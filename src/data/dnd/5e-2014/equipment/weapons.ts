@@ -1,0 +1,1041 @@
+import { Weapon } from '../../../../types/equipment/items';
+
+// Simple Melee Weapons
+export const club: Weapon = {
+  id: 'club',
+  name: 'Club',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'simple',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 1, die: 'd4', notation: '1d4' },
+  damageType: 'bludgeoning',
+  properties: ['light'],
+  weight: 2,
+  cost: { amount: 1, currency: 'sp' },
+  description: 'A simple wooden club.',
+  requiresAttunement: false,
+};
+
+export const dagger: Weapon = {
+  id: 'dagger',
+  name: 'Dagger',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'simple',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 1, die: 'd4', notation: '1d4' },
+  damageType: 'piercing',
+  properties: ['finesse', 'light', 'thrown'],
+  range: { normal: 20, max: 60 },
+  weight: 1,
+  cost: { amount: 2, currency: 'gp' },
+  description: 'A simple dagger, useful for both melee and ranged attacks.',
+  requiresAttunement: false,
+};
+
+export const greatclub: Weapon = {
+  id: 'greatclub',
+  name: 'Greatclub',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'simple',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 1, die: 'd8', notation: '1d8' },
+  damageType: 'bludgeoning',
+  properties: ['two-handed'],
+  weight: 10,
+  cost: { amount: 2, currency: 'sp' },
+  description: 'A large, heavy club requiring two hands to wield.',
+  requiresAttunement: false,
+};
+
+export const handaxe: Weapon = {
+  id: 'handaxe',
+  name: 'Handaxe',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'simple',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 1, die: 'd6', notation: '1d6' },
+  damageType: 'slashing',
+  properties: ['light', 'thrown'],
+  range: { normal: 20, max: 60 },
+  weight: 2,
+  cost: { amount: 5, currency: 'gp' },
+  description: 'A light axe that can be thrown or used in melee.',
+  requiresAttunement: false,
+};
+
+export const javelin: Weapon = {
+  id: 'javelin',
+  name: 'Javelin',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'simple',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 1, die: 'd6', notation: '1d6' },
+  damageType: 'piercing',
+  properties: ['thrown'],
+  range: { normal: 30, max: 120 },
+  weight: 2,
+  cost: { amount: 5, currency: 'sp' },
+  description: 'A throwing spear.',
+  requiresAttunement: false,
+};
+
+export const mace: Weapon = {
+  id: 'mace',
+  name: 'Mace',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'simple',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 1, die: 'd6', notation: '1d6' },
+  damageType: 'bludgeoning',
+  properties: [],
+  weight: 4,
+  cost: { amount: 5, currency: 'gp' },
+  description: 'A metal-headed bludgeoning weapon.',
+  requiresAttunement: false,
+};
+
+export const quarterstaff: Weapon = {
+  id: 'quarterstaff',
+  name: 'Quarterstaff',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'simple',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 1, die: 'd6', notation: '1d6' },
+  damageType: 'bludgeoning',
+  properties: ['versatile'],
+  versatileDamage: { count: 1, die: 'd8', notation: '1d8' },
+  weight: 4,
+  cost: { amount: 2, currency: 'sp' },
+  description: 'A simple wooden staff that can be wielded with one or two hands.',
+  requiresAttunement: false,
+};
+
+export const spear: Weapon = {
+  id: 'spear',
+  name: 'Spear',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'simple',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 1, die: 'd6', notation: '1d6' },
+  damageType: 'piercing',
+  properties: ['thrown', 'versatile'],
+  range: { normal: 20, max: 60 },
+  versatileDamage: { count: 1, die: 'd8', notation: '1d8' },
+  weight: 3,
+  cost: { amount: 1, currency: 'gp' },
+  description: 'A versatile weapon that can be thrown or used in melee.',
+  requiresAttunement: false,
+};
+
+export const sickle: Weapon = {
+  id: 'sickle',
+  name: 'Sickle',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'simple',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 1, die: 'd4', notation: '1d4' },
+  damageType: 'slashing',
+  properties: ['light'],
+  weight: 2,
+  cost: { amount: 1, currency: 'gp' },
+  description: 'A curved blade used for harvesting, also effective in combat.',
+  requiresAttunement: false,
+};
+
+export const lightHammer: Weapon = {
+  id: 'light-hammer',
+  name: 'Light Hammer',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'simple',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 1, die: 'd4', notation: '1d4' },
+  damageType: 'bludgeoning',
+  properties: ['light', 'thrown'],
+  range: { normal: 20, max: 60 },
+  weight: 2,
+  cost: { amount: 2, currency: 'gp' },
+  description: 'A small hammer that can be thrown.',
+  requiresAttunement: false,
+};
+
+// Simple Ranged Weapons
+export const lightCrossbow: Weapon = {
+  id: 'light-crossbow',
+  name: 'Light Crossbow',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'simple',
+  category: 'ranged',
+  rarity: 'common',
+  damage: { count: 1, die: 'd8', notation: '1d8' },
+  damageType: 'piercing',
+  properties: ['ammunition', 'loading', 'two-handed'],
+  range: { normal: 80, max: 320 },
+  weight: 5,
+  cost: { amount: 25, currency: 'gp' },
+  description: 'A simple crossbow requiring bolts as ammunition.',
+  requiresAttunement: false,
+};
+
+export const shortbow: Weapon = {
+  id: 'shortbow',
+  name: 'Shortbow',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'simple',
+  category: 'ranged',
+  rarity: 'common',
+  damage: { count: 1, die: 'd6', notation: '1d6' },
+  damageType: 'piercing',
+  properties: ['ammunition', 'two-handed'],
+  range: { normal: 80, max: 320 },
+  weight: 2,
+  cost: { amount: 25, currency: 'gp' },
+  description: 'A small bow suitable for beginners.',
+  requiresAttunement: false,
+};
+
+export const dart: Weapon = {
+  id: 'dart',
+  name: 'Dart',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'simple',
+  category: 'ranged',
+  rarity: 'common',
+  damage: { count: 1, die: 'd4', notation: '1d4' },
+  damageType: 'piercing',
+  properties: ['finesse', 'thrown'],
+  range: { normal: 20, max: 60 },
+  weight: 0.25,
+  cost: { amount: 5, currency: 'cp' },
+  description: 'A small thrown projectile.',
+  requiresAttunement: false,
+};
+
+export const sling: Weapon = {
+  id: 'sling',
+  name: 'Sling',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'simple',
+  category: 'ranged',
+  rarity: 'common',
+  damage: { count: 1, die: 'd4', notation: '1d4' },
+  damageType: 'bludgeoning',
+  properties: ['ammunition'],
+  range: { normal: 30, max: 120 },
+  weight: 0,
+  cost: { amount: 1, currency: 'sp' },
+  description: 'A simple ranged weapon that hurls stones or bullets.',
+  requiresAttunement: false,
+};
+
+export const blowgun: Weapon = {
+  id: 'blowgun',
+  name: 'Blowgun',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'simple',
+  category: 'ranged',
+  rarity: 'common',
+  damage: { count: 1, die: 'd1', notation: '1' },
+  damageType: 'piercing',
+  properties: ['ammunition', 'loading'],
+  range: { normal: 25, max: 100 },
+  weight: 1,
+  cost: { amount: 10, currency: 'gp' },
+  description: 'A tube for firing poisoned darts. Deals minimal damage but used to deliver poison.',
+  requiresAttunement: false,
+};
+
+// Martial Melee Weapons
+export const battleaxe: Weapon = {
+  id: 'battleaxe',
+  name: 'Battleaxe',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'martial',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 1, die: 'd8', notation: '1d8' },
+  damageType: 'slashing',
+  properties: ['versatile'],
+  versatileDamage: { count: 1, die: 'd10', notation: '1d10' },
+  weight: 4,
+  cost: { amount: 10, currency: 'gp' },
+  description: 'A one-handed axe that can be used with two hands for extra damage.',
+  requiresAttunement: false,
+};
+
+export const flail: Weapon = {
+  id: 'flail',
+  name: 'Flail',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'martial',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 1, die: 'd8', notation: '1d8' },
+  damageType: 'bludgeoning',
+  properties: [],
+  weight: 2,
+  cost: { amount: 10, currency: 'gp' },
+  description: 'A spiked ball on a chain attached to a handle.',
+  requiresAttunement: false,
+};
+
+export const glaive: Weapon = {
+  id: 'glaive',
+  name: 'Glaive',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'martial',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 1, die: 'd10', notation: '1d10' },
+  damageType: 'slashing',
+  properties: ['heavy', 'reach', 'two-handed'],
+  reach: 10,
+  weight: 6,
+  cost: { amount: 20, currency: 'gp' },
+  description: 'A polearm with a blade at the end, granting 10-foot reach.',
+  requiresAttunement: false,
+};
+
+export const greataxe: Weapon = {
+  id: 'greataxe',
+  name: 'Greataxe',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'martial',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 1, die: 'd12', notation: '1d12' },
+  damageType: 'slashing',
+  properties: ['heavy', 'two-handed'],
+  weight: 7,
+  cost: { amount: 30, currency: 'gp' },
+  description: 'A massive two-handed axe dealing tremendous damage.',
+  requiresAttunement: false,
+};
+
+export const greatsword: Weapon = {
+  id: 'greatsword',
+  name: 'Greatsword',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'martial',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 2, die: 'd6', notation: '2d6' },
+  damageType: 'slashing',
+  properties: ['heavy', 'two-handed'],
+  weight: 6,
+  cost: { amount: 50, currency: 'gp' },
+  description: 'A large two-handed sword favored by heavy fighters.',
+  requiresAttunement: false,
+};
+
+export const halberd: Weapon = {
+  id: 'halberd',
+  name: 'Halberd',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'martial',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 1, die: 'd10', notation: '1d10' },
+  damageType: 'slashing',
+  properties: ['heavy', 'reach', 'two-handed'],
+  reach: 10,
+  weight: 6,
+  cost: { amount: 20, currency: 'gp' },
+  description: 'A polearm combining an axe blade with a spear point.',
+  requiresAttunement: false,
+};
+
+export const lance: Weapon = {
+  id: 'lance',
+  name: 'Lance',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'martial',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 1, die: 'd12', notation: '1d12' },
+  damageType: 'piercing',
+  properties: ['reach', 'special'],
+  reach: 10,
+  weight: 6,
+  cost: { amount: 10, currency: 'gp' },
+  description: 'A cavalry weapon. You have disadvantage when you use a lance to attack a target within 5 feet of you. Also, a lance requires two hands to wield when you aren\'t mounted.',
+  requiresAttunement: false,
+};
+
+export const longsword: Weapon = {
+  id: 'longsword',
+  name: 'Longsword',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'martial',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 1, die: 'd8', notation: '1d8' },
+  damageType: 'slashing',
+  properties: ['versatile'],
+  versatileDamage: { count: 1, die: 'd10', notation: '1d10' },
+  weight: 3,
+  cost: { amount: 15, currency: 'gp' },
+  description: 'The iconic medieval sword, versatile and reliable.',
+  requiresAttunement: false,
+};
+
+export const maul: Weapon = {
+  id: 'maul',
+  name: 'Maul',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'martial',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 2, die: 'd6', notation: '2d6' },
+  damageType: 'bludgeoning',
+  properties: ['heavy', 'two-handed'],
+  weight: 10,
+  cost: { amount: 10, currency: 'gp' },
+  description: 'A massive two-handed hammer.',
+  requiresAttunement: false,
+};
+
+export const morningstar: Weapon = {
+  id: 'morningstar',
+  name: 'Morningstar',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'martial',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 1, die: 'd8', notation: '1d8' },
+  damageType: 'piercing',
+  properties: [],
+  weight: 4,
+  cost: { amount: 15, currency: 'gp' },
+  description: 'A spiked mace.',
+  requiresAttunement: false,
+};
+
+export const pike: Weapon = {
+  id: 'pike',
+  name: 'Pike',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'martial',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 1, die: 'd10', notation: '1d10' },
+  damageType: 'piercing',
+  properties: ['heavy', 'reach', 'two-handed'],
+  reach: 10,
+  weight: 18,
+  cost: { amount: 5, currency: 'gp' },
+  description: 'A long spear used in formation combat.',
+  requiresAttunement: false,
+};
+
+export const rapier: Weapon = {
+  id: 'rapier',
+  name: 'Rapier',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'martial',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 1, die: 'd8', notation: '1d8' },
+  damageType: 'piercing',
+  properties: ['finesse'],
+  weight: 2,
+  cost: { amount: 25, currency: 'gp' },
+  description: 'A slender, sharply pointed sword favored by duelists.',
+  requiresAttunement: false,
+};
+
+export const scimitar: Weapon = {
+  id: 'scimitar',
+  name: 'Scimitar',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'martial',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 1, die: 'd6', notation: '1d6' },
+  damageType: 'slashing',
+  properties: ['finesse', 'light'],
+  weight: 3,
+  cost: { amount: 25, currency: 'gp' },
+  description: 'A curved sword favored for its speed.',
+  requiresAttunement: false,
+};
+
+export const shortsword: Weapon = {
+  id: 'shortsword',
+  name: 'Shortsword',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'martial',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 1, die: 'd6', notation: '1d6' },
+  damageType: 'piercing',
+  properties: ['finesse', 'light'],
+  weight: 2,
+  cost: { amount: 10, currency: 'gp' },
+  description: 'A short blade perfect for dual-wielding.',
+  requiresAttunement: false,
+};
+
+export const trident: Weapon = {
+  id: 'trident',
+  name: 'Trident',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'martial',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 1, die: 'd6', notation: '1d6' },
+  damageType: 'piercing',
+  properties: ['thrown', 'versatile'],
+  range: { normal: 20, max: 60 },
+  versatileDamage: { count: 1, die: 'd8', notation: '1d8' },
+  weight: 4,
+  cost: { amount: 5, currency: 'gp' },
+  description: 'A three-pronged spear.',
+  requiresAttunement: false,
+};
+
+export const warhammer: Weapon = {
+  id: 'warhammer',
+  name: 'Warhammer',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'martial',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 1, die: 'd8', notation: '1d8' },
+  damageType: 'bludgeoning',
+  properties: ['versatile'],
+  versatileDamage: { count: 1, die: 'd10', notation: '1d10' },
+  weight: 2,
+  cost: { amount: 15, currency: 'gp' },
+  description: 'A one-handed hammer designed for war.',
+  requiresAttunement: false,
+};
+
+export const warpick: Weapon = {
+  id: 'war-pick',
+  name: 'War Pick',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'martial',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 1, die: 'd8', notation: '1d8' },
+  damageType: 'piercing',
+  properties: [],
+  weight: 2,
+  cost: { amount: 5, currency: 'gp' },
+  description: 'A pick designed for puncturing armor.',
+  requiresAttunement: false,
+};
+
+export const whip: Weapon = {
+  id: 'whip',
+  name: 'Whip',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'martial',
+  category: 'melee',
+  rarity: 'common',
+  damage: { count: 1, die: 'd4', notation: '1d4' },
+  damageType: 'slashing',
+  properties: ['finesse', 'reach'],
+  reach: 10,
+  weight: 3,
+  cost: { amount: 2, currency: 'gp' },
+  description: 'A flexible weapon with 10-foot reach.',
+  requiresAttunement: false,
+};
+
+// Martial Ranged Weapons
+export const handCrossbow: Weapon = {
+  id: 'hand-crossbow',
+  name: 'Hand Crossbow',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'martial',
+  category: 'ranged',
+  rarity: 'common',
+  damage: { count: 1, die: 'd6', notation: '1d6' },
+  damageType: 'piercing',
+  properties: ['ammunition', 'light', 'loading'],
+  range: { normal: 30, max: 120 },
+  weight: 3,
+  cost: { amount: 75, currency: 'gp' },
+  description: 'A small crossbow that can be fired with one hand.',
+  requiresAttunement: false,
+};
+
+export const heavyCrossbow: Weapon = {
+  id: 'heavy-crossbow',
+  name: 'Heavy Crossbow',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'martial',
+  category: 'ranged',
+  rarity: 'common',
+  damage: { count: 1, die: 'd10', notation: '1d10' },
+  damageType: 'piercing',
+  properties: ['ammunition', 'heavy', 'loading', 'two-handed'],
+  range: { normal: 100, max: 400 },
+  weight: 18,
+  cost: { amount: 50, currency: 'gp' },
+  description: 'A powerful crossbow requiring significant strength.',
+  requiresAttunement: false,
+};
+
+export const longbow: Weapon = {
+  id: 'longbow',
+  name: 'Longbow',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'weapon',
+  weaponType: 'martial',
+  category: 'ranged',
+  rarity: 'common',
+  damage: { count: 1, die: 'd8', notation: '1d8' },
+  damageType: 'piercing',
+  properties: ['ammunition', 'heavy', 'two-handed'],
+  range: { normal: 150, max: 600 },
+  weight: 2,
+  cost: { amount: 50, currency: 'gp' },
+  description: 'A tall bow with impressive range.',
+  requiresAttunement: false,
+};
+
+export const dnd5eWeapons: Weapon[] = [
+  // Simple Melee
+  club,
+  dagger,
+  greatclub,
+  handaxe,
+  javelin,
+  lightHammer,
+  mace,
+  quarterstaff,
+  sickle,
+  spear,
+  // Simple Ranged
+  blowgun,
+  dart,
+  lightCrossbow,
+  shortbow,
+  sling,
+  // Martial Melee
+  battleaxe,
+  flail,
+  glaive,
+  greataxe,
+  greatsword,
+  halberd,
+  lance,
+  longsword,
+  maul,
+  morningstar,
+  pike,
+  rapier,
+  scimitar,
+  shortsword,
+  trident,
+  warhammer,
+  warpick,
+  whip,
+  // Martial Ranged
+  handCrossbow,
+  heavyCrossbow,
+  longbow,
+];
+import { Item } from '../../../../types/equipment/items';
+
+// D&D 5e-2014 Magic Weapon Variants - SRD Compliant
+// +1, +2, +3 variants for all weapon types
+
+// LONGSWORDS
+export const longswordPlus1: Item = {
+  id: 'longsword-plus-1',
+  name: 'Longsword +1',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'uncommon',
+  weight: 3,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +1 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+export const longswordPlus2: Item = {
+  id: 'longsword-plus-2',
+  name: 'Longsword +2',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'rare',
+  weight: 3,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +2 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+export const longswordPlus3: Item = {
+  id: 'longsword-plus-3',
+  name: 'Longsword +3',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'very-rare',
+  weight: 3,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +3 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+// GREATSWORDS
+export const greatswordPlus1: Item = {
+  id: 'greatsword-plus-1',
+  name: 'Greatsword +1',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'uncommon',
+  weight: 6,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +1 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+export const greatswordPlus2: Item = {
+  id: 'greatsword-plus-2',
+  name: 'Greatsword +2',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'rare',
+  weight: 6,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +2 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+export const greatswordPlus3: Item = {
+  id: 'greatsword-plus-3',
+  name: 'Greatsword +3',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'very-rare',
+  weight: 6,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +3 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+// SHORTSWORDS
+export const shortswordPlus1: Item = {
+  id: 'shortsword-plus-1',
+  name: 'Shortsword +1',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'uncommon',
+  weight: 2,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +1 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+export const shortswordPlus2: Item = {
+  id: 'shortsword-plus-2',
+  name: 'Shortsword +2',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'rare',
+  weight: 2,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +2 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+export const shortswordPlus3: Item = {
+  id: 'shortsword-plus-3',
+  name: 'Shortsword +3',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'very-rare',
+  weight: 2,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +3 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+// DAGGERS
+export const daggerPlus1: Item = {
+  id: 'dagger-plus-1',
+  name: 'Dagger +1',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'uncommon',
+  weight: 1,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +1 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+export const daggerPlus2: Item = {
+  id: 'dagger-plus-2',
+  name: 'Dagger +2',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'rare',
+  weight: 1,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +2 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+export const daggerPlus3: Item = {
+  id: 'dagger-plus-3',
+  name: 'Dagger +3',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'very-rare',
+  weight: 1,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +3 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+// LONGBOWS
+export const longbowPlus1: Item = {
+  id: 'longbow-plus-1',
+  name: 'Longbow +1',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'uncommon',
+  weight: 2,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +1 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+export const longbowPlus2: Item = {
+  id: 'longbow-plus-2',
+  name: 'Longbow +2',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'rare',
+  weight: 2,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +2 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+export const longbowPlus3: Item = {
+  id: 'longbow-plus-3',
+  name: 'Longbow +3',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'very-rare',
+  weight: 2,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +3 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+// SHORTBOWS
+export const shortbowPlus1: Item = {
+  id: 'shortbow-plus-1',
+  name: 'Shortbow +1',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'uncommon',
+  weight: 2,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +1 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+export const shortbowPlus2: Item = {
+  id: 'shortbow-plus-2',
+  name: 'Shortbow +2',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'rare',
+  weight: 2,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +2 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+export const shortbowPlus3: Item = {
+  id: 'shortbow-plus-3',
+  name: 'Shortbow +3',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'very-rare',
+  weight: 2,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +3 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+// BATTLEAXES
+export const battleaxePlus1: Item = {
+  id: 'battleaxe-plus-1',
+  name: 'Battleaxe +1',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'uncommon',
+  weight: 4,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +1 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+export const battleaxePlus2: Item = {
+  id: 'battleaxe-plus-2',
+  name: 'Battleaxe +2',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'rare',
+  weight: 4,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +2 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+export const battleaxePlus3: Item = {
+  id: 'battleaxe-plus-3',
+  name: 'Battleaxe +3',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'very-rare',
+  weight: 4,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +3 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+// WARHAMMERS
+export const warhammerPlus1: Item = {
+  id: 'warhammer-plus-1',
+  name: 'Warhammer +1',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'uncommon',
+  weight: 2,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +1 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+export const warhammerPlus2: Item = {
+  id: 'warhammer-plus-2',
+  name: 'Warhammer +2',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'rare',
+  weight: 2,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +2 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+export const warhammerPlus3: Item = {
+  id: 'warhammer-plus-3',
+  name: 'Warhammer +3',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'very-rare',
+  weight: 2,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +3 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+// MACES
+export const macePlus1: Item = {
+  id: 'mace-plus-1',
+  name: 'Mace +1',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'uncommon',
+  weight: 4,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +1 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+export const macePlus2: Item = {
+  id: 'mace-plus-2',
+  name: 'Mace +2',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'rare',
+  weight: 4,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +2 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+export const macePlus3: Item = {
+  id: 'mace-plus-3',
+  name: 'Mace +3',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'very-rare',
+  weight: 4,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +3 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+// RAPIERS
+export const rapierPlus1: Item = {
+  id: 'rapier-plus-1',
+  name: 'Rapier +1',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'uncommon',
+  weight: 2,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +1 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+export const rapierPlus2: Item = {
+  id: 'rapier-plus-2',
+  name: 'Rapier +2',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'rare',
+  weight: 2,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +2 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+export const rapierPlus3: Item = {
+  id: 'rapier-plus-3',
+  name: 'Rapier +3',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'very-rare',
+  weight: 2,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +3 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+// CROSSBOWS (LIGHT)
+export const lightCrossbowPlus1: Item = {
+  id: 'light-crossbow-plus-1',
+  name: 'Light Crossbow +1',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'uncommon',
+  weight: 5,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +1 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+export const lightCrossbowPlus2: Item = {
+  id: 'light-crossbow-plus-2',
+  name: 'Light Crossbow +2',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'rare',
+  weight: 5,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +2 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+export const lightCrossbowPlus3: Item = {
+  id: 'light-crossbow-plus-3',
+  name: 'Light Crossbow +3',
+  system: 'dnd-5e-2014', source: 'SRD 5.1',   type: 'magic-item',
+  rarity: 'very-rare',
+  weight: 5,
+  cost: { amount: 0, currency: 'gp' },
+  description: 'You have a +3 bonus to attack and damage rolls made with this magic weapon.',
+  requiresAttunement: false,
+};
+
+export const magicWeaponsExpanded: Item[] = [
+  longswordPlus1, longswordPlus2, longswordPlus3,
+  greatswordPlus1, greatswordPlus2, greatswordPlus3,
+  shortswordPlus1, shortswordPlus2, shortswordPlus3,
+  daggerPlus1, daggerPlus2, daggerPlus3,
+  longbowPlus1, longbowPlus2, longbowPlus3,
+  shortbowPlus1, shortbowPlus2, shortbowPlus3,
+  battleaxePlus1, battleaxePlus2, battleaxePlus3,
+  warhammerPlus1, warhammerPlus2, warhammerPlus3,
+  macePlus1, macePlus2, macePlus3,
+  rapierPlus1, rapierPlus2, rapierPlus3,
+  lightCrossbowPlus1, lightCrossbowPlus2, lightCrossbowPlus3,
+];

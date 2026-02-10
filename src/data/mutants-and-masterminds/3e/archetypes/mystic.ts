@@ -1,0 +1,42 @@
+/**
+ * Mutants & Masterminds 3e - Archetypes
+ * 
+ * This content is derived from the System Reference Document and is
+ * released under the Open Gaming License v1.0a.
+ * 
+ * Source: Hero's Handbook (d20herosrd.com)
+ * License: OGL v1.0a
+ */
+
+import { CharacterClass } from '../../../../types/character-options/classes';
+
+export const mysticArchetype: CharacterClass = {
+  id: 'mam3e-mystic',
+  name: 'Mystic',
+  system: 'mam3e',
+  source: "Hero's Handbook",
+  version: '1.0',
+  lastUpdated: '2026-01-15',
+  sourceBook: { name: "Mutants & Masterminds Hero's Handbook", page: 1, url: 'https://www.d20herosrd.com/character-creation/archetypes/mystic/' },
+  hitDie: 'd6',
+  primaryAbility: ['wis', 'int'],
+  savingThrowProficiencies: ['wis', 'int'],
+  armorProficiencies: [],
+  weaponProficiencies: [],
+  toolProficiencies: [],
+  skillProficiencies: { count: 3, options: ['arcana', 'insight', 'perception'], label: 'Choose class skills' },
+  equipmentChoices: [],
+  startingGold: { dice: '1d6', multiplier: 100 },
+  features: [
+    {
+      level: 1,
+      features: [
+        { id: 'magical-powers', name: 'Magical Powers', source: 'Mystic', description: 'Mastery of mystical and magical forces' },
+        { id: 'spellcasting', name: 'Spellcasting', source: 'Mystic', description: 'Ability to cast spells and perform rituals' },
+      ],
+    },
+  ],
+  subclassLevel: 1,
+  subclasses: [],
+  description: 'A wielder of magic and mystical forces, drawing power from arcane or divine sources.',
+};

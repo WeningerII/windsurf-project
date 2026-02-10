@@ -1,0 +1,1706 @@
+import { Spell } from '../../../../types/magic/spells';
+
+// D&D 3.5e Level 1 Spells (SRD)
+export const level1Spells: Spell[] = [
+  {
+    id: 'bane-cleric-35e',
+    name: 'Bane',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'enchantment',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'ranged',
+      feet: 50
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Enemies take -1 on attack rolls and saves against fear.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'bless-cleric-35e',
+    name: 'Bless',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'enchantment',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'ranged',
+      feet: 50
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Allies gain +1 on attack rolls and saves against fear.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'bless-water-cleric-35e',
+    name: 'Bless Water',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'transmutation',
+    castingTime: {
+      type: 'minutes',
+      minutes: 1
+    },
+    range: {
+      type: 'touch'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true
+    },
+    duration: {
+      type: 'instant'
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Makes holy water.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'calm-animals-druid-35e',
+    name: 'Calm Animals',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'enchantment',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'ranged',
+      feet: 30
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Calms (2d4 + level) HD of animals.',
+    classes: [
+      'druid'
+    ],
+    levelsByClass: {
+      druid: 1
+    }
+  },
+  {
+    id: 'cause-fear-cleric-35e',
+    name: 'Cause Fear',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'necromancy',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'ranged',
+      feet: 30
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'rounds',
+      rounds: 4
+    },
+    concentration: false,
+    ritual: false,
+    description: 'One creature of 5 HD or less flees for 1d4 rounds.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'charm-animal-druid-35e',
+    name: 'Charm Animal',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'enchantment',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'ranged',
+      feet: 30
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'hours',
+      hours: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Makes one animal your friend.',
+    classes: [
+      'druid'
+    ],
+    levelsByClass: {
+      druid: 1
+    }
+  },
+  {
+    id: 'command-cleric-35e',
+    name: 'Command',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'enchantment',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'ranged',
+      feet: 30
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false
+    },
+    duration: {
+      type: 'rounds',
+      rounds: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: 'One subject obeys selected command for 1 round.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'comprehend-languages-cleric-35e',
+    name: 'Comprehend Languages',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'divination',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'self'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10
+    },
+    concentration: false,
+    ritual: false,
+    description: 'You understand all spoken and written languages.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'cure-light-wounds-cleric-35e',
+    name: 'Cure Light Wounds',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'touch'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'instant'
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Cures 1d8 damage +1/level (max +5).',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'cure-light-wounds-druid-35e',
+    name: 'Cure Light Wounds',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'touch'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'instant'
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Cures 1d8 damage +1/level (max +5).',
+    classes: [
+      'druid'
+    ],
+    levelsByClass: {
+      druid: 1
+    }
+  },
+  {
+    id: 'curse-water-cleric-35e',
+    name: 'Curse Water',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'necromancy',
+    castingTime: {
+      type: 'minutes',
+      minutes: 1
+    },
+    range: {
+      type: 'touch'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true
+    },
+    duration: {
+      type: 'instant'
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Makes unholy water.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'deathwatch-cleric-35e',
+    name: 'Deathwatch',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'necromancy',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'ranged',
+      feet: 30
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Reveals how near death subjects within 30 ft. are.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'detect-animals-plants-druid-35e',
+    name: 'Detect Animals or Plants',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'divination',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'ranged',
+      feet: 400
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10
+    },
+    concentration: true,
+    ritual: false,
+    description: 'Detects kinds of animals or plants.',
+    classes: [
+      'druid'
+    ],
+    levelsByClass: {
+      druid: 1
+    }
+  },
+  {
+    id: 'detect-chaos-cleric-35e',
+    name: 'Detect Chaos',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'divination',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'ranged',
+      feet: 60
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10
+    },
+    concentration: true,
+    ritual: false,
+    description: 'Reveals creatures, spells, or objects of chaotic alignment.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'detect-evil-cleric-35e',
+    name: 'Detect Evil',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'divination',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'ranged',
+      feet: 60
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10
+    },
+    concentration: true,
+    ritual: false,
+    description: 'Reveals creatures, spells, or objects of evil alignment.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'detect-good-cleric-35e',
+    name: 'Detect Good',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'divination',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'ranged',
+      feet: 60
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10
+    },
+    concentration: true,
+    ritual: false,
+    description: 'Reveals creatures, spells, or objects of good alignment.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'detect-law-cleric-35e',
+    name: 'Detect Law',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'divination',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'ranged',
+      feet: 60
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10
+    },
+    concentration: true,
+    ritual: false,
+    description: 'Reveals creatures, spells, or objects of lawful alignment.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'detect-snares-pits-druid-35e',
+    name: 'Detect Snares and Pits',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'divination',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'ranged',
+      feet: 60
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10
+    },
+    concentration: true,
+    ritual: false,
+    description: 'Reveals natural or primitive traps.',
+    classes: [
+      'druid'
+    ],
+    levelsByClass: {
+      druid: 1
+    }
+  },
+  {
+    id: 'detect-undead-cleric-35e',
+    name: 'Detect Undead',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'divination',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'ranged',
+      feet: 60
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10
+    },
+    concentration: true,
+    ritual: false,
+    description: 'Reveals undead within 60 ft.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'divine-favor-cleric-35e',
+    name: 'Divine Favor',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'self'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: 'You gain +1 per three levels on attack and damage rolls.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'doom-cleric-35e',
+    name: 'Doom',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'necromancy',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'ranged',
+      feet: 30
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: 'One subject takes -2 on attack rolls, saves, and checks.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'endure-elements-cleric-35e',
+    name: 'Endure Elements',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'abjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'touch'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'hours',
+      hours: 24
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Exist comfortably in hot or cold environments.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'endure-elements-druid-35e',
+    name: 'Endure Elements',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'abjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'touch'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'hours',
+      hours: 24
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Exist comfortably in hot or cold environments.',
+    classes: [
+      'druid'
+    ],
+    levelsByClass: {
+      druid: 1
+    }
+  },
+  {
+    id: 'entangle-druid-35e',
+    name: 'Entangle',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'transmutation',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'ranged',
+      feet: 400
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Plants entangle everyone in 40-ft.-radius.',
+    classes: [
+      'druid'
+    ],
+    levelsByClass: {
+      druid: 1
+    }
+  },
+  {
+    id: 'entropic-shield-cleric-35e',
+    name: 'Entropic Shield',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'abjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'self'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Ranged attacks against you have 20% miss chance.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'faerie-fire-druid-35e',
+    name: 'Faerie Fire',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'ranged',
+      feet: 400
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Outlines subjects with light, canceling blur, concealment, and the like.',
+    classes: [
+      'druid'
+    ],
+    levelsByClass: {
+      druid: 1
+    }
+  },
+  {
+    id: 'goodberry-druid-35e',
+    name: 'Goodberry',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'transmutation',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'touch'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'hours',
+      hours: 24
+    },
+    concentration: false,
+    ritual: false,
+    description: '2d4 berries each cure 1 hp (max 8 hp/24 hours).',
+    classes: [
+      'druid'
+    ],
+    levelsByClass: {
+      druid: 1
+    }
+  },
+  {
+    id: 'hide-from-animals-druid-35e',
+    name: 'Hide from Animals',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'abjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'touch'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Animals can\'t perceive one subject/level.',
+    classes: [
+      'druid'
+    ],
+    levelsByClass: {
+      druid: 1
+    }
+  },
+  {
+    id: 'hide-from-undead-cleric-35e',
+    name: 'Hide from Undead',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'abjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'touch'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Undead can\'t perceive one subject/level.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'inflict-light-wounds-cleric-35e',
+    name: 'Inflict Light Wounds',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'necromancy',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'touch'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'instant'
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Touch deals 1d8 damage +1/level (max +5).',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'jump-druid-35e',
+    name: 'Jump',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'transmutation',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'touch'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Subject gets bonus on Jump checks.',
+    classes: [
+      'druid'
+    ],
+    levelsByClass: {
+      druid: 1
+    }
+  },
+  {
+    id: 'longstrider-druid-35e',
+    name: 'Longstrider',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'transmutation',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'self'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'hours',
+      hours: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Your speed increases by 10 ft.',
+    classes: [
+      'druid'
+    ],
+    levelsByClass: {
+      druid: 1
+    }
+  },
+  {
+    id: 'magic-fang-druid-35e',
+    name: 'Magic Fang',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'transmutation',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'touch'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: 'One natural weapon of subject creature gets +1 on attack and damage rolls.',
+    classes: [
+      'druid'
+    ],
+    levelsByClass: {
+      druid: 1
+    }
+  },
+  {
+    id: 'magic-stone-cleric-35e',
+    name: 'Magic Stone',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'transmutation',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'touch'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 30
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Three stones gain +1 on attack, deal 1d6 +1 damage.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'magic-stone-druid-35e',
+    name: 'Magic Stone',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'transmutation',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'touch'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 30
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Three stones gain +1 on attack rolls, deal 1d6+1 damage.',
+    classes: [
+      'druid'
+    ],
+    levelsByClass: {
+      druid: 1
+    }
+  },
+  {
+    id: 'magic-weapon-cleric-35e',
+    name: 'Magic Weapon',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'transmutation',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'touch'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Weapon gains +1 bonus.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'obscuring-mist-cleric-35e',
+    name: 'Obscuring Mist',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'ranged',
+      feet: 20
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Fog surrounds you.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'obscuring-mist-druid-35e',
+    name: 'Obscuring Mist',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'ranged',
+      feet: 20
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Fog surrounds you.',
+    classes: [
+      'druid'
+    ],
+    levelsByClass: {
+      druid: 1
+    }
+  },
+  {
+    id: 'pass-without-trace-druid-35e',
+    name: 'Pass without Trace',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'transmutation',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'touch'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'hours',
+      hours: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: 'One subject/level leaves no tracks.',
+    classes: [
+      'druid'
+    ],
+    levelsByClass: {
+      druid: 1
+    }
+  },
+  {
+    id: 'produce-flame-druid-35e',
+    name: 'Produce Flame',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'ranged',
+      feet: 120
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: '1d6 damage +1/level, touch or thrown.',
+    classes: [
+      'druid'
+    ],
+    levelsByClass: {
+      druid: 1
+    }
+  },
+  {
+    id: 'protection-from-chaos-cleric-35e',
+    name: 'Protection from Chaos',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'abjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'touch'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: '+2 to AC and saves, counter mind control, hedge out elementals and outsiders.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'protection-from-evil-cleric-35e',
+    name: 'Protection from Evil',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'abjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'touch'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: '+2 to AC and saves, counter mind control, hedge out elementals and outsiders.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'protection-from-good-cleric-35e',
+    name: 'Protection from Good',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'abjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'touch'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: '+2 to AC and saves, counter mind control, hedge out elementals and outsiders.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'protection-from-law-cleric-35e',
+    name: 'Protection from Law',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'abjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'touch'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: '+2 to AC and saves, counter mind control, hedge out elementals and outsiders.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'remove-fear-cleric-35e',
+    name: 'Remove Fear',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'abjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'ranged',
+      feet: 30
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Suppresses fear or gives +4 on saves against fear for one subject + one per four levels.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'sanctuary-cleric-35e',
+    name: 'Sanctuary',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'abjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'touch'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'rounds',
+      rounds: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Opponents can\'t attack you, and you can\'t attack.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'shield-of-faith-cleric-35e',
+    name: 'Shield of Faith',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'abjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'touch'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Aura grants +2 or higher deflection bonus.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'shillelagh-druid-35e',
+    name: 'Shillelagh',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'transmutation',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'touch'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Cudgel or quarterstaff becomes +1 weapon and deals damage as if two sizes larger.',
+    classes: [
+      'druid'
+    ],
+    levelsByClass: {
+      druid: 1
+    }
+  },
+  {
+    id: 'speak-animals-druid-35e',
+    name: 'Speak with Animals',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'divination',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'self'
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: 'You can communicate with animals.',
+    classes: [
+      'druid'
+    ],
+    levelsByClass: {
+      druid: 1
+    }
+  },
+  {
+    id: 'summon-monster-i-cleric-35e',
+    name: 'Summon Monster I',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'ranged',
+      feet: 30
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'rounds',
+      rounds: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Calls extraplanar creature to fight for you.',
+    classes: [
+      'cleric'
+    ],
+    levelsByClass: {
+      cleric: 1
+    }
+  },
+  {
+    id: 'summon-natures-ally-i-druid-35e',
+    name: 'Summon Nature\'s Ally I',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    level: 1,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1
+    },
+    range: {
+      type: 'ranged',
+      feet: 30
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false
+    },
+    duration: {
+      type: 'rounds',
+      rounds: 1
+    },
+    concentration: false,
+    ritual: false,
+    description: 'Calls creature to fight.',
+    classes: [
+      'druid'
+    ],
+    levelsByClass: {
+      druid: 1
+    }
+  }
+];

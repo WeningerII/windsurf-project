@@ -1,0 +1,166 @@
+/**
+ * Error Logging and Monitoring Utilities
+ * 
+ * Provides centralized error logging with categorization and context
+ */
+
+export enum ErrorSeverity {
+  LOW = 'low',
+  MEDIUM = 'medium',
+  HIGH = 'high',
+  CRITICAL = 'critical',
+}
+
+export enum ErrorCategory {
+  VALIDATION = 'validation',
+  STORAGE = 'storage',
+  DATA_LOAD = 'data_load',
+  RENDER = 'render',
+  USER_ACTION = 'user_action',
+  NETWORK = 'network',
+  UNKNOWN = 'unknown',
+}
+
+export interface ErrorLog {
+  timestamp: Date;
+  category: ErrorCategory;
+  severity: ErrorSeverity;
+  message: string;
+  stack?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Error context requires flexible type
+  context?: Record<string, any>;
+  userAgent?: string;
+}
+
+class ErrorLogger {
+  private logs: ErrorLog[] = [];
+  private maxLogs = 100;
+
+  log(
+    category: ErrorCategory,
+    severity: ErrorSeverity,
+    message: string,
+    error?: Error,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Error context requires flexible type
+    context?: Record<string, any>
+  ): void {
+    const errorLog: ErrorLog = {
+      timestamp: new Date(),
+      category,
+      severity,
+      message,
+      stack: error?.stack,
+      context,
+      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
+    };
+
+    this.logs.push(errorLog);
+
+    // Keep only last N logs
+    if (this.logs.length > this.maxLogs) {
+      this.logs.shift();
+    }
+
+    // Console output based on severity
+    if (severity === ErrorSeverity.CRITICAL || severity === ErrorSeverity.HIGH) {
+      console.error(`[${category}] ${message}`, error, context);
+    } else if (severity === ErrorSeverity.MEDIUM) {
+      console.warn(`[${category}] ${message}`, context);
+    } else {
+      console.log(`[${category}] ${message}`, context);
+    }
+
+    // In production, could send to analytics service
+    if (severity === ErrorSeverity.CRITICAL) {
+      this.sendToMonitoring(errorLog);
+    }
+  }
+
+  private sendToMonitoring(errorLog: ErrorLog): void {
+    // Placeholder for production error monitoring
+    // Could integrate with Sentry, LogRocket, etc.
+    try {
+      if (typeof window !== 'undefined' && 'localStorage' in window) {
+        const criticalErrors = JSON.parse(
+          localStorage.getItem('critical-errors') || '[]'
+        );
+        criticalErrors.push(errorLog);
+        localStorage.setItem(
+          'critical-errors',
+          JSON.stringify(criticalErrors.slice(-10))
+        );
+      }
+    } catch (e) {
+      console.error('Failed to store critical error', e);
+    }
+  }
+
+  getLogs(): ErrorLog[] {
+    return [...this.logs];
+  }
+
+  getLogsByCategory(category: ErrorCategory): ErrorLog[] {
+    return this.logs.filter((log) => log.category === category);
+  }
+
+  getLogsBySeverity(severity: ErrorSeverity): ErrorLog[] {
+    return this.logs.filter((log) => log.severity === severity);
+  }
+
+  clearLogs(): void {
+    this.logs = [];
+  }
+
+  exportLogs(): string {
+    return JSON.stringify(this.logs, null, 2);
+  }
+}
+
+export const errorLogger = new ErrorLogger();
+
+/**
+ * Wrapper for async functions with error logging
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Generic async function wrapper requires flexible types
+export function withErrorLogging<T extends (...args: any[]) => Promise<any>>(
+  fn: T,
+  category: ErrorCategory,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Error context requires flexible type
+  context?: Record<string, any>
+): T {
+  return (async (...args: Parameters<T>): Promise<ReturnType<T>> => {
+    try {
+      return await fn(...args);
+    } catch (error) {
+      errorLogger.log(
+        category,
+        ErrorSeverity.HIGH,
+        `Error in ${fn.name || 'anonymous function'}`,
+        error as Error,
+        { ...context, args }
+      );
+      throw error;
+    }
+  }) as T;
+}
+
+/**
+ * Safe function execution with fallback
+ */
+export function safeExecute<T>(
+  fn: () => T,
+  fallback: T,
+  category: ErrorCategory = ErrorCategory.UNKNOWN
+): T {
+  try {
+    return fn();
+  } catch (error) {
+    errorLogger.log(
+      category,
+      ErrorSeverity.MEDIUM,
+      'Safe execution caught error',
+      error as Error
+    );
+    return fallback;
+  }
+}

@@ -1,0 +1,598 @@
+{
+  "generatedAt": "2026-02-10T16:47:58.300Z",
+  "policy": {
+    "dnd-5e-2014": {
+      "allowedSources": [
+        "SRD 5.1",
+        "SRD",
+        "System Reference Document 5.1"
+      ],
+      "allowMissingSourceFor": []
+    },
+    "dnd-5e-2024": {
+      "allowedSources": [
+        "SRD 5.2",
+        "System Reference Document 5.2"
+      ],
+      "allowMissingSourceFor": []
+    },
+    "dnd-3.5e": {
+      "allowedSources": [
+        "SRD 3.5",
+        "PHB 3.5",
+        "PHB",
+        "Player's Handbook 3.5"
+      ],
+      "allowMissingSourceFor": []
+    },
+    "pf1e": {
+      "allowedSources": [
+        "Core Rulebook",
+        "CRB"
+      ],
+      "allowMissingSourceFor": []
+    },
+    "pf2e": {
+      "allowedSources": [
+        "Core Rulebook",
+        "CRB"
+      ],
+      "allowMissingSourceFor": []
+    },
+    "mam3e": {
+      "allowedSources": [
+        "Hero's Handbook",
+        "HH",
+        "Mutants & Masterminds Hero's Handbook"
+      ],
+      "allowMissingSourceFor": []
+    }
+  },
+  "loaderSummary": {
+    "dnd-5e-2014": {
+      "spells": 238,
+      "classes": 12,
+      "species": 9,
+      "monsters": 41,
+      "equipment": 230,
+      "feats": 0
+    },
+    "dnd-5e-2024": {
+      "spells": 315,
+      "classes": 12,
+      "species": 9,
+      "monsters": 99,
+      "equipment": 204,
+      "feats": 87
+    },
+    "dnd-3.5e": {
+      "spells": 555,
+      "classes": 11,
+      "species": 7,
+      "monsters": 0,
+      "equipment": 207,
+      "feats": 515
+    },
+    "pf1e": {
+      "spells": 134,
+      "classes": 11,
+      "species": 7,
+      "monsters": 0,
+      "equipment": 70,
+      "feats": 742
+    },
+    "pf2e": {
+      "spells": 146,
+      "classes": 12,
+      "species": 6,
+      "monsters": 0,
+      "equipment": 0,
+      "feats": 231
+    },
+    "mam3e": {
+      "spells": 111,
+      "classes": 0,
+      "species": 0,
+      "monsters": 0,
+      "equipment": 127,
+      "feats": 0
+    }
+  },
+  "loaderAudit": [
+    {
+      "systemId": "dnd-5e-2014",
+      "systemLabel": "D&D 5e (2014)",
+      "category": "spells",
+      "categoryLabel": "Spells/Powers",
+      "metrics": {
+        "rawCount": 238,
+        "uniqueCount": 238,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "SRD 5.1": 238
+        }
+      }
+    },
+    {
+      "systemId": "dnd-5e-2014",
+      "systemLabel": "D&D 5e (2014)",
+      "category": "classes",
+      "categoryLabel": "Classes",
+      "metrics": {
+        "rawCount": 12,
+        "uniqueCount": 12,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "SRD 5.1": 12
+        }
+      }
+    },
+    {
+      "systemId": "dnd-5e-2014",
+      "systemLabel": "D&D 5e (2014)",
+      "category": "species",
+      "categoryLabel": "Species/Races",
+      "metrics": {
+        "rawCount": 9,
+        "uniqueCount": 9,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "SRD 5.1": 9
+        }
+      }
+    },
+    {
+      "systemId": "dnd-5e-2014",
+      "systemLabel": "D&D 5e (2014)",
+      "category": "monsters",
+      "categoryLabel": "Monsters",
+      "metrics": {
+        "rawCount": 41,
+        "uniqueCount": 41,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "SRD": 41
+        }
+      }
+    },
+    {
+      "systemId": "dnd-5e-2014",
+      "systemLabel": "D&D 5e (2014)",
+      "category": "equipment",
+      "categoryLabel": "Equipment",
+      "metrics": {
+        "rawCount": 230,
+        "uniqueCount": 230,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "SRD 5.1": 230
+        }
+      }
+    },
+    {
+      "systemId": "dnd-5e-2024",
+      "systemLabel": "D&D 5e (2024)",
+      "category": "spells",
+      "categoryLabel": "Spells/Powers",
+      "metrics": {
+        "rawCount": 315,
+        "uniqueCount": 315,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "SRD 5.2": 315
+        }
+      }
+    },
+    {
+      "systemId": "dnd-5e-2024",
+      "systemLabel": "D&D 5e (2024)",
+      "category": "classes",
+      "categoryLabel": "Classes",
+      "metrics": {
+        "rawCount": 12,
+        "uniqueCount": 12,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "SRD 5.2": 12
+        }
+      }
+    },
+    {
+      "systemId": "dnd-5e-2024",
+      "systemLabel": "D&D 5e (2024)",
+      "category": "species",
+      "categoryLabel": "Species/Races",
+      "metrics": {
+        "rawCount": 9,
+        "uniqueCount": 9,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "SRD 5.2": 9
+        }
+      }
+    },
+    {
+      "systemId": "dnd-5e-2024",
+      "systemLabel": "D&D 5e (2024)",
+      "category": "monsters",
+      "categoryLabel": "Monsters",
+      "metrics": {
+        "rawCount": 99,
+        "uniqueCount": 99,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "SRD 5.2": 99
+        }
+      }
+    },
+    {
+      "systemId": "dnd-5e-2024",
+      "systemLabel": "D&D 5e (2024)",
+      "category": "equipment",
+      "categoryLabel": "Equipment",
+      "metrics": {
+        "rawCount": 204,
+        "uniqueCount": 204,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "SRD 5.2": 204
+        }
+      }
+    },
+    {
+      "systemId": "dnd-5e-2024",
+      "systemLabel": "D&D 5e (2024)",
+      "category": "feats",
+      "categoryLabel": "Feats",
+      "metrics": {
+        "rawCount": 87,
+        "uniqueCount": 87,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "SRD 5.2": 87
+        }
+      }
+    },
+    {
+      "systemId": "dnd-3.5e",
+      "systemLabel": "D&D 3.5e",
+      "category": "spells",
+      "categoryLabel": "Spells/Powers",
+      "metrics": {
+        "rawCount": 555,
+        "uniqueCount": 555,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "SRD 3.5": 555
+        }
+      }
+    },
+    {
+      "systemId": "dnd-3.5e",
+      "systemLabel": "D&D 3.5e",
+      "category": "classes",
+      "categoryLabel": "Classes",
+      "metrics": {
+        "rawCount": 11,
+        "uniqueCount": 11,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "PHB 3.5": 11
+        }
+      }
+    },
+    {
+      "systemId": "dnd-3.5e",
+      "systemLabel": "D&D 3.5e",
+      "category": "species",
+      "categoryLabel": "Species/Races",
+      "metrics": {
+        "rawCount": 7,
+        "uniqueCount": 7,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "PHB 3.5": 7
+        }
+      }
+    },
+    {
+      "systemId": "dnd-3.5e",
+      "systemLabel": "D&D 3.5e",
+      "category": "equipment",
+      "categoryLabel": "Equipment",
+      "metrics": {
+        "rawCount": 207,
+        "uniqueCount": 207,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "SRD 3.5": 207
+        }
+      }
+    },
+    {
+      "systemId": "dnd-3.5e",
+      "systemLabel": "D&D 3.5e",
+      "category": "feats",
+      "categoryLabel": "Feats",
+      "metrics": {
+        "rawCount": 515,
+        "uniqueCount": 515,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "PHB": 515
+        }
+      }
+    },
+    {
+      "systemId": "pf1e",
+      "systemLabel": "Pathfinder 1e",
+      "category": "spells",
+      "categoryLabel": "Spells/Powers",
+      "metrics": {
+        "rawCount": 134,
+        "uniqueCount": 134,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Core Rulebook": 134
+        }
+      }
+    },
+    {
+      "systemId": "pf1e",
+      "systemLabel": "Pathfinder 1e",
+      "category": "classes",
+      "categoryLabel": "Classes",
+      "metrics": {
+        "rawCount": 11,
+        "uniqueCount": 11,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Core Rulebook": 11
+        }
+      }
+    },
+    {
+      "systemId": "pf1e",
+      "systemLabel": "Pathfinder 1e",
+      "category": "species",
+      "categoryLabel": "Species/Races",
+      "metrics": {
+        "rawCount": 7,
+        "uniqueCount": 7,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Core Rulebook": 7
+        }
+      }
+    },
+    {
+      "systemId": "pf1e",
+      "systemLabel": "Pathfinder 1e",
+      "category": "equipment",
+      "categoryLabel": "Equipment",
+      "metrics": {
+        "rawCount": 70,
+        "uniqueCount": 70,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Core Rulebook": 70
+        }
+      }
+    },
+    {
+      "systemId": "pf1e",
+      "systemLabel": "Pathfinder 1e",
+      "category": "feats",
+      "categoryLabel": "Feats",
+      "metrics": {
+        "rawCount": 742,
+        "uniqueCount": 742,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "CRB": 742
+        }
+      }
+    },
+    {
+      "systemId": "pf2e",
+      "systemLabel": "Pathfinder 2e",
+      "category": "spells",
+      "categoryLabel": "Spells/Powers",
+      "metrics": {
+        "rawCount": 146,
+        "uniqueCount": 146,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Core Rulebook": 146
+        }
+      }
+    },
+    {
+      "systemId": "pf2e",
+      "systemLabel": "Pathfinder 2e",
+      "category": "classes",
+      "categoryLabel": "Classes",
+      "metrics": {
+        "rawCount": 12,
+        "uniqueCount": 12,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Core Rulebook": 12
+        }
+      }
+    },
+    {
+      "systemId": "pf2e",
+      "systemLabel": "Pathfinder 2e",
+      "category": "species",
+      "categoryLabel": "Species/Races",
+      "metrics": {
+        "rawCount": 6,
+        "uniqueCount": 6,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Core Rulebook": 6
+        }
+      }
+    },
+    {
+      "systemId": "pf2e",
+      "systemLabel": "Pathfinder 2e",
+      "category": "feats",
+      "categoryLabel": "Feats",
+      "metrics": {
+        "rawCount": 231,
+        "uniqueCount": 231,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "CRB": 135,
+          "Core Rulebook": 96
+        }
+      }
+    },
+    {
+      "systemId": "mam3e",
+      "systemLabel": "Mutants & Masterminds 3e",
+      "category": "spells",
+      "categoryLabel": "Spells/Powers",
+      "metrics": {
+        "rawCount": 111,
+        "uniqueCount": 111,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Hero's Handbook": 111
+        }
+      }
+    },
+    {
+      "systemId": "mam3e",
+      "systemLabel": "Mutants & Masterminds 3e",
+      "category": "equipment",
+      "categoryLabel": "Equipment",
+      "metrics": {
+        "rawCount": 127,
+        "uniqueCount": 127,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Hero's Handbook": 127
+        }
+      }
+    }
+  ],
+  "moduleAudit": [
+    {
+      "label": "M&M 3e powers exports",
+      "systemId": "mam3e",
+      "category": "powers",
+      "metrics": {
+        "rawCount": 444,
+        "uniqueCount": 111,
+        "duplicateCount": 333,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Hero's Handbook": 111
+        }
+      }
+    },
+    {
+      "label": "M&M 3e advantages exports",
+      "systemId": "mam3e",
+      "category": "advantages",
+      "metrics": {
+        "rawCount": 243,
+        "uniqueCount": 81,
+        "duplicateCount": 162,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Hero's Handbook": 81
+        }
+      }
+    },
+    {
+      "label": "M&M 3e archetypes exports",
+      "systemId": "mam3e",
+      "category": "archetypes",
+      "metrics": {
+        "rawCount": 30,
+        "uniqueCount": 15,
+        "duplicateCount": 15,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Hero's Handbook": 15
+        }
+      }
+    },
+    {
+      "label": "PF2e archetypes exports",
+      "systemId": "pf2e",
+      "category": "archetypes",
+      "metrics": {
+        "rawCount": 20,
+        "uniqueCount": 5,
+        "duplicateCount": 15,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Core Rulebook": 5
+        }
+      }
+    }
+  ]
+}

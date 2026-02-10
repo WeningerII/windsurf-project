@@ -1,0 +1,68 @@
+// Mutants & Masterminds 3e Fortune Advantages
+
+import { Advantage } from '../../../../types/mam/advantages';
+
+export const fortuneAdvantages: Advantage[] = [
+  {
+    id: 'beginners-luck',
+    name: "Beginner's Luck",
+    system: 'mam3e',
+    source: "Hero's Handbook",
+    type: 'fortune',
+    ranked: false,
+    description: 'Spend a hero point to gain temporary ranks in a skill.',
+    benefit: 'By spending a hero point, you gain an effective 5 ranks in one skill of your choice until the end of the scene. If you already have ranks in that skill, you gain +5 to your existing rank.',
+  },
+  {
+    id: 'inspire',
+    name: 'Inspire',
+    system: 'mam3e',
+    source: "Hero's Handbook",
+    type: 'fortune',
+    ranked: true,
+    maxRanks: 5,
+    description: 'Spend a hero point to grant allies a bonus.',
+    benefit: 'You can spend a hero point to grant allies within hearing distance a +1 circumstance bonus per rank on a single check of a particular type.',
+  },
+  {
+    id: 'leadership',
+    name: 'Leadership',
+    system: 'mam3e',
+    source: "Hero's Handbook",
+    type: 'fortune',
+    ranked: false,
+    description: 'Spend a hero point to remove a condition from an ally.',
+    benefit: 'You can spend a hero point to remove one of the following conditions from an ally: dazed, fatigued, or stunned.',
+  },
+  {
+    id: 'luck',
+    name: 'Luck',
+    system: 'mam3e',
+    source: "Hero's Handbook",
+    type: 'fortune',
+    ranked: true,
+    maxRanks: 10,
+    description: 'Gain additional hero points.',
+    benefit: 'You have additional hero points at the start of each game session equal to your rank in this advantage. These points are subject to the normal cap of hero points.',
+  },
+  {
+    id: 'seize-initiative',
+    name: 'Seize Initiative',
+    system: 'mam3e',
+    source: "Hero's Handbook",
+    type: 'fortune',
+    ranked: false,
+    description: 'Spend a hero point to go first.',
+    benefit: 'You can spend a hero point to automatically go first in the initiative order. You may only do this at the start of combat before any actions have been taken.',
+  },
+  {
+    id: 'ultimate-effort',
+    name: 'Ultimate Effort',
+    system: 'mam3e',
+    source: "Hero's Handbook",
+    type: 'fortune',
+    ranked: false,
+    description: 'Spend a hero point to treat a roll as 20.',
+    benefit: 'You can spend a hero point on a specific check and treat your d20 roll as a 20. Choose the check when you acquire this advantage (e.g., Ultimate Aim, Ultimate Toughness).',
+  },
+];

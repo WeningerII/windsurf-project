@@ -1,0 +1,32 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": [
+    "./src/utils/dataLoader.ts",
+    "./src/utils/browserCompat.ts",
+    "./src/utils/inputValidation.ts",
+    "./src/types/core/character.ts",
+    "./src/types/magic/spells.ts",
+    "./src/types/mam/powers.ts"
+  ],
+  "entryPointStrategy": "expand",
+  "out": "docs/api",
+  "name": "RPG Character Sheet API",
+  "includeVersion": true,
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeExternals": true,
+  "readme": "none",
+  "navigation": {
+    "includeCategories": true,
+    "includeGroups": true
+  },
+  "categorizeByGroup": true,
+  "sort": ["kind", "alphabetical"],
+  "kindSortOrder": [
+    "Function",
+    "Interface",
+    "TypeAlias",
+    "Variable",
+    "Class"
+  ]
+}
