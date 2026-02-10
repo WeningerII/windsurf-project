@@ -7,13 +7,13 @@
 
 ## 🎯 Project Status
 
-- ✅ **D&D 5e-2024**: SRD Subset - 315 spells, 91 feats, 99 monsters, 147 equipment items
-- ✅ **D&D 5e-2014**: SRD Subset - 238 spells, 213 equipment items, all core classes
-- ✅ **Pathfinder 2e**: Core Complete - 146 spells, 231 feats, 5 archetypes, 12 classes
+- ✅ **D&D 5e-2024**: SRD Subset - 315 spells, 87 feats, 99 monsters, 204 equipment items
+- ✅ **D&D 5e-2014**: SRD Subset - 238 spells, 230 equipment items, all core classes
+- ✅ **Pathfinder 2e**: Core Complete - 146 spells, 231 feats, 188 equipment, 5 archetypes, 12 classes
 - ✅ **D&D 3.5e**: Core Implementation - 555 spells (SRD), 515 feats, 11 classes
 - ✅ **Pathfinder 1e**: Core Complete - 134 spells, 742 feats, 11 classes
-- ✅ **Mutants & Masterminds 3e**: Core Complete - 111 powers, 108 advantages
-- ✅ **Tests**: 3174/3174 Passing
+- ✅ **Mutants & Masterminds 3e**: Core Complete - 111 powers, 81 advantages, 127 equipment
+- ✅ **Tests**: 3190/3190 Passing
 - ✅ **Build**: Passing (0 errors, 4 warnings)
 - ✅ **Type Safety**: Strict TypeScript
 - ✅ **SRD Compliance**: Strict - no proprietary content

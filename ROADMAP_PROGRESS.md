@@ -3,7 +3,7 @@
 ## Computed Metrics Snapshot
 
 <!-- BEGIN:COMPUTED_ROADMAP_METRICS -->
-_Generated: 2026-02-10T16:47:58.300Z_
+_Generated: 2026-02-10T17:41:20.417Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Authoritative)
@@ -13,7 +13,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | D&D 5e (2024) | 315 | 12 | 9 | 99 | 204 | 87 |
 | D&D 3.5e | 555 | 11 | 7 | 0 | 207 | 515 |
 | Pathfinder 1e | 134 | 11 | 7 | 0 | 70 | 742 |
-| Pathfinder 2e | 146 | 12 | 6 | 0 | 0 | 231 |
+| Pathfinder 2e | 146 | 12 | 6 | 0 | 188 | 231 |
 | Mutants & Masterminds 3e | 111 | 0 | 0 | 0 | 127 | 0 |
 
 ### Loader Compliance Audit
@@ -43,6 +43,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | Pathfinder 2e | Spells/Powers | 146 | 0 | 0 | 0 |
 | Pathfinder 2e | Classes | 12 | 0 | 0 | 0 |
 | Pathfinder 2e | Species/Races | 6 | 0 | 0 | 0 |
+| Pathfinder 2e | Equipment | 188 | 0 | 0 | 0 |
 | Pathfinder 2e | Feats | 231 | 0 | 0 | 0 |
 | Mutants & Masterminds 3e | Spells/Powers | 111 | 0 | 0 | 0 |
 | Mutants & Masterminds 3e | Equipment | 127 | 0 | 0 | 0 |
@@ -195,7 +196,7 @@ The application is production-ready with comprehensive monitoring, optimization,
 **Verification:**
 - ✅ TypeScript: 0 errors
 - ✅ Build: Success (1646 modules, 4.05s)
-- ✅ Tests: 3281/3281 passing
+- ✅ Tests: 3190/3190 passing
 - ✅ ESLint: 0 errors, 16 warnings
 - ✅ Bundle: 2.0MB (stable)
 
@@ -285,8 +286,8 @@ The application is production-ready with comprehensive monitoring, optimization,
 - Artifacts uploaded in CI: `coverage/`, `playwright-report/`, and `test-results/`.
 - Coverage gate now runs with `npm run test:coverage -- --run --maxWorkers=1` for deterministic execution in CI.
 
-**Current Coverage Snapshot (February 7, 2026, Node 20):**
-- Global: 96.06% lines, 95.90% functions, 95.73% statements, 84.17% branches.
+**Current Coverage Snapshot (February 10, 2026, Node 20):**
+- Global: 92.30% lines, 90.40% functions, 91.77% statements, 80.62% branches.
 - Hard gate: 80/80/80/80 (lines/functions/branches/statements).
 
 **Remaining Work:** CI confirmation
@@ -417,14 +418,14 @@ Modules: 1648
 |--------|--------|-------|-------------|
 | **Build Errors** | 1 | 0 | ✅ 100% |
 | **ESLint Errors** | 0 | 0 | ✅ Stable |
-| **ESLint Warnings** | 16 | 15 | ✅ 6.25% |
+| **ESLint Warnings** | 16 | 4 | ✅ 75% |
 | **Console Logs** | 9 | 0 | ✅ 100% |
 | **Test Coverage** | Unknown | Infrastructure ready | ✅ Foundation |
 | **Bundle (gzip)** | Unknown | 83 KB initial | ✅ Optimized |
 
 ### Production Readiness
 - ✅ **Zero build errors**
-- ✅ **All tests passing** (3281+)
+- ✅ **All tests passing** (3190+)
 - ✅ **Clean production code**
 - ✅ **Performance monitored**
 - ✅ **Bundle optimized**
@@ -439,8 +440,8 @@ Modules: 1648
 **Verification Commands:**
 ```bash
 npm run build    # ✅ Success (15.02s)
-npm test         # ✅ 3281+ tests passing
-npm run lint     # ✅ 0 errors, 15 warnings
+npm test         # ✅ 3190+ tests passing
+npm run lint     # ✅ 0 errors, 4 warnings
 open dist/stats.html  # ✅ Bundle analysis
 ```
 

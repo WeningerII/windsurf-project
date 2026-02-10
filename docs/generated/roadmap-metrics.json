@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-10T16:47:58.300Z",
+  "generatedAt": "2026-02-10T17:41:20.417Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -86,7 +86,7 @@
       "classes": 12,
       "species": 6,
       "monsters": 0,
-      "equipment": 0,
+      "equipment": 188,
       "feats": 231
     },
     "mam3e": {
@@ -480,6 +480,22 @@
         "nonCompliantCount": 0,
         "sourceCounts": {
           "Core Rulebook": 6
+        }
+      }
+    },
+    {
+      "systemId": "pf2e",
+      "systemLabel": "Pathfinder 2e",
+      "category": "equipment",
+      "categoryLabel": "Equipment",
+      "metrics": {
+        "rawCount": 188,
+        "uniqueCount": 188,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Core Rulebook": 188
         }
       }
     },

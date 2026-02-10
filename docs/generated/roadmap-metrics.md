@@ -1,4 +1,4 @@
-_Generated: 2026-02-10T16:47:58.300Z_
+_Generated: 2026-02-10T17:41:20.417Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Authoritative)
@@ -8,7 +8,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | D&D 5e (2024) | 315 | 12 | 9 | 99 | 204 | 87 |
 | D&D 3.5e | 555 | 11 | 7 | 0 | 207 | 515 |
 | Pathfinder 1e | 134 | 11 | 7 | 0 | 70 | 742 |
-| Pathfinder 2e | 146 | 12 | 6 | 0 | 0 | 231 |
+| Pathfinder 2e | 146 | 12 | 6 | 0 | 188 | 231 |
 | Mutants & Masterminds 3e | 111 | 0 | 0 | 0 | 127 | 0 |
 
 ### Loader Compliance Audit
@@ -38,6 +38,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | Pathfinder 2e | Spells/Powers | 146 | 0 | 0 | 0 |
 | Pathfinder 2e | Classes | 12 | 0 | 0 | 0 |
 | Pathfinder 2e | Species/Races | 6 | 0 | 0 | 0 |
+| Pathfinder 2e | Equipment | 188 | 0 | 0 | 0 |
 | Pathfinder 2e | Feats | 231 | 0 | 0 | 0 |
 | Mutants & Masterminds 3e | Spells/Powers | 111 | 0 | 0 | 0 |
 | Mutants & Masterminds 3e | Equipment | 127 | 0 | 0 | 0 |

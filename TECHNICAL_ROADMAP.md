@@ -3,7 +3,7 @@
 ## Computed Metrics Snapshot
 
 <!-- BEGIN:COMPUTED_ROADMAP_METRICS -->
-_Generated: 2026-02-10T16:47:58.300Z_
+_Generated: 2026-02-10T17:41:20.417Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Authoritative)
@@ -13,7 +13,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | D&D 5e (2024) | 315 | 12 | 9 | 99 | 204 | 87 |
 | D&D 3.5e | 555 | 11 | 7 | 0 | 207 | 515 |
 | Pathfinder 1e | 134 | 11 | 7 | 0 | 70 | 742 |
-| Pathfinder 2e | 146 | 12 | 6 | 0 | 0 | 231 |
+| Pathfinder 2e | 146 | 12 | 6 | 0 | 188 | 231 |
 | Mutants & Masterminds 3e | 111 | 0 | 0 | 0 | 127 | 0 |
 
 ### Loader Compliance Audit
@@ -43,6 +43,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | Pathfinder 2e | Spells/Powers | 146 | 0 | 0 | 0 |
 | Pathfinder 2e | Classes | 12 | 0 | 0 | 0 |
 | Pathfinder 2e | Species/Races | 6 | 0 | 0 | 0 |
+| Pathfinder 2e | Equipment | 188 | 0 | 0 | 0 |
 | Pathfinder 2e | Feats | 231 | 0 | 0 | 0 |
 | Mutants & Masterminds 3e | Spells/Powers | 111 | 0 | 0 | 0 |
 | Mutants & Masterminds 3e | Equipment | 127 | 0 | 0 | 0 |
@@ -503,7 +504,7 @@ describe('Character Management', () => {
 ### 3.4 E2E Testing Setup (Optional)
 **Technology:** Playwright
 
-Status update (February 7, 2026): Playwright is installed (`@playwright/test`), configuration is in `playwright.config.ts`, and `e2e/phase3-workflows.spec.ts` provides 5 passing Chromium scenarios via `npm run test:e2e`. CI now runs `npm run test:e2e` and uploads `playwright-report/` plus `test-results/` artifacts. Coverage now runs as an enforced CI gate via `npm run test:coverage -- --run --maxWorkers=1` with thresholds set to 80/80/80/80 (lines/functions/branches/statements). Local Node 20 baseline: 96.06% lines, 95.90% functions, 95.73% statements, 84.17% branches.
+Status update (February 7, 2026): Playwright is installed (`@playwright/test`), configuration is in `playwright.config.ts`, and `e2e/phase3-workflows.spec.ts` provides 5 passing Chromium scenarios via `npm run test:e2e`. CI now runs `npm run test:e2e` and uploads `playwright-report/` plus `test-results/` artifacts. Coverage now runs as an enforced CI gate via `npm run test:coverage -- --run --maxWorkers=1` with thresholds set to 80/80/80/80 (lines/functions/branches/statements). Local Node 20 baseline: 92.30% lines, 90.40% functions, 91.77% statements, 80.62% branches.
 
 **Setup:**
 ```bash
@@ -851,7 +852,7 @@ npm run test:coverage
 **Success Criteria:**
 - ✅ Coverage reports in CI/CD
 - ✅ Coverage badge in README (Codecov + CI status badges added Feb 7)
-- ✅ 80%+ coverage maintained (current: 96.06% lines)
+- ✅ 80%+ coverage maintained (current: 92.30% lines)
 
 **Assignee:** DevOps Engineer  
 **Estimated Time:** 1 day  
@@ -950,7 +951,7 @@ Status update (February 7, 2026): `DEVELOPER_ONBOARDING.md` created with Day 1 �
 - [ ] Prettier check passes
 
 ### Phase 3 Success Criteria
-- [x] 80%+ component test coverage (current lines: 97.06%)
+- [x] 80%+ component test coverage (current lines: 92.30%)
 - [x] 10+ integration tests
 - [x] E2E testing framework ready
 - [x] Coverage gate enforced in CI/CD (80/80/80/80)
