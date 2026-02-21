@@ -199,24 +199,11 @@ export const run: FeatDefinition = {
   benefits: ['When running, you move five times your normal speed instead of four times', '+4 bonus on Acrobatics checks made to jump'],
 };
 
-export const shieldBash: FeatDefinition = {
-  id: 'shield-bash-pf1e', name: 'Shield Bash', system: 'pf1e', source: 'CRB',
-  prerequisites: [{ type: 'other', description: 'Shield Proficiency' }],
-  description: 'You can bash with a shield while retaining its shield bonus to your AC.',
-  benefits: ['When you perform a shield bash, you may still apply the shield\'s shield bonus to your AC'],
-};
-
 export const shieldFocus: FeatDefinition = {
   id: 'shield-focus-pf1e', name: 'Shield Focus', system: 'pf1e', source: 'CRB',
   prerequisites: [{ type: 'other', description: 'Shield Proficiency, base attack bonus +1' }],
   description: 'You are skilled at deflecting blows with your shield.',
   benefits: ['Increase the AC bonus granted by any shield you are using by 1'],
-};
-
-export const sneakAttack: FeatDefinition = {
-  id: 'sneak-attack-pf1e', name: 'Sneak Attack', system: 'pf1e', source: 'CRB',
-  description: 'You can strike your foes\' vital areas.',
-  benefits: ['If you can catch an opponent when unable to defend effectively, you can strike a vital spot for extra damage'],
 };
 
 export const stepUp: FeatDefinition = {
@@ -342,7 +329,7 @@ export const combatFeats: FeatDefinition[] = [
   endurance, greatCleave, greatFortitude, improvedCritical, improvedInitiative,
   improvedUnarmedStrike, intimidatingProwess, ironWill, lightningReflexes, mobility,
   mountedCombat, pointBlankShot, powerAttack, preciseShot, quickDraw, rapidShot, run,
-  shieldBash, shieldFocus, sneakAttack, stepUp, stunningFist, toughness, twoWeaponFighting,
+  shieldFocus, stepUp, stunningFist, toughness, twoWeaponFighting,
   vitalStrike, weaponFinesse, weaponFocus, weaponSpecialization, whirlwindAttack,
   improvedDisarm, improvedGrapple, improvedTrip, improvedTwoWeaponFighting,
   greaterTwoWeaponFighting, improvedShieldBash, springAttack, manyshot,

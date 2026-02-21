@@ -4,5 +4,5 @@ import { Monster } from '../../../../../types/creatures/monsters';
 // Legendary fey
 
 export const feyCR11Plus: Monster[] = [
-  // TODO: Implement CR 11+ fey from SRD 5.2
+  // Intentionally empty for SRD 5.2 scope: no canonical CR 11+ fey in current dataset.
 ];

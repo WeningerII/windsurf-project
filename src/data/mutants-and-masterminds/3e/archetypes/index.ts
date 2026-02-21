@@ -36,20 +36,5 @@ export const mm3eArchetypes = {
   weaponMaster: weaponMasterArchetype,
 };
 
-export {
-  battlesuitArchetype,
-  constructArchetype,
-  crimeFighterArchetype,
-  energyControllerArchetype,
-  gadgeteerArchetype,
-  martialArtistArchetype,
-  mimicArchetype,
-  mysticArchetype,
-  paragonArchetype,
-  powerhouseArchetype,
-  psychicArchetype,
-  shapeshifterArchetype,
-  speedsterArchetype,
-  warriorArchetype,
-  weaponMasterArchetype,
-};
+// Individual archetypes available via mm3eArchetypes object above
+// Import directly from individual files if needed (e.g., import { battlesuitArchetype } from './battlesuit')

@@ -1,83 +1,89 @@
 # Data Export / Import Format
 
-**Last Updated**: February 7, 2026
+**Last Updated**: February 18, 2026
 
-This document specifies the JSON format used when exporting and importing character data. The same envelope format is used for both localStorage persistence and file-based export/import.
+This document specifies the canonical **V2** storage and export/import format.
 
 ---
 
-## Storage Implementation
+## Canonical Storage Implementation
 
-**Source file:** `src/utils/storage.ts`
+Primary implementation:
+
+```text
+src/utils/documentStorage.ts
+```
+
+Key functions:
 
 | Function | Purpose |
 |----------|---------|
-| `saveCharacters(characters)` | Persist to localStorage |
-| `loadCharacters()` | Load from localStorage |
-| `exportCharacters(characters)` | Serialize to pretty-printed JSON string |
-| `importCharacters(jsonString)` | Parse JSON string → `Character[]` |
-| `clearAllData()` | Remove all character data from localStorage |
-| `getStorageSize()` | Return byte size of stored data |
+| `saveDocuments(documents)` | Persist V2 docs to localStorage |
+| `loadDocuments()` | Load V2 docs from localStorage |
+| `exportDocuments(documents)` | Serialize V2 envelope JSON |
+| `importDocuments(jsonString)` | Parse V2 envelope JSON |
+| `clearDocumentStorage()` | Clear V2 localStorage key |
+
+Legacy compatibility (migration path only):
+
+```text
+src/utils/storage.ts
+```
 
 ---
 
-## localStorage Key
+## localStorage Keys
 
+Canonical key:
+
+```text
+rpg-documents-v2
 ```
+
+Legacy key (read for migration only):
+
+```text
 rpg-characters
 ```
 
-Single key. All characters are stored together in one versioned envelope.
-
 ---
 
-## Envelope Schema
-
-Every persisted or exported payload uses this envelope:
+## V2 Envelope Schema
 
 ```json
 {
-  "version": "1.0",
-  "characters": [ /* Character objects */ ],
-  "lastModified": "2026-02-07T21:15:00.000Z"
+  "version": "2.0",
+  "documents": [ /* CharacterDocument<SystemDataModel>[] */ ],
+  "lastModified": "2026-02-18T18:00:00.000Z"
 }
 ```
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `version` | `string` | Schema version. Currently `"1.0"`. Used for future migration detection. |
-| `characters` | `Character[]` | Array of character objects (see `character-schema.md`). |
-| `lastModified` | `string` | ISO 8601 timestamp of when the payload was last written. |
+| `version` | `string` | Schema version (`"2.0"` for V2 document storage). |
+| `documents` | `CharacterDocument[]` | Array of V2 character documents. |
+| `lastModified` | `string` | ISO 8601 timestamp of last write. |
 
 ---
 
 ## Date Serialization
 
-`createdAt` and `updatedAt` on each character are stored as ISO 8601 strings in JSON. On load/import, they are hydrated back to `Date` objects:
-
-```typescript
-createdAt: new Date(char.createdAt),
-updatedAt: new Date(char.updatedAt),
-```
+`createdAt` and `updatedAt` are serialized as ISO strings and hydrated back to `Date` objects by `loadDocuments()` / `importDocuments()`.
 
 ---
 
-## Version Migration
+## Import Behavior in App Flow
 
-When loading data, if `version` does not match the current `STORAGE_VERSION` (`"1.0"`), a warning is logged in development mode. Currently no migration logic exists—future breaking schema changes should add migration handlers in `loadCharacters()`.
+When importing through the UI:
 
----
+1. File is parsed via `importDocuments(jsonString)`.
+2. Each imported document is normalized with:
+   - New UUID
+   - New `createdAt`
+   - New `updatedAt`
+3. Normalized docs are appended to current documents.
 
-## Import Behavior
-
-When a user imports characters from a file:
-
-1. The JSON is parsed and validated (must have a `characters` array).
-2. Each character receives a **new UUID** via `generateUUID()` to prevent ID conflicts.
-3. `createdAt` and `updatedAt` are reset to the current time.
-4. Characters are appended to the existing list (not replaced).
-
-This means imported characters are always treated as new entries.
+This prevents ID collisions and ensures imported entries are treated as new local records.
 
 ---
 
@@ -85,91 +91,19 @@ This means imported characters are always treated as new entries.
 
 | Scenario | Behavior |
 |----------|----------|
-| localStorage full | `saveCharacters` throws `"Failed to save character data. Storage may be full."` |
-| Malformed JSON in localStorage | `loadCharacters` returns `[]`, logs error in dev mode |
-| Invalid import file | `importCharacters` throws `"Failed to import characters. Invalid JSON format."` |
-| Missing `characters` array | `importCharacters` throws `"Failed to import characters. Invalid JSON format."` |
+| localStorage failure on save | Throws `"Failed to save document data. Storage may be full."` |
+| malformed V2 JSON | `importDocuments` throws invalid JSON format error |
+| malformed stored V2 data | `loadDocuments()` attempts legacy fallback (`rpg-characters`), otherwise returns `[]` |
 
 ---
 
-## Example Export File
+## Legacy Migration Note
 
-```json
-{
-  "version": "1.0",
-  "characters": [
-    {
-      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-      "name": "Gandalf",
-      "system": "dnd-5e-2014",
-      "level": 20,
-      "experiencePoints": 355000,
-      "speciesId": "human",
-      "classLevels": [
-        {
-          "classId": "wizard",
-          "subclassId": "school-of-evocation",
-          "level": 20,
-          "hitDieRolls": [6, 4, 5, 3, 6, 4, 5, 3, 6, 4, 5, 3, 6, 4, 5, 3, 6, 4, 5, 3]
-        }
-      ],
-      "baseAttributes": {
-        "STR": 10,
-        "DEX": 14,
-        "CON": 12,
-        "INT": 20,
-        "WIS": 16,
-        "CHA": 14
-      },
-      "skillProficiencies": {
-        "arcana": { "level": "expertise", "source": ["Wizard"] },
-        "history": { "level": "proficient", "source": ["Wizard"] }
-      },
-      "hitPoints": { "current": 102, "max": 102, "temp": 0 },
-      "hitDice": [{ "die": "d6", "total": 20, "remaining": 20 }],
-      "armorClass": 15,
-      "initiative": 2,
-      "speed": 30,
-      "armorProficiencies": [],
-      "weaponProficiencies": ["dagger", "dart", "sling", "quarterstaff", "light-crossbow"],
-      "toolProficiencies": [],
-      "languageProficiencies": ["common", "elvish", "dwarvish"],
-      "savingThrowProficiencies": ["INT", "WIS"],
-      "features": [],
-      "feats": [],
-      "spellcasting": {
-        "classes": [{ "classId": "wizard", "ability": "INT", "spellcastingLevel": 20 }],
-        "spellsKnown": ["fireball", "shield", "magic-missile"],
-        "spellsPrepared": ["fireball", "shield"],
-        "spellSlots": {
-          "1": { "max": 4, "used": 0 },
-          "2": { "max": 3, "used": 0 },
-          "3": { "max": 3, "used": 0 },
-          "4": { "max": 3, "used": 0 },
-          "5": { "max": 3, "used": 0 },
-          "6": { "max": 2, "used": 0 },
-          "7": { "max": 2, "used": 0 },
-          "8": { "max": 1, "used": 0 },
-          "9": { "max": 1, "used": 0 }
-        }
-      },
-      "equipment": [],
-      "inventory": [],
-      "currency": { "copper": 0, "silver": 0, "electrum": 0, "gold": 500, "platinum": 0 },
-      "notes": "The Grey Wanderer",
-      "createdAt": "2026-02-07T12:00:00.000Z",
-      "updatedAt": "2026-02-07T15:30:00.000Z"
-    }
-  ],
-  "lastModified": "2026-02-07T15:30:00.000Z"
-}
-```
+`loadDocuments()` in `src/utils/documentStorage.ts` owns migration behavior:
 
----
+1. If valid V2 (`rpg-documents-v2`) exists, it is returned as canonical.
+2. If V2 is missing/invalid, legacy `rpg-characters` is loaded via `src/utils/storage.ts`.
+3. Legacy records are converted via `src/utils/migrateLegacy.ts`, persisted to V2, and returned.
+4. Malformed legacy payloads fail safely to an empty list.
 
-## Storage Limits
-
-- **localStorage quota**: Typically 5-10 MB per origin (browser-dependent).
-- **Practical limit**: ~50 characters before performance may degrade.
-- Use `getStorageSize()` to check current usage in bytes.
-- The Data Management screen in the UI exposes current storage usage.
+`App.tsx` no longer contains migration logic.

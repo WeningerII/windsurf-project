@@ -1,17 +1,16 @@
 // Pathfinder 2e Archetypes - Master Index (Strict Core Rulebook only)
-// Non-core archetype implementations are intentionally not exported here.
+// Single-source architecture: all archetypes combined from individual files
 
 import { Archetype } from '../../../../types/character-options/archetypes';
 
-// Legacy single archetypes (keeping for backwards compatibility)
 import { championArchetype } from './champion-archetype';
 import { clericArchetype } from './cleric-archetype';
 import { rangerArchetype } from './ranger-archetype';
 import { rogueArchetype } from './rogue-archetype';
 import { wizardArchetype } from './wizard-archetype';
 
-// Strict Core Rulebook exports only
-const coreRulebookArchetypes: Archetype[] = [
+// All archetypes combined (single source of truth)
+export const allPf2eArchetypes: Archetype[] = [
   championArchetype,
   clericArchetype,
   rangerArchetype,
@@ -19,36 +18,7 @@ const coreRulebookArchetypes: Archetype[] = [
   wizardArchetype,
 ];
 
-// Backward-compatibility placeholders for removed non-core datasets.
-// These remain exported as empty arrays so existing imports do not break.
-export const coreMulticlassDedications: Archetype[] = [];
-export const expandedMulticlassDedications: Archetype[] = [];
-export const popularArchetypes: Archetype[] = [];
-
-export const pf2eArchetypes = {
-  // Legacy individual exports
-  champion: championArchetype,
-  cleric: clericArchetype,
-  ranger: rangerArchetype,
-  rogue: rogueArchetype,
-  wizard: wizardArchetype,
-  // Core-only archetypes by ID
-  ...Object.fromEntries(coreRulebookArchetypes.map(a => [a.id, a])),
-};
-
-export const getArchetype = (id: string) => {
-  return pf2eArchetypes[id as keyof typeof pf2eArchetypes];
-};
-
-// Export individual archetype collections
-export {
-  // Legacy exports
-  championArchetype,
-  clericArchetype,
-  rangerArchetype,
-  rogueArchetype,
-  wizardArchetype,
-};
-
-// Export combined array for easy iteration
-export const allPf2eArchetypes = coreRulebookArchetypes;
+// Archetypes indexed by id for quick lookup
+export const pf2eArchetypes: Record<string, Archetype> = Object.fromEntries(
+  allPf2eArchetypes.map(a => [a.id, a])
+);

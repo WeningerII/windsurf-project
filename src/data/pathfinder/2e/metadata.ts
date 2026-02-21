@@ -9,7 +9,6 @@ import { generalFeats } from './feats/general';
 import { skillFeats } from './feats/skill';
 import { ancestryFeats } from './feats/ancestry';
 import { classFeats } from './feats/class';
-import { magicFeats } from './feats/magic-feats';
 import { pf2eWeapons } from './equipment/weapons';
 import { pf2eArmor } from './equipment/armor';
 import { pf2eMagicItems } from './equipment/magic-items';
@@ -39,13 +38,12 @@ export const pf2eMetadata = {
     },
     
     feats: {
-      count: generalFeats.length + skillFeats.length + ancestryFeats.length + classFeats.length + magicFeats.length,
+      count: generalFeats.length + skillFeats.length + ancestryFeats.length + classFeats.length,
       byType: {
         ancestry: ancestryFeats.length,
         class: classFeats.length,
         general: generalFeats.length,
         skill: skillFeats.length,
-        magic: magicFeats.length,
       },
     },
     

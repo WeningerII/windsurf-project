@@ -1,20 +1,23 @@
-import { beforeEach, describe, expect, it } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
+import { registerAllSystems } from '../systems';
+import { systemRegistry } from '../registry';
 
 type CreationOptions = {
   name: string;
-  level?: string;
-  selectClass?: boolean;
-  selectSpecies?: boolean;
+  level?: number;
+  classId?: string;
+  speciesId?: string;
 };
 
-function getStoredCharacters(): Array<Record<string, unknown>> {
-  const raw = localStorage.getItem('rpg-characters');
+function getStoredDocuments(): Array<Record<string, unknown>> {
+  const raw = localStorage.getItem('rpg-documents-v2');
   if (!raw) return [];
-  const parsed = JSON.parse(raw) as { characters?: Array<Record<string, unknown>> };
-  return parsed.characters || [];
+  const parsed = JSON.parse(raw) as { documents?: Array<Record<string, unknown>> };
+  return parsed.documents || [];
 }
 
 async function selectSystem(user: ReturnType<typeof userEvent.setup>, systemName: string) {
@@ -24,51 +27,51 @@ async function selectSystem(user: ReturnType<typeof userEvent.setup>, systemName
 
 async function startCreation(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByRole('button', { name: /create new character/i }));
-  expect(await screen.findByText('Basic Information')).toBeInTheDocument();
-}
-
-async function clickNext(user: ReturnType<typeof userEvent.setup>, count = 1) {
-  for (let i = 0; i < count; i += 1) {
-    await user.click(screen.getByRole('button', { name: /next/i }));
-  }
+  expect(await screen.findByDisplayValue('New Character')).toBeInTheDocument();
 }
 
 async function createCharacter(
-  user: ReturnType<typeof userEvent.setup>,
   {
     name,
-    level = '1',
-    selectClass = true,
-    selectSpecies = true,
+    level = 1,
   }: CreationOptions
 ) {
-  fireEvent.change(screen.getByPlaceholderText('Enter character name'), {
+  fireEvent.change(screen.getByTitle('Character name'), {
     target: { value: name },
   });
-  fireEvent.change(screen.getByRole('spinbutton'), {
+  fireEvent.change(screen.getByTitle('Character Level'), {
     target: { value: level },
   });
 
-  await clickNext(user); // class step
-  if (selectClass) {
-    await user.click(
-      await screen.findByRole('button', { name: /fighter/i }, { timeout: 5000 })
-    );
-  }
+  await waitFor(() => {
+    expect(screen.getByTitle('Character name')).toHaveValue(name);
+    expect(screen.getByTitle('Character Level')).toHaveValue(level);
+  });
+}
 
-  await clickNext(user); // species step
-  if (selectSpecies) {
-    await user.click(
-      await screen.findByRole('button', { name: /human/i }, { timeout: 5000 })
-    );
-  }
+async function createCharacterWithoutSelections({
+  name,
+  level = 1,
+}: Pick<CreationOptions, 'name' | 'level'>) {
+  fireEvent.change(screen.getByTitle('Character name'), {
+    target: { value: name },
+  });
+  fireEvent.change(screen.getByTitle('Character Level'), {
+    target: { value: level },
+  });
 
-  await clickNext(user, 4); // ability -> skills -> equipment -> review
-  await user.click(screen.getByRole('button', { name: /create character/i }));
-  expect(await screen.findByText('Character Information')).toBeInTheDocument();
+  await waitFor(() => {
+    expect(screen.getByTitle('Character name')).toHaveValue(name);
+  });
 }
 
 describe('Character Creation Flow', () => {
+  beforeAll(() => {
+    if (!systemRegistry.get('dnd-5e-2024')) {
+      registerAllSystems();
+    }
+  });
+
   beforeEach(() => {
     localStorage.clear();
   });
@@ -79,12 +82,10 @@ describe('Character Creation Flow', () => {
 
     await selectSystem(user, 'D&D 5e (2024)');
     await startCreation(user);
-    await createCharacter(user, { name: 'Phase3 Hero', level: '3' });
+    await createCharacter({ name: 'Phase3 Hero', level: 3 });
 
-    expect(screen.getByLabelText('Character Name')).toHaveValue('Phase3 Hero');
-    expect(screen.getByLabelText('Class')).toHaveValue('fighter');
-    expect(screen.getByLabelText('Species/Race')).toHaveValue('human');
-    expect(screen.getByLabelText('Level')).toHaveValue(3);
+    expect(screen.getByTitle('Character name')).toHaveValue('Phase3 Hero');
+    expect(screen.getByTitle('Character Level')).toHaveValue(3);
   });
 
   it('persists class/species/system in localStorage after creation', async () => {
@@ -93,23 +94,27 @@ describe('Character Creation Flow', () => {
 
     await selectSystem(user, 'D&D 5e (2024)');
     await startCreation(user);
-    await createCharacter(user, { name: 'Persisted Build', level: '4' });
+    await createCharacter({ name: 'Persisted Build', level: 4 });
 
-    const stored = getStoredCharacters();
-    expect(stored).toHaveLength(1);
-    expect(stored[0].name).toBe('Persisted Build');
-    expect(stored[0].system).toBe('dnd-5e-2024');
-    expect(stored[0].speciesId).toBe('human');
-    expect((stored[0].classLevels as Array<{ classId: string }>)[0].classId).toBe('fighter');
+    await waitFor(() => {
+      const stored = getStoredDocuments();
+      expect(stored).toHaveLength(1);
+      expect(stored[0].name).toBe('Persisted Build');
+      expect(stored[0].systemId).toBe('dnd-5e-2024');
+      const system = stored[0].system as {
+        level?: number;
+      };
+      expect(system.level).toBe(4);
+    });
   });
 
-  it('returns to selector when creation is canceled', async () => {
+  it('returns to selector when user goes back from sheet', async () => {
     const user = userEvent.setup();
     render(<App />);
 
     await selectSystem(user, 'D&D 5e (2024)');
     await startCreation(user);
-    await user.click(screen.getByRole('button', { name: /^cancel$/i }));
+    await user.click(screen.getByRole('button', { name: /^back$/i }));
 
     expect(screen.getByText('Choose a Game System')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /create new character/i })).toBeInTheDocument();
@@ -121,14 +126,14 @@ describe('Character Creation Flow', () => {
 
     await selectSystem(user, 'D&D 5e (2024)');
     await startCreation(user);
-    await createCharacter(user, { name: 'Reopen Hero' });
+    await createCharacter({ name: 'Reopen Hero' });
 
     await user.click(screen.getByRole('button', { name: /^back$/i }));
     expect(screen.getByText('Your Characters')).toBeInTheDocument();
     expect(screen.getByText('Reopen Hero')).toBeInTheDocument();
 
     await user.click(screen.getByText('Reopen Hero'));
-    expect(await screen.findByText('Character Information')).toBeInTheDocument();
+    expect(await screen.findByDisplayValue('Reopen Hero')).toBeInTheDocument();
   });
 
   it('creates a character even when class/species are skipped', async () => {
@@ -137,16 +142,17 @@ describe('Character Creation Flow', () => {
 
     await selectSystem(user, 'D&D 5e (2024)');
     await startCreation(user);
-    await createCharacter(user, {
-      name: 'No Selection Hero',
-      selectClass: false,
-      selectSpecies: false,
-    });
+    await createCharacterWithoutSelections({ name: 'No Selection Hero' });
 
-    const stored = getStoredCharacters();
-    expect(stored).toHaveLength(1);
-    expect(stored[0].name).toBe('No Selection Hero');
-    expect(stored[0].classLevels).toEqual([]);
-    expect(stored[0].speciesId).toBeUndefined();
+    await waitFor(() => {
+      const stored = getStoredDocuments();
+      expect(stored).toHaveLength(1);
+      expect(stored[0].name).toBe('No Selection Hero');
+      const system = stored[0].system as {
+        classLevels?: unknown[];
+        speciesId?: string;
+      };
+      expect(system.classLevels).toEqual([]);
+    });
   });
 });

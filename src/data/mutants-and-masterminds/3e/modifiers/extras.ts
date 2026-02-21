@@ -299,13 +299,6 @@ export const improved_range: PowerModifier = {
   effects: ['Each rank increases range increment by 50%.'],
 };
 
-export const incurable_extra: PowerModifier = {
-  id: 'incurable-extra', name: 'Incurable', system: 'mam3e', source: "Hero's Handbook",
-  type: 'extra', costPerRank: 0, flatCost: 1,
-  description: 'Damage from this effect is harder to heal.',
-  effects: ['Requires two successful Treatment or Healing checks instead of one.'],
-};
-
 export const increased_action: PowerModifier = {
   id: 'increased-action', name: 'Increased Action', system: 'mam3e', source: "Hero's Handbook",
   type: 'extra', costPerRank: 1,
@@ -325,13 +318,6 @@ export const migration: PowerModifier = {
   type: 'extra', costPerRank: 1,
   description: 'You can move an effect from one target to another.',
   effects: ['Transfer effect to a new target as a move action.'],
-};
-
-export const penetrating_extra: PowerModifier = {
-  id: 'penetrating-extra', name: 'Penetrating', system: 'mam3e', source: "Hero's Handbook",
-  type: 'extra', costPerRank: 0, flatCost: 1,
-  description: 'Your effect overcomes Impervious Resistance.',
-  effects: ['Each rank negates 5 ranks of Impervious.'],
 };
 
 export const progression: PowerModifier = {
@@ -390,13 +376,6 @@ export const stabilize: PowerModifier = {
   effects: ['Can stabilize a dying character.'],
 };
 
-export const subtle_extra: PowerModifier = {
-  id: 'subtle-extra', name: 'Subtle', system: 'mam3e', source: "Hero's Handbook",
-  type: 'extra', costPerRank: 0, flatCost: 1,
-  description: 'Your effect is harder to detect.',
-  effects: ['Rank 1: DC 20 to notice', 'Rank 2: Completely undetectable'],
-};
-
 export const variable: PowerModifier = {
   id: 'variable', name: 'Variable', system: 'mam3e', source: "Hero's Handbook",
   type: 'extra', costPerRank: 1,
@@ -425,13 +404,6 @@ export const damaging: PowerModifier = {
   effects: ['Effect also inflicts damage.'],
 };
 
-export const multiattack_extra: PowerModifier = {
-  id: 'multiattack-extra', name: 'Multiattack', system: 'mam3e', source: "Hero's Handbook",
-  type: 'extra', costPerRank: 1,
-  description: 'Multiple attacks against one or more targets.',
-  effects: ['Attack multiple targets or increase effect against one.'],
-};
-
 export const extras: PowerModifier[] = [
   accurate, affects_corporeal, affects_insubstantial, affects_objects, affects_others,
   alternate_effect, area, attack, contagious, continuous, dimensional, extended_range,
@@ -439,8 +411,8 @@ export const extras: PowerModifier[] = [
   indirect, innate, insidious, linked, multiattack, penetrating, precise, reach,
   reaction, reversible, ricochet, secondary_effect, selective, sleep, split,
   subtle, sustained, triggered, variable_descriptor, cumulative, feature, improved_critical,
-  improved_range, incurable_extra, increased_action, line_of_sight, migration,
-  penetrating_extra, progression, range, reduced_action, reflect, restore,
-  second_chance, split_attack, stabilize, subtle_extra, variable, zone,
-  affects_substantial, damaging, multiattack_extra,
+  improved_range, increased_action, line_of_sight, migration,
+  progression, range, reduced_action, reflect, restore,
+  second_chance, split_attack, stabilize, variable, zone,
+  affects_substantial, damaging,
 ];

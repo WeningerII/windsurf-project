@@ -1,6 +1,6 @@
 # Future Backend API Contract
 
-**Last Updated**: February 7, 2026  
+**Last Updated**: February 18, 2026  
 **Status**: Draft — no backend exists yet. This documents the contract a future backend should implement to replace localStorage persistence.
 
 ---
@@ -19,7 +19,7 @@ The application currently runs entirely client-side with localStorage as the per
 
 ## Design Principles
 
-1. **Backward compatible** — The JSON envelope format (`version`, `characters[]`, `lastModified`) must remain the canonical wire format.
+1. **Backward compatible** — The JSON envelope format (`version`, `documents[]`, `lastModified`) must remain the canonical wire format.
 2. **Offline-first** — The client should continue working with localStorage and sync when connectivity is available.
 3. **Stateless API** — Use token-based auth (JWT). No server-side sessions.
 4. **Idempotent writes** — PUT and DELETE operations should be safely retryable.
@@ -76,9 +76,8 @@ Authorization: Bearer <token>
 
 {
   "name": "Gandalf",
-  "system": "dnd-5e-2014",
-  "level": 20,
-  ...
+  "systemId": "dnd-5e-2014",
+  "system": { ... }
 }
 ```
 
@@ -88,8 +87,8 @@ Authorization: Bearer <token>
 {
   "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
   "name": "Gandalf",
-  "system": "dnd-5e-2014",
-  "level": 20,
+  "systemId": "dnd-5e-2014",
+  "system": { ... },
   "createdAt": "2026-02-07T12:00:00.000Z",
   "updatedAt": "2026-02-07T12:00:00.000Z"
 }
@@ -103,8 +102,8 @@ Uses the same envelope format as file export:
 
 ```json
 {
-  "version": "1.0",
-  "characters": [ ... ],
+  "version": "2.0",
+  "documents": [ ... ],
   "lastModified": "2026-02-07T15:30:00.000Z"
 }
 ```
@@ -116,7 +115,7 @@ Uses the same envelope format as file export:
 ```json
 {
   "lastSyncedAt": "2026-02-07T10:00:00.000Z",
-  "localCharacters": [ ... ]
+  "localDocuments": [ ... ]
 }
 ```
 
@@ -124,10 +123,10 @@ Uses the same envelope format as file export:
 
 ```json
 {
-  "mergedCharacters": [ ... ],
+  "mergedDocuments": [ ... ],
   "conflicts": [
     {
-      "characterId": "abc123",
+      "documentId": "abc123",
       "localVersion": { ... },
       "serverVersion": { ... }
     }
@@ -174,7 +173,7 @@ To add a backend without breaking existing users:
 3. **Phase C**: Once synced, server becomes source of truth. localStorage acts as offline cache.
 4. **Phase D**: Deprecate localStorage-only mode (optional).
 
-The `StorageData.version` field should be bumped to `"2.0"` when server sync is introduced, with a migration handler in `loadCharacters()`.
+The `DocumentStorageData.version` field should be bumped to `"3.0"` when server sync is introduced, with a migration handler in `loadDocuments()`.
 
 ---
 

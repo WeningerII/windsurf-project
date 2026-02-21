@@ -224,10 +224,10 @@ export const vulnerable: Condition = {
   system: 'mam3e',
   source: "Hero's Handbook",
   category: 'basic',
-  description: 'Vulnerable characters are susceptible to additional damage.',
+  description: 'Vulnerable characters are limited in their ability to defend themselves.',
   effects: [
-    'Additional degree of effect against vulnerable character',
-    'Can apply to specific attack types or descriptors',
+    'Active defenses halved (round up the final value)',
+    'Defenseless supersedes vulnerable',
   ],
 };
 
@@ -365,7 +365,38 @@ export const prone: Condition = {
     '–5 circumstance penalty to close attack checks',
     'Close attackers gain +5 circumstance bonus',
     'Ranged attackers have –5 circumstance penalty',
+    'Character is hindered',
     'Standing requires move action (or Acrobatics check as free action)',
+  ],
+};
+
+export const blind: Condition = {
+  id: 'blind',
+  name: 'Blind',
+  system: 'mam3e',
+  source: "Hero's Handbook",
+  category: 'combined',
+  description: 'The character cannot see.',
+  effects: [
+    'Everything has full visual concealment from the character',
+    'Hindered (move at half speed)',
+    'Visually unaware',
+    'Vulnerable (active defenses halved)',
+    'May be impaired or disabled for activities where vision is a factor',
+  ],
+};
+
+export const deaf: Condition = {
+  id: 'deaf',
+  name: 'Deaf',
+  system: 'mam3e',
+  source: "Hero's Handbook",
+  category: 'combined',
+  description: 'The character cannot hear.',
+  effects: [
+    'Everything has total auditory concealment from the character',
+    'May allow surprise attacks on the unaware character',
+    'Interaction limited to sign-language and lip-reading',
   ],
 };
 
@@ -418,9 +449,24 @@ export const basicConditions: Condition[] = [
   weakened,
 ];
 
+export const surprised: Condition = {
+  id: 'surprised',
+  name: 'Surprised',
+  system: 'mam3e',
+  source: "Hero's Handbook",
+  category: 'combined',
+  description: 'A surprised character is caught off-guard.',
+  effects: [
+    'Stunned (cannot take actions)',
+    'Vulnerable (active defenses halved)',
+  ],
+};
+
 export const combinedConditions: Condition[] = [
   asleep,
+  blind,
   bound,
+  deaf,
   dying,
   entranced,
   exhausted,
@@ -429,6 +475,7 @@ export const combinedConditions: Condition[] = [
   prone,
   restrained,
   staggered,
+  surprised,
 ];
 
 export const allConditions: Condition[] = [

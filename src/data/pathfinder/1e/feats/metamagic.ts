@@ -46,19 +46,6 @@ export const quickenSpell: FeatDefinition = {
   benefits: ['Casting a quickened spell is a swift action', 'You can perform another action, even casting another spell, in the same round', 'A quickened spell uses up a spell slot four levels higher than the spell\'s actual level'],
 };
 
-export const reachSpell: FeatDefinition = {
-  id: 'reach-spell-pf1e', name: 'Reach Spell', system: 'pf1e', source: 'APG',
-  description: 'You can alter a spell with a range of touch, close, or medium to increase its range.',
-  benefits: ['A spell with a range of touch becomes a spell with a range of close (25 ft. + 5 ft./2 levels)', 'A reach spell uses up a spell slot one level higher than the spell\'s actual level'],
-};
-
-export const selectiveSpell: FeatDefinition = {
-  id: 'selective-spell-pf1e', name: 'Selective Spell', system: 'pf1e', source: 'APG',
-  prerequisites: [{ type: 'other', description: 'Spellcraft 10 ranks' }],
-  description: 'Your allies need not fear friendly fire.',
-  benefits: ['When casting a selective spell with an area effect, you can choose a number of targets equal to your spellcasting ability modifier to be unaffected by the spell', 'A selective spell uses up a spell slot one level higher than the spell\'s actual level'],
-};
-
 export const silentSpell: FeatDefinition = {
   id: 'silent-spell-pf1e', name: 'Silent Spell', system: 'pf1e', source: 'CRB',
   description: 'You can cast your spells without making any sound.',
@@ -77,72 +64,7 @@ export const widenSpell: FeatDefinition = {
   benefits: ['You can alter a burst, emanation, or spread shaped spell to increase its area. Any numeric measurements of the spell\'s area increase by 100%', 'A widened spell uses up a spell slot three levels higher than the spell\'s actual level'],
 };
 
-export const twinnedSpell: FeatDefinition = {
-  id: 'twinned-spell-pf1e', name: 'Twinned Spell', system: 'pf1e', source: 'CRB',
-  prerequisites: [{ type: 'other', description: 'Ability to cast spells' }],
-  description: 'You can cast a spell on two targets.',
-  benefits: ['Cast a spell that targets one creature on two targets instead of one', 'A twinned spell uses up a spell slot one level higher than the spell\'s actual level'],
-};
-
-export const bouncingSpell: FeatDefinition = {
-  id: 'bouncing-spell-pf1e', name: 'Bouncing Spell', system: 'pf1e', source: 'APG',
-  prerequisites: [{ type: 'other', description: 'Ability to cast spells' }],
-  description: 'Your spells can bounce to another target.',
-  benefits: ['If a spell fails against its target, it bounces to another valid target within range', 'A bouncing spell uses up a spell slot one level higher than the spell\'s actual level'],
-};
-
-export const dazingSpell: FeatDefinition = {
-  id: 'dazing-spell-pf1e', name: 'Dazing Spell', system: 'pf1e', source: 'APG',
-  prerequisites: [{ type: 'other', description: 'Ability to cast spells' }],
-  description: 'Your spells can daze opponents.',
-  benefits: ['Creatures that take damage from your spell are dazed for a number of rounds equal to the spell\'s level', 'A dazing spell uses up a spell slot three levels higher than the spell\'s actual level'],
-};
-
-export const rimeSpell: FeatDefinition = {
-  id: 'rime-spell-pf1e', name: 'Rime Spell', system: 'pf1e', source: 'APG',
-  prerequisites: [{ type: 'other', description: 'Ability to cast spells' }],
-  description: 'Your cold spells entangle opponents.',
-  benefits: ['Creatures damaged by your cold spells become entangled', 'A rime spell uses up a spell slot one level higher than the spell\'s actual level'],
-};
-
-export const intensifiedSpell: FeatDefinition = {
-  id: 'intensified-spell-pf1e', name: 'Intensified Spell', system: 'pf1e', source: 'APG',
-  prerequisites: [{ type: 'other', description: 'Ability to cast spells' }],
-  description: 'Your spells deal more damage.',
-  benefits: ['Increase maximum damage dice of the spell by 5 levels', 'An intensified spell uses up a spell slot one level higher than the spell\'s actual level'],
-};
-
-export const piercingSpell: FeatDefinition = {
-  id: 'piercing-spell-pf1e', name: 'Piercing Spell', system: 'pf1e', source: 'APG',
-  prerequisites: [{ type: 'other', description: 'Ability to cast spells' }],
-  description: 'Your spells pierce spell resistance.',
-  benefits: ['Treat the target\'s spell resistance as 5 lower', 'A piercing spell uses up a spell slot one level higher than the spell\'s actual level'],
-};
-
-export const echoingSpell: FeatDefinition = {
-  id: 'echoing-spell-pf1e', name: 'Echoing Spell', system: 'pf1e', source: 'APG',
-  prerequisites: [{ type: 'other', description: 'Ability to cast spells' }],
-  description: 'Your spells echo on the next round.',
-  benefits: ['The spell repeats on the next round at reduced effect', 'An echoing spell uses up a spell slot three levels higher than the spell\'s actual level'],
-};
-
-export const lingeringSpell: FeatDefinition = {
-  id: 'lingering-spell-pf1e', name: 'Lingering Spell', system: 'pf1e', source: 'APG',
-  prerequisites: [{ type: 'other', description: 'Ability to cast spells' }],
-  description: 'Your instantaneous spells last longer.',
-  benefits: ['A spell with instantaneous duration deals damage for 1 additional round', 'A lingering spell uses up a spell slot one level higher than the spell\'s actual level'],
-};
-
-export const persistentSpell: FeatDefinition = {
-  id: 'persistent-spell-pf1e', name: 'Persistent Spell', system: 'pf1e', source: 'APG',
-  prerequisites: [{ type: 'other', description: 'Ability to cast spells' }],
-  description: 'Your spells are harder to resist.',
-  benefits: ['Creatures must save twice against the spell and take the worse result', 'A persistent spell uses up a spell slot two levels higher than the spell\'s actual level'],
-};
-
 export const metamagicFeats: FeatDefinition[] = [
   empowerSpell, enlargeSpell, extendSpell, heightenSpell, maximizeSpell,
-  quickenSpell, reachSpell, selectiveSpell, silentSpell, stillSpell, widenSpell,
-  twinnedSpell, bouncingSpell, dazingSpell, rimeSpell, intensifiedSpell,
-  piercingSpell, echoingSpell, lingeringSpell, persistentSpell,
+  quickenSpell, silentSpell, stillSpell, widenSpell,
 ];

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-02-10T17:41:20.417Z",
+  "generatedAt": "2026-02-21T18:45:30.163Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -79,7 +79,7 @@
       "species": 7,
       "monsters": 0,
       "equipment": 70,
-      "feats": 742
+      "feats": 86
     },
     "pf2e": {
       "spells": 146,
@@ -87,14 +87,14 @@
       "species": 6,
       "monsters": 0,
       "equipment": 188,
-      "feats": 231
+      "feats": 93
     },
     "mam3e": {
-      "spells": 111,
+      "spells": 61,
       "classes": 0,
       "species": 0,
       "monsters": 0,
-      "equipment": 127,
+      "equipment": 150,
       "feats": 0
     }
   },
@@ -425,13 +425,13 @@
       "category": "feats",
       "categoryLabel": "Feats",
       "metrics": {
-        "rawCount": 742,
-        "uniqueCount": 742,
+        "rawCount": 86,
+        "uniqueCount": 86,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "CRB": 742
+          "CRB": 86
         }
       }
     },
@@ -505,14 +505,13 @@
       "category": "feats",
       "categoryLabel": "Feats",
       "metrics": {
-        "rawCount": 231,
-        "uniqueCount": 231,
+        "rawCount": 93,
+        "uniqueCount": 93,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "CRB": 135,
-          "Core Rulebook": 96
+          "Core Rulebook": 93
         }
       }
     },
@@ -522,13 +521,13 @@
       "category": "spells",
       "categoryLabel": "Spells/Powers",
       "metrics": {
-        "rawCount": 111,
-        "uniqueCount": 111,
+        "rawCount": 61,
+        "uniqueCount": 61,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "Hero's Handbook": 111
+          "Hero's Handbook": 61
         }
       }
     },
@@ -538,56 +537,56 @@
       "category": "equipment",
       "categoryLabel": "Equipment",
       "metrics": {
-        "rawCount": 127,
-        "uniqueCount": 127,
+        "rawCount": 150,
+        "uniqueCount": 150,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "Hero's Handbook": 127
+          "Hero's Handbook": 150
         }
       }
     }
   ],
   "moduleAudit": [
     {
-      "label": "M&M 3e powers exports",
+      "label": "M&M 3e powers",
       "systemId": "mam3e",
       "category": "powers",
       "metrics": {
-        "rawCount": 444,
-        "uniqueCount": 111,
-        "duplicateCount": 333,
+        "rawCount": 61,
+        "uniqueCount": 61,
+        "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "Hero's Handbook": 111
+          "Hero's Handbook": 61
         }
       }
     },
     {
-      "label": "M&M 3e advantages exports",
+      "label": "M&M 3e advantages",
       "systemId": "mam3e",
       "category": "advantages",
       "metrics": {
-        "rawCount": 243,
-        "uniqueCount": 81,
-        "duplicateCount": 162,
+        "rawCount": 74,
+        "uniqueCount": 74,
+        "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "Hero's Handbook": 81
+          "Hero's Handbook": 74
         }
       }
     },
     {
-      "label": "M&M 3e archetypes exports",
+      "label": "M&M 3e archetypes",
       "systemId": "mam3e",
       "category": "archetypes",
       "metrics": {
-        "rawCount": 30,
+        "rawCount": 15,
         "uniqueCount": 15,
-        "duplicateCount": 15,
+        "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
@@ -596,13 +595,13 @@
       }
     },
     {
-      "label": "PF2e archetypes exports",
+      "label": "PF2e archetypes",
       "systemId": "pf2e",
       "category": "archetypes",
       "metrics": {
-        "rawCount": 20,
+        "rawCount": 5,
         "uniqueCount": 5,
-        "duplicateCount": 15,
+        "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {

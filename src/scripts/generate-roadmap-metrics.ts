@@ -19,10 +19,10 @@ import {
   strictOpenContentPolicy,
 } from '../utils/openContentPolicy';
 
-import * as mamPowersModule from '../data/mutants-and-masterminds/3e/powers';
-import * as mamAdvantagesModule from '../data/mutants-and-masterminds/3e/advantages';
-import * as mamArchetypesModule from '../data/mutants-and-masterminds/3e/archetypes';
-import * as pf2eArchetypesModule from '../data/pathfinder/2e/archetypes';
+import { allPowers } from '../data/mutants-and-masterminds/3e/powers';
+import { mam3eAdvantages } from '../data/mutants-and-masterminds/3e/advantages';
+import { mm3eArchetypes } from '../data/mutants-and-masterminds/3e/archetypes';
+import { allPf2eArchetypes } from '../data/pathfinder/2e/archetypes';
 
 type LoaderCategory = 'spells' | 'classes' | 'species' | 'monsters' | 'equipment' | 'feats';
 
@@ -108,44 +108,6 @@ function dedupeById<T extends ItemRecord>(items: T[]): T[] {
   });
 
   return unique;
-}
-
-function collectModuleItems(moduleExports: Record<string, unknown>): ItemRecord[] {
-  const items: unknown[] = [];
-
-  const collect = (value: unknown): void => {
-    if (Array.isArray(value)) {
-      value.forEach(entry => items.push(entry));
-      return;
-    }
-
-    if (!value || typeof value !== 'object') {
-      return;
-    }
-
-    const record = value as Record<string, unknown>;
-    if (typeof record.id === 'string' && typeof record.name === 'string') {
-      items.push(record);
-      return;
-    }
-
-    Object.values(record).forEach(innerValue => {
-      if (Array.isArray(innerValue)) {
-        innerValue.forEach(entry => items.push(entry));
-      } else if (
-        innerValue &&
-        typeof innerValue === 'object' &&
-        'id' in innerValue &&
-        'name' in innerValue
-      ) {
-        items.push(innerValue);
-      }
-    });
-  };
-
-  Object.values(moduleExports).forEach(collect);
-
-  return items.filter(isItemRecord);
 }
 
 function computeMetrics(
@@ -384,28 +346,28 @@ async function main(): Promise<void> {
 
   const moduleRows: ModuleAuditRow[] = [
     {
-      label: 'M&M 3e powers exports',
+      label: 'M&M 3e powers',
       systemId: 'mam3e',
       category: 'powers',
-      metrics: computeMetrics('mam3e', 'powers', collectModuleItems(mamPowersModule)),
+      metrics: computeMetrics('mam3e', 'powers', allPowers),
     },
     {
-      label: 'M&M 3e advantages exports',
+      label: 'M&M 3e advantages',
       systemId: 'mam3e',
       category: 'advantages',
-      metrics: computeMetrics('mam3e', 'advantages', collectModuleItems(mamAdvantagesModule)),
+      metrics: computeMetrics('mam3e', 'advantages', mam3eAdvantages),
     },
     {
-      label: 'M&M 3e archetypes exports',
+      label: 'M&M 3e archetypes',
       systemId: 'mam3e',
       category: 'archetypes',
-      metrics: computeMetrics('mam3e', 'archetypes', collectModuleItems(mamArchetypesModule)),
+      metrics: computeMetrics('mam3e', 'archetypes', Object.values(mm3eArchetypes)),
     },
     {
-      label: 'PF2e archetypes exports',
+      label: 'PF2e archetypes',
       systemId: 'pf2e',
       category: 'archetypes',
-      metrics: computeMetrics('pf2e', 'archetypes', collectModuleItems(pf2eArchetypesModule)),
+      metrics: computeMetrics('pf2e', 'archetypes', allPf2eArchetypes),
     },
   ];
 
@@ -446,8 +408,8 @@ async function main(): Promise<void> {
     'utf8'
   );
 
-  const roadmapProgressPath = path.join(projectRoot, 'ROADMAP_PROGRESS.md');
-  const technicalRoadmapPath = path.join(projectRoot, 'TECHNICAL_ROADMAP.md');
+  const roadmapProgressPath = path.join(projectRoot, 'docs', 'ROADMAP_PROGRESS.md');
+  const technicalRoadmapPath = path.join(projectRoot, 'docs', 'TECHNICAL_ROADMAP.md');
 
   await upsertComputedSection(roadmapProgressPath, markdown);
   await upsertComputedSection(technicalRoadmapPath, markdown);

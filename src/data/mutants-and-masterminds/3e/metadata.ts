@@ -1,7 +1,7 @@
 // Mutants & Masterminds 3e Edition Metadata and Progress Tracking
 // All counts are computed from actual data imports — never hardcoded.
 
-import { allPowers, attackPowers, defensePowers, movementPowers, sensoryPowers, generalPowers, controlPowers } from './powers/index';
+import { allPowers, attackPowers, defensePowers, movementPowers, sensoryPowers, generalPowers, controlPowers } from './powers/aggregations';
 import { powerModifiers } from './modifiers/index';
 import { mam3eAdvantages } from './advantages/index';
 import { combatAdvantages } from './advantages/combat';

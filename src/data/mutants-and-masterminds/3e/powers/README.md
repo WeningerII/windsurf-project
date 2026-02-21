@@ -1,6 +1,6 @@
 # Mutants & Masterminds 3e Powers
 
-**Last Updated**: January 28, 2026 (architecture reorganization)
+**Last Updated**: February 10, 2026 (SRD-only verification)
 
 ## Architecture Overview
 
@@ -33,7 +33,7 @@ powers/
 import { allPowers, powerById } from '@/data/mutants-and-masterminds/3e/powers';
 
 // Access all powers
-console.log(allPowers.length); // 111 unique powers
+console.log(allPowers.length); // 61 SRD-verified powers
 
 // Quick lookup by ID
 const blast = powerById['blast'];
@@ -46,7 +46,7 @@ import { attackPowers, defensePowers, movementPowers } from '@/data/mutants-and-
 
 // Use specific type
 attackPowers.forEach(power => console.log(power.name));
-console.log(attackPowers.length); // 14 attack powers
+console.log(attackPowers.length); // 12 attack powers
 
 // Use powersByType for all at once
 import { powersByType } from '@/data/mutants-and-masterminds/3e/powers';
@@ -88,14 +88,14 @@ Just as D&D spells are organized by level (0-9), M&M powers are organized by **t
 
 Just as D&D spells have schools (evocation, enchantment, etc.), M&M powers have **descriptors** (fire, mental, magic, cosmic, etc.) that describe thematic flavor. Use the `powersByDescriptor()` function to filter by theme.
 
-### Power Types (111 Total)
+### Power Types (61 Total — 40 Core Effects + 21 Sample Powers)
 
-- **Attack** (14): Offensive powers - Damage, Affliction, Weaken, Blast, Psychic Blast, etc.
-- **Defense** (15): Protective powers - Protection, Immunity, Force Field, Energy Absorption, etc.
-- **Movement** (11): Locomotion - Flight, Speed, Teleport, Swimming, Burrowing, etc.
-- **Sensory** (10): Perception - Senses, Telepathy, Mind Reading, Remote Sensing, etc.
-- **General** (52): Utility & versatile - Enhanced Ability, Healing, Create, Morph, Summon, Reality Warping, etc.
-- **Control** (9): Environmental/object control - Environment, Move Object, Elemental Control, etc.
+- **Attack** (12): 4 core (Damage, Affliction, Nullify, Weaken) + 8 sample (Blast, Dazzle, Energy Aura, Mental Blast, Sleep, Snare, Strike, Suffocation)
+- **Control** (11): 7 core (Create, Environment, Illusion, Luck Control, Move Object, Summon, Transform) + 4 sample (Duplication, Element Control, Energy Control, Mind Control)
+- **Defense** (7): 5 core (Protection, Immunity, Regeneration, Immortality, Deflect) + 2 sample (Force Field, Energy Absorption)
+- **General** (16): 11 core (Elongation, Enhanced Trait, Extra Limbs, Feature, Growth, Healing, Insubstantial, Morph, Quickness, Shrinking, Variable) + 5 sample (Alternate Form, Magic, Mimic, Power-Lifting, Shapeshift)
+- **Movement** (8): 7 core (Flight, Speed, Swimming, Leaping, Teleport, Movement, Burrowing) + 1 sample (Super-Speed)
+- **Sensory** (7): 6 core (Senses, Communication, Comprehend, Concealment, Mind Reading, Remote Sensing) + 1 sample (Invisibility)
 
 ### Common Descriptors (Thematic Filtering)
 
@@ -110,11 +110,12 @@ Use `powersByDescriptor()` or `descriptorGroups` to find powers by theme:
 
 ## Data Quality Standards
 
-All 111 powers follow these standards:
+All 61 powers follow these standards:
 
 - **Source**: "Hero's Handbook" (official M&M 3e rulebook)
+- **SRD Verified**: All stats (action, range, duration, baseCost) verified against d20herosrd.com
 - **Mechanics**: Detailed effect descriptions with DC calculations and rank progressions
-- **Cost Accuracy**: Verified base costs per M&M 3e rules
+- **Cost Accuracy**: Verified base costs directly from d20herosrd.com
 - **Descriptors**: Comprehensive descriptor arrays for thematic customization
 - **Durations**: Accurate action types and duration values
 - **Unique IDs**: 100% unique - no duplicates (verified via `powerById`)
@@ -148,7 +149,13 @@ When adding a new power:
 - Consolidated 20 files → 6 type-based files
 - Matches D&D/Pathfinder organizational pattern
 - Descriptor-based filtering replaces thematic files
-- **Result**: 111 unique powers with 100% ID uniqueness
+
+**February 10, 2026**: SRD-only verification
+- Verified all entries against d20herosrd.com
+- Removed ~139 fabricated/non-SRD entries
+- Scaled from 200 to 61 SRD-verified powers (quality over quantity)
+- All stats (action, range, duration, baseCost) verified via curl from SRD
+- **Result**: 61 SRD-verified powers with 100% accuracy
 
 ## Technical Details
 

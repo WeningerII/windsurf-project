@@ -1,0 +1,53 @@
+import { SystemDefinition } from '../../registry/types';
+import { Dnd35eDataModel, createDefaultDnd35eData } from './data-model';
+import { Dnd35eEngine } from './engine';
+import { makeD20LegacySheet } from '../d20-legacy/wrapper';
+
+export const Dnd35eSystemDef: SystemDefinition<Dnd35eDataModel> = {
+  id: 'dnd-3.5e',
+  label: 'D&D 3.5e',
+  version: 'SRD 3.5',
+  attributes: [
+    { id: 'str', name: 'Strength', abbreviation: 'STR', description: 'Physical power' },
+    { id: 'dex', name: 'Dexterity', abbreviation: 'DEX', description: 'Agility and reflexes' },
+    { id: 'con', name: 'Constitution', abbreviation: 'CON', description: 'Health and stamina' },
+    { id: 'int', name: 'Intelligence', abbreviation: 'INT', description: 'Reasoning and memory' },
+    { id: 'wis', name: 'Wisdom', abbreviation: 'WIS', description: 'Willpower and perception' },
+    { id: 'cha', name: 'Charisma', abbreviation: 'CHA', description: 'Force of personality' },
+  ],
+  skills: [
+    { id: 'appraise', name: 'Appraise', attribute: 'int' },
+    { id: 'balance', name: 'Balance', attribute: 'dex' },
+    { id: 'bluff', name: 'Bluff', attribute: 'cha' },
+    { id: 'climb', name: 'Climb', attribute: 'str' },
+    { id: 'concentration', name: 'Concentration', attribute: 'con' },
+    { id: 'diplomacy', name: 'Diplomacy', attribute: 'cha' },
+    { id: 'disable-device', name: 'Disable Device', attribute: 'int' },
+    { id: 'disguise', name: 'Disguise', attribute: 'cha' },
+    { id: 'escape-artist', name: 'Escape Artist', attribute: 'dex' },
+    { id: 'gather-info', name: 'Gather Information', attribute: 'cha' },
+    { id: 'handle-animal', name: 'Handle Animal', attribute: 'cha' },
+    { id: 'heal', name: 'Heal', attribute: 'wis' },
+    { id: 'hide', name: 'Hide', attribute: 'dex' },
+    { id: 'intimidate', name: 'Intimidate', attribute: 'cha' },
+    { id: 'jump', name: 'Jump', attribute: 'str' },
+    { id: 'knowledge', name: 'Knowledge', attribute: 'int' },
+    { id: 'listen', name: 'Listen', attribute: 'wis' },
+    { id: 'move-silently', name: 'Move Silently', attribute: 'dex' },
+    { id: 'open-lock', name: 'Open Lock', attribute: 'dex' },
+    { id: 'ride', name: 'Ride', attribute: 'dex' },
+    { id: 'search', name: 'Search', attribute: 'int' },
+    { id: 'sense-motive', name: 'Sense Motive', attribute: 'wis' },
+    { id: 'sleight-of-hand', name: 'Sleight of Hand', attribute: 'dex' },
+    { id: 'spellcraft', name: 'Spellcraft', attribute: 'int' },
+    { id: 'spot', name: 'Spot', attribute: 'wis' },
+    { id: 'survival', name: 'Survival', attribute: 'wis' },
+    { id: 'swim', name: 'Swim', attribute: 'str' },
+    { id: 'tumble', name: 'Tumble', attribute: 'dex' },
+    { id: 'use-magic', name: 'Use Magic Device', attribute: 'cha' },
+    { id: 'use-rope', name: 'Use Rope', attribute: 'dex' },
+  ],
+  createDefaultData: createDefaultDnd35eData,
+  engine: new Dnd35eEngine(),
+  SheetComponent: makeD20LegacySheet<Dnd35eDataModel>(),
+};

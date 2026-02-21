@@ -1,5 +1,5 @@
 import { GameSystemId } from '../types/game-systems';
-import { gameSystems } from '../data/game-systems';
+import { systemRegistry } from '../registry';
 import { BookOpen, Shield, Users, Sword } from 'lucide-react';
 import { dnd5eMetadata } from '../data/dnd/5e-2014/metadata';
 import { dnd5e2024Metadata } from '../data/dnd/5e-2024/metadata';
@@ -64,7 +64,7 @@ export const GameSystemSelector: React.FC<GameSystemSelectorProps> = ({
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {gameSystems.map((system) => {
+        {systemRegistry.getAll().map((system) => {
           const metadata = systemMetadata[system.id as GameSystemId];
           return (
             <button
@@ -77,7 +77,7 @@ export const GameSystemSelector: React.FC<GameSystemSelectorProps> = ({
               }`}
             >
               <div className="mb-4">
-                <h3 className="font-semibold text-xl mb-1">{system.name}</h3>
+                <h3 className="font-semibold text-xl mb-1">{system.label}</h3>
                 <p className="text-sm text-muted-foreground">{system.version}</p>
               </div>
               

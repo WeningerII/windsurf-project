@@ -404,12 +404,6 @@ async function loadPf1eFeats(): Promise<FeatDefinition[]> {
     ...feats.combat,
     ...feats.metamagic,
     ...feats.general,
-    ...feats.racial,
-    ...feats.class,
-    ...feats.magic,
-    ...feats.ability,
-    ...feats.divine,
-    ...feats.teamwork,
   ];
   return allFeats;
 }

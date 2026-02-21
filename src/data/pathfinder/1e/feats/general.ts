@@ -150,12 +150,6 @@ export const negotiator: FeatDefinition = {
   benefits: ['+2 bonus on Diplomacy checks', '+2 bonus on Sense Motive checks', 'If you have 10 or more ranks in one of these skills, the bonus increases to +4 for that skill'],
 };
 
-export const nimbleFingers: FeatDefinition = {
-  id: 'nimble-fingers-pf1e', name: 'Nimble Fingers', system: 'pf1e', source: 'CRB',
-  description: 'You are adept at manipulating small, delicate objects.',
-  benefits: ['+2 bonus on Disable Device checks', '+2 bonus on Sleight of Hand checks', 'If you have 10 or more ranks in one of these skills, the bonus increases to +4 for that skill'],
-};
-
 export const persuasive: FeatDefinition = {
   id: 'persuasive-pf1e', name: 'Persuasive', system: 'pf1e', source: 'CRB',
   description: 'You are skilled at swaying attitudes and intimidating others into your way of thinking.',
@@ -199,25 +193,6 @@ export const stealthy: FeatDefinition = {
   benefits: ['+2 bonus on Escape Artist checks', '+2 bonus on Stealth checks', 'If you have 10 or more ranks in one of these skills, the bonus increases to +4 for that skill'],
 };
 
-export const diligent: FeatDefinition = {
-  id: 'diligent-pf1e', name: 'Diligent', system: 'pf1e', source: 'CRB',
-  description: 'You are careful and thorough.',
-  benefits: ['+2 bonus on Appraise checks', '+2 bonus on Linguistics checks', 'If you have 10 or more ranks in one of these skills, the bonus increases to +4 for that skill'],
-};
-
-export const focusedMind: FeatDefinition = {
-  id: 'focused-mind-pf1e', name: 'Focused Mind', system: 'pf1e', source: 'CRB',
-  description: 'You have exceptional focus.',
-  benefits: ['+2 bonus on Concentration checks'],
-};
-
-export const acrobaticsTraining: FeatDefinition = {
-  id: 'acrobatics-training-pf1e', name: 'Acrobatics Training', system: 'pf1e', source: 'APG',
-  prerequisites: [{ type: 'ability', ability: 'dex', value: 13 }],
-  description: 'You are trained in acrobatic movement.',
-  benefits: ['+2 bonus on Acrobatics checks', 'You can move through difficult terrain at normal speed'],
-};
-
 export const greaterSpellFocus: FeatDefinition = {
   id: 'greater-spell-focus-pf1e', name: 'Greater Spell Focus', system: 'pf1e', source: 'CRB',
   prerequisites: [{ type: 'other', description: 'Spell Focus' }],
@@ -237,7 +212,7 @@ export const generalFeats: FeatDefinition[] = [
   armorProficiencyHeavy, athletic, brewPotion, craftMagicArmsAndArmor, craftRod,
   craftStaff, craftWand, craftWondrousItem, deceitful, deftHands, forgeRing,
   improvedCounterspell, leadership, magicalAptitude, naturalSpell, negotiator,
-  nimbleFingers, persuasive, scribeScroll, selfSufficient, skillFocus, spellFocus,
-  spellPenetration, stealthy, diligent, focusedMind, acrobaticsTraining,
+  persuasive, scribeScroll, selfSufficient, skillFocus, spellFocus,
+  spellPenetration, stealthy,
   greaterSpellFocus, greaterSpellPenetration,
 ];

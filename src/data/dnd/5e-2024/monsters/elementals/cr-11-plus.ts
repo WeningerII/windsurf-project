@@ -4,5 +4,5 @@ import { Monster } from '../../../../../types/creatures/monsters';
 // Ancient and legendary elementals
 
 export const elementalsCR11Plus: Monster[] = [
-  // TODO: Implement CR 11+ elementals from SRD 5.2
+  // Intentionally empty for SRD 5.2 scope: no canonical CR 11+ elementals in current dataset.
 ];

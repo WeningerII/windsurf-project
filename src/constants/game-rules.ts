@@ -1,8 +1,9 @@
 /**
  * D&D 5e Game Rules Constants
  * 
- * Centralized constants for game mechanics to eliminate magic numbers
- * and ensure consistency across the application.
+ * These constants are specific to D&D 5e (2014 & 2024). They are consumed by
+ * the validation system. If/when native 5e sheets are fully independent, 
+ * move these into src/systems/dnd5e/constants.ts.
  */
 
 export const GAME_RULES = {
@@ -50,8 +51,9 @@ export const GAME_RULES = {
   MIN_CHARACTER_NAME_LENGTH: 1,
 };
 
-// Re-export canonical calculator functions from the engine
-export { calculateAbilityModifier, calculateProficiencyBonus } from '../engine/core/calculator';
+// Re-export shared math as named 5e-style aliases
+export { abilityMod as calculateAbilityModifier } from '../utils/math';
+export { calculateProficiencyBonus } from '../engine/core/calculator';
 
 /**
  * Validate character level

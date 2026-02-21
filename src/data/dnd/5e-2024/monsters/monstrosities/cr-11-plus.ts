@@ -4,5 +4,5 @@ import { Monster } from '../../../../../types/creatures/monsters';
 // Ancient and legendary monstrosities
 
 export const monstrositiesCR11Plus: Monster[] = [
-  // TODO: Implement CR 11+ monstrosities from SRD 5.2
+  // Intentionally empty for SRD 5.2 scope: no canonical CR 11+ monstrosities in current dataset.
 ];

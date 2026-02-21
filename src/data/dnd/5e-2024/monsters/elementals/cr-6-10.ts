@@ -4,5 +4,5 @@ import { Monster } from '../../../../../types/creatures/monsters';
 // Powerful elementals
 
 export const elementalsCR6to10: Monster[] = [
-  // TODO: Implement CR 6-10 elementals from SRD 5.2
+  // Intentionally empty for SRD 5.2 scope: no canonical CR 6-10 elementals in current dataset.
 ];

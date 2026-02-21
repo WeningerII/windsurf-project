@@ -43,12 +43,6 @@ export const pf1eMetadata = {
         combat: pf1eFeats.combat.length,
         metamagic: pf1eFeats.metamagic.length,
         general: pf1eFeats.general.length,
-        teamwork: pf1eFeats.teamwork.length,
-        racial: pf1eFeats.racial.length,
-        class: pf1eFeats.class.length,
-        magic: pf1eFeats.magic.length,
-        ability: pf1eFeats.ability.length,
-        divine: pf1eFeats.divine.length,
       },
     },
     

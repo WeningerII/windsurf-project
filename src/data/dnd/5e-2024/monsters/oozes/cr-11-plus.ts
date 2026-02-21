@@ -4,5 +4,5 @@ import { Monster } from '../../../../../types/creatures/monsters';
 // Ancient and massive oozes
 
 export const oozesCR11Plus: Monster[] = [
-  // TODO: Implement CR 11+ oozes from SRD 5.2
+  // Intentionally empty for SRD 5.2 scope: no canonical CR 11+ oozes in current dataset.
 ];

@@ -1,8 +1,13 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeAll } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { registerAllSystems } from '../../systems';
 import { GameSystemSelector } from '../../components/GameSystemSelector';
 import type { GameSystemId } from '../../types/game-systems';
+
+beforeAll(() => {
+  registerAllSystems();
+});
 
 describe('GameSystemSelector', () => {
   it('should render all 6 game systems', () => {

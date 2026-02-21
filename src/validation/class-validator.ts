@@ -26,6 +26,46 @@ export interface ValidationResult {
   warnings: ValidationError[];
 }
 
+function hasSubclassFeatureAtLevel(cls: CharacterClass, level: number): boolean {
+  if (!cls.subclasses || cls.subclasses.length === 0) return false;
+
+  return cls.subclasses.some(subclass =>
+    subclass.features?.some(
+      progression => progression.level === level && progression.features.length > 0
+    )
+  );
+}
+
+function hasProgressionDeltaAtLevel(values: number[] | undefined, level: number): boolean {
+  if (!values || level < GAME_RULES.MIN_CHARACTER_LEVEL || level > values.length) {
+    return false;
+  }
+
+  const currentIdx = level - 1;
+  const current = values[currentIdx] ?? 0;
+  const previous = currentIdx > 0 ? (values[currentIdx - 1] ?? 0) : 0;
+  return current !== previous;
+}
+
+function hasSpellcastingProgressionAtLevel(cls: CharacterClass, level: number): boolean {
+  if (!cls.spellcasting) return false;
+
+  const slotDelta = Object.values(cls.spellcasting.spellSlots).some(slots =>
+    hasProgressionDeltaAtLevel(slots, level)
+  );
+
+  const cantripDelta = hasProgressionDeltaAtLevel(cls.spellcasting.cantripsKnown, level);
+  const spellsKnownDelta = hasProgressionDeltaAtLevel(cls.spellcasting.spellsKnown, level);
+
+  // Prepared casters effectively scale each level via their formula even when
+  // slot arrays do not change on that exact level.
+  const preparedCasterDelta = Boolean(
+    cls.spellcasting.preparedCasterFormula && level > GAME_RULES.MIN_CHARACTER_LEVEL
+  );
+
+  return slotDelta || cantripDelta || spellsKnownDelta || preparedCasterDelta;
+}
+
 /**
  * Validate a CharacterClass object
  */
@@ -203,14 +243,18 @@ export function validateClass(cls: CharacterClass): ValidationResult {
     // Validate each feature has required fields
     cls.features.forEach((progression, idx) => {
       if (!progression.features || progression.features.length === 0) {
-        // Empty feature arrays are okay for levels with only subclass features
-        // But warn about it
-        warnings.push({
-          code: 'EMPTY_FEATURE_LEVEL',
-          message: `Level ${progression.level} has no features`,
-          field: `features[${idx}]`,
-          severity: 'warning',
-        });
+        const hasImplicitProgression =
+          hasSubclassFeatureAtLevel(cls, progression.level) ||
+          hasSpellcastingProgressionAtLevel(cls, progression.level);
+
+        if (!hasImplicitProgression) {
+          warnings.push({
+            code: 'EMPTY_FEATURE_LEVEL',
+            message: `Level ${progression.level} has no features`,
+            field: `features[${idx}]`,
+            severity: 'warning',
+          });
+        }
       }
       
       progression.features.forEach((feature, fIdx) => {

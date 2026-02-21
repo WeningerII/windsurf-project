@@ -132,7 +132,7 @@ export const phobia: Complication = {
 export const powerLoss: Complication = {
   id: 'power-loss', name: 'Power Loss', system: 'mam3e', source: "Hero's Handbook",
   category: 'power-loss',
-  description: 'Your powers can be appearance or appearance under certain conditions.',
+  description: 'Certain circumstances cause some or all of your powers to fail or stop working, or rob you of them altogether.',
   examples: ['Powers don\'t work in darkness', 'Need to recharge powers', 'Powers fade over time'],
 };
 
@@ -206,24 +206,10 @@ export const quirk: Complication = {
   examples: ['Always speaks in rhyme', 'Compulsive truth-teller', 'Refuses to use technology'],
 };
 
-export const statusQuo: Complication = {
-  id: 'status-quo', name: 'Status Quo', system: 'mam3e', source: "Hero's Handbook",
-  category: 'other',
-  description: 'Your actions are limited by maintaining the status quo.',
-  examples: ['Cannot reveal powers publicly', 'Must maintain civilian identity', 'Bound by legal system'],
-};
-
-export const unluck: Complication = {
-  id: 'unluck', name: 'Unluck', system: 'mam3e', source: "Hero's Handbook",
-  category: 'other',
-  description: 'You have bad luck that causes problems.',
-  examples: ['Things always go wrong at the worst time', 'Accidents happen around you', 'Murphy\'s Law personified'],
-};
-
 export const complications: Complication[] = [
   acceptanceMotivation, greedMotivation, justiceMotivation, patriotismMotivation,
   recognitionMotivation, responsibilityMotivation, thrillsMotivation, doingGoodMotivation,
   accident, addiction, disability, enemy, fame, hatred, honor, identity,
   obsession, phobia, powerLoss, prejudice, relationship, reputation,
-  responsibility, rivalry, secret, temper, weakness, quirk, statusQuo, unluck,
+  responsibility, rivalry, secret, temper, weakness, quirk,
 ];

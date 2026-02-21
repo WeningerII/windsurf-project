@@ -183,16 +183,16 @@ export const usePrevious = <T>(value: T): T | undefined => {
   return ref.current;
 };
 
-export const memoize = <T extends (...args: any[]) => any>(fn: T): T => {
-  const cache = new Map();
+export const memoize = <Args extends unknown[], Result>(fn: (...args: Args) => Result) => {
+  const cache = new Map<string, Result>();
 
-  return ((...args: Parameters<T>) => {
+  return (...args: Args): Result => {
     const key = JSON.stringify(args);
     if (cache.has(key)) {
-      return cache.get(key);
+      return cache.get(key) as Result;
     }
     const result = fn(...args);
     cache.set(key, result);
     return result;
-  }) as T;
+  };
 };
