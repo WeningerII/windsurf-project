@@ -1027,10 +1027,9 @@ Ongoing: ████ Phase 6 (Documentation)
 - 0 non-compliant records across all systems
 - All counts now reflect ground truth
 
-### Next Priority: Architecture V2 Finalization
+### Next Priority: Phase 6 Documentation Polish
 
-- Finalize migration window for `rpg-documents-v2` in `documentStorage.ts`
-- Implement robust CI/CD gates (80% coverage minimums)
+- Optional documentation polish tasks (Storybook/tutorials if pursued)
 - Extend documentation and usage guides for the new Document Model
 - Consider adding M&M complications/skills/conditions to loader metrics
 
