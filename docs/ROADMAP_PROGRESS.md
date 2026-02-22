@@ -184,7 +184,7 @@ The application is now fully architected for multi-system support with no legacy
 ### Current Workstream
 
 ### Open Items
-- [ ] Confirm first GitHub Actions green run with enforced `80/80/80/80` coverage + Playwright gates.
+- [x] Confirm first GitHub Actions green run with enforced `80/80/80/80` coverage + Playwright gates.
 - [x] Run final cross-system QA wording pass for PF1e feats, PF2e feats, and M&M complications/conditions.
 - [ ] Keep docs synchronized after each data change via `npm run roadmap:metrics`.
 - [x] Execute Phase 5 of `docs/refactoring/LEGACY_DEPRECATION_PLAN.md` (remove V1 storage bridge after support window).
@@ -224,14 +224,14 @@ Detailed phase/session writeups are preserved in `docs/archive/` and should be t
 - [x] M&M 3e core SRD data is reconciled to `61` powers and `150` equipment.
 
 ### Remaining
-- [ ] CI confirmation for enforced coverage/e2e gates (Phase 3 final check).
+- [x] CI confirmation for enforced coverage/e2e gates (Phase 3 final check).
 - [ ] Optional documentation polish tasks in Phase 6 (Storybook/tutorials if pursued).
 
 ---
 
 ## Next Actions
 
-1. **Verify CI/CD:** Confirm the new test suite (47 engine tests) runs cleanly in CI.
+1. **Verify CI/CD:** Verified new test suite (47 engine tests) runs cleanly in CI.
 2. **Content QA:** Final QA wording pass for reconciled PF1e/PF2e/M&M datasets is complete.
 3. **Documentation:** Keep `TECHNICAL_ROADMAP.md` synchronized.
 
