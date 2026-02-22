@@ -185,7 +185,7 @@ The application is now fully architected for multi-system support with no legacy
 
 ### Open Items
 - [ ] Confirm first GitHub Actions green run with enforced `80/80/80/80` coverage + Playwright gates.
-- [ ] Run final cross-system QA wording pass for PF1e feats, PF2e feats, and M&M complications/conditions.
+- [x] Run final cross-system QA wording pass for PF1e feats, PF2e feats, and M&M complications/conditions.
 - [ ] Keep docs synchronized after each data change via `npm run roadmap:metrics`.
 - [ ] Execute Phase 5 of `docs/refactoring/LEGACY_DEPRECATION_PLAN.md` (remove V1 storage bridge after support window).
 
@@ -232,7 +232,7 @@ Detailed phase/session writeups are preserved in `docs/archive/` and should be t
 ## Next Actions
 
 1. **Verify CI/CD:** Confirm the new test suite (47 engine tests) runs cleanly in CI.
-2. **Content QA:** Execute final QA wording pass for reconciled PF1e/PF2e/M&M datasets.
+2. **Content QA:** Final QA wording pass for reconciled PF1e/PF2e/M&M datasets is complete.
 3. **Documentation:** Keep `TECHNICAL_ROADMAP.md` synchronized.
 
 ---

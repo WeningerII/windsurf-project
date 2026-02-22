@@ -1027,12 +1027,11 @@ Ongoing: ████ Phase 6 (Documentation)
 - 0 non-compliant records across all systems
 - All counts now reflect ground truth
 
-### Next Priority: QA Pass
+### Next Priority: Architecture V2 Finalization
 
-**Remaining Work:**
-- Verify PF1e 86 CRB feats against d20pfsrd.com for accuracy
-- Verify PF2e 93 CRB feats against Archives of Nethys for accuracy
-- QA pass on M&M 3e complications and conditions for SRD accuracy
+- Finalize migration window for `rpg-documents-v2` in `documentStorage.ts`
+- Implement robust CI/CD gates (80% coverage minimums)
+- Extend documentation and usage guides for the new Document Model
 - Consider adding M&M complications/skills/conditions to loader metrics
 
 ---
