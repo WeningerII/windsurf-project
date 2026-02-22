@@ -187,14 +187,14 @@ The application is now fully architected for multi-system support with no legacy
 - [ ] Confirm first GitHub Actions green run with enforced `80/80/80/80` coverage + Playwright gates.
 - [x] Run final cross-system QA wording pass for PF1e feats, PF2e feats, and M&M complications/conditions.
 - [ ] Keep docs synchronized after each data change via `npm run roadmap:metrics`.
-- [ ] Execute Phase 5 of `docs/refactoring/LEGACY_DEPRECATION_PLAN.md` (remove V1 storage bridge after support window).
+- [x] Execute Phase 5 of `docs/refactoring/LEGACY_DEPRECATION_PLAN.md` (remove V1 storage bridge after support window).
 
 ### Completed in This Reconciliation Cycle
 - [x] **Architecture V2:** Full refactor to Document & Data Model.
 - [x] **Native Sheets:** Implemented for all systems including D&D 5e (2014 & 2024).
 - [x] **System Engines:** 6/6 real engines with 47/47 passing tests.
 - [x] **Persistence:** Auto-migration and robust storage.
-- [x] **Legacy Phase 4:** Legacy D20 UI adapter path (`D20SheetAdapter`, `CharacterSheet`, etc.) successfully retired.
+- [x] **Legacy Phase 5:** Removed legacy V1 storage bridge (`migrateLegacy.ts`, etc.) to complete `rpg-documents-v2` architecture.
 
 ---
 

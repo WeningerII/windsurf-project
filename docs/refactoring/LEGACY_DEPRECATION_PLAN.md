@@ -36,7 +36,7 @@ This audit was performed with targeted code search over runtime and test paths:
 | --- | --- | --- |
 | `src/utils/storage.ts` | Read by `src/utils/documentStorage.ts` during legacy fallback | Needed while supporting `rpg-characters` legacy imports. |
 | `src/utils/migrateLegacy.ts` | Used by `src/utils/documentStorage.ts` during fallback migration | Needed until legacy storage support is retired. |
-| `src/utils/documentStorage.ts` | Owns V2-first load + legacy migration semantics | Must remain until Phase 5 migration bridge removal. |
+| `src/utils/documentStorage.ts` | Owns V2-first load | Migration bridge removed in Phase 5. |
 
 ### 3) Transitional runtime adapters (active)
 
@@ -103,11 +103,13 @@ This audit was performed with targeted code search over runtime and test paths:
 
 ### Phase 5: Remove V1 Storage + Migration Bridge
 
-1. Remove `src/utils/storage.ts` once migration support window closes.
-2. Remove `src/utils/migrateLegacy.ts` if no longer needed.
-3. Remove V1 storage tests (`src/__tests__/storage.test.ts`) or convert them to historical fixture tests only.
+1. Remove `src/utils/storage.ts`.
+2. Remove `src/utils/migrateLegacy.ts`.
+3. Remove V1 storage tests (`src/__tests__/storage.test.ts`).
 
 **Exit Criteria:** Only V2 key `rpg-documents-v2` remains in runtime code.
+
+**Status:** Complete. V1 storage bridge and migration logic have been fully removed.
 
 ---
 
@@ -130,4 +132,4 @@ This audit was performed with targeted code search over runtime and test paths:
 - [x] Phase 2 complete
 - [x] Phase 3 complete
 - [x] Phase 4 complete
-- [ ] Phase 5 complete
+- [x] Phase 5 complete
