@@ -19,17 +19,19 @@ export const skeleton: Monster = {
   damageImmunities: ['poison'],
   conditionImmunities: ['exhaustion', 'poisoned'],
   senses: ['darkvision 60 ft.', 'passive Perception 9'],
-  languages: ['understands Common but can\'t speak'],
+  languages: ["understands Common but can't speak"],
   challengeRating: 0.25,
   experiencePoints: 50,
   actions: [
     {
       name: 'Shortsword',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
+      description:
+        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
     },
     {
       name: 'Shortbow',
-      description: 'Ranged Weapon Attack: +4 to hit, range 80/320 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
+      description:
+        'Ranged Weapon Attack: +4 to hit, range 80/320 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
     },
   ],
   environment: ['dungeon', 'ruins'],
@@ -51,19 +53,21 @@ export const zombie: Monster = {
   damageImmunities: ['poison'],
   conditionImmunities: ['poisoned'],
   senses: ['darkvision 60 ft.', 'passive Perception 8'],
-  languages: ['understands languages it knew in life but can\'t speak'],
+  languages: ["understands languages it knew in life but can't speak"],
   challengeRating: 0.25,
   experiencePoints: 50,
   specialAbilities: [
     {
       name: 'Undead Fortitude',
-      description: 'If damage reduces the zombie to 0 hit points, it must make a Constitution saving throw with a DC of 5 + the damage taken, unless the damage is radiant or from a critical hit. On a success, the zombie drops to 1 hit point instead.',
+      description:
+        'If damage reduces the zombie to 0 hit points, it must make a Constitution saving throw with a DC of 5 + the damage taken, unless the damage is radiant or from a critical hit. On a success, the zombie drops to 1 hit point instead.',
     },
   ],
   actions: [
     {
       name: 'Slam',
-      description: 'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) bludgeoning damage.',
+      description:
+        'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) bludgeoning damage.',
     },
   ],
   environment: ['dungeon', 'ruins', 'graveyard'],
@@ -90,11 +94,13 @@ export const ghoul: Monster = {
   actions: [
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +2 to hit, reach 5 ft., one target. Hit: 9 (2d6 + 2) piercing damage.',
+      description:
+        'Melee Weapon Attack: +2 to hit, reach 5 ft., one target. Hit: 9 (2d6 + 2) piercing damage.',
     },
     {
       name: 'Claws',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 7 (2d4 + 2) slashing damage. If the target is a creature other than an elf or undead, it must succeed on a DC 10 Constitution saving throw or be paralyzed for 1 minute. The target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success.',
+      description:
+        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 7 (2d4 + 2) slashing damage. If the target is a creature other than an elf or undead, it must succeed on a DC 10 Constitution saving throw or be paralyzed for 1 minute. The target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success.',
     },
   ],
   environment: ['dungeon', 'ruins', 'graveyard'],
@@ -114,9 +120,27 @@ export const shadow: Monster = {
   abilities: { str: 6, dex: 14, con: 13, int: 6, wis: 10, cha: 8 },
   skills: { Stealth: 4 },
   damageVulnerabilities: ['radiant'],
-  damageResistances: ['acid', 'cold', 'fire', 'lightning', 'thunder', 'bludgeoning', 'piercing', 'slashing'],
+  damageResistances: [
+    'acid',
+    'cold',
+    'fire',
+    'lightning',
+    'thunder',
+    'bludgeoning',
+    'piercing',
+    'slashing',
+  ],
   damageImmunities: ['necrotic', 'poison'],
-  conditionImmunities: ['exhaustion', 'frightened', 'grappled', 'paralyzed', 'petrified', 'poisoned', 'prone', 'restrained'],
+  conditionImmunities: [
+    'exhaustion',
+    'frightened',
+    'grappled',
+    'paralyzed',
+    'petrified',
+    'poisoned',
+    'prone',
+    'restrained',
+  ],
   senses: ['darkvision 60 ft.', 'passive Perception 10'],
   languages: [],
   challengeRating: 0.5,
@@ -124,29 +148,28 @@ export const shadow: Monster = {
   specialAbilities: [
     {
       name: 'Amorphous',
-      description: 'The shadow can move through a space as narrow as 1 inch wide without squeezing.',
+      description:
+        'The shadow can move through a space as narrow as 1 inch wide without squeezing.',
     },
     {
       name: 'Shadow Stealth',
-      description: 'While in dim light or darkness, the shadow can take the Hide action as a bonus action.',
+      description:
+        'While in dim light or darkness, the shadow can take the Hide action as a bonus action.',
     },
     {
       name: 'Sunlight Weakness',
-      description: 'While in sunlight, the shadow has disadvantage on attack rolls, ability checks, and saving throws.',
+      description:
+        'While in sunlight, the shadow has disadvantage on attack rolls, ability checks, and saving throws.',
     },
   ],
   actions: [
     {
       name: 'Strength Drain',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one creature. Hit: 9 (2d6 + 2) necrotic damage, and the target\'s Strength score is reduced by 1d4. The target dies if this reduces its Strength to 0. Otherwise, the reduction lasts until the target finishes a short or long rest.',
+      description:
+        "Melee Weapon Attack: +4 to hit, reach 5 ft., one creature. Hit: 9 (2d6 + 2) necrotic damage, and the target's Strength score is reduced by 1d4. The target dies if this reduces its Strength to 0. Otherwise, the reduction lasts until the target finishes a short or long rest.",
     },
   ],
   environment: ['dungeon', 'ruins'],
 };
 
-export const undeadCR0to5: Monster[] = [
-  skeleton,
-  zombie,
-  ghoul,
-  shadow,
-];
+export const undeadCR0to5: Monster[] = [skeleton, zombie, ghoul, shadow];

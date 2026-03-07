@@ -5,7 +5,8 @@ export const dragonicBloodlineSubclass: Subclass = {
   id: 'pf2e-sorcerer-draconic-bloodline',
   name: 'Draconic Bloodline',
   parentClassId: 'sorcerer',
-  description: 'A sorcerer with draconic heritage who wields dragon magic and gains draconic abilities.',
+  description:
+    'A sorcerer with draconic heritage who wields dragon magic and gains draconic abilities.',
   features: [
     {
       level: 1,
@@ -20,7 +21,8 @@ export const dragonicBloodlineSubclass: Subclass = {
           id: 'draconic-resilience',
           name: 'Draconic Resilience',
           source: 'Sorcerer 1',
-          description: 'You gain resistance to one type of elemental damage based on your dragon ancestry.',
+          description:
+            'You gain resistance to one type of elemental damage based on your dragon ancestry.',
         },
       ],
     },
@@ -108,7 +110,8 @@ export const dragonicBloodlineSubclass: Subclass = {
           id: 'draconic-ultimate-feat',
           name: 'Ultimate Draconic Feat',
           source: 'Sorcerer 9',
-          description: 'You gain an ultimate feat that represents the pinnacle of your draconic abilities.',
+          description:
+            'You gain an ultimate feat that represents the pinnacle of your draconic abilities.',
         },
       ],
     },
@@ -174,7 +177,8 @@ export const dragonicBloodlineSubclass: Subclass = {
           id: 'draconic-apex-feat',
           name: 'Apex Draconic Feat',
           source: 'Sorcerer 15',
-          description: 'You gain an apex feat that represents the ultimate expression of your draconic abilities.',
+          description:
+            'You gain an apex feat that represents the ultimate expression of your draconic abilities.',
         },
       ],
     },

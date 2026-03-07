@@ -16,9 +16,16 @@ export const ironGolem: Monster = {
   speed: { walk: 30 },
   abilities: { str: 24, dex: 9, con: 20, int: 3, wis: 11, cha: 1 },
   damageImmunities: ['fire', 'poison', 'psychic', 'bludgeoning', 'piercing', 'slashing'],
-  conditionImmunities: ['charmed', 'exhaustion', 'frightened', 'paralyzed', 'petrified', 'poisoned'],
+  conditionImmunities: [
+    'charmed',
+    'exhaustion',
+    'frightened',
+    'paralyzed',
+    'petrified',
+    'poisoned',
+  ],
   senses: ['darkvision 120 ft.', 'passive Perception 10'],
-  languages: ['understands the languages of its creator but can\'t speak'],
+  languages: ["understands the languages of its creator but can't speak"],
   challengeRating: 16,
   experiencePoints: 15000,
   specialAbilities: [
@@ -32,7 +39,7 @@ export const ironGolem: Monster = {
     },
     {
       name: 'Magic Weapons',
-      description: 'The golem\'s weapon attacks are magical.',
+      description: "The golem's weapon attacks are magical.",
     },
   ],
   actions: [
@@ -42,12 +49,11 @@ export const ironGolem: Monster = {
     },
     {
       name: 'Slam',
-      description: 'Melee Weapon Attack: +13 to hit, reach 5 ft., one target. Hit: 20 (3d8 + 7) bludgeoning damage.',
+      description:
+        'Melee Weapon Attack: +13 to hit, reach 5 ft., one target. Hit: 20 (3d8 + 7) bludgeoning damage.',
     },
   ],
   environment: ['dungeon', 'tower'],
 };
 
-export const constructsCR6to10: Monster[] = [
-  ironGolem,
-];
+export const constructsCR6to10: Monster[] = [ironGolem];

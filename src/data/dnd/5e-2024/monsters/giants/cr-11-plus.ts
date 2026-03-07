@@ -29,7 +29,8 @@ export const stormGiant: Monster = {
     },
     {
       name: 'Legendary Resistance',
-      description: 'If the giant fails a saving throw, it can choose to succeed instead. It can use this trait three times and regains expended uses when it finishes a long rest.',
+      description:
+        'If the giant fails a saving throw, it can choose to succeed instead. It can use this trait three times and regains expended uses when it finishes a long rest.',
     },
   ],
   actions: [
@@ -39,15 +40,18 @@ export const stormGiant: Monster = {
     },
     {
       name: 'Greatsword',
-      description: 'Melee Weapon Attack: +12 to hit, reach 15 ft., one target. Hit: 28 (6d6 + 8) slashing damage.',
+      description:
+        'Melee Weapon Attack: +12 to hit, reach 15 ft., one target. Hit: 28 (6d6 + 8) slashing damage.',
     },
     {
       name: 'Rock',
-      description: 'Ranged Weapon Attack: +12 to hit, range 60/240 ft., one target. Hit: 35 (10d6) bludgeoning damage.',
+      description:
+        'Ranged Weapon Attack: +12 to hit, range 60/240 ft., one target. Hit: 35 (10d6) bludgeoning damage.',
     },
     {
       name: 'Lightning Strike',
-      description: 'The giant casts lightning bolt as a 6th-level spell, centered on itself. Each creature within 100 feet of the giant must make a DC 17 Dexterity saving throw, taking 54 (12d8) lightning damage on a failed save, or half as much on a successful one.',
+      description:
+        'The giant casts lightning bolt as a 6th-level spell, centered on itself. Each creature within 100 feet of the giant must make a DC 17 Dexterity saving throw, taking 54 (12d8) lightning damage on a failed save, or half as much on a successful one.',
     },
   ],
   legendaryActions: [
@@ -70,6 +74,4 @@ export const stormGiant: Monster = {
   environment: ['mountain'],
 };
 
-export const giantsCR11Plus: Monster[] = [
-  stormGiant,
-];
+export const giantsCR11Plus: Monster[] = [stormGiant];

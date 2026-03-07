@@ -14,7 +14,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'Blessings from beyond help your companions strike true. You and your allies in the area gain a +1 status bonus to attack rolls.',
+    description:
+      'Blessings from beyond help your companions strike true. You and your allies in the area gain a +1 status bonus to attack rolls.',
     classes: ['cleric'],
   },
   {
@@ -31,7 +32,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'Gouts of flame rush from your hands. You deal 2d6 fire damage to creatures in the area. Each creature must attempt a basic Reflex save.',
+    description:
+      'Gouts of flame rush from your hands. You deal 2d6 fire damage to creatures in the area. Each creature must attempt a basic Reflex save.',
     damage: { base: { count: 2, die: 'd6', notation: '2d6' }, type: 'fire' },
     savingThrow: { attribute: 'dex', success: 'half' },
     classes: ['sorcerer', 'wizard'],
@@ -50,7 +52,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'Brilliant colors flash from your hand in a vibrant spray. Creatures in the cone must attempt a Will save. On a failure, creatures are dazzled for 1 round. On a critical failure, creatures are stunned 1, blinded, and dazzled.',
+    description:
+      'Brilliant colors flash from your hand in a vibrant spray. Creatures in the cone must attempt a Will save. On a failure, creatures are dazzled for 1 round. On a critical failure, creatures are stunned 1, blinded, and dazzled.',
     savingThrow: { attribute: 'wis', success: 'none' },
     classes: ['sorcerer', 'wizard'],
   },
@@ -67,7 +70,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'rounds', rounds: 1 },
     concentration: false,
     ritual: false,
-    description: 'You shout a command that\'s hard to ignore. You can command the target to approach you, flee from you, release what it\'s holding, drop prone, or stand in place. The target must attempt a Will save.',
+    description:
+      "You shout a command that's hard to ignore. You can command the target to approach you, flee from you, release what it's holding, drop prone, or stand in place. The target must attempt a Will save.",
     savingThrow: { attribute: 'wis', success: 'none' },
     classes: ['bard', 'cleric'],
   },
@@ -84,7 +88,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You make a request of a creature. The target must attempt a Will save. On a failure, it is compelled to comply with a reasonable request.',
+    description:
+      'You make a request of a creature. The target must attempt a Will save. On a failure, it is compelled to comply with a reasonable request.',
     classes: ['bard', 'cleric'],
   },
   {
@@ -100,7 +105,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You plant fear in the target; it must attempt a Will save. On a failure, the target becomes frightened 1 (or frightened 2 on a critical failure). On a critical success, the target is unaffected.',
+    description:
+      'You plant fear in the target; it must attempt a Will save. On a failure, the target becomes frightened 1 (or frightened 2 on a critical failure). On a critical success, the target is unaffected.',
     savingThrow: { attribute: 'wis', success: 'none' },
     classes: ['bard', 'sorcerer', 'wizard'],
   },
@@ -133,7 +139,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 10 },
     concentration: false,
     ritual: false,
-    description: 'A shroud of mist surrounds the target, granting concealment against ranged attacks.',
+    description:
+      'A shroud of mist surrounds the target, granting concealment against ranged attacks.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -150,7 +157,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'You conjure grease, with effects based on choosing area or target. Area: All solid ground in the area is covered with grease. Each creature standing on the greasy surface must succeed at a Reflex save or fall prone.',
+    description:
+      'You conjure grease, with effects based on choosing area or target. Area: All solid ground in the area is covered with grease. Each creature standing on the greasy surface must succeed at a Reflex save or fall prone.',
     savingThrow: { attribute: 'dex', success: 'none' },
     classes: ['sorcerer', 'wizard'],
   },
@@ -167,7 +175,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'Tendrils of shadow strike the target. Make a spell attack. On a hit, you deal 1d6 negative damage and the target is frightened 1.',
+    description:
+      'Tendrils of shadow strike the target. Make a spell attack. On a hit, you deal 1d6 negative damage and the target is frightened 1.',
     damage: { base: { count: 1, die: 'd6', notation: '1d6' }, type: 'necrotic' },
     classes: ['sorcerer', 'wizard'],
   },
@@ -184,7 +193,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'rounds', rounds: 1 },
     concentration: false,
     ritual: false,
-    description: 'You create a powerful blast of air in a line 60 feet long and 10 feet wide. Each creature in the line must attempt a Fortitude save. On a failure, creatures are pushed 10 feet away from you.',
+    description:
+      'You create a powerful blast of air in a line 60 feet long and 10 feet wide. Each creature in the line must attempt a Fortitude save. On a failure, creatures are pushed 10 feet away from you.',
     classes: ['druid', 'sorcerer', 'wizard'],
   },
   {
@@ -216,7 +226,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You channel positive energy to heal the living or damage the undead. If the target is a willing living creature, you restore 1d8 Hit Points. If the target is undead, you deal that amount of positive damage to it, and it gets a basic Fortitude save.',
+    description:
+      'You channel positive energy to heal the living or damage the undead. If the target is a willing living creature, you restore 1d8 Hit Points. If the target is undead, you deal that amount of positive damage to it, and it gets a basic Fortitude save.',
     classes: ['cleric', 'druid'],
   },
   {
@@ -232,7 +243,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'hours', hours: 1 },
     concentration: false,
     ritual: false,
-    description: 'You make yourself look like a different humanoid. Creatures can attempt a Perception check to see through the disguise.',
+    description:
+      'You make yourself look like a different humanoid. Creatures can attempt a Perception check to see through the disguise.',
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -248,7 +260,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'You enhance the target\'s ability to leap. The target can jump 5 feet vertically and 10 feet horizontally, or 10 feet vertically and 20 feet horizontally if it Strides at least 10 feet first.',
+    description:
+      "You enhance the target's ability to leap. The target can jump 5 feet vertically and 10 feet horizontally, or 10 feet vertically and 20 feet horizontally if it Strides at least 10 feet first.",
     classes: ['druid', 'ranger', 'sorcerer', 'wizard'],
   },
   {
@@ -280,7 +293,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'permanent' },
     concentration: false,
     ritual: false,
-    description: 'The target lock becomes harder to pick. The DC to Pick the Lock increases by 5. If you have the lock\'s key, you can unlock it normally.',
+    description:
+      "The target lock becomes harder to pick. The DC to Pick the Lock increases by 5. If you have the lock's key, you can unlock it normally.",
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -296,7 +310,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You send a dart of force streaking toward a creature that you can see. It automatically hits and deals 1d4+1 force damage. For each additional action you use when Casting the Spell, increase the number of missiles you shoot by one, to a maximum of three missiles for 3 actions.',
+    description:
+      'You send a dart of force streaking toward a creature that you can see. It automatically hits and deals 1d4+1 force damage. For each additional action you use when Casting the Spell, increase the number of missiles you shoot by one, to a maximum of three missiles for 3 actions.',
     damage: { base: { count: 1, die: 'd4', notation: '1d4+1' }, type: 'force' },
     classes: ['sorcerer', 'wizard'],
   },
@@ -313,7 +328,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'The weapon glimmers with magical power. The target becomes a +1 striking weapon, gaining a +1 item bonus to attack rolls and increasing the number of weapon damage dice to two.',
+    description:
+      'The weapon glimmers with magical power. The target becomes a +1 striking weapon, gaining a +1 item bonus to attack rolls and increasing the number of weapon damage dice to two.',
     classes: ['cleric', 'sorcerer', 'wizard'],
   },
   {
@@ -329,7 +345,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 10 },
     concentration: false,
     ritual: false,
-    description: 'You link your mind to the target\'s mind. You can communicate telepathically with the target as long as you both remain within 500 feet of each other.',
+    description:
+      "You link your mind to the target's mind. You can communicate telepathically with the target as long as you both remain within 500 feet of each other.",
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -345,7 +362,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'hours', hours: 1 },
     concentration: false,
     ritual: false,
-    description: 'You eliminate all scent from the target creature or object. This prevents creatures from tracking the target by scent and negates any special senses that rely on smell.',
+    description:
+      'You eliminate all scent from the target creature or object. This prevents creatures from tracking the target by scent and negates any special senses that rely on smell.',
     classes: ['druid', 'ranger'],
   },
   {
@@ -361,7 +379,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 10 },
     concentration: false,
     ritual: false,
-    description: 'You transform into a Tiny animal pest form. You can choose the specific pest form each time you cast the spell. You gain low-light vision and a +4 status bonus to Stealth checks.',
+    description:
+      'You transform into a Tiny animal pest form. You can choose the specific pest form each time you cast the spell. You gain low-light vision and a +4 status bonus to Stealth checks.',
     classes: ['druid', 'sorcerer', 'wizard'],
   },
   {
@@ -377,7 +396,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'A ray with the power to sap a foe\'s strength flashes from your hand. Attempt a ranged spell attack against the target. On a hit, the target becomes enfeebled 2 for 1 minute. On a critical hit, the target is enfeebled 3 for 1 minute.',
+    description:
+      "A ray with the power to sap a foe's strength flashes from your hand. Attempt a ranged spell attack against the target. On a hit, the target becomes enfeebled 2 for 1 minute. On a critical hit, the target is enfeebled 3 for 1 minute.",
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -393,7 +413,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'You ward a creature with protective energy that deters enemy attacks. Creatures attempting to attack the target must attempt a Will save each time. On a failure, they must choose a different target or the attack fails.',
+    description:
+      'You ward a creature with protective energy that deters enemy attacks. Creatures attempting to attack the target must attempt a Will save each time. On a failure, they must choose a different target or the attack fails.',
     classes: ['cleric'],
   },
   {
@@ -409,7 +430,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You shroud your hands in a crackling field of lightning. Make a melee spell attack roll. On a hit, you deal 2d12 electricity damage. If the target is wearing metal armor or is made of metal, you gain a +1 circumstance bonus to your attack roll.',
+    description:
+      'You shroud your hands in a crackling field of lightning. Make a melee spell attack roll. On a hit, you deal 2d12 electricity damage. If the target is wearing metal armor or is made of metal, you gain a +1 circumstance bonus to your attack roll.',
     damage: { base: { count: 2, die: 'd12', notation: '2d12' }, type: 'electricity' },
     classes: ['sorcerer', 'wizard'],
   },
@@ -426,7 +448,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You grace the target with soothing energy. The target regains 1d10+4 Hit Points. You also attempt to counteract the frightened condition.',
+    description:
+      'You grace the target with soothing energy. The target regains 1d10+4 Hit Points. You also attempt to counteract the frightened condition.',
     classes: ['bard', 'cleric'],
   },
   {
@@ -442,7 +465,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'You conjure an animal to fight for you. You summon a common creature that has the animal trait and whose level is -1. It acts on your turn.',
+    description:
+      'You conjure an animal to fight for you. You summon a common creature that has the animal trait and whose level is -1. It acts on your turn.',
     classes: ['druid', 'ranger'],
   },
   {
@@ -458,7 +482,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'A glimpse into the future ensures your next blow strikes true. The next time you make an attack roll before the end of your turn, roll the attack twice and use the better result. The attack ignores circumstance penalties to the attack roll and any flat check required due to the target being concealed or hidden.',
+    description:
+      'A glimpse into the future ensures your next blow strikes true. The next time you make an attack roll before the end of your turn, roll the attack twice and use the better result. The attack ignores circumstance penalties to the attack roll and any flat check required due to the target being concealed or hidden.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -474,7 +499,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 10 },
     concentration: false,
     ritual: false,
-    description: 'Whenever you speak or make a sound, you can make it appear to originate from somewhere else within range. This can allow you to make it seem like someone else is speaking.',
+    description:
+      'Whenever you speak or make a sound, you can make it appear to originate from somewhere else within range. This can allow you to make it seem like someone else is speaking.',
     classes: ['bard', 'sorcerer', 'wizard'],
   },
 ];

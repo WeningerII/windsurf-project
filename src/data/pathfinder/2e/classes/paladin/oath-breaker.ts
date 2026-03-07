@@ -5,7 +5,8 @@ export const oathBreakerSubclass: Subclass = {
   id: 'pf2e-paladin-oath-breaker',
   name: 'Oath Breaker',
   parentClassId: 'paladin',
-  description: 'A fallen paladin who has broken their oath and now wields dark power through their betrayal.',
+  description:
+    'A fallen paladin who has broken their oath and now wields dark power through their betrayal.',
   features: [
     {
       level: 1,
@@ -108,7 +109,8 @@ export const oathBreakerSubclass: Subclass = {
           id: 'oath-breaker-ultimate-feat',
           name: 'Ultimate Oath Breaker Feat',
           source: 'Paladin 9',
-          description: 'You gain an ultimate feat that represents the pinnacle of your oath breaker abilities.',
+          description:
+            'You gain an ultimate feat that represents the pinnacle of your oath breaker abilities.',
         },
       ],
     },
@@ -174,7 +176,8 @@ export const oathBreakerSubclass: Subclass = {
           id: 'oath-breaker-apex-feat',
           name: 'Apex Oath Breaker Feat',
           source: 'Paladin 15',
-          description: 'You gain an apex feat that represents the ultimate expression of your oath breaker abilities.',
+          description:
+            'You gain an apex feat that represents the ultimate expression of your oath breaker abilities.',
         },
       ],
     },
@@ -196,7 +199,8 @@ export const oathBreakerSubclass: Subclass = {
           id: 'oath-breaker-transcendent-feat',
           name: 'Transcendent Oath Breaker Feat',
           source: 'Paladin 17',
-          description: 'You gain a transcendent feat that goes beyond normal oath breaker abilities.',
+          description:
+            'You gain a transcendent feat that goes beyond normal oath breaker abilities.',
         },
       ],
     },

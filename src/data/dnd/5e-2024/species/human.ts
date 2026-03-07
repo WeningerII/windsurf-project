@@ -7,7 +7,7 @@ export const human: Species = {
   source: 'SRD 5.2',
   size: 'medium',
   speed: 30,
-  
+
   abilityScoreIncrease: [
     {
       type: 'choice',
@@ -19,7 +19,7 @@ export const human: Species = {
       values: [2, 1],
     },
   ],
-  
+
   traits: [
     {
       id: 'resourceful',
@@ -40,7 +40,7 @@ export const human: Species = {
       description: 'You gain an Origin feat of your choice.',
     },
   ],
-  
+
   languages: {
     automatic: ['Common'],
     choice: {
@@ -49,12 +49,14 @@ export const human: Species = {
       label: 'Choose one additional language',
     },
   },
-  
-  description: 'Humans are the most adaptable and ambitious people among the common species. They have widely varying tastes, morals, and customs in the many different lands where they have settled.',
-  
+
+  description:
+    'Humans are the most adaptable and ambitious people among the common species. They have widely varying tastes, morals, and customs in the many different lands where they have settled.',
+
   ageInfo: 'Humans reach adulthood in their late teens and live less than a century.',
-  
+
   alignmentTendency: 'Humans tend toward no particular alignment.',
-  
-  sizeDescription: 'Humans vary widely in height and build, from barely 5 feet to well over 6 feet tall. Your size is Medium.',
+
+  sizeDescription:
+    'Humans vary widely in height and build, from barely 5 feet to well over 6 feet tall. Your size is Medium.',
 };

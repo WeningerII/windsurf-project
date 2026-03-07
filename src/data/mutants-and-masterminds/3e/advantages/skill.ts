@@ -11,7 +11,8 @@ export const skillAdvantages: Advantage[] = [
     type: 'skill',
     ranked: false,
     description: 'Use Acrobatics or movement speed to feint.',
-    benefit: 'You can use your Acrobatics bonus or movement speed rank in place of Deception to feint and trick in combat. Your opponent opposes the attempt with Acrobatics or Insight (whichever is better).',
+    benefit:
+      'You can use your Acrobatics bonus or movement speed rank in place of Deception to feint and trick in combat. Your opponent opposes the attempt with Acrobatics or Insight (whichever is better).',
   },
   {
     id: 'animal-empathy',
@@ -21,7 +22,8 @@ export const skillAdvantages: Advantage[] = [
     type: 'skill',
     ranked: false,
     description: 'Use interaction skills on animals.',
-    benefit: 'You can use interaction skills on animals normally without the usual –10 circumstance penalty, and do not have to speak a language the animal understands; you communicate through gestures and body language.',
+    benefit:
+      'You can use interaction skills on animals normally without the usual –10 circumstance penalty, and do not have to speak a language the animal understands; you communicate through gestures and body language.',
   },
   {
     id: 'artificer',
@@ -31,7 +33,8 @@ export const skillAdvantages: Advantage[] = [
     type: 'skill',
     ranked: false,
     description: 'Create temporary magical devices.',
-    benefit: 'You can use the Expertise: Magic skill to create temporary magical devices. See Magical Inventions for details.',
+    benefit:
+      'You can use the Expertise: Magic skill to create temporary magical devices. See Magical Inventions for details.',
   },
   {
     id: 'attractive',
@@ -42,7 +45,8 @@ export const skillAdvantages: Advantage[] = [
     ranked: true,
     maxRanks: 2,
     description: 'Bonus to interaction skills based on appearance.',
-    benefit: 'You gain a +2 circumstance bonus on Deception and Persuasion checks to deceive, seduce, or change the attitude of anyone who finds your looks appealing. Rank 2 (Very Attractive) increases the bonus to +5. This bonus does not count toward power level limits.',
+    benefit:
+      'You gain a +2 circumstance bonus on Deception and Persuasion checks to deceive, seduce, or change the attitude of anyone who finds your looks appealing. Rank 2 (Very Attractive) increases the bonus to +5. This bonus does not count toward power level limits.',
   },
   {
     id: 'connected',
@@ -52,7 +56,8 @@ export const skillAdvantages: Advantage[] = [
     type: 'skill',
     ranked: false,
     description: 'Call in favors with a Persuasion check.',
-    benefit: 'You know people who can help you out. Make a Persuasion check to call in favors (DC 10 for simple favors, up to DC 25+ for difficult ones). You can spend a victory point to automatically secure the favor, if the GM allows it.',
+    benefit:
+      'You know people who can help you out. Make a Persuasion check to call in favors (DC 10 for simple favors, up to DC 25+ for difficult ones). You can spend a victory point to automatically secure the favor, if the GM allows it.',
   },
   {
     id: 'contacts',
@@ -62,7 +67,8 @@ export const skillAdvantages: Advantage[] = [
     type: 'skill',
     ranked: false,
     description: 'Gather information in minutes instead of hours.',
-    benefit: 'You have such extensive and well-informed contacts you can make an Investigation check to gather information in only one minute, assuming you have some means of getting in touch with them. Further checks on the same subject require the normal length of time.',
+    benefit:
+      'You have such extensive and well-informed contacts you can make an Investigation check to gather information in only one minute, assuming you have some means of getting in touch with them. Further checks on the same subject require the normal length of time.',
   },
   {
     id: 'daze',
@@ -73,7 +79,8 @@ export const skillAdvantages: Advantage[] = [
     ranked: true,
     maxRanks: 2,
     description: 'Use Deception or Intimidation to daze an opponent.',
-    benefit: 'You can make a Deception or Intimidation check (choose one when you acquire this advantage) as a standard action to cause an opponent to hesitate. Make a skill check against the target\'s resistance (same skill, Insight, or Will, whichever is highest). If you win, the target is dazed until the end of your next round.',
+    benefit:
+      "You can make a Deception or Intimidation check (choose one when you acquire this advantage) as a standard action to cause an opponent to hesitate. Make a skill check against the target's resistance (same skill, Insight, or Will, whichever is highest). If you win, the target is dazed until the end of your next round.",
   },
   {
     id: 'fascinate',
@@ -82,8 +89,9 @@ export const skillAdvantages: Advantage[] = [
     source: "Hero's Handbook",
     type: 'skill',
     ranked: true,
-    description: 'Hold a target\'s attention with an interaction skill.',
-    benefit: 'Choose Deception, Intimidation, or Persuasion (or an appropriate Expertise skill). Take a standard action and make a skill check against the target\'s opposing check (Insight or Will). If you succeed, the target is entranced. You can maintain the effect with a standard action each round.',
+    description: "Hold a target's attention with an interaction skill.",
+    benefit:
+      "Choose Deception, Intimidation, or Persuasion (or an appropriate Expertise skill). Take a standard action and make a skill check against the target's opposing check (Insight or Will). If you succeed, the target is entranced. You can maintain the effect with a standard action each round.",
   },
   {
     id: 'favored-foe',
@@ -93,7 +101,8 @@ export const skillAdvantages: Advantage[] = [
     type: 'skill',
     ranked: false,
     description: 'Circumstance bonus against a particular type of opponent.',
-    benefit: 'Choose a type of opponent you\'ve studied (aliens, animals, constructs, mutants, undead, etc.). You gain a +2 circumstance bonus on Deception, Intimidation, Insight, and Perception checks dealing with your favored foe. This bonus is not limited by power level.',
+    benefit:
+      "Choose a type of opponent you've studied (aliens, animals, constructs, mutants, undead, etc.). You gain a +2 circumstance bonus on Deception, Intimidation, Insight, and Perception checks dealing with your favored foe. This bonus is not limited by power level.",
   },
   {
     id: 'hide-in-plain-sight',
@@ -103,7 +112,8 @@ export const skillAdvantages: Advantage[] = [
     type: 'skill',
     ranked: false,
     description: 'Hide without a diversion or check.',
-    benefit: 'You can hide without any need for a Deception or Intimidation check or diversion, and without penalty to your Stealth check. You must still have some form of cover or concealment within range of your normal movement speed.',
+    benefit:
+      'You can hide without any need for a Deception or Intimidation check or diversion, and without penalty to your Stealth check. You must still have some form of cover or concealment within range of your normal movement speed.',
   },
   {
     id: 'improvised-tools',
@@ -113,7 +123,8 @@ export const skillAdvantages: Advantage[] = [
     type: 'skill',
     ranked: false,
     description: 'Ignore the penalty for lacking proper tools.',
-    benefit: 'You ignore the circumstance penalty for using skills without proper tools, since you can improvise sufficient tools from whatever is at hand. If forced to work without tools at all, you suffer only a –2 penalty.',
+    benefit:
+      'You ignore the circumstance penalty for using skills without proper tools, since you can improvise sufficient tools from whatever is at hand. If forced to work without tools at all, you suffer only a –2 penalty.',
   },
   {
     id: 'inventor',
@@ -133,7 +144,8 @@ export const skillAdvantages: Advantage[] = [
     type: 'skill',
     ranked: false,
     description: 'Use any skill untrained.',
-    benefit: 'You can use any skill untrained, even skills or aspects of skills that normally cannot be used untrained, although you must still have proper tools if the skill requires them.',
+    benefit:
+      'You can use any skill untrained, even skills or aspects of skills that normally cannot be used untrained, although you must still have proper tools if the skill requires them.',
   },
   {
     id: 'ritualist',
@@ -143,7 +155,8 @@ export const skillAdvantages: Advantage[] = [
     type: 'skill',
     ranked: false,
     description: 'Create and cast magical rituals.',
-    benefit: 'You can use the Expertise: Magic skill to create and cast magical rituals. This advantage is often a back-up or secondary magical ability, and may be the only form of magic available to some characters.',
+    benefit:
+      'You can use the Expertise: Magic skill to create and cast magical rituals. This advantage is often a back-up or secondary magical ability, and may be the only form of magic available to some characters.',
   },
   {
     id: 'skill-mastery',
@@ -153,7 +166,8 @@ export const skillAdvantages: Advantage[] = [
     type: 'skill',
     ranked: false,
     description: 'Make routine checks with a chosen skill under pressure.',
-    benefit: 'Choose a skill. You can make routine checks with that skill even when under pressure. This does not allow routine checks with skills that do not normally allow them. You can take this advantage multiple times for different skills.',
+    benefit:
+      'Choose a skill. You can make routine checks with that skill even when under pressure. This does not allow routine checks with skills that do not normally allow them. You can take this advantage multiple times for different skills.',
   },
   {
     id: 'startle',
@@ -163,7 +177,8 @@ export const skillAdvantages: Advantage[] = [
     type: 'skill',
     ranked: false,
     description: 'Use Intimidation to feint in combat.',
-    benefit: 'You can use Intimidation rather than Deception to feint in combat. Targets resist with Insight, Intimidation, or Will defense.',
+    benefit:
+      'You can use Intimidation rather than Deception to feint in combat. Targets resist with Insight, Intimidation, or Will defense.',
   },
   {
     id: 'taunt',
@@ -173,7 +188,8 @@ export const skillAdvantages: Advantage[] = [
     type: 'skill',
     ranked: false,
     description: 'Use Deception to demoralize.',
-    benefit: 'You can demoralize an opponent with Deception rather than Intimidation, disparaging and undermining confidence. Targets resist using Deception, Insight, or Will defense.',
+    benefit:
+      'You can demoralize an opponent with Deception rather than Intimidation, disparaging and undermining confidence. Targets resist using Deception, Insight, or Will defense.',
   },
   {
     id: 'tracking',
@@ -183,7 +199,8 @@ export const skillAdvantages: Advantage[] = [
     type: 'skill',
     ranked: false,
     description: 'Use Perception to visually follow tracks.',
-    benefit: 'You can use the Perception skill to visually follow tracks like the Tracking Senses effect.',
+    benefit:
+      'You can use the Perception skill to visually follow tracks like the Tracking Senses effect.',
   },
   {
     id: 'well-informed',
@@ -193,6 +210,7 @@ export const skillAdvantages: Advantage[] = [
     type: 'skill',
     ranked: false,
     description: 'Immediate knowledge check upon encountering someone or something.',
-    benefit: 'When encountering an individual, group, or organization for the first time, you can make an immediate Investigation or Persuasion skill check to see if you have heard something about the subject. You receive only one check per subject upon first encountering them.',
+    benefit:
+      'When encountering an individual, group, or organization for the first time, you can make an immediate Investigation or Persuasion skill check to see if you have heard something about the subject. You receive only one check per subject upon first encountering them.',
   },
 ];

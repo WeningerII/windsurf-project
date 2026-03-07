@@ -25,22 +25,23 @@ export const succubus: Monster = {
   specialAbilities: [
     {
       name: 'Telepathic Bond',
-      description: 'The succubus ignores the range restriction on its telepathy when communicating with a creature it has charmed. The charmed creature can respond telepathically to the succubus even when it is on a different plane of existence.',
+      description:
+        'The succubus ignores the range restriction on its telepathy when communicating with a creature it has charmed. The charmed creature can respond telepathically to the succubus even when it is on a different plane of existence.',
     },
   ],
   actions: [
     {
       name: 'Claw',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) slashing damage.',
+      description:
+        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) slashing damage.',
     },
     {
       name: 'Charm',
-      description: 'One humanoid the succubus can see within 30 feet of it must make a DC 15 Wisdom saving throw or be magically charmed for 1 day. The charmed creature obeys the succubus\'s verbal or telepathic commands. If the target takes any damage, it can repeat the saving throw, ending the effect on a success.',
+      description:
+        "One humanoid the succubus can see within 30 feet of it must make a DC 15 Wisdom saving throw or be magically charmed for 1 day. The charmed creature obeys the succubus's verbal or telepathic commands. If the target takes any damage, it can repeat the saving throw, ending the effect on a success.",
     },
   ],
   environment: ['underdark', 'urban'],
 };
 
-export const fiendsCR6to10: Monster[] = [
-  succubus,
-];
+export const fiendsCR6to10: Monster[] = [succubus];

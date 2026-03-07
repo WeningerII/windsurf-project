@@ -23,25 +23,28 @@ export const dnd5eEquipmentByType = {
 };
 
 // Index by ID
-export const dnd5eEquipmentById: Record<string, Weapon | Armor | Shield | Item> = 
-  dnd5eEquipment.reduce((acc, item) => {
-    acc[item.id] = item;
-    return acc;
-  }, {} as Record<string, Weapon | Armor | Shield | Item>);
+export const dnd5eEquipmentById: Record<string, Weapon | Armor | Shield | Item> =
+  dnd5eEquipment.reduce(
+    (acc, item) => {
+      acc[item.id] = item;
+      return acc;
+    },
+    {} as Record<string, Weapon | Armor | Shield | Item>
+  );
 
 // Weapons by category
 export const dnd5eWeaponsByType = {
-  simpleMelee: dnd5eWeapons.filter(w => w.weaponType === 'simple' && w.category === 'melee'),
-  simpleRanged: dnd5eWeapons.filter(w => w.weaponType === 'simple' && w.category === 'ranged'),
-  martialMelee: dnd5eWeapons.filter(w => w.weaponType === 'martial' && w.category === 'melee'),
-  martialRanged: dnd5eWeapons.filter(w => w.weaponType === 'martial' && w.category === 'ranged'),
+  simpleMelee: dnd5eWeapons.filter((w) => w.weaponType === 'simple' && w.category === 'melee'),
+  simpleRanged: dnd5eWeapons.filter((w) => w.weaponType === 'simple' && w.category === 'ranged'),
+  martialMelee: dnd5eWeapons.filter((w) => w.weaponType === 'martial' && w.category === 'melee'),
+  martialRanged: dnd5eWeapons.filter((w) => w.weaponType === 'martial' && w.category === 'ranged'),
 };
 
 // Armor by type
 export const dnd5eArmorByType = {
-  light: dnd5eArmor.filter(a => a.armorType === 'light'),
-  medium: dnd5eArmor.filter(a => a.armorType === 'medium'),
-  heavy: dnd5eArmor.filter(a => a.armorType === 'heavy'),
+  light: dnd5eArmor.filter((a) => a.armorType === 'light'),
+  medium: dnd5eArmor.filter((a) => a.armorType === 'medium'),
+  heavy: dnd5eArmor.filter((a) => a.armorType === 'heavy'),
 };
 
 // Statistics
@@ -79,15 +82,19 @@ export function getEquipmentById(id: string): (Weapon | Armor | Shield | Item) |
 }
 
 export function getWeaponsByProperty(property: string): Weapon[] {
-  return dnd5eWeapons.filter(w => w.properties.some(p => p === property));
+  return dnd5eWeapons.filter((w) => w.properties.some((p) => p === property));
 }
 
 export function getArmorByMaxAC(): Armor[] {
   return [...dnd5eArmor].sort((a, b) => b.armorClass - a.armorClass);
 }
 
-export function getEquipmentByPriceRange(min: number, max: number, currency: 'cp' | 'sp' | 'gp' | 'pp' = 'gp'): (Weapon | Armor | Shield | Item)[] {
-  return dnd5eEquipment.filter(item => {
+export function getEquipmentByPriceRange(
+  min: number,
+  max: number,
+  currency: 'cp' | 'sp' | 'gp' | 'pp' = 'gp'
+): (Weapon | Armor | Shield | Item)[] {
+  return dnd5eEquipment.filter((item) => {
     if (item.cost.currency !== currency) return false;
     return item.cost.amount >= min && item.cost.amount <= max;
   });

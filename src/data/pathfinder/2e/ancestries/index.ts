@@ -17,12 +17,4 @@ export const pf2eAncestries = {
   orc,
 };
 
-export {
-  dwarf,
-  elf,
-  gnome,
-  goblin,
-  halfling,
-  human,
-  orc,
-};
+export { dwarf, elf, gnome, goblin, halfling, human, orc };

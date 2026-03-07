@@ -16,9 +16,9 @@ export const dnd5e2024Backgrounds: Background[] = [
 ];
 
 export function getBackgroundById(id: string): Background | undefined {
-  return dnd5e2024Backgrounds.find(bg => bg.id === id);
+  return dnd5e2024Backgrounds.find((bg) => bg.id === id);
 }
 
 export function getBackgroundsBySystem(system: string): Background[] {
-  return dnd5e2024Backgrounds.filter(bg => bg.system === system);
+  return dnd5e2024Backgrounds.filter((bg) => bg.system === system);
 }

@@ -20,5 +20,5 @@ export const allPf2eArchetypes: Archetype[] = [
 
 // Archetypes indexed by id for quick lookup
 export const pf2eArchetypes: Record<string, Archetype> = Object.fromEntries(
-  allPf2eArchetypes.map(a => [a.id, a])
+  allPf2eArchetypes.map((a) => [a.id, a])
 );

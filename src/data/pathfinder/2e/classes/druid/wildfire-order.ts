@@ -5,7 +5,8 @@ export const wildfireOrderSubclass: Subclass = {
   id: 'pf2e-druid-wildfire-order',
   name: 'Wildfire Order',
   parentClassId: 'druid',
-  description: 'A druid devoted to the primal forces of fire and destruction, channeling the power of wildfires.',
+  description:
+    'A druid devoted to the primal forces of fire and destruction, channeling the power of wildfires.',
   features: [
     {
       level: 1,
@@ -31,7 +32,8 @@ export const wildfireOrderSubclass: Subclass = {
           id: 'wildfire-form',
           name: 'Wildfire Form',
           source: 'Druid 2',
-          description: 'You can assume a form wreathed in flames, gaining fire immunity and dealing fire damage with melee attacks.',
+          description:
+            'You can assume a form wreathed in flames, gaining fire immunity and dealing fire damage with melee attacks.',
         },
       ],
     },
@@ -53,7 +55,8 @@ export const wildfireOrderSubclass: Subclass = {
           id: 'improved-wildfire',
           name: 'Improved Wildfire',
           source: 'Druid 4',
-          description: 'Your wildfire abilities become more powerful. Increase the damage of your fire spells.',
+          description:
+            'Your wildfire abilities become more powerful. Increase the damage of your fire spells.',
         },
       ],
     },
@@ -64,7 +67,8 @@ export const wildfireOrderSubclass: Subclass = {
           id: 'wildfire-mastery',
           name: 'Wildfire Mastery',
           source: 'Druid 5',
-          description: 'You have mastered wildfire magic. Your fire spells can now spread to nearby creatures.',
+          description:
+            'You have mastered wildfire magic. Your fire spells can now spread to nearby creatures.',
         },
       ],
     },
@@ -108,7 +112,8 @@ export const wildfireOrderSubclass: Subclass = {
           id: 'wildfire-ultimate-feat',
           name: 'Ultimate Wildfire Feat',
           source: 'Druid 9',
-          description: 'You gain an ultimate feat that represents the pinnacle of your wildfire abilities.',
+          description:
+            'You gain an ultimate feat that represents the pinnacle of your wildfire abilities.',
         },
       ],
     },
@@ -119,7 +124,8 @@ export const wildfireOrderSubclass: Subclass = {
           id: 'wildfire-perfection',
           name: 'Wildfire Perfection',
           source: 'Druid 10',
-          description: 'You have perfected your wildfire abilities. Your fire spells deal maximum damage.',
+          description:
+            'You have perfected your wildfire abilities. Your fire spells deal maximum damage.',
         },
       ],
     },
@@ -174,7 +180,8 @@ export const wildfireOrderSubclass: Subclass = {
           id: 'wildfire-apex-feat',
           name: 'Apex Wildfire Feat',
           source: 'Druid 15',
-          description: 'You gain an apex feat that represents the ultimate expression of your wildfire abilities.',
+          description:
+            'You gain an apex feat that represents the ultimate expression of your wildfire abilities.',
         },
       ],
     },

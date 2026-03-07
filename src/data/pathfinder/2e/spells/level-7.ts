@@ -15,7 +15,8 @@ export const level7Spells: Spell[] = [
     duration: { type: 'rounds', rounds: 1 },
     concentration: true,
     ritual: false,
-    description: 'A fireball explodes at a point you designate. You can delay the explosion for up to 5 rounds. Each creature takes 10d6 fire damage with a basic Reflex save.',
+    description:
+      'A fireball explodes at a point you designate. You can delay the explosion for up to 5 rounds. Each creature takes 10d6 fire damage with a basic Reflex save.',
     damage: { base: { count: 10, die: 'd6', notation: '10d6' }, type: 'fire' },
     savingThrow: { attribute: 'dex', success: 'half' },
     classes: ['sorcerer', 'wizard'],
@@ -33,7 +34,8 @@ export const level7Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'You protect the target with a powerful, multi-layered defense. The target gains resistance 5 to acid, cold, electricity, fire, force, negative, positive, and sonic damage.',
+    description:
+      'You protect the target with a powerful, multi-layered defense. The target gains resistance 5 to acid, cold, electricity, fire, force, negative, positive, and sonic damage.',
     classes: ['cleric', 'sorcerer', 'wizard'],
   },
   {
@@ -49,7 +51,8 @@ export const level7Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'You step into the Ethereal Plane. You can see into the Material Plane from the Ethereal Plane, but not vice versa.',
+    description:
+      'You step into the Ethereal Plane. You can see into the Material Plane from the Ethereal Plane, but not vice versa.',
     classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
   },
   {
@@ -65,7 +68,8 @@ export const level7Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You call down a massive firestorm. Creatures in five 10-foot cubes within range must attempt a Reflex save, taking 14d6 fire damage on a failure or half on a success.',
+    description:
+      'You call down a massive firestorm. Creatures in five 10-foot cubes within range must attempt a Reflex save, taking 14d6 fire damage on a failure or half on a success.',
     damage: { base: { count: 14, die: 'd6', notation: '14d6' }, type: 'fire' },
     classes: ['cleric', 'druid'],
   },
@@ -82,7 +86,8 @@ export const level7Spells: Spell[] = [
     duration: { type: 'hours', hours: 1 },
     concentration: false,
     ritual: false,
-    description: 'An invisible, immobile, cube-shaped prison of magical force springs into being. Nothing can pass through the barrier from either side.',
+    description:
+      'An invisible, immobile, cube-shaped prison of magical force springs into being. Nothing can pass through the barrier from either side.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -98,7 +103,8 @@ export const level7Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You and up to 8 willing creatures physically enter the Astral Plane or the Ethereal Plane. Alternatively, you can transport yourself and up to 8 willing creatures to another plane of existence.',
+    description:
+      'You and up to 8 willing creatures physically enter the Astral Plane or the Ethereal Plane. Alternatively, you can transport yourself and up to 8 willing creatures to another plane of existence.',
     classes: ['cleric', 'sorcerer', 'wizard'],
   },
   {
@@ -114,7 +120,8 @@ export const level7Spells: Spell[] = [
     duration: { type: 'permanent' },
     concentration: false,
     ritual: false,
-    description: 'You utter a word of power that blinds one creature you can see. If the creature has fewer than 200 HP, it is blinded.',
+    description:
+      'You utter a word of power that blinds one creature you can see. If the creature has fewer than 200 HP, it is blinded.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -130,7 +137,8 @@ export const level7Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'A spray of rainbow light beams cascades from your open hand. Each creature in the area must roll 1d8 on the table below to see which beam affects it, then attempt a saving throw of the indicated type.',
+    description:
+      'A spray of rainbow light beams cascades from your open hand. Each creature in the area must roll 1d8 on the table below to see which beam affects it, then attempt a saving throw of the indicated type.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -146,7 +154,8 @@ export const level7Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'The target regains 15 Hit Points per round for 1 minute. The target also regrows severed body parts and removes the drained condition.',
+    description:
+      'The target regains 15 Hit Points per round for 1 minute. The target also regrows severed body parts and removes the drained condition.',
     classes: ['cleric', 'druid'],
   },
   {
@@ -162,7 +171,8 @@ export const level7Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'You reverse gravity in a 20-foot radius, 40-foot-tall cylinder. Creatures and objects in the area that aren\'t secured to the ground immediately fall upward to the top of the area.',
+    description:
+      "You reverse gravity in a 20-foot radius, 40-foot-tall cylinder. Creatures and objects in the area that aren't secured to the ground immediately fall upward to the top of the area.",
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -178,7 +188,8 @@ export const level7Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You and up to 8 willing creatures are instantly transported to any location on the same plane that you can identify precisely.',
+    description:
+      'You and up to 8 willing creatures are instantly transported to any location on the same plane that you can identify precisely.',
     classes: ['sorcerer', 'wizard'],
   },
 ];

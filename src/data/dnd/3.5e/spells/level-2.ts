@@ -11,29 +11,27 @@ export const level2Spells: Spell[] = [
     school: 'enchantment',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
     description: '+1 on attack rolls and saves against fear, 1d8 temporary hp +1/level (max +10).',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'align-weapon-cleric-35e',
@@ -44,29 +42,27 @@ export const level2Spells: Spell[] = [
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Weapon becomes good, evil, lawful, or chaotic.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'animal-messenger-druid-35e',
@@ -77,30 +73,28 @@ export const level2Spells: Spell[] = [
     school: 'enchantment',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'hours',
-      hours: 24
+      hours: 24,
     },
     concentration: false,
     ritual: false,
     description: 'Sends a Tiny animal to a specific place.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 2
-    }
+      druid: 2,
+    },
   },
   {
     id: 'animal-trance-druid-35e',
@@ -111,30 +105,28 @@ export const level2Spells: Spell[] = [
     school: 'enchantment',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: false,
-      material: false
+      material: false,
     },
     duration: {
       type: 'rounds',
-      rounds: 10
+      rounds: 10,
     },
     concentration: false,
     ritual: false,
     description: 'Fascinates 2d6 HD of animals.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 2
-    }
+      druid: 2,
+    },
   },
   {
     id: 'augury-cleric-35e',
@@ -145,28 +137,26 @@ export const level2Spells: Spell[] = [
     school: 'divination',
     castingTime: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     range: {
-      type: 'self'
+      type: 'self',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: true
+      material: true,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'Learns whether an action will be good or bad.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'barkskin-druid-35e',
@@ -177,161 +167,151 @@ export const level2Spells: Spell[] = [
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 10
+      minutes: 10,
     },
     concentration: false,
     ritual: false,
     description: 'Grants +2 (or higher) enhancement to natural armor.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 2
-    }
+      druid: 2,
+    },
   },
   {
     id: 'bears-endurance-cleric-35e',
-    name: 'Bear\'s Endurance',
+    name: "Bear's Endurance",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     level: 2,
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Subject gains +4 to Con for 1 min./level.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'bears-endurance-druid-35e',
-    name: 'Bear\'s Endurance',
+    name: "Bear's Endurance",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     level: 2,
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Subject gains +4 to Con for 1 min./level.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 2
-    }
+      druid: 2,
+    },
   },
   {
     id: 'bulls-strength-cleric-35e',
-    name: 'Bull\'s Strength',
+    name: "Bull's Strength",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     level: 2,
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Subject gains +4 to Str for 1 min./level.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'bulls-strength-druid-35e',
-    name: 'Bull\'s Strength',
+    name: "Bull's Strength",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     level: 2,
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Subject gains +4 to Str for 1 min./level.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 2
-    }
+      druid: 2,
+    },
   },
   {
     id: 'calm-emotions-cleric-35e',
@@ -342,63 +322,59 @@ export const level2Spells: Spell[] = [
     school: 'enchantment',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 100
+      feet: 100,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'rounds',
-      rounds: 10
+      rounds: 10,
     },
     concentration: true,
     ritual: false,
     description: 'Calms creatures, negating emotion effects.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'cats-grace-druid-35e',
-    name: 'Cat\'s Grace',
+    name: "Cat's Grace",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     level: 2,
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Subject gains +4 to Dex for 1 min./level.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 2
-    }
+      druid: 2,
+    },
   },
   {
     id: 'chill-metal-druid-35e',
@@ -409,30 +385,28 @@ export const level2Spells: Spell[] = [
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'rounds',
-      rounds: 7
+      rounds: 7,
     },
     concentration: false,
     ritual: false,
     description: 'Cold metal damages those who touch it.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 2
-    }
+      druid: 2,
+    },
   },
   {
     id: 'consecrate-cleric-35e',
@@ -443,30 +417,28 @@ export const level2Spells: Spell[] = [
     school: 'evocation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 20
+      feet: 20,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: true
+      material: true,
     },
     duration: {
       type: 'hours',
-      hours: 2
+      hours: 2,
     },
     concentration: false,
     ritual: false,
     description: 'Fills area with positive energy, making undead weaker.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'cure-moderate-wounds-cleric-35e',
@@ -477,28 +449,26 @@ export const level2Spells: Spell[] = [
     school: 'conjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'Cures 2d8 damage +1/level (max +10).',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'darkness-cleric-35e',
@@ -509,29 +479,27 @@ export const level2Spells: Spell[] = [
     school: 'evocation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: false,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 10
+      minutes: 10,
     },
     concentration: false,
     ritual: false,
     description: '20-ft. radius of supernatural shadow.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'death-knell-cleric-35e',
@@ -542,28 +510,26 @@ export const level2Spells: Spell[] = [
     school: 'necromancy',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'Kills dying creature; you gain 1d8 temporary hp, +2 to Str, and +1 level.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'delay-poison-cleric-35e',
@@ -574,29 +540,27 @@ export const level2Spells: Spell[] = [
     school: 'conjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'hours',
-      hours: 1
+      hours: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Stops poison from harming subject for 1 hour/level.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'delay-poison-druid-35e',
@@ -607,29 +571,27 @@ export const level2Spells: Spell[] = [
     school: 'conjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'hours',
-      hours: 1
+      hours: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Stops poison from harming subject for 1 hour/level.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 2
-    }
+      druid: 2,
+    },
   },
   {
     id: 'desecrate-cleric-35e',
@@ -640,63 +602,59 @@ export const level2Spells: Spell[] = [
     school: 'evocation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 20
+      feet: 20,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: true
+      material: true,
     },
     duration: {
       type: 'hours',
-      hours: 2
+      hours: 2,
     },
     concentration: false,
     ritual: false,
     description: 'Fills area with negative energy, making undead stronger.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'eagles-splendor-cleric-35e',
-    name: 'Eagle\'s Splendor',
+    name: "Eagle's Splendor",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     level: 2,
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Subject gains +4 to Cha for 1 min./level.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'enthrall-cleric-35e',
@@ -707,30 +665,28 @@ export const level2Spells: Spell[] = [
     school: 'enchantment',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 100
+      feet: 100,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'hours',
-      hours: 1
+      hours: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Captivates all within 100 ft. + 10 ft./level.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'find-traps-cleric-35e',
@@ -741,29 +697,27 @@ export const level2Spells: Spell[] = [
     school: 'divination',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'self'
+      type: 'self',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Notice traps as a rogue does.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'fire-trap-druid-35e',
@@ -774,28 +728,26 @@ export const level2Spells: Spell[] = [
     school: 'abjuration',
     castingTime: {
       type: 'minutes',
-      minutes: 10
+      minutes: 10,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: true
+      material: true,
     },
     duration: {
-      type: 'permanent'
+      type: 'permanent',
     },
     concentration: false,
     ritual: false,
     description: 'Opened object deals 1d4 +1/level damage.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 2
-    }
+      druid: 2,
+    },
   },
   {
     id: 'flame-blade-druid-35e',
@@ -806,30 +758,28 @@ export const level2Spells: Spell[] = [
     school: 'evocation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 0
+      feet: 0,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Touch attack deals 1d8 +1/two levels damage.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 2
-    }
+      druid: 2,
+    },
   },
   {
     id: 'flaming-sphere-druid-35e',
@@ -840,30 +790,28 @@ export const level2Spells: Spell[] = [
     school: 'evocation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 100
+      feet: 100,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'rounds',
-      rounds: 1
+      rounds: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Creates rolling ball of fire, 2d6 damage, lasts 1 round/level.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 2
-    }
+      druid: 2,
+    },
   },
   {
     id: 'fog-cloud-druid-35e',
@@ -874,30 +822,28 @@ export const level2Spells: Spell[] = [
     school: 'conjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 100
+      feet: 100,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 10
+      minutes: 10,
     },
     concentration: false,
     ritual: false,
     description: 'Fog obscures vision.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 2
-    }
+      druid: 2,
+    },
   },
   {
     id: 'gentle-repose-cleric-35e',
@@ -908,29 +854,27 @@ export const level2Spells: Spell[] = [
     school: 'necromancy',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'hours',
-      hours: 24
+      hours: 24,
     },
     concentration: false,
     ritual: false,
     description: 'Preserves one corpse.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'gust-wind-druid-35e',
@@ -941,30 +885,28 @@ export const level2Spells: Spell[] = [
     school: 'evocation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 60
+      feet: 60,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'rounds',
-      rounds: 1
+      rounds: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Blows away or knocks down smaller creatures.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 2
-    }
+      druid: 2,
+    },
   },
   {
     id: 'heat-metal-druid-35e',
@@ -975,30 +917,28 @@ export const level2Spells: Spell[] = [
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'rounds',
-      rounds: 7
+      rounds: 7,
     },
     concentration: false,
     ritual: false,
     description: 'Make metal so hot it damages those who touch it.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 2
-    }
+      druid: 2,
+    },
   },
   {
     id: 'hold-animal-druid-35e',
@@ -1009,30 +949,28 @@ export const level2Spells: Spell[] = [
     school: 'enchantment',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 100
+      feet: 100,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'rounds',
-      rounds: 1
+      rounds: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Paralyzes one animal for 1 round/level.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 2
-    }
+      druid: 2,
+    },
   },
   {
     id: 'hold-person-cleric-35e',
@@ -1043,30 +981,28 @@ export const level2Spells: Spell[] = [
     school: 'enchantment',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 100
+      feet: 100,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'rounds',
-      rounds: 1
+      rounds: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Paralyzes one humanoid for 1 round/level.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'hold-person-35e',
@@ -1077,43 +1013,38 @@ export const level2Spells: Spell[] = [
     school: 'enchantment',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 60
+      feet: 60,
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'A small, straight piece of iron'
+      materialDescription: 'A small, straight piece of iron',
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: true,
     ritual: false,
-    description: 'Choose a humanoid that you can see within range. The target must succeed on a Wisdom saving throw or be paralyzed for the duration. At the end of each of the target\'s turns, it can make another Wisdom saving throw.',
+    description:
+      "Choose a humanoid that you can see within range. The target must succeed on a Wisdom saving throw or be paralyzed for the duration. At the end of each of the target's turns, it can make another Wisdom saving throw.",
     savingThrow: {
       attribute: 'wis',
-      success: 'none'
+      success: 'none',
     },
-    classes: [
-      'bard',
-      'cleric',
-      'druid',
-      'sorcerer',
-      'wizard'
-    ],
+    classes: ['bard', 'cleric', 'druid', 'sorcerer', 'wizard'],
     levelsByClass: {
       bard: 2,
       cleric: 2,
       druid: 2,
       sorcerer: 2,
-      wizard: 2
-    }
+      wizard: 2,
+    },
   },
   {
     id: 'inflict-moderate-wounds-cleric-35e',
@@ -1124,28 +1055,26 @@ export const level2Spells: Spell[] = [
     school: 'necromancy',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'Touch attack, 2d8 damage +1/level (max +10).',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'make-whole-cleric-35e',
@@ -1156,95 +1085,89 @@ export const level2Spells: Spell[] = [
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 10
+      feet: 10,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'Repairs an object.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'owls-wisdom-cleric-35e',
-    name: 'Owl\'s Wisdom',
+    name: "Owl's Wisdom",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     level: 2,
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Subject gains +4 to Wis for 1 min./level.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'owls-wisdom-druid-35e',
-    name: 'Owl\'s Wisdom',
+    name: "Owl's Wisdom",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     level: 2,
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Subject gains +4 to Wis for 1 min./level.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 2
-    }
+      druid: 2,
+    },
   },
   {
     id: 'reduce-animal-druid-35e',
@@ -1255,29 +1178,27 @@ export const level2Spells: Spell[] = [
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'hours',
-      hours: 1
+      hours: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Shrinks one willing animal.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 2
-    }
+      druid: 2,
+    },
   },
   {
     id: 'remove-paralysis-cleric-35e',
@@ -1288,29 +1209,27 @@ export const level2Spells: Spell[] = [
     school: 'conjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 10
+      feet: 10,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'Frees one or more creatures from paralysis or slow effect.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'resist-energy-cleric-35e',
@@ -1321,29 +1240,27 @@ export const level2Spells: Spell[] = [
     school: 'abjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 10
+      minutes: 10,
     },
     concentration: false,
     ritual: false,
     description: 'Ignores 10 (or more) points of damage/attack from specified energy type.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'resist-energy-druid-35e',
@@ -1354,29 +1271,27 @@ export const level2Spells: Spell[] = [
     school: 'abjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 10
+      minutes: 10,
     },
     concentration: false,
     ritual: false,
     description: 'Ignores 10 (or more) points of damage/attack from specified energy type.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 2
-    }
+      druid: 2,
+    },
   },
   {
     id: 'restoration-lesser-cleric-35e',
@@ -1387,28 +1302,26 @@ export const level2Spells: Spell[] = [
     school: 'conjuration',
     castingTime: {
       type: 'minutes',
-      minutes: 3
+      minutes: 3,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'Dispels magical ability penalty or repairs 1d4 ability damage.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'restoration-lesser-druid-35e',
@@ -1419,28 +1332,26 @@ export const level2Spells: Spell[] = [
     school: 'conjuration',
     castingTime: {
       type: 'minutes',
-      minutes: 3
+      minutes: 3,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'Dispels magical ability penalty or repairs 1d4 ability damage.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 2
-    }
+      druid: 2,
+    },
   },
   {
     id: 'shatter-cleric-35e',
@@ -1451,29 +1362,27 @@ export const level2Spells: Spell[] = [
     school: 'evocation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'Sonic vibration damages objects or crystalline creatures.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'shield-other-cleric-35e',
@@ -1484,30 +1393,28 @@ export const level2Spells: Spell[] = [
     school: 'abjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 25
+      feet: 25,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: true
+      material: true,
     },
     duration: {
       type: 'hours',
-      hours: 1
+      hours: 1,
     },
     concentration: false,
     ritual: false,
-    description: 'You take half of subject\'s damage.',
-    classes: [
-      'cleric'
-    ],
+    description: "You take half of subject's damage.",
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'silence-cleric-35e',
@@ -1518,30 +1425,28 @@ export const level2Spells: Spell[] = [
     school: 'illusion',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 400
+      feet: 400,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Negates sound in 20-ft. radius.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'soften-earth-stone-druid-35e',
@@ -1552,29 +1457,27 @@ export const level2Spells: Spell[] = [
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'Turns stone to clay or dirt to sand or mud.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 2
-    }
+      druid: 2,
+    },
   },
   {
     id: 'sound-burst-cleric-35e',
@@ -1585,29 +1488,27 @@ export const level2Spells: Spell[] = [
     school: 'evocation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'Deals 1d8 sonic damage to subjects; may stun them.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'spider-climb-druid-35e',
@@ -1618,29 +1519,27 @@ export const level2Spells: Spell[] = [
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 10
+      minutes: 10,
     },
     concentration: false,
     ritual: false,
     description: 'Grants ability to walk on walls and ceilings.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 2
-    }
+      druid: 2,
+    },
   },
   {
     id: 'spiritual-weapon-cleric-35e',
@@ -1651,30 +1550,28 @@ export const level2Spells: Spell[] = [
     school: 'evocation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 100
+      feet: 100,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'rounds',
-      rounds: 1
+      rounds: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Magic weapon attacks on its own.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'status-cleric-35e',
@@ -1685,29 +1582,27 @@ export const level2Spells: Spell[] = [
     school: 'divination',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'hours',
-      hours: 1
+      hours: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Monitors condition, position of allies.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'summon-monster-ii-cleric-35e',
@@ -1718,64 +1613,60 @@ export const level2Spells: Spell[] = [
     school: 'conjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'rounds',
-      rounds: 1
+      rounds: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Calls extraplanar creature to fight for you.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'summon-natures-ally-ii-druid-35e',
-    name: 'Summon Nature\'s Ally II',
+    name: "Summon Nature's Ally II",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     level: 2,
     school: 'conjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'rounds',
-      rounds: 1
+      rounds: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Calls creature to fight.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 2
-    }
+      druid: 2,
+    },
   },
   {
     id: 'summon-swarm-druid-35e',
@@ -1786,30 +1677,28 @@ export const level2Spells: Spell[] = [
     school: 'conjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'rounds',
-      rounds: 10
+      rounds: 10,
     },
     concentration: true,
     ritual: false,
     description: 'Summons swarm of bats, rats, or spiders.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 2
-    }
+      druid: 2,
+    },
   },
   {
     id: 'tree-shape-druid-35e',
@@ -1820,29 +1709,27 @@ export const level2Spells: Spell[] = [
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'self'
+      type: 'self',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'hours',
-      hours: 1
+      hours: 1,
     },
     concentration: false,
     ritual: false,
     description: 'You look exactly like a tree for 1 hour/level.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 2
-    }
+      druid: 2,
+    },
   },
   {
     id: 'undetectable-alignment-cleric-35e',
@@ -1853,30 +1740,28 @@ export const level2Spells: Spell[] = [
     school: 'abjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 10
+      feet: 10,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'hours',
-      hours: 24
+      hours: 24,
     },
     concentration: false,
     ritual: false,
     description: 'Conceals alignment for 24 hours.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
+      cleric: 2,
+    },
   },
   {
     id: 'warp-wood-druid-35e',
@@ -1887,29 +1772,27 @@ export const level2Spells: Spell[] = [
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'Bends wood (shaft, handle, door, plank).',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 2
-    }
+      druid: 2,
+    },
   },
   {
     id: 'wood-shape-druid-35e',
@@ -1920,28 +1803,26 @@ export const level2Spells: Spell[] = [
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'Rearranges wooden objects to suit you.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 2
-    }
+      druid: 2,
+    },
   },
   {
     id: 'zone-of-truth-cleric-35e',
@@ -1952,29 +1833,27 @@ export const level2Spells: Spell[] = [
     school: 'enchantment',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Subjects within range cannot lie.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 2
-    }
-  }
+      cleric: 2,
+    },
+  },
 ];

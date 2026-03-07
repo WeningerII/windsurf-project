@@ -24,12 +24,11 @@ export const awakenedShrub: Monster = {
   actions: [
     {
       name: 'Rake',
-      description: 'Melee Weapon Attack: +1 to hit, reach 5 ft., one target. Hit: 1 (1d4 - 1) slashing damage.',
+      description:
+        'Melee Weapon Attack: +1 to hit, reach 5 ft., one target. Hit: 1 (1d4 - 1) slashing damage.',
     },
   ],
   environment: ['forest'],
 };
 
-export const plantsCR0to5: Monster[] = [
-  awakenedShrub,
-];
+export const plantsCR0to5: Monster[] = [awakenedShrub];

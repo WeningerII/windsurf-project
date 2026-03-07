@@ -5,7 +5,8 @@ export const hexbladeSubclass: Subclass = {
   id: 'pf2e-warlock-hexblade',
   name: 'Hexblade',
   parentClassId: 'warlock',
-  description: 'A warlock who has made a pact with a powerful entity, gaining the ability to curse enemies with their blade.',
+  description:
+    'A warlock who has made a pact with a powerful entity, gaining the ability to curse enemies with their blade.',
   features: [
     {
       level: 1,
@@ -108,7 +109,8 @@ export const hexbladeSubclass: Subclass = {
           id: 'hexblade-ultimate-feat',
           name: 'Ultimate Hexblade Feat',
           source: 'Warlock 9',
-          description: 'You gain an ultimate feat that represents the pinnacle of your hexblade abilities.',
+          description:
+            'You gain an ultimate feat that represents the pinnacle of your hexblade abilities.',
         },
       ],
     },
@@ -174,7 +176,8 @@ export const hexbladeSubclass: Subclass = {
           id: 'hexblade-apex-feat',
           name: 'Apex Hexblade Feat',
           source: 'Warlock 15',
-          description: 'You gain an apex feat that represents the ultimate expression of your hexblade abilities.',
+          description:
+            'You gain an apex feat that represents the ultimate expression of your hexblade abilities.',
         },
       ],
     },

@@ -13,10 +13,6 @@ export const pf1eFeats = {
 };
 
 export const getFeat = (id: string) => {
-  const allFeats = [
-    ...pf1eFeats.combat,
-    ...pf1eFeats.metamagic,
-    ...pf1eFeats.general,
-  ];
+  const allFeats = [...pf1eFeats.combat, ...pf1eFeats.metamagic, ...pf1eFeats.general];
   return allFeats.find((f) => f.id === id);
 };

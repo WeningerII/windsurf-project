@@ -14,7 +14,8 @@ export const berserkerSubclass: Subclass = {
           id: 'berserker-rage',
           name: 'Berserker Rage',
           source: 'Barbarian 1',
-          description: 'You can enter a berserker rage, gaining bonuses to melee damage and taking penalties to AC. While raging, you can only use melee attacks and can\'t use ranged weapons.',
+          description:
+            "You can enter a berserker rage, gaining bonuses to melee damage and taking penalties to AC. While raging, you can only use melee attacks and can't use ranged weapons.",
         },
         {
           id: 'rage-damage',
@@ -31,7 +32,8 @@ export const berserkerSubclass: Subclass = {
           id: 'reckless-attack',
           name: 'Reckless Attack',
           source: 'Barbarian 2',
-          description: 'While raging, you can make reckless attacks. You gain advantage on melee attack rolls, but attack rolls against you have advantage.',
+          description:
+            'While raging, you can make reckless attacks. You gain advantage on melee attack rolls, but attack rolls against you have advantage.',
         },
       ],
     },
@@ -53,7 +55,8 @@ export const berserkerSubclass: Subclass = {
           id: 'relentless-rage',
           name: 'Relentless Rage',
           source: 'Barbarian 4',
-          description: 'Your rage can continue even when you don\'t attack. If you don\'t attack or take damage during your turn, your rage continues.',
+          description:
+            "Your rage can continue even when you don't attack. If you don't attack or take damage during your turn, your rage continues.",
         },
       ],
     },
@@ -108,7 +111,8 @@ export const berserkerSubclass: Subclass = {
           id: 'berserker-ultimate-feat',
           name: 'Ultimate Berserker Feat',
           source: 'Barbarian 9',
-          description: 'You gain an ultimate feat that represents the pinnacle of your berserker abilities.',
+          description:
+            'You gain an ultimate feat that represents the pinnacle of your berserker abilities.',
         },
       ],
     },
@@ -119,7 +123,8 @@ export const berserkerSubclass: Subclass = {
           id: 'berserker-perfection',
           name: 'Berserker Perfection',
           source: 'Barbarian 10',
-          description: 'You have perfected your berserker abilities. Increase the damage bonus to +4.',
+          description:
+            'You have perfected your berserker abilities. Increase the damage bonus to +4.',
         },
       ],
     },
@@ -141,7 +146,8 @@ export const berserkerSubclass: Subclass = {
           id: 'whirlwind-attack',
           name: 'Whirlwind Attack',
           source: 'Barbarian 12',
-          description: 'While raging, you can make melee attacks against all creatures within reach.',
+          description:
+            'While raging, you can make melee attacks against all creatures within reach.',
         },
       ],
     },
@@ -174,7 +180,8 @@ export const berserkerSubclass: Subclass = {
           id: 'berserker-apex-feat',
           name: 'Apex Berserker Feat',
           source: 'Barbarian 15',
-          description: 'You gain an apex feat that represents the ultimate expression of your berserker abilities.',
+          description:
+            'You gain an apex feat that represents the ultimate expression of your berserker abilities.',
         },
       ],
     },
@@ -185,7 +192,8 @@ export const berserkerSubclass: Subclass = {
           id: 'titan-rage',
           name: 'Titan Rage',
           source: 'Barbarian 16',
-          description: 'While raging, you become as large as a giant and your attacks deal double damage.',
+          description:
+            'While raging, you become as large as a giant and your attacks deal double damage.',
         },
       ],
     },
@@ -229,7 +237,8 @@ export const berserkerSubclass: Subclass = {
           id: 'berserker-ascension',
           name: 'Berserker Ascension',
           source: 'Barbarian 20',
-          description: 'You have ascended to the pinnacle of berserker mastery. You gain all benefits of your berserker abilities at their maximum potency.',
+          description:
+            'You have ascended to the pinnacle of berserker mastery. You gain all benefits of your berserker abilities at their maximum potency.',
         },
       ],
     },

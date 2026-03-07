@@ -49,28 +49,37 @@ export const dnd5e2024SpellsByLevel: Record<number, Spell[]> = {
   9: dnd5e2024Spells.level9,
 };
 
-export const dnd5e2024SpellsById: Record<string, Spell> = dnd5e2024AllSpells.reduce((acc, spell) => {
-  acc[spell.id] = spell;
-  return acc;
-}, {} as Record<string, Spell>);
+export const dnd5e2024SpellsById: Record<string, Spell> = dnd5e2024AllSpells.reduce(
+  (acc, spell) => {
+    acc[spell.id] = spell;
+    return acc;
+  },
+  {} as Record<string, Spell>
+);
 
-export const dnd5e2024SpellsByClass: Record<string, Spell[]> = dnd5e2024AllSpells.reduce((acc, spell) => {
-  spell.classes.forEach(className => {
-    if (!acc[className]) {
-      acc[className] = [];
+export const dnd5e2024SpellsByClass: Record<string, Spell[]> = dnd5e2024AllSpells.reduce(
+  (acc, spell) => {
+    spell.classes.forEach((className) => {
+      if (!acc[className]) {
+        acc[className] = [];
+      }
+      acc[className].push(spell);
+    });
+    return acc;
+  },
+  {} as Record<string, Spell[]>
+);
+
+export const dnd5e2024SpellsBySchool: Record<string, Spell[]> = dnd5e2024AllSpells.reduce(
+  (acc, spell) => {
+    if (!acc[spell.school]) {
+      acc[spell.school] = [];
     }
-    acc[className].push(spell);
-  });
-  return acc;
-}, {} as Record<string, Spell[]>);
-
-export const dnd5e2024SpellsBySchool: Record<string, Spell[]> = dnd5e2024AllSpells.reduce((acc, spell) => {
-  if (!acc[spell.school]) {
-    acc[spell.school] = [];
-  }
-  acc[spell.school].push(spell);
-  return acc;
-}, {} as Record<string, Spell[]>);
+    acc[spell.school].push(spell);
+    return acc;
+  },
+  {} as Record<string, Spell[]>
+);
 
 export const dnd5e2024SpellStats = {
   total: dnd5e2024AllSpells.length,
@@ -86,14 +95,20 @@ export const dnd5e2024SpellStats = {
     level8: dnd5e2024Spells.level8.length,
     level9: dnd5e2024Spells.level9.length,
   },
-  byClass: Object.entries(dnd5e2024SpellsByClass).reduce((acc, [className, spells]) => {
-    acc[className] = spells.length;
-    return acc;
-  }, {} as Record<string, number>),
-  bySchool: Object.entries(dnd5e2024SpellsBySchool).reduce((acc, [school, spells]) => {
-    acc[school] = spells.length;
-    return acc;
-  }, {} as Record<string, number>),
+  byClass: Object.entries(dnd5e2024SpellsByClass).reduce(
+    (acc, [className, spells]) => {
+      acc[className] = spells.length;
+      return acc;
+    },
+    {} as Record<string, number>
+  ),
+  bySchool: Object.entries(dnd5e2024SpellsBySchool).reduce(
+    (acc, [school, spells]) => {
+      acc[school] = spells.length;
+      return acc;
+    },
+    {} as Record<string, number>
+  ),
 };
 
 export const getSpell = (id: string) => dnd5e2024SpellsById[id];

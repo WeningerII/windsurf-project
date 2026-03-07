@@ -15,7 +15,8 @@ export const level5Spells: Spell[] = [
     concentration: false,
     ritual: false,
     savingThrow: { attribute: 'con', success: 'special' },
-    description: 'This spell generates a bank of fog, similar to a fog cloud, except that its vapors are yellowish green and poisonous. Living creatures with 3 or fewer HD die, and living creatures with 4 to 6 HD are slain unless they succeed on a Fortitude save.',
+    description:
+      'This spell generates a bank of fog, similar to a fog cloud, except that its vapors are yellowish green and poisonous. Living creatures with 3 or fewer HD die, and living creatures with 4 to 6 HD are slain unless they succeed on a Fortitude save.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -33,7 +34,8 @@ export const level5Spells: Spell[] = [
     concentration: false,
     ritual: false,
     savingThrow: { attribute: 'dex', success: 'half' },
-    description: 'Cone of cold creates an area of extreme cold, originating at your hand and extending outward in a cone. It drains heat, dealing 1d6 points of cold damage per caster level (maximum 15d6).',
+    description:
+      'Cone of cold creates an area of extreme cold, originating at your hand and extending outward in a cone. It drains heat, dealing 1d6 points of cold damage per caster level (maximum 15d6).',
     damage: { base: { count: 1, die: 'd6', notation: '1d6 per level (max 15d6)' }, type: 'cold' },
     classes: ['sorcerer', 'wizard'],
   },
@@ -50,7 +52,8 @@ export const level5Spells: Spell[] = [
     duration: { type: 'concentration', maxDuration: '1 minute per level' },
     concentration: true,
     ritual: false,
-    description: 'You send your mind to another plane of existence in order to receive advice and information from powers there. The powers reply in a language you understand, but they resent such contact and give only brief answers to your questions.',
+    description:
+      'You send your mind to another plane of existence in order to receive advice and information from powers there. The powers reply in a language you understand, but they resent such contact and give only brief answers to your questions.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -67,7 +70,8 @@ export const level5Spells: Spell[] = [
     concentration: false,
     ritual: false,
     savingThrow: { attribute: 'wis', success: 'none' },
-    description: 'You can control the actions of any humanoid creature through a telepathic link that you establish with the subject\'s mind. Once you have given a dominated creature a command, it continues to attempt to carry out that command to the exclusion of all other activities.',
+    description:
+      "You can control the actions of any humanoid creature through a telepathic link that you establish with the subject's mind. Once you have given a dominated creature a command, it continues to attempt to carry out that command to the exclusion of all other activities.",
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -84,7 +88,8 @@ export const level5Spells: Spell[] = [
     concentration: false,
     ritual: false,
     savingThrow: { attribute: 'wis', success: 'none' },
-    description: 'Target creature\'s Intelligence and Charisma scores each drop to 1. The affected creature is unable to use Intelligence- or Charisma-based skills, cast spells, understand language, or communicate coherently.',
+    description:
+      "Target creature's Intelligence and Charisma scores each drop to 1. The affected creature is unable to use Intelligence- or Charisma-based skills, cast spells, understand language, or communicate coherently.",
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -101,7 +106,8 @@ export const level5Spells: Spell[] = [
     concentration: false,
     ritual: false,
     savingThrow: { attribute: 'wis', success: 'none' },
-    description: 'This spell functions like hold person, except that it affects any living creature that fails its Will save.',
+    description:
+      'This spell functions like hold person, except that it affects any living creature that fails its Will save.',
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -117,7 +123,8 @@ export const level5Spells: Spell[] = [
     duration: { type: 'hours', hours: 1 },
     concentration: false,
     ritual: false,
-    description: 'You create a passage through wooden, plaster, or stone walls, but not through metal or other harder materials. The passage is 10 feet deep plus an additional 5 feet deep per three caster levels above 9th (15 feet at 12th, 20 feet at 15th, and a maximum of 25 feet deep at 18th level).',
+    description:
+      'You create a passage through wooden, plaster, or stone walls, but not through metal or other harder materials. The passage is 10 feet deep plus an additional 5 feet deep per three caster levels above 9th (15 feet at 12th, 20 feet at 15th, and a maximum of 25 feet deep at 18th level).',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -133,7 +140,8 @@ export const level5Spells: Spell[] = [
     duration: { type: 'concentration', maxDuration: '1 round per level' },
     concentration: true,
     ritual: false,
-    description: 'You move objects or creatures by concentrating on them. Depending on the version selected, the spell can provide a gentle, sustained force, perform a variety of combat maneuvers, or exert a single short, violent thrust.',
+    description:
+      'You move objects or creatures by concentrating on them. Depending on the version selected, the spell can provide a gentle, sustained force, perform a variety of combat maneuvers, or exert a single short, violent thrust.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -149,7 +157,8 @@ export const level5Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'This spell instantly transports you to a designated destination, which may be as distant as 100 miles per caster level. You can bring along objects as long as their weight doesn\'t exceed your maximum load. You may also bring one additional willing Medium or smaller creature per three caster levels.',
+    description:
+      "This spell instantly transports you to a designated destination, which may be as distant as 100 miles per caster level. You can bring along objects as long as their weight doesn't exceed your maximum load. You may also bring one additional willing Medium or smaller creature per three caster levels.",
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -165,7 +174,8 @@ export const level5Spells: Spell[] = [
     duration: { type: 'rounds', rounds: 1 },
     concentration: false,
     ritual: false,
-    description: 'A wall of force creates an invisible wall of pure force. The wall cannot move and is not easily destroyed. A wall of force is immune to dispel magic, although a mage\'s disjunction can still dispel it.',
+    description:
+      "A wall of force creates an invisible wall of pure force. The wall cannot move and is not easily destroyed. A wall of force is immune to dispel magic, although a mage's disjunction can still dispel it.",
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -181,7 +191,8 @@ export const level5Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'This spell creates a wall of rock that merges into adjoining rock surfaces. A wall of stone is 1 inch thick per four caster levels and composed of up to one 5-foot square per level. You can double the wall\'s area by halving its thickness.',
+    description:
+      "This spell creates a wall of rock that merges into adjoining rock surfaces. A wall of stone is 1 inch thick per four caster levels and composed of up to one 5-foot square per level. You can double the wall's area by halving its thickness.",
     classes: ['cleric', 'druid', 'sorcerer', 'wizard'],
   },
 ];

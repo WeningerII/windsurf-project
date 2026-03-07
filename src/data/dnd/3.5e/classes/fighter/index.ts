@@ -5,35 +5,35 @@ export const fighter: CharacterClass = {
   name: 'Fighter',
   system: 'dnd-3.5e',
   source: 'PHB 3.5',
-  
+
   version: '3.5',
   lastUpdated: '2026-01-13',
   sourceBook: {
-    name: 'Player\'s Handbook 3.5',
-    url: 'https://www.d20srd.org/srd/classes/fighter.htm'
+    name: "Player's Handbook 3.5",
+    url: 'https://www.d20srd.org/srd/classes/fighter.htm',
   },
-  
+
   hitDie: 'd10',
   primaryAbility: ['str'],
   savingThrowProficiencies: ['str', 'con'],
-  
+
   armorProficiencies: ['light', 'medium', 'heavy', 'shields'],
   weaponProficiencies: ['simple', 'martial'],
   toolProficiencies: [],
-  
+
   skillProficiencies: {
     count: 2,
     options: ['climb', 'handle-animal', 'intimidate', 'jump', 'ride', 'swim'],
     label: 'Choose two skills',
   },
-  
+
   equipmentChoices: [],
-  
+
   startingGold: {
     dice: '6d4',
     multiplier: 10,
   },
-  
+
   features: [
     {
       level: 1,
@@ -42,7 +42,8 @@ export const fighter: CharacterClass = {
           id: 'bonus-feat-1',
           name: 'Bonus Feat',
           source: 'Fighter 1',
-          description: 'At 1st level, a fighter gets a bonus combat-oriented feat in addition to the feat that any 1st-level character gets and the bonus feat granted to a human character. The fighter gains an additional bonus feat at 2nd level and every two fighter levels thereafter (4th, 6th, 8th, 10th, 12th, 14th, 16th, 18th, and 20th).',
+          description:
+            'At 1st level, a fighter gets a bonus combat-oriented feat in addition to the feat that any 1st-level character gets and the bonus feat granted to a human character. The fighter gains an additional bonus feat at 2nd level and every two fighter levels thereafter (4th, 6th, 8th, 10th, 12th, 14th, 16th, 18th, and 20th).',
         },
       ],
     },
@@ -256,22 +257,22 @@ export const fighter: CharacterClass = {
       ],
     },
   ],
-  
+
   subclassLevel: 0,
   subclasses: [],
-  
+
   classResources: [],
-  
+
   multiclassRequirements: [],
-  
+
   multiclassProficiencies: {
     armor: [],
     weapons: [],
     tools: [],
   },
-  
+
   description: 'A master of combat who relies on heavy armor and melee weapons.',
-  
+
   displayMetadata: {
     icon: 'sword',
     color: '#8B4513',

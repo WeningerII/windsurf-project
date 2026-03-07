@@ -5,7 +5,8 @@ export const redeemerSubclass: Subclass = {
   id: 'pf2e-paladin-redeemer',
   name: 'Redeemer',
   parentClassId: 'paladin',
-  description: 'A paladin devoted to redemption and salvation, seeking to save even the most fallen souls.',
+  description:
+    'A paladin devoted to redemption and salvation, seeking to save even the most fallen souls.',
   features: [
     {
       level: 1,
@@ -31,7 +32,8 @@ export const redeemerSubclass: Subclass = {
           id: 'channel-divinity-redemption',
           name: 'Channel Divinity: Redemption',
           source: 'Paladin 2',
-          description: 'You can use your Channel Divinity to offer redemption to a creature, giving it a chance to change its ways.',
+          description:
+            'You can use your Channel Divinity to offer redemption to a creature, giving it a chance to change its ways.',
         },
       ],
     },
@@ -53,7 +55,8 @@ export const redeemerSubclass: Subclass = {
           id: 'improved-redemption',
           name: 'Improved Redemption',
           source: 'Paladin 4',
-          description: 'Your redemption becomes more effective. Increase the chance of redemption success.',
+          description:
+            'Your redemption becomes more effective. Increase the chance of redemption success.',
         },
       ],
     },
@@ -64,7 +67,8 @@ export const redeemerSubclass: Subclass = {
           id: 'redeemer-mastery',
           name: 'Redeemer Mastery',
           source: 'Paladin 5',
-          description: 'Your redemption abilities become more powerful. You can redeem multiple creatures.',
+          description:
+            'Your redemption abilities become more powerful. You can redeem multiple creatures.',
         },
       ],
     },
@@ -108,7 +112,8 @@ export const redeemerSubclass: Subclass = {
           id: 'redeemer-ultimate-feat',
           name: 'Ultimate Redeemer Feat',
           source: 'Paladin 9',
-          description: 'You gain an ultimate feat that represents the pinnacle of your redemption abilities.',
+          description:
+            'You gain an ultimate feat that represents the pinnacle of your redemption abilities.',
         },
       ],
     },
@@ -174,7 +179,8 @@ export const redeemerSubclass: Subclass = {
           id: 'redeemer-apex-feat',
           name: 'Apex Redeemer Feat',
           source: 'Paladin 15',
-          description: 'You gain an apex feat that represents the ultimate expression of your redemption abilities.',
+          description:
+            'You gain an apex feat that represents the ultimate expression of your redemption abilities.',
         },
       ],
     },

@@ -15,13 +15,16 @@ export * as mm3e from './mutants-and-masterminds/3e/metadata';
 // System Registry - uses canonical IDs from types/game-systems.ts
 import type { GameSystemId } from '../types/game-systems';
 
-export const systemRegistry: Record<GameSystemId, {
-  id: GameSystemId;
-  name: string;
-  abbr: string;
-  srdVersion?: string;
-  metadata: () => Promise<unknown>;
-}> = {
+export const systemRegistry: Record<
+  GameSystemId,
+  {
+    id: GameSystemId;
+    name: string;
+    abbr: string;
+    srdVersion?: string;
+    metadata: () => Promise<unknown>;
+  }
+> = {
   'dnd-5e-2024': {
     id: 'dnd-5e-2024',
     name: 'D&D 5th Edition (2024)',
@@ -43,23 +46,30 @@ export const systemRegistry: Record<GameSystemId, {
     srdVersion: '3.5',
     metadata: () => import('./dnd/3.5e/metadata'),
   },
-  'pf1e': {
+  pf1e: {
     id: 'pf1e',
     name: 'Pathfinder 1st Edition',
     abbr: 'PF1e',
     metadata: () => import('./pathfinder/1e/metadata'),
   },
-  'pf2e': {
+  pf2e: {
     id: 'pf2e',
     name: 'Pathfinder 2nd Edition',
     abbr: 'PF2e',
     metadata: () => import('./pathfinder/2e/metadata'),
   },
-  'mam3e': {
+  mam3e: {
     id: 'mam3e',
     name: 'Mutants & Masterminds 3rd Edition',
     abbr: 'M&M 3e',
     metadata: () => import('./mutants-and-masterminds/3e/metadata'),
+  },
+  daggerheart: {
+    id: 'daggerheart',
+    name: 'Daggerheart',
+    abbr: 'DH',
+    srdVersion: '1.0',
+    metadata: () => Promise.resolve({}),
   },
 };
 

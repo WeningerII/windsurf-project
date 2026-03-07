@@ -64,7 +64,8 @@ export const shadowDancerSubclass: Subclass = {
           id: 'shadow-dancer-mastery',
           name: 'Shadow Dancer Mastery',
           source: 'Rogue 5',
-          description: 'You have mastered shadow dancing. Your shadow abilities become more powerful.',
+          description:
+            'You have mastered shadow dancing. Your shadow abilities become more powerful.',
         },
       ],
     },
@@ -108,7 +109,8 @@ export const shadowDancerSubclass: Subclass = {
           id: 'shadow-dancer-ultimate-feat',
           name: 'Ultimate Shadow Dancer Feat',
           source: 'Rogue 9',
-          description: 'You gain an ultimate feat that represents the pinnacle of your shadow dancing abilities.',
+          description:
+            'You gain an ultimate feat that represents the pinnacle of your shadow dancing abilities.',
         },
       ],
     },
@@ -174,7 +176,8 @@ export const shadowDancerSubclass: Subclass = {
           id: 'shadow-dancer-apex-feat',
           name: 'Apex Shadow Dancer Feat',
           source: 'Rogue 15',
-          description: 'You gain an apex feat that represents the ultimate expression of your shadow dancing abilities.',
+          description:
+            'You gain an apex feat that represents the ultimate expression of your shadow dancing abilities.',
         },
       ],
     },
@@ -196,7 +199,8 @@ export const shadowDancerSubclass: Subclass = {
           id: 'shadow-dancer-transcendent-feat',
           name: 'Transcendent Shadow Dancer Feat',
           source: 'Rogue 17',
-          description: 'You gain a transcendent feat that goes beyond normal shadow dancing abilities.',
+          description:
+            'You gain a transcendent feat that goes beyond normal shadow dancing abilities.',
         },
       ],
     },

@@ -6,7 +6,13 @@ import { dnd5eClasses } from './classes/index';
 import { dnd5eSpecies } from './species/index';
 import { dnd5eBackgrounds } from './backgrounds/index';
 import { dnd5eMonsters } from './monsters/index';
-import { dnd5eWeapons, dnd5eArmor, dnd5eShields, dnd5eAdventuringGear, dnd5eMagicItems } from './equipment/index';
+import {
+  dnd5eWeapons,
+  dnd5eArmor,
+  dnd5eShields,
+  dnd5eAdventuringGear,
+  dnd5eMagicItems,
+} from './equipment/index';
 import { magicWeapons } from './equipment/magic-weapons';
 import { magicArmor } from './equipment/magic-armor';
 import { potions } from './equipment/potions';
@@ -24,7 +30,7 @@ export const dnd5eMetadata = {
   system: 'dnd-5e-2014',
   edition: '5e',
   version: 'SRD 5.1 Only',
-  
+
   stats: {
     spells: {
       count: dnd5eSpells.length,
@@ -35,34 +41,39 @@ export const dnd5eMetadata = {
         Object.entries(dnd5eSpellsBySchool).map(([k, v]) => [k, v.length])
       ) as Record<string, number>,
     },
-    
+
     classes: {
       count: dnd5eClasses.length,
     },
-    
+
     species: {
       count: dnd5eSpecies.length,
     },
-    
+
     feats: {
       count: 0, // SRD 5.1 intentionally excludes feats
     },
-    
+
     backgrounds: {
       count: dnd5eBackgrounds.length,
     },
-    
+
     monsters: {
       count: dnd5eMonsters.length,
     },
-    
+
     equipment: {
       weapons: dnd5eWeapons.length,
       armor: dnd5eArmor.length + dnd5eShields.length,
       adventuringGear: dnd5eAdventuringGear.length,
-      magicItems: dnd5eMagicItems.length + magicWeapons.length + magicArmor.length + potions.length + wondrousItems.length,
+      magicItems:
+        dnd5eMagicItems.length +
+        magicWeapons.length +
+        magicArmor.length +
+        potions.length +
+        wondrousItems.length,
     },
-    
+
     specialAbilities: {
       smites: divineSmites.length,
       invocations: eldritchInvocations.length,
@@ -74,15 +85,13 @@ export const dnd5eMetadata = {
       fightingStyles: fightingStyles.length,
     },
   },
-  
-  sources: [
-    { id: 'srd', name: 'System Reference Document 5.1', abbr: 'SRD 5.1' },
-  ],
+
+  sources: [{ id: 'srd', name: 'System Reference Document 5.1', abbr: 'SRD 5.1' }],
 };
 
 export function getProgress(): number {
   const stats = dnd5eMetadata.stats;
-  const totalItems = 
+  const totalItems =
     stats.spells.count +
     stats.classes.count +
     stats.species.count +
@@ -94,7 +103,7 @@ export function getProgress(): number {
     stats.equipment.adventuringGear +
     stats.equipment.magicItems +
     Object.values(stats.specialAbilities).reduce((sum, n) => sum + n, 0);
-    
+
   // All present data is implemented — progress is 100%
   return totalItems > 0 ? 100 : 0;
 }

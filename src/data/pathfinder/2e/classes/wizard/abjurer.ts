@@ -5,7 +5,8 @@ export const abjurerSubclass: Subclass = {
   id: 'pf2e-wizard-abjurer',
   name: 'Abjurer',
   parentClassId: 'wizard',
-  description: 'A wizard who specializes in abjuration magic, protecting allies and banishing threats.',
+  description:
+    'A wizard who specializes in abjuration magic, protecting allies and banishing threats.',
   features: [
     {
       level: 1,
@@ -14,7 +15,8 @@ export const abjurerSubclass: Subclass = {
           id: 'abjuration-focus',
           name: 'Abjuration Focus',
           source: 'Wizard 1',
-          description: 'You specialize in abjuration magic. You gain a +1 bonus to spell save DCs for abjuration spells.',
+          description:
+            'You specialize in abjuration magic. You gain a +1 bonus to spell save DCs for abjuration spells.',
         },
         {
           id: 'abjuration-spells',
@@ -53,7 +55,8 @@ export const abjurerSubclass: Subclass = {
           id: 'improved-abjuration',
           name: 'Improved Abjuration',
           source: 'Wizard 4',
-          description: 'Your abjuration spells become more effective. Increase the bonus to spell save DCs to +2.',
+          description:
+            'Your abjuration spells become more effective. Increase the bonus to spell save DCs to +2.',
         },
       ],
     },
@@ -64,7 +67,8 @@ export const abjurerSubclass: Subclass = {
           id: 'abjurer-mastery',
           name: 'Abjurer Mastery',
           source: 'Wizard 5',
-          description: 'Your abjuration magic becomes more potent. Your protective wards become stronger.',
+          description:
+            'Your abjuration magic becomes more potent. Your protective wards become stronger.',
         },
       ],
     },
@@ -108,7 +112,8 @@ export const abjurerSubclass: Subclass = {
           id: 'abjurer-ultimate-feat',
           name: 'Ultimate Abjurer Feat',
           source: 'Wizard 9',
-          description: 'You gain an ultimate feat that represents the pinnacle of your abjuration abilities.',
+          description:
+            'You gain an ultimate feat that represents the pinnacle of your abjuration abilities.',
         },
       ],
     },
@@ -119,7 +124,8 @@ export const abjurerSubclass: Subclass = {
           id: 'abjurer-perfection',
           name: 'Abjurer Perfection',
           source: 'Wizard 10',
-          description: 'You have perfected your abjuration abilities. Increase the bonus to spell save DCs to +3.',
+          description:
+            'You have perfected your abjuration abilities. Increase the bonus to spell save DCs to +3.',
         },
       ],
     },
@@ -174,7 +180,8 @@ export const abjurerSubclass: Subclass = {
           id: 'abjurer-apex-feat',
           name: 'Apex Abjurer Feat',
           source: 'Wizard 15',
-          description: 'You gain an apex feat that represents the ultimate expression of your abjuration abilities.',
+          description:
+            'You gain an apex feat that represents the ultimate expression of your abjuration abilities.',
         },
       ],
     },

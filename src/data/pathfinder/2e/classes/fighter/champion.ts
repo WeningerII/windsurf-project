@@ -4,7 +4,7 @@ export const championSubclass: Subclass = {
   id: 'pf2e-fighter-champion',
   name: 'Champion',
   parentClassId: 'fighter',
-  
+
   features: [
     {
       level: 1,
@@ -13,13 +13,15 @@ export const championSubclass: Subclass = {
           id: 'champion-dedication',
           name: 'Champion Dedication',
           source: 'Fighter 1',
-          description: 'You dedicate yourself to a cause, becoming a champion of your deity or ideal. You gain a champion\'s reaction and access to champion feats.',
+          description:
+            "You dedicate yourself to a cause, becoming a champion of your deity or ideal. You gain a champion's reaction and access to champion feats.",
         },
         {
           id: 'champion-reaction',
-          name: 'Champion\'s Reaction',
+          name: "Champion's Reaction",
           source: 'Fighter 1',
-          description: 'You gain the Deific Weapon reaction, allowing you to protect an ally with your deity\'s power.',
+          description:
+            "You gain the Deific Weapon reaction, allowing you to protect an ally with your deity's power.",
         },
       ],
     },
@@ -30,7 +32,8 @@ export const championSubclass: Subclass = {
           id: 'champion-feat-2',
           name: 'Champion Feat',
           source: 'Fighter 2',
-          description: 'You gain a champion feat. You can select from feats that grant you champion abilities.',
+          description:
+            'You gain a champion feat. You can select from feats that grant you champion abilities.',
         },
       ],
     },
@@ -134,6 +137,6 @@ export const championSubclass: Subclass = {
       ],
     },
   ],
-  
+
   description: 'A champion dedicated to a cause, deity, or ideal, wielding divine power in combat.',
 };

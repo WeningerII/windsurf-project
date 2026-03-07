@@ -14,7 +14,8 @@ export const level5Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'You banish the target to another plane of existence. The target must attempt a Will save. On a failure, if the target is native to this plane, it\'s sent to a random location on a different plane. If it\'s not native, it returns to its home plane.',
+    description:
+      "You banish the target to another plane of existence. The target must attempt a Will save. On a failure, if the target is native to this plane, it's sent to a random location on a different plane. If it's not native, it returns to its home plane.",
     classes: ['cleric', 'sorcerer', 'wizard'],
   },
   {
@@ -31,7 +32,8 @@ export const level5Spells: Spell[] = [
     duration: { type: 'rounds', rounds: 1 },
     concentration: true,
     ritual: false,
-    description: 'You conjure a poisonous fog. This functions as obscuring mist, except the area moves 10 feet away from you each round. Each creature that starts its turn in the cloud takes 6d8 poison damage with a basic Fortitude save.',
+    description:
+      'You conjure a poisonous fog. This functions as obscuring mist, except the area moves 10 feet away from you each round. Each creature that starts its turn in the cloud takes 6d8 poison damage with a basic Fortitude save.',
     damage: { base: { count: 6, die: 'd8', notation: '6d8' }, type: 'poison' },
     savingThrow: { attribute: 'con', success: 'half' },
     classes: ['sorcerer', 'wizard'],
@@ -50,7 +52,8 @@ export const level5Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'Icy cold rushes forth from your hands. You deal 12d6 cold damage to creatures in the area; they must each attempt a basic Reflex save.',
+    description:
+      'Icy cold rushes forth from your hands. You deal 12d6 cold damage to creatures in the area; they must each attempt a basic Reflex save.',
     damage: { base: { count: 12, die: 'd6', notation: '12d6' }, type: 'cold' },
     savingThrow: { attribute: 'dex', success: 'half' },
     classes: ['sorcerer', 'wizard'],
@@ -68,7 +71,8 @@ export const level5Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'You inflict despair on creatures in the area. Affected creatures take a -2 status penalty to attack rolls, saving throws, ability checks, and skill checks.',
+    description:
+      'You inflict despair on creatures in the area. Affected creatures take a -2 status penalty to attack rolls, saving throws, ability checks, and skill checks.',
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -84,7 +88,8 @@ export const level5Spells: Spell[] = [
     duration: { type: 'permanent' },
     concentration: false,
     ritual: false,
-    description: 'You reduce the target\'s mental faculties. The target must attempt an Intelligence save. On a failure, the target becomes feebleminded.',
+    description:
+      "You reduce the target's mental faculties. The target must attempt an Intelligence save. On a failure, the target becomes feebleminded.",
     savingThrow: { attribute: 'int', success: 'none' },
     classes: ['bard', 'sorcerer', 'wizard'],
   },
@@ -101,7 +106,8 @@ export const level5Spells: Spell[] = [
     duration: { type: 'hours', hours: 1 },
     concentration: false,
     ritual: false,
-    description: 'You create a visible tunnel through the wall in the chosen area, replacing the area with empty space. If the wall is thicker than 10 feet, the tunnel ends 10 feet in.',
+    description:
+      'You create a visible tunnel through the wall in the chosen area, replacing the area with empty space. If the wall is thicker than 10 feet, the tunnel ends 10 feet in.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -117,7 +123,8 @@ export const level5Spells: Spell[] = [
     duration: { type: 'hours', hours: 1 },
     concentration: true,
     ritual: false,
-    description: 'You create an invisible, floating eye, 1 inch in diameter, at a location you can see within range. It hovers there and remains for the duration, allowing you to see from its position as if you were there. The eye can\'t move, but you can dismiss the spell and create a new eye as an action.',
+    description:
+      "You create an invisible, floating eye, 1 inch in diameter, at a location you can see within range. It hovers there and remains for the duration, allowing you to see from its position as if you were there. The eye can't move, but you can dismiss the spell and create a new eye as an action.",
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -133,7 +140,8 @@ export const level5Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You send the target a mental message of 25 words or fewer, and it can respond immediately with its own message of 25 words or fewer.',
+    description:
+      'You send the target a mental message of 25 words or fewer, and it can respond immediately with its own message of 25 words or fewer.',
     classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
   },
   {
@@ -149,7 +157,8 @@ export const level5Spells: Spell[] = [
     duration: { type: 'rounds', rounds: 1 },
     concentration: false,
     ritual: false,
-    description: 'You emit a pulsating mental blast. Creatures in a 30-foot emanation must attempt a Will save, taking 6d6 mental damage and becoming stunned 1 on a failure.',
+    description:
+      'You emit a pulsating mental blast. Creatures in a 30-foot emanation must attempt a Will save, taking 6d6 mental damage and becoming stunned 1 on a failure.',
     damage: { base: { count: 6, die: 'd6', notation: '6d6' }, type: 'psychic' },
     classes: ['bard', 'sorcerer', 'wizard'],
   },
@@ -166,7 +175,8 @@ export const level5Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You shape a wall of solid stone. You create a 1-inch-thick wall of stone up to 120 feet long, and 20 feet high. The wall doesn\'t need to stand vertically, so you can use it to form a bridge or set of stairs, for example.',
+    description:
+      "You shape a wall of solid stone. You create a 1-inch-thick wall of stone up to 120 feet long, and 20 feet high. The wall doesn't need to stand vertically, so you can use it to form a bridge or set of stairs, for example.",
     classes: ['cleric', 'druid', 'sorcerer', 'wizard'],
   },
 ];

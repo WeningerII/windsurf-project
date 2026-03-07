@@ -51,20 +51,26 @@ export const dnd5e2024MonstersByType = {
 };
 
 // Index by ID
-export const dnd5e2024MonstersById: Record<string, Monster> = dnd5e2024Monsters.reduce((acc, monster) => {
-  acc[monster.id] = monster;
-  return acc;
-}, {} as Record<string, Monster>);
+export const dnd5e2024MonstersById: Record<string, Monster> = dnd5e2024Monsters.reduce(
+  (acc, monster) => {
+    acc[monster.id] = monster;
+    return acc;
+  },
+  {} as Record<string, Monster>
+);
 
 // Index by CR
-export const dnd5e2024MonstersByCR: Record<number, Monster[]> = dnd5e2024Monsters.reduce((acc, monster) => {
-  const cr = monster.challengeRating;
-  if (!acc[cr]) {
-    acc[cr] = [];
-  }
-  acc[cr].push(monster);
-  return acc;
-}, {} as Record<number, Monster[]>);
+export const dnd5e2024MonstersByCR: Record<number, Monster[]> = dnd5e2024Monsters.reduce(
+  (acc, monster) => {
+    const cr = monster.challengeRating;
+    if (!acc[cr]) {
+      acc[cr] = [];
+    }
+    acc[cr].push(monster);
+    return acc;
+  },
+  {} as Record<number, Monster[]>
+);
 
 // Helper functions
 export function getMonsterById(id: string): Monster | undefined {
@@ -76,7 +82,7 @@ export function getMonstersByCR(cr: number): Monster[] {
 }
 
 export function getMonstersByCRRange(minCR: number, maxCR: number): Monster[] {
-  return dnd5e2024Monsters.filter(m => m.challengeRating >= minCR && m.challengeRating <= maxCR);
+  return dnd5e2024Monsters.filter((m) => m.challengeRating >= minCR && m.challengeRating <= maxCR);
 }
 
 export function getMonstersByType(type: string): Monster[] {
@@ -86,14 +92,20 @@ export function getMonstersByType(type: string): Monster[] {
 // Statistics
 export const monsterStats = {
   total: dnd5e2024Monsters.length,
-  byType: Object.entries(dnd5e2024MonstersByType).reduce((acc, [type, monsters]) => {
-    acc[type] = monsters.length;
-    return acc;
-  }, {} as Record<string, number>),
-  byCR: Object.entries(dnd5e2024MonstersByCR).reduce((acc, [cr, monsters]) => {
-    acc[cr] = monsters.length;
-    return acc;
-  }, {} as Record<string, number>),
+  byType: Object.entries(dnd5e2024MonstersByType).reduce(
+    (acc, [type, monsters]) => {
+      acc[type] = monsters.length;
+      return acc;
+    },
+    {} as Record<string, number>
+  ),
+  byCR: Object.entries(dnd5e2024MonstersByCR).reduce(
+    (acc, [cr, monsters]) => {
+      acc[cr] = monsters.length;
+      return acc;
+    },
+    {} as Record<string, number>
+  ),
 };
 
 // Export type collections

@@ -17,7 +17,17 @@ export const airElemental: Monster = {
   abilities: { str: 14, dex: 20, con: 14, int: 6, wis: 10, cha: 6 },
   damageResistances: ['bludgeoning', 'piercing', 'slashing'],
   damageImmunities: ['poison'],
-  conditionImmunities: ['charmed', 'exhaustion', 'frightened', 'grappled', 'paralyzed', 'petrified', 'poisoned', 'prone', 'restrained'],
+  conditionImmunities: [
+    'charmed',
+    'exhaustion',
+    'frightened',
+    'grappled',
+    'paralyzed',
+    'petrified',
+    'poisoned',
+    'prone',
+    'restrained',
+  ],
   senses: ['darkvision 60 ft.', 'passive Perception 12'],
   languages: ['Aquan'],
   challengeRating: 5,
@@ -25,11 +35,13 @@ export const airElemental: Monster = {
   specialAbilities: [
     {
       name: 'Air Form',
-      description: 'The elemental can enter a hostile creature\'s space and stop there. It can move through a space as narrow as 1 inch wide.',
+      description:
+        "The elemental can enter a hostile creature's space and stop there. It can move through a space as narrow as 1 inch wide.",
     },
     {
       name: 'Whirlwind',
-      description: 'The elemental can create a 10-foot radius, 30-foot high cylinder of swirling air lasting for 1 minute.',
+      description:
+        'The elemental can create a 10-foot radius, 30-foot high cylinder of swirling air lasting for 1 minute.',
     },
   ],
   actions: [
@@ -39,7 +51,8 @@ export const airElemental: Monster = {
     },
     {
       name: 'Slam',
-      description: 'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 13 (2d8 + 4) bludgeoning damage.',
+      description:
+        'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 13 (2d8 + 4) bludgeoning damage.',
     },
   ],
   environment: ['coastal', 'grassland'],
@@ -59,7 +72,17 @@ export const earthElemental: Monster = {
   abilities: { str: 19, dex: 8, con: 16, int: 6, wis: 10, cha: 6 },
   damageResistances: ['bludgeoning', 'piercing', 'slashing'],
   damageImmunities: ['poison'],
-  conditionImmunities: ['charmed', 'exhaustion', 'frightened', 'grappled', 'paralyzed', 'petrified', 'poisoned', 'prone', 'restrained'],
+  conditionImmunities: [
+    'charmed',
+    'exhaustion',
+    'frightened',
+    'grappled',
+    'paralyzed',
+    'petrified',
+    'poisoned',
+    'prone',
+    'restrained',
+  ],
   senses: ['darkvision 60 ft.', 'passive Perception 10'],
   languages: ['Terran'],
   challengeRating: 5,
@@ -67,7 +90,8 @@ export const earthElemental: Monster = {
   specialAbilities: [
     {
       name: 'Earth Form',
-      description: 'The elemental can enter a hostile creature\'s space and stop there. It can move through a space as narrow as 1 inch wide.',
+      description:
+        "The elemental can enter a hostile creature's space and stop there. It can move through a space as narrow as 1 inch wide.",
     },
     {
       name: 'Earth Glide',
@@ -81,7 +105,8 @@ export const earthElemental: Monster = {
     },
     {
       name: 'Slam',
-      description: 'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 13 (2d8 + 4) bludgeoning damage.',
+      description:
+        'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 13 (2d8 + 4) bludgeoning damage.',
     },
   ],
   environment: ['cave', 'mountain'],
@@ -101,7 +126,17 @@ export const fireElemental: Monster = {
   abilities: { str: 10, dex: 17, con: 16, int: 6, wis: 10, cha: 7 },
   damageResistances: ['bludgeoning', 'piercing', 'slashing'],
   damageImmunities: ['fire', 'poison'],
-  conditionImmunities: ['charmed', 'exhaustion', 'frightened', 'grappled', 'paralyzed', 'petrified', 'poisoned', 'prone', 'restrained'],
+  conditionImmunities: [
+    'charmed',
+    'exhaustion',
+    'frightened',
+    'grappled',
+    'paralyzed',
+    'petrified',
+    'poisoned',
+    'prone',
+    'restrained',
+  ],
   senses: ['darkvision 60 ft.', 'passive Perception 10'],
   languages: ['Ignan'],
   challengeRating: 5,
@@ -109,15 +144,18 @@ export const fireElemental: Monster = {
   specialAbilities: [
     {
       name: 'Fire Form',
-      description: 'The elemental can enter a hostile creature\'s space and stop there. It can move through a space as narrow as 1 foot wide.',
+      description:
+        "The elemental can enter a hostile creature's space and stop there. It can move through a space as narrow as 1 foot wide.",
     },
     {
       name: 'Illumination',
-      description: 'The elemental sheds bright light in a 30-foot radius and dim light in an additional 30 feet.',
+      description:
+        'The elemental sheds bright light in a 30-foot radius and dim light in an additional 30 feet.',
     },
     {
       name: 'Water Susceptibility',
-      description: 'For every 5 feet the elemental moves in water, or for every gallon of water splashed on it, it takes 1 cold damage.',
+      description:
+        'For every 5 feet the elemental moves in water, or for every gallon of water splashed on it, it takes 1 cold damage.',
     },
   ],
   actions: [
@@ -127,7 +165,8 @@ export const fireElemental: Monster = {
     },
     {
       name: 'Touch',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 10 (2d6 + 3) fire damage. If the target is a creature or a flammable object, it ignites. If not dealt with, the fire spreads.',
+      description:
+        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 10 (2d6 + 3) fire damage. If the target is a creature or a flammable object, it ignites. If not dealt with, the fire spreads.',
     },
   ],
   environment: ['underdark', 'volcano'],
@@ -147,7 +186,17 @@ export const waterElemental: Monster = {
   abilities: { str: 16, dex: 14, con: 14, int: 6, wis: 10, cha: 6 },
   damageResistances: ['bludgeoning', 'piercing', 'slashing'],
   damageImmunities: ['poison'],
-  conditionImmunities: ['charmed', 'exhaustion', 'frightened', 'grappled', 'paralyzed', 'petrified', 'poisoned', 'prone', 'restrained'],
+  conditionImmunities: [
+    'charmed',
+    'exhaustion',
+    'frightened',
+    'grappled',
+    'paralyzed',
+    'petrified',
+    'poisoned',
+    'prone',
+    'restrained',
+  ],
   senses: ['darkvision 60 ft.', 'passive Perception 12'],
   languages: ['Aquan'],
   challengeRating: 5,
@@ -155,11 +204,13 @@ export const waterElemental: Monster = {
   specialAbilities: [
     {
       name: 'Water Form',
-      description: 'The elemental can enter a hostile creature\'s space and stop there. It can move through a space as narrow as 1 inch wide.',
+      description:
+        "The elemental can enter a hostile creature's space and stop there. It can move through a space as narrow as 1 inch wide.",
     },
     {
       name: 'Freezing Fog',
-      description: 'The elemental creates a 20-foot radius sphere of magical fog lasting for 1 minute.',
+      description:
+        'The elemental creates a 20-foot radius sphere of magical fog lasting for 1 minute.',
     },
     {
       name: 'Water Susceptibility',
@@ -173,7 +224,8 @@ export const waterElemental: Monster = {
     },
     {
       name: 'Slam',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 13 (2d8 + 4) bludgeoning damage.',
+      description:
+        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 13 (2d8 + 4) bludgeoning damage.',
     },
   ],
   environment: ['coastal', 'ocean'],

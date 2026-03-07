@@ -27,11 +27,13 @@ export const giantApe: Monster = {
     },
     {
       name: 'Fist',
-      description: 'Melee Weapon Attack: +9 to hit, reach 10 ft., one target. Hit: 22 (3d10 + 6) bludgeoning damage.',
+      description:
+        'Melee Weapon Attack: +9 to hit, reach 10 ft., one target. Hit: 22 (3d10 + 6) bludgeoning damage.',
     },
     {
       name: 'Rock',
-      description: 'Ranged Weapon Attack: +9 to hit, range 50/100 ft., one target. Hit: 30 (7d6 + 6) bludgeoning damage.',
+      description:
+        'Ranged Weapon Attack: +9 to hit, range 50/100 ft., one target. Hit: 30 (7d6 + 6) bludgeoning damage.',
     },
   ],
   environment: ['jungle', 'forest'],
@@ -56,17 +58,20 @@ export const mammoth: Monster = {
   specialAbilities: [
     {
       name: 'Trampling Charge',
-      description: 'If the mammoth moves at least 20 feet straight toward a creature and then hits it with a gore attack on the same turn, that target must succeed on a DC 18 Strength saving throw or be knocked prone. If the target is prone, the mammoth can make one stomp attack against it as a bonus action.',
+      description:
+        'If the mammoth moves at least 20 feet straight toward a creature and then hits it with a gore attack on the same turn, that target must succeed on a DC 18 Strength saving throw or be knocked prone. If the target is prone, the mammoth can make one stomp attack against it as a bonus action.',
     },
   ],
   actions: [
     {
       name: 'Gore',
-      description: 'Melee Weapon Attack: +10 to hit, reach 10 ft., one target. Hit: 25 (4d8 + 7) piercing damage.',
+      description:
+        'Melee Weapon Attack: +10 to hit, reach 10 ft., one target. Hit: 25 (4d8 + 7) piercing damage.',
     },
     {
       name: 'Stomp',
-      description: 'Melee Weapon Attack: +10 to hit, reach 5 ft., one prone creature. Hit: 29 (4d10 + 7) bludgeoning damage.',
+      description:
+        'Melee Weapon Attack: +10 to hit, reach 5 ft., one prone creature. Hit: 29 (4d10 + 7) bludgeoning damage.',
     },
   ],
   environment: ['arctic', 'grassland'],
@@ -102,11 +107,13 @@ export const giantCrocodile: Monster = {
     },
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +8 to hit, reach 5 ft., one target. Hit: 21 (3d10 + 5) piercing damage, and the target is grappled (escape DC 16). Until this grapple ends, the target is restrained, and the crocodile can\'t bite another target.',
+      description:
+        "Melee Weapon Attack: +8 to hit, reach 5 ft., one target. Hit: 21 (3d10 + 5) piercing damage, and the target is grappled (escape DC 16). Until this grapple ends, the target is restrained, and the crocodile can't bite another target.",
     },
     {
       name: 'Tail',
-      description: 'Melee Weapon Attack: +8 to hit, reach 10 ft., one target not grappled by the crocodile. Hit: 14 (2d8 + 5) bludgeoning damage. If the target is a creature, it must succeed on a DC 16 Strength saving throw or be knocked prone.',
+      description:
+        'Melee Weapon Attack: +8 to hit, reach 10 ft., one target not grappled by the crocodile. Hit: 14 (2d8 + 5) bludgeoning damage. If the target is a creature, it must succeed on a DC 16 Strength saving throw or be knocked prone.',
     },
   ],
   environment: ['swamp', 'water'],
@@ -132,7 +139,8 @@ export const hunterShark: Monster = {
   specialAbilities: [
     {
       name: 'Blood Frenzy',
-      description: 'The shark has advantage on melee attack rolls against any creature that doesn\'t have all its hit points.',
+      description:
+        "The shark has advantage on melee attack rolls against any creature that doesn't have all its hit points.",
     },
     {
       name: 'Water Breathing',
@@ -142,7 +150,8 @@ export const hunterShark: Monster = {
   actions: [
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 13 (2d8 + 4) piercing damage.',
+      description:
+        'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 13 (2d8 + 4) piercing damage.',
     },
   ],
   environment: ['water'],
@@ -178,11 +187,13 @@ export const polarBear: Monster = {
     },
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 9 (1d8 + 5) piercing damage.',
+      description:
+        'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 9 (1d8 + 5) piercing damage.',
     },
     {
       name: 'Claws',
-      description: 'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 12 (2d6 + 5) slashing damage.',
+      description:
+        'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 12 (2d6 + 5) slashing damage.',
     },
   ],
   environment: ['arctic'],
@@ -207,13 +218,15 @@ export const rhinoceros: Monster = {
   specialAbilities: [
     {
       name: 'Charge',
-      description: 'If the rhinoceros moves at least 20 feet straight toward a target and then hits it with a gore attack on the same turn, the target takes an extra 9 (2d8) bludgeoning damage. If the target is a creature, it must succeed on a DC 15 Strength saving throw or be knocked prone.',
+      description:
+        'If the rhinoceros moves at least 20 feet straight toward a target and then hits it with a gore attack on the same turn, the target takes an extra 9 (2d8) bludgeoning damage. If the target is a creature, it must succeed on a DC 15 Strength saving throw or be knocked prone.',
     },
   ],
   actions: [
     {
       name: 'Gore',
-      description: 'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 14 (2d8 + 5) bludgeoning damage.',
+      description:
+        'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 14 (2d8 + 5) bludgeoning damage.',
     },
   ],
   environment: ['grassland'],
@@ -243,17 +256,20 @@ export const saberToothedTiger: Monster = {
     },
     {
       name: 'Pounce',
-      description: 'If the tiger moves at least 20 feet straight toward a creature and then hits it with a claw attack on the same turn, that target must succeed on a DC 14 Strength saving throw or be knocked prone. If the target is prone, the tiger can make one bite attack against it as a bonus action.',
+      description:
+        'If the tiger moves at least 20 feet straight toward a creature and then hits it with a claw attack on the same turn, that target must succeed on a DC 14 Strength saving throw or be knocked prone. If the target is prone, the tiger can make one bite attack against it as a bonus action.',
     },
   ],
   actions: [
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 10 (1d10 + 5) piercing damage.',
+      description:
+        'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 10 (1d10 + 5) piercing damage.',
     },
     {
       name: 'Claw',
-      description: 'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 12 (2d6 + 5) slashing damage.',
+      description:
+        'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 12 (2d6 + 5) slashing damage.',
     },
   ],
   environment: ['arctic', 'mountain'],
@@ -273,23 +289,26 @@ export const giantElk: Monster = {
   abilities: { str: 19, dex: 16, con: 14, int: 7, wis: 14, cha: 10 },
   skills: { Perception: 4 },
   senses: ['passive Perception 14'],
-  languages: ['Giant Elk', 'understands Common, Elvish, and Sylvan but can\'t speak'],
+  languages: ['Giant Elk', "understands Common, Elvish, and Sylvan but can't speak"],
   challengeRating: 2,
   experiencePoints: 450,
   specialAbilities: [
     {
       name: 'Charge',
-      description: 'If the elk moves at least 20 feet straight toward a target and then hits it with a ram attack on the same turn, the target takes an extra 7 (2d6) damage. If the target is a creature, it must succeed on a DC 14 Strength saving throw or be knocked prone.',
+      description:
+        'If the elk moves at least 20 feet straight toward a target and then hits it with a ram attack on the same turn, the target takes an extra 7 (2d6) damage. If the target is a creature, it must succeed on a DC 14 Strength saving throw or be knocked prone.',
     },
   ],
   actions: [
     {
       name: 'Ram',
-      description: 'Melee Weapon Attack: +6 to hit, reach 10 ft., one target. Hit: 11 (2d6 + 4) bludgeoning damage.',
+      description:
+        'Melee Weapon Attack: +6 to hit, reach 10 ft., one target. Hit: 11 (2d6 + 4) bludgeoning damage.',
     },
     {
       name: 'Hooves',
-      description: 'Melee Weapon Attack: +6 to hit, reach 5 ft., one prone creature. Hit: 22 (4d8 + 4) bludgeoning damage.',
+      description:
+        'Melee Weapon Attack: +6 to hit, reach 5 ft., one prone creature. Hit: 22 (4d8 + 4) bludgeoning damage.',
     },
   ],
   environment: ['forest', 'grassland'],

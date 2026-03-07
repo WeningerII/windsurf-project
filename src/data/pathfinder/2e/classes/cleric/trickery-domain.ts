@@ -5,7 +5,8 @@ export const trickeryDomainSubclass: Subclass = {
   id: 'pf2e-cleric-trickery-domain',
   name: 'Trickery Domain',
   parentClassId: 'cleric',
-  description: 'A cleric devoted to deception and misdirection, serving a deity of trickery and cunning.',
+  description:
+    'A cleric devoted to deception and misdirection, serving a deity of trickery and cunning.',
   features: [
     {
       level: 1,
@@ -31,7 +32,8 @@ export const trickeryDomainSubclass: Subclass = {
           id: 'channel-divinity-trickery',
           name: 'Channel Divinity: Invoke Duplicity',
           source: 'Cleric 2',
-          description: 'You can create an illusory duplicate of yourself that can move and act independently.',
+          description:
+            'You can create an illusory duplicate of yourself that can move and act independently.',
         },
       ],
     },
@@ -53,7 +55,8 @@ export const trickeryDomainSubclass: Subclass = {
           id: 'improved-deception',
           name: 'Improved Deception',
           source: 'Cleric 4',
-          description: 'Your deception becomes more effective. Increase the bonus to Deception checks to +2.',
+          description:
+            'Your deception becomes more effective. Increase the bonus to Deception checks to +2.',
         },
       ],
     },
@@ -86,7 +89,8 @@ export const trickeryDomainSubclass: Subclass = {
           id: 'master-of-deception',
           name: 'Master of Deception',
           source: 'Cleric 7',
-          description: 'You have become a master of deception. Your duplicates are indistinguishable from you.',
+          description:
+            'You have become a master of deception. Your duplicates are indistinguishable from you.',
         },
       ],
     },
@@ -108,7 +112,8 @@ export const trickeryDomainSubclass: Subclass = {
           id: 'trickery-ultimate-feat',
           name: 'Ultimate Trickery Feat',
           source: 'Cleric 9',
-          description: 'You gain an ultimate feat that represents the pinnacle of your trickery abilities.',
+          description:
+            'You gain an ultimate feat that represents the pinnacle of your trickery abilities.',
         },
       ],
     },
@@ -119,7 +124,8 @@ export const trickeryDomainSubclass: Subclass = {
           id: 'trickery-perfection',
           name: 'Trickery Perfection',
           source: 'Cleric 10',
-          description: 'You have perfected your trickery abilities. Increase the bonus to Deception checks to +3.',
+          description:
+            'You have perfected your trickery abilities. Increase the bonus to Deception checks to +3.',
         },
       ],
     },
@@ -163,7 +169,8 @@ export const trickeryDomainSubclass: Subclass = {
           id: 'immortal-deception',
           name: 'Immortal Deception',
           source: 'Cleric 14',
-          description: 'Your deception is nearly perfect. Increase the bonus to Deception checks to +4.',
+          description:
+            'Your deception is nearly perfect. Increase the bonus to Deception checks to +4.',
         },
       ],
     },
@@ -174,7 +181,8 @@ export const trickeryDomainSubclass: Subclass = {
           id: 'trickery-apex-feat',
           name: 'Apex Trickery Feat',
           source: 'Cleric 15',
-          description: 'You gain an apex feat that represents the ultimate expression of your trickery abilities.',
+          description:
+            'You gain an apex feat that represents the ultimate expression of your trickery abilities.',
         },
       ],
     },
@@ -185,7 +193,8 @@ export const trickeryDomainSubclass: Subclass = {
           id: 'god-of-trickery',
           name: 'God of Trickery',
           source: 'Cleric 16',
-          description: 'You have become a god of trickery. Your duplicates can now act as full copies of you.',
+          description:
+            'You have become a god of trickery. Your duplicates can now act as full copies of you.',
         },
       ],
     },
@@ -229,7 +238,8 @@ export const trickeryDomainSubclass: Subclass = {
           id: 'trickery-ascension',
           name: 'Trickery Ascension',
           source: 'Cleric 20',
-          description: 'You have ascended to the pinnacle of trickery mastery. You gain all benefits of your trickery abilities at their maximum potency.',
+          description:
+            'You have ascended to the pinnacle of trickery mastery. You gain all benefits of your trickery abilities at their maximum potency.',
         },
       ],
     },

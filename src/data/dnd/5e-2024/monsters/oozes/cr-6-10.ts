@@ -24,22 +24,22 @@ export const blackPudding: Monster = {
   specialAbilities: [
     {
       name: 'Amorphous',
-      description: 'The pudding can occupy another creature\'s space and vice versa.',
+      description: "The pudding can occupy another creature's space and vice versa.",
     },
     {
       name: 'Corrosive Form',
-      description: 'A creature that touches the pudding or hits it with a melee attack while within 5 feet of it takes 4 (1d8) acid damage. Any nonmagical weapon made of metal or wood that hits the pudding corrodes. After dealing damage, the weapon takes a permanent and cumulative -1 penalty to damage rolls. If its penalty drops to -5, the weapon is destroyed. Nonmagical ammunition made of metal or wood that hits the pudding is destroyed after dealing damage.',
+      description:
+        'A creature that touches the pudding or hits it with a melee attack while within 5 feet of it takes 4 (1d8) acid damage. Any nonmagical weapon made of metal or wood that hits the pudding corrodes. After dealing damage, the weapon takes a permanent and cumulative -1 penalty to damage rolls. If its penalty drops to -5, the weapon is destroyed. Nonmagical ammunition made of metal or wood that hits the pudding is destroyed after dealing damage.',
     },
   ],
   actions: [
     {
       name: 'Pseudopod',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) bludgeoning damage plus 7 (2d6) acid damage.',
+      description:
+        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) bludgeoning damage plus 7 (2d6) acid damage.',
     },
   ],
   environment: ['dungeon', 'underdark'],
 };
 
-export const oozesCR6to10: Monster[] = [
-  blackPudding,
-];
+export const oozesCR6to10: Monster[] = [blackPudding];

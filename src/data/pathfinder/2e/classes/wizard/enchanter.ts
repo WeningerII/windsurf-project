@@ -5,7 +5,8 @@ export const enchanterSubclass: Subclass = {
   id: 'pf2e-wizard-enchanter',
   name: 'Enchanter',
   parentClassId: 'wizard',
-  description: 'A specialist in enchantment magic who controls minds and influences the wills of others.',
+  description:
+    'A specialist in enchantment magic who controls minds and influences the wills of others.',
   features: [
     {
       level: 1,
@@ -14,7 +15,8 @@ export const enchanterSubclass: Subclass = {
           id: 'enchantment-focus',
           name: 'Enchantment Focus',
           source: 'Wizard 1',
-          description: 'You specialize in enchantment magic. You gain a +1 circumstance bonus to spell attack rolls and spell save DCs for enchantment spells.',
+          description:
+            'You specialize in enchantment magic. You gain a +1 circumstance bonus to spell attack rolls and spell save DCs for enchantment spells.',
         },
         {
           id: 'enchantment-spells',
@@ -31,7 +33,8 @@ export const enchanterSubclass: Subclass = {
           id: 'charm-mastery',
           name: 'Charm Mastery',
           source: 'Wizard 2',
-          description: 'Your charm spells are more effective. Creatures affected by your charm spells have disadvantage on saving throws against them.',
+          description:
+            'Your charm spells are more effective. Creatures affected by your charm spells have disadvantage on saving throws against them.',
         },
       ],
     },
@@ -64,7 +67,8 @@ export const enchanterSubclass: Subclass = {
           id: 'enchantment-mastery',
           name: 'Enchantment Mastery',
           source: 'Wizard 5',
-          description: 'Your enchantment magic becomes more potent. Increase the bonus to spell attack rolls and spell save DCs to +2.',
+          description:
+            'Your enchantment magic becomes more potent. Increase the bonus to spell attack rolls and spell save DCs to +2.',
         },
       ],
     },
@@ -108,7 +112,8 @@ export const enchanterSubclass: Subclass = {
           id: 'enchanter-ultimate-feat',
           name: 'Ultimate Enchanter Feat',
           source: 'Wizard 9',
-          description: 'You gain an ultimate feat that represents the pinnacle of your enchantment abilities.',
+          description:
+            'You gain an ultimate feat that represents the pinnacle of your enchantment abilities.',
         },
       ],
     },
@@ -119,7 +124,8 @@ export const enchanterSubclass: Subclass = {
           id: 'enchantment-perfection',
           name: 'Enchantment Perfection',
           source: 'Wizard 10',
-          description: 'You have perfected your enchantment abilities. Increase the bonus to spell attack rolls and spell save DCs to +3.',
+          description:
+            'You have perfected your enchantment abilities. Increase the bonus to spell attack rolls and spell save DCs to +3.',
         },
       ],
     },
@@ -163,7 +169,8 @@ export const enchanterSubclass: Subclass = {
           id: 'irresistible-enchantment',
           name: 'Irresistible Enchantment',
           source: 'Wizard 14',
-          description: 'Your enchantment magic is nearly impossible to resist. Increase the bonus to spell save DCs to +4.',
+          description:
+            'Your enchantment magic is nearly impossible to resist. Increase the bonus to spell save DCs to +4.',
         },
       ],
     },
@@ -174,7 +181,8 @@ export const enchanterSubclass: Subclass = {
           id: 'enchanter-apex-feat',
           name: 'Apex Enchanter Feat',
           source: 'Wizard 15',
-          description: 'You gain an apex feat that represents the ultimate expression of your enchantment abilities.',
+          description:
+            'You gain an apex feat that represents the ultimate expression of your enchantment abilities.',
         },
       ],
     },
@@ -185,7 +193,8 @@ export const enchanterSubclass: Subclass = {
           id: 'mind-master',
           name: 'Mind Master',
           source: 'Wizard 16',
-          description: 'You have become a master of minds. You can control multiple minds simultaneously.',
+          description:
+            'You have become a master of minds. You can control multiple minds simultaneously.',
         },
       ],
     },
@@ -196,7 +205,8 @@ export const enchanterSubclass: Subclass = {
           id: 'enchanter-transcendent-feat',
           name: 'Transcendent Enchanter Feat',
           source: 'Wizard 17',
-          description: 'You gain a transcendent feat that goes beyond normal enchantment abilities.',
+          description:
+            'You gain a transcendent feat that goes beyond normal enchantment abilities.',
         },
       ],
     },
@@ -207,7 +217,8 @@ export const enchanterSubclass: Subclass = {
           id: 'perfect-enchantment',
           name: 'Perfect Enchantment',
           source: 'Wizard 18',
-          description: 'Your enchantment magic is perfect. Increase the bonus to spell save DCs to +5.',
+          description:
+            'Your enchantment magic is perfect. Increase the bonus to spell save DCs to +5.',
         },
       ],
     },
@@ -229,7 +240,8 @@ export const enchanterSubclass: Subclass = {
           id: 'enchanter-ascension',
           name: 'Enchanter Ascension',
           source: 'Wizard 20',
-          description: 'You have ascended to the pinnacle of enchantment mastery. You gain all benefits of your enchantment abilities at their maximum potency.',
+          description:
+            'You have ascended to the pinnacle of enchantment mastery. You gain all benefits of your enchantment abilities at their maximum potency.',
         },
       ],
     },

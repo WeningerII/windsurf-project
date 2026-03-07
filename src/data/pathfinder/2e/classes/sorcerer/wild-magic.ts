@@ -5,7 +5,8 @@ export const wildMagicSubclass: Subclass = {
   id: 'pf2e-sorcerer-wild-magic',
   name: 'Wild Magic',
   parentClassId: 'sorcerer',
-  description: 'A sorcerer whose magic is chaotic and unpredictable, channeling the raw forces of wild magic.',
+  description:
+    'A sorcerer whose magic is chaotic and unpredictable, channeling the raw forces of wild magic.',
   features: [
     {
       level: 1,
@@ -108,7 +109,8 @@ export const wildMagicSubclass: Subclass = {
           id: 'wild-magic-ultimate-feat',
           name: 'Ultimate Wild Magic Feat',
           source: 'Sorcerer 9',
-          description: 'You gain an ultimate feat that represents the pinnacle of your wild magic abilities.',
+          description:
+            'You gain an ultimate feat that represents the pinnacle of your wild magic abilities.',
         },
       ],
     },
@@ -174,7 +176,8 @@ export const wildMagicSubclass: Subclass = {
           id: 'wild-magic-apex-feat',
           name: 'Apex Wild Magic Feat',
           source: 'Sorcerer 15',
-          description: 'You gain an apex feat that represents the ultimate expression of your wild magic abilities.',
+          description:
+            'You gain an apex feat that represents the ultimate expression of your wild magic abilities.',
         },
       ],
     },

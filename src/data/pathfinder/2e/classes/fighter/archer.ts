@@ -5,7 +5,8 @@ export const archerSubclass: Subclass = {
   id: 'pf2e-fighter-archer',
   name: 'Archer',
   parentClassId: 'fighter',
-  description: 'A master of ranged combat who wields bows and other projectile weapons with deadly precision.',
+  description:
+    'A master of ranged combat who wields bows and other projectile weapons with deadly precision.',
   features: [
     {
       level: 1,
@@ -14,7 +15,8 @@ export const archerSubclass: Subclass = {
           id: 'archer-training',
           name: 'Archer Training',
           source: 'Fighter 1',
-          description: 'You gain proficiency with all ranged weapons and advantage on ranged attack rolls.',
+          description:
+            'You gain proficiency with all ranged weapons and advantage on ranged attack rolls.',
         },
         {
           id: 'quick-draw',
@@ -108,7 +110,8 @@ export const archerSubclass: Subclass = {
           id: 'archer-ultimate-feat',
           name: 'Ultimate Archer Feat',
           source: 'Fighter 9',
-          description: 'You gain an ultimate feat that represents the pinnacle of your archery abilities.',
+          description:
+            'You gain an ultimate feat that represents the pinnacle of your archery abilities.',
         },
       ],
     },
@@ -119,7 +122,8 @@ export const archerSubclass: Subclass = {
           id: 'archer-perfection',
           name: 'Archer Perfection',
           source: 'Fighter 10',
-          description: 'You have perfected your archery abilities. Your ranged attacks gain a +2 bonus to hit.',
+          description:
+            'You have perfected your archery abilities. Your ranged attacks gain a +2 bonus to hit.',
         },
       ],
     },
@@ -163,7 +167,8 @@ export const archerSubclass: Subclass = {
           id: 'immortal-archer',
           name: 'Immortal Archer',
           source: 'Fighter 14',
-          description: 'Your archery is nearly perfect. Your ranged attacks gain a +3 bonus to hit.',
+          description:
+            'Your archery is nearly perfect. Your ranged attacks gain a +3 bonus to hit.',
         },
       ],
     },
@@ -174,7 +179,8 @@ export const archerSubclass: Subclass = {
           id: 'archer-apex-feat',
           name: 'Apex Archer Feat',
           source: 'Fighter 15',
-          description: 'You gain an apex feat that represents the ultimate expression of your archery abilities.',
+          description:
+            'You gain an apex feat that represents the ultimate expression of your archery abilities.',
         },
       ],
     },

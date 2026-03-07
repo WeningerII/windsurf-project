@@ -18,7 +18,7 @@ export const mam3eAdvantages: Advantage[] = [
 // Advantages indexed by ID for quick lookup
 export const mam3eAdvantagesById: Record<string, Advantage> = mam3eAdvantages.reduce(
   (acc, advantage) => {
-    if (acc[advantage.id]) {
+    if (acc[advantage.id] && import.meta.env.DEV) {
       console.warn(`Duplicate advantage ID detected: ${advantage.id}`);
     }
     acc[advantage.id] = advantage;

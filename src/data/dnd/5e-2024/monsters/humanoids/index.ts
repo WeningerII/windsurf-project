@@ -4,10 +4,6 @@ import { humanoidsCR11Plus } from './cr-11-plus';
 
 export { humanoidsCR0to5, humanoidsCR6to10, humanoidsCR11Plus };
 
-export const allHumanoids = [
-  ...humanoidsCR0to5,
-  ...humanoidsCR6to10,
-  ...humanoidsCR11Plus,
-];
+export const allHumanoids = [...humanoidsCR0to5, ...humanoidsCR6to10, ...humanoidsCR11Plus];
 
 export default allHumanoids;

@@ -1,9 +1,9 @@
 /**
  * Pathfinder 1e Core Traits - SRD-Compliant
- * 
+ *
  * This content is derived from the System Reference Document and is
  * released under the Open Gaming License v1.0a.
- * 
+ *
  * Source: Pathfinder 1e SRD (d20pfsrd.com/)
  * License: OGL v1.0a
  */
@@ -31,7 +31,8 @@ export const pf1eTraits: Trait[] = [
     name: 'Adopted',
     category: 'Social',
     description: 'You were adopted and raised by people not of your birth race.',
-    benefit: 'You gain an additional language and +2 bonus on Diplomacy checks with your adopted race.',
+    benefit:
+      'You gain an additional language and +2 bonus on Diplomacy checks with your adopted race.',
     source: 'Core Rulebook',
   },
   {
@@ -101,13 +102,13 @@ export const pf1eTraits: Trait[] = [
 ];
 
 export const getTrait = (id: string): Trait | undefined => {
-  return pf1eTraits.find(trait => trait.id === id);
+  return pf1eTraits.find((trait) => trait.id === id);
 };
 
 export const getTraitsByCategory = (category: string): Trait[] => {
-  return pf1eTraits.filter(trait => trait.category === category);
+  return pf1eTraits.filter((trait) => trait.category === category);
 };
 
 export const getTraitsByName = (name: string): Trait | undefined => {
-  return pf1eTraits.find(trait => trait.name === name);
+  return pf1eTraits.find((trait) => trait.name === name);
 };

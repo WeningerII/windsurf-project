@@ -29,7 +29,8 @@ export const adultRedDragon: Monster = {
   actions: [
     {
       name: 'Multiattack',
-      description: 'The dragon can use its Frightful Presence. It then makes three attacks: one with its bite and two with its claws.',
+      description:
+        'The dragon can use its Frightful Presence. It then makes three attacks: one with its bite and two with its claws.',
     },
     {
       name: 'Bite',
@@ -53,11 +54,14 @@ export const adultRedDragon: Monster = {
       description: 'Melee Weapon Attack: +14 to hit, reach 15 ft., one target.',
       attackBonus: 14,
       reach: 15,
-      damage: [{ dice: { count: 2, die: 'd8', modifier: 8, notation: '2d8+8' }, type: 'bludgeoning' }],
+      damage: [
+        { dice: { count: 2, die: 'd8', modifier: 8, notation: '2d8+8' }, type: 'bludgeoning' },
+      ],
     },
     {
       name: 'Frightful Presence',
-      description: 'Each creature of the dragon\'s choice that is within 120 feet of the dragon and aware of it must succeed on a DC 19 Wisdom saving throw or become frightened for 1 minute. A creature can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success.',
+      description:
+        "Each creature of the dragon's choice that is within 120 feet of the dragon and aware of it must succeed on a DC 19 Wisdom saving throw or become frightened for 1 minute. A creature can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success.",
       savingThrow: {
         attribute: 'wis',
         dc: 19,
@@ -66,7 +70,8 @@ export const adultRedDragon: Monster = {
     },
     {
       name: 'Fire Breath',
-      description: 'The dragon exhales fire in a 60-foot cone. Each creature in that area must make a DC 21 Dexterity saving throw, taking 18d6 fire damage on a failed save, or half as much damage on a successful one.',
+      description:
+        'The dragon exhales fire in a 60-foot cone. Each creature in that area must make a DC 21 Dexterity saving throw, taking 18d6 fire damage on a failed save, or half as much damage on a successful one.',
       savingThrow: {
         attribute: 'dex',
         dc: 21,
@@ -89,7 +94,8 @@ export const adultRedDragon: Monster = {
     {
       name: 'Wing Attack',
       cost: 2,
-      description: 'The dragon beats its wings. Each creature within 10 feet of the dragon must succeed on a DC 22 Dexterity saving throw or take 2d6+8 bludgeoning damage and be knocked prone. The dragon can then fly up to half its flying speed.',
+      description:
+        'The dragon beats its wings. Each creature within 10 feet of the dragon must succeed on a DC 22 Dexterity saving throw or take 2d6+8 bludgeoning damage and be knocked prone. The dragon can then fly up to half its flying speed.',
     },
   ],
   description: 'The most powerful and greedy of chromatic dragons, arrogant and cruel.',
@@ -117,7 +123,8 @@ export const purpleWorm: Monster = {
   specialAbilities: [
     {
       name: 'Tunneler',
-      description: 'The worm can burrow through solid rock at half its burrow speed and leaves a 10-foot-diameter tunnel in its wake.',
+      description:
+        'The worm can burrow through solid rock at half its burrow speed and leaves a 10-foot-diameter tunnel in its wake.',
     },
   ],
   actions: [
@@ -127,7 +134,8 @@ export const purpleWorm: Monster = {
     },
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +14 to hit, reach 10 ft., one target. If the target is a Large or smaller creature, it must succeed on a DC 19 Dexterity saving throw or be swallowed by the worm. A swallowed creature is blinded and restrained, it has total cover against attacks and other effects outside the worm, and it takes 6d6 acid damage at the start of each of the worm\'s turns.',
+      description:
+        "Melee Weapon Attack: +14 to hit, reach 10 ft., one target. If the target is a Large or smaller creature, it must succeed on a DC 19 Dexterity saving throw or be swallowed by the worm. A swallowed creature is blinded and restrained, it has total cover against attacks and other effects outside the worm, and it takes 6d6 acid damage at the start of each of the worm's turns.",
       attackBonus: 14,
       reach: 10,
       damage: [{ dice: { count: 3, die: 'd8', modifier: 9, notation: '3d8+9' }, type: 'piercing' }],
@@ -139,7 +147,8 @@ export const purpleWorm: Monster = {
     },
     {
       name: 'Tail Stinger',
-      description: 'Melee Weapon Attack: +14 to hit, reach 10 ft., one creature. The target must make a DC 19 Constitution saving throw, taking 12d6 poison damage on a failed save, or half as much damage on a successful one.',
+      description:
+        'Melee Weapon Attack: +14 to hit, reach 10 ft., one creature. The target must make a DC 19 Constitution saving throw, taking 12d6 poison damage on a failed save, or half as much damage on a successful one.',
       attackBonus: 14,
       reach: 10,
       damage: [{ dice: { count: 3, die: 'd6', modifier: 9, notation: '3d6+9' }, type: 'piercing' }],
@@ -183,7 +192,8 @@ export const ancientBlueDragon: Monster = {
   actions: [
     {
       name: 'Multiattack',
-      description: 'The dragon can use its Frightful Presence. It then makes three attacks: one with its bite and two with its claws.',
+      description:
+        'The dragon can use its Frightful Presence. It then makes three attacks: one with its bite and two with its claws.',
     },
     {
       name: 'Bite',
@@ -207,11 +217,14 @@ export const ancientBlueDragon: Monster = {
       description: 'Melee Weapon Attack: +16 to hit, reach 20 ft., one target.',
       attackBonus: 16,
       reach: 20,
-      damage: [{ dice: { count: 2, die: 'd8', modifier: 9, notation: '2d8+9' }, type: 'bludgeoning' }],
+      damage: [
+        { dice: { count: 2, die: 'd8', modifier: 9, notation: '2d8+9' }, type: 'bludgeoning' },
+      ],
     },
     {
       name: 'Frightful Presence',
-      description: 'Each creature of the dragon\'s choice within 120 feet of it and aware of it must succeed on a DC 20 Wisdom saving throw or become frightened for 1 minute.',
+      description:
+        "Each creature of the dragon's choice within 120 feet of it and aware of it must succeed on a DC 20 Wisdom saving throw or become frightened for 1 minute.",
       savingThrow: {
         attribute: 'wis',
         dc: 20,
@@ -220,7 +233,8 @@ export const ancientBlueDragon: Monster = {
     },
     {
       name: 'Lightning Breath',
-      description: 'The dragon exhales lightning in a 120-foot line that is 10 feet wide. Each creature in that line must make a DC 23 Dexterity saving throw, taking 22d10 lightning damage on a failed save, or half as much damage on a successful one.',
+      description:
+        'The dragon exhales lightning in a 120-foot line that is 10 feet wide. Each creature in that line must make a DC 23 Dexterity saving throw, taking 22d10 lightning damage on a failed save, or half as much damage on a successful one.',
       savingThrow: {
         attribute: 'dex',
         dc: 23,
@@ -243,7 +257,8 @@ export const ancientBlueDragon: Monster = {
     {
       name: 'Wing Attack',
       cost: 2,
-      description: 'The dragon beats its wings. Each creature within 15 feet must succeed on a DC 24 Dexterity saving throw or take 2d6+9 bludgeoning damage and be knocked prone. The dragon can then fly up to half its flying speed.',
+      description:
+        'The dragon beats its wings. Each creature within 15 feet must succeed on a DC 24 Dexterity saving throw or take 2d6+9 bludgeoning damage and be knocked prone. The dragon can then fly up to half its flying speed.',
     },
   ],
   description: 'Ancient and cunning blue dragons, masters of desert wastelands.',
@@ -279,7 +294,8 @@ export const lich: Monster = {
     },
     {
       name: 'Rejuvenation',
-      description: 'If it has a phylactery, a destroyed lich gains a new body in 1d10 days, regaining all its hit points and becoming active again. The new body appears within 5 feet of the phylactery.',
+      description:
+        'If it has a phylactery, a destroyed lich gains a new body in 1d10 days, regaining all its hit points and becoming active again. The new body appears within 5 feet of the phylactery.',
     },
     {
       name: 'Turn Resistance',
@@ -287,13 +303,15 @@ export const lich: Monster = {
     },
     {
       name: 'Spellcasting',
-      description: 'The lich is an 18th-level spellcaster. Its spellcasting ability is Intelligence (spell save DC 20, +12 to hit with spell attacks). The lich has the following wizard spells prepared: Cantrips: mage hand, prestidigitation, ray of frost; 1st level (4 slots): detect magic, magic missile, shield, thunderwave; 2nd level (3 slots): detect thoughts, invisibility, acid arrow, mirror image; 3rd level (3 slots): animate dead, counterspell, dispel magic, fireball; 4th level (3 slots): blight, dimension door; 5th level (3 slots): cloudkill, scrying; 6th level (1 slot): disintegrate, globe of invulnerability; 7th level (1 slot): finger of death, plane shift; 8th level (1 slot): dominate monster, power word stun; 9th level (1 slot): power word kill.',
+      description:
+        'The lich is an 18th-level spellcaster. Its spellcasting ability is Intelligence (spell save DC 20, +12 to hit with spell attacks). The lich has the following wizard spells prepared: Cantrips: mage hand, prestidigitation, ray of frost; 1st level (4 slots): detect magic, magic missile, shield, thunderwave; 2nd level (3 slots): detect thoughts, invisibility, acid arrow, mirror image; 3rd level (3 slots): animate dead, counterspell, dispel magic, fireball; 4th level (3 slots): blight, dimension door; 5th level (3 slots): cloudkill, scrying; 6th level (1 slot): disintegrate, globe of invulnerability; 7th level (1 slot): finger of death, plane shift; 8th level (1 slot): dominate monster, power word stun; 9th level (1 slot): power word kill.',
     },
   ],
   actions: [
     {
       name: 'Paralyzing Touch',
-      description: 'Melee Spell Attack: +12 to hit, reach 5 ft., one creature. The target must succeed on a DC 18 Constitution saving throw or be paralyzed for 1 minute. The target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success.',
+      description:
+        'Melee Spell Attack: +12 to hit, reach 5 ft., one creature. The target must succeed on a DC 18 Constitution saving throw or be paralyzed for 1 minute. The target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success.',
       attackBonus: 12,
       reach: 5,
       damage: [{ dice: { count: 3, die: 'd6', notation: '3d6' }, type: 'cold' }],
@@ -318,15 +336,18 @@ export const lich: Monster = {
     {
       name: 'Frightening Gaze',
       cost: 2,
-      description: 'The lich fixes its gaze on one creature it can see within 10 feet of it. The target must succeed on a DC 18 Wisdom saving throw against this magic or become frightened for 1 minute. The frightened target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success.',
+      description:
+        'The lich fixes its gaze on one creature it can see within 10 feet of it. The target must succeed on a DC 18 Wisdom saving throw against this magic or become frightened for 1 minute. The frightened target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success.',
     },
     {
       name: 'Disrupt Life',
       cost: 3,
-      description: 'Each living creature within 20 feet of the lich must make a DC 18 Constitution saving throw against this magic, taking 21 (6d6) necrotic damage on a failed save, or half as much damage on a successful one.',
+      description:
+        'Each living creature within 20 feet of the lich must make a DC 18 Constitution saving throw against this magic, taking 21 (6d6) necrotic damage on a failed save, or half as much damage on a successful one.',
     },
   ],
-  description: 'Powerful undead spellcasters who have achieved immortality through dark magic and a phylactery.',
+  description:
+    'Powerful undead spellcasters who have achieved immortality through dark magic and a phylactery.',
   environment: ['ruins', 'underground'],
 };
 
@@ -359,7 +380,8 @@ export const ancientRedDragon: Monster = {
   actions: [
     {
       name: 'Multiattack',
-      description: 'The dragon can use its Frightful Presence. It then makes three attacks: one with its bite and two with its claws.',
+      description:
+        'The dragon can use its Frightful Presence. It then makes three attacks: one with its bite and two with its claws.',
     },
     {
       name: 'Bite',
@@ -376,18 +398,23 @@ export const ancientRedDragon: Monster = {
       description: 'Melee Weapon Attack: +17 to hit, reach 10 ft., one target.',
       attackBonus: 17,
       reach: 10,
-      damage: [{ dice: { count: 2, die: 'd6', modifier: 10, notation: '2d6+10' }, type: 'slashing' }],
+      damage: [
+        { dice: { count: 2, die: 'd6', modifier: 10, notation: '2d6+10' }, type: 'slashing' },
+      ],
     },
     {
       name: 'Tail',
       description: 'Melee Weapon Attack: +17 to hit, reach 20 ft., one target.',
       attackBonus: 17,
       reach: 20,
-      damage: [{ dice: { count: 2, die: 'd8', modifier: 10, notation: '2d8+10' }, type: 'bludgeoning' }],
+      damage: [
+        { dice: { count: 2, die: 'd8', modifier: 10, notation: '2d8+10' }, type: 'bludgeoning' },
+      ],
     },
     {
       name: 'Frightful Presence',
-      description: 'Each creature of the dragon\'s choice within 120 feet of it and aware of it must succeed on a DC 21 Wisdom saving throw or become frightened for 1 minute.',
+      description:
+        "Each creature of the dragon's choice within 120 feet of it and aware of it must succeed on a DC 21 Wisdom saving throw or become frightened for 1 minute.",
       savingThrow: {
         attribute: 'wis',
         dc: 21,
@@ -396,7 +423,8 @@ export const ancientRedDragon: Monster = {
     },
     {
       name: 'Fire Breath',
-      description: 'The dragon exhales fire in a 90-foot cone. Each creature in that area must make a DC 24 Dexterity saving throw, taking 26d6 fire damage on a failed save, or half as much damage on a successful one.',
+      description:
+        'The dragon exhales fire in a 90-foot cone. Each creature in that area must make a DC 24 Dexterity saving throw, taking 26d6 fire damage on a failed save, or half as much damage on a successful one.',
       savingThrow: {
         attribute: 'dex',
         dc: 24,
@@ -419,10 +447,12 @@ export const ancientRedDragon: Monster = {
     {
       name: 'Wing Attack',
       cost: 2,
-      description: 'The dragon beats its wings. Each creature within 15 feet must succeed on a DC 25 Dexterity saving throw or take 2d6+10 bludgeoning damage and be knocked prone. The dragon can then fly up to half its flying speed.',
+      description:
+        'The dragon beats its wings. Each creature within 15 feet must succeed on a DC 25 Dexterity saving throw or take 2d6+10 bludgeoning damage and be knocked prone. The dragon can then fly up to half its flying speed.',
     },
   ],
-  description: 'The ultimate draconic threat - ancient red dragons are the most powerful and terrifying of all chromatic dragons.',
+  description:
+    'The ultimate draconic threat - ancient red dragons are the most powerful and terrifying of all chromatic dragons.',
   environment: ['mountains', 'volcanoes'],
 };
 
@@ -449,15 +479,18 @@ export const balor: Monster = {
   specialAbilities: [
     {
       name: 'Death Throes',
-      description: 'When the balor dies, it explodes. Each creature within 30 feet must make a DC 20 Dexterity saving throw, taking 70 (20d6) fire damage on a failed save, or half as much on a successful one.',
+      description:
+        'When the balor dies, it explodes. Each creature within 30 feet must make a DC 20 Dexterity saving throw, taking 70 (20d6) fire damage on a failed save, or half as much on a successful one.',
     },
     {
       name: 'Fire Aura',
-      description: 'At the start of each of the balor\'s turns, each creature within 5 feet takes 10 (3d6) fire damage. A creature that touches the balor or hits it with a melee attack while within 5 feet takes 10 (3d6) fire damage.',
+      description:
+        "At the start of each of the balor's turns, each creature within 5 feet takes 10 (3d6) fire damage. A creature that touches the balor or hits it with a melee attack while within 5 feet takes 10 (3d6) fire damage.",
     },
     {
       name: 'Magic Resistance',
-      description: 'The balor has advantage on saving throws against spells and other magical effects.',
+      description:
+        'The balor has advantage on saving throws against spells and other magical effects.',
     },
   ],
   actions: [
@@ -470,14 +503,20 @@ export const balor: Monster = {
       description: 'Melee Weapon Attack: +14 to hit, reach 10 ft., one target.',
       attackBonus: 14,
       reach: 10,
-      damage: [{ dice: { count: 3, die: 'd8', notation: '3d8+8' }, type: 'slashing' }, { dice: { count: 3, die: 'd8', notation: '3d8' }, type: 'fire' }],
+      damage: [
+        { dice: { count: 3, die: 'd8', notation: '3d8+8' }, type: 'slashing' },
+        { dice: { count: 3, die: 'd8', notation: '3d8' }, type: 'fire' },
+      ],
     },
     {
       name: 'Whip',
       description: 'Melee Weapon Attack: +14 to hit, reach 30 ft., one target.',
       attackBonus: 14,
       reach: 30,
-      damage: [{ dice: { count: 2, die: 'd6', notation: '2d6+8' }, type: 'slashing' }, { dice: { count: 3, die: 'd6', notation: '3d6' }, type: 'fire' }],
+      damage: [
+        { dice: { count: 2, die: 'd6', notation: '2d6+8' }, type: 'slashing' },
+        { dice: { count: 3, die: 'd6', notation: '3d6' }, type: 'fire' },
+      ],
     },
   ],
   description: 'The most powerful demon generals, balors command armies of lesser fiends.',
@@ -502,7 +541,10 @@ export const kraken: Monster = {
   damageImmunities: ['lightning', 'bludgeoning', 'piercing', 'slashing'],
   conditionImmunities: ['frightened', 'paralyzed'],
   senses: ['truesight 120 ft.', 'passive Perception 14'],
-  languages: ['understands Abyssal, Celestial, Infernal, and Primordial but can\'t speak', 'telepathy 120 ft.'],
+  languages: [
+    "understands Abyssal, Celestial, Infernal, and Primordial but can't speak",
+    'telepathy 120 ft.',
+  ],
   specialAbilities: [
     {
       name: 'Amphibious',
@@ -510,7 +552,8 @@ export const kraken: Monster = {
     },
     {
       name: 'Freedom of Movement',
-      description: 'The kraken ignores difficult terrain, and magical effects can\'t reduce its speed or cause it to be restrained.',
+      description:
+        "The kraken ignores difficult terrain, and magical effects can't reduce its speed or cause it to be restrained.",
     },
     {
       name: 'Siege Monster',
@@ -520,7 +563,8 @@ export const kraken: Monster = {
   actions: [
     {
       name: 'Multiattack',
-      description: 'The kraken makes three tentacle attacks, each of which it can replace with one use of Fling.',
+      description:
+        'The kraken makes three tentacle attacks, each of which it can replace with one use of Fling.',
     },
     {
       name: 'Bite',
@@ -538,7 +582,8 @@ export const kraken: Monster = {
     },
     {
       name: 'Lightning Storm',
-      description: 'The kraken magically creates three bolts of lightning, each of which can strike a target within 120 feet. A target must make a DC 23 Dexterity saving throw, taking 22 (4d10) lightning damage on a failed save, or half as much on a successful one.',
+      description:
+        'The kraken magically creates three bolts of lightning, each of which can strike a target within 120 feet. A target must make a DC 23 Dexterity saving throw, taking 22 (4d10) lightning damage on a failed save, or half as much on a successful one.',
     },
   ],
   legendaryActions: [
@@ -550,7 +595,8 @@ export const kraken: Monster = {
     {
       name: 'Fling',
       cost: 1,
-      description: 'One Large or smaller object held or creature grappled by the kraken is thrown up to 60 feet in a random direction and knocked prone.',
+      description:
+        'One Large or smaller object held or creature grappled by the kraken is thrown up to 60 feet in a random direction and knocked prone.',
     },
     {
       name: 'Lightning Storm',

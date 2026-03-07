@@ -5,7 +5,8 @@ export const beastmasterSubclass: Subclass = {
   id: 'pf2e-ranger-beastmaster',
   name: 'Beast Master',
   parentClassId: 'ranger',
-  description: 'A ranger who forms a powerful bond with a beast companion, fighting alongside it in battle.',
+  description:
+    'A ranger who forms a powerful bond with a beast companion, fighting alongside it in battle.',
   features: [
     {
       level: 1,
@@ -64,7 +65,8 @@ export const beastmasterSubclass: Subclass = {
           id: 'beastmaster-mastery',
           name: 'Beast Master Mastery',
           source: 'Ranger 5',
-          description: 'You have mastered beast companionship. Your companion gains additional abilities.',
+          description:
+            'You have mastered beast companionship. Your companion gains additional abilities.',
         },
       ],
     },
@@ -108,7 +110,8 @@ export const beastmasterSubclass: Subclass = {
           id: 'beastmaster-ultimate-feat',
           name: 'Ultimate Beast Master Feat',
           source: 'Ranger 9',
-          description: 'You gain an ultimate feat that represents the pinnacle of your beast mastery abilities.',
+          description:
+            'You gain an ultimate feat that represents the pinnacle of your beast mastery abilities.',
         },
       ],
     },
@@ -174,7 +177,8 @@ export const beastmasterSubclass: Subclass = {
           id: 'beastmaster-apex-feat',
           name: 'Apex Beast Master Feat',
           source: 'Ranger 15',
-          description: 'You gain an apex feat that represents the ultimate expression of your beast mastery abilities.',
+          description:
+            'You gain an apex feat that represents the ultimate expression of your beast mastery abilities.',
         },
       ],
     },
@@ -196,7 +200,8 @@ export const beastmasterSubclass: Subclass = {
           id: 'beastmaster-transcendent-feat',
           name: 'Transcendent Beast Master Feat',
           source: 'Ranger 17',
-          description: 'You gain a transcendent feat that goes beyond normal beast mastery abilities.',
+          description:
+            'You gain a transcendent feat that goes beyond normal beast mastery abilities.',
         },
       ],
     },

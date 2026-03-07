@@ -9,7 +9,9 @@ export const generalFeats: FeatDefinition[] = [
     system: 'pf2e',
     source: 'Core Rulebook',
     description: 'You were raised by a different ancestry or spent significant time with them.',
-    benefits: ['Choose an ancestry. You can select ancestry feats from the chosen ancestry as if it were your own.'],
+    benefits: [
+      'Choose an ancestry. You can select ancestry feats from the chosen ancestry as if it were your own.',
+    ],
   },
   {
     id: 'armor-proficiency',
@@ -25,7 +27,10 @@ export const generalFeats: FeatDefinition[] = [
     system: 'pf2e',
     source: 'Core Rulebook',
     description: 'You have incredible control over your breathing.',
-    benefits: ['You can hold your breath for 25x as long as usual.', 'You gain a +1 circumstance bonus to saving throws against inhaled threats.'],
+    benefits: [
+      'You can hold your breath for 25x as long as usual.',
+      'You gain a +1 circumstance bonus to saving throws against inhaled threats.',
+    ],
   },
   {
     id: 'canny-acumen',
@@ -34,14 +39,16 @@ export const generalFeats: FeatDefinition[] = [
     source: 'Core Rulebook',
     prerequisites: [{ type: 'other', description: 'Level 17' }],
     description: 'Your avoidance or observation becomes second nature.',
-    benefits: ['Choose Perception, Fortitude saves, Reflex saves, or Will saves. You become an expert in that statistic.'],
+    benefits: [
+      'Choose Perception, Fortitude saves, Reflex saves, or Will saves. You become an expert in that statistic.',
+    ],
   },
   {
     id: 'diehard',
     name: 'Diehard',
     system: 'pf2e',
     source: 'Core Rulebook',
-    description: "It takes more to kill you than most.",
+    description: 'It takes more to kill you than most.',
     benefits: ['You die at dying 5 rather than dying 4.'],
   },
   {
@@ -49,7 +56,9 @@ export const generalFeats: FeatDefinition[] = [
     name: 'Expeditious Search',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'perception', minValue: 2, description: 'Master in Perception' }],
+    prerequisites: [
+      { type: 'skill', id: 'perception', minValue: 2, description: 'Master in Perception' },
+    ],
     description: 'You can Search quickly.',
     benefits: ['You can Search a 10-foot square in a single action instead of 3 actions.'],
   },
@@ -60,7 +69,10 @@ export const generalFeats: FeatDefinition[] = [
     source: 'Core Rulebook',
     prerequisites: [{ type: 'attribute', id: 'con', minValue: 14, description: 'Constitution 14' }],
     description: 'You recover quickly from ailments.',
-    benefits: ['Your recovery checks to recover from diseases and poisons are a DC 10 flat check.', 'You reduce the severity of your drained condition by 2 instead of 1 when you have a full night\'s rest.'],
+    benefits: [
+      'Your recovery checks to recover from diseases and poisons are a DC 10 flat check.',
+      "You reduce the severity of your drained condition by 2 instead of 1 when you have a full night's rest.",
+    ],
   },
   {
     id: 'fleet',
@@ -93,7 +105,10 @@ export const generalFeats: FeatDefinition[] = [
     system: 'pf2e',
     source: 'Core Rulebook',
     description: 'You have learned to ride animals.',
-    benefits: ['When you Command an Animal to move, you automatically succeed.', 'You don\'t fall off a mount when it becomes unconscious.'],
+    benefits: [
+      'When you Command an Animal to move, you automatically succeed.',
+      "You don't fall off a mount when it becomes unconscious.",
+    ],
   },
   {
     id: 'shield-block',
@@ -101,7 +116,9 @@ export const generalFeats: FeatDefinition[] = [
     system: 'pf2e',
     source: 'Core Rulebook',
     description: 'You can use your shield to reduce damage.',
-    benefits: ['When you have a shield raised and would take damage from a physical attack, you can use your reaction to reduce the damage by the shield\'s Hardness.'],
+    benefits: [
+      "When you have a shield raised and would take damage from a physical attack, you can use your reaction to reduce the damage by the shield's Hardness.",
+    ],
   },
   {
     id: 'toughness',
@@ -109,7 +126,10 @@ export const generalFeats: FeatDefinition[] = [
     system: 'pf2e',
     source: 'Core Rulebook',
     description: 'You can take more punishment than most.',
-    benefits: ['Your maximum Hit Points increase by your level.', 'You reduce the DC of recovery checks by 1.'],
+    benefits: [
+      'Your maximum Hit Points increase by your level.',
+      'You reduce the DC of recovery checks by 1.',
+    ],
   },
   {
     id: 'weapon-proficiency',
@@ -133,6 +153,9 @@ export const generalFeats: FeatDefinition[] = [
     system: 'pf2e',
     source: 'Core Rulebook',
     description: 'You can try things you know nothing about.',
-    benefits: ['Your proficiency bonus for untrained skill checks is equal to half your level instead of +0.', 'At level 7, the proficiency bonus equals your full level.'],
+    benefits: [
+      'Your proficiency bonus for untrained skill checks is equal to half your level instead of +0.',
+      'At level 7, the proficiency bonus equals your full level.',
+    ],
   },
 ];

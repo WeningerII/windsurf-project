@@ -30,21 +30,25 @@ export const captain: Monster = {
   actions: [
     {
       name: 'Multiattack',
-      description: 'The captain makes three melee attacks: two with its longsword and one with its dagger. Or the captain makes two ranged attacks with its crossbows.',
+      description:
+        'The captain makes three melee attacks: two with its longsword and one with its dagger. Or the captain makes two ranged attacks with its crossbows.',
     },
     {
       name: 'Longsword',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 7 (1d8 + 3) slashing damage.',
+      description:
+        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 7 (1d8 + 3) slashing damage.',
     },
     {
       name: 'Dagger',
-      description: 'Melee or Ranged Weapon Attack: +5 to hit, reach 5 ft. or range 20/60 ft., one target. Hit: 5 (1d4 + 3) piercing damage.',
+      description:
+        'Melee or Ranged Weapon Attack: +5 to hit, reach 5 ft. or range 20/60 ft., one target. Hit: 5 (1d4 + 3) piercing damage.',
     },
   ],
   reactions: [
     {
       name: 'Parry',
-      description: 'The captain adds 2 to its AC against one melee attack that would hit it. To do so, the captain must see the attacker and be wielding a melee weapon.',
+      description:
+        'The captain adds 2 to its AC against one melee attack that would hit it. To do so, the captain must see the attacker and be wielding a melee weapon.',
     },
   ],
   environment: ['urban', 'any'],
@@ -75,13 +79,15 @@ export const mage: Monster = {
     },
     {
       name: 'Spellcasting',
-      description: 'The mage is a 9th-level spellcaster. Its spellcasting ability is Intelligence (spell save DC 15, +7 to hit with spell attacks). The mage has the following wizard spells prepared: Cantrips (at will): fire bolt, light, mage hand, prestidigitation; 1st level (4 slots): detect magic, mage armor, magic missile, shield; 2nd level (3 slots): misty step, scorching ray; 3rd level (3 slots): counterspell, fireball, fly; 4th level (3 slots): greater invisibility, ice storm; 5th level (1 slot): cone of cold.',
+      description:
+        'The mage is a 9th-level spellcaster. Its spellcasting ability is Intelligence (spell save DC 15, +7 to hit with spell attacks). The mage has the following wizard spells prepared: Cantrips (at will): fire bolt, light, mage hand, prestidigitation; 1st level (4 slots): detect magic, mage armor, magic missile, shield; 2nd level (3 slots): misty step, scorching ray; 3rd level (3 slots): counterspell, fireball, fly; 4th level (3 slots): greater invisibility, ice storm; 5th level (1 slot): cone of cold.',
     },
   ],
   actions: [
     {
       name: 'Dagger',
-      description: 'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 2 (1d4) piercing damage.',
+      description:
+        'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 2 (1d4) piercing damage.',
     },
   ],
   environment: ['urban', 'tower'],
@@ -112,7 +118,8 @@ export const warlord: Monster = {
     },
     {
       name: 'Parry',
-      description: 'The warlord adds 3 to its AC against one melee attack that would hit it. To do so, the warlord must see the attacker and be wielding a melee weapon.',
+      description:
+        'The warlord adds 3 to its AC against one melee attack that would hit it. To do so, the warlord must see the attacker and be wielding a melee weapon.',
     },
   ],
   actions: [
@@ -122,7 +129,8 @@ export const warlord: Monster = {
     },
     {
       name: 'Longsword',
-      description: 'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 10 (1d8 + 4) slashing damage, or 11 (1d10 + 4) slashing damage if used with two hands.',
+      description:
+        'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 10 (1d8 + 4) slashing damage, or 11 (1d10 + 4) slashing damage if used with two hands.',
     },
   ],
   environment: ['any'],
@@ -150,21 +158,18 @@ export const necromancer: Monster = {
   specialAbilities: [
     {
       name: 'Spellcasting',
-      description: 'The necromancer is a 13th-level spellcaster. Its spellcasting ability is Intelligence (spell save DC 16, +8 to hit with spell attacks). The necromancer has the following wizard spells prepared: Cantrips (at will): chill touch, mage hand, prestidigitation; 1st level (4 slots): detect magic, magic missile, shield; 2nd level (3 slots): blindness/deafness, scorching ray; 3rd level (3 slots): animate dead, counterspell, dispel magic; 4th level (3 slots): blight, dimension door; 5th level (2 slots): cloudkill, cone of cold; 6th level (1 slot): circle of death.',
+      description:
+        'The necromancer is a 13th-level spellcaster. Its spellcasting ability is Intelligence (spell save DC 16, +8 to hit with spell attacks). The necromancer has the following wizard spells prepared: Cantrips (at will): chill touch, mage hand, prestidigitation; 1st level (4 slots): detect magic, magic missile, shield; 2nd level (3 slots): blindness/deafness, scorching ray; 3rd level (3 slots): animate dead, counterspell, dispel magic; 4th level (3 slots): blight, dimension door; 5th level (2 slots): cloudkill, cone of cold; 6th level (1 slot): circle of death.',
     },
   ],
   actions: [
     {
       name: 'Dagger',
-      description: 'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 2 (1d4) piercing damage.',
+      description:
+        'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 2 (1d4) piercing damage.',
     },
   ],
   environment: ['underdark', 'tower'],
 };
 
-export const humanoidsCR6to10: Monster[] = [
-  captain,
-  mage,
-  warlord,
-  necromancer,
-];
+export const humanoidsCR6to10: Monster[] = [captain, mage, warlord, necromancer];

@@ -22,7 +22,8 @@ export const commoner: Monster = {
   actions: [
     {
       name: 'Club',
-      description: 'Melee Weapon Attack: +2 to hit, reach 5 ft., one target. Hit: 2 (1d4) bludgeoning damage.',
+      description:
+        'Melee Weapon Attack: +2 to hit, reach 5 ft., one target. Hit: 2 (1d4) bludgeoning damage.',
     },
   ],
   environment: ['urban', 'any'],
@@ -48,7 +49,8 @@ export const guard: Monster = {
   actions: [
     {
       name: 'Spear',
-      description: 'Melee or Ranged Weapon Attack: +3 to hit, reach 5 ft. or range 20/60 ft., one target. Hit: 4 (1d6 + 1) piercing damage, or 5 (1d8 + 1) piercing damage if used with two hands to make a melee attack.',
+      description:
+        'Melee or Ranged Weapon Attack: +3 to hit, reach 5 ft. or range 20/60 ft., one target. Hit: 4 (1d6 + 1) piercing damage, or 5 (1d8 + 1) piercing damage if used with two hands to make a melee attack.',
     },
   ],
   environment: ['urban'],
@@ -73,11 +75,13 @@ export const bandit: Monster = {
   actions: [
     {
       name: 'Scimitar',
-      description: 'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) slashing damage.',
+      description:
+        'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) slashing damage.',
     },
     {
       name: 'Light Crossbow',
-      description: 'Ranged Weapon Attack: +3 to hit, range 80/320 ft., one target. Hit: 5 (1d8 + 1) piercing damage.',
+      description:
+        'Ranged Weapon Attack: +3 to hit, range 80/320 ft., one target. Hit: 5 (1d8 + 1) piercing damage.',
     },
   ],
   environment: ['forest', 'road'],
@@ -103,7 +107,8 @@ export const cultist: Monster = {
   actions: [
     {
       name: 'Scimitar',
-      description: 'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) slashing damage.',
+      description:
+        'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) slashing damage.',
     },
   ],
   environment: ['urban', 'dungeon'],
@@ -129,13 +134,15 @@ export const noble: Monster = {
   actions: [
     {
       name: 'Rapier',
-      description: 'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 5 (1d8 + 1) piercing damage.',
+      description:
+        'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 5 (1d8 + 1) piercing damage.',
     },
   ],
   reactions: [
     {
       name: 'Parry',
-      description: 'The noble adds 2 to its AC against one melee attack that would hit it. To do so, the noble must see the attacker and be wielding a melee weapon.',
+      description:
+        'The noble adds 2 to its AC against one melee attack that would hit it. To do so, the noble must see the attacker and be wielding a melee weapon.',
     },
   ],
   environment: ['urban'],
@@ -161,17 +168,20 @@ export const goblin: Monster = {
   specialAbilities: [
     {
       name: 'Nimble Escape',
-      description: 'The goblin can take the Disengage or Hide action as a bonus action on each of its turns.',
+      description:
+        'The goblin can take the Disengage or Hide action as a bonus action on each of its turns.',
     },
   ],
   actions: [
     {
       name: 'Scimitar',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) slashing damage.',
+      description:
+        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) slashing damage.',
     },
     {
       name: 'Shortbow',
-      description: 'Ranged Weapon Attack: +4 to hit, range 80/320 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
+      description:
+        'Ranged Weapon Attack: +4 to hit, range 80/320 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
     },
   ],
   environment: ['forest', 'hill', 'underdark'],
@@ -197,17 +207,20 @@ export const orc: Monster = {
   specialAbilities: [
     {
       name: 'Aggressive',
-      description: 'As a bonus action, the orc can move up to its speed toward a hostile creature that it can see.',
+      description:
+        'As a bonus action, the orc can move up to its speed toward a hostile creature that it can see.',
     },
   ],
   actions: [
     {
       name: 'Greataxe',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 9 (1d12 + 3) slashing damage.',
+      description:
+        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 9 (1d12 + 3) slashing damage.',
     },
     {
       name: 'Javelin',
-      description: 'Melee or Ranged Weapon Attack: +5 to hit, reach 5 ft. or range 30/120 ft., one target. Hit: 6 (1d6 + 3) piercing damage.',
+      description:
+        'Melee or Ranged Weapon Attack: +5 to hit, reach 5 ft. or range 30/120 ft., one target. Hit: 6 (1d6 + 3) piercing damage.',
     },
   ],
   environment: ['mountain', 'underdark'],
@@ -233,7 +246,8 @@ export const acolyte: Monster = {
   actions: [
     {
       name: 'Club',
-      description: 'Melee Weapon Attack: +2 to hit, reach 5 ft., one target. Hit: 2 (1d4) bludgeoning damage.',
+      description:
+        'Melee Weapon Attack: +2 to hit, reach 5 ft., one target. Hit: 2 (1d4) bludgeoning damage.',
     },
   ],
   environment: ['urban', 'temple'],
@@ -258,21 +272,25 @@ export const kobold: Monster = {
   specialAbilities: [
     {
       name: 'Sunlight Sensitivity',
-      description: 'While in sunlight, the kobold has disadvantage on attack rolls, as well as on Wisdom (Perception) checks that rely on sight.',
+      description:
+        'While in sunlight, the kobold has disadvantage on attack rolls, as well as on Wisdom (Perception) checks that rely on sight.',
     },
     {
       name: 'Pack Tactics',
-      description: 'The kobold has advantage on an attack roll against a creature if at least one of the kobold\'s allies is within 5 feet of the creature and the ally isn\'t incapacitated.',
+      description:
+        "The kobold has advantage on an attack roll against a creature if at least one of the kobold's allies is within 5 feet of the creature and the ally isn't incapacitated.",
     },
   ],
   actions: [
     {
       name: 'Dagger',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 4 (1d4 + 2) piercing damage.',
+      description:
+        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 4 (1d4 + 2) piercing damage.',
     },
     {
       name: 'Sling',
-      description: 'Ranged Weapon Attack: +4 to hit, range 30/120 ft., one target. Hit: 4 (1d4 + 2) bludgeoning damage.',
+      description:
+        'Ranged Weapon Attack: +4 to hit, range 30/120 ft., one target. Hit: 4 (1d4 + 2) bludgeoning damage.',
     },
   ],
   environment: ['underdark', 'forest'],
@@ -297,17 +315,20 @@ export const hobgoblin: Monster = {
   specialAbilities: [
     {
       name: 'Martial Advantage',
-      description: 'Once per turn, the hobgoblin can deal an extra 7 (2d6) damage to a creature it hits with a weapon attack if that creature is within 5 feet of an ally of the hobgoblin that isn\'t incapacitated.',
+      description:
+        "Once per turn, the hobgoblin can deal an extra 7 (2d6) damage to a creature it hits with a weapon attack if that creature is within 5 feet of an ally of the hobgoblin that isn't incapacitated.",
     },
   ],
   actions: [
     {
       name: 'Longsword',
-      description: 'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 5 (1d8 + 1) slashing damage, or 6 (1d10 + 1) slashing damage if used with two hands.',
+      description:
+        'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 5 (1d8 + 1) slashing damage, or 6 (1d10 + 1) slashing damage if used with two hands.',
     },
     {
       name: 'Longbow',
-      description: 'Ranged Weapon Attack: +3 to hit, range 150/600 ft., one target. Hit: 5 (1d8 + 1) piercing damage.',
+      description:
+        'Ranged Weapon Attack: +3 to hit, range 150/600 ft., one target. Hit: 5 (1d8 + 1) piercing damage.',
     },
   ],
   environment: ['forest', 'mountain'],
@@ -333,21 +354,25 @@ export const bugbear: Monster = {
   specialAbilities: [
     {
       name: 'Brute',
-      description: 'A melee weapon deals one extra die of its damage when the bugbear hits with it (included in the attack).',
+      description:
+        'A melee weapon deals one extra die of its damage when the bugbear hits with it (included in the attack).',
     },
     {
       name: 'Surprise Attack',
-      description: 'If the bugbear surprises a creature and hits it with an attack during the first round of combat, the target takes an extra 7 (2d6) damage from the attack.',
+      description:
+        'If the bugbear surprises a creature and hits it with an attack during the first round of combat, the target takes an extra 7 (2d6) damage from the attack.',
     },
   ],
   actions: [
     {
       name: 'Morningstar',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 11 (2d8 + 2) piercing damage.',
+      description:
+        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 11 (2d8 + 2) piercing damage.',
     },
     {
       name: 'Javelin',
-      description: 'Melee or Ranged Weapon Attack: +4 to hit, reach 5 ft. or range 30/120 ft., one target. Hit: 9 (2d6 + 2) piercing damage in melee or 5 (1d6 + 2) piercing damage at range.',
+      description:
+        'Melee or Ranged Weapon Attack: +4 to hit, reach 5 ft. or range 30/120 ft., one target. Hit: 9 (2d6 + 2) piercing damage in melee or 5 (1d6 + 2) piercing damage at range.',
     },
   ],
   environment: ['forest', 'underdark'],
@@ -373,7 +398,8 @@ export const scout: Monster = {
   specialAbilities: [
     {
       name: 'Keen Hearing and Sight',
-      description: 'The scout has advantage on Wisdom (Perception) checks that rely on hearing or sight.',
+      description:
+        'The scout has advantage on Wisdom (Perception) checks that rely on hearing or sight.',
     },
   ],
   actions: [
@@ -383,11 +409,13 @@ export const scout: Monster = {
     },
     {
       name: 'Shortsword',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
+      description:
+        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
     },
     {
       name: 'Longbow',
-      description: 'Ranged Weapon Attack: +4 to hit, range 150/600 ft., one target. Hit: 6 (1d8 + 2) piercing damage.',
+      description:
+        'Ranged Weapon Attack: +4 to hit, range 150/600 ft., one target. Hit: 6 (1d8 + 2) piercing damage.',
     },
   ],
   environment: ['forest', 'grassland'],
@@ -405,7 +433,15 @@ export const spy: Monster = {
   hitPoints: { count: 6, die: 'd8', modifier: 6, notation: '6d8+6' },
   speed: { walk: 30 },
   abilities: { str: 10, dex: 15, con: 10, int: 12, wis: 14, cha: 16 },
-  skills: { Deception: 5, Insight: 4, Investigation: 5, Perception: 6, Persuasion: 5, Sleight_of_Hand: 4, Stealth: 4 },
+  skills: {
+    Deception: 5,
+    Insight: 4,
+    Investigation: 5,
+    Perception: 6,
+    Persuasion: 5,
+    Sleight_of_Hand: 4,
+    Stealth: 4,
+  },
   senses: ['passive Perception 16'],
   languages: ['Common', 'two other languages'],
   challengeRating: 1,
@@ -413,11 +449,13 @@ export const spy: Monster = {
   specialAbilities: [
     {
       name: 'Cunning Action',
-      description: 'On each of its turns, the spy can use a bonus action to take the Dash, Disengage, or Hide action.',
+      description:
+        'On each of its turns, the spy can use a bonus action to take the Dash, Disengage, or Hide action.',
     },
     {
       name: 'Sneak Attack',
-      description: 'Once per turn, the spy deals an extra 7 (2d6) damage when it hits a target with a weapon attack and has advantage on the attack roll, or when the target is within 5 feet of an ally of the spy that isn\'t incapacitated and the spy doesn\'t have disadvantage on the attack roll.',
+      description:
+        "Once per turn, the spy deals an extra 7 (2d6) damage when it hits a target with a weapon attack and has advantage on the attack roll, or when the target is within 5 feet of an ally of the spy that isn't incapacitated and the spy doesn't have disadvantage on the attack roll.",
     },
   ],
   actions: [
@@ -427,11 +465,13 @@ export const spy: Monster = {
     },
     {
       name: 'Shortsword',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
+      description:
+        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
     },
     {
       name: 'Hand Crossbow',
-      description: 'Ranged Weapon Attack: +4 to hit, range 30/120 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
+      description:
+        'Ranged Weapon Attack: +4 to hit, range 30/120 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
     },
   ],
   environment: ['urban'],
@@ -457,7 +497,8 @@ export const thug: Monster = {
   specialAbilities: [
     {
       name: 'Pack Tactics',
-      description: 'The thug has advantage on an attack roll against a creature if at least one of the thug\'s allies is within 5 feet of the creature and the ally isn\'t incapacitated.',
+      description:
+        "The thug has advantage on an attack roll against a creature if at least one of the thug's allies is within 5 feet of the creature and the ally isn't incapacitated.",
     },
   ],
   actions: [
@@ -467,11 +508,13 @@ export const thug: Monster = {
     },
     {
       name: 'Mace',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) bludgeoning damage.',
+      description:
+        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) bludgeoning damage.',
     },
     {
       name: 'Heavy Crossbow',
-      description: 'Ranged Weapon Attack: +2 to hit, range 100/400 ft., one target. Hit: 5 (1d10) piercing damage.',
+      description:
+        'Ranged Weapon Attack: +2 to hit, range 100/400 ft., one target. Hit: 5 (1d10) piercing damage.',
     },
   ],
   environment: ['urban'],
@@ -497,19 +540,23 @@ export const veteran: Monster = {
   actions: [
     {
       name: 'Multiattack',
-      description: 'The veteran makes two longsword attacks. If it has a shortsword drawn, it can also make a shortsword attack.',
+      description:
+        'The veteran makes two longsword attacks. If it has a shortsword drawn, it can also make a shortsword attack.',
     },
     {
       name: 'Longsword',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 7 (1d8 + 3) slashing damage, or 8 (1d10 + 3) slashing damage if used with two hands.',
+      description:
+        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 7 (1d8 + 3) slashing damage, or 8 (1d10 + 3) slashing damage if used with two hands.',
     },
     {
       name: 'Shortsword',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) piercing damage.',
+      description:
+        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) piercing damage.',
     },
     {
       name: 'Heavy Crossbow',
-      description: 'Ranged Weapon Attack: +3 to hit, range 100/400 ft., one target. Hit: 6 (1d10 + 1) piercing damage.',
+      description:
+        'Ranged Weapon Attack: +3 to hit, range 100/400 ft., one target. Hit: 6 (1d10 + 1) piercing damage.',
     },
   ],
   environment: ['urban', 'any'],
@@ -534,13 +581,15 @@ export const berserker: Monster = {
   specialAbilities: [
     {
       name: 'Reckless',
-      description: 'At the start of its turn, the berserker can gain advantage on all melee weapon attack rolls during that turn, but attack rolls against it have advantage until the start of its next turn.',
+      description:
+        'At the start of its turn, the berserker can gain advantage on all melee weapon attack rolls during that turn, but attack rolls against it have advantage until the start of its next turn.',
     },
   ],
   actions: [
     {
       name: 'Greataxe',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 9 (1d12 + 3) slashing damage.',
+      description:
+        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 9 (1d12 + 3) slashing damage.',
     },
   ],
   environment: ['any'],
@@ -566,13 +615,15 @@ export const druid: Monster = {
   specialAbilities: [
     {
       name: 'Spellcasting',
-      description: 'The druid is a 4th-level spellcaster. Its spellcasting ability is Wisdom (spell save DC 12, +4 to hit with spell attacks). The druid has the following druid spells prepared: Cantrips (at will): druidcraft, produce flame, shillelagh; 1st level (4 slots): entangle, longstrider, speak with animals, thunderwave; 2nd level (3 slots): animal messenger, barkskin.',
+      description:
+        'The druid is a 4th-level spellcaster. Its spellcasting ability is Wisdom (spell save DC 12, +4 to hit with spell attacks). The druid has the following druid spells prepared: Cantrips (at will): druidcraft, produce flame, shillelagh; 1st level (4 slots): entangle, longstrider, speak with animals, thunderwave; 2nd level (3 slots): animal messenger, barkskin.',
     },
   ],
   actions: [
     {
       name: 'Quarterstaff',
-      description: 'Melee Weapon Attack: +2 to hit (+4 to hit with shillelagh), reach 5 ft., one target. Hit: 3 (1d6) bludgeoning damage, or 4 (1d8) bludgeoning damage if wielded with two hands, or 6 (1d8 + 2) bludgeoning damage with shillelagh.',
+      description:
+        'Melee Weapon Attack: +2 to hit (+4 to hit with shillelagh), reach 5 ft., one target. Hit: 3 (1d6) bludgeoning damage, or 4 (1d8) bludgeoning damage if wielded with two hands, or 6 (1d8 + 2) bludgeoning damage with shillelagh.',
     },
   ],
   environment: ['forest', 'grassland'],
@@ -598,17 +649,20 @@ export const priest: Monster = {
   specialAbilities: [
     {
       name: 'Divine Eminence',
-      description: 'As a bonus action, the priest can expend a spell slot to cause its melee weapon attacks to magically deal an extra 10 (3d6) radiant damage to a target on a hit. This benefit lasts until the end of the turn. If the priest expends a spell slot of 2nd level or higher, the extra damage increases by 1d6 for each level above 1st.',
+      description:
+        'As a bonus action, the priest can expend a spell slot to cause its melee weapon attacks to magically deal an extra 10 (3d6) radiant damage to a target on a hit. This benefit lasts until the end of the turn. If the priest expends a spell slot of 2nd level or higher, the extra damage increases by 1d6 for each level above 1st.',
     },
     {
       name: 'Spellcasting',
-      description: 'The priest is a 5th-level spellcaster. Its spellcasting ability is Wisdom (spell save DC 13, +5 to hit with spell attacks). The priest has the following cleric spells prepared: Cantrips (at will): light, sacred flame, thaumaturgy; 1st level (4 slots): cure wounds, guiding bolt, sanctuary; 2nd level (3 slots): lesser restoration, spiritual weapon; 3rd level (2 slots): dispel magic, spirit guardians.',
+      description:
+        'The priest is a 5th-level spellcaster. Its spellcasting ability is Wisdom (spell save DC 13, +5 to hit with spell attacks). The priest has the following cleric spells prepared: Cantrips (at will): light, sacred flame, thaumaturgy; 1st level (4 slots): cure wounds, guiding bolt, sanctuary; 2nd level (3 slots): lesser restoration, spiritual weapon; 3rd level (2 slots): dispel magic, spirit guardians.',
     },
   ],
   actions: [
     {
       name: 'Mace',
-      description: 'Melee Weapon Attack: +2 to hit, reach 5 ft., one target. Hit: 3 (1d6) bludgeoning damage.',
+      description:
+        'Melee Weapon Attack: +2 to hit, reach 5 ft., one target. Hit: 3 (1d6) bludgeoning damage.',
     },
   ],
   environment: ['urban', 'temple'],
@@ -644,17 +698,20 @@ export const knight: Monster = {
     },
     {
       name: 'Greatsword',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 10 (2d6 + 3) slashing damage.',
+      description:
+        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 10 (2d6 + 3) slashing damage.',
     },
     {
       name: 'Heavy Crossbow',
-      description: 'Ranged Weapon Attack: +2 to hit, range 100/400 ft., one target. Hit: 5 (1d10) piercing damage.',
+      description:
+        'Ranged Weapon Attack: +2 to hit, range 100/400 ft., one target. Hit: 5 (1d10) piercing damage.',
     },
   ],
   reactions: [
     {
       name: 'Parry',
-      description: 'The knight adds 2 to its AC against one melee attack that would hit it. To do so, the knight must see the attacker and be wielding a melee weapon.',
+      description:
+        'The knight adds 2 to its AC against one melee attack that would hit it. To do so, the knight must see the attacker and be wielding a melee weapon.',
     },
   ],
   environment: ['urban', 'castle'],
@@ -685,7 +742,8 @@ export const gladiator: Monster = {
     },
     {
       name: 'Brute',
-      description: 'A melee weapon deals one extra die of its damage when the gladiator hits with it (included in the attack).',
+      description:
+        'A melee weapon deals one extra die of its damage when the gladiator hits with it (included in the attack).',
     },
   ],
   actions: [
@@ -695,17 +753,20 @@ export const gladiator: Monster = {
     },
     {
       name: 'Spear',
-      description: 'Melee or Ranged Weapon Attack: +7 to hit, reach 5 ft. and range 20/60 ft., one target. Hit: 11 (2d6 + 4) piercing damage, or 13 (2d8 + 4) piercing damage if used with two hands to make a melee attack.',
+      description:
+        'Melee or Ranged Weapon Attack: +7 to hit, reach 5 ft. and range 20/60 ft., one target. Hit: 11 (2d6 + 4) piercing damage, or 13 (2d8 + 4) piercing damage if used with two hands to make a melee attack.',
     },
     {
       name: 'Shield Bash',
-      description: 'Melee Weapon Attack: +7 to hit, reach 5 ft., one creature. Hit: 9 (2d4 + 4) bludgeoning damage. If the target is a Medium or smaller creature, it must succeed on a DC 15 Strength saving throw or be knocked prone.',
+      description:
+        'Melee Weapon Attack: +7 to hit, reach 5 ft., one creature. Hit: 9 (2d4 + 4) bludgeoning damage. If the target is a Medium or smaller creature, it must succeed on a DC 15 Strength saving throw or be knocked prone.',
     },
   ],
   reactions: [
     {
       name: 'Parry',
-      description: 'The gladiator adds 3 to its AC against one melee attack that would hit it. To do so, the gladiator must see the attacker and be wielding a melee weapon.',
+      description:
+        'The gladiator adds 3 to its AC against one melee attack that would hit it. To do so, the gladiator must see the attacker and be wielding a melee weapon.',
     },
   ],
   environment: ['urban', 'arena'],
@@ -727,21 +788,24 @@ export const assassin: Monster = {
   skills: { Acrobatics: 6, Deception: 3, Perception: 3, Stealth: 9 },
   damageResistances: ['poison'],
   senses: ['passive Perception 13'],
-  languages: ['Thieves\' Cant', 'Common', 'two other languages'],
+  languages: ["Thieves' Cant", 'Common', 'two other languages'],
   challengeRating: 8,
   experiencePoints: 3900,
   specialAbilities: [
     {
       name: 'Assassinate',
-      description: 'During its first turn, the assassin has advantage on attack rolls against any creature that hasn\'t taken a turn. Any hit the assassin scores against a surprised creature is a critical hit.',
+      description:
+        "During its first turn, the assassin has advantage on attack rolls against any creature that hasn't taken a turn. Any hit the assassin scores against a surprised creature is a critical hit.",
     },
     {
       name: 'Evasion',
-      description: 'If the assassin is subjected to an effect that allows it to make a Dexterity saving throw to take only half damage, the assassin instead takes no damage if it succeeds on the saving throw, and only half damage if it fails.',
+      description:
+        'If the assassin is subjected to an effect that allows it to make a Dexterity saving throw to take only half damage, the assassin instead takes no damage if it succeeds on the saving throw, and only half damage if it fails.',
     },
     {
       name: 'Sneak Attack',
-      description: 'Once per turn, the assassin deals an extra 14 (4d6) damage when it hits a target with a weapon attack and has advantage on the attack roll, or when the target is within 5 feet of an ally of the assassin that isn\'t incapacitated and the assassin doesn\'t have disadvantage on the attack roll.',
+      description:
+        "Once per turn, the assassin deals an extra 14 (4d6) damage when it hits a target with a weapon attack and has advantage on the attack roll, or when the target is within 5 feet of an ally of the assassin that isn't incapacitated and the assassin doesn't have disadvantage on the attack roll.",
     },
   ],
   actions: [
@@ -751,11 +815,13 @@ export const assassin: Monster = {
     },
     {
       name: 'Shortsword',
-      description: 'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) piercing damage, and the target must make a DC 15 Constitution saving throw, taking 24 (7d6) poison damage on a failed save, or half as much damage on a successful one.',
+      description:
+        'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) piercing damage, and the target must make a DC 15 Constitution saving throw, taking 24 (7d6) poison damage on a failed save, or half as much damage on a successful one.',
     },
     {
       name: 'Light Crossbow',
-      description: 'Ranged Weapon Attack: +6 to hit, range 80/320 ft., one target. Hit: 7 (1d8 + 3) piercing damage, and the target must make a DC 15 Constitution saving throw, taking 24 (7d6) poison damage on a failed save, or half as much damage on a successful one.',
+      description:
+        'Ranged Weapon Attack: +6 to hit, range 80/320 ft., one target. Hit: 7 (1d8 + 3) piercing damage, and the target must make a DC 15 Constitution saving throw, taking 24 (7d6) poison damage on a failed save, or half as much damage on a successful one.',
     },
   ],
   environment: ['urban'],

@@ -5,7 +5,8 @@ export const tricksterSubclass: Subclass = {
   id: 'pf2e-rogue-trickster',
   name: 'Trickster',
   parentClassId: 'rogue',
-  description: 'A master of deception and misdirection who uses cunning and wit to overcome challenges.',
+  description:
+    'A master of deception and misdirection who uses cunning and wit to overcome challenges.',
   features: [
     {
       level: 1,
@@ -14,7 +15,8 @@ export const tricksterSubclass: Subclass = {
           id: 'trickster-racket',
           name: 'Trickster Racket',
           source: 'Rogue 1',
-          description: 'You gain the Trickster Racket, allowing you to use deception and misdirection in combat. You can use Deception to Feint in combat, and you gain a +1 circumstance bonus to Deception checks to Feint.',
+          description:
+            'You gain the Trickster Racket, allowing you to use deception and misdirection in combat. You can use Deception to Feint in combat, and you gain a +1 circumstance bonus to Deception checks to Feint.',
         },
         {
           id: 'rogue-racket-ability',
@@ -31,7 +33,8 @@ export const tricksterSubclass: Subclass = {
           id: 'evasion',
           name: 'Evasion',
           source: 'Rogue 2',
-          description: 'When you roll a success on a Reflex save, you get a critical success instead. You gain a +2 circumstance bonus to Reflex saves against effects you can see.',
+          description:
+            'When you roll a success on a Reflex save, you get a critical success instead. You gain a +2 circumstance bonus to Reflex saves against effects you can see.',
         },
       ],
     },
@@ -53,7 +56,8 @@ export const tricksterSubclass: Subclass = {
           id: 'debilitating-strike',
           name: 'Debilitating Strike',
           source: 'Rogue 4',
-          description: 'When you hit with a Sneak Attack, you can apply a debilitating effect to your target.',
+          description:
+            'When you hit with a Sneak Attack, you can apply a debilitating effect to your target.',
         },
       ],
     },
@@ -64,7 +68,8 @@ export const tricksterSubclass: Subclass = {
           id: 'trickster-mastery',
           name: 'Trickster Mastery',
           source: 'Rogue 5',
-          description: 'Your deception and misdirection become more effective. Increase the bonus to Deception checks to Feint to +2.',
+          description:
+            'Your deception and misdirection become more effective. Increase the bonus to Deception checks to Feint to +2.',
         },
       ],
     },
@@ -86,7 +91,8 @@ export const tricksterSubclass: Subclass = {
           id: 'trickster-evasion-mastery',
           name: 'Evasion Mastery',
           source: 'Rogue 7',
-          description: 'Your evasion becomes even more reliable. You gain a +3 circumstance bonus to Reflex saves.',
+          description:
+            'Your evasion becomes even more reliable. You gain a +3 circumstance bonus to Reflex saves.',
         },
       ],
     },
@@ -108,7 +114,8 @@ export const tricksterSubclass: Subclass = {
           id: 'trickster-ultimate-feat',
           name: 'Ultimate Trickster Feat',
           source: 'Rogue 9',
-          description: 'You gain an ultimate feat that represents the pinnacle of your Trickster abilities.',
+          description:
+            'You gain an ultimate feat that represents the pinnacle of your Trickster abilities.',
         },
       ],
     },
@@ -119,7 +126,8 @@ export const tricksterSubclass: Subclass = {
           id: 'trickster-perfection',
           name: 'Trickster Perfection',
           source: 'Rogue 10',
-          description: 'You have perfected your trickster abilities. You gain a +4 circumstance bonus to Deception checks to Feint.',
+          description:
+            'You have perfected your trickster abilities. You gain a +4 circumstance bonus to Deception checks to Feint.',
         },
       ],
     },
@@ -163,7 +171,8 @@ export const tricksterSubclass: Subclass = {
           id: 'trickster-immortal-evasion',
           name: 'Immortal Evasion',
           source: 'Rogue 14',
-          description: 'Your evasion is nearly perfect. You gain a +5 circumstance bonus to Reflex saves.',
+          description:
+            'Your evasion is nearly perfect. You gain a +5 circumstance bonus to Reflex saves.',
         },
       ],
     },
@@ -174,7 +183,8 @@ export const tricksterSubclass: Subclass = {
           id: 'trickster-apex-feat',
           name: 'Apex Trickster Feat',
           source: 'Rogue 15',
-          description: 'You gain an apex feat that represents the ultimate expression of your Trickster abilities.',
+          description:
+            'You gain an apex feat that represents the ultimate expression of your Trickster abilities.',
         },
       ],
     },
@@ -207,7 +217,8 @@ export const tricksterSubclass: Subclass = {
           id: 'trickster-perfect-evasion',
           name: 'Perfect Evasion',
           source: 'Rogue 18',
-          description: 'You can now avoid almost any danger. You gain a +6 circumstance bonus to Reflex saves.',
+          description:
+            'You can now avoid almost any danger. You gain a +6 circumstance bonus to Reflex saves.',
         },
       ],
     },
@@ -229,7 +240,8 @@ export const tricksterSubclass: Subclass = {
           id: 'trickster-ascension',
           name: 'Trickster Ascension',
           source: 'Rogue 20',
-          description: 'You have ascended to the pinnacle of trickster mastery. You gain all benefits of your Trickster abilities at their maximum potency.',
+          description:
+            'You have ascended to the pinnacle of trickster mastery. You gain all benefits of your Trickster abilities at their maximum potency.',
         },
       ],
     },

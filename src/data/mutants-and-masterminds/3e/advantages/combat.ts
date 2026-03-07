@@ -11,7 +11,8 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: false,
     description: 'Trade effect DC for attack bonus.',
-    benefit: 'When you make an accurate attack, you can take a penalty of up to –5 on the effect modifier and add the same number (up to +5) to your attack bonus.',
+    benefit:
+      'When you make an accurate attack, you can take a penalty of up to –5 on the effect modifier and add the same number (up to +5) to your attack bonus.',
   },
   {
     id: 'all-out-attack',
@@ -21,7 +22,8 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: false,
     description: 'Trade active defense for attack bonus.',
-    benefit: 'When you make an all-out attack, you can take a penalty of up to –5 on your active defenses (Dodge and Parry) and add the same number (up to +5) to your attack bonus.',
+    benefit:
+      'When you make an all-out attack, you can take a penalty of up to –5 on your active defenses (Dodge and Parry) and add the same number (up to +5) to your attack bonus.',
   },
   {
     id: 'chokehold',
@@ -31,7 +33,8 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: false,
     description: 'Suffocate opponents you have grabbed and restrained.',
-    benefit: 'If you successfully grab and restrain an opponent, you can apply a chokehold, causing your opponent to begin suffocating for as long as you continue to restrain them.',
+    benefit:
+      'If you successfully grab and restrain an opponent, you can apply a chokehold, causing your opponent to begin suffocating for as long as you continue to restrain them.',
   },
   {
     id: 'close-attack',
@@ -41,7 +44,8 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: true,
     description: 'Bonus to close attack checks.',
-    benefit: 'You have a +1 bonus to close attack checks per rank in this advantage. Your total attack bonus is still limited by power level.',
+    benefit:
+      'You have a +1 bonus to close attack checks per rank in this advantage. Your total attack bonus is still limited by power level.',
   },
   {
     id: 'defensive-attack',
@@ -51,7 +55,8 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: false,
     description: 'Trade attack bonus for active defense bonus.',
-    benefit: 'When you make a defensive attack, you can take a penalty of up to –5 on your attack bonus and add the same number (up to +5) to both your active defenses (Dodge and Parry).',
+    benefit:
+      'When you make a defensive attack, you can take a penalty of up to –5 on your attack bonus and add the same number (up to +5) to both your active defenses (Dodge and Parry).',
   },
   {
     id: 'defensive-roll',
@@ -61,7 +66,8 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: true,
     description: 'Active defense bonus to Toughness.',
-    benefit: 'You receive a bonus to your Toughness equal to your advantage rank, but it is considered an active defense similar to Dodge and Parry, so you lose this bonus whenever you are vulnerable or defenseless. Your total Toughness is still limited by power level.',
+    benefit:
+      'You receive a bonus to your Toughness equal to your advantage rank, but it is considered an active defense similar to Dodge and Parry, so you lose this bonus whenever you are vulnerable or defenseless. Your total Toughness is still limited by power level.',
   },
   {
     id: 'evasion',
@@ -72,7 +78,8 @@ export const combatAdvantages: Advantage[] = [
     ranked: true,
     maxRanks: 2,
     description: 'Improved resistance to area effects.',
-    benefit: 'You have a +2 circumstance bonus to Dodge resistance checks to avoid area effects. If you have 2 ranks, your circumstance bonus increases to +5.',
+    benefit:
+      'You have a +2 circumstance bonus to Dodge resistance checks to avoid area effects. If you have 2 ranks, your circumstance bonus increases to +5.',
   },
   {
     id: 'fast-grab',
@@ -82,7 +89,8 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: false,
     description: 'Make a grab attempt after a successful unarmed attack.',
-    benefit: 'When you hit with an unarmed attack, you can immediately make a grab check against that opponent as a free action. Your unarmed attack inflicts its normal damage and counts as the initial attack check required to grab.',
+    benefit:
+      'When you hit with an unarmed attack, you can immediately make a grab check against that opponent as a free action. Your unarmed attack inflicts its normal damage and counts as the initial attack check required to grab.',
   },
   {
     id: 'favored-environment',
@@ -92,7 +100,8 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: false,
     description: 'Bonus to attack or defense in a chosen environment.',
-    benefit: 'Choose an environment you are especially suited for (e.g., in the air, underwater, in space, extreme heat/cold, jungles). While in your favored environment, you gain a +2 circumstance bonus to attack checks or your active defenses (choose at the start of each round).',
+    benefit:
+      'Choose an environment you are especially suited for (e.g., in the air, underwater, in space, extreme heat/cold, jungles). While in your favored environment, you gain a +2 circumstance bonus to attack checks or your active defenses (choose at the start of each round).',
   },
   {
     id: 'grabbing-finesse',
@@ -102,7 +111,8 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: false,
     description: 'Use Dexterity instead of Strength for grab attacks.',
-    benefit: 'You can use your Dexterity bonus, rather than your Strength bonus, to make grab attacks. You are not vulnerable while grabbing.',
+    benefit:
+      'You can use your Dexterity bonus, rather than your Strength bonus, to make grab attacks. You are not vulnerable while grabbing.',
   },
   {
     id: 'improved-aim',
@@ -112,7 +122,8 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: false,
     description: 'Double the normal aiming bonus.',
-    benefit: 'When you take a standard action to aim, you gain double the normal circumstance bonus: +10 for a close attack or ranged attack adjacent to the target, +5 for a ranged attack at greater distance.',
+    benefit:
+      'When you take a standard action to aim, you gain double the normal circumstance bonus: +10 for a close attack or ranged attack adjacent to the target, +5 for a ranged attack at greater distance.',
   },
   {
     id: 'improved-critical',
@@ -123,7 +134,8 @@ export const combatAdvantages: Advantage[] = [
     ranked: true,
     maxRanks: 4,
     description: 'Increased critical threat range.',
-    benefit: 'Increase your critical threat range with a particular attack by 1, allowing you to score a critical hit on a natural 19 or 20. Each additional rank applies to a different attack or increases your threat range by one more, to a maximum of 16–20 with 4 ranks. Only a natural 20 is an automatic hit.',
+    benefit:
+      'Increase your critical threat range with a particular attack by 1, allowing you to score a critical hit on a natural 19 or 20. Each additional rank applies to a different attack or increases your threat range by one more, to a maximum of 16–20 with 4 ranks. Only a natural 20 is an automatic hit.',
   },
   {
     id: 'improved-defense',
@@ -133,7 +145,8 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: false,
     description: 'Increased bonus when taking the defend action.',
-    benefit: 'When you take the defend action in combat, you gain a +2 circumstance bonus to your active defense checks for the round.',
+    benefit:
+      'When you take the defend action in combat, you gain a +2 circumstance bonus to your active defense checks for the round.',
   },
   {
     id: 'improved-disarm',
@@ -143,7 +156,8 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: false,
     description: 'No penalty for disarm attempts.',
-    benefit: 'You have no penalty to your attack check when attempting to disarm an opponent, and they do not get the opportunity to disarm you.',
+    benefit:
+      'You have no penalty to your attack check when attempting to disarm an opponent, and they do not get the opportunity to disarm you.',
   },
   {
     id: 'improved-grab',
@@ -153,7 +167,8 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: false,
     description: 'Grab with one arm and remain not vulnerable.',
-    benefit: 'You can make grab attacks with only one arm, leaving the other free. You can also maintain the grab while using your other hand to perform actions. You are not vulnerable while grabbing.',
+    benefit:
+      'You can make grab attacks with only one arm, leaving the other free. You can also maintain the grab while using your other hand to perform actions. You are not vulnerable while grabbing.',
   },
   {
     id: 'improved-hold',
@@ -163,7 +178,8 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: false,
     description: 'Opponents suffer a penalty to escape your grabs.',
-    benefit: 'Your grab attacks are particularly difficult to escape. Opponents you grab suffer a –5 circumstance penalty on checks to escape.',
+    benefit:
+      'Your grab attacks are particularly difficult to escape. Opponents you grab suffer a –5 circumstance penalty on checks to escape.',
   },
   {
     id: 'improved-initiative',
@@ -193,7 +209,8 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: false,
     description: 'No penalty for trip attempts.',
-    benefit: 'You have no penalty to your attack check to trip an opponent, and they do not get the opportunity to trip you. You choose which skill your opponent uses to defend against the trip.',
+    benefit:
+      'You have no penalty to your attack check to trip an opponent, and they do not get the opportunity to trip you. You choose which skill your opponent uses to defend against the trip.',
   },
   {
     id: 'improvised-weapon',
@@ -203,7 +220,8 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: true,
     description: 'Use improvised close combat weapons effectively.',
-    benefit: 'When wielding an improvised close combat weapon, you use your Close Combat: Unarmed skill bonus for attack checks rather than your general Close Combat bonus. Additional ranks give you a +1 bonus to Damage with improvised weapons per rank, limited by power level.',
+    benefit:
+      'When wielding an improvised close combat weapon, you use your Close Combat: Unarmed skill bonus for attack checks rather than your general Close Combat bonus. Additional ranks give you a +1 bonus to Damage with improvised weapons per rank, limited by power level.',
   },
   {
     id: 'move-by-action',
@@ -213,7 +231,8 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: false,
     description: 'Move both before and after your standard action.',
-    benefit: 'When taking a standard action and a move action, you can move both before and after your standard action, provided the total distance moved is not greater than your normal movement speed.',
+    benefit:
+      'When taking a standard action and a move action, you can move both before and after your standard action, provided the total distance moved is not greater than your normal movement speed.',
   },
   {
     id: 'power-attack',
@@ -223,7 +242,8 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: false,
     description: 'Trade attack bonus for effect bonus.',
-    benefit: 'When you make a power attack, you can take a penalty of up to –5 on your attack bonus and add the same number (up to +5) to the effect bonus of your attack.',
+    benefit:
+      'When you make a power attack, you can take a penalty of up to –5 on your attack bonus and add the same number (up to +5) to the effect bonus of your attack.',
   },
   {
     id: 'precise-attack',
@@ -234,7 +254,8 @@ export const combatAdvantages: Advantage[] = [
     ranked: true,
     maxRanks: 4,
     description: 'Ignore attack check penalties for cover or concealment.',
-    benefit: 'When you make close or ranged attacks (choose one), you ignore attack check penalties for cover or concealment (choose one). Each additional rank lets you choose another option, so with rank 4 all your attacks ignore both cover and concealment penalties.',
+    benefit:
+      'When you make close or ranged attacks (choose one), you ignore attack check penalties for cover or concealment (choose one). Each additional rank lets you choose another option, so with rank 4 all your attacks ignore both cover and concealment penalties.',
   },
   {
     id: 'prone-fighting',
@@ -244,7 +265,8 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: false,
     description: 'No penalties for being prone in combat.',
-    benefit: 'You suffer no circumstance penalty to attack checks for being prone, and adjacent opponents do not gain the usual circumstance bonus for close attacks against you.',
+    benefit:
+      'You suffer no circumstance penalty to attack checks for being prone, and adjacent opponents do not gain the usual circumstance bonus for close attacks against you.',
   },
   {
     id: 'quick-draw',
@@ -254,7 +276,8 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: false,
     description: 'Draw a weapon as a free action.',
-    benefit: 'You can draw a weapon from a holster or sheath as a free action, rather than a move action.',
+    benefit:
+      'You can draw a weapon from a holster or sheath as a free action, rather than a move action.',
   },
   {
     id: 'ranged-attack',
@@ -264,7 +287,8 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: true,
     description: 'Bonus to ranged attack checks.',
-    benefit: 'You have a +1 bonus to ranged attack checks per rank in this advantage. Your total attack bonus is still limited by power level.',
+    benefit:
+      'You have a +1 bonus to ranged attack checks per rank in this advantage. Your total attack bonus is still limited by power level.',
   },
   {
     id: 'redirect',
@@ -274,7 +298,8 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: false,
     description: 'Redirect a missed attack at another target.',
-    benefit: 'If you successfully trick an opponent, you can redirect a missed attack against you from that opponent at another target as a reaction. The new target must be adjacent to you and within range of the attack.',
+    benefit:
+      'If you successfully trick an opponent, you can redirect a missed attack against you from that opponent at another target as a reaction. The new target must be adjacent to you and within range of the attack.',
   },
   {
     id: 'set-up',
@@ -284,7 +309,8 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: true,
     description: 'Transfer the benefits of an interaction skill to allies.',
-    benefit: 'You can transfer the benefits of a successful combat use of an interaction skill to your teammates. Each rank lets you transfer the benefit to one ally. The affected allies must be capable of interacting with you to benefit.',
+    benefit:
+      'You can transfer the benefits of a successful combat use of an interaction skill to your teammates. Each rank lets you transfer the benefit to one ally. The affected allies must be capable of interacting with you to benefit.',
   },
   {
     id: 'takedown',
@@ -295,7 +321,8 @@ export const combatAdvantages: Advantage[] = [
     ranked: true,
     maxRanks: 2,
     description: 'Free attack when you incapacitate a minion.',
-    benefit: 'If you render a minion incapacitated with an attack, you get an immediate extra attack as a free action against another minion within range and adjacent to the previous target. Rank 2 allows you to attack non-adjacent minion targets, moving between attacks if necessary.',
+    benefit:
+      'If you render a minion incapacitated with an attack, you get an immediate extra attack as a free action against another minion within range and adjacent to the previous target. Rank 2 allows you to attack non-adjacent minion targets, moving between attacks if necessary.',
   },
   {
     id: 'throwing-mastery',
@@ -305,7 +332,8 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: true,
     description: 'Bonus damage with thrown weapons.',
-    benefit: 'You have a +1 damage bonus with thrown weapons per rank. You can also throw normally harmless objects as weapons with a damage bonus equal to your advantage rank. Maximum damage is still limited by power level.',
+    benefit:
+      'You have a +1 damage bonus with thrown weapons per rank. You can also throw normally harmless objects as weapons with a damage bonus equal to your advantage rank. Maximum damage is still limited by power level.',
   },
   {
     id: 'uncanny-dodge',
@@ -315,7 +343,8 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: false,
     description: 'Not vulnerable when surprised or caught off-guard.',
-    benefit: 'You are not vulnerable when surprised or otherwise caught off-guard. You are still made vulnerable by effects that limit your mobility.',
+    benefit:
+      'You are not vulnerable when surprised or otherwise caught off-guard. You are still made vulnerable by effects that limit your mobility.',
   },
   {
     id: 'weapon-bind',
@@ -325,7 +354,8 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: false,
     description: 'Free disarm attempt when you successfully defend.',
-    benefit: 'If you take the defend action and successfully defend against a close weapon attack, you can make a disarm attempt against the attacker immediately as a reaction.',
+    benefit:
+      'If you take the defend action and successfully defend against a close weapon attack, you can make a disarm attempt against the attacker immediately as a reaction.',
   },
   {
     id: 'weapon-break',
@@ -335,6 +365,7 @@ export const combatAdvantages: Advantage[] = [
     type: 'combat',
     ranked: false,
     description: 'Free smash attempt when you successfully defend.',
-    benefit: 'If you take the defend action and successfully defend against a close weapon attack, you can make an attack against the attacker\'s weapon immediately as a reaction, inflicting normal damage to the weapon if it hits.',
+    benefit:
+      "If you take the defend action and successfully defend against a close weapon attack, you can make an attack against the attacker's weapon immediately as a reaction, inflicting normal damage to the weapon if it hits.",
   },
 ];

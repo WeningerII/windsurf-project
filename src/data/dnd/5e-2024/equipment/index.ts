@@ -12,7 +12,7 @@ export const dnd5e2024Equipment: Item[] = [
 ];
 
 export const getEquipment = (id: string): Item | undefined => {
-  return dnd5e2024Equipment.find(item => item.id === id);
+  return dnd5e2024Equipment.find((item) => item.id === id);
 };
 
 export { dnd5e2024Weapons, dnd5e2024Armor, dnd5e2024Gear, dnd5e2024MagicItems };

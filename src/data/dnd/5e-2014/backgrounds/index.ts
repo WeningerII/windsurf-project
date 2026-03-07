@@ -7,19 +7,12 @@ import { sage } from './sage';
 import { soldier } from './soldier';
 
 // SRD 5.1: 6 backgrounds included
-export const dnd5eBackgrounds: Background[] = [
-  acolyte,
-  criminal,
-  folkHero,
-  noble,
-  sage,
-  soldier,
-];
+export const dnd5eBackgrounds: Background[] = [acolyte, criminal, folkHero, noble, sage, soldier];
 
 export function getBackgroundById(id: string): Background | undefined {
-  return dnd5eBackgrounds.find(bg => bg.id === id);
+  return dnd5eBackgrounds.find((bg) => bg.id === id);
 }
 
 export function getBackgroundsBySystem(system: string): Background[] {
-  return dnd5eBackgrounds.filter(bg => bg.system === system);
+  return dnd5eBackgrounds.filter((bg) => bg.system === system);
 }

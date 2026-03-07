@@ -25,7 +25,8 @@ export const deva: Monster = {
   specialAbilities: [
     {
       name: 'Innate Spellcasting',
-      description: 'The deva\'s spellcasting ability is Charisma (spell save DC 14). The deva can innately cast the following spells, requiring only verbal components: At will: detect evil and good; 1/day each: commune, detect thoughts.',
+      description:
+        "The deva's spellcasting ability is Charisma (spell save DC 14). The deva can innately cast the following spells, requiring only verbal components: At will: detect evil and good; 1/day each: commune, detect thoughts.",
     },
     {
       name: 'Magic Resistance',
@@ -39,12 +40,11 @@ export const deva: Monster = {
     },
     {
       name: 'Mace',
-      description: 'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 10 (1d8 + 4) bludgeoning damage plus 16 (3d10) radiant damage.',
+      description:
+        'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 10 (1d8 + 4) bludgeoning damage plus 16 (3d10) radiant damage.',
     },
   ],
   environment: ['celestial'],
 };
 
-export const celestialsCR0to5: Monster[] = [
-  deva,
-];
+export const celestialsCR0to5: Monster[] = [deva];

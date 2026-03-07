@@ -23,17 +23,20 @@ export const wolf: Monster = {
   specialAbilities: [
     {
       name: 'Keen Hearing and Smell',
-      description: 'The wolf has advantage on Wisdom (Perception) checks that rely on hearing or smell.',
+      description:
+        'The wolf has advantage on Wisdom (Perception) checks that rely on hearing or smell.',
     },
     {
       name: 'Pack Tactics',
-      description: 'The wolf has advantage on attack rolls against a creature if at least one of the wolf\'s allies is within 5 feet of the creature and the ally isn\'t incapacitated.',
+      description:
+        "The wolf has advantage on attack rolls against a creature if at least one of the wolf's allies is within 5 feet of the creature and the ally isn't incapacitated.",
     },
   ],
   actions: [
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 7 (2d4 + 2) piercing damage. If the target is a creature, it must succeed on a DC 11 Strength saving throw or be knocked prone.',
+      description:
+        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 7 (2d4 + 2) piercing damage. If the target is a creature, it must succeed on a DC 11 Strength saving throw or be knocked prone.',
     },
   ],
   environment: ['forest', 'grassland', 'hill'],
@@ -59,17 +62,20 @@ export const direwolf: Monster = {
   specialAbilities: [
     {
       name: 'Keen Hearing and Smell',
-      description: 'The wolf has advantage on Wisdom (Perception) checks that rely on hearing or smell.',
+      description:
+        'The wolf has advantage on Wisdom (Perception) checks that rely on hearing or smell.',
     },
     {
       name: 'Pack Tactics',
-      description: 'The wolf has advantage on attack rolls against a creature if at least one of the wolf\'s allies is within 5 feet of the creature and the ally isn\'t incapacitated.',
+      description:
+        "The wolf has advantage on attack rolls against a creature if at least one of the wolf's allies is within 5 feet of the creature and the ally isn't incapacitated.",
     },
   ],
   actions: [
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 10 (2d6 + 3) piercing damage. If the target is a creature, it must succeed on a DC 13 Strength saving throw or be knocked prone.',
+      description:
+        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 10 (2d6 + 3) piercing damage. If the target is a creature, it must succeed on a DC 13 Strength saving throw or be knocked prone.',
     },
   ],
   environment: ['forest', 'hill'],
@@ -105,11 +111,13 @@ export const brownBear: Monster = {
     },
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 8 (1d8 + 4) piercing damage.',
+      description:
+        'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 8 (1d8 + 4) piercing damage.',
     },
     {
       name: 'Claws',
-      description: 'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 11 (2d6 + 4) slashing damage.',
+      description:
+        'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 11 (2d6 + 4) slashing damage.',
     },
   ],
   environment: ['forest', 'hill'],
@@ -135,11 +143,13 @@ export const giantSpider: Monster = {
   specialAbilities: [
     {
       name: 'Spider Climb',
-      description: 'The spider can climb difficult surfaces, including upside down on ceilings, without needing to make an ability check.',
+      description:
+        'The spider can climb difficult surfaces, including upside down on ceilings, without needing to make an ability check.',
     },
     {
       name: 'Web Sense',
-      description: 'While in contact with a web, the spider knows the exact location of any other creature in contact with the same web.',
+      description:
+        'While in contact with a web, the spider knows the exact location of any other creature in contact with the same web.',
     },
     {
       name: 'Web Walker',
@@ -149,11 +159,13 @@ export const giantSpider: Monster = {
   actions: [
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 7 (1d8 + 3) piercing damage, and the target must make a DC 11 Constitution saving throw, taking 9 (2d8) poison damage on a failed save, or half as much damage on a successful one. If the poison damage reduces the target to 0 hit points, the target is stable but poisoned for 1 hour, even after regaining hit points, and is paralyzed while poisoned in this way.',
+      description:
+        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 7 (1d8 + 3) piercing damage, and the target must make a DC 11 Constitution saving throw, taking 9 (2d8) poison damage on a failed save, or half as much damage on a successful one. If the poison damage reduces the target to 0 hit points, the target is stable but poisoned for 1 hour, even after regaining hit points, and is paralyzed while poisoned in this way.',
     },
     {
       name: 'Web',
-      description: 'Ranged Weapon Attack: +5 to hit, range 30/60 ft., one creature. Hit: The target is restrained by webbing. As an action, the restrained target can make a DC 12 Strength check, bursting the webbing on a success. The webbing can also be attacked and destroyed (AC 10; hp 5; vulnerability to fire damage; immunity to bludgeoning, poison, and psychic damage).',
+      description:
+        'Ranged Weapon Attack: +5 to hit, range 30/60 ft., one creature. Hit: The target is restrained by webbing. As an action, the restrained target can make a DC 12 Strength check, bursting the webbing on a success. The webbing can also be attacked and destroyed (AC 10; hp 5; vulnerability to fire damage; immunity to bludgeoning, poison, and psychic damage).',
     },
   ],
   environment: ['underdark', 'forest'],
@@ -185,7 +197,8 @@ export const crocodile: Monster = {
   actions: [
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 7 (1d10 + 2) piercing damage, and the target is grappled (escape DC 12). Until this grapple ends, the target is restrained, and the crocodile can\'t bite another target.',
+      description:
+        "Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 7 (1d10 + 2) piercing damage, and the target is grappled (escape DC 12). Until this grapple ends, the target is restrained, and the crocodile can't bite another target.",
     },
   ],
   environment: ['swamp', 'water'],
@@ -215,11 +228,13 @@ export const lion: Monster = {
     },
     {
       name: 'Pack Tactics',
-      description: 'The lion has advantage on an attack roll against a creature if at least one of the lion\'s allies is within 5 feet of the creature and the ally isn\'t incapacitated.',
+      description:
+        "The lion has advantage on an attack roll against a creature if at least one of the lion's allies is within 5 feet of the creature and the ally isn't incapacitated.",
     },
     {
       name: 'Pounce',
-      description: 'If the lion moves at least 20 feet straight toward a creature and then hits it with a claw attack on the same turn, that target must succeed on a DC 13 Strength saving throw or be knocked prone. If the target is prone, the lion can make one bite attack against it as a bonus action.',
+      description:
+        'If the lion moves at least 20 feet straight toward a creature and then hits it with a claw attack on the same turn, that target must succeed on a DC 13 Strength saving throw or be knocked prone. If the target is prone, the lion can make one bite attack against it as a bonus action.',
     },
     {
       name: 'Running Leap',
@@ -229,11 +244,13 @@ export const lion: Monster = {
   actions: [
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 7 (1d8 + 3) piercing damage.',
+      description:
+        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 7 (1d8 + 3) piercing damage.',
     },
     {
       name: 'Claw',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) slashing damage.',
+      description:
+        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) slashing damage.',
     },
   ],
   environment: ['grassland', 'hill'],
@@ -262,13 +279,15 @@ export const giantRat: Monster = {
     },
     {
       name: 'Pack Tactics',
-      description: 'The rat has advantage on an attack roll against a creature if at least one of the rat\'s allies is within 5 feet of the creature and the ally isn\'t incapacitated.',
+      description:
+        "The rat has advantage on an attack roll against a creature if at least one of the rat's allies is within 5 feet of the creature and the ally isn't incapacitated.",
     },
   ],
   actions: [
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 4 (1d4 + 2) piercing damage.',
+      description:
+        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 4 (1d4 + 2) piercing damage.',
     },
   ],
   environment: ['urban', 'underdark'],
@@ -293,17 +312,20 @@ export const elk: Monster = {
   specialAbilities: [
     {
       name: 'Charge',
-      description: 'If the elk moves at least 20 feet straight toward a target and then hits it with a ram attack on the same turn, the target takes an extra 7 (2d6) damage. If the target is a creature, it must succeed on a DC 13 Strength saving throw or be knocked prone.',
+      description:
+        'If the elk moves at least 20 feet straight toward a target and then hits it with a ram attack on the same turn, the target takes an extra 7 (2d6) damage. If the target is a creature, it must succeed on a DC 13 Strength saving throw or be knocked prone.',
     },
   ],
   actions: [
     {
       name: 'Ram',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) bludgeoning damage.',
+      description:
+        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) bludgeoning damage.',
     },
     {
       name: 'Hooves',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one prone creature. Hit: 8 (2d4 + 3) bludgeoning damage.',
+      description:
+        'Melee Weapon Attack: +5 to hit, reach 5 ft., one prone creature. Hit: 8 (2d4 + 3) bludgeoning damage.',
     },
   ],
   environment: ['forest', 'grassland', 'hill'],
@@ -335,7 +357,8 @@ export const eagle: Monster = {
   actions: [
     {
       name: 'Talons',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 4 (1d4 + 2) slashing damage.',
+      description:
+        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 4 (1d4 + 2) slashing damage.',
     },
   ],
   environment: ['mountain', 'grassland'],
@@ -365,17 +388,20 @@ export const panther: Monster = {
     },
     {
       name: 'Pounce',
-      description: 'If the panther moves at least 20 feet straight toward a creature and then hits it with a claw attack on the same turn, that target must succeed on a DC 12 Strength saving throw or be knocked prone. If the target is prone, the panther can make one bite attack against it as a bonus action.',
+      description:
+        'If the panther moves at least 20 feet straight toward a creature and then hits it with a claw attack on the same turn, that target must succeed on a DC 12 Strength saving throw or be knocked prone. If the target is prone, the panther can make one bite attack against it as a bonus action.',
     },
   ],
   actions: [
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
+      description:
+        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
     },
     {
       name: 'Claw',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 4 (1d4 + 2) slashing damage.',
+      description:
+        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 4 (1d4 + 2) slashing damage.',
     },
   ],
   environment: ['forest', 'jungle'],
@@ -400,17 +426,20 @@ export const boar: Monster = {
   specialAbilities: [
     {
       name: 'Charge',
-      description: 'If the boar moves at least 20 feet straight toward a target and then hits it with a tusk attack on the same turn, the target takes an extra 3 (1d6) slashing damage. If the target is a creature, it must succeed on a DC 11 Strength saving throw or be knocked prone.',
+      description:
+        'If the boar moves at least 20 feet straight toward a target and then hits it with a tusk attack on the same turn, the target takes an extra 3 (1d6) slashing damage. If the target is a creature, it must succeed on a DC 11 Strength saving throw or be knocked prone.',
     },
     {
       name: 'Relentless',
-      description: 'If the boar takes 7 damage or less that would reduce it to 0 hit points, it is reduced to 1 hit point instead.',
+      description:
+        'If the boar takes 7 damage or less that would reduce it to 0 hit points, it is reduced to 1 hit point instead.',
     },
   ],
   actions: [
     {
       name: 'Tusk',
-      description: 'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) slashing damage.',
+      description:
+        'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) slashing damage.',
     },
   ],
   environment: ['forest', 'grassland'],
@@ -435,11 +464,13 @@ export const constrictor_snake: Monster = {
   actions: [
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
+      description:
+        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
     },
     {
       name: 'Constrict',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one creature. Hit: 6 (1d8 + 2) bludgeoning damage, and the target is grappled (escape DC 14). Until this grapple ends, the creature is restrained, and the snake can\'t constrict another target.',
+      description:
+        "Melee Weapon Attack: +4 to hit, reach 5 ft., one creature. Hit: 6 (1d8 + 2) bludgeoning damage, and the target is grappled (escape DC 14). Until this grapple ends, the creature is restrained, and the snake can't constrict another target.",
     },
   ],
   environment: ['swamp', 'jungle'],
@@ -465,7 +496,8 @@ export const reef_shark: Monster = {
   specialAbilities: [
     {
       name: 'Pack Tactics',
-      description: 'The shark has advantage on an attack roll against a creature if at least one of the shark\'s allies is within 5 feet of the creature and the ally isn\'t incapacitated.',
+      description:
+        "The shark has advantage on an attack roll against a creature if at least one of the shark's allies is within 5 feet of the creature and the ally isn't incapacitated.",
     },
     {
       name: 'Water Breathing',
@@ -475,7 +507,8 @@ export const reef_shark: Monster = {
   actions: [
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 6 (1d8 + 2) piercing damage.',
+      description:
+        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 6 (1d8 + 2) piercing damage.',
     },
   ],
   environment: ['water'],
@@ -500,13 +533,15 @@ export const warhorse: Monster = {
   specialAbilities: [
     {
       name: 'Trampling Charge',
-      description: 'If the horse moves at least 20 feet straight toward a creature and then hits it with a hooves attack on the same turn, that target must succeed on a DC 14 Strength saving throw or be knocked prone. If the target is prone, the horse can make another attack with its hooves against it as a bonus action.',
+      description:
+        'If the horse moves at least 20 feet straight toward a creature and then hits it with a hooves attack on the same turn, that target must succeed on a DC 14 Strength saving throw or be knocked prone. If the target is prone, the horse can make another attack with its hooves against it as a bonus action.',
     },
   ],
   actions: [
     {
       name: 'Hooves',
-      description: 'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 11 (2d6 + 4) bludgeoning damage.',
+      description:
+        'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 11 (2d6 + 4) bludgeoning damage.',
     },
   ],
   environment: ['grassland'],
@@ -536,11 +571,13 @@ export const ape: Monster = {
     },
     {
       name: 'Fist',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) bludgeoning damage.',
+      description:
+        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) bludgeoning damage.',
     },
     {
       name: 'Rock',
-      description: 'Ranged Weapon Attack: +5 to hit, range 25/50 ft., one target. Hit: 6 (1d6 + 3) bludgeoning damage.',
+      description:
+        'Ranged Weapon Attack: +5 to hit, range 25/50 ft., one target. Hit: 6 (1d6 + 3) bludgeoning damage.',
     },
   ],
   environment: ['forest', 'jungle'],
@@ -576,11 +613,13 @@ export const blackBear: Monster = {
     },
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
+      description:
+        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
     },
     {
       name: 'Claws',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 7 (2d4 + 2) slashing damage.',
+      description:
+        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 7 (2d4 + 2) slashing damage.',
     },
   ],
   environment: ['forest'],
@@ -605,7 +644,7 @@ export const giantBat: Monster = {
   specialAbilities: [
     {
       name: 'Echolocation',
-      description: 'The bat can\'t use its blindsight while deafened.',
+      description: "The bat can't use its blindsight while deafened.",
     },
     {
       name: 'Keen Hearing',
@@ -615,7 +654,8 @@ export const giantBat: Monster = {
   actions: [
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
+      description:
+        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
     },
   ],
   environment: ['underdark', 'cave'],
@@ -640,7 +680,8 @@ export const giantCentipede: Monster = {
   actions: [
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 4 (1d4 + 2) piercing damage, and the target must succeed on a DC 11 Constitution saving throw or take 10 (3d6) poison damage. If the poison damage reduces the target to 0 hit points, the target is stable but poisoned for 1 hour, even after regaining hit points, and is paralyzed while poisoned in this way.',
+      description:
+        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 4 (1d4 + 2) piercing damage, and the target must succeed on a DC 11 Constitution saving throw or take 10 (3d6) poison damage. If the poison damage reduces the target to 0 hit points, the target is stable but poisoned for 1 hour, even after regaining hit points, and is paralyzed while poisoned in this way.',
     },
   ],
   environment: ['underdark', 'forest'],
@@ -670,17 +711,20 @@ export const giantFrog: Monster = {
     },
     {
       name: 'Standing Leap',
-      description: 'The frog\'s long jump is up to 20 feet and its high jump is up to 10 feet, with or without a running start.',
+      description:
+        "The frog's long jump is up to 20 feet and its high jump is up to 10 feet, with or without a running start.",
     },
   ],
   actions: [
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) piercing damage, and the target is grappled (escape DC 11). Until this grapple ends, the target is restrained, and the frog can\'t bite another target.',
+      description:
+        "Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) piercing damage, and the target is grappled (escape DC 11). Until this grapple ends, the target is restrained, and the frog can't bite another target.",
     },
     {
       name: 'Swallow',
-      description: 'The frog makes one bite attack against a Small or smaller target it is grappling. If the attack hits, the target is swallowed, and the grapple ends. The swallowed target is blinded and restrained, it has total cover against attacks and other effects outside the frog, and it takes 5 (2d4) acid damage at the start of each of the frog\'s turns. The frog can have only one target swallowed at a time.',
+      description:
+        "The frog makes one bite attack against a Small or smaller target it is grappling. If the attack hits, the target is swallowed, and the grapple ends. The swallowed target is blinded and restrained, it has total cover against attacks and other effects outside the frog, and it takes 5 (2d4) acid damage at the start of each of the frog's turns. The frog can have only one target swallowed at a time.",
     },
   ],
   environment: ['swamp', 'forest'],
@@ -705,7 +749,8 @@ export const giantWasp: Monster = {
   actions: [
     {
       name: 'Sting',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage, and the target must make a DC 11 Constitution saving throw, taking 10 (3d6) poison damage on a failed save, or half as much damage on a successful one. If the poison damage reduces the target to 0 hit points, the target is stable but poisoned for 1 hour, even after regaining hit points, and is paralyzed while poisoned in this way.',
+      description:
+        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage, and the target must make a DC 11 Constitution saving throw, taking 10 (3d6) poison damage on a failed save, or half as much damage on a successful one. If the poison damage reduces the target to 0 hit points, the target is stable but poisoned for 1 hour, even after regaining hit points, and is paralyzed while poisoned in this way.',
     },
   ],
   environment: ['forest', 'grassland'],

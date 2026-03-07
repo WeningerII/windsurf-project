@@ -23,22 +23,23 @@ export const dryad: Monster = {
   specialAbilities: [
     {
       name: 'Innate Spellcasting',
-      description: 'The dryad\'s innate spellcasting ability is Wisdom (spell save DC 12). It can innately cast the following spells, requiring no material components: At will: druidcraft; 3/day each: entangle, goodberry.',
+      description:
+        "The dryad's innate spellcasting ability is Wisdom (spell save DC 12). It can innately cast the following spells, requiring no material components: At will: druidcraft; 3/day each: entangle, goodberry.",
     },
     {
       name: 'Tree Stride',
-      description: 'Once on her turn, the dryad can use 10 feet of her movement to step magically into one living tree within her reach and emerge from a living tree within 60 feet of it, appearing in an unoccupied space within 5 feet of the second tree. Both trees must be Large or bigger.',
+      description:
+        'Once on her turn, the dryad can use 10 feet of her movement to step magically into one living tree within her reach and emerge from a living tree within 60 feet of it, appearing in an unoccupied space within 5 feet of the second tree. Both trees must be Large or bigger.',
     },
   ],
   actions: [
     {
       name: 'Quarterstaff',
-      description: 'Melee Weapon Attack: +2 to hit, reach 5 ft., one target. Hit: 2 (1d6 - 1) bludgeoning damage, or 3 (1d8 - 1) bludgeoning damage if used with two hands.',
+      description:
+        'Melee Weapon Attack: +2 to hit, reach 5 ft., one target. Hit: 2 (1d6 - 1) bludgeoning damage, or 3 (1d8 - 1) bludgeoning damage if used with two hands.',
     },
   ],
   environment: ['forest'],
 };
 
-export const feyCR6to10: Monster[] = [
-  dryad,
-];
+export const feyCR6to10: Monster[] = [dryad];

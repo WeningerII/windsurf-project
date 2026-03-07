@@ -16,9 +16,16 @@ export const clayGolem: Monster = {
   speed: { walk: 20 },
   abilities: { str: 20, dex: 9, con: 16, int: 3, wis: 8, cha: 1 },
   damageImmunities: ['acid', 'poison', 'psychic'],
-  conditionImmunities: ['charmed', 'exhaustion', 'frightened', 'paralyzed', 'petrified', 'poisoned'],
+  conditionImmunities: [
+    'charmed',
+    'exhaustion',
+    'frightened',
+    'paralyzed',
+    'petrified',
+    'poisoned',
+  ],
   senses: ['darkvision 60 ft.', 'passive Perception 9'],
-  languages: ['understands the languages of its creator but can\'t speak'],
+  languages: ["understands the languages of its creator but can't speak"],
   challengeRating: 5,
   experiencePoints: 1800,
   specialAbilities: [
@@ -32,7 +39,7 @@ export const clayGolem: Monster = {
     },
     {
       name: 'Magic Weapons',
-      description: 'The golem\'s weapon attacks are magical.',
+      description: "The golem's weapon attacks are magical.",
     },
   ],
   actions: [
@@ -42,12 +49,11 @@ export const clayGolem: Monster = {
     },
     {
       name: 'Slam',
-      description: 'Melee Weapon Attack: +8 to hit, reach 5 ft., one target. Hit: 13 (2d8 + 5) bludgeoning damage.',
+      description:
+        'Melee Weapon Attack: +8 to hit, reach 5 ft., one target. Hit: 13 (2d8 + 5) bludgeoning damage.',
     },
   ],
   environment: ['dungeon', 'tower'],
 };
 
-export const constructsCR0to5: Monster[] = [
-  clayGolem,
-];
+export const constructsCR0to5: Monster[] = [clayGolem];

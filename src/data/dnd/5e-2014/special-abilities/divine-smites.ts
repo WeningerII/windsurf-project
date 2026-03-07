@@ -19,7 +19,8 @@ export const divineSmites: DivineSmite[] = [
     source: 'SRD 5.1',
     spellSlotLevel: 1,
     baseDamage: '1d8',
-    description: 'When you hit a creature with a melee weapon attack, you can expend one spell slot to deal radiant damage to the target.',
+    description:
+      'When you hit a creature with a melee weapon attack, you can expend one spell slot to deal radiant damage to the target.',
     effects: ['Deal 1d8 radiant damage + 1d8 per spell slot level'],
   },
   {
@@ -29,7 +30,8 @@ export const divineSmites: DivineSmite[] = [
     source: 'SRD 5.1',
     spellSlotLevel: 2,
     baseDamage: '2d8',
-    description: 'When you hit a creature with a melee weapon attack, you can expend a 2nd-level spell slot to deal radiant damage.',
+    description:
+      'When you hit a creature with a melee weapon attack, you can expend a 2nd-level spell slot to deal radiant damage.',
     effects: ['Deal 2d8 radiant damage'],
   },
   {
@@ -39,7 +41,8 @@ export const divineSmites: DivineSmite[] = [
     source: 'SRD 5.1',
     spellSlotLevel: 3,
     baseDamage: '3d8',
-    description: 'When you hit a creature with a melee weapon attack, you can expend a 3rd-level spell slot to deal radiant damage.',
+    description:
+      'When you hit a creature with a melee weapon attack, you can expend a 3rd-level spell slot to deal radiant damage.',
     effects: ['Deal 3d8 radiant damage'],
   },
   {
@@ -49,7 +52,8 @@ export const divineSmites: DivineSmite[] = [
     source: 'SRD 5.1',
     spellSlotLevel: 4,
     baseDamage: '4d8',
-    description: 'When you hit a creature with a melee weapon attack, you can expend a 4th-level spell slot to deal radiant damage.',
+    description:
+      'When you hit a creature with a melee weapon attack, you can expend a 4th-level spell slot to deal radiant damage.',
     effects: ['Deal 4d8 radiant damage'],
   },
   {
@@ -59,7 +63,8 @@ export const divineSmites: DivineSmite[] = [
     source: 'SRD 5.1',
     spellSlotLevel: 5,
     baseDamage: '5d8',
-    description: 'When you hit a creature with a melee weapon attack, you can expend a 5th-level spell slot to deal radiant damage.',
+    description:
+      'When you hit a creature with a melee weapon attack, you can expend a 5th-level spell slot to deal radiant damage.',
     effects: ['Deal 5d8 radiant damage'],
   },
   {
@@ -69,7 +74,8 @@ export const divineSmites: DivineSmite[] = [
     source: 'SRD 5.1',
     spellSlotLevel: 1,
     baseDamage: '1d8',
-    description: 'Divine Smite deals an extra 1d8 radiant damage when used against an undead or fiend.',
+    description:
+      'Divine Smite deals an extra 1d8 radiant damage when used against an undead or fiend.',
     effects: ['Extra 1d8 damage vs undead/fiends'],
   },
   {

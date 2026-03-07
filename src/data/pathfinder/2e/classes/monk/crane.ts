@@ -4,7 +4,7 @@ export const craneSubclass: Subclass = {
   id: 'pf2e-monk-crane',
   name: 'Crane Stance',
   parentClassId: 'monk',
-  
+
   features: [
     {
       level: 1,
@@ -13,13 +13,15 @@ export const craneSubclass: Subclass = {
           id: 'crane-stance',
           name: 'Crane Stance',
           source: 'Monk 1',
-          description: 'You adopt the crane stance, gaining a +1 circumstance bonus to AC and allowing you to use Acrobatics instead of Athletics for checks to Tumble Through or Balance.',
+          description:
+            'You adopt the crane stance, gaining a +1 circumstance bonus to AC and allowing you to use Acrobatics instead of Athletics for checks to Tumble Through or Balance.',
         },
         {
           id: 'crane-wing-block',
           name: 'Crane Wing Block',
           source: 'Monk 1',
-          description: 'You can use your reaction to block an attack with your crane stance, potentially deflecting it.',
+          description:
+            'You can use your reaction to block an attack with your crane stance, potentially deflecting it.',
         },
       ],
     },
@@ -134,6 +136,7 @@ export const craneSubclass: Subclass = {
       ],
     },
   ],
-  
-  description: 'A monk who has mastered the crane stance, emphasizing grace, balance, and defensive techniques.',
+
+  description:
+    'A monk who has mastered the crane stance, emphasizing grace, balance, and defensive techniques.',
 };

@@ -23,11 +23,13 @@ export const hydra: Monster = {
   specialAbilities: [
     {
       name: 'Multiple Heads',
-      description: 'The hydra has five heads. While it has more than one head, the hydra has advantage on Wisdom (Perception) checks and on saving throws against being blinded, charmed, deafened, frightened, stunned, and knocked unconscious. Whenever the hydra takes 25 or more damage in a single turn, one of its heads dies. If all its heads die, the hydra dies. At the end of its turn, it grows two heads for each of its heads that died since its last turn, unless it has taken fire damage since its last turn. The hydra regains 10 hit points for each head regrown this way.',
+      description:
+        'The hydra has five heads. While it has more than one head, the hydra has advantage on Wisdom (Perception) checks and on saving throws against being blinded, charmed, deafened, frightened, stunned, and knocked unconscious. Whenever the hydra takes 25 or more damage in a single turn, one of its heads dies. If all its heads die, the hydra dies. At the end of its turn, it grows two heads for each of its heads that died since its last turn, unless it has taken fire damage since its last turn. The hydra regains 10 hit points for each head regrown this way.',
     },
     {
       name: 'Reactive Heads',
-      description: 'For each head the hydra has beyond one, it gets an extra reaction that can be used only for opportunity attacks.',
+      description:
+        'For each head the hydra has beyond one, it gets an extra reaction that can be used only for opportunity attacks.',
     },
     {
       name: 'Wakeful',
@@ -41,7 +43,8 @@ export const hydra: Monster = {
     },
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +8 to hit, reach 10 ft., one target. Hit: 10 (1d10 + 5) piercing damage.',
+      description:
+        'Melee Weapon Attack: +8 to hit, reach 10 ft., one target. Hit: 10 (1d10 + 5) piercing damage.',
     },
   ],
   environment: ['swamp', 'water'],
@@ -67,11 +70,13 @@ export const manticore: Monster = {
   specialAbilities: [
     {
       name: 'Flyby Attack',
-      description: 'The manticore doesn\'t provoke opportunity attacks when it flies out of an enemy\'s reach.',
+      description:
+        "The manticore doesn't provoke opportunity attacks when it flies out of an enemy's reach.",
     },
     {
       name: 'Keen Hearing',
-      description: 'The manticore can hear sounds that are too faint for others to detect. It can also pinpoint the source of sounds it can hear.',
+      description:
+        'The manticore can hear sounds that are too faint for others to detect. It can also pinpoint the source of sounds it can hear.',
     },
   ],
   actions: [
@@ -81,21 +86,21 @@ export const manticore: Monster = {
     },
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 8 (1d6 + 4) piercing damage.',
+      description:
+        'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 8 (1d6 + 4) piercing damage.',
     },
     {
       name: 'Claw',
-      description: 'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 8 (1d6 + 4) slashing damage.',
+      description:
+        'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 8 (1d6 + 4) slashing damage.',
     },
     {
       name: 'Tail Spike',
-      description: 'Ranged Weapon Attack: +7 to hit, range 100/400 ft., one target. Hit: 8 (1d6 + 4) piercing damage.',
+      description:
+        'Ranged Weapon Attack: +7 to hit, range 100/400 ft., one target. Hit: 8 (1d6 + 4) piercing damage.',
     },
   ],
   environment: ['desert', 'grassland', 'mountain'],
 };
 
-export const monstrositiesCR6to10: Monster[] = [
-  hydra,
-  manticore,
-];
+export const monstrositiesCR6to10: Monster[] = [hydra, manticore];

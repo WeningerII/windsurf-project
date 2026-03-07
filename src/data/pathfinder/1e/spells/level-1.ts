@@ -14,7 +14,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'hours', hours: 2 },
     concentration: false,
     ritual: false,
-    description: 'Alarm creates a subtle ward on an area you select. Once the spell effect is in place, it thereafter sounds a mental or audible alarm each time a creature of Tiny or larger size enters the warded area or touches it. A creature that speaks the password (determined by you at the time of casting) does not set off the alarm.',
+    description:
+      'Alarm creates a subtle ward on an area you select. Once the spell effect is in place, it thereafter sounds a mental or audible alarm each time a creature of Tiny or larger size enters the warded area or touches it. A creature that speaks the password (determined by you at the time of casting) does not set off the alarm.',
     classes: ['bard', 'ranger', 'sorcerer', 'wizard'],
   },
   {
@@ -30,7 +31,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'Bless fills your allies with courage. Each ally gains a +1 morale bonus on attack rolls and on saving throws against fear effects.',
+    description:
+      'Bless fills your allies with courage. Each ally gains a +1 morale bonus on attack rolls and on saving throws against fear effects.',
     classes: ['cleric'],
   },
   {
@@ -48,7 +50,8 @@ export const level1Spells: Spell[] = [
     concentration: false,
     ritual: false,
     savingThrow: { attribute: 'dex', success: 'half' },
-    description: 'A cone of searing flame shoots from your fingertips. Any creature in the area of the flames takes 1d4 points of fire damage per caster level (maximum 5d4).',
+    description:
+      'A cone of searing flame shoots from your fingertips. Any creature in the area of the flames takes 1d4 points of fire damage per caster level (maximum 5d4).',
     damage: { base: { count: 1, die: 'd4', notation: '1d4 per level' }, type: 'fire' },
     classes: ['sorcerer', 'wizard'],
   },
@@ -66,7 +69,8 @@ export const level1Spells: Spell[] = [
     concentration: false,
     ritual: false,
     savingThrow: { attribute: 'wis', success: 'none' },
-    description: 'This charm makes a humanoid creature regard you as its trusted friend and ally (treat the target\'s attitude as friendly). If the creature is currently being threatened or attacked by you or your allies, however, it receives a +5 bonus on its saving throw.',
+    description:
+      "This charm makes a humanoid creature regard you as its trusted friend and ally (treat the target's attitude as friendly). If the creature is currently being threatened or attacked by you or your allies, however, it receives a +5 bonus on its saving throw.",
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -84,7 +88,8 @@ export const level1Spells: Spell[] = [
     concentration: false,
     ritual: false,
     savingThrow: { attribute: 'wis', success: 'none' },
-    description: 'A vivid cone of clashing colors springs forth from your hand, causing creatures to become stunned, perhaps also blinded, and possibly knocking them unconscious. Each creature within the cone is affected according to its HD.',
+    description:
+      'A vivid cone of clashing colors springs forth from your hand, causing creatures to become stunned, perhaps also blinded, and possibly knocking them unconscious. Each creature within the cone is affected according to its HD.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -100,7 +105,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 10 },
     concentration: false,
     ritual: false,
-    description: 'You can understand the spoken words of creatures or read otherwise incomprehensible written messages. The ability to read does not necessarily impart insight into the material, merely its literal meaning.',
+    description:
+      'You can understand the spoken words of creatures or read otherwise incomprehensible written messages. The ability to read does not necessarily impart insight into the material, merely its literal meaning.',
     classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
   },
   {
@@ -116,7 +122,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'When laying your hand upon a living creature, you channel positive energy that cures 1d8 points of damage + 1 point per caster level (maximum +5).',
+    description:
+      'When laying your hand upon a living creature, you channel positive energy that cures 1d8 points of damage + 1 point per caster level (maximum +5).',
     classes: ['bard', 'cleric', 'druid', 'ranger'],
   },
   {
@@ -133,7 +140,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'concentration', maxDuration: '1 minute per level' },
     concentration: true,
     ritual: false,
-    description: 'You can detect secret doors, compartments, caches, and so forth. Only passages, doors, or openings that have been specifically constructed to escape detection are detected by this spell.',
+    description:
+      'You can detect secret doors, compartments, caches, and so forth. Only passages, doors, or openings that have been specifically constructed to escape detection are detected by this spell.',
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -149,7 +157,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'hours', hours: 24 },
     concentration: false,
     ritual: false,
-    description: 'A creature protected by endure elements suffers no harm from being in a hot or cold environment. It can exist comfortably in conditions between –50 and 140 degrees Fahrenheit without having to make Fortitude saves.',
+    description:
+      'A creature protected by endure elements suffers no harm from being in a hot or cold environment. It can exist comfortably in conditions between –50 and 140 degrees Fahrenheit without having to make Fortitude saves.',
     classes: ['cleric', 'druid', 'ranger', 'sorcerer', 'wizard'],
   },
   {
@@ -166,7 +175,8 @@ export const level1Spells: Spell[] = [
     concentration: false,
     ritual: false,
     savingThrow: { attribute: 'con', success: 'none' },
-    description: 'This spell causes instant growth of a humanoid creature, doubling its height and multiplying its weight by 8. This increase changes the creature\'s size category to the next larger one. The target gains a +2 size bonus to Strength, a –2 size penalty to Dexterity, and a –1 penalty on attack rolls and AC due to its increased size.',
+    description:
+      "This spell causes instant growth of a humanoid creature, doubling its height and multiplying its weight by 8. This increase changes the creature's size category to the next larger one. The target gains a +2 size bonus to Strength, a –2 size penalty to Dexterity, and a –1 penalty on attack rolls and AC due to its increased size.",
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -182,7 +192,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'This spell increases your base land speed by 30 feet. This adjustment is treated as an enhancement bonus. There is no effect on other modes of movement, such as burrow, climb, fly, or swim.',
+    description:
+      'This spell increases your base land speed by 30 feet. This adjustment is treated as an enhancement bonus. There is no effect on other modes of movement, such as burrow, climb, fly, or swim.',
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -198,7 +209,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'special', description: 'until landing or 1 round per level' },
     concentration: false,
     ritual: false,
-    description: 'The affected creatures or objects fall slowly. Feather fall instantly changes the rate at which the targets fall to a mere 60 feet per round, equivalent to the end of a fall from a few feet. The spell affects one or more Medium or smaller creatures.',
+    description:
+      'The affected creatures or objects fall slowly. Feather fall instantly changes the rate at which the targets fall to a mere 60 feet per round, equivalent to the end of a fall from a few feet. The spell affects one or more Medium or smaller creatures.',
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -215,7 +227,8 @@ export const level1Spells: Spell[] = [
     concentration: false,
     ritual: false,
     savingThrow: { attribute: 'dex', success: 'special' },
-    description: 'A grease spell covers a solid surface with a layer of slippery grease. Any creature in the area when the spell is cast must make a successful Reflex save or fall. A creature can walk within or through the area of grease at half normal speed with a DC 10 Acrobatics check.',
+    description:
+      'A grease spell covers a solid surface with a layer of slippery grease. Any creature in the area when the spell is cast must make a successful Reflex save or fall. A creature can walk within or through the area of grease at half normal speed with a DC 10 Acrobatics check.',
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -231,7 +244,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'This spell functions as detect magic, except that it gives you a +10 enhancement bonus on Spellcraft checks made to identify the properties and command words of magic items in your possession.',
+    description:
+      'This spell functions as detect magic, except that it gives you a +10 enhancement bonus on Spellcraft checks made to identify the properties and command words of magic items in your possession.',
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -247,7 +261,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'hours', hours: 1 },
     concentration: false,
     ritual: false,
-    description: 'An invisible but tangible field of force surrounds the subject of a mage armor spell, providing a +4 armor bonus to AC. Unlike mundane armor, mage armor entails no armor check penalty, arcane spell failure chance, or speed reduction.',
+    description:
+      'An invisible but tangible field of force surrounds the subject of a mage armor spell, providing a +4 armor bonus to AC. Unlike mundane armor, mage armor entails no armor check penalty, arcane spell failure chance, or speed reduction.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -263,7 +278,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'A missile of magical energy darts forth from your fingertip and strikes its target, dealing 1d4+1 points of force damage. The missile strikes unerringly, even if the target is in melee combat, so long as it has less than total cover or total concealment. You fire one additional missile for every two caster levels beyond 1st (max 5).',
+    description:
+      'A missile of magical energy darts forth from your fingertip and strikes its target, dealing 1d4+1 points of force damage. The missile strikes unerringly, even if the target is in melee combat, so long as it has less than total cover or total concealment. You fire one additional missile for every two caster levels beyond 1st (max 5).',
     damage: { base: { count: 1, die: 'd4', notation: '1d4+1' }, type: 'force' },
     classes: ['sorcerer', 'wizard'],
   },
@@ -281,7 +297,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'A misty vapor arises around you. It is stationary. The vapor obscures all sight, including darkvision, beyond 5 feet. A creature 5 feet away has concealment. Creatures farther away have total concealment.',
+    description:
+      'A misty vapor arises around you. It is stationary. The vapor obscures all sight, including darkvision, beyond 5 feet. A creature 5 feet away has concealment. Creatures farther away have total concealment.',
     classes: ['cleric', 'druid', 'sorcerer', 'wizard'],
   },
   {
@@ -297,7 +314,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'This spell wards a creature from attacks by evil creatures, from mental control, and from summoned creatures. It creates a magical barrier around the subject at a distance of 1 foot. The barrier moves with the subject and has three major effects: +2 deflection bonus to AC and +2 resistance bonus on saves against evil creatures, blocks possession and mental influence, and prevents contact by summoned creatures.',
+    description:
+      'This spell wards a creature from attacks by evil creatures, from mental control, and from summoned creatures. It creates a magical barrier around the subject at a distance of 1 foot. The barrier moves with the subject and has three major effects: +2 deflection bonus to AC and +2 resistance bonus on saves against evil creatures, blocks possession and mental influence, and prevents contact by summoned creatures.',
     classes: ['cleric', 'sorcerer', 'wizard'],
   },
   {
@@ -313,7 +331,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'Shield creates an invisible shield of force that hovers in front of you. It negates magic missile attacks directed at you. The disk also provides a +4 shield bonus to AC. This bonus applies against incorporeal touch attacks.',
+    description:
+      'Shield creates an invisible shield of force that hovers in front of you. It negates magic missile attacks directed at you. The disk also provides a +4 shield bonus to AC. This bonus applies against incorporeal touch attacks.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -330,7 +349,8 @@ export const level1Spells: Spell[] = [
     concentration: true,
     ritual: false,
     savingThrow: { attribute: 'wis', success: 'none' },
-    description: 'This spell creates the visual illusion of an object, creature, or force, as visualized by you. The illusion does not create sound, smell, texture, or temperature. You can move the image within the limits of the size of the effect.',
+    description:
+      'This spell creates the visual illusion of an object, creature, or force, as visualized by you. The illusion does not create sound, smell, texture, or temperature. You can move the image within the limits of the size of the effect.',
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -347,7 +367,8 @@ export const level1Spells: Spell[] = [
     concentration: false,
     ritual: false,
     savingThrow: { attribute: 'wis', success: 'none' },
-    description: 'A sleep spell causes a magical slumber to come upon 4 HD of creatures. Creatures with the fewest HD are affected first. Among creatures with equal HD, those who are closest to the spell\'s point of origin are affected first.',
+    description:
+      "A sleep spell causes a magical slumber to come upon 4 HD of creatures. Creatures with the fewest HD are affected first. Among creatures with equal HD, those who are closest to the spell's point of origin are affected first.",
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -363,7 +384,8 @@ export const level1Spells: Spell[] = [
     duration: { type: 'rounds', rounds: 1 },
     concentration: false,
     ritual: false,
-    description: 'This spell summons an extraplanar creature (typically an outsider, elemental, or magical beast native to another plane). It appears where you designate and acts immediately, on your turn. It attacks your opponents to the best of its ability.',
+    description:
+      'This spell summons an extraplanar creature (typically an outsider, elemental, or magical beast native to another plane). It appears where you designate and acts immediately, on your turn. It attacks your opponents to the best of its ability.',
     classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
   },
 ];

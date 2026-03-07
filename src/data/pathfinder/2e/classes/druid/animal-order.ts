@@ -5,7 +5,8 @@ export const animalOrderSubclass: Subclass = {
   id: 'pf2e-druid-animal-order',
   name: 'Animal Order',
   parentClassId: 'druid',
-  description: 'A druid devoted to the animal kingdom who gains the ability to transform into animals and command beasts.',
+  description:
+    'A druid devoted to the animal kingdom who gains the ability to transform into animals and command beasts.',
   features: [
     {
       level: 1,
@@ -108,7 +109,8 @@ export const animalOrderSubclass: Subclass = {
           id: 'animal-order-ultimate-feat',
           name: 'Ultimate Animal Order Feat',
           source: 'Druid 9',
-          description: 'You gain an ultimate feat that represents the pinnacle of your animal order abilities.',
+          description:
+            'You gain an ultimate feat that represents the pinnacle of your animal order abilities.',
         },
       ],
     },
@@ -174,7 +176,8 @@ export const animalOrderSubclass: Subclass = {
           id: 'animal-order-apex-feat',
           name: 'Apex Animal Order Feat',
           source: 'Druid 15',
-          description: 'You gain an apex feat that represents the ultimate expression of your animal order abilities.',
+          description:
+            'You gain an apex feat that represents the ultimate expression of your animal order abilities.',
         },
       ],
     },
@@ -196,7 +199,8 @@ export const animalOrderSubclass: Subclass = {
           id: 'animal-order-transcendent-feat',
           name: 'Transcendent Animal Order Feat',
           source: 'Druid 17',
-          description: 'You gain a transcendent feat that goes beyond normal animal order abilities.',
+          description:
+            'You gain a transcendent feat that goes beyond normal animal order abilities.',
         },
       ],
     },

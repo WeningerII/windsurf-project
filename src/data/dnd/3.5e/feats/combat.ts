@@ -48,7 +48,10 @@ export const berserkRage: FeatDefinition = {
   source: 'PHB',
   prerequisites: [{ type: 'other', description: 'Rage class feature' }],
   description: 'You can enter a more powerful rage.',
-  benefits: ['While raging, gain +4 to Strength instead of +2', 'Gain +2 to Will saves instead of +1'],
+  benefits: [
+    'While raging, gain +4 to Strength instead of +2',
+    'Gain +2 to Will saves instead of +1',
+  ],
 };
 
 export const bladeMastery: FeatDefinition = {
@@ -58,7 +61,10 @@ export const bladeMastery: FeatDefinition = {
   source: 'PHB',
   prerequisites: [{ type: 'other', description: 'Weapon Focus (any blade)' }],
   description: 'You are a master of blade weapons.',
-  benefits: ['+1 bonus on attack rolls with blade weapons', '+1 bonus on damage rolls with blade weapons'],
+  benefits: [
+    '+1 bonus on attack rolls with blade weapons',
+    '+1 bonus on damage rolls with blade weapons',
+  ],
 };
 
 export const blastAttack: FeatDefinition = {
@@ -117,7 +123,10 @@ export const breakFall: FeatDefinition = {
   source: 'PHB',
   prerequisites: [{ type: 'ability', ability: 'dex', value: 13 }],
   description: 'You know how to fall safely.',
-  benefits: ['Reduce fall damage by 10 feet', '+2 bonus on Acrobatics checks to reduce fall damage'],
+  benefits: [
+    'Reduce fall damage by 10 feet',
+    '+2 bonus on Acrobatics checks to reduce fall damage',
+  ],
 };
 
 export const bullRush: FeatDefinition = {
@@ -127,7 +136,10 @@ export const bullRush: FeatDefinition = {
   source: 'PHB',
   prerequisites: [{ type: 'ability', ability: 'str', value: 13 }],
   description: 'You can knock foes back with your attacks.',
-  benefits: ['+2 bonus on bull rush attempts', 'You can bull rush as a free action after a successful melee attack'],
+  benefits: [
+    '+2 bonus on bull rush attempts',
+    'You can bull rush as a free action after a successful melee attack',
+  ],
 };
 
 export const chainLightning: FeatDefinition = {
@@ -137,7 +149,10 @@ export const chainLightning: FeatDefinition = {
   source: 'PHB',
   prerequisites: [{ type: 'other', description: 'Spell Focus (Evocation)' }],
   description: 'Your lightning spells chain to nearby foes.',
-  benefits: ['Your lightning spells can chain to nearby enemies', '+1 bonus on damage rolls with lightning spells'],
+  benefits: [
+    'Your lightning spells can chain to nearby enemies',
+    '+1 bonus on damage rolls with lightning spells',
+  ],
 };
 
 export const cleaveExpert: FeatDefinition = {
@@ -175,9 +190,15 @@ export const crushingBlow: FeatDefinition = {
   name: 'Crushing Blow',
   system: 'dnd-3.5e',
   source: 'PHB',
-  prerequisites: [{ type: 'ability', ability: 'str', value: 15 }, { type: 'other', description: 'Power Attack' }],
+  prerequisites: [
+    { type: 'ability', ability: 'str', value: 15 },
+    { type: 'other', description: 'Power Attack' },
+  ],
   description: 'Your melee attacks are devastating.',
-  benefits: ['When you use Power Attack, you gain +1d6 damage', '+2 bonus on damage rolls with heavy weapons'],
+  benefits: [
+    'When you use Power Attack, you gain +1d6 damage',
+    '+2 bonus on damage rolls with heavy weapons',
+  ],
 };
 
 export const defensiveStance: FeatDefinition = {
@@ -187,7 +208,10 @@ export const defensiveStance: FeatDefinition = {
   source: 'PHB',
   prerequisites: [{ type: 'ability', ability: 'dex', value: 13 }],
   description: 'You can take a defensive stance in combat.',
-  benefits: ['+2 bonus to AC when you take a full-round action to defend', '-2 penalty to attack rolls'],
+  benefits: [
+    '+2 bonus to AC when you take a full-round action to defend',
+    '-2 penalty to attack rolls',
+  ],
 };
 
 export const disarmMastery: FeatDefinition = {
@@ -197,7 +221,10 @@ export const disarmMastery: FeatDefinition = {
   source: 'PHB',
   prerequisites: [{ type: 'ability', ability: 'dex', value: 13 }],
   description: 'You are skilled at disarming opponents.',
-  benefits: ['+2 bonus on disarm attempts', 'You can disarm as a free action after a successful melee attack'],
+  benefits: [
+    '+2 bonus on disarm attempts',
+    'You can disarm as a free action after a successful melee attack',
+  ],
 };
 
 export const doubleStrike: FeatDefinition = {
@@ -207,7 +234,10 @@ export const doubleStrike: FeatDefinition = {
   source: 'PHB',
   prerequisites: [{ type: 'other', description: 'Two-Weapon Fighting' }],
   description: 'You can strike with both weapons in quick succession.',
-  benefits: ['You can make an extra attack with your off-hand weapon', '+1 bonus on off-hand attack rolls'],
+  benefits: [
+    'You can make an extra attack with your off-hand weapon',
+    '+1 bonus on off-hand attack rolls',
+  ],
 };
 
 export const drainMastery: FeatDefinition = {
@@ -217,7 +247,10 @@ export const drainMastery: FeatDefinition = {
   source: 'PHB',
   prerequisites: [{ type: 'other', description: 'Spell Focus (Necromancy)' }],
   description: 'Your drain spells are more powerful.',
-  benefits: ['+1 bonus on damage rolls with drain spells', 'Drain spells heal you for half the damage dealt'],
+  benefits: [
+    '+1 bonus on damage rolls with drain spells',
+    'Drain spells heal you for half the damage dealt',
+  ],
 };
 
 export const expertParry: FeatDefinition = {
@@ -227,7 +260,10 @@ export const expertParry: FeatDefinition = {
   source: 'PHB',
   prerequisites: [{ type: 'ability', ability: 'dex', value: 15 }],
   description: 'You are skilled at parrying attacks.',
-  benefits: ['+2 bonus to AC against melee attacks', 'You can parry one attack per round as a free action'],
+  benefits: [
+    '+2 bonus to AC against melee attacks',
+    'You can parry one attack per round as a free action',
+  ],
 };
 
 export const feintMastery: FeatDefinition = {
@@ -237,7 +273,10 @@ export const feintMastery: FeatDefinition = {
   source: 'PHB',
   prerequisites: [{ type: 'ability', ability: 'int', value: 13 }],
   description: 'You are skilled at feinting in combat.',
-  benefits: ['+2 bonus on feint attempts', 'You can feint as a free action against one opponent per round'],
+  benefits: [
+    '+2 bonus on feint attempts',
+    'You can feint as a free action against one opponent per round',
+  ],
 };
 
 export const combatFeats: FeatDefinition[] = [

@@ -5,7 +5,8 @@ export const assassinSubclass: Subclass = {
   id: 'pf2e-rogue-assassin',
   name: 'Assassin',
   parentClassId: 'rogue',
-  description: 'A rogue trained in the art of assassination who strikes from the shadows with deadly precision.',
+  description:
+    'A rogue trained in the art of assassination who strikes from the shadows with deadly precision.',
   features: [
     {
       level: 1,
@@ -108,7 +109,8 @@ export const assassinSubclass: Subclass = {
           id: 'assassin-ultimate-feat',
           name: 'Ultimate Assassin Feat',
           source: 'Rogue 9',
-          description: 'You gain an ultimate feat that represents the pinnacle of your assassination abilities.',
+          description:
+            'You gain an ultimate feat that represents the pinnacle of your assassination abilities.',
         },
       ],
     },
@@ -174,7 +176,8 @@ export const assassinSubclass: Subclass = {
           id: 'assassin-apex-feat',
           name: 'Apex Assassin Feat',
           source: 'Rogue 15',
-          description: 'You gain an apex feat that represents the ultimate expression of your assassination abilities.',
+          description:
+            'You gain an apex feat that represents the ultimate expression of your assassination abilities.',
         },
       ],
     },
@@ -196,7 +199,8 @@ export const assassinSubclass: Subclass = {
           id: 'assassin-transcendent-feat',
           name: 'Transcendent Assassin Feat',
           source: 'Rogue 17',
-          description: 'You gain a transcendent feat that goes beyond normal assassination abilities.',
+          description:
+            'You gain a transcendent feat that goes beyond normal assassination abilities.',
         },
       ],
     },

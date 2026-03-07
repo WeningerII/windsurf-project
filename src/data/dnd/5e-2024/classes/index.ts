@@ -27,5 +27,5 @@ export const dnd5e2024Classes = [
 ];
 
 export const getClass = (id: string) => {
-  return dnd5e2024Classes.find(c => c.id === id);
+  return dnd5e2024Classes.find((c) => c.id === id);
 };

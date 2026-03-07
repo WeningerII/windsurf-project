@@ -108,7 +108,8 @@ export const duelistSubclass: Subclass = {
           id: 'duelist-ultimate-feat',
           name: 'Ultimate Duelist Feat',
           source: 'Fighter 9',
-          description: 'You gain an ultimate feat that represents the pinnacle of your dueling abilities.',
+          description:
+            'You gain an ultimate feat that represents the pinnacle of your dueling abilities.',
         },
       ],
     },
@@ -174,7 +175,8 @@ export const duelistSubclass: Subclass = {
           id: 'duelist-apex-feat',
           name: 'Apex Duelist Feat',
           source: 'Fighter 15',
-          description: 'You gain an apex feat that represents the ultimate expression of your dueling abilities.',
+          description:
+            'You gain an apex feat that represents the ultimate expression of your dueling abilities.',
         },
       ],
     },

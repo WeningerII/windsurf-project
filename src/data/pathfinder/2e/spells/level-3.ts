@@ -14,7 +14,8 @@ export const level3Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You attempt to take control of an undead creature. The target must attempt a Will save. On a failure, it becomes controlled by you for 1 minute.',
+    description:
+      'You attempt to take control of an undead creature. The target must attempt a Will save. On a failure, it becomes controlled by you for 1 minute.',
     classes: ['cleric', 'sorcerer', 'wizard'],
   },
   {
@@ -30,7 +31,8 @@ export const level3Spells: Spell[] = [
     duration: { type: 'varies' },
     concentration: false,
     ritual: false,
-    description: 'You blind the target. The target must attempt a Fortitude save. On a critical success, the target is unaffected. On a success, the target is blinded until the end of its next turn. On a failure, the target is blinded for 1 minute. On a critical failure, the target is blinded permanently.',
+    description:
+      'You blind the target. The target must attempt a Fortitude save. On a critical success, the target is unaffected. On a success, the target is blinded until the end of its next turn. On a failure, the target is blinded for 1 minute. On a critical failure, the target is blinded permanently.',
     classes: ['cleric', 'sorcerer', 'wizard'],
   },
   {
@@ -46,7 +48,8 @@ export const level3Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'You pull the target toward the ground. The target must attempt a Fortitude save. On a failure, flying creatures fall and all creatures can\'t Fly, levitate, or otherwise leave the ground.',
+    description:
+      "You pull the target toward the ground. The target must attempt a Fortitude save. On a failure, flying creatures fall and all creatures can't Fly, levitate, or otherwise leave the ground.",
     classes: ['druid', 'sorcerer', 'wizard'],
   },
   {
@@ -63,7 +66,8 @@ export const level3Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'A roaring blast of fire appears at a spot you designate, dealing 6d6 fire damage. Each creature in the area must attempt a basic Reflex save.',
+    description:
+      'A roaring blast of fire appears at a spot you designate, dealing 6d6 fire damage. Each creature in the area must attempt a basic Reflex save.',
     damage: { base: { count: 6, die: 'd6', notation: '6d6' }, type: 'fire' },
     savingThrow: { attribute: 'dex', success: 'half' },
     classes: ['sorcerer', 'wizard'],
@@ -81,7 +85,8 @@ export const level3Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'The target weapon becomes translucent and ghostly. It can affect incorporeal creatures as if it had the ghost touch property rune.',
+    description:
+      'The target weapon becomes translucent and ghostly. It can affect incorporeal creatures as if it had the ghost touch property rune.',
     classes: ['cleric', 'sorcerer', 'wizard'],
   },
   {
@@ -97,7 +102,8 @@ export const level3Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'Magic empowers the target to act faster. It gains the quickened condition and can use the extra action only to Stride or Strike.',
+    description:
+      'Magic empowers the target to act faster. It gains the quickened condition and can use the extra action only to Stride or Strike.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -113,7 +119,8 @@ export const level3Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 10 },
     concentration: false,
     ritual: false,
-    description: 'You tap into the target\'s inner heroism, granting it a +1 status bonus to attack rolls, Perception checks, saving throws, and skill checks.',
+    description:
+      "You tap into the target's inner heroism, granting it a +1 status bonus to attack rolls, Perception checks, saving throws, and skill checks.",
     classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
   },
   {
@@ -129,7 +136,8 @@ export const level3Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: true,
     ritual: false,
-    description: 'You create a pattern of shifting colors in the air. Creatures in the area must attempt a Will save. On a failure, they become fascinated and can take no actions.',
+    description:
+      'You create a pattern of shifting colors in the air. Creatures in the area must attempt a Will save. On a failure, they become fascinated and can take no actions.',
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -146,7 +154,8 @@ export const level3Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'A bolt of lightning strikes outward from your hand, dealing 4d12 electricity damage. Each creature in the area must attempt a basic Reflex save.',
+    description:
+      'A bolt of lightning strikes outward from your hand, dealing 4d12 electricity damage. Each creature in the area must attempt a basic Reflex save.',
     damage: { base: { count: 4, die: 'd12', notation: '4d12' }, type: 'lightning' },
     savingThrow: { attribute: 'dex', success: 'half' },
     classes: ['sorcerer', 'wizard'],
@@ -164,7 +173,8 @@ export const level3Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'You block the target\'s motor impulses. The target must attempt a Will save. On a failure, the target is paralyzed for the duration.',
+    description:
+      "You block the target's motor impulses. The target must attempt a Will save. On a failure, the target is paralyzed for the duration.",
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -180,7 +190,8 @@ export const level3Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'You dilate the flow of time around the target, making it slowed 1. The target must attempt a Will save. On a critical failure, the target is slowed 2.',
+    description:
+      'You dilate the flow of time around the target, making it slowed 1. The target must attempt a Will save. On a critical failure, the target is slowed 2.',
     savingThrow: { attribute: 'wis', success: 'none' },
     classes: ['sorcerer', 'wizard'],
   },
@@ -198,7 +209,8 @@ export const level3Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'You create a cloud of putrid mist. Each creature in the cloud when you cast the spell, or that enters the cloud, must attempt a Fortitude save. On a failure, the creature becomes sickened 1 (sickened 2 on a critical failure).',
+    description:
+      'You create a cloud of putrid mist. Each creature in the cloud when you cast the spell, or that enters the cloud, must attempt a Fortitude save. On a failure, the creature becomes sickened 1 (sickened 2 on a critical failure).',
     savingThrow: { attribute: 'con', success: 'none' },
     classes: ['sorcerer', 'wizard'],
   },
@@ -215,7 +227,8 @@ export const level3Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'Your touch leeches the lifeblood out of a target to empower yourself. You deal 6d6 negative damage to the touched creature and you gain temporary Hit Points equal to half the damage the target takes (after applying resistances, weaknesses, and the like).',
+    description:
+      'Your touch leeches the lifeblood out of a target to empower yourself. You deal 6d6 negative damage to the touched creature and you gain temporary Hit Points equal to half the damage the target takes (after applying resistances, weaknesses, and the like).',
     damage: { base: { count: 6, die: 'd6', notation: '6d6' }, type: 'necrotic' },
     classes: ['sorcerer', 'wizard'],
   },
@@ -232,7 +245,8 @@ export const level3Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'You create a wall of gusting wind. The wall is 60 feet long, 20 feet high, and 5 feet thick. Ranged attacks can\'t pass through the wall, and creatures trying to move through must attempt a Fortitude save or be pushed back.',
+    description:
+      "You create a wall of gusting wind. The wall is 60 feet long, 20 feet high, and 5 feet thick. Ranged attacks can't pass through the wall, and creatures trying to move through must attempt a Fortitude save or be pushed back.",
     classes: ['druid', 'sorcerer', 'wizard'],
   },
 ];

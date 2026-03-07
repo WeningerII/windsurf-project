@@ -25,13 +25,15 @@ export const halfElf: Species = {
       id: 'low-light-vision-half-elf',
       name: 'Low-Light Vision',
       source: 'Half-Elf',
-      description: 'A half-elf can see twice as far as a human in starlight, moonlight, torchlight, and similar conditions of poor illumination.',
+      description:
+        'A half-elf can see twice as far as a human in starlight, moonlight, torchlight, and similar conditions of poor illumination.',
     },
     {
       id: 'immunity-to-sleep-half-elf',
       name: 'Immunity to Sleep',
       source: 'Half-Elf',
-      description: 'Immunity to sleep spells and similar magical effects, and a +2 racial bonus on saving throws against enchantment spells or effects.',
+      description:
+        'Immunity to sleep spells and similar magical effects, and a +2 racial bonus on saving throws against enchantment spells or effects.',
     },
     {
       id: 'skill-bonuses-half-elf',
@@ -47,9 +49,11 @@ export const halfElf: Species = {
     },
   ],
 
-  description: 'Half-elves are often caught between two worlds, combining human adaptability with elven grace.',
+  description:
+    'Half-elves are often caught between two worlds, combining human adaptability with elven grace.',
 
-  ageInfo: 'Half-elves reach adulthood around age 20 and live longer than humans (often beyond 180 years).',
+  ageInfo:
+    'Half-elves reach adulthood around age 20 and live longer than humans (often beyond 180 years).',
 
   alignmentTendency: 'Half-elves share the chaotic bent of their elven heritage.',
 

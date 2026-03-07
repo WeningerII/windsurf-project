@@ -39,7 +39,7 @@ export const powersByType: Record<string, Power[]> = {
 // Powers indexed by ID for quick lookup
 export const powerById: Record<string, Power> = allPowers.reduce(
   (acc, power) => {
-    if (acc[power.id]) {
+    if (acc[power.id] && import.meta.env.DEV) {
       console.warn(`Duplicate power ID detected: ${power.id}`);
     }
     acc[power.id] = power;
@@ -50,7 +50,7 @@ export const powerById: Record<string, Power> = allPowers.reduce(
 
 // NEW: Descriptor-based filtering (thematic organization)
 export const powersByDescriptor = (descriptor: string): Power[] =>
-  allPowers.filter(p => p.descriptors?.includes(descriptor) ?? false);
+  allPowers.filter((p) => p.descriptors?.includes(descriptor) ?? false);
 
 // NEW: Common descriptor groups for easy thematic browsing
 export const descriptorGroups = {
@@ -61,36 +61,36 @@ export const descriptorGroups = {
   water: () => powersByDescriptor('water'),
   earth: () => powersByDescriptor('earth'),
   air: () => powersByDescriptor('air'),
-  
+
   // Energy types
   energy: () => powersByDescriptor('energy'),
   radiation: () => powersByDescriptor('radiation'),
   light: () => powersByDescriptor('light'),
   force: () => powersByDescriptor('force'),
-  
+
   // Mental/Psychic
   mental: () => powersByDescriptor('mental'),
   psychic: () => powersByDescriptor('psychic'),
   telepathy: () => powersByDescriptor('telepathy'),
-  
+
   // Supernatural
   magic: () => powersByDescriptor('magic'),
   cosmic: () => powersByDescriptor('cosmic'),
   divine: () => powersByDescriptor('divine'),
-  
+
   // Science/Tech
   technology: () => powersByDescriptor('technology'),
   scientific: () => powersByDescriptor('scientific'),
-  
+
   // Physical
   biological: () => powersByDescriptor('biological'),
   physical: () => powersByDescriptor('physical'),
-  
+
   // Reality manipulation
   reality: () => powersByDescriptor('reality'),
   temporal: () => powersByDescriptor('temporal'),
   dimensional: () => powersByDescriptor('dimensional'),
-  
+
   // Combat descriptors
   weapon: () => powersByDescriptor('weapon'),
   armor: () => powersByDescriptor('armor'),

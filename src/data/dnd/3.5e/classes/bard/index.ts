@@ -9,7 +9,7 @@ export const bard: CharacterClass = {
   version: '3.5',
   lastUpdated: '2026-01-13',
   sourceBook: {
-    name: 'Player\'s Handbook 3.5',
+    name: "Player's Handbook 3.5",
     url: 'https://www.d20srd.org/srd/classes/bard.htm',
   },
 
@@ -67,13 +67,15 @@ export const bard: CharacterClass = {
           id: 'bardic-music',
           name: 'Bardic Music',
           source: 'Bard 1',
-          description: 'Once per day per bard level, you can use song or poetics to produce magical effects on those around you.',
+          description:
+            'Once per day per bard level, you can use song or poetics to produce magical effects on those around you.',
         },
         {
           id: 'bardic-knowledge',
           name: 'Bardic Knowledge',
           source: 'Bard 1',
-          description: 'You may make a special Bardic Knowledge check with a bonus equal to your bard level + your Intelligence modifier to see whether you know some relevant information about local notable people, legendary items, or noteworthy places.',
+          description:
+            'You may make a special Bardic Knowledge check with a bonus equal to your bard level + your Intelligence modifier to see whether you know some relevant information about local notable people, legendary items, or noteworthy places.',
         },
       ],
     },
@@ -84,7 +86,8 @@ export const bard: CharacterClass = {
           id: 'well-versed',
           name: 'Well Versed',
           source: 'Bard 2',
-          description: 'You gain a +2 bonus on saving throws against Enchantment spells and effects.',
+          description:
+            'You gain a +2 bonus on saving throws against Enchantment spells and effects.',
         },
       ],
     },

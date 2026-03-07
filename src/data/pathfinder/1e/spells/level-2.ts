@@ -14,7 +14,8 @@ export const level2Spells: Spell[] = [
     duration: { type: 'rounds', rounds: 1 },
     concentration: false,
     ritual: false,
-    description: 'A magical arrow of acid springs from your hand and speeds to its target. You must succeed on a ranged touch attack to hit your target. The arrow deals 2d4 points of acid damage with no splash damage. For every three caster levels you possess, the acid lasts for another round (to a maximum of 6 additional rounds at 18th level).',
+    description:
+      'A magical arrow of acid springs from your hand and speeds to its target. You must succeed on a ranged touch attack to hit your target. The arrow deals 2d4 points of acid damage with no splash damage. For every three caster levels you possess, the acid lasts for another round (to a maximum of 6 additional rounds at 18th level).',
     damage: { base: { count: 2, die: 'd4', notation: '2d4' }, type: 'acid' },
     classes: ['sorcerer', 'wizard'],
   },
@@ -31,7 +32,8 @@ export const level2Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'Aid grants the target a +1 morale bonus on attack rolls and saves against fear effects, plus temporary hit points equal to 1d8 + caster level (to a maximum of 1d8+10 temporary hit points at caster level 10th).',
+    description:
+      'Aid grants the target a +1 morale bonus on attack rolls and saves against fear effects, plus temporary hit points equal to 1d8 + caster level (to a maximum of 1d8+10 temporary hit points at caster level 10th).',
     classes: ['cleric'],
   },
   {
@@ -47,7 +49,8 @@ export const level2Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'When you cast this spell, you can assume the form of any Small or Medium creature of the humanoid type. If the form you assume has any of the following abilities, you gain the listed ability: darkvision 60 feet, low-light vision, scent, and swim 30 feet.',
+    description:
+      'When you cast this spell, you can assume the form of any Small or Medium creature of the humanoid type. If the form you assume has any of the following abilities, you gain the listed ability: darkvision 60 feet, low-light vision, scent, and swim 30 feet.',
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -63,7 +66,8 @@ export const level2Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'The affected creature gains greater vitality and stamina. The spell grants the subject a +4 enhancement bonus to Constitution, which adds the usual benefits to hit points, Fortitude saves, Constitution checks, and so forth.',
+    description:
+      'The affected creature gains greater vitality and stamina. The spell grants the subject a +4 enhancement bonus to Constitution, which adds the usual benefits to hit points, Fortitude saves, Constitution checks, and so forth.',
     classes: ['cleric', 'druid', 'ranger', 'sorcerer', 'wizard'],
   },
   {
@@ -79,7 +83,8 @@ export const level2Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'The subject\'s outline appears blurred, shifting, and wavering. This distortion grants the subject concealment (20% miss chance). A see invisibility spell does not counteract the blur effect, but a true seeing spell does.',
+    description:
+      "The subject's outline appears blurred, shifting, and wavering. This distortion grants the subject concealment (20% miss chance). A see invisibility spell does not counteract the blur effect, but a true seeing spell does.",
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -95,7 +100,8 @@ export const level2Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'The subject becomes stronger. The spell grants a +4 enhancement bonus to Strength, adding the usual benefits to melee attack rolls, melee damage rolls, and other uses of the Strength modifier.',
+    description:
+      'The subject becomes stronger. The spell grants a +4 enhancement bonus to Strength, adding the usual benefits to melee attack rolls, melee damage rolls, and other uses of the Strength modifier.',
     classes: ['cleric', 'druid', 'sorcerer', 'wizard'],
   },
   {
@@ -111,7 +117,8 @@ export const level2Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'The transmuted creature becomes more graceful, agile, and coordinated. The spell grants a +4 enhancement bonus to Dexterity, adding the usual benefits to AC, Reflex saves, and other uses of the Dexterity modifier.',
+    description:
+      'The transmuted creature becomes more graceful, agile, and coordinated. The spell grants a +4 enhancement bonus to Dexterity, adding the usual benefits to AC, Reflex saves, and other uses of the Dexterity modifier.',
     classes: ['bard', 'druid', 'ranger', 'sorcerer', 'wizard'],
   },
   {
@@ -127,7 +134,8 @@ export const level2Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'This spell causes an object to radiate darkness out to a 20-foot radius. This darkness causes the illumination level in the area to drop one step, from bright light to normal light, from normal light to dim light, or from dim light to darkness.',
+    description:
+      'This spell causes an object to radiate darkness out to a 20-foot radius. This darkness causes the illumination level in the area to drop one step, from bright light to normal light, from normal light to dim light, or from dim light to darkness.',
     classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
   },
   {
@@ -145,7 +153,8 @@ export const level2Spells: Spell[] = [
     concentration: true,
     ritual: false,
     savingThrow: { attribute: 'wis', success: 'none' },
-    description: 'You detect surface thoughts. The amount of information revealed depends on how long you study a particular area or subject.',
+    description:
+      'You detect surface thoughts. The amount of information revealed depends on how long you study a particular area or subject.',
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -161,7 +170,8 @@ export const level2Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'The transmuted creature becomes more poised, articulate, and personally forceful. The spell grants a +4 enhancement bonus to Charisma, adding the usual benefits to Charisma-based skill checks and other uses of the Charisma modifier.',
+    description:
+      'The transmuted creature becomes more poised, articulate, and personally forceful. The spell grants a +4 enhancement bonus to Charisma, adding the usual benefits to Charisma-based skill checks and other uses of the Charisma modifier.',
     classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
   },
   {
@@ -177,7 +187,8 @@ export const level2Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'The target becomes smarter. The spell grants a +4 enhancement bonus to Intelligence, adding the usual benefits to Intelligence-based skill checks and other uses of the Intelligence modifier.',
+    description:
+      'The target becomes smarter. The spell grants a +4 enhancement bonus to Intelligence, adding the usual benefits to Intelligence-based skill checks and other uses of the Intelligence modifier.',
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -193,7 +204,8 @@ export const level2Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'The creature or object touched becomes invisible. If the recipient is a creature carrying gear, that vanishes, too. If you cast the spell on someone else, neither you nor your allies can see the subject, unless you can normally see invisible things or you employ magic to do so. The spell ends if the subject attacks any creature.',
+    description:
+      'The creature or object touched becomes invisible. If the recipient is a creature carrying gear, that vanishes, too. If you cast the spell on someone else, neither you nor your allies can see the subject, unless you can normally see invisible things or you employ magic to do so. The spell ends if the subject attacks any creature.',
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -209,7 +221,8 @@ export const level2Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'Knock opens stuck, barred, or locked doors, as well as those subject to hold portal or arcane lock. When you complete the casting of this spell, make a caster level check against the DC of the lock with a +10 bonus. If successful, knock opens up to two means of closure.',
+    description:
+      'Knock opens stuck, barred, or locked doors, as well as those subject to hold portal or arcane lock. When you complete the casting of this spell, make a caster level check against the DC of the lock with a +10 bonus. If successful, knock opens up to two means of closure.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -225,7 +238,8 @@ export const level2Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'Levitate allows you to move yourself, another creature, or an object up and down as you wish. A creature must be willing to be levitated, and an object must be unattended or possessed by a willing creature. You can mentally direct the recipient to move up or down as much as 20 feet each round.',
+    description:
+      'Levitate allows you to move yourself, another creature, or an object up and down as you wish. A creature must be willing to be levitated, and an object must be unattended or possessed by a willing creature. You can mentally direct the recipient to move up or down as much as 20 feet each round.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -241,7 +255,8 @@ export const level2Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'Several illusory duplicates of you pop into being, making it difficult for enemies to know which target to attack. Mirror image creates 1d4 images plus one image per three caster levels (maximum eight images total). These figments separate from you and remain in a cluster, each within 5 feet of at least one other figment or you.',
+    description:
+      'Several illusory duplicates of you pop into being, making it difficult for enemies to know which target to attack. Mirror image creates 1d4 images plus one image per three caster levels (maximum eight images total). These figments separate from you and remain in a cluster, each within 5 feet of at least one other figment or you.',
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -257,7 +272,8 @@ export const level2Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'The transmuted creature becomes wiser. The spell grants a +4 enhancement bonus to Wisdom, adding the usual benefits to Wisdom-related skills, Will saving throws, and other uses of the Wisdom modifier.',
+    description:
+      'The transmuted creature becomes wiser. The spell grants a +4 enhancement bonus to Wisdom, adding the usual benefits to Wisdom-related skills, Will saving throws, and other uses of the Wisdom modifier.',
     classes: ['cleric', 'druid', 'ranger', 'sorcerer', 'wizard'],
   },
   {
@@ -273,7 +289,8 @@ export const level2Spells: Spell[] = [
     duration: { type: 'hours', hours: 1 },
     concentration: false,
     ritual: false,
-    description: 'The warded creature gains resistance to ranged weapons. The subject gains damage reduction 10/magic against ranged weapons. This spell doesn\'t grant you the ability to damage creatures with similar damage reduction.',
+    description:
+      "The warded creature gains resistance to ranged weapons. The subject gains damage reduction 10/magic against ranged weapons. This spell doesn't grant you the ability to damage creatures with similar damage reduction.",
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -289,7 +306,8 @@ export const level2Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 10 },
     concentration: false,
     ritual: false,
-    description: 'This abjuration grants a creature limited protection from damage of whichever one of five energy types you select: acid, cold, electricity, fire, or sonic. The subject gains resist energy 10 against the energy type chosen, meaning that each time the creature is subjected to such damage, that damage is reduced by 10 points.',
+    description:
+      'This abjuration grants a creature limited protection from damage of whichever one of five energy types you select: acid, cold, electricity, fire, or sonic. The subject gains resist energy 10 against the energy type chosen, meaning that each time the creature is subjected to such damage, that damage is reduced by 10 points.',
     classes: ['cleric', 'druid', 'ranger', 'sorcerer', 'wizard'],
   },
   {
@@ -305,7 +323,8 @@ export const level2Spells: Spell[] = [
     duration: { type: 'hours', hours: 1 },
     concentration: false,
     ritual: false,
-    description: 'When this spell is cast upon a piece of rope from 5 to 30 feet long, one end of the rope rises into the air until the whole rope hangs perpendicular to the ground. The upper end is, in fact, fastened to an extradimensional space that is outside the multiverse.',
+    description:
+      'When this spell is cast upon a piece of rope from 5 to 30 feet long, one end of the rope rises into the air until the whole rope hangs perpendicular to the ground. The upper end is, in fact, fastened to an extradimensional space that is outside the multiverse.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -321,7 +340,8 @@ export const level2Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You blast your enemies with a searing beam of fire. You may fire one ray, plus one additional ray for every four levels beyond 3rd (to a maximum of three rays at 11th level). Each ray requires a ranged touch attack to hit and deals 4d6 points of fire damage.',
+    description:
+      'You blast your enemies with a searing beam of fire. You may fire one ray, plus one additional ray for every four levels beyond 3rd (to a maximum of three rays at 11th level). Each ray requires a ranged touch attack to hit and deals 4d6 points of fire damage.',
     damage: { base: { count: 4, die: 'd6', notation: '4d6' }, type: 'fire' },
     classes: ['sorcerer', 'wizard'],
   },
@@ -338,7 +358,8 @@ export const level2Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 10 },
     concentration: false,
     ritual: false,
-    description: 'You can see any objects or beings that are invisible within your range of vision, as well as any that are ethereal, as if they were normally visible. Such creatures are visible to you as translucent shapes.',
+    description:
+      'You can see any objects or beings that are invisible within your range of vision, as well as any that are ethereal, as if they were normally visible. Such creatures are visible to you as translucent shapes.',
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -354,7 +375,8 @@ export const level2Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 10 },
     concentration: false,
     ritual: false,
-    description: 'The subject can climb and travel on vertical surfaces or even traverse ceilings as well as a spider does. The affected creature must have its hands free to climb in this manner. The subject gains a climb speed of 20 feet.',
+    description:
+      'The subject can climb and travel on vertical surfaces or even traverse ceilings as well as a spider does. The affected creature must have its hands free to climb in this manner. The subject gains a climb speed of 20 feet.',
     classes: ['alchemist', 'druid', 'sorcerer', 'wizard'],
   },
   {
@@ -371,7 +393,8 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     savingThrow: { attribute: 'dex', success: 'none' },
-    description: 'Web creates a many-layered mass of strong, sticky strands. These strands trap those caught in them. The strands are similar to spiderweb but far larger and tougher. Creatures caught within a web become grappled by the sticky fibers.',
+    description:
+      'Web creates a many-layered mass of strong, sticky strands. These strands trap those caught in them. The strands are similar to spiderweb but far larger and tougher. Creatures caught within a web become grappled by the sticky fibers.',
     classes: ['sorcerer', 'wizard'],
   },
 ];

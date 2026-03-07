@@ -4,10 +4,6 @@ import { constructsCR11Plus } from './cr-11-plus';
 
 export { constructsCR0to5, constructsCR6to10, constructsCR11Plus };
 
-export const allConstructs = [
-  ...constructsCR0to5,
-  ...constructsCR6to10,
-  ...constructsCR11Plus,
-];
+export const allConstructs = [...constructsCR0to5, ...constructsCR6to10, ...constructsCR11Plus];
 
 export default allConstructs;

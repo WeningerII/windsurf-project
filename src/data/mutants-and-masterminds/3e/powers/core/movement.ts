@@ -94,7 +94,8 @@ export const movementPowers: Power[] = [
     baseCost: 2,
     perRank: true,
     descriptors: ['teleportation', 'dimensional', 'technological'],
-    description: 'You can instantly move from one location to another without crossing the intervening space.',
+    description:
+      'You can instantly move from one location to another without crossing the intervening space.',
     effects: [
       'Teleport distance rank equal to effect rank',
       'Rank 1: 15 feet; Rank 5: 250 feet; Rank 10: 2 miles; Rank 16: anywhere on Earth',

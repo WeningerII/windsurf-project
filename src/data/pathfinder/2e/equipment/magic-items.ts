@@ -41,7 +41,7 @@ export const pf2eMagicItems: MagicItem[] = [
     price: '100 gp',
     rarity: 'uncommon',
     type: 'Wondrous Item',
-    description: 'These boots increase the wearer\'s movement speed by 10 feet.',
+    description: "These boots increase the wearer's movement speed by 10 feet.",
     source: 'Core Rulebook',
   },
   {
@@ -71,7 +71,8 @@ export const pf2eMagicItems: MagicItem[] = [
     price: '100 gp',
     rarity: 'uncommon',
     type: 'Ring',
-    description: 'This ring allows the wearer to survive on one-quarter the normal amount of food and water.',
+    description:
+      'This ring allows the wearer to survive on one-quarter the normal amount of food and water.',
     source: 'Core Rulebook',
   },
   {
@@ -117,13 +118,13 @@ export const pf2eMagicItems: MagicItem[] = [
 ];
 
 export const getMagicItem = (id: string): MagicItem | undefined => {
-  return pf2eMagicItems.find(item => item.id === id);
+  return pf2eMagicItems.find((item) => item.id === id);
 };
 
 export const getMagicItemsByLevel = (level: number): MagicItem[] => {
-  return pf2eMagicItems.filter(item => item.level === level);
+  return pf2eMagicItems.filter((item) => item.level === level);
 };
 
 export const getMagicItemsByRarity = (rarity: string): MagicItem[] => {
-  return pf2eMagicItems.filter(item => item.rarity === rarity);
+  return pf2eMagicItems.filter((item) => item.rarity === rarity);
 };

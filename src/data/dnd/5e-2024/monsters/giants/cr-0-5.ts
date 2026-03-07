@@ -27,16 +27,16 @@ export const hillGiant: Monster = {
     },
     {
       name: 'Greatclub',
-      description: 'Melee Weapon Attack: +8 to hit, reach 10 ft., one target. Hit: 18 (4d8) bludgeoning damage.',
+      description:
+        'Melee Weapon Attack: +8 to hit, reach 10 ft., one target. Hit: 18 (4d8) bludgeoning damage.',
     },
     {
       name: 'Rock',
-      description: 'Ranged Weapon Attack: +8 to hit, range 60/240 ft., one target. Hit: 21 (6d6) bludgeoning damage.',
+      description:
+        'Ranged Weapon Attack: +8 to hit, range 60/240 ft., one target. Hit: 21 (6d6) bludgeoning damage.',
     },
   ],
   environment: ['mountain', 'hill'],
 };
 
-export const giantsCR0to5: Monster[] = [
-  hillGiant,
-];
+export const giantsCR0to5: Monster[] = [hillGiant];

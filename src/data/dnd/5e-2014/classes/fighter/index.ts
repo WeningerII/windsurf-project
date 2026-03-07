@@ -6,35 +6,41 @@ export const fighter: CharacterClass = {
   name: 'Fighter',
   system: 'dnd-5e-2014',
   source: 'SRD 5.1',
-  
+
   version: '5.1',
   lastUpdated: '2026-01-13',
   sourceBook: {
     name: 'System Reference Document 5.1',
-    url: 'https://dnd.wizards.com/resources/systems-reference-document'
+    url: 'https://dnd.wizards.com/resources/systems-reference-document',
   },
-  
+
   hitDie: 'd10',
   primaryAbility: ['str', 'dex'],
   savingThrowProficiencies: ['str', 'con'],
-  
+
   armorProficiencies: ['light', 'medium', 'heavy', 'shields'],
   weaponProficiencies: ['simple', 'martial'],
   toolProficiencies: [],
-  
+
   skillProficiencies: {
     count: 2,
-    options: ['acrobatics', 'animal-handling', 'athletics', 'history', 'insight', 'intimidation', 'perception', 'survival'],
+    options: [
+      'acrobatics',
+      'animal-handling',
+      'athletics',
+      'history',
+      'insight',
+      'intimidation',
+      'perception',
+      'survival',
+    ],
     label: 'Choose two skills',
   },
-  
+
   equipmentChoices: [
     {
       choose: 1,
-      options: [
-        ['chain-mail'],
-        ['leather-armor', 'longbow', 'arrows-20'],
-      ],
+      options: [['chain-mail'], ['leather-armor', 'longbow', 'arrows-20']],
     },
     {
       choose: 1,
@@ -52,18 +58,15 @@ export const fighter: CharacterClass = {
     },
     {
       choose: 1,
-      options: [
-        ['dungeoneers-pack'],
-        ['explorers-pack'],
-      ],
+      options: [['dungeoneers-pack'], ['explorers-pack']],
     },
   ],
-  
+
   startingGold: {
     dice: '5d4',
     multiplier: 10,
   },
-  
+
   features: [
     {
       level: 1,
@@ -72,13 +75,15 @@ export const fighter: CharacterClass = {
           id: 'fighting-style',
           name: 'Fighting Style',
           source: 'Fighter 1',
-          description: 'You adopt a particular style of fighting as your specialty. Choose one of the following options. You can\'t take a Fighting Style option more than once, even if you later get to choose again.',
+          description:
+            "You adopt a particular style of fighting as your specialty. Choose one of the following options. You can't take a Fighting Style option more than once, even if you later get to choose again.",
         },
         {
           id: 'second-wind',
           name: 'Second Wind',
           source: 'Fighter 1',
-          description: 'You have a limited well of stamina that you can draw on to protect yourself from harm. On your turn, you can use a bonus action to regain hit points equal to 1d10 + your fighter level. Once you use this feature, you must finish a short or long rest before you can use it again.',
+          description:
+            'You have a limited well of stamina that you can draw on to protect yourself from harm. On your turn, you can use a bonus action to regain hit points equal to 1d10 + your fighter level. Once you use this feature, you must finish a short or long rest before you can use it again.',
           uses: {
             current: 1,
             max: 1,
@@ -94,7 +99,8 @@ export const fighter: CharacterClass = {
           id: 'action-surge',
           name: 'Action Surge',
           source: 'Fighter 2',
-          description: 'Starting at 2nd level, you can push yourself beyond your normal limits for a moment. On your turn, you can take one additional action. Once you use this feature, you must finish a short or long rest before you can use it again. Starting at 17th level, you can use it twice before a rest, but only once on the same turn.',
+          description:
+            'Starting at 2nd level, you can push yourself beyond your normal limits for a moment. On your turn, you can take one additional action. Once you use this feature, you must finish a short or long rest before you can use it again. Starting at 17th level, you can use it twice before a rest, but only once on the same turn.',
           uses: {
             current: 1,
             max: 1,
@@ -110,7 +116,8 @@ export const fighter: CharacterClass = {
           id: 'martial-archetype',
           name: 'Martial Archetype',
           source: 'Fighter 3',
-          description: 'At 3rd level, you choose an archetype that you strive to emulate in your combat styles and techniques.',
+          description:
+            'At 3rd level, you choose an archetype that you strive to emulate in your combat styles and techniques.',
         },
       ],
     },
@@ -121,7 +128,8 @@ export const fighter: CharacterClass = {
           id: 'ability-score-improvement-4',
           name: 'Ability Score Improvement',
           source: 'Fighter 4',
-          description: 'When you reach 4th level, you can increase one ability score of your choice by 2, or you can increase two ability scores of your choice by 1. As normal, you can\'t increase an ability score above 20 using this feature.',
+          description:
+            "When you reach 4th level, you can increase one ability score of your choice by 2, or you can increase two ability scores of your choice by 1. As normal, you can't increase an ability score above 20 using this feature.",
         },
       ],
     },
@@ -132,7 +140,8 @@ export const fighter: CharacterClass = {
           id: 'extra-attack',
           name: 'Extra Attack',
           source: 'Fighter 5',
-          description: 'Beginning at 5th level, you can attack twice, instead of once, whenever you take the Attack action on your turn. The number of attacks increases to three when you reach 11th level in this class and to four when you reach 20th level in this class.',
+          description:
+            'Beginning at 5th level, you can attack twice, instead of once, whenever you take the Attack action on your turn. The number of attacks increases to three when you reach 11th level in this class and to four when you reach 20th level in this class.',
         },
       ],
     },
@@ -143,7 +152,8 @@ export const fighter: CharacterClass = {
           id: 'ability-score-improvement-6',
           name: 'Ability Score Improvement',
           source: 'Fighter 6',
-          description: 'When you reach 6th level, you can increase one ability score of your choice by 2, or you can increase two ability scores of your choice by 1.',
+          description:
+            'When you reach 6th level, you can increase one ability score of your choice by 2, or you can increase two ability scores of your choice by 1.',
         },
       ],
     },
@@ -165,7 +175,8 @@ export const fighter: CharacterClass = {
           id: 'ability-score-improvement-8',
           name: 'Ability Score Improvement',
           source: 'Fighter 8',
-          description: 'When you reach 8th level, you can increase one ability score of your choice by 2, or you can increase two ability scores of your choice by 1.',
+          description:
+            'When you reach 8th level, you can increase one ability score of your choice by 2, or you can increase two ability scores of your choice by 1.',
         },
       ],
     },
@@ -176,7 +187,8 @@ export const fighter: CharacterClass = {
           id: 'indomitable',
           name: 'Indomitable',
           source: 'Fighter 9',
-          description: 'Beginning at 9th level, you can reroll a saving throw that you fail. If you do so, you must use the new roll, and you can\'t use this feature again until you finish a long rest. You can use this feature twice between long rests starting at 13th level and three times between long rests starting at 17th level.',
+          description:
+            "Beginning at 9th level, you can reroll a saving throw that you fail. If you do so, you must use the new roll, and you can't use this feature again until you finish a long rest. You can use this feature twice between long rests starting at 13th level and three times between long rests starting at 17th level.",
           uses: {
             current: 1,
             max: 1,
@@ -203,7 +215,8 @@ export const fighter: CharacterClass = {
           id: 'extra-attack-2',
           name: 'Extra Attack (2)',
           source: 'Fighter 11',
-          description: 'At 11th level, you can attack three times whenever you take the Attack action on your turn.',
+          description:
+            'At 11th level, you can attack three times whenever you take the Attack action on your turn.',
         },
       ],
     },
@@ -214,7 +227,8 @@ export const fighter: CharacterClass = {
           id: 'ability-score-improvement-12',
           name: 'Ability Score Improvement',
           source: 'Fighter 12',
-          description: 'When you reach 12th level, you can increase one ability score of your choice by 2, or you can increase two ability scores of your choice by 1.',
+          description:
+            'When you reach 12th level, you can increase one ability score of your choice by 2, or you can increase two ability scores of your choice by 1.',
         },
       ],
     },
@@ -236,7 +250,8 @@ export const fighter: CharacterClass = {
           id: 'ability-score-improvement-14',
           name: 'Ability Score Improvement',
           source: 'Fighter 14',
-          description: 'When you reach 14th level, you can increase one ability score of your choice by 2, or you can increase two ability scores of your choice by 1.',
+          description:
+            'When you reach 14th level, you can increase one ability score of your choice by 2, or you can increase two ability scores of your choice by 1.',
         },
       ],
     },
@@ -258,7 +273,8 @@ export const fighter: CharacterClass = {
           id: 'ability-score-improvement-16',
           name: 'Ability Score Improvement',
           source: 'Fighter 16',
-          description: 'When you reach 16th level, you can increase one ability score of your choice by 2, or you can increase two ability scores of your choice by 1.',
+          description:
+            'When you reach 16th level, you can increase one ability score of your choice by 2, or you can increase two ability scores of your choice by 1.',
         },
       ],
     },
@@ -297,7 +313,8 @@ export const fighter: CharacterClass = {
           id: 'ability-score-improvement-19',
           name: 'Ability Score Improvement',
           source: 'Fighter 19',
-          description: 'When you reach 19th level, you can increase one ability score of your choice by 2, or you can increase two ability scores of your choice by 1.',
+          description:
+            'When you reach 19th level, you can increase one ability score of your choice by 2, or you can increase two ability scores of your choice by 1.',
         },
       ],
     },
@@ -308,23 +325,24 @@ export const fighter: CharacterClass = {
           id: 'extra-attack-3',
           name: 'Extra Attack (3)',
           source: 'Fighter 20',
-          description: 'At 20th level, you can attack four times whenever you take the Attack action on your turn.',
+          description:
+            'At 20th level, you can attack four times whenever you take the Attack action on your turn.',
         },
       ],
     },
   ],
-  
+
   subclassLevel: 3,
   subclasses: [championSubclass],
-  
+
   subclassSelection: {
     timing: 'level',
     optional: false,
     canChange: false,
     prerequisitesMustMeet: false,
-    flavorText: 'At 3rd level, you choose an archetype that reflects your specialty.'
+    flavorText: 'At 3rd level, you choose an archetype that reflects your specialty.',
   }, // SRD: Champion only
-  
+
   classResources: [
     {
       id: 'second-wind',
@@ -350,7 +368,7 @@ export const fighter: CharacterClass = {
       displayOrder: 3,
     },
   ],
-  
+
   multiclassRequirements: [
     {
       type: 'attribute',
@@ -358,15 +376,15 @@ export const fighter: CharacterClass = {
       description: 'Strength 13 or Dexterity 13',
     },
   ],
-  
+
   multiclassProficiencies: {
     armor: ['light', 'medium', 'shields'],
     weapons: ['simple', 'martial'],
     tools: [],
   },
-  
+
   description: 'A master of martial combat, skilled with a variety of weapons and armor.',
-  
+
   displayMetadata: {
     icon: 'sword',
     color: '#8B4513',

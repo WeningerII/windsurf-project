@@ -10,14 +10,19 @@ export const level5Spells: Spell[] = [
     school: 'evocation',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'ranged', feet: 120 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a small block of granite' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a small block of granite',
+    },
     duration: { type: 'concentration', maxDuration: '10 minutes' },
     concentration: true,
     ritual: false,
-    description: 'A nonmagical wall of solid stone springs into existence at a point you choose within range. The wall is 6 inches thick and is composed of ten 10-foot-by-10-foot panels. Each panel must be contiguous with at least one other panel. Alternatively, you can create 10-foot-by-20-foot panels that are only 3 inches thick. If the wall cuts through a creature\'s space when it appears, the creature is pushed to one side of the wall (your choice). If a creature would be surrounded on all sides by the wall (or the wall and another solid surface), that creature can make a Dexterity saving throw. On a success, it can use its reaction to move up to its speed so that it is no longer enclosed by the wall. The wall can have any shape you desire, though it can\'t occupy the same space as a creature or object. The wall doesn\'t need to be vertical or rest on any firm foundation. It must, however, merge with and be solidly supported by existing stone. Thus, you can use this spell to bridge a chasm or create a ramp. If you create a span greater than 20 feet in length, you must halve the size of each panel to create supports. You can crudely shape the wall to create crenellations, battlements, and so on. The wall is an object made of stone that can be damaged and thus breached. Each panel has AC 15 and 30 hit points per inch of thickness. Reducing a panel to 0 hit points destroys it and might cause connected panels to collapse at the DM\'s discretion. If you maintain your concentration on this spell for its whole duration, the wall becomes permanent and can\'t be dispelled. Otherwise, the wall disappears when the spell ends.',
+    description:
+      "A nonmagical wall of solid stone springs into existence at a point you choose within range. The wall is 6 inches thick and is composed of ten 10-foot-by-10-foot panels. Each panel must be contiguous with at least one other panel. Alternatively, you can create 10-foot-by-20-foot panels that are only 3 inches thick. If the wall cuts through a creature's space when it appears, the creature is pushed to one side of the wall (your choice). If a creature would be surrounded on all sides by the wall (or the wall and another solid surface), that creature can make a Dexterity saving throw. On a success, it can use its reaction to move up to its speed so that it is no longer enclosed by the wall. The wall can have any shape you desire, though it can't occupy the same space as a creature or object. The wall doesn't need to be vertical or rest on any firm foundation. It must, however, merge with and be solidly supported by existing stone. Thus, you can use this spell to bridge a chasm or create a ramp. If you create a span greater than 20 feet in length, you must halve the size of each panel to create supports. You can crudely shape the wall to create crenellations, battlements, and so on. The wall is an object made of stone that can be damaged and thus breached. Each panel has AC 15 and 30 hit points per inch of thickness. Reducing a panel to 0 hit points destroys it and might cause connected panels to collapse at the DM's discretion. If you maintain your concentration on this spell for its whole duration, the wall becomes permanent and can't be dispelled. Otherwise, the wall disappears when the spell ends.",
     classes: ['druid', 'sorcerer', 'wizard'],
-  }
-,
+  },
   {
     id: 'scrying',
     name: 'Scrying',
@@ -27,15 +32,22 @@ export const level5Spells: Spell[] = [
     school: 'divination',
     castingTime: { type: 'minute', amount: 10 },
     range: { type: 'self' },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a focus worth at least 1,000 gp, such as a crystal ball, a silver mirror, or a font filled with holy water', materialCost: 1000 },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'a focus worth at least 1,000 gp, such as a crystal ball, a silver mirror, or a font filled with holy water',
+      materialCost: 1000,
+    },
     duration: { type: 'concentration', maxDuration: '10 minutes' },
     savingThrow: { attribute: 'wis', success: 'none' },
     concentration: true,
     ritual: false,
-    description: 'You can see and hear a particular creature you choose that is on the same plane of existence as you. The target must make a Wisdom saving throw, which is modified by how well you know the target and the sort of physical connection you have to it. If a target knows you\'re casting this spell, it can fail the saving throw voluntarily if it wants to be observed. Knowledge/Connection: Secondhand (you have heard of the target) +5, Firsthand (you have met the target) +0, Familiar (you know the target well) −5. On a successful save, the target isn\'t affected, and you can\'t use this spell against it again for 24 hours. On a failed save, the spell creates an invisible sensor within 10 feet of the target. You can see and hear through the sensor as if you were there. The sensor moves with the target, remaining within 10 feet of it for the duration. A creature that can see invisible objects sees the sensor as a luminous orb about the size of your fist.',
+    description:
+      "You can see and hear a particular creature you choose that is on the same plane of existence as you. The target must make a Wisdom saving throw, which is modified by how well you know the target and the sort of physical connection you have to it. If a target knows you're casting this spell, it can fail the saving throw voluntarily if it wants to be observed. Knowledge/Connection: Secondhand (you have heard of the target) +5, Firsthand (you have met the target) +0, Familiar (you know the target well) −5. On a successful save, the target isn't affected, and you can't use this spell against it again for 24 hours. On a failed save, the spell creates an invisible sensor within 10 feet of the target. You can see and hear through the sensor as if you were there. The sensor moves with the target, remaining within 10 feet of it for the duration. A creature that can see invisible objects sees the sensor as a luminous orb about the size of your fist.",
     classes: ['bard', 'cleric', 'druid', 'warlock', 'wizard'],
-  }
-,
+  },
   {
     id: 'teleportation-circle',
     name: 'Teleportation Circle',
@@ -45,14 +57,22 @@ export const level5Spells: Spell[] = [
     school: 'conjuration',
     castingTime: { type: 'minute', amount: 1 },
     range: { type: 'ranged', feet: 10 },
-    components: { verbal: true, somatic: false, material: true, materialDescription: 'rare chalks and inks infused with precious gems worth 50 gp, which the spell consumes', materialCost: 50, materialConsumed: true },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: true,
+      materialDescription:
+        'rare chalks and inks infused with precious gems worth 50 gp, which the spell consumes',
+      materialCost: 50,
+      materialConsumed: true,
+    },
     duration: { type: 'rounds', rounds: 1 },
     concentration: false,
     ritual: false,
-    description: 'As you cast the spell, you draw a 10-foot-diameter circle on the ground inscribed with sigils that link your location to a permanent teleportation circle of your choice whose sigil sequence you know and that is on the same plane of existence as you. A shimmering portal opens within the circle you drew and remains open until the end of your next turn. Any creature that enters the portal instantly appears within 5 feet of the destination circle or in the nearest unoccupied space if that space is occupied. Many major temples, guilds, and other important places have permanent teleportation circles inscribed somewhere within their confines. Each such circle includes a unique sigil sequence—a string of magical runes arranged in a particular pattern. When you first gain the ability to cast this spell, you learn the sigil sequences for two destinations on the Material Plane, determined by the DM. You can learn additional sigil sequences during your adventures. You can commit a new sigil sequence to memory after studying it for 1 minute. You can create a permanent teleportation circle by casting this spell in the same location every day for one year. You need not use the circle to teleport when you cast the spell in this way.',
+    description:
+      'As you cast the spell, you draw a 10-foot-diameter circle on the ground inscribed with sigils that link your location to a permanent teleportation circle of your choice whose sigil sequence you know and that is on the same plane of existence as you. A shimmering portal opens within the circle you drew and remains open until the end of your next turn. Any creature that enters the portal instantly appears within 5 feet of the destination circle or in the nearest unoccupied space if that space is occupied. Many major temples, guilds, and other important places have permanent teleportation circles inscribed somewhere within their confines. Each such circle includes a unique sigil sequence—a string of magical runes arranged in a particular pattern. When you first gain the ability to cast this spell, you learn the sigil sequences for two destinations on the Material Plane, determined by the DM. You can learn additional sigil sequences during your adventures. You can commit a new sigil sequence to memory after studying it for 1 minute. You can create a permanent teleportation circle by casting this spell in the same location every day for one year. You need not use the circle to teleport when you cast the spell in this way.',
     classes: ['bard', 'sorcerer', 'wizard'],
-  }
-,
+  },
   {
     id: 'raise-dead',
     name: 'Raise Dead',
@@ -62,14 +82,21 @@ export const level5Spells: Spell[] = [
     school: 'necromancy',
     castingTime: { type: 'hour', amount: 1 },
     range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a diamond worth at least 500 gp, which the spell consumes', materialCost: 500, materialConsumed: true },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a diamond worth at least 500 gp, which the spell consumes',
+      materialCost: 500,
+      materialConsumed: true,
+    },
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You return a dead creature you touch to life, provided that it has been dead no longer than 10 days. If the creature\'s soul is both willing and at liberty to rejoin the body, the creature returns to life with 1 hit point. This spell also neutralizes any poisons and cures nonmagical diseases that affected the creature at the time it died. This spell doesn\'t, however, remove magical diseases, curses, or similar effects; if these aren\'t first removed prior to casting the spell, they take effect when the creature returns to life. The spell can\'t return an undead creature to life. This spell closes all mortal wounds, but it doesn\'t restore missing body parts. If the creature is lacking body parts or organs integral for its survival—its head, for instance—the spell automatically fails. Coming back from the dead is an ordeal. The target takes a −4 penalty to all attack rolls, saving throws, and ability checks. Every time the target finishes a long rest, the penalty is reduced by 1 until it disappears.',
+    description:
+      "You return a dead creature you touch to life, provided that it has been dead no longer than 10 days. If the creature's soul is both willing and at liberty to rejoin the body, the creature returns to life with 1 hit point. This spell also neutralizes any poisons and cures nonmagical diseases that affected the creature at the time it died. This spell doesn't, however, remove magical diseases, curses, or similar effects; if these aren't first removed prior to casting the spell, they take effect when the creature returns to life. The spell can't return an undead creature to life. This spell closes all mortal wounds, but it doesn't restore missing body parts. If the creature is lacking body parts or organs integral for its survival—its head, for instance—the spell automatically fails. Coming back from the dead is an ordeal. The target takes a −4 penalty to all attack rolls, saving throws, and ability checks. Every time the target finishes a long rest, the penalty is reduced by 1 until it disappears.",
     classes: ['bard', 'cleric', 'paladin'],
-  }
-,
+  },
   {
     id: 'greater-restoration',
     name: 'Greater Restoration',
@@ -79,14 +106,21 @@ export const level5Spells: Spell[] = [
     school: 'abjuration',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'diamond dust worth at least 100 gp, which the spell consumes', materialCost: 100, materialConsumed: true },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'diamond dust worth at least 100 gp, which the spell consumes',
+      materialCost: 100,
+      materialConsumed: true,
+    },
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You imbue a creature you touch with positive energy to undo a debilitating effect. You can reduce the target\'s exhaustion level by one, or end one of the following effects on the target: One effect that charmed or petrified the target, One curse, including the target\'s attunement to a cursed magic item, Any reduction to one of the target\'s ability scores, One effect reducing the target\'s hit point maximum.',
+    description:
+      "You imbue a creature you touch with positive energy to undo a debilitating effect. You can reduce the target's exhaustion level by one, or end one of the following effects on the target: One effect that charmed or petrified the target, One curse, including the target's attunement to a cursed magic item, Any reduction to one of the target's ability scores, One effect reducing the target's hit point maximum.",
     classes: ['bard', 'cleric', 'druid'],
-  }
-,
+  },
   {
     id: 'hold-monster',
     name: 'Hold Monster',
@@ -96,16 +130,22 @@ export const level5Spells: Spell[] = [
     school: 'enchantment',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'ranged', feet: 90 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a small, straight piece of iron' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a small, straight piece of iron',
+    },
     duration: { type: 'concentration', maxDuration: '1 minute' },
     savingThrow: { attribute: 'wis', success: 'none' },
     concentration: true,
     ritual: false,
-    description: 'Choose a creature that you can see within range. The target must succeed on a Wisdom saving throw or be paralyzed for the duration. This spell has no effect on undead. At the end of each of its turns, the target can make another Wisdom saving throw. On a success, the spell ends on the target.',
-    atHigherLevels: 'When you cast this spell using a spell slot of 6th level or higher, you can target one additional creature for each slot level above 5th. The creatures must be within 30 feet of each other when you target them.',
+    description:
+      'Choose a creature that you can see within range. The target must succeed on a Wisdom saving throw or be paralyzed for the duration. This spell has no effect on undead. At the end of each of its turns, the target can make another Wisdom saving throw. On a success, the spell ends on the target.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of 6th level or higher, you can target one additional creature for each slot level above 5th. The creatures must be within 30 feet of each other when you target them.',
     classes: ['bard', 'sorcerer', 'warlock', 'wizard'],
-  }
-,
+  },
   {
     id: 'passwall',
     name: 'Passwall',
@@ -115,14 +155,19 @@ export const level5Spells: Spell[] = [
     school: 'transmutation',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a pinch of sesame seeds' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a pinch of sesame seeds',
+    },
     duration: { type: 'hours', hours: 1 },
     concentration: false,
     ritual: false,
-    description: 'A passage appears at a point of your choice that you can see on a wooden, plaster, or stone surface (such as a wall, a ceiling, or a floor) within range, and lasts for the duration. You choose the opening\'s dimensions: up to 5 feet wide, 8 feet tall, and 20 feet deep. The passage creates no instability in a structure surrounding it. When the opening disappears, any creatures or objects still in the passage created by the spell are safely ejected to an unoccupied space nearest to the surface on which you cast the spell.',
+    description:
+      "A passage appears at a point of your choice that you can see on a wooden, plaster, or stone surface (such as a wall, a ceiling, or a floor) within range, and lasts for the duration. You choose the opening's dimensions: up to 5 feet wide, 8 feet tall, and 20 feet deep. The passage creates no instability in a structure surrounding it. When the opening disappears, any creatures or objects still in the passage created by the spell are safely ejected to an unoccupied space nearest to the surface on which you cast the spell.",
     classes: ['wizard'],
-  }
-,
+  },
   {
     id: 'animate-objects',
     name: 'Animate Objects',
@@ -136,11 +181,12 @@ export const level5Spells: Spell[] = [
     duration: { type: 'concentration', maxDuration: '1 minute' },
     concentration: true,
     ritual: false,
-    description: 'Objects come alive at your command. Choose up to ten nonmagical objects within range that are not being worn or carried. Medium targets count as two objects, Large targets count as four objects, Huge targets count as eight objects. You can\'t animate any object larger than Huge. If the total number of objects you animate exceeds ten, the spell fails when you try to animate anything beyond the tenth.',
-    atHigherLevels: 'If you cast this spell using a spell slot of 6th level or higher, you can animate two additional objects for each slot level above 5th.',
+    description:
+      "Objects come alive at your command. Choose up to ten nonmagical objects within range that are not being worn or carried. Medium targets count as two objects, Large targets count as four objects, Huge targets count as eight objects. You can't animate any object larger than Huge. If the total number of objects you animate exceeds ten, the spell fails when you try to animate anything beyond the tenth.",
+    atHigherLevels:
+      'If you cast this spell using a spell slot of 6th level or higher, you can animate two additional objects for each slot level above 5th.',
     classes: ['bard', 'sorcerer', 'wizard'],
-  }
-,
+  },
   {
     id: 'awaken',
     name: 'Awaken',
@@ -150,14 +196,22 @@ export const level5Spells: Spell[] = [
     school: 'transmutation',
     castingTime: { type: 'hour', amount: 8 },
     range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'an agate worth at least 1,000 gp, which the spell consumes, and herbs worth at least 100 gp', materialCost: 1100, materialConsumed: true },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'an agate worth at least 1,000 gp, which the spell consumes, and herbs worth at least 100 gp',
+      materialCost: 1100,
+      materialConsumed: true,
+    },
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'After spending the casting time tracing magical pathways within a precious gemstone, you touch a beast or plant that has at least 1 hit point and is incapacitated. The target must make a Wisdom saving throw. If it fails, the target gains an Intelligence of 10. If the target has Intelligence 4 or higher, the spell fails.',
+    description:
+      'After spending the casting time tracing magical pathways within a precious gemstone, you touch a beast or plant that has at least 1 hit point and is incapacitated. The target must make a Wisdom saving throw. If it fails, the target gains an Intelligence of 10. If the target has Intelligence 4 or higher, the spell fails.',
     classes: ['bard', 'cleric', 'druid'],
-  }
-,
+  },
   {
     id: 'conjure-elemental',
     name: 'Conjure Elemental',
@@ -167,15 +221,22 @@ export const level5Spells: Spell[] = [
     school: 'conjuration',
     castingTime: { type: 'minute', amount: 1 },
     range: { type: 'ranged', feet: 90 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'burning incense for air, soft clay for earth, salt water for water, or sulfur for fire' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'burning incense for air, soft clay for earth, salt water for water, or sulfur for fire',
+    },
     duration: { type: 'concentration', maxDuration: '1 hour' },
     concentration: true,
     ritual: false,
-    description: 'You call forth an elemental servant. Choose an area of air, earth, fire, or water that fills a 10-foot cube within range. An elemental of challenge rating 5 or lower appropriate to the area you chose appears in an unoccupied space within 10 feet of it. For example, a fire elemental emerges from a bonfire, and an earth elemental rises up from the ground. The elemental disappears when it drops to 0 hit points or when the spell ends.',
-    atHigherLevels: 'When you cast this spell using a spell slot of 6th level or higher, the challenge rating increases by 1 for each slot level above 5th.',
+    description:
+      'You call forth an elemental servant. Choose an area of air, earth, fire, or water that fills a 10-foot cube within range. An elemental of challenge rating 5 or lower appropriate to the area you chose appears in an unoccupied space within 10 feet of it. For example, a fire elemental emerges from a bonfire, and an earth elemental rises up from the ground. The elemental disappears when it drops to 0 hit points or when the spell ends.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of 6th level or higher, the challenge rating increases by 1 for each slot level above 5th.',
     classes: ['druid', 'wizard'],
-  }
-,
+  },
   {
     id: 'contact-other-plane',
     name: 'Contact Other Plane',
@@ -189,10 +250,10 @@ export const level5Spells: Spell[] = [
     duration: { type: 'concentration', maxDuration: '1 minute' },
     concentration: true,
     ritual: true,
-    description: 'You mentally contact a demigod, the spirit of a long-dead sage, or some other mysterious entity from another plane. Contacting this extraplanar intelligence requires you to succeed on a Charisma check opposed by its own Charisma check. You can perceive and communicate with the entity if you succeed by 10 or more on the check.',
+    description:
+      'You mentally contact a demigod, the spirit of a long-dead sage, or some other mysterious entity from another plane. Contacting this extraplanar intelligence requires you to succeed on a Charisma check opposed by its own Charisma check. You can perceive and communicate with the entity if you succeed by 10 or more on the check.',
     classes: ['wizard'],
-  }
-,
+  },
   {
     id: 'dominate-person',
     name: 'Dominate Person',
@@ -207,11 +268,12 @@ export const level5Spells: Spell[] = [
     savingThrow: { attribute: 'wis', success: 'none' },
     concentration: true,
     ritual: false,
-    description: 'You attempt to beguile a humanoid that you can see within range. It must succeed on a Wisdom saving throw or be charmed by you for the duration. If you or creatures that are friendly to you are fighting it, it has advantage on the saving throw. While the target is charmed, you have a telepathic link with it as long as the two of you are on the same plane of existence. You can use this telepathic link to issue commands to the creature while you are conscious.',
-    atHigherLevels: 'When you cast this spell using a 6th-level spell slot, the duration is concentration, up to 10 minutes. When you use a 7th-level spell slot, the duration is concentration, up to 1 hour. When you use a spell slot of 8th level or higher, the duration is concentration, up to 8 hours.',
+    description:
+      'You attempt to beguile a humanoid that you can see within range. It must succeed on a Wisdom saving throw or be charmed by you for the duration. If you or creatures that are friendly to you are fighting it, it has advantage on the saving throw. While the target is charmed, you have a telepathic link with it as long as the two of you are on the same plane of existence. You can use this telepathic link to issue commands to the creature while you are conscious.',
+    atHigherLevels:
+      'When you cast this spell using a 6th-level spell slot, the duration is concentration, up to 10 minutes. When you use a 7th-level spell slot, the duration is concentration, up to 1 hour. When you use a spell slot of 8th level or higher, the duration is concentration, up to 8 hours.',
     classes: ['sorcerer', 'wizard'],
-  }
-,
+  },
   {
     id: 'dream',
     name: 'Dream',
@@ -221,14 +283,20 @@ export const level5Spells: Spell[] = [
     school: 'illusion',
     castingTime: { type: 'minute', amount: 1 },
     range: { type: 'unlimited' },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a handful of sand, a dab of ink, and a writing quill plucked from a sleeping bird' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'a handful of sand, a dab of ink, and a writing quill plucked from a sleeping bird',
+    },
     duration: { type: 'hours', hours: 8 },
     concentration: false,
     ritual: false,
-    description: 'This spell shapes a creature\'s dreams. Choose a creature known to you as the target of this spell. The creature must be on the same plane of existence as you. Creatures that don\'t sleep, such as elves, can\'t be contacted by this spell. You, or a willing creature you touch, enters a trance state, acting as a messenger. While in the trance, the messenger is aware of his or her surroundings, but can\'t take actions at all. If the target is asleep, the messenger appears in the target\'s dreams and can converse with the target as long as it remains asleep, through the duration of the spell.',
+    description:
+      "This spell shapes a creature's dreams. Choose a creature known to you as the target of this spell. The creature must be on the same plane of existence as you. Creatures that don't sleep, such as elves, can't be contacted by this spell. You, or a willing creature you touch, enters a trance state, acting as a messenger. While in the trance, the messenger is aware of his or her surroundings, but can't take actions at all. If the target is asleep, the messenger appears in the target's dreams and can converse with the target as long as it remains asleep, through the duration of the spell.",
     classes: ['bard', 'wizard'],
-  }
-,
+  },
   {
     id: 'geas',
     name: 'Geas',
@@ -242,10 +310,10 @@ export const level5Spells: Spell[] = [
     duration: { type: 'special', description: 'until dispelled' },
     concentration: false,
     ritual: false,
-    description: 'You place a magical command on a creature that you can see within range, provided it understands you. Failure to heed the geas produces no ill effect initially. Rather, there is a 5d10 psychic damage each day the creature delay acting to bring about the geas. The creature knows it is plagued by some ill curse but not the source of the burden unless your spell, at the time of casting, named a pertinent creature or object as the focus of the geas.',
+    description:
+      'You place a magical command on a creature that you can see within range, provided it understands you. Failure to heed the geas produces no ill effect initially. Rather, there is a 5d10 psychic damage each day the creature delay acting to bring about the geas. The creature knows it is plagued by some ill curse but not the source of the burden unless your spell, at the time of casting, named a pertinent creature or object as the focus of the geas.',
     classes: ['bard', 'cleric', 'druid', 'paladin', 'wizard'],
-  }
-,
+  },
   {
     id: 'legend-lore',
     name: 'Legend Lore',
@@ -255,14 +323,20 @@ export const level5Spells: Spell[] = [
     school: 'divination',
     castingTime: { type: 'minute', amount: 10 },
     range: { type: 'self' },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'incense worth at least 250 gp, which the spell consumes, and four ivory strips worth at least 50 gp each' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'incense worth at least 250 gp, which the spell consumes, and four ivory strips worth at least 50 gp each',
+    },
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'Name or describe a person, place, or object. The spell brings to your mind a brief summary of the significant lore about the thing you named. The information might consist of current tales, forgotten history, or even secret lore that has never been widely known. If the thing you named is not of legendary importance, you gain no information.',
+    description:
+      'Name or describe a person, place, or object. The spell brings to your mind a brief summary of the significant lore about the thing you named. The information might consist of current tales, forgotten history, or even secret lore that has never been widely known. If the thing you named is not of legendary importance, you gain no information.',
     classes: ['bard', 'cleric', 'wizard'],
-  }
-,
+  },
   {
     id: 'telekinesis',
     name: 'Telekinesis',
@@ -276,10 +350,10 @@ export const level5Spells: Spell[] = [
     duration: { type: 'concentration', maxDuration: '10 minutes' },
     concentration: true,
     ritual: false,
-    description: 'You gain the ability to move or manipulate creatures or objects by thought. When you cast the spell, and as your action each turn until the spell ends, you can exert your will on one creature or object you can see within range, causing the appropriate effect. You can affect the same target round after round, or choose a new target at any time. If you switch targets, the previous target is no longer affected by the spell.',
+    description:
+      'You gain the ability to move or manipulate creatures or objects by thought. When you cast the spell, and as your action each turn until the spell ends, you can exert your will on one creature or object you can see within range, causing the appropriate effect. You can affect the same target round after round, or choose a new target at any time. If you switch targets, the previous target is no longer affected by the spell.',
     classes: ['sorcerer', 'wizard'],
-  }
-,
+  },
   {
     id: 'transmute-rock',
     name: 'Transmute Rock',
@@ -289,14 +363,19 @@ export const level5Spells: Spell[] = [
     school: 'transmutation',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'ranged', feet: 120 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'clay and stone worth at least 1 gp' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'clay and stone worth at least 1 gp',
+    },
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You choose an area of stone or mud that you can see that fits within a 40-foot cube and is within range, and choose one of the following effects. Transmute Rock to Mud, Transmute Mud to Rock.',
+    description:
+      'You choose an area of stone or mud that you can see that fits within a 40-foot cube and is within range, and choose one of the following effects. Transmute Rock to Mud, Transmute Mud to Rock.',
     classes: ['druid', 'wizard'],
-  }
-,
+  },
   {
     id: 'wall-of-force',
     name: 'Wall of Force',
@@ -306,14 +385,19 @@ export const level5Spells: Spell[] = [
     school: 'evocation',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'ranged', feet: 120 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a pinch of powder made by crushing a clear gemstone' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a pinch of powder made by crushing a clear gemstone',
+    },
     duration: { type: 'concentration', maxDuration: '10 minutes' },
     concentration: true,
     ritual: false,
-    description: 'An invisible wall of force springs into existence at a point you choose within range. The wall appears in any orientation you choose, as a horizontal or vertical barrier or at an angle. It can be free floating or resting on a solid surface. You can form it into a hemispherical dome or a sphere with a radius of up to 15 feet, or you can shape a flat surface made up of ten 10-foot-by-10-foot panels. Each panel must be contiguous with another panel. In any form, the wall is 1/4 inch thick. It lasts for the duration.',
+    description:
+      'An invisible wall of force springs into existence at a point you choose within range. The wall appears in any orientation you choose, as a horizontal or vertical barrier or at an angle. It can be free floating or resting on a solid surface. You can form it into a hemispherical dome or a sphere with a radius of up to 15 feet, or you can shape a flat surface made up of ten 10-foot-by-10-foot panels. Each panel must be contiguous with another panel. In any form, the wall is 1/4 inch thick. It lasts for the duration.',
     classes: ['wizard'],
-  }
-,
+  },
   {
     id: 'circle-of-teleportation',
     name: 'Circle of Teleportation',
@@ -323,14 +407,21 @@ export const level5Spells: Spell[] = [
     school: 'conjuration',
     castingTime: { type: 'minute', amount: 1 },
     range: { type: 'ranged', feet: 10 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'rare chalks and inks infused with precious gems worth 50 gp, which the spell consumes' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'rare chalks and inks infused with precious gems worth 50 gp, which the spell consumes',
+    },
     duration: { type: 'hours', hours: 1 },
     concentration: false,
     ritual: false,
-    description: 'As you cast this spell, you draw a 10-foot-diameter circle on the ground inscribed with sigils that link your location to a permanent teleportation circle of your choice whose sigil sequence you know and that is on the same plane of existence as you. A shimmering portal opens within the circle you drew and remains open until the end of your next turn. Any creature that enters the portal instantly appears within 5 feet of the destination circle or in the nearest unoccupied space if that space is occupied.',
+    description:
+      'As you cast this spell, you draw a 10-foot-diameter circle on the ground inscribed with sigils that link your location to a permanent teleportation circle of your choice whose sigil sequence you know and that is on the same plane of existence as you. A shimmering portal opens within the circle you drew and remains open until the end of your next turn. Any creature that enters the portal instantly appears within 5 feet of the destination circle or in the nearest unoccupied space if that space is occupied.',
     classes: ['bard', 'sorcerer', 'wizard'],
-  }
+  },
 ];
 
 // Helper function for lookups
-export const getLevel5SpellById = (id: string) => level5Spells.find(spell => spell.id === id);
+export const getLevel5SpellById = (id: string) => level5Spells.find((spell) => spell.id === id);

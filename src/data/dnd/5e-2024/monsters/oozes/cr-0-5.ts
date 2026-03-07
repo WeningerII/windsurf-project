@@ -23,22 +23,23 @@ export const gelatinousCube: Monster = {
   specialAbilities: [
     {
       name: 'Engulfing Movement',
-      description: 'The cube can enter a hostile creature\'s space and stop there. It can move through a space as narrow as 3 feet wide.',
+      description:
+        "The cube can enter a hostile creature's space and stop there. It can move through a space as narrow as 3 feet wide.",
     },
     {
       name: 'Transparent',
-      description: 'Even when the cube is in plain sight, it takes a successful DC 15 Wisdom (Perception) check to spot the cube if it has neither moved nor attacked. A creature that tries to enter the cube\'s space while unaware of it is surprised by the cube.',
+      description:
+        "Even when the cube is in plain sight, it takes a successful DC 15 Wisdom (Perception) check to spot the cube if it has neither moved nor attacked. A creature that tries to enter the cube's space while unaware of it is surprised by the cube.",
     },
   ],
   actions: [
     {
       name: 'Engulf',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one creature. Hit: 13 (2d8 + 4) acid damage. If the cube hits a Medium or smaller creature, the target is also grappled (escape DC 12). Until this grapple ends, the target is restrained and unable to breathe unless it can breathe water. If the cube moves, the grappled creature moves with it.',
+      description:
+        'Melee Weapon Attack: +4 to hit, reach 5 ft., one creature. Hit: 13 (2d8 + 4) acid damage. If the cube hits a Medium or smaller creature, the target is also grappled (escape DC 12). Until this grapple ends, the target is restrained and unable to breathe unless it can breathe water. If the cube moves, the grappled creature moves with it.',
     },
   ],
   environment: ['dungeon', 'underdark'],
 };
 
-export const oozesCR0to5: Monster[] = [
-  gelatinousCube,
-];
+export const oozesCR0to5: Monster[] = [gelatinousCube];

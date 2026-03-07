@@ -16,7 +16,7 @@ export const pf1eMetadata = {
   system: 'pf1e',
   edition: '1e',
   version: 'Core Rulebook + Expanded',
-  
+
   stats: {
     spells: {
       count: pf1eSpells.length,
@@ -27,16 +27,16 @@ export const pf1eMetadata = {
         Object.entries(pf1eSpellsBySchool).map(([k, v]) => [k, v.length])
       ) as Record<string, number>,
     },
-    
+
     classes: {
       baseClasses: Object.keys(pf1eClasses).length,
       prestigeClasses: pf1ePrestigeClasses.length,
     },
-    
+
     races: {
       count: Object.keys(pf1eRaces).length,
     },
-    
+
     feats: {
       count: Object.values(pf1eFeats).reduce((sum, arr) => sum + arr.length, 0),
       byType: {
@@ -45,11 +45,11 @@ export const pf1eMetadata = {
         general: pf1eFeats.general.length,
       },
     },
-    
+
     traits: {
       count: pf1eTraits.length,
     },
-    
+
     equipment: {
       weapons: Object.keys(pf1eWeapons).length,
       armor: Object.keys(pf1eArmor).length,
@@ -57,10 +57,10 @@ export const pf1eMetadata = {
       gear: Object.keys(pf1eGear).length,
     },
   },
-  
+
   sources: [
     { id: 'crb', name: 'Core Rulebook', abbr: 'CRB' },
-    { id: 'apg', name: 'Advanced Player\'s Guide', abbr: 'APG' },
+    { id: 'apg', name: "Advanced Player's Guide", abbr: 'APG' },
     { id: 'um', name: 'Ultimate Magic', abbr: 'UM' },
     { id: 'uc', name: 'Ultimate Combat', abbr: 'UC' },
     { id: 'arg', name: 'Advanced Race Guide', abbr: 'ARG' },
@@ -69,7 +69,7 @@ export const pf1eMetadata = {
 
 export function getProgress(): number {
   const stats = pf1eMetadata.stats;
-  const totalItems = 
+  const totalItems =
     stats.spells.count +
     stats.classes.baseClasses +
     stats.classes.prestigeClasses +
@@ -80,7 +80,7 @@ export function getProgress(): number {
     stats.equipment.armor +
     stats.equipment.magicItems +
     stats.equipment.gear;
-    
+
   // All present data is implemented — progress is 100%
   return totalItems > 0 ? 100 : 0;
 }

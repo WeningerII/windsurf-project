@@ -10,7 +10,7 @@ export const wizard: CharacterClass = {
   sourceBook: {
     name: 'Pathfinder Core Rulebook',
     page: 77,
-    url: 'https://www.d20pfsrd.com/classes/core-classes/wizard/'
+    url: 'https://www.d20pfsrd.com/classes/core-classes/wizard/',
   },
   hitDie: 'd6',
   primaryAbility: ['int'],
@@ -20,30 +20,101 @@ export const wizard: CharacterClass = {
   toolProficiencies: [],
   skillProficiencies: {
     count: 2,
-    options: ['appraise', 'fly', 'knowledge-arcana', 'knowledge-dungeoneering', 'knowledge-engineering', 'knowledge-geography', 'knowledge-history', 'knowledge-local', 'knowledge-nature', 'knowledge-nobility', 'knowledge-planes', 'knowledge-religion', 'linguistics', 'spellcraft'],
+    options: [
+      'appraise',
+      'fly',
+      'knowledge-arcana',
+      'knowledge-dungeoneering',
+      'knowledge-engineering',
+      'knowledge-geography',
+      'knowledge-history',
+      'knowledge-local',
+      'knowledge-nature',
+      'knowledge-nobility',
+      'knowledge-planes',
+      'knowledge-religion',
+      'linguistics',
+      'spellcraft',
+    ],
     label: 'Choose class skills (2 + Int modifier ranks per level)',
   },
   equipmentChoices: [],
   startingGold: { dice: '2d6', multiplier: 10 },
   features: [
-    { level: 1, features: [
-      { id: 'arcane-bond', name: 'Arcane Bond', source: 'Wizard 1', description: 'Form a powerful bond with an object or familiar.' },
-      { id: 'arcane-school', name: 'Arcane School', source: 'Wizard 1', description: 'Specialize in a school of magic, gaining school powers. May select universalist instead.' },
-      { id: 'cantrips', name: 'Cantrips', source: 'Wizard 1', description: 'Cast 0-level spells at will.' },
-      { id: 'scribe-scroll', name: 'Scribe Scroll', source: 'Wizard 1', description: 'Gain Scribe Scroll as a bonus feat.' },
-    ]},
-    { level: 5, features: [
-      { id: 'bonus-feat-5', name: 'Bonus Feat', source: 'Wizard 5', description: 'Gain a bonus metamagic, item creation, or Spell Mastery feat.' },
-    ]},
-    { level: 10, features: [
-      { id: 'bonus-feat-10', name: 'Bonus Feat', source: 'Wizard 10', description: 'Gain another bonus feat.' },
-    ]},
-    { level: 15, features: [
-      { id: 'bonus-feat-15', name: 'Bonus Feat', source: 'Wizard 15', description: 'Gain another bonus feat.' },
-    ]},
-    { level: 20, features: [
-      { id: 'bonus-feat-20', name: 'Bonus Feat', source: 'Wizard 20', description: 'Gain another bonus feat.' },
-    ]},
+    {
+      level: 1,
+      features: [
+        {
+          id: 'arcane-bond',
+          name: 'Arcane Bond',
+          source: 'Wizard 1',
+          description: 'Form a powerful bond with an object or familiar.',
+        },
+        {
+          id: 'arcane-school',
+          name: 'Arcane School',
+          source: 'Wizard 1',
+          description:
+            'Specialize in a school of magic, gaining school powers. May select universalist instead.',
+        },
+        {
+          id: 'cantrips',
+          name: 'Cantrips',
+          source: 'Wizard 1',
+          description: 'Cast 0-level spells at will.',
+        },
+        {
+          id: 'scribe-scroll',
+          name: 'Scribe Scroll',
+          source: 'Wizard 1',
+          description: 'Gain Scribe Scroll as a bonus feat.',
+        },
+      ],
+    },
+    {
+      level: 5,
+      features: [
+        {
+          id: 'bonus-feat-5',
+          name: 'Bonus Feat',
+          source: 'Wizard 5',
+          description: 'Gain a bonus metamagic, item creation, or Spell Mastery feat.',
+        },
+      ],
+    },
+    {
+      level: 10,
+      features: [
+        {
+          id: 'bonus-feat-10',
+          name: 'Bonus Feat',
+          source: 'Wizard 10',
+          description: 'Gain another bonus feat.',
+        },
+      ],
+    },
+    {
+      level: 15,
+      features: [
+        {
+          id: 'bonus-feat-15',
+          name: 'Bonus Feat',
+          source: 'Wizard 15',
+          description: 'Gain another bonus feat.',
+        },
+      ],
+    },
+    {
+      level: 20,
+      features: [
+        {
+          id: 'bonus-feat-20',
+          name: 'Bonus Feat',
+          source: 'Wizard 20',
+          description: 'Gain another bonus feat.',
+        },
+      ],
+    },
   ],
   subclassLevel: 1,
   subclasses: [],
@@ -68,7 +139,8 @@ export const wizard: CharacterClass = {
   classResources: [],
   multiclassRequirements: [],
   multiclassProficiencies: { armor: [], weapons: [], tools: [] },
-  description: 'Beyond the veil of the mundane hide the secrets of absolute power. The works of beings beyond mortals, the ## powerful and mysterious arcane magic.',
+  description:
+    'Beyond the veil of the mundane hide the secrets of absolute power. The works of beings beyond mortals, the ## powerful and mysterious arcane magic.',
   displayMetadata: {
     icon: 'book',
     color: '#4169E1',

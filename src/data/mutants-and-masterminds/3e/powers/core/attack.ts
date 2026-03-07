@@ -80,7 +80,7 @@ export const attackPowers: Power[] = [
     baseCost: 1,
     perRank: true,
     descriptors: ['drain', 'entropy', 'biological'],
-    description: 'You can temporarily reduce one of a target\'s traits.',
+    description: "You can temporarily reduce one of a target's traits.",
     effects: [
       'Choose one trait to weaken when you acquire this effect',
       'Close attack, resisted by Fortitude or Will (DC 10 + rank)',
@@ -121,7 +121,7 @@ export const attackPowers: Power[] = [
     baseCost: 2,
     perRank: true,
     descriptors: ['light', 'sonic', 'sensory'],
-    description: 'You can overwhelm one of a target\'s sense types.',
+    description: "You can overwhelm one of a target's sense types.",
     effects: [
       'Ranged Affliction targeting one sense type',
       'Resisted by Fortitude (DC 10 + rank)',

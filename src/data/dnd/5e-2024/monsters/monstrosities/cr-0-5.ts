@@ -33,16 +33,16 @@ export const griffon: Monster = {
     },
     {
       name: 'Beak',
-      description: 'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 8 (1d8 + 4) piercing damage.',
+      description:
+        'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 8 (1d8 + 4) piercing damage.',
     },
     {
       name: 'Claws',
-      description: 'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 11 (2d6 + 4) slashing damage.',
+      description:
+        'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 11 (2d6 + 4) slashing damage.',
     },
   ],
   environment: ['mountain', 'grassland'],
 };
 
-export const monstrositiesCR0to5: Monster[] = [
-  griffon,
-];
+export const monstrositiesCR0to5: Monster[] = [griffon];

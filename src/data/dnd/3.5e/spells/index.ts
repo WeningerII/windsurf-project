@@ -36,22 +36,31 @@ export const dnd35eSpellsByLevel: Record<number, Spell[]> = {
   9: level9Spells,
 };
 
-export const dnd35eSpellsById: Record<string, Spell> = dnd35eSpells.reduce((acc, spell) => {
-  acc[spell.id] = spell;
-  return acc;
-}, {} as Record<string, Spell>);
+export const dnd35eSpellsById: Record<string, Spell> = dnd35eSpells.reduce(
+  (acc, spell) => {
+    acc[spell.id] = spell;
+    return acc;
+  },
+  {} as Record<string, Spell>
+);
 
-export const dnd35eSpellsByClass: Record<string, Spell[]> = dnd35eSpells.reduce((acc, spell) => {
-  spell.classes.forEach(className => {
-    if (!acc[className]) {
-      acc[className] = [];
-    }
-    acc[className].push(spell);
-  });
-  return acc;
-}, {} as Record<string, Spell[]>);
+export const dnd35eSpellsByClass: Record<string, Spell[]> = dnd35eSpells.reduce(
+  (acc, spell) => {
+    spell.classes.forEach((className) => {
+      if (!acc[className]) {
+        acc[className] = [];
+      }
+      acc[className].push(spell);
+    });
+    return acc;
+  },
+  {} as Record<string, Spell[]>
+);
 
-export const dnd35eSpellsByClassAndLevel: Record<string, Record<number, Spell[]>> = dnd35eSpells.reduce(
+export const dnd35eSpellsByClassAndLevel: Record<
+  string,
+  Record<number, Spell[]>
+> = dnd35eSpells.reduce(
   (acc, spell) => {
     const levelsByClass = spell.levelsByClass || {};
     Object.entries(levelsByClass).forEach(([className, level]) => {
@@ -68,15 +77,18 @@ export const dnd35eSpellsByClassAndLevel: Record<string, Record<number, Spell[]>
   {} as Record<string, Record<number, Spell[]>>
 );
 
-export const dnd35eSpellsBySchool: Record<string, Spell[]> = dnd35eSpells.reduce((acc, spell) => {
-  if (!acc[spell.school]) {
-    acc[spell.school] = [];
-  }
-  acc[spell.school].push(spell);
-  return acc;
-}, {} as Record<string, Spell[]>);
+export const dnd35eSpellsBySchool: Record<string, Spell[]> = dnd35eSpells.reduce(
+  (acc, spell) => {
+    if (!acc[spell.school]) {
+      acc[spell.school] = [];
+    }
+    acc[spell.school].push(spell);
+    return acc;
+  },
+  {} as Record<string, Spell[]>
+);
 
-export { 
+export {
   cantrips,
   level1Spells,
   level2Spells,

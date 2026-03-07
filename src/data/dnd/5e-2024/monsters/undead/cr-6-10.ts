@@ -15,9 +15,27 @@ export const wraith: Monster = {
   hitPoints: { count: 6, die: 'd8', modifier: 18, notation: '6d8+18' },
   speed: { walk: 0, fly: 60 },
   abilities: { str: 6, dex: 16, con: 16, int: 12, wis: 14, cha: 15 },
-  damageResistances: ['acid', 'cold', 'fire', 'lightning', 'thunder', 'bludgeoning', 'piercing', 'slashing'],
+  damageResistances: [
+    'acid',
+    'cold',
+    'fire',
+    'lightning',
+    'thunder',
+    'bludgeoning',
+    'piercing',
+    'slashing',
+  ],
   damageImmunities: ['necrotic', 'poison'],
-  conditionImmunities: ['charmed', 'exhaustion', 'grappled', 'paralyzed', 'petrified', 'poisoned', 'prone', 'restrained'],
+  conditionImmunities: [
+    'charmed',
+    'exhaustion',
+    'grappled',
+    'paralyzed',
+    'petrified',
+    'poisoned',
+    'prone',
+    'restrained',
+  ],
   senses: ['darkvision 60 ft.', 'passive Perception 12'],
   languages: ['Common'],
   challengeRating: 5,
@@ -25,17 +43,20 @@ export const wraith: Monster = {
   specialAbilities: [
     {
       name: 'Incorporeal Movement',
-      description: 'The wraith can move through other creatures and objects as if they were difficult terrain. It takes 5 (1d10) force damage if it ends its turn inside an object.',
+      description:
+        'The wraith can move through other creatures and objects as if they were difficult terrain. It takes 5 (1d10) force damage if it ends its turn inside an object.',
     },
     {
       name: 'Sunlight Sensitivity',
-      description: 'While in sunlight, the wraith has disadvantage on attack rolls, as well as on Wisdom (Perception) checks that rely on sight.',
+      description:
+        'While in sunlight, the wraith has disadvantage on attack rolls, as well as on Wisdom (Perception) checks that rely on sight.',
     },
   ],
   actions: [
     {
       name: 'Life Drain',
-      description: 'Melee Weapon Attack: +6 to hit, reach 5 ft., one creature. Hit: 22 (4d8 + 4) necrotic damage. The target must succeed on a DC 14 Constitution saving throw or its hit point maximum is reduced by an amount equal to the damage taken. This reduction lasts until the target finishes a long rest. The target dies if this effect reduces its hit point maximum to 0.',
+      description:
+        'Melee Weapon Attack: +6 to hit, reach 5 ft., one creature. Hit: 22 (4d8 + 4) necrotic damage. The target must succeed on a DC 14 Constitution saving throw or its hit point maximum is reduced by an amount equal to the damage taken. This reduction lasts until the target finishes a long rest. The target dies if this effect reduces its hit point maximum to 0.',
     },
   ],
   environment: ['underdark', 'ruins'],
@@ -64,7 +85,8 @@ export const mummy: Monster = {
   specialAbilities: [
     {
       name: 'Curse of the Mummy',
-      description: 'Any creature that starts its turn within 5 feet of the mummy must succeed on a DC 13 Wisdom saving throw or be cursed. A cursed creature has disadvantage on attack rolls and saving throws. The curse lasts until removed by a remove curse spell or similar magic.',
+      description:
+        'Any creature that starts its turn within 5 feet of the mummy must succeed on a DC 13 Wisdom saving throw or be cursed. A cursed creature has disadvantage on attack rolls and saving throws. The curse lasts until removed by a remove curse spell or similar magic.',
     },
   ],
   actions: [
@@ -74,7 +96,8 @@ export const mummy: Monster = {
     },
     {
       name: 'Rotting Fist',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 10 (2d6 + 3) bludgeoning damage plus 10 (3d6) necrotic damage.',
+      description:
+        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 10 (2d6 + 3) bludgeoning damage plus 10 (3d6) necrotic damage.',
     },
   ],
   environment: ['dungeon', 'ruins', 'tomb'],
@@ -102,15 +125,18 @@ export const vampireSpawn: Monster = {
   specialAbilities: [
     {
       name: 'Regeneration',
-      description: 'The vampire spawn regains 6 hit points at the start of its turn if it has at least 1 hit point and isn\'t in sunlight or running water. If the spawn takes radiant damage or damage from holy water, this trait doesn\'t function at the start of the spawn\'s next turn.',
+      description:
+        "The vampire spawn regains 6 hit points at the start of its turn if it has at least 1 hit point and isn't in sunlight or running water. If the spawn takes radiant damage or damage from holy water, this trait doesn't function at the start of the spawn's next turn.",
     },
     {
       name: 'Spider Climb',
-      description: 'The vampire spawn can climb difficult surfaces, including upside down on ceilings, without needing to make an ability check.',
+      description:
+        'The vampire spawn can climb difficult surfaces, including upside down on ceilings, without needing to make an ability check.',
     },
     {
       name: 'Vampire Weaknesses',
-      description: 'The vampire spawn has the following flaws: Forbiddance. The spawn can\'t enter a residence without an invitation from one of the occupants. Harmed by Running Water. The spawn takes 20 acid damage when it ends a turn in running water. Stake to the Heart. If a piercing weapon made of wood is driven into the spawn\'s heart while the spawn is incapacitated in its resting place, the spawn is paralyzed until the stake is removed. Sunlight Hypersensitivity. The spawn takes 20 radiant damage when it starts its turn in sunlight. While in sunlight, it has disadvantage on attack rolls and ability checks.',
+      description:
+        "The vampire spawn has the following flaws: Forbiddance. The spawn can't enter a residence without an invitation from one of the occupants. Harmed by Running Water. The spawn takes 20 acid damage when it ends a turn in running water. Stake to the Heart. If a piercing weapon made of wood is driven into the spawn's heart while the spawn is incapacitated in its resting place, the spawn is paralyzed until the stake is removed. Sunlight Hypersensitivity. The spawn takes 20 radiant damage when it starts its turn in sunlight. While in sunlight, it has disadvantage on attack rolls and ability checks.",
     },
   ],
   actions: [
@@ -120,18 +146,16 @@ export const vampireSpawn: Monster = {
     },
     {
       name: 'Claw',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one creature. Hit: 6 (1d6 + 3) slashing damage. Instead of dealing damage, the spawn can grapple the target (escape DC 13).',
+      description:
+        'Melee Weapon Attack: +5 to hit, reach 5 ft., one creature. Hit: 6 (1d6 + 3) slashing damage. Instead of dealing damage, the spawn can grapple the target (escape DC 13).',
     },
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one willing creature, or a creature that is grappled by the spawn, incapacitated, or restrained. Hit: 6 (1d6 + 3) piercing damage plus 7 (2d6) necrotic damage. The target\'s hit point maximum is reduced by an amount equal to the necrotic damage taken, and the spawn regains hit points equal to that amount. The reduction lasts until the target finishes a long rest. The target dies if this effect reduces its hit point maximum to 0.',
+      description:
+        "Melee Weapon Attack: +5 to hit, reach 5 ft., one willing creature, or a creature that is grappled by the spawn, incapacitated, or restrained. Hit: 6 (1d6 + 3) piercing damage plus 7 (2d6) necrotic damage. The target's hit point maximum is reduced by an amount equal to the necrotic damage taken, and the spawn regains hit points equal to that amount. The reduction lasts until the target finishes a long rest. The target dies if this effect reduces its hit point maximum to 0.",
     },
   ],
   environment: ['urban', 'underdark'],
 };
 
-export const undeadCR6to10: Monster[] = [
-  wraith,
-  mummy,
-  vampireSpawn,
-];
+export const undeadCR6to10: Monster[] = [wraith, mummy, vampireSpawn];

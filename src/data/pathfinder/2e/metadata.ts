@@ -20,7 +20,7 @@ export const pf2eMetadata = {
   system: 'pf2e',
   edition: '2e',
   version: 'Core Rulebook + Expanded',
-  
+
   stats: {
     spells: {
       count: pf2eSpells.length,
@@ -28,15 +28,15 @@ export const pf2eMetadata = {
         Object.entries(pf2eSpellsByLevel).map(([k, v]) => [k, v.length])
       ) as Record<string, number>,
     },
-    
+
     classes: {
       count: Object.keys(pf2eClasses).length,
     },
-    
+
     ancestries: {
       count: Object.keys(pf2eAncestries).length,
     },
-    
+
     feats: {
       count: generalFeats.length + skillFeats.length + ancestryFeats.length + classFeats.length,
       byType: {
@@ -46,11 +46,11 @@ export const pf2eMetadata = {
         skill: skillFeats.length,
       },
     },
-    
+
     archetypes: {
       count: allPf2eArchetypes.length,
     },
-    
+
     equipment: {
       weapons: Object.keys(pf2eWeapons).length,
       armor: Object.keys(pf2eArmor).length,
@@ -58,10 +58,10 @@ export const pf2eMetadata = {
       gear: Object.keys(pf2eGear).length,
     },
   },
-  
+
   sources: [
     { id: 'crb', name: 'Core Rulebook', abbr: 'CRB' },
-    { id: 'apg', name: 'Advanced Player\'s Guide', abbr: 'APG' },
+    { id: 'apg', name: "Advanced Player's Guide", abbr: 'APG' },
     { id: 'som', name: 'Secrets of Magic', abbr: 'SoM' },
     { id: 'lopg', name: 'Lost Omens: Pathfinder Guide', abbr: 'LOPG' },
     { id: 'locg', name: 'Lost Omens: Character Guide', abbr: 'LOCG' },
@@ -70,7 +70,7 @@ export const pf2eMetadata = {
 
 export function getProgress(): number {
   const stats = pf2eMetadata.stats;
-  const totalItems = 
+  const totalItems =
     stats.spells.count +
     stats.classes.count +
     stats.ancestries.count +
@@ -80,7 +80,7 @@ export function getProgress(): number {
     stats.equipment.armor +
     stats.equipment.magicItems +
     stats.equipment.gear;
-    
+
   // All present data is implemented — progress is 100%
   return totalItems > 0 ? 100 : 0;
 }

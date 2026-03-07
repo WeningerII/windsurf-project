@@ -16,7 +16,13 @@ export const assassin: PrestigeClass = {
   id: 'assassin',
   name: 'Assassin',
   description: 'Masters of death and deception.',
-  prerequisites: ['Alignment: Any non-good', 'BAB +6', 'Sneak Attack +2d6', 'Disguise 8 ranks', 'Stealth 8 ranks'],
+  prerequisites: [
+    'Alignment: Any non-good',
+    'BAB +6',
+    'Sneak Attack +2d6',
+    'Disguise 8 ranks',
+    'Stealth 8 ranks',
+  ],
   hitDie: 'd6',
   skillPoints: 4,
   classFeatures: {
@@ -31,7 +37,12 @@ export const blackguard: PrestigeClass = {
   id: 'blackguard',
   name: 'Blackguard',
   description: 'Fallen paladins who embrace darkness.',
-  prerequisites: ['Alignment: Any non-good', 'BAB +6', 'Knowledge (Religion) 2 ranks', 'Perform 2 ranks'],
+  prerequisites: [
+    'Alignment: Any non-good',
+    'BAB +6',
+    'Knowledge (Religion) 2 ranks',
+    'Perform 2 ranks',
+  ],
   hitDie: 'd10',
   skillPoints: 2,
   classFeatures: {
@@ -46,7 +57,12 @@ export const arcaneArcher: PrestigeClass = {
   id: 'arcane-archer',
   name: 'Arcane Archer',
   description: 'Masters of archery who imbue arrows with magic.',
-  prerequisites: ['BAB +6', 'Point Blank Shot', 'Precise Shot', 'Ability to cast 1st-level arcane spells'],
+  prerequisites: [
+    'BAB +6',
+    'Point Blank Shot',
+    'Precise Shot',
+    'Ability to cast 1st-level arcane spells',
+  ],
   hitDie: 'd8',
   skillPoints: 4,
   classFeatures: {
@@ -75,7 +91,11 @@ export const archmage: PrestigeClass = {
   id: 'archmage',
   name: 'Archmage',
   description: 'Ultimate masters of arcane magic.',
-  prerequisites: ['Ability to cast 7th-level arcane spells', 'Spellcraft 15 ranks', 'Knowledge (Arcana) 15 ranks'],
+  prerequisites: [
+    'Ability to cast 7th-level arcane spells',
+    'Spellcraft 15 ranks',
+    'Knowledge (Arcana) 15 ranks',
+  ],
   hitDie: 'd4',
   skillPoints: 2,
   classFeatures: {
@@ -159,7 +179,11 @@ export const loremaster: PrestigeClass = {
   id: 'loremaster',
   name: 'Loremaster',
   description: 'Keepers of arcane knowledge.',
-  prerequisites: ['Ability to cast 6th-level spells', 'Knowledge (any) 15 ranks', 'Spellcraft 15 ranks'],
+  prerequisites: [
+    'Ability to cast 6th-level spells',
+    'Knowledge (any) 15 ranks',
+    'Spellcraft 15 ranks',
+  ],
   hitDie: 'd4',
   skillPoints: 4,
   classFeatures: {
@@ -173,7 +197,12 @@ export const mysticTheurge: PrestigeClass = {
   id: 'mystic-theurge',
   name: 'Mystic Theurge',
   description: 'Masters of both arcane and divine magic.',
-  prerequisites: ['Ability to cast 2nd-level arcane spells', 'Ability to cast 2nd-level divine spells', 'Knowledge (Arcana) 6 ranks', 'Knowledge (Religion) 6 ranks'],
+  prerequisites: [
+    'Ability to cast 2nd-level arcane spells',
+    'Ability to cast 2nd-level divine spells',
+    'Knowledge (Arcana) 6 ranks',
+    'Knowledge (Religion) 6 ranks',
+  ],
   hitDie: 'd6',
   skillPoints: 2,
   classFeatures: {
@@ -215,7 +244,11 @@ export const thaumaturgist: PrestigeClass = {
   id: 'thaumaturgist',
   name: 'Thaumaturgist',
   description: 'Specialists in summoning and binding outsiders.',
-  prerequisites: ['Ability to cast lesser planar ally', 'Knowledge (Planes) 10 ranks', 'Knowledge (Religion) 10 ranks'],
+  prerequisites: [
+    'Ability to cast lesser planar ally',
+    'Knowledge (Planes) 10 ranks',
+    'Knowledge (Religion) 10 ranks',
+  ],
   hitDie: 'd4',
   skillPoints: 2,
   classFeatures: {
@@ -230,20 +263,20 @@ export const dnd35ePrestigeClasses: PrestigeClass[] = [
   arcaneArcher,
   arcaneTrickster,
   archmage,
-  assassin, 
+  assassin,
   blackguard,
   dragonDisciple,
   duelist,
   dwarvenDefender,
-  eldritchKnight, 
+  eldritchKnight,
   hierophant,
   horizonWalker,
   loremaster,
-  mysticTheurge, 
+  mysticTheurge,
   shadowdancer,
   thaumaturgist,
 ];
 
 export const getPrestigeClass = (id: string) => {
-  return dnd35ePrestigeClasses.find(pc => pc.id === id);
+  return dnd35ePrestigeClasses.find((pc) => pc.id === id);
 };

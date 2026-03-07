@@ -24,7 +24,8 @@ export const treant: Monster = {
   specialAbilities: [
     {
       name: 'False Appearance',
-      description: 'While the treant remains motionless, it is indistinguishable from a normal tree.',
+      description:
+        'While the treant remains motionless, it is indistinguishable from a normal tree.',
     },
     {
       name: 'Siege Monster',
@@ -38,16 +39,16 @@ export const treant: Monster = {
     },
     {
       name: 'Slam',
-      description: 'Melee Weapon Attack: +9 to hit, reach 5 ft., one target. Hit: 15 (3d6 + 5) bludgeoning damage.',
+      description:
+        'Melee Weapon Attack: +9 to hit, reach 5 ft., one target. Hit: 15 (3d6 + 5) bludgeoning damage.',
     },
     {
       name: 'Rock',
-      description: 'Ranged Weapon Attack: +9 to hit, range 60/240 ft., one target. Hit: 28 (4d10 + 5) bludgeoning damage.',
+      description:
+        'Ranged Weapon Attack: +9 to hit, range 60/240 ft., one target. Hit: 28 (4d10 + 5) bludgeoning damage.',
     },
   ],
   environment: ['forest'],
 };
 
-export const plantsCR6to10: Monster[] = [
-  treant,
-];
+export const plantsCR6to10: Monster[] = [treant];

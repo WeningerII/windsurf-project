@@ -4,10 +4,6 @@ import { celestialsCR11Plus } from './cr-11-plus';
 
 export { celestialsCR0to5, celestialsCR6to10, celestialsCR11Plus };
 
-export const allCelestials = [
-  ...celestialsCR0to5,
-  ...celestialsCR6to10,
-  ...celestialsCR11Plus,
-];
+export const allCelestials = [...celestialsCR0to5, ...celestialsCR6to10, ...celestialsCR11Plus];
 
 export default allCelestials;

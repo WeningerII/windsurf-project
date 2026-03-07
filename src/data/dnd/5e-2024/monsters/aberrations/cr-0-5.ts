@@ -23,7 +23,7 @@ export const grimlock: Monster = {
   specialAbilities: [
     {
       name: 'Blind Senses',
-      description: 'The grimlock can\'t use its blindsight while deafened and unable to smell.',
+      description: "The grimlock can't use its blindsight while deafened and unable to smell.",
     },
     {
       name: 'Keen Smell',
@@ -33,7 +33,8 @@ export const grimlock: Monster = {
   actions: [
     {
       name: 'Spiked Bone Club',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 7 (1d8 + 3) bludgeoning damage.',
+      description:
+        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 7 (1d8 + 3) bludgeoning damage.',
     },
   ],
   environment: ['underdark'],
@@ -63,7 +64,8 @@ export const chuul: Monster = {
     },
     {
       name: 'Spider Climb',
-      description: 'The chuul can climb difficult surfaces, including upside down on ceilings, without needing to make an ability check.',
+      description:
+        'The chuul can climb difficult surfaces, including upside down on ceilings, without needing to make an ability check.',
     },
   ],
   actions: [
@@ -73,11 +75,13 @@ export const chuul: Monster = {
     },
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 11 (2d6 + 4) piercing damage.',
+      description:
+        'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 11 (2d6 + 4) piercing damage.',
     },
     {
       name: 'Claws',
-      description: 'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 13 (2d8 + 4) slashing damage.',
+      description:
+        'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 13 (2d8 + 4) slashing damage.',
     },
   ],
   environment: ['underdark'],
@@ -103,7 +107,8 @@ export const otyugh: Monster = {
   specialAbilities: [
     {
       name: 'Limited Telepathy',
-      description: 'The otyugh can magically transmit simple messages and images to any creature within 120 feet of it that can see it. Communication is limited by the otyugh\'s Intelligence score. The creature can\'t transmit emotions or sensory experiences other than images.',
+      description:
+        "The otyugh can magically transmit simple messages and images to any creature within 120 feet of it that can see it. Communication is limited by the otyugh's Intelligence score. The creature can't transmit emotions or sensory experiences other than images.",
     },
   ],
   actions: [
@@ -113,18 +118,16 @@ export const otyugh: Monster = {
     },
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 12 (2d8 + 3) piercing damage.',
+      description:
+        'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 12 (2d8 + 3) piercing damage.',
     },
     {
       name: 'Tentacle',
-      description: 'Melee Weapon Attack: +6 to hit, reach 15 ft., one target. Hit: 10 (2d6 + 3) bludgeoning damage. If the target is Medium or smaller, it is grappled (escape DC 14). Until this grapple ends, the target is restrained and unable to breathe unless it can breathe water. If the otyugh moves, the grappled creature moves with it.',
+      description:
+        'Melee Weapon Attack: +6 to hit, reach 15 ft., one target. Hit: 10 (2d6 + 3) bludgeoning damage. If the target is Medium or smaller, it is grappled (escape DC 14). Until this grapple ends, the target is restrained and unable to breathe unless it can breathe water. If the otyugh moves, the grappled creature moves with it.',
     },
   ],
   environment: ['underdark', 'dungeon'],
 };
 
-export const aberrationsCR0to5: Monster[] = [
-  grimlock,
-  chuul,
-  otyugh,
-];
+export const aberrationsCR0to5: Monster[] = [grimlock, chuul, otyugh];

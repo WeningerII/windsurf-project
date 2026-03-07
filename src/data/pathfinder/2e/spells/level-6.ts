@@ -14,7 +14,8 @@ export const level6Spells: Spell[] = [
     duration: { type: 'permanent' },
     concentration: false,
     ritual: false,
-    description: 'You transform the target into a harmless animal form. The target must attempt a Fortitude save. On a failure, it becomes a tiny animal.',
+    description:
+      'You transform the target into a harmless animal form. The target must attempt a Fortitude save. On a failure, it becomes a tiny animal.',
     savingThrow: { attribute: 'con', success: 'none' },
     classes: ['druid', 'sorcerer', 'wizard'],
   },
@@ -31,7 +32,8 @@ export const level6Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You discharge a powerful bolt of lightning at the target, dealing 8d12 electricity damage. The target must attempt a basic Reflex save. The electricity arcs to another creature within 30 feet of the first target, and so on.',
+    description:
+      'You discharge a powerful bolt of lightning at the target, dealing 8d12 electricity damage. The target must attempt a basic Reflex save. The electricity arcs to another creature within 30 feet of the first target, and so on.',
     damage: { base: { count: 8, die: 'd12', notation: '8d12' }, type: 'lightning' },
     classes: ['sorcerer', 'wizard'],
   },
@@ -48,7 +50,8 @@ export const level6Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'A thin, green ray springs from your pointing finger. The target takes 12d10 force damage. A creature reduced to 0 HP is entirely disintegrated.',
+    description:
+      'A thin, green ray springs from your pointing finger. The target takes 12d10 force damage. A creature reduced to 0 HP is entirely disintegrated.',
     damage: { base: { count: 12, die: 'd10', notation: '12d10' }, type: 'force' },
     savingThrow: { attribute: 'dex', success: 'half' },
     classes: ['sorcerer', 'wizard'],
@@ -67,7 +70,8 @@ export const level6Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'A geyser of boiling water erupts from the ground. Each creature in the area takes 7d12 fire damage with a basic Reflex save.',
+    description:
+      'A geyser of boiling water erupts from the ground. Each creature in the area takes 7d12 fire damage with a basic Reflex save.',
     damage: { base: { count: 7, die: 'd12', notation: '7d12' }, type: 'fire' },
     savingThrow: { attribute: 'dex', success: 'half' },
     classes: ['druid', 'sorcerer', 'wizard'],
@@ -85,7 +89,8 @@ export const level6Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: true,
     ritual: false,
-    description: 'You become invisible and create an illusory double. You can move the double while you move separately.',
+    description:
+      'You become invisible and create an illusory double. You can move the double while you move separately.',
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -101,7 +106,8 @@ export const level6Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You and the other targets are instantly transported to any location within range, as long as you can identify the location precisely both by its position relative to your starting position and by its appearance (or other identifying features).',
+    description:
+      'You and the other targets are instantly transported to any location within range, as long as you can identify the location precisely both by its position relative to your starting position and by its appearance (or other identifying features).',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -117,7 +123,8 @@ export const level6Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 10 },
     concentration: false,
     ritual: false,
-    description: 'You see things within 60 feet as they actually are. The target can see through visual illusions and transmutations, and it can see invisible creatures and objects.',
+    description:
+      'You see things within 60 feet as they actually are. The target can see through visual illusions and transmutations, and it can see invisible creatures and objects.',
     classes: ['cleric', 'sorcerer', 'wizard'],
   },
   {
@@ -133,7 +140,8 @@ export const level6Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'You form an invisible wall of pure magical force up to 50 feet long and up to 20 feet high. The wall has no discernible thickness. It must be a straight line, though you can shape it into a curve.',
+    description:
+      'You form an invisible wall of pure magical force up to 50 feet long and up to 20 feet high. The wall has no discernible thickness. It must be a straight line, though you can shape it into a curve.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -149,7 +157,8 @@ export const level6Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'You create a wall of solid ice. The wall is 1 foot thick and composed of up to 10 contiguous 10-foot sections. Each section has AC 10, Hardness 10, and 40 Hit Points. It melts slowly in warm environments.',
+    description:
+      'You create a wall of solid ice. The wall is 1 foot thick and composed of up to 10 contiguous 10-foot sections. Each section has AC 10, Hardness 10, and 40 Hit Points. It melts slowly in warm environments.',
     classes: ['sorcerer', 'wizard'],
   },
 ];

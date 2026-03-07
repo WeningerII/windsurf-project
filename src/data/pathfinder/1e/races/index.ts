@@ -17,12 +17,4 @@ export const pf1eRaces = {
   human,
 };
 
-export {
-  dwarf,
-  elf,
-  gnome,
-  halfElf,
-  halfOrc,
-  halfling,
-  human,
-};
+export { dwarf, elf, gnome, halfElf, halfOrc, halfling, human };

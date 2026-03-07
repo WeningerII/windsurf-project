@@ -12,7 +12,7 @@ export const dnd35eMetadata = {
   system: 'dnd-3.5e',
   edition: '3.5e',
   version: 'SRD 3.5',
-  
+
   stats: {
     spells: {
       count: dnd35eSpells.length,
@@ -23,19 +23,19 @@ export const dnd35eMetadata = {
         Object.entries(dnd35eSpellsBySchool).map(([k, v]) => [k, v.length])
       ) as Record<string, number>,
     },
-    
+
     classes: {
       count: dnd35eClasses.length,
     },
-    
+
     prestigeClasses: {
       count: dnd35ePrestigeClasses.length,
     },
-    
+
     races: {
       count: dnd35eRaces.length,
     },
-    
+
     feats: {
       count: Object.values(dnd35eFeats).reduce((sum, arr) => sum + arr.length, 0),
       byType: {
@@ -48,7 +48,7 @@ export const dnd35eMetadata = {
         magic: dnd35eFeats.magic.length,
       },
     },
-    
+
     equipment: {
       weapons: dnd35eEquipment.weapons.length,
       armor: dnd35eEquipment.armor.length,
@@ -57,15 +57,13 @@ export const dnd35eMetadata = {
       magicItems: dnd35eEquipment.magicItems.length,
     },
   },
-  
-  sources: [
-    { id: 'srd', name: 'System Reference Document 3.5', abbr: 'SRD 3.5' },
-  ],
+
+  sources: [{ id: 'srd', name: 'System Reference Document 3.5', abbr: 'SRD 3.5' }],
 };
 
 export function getProgress(): number {
   const stats = dnd35eMetadata.stats;
-  const totalItems = 
+  const totalItems =
     stats.spells.count +
     stats.classes.count +
     stats.prestigeClasses.count +
@@ -76,7 +74,7 @@ export function getProgress(): number {
     stats.equipment.shields +
     stats.equipment.adventuringGear +
     stats.equipment.magicItems;
-    
+
   // All present data is implemented — progress is 100%
   return totalItems > 0 ? 100 : 0;
 }

@@ -35,7 +35,8 @@ export const fightingStyles: FightingStyle[] = [
     system: 'dnd-5e-2014',
     source: 'SRD 5.1',
     class: ['fighter', 'paladin'],
-    description: 'When you are wielding a melee weapon in one hand and no other weapons, you gain a +2 bonus to damage rolls with that weapon.',
+    description:
+      'When you are wielding a melee weapon in one hand and no other weapons, you gain a +2 bonus to damage rolls with that weapon.',
     benefits: ['+2 bonus to damage rolls with single melee weapon'],
   },
   {
@@ -44,7 +45,8 @@ export const fightingStyles: FightingStyle[] = [
     system: 'dnd-5e-2014',
     source: 'SRD 5.1',
     class: ['fighter', 'paladin'],
-    description: 'When you roll a 1 or 2 on a damage die for an attack you make with a melee weapon that you are wielding with two hands, you can reroll the die and must use the new roll.',
+    description:
+      'When you roll a 1 or 2 on a damage die for an attack you make with a melee weapon that you are wielding with two hands, you can reroll the die and must use the new roll.',
     benefits: ['Reroll 1 or 2 on damage dice for two-handed melee weapons'],
   },
   {
@@ -53,7 +55,8 @@ export const fightingStyles: FightingStyle[] = [
     system: 'dnd-5e-2014',
     source: 'SRD 5.1',
     class: ['fighter', 'paladin'],
-    description: 'When a creature you can see attacks a target other than you that is within 5 feet of you, you can use your reaction to impose disadvantage on the attack roll.',
+    description:
+      'When a creature you can see attacks a target other than you that is within 5 feet of you, you can use your reaction to impose disadvantage on the attack roll.',
     benefits: ['Impose disadvantage on attacks against nearby allies'],
   },
   {
@@ -62,7 +65,8 @@ export const fightingStyles: FightingStyle[] = [
     system: 'dnd-5e-2014',
     source: 'SRD 5.1',
     class: ['fighter', 'paladin'],
-    description: 'When you engage in two-weapon fighting, you can add your ability modifier to the damage of the second attack.',
+    description:
+      'When you engage in two-weapon fighting, you can add your ability modifier to the damage of the second attack.',
     benefits: ['Add ability modifier to off-hand weapon damage'],
   },
   {

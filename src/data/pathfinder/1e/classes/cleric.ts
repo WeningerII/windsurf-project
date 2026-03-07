@@ -5,36 +5,48 @@ export const cleric: CharacterClass = {
   name: 'Cleric',
   system: 'pf1e',
   source: 'Core Rulebook',
-  
+
   version: '1.0',
   lastUpdated: '2026-01-13',
   sourceBook: {
     name: 'Pathfinder Core Rulebook',
     page: 38,
-    url: 'https://www.d20pfsrd.com/classes/core-classes/cleric/'
+    url: 'https://www.d20pfsrd.com/classes/core-classes/cleric/',
   },
-  
+
   hitDie: 'd8',
   primaryAbility: ['wis'],
   savingThrowProficiencies: ['wis', 'con'],
-  
+
   armorProficiencies: ['light', 'medium', 'heavy', 'shields'],
   weaponProficiencies: ['simple', 'deity-favored'],
   toolProficiencies: [],
-  
+
   skillProficiencies: {
     count: 2,
-    options: ['appraise', 'diplomacy', 'heal', 'knowledge-arcana', 'knowledge-history', 'knowledge-nobility', 'knowledge-planes', 'knowledge-religion', 'linguistics', 'sense-motive', 'spellcraft'],
+    options: [
+      'appraise',
+      'diplomacy',
+      'heal',
+      'knowledge-arcana',
+      'knowledge-history',
+      'knowledge-nobility',
+      'knowledge-planes',
+      'knowledge-religion',
+      'linguistics',
+      'sense-motive',
+      'spellcraft',
+    ],
     label: 'Choose class skills (2 + Int modifier ranks per level)',
   },
-  
+
   equipmentChoices: [],
-  
+
   startingGold: {
     dice: '4d6',
     multiplier: 10,
   },
-  
+
   features: [
     {
       level: 1,
@@ -43,13 +55,15 @@ export const cleric: CharacterClass = {
           id: 'aura',
           name: 'Aura',
           source: 'Cleric 1',
-          description: 'A cleric of a chaotic, evil, good, or lawful deity has a particularly powerful aura corresponding to the deity\'s alignment.',
+          description:
+            "A cleric of a chaotic, evil, good, or lawful deity has a particularly powerful aura corresponding to the deity's alignment.",
         },
         {
           id: 'channel-energy',
           name: 'Channel Energy',
           source: 'Cleric 1',
-          description: 'Regardless of alignment, any cleric can release a wave of energy by channeling the power of her faith through her holy (or unholy) symbol. This energy can be used to cause or heal damage, depending on the type of energy channeled and the creatures targeted. A cleric can channel energy a number of times per day equal to 3 + her Charisma modifier. The amount of damage dealt or healed is equal to 1d6 points of damage plus 1d6 points of damage for every two cleric levels beyond 1st (2d6 at 3rd, 3d6 at 5th, and so on).',
+          description:
+            'Regardless of alignment, any cleric can release a wave of energy by channeling the power of her faith through her holy (or unholy) symbol. This energy can be used to cause or heal damage, depending on the type of energy channeled and the creatures targeted. A cleric can channel energy a number of times per day equal to 3 + her Charisma modifier. The amount of damage dealt or healed is equal to 1d6 points of damage plus 1d6 points of damage for every two cleric levels beyond 1st (2d6 at 3rd, 3d6 at 5th, and so on).',
           uses: {
             current: 3,
             max: 3,
@@ -60,19 +74,22 @@ export const cleric: CharacterClass = {
           id: 'domains',
           name: 'Domains',
           source: 'Cleric 1',
-          description: 'A cleric\'s deity influences her alignment, what magic she can perform, her values, and how others see her. A cleric chooses two domains from among those belonging to her deity. Each domain grants a number of domain powers, dependent upon the level of the cleric, as well as a number of bonus spells.',
+          description:
+            "A cleric's deity influences her alignment, what magic she can perform, her values, and how others see her. A cleric chooses two domains from among those belonging to her deity. Each domain grants a number of domain powers, dependent upon the level of the cleric, as well as a number of bonus spells.",
         },
         {
           id: 'orisons',
           name: 'Orisons',
           source: 'Cleric 1',
-          description: 'Clerics can prepare a number of orisons, or 0-level spells, each day. These spells are cast like any other spell, but they are not expended when cast and may be used again.',
+          description:
+            'Clerics can prepare a number of orisons, or 0-level spells, each day. These spells are cast like any other spell, but they are not expended when cast and may be used again.',
         },
         {
           id: 'spontaneous-casting',
           name: 'Spontaneous Casting',
           source: 'Cleric 1',
-          description: 'A good cleric (or a neutral cleric of a good deity) can channel stored spell energy into healing spells that she did not prepare ahead of time. The cleric can "lose" any prepared spell that is not an orison or domain spell in order to cast any cure spell of the same spell level or lower (a cure spell is any spell with "cure" in its name). An evil cleric (or a neutral cleric of an evil deity) can\'t convert prepared spells to cure spells but can convert them to inflict spells.',
+          description:
+            'A good cleric (or a neutral cleric of a good deity) can channel stored spell energy into healing spells that she did not prepare ahead of time. The cleric can "lose" any prepared spell that is not an orison or domain spell in order to cast any cure spell of the same spell level or lower (a cure spell is any spell with "cure" in its name). An evil cleric (or a neutral cleric of an evil deity) can\'t convert prepared spells to cure spells but can convert them to inflict spells.',
         },
       ],
     },
@@ -176,10 +193,10 @@ export const cleric: CharacterClass = {
       ],
     },
   ],
-  
+
   subclassLevel: 1,
   subclasses: [],
-  
+
   spellcasting: {
     ability: 'wis',
     spellListId: 'cleric-pf1e',
@@ -198,7 +215,7 @@ export const cleric: CharacterClass = {
     ritualCasting: false,
     multiclassCasterLevel: 'full',
   },
-  
+
   classResources: [
     {
       id: 'channel-energy-uses',
@@ -209,17 +226,18 @@ export const cleric: CharacterClass = {
       defaultValue: 3,
     },
   ],
-  
+
   multiclassRequirements: [],
-  
+
   multiclassProficiencies: {
     armor: [],
     weapons: [],
     tools: [],
   },
-  
-  description: 'In faith and the miracles of the divine, many find a greater purpose. Called to serve powers beyond most mortal understanding, all priests preach wonders and provide for the spiritual needs of their people.',
-  
+
+  description:
+    'In faith and the miracles of the divine, many find a greater purpose. Called to serve powers beyond most mortal understanding, all priests preach wonders and provide for the spiritual needs of their people.',
+
   displayMetadata: {
     icon: 'cross',
     color: '#FFD700',

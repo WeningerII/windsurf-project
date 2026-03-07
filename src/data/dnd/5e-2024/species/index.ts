@@ -21,5 +21,5 @@ export const dnd5e2024Species = [
 ];
 
 export const getSpecies = (id: string) => {
-  return dnd5e2024Species.find(s => s.id === id);
+  return dnd5e2024Species.find((s) => s.id === id);
 };

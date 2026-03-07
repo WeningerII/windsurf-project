@@ -26,7 +26,8 @@ export const imp: Monster = {
   specialAbilities: [
     {
       name: 'Invisibility',
-      description: 'The imp can use an action to become invisible until it attacks or until its concentration ends (as if concentrating on a spell). Any equipment the imp wears or carries is invisible with it.',
+      description:
+        'The imp can use an action to become invisible until it attacks or until its concentration ends (as if concentrating on a spell). Any equipment the imp wears or carries is invisible with it.',
     },
     {
       name: 'Resistance to Magic',
@@ -36,7 +37,8 @@ export const imp: Monster = {
   actions: [
     {
       name: 'Sting',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 5 (1d4 + 3) piercing damage, and the target must succeed on a DC 11 Constitution saving throw or take 10 (3d6) poison damage.',
+      description:
+        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 5 (1d4 + 3) piercing damage, and the target must succeed on a DC 11 Constitution saving throw or take 10 (3d6) poison damage.',
     },
   ],
   environment: ['underdark', 'urban'],
@@ -65,19 +67,18 @@ export const quasit: Monster = {
   specialAbilities: [
     {
       name: 'Scare',
-      description: 'One creature of the quasit\'s choice within 20 feet of it that can see it must succeed on a DC 10 Wisdom saving throw or be frightened for 1 minute. The target can repeat the saving throw at the end of each of its turns, with disadvantage if the quasit is within line of sight, ending the effect on itself on a success.',
+      description:
+        "One creature of the quasit's choice within 20 feet of it that can see it must succeed on a DC 10 Wisdom saving throw or be frightened for 1 minute. The target can repeat the saving throw at the end of each of its turns, with disadvantage if the quasit is within line of sight, ending the effect on itself on a success.",
     },
   ],
   actions: [
     {
       name: 'Claws',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d4 + 3) slashing damage.',
+      description:
+        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d4 + 3) slashing damage.',
     },
   ],
   environment: ['underdark'],
 };
 
-export const fiendsCR0to5: Monster[] = [
-  imp,
-  quasit,
-];
+export const fiendsCR0to5: Monster[] = [imp, quasit];

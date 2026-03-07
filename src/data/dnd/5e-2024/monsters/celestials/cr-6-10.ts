@@ -25,11 +25,13 @@ export const planetar: Monster = {
   specialAbilities: [
     {
       name: 'Innate Spellcasting',
-      description: 'The planetar\'s spellcasting ability is Charisma (spell save DC 17). The planetar can innately cast the following spells, requiring no material components: At will: detect evil and good, invisibility; 3/day each: blade barrier, dispel evil and good, flame strike, teleport; 1/day each: commune, control weather.',
+      description:
+        "The planetar's spellcasting ability is Charisma (spell save DC 17). The planetar can innately cast the following spells, requiring no material components: At will: detect evil and good, invisibility; 3/day each: blade barrier, dispel evil and good, flame strike, teleport; 1/day each: commune, control weather.",
     },
     {
       name: 'Magic Resistance',
-      description: 'The planetar has advantage on saving throws against spells and magical effects.',
+      description:
+        'The planetar has advantage on saving throws against spells and magical effects.',
     },
   ],
   actions: [
@@ -39,12 +41,11 @@ export const planetar: Monster = {
     },
     {
       name: 'Greatsword',
-      description: 'Melee Weapon Attack: +12 to hit, reach 5 ft., one target. Hit: 21 (4d6 + 7) slashing damage plus 22 (4d10) radiant damage.',
+      description:
+        'Melee Weapon Attack: +12 to hit, reach 5 ft., one target. Hit: 21 (4d6 + 7) slashing damage plus 22 (4d10) radiant damage.',
     },
   ],
   environment: ['celestial'],
 };
 
-export const celestialsCR6to10: Monster[] = [
-  planetar,
-];
+export const celestialsCR6to10: Monster[] = [planetar];

@@ -25,25 +25,30 @@ export const mindFlayer: Monster = {
   specialAbilities: [
     {
       name: 'Magic Resistance',
-      description: 'The mind flayer has advantage on saving throws against spells and magical effects.',
+      description:
+        'The mind flayer has advantage on saving throws against spells and magical effects.',
     },
     {
       name: 'Innate Spellcasting',
-      description: 'The mind flayer\'s innate spellcasting ability is Intelligence (spell save DC 13). It can innately cast the following spells, requiring no material components: At will: mage hand, minor illusion; 1/day each: charm person, detect thoughts, feeblemind, levitate, plane shift.',
+      description:
+        "The mind flayer's innate spellcasting ability is Intelligence (spell save DC 13). It can innately cast the following spells, requiring no material components: At will: mage hand, minor illusion; 1/day each: charm person, detect thoughts, feeblemind, levitate, plane shift.",
     },
   ],
   actions: [
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one creature. Hit: 32 (4d12 + 2) piercing damage.',
+      description:
+        'Melee Weapon Attack: +5 to hit, reach 5 ft., one creature. Hit: 32 (4d12 + 2) piercing damage.',
     },
     {
       name: 'Tentacles',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 15 (2d10 + 2) psychic damage. If the target is Medium or smaller, it is grappled (escape DC 15) and unable to breathe unless it can breathe water. If the mind flayer loses its concentration, the grapple ends.',
+      description:
+        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 15 (2d10 + 2) psychic damage. If the target is Medium or smaller, it is grappled (escape DC 15) and unable to breathe unless it can breathe water. If the mind flayer loses its concentration, the grapple ends.',
     },
     {
       name: 'Extract Brain',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one incapacitated humanoid grappled by the mind flayer. Hit: The target takes 55 (10d10) piercing damage. If this damage reduces the target to 0 hit points, the mind flayer kills the target by extracting and devouring its brain.',
+      description:
+        'Melee Weapon Attack: +5 to hit, reach 5 ft., one incapacitated humanoid grappled by the mind flayer. Hit: The target takes 55 (10d10) piercing damage. If this damage reduces the target to 0 hit points, the mind flayer kills the target by extracting and devouring its brain.',
     },
   ],
   environment: ['underdark'],
@@ -64,7 +69,16 @@ export const aboleth: Monster = {
   savingThrows: { int: 8, wis: 6, cha: 8 },
   skills: { History: 12, Perception: 10 },
   damageImmunities: ['psychic'],
-  conditionImmunities: ['charmed', 'exhaustion', 'frightened', 'paralyzed', 'petrified', 'poisoned', 'prone', 'restrained'],
+  conditionImmunities: [
+    'charmed',
+    'exhaustion',
+    'frightened',
+    'paralyzed',
+    'petrified',
+    'poisoned',
+    'prone',
+    'restrained',
+  ],
   senses: ['darkvision 120 ft.', 'passive Perception 20'],
   languages: ['Abyssal', 'telepathy 120 ft.'],
   challengeRating: 10,
@@ -76,11 +90,13 @@ export const aboleth: Monster = {
     },
     {
       name: 'Legendary Resistance',
-      description: 'If the aboleth fails a saving throw, it can choose to succeed instead. It can use this trait three times and regains expended uses when it finishes a long rest.',
+      description:
+        'If the aboleth fails a saving throw, it can choose to succeed instead. It can use this trait three times and regains expended uses when it finishes a long rest.',
     },
     {
       name: 'Mucous Cloud',
-      description: 'While underwater, the aboleth is surrounded by transformative mucus. A creature that touches the aboleth or that hits it with a melee attack while within 5 feet of it must make a DC 16 Constitution saving throw. On a failure, the creature is diseased for 1d4 hours. The diseased creature can breathe only underwater.',
+      description:
+        'While underwater, the aboleth is surrounded by transformative mucus. A creature that touches the aboleth or that hits it with a melee attack while within 5 feet of it must make a DC 16 Constitution saving throw. On a failure, the creature is diseased for 1d4 hours. The diseased creature can breathe only underwater.',
     },
   ],
   actions: [
@@ -90,7 +106,8 @@ export const aboleth: Monster = {
     },
     {
       name: 'Tentacle',
-      description: 'Melee Weapon Attack: +9 to hit, reach 30 ft., one target. Hit: 12 (2d6 + 5) bludgeoning damage. If the target is a creature, it must succeed on a DC 16 Constitution saving throw or become diseased. The disease has no effect for 1 minute and can be removed by any magic that cures disease. After 1 minute, the diseased creature\'s skin becomes translucent and slimy, the creature can\'t regain hit points unless it is underwater, and the disease can be removed only by heal or another disease-curing spell of 6th level or higher. When the creature is outside a body of salt water, it takes 6 (1d12) acid damage every 10 minutes unless moisture is applied to the skin before the 10 minutes have elapsed.',
+      description:
+        "Melee Weapon Attack: +9 to hit, reach 30 ft., one target. Hit: 12 (2d6 + 5) bludgeoning damage. If the target is a creature, it must succeed on a DC 16 Constitution saving throw or become diseased. The disease has no effect for 1 minute and can be removed by any magic that cures disease. After 1 minute, the diseased creature's skin becomes translucent and slimy, the creature can't regain hit points unless it is underwater, and the disease can be removed only by heal or another disease-curing spell of 6th level or higher. When the creature is outside a body of salt water, it takes 6 (1d12) acid damage every 10 minutes unless moisture is applied to the skin before the 10 minutes have elapsed.",
     },
   ],
   legendaryActions: [
@@ -113,7 +130,4 @@ export const aboleth: Monster = {
   environment: ['underdark', 'water'],
 };
 
-export const aberrationsCR6to10: Monster[] = [ 
-  mindFlayer,
-  aboleth,
-];
+export const aberrationsCR6to10: Monster[] = [mindFlayer, aboleth];

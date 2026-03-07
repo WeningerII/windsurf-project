@@ -1,9 +1,9 @@
 /**
  * D&D 5e (2014) - Druid Wild Shape Beast Forms
- * 
+ *
  * This content is derived from the System Reference Document and is
  * released under the Open Gaming License v1.0a.
- * 
+ *
  * Source: SRD 5.1
  * License: OGL v1.0a
  */

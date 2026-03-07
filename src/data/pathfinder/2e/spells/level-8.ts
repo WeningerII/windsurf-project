@@ -14,7 +14,8 @@ export const level8Spells: Spell[] = [
     duration: { type: 'rounds', rounds: 1 },
     concentration: false,
     ritual: false,
-    description: 'You shake the ground, topple creatures into fissures, and collapse structures. The GM might add additional effects in certain areas. Cliffs might collapse, causing creatures to fall, or a lake might drain as fissures open up below its surface.',
+    description:
+      'You shake the ground, topple creatures into fissures, and collapse structures. The GM might add additional effects in certain areas. Cliffs might collapse, causing creatures to fall, or a lake might drain as fissures open up below its surface.',
     classes: ['cleric', 'druid'],
   },
   {
@@ -30,7 +31,8 @@ export const level8Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You pull the moisture from the targets\' bodies, dealing 10d10 negative damage. Creatures made of water or with the water trait, such as water elementals, take double damage from horrid wilting.',
+    description:
+      "You pull the moisture from the targets' bodies, dealing 10d10 negative damage. Creatures made of water or with the water trait, such as water elementals, take double damage from horrid wilting.",
     damage: { base: { count: 10, die: 'd10', notation: '10d10' }, type: 'necrotic' },
     classes: ['sorcerer', 'wizard'],
   },
@@ -47,7 +49,8 @@ export const level8Spells: Spell[] = [
     duration: { type: 'varies' },
     concentration: false,
     ritual: false,
-    description: 'You transport the target into an extradimensional maze of eldritch origin and trap it there. Once per turn, the target can attempt an Intelligence check or Perception check against your spell DC to escape the maze.',
+    description:
+      'You transport the target into an extradimensional maze of eldritch origin and trap it there. Once per turn, the target can attempt an Intelligence check or Perception check against your spell DC to escape the maze.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -63,7 +66,8 @@ export const level8Spells: Spell[] = [
     duration: { type: 'hours', hours: 1 },
     concentration: false,
     ritual: false,
-    description: 'This spell functions like misdirection, except that it can affect one creature per caster level.',
+    description:
+      'This spell functions like misdirection, except that it can affect one creature per caster level.',
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -79,7 +83,8 @@ export const level8Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You fire a blue-white ray of freezing air and sleet that deals 10d8 cold damage. The target must attempt a Fortitude save. On a critical failure, the target is also drained 2.',
+    description:
+      'You fire a blue-white ray of freezing air and sleet that deals 10d8 cold damage. The target must attempt a Fortitude save. On a critical failure, the target is also drained 2.',
     damage: { base: { count: 10, die: 'd8', notation: '10d8' }, type: 'cold' },
     classes: ['sorcerer', 'wizard'],
   },
@@ -96,7 +101,8 @@ export const level8Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You utter a word of power that stuns one creature you can see. If the creature has fewer than 150 HP, it is stunned.',
+    description:
+      'You utter a word of power that stuns one creature you can see. If the creature has fewer than 150 HP, it is stunned.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -112,7 +118,8 @@ export const level8Spells: Spell[] = [
     duration: { type: 'hours', hours: 10 },
     concentration: false,
     ritual: false,
-    description: 'A shimmering, multicolored plane of light springs into being. The wall is opaque to normal sight. Each color has a special effect.',
+    description:
+      'A shimmering, multicolored plane of light springs into being. The wall is opaque to normal sight. Each color has a special effect.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -128,7 +135,8 @@ export const level8Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You cause brilliant sunlight to explode in a 60-foot burst. Creatures in the area take 8d10 damage and are blinded. Undead and creatures with light blindness take double damage. Targets attempt a Reflex save.',
+    description:
+      'You cause brilliant sunlight to explode in a 60-foot burst. Creatures in the area take 8d10 damage and are blinded. Undead and creatures with light blindness take double damage. Targets attempt a Reflex save.',
     damage: { base: { count: 8, die: 'd10', notation: '8d10' }, type: 'fire' },
     classes: ['cleric', 'druid', 'sorcerer', 'wizard'],
   },

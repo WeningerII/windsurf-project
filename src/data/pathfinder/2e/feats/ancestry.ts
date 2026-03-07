@@ -11,7 +11,10 @@ export const ancestryFeats: FeatDefinition[] = [
     source: 'Core Rulebook',
     prerequisites: [{ type: 'race', description: 'Dwarf' }],
     description: 'You eagerly absorb the knowledge of your ancestors.',
-    benefits: ['You gain trained proficiency in Crafting and Religion.', 'You also become trained in Dwarven Lore.'],
+    benefits: [
+      'You gain trained proficiency in Crafting and Religion.',
+      'You also become trained in Dwarven Lore.',
+    ],
   },
   {
     id: 'dwarven-weapon-familiarity',
@@ -20,7 +23,10 @@ export const ancestryFeats: FeatDefinition[] = [
     source: 'Core Rulebook',
     prerequisites: [{ type: 'race', description: 'Dwarf' }],
     description: 'Your kin have instilled in you an affinity for hard-hitting weapons.',
-    benefits: ['You are trained with battle axes, picks, and warhammers.', 'You treat dwarven weapons as one category simpler for proficiency.'],
+    benefits: [
+      'You are trained with battle axes, picks, and warhammers.',
+      'You treat dwarven weapons as one category simpler for proficiency.',
+    ],
   },
   {
     id: 'rock-runner',
@@ -29,7 +35,9 @@ export const ancestryFeats: FeatDefinition[] = [
     source: 'Core Rulebook',
     prerequisites: [{ type: 'race', description: 'Dwarf' }],
     description: 'Your innate connection to stone makes you agile in rocky terrain.',
-    benefits: ['You can ignore difficult terrain caused by rubble and uneven ground made of stone and earth.'],
+    benefits: [
+      'You can ignore difficult terrain caused by rubble and uneven ground made of stone and earth.',
+    ],
   },
   {
     id: 'unburdened-iron',
@@ -38,7 +46,9 @@ export const ancestryFeats: FeatDefinition[] = [
     source: 'Core Rulebook',
     prerequisites: [{ type: 'race', description: 'Dwarf' }],
     description: 'You have learned to move without being encumbered by armor.',
-    benefits: ['You treat your Strength as 2 higher for determining the armor you can wear without speed penalty.'],
+    benefits: [
+      'You treat your Strength as 2 higher for determining the armor you can wear without speed penalty.',
+    ],
   },
   // Elf
   {
@@ -48,7 +58,9 @@ export const ancestryFeats: FeatDefinition[] = [
     source: 'Core Rulebook',
     prerequisites: [{ type: 'race', description: 'Elf' }],
     description: 'You have accumulated vast knowledge over the years.',
-    benefits: ['During your daily preparations, you gain trained proficiency in one skill of your choice.'],
+    benefits: [
+      'During your daily preparations, you gain trained proficiency in one skill of your choice.',
+    ],
   },
   {
     id: 'elven-lore',
@@ -57,7 +69,10 @@ export const ancestryFeats: FeatDefinition[] = [
     source: 'Core Rulebook',
     prerequisites: [{ type: 'race', description: 'Elf' }],
     description: 'You have studied traditional elven arts.',
-    benefits: ['You gain trained proficiency in Arcana and Nature.', 'You also become trained in Elven Lore.'],
+    benefits: [
+      'You gain trained proficiency in Arcana and Nature.',
+      'You also become trained in Elven Lore.',
+    ],
   },
   {
     id: 'elven-weapon-familiarity',
@@ -66,7 +81,9 @@ export const ancestryFeats: FeatDefinition[] = [
     source: 'Core Rulebook',
     prerequisites: [{ type: 'race', description: 'Elf' }],
     description: 'You favor the weapons of your elven ancestors.',
-    benefits: ['You are trained with longbows, composite longbows, longswords, rapiers, shortbows, and composite shortbows.'],
+    benefits: [
+      'You are trained with longbows, composite longbows, longswords, rapiers, shortbows, and composite shortbows.',
+    ],
   },
   {
     id: 'forlorn',
@@ -103,7 +120,10 @@ export const ancestryFeats: FeatDefinition[] = [
     source: 'Core Rulebook',
     prerequisites: [{ type: 'race', description: 'Gnome' }],
     description: 'You favor unusual weapons.',
-    benefits: ['You are trained with glaives and kukris.', 'You treat gnome weapons as one category simpler for proficiency.'],
+    benefits: [
+      'You are trained with glaives and kukris.',
+      'You treat gnome weapons as one category simpler for proficiency.',
+    ],
   },
   {
     id: 'illusion-sense',
@@ -131,7 +151,9 @@ export const ancestryFeats: FeatDefinition[] = [
     source: 'Core Rulebook',
     prerequisites: [{ type: 'race', description: 'Goblin' }],
     description: 'You know that the best food is free food.',
-    benefits: ['You gain a +1 circumstance bonus to checks to Subsist and to find valuable items in refuse.'],
+    benefits: [
+      'You gain a +1 circumstance bonus to checks to Subsist and to find valuable items in refuse.',
+    ],
   },
   {
     id: 'goblin-scuttle',
@@ -139,7 +161,7 @@ export const ancestryFeats: FeatDefinition[] = [
     system: 'pf2e',
     source: 'Core Rulebook',
     prerequisites: [{ type: 'race', description: 'Goblin' }],
-    description: 'You take advantage of your allies\' movements to move yourself.',
+    description: "You take advantage of your allies' movements to move yourself.",
     benefits: ['When an ally ends a move action adjacent to you, you can Step as a reaction.'],
   },
   {
@@ -149,7 +171,10 @@ export const ancestryFeats: FeatDefinition[] = [
     source: 'Core Rulebook',
     prerequisites: [{ type: 'race', description: 'Goblin' }],
     description: 'Others might lookitated by the weapons of your people.',
-    benefits: ['You are trained with the dogslicer and horsechopper.', 'You treat goblin weapons as one category simpler for proficiency.'],
+    benefits: [
+      'You are trained with the dogslicer and horsechopper.',
+      'You treat goblin weapons as one category simpler for proficiency.',
+    ],
   },
   // Halfling
   {
@@ -159,7 +184,9 @@ export const ancestryFeats: FeatDefinition[] = [
     source: 'Core Rulebook',
     prerequisites: [{ type: 'race', description: 'Halfling' }],
     description: 'You have learned to blend into crowds.',
-    benefits: ['You can use creatures at least one size larger than you as cover for Hide and Sneak.'],
+    benefits: [
+      'You can use creatures at least one size larger than you as cover for Hide and Sneak.',
+    ],
   },
   {
     id: 'halfling-lore',
@@ -168,7 +195,10 @@ export const ancestryFeats: FeatDefinition[] = [
     source: 'Core Rulebook',
     prerequisites: [{ type: 'race', description: 'Halfling' }],
     description: 'You have picked up tricks of many trades.',
-    benefits: ['You gain trained proficiency in Acrobatics and Stealth.', 'You also become trained in Halfling Lore.'],
+    benefits: [
+      'You gain trained proficiency in Acrobatics and Stealth.',
+      'You also become trained in Halfling Lore.',
+    ],
   },
   {
     id: 'halfling-luck',
@@ -186,7 +216,10 @@ export const ancestryFeats: FeatDefinition[] = [
     source: 'Core Rulebook',
     prerequisites: [{ type: 'race', description: 'Halfling' }],
     description: 'You favor the weapons of your people.',
-    benefits: ['You are trained with slings, halfling sling staffs, and shortswords.', 'You treat halfling weapons as one category simpler for proficiency.'],
+    benefits: [
+      'You are trained with slings, halfling sling staffs, and shortswords.',
+      'You treat halfling weapons as one category simpler for proficiency.',
+    ],
   },
   {
     id: 'sure-feet',
@@ -195,7 +228,9 @@ export const ancestryFeats: FeatDefinition[] = [
     source: 'Core Rulebook',
     prerequisites: [{ type: 'race', description: 'Halfling' }],
     description: 'You are nimble on uneven surfaces.',
-    benefits: ['You gain a +2 circumstance bonus to Acrobatics checks and Reflex saves against being knocked prone.'],
+    benefits: [
+      'You gain a +2 circumstance bonus to Acrobatics checks and Reflex saves against being knocked prone.',
+    ],
   },
   // Human
   {
@@ -232,7 +267,10 @@ export const ancestryFeats: FeatDefinition[] = [
     source: 'Core Rulebook',
     prerequisites: [{ type: 'race', description: 'Human' }],
     description: 'Your stubbornness is legendary.',
-    benefits: ['You gain a +1 circumstance bonus to saves against effects that would make you controlled.', 'On a success, you get a critical success.'],
+    benefits: [
+      'You gain a +1 circumstance bonus to saves against effects that would make you controlled.',
+      'On a success, you get a critical success.',
+    ],
   },
   {
     id: 'natural-ambition',

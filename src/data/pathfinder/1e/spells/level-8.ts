@@ -15,8 +15,12 @@ export const level8Spells: Spell[] = [
     concentration: false,
     ritual: false,
     savingThrow: { attribute: 'con', success: 'half' },
-    description: 'This spell evaporates moisture from the body of each subject living creature, causing flesh to wither and crack and crumble to dust. This deals 1d6 points of damage per caster level (maximum 20d6).',
-    damage: { base: { count: 1, die: 'd6', notation: '1d6 per level (max 20d6)' }, type: 'necrotic' },
+    description:
+      'This spell evaporates moisture from the body of each subject living creature, causing flesh to wither and crack and crumble to dust. This deals 1d6 points of damage per caster level (maximum 20d6).',
+    damage: {
+      base: { count: 1, die: 'd6', notation: '1d6 per level (max 20d6)' },
+      type: 'necrotic',
+    },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -33,7 +37,8 @@ export const level8Spells: Spell[] = [
     concentration: false,
     ritual: false,
     savingThrow: { attribute: 'dex', success: 'half' },
-    description: 'Meteor swarm is a very powerful and spectacular spell that is similar to fireball in many aspects. When you cast it, four 2-foot-diameter spheres spring from your outstretched hand and streak in straight lines to the spots you select. The meteor spheres leave a fiery trail of sparks. Each sphere deals 2d6 points of bludgeoning damage and 6d6 points of fire damage.',
+    description:
+      'Meteor swarm is a very powerful and spectacular spell that is similar to fireball in many aspects. When you cast it, four 2-foot-diameter spheres spring from your outstretched hand and streak in straight lines to the spots you select. The meteor spheres leave a fiery trail of sparks. Each sphere deals 2d6 points of bludgeoning damage and 6d6 points of fire damage.',
     damage: { base: { count: 6, die: 'd6', notation: '2d6 bludgeoning + 6d6 fire' }, type: 'fire' },
     classes: ['sorcerer', 'wizard'],
   },
@@ -50,7 +55,8 @@ export const level8Spells: Spell[] = [
     duration: { type: 'special', description: 'See text' },
     concentration: false,
     ritual: false,
-    description: 'You utter a single word of power that instantly causes one creature of your choice to become stunned, whether the creature can hear the word or not. The duration of the spell depends on the target\'s current hit point total.',
+    description:
+      "You utter a single word of power that instantly causes one creature of your choice to become stunned, whether the creature can hear the word or not. The duration of the spell depends on the target's current hit point total.",
     classes: ['sorcerer', 'wizard'],
   },
 ];

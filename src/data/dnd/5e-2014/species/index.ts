@@ -23,9 +23,9 @@ export const dnd5eSpecies: Species[] = [
 ];
 
 export function getSpeciesById(id: string): Species | undefined {
-  return dnd5eSpecies.find(species => species.id === id);
+  return dnd5eSpecies.find((species) => species.id === id);
 }
 
 export function getSpeciesBySystem(system: string): Species[] {
-  return dnd5eSpecies.filter(species => species.system === system);
+  return dnd5eSpecies.filter((species) => species.system === system);
 }

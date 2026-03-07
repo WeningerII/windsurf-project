@@ -25,16 +25,4 @@ export const pf1eClasses = {
   wizard,
 };
 
-export {
-  barbarian,
-  bard,
-  cleric,
-  druid,
-  fighter,
-  monk,
-  paladin,
-  ranger,
-  rogue,
-  sorcerer,
-  wizard,
-};
+export { barbarian, bard, cleric, druid, fighter, monk, paladin, ranger, rogue, sorcerer, wizard };

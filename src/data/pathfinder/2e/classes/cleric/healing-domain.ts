@@ -108,7 +108,8 @@ export const healingDomainSubclass: Subclass = {
           id: 'healing-domain-ultimate-feat',
           name: 'Ultimate Healing Domain Feat',
           source: 'Cleric 9',
-          description: 'You gain an ultimate feat that represents the pinnacle of your healing abilities.',
+          description:
+            'You gain an ultimate feat that represents the pinnacle of your healing abilities.',
         },
       ],
     },
@@ -174,7 +175,8 @@ export const healingDomainSubclass: Subclass = {
           id: 'healing-domain-apex-feat',
           name: 'Apex Healing Domain Feat',
           source: 'Cleric 15',
-          description: 'You gain an apex feat that represents the ultimate expression of your healing abilities.',
+          description:
+            'You gain an apex feat that represents the ultimate expression of your healing abilities.',
         },
       ],
     },

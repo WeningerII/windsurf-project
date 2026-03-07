@@ -4,10 +4,6 @@ import { undeadCR11Plus } from './cr-11-plus';
 
 export { undeadCR0to5, undeadCR6to10, undeadCR11Plus };
 
-export const allUndead = [
-  ...undeadCR0to5,
-  ...undeadCR6to10,
-  ...undeadCR11Plus,
-];
+export const allUndead = [...undeadCR0to5, ...undeadCR6to10, ...undeadCR11Plus];
 
 export default allUndead;

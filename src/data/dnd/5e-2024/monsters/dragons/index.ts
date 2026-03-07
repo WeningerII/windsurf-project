@@ -4,10 +4,6 @@ import { dragonsCR11Plus } from './cr-11-plus';
 
 export { dragonsCR0to5, dragonsCR6to10, dragonsCR11Plus };
 
-export const allDragons = [
-  ...dragonsCR0to5,
-  ...dragonsCR6to10,
-  ...dragonsCR11Plus,
-];
+export const allDragons = [...dragonsCR0to5, ...dragonsCR6to10, ...dragonsCR11Plus];
 
 export default allDragons;

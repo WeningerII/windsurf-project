@@ -6,63 +6,52 @@ export const sorcerer: CharacterClass = {
   name: 'Sorcerer',
   system: 'dnd-5e-2024',
   source: 'SRD 5.2',
-  
+
   version: '5.2',
   lastUpdated: '2026-01-13',
   sourceBook: {
     name: 'System Reference Document 5.2 (2024)',
-    url: 'https://dnd.wizards.com/resources/systems-reference-document'
+    url: 'https://dnd.wizards.com/resources/systems-reference-document',
   },
-  
+
   hitDie: 'd6',
   primaryAbility: ['cha'],
   savingThrowProficiencies: ['con', 'cha'],
-  
+
   armorProficiencies: [],
   weaponProficiencies: ['simple'],
   toolProficiencies: [],
-  
+
   skillProficiencies: {
     count: 2,
     options: ['arcana', 'deception', 'insight', 'intimidation', 'persuasion', 'religion'],
     label: 'Choose two skills',
   },
-  
+
   equipmentChoices: [
     {
       choose: 1,
-      options: [
-        ['light-crossbow', 'bolts-20'],
-        ['simple-weapon'],
-      ],
+      options: [['light-crossbow', 'bolts-20'], ['simple-weapon']],
     },
     {
       choose: 1,
-      options: [
-        ['component-pouch'],
-        ['arcane-focus'],
-      ],
+      options: [['component-pouch'], ['arcane-focus']],
     },
     {
       choose: 1,
-      options: [
-        ['dungeoneers-pack'],
-        ['explorers-pack'],
-      ],
+      options: [['dungeoneers-pack'], ['explorers-pack']],
     },
     {
       choose: 1,
-      options: [
-        ['dagger', 'dagger'],
-      ],
+      options: [['dagger', 'dagger']],
     },
   ],
-  
+
   startingGold: {
     dice: '3d4',
     multiplier: 10,
   },
-  
+
   features: [
     {
       level: 1,
@@ -71,7 +60,8 @@ export const sorcerer: CharacterClass = {
           id: 'innate-sorcery',
           name: 'Innate Sorcery',
           source: 'Sorcerer 1',
-          description: 'An event in your past, or in the life of a parent or ancestor, left an indelible mark on you, infusing you with arcane magic. As a Bonus Action, you can unleash the magic within you for 1 minute. For the duration, the spell save DC of your Sorcerer spells increases by 1, and you have Advantage on attack rolls for Sorcerer spells you cast. You can use this feature twice, and you regain all expended uses of it when you finish a Long Rest.',
+          description:
+            'An event in your past, or in the life of a parent or ancestor, left an indelible mark on you, infusing you with arcane magic. As a Bonus Action, you can unleash the magic within you for 1 minute. For the duration, the spell save DC of your Sorcerer spells increases by 1, and you have Advantage on attack rolls for Sorcerer spells you cast. You can use this feature twice, and you regain all expended uses of it when you finish a Long Rest.',
           uses: {
             current: 2,
             max: 2,
@@ -82,7 +72,8 @@ export const sorcerer: CharacterClass = {
           id: 'spellcasting-sorcerer',
           name: 'Spellcasting',
           source: 'Sorcerer 1',
-          description: 'You have learned to manipulate the fabric of reality with your will and your innate magic. You can cast Sorcerer spells.',
+          description:
+            'You have learned to manipulate the fabric of reality with your will and your innate magic. You can cast Sorcerer spells.',
         },
       ],
     },
@@ -93,13 +84,15 @@ export const sorcerer: CharacterClass = {
           id: 'font-of-magic',
           name: 'Font of Magic',
           source: 'Sorcerer 2',
-          description: 'You tap into a deep wellspring of magic within yourself. This wellspring is represented by Sorcery Points, which allow you to create a variety of magical effects. You have 2 Sorcery Points, and you gain more as you reach higher levels. You regain all spent Sorcery Points when you finish a Long Rest. You can also use your Sorcery Points to gain additional spell slots or sacrifice spell slots to gain additional Sorcery Points.',
+          description:
+            'You tap into a deep wellspring of magic within yourself. This wellspring is represented by Sorcery Points, which allow you to create a variety of magical effects. You have 2 Sorcery Points, and you gain more as you reach higher levels. You regain all spent Sorcery Points when you finish a Long Rest. You can also use your Sorcery Points to gain additional spell slots or sacrifice spell slots to gain additional Sorcery Points.',
         },
         {
           id: 'metamagic',
           name: 'Metamagic',
           source: 'Sorcerer 2',
-          description: 'You gain the ability to twist your spells to suit your needs. You gain two Metamagic options of your choice. You gain more at higher levels. You can use only one Metamagic option on a spell when you cast it, unless otherwise noted.',
+          description:
+            'You gain the ability to twist your spells to suit your needs. You gain two Metamagic options of your choice. You gain more at higher levels. You can use only one Metamagic option on a spell when you cast it, unless otherwise noted.',
         },
       ],
     },
@@ -110,7 +103,8 @@ export const sorcerer: CharacterClass = {
           id: 'sorcerous-origin',
           name: 'Sorcerer Subclass',
           source: 'Sorcerer 3',
-          description: 'You choose a Sorcerous Origin, which describes the source of your innate magical power.',
+          description:
+            'You choose a Sorcerous Origin, which describes the source of your innate magical power.',
         },
       ],
     },
@@ -132,7 +126,8 @@ export const sorcerer: CharacterClass = {
           id: 'sorcerous-vitality',
           name: 'Sorcerous Vitality',
           source: 'Sorcerer 5',
-          description: 'Your innate magic sustains you in battle. As a Bonus Action, you can spend 1 or more Sorcery Points to regain Hit Points. For each Sorcery Point you spend, you roll a d6 and add your Constitution modifier to the roll. You regain a number of Hit Points equal to the total.',
+          description:
+            'Your innate magic sustains you in battle. As a Bonus Action, you can spend 1 or more Sorcery Points to regain Hit Points. For each Sorcery Point you spend, you roll a d6 and add your Constitution modifier to the roll. You regain a number of Hit Points equal to the total.',
         },
       ],
     },
@@ -147,7 +142,8 @@ export const sorcerer: CharacterClass = {
           id: 'sorcery-incarnate',
           name: 'Sorcery Incarnate',
           source: 'Sorcerer 7',
-          description: 'While your Innate Sorcery feature is active, you can use up to two Metamagic options on a spell when you cast it.',
+          description:
+            'While your Innate Sorcery feature is active, you can use up to two Metamagic options on a spell when you cast it.',
         },
       ],
     },
@@ -207,7 +203,8 @@ export const sorcerer: CharacterClass = {
           id: 'sorcerous-restoration',
           name: 'Sorcerous Restoration',
           source: 'Sorcerer 15',
-          description: 'You regain 4 expended Sorcery Points whenever you finish a Short Rest. Additionally, when you roll Initiative and have no Sorcery Points remaining, you regain 4 Sorcery Points.',
+          description:
+            'You regain 4 expended Sorcery Points whenever you finish a Short Rest. Additionally, when you roll Initiative and have no Sorcery Points remaining, you regain 4 Sorcery Points.',
         },
       ],
     },
@@ -240,7 +237,8 @@ export const sorcerer: CharacterClass = {
           id: 'arcane-apotheosis',
           name: 'Arcane Apotheosis',
           source: 'Sorcerer 18',
-          description: 'While your Innate Sorcery feature is active, you can use one Metamagic option on each of your turns without spending Sorcery Points.',
+          description:
+            'While your Innate Sorcery feature is active, you can use one Metamagic option on each of your turns without spending Sorcery Points.',
         },
       ],
     },
@@ -251,7 +249,8 @@ export const sorcerer: CharacterClass = {
           id: 'epic-boon',
           name: 'Epic Boon',
           source: 'Sorcerer 19',
-          description: 'You gain an Epic Boon feat or another feat of your choice for which you qualify.',
+          description:
+            'You gain an Epic Boon feat or another feat of your choice for which you qualify.',
         },
         {
           id: 'ability-score-improvement-19',
@@ -268,23 +267,24 @@ export const sorcerer: CharacterClass = {
           id: 'sorcery-incarnate-20',
           name: 'Sorcerous Restoration Improvement',
           source: 'Sorcerer 20',
-          description: 'You regain 4 Sorcery Points when you finish a Short Rest, or when you roll Initiative and have no Sorcery Points left.',
+          description:
+            'You regain 4 Sorcery Points when you finish a Short Rest, or when you roll Initiative and have no Sorcery Points left.',
         },
       ],
     },
   ],
-  
+
   subclassLevel: 3,
   subclasses: [draconicBloodlineSubclass],
-  
+
   subclassSelection: {
     timing: 'level',
     optional: false,
     canChange: false,
     prerequisitesMustMeet: false,
-    flavorText: 'At 3rd level, you choose a Sorcerous Origin.'
+    flavorText: 'At 3rd level, you choose a Sorcerous Origin.',
   },
-  
+
   classResources: [
     {
       id: 'sorcery-points',
@@ -302,7 +302,7 @@ export const sorcerer: CharacterClass = {
       defaultValue: 2,
     },
   ],
-  
+
   spellcasting: {
     ability: 'cha',
     spellListId: 'sorcerer',
@@ -322,7 +322,7 @@ export const sorcerer: CharacterClass = {
     ritualCasting: true,
     multiclassCasterLevel: 'full',
   },
-  
+
   multiclassRequirements: [
     {
       type: 'attribute',
@@ -330,15 +330,15 @@ export const sorcerer: CharacterClass = {
       description: 'Charisma 13',
     },
   ],
-  
+
   multiclassProficiencies: {
     armor: [],
     weapons: [],
     tools: [],
   },
-  
+
   description: 'A spellcaster who draws on inherent magic from a gift or bloodline.',
-  
+
   displayMetadata: {
     icon: 'flame',
     color: '#FF4500',

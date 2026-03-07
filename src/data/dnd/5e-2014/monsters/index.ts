@@ -21,53 +21,68 @@ export const dnd5eMonstersByCR = {
 };
 
 // Index by ID
-export const dnd5eMonstersById: Record<string, Monster> = dnd5eMonsters.reduce((acc, monster) => {
-  acc[monster.id] = monster;
-  return acc;
-}, {} as Record<string, Monster>);
+export const dnd5eMonstersById: Record<string, Monster> = dnd5eMonsters.reduce(
+  (acc, monster) => {
+    acc[monster.id] = monster;
+    return acc;
+  },
+  {} as Record<string, Monster>
+);
 
 // Index by CR
-export const dnd5eMonstersByExactCR: Record<number, Monster[]> = dnd5eMonsters.reduce((acc, monster) => {
-  const cr = monster.challengeRating;
-  if (!acc[cr]) {
-    acc[cr] = [];
-  }
-  acc[cr].push(monster);
-  return acc;
-}, {} as Record<number, Monster[]>);
+export const dnd5eMonstersByExactCR: Record<number, Monster[]> = dnd5eMonsters.reduce(
+  (acc, monster) => {
+    const cr = monster.challengeRating;
+    if (!acc[cr]) {
+      acc[cr] = [];
+    }
+    acc[cr].push(monster);
+    return acc;
+  },
+  {} as Record<number, Monster[]>
+);
 
 // Index by Type
-export const dnd5eMonstersByType: Record<string, Monster[]> = dnd5eMonsters.reduce((acc, monster) => {
-  const type = monster.type;
-  if (!acc[type]) {
-    acc[type] = [];
-  }
-  acc[type].push(monster);
-  return acc;
-}, {} as Record<string, Monster[]>);
+export const dnd5eMonstersByType: Record<string, Monster[]> = dnd5eMonsters.reduce(
+  (acc, monster) => {
+    const type = monster.type;
+    if (!acc[type]) {
+      acc[type] = [];
+    }
+    acc[type].push(monster);
+    return acc;
+  },
+  {} as Record<string, Monster[]>
+);
 
 // Index by Size
-export const dnd5eMonstersBySize: Record<string, Monster[]> = dnd5eMonsters.reduce((acc, monster) => {
-  const size = monster.size;
-  if (!acc[size]) {
-    acc[size] = [];
-  }
-  acc[size].push(monster);
-  return acc;
-}, {} as Record<string, Monster[]>);
+export const dnd5eMonstersBySize: Record<string, Monster[]> = dnd5eMonsters.reduce(
+  (acc, monster) => {
+    const size = monster.size;
+    if (!acc[size]) {
+      acc[size] = [];
+    }
+    acc[size].push(monster);
+    return acc;
+  },
+  {} as Record<string, Monster[]>
+);
 
 // Index by Environment
-export const dnd5eMonstersByEnvironment: Record<string, Monster[]> = dnd5eMonsters.reduce((acc, monster) => {
-  if (monster.environment) {
-    monster.environment.forEach(env => {
-      if (!acc[env]) {
-        acc[env] = [];
-      }
-      acc[env].push(monster);
-    });
-  }
-  return acc;
-}, {} as Record<string, Monster[]>);
+export const dnd5eMonstersByEnvironment: Record<string, Monster[]> = dnd5eMonsters.reduce(
+  (acc, monster) => {
+    if (monster.environment) {
+      monster.environment.forEach((env) => {
+        if (!acc[env]) {
+          acc[env] = [];
+        }
+        acc[env].push(monster);
+      });
+    }
+    return acc;
+  },
+  {} as Record<string, Monster[]>
+);
 
 // Statistics
 export const monsterStats = {
@@ -78,14 +93,20 @@ export const monsterStats = {
     cr6to10: dnd5eCR6to10Monsters.length,
     cr11Plus: dnd5eCR11PlusMonsters.length,
   },
-  byType: Object.entries(dnd5eMonstersByType).reduce((acc, [type, monsters]) => {
-    acc[type] = monsters.length;
-    return acc;
-  }, {} as Record<string, number>),
-  bySize: Object.entries(dnd5eMonstersBySize).reduce((acc, [size, monsters]) => {
-    acc[size] = monsters.length;
-    return acc;
-  }, {} as Record<string, number>),
+  byType: Object.entries(dnd5eMonstersByType).reduce(
+    (acc, [type, monsters]) => {
+      acc[type] = monsters.length;
+      return acc;
+    },
+    {} as Record<string, number>
+  ),
+  bySize: Object.entries(dnd5eMonstersBySize).reduce(
+    (acc, [size, monsters]) => {
+      acc[size] = monsters.length;
+      return acc;
+    },
+    {} as Record<string, number>
+  ),
 };
 
 // Helper functions
@@ -98,7 +119,7 @@ export function getMonstersByCR(cr: number): Monster[] {
 }
 
 export function getMonstersByCRRange(minCR: number, maxCR: number): Monster[] {
-  return dnd5eMonsters.filter(m => m.challengeRating >= minCR && m.challengeRating <= maxCR);
+  return dnd5eMonsters.filter((m) => m.challengeRating >= minCR && m.challengeRating <= maxCR);
 }
 
 export function getMonstersByType(type: string): Monster[] {
@@ -114,9 +135,4 @@ export function calculateEncounterXP(monsters: Monster[]): number {
 }
 
 // Export individual collections
-export { 
-  dnd5eCR0to1Monsters, 
-  dnd5eCR2to5Monsters, 
-  dnd5eCR6to10Monsters,
-  dnd5eCR11PlusMonsters,
-};
+export { dnd5eCR0to1Monsters, dnd5eCR2to5Monsters, dnd5eCR6to10Monsters, dnd5eCR11PlusMonsters };

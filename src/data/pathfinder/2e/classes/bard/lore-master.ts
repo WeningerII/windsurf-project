@@ -5,7 +5,8 @@ export const loreMasterSubclass: Subclass = {
   id: 'pf2e-bard-lore-master',
   name: 'Lore Master',
   parentClassId: 'bard',
-  description: 'A bard devoted to knowledge and lore who wields the power of ancient wisdom and arcane secrets.',
+  description:
+    'A bard devoted to knowledge and lore who wields the power of ancient wisdom and arcane secrets.',
   features: [
     {
       level: 1,
@@ -108,7 +109,8 @@ export const loreMasterSubclass: Subclass = {
           id: 'lore-ultimate-feat',
           name: 'Ultimate Lore Feat',
           source: 'Bard 9',
-          description: 'You gain an ultimate feat that represents the pinnacle of your lore abilities.',
+          description:
+            'You gain an ultimate feat that represents the pinnacle of your lore abilities.',
         },
       ],
     },
@@ -174,7 +176,8 @@ export const loreMasterSubclass: Subclass = {
           id: 'lore-apex-feat',
           name: 'Apex Lore Feat',
           source: 'Bard 15',
-          description: 'You gain an apex feat that represents the ultimate expression of your lore abilities.',
+          description:
+            'You gain an apex feat that represents the ultimate expression of your lore abilities.',
         },
       ],
     },

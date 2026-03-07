@@ -10,14 +10,22 @@ export const level6Spells: Spell[] = [
     school: 'divination',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'an ointment for the eyes that costs 25 gp; is made from mushroom powder, saffron, and fat; and is consumed by the spell', materialCost: 25, materialConsumed: true },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'an ointment for the eyes that costs 25 gp; is made from mushroom powder, saffron, and fat; and is consumed by the spell',
+      materialCost: 25,
+      materialConsumed: true,
+    },
     duration: { type: 'hours', hours: 1 },
     concentration: false,
     ritual: false,
-    description: 'This spell gives the willing creature you touch the ability to see things as they actually are. For the duration, the creature has truesight, notices secret doors hidden by magic, and can see into the Ethereal Plane, all out to a range of 120 feet.',
+    description:
+      'This spell gives the willing creature you touch the ability to see things as they actually are. For the duration, the creature has truesight, notices secret doors hidden by magic, and can see into the Ethereal Plane, all out to a range of 120 feet.',
     classes: ['bard', 'cleric', 'sorcerer', 'warlock', 'wizard'],
-  }
-,
+  },
   {
     id: 'heal',
     name: 'Heal',
@@ -32,28 +40,36 @@ export const level6Spells: Spell[] = [
     healing: { count: 70, die: 'd4', notation: '70' },
     concentration: false,
     ritual: false,
-    description: 'Choose a creature that you can see within range. A surge of positive energy washes through the creature, causing it to regain 70 hit points. This spell also ends blindness, deafness, and any diseases affecting the target. This spell has no effect on constructs or undead.',
-    atHigherLevels: 'When you cast this spell using a spell slot of 7th level or higher, the amount of healing increases by 10 for each slot level above 6th.',
+    description:
+      'Choose a creature that you can see within range. A surge of positive energy washes through the creature, causing it to regain 70 hit points. This spell also ends blindness, deafness, and any diseases affecting the target. This spell has no effect on constructs or undead.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of 7th level or higher, the amount of healing increases by 10 for each slot level above 6th.',
     classes: ['cleric', 'druid'],
-  }
-,
+  },
   {
     id: 'heroes-feast',
-    name: 'Heroes\' Feast',
+    name: "Heroes' Feast",
     system: 'dnd-5e-2014',
     source: 'SRD 5.1',
     level: 6,
     school: 'conjuration',
     castingTime: { type: 'minute', amount: 10 },
     range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a gem-encrusted bowl worth at least 1,000 gp, which the spell consumes', materialCost: 1000, materialConsumed: true },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a gem-encrusted bowl worth at least 1,000 gp, which the spell consumes',
+      materialCost: 1000,
+      materialConsumed: true,
+    },
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You bring forth a great feast, including magnificent food and drink. The feast takes 1 hour to consume and disappears at the end of that time, and the beneficial effects don\'t set in until this hour is over. Up to twelve creatures can partake of the feast. A creature that partakes of the feast gains several benefits. The creature is cured of all diseases and poison, becomes immune to poison and being frightened, and makes all Wisdom saving throws with advantage. Its hit point maximum also increases by 2d10, and it gains the same number of hit points. These benefits last for 24 hours.',
+    description:
+      "You bring forth a great feast, including magnificent food and drink. The feast takes 1 hour to consume and disappears at the end of that time, and the beneficial effects don't set in until this hour is over. Up to twelve creatures can partake of the feast. A creature that partakes of the feast gains several benefits. The creature is cured of all diseases and poison, becomes immune to poison and being frightened, and makes all Wisdom saving throws with advantage. Its hit point maximum also increases by 2d10, and it gains the same number of hit points. These benefits last for 24 hours.",
     classes: ['cleric', 'druid'],
-  }
-,
+  },
   {
     id: 'find-the-path',
     name: 'Find the Path',
@@ -63,14 +79,20 @@ export const level6Spells: Spell[] = [
     school: 'divination',
     castingTime: { type: 'minute', amount: 1 },
     range: { type: 'self' },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a set of divinatory tools—such as bones, ivory sticks, cards, teeth, or carved runes—worth 100 gp and an object from the location you wish to find' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'a set of divinatory tools—such as bones, ivory sticks, cards, teeth, or carved runes—worth 100 gp and an object from the location you wish to find',
+    },
     duration: { type: 'concentration', maxDuration: '1 day' },
     concentration: true,
     ritual: false,
-    description: 'This spell allows you to find the shortest, most direct physical route to a specific fixed location that you are familiar with on the same plane of existence. If you name a destination on another plane of existence, a destination that moves (such as a mobile fortress), or a destination that isn\'t specific (such as "a green dragon\'s lair"), the spell fails. For the duration, as long as you are on the same plane of existence as the destination, you know how far it is and in what direction it lies. While you are traveling there, whenever you are presented with a choice of paths along the way, you automatically determine which path is the shortest and most direct route (but not necessarily the safest route) to the destination.',
+    description:
+      'This spell allows you to find the shortest, most direct physical route to a specific fixed location that you are familiar with on the same plane of existence. If you name a destination on another plane of existence, a destination that moves (such as a mobile fortress), or a destination that isn\'t specific (such as "a green dragon\'s lair"), the spell fails. For the duration, as long as you are on the same plane of existence as the destination, you know how far it is and in what direction it lies. While you are traveling there, whenever you are presented with a choice of paths along the way, you automatically determine which path is the shortest and most direct route (but not necessarily the safest route) to the destination.',
     classes: ['bard', 'cleric', 'druid'],
-  }
-,
+  },
   {
     id: 'arcane-gate',
     name: 'Arcane Gate',
@@ -84,10 +106,10 @@ export const level6Spells: Spell[] = [
     duration: { type: 'concentration', maxDuration: '10 minutes' },
     concentration: true,
     ritual: false,
-    description: 'You create linked teleportation portals that remain open for the duration. Choose two points on the ground that you can see, one point within 10 feet of you and one point within 500 feet of you. A circular portal, 10 feet in diameter, opens over each point. If the portal would open in a space occupied by a creature, the spell fails, and the casting is wasted.',
+    description:
+      'You create linked teleportation portals that remain open for the duration. Choose two points on the ground that you can see, one point within 10 feet of you and one point within 500 feet of you. A circular portal, 10 feet in diameter, opens over each point. If the portal would open in a space occupied by a creature, the spell fails, and the casting is wasted.',
     classes: ['sorcerer', 'wizard'],
-  }
-,
+  },
   {
     id: 'conjure-elementals',
     name: 'Conjure Elementals',
@@ -97,15 +119,22 @@ export const level6Spells: Spell[] = [
     school: 'conjuration',
     castingTime: { type: 'minute', amount: 1 },
     range: { type: 'ranged', feet: 90 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'burning incense for air, soft clay for earth, salt water for water, or sulfur for fire' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'burning incense for air, soft clay for earth, salt water for water, or sulfur for fire',
+    },
     duration: { type: 'concentration', maxDuration: '1 hour' },
     concentration: true,
     ritual: false,
-    description: 'You call forth elementals that appear in unoccupied spaces that you can see within range. You choose one of the following options for what appears: Four elementals of challenge rating 1 or lower, Two elementals of challenge rating 2 or lower, One elemental of challenge rating 3 or lower. An elemental summoned by this spell disappears when it drops to 0 hit points or when the spell ends.',
-    atHigherLevels: 'When you cast this spell using certain higher-level spell slots, you choose one of the summoning options above, and more creatures appear: twice as many with a 7th-level slot and three times as many with a 9th-level slot.',
+    description:
+      'You call forth elementals that appear in unoccupied spaces that you can see within range. You choose one of the following options for what appears: Four elementals of challenge rating 1 or lower, Two elementals of challenge rating 2 or lower, One elemental of challenge rating 3 or lower. An elemental summoned by this spell disappears when it drops to 0 hit points or when the spell ends.',
+    atHigherLevels:
+      'When you cast this spell using certain higher-level spell slots, you choose one of the summoning options above, and more creatures appear: twice as many with a 7th-level slot and three times as many with a 9th-level slot.',
     classes: ['druid', 'wizard'],
-  }
-,
+  },
   {
     id: 'contingency',
     name: 'Contingency',
@@ -115,14 +144,20 @@ export const level6Spells: Spell[] = [
     school: 'evocation',
     castingTime: { type: 'minute', amount: 10 },
     range: { type: 'self' },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a statuette of yourself carved from ivory and decorated with gems worth at least 1,500 gp' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'a statuette of yourself carved from ivory and decorated with gems worth at least 1,500 gp',
+    },
     duration: { type: 'hours', hours: 10 },
     concentration: false,
     ritual: false,
-    description: 'Choose a spell of 5th level or lower that you can cast, that you know or that appears in a cleric, druid, paladin, ranger, sorcerer, or wizard spell list. You cast that spell—called the contingent spell—as part of casting contingency, expending spell slots for both, but the contingent spell doesn\'t come into effect. Instead, it takes effect when a certain circumstance occurs. You describe that circumstance when you cast the two spells. For example, a contingency cast with water breathing might stipulate that water breathing comes into effect when you are engulfed in water or a similar liquid.',
+    description:
+      "Choose a spell of 5th level or lower that you can cast, that you know or that appears in a cleric, druid, paladin, ranger, sorcerer, or wizard spell list. You cast that spell—called the contingent spell—as part of casting contingency, expending spell slots for both, but the contingent spell doesn't come into effect. Instead, it takes effect when a certain circumstance occurs. You describe that circumstance when you cast the two spells. For example, a contingency cast with water breathing might stipulate that water breathing comes into effect when you are engulfed in water or a similar liquid.",
     classes: ['wizard'],
-  }
-,
+  },
   {
     id: 'eyebite',
     name: 'Eyebite',
@@ -136,10 +171,10 @@ export const level6Spells: Spell[] = [
     duration: { type: 'concentration', maxDuration: '1 minute' },
     concentration: true,
     ritual: false,
-    description: 'For the spell\'s duration, your eyes become an inky void imbued with dread power. You can use your action to cast the spell\'s eye rays. You decide how many rays you create, choosing from the options below, and you can create a number of rays equal to the number of actions you have left. Before you finish casting this spell, you can decide that one of the rays is a searing ray, one is a paralyzing ray, one is a fear ray, and one is a slowing ray. If you create a ray that isn\'t one of these four options, it must be a death ray.',
+    description:
+      "For the spell's duration, your eyes become an inky void imbued with dread power. You can use your action to cast the spell's eye rays. You decide how many rays you create, choosing from the options below, and you can create a number of rays equal to the number of actions you have left. Before you finish casting this spell, you can decide that one of the rays is a searing ray, one is a paralyzing ray, one is a fear ray, and one is a slowing ray. If you create a ray that isn't one of these four options, it must be a death ray.",
     classes: ['wizard'],
-  }
-,
+  },
   {
     id: 'forbiddance',
     name: 'Forbiddance',
@@ -149,14 +184,20 @@ export const level6Spells: Spell[] = [
     school: 'abjuration',
     castingTime: { type: 'minute', amount: 10 },
     range: { type: 'ranged', feet: 60 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'the ashes of a phoenix, rare incense, and at least 1,000 gp worth of powdered silver and mercury' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'the ashes of a phoenix, rare incense, and at least 1,000 gp worth of powdered silver and mercury',
+    },
     duration: { type: 'permanent' },
     concentration: false,
     ritual: true,
-    description: 'You protect a point you can see within range against magical travel and planar travel. Until the spell ends, no creature can teleport into the area or use portals, such as those created by the gate spell, to enter the area. The spell proofs the area against the astral projection and ethereal travel. This spell does not prevent creatures from leaving the protected area.',
+    description:
+      'You protect a point you can see within range against magical travel and planar travel. Until the spell ends, no creature can teleport into the area or use portals, such as those created by the gate spell, to enter the area. The spell proofs the area against the astral projection and ethereal travel. This spell does not prevent creatures from leaving the protected area.',
     classes: ['cleric'],
-  }
-,
+  },
   {
     id: 'glass-staff',
     name: 'Glass Staff',
@@ -166,14 +207,19 @@ export const level6Spells: Spell[] = [
     school: 'transmutation',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'ranged', feet: 60 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a small glass rod' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a small glass rod',
+    },
     duration: { type: 'concentration', maxDuration: '1 minute' },
     concentration: true,
     ritual: false,
-    description: 'You cause a nonmagical wooden staff or quarterstaff to become a staff of glass. For the duration, the staff is transparent and has resistance to bludgeoning, piercing, and slashing damage. If the staff is used as a weapon, it deals an extra 1d6 force damage on a hit.',
+    description:
+      'You cause a nonmagical wooden staff or quarterstaff to become a staff of glass. For the duration, the staff is transparent and has resistance to bludgeoning, piercing, and slashing damage. If the staff is used as a weapon, it deals an extra 1d6 force damage on a hit.',
     classes: ['wizard'],
-  }
-,
+  },
   {
     id: 'globe-of-invulnerability',
     name: 'Globe of Invulnerability',
@@ -183,14 +229,19 @@ export const level6Spells: Spell[] = [
     school: 'abjuration',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'self' },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a glass or crystal bead that shatters when the spell ends' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a glass or crystal bead that shatters when the spell ends',
+    },
     duration: { type: 'concentration', maxDuration: '1 minute' },
     concentration: true,
     ritual: false,
-    description: 'An immobile, invisible, magical barrier springs into existence in a 10-foot radius around you. This barrier moves with you and remains for the duration. Any spell of 5th level or lower cast from outside the barrier can\'t affect creatures or objects within it, even if the spell is cast using a higher level spell slot. Such a spell can target creatures and objects within the barrier, but the spell has no effect on them. Similarly, the area within the barrier is excluded from areas affected by such spells.',
+    description:
+      "An immobile, invisible, magical barrier springs into existence in a 10-foot radius around you. This barrier moves with you and remains for the duration. Any spell of 5th level or lower cast from outside the barrier can't affect creatures or objects within it, even if the spell is cast using a higher level spell slot. Such a spell can target creatures and objects within the barrier, but the spell has no effect on them. Similarly, the area within the barrier is excluded from areas affected by such spells.",
     classes: ['sorcerer', 'wizard'],
-  }
-,
+  },
   {
     id: 'guards-and-wards',
     name: 'Guards and Wards',
@@ -200,14 +251,20 @@ export const level6Spells: Spell[] = [
     school: 'abjuration',
     castingTime: { type: 'minute', amount: 10 },
     range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'burning incense, a small measure of powdered silver, and a piece of iron or steel' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'burning incense, a small measure of powdered silver, and a piece of iron or steel',
+    },
     duration: { type: 'hours', hours: 24 },
     concentration: false,
     ritual: false,
-    description: 'You create a magical ward that protects an area you touch. The area can be as small as a single room or as large as a castle, but the total area can\'t exceed 5,000 square feet (roughly a 70-foot-by-70-foot area). When you cast the spell, you can specify individuals who are unaffected by any of the effects that you choose. You can designate a password that, when spoken aloud, makes the speaker immune to these effects.',
+    description:
+      "You create a magical ward that protects an area you touch. The area can be as small as a single room or as large as a castle, but the total area can't exceed 5,000 square feet (roughly a 70-foot-by-70-foot area). When you cast the spell, you can specify individuals who are unaffected by any of the effects that you choose. You can designate a password that, when spoken aloud, makes the speaker immune to these effects.",
     classes: ['bard', 'wizard'],
-  }
-,
+  },
   {
     id: 'livening-stone',
     name: 'Livening Stone',
@@ -217,14 +274,19 @@ export const level6Spells: Spell[] = [
     school: 'transmutation',
     castingTime: { type: 'minute', amount: 1 },
     range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a stone worth at least 100 gp' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a stone worth at least 100 gp',
+    },
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You touch a stone and cause it to become a stone golem under your control. The stone must be at least 2 feet in any dimension. The golem obeys your verbal commands. If you don\'t issue any commands to the golem, it defends itself against hostile creatures but otherwise takes no actions.',
+    description:
+      "You touch a stone and cause it to become a stone golem under your control. The stone must be at least 2 feet in any dimension. The golem obeys your verbal commands. If you don't issue any commands to the golem, it defends itself against hostile creatures but otherwise takes no actions.",
     classes: ['wizard'],
-  }
-,
+  },
   {
     id: 'mass-heal',
     name: 'Mass Heal',
@@ -239,10 +301,10 @@ export const level6Spells: Spell[] = [
     healing: { count: 70, die: 'd1', notation: '70 hp' },
     concentration: false,
     ritual: false,
-    description: 'A wave of healing energy washes out from a point of your choice within range. Choose up to six creatures in a 30-foot-radius sphere centered on that point. Each creature in that sphere regains hit points equal to 70.',
+    description:
+      'A wave of healing energy washes out from a point of your choice within range. Choose up to six creatures in a 30-foot-radius sphere centered on that point. Each creature in that sphere regains hit points equal to 70.',
     classes: ['cleric'],
-  }
-,
+  },
   {
     id: 'move-earth',
     name: 'Move Earth',
@@ -256,27 +318,32 @@ export const level6Spells: Spell[] = [
     duration: { type: 'concentration', maxDuration: '2 hours' },
     concentration: true,
     ritual: false,
-    description: 'Choose an area of terrain no larger than 40 feet on each side within range. You can reshape dirt, sand, or clay in the area in any manner you choose for the duration. You can raise or lower the elevation of the terrain, create or fill in a trench, erect or flatten a wall, or form a pillar. The extent of any such changes can\'t exceed twice the spell\'s range.',
+    description:
+      "Choose an area of terrain no larger than 40 feet on each side within range. You can reshape dirt, sand, or clay in the area in any manner you choose for the duration. You can raise or lower the elevation of the terrain, create or fill in a trench, erect or flatten a wall, or form a pillar. The extent of any such changes can't exceed twice the spell's range.",
     classes: ['druid', 'wizard'],
-  }
-,
+  },
   {
     id: 'otiluke-resilience',
-    name: 'Otiluke\'s Resilience',
+    name: "Otiluke's Resilience",
     system: 'dnd-5e-2014',
     source: 'SRD 5.1',
     level: 6,
     school: 'abjuration',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a diamond worth at least 1,500 gp' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a diamond worth at least 1,500 gp',
+    },
     duration: { type: 'concentration', maxDuration: '1 hour' },
     concentration: true,
     ritual: false,
-    description: 'You grant yourself or a creature you touch resistance to one damage type of your choice for the duration. At the end of each of the target\'s turns, it can end this effect and choose a different damage type to have resistance to.',
+    description:
+      "You grant yourself or a creature you touch resistance to one damage type of your choice for the duration. At the end of each of the target's turns, it can end this effect and choose a different damage type to have resistance to.",
     classes: ['wizard'],
-  }
-,
+  },
   {
     id: 'planar-ally',
     name: 'Planar Ally',
@@ -286,14 +353,19 @@ export const level6Spells: Spell[] = [
     school: 'conjuration',
     castingTime: { type: 'hour', amount: 1 },
     range: { type: 'ranged', feet: 60 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a vial of holy water and 25 gp worth of incense' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a vial of holy water and 25 gp worth of incense',
+    },
     duration: { type: 'instant' },
     concentration: false,
     ritual: true,
-    description: 'By casting this spell, you attempt to bind a celestial, fey, fiend, or undead creature to your will. The creature must be able to hear you and must be of a challenge rating equal to or lower than your character level. Appearing in an unoccupied space that you can see within range, the creature makes a Charisma saving throw. On a failed save, it is bound to serve you for the spell\'s duration.',
+    description:
+      "By casting this spell, you attempt to bind a celestial, fey, fiend, or undead creature to your will. The creature must be able to hear you and must be of a challenge rating equal to or lower than your character level. Appearing in an unoccupied space that you can see within range, the creature makes a Charisma saving throw. On a failed save, it is bound to serve you for the spell's duration.",
     classes: ['cleric'],
-  }
-,
+  },
   {
     id: 'programmed-illusion',
     name: 'Programmed Illusion',
@@ -303,14 +375,19 @@ export const level6Spells: Spell[] = [
     school: 'illusion',
     castingTime: { type: 'minute', amount: 1 },
     range: { type: 'ranged', feet: 120 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a small piece of fleece and jade dust worth at least 25 gp' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a small piece of fleece and jade dust worth at least 25 gp',
+    },
     duration: { type: 'special', description: 'until dispelled' },
     concentration: false,
     ritual: false,
-    description: 'You create an illusion of an object, a creature, or some other visible phenomenon within range that activates under the condition you specify. The illusion is imperceptible until then. It must be no larger than a 30-foot cube, and use only the senses of sight and sound. The spell lasts until it is dispelled.',
+    description:
+      'You create an illusion of an object, a creature, or some other visible phenomenon within range that activates under the condition you specify. The illusion is imperceptible until then. It must be no larger than a 30-foot cube, and use only the senses of sight and sound. The spell lasts until it is dispelled.',
     classes: ['bard', 'wizard'],
-  }
-,
+  },
   {
     id: 'transport-via-plants',
     name: 'Transport via Plants',
@@ -324,10 +401,10 @@ export const level6Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'This spell creates a magical link between a Large or larger inanimate plant within range and another plant, at any distance, on the same plane of existence. You must have seen or touched the destination plant at least once before. For the duration, you can use your action to transport yourself and up to eight willing creatures from the origin plant to the destination plant, provided the path between them is clear.',
+    description:
+      'This spell creates a magical link between a Large or larger inanimate plant within range and another plant, at any distance, on the same plane of existence. You must have seen or touched the destination plant at least once before. For the duration, you can use your action to transport yourself and up to eight willing creatures from the origin plant to the destination plant, provided the path between them is clear.',
     classes: ['druid'],
-  }
-,
+  },
   {
     id: 'true-polymorph',
     name: 'True Polymorph',
@@ -337,14 +414,20 @@ export const level6Spells: Spell[] = [
     school: 'transmutation',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a jade circlet worth at least 1,500 gp' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a jade circlet worth at least 1,500 gp',
+    },
     duration: { type: 'concentration', maxDuration: '1 hour' },
     concentration: true,
     ritual: false,
-    description: 'Choose one creature or nonmagical object that you can see within range. You transform the creature into a different creature, the creature into a nonmagical object, or the object into a creature. A creature can\'t be transformed into an object if it has at least 1 hit point. An object can\'t be transformed into a creature.',
+    description:
+      "Choose one creature or nonmagical object that you can see within range. You transform the creature into a different creature, the creature into a nonmagical object, or the object into a creature. A creature can't be transformed into an object if it has at least 1 hit point. An object can't be transformed into a creature.",
     classes: ['bard', 'warlock', 'wizard'],
-  }
+  },
 ];
 
 // Helper function for lookups
-export const getLevel6SpellById = (id: string) => level6Spells.find(spell => spell.id === id);
+export const getLevel6SpellById = (id: string) => level6Spells.find((spell) => spell.id === id);

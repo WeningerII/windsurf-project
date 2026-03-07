@@ -14,7 +14,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You splash a glob of acid that splatters your target and nearby creatures. Make a spell attack. If you hit, you deal 1d6 acid damage plus 1 splash damage. On a critical success, the target also takes 1 persistent acid damage.',
+    description:
+      'You splash a glob of acid that splatters your target and nearby creatures. Make a spell attack. If you hit, you deal 1d6 acid damage plus 1 splash damage. On a critical success, the target also takes 1 persistent acid damage.',
     damage: { base: { count: 1, die: 'd6', notation: '1d6' }, type: 'acid' },
     classes: ['sorcerer', 'wizard'],
   },
@@ -31,7 +32,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'Siphoning negative energy into yourself, your hand radiates a pale darkness. Your touch weakens the living and disorients undead. Make a melee spell attack roll. On a hit, the target takes 1d4 negative damage and becomes enfeebled 1 until the start of your next turn.',
+    description:
+      'Siphoning negative energy into yourself, your hand radiates a pale darkness. Your touch weakens the living and disorients undead. Make a melee spell attack roll. On a hit, the target takes 1d4 negative damage and becomes enfeebled 1 until the start of your next turn.',
     damage: { base: { count: 1, die: 'd4', notation: '1d4' }, type: 'necrotic' },
     classes: ['sorcerer', 'wizard'],
   },
@@ -48,7 +50,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You cloud the target\'s mind and daze it with a mental jolt. The target must attempt a Will save. On a failure, the target is stunned 1 (stunned 2 on a critical failure).',
+    description:
+      "You cloud the target's mind and daze it with a mental jolt. The target must attempt a Will save. On a failure, the target is stunned 1 (stunned 2 on a critical failure).",
     savingThrow: { attribute: 'wis', success: 'none' },
     classes: ['bard', 'sorcerer', 'wizard'],
   },
@@ -65,7 +68,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You unleash a beam of divine energy. Make a ranged spell attack roll against the target. On a hit, the target takes 1d4 good damage and on a critical success, the target is also dazzled for 1 round.',
+    description:
+      'You unleash a beam of divine energy. Make a ranged spell attack roll against the target. On a hit, the target takes 1d4 good damage and on a critical success, the target is also dazzled for 1 round.',
     damage: { base: { count: 1, die: 'd4', notation: '1d4' }, type: 'radiant' },
     classes: ['cleric'],
   },
@@ -82,7 +86,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'An arc of lightning leaps from one target to another. You deal electricity damage equal to 1d4 plus your spellcasting ability modifier to each target, with a basic Reflex save.',
+    description:
+      'An arc of lightning leaps from one target to another. You deal electricity damage equal to 1d4 plus your spellcasting ability modifier to each target, with a basic Reflex save.',
     damage: { base: { count: 1, die: 'd4', notation: '1d4' }, type: 'lightning' },
     savingThrow: { attribute: 'dex', success: 'half' },
     classes: ['sorcerer', 'wizard'],
@@ -100,7 +105,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'You ward yourself or an ally. The target gains a +1 status bonus to AC for 1 minute.',
+    description:
+      'You ward yourself or an ally. The target gains a +1 status bonus to AC for 1 minute.',
     classes: ['cleric'],
   },
   {
@@ -116,7 +122,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'rounds', rounds: 1 },
     concentration: false,
     ritual: false,
-    description: 'You ask for divine guidance. The target gains a +1 status bonus to one attack roll, Perception check, saving throw, or skill check before the start of your next turn.',
+    description:
+      'You ask for divine guidance. The target gains a +1 status bonus to one attack roll, Perception check, saving throw, or skill check before the start of your next turn.',
     classes: ['cleric', 'druid'],
   },
   {
@@ -132,7 +139,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'permanent' },
     concentration: false,
     ritual: false,
-    description: 'The object glows, casting bright light in a 20-foot radius (and dim light for the next 20 feet) like a torch. If you cast this spell again on a second object, the light spell on the first object ends.',
+    description:
+      'The object glows, casting bright light in a 20-foot radius (and dim light for the next 20 feet) like a torch. If you cast this spell again on a second object, the light spell on the first object ends.',
     classes: ['bard', 'cleric', 'druid', 'sorcerer', 'wizard'],
   },
   {
@@ -148,7 +156,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: true,
     ritual: false,
-    description: 'You create a floating hand that can manipulate objects. The hand can move up to 30 feet each round and can perform simple tasks like opening doors or picking up items weighing 1 Bulk or less.',
+    description:
+      'You create a floating hand that can manipulate objects. The hand can move up to 30 feet each round and can perform simple tasks like opening doors or picking up items weighing 1 Bulk or less.',
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -164,7 +173,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You mouth words quietly to the target, who hears them as if you were standing next to them. The target can respond in kind.',
+    description:
+      'You mouth words quietly to the target, who hears them as if you were standing next to them. The target can respond in kind.',
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -180,7 +190,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'A small ball of flame appears in the palm of your hand, and you lash out with it either in melee or at range. Make a spell attack roll against your target. If you hit, you deal 1d4 fire damage plus your spellcasting ability modifier.',
+    description:
+      'A small ball of flame appears in the palm of your hand, and you lash out with it either in melee or at range. Make a spell attack roll against your target. If you hit, you deal 1d4 fire damage plus your spellcasting ability modifier.',
     damage: { base: { count: 1, die: 'd4', notation: '1d4' }, type: 'fire' },
     classes: ['cleric', 'druid', 'sorcerer', 'wizard'],
   },
@@ -197,7 +208,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You blast an icy ray. Make a spell attack roll. The ray deals cold damage equal to 1d4 plus your spellcasting ability modifier.',
+    description:
+      'You blast an icy ray. Make a spell attack roll. The ray deals cold damage equal to 1d4 plus your spellcasting ability modifier.',
     damage: { base: { count: 1, die: 'd4', notation: '1d4' }, type: 'cold' },
     classes: ['sorcerer', 'wizard'],
   },
@@ -214,7 +226,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'rounds', rounds: 1 },
     concentration: false,
     ritual: false,
-    description: 'You raise a magical shield of force. This counts as using the Raise a Shield action, giving you a +1 circumstance bonus to AC. While the spell is in effect, you can also use the Shield Block reaction with your magic shield.',
+    description:
+      'You raise a magical shield of force. This counts as using the Raise a Shield action, giving you a +1 circumstance bonus to AC. While the spell is in effect, you can also use the Shield Block reaction with your magic shield.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -230,7 +243,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'A vine lashes out from your hand to entangle a target. Make a spell attack roll. On a hit, the target takes a –10-foot status penalty to its Speed for 1 round. On a critical hit, the target is also immobilized for 1 round.',
+    description:
+      'A vine lashes out from your hand to entangle a target. Make a spell attack roll. On a hit, the target takes a –10-foot status penalty to its Speed for 1 round. On a critical hit, the target is also immobilized for 1 round.',
     classes: ['druid'],
   },
   {
@@ -246,7 +260,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You hurl a loose object at the target. Make a spell attack. On a hit, you deal 1d6 bludgeoning, piercing, or slashing damage (depending on the object).',
+    description:
+      'You hurl a loose object at the target. Make a spell attack. On a hit, you deal 1d6 bludgeoning, piercing, or slashing damage (depending on the object).',
     damage: { base: { count: 1, die: 'd6', notation: '1d6' }, type: 'bludgeoning' },
     classes: ['sorcerer', 'wizard'],
   },

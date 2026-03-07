@@ -39,7 +39,7 @@ export const controlled: Condition = {
   category: 'basic',
   description: 'A controlled character has no free will.',
   effects: [
-    'Character\'s actions each turn are dictated by another, controlling, character',
+    "Character's actions each turn are dictated by another, controlling, character",
     'No independent decision-making',
   ],
 };
@@ -50,7 +50,8 @@ export const dazed: Condition = {
   system: 'mam3e',
   source: "Hero's Handbook",
   category: 'basic',
-  description: 'A dazed character is limited to free actions and a single standard action per turn.',
+  description:
+    'A dazed character is limited to free actions and a single standard action per turn.',
   effects: [
     'Limited to free actions and one standard action per turn',
     'Standard action may be used to perform a move action',
@@ -113,10 +114,7 @@ export const fatigued: Condition = {
   source: "Hero's Handbook",
   category: 'basic',
   description: 'Fatigued characters are hindered.',
-  effects: [
-    'Character is hindered (moves at half speed)',
-    'Recover after one hour of rest',
-  ],
+  effects: ['Character is hindered (moves at half speed)', 'Recover after one hour of rest'],
   supersededBy: ['exhausted'],
 };
 
@@ -127,10 +125,7 @@ export const hindered: Condition = {
   source: "Hero's Handbook",
   category: 'basic',
   description: 'A hindered character moves at half normal speed.',
-  effects: [
-    'Movement speed reduced by –1 speed rank',
-    'Move at half normal speed',
-  ],
+  effects: ['Movement speed reduced by –1 speed rank', 'Move at half normal speed'],
   supersededBy: ['immobile'],
 };
 
@@ -169,10 +164,7 @@ export const normal: Condition = {
   source: "Hero's Handbook",
   category: 'basic',
   description: 'The character is unharmed and unaffected by other conditions.',
-  effects: [
-    'No conditions affecting the character',
-    'Acting normally',
-  ],
+  effects: ['No conditions affecting the character', 'Acting normally'],
 };
 
 export const stunned: Condition = {
@@ -182,10 +174,7 @@ export const stunned: Condition = {
   source: "Hero's Handbook",
   category: 'basic',
   description: 'Stunned characters cannot take any actions, including free actions.',
-  effects: [
-    'Cannot take any actions',
-    'Cannot take free actions',
-  ],
+  effects: ['Cannot take any actions', 'Cannot take free actions'],
 };
 
 export const transformed: Condition = {
@@ -194,7 +183,8 @@ export const transformed: Condition = {
   system: 'mam3e',
   source: "Hero's Handbook",
   category: 'basic',
-  description: 'Transformed characters have some or all of their traits altered by an outside agency.',
+  description:
+    'Transformed characters have some or all of their traits altered by an outside agency.',
   effects: [
     'Some or all traits altered by external effect',
     'May range from appearance change to complete trait alteration',
@@ -301,7 +291,8 @@ export const entranced: Condition = {
   system: 'mam3e',
   source: "Hero's Handbook",
   category: 'combined',
-  description: 'Entranced characters are stunned, taking no actions other than paying attention to the entrancing effect.',
+  description:
+    'Entranced characters are stunned, taking no actions other than paying attention to the entrancing effect.',
   effects: [
     'Stunned (cannot take actions)',
     'Can only pay attention to entrancing effect',
@@ -456,10 +447,7 @@ export const surprised: Condition = {
   source: "Hero's Handbook",
   category: 'combined',
   description: 'A surprised character is caught off-guard.',
-  effects: [
-    'Stunned (cannot take actions)',
-    'Vulnerable (active defenses halved)',
-  ],
+  effects: ['Stunned (cannot take actions)', 'Vulnerable (active defenses halved)'],
 };
 
 export const combinedConditions: Condition[] = [
@@ -478,10 +466,7 @@ export const combinedConditions: Condition[] = [
   surprised,
 ];
 
-export const allConditions: Condition[] = [
-  ...basicConditions,
-  ...combinedConditions,
-];
+export const allConditions: Condition[] = [...basicConditions, ...combinedConditions];
 
 export const conditionsById: Record<string, Condition> = allConditions.reduce(
   (acc, condition) => {

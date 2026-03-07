@@ -11,45 +11,43 @@ export const level6Spells: Spell[] = [
     school: 'conjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 120
+      feet: 120,
     },
     areaOfEffect: {
       type: 'sphere',
-      radius: 20
+      radius: 20,
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'Piece of rhubarb leaf and an adder\'s stomach'
+      materialDescription: "Piece of rhubarb leaf and an adder's stomach",
     },
     duration: {
       type: 'rounds',
-      rounds: 1
+      rounds: 1,
     },
     concentration: false,
     ritual: false,
-    description: 'Acid fog creates a billowing mass of misty vapors similar to that produced by a solid fog spell. In addition to slowing creatures down and obscuring sight, this spell\'s vapors are highly acidic. Each round on your turn, starting when you cast the spell, the fog deals 2d6 points of acid damage to each creature and object within it.',
+    description:
+      "Acid fog creates a billowing mass of misty vapors similar to that produced by a solid fog spell. In addition to slowing creatures down and obscuring sight, this spell's vapors are highly acidic. Each round on your turn, starting when you cast the spell, the fog deals 2d6 points of acid damage to each creature and object within it.",
     damage: {
       base: {
         count: 2,
         die: 'd6',
-        notation: '2d6'
+        notation: '2d6',
       },
-      type: 'acid'
+      type: 'acid',
     },
-    classes: [
-      'sorcerer',
-      'wizard'
-    ],
+    classes: ['sorcerer', 'wizard'],
     levelsByClass: {
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'analyze-dweomer-35e',
@@ -60,35 +58,32 @@ export const level6Spells: Spell[] = [
     school: 'divination',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'Ruby and owl feather worth 1,500 gp'
+      materialDescription: 'Ruby and owl feather worth 1,500 gp',
     },
     duration: {
       type: 'rounds',
-      rounds: 1
+      rounds: 1,
     },
     concentration: true,
     ritual: false,
-    description: 'You discern all spells and magical properties present in a number of creatures or objects. Each round, you may examine a single creature or object that you can see as a free action. In the case of a magic item, you learn its functions, how to activate its functions (if appropriate), and how many charges are left (if it uses charges).',
-    classes: [
-      'bard',
-      'sorcerer',
-      'wizard'
-    ],
+    description:
+      'You discern all spells and magical properties present in a number of creatures or objects. Each round, you may examine a single creature or object that you can see as a free action. In the case of a magic item, you learn its functions, how to activate its functions (if appropriate), and how many charges are left (if it uses charges).',
+    classes: ['bard', 'sorcerer', 'wizard'],
     levelsByClass: {
       bard: 6,
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'animate-objects-cleric-35e',
@@ -99,30 +94,28 @@ export const level6Spells: Spell[] = [
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 100
+      feet: 100,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'rounds',
-      rounds: 1
+      rounds: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Objects attack your foes.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'antilife-shell-cleric-35e',
@@ -133,30 +126,28 @@ export const level6Spells: Spell[] = [
     school: 'abjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 10
+      feet: 10,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 10
+      minutes: 10,
     },
     concentration: false,
     ritual: false,
     description: '10-ft. field hedges out living creatures.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'antilife-shell-druid-35e',
@@ -167,30 +158,28 @@ export const level6Spells: Spell[] = [
     school: 'abjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 10
+      feet: 10,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 10
+      minutes: 10,
     },
     concentration: false,
     ritual: false,
     description: '10-ft.-radius field hedges out living creatures.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 6
-    }
+      druid: 6,
+    },
   },
   {
     id: 'antimagic-field-35e',
@@ -201,39 +190,36 @@ export const level6Spells: Spell[] = [
     school: 'abjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 10
+      feet: 10,
     },
     areaOfEffect: {
       type: 'sphere',
-      radius: 10
+      radius: 10,
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'Pinch of powdered iron or iron filings'
+      materialDescription: 'Pinch of powdered iron or iron filings',
     },
     duration: {
       type: 'minutes',
-      minutes: 10
+      minutes: 10,
     },
     concentration: false,
     ritual: false,
-    description: 'An invisible barrier surrounds you and moves with you. The space within this barrier is impervious to most magical effects, including spells, spell-like abilities, and supernatural abilities. Likewise, it prevents the functioning of any magic items or spells within its confines.',
-    classes: [
-      'cleric',
-      'sorcerer',
-      'wizard'
-    ],
+    description:
+      'An invisible barrier surrounds you and moves with you. The space within this barrier is impervious to most magical effects, including spells, spell-like abilities, and supernatural abilities. Likewise, it prevents the functioning of any magic items or spells within its confines.',
+    classes: ['cleric', 'sorcerer', 'wizard'],
     levelsByClass: {
       cleric: 6,
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'banishment-cleric-35e',
@@ -244,138 +230,128 @@ export const level6Spells: Spell[] = [
     school: 'abjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'Banishes 2 HD/level of extraplanar creatures.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'bears-endurance-mass-35e',
-    name: 'Bear\'s Endurance, Mass',
+    name: "Bear's Endurance, Mass",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     level: 6,
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'Few hairs or pinch of dung from a bear'
+      materialDescription: 'Few hairs or pinch of dung from a bear',
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
-    description: 'This spell functions like bear\'s endurance, except that it affects multiple creatures. The affected creature gains a +4 enhancement bonus to Constitution, which adds the usual benefits to hit points, Fortitude saves, Constitution checks, and so forth.',
-    classes: [
-      'cleric',
-      'druid',
-      'sorcerer',
-      'wizard'
-    ],
+    description:
+      "This spell functions like bear's endurance, except that it affects multiple creatures. The affected creature gains a +4 enhancement bonus to Constitution, which adds the usual benefits to hit points, Fortitude saves, Constitution checks, and so forth.",
+    classes: ['cleric', 'druid', 'sorcerer', 'wizard'],
     levelsByClass: {
       cleric: 6,
       druid: 6,
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'bears-endurance-mass-cleric-35e',
-    name: 'Bear\'s Endurance, Mass',
+    name: "Bear's Endurance, Mass",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     level: 6,
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
-    description: 'As bear\'s endurance, affects one subject/level.',
-    classes: [
-      'cleric'
-    ],
+    description: "As bear's endurance, affects one subject/level.",
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'bears-endurance-mass-druid-35e',
-    name: 'Bear\'s Endurance, Mass',
+    name: "Bear's Endurance, Mass",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     level: 6,
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
-    description: 'As bear\'s endurance, affects one subject/level.',
-    classes: [
-      'druid'
-    ],
+    description: "As bear's endurance, affects one subject/level.",
+    classes: ['druid'],
     levelsByClass: {
-      druid: 6
-    }
+      druid: 6,
+    },
   },
   {
     id: 'blade-barrier-cleric-35e',
@@ -386,132 +362,124 @@ export const level6Spells: Spell[] = [
     school: 'evocation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 100
+      feet: 100,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Wall of blades deals 1d6/level damage.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'bulls-strength-mass-cleric-35e',
-    name: 'Bull\'s Strength, Mass',
+    name: "Bull's Strength, Mass",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     level: 6,
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
-    description: 'As bull\'s strength, affects one subject/level.',
-    classes: [
-      'cleric'
-    ],
+    description: "As bull's strength, affects one subject/level.",
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'bulls-strength-mass-druid-35e',
-    name: 'Bull\'s Strength, Mass',
+    name: "Bull's Strength, Mass",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     level: 6,
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
-    description: 'As bull\'s strength, affects one subject/level.',
-    classes: [
-      'druid'
-    ],
+    description: "As bull's strength, affects one subject/level.",
+    classes: ['druid'],
     levelsByClass: {
-      druid: 6
-    }
+      druid: 6,
+    },
   },
   {
     id: 'cats-grace-mass-druid-35e',
-    name: 'Cat\'s Grace, Mass',
+    name: "Cat's Grace, Mass",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     level: 6,
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
-    description: 'As cat\'s grace, affects one subject/level.',
-    classes: [
-      'druid'
-    ],
+    description: "As cat's grace, affects one subject/level.",
+    classes: ['druid'],
     levelsByClass: {
-      druid: 6
-    }
+      druid: 6,
+    },
   },
   {
     id: 'chain-lightning-6-35e',
@@ -522,44 +490,43 @@ export const level6Spells: Spell[] = [
     school: 'evocation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 400
+      feet: 400,
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'Bit of fur, an amber, glass, or crystal rod, plus one silver pin per caster level'
+      materialDescription:
+        'Bit of fur, an amber, glass, or crystal rod, plus one silver pin per caster level',
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
-    description: 'This spell creates an electrical discharge that begins as a single stroke commencing from your fingertips. Unlike lightning bolt, chain lightning strikes one object or creature initially, then arcs to other targets. The bolt deals 1d6 points of electricity damage per caster level (maximum 20d6) to the primary target.',
+    description:
+      'This spell creates an electrical discharge that begins as a single stroke commencing from your fingertips. Unlike lightning bolt, chain lightning strikes one object or creature initially, then arcs to other targets. The bolt deals 1d6 points of electricity damage per caster level (maximum 20d6) to the primary target.',
     damage: {
       base: {
         count: 20,
         die: 'd6',
-        notation: '20d6'
+        notation: '20d6',
       },
-      type: 'lightning'
+      type: 'lightning',
     },
     savingThrow: {
       attribute: 'dex',
-      success: 'half'
+      success: 'half',
     },
-    classes: [
-      'sorcerer',
-      'wizard'
-    ],
+    classes: ['sorcerer', 'wizard'],
     levelsByClass: {
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'chain-lightning-35e',
@@ -570,40 +537,39 @@ export const level6Spells: Spell[] = [
     school: 'evocation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 150
+      feet: 150,
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'A bit of fur; a piece of amber, crystal, or glass; and a small wooden stick or wand'
+      materialDescription:
+        'A bit of fur; a piece of amber, crystal, or glass; and a small wooden stick or wand',
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
-    description: 'You hurl a bolt of lightning toward a creature of your choice that you can see within range. Make a ranged spell attack against the target. On a hit, the target takes 10d8 lightning damage, and the lightning jumps to up to three other creatures of your choice that you can see within 30 feet of the target.',
+    description:
+      'You hurl a bolt of lightning toward a creature of your choice that you can see within range. Make a ranged spell attack against the target. On a hit, the target takes 10d8 lightning damage, and the lightning jumps to up to three other creatures of your choice that you can see within 30 feet of the target.',
     damage: {
       base: {
         count: 10,
         die: 'd8',
-        notation: '10d8'
+        notation: '10d8',
       },
-      type: 'lightning'
+      type: 'lightning',
     },
-    classes: [
-      'sorcerer',
-      'wizard'
-    ],
+    classes: ['sorcerer', 'wizard'],
     levelsByClass: {
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'circle-of-death-35e',
@@ -614,36 +580,34 @@ export const level6Spells: Spell[] = [
     school: 'necromancy',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 120
+      feet: 120,
     },
     areaOfEffect: {
       type: 'sphere',
-      radius: 40
+      radius: 40,
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'Powdered black pearl worth 500 gp'
+      materialDescription: 'Powdered black pearl worth 500 gp',
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
-    description: 'A circle of death snuffs out the life force of living creatures, killing them instantly. The spell slays 1d4 HD worth of living creatures per caster level (maximum 20d4). Creatures with the fewest HD are affected first; among creatures with equal HD, those who are closest to the burst\'s point of origin are affected first.',
-    classes: [
-      'sorcerer',
-      'wizard'
-    ],
+    description:
+      "A circle of death snuffs out the life force of living creatures, killing them instantly. The spell slays 1d4 HD worth of living creatures per caster level (maximum 20d4). Creatures with the fewest HD are affected first; among creatures with equal HD, those who are closest to the burst's point of origin are affected first.",
+    classes: ['sorcerer', 'wizard'],
     levelsByClass: {
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'contingency-35e',
@@ -654,32 +618,30 @@ export const level6Spells: Spell[] = [
     school: 'evocation',
     castingTime: {
       type: 'action',
-      amount: 10
+      amount: 10,
     },
     range: {
-      type: 'self'
+      type: 'self',
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'Quicksilver, eyelash of ogre mage, and 1,500 gp worth of powdered gems'
+      materialDescription: 'Quicksilver, eyelash of ogre mage, and 1,500 gp worth of powdered gems',
     },
     duration: {
       type: 'hours',
-      hours: 24
+      hours: 24,
     },
     concentration: false,
     ritual: false,
-    description: 'You can place another spell upon your person so that it comes into effect under some condition you dictate when casting contingency. The contingency spell and the companion spell are cast at the same time. The 10-minute casting time is the minimum total for both castings; if the companion spell has a casting time longer than 10 minutes, use that instead.',
-    classes: [
-      'sorcerer',
-      'wizard'
-    ],
+    description:
+      'You can place another spell upon your person so that it comes into effect under some condition you dictate when casting contingency. The contingency spell and the companion spell are cast at the same time. The 10-minute casting time is the minimum total for both castings; if the companion spell has a casting time longer than 10 minutes, use that instead.',
+    classes: ['sorcerer', 'wizard'],
     levelsByClass: {
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'create-undead-35e',
@@ -690,34 +652,32 @@ export const level6Spells: Spell[] = [
     school: 'necromancy',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'Clay pot filled with grave dirt and onyx gems worth 50 gp per HD of undead'
+      materialDescription:
+        'Clay pot filled with grave dirt and onyx gems worth 50 gp per HD of undead',
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
-    description: 'A much more potent spell than animate dead, this evil spell allows you to create more powerful sorts of undead: ghouls, ghasts, mummies, and mohrgs. The type or types of undead you can create is based on your caster level.',
-    classes: [
-      'cleric',
-      'sorcerer',
-      'wizard'
-    ],
+    description:
+      'A much more potent spell than animate dead, this evil spell allows you to create more powerful sorts of undead: ghouls, ghasts, mummies, and mohrgs. The type or types of undead you can create is based on your caster level.',
+    classes: ['cleric', 'sorcerer', 'wizard'],
     levelsByClass: {
       cleric: 6,
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'create-undead-cleric-35e',
@@ -728,29 +688,27 @@ export const level6Spells: Spell[] = [
     school: 'necromancy',
     castingTime: {
       type: 'hour',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 10
+      feet: 10,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: true
+      material: true,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'Create ghouls, ghasts, mummies, or mohrgs.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'cure-light-mass-druid-35e',
@@ -761,29 +719,27 @@ export const level6Spells: Spell[] = [
     school: 'conjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'Cures 1d8 damage +1/level for many creatures.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 6
-    }
+      druid: 6,
+    },
   },
   {
     id: 'cure-moderate-mass-cleric-35e',
@@ -794,29 +750,27 @@ export const level6Spells: Spell[] = [
     school: 'conjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'Cures 2d8 damage +1/level for many creatures.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'disintegrate-35e',
@@ -827,44 +781,42 @@ export const level6Spells: Spell[] = [
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 120
+      feet: 120,
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'Lodestone and pinch of dust'
+      materialDescription: 'Lodestone and pinch of dust',
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
-    description: 'A thin, green ray springs from your pointing finger. You must make a successful ranged touch attack to hit. Any creature struck by the ray takes 2d6 points of damage per caster level (to a maximum of 40d6). Any creature reduced to 0 or fewer hit points by this spell is entirely disintegrated, leaving behind only a trace of fine dust.',
+    description:
+      'A thin, green ray springs from your pointing finger. You must make a successful ranged touch attack to hit. Any creature struck by the ray takes 2d6 points of damage per caster level (to a maximum of 40d6). Any creature reduced to 0 or fewer hit points by this spell is entirely disintegrated, leaving behind only a trace of fine dust.',
     damage: {
       base: {
         count: 40,
         die: 'd6',
-        notation: '40d6'
+        notation: '40d6',
       },
-      type: 'force'
+      type: 'force',
     },
     savingThrow: {
       attribute: 'con',
-      success: 'half'
+      success: 'half',
     },
-    classes: [
-      'sorcerer',
-      'wizard'
-    ],
+    classes: ['sorcerer', 'wizard'],
     levelsByClass: {
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'dispel-magic-greater-6-35e',
@@ -875,37 +827,32 @@ export const level6Spells: Spell[] = [
     school: 'abjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 120
+      feet: 120,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
-    description: 'This spell functions like dispel magic, except that the maximum caster level on your dispel check is +20 instead of +10. Additionally, greater dispel magic has a chance to dispel any effect that remove curse can remove, even if dispel magic can\'t dispel that effect.',
-    classes: [
-      'bard',
-      'cleric',
-      'druid',
-      'sorcerer',
-      'wizard'
-    ],
+    description:
+      "This spell functions like dispel magic, except that the maximum caster level on your dispel check is +20 instead of +10. Additionally, greater dispel magic has a chance to dispel any effect that remove curse can remove, even if dispel magic can't dispel that effect.",
+    classes: ['bard', 'cleric', 'druid', 'sorcerer', 'wizard'],
     levelsByClass: {
       bard: 6,
       cleric: 6,
       druid: 6,
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'dispel-magic-greater-cleric-35e',
@@ -916,29 +863,27 @@ export const level6Spells: Spell[] = [
     school: 'abjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 100
+      feet: 100,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'As dispel magic, but up to +20 on check.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'dispel-magic-greater-druid-35e',
@@ -949,63 +894,59 @@ export const level6Spells: Spell[] = [
     school: 'abjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 100
+      feet: 100,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'As dispel magic, but +20 on check.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 6
-    }
+      druid: 6,
+    },
   },
   {
     id: 'eagles-splendor-mass-cleric-35e',
-    name: 'Eagle\'s Splendor, Mass',
+    name: "Eagle's Splendor, Mass",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     level: 6,
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
-    description: 'As eagle\'s splendor, affects one subject/level.',
-    classes: [
-      'cleric'
-    ],
+    description: "As eagle's splendor, affects one subject/level.",
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'eyebite-35e',
@@ -1016,38 +957,35 @@ export const level6Spells: Spell[] = [
     school: 'necromancy',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'rounds',
-      rounds: 1
+      rounds: 1,
     },
     concentration: false,
     ritual: false,
-    description: 'Each round, you may target a single living creature, striking it with waves of evil power. Depending on the target\'s HD, this attack has as many as three effects: Comatose for 10 minutes per caster level, Panicked for 1d4 rounds, or Sickened for 10 minutes per caster level.',
+    description:
+      "Each round, you may target a single living creature, striking it with waves of evil power. Depending on the target's HD, this attack has as many as three effects: Comatose for 10 minutes per caster level, Panicked for 1d4 rounds, or Sickened for 10 minutes per caster level.",
     savingThrow: {
       attribute: 'con',
-      success: 'none'
+      success: 'none',
     },
-    classes: [
-      'bard',
-      'sorcerer',
-      'wizard'
-    ],
+    classes: ['bard', 'sorcerer', 'wizard'],
     levelsByClass: {
       bard: 6,
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'find-path-cleric-35e',
@@ -1058,29 +996,27 @@ export const level6Spells: Spell[] = [
     school: 'divination',
     castingTime: {
       type: 'minutes',
-      minutes: 3
+      minutes: 3,
     },
     range: {
-      type: 'self'
+      type: 'self',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 10
+      minutes: 10,
     },
     concentration: false,
     ritual: false,
     description: 'Shows most direct way to a location.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'find-path-druid-35e',
@@ -1091,29 +1027,27 @@ export const level6Spells: Spell[] = [
     school: 'divination',
     castingTime: {
       type: 'minutes',
-      minutes: 3
+      minutes: 3,
     },
     range: {
-      type: 'self'
+      type: 'self',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 10
+      minutes: 10,
     },
     concentration: false,
     ritual: false,
     description: 'Shows most direct way to a location.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 6
-    }
+      druid: 6,
+    },
   },
   {
     id: 'find-the-path-35e',
@@ -1124,34 +1058,31 @@ export const level6Spells: Spell[] = [
     school: 'divination',
     castingTime: {
       type: 'action',
-      amount: 3
+      amount: 3,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'Set of divination counters worth 100 gp'
+      materialDescription: 'Set of divination counters worth 100 gp',
     },
     duration: {
       type: 'minutes',
-      minutes: 10
+      minutes: 10,
     },
     concentration: false,
     ritual: false,
-    description: 'The recipient of this spell can find the shortest, most direct physical route to a specified destination, be it the way into or out of a locale. The locale can be outdoors, underground, or even inside a maze spell. Find the path works with respect to locations, not objects or creatures at a locale.',
-    classes: [
-      'bard',
-      'cleric',
-      'druid'
-    ],
+    description:
+      'The recipient of this spell can find the shortest, most direct physical route to a specified destination, be it the way into or out of a locale. The locale can be outdoors, underground, or even inside a maze spell. Find the path works with respect to locations, not objects or creatures at a locale.',
+    classes: ['bard', 'cleric', 'druid'],
     levelsByClass: {
       bard: 6,
       cleric: 6,
-      druid: 6
-    }
+      druid: 6,
+    },
   },
   {
     id: 'fire-seeds-druid-35e',
@@ -1162,29 +1093,27 @@ export const level6Spells: Spell[] = [
     school: 'conjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 10
+      minutes: 10,
     },
     concentration: false,
     ritual: false,
     description: 'Acorns and berries become grenades and bombs.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 6
-    }
+      druid: 6,
+    },
   },
   {
     id: 'flesh-to-stone-35e',
@@ -1195,36 +1124,34 @@ export const level6Spells: Spell[] = [
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 120
+      feet: 120,
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'Lime, water, and earth'
+      materialDescription: 'Lime, water, and earth',
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
-    description: 'The subject, along with all its carried gear, turns into a mindless, inert statue. If the statue resulting from this spell is broken or damaged, the subject (if ever returned to its original state) has similar damage or deformities. The creature is not dead, but it does not seem to be alive either when viewed with spells such as deathwatch.',
+    description:
+      'The subject, along with all its carried gear, turns into a mindless, inert statue. If the statue resulting from this spell is broken or damaged, the subject (if ever returned to its original state) has similar damage or deformities. The creature is not dead, but it does not seem to be alive either when viewed with spells such as deathwatch.',
     savingThrow: {
       attribute: 'con',
-      success: 'none'
+      success: 'none',
     },
-    classes: [
-      'sorcerer',
-      'wizard'
-    ],
+    classes: ['sorcerer', 'wizard'],
     levelsByClass: {
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'forbiddance-cleric-35e',
@@ -1235,29 +1162,27 @@ export const level6Spells: Spell[] = [
     school: 'abjuration',
     castingTime: {
       type: 'minutes',
-      minutes: 6
+      minutes: 6,
     },
     range: {
       type: 'ranged',
-      feet: 100
+      feet: 100,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: true
+      material: true,
     },
     duration: {
-      type: 'permanent'
+      type: 'permanent',
     },
     concentration: false,
     ritual: false,
     description: 'Blocks planar travel, damages creatures of different alignment.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'freezing-sphere-35e',
@@ -1268,47 +1193,45 @@ export const level6Spells: Spell[] = [
     school: 'evocation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 400
+      feet: 400,
     },
     areaOfEffect: {
       type: 'sphere',
-      radius: 40
+      radius: 40,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
-    description: 'Freezing sphere creates a frigid globe of cold energy that streaks from your fingertips to the location you select, where it explodes in a 40-foot-radius burst, dealing 1d6 points of cold damage per caster level (maximum 15d6) to each creature in the area.',
+    description:
+      'Freezing sphere creates a frigid globe of cold energy that streaks from your fingertips to the location you select, where it explodes in a 40-foot-radius burst, dealing 1d6 points of cold damage per caster level (maximum 15d6) to each creature in the area.',
     damage: {
       base: {
         count: 15,
         die: 'd6',
-        notation: '15d6'
+        notation: '15d6',
       },
-      type: 'cold'
+      type: 'cold',
     },
     savingThrow: {
       attribute: 'dex',
-      success: 'half'
+      success: 'half',
     },
-    classes: [
-      'sorcerer',
-      'wizard'
-    ],
+    classes: ['sorcerer', 'wizard'],
     levelsByClass: {
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'geas-quest-cleric-35e',
@@ -1319,29 +1242,27 @@ export const level6Spells: Spell[] = [
     school: 'enchantment',
     castingTime: {
       type: 'minutes',
-      minutes: 10
+      minutes: 10,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: false,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'As lesser geas, plus it affects any creature.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'geas-quest-35e',
@@ -1352,43 +1273,39 @@ export const level6Spells: Spell[] = [
     school: 'enchantment',
     castingTime: {
       type: 'action',
-      amount: 10
+      amount: 10,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: false,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'permanent'
+      type: 'permanent',
     },
     concentration: false,
     ritual: false,
-    description: 'This spell functions similarly to lesser geas, except that it affects a creature of any HD and allows no saving throw. Instead of taking penalties, the subject becomes increasingly ill if it disobeys the geas. The first day, it takes 3d6 points of damage. On the second day, the subject takes 3d6 points of damage. Each day thereafter, it takes 3d6 points of damage until it follows your instructions.',
+    description:
+      'This spell functions similarly to lesser geas, except that it affects a creature of any HD and allows no saving throw. Instead of taking penalties, the subject becomes increasingly ill if it disobeys the geas. The first day, it takes 3d6 points of damage. On the second day, the subject takes 3d6 points of damage. Each day thereafter, it takes 3d6 points of damage until it follows your instructions.',
     damage: {
       base: {
         count: 3,
         die: 'd6',
-        notation: '3d6'
+        notation: '3d6',
       },
-      type: 'psychic'
+      type: 'psychic',
     },
-    classes: [
-      'bard',
-      'cleric',
-      'sorcerer',
-      'wizard'
-    ],
+    classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
     levelsByClass: {
       bard: 6,
       cleric: 6,
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'globe-of-invulnerability-greater-35e',
@@ -1399,33 +1316,31 @@ export const level6Spells: Spell[] = [
     school: 'abjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 10
+      feet: 10,
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'Glass or crystal bead'
+      materialDescription: 'Glass or crystal bead',
     },
     duration: {
       type: 'rounds',
-      rounds: 1
+      rounds: 1,
     },
     concentration: false,
     ritual: false,
-    description: 'This spell functions like lesser globe of invulnerability, except that it also excludes 4th-level spells and spell-like effects.',
-    classes: [
-      'sorcerer',
-      'wizard'
-    ],
+    description:
+      'This spell functions like lesser globe of invulnerability, except that it also excludes 4th-level spells and spell-like effects.',
+    classes: ['sorcerer', 'wizard'],
     levelsByClass: {
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'glyph-warding-greater-cleric-35e',
@@ -1436,28 +1351,26 @@ export const level6Spells: Spell[] = [
     school: 'abjuration',
     castingTime: {
       type: 'minutes',
-      minutes: 10
+      minutes: 10,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: true
+      material: true,
     },
     duration: {
-      type: 'permanent'
+      type: 'permanent',
     },
     concentration: false,
     ritual: false,
     description: 'As glyph of warding, but up to 10d8 damage or 6th-level spell.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'guards-and-wards-35e',
@@ -1468,36 +1381,35 @@ export const level6Spells: Spell[] = [
     school: 'abjuration',
     castingTime: {
       type: 'action',
-      amount: 30
+      amount: 30,
     },
     range: {
-      type: 'unlimited'
+      type: 'unlimited',
     },
     areaOfEffect: {
       type: 'cube',
-      feet: 200
+      feet: 200,
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'Burning incense, small measure of brimstone and oil, knotted string, small amount of blood'
+      materialDescription:
+        'Burning incense, small measure of brimstone and oil, knotted string, small amount of blood',
     },
     duration: {
       type: 'hours',
-      hours: 2
+      hours: 2,
     },
     concentration: false,
     ritual: false,
-    description: 'This powerful spell is primarily used to defend your stronghold. The ward protects 200 square feet per caster level. The spell creates multiple magical effects within the warded area. The whole warded area radiates strong magic of the abjuration school.',
-    classes: [
-      'sorcerer',
-      'wizard'
-    ],
+    description:
+      'This powerful spell is primarily used to defend your stronghold. The ward protects 200 square feet per caster level. The spell creates multiple magical effects within the warded area. The whole warded area radiates strong magic of the abjuration school.',
+    classes: ['sorcerer', 'wizard'],
     levelsByClass: {
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'harm-cleric-35e',
@@ -1508,28 +1420,26 @@ export const level6Spells: Spell[] = [
     school: 'necromancy',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'Deals 10 points/level damage to target.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'harm-35e',
@@ -1540,40 +1450,39 @@ export const level6Spells: Spell[] = [
     school: 'necromancy',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
-    description: 'Harm charges a subject with negative energy that deals 10 points of damage per caster level (to a maximum of 150 points at 15th level). If the creature successfully saves, harm deals half this amount, but it cannot reduce the target\'s hit points to less than 1.',
+    description:
+      "Harm charges a subject with negative energy that deals 10 points of damage per caster level (to a maximum of 150 points at 15th level). If the creature successfully saves, harm deals half this amount, but it cannot reduce the target's hit points to less than 1.",
     damage: {
       base: {
         count: 10,
         die: 'd10',
-        notation: '10d10'
+        notation: '10d10',
       },
-      type: 'necrotic'
+      type: 'necrotic',
     },
     savingThrow: {
       attribute: 'wis',
-      success: 'half'
+      success: 'half',
     },
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'heal-cleric-35e',
@@ -1584,99 +1493,93 @@ export const level6Spells: Spell[] = [
     school: 'conjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'Cures 10 points/level of damage, all diseases and mental conditions.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'heroes-feast-cleric-35e',
-    name: 'Heroes\' Feast',
+    name: "Heroes' Feast",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     level: 6,
     school: 'conjuration',
     castingTime: {
       type: 'minutes',
-      minutes: 10
+      minutes: 10,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'hours',
-      hours: 1
+      hours: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Food for one creature/level cures and grants combat bonuses.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'heroes-feast-35e',
-    name: 'Heroes\' Feast',
+    name: "Heroes' Feast",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     level: 6,
     school: 'conjuration',
     castingTime: {
       type: 'action',
-      amount: 10
+      amount: 10,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'Holy water and diamond dust worth 500 gp'
+      materialDescription: 'Holy water and diamond dust worth 500 gp',
     },
     duration: {
       type: 'hours',
-      hours: 1
+      hours: 1,
     },
     concentration: false,
     ritual: false,
-    description: 'You bring forth a great feast, including a magnificent table, chairs, service, and food and drink. The feast takes 1 hour to consume, and the beneficial effects do not set in until this hour is over. Every creature partaking of the feast is cured of all diseases, sickness, and nausea; becomes immune to poison for 12 hours; and gains 1d8 temporary hit points +1 point per two caster levels (maximum +10) after imbibing the nectar-like beverage that is part of the feast.',
-    classes: [
-      'bard',
-      'cleric'
-    ],
+    description:
+      'You bring forth a great feast, including a magnificent table, chairs, service, and food and drink. The feast takes 1 hour to consume, and the beneficial effects do not set in until this hour is over. Every creature partaking of the feast is cured of all diseases, sickness, and nausea; becomes immune to poison for 12 hours; and gains 1d8 temporary hit points +1 point per two caster levels (maximum +10) after imbibing the nectar-like beverage that is part of the feast.',
+    classes: ['bard', 'cleric'],
     levelsByClass: {
       bard: 6,
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'heroism-greater-35e',
@@ -1687,33 +1590,30 @@ export const level6Spells: Spell[] = [
     school: 'enchantment',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
-    description: 'This spell functions like heroism, except the creature gains a +4 morale bonus on attack rolls, saves, and skill checks, immunity to fear effects, and temporary hit points equal to your caster level (maximum 20).',
-    classes: [
-      'bard',
-      'sorcerer',
-      'wizard'
-    ],
+    description:
+      'This spell functions like heroism, except the creature gains a +4 morale bonus on attack rolls, saves, and skill checks, immunity to fear effects, and temporary hit points equal to your caster level (maximum 20).',
+    classes: ['bard', 'sorcerer', 'wizard'],
     levelsByClass: {
       bard: 6,
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'heroism-greater-6-35e',
@@ -1724,33 +1624,30 @@ export const level6Spells: Spell[] = [
     school: 'enchantment',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
-    description: 'This spell functions like heroism, except the creature gains a +4 morale bonus on attack rolls, saves, and skill checks, immunity to fear effects, and temporary hit points equal to your caster level (maximum 20).',
-    classes: [
-      'bard',
-      'sorcerer',
-      'wizard'
-    ],
+    description:
+      'This spell functions like heroism, except the creature gains a +4 morale bonus on attack rolls, saves, and skill checks, immunity to fear effects, and temporary hit points equal to your caster level (maximum 20).',
+    classes: ['bard', 'sorcerer', 'wizard'],
     levelsByClass: {
       bard: 6,
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'inflict-moderate-mass-cleric-35e',
@@ -1761,29 +1658,27 @@ export const level6Spells: Spell[] = [
     school: 'necromancy',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'Deals 2d8 damage +1/level to many creatures.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'ironwood-druid-35e',
@@ -1794,30 +1689,28 @@ export const level6Spells: Spell[] = [
     school: 'transmutation',
     castingTime: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     range: {
       type: 'ranged',
-      feet: 0
+      feet: 0,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'hours',
-      hours: 24
+      hours: 24,
     },
     concentration: false,
     ritual: false,
     description: 'Magic wood is strong as steel.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 6
-    }
+      druid: 6,
+    },
   },
   {
     id: 'liveoak-druid-35e',
@@ -1828,29 +1721,27 @@ export const level6Spells: Spell[] = [
     school: 'transmutation',
     castingTime: {
       type: 'minutes',
-      minutes: 10
+      minutes: 10,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'hours',
-      hours: 24
+      hours: 24,
     },
     concentration: false,
     ritual: false,
     description: 'Oak becomes treant guardian.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 6
-    }
+      druid: 6,
+    },
   },
   {
     id: 'mislead-35e',
@@ -1861,34 +1752,31 @@ export const level6Spells: Spell[] = [
     school: 'illusion',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: false,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'rounds',
-      rounds: 1
+      rounds: 1,
     },
     concentration: false,
     ritual: false,
-    description: 'You become invisible (as greater invisibility, a 4th-level spell), and at the same time, an illusory double of you (as major image, a 3rd-level spell) appears. You are then free to go elsewhere while your double moves away. The double appears within range but thereafter moves as you direct it (which requires concentration beginning on the first round after the casting).',
-    classes: [
-      'bard',
-      'sorcerer',
-      'wizard'
-    ],
+    description:
+      'You become invisible (as greater invisibility, a 4th-level spell), and at the same time, an illusory double of you (as major image, a 3rd-level spell) appears. You are then free to go elsewhere while your double moves away. The double appears within range but thereafter moves as you direct it (which requires concentration beginning on the first round after the casting).',
+    classes: ['bard', 'sorcerer', 'wizard'],
     levelsByClass: {
       bard: 6,
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'move-earth-druid-35e',
@@ -1899,29 +1787,27 @@ export const level6Spells: Spell[] = [
     school: 'transmutation',
     castingTime: {
       type: 'minutes',
-      minutes: 10
+      minutes: 10,
     },
     range: {
       type: 'ranged',
-      feet: 400
+      feet: 400,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'Digs trenches and builds hills.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 6
-    }
+      druid: 6,
+    },
   },
   {
     id: 'move-earth-35e',
@@ -1932,106 +1818,99 @@ export const level6Spells: Spell[] = [
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 10
+      amount: 10,
     },
     range: {
       type: 'ranged',
-      feet: 400
+      feet: 400,
     },
     areaOfEffect: {
       type: 'cube',
-      feet: 750
+      feet: 750,
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'Mixture of soils (clay, loam, sand) in a small bag, and iron blade'
+      materialDescription: 'Mixture of soils (clay, loam, sand) in a small bag, and iron blade',
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
-    description: 'Move earth moves dirt (clay, loam, sand), possibly collapsing embankments, moving hillocks, shifting dunes, and so forth. However, in no event can rock formations be collapsed or moved. The area to be affected determines the casting time.',
-    classes: [
-      'druid',
-      'sorcerer',
-      'wizard'
-    ],
+    description:
+      'Move earth moves dirt (clay, loam, sand), possibly collapsing embankments, moving hillocks, shifting dunes, and so forth. However, in no event can rock formations be collapsed or moved. The area to be affected determines the casting time.',
+    classes: ['druid', 'sorcerer', 'wizard'],
     levelsByClass: {
       druid: 6,
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'owls-wisdom-mass-cleric-35e',
-    name: 'Owl\'s Wisdom, Mass',
+    name: "Owl's Wisdom, Mass",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     level: 6,
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
-    description: 'As owl\'s wisdom, affects one subject/level.',
-    classes: [
-      'cleric'
-    ],
+    description: "As owl's wisdom, affects one subject/level.",
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'owls-wisdom-mass-druid-35e',
-    name: 'Owl\'s Wisdom, Mass',
+    name: "Owl's Wisdom, Mass",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     level: 6,
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
-    description: 'As owl\'s wisdom, affects one subject/level.',
-    classes: [
-      'druid'
-    ],
+    description: "As owl's wisdom, affects one subject/level.",
+    classes: ['druid'],
     levelsByClass: {
-      druid: 6
-    }
+      druid: 6,
+    },
   },
   {
     id: 'permanent-image-35e',
@@ -2042,34 +1921,31 @@ export const level6Spells: Spell[] = [
     school: 'illusion',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 400
+      feet: 400,
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'Bit of fleece plus 25 gp worth of powdered jade'
+      materialDescription: 'Bit of fleece plus 25 gp worth of powdered jade',
     },
     duration: {
-      type: 'permanent'
+      type: 'permanent',
     },
     concentration: false,
     ritual: false,
-    description: 'This spell functions like silent image, except that the figment includes visual, auditory, olfactory, and thermal elements, and the spell is permanent. By concentrating, you can move the image within the limits of the range, but it is static while you are not concentrating.',
-    classes: [
-      'bard',
-      'sorcerer',
-      'wizard'
-    ],
+    description:
+      'This spell functions like silent image, except that the figment includes visual, auditory, olfactory, and thermal elements, and the spell is permanent. By concentrating, you can move the image within the limits of the range, but it is static while you are not concentrating.',
+    classes: ['bard', 'sorcerer', 'wizard'],
     levelsByClass: {
       bard: 6,
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'planar-ally-cleric-35e',
@@ -2080,29 +1956,27 @@ export const level6Spells: Spell[] = [
     school: 'conjuration',
     castingTime: {
       type: 'minutes',
-      minutes: 10
+      minutes: 10,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: true
+      material: true,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'As lesser planar ally, but up to 12 HD.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'planar-binding-35e',
@@ -2113,36 +1987,34 @@ export const level6Spells: Spell[] = [
     school: 'conjuration',
     castingTime: {
       type: 'action',
-      amount: 10
+      amount: 10,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'Offerings worth 1,000 gp plus payment'
+      materialDescription: 'Offerings worth 1,000 gp plus payment',
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
-    description: 'This spell functions like lesser planar binding, except that you may call a single creature of 12 HD or less, or up to three creatures of the same kind whose Hit Dice total no more than 12. Each creature gets a saving throw, makes an independent attempt to escape, and must be individually persuaded to aid you.',
+    description:
+      'This spell functions like lesser planar binding, except that you may call a single creature of 12 HD or less, or up to three creatures of the same kind whose Hit Dice total no more than 12. Each creature gets a saving throw, makes an independent attempt to escape, and must be individually persuaded to aid you.',
     savingThrow: {
       attribute: 'wis',
-      success: 'none'
+      success: 'none',
     },
-    classes: [
-      'sorcerer',
-      'wizard'
-    ],
+    classes: ['sorcerer', 'wizard'],
     levelsByClass: {
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'programmed-image-35e',
@@ -2153,34 +2025,31 @@ export const level6Spells: Spell[] = [
     school: 'illusion',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 400
+      feet: 400,
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'Fleece and jade dust worth 25 gp'
+      materialDescription: 'Fleece and jade dust worth 25 gp',
     },
     duration: {
-      type: 'permanent'
+      type: 'permanent',
     },
     concentration: false,
     ritual: false,
-    description: 'This spell functions like major image, except that this spell\'s figment activates when a specific condition occurs. The figment includes visual, auditory, olfactory, and thermal elements, including intelligible speech.',
-    classes: [
-      'bard',
-      'sorcerer',
-      'wizard'
-    ],
+    description:
+      "This spell functions like major image, except that this spell's figment activates when a specific condition occurs. The figment includes visual, auditory, olfactory, and thermal elements, including intelligible speech.",
+    classes: ['bard', 'sorcerer', 'wizard'],
     levelsByClass: {
       bard: 6,
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'repel-wood-druid-35e',
@@ -2191,30 +2060,28 @@ export const level6Spells: Spell[] = [
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 60
+      feet: 60,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Pushes away wooden objects.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 6
-    }
+      druid: 6,
+    },
   },
   {
     id: 'repulsion-35e',
@@ -2225,43 +2092,40 @@ export const level6Spells: Spell[] = [
     school: 'abjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 10
+      feet: 10,
     },
     areaOfEffect: {
       type: 'sphere',
-      radius: 10
+      radius: 10,
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'Pair of small iron bars attached to two small canine statuettes'
+      materialDescription: 'Pair of small iron bars attached to two small canine statuettes',
     },
     duration: {
       type: 'rounds',
-      rounds: 1
+      rounds: 1,
     },
     concentration: false,
     ritual: false,
-    description: 'An invisible, mobile field surrounds you and prevents creatures from approaching you. You decide how big the field is at the time of casting (to the limit your level allows). Any creature within or entering the field must attempt a save. If it fails, it becomes unable to move toward you for the duration of the spell.',
+    description:
+      'An invisible, mobile field surrounds you and prevents creatures from approaching you. You decide how big the field is at the time of casting (to the limit your level allows). Any creature within or entering the field must attempt a save. If it fails, it becomes unable to move toward you for the duration of the spell.',
     savingThrow: {
       attribute: 'wis',
-      success: 'none'
+      success: 'none',
     },
-    classes: [
-      'cleric',
-      'sorcerer',
-      'wizard'
-    ],
+    classes: ['cleric', 'sorcerer', 'wizard'],
     levelsByClass: {
       cleric: 6,
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'shadow-walk-35e',
@@ -2272,33 +2136,30 @@ export const level6Spells: Spell[] = [
     school: 'illusion',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'hours',
-      hours: 1
+      hours: 1,
     },
     concentration: false,
     ritual: false,
-    description: 'To use the shadow walk spell, you must be in an area of shadowy illumination. You and any creature you touch are then transported along a coiling path of shadowstuff to the edge of the Material Plane where it borders the Plane of Shadow. In the region of shadow, you move at a rate of 50 miles per hour, moving normally on the borders of the Plane of Shadow but much more rapidly relative to the Material Plane.',
-    classes: [
-      'bard',
-      'sorcerer',
-      'wizard'
-    ],
+    description:
+      'To use the shadow walk spell, you must be in an area of shadowy illumination. You and any creature you touch are then transported along a coiling path of shadowstuff to the edge of the Material Plane where it borders the Plane of Shadow. In the region of shadow, you move at a rate of 50 miles per hour, moving normally on the borders of the Plane of Shadow but much more rapidly relative to the Material Plane.',
+    classes: ['bard', 'sorcerer', 'wizard'],
     levelsByClass: {
       bard: 6,
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'spellstaff-druid-35e',
@@ -2309,28 +2170,26 @@ export const level6Spells: Spell[] = [
     school: 'transmutation',
     castingTime: {
       type: 'minutes',
-      minutes: 10
+      minutes: 10,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'permanent'
+      type: 'permanent',
     },
     concentration: false,
     ritual: false,
     description: 'Stores one spell in wooden quarterstaff.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 6
-    }
+      druid: 6,
+    },
   },
   {
     id: 'stone-tell-druid-35e',
@@ -2341,29 +2200,27 @@ export const level6Spells: Spell[] = [
     school: 'divination',
     castingTime: {
       type: 'minutes',
-      minutes: 10
+      minutes: 10,
     },
     range: {
-      type: 'self'
+      type: 'self',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'minutes',
-      minutes: 1
+      minutes: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Talk to natural or worked stone.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 6
-    }
+      druid: 6,
+    },
   },
   {
     id: 'stone-to-flesh-35e',
@@ -2374,36 +2231,34 @@ export const level6Spells: Spell[] = [
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 120
+      feet: 120,
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'Vial of blood or drop of blood'
+      materialDescription: 'Vial of blood or drop of blood',
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
-    description: 'This spell restores a petrified creature to its normal state, restoring life and goods. The creature must make a DC 15 Fortitude save to survive the process. Any petrified creature, regardless of size, can be restored.',
+    description:
+      'This spell restores a petrified creature to its normal state, restoring life and goods. The creature must make a DC 15 Fortitude save to survive the process. Any petrified creature, regardless of size, can be restored.',
     savingThrow: {
       attribute: 'con',
-      success: 'none'
+      success: 'none',
     },
-    classes: [
-      'sorcerer',
-      'wizard'
-    ],
+    classes: ['sorcerer', 'wizard'],
     levelsByClass: {
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'suggestion-mass-35e',
@@ -2414,39 +2269,36 @@ export const level6Spells: Spell[] = [
     school: 'enchantment',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 120
+      feet: 120,
     },
     components: {
       verbal: true,
       somatic: false,
       material: true,
-      materialDescription: 'Snake\'s tongue and honeycomb or drop of sweet oil'
+      materialDescription: "Snake's tongue and honeycomb or drop of sweet oil",
     },
     duration: {
       type: 'hours',
-      hours: 1
+      hours: 1,
     },
     concentration: false,
     ritual: false,
-    description: 'This spell functions like suggestion, except that it can affect one creature per level, no two of which can be more than 30 feet apart. The same suggestion applies to all these creatures.',
+    description:
+      'This spell functions like suggestion, except that it can affect one creature per level, no two of which can be more than 30 feet apart. The same suggestion applies to all these creatures.',
     savingThrow: {
       attribute: 'wis',
-      success: 'none'
+      success: 'none',
     },
-    classes: [
-      'bard',
-      'sorcerer',
-      'wizard'
-    ],
+    classes: ['bard', 'sorcerer', 'wizard'],
     levelsByClass: {
       bard: 6,
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'suggestion-mass-8-35e',
@@ -2457,39 +2309,36 @@ export const level6Spells: Spell[] = [
     school: 'enchantment',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 120
+      feet: 120,
     },
     components: {
       verbal: true,
       somatic: false,
       material: true,
-      materialDescription: 'Snake tongue and honeycomb'
+      materialDescription: 'Snake tongue and honeycomb',
     },
     duration: {
       type: 'hours',
-      hours: 1
+      hours: 1,
     },
     concentration: false,
     ritual: false,
-    description: 'This spell functions like suggestion, except that it can affect one creature per level, no two of which can be more than 30 feet apart.',
+    description:
+      'This spell functions like suggestion, except that it can affect one creature per level, no two of which can be more than 30 feet apart.',
     savingThrow: {
       attribute: 'wis',
-      success: 'none'
+      success: 'none',
     },
-    classes: [
-      'bard',
-      'sorcerer',
-      'wizard'
-    ],
+    classes: ['bard', 'sorcerer', 'wizard'],
     levelsByClass: {
       bard: 6,
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'summon-monster-vi-cleric-35e',
@@ -2500,30 +2349,28 @@ export const level6Spells: Spell[] = [
     school: 'conjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'rounds',
-      rounds: 1
+      rounds: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Calls extraplanar creature to fight for you.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'summon-monster-6-35e',
@@ -2534,70 +2381,64 @@ export const level6Spells: Spell[] = [
     school: 'conjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'rounds',
-      rounds: 1
+      rounds: 1,
     },
     concentration: false,
     ritual: false,
-    description: 'This spell functions like summon monster I, except that you can summon one creature from the 6th-level list, 1d3 creatures of the same kind from the 5th-level list, or 1d4+1 creatures of the same kind from a lower-level list.',
-    classes: [
-      'bard',
-      'cleric',
-      'sorcerer',
-      'wizard'
-    ],
+    description:
+      'This spell functions like summon monster I, except that you can summon one creature from the 6th-level list, 1d3 creatures of the same kind from the 5th-level list, or 1d4+1 creatures of the same kind from a lower-level list.',
+    classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
     levelsByClass: {
       bard: 6,
       cleric: 6,
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'summon-natures-ally-vi-druid-35e',
-    name: 'Summon Nature\'s Ally VI',
+    name: "Summon Nature's Ally VI",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     level: 6,
     school: 'conjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 30
+      feet: 30,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'rounds',
-      rounds: 1
+      rounds: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Calls creature to fight.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 6
-    }
+      druid: 6,
+    },
   },
   {
     id: 'symbol-fear-cleric-35e',
@@ -2608,29 +2449,27 @@ export const level6Spells: Spell[] = [
     school: 'necromancy',
     castingTime: {
       type: 'minutes',
-      minutes: 10
+      minutes: 10,
     },
     range: {
       type: 'ranged',
-      feet: 60
+      feet: 60,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: true
+      material: true,
     },
     duration: {
-      type: 'permanent'
+      type: 'permanent',
     },
     concentration: false,
     ritual: false,
     description: 'Triggered rune panics nearby creatures.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'symbol-of-fear-35e',
@@ -2641,38 +2480,36 @@ export const level6Spells: Spell[] = [
     school: 'necromancy',
     castingTime: {
       type: 'action',
-      amount: 10
+      amount: 10,
     },
     range: {
       type: 'ranged',
-      feet: 0
+      feet: 0,
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'Mercury and phosphorus, plus powdered diamond and opal worth 1,000 gp each'
+      materialDescription:
+        'Mercury and phosphorus, plus powdered diamond and opal worth 1,000 gp each',
     },
     duration: {
-      type: 'permanent'
+      type: 'permanent',
     },
     concentration: false,
     ritual: false,
-    description: 'This spell functions like symbol of death, except that all creatures within 60 feet of the symbol of fear instead become panicked for 1 round per caster level. A panicked creature has a 50% chance to drop what it\'s holding, and it must flee at top speed.',
+    description:
+      "This spell functions like symbol of death, except that all creatures within 60 feet of the symbol of fear instead become panicked for 1 round per caster level. A panicked creature has a 50% chance to drop what it's holding, and it must flee at top speed.",
     savingThrow: {
       attribute: 'wis',
-      success: 'none'
+      success: 'none',
     },
-    classes: [
-      'cleric',
-      'sorcerer',
-      'wizard'
-    ],
+    classes: ['cleric', 'sorcerer', 'wizard'],
     levelsByClass: {
       cleric: 6,
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'symbol-persuasion-cleric-35e',
@@ -2683,29 +2520,27 @@ export const level6Spells: Spell[] = [
     school: 'enchantment',
     castingTime: {
       type: 'minutes',
-      minutes: 10
+      minutes: 10,
     },
     range: {
       type: 'ranged',
-      feet: 60
+      feet: 60,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: true
+      material: true,
     },
     duration: {
-      type: 'permanent'
+      type: 'permanent',
     },
     concentration: false,
     ritual: false,
     description: 'Triggered rune charms nearby creatures.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'symbol-of-persuasion-35e',
@@ -2716,38 +2551,36 @@ export const level6Spells: Spell[] = [
     school: 'enchantment',
     castingTime: {
       type: 'action',
-      amount: 10
+      amount: 10,
     },
     range: {
       type: 'ranged',
-      feet: 0
+      feet: 0,
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'Mercury and phosphorus, plus powdered diamond and opal worth 5,000 gp each'
+      materialDescription:
+        'Mercury and phosphorus, plus powdered diamond and opal worth 5,000 gp each',
     },
     duration: {
-      type: 'permanent'
+      type: 'permanent',
     },
     concentration: false,
     ritual: false,
-    description: 'This spell functions like symbol of death, except that all creatures within the radius of a symbol of persuasion instead become charmed by the caster (as the charm monster spell) for 1 hour per caster level. Unlike symbol of death, symbol of persuasion has no hit point limit; once triggered, a symbol of persuasion simply remains active for 10 minutes per caster level.',
+    description:
+      'This spell functions like symbol of death, except that all creatures within the radius of a symbol of persuasion instead become charmed by the caster (as the charm monster spell) for 1 hour per caster level. Unlike symbol of death, symbol of persuasion has no hit point limit; once triggered, a symbol of persuasion simply remains active for 10 minutes per caster level.',
     savingThrow: {
       attribute: 'wis',
-      success: 'none'
+      success: 'none',
     },
-    classes: [
-      'cleric',
-      'sorcerer',
-      'wizard'
-    ],
+    classes: ['cleric', 'sorcerer', 'wizard'],
     levelsByClass: {
       cleric: 6,
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'transformation-35e',
@@ -2758,32 +2591,30 @@ export const level6Spells: Spell[] = [
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'self'
+      type: 'self',
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'Potion of bull\'s strength (consumed)'
+      materialDescription: "Potion of bull's strength (consumed)",
     },
     duration: {
       type: 'rounds',
-      rounds: 1
+      rounds: 1,
     },
     concentration: false,
     ritual: false,
-    description: 'You become a virtual fighting machine—stronger, tougher, faster, and more skilled in combat. Your mindset changes so that you relish combat and you can\'t cast spells, even from magic items. You gain a +4 enhancement bonus to Strength, Dexterity, and Constitution, a +4 natural armor bonus to AC, a +5 competence bonus on Fortitude saves, and proficiency with all simple and martial weapons.',
-    classes: [
-      'sorcerer',
-      'wizard'
-    ],
+    description:
+      "You become a virtual fighting machine—stronger, tougher, faster, and more skilled in combat. Your mindset changes so that you relish combat and you can't cast spells, even from magic items. You gain a +4 enhancement bonus to Strength, Dexterity, and Constitution, a +4 natural armor bonus to AC, a +5 competence bonus on Fortitude saves, and proficiency with all simple and martial weapons.",
+    classes: ['sorcerer', 'wizard'],
     levelsByClass: {
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'transport-plants-druid-35e',
@@ -2794,29 +2625,27 @@ export const level6Spells: Spell[] = [
     school: 'conjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'unlimited'
+      type: 'unlimited',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'rounds',
-      rounds: 1
+      rounds: 1,
     },
     concentration: false,
     ritual: false,
     description: 'Move instantly from one plant to another of the same kind.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 6
-    }
+      druid: 6,
+    },
   },
   {
     id: 'undeath-death-cleric-35e',
@@ -2827,29 +2656,27 @@ export const level6Spells: Spell[] = [
     school: 'necromancy',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 100
+      feet: 100,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: true
+      material: true,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'Destroys 1d4 HD/level undead (max 20d4).',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'undeath-to-death-35e',
@@ -2860,38 +2687,35 @@ export const level6Spells: Spell[] = [
     school: 'necromancy',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 120
+      feet: 120,
     },
     areaOfEffect: {
       type: 'sphere',
-      radius: 40
+      radius: 40,
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'Diamond powder worth 500 gp'
+      materialDescription: 'Diamond powder worth 500 gp',
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
-    description: 'This spell functions like circle of death, except that it destroys undead creatures as noted above. The spell slays 1d4 HD worth of undead creatures per caster level (maximum 20d4).',
-    classes: [
-      'cleric',
-      'sorcerer',
-      'wizard'
-    ],
+    description:
+      'This spell functions like circle of death, except that it destroys undead creatures as noted above. The spell slays 1d4 HD worth of undead creatures per caster level (maximum 20d4).',
+    classes: ['cleric', 'sorcerer', 'wizard'],
     levelsByClass: {
       cleric: 6,
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'veil-35e',
@@ -2902,34 +2726,31 @@ export const level6Spells: Spell[] = [
     school: 'illusion',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 400
+      feet: 400,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'hours',
-      hours: 1
+      hours: 1,
     },
     concentration: false,
     ritual: false,
-    description: 'You instantly change the appearance of the subjects and then maintain that appearance for the spell\'s duration. You can make the subjects appear to be anything you wish. The subjects look, feel, and smell just like the creatures the spell makes them resemble. Affected creatures resume their normal appearances if slain.',
-    classes: [
-      'bard',
-      'sorcerer',
-      'wizard'
-    ],
+    description:
+      "You instantly change the appearance of the subjects and then maintain that appearance for the spell's duration. You can make the subjects appear to be anything you wish. The subjects look, feel, and smell just like the creatures the spell makes them resemble. Affected creatures resume their normal appearances if slain.",
+    classes: ['bard', 'sorcerer', 'wizard'],
     levelsByClass: {
       bard: 6,
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'wall-of-iron-35e',
@@ -2940,32 +2761,30 @@ export const level6Spells: Spell[] = [
     school: 'conjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 120
+      feet: 120,
     },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'Small piece of sheet iron'
+      materialDescription: 'Small piece of sheet iron',
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
-    description: 'You cause a flat, vertical iron wall to spring into being. The wall inserts itself into any surrounding nonliving material if its area is sufficient to do so. The wall cannot be conjured so that it occupies the same space as a creature or another object. It must always be a flat plane.',
-    classes: [
-      'sorcerer',
-      'wizard'
-    ],
+    description:
+      'You cause a flat, vertical iron wall to spring into being. The wall inserts itself into any surrounding nonliving material if its area is sufficient to do so. The wall cannot be conjured so that it occupies the same space as a creature or another object. It must always be a flat plane.',
+    classes: ['sorcerer', 'wizard'],
     levelsByClass: {
       sorcerer: 6,
-      wizard: 6
-    }
+      wizard: 6,
+    },
   },
   {
     id: 'wall-stone-druid-35e',
@@ -2976,29 +2795,27 @@ export const level6Spells: Spell[] = [
     school: 'conjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
       type: 'ranged',
-      feet: 100
+      feet: 100,
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'Creates a stone wall that can be shaped.',
-    classes: [
-      'druid'
-    ],
+    classes: ['druid'],
     levelsByClass: {
-      druid: 6
-    }
+      druid: 6,
+    },
   },
   {
     id: 'wind-walk-cleric-35e',
@@ -3009,29 +2826,27 @@ export const level6Spells: Spell[] = [
     school: 'transmutation',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'touch'
+      type: 'touch',
     },
     components: {
       verbal: true,
       somatic: true,
-      material: false
+      material: false,
     },
     duration: {
       type: 'hours',
-      hours: 1
+      hours: 1,
     },
     concentration: false,
     ritual: false,
     description: 'You and your allies turn vaporous and travel fast.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
+      cleric: 6,
+    },
   },
   {
     id: 'word-recall-cleric-35e',
@@ -3042,27 +2857,25 @@ export const level6Spells: Spell[] = [
     school: 'conjuration',
     castingTime: {
       type: 'action',
-      amount: 1
+      amount: 1,
     },
     range: {
-      type: 'unlimited'
+      type: 'unlimited',
     },
     components: {
       verbal: true,
       somatic: false,
-      material: false
+      material: false,
     },
     duration: {
-      type: 'instant'
+      type: 'instant',
     },
     concentration: false,
     ritual: false,
     description: 'Teleports you back to designated place.',
-    classes: [
-      'cleric'
-    ],
+    classes: ['cleric'],
     levelsByClass: {
-      cleric: 6
-    }
-  }
+      cleric: 6,
+    },
+  },
 ];

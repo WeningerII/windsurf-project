@@ -25,11 +25,13 @@ export const solar: Monster = {
   specialAbilities: [
     {
       name: 'Innate Spellcasting',
-      description: 'The solar\'s spellcasting ability is Charisma (spell save DC 21). The solar can innately cast the following spells, requiring no material components: At will: detect evil and good, invisibility, identify; 3/day each: blade barrier, dispel evil and good, resurrection; 1/day each: commune, control weather.',
+      description:
+        "The solar's spellcasting ability is Charisma (spell save DC 21). The solar can innately cast the following spells, requiring no material components: At will: detect evil and good, invisibility, identify; 3/day each: blade barrier, dispel evil and good, resurrection; 1/day each: commune, control weather.",
     },
     {
       name: 'Legendary Resistance',
-      description: 'If the solar fails a saving throw, it can choose to succeed instead. It can use this trait three times and regains expended uses when it finishes a long rest.',
+      description:
+        'If the solar fails a saving throw, it can choose to succeed instead. It can use this trait three times and regains expended uses when it finishes a long rest.',
     },
     {
       name: 'Magic Resistance',
@@ -43,24 +45,25 @@ export const solar: Monster = {
     },
     {
       name: 'Greatsword',
-      description: 'Melee Weapon Attack: +14 to hit, reach 5 ft., one target. Hit: 21 (4d6 + 7) slashing damage plus 27 (5d10) radiant damage.',
+      description:
+        'Melee Weapon Attack: +14 to hit, reach 5 ft., one target. Hit: 21 (4d6 + 7) slashing damage plus 27 (5d10) radiant damage.',
     },
   ],
   legendaryActions: [
     {
       name: 'Teleport',
       cost: 1,
-      description: 'The solar magically teleports up to 120 feet to an unoccupied space it can see.',
+      description:
+        'The solar magically teleports up to 120 feet to an unoccupied space it can see.',
     },
     {
       name: 'Searing Burst',
       cost: 2,
-      description: 'The solar emits magical, divine energy. Each creature of its choice that it can see within 10 feet of it must make a DC 21 Dexterity saving throw, taking 16 (3d10) fire damage on a failed save, or half as much on a successful one.',
+      description:
+        'The solar emits magical, divine energy. Each creature of its choice that it can see within 10 feet of it must make a DC 21 Dexterity saving throw, taking 16 (3d10) fire damage on a failed save, or half as much on a successful one.',
     },
   ],
   environment: ['celestial'],
 };
 
-export const celestialsCR11Plus: Monster[] = [
-  solar,
-];
+export const celestialsCR11Plus: Monster[] = [solar];

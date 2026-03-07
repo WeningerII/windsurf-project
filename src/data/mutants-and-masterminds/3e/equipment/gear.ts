@@ -235,7 +235,8 @@ export const gear: MaMEquipment[] = [
     source: "Hero's Handbook",
     type: 'gear',
     cost: 2,
-    description: 'Crime scene investigation tools. +2 to Investigation checks for analyzing evidence.',
+    description:
+      'Crime scene investigation tools. +2 to Investigation checks for analyzing evidence.',
   },
   {
     id: 'tear-gas-grenade',
@@ -244,7 +245,8 @@ export const gear: MaMEquipment[] = [
     source: "Hero's Handbook",
     type: 'gear',
     cost: 2,
-    description: 'Creates a cloud of irritant gas. Affliction 3 (Dazed/Stunned), Fortitude, Burst Area.',
+    description:
+      'Creates a cloud of irritant gas. Affliction 3 (Dazed/Stunned), Fortitude, Burst Area.',
   },
   {
     id: 'grappling-gun',
@@ -262,7 +264,8 @@ export const gear: MaMEquipment[] = [
     source: "Hero's Handbook",
     type: 'gear',
     cost: 2,
-    description: 'Compact medical supplies. +2 to Treatment checks for first aid and stabilization.',
+    description:
+      'Compact medical supplies. +2 to Treatment checks for first aid and stabilization.',
   },
   {
     id: 'emergency-beacon',
@@ -271,6 +274,7 @@ export const gear: MaMEquipment[] = [
     source: "Hero's Handbook",
     type: 'gear',
     cost: 1,
-    description: 'A distress signal transmitter. Communication 1 (Radio, limited to distress signal).',
+    description:
+      'A distress signal transmitter. Communication 1 (Radio, limited to distress signal).',
   },
 ];

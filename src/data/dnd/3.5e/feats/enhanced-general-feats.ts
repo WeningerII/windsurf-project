@@ -36,9 +36,7 @@ export const dodge: FeatDefinition = {
   name: 'Dodge',
   system: 'dnd-3.5e',
   source: 'SRD',
-  prerequisites: [
-    { type: 'ability', ability: 'dex', value: 13 },
-  ],
+  prerequisites: [{ type: 'ability', ability: 'dex', value: 13 }],
   description: 'You are adept at dodging blows.',
   benefits: [
     'During your action, you designate an opponent and receive a +1 dodge bonus to Armor Class against attacks from that opponent',
@@ -78,7 +76,7 @@ export const springAttack: FeatDefinition = {
   benefits: [
     'When using the attack action with a melee weapon, you can move both before and after the attack, provided that your total distance moved is not greater than your speed',
     'Moving in this way does not provoke an attack of opportunity from the defender you attack, though it might provoke attacks of opportunity from other creatures, if appropriate',
-    'You can\'t use this feat if you are wearing heavy armor',
+    "You can't use this feat if you are wearing heavy armor",
     'You must move at least 5 feet both before and after you make your attack in order to utilize the benefits of Spring Attack',
   ],
 };
@@ -88,13 +86,11 @@ export const leadership: FeatDefinition = {
   name: 'Leadership',
   system: 'dnd-3.5e',
   source: 'SRD',
-  prerequisites: [
-    { type: 'other', description: 'Character level 6th' },
-  ],
+  prerequisites: [{ type: 'other', description: 'Character level 6th' }],
   description: 'You are a leader of men.',
   benefits: [
     'You can attract loyal companions and devoted followers, subordinates who assist you',
-    'See the leadership rules in the Dungeon Master\'s Guide for details on your Leadership score and how many followers you can attract',
+    "See the leadership rules in the Dungeon Master's Guide for details on your Leadership score and how many followers you can attract",
   ],
 };
 
@@ -120,9 +116,7 @@ export const greatFortitude: FeatDefinition = {
   source: 'SRD',
   prerequisites: [],
   description: 'You are tougher than normal.',
-  benefits: [
-    'You get a +2 bonus on all Fortitude saving throws',
-  ],
+  benefits: ['You get a +2 bonus on all Fortitude saving throws'],
 };
 
 export const ironWill: FeatDefinition = {
@@ -132,9 +126,7 @@ export const ironWill: FeatDefinition = {
   source: 'SRD',
   prerequisites: [],
   description: 'You have a stronger will than normal.',
-  benefits: [
-    'You get a +2 bonus on all Will saving throws',
-  ],
+  benefits: ['You get a +2 bonus on all Will saving throws'],
 };
 
 export const lightningReflexes: FeatDefinition = {
@@ -144,9 +136,7 @@ export const lightningReflexes: FeatDefinition = {
   source: 'SRD',
   prerequisites: [],
   description: 'You have faster reflexes than normal.',
-  benefits: [
-    'You get a +2 bonus on all Reflex saving throws',
-  ],
+  benefits: ['You get a +2 bonus on all Reflex saving throws'],
 };
 
 export const skillFocus: FeatDefinition = {

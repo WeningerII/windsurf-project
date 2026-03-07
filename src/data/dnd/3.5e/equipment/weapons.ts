@@ -3,58 +3,496 @@
 import { DnD35eWeapon } from '../../../../types/equipment';
 
 // Simple Melee Weapons
-export const club: DnD35eWeapon = { id: 'club', name: 'Club', type: 'melee', damage: '1d4', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'bludgeoning', weight: 3, cost: '1 sp', properties: ['light'] };
-export const dagger: DnD35eWeapon = { id: 'dagger', name: 'Dagger', type: 'melee', damage: '1d4', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'piercing', weight: 1, cost: '2 gp', properties: ['light', 'finesse'] };
-export const greatclub: DnD35eWeapon = { id: 'greatclub', name: 'Greatclub', type: 'melee', damage: '1d8', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'bludgeoning', weight: 8, cost: '5 sp', properties: ['two-handed'] };
-export const handaxe: DnD35eWeapon = { id: 'handaxe', name: 'Handaxe', type: 'melee', damage: '1d6', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'slashing', weight: 2, cost: '5 gp', properties: ['light'] };
-export const javelin: DnD35eWeapon = { id: 'javelin', name: 'Javelin', type: 'ranged', damage: '1d6', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'piercing', weight: 2, cost: '5 sp', properties: ['light'] };
-export const lightHammer: DnD35eWeapon = { id: 'light-hammer', name: 'Light Hammer', type: 'melee', damage: '1d4', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'bludgeoning', weight: 2, cost: '2 gp', properties: ['light'] };
-export const mace: DnD35eWeapon = { id: 'mace', name: 'Mace', type: 'melee', damage: '1d6', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'bludgeoning', weight: 4, cost: '5 gp', properties: ['light'] };
-export const quarterstaff: DnD35eWeapon = { id: 'quarterstaff', name: 'Quarterstaff', type: 'melee', damage: '1d6', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'bludgeoning', weight: 4, cost: '2 sp', properties: ['versatile'] };
-export const sickle: DnD35eWeapon = { id: 'sickle', name: 'Sickle', type: 'melee', damage: '1d4', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'slashing', weight: 2, cost: '1 gp', properties: ['light'] };
-export const spear: DnD35eWeapon = { id: 'spear', name: 'Spear', type: 'melee', damage: '1d6', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'piercing', weight: 3, cost: '1 gp', properties: ['versatile'] };
+export const club: DnD35eWeapon = {
+  id: 'club',
+  name: 'Club',
+  type: 'melee',
+  damage: '1d4',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'bludgeoning',
+  weight: 3,
+  cost: '1 sp',
+  properties: ['light'],
+};
+export const dagger: DnD35eWeapon = {
+  id: 'dagger',
+  name: 'Dagger',
+  type: 'melee',
+  damage: '1d4',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'piercing',
+  weight: 1,
+  cost: '2 gp',
+  properties: ['light', 'finesse'],
+};
+export const greatclub: DnD35eWeapon = {
+  id: 'greatclub',
+  name: 'Greatclub',
+  type: 'melee',
+  damage: '1d8',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'bludgeoning',
+  weight: 8,
+  cost: '5 sp',
+  properties: ['two-handed'],
+};
+export const handaxe: DnD35eWeapon = {
+  id: 'handaxe',
+  name: 'Handaxe',
+  type: 'melee',
+  damage: '1d6',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'slashing',
+  weight: 2,
+  cost: '5 gp',
+  properties: ['light'],
+};
+export const javelin: DnD35eWeapon = {
+  id: 'javelin',
+  name: 'Javelin',
+  type: 'ranged',
+  damage: '1d6',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'piercing',
+  weight: 2,
+  cost: '5 sp',
+  properties: ['light'],
+};
+export const lightHammer: DnD35eWeapon = {
+  id: 'light-hammer',
+  name: 'Light Hammer',
+  type: 'melee',
+  damage: '1d4',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'bludgeoning',
+  weight: 2,
+  cost: '2 gp',
+  properties: ['light'],
+};
+export const mace: DnD35eWeapon = {
+  id: 'mace',
+  name: 'Mace',
+  type: 'melee',
+  damage: '1d6',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'bludgeoning',
+  weight: 4,
+  cost: '5 gp',
+  properties: ['light'],
+};
+export const quarterstaff: DnD35eWeapon = {
+  id: 'quarterstaff',
+  name: 'Quarterstaff',
+  type: 'melee',
+  damage: '1d6',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'bludgeoning',
+  weight: 4,
+  cost: '2 sp',
+  properties: ['versatile'],
+};
+export const sickle: DnD35eWeapon = {
+  id: 'sickle',
+  name: 'Sickle',
+  type: 'melee',
+  damage: '1d4',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'slashing',
+  weight: 2,
+  cost: '1 gp',
+  properties: ['light'],
+};
+export const spear: DnD35eWeapon = {
+  id: 'spear',
+  name: 'Spear',
+  type: 'melee',
+  damage: '1d6',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'piercing',
+  weight: 3,
+  cost: '1 gp',
+  properties: ['versatile'],
+};
 
 // Simple Ranged Weapons
-export const lightCrossbow: DnD35eWeapon = { id: 'light-crossbow', name: 'Light Crossbow', type: 'ranged', damage: '1d8', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'piercing', weight: 5, cost: '25 gp', properties: ['ammunition'] };
-export const dart: DnD35eWeapon = { id: 'dart', name: 'Dart', type: 'ranged', damage: '1d4', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'piercing', weight: 0.25, cost: '5 cp', properties: ['finesse', 'light'] };
-export const shortbow: DnD35eWeapon = { id: 'shortbow', name: 'Shortbow', type: 'ranged', damage: '1d6', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'piercing', weight: 2, cost: '25 gp', properties: ['ammunition'] };
-export const sling: DnD35eWeapon = { id: 'sling', name: 'Sling', type: 'ranged', damage: '1d4', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'bludgeoning', weight: 0, cost: '1 sp', properties: ['ammunition'] };
+export const lightCrossbow: DnD35eWeapon = {
+  id: 'light-crossbow',
+  name: 'Light Crossbow',
+  type: 'ranged',
+  damage: '1d8',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'piercing',
+  weight: 5,
+  cost: '25 gp',
+  properties: ['ammunition'],
+};
+export const dart: DnD35eWeapon = {
+  id: 'dart',
+  name: 'Dart',
+  type: 'ranged',
+  damage: '1d4',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'piercing',
+  weight: 0.25,
+  cost: '5 cp',
+  properties: ['finesse', 'light'],
+};
+export const shortbow: DnD35eWeapon = {
+  id: 'shortbow',
+  name: 'Shortbow',
+  type: 'ranged',
+  damage: '1d6',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'piercing',
+  weight: 2,
+  cost: '25 gp',
+  properties: ['ammunition'],
+};
+export const sling: DnD35eWeapon = {
+  id: 'sling',
+  name: 'Sling',
+  type: 'ranged',
+  damage: '1d4',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'bludgeoning',
+  weight: 0,
+  cost: '1 sp',
+  properties: ['ammunition'],
+};
 
 // Martial Melee Weapons
-export const battleaxe: DnD35eWeapon = { id: 'battleaxe', name: 'Battleaxe', type: 'melee', damage: '1d8', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'slashing', weight: 4, cost: '10 gp', properties: ['versatile'] };
-export const flail: DnD35eWeapon = { id: 'flail', name: 'Flail', type: 'melee', damage: '1d8', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'bludgeoning', weight: 2, cost: '10 gp', properties: [] };
-export const glaive: DnD35eWeapon = { id: 'glaive', name: 'Glaive', type: 'melee', damage: '1d10', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'slashing', weight: 6, cost: '20 gp', properties: ['two-handed', 'reach'] };
-export const greataxe: DnD35eWeapon = { id: 'greataxe', name: 'Greataxe', type: 'melee', damage: '1d12', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'slashing', weight: 7, cost: '30 gp', properties: ['two-handed'] };
-export const greatsword: DnD35eWeapon = { id: 'greatsword', name: 'Greatsword', type: 'melee', damage: '2d6', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'slashing', weight: 6, cost: '50 gp', properties: ['two-handed'] };
-export const halberd: DnD35eWeapon = { id: 'halberd', name: 'Halberd', type: 'melee', damage: '1d10', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'slashing', weight: 6, cost: '20 gp', properties: ['two-handed', 'reach'] };
-export const lance: DnD35eWeapon = { id: 'lance', name: 'Lance', type: 'melee', damage: '1d12', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'piercing', weight: 6, cost: '10 gp', properties: ['reach'] };
-export const longsword: DnD35eWeapon = { id: 'longsword', name: 'Longsword', type: 'melee', damage: '1d8', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'slashing', weight: 3, cost: '15 gp', properties: ['versatile'] };
-export const maul: DnD35eWeapon = { id: 'maul', name: 'Maul', type: 'melee', damage: '2d6', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'bludgeoning', weight: 10, cost: '10 gp', properties: ['two-handed'] };
-export const morningstar: DnD35eWeapon = { id: 'morningstar', name: 'Morningstar', type: 'melee', damage: '1d8', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'bludgeoning', weight: 4, cost: '15 gp', properties: [] };
-export const pike: DnD35eWeapon = { id: 'pike', name: 'Pike', type: 'melee', damage: '1d10', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'piercing', weight: 18, cost: '5 gp', properties: ['two-handed', 'reach'] };
-export const rapier: DnD35eWeapon = { id: 'rapier', name: 'Rapier', type: 'melee', damage: '1d8', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'piercing', weight: 2, cost: '25 gp', properties: ['finesse'] };
-export const scimitar: DnD35eWeapon = { id: 'scimitar', name: 'Scimitar', type: 'melee', damage: '1d6', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'slashing', weight: 3, cost: '25 gp', properties: ['finesse', 'light'] };
-export const shortsword: DnD35eWeapon = { id: 'shortsword', name: 'Shortsword', type: 'melee', damage: '1d6', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'piercing', weight: 2, cost: '10 gp', properties: ['finesse', 'light'] };
-export const trident: DnD35eWeapon = { id: 'trident', name: 'Trident', type: 'melee', damage: '1d6', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'piercing', weight: 4, cost: '5 gp', properties: ['versatile'] };
-export const warPick: DnD35eWeapon = { id: 'war-pick', name: 'War Pick', type: 'melee', damage: '1d8', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'piercing', weight: 2, cost: '5 gp', properties: [] };
-export const warhammer: DnD35eWeapon = { id: 'warhammer', name: 'Warhammer', type: 'melee', damage: '1d8', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'bludgeoning', weight: 2, cost: '15 gp', properties: ['versatile'] };
-export const whip: DnD35eWeapon = { id: 'whip', name: 'Whip', type: 'melee', damage: '1d4', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'slashing', weight: 3, cost: '2 gp', properties: ['finesse', 'reach'] };
+export const battleaxe: DnD35eWeapon = {
+  id: 'battleaxe',
+  name: 'Battleaxe',
+  type: 'melee',
+  damage: '1d8',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'slashing',
+  weight: 4,
+  cost: '10 gp',
+  properties: ['versatile'],
+};
+export const flail: DnD35eWeapon = {
+  id: 'flail',
+  name: 'Flail',
+  type: 'melee',
+  damage: '1d8',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'bludgeoning',
+  weight: 2,
+  cost: '10 gp',
+  properties: [],
+};
+export const glaive: DnD35eWeapon = {
+  id: 'glaive',
+  name: 'Glaive',
+  type: 'melee',
+  damage: '1d10',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'slashing',
+  weight: 6,
+  cost: '20 gp',
+  properties: ['two-handed', 'reach'],
+};
+export const greataxe: DnD35eWeapon = {
+  id: 'greataxe',
+  name: 'Greataxe',
+  type: 'melee',
+  damage: '1d12',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'slashing',
+  weight: 7,
+  cost: '30 gp',
+  properties: ['two-handed'],
+};
+export const greatsword: DnD35eWeapon = {
+  id: 'greatsword',
+  name: 'Greatsword',
+  type: 'melee',
+  damage: '2d6',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'slashing',
+  weight: 6,
+  cost: '50 gp',
+  properties: ['two-handed'],
+};
+export const halberd: DnD35eWeapon = {
+  id: 'halberd',
+  name: 'Halberd',
+  type: 'melee',
+  damage: '1d10',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'slashing',
+  weight: 6,
+  cost: '20 gp',
+  properties: ['two-handed', 'reach'],
+};
+export const lance: DnD35eWeapon = {
+  id: 'lance',
+  name: 'Lance',
+  type: 'melee',
+  damage: '1d12',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'piercing',
+  weight: 6,
+  cost: '10 gp',
+  properties: ['reach'],
+};
+export const longsword: DnD35eWeapon = {
+  id: 'longsword',
+  name: 'Longsword',
+  type: 'melee',
+  damage: '1d8',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'slashing',
+  weight: 3,
+  cost: '15 gp',
+  properties: ['versatile'],
+};
+export const maul: DnD35eWeapon = {
+  id: 'maul',
+  name: 'Maul',
+  type: 'melee',
+  damage: '2d6',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'bludgeoning',
+  weight: 10,
+  cost: '10 gp',
+  properties: ['two-handed'],
+};
+export const morningstar: DnD35eWeapon = {
+  id: 'morningstar',
+  name: 'Morningstar',
+  type: 'melee',
+  damage: '1d8',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'bludgeoning',
+  weight: 4,
+  cost: '15 gp',
+  properties: [],
+};
+export const pike: DnD35eWeapon = {
+  id: 'pike',
+  name: 'Pike',
+  type: 'melee',
+  damage: '1d10',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'piercing',
+  weight: 18,
+  cost: '5 gp',
+  properties: ['two-handed', 'reach'],
+};
+export const rapier: DnD35eWeapon = {
+  id: 'rapier',
+  name: 'Rapier',
+  type: 'melee',
+  damage: '1d8',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'piercing',
+  weight: 2,
+  cost: '25 gp',
+  properties: ['finesse'],
+};
+export const scimitar: DnD35eWeapon = {
+  id: 'scimitar',
+  name: 'Scimitar',
+  type: 'melee',
+  damage: '1d6',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'slashing',
+  weight: 3,
+  cost: '25 gp',
+  properties: ['finesse', 'light'],
+};
+export const shortsword: DnD35eWeapon = {
+  id: 'shortsword',
+  name: 'Shortsword',
+  type: 'melee',
+  damage: '1d6',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'piercing',
+  weight: 2,
+  cost: '10 gp',
+  properties: ['finesse', 'light'],
+};
+export const trident: DnD35eWeapon = {
+  id: 'trident',
+  name: 'Trident',
+  type: 'melee',
+  damage: '1d6',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'piercing',
+  weight: 4,
+  cost: '5 gp',
+  properties: ['versatile'],
+};
+export const warPick: DnD35eWeapon = {
+  id: 'war-pick',
+  name: 'War Pick',
+  type: 'melee',
+  damage: '1d8',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'piercing',
+  weight: 2,
+  cost: '5 gp',
+  properties: [],
+};
+export const warhammer: DnD35eWeapon = {
+  id: 'warhammer',
+  name: 'Warhammer',
+  type: 'melee',
+  damage: '1d8',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'bludgeoning',
+  weight: 2,
+  cost: '15 gp',
+  properties: ['versatile'],
+};
+export const whip: DnD35eWeapon = {
+  id: 'whip',
+  name: 'Whip',
+  type: 'melee',
+  damage: '1d4',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'slashing',
+  weight: 3,
+  cost: '2 gp',
+  properties: ['finesse', 'reach'],
+};
 
 // Martial Ranged Weapons
-export const blowgun: DnD35eWeapon = { id: 'blowgun', name: 'Blowgun', type: 'ranged', damage: '1', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'piercing', weight: 1, cost: '10 gp', properties: ['ammunition'] };
-export const handCrossbow: DnD35eWeapon = { id: 'hand-crossbow', name: 'Hand Crossbow', type: 'ranged', damage: '1d6', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'piercing', weight: 3, cost: '75 gp', properties: ['ammunition', 'light'] };
-export const heavyCrossbow: DnD35eWeapon = { id: 'heavy-crossbow', name: 'Heavy Crossbow', type: 'ranged', damage: '1d10', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'piercing', weight: 18, cost: '50 gp', properties: ['ammunition', 'two-handed'] };
-export const longbow: DnD35eWeapon = { id: 'longbow', name: 'Longbow', type: 'ranged', damage: '1d8', system: 'dnd-3.5e', source: 'SRD 3.5', damageType: 'piercing', weight: 2, cost: '50 gp', properties: ['ammunition', 'two-handed'] };
-export const net: DnD35eWeapon = { id: 'net', name: 'Net', type: 'ranged', damage: '0', system: 'dnd-3.5e', source: 'SRD 3.5', weight: 3, cost: '1 gp', properties: ['special'] };
+export const blowgun: DnD35eWeapon = {
+  id: 'blowgun',
+  name: 'Blowgun',
+  type: 'ranged',
+  damage: '1',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'piercing',
+  weight: 1,
+  cost: '10 gp',
+  properties: ['ammunition'],
+};
+export const handCrossbow: DnD35eWeapon = {
+  id: 'hand-crossbow',
+  name: 'Hand Crossbow',
+  type: 'ranged',
+  damage: '1d6',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'piercing',
+  weight: 3,
+  cost: '75 gp',
+  properties: ['ammunition', 'light'],
+};
+export const heavyCrossbow: DnD35eWeapon = {
+  id: 'heavy-crossbow',
+  name: 'Heavy Crossbow',
+  type: 'ranged',
+  damage: '1d10',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'piercing',
+  weight: 18,
+  cost: '50 gp',
+  properties: ['ammunition', 'two-handed'],
+};
+export const longbow: DnD35eWeapon = {
+  id: 'longbow',
+  name: 'Longbow',
+  type: 'ranged',
+  damage: '1d8',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  damageType: 'piercing',
+  weight: 2,
+  cost: '50 gp',
+  properties: ['ammunition', 'two-handed'],
+};
+export const net: DnD35eWeapon = {
+  id: 'net',
+  name: 'Net',
+  type: 'ranged',
+  damage: '0',
+  system: 'dnd-3.5e',
+  source: 'SRD 3.5',
+  weight: 3,
+  cost: '1 gp',
+  properties: ['special'],
+};
 
 export const dnd35eWeapons: DnD35eWeapon[] = [
   // Simple Melee
-  club, dagger, greatclub, handaxe, javelin, lightHammer, mace, quarterstaff, sickle, spear,
+  club,
+  dagger,
+  greatclub,
+  handaxe,
+  javelin,
+  lightHammer,
+  mace,
+  quarterstaff,
+  sickle,
+  spear,
   // Simple Ranged
-  lightCrossbow, dart, shortbow, sling,
+  lightCrossbow,
+  dart,
+  shortbow,
+  sling,
   // Martial Melee
-  battleaxe, flail, glaive, greataxe, greatsword, halberd, lance, longsword, maul, morningstar,
-  pike, rapier, scimitar, shortsword, trident, warPick, warhammer, whip,
+  battleaxe,
+  flail,
+  glaive,
+  greataxe,
+  greatsword,
+  halberd,
+  lance,
+  longsword,
+  maul,
+  morningstar,
+  pike,
+  rapier,
+  scimitar,
+  shortsword,
+  trident,
+  warPick,
+  warhammer,
+  whip,
   // Martial Ranged
-  blowgun, handCrossbow, heavyCrossbow, longbow, net,
+  blowgun,
+  handCrossbow,
+  heavyCrossbow,
+  longbow,
+  net,
 ];

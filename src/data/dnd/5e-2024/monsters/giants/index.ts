@@ -4,10 +4,6 @@ import { giantsCR11Plus } from './cr-11-plus';
 
 export { giantsCR0to5, giantsCR6to10, giantsCR11Plus };
 
-export const allGiants = [
-  ...giantsCR0to5,
-  ...giantsCR6to10,
-  ...giantsCR11Plus,
-];
+export const allGiants = [...giantsCR0to5, ...giantsCR6to10, ...giantsCR11Plus];
 
 export default allGiants;

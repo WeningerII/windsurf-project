@@ -8,17 +8,22 @@ export const level3Spells: Spell[] = [
     source: 'SRD 5.1',
     level: 3,
     school: 'abjuration',
-    castingTime: { type: 'reaction', amount: 1, condition: 'which you take when you see a creature within 60 feet of you casting a spell' },
+    castingTime: {
+      type: 'reaction',
+      amount: 1,
+      condition: 'which you take when you see a creature within 60 feet of you casting a spell',
+    },
     range: { type: 'ranged', feet: 60 },
     components: { verbal: false, somatic: true, material: false },
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You attempt to interrupt a creature in the process of casting a spell. If the creature is casting a spell of 3rd level or lower, its spell fails and has no effect. If it is casting a spell of 4th level or higher, make an ability check using your spellcasting ability. The DC equals 10 + the spell\'s level. On a success, the creature\'s spell fails and has no effect.',
-    atHigherLevels: 'When you cast this spell using a spell slot of 4th level or higher, the interrupted spell has no effect if its level is less than or equal to the level of the spell slot you used.',
+    description:
+      "You attempt to interrupt a creature in the process of casting a spell. If the creature is casting a spell of 3rd level or lower, its spell fails and has no effect. If it is casting a spell of 4th level or higher, make an ability check using your spellcasting ability. The DC equals 10 + the spell's level. On a success, the creature's spell fails and has no effect.",
+    atHigherLevels:
+      'When you cast this spell using a spell slot of 4th level or higher, the interrupted spell has no effect if its level is less than or equal to the level of the spell slot you used.',
     classes: ['sorcerer', 'warlock', 'wizard'],
-  }
-,
+  },
   {
     id: 'dispel-magic',
     name: 'Dispel Magic',
@@ -32,11 +37,12 @@ export const level3Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'Choose one creature, object, or magical effect within range. Any spell of 3rd level or lower on the target ends. For each spell of 4th level or higher on the target, make an ability check using your spellcasting ability. The DC equals 10 + the spell\'s level. On a successful check, the spell ends.',
-    atHigherLevels: 'When you cast this spell using a spell slot of 4th level or higher, you automatically end the effects of a spell on the target if the spell\'s level is equal to or less than the level of the spell slot you used.',
+    description:
+      "Choose one creature, object, or magical effect within range. Any spell of 3rd level or lower on the target ends. For each spell of 4th level or higher on the target, make an ability check using your spellcasting ability. The DC equals 10 + the spell's level. On a successful check, the spell ends.",
+    atHigherLevels:
+      "When you cast this spell using a spell slot of 4th level or higher, you automatically end the effects of a spell on the target if the spell's level is equal to or less than the level of the spell slot you used.",
     classes: ['bard', 'cleric', 'druid', 'paladin', 'sorcerer', 'warlock', 'wizard'],
-  }
-,
+  },
   {
     id: 'fly',
     name: 'Fly',
@@ -46,15 +52,21 @@ export const level3Spells: Spell[] = [
     school: 'transmutation',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a wing feather from any bird' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a wing feather from any bird',
+    },
     duration: { type: 'concentration', maxDuration: '10 minutes' },
     concentration: true,
     ritual: false,
-    description: 'You touch a willing creature. The target gains a flying speed of 60 feet for the duration. When the spell ends, the target falls if it is still aloft, unless it can stop the fall.',
-    atHigherLevels: 'When you cast this spell using a spell slot of 4th level or higher, you can target one additional creature for each slot level above 3rd.',
+    description:
+      'You touch a willing creature. The target gains a flying speed of 60 feet for the duration. When the spell ends, the target falls if it is still aloft, unless it can stop the fall.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of 4th level or higher, you can target one additional creature for each slot level above 3rd.',
     classes: ['sorcerer', 'warlock', 'wizard'],
-  }
-,
+  },
   {
     id: 'haste',
     name: 'Haste',
@@ -64,14 +76,19 @@ export const level3Spells: Spell[] = [
     school: 'transmutation',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a shaving of licorice root' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a shaving of licorice root',
+    },
     duration: { type: 'concentration', maxDuration: '1 minute' },
     concentration: true,
     ritual: false,
-    description: 'Choose a willing creature that you can see within range. Until the spell ends, the target\'s speed is doubled, it gains a +2 bonus to AC, it has advantage on Dexterity saving throws, and it gains an additional action on each of its turns. That action can be used only to take the Attack (one weapon attack only), Dash, Disengage, Hide, or Use an Object action. When the spell ends, the target can\'t move or take actions until after its next turn, as a wave of lethargy sweeps over it.',
+    description:
+      "Choose a willing creature that you can see within range. Until the spell ends, the target's speed is doubled, it gains a +2 bonus to AC, it has advantage on Dexterity saving throws, and it gains an additional action on each of its turns. That action can be used only to take the Attack (one weapon attack only), Dash, Disengage, Hide, or Use an Object action. When the spell ends, the target can't move or take actions until after its next turn, as a wave of lethargy sweeps over it.",
     classes: ['sorcerer', 'wizard'],
-  }
-,
+  },
   {
     id: 'hypnotic-pattern',
     name: 'Hypnotic Pattern',
@@ -81,16 +98,22 @@ export const level3Spells: Spell[] = [
     school: 'illusion',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'ranged', feet: 120 },
-    components: { verbal: false, somatic: true, material: true, materialDescription: 'a glowing stick of incense or a crystal vial filled with phosphorescent material' },
+    components: {
+      verbal: false,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'a glowing stick of incense or a crystal vial filled with phosphorescent material',
+    },
     duration: { type: 'concentration', maxDuration: '1 minute' },
     areaOfEffect: { type: 'cube', feet: 30 },
     savingThrow: { attribute: 'wis', success: 'none' },
     concentration: true,
     ritual: false,
-    description: 'You create a twisting pattern of colors that weaves through the air inside a 30-foot cube within range. The pattern appears for a moment and vanishes. Each creature in the area who sees the pattern must make a Wisdom saving throw. On a failed save, the creature becomes charmed for the duration. While charmed by this spell, the creature is incapacitated and has a speed of 0. The spell ends for an affected creature if it takes any damage or if someone else uses an action to shake the creature out of its stupor.',
+    description:
+      'You create a twisting pattern of colors that weaves through the air inside a 30-foot cube within range. The pattern appears for a moment and vanishes. Each creature in the area who sees the pattern must make a Wisdom saving throw. On a failed save, the creature becomes charmed for the duration. While charmed by this spell, the creature is incapacitated and has a speed of 0. The spell ends for an affected creature if it takes any damage or if someone else uses an action to shake the creature out of its stupor.',
     classes: ['bard', 'sorcerer', 'warlock', 'wizard'],
-  }
-,
+  },
   {
     id: 'revivify',
     name: 'Revivify',
@@ -100,14 +123,21 @@ export const level3Spells: Spell[] = [
     school: 'necromancy',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'diamonds worth 300 gp, which the spell consumes', materialCost: 300, materialConsumed: true },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'diamonds worth 300 gp, which the spell consumes',
+      materialCost: 300,
+      materialConsumed: true,
+    },
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You touch a creature that has died within the last minute. That creature returns to life with 1 hit point. This spell can\'t return to life a creature that has died of old age, nor can it restore any missing body parts.',
+    description:
+      "You touch a creature that has died within the last minute. That creature returns to life with 1 hit point. This spell can't return to life a creature that has died of old age, nor can it restore any missing body parts.",
     classes: ['cleric', 'paladin'],
-  }
-,
+  },
   {
     id: 'slow',
     name: 'Slow',
@@ -117,15 +147,20 @@ export const level3Spells: Spell[] = [
     school: 'transmutation',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'ranged', feet: 120 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a drop of molasses' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a drop of molasses',
+    },
     duration: { type: 'concentration', maxDuration: '1 minute' },
     savingThrow: { attribute: 'wis', success: 'none' },
     concentration: true,
     ritual: false,
-    description: 'You alter time around up to six creatures of your choice in a 40-foot cube within range. Each target must succeed on a Wisdom saving throw or be affected by this spell for the duration. An affected target\'s speed is halved, it takes a −2 penalty to AC and Dexterity saving throws, and it can\'t use reactions. On its turn, it can use either an action or a bonus action, not both. Regardless of the creature\'s abilities or magic items, it can\'t make more than one melee or ranged attack during its turn. If the creature attempts to cast a spell with a casting time of 1 action, roll a d20. On an 11 or higher, the spell doesn\'t take effect until the creature\'s next turn, and the creature must use its action on that turn to complete the spell. If it can\'t, the spell is wasted. A creature affected by this spell makes another Wisdom saving throw at the end of each of its turns. On a successful save, the effect ends for it.',
+    description:
+      "You alter time around up to six creatures of your choice in a 40-foot cube within range. Each target must succeed on a Wisdom saving throw or be affected by this spell for the duration. An affected target's speed is halved, it takes a −2 penalty to AC and Dexterity saving throws, and it can't use reactions. On its turn, it can use either an action or a bonus action, not both. Regardless of the creature's abilities or magic items, it can't make more than one melee or ranged attack during its turn. If the creature attempts to cast a spell with a casting time of 1 action, roll a d20. On an 11 or higher, the spell doesn't take effect until the creature's next turn, and the creature must use its action on that turn to complete the spell. If it can't, the spell is wasted. A creature affected by this spell makes another Wisdom saving throw at the end of each of its turns. On a successful save, the effect ends for it.",
     classes: ['sorcerer', 'wizard'],
-  }
-,
+  },
   {
     id: 'conjure-animals',
     name: 'Conjure Animals',
@@ -139,11 +174,12 @@ export const level3Spells: Spell[] = [
     duration: { type: 'concentration', maxDuration: '1 hour' },
     concentration: true,
     ritual: false,
-    description: 'You summon fey spirits that take the form of beasts and appear in unoccupied spaces that you can see within range. Choose one of the following options for what appears:\n\n• One beast of challenge rating 2 or lower\n• Two beasts of challenge rating 1 or lower\n• Four beasts of challenge rating 1/2 or lower\n• Eight beasts of challenge rating 1/4 or lower\n\nEach beast is also considered fey, and it disappears when it drops to 0 hit points or when the spell ends. The summoned creatures are friendly to you and your companions. Roll initiative for the summoned creatures as a group, which has its own turns. They obey any verbal commands that you issue to them (no action required by you). If you don\'t issue any commands to them, they defend themselves from hostile creatures, but otherwise take no actions.',
-    atHigherLevels: 'When you cast this spell using certain higher-level spell slots, you choose one of the summoning options above, and more creatures appear: twice as many with a 5th-level slot, three times as many with a 7th-level slot, and four times as many with a 9th-level slot.',
+    description:
+      "You summon fey spirits that take the form of beasts and appear in unoccupied spaces that you can see within range. Choose one of the following options for what appears:\n\n• One beast of challenge rating 2 or lower\n• Two beasts of challenge rating 1 or lower\n• Four beasts of challenge rating 1/2 or lower\n• Eight beasts of challenge rating 1/4 or lower\n\nEach beast is also considered fey, and it disappears when it drops to 0 hit points or when the spell ends. The summoned creatures are friendly to you and your companions. Roll initiative for the summoned creatures as a group, which has its own turns. They obey any verbal commands that you issue to them (no action required by you). If you don't issue any commands to them, they defend themselves from hostile creatures, but otherwise take no actions.",
+    atHigherLevels:
+      'When you cast this spell using certain higher-level spell slots, you choose one of the summoning options above, and more creatures appear: twice as many with a 5th-level slot, three times as many with a 7th-level slot, and four times as many with a 9th-level slot.',
     classes: ['druid', 'ranger'],
-  }
-,
+  },
   {
     id: 'plant-growth',
     name: 'Plant Growth',
@@ -157,10 +193,10 @@ export const level3Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'This spell channels vitality into plants within a specific area. There are two possible uses for the spell, granting either immediate or long-term benefits. If you cast this spell using 1 action, choose a point within range. All normal plants in a 100-foot radius centered on that point become thick and overgrown. A creature moving through the area must spend 4 feet of movement for every 1 foot it moves. You can exclude one or more areas of any size within the spell\'s area from being affected. If you cast this spell over 8 hours, you enrich the land. All plants in a half-mile radius centered on a point within range become enriched for 1 year. The plants yield twice the normal amount of food when harvested.',
+    description:
+      "This spell channels vitality into plants within a specific area. There are two possible uses for the spell, granting either immediate or long-term benefits. If you cast this spell using 1 action, choose a point within range. All normal plants in a 100-foot radius centered on that point become thick and overgrown. A creature moving through the area must spend 4 feet of movement for every 1 foot it moves. You can exclude one or more areas of any size within the spell's area from being affected. If you cast this spell over 8 hours, you enrich the land. All plants in a half-mile radius centered on a point within range become enriched for 1 year. The plants yield twice the normal amount of food when harvested.",
     classes: ['bard', 'druid', 'ranger'],
-  }
-,
+  },
   {
     id: 'water-breathing',
     name: 'Water Breathing',
@@ -170,14 +206,19 @@ export const level3Spells: Spell[] = [
     school: 'transmutation',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a short reed or piece of straw' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a short reed or piece of straw',
+    },
     duration: { type: 'hours', hours: 24 },
     concentration: false,
     ritual: true,
-    description: 'This spell grants up to ten willing creatures you can see within range the ability to breathe underwater until the spell ends. Affected creatures also retain their normal mode of respiration.',
+    description:
+      'This spell grants up to ten willing creatures you can see within range the ability to breathe underwater until the spell ends. Affected creatures also retain their normal mode of respiration.',
     classes: ['druid', 'ranger', 'sorcerer', 'wizard'],
-  }
-,
+  },
   {
     id: 'protection-from-energy',
     name: 'Protection from Energy',
@@ -191,10 +232,10 @@ export const level3Spells: Spell[] = [
     duration: { type: 'concentration', maxDuration: '1 hour' },
     concentration: true,
     ritual: false,
-    description: 'For the duration, the willing creature you touch has resistance to one damage type of your choice: acid, cold, fire, lightning, or thunder.',
+    description:
+      'For the duration, the willing creature you touch has resistance to one damage type of your choice: acid, cold, fire, lightning, or thunder.',
     classes: ['cleric', 'druid', 'ranger', 'sorcerer', 'wizard'],
-  }
-,
+  },
   {
     id: 'animate-dead',
     name: 'Animate Dead',
@@ -204,15 +245,21 @@ export const level3Spells: Spell[] = [
     school: 'necromancy',
     castingTime: { type: 'minute', amount: 1 },
     range: { type: 'ranged', feet: 10 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a drop of blood, a piece of flesh, and a pinch of bone dust' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a drop of blood, a piece of flesh, and a pinch of bone dust',
+    },
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'This spell creates an undead servant. Choose a pile of bones or a corpse of a Medium or Small humanoid within range. Your spell imbues the target with a foul mimicry of life, raising it as an undead creature. The target becomes a skeleton if you chose bones or a zombie if you chose a corpse. On each of your turns, you can use a bonus action to mentally command any creature you made with this spell if the creature is within 60 feet of you.',
-    atHigherLevels: 'When you cast this spell using a spell slot of 4th level or higher, you animate or reassert control over two additional undead creatures for each slot level above 3rd.',
+    description:
+      'This spell creates an undead servant. Choose a pile of bones or a corpse of a Medium or Small humanoid within range. Your spell imbues the target with a foul mimicry of life, raising it as an undead creature. The target becomes a skeleton if you chose bones or a zombie if you chose a corpse. On each of your turns, you can use a bonus action to mentally command any creature you made with this spell if the creature is within 60 feet of you.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of 4th level or higher, you animate or reassert control over two additional undead creatures for each slot level above 3rd.',
     classes: ['cleric', 'wizard'],
-  }
-,
+  },
   {
     id: 'beacon-of-hope',
     name: 'Beacon of Hope',
@@ -226,10 +273,10 @@ export const level3Spells: Spell[] = [
     duration: { type: 'concentration', maxDuration: '1 minute' },
     concentration: true,
     ritual: false,
-    description: 'This spell bestows hope and vitality. Choose any number of creatures within range. For the duration, each target has advantage on Wisdom saving throws and death saving throws, and regains the maximum number of hit points possible from any healing.',
+    description:
+      'This spell bestows hope and vitality. Choose any number of creatures within range. For the duration, each target has advantage on Wisdom saving throws and death saving throws, and regains the maximum number of hit points possible from any healing.',
     classes: ['cleric'],
-  }
-,
+  },
   {
     id: 'bestow-curse',
     name: 'Bestow Curse',
@@ -244,11 +291,12 @@ export const level3Spells: Spell[] = [
     savingThrow: { attribute: 'wis', success: 'none' },
     concentration: true,
     ritual: false,
-    description: 'You touch a creature, and that creature must succeed on a Wisdom saving throw or become cursed for the duration of the spell. When you cast this spell, choose the nature of the curse from the following options: Choose one ability score. While cursed, the target has disadvantage on ability checks and saving throws made with that ability score. While cursed, the target has disadvantage on attack rolls against you. While cursed, the target must make a Wisdom saving throw at the start of each of its turns. If it fails, it wastes its action that turn doing nothing. While cursed, your attacks and spells deal an extra 1d8 necrotic damage to the target.',
-    atHigherLevels: 'If you cast this spell using a spell slot of 4th level or higher, the duration is concentration, up to 10 minutes. If you use a spell slot of 5th level or higher, the duration is 8 hours. If you use a spell slot of 7th level or higher, the duration is 24 hours. If you use a 9th level spell slot, the spell lasts until it is dispelled.',
+    description:
+      'You touch a creature, and that creature must succeed on a Wisdom saving throw or become cursed for the duration of the spell. When you cast this spell, choose the nature of the curse from the following options: Choose one ability score. While cursed, the target has disadvantage on ability checks and saving throws made with that ability score. While cursed, the target has disadvantage on attack rolls against you. While cursed, the target must make a Wisdom saving throw at the start of each of its turns. If it fails, it wastes its action that turn doing nothing. While cursed, your attacks and spells deal an extra 1d8 necrotic damage to the target.',
+    atHigherLevels:
+      'If you cast this spell using a spell slot of 4th level or higher, the duration is concentration, up to 10 minutes. If you use a spell slot of 5th level or higher, the duration is 8 hours. If you use a spell slot of 7th level or higher, the duration is 24 hours. If you use a 9th level spell slot, the spell lasts until it is dispelled.',
     classes: ['bard', 'cleric', 'wizard'],
-  }
-,
+  },
   {
     id: 'blinding-smite',
     name: 'Blinding Smite',
@@ -263,10 +311,10 @@ export const level3Spells: Spell[] = [
     savingThrow: { attribute: 'con', success: 'none' },
     concentration: true,
     ritual: false,
-    description: 'The next time you hit a creature with a melee weapon attack during this spell\'s duration, your weapon flares with bright light, and the attack deals an extra 3d8 radiant damage to the target. Additionally, the target must succeed on a Constitution saving throw or be blinded until the spell ends.',
+    description:
+      "The next time you hit a creature with a melee weapon attack during this spell's duration, your weapon flares with bright light, and the attack deals an extra 3d8 radiant damage to the target. Additionally, the target must succeed on a Constitution saving throw or be blinded until the spell ends.",
     classes: ['paladin'],
-  }
-,
+  },
   {
     id: 'clairvoyance',
     name: 'Clairvoyance',
@@ -276,14 +324,21 @@ export const level3Spells: Spell[] = [
     school: 'divination',
     castingTime: { type: 'minute', amount: 10 },
     range: { type: 'ranged', feet: 1 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a focus worth at least 100 gp, either a jeweled horn for hearing or a glass eye for seeing', materialCost: 100 },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'a focus worth at least 100 gp, either a jeweled horn for hearing or a glass eye for seeing',
+      materialCost: 100,
+    },
     duration: { type: 'concentration', maxDuration: '10 minutes' },
     concentration: true,
     ritual: false,
-    description: 'You create an invisible sensor within range in a location familiar to you (a place you have visited or seen before) or in an obvious location that is unfamiliar to you (such as behind a door, around a corner, or in a grove of trees). The sensor remains in place for the duration, and it can\'t be attacked or otherwise interacted with. When you cast the spell, you choose seeing or hearing. You can use the chosen sense through the sensor as if you were in its space.',
+    description:
+      "You create an invisible sensor within range in a location familiar to you (a place you have visited or seen before) or in an obvious location that is unfamiliar to you (such as behind a door, around a corner, or in a grove of trees). The sensor remains in place for the duration, and it can't be attacked or otherwise interacted with. When you cast the spell, you choose seeing or hearing. You can use the chosen sense through the sensor as if you were in its space.",
     classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
-  }
-,
+  },
   {
     id: 'create-food-and-water',
     name: 'Create Food and Water',
@@ -297,10 +352,10 @@ export const level3Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You create 45 pounds of food and 30 gallons of water on the ground or in containers within range, enough to sustain up to fifteen humanoids or five steeds for 24 hours. The food is bland but nourishing, and spoils if uneaten after 24 hours. The water is clean and doesn\'t go bad.',
+    description:
+      "You create 45 pounds of food and 30 gallons of water on the ground or in containers within range, enough to sustain up to fifteen humanoids or five steeds for 24 hours. The food is bland but nourishing, and spoils if uneaten after 24 hours. The water is clean and doesn't go bad.",
     classes: ['cleric', 'paladin'],
-  }
-,
+  },
   {
     id: 'daylight',
     name: 'Daylight',
@@ -315,10 +370,10 @@ export const level3Spells: Spell[] = [
     areaOfEffect: { type: 'sphere', radius: 60 },
     concentration: false,
     ritual: false,
-    description: 'A 60-foot-radius sphere of light spreads out from a point you choose within range. The sphere is bright light and sheds dim light for an additional 60 feet. If you chose a point on an object you are holding or one that isn\'t being worn or carried, the light shines from the object and moves with it. Completely covering the affected object with an opaque object, such as a bowl or a helm, blocks the light. If any of this spell\'s area overlaps with an area of darkness created by a spell of 3rd level or lower, the spell that created the darkness is dispelled.',
+    description:
+      "A 60-foot-radius sphere of light spreads out from a point you choose within range. The sphere is bright light and sheds dim light for an additional 60 feet. If you chose a point on an object you are holding or one that isn't being worn or carried, the light shines from the object and moves with it. Completely covering the affected object with an opaque object, such as a bowl or a helm, blocks the light. If any of this spell's area overlaps with an area of darkness created by a spell of 3rd level or lower, the spell that created the darkness is dispelled.",
     classes: ['cleric', 'druid', 'paladin', 'ranger', 'sorcerer'],
-  }
-,
+  },
   {
     id: 'fear',
     name: 'Fear',
@@ -328,16 +383,21 @@ export const level3Spells: Spell[] = [
     school: 'illusion',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'self' },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a white feather or the heart of a hen' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a white feather or the heart of a hen',
+    },
     duration: { type: 'concentration', maxDuration: '1 minute' },
     areaOfEffect: { type: 'cone', feet: 30 },
     savingThrow: { attribute: 'wis', success: 'none' },
     concentration: true,
     ritual: false,
-    description: 'You project a phantasmal image of a creature\'s worst fears. Each creature in a 30-foot cone must succeed on a Wisdom saving throw or drop whatever it is holding and become frightened for the duration. While frightened by this spell, a creature must take the Dash action and move away from you by the safest available route on each of its turns, unless there is nowhere to move.',
+    description:
+      "You project a phantasmal image of a creature's worst fears. Each creature in a 30-foot cone must succeed on a Wisdom saving throw or drop whatever it is holding and become frightened for the duration. While frightened by this spell, a creature must take the Dash action and move away from you by the safest available route on each of its turns, unless there is nowhere to move.",
     classes: ['bard', 'sorcerer', 'warlock', 'wizard'],
-  }
-,
+  },
   {
     id: 'feign-death',
     name: 'Feign Death',
@@ -347,14 +407,19 @@ export const level3Spells: Spell[] = [
     school: 'necromancy',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a pinch of graveyard dirt' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a pinch of graveyard dirt',
+    },
     duration: { type: 'hours', hours: 1 },
     concentration: false,
     ritual: true,
-    description: 'You touch a willing creature and put it into a cataleptic state that is indistinguishable from death. For the spell\'s duration, or until you use an action to touch the target and dismiss the spell, the target appears dead to all outward inspection and to spells used to determine the target\'s status. The target is blinded and incapacitated, and its speed drops to 0. The target has resistance to all damage except psychic damage. If the target is diseased or poisoned when you cast the spell, or becomes diseased or poisoned while under the spell\'s effect, the disease and poison have no effect until the spell ends.',
+    description:
+      "You touch a willing creature and put it into a cataleptic state that is indistinguishable from death. For the spell's duration, or until you use an action to touch the target and dismiss the spell, the target appears dead to all outward inspection and to spells used to determine the target's status. The target is blinded and incapacitated, and its speed drops to 0. The target has resistance to all damage except psychic damage. If the target is diseased or poisoned when you cast the spell, or becomes diseased or poisoned while under the spell's effect, the disease and poison have no effect until the spell ends.",
     classes: ['bard', 'cleric', 'druid', 'wizard'],
-  }
-,
+  },
   {
     id: 'glyph-of-warding',
     name: 'Glyph of Warding',
@@ -364,15 +429,24 @@ export const level3Spells: Spell[] = [
     school: 'abjuration',
     castingTime: { type: 'hour', amount: 1 },
     range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'incense and powdered diamond worth at least 200 gp, which the spell consumes', materialCost: 200, materialConsumed: true },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'incense and powdered diamond worth at least 200 gp, which the spell consumes',
+      materialCost: 200,
+      materialConsumed: true,
+    },
     duration: { type: 'permanent' },
     concentration: false,
     ritual: false,
-    description: 'When you cast this spell, you inscribe a glyph that harms other creatures, either upon a surface (such as a table or a section of floor or wall) or within an object that can be closed (such as a book, a scroll, or a treasure chest) to conceal the glyph. If you choose a surface, the glyph can cover an area of the surface no larger than 10 feet in diameter. If you choose an object, that object must remain in its place; if the object is moved more than 10 feet from where you cast this spell, the glyph is broken, and the spell ends without being triggered.',
-    atHigherLevels: 'When you cast this spell using a spell slot of 4th level or higher, the damage of an explosive runes glyph increases by 1d8 for each slot level above 3rd. If you create a spell glyph, you can store any spell of up to the same level as the slot you use for the glyph of warding.',
+    description:
+      'When you cast this spell, you inscribe a glyph that harms other creatures, either upon a surface (such as a table or a section of floor or wall) or within an object that can be closed (such as a book, a scroll, or a treasure chest) to conceal the glyph. If you choose a surface, the glyph can cover an area of the surface no larger than 10 feet in diameter. If you choose an object, that object must remain in its place; if the object is moved more than 10 feet from where you cast this spell, the glyph is broken, and the spell ends without being triggered.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of 4th level or higher, the damage of an explosive runes glyph increases by 1d8 for each slot level above 3rd. If you create a spell glyph, you can store any spell of up to the same level as the slot you use for the glyph of warding.',
     classes: ['bard', 'cleric', 'wizard'],
-  }
-,
+  },
   {
     id: 'hunger-of-hadar',
     name: 'Hunger of Hadar',
@@ -382,33 +456,43 @@ export const level3Spells: Spell[] = [
     school: 'conjuration',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'ranged', feet: 150 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a pickled octopus tentacle' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a pickled octopus tentacle',
+    },
     duration: { type: 'concentration', maxDuration: '1 minute' },
     areaOfEffect: { type: 'sphere', radius: 20 },
     concentration: true,
     ritual: false,
-    description: 'You open a gateway to the dark between the stars, a region infested with unknown horrors. A 20-foot-radius sphere of blackness and bitter cold appears, centered on a point with range and lasting for the duration. This void is filled with a cacophony of soft whispers and slurping noises that can be heard up to 30 feet away. No light, magical or otherwise, can illuminate the area, and creatures fully within the area are blinded.',
+    description:
+      'You open a gateway to the dark between the stars, a region infested with unknown horrors. A 20-foot-radius sphere of blackness and bitter cold appears, centered on a point with range and lasting for the duration. This void is filled with a cacophony of soft whispers and slurping noises that can be heard up to 30 feet away. No light, magical or otherwise, can illuminate the area, and creatures fully within the area are blinded.',
     classes: ['warlock'],
-  }
-,
+  },
   {
     id: 'leomunds-tiny-hut',
-    name: 'Leomund\'s Tiny Hut',
+    name: "Leomund's Tiny Hut",
     system: 'dnd-5e-2014',
     source: 'SRD 5.1',
     level: 3,
     school: 'evocation',
     castingTime: { type: 'minute', amount: 1 },
     range: { type: 'self' },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a small crystal bead' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a small crystal bead',
+    },
     duration: { type: 'hours', hours: 8 },
     areaOfEffect: { type: 'sphere', radius: 10 },
     concentration: false,
     ritual: true,
-    description: 'A 10-foot-radius immobile dome of force springs into existence around and above you and remains stationary for the duration. The spell ends if you leave its area. Nine creatures of Medium size or smaller can fit inside the dome with you. The spell fails if its area includes a larger creature or more than nine creatures. Creatures and objects within the dome when you cast this spell can move through it freely. All other creatures and objects are barred from passing through it. Spells and other magical effects can\'t extend through the dome or be cast through it.',
+    description:
+      "A 10-foot-radius immobile dome of force springs into existence around and above you and remains stationary for the duration. The spell ends if you leave its area. Nine creatures of Medium size or smaller can fit inside the dome with you. The spell fails if its area includes a larger creature or more than nine creatures. Creatures and objects within the dome when you cast this spell can move through it freely. All other creatures and objects are barred from passing through it. Spells and other magical effects can't extend through the dome or be cast through it.",
     classes: ['bard', 'wizard'],
-  }
-,
+  },
   {
     id: 'magic-circle',
     name: 'Magic Circle',
@@ -418,16 +502,25 @@ export const level3Spells: Spell[] = [
     school: 'abjuration',
     castingTime: { type: 'minute', amount: 1 },
     range: { type: 'ranged', feet: 10 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'holy water or powdered silver and iron worth at least 100 gp, which the spell consumes', materialCost: 100, materialConsumed: true },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'holy water or powdered silver and iron worth at least 100 gp, which the spell consumes',
+      materialCost: 100,
+      materialConsumed: true,
+    },
     duration: { type: 'hours', hours: 1 },
     areaOfEffect: { type: 'cylinder', radius: 10, height: 20 },
     concentration: false,
     ritual: false,
-    description: 'You create a 10-foot-radius, 20-foot-tall cylinder of magical energy centered on a point on the ground that you can see within range. Glowing runes appear wherever the cylinder intersects with the floor or other surface. Choose one or more of the following types of creatures: celestials, elementals, fey, fiends, or undead. The circle affects a creature of the chosen type in the following ways: The creature can\'t willingly enter the cylinder by nonmagical means. The creature has disadvantage on attack rolls against targets within the cylinder. Targets within the cylinder can\'t be charmed, frightened, or possessed by the creature.',
-    atHigherLevels: 'When you cast this spell using a spell slot of 4th level or higher, the duration increases by 1 hour for each slot level above 3rd.',
+    description:
+      "You create a 10-foot-radius, 20-foot-tall cylinder of magical energy centered on a point on the ground that you can see within range. Glowing runes appear wherever the cylinder intersects with the floor or other surface. Choose one or more of the following types of creatures: celestials, elementals, fey, fiends, or undead. The circle affects a creature of the chosen type in the following ways: The creature can't willingly enter the cylinder by nonmagical means. The creature has disadvantage on attack rolls against targets within the cylinder. Targets within the cylinder can't be charmed, frightened, or possessed by the creature.",
+    atHigherLevels:
+      'When you cast this spell using a spell slot of 4th level or higher, the duration increases by 1 hour for each slot level above 3rd.',
     classes: ['cleric', 'paladin', 'warlock', 'wizard'],
-  }
-,
+  },
   {
     id: 'major-image',
     name: 'Major Image',
@@ -437,15 +530,21 @@ export const level3Spells: Spell[] = [
     school: 'illusion',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'ranged', feet: 120 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a bit of fleece' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a bit of fleece',
+    },
     duration: { type: 'concentration', maxDuration: '10 minutes' },
     concentration: true,
     ritual: false,
-    description: 'You create the image of an object, a creature, or some other visible phenomenon that is no larger than a 20-foot cube. The image appears at a spot that you can see within range and lasts for the duration. It seems completely real, including sounds, smells, and temperature appropriate to the thing depicted. You can\'t create sufficient heat or cold to cause damage, a sound loud enough to deal thunder damage or deafen a creature, or a smell that might sicken a creature (like a troglodyte\'s stench).',
-    atHigherLevels: 'When you cast this spell using a spell slot of 6th level or higher, the spell lasts until dispelled, without requiring your concentration.',
+    description:
+      "You create the image of an object, a creature, or some other visible phenomenon that is no larger than a 20-foot cube. The image appears at a spot that you can see within range and lasts for the duration. It seems completely real, including sounds, smells, and temperature appropriate to the thing depicted. You can't create sufficient heat or cold to cause damage, a sound loud enough to deal thunder damage or deafen a creature, or a smell that might sicken a creature (like a troglodyte's stench).",
+    atHigherLevels:
+      'When you cast this spell using a spell slot of 6th level or higher, the spell lasts until dispelled, without requiring your concentration.',
     classes: ['bard', 'sorcerer', 'warlock', 'wizard'],
-  }
-,
+  },
   {
     id: 'mass-healing-word',
     name: 'Mass Healing Word',
@@ -460,11 +559,12 @@ export const level3Spells: Spell[] = [
     healing: { count: 1, die: 'd4', notation: '1d4' },
     concentration: false,
     ritual: false,
-    description: 'As you call out words of restoration, up to six creatures of your choice that you can see within range regain hit points equal to 1d4 + your spellcasting ability modifier. This spell has no effect on undead or constructs.',
-    atHigherLevels: 'When you cast this spell using a spell slot of 4th level or higher, the healing increases by 1d4 for each slot level above 3rd.',
+    description:
+      'As you call out words of restoration, up to six creatures of your choice that you can see within range regain hit points equal to 1d4 + your spellcasting ability modifier. This spell has no effect on undead or constructs.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of 4th level or higher, the healing increases by 1d4 for each slot level above 3rd.',
     classes: ['cleric'],
-  }
-,
+  },
   {
     id: 'nondetection',
     name: 'Nondetection',
@@ -474,14 +574,22 @@ export const level3Spells: Spell[] = [
     school: 'abjuration',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a pinch of diamond dust worth 25 gp sprinkled over the target, which the spell consumes', materialCost: 25, materialConsumed: true },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'a pinch of diamond dust worth 25 gp sprinkled over the target, which the spell consumes',
+      materialCost: 25,
+      materialConsumed: true,
+    },
     duration: { type: 'hours', hours: 8 },
     concentration: false,
     ritual: false,
-    description: 'For the duration, you hide a target that you touch from divination magic. The target can be a willing creature or a place or an object no larger than 10 feet in any dimension. The target can\'t be targeted by any divination magic or perceived through magical scrying sensors.',
+    description:
+      "For the duration, you hide a target that you touch from divination magic. The target can be a willing creature or a place or an object no larger than 10 feet in any dimension. The target can't be targeted by any divination magic or perceived through magical scrying sensors.",
     classes: ['bard', 'ranger', 'wizard'],
-  }
-,
+  },
   {
     id: 'phantom-steed',
     name: 'Phantom Steed',
@@ -495,10 +603,10 @@ export const level3Spells: Spell[] = [
     duration: { type: 'hours', hours: 1 },
     concentration: false,
     ritual: true,
-    description: 'A Large quasi-real, horse-like creature appears on the ground in an unoccupied space of your choice within range. You decide the creature\'s appearance, but it is equipped with a saddle, bit, and bridle. Any of the equipment created by the spell vanishes in a puff of smoke if it is carried more than 10 feet away from the steed. For the duration, you or a creature you choose can ride the steed. The creature uses the statistics for a riding horse, except it has a speed of 100 feet and can travel 10 miles in an hour, or 13 miles at a fast pace.',
+    description:
+      "A Large quasi-real, horse-like creature appears on the ground in an unoccupied space of your choice within range. You decide the creature's appearance, but it is equipped with a saddle, bit, and bridle. Any of the equipment created by the spell vanishes in a puff of smoke if it is carried more than 10 feet away from the steed. For the duration, you or a creature you choose can ride the steed. The creature uses the statistics for a riding horse, except it has a speed of 100 feet and can travel 10 miles in an hour, or 13 miles at a fast pace.",
     classes: ['wizard'],
-  }
-,
+  },
   {
     id: 'remove-curse',
     name: 'Remove Curse',
@@ -512,10 +620,10 @@ export const level3Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'At your touch, all curses affecting one creature or object end. If the object is a cursed magic item, its curse remains, but the spell breaks its owner\'s attunement to the object so it can be removed or discarded.',
+    description:
+      "At your touch, all curses affecting one creature or object end. If the object is a cursed magic item, its curse remains, but the spell breaks its owner's attunement to the object so it can be removed or discarded.",
     classes: ['cleric', 'paladin', 'warlock', 'wizard'],
-  }
-,
+  },
   {
     id: 'sending',
     name: 'Sending',
@@ -525,14 +633,19 @@ export const level3Spells: Spell[] = [
     school: 'evocation',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'unlimited' },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a short piece of fine copper wire' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a short piece of fine copper wire',
+    },
     duration: { type: 'rounds', rounds: 1 },
     concentration: false,
     ritual: false,
-    description: 'You send a short message of twenty-five words or less to a creature with which you are familiar. The creature hears the message in its mind, recognizes you as the sender if it knows you, and can answer in a like manner immediately. The spell enables creatures with Intelligence scores of at least 1 to understand the meaning of your message.',
+    description:
+      'You send a short message of twenty-five words or less to a creature with which you are familiar. The creature hears the message in its mind, recognizes you as the sender if it knows you, and can answer in a like manner immediately. The spell enables creatures with Intelligence scores of at least 1 to understand the meaning of your message.',
     classes: ['bard', 'cleric', 'wizard'],
-  }
-,
+  },
   {
     id: 'sleet-storm',
     name: 'Sleet Storm',
@@ -542,16 +655,21 @@ export const level3Spells: Spell[] = [
     school: 'conjuration',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'ranged', feet: 150 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a pinch of dust and a few drops of water' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a pinch of dust and a few drops of water',
+    },
     duration: { type: 'concentration', maxDuration: '1 minute' },
     areaOfEffect: { type: 'cylinder', radius: 40, height: 20 },
     savingThrow: { attribute: 'dex', success: 'none' },
     concentration: true,
     ritual: false,
-    description: 'Until the spell ends, freezing rain and sleet fall in a 20-foot-tall cylinder with a 40-foot radius centered on a point you choose within range. The area is heavily obscured, and exposed flames in the area are doused. The ground in the area is covered with slick ice, making it difficult terrain. When a creature enters the spell\'s area for the first time on a turn or starts its turn there, it must make a Dexterity saving throw. On a failed save, it falls prone.',
+    description:
+      "Until the spell ends, freezing rain and sleet fall in a 20-foot-tall cylinder with a 40-foot radius centered on a point you choose within range. The area is heavily obscured, and exposed flames in the area are doused. The ground in the area is covered with slick ice, making it difficult terrain. When a creature enters the spell's area for the first time on a turn or starts its turn there, it must make a Dexterity saving throw. On a failed save, it falls prone.",
     classes: ['druid', 'sorcerer', 'wizard'],
-  }
-,
+  },
   {
     id: 'speak-with-dead',
     name: 'Speak with Dead',
@@ -561,14 +679,19 @@ export const level3Spells: Spell[] = [
     school: 'necromancy',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'ranged', feet: 10 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'burning incense' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'burning incense',
+    },
     duration: { type: 'minutes', minutes: 10 },
     concentration: false,
     ritual: false,
-    description: 'You grant the semblance of life and intelligence to a corpse of your choice within range, allowing it to answer the questions you pose. The corpse must still have a mouth and can\'t be undead. The spell fails if the corpse was the target of this spell within the last 10 days. Until the spell ends, you can ask the corpse up to five questions. The corpse knows only what it knew in life, including the languages it knew. Answers are usually brief, cryptic, or repetitive, and the corpse is under no compulsion to offer a truthful answer if you are hostile to it or it recognizes you as an enemy.',
+    description:
+      "You grant the semblance of life and intelligence to a corpse of your choice within range, allowing it to answer the questions you pose. The corpse must still have a mouth and can't be undead. The spell fails if the corpse was the target of this spell within the last 10 days. Until the spell ends, you can ask the corpse up to five questions. The corpse knows only what it knew in life, including the languages it knew. Answers are usually brief, cryptic, or repetitive, and the corpse is under no compulsion to offer a truthful answer if you are hostile to it or it recognizes you as an enemy.",
     classes: ['bard', 'cleric'],
-  }
-,
+  },
   {
     id: 'speak-with-plants',
     name: 'Speak with Plants',
@@ -582,10 +705,10 @@ export const level3Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 10 },
     concentration: false,
     ritual: false,
-    description: 'You imbue plants within 30 feet of you with limited sentience and animation, giving them the ability to communicate with you and follow your simple commands. You can question plants about events in the spell\'s area within the past day, gaining information about creatures that have passed, weather, and other circumstances. You can also turn difficult terrain caused by plant growth (such as thickets and undergrowth) into ordinary terrain that lasts for the duration.',
+    description:
+      "You imbue plants within 30 feet of you with limited sentience and animation, giving them the ability to communicate with you and follow your simple commands. You can question plants about events in the spell's area within the past day, gaining information about creatures that have passed, weather, and other circumstances. You can also turn difficult terrain caused by plant growth (such as thickets and undergrowth) into ordinary terrain that lasts for the duration.",
     classes: ['bard', 'druid', 'ranger'],
-  }
-,
+  },
   {
     id: 'tongues',
     name: 'Tongues',
@@ -595,14 +718,19 @@ export const level3Spells: Spell[] = [
     school: 'divination',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'touch' },
-    components: { verbal: true, somatic: false, material: true, materialDescription: 'a small clay model of a ziggurat' },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: true,
+      materialDescription: 'a small clay model of a ziggurat',
+    },
     duration: { type: 'hours', hours: 1 },
     concentration: false,
     ritual: false,
-    description: 'This spell grants the creature you touch the ability to understand any spoken language it hears. Moreover, when the target speaks, any creature that knows at least one language and can hear the target understands what it says.',
+    description:
+      'This spell grants the creature you touch the ability to understand any spoken language it hears. Moreover, when the target speaks, any creature that knows at least one language and can hear the target understands what it says.',
     classes: ['bard', 'cleric', 'sorcerer', 'warlock', 'wizard'],
-  }
-,
+  },
   {
     id: 'beast-sense',
     name: 'Beast Sense',
@@ -616,10 +744,10 @@ export const level3Spells: Spell[] = [
     duration: { type: 'concentration', maxDuration: '1 hour' },
     concentration: true,
     ritual: true,
-    description: 'You touch a willing beast. For the duration of the spell, you can use your action to perceive through the beast\'s senses, but you can\'t switch to a new animal within 1 minute of doing so. While perceiving through the beast\'s senses, you gain the benefits of any special senses possessed by that creature, though you are blinded and deafened to your own surroundings.',
+    description:
+      "You touch a willing beast. For the duration of the spell, you can use your action to perceive through the beast's senses, but you can't switch to a new animal within 1 minute of doing so. While perceiving through the beast's senses, you gain the benefits of any special senses possessed by that creature, though you are blinded and deafened to your own surroundings.",
     classes: ['druid', 'ranger'],
-  }
-,
+  },
   {
     id: 'meld-into-stone',
     name: 'Meld into Stone',
@@ -633,10 +761,10 @@ export const level3Spells: Spell[] = [
     duration: { type: 'hours', hours: 8 },
     concentration: false,
     ritual: true,
-    description: 'You step into a stone object or surface large enough to fully contain your body, melding yourself and all the equipment you carry with the stone for the duration. Using your movement, you step into the stone at a point you can touch. Nothing of your presence remains visible or otherwise detectable by nonmagical senses.',
+    description:
+      'You step into a stone object or surface large enough to fully contain your body, melding yourself and all the equipment you carry with the stone for the duration. Using your movement, you step into the stone at a point you can touch. Nothing of your presence remains visible or otherwise detectable by nonmagical senses.',
     classes: ['cleric', 'druid', 'wizard'],
-  }
-,
+  },
   {
     id: 'stinking-cloud',
     name: 'Stinking Cloud',
@@ -646,14 +774,19 @@ export const level3Spells: Spell[] = [
     school: 'conjuration',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'ranged', feet: 90 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a rotten egg or several skunk cabbage leaves' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a rotten egg or several skunk cabbage leaves',
+    },
     duration: { type: 'concentration', maxDuration: '1 minute' },
     concentration: true,
     ritual: false,
-    description: 'A 20-foot-radius sphere of yellowish, nauseating gas spreads from a point of your choice within range. The cloud spreads around corners. Each creature that starts its turn in the cloud must succeed on a Constitution saving throw or spend its action that turn retching and reeling. Creatures that don\'t need to breathe or are immune to poison automatically succeed on the save.',
+    description:
+      "A 20-foot-radius sphere of yellowish, nauseating gas spreads from a point of your choice within range. The cloud spreads around corners. Each creature that starts its turn in the cloud must succeed on a Constitution saving throw or spend its action that turn retching and reeling. Creatures that don't need to breathe or are immune to poison automatically succeed on the save.",
     classes: ['bard', 'sorcerer', 'wizard'],
-  }
-,
+  },
   {
     id: 'summon-lesser-demons',
     name: 'Summon Lesser Demons',
@@ -663,14 +796,19 @@ export const level3Spells: Spell[] = [
     school: 'conjuration',
     castingTime: { type: 'action', amount: 1 },
     range: { type: 'ranged', feet: 60 },
-    components: { verbal: true, somatic: true, material: true, materialDescription: 'a vial of blood from a humanoid killed within the past 24 hours' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a vial of blood from a humanoid killed within the past 24 hours',
+    },
     duration: { type: 'concentration', maxDuration: '1 hour' },
     concentration: true,
     ritual: false,
-    description: 'You utter foul words of power summoning demons from the lower planes. Up to eight demonlings or one demon of challenge rating 3 or lower appears in unoccupied spaces you can see within range. A summoned demon disappears when it drops to 0 hit points or when the spell ends. A demon summoned by this spell is friendly to you and your companions for the duration. Roll initiative for the summoned demon as a group, which has its own turns. It obeys any verbal commands that you issue to it (no action required by you), as long as they don\'t violate its alignment.',
+    description:
+      "You utter foul words of power summoning demons from the lower planes. Up to eight demonlings or one demon of challenge rating 3 or lower appears in unoccupied spaces you can see within range. A summoned demon disappears when it drops to 0 hit points or when the spell ends. A demon summoned by this spell is friendly to you and your companions for the duration. Roll initiative for the summoned demon as a group, which has its own turns. It obeys any verbal commands that you issue to it (no action required by you), as long as they don't violate its alignment.",
     classes: ['wizard'],
-  }
-,
+  },
   {
     id: 'vampiric-touch',
     name: 'Vampiric Touch',
@@ -684,11 +822,13 @@ export const level3Spells: Spell[] = [
     duration: { type: 'concentration', maxDuration: '1 minute' },
     concentration: true,
     ritual: false,
-    description: 'The touch of your shadow-wreathed hand can siphon life force from others to heal your wounds. Make a melee spell attack against a creature within your reach. On a hit, the target takes 3d6 necrotic damage, and you regain hit points equal to half the amount of necrotic damage dealt. Until the spell ends, you can make the attack again on each of your turns without using an action.',
-    atHigherLevels: 'When you cast this spell using a spell slot of 4th level or higher, the damage increases by 1d6 for each slot level above 3rd.',
+    description:
+      'The touch of your shadow-wreathed hand can siphon life force from others to heal your wounds. Make a melee spell attack against a creature within your reach. On a hit, the target takes 3d6 necrotic damage, and you regain hit points equal to half the amount of necrotic damage dealt. Until the spell ends, you can make the attack again on each of your turns without using an action.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of 4th level or higher, the damage increases by 1d6 for each slot level above 3rd.',
     classes: ['wizard'],
-  }
+  },
 ];
 
 // Helper function for lookups
-export const getLevel3SpellById = (id: string) => level3Spells.find(spell => spell.id === id);
+export const getLevel3SpellById = (id: string) => level3Spells.find((spell) => spell.id === id);

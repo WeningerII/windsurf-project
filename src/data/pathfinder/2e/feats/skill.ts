@@ -9,25 +9,36 @@ export const skillFeats: FeatDefinition[] = [
     name: 'Cat Fall',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'acrobatics', minValue: 1, description: 'Trained in Acrobatics' }],
+    prerequisites: [
+      { type: 'skill', id: 'acrobatics', minValue: 1, description: 'Trained in Acrobatics' },
+    ],
     description: 'You have excellent control of your body.',
-    benefits: ['Treat falls as 10 feet shorter.', 'At Expert, treat as 25 feet shorter; Master 50 feet; Legendary, always land on your feet.'],
+    benefits: [
+      'Treat falls as 10 feet shorter.',
+      'At Expert, treat as 25 feet shorter; Master 50 feet; Legendary, always land on your feet.',
+    ],
   },
   {
     id: 'steady-balance',
     name: 'Steady Balance',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'acrobatics', minValue: 1, description: 'Trained in Acrobatics' }],
+    prerequisites: [
+      { type: 'skill', id: 'acrobatics', minValue: 1, description: 'Trained in Acrobatics' },
+    ],
     description: 'You can keep your balance easily.',
-    benefits: ['You gain a +2 circumstance bonus to Balance and to save against being knocked prone.'],
+    benefits: [
+      'You gain a +2 circumstance bonus to Balance and to save against being knocked prone.',
+    ],
   },
   {
     id: 'quick-squeeze',
     name: 'Quick Squeeze',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'acrobatics', minValue: 1, description: 'Trained in Acrobatics' }],
+    prerequisites: [
+      { type: 'skill', id: 'acrobatics', minValue: 1, description: 'Trained in Acrobatics' },
+    ],
     description: 'You quickly squeeze through tight spaces.',
     benefits: ['You can Squeeze at 5 feet per round (10 feet on a critical success).'],
   },
@@ -46,7 +57,9 @@ export const skillFeats: FeatDefinition[] = [
     name: 'Unified Theory',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'arcana', minValue: 4, description: 'Legendary in Arcana' }],
+    prerequisites: [
+      { type: 'skill', id: 'arcana', minValue: 4, description: 'Legendary in Arcana' },
+    ],
     description: 'You understand the fundamental principles of magic.',
     benefits: ['You can use Arcana for checks requiring Nature, Occultism, or Religion.'],
   },
@@ -56,16 +69,20 @@ export const skillFeats: FeatDefinition[] = [
     name: 'Combat Climber',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'athletics', minValue: 1, description: 'Trained in Athletics' }],
+    prerequisites: [
+      { type: 'skill', id: 'athletics', minValue: 1, description: 'Trained in Athletics' },
+    ],
     description: 'You can fight while climbing.',
-    benefits: ['You\'re not flat-footed while Climbing.', 'You can Climb with a hand occupied.'],
+    benefits: ["You're not flat-footed while Climbing.", 'You can Climb with a hand occupied.'],
   },
   {
     id: 'hefty-hauler',
     name: 'Hefty Hauler',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'athletics', minValue: 1, description: 'Trained in Athletics' }],
+    prerequisites: [
+      { type: 'skill', id: 'athletics', minValue: 1, description: 'Trained in Athletics' },
+    ],
     description: 'You can carry more than normal.',
     benefits: ['Increase your maximum and encumbered Bulk limits by 2.'],
   },
@@ -74,7 +91,9 @@ export const skillFeats: FeatDefinition[] = [
     name: 'Quick Jump',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'athletics', minValue: 1, description: 'Trained in Athletics' }],
+    prerequisites: [
+      { type: 'skill', id: 'athletics', minValue: 1, description: 'Trained in Athletics' },
+    ],
     description: 'You can leap quickly.',
     benefits: ['You can High Jump or Long Jump as a single action instead of 2 actions.'],
   },
@@ -83,9 +102,13 @@ export const skillFeats: FeatDefinition[] = [
     name: 'Titan Wrestler',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'athletics', minValue: 1, description: 'Trained in Athletics' }],
+    prerequisites: [
+      { type: 'skill', id: 'athletics', minValue: 1, description: 'Trained in Athletics' },
+    ],
     description: 'You can wrestle larger foes.',
-    benefits: ['You can attempt to Disarm, Grapple, Shove, or Trip creatures up to two sizes larger than you.'],
+    benefits: [
+      'You can attempt to Disarm, Grapple, Shove, or Trip creatures up to two sizes larger than you.',
+    ],
   },
   // Crafting
   {
@@ -93,27 +116,41 @@ export const skillFeats: FeatDefinition[] = [
     name: 'Quick Repair',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'crafting', minValue: 1, description: 'Trained in Crafting' }],
+    prerequisites: [
+      { type: 'skill', id: 'crafting', minValue: 1, description: 'Trained in Crafting' },
+    ],
     description: 'You repair items quickly.',
-    benefits: ['You can Repair in 1 minute. At Master, in 3 actions. At Legendary, in a single action.'],
+    benefits: [
+      'You can Repair in 1 minute. At Master, in 3 actions. At Legendary, in a single action.',
+    ],
   },
   {
     id: 'snare-crafting',
     name: 'Snare Crafting',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'crafting', minValue: 1, description: 'Trained in Crafting' }],
+    prerequisites: [
+      { type: 'skill', id: 'crafting', minValue: 1, description: 'Trained in Crafting' },
+    ],
     description: 'You can create simple snares.',
-    benefits: ['You can Craft snares.', 'You gain the formulas for 4 common snares of your choice.'],
+    benefits: [
+      'You can Craft snares.',
+      'You gain the formulas for 4 common snares of your choice.',
+    ],
   },
   {
     id: 'specialty-crafting',
     name: 'Specialty Crafting',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'crafting', minValue: 1, description: 'Trained in Crafting' }],
+    prerequisites: [
+      { type: 'skill', id: 'crafting', minValue: 1, description: 'Trained in Crafting' },
+    ],
     description: 'You are a specialist in a craft.',
-    benefits: ['You gain a +1 circumstance bonus to Craft checks with your specialty.', '+2 at Master.'],
+    benefits: [
+      'You gain a +1 circumstance bonus to Craft checks with your specialty.',
+      '+2 at Master.',
+    ],
   },
   // Deception
   {
@@ -121,16 +158,22 @@ export const skillFeats: FeatDefinition[] = [
     name: 'Charming Liar',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'deception', minValue: 1, description: 'Trained in Deception' }],
+    prerequisites: [
+      { type: 'skill', id: 'deception', minValue: 1, description: 'Trained in Deception' },
+    ],
     description: 'Your lies are convincing.',
-    benefits: ['When you get a critical success at lying, the target\'s attitude improves by one step.'],
+    benefits: [
+      "When you get a critical success at lying, the target's attitude improves by one step.",
+    ],
   },
   {
     id: 'lengthy-diversion',
     name: 'Lengthy Diversion',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'deception', minValue: 1, description: 'Trained in Deception' }],
+    prerequisites: [
+      { type: 'skill', id: 'deception', minValue: 1, description: 'Trained in Deception' },
+    ],
     description: 'Your diversions last longer.',
     benefits: ['When you Create a Diversion, you remain hidden until the end of your next turn.'],
   },
@@ -139,7 +182,9 @@ export const skillFeats: FeatDefinition[] = [
     name: 'Lie to Me',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'deception', minValue: 1, description: 'Trained in Deception' }],
+    prerequisites: [
+      { type: 'skill', id: 'deception', minValue: 1, description: 'Trained in Deception' },
+    ],
     description: 'You can detect lies.',
     benefits: ['You can use Deception instead of Perception to Sense Motive.'],
   },
@@ -149,25 +194,36 @@ export const skillFeats: FeatDefinition[] = [
     name: 'Bargain Hunter',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'diplomacy', minValue: 1, description: 'Trained in Diplomacy' }],
+    prerequisites: [
+      { type: 'skill', id: 'diplomacy', minValue: 1, description: 'Trained in Diplomacy' },
+    ],
     description: 'You find the best deals.',
-    benefits: ['You gain a +2 circumstance bonus to initial checks to Earn Income using Diplomacy.'],
+    benefits: [
+      'You gain a +2 circumstance bonus to initial checks to Earn Income using Diplomacy.',
+    ],
   },
   {
     id: 'group-impression',
     name: 'Group Impression',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'diplomacy', minValue: 1, description: 'Trained in Diplomacy' }],
+    prerequisites: [
+      { type: 'skill', id: 'diplomacy', minValue: 1, description: 'Trained in Diplomacy' },
+    ],
     description: 'You can address a crowd.',
-    benefits: ['You can Make an Impression on up to 4 targets at once.', 'Use the worst result against all targets.'],
+    benefits: [
+      'You can Make an Impression on up to 4 targets at once.',
+      'Use the worst result against all targets.',
+    ],
   },
   {
     id: 'hobnobber',
     name: 'Hobnobber',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'diplomacy', minValue: 1, description: 'Trained in Diplomacy' }],
+    prerequisites: [
+      { type: 'skill', id: 'diplomacy', minValue: 1, description: 'Trained in Diplomacy' },
+    ],
     description: 'You are a quick networker.',
     benefits: ['You Gather Information in half the time, or with a -5 penalty in normal time.'],
   },
@@ -177,16 +233,23 @@ export const skillFeats: FeatDefinition[] = [
     name: 'Group Coercion',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'intimidation', minValue: 1, description: 'Trained in Intimidation' }],
+    prerequisites: [
+      { type: 'skill', id: 'intimidation', minValue: 1, description: 'Trained in Intimidation' },
+    ],
     description: 'You can threaten groups.',
-    benefits: ['You can Coerce up to 4 targets at once.', 'Use the worst result against all targets.'],
+    benefits: [
+      'You can Coerce up to 4 targets at once.',
+      'Use the worst result against all targets.',
+    ],
   },
   {
     id: 'intimidating-glare',
     name: 'Intimidating Glare',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'intimidation', minValue: 1, description: 'Trained in Intimidation' }],
+    prerequisites: [
+      { type: 'skill', id: 'intimidation', minValue: 1, description: 'Trained in Intimidation' },
+    ],
     description: 'Your glare is terrifying.',
     benefits: ['You can Demoralize with a glare without speaking.', 'No language penalty.'],
   },
@@ -196,27 +259,41 @@ export const skillFeats: FeatDefinition[] = [
     name: 'Battle Medicine',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'medicine', minValue: 1, description: 'Trained in Medicine' }],
+    prerequisites: [
+      { type: 'skill', id: 'medicine', minValue: 1, description: 'Trained in Medicine' },
+    ],
     description: 'You can quickly treat wounds in battle.',
-    benefits: ['You can attempt to Treat Wounds as a single action.', 'The target is immune to your Battle Medicine for 1 day.'],
+    benefits: [
+      'You can attempt to Treat Wounds as a single action.',
+      'The target is immune to your Battle Medicine for 1 day.',
+    ],
   },
   {
     id: 'continual-recovery',
     name: 'Continual Recovery',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'medicine', minValue: 2, description: 'Expert in Medicine' }],
+    prerequisites: [
+      { type: 'skill', id: 'medicine', minValue: 2, description: 'Expert in Medicine' },
+    ],
     description: 'You can recover patients quickly.',
-    benefits: ['You can Treat Wounds on the same creature after only 10 minutes instead of 1 hour.'],
+    benefits: [
+      'You can Treat Wounds on the same creature after only 10 minutes instead of 1 hour.',
+    ],
   },
   {
     id: 'ward-medic',
     name: 'Ward Medic',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'medicine', minValue: 2, description: 'Expert in Medicine' }],
+    prerequisites: [
+      { type: 'skill', id: 'medicine', minValue: 2, description: 'Expert in Medicine' },
+    ],
     description: 'You can treat multiple patients.',
-    benefits: ['You can Treat Disease or Treat Wounds on up to 2 creatures at once.', '+2 at Master, +4 at Legendary.'],
+    benefits: [
+      'You can Treat Disease or Treat Wounds on up to 2 creatures at once.',
+      '+2 at Master, +4 at Legendary.',
+    ],
   },
   // Stealth
   {
@@ -224,7 +301,9 @@ export const skillFeats: FeatDefinition[] = [
     name: 'Experienced Smuggler',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'stealth', minValue: 1, description: 'Trained in Stealth' }],
+    prerequisites: [
+      { type: 'skill', id: 'stealth', minValue: 1, description: 'Trained in Stealth' },
+    ],
     description: 'You know how to hide contraband.',
     benefits: ['You gain a +2 circumstance bonus to conceal items on your person or in baggage.'],
   },
@@ -233,7 +312,9 @@ export const skillFeats: FeatDefinition[] = [
     name: 'Terrain Stalker',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'stealth', minValue: 1, description: 'Trained in Stealth' }],
+    prerequisites: [
+      { type: 'skill', id: 'stealth', minValue: 1, description: 'Trained in Stealth' },
+    ],
     description: 'You move silently in specific terrain.',
     benefits: ['Choose a terrain. You can Sneak at full speed in that terrain.'],
   },
@@ -243,7 +324,9 @@ export const skillFeats: FeatDefinition[] = [
     name: 'Pickpocket',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'thievery', minValue: 1, description: 'Trained in Thievery' }],
+    prerequisites: [
+      { type: 'skill', id: 'thievery', minValue: 1, description: 'Trained in Thievery' },
+    ],
     description: 'You can steal from creatures.',
     benefits: ['You can Steal from a creature without penalty.'],
   },
@@ -252,8 +335,12 @@ export const skillFeats: FeatDefinition[] = [
     name: 'Subtle Theft',
     system: 'pf2e',
     source: 'Core Rulebook',
-    prerequisites: [{ type: 'skill', id: 'thievery', minValue: 1, description: 'Trained in Thievery' }],
+    prerequisites: [
+      { type: 'skill', id: 'thievery', minValue: 1, description: 'Trained in Thievery' },
+    ],
     description: 'You steal without being noticed.',
-    benefits: ['When you Steal or Palm an Object, observers take a -2 circumstance penalty to Perception.'],
+    benefits: [
+      'When you Steal or Palm an Object, observers take a -2 circumstance penalty to Perception.',
+    ],
   },
 ];

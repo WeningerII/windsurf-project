@@ -80,7 +80,8 @@ export const guard: Monster = {
   actions: [
     {
       name: 'Spear',
-      description: 'Melee or Ranged Weapon Attack: +3 to hit, reach 5 ft. or range 20/60 ft., one target.',
+      description:
+        'Melee or Ranged Weapon Attack: +3 to hit, reach 5 ft. or range 20/60 ft., one target.',
       attackBonus: 3,
       reach: 5,
       range: { normal: 20, max: 60 },
@@ -112,7 +113,8 @@ export const goblin: Monster = {
   specialAbilities: [
     {
       name: 'Nimble Escape',
-      description: 'The goblin can take the Disengage or Hide action as a bonus action on each of its turns.',
+      description:
+        'The goblin can take the Disengage or Hide action as a bonus action on each of its turns.',
     },
   ],
   actions: [
@@ -153,7 +155,7 @@ export const skeleton: Monster = {
   damageImmunities: ['poison'],
   conditionImmunities: ['exhaustion', 'poisoned'],
   senses: ['darkvision 60 ft.', 'passive Perception 9'],
-  languages: ['understands all languages it knew in life but can\'t speak'],
+  languages: ["understands all languages it knew in life but can't speak"],
   actions: [
     {
       name: 'Shortsword',
@@ -195,7 +197,8 @@ export const orc: Monster = {
   specialAbilities: [
     {
       name: 'Aggressive',
-      description: 'As a bonus action, the orc can move up to its speed toward a hostile creature that it can see.',
+      description:
+        'As a bonus action, the orc can move up to its speed toward a hostile creature that it can see.',
     },
   ],
   actions: [
@@ -204,11 +207,14 @@ export const orc: Monster = {
       description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target.',
       attackBonus: 5,
       reach: 5,
-      damage: [{ dice: { count: 1, die: 'd12', modifier: 3, notation: '1d12+3' }, type: 'slashing' }],
+      damage: [
+        { dice: { count: 1, die: 'd12', modifier: 3, notation: '1d12+3' }, type: 'slashing' },
+      ],
     },
     {
       name: 'Javelin',
-      description: 'Melee or Ranged Weapon Attack: +5 to hit, reach 5 ft. or range 30/120 ft., one target.',
+      description:
+        'Melee or Ranged Weapon Attack: +5 to hit, reach 5 ft. or range 30/120 ft., one target.',
       attackBonus: 5,
       reach: 5,
       range: { normal: 30, max: 120 },
@@ -240,17 +246,20 @@ export const direwolf: Monster = {
   specialAbilities: [
     {
       name: 'Keen Hearing and Smell',
-      description: 'The wolf has advantage on Wisdom (Perception) checks that rely on hearing or smell.',
+      description:
+        'The wolf has advantage on Wisdom (Perception) checks that rely on hearing or smell.',
     },
     {
       name: 'Pack Tactics',
-      description: 'The wolf has advantage on attack rolls against a creature if at least one of the wolf\'s allies is within 5 feet of the creature and the ally isn\'t incapacitated.',
+      description:
+        "The wolf has advantage on attack rolls against a creature if at least one of the wolf's allies is within 5 feet of the creature and the ally isn't incapacitated.",
     },
   ],
   actions: [
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. If the target is a creature, it must succeed on a DC 13 Strength saving throw or be knocked prone.',
+      description:
+        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. If the target is a creature, it must succeed on a DC 13 Strength saving throw or be knocked prone.',
       attackBonus: 5,
       reach: 5,
       damage: [{ dice: { count: 2, die: 'd6', modifier: 3, notation: '2d6+3' }, type: 'piercing' }],
@@ -285,11 +294,13 @@ export const bugbear: Monster = {
   specialAbilities: [
     {
       name: 'Brute',
-      description: 'A melee weapon deals one extra die of its damage when the bugbear hits with it (included in the attack).',
+      description:
+        'A melee weapon deals one extra die of its damage when the bugbear hits with it (included in the attack).',
     },
     {
       name: 'Surprise Attack',
-      description: 'If the bugbear surprises a creature and hits it with an attack during the first round of combat, the target takes an extra 7 (2d6) damage from the attack.',
+      description:
+        'If the bugbear surprises a creature and hits it with an attack during the first round of combat, the target takes an extra 7 (2d6) damage from the attack.',
     },
   ],
   actions: [
@@ -302,7 +313,8 @@ export const bugbear: Monster = {
     },
     {
       name: 'Javelin',
-      description: 'Melee or Ranged Weapon Attack: +4 to hit, reach 5 ft. or range 30/120 ft., one target.',
+      description:
+        'Melee or Ranged Weapon Attack: +4 to hit, reach 5 ft. or range 30/120 ft., one target.',
       attackBonus: 4,
       reach: 5,
       range: { normal: 30, max: 120 },
@@ -331,11 +343,12 @@ export const zombie: Monster = {
   damageImmunities: ['poison'],
   conditionImmunities: ['poisoned'],
   senses: ['darkvision 60 ft.', 'passive Perception 8'],
-  languages: ['understands the languages it knew in life but can\'t speak'],
+  languages: ["understands the languages it knew in life but can't speak"],
   specialAbilities: [
     {
       name: 'Undead Fortitude',
-      description: 'If damage reduces the zombie to 0 hit points, it must make a Constitution saving throw with a DC of 5 + the damage taken, unless the damage is radiant or from a critical hit. On a success, the zombie drops to 1 hit point instead.',
+      description:
+        'If damage reduces the zombie to 0 hit points, it must make a Constitution saving throw with a DC of 5 + the damage taken, unless the damage is radiant or from a critical hit. On a success, the zombie drops to 1 hit point instead.',
     },
   ],
   actions: [
@@ -344,7 +357,9 @@ export const zombie: Monster = {
       description: 'Melee Weapon Attack: +3 to hit, reach 5 ft., one target.',
       attackBonus: 3,
       reach: 5,
-      damage: [{ dice: { count: 1, die: 'd6', modifier: 1, notation: '1d6+1' }, type: 'bludgeoning' }],
+      damage: [
+        { dice: { count: 1, die: 'd6', modifier: 1, notation: '1d6+1' }, type: 'bludgeoning' },
+      ],
     },
   ],
   description: 'Shambling corpses animated by foul necromancy.',
@@ -371,11 +386,13 @@ export const wolf: Monster = {
   specialAbilities: [
     {
       name: 'Keen Hearing and Smell',
-      description: 'The wolf has advantage on Wisdom (Perception) checks that rely on hearing or smell.',
+      description:
+        'The wolf has advantage on Wisdom (Perception) checks that rely on hearing or smell.',
     },
     {
       name: 'Pack Tactics',
-      description: 'The wolf has advantage on attack rolls against a creature if at least one of the wolf\'s allies is within 5 feet of the creature and the ally isn\'t incapacitated.',
+      description:
+        "The wolf has advantage on attack rolls against a creature if at least one of the wolf's allies is within 5 feet of the creature and the ally isn't incapacitated.",
     },
   ],
   actions: [
@@ -411,11 +428,13 @@ export const spider: Monster = {
   specialAbilities: [
     {
       name: 'Spider Climb',
-      description: 'The spider can climb difficult surfaces, including upside down on ceilings, without needing to make an ability check.',
+      description:
+        'The spider can climb difficult surfaces, including upside down on ceilings, without needing to make an ability check.',
     },
     {
       name: 'Web Sense',
-      description: 'While in contact with a web, the spider knows the exact location of any other creature in contact with the same web.',
+      description:
+        'While in contact with a web, the spider knows the exact location of any other creature in contact with the same web.',
     },
     {
       name: 'Web Walker',
@@ -454,17 +473,20 @@ export const kobold: Monster = {
   specialAbilities: [
     {
       name: 'Sunlight Sensitivity',
-      description: 'While in sunlight, the kobold has disadvantage on attack rolls and Wisdom (Perception) checks that rely on sight.',
+      description:
+        'While in sunlight, the kobold has disadvantage on attack rolls and Wisdom (Perception) checks that rely on sight.',
     },
     {
       name: 'Pack Tactics',
-      description: 'The kobold has advantage on attack rolls against a creature if at least one of the kobold\'s allies is within 5 feet of the creature and the ally isn\'t incapacitated.',
+      description:
+        "The kobold has advantage on attack rolls against a creature if at least one of the kobold's allies is within 5 feet of the creature and the ally isn't incapacitated.",
     },
   ],
   actions: [
     {
       name: 'Dagger',
-      description: 'Melee or Ranged Weapon Attack: +4 to hit, reach 5 ft. or range 20/60 ft., one target.',
+      description:
+        'Melee or Ranged Weapon Attack: +4 to hit, reach 5 ft. or range 20/60 ft., one target.',
       attackBonus: 4,
       reach: 5,
       damage: [{ dice: { count: 1, die: 'd4', notation: '1d4+2' }, type: 'piercing' }],

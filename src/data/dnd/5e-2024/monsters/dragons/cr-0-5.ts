@@ -31,16 +31,16 @@ export const redDragonWyrmling: Monster = {
   actions: [
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 7 (1d10 + 2) piercing damage plus 3 (1d6) fire damage.',
+      description:
+        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 7 (1d10 + 2) piercing damage plus 3 (1d6) fire damage.',
     },
     {
       name: 'Fire Breath',
-      description: 'The dragon exhales fire in a 15-foot cone. Each creature in that area must make a DC 11 Dexterity saving throw, taking 22 (5d8) fire damage on a failed save, or half as much on a successful one.',
+      description:
+        'The dragon exhales fire in a 15-foot cone. Each creature in that area must make a DC 11 Dexterity saving throw, taking 22 (5d8) fire damage on a failed save, or half as much on a successful one.',
     },
   ],
   environment: ['mountain'],
 };
 
-export const dragonsCR0to5: Monster[] = [
-  redDragonWyrmling,
-];
+export const dragonsCR0to5: Monster[] = [redDragonWyrmling];

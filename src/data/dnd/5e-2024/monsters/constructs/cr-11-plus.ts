@@ -16,9 +16,16 @@ export const stoneGolem: Monster = {
   speed: { walk: 30 },
   abilities: { str: 22, dex: 9, con: 20, int: 3, wis: 11, cha: 1 },
   damageImmunities: ['poison', 'psychic', 'bludgeoning', 'piercing', 'slashing'],
-  conditionImmunities: ['charmed', 'exhaustion', 'frightened', 'paralyzed', 'petrified', 'poisoned'],
+  conditionImmunities: [
+    'charmed',
+    'exhaustion',
+    'frightened',
+    'paralyzed',
+    'petrified',
+    'poisoned',
+  ],
   senses: ['darkvision 120 ft.', 'passive Perception 10'],
-  languages: ['understands the languages of its creator but can\'t speak'],
+  languages: ["understands the languages of its creator but can't speak"],
   challengeRating: 10,
   experiencePoints: 5900,
   specialAbilities: [
@@ -32,7 +39,7 @@ export const stoneGolem: Monster = {
     },
     {
       name: 'Magic Weapons',
-      description: 'The golem\'s weapon attacks are magical.',
+      description: "The golem's weapon attacks are magical.",
     },
   ],
   actions: [
@@ -42,12 +49,11 @@ export const stoneGolem: Monster = {
     },
     {
       name: 'Slam',
-      description: 'Melee Weapon Attack: +10 to hit, reach 5 ft., one target. Hit: 19 (3d8 + 6) bludgeoning damage.',
+      description:
+        'Melee Weapon Attack: +10 to hit, reach 5 ft., one target. Hit: 19 (3d8 + 6) bludgeoning damage.',
     },
   ],
   environment: ['dungeon', 'tower'],
 };
 
-export const constructsCR11Plus: Monster[] = [
-  stoneGolem,
-];
+export const constructsCR11Plus: Monster[] = [stoneGolem];

@@ -36,33 +36,42 @@ export const pf1eSpellsByLevel: Record<number, Spell[]> = {
   9: level9Spells,
 };
 
-export const pf1eSpellsById: Record<string, Spell> = pf1eSpells.reduce((acc, spell) => {
-  acc[spell.id] = spell;
-  return acc;
-}, {} as Record<string, Spell>);
+export const pf1eSpellsById: Record<string, Spell> = pf1eSpells.reduce(
+  (acc, spell) => {
+    acc[spell.id] = spell;
+    return acc;
+  },
+  {} as Record<string, Spell>
+);
 
-export const pf1eSpellsByClass: Record<string, Spell[]> = pf1eSpells.reduce((acc, spell) => {
-  spell.classes.forEach(className => {
-    if (!acc[className]) {
-      acc[className] = [];
+export const pf1eSpellsByClass: Record<string, Spell[]> = pf1eSpells.reduce(
+  (acc, spell) => {
+    spell.classes.forEach((className) => {
+      if (!acc[className]) {
+        acc[className] = [];
+      }
+      acc[className].push(spell);
+    });
+    return acc;
+  },
+  {} as Record<string, Spell[]>
+);
+
+export const pf1eSpellsBySchool: Record<string, Spell[]> = pf1eSpells.reduce(
+  (acc, spell) => {
+    if (!acc[spell.school]) {
+      acc[spell.school] = [];
     }
-    acc[className].push(spell);
-  });
-  return acc;
-}, {} as Record<string, Spell[]>);
+    acc[spell.school].push(spell);
+    return acc;
+  },
+  {} as Record<string, Spell[]>
+);
 
-export const pf1eSpellsBySchool: Record<string, Spell[]> = pf1eSpells.reduce((acc, spell) => {
-  if (!acc[spell.school]) {
-    acc[spell.school] = [];
-  }
-  acc[spell.school].push(spell);
-  return acc;
-}, {} as Record<string, Spell[]>);
-
-export { 
-  cantrips, 
-  level1Spells, 
-  level2Spells, 
+export {
+  cantrips,
+  level1Spells,
+  level2Spells,
   level3Spells,
   level4Spells,
   level5Spells,

@@ -27,22 +27,23 @@ export const pixie: Monster = {
     },
     {
       name: 'Innate Spellcasting',
-      description: 'The pixie\'s innate spellcasting ability is Charisma (spell save DC 11). It can innately cast the following spells, requiring no material components: At will: druidcraft; 1/day each: confusion, dancing lights, detect magic, detect thoughts, disguise self, dispel magic, entangle, fly, phantasmal force, polymorph, sleep.',
+      description:
+        "The pixie's innate spellcasting ability is Charisma (spell save DC 11). It can innately cast the following spells, requiring no material components: At will: druidcraft; 1/day each: confusion, dancing lights, detect magic, detect thoughts, disguise self, dispel magic, entangle, fly, phantasmal force, polymorph, sleep.",
     },
   ],
   actions: [
     {
       name: 'Dagger',
-      description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d4 + 4) piercing damage.',
+      description:
+        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d4 + 4) piercing damage.',
     },
     {
       name: 'Polymorph',
-      description: 'One creature the pixie can see within 30 feet of it must make a DC 11 Wisdom saving throw or be magically polymorphed into a sheep, pig, or goat for up to 1 hour. The target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success. If the target is unwilling, it has advantage on the saving throw.',
+      description:
+        'One creature the pixie can see within 30 feet of it must make a DC 11 Wisdom saving throw or be magically polymorphed into a sheep, pig, or goat for up to 1 hour. The target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success. If the target is unwilling, it has advantage on the saving throw.',
     },
   ],
   environment: ['forest'],
 };
 
-export const feyCR0to5: Monster[] = [
-  pixie,
-];
+export const feyCR0to5: Monster[] = [pixie];

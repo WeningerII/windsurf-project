@@ -23,11 +23,14 @@ export const ogre: Monster = {
       description: 'Melee Weapon Attack: +6 to hit, reach 5 ft., one target.',
       attackBonus: 6,
       reach: 5,
-      damage: [{ dice: { count: 2, die: 'd8', modifier: 4, notation: '2d8+4' }, type: 'bludgeoning' }],
+      damage: [
+        { dice: { count: 2, die: 'd8', modifier: 4, notation: '2d8+4' }, type: 'bludgeoning' },
+      ],
     },
     {
       name: 'Javelin',
-      description: 'Melee or Ranged Weapon Attack: +6 to hit, reach 5 ft. or range 30/120 ft., one target.',
+      description:
+        'Melee or Ranged Weapon Attack: +6 to hit, reach 5 ft. or range 30/120 ft., one target.',
       attackBonus: 6,
       reach: 5,
       range: { normal: 30, max: 120 },
@@ -66,7 +69,8 @@ export const ghoul: Monster = {
     },
     {
       name: 'Claws',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. If the target is a creature other than an elf or undead, it must succeed on a DC 10 Constitution saving throw or be paralyzed for 1 minute. The target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success.',
+      description:
+        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. If the target is a creature other than an elf or undead, it must succeed on a DC 10 Constitution saving throw or be paralyzed for 1 minute. The target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success.',
       attackBonus: 4,
       reach: 5,
       damage: [{ dice: { count: 2, die: 'd4', modifier: 2, notation: '2d4+2' }, type: 'slashing' }],
@@ -102,7 +106,8 @@ export const owlbear: Monster = {
   specialAbilities: [
     {
       name: 'Keen Sight and Smell',
-      description: 'The owlbear has advantage on Wisdom (Perception) checks that rely on sight or smell.',
+      description:
+        'The owlbear has advantage on Wisdom (Perception) checks that rely on sight or smell.',
     },
   ],
   actions: [
@@ -115,7 +120,9 @@ export const owlbear: Monster = {
       description: 'Melee Weapon Attack: +7 to hit, reach 5 ft., one creature.',
       attackBonus: 7,
       reach: 5,
-      damage: [{ dice: { count: 1, die: 'd10', modifier: 5, notation: '1d10+5' }, type: 'piercing' }],
+      damage: [
+        { dice: { count: 1, die: 'd10', modifier: 5, notation: '1d10+5' }, type: 'piercing' },
+      ],
     },
     {
       name: 'Claws',
@@ -150,21 +157,25 @@ export const werewolf: Monster = {
   specialAbilities: [
     {
       name: 'Shapechanger',
-      description: 'The werewolf can use its action to polymorph into a wolf-humanoid hybrid or into a wolf, or back into its true form, which is humanoid. Its statistics, other than its AC, are the same in each form. Any equipment it is wearing or carrying isn\'t transformed. It reverts to its true form if it dies.',
+      description:
+        "The werewolf can use its action to polymorph into a wolf-humanoid hybrid or into a wolf, or back into its true form, which is humanoid. Its statistics, other than its AC, are the same in each form. Any equipment it is wearing or carrying isn't transformed. It reverts to its true form if it dies.",
     },
     {
       name: 'Keen Hearing and Smell',
-      description: 'The werewolf has advantage on Wisdom (Perception) checks that rely on hearing or smell.',
+      description:
+        'The werewolf has advantage on Wisdom (Perception) checks that rely on hearing or smell.',
     },
   ],
   actions: [
     {
       name: 'Multiattack',
-      description: 'The werewolf makes two attacks: two with its spear (humanoid form) or one with its bite and one with its claws (wolf or hybrid form).',
+      description:
+        'The werewolf makes two attacks: two with its spear (humanoid form) or one with its bite and one with its claws (wolf or hybrid form).',
     },
     {
       name: 'Bite',
-      description: 'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. If the target is a humanoid, it must succeed on a DC 12 Constitution saving throw or be cursed with werewolf lycanthropy.',
+      description:
+        'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. If the target is a humanoid, it must succeed on a DC 12 Constitution saving throw or be cursed with werewolf lycanthropy.',
       attackBonus: 4,
       reach: 5,
       damage: [{ dice: { count: 1, die: 'd8', modifier: 2, notation: '1d8+2' }, type: 'piercing' }],
@@ -225,7 +236,8 @@ export const blackDragonWyrmling: Monster = {
     },
     {
       name: 'Acid Breath',
-      description: 'The dragon exhales acid in a 15-foot line that is 5 feet wide. Each creature in that line must make a DC 11 Dexterity saving throw, taking 5d8 acid damage on a failed save, or half as much damage on a successful one.',
+      description:
+        'The dragon exhales acid in a 15-foot line that is 5 feet wide. Each creature in that line must make a DC 11 Dexterity saving throw, taking 5d8 acid damage on a failed save, or half as much damage on a successful one.',
       savingThrow: {
         attribute: 'dex',
         dc: 11,
@@ -261,11 +273,13 @@ export const flameskull: Monster = {
   specialAbilities: [
     {
       name: 'Illumination',
-      description: 'The flameskull sheds either dim light in a 15-foot radius, or bright light in a 15-foot radius and dim light for an additional 15 feet. It can switch between the options as an action.',
+      description:
+        'The flameskull sheds either dim light in a 15-foot radius, or bright light in a 15-foot radius and dim light for an additional 15 feet. It can switch between the options as an action.',
     },
     {
       name: 'Rejuvenation',
-      description: 'If the flameskull is destroyed, it regains all its hit points in 1 hour unless holy water is sprinkled on its remains or a dispel magic or remove curse spell is cast on them.',
+      description:
+        'If the flameskull is destroyed, it regains all its hit points in 1 hour unless holy water is sprinkled on its remains or a dispel magic or remove curse spell is cast on them.',
     },
   ],
   actions: [
@@ -281,7 +295,8 @@ export const flameskull: Monster = {
       damage: [{ dice: { count: 3, die: 'd6', notation: '3d6' }, type: 'fire' }],
     },
   ],
-  description: 'The burning skull of a dead wizard, animated by dark magic and bound to guard a location.',
+  description:
+    'The burning skull of a dead wizard, animated by dark magic and bound to guard a location.',
   environment: ['underground', 'ruins'],
 };
 
@@ -311,7 +326,8 @@ export const gladiator: Monster = {
     },
     {
       name: 'Brute',
-      description: 'A melee weapon deals one extra die of its damage when the gladiator hits with it (included in the attack).',
+      description:
+        'A melee weapon deals one extra die of its damage when the gladiator hits with it (included in the attack).',
     },
   ],
   actions: [
@@ -321,7 +337,8 @@ export const gladiator: Monster = {
     },
     {
       name: 'Spear',
-      description: 'Melee or Ranged Weapon Attack: +7 to hit, reach 5 ft. and range 20/60 ft., one target.',
+      description:
+        'Melee or Ranged Weapon Attack: +7 to hit, reach 5 ft. and range 20/60 ft., one target.',
       attackBonus: 7,
       reach: 5,
       range: { normal: 20, max: 60 },
@@ -329,10 +346,13 @@ export const gladiator: Monster = {
     },
     {
       name: 'Shield Bash',
-      description: 'Melee Weapon Attack: +7 to hit, reach 5 ft., one creature. If the target is a Medium or smaller creature, it must succeed on a DC 15 Strength saving throw or be knocked prone.',
+      description:
+        'Melee Weapon Attack: +7 to hit, reach 5 ft., one creature. If the target is a Medium or smaller creature, it must succeed on a DC 15 Strength saving throw or be knocked prone.',
       attackBonus: 7,
       reach: 5,
-      damage: [{ dice: { count: 2, die: 'd4', modifier: 4, notation: '2d4+4' }, type: 'bludgeoning' }],
+      damage: [
+        { dice: { count: 2, die: 'd4', modifier: 4, notation: '2d4+4' }, type: 'bludgeoning' },
+      ],
       savingThrow: {
         attribute: 'str',
         dc: 15,
@@ -343,7 +363,8 @@ export const gladiator: Monster = {
   reactions: [
     {
       name: 'Parry',
-      description: 'The gladiator adds 3 to its AC against one melee attack that would hit it. To do so, the gladiator must see the attacker and be wielding a melee weapon.',
+      description:
+        'The gladiator adds 3 to its AC against one melee attack that would hit it. To do so, the gladiator must see the attacker and be wielding a melee weapon.',
     },
   ],
   description: 'Elite warriors trained for combat in the arena.',
@@ -374,7 +395,8 @@ export const troll: Monster = {
     },
     {
       name: 'Regeneration',
-      description: 'The troll regains 10 hit points at the start of its turn. If the troll takes acid or fire damage, this trait doesn\'t function at the start of the troll\'s next turn. The troll dies only if it starts its turn with 0 hit points and doesn\'t regenerate.',
+      description:
+        "The troll regains 10 hit points at the start of its turn. If the troll takes acid or fire damage, this trait doesn't function at the start of the troll's next turn. The troll dies only if it starts its turn with 0 hit points and doesn't regenerate.",
     },
   ],
   actions: [
@@ -423,7 +445,8 @@ export const youngWhiteDragon: Monster = {
   specialAbilities: [
     {
       name: 'Ice Walk',
-      description: 'The dragon can move across and climb icy surfaces without needing to make an ability check. Additionally, difficult terrain composed of ice or snow doesn\'t cost it extra movement.',
+      description:
+        "The dragon can move across and climb icy surfaces without needing to make an ability check. Additionally, difficult terrain composed of ice or snow doesn't cost it extra movement.",
     },
   ],
   actions: [
@@ -450,7 +473,8 @@ export const youngWhiteDragon: Monster = {
     },
     {
       name: 'Cold Breath',
-      description: 'The dragon exhales an icy blast in a 30-foot cone. Each creature in that area must make a DC 15 Constitution saving throw, taking 10d8 cold damage on a failed save, or half as much damage on a successful one.',
+      description:
+        'The dragon exhales an icy blast in a 30-foot cone. Each creature in that area must make a DC 15 Constitution saving throw, taking 10d8 cold damage on a failed save, or half as much damage on a successful one.',
       savingThrow: {
         attribute: 'con',
         dc: 15,
@@ -485,11 +509,15 @@ export const ankheg: Monster = {
       description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target.',
       attackBonus: 5,
       reach: 5,
-      damage: [{ dice: { count: 2, die: 'd6', notation: '2d6+3' }, type: 'slashing' }, { dice: { count: 1, die: 'd6', notation: '1d6' }, type: 'acid' }],
+      damage: [
+        { dice: { count: 2, die: 'd6', notation: '2d6+3' }, type: 'slashing' },
+        { dice: { count: 1, die: 'd6', notation: '1d6' }, type: 'acid' },
+      ],
     },
     {
       name: 'Acid Spray',
-      description: 'The ankheg spits acid in a line that is 30 feet long and 5 feet wide. Each creature in that line must make a DC 13 Dexterity saving throw, taking 3d6 acid damage on a failed save, or half as much on a successful one.',
+      description:
+        'The ankheg spits acid in a line that is 30 feet long and 5 feet wide. Each creature in that line must make a DC 13 Dexterity saving throw, taking 3d6 acid damage on a failed save, or half as much on a successful one.',
       recharge: '6',
     },
   ],
@@ -512,15 +540,34 @@ export const banshee: Monster = {
   speed: { walk: 0, fly: 40 },
   abilities: { str: 1, dex: 14, con: 10, int: 12, wis: 11, cha: 17 },
   savingThrows: { wis: 2, cha: 5 },
-  damageResistances: ['acid', 'fire', 'lightning', 'thunder', 'bludgeoning', 'piercing', 'slashing'],
+  damageResistances: [
+    'acid',
+    'fire',
+    'lightning',
+    'thunder',
+    'bludgeoning',
+    'piercing',
+    'slashing',
+  ],
   damageImmunities: ['cold', 'necrotic', 'poison'],
-  conditionImmunities: ['charmed', 'exhaustion', 'frightened', 'grappled', 'paralyzed', 'petrified', 'poisoned', 'prone', 'restrained'],
+  conditionImmunities: [
+    'charmed',
+    'exhaustion',
+    'frightened',
+    'grappled',
+    'paralyzed',
+    'petrified',
+    'poisoned',
+    'prone',
+    'restrained',
+  ],
   senses: ['darkvision 60 ft.', 'passive Perception 10'],
   languages: ['Common', 'Elvish'],
   specialAbilities: [
     {
       name: 'Incorporeal Movement',
-      description: 'The banshee can move through other creatures and objects as if they were difficult terrain. It takes 5 (1d10) force damage if it ends its turn inside an object.',
+      description:
+        'The banshee can move through other creatures and objects as if they were difficult terrain. It takes 5 (1d10) force damage if it ends its turn inside an object.',
     },
   ],
   actions: [
@@ -533,7 +580,8 @@ export const banshee: Monster = {
     },
     {
       name: 'Wail',
-      description: 'The banshee releases a mournful wail. This wail has no effect on constructs and undead. All other creatures within 30 feet that can hear the banshee must make a DC 13 Constitution saving throw. On a failure, a creature drops to 0 hit points. On a success, a creature takes 3d6 psychic damage.',
+      description:
+        'The banshee releases a mournful wail. This wail has no effect on constructs and undead. All other creatures within 30 feet that can hear the banshee must make a DC 13 Constitution saving throw. On a failure, a creature drops to 0 hit points. On a success, a creature takes 3d6 psychic damage.',
       recharge: '5-6',
     },
   ],
@@ -560,7 +608,8 @@ export const basilisk: Monster = {
   specialAbilities: [
     {
       name: 'Petrifying Gaze',
-      description: 'If a creature starts its turn within 30 feet of the basilisk and can see the basilisk\'s eyes, the basilisk can force it to make a DC 12 Constitution saving throw if the basilisk isn\'t incapacitated. On a failed save, the creature magically begins to turn to stone and is restrained. A creature restrained in this way must make another Constitution saving throw at the end of its next turn. On a success, the effect ends. On a failure, the creature is petrified until freed by the greater restoration spell or other magic.',
+      description:
+        "If a creature starts its turn within 30 feet of the basilisk and can see the basilisk's eyes, the basilisk can force it to make a DC 12 Constitution saving throw if the basilisk isn't incapacitated. On a failed save, the creature magically begins to turn to stone and is restrained. A creature restrained in this way must make another Constitution saving throw at the end of its next turn. On a success, the effect ends. On a failure, the creature is petrified until freed by the greater restoration spell or other magic.",
     },
   ],
   actions: [
@@ -569,7 +618,10 @@ export const basilisk: Monster = {
       description: 'Melee Weapon Attack: +5 to hit, reach 5 ft., one target.',
       attackBonus: 5,
       reach: 5,
-      damage: [{ dice: { count: 2, die: 'd6', notation: '2d6+3' }, type: 'piercing' }, { dice: { count: 2, die: 'd6', notation: '2d6' }, type: 'poison' }],
+      damage: [
+        { dice: { count: 2, die: 'd6', notation: '2d6+3' }, type: 'piercing' },
+        { dice: { count: 2, die: 'd6', notation: '2d6' }, type: 'poison' },
+      ],
     },
   ],
   description: 'A reptilian monster whose gaze turns victims to stone.',

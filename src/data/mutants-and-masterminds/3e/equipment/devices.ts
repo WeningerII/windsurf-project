@@ -56,7 +56,8 @@ export const devices: Device[] = [
     cost: 5,
     removable: true,
     powers: ['illusion'],
-    description: 'A device that creates realistic three-dimensional holograms. Illusion 4 (Visual).',
+    description:
+      'A device that creates realistic three-dimensional holograms. Illusion 4 (Visual).',
   },
   {
     id: 'flashlight',

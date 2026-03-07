@@ -4,10 +4,6 @@ import { oozesCR11Plus } from './cr-11-plus';
 
 export { oozesCR0to5, oozesCR6to10, oozesCR11Plus };
 
-export const allOozes = [
-  ...oozesCR0to5,
-  ...oozesCR6to10,
-  ...oozesCR11Plus,
-];
+export const allOozes = [...oozesCR0to5, ...oozesCR6to10, ...oozesCR11Plus];
 
 export default allOozes;

@@ -6,46 +6,42 @@ export const monk: CharacterClass = {
   name: 'Monk',
   system: 'dnd-5e-2024',
   source: 'SRD 5.2',
-  
+
   version: '5.2',
   lastUpdated: '2026-01-13',
   sourceBook: {
     name: 'System Reference Document 5.2 (2024)',
-    url: 'https://dnd.wizards.com/resources/systems-reference-document'
+    url: 'https://dnd.wizards.com/resources/systems-reference-document',
   },
-  
+
   hitDie: 'd8',
   primaryAbility: ['dex', 'wis'],
   savingThrowProficiencies: ['str', 'dex'],
-  
+
   armorProficiencies: [],
   weaponProficiencies: ['simple', 'martial'],
-  toolProficiencies: [{
-    count: 1,
-    options: ['artisans-tools', 'musical-instrument'],
-    label: 'Choose one type of artisan\'s tools or one musical instrument',
-  }],
-  
+  toolProficiencies: [
+    {
+      count: 1,
+      options: ['artisans-tools', 'musical-instrument'],
+      label: "Choose one type of artisan's tools or one musical instrument",
+    },
+  ],
+
   skillProficiencies: {
     count: 2,
     options: ['acrobatics', 'athletics', 'history', 'insight', 'religion', 'stealth'],
     label: 'Choose two skills',
   },
-  
+
   equipmentChoices: [
     {
       choose: 1,
-      options: [
-        ['shortsword'],
-        ['simple-weapon'],
-      ],
+      options: [['shortsword'], ['simple-weapon']],
     },
     {
       choose: 1,
-      options: [
-        ['dungeoneers-pack'],
-        ['explorers-pack'],
-      ],
+      options: [['dungeoneers-pack'], ['explorers-pack']],
     },
     {
       choose: 1,
@@ -54,12 +50,12 @@ export const monk: CharacterClass = {
       ],
     },
   ],
-  
+
   startingGold: {
     dice: '5d4',
     multiplier: 1,
   },
-  
+
   features: [
     {
       level: 1,
@@ -68,13 +64,15 @@ export const monk: CharacterClass = {
           id: 'martial-arts',
           name: 'Martial Arts',
           source: 'Monk 1',
-          description: 'Your practice of martial arts gives you mastery of combat styles that use Unarmed Strikes and Monk Weapons. Your Martial Arts die is a d6. It increases as you gain Monk levels. You can use Dexterity instead of Strength for attack and damage rolls of your Unarmed Strikes and Monk Weapons. When you use the Attack action with an Unarmed Strike or a Monk Weapon, you can make one Unarmed Strike as a Bonus Action.',
+          description:
+            'Your practice of martial arts gives you mastery of combat styles that use Unarmed Strikes and Monk Weapons. Your Martial Arts die is a d6. It increases as you gain Monk levels. You can use Dexterity instead of Strength for attack and damage rolls of your Unarmed Strikes and Monk Weapons. When you use the Attack action with an Unarmed Strike or a Monk Weapon, you can make one Unarmed Strike as a Bonus Action.',
         },
         {
           id: 'unarmored-defense-monk',
           name: 'Unarmored Defense',
           source: 'Monk 1',
-          description: 'While you are wearing no armor and not wielding a shield, your AC equals 10 + your Dexterity modifier + your Wisdom modifier.',
+          description:
+            'While you are wearing no armor and not wielding a shield, your AC equals 10 + your Dexterity modifier + your Wisdom modifier.',
         },
       ],
     },
@@ -83,9 +81,10 @@ export const monk: CharacterClass = {
       features: [
         {
           id: 'monks-focus',
-          name: 'Monk\'s Focus',
+          name: "Monk's Focus",
           source: 'Monk 2',
-          description: 'Your training allows you to harness a well of extraordinary energy within yourself. Your access to this energy is represented by a number of Focus Points equal to your Monk level. You can spend these points to fuel various features: Flurry of Blows (1 point), Patient Defense (1 point), Step of the Wind (1 point).',
+          description:
+            'Your training allows you to harness a well of extraordinary energy within yourself. Your access to this energy is represented by a number of Focus Points equal to your Monk level. You can spend these points to fuel various features: Flurry of Blows (1 point), Patient Defense (1 point), Step of the Wind (1 point).',
           uses: {
             current: 2,
             max: 2,
@@ -96,13 +95,15 @@ export const monk: CharacterClass = {
           id: 'unarmored-movement',
           name: 'Unarmored Movement',
           source: 'Monk 2',
-          description: 'Your Speed increases by 10 feet while you are not wearing armor or wielding a shield. This bonus increases when you reach certain Monk levels.',
+          description:
+            'Your Speed increases by 10 feet while you are not wearing armor or wielding a shield. This bonus increases when you reach certain Monk levels.',
         },
         {
           id: 'uncanny-metabolism',
           name: 'Uncanny Metabolism',
           source: 'Monk 2',
-          description: 'When you roll Initiative, you can regain all expended Focus Points. When you do so, you regain a number of Hit Points equal to your Monk level + your Monk\'s Focus die roll. Once you use this feature, you can\'t use it again until you finish a Long Rest.',
+          description:
+            "When you roll Initiative, you can regain all expended Focus Points. When you do so, you regain a number of Hit Points equal to your Monk level + your Monk's Focus die roll. Once you use this feature, you can't use it again until you finish a Long Rest.",
         },
       ],
     },
@@ -119,7 +120,8 @@ export const monk: CharacterClass = {
           id: 'deflect-attacks',
           name: 'Deflect Attacks',
           source: 'Monk 3',
-          description: 'When you are hit by an attack roll, you can use your Reaction to reduce the damage by 1d10 + your Dexterity modifier + your Monk level. If you reduce the damage to 0, you can spend 1 Focus Point to redirect some of the attack\'s force. If you do so, you can make a melee or ranged attack against a creature within 60 feet of you.',
+          description:
+            "When you are hit by an attack roll, you can use your Reaction to reduce the damage by 1d10 + your Dexterity modifier + your Monk level. If you reduce the damage to 0, you can spend 1 Focus Point to redirect some of the attack's force. If you do so, you can make a melee or ranged attack against a creature within 60 feet of you.",
         },
       ],
     },
@@ -136,7 +138,8 @@ export const monk: CharacterClass = {
           id: 'slow-fall',
           name: 'Slow Fall',
           source: 'Monk 4',
-          description: 'You can use your Reaction when you fall to reduce any falling damage you take by an amount equal to five times your Monk level.',
+          description:
+            'You can use your Reaction when you fall to reduce any falling damage you take by an amount equal to five times your Monk level.',
         },
       ],
     },
@@ -147,13 +150,15 @@ export const monk: CharacterClass = {
           id: 'extra-attack-monk',
           name: 'Extra Attack',
           source: 'Monk 5',
-          description: 'You can attack twice, instead of once, whenever you take the Attack action on your turn.',
+          description:
+            'You can attack twice, instead of once, whenever you take the Attack action on your turn.',
         },
         {
           id: 'stunning-strike',
           name: 'Stunning Strike',
           source: 'Monk 5',
-          description: 'Once per turn when you hit a creature with a Monk Weapon or an Unarmed Strike, you can spend 1 Focus Point to attempt a stunning strike. The target must succeed on a Constitution saving throw or have the Stunned condition until the start of your next turn.',
+          description:
+            'Once per turn when you hit a creature with a Monk Weapon or an Unarmed Strike, you can spend 1 Focus Point to attempt a stunning strike. The target must succeed on a Constitution saving throw or have the Stunned condition until the start of your next turn.',
         },
       ],
     },
@@ -164,7 +169,8 @@ export const monk: CharacterClass = {
           id: 'empowered-strikes',
           name: 'Empowered Strikes',
           source: 'Monk 6',
-          description: 'Your Unarmed Strikes count as magical for the purpose of overcoming resistance and immunity to nonmagical attacks and damage. You can also deal Force damage instead of Bludgeoning damage with your Unarmed Strikes.',
+          description:
+            'Your Unarmed Strikes count as magical for the purpose of overcoming resistance and immunity to nonmagical attacks and damage. You can also deal Force damage instead of Bludgeoning damage with your Unarmed Strikes.',
         },
       ],
     },
@@ -175,7 +181,8 @@ export const monk: CharacterClass = {
           id: 'evasion-monk',
           name: 'Evasion',
           source: 'Monk 7',
-          description: 'When you are subjected to an effect that allows you to make a Dexterity saving throw to take only half damage, you instead take no damage if you succeed on the saving throw, and only half damage if you fail.',
+          description:
+            'When you are subjected to an effect that allows you to make a Dexterity saving throw to take only half damage, you instead take no damage if you succeed on the saving throw, and only half damage if you fail.',
         },
       ],
     },
@@ -197,7 +204,8 @@ export const monk: CharacterClass = {
           id: 'acrobatic-movement',
           name: 'Acrobatic Movement',
           source: 'Monk 9',
-          description: 'You gain the ability to move along vertical surfaces and across liquids on your turn without falling during the move.',
+          description:
+            'You gain the ability to move along vertical surfaces and across liquids on your turn without falling during the move.',
         },
       ],
     },
@@ -208,13 +216,15 @@ export const monk: CharacterClass = {
           id: 'heightened-focus',
           name: 'Heightened Focus',
           source: 'Monk 10',
-          description: 'Your Flurry of Blows now grants three Unarmed Strikes. Your Patient Defense now grants Temporary Hit Points. Your Step of the Wind now allows you to move a willing creature with you.',
+          description:
+            'Your Flurry of Blows now grants three Unarmed Strikes. Your Patient Defense now grants Temporary Hit Points. Your Step of the Wind now allows you to move a willing creature with you.',
         },
         {
           id: 'self-restoration',
           name: 'Self-Restoration',
           source: 'Monk 10',
-          description: 'You can use a Bonus Action to remove the Charmed, Frightened, or Poisoned condition from yourself. In addition, you don\'t suffer a level of Exhaustion from going without food or water.',
+          description:
+            "You can use a Bonus Action to remove the Charmed, Frightened, or Poisoned condition from yourself. In addition, you don't suffer a level of Exhaustion from going without food or water.",
         },
       ],
     },
@@ -240,7 +250,8 @@ export const monk: CharacterClass = {
           id: 'deflect-energy',
           name: 'Deflect Energy',
           source: 'Monk 13',
-          description: 'You can now use your Deflect Attacks feature against attacks that deal any damage type, not just Bludgeoning, Piercing, or Slashing.',
+          description:
+            'You can now use your Deflect Attacks feature against attacks that deal any damage type, not just Bludgeoning, Piercing, or Slashing.',
         },
       ],
     },
@@ -251,7 +262,8 @@ export const monk: CharacterClass = {
           id: 'disciplined-survivor',
           name: 'Disciplined Survivor',
           source: 'Monk 14',
-          description: 'You gain proficiency in all saving throws. Additionally, whenever you make a saving throw and fail, you can spend 1 Focus Point to reroll it and take the second result.',
+          description:
+            'You gain proficiency in all saving throws. Additionally, whenever you make a saving throw and fail, you can spend 1 Focus Point to reroll it and take the second result.',
         },
       ],
     },
@@ -262,7 +274,8 @@ export const monk: CharacterClass = {
           id: 'perfect-focus',
           name: 'Perfect Focus',
           source: 'Monk 15',
-          description: 'If you roll Initiative and have no Focus Points remaining, you regain 4 Focus Points.',
+          description:
+            'If you roll Initiative and have no Focus Points remaining, you regain 4 Focus Points.',
         },
       ],
     },
@@ -288,7 +301,8 @@ export const monk: CharacterClass = {
           id: 'superior-defense',
           name: 'Superior Defense',
           source: 'Monk 18',
-          description: 'At the start of your turn, you can spend 3 Focus Points to gain Resistance to all damage types except Force damage for 1 minute or until you have the Incapacitated condition.',
+          description:
+            'At the start of your turn, you can spend 3 Focus Points to gain Resistance to all damage types except Force damage for 1 minute or until you have the Incapacitated condition.',
         },
       ],
     },
@@ -299,7 +313,8 @@ export const monk: CharacterClass = {
           id: 'epic-boon',
           name: 'Epic Boon',
           source: 'Monk 19',
-          description: 'You gain an Epic Boon feat or another feat of your choice for which you qualify.',
+          description:
+            'You gain an Epic Boon feat or another feat of your choice for which you qualify.',
         },
         {
           id: 'ability-score-improvement-19',
@@ -316,23 +331,24 @@ export const monk: CharacterClass = {
           id: 'body-and-mind',
           name: 'Body and Mind',
           source: 'Monk 20',
-          description: 'Your Dexterity and Wisdom scores increase by 4. Your maximum for those scores is now 26.',
+          description:
+            'Your Dexterity and Wisdom scores increase by 4. Your maximum for those scores is now 26.',
         },
       ],
     },
   ],
-  
+
   subclassLevel: 3,
   subclasses: [openHandSubclass],
-  
+
   subclassSelection: {
     timing: 'level',
     optional: false,
     canChange: false,
     prerequisitesMustMeet: false,
-    flavorText: 'At 3rd level, you choose a Monastic Tradition.'
+    flavorText: 'At 3rd level, you choose a Monastic Tradition.',
   },
-  
+
   classResources: [
     {
       id: 'focus-points',
@@ -349,7 +365,7 @@ export const monk: CharacterClass = {
       displayOrder: 2,
     },
   ],
-  
+
   multiclassRequirements: [
     {
       type: 'attribute',
@@ -357,15 +373,16 @@ export const monk: CharacterClass = {
       description: 'Dexterity 13 and Wisdom 13',
     },
   ],
-  
+
   multiclassProficiencies: {
     armor: [],
     weapons: ['simple', 'martial'],
     tools: [],
   },
-  
-  description: 'A master of martial arts, harnessing the power of the body in pursuit of physical and spiritual perfection.',
-  
+
+  description:
+    'A master of martial arts, harnessing the power of the body in pursuit of physical and spiritual perfection.',
+
   displayMetadata: {
     icon: 'fist',
     color: '#4169E1',

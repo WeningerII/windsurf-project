@@ -14,7 +14,8 @@ export const level9Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You destroy the target\'s magic, ripping it apart. The target loses all magical properties for 1 minute. If the target is an artifact, it instead loses its magical properties for 1 hour.',
+    description:
+      "You destroy the target's magic, ripping it apart. The target loses all magical properties for 1 minute. If the target is an artifact, it instead loses its magical properties for 1 hour.",
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -30,7 +31,8 @@ export const level9Spells: Spell[] = [
     duration: { type: 'hours', hours: 1 },
     concentration: false,
     ritual: false,
-    description: 'You gain a supernatural sense of impending danger. You gain a +2 status bonus to initiative and aren\'t flat-footed against hidden or undetected creatures. You can\'t be surprised.',
+    description:
+      "You gain a supernatural sense of impending danger. You gain a +2 status bonus to initiative and aren't flat-footed against hidden or undetected creatures. You can't be surprised.",
     classes: ['druid', 'sorcerer', 'wizard'],
   },
   {
@@ -46,7 +48,8 @@ export const level9Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You conjure a portal linking an unoccupied space you can see to a precise location on a different plane of existence.',
+    description:
+      'You conjure a portal linking an unoccupied space you can see to a precise location on a different plane of existence.',
     classes: ['cleric', 'sorcerer', 'wizard'],
   },
   {
@@ -62,7 +65,8 @@ export const level9Spells: Spell[] = [
     duration: { type: 'varies' },
     concentration: false,
     ritual: false,
-    description: 'You crush the target with telekinetic force. The target takes 75 damage with a basic Fortitude save. If the target critically fails the save, it is crushed into a tiny ball and dies.',
+    description:
+      'You crush the target with telekinetic force. The target takes 75 damage with a basic Fortitude save. If the target critically fails the save, it is crushed into a tiny ball and dies.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -78,7 +82,8 @@ export const level9Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You call down four meteors that explode in a fiery blast. Each meteor deals 6d10 bludgeoning damage to any creatures in the 10-foot burst and 14d6 fire damage to creatures in the 40-foot burst.',
+    description:
+      'You call down four meteors that explode in a fiery blast. Each meteor deals 6d10 bludgeoning damage to any creatures in the 10-foot burst and 14d6 fire damage to creatures in the 40-foot burst.',
     damage: { base: { count: 14, die: 'd6', notation: '14d6' }, type: 'fire' },
     classes: ['sorcerer', 'wizard'],
   },
@@ -95,7 +100,8 @@ export const level9Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You utter a single word of power that instantly kills one creature with 50 or fewer Hit Points. If the target has more than 50 HP, it\'s stunned 1 instead.',
+    description:
+      "You utter a single word of power that instantly kills one creature with 50 or fewer Hit Points. If the target has more than 50 HP, it's stunned 1 instead.",
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -112,7 +118,8 @@ export const level9Spells: Spell[] = [
     duration: { type: 'hours', hours: 10 },
     concentration: false,
     ritual: false,
-    description: 'An immobile, invisible sphere of magical force surrounds you. Nothing can pass through the barrier from either side.',
+    description:
+      'An immobile, invisible sphere of magical force surrounds you. Nothing can pass through the barrier from either side.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -128,7 +135,8 @@ export const level9Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 10 },
     concentration: false,
     ritual: false,
-    description: 'You transform into a battle form. Choose a form you\'ve seen that\'s level 15 or lower. You can change between forms by Dismissing and Casting the spell again.',
+    description:
+      "You transform into a battle form. Choose a form you've seen that's level 15 or lower. You can change between forms by Dismissing and Casting the spell again.",
     classes: ['druid', 'sorcerer', 'wizard'],
   },
   {
@@ -144,7 +152,8 @@ export const level9Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You briefly stop the flow of time for everyone but yourself. You can take 1d4+1 rounds of actions.',
+    description:
+      'You briefly stop the flow of time for everyone but yourself. You can take 1d4+1 rounds of actions.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -160,7 +169,8 @@ export const level9Spells: Spell[] = [
     duration: { type: 'varies' },
     concentration: false,
     ritual: false,
-    description: 'You state a wish, making your greatest desire come true. A wish spell can produce any one of the following effects: duplicate any spell of 9th level or lower, produce any effect whose power level is in line with the above effects, grant a creature a +1 circumstance bonus to one ability score for 1 hour.',
+    description:
+      'You state a wish, making your greatest desire come true. A wish spell can produce any one of the following effects: duplicate any spell of 9th level or lower, produce any effect whose power level is in line with the above effects, grant a creature a +1 circumstance bonus to one ability score for 1 hour.',
     classes: ['sorcerer', 'wizard'],
   },
 ];

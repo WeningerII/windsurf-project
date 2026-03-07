@@ -14,7 +14,8 @@ export const level4Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 5 },
     concentration: false,
     ritual: false,
-    description: 'The target can walk on air as if it were solid ground. The target gains a fly Speed equal to its land Speed.',
+    description:
+      'The target can walk on air as if it were solid ground. The target gains a fly Speed equal to its land Speed.',
     classes: ['cleric', 'druid'],
   },
   {
@@ -30,7 +31,8 @@ export const level4Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'You phase in and out of existence. You gain resistance 5 to all damage. At the start of each of your turns, roll 1d4. On a result of 1, you\'re incorporeal until the start of your next turn.',
+    description:
+      "You phase in and out of existence. You gain resistance 5 to all damage. At the start of each of your turns, roll 1d4. On a result of 1, you're incorporeal until the start of your next turn.",
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -46,7 +48,8 @@ export const level4Spells: Spell[] = [
     duration: { type: 'rounds', rounds: 1 },
     concentration: true,
     ritual: false,
-    description: 'You befuddle your target with strange impulses. The target must attempt a Will save. On a failure, the target is confused for 1 round. On a critical failure, the target is confused for 1 minute.',
+    description:
+      'You befuddle your target with strange impulses. The target must attempt a Will save. On a failure, the target is confused for 1 round. On a critical failure, the target is confused for 1 minute.',
     savingThrow: { attribute: 'wis', success: 'none' },
     classes: ['bard', 'sorcerer', 'wizard'],
   },
@@ -63,7 +66,8 @@ export const level4Spells: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'Opening a door that bypasses normal space, you instantly transport yourself and any items you\'re wearing and holding from your current space to a clear space within range you can see. If this would bring another creature with you, the spell is lost.',
+    description:
+      "Opening a door that bypasses normal space, you instantly transport yourself and any items you're wearing and holding from your current space to a clear space within range you can see. If this would bring another creature with you, the spell is lost.",
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -79,7 +83,8 @@ export const level4Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'You prevent the target from teleporting or traveling through other dimensions. The target must attempt a Will save. On a failure, it can\'t teleport or use dimensional travel for the duration.',
+    description:
+      "You prevent the target from teleporting or traveling through other dimensions. The target must attempt a Will save. On a failure, it can't teleport or use dimensional travel for the duration.",
     classes: ['cleric', 'sorcerer', 'wizard'],
   },
   {
@@ -95,7 +100,8 @@ export const level4Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 5 },
     concentration: false,
     ritual: false,
-    description: 'The target can soar through the air, gaining a fly Speed equal to its Speed or 20 feet, whichever is greater.',
+    description:
+      'The target can soar through the air, gaining a fly Speed equal to its Speed or 20 feet, whichever is greater.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -111,7 +117,8 @@ export const level4Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 10 },
     concentration: false,
     ritual: false,
-    description: 'You repel effects that would hinder a creature\'s movement. The target ignores difficult terrain and greater difficult terrain, and effects that would impose a circumstance penalty on their Speed.',
+    description:
+      "You repel effects that would hinder a creature's movement. The target ignores difficult terrain and greater difficult terrain, and effects that would impose a circumstance penalty on their Speed.",
     classes: ['cleric', 'druid', 'ranger'],
   },
   {
@@ -127,7 +134,8 @@ export const level4Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 10 },
     concentration: false,
     ritual: false,
-    description: 'You create a 10-foot-radius sphere of shimmering energy. Spells of 3rd level or lower can\'t pass through the globe and have no effect on targets within it.',
+    description:
+      "You create a 10-foot-radius sphere of shimmering energy. Spells of 3rd level or lower can't pass through the globe and have no effect on targets within it.",
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -144,7 +152,8 @@ export const level4Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'You create a bank of fog so thick it impedes movement as well as sight. This functions as obscuring mist, but the area is also difficult terrain.',
+    description:
+      'You create a bank of fog so thick it impedes movement as well as sight. This functions as obscuring mist, but the area is also difficult terrain.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -160,7 +169,8 @@ export const level4Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 10 },
     concentration: false,
     ritual: false,
-    description: 'You ward the target against a specific spell. Choose one spell of 4th level or lower. The target is immune to that spell for the duration.',
+    description:
+      'You ward the target against a specific spell. Choose one spell of 4th level or lower. The target is immune to that spell for the duration.',
     classes: ['cleric'],
   },
   {
@@ -176,7 +186,8 @@ export const level4Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 20 },
     concentration: false,
     ritual: false,
-    description: 'The target\'s skin hardens like stone. The target gains resistance 5 to physical damage, except adamantine. Each time the target is hit by a bludgeoning, piercing, or slashing attack, stoneskin\'s duration decreases by 1 minute.',
+    description:
+      "The target's skin hardens like stone. The target gains resistance 5 to physical damage, except adamantine. Each time the target is hit by a bludgeoning, piercing, or slashing attack, stoneskin's duration decreases by 1 minute.",
     classes: ['druid', 'sorcerer', 'wizard'],
   },
   {
@@ -192,7 +203,8 @@ export const level4Spells: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'You raise a blazing wall that burns creatures passing through it. You create either a 5-foot-thick wall of flame in a straight line up to 60 feet long and 10 feet high, or a 5-foot-thick, 10-foot-radius ring of flame with the same height.',
+    description:
+      'You raise a blazing wall that burns creatures passing through it. You create either a 5-foot-thick wall of flame in a straight line up to 60 feet long and 10 feet high, or a 5-foot-thick, 10-foot-radius ring of flame with the same height.',
     damage: { base: { count: 4, die: 'd6', notation: '4d6' }, type: 'fire' },
     savingThrow: { attribute: 'dex', success: 'half' },
     classes: ['druid', 'sorcerer', 'wizard'],

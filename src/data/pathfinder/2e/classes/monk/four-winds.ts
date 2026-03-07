@@ -5,7 +5,8 @@ export const fourWindsSubclass: Subclass = {
   id: 'pf2e-monk-four-winds',
   name: 'Four Winds',
   parentClassId: 'monk',
-  description: 'A monk who harnesses the power of the four winds to enhance their martial abilities.',
+  description:
+    'A monk who harnesses the power of the four winds to enhance their martial abilities.',
   features: [
     {
       level: 1,
@@ -14,7 +15,8 @@ export const fourWindsSubclass: Subclass = {
           id: 'four-winds-stance',
           name: 'Four Winds Stance',
           source: 'Monk 1',
-          description: 'You gain the ability to channel the power of the four winds in your martial arts.',
+          description:
+            'You gain the ability to channel the power of the four winds in your martial arts.',
         },
         {
           id: 'wind-strike',
@@ -64,7 +66,8 @@ export const fourWindsSubclass: Subclass = {
           id: 'four-winds-mastery',
           name: 'Four Winds Mastery',
           source: 'Monk 5',
-          description: 'You have mastered the four winds. Your wind abilities become more powerful.',
+          description:
+            'You have mastered the four winds. Your wind abilities become more powerful.',
         },
       ],
     },
@@ -108,7 +111,8 @@ export const fourWindsSubclass: Subclass = {
           id: 'four-winds-ultimate-feat',
           name: 'Ultimate Four Winds Feat',
           source: 'Monk 9',
-          description: 'You gain an ultimate feat that represents the pinnacle of your four winds abilities.',
+          description:
+            'You gain an ultimate feat that represents the pinnacle of your four winds abilities.',
         },
       ],
     },
@@ -174,7 +178,8 @@ export const fourWindsSubclass: Subclass = {
           id: 'four-winds-apex-feat',
           name: 'Apex Four Winds Feat',
           source: 'Monk 15',
-          description: 'You gain an apex feat that represents the ultimate expression of your four winds abilities.',
+          description:
+            'You gain an apex feat that represents the ultimate expression of your four winds abilities.',
         },
       ],
     },

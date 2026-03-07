@@ -18,7 +18,8 @@ export const eldritchInvocations: EldritchInvocation[] = [
     system: 'dnd-5e-2014',
     source: 'SRD 5.1',
     minLevel: 0,
-    description: 'When you cast eldritch blast, add your Charisma modifier to the damage it deals on a hit.',
+    description:
+      'When you cast eldritch blast, add your Charisma modifier to the damage it deals on a hit.',
     effects: ['Add CHA modifier to eldritch blast damage'],
   },
   {
@@ -27,7 +28,8 @@ export const eldritchInvocations: EldritchInvocation[] = [
     system: 'dnd-5e-2014',
     source: 'SRD 5.1',
     minLevel: 0,
-    description: 'You can cast mage armor on yourself at will, without expending a spell slot or material components.',
+    description:
+      'You can cast mage armor on yourself at will, without expending a spell slot or material components.',
     effects: ['Cast mage armor at will'],
   },
   {
@@ -64,7 +66,8 @@ export const eldritchInvocations: EldritchInvocation[] = [
     system: 'dnd-5e-2014',
     source: 'SRD 5.1',
     minLevel: 0,
-    description: 'You can see in dim light within 120 feet of you as if it were bright light, and in darkness as if it were dim light.',
+    description:
+      'You can see in dim light within 120 feet of you as if it were bright light, and in darkness as if it were dim light.',
     effects: ['See in dim light and darkness'],
   },
   {
@@ -73,7 +76,8 @@ export const eldritchInvocations: EldritchInvocation[] = [
     system: 'dnd-5e-2014',
     source: 'SRD 5.1',
     minLevel: 7,
-    description: 'You can cast confusion once using a warlock spell slot. You can\'t do so again until you finish a long rest.',
+    description:
+      "You can cast confusion once using a warlock spell slot. You can't do so again until you finish a long rest.",
     effects: ['Cast confusion once per long rest'],
   },
   {
@@ -92,7 +96,8 @@ export const eldritchInvocations: EldritchInvocation[] = [
     source: 'SRD 5.1',
     minLevel: 1,
     prerequisites: 'Pact of the Fiend feature',
-    description: 'You can choose one damage type when you finish a short or long rest and gain resistance to that damage type until your next rest.',
+    description:
+      'You can choose one damage type when you finish a short or long rest and gain resistance to that damage type until your next rest.',
     effects: ['Gain resistance to chosen damage type'],
   },
   {
@@ -101,8 +106,9 @@ export const eldritchInvocations: EldritchInvocation[] = [
     system: 'dnd-5e-2014',
     source: 'SRD 5.1',
     minLevel: 0,
-    description: 'You can use your action to touch a willing humanoid and perceive through its senses until the end of your next turn.',
-    effects: ['Perceive through another creature\'s senses'],
+    description:
+      'You can use your action to touch a willing humanoid and perceive through its senses until the end of your next turn.',
+    effects: ["Perceive through another creature's senses"],
   },
   {
     id: 'mask-of-many-faces',
@@ -119,7 +125,8 @@ export const eldritchInvocations: EldritchInvocation[] = [
     system: 'dnd-5e-2014',
     source: 'SRD 5.1',
     minLevel: 5,
-    description: 'When you are in an area of dim light or darkness, you can use your action to become invisible until you move or take an action or reaction.',
+    description:
+      'When you are in an area of dim light or darkness, you can use your action to become invisible until you move or take an action or reaction.',
     effects: ['Become invisible in dim light or darkness'],
   },
   {
@@ -128,7 +135,8 @@ export const eldritchInvocations: EldritchInvocation[] = [
     system: 'dnd-5e-2014',
     source: 'SRD 5.1',
     minLevel: 5,
-    description: 'You can cast bestow curse once using a warlock spell slot. You can\'t do so again until you finish a long rest.',
+    description:
+      "You can cast bestow curse once using a warlock spell slot. You can't do so again until you finish a long rest.",
     effects: ['Cast bestow curse once per long rest'],
   },
   {
@@ -137,7 +145,8 @@ export const eldritchInvocations: EldritchInvocation[] = [
     system: 'dnd-5e-2014',
     source: 'SRD 5.1',
     minLevel: 0,
-    description: 'You can cast bane once using a warlock spell slot. You can\'t do so again until you finish a long rest.',
+    description:
+      "You can cast bane once using a warlock spell slot. You can't do so again until you finish a long rest.",
     effects: ['Cast bane once per long rest'],
   },
   {
@@ -146,7 +155,8 @@ export const eldritchInvocations: EldritchInvocation[] = [
     system: 'dnd-5e-2014',
     source: 'SRD 5.1',
     minLevel: 9,
-    description: 'You can cast levitate on yourself at will, without expending a spell slot or material components.',
+    description:
+      'You can cast levitate on yourself at will, without expending a spell slot or material components.',
     effects: ['Cast levitate on self at will'],
   },
   {
@@ -165,7 +175,8 @@ export const eldritchInvocations: EldritchInvocation[] = [
     system: 'dnd-5e-2014',
     source: 'SRD 5.1',
     minLevel: 0,
-    description: 'You can cast false life on yourself at will as a 1st-level spell, without expending a spell slot or material components.',
+    description:
+      'You can cast false life on yourself at will as a 1st-level spell, without expending a spell slot or material components.',
     effects: ['Cast false life at will'],
   },
   {
@@ -175,7 +186,8 @@ export const eldritchInvocations: EldritchInvocation[] = [
     source: 'SRD 5.1',
     minLevel: 12,
     prerequisites: 'Pact of the Blade feature',
-    description: 'When you hit a creature with your pact weapon, the creature takes extra necrotic damage equal to your Charisma modifier (minimum 1).',
+    description:
+      'When you hit a creature with your pact weapon, the creature takes extra necrotic damage equal to your Charisma modifier (minimum 1).',
     effects: ['Add CHA modifier as necrotic damage with pact weapon'],
   },
   {
@@ -184,7 +196,8 @@ export const eldritchInvocations: EldritchInvocation[] = [
     system: 'dnd-5e-2014',
     source: 'SRD 5.1',
     minLevel: 0,
-    description: 'You can cast silent image at will, without expending a spell slot or material components.',
+    description:
+      'You can cast silent image at will, without expending a spell slot or material components.',
     effects: ['Cast silent image at will'],
   },
   {
@@ -194,7 +207,8 @@ export const eldritchInvocations: EldritchInvocation[] = [
     source: 'SRD 5.1',
     minLevel: 0,
     prerequisites: 'Eldritch blast cantrip',
-    description: 'When you hit a creature with eldritch blast, you can push the creature up to 10 feet away from you in a straight line.',
+    description:
+      'When you hit a creature with eldritch blast, you can push the creature up to 10 feet away from you in a straight line.',
     effects: ['Push target 10 feet with eldritch blast'],
   },
   {
@@ -204,7 +218,8 @@ export const eldritchInvocations: EldritchInvocation[] = [
     source: 'SRD 5.1',
     minLevel: 5,
     prerequisites: 'Pact of the Blade feature',
-    description: 'You can attack with your pact weapon twice, instead of once, whenever you take the Attack action on your turn.',
+    description:
+      'You can attack with your pact weapon twice, instead of once, whenever you take the Attack action on your turn.',
     effects: ['Extra Attack with pact weapon'],
   },
   {
@@ -223,7 +238,8 @@ export const eldritchInvocations: EldritchInvocation[] = [
     source: 'SRD 5.1',
     minLevel: 0,
     prerequisites: 'Pact of the Chain feature',
-    description: 'You can communicate telepathically with your familiar and perceive through your familiar\'s senses as long as you are on the same plane of existence.',
+    description:
+      "You can communicate telepathically with your familiar and perceive through your familiar's senses as long as you are on the same plane of existence.",
     effects: ['Telepathic communication and perception through familiar'],
   },
   {
@@ -241,7 +257,8 @@ export const eldritchInvocations: EldritchInvocation[] = [
     system: 'dnd-5e-2014',
     source: 'SRD 5.1',
     minLevel: 15,
-    description: 'You can see the true form of any shapechanger or creature concealed by illusion or transmutation magic while the creature is within 30 feet of you and within line of sight.',
+    description:
+      'You can see the true form of any shapechanger or creature concealed by illusion or transmutation magic while the creature is within 30 feet of you and within line of sight.',
     effects: ['See through shapechangers and illusions within 30 feet'],
   },
 ];

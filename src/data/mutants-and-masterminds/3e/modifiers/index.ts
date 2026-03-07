@@ -9,9 +9,6 @@ export const powerModifiers = {
 };
 
 export const getModifier = (id: string) => {
-  const all = [
-    ...powerModifiers.extras,
-    ...powerModifiers.flaws,
-  ];
+  const all = [...powerModifiers.extras, ...powerModifiers.flaws];
   return all.find((m) => m.id === id);
 };

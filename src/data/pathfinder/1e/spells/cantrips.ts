@@ -14,7 +14,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You fire a small orb of acid at the target. You must succeed on a ranged touch attack to hit your target. The orb deals 1d3 points of acid damage.',
+    description:
+      'You fire a small orb of acid at the target. You must succeed on a ranged touch attack to hit your target. The orb deals 1d3 points of acid damage.',
     damage: { base: { count: 1, die: 'd4', notation: '1d3' }, type: 'acid' },
     classes: ['sorcerer', 'wizard'],
   },
@@ -31,7 +32,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'permanent' },
     concentration: false,
     ritual: false,
-    description: 'This spell allows you to inscribe your personal rune or mark, which can consist of no more than six characters. The writing can be visible or invisible. An arcane mark spell enables you to etch the rune upon any substance without harm to the material upon which it is placed.',
+    description:
+      'This spell allows you to inscribe your personal rune or mark, which can consist of no more than six characters. The writing can be visible or invisible. An arcane mark spell enables you to etch the rune upon any substance without harm to the material upon which it is placed.',
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -48,7 +50,8 @@ export const cantrips: Spell[] = [
     concentration: false,
     ritual: false,
     savingThrow: { attribute: 'con', success: 'none' },
-    description: 'You cause a living creature that is below 0 hit points but stabilized to resume dying. Upon casting this spell, you target a living creature that has –1 or fewer hit points. That creature begins dying, taking 1 point of damage per round.',
+    description:
+      'You cause a living creature that is below 0 hit points but stabilized to resume dying. Upon casting this spell, you target a living creature that has –1 or fewer hit points. That creature begins dying, taking 1 point of damage per round.',
     classes: ['cleric', 'sorcerer', 'wizard'],
   },
   {
@@ -64,7 +67,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'Depending on the version selected, you create up to four lights that resemble lanterns or torches (and cast that amount of light), or up to four glowing spheres of light (which look like will-o\'-wisps), or one faintly glowing, vaguely humanoid shape.',
+    description:
+      "Depending on the version selected, you create up to four lights that resemble lanterns or torches (and cast that amount of light), or up to four glowing spheres of light (which look like will-o'-wisps), or one faintly glowing, vaguely humanoid shape.",
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -81,7 +85,8 @@ export const cantrips: Spell[] = [
     concentration: false,
     ritual: false,
     savingThrow: { attribute: 'wis', success: 'none' },
-    description: 'This spell clouds the mind of a humanoid creature with 4 or fewer Hit Dice so that it takes no actions. Humanoids of 5 or more HD are not affected. A dazed subject is not stunned, so attackers get no special advantage against it.',
+    description:
+      'This spell clouds the mind of a humanoid creature with 4 or fewer Hit Dice so that it takes no actions. Humanoids of 5 or more HD are not affected. A dazed subject is not stunned, so attackers get no special advantage against it.',
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -98,7 +103,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'concentration', maxDuration: '1 minute per level' },
     concentration: true,
     ritual: false,
-    description: 'You detect magical auras. The amount of information revealed depends on how long you study a particular area or subject.',
+    description:
+      'You detect magical auras. The amount of information revealed depends on how long you study a particular area or subject.',
     classes: ['bard', 'cleric', 'druid', 'sorcerer', 'wizard'],
   },
   {
@@ -114,7 +120,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You determine whether a creature, object, or area has been poisoned or is poisonous. You can determine the exact type of poison with a DC 20 Wisdom check. A character with the Craft (alchemy) skill may try a DC 20 Craft (alchemy) check if the Wisdom check fails, or may try the Craft (alchemy) check prior to the Wisdom check.',
+    description:
+      'You determine whether a creature, object, or area has been poisoned or is poisonous. You can determine the exact type of poison with a DC 20 Wisdom check. A character with the Craft (alchemy) skill may try a DC 20 Craft (alchemy) check if the Wisdom check fails, or may try the Craft (alchemy) check prior to the Wisdom check.',
     classes: ['cleric', 'druid', 'ranger'],
   },
   {
@@ -130,7 +137,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You direct a ray of positive energy. You must make a ranged touch attack to hit, and if the ray hits an undead creature, it deals 1d6 points of damage to it.',
+    description:
+      'You direct a ray of positive energy. You must make a ranged touch attack to hit, and if the ray hits an undead creature, it deals 1d6 points of damage to it.',
     damage: { base: { count: 1, die: 'd6', notation: '1d6' }, type: 'radiant' },
     classes: ['sorcerer', 'wizard'],
   },
@@ -148,7 +156,8 @@ export const cantrips: Spell[] = [
     concentration: false,
     ritual: false,
     savingThrow: { attribute: 'dex', success: 'none' },
-    description: 'This cantrip creates a burst of light. If you cause the light to burst in front of a single creature, that creature is dazzled for 1 minute unless it makes a successful Fortitude save. Sightless creatures, as well as creatures already dazzled, are not affected by flare.',
+    description:
+      'This cantrip creates a burst of light. If you cause the light to burst in front of a single creature, that creature is dazzled for 1 minute unless it makes a successful Fortitude save. Sightless creatures, as well as creatures already dazzled, are not affected by flare.',
     classes: ['bard', 'druid', 'sorcerer', 'wizard'],
   },
   {
@@ -165,7 +174,8 @@ export const cantrips: Spell[] = [
     concentration: true,
     ritual: false,
     savingThrow: { attribute: 'wis', success: 'none' },
-    description: 'Ghost sound allows you to create a volume of sound that rises, recedes, approaches, or remains at a fixed place. You choose what type of sound ghost sound creates when casting it and cannot thereafter change the sound\'s basic character.',
+    description:
+      "Ghost sound allows you to create a volume of sound that rises, recedes, approaches, or remains at a fixed place. You choose what type of sound ghost sound creates when casting it and cannot thereafter change the sound's basic character.",
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -181,7 +191,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'This spell imbues the subject with a touch of divine guidance. The creature gets a +1 competence bonus on a single attack roll, saving throw, or skill check. It must choose to use the bonus before making the roll to which it applies.',
+    description:
+      'This spell imbues the subject with a touch of divine guidance. The creature gets a +1 competence bonus on a single attack roll, saving throw, or skill check. It must choose to use the bonus before making the roll to which it applies.',
     classes: ['cleric', 'druid'],
   },
   {
@@ -197,7 +208,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You instantly know the direction of north from your current position. The spell is effective in any environment in which "north" exists, but it may not work in extraplanar settings.',
+    description:
+      'You instantly know the direction of north from your current position. The spell is effective in any environment in which "north" exists, but it may not work in extraplanar settings.',
     classes: ['bard', 'druid'],
   },
   {
@@ -213,7 +225,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'minutes', minutes: 10 },
     concentration: false,
     ritual: false,
-    description: 'This spell causes a touched object to glow like a torch, shedding normal light in a 20-foot radius, and increasing the light level for an additional 20 feet by one step, up to normal light (darkness becomes dim light, and dim light becomes normal light).',
+    description:
+      'This spell causes a touched object to glow like a torch, shedding normal light in a 20-foot radius, and increasing the light level for an additional 20 feet by one step, up to normal light (darkness becomes dim light, and dim light becomes normal light).',
     classes: ['bard', 'cleric', 'druid', 'sorcerer', 'wizard'],
   },
   {
@@ -229,7 +242,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'concentration', maxDuration: '1 minute per level' },
     concentration: true,
     ritual: false,
-    description: 'You point your finger at an object and can lift it and move it at will from a distance. As a move action, you can propel the object as far as 15 feet in any direction, though the spell ends if the distance between you and the object ever exceeds the spell\'s range.',
+    description:
+      "You point your finger at an object and can lift it and move it at will from a distance. As a move action, you can propel the object as far as 15 feet in any direction, though the spell ends if the distance between you and the object ever exceeds the spell's range.",
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -245,7 +259,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'This spell repairs damaged objects, restoring 1d4 hit points to the object. If the object has the broken condition, this condition is removed if the object is restored to at least half its original hit points.',
+    description:
+      'This spell repairs damaged objects, restoring 1d4 hit points to the object. If the object has the broken condition, this condition is removed if the object is restored to at least half its original hit points.',
     classes: ['bard', 'cleric', 'druid', 'sorcerer', 'wizard'],
   },
   {
@@ -261,7 +276,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'minutes', minutes: 10 },
     concentration: false,
     ritual: false,
-    description: 'You can whisper messages and receive whispered replies. Those nearby can hear these messages with a DC 25 Perception check. You point your finger at each creature you want to receive the message.',
+    description:
+      'You can whisper messages and receive whispered replies. Those nearby can hear these messages with a DC 25 Perception check. You point your finger at each creature you want to receive the message.',
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -277,7 +293,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'You can open or close (your choice) a door, chest, box, window, bag, pouch, bottle, barrel, or other container. If anything resists this activity (such as a bar on a door or a lock on a chest), the spell fails.',
+    description:
+      'You can open or close (your choice) a door, chest, box, window, bag, pouch, bottle, barrel, or other container. If anything resists this activity (such as a bar on a door or a lock on a chest), the spell fails.',
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -293,7 +310,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'hours', hours: 1 },
     concentration: false,
     ritual: false,
-    description: 'Prestidigitations are minor tricks that novice spellcasters use for practice. Once cast, a prestidigitation spell enables you to perform simple magical effects for 1 hour. The effects are minor and have severe limitations.',
+    description:
+      'Prestidigitations are minor tricks that novice spellcasters use for practice. Once cast, a prestidigitation spell enables you to perform simple magical effects for 1 hour. The effects are minor and have severe limitations.',
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -309,7 +327,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'This spell makes spoiled, rotten, diseased, poisonous, or otherwise contaminated food and water pure and suitable for eating and drinking. This spell does not prevent subsequent natural decay or spoilage.',
+    description:
+      'This spell makes spoiled, rotten, diseased, poisonous, or otherwise contaminated food and water pure and suitable for eating and drinking. This spell does not prevent subsequent natural decay or spoilage.',
     classes: ['cleric', 'druid'],
   },
   {
@@ -325,7 +344,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'A ray of freezing air and ice projects from your pointing finger. You must succeed on a ranged touch attack with the ray to deal damage to a target. The ray deals 1d3 points of cold damage.',
+    description:
+      'A ray of freezing air and ice projects from your pointing finger. You must succeed on a ranged touch attack with the ray to deal damage to a target. The ray deals 1d3 points of cold damage.',
     damage: { base: { count: 1, die: 'd4', notation: '1d3' }, type: 'cold' },
     classes: ['sorcerer', 'wizard'],
   },
@@ -342,7 +362,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'minutes', minutes: 10 },
     concentration: false,
     ritual: false,
-    description: 'You can decipher magical inscriptions on objects—books, scrolls, weapons, and the like—that would otherwise be unintelligible. This deciphering does not normally invoke the magic contained in the writing, although it may do so in the case of a cursed or trapped scroll.',
+    description:
+      'You can decipher magical inscriptions on objects—books, scrolls, weapons, and the like—that would otherwise be unintelligible. This deciphering does not normally invoke the magic contained in the writing, although it may do so in the case of a cursed or trapped scroll.',
     classes: ['bard', 'cleric', 'druid', 'ranger', 'sorcerer', 'wizard'],
   },
   {
@@ -358,7 +379,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'You imbue the subject with magical energy that protects it from harm, granting it a +1 resistance bonus on saves.',
+    description:
+      'You imbue the subject with magical energy that protects it from harm, granting it a +1 resistance bonus on saves.',
     classes: ['bard', 'cleric', 'druid', 'sorcerer', 'wizard'],
   },
   {
@@ -374,7 +396,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'instant' },
     concentration: false,
     ritual: false,
-    description: 'Upon casting this spell, you target a living creature that has –1 or fewer hit points. That creature is automatically stabilized and does not lose any further hit points. If the creature later takes damage, it continues dying normally.',
+    description:
+      'Upon casting this spell, you target a living creature that has –1 or fewer hit points. That creature is automatically stabilized and does not lose any further hit points. If the creature later takes damage, it continues dying normally.',
     classes: ['cleric', 'druid'],
   },
   {
@@ -391,7 +414,8 @@ export const cantrips: Spell[] = [
     concentration: false,
     ritual: false,
     savingThrow: { attribute: 'con', success: 'none' },
-    description: 'You channel negative energy through your touch, fatiguing the target. You must succeed on a touch attack to strike a target. The subject is immediately fatigued for the spell\'s duration.',
+    description:
+      "You channel negative energy through your touch, fatiguing the target. You must succeed on a touch attack to strike a target. The subject is immediately fatigued for the spell's duration.",
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -407,7 +431,8 @@ export const cantrips: Spell[] = [
     duration: { type: 'minutes', minutes: 1 },
     concentration: false,
     ritual: false,
-    description: 'With a touch, you infuse a creature with a tiny surge of life, granting the subject 1 temporary hit point.',
+    description:
+      'With a touch, you infuse a creature with a tiny surge of life, granting the subject 1 temporary hit point.',
     classes: ['cleric', 'druid'],
   },
 ];

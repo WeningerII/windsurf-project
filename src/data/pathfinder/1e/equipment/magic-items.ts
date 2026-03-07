@@ -9,14 +9,14 @@ import { MagicItem } from '../../../../types/equipment/items';
 export const amuletOfHealth: MagicItem = {
   id: 'amulet-of-health',
   name: 'Amulet of Health',
-  system: 'pf1e', source: 'Core Rulebook',   type: 'magic-item',
+  system: 'pf1e',
+  source: 'Core Rulebook',
+  type: 'magic-item',
   rarity: 'uncommon',
   weight: 0.5,
   cost: { amount: 30000, currency: 'gp' },
   requiresAttunement: false,
-  modifiers: [
-    { value: 2, type: 'enhancement', source: 'Amulet of Health' },
-  ],
+  modifiers: [{ value: 2, type: 'enhancement', source: 'Amulet of Health' }],
   effects: ['+2 enhancement bonus to Constitution'],
   description: 'This amulet grants the wearer a +2 enhancement bonus to Constitution.',
 };
@@ -24,14 +24,14 @@ export const amuletOfHealth: MagicItem = {
 export const beltOfStrength: MagicItem = {
   id: 'belt-of-strength',
   name: 'Belt of Strength',
-  system: 'pf1e', source: 'Core Rulebook',   type: 'magic-item',
+  system: 'pf1e',
+  source: 'Core Rulebook',
+  type: 'magic-item',
   rarity: 'uncommon',
   weight: 1,
   cost: { amount: 30000, currency: 'gp' },
   requiresAttunement: false,
-  modifiers: [
-    { value: 2, type: 'enhancement', source: 'Belt of Strength' },
-  ],
+  modifiers: [{ value: 2, type: 'enhancement', source: 'Belt of Strength' }],
   effects: ['+2 enhancement bonus to Strength'],
   description: 'This belt grants the wearer a +2 enhancement bonus to Strength.',
 };
@@ -39,27 +39,29 @@ export const beltOfStrength: MagicItem = {
 export const bootsOfSpeed: MagicItem = {
   id: 'boots-of-speed',
   name: 'Boots of Speed',
-  system: 'pf1e', source: 'Core Rulebook',   type: 'magic-item',
+  system: 'pf1e',
+  source: 'Core Rulebook',
+  type: 'magic-item',
   rarity: 'uncommon',
   weight: 1,
   cost: { amount: 12000, currency: 'gp' },
   requiresAttunement: false,
   modifiers: [],
   effects: ['Increase movement speed by 30 feet'],
-  description: 'These boots increase the wearer\'s movement speed by 30 feet.',
+  description: "These boots increase the wearer's movement speed by 30 feet.",
 };
 
 export const cloakOfResistance: MagicItem = {
   id: 'cloak-of-resistance',
   name: 'Cloak of Resistance',
-  system: 'pf1e', source: 'Core Rulebook',   type: 'magic-item',
+  system: 'pf1e',
+  source: 'Core Rulebook',
+  type: 'magic-item',
   rarity: 'uncommon',
   weight: 1,
   cost: { amount: 1000, currency: 'gp' },
   requiresAttunement: false,
-  modifiers: [
-    { value: 1, type: 'saving-throw', source: 'Cloak of Resistance' },
-  ],
+  modifiers: [{ value: 1, type: 'saving-throw', source: 'Cloak of Resistance' }],
   effects: ['+1 resistance bonus to all saving throws'],
   description: 'This cloak grants the wearer a +1 bonus to all saving throws.',
 };
@@ -67,14 +69,14 @@ export const cloakOfResistance: MagicItem = {
 export const cloakOfCharisma: MagicItem = {
   id: 'cloak-of-charisma',
   name: 'Cloak of Charisma',
-  system: 'pf1e', source: 'Core Rulebook',   type: 'magic-item',
+  system: 'pf1e',
+  source: 'Core Rulebook',
+  type: 'magic-item',
   rarity: 'uncommon',
   weight: 1,
   cost: { amount: 30000, currency: 'gp' },
   requiresAttunement: false,
-  modifiers: [
-    { value: 2, type: 'enhancement', source: 'Cloak of Charisma' },
-  ],
+  modifiers: [{ value: 2, type: 'enhancement', source: 'Cloak of Charisma' }],
   effects: ['+2 enhancement bonus to Charisma'],
   description: 'This cloak grants the wearer a +2 enhancement bonus to Charisma.',
 };
@@ -84,14 +86,14 @@ export const cloakOfCharisma: MagicItem = {
 export const ringOfProtection: MagicItem = {
   id: 'ring-of-protection',
   name: 'Ring of Protection',
-  system: 'pf1e', source: 'Core Rulebook',   type: 'magic-item',
+  system: 'pf1e',
+  source: 'Core Rulebook',
+  type: 'magic-item',
   rarity: 'uncommon',
   weight: 0,
   cost: { amount: 2000, currency: 'gp' },
   requiresAttunement: false,
-  modifiers: [
-    { value: 1, type: 'armor-class', source: 'Ring of Protection' },
-  ],
+  modifiers: [{ value: 1, type: 'armor-class', source: 'Ring of Protection' }],
   effects: ['+1 deflection bonus to AC'],
   description: 'This ring grants the wearer a +1 deflection bonus to AC.',
 };
@@ -99,20 +101,25 @@ export const ringOfProtection: MagicItem = {
 export const ringOfSustenance: MagicItem = {
   id: 'ring-of-sustenance',
   name: 'Ring of Sustenance',
-  system: 'pf1e', source: 'Core Rulebook',   type: 'magic-item',
+  system: 'pf1e',
+  source: 'Core Rulebook',
+  type: 'magic-item',
   rarity: 'uncommon',
   weight: 0,
   cost: { amount: 2500, currency: 'gp' },
   requiresAttunement: false,
   modifiers: [],
   effects: ['Survive on one-quarter the normal amount of food and water'],
-  description: 'This ring allows the wearer to survive on one-quarter the normal amount of food and water.',
+  description:
+    'This ring allows the wearer to survive on one-quarter the normal amount of food and water.',
 };
 
 export const ringOfInvisibility: MagicItem = {
   id: 'ring-of-invisibility',
   name: 'Ring of Invisibility',
-  system: 'pf1e', source: 'Core Rulebook',   type: 'magic-item',
+  system: 'pf1e',
+  source: 'Core Rulebook',
+  type: 'magic-item',
   rarity: 'rare',
   weight: 0,
   cost: { amount: 20000, currency: 'gp' },
@@ -127,7 +134,9 @@ export const ringOfInvisibility: MagicItem = {
 export const wandOfMagicMissiles: MagicItem = {
   id: 'wand-of-magic-missiles',
   name: 'Wand of Magic Missiles',
-  system: 'pf1e', source: 'Core Rulebook',   type: 'magic-item',
+  system: 'pf1e',
+  source: 'Core Rulebook',
+  type: 'magic-item',
   rarity: 'common',
   weight: 0.5,
   cost: { amount: 750, currency: 'gp' },
@@ -144,7 +153,9 @@ export const wandOfMagicMissiles: MagicItem = {
 export const wandOfCureLightWounds: MagicItem = {
   id: 'wand-of-cure-light-wounds',
   name: 'Wand of Cure Light Wounds',
-  system: 'pf1e', source: 'Core Rulebook',   type: 'magic-item',
+  system: 'pf1e',
+  source: 'Core Rulebook',
+  type: 'magic-item',
   rarity: 'common',
   weight: 0.5,
   cost: { amount: 750, currency: 'gp' },
@@ -161,7 +172,9 @@ export const wandOfCureLightWounds: MagicItem = {
 export const wandOfFireball: MagicItem = {
   id: 'wand-of-fireball',
   name: 'Wand of Fireball',
-  system: 'pf1e', source: 'Core Rulebook',   type: 'magic-item',
+  system: 'pf1e',
+  source: 'Core Rulebook',
+  type: 'magic-item',
   rarity: 'uncommon',
   weight: 0.5,
   cost: { amount: 7200, currency: 'gp' },
@@ -180,7 +193,9 @@ export const wandOfFireball: MagicItem = {
 export const bagOfHolding: MagicItem = {
   id: 'bag-of-holding',
   name: 'Bag of Holding',
-  system: 'pf1e', source: 'Core Rulebook',   type: 'magic-item',
+  system: 'pf1e',
+  source: 'Core Rulebook',
+  type: 'magic-item',
   rarity: 'uncommon',
   weight: 15,
   cost: { amount: 2500, currency: 'gp' },
@@ -193,7 +208,9 @@ export const bagOfHolding: MagicItem = {
 export const portableHole: MagicItem = {
   id: 'portable-hole',
   name: 'Portable Hole',
-  system: 'pf1e', source: 'Core Rulebook',   type: 'magic-item',
+  system: 'pf1e',
+  source: 'Core Rulebook',
+  type: 'magic-item',
   rarity: 'rare',
   weight: 0,
   cost: { amount: 20000, currency: 'gp' },
@@ -208,7 +225,9 @@ export const portableHole: MagicItem = {
 export const cloakOfInvisibility: MagicItem = {
   id: 'cloak-of-invisibility',
   name: 'Cloak of Invisibility',
-  system: 'pf1e', source: 'Core Rulebook',   type: 'magic-item',
+  system: 'pf1e',
+  source: 'Core Rulebook',
+  type: 'magic-item',
   rarity: 'rare',
   weight: 1,
   cost: { amount: 62000, currency: 'gp' },
@@ -221,7 +240,9 @@ export const cloakOfInvisibility: MagicItem = {
 export const cloakOfFlying: MagicItem = {
   id: 'cloak-of-flying',
   name: 'Cloak of Flying',
-  system: 'pf1e', source: 'Core Rulebook',   type: 'magic-item',
+  system: 'pf1e',
+  source: 'Core Rulebook',
+  type: 'magic-item',
   rarity: 'rare',
   weight: 1,
   cost: { amount: 55000, currency: 'gp' },
@@ -236,7 +257,9 @@ export const cloakOfFlying: MagicItem = {
 export const longsword1: MagicItem = {
   id: 'longsword-1',
   name: 'Longsword +1',
-  system: 'pf1e', source: 'Core Rulebook',   type: 'magic-item',
+  system: 'pf1e',
+  source: 'Core Rulebook',
+  type: 'magic-item',
   rarity: 'uncommon',
   weight: 4,
   cost: { amount: 2315, currency: 'gp' },
@@ -254,7 +277,9 @@ export const longsword1: MagicItem = {
 export const longsword2: MagicItem = {
   id: 'longsword-2',
   name: 'Longsword +2',
-  system: 'pf1e', source: 'Core Rulebook',   type: 'magic-item',
+  system: 'pf1e',
+  source: 'Core Rulebook',
+  type: 'magic-item',
   baseItemId: 'longsword',
   rarity: 'rare',
   weight: 4,
@@ -272,7 +297,9 @@ export const longsword2: MagicItem = {
 export const shortsword1: MagicItem = {
   id: 'shortsword-1',
   name: 'Shortsword +1',
-  system: 'pf1e', source: 'Core Rulebook',   type: 'magic-item',
+  system: 'pf1e',
+  source: 'Core Rulebook',
+  type: 'magic-item',
   baseItemId: 'shortsword',
   rarity: 'uncommon',
   weight: 2,
@@ -290,7 +317,9 @@ export const shortsword1: MagicItem = {
 export const greataxe1: MagicItem = {
   id: 'greataxe-1',
   name: 'Greataxe +1',
-  system: 'pf1e', source: 'Core Rulebook',   type: 'magic-item',
+  system: 'pf1e',
+  source: 'Core Rulebook',
+  type: 'magic-item',
   baseItemId: 'greataxe',
   rarity: 'uncommon',
   weight: 12,
@@ -308,7 +337,9 @@ export const greataxe1: MagicItem = {
 export const longbow1: MagicItem = {
   id: 'longbow-1',
   name: 'Longbow +1',
-  system: 'pf1e', source: 'Core Rulebook',   type: 'magic-item',
+  system: 'pf1e',
+  source: 'Core Rulebook',
+  type: 'magic-item',
   baseItemId: 'longbow',
   rarity: 'uncommon',
   weight: 3,
@@ -326,7 +357,9 @@ export const longbow1: MagicItem = {
 export const flamingLongsword: MagicItem = {
   id: 'flaming-longsword',
   name: 'Flaming Longsword',
-  system: 'pf1e', source: 'Core Rulebook',   type: 'magic-item',
+  system: 'pf1e',
+  source: 'Core Rulebook',
+  type: 'magic-item',
   baseItemId: 'longsword',
   rarity: 'rare',
   weight: 4,
@@ -338,14 +371,19 @@ export const flamingLongsword: MagicItem = {
     { value: 1, type: 'damage', source: 'Magic Enhancement' },
     { value: 1, type: 'damage', source: 'Flaming Property' },
   ],
-  effects: ['Deals additional 1d6 fire damage on hit', 'Counts as magical for overcoming damage reduction'],
+  effects: [
+    'Deals additional 1d6 fire damage on hit',
+    'Counts as magical for overcoming damage reduction',
+  ],
   description: 'This longsword is wreathed in magical flames.',
 };
 
 export const frostLongsword: MagicItem = {
   id: 'frost-longsword',
   name: 'Frost Longsword',
-  system: 'pf1e', source: 'Core Rulebook',   type: 'magic-item',
+  system: 'pf1e',
+  source: 'Core Rulebook',
+  type: 'magic-item',
   baseItemId: 'longsword',
   rarity: 'rare',
   weight: 4,
@@ -357,14 +395,19 @@ export const frostLongsword: MagicItem = {
     { value: 1, type: 'damage', source: 'Magic Enhancement' },
     { value: 1, type: 'damage', source: 'Frost Property' },
   ],
-  effects: ['Deals additional 1d6 cold damage on hit', 'Counts as magical for overcoming damage reduction'],
+  effects: [
+    'Deals additional 1d6 cold damage on hit',
+    'Counts as magical for overcoming damage reduction',
+  ],
   description: 'This longsword is covered in a layer of magical frost.',
 };
 
 export const shockLongsword: MagicItem = {
   id: 'shock-longsword',
   name: 'Shock Longsword',
-  system: 'pf1e', source: 'Core Rulebook',   type: 'magic-item',
+  system: 'pf1e',
+  source: 'Core Rulebook',
+  type: 'magic-item',
   rarity: 'rare',
   weight: 4,
   cost: { amount: 8815, currency: 'gp' },
@@ -376,7 +419,10 @@ export const shockLongsword: MagicItem = {
     { value: 1, type: 'damage', source: 'Magic Enhancement' },
     { value: 1, type: 'damage', source: 'Shock Property' },
   ],
-  effects: ['Deals additional 1d6 electricity damage on hit', 'Counts as magical for overcoming damage reduction'],
+  effects: [
+    'Deals additional 1d6 electricity damage on hit',
+    'Counts as magical for overcoming damage reduction',
+  ],
   description: 'This longsword crackles with electrical energy.',
 };
 

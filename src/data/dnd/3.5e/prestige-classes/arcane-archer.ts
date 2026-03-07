@@ -47,14 +47,19 @@ export const arcaneArcher: CharacterClass = {
   name: 'Arcane Archer',
   system: 'dnd-3.5e',
   source: 'DMG',
-  description: 'An arcane archer is a fighter who has learned to infuse arrows and bolts with magical energy.',
+  description:
+    'An arcane archer is a fighter who has learned to infuse arrows and bolts with magical energy.',
   hitDie: 'd8',
   primaryAbility: ['dex', 'int'],
   savingThrowProficiencies: ['dex'],
   armorProficiencies: ['light armor', 'medium armor'],
   weaponProficiencies: ['simple weapons', 'martial weapons'],
   toolProficiencies: [],
-  skillProficiencies: { count: 4, options: ['Craft', 'Handle Animal', 'Listen', 'Perception', 'Ride', 'Spot'], label: 'Choose 4 class skills' },
+  skillProficiencies: {
+    count: 4,
+    options: ['Craft', 'Handle Animal', 'Listen', 'Perception', 'Ride', 'Spot'],
+    label: 'Choose 4 class skills',
+  },
   equipmentChoices: [],
   features: [
     { level: 1, features: [arcaneArcherFeatures[0]] },
