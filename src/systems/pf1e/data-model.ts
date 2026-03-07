@@ -1,4 +1,5 @@
 import { SystemDataModel } from '../../types/core/document';
+import { Feature } from '../../types/core/character';
 
 /**
  * Pathfinder 1e Data Model
@@ -41,6 +42,7 @@ export interface Pf1eTrait {
   id: string;
   name: string;
   type: 'campaign' | 'combat' | 'faith' | 'magic' | 'social' | 'race' | 'regional';
+  source?: string;
   description: string;
 }
 
@@ -51,12 +53,22 @@ export interface Pf1eDataModel extends SystemDataModel {
   speciesId?: string; // race
   classLevels: Pf1eClassLevel[];
   alignmentId?: string;
-  sizeCategory: 'fine' | 'diminutive' | 'tiny' | 'small' | 'medium' | 'large' | 'huge' | 'gargantuan' | 'colossal';
+  sizeCategory:
+    | 'fine'
+    | 'diminutive'
+    | 'tiny'
+    | 'small'
+    | 'medium'
+    | 'large'
+    | 'huge'
+    | 'gargantuan'
+    | 'colossal';
 
   baseAttributes: Record<string, number>;
 
   skillRanks: Record<string, number>;
   classSkills: string[];
+  favoredClassSkillBonus: number; // cumulative +1 skill point selections from favored class
 
   hitPoints: { current: number; max: number; temp: number };
   baseAttackBonus: number;
@@ -68,13 +80,23 @@ export interface Pf1eDataModel extends SystemDataModel {
 
   saves: Pf1eSaves;
 
+  features: Feature[];
   feats: Pf1eFeat[];
   traits: Pf1eTrait[];
 
   spellsPerDay?: Record<number, { total: number; used: number }>;
   spellsKnown?: string[];
 
-  equipment: Array<{ itemId: string; name: string; equipped: boolean; slot?: string }>;
+  equipment: Array<{
+    itemId: string;
+    name: string;
+    equipped: boolean;
+    slot?: string;
+    armorClass?: number;
+    armorType?: 'light' | 'medium' | 'heavy';
+    dexBonusMax?: number;
+    shieldBonus?: number;
+  }>;
   inventory: Array<{ itemId: string; name: string; quantity: number; weight: number }>;
   currency: { copper: number; silver: number; gold: number; platinum: number };
 
@@ -90,6 +112,7 @@ export const createDefaultPf1eData = (): Pf1eDataModel => ({
   baseAttributes: { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
   skillRanks: {},
   classSkills: [],
+  favoredClassSkillBonus: 0,
   hitPoints: { current: 8, max: 8, temp: 0 },
   baseAttackBonus: 0,
   armorClass: { total: 10, touch: 10, flatFooted: 10 },
@@ -102,6 +125,7 @@ export const createDefaultPf1eData = (): Pf1eDataModel => ({
     reflex: { base: 0, ability: 0, misc: 0, total: 0 },
     will: { base: 0, ability: 0, misc: 0, total: 0 },
   },
+  features: [],
   feats: [],
   traits: [],
   equipment: [],

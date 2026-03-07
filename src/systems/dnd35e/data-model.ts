@@ -1,4 +1,5 @@
 import { SystemDataModel } from '../../types/core/document';
+import { Feature } from '../../types/core/character';
 
 /**
  * D&D 3.5e Data Model
@@ -43,7 +44,16 @@ export interface Dnd35eDataModel extends SystemDataModel {
   speciesId?: string; // race
   classLevels: Dnd35eClassLevel[];
   alignmentId?: string;
-  sizeCategory: 'fine' | 'diminutive' | 'tiny' | 'small' | 'medium' | 'large' | 'huge' | 'gargantuan' | 'colossal';
+  sizeCategory:
+    | 'fine'
+    | 'diminutive'
+    | 'tiny'
+    | 'small'
+    | 'medium'
+    | 'large'
+    | 'huge'
+    | 'gargantuan'
+    | 'colossal';
 
   baseAttributes: Record<string, number>; // str, dex, con, int, wis, cha
 
@@ -63,6 +73,7 @@ export interface Dnd35eDataModel extends SystemDataModel {
   saves: Dnd35eSaves;
 
   // Feats
+  features: Feature[];
   feats: Dnd35eFeat[];
 
   // Spellcasting (Vancian)
@@ -70,7 +81,16 @@ export interface Dnd35eDataModel extends SystemDataModel {
   spellsKnown?: string[];
 
   // Equipment
-  equipment: Array<{ itemId: string; name: string; equipped: boolean; slot?: string }>;
+  equipment: Array<{
+    itemId: string;
+    name: string;
+    equipped: boolean;
+    slot?: string;
+    armorClass?: number;
+    armorType?: 'light' | 'medium' | 'heavy';
+    dexBonusMax?: number;
+    shieldBonus?: number;
+  }>;
   inventory: Array<{ itemId: string; name: string; quantity: number; weight: number }>;
   currency: { copper: number; silver: number; gold: number; platinum: number };
 
@@ -97,6 +117,7 @@ export const createDefaultDnd35eData = (): Dnd35eDataModel => ({
     reflex: { base: 0, ability: 0, misc: 0, total: 0 },
     will: { base: 0, ability: 0, misc: 0, total: 0 },
   },
+  features: [],
   feats: [],
   equipment: [],
   inventory: [],

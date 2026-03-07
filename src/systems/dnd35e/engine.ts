@@ -2,17 +2,42 @@ import { SystemEngine, RollResult } from '../../registry/types';
 import { CharacterDocument } from '../../types/core/document';
 import { Dnd35eDataModel } from './data-model';
 import { abilityMod } from '../../utils/math';
-import { SIZE_MODS, GRAPPLE_SIZE_MODS, baseSave, classBAB } from '../shared/d20-helpers';
+import { GRAPPLE_SIZE_MODS, baseSave, classBAB } from '../shared/d20-helpers';
+import { computeD20LegacyAC } from '../../utils/armorClass';
+import { dnd35eClasses } from '../../data/dnd/3.5e/classes';
+import { pf1eClasses } from '../../data/pathfinder/1e/classes';
+import { getSpellSlotsAtClassLevel, mergeVancianSpellSlots } from '../../utils/classSpellcasting';
 
 const SKILL_ABILITIES: Record<string, string> = {
-  appraise: 'int', balance: 'dex', bluff: 'cha', climb: 'str',
-  concentration: 'con', diplomacy: 'cha', 'disable-device': 'int',
-  disguise: 'cha', 'escape-artist': 'dex', 'gather-info': 'cha',
-  'handle-animal': 'cha', heal: 'wis', hide: 'dex', intimidate: 'cha',
-  jump: 'str', knowledge: 'int', listen: 'wis', 'move-silently': 'dex',
-  'open-lock': 'dex', ride: 'dex', search: 'int', 'sense-motive': 'wis',
-  'sleight-of-hand': 'dex', spellcraft: 'int', spot: 'wis',
-  survival: 'wis', swim: 'str', tumble: 'dex', 'use-magic': 'cha',
+  appraise: 'int',
+  balance: 'dex',
+  bluff: 'cha',
+  climb: 'str',
+  concentration: 'con',
+  diplomacy: 'cha',
+  'disable-device': 'int',
+  disguise: 'cha',
+  'escape-artist': 'dex',
+  'gather-info': 'cha',
+  'handle-animal': 'cha',
+  heal: 'wis',
+  hide: 'dex',
+  intimidate: 'cha',
+  jump: 'str',
+  knowledge: 'int',
+  listen: 'wis',
+  'move-silently': 'dex',
+  'open-lock': 'dex',
+  ride: 'dex',
+  search: 'int',
+  'sense-motive': 'wis',
+  'sleight-of-hand': 'dex',
+  spellcraft: 'int',
+  spot: 'wis',
+  survival: 'wis',
+  swim: 'str',
+  tumble: 'dex',
+  'use-magic': 'cha',
   'use-rope': 'dex',
 };
 
@@ -27,14 +52,12 @@ const SKILL_ABILITIES: Record<string, string> = {
  *   - Grapple = BAB + STR mod + size modifier
  */
 export class Dnd35eEngine implements SystemEngine<Dnd35eDataModel> {
-
   prepareData(document: CharacterDocument<Dnd35eDataModel>): CharacterDocument<Dnd35eDataModel> {
     const d = document.system;
     const strMod = abilityMod(d.baseAttributes.str ?? 10);
     const dexMod = abilityMod(d.baseAttributes.dex ?? 10);
     const conMod = abilityMod(d.baseAttributes.con ?? 10);
     const wisMod = abilityMod(d.baseAttributes.wis ?? 10);
-    const sizeMod = SIZE_MODS[d.sizeCategory] ?? 0;
     const grappleSizeMod = GRAPPLE_SIZE_MODS[d.sizeCategory] ?? 0;
 
     // --- BAB (sum across multiclass) ---
@@ -45,7 +68,9 @@ export class Dnd35eEngine implements SystemEngine<Dnd35eDataModel> {
     d.baseAttackBonus = totalBAB;
 
     // --- Saves ---
-    let fortBase = 0, refBase = 0, willBase = 0;
+    let fortBase = 0,
+      refBase = 0,
+      willBase = 0;
     for (const cl of d.classLevels) {
       fortBase += baseSave(cl.level, cl.fortSave);
       refBase += baseSave(cl.level, cl.refSave);
@@ -74,10 +99,30 @@ export class Dnd35eEngine implements SystemEngine<Dnd35eDataModel> {
     d.hitPoints.max = maxHP;
     d.hitPoints.current = Math.min(d.hitPoints.current, maxHP);
 
-    // --- AC ---
-    d.armorClass.total = 10 + dexMod + sizeMod; // + armor + shield + natural + deflection (from equipment)
-    d.armorClass.touch = 10 + dexMod + sizeMod;
-    d.armorClass.flatFooted = 10 + sizeMod; // no DEX
+    // --- Spell Slots (best available class spell table data) ---
+    // NOTE: 3.5e class files currently lack full `spellcasting.spellSlots` tables.
+    // We use native 3.5e spell tables when present and fall back to PF1e core tables
+    // for matching class IDs to automate baseline slot totals.
+    const slotTotals: Record<number, number> = {};
+    for (const cl of d.classLevels) {
+      const dndClass = dnd35eClasses.find((klass) => klass.id === cl.classId);
+      const fallbackPf1Class = pf1eClasses[cl.classId as keyof typeof pf1eClasses];
+      const spellSlotsTable = (dndClass?.spellcasting?.spellSlots ??
+        fallbackPf1Class?.spellcasting?.spellSlots) as Record<number, number[]> | undefined;
+
+      const classSlots = getSpellSlotsAtClassLevel(spellSlotsTable, cl.level);
+      for (const [spellLevel, total] of Object.entries(classSlots)) {
+        const level = Number(spellLevel);
+        slotTotals[level] = (slotTotals[level] ?? 0) + total;
+      }
+    }
+    d.spellsPerDay = mergeVancianSpellSlots(d.spellsPerDay, slotTotals);
+
+    // --- AC (from equipped armor items + size) ---
+    const ac = computeD20LegacyAC(d.baseAttributes.dex ?? 10, d.sizeCategory, d.equipment);
+    d.armorClass.total = ac.total;
+    d.armorClass.touch = ac.touch;
+    d.armorClass.flatFooted = ac.flatFooted;
 
     // --- Initiative ---
     d.initiative = dexMod; // + Improved Initiative feat (+4) handled by misc
@@ -88,7 +133,10 @@ export class Dnd35eEngine implements SystemEngine<Dnd35eDataModel> {
     return document;
   }
 
-  async rollCheck(document: CharacterDocument<Dnd35eDataModel>, checkId: string): Promise<RollResult> {
+  async rollCheck(
+    document: CharacterDocument<Dnd35eDataModel>,
+    checkId: string
+  ): Promise<RollResult> {
     const d = document.system;
     let modifier = 0;
     let flavor = '';
@@ -128,7 +176,11 @@ export class Dnd35eEngine implements SystemEngine<Dnd35eDataModel> {
     };
   }
 
-  applyDamage(document: CharacterDocument<Dnd35eDataModel>, amount: number, _type: string): CharacterDocument<Dnd35eDataModel> {
+  applyDamage(
+    document: CharacterDocument<Dnd35eDataModel>,
+    amount: number,
+    _type: string
+  ): CharacterDocument<Dnd35eDataModel> {
     const hp = document.system.hitPoints;
     let remaining = amount;
     if (hp.temp > 0) {

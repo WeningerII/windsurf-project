@@ -13,8 +13,7 @@ export function makeD20LegacySheet<T extends SystemDataModel>(): React.Component
   const D20LegacyWrapper: React.FC<{
     document: CharacterDocument<T>;
     onUpdate?: (doc: CharacterDocument<SystemDataModel>) => void;
-  }> = ({ document, onUpdate }) =>
-    React.createElement(D20LegacySheet, { document, onUpdate });
+  }> = ({ document, onUpdate }) => React.createElement(D20LegacySheet, { document, onUpdate });
   D20LegacyWrapper.displayName = 'D20LegacyWrapper';
   return D20LegacyWrapper;
 }

@@ -7,6 +7,7 @@ export const Pf2eSystemDef: SystemDefinition<Pf2eDataModel> = {
   id: 'pf2e',
   label: 'Pathfinder 2e',
   version: 'PF2e SRD',
+  supportLevel: 'full',
   attributes: [
     { id: 'str', name: 'Strength', abbreviation: 'STR', description: 'Physical power' },
     { id: 'dex', name: 'Dexterity', abbreviation: 'DEX', description: 'Agility and reflexes' },

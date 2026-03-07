@@ -1,16 +1,23 @@
 import { SystemDataModel } from '../../types/core/document';
 import { Power } from '../../types/mam/powers';
 
+export interface Mam3eConditionTrack {
+  bruised: number;
+  dazed: boolean;
+  staggered: boolean;
+  incapacitated: boolean;
+}
+
 /**
  * Mutants & Masterminds 3e Character Data Model
- * 
+ *
  * This model purely defines the DATA structure.
  * It has NO dependency on "Class Levels" or "Spell Slots".
  */
 export interface Mam3eDataModel extends SystemDataModel {
   // Power Level is the cap for the campaign/character
   powerLevel: number;
-  
+
   // Power Points (PP) Economy
   powerPoints: {
     total: number;
@@ -57,16 +64,33 @@ export interface Mam3eDataModel extends SystemDataModel {
   }>;
 
   // Skills
-  skills: Record<string, {
-    rank: number; // Purchased ranks
-    total: number; // Ability + Rank + Misc
-  }>;
-  
+  skills: Record<
+    string,
+    {
+      rank: number; // Purchased ranks
+      total: number; // Ability + Rank + Misc
+    }
+  >;
+
+  // Pinned reference archetypes. These are browse/persistence aids only and do not auto-apply stats.
+  selectedArchetypeIds?: string[];
+
   // Complications (Hero Points generator)
   complications: Array<{
+    id?: string;
     name: string;
     description: string;
+    source?: string;
+    category?: string;
   }>;
+
+  // M&M damage condition track (replaces HP attrition model)
+  conditionTrack: Mam3eConditionTrack;
+
+  notes?: string;
+
+  // PL cap violations (computed by engine)
+  plViolations?: Array<{ label: string; value: number; limit: number }>;
 }
 
 export const createDefaultMam3eData = (): Mam3eDataModel => ({
@@ -82,8 +106,14 @@ export const createDefaultMam3eData = (): Mam3eDataModel => ({
     },
   },
   abilities: {
-    str: 0, sta: 0, agi: 0, dex: 0,
-    fgt: 0, int: 0, awe: 0, pre: 0,
+    str: 0,
+    sta: 0,
+    agi: 0,
+    dex: 0,
+    fgt: 0,
+    int: 0,
+    awe: 0,
+    pre: 0,
   },
   defenses: {
     dodge: { rank: 0, total: 0 },
@@ -95,5 +125,13 @@ export const createDefaultMam3eData = (): Mam3eDataModel => ({
   powers: [],
   advantages: [],
   skills: {},
+  selectedArchetypeIds: [],
   complications: [],
+  conditionTrack: {
+    bruised: 0,
+    dazed: false,
+    staggered: false,
+    incapacitated: false,
+  },
+  notes: '',
 });

@@ -5,6 +5,7 @@ import { Dnd5e2024SystemDef } from './dnd5e-2024/definition';
 import { Dnd35eSystemDef } from './dnd35e/definition';
 import { Pf1eSystemDef } from './pf1e/definition';
 import { Pf2eSystemDef } from './pf2e/definition';
+import { DaggerheartSystemDef } from './daggerheart/definition';
 
 // Register all systems
 export function registerAllSystems() {
@@ -14,4 +15,5 @@ export function registerAllSystems() {
   systemRegistry.register(Pf1eSystemDef);
   systemRegistry.register(Pf2eSystemDef);
   systemRegistry.register(Mam3eSystemDef);
+  systemRegistry.register(DaggerheartSystemDef);
 }

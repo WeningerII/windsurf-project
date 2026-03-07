@@ -1,3 +1,4 @@
+import { Feature } from '../../types/core/character';
 import { SystemDataModel } from '../../types/core/document';
 
 /**
@@ -18,6 +19,8 @@ export interface Pf2eProficiency {
   tier: Pf2eProficiencyTier;
   /** Computed: level + tier bonus (0/2/4/6/8). 0 if untrained (no level added). */
   total: number;
+  /** Optional provenance for template-driven grants. */
+  source?: string[];
 }
 
 export interface Pf2eClassLevel {
@@ -54,11 +57,17 @@ export interface Pf2eDataModel extends SystemDataModel {
   heritageId?: string;
   backgroundId?: string;
   classId?: string;
+  selectedArchetypeIds?: string[];
+  ancestryHP: number; // HP from ancestry (e.g., Human=8, Dwarf=10, Elf=6)
+  size: 'tiny' | 'small' | 'medium' | 'large' | 'huge' | 'gargantuan';
+  languages: string[];
+  keyAbility?: string;
 
   baseAttributes: Record<string, number>; // str, dex, con, int, wis, cha (ability scores, not modifiers)
 
   // Proficiencies (the core of PF2e)
   skillProficiencies: Record<string, Pf2eProficiency>;
+  loreProficiencies: Record<string, Pf2eProficiency>;
   saveProficiencies: {
     fortitude: Pf2eProficiency;
     reflex: Pf2eProficiency;
@@ -75,12 +84,23 @@ export interface Pf2eDataModel extends SystemDataModel {
 
   // Feats (organized by type)
   feats: Pf2eFeat[];
+  features: Feature[];
 
   // Spellcasting
   spellcasting?: Pf2eSpellcasting;
 
   // Equipment (Bulk system)
-  equipment: Array<{ itemId: string; name: string; bulk: number; equipped: boolean; invested?: boolean }>;
+  equipment: Array<{
+    itemId: string;
+    name: string;
+    bulk: number;
+    equipped: boolean;
+    invested?: boolean;
+    armorClass?: number;
+    armorType?: 'light' | 'medium' | 'heavy';
+    dexBonusMax?: number;
+    shieldBonus?: number;
+  }>;
   inventory: Array<{ itemId: string; name: string; quantity: number; bulk: number }>;
   currency: { copper: number; silver: number; gold: number; platinum: number };
 
@@ -94,7 +114,11 @@ export interface Pf2eDataModel extends SystemDataModel {
 /** Tier bonus: untrained=0, trained=2, expert=4, master=6, legendary=8 */
 export function tierBonus(tier: Pf2eProficiencyTier): number {
   const map: Record<Pf2eProficiencyTier, number> = {
-    untrained: 0, trained: 2, expert: 4, master: 6, legendary: 8,
+    untrained: 0,
+    trained: 2,
+    expert: 4,
+    master: 6,
+    legendary: 8,
   };
   return map[tier];
 }
@@ -109,8 +133,13 @@ export const createDefaultPf2eData = (): Pf2eDataModel => ({
   level: 1,
   experiencePoints: 0,
   heroPoints: 1,
+  selectedArchetypeIds: [],
+  ancestryHP: 8,
+  size: 'medium',
+  languages: [],
   baseAttributes: { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
   skillProficiencies: {},
+  loreProficiencies: {},
   saveProficiencies: {
     fortitude: { tier: 'trained', total: 0 },
     reflex: { tier: 'trained', total: 0 },
@@ -133,6 +162,7 @@ export const createDefaultPf2eData = (): Pf2eDataModel => ({
   armorClass: 10,
   speed: 25,
   feats: [],
+  features: [],
   equipment: [],
   inventory: [],
   currency: { copper: 0, silver: 0, gold: 0, platinum: 0 },

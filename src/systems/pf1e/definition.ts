@@ -7,6 +7,9 @@ export const Pf1eSystemDef: SystemDefinition<Pf1eDataModel> = {
   id: 'pf1e',
   label: 'Pathfinder 1e',
   version: 'PF1e SRD',
+  supportLevel: 'partial',
+  supportNotes:
+    'Base classes and vetted CRB prestige classes are selectable; prestige spellcasting progression remains manual',
   attributes: [
     { id: 'str', name: 'Strength', abbreviation: 'STR', description: 'Physical power' },
     { id: 'dex', name: 'Dexterity', abbreviation: 'DEX', description: 'Agility and reflexes' },

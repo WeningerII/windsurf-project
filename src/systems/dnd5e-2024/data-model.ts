@@ -4,6 +4,7 @@ import {
   SkillProficiency,
   HitPoints,
   HitDice,
+  DeathSaves,
   Feature,
   Feat,
   SpellcastingInfo,
@@ -12,6 +13,25 @@ import {
   Currency,
   PersonalityInfo,
 } from '../../types/core/character';
+import type { Dnd5eFeatureOptionSelection } from '../../types/character-options/feature-options';
+import { Dnd5eCondition } from '../dnd5e/conditions';
+
+export interface Dnd5e2024TemplateState {
+  classDerivedProficiencies: {
+    armor: string[];
+    weapons: string[];
+    tools: string[];
+    savingThrows: string[];
+  };
+  featDerivedAutomation: {
+    abilityScores: Record<string, number>;
+    armor: string[];
+    weapons: string[];
+    tools: string[];
+    languages: string[];
+    savingThrows: string[];
+  };
+}
 
 /**
  * D&D 5e 2024 (SRD 5.2) Data Model
@@ -38,6 +58,9 @@ export interface Dnd5e2024DataModel extends SystemDataModel {
 
   hitPoints: HitPoints;
   hitDice: HitDice[];
+  deathSaves: DeathSaves;
+  conditions: Dnd5eCondition[];
+  exhaustionLevel: number;
   armorClass: number;
   initiative: number;
   speed: number;
@@ -50,7 +73,9 @@ export interface Dnd5e2024DataModel extends SystemDataModel {
 
   features: Feature[];
   feats: Feat[];
+  featureOptionSelections?: Dnd5eFeatureOptionSelection[];
   spellcasting?: SpellcastingInfo;
+  templateState?: Dnd5e2024TemplateState;
 
   equipment: EquippedItem[];
   inventory: InventoryItem[];
@@ -71,6 +96,9 @@ export const createDefaultDnd5e2024Data = (): Dnd5e2024DataModel => ({
   skillProficiencies: {},
   hitPoints: { current: 10, max: 10, temp: 0 },
   hitDice: [],
+  deathSaves: { successes: 0, failures: 0 },
+  conditions: [],
+  exhaustionLevel: 0,
   armorClass: 10,
   initiative: 0,
   speed: 30,
@@ -81,8 +109,25 @@ export const createDefaultDnd5e2024Data = (): Dnd5e2024DataModel => ({
   savingThrowProficiencies: [],
   features: [],
   feats: [],
+  featureOptionSelections: [],
   equipment: [],
   inventory: [],
   currency: { copper: 0, silver: 0, electrum: 0, gold: 0, platinum: 0 },
+  templateState: {
+    classDerivedProficiencies: {
+      armor: [],
+      weapons: [],
+      tools: [],
+      savingThrows: [],
+    },
+    featDerivedAutomation: {
+      abilityScores: {},
+      armor: [],
+      weapons: [],
+      tools: [],
+      languages: [],
+      savingThrows: [],
+    },
+  },
   weaponMasteries: [],
 });
