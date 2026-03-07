@@ -9,15 +9,35 @@ import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const schools = ['abjuration', 'conjuration', 'divination', 'enchantment', 'evocation', 'illusion', 'necromancy', 'transmutation'];
-const levels = ['cantrips', 'level-1', 'level-2', 'level-3', 'level-4', 'level-5', 'level-6', 'level-7', 'level-8', 'level-9'];
+const schools = [
+  'abjuration',
+  'conjuration',
+  'divination',
+  'enchantment',
+  'evocation',
+  'illusion',
+  'necromancy',
+  'transmutation',
+];
+const levels = [
+  'cantrips',
+  'level-1',
+  'level-2',
+  'level-3',
+  'level-4',
+  'level-5',
+  'level-6',
+  'level-7',
+  'level-8',
+  'level-9',
+];
 
 const baseDir = path.join(__dirname, '../../data/dnd/5e-2014/spells');
 
 function createLevelIndex(level: string) {
   const levelDir = path.join(baseDir, level);
   const indexPath = path.join(levelDir, 'index.ts');
-  
+
   const content = `// D&D 5e ${level.charAt(0).toUpperCase() + level.slice(1)} Spells
 
 export * from './abjuration';
@@ -29,7 +49,7 @@ export * from './illusion';
 export * from './necromancy';
 export * from './transmutation';
 `;
-  
+
   fs.writeFileSync(indexPath, content);
   console.log(`Created ${indexPath}`);
 }
@@ -37,18 +57,18 @@ export * from './transmutation';
 function createSchoolIndex(level: string, school: string) {
   const schoolDir = path.join(baseDir, level, school);
   const indexPath = path.join(schoolDir, 'index.ts');
-  
+
   if (fs.existsSync(indexPath)) {
     console.log(`Skipping ${indexPath} (already exists)`);
     return;
   }
-  
+
   const content = `// ${school.charAt(0).toUpperCase() + school.slice(1)} ${level === 'cantrips' ? 'Cantrips' : level.toUpperCase()}
 import { Spell } from '../../../../../../types/magic/spells';
 
 export const ${school}${level === 'cantrips' ? 'Cantrips' : level.replace('level-', 'Level')}Spells: Spell[] = [];
 `;
-  
+
   fs.writeFileSync(indexPath, content);
   console.log(`Created ${indexPath}`);
 }
@@ -56,7 +76,7 @@ export const ${school}${level === 'cantrips' ? 'Cantrips' : level.replace('level
 function createREADME(level: string, school: string) {
   const schoolDir = path.join(baseDir, level, school);
   const readmePath = path.join(schoolDir, 'README.md');
-  
+
   const content = `# ${school.charAt(0).toUpperCase() + school.slice(1)} ${level === 'cantrips' ? 'Cantrips' : level.toUpperCase()} Spells
 
 ## How to Add a Spell
@@ -91,7 +111,7 @@ export const evocationLevel1Spells: Spell[] = [
 ];
 \`\`\`
 `;
-  
+
   fs.writeFileSync(readmePath, content);
   console.log(`Created ${readmePath}`);
 }
@@ -101,7 +121,7 @@ console.log('Generating spell index files...\n');
 
 for (const level of levels) {
   createLevelIndex(level);
-  
+
   for (const school of schools) {
     createSchoolIndex(level, school);
     createREADME(level, school);

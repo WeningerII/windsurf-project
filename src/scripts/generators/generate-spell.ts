@@ -40,22 +40,27 @@ function slugify(text: string): string {
 function generateSpellTemplate(options: SpellGeneratorOptions): string {
   const { name, id, level, school, system, edition } = options;
   const spellId = id || slugify(name);
-  
+
   // Parse casting time
   const castingTime = parseCastingTime(options.castingTime || 'action');
-  
+
   // Parse range
   const range = parseRange(options.range || (level === 0 ? '60' : '120'));
-  
+
   // Parse components
   const components = parseComponents(options.components || 'V,S');
-  
+
   // Parse duration
   const duration = parseDuration(options.duration || 'instant');
-  
+
   // Parse classes
-  const classes = options.classes ? options.classes.split(',').map(c => `'${c.trim()}'`).join(', ') : '';
-  
+  const classes = options.classes
+    ? options.classes
+        .split(',')
+        .map((c) => `'${c.trim()}'`)
+        .join(', ')
+    : '';
+
   // Build damage/effects section
   let effectsSection = '';
   if (options.damage) {
@@ -68,9 +73,11 @@ function generateSpellTemplate(options: SpellGeneratorOptions): string {
   if (options.attackRoll) {
     effectsSection += `\n  attackRoll: true,`;
   }
-  
-  const description = options.description || `A ${level === 0 ? 'cantrip' : `level ${level} spell`} from the school of ${school}.`;
-  
+
+  const description =
+    options.description ||
+    `A ${level === 0 ? 'cantrip' : `level ${level} spell`} from the school of ${school}.`;
+
   return `import { Spell } from '../../../../../../types/magic/spells';
 
 export const ${spellId.replace(/-/g, '')}Spell: Spell = {
@@ -129,17 +136,20 @@ function parseRange(range: string): string {
 }
 
 function parseComponents(components: string): string {
-  const parts = components.toUpperCase().split(',').map(c => c.trim());
+  const parts = components
+    .toUpperCase()
+    .split(',')
+    .map((c) => c.trim());
   const verbal = parts.includes('V');
   const somatic = parts.includes('S');
   const hasMaterial = parts.includes('M');
-  
+
   if (hasMaterial && components.includes('(')) {
     const materialMatch = components.match(/M\s*\(([^)]+)\)/);
     const material = materialMatch ? materialMatch[1] : '';
     return `{\n    verbal: ${verbal},\n    somatic: ${somatic},\n    material: true,\n    materialDescription: '${material}',\n  }`;
   }
-  
+
   return `{\n    verbal: ${verbal},\n    somatic: ${somatic},\n    material: ${hasMaterial},\n  }`;
 }
 
@@ -180,7 +190,7 @@ function parseDamage(damage: string): string {
 function generateSpell(options: SpellGeneratorOptions): void {
   const { system, edition, level, school, name } = options;
   const spellId = options.id || slugify(name);
-  
+
   // Construct paths
   const levelFolder = level === 0 ? 'cantrips' : `level-${level}`;
   const spellDir = path.join(
@@ -192,49 +202,49 @@ function generateSpell(options: SpellGeneratorOptions): void {
     levelFolder,
     school
   );
-  
+
   const spellFilePath = path.join(spellDir, `${spellId}.ts`);
   const indexPath = path.join(spellDir, 'index.ts');
-  
+
   // Check if spell already exists
   if (fs.existsSync(spellFilePath)) {
     console.error(`Error: Spell file already exists: ${spellFilePath}`);
     process.exit(1);
   }
-  
+
   // Ensure directory exists
   fs.mkdirSync(spellDir, { recursive: true });
-  
+
   // Generate spell file
   const spellContent = generateSpellTemplate(options);
   fs.writeFileSync(spellFilePath, spellContent);
   console.log(`✓ Created spell file: ${spellFilePath}`);
-  
+
   // Update index.ts
   if (fs.existsSync(indexPath)) {
     const indexContent = fs.readFileSync(indexPath, 'utf-8');
     const importStatement = `import { ${spellId.replace(/-/g, '')}Spell } from './${spellId}';`;
     const exportName = `${spellId.replace(/-/g, '')}Spell`;
-    
+
     // Add import
     const lines = indexContent.split('\n');
-    const importLineIndex = lines.findIndex(line => line.startsWith('import'));
+    const importLineIndex = lines.findIndex((line) => line.startsWith('import'));
     if (importLineIndex >= 0) {
       lines.splice(importLineIndex + 1, 0, importStatement);
     } else {
       lines.unshift(importStatement);
     }
-    
+
     // Add to array
-    const arrayLineIndex = lines.findIndex(line => line.includes('Spell[] = ['));
+    const arrayLineIndex = lines.findIndex((line) => line.includes('Spell[] = ['));
     if (arrayLineIndex >= 0) {
       lines[arrayLineIndex] = lines[arrayLineIndex].replace('[', `[\n  ${exportName},`);
     }
-    
+
     fs.writeFileSync(indexPath, lines.join('\n'));
     console.log(`✓ Updated index: ${indexPath}`);
   }
-  
+
   console.log(`\n✓ Spell "${name}" created successfully!`);
   console.log(`\nNext steps:`);
   console.log(`1. Edit ${spellFilePath}`);
@@ -245,7 +255,7 @@ function generateSpell(options: SpellGeneratorOptions): void {
 // CLI handling
 if (import.meta.url === `file://${process.argv[1]}`) {
   const args = process.argv.slice(2);
-  
+
   if (args.length === 0 || args.includes('--help')) {
     console.log(`
 Usage: npm run generate:spell -- --system dnd --edition 5e --level 1 --school evocation --name "Magic Missile"
@@ -284,13 +294,13 @@ Examples:
     `);
     process.exit(0);
   }
-  
+
   const options: Partial<SpellGeneratorOptions> = {};
-  
+
   for (let i = 0; i < args.length; i += 2) {
     const key = args[i].replace('--', '') as keyof SpellGeneratorOptions;
     const value = args[i + 1];
-    
+
     if (key === 'level') {
       options.level = parseInt(value);
     } else if (key === 'concentration' || key === 'ritual' || key === 'attackRoll') {
@@ -299,13 +309,19 @@ Examples:
       options[key] = value as never;
     }
   }
-  
-  if (!options.system || !options.edition || options.level === undefined || !options.school || !options.name) {
+
+  if (
+    !options.system ||
+    !options.edition ||
+    options.level === undefined ||
+    !options.school ||
+    !options.name
+  ) {
     console.error('Error: Missing required arguments');
     console.error('Run with --help for usage information');
     process.exit(1);
   }
-  
+
   generateSpell(options as SpellGeneratorOptions);
 }
 

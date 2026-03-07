@@ -1,6 +1,6 @@
 /**
  * Class Data Validation System
- * 
+ *
  * Validates CharacterClass data integrity to catch errors before runtime
  */
 
@@ -29,9 +29,9 @@ export interface ValidationResult {
 function hasSubclassFeatureAtLevel(cls: CharacterClass, level: number): boolean {
   if (!cls.subclasses || cls.subclasses.length === 0) return false;
 
-  return cls.subclasses.some(subclass =>
+  return cls.subclasses.some((subclass) =>
     subclass.features?.some(
-      progression => progression.level === level && progression.features.length > 0
+      (progression) => progression.level === level && progression.features.length > 0
     )
   );
 }
@@ -50,7 +50,7 @@ function hasProgressionDeltaAtLevel(values: number[] | undefined, level: number)
 function hasSpellcastingProgressionAtLevel(cls: CharacterClass, level: number): boolean {
   if (!cls.spellcasting) return false;
 
-  const slotDelta = Object.values(cls.spellcasting.spellSlots).some(slots =>
+  const slotDelta = Object.values(cls.spellcasting.spellSlots).some((slots) =>
     hasProgressionDeltaAtLevel(slots, level)
   );
 
@@ -72,7 +72,7 @@ function hasSpellcastingProgressionAtLevel(cls: CharacterClass, level: number): 
 export function validateClass(cls: CharacterClass): ValidationResult {
   const errors: ValidationError[] = [];
   const warnings: ValidationError[] = [];
-  
+
   // Required fields
   if (!cls.id) {
     errors.push({
@@ -82,7 +82,7 @@ export function validateClass(cls: CharacterClass): ValidationResult {
       severity: 'error',
     });
   }
-  
+
   if (!cls.name) {
     errors.push({
       code: 'MISSING_NAME',
@@ -91,7 +91,7 @@ export function validateClass(cls: CharacterClass): ValidationResult {
       severity: 'error',
     });
   }
-  
+
   // ID format validation (should be kebab-case)
   if (cls.id && !/^[a-z][a-z0-9-]*$/.test(cls.id)) {
     warnings.push({
@@ -101,7 +101,7 @@ export function validateClass(cls: CharacterClass): ValidationResult {
       severity: 'warning',
     });
   }
-  
+
   // Primary ability validation
   if (!cls.primaryAbility || cls.primaryAbility.length === 0) {
     errors.push({
@@ -111,7 +111,7 @@ export function validateClass(cls: CharacterClass): ValidationResult {
       severity: 'error',
     });
   }
-  
+
   // Saving throw validation
   if (!cls.savingThrowProficiencies || cls.savingThrowProficiencies.length !== 2) {
     errors.push({
@@ -121,9 +121,12 @@ export function validateClass(cls: CharacterClass): ValidationResult {
       severity: 'error',
     });
   }
-  
+
   // Subclass level validation
-  if (cls.subclassLevel < GAME_RULES.MIN_CHARACTER_LEVEL || cls.subclassLevel > GAME_RULES.MAX_CHARACTER_LEVEL) {
+  if (
+    cls.subclassLevel < GAME_RULES.MIN_CHARACTER_LEVEL ||
+    cls.subclassLevel > GAME_RULES.MAX_CHARACTER_LEVEL
+  ) {
     errors.push({
       code: 'INVALID_SUBCLASS_LEVEL',
       message: `Subclass level must be ${GAME_RULES.MIN_CHARACTER_LEVEL}-${GAME_RULES.MAX_CHARACTER_LEVEL}, got: ${cls.subclassLevel}`,
@@ -131,7 +134,7 @@ export function validateClass(cls: CharacterClass): ValidationResult {
       severity: 'error',
     });
   }
-  
+
   // Most classes get subclass at level 1, 2, or 3
   if (cls.subclassLevel > 3) {
     warnings.push({
@@ -141,7 +144,7 @@ export function validateClass(cls: CharacterClass): ValidationResult {
       severity: 'warning',
     });
   }
-  
+
   // Proficiency validation
   cls.weaponProficiencies?.forEach((prof, idx) => {
     if (!isValidWeaponProficiency(prof)) {
@@ -153,7 +156,7 @@ export function validateClass(cls: CharacterClass): ValidationResult {
       });
     }
   });
-  
+
   cls.armorProficiencies?.forEach((prof, idx) => {
     if (!isValidArmorProficiency(prof)) {
       errors.push({
@@ -164,7 +167,7 @@ export function validateClass(cls: CharacterClass): ValidationResult {
       });
     }
   });
-  
+
   // Validate tool proficiencies in choices
   cls.toolProficiencies?.forEach((choice, idx) => {
     choice.options.forEach((tool, toolIdx) => {
@@ -178,7 +181,7 @@ export function validateClass(cls: CharacterClass): ValidationResult {
       }
     });
   });
-  
+
   // Validate skill proficiencies
   cls.skillProficiencies?.options.forEach((skill, idx) => {
     if (!isValidSkillProficiency(skill)) {
@@ -190,7 +193,7 @@ export function validateClass(cls: CharacterClass): ValidationResult {
       });
     }
   });
-  
+
   // Feature progression validation
   if (!cls.features || cls.features.length === 0) {
     errors.push({
@@ -201,10 +204,10 @@ export function validateClass(cls: CharacterClass): ValidationResult {
     });
   } else {
     // Check for 20-level progression
-    const levels = cls.features.map(f => f.level);
+    const levels = cls.features.map((f) => f.level);
     const maxLevel = Math.max(...levels);
     const minLevel = Math.min(...levels);
-    
+
     if (maxLevel !== GAME_RULES.MAX_CHARACTER_LEVEL) {
       warnings.push({
         code: 'INCOMPLETE_PROGRESSION',
@@ -213,7 +216,7 @@ export function validateClass(cls: CharacterClass): ValidationResult {
         severity: 'warning',
       });
     }
-    
+
     if (minLevel !== GAME_RULES.MIN_CHARACTER_LEVEL) {
       errors.push({
         code: 'MISSING_LEVEL_1',
@@ -222,13 +225,13 @@ export function validateClass(cls: CharacterClass): ValidationResult {
         severity: 'error',
       });
     }
-    
+
     // Check for duplicate levels
     const levelCounts = new Map<number, number>();
-    levels.forEach(level => {
+    levels.forEach((level) => {
       levelCounts.set(level, (levelCounts.get(level) ?? 0) + 1);
     });
-    
+
     levelCounts.forEach((count, level) => {
       if (count > 1) {
         errors.push({
@@ -239,7 +242,7 @@ export function validateClass(cls: CharacterClass): ValidationResult {
         });
       }
     });
-    
+
     // Validate each feature has required fields
     cls.features.forEach((progression, idx) => {
       if (!progression.features || progression.features.length === 0) {
@@ -256,7 +259,7 @@ export function validateClass(cls: CharacterClass): ValidationResult {
           });
         }
       }
-      
+
       progression.features.forEach((feature, fIdx) => {
         if (!feature.id) {
           errors.push({
@@ -266,7 +269,7 @@ export function validateClass(cls: CharacterClass): ValidationResult {
             severity: 'error',
           });
         }
-        
+
         if (!feature.name) {
           errors.push({
             code: 'MISSING_FEATURE_NAME',
@@ -275,7 +278,7 @@ export function validateClass(cls: CharacterClass): ValidationResult {
             severity: 'error',
           });
         }
-        
+
         if (!feature.description) {
           warnings.push({
             code: 'MISSING_FEATURE_DESCRIPTION',
@@ -287,11 +290,11 @@ export function validateClass(cls: CharacterClass): ValidationResult {
       });
     });
   }
-  
+
   // Spellcasting validation
   if (cls.spellcasting) {
     const sc = cls.spellcasting;
-    
+
     // Validate spell slots
     Object.entries(sc.spellSlots).forEach(([level, slots]) => {
       if (slots.length !== GAME_RULES.SPELL_SLOT_ARRAY_LENGTH) {
@@ -303,7 +306,7 @@ export function validateClass(cls: CharacterClass): ValidationResult {
         });
       }
     });
-    
+
     // Validate cantrips known
     if (sc.cantripsKnown && sc.cantripsKnown.length !== GAME_RULES.SPELL_SLOT_ARRAY_LENGTH) {
       errors.push({
@@ -313,7 +316,7 @@ export function validateClass(cls: CharacterClass): ValidationResult {
         severity: 'error',
       });
     }
-    
+
     // Validate spells known
     if (sc.spellsKnown && sc.spellsKnown.length !== GAME_RULES.SPELL_SLOT_ARRAY_LENGTH) {
       errors.push({
@@ -323,7 +326,7 @@ export function validateClass(cls: CharacterClass): ValidationResult {
         severity: 'error',
       });
     }
-    
+
     // Pact Magic specific validation
     if (sc.isPactMagic) {
       if (sc.slotRecovery !== 'short-rest') {
@@ -334,7 +337,7 @@ export function validateClass(cls: CharacterClass): ValidationResult {
           severity: 'warning',
         });
       }
-      
+
       if (sc.multiclassCasterLevel !== 'none') {
         warnings.push({
           code: 'PACT_MAGIC_MULTICLASS',
@@ -344,7 +347,7 @@ export function validateClass(cls: CharacterClass): ValidationResult {
         });
       }
     }
-    
+
     // Normal spellcasting should have multiclass level
     if (!sc.isPactMagic && !sc.multiclassCasterLevel) {
       warnings.push({
@@ -355,7 +358,7 @@ export function validateClass(cls: CharacterClass): ValidationResult {
       });
     }
   }
-  
+
   // Subclass validation
   if (!cls.subclasses || cls.subclasses.length === 0) {
     warnings.push({
@@ -374,7 +377,7 @@ export function validateClass(cls: CharacterClass): ValidationResult {
           severity: 'error',
         });
       }
-      
+
       if (!subclass.name) {
         errors.push({
           code: 'MISSING_SUBCLASS_NAME',
@@ -383,7 +386,7 @@ export function validateClass(cls: CharacterClass): ValidationResult {
           severity: 'error',
         });
       }
-      
+
       if (subclass.parentClassId !== cls.id) {
         errors.push({
           code: 'MISMATCHED_PARENT_CLASS',
@@ -394,7 +397,7 @@ export function validateClass(cls: CharacterClass): ValidationResult {
       }
     });
   }
-  
+
   return {
     valid: errors.length === 0,
     errors,
@@ -407,11 +410,11 @@ export function validateClass(cls: CharacterClass): ValidationResult {
  */
 export function validateClasses(classes: CharacterClass[]): Map<string, ValidationResult> {
   const results = new Map<string, ValidationResult>();
-  
-  classes.forEach(cls => {
+
+  classes.forEach((cls) => {
     results.set(cls.id, validateClass(cls));
   });
-  
+
   return results;
 }
 
@@ -421,28 +424,28 @@ export function validateClasses(classes: CharacterClass[]): Map<string, Validati
 export function printValidationResults(results: Map<string, ValidationResult>): void {
   let totalErrors = 0;
   let totalWarnings = 0;
-  
+
   results.forEach((result, classId) => {
     if (result.errors.length > 0 || result.warnings.length > 0) {
       console.log(`\n=== ${classId} ===`);
-      
-      result.errors.forEach(error => {
+
+      result.errors.forEach((error) => {
         console.error(`  ❌ ERROR [${error.code}]: ${error.message}`);
         if (error.field) console.error(`     Field: ${error.field}`);
         totalErrors++;
       });
-      
-      result.warnings.forEach(warning => {
+
+      result.warnings.forEach((warning) => {
         console.warn(`  ⚠️  WARNING [${warning.code}]: ${warning.message}`);
         if (warning.field) console.warn(`     Field: ${warning.field}`);
         totalWarnings++;
       });
     }
   });
-  
+
   console.log(`\n=== Summary ===`);
   console.log(`Total Classes: ${results.size}`);
-  console.log(`Valid: ${Array.from(results.values()).filter(r => r.valid).length}`);
+  console.log(`Valid: ${Array.from(results.values()).filter((r) => r.valid).length}`);
   console.log(`Errors: ${totalErrors}`);
   console.log(`Warnings: ${totalWarnings}`);
 }

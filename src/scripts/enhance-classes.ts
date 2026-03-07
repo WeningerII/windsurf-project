@@ -1,6 +1,6 @@
 /**
  * Script to enhance all D&D 5e classes to 100% quality
- * 
+ *
  * Adds:
  * - Versioning metadata
  * - Display tags
@@ -162,9 +162,9 @@ console.log('🔧 Enhancing D&D 5e Classes to 100% Quality\n');
 
 let enhancementsMade = 0;
 
-dnd5eClasses.forEach(cls => {
+dnd5eClasses.forEach((cls) => {
   console.log(`\n📋 ${cls.name}:`);
-  
+
   // Check versioning
   if (!cls.version) {
     console.log('  ⚠️  Missing version metadata');
@@ -172,7 +172,7 @@ dnd5eClasses.forEach(cls => {
   } else {
     console.log('  ✅ Has version metadata');
   }
-  
+
   // Check display tags
   if (!cls.displayMetadata?.tags || cls.displayMetadata.tags.length === 0) {
     const tags = classTags[cls.id] || [];
@@ -181,7 +181,7 @@ dnd5eClasses.forEach(cls => {
   } else {
     console.log(`  ✅ Has ${cls.displayMetadata.tags.length} display tags`);
   }
-  
+
   // Check caster type
   if (!cls.displayMetadata?.casterType) {
     console.log('  ⚠️  Missing caster type');
@@ -189,7 +189,7 @@ dnd5eClasses.forEach(cls => {
   } else {
     console.log('  ✅ Has caster type');
   }
-  
+
   // Check class resources
   const resourcesNeeded = classResourcesNeeded[cls.id as keyof typeof classResourcesNeeded];
   if (resourcesNeeded && (!cls.classResources || cls.classResources.length === 0)) {
@@ -198,7 +198,7 @@ dnd5eClasses.forEach(cls => {
   } else if (cls.classResources && cls.classResources.length > 0) {
     console.log(`  ✅ Has ${cls.classResources.length} class resources`);
   }
-  
+
   // Check subclass selection metadata
   if (!cls.subclassSelection) {
     console.log('  ⚠️  Missing subclass selection metadata');
@@ -217,7 +217,9 @@ console.log(`   - sourceBook: { name: "SRD 5.1", url: "..." }`);
 console.log(`   - displayMetadata.tags: [...]`);
 console.log(`   - displayMetadata.casterType: "full"|"half"|"third"|"pact"|"none"`);
 console.log(`   - classResources: [...]`);
-console.log(`   - subclassSelection: { timing: "level", optional: false, canChange: false, prerequisitesMustMeet: false }`);
+console.log(
+  `   - subclassSelection: { timing: "level", optional: false, canChange: false, prerequisitesMustMeet: false }`
+);
 
 // Export the data for use in updates
 export { classTags, casterTypes, classResourcesNeeded };

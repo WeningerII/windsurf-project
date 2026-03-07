@@ -25,6 +25,9 @@ jobs:
       
       - name: Run linter
         run: npm run lint
+
+      - name: Check formatting (Prettier)
+        run: npm run format:check
       
       - name: Run unit tests with coverage gate
         run: npm run test:coverage -- --run --maxWorkers=1
@@ -34,6 +37,16 @@ jobs:
       
       - name: Build
         run: npm run build
+
+      - name: Enforce bundle size budgets
+        run: npm run check:bundle-size
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7
 
       - name: Upload coverage artifacts
         if: always()
@@ -92,37 +105,10 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
 
-  build:
-    name: Build Application
-    runs-on: ubuntu-latest
-    needs: [test, e2e]
-    
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci
-      
-      - name: Build
-        run: npm run build
-      
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: dist/
-          retention-days: 7
-
   deploy-preview:
     name: Deploy Preview
     runs-on: ubuntu-latest
-    needs: build
+    needs: [test, e2e]
     if: github.event_name == 'pull_request'
     
     steps:
@@ -141,6 +127,32 @@ jobs:
           production-deploy: false
           github-token: ${{ secrets.GITHUB_TOKEN }}
           deploy-message: "Deploy from GitHub Actions"
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+  deploy-production:
+    name: Deploy Production
+    runs-on: ubuntu-latest
+    needs: [test, e2e]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Deploy to Netlify (Production)
+        uses: nwtgck/actions-netlify@v2
+        with:
+          publish-dir: './dist'
+          production-deploy: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Production deploy from GitHub Actions"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
