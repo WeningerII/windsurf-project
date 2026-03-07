@@ -1,6 +1,6 @@
 /**
  * Standardized proficiency identifiers for D&D 5e
- * 
+ *
  * This ensures consistency across all class definitions and prevents typos.
  * All proficiency strings should use these constants.
  */
@@ -111,10 +111,10 @@ export const MartialWeaponProficiency = {
 /**
  * Combined weapon proficiency type
  */
-export type WeaponProficiency = 
-  | typeof WeaponCategoryProficiency[keyof typeof WeaponCategoryProficiency]
-  | typeof SimpleWeaponProficiency[keyof typeof SimpleWeaponProficiency]
-  | typeof MartialWeaponProficiency[keyof typeof MartialWeaponProficiency];
+export type WeaponProficiency =
+  | (typeof WeaponCategoryProficiency)[keyof typeof WeaponCategoryProficiency]
+  | (typeof SimpleWeaponProficiency)[keyof typeof SimpleWeaponProficiency]
+  | (typeof MartialWeaponProficiency)[keyof typeof MartialWeaponProficiency];
 
 // ============================================================================
 // ARMOR PROFICIENCIES
@@ -134,7 +134,7 @@ export const ArmorProficiency = {
   HEAVY_SHORT: 'heavy',
 } as const;
 
-export type ArmorProficiencyType = typeof ArmorProficiency[keyof typeof ArmorProficiency];
+export type ArmorProficiencyType = (typeof ArmorProficiency)[keyof typeof ArmorProficiency];
 
 // ============================================================================
 // TOOL PROFICIENCIES
@@ -211,11 +211,11 @@ export const OtherToolProficiency = {
 /**
  * Combined tool proficiency type
  */
-export type ToolProficiency = 
-  | typeof ArtisanToolProficiency[keyof typeof ArtisanToolProficiency]
-  | typeof GamingSetProficiency[keyof typeof GamingSetProficiency]
-  | typeof MusicalInstrumentProficiency[keyof typeof MusicalInstrumentProficiency]
-  | typeof OtherToolProficiency[keyof typeof OtherToolProficiency];
+export type ToolProficiency =
+  | (typeof ArtisanToolProficiency)[keyof typeof ArtisanToolProficiency]
+  | (typeof GamingSetProficiency)[keyof typeof GamingSetProficiency]
+  | (typeof MusicalInstrumentProficiency)[keyof typeof MusicalInstrumentProficiency]
+  | (typeof OtherToolProficiency)[keyof typeof OtherToolProficiency];
 
 // ============================================================================
 // SKILL PROFICIENCIES
@@ -245,7 +245,7 @@ export const SkillProficiency = {
   SURVIVAL: 'survival',
 } as const;
 
-export type SkillProficiencyType = typeof SkillProficiency[keyof typeof SkillProficiency];
+export type SkillProficiencyType = (typeof SkillProficiency)[keyof typeof SkillProficiency];
 
 // ============================================================================
 // UTILITY FUNCTIONS

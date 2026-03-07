@@ -1,4 +1,12 @@
 import { CharacterDocument, SystemDataModel } from '../types/core/document';
+import {
+  isIndexedDBAvailable,
+  idbLoadDocuments,
+  idbSaveDocuments,
+  idbClearDocuments,
+  idbHasMigrated,
+  idbSetMigrated,
+} from './indexedDBAdapter';
 
 const STORAGE_KEY = 'rpg-documents-v2';
 const STORAGE_VERSION = '2.0';
@@ -12,7 +20,7 @@ interface DocumentStorageData {
 function hydrateDocuments(
   documents: CharacterDocument<SystemDataModel>[]
 ): CharacterDocument<SystemDataModel>[] {
-  return documents.map(doc => ({
+  return documents.map((doc) => ({
     ...doc,
     createdAt: new Date(doc.createdAt),
     updatedAt: new Date(doc.updatedAt),
@@ -42,27 +50,79 @@ function tryLoadV2Documents(): CharacterDocument<SystemDataModel>[] | null {
   }
 }
 
+function saveToLocalStorage(documents: CharacterDocument<SystemDataModel>[]): void {
+  const data: DocumentStorageData = {
+    version: STORAGE_VERSION,
+    documents,
+    lastModified: new Date().toISOString(),
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+/**
+ * Save documents to IndexedDB (primary) and localStorage (best-effort mirror).
+ * If IndexedDB is unavailable, falls back to localStorage only.
+ */
 export function saveDocuments(documents: CharacterDocument<SystemDataModel>[]): void {
   try {
-    const data: DocumentStorageData = {
-      version: STORAGE_VERSION,
-      documents,
-      lastModified: new Date().toISOString(),
-    };
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    saveToLocalStorage(documents);
   } catch (error) {
     if (process.env.NODE_ENV !== 'production') {
-      console.error('Failed to save documents:', error);
+      console.error('Failed to save documents to localStorage:', error);
     }
     throw new Error('Failed to save document data. Storage may be full.');
   }
+
+  // Best-effort async write to IndexedDB (does not block)
+  if (isIndexedDBAvailable()) {
+    idbSaveDocuments(documents).catch(() => {
+      // IndexedDB write failed; localStorage is still the source of truth
+    });
+  }
 }
 
+/**
+ * Synchronous load from localStorage. Used as the initial (fast) path.
+ */
 export function loadDocuments(): CharacterDocument<SystemDataModel>[] {
   const v2Documents = tryLoadV2Documents();
   if (v2Documents !== null) {
     return v2Documents;
   }
+  return [];
+}
+
+/**
+ * Async load with IndexedDB primary, localStorage fallback, and auto-migration.
+ *
+ * Strategy:
+ * 1. Try IndexedDB first (primary).
+ * 2. If IndexedDB has data, return it.
+ * 3. If IndexedDB is empty/unavailable, fall back to localStorage.
+ * 4. If localStorage has data and IndexedDB hasn't been migrated, auto-migrate.
+ */
+export async function loadDocumentsAsync(): Promise<CharacterDocument<SystemDataModel>[]> {
+  // Try IndexedDB first
+  const idbDocs = await idbLoadDocuments();
+  if (idbDocs !== null && idbDocs.length > 0) {
+    return idbDocs;
+  }
+
+  // Fallback to localStorage
+  const localDocs = tryLoadV2Documents();
+  if (localDocs !== null && localDocs.length > 0) {
+    // Auto-migrate: copy localStorage data into IndexedDB
+    if (isIndexedDBAvailable() && !(await idbHasMigrated())) {
+      try {
+        await idbSaveDocuments(localDocs);
+        await idbSetMigrated();
+      } catch {
+        // Migration failed; localStorage remains authoritative
+      }
+    }
+    return localDocs;
+  }
+
   return [];
 }
 
@@ -83,7 +143,7 @@ export function importDocuments(jsonString: string): CharacterDocument<SystemDat
       throw new Error('Invalid document data format');
     }
 
-    return data.documents.map(doc => ({
+    return data.documents.map((doc) => ({
       ...doc,
       createdAt: new Date(doc.createdAt),
       updatedAt: new Date(doc.updatedAt),
@@ -93,6 +153,15 @@ export function importDocuments(jsonString: string): CharacterDocument<SystemDat
   }
 }
 
+/**
+ * Clear documents from both IndexedDB and localStorage.
+ */
 export function clearDocumentStorage(): void {
   localStorage.removeItem(STORAGE_KEY);
+
+  if (isIndexedDBAvailable()) {
+    idbClearDocuments().catch(() => {
+      // Best-effort clear
+    });
+  }
 }

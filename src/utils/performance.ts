@@ -23,7 +23,7 @@ export const measurePerformance = <T>(name: string, fn: () => T): T => {
     const result = fn();
     const end = performance.now();
     const duration = end - start;
-    
+
     // Log slow operations
     if (duration > 1000) {
       errorLogger.log(
@@ -34,19 +34,19 @@ export const measurePerformance = <T>(name: string, fn: () => T): T => {
         { duration, name }
       );
     }
-    
+
     // Store metric
     performanceMetrics.push({
       name,
       duration,
       timestamp: new Date(),
     });
-    
+
     // Keep only recent metrics
     if (performanceMetrics.length > MAX_METRICS) {
       performanceMetrics.shift();
     }
-    
+
     return result;
   } catch (error) {
     const end = performance.now();
@@ -73,7 +73,7 @@ export const measurePerformanceAsync = async <T>(
     const result = await fn();
     const end = performance.now();
     const duration = end - start;
-    
+
     if (duration > 2000) {
       errorLogger.log(
         ErrorCategory.UNKNOWN,
@@ -83,17 +83,17 @@ export const measurePerformanceAsync = async <T>(
         { duration, name }
       );
     }
-    
+
     performanceMetrics.push({
       name,
       duration,
       timestamp: new Date(),
     });
-    
+
     if (performanceMetrics.length > MAX_METRICS) {
       performanceMetrics.shift();
     }
-    
+
     return result;
   } catch (error) {
     const end = performance.now();
@@ -131,7 +131,7 @@ export const debounce = <T extends (...args: any[]) => any>(
   wait: number
 ): ((...args: Parameters<T>) => void) => {
   let timeout: ReturnType<typeof setTimeout> | null = null;
-  
+
   return (...args: Parameters<T>) => {
     if (timeout) clearTimeout(timeout);
     timeout = setTimeout(() => func(...args), wait);
@@ -147,7 +147,7 @@ export const throttle = <T extends (...args: any[]) => any>(
   limit: number
 ): ((...args: Parameters<T>) => void) => {
   let inThrottle: boolean;
-  
+
   return (...args: Parameters<T>) => {
     if (!inThrottle) {
       func(...args);

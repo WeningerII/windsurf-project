@@ -1,6 +1,6 @@
 /**
  * Error Logging and Monitoring Utilities
- * 
+ *
  * Provides centralized error logging with categorization and context
  */
 
@@ -61,12 +61,12 @@ class ErrorLogger {
       this.logs.shift();
     }
 
-    // Console output based on severity
+    // Console output based on severity (suppress LOW in production)
     if (severity === ErrorSeverity.CRITICAL || severity === ErrorSeverity.HIGH) {
       console.error(`[${category}] ${message}`, error, context);
     } else if (severity === ErrorSeverity.MEDIUM) {
       console.warn(`[${category}] ${message}`, context);
-    } else {
+    } else if (import.meta.env.DEV) {
       console.log(`[${category}] ${message}`, context);
     }
 
@@ -81,14 +81,9 @@ class ErrorLogger {
     // Could integrate with Sentry, LogRocket, etc.
     try {
       if (typeof window !== 'undefined' && 'localStorage' in window) {
-        const criticalErrors = JSON.parse(
-          localStorage.getItem('critical-errors') || '[]'
-        );
+        const criticalErrors = JSON.parse(localStorage.getItem('critical-errors') || '[]');
         criticalErrors.push(errorLog);
-        localStorage.setItem(
-          'critical-errors',
-          JSON.stringify(criticalErrors.slice(-10))
-        );
+        localStorage.setItem('critical-errors', JSON.stringify(criticalErrors.slice(-10)));
       }
     } catch (e) {
       console.error('Failed to store critical error', e);
@@ -155,12 +150,7 @@ export function safeExecute<T>(
   try {
     return fn();
   } catch (error) {
-    errorLogger.log(
-      category,
-      ErrorSeverity.MEDIUM,
-      'Safe execution caught error',
-      error as Error
-    );
+    errorLogger.log(category, ErrorSeverity.MEDIUM, 'Safe execution caught error', error as Error);
     return fallback;
   }
 }

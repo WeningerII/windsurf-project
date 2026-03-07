@@ -39,7 +39,7 @@ class PerformanceMonitor {
   }
 
   private notifyListeners(): void {
-    this.listeners.forEach(listener => listener(this.getMetrics()));
+    this.listeners.forEach((listener) => listener(this.getMetrics()));
   }
 
   public getMetrics(): PerformanceMetrics {

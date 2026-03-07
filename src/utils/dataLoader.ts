@@ -1,9 +1,9 @@
 /**
  * Centralized Data Loader for All Game Systems
- * 
+ *
  * Provides async loading functions for game data (spells, classes, equipment, etc.)
  * across multiple RPG systems. Uses dynamic imports for code splitting and lazy loading.
- * 
+ *
  * @module dataLoader
  * @example
  * ```typescript
@@ -13,13 +13,22 @@
  */
 
 import { GameSystemId } from '../types/game-systems';
+import type { Advantage } from '../types/mam/advantages';
 import { Spell } from '../types/magic/spells';
 import { CharacterClass } from '../types/character-options/classes';
 import { Species } from '../types/character-options/species';
+import { Background } from '../types/character-options/backgrounds';
+import type { Archetype } from '../types/character-options/archetypes';
+import type { Dnd5eFeatureOptionDefinition } from '../types/character-options/feature-options';
 import { Monster } from '../types/creatures/monsters';
 import { FeatDefinition } from '../types/character-options/feats';
 import { Item } from '../types/equipment/items';
+import type { Pf2eBackgroundDefinition } from '../data/pathfinder/2e/backgrounds';
+import type { Complication } from '../data/mutants-and-masterminds/3e/complications';
+import type { PowerModifier } from '../data/mutants-and-masterminds/3e/modifiers/extras';
+import type { Pf1eTrait } from '../systems/pf1e/data-model';
 import { errorLogger, ErrorCategory, ErrorSeverity } from './errorLogger';
+import { loadDnd5e2014FeatureOptions } from './dnd5eFeatureOptions';
 import { OpenContentCategory, filterOpenContentBySource } from './openContentPolicy';
 
 type LoadedEntity = {
@@ -30,7 +39,7 @@ function dedupeById<T extends LoadedEntity>(items: T[]): T[] {
   const uniqueItems: T[] = [];
   const seen = new Set<string>();
 
-  items.forEach(item => {
+  items.forEach((item) => {
     if (seen.has(item.id)) {
       return;
     }
@@ -46,17 +55,19 @@ function finalizeLoadedItems<T extends LoadedEntity>(
   category: OpenContentCategory,
   items: T[]
 ): T[] {
-  const validItems = items.filter(item => typeof item.id === 'string' && item.id.trim().length > 0);
+  const validItems = items.filter(
+    (item) => typeof item.id === 'string' && item.id.trim().length > 0
+  );
   const uniqueItems = dedupeById(validItems);
   return filterOpenContentBySource(systemId, category, uniqueItems);
 }
 
 /**
  * Load all D&D 5e-2024 spells from spell level modules
- * 
+ *
  * Dynamically imports cantrips and spell levels 1-9, then aggregates them.
  * Handles both array exports and individual spell exports.
- * 
+ *
  * @returns Promise resolving to array of all D&D 5e-2024 spells
  * @private
  */
@@ -73,10 +84,10 @@ async function loadDnd5e2024Spells(): Promise<Spell[]> {
     import('../data/dnd/5e-2024/spells/level-8'),
     import('../data/dnd/5e-2024/spells/level-9'),
   ]);
-  
+
   const spells: Spell[] = [];
-  modules.forEach(module => {
-    Object.values(module).forEach(value => {
+  modules.forEach((module) => {
+    Object.values(module).forEach((value) => {
       if (Array.isArray(value)) {
         spells.push(...value);
       } else if (value && typeof value === 'object' && 'id' in value && 'name' in value) {
@@ -84,27 +95,27 @@ async function loadDnd5e2024Spells(): Promise<Spell[]> {
       }
     });
   });
-  
+
   return spells;
 }
 
 /**
  * Load all D&D 5e-2024 character classes
- * 
+ *
  * @returns Promise resolving to array of character classes
  * @private
  */
 async function loadDnd5e2024Classes(): Promise<CharacterClass[]> {
   const classModule = await import('../data/dnd/5e-2024/classes');
   const classes = classModule.dnd5e2024Classes || [];
-  return classes.filter(c => c && c.id && c.name && c.system);
+  return classes.filter((c) => c && c.id && c.name && c.system);
 }
 
 /**
  * Load all D&D 5e-2024 species/races
- * 
+ *
  * Deduplicates species by ID to handle both array and individual exports.
- * 
+ *
  * @returns Promise resolving to array of species
  * @private
  */
@@ -112,21 +123,38 @@ async function loadDnd5e2024Species(): Promise<Species[]> {
   const speciesModule = await import('../data/dnd/5e-2024/species');
   const species = new Map<string, Species>();
 
-  Object.values(speciesModule).forEach(value => {
+  Object.values(speciesModule).forEach((value) => {
     if (Array.isArray(value)) {
-      value.forEach(entry => {
-        if (entry && typeof entry === 'object' && 'id' in entry && 'name' in entry && 'system' in entry) {
+      value.forEach((entry) => {
+        if (
+          entry &&
+          typeof entry === 'object' &&
+          'id' in entry &&
+          'name' in entry &&
+          'system' in entry
+        ) {
           const s = entry as Species;
           species.set(s.id, s);
         }
       });
-    } else if (value && typeof value === 'object' && 'id' in value && 'name' in value && 'system' in value) {
+    } else if (
+      value &&
+      typeof value === 'object' &&
+      'id' in value &&
+      'name' in value &&
+      'system' in value
+    ) {
       const s = value as Species;
       species.set(s.id, s);
     }
   });
-  
+
   return Array.from(species.values());
+}
+
+async function loadDnd5e2024Backgrounds(): Promise<Background[]> {
+  const backgroundModule = await import('../data/dnd/5e-2024/backgrounds');
+  return backgroundModule.dnd5e2024Backgrounds || [];
 }
 
 async function loadDnd5e2024Monsters(): Promise<Monster[]> {
@@ -138,9 +166,9 @@ async function loadDnd5e2024Equipment(): Promise<Item[]> {
   const equipModule = await import('../data/dnd/5e-2024/equipment');
   const items = new Map<string, Item>();
 
-  Object.values(equipModule).forEach(value => {
+  Object.values(equipModule).forEach((value) => {
     if (Array.isArray(value)) {
-      value.forEach(entry => {
+      value.forEach((entry) => {
         if (entry && typeof entry === 'object' && 'id' in entry) {
           const item = entry as Item;
           items.set(item.id, item);
@@ -151,7 +179,7 @@ async function loadDnd5e2024Equipment(): Promise<Item[]> {
       items.set(item.id, item);
     }
   });
-  
+
   return Array.from(items.values());
 }
 
@@ -159,18 +187,18 @@ async function loadDnd5e2024Feats(): Promise<FeatDefinition[]> {
   const featModule = await import('../data/dnd/5e-2024/feats');
   const feats = new Map<string, FeatDefinition>();
 
-  Object.values(featModule).forEach(value => {
+  Object.values(featModule).forEach((value) => {
     if (Array.isArray(value)) {
-      value.forEach(entry => {
+      value.forEach((entry) => {
         if (entry && typeof entry === 'object' && 'id' in entry) {
           const feat = entry as FeatDefinition;
           feats.set(feat.id, feat);
         }
       });
     } else if (value && typeof value === 'object') {
-      Object.values(value).forEach(inner => {
+      Object.values(value).forEach((inner) => {
         if (Array.isArray(inner)) {
-          inner.forEach(entry => {
+          inner.forEach((entry) => {
             if (entry && typeof entry === 'object' && 'id' in entry) {
               const feat = entry as FeatDefinition;
               feats.set(feat.id, feat);
@@ -180,7 +208,7 @@ async function loadDnd5e2024Feats(): Promise<FeatDefinition[]> {
       });
     }
   });
-  
+
   return Array.from(feats.values());
 }
 
@@ -199,10 +227,10 @@ async function loadDnd5e2014Spells(): Promise<Spell[]> {
       import('../data/dnd/5e-2014/spells/level-8'),
       import('../data/dnd/5e-2014/spells/level-9'),
     ]);
-    
+
     const spells: Spell[] = [];
-    modules.forEach(module => {
-      Object.values(module).forEach(value => {
+    modules.forEach((module) => {
+      Object.values(module).forEach((value) => {
         if (Array.isArray(value)) {
           spells.push(...value);
         } else if (value && typeof value === 'object' && 'id' in value && 'name' in value) {
@@ -210,7 +238,7 @@ async function loadDnd5e2014Spells(): Promise<Spell[]> {
         }
       });
     });
-    
+
     return spells;
   } catch (error) {
     errorLogger.log(
@@ -233,12 +261,17 @@ async function loadDnd5e2014Species(): Promise<Species[]> {
   return speciesModule.dnd5eSpecies || [];
 }
 
+async function loadDnd5e2014Backgrounds(): Promise<Background[]> {
+  const backgroundModule = await import('../data/dnd/5e-2014/backgrounds');
+  return backgroundModule.dnd5eBackgrounds || [];
+}
+
 async function loadDnd5e2014Monsters(): Promise<Monster[]> {
   try {
     const monsterModule = await import('../data/dnd/5e-2014/monsters');
     const monsters = monsterModule.dnd5eMonsters || [];
-    
-    return monsters.filter(m => m && m.id && m.name && m.system === 'dnd-5e-2014');
+
+    return monsters.filter((m) => m && m.id && m.name && m.system === 'dnd-5e-2014');
   } catch (error) {
     errorLogger.log(
       ErrorCategory.DATA_LOAD,
@@ -288,12 +321,22 @@ async function loadPf2eSpecies(): Promise<Species[]> {
 async function loadPf2eFeats(): Promise<FeatDefinition[]> {
   const featModule = await import('../data/pathfinder/2e/feats');
   const feats: FeatDefinition[] = [];
-  Object.values(featModule).forEach(value => {
+  Object.values(featModule).forEach((value) => {
     if (Array.isArray(value)) {
-      feats.push(...(value as FeatDefinition[]).filter(f => f && f.id && f.name));
+      feats.push(...(value as FeatDefinition[]).filter((f) => f && f.id && f.name));
     }
   });
   return feats;
+}
+
+async function loadPf2eBackgrounds(): Promise<Pf2eBackgroundDefinition[]> {
+  const backgroundModule = await import('../data/pathfinder/2e/backgrounds');
+  return backgroundModule.pf2eBackgrounds || [];
+}
+
+async function loadPf2eArchetypes(): Promise<Archetype[]> {
+  const archetypeModule = await import('../data/pathfinder/2e/archetypes');
+  return archetypeModule.allPf2eArchetypes || [];
 }
 
 // D&D 3.5e Loaders
@@ -315,12 +358,7 @@ async function loadDnd35eSpecies(): Promise<Species[]> {
 async function loadDnd35eEquipment(): Promise<Item[]> {
   const equipModule = await import('../data/dnd/3.5e/equipment');
   const eq = equipModule.dnd35eEquipment;
-  const allItems: unknown[] = [
-    ...eq.weapons,
-    ...eq.armor,
-    ...eq.shields,
-    ...eq.adventuringGear,
-  ];
+  const allItems: unknown[] = [...eq.weapons, ...eq.armor, ...eq.shields, ...eq.adventuringGear];
   return allItems.filter((item: unknown) => {
     const i = item as Record<string, unknown>;
     return i && i.id && i.name;
@@ -359,8 +397,11 @@ async function loadPf1eSpells(): Promise<Spell[]> {
 }
 
 async function loadPf1eClasses(): Promise<CharacterClass[]> {
-  const classModule = await import('../data/pathfinder/1e/classes');
-  return Object.values(classModule.pf1eClasses);
+  const [classModule, prestigeModule] = await Promise.all([
+    import('../data/pathfinder/1e/classes'),
+    import('../data/pathfinder/1e/prestige-classes'),
+  ]);
+  return [...Object.values(classModule.pf1eClasses), ...prestigeModule.pf1ePrestigeClasses];
 }
 
 async function loadPf1eSpecies(): Promise<Species[]> {
@@ -400,35 +441,41 @@ async function loadPf2eEquipment(): Promise<Item[]> {
 async function loadPf1eFeats(): Promise<FeatDefinition[]> {
   const featModule = await import('../data/pathfinder/1e/feats');
   const feats = featModule.pf1eFeats;
-  const allFeats: FeatDefinition[] = [
-    ...feats.combat,
-    ...feats.metamagic,
-    ...feats.general,
-  ];
+  const allFeats: FeatDefinition[] = [...feats.combat, ...feats.metamagic, ...feats.general];
   return allFeats;
+}
+
+async function loadPf1eTraits(): Promise<Pf1eTrait[]> {
+  const traitModule = await import('../data/pathfinder/1e/traits');
+  return traitModule.pf1eTraits || [];
 }
 
 // M&M 3e Loaders
 async function loadMam3ePowers(): Promise<Spell[]> {
   const powerModule = await import('../data/mutants-and-masterminds/3e/powers');
   const powers: Spell[] = [];
-  
-  Object.values(powerModule).forEach(value => {
+
+  Object.values(powerModule).forEach((value) => {
     if (Array.isArray(value)) {
-      const validPowers = (value as unknown as Spell[]).filter(p => p && p.id && p.name);
+      const validPowers = (value as unknown as Spell[]).filter((p) => p && p.id && p.name);
       powers.push(...validPowers);
     } else if (value && typeof value === 'object' && 'id' in value && 'name' in value) {
       powers.push(value as unknown as Spell);
     }
   });
-  
+
   return powers;
+}
+
+async function loadMam3eAdvantages(): Promise<Advantage[]> {
+  const { mam3eAdvantages } = await import('../data/mutants-and-masterminds/3e/advantages');
+  return mam3eAdvantages;
 }
 
 async function loadMam3eEquipment(): Promise<Item[]> {
   const equipModule = await import('../data/mutants-and-masterminds/3e/equipment');
   const allItems: unknown[] = [];
-  Object.values(equipModule).forEach(value => {
+  Object.values(equipModule).forEach((value) => {
     if (Array.isArray(value)) {
       allItems.push(...value);
     }
@@ -439,17 +486,33 @@ async function loadMam3eEquipment(): Promise<Item[]> {
   }) as Item[];
 }
 
+async function loadMam3eArchetypes(): Promise<CharacterClass[]> {
+  const archetypeModule = await import('../data/mutants-and-masterminds/3e/archetypes');
+  return Object.values(archetypeModule.mm3eArchetypes || {});
+}
+
+async function loadMam3eComplications(): Promise<Complication[]> {
+  const complicationModule = await import('../data/mutants-and-masterminds/3e/complications');
+  return complicationModule.complications || [];
+}
+
+async function loadMam3ePowerModifiers(): Promise<PowerModifier[]> {
+  const modifierModule = await import('../data/mutants-and-masterminds/3e/modifiers');
+  const { extras = [], flaws = [] } = modifierModule.powerModifiers || {};
+  return [...extras, ...flaws];
+}
+
 // Main Loader Functions
 
 /**
  * Load all spells for a given game system
- * 
+ *
  * Dynamically imports and aggregates spell data for the specified system.
  * Returns empty array for systems without spell data.
- * 
+ *
  * @param systemId - The game system identifier (e.g., 'dnd-5e-2024', 'pf2e')
  * @returns Promise resolving to array of spells for the system
- * 
+ *
  * @example
  * ```typescript
  * const spells = await loadSpellsForSystem('dnd-5e-2024');
@@ -487,10 +550,10 @@ export async function loadSpellsForSystem(systemId: GameSystemId): Promise<Spell
 
 /**
  * Load all character classes for a given game system
- * 
+ *
  * @param systemId - The game system identifier
  * @returns Promise resolving to array of character classes
- * 
+ *
  * @example
  * ```typescript
  * const classes = await loadClassesForSystem('pf2e');
@@ -524,9 +587,9 @@ export async function loadClassesForSystem(systemId: GameSystemId): Promise<Char
 
 /**
  * Load all species/races for a given game system
- * 
+ *
  * Only available for D&D systems. Returns empty array for other systems.
- * 
+ *
  * @param systemId - The game system identifier
  * @returns Promise resolving to array of species
  */
@@ -556,11 +619,62 @@ export async function loadSpeciesForSystem(systemId: GameSystemId): Promise<Spec
   return finalizeLoadedItems(systemId, 'species', species);
 }
 
+export async function loadBackgroundsForSystem(systemId: GameSystemId): Promise<Background[]> {
+  let backgrounds: Background[];
+
+  switch (systemId) {
+    case 'dnd-5e-2024':
+      backgrounds = await loadDnd5e2024Backgrounds();
+      break;
+    case 'dnd-5e-2014':
+      backgrounds = await loadDnd5e2014Backgrounds();
+      break;
+    case 'dnd-3.5e':
+    case 'pf1e':
+      return [];
+    default:
+      return [];
+  }
+
+  return finalizeLoadedItems(systemId, 'backgrounds', backgrounds);
+}
+
+export async function loadPf2eBackgroundsForSystem(
+  systemId: GameSystemId
+): Promise<Pf2eBackgroundDefinition[]> {
+  if (systemId !== 'pf2e') {
+    return [];
+  }
+
+  const backgrounds = await loadPf2eBackgrounds();
+  return finalizeLoadedItems(systemId, 'backgrounds', backgrounds);
+}
+
+export async function loadArchetypesForSystem(systemId: GameSystemId): Promise<Archetype[]> {
+  if (systemId !== 'pf2e') {
+    return [];
+  }
+
+  const archetypes = await loadPf2eArchetypes();
+  return finalizeLoadedItems(systemId, 'archetypes', archetypes);
+}
+
+export async function loadMam3eArchetypesForSystem(
+  systemId: GameSystemId
+): Promise<CharacterClass[]> {
+  if (systemId !== 'mam3e') {
+    return [];
+  }
+
+  const archetypes = await loadMam3eArchetypes();
+  return finalizeLoadedItems(systemId, 'archetypes', archetypes);
+}
+
 /**
  * Load all monsters for a given game system
- * 
+ *
  * Currently only available for D&D 5e systems.
- * 
+ *
  * @param systemId - The game system identifier
  * @returns Promise resolving to array of monsters
  */
@@ -583,9 +697,9 @@ export async function loadMonstersForSystem(systemId: GameSystemId): Promise<Mon
 
 /**
  * Load all equipment items for a given game system
- * 
+ *
  * Includes weapons, armor, gear, and magic items.
- * 
+ *
  * @param systemId - The game system identifier
  * @returns Promise resolving to array of equipment items
  */
@@ -618,11 +732,31 @@ export async function loadEquipmentForSystem(systemId: GameSystemId): Promise<It
   return finalizeLoadedItems(systemId, 'equipment', equipment);
 }
 
+export async function loadTraitsForSystem(systemId: GameSystemId): Promise<Pf1eTrait[]> {
+  if (systemId !== 'pf1e') {
+    return [];
+  }
+
+  const traits = await loadPf1eTraits();
+  return finalizeLoadedItems(systemId, 'traits', traits);
+}
+
+export async function loadFeatureOptionsForSystem(
+  systemId: GameSystemId
+): Promise<Dnd5eFeatureOptionDefinition[]> {
+  if (systemId !== 'dnd-5e-2014') {
+    return [];
+  }
+
+  const options = await loadDnd5e2014FeatureOptions();
+  return finalizeLoadedItems(systemId, 'featureOptions', options);
+}
+
 /**
  * Load all feats for a given game system
- * 
+ *
  * Currently only available for D&D 5e systems.
- * 
+ *
  * @param systemId - The game system identifier
  * @returns Promise resolving to array of feat definitions
  */
@@ -650,4 +784,34 @@ export async function loadFeatsForSystem(systemId: GameSystemId): Promise<FeatDe
   }
 
   return finalizeLoadedItems(systemId, 'feats', feats);
+}
+
+/**
+ * Load advantages for M&M 3e
+ */
+export async function loadAdvantagesForSystem(systemId: GameSystemId): Promise<Advantage[]> {
+  if (systemId !== 'mam3e') return [];
+
+  const advantages = await loadMam3eAdvantages();
+  return finalizeLoadedItems(systemId, 'advantages', advantages);
+}
+
+export async function loadComplicationsForSystem(systemId: GameSystemId): Promise<Complication[]> {
+  if (systemId !== 'mam3e') {
+    return [];
+  }
+
+  const complications = await loadMam3eComplications();
+  return finalizeLoadedItems(systemId, 'complications', complications);
+}
+
+export async function loadPowerModifiersForSystem(
+  systemId: GameSystemId
+): Promise<PowerModifier[]> {
+  if (systemId !== 'mam3e') {
+    return [];
+  }
+
+  const modifiers = await loadMam3ePowerModifiers();
+  return finalizeLoadedItems(systemId, 'powerModifiers', modifiers);
 }

@@ -1,10 +1,10 @@
 /**
  * Browser Compatibility Checks and Polyfills
- * 
+ *
  * Detects browser capabilities (localStorage, crypto, notifications, etc.)
  * and provides fallback implementations where needed. Essential for ensuring
  * the app works across different browsers and environments.
- * 
+ *
  * @module browserCompat
  */
 
@@ -20,12 +20,12 @@ export interface BrowserCapabilities {
 
 /**
  * Check which browser capabilities are available
- * 
+ *
  * Tests for localStorage, crypto API, storage estimate API, notifications,
  * and service workers. Logs errors when capabilities are missing.
- * 
+ *
  * @returns Object indicating which capabilities are available
- * 
+ *
  * @example
  * ```typescript
  * const caps = checkBrowserCapabilities();
@@ -80,12 +80,12 @@ export function checkBrowserCapabilities(): BrowserCapabilities {
 
 /**
  * Generate a UUID using browser crypto API with fallback
- * 
+ *
  * Attempts to use crypto.randomUUID() for cryptographically secure UUIDs.
  * Falls back to Math.random() if crypto API is unavailable (less secure but functional).
- * 
+ *
  * @returns A UUID v4 string (e.g., '550e8400-e29b-41d4-a716-446655440000')
- * 
+ *
  * @example
  * ```typescript
  * const id = generateUUID();
@@ -110,10 +110,10 @@ export function generateUUID(): string {
  */
 export function isBrowserSupported(): boolean {
   const capabilities = checkBrowserCapabilities();
-  
+
   // Minimum requirements
   const required = capabilities.localStorage && capabilities.crypto;
-  
+
   if (!required) {
     errorLogger.log(
       ErrorCategory.UNKNOWN,
@@ -123,7 +123,7 @@ export function isBrowserSupported(): boolean {
       capabilities
     );
   }
-  
+
   return required;
 }
 
@@ -132,13 +132,13 @@ export function isBrowserSupported(): boolean {
  */
 export function showCompatibilityWarning(capabilities: BrowserCapabilities): void {
   const missing: string[] = [];
-  
+
   if (!capabilities.localStorage) missing.push('localStorage');
   if (!capabilities.crypto) missing.push('crypto API');
-  
+
   if (missing.length > 0) {
     const message = `Your browser does not support: ${missing.join(', ')}. The application may not function correctly.`;
-    
+
     errorLogger.log(
       ErrorCategory.UNKNOWN,
       ErrorSeverity.CRITICAL,
@@ -146,11 +146,10 @@ export function showCompatibilityWarning(capabilities: BrowserCapabilities): voi
       undefined,
       { missing, capabilities }
     );
-    
-    // Show user-facing warning
+
+    // Show user-facing warning via structured logger (no raw console)
     if (typeof window !== 'undefined') {
-      console.error(message);
-      alert(message);
+      errorLogger.log(ErrorCategory.UNKNOWN, ErrorSeverity.CRITICAL, message);
     }
   }
 }
@@ -160,7 +159,7 @@ export function showCompatibilityWarning(capabilities: BrowserCapabilities): voi
  */
 export function initBrowserCompat(): void {
   const capabilities = checkBrowserCapabilities();
-  
+
   if (!isBrowserSupported()) {
     showCompatibilityWarning(capabilities);
   } else {

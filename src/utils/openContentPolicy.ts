@@ -4,12 +4,17 @@ export type OpenContentCategory =
   | 'spells'
   | 'classes'
   | 'species'
+  | 'backgrounds'
+  | 'featureOptions'
+  | 'traits'
   | 'monsters'
   | 'equipment'
   | 'feats'
   | 'powers'
   | 'advantages'
-  | 'archetypes';
+  | 'archetypes'
+  | 'complications'
+  | 'powerModifiers';
 
 type SystemOpenContentPolicy = {
   allowedSources: readonly string[];
@@ -41,18 +46,27 @@ export const strictOpenContentPolicy: Record<GameSystemId, SystemOpenContentPoli
     allowedSources: ["Hero's Handbook", 'HH', "Mutants & Masterminds Hero's Handbook"],
     allowMissingSourceFor: [],
   },
+  daggerheart: {
+    allowedSources: ['Daggerheart Core Rulebook', 'Daggerheart'],
+    allowMissingSourceFor: [],
+  },
 };
 
 const normalizeSource = (source: string): string =>
   source.trim().replace(/\s+/g, ' ').toLowerCase();
 
 const normalizedAllowedSourcesBySystem: Record<GameSystemId, Set<string>> = {
-  'dnd-5e-2014': new Set(strictOpenContentPolicy['dnd-5e-2014'].allowedSources.map(normalizeSource)),
-  'dnd-5e-2024': new Set(strictOpenContentPolicy['dnd-5e-2024'].allowedSources.map(normalizeSource)),
+  'dnd-5e-2014': new Set(
+    strictOpenContentPolicy['dnd-5e-2014'].allowedSources.map(normalizeSource)
+  ),
+  'dnd-5e-2024': new Set(
+    strictOpenContentPolicy['dnd-5e-2024'].allowedSources.map(normalizeSource)
+  ),
   'dnd-3.5e': new Set(strictOpenContentPolicy['dnd-3.5e'].allowedSources.map(normalizeSource)),
   pf1e: new Set(strictOpenContentPolicy.pf1e.allowedSources.map(normalizeSource)),
   pf2e: new Set(strictOpenContentPolicy.pf2e.allowedSources.map(normalizeSource)),
   mam3e: new Set(strictOpenContentPolicy.mam3e.allowedSources.map(normalizeSource)),
+  daggerheart: new Set(strictOpenContentPolicy.daggerheart.allowedSources.map(normalizeSource)),
 };
 
 const allowMissingSourceBySystemAndCategory: Record<GameSystemId, Set<OpenContentCategory>> = {
@@ -62,6 +76,7 @@ const allowMissingSourceBySystemAndCategory: Record<GameSystemId, Set<OpenConten
   pf1e: new Set(strictOpenContentPolicy.pf1e.allowMissingSourceFor),
   pf2e: new Set(strictOpenContentPolicy.pf2e.allowMissingSourceFor),
   mam3e: new Set(strictOpenContentPolicy.mam3e.allowMissingSourceFor),
+  daggerheart: new Set(strictOpenContentPolicy.daggerheart.allowMissingSourceFor),
 };
 
 export function extractSourceAttribution(item: unknown): string | null {
@@ -113,5 +128,5 @@ export function filterOpenContentBySource<T>(
   category: OpenContentCategory,
   items: T[]
 ): T[] {
-  return items.filter(item => isOpenContentCompliant(systemId, category, item));
+  return items.filter((item) => isOpenContentCompliant(systemId, category, item));
 }

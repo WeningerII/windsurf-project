@@ -10,12 +10,16 @@ export function rollDice(sides: number, count: number = 1): number[] {
   return rolls;
 }
 
-export function parseDiceNotation(notation: string): { count: number; sides: number; modifier: number } {
+export function parseDiceNotation(notation: string): {
+  count: number;
+  sides: number;
+  modifier: number;
+} {
   const match = notation.match(/(\d+)?d(\d+)([+-]\d+)?/i);
   if (!match) {
     throw new Error(`Invalid dice notation: ${notation}`);
   }
-  
+
   return {
     count: match[1] ? parseInt(match[1]) : 1,
     sides: parseInt(match[2]),
