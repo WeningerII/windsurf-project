@@ -1,6 +1,6 @@
 # Contributing Guidelines
 
-**Last Updated**: January 26, 2026 (audit refresh)
+**Last Updated**: March 7, 2026
 
 This document outlines engineering principles and practices for maintaining code quality. Follow these guidelines to keep the codebase clean, maintainable, and comprehensible.
 
@@ -24,6 +24,10 @@ This document outlines engineering principles and practices for maintaining code
 ## Environment Requirements
 
 - Node.js 20.19+ (or 22.12+ / 24+). The test stack depends on this runtime.
+- `.nvmrc` pins `20.19.0`; use `nvm use` if you rely on nvm-managed shells.
+- `npm run test:coverage` is stricter than plain `npm test`: `@vitest/coverage-v8` requires `node:inspector/promises`, so Node 18 shells fail before any tests execute.
+- Current baseline: `npm run test:coverage -- --run --maxWorkers=1` passed on March 7, 2026 with 78 test files, 3214 tests, and 80.65% branch coverage under Node `v22.18.0`.
+- When you make a previously repo-only content family product-reachable, wire it through a loader first and rerun `npm run roadmap:metrics` so `docs/generated/roadmap-metrics.*` stays aligned with runtime reality.
 
 ## Core Principles
 
@@ -306,9 +310,9 @@ function CharacterSheet({ character }) {
 
 Keep the main user flow consistent with the current app composition:
 
-- **CharacterCreation** for guided, multi-step character creation.
-- **CharacterSheetTabs** for editing and browsing (sheet + data tabs).
-- **DataManagement** on the home screen for bulk export/import/clear.
+- **App.tsx** creates V2 `CharacterDocument` objects directly and opens the system-specific sheet.
+- **SystemSheetRenderer** dispatches to native sheet components per system via the `SystemRegistry`.
+- **Home screen** provides export/import/clear controls directly in App.
 
 When generating new IDs in UI flows, use `generateUUID` from `src/utils/browserCompat.ts`.
 

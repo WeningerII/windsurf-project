@@ -1,50 +1,32 @@
 {
-  "generatedAt": "2026-02-21T18:45:30.163Z",
+  "generatedAt": "2026-03-07T19:09:52.009Z",
   "policy": {
     "dnd-5e-2014": {
-      "allowedSources": [
-        "SRD 5.1",
-        "SRD",
-        "System Reference Document 5.1"
-      ],
+      "allowedSources": ["SRD 5.1", "SRD", "System Reference Document 5.1"],
       "allowMissingSourceFor": []
     },
     "dnd-5e-2024": {
-      "allowedSources": [
-        "SRD 5.2",
-        "System Reference Document 5.2"
-      ],
+      "allowedSources": ["SRD 5.2", "System Reference Document 5.2"],
       "allowMissingSourceFor": []
     },
     "dnd-3.5e": {
-      "allowedSources": [
-        "SRD 3.5",
-        "PHB 3.5",
-        "PHB",
-        "Player's Handbook 3.5"
-      ],
+      "allowedSources": ["SRD 3.5", "PHB 3.5", "PHB", "Player's Handbook 3.5"],
       "allowMissingSourceFor": []
     },
     "pf1e": {
-      "allowedSources": [
-        "Core Rulebook",
-        "CRB"
-      ],
+      "allowedSources": ["Core Rulebook", "CRB"],
       "allowMissingSourceFor": []
     },
     "pf2e": {
-      "allowedSources": [
-        "Core Rulebook",
-        "CRB"
-      ],
+      "allowedSources": ["Core Rulebook", "CRB"],
       "allowMissingSourceFor": []
     },
     "mam3e": {
-      "allowedSources": [
-        "Hero's Handbook",
-        "HH",
-        "Mutants & Masterminds Hero's Handbook"
-      ],
+      "allowedSources": ["Hero's Handbook", "HH", "Mutants & Masterminds Hero's Handbook"],
+      "allowMissingSourceFor": []
+    },
+    "daggerheart": {
+      "allowedSources": ["Daggerheart Core Rulebook", "Daggerheart"],
       "allowMissingSourceFor": []
     }
   },
@@ -53,49 +35,91 @@
       "spells": 238,
       "classes": 12,
       "species": 9,
+      "backgrounds": 6,
+      "traits": 0,
+      "featureOptions": 106,
+      "archetypes": 0,
+      "complications": 0,
       "monsters": 41,
       "equipment": 230,
-      "feats": 0
+      "feats": 0,
+      "advantages": 0,
+      "powerModifiers": 0
     },
     "dnd-5e-2024": {
       "spells": 315,
       "classes": 12,
       "species": 9,
+      "backgrounds": 6,
+      "traits": 0,
+      "featureOptions": 0,
+      "archetypes": 0,
+      "complications": 0,
       "monsters": 99,
       "equipment": 204,
-      "feats": 87
+      "feats": 87,
+      "advantages": 0,
+      "powerModifiers": 0
     },
     "dnd-3.5e": {
       "spells": 555,
       "classes": 11,
       "species": 7,
+      "backgrounds": 0,
+      "traits": 0,
+      "featureOptions": 0,
+      "archetypes": 0,
+      "complications": 0,
       "monsters": 0,
       "equipment": 207,
-      "feats": 515
+      "feats": 515,
+      "advantages": 0,
+      "powerModifiers": 0
     },
     "pf1e": {
       "spells": 134,
-      "classes": 11,
+      "classes": 18,
       "species": 7,
+      "backgrounds": 0,
+      "traits": 12,
+      "featureOptions": 0,
+      "archetypes": 0,
+      "complications": 0,
       "monsters": 0,
       "equipment": 70,
-      "feats": 86
+      "feats": 86,
+      "advantages": 0,
+      "powerModifiers": 0
     },
     "pf2e": {
       "spells": 146,
       "classes": 12,
       "species": 6,
+      "backgrounds": 16,
+      "traits": 0,
+      "featureOptions": 0,
+      "archetypes": 5,
+      "complications": 0,
       "monsters": 0,
       "equipment": 188,
-      "feats": 93
+      "feats": 93,
+      "advantages": 0,
+      "powerModifiers": 0
     },
     "mam3e": {
       "spells": 61,
       "classes": 0,
       "species": 0,
+      "backgrounds": 0,
+      "traits": 0,
+      "featureOptions": 0,
+      "archetypes": 15,
+      "complications": 28,
       "monsters": 0,
       "equipment": 150,
-      "feats": 0
+      "feats": 0,
+      "advantages": 74,
+      "powerModifiers": 101
     }
   },
   "loaderAudit": [
@@ -144,6 +168,38 @@
         "nonCompliantCount": 0,
         "sourceCounts": {
           "SRD 5.1": 9
+        }
+      }
+    },
+    {
+      "systemId": "dnd-5e-2014",
+      "systemLabel": "D&D 5e (2014)",
+      "category": "backgrounds",
+      "categoryLabel": "Backgrounds",
+      "metrics": {
+        "rawCount": 6,
+        "uniqueCount": 6,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "SRD 5.1": 6
+        }
+      }
+    },
+    {
+      "systemId": "dnd-5e-2014",
+      "systemLabel": "D&D 5e (2014)",
+      "category": "featureOptions",
+      "categoryLabel": "Feature Options",
+      "metrics": {
+        "rawCount": 106,
+        "uniqueCount": 106,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "SRD 5.1": 106
         }
       }
     },
@@ -224,6 +280,22 @@
         "nonCompliantCount": 0,
         "sourceCounts": {
           "SRD 5.2": 9
+        }
+      }
+    },
+    {
+      "systemId": "dnd-5e-2024",
+      "systemLabel": "D&D 5e (2024)",
+      "category": "backgrounds",
+      "categoryLabel": "Backgrounds",
+      "metrics": {
+        "rawCount": 6,
+        "uniqueCount": 6,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "SRD 5.2": 6
         }
       }
     },
@@ -377,13 +449,13 @@
       "category": "classes",
       "categoryLabel": "Classes",
       "metrics": {
-        "rawCount": 11,
-        "uniqueCount": 11,
+        "rawCount": 18,
+        "uniqueCount": 18,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "Core Rulebook": 11
+          "Core Rulebook": 18
         }
       }
     },
@@ -400,6 +472,22 @@
         "nonCompliantCount": 0,
         "sourceCounts": {
           "Core Rulebook": 7
+        }
+      }
+    },
+    {
+      "systemId": "pf1e",
+      "systemLabel": "Pathfinder 1e",
+      "category": "traits",
+      "categoryLabel": "Traits",
+      "metrics": {
+        "rawCount": 12,
+        "uniqueCount": 12,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Core Rulebook": 12
         }
       }
     },
@@ -486,6 +574,38 @@
     {
       "systemId": "pf2e",
       "systemLabel": "Pathfinder 2e",
+      "category": "backgrounds",
+      "categoryLabel": "Backgrounds",
+      "metrics": {
+        "rawCount": 16,
+        "uniqueCount": 16,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Core Rulebook": 16
+        }
+      }
+    },
+    {
+      "systemId": "pf2e",
+      "systemLabel": "Pathfinder 2e",
+      "category": "archetypes",
+      "categoryLabel": "Archetypes",
+      "metrics": {
+        "rawCount": 5,
+        "uniqueCount": 5,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Core Rulebook": 5
+        }
+      }
+    },
+    {
+      "systemId": "pf2e",
+      "systemLabel": "Pathfinder 2e",
       "category": "equipment",
       "categoryLabel": "Equipment",
       "metrics": {
@@ -534,6 +654,38 @@
     {
       "systemId": "mam3e",
       "systemLabel": "Mutants & Masterminds 3e",
+      "category": "archetypes",
+      "categoryLabel": "Archetypes",
+      "metrics": {
+        "rawCount": 15,
+        "uniqueCount": 15,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Hero's Handbook": 15
+        }
+      }
+    },
+    {
+      "systemId": "mam3e",
+      "systemLabel": "Mutants & Masterminds 3e",
+      "category": "complications",
+      "categoryLabel": "Complications",
+      "metrics": {
+        "rawCount": 28,
+        "uniqueCount": 28,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Hero's Handbook": 28
+        }
+      }
+    },
+    {
+      "systemId": "mam3e",
+      "systemLabel": "Mutants & Masterminds 3e",
       "category": "equipment",
       "categoryLabel": "Equipment",
       "metrics": {
@@ -544,6 +696,38 @@
         "nonCompliantCount": 0,
         "sourceCounts": {
           "Hero's Handbook": 150
+        }
+      }
+    },
+    {
+      "systemId": "mam3e",
+      "systemLabel": "Mutants & Masterminds 3e",
+      "category": "advantages",
+      "categoryLabel": "Advantages",
+      "metrics": {
+        "rawCount": 74,
+        "uniqueCount": 74,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Hero's Handbook": 74
+        }
+      }
+    },
+    {
+      "systemId": "mam3e",
+      "systemLabel": "Mutants & Masterminds 3e",
+      "category": "powerModifiers",
+      "categoryLabel": "Power Modifiers",
+      "metrics": {
+        "rawCount": 101,
+        "uniqueCount": 101,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Hero's Handbook": 101
         }
       }
     }
@@ -591,6 +775,36 @@
         "nonCompliantCount": 0,
         "sourceCounts": {
           "Hero's Handbook": 15
+        }
+      }
+    },
+    {
+      "label": "M&M 3e complications",
+      "systemId": "mam3e",
+      "category": "complications",
+      "metrics": {
+        "rawCount": 28,
+        "uniqueCount": 28,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Hero's Handbook": 28
+        }
+      }
+    },
+    {
+      "label": "M&M 3e power modifiers",
+      "systemId": "mam3e",
+      "category": "powerModifiers",
+      "metrics": {
+        "rawCount": 101,
+        "uniqueCount": 101,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Hero's Handbook": 101
         }
       }
     },
