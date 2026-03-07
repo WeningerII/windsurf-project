@@ -38,7 +38,7 @@ export class ErrorBoundary extends Component<Props, State> {
         errorBoundary: true,
       }
     );
-    
+
     this.setState({
       error,
       errorInfo,
@@ -69,9 +69,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 </div>
                 <div>
                   <CardTitle>Something went wrong</CardTitle>
-                  <CardDescription>
-                    An unexpected error occurred in the application
-                  </CardDescription>
+                  <CardDescription>An unexpected error occurred in the application</CardDescription>
                 </div>
               </div>
             </CardHeader>
@@ -85,20 +83,13 @@ export class ErrorBoundary extends Component<Props, State> {
               )}
               {process.env.NODE_ENV === 'development' && this.state.errorInfo && (
                 <details className="p-4 rounded-lg bg-muted">
-                  <summary className="cursor-pointer font-semibold mb-2">
-                    Stack Trace
-                  </summary>
-                  <pre className="text-xs overflow-auto">
-                    {this.state.errorInfo.componentStack}
-                  </pre>
+                  <summary className="cursor-pointer font-semibold mb-2">Stack Trace</summary>
+                  <pre className="text-xs overflow-auto">{this.state.errorInfo.componentStack}</pre>
                 </details>
               )}
               <div className="flex gap-2">
                 <Button onClick={this.handleReset}>Try Again</Button>
-                <Button
-                  variant="outline"
-                  onClick={() => window.location.reload()}
-                >
+                <Button variant="outline" onClick={() => window.location.reload()}>
                   Reload Page
                 </Button>
               </div>

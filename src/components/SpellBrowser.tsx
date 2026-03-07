@@ -18,24 +18,15 @@ interface SpellBrowserProps {
   onSelectSpell?: (spell: SpellDisplay) => void;
 }
 
-export const SpellBrowser: React.FC<SpellBrowserProps> = ({
-  spells,
-  onSelectSpell,
-}) => {
+export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpell }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
   const [selectedSchool, setSelectedSchool] = useState<string | null>(null);
   const [selectedClass, setSelectedClass] = useState<string | null>(null);
 
-  const schools = useMemo(
-    () => [...new Set(spells.map((s) => s.school))].sort(),
-    [spells]
-  );
+  const schools = useMemo(() => [...new Set(spells.map((s) => s.school))].sort(), [spells]);
 
-  const classes = useMemo(
-    () => [...new Set(spells.flatMap((s) => s.classes))].sort(),
-    [spells]
-  );
+  const classes = useMemo(() => [...new Set(spells.flatMap((s) => s.classes))].sort(), [spells]);
 
   const filteredSpells = useMemo(() => {
     return spells.filter((spell) => {
@@ -43,14 +34,11 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({
         spell.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         spell.description.toLowerCase().includes(searchTerm.toLowerCase());
 
-      const matchesLevel =
-        selectedLevel === null || spell.level === selectedLevel;
+      const matchesLevel = selectedLevel === null || spell.level === selectedLevel;
 
-      const matchesSchool =
-        selectedSchool === null || spell.school === selectedSchool;
+      const matchesSchool = selectedSchool === null || spell.school === selectedSchool;
 
-      const matchesClass =
-        selectedClass === null || spell.classes.includes(selectedClass);
+      const matchesClass = selectedClass === null || spell.classes.includes(selectedClass);
 
       return matchesSearch && matchesLevel && matchesSchool && matchesClass;
     });
@@ -85,9 +73,7 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({
           <label className="block text-sm font-medium mb-2">Spell Level</label>
           <select
             value={selectedLevel ?? ''}
-            onChange={(e) =>
-              setSelectedLevel(e.target.value ? parseInt(e.target.value) : null)
-            }
+            onChange={(e) => setSelectedLevel(e.target.value ? parseInt(e.target.value) : null)}
             className="w-full px-3 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             aria-label="Filter by spell level"
           >
@@ -176,21 +162,17 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({
 
                 <div className="grid grid-cols-3 gap-4 text-sm mb-3">
                   <div>
-                    <span className="font-medium">Casting Time:</span>{' '}
-                    {spell.castingTime}
+                    <span className="font-medium">Casting Time:</span> {spell.castingTime}
                   </div>
                   <div>
                     <span className="font-medium">Range:</span> {spell.range}
                   </div>
                   <div>
-                    <span className="font-medium">Duration:</span>{' '}
-                    {spell.duration}
+                    <span className="font-medium">Duration:</span> {spell.duration}
                   </div>
                 </div>
 
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  {spell.description}
-                </p>
+                <p className="text-sm text-muted-foreground line-clamp-2">{spell.description}</p>
               </div>
             ))
           ) : (

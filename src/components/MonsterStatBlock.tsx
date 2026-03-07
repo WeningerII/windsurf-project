@@ -31,7 +31,8 @@ export const MonsterStatBlock: React.FC<MonsterStatBlockProps> = ({ monster }) =
             <div>
               <CardTitle className="text-2xl">{monster.name}</CardTitle>
               <p className="text-sm text-muted-foreground">
-                {monster.size.charAt(0).toUpperCase() + monster.size.slice(1)} {monster.type}, {monster.alignment}
+                {monster.size.charAt(0).toUpperCase() + monster.size.slice(1)} {monster.type},{' '}
+                {monster.alignment}
               </p>
             </div>
           </div>
@@ -58,7 +59,8 @@ export const MonsterStatBlock: React.FC<MonsterStatBlockProps> = ({ monster }) =
             <div>
               <div className="text-xs text-muted-foreground">Hit Points</div>
               <div className="text-lg font-bold">
-                {monster.hitPoints.notation || `${monster.hitPoints.count}d${monster.hitPoints.die}${monster.hitPoints.modifier ? `+${monster.hitPoints.modifier}` : ''}`}
+                {monster.hitPoints.notation ||
+                  `${monster.hitPoints.count}d${monster.hitPoints.die}${monster.hitPoints.modifier ? `+${monster.hitPoints.modifier}` : ''}`}
               </div>
             </div>
           </div>
@@ -73,7 +75,9 @@ export const MonsterStatBlock: React.FC<MonsterStatBlockProps> = ({ monster }) =
 
         {/* Ability Scores */}
         <div>
-          <h3 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wide">Ability Scores</h3>
+          <h3 className="text-sm font-semibold mb-3 text-muted-foreground uppercase tracking-wide">
+            Ability Scores
+          </h3>
           <div className="grid grid-cols-6 gap-4">
             {Object.entries(monster.abilities).map(([ability, score]) => (
               <div key={ability} className="text-center p-3 border rounded-lg">
@@ -92,7 +96,8 @@ export const MonsterStatBlock: React.FC<MonsterStatBlockProps> = ({ monster }) =
               <span className="font-semibold">Saving Throws:</span>{' '}
               {Object.entries(monster.savingThrows).map(([ability, bonus]) => (
                 <span key={ability} className="ml-2">
-                  {ability.toUpperCase()} {bonus >= 0 ? '+' : ''}{bonus}
+                  {ability.toUpperCase()} {bonus >= 0 ? '+' : ''}
+                  {bonus}
                 </span>
               ))}
             </div>
@@ -103,7 +108,8 @@ export const MonsterStatBlock: React.FC<MonsterStatBlockProps> = ({ monster }) =
               <span className="font-semibold">Skills:</span>{' '}
               {Object.entries(monster.skills).map(([skill, bonus]) => (
                 <span key={skill} className="ml-2">
-                  {skill} {bonus >= 0 ? '+' : ''}{bonus}
+                  {skill} {bonus >= 0 ? '+' : ''}
+                  {bonus}
                 </span>
               ))}
             </div>
@@ -139,8 +145,7 @@ export const MonsterStatBlock: React.FC<MonsterStatBlockProps> = ({ monster }) =
 
           {monster.senses && monster.senses.length > 0 && (
             <div>
-              <span className="font-semibold">Senses:</span>{' '}
-              {monster.senses.join(', ')}
+              <span className="font-semibold">Senses:</span> {monster.senses.join(', ')}
             </div>
           )}
 
@@ -208,13 +213,17 @@ export const MonsterStatBlock: React.FC<MonsterStatBlockProps> = ({ monster }) =
           <div>
             <h3 className="text-sm font-semibold mb-3 text-yellow-600">Legendary Actions</h3>
             <p className="text-sm text-muted-foreground mb-3">
-              The {monster.name.toLowerCase()} can take 3 legendary actions, choosing from the options below. Only one legendary action can be used at a time and only at the end of another creature&apos;s turn. The {monster.name.toLowerCase()} regains spent legendary actions at the start of its turn.
+              The {monster.name.toLowerCase()} can take 3 legendary actions, choosing from the
+              options below. Only one legendary action can be used at a time and only at the end of
+              another creature&apos;s turn. The {monster.name.toLowerCase()} regains spent legendary
+              actions at the start of its turn.
             </p>
             <div className="space-y-3">
               {monster.legendaryActions.map((action, index) => (
                 <div key={index} className="pl-4 border-l-2 border-yellow-500/50">
                   <div className="font-semibold">
-                    {action.name} {action.cost && action.cost > 1 && `(Costs ${action.cost} Actions)`}
+                    {action.name}{' '}
+                    {action.cost && action.cost > 1 && `(Costs ${action.cost} Actions)`}
                   </div>
                   <div className="text-sm text-muted-foreground mt-1">{action.description}</div>
                 </div>

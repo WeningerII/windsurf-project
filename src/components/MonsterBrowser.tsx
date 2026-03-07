@@ -7,47 +7,36 @@ interface MonsterBrowserProps {
   onSelectMonster?: (monster: Monster) => void;
 }
 
-export const MonsterBrowser: React.FC<MonsterBrowserProps> = ({
-  monsters,
-  onSelectMonster,
-}) => {
+export const MonsterBrowser: React.FC<MonsterBrowserProps> = ({ monsters, onSelectMonster }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [selectedCR, setSelectedCR] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
-  const types = useMemo(
-    () => [...new Set(monsters.map((m) => m.type))].sort(),
-    [monsters]
-  );
+  const types = useMemo(() => [...new Set(monsters.map((m) => m.type))].sort(), [monsters]);
 
   const challengeRatings = useMemo(
     () => [...new Set(monsters.map((m) => m.challengeRating))].sort((a, b) => a - b),
     [monsters]
   );
 
-  const sizes = useMemo(
-    () => [...new Set(monsters.map((m) => m.size))].sort(),
-    [monsters]
-  );
+  const sizes = useMemo(() => [...new Set(monsters.map((m) => m.size))].sort(), [monsters]);
 
   const filteredMonsters = useMemo(() => {
     return monsters.filter((monster) => {
       const matchesSearch =
         monster.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (monster.specialAbilities?.some(ability => 
-          ability.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          ability.description.toLowerCase().includes(searchTerm.toLowerCase())
-        ));
+        monster.specialAbilities?.some(
+          (ability) =>
+            ability.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            ability.description.toLowerCase().includes(searchTerm.toLowerCase())
+        );
 
-      const matchesType =
-        selectedType === null || monster.type === selectedType;
+      const matchesType = selectedType === null || monster.type === selectedType;
 
-      const matchesCR =
-        selectedCR === null || monster.challengeRating.toString() === selectedCR;
+      const matchesCR = selectedCR === null || monster.challengeRating.toString() === selectedCR;
 
-      const matchesSize =
-        selectedSize === null || monster.size === selectedSize;
+      const matchesSize = selectedSize === null || monster.size === selectedSize;
 
       return matchesSearch && matchesType && matchesCR && matchesSize;
     });
@@ -168,7 +157,8 @@ export const MonsterBrowser: React.FC<MonsterBrowserProps> = ({
                     <div>
                       <h3 className="font-semibold text-lg">{monster.name}</h3>
                       <p className="text-sm text-muted-foreground">
-                        {monster.size.charAt(0).toUpperCase() + monster.size.slice(1)} {monster.type} • {monster.alignment}
+                        {monster.size.charAt(0).toUpperCase() + monster.size.slice(1)}{' '}
+                        {monster.type} • {monster.alignment}
                       </p>
                     </div>
                   </div>
@@ -188,13 +178,16 @@ export const MonsterBrowser: React.FC<MonsterBrowserProps> = ({
                   </div>
                   <div>
                     <span className="font-medium">HP:</span>{' '}
-                    {monster.hitPoints.notation || `${monster.hitPoints.count}d${monster.hitPoints.die}`}
+                    {monster.hitPoints.notation ||
+                      `${monster.hitPoints.count}d${monster.hitPoints.die}`}
                   </div>
                   <div>
                     <span className="font-medium">Speed:</span>{' '}
-                    {typeof monster.speed === 'number' 
-                      ? `${monster.speed} ft.` 
-                      : Object.entries(monster.speed).map(([k, v]) => `${k} ${v} ft.`).join(', ')}
+                    {typeof monster.speed === 'number'
+                      ? `${monster.speed} ft.`
+                      : Object.entries(monster.speed)
+                          .map(([k, v]) => `${k} ${v} ft.`)
+                          .join(', ')}
                   </div>
                 </div>
 
@@ -202,7 +195,10 @@ export const MonsterBrowser: React.FC<MonsterBrowserProps> = ({
                   <div className="text-sm">
                     <span className="font-medium">Abilities:</span>{' '}
                     <span className="text-muted-foreground">
-                      {monster.specialAbilities.slice(0, 3).map(a => a.name).join(', ')}
+                      {monster.specialAbilities
+                        .slice(0, 3)
+                        .map((a) => a.name)
+                        .join(', ')}
                       {monster.specialAbilities.length > 3 && '...'}
                     </span>
                   </div>

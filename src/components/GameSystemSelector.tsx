@@ -1,122 +1,200 @@
+import { useEffect, useState, type ReactNode } from 'react';
 import { GameSystemId } from '../types/game-systems';
+import type {
+  SystemCatalogSummary,
+  SystemContentCategoryId,
+  SystemSupportLevel,
+} from '../types/system-catalog';
 import { systemRegistry } from '../registry';
-import { BookOpen, Shield, Users, Sword } from 'lucide-react';
-import { dnd5eMetadata } from '../data/dnd/5e-2014/metadata';
-import { dnd5e2024Metadata } from '../data/dnd/5e-2024/metadata';
-import { dnd35eMetadata } from '../data/dnd/3.5e/metadata';
-import { pf1eMetadata } from '../data/pathfinder/1e/metadata';
-import { pf2eMetadata } from '../data/pathfinder/2e/metadata';
-import { mm3eMetadata } from '../data/mutants-and-masterminds/3e/metadata';
+import {
+  BookOpen,
+  Shield,
+  Users,
+  Sword,
+  Sparkles,
+  Scroll,
+  Flame,
+  Wand2,
+  Swords,
+  Zap,
+  Star,
+  AlertTriangle,
+} from 'lucide-react';
+import { loadAllSystemCatalogSummaries } from '../utils/systemCatalog';
 
 interface GameSystemSelectorProps {
   selectedSystem: GameSystemId | null;
   onSelect: (systemId: GameSystemId) => void;
 }
 
-const systemMetadata: Record<GameSystemId, { spells: number; classes: number; monsters: number; equipment: number }> = {
+const systemAccents: Record<GameSystemId, { icon: ReactNode; gradient: string; accent: string }> = {
   'dnd-5e-2024': {
-    spells: dnd5e2024Metadata.stats.spells.count,
-    classes: dnd5e2024Metadata.stats.classes.count,
-    monsters: dnd5e2024Metadata.stats.monsters.count,
-    equipment: dnd5e2024Metadata.stats.equipment.weapons + dnd5e2024Metadata.stats.equipment.armor + dnd5e2024Metadata.stats.equipment.gear + dnd5e2024Metadata.stats.equipment.magicItems,
+    icon: <Sparkles className="w-6 h-6" />,
+    gradient: 'from-red-500/10 to-amber-500/10',
+    accent: 'text-red-500 dark:text-red-400',
   },
   'dnd-5e-2014': {
-    spells: dnd5eMetadata.stats.spells.count,
-    classes: dnd5eMetadata.stats.classes.count,
-    monsters: dnd5eMetadata.stats.monsters.count,
-    equipment: dnd5eMetadata.stats.equipment.weapons + dnd5eMetadata.stats.equipment.armor + dnd5eMetadata.stats.equipment.adventuringGear + dnd5eMetadata.stats.equipment.magicItems,
+    icon: <Scroll className="w-6 h-6" />,
+    gradient: 'from-red-500/10 to-orange-500/10',
+    accent: 'text-red-600 dark:text-red-400',
   },
-  'pf2e': {
-    spells: pf2eMetadata.stats.spells.count,
-    classes: pf2eMetadata.stats.classes.count,
-    monsters: 0,
-    equipment: pf2eMetadata.stats.equipment.weapons + pf2eMetadata.stats.equipment.armor + pf2eMetadata.stats.equipment.gear + pf2eMetadata.stats.equipment.magicItems,
+  pf2e: {
+    icon: <Flame className="w-6 h-6" />,
+    gradient: 'from-blue-500/10 to-cyan-500/10',
+    accent: 'text-blue-600 dark:text-blue-400',
   },
   'dnd-3.5e': {
-    spells: dnd35eMetadata.stats.spells.count,
-    classes: dnd35eMetadata.stats.classes.count + dnd35eMetadata.stats.prestigeClasses.count,
-    monsters: 0,
-    equipment: dnd35eMetadata.stats.equipment.weapons + dnd35eMetadata.stats.equipment.armor + dnd35eMetadata.stats.equipment.shields + dnd35eMetadata.stats.equipment.adventuringGear + dnd35eMetadata.stats.equipment.magicItems,
+    icon: <Wand2 className="w-6 h-6" />,
+    gradient: 'from-amber-500/10 to-yellow-500/10',
+    accent: 'text-amber-600 dark:text-amber-400',
   },
-  'pf1e': {
-    spells: pf1eMetadata.stats.spells.count,
-    classes: pf1eMetadata.stats.classes.baseClasses + pf1eMetadata.stats.classes.prestigeClasses,
-    monsters: 0,
-    equipment: pf1eMetadata.stats.equipment.weapons + pf1eMetadata.stats.equipment.armor + pf1eMetadata.stats.equipment.gear + pf1eMetadata.stats.equipment.magicItems,
+  pf1e: {
+    icon: <Swords className="w-6 h-6" />,
+    gradient: 'from-emerald-500/10 to-teal-500/10',
+    accent: 'text-emerald-600 dark:text-emerald-400',
   },
-  'mam3e': {
-    spells: mm3eMetadata.stats.powers.count,
-    classes: 0,
-    monsters: 0,
-    equipment: mm3eMetadata.stats.equipment.vehicles + mm3eMetadata.stats.equipment.devices + mm3eMetadata.stats.equipment.headquarters + mm3eMetadata.stats.equipment.weapons + mm3eMetadata.stats.equipment.armor + mm3eMetadata.stats.equipment.gear,
+  mam3e: {
+    icon: <Zap className="w-6 h-6" />,
+    gradient: 'from-purple-500/10 to-pink-500/10',
+    accent: 'text-purple-600 dark:text-purple-400',
+  },
+  daggerheart: {
+    icon: <Sword className="w-6 h-6" />,
+    gradient: 'from-rose-500/10 to-violet-500/10',
+    accent: 'text-rose-600 dark:text-rose-400',
   },
 };
 
-export const GameSystemSelector: React.FC<GameSystemSelectorProps> = ({
-  selectedSystem,
-  onSelect,
-}) => {
+const categoryIcons: Record<SystemContentCategoryId, ReactNode> = {
+  spells: <BookOpen className="w-3.5 h-3.5 shrink-0" />,
+  classes: <Shield className="w-3.5 h-3.5 shrink-0" />,
+  species: <Users className="w-3.5 h-3.5 shrink-0" />,
+  featureOptions: <Sparkles className="w-3.5 h-3.5 shrink-0" />,
+  backgrounds: <Scroll className="w-3.5 h-3.5 shrink-0" />,
+  traits: <Sparkles className="w-3.5 h-3.5 shrink-0" />,
+  archetypes: <Shield className="w-3.5 h-3.5 shrink-0" />,
+  complications: <AlertTriangle className="w-3.5 h-3.5 shrink-0" />,
+  monsters: <Users className="w-3.5 h-3.5 shrink-0" />,
+  equipment: <Sword className="w-3.5 h-3.5 shrink-0" />,
+  feats: <Star className="w-3.5 h-3.5 shrink-0" />,
+  advantages: <Sparkles className="w-3.5 h-3.5 shrink-0" />,
+  powerModifiers: <Wand2 className="w-3.5 h-3.5 shrink-0" />,
+};
+
+const supportBadgeStyles: Record<SystemSupportLevel, string> = {
+  full: 'bg-emerald-500/10 text-emerald-700 border border-emerald-500/20',
+  partial: 'bg-amber-500/10 text-amber-700 border border-amber-500/20',
+  scaffold: 'bg-slate-500/10 text-slate-700 border border-slate-500/20',
+};
+
+const supportBadgeLabels: Record<SystemSupportLevel, string> = {
+  full: 'Full',
+  partial: 'Partial',
+  scaffold: 'Scaffold',
+};
+
+export function GameSystemSelector({ selectedSystem, onSelect }: GameSystemSelectorProps) {
+  const [summaries, setSummaries] = useState<Partial<Record<GameSystemId, SystemCatalogSummary>>>(
+    {}
+  );
+
+  useEffect(() => {
+    let canceled = false;
+    const systemIds = systemRegistry.getAll().map((system) => system.id as GameSystemId);
+
+    void loadAllSystemCatalogSummaries(systemIds).then((loadedSummaries) => {
+      if (!canceled) {
+        setSummaries(loadedSummaries);
+      }
+    });
+
+    return () => {
+      canceled = true;
+    };
+  }, []);
+
   return (
     <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="text-3xl font-bold mb-2">Choose Your Game System</h2>
-        <p className="text-muted-foreground">Select from 6 fully implemented RPG systems</p>
-      </div>
-      
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {systemRegistry.getAll().map((system) => {
-          const metadata = systemMetadata[system.id as GameSystemId];
+          const systemId = system.id as GameSystemId;
+          const summary = summaries[systemId];
+          const visual = systemAccents[systemId];
+          const isSelected = selectedSystem === system.id;
+          const visibleCategories =
+            summary?.categories
+              .filter((category) => category.reachability === 'product' && category.count > 0)
+              .slice(0, 4) ?? [];
+
           return (
             <button
               key={system.id}
-              onClick={() => onSelect(system.id as GameSystemId)}
-              className={`p-6 rounded-lg border-2 transition-all text-left hover:shadow-lg ${
-                selectedSystem === system.id
-                  ? 'border-primary bg-primary/5 shadow-md'
+              onClick={() => onSelect(systemId)}
+              className={`group relative p-6 rounded-xl border-2 transition-all duration-200 text-left hover:shadow-lg hover:-translate-y-0.5 ${
+                isSelected
+                  ? 'border-primary bg-primary/5 shadow-md ring-2 ring-primary/20'
                   : 'border-input hover:border-primary/50'
               }`}
             >
-              <div className="mb-4">
-                <h3 className="font-semibold text-xl mb-1">{system.label}</h3>
-                <p className="text-sm text-muted-foreground">{system.version}</p>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                {metadata.spells > 0 && (
-                  <div className="flex items-center gap-1 text-muted-foreground">
-                    <BookOpen className="w-3 h-3" />
-                    <span>{metadata.spells} spells</span>
+              <div
+                className={`absolute inset-0 rounded-xl bg-gradient-to-br ${visual.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none`}
+              />
+              <div className="relative">
+                <div className="flex items-start justify-between mb-3 gap-2">
+                  <div className={`p-2 rounded-lg bg-card border ${visual.accent}`}>
+                    {visual.icon}
                   </div>
-                )}
-                {metadata.classes > 0 && (
-                  <div className="flex items-center gap-1 text-muted-foreground">
-                    <Shield className="w-3 h-3" />
-                    <span>{metadata.classes} classes</span>
+                  <div className="flex flex-wrap justify-end gap-1.5">
+                    {summary && summary.supportLevel !== 'full' && (
+                      <span
+                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium ${supportBadgeStyles[summary.supportLevel]}`}
+                      >
+                        {supportBadgeLabels[summary.supportLevel]}
+                      </span>
+                    )}
+                    {isSelected && (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary text-primary-foreground text-xs font-medium">
+                        Selected
+                      </span>
+                    )}
                   </div>
-                )}
-                {metadata.monsters > 0 && (
-                  <div className="flex items-center gap-1 text-muted-foreground">
-                    <Users className="w-3 h-3" />
-                    <span>{metadata.monsters} monsters</span>
-                  </div>
-                )}
-                {metadata.equipment > 0 && (
-                  <div className="flex items-center gap-1 text-muted-foreground">
-                    <Sword className="w-3 h-3" />
-                    <span>{metadata.equipment} items</span>
-                  </div>
-                )}
-              </div>
-              
-              {selectedSystem === system.id && (
-                <div className="mt-3 pt-3 border-t border-primary/20">
-                  <p className="text-xs font-medium text-primary">✓ Selected</p>
                 </div>
-              )}
+                <h3 className="font-semibold text-lg mb-0.5">{system.label}</h3>
+                <p className="text-xs text-muted-foreground">{system.version}</p>
+                {summary?.supportNotes && (
+                  <p className="mt-1 text-xs text-muted-foreground">{summary.supportNotes}</p>
+                )}
+
+                <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs min-h-[3rem]">
+                  {!summary ? (
+                    <div className="col-span-2 text-muted-foreground">
+                      Loading content summary...
+                    </div>
+                  ) : visibleCategories.length > 0 ? (
+                    visibleCategories.map((category) => (
+                      <div
+                        key={category.id}
+                        className="flex items-center gap-1.5 text-muted-foreground"
+                      >
+                        {categoryIcons[category.id]}
+                        <span>
+                          {category.count} {category.label.toLowerCase()}
+                        </span>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="col-span-2 text-muted-foreground">
+                      {summary.supportLevel === 'scaffold'
+                        ? 'No loader-backed content yet'
+                        : 'No summarized content available'}
+                    </div>
+                  )}
+                </div>
+              </div>
             </button>
           );
         })}
       </div>
     </div>
   );
-};
+}

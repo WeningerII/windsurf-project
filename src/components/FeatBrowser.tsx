@@ -16,10 +16,7 @@ interface FeatBrowserProps {
   onSelectFeat?: (feat: Feat) => void;
 }
 
-export const FeatBrowser: React.FC<FeatBrowserProps> = ({
-  feats,
-  onSelectFeat,
-}) => {
+export const FeatBrowser: React.FC<FeatBrowserProps> = ({ feats, onSelectFeat }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedFeat, setExpandedFeat] = useState<string | null>(null);
   const [filterByPrerequisites, setFilterByPrerequisites] = useState(false);
@@ -73,14 +70,9 @@ export const FeatBrowser: React.FC<FeatBrowserProps> = ({
         <div className="space-y-2">
           {filteredFeats.length > 0 ? (
             filteredFeats.map((feat) => (
-              <div
-                key={feat.id}
-                className="border border-input rounded-lg overflow-hidden"
-              >
+              <div key={feat.id} className="border border-input rounded-lg overflow-hidden">
                 <button
-                  onClick={() =>
-                    setExpandedFeat(expandedFeat === feat.id ? null : feat.id)
-                  }
+                  onClick={() => setExpandedFeat(expandedFeat === feat.id ? null : feat.id)}
                   className="w-full p-4 hover:bg-muted transition-all flex justify-between items-center"
                 >
                   <div className="text-left">
@@ -102,9 +94,7 @@ export const FeatBrowser: React.FC<FeatBrowserProps> = ({
 
                     {feat.prerequisites && feat.prerequisites.length > 0 && (
                       <div>
-                        <h5 className="font-medium text-sm mb-2">
-                          Prerequisites:
-                        </h5>
+                        <h5 className="font-medium text-sm mb-2">Prerequisites:</h5>
                         <ul className="list-disc list-inside space-y-1">
                           {feat.prerequisites.map((prereq, idx) => (
                             <li key={idx} className="text-sm">

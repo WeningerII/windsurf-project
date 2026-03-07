@@ -45,12 +45,14 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({
 
   const handleAddItem = () => {
     if (formData.name && onAddItem) {
-      const quantity = typeof formData.quantity === 'number' && Number.isFinite(formData.quantity)
-        ? formData.quantity
-        : 1;
-      const weight = typeof formData.weight === 'number' && Number.isFinite(formData.weight)
-        ? formData.weight
-        : 0;
+      const quantity =
+        typeof formData.quantity === 'number' && Number.isFinite(formData.quantity)
+          ? formData.quantity
+          : 1;
+      const weight =
+        typeof formData.weight === 'number' && Number.isFinite(formData.weight)
+          ? formData.weight
+          : 0;
       onAddItem({
         id: generateUUID(),
         name: formData.name,
@@ -98,9 +100,7 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({
               <input
                 type="text"
                 value={formData.name || ''}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="w-full px-3 py-2 border border-input rounded-lg"
                 placeholder="e.g., Longsword"
               />
@@ -141,9 +141,7 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({
               <input
                 type="text"
                 value={formData.value || '0 gp'}
-                onChange={(e) =>
-                  setFormData({ ...formData, value: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, value: e.target.value })}
                 className="w-full px-3 py-2 border border-input rounded-lg"
                 placeholder="e.g., 15 gp"
               />
@@ -153,9 +151,7 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({
             <label className="block text-sm font-medium mb-2">Description</label>
             <textarea
               value={formData.description || ''}
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               className="w-full px-3 py-2 border border-input rounded-lg"
               placeholder="Optional description"
               rows={3}
@@ -193,16 +189,15 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({
                     <span className="font-medium">Qty:</span> {item.quantity}
                   </div>
                   <div>
-                    <span className="font-medium">Weight:</span> {(item.weight * item.quantity).toFixed(1)} lbs
+                    <span className="font-medium">Weight:</span>{' '}
+                    {(item.weight * item.quantity).toFixed(1)} lbs
                   </div>
                   <div>
                     <span className="font-medium">Value:</span> {item.value}
                   </div>
                 </div>
                 {item.description && (
-                  <p className="text-sm text-muted-foreground mt-2">
-                    {item.description}
-                  </p>
+                  <p className="text-sm text-muted-foreground mt-2">{item.description}</p>
                 )}
               </div>
               <div className="flex gap-2">

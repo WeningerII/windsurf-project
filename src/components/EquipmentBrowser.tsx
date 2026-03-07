@@ -25,15 +25,9 @@ export const EquipmentBrowser: React.FC<EquipmentBrowserProps> = ({
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [selectedRarity, setSelectedRarity] = useState<string | null>(null);
 
-  const types = useMemo(
-    () => [...new Set(equipment.map((e) => e.type))].sort(),
-    [equipment]
-  );
+  const types = useMemo(() => [...new Set(equipment.map((e) => e.type))].sort(), [equipment]);
 
-  const rarities = useMemo(
-    () => [...new Set(equipment.map((e) => e.rarity))].sort(),
-    [equipment]
-  );
+  const rarities = useMemo(() => [...new Set(equipment.map((e) => e.rarity))].sort(), [equipment]);
 
   const filteredEquipment = useMemo(() => {
     return equipment.filter((item) => {
@@ -42,8 +36,7 @@ export const EquipmentBrowser: React.FC<EquipmentBrowserProps> = ({
         item.description.toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchesType = selectedType === null || item.type === selectedType;
-      const matchesRarity =
-        selectedRarity === null || item.rarity === selectedRarity;
+      const matchesRarity = selectedRarity === null || item.rarity === selectedRarity;
 
       return matchesSearch && matchesType && matchesRarity;
     });
@@ -138,15 +131,11 @@ export const EquipmentBrowser: React.FC<EquipmentBrowserProps> = ({
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-medium">{item.cost}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {item.weight} lbs
-                    </p>
+                    <p className="text-xs text-muted-foreground">{item.weight} lbs</p>
                   </div>
                 </div>
 
-                <p className="text-sm text-muted-foreground mb-2">
-                  {item.description}
-                </p>
+                <p className="text-sm text-muted-foreground mb-2">{item.description}</p>
 
                 {item.properties && item.properties.length > 0 && (
                   <div className="flex flex-wrap gap-1">
