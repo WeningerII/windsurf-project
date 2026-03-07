@@ -116,9 +116,13 @@ describe('errorLogger', () => {
     const logSpy = vi.spyOn(errorLogger, 'log').mockImplementation(() => {});
 
     const success = safeExecute(() => 7, 99, ErrorCategory.VALIDATION);
-    const fallback = safeExecute(() => {
-      throw new Error('nope');
-    }, 99, ErrorCategory.VALIDATION);
+    const fallback = safeExecute(
+      () => {
+        throw new Error('nope');
+      },
+      99,
+      ErrorCategory.VALIDATION
+    );
 
     expect(success).toBe(7);
     expect(fallback).toBe(99);

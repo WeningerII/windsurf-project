@@ -21,7 +21,9 @@ const monsters: Monster[] = [
     abilities: { str: 8, dex: 14, con: 10, int: 10, wis: 8, cha: 8 },
     senses: ['darkvision 60 ft.'],
     languages: ['Common', 'Goblin'],
-    specialAbilities: [{ name: 'Nimble Escape', description: 'Can Disengage or Hide as a bonus action.' }],
+    specialAbilities: [
+      { name: 'Nimble Escape', description: 'Can Disengage or Hide as a bonus action.' },
+    ],
     actions: [{ name: 'Scimitar', description: 'Melee weapon attack.' }],
   },
   {

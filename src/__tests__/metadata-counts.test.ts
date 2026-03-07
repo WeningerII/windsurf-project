@@ -8,12 +8,22 @@
  */
 
 import { dnd5eMetadata } from '../data/dnd/5e-2014/metadata';
-import { dnd5eSpells, dnd5eSpellsByLevel, dnd5eSpellsBySchool } from '../data/dnd/5e-2014/spells/index';
+import {
+  dnd5eSpells,
+  dnd5eSpellsByLevel,
+  dnd5eSpellsBySchool,
+} from '../data/dnd/5e-2014/spells/index';
 import { dnd5eClasses } from '../data/dnd/5e-2014/classes/index';
 import { dnd5eSpecies } from '../data/dnd/5e-2014/species/index';
 import { dnd5eBackgrounds } from '../data/dnd/5e-2014/backgrounds/index';
 import { dnd5eMonsters } from '../data/dnd/5e-2014/monsters/index';
-import { dnd5eWeapons, dnd5eArmor, dnd5eShields, dnd5eAdventuringGear, dnd5eMagicItems } from '../data/dnd/5e-2014/equipment/index';
+import {
+  dnd5eWeapons,
+  dnd5eArmor,
+  dnd5eShields,
+  dnd5eAdventuringGear,
+  dnd5eMagicItems,
+} from '../data/dnd/5e-2014/equipment/index';
 
 import { dnd5e2024Metadata } from '../data/dnd/5e-2024/metadata';
 import { dnd5e2024AllSpells } from '../data/dnd/5e-2024/spells/index';
@@ -21,7 +31,12 @@ import { dnd5e2024Classes } from '../data/dnd/5e-2024/classes/index';
 import { dnd5e2024Species } from '../data/dnd/5e-2024/species/index';
 import { dnd5e2024Backgrounds } from '../data/dnd/5e-2024/backgrounds/index';
 import { dnd5e2024Monsters } from '../data/dnd/5e-2024/monsters/index';
-import { dnd5e2024Weapons, dnd5e2024Armor, dnd5e2024Gear, dnd5e2024MagicItems } from '../data/dnd/5e-2024/equipment/index';
+import {
+  dnd5e2024Weapons,
+  dnd5e2024Armor,
+  dnd5e2024Gear,
+  dnd5e2024MagicItems,
+} from '../data/dnd/5e-2024/equipment/index';
 
 import { dnd35eMetadata } from '../data/dnd/3.5e/metadata';
 import { dnd35eSpells } from '../data/dnd/3.5e/spells/index';

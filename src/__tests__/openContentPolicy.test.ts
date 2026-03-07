@@ -12,7 +12,9 @@ describe('openContentPolicy', () => {
     expect(extractSourceAttribution({ source: ' SRD 5.1 ' })).toBe('SRD 5.1');
     expect(extractSourceAttribution({ source: { book: 'Core Rulebook' } })).toBe('Core Rulebook');
     expect(extractSourceAttribution({ source: { name: 'CRB' } })).toBe('CRB');
-    expect(extractSourceAttribution({ sourceBook: { name: 'Hero\'s Handbook' } })).toBe("Hero's Handbook");
+    expect(extractSourceAttribution({ sourceBook: { name: "Hero's Handbook" } })).toBe(
+      "Hero's Handbook"
+    );
   });
 
   it('returns null when source attribution is missing or invalid', () => {
@@ -59,12 +61,15 @@ describe('openContentPolicy', () => {
       'spells',
       'classes',
       'species',
+      'backgrounds',
       'monsters',
       'equipment',
       'feats',
       'powers',
       'advantages',
       'archetypes',
+      'complications',
+      'powerModifiers',
     ];
 
     for (const system of systems) {

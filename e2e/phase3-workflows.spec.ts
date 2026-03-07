@@ -1,48 +1,27 @@
 import { Buffer } from 'node:buffer';
 import { expect, test, type Page } from '@playwright/test';
 
-async function selectSystemAndStartCreation(page: Page) {
-  await page.getByRole('button', { name: /D&D 5e \(2024\)/i }).click();
+/**
+ * Select a system card and click "Create New Character".
+ * The current UI flow: click system card → action bar appears → click create.
+ * This opens the character sheet directly (no wizard).
+ */
+async function createCharacterForSystem(page: Page, systemPattern: RegExp = /D&D 5e \(2024\)/i) {
+  await page.getByRole('button', { name: systemPattern }).click();
   await page.getByRole('button', { name: /Create New Character/i }).click();
-  await expect(page.getByText('Basic Information')).toBeVisible();
+  // Sheet opens — the header shows "New Character" and the Back button
+  await expect(page.getByRole('button', { name: /^Back$/i })).toBeVisible();
 }
 
-async function createCharacter(
-  page: Page,
-  {
-    name,
-    level = '1',
-    selectClass = true,
-    selectSpecies = true,
-  }: {
-    name: string;
-    level?: string;
-    selectClass?: boolean;
-    selectSpecies?: boolean;
-  }
-) {
-  await page.getByPlaceholder('Enter character name').fill(name);
-  await page.getByRole('spinbutton').fill(level);
-
-  await page.getByRole('button', { name: /^Next$/i }).click();
-  if (selectClass) {
-    const fighter = page.getByRole('button', { name: /fighter/i });
-    await expect(fighter).toBeVisible({ timeout: 10000 });
-    await fighter.click();
-  }
-
-  await page.getByRole('button', { name: /^Next$/i }).click();
-  if (selectSpecies) {
-    const human = page.getByRole('button', { name: /human/i });
-    await expect(human).toBeVisible({ timeout: 10000 });
-    await human.click();
-  }
-
-  for (let i = 0; i < 4; i += 1) {
-    await page.getByRole('button', { name: /^Next$/i }).click();
-  }
-  await page.getByRole('button', { name: /Create Character/i }).click();
-  await expect(page.getByText('Character Information')).toBeVisible();
+/**
+ * Rename the character via the sheet's name input.
+ * Most systems use title="Character name"; Daggerheart currently uses a placeholder.
+ */
+async function renameCharacter(page: Page, name: string) {
+  const titledInput = page.locator('input[title="Character name"]');
+  const nameInput =
+    (await titledInput.count()) > 0 ? titledInput.first() : page.getByPlaceholder('Character Name');
+  await nameInput.fill(name);
 }
 
 test.beforeEach(async ({ page }) => {
@@ -59,62 +38,103 @@ test('renders landing page with system choices', async ({ page }) => {
   await expect(page.getByRole('button', { name: /Pathfinder 2e/i })).toBeVisible();
 });
 
-test('creates a D&D 5e-2024 fighter and displays character sheet', async ({ page }) => {
-  await selectSystemAndStartCreation(page);
-  await createCharacter(page, { name: 'E2E Fighter', level: '3' });
+test('creates a D&D 5e-2024 character and displays character sheet', async ({ page }) => {
+  await createCharacterForSystem(page);
+  await renameCharacter(page, 'E2E Fighter');
 
-  await expect(page.getByLabel('Character Name')).toHaveValue('E2E Fighter');
-  await expect(page.getByLabel(/^Class$/)).toHaveValue('fighter');
-  await expect(page.getByLabel('Species/Race')).toHaveValue('human');
+  // Verify the name input has the new value
+  const nameInput = page.locator('input[title="Character name"]');
+  await expect(nameInput).toHaveValue('E2E Fighter');
+
+  // Verify the header shows the character name
+  await expect(page.getByRole('heading', { name: 'E2E Fighter' })).toBeVisible();
 });
 
 test('persists created character after reload', async ({ page }) => {
-  await selectSystemAndStartCreation(page);
-  await createCharacter(page, { name: 'Persistent E2E Hero', selectClass: false, selectSpecies: false });
+  await createCharacterForSystem(page);
+  await renameCharacter(page, 'Persistent E2E Hero');
 
+  // Go back to character list
   await page.getByRole('button', { name: /^Back$/i }).click();
   await expect(page.getByRole('heading', { name: 'Your Characters' })).toBeVisible();
   await expect(page.getByText('Persistent E2E Hero')).toBeVisible();
 
+  // Reload and verify persistence
   await page.reload();
   await expect(page.getByRole('heading', { name: 'Your Characters' })).toBeVisible();
   await expect(page.getByText('Persistent E2E Hero')).toBeVisible();
 });
 
-test('clears all characters from Data Management', async ({ page }) => {
-  await selectSystemAndStartCreation(page);
-  await createCharacter(page, { name: 'Clearable E2E Hero', selectClass: false, selectSpecies: false });
+test('clears all characters', async ({ page }) => {
+  await createCharacterForSystem(page);
+  await renameCharacter(page, 'Clearable E2E Hero');
 
   await page.getByRole('button', { name: /^Back$/i }).click();
   await expect(page.getByRole('heading', { name: 'Your Characters' })).toBeVisible();
 
-  page.once('dialog', (dialog) => dialog.accept());
-  await page.getByRole('button', { name: /Clear All Data/i }).click();
+  // Confirm the in-app modal and clear everything
+  await page.getByRole('button', { name: /Clear All Characters/i }).click();
+  await expect(page.getByRole('heading', { name: /Delete All Characters/i })).toBeVisible();
+  await page.getByRole('button', { name: /^Delete$/i }).click();
 
-  await expect(page.getByText('All characters deleted successfully.')).toBeVisible();
+  // Characters section should disappear
   await expect(page.getByRole('heading', { name: 'Your Characters' })).toHaveCount(0);
 });
 
 test('imports a character snapshot through the file input', async ({ page }) => {
-  await selectSystemAndStartCreation(page);
-  await createCharacter(page, { name: 'Importable E2E Hero', selectClass: false, selectSpecies: false });
+  await createCharacterForSystem(page);
+  await renameCharacter(page, 'Importable E2E Hero');
 
   await page.getByRole('button', { name: /^Back$/i }).click();
   await expect(page.getByRole('heading', { name: 'Your Characters' })).toBeVisible();
 
-  const exportSnapshot = await page.evaluate(() => localStorage.getItem('rpg-characters'));
+  // Grab the V2 storage snapshot
+  const exportSnapshot = await page.evaluate(() => localStorage.getItem('rpg-documents-v2'));
   expect(exportSnapshot).toBeTruthy();
 
-  page.once('dialog', (dialog) => dialog.accept());
-  await page.getByRole('button', { name: /Clear All Data/i }).click();
-  await expect(page.getByText('All characters deleted successfully.')).toBeVisible();
+  // Clear all characters
+  await page.getByRole('button', { name: /Clear All Characters/i }).click();
+  await expect(page.getByRole('heading', { name: /Delete All Characters/i })).toBeVisible();
+  await page.getByRole('button', { name: /^Delete$/i }).click();
+  await expect(page.getByRole('heading', { name: 'Your Characters' })).toHaveCount(0);
 
-  await page.locator('input[aria-label="Import character file"]').setInputFiles({
+  // Select a system so the Import button appears in the action bar
+  await page.getByRole('button', { name: /D&D 5e \(2024\)/i }).click();
+
+  // The Import button triggers a hidden file input via JS.
+  // We intercept the file chooser event to supply our file.
+  const [fileChooser] = await Promise.all([
+    page.waitForEvent('filechooser'),
+    page.getByRole('button', { name: /Import Character/i }).click(),
+  ]);
+
+  await fileChooser.setFiles({
     name: 'characters.json',
     mimeType: 'application/json',
     buffer: Buffer.from(exportSnapshot ?? '', 'utf-8'),
   });
 
-  await expect(page.getByText('Character Information')).toBeVisible();
-  await expect(page.getByLabel('Character Name')).toHaveValue('Importable E2E Hero');
+  // After import, the sheet should open with the imported character
+  await expect(page.getByRole('button', { name: /^Back$/i })).toBeVisible();
+  const nameInput = page.locator('input[title="Character name"]');
+  await expect(nameInput).toHaveValue('Importable E2E Hero');
+});
+
+test('creates and persists a Daggerheart scaffold character', async ({ page }) => {
+  await createCharacterForSystem(page, /Daggerheart/i);
+  await expect(page.getByText('Attributes')).toBeVisible();
+  await renameCharacter(page, 'Hopebound E2E Hero');
+
+  await page.getByRole('button', { name: /Add Experience/i }).click();
+  await expect(page.locator('input[placeholder="Character Name"]')).toHaveValue(
+    'Hopebound E2E Hero'
+  );
+
+  await page.getByRole('button', { name: /^Back$/i }).click();
+  await expect(page.getByRole('heading', { name: 'Your Characters' })).toBeVisible();
+  await expect(page.getByText('Hopebound E2E Hero')).toBeVisible();
+
+  await page.reload();
+  await expect(page.getByRole('heading', { name: 'Your Characters' })).toBeVisible();
+  await expect(page.getByText('Hopebound E2E Hero')).toBeVisible();
 });

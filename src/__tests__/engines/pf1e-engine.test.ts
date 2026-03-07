@@ -23,11 +23,19 @@ describe('Pf1eEngine', () => {
       const doc = makeDoc({
         baseAttributes: { str: 16, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
         sizeCategory: 'medium',
-        classLevels: [{
-          classId: 'fighter', level: 4, hitDieRolls: [10, 8, 7, 6],
-          bab: 'full', fortSave: 'good', refSave: 'poor', willSave: 'poor',
-          skillPointsPerLevel: 2, favoredClassBonus: 'hp',
-        }],
+        classLevels: [
+          {
+            classId: 'fighter',
+            level: 4,
+            hitDieRolls: [10, 8, 7, 6],
+            bab: 'full',
+            fortSave: 'good',
+            refSave: 'poor',
+            willSave: 'poor',
+            skillPointsPerLevel: 2,
+            favoredClassBonus: 'hp',
+          },
+        ],
       });
       const result = engine.prepareData(doc);
       // BAB(4) + STR(3) + size(0) = 7
@@ -38,11 +46,19 @@ describe('Pf1eEngine', () => {
       const doc = makeDoc({
         baseAttributes: { str: 14, dex: 16, con: 10, int: 10, wis: 10, cha: 10 },
         sizeCategory: 'small',
-        classLevels: [{
-          classId: 'rogue', level: 3, hitDieRolls: [8, 5, 6],
-          bab: 'three-quarter', fortSave: 'poor', refSave: 'good', willSave: 'poor',
-          skillPointsPerLevel: 8, favoredClassBonus: 'skill',
-        }],
+        classLevels: [
+          {
+            classId: 'rogue',
+            level: 3,
+            hitDieRolls: [8, 5, 6],
+            bab: 'three-quarter',
+            fortSave: 'poor',
+            refSave: 'good',
+            willSave: 'poor',
+            skillPointsPerLevel: 8,
+            favoredClassBonus: 'skill',
+          },
+        ],
       });
       const result = engine.prepareData(doc);
       // BAB = floor(3*3/4) = 2, STR +2, DEX +3, size -1
@@ -53,11 +69,19 @@ describe('Pf1eEngine', () => {
     it('adds favored class HP bonus', () => {
       const doc = makeDoc({
         baseAttributes: { str: 10, dex: 10, con: 12, int: 10, wis: 10, cha: 10 },
-        classLevels: [{
-          classId: 'fighter', level: 3, hitDieRolls: [10, 7, 5],
-          bab: 'full', fortSave: 'good', refSave: 'poor', willSave: 'poor',
-          skillPointsPerLevel: 2, favoredClassBonus: 'hp',
-        }],
+        classLevels: [
+          {
+            classId: 'fighter',
+            level: 3,
+            hitDieRolls: [10, 7, 5],
+            bab: 'full',
+            fortSave: 'good',
+            refSave: 'poor',
+            willSave: 'poor',
+            skillPointsPerLevel: 2,
+            favoredClassBonus: 'hp',
+          },
+        ],
         hitPoints: { current: 50, max: 50, temp: 0 },
       });
       const result = engine.prepareData(doc);
@@ -68,11 +92,19 @@ describe('Pf1eEngine', () => {
     it('calculates saves with good/poor progressions', () => {
       const doc = makeDoc({
         baseAttributes: { str: 10, dex: 14, con: 10, int: 10, wis: 10, cha: 10 },
-        classLevels: [{
-          classId: 'rogue', level: 6, hitDieRolls: [8, 5, 6, 4, 7, 5],
-          bab: 'three-quarter', fortSave: 'poor', refSave: 'good', willSave: 'poor',
-          skillPointsPerLevel: 8, favoredClassBonus: 'skill',
-        }],
+        classLevels: [
+          {
+            classId: 'rogue',
+            level: 6,
+            hitDieRolls: [8, 5, 6, 4, 7, 5],
+            bab: 'three-quarter',
+            fortSave: 'poor',
+            refSave: 'good',
+            willSave: 'poor',
+            skillPointsPerLevel: 8,
+            favoredClassBonus: 'skill',
+          },
+        ],
         saves: {
           fortitude: { base: 0, ability: 0, misc: 0, total: 0 },
           reflex: { base: 0, ability: 0, misc: 0, total: 0 },
@@ -84,6 +116,51 @@ describe('Pf1eEngine', () => {
       expect(result.system.saves.reflex.total).toBe(7);
       // Poor fort at level 6: floor(6/3) = 2, CON mod 0
       expect(result.system.saves.fortitude.total).toBe(2);
+    });
+
+    it('tracks favored class skill bonus selections', () => {
+      const doc = makeDoc({
+        classLevels: [
+          {
+            classId: 'rogue',
+            level: 4,
+            hitDieRolls: [8, 6, 6, 5],
+            bab: 'three-quarter',
+            fortSave: 'poor',
+            refSave: 'good',
+            willSave: 'poor',
+            skillPointsPerLevel: 8,
+            favoredClassBonus: 'skill',
+          },
+        ],
+      });
+      const result = engine.prepareData(doc);
+      expect(result.system.favoredClassSkillBonus).toBe(4);
+    });
+
+    it('auto-populates PF1e Vancian spell slots from class tables', () => {
+      const doc = makeDoc({
+        classLevels: [
+          {
+            classId: 'wizard',
+            level: 3,
+            hitDieRolls: [6, 4, 4],
+            bab: 'half',
+            fortSave: 'poor',
+            refSave: 'poor',
+            willSave: 'good',
+            skillPointsPerLevel: 2,
+            favoredClassBonus: 'skill',
+          },
+        ],
+        spellsPerDay: {
+          1: { total: 99, used: 8 },
+          2: { total: 99, used: 4 },
+        },
+      });
+      const result = engine.prepareData(doc);
+      expect(result.system.spellsPerDay?.[1]).toEqual({ total: 2, used: 2 });
+      expect(result.system.spellsPerDay?.[2]).toEqual({ total: 1, used: 1 });
     });
   });
 

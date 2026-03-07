@@ -68,6 +68,28 @@ describe('Dnd5eEngine', () => {
       const result = engine.prepareData(doc);
       expect(result.system.initiative).toBe(4);
     });
+
+    it('preserves spent hit dice between prepareData calls', () => {
+      const doc = makeDoc({
+        classLevels: [{ classId: 'fighter', level: 3, hitDieRolls: [10, 7, 6] }],
+        hitDice: [{ die: 'd10', total: 3, remaining: 1 }],
+      });
+      const result = engine.prepareData(doc);
+      expect(result.system.hitDice[0].remaining).toBe(1);
+    });
+
+    it('applies exhaustion level 4 by halving max HP', () => {
+      const doc = makeDoc({
+        baseAttributes: { str: 10, dex: 10, con: 14, int: 10, wis: 10, cha: 10 },
+        classLevels: [{ classId: 'fighter', level: 2, hitDieRolls: [10, 8] }],
+        exhaustionLevel: 4,
+        hitPoints: { current: 50, max: 50, temp: 0 },
+      });
+      const result = engine.prepareData(doc);
+      // Base max HP = (10+2) + (8+2) = 22, exhaustion 4 halves to 11.
+      expect(result.system.hitPoints.max).toBe(11);
+      expect(result.system.hitPoints.current).toBe(11);
+    });
   });
 
   describe('rollCheck', () => {
@@ -116,6 +138,26 @@ describe('Dnd5eEngine', () => {
       // DEX mod +3, expertise = prof*2 = 4, total = 7
       expect(result.formula).toBe('1d20 + 7');
     });
+
+    it('applies disadvantage on ability checks while poisoned', async () => {
+      const doc = makeDoc({
+        baseAttributes: { str: 14, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+        conditions: [{ id: 'poisoned', name: 'Poisoned' }],
+      });
+      const result = await engine.rollCheck(doc, 'str');
+      expect(result.formula).toBe('2d20kl1 + 2');
+      expect(result.flavor).toBe('STR Check (Disadvantage)');
+    });
+
+    it('auto-fails STR/DEX saves for paralyzed targets', async () => {
+      const doc = makeDoc({
+        baseAttributes: { str: 16, dex: 14, con: 10, int: 10, wis: 10, cha: 10 },
+        conditions: [{ id: 'paralyzed', name: 'Paralyzed' }],
+      });
+      const result = await engine.rollCheck(doc, 'save-dex');
+      expect(result.formula).toBe('Auto-fail');
+      expect(result.flavor).toContain('Condition auto-fail');
+    });
   });
 
   describe('applyDamage', () => {
@@ -136,6 +178,16 @@ describe('Dnd5eEngine', () => {
       const doc = makeDoc({ hitPoints: { current: 5, max: 20, temp: 0 } });
       const result = engine.applyDamage(doc, 100, 'force');
       expect(result.system.hitPoints.current).toBe(0);
+    });
+
+    it('heals when damage amount is negative and clears death saves when conscious', () => {
+      const doc = makeDoc({
+        hitPoints: { current: 0, max: 20, temp: 0 },
+        deathSaves: { successes: 2, failures: 1 },
+      });
+      const result = engine.applyDamage(doc, -5, 'healing');
+      expect(result.system.hitPoints.current).toBe(5);
+      expect(result.system.deathSaves).toEqual({ successes: 0, failures: 0 });
     });
   });
 });

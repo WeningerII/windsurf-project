@@ -5,15 +5,15 @@ describe('D&D 5e-2014 Channel Divinity Options', () => {
   it('should have at least 12 options', () => {
     expect(channelDivinityOptions.length).toBeGreaterThanOrEqual(12);
   });
-  
+
   it('should have unique IDs', () => {
-    const ids = channelDivinityOptions.map(o => o.id);
+    const ids = channelDivinityOptions.map((o) => o.id);
     const uniqueIds = new Set(ids);
     expect(uniqueIds.size).toBe(ids.length);
   });
-  
+
   it('should all have valid structure', () => {
-    channelDivinityOptions.forEach(option => {
+    channelDivinityOptions.forEach((option) => {
       expect(option.id).toMatch(/^[a-z0-9-]+$/);
       expect(option.name).toBeTruthy();
       expect(option.description).toBeTruthy();
@@ -24,47 +24,47 @@ describe('D&D 5e-2014 Channel Divinity Options', () => {
       expect(option.minLevel).toBeGreaterThan(0);
     });
   });
-  
+
   it('should have version numbers', () => {
-    channelDivinityOptions.forEach(option => {
+    channelDivinityOptions.forEach((option) => {
       expect(option.version).toMatch(/^\d+\.\d+\.\d+$/);
     });
   });
-  
+
   it('should include Turn Undead', () => {
-    const turnUndead = channelDivinityOptions.find(o => o.id === 'turn-undead');
+    const turnUndead = channelDivinityOptions.find((o) => o.id === 'turn-undead');
     expect(turnUndead).toBeDefined();
     expect(turnUndead?.domain).toBeUndefined();
     expect(turnUndead?.minLevel).toBe(2);
   });
-  
+
   it('should have valid domains when present', () => {
     const validDomains = ['knowledge', 'life', 'light', 'nature', 'tempest', 'trickery', 'war'];
-    
-    channelDivinityOptions.forEach(option => {
+
+    channelDivinityOptions.forEach((option) => {
       if (option.domain !== undefined) {
         expect(validDomains).toContain(option.domain);
       }
     });
   });
-  
+
   it('should include one option per domain at level 2', () => {
     const domains = ['knowledge', 'life', 'light', 'nature', 'tempest', 'trickery', 'war'];
-    
-    domains.forEach(domain => {
+
+    domains.forEach((domain) => {
       const level2Options = channelDivinityOptions.filter(
-        o => o.domain === domain && o.minLevel === 2
+        (o) => o.domain === domain && o.minLevel === 2
       );
       expect(level2Options.length).toBeGreaterThanOrEqual(1);
     });
   });
-  
+
   it('should have appropriate level requirements', () => {
-    channelDivinityOptions.forEach(option => {
+    channelDivinityOptions.forEach((option) => {
       expect([2, 6, 8, 17]).toContain(option.minLevel);
     });
   });
-  
+
   it('should include domain-specific options', () => {
     const domainOptions = [
       'preserve-life',
@@ -73,15 +73,15 @@ describe('D&D 5e-2014 Channel Divinity Options', () => {
       'invoke-duplicity',
       'radiance-of-the-dawn',
     ];
-    
-    const optionIds = channelDivinityOptions.map(o => o.id);
-    domainOptions.forEach(domain => {
+
+    const optionIds = channelDivinityOptions.map((o) => o.id);
+    domainOptions.forEach((domain) => {
       expect(optionIds).toContain(domain);
     });
   });
-  
+
   it('should have reaction-based options', () => {
-    const reactionOptions = channelDivinityOptions.filter(o => o.actionType === 'reaction');
+    const reactionOptions = channelDivinityOptions.filter((o) => o.actionType === 'reaction');
     expect(reactionOptions.length).toBeGreaterThan(0);
   });
 });

@@ -66,6 +66,70 @@ describe('Mam3eEngine', () => {
       // Defense ranks = 5+3+2+0+4 = 14, cost = 14 * 1 = 14
       expect(result.system.powerPoints.spent.defenses).toBe(14);
     });
+
+    it('calculates power costs using rank plus extras/flaws modifiers', () => {
+      const doc = makeDoc({
+        powers: [
+          {
+            id: 'blast',
+            name: 'Blast',
+            system: 'mam3e',
+            source: 'test',
+            type: 'attack',
+            action: 'standard',
+            range: 'ranged',
+            duration: 'instant',
+            baseCost: 2,
+            perRank: true,
+            rank: 4,
+            extras: ['accurate', 'subtle'],
+            flaws: ['limited', 'activation'],
+            modifierRanks: {
+              accurate: 1,
+              subtle: 1,
+              limited: 1,
+              activation: 1,
+            },
+            description: '',
+            effects: [],
+          },
+        ],
+      });
+      const result = engine.prepareData(doc);
+      // (base 2 + accurate 1 + limited -1) * rank 4 + subtle +1 + activation -1 = 8
+      expect(result.system.powerPoints.spent.powers).toBe(8);
+    });
+
+    it('flags close attack/effect PL cap violations', () => {
+      const doc = makeDoc({
+        powerLevel: 8, // cap = 16
+        abilities: { str: 0, sta: 0, agi: 0, dex: 0, fgt: 10, int: 0, awe: 0, pre: 0 },
+        skills: {
+          'close-combat': { rank: 7, total: 0 },
+        },
+        powers: [
+          {
+            id: 'strike',
+            name: 'Strike',
+            system: 'mam3e',
+            source: 'test',
+            type: 'attack',
+            action: 'standard',
+            range: 'close',
+            duration: 'instant',
+            baseCost: 1,
+            perRank: true,
+            rank: 5,
+            description: '',
+            effects: [],
+          },
+        ],
+      });
+      const result = engine.prepareData(doc);
+      expect(
+        result.system.plViolations?.some((entry) => entry.label === 'Close Attack + Effect')
+      ).toBe(true);
+    });
   });
 
   describe('rollCheck', () => {
@@ -91,11 +155,52 @@ describe('Mam3eEngine', () => {
   });
 
   describe('applyDamage', () => {
-    it('is a no-op (M&M uses condition track, not HP)', () => {
+    it('applies bruised on a low toughness failure (1-4)', () => {
       const doc = makeDoc();
-      const result = engine.applyDamage(doc, 10, 'damage');
-      // M&M doesn't have HP — applyDamage should return document unchanged
-      expect(result).toBe(doc);
+      const result = engine.applyDamage(doc, 3, 'damage');
+      expect(result.system.conditionTrack.bruised).toBe(1);
+      expect(result.system.conditionTrack.dazed).toBe(false);
+      expect(result.system.conditionTrack.staggered).toBe(false);
+      expect(result.system.conditionTrack.incapacitated).toBe(false);
+    });
+
+    it('applies dazed on a medium toughness failure (5-9)', () => {
+      const doc = makeDoc();
+      const result = engine.applyDamage(doc, 7, 'damage');
+      expect(result.system.conditionTrack.bruised).toBe(1);
+      expect(result.system.conditionTrack.dazed).toBe(true);
+      expect(result.system.conditionTrack.staggered).toBe(false);
+      expect(result.system.conditionTrack.incapacitated).toBe(false);
+    });
+
+    it('applies staggered on a high toughness failure (10-14)', () => {
+      const doc = makeDoc();
+      const result = engine.applyDamage(doc, 12, 'damage');
+      expect(result.system.conditionTrack.bruised).toBe(1);
+      expect(result.system.conditionTrack.dazed).toBe(false);
+      expect(result.system.conditionTrack.staggered).toBe(true);
+      expect(result.system.conditionTrack.incapacitated).toBe(false);
+    });
+
+    it('applies incapacitated on a severe toughness failure (15+)', () => {
+      const doc = makeDoc();
+      const result = engine.applyDamage(doc, 18, 'damage');
+      expect(result.system.conditionTrack.incapacitated).toBe(true);
+    });
+
+    it('escalates to staggered when already dazed and failing by 5+', () => {
+      const doc = makeDoc({
+        conditionTrack: {
+          bruised: 2,
+          dazed: true,
+          staggered: false,
+          incapacitated: false,
+        },
+      });
+      const result = engine.applyDamage(doc, 6, 'damage');
+      expect(result.system.conditionTrack.bruised).toBe(3);
+      expect(result.system.conditionTrack.dazed).toBe(true);
+      expect(result.system.conditionTrack.staggered).toBe(true);
     });
   });
 });

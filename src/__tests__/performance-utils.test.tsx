@@ -34,9 +34,7 @@ describe('performance utilities', () => {
   });
 
   it('measures sync operations and stores metrics', () => {
-    vi.spyOn(performance, 'now')
-      .mockReturnValueOnce(0)
-      .mockReturnValueOnce(25);
+    vi.spyOn(performance, 'now').mockReturnValueOnce(0).mockReturnValueOnce(25);
 
     const result = measurePerformance('fast-sync', () => 42);
     const metrics = getPerformanceMetrics();
@@ -48,9 +46,7 @@ describe('performance utilities', () => {
 
   it('logs slow sync operations', () => {
     const logSpy = vi.spyOn(errorLogger, 'log').mockImplementation(() => {});
-    vi.spyOn(performance, 'now')
-      .mockReturnValueOnce(10)
-      .mockReturnValueOnce(1250);
+    vi.spyOn(performance, 'now').mockReturnValueOnce(10).mockReturnValueOnce(1250);
 
     measurePerformance('slow-sync', () => 'ok');
 
@@ -65,9 +61,7 @@ describe('performance utilities', () => {
 
   it('logs and rethrows sync errors', () => {
     const logSpy = vi.spyOn(errorLogger, 'log').mockImplementation(() => {});
-    vi.spyOn(performance, 'now')
-      .mockReturnValueOnce(0)
-      .mockReturnValueOnce(5);
+    vi.spyOn(performance, 'now').mockReturnValueOnce(0).mockReturnValueOnce(5);
 
     expect(() =>
       measurePerformance('explode-sync', () => {
@@ -86,9 +80,7 @@ describe('performance utilities', () => {
 
   it('measures async operations and logs slow async calls', async () => {
     const logSpy = vi.spyOn(errorLogger, 'log').mockImplementation(() => {});
-    vi.spyOn(performance, 'now')
-      .mockReturnValueOnce(100)
-      .mockReturnValueOnce(2300);
+    vi.spyOn(performance, 'now').mockReturnValueOnce(100).mockReturnValueOnce(2300);
 
     const result = await measurePerformanceAsync('slow-async', async () => 'done');
 
@@ -104,9 +96,7 @@ describe('performance utilities', () => {
 
   it('logs and rethrows async errors', async () => {
     const logSpy = vi.spyOn(errorLogger, 'log').mockImplementation(() => {});
-    vi.spyOn(performance, 'now')
-      .mockReturnValueOnce(200)
-      .mockReturnValueOnce(450);
+    vi.spyOn(performance, 'now').mockReturnValueOnce(200).mockReturnValueOnce(450);
 
     await expect(
       measurePerformanceAsync('explode-async', async () => {
@@ -191,9 +181,7 @@ describe('performance utilities', () => {
   });
 
   it('can clear captured performance metrics', () => {
-    vi.spyOn(performance, 'now')
-      .mockReturnValueOnce(0)
-      .mockReturnValueOnce(10);
+    vi.spyOn(performance, 'now').mockReturnValueOnce(0).mockReturnValueOnce(10);
 
     measurePerformance('clear-target', () => true);
     expect(getPerformanceMetrics()).toHaveLength(1);

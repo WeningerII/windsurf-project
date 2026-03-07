@@ -21,7 +21,18 @@ describe('Dnd35eEngine', () => {
   describe('prepareData', () => {
     it('calculates BAB from full progression class', () => {
       const doc = makeDoc({
-        classLevels: [{ classId: 'fighter', level: 5, hitDieRolls: [10, 8, 7, 6, 9], bab: 'full', fortSave: 'good', refSave: 'poor', willSave: 'poor', skillPointsPerLevel: 2 }],
+        classLevels: [
+          {
+            classId: 'fighter',
+            level: 5,
+            hitDieRolls: [10, 8, 7, 6, 9],
+            bab: 'full',
+            fortSave: 'good',
+            refSave: 'poor',
+            willSave: 'poor',
+            skillPointsPerLevel: 2,
+          },
+        ],
       });
       const result = engine.prepareData(doc);
       expect(result.system.baseAttackBonus).toBe(5);
@@ -29,7 +40,18 @@ describe('Dnd35eEngine', () => {
 
     it('calculates BAB from half progression class', () => {
       const doc = makeDoc({
-        classLevels: [{ classId: 'wizard', level: 6, hitDieRolls: [4, 3, 4, 2, 3, 4], bab: 'half', fortSave: 'poor', refSave: 'poor', willSave: 'good', skillPointsPerLevel: 2 }],
+        classLevels: [
+          {
+            classId: 'wizard',
+            level: 6,
+            hitDieRolls: [4, 3, 4, 2, 3, 4],
+            bab: 'half',
+            fortSave: 'poor',
+            refSave: 'poor',
+            willSave: 'good',
+            skillPointsPerLevel: 2,
+          },
+        ],
       });
       const result = engine.prepareData(doc);
       // floor(6/2) = 3
@@ -39,7 +61,18 @@ describe('Dnd35eEngine', () => {
     it('calculates good and poor saves correctly', () => {
       const doc = makeDoc({
         baseAttributes: { str: 10, dex: 10, con: 14, int: 10, wis: 12, cha: 10 },
-        classLevels: [{ classId: 'fighter', level: 4, hitDieRolls: [10, 8, 7, 6], bab: 'full', fortSave: 'good', refSave: 'poor', willSave: 'poor', skillPointsPerLevel: 2 }],
+        classLevels: [
+          {
+            classId: 'fighter',
+            level: 4,
+            hitDieRolls: [10, 8, 7, 6],
+            bab: 'full',
+            fortSave: 'good',
+            refSave: 'poor',
+            willSave: 'poor',
+            skillPointsPerLevel: 2,
+          },
+        ],
         saves: {
           fortitude: { base: 0, ability: 0, misc: 0, total: 0 },
           reflex: { base: 0, ability: 0, misc: 0, total: 0 },
@@ -62,7 +95,18 @@ describe('Dnd35eEngine', () => {
     it('calculates HP from hit die rolls + CON mod', () => {
       const doc = makeDoc({
         baseAttributes: { str: 10, dex: 10, con: 16, int: 10, wis: 10, cha: 10 },
-        classLevels: [{ classId: 'fighter', level: 3, hitDieRolls: [10, 7, 5], bab: 'full', fortSave: 'good', refSave: 'poor', willSave: 'poor', skillPointsPerLevel: 2 }],
+        classLevels: [
+          {
+            classId: 'fighter',
+            level: 3,
+            hitDieRolls: [10, 7, 5],
+            bab: 'full',
+            fortSave: 'good',
+            refSave: 'poor',
+            willSave: 'poor',
+            skillPointsPerLevel: 2,
+          },
+        ],
         hitPoints: { current: 50, max: 50, temp: 0 },
       });
       const result = engine.prepareData(doc);
@@ -86,11 +130,47 @@ describe('Dnd35eEngine', () => {
       const doc = makeDoc({
         baseAttributes: { str: 18, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
         sizeCategory: 'large',
-        classLevels: [{ classId: 'fighter', level: 4, hitDieRolls: [10, 8, 7, 6], bab: 'full', fortSave: 'good', refSave: 'poor', willSave: 'poor', skillPointsPerLevel: 2 }],
+        classLevels: [
+          {
+            classId: 'fighter',
+            level: 4,
+            hitDieRolls: [10, 8, 7, 6],
+            bab: 'full',
+            fortSave: 'good',
+            refSave: 'poor',
+            willSave: 'poor',
+            skillPointsPerLevel: 2,
+          },
+        ],
       });
       const result = engine.prepareData(doc);
       // BAB(4) + STR(4) + size(4 for large) = 12
       expect(result.system.grapple).toBe(12);
+    });
+
+    it('auto-populates Vancian spell slots from class spell tables', () => {
+      const doc = makeDoc({
+        classLevels: [
+          {
+            classId: 'wizard',
+            level: 3,
+            hitDieRolls: [4, 3, 4],
+            bab: 'half',
+            fortSave: 'poor',
+            refSave: 'poor',
+            willSave: 'good',
+            skillPointsPerLevel: 2,
+          },
+        ],
+        spellsPerDay: {
+          1: { total: 99, used: 7 },
+          2: { total: 99, used: 5 },
+        },
+      });
+      const result = engine.prepareData(doc);
+      // Wizard level 3: 1st=2, 2nd=1; used values clamp to totals.
+      expect(result.system.spellsPerDay?.[1]).toEqual({ total: 2, used: 2 });
+      expect(result.system.spellsPerDay?.[2]).toEqual({ total: 1, used: 1 });
     });
   });
 

@@ -4,7 +4,9 @@ import { createDefaultDnd5e2024Data } from '../../systems/dnd5e-2024/data-model'
 import { CharacterDocument } from '../../types/core/document';
 import { Dnd5e2024DataModel } from '../../systems/dnd5e-2024/data-model';
 
-function makeDoc(overrides: Partial<Dnd5e2024DataModel> = {}): CharacterDocument<Dnd5e2024DataModel> {
+function makeDoc(
+  overrides: Partial<Dnd5e2024DataModel> = {}
+): CharacterDocument<Dnd5e2024DataModel> {
   return {
     id: 'test-5e24',
     name: 'Test 2024 Hero',
@@ -38,6 +40,36 @@ describe('Dnd5e2024Engine', () => {
       const result = engine.prepareData(doc);
       expect(result.system.weaponMasteries).toEqual(['longsword', 'shortbow']);
     });
+
+    it('preserves spent hit dice between prepareData calls', () => {
+      const doc = makeDoc({
+        classLevels: [{ classId: 'fighter', level: 2, hitDieRolls: [10, 7] }],
+        hitDice: [{ die: 'd10', total: 2, remaining: 1 }],
+      });
+      const result = engine.prepareData(doc);
+      expect(result.system.hitDice[0].remaining).toBe(1);
+    });
+
+    it('uses INT for initiative when Alert feat outpaces DEX', () => {
+      const doc = makeDoc({
+        baseAttributes: { str: 10, dex: 12, con: 10, int: 18, wis: 10, cha: 10 },
+        feats: [{ id: 'alert', name: 'Alert', description: '', source: 'test' }],
+      });
+      const result = engine.prepareData(doc);
+      expect(result.system.initiative).toBe(4);
+    });
+
+    it('applies exhaustion level 4 by halving max HP', () => {
+      const doc = makeDoc({
+        baseAttributes: { str: 10, dex: 10, con: 14, int: 10, wis: 10, cha: 10 },
+        classLevels: [{ classId: 'fighter', level: 2, hitDieRolls: [10, 8] }],
+        exhaustionLevel: 4,
+        hitPoints: { current: 99, max: 99, temp: 0 },
+      });
+      const result = engine.prepareData(doc);
+      expect(result.system.hitPoints.max).toBe(11);
+      expect(result.system.hitPoints.current).toBe(11);
+    });
   });
 
   describe('rollCheck', () => {
@@ -48,6 +80,16 @@ describe('Dnd5e2024Engine', () => {
       const result = await engine.rollCheck(doc, 'str');
       expect(result.formula).toBe('1d20 + 3');
     });
+
+    it('applies disadvantage on ability checks while poisoned', async () => {
+      const doc = makeDoc({
+        baseAttributes: { str: 16, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+        conditions: [{ id: 'poisoned', name: 'Poisoned' }],
+      });
+      const result = await engine.rollCheck(doc, 'str');
+      expect(result.formula).toBe('2d20kl1 + 3');
+      expect(result.flavor).toBe('STR Check (Disadvantage)');
+    });
   });
 
   describe('applyDamage', () => {
@@ -56,6 +98,16 @@ describe('Dnd5e2024Engine', () => {
       const result = engine.applyDamage(doc, 5, 'fire');
       expect(result.system.hitPoints.temp).toBe(0);
       expect(result.system.hitPoints.current).toBe(13);
+    });
+
+    it('supports healing via negative amount and clears death saves when conscious', () => {
+      const doc = makeDoc({
+        hitPoints: { current: 0, max: 20, temp: 0 },
+        deathSaves: { successes: 1, failures: 2 },
+      });
+      const result = engine.applyDamage(doc, -3, 'healing');
+      expect(result.system.hitPoints.current).toBe(3);
+      expect(result.system.deathSaves).toEqual({ successes: 0, failures: 0 });
     });
   });
 });

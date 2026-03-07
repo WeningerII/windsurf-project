@@ -1,9 +1,37 @@
 import '@testing-library/jest-dom';
-import { describe, it, expect, beforeAll, beforeEach } from 'vitest';
+import { describe, it, expect, beforeAll, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import App from '../App';
 import { registerAllSystems } from '../systems';
 import { systemRegistry } from '../registry';
+
+vi.mock('../components/GameSystemSelector', () => ({
+  GameSystemSelector: ({
+    selectedSystem,
+    onSelect,
+  }: {
+    selectedSystem: string | null;
+    onSelect: (systemId: 'dnd-5e-2024') => void;
+  }) => (
+    <div>
+      <button
+        type="button"
+        aria-pressed={selectedSystem === 'dnd-5e-2024'}
+        onClick={() => onSelect('dnd-5e-2024')}
+      >
+        D&amp;D 5e (2024)
+      </button>
+    </div>
+  ),
+}));
+
+vi.mock('../components/SystemStatusDashboard', () => ({
+  SystemStatusDashboard: () => null,
+}));
+
+vi.mock('../utils/systemCatalog', () => ({
+  loadAllSystemCatalogSummaries: () => Promise.resolve({}),
+}));
 
 describe('App', () => {
   beforeAll(() => {

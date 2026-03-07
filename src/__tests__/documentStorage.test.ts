@@ -24,7 +24,7 @@ function setV2Documents(documents: CharacterDocument<SystemDataModel>[]) {
     V2_KEY,
     JSON.stringify({
       version: '2.0',
-      documents: documents.map(doc => ({
+      documents: documents.map((doc) => ({
         ...doc,
         createdAt: doc.createdAt.toISOString(),
         updatedAt: doc.updatedAt.toISOString(),
@@ -101,7 +101,9 @@ describe('documentStorage behavior', () => {
     expect(loaded).toHaveLength(1);
     expect(loaded[0]?.createdAt).toBeInstanceOf(Date);
     expect(loaded[0]?.updatedAt).toBeInstanceOf(Date);
-    expect(warnSpy).toHaveBeenCalledWith('Document storage version mismatch, attempting migration...');
+    expect(warnSpy).toHaveBeenCalledWith(
+      'Document storage version mismatch, attempting migration...'
+    );
   });
 
   it('throws a descriptive error when saveDocuments fails', () => {

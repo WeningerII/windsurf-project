@@ -1,6 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const metricCallbacks: Partial<Record<'cls' | 'inp' | 'fcp' | 'lcp' | 'ttfb', (metric: { value: number }) => void>> = {};
+const metricCallbacks: Partial<
+  Record<'cls' | 'inp' | 'fcp' | 'lcp' | 'ttfb', (metric: { value: number }) => void>
+> = {};
 
 vi.mock('web-vitals', () => ({
   onCLS: vi.fn((cb: (metric: { value: number }) => void) => {

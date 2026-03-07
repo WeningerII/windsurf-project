@@ -79,6 +79,27 @@ describe('Pf2eEngine', () => {
       expect(result.system.armorClass).toBe(19);
     });
 
+    it('applies status penalties from conditions to AC', () => {
+      const doc = makeDoc({
+        level: 4,
+        baseAttributes: { str: 10, dex: 16, con: 10, int: 10, wis: 10, cha: 10 },
+        armorProficiencies: {
+          unarmored: { tier: 'trained', total: 0 },
+          light: { tier: 'untrained', total: 0 },
+          medium: { tier: 'untrained', total: 0 },
+          heavy: { tier: 'untrained', total: 0 },
+        },
+        conditions: [
+          { id: 'cond-clumsy', name: 'Clumsy', value: 2 },
+          { id: 'cond-frightened', name: 'Frightened', value: 1 },
+        ],
+      });
+
+      const result = engine.prepareData(doc);
+      // Base AC 19, highest status penalty is 2 => 17
+      expect(result.system.armorClass).toBe(17);
+    });
+
     it('computes perception proficiency', () => {
       const doc = makeDoc({
         level: 7,
@@ -87,6 +108,29 @@ describe('Pf2eEngine', () => {
       const result = engine.prepareData(doc);
       // Master: 7 + 6 = 13
       expect(result.system.perceptionProficiency.total).toBe(13);
+    });
+
+    it('auto-populates spell slot maxima and focus points from class progression', () => {
+      const doc = makeDoc({
+        level: 4,
+        classId: 'wizard',
+        spellcasting: {
+          tradition: 'arcane',
+          type: 'prepared',
+          proficiency: { tier: 'trained', total: 0 },
+          spellSlots: {
+            1: { max: 99, used: 8 },
+            2: { max: 99, used: 6 },
+          },
+          spellsKnown: [],
+          focusPoints: { current: 3, max: 3 },
+        },
+      });
+
+      const result = engine.prepareData(doc);
+      expect(result.system.spellcasting?.spellSlots[1]).toEqual({ max: 3, used: 3 });
+      expect(result.system.spellcasting?.spellSlots[2]).toEqual({ max: 2, used: 2 });
+      expect(result.system.spellcasting?.focusPoints).toEqual({ current: 1, max: 1 });
     });
   });
 
@@ -130,6 +174,24 @@ describe('Pf2eEngine', () => {
       // CON mod +2, proficiency 9 = 11
       expect(result.formula).toBe('1d20 + 11');
       expect(result.flavor).toBe('Fortitude Save');
+    });
+
+    it('applies condition penalties to roll modifiers', async () => {
+      const doc = makeDoc({
+        level: 3,
+        baseAttributes: { str: 18, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+        skillProficiencies: {
+          athletics: { tier: 'expert', total: 7 },
+        },
+        conditions: [
+          { id: 'cond-enfeebled', name: 'Enfeebled', value: 2 },
+          { id: 'cond-frightened', name: 'Frightened', value: 1 },
+        ],
+      });
+
+      const result = await engine.rollCheck(doc, 'athletics');
+      // Base: STR +4, proficiency 7 = 11; highest relevant status penalty is 2
+      expect(result.formula).toBe('1d20 + 11 - 2');
     });
   });
 

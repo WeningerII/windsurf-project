@@ -25,10 +25,14 @@ const fullMonster: Monster = {
   conditionImmunities: ['charmed'],
   senses: ['blindsight 60 ft.', 'darkvision 120 ft.'],
   languages: ['Common', 'Draconic'],
-  specialAbilities: [{ name: 'Legendary Resistance', description: 'Can choose to succeed a failed save.' }],
+  specialAbilities: [
+    { name: 'Legendary Resistance', description: 'Can choose to succeed a failed save.' },
+  ],
   actions: [{ name: 'Multiattack', description: 'Makes three attacks.' }],
   reactions: [{ name: 'Wing Deflection', description: 'Adds +5 to AC.' }],
-  legendaryActions: [{ name: 'Detect', cost: 1, description: 'Makes a Wisdom (Perception) check.' }],
+  legendaryActions: [
+    { name: 'Detect', cost: 1, description: 'Makes a Wisdom (Perception) check.' },
+  ],
 };
 
 const simpleMonster: Monster = {

@@ -87,9 +87,6 @@ describe('browserCompat', () => {
 
   it('shows warning and alerts when required capabilities are missing', () => {
     const logSpy = vi.spyOn(errorLogger, 'log').mockImplementation(() => {});
-    const alertMock = vi.fn();
-    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    vi.stubGlobal('alert', alertMock);
 
     const caps: BrowserCapabilities = {
       localStorage: false,
@@ -108,8 +105,12 @@ describe('browserCompat', () => {
       undefined,
       expect.objectContaining({ missing: ['localStorage', 'crypto API'] })
     );
-    expect(consoleErrorSpy).toHaveBeenCalled();
-    expect(alertMock).toHaveBeenCalled();
+    // User-facing warning is now routed through errorLogger instead of raw console.error + alert
+    expect(logSpy).toHaveBeenCalledWith(
+      ErrorCategory.UNKNOWN,
+      ErrorSeverity.CRITICAL,
+      expect.stringContaining('Your browser does not support')
+    );
   });
 
   it('logs successful compatibility check in initBrowserCompat', () => {

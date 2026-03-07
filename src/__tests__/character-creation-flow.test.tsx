@@ -31,33 +31,51 @@ async function startCreation(user: ReturnType<typeof userEvent.setup>) {
 }
 
 async function createCharacter(
-  {
-    name,
-    level = 1,
-  }: CreationOptions
+  user: ReturnType<typeof userEvent.setup>,
+  { name, level = 1, classId, speciesId }: CreationOptions
 ) {
   fireEvent.change(screen.getByTitle('Character name'), {
     target: { value: name },
   });
-  fireEvent.change(screen.getByTitle('Character Level'), {
-    target: { value: level },
-  });
 
   await waitFor(() => {
     expect(screen.getByTitle('Character name')).toHaveValue(name);
-    expect(screen.getByTitle('Character Level')).toHaveValue(level);
   });
+
+  if (speciesId) {
+    const speciesSelect = screen.getByTitle('Species');
+    await waitFor(() => {
+      const options = Array.from(speciesSelect.querySelectorAll('option')).map((option) => option.value);
+      expect(options).toContain(speciesId);
+    });
+    await user.selectOptions(speciesSelect, speciesId);
+    expect(speciesSelect).toHaveValue(speciesId);
+  }
+
+  if (classId) {
+    const classSelect = screen.getByTitle('Add class');
+    await waitFor(() => {
+      const options = Array.from(classSelect.querySelectorAll('option')).map((option) => option.value);
+      expect(options).toContain(classId);
+    });
+
+    await user.selectOptions(classSelect, classId);
+    fireEvent.change(screen.getByTitle('New class level'), {
+      target: { value: level },
+    });
+    await user.click(screen.getByRole('button', { name: /^add class$/i }));
+
+    await waitFor(() => {
+      expect(screen.getByTitle(`${classId} level`)).toHaveValue(level);
+    });
+  }
 }
 
 async function createCharacterWithoutSelections({
   name,
-  level = 1,
-}: Pick<CreationOptions, 'name' | 'level'>) {
+}: Pick<CreationOptions, 'name'>) {
   fireEvent.change(screen.getByTitle('Character name'), {
     target: { value: name },
-  });
-  fireEvent.change(screen.getByTitle('Character Level'), {
-    target: { value: level },
   });
 
   await waitFor(() => {
@@ -82,10 +100,10 @@ describe('Character Creation Flow', () => {
 
     await selectSystem(user, 'D&D 5e (2024)');
     await startCreation(user);
-    await createCharacter({ name: 'Phase3 Hero', level: 3 });
+    await createCharacter(user, { name: 'Phase3 Hero', classId: 'fighter', level: 3 });
 
     expect(screen.getByTitle('Character name')).toHaveValue('Phase3 Hero');
-    expect(screen.getByTitle('Character Level')).toHaveValue(3);
+    expect(screen.getByTitle('fighter level')).toHaveValue(3);
   });
 
   it('persists class/species/system in localStorage after creation', async () => {
@@ -94,7 +112,12 @@ describe('Character Creation Flow', () => {
 
     await selectSystem(user, 'D&D 5e (2024)');
     await startCreation(user);
-    await createCharacter({ name: 'Persisted Build', level: 4 });
+    await createCharacter(user, {
+      name: 'Persisted Build',
+      classId: 'fighter',
+      level: 4,
+      speciesId: 'elf',
+    });
 
     await waitFor(() => {
       const stored = getStoredDocuments();
@@ -103,8 +126,12 @@ describe('Character Creation Flow', () => {
       expect(stored[0].systemId).toBe('dnd-5e-2024');
       const system = stored[0].system as {
         level?: number;
+        speciesId?: string;
+        classLevels?: Array<{ classId?: string; level?: number }>;
       };
       expect(system.level).toBe(4);
+      expect(system.speciesId).toBe('elf');
+      expect(system.classLevels).toMatchObject([{ classId: 'fighter', level: 4 }]);
     });
   });
 
@@ -126,7 +153,7 @@ describe('Character Creation Flow', () => {
 
     await selectSystem(user, 'D&D 5e (2024)');
     await startCreation(user);
-    await createCharacter({ name: 'Reopen Hero' });
+    await createCharacter(user, { name: 'Reopen Hero' });
 
     await user.click(screen.getByRole('button', { name: /^back$/i }));
     expect(screen.getByText('Your Characters')).toBeInTheDocument();
@@ -149,10 +176,13 @@ describe('Character Creation Flow', () => {
       expect(stored).toHaveLength(1);
       expect(stored[0].name).toBe('No Selection Hero');
       const system = stored[0].system as {
+        level?: number;
         classLevels?: unknown[];
         speciesId?: string;
       };
+      expect(system.level).toBe(1);
       expect(system.classLevels).toEqual([]);
+      expect(system.speciesId).toBeUndefined();
     });
   });
 });

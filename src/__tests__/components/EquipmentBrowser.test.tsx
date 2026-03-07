@@ -70,15 +70,11 @@ describe('EquipmentBrowser', () => {
     const user = userEvent.setup();
     const onSelectEquipment = vi.fn();
 
-    render(
-      <EquipmentBrowser equipment={equipment} onSelectEquipment={onSelectEquipment} />
-    );
+    render(<EquipmentBrowser equipment={equipment} onSelectEquipment={onSelectEquipment} />);
 
     await user.click(screen.getByText('Longsword'));
 
     expect(onSelectEquipment).toHaveBeenCalledTimes(1);
-    expect(onSelectEquipment).toHaveBeenCalledWith(
-      expect.objectContaining({ id: 'longsword' })
-    );
+    expect(onSelectEquipment).toHaveBeenCalledWith(expect.objectContaining({ id: 'longsword' }));
   });
 });

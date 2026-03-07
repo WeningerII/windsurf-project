@@ -76,10 +76,7 @@ describe('SpellBrowser', () => {
     const user = userEvent.setup();
     render(<SpellBrowser spells={mockSpells} />);
 
-    await user.selectOptions(
-      screen.getByLabelText('Filter by spell level'),
-      '1'
-    );
+    await user.selectOptions(screen.getByLabelText('Filter by spell level'), '1');
 
     expect(screen.getByText('Showing 2 of 4 spells')).toBeInTheDocument();
     expect(screen.getByText('Cure Wounds')).toBeInTheDocument();
@@ -91,10 +88,7 @@ describe('SpellBrowser', () => {
     const user = userEvent.setup();
     render(<SpellBrowser spells={mockSpells} />);
 
-    await user.selectOptions(
-      screen.getByLabelText('Filter by spell school'),
-      'illusion'
-    );
+    await user.selectOptions(screen.getByLabelText('Filter by spell school'), 'illusion');
 
     expect(screen.getByText('Showing 1 of 4 spells')).toBeInTheDocument();
     expect(screen.getByText('Invisibility')).toBeInTheDocument();
