@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="RPG Character Sheet">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="url(#bg)" />
+  <rect x="80" y="64" width="352" height="384" rx="34" fill="#e2e8f0" />
+  <rect x="112" y="120" width="214" height="34" rx="17" fill="#0f172a" />
+  <rect x="112" y="190" width="286" height="22" rx="11" fill="#64748b" />
+  <rect x="112" y="234" width="286" height="22" rx="11" fill="#64748b" />
+  <rect x="112" y="278" width="208" height="22" rx="11" fill="#64748b" />
+  <circle cx="364" cy="370" r="62" fill="#2563eb" />
+  <text x="364" y="387" text-anchor="middle" font-size="52" font-family="Arial, sans-serif" fill="#ffffff">d20</text>
+</svg>
