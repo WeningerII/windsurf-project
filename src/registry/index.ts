@@ -12,14 +12,14 @@ class SystemRegistry {
    */
   register<T extends SystemDataModel>(def: SystemDefinition<T>) {
     if (this.systems.has(def.id)) {
-      if (process.env.NODE_ENV === 'development') {
+      if (import.meta.env.DEV) {
         console.warn(`SystemRegistry: Overwriting existing system '${def.id}'`);
       }
     }
     // We cast to SystemDefinition<SystemDataModel> because T extends SystemDataModel
     // This implies that the registry holds generic system definitions.
     this.systems.set(def.id, def as unknown as SystemDefinition<SystemDataModel>);
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.DEV) {
       console.log(`SystemRegistry: Registered '${def.id}'`);
     }
   }

@@ -7,7 +7,7 @@ export interface WeaponItem {
   system: string;
   source: string;
   type: 'melee' | 'ranged' | 'thrown';
-  category?: string;  // e.g., 'simple', 'martial'
+  category?: string; // e.g., 'simple', 'martial'
   damage?: string | { dice: string; type: string };
   properties?: string[];
   weight: number;
@@ -18,16 +18,16 @@ export interface WeaponItem {
 // System-specific extensions
 export interface DnD35eWeapon extends WeaponItem {
   damage: string;
-  critical?: string;  // e.g., "19-20/×2"
+  critical?: string; // e.g., "19-20/×2"
   range?: number;
   damageType?: 'slashing' | 'piercing' | 'bludgeoning';
-  cost: string;  // e.g., "15 gp"
+  cost: string; // e.g., "15 gp"
 }
 
 export interface DnD5eWeapon extends WeaponItem {
   damage: { dice: string; type: string };
   range?: { normal: number; long?: number };
-  cost: number;  // In gold pieces
+  cost: number; // In gold pieces
 }
 
 export interface PathfinderWeapon extends WeaponItem {

@@ -14,6 +14,8 @@ export interface RollResult {
   isCritical?: boolean;
   isFumble?: boolean;
   flavor?: string;
+  /** PF2e degree of success (only set when a DC is provided) */
+  degreeOfSuccess?: 'critical-success' | 'success' | 'failure' | 'critical-failure';
 }
 
 /**
@@ -31,7 +33,11 @@ export interface SystemEngine<T extends SystemDataModel> {
   /**
    * Execute a rules-based check (Skill, Save, Attack).
    */
-  rollCheck(document: CharacterDocument<T>, checkId: string, options?: unknown): Promise<RollResult>;
+  rollCheck(
+    document: CharacterDocument<T>,
+    checkId: string,
+    options?: unknown
+  ): Promise<RollResult>;
 
   /**
    * Apply damage/healing to the character.
@@ -45,26 +51,30 @@ export interface SystemEngine<T extends SystemDataModel> {
 export interface SystemDefinition<T extends SystemDataModel> {
   // Unique ID (e.g., 'dnd-5e-2024', 'mam3e')
   id: string;
-  
+
   // Human-readable label
   label: string;
 
   // Version / SRD label (e.g., 'SRD 5.2')
   version?: string;
 
+  // Current implementation maturity exposed in runtime surfaces.
+  supportLevel?: 'full' | 'partial' | 'scaffold';
+  supportNotes?: string;
+
   // Ability scores / attributes for this system
   attributes?: Attribute[];
 
   // Skills for this system
   skills?: Skill[];
-  
+
   // The Data Model constructor/factory
   // Returns a default/empty data state for a new character
   createDefaultData: () => T;
-  
+
   // The Logic Engine implementation
   engine: SystemEngine<T>;
-  
+
   // The Main Character Sheet Component
   SheetComponent: React.ComponentType<{
     document: CharacterDocument<T>;

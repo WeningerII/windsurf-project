@@ -24,10 +24,10 @@ export interface ComputedAttribute {
   savingThrowProficient: boolean;
 }
 
-export type AttributeGenerationMethod = 
-  | 'standard-array' 
-  | 'point-buy' 
-  | 'manual' 
+export type AttributeGenerationMethod =
+  | 'standard-array'
+  | 'point-buy'
+  | 'manual'
   | 'roll-4d6-drop-lowest'
   | 'roll-3d6';
 

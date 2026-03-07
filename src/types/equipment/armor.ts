@@ -21,7 +21,7 @@ export interface DnD35eArmor extends ArmorItem {
   armorCheckPenalty?: number;
   arcaneSpellFailure?: number;
   speedReduction?: number;
-  cost: string;  // e.g., "150 gp"
+  cost: string; // e.g., "150 gp"
 }
 
 export interface DnD35eShield extends ArmorItem {
@@ -33,10 +33,10 @@ export interface DnD35eShield extends ArmorItem {
 }
 
 export interface DnD5eArmor extends ArmorItem {
-  armorClass: number | string;  // Can be "11 + Dex modifier"
+  armorClass: number | string; // Can be "11 + Dex modifier"
   stealthDisadvantage?: boolean;
   strengthRequirement?: number;
-  cost: number;  // In gold pieces
+  cost: number; // In gold pieces
 }
 
 export interface PathfinderArmor extends ArmorItem {
@@ -44,7 +44,7 @@ export interface PathfinderArmor extends ArmorItem {
   dexCap?: number;
   checkPenalty?: number;
   speedPenalty?: number;
-  strength?: number;  // Strength requirement
+  strength?: number; // Strength requirement
   bulk?: number;
   traits?: string[];
 }

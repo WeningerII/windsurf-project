@@ -1,9 +1,9 @@
 /**
  * Spell data types for magic systems
- * 
+ *
  * Unified spell interface supporting D&D, Pathfinder, and other magic systems.
  * Flexible enough to handle system differences (spell slots vs spell points, etc.).
- * 
+ *
  * @module types/magic/spells
  */
 
@@ -11,10 +11,10 @@ import { DiceRoll, DamageType, Duration, Range, AreaOfEffect } from '../core/com
 
 /**
  * Spell definition
- * 
+ *
  * Complete spell data including casting requirements, effects, and system info.
  * Level 0 = cantrips. Supports both D&D-style and Pathfinder-style spells.
- * 
+ *
  * @example
  * ```typescript
  * const fireball: Spell = {
@@ -34,44 +34,44 @@ export interface Spell {
   name: string;
   system: string;
   source: string;
-  
+
   level: number; // 0 for cantrips
   school: MagicSchool;
   subschool?: string;
   descriptors?: string[];
-  
+
   castingTime: CastingTime;
   range: Range;
   components: SpellComponents;
   duration: Duration;
-  
+
   areaOfEffect?: AreaOfEffect;
   target?: string;
   effect?: string;
   area?: string;
   savingThrow?: SavingThrowInfo;
   attackRoll?: boolean;
-  
+
   damage?: SpellDamage;
   healing?: DiceRoll;
   spellResistance?: boolean;
-  
+
   concentration: boolean;
   ritual: boolean;
-  
+
   description: string;
   atHigherLevels?: string;
-  
+
   classes: string[]; // Which classes can learn this
   levelsByClass?: Record<string, number>;
 }
 
 /**
  * Magic schools for spell classification
- * 
+ *
  * Supports D&D schools (abjuration-transmutation) and Pathfinder traditions.
  */
-export type MagicSchool = 
+export type MagicSchool =
   | 'abjuration'
   | 'conjuration'
   | 'divination'
@@ -87,7 +87,7 @@ export type MagicSchool =
 
 /**
  * Spell casting time
- * 
+ *
  * Supports D&D 5e actions, D&D 3.5e/Pathfinder 1e actions, and extended casting times.
  */
 export interface CastingTime {
@@ -113,7 +113,7 @@ export interface CastingTime {
 
 /**
  * Spell components (Verbal, Somatic, Material)
- * 
+ *
  * Tracks VSM components and material cost for expensive components.
  */
 export interface SpellComponents {

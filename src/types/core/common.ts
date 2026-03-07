@@ -21,30 +21,30 @@ export interface DiceRoll {
   notation: string; // e.g., "2d6+3"
 }
 
-export type DamageType = 
-  | 'acid' 
-  | 'bludgeoning' 
-  | 'cold' 
-  | 'fire' 
-  | 'force' 
-  | 'lightning' 
-  | 'necrotic' 
-  | 'piercing' 
-  | 'poison' 
-  | 'psychic' 
-  | 'radiant' 
-  | 'slashing' 
+export type DamageType =
+  | 'acid'
+  | 'bludgeoning'
+  | 'cold'
+  | 'fire'
+  | 'force'
+  | 'lightning'
+  | 'necrotic'
+  | 'piercing'
+  | 'poison'
+  | 'psychic'
+  | 'radiant'
+  | 'slashing'
   | 'thunder'
   | 'electricity'
   | 'sonic';
 
-export type BonusType = 
-  | 'enhancement' 
-  | 'circumstance' 
-  | 'racial' 
-  | 'insight' 
-  | 'luck' 
-  | 'proficiency' 
+export type BonusType =
+  | 'enhancement'
+  | 'circumstance'
+  | 'racial'
+  | 'insight'
+  | 'luck'
+  | 'proficiency'
   | 'alchemical'
   | 'divine'
   | 'armor-class'
@@ -61,7 +61,7 @@ export interface Modifier {
   source: string;
 }
 
-export type Duration = 
+export type Duration =
   | { type: 'instant' }
   | { type: 'rounds'; rounds: number }
   | { type: 'rounds-per-level'; rounds: number }
@@ -76,7 +76,7 @@ export type Duration =
   | { type: 'varies'; description?: string }
   | { type: 'special'; description: string };
 
-export type Range = 
+export type Range =
   | { type: 'self' }
   | { type: 'personal' }
   | { type: 'touch' }
@@ -89,7 +89,7 @@ export type Range =
   | { type: 'cone'; feet: number }
   | { type: 'special'; description: string };
 
-export type AreaOfEffect = 
+export type AreaOfEffect =
   | { type: 'cone'; feet: number }
   | { type: 'cube'; feet: number }
   | { type: 'cylinder'; radius: number; height: number }
@@ -99,7 +99,18 @@ export type AreaOfEffect =
   | { type: 'spread'; radius: number };
 
 export interface Prerequisite {
-  type: 'level' | 'attribute' | 'ability' | 'proficiency' | 'feature' | 'spell' | 'class' | 'race' | 'skill' | 'advantage' | 'other';
+  type:
+    | 'level'
+    | 'attribute'
+    | 'ability'
+    | 'proficiency'
+    | 'feature'
+    | 'spell'
+    | 'class'
+    | 'race'
+    | 'skill'
+    | 'advantage'
+    | 'other';
   id?: string;
   ability?: string;
   value?: string | number;

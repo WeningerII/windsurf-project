@@ -1,5 +1,12 @@
 // Canonical type definitions for game systems
-export type GameSystemId = 'dnd-5e-2014' | 'dnd-5e-2024' | 'dnd-3.5e' | 'pf1e' | 'pf2e' | 'mam3e';
+export type GameSystemId =
+  | 'dnd-5e-2014'
+  | 'dnd-5e-2024'
+  | 'dnd-3.5e'
+  | 'pf1e'
+  | 'pf2e'
+  | 'mam3e'
+  | 'daggerheart';
 
 export interface GameSystem {
   id: GameSystemId;

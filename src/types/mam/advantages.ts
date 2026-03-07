@@ -5,13 +5,13 @@ export interface Advantage {
   name: string;
   system: 'mam3e';
   source: string;
-  
+
   type: AdvantageType;
   ranked: boolean;
   maxRanks?: number;
-  
+
   prerequisites?: AdvantagePrerequisite[];
-  
+
   description: string;
   benefit: string;
 }

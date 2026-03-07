@@ -7,21 +7,21 @@ export interface Species {
   name: string;
   system: string; // Which game system
   source: string; // PHB, Volo's, etc.
-  
+
   // Ability score modifiers
   abilityScoreIncrease: AbilityScoreIncrease[];
-  
+
   // Basic traits
   size: Size;
   speed: number;
   languages: LanguageChoice;
-  
+
   // Features
   traits: Feature[];
-  
+
   // Optional: Subraces
   subraces?: Subrace[];
-  
+
   // Flavor
   description: string;
   ageInfo: string;

@@ -6,14 +6,14 @@ export interface FeatDefinition {
   name: string;
   system: string;
   source: string;
-  
+
   prerequisites?: Prerequisite[];
-  
+
   // Feat benefits
   abilityScoreIncrease?: AbilityScoreIncreaseFeat;
   proficienciesGranted?: ProficienciesGranted;
   modifiers?: Modifier[];
-  
+
   description: string;
   benefits: string[];
   special?: string;

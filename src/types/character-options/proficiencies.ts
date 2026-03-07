@@ -1,6 +1,6 @@
 /**
  * Standardized proficiency identifiers for all D&D content
- * 
+ *
  * Use these constants to ensure consistency across all class/species/background data
  */
 
@@ -12,14 +12,14 @@ export const ArmorProficiency = {
   SHIELDS: 'shields',
 } as const;
 
-export type ArmorProficiencyType = typeof ArmorProficiency[keyof typeof ArmorProficiency];
+export type ArmorProficiencyType = (typeof ArmorProficiency)[keyof typeof ArmorProficiency];
 
 // Weapon Proficiency Categories
 export const WeaponProficiency = {
   // Categories
   SIMPLE: 'simple-weapons',
   MARTIAL: 'martial-weapons',
-  
+
   // Simple Melee
   CLUB: 'club',
   DAGGER: 'dagger',
@@ -31,13 +31,13 @@ export const WeaponProficiency = {
   QUARTERSTAFF: 'quarterstaff',
   SICKLE: 'sickle',
   SPEAR: 'spear',
-  
+
   // Simple Ranged
   LIGHT_CROSSBOW: 'light-crossbow',
   DART: 'dart',
   SHORTBOW: 'shortbow',
   SLING: 'sling',
-  
+
   // Martial Melee
   BATTLEAXE: 'battleaxe',
   FLAIL: 'flail',
@@ -57,7 +57,7 @@ export const WeaponProficiency = {
   WAR_PICK: 'war-pick',
   WARHAMMER: 'warhammer',
   WHIP: 'whip',
-  
+
   // Martial Ranged
   BLOWGUN: 'blowgun',
   HAND_CROSSBOW: 'hand-crossbow',
@@ -66,7 +66,7 @@ export const WeaponProficiency = {
   NET: 'net',
 } as const;
 
-export type WeaponProficiencyType = typeof WeaponProficiency[keyof typeof WeaponProficiency];
+export type WeaponProficiencyType = (typeof WeaponProficiency)[keyof typeof WeaponProficiency];
 
 // Tool Proficiencies
 export const ToolProficiency = {
@@ -88,13 +88,13 @@ export const ToolProficiency = {
   TINKERS_TOOLS: 'tinkers-tools',
   WEAVERS_TOOLS: 'weavers-tools',
   WOODCARVERS_TOOLS: 'woodcarvers-tools',
-  
+
   // Gaming Sets
   DICE_SET: 'dice-set',
   DRAGONCHESS_SET: 'dragonchess-set',
   PLAYING_CARD_SET: 'playing-card-set',
   THREE_DRAGON_ANTE_SET: 'three-dragon-ante-set',
-  
+
   // Musical Instruments
   BAGPIPES: 'bagpipes',
   DRUM: 'drum',
@@ -106,7 +106,7 @@ export const ToolProficiency = {
   PAN_FLUTE: 'pan-flute',
   SHAWM: 'shawm',
   VIOL: 'viol',
-  
+
   // Other Tools
   DISGUISE_KIT: 'disguise-kit',
   FORGERY_KIT: 'forgery-kit',
@@ -114,14 +114,14 @@ export const ToolProficiency = {
   NAVIGATORS_TOOLS: 'navigators-tools',
   POISONERS_KIT: 'poisoners-kit',
   THIEVES_TOOLS: 'thieves-tools',
-  
+
   // Generic categories for character creation
   ANY_ARTISANS_TOOLS: 'any-artisans-tools',
   ANY_MUSICAL_INSTRUMENT: 'any-musical-instrument',
   ANY_GAMING_SET: 'any-gaming-set',
 } as const;
 
-export type ToolProficiencyType = typeof ToolProficiency[keyof typeof ToolProficiency];
+export type ToolProficiencyType = (typeof ToolProficiency)[keyof typeof ToolProficiency];
 
 // Skill Proficiencies (for reference)
 export const Skill = {
@@ -145,4 +145,4 @@ export const Skill = {
   SURVIVAL: 'survival',
 } as const;
 
-export type SkillType = typeof Skill[keyof typeof Skill];
+export type SkillType = (typeof Skill)[keyof typeof Skill];

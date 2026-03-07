@@ -6,23 +6,25 @@ export interface Item {
   id: string;
   name: string;
   system: string;
-  source?: string | {
-    book?: string;
-    name?: string;
-    page?: number;
-    url?: string;
-  };
+  source?:
+    | string
+    | {
+        book?: string;
+        name?: string;
+        page?: number;
+        url?: string;
+      };
   type: ItemType;
   rarity: Rarity;
-  
+
   weight: number;
   cost: { amount: number; currency: 'cp' | 'sp' | 'gp' | 'pp' };
-  
+
   description: string;
   requiresAttunement: boolean;
 }
 
-export type ItemType = 
+export type ItemType =
   | 'weapon'
   | 'armor'
   | 'shield'
@@ -32,27 +34,21 @@ export type ItemType =
   | 'magic-item'
   | 'treasure';
 
-export type Rarity = 
-  | 'common'
-  | 'uncommon'
-  | 'rare'
-  | 'very-rare'
-  | 'legendary'
-  | 'artifact';
+export type Rarity = 'common' | 'uncommon' | 'rare' | 'very-rare' | 'legendary' | 'artifact';
 
 export interface Weapon extends Item {
   type: 'weapon';
   weaponType: 'simple' | 'martial';
   category: 'melee' | 'ranged';
-  
+
   damage: DiceRoll;
   damageType: DamageType;
   properties: WeaponProperty[];
   mastery?: string;
-  
+
   range?: { normal: number; max: number };
   reach?: number;
-  
+
   versatileDamage?: DiceRoll;
 }
 

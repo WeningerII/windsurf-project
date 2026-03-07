@@ -5,56 +5,50 @@ export interface Monster {
   name: string;
   system: string;
   source: string;
-  
+
   // Basic Info
   size: CreatureSize;
   type: CreatureType;
   alignment: Alignment;
   challengeRating: number;
   experiencePoints: number;
-  
+
   // Defenses
   armorClass: number;
   hitPoints: DiceRoll;
   speed: CreatureSpeed;
-  
+
   // Ability Scores
   abilities: AbilityScores;
-  
+
   // Proficiencies
   savingThrows?: Partial<Record<AbilityScore, number>>;
   skills?: Record<string, number>;
-  
+
   // Resistances & Immunities
   damageResistances?: DamageType[];
   damageImmunities?: DamageType[];
   damageVulnerabilities?: DamageType[];
   conditionImmunities?: string[];
-  
+
   // Senses
   senses: string[];
   languages: string[];
-  
+
   // Abilities
   specialAbilities?: SpecialAbility[];
   actions: Action[];
   reactions?: Action[];
   legendaryActions?: LegendaryAction[];
-  
+
   // Description
   description?: string;
   environment?: string[];
 }
 
-export type CreatureSize = 
-  | 'tiny'
-  | 'small'
-  | 'medium'
-  | 'large'
-  | 'huge'
-  | 'gargantuan';
+export type CreatureSize = 'tiny' | 'small' | 'medium' | 'large' | 'huge' | 'gargantuan';
 
-export type CreatureType = 
+export type CreatureType =
   | 'aberration'
   | 'beast'
   | 'celestial'
@@ -70,7 +64,7 @@ export type CreatureType =
   | 'plant'
   | 'undead';
 
-export type Alignment = 
+export type Alignment =
   | 'lawful good'
   | 'neutral good'
   | 'chaotic good'

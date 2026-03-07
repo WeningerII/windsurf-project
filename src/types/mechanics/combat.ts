@@ -12,7 +12,7 @@ export interface Attack {
   properties: WeaponProperty[];
 }
 
-export type WeaponProperty = 
+export type WeaponProperty =
   | 'ammunition'
   | 'finesse'
   | 'heavy'

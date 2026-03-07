@@ -6,19 +6,19 @@ export interface Background {
   name: string;
   system: string;
   source: string;
-  
+
   // Proficiencies
   skillProficiencies: string[] | Choice<string>;
   toolProficiencies?: string[] | Choice<string>;
   languageProficiencies?: Choice<string>;
-  
+
   // Equipment
   equipment: string[];
   gold: number;
-  
+
   // Features
   feature: Feature;
-  
+
   // Personality
   suggestedCharacteristics: {
     traits: string[];
@@ -26,6 +26,6 @@ export interface Background {
     bonds: string[];
     flaws: string[];
   };
-  
+
   description: string;
 }

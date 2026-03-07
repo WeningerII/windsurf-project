@@ -5,10 +5,10 @@ export interface MaMEquipment {
   name: string;
   system: 'mam3e';
   source: string;
-  
+
   type: MaMEquipmentType;
   cost: number; // Equipment points
-  
+
   features?: string[];
   description: string;
 }
@@ -25,7 +25,14 @@ export interface Vehicle extends MaMEquipment {
   features: string[];
 }
 
-export type VehicleSize = 'small' | 'medium' | 'large' | 'huge' | 'gargantuan' | 'colossal' | 'awesome';
+export type VehicleSize =
+  | 'small'
+  | 'medium'
+  | 'large'
+  | 'huge'
+  | 'gargantuan'
+  | 'colossal'
+  | 'awesome';
 
 export interface Device extends MaMEquipment {
   type: 'device';

@@ -6,7 +6,7 @@ export interface CharacterClass {
   name: string;
   system: string;
   source: string;
-  
+
   // Versioning and provenance
   version?: string; // e.g., "5.1", "2024", "3.5"
   lastUpdated?: string; // ISO date of last update
@@ -16,30 +16,30 @@ export interface CharacterClass {
     page?: number;
     url?: string;
   };
-  
+
   // Core properties
   hitDie: DiceType;
   primaryAbility: AbilityScore[];
   savingThrowProficiencies: AbilityScore[];
-  
+
   // Display metadata for UI
   displayMetadata?: ClassDisplayMetadata;
-  
+
   // Starting proficiencies
   armorProficiencies: string[];
   weaponProficiencies: string[];
   toolProficiencies: Choice<string>[];
   skillProficiencies: Choice<string>;
-  
+
   // Starting equipment choices
   equipmentChoices: EquipmentChoice[];
   startingGold?: { dice: string; multiplier: number }; // Alternative to equipment
-  
+
   // Level progression
   features: ClassFeatureProgression[];
   subclassLevel: number; // When you choose a subclass
   subclasses: Subclass[];
-  
+
   // Subclass selection metadata
   subclassSelection?: {
     timing: 'level' | 'creation'; // Most get at a level, some at creation
@@ -48,17 +48,17 @@ export interface CharacterClass {
     prerequisitesMustMeet: boolean; // Do subclass prerequisites apply?
     flavorText?: string; // Description of the choice moment
   };
-  
+
   // Spellcasting
   spellcasting?: SpellcastingProgression;
-  
+
   // Class-specific resources
   classResources?: ClassResource[];
-  
+
   // Multiclassing
   multiclassRequirements?: Prerequisite[];
   multiclassProficiencies?: MulticlassProficiencies;
-  
+
   description: string;
 }
 
@@ -96,11 +96,11 @@ export interface SpellcastingProgression {
   preparedCasterFormula?: string; // e.g., "ability_modifier + class_level" for prepared casters
   spellSlots: SpellSlotProgression;
   ritualCasting: boolean;
-  
+
   // Pact Magic (Warlock-specific)
   isPactMagic?: boolean; // True for Warlock
   slotRecovery?: 'long-rest' | 'short-rest'; // Short rest for Warlock
-  
+
   // Multiclassing
   multiclassCasterLevel?: 'full' | 'half' | 'third' | 'none';
 }
@@ -135,10 +135,26 @@ export interface MulticlassProficiencies {
 
 // Type guard for spell slot array validation
 export type SpellSlotArray = readonly [
-  number, number, number, number, number,
-  number, number, number, number, number,
-  number, number, number, number, number,
-  number, number, number, number, number
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
 ]; // Exactly 20 elements for levels 1-20
 
 // Display metadata for UI/UX
@@ -157,7 +173,7 @@ export interface ClassDisplayMetadata {
 /**
  * Tags for categorizing and filtering classes
  */
-export type ClassTag = 
+export type ClassTag =
   | 'martial' // Physical combat focused
   | 'spellcaster' // Magic user
   | 'divine' // Divine magic source

@@ -1,18 +1,18 @@
 /**
  * Mutants & Masterminds 3e Power Types
- * 
+ *
  * Defines powers for M&M 3e superhero system. Powers are purchased with
  * power points and can be modified with extras and flaws.
- * 
+ *
  * @module types/mam/powers
  */
 
 /**
  * M&M 3e Power definition
- * 
+ *
  * Powers are the core mechanic of M&M 3e. Each power has a base cost
  * and can be ranked up, modified with extras (increase cost) or flaws (decrease cost).
- * 
+ *
  * @example
  * ```typescript
  * const damage: Power = {
@@ -36,19 +36,21 @@ export interface Power {
   name: string;
   system: 'mam3e';
   source: string;
-  
+
   type: PowerType;
   action: ActionType;
   range: PowerRange;
   duration: PowerDuration;
-  
+
   baseCost: number;
   perRank: boolean;
-  
+  rank?: number;
+
   descriptors?: string[];
   extras?: string[];
   flaws?: string[];
-  
+  modifierRanks?: Record<string, number>;
+
   description: string;
   effects: string[];
 }
@@ -65,7 +67,7 @@ export type ActionType = 'standard' | 'move' | 'free' | 'reaction' | 'none';
 
 /**
  * Power range categories
- * 
+ *
  * - personal: Affects only the user
  * - close: Touch range
  * - ranged: Distance (rank × 30 feet typically)
@@ -75,7 +77,7 @@ export type PowerRange = 'personal' | 'close' | 'ranged' | 'perception';
 
 /**
  * Power duration types
- * 
+ *
  * - instant: One-time effect
  * - concentration: Requires concentration (free action per round)
  * - sustained: Requires free action to maintain

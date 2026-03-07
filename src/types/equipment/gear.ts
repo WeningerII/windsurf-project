@@ -15,16 +15,25 @@ export interface GearItem {
 
 // System-specific extensions
 export interface DnD35eGear extends GearItem {
-  category: 'adventuring' | 'tools' | 'substances' | 'animals' | 'services' | 'food-lodging' | 'clothing' | 'transport' | 'mount-gear';
-  cost: string;  // e.g., "2 gp"
+  category:
+    | 'adventuring'
+    | 'tools'
+    | 'substances'
+    | 'animals'
+    | 'services'
+    | 'food-lodging'
+    | 'clothing'
+    | 'transport'
+    | 'mount-gear';
+  cost: string; // e.g., "2 gp"
 }
 
 export interface DnD5eGear extends GearItem {
   category: string;
-  cost: number;  // In copper pieces
+  cost: number; // In copper pieces
 }
 
 export interface PathfinderGear extends GearItem {
   category: string;
-  bulk?: number;  // PF2e uses bulk instead of weight
+  bulk?: number; // PF2e uses bulk instead of weight
 }

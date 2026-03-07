@@ -1,6 +1,6 @@
 /**
  * Component Prop Type Definitions
- * 
+ *
  * Centralized prop interfaces for reusability across components
  */
 
