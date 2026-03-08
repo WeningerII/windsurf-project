@@ -19,6 +19,35 @@ describe('Dnd35eEngine', () => {
   const engine = new Dnd35eEngine();
 
   describe('prepareData', () => {
+    it('returns a new document reference from prepareData without mutating the original system', () => {
+      const doc = makeDoc({
+        classLevels: [
+          {
+            classId: 'fighter',
+            level: 1,
+            hitDieRolls: [10],
+            bab: 'full',
+            fortSave: 'good',
+            refSave: 'poor',
+            willSave: 'poor',
+            skillPointsPerLevel: 2,
+          },
+        ],
+        hitPoints: { current: 20, max: 20, temp: 0 },
+      });
+      const originalSystem = doc.system;
+      const originalHitPoints = { ...doc.system.hitPoints };
+
+      const result = engine.prepareData(doc);
+
+      expect(result).not.toBe(doc);
+      expect(result.system).not.toBe(originalSystem);
+      expect(result.system.saves).not.toBe(originalSystem.saves);
+      expect(result.system.hitPoints).not.toBe(originalSystem.hitPoints);
+      expect(doc.system.baseAttackBonus).toBe(0);
+      expect(doc.system.hitPoints).toEqual(originalHitPoints);
+    });
+
     it('calculates BAB from full progression class', () => {
       const doc = makeDoc({
         classLevels: [
@@ -205,6 +234,13 @@ describe('Dnd35eEngine', () => {
       const result = engine.applyDamage(doc, 12, 'slashing');
       expect(result.system.hitPoints.temp).toBe(0);
       expect(result.system.hitPoints.current).toBe(16);
+    });
+
+    it('treats negative damage as healing without consuming temp HP', () => {
+      const doc = makeDoc({ hitPoints: { current: 5, max: 20, temp: 4 } });
+      const result = engine.applyDamage(doc, -6, 'healing');
+      expect(result.system.hitPoints.current).toBe(11);
+      expect(result.system.hitPoints.temp).toBe(4);
     });
   });
 });

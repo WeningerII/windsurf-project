@@ -19,6 +19,26 @@ describe('Dnd5eEngine', () => {
   const engine = new Dnd5eEngine();
 
   describe('prepareData', () => {
+    it('returns a new document reference from prepareData without mutating the original system', () => {
+      const doc = makeDoc({
+        classLevels: [{ classId: 'fighter', level: 1, hitDieRolls: [10] }],
+        hitPoints: { current: 20, max: 20, temp: 0 },
+        armorClass: 5,
+        initiative: -1,
+      });
+      const originalSystem = doc.system;
+      const originalHitPoints = { ...doc.system.hitPoints };
+
+      const result = engine.prepareData(doc);
+
+      expect(result).not.toBe(doc);
+      expect(result.system).not.toBe(originalSystem);
+      expect(result.system.hitPoints).not.toBe(originalSystem.hitPoints);
+      expect(doc.system.hitPoints).toEqual(originalHitPoints);
+      expect(doc.system.armorClass).toBe(5);
+      expect(doc.system.initiative).toBe(-1);
+    });
+
     it('calculates proficiency bonus from level', () => {
       const doc = makeDoc({ level: 1 });
       const result = engine.prepareData(doc);
@@ -50,6 +70,12 @@ describe('Dnd5eEngine', () => {
       const result = engine.prepareData(doc);
       // CON mod = -4, roll 1 + (-4) = -3, clamped to 1
       expect(result.system.hitPoints.max).toBe(1);
+    });
+
+    it('preserves default max HP when no class levels are present', () => {
+      const result = engine.prepareData(makeDoc());
+      expect(result.system.hitPoints.max).toBe(10);
+      expect(result.system.hitPoints.current).toBe(10);
     });
 
     it('calculates AC = 10 + DEX mod', () => {

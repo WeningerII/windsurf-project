@@ -1,10 +1,11 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
-import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useDocuments } from '../../hooks/useDocuments';
 import { registerAllSystems } from '../../systems';
 import { systemRegistry } from '../../registry';
 import { createDefaultDnd5e2024Data } from '../../systems/dnd5e-2024/data-model';
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
+import * as documentStorage from '../../utils/documentStorage';
 
 function makeDoc(id = 'doc-1', name = 'Hook Hero'): CharacterDocument<SystemDataModel> {
   return {
@@ -33,6 +34,7 @@ describe('useDocuments', () => {
 
   beforeEach(() => {
     localStorage.clear();
+    vi.restoreAllMocks();
   });
 
   it('loads persisted documents on mount', async () => {
@@ -62,17 +64,17 @@ describe('useDocuments', () => {
     act(() => {
       result.current.addDocument(doc);
     });
-    expect(readStoredDocs()).toHaveLength(1);
+    await waitFor(() => expect(readStoredDocs()).toHaveLength(1));
 
     act(() => {
       result.current.updateDocument({ ...doc, name: 'Updated Hook Hero' });
     });
-    expect(readStoredDocs()[0].name).toBe('Updated Hook Hero');
+    await waitFor(() => expect(readStoredDocs()[0].name).toBe('Updated Hook Hero'));
 
     act(() => {
       result.current.deleteDocument(doc.id);
     });
-    expect(readStoredDocs()).toHaveLength(0);
+    await waitFor(() => expect(readStoredDocs()).toHaveLength(0));
   });
 
   it('clears all documents and removes storage key', async () => {
@@ -82,14 +84,13 @@ describe('useDocuments', () => {
     act(() => {
       result.current.addDocument(makeDoc('clear-doc-a', 'Clear A'));
       result.current.addDocument(makeDoc('clear-doc-b', 'Clear B'));
-    });
-    expect(readStoredDocs()).toHaveLength(2);
-
-    act(() => {
       result.current.clearAllDocuments();
     });
 
     expect(result.current.documents).toHaveLength(0);
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 350));
+    });
     expect(localStorage.getItem('rpg-documents-v2')).toBeNull();
   });
 
@@ -131,6 +132,74 @@ describe('useDocuments', () => {
       result.current.redo();
     });
     expect(result.current.documents[0].name).toBe('History Hero Updated');
-    expect(readStoredDocs()[0].name).toBe('History Hero Updated');
+    await waitFor(() => expect(readStoredDocs()[0].name).toBe('History Hero Updated'));
+  });
+
+  it('coalesces rapid same-document updates into a single undo step', async () => {
+    const { result } = renderHook(() => useDocuments());
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    const doc = makeDoc('coalesce-doc', 'Base Name');
+    act(() => {
+      result.current.addDocument(doc);
+    });
+
+    act(() => {
+      result.current.updateDocument({ ...doc, name: 'First Edit' });
+      result.current.updateDocument({ ...doc, name: 'Second Edit' });
+    });
+
+    expect(result.current.documents[0].name).toBe('Second Edit');
+
+    act(() => {
+      result.current.undo();
+    });
+
+    expect(result.current.documents[0].name).toBe('Base Name');
+  });
+
+  it('does not let async IndexedDB load overwrite local edits made after mount', async () => {
+    const staleAsyncDoc = makeDoc('stale-idb-doc', 'IndexedDB Hero');
+    let resolveAsyncLoad:
+      | ((docs: CharacterDocument<SystemDataModel>[]) => void)
+      | undefined;
+
+    vi.spyOn(documentStorage, 'loadDocuments').mockReturnValue([]);
+    vi.spyOn(documentStorage, 'loadDocumentsAsync').mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          resolveAsyncLoad = resolve;
+        })
+    );
+
+    const { result } = renderHook(() => useDocuments());
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    act(() => {
+      result.current.addDocument(makeDoc('local-doc', 'Local Hero'));
+    });
+    expect(result.current.documents.map((doc) => doc.name)).toEqual(['Local Hero']);
+
+    await act(async () => {
+      resolveAsyncLoad?.([staleAsyncDoc]);
+      await Promise.resolve();
+    });
+
+    expect(result.current.documents.map((doc) => doc.name)).toEqual(['Local Hero']);
+  });
+
+  it('flushes pending debounced document saves on unmount', async () => {
+    const { result, unmount } = renderHook(() => useDocuments());
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    const doc = makeDoc('flush-doc', 'Flush Hero');
+    act(() => {
+      result.current.addDocument(doc);
+      result.current.updateDocument({ ...doc, name: 'Flushed Hook Hero' });
+    });
+
+    unmount();
+
+    expect(readStoredDocs()).toMatchObject([{ name: 'Flushed Hook Hero' }]);
   });
 });

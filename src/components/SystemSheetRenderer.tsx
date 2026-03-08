@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { systemRegistry } from '../registry';
 import { CharacterDocument, SystemDataModel } from '../types/core/document';
+import { Skeleton } from './ui/Skeleton';
 
 interface Props {
   document: CharacterDocument<SystemDataModel>;
@@ -20,5 +21,17 @@ export const SystemSheetRenderer: React.FC<Props> = ({ document, onUpdate }) => 
   }
 
   const Sheet = systemDef.SheetComponent;
-  return <Sheet document={document} onUpdate={onUpdate} />;
+  return (
+    <Suspense
+      fallback={
+        <div className="space-y-4 p-4">
+          <Skeleton className="h-10 w-1/3" />
+          <Skeleton className="h-24 w-full" />
+          <Skeleton className="h-64 w-full" />
+        </div>
+      }
+    >
+      <Sheet document={document} onUpdate={onUpdate} />
+    </Suspense>
+  );
 };

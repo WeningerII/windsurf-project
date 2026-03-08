@@ -1,7 +1,7 @@
 import { SystemDefinition } from '../../registry/types';
 import { DaggerheartDataModel, createDefaultDaggerheartData } from './data-model';
 import { DaggerheartEngine } from './engine';
-import { DaggerheartSheet } from './sheet';
+import { lazy } from 'react';
 
 export const DaggerheartSystemDef: SystemDefinition<DaggerheartDataModel> = {
   id: 'daggerheart',
@@ -50,5 +50,5 @@ export const DaggerheartSystemDef: SystemDefinition<DaggerheartDataModel> = {
   skills: [],
   createDefaultData: createDefaultDaggerheartData,
   engine: new DaggerheartEngine(),
-  SheetComponent: DaggerheartSheet,
+  SheetComponent: lazy(() => import('./sheet').then((m) => ({ default: m.DaggerheartSheet }))),
 };

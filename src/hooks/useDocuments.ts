@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { CharacterDocument, SystemDataModel } from '../types/core/document';
 import {
   saveDocuments,
@@ -7,6 +7,7 @@ import {
   clearDocumentStorage,
 } from '../utils/documentStorage';
 import { systemRegistry } from '../registry';
+import { debounce, throttle } from '../utils/performance';
 
 const MAX_HISTORY = 50;
 
@@ -32,10 +33,17 @@ export const useDocuments = () => {
   const [historyPast, setHistoryPast] = useState<CharacterDocument<SystemDataModel>[][]>([]);
   const [historyFuture, setHistoryFuture] = useState<CharacterDocument<SystemDataModel>[][]>([]);
   const documentsRef = useRef<CharacterDocument<SystemDataModel>[]>([]);
+  const historyPastRef = useRef<CharacterDocument<SystemDataModel>[][]>([]);
+  const hasLocalEditsRef = useRef(false);
+  const persistVersionRef = useRef(0);
 
   useEffect(() => {
     documentsRef.current = documents;
   }, [documents]);
+
+  useEffect(() => {
+    historyPastRef.current = historyPast;
+  }, [historyPast]);
 
   useEffect(() => {
     // Fast synchronous load from localStorage first
@@ -51,7 +59,11 @@ export const useDocuments = () => {
     // Then attempt async IndexedDB load (may auto-migrate localStorage data)
     loadDocumentsAsync()
       .then((asyncDocs) => {
-        if (asyncDocs.length > 0) {
+        if (
+          asyncDocs.length > 0 &&
+          historyPastRef.current.length === 0 &&
+          !hasLocalEditsRef.current
+        ) {
           setDocuments(asyncDocs);
         }
       })
@@ -68,23 +80,48 @@ export const useDocuments = () => {
     }
   }, []);
 
+  const debouncedPersist = useMemo(
+    () =>
+      debounce((docs: CharacterDocument<SystemDataModel>[], version: number) => {
+        if (version !== persistVersionRef.current) return;
+        persist(docs);
+      }, 300),
+    [persist]
+  );
+
+  useEffect(() => () => debouncedPersist.flush(), [debouncedPersist]);
+
   const pushHistorySnapshot = useCallback((snapshot: CharacterDocument<SystemDataModel>[]) => {
     setHistoryPast((prev) => [...prev.slice(-(MAX_HISTORY - 1)), cloneDocumentsSnapshot(snapshot)]);
     setHistoryFuture([]);
   }, []);
 
+  const throttledPushHistory = useMemo(
+    () =>
+      throttle((snapshot: CharacterDocument<SystemDataModel>[]) => {
+        pushHistorySnapshot(snapshot);
+      }, 500),
+    [pushHistorySnapshot]
+  );
+
   const applyDocumentsUpdate = useCallback(
     (
       updater: (prev: CharacterDocument<SystemDataModel>[]) => CharacterDocument<SystemDataModel>[]
     ) => {
+      const persistVersion = ++persistVersionRef.current;
       setDocuments((prev) => {
         const next = updater(prev);
-        pushHistorySnapshot(prev);
-        persist(next);
+        hasLocalEditsRef.current = true;
+        if (next.length === prev.length) {
+          throttledPushHistory(prev);
+        } else {
+          pushHistorySnapshot(prev);
+        }
+        debouncedPersist(next, persistVersion);
         return next;
       });
     },
-    [persist, pushHistorySnapshot]
+    [debouncedPersist, pushHistorySnapshot, throttledPushHistory]
   );
 
   const addDocument = useCallback(
@@ -131,17 +168,21 @@ export const useDocuments = () => {
   );
 
   const clearAllDocuments = useCallback(() => {
+    hasLocalEditsRef.current = true;
+    persistVersionRef.current += 1;
     pushHistorySnapshot(documentsRef.current);
+    debouncedPersist.cancel();
     setDocuments([]);
     try {
       clearDocumentStorage();
+      setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to clear document data');
     }
-    setError(null);
-  }, [pushHistorySnapshot]);
+  }, [debouncedPersist, pushHistorySnapshot]);
 
   const undo = useCallback(() => {
+    const persistVersion = ++persistVersionRef.current;
     setHistoryPast((past) => {
       if (past.length === 0) return past;
 
@@ -151,14 +192,16 @@ export const useDocuments = () => {
         cloneDocumentsSnapshot(current),
         ...future.slice(0, MAX_HISTORY - 1),
       ]);
+      hasLocalEditsRef.current = true;
       setDocuments(cloneDocumentsSnapshot(previous));
-      persist(previous);
+      debouncedPersist(previous, persistVersion);
 
       return past.slice(0, -1);
     });
-  }, [persist]);
+  }, [debouncedPersist]);
 
   const redo = useCallback(() => {
+    const persistVersion = ++persistVersionRef.current;
     setHistoryFuture((future) => {
       if (future.length === 0) return future;
 
@@ -168,12 +211,13 @@ export const useDocuments = () => {
         ...past.slice(-(MAX_HISTORY - 1)),
         cloneDocumentsSnapshot(current),
       ]);
+      hasLocalEditsRef.current = true;
       setDocuments(cloneDocumentsSnapshot(next));
-      persist(next);
+      debouncedPersist(next, persistVersion);
 
       return future.slice(1);
     });
-  }, [persist]);
+  }, [debouncedPersist]);
 
   const clearError = useCallback(() => {
     setError(null);

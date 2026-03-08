@@ -76,7 +76,25 @@ function applyToughnessFailure(
  */
 export class Mam3eEngine implements SystemEngine<Mam3eDataModel> {
   prepareData(document: CharacterDocument<Mam3eDataModel>): CharacterDocument<Mam3eDataModel> {
-    const data = document.system;
+    const clonedDoc = {
+      ...document,
+      system: {
+        ...document.system,
+        powerPoints: {
+          ...document.system.powerPoints,
+          spent: { ...document.system.powerPoints.spent },
+        },
+        defenses: {
+          dodge: { ...document.system.defenses.dodge },
+          parry: { ...document.system.defenses.parry },
+          fortitude: { ...document.system.defenses.fortitude },
+          toughness: { ...document.system.defenses.toughness },
+          will: { ...document.system.defenses.will },
+        },
+        skills: { ...document.system.skills },
+      },
+    };
+    const data = clonedDoc.system;
     data.conditionTrack = normalizeConditionTrack(data.conditionTrack);
 
     // 1. Calculate Ability Costs (2 PP per rank)
@@ -206,7 +224,7 @@ export class Mam3eEngine implements SystemEngine<Mam3eDataModel> {
 
     data.plViolations = violations;
 
-    return document;
+    return clonedDoc;
   }
 
   async rollCheck(
@@ -250,12 +268,19 @@ export class Mam3eEngine implements SystemEngine<Mam3eDataModel> {
     amount: number,
     _type: string
   ): CharacterDocument<Mam3eDataModel> {
+    const clonedDoc = {
+      ...document,
+      system: {
+        ...document.system,
+        conditionTrack: { ...document.system.conditionTrack },
+      },
+    };
     // For M&M, "amount" is interpreted as Toughness failure margin.
     const margin = Math.max(0, Math.floor(amount));
-    if (margin <= 0) return document;
+    if (margin <= 0) return clonedDoc;
 
-    const current = normalizeConditionTrack(document.system.conditionTrack);
-    document.system.conditionTrack = applyToughnessFailure(current, margin);
-    return document;
+    const current = normalizeConditionTrack(clonedDoc.system.conditionTrack);
+    clonedDoc.system.conditionTrack = applyToughnessFailure(current, margin);
+    return clonedDoc;
   }
 }

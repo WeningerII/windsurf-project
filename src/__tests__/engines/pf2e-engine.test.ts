@@ -19,6 +19,25 @@ describe('Pf2eEngine', () => {
   const engine = new Pf2eEngine();
 
   describe('prepareData', () => {
+    it('returns a new document reference from prepareData without mutating the original system', () => {
+      const doc = makeDoc({
+        level: 5,
+        skillProficiencies: {
+          athletics: { tier: 'trained', total: 0 },
+        },
+      });
+      const originalSystem = doc.system;
+      const originalSkillProficiencies = doc.system.skillProficiencies;
+
+      const result = engine.prepareData(doc);
+
+      expect(result).not.toBe(doc);
+      expect(result.system).not.toBe(originalSystem);
+      expect(result.system.skillProficiencies).not.toBe(originalSkillProficiencies);
+      expect(doc.system.skillProficiencies.athletics.total).toBe(0);
+      expect(doc.system.armorClass).toBe(10);
+    });
+
     it('computes proficiency totals: trained = level + 2', () => {
       const doc = makeDoc({
         level: 5,
@@ -79,7 +98,37 @@ describe('Pf2eEngine', () => {
       expect(result.system.armorClass).toBe(19);
     });
 
-    it('applies status penalties from conditions to AC', () => {
+    it('does not change heavy armor AC from clumsy when the armor dex cap is 0', () => {
+      const doc = makeDoc({
+        level: 4,
+        baseAttributes: { str: 10, dex: 16, con: 10, int: 10, wis: 10, cha: 10 },
+        armorProficiencies: {
+          unarmored: { tier: 'untrained', total: 0 },
+          light: { tier: 'untrained', total: 0 },
+          medium: { tier: 'untrained', total: 0 },
+          heavy: { tier: 'trained', total: 0 },
+        },
+        equipment: [
+          {
+            itemId: 'full-plate',
+            name: 'Full Plate',
+            bulk: 4,
+            equipped: true,
+            armorClass: 6,
+            armorType: 'heavy',
+            dexBonusMax: 0,
+          },
+        ],
+        conditions: [
+          { id: 'cond-clumsy', name: 'Clumsy', value: 2 },
+        ],
+      });
+
+      const result = engine.prepareData(doc);
+      expect(result.system.armorClass).toBe(22);
+    });
+
+    it('reduces unarmored AC from clumsy via effective dexterity only', () => {
       const doc = makeDoc({
         level: 4,
         baseAttributes: { str: 10, dex: 16, con: 10, int: 10, wis: 10, cha: 10 },
@@ -96,7 +145,6 @@ describe('Pf2eEngine', () => {
       });
 
       const result = engine.prepareData(doc);
-      // Base AC 19, highest status penalty is 2 => 17
       expect(result.system.armorClass).toBe(17);
     });
 

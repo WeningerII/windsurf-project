@@ -1,4 +1,12 @@
-/**
+import * as fs from 'fs';
+
+let p = 'src/utils/performance.ts';
+let code = fs.readFileSync(p, 'utf8');
+
+// Only keep debounce and throttle.
+// The file might contain memoize, useDebounce, usePrevious, getPerformanceMetrics, clearPerformanceMetrics, measurePerformance, measurePerformanceAsync.
+
+const newCode = `/**
  * Simple debounce function to limit how often a function is called
  */
 export function debounce<T extends (...args: any[]) => void>(
@@ -70,3 +78,12 @@ export function throttle<T extends (...args: any[]) => void>(
     }
   };
 }
+`;
+
+fs.writeFileSync(p, newCode);
+
+p = 'src/main.tsx';
+code = fs.readFileSync(p, 'utf8');
+code = code.replace(/import \{ reportWebVitals \} from '\.\/utils\/performanceMonitoring';\n/, '');
+code = code.replace(/reportWebVitals\(console\.table\);\n/, '');
+fs.writeFileSync(p, code);

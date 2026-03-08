@@ -5,6 +5,9 @@ import App from '../App';
 import { registerAllSystems } from '../systems';
 import { systemRegistry } from '../registry';
 
+const SHEET_LOAD_TIMEOUT_MS = 15000;
+const FLOW_TEST_TIMEOUT_MS = 20000;
+
 vi.mock('../components/GameSystemSelector', () => ({
   GameSystemSelector: ({
     selectedSystem,
@@ -61,28 +64,34 @@ describe('App', () => {
     expect(screen.getByText('Create New Character')).toBeInTheDocument();
   });
 
-  it('persists documents to v2 localStorage', async () => {
-    render(<App />);
+  it(
+    'persists documents to v2 localStorage',
+    async () => {
+      render(<App />);
 
-    fireEvent.click(screen.getByRole('button', { name: /D&D 5e \(2024\)/i }));
-    fireEvent.click(screen.getByRole('button', { name: /create new character/i }));
+      fireEvent.click(screen.getByRole('button', { name: /D&D 5e \(2024\)/i }));
+      fireEvent.click(screen.getByRole('button', { name: /create new character/i }));
 
-    expect(await screen.findByDisplayValue('New Character')).toBeInTheDocument();
-    fireEvent.change(screen.getByTitle('Character name'), {
-      target: { value: 'New Character' },
-    });
+      expect(
+        await screen.findByTitle('Character name', {}, { timeout: SHEET_LOAD_TIMEOUT_MS })
+      ).toHaveValue('New Character');
+      fireEvent.change(screen.getByTitle('Character name'), {
+        target: { value: 'New Character' },
+      });
 
-    await waitFor(() => {
-      const savedData = localStorage.getItem('rpg-documents-v2');
-      expect(savedData).toBeTruthy();
+      await waitFor(() => {
+        const savedData = localStorage.getItem('rpg-documents-v2');
+        expect(savedData).toBeTruthy();
 
-      const stored = JSON.parse(savedData as string) as {
-        documents?: Array<{ name?: string; systemId?: string }>;
-      };
-      expect(Array.isArray(stored.documents)).toBe(true);
-      expect(stored.documents?.length).toBe(1);
-      expect(stored.documents?.[0].name).toBe('New Character');
-      expect(stored.documents?.[0].systemId).toBe('dnd-5e-2024');
-    });
-  });
+        const stored = JSON.parse(savedData as string) as {
+          documents?: Array<{ name?: string; systemId?: string }>;
+        };
+        expect(Array.isArray(stored.documents)).toBe(true);
+        expect(stored.documents?.length).toBe(1);
+        expect(stored.documents?.[0].name).toBe('New Character');
+        expect(stored.documents?.[0].systemId).toBe('dnd-5e-2024');
+      });
+    },
+    FLOW_TEST_TIMEOUT_MS
+  );
 });

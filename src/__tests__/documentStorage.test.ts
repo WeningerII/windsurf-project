@@ -4,9 +4,12 @@ import {
   exportDocuments,
   importDocuments,
   loadDocuments,
+  resetDocumentStorageDiagnosticsForTests,
   saveDocuments,
 } from '../utils/documentStorage';
 import type { CharacterDocument, SystemDataModel } from '../types/core/document';
+import * as indexedDBAdapter from '../utils/indexedDBAdapter';
+import * as notifications from '../utils/notifications';
 
 const V2_KEY = 'rpg-documents-v2';
 
@@ -40,6 +43,7 @@ describe('documentStorage behavior', () => {
   beforeEach(() => {
     process.env.NODE_ENV = 'test';
     localStorage.clear();
+    resetDocumentStorageDiagnosticsForTests();
     vi.restoreAllMocks();
   });
 
@@ -151,5 +155,24 @@ describe('documentStorage behavior', () => {
     localStorage.setItem(V2_KEY, json);
     clearDocumentStorage();
     expect(localStorage.getItem(V2_KEY)).toBeNull();
+  });
+
+  it('shows a warning toast after 3 consecutive IndexedDB save failures', async () => {
+    vi.spyOn(indexedDBAdapter, 'isIndexedDBAvailable').mockReturnValue(true);
+    vi.spyOn(indexedDBAdapter, 'idbSaveDocuments').mockRejectedValue(new Error('IndexedDB down'));
+    const toastSpy = vi.spyOn(notifications, 'emitToast').mockImplementation(() => {});
+
+    saveDocuments([baseV2Document]);
+    saveDocuments([baseV2Document]);
+    saveDocuments([baseV2Document]);
+
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(toastSpy).toHaveBeenCalledTimes(1);
+    expect(toastSpy).toHaveBeenCalledWith(
+      'Changes are saving to browser storage only. Larger storage (IndexedDB) is unavailable.',
+      'warning'
+    );
   });
 });

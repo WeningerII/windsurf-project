@@ -1,10 +1,12 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import type { Campaign } from '../types/core/campaign';
 import { loadCampaigns, saveCampaigns, clearCampaignStorage } from '../utils/campaignStorage';
+import { debounce } from '../utils/performance';
 
 export const useCampaigns = () => {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const persistVersionRef = useRef(0);
 
   useEffect(() => {
     setCampaigns(loadCampaigns());
@@ -15,58 +17,74 @@ export const useCampaigns = () => {
     saveCampaigns(next);
   }, []);
 
+  const debouncedPersist = useMemo(
+    () =>
+      debounce((next: Campaign[], version: number) => {
+        if (version !== persistVersionRef.current) return;
+        persist(next);
+      }, 300),
+    [persist, persistVersionRef]
+  );
+
+  useEffect(() => () => debouncedPersist.flush(), [debouncedPersist]);
+
   const addCampaign = useCallback(
     (campaign: Campaign) => {
+      const persistVersion = ++persistVersionRef.current;
       setCampaigns((prev) => {
         const next = [...prev, campaign];
-        persist(next);
+        debouncedPersist(next, persistVersion);
         return next;
       });
     },
-    [persist]
+    [debouncedPersist, persistVersionRef]
   );
 
   const updateCampaign = useCallback(
     (campaign: Campaign) => {
+      const persistVersion = ++persistVersionRef.current;
       setCampaigns((prev) => {
         const next = prev.map((c) =>
           c.id === campaign.id ? { ...campaign, updatedAt: new Date() } : c
         );
-        persist(next);
+        debouncedPersist(next, persistVersion);
         return next;
       });
     },
-    [persist]
+    [debouncedPersist, persistVersionRef]
   );
 
   const deleteCampaign = useCallback(
     (id: string) => {
+      const persistVersion = ++persistVersionRef.current;
       setCampaigns((prev) => {
         const next = prev.filter((c) => c.id !== id);
-        persist(next);
+        debouncedPersist(next, persistVersion);
         return next;
       });
     },
-    [persist]
+    [debouncedPersist, persistVersionRef]
   );
 
   const addCharacterToCampaign = useCallback(
     (campaignId: string, characterId: string) => {
+      const persistVersion = ++persistVersionRef.current;
       setCampaigns((prev) => {
         const next = prev.map((c) => {
           if (c.id !== campaignId) return c;
           if (c.characterIds.includes(characterId)) return c;
           return { ...c, characterIds: [...c.characterIds, characterId], updatedAt: new Date() };
         });
-        persist(next);
+        debouncedPersist(next, persistVersion);
         return next;
       });
     },
-    [persist]
+    [debouncedPersist, persistVersionRef]
   );
 
   const removeCharacterFromCampaign = useCallback(
     (campaignId: string, characterId: string) => {
+      const persistVersion = ++persistVersionRef.current;
       setCampaigns((prev) => {
         const next = prev.map((c) => {
           if (c.id !== campaignId) return c;
@@ -76,17 +94,19 @@ export const useCampaigns = () => {
             updatedAt: new Date(),
           };
         });
-        persist(next);
+        debouncedPersist(next, persistVersion);
         return next;
       });
     },
-    [persist]
+    [debouncedPersist, persistVersionRef]
   );
 
   const clearAllCampaigns = useCallback(() => {
+    persistVersionRef.current += 1;
+    debouncedPersist.cancel();
     setCampaigns([]);
     clearCampaignStorage();
-  }, []);
+  }, [debouncedPersist, persistVersionRef]);
 
   return {
     campaigns,

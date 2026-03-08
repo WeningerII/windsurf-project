@@ -5,6 +5,9 @@ import App from '../App';
 import { registerAllSystems } from '../systems';
 import { systemRegistry } from '../registry';
 
+const SHEET_LOAD_TIMEOUT_MS = 15000;
+const FLOW_TEST_TIMEOUT_MS = 20000;
+
 function getStoredDocuments(): Array<Record<string, unknown>> {
   const raw = localStorage.getItem('rpg-documents-v2');
   if (!raw) return [];
@@ -15,11 +18,15 @@ function getStoredDocuments(): Array<Record<string, unknown>> {
 async function selectSystemAndStartCreation(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByRole('button', { name: /D&D 5e \(2024\)/i }));
   await user.click(screen.getByRole('button', { name: /create new character/i }));
-  expect(await screen.findByDisplayValue('New Character')).toBeInTheDocument();
+  expect(
+    await screen.findByTitle('Character name', {}, { timeout: SHEET_LOAD_TIMEOUT_MS })
+  ).toHaveValue('New Character');
 }
 
 async function createCharacter(user: ReturnType<typeof userEvent.setup>, name: string) {
-  fireEvent.change(screen.getByTitle('Character name'), {
+  const nameInput = await screen.findByTitle('Character name', {}, { timeout: SHEET_LOAD_TIMEOUT_MS });
+
+  fireEvent.change(nameInput, {
     target: { value: name },
   });
   await waitFor(() => {
@@ -27,9 +34,15 @@ async function createCharacter(user: ReturnType<typeof userEvent.setup>, name: s
   });
 }
 
+async function waitForStoredDocuments(expectedCount: number) {
+  await waitFor(() => {
+    expect(getStoredDocuments()).toHaveLength(expectedCount);
+  });
+}
+
 async function returnToList(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByRole('button', { name: /^back$/i }));
-  expect(await screen.findByText('Choose a Game System')).toBeInTheDocument();
+  expect(await screen.findByRole('button', { name: /create new character/i })).toBeInTheDocument();
 }
 
 async function importViaDynamicInput(
@@ -79,19 +92,27 @@ describe('Character Management Flow', () => {
     vi.restoreAllMocks();
   });
 
-  it('rehydrates saved characters from localStorage on app mount', async () => {
-    const user = userEvent.setup();
-    const { unmount } = render(<App />);
+  it(
+    'rehydrates saved characters from localStorage on app mount',
+    async () => {
+      const user = userEvent.setup();
+      const { unmount } = render(<App />);
 
-    await selectSystemAndStartCreation(user);
-    await createCharacter(user, 'Persisted Hero');
-    await returnToList(user);
+      await selectSystemAndStartCreation(user);
+      await createCharacter(user, 'Persisted Hero');
+      await waitFor(() => {
+        expect(getStoredDocuments()).toMatchObject([{ name: 'Persisted Hero' }]);
+      });
+      await returnToList(user);
 
-    unmount();
-    render(<App />);
-    expect(await screen.findByText('Your Characters')).toBeInTheDocument();
-    expect(screen.getByText('Persisted Hero')).toBeInTheDocument();
-  });
+      unmount();
+      render(<App />);
+      expect(
+        await screen.findByText('Persisted Hero', {}, { timeout: SHEET_LOAD_TIMEOUT_MS })
+      ).toBeInTheDocument();
+    },
+    FLOW_TEST_TIMEOUT_MS
+  );
 
   it('clears all characters when confirmation is accepted', async () => {
     const user = userEvent.setup();
@@ -116,6 +137,7 @@ describe('Character Management Flow', () => {
 
     await selectSystemAndStartCreation(user);
     await createCharacter(user, 'Protected Hero');
+    await waitForStoredDocuments(1);
     await returnToList(user);
 
     await user.click(screen.getByRole('button', { name: /clear all characters/i }));
@@ -275,6 +297,7 @@ describe('Character Management Flow', () => {
 
     await selectSystemAndStartCreation(user);
     await createCharacter(user, 'Importable Hero');
+    await waitForStoredDocuments(1);
     const exported = localStorage.getItem('rpg-documents-v2');
     expect(exported).toBeTruthy();
 

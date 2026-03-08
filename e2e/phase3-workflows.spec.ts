@@ -24,6 +24,68 @@ async function renameCharacter(page: Page, name: string) {
   await nameInput.fill(name);
 }
 
+async function installDownloadCapture(page: Page) {
+  await page.evaluate(() => {
+    if ((window as Window & { __downloadCaptureInstalled?: boolean }).__downloadCaptureInstalled) {
+      (window as Window & { __capturedDownloads?: Array<{ href: string; download: string }> })
+        .__capturedDownloads = [];
+      return;
+    }
+
+    const downloadWindow = window as Window & {
+      __capturedDownloads?: Array<{ href: string; download: string }>;
+      __downloadCaptureInstalled?: boolean;
+    };
+    downloadWindow.__capturedDownloads = [];
+
+    const originalCreateElement = document.createElement.bind(document);
+    document.createElement = ((tagName: string, options?: ElementCreationOptions) => {
+      const element = originalCreateElement(tagName, options);
+      if (tagName.toLowerCase() === 'a') {
+        const originalClick = element.click.bind(element);
+        element.click = () => {
+          downloadWindow.__capturedDownloads?.push({
+            href: element.getAttribute('href') ?? '',
+            download: element.getAttribute('download') ?? '',
+          });
+          originalClick();
+        };
+      }
+      return element;
+    }) as typeof document.createElement;
+
+    downloadWindow.__downloadCaptureInstalled = true;
+  });
+}
+
+async function waitForCapturedDownload(page: Page) {
+  await expect
+    .poll(
+      () =>
+        page.evaluate(() => {
+          const captured = (
+            window as Window & {
+              __capturedDownloads?: Array<{ href: string; download: string }>;
+            }
+          ).__capturedDownloads;
+          return captured && captured.length > 0 ? captured[0] : null;
+        }),
+      {
+        message: 'expected export action to create a downloadable payload',
+      }
+    )
+    .not.toBeNull();
+
+  return page.evaluate(() => {
+    const captured = (
+      window as Window & {
+        __capturedDownloads?: Array<{ href: string; download: string }>;
+      }
+    ).__capturedDownloads;
+    return captured?.[0] ?? null;
+  });
+}
+
 test.beforeEach(async ({ page }) => {
   await page.goto('/', { waitUntil: 'domcontentloaded' });
   await page.evaluate(() => localStorage.clear());
@@ -137,4 +199,92 @@ test('creates and persists a Daggerheart scaffold character', async ({ page }) =
   await page.reload();
   await expect(page.getByRole('heading', { name: 'Your Characters' })).toBeVisible();
   await expect(page.getByText('Hopebound E2E Hero')).toBeVisible();
+});
+
+test('persists dark mode across reloads', async ({ page }) => {
+  const themeToggle = page.getByRole('button', { name: /Current theme:/i });
+
+  await expect(themeToggle).toHaveAttribute('title', 'Theme: system');
+  await themeToggle.click();
+  await themeToggle.click();
+
+  await expect(themeToggle).toHaveAttribute('title', 'Theme: dark');
+  await expect(page.locator('html')).toHaveClass(/dark/);
+  await expect.poll(() => page.evaluate(() => localStorage.getItem('rpg-theme'))).toBe('dark');
+
+  await page.reload();
+
+  await expect(page.getByRole('button', { name: /Current theme: dark/i })).toBeVisible();
+  await expect(page.locator('html')).toHaveClass(/dark/);
+});
+
+test('roundtrips exported characters through clear-all and import', async ({ page }) => {
+  await installDownloadCapture(page);
+
+  await createCharacterForSystem(page);
+  await renameCharacter(page, 'Roundtrip E2E Hero');
+
+  await page.getByRole('button', { name: /^Back$/i }).click();
+  await expect(page.getByRole('heading', { name: 'Your Characters' })).toBeVisible();
+
+  await page.getByRole('button', { name: /Export All Characters/i }).click();
+  const capturedDownload = await waitForCapturedDownload(page);
+  expect(capturedDownload?.download).toMatch(/^all_characters_\d{4}-\d{2}-\d{2}\.json$/);
+  expect(capturedDownload?.href.startsWith('data:application/json;charset=utf-8,')).toBe(true);
+
+  const exportedPayload = decodeURIComponent(capturedDownload?.href.split(',', 2)[1] ?? '');
+  expect(exportedPayload).toContain('Roundtrip E2E Hero');
+
+  await page.getByRole('button', { name: /Clear All Characters/i }).click();
+  await expect(page.getByRole('heading', { name: /Delete All Characters/i })).toBeVisible();
+  await page.getByRole('button', { name: /^Delete$/i }).click();
+  await expect(page.getByRole('heading', { name: 'Your Characters' })).toHaveCount(0);
+
+  await page.getByRole('button', { name: /D&D 5e \(2024\)/i }).click();
+  const [fileChooser] = await Promise.all([
+    page.waitForEvent('filechooser'),
+    page.getByRole('button', { name: /Import Character/i }).click(),
+  ]);
+
+  await fileChooser.setFiles({
+    name: 'exported-characters.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(exportedPayload, 'utf-8'),
+  });
+
+  await expect(page.getByRole('button', { name: /^Back$/i })).toBeVisible();
+  await expect(page.locator('input[title="Character name"]')).toHaveValue('Roundtrip E2E Hero');
+
+  await page.getByRole('button', { name: /^Back$/i }).click();
+  await expect(page.getByText('Roundtrip E2E Hero')).toBeVisible();
+});
+
+test('shows a storage warning when saved data nears the browser limit', async ({ page }) => {
+  await page.evaluate(() => {
+    localStorage.setItem(
+      'rpg-documents-v2',
+      JSON.stringify({
+        version: '2.0',
+        documents: [
+          {
+            id: 'large-storage-doc',
+            name: 'Large Storage Hero',
+            systemId: 'dnd-5e-2024',
+            system: {
+              level: 1,
+              __largePayload: 'x'.repeat(4_300_000),
+            },
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          },
+        ],
+        lastModified: new Date().toISOString(),
+      })
+    );
+  });
+
+  await page.goto('/', { waitUntil: 'domcontentloaded' });
+
+  await expect(page.getByText(/Storage usage is at/i)).toBeVisible();
+  await expect(page.getByText('Large Storage Hero')).toBeVisible();
 });

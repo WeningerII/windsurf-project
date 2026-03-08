@@ -31,6 +31,7 @@ import { ConfirmDialog } from './components/ui/ConfirmDialog';
 import { ToastProvider, useToast } from './components/ui/Toast';
 import { useCampaigns } from './hooks/useCampaigns';
 import { CampaignManager } from './components/CampaignManager';
+import { prefetchSystemAssetsForIds } from './utils/systemAssetPrefetch';
 
 type CharacterSortOption =
   | 'updated-desc'
@@ -225,6 +226,15 @@ function AppContent() {
   useEffect(() => {
     initBrowserCompat();
   }, []);
+
+  useEffect(() => {
+    const activeSystemIds = new Set<GameSystemId>();
+    documents.forEach((doc) => activeSystemIds.add(doc.systemId as GameSystemId));
+    if (selectedSystem) {
+      activeSystemIds.add(selectedSystem);
+    }
+    prefetchSystemAssetsForIds(activeSystemIds);
+  }, [documents, selectedSystem]);
 
   const handleCreateCharacter = () => {
     if (!selectedSystem) return;

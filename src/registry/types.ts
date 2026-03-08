@@ -3,6 +3,17 @@ export type { SystemDataModel };
 import React from 'react';
 import type { Attribute, Skill } from '../types/game-systems';
 
+type SheetProps<T extends SystemDataModel> = {
+  document: CharacterDocument<T>;
+  onUpdate?: (document: CharacterDocument<SystemDataModel>) => void;
+};
+
+export type SystemSheetComponent<T extends SystemDataModel> =
+  | React.ComponentType<SheetProps<T>>
+  | (React.LazyExoticComponent<React.ComponentType<SheetProps<T>>> & {
+      preload?: () => Promise<unknown>;
+    });
+
 /**
  * Result of a mechanical roll.
  * Systems can extend this to add their own metadata (e.g., "Critical Success").
@@ -76,8 +87,5 @@ export interface SystemDefinition<T extends SystemDataModel> {
   engine: SystemEngine<T>;
 
   // The Main Character Sheet Component
-  SheetComponent: React.ComponentType<{
-    document: CharacterDocument<T>;
-    onUpdate?: (document: CharacterDocument<SystemDataModel>) => void;
-  }>;
+  SheetComponent: SystemSheetComponent<T>;
 }

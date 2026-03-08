@@ -84,56 +84,66 @@ export class Dnd5e2024Engine implements SystemEngine<Dnd5e2024DataModel> {
   prepareData(
     document: CharacterDocument<Dnd5e2024DataModel>
   ): CharacterDocument<Dnd5e2024DataModel> {
-    const d = document.system;
-    normalizeDeathSaves(document);
-    d.conditions = normalizeDnd5eConditions(d.conditions);
-    d.exhaustionLevel = Number.isFinite(d.exhaustionLevel)
-      ? Math.max(0, Math.min(6, Math.floor(d.exhaustionLevel)))
+    const clonedDoc = {
+      ...document,
+      system: {
+        ...document.system,
+        hitPoints: { ...document.system.hitPoints },
+        spellcasting: document.system.spellcasting ? { ...document.system.spellcasting, spellSlots: { ...document.system.spellcasting.spellSlots } } : undefined,
+      },
+    };
+    const data = clonedDoc.system;
+    normalizeDeathSaves(clonedDoc);
+    data.conditions = normalizeDnd5eConditions(data.conditions);
+    data.exhaustionLevel = Number.isFinite(data.exhaustionLevel)
+      ? Math.max(0, Math.min(6, Math.floor(data.exhaustionLevel)))
       : 0;
-    const conMod = abilityMod(d.baseAttributes.con ?? 10);
-    const dexMod = abilityMod(d.baseAttributes.dex ?? 10);
+    const conMod = abilityMod(data.baseAttributes.con ?? 10);
+    const dexMod = abilityMod(data.baseAttributes.dex ?? 10);
     const totalLevel =
-      d.classLevels.length > 0 ? d.classLevels.reduce((sum, cl) => sum + cl.level, 0) : d.level;
-    d.level = totalLevel;
+      data.classLevels.length > 0 ? data.classLevels.reduce((sum, cl) => sum + cl.level, 0) : data.level;
+    data.level = totalLevel;
 
     // --- Max HP ---
-    let maxHP = 0;
-    for (const cl of d.classLevels) {
-      const die = hitDieSize(cl.classId);
-      if (cl.hitDieRolls.length === 0) {
-        maxHP += die + conMod;
-      } else {
-        for (const roll of cl.hitDieRolls) {
-          maxHP += roll + conMod;
+    if (data.classLevels.length > 0) {
+      let maxHP = 0;
+      for (const cl of data.classLevels) {
+        const die = hitDieSize(cl.classId);
+        if (cl.hitDieRolls.length === 0) {
+          maxHP += die + conMod;
+        } else {
+          for (const roll of cl.hitDieRolls) {
+            maxHP += roll + conMod;
+          }
         }
       }
+      maxHP = Math.max(maxHP, totalLevel);
+      if (data.exhaustionLevel >= 4) {
+        maxHP = Math.max(1, Math.floor(maxHP / 2));
+      }
+      data.hitPoints.max = maxHP;
     }
-    maxHP = Math.max(maxHP, totalLevel);
-    if (d.exhaustionLevel >= 4) {
-      maxHP = Math.max(1, Math.floor(maxHP / 2));
-    }
-    d.hitPoints.max = maxHP;
-    d.hitPoints.current = Math.min(d.hitPoints.current, maxHP);
-    if (d.exhaustionLevel >= 6) {
-      d.hitPoints.current = 0;
-      document.system.deathSaves = { successes: 0, failures: 3 };
+    data.hitPoints.current = Math.min(data.hitPoints.current, data.hitPoints.max);
+    if (data.exhaustionLevel >= 6) {
+      data.hitPoints.current = 0;
+      clonedDoc.system.deathSaves = { successes: 0, failures: 3 };
     }
 
     // --- AC (from equipped armor, or unarmored fallback) ---
-    d.armorClass = compute5eAC(d.baseAttributes.dex ?? 10, d.equipment);
+    data.armorClass = compute5eAC(data.baseAttributes.dex ?? 10, data.equipment);
 
     // --- Initiative (2024: can be DEX or INT with Alert) ---
-    const intMod = abilityMod(d.baseAttributes.int ?? 10);
-    const hasAlertFeat = d.feats.some((feat) => {
+    const intMod = abilityMod(data.baseAttributes.int ?? 10);
+    const hasAlertFeat = data.feats.some((feat) => {
       const id = feat.id?.toLowerCase();
       const name = feat.name?.toLowerCase();
       return id === 'alert' || name === 'alert';
     });
-    d.initiative = hasAlertFeat ? Math.max(dexMod, intMod) : dexMod;
+    data.initiative = hasAlertFeat ? Math.max(dexMod, intMod) : dexMod;
 
     // --- Hit Dice ---
-    const previousHitDice = Array.isArray(d.hitDice) ? d.hitDice : [];
-    d.hitDice = d.classLevels.map((cl, index) => {
+    const previousHitDice = Array.isArray(data.hitDice) ? data.hitDice : [];
+    data.hitDice = data.classLevels.map((cl, index) => {
       const die = `d${hitDieSize(cl.classId)}`;
       const total = cl.level;
       const previous = previousHitDice[index];
@@ -155,18 +165,18 @@ export class Dnd5e2024Engine implements SystemEngine<Dnd5e2024DataModel> {
     });
 
     // --- Spell Slots (from class level tables) ---
-    if (d.spellcasting) {
-      d.spellcasting.spellSlots = compute5eSpellSlots(
-        d.classLevels.map((cl) => ({
+    if (data.spellcasting) {
+      data.spellcasting.spellSlots = compute5eSpellSlots(
+        data.classLevels.map((cl) => ({
           classId: cl.classId,
           level: cl.level,
           subclassId: cl.subclassId,
         })),
-        d.spellcasting.spellSlots
+        data.spellcasting.spellSlots
       );
     }
 
-    return document;
+    return clonedDoc;
   }
 
   async rollCheck(
@@ -242,12 +252,20 @@ export class Dnd5e2024Engine implements SystemEngine<Dnd5e2024DataModel> {
     amount: number,
     _type: string
   ): CharacterDocument<Dnd5e2024DataModel> {
-    const hp = document.system.hitPoints;
-    normalizeDeathSaves(document);
-    const deathSaves = document.system.deathSaves;
+    const clonedDoc = {
+      ...document,
+      system: {
+        ...document.system,
+        hitPoints: { ...document.system.hitPoints },
+        deathSaves: { ...document.system.deathSaves },
+      },
+    };
+    const hp = clonedDoc.system.hitPoints;
+    normalizeDeathSaves(clonedDoc);
+    const deathSaves = clonedDoc.system.deathSaves;
 
     if (amount === 0) {
-      return document;
+      return clonedDoc;
     }
 
     if (amount < 0) {
@@ -257,7 +275,7 @@ export class Dnd5e2024Engine implements SystemEngine<Dnd5e2024DataModel> {
         deathSaves.successes = 0;
         deathSaves.failures = 0;
       }
-      return document;
+      return clonedDoc;
     }
 
     let remaining = amount;
@@ -279,6 +297,6 @@ export class Dnd5e2024Engine implements SystemEngine<Dnd5e2024DataModel> {
       deathSaves.failures = Math.min(3, deathSaves.failures + 1);
     }
 
-    return document;
+    return clonedDoc;
   }
 }

@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useEffect, createContext, useContext } from 'react';
-import { X, CheckCircle, AlertCircle, Info } from 'lucide-react';
-
-type ToastVariant = 'success' | 'error' | 'info';
+import { X, CheckCircle, AlertCircle, Info, AlertTriangle } from 'lucide-react';
+import { registerToastHandler, ToastVariant } from '../../utils/notifications';
 
 interface ToastItem {
   id: number;
@@ -32,6 +31,11 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
+  useEffect(() => {
+    registerToastHandler(toast);
+    return () => registerToastHandler(null);
+  }, [toast]);
+
   return (
     <ToastContext.Provider value={{ toast }}>
       {children}
@@ -48,12 +52,14 @@ const VARIANT_STYLES: Record<ToastVariant, string> = {
   success: 'border-emerald-500/30 bg-emerald-500/10',
   error: 'border-destructive/30 bg-destructive/10',
   info: 'border-primary/30 bg-primary/10',
+  warning: 'border-amber-500/30 bg-amber-500/10',
 };
 
 const VARIANT_ICONS: Record<ToastVariant, React.FC<{ className?: string }>> = {
   success: CheckCircle,
   error: AlertCircle,
   info: Info,
+  warning: AlertTriangle,
 };
 
 const ToastNotification: React.FC<{ item: ToastItem; onDismiss: (id: number) => void }> = ({

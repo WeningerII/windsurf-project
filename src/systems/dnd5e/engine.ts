@@ -85,54 +85,64 @@ function normalizeDeathSaves(document: CharacterDocument<Dnd5eDataModel>): void 
  */
 export class Dnd5eEngine implements SystemEngine<Dnd5eDataModel> {
   prepareData(document: CharacterDocument<Dnd5eDataModel>): CharacterDocument<Dnd5eDataModel> {
-    const d = document.system;
-    normalizeDeathSaves(document);
-    d.conditions = normalizeDnd5eConditions(d.conditions);
-    d.exhaustionLevel = Number.isFinite(d.exhaustionLevel)
-      ? Math.max(0, Math.min(6, Math.floor(d.exhaustionLevel)))
+    const clonedDoc = {
+      ...document,
+      system: {
+        ...document.system,
+        hitPoints: { ...document.system.hitPoints },
+        spellcasting: document.system.spellcasting ? { ...document.system.spellcasting, spellSlots: { ...document.system.spellcasting.spellSlots } } : undefined,
+      },
+    };
+    const data = clonedDoc.system;
+    normalizeDeathSaves(clonedDoc);
+    data.conditions = normalizeDnd5eConditions(data.conditions);
+    data.exhaustionLevel = Number.isFinite(data.exhaustionLevel)
+      ? Math.max(0, Math.min(6, Math.floor(data.exhaustionLevel)))
       : 0;
-    const conMod = abilityMod(d.baseAttributes.con ?? 10);
-    const dexMod = abilityMod(d.baseAttributes.dex ?? 10);
+    const conMod = abilityMod(data.baseAttributes.con ?? 10);
+    const dexMod = abilityMod(data.baseAttributes.dex ?? 10);
     const totalLevel =
-      d.classLevels.length > 0 ? d.classLevels.reduce((sum, cl) => sum + cl.level, 0) : d.level;
-    d.level = totalLevel;
+      data.classLevels.length > 0 ? data.classLevels.reduce((sum, cl) => sum + cl.level, 0) : data.level;
+    data.level = totalLevel;
     const pb = profBonus(totalLevel);
 
     // --- Max HP ---
-    let maxHP = 0;
-    for (const cl of d.classLevels) {
-      const die = hitDieSize(cl.classId);
-      if (cl.hitDieRolls.length === 0) {
-        // First level of first class: max die + CON
-        maxHP += die + conMod;
-      } else {
-        for (const roll of cl.hitDieRolls) {
-          maxHP += roll + conMod;
+    if (data.classLevels.length > 0) {
+      let maxHP = 0;
+      for (const cl of data.classLevels) {
+        const die = hitDieSize(cl.classId);
+        if (cl.hitDieRolls.length === 0) {
+          // First level of first class: max die + CON
+          maxHP += die + conMod;
+        } else {
+          for (const roll of cl.hitDieRolls) {
+            maxHP += roll + conMod;
+          }
         }
       }
+      maxHP = Math.max(maxHP, totalLevel); // minimum 1 HP per level
+      if (data.exhaustionLevel >= 4) {
+        // 2014 exhaustion level 4: hit point maximum is halved.
+        maxHP = Math.max(1, Math.floor(maxHP / 2));
+      }
+      data.hitPoints.max = maxHP;
     }
-    maxHP = Math.max(maxHP, totalLevel); // minimum 1 HP per level
-    if (d.exhaustionLevel >= 4) {
-      // 2014 exhaustion level 4: hit point maximum is halved.
-      maxHP = Math.max(1, Math.floor(maxHP / 2));
-    }
-    d.hitPoints.max = maxHP;
-    d.hitPoints.current = Math.min(d.hitPoints.current, maxHP);
-    if (d.exhaustionLevel >= 6) {
+    data.hitPoints.current = Math.min(data.hitPoints.current, data.hitPoints.max);
+    if (data.exhaustionLevel >= 6) {
       // 2014 exhaustion level 6: death.
-      d.hitPoints.current = 0;
-      document.system.deathSaves = { successes: 0, failures: 3 };
+      data.hitPoints.current = 0;
+      clonedDoc.system.deathSaves = { successes: 0, failures: 3 };
     }
 
     // --- AC (from equipped armor, or unarmored fallback) ---
-    d.armorClass = compute5eAC(d.baseAttributes.dex ?? 10, d.equipment);
+    data.armorClass = compute5eAC(data.baseAttributes.dex ?? 10, data.equipment);
 
     // --- Initiative ---
-    d.initiative = dexMod;
+    data.initiative = dexMod;
 
     // --- Hit Dice tracking ---
-    const previousHitDice = Array.isArray(d.hitDice) ? d.hitDice : [];
-    d.hitDice = d.classLevels.map((cl, index) => {
+    const previousHitDice = Array.isArray(data.hitDice) ? data.hitDice : [];
+    data.hitDice = data.classLevels.map((cl, index) => {
       const die = `d${hitDieSize(cl.classId)}`;
       const total = cl.level;
       const previous = previousHitDice[index];
@@ -162,19 +172,19 @@ export class Dnd5eEngine implements SystemEngine<Dnd5eDataModel> {
     // No mutation needed; the sheet computes: abilityMod + (proficient ? pb : 0)
 
     // --- Spell Slots (from class level tables) ---
-    if (d.spellcasting) {
-      d.spellcasting.spellSlots = compute5eSpellSlots(
-        d.classLevels.map((cl) => ({
+    if (data.spellcasting) {
+      data.spellcasting.spellSlots = compute5eSpellSlots(
+        data.classLevels.map((cl) => ({
           classId: cl.classId,
           level: cl.level,
           subclassId: cl.subclassId,
         })),
-        d.spellcasting.spellSlots
+        data.spellcasting.spellSlots
       );
     }
 
     void pb; // used by sheet at render time, not stored
-    return document;
+    return clonedDoc;
   }
 
   async rollCheck(
@@ -255,12 +265,20 @@ export class Dnd5eEngine implements SystemEngine<Dnd5eDataModel> {
     amount: number,
     _type: string
   ): CharacterDocument<Dnd5eDataModel> {
-    const hp = document.system.hitPoints;
-    normalizeDeathSaves(document);
-    const deathSaves = document.system.deathSaves;
+    const clonedDoc = {
+      ...document,
+      system: {
+        ...document.system,
+        hitPoints: { ...document.system.hitPoints },
+        deathSaves: { ...document.system.deathSaves },
+      },
+    };
+    const hp = clonedDoc.system.hitPoints;
+    normalizeDeathSaves(clonedDoc);
+    const deathSaves = clonedDoc.system.deathSaves;
 
     if (amount === 0) {
-      return document;
+      return clonedDoc;
     }
 
     if (amount < 0) {
@@ -270,7 +288,7 @@ export class Dnd5eEngine implements SystemEngine<Dnd5eDataModel> {
         deathSaves.successes = 0;
         deathSaves.failures = 0;
       }
-      return document;
+      return clonedDoc;
     }
 
     let remaining = amount;
@@ -296,6 +314,6 @@ export class Dnd5eEngine implements SystemEngine<Dnd5eDataModel> {
       deathSaves.failures = Math.min(3, deathSaves.failures + 1);
     }
 
-    return document;
+    return clonedDoc;
   }
 }

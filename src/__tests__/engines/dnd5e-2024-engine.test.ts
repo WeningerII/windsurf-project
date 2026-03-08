@@ -21,6 +21,26 @@ describe('Dnd5e2024Engine', () => {
   const engine = new Dnd5e2024Engine();
 
   describe('prepareData', () => {
+    it('returns a new document reference from prepareData without mutating the original system', () => {
+      const doc = makeDoc({
+        classLevels: [{ classId: 'fighter', level: 1, hitDieRolls: [10] }],
+        hitPoints: { current: 20, max: 20, temp: 0 },
+        armorClass: 5,
+        initiative: -1,
+      });
+      const originalSystem = doc.system;
+      const originalHitPoints = { ...doc.system.hitPoints };
+
+      const result = engine.prepareData(doc);
+
+      expect(result).not.toBe(doc);
+      expect(result.system).not.toBe(originalSystem);
+      expect(result.system.hitPoints).not.toBe(originalSystem.hitPoints);
+      expect(doc.system.hitPoints).toEqual(originalHitPoints);
+      expect(doc.system.armorClass).toBe(5);
+      expect(doc.system.initiative).toBe(-1);
+    });
+
     it('calculates HP identically to 2014 rules', () => {
       const doc = makeDoc({
         level: 2,
@@ -31,6 +51,12 @@ describe('Dnd5e2024Engine', () => {
       const result = engine.prepareData(doc);
       // CON mod +2, rolls: 10+2=12, 7+2=9 => 21
       expect(result.system.hitPoints.max).toBe(21);
+    });
+
+    it('preserves default max HP when no class levels are present', () => {
+      const result = engine.prepareData(makeDoc());
+      expect(result.system.hitPoints.max).toBe(10);
+      expect(result.system.hitPoints.current).toBe(10);
     });
 
     it('preserves weapon masteries field', () => {

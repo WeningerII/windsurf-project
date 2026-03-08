@@ -5,7 +5,7 @@ import { abilityMod } from '../../utils/math';
 import { GRAPPLE_SIZE_MODS, baseSave, classBAB } from '../shared/d20-helpers';
 import { computeD20LegacyAC } from '../../utils/armorClass';
 import { dnd35eClasses } from '../../data/dnd/3.5e/classes';
-import { pf1eClasses } from '../../data/pathfinder/1e/classes';
+import { pf1eClassSpellSlotTables } from '../../data/pathfinder/1e/classSpellSlotTables';
 import { getSpellSlotsAtClassLevel, mergeVancianSpellSlots } from '../../utils/classSpellcasting';
 
 const SKILL_ABILITIES: Record<string, string> = {
@@ -53,62 +53,74 @@ const SKILL_ABILITIES: Record<string, string> = {
  */
 export class Dnd35eEngine implements SystemEngine<Dnd35eDataModel> {
   prepareData(document: CharacterDocument<Dnd35eDataModel>): CharacterDocument<Dnd35eDataModel> {
-    const d = document.system;
-    const strMod = abilityMod(d.baseAttributes.str ?? 10);
-    const dexMod = abilityMod(d.baseAttributes.dex ?? 10);
-    const conMod = abilityMod(d.baseAttributes.con ?? 10);
-    const wisMod = abilityMod(d.baseAttributes.wis ?? 10);
-    const grappleSizeMod = GRAPPLE_SIZE_MODS[d.sizeCategory] ?? 0;
+    const clonedDoc = {
+      ...document,
+      system: {
+        ...document.system,
+        saves: {
+          fortitude: { ...document.system.saves.fortitude },
+          reflex: { ...document.system.saves.reflex },
+          will: { ...document.system.saves.will },
+        },
+        hitPoints: { ...document.system.hitPoints },
+        armorClass: { ...document.system.armorClass },
+      },
+    };
+    const data = clonedDoc.system;
+    const strMod = abilityMod(data.baseAttributes.str ?? 10);
+    const dexMod = abilityMod(data.baseAttributes.dex ?? 10);
+    const conMod = abilityMod(data.baseAttributes.con ?? 10);
+    const wisMod = abilityMod(data.baseAttributes.wis ?? 10);
+    const grappleSizeMod = GRAPPLE_SIZE_MODS[data.sizeCategory] ?? 0;
 
     // --- BAB (sum across multiclass) ---
     let totalBAB = 0;
-    for (const cl of d.classLevels) {
+    for (const cl of data.classLevels) {
       totalBAB += classBAB(cl.level, cl.bab);
     }
-    d.baseAttackBonus = totalBAB;
+    data.baseAttackBonus = totalBAB;
 
     // --- Saves ---
     let fortBase = 0,
       refBase = 0,
       willBase = 0;
-    for (const cl of d.classLevels) {
+    for (const cl of data.classLevels) {
       fortBase += baseSave(cl.level, cl.fortSave);
       refBase += baseSave(cl.level, cl.refSave);
       willBase += baseSave(cl.level, cl.willSave);
     }
-    d.saves.fortitude.base = fortBase;
-    d.saves.fortitude.ability = conMod;
-    d.saves.fortitude.total = fortBase + conMod + d.saves.fortitude.misc;
+    data.saves.fortitude.base = fortBase;
+    data.saves.fortitude.ability = conMod;
+    data.saves.fortitude.total = fortBase + conMod + data.saves.fortitude.misc;
 
-    d.saves.reflex.base = refBase;
-    d.saves.reflex.ability = dexMod;
-    d.saves.reflex.total = refBase + dexMod + d.saves.reflex.misc;
+    data.saves.reflex.base = refBase;
+    data.saves.reflex.ability = dexMod;
+    data.saves.reflex.total = refBase + dexMod + data.saves.reflex.misc;
 
-    d.saves.will.base = willBase;
-    d.saves.will.ability = wisMod;
-    d.saves.will.total = willBase + wisMod + d.saves.will.misc;
+    data.saves.will.base = willBase;
+    data.saves.will.ability = wisMod;
+    data.saves.will.total = willBase + wisMod + data.saves.will.misc;
 
     // --- Max HP ---
     let maxHP = 0;
-    for (const cl of d.classLevels) {
+    for (const cl of data.classLevels) {
       for (const roll of cl.hitDieRolls) {
         maxHP += Math.max(1, roll + conMod); // minimum 1 HP per die
       }
     }
     maxHP = Math.max(maxHP, 1);
-    d.hitPoints.max = maxHP;
-    d.hitPoints.current = Math.min(d.hitPoints.current, maxHP);
+    data.hitPoints.max = maxHP;
+    data.hitPoints.current = Math.min(data.hitPoints.current, maxHP);
 
     // --- Spell Slots (best available class spell table data) ---
     // NOTE: 3.5e class files currently lack full `spellcasting.spellSlots` tables.
     // We use native 3.5e spell tables when present and fall back to PF1e core tables
     // for matching class IDs to automate baseline slot totals.
     const slotTotals: Record<number, number> = {};
-    for (const cl of d.classLevels) {
+    for (const cl of data.classLevels) {
       const dndClass = dnd35eClasses.find((klass) => klass.id === cl.classId);
-      const fallbackPf1Class = pf1eClasses[cl.classId as keyof typeof pf1eClasses];
       const spellSlotsTable = (dndClass?.spellcasting?.spellSlots ??
-        fallbackPf1Class?.spellcasting?.spellSlots) as Record<number, number[]> | undefined;
+        pf1eClassSpellSlotTables[cl.classId]) as Record<number, number[]> | undefined;
 
       const classSlots = getSpellSlotsAtClassLevel(spellSlotsTable, cl.level);
       for (const [spellLevel, total] of Object.entries(classSlots)) {
@@ -116,21 +128,25 @@ export class Dnd35eEngine implements SystemEngine<Dnd35eDataModel> {
         slotTotals[level] = (slotTotals[level] ?? 0) + total;
       }
     }
-    d.spellsPerDay = mergeVancianSpellSlots(d.spellsPerDay, slotTotals);
+    data.spellsPerDay = mergeVancianSpellSlots(data.spellsPerDay, slotTotals);
 
     // --- AC (from equipped armor items + size) ---
-    const ac = computeD20LegacyAC(d.baseAttributes.dex ?? 10, d.sizeCategory, d.equipment);
-    d.armorClass.total = ac.total;
-    d.armorClass.touch = ac.touch;
-    d.armorClass.flatFooted = ac.flatFooted;
+    const ac = computeD20LegacyAC(
+      data.baseAttributes.dex ?? 10,
+      data.sizeCategory,
+      data.equipment
+    );
+    data.armorClass.total = ac.total;
+    data.armorClass.touch = ac.touch;
+    data.armorClass.flatFooted = ac.flatFooted;
 
     // --- Initiative ---
-    d.initiative = dexMod; // + Improved Initiative feat (+4) handled by misc
+    data.initiative = dexMod; // + Improved Initiative feat (+4) handled by misc
 
     // --- Grapple ---
-    d.grapple = totalBAB + strMod + grappleSizeMod;
+    data.grapple = totalBAB + strMod + grappleSizeMod;
 
-    return document;
+    return clonedDoc;
   }
 
   async rollCheck(
@@ -181,7 +197,19 @@ export class Dnd35eEngine implements SystemEngine<Dnd35eDataModel> {
     amount: number,
     _type: string
   ): CharacterDocument<Dnd35eDataModel> {
-    const hp = document.system.hitPoints;
+    const clonedDoc = {
+      ...document,
+      system: {
+        ...document.system,
+        hitPoints: { ...document.system.hitPoints },
+      },
+    };
+    const hp = clonedDoc.system.hitPoints;
+    if (amount < 0) {
+      const healing = Math.abs(amount);
+      hp.current = Math.min(hp.max, hp.current + healing);
+      return clonedDoc;
+    }
     let remaining = amount;
     if (hp.temp > 0) {
       const absorbed = Math.min(hp.temp, remaining);
@@ -191,6 +219,6 @@ export class Dnd35eEngine implements SystemEngine<Dnd35eDataModel> {
     if (remaining > 0) {
       hp.current = Math.max(0, hp.current - remaining);
     }
-    return document;
+    return clonedDoc;
   }
 }

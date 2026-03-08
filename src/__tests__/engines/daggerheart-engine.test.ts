@@ -20,6 +20,30 @@ describe('DaggerheartEngine', () => {
   const engine = new DaggerheartEngine();
 
   describe('prepareData', () => {
+    it('returns a new document reference from prepareData without mutating the original system', () => {
+      const doc = makeDoc({
+        level: 4,
+        attributes: {
+          ...createDefaultDaggerheartData().attributes,
+          agility: 2,
+          strength: 3,
+          presence: 1,
+        },
+        hitPoints: { current: 6, max: 6 },
+        stress: { current: 0, max: 6 },
+      });
+      const originalSystem = doc.system;
+      const originalHitPoints = { ...doc.system.hitPoints };
+
+      const result = engine.prepareData(doc);
+
+      expect(result).not.toBe(doc);
+      expect(result.system).not.toBe(originalSystem);
+      expect(result.system.hitPoints).not.toBe(originalSystem.hitPoints);
+      expect(doc.system.hitPoints).toEqual(originalHitPoints);
+      expect(doc.system.evasion).toBe(0);
+    });
+
     it('derives evasion, max hp, and max stress from level and attributes', () => {
       const doc = makeDoc({
         level: 4,

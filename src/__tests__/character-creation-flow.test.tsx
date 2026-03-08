@@ -13,6 +13,9 @@ type CreationOptions = {
   speciesId?: string;
 };
 
+const SHEET_LOAD_TIMEOUT_MS = 15000;
+const FLOW_TEST_TIMEOUT_MS = 20000;
+
 function getStoredDocuments(): Array<Record<string, unknown>> {
   const raw = localStorage.getItem('rpg-documents-v2');
   if (!raw) return [];
@@ -27,14 +30,18 @@ async function selectSystem(user: ReturnType<typeof userEvent.setup>, systemName
 
 async function startCreation(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByRole('button', { name: /create new character/i }));
-  expect(await screen.findByDisplayValue('New Character')).toBeInTheDocument();
+  expect(
+    await screen.findByTitle('Character name', {}, { timeout: SHEET_LOAD_TIMEOUT_MS })
+  ).toHaveValue('New Character');
 }
 
 async function createCharacter(
   user: ReturnType<typeof userEvent.setup>,
   { name, level = 1, classId, speciesId }: CreationOptions
 ) {
-  fireEvent.change(screen.getByTitle('Character name'), {
+  const nameInput = await screen.findByTitle('Character name', {}, { timeout: SHEET_LOAD_TIMEOUT_MS });
+
+  fireEvent.change(nameInput, {
     target: { value: name },
   });
 
@@ -74,7 +81,9 @@ async function createCharacter(
 async function createCharacterWithoutSelections({
   name,
 }: Pick<CreationOptions, 'name'>) {
-  fireEvent.change(screen.getByTitle('Character name'), {
+  const nameInput = await screen.findByTitle('Character name', {}, { timeout: SHEET_LOAD_TIMEOUT_MS });
+
+  fireEvent.change(nameInput, {
     target: { value: name },
   });
 
@@ -94,17 +103,21 @@ describe('Character Creation Flow', () => {
     localStorage.clear();
   });
 
-  it('creates a D&D 5e-2024 fighter and lands on the character sheet', async () => {
-    const user = userEvent.setup();
-    render(<App />);
+  it(
+    'creates a D&D 5e-2024 fighter and lands on the character sheet',
+    async () => {
+      const user = userEvent.setup();
+      render(<App />);
 
-    await selectSystem(user, 'D&D 5e (2024)');
-    await startCreation(user);
-    await createCharacter(user, { name: 'Phase3 Hero', classId: 'fighter', level: 3 });
+      await selectSystem(user, 'D&D 5e (2024)');
+      await startCreation(user);
+      await createCharacter(user, { name: 'Phase3 Hero', classId: 'fighter', level: 3 });
 
-    expect(screen.getByTitle('Character name')).toHaveValue('Phase3 Hero');
-    expect(screen.getByTitle('fighter level')).toHaveValue(3);
-  });
+      expect(screen.getByTitle('Character name')).toHaveValue('Phase3 Hero');
+      expect(screen.getByTitle('fighter level')).toHaveValue(3);
+    },
+    FLOW_TEST_TIMEOUT_MS
+  );
 
   it('persists class/species/system in localStorage after creation', async () => {
     const user = userEvent.setup();

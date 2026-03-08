@@ -1,7 +1,7 @@
 import { SystemDefinition } from '../../registry/types';
 import { Dnd5eDataModel, createDefaultDnd5eData } from './data-model';
 import { Dnd5eEngine } from './engine';
-import { Dnd5eSheet } from './components/Dnd5eSheet';
+import { lazy } from 'react';
 
 export const Dnd5eSystemDef: SystemDefinition<Dnd5eDataModel> = {
   id: 'dnd-5e-2014',
@@ -63,5 +63,5 @@ export const Dnd5eSystemDef: SystemDefinition<Dnd5eDataModel> = {
   ],
   createDefaultData: createDefaultDnd5eData,
   engine: new Dnd5eEngine(),
-  SheetComponent: Dnd5eSheet,
+  SheetComponent: lazy(() => import('./components/Dnd5eSheet').then((m) => ({ default: m.Dnd5eSheet }))),
 };

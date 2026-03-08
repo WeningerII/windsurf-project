@@ -128,73 +128,95 @@ function pf2eDegreeOfSuccess(
  */
 export class Pf2eEngine implements SystemEngine<Pf2eDataModel> {
   prepareData(document: CharacterDocument<Pf2eDataModel>): CharacterDocument<Pf2eDataModel> {
-    const d = document.system;
+    const clonedDoc = {
+      ...document,
+      system: {
+        ...document.system,
+        skillProficiencies: { ...document.system.skillProficiencies },
+        loreProficiencies: { ...document.system.loreProficiencies },
+        saveProficiencies: {
+          fortitude: { ...document.system.saveProficiencies.fortitude },
+          reflex: { ...document.system.saveProficiencies.reflex },
+          will: { ...document.system.saveProficiencies.will },
+        },
+        perceptionProficiency: { ...document.system.perceptionProficiency },
+        armorProficiencies: { ...document.system.armorProficiencies },
+        weaponProficiencies: { ...document.system.weaponProficiencies },
+        hitPoints: { ...document.system.hitPoints },
+      },
+    };
+    const data = clonedDoc.system;
 
     // --- Recompute all proficiency totals ---
-    for (const [skillId, prof] of Object.entries(d.skillProficiencies)) {
-      d.skillProficiencies[skillId] = {
+    for (const [skillId, prof] of Object.entries(data.skillProficiencies)) {
+      data.skillProficiencies[skillId] = {
         ...prof,
-        total: profTotal(d.level, prof.tier),
+        total: profTotal(data.level, prof.tier),
       };
     }
 
-    for (const [loreId, prof] of Object.entries(d.loreProficiencies || {})) {
-      d.loreProficiencies[loreId] = {
+    for (const [loreId, prof] of Object.entries(data.loreProficiencies || {})) {
+      data.loreProficiencies[loreId] = {
         ...prof,
-        total: profTotal(d.level, prof.tier),
+        total: profTotal(data.level, prof.tier),
       };
     }
 
     // Saves
     for (const [saveId, attr] of Object.entries(SAVE_ABILITIES)) {
-      const save = d.saveProficiencies[saveId as keyof typeof d.saveProficiencies];
+      const save = data.saveProficiencies[saveId as keyof typeof data.saveProficiencies];
       if (save) {
-        save.total = profTotal(d.level, save.tier);
+        save.total = profTotal(data.level, save.tier);
       }
       void attr; // ability mod added at roll time
     }
 
     // Perception
-    d.perceptionProficiency.total = profTotal(d.level, d.perceptionProficiency.tier);
+    data.perceptionProficiency.total = profTotal(data.level, data.perceptionProficiency.tier);
 
     // Armor proficiencies
-    for (const [key, prof] of Object.entries(d.armorProficiencies)) {
-      d.armorProficiencies[key] = { ...prof, total: profTotal(d.level, prof.tier) };
+    for (const [key, prof] of Object.entries(data.armorProficiencies)) {
+      data.armorProficiencies[key] = { ...prof, total: profTotal(data.level, prof.tier) };
     }
 
     // Weapon proficiencies
-    for (const [key, prof] of Object.entries(d.weaponProficiencies)) {
-      d.weaponProficiencies[key] = { ...prof, total: profTotal(d.level, prof.tier) };
+    for (const [key, prof] of Object.entries(data.weaponProficiencies)) {
+      data.weaponProficiencies[key] = { ...prof, total: profTotal(data.level, prof.tier) };
     }
 
     // --- AC = 10 + DEX mod + armor proficiency + armor item bonus ---
-    const equippedArmor = d.equipment.find(
+    const equippedArmor = data.equipment.find(
       (e) => e.equipped && e.armorClass != null && !e.shieldBonus
     );
     const armorCategory = equippedArmor?.armorType ?? 'unarmored';
     const armorProf =
-      d.armorProficiencies[armorCategory]?.total ?? d.armorProficiencies.unarmored?.total ?? 0;
-    d.armorClass = computePf2eAC(d.baseAttributes.dex ?? 10, armorProf, d.equipment);
-    d.armorClass = Math.max(0, d.armorClass - getPf2eStatusPenalty(d.conditions, 'dex'));
+      data.armorProficiencies[armorCategory]?.total ??
+      data.armorProficiencies.unarmored?.total ??
+      0;
+    const clumsyPenalty = normalizedConditionValue(data.conditions, 'clumsy');
+    const effectiveDex = Math.max(1, (data.baseAttributes.dex ?? 10) - clumsyPenalty * 2);
+    data.armorClass = computePf2eAC(effectiveDex, armorProf, data.equipment);
 
     // --- HP = ancestryHP + level × (class HP die + CON mod) ---
     // PF2e CRB p.26: Ancestry HP (flat) + level × (class HP + CON mod)
-    const conMod = abilityMod(d.baseAttributes.con ?? 10);
-    const classHitDie = d.classId ? (PF2E_CLASS_HP[d.classId] ?? 8) : 8;
-    let maxHP = (d.ancestryHP ?? 0) + d.level * (classHitDie + conMod);
-    maxHP = Math.max(maxHP, d.level);
-    d.hitPoints.max = maxHP;
-    d.hitPoints.current = Math.min(d.hitPoints.current, maxHP);
+    const conMod = abilityMod(data.baseAttributes.con ?? 10);
+    const classHitDie = data.classId ? (PF2E_CLASS_HP[data.classId] ?? 8) : 8;
+    let maxHP = (data.ancestryHP ?? 0) + data.level * (classHitDie + conMod);
+    maxHP = Math.max(maxHP, data.level);
+    data.hitPoints.max = maxHP;
+    data.hitPoints.current = Math.min(data.hitPoints.current, maxHP);
 
     // --- Spellcasting slots/focus from class progression ---
-    const classDef = d.classId ? pf2eClasses[d.classId as keyof typeof pf2eClasses] : undefined;
+    const classDef = data.classId
+      ? pf2eClasses[data.classId as keyof typeof pf2eClasses]
+      : undefined;
     const classSpellcasting = classDef?.spellcasting;
     if (classSpellcasting) {
       const slotMaxes = getSpellSlotsAtClassLevel(
         classSpellcasting.spellSlots as unknown as Record<number, number[]>,
-        d.level
+        data.level
       );
-      const existing = d.spellcasting;
+      const existing = data.spellcasting;
 
       const focusResource = classDef?.classResources?.find(
         (resource) => resource.id === 'focus-points'
@@ -204,7 +226,7 @@ export class Pf2eEngine implements SystemEngine<Pf2eDataModel> {
       const focusCurrent = Math.min(existing?.focusPoints.current ?? focusMax, focusMax);
 
       const proficiencyTier = existing?.proficiency.tier ?? 'trained';
-      d.spellcasting = {
+      data.spellcasting = {
         tradition: existing?.tradition ?? inferPf2eTradition(classSpellcasting.spellListId),
         type:
           existing?.type ??
@@ -214,7 +236,7 @@ export class Pf2eEngine implements SystemEngine<Pf2eDataModel> {
           ),
         proficiency: {
           tier: proficiencyTier,
-          total: profTotal(d.level, proficiencyTier),
+          total: profTotal(data.level, proficiencyTier),
         },
         spellSlots: mergeMaxUsedSpellSlots(existing?.spellSlots, slotMaxes),
         spellsKnown: existing?.spellsKnown ?? [],
@@ -225,7 +247,7 @@ export class Pf2eEngine implements SystemEngine<Pf2eDataModel> {
       };
     }
 
-    return document;
+    return clonedDoc;
   }
 
   async rollCheck(
@@ -292,7 +314,14 @@ export class Pf2eEngine implements SystemEngine<Pf2eDataModel> {
     amount: number,
     _type: string
   ): CharacterDocument<Pf2eDataModel> {
-    const hp = document.system.hitPoints;
+    const clonedDoc = {
+      ...document,
+      system: {
+        ...document.system,
+        hitPoints: { ...document.system.hitPoints },
+      },
+    };
+    const hp = clonedDoc.system.hitPoints;
     let remaining = amount;
     if (hp.temp > 0) {
       const absorbed = Math.min(hp.temp, remaining);
@@ -302,6 +331,6 @@ export class Pf2eEngine implements SystemEngine<Pf2eDataModel> {
     if (remaining > 0) {
       hp.current = Math.max(0, hp.current - remaining);
     }
-    return document;
+    return clonedDoc;
   }
 }

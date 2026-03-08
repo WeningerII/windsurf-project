@@ -19,6 +19,22 @@ describe('Mam3eEngine', () => {
   const engine = new Mam3eEngine();
 
   describe('prepareData', () => {
+    it('returns a new document reference from prepareData without mutating the original system', () => {
+      const doc = makeDoc({
+        abilities: { str: 3, sta: 2, agi: 1, dex: 0, fgt: 4, int: 0, awe: 0, pre: 0 },
+      });
+      const originalSystem = doc.system;
+      const originalSpent = { ...doc.system.powerPoints.spent };
+
+      const result = engine.prepareData(doc);
+
+      expect(result).not.toBe(doc);
+      expect(result.system).not.toBe(originalSystem);
+      expect(result.system.powerPoints).not.toBe(originalSystem.powerPoints);
+      expect(result.system.defenses).not.toBe(originalSystem.defenses);
+      expect(doc.system.powerPoints.spent).toEqual(originalSpent);
+    });
+
     it('calculates defense totals from abilities + ranks', () => {
       const doc = makeDoc({
         abilities: { str: 2, sta: 4, agi: 6, dex: 3, fgt: 5, int: 1, awe: 3, pre: 2 },

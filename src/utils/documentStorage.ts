@@ -7,14 +7,34 @@ import {
   idbHasMigrated,
   idbSetMigrated,
 } from './indexedDBAdapter';
+import { emitToast } from './notifications';
 
 const STORAGE_KEY = 'rpg-documents-v2';
 const STORAGE_VERSION = '2.0';
+const IDB_WARNING_THRESHOLD = 3;
+const IDB_WARNING_MESSAGE =
+  'Changes are saving to browser storage only. Larger storage (IndexedDB) is unavailable.';
 
 interface DocumentStorageData {
   version: string;
   documents: CharacterDocument<SystemDataModel>[];
   lastModified: string;
+}
+
+let consecutiveIdbSaveFailures = 0;
+let hasShownIdbWarning = false;
+
+function noteIdbSaveSuccess(): void {
+  consecutiveIdbSaveFailures = 0;
+  hasShownIdbWarning = false;
+}
+
+function noteIdbSaveFailure(): void {
+  consecutiveIdbSaveFailures += 1;
+  if (consecutiveIdbSaveFailures >= IDB_WARNING_THRESHOLD && !hasShownIdbWarning) {
+    hasShownIdbWarning = true;
+    emitToast(IDB_WARNING_MESSAGE, 'warning');
+  }
 }
 
 function hydrateDocuments(
@@ -75,9 +95,14 @@ export function saveDocuments(documents: CharacterDocument<SystemDataModel>[]): 
 
   // Best-effort async write to IndexedDB (does not block)
   if (isIndexedDBAvailable()) {
-    idbSaveDocuments(documents).catch(() => {
-      // IndexedDB write failed; localStorage is still the source of truth
-    });
+    idbSaveDocuments(documents)
+      .then(() => {
+        noteIdbSaveSuccess();
+      })
+      .catch(() => {
+        noteIdbSaveFailure();
+        // IndexedDB write failed; localStorage is still the source of truth
+      });
   }
 }
 
@@ -164,4 +189,9 @@ export function clearDocumentStorage(): void {
       // Best-effort clear
     });
   }
+}
+
+export function resetDocumentStorageDiagnosticsForTests(): void {
+  consecutiveIdbSaveFailures = 0;
+  hasShownIdbWarning = false;
 }

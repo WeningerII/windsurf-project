@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { renderHook, act } from '@testing-library/react';
+import { renderHook, act, waitFor } from '@testing-library/react';
 import { useCampaigns } from '../../hooks/useCampaigns';
 import type { Campaign } from '../../types/core/campaign';
 
@@ -34,15 +34,17 @@ describe('useCampaigns', () => {
     expect(result.current.campaigns[0].name).toBe('Test Campaign');
   });
 
-  it('persists campaigns to localStorage', () => {
+  it('persists campaigns to localStorage', async () => {
     const { result } = renderHook(() => useCampaigns());
     act(() => {
       result.current.addCampaign(makeCampaign());
     });
-    const stored = localStorage.getItem('rpg-campaigns-v1');
-    expect(stored).toBeTruthy();
-    const parsed = JSON.parse(stored!);
-    expect(parsed.campaigns).toHaveLength(1);
+    await waitFor(() => {
+      const stored = localStorage.getItem('rpg-campaigns-v1');
+      expect(stored).toBeTruthy();
+      const parsed = JSON.parse(stored!);
+      expect(parsed.campaigns).toHaveLength(1);
+    });
   });
 
   it('updates a campaign', () => {
@@ -103,15 +105,32 @@ describe('useCampaigns', () => {
     expect(result.current.campaigns[0].characterIds).toEqual(['char-b']);
   });
 
-  it('clears all campaigns', () => {
+  it('clears all campaigns without re-saving pending debounced state', async () => {
     const { result } = renderHook(() => useCampaigns());
     act(() => {
       result.current.addCampaign(makeCampaign());
       result.current.addCampaign(makeCampaign({ id: 'camp-2', name: 'Second' }));
-    });
-    act(() => {
       result.current.clearAllCampaigns();
     });
     expect(result.current.campaigns).toHaveLength(0);
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 350));
+    });
+    expect(localStorage.getItem('rpg-campaigns-v1')).toBeNull();
+  });
+
+  it('flushes pending debounced campaign saves on unmount', () => {
+    const { result, unmount } = renderHook(() => useCampaigns());
+    act(() => {
+      result.current.addCampaign(makeCampaign());
+      result.current.updateCampaign(makeCampaign({ name: 'Flushed Campaign' }));
+    });
+
+    unmount();
+
+    const stored = localStorage.getItem('rpg-campaigns-v1');
+    expect(stored).toBeTruthy();
+    const parsed = JSON.parse(stored!);
+    expect(parsed.campaigns).toMatchObject([{ name: 'Flushed Campaign' }]);
   });
 });

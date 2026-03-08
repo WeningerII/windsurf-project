@@ -19,6 +19,36 @@ describe('Pf1eEngine', () => {
   const engine = new Pf1eEngine();
 
   describe('prepareData', () => {
+    it('returns a new document reference from prepareData without mutating the original system', () => {
+      const doc = makeDoc({
+        classLevels: [
+          {
+            classId: 'fighter',
+            level: 1,
+            hitDieRolls: [10],
+            bab: 'full',
+            fortSave: 'good',
+            refSave: 'poor',
+            willSave: 'poor',
+            skillPointsPerLevel: 2,
+            favoredClassBonus: 'hp',
+          },
+        ],
+        hitPoints: { current: 20, max: 20, temp: 0 },
+      });
+      const originalSystem = doc.system;
+      const originalHitPoints = { ...doc.system.hitPoints };
+
+      const result = engine.prepareData(doc);
+
+      expect(result).not.toBe(doc);
+      expect(result.system).not.toBe(originalSystem);
+      expect(result.system.saves).not.toBe(originalSystem.saves);
+      expect(result.system.hitPoints).not.toBe(originalSystem.hitPoints);
+      expect(doc.system.baseAttackBonus).toBe(0);
+      expect(doc.system.hitPoints).toEqual(originalHitPoints);
+    });
+
     it('calculates CMB = BAB + STR + size', () => {
       const doc = makeDoc({
         baseAttributes: { str: 16, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
@@ -192,6 +222,15 @@ describe('Pf1eEngine', () => {
       const result = await engine.rollCheck(doc, 'cmb');
       expect(result.formula).toBe('1d20 + 9');
       expect(result.flavor).toBe('Combat Maneuver');
+    });
+  });
+
+  describe('applyDamage', () => {
+    it('treats negative damage as healing without consuming temp HP', () => {
+      const doc = makeDoc({ hitPoints: { current: 6, max: 20, temp: 5 } });
+      const result = engine.applyDamage(doc, -4, 'healing');
+      expect(result.system.hitPoints.current).toBe(10);
+      expect(result.system.hitPoints.temp).toBe(5);
     });
   });
 });
