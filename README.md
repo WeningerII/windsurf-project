@@ -301,7 +301,7 @@ weaponProficiencies: [WeaponProficiency.SIMPLE, WeaponProficiency.MARTIAL]
 ### Completed
 - ✅ UI/UX polish — Responsive layouts, dark mode, ConfirmDialog modals, toast notifications
 - ✅ Dice roller — Integrated dice rolling with system-aware modifiers
-- ✅ Performance — Code splitting, lazy loading, gzip/brotli compression, bundle budget CI gate
+- ✅ Performance — Code splitting, partial lazy loading (sheet-internal components), gzip/brotli compression, bundle budget CI gate
 - ✅ PWA/offline — Service worker + web manifest for offline access
 - ✅ IndexedDB — Dual-write storage with auto-migration from localStorage
 - ✅ Undo/redo — State history for accidental edit recovery
@@ -320,7 +320,7 @@ This project uses content from the **System Reference Document 5.1** under the *
 - ✅ No copyrighted material beyond SRD
 - ✅ One subclass per class (SRD limit)
 
-See **SRD_COMPLIANCE.md** for detailed compliance information.
+See documentation on Open Content Policy.
 
 ## 🤝 Contributing
 
@@ -336,7 +336,7 @@ Contributions welcome! Please:
 - **TypeScript** - Type safety
 - **Vite** - Build tool
 - **TailwindCSS** - Styling
-- **shadcn/ui** - UI components
+- **shadcn/ui-inspired** - UI components
 
 ## 🎉 Credits
 

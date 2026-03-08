@@ -77,7 +77,6 @@ Daggerheart is registered and selectable but is **scaffold-only**:
 - HP from ancestry + class die + CON per level
 - Degree of success (crit success/failure with nat 20/1 step)
 - Condition penalties (frightened, sickened, clumsy, enfeebled, stupefied)
-- Bulk tracking with encumbrance thresholds
 
 ### M&M 3e
 - Point-buy validation (abilities, powers, advantages, skills)
@@ -147,7 +146,7 @@ Templates and sheet automation populate proficiencies, features, HP, spell slots
 - **Auto-migration:** localStorage → IndexedDB on first load
 
 ### Testing
-- **78 Vitest files** across `src/__tests__/`
+- **76 Vitest files** across `src/__tests__/` (run `find src/__tests__ -name '*.test.*' | wc -l` to verify)
 - 7 engine test suites (all 7 registered systems now have baseline engine coverage)
 - 24 component test suites
 - 15 focused utility/template suites under `src/__tests__/utils/`
@@ -156,7 +155,7 @@ Templates and sheet automation populate proficiencies, features, HP, spell slots
 - Template pipeline integration tests (5e, PF2e, d20-legacy)
 - Recent additions: direct regression coverage for `classTemplate`, `systemCatalog`, `backgroundTemplate`, `speciesTemplate`, `classSpellcasting`, `featTemplate`, `dnd5eRest`, and `dnd5eFeatureOptions`, plus baseline Daggerheart engine/sheet coverage, App warning cleanup, a Daggerheart Playwright create/persist workflow, shipped 5e subclass selection wired through the shared class template, shared 5e feat ASI/proficiency automation, a shared 5e 27-point-buy / standard-array ability planner, a loader-backed 5e-2014 feature-option browser with persistence/provenance coverage, a shared `TabsTrigger` click-composition fix so loader-backed tabs activate correctly, and M&M archetype/complication/modifier browser coverage tied to the new loader-backed sheet surfaces
 - Full coverage gate passed on March 7, 2026 under Node `v22.18.0`: **3214 tests**, **80.65% branch coverage**
-- **E2E:** 1 Playwright spec (`e2e/phase3-workflows.spec.ts`) — 6 tests covering D&D 5e-2024 plus a Daggerheart scaffold create/persist flow
+- **E2E:** 2 Playwright specs (`phase3-workflows.spec.ts`, `system-smoke.spec.ts`) — 6 tests covering D&D 5e-2024 plus a Daggerheart scaffold create/persist flow
 
 ### PWA
 - Service worker (`public/service-worker.js`) + web manifest
