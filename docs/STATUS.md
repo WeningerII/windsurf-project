@@ -172,9 +172,8 @@ Templates and sheet automation populate proficiencies, features, HP, spell slots
 4. **5e-2014 feature-option effects are intentionally provenance-only** — invocations, maneuvers, wild shapes, and related catalogs are now browseable/persistent, but the sheet does not try to auto-apply every downstream rule rider
 5. **M&M archetypes are intentionally reference-only** — archetypes can now be pinned and reviewed in-sheet, but they do not auto-build powers, skills, or point totals
 6. **No spell preparation workflow**
-7. **Service worker doesn't cache data chunks** — offline loads app shell but fails to load game data
-8. **No PWA install prompt in UI**
-9. **`apiClient.ts` is a stub** — `configureApiClient()` is never called, no backend exists
+7. **No PWA install prompt in UI**
+8. **`apiClient.ts` is a stub** — `configureApiClient()` is never called, no backend exists
 
 ### Code Quality Debt
 1. **5e 2014 + 2024 engines are 90%+ duplicated** — should share a base
@@ -219,7 +218,7 @@ Templates and sheet automation populate proficiencies, features, HP, spell slots
 - [ ] Add browse tabs to Daggerheart sheet
 
 ### P3: Infrastructure
-- [ ] Cache per-system data chunks in service worker for real offline support
+- [x] Cache per-system data chunks in service worker for real offline support
 - [ ] Add PWA install prompt
 - [ ] Expand E2E coverage beyond 5e-2024 + Daggerheart smoke flows
 
