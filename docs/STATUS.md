@@ -181,15 +181,12 @@ Templates and sheet automation populate proficiencies, features, HP, spell slots
 2. **D20LegacySheet is a 46KB monolith** serving two systems
 3. **PF2e sheet (42KB) and M&M sheet (51KB) are also monoliths**
 4. **No shared form/section abstractions** despite `src/components/sheet/` primitives existing
-5. **Performance utilities (`measurePerformance`, etc.) exist but are never called**
-6. **`reportWebVitals()` results go nowhere** (no analytics endpoint)
 
 ### Testing Gaps
 1. **E2E is still minimal** — single spec, 6 tests, currently covering D&D 5e-2024 plus one Daggerheart scaffold flow
 2. **No E2E for:** PF1e, PF2e, D&D 3.5e, M&M, campaigns, dark mode, undo/redo, dice rolling
 3. **Daggerheart browser coverage is smoke-test only** — create/persist is covered, but import/export and any data-backed flow remain unavailable because the system is still scaffold-only
-4. **Coverage config only measures `src/components/` and `src/utils/`** — excludes `src/systems/`, `src/hooks/`, `src/registry/`, `src/data/`
-5. **Coverage remains runtime-sensitive** — Node 18 shells still fail before execution because V8 coverage needs `node:inspector/promises`; use `.nvmrc` / Node 20.19+ or newer
+4. **Coverage remains runtime-sensitive** — Node 18 shells still fail before execution because V8 coverage needs `node:inspector/promises`; use `.nvmrc` / Node 20.19+ or newer
 
 ### Recently Corrected Doc Drift
 1. **README no longer implies all 7 systems are equally production-ready** — Daggerheart is called out as scaffold-only
@@ -224,13 +221,12 @@ Templates and sheet automation populate proficiencies, features, HP, spell slots
 ### P3: Infrastructure
 - [ ] Cache per-system data chunks in service worker for real offline support
 - [ ] Add PWA install prompt
-- [ ] Wire performance monitoring utilities to something useful (or delete them)
 - [ ] Expand E2E coverage beyond 5e-2024 + Daggerheart smoke flows
 
 ### P4: Code Health
 - [ ] Extract shared 5e engine base to reduce duplication
 - [ ] Break monolith sheet components into composable sections
-- [ ] Expand coverage config to include `src/systems/`, `src/hooks/`, `src/registry/`
+- [x] Expand coverage config to include `src/systems/`, `src/hooks/`, `src/registry/`
 
 ### Future (not blocking)
 - [ ] Backend API (server sync, accounts) — no checked-in spec doc currently exists

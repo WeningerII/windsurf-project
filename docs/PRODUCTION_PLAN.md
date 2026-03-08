@@ -435,14 +435,14 @@ These are real gaps but are not blockers for shipping what exists:
 The app is production-ready when:
 
 - [ ] `tsc --noEmit` passes with zero errors
-- [ ] All Phase 1 bugs are fixed with regression tests
-- [ ] `npm run test:coverage -- --run` passes with expanded coverage config
-- [ ] `npm run build` succeeds
-- [ ] `npm run check:bundle-size` passes
-- [ ] `npm run lint` passes with `--max-warnings 0` (or documented exception count)
+- [x] All Phase 1 bugs are fixed with regression tests
+- [x] `npm run test:coverage -- --run` passes with expanded coverage config
+- [x] `npm run build` succeeds
+- [x] `npm run check:bundle-size` passes
+- [x] `npm run lint` passes with documented exception count
 - [ ] E2E tests pass against production build in at least Chromium
-- [ ] No `<owner>/<repo>` placeholder strings exist in shipped docs
+- [x] No `<owner>/<repo>` placeholder strings exist in shipped docs
 - [ ] Deploy pipeline (Netlify or Vercel — pick one) is configured with real secrets
-- [ ] README system count, coverage number, and feature claims match reality
+- [x] README system count, coverage number, and feature claims match reality
 - [ ] Service worker caches at least the user's active system data chunk
-- [ ] Storage persist is debounced (no localStorage write per keystroke)
+- [x] Storage persist is debounced (no localStorage write per keystroke)
