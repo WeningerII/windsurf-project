@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rpg-character-sheet-v1';
+const CACHE_NAME = 'rpg-character-sheet-v2';
 const APP_SHELL = ['/', '/index.html', '/manifest.webmanifest'];
 
 self.addEventListener('install', (event) => {
@@ -33,6 +33,11 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Handle Vite's HMR and dev server requests (skip caching)
+  if (requestUrl.pathname.startsWith('/@') || requestUrl.pathname.includes('node_modules')) {
+    return;
+  }
+
   if (request.mode === 'navigate') {
     event.respondWith(
       fetch(request)
@@ -50,11 +55,13 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // For JS chunks, CSS, and other static assets
   event.respondWith(
     caches.match(request).then((cached) => {
       if (cached) return cached;
 
       return fetch(request).then((response) => {
+        // Cache successful responses for our own assets
         if (response && response.status === 200) {
           const copy = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
@@ -63,4 +70,28 @@ self.addEventListener('fetch', (event) => {
       });
     })
   );
+});
+
+// Allow clients to tell the SW to cache specific system chunks proactively
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'CACHE_URLS') {
+    const urlsToCache = event.data.urls || [];
+    event.waitUntil(
+      caches.open(CACHE_NAME).then((cache) => {
+        return Promise.allSettled(
+          urlsToCache.map((url) => {
+            return cache.match(url).then((existing) => {
+              if (!existing) {
+                return fetch(url).then((response) => {
+                  if (response.ok) {
+                    return cache.put(url, response.clone());
+                  }
+                });
+              }
+            });
+          })
+        );
+      })
+    );
+  }
 });
