@@ -85,7 +85,7 @@ describe('Dnd5e2024Engine', () => {
       expect(result.system.initiative).toBe(4);
     });
 
-    it('applies exhaustion level 4 by halving max HP', () => {
+    it('does not halve max HP at exhaustion level 4 (2024 rules)', () => {
       const doc = makeDoc({
         baseAttributes: { str: 10, dex: 10, con: 14, int: 10, wis: 10, cha: 10 },
         classLevels: [{ classId: 'fighter', level: 2, hitDieRolls: [10, 8] }],
@@ -93,8 +93,8 @@ describe('Dnd5e2024Engine', () => {
         hitPoints: { current: 99, max: 99, temp: 0 },
       });
       const result = engine.prepareData(doc);
-      expect(result.system.hitPoints.max).toBe(11);
-      expect(result.system.hitPoints.current).toBe(11);
+      // 10 + 8 = 18 + (2 * 2 CON mod) = 22. In 2024 rules, exhaustion does not halve HP.
+      expect(result.system.hitPoints.max).toBe(22);
     });
   });
 

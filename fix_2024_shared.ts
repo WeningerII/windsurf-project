@@ -1,4 +1,11 @@
-import { Dnd5eEngineBase } from '../dnd5e-shared/engine';
+import * as fs from 'fs';
+
+let p = 'src/systems/dnd5e-2024/engine.ts';
+let code = fs.readFileSync(p, 'utf8');
+
+code = code.replace(
+  /export class Dnd5e2024Engine implements SystemEngine<Dnd5e2024DataModel> \{[\s\S]*\}\n\n\s*applyDamage\([\s\S]*?\}\n\}/,
+  `import { Dnd5eEngineBase } from '../dnd5e-shared/engine';
 import { CharacterDocument } from '../../types/core/document';
 import { Dnd5e2024DataModel } from './data-model';
 import { abilityMod } from '../../utils/math';
@@ -10,7 +17,7 @@ export class Dnd5e2024Engine extends Dnd5eEngineBase {
     
     // In 2024, the Alert feat allows swapping DEX for INT on initiative
     const intMod = abilityMod(data.baseAttributes.int ?? 10);
-    const hasAlertFeat = data.feats?.some((feat) => {
+    const hasAlertFeat = data.feats.some((feat) => {
       const id = feat.id?.toLowerCase();
       const name = feat.name?.toLowerCase();
       return id === 'alert' || name === 'alert';
@@ -21,13 +28,15 @@ export class Dnd5e2024Engine extends Dnd5eEngineBase {
   protected applyInitiativeModifiers(doc: CharacterDocument<Dnd5e2024DataModel>, modifier: number): number {
     const data = doc.system;
     const intMod = abilityMod(data.baseAttributes.int ?? 10);
+    const dexMod = abilityMod(data.baseAttributes.dex ?? 10);
     
-    const hasAlertFeat = data.feats?.some((feat) => {
+    const hasAlertFeat = data.feats.some((feat) => {
       const id = feat.id?.toLowerCase();
       const name = feat.name?.toLowerCase();
       return id === 'alert' || name === 'alert';
     });
     
+    // The base roll uses dexMod by default, so we might need to replace it entirely
     // Our shared applyInitiativeModifiers receives the already-computed 'modifier' (which is dexMod)
     return hasAlertFeat ? Math.max(modifier, intMod) : modifier;
   }
@@ -40,4 +49,7 @@ export class Dnd5e2024Engine extends Dnd5eEngineBase {
   protected isExhaustionLethal(exhaustion: number): boolean {
     return exhaustion >= 6; // Still lethal at 6
   }
-}
+}`
+);
+
+fs.writeFileSync(p, code);
