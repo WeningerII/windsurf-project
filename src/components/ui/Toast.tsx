@@ -39,7 +39,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   return (
     <ToastContext.Provider value={{ toast }}>
       {children}
-      <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm">
+      <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm" aria-label="Notifications">
         {toasts.map((t) => (
           <ToastNotification key={t.id} item={t} onDismiss={dismiss} />
         ))}
@@ -75,6 +75,8 @@ const ToastNotification: React.FC<{ item: ToastItem; onDismiss: (id: number) => 
 
   return (
     <div
+      role="status"
+      aria-live="polite"
       className={`flex items-center gap-2 px-4 py-3 rounded-lg border shadow-lg animate-in slide-in-from-right ${VARIANT_STYLES[item.variant]}`}
     >
       <Icon className="w-4 h-4 flex-shrink-0" />

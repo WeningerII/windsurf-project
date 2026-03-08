@@ -1,6 +1,3 @@
-/**
- * Simple debounce function to limit how often a function is called
- */
 export function debounce<T extends (...args: any[]) => void>(
   func: T,
   wait: number
@@ -44,29 +41,16 @@ export function debounce<T extends (...args: any[]) => void>(
   return debounced;
 }
 
-/**
- * Simple throttle function to limit how often a function is called
- */
-export function throttle<T extends (...args: any[]) => void>(
+export function throttle<T extends (...args: any[]) => any>(
   func: T,
   limit: number
 ): (...args: Parameters<T>) => void {
-  let inThrottle = false;
-  let lastArgs: Parameters<T> | undefined;
-
-  return function (...args: Parameters<T>) {
+  let inThrottle: boolean;
+  return function (this: any, ...args: Parameters<T>) {
     if (!inThrottle) {
-      func(...args);
+      func.apply(this, args);
       inThrottle = true;
-      setTimeout(() => {
-        inThrottle = false;
-        if (lastArgs) {
-          func(...lastArgs);
-          lastArgs = undefined;
-        }
-      }, limit);
-    } else {
-      lastArgs = args;
+      setTimeout(() => (inThrottle = false), limit);
     }
   };
 }
