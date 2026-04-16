@@ -1,11 +1,5 @@
-/**
- * Daggerheart Data Model
- *
- * Minimal scaffold implementing the Daggerheart TTRPG system.
- * This demonstrates how to add a new system to the registry.
- */
-
 import { SystemDataModel } from '../../types/core/document';
+import type { DaggerheartDomainCardType, DaggerheartDomainId } from '../../types/daggerheart';
 
 export interface DaggerheartDataModel extends SystemDataModel {
   level: number;
@@ -13,6 +7,11 @@ export interface DaggerheartDataModel extends SystemDataModel {
   community: string;
   class: string;
   subclass: string;
+  currency: {
+    handfuls: number;
+    bags: number;
+    chests: number;
+  };
 
   // Daggerheart uses paired attributes (Agility/Strength, Finesse/Instinct, etc.)
   attributes: {
@@ -44,12 +43,23 @@ export interface DaggerheartDataModel extends SystemDataModel {
   // Inventory
   inventory: Array<{ itemId: string; name: string; quantity: number; description: string }>;
 
-  // Domain cards (simplified)
+  weapons: {
+    primaryId: string;
+    secondaryId: string;
+    inventoryIds: string[];
+  };
+  armorId: string;
+
+  // Domain cards
   domainCards: Array<{
     id: string;
+    cardId?: string;
     name: string;
-    domain: string;
+    domain: DaggerheartDomainId | string;
     level: number;
+    type?: DaggerheartDomainCardType;
+    recallCost?: number;
+    location?: 'loadout' | 'vault';
     description: string;
   }>;
 
@@ -62,6 +72,11 @@ export const createDefaultDaggerheartData = (): DaggerheartDataModel => ({
   community: '',
   class: '',
   subclass: '',
+  currency: {
+    handfuls: 0,
+    bags: 0,
+    chests: 0,
+  },
   attributes: {
     agility: 0,
     strength: 0,
@@ -80,6 +95,12 @@ export const createDefaultDaggerheartData = (): DaggerheartDataModel => ({
   hope: 2,
   experiences: [],
   inventory: [],
+  weapons: {
+    primaryId: '',
+    secondaryId: '',
+    inventoryIds: [],
+  },
+  armorId: '',
   domainCards: [],
   notes: '',
 });

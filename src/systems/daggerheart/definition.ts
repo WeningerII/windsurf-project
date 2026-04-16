@@ -1,14 +1,15 @@
 import { SystemDefinition } from '../../registry/types';
 import { DaggerheartDataModel, createDefaultDaggerheartData } from './data-model';
 import { DaggerheartEngine } from './engine';
-import { lazy } from 'react';
+import { lazyWithPreload } from '../../utils/lazyWithPreload';
+import { SYSTEM_SUPPORT_NOTES } from '../../utils/documentationCopy';
 
 export const DaggerheartSystemDef: SystemDefinition<DaggerheartDataModel> = {
   id: 'daggerheart',
   label: 'Daggerheart',
   version: '1.0',
-  supportLevel: 'scaffold',
-  supportNotes: 'Manual entry only; no local data modules',
+  supportLevel: 'partial',
+  supportNotes: SYSTEM_SUPPORT_NOTES.daggerheart,
   attributes: [
     {
       id: 'agility',
@@ -50,5 +51,7 @@ export const DaggerheartSystemDef: SystemDefinition<DaggerheartDataModel> = {
   skills: [],
   createDefaultData: createDefaultDaggerheartData,
   engine: new DaggerheartEngine(),
-  SheetComponent: lazy(() => import('./sheet').then((m) => ({ default: m.DaggerheartSheet }))),
+  SheetComponent: lazyWithPreload(() =>
+    import('./sheet').then((m) => ({ default: m.DaggerheartSheet }))
+  ),
 };

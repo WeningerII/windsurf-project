@@ -7,29 +7,66 @@
 
 import { CharacterDocument } from '../../types/core/document';
 import { SystemEngine, RollResult } from '../../registry/types';
-import { DaggerheartDataModel } from './data-model';
+import { createDefaultDaggerheartData, DaggerheartDataModel } from './data-model';
+import {
+  getDaggerheartDerivedStats,
+  getDaggerheartEffectiveAttribute,
+} from '../../utils/daggerheartDerived';
+import {
+  clampDaggerheartInventoryQuantity,
+  normalizeDaggerheartCurrency,
+} from '../../utils/daggerheartInventory';
+import { normalizeDaggerheartDocument } from '../../utils/daggerheartNormalization';
+import type { DaggerheartTrait } from '../../types/daggerheart';
 
 export class DaggerheartEngine implements SystemEngine<DaggerheartDataModel> {
   prepareData(
     document: CharacterDocument<DaggerheartDataModel>
   ): CharacterDocument<DaggerheartDataModel> {
-    const d = { ...document, system: { ...document.system } };
-    const attrs = d.system.attributes;
+    const normalizedDocument = normalizeDaggerheartDocument(document);
+    const defaults = createDefaultDaggerheartData();
+    const d = structuredClone({
+      ...normalizedDocument,
+      system: {
+        ...defaults,
+        ...normalizedDocument.system,
+        currency: normalizeDaggerheartCurrency({
+          ...defaults.currency,
+          ...normalizedDocument.system.currency,
+        }),
+        armor: {
+          ...defaults.armor,
+          ...normalizedDocument.system.armor,
+        },
+        hitPoints: {
+          ...defaults.hitPoints,
+          ...normalizedDocument.system.hitPoints,
+        },
+        stress: {
+          ...defaults.stress,
+          ...normalizedDocument.system.stress,
+        },
+        weapons: {
+          ...defaults.weapons,
+          ...normalizedDocument.system.weapons,
+        },
+        inventory: (normalizedDocument.system.inventory || defaults.inventory).map((entry) => ({
+          ...entry,
+          quantity: clampDaggerheartInventoryQuantity(entry.itemId, entry.quantity),
+        })),
+      },
+    });
+    const derived = getDaggerheartDerivedStats(d.system);
 
-    // Evasion = base + Agility modifier (simplified)
-    d.system.evasion = 10 + attrs.agility;
+    d.system.evasion = derived.evasion;
+    d.system.armorScore = derived.armorScore;
+    d.system.majorThreshold = derived.majorThreshold;
+    d.system.severeThreshold = derived.severeThreshold;
+    d.system.armor.max = derived.armorMax;
 
-    // HP scales with level (base 6 + 2 per level after 1st)
-    const baseHp = 6 + (d.system.level - 1) * 2 + Math.max(0, attrs.strength);
-    if (d.system.hitPoints.max !== baseHp) {
-      d.system.hitPoints = { ...d.system.hitPoints, max: baseHp };
-    }
-
-    // Stress max = 6 + Presence modifier
-    const baseStress = 6 + Math.max(0, attrs.presence);
-    if (d.system.stress.max !== baseStress) {
-      d.system.stress = { ...d.system.stress, max: baseStress };
-    }
+    d.system.hitPoints.current = Math.min(d.system.hitPoints.current, d.system.hitPoints.max);
+    d.system.stress.current = Math.min(d.system.stress.current, d.system.stress.max);
+    d.system.armor.current = Math.min(d.system.armor.current, d.system.armor.max);
 
     return d;
   }
@@ -39,7 +76,10 @@ export class DaggerheartEngine implements SystemEngine<DaggerheartDataModel> {
     checkId: string
   ): Promise<RollResult> {
     const attrs = document.system.attributes;
-    const mod = (attrs as Record<string, number>)[checkId] ?? 0;
+    const mod =
+      checkId in attrs
+        ? getDaggerheartEffectiveAttribute(document.system, checkId as DaggerheartTrait)
+        : ((attrs as Record<string, number>)[checkId] ?? 0);
 
     // Daggerheart uses 2d12 — Hope die and Fear die
     const hopeDie = Math.floor(Math.random() * 12) + 1;
