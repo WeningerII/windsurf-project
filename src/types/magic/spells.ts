@@ -39,6 +39,8 @@ export interface Spell {
   school: MagicSchool;
   subschool?: string;
   descriptors?: string[];
+  traditions?: SpellTradition[];
+  traits?: string[];
 
   castingTime: CastingTime;
   range: Range;
@@ -50,17 +52,20 @@ export interface Spell {
   effect?: string;
   area?: string;
   savingThrow?: SavingThrowInfo;
+  savingThrowText?: string;
   attackRoll?: boolean;
 
   damage?: SpellDamage;
   healing?: DiceRoll;
   spellResistance?: boolean;
+  spellResistanceDetail?: SpellResistanceDetail;
 
   concentration: boolean;
   ritual: boolean;
 
   description: string;
   atHigherLevels?: string;
+  heightening?: SpellHeightening;
 
   classes: string[]; // Which classes can learn this
   levelsByClass?: Record<string, number>;
@@ -84,6 +89,10 @@ export type MagicSchool =
   | 'divine'
   | 'occult'
   | 'primal';
+
+export type SpellTradition = 'arcane' | 'divine' | 'occult' | 'primal';
+
+export type SpellResistanceDetail = 'yes' | 'no' | 'harmless' | 'object' | 'partial' | 'see-text';
 
 /**
  * Spell casting time
@@ -142,4 +151,11 @@ export interface SpellDamage {
     type: 'character-level' | 'spell-level';
     increment: DiceRoll;
   };
+}
+
+export interface SpellHeightening {
+  mode: 'interval' | 'fixed' | 'cantrip';
+  summary: string;
+  interval?: number;
+  ranks?: Record<number, string>;
 }

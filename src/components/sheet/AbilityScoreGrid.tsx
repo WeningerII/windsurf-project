@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from '../ui/Button';
 import { abilityMod, formatMod, parseNum } from '../../utils/math';
 
@@ -95,8 +95,7 @@ function clampPointBuyScore(score: number): number {
 }
 
 export const AbilityScoreGrid: React.FC<Props> = ({ attributes, names, onUpdate, planner }) => {
-  const abilityKeys = Object.keys(names);
-  const abilityKeySignature = abilityKeys.join('|');
+  const abilityKeys = useMemo(() => Object.keys(names), [names]);
   const [plannerMode, setPlannerMode] = useState<PlannerMode>('manual');
   const [pointBuyDraft, setPointBuyDraft] = useState<Record<string, number>>(() =>
     buildPointBuyDraft(attributes, abilityKeys)
@@ -108,7 +107,7 @@ export const AbilityScoreGrid: React.FC<Props> = ({ attributes, names, onUpdate,
   useEffect(() => {
     setPointBuyDraft(buildPointBuyDraft(attributes, abilityKeys));
     setStandardArrayDraft(buildStandardArrayDraft(attributes, abilityKeys));
-  }, [abilityKeySignature, attributes]);
+  }, [abilityKeys, attributes]);
 
   const pointBuyRemaining = POINT_BUY_BUDGET - totalPointBuyCost(pointBuyDraft, abilityKeys);
   const standardArrayRemaining = remainingStandardArrayValues(standardArrayDraft, abilityKeys);

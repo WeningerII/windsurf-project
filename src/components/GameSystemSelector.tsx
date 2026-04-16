@@ -20,7 +20,7 @@ import {
   Star,
   AlertTriangle,
 } from 'lucide-react';
-import { loadAllSystemCatalogSummaries } from '../utils/systemCatalog';
+import { loadAllSystemCatalogSummariesFromMetadata } from '../utils/systemCatalogMetadata';
 
 interface GameSystemSelectorProps {
   selectedSystem: GameSystemId | null;
@@ -68,6 +68,8 @@ const systemAccents: Record<GameSystemId, { icon: ReactNode; gradient: string; a
 const categoryIcons: Record<SystemContentCategoryId, ReactNode> = {
   spells: <BookOpen className="w-3.5 h-3.5 shrink-0" />,
   classes: <Shield className="w-3.5 h-3.5 shrink-0" />,
+  domains: <Sparkles className="w-3.5 h-3.5 shrink-0" />,
+  domainCards: <Scroll className="w-3.5 h-3.5 shrink-0" />,
   species: <Users className="w-3.5 h-3.5 shrink-0" />,
   featureOptions: <Sparkles className="w-3.5 h-3.5 shrink-0" />,
   backgrounds: <Scroll className="w-3.5 h-3.5 shrink-0" />,
@@ -102,7 +104,7 @@ export function GameSystemSelector({ selectedSystem, onSelect }: GameSystemSelec
     let canceled = false;
     const systemIds = systemRegistry.getAll().map((system) => system.id as GameSystemId);
 
-    void loadAllSystemCatalogSummaries(systemIds).then((loadedSummaries) => {
+    void loadAllSystemCatalogSummariesFromMetadata(systemIds).then((loadedSummaries) => {
       if (!canceled) {
         setSummaries(loadedSummaries);
       }

@@ -51,6 +51,8 @@ export interface CharacterClass {
 
   // Spellcasting
   spellcasting?: SpellcastingProgression;
+  d20SpellcastingAdvancement?: D20SpellcastingAdvancement;
+  alwaysPreparedSpells?: AlwaysPreparedSpellGrant[];
 
   // Class-specific resources
   classResources?: ClassResource[];
@@ -86,6 +88,14 @@ export interface Subclass {
   description: string;
   features: ClassFeatureProgression[];
   spellListExpansion?: string[]; // Additional spells available
+  alwaysPreparedSpells?: AlwaysPreparedSpellGrant[];
+}
+
+export interface AlwaysPreparedSpellGrant {
+  source: string;
+  minLevel: number;
+  spellIds: string[];
+  countsAgainstPreparedLimit: false;
 }
 
 export interface SpellcastingProgression {
@@ -103,6 +113,18 @@ export interface SpellcastingProgression {
 
   // Multiclassing
   multiclassCasterLevel?: 'full' | 'half' | 'third' | 'none';
+}
+
+export interface D20SpellcastingAdvancement {
+  tracks: D20SpellcastingAdvancementTrack[];
+}
+
+export interface D20SpellcastingAdvancementTrack {
+  id: string;
+  label: string;
+  kind: 'arcane' | 'divine' | 'any';
+  advancementLevels: number[];
+  eligibleClassIds?: string[];
 }
 
 export interface SpellSlotProgression {

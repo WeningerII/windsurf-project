@@ -39,7 +39,10 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   return (
     <ToastContext.Provider value={{ toast }}>
       {children}
-      <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm" aria-label="Notifications">
+      <div
+        className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm"
+        aria-label="Notifications"
+      >
         {toasts.map((t) => (
           <ToastNotification key={t.id} item={t} onDismiss={dismiss} />
         ))}
@@ -85,6 +88,7 @@ const ToastNotification: React.FC<{ item: ToastItem; onDismiss: (id: number) => 
         onClick={() => onDismiss(item.id)}
         className="text-muted-foreground hover:text-foreground"
         title="Dismiss"
+        aria-label="Dismiss notification"
       >
         <X className="w-3.5 h-3.5" />
       </button>

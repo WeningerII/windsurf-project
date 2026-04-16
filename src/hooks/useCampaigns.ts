@@ -28,6 +28,30 @@ export const useCampaigns = () => {
 
   useEffect(() => () => debouncedPersist.flush(), [debouncedPersist]);
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    const flushPersist = () => {
+      debouncedPersist.flush();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        flushPersist();
+      }
+    };
+
+    window.addEventListener('pagehide', flushPersist);
+    window.addEventListener('beforeunload', flushPersist);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener('pagehide', flushPersist);
+      window.removeEventListener('beforeunload', flushPersist);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [debouncedPersist]);
+
   const addCampaign = useCallback(
     (campaign: Campaign) => {
       const persistVersion = ++persistVersionRef.current;
@@ -117,5 +141,6 @@ export const useCampaigns = () => {
     addCharacterToCampaign,
     removeCharacterFromCampaign,
     clearAllCampaigns,
+    flushPendingSaves: debouncedPersist.flush,
   };
 };

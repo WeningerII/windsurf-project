@@ -20,6 +20,8 @@ import {
 } from 'lucide-react';
 import { ThemeToggle } from './components/ui/ThemeToggle';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { UserMenu } from './components/UserMenu';
+import { useSync } from './hooks/useSync';
 import { generateUUID, initBrowserCompat } from './utils/browserCompat';
 import { SystemSheetRenderer } from './components/SystemSheetRenderer';
 import { CharacterDocument, SystemDataModel } from './types/core/document';
@@ -32,6 +34,7 @@ import { ToastProvider, useToast } from './components/ui/Toast';
 import { useCampaigns } from './hooks/useCampaigns';
 import { CampaignManager } from './components/CampaignManager';
 import { prefetchSystemAssetsForIds } from './utils/systemAssetPrefetch';
+import { usePwaInstallPrompt } from './hooks/usePwaInstallPrompt';
 
 type CharacterSortOption =
   | 'updated-desc'
@@ -138,7 +141,13 @@ function AppContent() {
     redo,
     canUndo,
     canRedo,
+    flushPendingSaves: flushPendingDocumentSaves,
   } = useDocuments();
+
+  const { syncState, lastSyncedAt, sync } = useSync({
+    documents,
+    onMerge: addDocuments,
+  });
   const [currentDocId, setCurrentDocId] = useState<string | null>(null);
   const [selectedSystem, setSelectedSystem] = useState<GameSystemId | null>(null);
   const [systemFilter, setSystemFilter] = useState<GameSystemId | 'all'>('all');
@@ -157,7 +166,14 @@ function AppContent() {
     deleteCampaign,
     addCharacterToCampaign,
     removeCharacterFromCampaign,
+    flushPendingSaves: flushPendingCampaignSaves,
   } = useCampaigns();
+  const handleAppInstalled = useCallback(() => {
+    toast('App installed for offline-friendly access.', 'success');
+  }, [toast]);
+  const { canInstall, dismissInstallPrompt, isInstalling, promptInstall } = usePwaInstallPrompt({
+    onInstalled: handleAppInstalled,
+  });
 
   const showConfirm = useCallback((title: string, description: string, onConfirm: () => void) => {
     setConfirmDialog({ open: true, title, description, onConfirm });
@@ -166,6 +182,12 @@ function AppContent() {
   const closeConfirm = useCallback(() => {
     setConfirmDialog((prev) => ({ ...prev, open: false }));
   }, []);
+
+  const handleReturnToList = useCallback(() => {
+    flushPendingDocumentSaves();
+    flushPendingCampaignSaves();
+    setCurrentDocId(null);
+  }, [flushPendingCampaignSaves, flushPendingDocumentSaves]);
 
   const filteredAndSortedDocuments = useMemo(() => {
     const filtered =
@@ -340,7 +362,7 @@ function AppContent() {
     {
       key: 'Escape',
       callback: () => {
-        if (currentDocId) setCurrentDocId(null);
+        if (currentDocId) handleReturnToList();
       },
       description: 'Back to character list',
     },
@@ -383,6 +405,12 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-background">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-card focus:px-3 focus:py-2 focus:text-sm focus:shadow-md"
+      >
+        Skip to main content
+      </a>
       {/* Header */}
       <header className="sticky top-0 z-50 border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
         <div className="container mx-auto px-4 py-3">
@@ -391,7 +419,7 @@ function AppContent() {
               {currentDoc ? (
                 <Button
                   variant="ghost"
-                  onClick={() => setCurrentDocId(null)}
+                  onClick={handleReturnToList}
                   title="Back to character list"
                   className="shrink-0"
                 >
@@ -421,6 +449,7 @@ function AppContent() {
                 onClick={undo}
                 disabled={!canUndo}
                 title="Undo (Ctrl+Z)"
+                aria-label="Undo"
               >
                 <Undo2 className="w-4 h-4" />
               </Button>
@@ -430,6 +459,7 @@ function AppContent() {
                 onClick={redo}
                 disabled={!canRedo}
                 title="Redo (Ctrl+Shift+Z)"
+                aria-label="Redo"
               >
                 <Redo2 className="w-4 h-4" />
               </Button>
@@ -452,6 +482,7 @@ function AppContent() {
                     size="icon"
                     onClick={() => handleCloneDocument(currentDoc)}
                     title="Clone character"
+                    aria-label="Clone character"
                   >
                     <Copy className="w-4 h-4" />
                   </Button>
@@ -460,6 +491,7 @@ function AppContent() {
                     size="icon"
                     onClick={() => handleExportDocument(currentDoc)}
                     title="Export character"
+                    aria-label="Export character"
                   >
                     <Download className="w-4 h-4" />
                   </Button>
@@ -478,11 +510,13 @@ function AppContent() {
                     className="text-destructive hover:text-destructive hover:bg-destructive/10"
                     onClick={() => currentDocId && handleDeleteDocument(currentDocId)}
                     title="Delete character"
+                    aria-label="Delete character"
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </>
               )}
+              <UserMenu syncState={syncState} lastSyncedAt={lastSyncedAt} onSyncNow={sync} />
               <ThemeToggle />
             </div>
           </div>
@@ -501,6 +535,7 @@ function AppContent() {
               onClick={clearError}
               className="text-destructive hover:text-destructive/80 transition-colors"
               title="Dismiss"
+              aria-label="Dismiss error"
             >
               <X className="w-4 h-4" />
             </button>
@@ -509,7 +544,7 @@ function AppContent() {
       )}
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8">
         {isLoading ? (
           <div className="max-w-6xl mx-auto space-y-6 pt-4">
             <Skeleton className="h-10 w-64 mx-auto" />
@@ -530,9 +565,36 @@ function AppContent() {
             <div className="text-center space-y-3 pt-4">
               <h2 className="text-4xl font-bold tracking-tight">Choose a Game System</h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Select from 6 fully implemented RPG systems with SRD-compliant content
+                Select from 7 registered RPG systems with full or partial SRD-backed support
               </p>
             </div>
+
+            {canInstall && (
+              <section className="mx-auto max-w-3xl rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card p-5 shadow-sm">
+                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                  <div className="flex items-start gap-3">
+                    <div className="rounded-xl bg-primary/10 p-3 text-primary">
+                      <Download className="h-5 w-5" />
+                    </div>
+                    <div className="space-y-1">
+                      <h3 className="text-lg font-semibold tracking-tight">Install the app</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Add it to your home screen for faster launches and offline-friendly access.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Button variant="outline" onClick={dismissInstallPrompt}>
+                      Not now
+                    </Button>
+                    <Button onClick={() => void promptInstall()} disabled={isInstalling}>
+                      <Download className="mr-2 h-4 w-4" />
+                      {isInstalling ? 'Opening Prompt...' : 'Install App'}
+                    </Button>
+                  </div>
+                </div>
+              </section>
+            )}
 
             {/* System Selector */}
             <GameSystemSelector selectedSystem={selectedSystem} onSelect={setSelectedSystem} />
@@ -682,6 +744,7 @@ function AppContent() {
                             handleCloneDocument(doc);
                           }}
                           title={`Clone ${doc.name}`}
+                          aria-label={`Clone ${doc.name}`}
                         >
                           <Copy className="w-3.5 h-3.5" />
                         </Button>

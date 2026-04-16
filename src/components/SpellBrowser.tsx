@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { Search, Filter } from 'lucide-react';
 
-interface SpellDisplay {
+export interface SpellBrowserSpell {
   id: string;
   name: string;
   level: number;
@@ -11,11 +11,17 @@ interface SpellDisplay {
   duration: string;
   description: string;
   classes: string[];
+  traditions?: string[];
+  tags?: string[];
+  target?: string;
+  effect?: string;
+  area?: string;
+  scaling?: string;
 }
 
 interface SpellBrowserProps {
-  spells: SpellDisplay[];
-  onSelectSpell?: (spell: SpellDisplay) => void;
+  spells: SpellBrowserSpell[];
+  onSelectSpell?: (spell: SpellBrowserSpell) => void;
 }
 
 export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpell }) => {
@@ -23,16 +29,42 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpel
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
   const [selectedSchool, setSelectedSchool] = useState<string | null>(null);
   const [selectedClass, setSelectedClass] = useState<string | null>(null);
+  const [selectedTradition, setSelectedTradition] = useState<string | null>(null);
+
+  const levels = useMemo(
+    () => [...new Set(spells.map((s) => s.level))].sort((a, b) => a - b),
+    [spells]
+  );
 
   const schools = useMemo(() => [...new Set(spells.map((s) => s.school))].sort(), [spells]);
 
   const classes = useMemo(() => [...new Set(spells.flatMap((s) => s.classes))].sort(), [spells]);
 
+  const traditions = useMemo(
+    () => [...new Set(spells.flatMap((s) => s.traditions ?? []))].sort(),
+    [spells]
+  );
+
   const filteredSpells = useMemo(() => {
     return spells.filter((spell) => {
+      const searchableText = [
+        spell.name,
+        spell.description,
+        spell.school,
+        ...(spell.classes ?? []),
+        ...(spell.traditions ?? []),
+        ...(spell.tags ?? []),
+        spell.target,
+        spell.effect,
+        spell.area,
+        spell.scaling,
+      ]
+        .filter(Boolean)
+        .join(' ')
+        .toLowerCase();
+
       const matchesSearch =
-        spell.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        spell.description.toLowerCase().includes(searchTerm.toLowerCase());
+        searchTerm.trim().length === 0 || searchableText.includes(searchTerm.toLowerCase());
 
       const matchesLevel = selectedLevel === null || spell.level === selectedLevel;
 
@@ -40,15 +72,19 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpel
 
       const matchesClass = selectedClass === null || spell.classes.includes(selectedClass);
 
-      return matchesSearch && matchesLevel && matchesSchool && matchesClass;
+      const matchesTradition =
+        selectedTradition === null || (spell.traditions ?? []).includes(selectedTradition);
+
+      return matchesSearch && matchesLevel && matchesSchool && matchesClass && matchesTradition;
     });
-  }, [spells, searchTerm, selectedLevel, selectedSchool, selectedClass]);
+  }, [spells, searchTerm, selectedLevel, selectedSchool, selectedClass, selectedTradition]);
 
   const handleClearFilters = useCallback(() => {
     setSearchTerm('');
     setSelectedLevel(null);
     setSelectedSchool(null);
     setSelectedClass(null);
+    setSelectedTradition(null);
   }, []);
 
   return (
@@ -67,7 +103,7 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpel
       </div>
 
       {/* Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         {/* Level Filter */}
         <div>
           <label className="block text-sm font-medium mb-2">Spell Level</label>
@@ -78,7 +114,7 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpel
             aria-label="Filter by spell level"
           >
             <option value="">All Levels</option>
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((level) => (
+            {levels.map((level) => (
               <option key={level} value={level}>
                 {level === 0 ? 'Cantrip' : `Level ${level}`}
               </option>
@@ -122,6 +158,25 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpel
           </select>
         </div>
 
+        {/* Tradition Filter */}
+        <div>
+          <label className="block text-sm font-medium mb-2">Tradition</label>
+          <select
+            value={selectedTradition ?? ''}
+            onChange={(e) => setSelectedTradition(e.target.value || null)}
+            className="w-full px-3 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            aria-label="Filter by tradition"
+            disabled={traditions.length === 0}
+          >
+            <option value="">All Traditions</option>
+            {traditions.map((tradition) => (
+              <option key={tradition} value={tradition}>
+                {tradition.charAt(0).toUpperCase() + tradition.slice(1)}
+              </option>
+            ))}
+          </select>
+        </div>
+
         {/* Clear Filters */}
         <div className="flex items-end">
           <button
@@ -160,6 +215,27 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpel
                   </div>
                 </div>
 
+                {(spell.traditions?.length || spell.tags?.length) && (
+                  <div className="mb-3 flex flex-wrap gap-2 text-xs">
+                    {(spell.traditions ?? []).map((tradition) => (
+                      <span
+                        key={`${spell.id}-${tradition}`}
+                        className="rounded-full bg-secondary px-2 py-1 text-secondary-foreground"
+                      >
+                        {tradition}
+                      </span>
+                    ))}
+                    {(spell.tags ?? []).map((tag) => (
+                      <span
+                        key={`${spell.id}-${tag}`}
+                        className="rounded-full border border-input px-2 py-1 text-muted-foreground"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
                 <div className="grid grid-cols-3 gap-4 text-sm mb-3">
                   <div>
                     <span className="font-medium">Casting Time:</span> {spell.castingTime}
@@ -171,6 +247,31 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpel
                     <span className="font-medium">Duration:</span> {spell.duration}
                   </div>
                 </div>
+
+                {(spell.area || spell.target || spell.effect || spell.scaling) && (
+                  <div className="mb-3 space-y-1 text-sm text-muted-foreground">
+                    {spell.area && (
+                      <p>
+                        <span className="font-medium">Area:</span> {spell.area}
+                      </p>
+                    )}
+                    {spell.target && (
+                      <p>
+                        <span className="font-medium">Target:</span> {spell.target}
+                      </p>
+                    )}
+                    {spell.effect && (
+                      <p>
+                        <span className="font-medium">Effect:</span> {spell.effect}
+                      </p>
+                    )}
+                    {spell.scaling && (
+                      <p>
+                        <span className="font-medium">Scaling:</span> {spell.scaling}
+                      </p>
+                    )}
+                  </div>
+                )}
 
                 <p className="text-sm text-muted-foreground line-clamp-2">{spell.description}</p>
               </div>

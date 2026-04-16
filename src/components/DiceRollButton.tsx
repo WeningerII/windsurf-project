@@ -52,10 +52,17 @@ export const DiceRollButton: React.FC<DiceRollButtonProps> = ({
                 : 'bg-card border-border'
           }`}
         >
-          <span className="font-bold tabular-nums">{result.total}</span>
-          <span className="text-muted-foreground ml-1.5 text-xs">({result.formula})</span>
-          {result.isCritical && <span className="ml-1 text-green-600 font-bold">NAT 20!</span>}
-          {result.isFumble && <span className="ml-1 text-red-600 font-bold">NAT 1!</span>}
+          <div>
+            <span className="font-bold tabular-nums">{result.total}</span>
+            <span className="text-muted-foreground ml-1.5 text-xs">({result.formula})</span>
+            {result.isCritical && <span className="ml-1 text-green-600 font-bold">NAT 20!</span>}
+            {result.isFumble && <span className="ml-1 text-red-600 font-bold">NAT 1!</span>}
+          </div>
+          {result.flavor && (
+            <div className="mt-1 text-[11px] leading-snug text-muted-foreground whitespace-normal">
+              {result.flavor}
+            </div>
+          )}
         </div>
       )}
     </div>

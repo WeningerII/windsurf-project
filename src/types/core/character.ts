@@ -97,6 +97,8 @@ export interface ClassLevel {
   subclassId?: string;
   level: number;
   hitDieRolls: number[]; // Track actual HP rolls per level
+  skillSelections?: string[];
+  toolSelections?: string[];
 }
 
 /**
@@ -185,6 +187,7 @@ export interface SpellcastingInfo {
   classes: SpellcastingClass[];
   spellsKnown: string[]; // Spell IDs
   spellsPrepared: string[]; // For prepared casters
+  alwaysPreparedSpellIds?: string[];
   spellSlots: SpellSlots;
 }
 

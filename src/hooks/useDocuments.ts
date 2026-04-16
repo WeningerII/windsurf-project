@@ -7,9 +7,62 @@ import {
   clearDocumentStorage,
 } from '../utils/documentStorage';
 import { systemRegistry } from '../registry';
-import { debounce, throttle } from '../utils/performance';
+import { debounce } from '../utils/performance';
 
 const MAX_HISTORY = 50;
+
+function prepareDocumentWithEngine(
+  doc: CharacterDocument<SystemDataModel>
+): CharacterDocument<SystemDataModel> {
+  const sysDef = systemRegistry.get(doc.systemId);
+  return sysDef ? sysDef.engine.prepareData(doc) : doc;
+}
+
+function prepareDocumentsWithEngines(
+  docs: CharacterDocument<SystemDataModel>[]
+): CharacterDocument<SystemDataModel>[] {
+  return docs.map((doc) => prepareDocumentWithEngine(doc));
+}
+
+function documentsChanged(
+  before: CharacterDocument<SystemDataModel>[],
+  after: CharacterDocument<SystemDataModel>[]
+): boolean {
+  return JSON.stringify(before) !== JSON.stringify(after);
+}
+
+function getDocumentVersion(doc: CharacterDocument<SystemDataModel>): number {
+  return doc.version ?? 1;
+}
+
+function mergeDocumentCollections(
+  current: CharacterDocument<SystemDataModel>[],
+  incoming: CharacterDocument<SystemDataModel>[]
+): CharacterDocument<SystemDataModel>[] {
+  const merged = new Map<string, CharacterDocument<SystemDataModel>>();
+
+  current.forEach((doc) => {
+    merged.set(doc.id, doc);
+  });
+
+  incoming.forEach((doc) => {
+    const existing = merged.get(doc.id);
+    const docVersion = getDocumentVersion(doc);
+    const existingVersion = existing ? getDocumentVersion(existing) : 0;
+
+    if (
+      !existing ||
+      docVersion > existingVersion ||
+      (docVersion === existingVersion && doc.updatedAt >= existing.updatedAt)
+    ) {
+      merged.set(doc.id, doc);
+    }
+  });
+
+  return Array.from(merged.values()).sort(
+    (left, right) => right.updatedAt.getTime() - left.updatedAt.getTime()
+  );
+}
 
 function cloneDocumentsSnapshot(
   docs: CharacterDocument<SystemDataModel>[]
@@ -36,6 +89,7 @@ export const useDocuments = () => {
   const historyPastRef = useRef<CharacterDocument<SystemDataModel>[][]>([]);
   const hasLocalEditsRef = useRef(false);
   const persistVersionRef = useRef(0);
+  const historySnapshotQueuedRef = useRef(false);
 
   useEffect(() => {
     documentsRef.current = documents;
@@ -45,11 +99,23 @@ export const useDocuments = () => {
     historyPastRef.current = historyPast;
   }, [historyPast]);
 
+  const persist = useCallback((docs: CharacterDocument<SystemDataModel>[]) => {
+    try {
+      saveDocuments(docs);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to save documents');
+    }
+  }, []);
+
   useEffect(() => {
     // Fast synchronous load from localStorage first
     try {
       const loaded = loadDocuments();
-      setDocuments(loaded);
+      const prepared = prepareDocumentsWithEngines(loaded);
+      setDocuments(prepared);
+      if (documentsChanged(loaded, prepared)) {
+        persist(prepared);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load documents');
     } finally {
@@ -64,21 +130,17 @@ export const useDocuments = () => {
           historyPastRef.current.length === 0 &&
           !hasLocalEditsRef.current
         ) {
-          setDocuments(asyncDocs);
+          const prepared = prepareDocumentsWithEngines(asyncDocs);
+          setDocuments(prepared);
+          if (documentsChanged(asyncDocs, prepared)) {
+            persist(prepared);
+          }
         }
       })
       .catch(() => {
         // IndexedDB load failed; synchronous localStorage data is already set
       });
-  }, []);
-
-  const persist = useCallback((docs: CharacterDocument<SystemDataModel>[]) => {
-    try {
-      saveDocuments(docs);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save documents');
-    }
-  }, []);
+  }, [persist]);
 
   const debouncedPersist = useMemo(
     () =>
@@ -91,16 +153,53 @@ export const useDocuments = () => {
 
   useEffect(() => () => debouncedPersist.flush(), [debouncedPersist]);
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    const flushPersist = () => {
+      debouncedPersist.flush();
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        flushPersist();
+      }
+    };
+
+    window.addEventListener('pagehide', flushPersist);
+    window.addEventListener('beforeunload', flushPersist);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener('pagehide', flushPersist);
+      window.removeEventListener('beforeunload', flushPersist);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [debouncedPersist]);
+
   const pushHistorySnapshot = useCallback((snapshot: CharacterDocument<SystemDataModel>[]) => {
     setHistoryPast((prev) => [...prev.slice(-(MAX_HISTORY - 1)), cloneDocumentsSnapshot(snapshot)]);
     setHistoryFuture([]);
   }, []);
 
-  const throttledPushHistory = useMemo(
-    () =>
-      throttle((snapshot: CharacterDocument<SystemDataModel>[]) => {
-        pushHistorySnapshot(snapshot);
-      }, 500),
+  const queueHistorySnapshot = useCallback(
+    (snapshot: CharacterDocument<SystemDataModel>[]) => {
+      if (historySnapshotQueuedRef.current) return;
+
+      historySnapshotQueuedRef.current = true;
+      pushHistorySnapshot(snapshot);
+
+      const releaseQueue = () => {
+        historySnapshotQueuedRef.current = false;
+      };
+
+      if (typeof queueMicrotask === 'function') {
+        queueMicrotask(releaseQueue);
+        return;
+      }
+
+      setTimeout(releaseQueue, 0);
+    },
     [pushHistorySnapshot]
   );
 
@@ -111,9 +210,13 @@ export const useDocuments = () => {
       const persistVersion = ++persistVersionRef.current;
       setDocuments((prev) => {
         const next = updater(prev);
+        if (!documentsChanged(prev, next)) {
+          return prev;
+        }
+
         hasLocalEditsRef.current = true;
         if (next.length === prev.length) {
-          throttledPushHistory(prev);
+          queueHistorySnapshot(prev);
         } else {
           pushHistorySnapshot(prev);
         }
@@ -121,14 +224,15 @@ export const useDocuments = () => {
         return next;
       });
     },
-    [debouncedPersist, pushHistorySnapshot, throttledPushHistory]
+    [debouncedPersist, pushHistorySnapshot, queueHistorySnapshot]
   );
 
   const addDocument = useCallback(
     (doc: CharacterDocument<SystemDataModel>) => {
-      // Run prepareData through the system engine before saving
-      const sysDef = systemRegistry.get(doc.systemId);
-      const prepared = sysDef ? sysDef.engine.prepareData(doc) : doc;
+      const prepared = prepareDocumentWithEngine({
+        ...doc,
+        version: doc.version ?? 1,
+      });
 
       applyDocumentsUpdate((prev) => [...prev, prepared]);
     },
@@ -137,10 +241,11 @@ export const useDocuments = () => {
 
   const updateDocument = useCallback(
     (doc: CharacterDocument<SystemDataModel>) => {
-      const sysDef = systemRegistry.get(doc.systemId);
-      const prepared = sysDef
-        ? sysDef.engine.prepareData({ ...doc, updatedAt: new Date() })
-        : { ...doc, updatedAt: new Date() };
+      const prepared = prepareDocumentWithEngine({
+        ...doc,
+        updatedAt: new Date(),
+        version: (doc.version ?? 1) + 1,
+      });
 
       applyDocumentsUpdate((prev) => prev.map((d) => (d.id === prepared.id ? prepared : d)));
     },
@@ -157,12 +262,14 @@ export const useDocuments = () => {
 
   const addDocuments = useCallback(
     (docs: CharacterDocument<SystemDataModel>[]) => {
-      const prepared = docs.map((doc) => {
-        const sysDef = systemRegistry.get(doc.systemId);
-        return sysDef ? sysDef.engine.prepareData(doc) : doc;
-      });
+      const prepared = prepareDocumentsWithEngines(
+        docs.map((doc) => ({
+          ...doc,
+          version: doc.version ?? 1,
+        }))
+      );
 
-      applyDocumentsUpdate((prev) => [...prev, ...prepared]);
+      applyDocumentsUpdate((prev) => mergeDocumentCollections(prev, prepared));
     },
     [applyDocumentsUpdate]
   );
@@ -237,5 +344,6 @@ export const useDocuments = () => {
     canUndo: historyPast.length > 0,
     canRedo: historyFuture.length > 0,
     clearError,
+    flushPendingSaves: debouncedPersist.flush,
   };
 };

@@ -45,4 +45,5 @@ export interface CharacterDocument<T extends SystemDataModel = SystemDataModel> 
   // Metadata
   createdAt: Date;
   updatedAt: Date;
+  version?: number;
 }
