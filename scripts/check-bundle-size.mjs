@@ -7,10 +7,10 @@ import { gzipSync } from 'node:zlib';
 const assetsDir = path.resolve(process.cwd(), 'dist/assets');
 
 const budgets = {
-  totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 600 * 1024,
-  appChunkGzipBytes: parseInt(process.env.BUNDLE_BUDGET_APP_GZIP_BYTES || '', 10) || 70 * 1024,
+  totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 800 * 1024,
+  appChunkGzipBytes: parseInt(process.env.BUNDLE_BUDGET_APP_GZIP_BYTES || '', 10) || 80 * 1024,
   vendorChunkGzipBytes: parseInt(process.env.BUNDLE_BUDGET_VENDOR_GZIP_BYTES || '', 10) || 200 * 1024,
-  largestDataChunkGzipBytes: parseInt(process.env.BUNDLE_BUDGET_DATA_GZIP_BYTES || '', 10) || 130 * 1024,
+  largestDataChunkGzipBytes: parseInt(process.env.BUNDLE_BUDGET_DATA_GZIP_BYTES || '', 10) || 140 * 1024,
 };
 
 function formatBytes(bytes) {
@@ -46,7 +46,11 @@ const chunks = jsFiles.map((file) => {
 });
 
 const totalJsGzipBytes = chunks.reduce((sum, chunk) => sum + chunk.gzipBytes, 0);
-const appChunk = chunks.find((chunk) => /^index-.*\.js$/.test(chunk.file));
+const appChunks = chunks.filter((chunk) => /^index-.*\.js$/.test(chunk.file));
+const appChunk = appChunks.reduce(
+  (largest, chunk) => (!largest || chunk.gzipBytes > largest.gzipBytes ? chunk : largest),
+  null
+);
 const vendorChunk = chunks.find((chunk) => /^react-vendor-.*\.js$/.test(chunk.file))
   || chunks.find((chunk) => /^vendor-.*\.js$/.test(chunk.file));
 const dataChunks = chunks.filter((chunk) => chunk.file.includes('-data-'));

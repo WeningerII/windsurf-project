@@ -62,6 +62,9 @@ export default defineConfig({
           if (id.includes('src/data/mutants-and-masterminds/3e')) {
             return 'mam3e-data';
           }
+          if (id.includes('src/data/daggerheart')) {
+            return 'daggerheart-data';
+          }
         },
       },
     },

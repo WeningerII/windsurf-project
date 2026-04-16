@@ -22,7 +22,10 @@ import type {
   SystemSupportLevel,
 } from '../types/system-catalog';
 import { systemRegistry } from '../registry';
-import { KNOWN_SYSTEM_IDS, loadSystemCatalogSummary } from '../utils/systemCatalog';
+import {
+  KNOWN_SYSTEM_IDS,
+  loadSystemCatalogSummaryFromMetadata,
+} from '../utils/systemCatalogMetadata';
 
 interface SummaryState {
   status: 'loading' | 'ready' | 'error';
@@ -35,6 +38,8 @@ const categoryDisplay: Record<
 > = {
   spells: { icon: <BookOpen className="w-4 h-4" />, colorClass: 'text-blue-500' },
   classes: { icon: <Shield className="w-4 h-4" />, colorClass: 'text-purple-500' },
+  domains: { icon: <Sparkles className="w-4 h-4" />, colorClass: 'text-emerald-500' },
+  domainCards: { icon: <Scroll className="w-4 h-4" />, colorClass: 'text-rose-500' },
   species: { icon: <Users className="w-4 h-4" />, colorClass: 'text-orange-500' },
   featureOptions: { icon: <Sparkles className="w-4 h-4" />, colorClass: 'text-fuchsia-500' },
   backgrounds: { icon: <Scroll className="w-4 h-4" />, colorClass: 'text-cyan-500' },
@@ -103,7 +108,7 @@ export const SystemStatusDashboard: React.FC = () => {
     void Promise.all(
       KNOWN_SYSTEM_IDS.map(async (systemId) => {
         try {
-          const summary = await loadSystemCatalogSummary(systemId);
+          const summary = await loadSystemCatalogSummaryFromMetadata(systemId);
           if (!canceled) {
             setSummaries((prev) => ({
               ...prev,
@@ -113,7 +118,7 @@ export const SystemStatusDashboard: React.FC = () => {
               },
             }));
           }
-        } catch (error) {
+        } catch {
           if (!canceled) {
             setSummaries((prev) => ({
               ...prev,

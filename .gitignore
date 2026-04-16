@@ -11,6 +11,7 @@ node_modules
 dist
 dist-ssr
 coverage
+coverage-*/
 *.local
 
 # TypeDoc generated API docs
@@ -19,9 +20,15 @@ docs/api
 # Report files
 *-report.txt
 spell-report.txt
+playwright-report/
+test-results/
 
-# Duplicate node version management (use .nvmrc only)
-.node-version
+# Repo-pinned Node runtime files and local runtime cache
+.cache/node-dist/
+.cache/node-runtime/
+
+# Local scratch workspace for one-off scripts and notes
+scratch/
 
 # Editor directories and files
 .vscode/*
