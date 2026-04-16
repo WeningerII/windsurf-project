@@ -35,20 +35,17 @@ describe('compute5eSpellSlots', () => {
   });
 
   it('preserves and clamps used slot counts', () => {
-    const result = compute5eSpellSlots(
-      [{ classId: 'wizard', level: 5 }],
-      {
-        1: { max: 4, used: 99 },
-        2: { max: 3, used: 2 },
-        3: { max: 2, used: 7 },
-        4: { max: 0, used: 1 },
-        5: { max: 0, used: 0 },
-        6: { max: 0, used: 0 },
-        7: { max: 0, used: 0 },
-        8: { max: 0, used: 0 },
-        9: { max: 0, used: 0 },
-      }
-    );
+    const result = compute5eSpellSlots([{ classId: 'wizard', level: 5 }], {
+      1: { max: 4, used: 99 },
+      2: { max: 3, used: 2 },
+      3: { max: 2, used: 7 },
+      4: { max: 0, used: 1 },
+      5: { max: 0, used: 0 },
+      6: { max: 0, used: 0 },
+      7: { max: 0, used: 0 },
+      8: { max: 0, used: 0 },
+      9: { max: 0, used: 0 },
+    });
 
     expect(result[1]).toEqual({ max: 4, used: 4 });
     expect(result[2]).toEqual({ max: 3, used: 2 });

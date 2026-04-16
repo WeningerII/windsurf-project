@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { acolyte } from '../../data/dnd/5e-2014/backgrounds/acolyte';
 import { criminal } from '../../data/dnd/5e-2014/backgrounds/criminal';
+import { noble } from '../../data/dnd/5e-2014/backgrounds/noble';
 import { Background } from '../../types/character-options/backgrounds';
 import { createDefaultDnd5eData, Dnd5eDataModel } from '../../systems/dnd5e/data-model';
 import { CharacterDocument } from '../../types/core/document';
@@ -68,7 +69,62 @@ describe('applyDnd5eBackgroundTemplate', () => {
     });
   });
 
-  it('skips choice-based proficiencies and does not overwrite existing gold or duplicate features', () => {
+  it('applies selected background languages and removes them cleanly on background change', () => {
+    const nobleDoc = applyDnd5eBackgroundTemplate(makeDoc(), noble, undefined, {
+      toolSelections: ['dice-set'],
+      languageSelections: ['Draconic'],
+    });
+    const criminalDoc = applyDnd5eBackgroundTemplate(nobleDoc, criminal, noble, {
+      toolSelections: ['playing-card-set'],
+    });
+
+    expect(nobleDoc.system.backgroundId).toBe('noble');
+    expect(nobleDoc.system.backgroundLanguageSelections).toEqual(['Draconic']);
+    expect(nobleDoc.system.backgroundToolSelections).toEqual(['dice-set']);
+    expect(nobleDoc.system.languageProficiencies).toEqual(['Draconic']);
+    expect(nobleDoc.system.toolProficiencies).toEqual(['dice-set']);
+    expect(nobleDoc.system.templateState?.backgroundDerived).toEqual({
+      tools: ['dice-set'],
+      languages: ['Draconic'],
+    });
+
+    expect(criminalDoc.system.backgroundId).toBe('criminal');
+    expect(criminalDoc.system.backgroundLanguageSelections).toEqual([]);
+    expect(criminalDoc.system.backgroundToolSelections).toEqual(['playing-card-set']);
+    expect(criminalDoc.system.languageProficiencies).toEqual([]);
+    expect(criminalDoc.system.toolProficiencies).toEqual(['thieves-tools', 'playing-card-set']);
+    expect(criminalDoc.system.templateState?.backgroundDerived).toEqual({
+      tools: ['thieves-tools', 'playing-card-set'],
+      languages: [],
+    });
+  });
+
+  it('removes background-derived languages and tools while preserving other sources', () => {
+    const document = makeDoc({
+      backgroundId: noble.id,
+      backgroundLanguageSelections: ['Draconic'],
+      backgroundToolSelections: ['dice-set'],
+      languageProficiencies: ['Common', 'Draconic'],
+      toolProficiencies: ['thieves-tools', 'dice-set'],
+      templateState: {
+        ...createDefaultDnd5eData().templateState!,
+        backgroundDerived: {
+          tools: ['dice-set'],
+          languages: ['Draconic'],
+        },
+      },
+    });
+
+    const cleared = applyDnd5eBackgroundTemplate(document, undefined, noble);
+
+    expect(cleared.system.backgroundId).toBeUndefined();
+    expect(cleared.system.backgroundLanguageSelections).toEqual([]);
+    expect(cleared.system.backgroundToolSelections).toEqual([]);
+    expect(cleared.system.languageProficiencies).toEqual(['Common']);
+    expect(cleared.system.toolProficiencies).toEqual(['thieves-tools']);
+  });
+
+  it('does not auto-apply unresolved choice-based proficiencies or overwrite existing gold', () => {
     const customBackground: Background = {
       ...acolyte,
       id: 'choice-background',
@@ -117,7 +173,10 @@ describe('applyDnd5eBackgroundTemplate', () => {
       name: 'Scholar',
       skillProficiencies: ['insight', 'arcana'],
       toolProficiencies: ['calligraphers-supplies'],
-      languageProficiencies: ['Elvish', 'Dwarvish'] as unknown as Background['languageProficiencies'],
+      languageProficiencies: [
+        'Elvish',
+        'Dwarvish',
+      ] as unknown as Background['languageProficiencies'],
       feature: {
         id: 'researcher',
         name: 'Researcher',

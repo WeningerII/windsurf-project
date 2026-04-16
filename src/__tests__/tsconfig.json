@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "types": ["vitest/globals", "@testing-library/jest-dom", "vite/client"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "noEmit": true
+  },
+  "include": [
+    "./components/GameSystemSelector.test.tsx",
+    "./components/SystemStatusDashboard.test.tsx",
+    "./setup.ts",
+    "../vitest.d.ts",
+    "../vite-env.d.ts"
+  ],
+  "exclude": []
+}

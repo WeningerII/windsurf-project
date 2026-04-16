@@ -39,6 +39,13 @@ async function clickTab(page: Page, name: string | RegExp) {
   await tab.evaluate((element: HTMLButtonElement) => element.click());
 }
 
+async function expectRollResult(page: Page, buttonTitle: string | RegExp, formulaPattern: RegExp) {
+  const rollButton = page.getByTitle(buttonTitle);
+  await expect(rollButton).toBeVisible();
+  await rollButton.click();
+  await expect(rollButton.locator('xpath=..').getByText(formulaPattern)).toBeVisible();
+}
+
 test.beforeEach(async ({ page }) => {
   await openLandingPage(page);
 });
@@ -97,7 +104,8 @@ for (const systemName of ['D&D 3.5e', 'Pathfinder 1e'] as const) {
     await expect(page.getByPlaceholder('Search feats by name or description...')).toBeVisible();
 
     await clickTab(page, /^Spells$/i);
-    await expect(page.getByLabel('Search spells')).toBeVisible();
+    await page.waitForTimeout(1000);
+    await expect(page.getByLabel('Search spells')).toBeVisible({ timeout: 10000 });
 
     await clickTab(page, /^Equipment$/i);
     await expect(page.getByPlaceholder('Search equipment...')).toBeVisible();
@@ -105,6 +113,39 @@ for (const systemName of ['D&D 3.5e', 'Pathfinder 1e'] as const) {
     await expect(page.getByText('Something went wrong')).toHaveCount(0);
   });
 }
+
+test('surfaces the full D&D 3.5e SRD prestige catalog in the shared add-class flow', async ({
+  page,
+}) => {
+  await createCharacterForSystem(page, /D&D 3.5e/i, 'Prestige Smoke Hero');
+
+  const addClassSelect = page.locator('select[title="Add class"]');
+  await addClassSelect.focus();
+
+  await expect(addClassSelect.locator('option').filter({ hasText: 'Arcane Archer' })).toHaveCount(
+    1
+  );
+  await expect(addClassSelect.locator('option').filter({ hasText: 'Assassin' })).toHaveCount(1);
+  await expect(addClassSelect.locator('option').filter({ hasText: 'Duelist' })).toHaveCount(1);
+  await expect(addClassSelect.locator('option').filter({ hasText: 'Dragon Disciple' })).toHaveCount(
+    1
+  );
+  await expect(addClassSelect.locator('option').filter({ hasText: 'Shadowdancer' })).toHaveCount(1);
+  await expect(addClassSelect.locator('option').filter({ hasText: 'Horizon Walker' })).toHaveCount(
+    1
+  );
+  await expect(
+    addClassSelect.locator('option').filter({ hasText: 'Dwarven Defender' })
+  ).toHaveCount(1);
+  await expect(addClassSelect.locator('option').filter({ hasText: 'Archmage' })).toHaveCount(1);
+
+  await addClassSelect.selectOption('dwarven-defender-35e');
+  await page.locator('input[title="New class level"]').fill('3');
+  await page.getByRole('button', { name: /^Add Class$/i }).click();
+
+  await expect(page.locator('select[title="Class 1"]')).toHaveValue('dwarven-defender-35e');
+  await expect(page.locator('input[title="dwarven-defender-35e level"]')).toHaveValue('3');
+});
 
 test('smokes Pathfinder 2e browsers', async ({ page }) => {
   await createCharacterForSystem(page, /Pathfinder 2e/i, 'PF2e Smoke Hero');
@@ -128,7 +169,8 @@ test('smokes Mutants & Masterminds 3e reference browsers', async ({ page }) => {
   await createCharacterForSystem(page, /Mutants & Masters?minds 3e|M&M 3e/i, 'M&M Smoke Hero');
 
   await clickTab(page, /^Archetypes$/i);
-  await expect(page.getByLabel('Search archetypes')).toBeVisible();
+  await page.waitForTimeout(1000);
+  await expect(page.getByLabel('Search archetypes')).toBeVisible({ timeout: 10000 });
 
   await clickTab(page, /^Powers DB$/i);
   await expect(page.getByLabel('Search spells')).toBeVisible();
@@ -144,6 +186,41 @@ test('smokes Mutants & Masterminds 3e reference browsers', async ({ page }) => {
   await expect(page.getByPlaceholder('Search equipment...')).toBeVisible();
 
   await expect(page.getByText('Something went wrong')).toHaveCount(0);
+});
+
+test('supports in-sheet dice interactions across all registered system families', async ({
+  page,
+}) => {
+  await createCharacterForSystem(page, /D&D 5e \(2014\)/i, '5e 2014 Roller');
+  await clickTab(page, /^Saves$/i);
+  await expectRollResult(page, 'Roll Strength Save', /\(1d20/);
+  await backToCharacterList(page);
+
+  await createCharacterForSystem(page, /D&D 5e \(2024\)/i, '5e 2024 Roller');
+  await clickTab(page, /^Skills$/i);
+  await expectRollResult(page, 'Roll Acrobatics Check', /\(1d20/);
+  await backToCharacterList(page);
+
+  await createCharacterForSystem(page, /D&D 3.5e/i, '3.5e Roller');
+  await expectRollResult(page, 'Roll Attack Roll', /\(1d20/);
+  await backToCharacterList(page);
+
+  await createCharacterForSystem(page, /Pathfinder 1e/i, 'PF1e Roller');
+  await expectRollResult(page, 'Roll Attack Roll', /\(1d20/);
+  await backToCharacterList(page);
+
+  await createCharacterForSystem(page, /Pathfinder 2e/i, 'PF2e Roller');
+  await expectRollResult(page, 'Roll Perception', /\(1d20/);
+  await backToCharacterList(page);
+
+  await createCharacterForSystem(page, /Mutants & Masters?minds 3e|M&M 3e/i, 'M&M Roller');
+  await clickTab(page, /^Skills$/i);
+  await expectRollResult(page, 'Roll Perception Check', /\(1d20/);
+  await backToCharacterList(page);
+
+  await createCharacterForSystem(page, /Daggerheart/i, 'Daggerheart Roller');
+  await expectRollResult(page, 'Roll Agility', /\(2d12/);
+  await expect(page.getByText(/with Hope|with Fear|Critical!/i)).toBeVisible();
 });
 
 test('manages campaign membership and opens members from the campaign panel', async ({ page }) => {

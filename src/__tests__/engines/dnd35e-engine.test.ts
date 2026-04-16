@@ -201,6 +201,133 @@ describe('Dnd35eEngine', () => {
       expect(result.system.spellsPerDay?.[1]).toEqual({ total: 2, used: 2 });
       expect(result.system.spellsPerDay?.[2]).toEqual({ total: 1, used: 1 });
     });
+
+    it('auto-populates assassin prestige spell slots from the normalized 3.5e table', () => {
+      const doc = makeDoc({
+        classLevels: [
+          {
+            classId: 'assassin-35e',
+            level: 4,
+            hitDieRolls: [6, 4, 4, 4],
+            bab: 'three-quarter',
+            fortSave: 'poor',
+            refSave: 'good',
+            willSave: 'poor',
+            skillPointsPerLevel: 4,
+          },
+        ],
+      });
+
+      const result = engine.prepareData(doc);
+
+      expect(result.system.spellsPerDay?.[1]).toEqual({ total: 3, used: 0 });
+      expect(result.system.spellsPerDay?.[2]).toEqual({ total: 1, used: 0 });
+      expect(result.system.spellsPerDay?.[3]).toEqual({ total: 0, used: 0 });
+      expect(result.system.spellsPerDay?.[4]).toEqual({ total: 0, used: 0 });
+    });
+
+    it('auto-populates blackguard prestige spell slots from the normalized 3.5e table', () => {
+      const doc = makeDoc({
+        classLevels: [
+          {
+            classId: 'blackguard-35e',
+            level: 8,
+            hitDieRolls: [10, 6, 6, 6, 6, 6, 6, 6],
+            bab: 'full',
+            fortSave: 'good',
+            refSave: 'poor',
+            willSave: 'poor',
+            skillPointsPerLevel: 2,
+          },
+        ],
+      });
+
+      const result = engine.prepareData(doc);
+
+      expect(result.system.spellsPerDay?.[1]).toEqual({ total: 2, used: 0 });
+      expect(result.system.spellsPerDay?.[2]).toEqual({ total: 1, used: 0 });
+      expect(result.system.spellsPerDay?.[3]).toEqual({ total: 1, used: 0 });
+      expect(result.system.spellsPerDay?.[4]).toEqual({ total: 1, used: 0 });
+    });
+
+    it('advances an existing arcane class through eldritch knight spellcasting selections', () => {
+      const doc = makeDoc({
+        classLevels: [
+          {
+            classId: 'wizard',
+            level: 5,
+            hitDieRolls: [4, 3, 4, 3, 3],
+            bab: 'half',
+            fortSave: 'poor',
+            refSave: 'poor',
+            willSave: 'good',
+            skillPointsPerLevel: 2,
+          },
+          {
+            classId: 'eldritch-knight-35e',
+            level: 3,
+            hitDieRolls: [6, 4, 4],
+            bab: 'full',
+            fortSave: 'poor',
+            refSave: 'poor',
+            willSave: 'good',
+            skillPointsPerLevel: 2,
+            spellcastingSelections: ['wizard'],
+          },
+        ],
+      });
+
+      const result = engine.prepareData(doc);
+
+      expect(result.system.spellsPerDay?.[1]).toEqual({ total: 4, used: 0 });
+      expect(result.system.spellsPerDay?.[2]).toEqual({ total: 3, used: 0 });
+      expect(result.system.spellsPerDay?.[3]).toEqual({ total: 2, used: 0 });
+      expect(result.system.spellsPerDay?.[4]).toEqual({ total: 1, used: 0 });
+    });
+
+    it('advances both arcane and divine spell slots through mystic theurge selections', () => {
+      const doc = makeDoc({
+        classLevels: [
+          {
+            classId: 'wizard',
+            level: 3,
+            hitDieRolls: [4, 3, 4],
+            bab: 'half',
+            fortSave: 'poor',
+            refSave: 'poor',
+            willSave: 'good',
+            skillPointsPerLevel: 2,
+          },
+          {
+            classId: 'cleric',
+            level: 3,
+            hitDieRolls: [8, 5, 5],
+            bab: 'three-quarter',
+            fortSave: 'good',
+            refSave: 'poor',
+            willSave: 'good',
+            skillPointsPerLevel: 2,
+          },
+          {
+            classId: 'mystic-theurge-35e',
+            level: 2,
+            hitDieRolls: [4, 3],
+            bab: 'half',
+            fortSave: 'poor',
+            refSave: 'poor',
+            willSave: 'good',
+            skillPointsPerLevel: 2,
+            spellcastingSelections: ['wizard', 'cleric'],
+          },
+        ],
+      });
+
+      const result = engine.prepareData(doc);
+
+      expect(result.system.spellsPerDay?.[1]).toEqual({ total: 6, used: 0 });
+      expect(result.system.spellsPerDay?.[2]).toEqual({ total: 4, used: 0 });
+      expect(result.system.spellsPerDay?.[3]).toEqual({ total: 2, used: 0 });
+    });
   });
 
   describe('rollCheck', () => {

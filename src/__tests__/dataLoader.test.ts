@@ -7,6 +7,15 @@
 import { describe, it, expect } from 'vitest';
 import {
   loadBackgroundsForSystem,
+  loadDaggerheartAncestriesForSystem,
+  loadDaggerheartArmorForSystem,
+  loadDaggerheartClassesForSystem,
+  loadDaggerheartCommunitiesForSystem,
+  loadDaggerheartConsumablesForSystem,
+  loadDaggerheartDomainCardsForSystem,
+  loadDaggerheartDomainsForSystem,
+  loadDaggerheartLootForSystem,
+  loadDaggerheartWeaponsForSystem,
   loadSpellsForSystem,
   loadClassesForSystem,
   loadSpeciesForSystem,
@@ -23,11 +32,27 @@ import {
   loadAdvantagesForSystem,
 } from '../utils/dataLoader';
 
+function stableValue(value: unknown): unknown {
+  if (Array.isArray(value)) {
+    return value.map(stableValue);
+  }
+
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>)
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([key, entryValue]) => [key, stableValue(entryValue)])
+    );
+  }
+
+  return value;
+}
+
 describe('Data Loader Integration Tests', () => {
   describe('D&D 5e-2014 Loaders', () => {
     it('should load spells for dnd-5e-2014', async () => {
       const spells = await loadSpellsForSystem('dnd-5e-2014');
-      expect(spells.length).toBe(238);
+      expect(spells.length).toBe(244);
       expect(spells.every((s) => s.id && s.name && s.system === 'dnd-5e-2014')).toBe(true);
     });
 
@@ -77,7 +102,8 @@ describe('Data Loader Integration Tests', () => {
   describe('D&D 5e-2024 Loaders', () => {
     it('should load spells for dnd-5e-2024', async () => {
       const spells = await loadSpellsForSystem('dnd-5e-2024');
-      expect(Array.isArray(spells)).toBe(true);
+      expect(spells.length).toBe(320);
+      expect(spells.every((s) => s.id && s.name && s.system === 'dnd-5e-2024')).toBe(true);
     });
 
     it('should load classes for dnd-5e-2024', async () => {
@@ -113,7 +139,25 @@ describe('Data Loader Integration Tests', () => {
   describe('Pathfinder 2e Loaders', () => {
     it('should load spells for pf2e', async () => {
       const spells = await loadSpellsForSystem('pf2e');
-      expect(Array.isArray(spells)).toBe(true);
+      expect(spells.length).toBe(143);
+      expect(spells.every((spell) => spell.traditions && spell.traditions.length > 0)).toBe(true);
+      expect(
+        spells
+          .filter((spell) => spell.level === 0)
+          .every((spell) => spell.heightening && spell.heightening.mode === 'cantrip')
+      ).toBe(true);
+      expect(
+        spells.some((spell) => spell.id === 'teleport-pf2e' && spell.heightening?.mode === 'fixed')
+      ).toBe(true);
+      expect(
+        spells.some((spell) => spell.id === 'time-stop-9-pf2e' && spell.heightening?.ranks?.[10])
+      ).toBe(true);
+      expect(
+        spells.some((spell) => spell.id === 'wish-pf2e' && spell.heightening?.ranks?.[10])
+      ).toBe(true);
+      expect(spells.some((spell) => spell.id === 'teleport-7-pf2e')).toBe(false);
+      expect(spells.some((spell) => spell.id === 'time-stop-pf2e')).toBe(false);
+      expect(spells.some((spell) => spell.id === 'wish-9-pf2e')).toBe(false);
     });
 
     it('should load classes for pf2e', async () => {
@@ -136,7 +180,75 @@ describe('Data Loader Integration Tests', () => {
     });
   });
 
+  describe('D&D 3.5e Loaders', () => {
+    it('should load the canonicalized 3.5e spell catalog without exact class-split duplicates', async () => {
+      const spells = await loadSpellsForSystem('dnd-3.5e');
+      expect(spells.length).toBe(501);
+      const fingerprints = spells.map((spell) => {
+        const {
+          id: _id,
+          classes: _classes,
+          levelsByClass: _levelsByClass,
+          description: _description,
+          ...rest
+        } = spell;
+        return JSON.stringify(stableValue(rest));
+      });
+      expect(new Set(fingerprints).size).toBe(fingerprints.length);
+    });
+
+    it('should load the full normalized 3.5e core prestige catalog through the shared class loader', async () => {
+      const classes = await loadClassesForSystem('dnd-3.5e');
+      expect(classes.length).toBe(26);
+      expect(classes.some((entry) => entry.id === 'arcane-archer-35e')).toBe(true);
+      expect(classes.some((entry) => entry.id === 'arcane-trickster-35e')).toBe(true);
+      expect(classes.some((entry) => entry.id === 'archmage-35e')).toBe(true);
+      expect(classes.some((entry) => entry.id === 'assassin-35e')).toBe(true);
+      expect(classes.some((entry) => entry.id === 'blackguard-35e')).toBe(true);
+      expect(classes.some((entry) => entry.id === 'dragon-disciple-35e')).toBe(true);
+      expect(classes.some((entry) => entry.id === 'duelist-35e')).toBe(true);
+      expect(classes.some((entry) => entry.id === 'eldritch-knight-35e')).toBe(true);
+      expect(classes.some((entry) => entry.id === 'hierophant-35e')).toBe(true);
+      expect(classes.some((entry) => entry.id === 'shadowdancer-35e')).toBe(true);
+      expect(classes.some((entry) => entry.id === 'horizon-walker-35e')).toBe(true);
+      expect(classes.some((entry) => entry.id === 'dwarven-defender-35e')).toBe(true);
+      expect(classes.some((entry) => entry.id === 'loremaster-35e')).toBe(true);
+      expect(classes.some((entry) => entry.id === 'mystic-theurge-35e')).toBe(true);
+      expect(classes.some((entry) => entry.id === 'thaumaturgist-35e')).toBe(true);
+      expect(classes.some((entry) => entry.id === 'archmage')).toBe(false);
+      expect(
+        classes.every(
+          (entry) =>
+            entry.source === 'SRD 3.5' ||
+            entry.source === 'PHB' ||
+            entry.source === 'PHB 3.5' ||
+            entry.source === "Player's Handbook 3.5"
+        )
+      ).toBe(true);
+    });
+  });
+
   describe('Pathfinder 1e Loaders', () => {
+    it('should load spells with stored class-level mappings for pf1e', async () => {
+      const spells = await loadSpellsForSystem('pf1e');
+      expect(spells.length).toBe(134);
+      expect(
+        spells.every(
+          (spell) =>
+            spell.levelsByClass && Object.keys(spell.levelsByClass).length === spell.classes.length
+        )
+      ).toBe(true);
+      expect(
+        spells
+          .filter((spell) =>
+            /(ranged|melee)\s+touch attack|touch attack to hit|make a (ranged|melee) touch attack/i.test(
+              spell.description
+            )
+          )
+          .every((spell) => spell.attackRoll)
+      ).toBe(true);
+    });
+
     it('should load vetted PF1e prestige classes and exclude unresolved entries', async () => {
       const classes = await loadClassesForSystem('pf1e');
       expect(classes.length).toBe(18);
@@ -152,6 +264,112 @@ describe('Data Loader Integration Tests', () => {
       const traits = await loadTraitsForSystem('pf1e');
       expect(traits.length).toBeGreaterThan(0);
       expect(traits.every((trait) => trait.id && trait.name && trait.source)).toBe(true);
+    });
+  });
+
+  describe('Daggerheart Loaders', () => {
+    it('should load SRD-backed Daggerheart classes through the dedicated loader path', async () => {
+      const classes = await loadDaggerheartClassesForSystem('daggerheart');
+      expect(classes.length).toBe(9);
+      expect(classes.every((entry) => entry.system === 'daggerheart')).toBe(true);
+      expect(classes.every((entry) => entry.source === 'Daggerheart SRD 1.0')).toBe(true);
+      expect(classes.some((entry) => entry.name === 'Bard')).toBe(true);
+      expect(classes.some((entry) => entry.name === 'Wizard')).toBe(true);
+    });
+
+    it('should load SRD-backed Daggerheart ancestries through the dedicated loader path', async () => {
+      const ancestries = await loadDaggerheartAncestriesForSystem('daggerheart');
+      expect(ancestries.length).toBe(19);
+      expect(ancestries.every((entry) => entry.system === 'daggerheart')).toBe(true);
+      expect(ancestries.every((entry) => entry.source === 'Daggerheart SRD 1.0')).toBe(true);
+      expect(ancestries.some((entry) => entry.name === 'Human')).toBe(true);
+      expect(ancestries.some((entry) => entry.name === 'Mixed Ancestry')).toBe(true);
+    });
+
+    it('should load SRD-backed Daggerheart communities through the dedicated loader path', async () => {
+      const communities = await loadDaggerheartCommunitiesForSystem('daggerheart');
+      expect(communities.length).toBe(9);
+      expect(communities.every((entry) => entry.system === 'daggerheart')).toBe(true);
+      expect(communities.every((entry) => entry.source === 'Daggerheart SRD 1.0')).toBe(true);
+      expect(communities.some((entry) => entry.name === 'Highborne')).toBe(true);
+      expect(communities.some((entry) => entry.name === 'Wildborne')).toBe(true);
+    });
+
+    it('should load SRD-backed Daggerheart domains through the dedicated loader path', async () => {
+      const domains = await loadDaggerheartDomainsForSystem('daggerheart');
+      expect(domains.length).toBe(9);
+      expect(domains.every((entry) => entry.system === 'daggerheart')).toBe(true);
+      expect(domains.every((entry) => entry.source === 'Daggerheart SRD 1.0')).toBe(true);
+      expect(domains.some((entry) => entry.name === 'Arcana')).toBe(true);
+      expect(domains.some((entry) => entry.name === 'Valor')).toBe(true);
+    });
+
+    it('should load SRD-backed Daggerheart domain cards through the dedicated loader path', async () => {
+      const domainCards = await loadDaggerheartDomainCardsForSystem('daggerheart');
+      expect(domainCards.length).toBe(189);
+      expect(domainCards.every((entry) => entry.system === 'daggerheart')).toBe(true);
+      expect(domainCards.every((entry) => entry.source === 'Daggerheart SRD 1.0')).toBe(true);
+      expect(domainCards.some((entry) => entry.id === 'grace-inspirational-words')).toBe(true);
+      expect(domainCards.some((entry) => entry.id === 'valor-unyielding-armor')).toBe(true);
+    });
+
+    it('should load SRD-backed Daggerheart weapons through the dedicated loader path', async () => {
+      const weapons = await loadDaggerheartWeaponsForSystem('daggerheart');
+      expect(weapons.length).toBe(204);
+      expect(weapons.every((entry) => entry.system === 'daggerheart')).toBe(true);
+      expect(weapons.every((entry) => entry.source === 'Daggerheart SRD 1.0')).toBe(true);
+      expect(
+        weapons.some((entry) => entry.id === 'daggerheart-weapon-primary-broadsword-tier-1')
+      ).toBe(true);
+      expect(
+        weapons.some((entry) => entry.id === 'daggerheart-weapon-secondary-round-shield-tier-1')
+      ).toBe(true);
+      expect(
+        weapons.some(
+          (entry) => entry.id === 'daggerheart-weapon-primary-arcane-frame-wheelchair-tier-1'
+        )
+      ).toBe(true);
+    });
+
+    it('should load SRD-backed Daggerheart armor through the dedicated loader path', async () => {
+      const armor = await loadDaggerheartArmorForSystem('daggerheart');
+      expect(armor.length).toBe(34);
+      expect(armor.every((entry) => entry.system === 'daggerheart')).toBe(true);
+      expect(armor.every((entry) => entry.source === 'Daggerheart SRD 1.0')).toBe(true);
+      expect(armor.some((entry) => entry.id === 'daggerheart-armor-gambeson-armor-tier-1')).toBe(
+        true
+      );
+      expect(armor.some((entry) => entry.id === 'daggerheart-armor-savior-chainmail-tier-4')).toBe(
+        true
+      );
+    });
+
+    it('should load SRD-backed Daggerheart loot through the dedicated loader path', async () => {
+      const loot = await loadDaggerheartLootForSystem('daggerheart');
+      expect(loot.length).toBe(61);
+      expect(loot.every((entry) => entry.system === 'daggerheart')).toBe(true);
+      expect(loot.every((entry) => entry.source === 'Daggerheart SRD 1.0')).toBe(true);
+      expect(loot.some((entry) => entry.id === 'daggerheart-loot-premium-bedroll')).toBe(true);
+      expect(loot.some((entry) => entry.id === 'daggerheart-loot-stride-relic')).toBe(true);
+      expect(
+        loot.some((entry) => entry.id === 'daggerheart-loot-ring-of-unbreakable-resolve')
+      ).toBe(true);
+    });
+
+    it('should load SRD-backed Daggerheart consumables through the dedicated loader path', async () => {
+      const consumables = await loadDaggerheartConsumablesForSystem('daggerheart');
+      expect(consumables.length).toBe(54);
+      expect(consumables.every((entry) => entry.system === 'daggerheart')).toBe(true);
+      expect(consumables.every((entry) => entry.source === 'Daggerheart SRD 1.0')).toBe(true);
+      expect(
+        consumables.some((entry) => entry.id === 'daggerheart-consumable-minor-health-potion')
+      ).toBe(true);
+      expect(
+        consumables.some((entry) => entry.id === 'daggerheart-consumable-major-health-potion')
+      ).toBe(true);
+      expect(
+        consumables.some((entry) => entry.id === 'daggerheart-consumable-dragonbloom-tea')
+      ).toBe(true);
     });
   });
 

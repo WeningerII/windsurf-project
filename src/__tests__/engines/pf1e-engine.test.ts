@@ -192,6 +192,127 @@ describe('Pf1eEngine', () => {
       expect(result.system.spellsPerDay?.[1]).toEqual({ total: 2, used: 2 });
       expect(result.system.spellsPerDay?.[2]).toEqual({ total: 1, used: 1 });
     });
+
+    it('advances both PF1e mystic theurge spellcasting tracks through selected prior classes', () => {
+      const doc = makeDoc({
+        classLevels: [
+          {
+            classId: 'wizard',
+            level: 3,
+            hitDieRolls: [6, 4, 4],
+            bab: 'half',
+            fortSave: 'poor',
+            refSave: 'poor',
+            willSave: 'good',
+            skillPointsPerLevel: 2,
+            favoredClassBonus: 'hp',
+          },
+          {
+            classId: 'cleric',
+            level: 3,
+            hitDieRolls: [8, 5, 5],
+            bab: 'three-quarter',
+            fortSave: 'good',
+            refSave: 'poor',
+            willSave: 'good',
+            skillPointsPerLevel: 2,
+            favoredClassBonus: 'hp',
+          },
+          {
+            classId: 'mystic-theurge',
+            level: 2,
+            hitDieRolls: [6, 4],
+            bab: 'half',
+            fortSave: 'poor',
+            refSave: 'poor',
+            willSave: 'good',
+            skillPointsPerLevel: 2,
+            favoredClassBonus: 'hp',
+            spellcastingSelections: ['wizard', 'cleric'],
+          },
+        ],
+      });
+
+      const result = engine.prepareData(doc);
+
+      expect(result.system.spellsPerDay?.[1]).toEqual({ total: 6, used: 0 });
+      expect(result.system.spellsPerDay?.[2]).toEqual({ total: 4, used: 0 });
+      expect(result.system.spellsPerDay?.[3]).toEqual({ total: 2, used: 0 });
+    });
+
+    it('advances PF1e lore-master spell slots through its selected prior spellcasting class', () => {
+      const doc = makeDoc({
+        classLevels: [
+          {
+            classId: 'wizard',
+            level: 5,
+            hitDieRolls: [6, 4, 4, 4, 4],
+            bab: 'half',
+            fortSave: 'poor',
+            refSave: 'poor',
+            willSave: 'good',
+            skillPointsPerLevel: 2,
+            favoredClassBonus: 'hp',
+          },
+          {
+            classId: 'lore-master',
+            level: 2,
+            hitDieRolls: [6, 4],
+            bab: 'half',
+            fortSave: 'poor',
+            refSave: 'poor',
+            willSave: 'good',
+            skillPointsPerLevel: 4,
+            favoredClassBonus: 'hp',
+            spellcastingSelections: ['wizard'],
+          },
+        ],
+      });
+
+      const result = engine.prepareData(doc);
+
+      expect(result.system.spellsPerDay?.[1]).toEqual({ total: 4, used: 0 });
+      expect(result.system.spellsPerDay?.[2]).toEqual({ total: 3, used: 0 });
+      expect(result.system.spellsPerDay?.[3]).toEqual({ total: 2, used: 0 });
+      expect(result.system.spellsPerDay?.[4]).toEqual({ total: 1, used: 0 });
+    });
+
+    it('advances PF1e dragon disciple spell slots only from its selected spontaneous arcane class', () => {
+      const doc = makeDoc({
+        classLevels: [
+          {
+            classId: 'sorcerer',
+            level: 5,
+            hitDieRolls: [6, 4, 4, 4, 4],
+            bab: 'half',
+            fortSave: 'poor',
+            refSave: 'poor',
+            willSave: 'good',
+            skillPointsPerLevel: 2,
+            favoredClassBonus: 'hp',
+          },
+          {
+            classId: 'dragon-disciple',
+            level: 3,
+            hitDieRolls: [12, 7, 7],
+            bab: 'three-quarter',
+            fortSave: 'good',
+            refSave: 'poor',
+            willSave: 'good',
+            skillPointsPerLevel: 2,
+            favoredClassBonus: 'hp',
+            spellcastingSelections: ['sorcerer'],
+          },
+        ],
+      });
+
+      const result = engine.prepareData(doc);
+
+      expect(result.system.spellsPerDay?.[1]).toEqual({ total: 6, used: 0 });
+      expect(result.system.spellsPerDay?.[2]).toEqual({ total: 6, used: 0 });
+      expect(result.system.spellsPerDay?.[3]).toEqual({ total: 4, used: 0 });
+      expect(result.system.spellsPerDay?.[4]).toEqual({ total: 0, used: 0 });
+    });
   });
 
   describe('rollCheck', () => {

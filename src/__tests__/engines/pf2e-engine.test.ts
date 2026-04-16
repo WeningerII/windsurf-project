@@ -119,9 +119,7 @@ describe('Pf2eEngine', () => {
             dexBonusMax: 0,
           },
         ],
-        conditions: [
-          { id: 'cond-clumsy', name: 'Clumsy', value: 2 },
-        ],
+        conditions: [{ id: 'cond-clumsy', name: 'Clumsy', value: 2 }],
       });
 
       const result = engine.prepareData(doc);

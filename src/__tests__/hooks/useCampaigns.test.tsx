@@ -133,4 +133,21 @@ describe('useCampaigns', () => {
     const parsed = JSON.parse(stored!);
     expect(parsed.campaigns).toMatchObject([{ name: 'Flushed Campaign' }]);
   });
+
+  it('flushes pending campaign saves on pagehide', () => {
+    const { result } = renderHook(() => useCampaigns());
+    act(() => {
+      result.current.addCampaign(makeCampaign());
+      result.current.updateCampaign(makeCampaign({ name: 'Pagehide Campaign' }));
+    });
+
+    act(() => {
+      window.dispatchEvent(new Event('pagehide'));
+    });
+
+    const stored = localStorage.getItem('rpg-campaigns-v1');
+    expect(stored).toBeTruthy();
+    const parsed = JSON.parse(stored!);
+    expect(parsed.campaigns).toMatchObject([{ name: 'Pagehide Campaign' }]);
+  });
 });

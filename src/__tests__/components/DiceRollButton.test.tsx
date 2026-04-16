@@ -49,4 +49,19 @@ describe('DiceRollButton', () => {
 
     expect(await screen.findByText('NAT 1!')).toBeInTheDocument();
   });
+
+  it('renders roll flavor when the engine returns contextual text', async () => {
+    const user = userEvent.setup();
+    const onRoll = vi.fn().mockResolvedValue({
+      total: 16,
+      formula: '2d12 + 2 (agility)',
+      terms: [10, 4],
+      flavor: 'Hope (10) vs Fear (4) with Hope!',
+    });
+
+    render(<DiceRollButton label="Agility" onRoll={onRoll} />);
+    await user.click(screen.getByTitle('Roll Agility'));
+
+    expect(await screen.findByText(/with Hope/i)).toBeInTheDocument();
+  });
 });

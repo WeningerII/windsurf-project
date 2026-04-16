@@ -1,5 +1,6 @@
 import { Buffer } from 'node:buffer';
 import { expect, test, type Page } from '@playwright/test';
+import { createDefaultDnd5e2024Data } from '../src/systems/dnd5e-2024/data-model';
 
 /**
  * Select a system card and click "Create New Character".
@@ -27,8 +28,9 @@ async function renameCharacter(page: Page, name: string) {
 async function installDownloadCapture(page: Page) {
   await page.evaluate(() => {
     if ((window as Window & { __downloadCaptureInstalled?: boolean }).__downloadCaptureInstalled) {
-      (window as Window & { __capturedDownloads?: Array<{ href: string; download: string }> })
-        .__capturedDownloads = [];
+      (
+        window as Window & { __capturedDownloads?: Array<{ href: string; download: string }> }
+      ).__capturedDownloads = [];
       return;
     }
 
@@ -182,12 +184,65 @@ test('imports a character snapshot through the file input', async ({ page }) => 
   await expect(nameInput).toHaveValue('Importable E2E Hero');
 });
 
-test('creates and persists a Daggerheart scaffold character', async ({ page }) => {
+test('creates and persists a Daggerheart SRD-backed character', async ({ page }) => {
   await createCharacterForSystem(page, /Daggerheart/i);
   await expect(page.getByText('Attributes')).toBeVisible();
   await renameCharacter(page, 'Hopebound E2E Hero');
 
-  await page.getByRole('button', { name: /Add Experience/i }).click();
+  await page.locator('select[title="Class"]').selectOption('Bard');
+  await page.locator('select[title="Subclass"]').selectOption('Troubadour');
+  await page.locator('select[title="Ancestry"]').selectOption('Human');
+  await page.locator('select[title="Community"]').selectOption('Wanderborne');
+
+  await expect(page.getByText('Domains: Grace / Codex')).toBeVisible();
+  await expect(page.getByText('SRD start: Evasion 10, HP 5')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Troubadour' })).toBeVisible();
+  await expect(page.getByText(/High Stamina\./i)).toBeVisible();
+  await expect(page.getByText(/Nomadic Pack\./i)).toBeVisible();
+  await expect(page.locator('input[title="Current HP"]')).toHaveValue('5');
+  await expect(page.locator('input[value="A romance novel"]')).toBeVisible();
+  await expect(page.locator('input[value="Nomadic Pack"]')).toBeVisible();
+
+  await page.getByRole('tab', { name: 'Primary Library' }).click();
+  const broadswordCard = page.locator('article').filter({ has: page.getByText('Broadsword') });
+  await broadswordCard.getByRole('button', { name: 'Equip Primary' }).click();
+
+  await page.getByRole('tab', { name: 'Secondary Library' }).click();
+  const roundShieldCard = page.locator('article').filter({ has: page.getByText('Round Shield') });
+  await roundShieldCard.getByRole('button', { name: 'Equip Secondary' }).click();
+
+  await page.getByRole('tab', { name: 'Armor Library' }).click();
+  const chainmailCard = page.locator('article').filter({ has: page.getByText('Chainmail Armor') });
+  await chainmailCard.getByRole('button', { name: 'Equip Armor' }).click();
+  await expect(page.getByText('Burden 2/2')).toBeVisible();
+  await expect(page.getByText('Chainmail Armor').first()).toBeVisible();
+
+  await page.getByRole('tab', { name: 'Card Library' }).click();
+  const inspirationalWordsCard = page.locator('article').filter({
+    has: page.getByText('Inspirational Words'),
+  });
+  await inspirationalWordsCard.getByRole('button', { name: 'Add to Loadout' }).click();
+  await page.getByRole('tab', { name: 'Loadout' }).click();
+  await expect(page.getByText('Inspirational Words')).toBeVisible();
+  await expect(page.getByText('Loadout 1/5')).toBeVisible();
+
+  await page.getByRole('tab', { name: 'Loot Library' }).click();
+  const relicCard = page.locator('article').filter({ has: page.getByText('Stride Relic') });
+  await relicCard.getByRole('button', { name: 'Add to Inventory' }).click();
+
+  await page.getByRole('tab', { name: 'Consumables' }).click();
+  const potionCard = page.locator('article').filter({ has: page.getByText('Minor Health Potion') });
+  await potionCard.getByRole('button', { name: 'Add to Inventory' }).click();
+  await potionCard.getByRole('button', { name: 'Add Another' }).click();
+
+  await page.getByRole('tab', { name: 'Inventory' }).click();
+  await expect(page.getByText('Stride Relic')).toBeVisible();
+  await expect(page.getByText('Minor Health Potion')).toBeVisible();
+  await page.getByRole('button', { name: 'Use One' }).click();
+  await expect(page.locator('input[title="Handfuls"]')).toHaveValue('0');
+  await page.locator('input[title="Handfuls"]').fill('10');
+  await expect(page.getByText('Gold 0H / 1B / 0C')).toBeVisible();
+
   await expect(page.locator('input[placeholder="Character Name"]')).toHaveValue(
     'Hopebound E2E Hero'
   );
@@ -199,6 +254,147 @@ test('creates and persists a Daggerheart scaffold character', async ({ page }) =
   await page.reload();
   await expect(page.getByRole('heading', { name: 'Your Characters' })).toBeVisible();
   await expect(page.getByText('Hopebound E2E Hero')).toBeVisible();
+  await page
+    .locator('button')
+    .filter({ has: page.getByRole('heading', { name: 'Hopebound E2E Hero' }) })
+    .first()
+    .click();
+  await expect(page.locator('select[title="Class"]')).toHaveValue('Bard');
+  await expect(page.locator('select[title="Subclass"]')).toHaveValue('Troubadour');
+  await expect(page.locator('select[title="Ancestry"]')).toHaveValue('Human');
+  await expect(page.locator('select[title="Community"]')).toHaveValue('Wanderborne');
+  await expect(page.locator('input[title="Current HP"]')).toHaveValue('5');
+  await expect(page.locator('input[value="A romance novel"]')).toBeVisible();
+  await expect(page.locator('input[value="Nomadic Pack"]')).toBeVisible();
+  await expect(page.getByText('Stride Relic')).toBeVisible();
+  await expect(page.getByText('Minor Health Potion')).toBeVisible();
+  await expect(page.getByText('Gold 0H / 1B / 0C')).toBeVisible();
+  await expect(page.getByText('Broadsword').first()).toBeVisible();
+  await expect(page.getByText('Round Shield').first()).toBeVisible();
+  await expect(page.getByText('Chainmail Armor').first()).toBeVisible();
+  await expect(page.getByText('Inspirational Words')).toBeVisible();
+  await expect(page.getByText('Loadout 1/5')).toBeVisible();
+});
+
+test('browses Daggerheart SRD libraries and applies entries from the tabs', async ({ page }) => {
+  await createCharacterForSystem(page, /Daggerheart/i);
+
+  await page.getByRole('tab', { name: 'Class Library' }).click();
+  await expect(page.getByText('Reference Library')).toBeVisible();
+  await page.getByRole('button', { name: 'Apply Bard' }).click();
+
+  await page.getByRole('tab', { name: 'Ancestry Library' }).click();
+  await page.getByRole('button', { name: 'Apply Human' }).click();
+
+  await page.getByRole('tab', { name: 'Community Library' }).click();
+  await page.getByRole('button', { name: 'Apply Wanderborne' }).click();
+
+  await expect(page.locator('select[title="Class"]')).toHaveValue('Bard');
+  await expect(page.locator('select[title="Ancestry"]')).toHaveValue('Human');
+  await expect(page.locator('select[title="Community"]')).toHaveValue('Wanderborne');
+  await expect(page.locator('input[title="Current HP"]')).toHaveValue('5');
+  await expect(page.locator('input[value="A romance novel"]')).toBeVisible();
+  await expect(page.locator('input[value="Nomadic Pack"]')).toBeVisible();
+  await expect(page.getByText(/Nomadic Pack\./i).first()).toBeVisible();
+
+  await page.getByRole('tab', { name: 'Loot Library' }).click();
+  await expect(page.getByText('Infinite Bag')).toBeVisible();
+  await page.getByRole('tab', { name: 'Consumables' }).click();
+  await expect(
+    page.locator('article').filter({
+      has: page.getByRole('heading', { name: 'Health Potion', exact: true }),
+    })
+  ).toBeVisible();
+
+  await page.getByRole('tab', { name: 'Primary Library' }).click();
+  const broadswordCard = page.locator('article').filter({ has: page.getByText('Broadsword') });
+  await broadswordCard.getByRole('button', { name: 'Equip Primary' }).click();
+
+  await page.getByRole('tab', { name: 'Secondary Library' }).click();
+  const handCrossbowCard = page.locator('article').filter({ has: page.getByText('Hand Crossbow') });
+  await handCrossbowCard.getByRole('button', { name: 'Stow Weapon' }).click();
+  await expect(page.getByText('Stowed 1/2')).toBeVisible();
+  await expect(page.getByText('Hand Crossbow').first()).toBeVisible();
+
+  await page.getByRole('tab', { name: 'Armor Library' }).click();
+  const chainmailCard = page.locator('article').filter({ has: page.getByText('Chainmail Armor') });
+  await chainmailCard.getByRole('button', { name: 'Equip Armor' }).click();
+  await expect(page.getByText('Chainmail Armor').first()).toBeVisible();
+
+  await page.getByRole('tab', { name: 'Card Library' }).click();
+  const bookOfAvaCard = page.locator('article').filter({ has: page.getByText('Book of Ava') });
+  await bookOfAvaCard.getByRole('button', { name: 'Add to Vault' }).click();
+  await page.getByRole('tab', { name: 'Vault' }).click();
+  await expect(page.getByText('Book of Ava')).toBeVisible();
+  await expect(page.getByText('Vault 1')).toBeVisible();
+});
+
+test('roundtrips a Daggerheart character with loadout, vault, and inventory state', async ({
+  page,
+}) => {
+  await installDownloadCapture(page);
+  await createCharacterForSystem(page, /Daggerheart/i);
+  await renameCharacter(page, 'Roundtrip Hopebound');
+
+  await page.locator('select[title="Class"]').selectOption('Bard');
+  await page.locator('select[title="Subclass"]').selectOption('Troubadour');
+  await page.locator('select[title="Ancestry"]').selectOption('Human');
+  await page.locator('select[title="Community"]').selectOption('Wanderborne');
+
+  await page.getByRole('tab', { name: 'Card Library' }).click();
+  await page
+    .locator('article')
+    .filter({ has: page.getByText('Inspirational Words') })
+    .getByRole('button', { name: 'Add to Loadout' })
+    .click();
+  await page
+    .locator('article')
+    .filter({ has: page.getByText('Book of Ava') })
+    .getByRole('button', { name: 'Add to Vault' })
+    .click();
+
+  await page.getByRole('tab', { name: 'Loot Library' }).click();
+  await page
+    .locator('article')
+    .filter({ has: page.getByText('Stride Relic') })
+    .getByRole('button', { name: 'Add to Inventory' })
+    .click();
+
+  await page.getByRole('button', { name: /^Back$/i }).click();
+  await expect(page.getByText('Roundtrip Hopebound')).toBeVisible();
+
+  await page.getByRole('button', { name: /Export All Characters/i }).click();
+  const capturedDownload = await waitForCapturedDownload(page);
+  const exportedPayload = decodeURIComponent(capturedDownload?.href.split(',', 2)[1] ?? '');
+
+  await page.getByRole('button', { name: /Clear All Characters/i }).click();
+  await page.getByRole('button', { name: /^Delete$/i }).click();
+  await expect(page.getByText('Roundtrip Hopebound')).toHaveCount(0);
+
+  await page.getByRole('button', { name: /Daggerheart/i }).click();
+  const [fileChooser] = await Promise.all([
+    page.waitForEvent('filechooser'),
+    page.getByRole('button', { name: /Import Character/i }).click(),
+  ]);
+
+  await fileChooser.setFiles({
+    name: 'daggerheart-roundtrip.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(exportedPayload, 'utf-8'),
+  });
+
+  await expect(page.getByPlaceholder('Character Name')).toHaveValue('Roundtrip Hopebound');
+  await expect(page.locator('select[title="Class"]')).toHaveValue('Bard');
+  await expect(page.locator('select[title="Subclass"]')).toHaveValue('Troubadour');
+
+  await page.getByRole('tab', { name: 'Loadout' }).click();
+  await expect(page.getByText('Inspirational Words')).toBeVisible();
+
+  await page.getByRole('tab', { name: 'Vault' }).click();
+  await expect(page.getByText('Book of Ava')).toBeVisible();
+
+  await page.getByRole('tab', { name: 'Inventory' }).click();
+  await expect(page.getByText('Stride Relic')).toBeVisible();
 });
 
 test('persists dark mode across reloads', async ({ page }) => {
@@ -260,7 +456,12 @@ test('roundtrips exported characters through clear-all and import', async ({ pag
 });
 
 test('shows a storage warning when saved data nears the browser limit', async ({ page }) => {
-  await page.evaluate(() => {
+  const oversizedSystem = {
+    ...createDefaultDnd5e2024Data(),
+    __largePayload: 'x'.repeat(4_300_000),
+  };
+
+  await page.evaluate((system) => {
     localStorage.setItem(
       'rpg-documents-v2',
       JSON.stringify({
@@ -270,10 +471,7 @@ test('shows a storage warning when saved data nears the browser limit', async ({
             id: 'large-storage-doc',
             name: 'Large Storage Hero',
             systemId: 'dnd-5e-2024',
-            system: {
-              level: 1,
-              __largePayload: 'x'.repeat(4_300_000),
-            },
+            system,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
           },
@@ -281,7 +479,7 @@ test('shows a storage warning when saved data nears the browser limit', async ({
         lastModified: new Date().toISOString(),
       })
     );
-  });
+  }, oversizedSystem);
 
   await page.goto('/', { waitUntil: 'domcontentloaded' });
 

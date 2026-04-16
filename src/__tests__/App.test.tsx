@@ -1,9 +1,10 @@
 import '@testing-library/jest-dom';
 import { describe, it, expect, beforeAll, beforeEach, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { act, render, screen, fireEvent, waitFor } from '@testing-library/react';
 import App from '../App';
 import { registerAllSystems } from '../systems';
 import { systemRegistry } from '../registry';
+import { PWA_INSTALL_DISMISSED_STORAGE_KEY } from '../hooks/usePwaInstallPrompt';
 
 const SHEET_LOAD_TIMEOUT_MS = 15000;
 const FLOW_TEST_TIMEOUT_MS = 20000;
@@ -35,6 +36,36 @@ vi.mock('../components/SystemStatusDashboard', () => ({
 vi.mock('../utils/systemCatalog', () => ({
   loadAllSystemCatalogSummaries: () => Promise.resolve({}),
 }));
+
+interface MockBeforeInstallPromptEvent extends Event {
+  prompt: ReturnType<typeof vi.fn>;
+  userChoice: Promise<{
+    outcome: 'accepted' | 'dismissed';
+    platform: string;
+  }>;
+}
+
+async function dispatchBeforeInstallPrompt(outcome: 'accepted' | 'dismissed' = 'accepted') {
+  const prompt = vi.fn().mockResolvedValue(undefined);
+  const event = new Event('beforeinstallprompt', {
+    cancelable: true,
+  }) as MockBeforeInstallPromptEvent;
+
+  Object.defineProperty(event, 'prompt', {
+    configurable: true,
+    value: prompt,
+  });
+  Object.defineProperty(event, 'userChoice', {
+    configurable: true,
+    value: Promise.resolve({ outcome, platform: 'web' }),
+  });
+
+  await act(async () => {
+    window.dispatchEvent(event);
+  });
+
+  return { event, prompt };
+}
 
 describe('App', () => {
   beforeAll(() => {
@@ -94,4 +125,46 @@ describe('App', () => {
     },
     FLOW_TEST_TIMEOUT_MS
   );
+
+  it('persists install prompt dismissal across app mounts', async () => {
+    const { unmount } = render(<App />);
+
+    const { event } = await dispatchBeforeInstallPrompt();
+    expect(event.defaultPrevented).toBe(true);
+    expect(await screen.findByText('Install the app')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('button', { name: /Not now/i }));
+
+    await waitFor(() => {
+      expect(localStorage.getItem(PWA_INSTALL_DISMISSED_STORAGE_KEY)).toBe('true');
+    });
+    expect(screen.queryByText('Install the app')).not.toBeInTheDocument();
+
+    unmount();
+    render(<App />);
+
+    await dispatchBeforeInstallPrompt();
+
+    expect(screen.queryByText('Install the app')).not.toBeInTheDocument();
+  });
+
+  it('opens the install prompt and toasts after appinstalled', async () => {
+    render(<App />);
+
+    const { prompt } = await dispatchBeforeInstallPrompt();
+    fireEvent.click(await screen.findByRole('button', { name: /Install App/i }));
+
+    await waitFor(() => {
+      expect(prompt).toHaveBeenCalledTimes(1);
+    });
+
+    await act(async () => {
+      window.dispatchEvent(new Event('appinstalled'));
+    });
+
+    expect(
+      await screen.findByText('App installed for offline-friendly access.')
+    ).toBeInTheDocument();
+    expect(localStorage.getItem(PWA_INSTALL_DISMISSED_STORAGE_KEY)).toBeNull();
+  });
 });

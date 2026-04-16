@@ -8,10 +8,7 @@ function CrashOnRender() {
 }
 
 describe('ErrorBoundary', () => {
-  const originalNodeEnv = process.env.NODE_ENV;
-
   beforeEach(() => {
-    process.env.NODE_ENV = originalNodeEnv;
     vi.restoreAllMocks();
   });
 
@@ -49,8 +46,7 @@ describe('ErrorBoundary', () => {
     expect(screen.queryByText('Something went wrong')).not.toBeInTheDocument();
   });
 
-  it('shows stack trace details in development mode', () => {
-    process.env.NODE_ENV = 'development';
+  it('shows stack trace details outside production builds', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
 
     render(

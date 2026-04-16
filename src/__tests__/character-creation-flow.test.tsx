@@ -39,7 +39,11 @@ async function createCharacter(
   user: ReturnType<typeof userEvent.setup>,
   { name, level = 1, classId, speciesId }: CreationOptions
 ) {
-  const nameInput = await screen.findByTitle('Character name', {}, { timeout: SHEET_LOAD_TIMEOUT_MS });
+  const nameInput = await screen.findByTitle(
+    'Character name',
+    {},
+    { timeout: SHEET_LOAD_TIMEOUT_MS }
+  );
 
   fireEvent.change(nameInput, {
     target: { value: name },
@@ -52,7 +56,9 @@ async function createCharacter(
   if (speciesId) {
     const speciesSelect = screen.getByTitle('Species');
     await waitFor(() => {
-      const options = Array.from(speciesSelect.querySelectorAll('option')).map((option) => option.value);
+      const options = Array.from(speciesSelect.querySelectorAll('option')).map(
+        (option) => option.value
+      );
       expect(options).toContain(speciesId);
     });
     await user.selectOptions(speciesSelect, speciesId);
@@ -62,7 +68,9 @@ async function createCharacter(
   if (classId) {
     const classSelect = screen.getByTitle('Add class');
     await waitFor(() => {
-      const options = Array.from(classSelect.querySelectorAll('option')).map((option) => option.value);
+      const options = Array.from(classSelect.querySelectorAll('option')).map(
+        (option) => option.value
+      );
       expect(options).toContain(classId);
     });
 
@@ -78,10 +86,12 @@ async function createCharacter(
   }
 }
 
-async function createCharacterWithoutSelections({
-  name,
-}: Pick<CreationOptions, 'name'>) {
-  const nameInput = await screen.findByTitle('Character name', {}, { timeout: SHEET_LOAD_TIMEOUT_MS });
+async function createCharacterWithoutSelections({ name }: Pick<CreationOptions, 'name'>) {
+  const nameInput = await screen.findByTitle(
+    'Character name',
+    {},
+    { timeout: SHEET_LOAD_TIMEOUT_MS }
+  );
 
   fireEvent.change(nameInput, {
     target: { value: name },

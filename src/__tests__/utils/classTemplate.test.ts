@@ -57,6 +57,7 @@ describe('applyDnd5eClassTemplate', () => {
       classes: [{ classId: 'wizard', ability: 'int', spellcastingLevel: 3 }],
       spellsKnown: [],
       spellsPrepared: [],
+      alwaysPreparedSpellIds: [],
       spellSlots: {
         1: { max: 0, used: 0 },
         2: { max: 0, used: 0 },
@@ -69,6 +70,23 @@ describe('applyDnd5eClassTemplate', () => {
         9: { max: 0, used: 0 },
       },
     });
+  });
+
+  it('seeds always-prepared spell ids from structured subclass grants', () => {
+    const clericDoc = applyDnd5eSubclassTemplate(
+      applyDnd5eClassTemplate(makeDoc(), cleric, 5),
+      'cleric',
+      'life-domain'
+    );
+
+    expect(clericDoc.system.spellcasting?.alwaysPreparedSpellIds).toEqual([
+      'bless',
+      'cure-wounds',
+      'lesser-restoration',
+      'spiritual-weapon',
+      'beacon-of-hope',
+      'revivify',
+    ]);
   });
 
   it('prunes higher-level class features when leveling down', () => {
@@ -298,6 +316,60 @@ describe('applyDnd5eClassTemplate', () => {
     expect(strippedDoc.system.armorProficiencies).toEqual(['custom-armor-training']);
     expect(strippedDoc.system.weaponProficiencies).toEqual(baseWeaponProficiencies);
     expect(strippedDoc.system.toolProficiencies).toEqual(['smith-tools']);
+  });
+
+  it('defaults and preserves starting-class skill and tool selections', () => {
+    const bardDoc = applyDnd5eClassTemplate(makeDoc(), bard, 1);
+    const startingClass = bardDoc.system.classLevels[0];
+
+    expect(startingClass.skillSelections).toHaveLength(3);
+    expect(new Set(startingClass.skillSelections).size).toBe(3);
+    expect(startingClass.toolSelections).toHaveLength(3);
+    expect(new Set(startingClass.toolSelections).size).toBe(3);
+    expect(Object.keys(bardDoc.system.skillProficiencies).sort()).toEqual(
+      expect.arrayContaining((startingClass.skillSelections || []).slice().sort())
+    );
+    expect(bardDoc.system.toolProficiencies).toEqual(startingClass.toolSelections);
+
+    const leveledDoc = applyDnd5eClassTemplate(bardDoc, bard, 3);
+    expect(leveledDoc.system.classLevels[0].skillSelections).toEqual(startingClass.skillSelections);
+    expect(leveledDoc.system.classLevels[0].toolSelections).toEqual(startingClass.toolSelections);
+  });
+
+  it('replaces old starting-class skill and tool selections while preserving other sources', () => {
+    const bardDoc = applyDnd5eClassTemplate(
+      makeDoc({
+        skillProficiencies: {
+          history: { level: 'expertise', source: ['background'] },
+        },
+        toolProficiencies: ['thieves-tools'],
+      }),
+      bard,
+      1,
+      {
+        skillSelections: ['deception', 'insight', 'perception'],
+        toolSelections: ['lute', 'lyre', 'drum'],
+      }
+    );
+    const fighterDoc = applyDnd5eClassTemplate(bardDoc, fighter, 1, {
+      skillSelections: ['acrobatics', 'survival'],
+    });
+
+    expect(fighterDoc.system.classLevels[0]).toMatchObject({
+      classId: 'fighter',
+      skillSelections: ['acrobatics', 'survival'],
+      toolSelections: [],
+    });
+    expect(fighterDoc.system.skillProficiencies.history).toEqual({
+      level: 'expertise',
+      source: ['background'],
+    });
+    expect(fighterDoc.system.skillProficiencies.deception).toBeUndefined();
+    expect(fighterDoc.system.skillProficiencies.insight).toBeUndefined();
+    expect(fighterDoc.system.skillProficiencies.perception).toBeUndefined();
+    expect(fighterDoc.system.skillProficiencies.acrobatics?.source).toEqual(['Fighter']);
+    expect(fighterDoc.system.skillProficiencies.survival?.source).toEqual(['Fighter']);
+    expect(fighterDoc.system.toolProficiencies).toEqual(['thieves-tools']);
   });
 
   it('throws when replacing a missing class row', () => {

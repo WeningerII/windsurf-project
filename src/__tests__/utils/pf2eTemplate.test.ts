@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { pf2eBackgrounds } from '../../data/pathfinder/2e/backgrounds';
 import { dwarf } from '../../data/pathfinder/2e/ancestries/dwarf';
 import { elf } from '../../data/pathfinder/2e/ancestries/elf';
+import { human } from '../../data/pathfinder/2e/ancestries/human';
 import { fighter } from '../../data/pathfinder/2e/classes/fighter';
 import { wizard } from '../../data/pathfinder/2e/classes/wizard';
 import { createDefaultPf2eData, Pf2eDataModel } from '../../systems/pf2e/data-model';
@@ -70,6 +71,35 @@ describe('PF2e templates', () => {
     ]);
   });
 
+  it('preserves prepared spell selections when reapplying a prepared PF2e class', () => {
+    const updated = applyPf2eClassTemplate(
+      makeDoc({
+        classId: 'wizard',
+        spellcasting: {
+          tradition: 'arcane',
+          type: 'prepared',
+          proficiency: { tier: 'trained', total: 0 },
+          spellSlots: { 1: { max: 3, used: 0 }, 2: { max: 2, used: 0 } },
+          spellsKnown: ['magic-missile', 'shield'],
+          alwaysPreparedSpellIds: ['mage-armor'],
+          preparedSpellsByRank: { 1: ['magic-missile'], 2: ['shield'] },
+          focusPoints: { current: 1, max: 1 },
+        },
+      }),
+      wizard,
+      3
+    );
+
+    expect(updated.system.spellcasting).toMatchObject({
+      type: 'prepared',
+      alwaysPreparedSpellIds: ['mage-armor'],
+      preparedSpellsByRank: {
+        1: ['magic-missile'],
+        2: ['shield'],
+      },
+    });
+  });
+
   it('swaps ancestry and heritage fixed boosts, languages, and features cleanly', () => {
     const ironclad = dwarf.subraces?.find((heritage) => heritage.id === 'ironclad');
     const highElf = elf.subraces?.find((heritage) => heritage.id === 'high-elf');
@@ -99,6 +129,33 @@ describe('PF2e templates', () => {
     expect(elfDoc.system.speed).toBe(30);
     expect(elfDoc.system.features.some((feature) => feature.source === 'Dwarf')).toBe(false);
     expect(elfDoc.system.features.some((feature) => feature.id === 'low-light-vision')).toBe(true);
+  });
+
+  it('applies and reconfigures ancestry choice boosts without stacking stale values', () => {
+    const humanDoc = applyPf2eAncestryTemplate(makeDoc(), human, undefined, undefined, [
+      'dex',
+      'wis',
+    ]);
+    const updatedHumanDoc = applyPf2eAncestryTemplate(
+      humanDoc,
+      human,
+      undefined,
+      { ancestry: human },
+      ['str', 'cha']
+    );
+
+    expect(humanDoc.system.ancestryAbilityBoostSelections).toEqual(['dex', 'wis']);
+    expect(humanDoc.system.baseAttributes).toMatchObject({
+      dex: 12,
+      wis: 12,
+    });
+    expect(updatedHumanDoc.system.ancestryAbilityBoostSelections).toEqual(['str', 'cha']);
+    expect(updatedHumanDoc.system.baseAttributes).toMatchObject({
+      str: 12,
+      dex: 10,
+      wis: 10,
+      cha: 12,
+    });
   });
 
   it('merges and removes deterministic background training and feats by source', () => {
@@ -142,5 +199,72 @@ describe('PF2e templates', () => {
     });
     expect(criminalDoc.system.feats.some((feat) => feat.id === 'student-of-the-canon')).toBe(false);
     expect(criminalDoc.system.feats.some((feat) => feat.id === 'experienced-smuggler')).toBe(true);
+  });
+
+  it('applies background ability boosts and choice-based training selections', () => {
+    const scholar = pf2eBackgrounds.find((background) => background.id === 'pf2e-bg-scholar');
+    const guard = pf2eBackgrounds.find((background) => background.id === 'pf2e-bg-guard');
+
+    if (!scholar || !guard) {
+      throw new Error('Expected choice-based test backgrounds to exist.');
+    }
+
+    const doc = makeDoc({
+      skillProficiencies: {
+        religion: { tier: 'expert', total: 0, source: ['manual'] },
+      },
+    });
+
+    const scholarDoc = applyPf2eBackgroundTemplate(doc, scholar, undefined, {
+      abilityBoostSelections: ['wis', 'cha'],
+      skillTrainingSelection: 'religion',
+    });
+
+    expect(scholarDoc.system.backgroundAbilityBoostSelections).toEqual(['wis', 'cha']);
+    expect(scholarDoc.system.backgroundSkillTrainingSelection).toBe('religion');
+    expect(scholarDoc.system.baseAttributes).toMatchObject({
+      wis: 12,
+      cha: 12,
+    });
+    expect(scholarDoc.system.skillProficiencies.religion).toEqual({
+      tier: 'expert',
+      total: 0,
+      source: ['manual', 'Scholar'],
+    });
+    expect(scholarDoc.system.loreProficiencies['academia-lore']).toEqual({
+      tier: 'trained',
+      total: 0,
+      source: ['Scholar'],
+    });
+
+    const guardDoc = applyPf2eBackgroundTemplate(scholarDoc, guard, scholar, {
+      abilityBoostSelections: ['str', 'wis'],
+      loreTrainingSelection: 'warfare-lore',
+    });
+
+    expect(guardDoc.system.backgroundAbilityBoostSelections).toEqual(['str', 'wis']);
+    expect(guardDoc.system.backgroundSkillTrainingSelection).toBe('intimidation');
+    expect(guardDoc.system.backgroundLoreTrainingSelection).toBe('warfare-lore');
+    expect(guardDoc.system.baseAttributes).toMatchObject({
+      str: 12,
+      wis: 12,
+      cha: 10,
+    });
+    expect(guardDoc.system.skillProficiencies.religion).toEqual({
+      tier: 'expert',
+      total: 0,
+      source: ['manual'],
+    });
+    expect(guardDoc.system.skillProficiencies.intimidation).toEqual({
+      tier: 'trained',
+      total: 0,
+      source: ['Guard'],
+    });
+    expect(guardDoc.system.loreProficiencies['academia-lore']).toBeUndefined();
+    expect(guardDoc.system.loreProficiencies['warfare-lore']).toEqual({
+      tier: 'trained',
+      total: 0,
+      source: ['Guard'],
+    });
   });
 });

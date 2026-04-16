@@ -1,9 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import { elf } from '../../data/dnd/5e-2014/species/elf';
 import { human } from '../../data/dnd/5e-2014/species/human';
+import { halfElf } from '../../data/dnd/5e-2014/species/half-elf';
+import { dwarf } from '../../data/dnd/5e-2014/species/dwarf';
 import { halfOrc } from '../../data/dnd/5e-2014/species/half-orc';
+import { human as human2024 } from '../../data/dnd/5e-2024/species/human';
 import { Species } from '../../types/character-options/species';
 import { createDefaultDnd5eData, Dnd5eDataModel } from '../../systems/dnd5e/data-model';
+import {
+  createDefaultDnd5e2024Data,
+  Dnd5e2024DataModel,
+} from '../../systems/dnd5e-2024/data-model';
 import { CharacterDocument } from '../../types/core/document';
 import { applyDnd5eSpeciesTemplate } from '../../utils/speciesTemplate';
 
@@ -13,6 +20,19 @@ function makeDoc(overrides: Partial<Dnd5eDataModel> = {}): CharacterDocument<Dnd
     name: 'Species Hero',
     systemId: 'dnd-5e-2014',
     system: { ...createDefaultDnd5eData(), ...overrides },
+    createdAt: new Date('2026-03-01T00:00:00.000Z'),
+    updatedAt: new Date('2026-03-01T00:00:00.000Z'),
+  };
+}
+
+function make2024Doc(
+  overrides: Partial<Dnd5e2024DataModel> = {}
+): CharacterDocument<Dnd5e2024DataModel> {
+  return {
+    id: 'species-template-doc-2024',
+    name: 'Species Hero 2024',
+    systemId: 'dnd-5e-2024',
+    system: { ...createDefaultDnd5e2024Data(), ...overrides },
     createdAt: new Date('2026-03-01T00:00:00.000Z'),
     updatedAt: new Date('2026-03-01T00:00:00.000Z'),
   };
@@ -159,6 +179,12 @@ describe('applyDnd5eSpeciesTemplate', () => {
     expect(updated.system.features.map((feature) => feature.id)).toEqual(['human-versatility']);
   });
 
+  it('autofills optional human language choices on first application when no explicit selection exists', () => {
+    const updated = applyDnd5eSpeciesTemplate(makeDoc(), human);
+
+    expect(updated.system.languageProficiencies).toEqual(['Common', 'Dwarvish']);
+  });
+
   it('upgrades weaker proficiencies and fills in missing skill source arrays for species traits', () => {
     const doc = makeDoc({
       skillProficiencies: {
@@ -190,5 +216,90 @@ describe('applyDnd5eSpeciesTemplate', () => {
     );
 
     expect(updated.system.languageProficiencies).toEqual(['Common', 'Elvish']);
+  });
+
+  it('applies half-elf ability, language, and skill choices and removes them cleanly on change', () => {
+    const halfElfDoc = applyDnd5eSpeciesTemplate(makeDoc(), halfElf, undefined, {
+      abilitySelections: ['dex', 'wis'],
+      languageSelections: ['Draconic'],
+      skillSelections: ['insight', 'perception'],
+    });
+    const humanDoc = applyDnd5eSpeciesTemplate(halfElfDoc, human, halfElf, {
+      languageSelections: ['Sylvan'],
+    });
+
+    expect(halfElfDoc.system.baseAttributes).toMatchObject({
+      str: 10,
+      dex: 11,
+      con: 10,
+      int: 10,
+      wis: 11,
+      cha: 12,
+    });
+    expect(halfElfDoc.system.speciesAbilitySelections).toEqual(['dex', 'wis']);
+    expect(halfElfDoc.system.speciesLanguageSelections).toEqual(['Draconic']);
+    expect(halfElfDoc.system.speciesSkillSelections).toEqual(['insight', 'perception']);
+    expect(halfElfDoc.system.languageProficiencies).toEqual(['Common', 'Elvish', 'Draconic']);
+    expect(halfElfDoc.system.skillProficiencies.insight?.source).toEqual(['Half-Elf']);
+    expect(halfElfDoc.system.skillProficiencies.perception?.source).toEqual(['Half-Elf']);
+
+    expect(humanDoc.system.baseAttributes).toMatchObject({
+      str: 11,
+      dex: 11,
+      con: 11,
+      int: 11,
+      wis: 11,
+      cha: 11,
+    });
+    expect(humanDoc.system.speciesId).toBe('human');
+    expect(humanDoc.system.speciesAbilitySelections).toEqual([]);
+    expect(humanDoc.system.speciesLanguageSelections).toEqual(['Sylvan']);
+    expect(humanDoc.system.speciesSkillSelections).toEqual([]);
+    expect(humanDoc.system.languageProficiencies).toEqual(['Common', 'Sylvan']);
+    expect(humanDoc.system.skillProficiencies.insight).toBeUndefined();
+    expect(humanDoc.system.skillProficiencies.perception).toBeUndefined();
+  });
+
+  it('applies 2024 human flexible ability increases, skill choice, and language choice', () => {
+    const updated = applyDnd5eSpeciesTemplate(make2024Doc(), human2024, undefined, {
+      abilitySelections: ['dex', 'wis'],
+      languageSelections: ['Elvish'],
+      skillSelections: ['stealth'],
+    });
+
+    expect(updated.system.baseAttributes).toMatchObject({
+      str: 10,
+      dex: 12,
+      con: 10,
+      int: 10,
+      wis: 11,
+      cha: 10,
+    });
+    expect(updated.system.speciesAbilitySelections).toEqual(['dex', 'wis']);
+    expect(updated.system.speciesLanguageSelections).toEqual(['Elvish']);
+    expect(updated.system.speciesSkillSelections).toEqual(['stealth']);
+    expect(updated.system.languageProficiencies).toEqual(['Common', 'Elvish']);
+    expect(updated.system.skillProficiencies.stealth?.source).toEqual(['Human']);
+  });
+
+  it('applies dwarf weapon training and chosen tool proficiency and clears them', () => {
+    const dwarfDoc = applyDnd5eSpeciesTemplate(makeDoc(), dwarf, undefined, {
+      toolSelections: ['smiths-tools'],
+    });
+    const cleared = applyDnd5eSpeciesTemplate(dwarfDoc, undefined, dwarf);
+
+    expect(dwarfDoc.system.weaponProficiencies).toEqual([
+      'battleaxe',
+      'handaxe',
+      'light-hammer',
+      'warhammer',
+    ]);
+    expect(dwarfDoc.system.toolProficiencies).toEqual(['smiths-tools']);
+    expect(dwarfDoc.system.speciesToolSelections).toEqual(['smiths-tools']);
+
+    expect(cleared.system.speciesId).toBeUndefined();
+    expect(cleared.system.weaponProficiencies).toEqual([]);
+    expect(cleared.system.toolProficiencies).toEqual([]);
+    expect(cleared.system.speciesToolSelections).toEqual([]);
   });
 });

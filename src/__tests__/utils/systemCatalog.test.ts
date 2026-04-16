@@ -8,6 +8,15 @@ const {
   loadBackgroundsForSystemMock,
   loadClassesForSystemMock,
   loadComplicationsForSystemMock,
+  loadDaggerheartAncestriesForSystemMock,
+  loadDaggerheartClassesForSystemMock,
+  loadDaggerheartCommunitiesForSystemMock,
+  loadDaggerheartConsumablesForSystemMock,
+  loadDaggerheartDomainCardsForSystemMock,
+  loadDaggerheartDomainsForSystemMock,
+  loadDaggerheartArmorForSystemMock,
+  loadDaggerheartLootForSystemMock,
+  loadDaggerheartWeaponsForSystemMock,
   loadEquipmentForSystemMock,
   loadFeatsForSystemMock,
   loadFeatureOptionsForSystemMock,
@@ -25,6 +34,15 @@ const {
   loadBackgroundsForSystemMock: vi.fn(),
   loadClassesForSystemMock: vi.fn(),
   loadComplicationsForSystemMock: vi.fn(),
+  loadDaggerheartAncestriesForSystemMock: vi.fn(),
+  loadDaggerheartClassesForSystemMock: vi.fn(),
+  loadDaggerheartCommunitiesForSystemMock: vi.fn(),
+  loadDaggerheartConsumablesForSystemMock: vi.fn(),
+  loadDaggerheartDomainCardsForSystemMock: vi.fn(),
+  loadDaggerheartDomainsForSystemMock: vi.fn(),
+  loadDaggerheartArmorForSystemMock: vi.fn(),
+  loadDaggerheartLootForSystemMock: vi.fn(),
+  loadDaggerheartWeaponsForSystemMock: vi.fn(),
   loadEquipmentForSystemMock: vi.fn(),
   loadFeatsForSystemMock: vi.fn(),
   loadFeatureOptionsForSystemMock: vi.fn(),
@@ -49,6 +67,15 @@ vi.mock('../../utils/dataLoader', () => ({
   loadBackgroundsForSystem: loadBackgroundsForSystemMock,
   loadClassesForSystem: loadClassesForSystemMock,
   loadComplicationsForSystem: loadComplicationsForSystemMock,
+  loadDaggerheartAncestriesForSystem: loadDaggerheartAncestriesForSystemMock,
+  loadDaggerheartClassesForSystem: loadDaggerheartClassesForSystemMock,
+  loadDaggerheartCommunitiesForSystem: loadDaggerheartCommunitiesForSystemMock,
+  loadDaggerheartConsumablesForSystem: loadDaggerheartConsumablesForSystemMock,
+  loadDaggerheartDomainCardsForSystem: loadDaggerheartDomainCardsForSystemMock,
+  loadDaggerheartDomainsForSystem: loadDaggerheartDomainsForSystemMock,
+  loadDaggerheartArmorForSystem: loadDaggerheartArmorForSystemMock,
+  loadDaggerheartLootForSystem: loadDaggerheartLootForSystemMock,
+  loadDaggerheartWeaponsForSystem: loadDaggerheartWeaponsForSystemMock,
   loadEquipmentForSystem: loadEquipmentForSystemMock,
   loadFeatsForSystem: loadFeatsForSystemMock,
   loadFeatureOptionsForSystem: loadFeatureOptionsForSystemMock,
@@ -61,7 +88,15 @@ vi.mock('../../utils/dataLoader', () => ({
   loadTraitsForSystem: loadTraitsForSystemMock,
 }));
 
-import { loadAllSystemCatalogSummaries, loadSystemCatalogSummary } from '../../utils/systemCatalog';
+import {
+  clearSystemCatalogSummaryCache,
+  loadAllSystemCatalogSummaries,
+  loadSystemCatalogSummary,
+} from '../../utils/systemCatalog';
+import {
+  clearSystemCatalogMetadataSummaryCache,
+  loadSystemCatalogSummaryFromMetadata,
+} from '../../utils/systemCatalogMetadata';
 
 type SupportMeta = {
   label: string;
@@ -78,20 +113,21 @@ const registryMeta: Partial<Record<GameSystemId, SupportMeta>> = {
     label: 'D&D 3.5e',
     version: 'SRD 3.5',
     supportLevel: 'partial',
-    supportNotes: 'Base classes only in current product flows',
+    supportNotes: 'Base classes plus the full core SRD prestige catalog are selectable',
   },
   pf1e: {
     label: 'Pathfinder 1e',
     version: 'PF1e SRD',
     supportLevel: 'partial',
     supportNotes:
-      'Base classes and vetted CRB prestige classes are selectable; prestige spellcasting progression remains manual',
+      'Base classes and vetted CRB prestige classes are selectable; prestige spellcasting advancement is automated for the shipped prestige casters',
   },
   daggerheart: {
     label: 'Daggerheart',
     version: '1.0',
-    supportLevel: 'scaffold',
-    supportNotes: 'Manual entry only; no local data modules',
+    supportLevel: 'partial',
+    supportNotes:
+      'SRD-backed selectors, starter templates, browse tabs, equipment loadouts, gold tracking, and loot libraries are shipped; deterministic passive card bonuses are auto-applied where represented, while triggered, timing-based, and choice-based card effects remain tracked-but-manual or reference-only',
   },
 };
 
@@ -100,6 +136,8 @@ function makeItems(prefix: string, count: number): Array<{ id: string }> {
 }
 
 beforeEach(() => {
+  clearSystemCatalogSummaryCache();
+  clearSystemCatalogMetadataSummaryCache();
   systemRegistryGetMock.mockReset();
   systemRegistryGetMock.mockImplementation((systemId: GameSystemId) => registryMeta[systemId]);
 
@@ -109,6 +147,15 @@ beforeEach(() => {
     loadBackgroundsForSystemMock,
     loadClassesForSystemMock,
     loadComplicationsForSystemMock,
+    loadDaggerheartAncestriesForSystemMock,
+    loadDaggerheartClassesForSystemMock,
+    loadDaggerheartCommunitiesForSystemMock,
+    loadDaggerheartConsumablesForSystemMock,
+    loadDaggerheartDomainCardsForSystemMock,
+    loadDaggerheartDomainsForSystemMock,
+    loadDaggerheartArmorForSystemMock,
+    loadDaggerheartLootForSystemMock,
+    loadDaggerheartWeaponsForSystemMock,
     loadEquipmentForSystemMock,
     loadFeatsForSystemMock,
     loadFeatureOptionsForSystemMock,
@@ -126,7 +173,7 @@ beforeEach(() => {
 });
 
 describe('systemCatalog', () => {
-  it('summarizes D&D 5e 2014 product categories and source-filtered feats', async () => {
+  it('summarizes D&D 5e 2014 product categories including real feats', async () => {
     loadSpellsForSystemMock.mockResolvedValue(makeItems('spell', 2));
     loadClassesForSystemMock.mockResolvedValue(makeItems('class', 1));
     loadSpeciesForSystemMock.mockResolvedValue(makeItems('species', 1));
@@ -134,12 +181,13 @@ describe('systemCatalog', () => {
     loadFeatureOptionsForSystemMock.mockResolvedValue(makeItems('feature-option', 4));
     loadMonstersForSystemMock.mockResolvedValue(makeItems('monster', 1));
     loadEquipmentForSystemMock.mockResolvedValue(makeItems('equipment', 3));
+    loadFeatsForSystemMock.mockResolvedValue(makeItems('feat', 39));
 
     const summary = await loadSystemCatalogSummary('dnd-5e-2014');
 
     expect(summary.label).toBe('D&D 5e (2014)');
     expect(summary.supportLevel).toBe('full');
-    expect(summary.totalReachableCount).toBe(13);
+    expect(summary.totalReachableCount).toBe(52);
     expect(summary.categories).toEqual([
       { id: 'spells', label: 'Spells', count: 2, reachability: 'product' },
       { id: 'classes', label: 'Classes', count: 1, reachability: 'product' },
@@ -148,17 +196,11 @@ describe('systemCatalog', () => {
       { id: 'backgrounds', label: 'Backgrounds', count: 1, reachability: 'product' },
       { id: 'monsters', label: 'Monsters', count: 1, reachability: 'product' },
       { id: 'equipment', label: 'Equipment', count: 3, reachability: 'product' },
-      {
-        id: 'feats',
-        label: 'Feats',
-        count: 0,
-        reachability: 'source-filtered',
-        note: 'SRD 5.1 excludes feat data',
-      },
+      { id: 'feats', label: 'Feats', count: 39, reachability: 'product' },
     ]);
     expect(loadFeatureOptionsForSystemMock).toHaveBeenCalledWith('dnd-5e-2014');
     expect(loadMonstersForSystemMock).toHaveBeenCalledWith('dnd-5e-2014');
-    expect(loadFeatsForSystemMock).not.toHaveBeenCalled();
+    expect(loadFeatsForSystemMock).toHaveBeenCalledWith('dnd-5e-2014');
   });
 
   it('summarizes PF2e with dedicated background and archetype loaders', async () => {
@@ -240,16 +282,43 @@ describe('systemCatalog', () => {
     ]);
   });
 
-  it('returns an empty scaffold summary for Daggerheart without calling loaders', async () => {
+  it('summarizes Daggerheart from its dedicated SRD-backed loaders', async () => {
+    loadDaggerheartClassesForSystemMock.mockResolvedValue(makeItems('dh-class', 9));
+    loadDaggerheartAncestriesForSystemMock.mockResolvedValue(makeItems('dh-ancestry', 19));
+    loadDaggerheartCommunitiesForSystemMock.mockResolvedValue(makeItems('dh-community', 9));
+    loadDaggerheartDomainsForSystemMock.mockResolvedValue(makeItems('dh-domain', 9));
+    loadDaggerheartDomainCardsForSystemMock.mockResolvedValue(makeItems('dh-card', 189));
+    loadDaggerheartWeaponsForSystemMock.mockResolvedValue(makeItems('dh-weapon', 204));
+    loadDaggerheartArmorForSystemMock.mockResolvedValue(makeItems('dh-armor', 34));
+    loadDaggerheartLootForSystemMock.mockResolvedValue(makeItems('dh-loot', 61));
+    loadDaggerheartConsumablesForSystemMock.mockResolvedValue(makeItems('dh-consumable', 54));
+
     const summary = await loadSystemCatalogSummary('daggerheart');
 
     expect(summary.label).toBe('Daggerheart');
-    expect(summary.supportLevel).toBe('scaffold');
-    expect(summary.supportNotes).toBe('Manual entry only; no local data modules');
-    expect(summary.categories).toEqual([]);
-    expect(summary.totalReachableCount).toBe(0);
-    expect(loadSpellsForSystemMock).not.toHaveBeenCalled();
+    expect(summary.supportLevel).toBe('partial');
+    expect(summary.supportNotes).toContain('starter templates');
+    expect(summary.categories).toEqual([
+      { id: 'classes', label: 'Classes', count: 9, reachability: 'product' },
+      { id: 'domains', label: 'Domains', count: 9, reachability: 'product' },
+      { id: 'domainCards', label: 'Domain Cards', count: 189, reachability: 'product' },
+      { id: 'species', label: 'Ancestries', count: 19, reachability: 'product' },
+      { id: 'backgrounds', label: 'Communities', count: 9, reachability: 'product' },
+      { id: 'equipment', label: 'Equipment', count: 353, reachability: 'product' },
+    ]);
+    expect(summary.totalReachableCount).toBe(588);
     expect(loadClassesForSystemMock).not.toHaveBeenCalled();
+    expect(loadSpeciesForSystemMock).not.toHaveBeenCalled();
+    expect(loadBackgroundsForSystemMock).not.toHaveBeenCalled();
+    expect(loadDaggerheartClassesForSystemMock).toHaveBeenCalledWith('daggerheart');
+    expect(loadDaggerheartAncestriesForSystemMock).toHaveBeenCalledWith('daggerheart');
+    expect(loadDaggerheartCommunitiesForSystemMock).toHaveBeenCalledWith('daggerheart');
+    expect(loadDaggerheartDomainsForSystemMock).toHaveBeenCalledWith('daggerheart');
+    expect(loadDaggerheartDomainCardsForSystemMock).toHaveBeenCalledWith('daggerheart');
+    expect(loadDaggerheartWeaponsForSystemMock).toHaveBeenCalledWith('daggerheart');
+    expect(loadDaggerheartArmorForSystemMock).toHaveBeenCalledWith('daggerheart');
+    expect(loadDaggerheartLootForSystemMock).toHaveBeenCalledWith('daggerheart');
+    expect(loadDaggerheartConsumablesForSystemMock).toHaveBeenCalledWith('daggerheart');
   });
 
   it('loads summaries for only the requested system IDs', async () => {
@@ -260,13 +329,42 @@ describe('systemCatalog', () => {
     loadEquipmentForSystemMock.mockResolvedValue(makeItems('equipment', 1));
     loadFeatsForSystemMock.mockResolvedValue(makeItems('feat', 1));
     loadArchetypesForSystemMock.mockResolvedValue(makeItems('archetype', 1));
+    loadDaggerheartClassesForSystemMock.mockResolvedValue(makeItems('dh-class', 9));
+    loadDaggerheartAncestriesForSystemMock.mockResolvedValue(makeItems('dh-ancestry', 19));
+    loadDaggerheartCommunitiesForSystemMock.mockResolvedValue(makeItems('dh-community', 9));
+    loadDaggerheartDomainsForSystemMock.mockResolvedValue(makeItems('dh-domain', 9));
+    loadDaggerheartDomainCardsForSystemMock.mockResolvedValue(makeItems('dh-card', 189));
+    loadDaggerheartWeaponsForSystemMock.mockResolvedValue(makeItems('dh-weapon', 204));
+    loadDaggerheartArmorForSystemMock.mockResolvedValue(makeItems('dh-armor', 34));
+    loadDaggerheartLootForSystemMock.mockResolvedValue(makeItems('dh-loot', 61));
+    loadDaggerheartConsumablesForSystemMock.mockResolvedValue(makeItems('dh-consumable', 54));
 
     const summaries = await loadAllSystemCatalogSummaries(['pf2e', 'daggerheart']);
 
     expect(Object.keys(summaries)).toEqual(['pf2e', 'daggerheart']);
     expect(summaries.pf2e.totalReachableCount).toBe(7);
-    expect(summaries.daggerheart.totalReachableCount).toBe(0);
+    expect(summaries.daggerheart.totalReachableCount).toBe(588);
     expect(loadTraitsForSystemMock).not.toHaveBeenCalled();
     expect(loadAdvantagesForSystemMock).not.toHaveBeenCalled();
+  });
+
+  it('builds metadata-backed summaries without invoking loader modules', async () => {
+    const summary = await loadSystemCatalogSummaryFromMetadata('dnd-5e-2014');
+
+    expect(summary.systemId).toBe('dnd-5e-2014');
+    expect(summary.label).toBe('D&D 5e (2014)');
+    expect(summary.supportLevel).toBe('full');
+    expect(summary.categories.some((category) => category.id === 'spells')).toBe(true);
+    expect(summary.categories.some((category) => category.id === 'featureOptions')).toBe(true);
+    expect(summary.categories.some((category) => category.id === 'feats')).toBe(true);
+    expect(summary.categories.find((category) => category.id === 'feats')).toMatchObject({
+      reachability: 'product',
+    });
+    expect(summary.categories.find((category) => category.id === 'feats')!.count).toBeGreaterThan(
+      0
+    );
+    expect(loadSpellsForSystemMock).not.toHaveBeenCalled();
+    expect(loadClassesForSystemMock).not.toHaveBeenCalled();
+    expect(loadFeatureOptionsForSystemMock).not.toHaveBeenCalled();
   });
 });

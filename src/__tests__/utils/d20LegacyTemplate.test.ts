@@ -1,6 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import { fighter as fighter35 } from '../../data/dnd/3.5e/classes/fighter';
+import { cleric as cleric35 } from '../../data/dnd/3.5e/classes/cleric';
 import { wizard as wizard35 } from '../../data/dnd/3.5e/classes/wizard';
+import { arcaneArcher as arcaneArcher35 } from '../../data/dnd/3.5e/prestige-classes/arcane-archer';
+import { assassin as assassin35 } from '../../data/dnd/3.5e/prestige-classes/assassin';
+import { blackguard as blackguard35 } from '../../data/dnd/3.5e/prestige-classes/blackguard';
+import { dragonDisciple as dragonDisciple35 } from '../../data/dnd/3.5e/prestige-classes/dragon-disciple';
+import { duelist as duelist35 } from '../../data/dnd/3.5e/prestige-classes/duelist';
+import { dwarvenDefender as dwarvenDefender35 } from '../../data/dnd/3.5e/prestige-classes/dwarven-defender';
+import { eldritchKnight as eldritchKnight35 } from '../../data/dnd/3.5e/prestige-classes/eldritch-knight';
+import { loremaster as loremaster35 } from '../../data/dnd/3.5e/prestige-classes/loremaster';
+import { mysticTheurge as mysticTheurge35 } from '../../data/dnd/3.5e/prestige-classes/mystic-theurge';
 import { elf as elf35 } from '../../data/dnd/3.5e/races/elf';
 import { human as human35 } from '../../data/dnd/3.5e/races/human';
 import { createDefaultDnd35eData, Dnd35eDataModel } from '../../systems/dnd35e/data-model';
@@ -12,10 +22,15 @@ import {
   removeD20LegacyClassTemplate,
 } from '../../utils/d20LegacyTemplate';
 import { wizard as wizardPf1 } from '../../data/pathfinder/1e/classes/wizard';
+import { cleric as clericPf1 } from '../../data/pathfinder/1e/classes/cleric';
+import { sorcerer as sorcererPf1 } from '../../data/pathfinder/1e/classes/sorcerer';
 import { fighter as fighterPf1 } from '../../data/pathfinder/1e/classes/fighter';
 import { halfling as halflingPf1 } from '../../data/pathfinder/1e/races/halfling';
 import { human as humanPf1 } from '../../data/pathfinder/1e/races/human';
+import { dragonDisciple as dragonDisciplePf1 } from '../../data/pathfinder/1e/prestige-classes/dragon-disciple';
 import { duelist as duelistPf1 } from '../../data/pathfinder/1e/prestige-classes/duelist';
+import { loreMaster as loreMasterPf1 } from '../../data/pathfinder/1e/prestige-classes/lore-master';
+import { mysticTheurge as mysticTheurgePf1 } from '../../data/pathfinder/1e/prestige-classes/mystic-theurge';
 
 function make35Doc(overrides: Partial<Dnd35eDataModel> = {}): CharacterDocument<Dnd35eDataModel> {
   return {
@@ -126,6 +141,141 @@ describe('applyD20LegacyClassTemplate', () => {
     );
   });
 
+  it('applies vetted 3.5e prestige classes with the normalized class profile and spell slots', () => {
+    const arcaneArcherDoc = applyD20LegacyClassTemplate(make35Doc(), arcaneArcher35, 2);
+    const assassinDoc = applyD20LegacyClassTemplate(make35Doc(), assassin35, 4);
+    const blackguardDoc = applyD20LegacyClassTemplate(make35Doc(), blackguard35, 5);
+    const dragonDiscipleDoc = applyD20LegacyClassTemplate(make35Doc(), dragonDisciple35, 4);
+    const duelistDoc = applyD20LegacyClassTemplate(make35Doc(), duelist35, 2);
+    const dwarvenDefenderDoc = applyD20LegacyClassTemplate(make35Doc(), dwarvenDefender35, 3);
+
+    expect(arcaneArcherDoc.system.classLevels[0]).toMatchObject({
+      classId: 'arcane-archer-35e',
+      level: 2,
+      hitDieRolls: [8, 5],
+      bab: 'full',
+      fortSave: 'good',
+      refSave: 'good',
+      willSave: 'poor',
+      skillPointsPerLevel: 4,
+    });
+    expect(arcaneArcherDoc.system.classSkills).toEqual(
+      expect.arrayContaining(['hide', 'spot', 'survival'])
+    );
+    expect(arcaneArcherDoc.system.features.map((feature) => feature.id)).toEqual(
+      expect.arrayContaining(['enhance-arrow-1-35e', 'imbue-arrow-35e'])
+    );
+
+    expect(assassinDoc.system.classLevels[0]).toMatchObject({
+      classId: 'assassin-35e',
+      level: 4,
+      hitDieRolls: [6, 4, 4, 4],
+      bab: 'three-quarter',
+      fortSave: 'poor',
+      refSave: 'good',
+      willSave: 'poor',
+      skillPointsPerLevel: 4,
+    });
+    expect(assassinDoc.system.classSkills).toEqual(
+      expect.arrayContaining(['hide', 'move-silently', 'use-magic'])
+    );
+    expect(assassinDoc.system.features.map((feature) => feature.id)).toEqual(
+      expect.arrayContaining([
+        'death-attack-35e',
+        'assassin-sneak-attack-1-35e',
+        'assassin-spellcasting-35e',
+        'save-against-poison-2-35e',
+      ])
+    );
+
+    expect(blackguardDoc.system.classLevels[0]).toMatchObject({
+      classId: 'blackguard-35e',
+      level: 5,
+      hitDieRolls: [10, 6, 6, 6, 6],
+      bab: 'full',
+      fortSave: 'good',
+      refSave: 'poor',
+      willSave: 'poor',
+      skillPointsPerLevel: 2,
+    });
+    expect(blackguardDoc.system.classSkills).toEqual(
+      expect.arrayContaining(['concentration', 'intimidate', 'ride'])
+    );
+    expect(blackguardDoc.system.features.map((feature) => feature.id)).toEqual(
+      expect.arrayContaining([
+        'aura-of-evil-35e',
+        'dark-blessing-35e',
+        'blackguard-spellcasting-35e',
+        'command-undead-35e',
+        'blackguard-sneak-attack-1-35e',
+        'fiendish-servant-35e',
+      ])
+    );
+
+    expect(dragonDiscipleDoc.system.classLevels[0]).toMatchObject({
+      classId: 'dragon-disciple-35e',
+      level: 4,
+      hitDieRolls: [12, 7, 7, 7],
+      bab: 'three-quarter',
+      fortSave: 'good',
+      refSave: 'poor',
+      willSave: 'good',
+      skillPointsPerLevel: 2,
+    });
+    expect(dragonDiscipleDoc.system.classSkills).toEqual(
+      expect.arrayContaining(['concentration', 'diplomacy', 'knowledge'])
+    );
+    expect(dragonDiscipleDoc.system.features.map((feature) => feature.id)).toEqual(
+      expect.arrayContaining([
+        'dragon-disciple-natural-armor-1-35e',
+        'dragon-disciple-bonus-spell-1-35e',
+        'dragon-disciple-strength-1-35e',
+        'dragon-disciple-claws-and-bite-35e',
+        'dragon-disciple-breath-weapon-2d8-35e',
+        'dragon-disciple-natural-armor-2-35e',
+      ])
+    );
+
+    expect(duelistDoc.system.classLevels[0]).toMatchObject({
+      classId: 'duelist-35e',
+      level: 2,
+      hitDieRolls: [10, 6],
+      bab: 'full',
+      fortSave: 'poor',
+      refSave: 'good',
+      willSave: 'poor',
+      skillPointsPerLevel: 4,
+    });
+    expect(duelistDoc.system.classSkills).toEqual(
+      expect.arrayContaining(['bluff', 'sense-motive', 'tumble'])
+    );
+    expect(duelistDoc.system.features.map((feature) => feature.id)).toEqual(
+      expect.arrayContaining(['canny-defense-35e', 'improved-reaction-2-35e'])
+    );
+
+    expect(dwarvenDefenderDoc.system.classLevels[0]).toMatchObject({
+      classId: 'dwarven-defender-35e',
+      level: 3,
+      hitDieRolls: [12, 7, 7],
+      bab: 'full',
+      fortSave: 'good',
+      refSave: 'poor',
+      willSave: 'good',
+      skillPointsPerLevel: 2,
+    });
+    expect(dwarvenDefenderDoc.system.classSkills).toEqual(
+      expect.arrayContaining(['craft', 'listen', 'sense-motive'])
+    );
+    expect(dwarvenDefenderDoc.system.features.map((feature) => feature.id)).toEqual(
+      expect.arrayContaining([
+        'ac-bonus-1-35e',
+        'defensive-stance-1-35e',
+        'uncanny-dodge-dwarven-defender-35e',
+        'defensive-stance-2-35e',
+      ])
+    );
+  });
+
   it('adds and removes 3.5e multiclass rows without clobbering other class progressions', () => {
     const fighterDoc = applyD20LegacyClassTemplate(make35Doc(), fighter35, 2);
     const multiclassDoc = applyD20LegacyClassTemplate(fighterDoc, wizard35, 3, {
@@ -152,6 +302,66 @@ describe('applyD20LegacyClassTemplate', () => {
     );
   });
 
+  it('preserves tracked and prepared legacy spell state when class templates change', () => {
+    const wizardDoc = applyD20LegacyClassTemplate(
+      make35Doc({
+        spellsKnown: ['magic-missile', 'shield'],
+        preparedSpellsByLevel: {
+          1: ['magic-missile', 'magic-missile'],
+        },
+      }),
+      wizard35,
+      3
+    );
+    const leveledDoc = applyD20LegacyClassTemplate(wizardDoc, wizard35, 4);
+    const multiclassDoc = applyD20LegacyClassTemplate(leveledDoc, fighter35, 1, {
+      mode: 'add',
+    });
+
+    expect(leveledDoc.system.spellsKnown).toEqual(['magic-missile', 'shield']);
+    expect(leveledDoc.system.preparedSpellsByLevel).toEqual({
+      1: ['magic-missile', 'magic-missile'],
+    });
+    expect(multiclassDoc.system.spellsKnown).toEqual(['magic-missile', 'shield']);
+    expect(multiclassDoc.system.preparedSpellsByLevel).toEqual({
+      1: ['magic-missile', 'magic-missile'],
+    });
+  });
+
+  it('seeds spellcasting-advancement targets for normalized 3.5e prestige casters', () => {
+    const wizardClericDoc = applyD20LegacyClassTemplate(
+      applyD20LegacyClassTemplate(make35Doc(), wizard35, 3),
+      cleric35,
+      3,
+      { mode: 'add' }
+    );
+    const mysticTheurgeDoc = applyD20LegacyClassTemplate(wizardClericDoc, mysticTheurge35, 2, {
+      mode: 'add',
+    });
+    const eldritchKnightDoc = applyD20LegacyClassTemplate(
+      applyD20LegacyClassTemplate(make35Doc(), wizard35, 5),
+      eldritchKnight35,
+      3,
+      { mode: 'add' }
+    );
+    const loremasterDoc = applyD20LegacyClassTemplate(wizardClericDoc, loremaster35, 1, {
+      mode: 'add',
+    });
+
+    expect(mysticTheurgeDoc.system.classLevels[2]).toMatchObject({
+      classId: 'mystic-theurge-35e',
+      spellcastingSelections: ['wizard', 'cleric'],
+    });
+    expect(eldritchKnightDoc.system.classLevels[1]).toMatchObject({
+      classId: 'eldritch-knight-35e',
+      spellcastingSelections: ['wizard'],
+    });
+    expect(loremasterDoc.system.classLevels[2]).toMatchObject({
+      classId: 'loremaster-35e',
+      spellcastingSelections: ['wizard'],
+    });
+  });
+
   it('updates PF1e multiclass rows in place and preserves the other class', () => {
     const wizardDoc = applyD20LegacyClassTemplate(makePf1Doc(), wizardPf1, 2);
     const multiclassDoc = applyD20LegacyClassTemplate(wizardDoc, fighterPf1, 1, {
@@ -174,6 +384,43 @@ describe('applyD20LegacyClassTemplate', () => {
     expect(updatedFighterDoc.system.classSkills).toEqual(
       expect.arrayContaining(['spellcraft', 'climb'])
     );
+  });
+
+  it('seeds spellcasting-advancement targets for PF1e prestige casters', () => {
+    const wizardClericDoc = applyD20LegacyClassTemplate(
+      applyD20LegacyClassTemplate(makePf1Doc(), wizardPf1, 3),
+      clericPf1,
+      3,
+      { mode: 'add' }
+    );
+    const mysticTheurgeDoc = applyD20LegacyClassTemplate(wizardClericDoc, mysticTheurgePf1, 2, {
+      mode: 'add',
+    });
+    const loreMasterDoc = applyD20LegacyClassTemplate(wizardClericDoc, loreMasterPf1, 1, {
+      mode: 'add',
+    });
+    const wizardSorcererDoc = applyD20LegacyClassTemplate(
+      applyD20LegacyClassTemplate(makePf1Doc(), wizardPf1, 3),
+      sorcererPf1,
+      3,
+      { mode: 'add' }
+    );
+    const dragonDiscipleDoc = applyD20LegacyClassTemplate(wizardSorcererDoc, dragonDisciplePf1, 2, {
+      mode: 'add',
+    });
+
+    expect(mysticTheurgeDoc.system.classLevels[2]).toMatchObject({
+      classId: 'mystic-theurge',
+      spellcastingSelections: ['wizard', 'cleric'],
+    });
+    expect(loreMasterDoc.system.classLevels[2]).toMatchObject({
+      classId: 'lore-master',
+      spellcastingSelections: ['wizard'],
+    });
+    expect(dragonDiscipleDoc.system.classLevels[2]).toMatchObject({
+      classId: 'dragon-disciple',
+      spellcastingSelections: ['sorcerer'],
+    });
   });
 });
 

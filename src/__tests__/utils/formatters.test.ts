@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { formatCastingTime, formatDuration, formatRange } from '../../utils/formatters';
+import {
+  formatAreaOfEffect,
+  formatCastingTime,
+  formatDuration,
+  formatRange,
+} from '../../utils/formatters';
 
 describe('formatCastingTime', () => {
   it.each([
@@ -60,5 +65,20 @@ describe('formatDuration', () => {
     [{ type: 'unknown-duration' }, 'Unknown'],
   ])('formats %j as %s', (input, expected) => {
     expect(formatDuration(input as never)).toBe(expected);
+  });
+});
+
+describe('formatAreaOfEffect', () => {
+  it.each([
+    [undefined, undefined],
+    [{ type: 'cone', feet: 30 }, '30-foot cone'],
+    [{ type: 'cube', feet: 20 }, '20-foot cube'],
+    [{ type: 'cylinder', radius: 50, height: 100 }, '50-foot-radius, 100-foot-high cylinder'],
+    [{ type: 'line', length: 120, width: 5 }, '120-foot by 5-foot line'],
+    [{ type: 'sphere', radius: 20 }, '20-foot-radius sphere'],
+    [{ type: 'emanation', radius: 15 }, '15-foot emanation'],
+    [{ type: 'spread', radius: 10 }, '10-foot spread'],
+  ])('formats %j as %s', (input, expected) => {
+    expect(formatAreaOfEffect(input as never)).toBe(expected);
   });
 });
