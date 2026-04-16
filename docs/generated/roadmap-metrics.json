@@ -1,38 +1,65 @@
 {
-  "generatedAt": "2026-03-07T19:09:52.009Z",
+  "generatedAt": "<normalized>",
   "policy": {
     "dnd-5e-2014": {
-      "allowedSources": ["SRD 5.1", "SRD", "System Reference Document 5.1"],
+      "allowedSources": [
+        "SRD 5.1",
+        "SRD",
+        "System Reference Document 5.1"
+      ],
       "allowMissingSourceFor": []
     },
     "dnd-5e-2024": {
-      "allowedSources": ["SRD 5.2", "System Reference Document 5.2"],
+      "allowedSources": [
+        "SRD 5.2",
+        "System Reference Document 5.2"
+      ],
       "allowMissingSourceFor": []
     },
     "dnd-3.5e": {
-      "allowedSources": ["SRD 3.5", "PHB 3.5", "PHB", "Player's Handbook 3.5"],
+      "allowedSources": [
+        "SRD 3.5",
+        "PHB 3.5",
+        "PHB",
+        "Player's Handbook 3.5"
+      ],
       "allowMissingSourceFor": []
     },
     "pf1e": {
-      "allowedSources": ["Core Rulebook", "CRB"],
+      "allowedSources": [
+        "Core Rulebook",
+        "CRB"
+      ],
       "allowMissingSourceFor": []
     },
     "pf2e": {
-      "allowedSources": ["Core Rulebook", "CRB"],
+      "allowedSources": [
+        "Core Rulebook",
+        "CRB"
+      ],
       "allowMissingSourceFor": []
     },
     "mam3e": {
-      "allowedSources": ["Hero's Handbook", "HH", "Mutants & Masterminds Hero's Handbook"],
+      "allowedSources": [
+        "Hero's Handbook",
+        "HH",
+        "Mutants & Masterminds Hero's Handbook"
+      ],
       "allowMissingSourceFor": []
     },
     "daggerheart": {
-      "allowedSources": ["Daggerheart Core Rulebook", "Daggerheart"],
+      "allowedSources": [
+        "Daggerheart Core Rulebook",
+        "Daggerheart",
+        "Daggerheart SRD 1.0",
+        "System Reference Document 1.0"
+      ],
       "allowMissingSourceFor": []
     }
   },
-  "loaderSummary": {
+  "productReachableSummary": {
     "dnd-5e-2014": {
-      "spells": 238,
+      "spells": 244,
       "classes": 12,
       "species": 9,
       "backgrounds": 6,
@@ -47,7 +74,7 @@
       "powerModifiers": 0
     },
     "dnd-5e-2024": {
-      "spells": 315,
+      "spells": 320,
       "classes": 12,
       "species": 9,
       "backgrounds": 6,
@@ -62,8 +89,8 @@
       "powerModifiers": 0
     },
     "dnd-3.5e": {
-      "spells": 555,
-      "classes": 11,
+      "spells": 501,
+      "classes": 26,
       "species": 7,
       "backgrounds": 0,
       "traits": 0,
@@ -92,7 +119,7 @@
       "powerModifiers": 0
     },
     "pf2e": {
-      "spells": 146,
+      "spells": 143,
       "classes": 12,
       "species": 6,
       "backgrounds": 16,
@@ -120,6 +147,128 @@
       "feats": 0,
       "advantages": 74,
       "powerModifiers": 101
+    },
+    "daggerheart": {
+      "spells": 0,
+      "classes": 9,
+      "species": 19,
+      "backgrounds": 9,
+      "traits": 0,
+      "featureOptions": 0,
+      "archetypes": 0,
+      "complications": 0,
+      "monsters": 0,
+      "equipment": 353,
+      "feats": 0,
+      "advantages": 0,
+      "powerModifiers": 0
+    }
+  },
+  "repoResidentSummary": {
+    "dnd-5e-2014": {
+      "spells": 244,
+      "classes": 12,
+      "species": 9,
+      "backgrounds": 6,
+      "traits": 0,
+      "featureOptions": 106,
+      "archetypes": 0,
+      "complications": 0,
+      "monsters": 41,
+      "equipment": 230,
+      "feats": 0,
+      "advantages": 0,
+      "powerModifiers": 0
+    },
+    "dnd-5e-2024": {
+      "spells": 320,
+      "classes": 12,
+      "species": 9,
+      "backgrounds": 6,
+      "traits": 0,
+      "featureOptions": 0,
+      "archetypes": 0,
+      "complications": 0,
+      "monsters": 99,
+      "equipment": 204,
+      "feats": 87,
+      "advantages": 0,
+      "powerModifiers": 0
+    },
+    "dnd-3.5e": {
+      "spells": 501,
+      "classes": 26,
+      "species": 7,
+      "backgrounds": 0,
+      "traits": 0,
+      "featureOptions": 0,
+      "archetypes": 0,
+      "complications": 0,
+      "monsters": 0,
+      "equipment": 207,
+      "feats": 515,
+      "advantages": 0,
+      "powerModifiers": 0
+    },
+    "pf1e": {
+      "spells": 134,
+      "classes": 18,
+      "species": 7,
+      "backgrounds": 0,
+      "traits": 12,
+      "featureOptions": 0,
+      "archetypes": 0,
+      "complications": 0,
+      "monsters": 0,
+      "equipment": 70,
+      "feats": 86,
+      "advantages": 0,
+      "powerModifiers": 0
+    },
+    "pf2e": {
+      "spells": 143,
+      "classes": 12,
+      "species": 6,
+      "backgrounds": 16,
+      "traits": 0,
+      "featureOptions": 0,
+      "archetypes": 5,
+      "complications": 0,
+      "monsters": 0,
+      "equipment": 188,
+      "feats": 93,
+      "advantages": 0,
+      "powerModifiers": 0
+    },
+    "mam3e": {
+      "spells": 61,
+      "classes": 0,
+      "species": 0,
+      "backgrounds": 0,
+      "traits": 0,
+      "featureOptions": 0,
+      "archetypes": 15,
+      "complications": 28,
+      "monsters": 0,
+      "equipment": 150,
+      "feats": 0,
+      "advantages": 74,
+      "powerModifiers": 101
+    },
+    "daggerheart": {
+      "spells": 0,
+      "classes": 9,
+      "species": 19,
+      "backgrounds": 9,
+      "traits": 0,
+      "featureOptions": 0,
+      "archetypes": 0,
+      "complications": 0,
+      "monsters": 0,
+      "equipment": 353,
+      "feats": 0,
+      "advantages": 0,
+      "powerModifiers": 0
     }
   },
   "loaderAudit": [
@@ -129,13 +278,13 @@
       "category": "spells",
       "categoryLabel": "Spells/Powers",
       "metrics": {
-        "rawCount": 238,
-        "uniqueCount": 238,
+        "rawCount": 244,
+        "uniqueCount": 244,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 5.1": 238
+          "SRD 5.1": 244
         }
       }
     },
@@ -241,13 +390,13 @@
       "category": "spells",
       "categoryLabel": "Spells/Powers",
       "metrics": {
-        "rawCount": 315,
-        "uniqueCount": 315,
+        "rawCount": 320,
+        "uniqueCount": 320,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 5.2": 315
+          "SRD 5.2": 320
         }
       }
     },
@@ -353,13 +502,13 @@
       "category": "spells",
       "categoryLabel": "Spells/Powers",
       "metrics": {
-        "rawCount": 555,
-        "uniqueCount": 555,
+        "rawCount": 501,
+        "uniqueCount": 501,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 3.5": 555
+          "SRD 3.5": 501
         }
       }
     },
@@ -369,12 +518,13 @@
       "category": "classes",
       "categoryLabel": "Classes",
       "metrics": {
-        "rawCount": 11,
-        "uniqueCount": 11,
+        "rawCount": 26,
+        "uniqueCount": 26,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
+          "SRD 3.5": 15,
           "PHB 3.5": 11
         }
       }
@@ -529,13 +679,13 @@
       "category": "spells",
       "categoryLabel": "Spells/Powers",
       "metrics": {
-        "rawCount": 146,
-        "uniqueCount": 146,
+        "rawCount": 143,
+        "uniqueCount": 143,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "Core Rulebook": 146
+          "Core Rulebook": 143
         }
       }
     },
@@ -728,6 +878,70 @@
         "nonCompliantCount": 0,
         "sourceCounts": {
           "Hero's Handbook": 101
+        }
+      }
+    },
+    {
+      "systemId": "daggerheart",
+      "systemLabel": "Daggerheart",
+      "category": "classes",
+      "categoryLabel": "Classes",
+      "metrics": {
+        "rawCount": 9,
+        "uniqueCount": 9,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Daggerheart SRD 1.0": 9
+        }
+      }
+    },
+    {
+      "systemId": "daggerheart",
+      "systemLabel": "Daggerheart",
+      "category": "species",
+      "categoryLabel": "Species/Races",
+      "metrics": {
+        "rawCount": 19,
+        "uniqueCount": 19,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Daggerheart SRD 1.0": 19
+        }
+      }
+    },
+    {
+      "systemId": "daggerheart",
+      "systemLabel": "Daggerheart",
+      "category": "backgrounds",
+      "categoryLabel": "Backgrounds",
+      "metrics": {
+        "rawCount": 9,
+        "uniqueCount": 9,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Daggerheart SRD 1.0": 9
+        }
+      }
+    },
+    {
+      "systemId": "daggerheart",
+      "systemLabel": "Daggerheart",
+      "category": "equipment",
+      "categoryLabel": "Equipment",
+      "metrics": {
+        "rawCount": 353,
+        "uniqueCount": 353,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Daggerheart SRD 1.0": 353
         }
       }
     }

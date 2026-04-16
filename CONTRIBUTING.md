@@ -1,6 +1,6 @@
 # Contributing Guidelines
 
-**Last Updated**: March 7, 2026
+**Last Updated**: March 16, 2026
 
 This document outlines engineering principles and practices for maintaining code quality. Follow these guidelines to keep the codebase clean, maintainable, and comprehensible.
 
@@ -24,10 +24,19 @@ This document outlines engineering principles and practices for maintaining code
 ## Environment Requirements
 
 - Node.js 20.19+ (or 22.12+ / 24+). The test stack depends on this runtime.
-- `.nvmrc` pins `20.19.0`; use `nvm use` if you rely on nvm-managed shells.
+- `.nvmrc` and `.node-version` both pin `20.19.0`.
+- Manager path: use your preferred version manager to match the repo pin, then run normal `npm install` / `npm run verify` flows.
+- Bootstrap path: on host Node 18+, run `npm run bootstrap:node`, then `npm run pinned -- run <task>` if no version manager is available.
+- Manual fallback: if the host shell is below Node 18 or has no usable Node install, install Node `20.19.0` directly or fix the version manager before working in the repo.
 - `npm run test:coverage` is stricter than plain `npm test`: `@vitest/coverage-v8` requires `node:inspector/promises`, so Node 18 shells fail before any tests execute.
-- Current baseline: `npm run test:coverage -- --run --maxWorkers=1` passed on March 7, 2026 with 78 test files, 3214 tests, and 80.65% branch coverage under Node `v22.18.0`.
+- Current baseline: run `npm run verify` under Node `20.19+` and capture exact counts from the command output.
+- Latest recorded full pass: March 16, 2026 under Node `v20.19.0`. Treat the exact Vitest and Playwright totals as command output, not a hardcoded invariant in this file.
+- Update `docs/generated/verification-baseline.json` via `npm run record:verify-baseline -- --date "Month DD, YYYY" --node-version 20.19.0 [...]`; `npm run check:doc-drift` enforces the mirrored live-doc verification claims.
+- `npm run runtime:doctor` is the first stop when local Node policy, cached bootstrap runtime, or CI/runtime drift looks suspicious.
+- `docs/MASTER_PLAN.md` is the sole planning authority. If a roadmap statement in another doc drifts, update that doc to point back to the master plan instead of creating a competing backlog.
 - When you make a previously repo-only content family product-reachable, wire it through a loader first and rerun `npm run roadmap:metrics` so `docs/generated/roadmap-metrics.*` stays aligned with runtime reality.
+- Spell datasets now use normalized `spells/index.ts` catalog surfaces plus `spellIdAliases`. When canonicalizing spell ids or collapsing duplicates, preserve alias compatibility, rerun the spell parity suites, and regenerate roadmap metrics if the canonical counts change.
+- `npm run verify` now includes `check:doc-drift` after `check:generated-docs`; keep live docs, historical banners, workflow/runtime claims, and audited support-honesty copy aligned with the registered truth sources.
 
 ## Core Principles
 
@@ -429,10 +438,14 @@ import { VirtualList } from 'react-virtual';
 # Analyze bundle
 npm run build -- --analyze
 
-# Goals:
-# - Main bundle: <200KB gzipped
+# Enforced CI budgets:
+# - App chunk: <80KB gzipped
+# - Vendor chunk: <200KB gzipped
+# - Largest system-data chunk: <130KB gzipped
+# - Total JS: <700KB gzipped
+#
+# Stretch target:
 # - Per-system data: <100KB gzipped
-# - Total initial load: <300KB gzipped
 ```
 
 **Lazy load game system data:**
@@ -824,7 +837,8 @@ Before adding any content:
 2. Add source comment: `// Source: SRD 3.5, PHB p.XXX`
 3. Run tests: `npm test`
 
-See `SRD_COMPLIANCE.md` for detailed rules.
+See `src/utils/openContentPolicy.ts` for the enforced source filter and
+`docs/generated/roadmap-metrics.md` for the current compliance audit.
 
 ---
 

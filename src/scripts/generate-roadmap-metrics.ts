@@ -9,6 +9,13 @@ import {
   loadBackgroundsForSystem,
   loadComplicationsForSystem,
   loadClassesForSystem,
+  loadDaggerheartAncestriesForSystem,
+  loadDaggerheartArmorForSystem,
+  loadDaggerheartClassesForSystem,
+  loadDaggerheartCommunitiesForSystem,
+  loadDaggerheartConsumablesForSystem,
+  loadDaggerheartLootForSystem,
+  loadDaggerheartWeaponsForSystem,
   loadEquipmentForSystem,
   loadFeatsForSystem,
   loadFeatureOptionsForSystem,
@@ -97,19 +104,36 @@ const systems: SystemDefinition[] = [
   { id: 'pf1e', label: 'Pathfinder 1e' },
   { id: 'pf2e', label: 'Pathfinder 2e' },
   { id: 'mam3e', label: 'Mutants & Masterminds 3e' },
+  { id: 'daggerheart', label: 'Daggerheart' },
 ];
 
 const loaderDefinitions: LoaderDefinition[] = [
   { key: 'spells', label: 'Spells/Powers', load: (systemId) => loadSpellsForSystem(systemId) },
-  { key: 'classes', label: 'Classes', load: (systemId) => loadClassesForSystem(systemId) },
-  { key: 'species', label: 'Species/Races', load: (systemId) => loadSpeciesForSystem(systemId) },
+  {
+    key: 'classes',
+    label: 'Classes',
+    load: (systemId) =>
+      systemId === 'daggerheart'
+        ? loadDaggerheartClassesForSystem(systemId)
+        : loadClassesForSystem(systemId),
+  },
+  {
+    key: 'species',
+    label: 'Species/Races',
+    load: (systemId) =>
+      systemId === 'daggerheart'
+        ? loadDaggerheartAncestriesForSystem(systemId)
+        : loadSpeciesForSystem(systemId),
+  },
   {
     key: 'backgrounds',
     label: 'Backgrounds',
     load: (systemId) =>
-      systemId === 'pf2e'
-        ? loadPf2eBackgroundsForSystem(systemId)
-        : loadBackgroundsForSystem(systemId),
+      systemId === 'daggerheart'
+        ? loadDaggerheartCommunitiesForSystem(systemId)
+        : systemId === 'pf2e'
+          ? loadPf2eBackgroundsForSystem(systemId)
+          : loadBackgroundsForSystem(systemId),
   },
   { key: 'traits', label: 'Traits', load: (systemId) => loadTraitsForSystem(systemId) },
   {
@@ -131,7 +155,19 @@ const loaderDefinitions: LoaderDefinition[] = [
     load: (systemId) => loadComplicationsForSystem(systemId),
   },
   { key: 'monsters', label: 'Monsters', load: (systemId) => loadMonstersForSystem(systemId) },
-  { key: 'equipment', label: 'Equipment', load: (systemId) => loadEquipmentForSystem(systemId) },
+  {
+    key: 'equipment',
+    label: 'Equipment',
+    load: async (systemId) =>
+      systemId === 'daggerheart'
+        ? [
+            ...(await loadDaggerheartWeaponsForSystem(systemId)),
+            ...(await loadDaggerheartArmorForSystem(systemId)),
+            ...(await loadDaggerheartLootForSystem(systemId)),
+            ...(await loadDaggerheartConsumablesForSystem(systemId)),
+          ]
+        : loadEquipmentForSystem(systemId),
+  },
   { key: 'feats', label: 'Feats', load: (systemId) => loadFeatsForSystem(systemId) },
   { key: 'advantages', label: 'Advantages', load: (systemId) => loadAdvantagesForSystem(systemId) },
   {
@@ -223,43 +259,90 @@ function markdownTableRow(cells: Array<string | number>): string {
   return `| ${cells.join(' | ')} |`;
 }
 
-function buildMarkdownReport(
-  generatedAtIso: string,
-  loaderRows: LoaderAuditRow[],
-  moduleRows: ModuleAuditRow[]
-): string {
-  const loaderBySystem = new Map<GameSystemId, Record<LoaderCategory, number>>();
+function createEmptyCategoryCounts(): Record<LoaderCategory, number> {
+  return {
+    spells: 0,
+    classes: 0,
+    species: 0,
+    backgrounds: 0,
+    traits: 0,
+    featureOptions: 0,
+    archetypes: 0,
+    complications: 0,
+    monsters: 0,
+    equipment: 0,
+    feats: 0,
+    advantages: 0,
+    powerModifiers: 0,
+  };
+}
+
+function createSummaryBySystem(
+  loaderRows: LoaderAuditRow[]
+): Map<GameSystemId, Record<LoaderCategory, number>> {
+  const summary = new Map<GameSystemId, Record<LoaderCategory, number>>();
   systems.forEach((system) => {
-    loaderBySystem.set(system.id, {
-      spells: 0,
-      classes: 0,
-      species: 0,
-      backgrounds: 0,
-      traits: 0,
-      featureOptions: 0,
-      archetypes: 0,
-      complications: 0,
-      monsters: 0,
-      equipment: 0,
-      feats: 0,
-      advantages: 0,
-      powerModifiers: 0,
-    });
+    summary.set(system.id, createEmptyCategoryCounts());
   });
 
   loaderRows.forEach((row) => {
-    const existing = loaderBySystem.get(row.systemId);
+    const existing = summary.get(row.systemId);
     if (!existing) {
       return;
     }
     existing[row.category] = row.metrics.uniqueCount;
   });
 
+  return summary;
+}
+
+function applyRepoResidentOverrides(
+  summary: Map<GameSystemId, Record<LoaderCategory, number>>,
+  moduleRows: ModuleAuditRow[]
+): Map<GameSystemId, Record<LoaderCategory, number>> {
+  const repoResident = new Map<GameSystemId, Record<LoaderCategory, number>>();
+
+  for (const [systemId, counts] of summary.entries()) {
+    repoResident.set(systemId, { ...counts });
+  }
+
+  const overlayCategoryMap: Partial<Record<OpenContentCategory, LoaderCategory>> = {
+    archetypes: 'archetypes',
+    complications: 'complications',
+    powerModifiers: 'powerModifiers',
+    advantages: 'advantages',
+    powers: 'spells',
+  };
+
+  moduleRows.forEach((row) => {
+    const targetCategory = overlayCategoryMap[row.category];
+    if (!targetCategory) {
+      return;
+    }
+
+    const systemCounts = repoResident.get(row.systemId);
+    if (!systemCounts) {
+      return;
+    }
+
+    systemCounts[targetCategory] = Math.max(systemCounts[targetCategory], row.metrics.uniqueCount);
+  });
+
+  return repoResident;
+}
+
+function buildMarkdownReport(
+  generatedAtIso: string,
+  loaderRows: LoaderAuditRow[],
+  moduleRows: ModuleAuditRow[]
+): string {
+  const loaderBySystem = createSummaryBySystem(loaderRows);
+
   const lines: string[] = [];
   lines.push(`_Generated: ${generatedAtIso}_`);
   lines.push('_Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_');
   lines.push('');
-  lines.push('### Loader Totals (Authoritative)');
+  lines.push('### Loader Totals (Product-Reachable)');
   lines.push(
     markdownTableRow([
       'System',
@@ -279,7 +362,7 @@ function buildMarkdownReport(
     );
   });
   lines.push('');
-  lines.push('### Extended Loader Totals');
+  lines.push('### Extended Loader Totals (Product-Reachable)');
   lines.push(
     markdownTableRow([
       'System',
@@ -327,7 +410,7 @@ function buildMarkdownReport(
     );
   });
   lines.push('');
-  lines.push('### Referenced Module Audit (Raw Exports)');
+  lines.push('### Referenced Module Audit (Repo-Resident Raw Exports)');
   lines.push(
     markdownTableRow(['Dataset', 'Unique Items', 'Duplicates', 'Missing Source', 'Non-Compliant'])
   );
@@ -355,9 +438,9 @@ function buildMarkdownReport(
   );
 
   lines.push('### Policy Notes');
-  lines.push('- Loader totals above are the canonical roadmap counts.');
+  lines.push('- Loader totals above are the canonical product-reachable roadmap counts.');
   lines.push(
-    '- Non-loader rows identify compliance debt in implementation files that are not currently loader-backed.'
+    '- Raw-export rows below capture repo-resident datasets that may exceed product reachability.'
   );
   if (totalMissingSource === 0) {
     lines.push(
@@ -462,24 +545,21 @@ async function main(): Promise<void> {
   const generatedAtIso = new Date().toISOString();
   const markdown = buildMarkdownReport(generatedAtIso, loaderRows, moduleRows);
 
-  const loaderSummary = Object.fromEntries(
-    systems.map((system) => {
-      const perCategory = Object.fromEntries(
-        loaderDefinitions.map((loader) => {
-          const row = loaderRows.find(
-            (candidate) => candidate.systemId === system.id && candidate.category === loader.key
-          );
-          return [loader.key, row ? row.metrics.uniqueCount : 0];
-        })
-      );
-      return [system.id, perCategory];
-    })
+  const productReachableSummaryMap = createSummaryBySystem(loaderRows);
+  const repoResidentSummaryMap = applyRepoResidentOverrides(productReachableSummaryMap, moduleRows);
+
+  const productReachableSummary = Object.fromEntries(
+    systems.map((system) => [system.id, productReachableSummaryMap.get(system.id)])
+  );
+  const repoResidentSummary = Object.fromEntries(
+    systems.map((system) => [system.id, repoResidentSummaryMap.get(system.id)])
   );
 
   const output = {
     generatedAt: generatedAtIso,
     policy: strictOpenContentPolicy,
-    loaderSummary,
+    productReachableSummary,
+    repoResidentSummary,
     loaderAudit: loaderRows,
     moduleAudit: moduleRows,
   };

@@ -1,8 +1,16 @@
 # Evidence-Linked Parity Remediation Plan
 
+> Historical execution record: the planning content in this file has been subsumed by `docs/MASTER_PLAN.md`, which is now the sole planning authority.
+>
+> Unique historical value: this file preserves the exhaustive parity workstreams, decision matrix, and row-to-remediation mapping used during the March 2026 remediation push.
+>
+> Internal references to `docs/STATUS.md` below reflect the repo state at the time of writing and are not current planning instructions.
+
 Last updated: March 7, 2026
 
-Status note (March 7, 2026): the Vitest coverage gate is green again at 80.65% branch coverage (78 files / 3214 tests) under Node `v22.18.0`, baseline Daggerheart engine/sheet coverage now exists, a Daggerheart browser create/persist flow is covered in Playwright, shared 5e subclass selection is live in-sheet, shared 5e feat ASI/proficiency automation is live in-sheet, shared 5e-2014 feature-option browsing/persistence is live in-sheet, PF1e prestige classes are loader-backed/selectable in the shared legacy sheet, PF2e backgrounds/archetypes already flow through shared loaders, M&M archetypes/complications/power modifiers are now loader-backed and product-reachable in the native sheet, and the shared tab trigger now correctly activates loader-backed tabs while running their lazy-load callbacks. The remaining live parity backlog is now mostly Daggerheart data integration and 3.5e prestige normalization.
+Status note (March 7, 2026): at the time of this remediation snapshot, the Vitest coverage gate was green again at 80.65% branch coverage (78 files / 3214 tests) under Node `v22.18.0`, baseline Daggerheart engine/sheet coverage existed, a Daggerheart browser create/persist flow was covered in Playwright, shared 5e subclass selection was live in-sheet, shared 5e feat ASI/proficiency automation was live in-sheet, shared 5e-2014 feature-option browsing/persistence was live in-sheet, PF1e prestige classes were loader-backed/selectable in the shared legacy sheet, PF2e backgrounds/archetypes already flowed through shared loaders, M&M archetypes/complications/power modifiers were loader-backed and product-reachable in the native sheet, and the shared tab trigger correctly activated loader-backed tabs while running their lazy-load callbacks. The remaining work at that time was mostly Daggerheart data integration and 3.5e prestige normalization.
+
+Current repo truth note (March 16, 2026): this file is now primarily a historical execution record. Use `docs/MASTER_PLAN.md` for the live backlog and `docs/generated/roadmap-metrics.md` for current counts. Since this snapshot, Daggerheart data productization, 3.5e prestige reachability, shared spell preparation, and the spell-catalog parity baseline have landed; the remaining live work is narrower and is tracked in the master plan.
 
 Source of truth for gaps: `docs/EVIDENCE_LINKED_PARITY_AUDIT.md`
 

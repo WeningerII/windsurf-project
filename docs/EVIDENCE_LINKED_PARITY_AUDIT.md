@@ -1,8 +1,16 @@
 # Evidence-Linked Parity Audit
 
+> Historical audit snapshot: the planning implications from this document have been subsumed by `docs/MASTER_PLAN.md`, which is now the sole planning authority.
+>
+> Unique historical value: this file preserves the evidence snapshot and row-level findings from the March 2026 audit before the later productization work landed.
+>
+> Internal references to `docs/STATUS.md` below reflect the repo state at the time of writing and are not current planning instructions.
+
 Last verified: March 6, 2026
 
-Status note (March 7, 2026): this remains a March 6 parity snapshot. Since then, the repo's regression baseline has moved forward to 78 passing test files / 3214 passing tests with 80.65% branch coverage under Node `v22.18.0`, baseline Daggerheart engine/sheet coverage has landed, a Daggerheart browser create/persist flow now exists in Playwright, shared 5e subclass selection is live in-sheet, shared 5e feat ASI/proficiency automation is live in-sheet, shared 5e-2014 feature-option browsing/persistence is live in-sheet, PF1e prestige classes are loader-backed/selectable in the shared legacy sheet, PF2e backgrounds/archetypes already flow through shared loaders, M&M archetypes/complications/power modifiers are now loader-backed and product-reachable in the native sheet, and the shared tab trigger now correctly activates loader-backed tabs while running their lazy-load callbacks. Re-audit the specific rows below before treating every doc-drift finding as still live.
+Status note (March 7, 2026): this remains a March 6 parity snapshot. By March 7, 2026, the repo's regression baseline had already moved forward to 78 passing test files / 3214 passing tests with 80.65% branch coverage under Node `v22.18.0`, baseline Daggerheart engine/sheet coverage had landed, a Daggerheart browser create/persist flow existed in Playwright, shared 5e subclass selection was live in-sheet, shared 5e feat ASI/proficiency automation was live in-sheet, shared 5e-2014 feature-option browsing/persistence was live in-sheet, PF1e prestige classes were loader-backed/selectable in the shared legacy sheet, PF2e backgrounds/archetypes already flowed through shared loaders, M&M archetypes/complications/power modifiers were loader-backed and product-reachable in the native sheet, and the shared tab trigger correctly activated loader-backed tabs while running their lazy-load callbacks. Re-audit the specific rows below before treating every finding as current.
+
+Current repo truth note (March 16, 2026): many rows below are historical only. Use `docs/MASTER_PLAN.md`, `docs/STATUS.md`, and `docs/generated/roadmap-metrics.md` for live status. Since this snapshot, Daggerheart is data-backed, PF2e archetypes and PF1e traits are product-reachable, M&M archetype/complication/modifier surfaces are shipped, 3.5e prestige support is product-reachable, and the canonical spell catalogs now sit at 501 loader-backed D&D 3.5e spells and 143 loader-backed PF2e spells.
 
 ## Executive summary
 
@@ -33,6 +41,8 @@ Measured loader snapshot from a local `tsx` pass on March 6, 2026:
 | M&M 3e | 61 | 0 | 0 | 0 | 0 | 150 | 0 | 74 |
 | Daggerheart | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 
+These table counts are intentionally preserved as the March 6 historical snapshot. They are not the current repo totals.
+
 High-confidence findings:
 - False or dead user-facing surfaces exist in current product: 5e monster browsing claims, the shared D20 monster tab on systems with no monsters, and top-level Daggerheart readiness messaging.
 - At the time of the March 6 snapshot, repo-backed categories were materially ahead of product reachability in PF2e archetypes, 3.5e prestige classes, PF1e prestige classes, 5e-2014 special-ability datasets, and several M&M categories.
@@ -52,6 +62,7 @@ The following rows should not be treated as live blockers after the March 7, 202
 - `RR-09`: the misleading 5e-2014 empty Feats affordance is gone.
 - `UF-10`: baseline Daggerheart engine/sheet coverage and a Daggerheart Playwright smoke flow now exist; the remaining gap is breadth, not zero coverage.
 - `UF-11`, `UF-12`: README and status/docs can now be aligned to current product reachability instead of the March 6 doc-drift state.
+- Spell-catalog parity work since this snapshot has canonicalized duplicate spell rows through alias-safe lookup, so current spell totals are lower than the preserved March 6 raw snapshot in D&D 3.5e and PF2e.
 
 No direct non-parity proof was found in this pass for:
 - D&D 5e-2024 loader-backed core categories

@@ -1,29 +1,26 @@
 # Multi-System RPG Character Sheet
 
-![CI](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)
-[![codecov](https://codecov.io/gh/<owner>/<repo>/graph/badge.svg)](https://codecov.io/gh/<owner>/<repo>)
-
-Multi-system RPG character sheet using **ONLY SRD/OGL content** across 7 registered game systems. Six systems currently ship with full or partial product support; Daggerheart remains scaffold-only.
+Multi-system RPG character sheet using **only open-license SRD content** across 7 registered game systems. The repo ships a mix of full and partial product slices; use [docs/MASTER_PLAN.md](docs/MASTER_PLAN.md) for the canonical roadmap, [docs/STATUS.md](docs/STATUS.md) for the current-state summary, and [docs/generated/roadmap-metrics.md](docs/generated/roadmap-metrics.md) for authoritative loader-backed counts.
 
 ## 🎯 Project Status
 
-- ✅ **D&D 5e-2024**: SRD Subset - 315 spells, 87 feats, 99 monsters, 204 equipment items
-- ✅ **D&D 5e-2014**: SRD Subset - 238 spells, 41 monsters, 230 equipment items, 106 loader-backed feature options, all core classes
-- ✅ **Pathfinder 2e**: Core product support - 146 spells, 93 feats, 188 equipment, 12 classes
-- ✅ **D&D 3.5e**: Partial product support - 555 spells (SRD), 515 feats, 11 loader-backed base classes
-- ✅ **Pathfinder 1e**: Partial product support - 134 spells, 86 feats, 70 equipment, 18 loader-backed classes
-- ✅ **Mutants & Masterminds 3e**: Core product support - 61 powers, 74 advantages, 150 equipment, 15 archetypes, 28 complications, 101 power modifiers
-- ⚠️ **Daggerheart**: Scaffold only - manual-entry sheet, no local loader-backed content yet
-- ✅ **Build**: Passing (0 errors)
-- ✅ **Type Safety**: Strict TypeScript
-- ✅ **Coverage**: 80.65% branch coverage on March 7, 2026 (`npm run test:coverage` under Node 22.18.0)
-- ✅ **SRD Compliance**: Strict - no proprietary content
+- ✅ **Verification**: `npm run verify` passed on March 16, 2026 under Node `20.19.0`
+- ✅ **D&D 5e 2014 + 2024**: full SRD-backed character management with shared 5e sheet flows and structured always-prepared support
+- ✅ **Pathfinder 2e**: native sheet with loader-backed archetypes, backgrounds, feats, spells, and equipment
+- ✅ **D&D 3.5e + Pathfinder 1e**: shared legacy sheet with base/prestige-class product reachability and Vancian tracked/prepared spell workflows
+- ✅ **Spell catalog parity baseline**: shared spell indexes and alias-safe lookups across all five spell systems, including PF2e rank-10 browser support
+- ✅ **Mutants & Masterminds 3e**: native point-buy sheet with browseable SRD reference surfaces
+- ✅ **Daggerheart**: partial SRD-backed support with selectors, templates, equipment, domains, and domain-card loadouts
+- ✅ **Open-content policy**: strict source-filtered SRD/core-only shipping
 
 ## 🚀 Quick Start
 
 ### Requirements
 - **Node.js**: 20.19+ (or 22.12+ / 24+)
-- **Runtime Pin**: `.nvmrc` is set to `20.19.0`; run `nvm use` if you use nvm
+- **Runtime Pin**: `.nvmrc` and `.node-version` both pin `20.19.0`
+- **Manager Path**: Use your preferred version manager to match the repo pin, then run normal `npm install` / `npm run verify` flows
+- **Bootstrap Path**: On host Node 18+, run `npm run bootstrap:node`, then `npm run pinned -- run <task>` if no version manager is available
+- **Manual Fallback**: If the host shell is below Node 18 or has no usable Node install, install Node `20.19.0` manually or fix your version manager before using the repo
 - **Package Manager**: npm (comes with Node.js)
 - **Browser**: Modern browser with ES2020+ support
 
@@ -33,11 +30,13 @@ Multi-system RPG character sheet using **ONLY SRD/OGL content** across 7 registe
 git clone <repository-url>
 cd windsurf-project
 
-# Match the pinned runtime if you use nvm
-nvm use
-
-# Install dependencies
+# Manager path: match the repo pin, then install normally
+# Example if you use nvm:
+# nvm use
 npm install
+
+# Bootstrap path: host Node 18+ with no working version manager
+# npm run bootstrap:node
 ```
 
 ### Development Commands
@@ -47,12 +46,15 @@ npm install
 npm run dev        # Start dev server (http://localhost:5173)
 npm run build      # Production build to dist/
 npm run preview    # Preview production build
+npm run verify     # Full repo verification pass (Node 20.19+ / 22.12+ / 24+)
+npm run runtime:doctor  # Show host/runtime policy state and recovery commands
 ```
 
 **Code Quality:**
 ```bash
 npm run lint       # Run ESLint
 npm run validate   # Validate all game data
+npm run check:doc-drift  # Validate live docs, historical banners, and audited support-copy claims
 npm test           # Run the Vitest suite
 npm run test:ui    # Interactive test UI (Vitest)
 npm run test:coverage  # Generate coverage report (Node 20.19+ required)
@@ -66,8 +68,8 @@ npx tsc --noEmit   # TypeScript type checking
 ### Environment Setup
 
 **First Time Setup:**
-1. Run `nvm use` (or otherwise install Node.js 20.19+): `node --version`
-2. Run `npm install` to install dependencies
+1. Manager path: use your preferred version manager to match `.nvmrc` / `.node-version`, then run `npm install`
+2. Bootstrap path: if the shell is on host Node 18+ with no version manager, run `npm run bootstrap:node`
 3. Run `npm test` to verify installation
 4. Run `npm run dev` to start development server
 5. Open http://localhost:5173 in your browser
@@ -107,6 +109,8 @@ npm test -- --clearCache
 
 If `npm run test:coverage` fails before running any tests, confirm the shell is on Node 20.19+ or newer. The V8 coverage provider depends on `node:inspector/promises`, which is not available in Node 18.
 
+If `npm install` fails immediately on an unsupported host runtime, run `npm run runtime:doctor` to see the current host/runtime state. On host Node 18+ you can recover with `npm run bootstrap:node`, then use `npm run pinned -- run <task>` for repo commands until your normal version-manager path is fixed.
+
 **TypeScript Errors:**
 ```bash
 # Rebuild TypeScript
@@ -124,7 +128,9 @@ npx tsc --noEmit
 - **5e 2014 Feature-Option Browser**: Browse and persist SRD invocations, fighting styles, metamagic, maneuvers, ki abilities, channel divinity options, wild shapes, and smites from the shared Features tab
 - **5e Feat Automation**: 2024 feat selection now applies supported ASIs and proficiency grants; deeper feat riders remain manual
 - **5e Ability Score Planner**: Use a built-in 27-point-buy planner or assign the standard array from the shared 5e ability tab
+- **Cross-System Spell Browser**: Normalized spell catalogs now drive shared browser filters, alias-safe lookup, PF2e rank-10 level filtering, and richer target/effect/area/scaling display
 - **M&M Reference Surfaces**: Pin loader-backed archetypes, insert SRD complications, and browse the shared power-modifier catalog from the native M&M sheet
+- **PF2e + M&M Native Sheet Decomposition**: Both systems now split headers, tab bodies, and browser-heavy surfaces into dedicated components, with state/template orchestration moved into system-local controller hooks and browse surfaces prewarming loaders and lazy chunks on focus/hover
 - **Character Management**: Create, edit, and manage characters across 7 game systems
 - **Export/Import**: Backup and share characters via JSON files
 - **Auto-Save**: Changes automatically saved to browser localStorage
@@ -135,30 +141,40 @@ npx tsc --noEmit
 
 ### Deployment
 ```bash
-# Vercel
-vercel --prod
-
-# Manual
-npm run build && deploy dist/
+# Netlify CI deploys this repo in GitHub Actions.
+# Manual deploy:
+npm run build
+netlify deploy --dir=dist --prod
 ```
+
+Required GitHub Actions secrets for Netlify deploys:
+- `NETLIFY_AUTH_TOKEN`
+- `NETLIFY_SITE_ID`
 
 ## 📁 Project Structure
 
 ```
 src/
+├── systems/              # Per-system definitions, engines, sheets, controllers
+├── hooks/                # App and system-local state orchestration
+├── registry/             # System registry and engine contracts
+├── utils/                # Loaders, templates, storage, reporting, helpers
 ├── data/
 │   ├── dnd/
 │   │   ├── 5e-2014/      # D&D 5e SRD 5.1 (2014)
-│   │   └── 3.5e/         # D&D 3.5e (ready for content)
+│   │   ├── 5e-2024/      # D&D 5e SRD 5.2 (2024)
+│   │   └── 3.5e/         # D&D 3.5e SRD
 │   ├── pathfinder/
-│   └── mutants-and-masterminds/
+│   ├── mutants-and-masterminds/
+│   └── daggerheart/
 ├── types/                # TypeScript definitions
-├── validation/           # Data validation
 ├── components/           # React UI components
-└── constants/            # Type-safe constants
+└── validation/           # Data validation
 ```
 
-## 🎲 Implemented Systems (SRD/OGL Content Only)
+## 🎲 Implemented Systems (Open-License SRD Content Only)
+
+Counts below summarize the current generated metrics in [docs/generated/roadmap-metrics.md](docs/generated/roadmap-metrics.md).
 
 ### D&D 5th Edition (2024) - SRD 5.2 ✅
 
@@ -166,7 +182,7 @@ src/
 - Species: 9/9 core species
 - Classes: 12/12 with full 1-20 progressions
 - Subclasses: 12/12 (one per class)
-- Spells: 315 (26 cantrips + 289 leveled spells)
+- Spells: 320 (26 cantrips + 294 leveled spells)
 - Monsters: 99 creatures across 14 types
 - Backgrounds: 6 core backgrounds
 - Equipment: 204 items (39 weapons, 13 armor, 50 gear, 102 magic items)
@@ -179,7 +195,7 @@ src/
 **SRD Subset Implemented**:
 - Species: 9/9 core species
 - Classes: 12/12 with subclasses
-- Spells: 238 (SRD only)
+- Spells: 244 (SRD only)
 - Monsters: 41
 - Equipment: 230 items
 - Feature Options: 106 loader-backed entries surfaced through the shared Features tab
@@ -201,11 +217,11 @@ src/
 - Feats: 86 feats (Core Rulebook only)
 - Equipment: 70 items
 
-**Status**: Base classes plus vetted CRB prestige classes are shipped; some prestige-caster spell progression still requires manual tracking in the sheet
+**Status**: Base classes plus vetted CRB prestige classes are shipped, and prestige spellcasting advancement is now automated for the shipped prestige casters. Assassin is no longer misclassified as a spell-progressing prestige class.
 
 ### Pathfinder 2e - Core Product Support ✅
 **Implemented**:
-- Spells: 146 spells
+- Spells: 143 spells
 - Classes: 12 core classes
 - Feats: 93 feats (Core Rulebook only)
 - Ancestries: 6 core ancestries
@@ -213,17 +229,17 @@ src/
 - Archetypes: 5 loader-backed archetypes in the native sheet
 - Equipment: 188 items
 
-**Status**: Core product support is shipped, including loader-backed backgrounds and archetypes in the PF2e sheet
+**Status**: Core product support is shipped, including loader-backed backgrounds and archetypes in the PF2e sheet, shared browser support through rank 10, and alias-safe canonical handling for the remaining cross-rank duplicate spell ids.
 
 ### D&D 3.5e - Base Product Support ✅ (SRD-Only)
 **Implemented**: 
-- Spells: 555 (SRD spell list)
-- Base Classes: 11 core classes
+- Spells: 501 canonical loader-backed spells (after alias-safe duplicate collapse)
+- Classes: 26 loader-backed classes (11 core + 15 core SRD prestige classes)
 - Feats: 515 (after open-content filtering)
 - Equipment: 38 weapons, 19 armor, 153 gear, 19 magic items
 - Races: 7
 
-**Status**: Reachable counts are now truth-aligned to the 11 loader-backed base classes; prestige classes remain repo-backed and need normalization before productization
+**Status**: Reachable counts now include the full core SRD prestige catalog: Arcane Archer, Arcane Trickster, Archmage, Assassin, Blackguard, Dragon Disciple, Duelist, Dwarven Defender, Eldritch Knight, Hierophant, Horizon Walker, Loremaster, Mystic Theurge, Shadowdancer, and Thaumaturgist. Prestige-caster rows now surface in-sheet spellcasting-advancement selectors for the normalized dual-progression classes, and the canonical spell catalog now resolves collapsed class-split duplicates through aliases.
 
 ### Mutants & Masterminds 3e - Core Product Support ✅
 **Implemented**:
@@ -237,17 +253,33 @@ src/
 
 **Status**: Core power/advantage/equipment support is shipped alongside loader-backed archetype pinning, complication insertion, and modifier catalog reporting. Archetypes remain reference-only and do not auto-build characters.
 
+### Daggerheart - Partial Product Support ✅
+**Implemented**:
+- Classes: 9 SRD-backed classes with subclass reference data
+- Ancestries: 19 SRD-backed ancestry options
+- Communities: 9 SRD-backed community options
+- Domains: 9 SRD-backed domains with class mappings
+- Domain Cards: 189 SRD-backed cards with loadout/vault browsing and persistence
+- Equipment: 204 SRD-backed weapons, 34 SRD-backed armor entries, 61 loot entries, and 54 consumables with active/stowed loadout and inventory support
+- Sheet support: selector-backed class, ancestry, community, and subclass choices with in-sheet SRD reference panels
+- Starter templates: class, ancestry, and community selections seed supported starting stats and inventory
+- Browse tabs: in-sheet class, ancestry, community, weapon, and armor libraries with direct apply actions
+- Card library: in-sheet domain-card browser with real add-to-loadout / add-to-vault flows
+- Loadout automation: active armor now derives Armor Score and damage thresholds; equipped weapons enforce burden and slot rules
+
+**Status**: Daggerheart now ships official SRD-backed identity data, domains, domain cards, weapons, armor, loot, consumables, starter templates for supported starting stats and inventory, and browseable in-sheet reference libraries. Deeper card-effect automation remains future work.
+
 ## 📊 Quality Metrics
 
 | Metric | Status |
 |--------|--------|
 | **Build** | Passing ✅ |
-| **Tests** | Passing ✅ |
-| **Coverage** | 80.65% branch (March 7, 2026) ✅ |
+| **Verification** | `npm run verify` green on March 16, 2026 ✅ |
+| **Coverage Gate** | Passing under Node 20.19+ ✅ |
 | **Lint** | 0 Errors ✅ |
 | **Type Safety** | 100% Strict ✅ |
-| **SRD Compliance** | **STRICT - SRD/OGL Only** ✅ |
-| **System Support** | 6 full/partial + 1 scaffold ✅ |
+| **Open-Content Compliance** | **STRICT - source-filtered open-license SRD only** ✅ |
+| **System Support** | 7 full/partial ✅ |
 | **Architecture** | V2 Document & Data Model ✅ |
 
 ## 🔍 Validation System
@@ -268,10 +300,11 @@ Validates:
 
 ## 📚 Documentation
 
-- **docs/STATUS.md** - Current project status, remaining work, known gaps, and verified test baseline
-- **docs/generated/roadmap-metrics.md** - Generated loader-backed content counts and compliance audit
-- **docs/EVIDENCE_LINKED_PARITY_AUDIT.md** - March 6, 2026 parity audit snapshot
-- **docs/EVIDENCE_LINKED_PARITY_REMEDIATION_PLAN.md** - Evidence-linked remediation sequencing
+- **docs/MASTER_PLAN.md** - Canonical roadmap and planning authority
+- **docs/STATUS.md** - Current-state summary and verified test baseline
+- **docs/generated/roadmap-metrics.md** - Generated product-reachable counts plus raw-export audit
+- **docs/EVIDENCE_LINKED_PARITY_AUDIT.md** - Historical March 2026 audit snapshot
+- **docs/EVIDENCE_LINKED_PARITY_REMEDIATION_PLAN.md** - Historical remediation sequencing record
 - **CONTRIBUTING.md** - Developer guide, environment requirements, and engineering standards
 
 ## 🛠️ Development Guide
@@ -296,31 +329,22 @@ import { WeaponProficiency, ArmorProficiency, Skill } from './constants/proficie
 weaponProficiencies: [WeaponProficiency.SIMPLE, WeaponProficiency.MARTIAL]
 ```
 
-## 🎯 Roadmap
+## 🎯 Planning
 
-### Completed
-- ✅ UI/UX polish — Responsive layouts, dark mode, ConfirmDialog modals, toast notifications
-- ✅ Dice roller — Integrated dice rolling with system-aware modifiers
-- ✅ Performance — Code splitting, partial lazy loading (sheet-internal components), gzip/brotli compression, bundle budget CI gate
-- ✅ PWA/offline — Service worker + web manifest for offline access
-- ✅ IndexedDB — Dual-write storage with auto-migration from localStorage
-- ✅ Undo/redo — State history for accidental edit recovery
-- ✅ Campaign management — Campaign CRUD with party tracking
-
-### Future
-- **Backend API** — Optional server sync for cross-device support; no checked-in API spec doc today
-- **Additional game systems** — Daggerheart scaffold registered; more systems can follow the registry pattern
+- `docs/MASTER_PLAN.md` is the sole roadmap and planning authority.
+- `docs/STATUS.md` is a concise current-state summary, not a second backlog.
+- `docs/generated/roadmap-metrics.md` carries the authoritative generated count tables.
 
 ## 📜 Legal & Licensing
 
-This project uses content from the **System Reference Document 5.1** under the **Open Gaming License (OGL) 1.0a**.
+This project uses only open-license reference content, filtered at load time by source attribution.
 
-- ✅ All content is SRD 5.1 compliant
-- ✅ No Product Identity used
-- ✅ No copyrighted material beyond SRD
-- ✅ One subclass per class (SRD limit)
+- ✅ D&D and Pathfinder content is limited to the allowed SRD/core source strings enforced in `src/utils/openContentPolicy.ts`
+- ✅ Daggerheart content is limited to **Daggerheart SRD 1.0** / **System Reference Document 1.0** source strings
+- ✅ No product-identity text is intentionally shipped outside the allowed open-content sources
+- ✅ Loader-backed content is source-filtered before reaching the product UI
 
-See documentation on Open Content Policy.
+See `src/utils/openContentPolicy.ts` and `docs/generated/roadmap-metrics.md`.
 
 ## 🤝 Contributing
 
@@ -348,4 +372,4 @@ Built with a focus on:
 
 ---
 
-**Last Updated**: March 7, 2026
+**Last Updated**: March 16, 2026

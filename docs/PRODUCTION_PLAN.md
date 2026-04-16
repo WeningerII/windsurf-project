@@ -1,18 +1,28 @@
 # Production Readiness Plan
 
+> Historical execution record: the planning content in this file has been subsumed by `docs/MASTER_PLAN.md`, which is now the sole planning authority.
+>
+> Unique historical value: this file preserves the original March 2026 production-hardening sequence and the launch-risk ordering that drove the shipped fixes.
+>
+> Internal references to `docs/STATUS.md` below reflect the repo state at the time of writing and are not current planning instructions.
+>
+> Current repo truth note (March 16, 2026): use `docs/MASTER_PLAN.md`, `docs/STATUS.md`, and `docs/generated/roadmap-metrics.md` for live status. Since this snapshot, shared controller convergence, Daggerheart data productization, cross-system spell preparation, and the spell-catalog parity baseline have landed; the canonical loader-backed spell counts are now 501 for D&D 3.5e and 143 for PF2e.
+
 **Created:** March 7, 2026
 **Source:** Deep codebase audit of every engine, hook, storage layer, data loader, sheet component, type system, test suite, and config file.
 **Scope:** Everything required to ship this app to real users with confidence.
+
+> Snapshot note: the body below is preserved as a March 2026 planning snapshot. Many items are now shipped or superseded; use `docs/MASTER_PLAN.md` for current direction.
 
 ---
 
 ## Current State Summary
 
-The app is architecturally sound — the Document & Data Model pattern, system registry, per-system engines, and shared component library are well-designed. Six of seven registered systems have functional engines, sheets, and SRD data. The CI pipeline is comprehensive.
+At the time this plan was written, the app was architecturally sound — the Document & Data Model pattern, system registry, per-system engines, and shared component library were well-designed. Six of seven registered systems had functional engines, sheets, and SRD data. The CI pipeline was comprehensive.
 
-But the runtime has real bugs that produce wrong numbers on screen. The storage layer has race conditions. The test coverage gate is misleading. The bundle ships dead code. And the docs have drifted from reality in several places.
+At that time, the runtime still had real bugs that produced wrong numbers on screen. The storage layer had race conditions. The test coverage gate was misleading. The bundle shipped dead code. And the docs had drifted from reality in several places.
 
-This plan is organized into **five phases**, ordered by blast radius — fix things that break user trust first, then harden persistence, then optimize delivery, then clean up, then polish.
+This plan is organized into **six phases**, ordered by blast radius — fix things that break user trust first, then harden persistence, then optimize delivery, then clean up, then polish, then tackle post-launch accessibility follow-through.
 
 ---
 
@@ -318,7 +328,7 @@ The existing `e2e/system-smoke.spec.ts` already covers all 7 systems. Add cases 
 
 **Current problems:**
 - Line 3-4: CI badge URLs are `<owner>/<repo>` placeholders
-- Line 523: "Select from 6 fully implemented RPG systems" — correct count but should match registry (7 registered, 6 production, 1 scaffold)
+- Line 523: "Select from 6 fully implemented RPG systems" — stale; current reality is 7 registered systems with 7 full/partial product slices and differing maturity levels
 - Line 147-159: Project structure diagram is incomplete (missing `systems/`, `hooks/`, `registry/`, `utils/`)
 - Line 304: Claims "lazy loading" as completed — only partial (sheet-internal, not top-level)
 - Line 323: References `SRD_COMPLIANCE.md` without `docs/` prefix — file no longer exists in `docs/`
@@ -420,11 +430,11 @@ This phase is listed for completeness but is not a launch blocker for a beta.
 
 These are real gaps but are not blockers for shipping what exists:
 
-1. **Daggerheart content** — remains scaffold-only. No local data files exist. The plan does not invent SRD data.
+1. **Daggerheart content** — this note is now historical. The repo now ships SRD-backed Daggerheart classes, ancestries, communities, weapons, armor, loot, consumables, domains, domain cards, dedicated loaders, selector-backed reference panels, starter templates, browse tabs, and real loadout automation; deeper card-effect automation still remains open work.
 2. **Backend API / server sync** — `apiClient.ts` is a stub. No backend exists. This is a future feature, not a bug.
 3. **Guided character creation wizard** — doesn't exist. Users create blank sheets and fill manually (or use template dropdowns). This is a UX improvement, not a correctness issue.
 4. **Full feat/feature automation** — feat selection applies ASIs and proficiencies. Deeper feat riders remain manual. This is by design.
-5. **3.5e prestige class normalization** — tracked in STATUS.md P1 remaining work. Requires manual data entry, not code changes.
+5. **3.5e prestige class normalization** — this core SRD lane is now shipped. Any future expansion beyond the normalized 15-class SRD prestige catalog is additional content work, not a blocker for the current product slice.
 6. **5e 2014/2024 engine deduplication** — ~250 lines of identical code across the two engines. Real tech debt but not user-facing.
 7. **Sheet component decomposition** — the 1960-line `Dnd5eSheetBase` monolith works correctly. Breaking it up is maintenance hygiene, not a bug fix.
 
@@ -434,15 +444,15 @@ These are real gaps but are not blockers for shipping what exists:
 
 The app is production-ready when:
 
-- [ ] `tsc --noEmit` passes with zero errors
+- [x] `tsc --noEmit` passes with zero errors
 - [x] All Phase 1 bugs are fixed with regression tests
 - [x] `npm run test:coverage -- --run` passes with expanded coverage config
 - [x] `npm run build` succeeds
 - [x] `npm run check:bundle-size` passes
 - [x] `npm run lint` passes with documented exception count
-- [ ] E2E tests pass against production build in at least Chromium
+- [x] E2E tests pass against production build in at least Chromium (March 11, 2026: the full Playwright suite passed in both Chromium and Firefox after the Daggerheart locator/storage-fixture fixes and the 3.5e prestige-catalog alignment.)
 - [x] No `<owner>/<repo>` placeholder strings exist in shipped docs
 - [ ] Deploy pipeline (Netlify or Vercel — pick one) is configured with real secrets
 - [x] README system count, coverage number, and feature claims match reality
-- [ ] Service worker caches at least the user's active system data chunk
+- [x] Service worker caches at least the user's active system data chunk
 - [x] Storage persist is debounced (no localStorage write per keystroke)
