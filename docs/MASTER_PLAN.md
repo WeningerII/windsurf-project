@@ -1,6 +1,6 @@
 # Master Plan
 
-**Last consolidated:** March 16, 2026
+**Last consolidated:** April 16, 2026
 
 `docs/MASTER_PLAN.md` is the sole planning authority for this repo. If another document appears to define roadmap, sequencing, or long-horizon scope, treat that content as historical or descriptive unless it is explicitly mirrored here.
 
@@ -33,7 +33,7 @@ Every inherited item below is classified as one of:
 ## Current Repo Truth
 
 - The repo currently ships 7 registered systems.
-- The documented repo-wide verification baseline is green as of March 16, 2026 via `npm run verify` under Node `20.19.0`. Verification claims and scripted re-checks must stay tied to the supported runtime policy (`20.19+`, `22.12+`, or `24+`).
+- The documented repo-wide verification baseline is green as of April 16, 2026 via `npm run verify` under Node `20.19.0`. Verification claims and scripted re-checks must stay tied to the supported runtime policy (`20.19+`, `22.12+`, or `24+`).
 - Netlify is the canonical deployment target represented in repo docs and CI.
 - The app is browser-local today: IndexedDB is the primary store, localStorage is the fallback, and there is no checked-in backend or sync layer.
 - Loader-backed counts and support summaries live in `docs/generated/roadmap-metrics.md` and `docs/generated/roadmap-metrics.json`. Narrative docs should summarize them, not compete with them, and must stay aligned with the metadata-backed selector/dashboard summary path already used in-app.
