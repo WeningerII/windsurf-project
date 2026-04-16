@@ -273,6 +273,13 @@ export const cantrips: Spell[] = [
       type: 'concentration',
       maxDuration: '1 minute',
     },
+    target: '1 creature you can see within range',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText:
+      "The target succeeds automatically if it isn't a Humanoid, if you're fighting it, or if you cast Friends on it within the past 24 hours.",
     concentration: true,
     ritual: false,
     description:
@@ -333,6 +340,13 @@ export const cantrips: Spell[] = [
       type: 'hours',
       hours: 1,
     },
+    target: '1 object no larger than 10 feet in any dimension',
+    savingThrow: {
+      attribute: 'dex',
+      success: 'none',
+    },
+    savingThrowText:
+      'A hostile creature holding or wearing the target object can avoid the spell with a successful Dexterity saving throw.',
     concentration: false,
     ritual: false,
     description:
@@ -483,10 +497,7 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
-    savingThrow: {
-      attribute: 'con',
-      success: 'none',
-    },
+    attackRoll: true,
     damage: {
       base: {
         count: 1,

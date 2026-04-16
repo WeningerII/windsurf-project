@@ -308,6 +308,7 @@ export const level3Spells: Spell[] = [
     range: { type: 'self' },
     components: { verbal: true, somatic: false, material: false },
     duration: { type: 'concentration', maxDuration: '1 minute' },
+    effect: 'Your next melee weapon hit deals extra radiant damage and can blind the target',
     savingThrow: { attribute: 'con', success: 'none' },
     concentration: true,
     ritual: false,
@@ -781,6 +782,10 @@ export const level3Spells: Spell[] = [
       materialDescription: 'a rotten egg or several skunk cabbage leaves',
     },
     duration: { type: 'concentration', maxDuration: '1 minute' },
+    areaOfEffect: { type: 'sphere', radius: 20 },
+    savingThrow: { attribute: 'con', success: 'none' },
+    savingThrowText:
+      'A creature that starts its turn in the cloud must succeed on a Constitution saving throw or spend its action retching and reeling.',
     concentration: true,
     ritual: false,
     description:
@@ -820,6 +825,7 @@ export const level3Spells: Spell[] = [
     range: { type: 'self' },
     components: { verbal: true, somatic: true, material: false },
     duration: { type: 'concentration', maxDuration: '1 minute' },
+    attackRoll: true,
     concentration: true,
     ritual: false,
     description:

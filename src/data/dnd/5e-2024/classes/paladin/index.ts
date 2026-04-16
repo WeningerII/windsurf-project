@@ -310,6 +310,20 @@ export const paladin: CharacterClass = {
       features: [],
     },
   ],
+  alwaysPreparedSpells: [
+    {
+      source: "Paladin's Smite",
+      minLevel: 2,
+      spellIds: ['divine-smite'],
+      countsAgainstPreparedLimit: false,
+    },
+    {
+      source: 'Faithful Steed',
+      minLevel: 5,
+      spellIds: ['find-steed'],
+      countsAgainstPreparedLimit: false,
+    },
+  ],
 
   subclassLevel: 3,
   subclasses: [devotionSubclass],

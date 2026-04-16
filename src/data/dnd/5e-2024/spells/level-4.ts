@@ -488,6 +488,24 @@ export const level4Spells: Spell[] = [
       type: 'concentration',
       maxDuration: '10 minutes',
     },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 30,
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+    },
+    savingThrowText:
+      'A creature that starts its turn in the area must succeed on a Constitution saving throw or take 2d8 poison damage.',
+    damage: {
+      base: {
+        count: 2,
+        die: 'd8',
+        notation: '2d8',
+      },
+      type: 'poison',
+    },
     concentration: true,
     ritual: false,
     description:
@@ -912,6 +930,24 @@ export const level4Spells: Spell[] = [
     duration: {
       type: 'concentration',
       maxDuration: '10 minutes',
+    },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 30,
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+    },
+    savingThrowText:
+      'A creature that starts its turn in the area must succeed on a Constitution saving throw or take 2d8 poison damage.',
+    damage: {
+      base: {
+        count: 2,
+        die: 'd8',
+        notation: '2d8',
+      },
+      type: 'poison',
     },
     concentration: true,
     ritual: false,

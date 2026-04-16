@@ -8,10 +8,24 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'enchantment',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['divine'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -25,17 +39,43 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'self' },
-    areaOfEffect: { type: 'cone', feet: 15 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    areaOfEffect: {
+      type: 'cone',
+      feet: 15,
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    savingThrowText: 'basic Reflex save',
+    damage: {
+      base: {
+        count: 2,
+        die: 'd6',
+        notation: '2d6',
+      },
+      type: 'fire',
+    },
     concentration: false,
     ritual: false,
     description:
       'Gouts of flame rush from your hands. You deal 2d6 fire damage to creatures in the area. Each creature must attempt a basic Reflex save.',
-    damage: { base: { count: 2, die: 'd6', notation: '2d6' }, type: 'fire' },
-    savingThrow: { attribute: 'dex', success: 'half' },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -45,16 +85,35 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'illusion',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'self' },
-    areaOfEffect: { type: 'cone', feet: 15 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    areaOfEffect: {
+      type: 'cone',
+      feet: 15,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will save',
     concentration: false,
     ritual: false,
     description:
       'Brilliant colors flash from your hand in a vibrant spray. Creatures in the cone must attempt a Will save. On a failure, creatures are dazzled for 1 round. On a critical failure, creatures are stunned 1, blinded, and dazzled.',
-    savingThrow: { attribute: 'wis', success: 'none' },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -64,15 +123,33 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'enchantment',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'rounds', rounds: 1 },
+    traditions: ['divine', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'rounds',
+      rounds: 1,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will save',
     concentration: false,
     ritual: false,
     description:
       "You shout a command that's hard to ignore. You can command the target to approach you, flee from you, release what it's holding, drop prone, or stand in place. The target must attempt a Will save.",
-    savingThrow: { attribute: 'wis', success: 'none' },
     classes: ['bard', 'cleric'],
   },
   {
@@ -82,10 +159,28 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'enchantment',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['divine', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will save',
     concentration: false,
     ritual: false,
     description:
@@ -99,15 +194,32 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'enchantment',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will save',
     concentration: false,
     ritual: false,
     description:
       'You plant fear in the target; it must attempt a Will save. On a failure, the target becomes frightened 1 (or frightened 2 on a critical failure). On a critical success, the target is unaffected.',
-    savingThrow: { attribute: 'wis', success: 'none' },
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -117,10 +229,23 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'transmutation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
     concentration: false,
     ritual: false,
     description: 'The target can move through difficult terrain without penalty for 1 minute.',
@@ -133,10 +258,23 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'abjuration',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 10 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -150,16 +288,36 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'conjuration',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 30 },
-    areaOfEffect: { type: 'cube', feet: 10 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    areaOfEffect: {
+      type: 'cube',
+      feet: 10,
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'none',
+    },
     concentration: false,
     ritual: false,
     description:
       'You conjure grease, with effects based on choosing area or target. Area: All solid ground in the area is covered with grease. Each creature standing on the greasy surface must succeed at a Reflex save or fall prone.',
-    savingThrow: { attribute: 'dex', success: 'none' },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -169,15 +327,36 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'necromancy',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    attackRoll: true,
+    damage: {
+      base: {
+        count: 1,
+        die: 'd6',
+        notation: '1d6',
+      },
+      type: 'necrotic',
+    },
     concentration: false,
     ritual: false,
     description:
       'Tendrils of shadow strike the target. Make a spell attack. On a hit, you deal 1d6 negative damage and the target is frightened 1.',
-    damage: { base: { count: 1, die: 'd6', notation: '1d6' }, type: 'necrotic' },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -187,10 +366,29 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 60 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'rounds', rounds: 1 },
+    traditions: ['arcane', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'rounds',
+      rounds: 1,
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+    },
+    savingThrowText: 'Fortitude save',
     concentration: false,
     ritual: false,
     description:
@@ -204,10 +402,22 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'conjuration',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['divine', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
     concentration: false,
     ritual: false,
     description: 'A creature you touch regains 1d8 hit points.',
@@ -220,10 +430,27 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'necromancy',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'touch' },
-    components: { verbal: false, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['divine', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: false,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'half',
+    },
+    savingThrowText: 'basic Fortitude save',
     concentration: false,
     ritual: false,
     description:
@@ -237,10 +464,23 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'illusion',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'self' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'hours', hours: 1 },
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'hours',
+      hours: 1,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -254,10 +494,23 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'transmutation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'touch' },
-    components: { verbal: false, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['arcane', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: false,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -271,10 +524,23 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'transmutation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
     concentration: false,
     ritual: false,
     description: 'The target can jump twice as far as normal.',
@@ -287,10 +553,22 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'abjuration',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'permanent' },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'permanent',
+    },
     concentration: false,
     ritual: false,
     description:
@@ -304,15 +582,35 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 120 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    damage: {
+      base: {
+        count: 1,
+        die: 'd4',
+        notation: '1d4+1',
+      },
+      type: 'force',
+    },
     concentration: false,
     ritual: false,
     description:
       'You send a dart of force streaking toward a creature that you can see. It automatically hits and deals 1d4+1 force damage. For each additional action you use when Casting the Spell, increase the number of missiles you shoot by one, to a maximum of three missiles for 3 actions.',
-    damage: { base: { count: 1, die: 'd4', notation: '1d4+1' }, type: 'force' },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -322,10 +620,23 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'transmutation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['arcane', 'divine'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -339,10 +650,23 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'divination',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 10 },
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -356,10 +680,23 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'abjuration',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'hours', hours: 1 },
+    traditions: ['primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'hours',
+      hours: 1,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -373,10 +710,23 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'transmutation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'self' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 10 },
+    traditions: ['arcane', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -390,10 +740,25 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'necromancy',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    attackRoll: true,
     concentration: false,
     ritual: false,
     description:
@@ -407,10 +772,28 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'abjuration',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['divine'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will save',
     concentration: false,
     ritual: false,
     description:
@@ -424,15 +807,35 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'touch' },
-    components: { verbal: false, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: false,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    attackRoll: true,
+    damage: {
+      base: {
+        count: 2,
+        die: 'd12',
+        notation: '2d12',
+      },
+      type: 'electricity',
+    },
     concentration: false,
     ritual: false,
     description:
       'You shroud your hands in a crackling field of lightning. Make a melee spell attack roll. On a hit, you deal 2d12 electricity damage. If the target is wearing metal armor or is made of metal, you gain a +1 circumstance bonus to your attack roll.',
-    damage: { base: { count: 2, die: 'd12', notation: '2d12' }, type: 'electricity' },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -442,10 +845,23 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'enchantment',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['divine', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
     concentration: false,
     ritual: false,
     description:
@@ -459,10 +875,24 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'conjuration',
-    castingTime: { type: 'action', amount: 3 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['primal'],
+    castingTime: {
+      type: 'action',
+      amount: 3,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -476,10 +906,22 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'divination',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'self' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
     concentration: false,
     ritual: false,
     description:
@@ -493,10 +935,24 @@ export const level1Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 1,
     school: 'illusion',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 60 },
-    components: { verbal: true, somatic: false, material: false },
-    duration: { type: 'minutes', minutes: 10 },
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10,
+    },
     concentration: false,
     ritual: false,
     description:

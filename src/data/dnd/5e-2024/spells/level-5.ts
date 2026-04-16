@@ -59,6 +59,13 @@ export const level5Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: '1 Huge or smaller Beast or plant with Intelligence 3 or less',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText:
+      'The beast or plant resists the awakening on a successful Wisdom saving throw.',
     concentration: false,
     ritual: false,
     description:
@@ -254,6 +261,55 @@ export const level5Spells: Spell[] = [
     classes: ['warlock', 'wizard'],
   },
   {
+    id: 'conjure-volley',
+    name: 'Conjure Volley',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 5,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 150,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a Melee or Ranged weapon worth at least 1 CP',
+    },
+    duration: {
+      type: 'instant',
+    },
+    areaOfEffect: {
+      type: 'cylinder',
+      radius: 10,
+      height: 20,
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    damage: {
+      base: {
+        count: 8,
+        die: 'd8',
+        notation: '8d8',
+      },
+      type: 'force',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You throw a weapon or fire a piece of ammunition into the air and choose a point you can see within range. Countless spectral weapons rain down in a 20-foot-high, 10-foot-radius cylinder centered on that point and disappear. Each creature of your choice that you can see in the area must make a Dexterity saving throw, taking 8d8 Force damage on a failed save or half as much damage on a successful one. The spell then teleports the material component back to your hand.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of level 6 or higher, the damage increases by 1d8 for each slot level above 5.',
+    classes: ['ranger'],
+  },
+  {
     id: 'contagion',
     name: 'Contagion',
     system: 'dnd-5e-2024',
@@ -343,6 +399,7 @@ export const level5Spells: Spell[] = [
       type: 'concentration',
       maxDuration: '1 minute',
     },
+    attackRoll: true,
     concentration: true,
     ritual: false,
     description:
@@ -1045,10 +1102,79 @@ export const level5Spells: Spell[] = [
       type: 'concentration',
       maxDuration: '10 minutes',
     },
+    effect: 'A nonmagical stone wall made of ten 10-foot-by-10-foot panels',
+    savingThrow: {
+      attribute: 'dex',
+      success: 'none',
+    },
+    savingThrowText:
+      'A creature that would be fully enclosed by the wall can succeed on a Dexterity saving throw to use its reaction to move clear of the enclosure.',
     concentration: true,
     ritual: false,
     description:
       'A nonmagical wall of solid stone springs into existence at a point you choose within range. The wall is 6 inches thick and is composed of ten 10-foot-by-10-foot panels.',
     classes: ['druid', 'sorcerer', 'wizard'],
+  },
+  {
+    id: 'commune',
+    name: 'Commune',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 5,
+    school: 'divination',
+    castingTime: {
+      type: 'minute',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'incense and a vial of holy or unholy water',
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    concentration: false,
+    ritual: true,
+    description:
+      'You contact your deity or a divine proxy and ask up to three yes-or-no questions before the spell ends. You receive a correct answer for each question, though information beyond the deity’s knowledge can return an unclear answer instead.',
+    classes: ['cleric'],
+  },
+  {
+    id: 'hallow',
+    name: 'Hallow',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 5,
+    school: 'evocation',
+    castingTime: {
+      type: 'hour',
+      amount: 24,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'herbs, oils, and incense worth at least 1,000 gp, which the spell consumes',
+      materialCost: 1000,
+      materialConsumed: true,
+    },
+    duration: {
+      type: 'unlimited',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You touch a point and infuse an area around it with holy or unholy power. The area can’t overlap with another active Hallow spell, and you can bind an additional sacred or profane rider to the warded space, such as fear warding, silence, or planar exclusion.',
+    classes: ['cleric'],
   },
 ];

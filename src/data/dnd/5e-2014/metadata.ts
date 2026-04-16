@@ -25,6 +25,7 @@ import { kiAbilities } from './special-abilities/ki-abilities';
 import { maneuvers } from './special-abilities/maneuvers';
 import { channelDivinityOptions } from './class-features/cleric/channel-divinity';
 import { wildShapeForms } from './class-features/druid/wild-shapes';
+import { dnd5e2014Feats } from './feats';
 
 export const dnd5eMetadata = {
   system: 'dnd-5e-2014',
@@ -51,7 +52,7 @@ export const dnd5eMetadata = {
     },
 
     feats: {
-      count: 0, // SRD 5.1 intentionally excludes feats
+      count: dnd5e2014Feats.length,
     },
 
     backgrounds: {

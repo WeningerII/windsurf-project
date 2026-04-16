@@ -8,10 +8,24 @@ export const level2Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 2,
     school: 'enchantment',
-    castingTime: { type: 'reaction', amount: 1 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: false, material: false },
-    duration: { type: 'rounds', rounds: 1 },
+    traditions: ['divine', 'occult'],
+    castingTime: {
+      type: 'reaction',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'rounds',
+      rounds: 1,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -25,10 +39,23 @@ export const level2Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 2,
     school: 'transmutation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'self' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -42,10 +69,23 @@ export const level2Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 2,
     school: 'illusion',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -59,10 +99,29 @@ export const level2Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 2,
     school: 'enchantment',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 120 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['divine', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will save',
     concentration: true,
     ritual: false,
     description:
@@ -76,10 +135,22 @@ export const level2Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 2,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 3 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'unlimited' },
+    traditions: ['arcane', 'divine'],
+    castingTime: {
+      type: 'action',
+      amount: 3,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'unlimited',
+    },
     concentration: false,
     ritual: false,
     description:
@@ -93,11 +164,28 @@ export const level2Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 2,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 3 },
-    range: { type: 'ranged', feet: 120 },
-    areaOfEffect: { type: 'sphere', radius: 20 },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['arcane', 'divine'],
+    castingTime: {
+      type: 'action',
+      amount: 3,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 20,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -111,10 +199,23 @@ export const level2Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 2,
     school: 'divination',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'hours', hours: 1 },
+    traditions: ['arcane', 'divine', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'hours',
+      hours: 1,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -128,10 +229,29 @@ export const level2Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 2,
     school: 'necromancy',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['arcane', 'divine'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+    },
+    savingThrowText: 'Fortitude save',
     concentration: false,
     ritual: false,
     description:
@@ -145,10 +265,23 @@ export const level2Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 2,
     school: 'abjuration',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 120 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['arcane', 'divine', 'occult', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
     concentration: false,
     ritual: false,
     description:
@@ -162,10 +295,24 @@ export const level2Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 2,
     school: 'transmutation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 5 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 5,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -179,10 +326,24 @@ export const level2Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 2,
     school: 'transmutation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 5 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 5,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -196,10 +357,24 @@ export const level2Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 2,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 120 },
-    components: { verbal: false, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 5 },
+    traditions: ['primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: false,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 5,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -213,16 +388,41 @@ export const level2Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 2,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'rounds', rounds: 1 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'rounds',
+      rounds: 1,
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    savingThrowText: 'basic Reflex save',
+    damage: {
+      base: {
+        count: 3,
+        die: 'd6',
+        notation: '3d6',
+      },
+      type: 'fire',
+    },
     concentration: true,
     ritual: false,
     description:
       'You create a sphere of flame in a square within range. The sphere must be supported by a solid surface, such as a stone floor. The sphere deals 3d6 fire damage to each creature in the square where it first appears; each creature must attempt a basic Reflex save.',
-    damage: { base: { count: 3, die: 'd6', notation: '3d6' }, type: 'fire' },
-    savingThrow: { attribute: 'dex', success: 'half' },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -232,16 +432,37 @@ export const level2Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 2,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 120 },
-    areaOfEffect: { type: 'sphere', radius: 10 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'rounds', rounds: 1 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'rounds',
+      rounds: 1,
+    },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 10,
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'none',
+    },
+    savingThrowText: 'Reflex save',
     concentration: false,
     ritual: false,
     description:
       "Creatures in the area are outlined by glittering dust. Each creature must attempt a Reflex save. On a failure, creatures are dazzled for the duration and can't be concealed. On a critical failure, creatures are also blinded.",
-    savingThrow: { attribute: 'dex', success: 'none' },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -251,10 +472,29 @@ export const level2Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 2,
     school: 'enchantment',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will save',
     concentration: false,
     ritual: false,
     description:
@@ -268,10 +508,23 @@ export const level2Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 2,
     school: 'illusion',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'minutes', minutes: 10 },
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -285,10 +538,23 @@ export const level2Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 2,
     school: 'illusion',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'self' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -302,10 +568,23 @@ export const level2Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 2,
     school: 'abjuration',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 10 },
+    traditions: ['arcane', 'divine', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -319,10 +598,22 @@ export const level2Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 2,
     school: 'necromancy',
-    castingTime: { type: 'minutes', minutes: 1 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['divine', 'primal'],
+    castingTime: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
     concentration: false,
     ritual: false,
     description:
@@ -336,10 +627,23 @@ export const level2Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 2,
     school: 'divination',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'self' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 10 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -353,10 +657,24 @@ export const level2Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 2,
     school: 'transmutation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 5 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 5,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -370,15 +688,40 @@ export const level2Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 2,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['divine', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+    },
+    savingThrowText: 'Fortitude save',
+    damage: {
+      base: {
+        count: 2,
+        die: 'd10',
+        notation: '2d10',
+      },
+      type: 'sonic',
+    },
     concentration: false,
     ritual: false,
     description:
       'A cacophonous burst of sound deals 2d10 sonic damage to each creature in a 10-foot burst. Each creature must attempt a Fortitude save. On a critical failure, the creature is also stunned 1.',
-    damage: { base: { count: 2, die: 'd10', notation: '2d10' }, type: 'sonic' },
     classes: ['bard', 'cleric'],
   },
   {
@@ -388,11 +731,28 @@ export const level2Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 2,
     school: 'conjuration',
-    castingTime: { type: 'action', amount: 3 },
-    range: { type: 'ranged', feet: 30 },
-    areaOfEffect: { type: 'sphere', radius: 10 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 3,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 10,
+    },
     concentration: false,
     ritual: false,
     description:

@@ -25,6 +25,7 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    attackRoll: true,
     concentration: false,
     ritual: false,
     description:
@@ -132,6 +133,7 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    attackRoll: true,
     concentration: false,
     ritual: false,
     description:
@@ -604,6 +606,7 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    attackRoll: true,
     concentration: false,
     ritual: false,
     description:
@@ -1191,6 +1194,7 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    attackRoll: true,
     concentration: false,
     ritual: false,
     description:
@@ -1393,6 +1397,7 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    attackRoll: true,
     concentration: false,
     ritual: false,
     description:

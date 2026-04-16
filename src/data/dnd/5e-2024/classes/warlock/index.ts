@@ -285,6 +285,14 @@ export const warlock: CharacterClass = {
       ],
     },
   ],
+  alwaysPreparedSpells: [
+    {
+      source: 'Contact Patron',
+      minLevel: 9,
+      spellIds: ['contact-other-plane'],
+      countsAgainstPreparedLimit: false,
+    },
+  ],
 
   subclassLevel: 3,
   subclasses: [fiendSubclass],

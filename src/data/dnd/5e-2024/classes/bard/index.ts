@@ -290,6 +290,14 @@ export const bard: CharacterClass = {
       ],
     },
   ],
+  alwaysPreparedSpells: [
+    {
+      source: 'Words of Creation',
+      minLevel: 20,
+      spellIds: ['power-word-kill', 'power-word-heal'],
+      countsAgainstPreparedLimit: false,
+    },
+  ],
 
   subclassLevel: 3,
   subclasses: [loreSubclass],

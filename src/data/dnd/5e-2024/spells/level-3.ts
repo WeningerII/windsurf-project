@@ -151,6 +151,13 @@ export const level3Spells: Spell[] = [
       type: 'concentration',
       maxDuration: '1 minute',
     },
+    effect: 'Your next weapon hit deals extra radiant damage and can blind the target',
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+    },
+    savingThrowText:
+      'The target of the triggering weapon hit makes a Constitution saving throw to avoid the extra radiant burst and the Blinded condition.',
     concentration: true,
     ritual: false,
     description:
@@ -262,6 +269,53 @@ export const level3Spells: Spell[] = [
     description:
       'You summon fey creatures that appear in unoccupied spaces you can see within range. Choose from the following options for what appears: One creature of challenge rating 2 or lower, or two creatures of challenge rating 1 or lower, or four creatures of challenge rating 1/4 or lower, or eight creatures of challenge rating 1/8 or lower.',
     classes: ['druid', 'ranger'],
+  },
+  {
+    id: 'conjure-barrage',
+    name: 'Conjure Barrage',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 3,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a Melee or Ranged weapon worth at least 1 CP',
+    },
+    duration: {
+      type: 'instant',
+    },
+    areaOfEffect: {
+      type: 'cone',
+      feet: 60,
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    damage: {
+      base: {
+        count: 5,
+        die: 'd8',
+        notation: '5d8',
+      },
+      type: 'force',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You throw a weapon or fire a piece of ammunition into the air. Countless spectral weapons then fall in a 60-foot cone originating from you and disappear. Each creature of your choice that you can see in the area must make a Dexterity saving throw, taking 5d8 Force damage on a failed save or half as much damage on a successful one. The spell then teleports the material component back to your hand.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of level 4 or higher, the damage increases by 1d8 for each slot level above 3.',
+    classes: ['ranger'],
   },
   {
     id: 'counterspell',
@@ -663,6 +717,16 @@ export const level3Spells: Spell[] = [
       type: 'concentration',
       maxDuration: '1 minute',
     },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 20,
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+    },
+    savingThrowText:
+      'A creature that starts its turn in the cloud must succeed on a Constitution saving throw or spend its action retching and reeling.',
     concentration: true,
     ritual: false,
     description:
@@ -1383,6 +1447,16 @@ export const level3Spells: Spell[] = [
       type: 'concentration',
       maxDuration: '1 minute',
     },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 20,
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+    },
+    savingThrowText:
+      'A creature that starts its turn in the cloud must succeed on a Constitution saving throw or spend its action retching and reeling.',
     concentration: true,
     ritual: false,
     description:
@@ -1473,6 +1547,7 @@ export const level3Spells: Spell[] = [
       type: 'concentration',
       maxDuration: '1 minute',
     },
+    attackRoll: true,
     concentration: true,
     ritual: false,
     description:

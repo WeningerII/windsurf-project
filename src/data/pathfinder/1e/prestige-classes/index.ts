@@ -21,12 +21,4 @@ export const pf1ePrestigeClasses: CharacterClass[] = [
   shadowdancer,
 ];
 
-export {
-  arcaneArcher,
-  assassin,
-  dragonDisciple,
-  duelist,
-  loreMaster,
-  mysticTheurge,
-  shadowdancer,
-};
+export { arcaneArcher, assassin, dragonDisciple, duelist, loreMaster, mysticTheurge, shadowdancer };

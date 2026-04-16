@@ -8,10 +8,24 @@ export const level9Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 9,
     school: 'abjuration',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 120 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    effect: "Rip apart a target's magic and suppress its magical properties",
     concentration: false,
     ritual: false,
     description:
@@ -25,10 +39,23 @@ export const level9Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 9,
     school: 'divination',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'hours', hours: 1 },
+    traditions: ['arcane', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'hours',
+      hours: 1,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -42,10 +69,24 @@ export const level9Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 9,
     school: 'conjuration',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 60 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['arcane', 'divine'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    effect: 'A portal linking an unoccupied space you can see to a location on another plane',
     concentration: false,
     ritual: false,
     description:
@@ -59,10 +100,29 @@ export const level9Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 9,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'varies' },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'varies',
+    },
+    target: '1 creature within range',
+    savingThrow: {
+      attribute: 'con',
+      success: 'half',
+    },
+    savingThrowText: 'basic Fortitude save',
     concentration: false,
     ritual: false,
     description:
@@ -76,15 +136,35 @@ export const level9Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 9,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 500 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 500,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    damage: {
+      base: {
+        count: 14,
+        die: 'd6',
+        notation: '14d6',
+      },
+      type: 'fire',
+    },
     concentration: false,
     ritual: false,
     description:
       'You call down four meteors that explode in a fiery blast. Each meteor deals 6d10 bludgeoning damage to any creatures in the 10-foot burst and 14d6 fire damage to creatures in the 40-foot burst.',
-    damage: { base: { count: 14, die: 'd6', notation: '14d6' }, type: 'fire' },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -94,10 +174,24 @@ export const level9Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 9,
     school: 'enchantment',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: false, material: false },
-    duration: { type: 'instant' },
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    target: '1 creature with 50 or fewer Hit Points, or stun a hardier target',
     concentration: false,
     ritual: false,
     description:
@@ -111,11 +205,27 @@ export const level9Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 9,
     school: 'abjuration',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'self' },
-    areaOfEffect: { type: 'sphere', radius: 10 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'hours', hours: 10 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'hours',
+      hours: 10,
+    },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 10,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -129,10 +239,24 @@ export const level9Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 9,
     school: 'transmutation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'self' },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'minutes', minutes: 10 },
+    traditions: ['arcane', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10,
+    },
+    effect: "Transform into a battle form you've seen of level 15 or lower",
     concentration: false,
     ritual: false,
     description:
@@ -146,10 +270,30 @@ export const level9Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 9,
     school: 'transmutation',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'self' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    effect: 'You take 1d4+1 rounds of actions while time is stopped for everyone else',
+    heightening: {
+      mode: 'fixed',
+      summary: 'Heightened (10th): You gain 3 extra actions you can use on your turn.',
+      ranks: {
+        10: 'You temporarily stop time for everything but yourself, allowing you to use several actions in what appears to others to be no time at all. You gain 3 extra actions you can use on your turn.',
+      },
+    },
     concentration: false,
     ritual: false,
     description:
@@ -163,10 +307,32 @@ export const level9Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 9,
     school: 'divination',
-    castingTime: { type: 'action', amount: 3 },
-    range: { type: 'unlimited' },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'varies' },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 3,
+    },
+    range: {
+      type: 'unlimited',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'varies',
+    },
+    effect:
+      'Duplicate a spell of 9th level or lower or produce a comparable reality-warping effect',
+    heightening: {
+      mode: 'fixed',
+      summary:
+        'Heightened (10th): Wish becomes the mightiest spell a mortal creature can cast, directly altering the foundations of reality.',
+      ranks: {
+        10: 'Wish is the mightiest spell a mortal creature can cast. By speaking aloud, you can alter the very foundations of reality.',
+      },
+    },
     concentration: false,
     ritual: false,
     description:

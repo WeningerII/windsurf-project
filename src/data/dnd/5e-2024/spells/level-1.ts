@@ -1345,7 +1345,14 @@ export const level1Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: '1 creature within range',
     attackRoll: true,
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+    },
+    savingThrowText:
+      'On a hit, the target makes a Constitution saving throw to avoid the Poisoned condition.',
     damage: {
       base: {
         count: 2,
@@ -1626,37 +1633,6 @@ export const level1Spells: Spell[] = [
     classes: ['wizard'],
   },
   {
-    id: 'tensors-floating-disk',
-    name: "Tenser's Floating Disk",
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 1,
-    school: 'conjuration',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 30,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'a drop of mercury',
-    },
-    duration: {
-      type: 'hours',
-      hours: 1,
-    },
-    concentration: false,
-    ritual: true,
-    description:
-      "This spell creates a circular, horizontal plane of force, 3 feet in diameter and 1 inch thick, that floats 3 feet above the ground in an unoccupied space of your choice that you can see within range. The disk remains for the duration, and can hold up to 500 pounds. If more weight is placed on it, the spell ends, and everything on the disk falls to the ground. The disk is immobile while you are within 20 feet of it. If you move more than 20 feet away from it, the disk follows you so that it remains within 20 feet of you. If can move across uneven terrain, up or down stairs, slopes and the like, but it can't cross an elevation change of 10 feet or more.",
-    classes: ['wizard'],
-  },
-  {
     id: 'thunderwave',
     name: 'Thunderwave',
     system: 'dnd-5e-2024',
@@ -1806,6 +1782,37 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description:
       "The next time you hit with a melee weapon attack during this spell's duration, your attack deals an extra 1d6 psychic damage. Additionally, if the target is a creature, it must make a Wisdom saving throw or be frightened of you until the spell ends. As an action, the creature can make a Wisdom check against your spell save DC to steel its resolve and end this spell.",
+    classes: ['paladin'],
+  },
+  {
+    id: 'divine-smite',
+    name: 'Divine Smite',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 1,
+    school: 'evocation',
+    castingTime: {
+      type: 'bonus-action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 minute',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'The next time you hit a target with a melee weapon or an unarmed strike before the spell ends, your attack deals an extra 2d8 Radiant damage. If the target is a Fiend or Undead, the attack deals an extra 1d8 Radiant damage to it.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of level 2 or higher, the damage increases by 1d8 for each slot level above 1.',
     classes: ['paladin'],
   },
 ];

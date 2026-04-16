@@ -727,6 +727,53 @@ export const level2Spells: Spell[] = [
       'You know the magic of animating objects. This spell animates a Tiny nonmagical object within range. As long as the spell lasts, you can use your action each turn to mentally command any creature you animated with this spell if the creature is within 120 feet of you.',
     classes: ['wizard'],
   },
+  {
+    id: 'spiritual-weapon',
+    name: 'Spiritual Weapon',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 2,
+    school: 'evocation',
+    castingTime: { type: 'bonus-action', amount: 1 },
+    range: { type: 'ranged', feet: 60 },
+    components: { verbal: true, somatic: true, material: false },
+    duration: { type: 'minutes', minutes: 1 },
+    attackRoll: true,
+    damage: {
+      base: {
+        count: 1,
+        die: 'd8',
+        notation: '1d8',
+      },
+      type: 'force',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You create a floating, spectral weapon within range that lasts for the duration or until you cast this spell again. When you cast the spell, you can make a melee spell attack against a creature within 5 feet of the weapon. On a hit, the target takes force damage equal to 1d8 + your spellcasting ability modifier. As a bonus action on your turn, you can move the weapon up to 20 feet and repeat the attack against a creature within 5 feet of it.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of 3rd level or higher, the damage increases by 1d8 for every two slot levels above 2nd.',
+    classes: ['cleric'],
+  },
+  {
+    id: 'zone-of-truth',
+    name: 'Zone of Truth',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 2,
+    school: 'enchantment',
+    castingTime: { type: 'action', amount: 1 },
+    range: { type: 'ranged', feet: 60 },
+    components: { verbal: true, somatic: true, material: false },
+    duration: { type: 'minutes', minutes: 10 },
+    areaOfEffect: { type: 'sphere', radius: 15 },
+    savingThrow: { attribute: 'cha', success: 'none' },
+    concentration: false,
+    ritual: false,
+    description:
+      "You create a magical zone that guards against deception in a 15-foot-radius sphere centered on a point of your choice within range. Until the spell ends, a creature that enters the area for the first time on a turn or starts its turn there must make a Charisma saving throw. On a failed save, a creature can't speak a deliberate lie while in the radius, and you know whether each creature succeeds or fails.",
+    classes: ['bard', 'cleric', 'paladin'],
+  },
 ];
 
 // Helper function for lookups

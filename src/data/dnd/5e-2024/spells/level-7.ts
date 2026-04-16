@@ -514,6 +514,8 @@ export const level7Spells: Spell[] = [
       attribute: 'dex',
       success: 'none',
     },
+    savingThrowText:
+      'A creature in the area can succeed on a Dexterity saving throw to grab a fixed object and avoid the fall.',
     concentration: true,
     ritual: false,
     description:

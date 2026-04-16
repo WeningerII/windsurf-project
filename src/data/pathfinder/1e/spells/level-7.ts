@@ -8,17 +8,44 @@ export const level7Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 7,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 400 },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'rounds', rounds: 5 },
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 400,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'rounds',
+      rounds: 5,
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    damage: {
+      base: {
+        count: 1,
+        die: 'd6',
+        notation: '1d6 per level (max 20d6)',
+      },
+      type: 'fire',
+    },
     concentration: false,
     ritual: false,
-    savingThrow: { attribute: 'dex', success: 'half' },
     description:
       'This spell creates a fireball like the fireball spell, except that it is more powerful and can detonate up to 5 rounds after the spell is cast. The burst of flame deals 1d6 points of fire damage per caster level (maximum 20d6).',
-    damage: { base: { count: 1, die: 'd6', notation: '1d6 per level (max 20d6)' }, type: 'fire' },
     classes: ['sorcerer', 'wizard'],
+    levelsByClass: {
+      sorcerer: 7,
+      wizard: 7,
+    },
   },
   {
     id: 'pf1e-finger-of-death',
@@ -27,17 +54,44 @@ export const level7Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 7,
     school: 'necromancy',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 25 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 25,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'half',
+    },
+    damage: {
+      base: {
+        count: 3,
+        die: 'd6',
+        notation: '3d6+1 per level',
+      },
+      type: 'necrotic',
+    },
     concentration: false,
     ritual: false,
-    savingThrow: { attribute: 'con', success: 'half' },
     description:
       'You can slay any one living creature within range. The target is entitled to a Fortitude saving throw to survive the attack. If the save is successful, the creature instead takes 3d6 points of damage +1 point per caster level (maximum +25).',
-    damage: { base: { count: 3, die: 'd6', notation: '3d6+1 per level' }, type: 'necrotic' },
     classes: ['druid', 'sorcerer', 'wizard'],
+    levelsByClass: {
+      druid: 7,
+      sorcerer: 7,
+      wizard: 7,
+    },
   },
   {
     id: 'pf1e-power-word-blind',
@@ -46,15 +100,32 @@ export const level7Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 7,
     school: 'enchantment',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 25 },
-    components: { verbal: true, somatic: false, material: false },
-    duration: { type: 'special', description: 'See text' },
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 25,
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'special',
+      description: 'See text',
+    },
     concentration: false,
     ritual: false,
     description:
       "You utter a single word of power that causes one creature of your choice to become blinded, whether the creature can hear the word or not. The duration of the spell depends on the target's current hit point total. Any creature that currently has 201 or more hit points is unaffected by power word blind.",
     classes: ['sorcerer', 'wizard'],
+    levelsByClass: {
+      sorcerer: 7,
+      wizard: 7,
+    },
   },
   {
     id: 'pf1e-teleport-greater',
@@ -63,14 +134,29 @@ export const level7Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 7,
     school: 'conjuration',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: false, material: false },
-    duration: { type: 'instant' },
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
     concentration: false,
     ritual: false,
     description:
       'This spell functions like teleport, except that there is no range limit and there is no chance you arrive off target. In addition, you need not have seen the destination, but in that case you must have at least a reliable description of the place to which you are teleporting.',
     classes: ['sorcerer', 'wizard'],
+    levelsByClass: {
+      sorcerer: 7,
+      wizard: 7,
+    },
   },
 ];

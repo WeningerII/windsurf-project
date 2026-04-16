@@ -8,10 +8,24 @@ export const level8Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 8,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 500 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'rounds', rounds: 1 },
+    traditions: ['divine', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 500,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'rounds',
+      rounds: 1,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -25,15 +39,35 @@ export const level8Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 8,
     school: 'necromancy',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 500 },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'instant' },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 500,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'instant',
+    },
+    damage: {
+      base: {
+        count: 10,
+        die: 'd10',
+        notation: '10d10',
+      },
+      type: 'necrotic',
+    },
     concentration: false,
     ritual: false,
     description:
       "You pull the moisture from the targets' bodies, dealing 10d10 negative damage. Creatures made of water or with the water trait, such as water elementals, take double damage from horrid wilting.",
-    damage: { base: { count: 10, die: 'd10', notation: '10d10' }, type: 'necrotic' },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -43,10 +77,24 @@ export const level8Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 8,
     school: 'conjuration',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'varies' },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'varies',
+    },
+    target: '1 creature within range',
     concentration: false,
     ritual: false,
     description:
@@ -60,10 +108,24 @@ export const level8Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 8,
     school: 'illusion',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'hours', hours: 1 },
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'hours',
+      hours: 1,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -77,15 +139,40 @@ export const level8Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 8,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 120 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+    },
+    savingThrowText: 'Fortitude save',
+    damage: {
+      base: {
+        count: 10,
+        die: 'd8',
+        notation: '10d8',
+      },
+      type: 'cold',
+    },
     concentration: false,
     ritual: false,
     description:
       'You fire a blue-white ray of freezing air and sleet that deals 10d8 cold damage. The target must attempt a Fortitude save. On a critical failure, the target is also drained 2.',
-    damage: { base: { count: 10, die: 'd8', notation: '10d8' }, type: 'cold' },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -95,10 +182,24 @@ export const level8Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 8,
     school: 'enchantment',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 120 },
-    components: { verbal: true, somatic: false, material: false },
-    duration: { type: 'instant' },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    target: '1 creature you can see within range',
     concentration: false,
     ritual: false,
     description:
@@ -112,10 +213,25 @@ export const level8Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 8,
     school: 'abjuration',
-    castingTime: { type: 'action', amount: 3 },
-    range: { type: 'ranged', feet: 60 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'hours', hours: 10 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 3,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'hours',
+      hours: 10,
+    },
+    effect: 'A shimmering, multicolored wall of light',
     concentration: false,
     ritual: false,
     description:
@@ -129,15 +245,41 @@ export const level8Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 8,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 500 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['arcane', 'divine', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 500,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    area: '60-foot burst',
+    savingThrow: {
+      attribute: 'dex',
+      success: 'none',
+    },
+    savingThrowText: 'Reflex save',
+    damage: {
+      base: {
+        count: 8,
+        die: 'd10',
+        notation: '8d10',
+      },
+      type: 'fire',
+    },
     concentration: false,
     ritual: false,
     description:
       'You cause brilliant sunlight to explode in a 60-foot burst. Creatures in the area take 8d10 damage and are blinded. Undead and creatures with light blindness take double damage. Targets attempt a Reflex save.',
-    damage: { base: { count: 8, die: 'd10', notation: '8d10' }, type: 'fire' },
     classes: ['cleric', 'druid', 'sorcerer', 'wizard'],
   },
 ];

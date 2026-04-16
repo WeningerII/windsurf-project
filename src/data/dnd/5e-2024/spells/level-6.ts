@@ -98,6 +98,13 @@ export const level6Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: '1 creature you can see within range, plus up to 3 secondary creatures within 30 feet',
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    savingThrowText:
+      'The primary target and each secondary target make a Dexterity saving throw against the lightning arc.',
     damage: {
       base: {
         count: 10,
@@ -850,36 +857,6 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description:
       "You grant yourself or a creature you touch resistance to one damage type of your choice for the duration. At the end of each of the target's turns, it can end this effect and choose a different damage type to have resistance to.",
-    classes: ['wizard'],
-  },
-  {
-    id: 'otilukes-resilience-6',
-    name: "Otilukes's Resilience",
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 6,
-    school: 'abjuration',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'touch',
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription:
-        'a gem, crystal, reliquary, or some other ornamental container worth at least 500 gp',
-    },
-    duration: {
-      type: 'permanent',
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      'You touch a willing creature and grant it a magical reserve of resilience. For the duration, the target has resistance to nonmagical damage. When the target takes damage, it can use its reaction to roll a d6. The target reduces the damage taken by the number rolled plus your spellcasting ability modifier.',
     classes: ['wizard'],
   },
   {

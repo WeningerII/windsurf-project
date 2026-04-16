@@ -8,15 +8,41 @@ export const level10Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 10,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 1000 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['divine', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 1000,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    area: '60-foot burst',
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+    },
+    savingThrowText: 'Fortitude save',
+    damage: {
+      base: {
+        count: 5,
+        die: 'd10',
+        notation: '5d10',
+      },
+      type: 'bludgeoning',
+    },
     concentration: false,
     ritual: false,
     description:
       'You call an instant, devastating earthquake, volcanic eruption, and storm. Creatures in a 60-foot burst take 5d10 bludgeoning, 5d10 fire, and 5d10 electricity damage. Targets attempt a Fortitude save.',
-    damage: { base: { count: 5, die: 'd10', notation: '5d10' }, type: 'bludgeoning' },
     classes: ['cleric', 'druid'],
   },
   {
@@ -26,10 +52,29 @@ export const level10Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 10,
     school: 'enchantment',
-    castingTime: { type: 'action', amount: 3 },
-    range: { type: 'ranged', feet: 100 },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'unlimited' },
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 3,
+    },
+    range: {
+      type: 'ranged',
+      feet: 100,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'unlimited',
+    },
+    target: '1 creature within range',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will save',
     concentration: false,
     ritual: false,
     description:
@@ -43,10 +88,24 @@ export const level10Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 10,
     school: 'necromancy',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'instant' },
+    traditions: ['divine', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'instant',
+    },
+    target: '1 dying creature within range',
     concentration: false,
     ritual: false,
     description:
@@ -60,10 +119,22 @@ export const level10Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 10,
     school: 'transmutation',
-    castingTime: { type: 'action', amount: 3 },
-    range: { type: 'self' },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'varies' },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 3,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'varies',
+    },
     concentration: false,
     ritual: false,
     description:
@@ -77,10 +148,22 @@ export const level10Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 10,
     school: 'transmutation',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'self' },
-    components: { verbal: true, somatic: false, material: false },
-    duration: { type: 'instant' },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
     concentration: false,
     ritual: false,
     description:

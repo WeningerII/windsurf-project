@@ -1,4 +1,5 @@
 import { Spell } from '../../../../types/magic/spells';
+import { buildSpellCatalog } from '../../../../utils/spellCatalog';
 import { cantrips } from './cantrips';
 import { level1Spells } from './level-1';
 import { level2Spells } from './level-2';
@@ -11,21 +12,7 @@ import { level8Spells } from './level-8';
 import { level9Spells } from './level-9';
 import { level10Spells } from './level-10';
 
-export const pf2eSpells: Spell[] = [
-  ...cantrips,
-  ...level1Spells,
-  ...level2Spells,
-  ...level3Spells,
-  ...level4Spells,
-  ...level5Spells,
-  ...level6Spells,
-  ...level7Spells,
-  ...level8Spells,
-  ...level9Spells,
-  ...level10Spells,
-];
-
-export const pf2eSpellsByLevel: Record<number, Spell[]> = {
+const rawSpellsByLevel: Record<number, Spell[]> = {
   0: cantrips,
   1: level1Spells,
   2: level2Spells,
@@ -39,37 +26,30 @@ export const pf2eSpellsByLevel: Record<number, Spell[]> = {
   10: level10Spells,
 };
 
-export const pf2eSpellsById: Record<string, Spell> = pf2eSpells.reduce(
-  (acc, spell) => {
-    acc[spell.id] = spell;
-    return acc;
+const catalog = buildSpellCatalog(rawSpellsByLevel, {
+  omittedSpellIds: ['teleport-7-pf2e', 'time-stop-pf2e', 'wish-9-pf2e'],
+  spellIdAliases: {
+    'teleport-7-pf2e': 'teleport-pf2e',
+    'time-stop-pf2e': 'time-stop-9-pf2e',
+    'wish-9-pf2e': 'wish-pf2e',
   },
-  {} as Record<string, Spell>
-);
+});
 
-export const pf2eSpellsByClass: Record<string, Spell[]> = pf2eSpells.reduce(
-  (acc, spell) => {
-    spell.classes.forEach((className) => {
-      if (!acc[className]) {
-        acc[className] = [];
-      }
-      acc[className].push(spell);
-    });
-    return acc;
-  },
-  {} as Record<string, Spell[]>
-);
+export const allSpells = catalog.allSpells;
+export const spellsByLevel = catalog.spellsByLevel;
+export const spellsById = catalog.spellsById;
+export const spellsByClass = catalog.spellsByClass;
+export const spellsBySchool = catalog.spellsBySchool;
+export const spellIdAliases = catalog.spellIdAliases;
+export const spellStats = catalog.spellStats;
+export const spellsByClassAndLevel = catalog.spellsByClassAndLevel;
+export const getSpell = catalog.getSpell;
 
-export const pf2eSpellsBySchool: Record<string, Spell[]> = pf2eSpells.reduce(
-  (acc, spell) => {
-    if (!acc[spell.school]) {
-      acc[spell.school] = [];
-    }
-    acc[spell.school].push(spell);
-    return acc;
-  },
-  {} as Record<string, Spell[]>
-);
+export const pf2eSpells = allSpells;
+export const pf2eSpellsByLevel = spellsByLevel;
+export const pf2eSpellsById = spellsById;
+export const pf2eSpellsByClass = spellsByClass;
+export const pf2eSpellsBySchool = spellsBySchool;
 
 export {
   cantrips,

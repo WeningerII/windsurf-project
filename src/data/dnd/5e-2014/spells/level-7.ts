@@ -20,6 +20,7 @@ export const level7Spells: Spell[] = [
     },
     duration: { type: 'instant' },
     savingThrow: { attribute: 'cha', success: 'none' },
+    attackRoll: true,
     concentration: false,
     ritual: false,
     description:
@@ -186,6 +187,7 @@ export const level7Spells: Spell[] = [
         'a miniature platinum sword with a grip and pommel of copper and zinc worth 250 gp',
     },
     duration: { type: 'concentration', maxDuration: '1 minute' },
+    attackRoll: true,
     concentration: true,
     ritual: false,
     description:
@@ -208,7 +210,10 @@ export const level7Spells: Spell[] = [
       materialDescription: 'a lodestone and iron filings',
     },
     duration: { type: 'concentration', maxDuration: '1 minute' },
-    areaOfEffect: { type: 'cube', feet: 50 },
+    areaOfEffect: { type: 'cylinder', radius: 50, height: 100 },
+    savingThrow: { attribute: 'dex', success: 'none' },
+    savingThrowText:
+      'A creature in the area can succeed on a Dexterity saving throw to grab a fixed object and avoid the fall.',
     concentration: true,
     ritual: false,
     description:

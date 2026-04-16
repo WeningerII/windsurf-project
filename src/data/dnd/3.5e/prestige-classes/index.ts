@@ -1,5 +1,23 @@
 // D&D 3.5e Prestige Classes
 
+import type { CharacterClass } from '../../../../types/character-options/classes';
+import { arcaneArcher as normalizedArcaneArcher } from './arcane-archer';
+import { arcaneTrickster as normalizedArcaneTrickster } from './arcane-trickster';
+import { archmage as normalizedArchmage } from './archmage';
+import { assassin as normalizedAssassin } from './assassin';
+import { blackguard as normalizedBlackguard } from './blackguard';
+import { dragonDisciple as normalizedDragonDisciple } from './dragon-disciple';
+import { duelist as normalizedDuelist } from './duelist';
+import { dwarvenDefender as normalizedDwarvenDefender } from './dwarven-defender';
+import { eldritchKnight as normalizedEldritchKnight } from './eldritch-knight';
+import { hierophant as normalizedHierophant } from './hierophant';
+import { horizonWalker as normalizedHorizonWalker } from './horizon-walker';
+import { loremaster as normalizedLoremaster } from './loremaster';
+import { mysticTheurge as normalizedMysticTheurge } from './mystic-theurge';
+import { isDnd35eProductPrestigeClassId } from './productCatalog';
+import { shadowdancer as normalizedShadowdancer } from './shadowdancer';
+import { thaumaturgist as normalizedThaumaturgist } from './thaumaturgist';
+
 export interface PrestigeClass {
   id: string;
   name: string;
@@ -280,3 +298,28 @@ export const dnd35ePrestigeClasses: PrestigeClass[] = [
 export const getPrestigeClass = (id: string) => {
   return dnd35ePrestigeClasses.find((pc) => pc.id === id);
 };
+
+export const dnd35eNormalizedPrestigeClasses: CharacterClass[] = [
+  normalizedArcaneArcher,
+  normalizedArcaneTrickster,
+  normalizedArchmage,
+  normalizedAssassin,
+  normalizedBlackguard,
+  normalizedDragonDisciple,
+  normalizedDuelist,
+  normalizedEldritchKnight,
+  normalizedHierophant,
+  normalizedShadowdancer,
+  normalizedHorizonWalker,
+  normalizedDwarvenDefender,
+  normalizedLoremaster,
+  normalizedMysticTheurge,
+  normalizedThaumaturgist,
+];
+
+export const dnd35eProductPrestigeClasses: CharacterClass[] =
+  dnd35eNormalizedPrestigeClasses.filter((classData) =>
+    isDnd35eProductPrestigeClassId(classData.id)
+  );
+
+export { dnd35eProductPrestigeClassIds, isDnd35eProductPrestigeClassId } from './productCatalog';

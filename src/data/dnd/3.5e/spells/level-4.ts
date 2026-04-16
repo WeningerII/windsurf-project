@@ -757,6 +757,7 @@ export const level4Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    attackRoll: true,
     concentration: false,
     ritual: false,
     description:
@@ -1050,6 +1051,7 @@ export const level4Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    attackRoll: true,
     concentration: false,
     ritual: false,
     description:

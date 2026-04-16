@@ -143,6 +143,10 @@ export const cantrips: Spell[] = [
       materialDescription: 'a firefly or phosphorescent moss',
     },
     duration: { type: 'hours', hours: 1 },
+    target: '1 object no larger than 10 feet in any dimension',
+    savingThrow: { attribute: 'dex', success: 'none' },
+    savingThrowText:
+      'A hostile creature holding or wearing the target object can avoid the spell with a successful Dexterity saving throw.',
     concentration: false,
     ritual: false,
     description:

@@ -75,6 +75,38 @@ export const devotionSubclass: Subclass = {
     'commune',
     'flame-strike',
   ],
+  alwaysPreparedSpells: [
+    {
+      source: 'Oath Spells',
+      minLevel: 3,
+      spellIds: ['protection-from-evil-and-good', 'sanctuary'],
+      countsAgainstPreparedLimit: false,
+    },
+    {
+      source: 'Oath Spells',
+      minLevel: 5,
+      spellIds: ['aid', 'zone-of-truth'],
+      countsAgainstPreparedLimit: false,
+    },
+    {
+      source: 'Oath Spells',
+      minLevel: 9,
+      spellIds: ['beacon-of-hope', 'dispel-magic'],
+      countsAgainstPreparedLimit: false,
+    },
+    {
+      source: 'Oath Spells',
+      minLevel: 13,
+      spellIds: ['freedom-of-movement', 'guardian-of-faith'],
+      countsAgainstPreparedLimit: false,
+    },
+    {
+      source: 'Oath Spells',
+      minLevel: 17,
+      spellIds: ['commune', 'flame-strike'],
+      countsAgainstPreparedLimit: false,
+    },
+  ],
 
   description:
     'The Oath of Devotion binds a paladin to the loftiest ideals of justice, virtue, and order. Sometimes called cavaliers, white knights, or holy warriors, these paladins meet the ideal of the knight in shining armor, acting with honor in pursuit of justice and the greater good.',

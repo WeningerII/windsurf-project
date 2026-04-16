@@ -8,15 +8,31 @@ export const level4Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 4,
     school: 'divination',
-    castingTime: { type: 'minutes', minutes: 10 },
-    range: { type: 'unlimited' },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'minutes', minutes: 1 },
+    castingTime: {
+      type: 'minutes',
+      minutes: 10,
+    },
+    range: {
+      type: 'unlimited',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
     concentration: false,
     ritual: false,
     description:
       'You create an invisible magical sensor that sends you visual information. The sensor moves at 30 feet per round. It can travel in any direction as long as the spell lasts.',
     classes: ['sorcerer', 'wizard'],
+    levelsByClass: {
+      sorcerer: 4,
+      wizard: 4,
+    },
   },
   {
     id: 'pf1e-black-tentacles',
@@ -25,15 +41,32 @@ export const level4Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 4,
     school: 'conjuration',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 100 },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'rounds', rounds: 1 },
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 100,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'rounds',
+      rounds: 1,
+    },
     concentration: false,
     ritual: false,
     description:
       'This spell causes a field of rubbery black tentacles to appear, burrowing up from the floor and reaching for any creature in the area. Every creature within the area of the spell must make a combat maneuver check or be grappled by the tentacles.',
     classes: ['sorcerer', 'wizard'],
+    levelsByClass: {
+      sorcerer: 4,
+      wizard: 4,
+    },
   },
   {
     id: 'pf1e-charm-monster',
@@ -42,16 +75,37 @@ export const level4Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 4,
     school: 'enchantment',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 25 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'hours', hours: 24 },
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 25,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'hours',
+      hours: 24,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
     concentration: false,
     ritual: false,
-    savingThrow: { attribute: 'wis', success: 'none' },
     description:
       "This charm makes a creature regard you as its trusted friend and ally (treat the target's attitude as friendly). This spell functions like charm person, except that the effect is not restricted by creature type or size.",
     classes: ['bard', 'sorcerer', 'wizard'],
+    levelsByClass: {
+      bard: 4,
+      sorcerer: 4,
+      wizard: 4,
+    },
   },
   {
     id: 'pf1e-confusion',
@@ -60,16 +114,37 @@ export const level4Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 4,
     school: 'enchantment',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 100 },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'rounds', rounds: 1 },
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 100,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'rounds',
+      rounds: 1,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
     concentration: false,
     ritual: false,
-    savingThrow: { attribute: 'wis', success: 'none' },
     description:
       'This spell causes the targets to become confused, making them unable to determine their actions. Roll on the confusion behavior table each round to see what the subject does.',
     classes: ['bard', 'sorcerer', 'wizard'],
+    levelsByClass: {
+      bard: 4,
+      sorcerer: 4,
+      wizard: 4,
+    },
   },
   {
     id: 'pf1e-dimension-door',
@@ -78,15 +153,32 @@ export const level4Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 4,
     school: 'conjuration',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 400 },
-    components: { verbal: true, somatic: false, material: false },
-    duration: { type: 'instant' },
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 400,
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
     concentration: false,
     ritual: false,
     description:
       "You instantly transfer yourself from your current location to any other spot within range. You always arrive at exactly the spot desired. After using this spell, you can't take any other actions until your next turn.",
     classes: ['bard', 'sorcerer', 'wizard'],
+    levelsByClass: {
+      bard: 4,
+      sorcerer: 4,
+      wizard: 4,
+    },
   },
   {
     id: 'pf1e-greater-invisibility',
@@ -95,15 +187,32 @@ export const level4Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 4,
     school: 'illusion',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'rounds', rounds: 1 },
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'rounds',
+      rounds: 1,
+    },
     concentration: false,
     ritual: false,
     description:
       "This spell functions like invisibility, except that it doesn't end if the subject attacks.",
     classes: ['bard', 'sorcerer', 'wizard'],
+    levelsByClass: {
+      bard: 4,
+      sorcerer: 4,
+      wizard: 4,
+    },
   },
   {
     id: 'pf1e-ice-storm',
@@ -112,17 +221,44 @@ export const level4Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 4,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 400 },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'instant' },
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 400,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'none',
+    },
+    damage: {
+      base: {
+        count: 3,
+        die: 'd6',
+        notation: '3d6 bludgeoning + 2d6 cold',
+      },
+      type: 'cold',
+    },
     concentration: false,
     ritual: false,
-    savingThrow: { attribute: 'dex', success: 'none' },
     description:
       'Great magical hailstones pound down, dealing 3d6 points of bludgeoning damage and 2d6 points of cold damage to every creature in the area.',
-    damage: { base: { count: 3, die: 'd6', notation: '3d6 bludgeoning + 2d6 cold' }, type: 'cold' },
     classes: ['druid', 'sorcerer', 'wizard'],
+    levelsByClass: {
+      druid: 4,
+      sorcerer: 4,
+      wizard: 4,
+    },
   },
   {
     id: 'pf1e-polymorph',
@@ -131,15 +267,31 @@ export const level4Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 4,
     school: 'transmutation',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'minutes', minutes: 1 },
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
     concentration: false,
     ritual: false,
     description:
       'This spell transforms a willing creature into an animal, humanoid, or elemental of your choosing. The spell has no effect on unwilling creatures, nor can the subject be forced into an inappropriate form.',
     classes: ['sorcerer', 'wizard'],
+    levelsByClass: {
+      sorcerer: 4,
+      wizard: 4,
+    },
   },
   {
     id: 'pf1e-scrying',
@@ -148,16 +300,38 @@ export const level4Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 4,
     school: 'divination',
-    castingTime: { type: 'hour', amount: 1 },
-    range: { type: 'unlimited' },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'minutes', minutes: 1 },
+    castingTime: {
+      type: 'hour',
+      amount: 1,
+    },
+    range: {
+      type: 'unlimited',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
     concentration: false,
     ritual: false,
-    savingThrow: { attribute: 'wis', success: 'none' },
     description:
       'You can observe a creature at any distance. If the subject succeeds on a Will save, the spell fails. The difficulty of the save depends on how well your knowledge of the subject and what sort of physical connection (if any) you have to that creature.',
     classes: ['bard', 'cleric', 'druid', 'sorcerer', 'wizard'],
+    levelsByClass: {
+      bard: 4,
+      cleric: 4,
+      druid: 4,
+      sorcerer: 4,
+      wizard: 4,
+    },
   },
   {
     id: 'pf1e-solid-fog',
@@ -166,15 +340,32 @@ export const level4Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 4,
     school: 'conjuration',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 100 },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'minutes', minutes: 1 },
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 100,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
     concentration: false,
     ritual: false,
     description:
       'This spell functions like fog cloud, but in addition to obscuring sight, the solid fog is so thick that it impedes movement. Creatures moving through a solid fog move at half their normal speed and take a –2 penalty on all melee attack and melee damage rolls.',
     classes: ['sorcerer', 'wizard'],
+    levelsByClass: {
+      sorcerer: 4,
+      wizard: 4,
+    },
   },
   {
     id: 'pf1e-stone-shape',
@@ -183,15 +374,32 @@ export const level4Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 4,
     school: 'transmutation',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'instant' },
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'instant',
+    },
     concentration: false,
     ritual: false,
     description:
       'You can form an existing piece of stone into any shape that suits your purpose. For example, you can make a stone weapon, a special trapdoor, or a crude idol. Stone shape also permits you to reshape a stone door so as to make it fit more tightly in its frame.',
     classes: ['cleric', 'druid', 'sorcerer', 'wizard'],
+    levelsByClass: {
+      cleric: 4,
+      druid: 4,
+      sorcerer: 4,
+      wizard: 4,
+    },
   },
   {
     id: 'pf1e-stoneskin',
@@ -200,15 +408,32 @@ export const level4Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 4,
     school: 'abjuration',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'minutes', minutes: 10 },
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10,
+    },
     concentration: false,
     ritual: false,
     description:
       'The warded creature gains resistance to blows, cuts, stabs, and slashes. The subject gains DR 10/adamantine. It ignores the first 10 points of damage each time it takes damage from a weapon, though an adamantine weapon bypasses the reduction.',
     classes: ['druid', 'sorcerer', 'wizard'],
+    levelsByClass: {
+      druid: 4,
+      sorcerer: 4,
+      wizard: 4,
+    },
   },
   {
     id: 'pf1e-wall-of-fire',
@@ -217,16 +442,41 @@ export const level4Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 4,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 100 },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'concentration', maxDuration: '1 round per level' },
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 100,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 round per level',
+    },
+    damage: {
+      base: {
+        count: 2,
+        die: 'd4',
+        notation: '2d4',
+      },
+      type: 'fire',
+    },
     concentration: true,
     ritual: false,
     description:
       'An immobile, blazing curtain of shimmering violet fire springs into existence. One side of the wall, selected by you, sends forth waves of heat, dealing 2d4 points of fire damage to creatures within 10 feet and 1d4 points of fire damage to those past 10 feet but within 20 feet.',
-    damage: { base: { count: 2, die: 'd4', notation: '2d4' }, type: 'fire' },
     classes: ['druid', 'sorcerer', 'wizard'],
+    levelsByClass: {
+      druid: 4,
+      sorcerer: 4,
+      wizard: 4,
+    },
   },
   {
     id: 'pf1e-wall-of-ice',
@@ -235,14 +485,31 @@ export const level4Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 4,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 100 },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'minutes', minutes: 1 },
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 100,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
     concentration: false,
     ritual: false,
     description:
       'This spell creates an anchored plane of ice or a hemisphere of ice, depending on the version selected. A wall of ice cannot form in an area occupied by physical objects or creatures. Its surface must be smooth and unbroken when created.',
     classes: ['sorcerer', 'wizard'],
+    levelsByClass: {
+      sorcerer: 4,
+      wizard: 4,
+    },
   },
 ];

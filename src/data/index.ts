@@ -11,6 +11,7 @@ export * as pf2e from './pathfinder/2e/metadata';
 
 // Other Systems
 export * as mm3e from './mutants-and-masterminds/3e/metadata';
+export * as daggerheart from './daggerheart/1.0/metadata';
 
 // System Registry - uses canonical IDs from types/game-systems.ts
 import type { GameSystemId } from '../types/game-systems';
@@ -69,7 +70,7 @@ export const systemRegistry: Record<
     name: 'Daggerheart',
     abbr: 'DH',
     srdVersion: '1.0',
-    metadata: () => Promise.resolve({}),
+    metadata: () => import('./daggerheart/1.0/metadata'),
   },
 };
 

@@ -111,6 +111,17 @@ export const dragonDisciple: CharacterClass = {
       ],
     },
   ],
+  d20SpellcastingAdvancement: {
+    tracks: [
+      {
+        id: 'arcane-class',
+        label: 'Arcane Spellcasting Class',
+        kind: 'arcane',
+        advancementLevels: [2, 3, 4, 6, 7, 8, 10],
+        eligibleClassIds: ['bard', 'sorcerer'],
+      },
+    ],
+  },
   subclassLevel: 1,
   subclasses: [],
   description:

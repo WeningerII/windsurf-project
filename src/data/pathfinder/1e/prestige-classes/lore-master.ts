@@ -120,6 +120,16 @@ export const loreMaster: CharacterClass = {
       ],
     },
   ],
+  d20SpellcastingAdvancement: {
+    tracks: [
+      {
+        id: 'existing-class',
+        label: 'Spellcasting Class',
+        kind: 'any',
+        advancementLevels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      },
+    ],
+  },
   subclassLevel: 1,
   subclasses: [],
   description:

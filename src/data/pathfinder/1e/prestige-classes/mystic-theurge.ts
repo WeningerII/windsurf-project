@@ -111,6 +111,22 @@ export const mysticTheurge: CharacterClass = {
       ],
     },
   ],
+  d20SpellcastingAdvancement: {
+    tracks: [
+      {
+        id: 'arcane-class',
+        label: 'Arcane Spellcasting Class',
+        kind: 'arcane',
+        advancementLevels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      },
+      {
+        id: 'divine-class',
+        label: 'Divine Spellcasting Class',
+        kind: 'divine',
+        advancementLevels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      },
+    ],
+  },
   subclassLevel: 1,
   subclasses: [],
   description:

@@ -17,6 +17,10 @@ export const level5Spells: Spell[] = [
       materialDescription: 'a small block of granite',
     },
     duration: { type: 'concentration', maxDuration: '10 minutes' },
+    effect: 'A nonmagical stone wall made of ten 10-foot-by-10-foot panels',
+    savingThrow: { attribute: 'dex', success: 'none' },
+    savingThrowText:
+      'A creature that would be fully enclosed by the wall can succeed on a Dexterity saving throw to use its reaction to move clear of the enclosure.',
     concentration: true,
     ritual: false,
     description:
@@ -206,6 +210,10 @@ export const level5Spells: Spell[] = [
       materialConsumed: true,
     },
     duration: { type: 'instant' },
+    target: '1 incapacitated beast or plant with at least 1 hit point',
+    savingThrow: { attribute: 'wis', success: 'none' },
+    savingThrowText:
+      'The incapacitated beast or plant resists the awakening on a successful Wisdom saving throw.',
     concentration: false,
     ritual: false,
     description:
@@ -420,6 +428,87 @@ export const level5Spells: Spell[] = [
     description:
       'As you cast this spell, you draw a 10-foot-diameter circle on the ground inscribed with sigils that link your location to a permanent teleportation circle of your choice whose sigil sequence you know and that is on the same plane of existence as you. A shimmering portal opens within the circle you drew and remains open until the end of your next turn. Any creature that enters the portal instantly appears within 5 feet of the destination circle or in the nearest unoccupied space if that space is occupied.',
     classes: ['bard', 'sorcerer', 'wizard'],
+  },
+  {
+    id: 'commune',
+    name: 'Commune',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 5,
+    school: 'divination',
+    castingTime: { type: 'minute', amount: 1 },
+    range: { type: 'self' },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'incense and a vial of holy or unholy water',
+    },
+    duration: { type: 'minutes', minutes: 1 },
+    concentration: false,
+    ritual: true,
+    description:
+      'You contact your deity or a divine proxy and ask up to three questions that can be answered with a yes or no. You must ask your questions before the spell ends, and you receive a correct answer for each question. If the information lies beyond the deity’s knowledge, you might receive an unclear answer instead.',
+    classes: ['cleric'],
+  },
+  {
+    id: 'flame-strike',
+    name: 'Flame Strike',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 5,
+    school: 'evocation',
+    castingTime: { type: 'action', amount: 1 },
+    range: { type: 'ranged', feet: 60 },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a pinch of sulfur',
+    },
+    duration: { type: 'instant' },
+    areaOfEffect: { type: 'cylinder', radius: 10, height: 40 },
+    savingThrow: { attribute: 'dex', success: 'half' },
+    damage: {
+      base: {
+        count: 4,
+        die: 'd6',
+        notation: '4d6',
+      },
+      type: 'fire',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'A vertical column of divine fire roars down from the heavens in a location you specify. Each creature in a 10-foot-radius, 40-foot-high cylinder centered on a point within range must make a Dexterity saving throw, taking 4d6 fire damage and 4d6 radiant damage on a failed save, or half as much total damage on a success.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of 6th level or higher, the fire damage or the radiant damage (your choice) increases by 1d6 for each slot level above 5th.',
+    classes: ['cleric'],
+  },
+  {
+    id: 'mass-cure-wounds',
+    name: 'Mass Cure Wounds',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 5,
+    school: 'evocation',
+    castingTime: { type: 'action', amount: 1 },
+    range: { type: 'ranged', feet: 60 },
+    components: { verbal: true, somatic: true, material: false },
+    duration: { type: 'instant' },
+    areaOfEffect: { type: 'sphere', radius: 30 },
+    healing: {
+      count: 3,
+      die: 'd8',
+      notation: '3d8',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'A wave of healing energy washes out from a point of your choice within range. Choose up to six creatures in a 30-foot-radius sphere centered on that point. Each target regains hit points equal to 3d8 plus your spellcasting ability modifier. This spell has no effect on undead or constructs.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of 6th level or higher, the healing increases by 1d8 for each slot level above 5th.',
+    classes: ['bard', 'cleric', 'druid'],
   },
 ];
 

@@ -8,10 +8,29 @@ export const level5Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 5,
     school: 'abjuration',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['arcane', 'divine'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will save',
     concentration: false,
     ritual: false,
     description:
@@ -25,17 +44,45 @@ export const level5Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 5,
     school: 'necromancy',
-    castingTime: { type: 'action', amount: 3 },
-    range: { type: 'ranged', feet: 120 },
-    areaOfEffect: { type: 'sphere', radius: 20 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'rounds', rounds: 1 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 3,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'rounds',
+      rounds: 1,
+    },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 20,
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'half',
+    },
+    savingThrowText: 'basic Fortitude save',
+    damage: {
+      base: {
+        count: 6,
+        die: 'd8',
+        notation: '6d8',
+      },
+      type: 'poison',
+    },
     concentration: true,
     ritual: false,
     description:
       'You conjure a poisonous fog. This functions as obscuring mist, except the area moves 10 feet away from you each round. Each creature that starts its turn in the cloud takes 6d8 poison damage with a basic Fortitude save.',
-    damage: { base: { count: 6, die: 'd8', notation: '6d8' }, type: 'poison' },
-    savingThrow: { attribute: 'con', success: 'half' },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -45,17 +92,43 @@ export const level5Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 5,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'self' },
-    areaOfEffect: { type: 'cone', feet: 60 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    areaOfEffect: {
+      type: 'cone',
+      feet: 60,
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    savingThrowText: 'basic Reflex save',
+    damage: {
+      base: {
+        count: 12,
+        die: 'd6',
+        notation: '12d6',
+      },
+      type: 'cold',
+    },
     concentration: false,
     ritual: false,
     description:
       'Icy cold rushes forth from your hands. You deal 12d6 cold damage to creatures in the area; they must each attempt a basic Reflex save.',
-    damage: { base: { count: 12, die: 'd6', notation: '12d6' }, type: 'cold' },
-    savingThrow: { attribute: 'dex', success: 'half' },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -65,10 +138,24 @@ export const level5Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 5,
     school: 'enchantment',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -82,15 +169,32 @@ export const level5Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 5,
     school: 'enchantment',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 120 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'permanent' },
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'permanent',
+    },
+    savingThrow: {
+      attribute: 'int',
+      success: 'none',
+    },
+    savingThrowText: 'Intelligence save',
     concentration: false,
     ritual: false,
     description:
       "You reduce the target's mental faculties. The target must attempt an Intelligence save. On a failure, the target becomes feebleminded.",
-    savingThrow: { attribute: 'int', success: 'none' },
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -100,10 +204,23 @@ export const level5Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 5,
     school: 'conjuration',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'hours', hours: 1 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'hours',
+      hours: 1,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -117,10 +234,24 @@ export const level5Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 5,
     school: 'divination',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 500 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'hours', hours: 1 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 500,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'hours',
+      hours: 1,
+    },
     concentration: true,
     ritual: false,
     description:
@@ -134,10 +265,22 @@ export const level5Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 5,
     school: 'divination',
-    castingTime: { type: 'action', amount: 3 },
-    range: { type: 'unlimited' },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'instant' },
+    traditions: ['arcane', 'divine', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 3,
+    },
+    range: {
+      type: 'unlimited',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'instant',
+    },
     concentration: false,
     ritual: false,
     description:
@@ -151,15 +294,41 @@ export const level5Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 5,
     school: 'enchantment',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'rounds', rounds: 1 },
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'rounds',
+      rounds: 1,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will save',
+    damage: {
+      base: {
+        count: 6,
+        die: 'd6',
+        notation: '6d6',
+      },
+      type: 'psychic',
+    },
     concentration: false,
     ritual: false,
     description:
       'You emit a pulsating mental blast. Creatures in a 30-foot emanation must attempt a Will save, taking 6d6 mental damage and becoming stunned 1 on a failure.',
-    damage: { base: { count: 6, die: 'd6', notation: '6d6' }, type: 'psychic' },
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -169,10 +338,23 @@ export const level5Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 5,
     school: 'conjuration',
-    castingTime: { type: 'action', amount: 3 },
-    range: { type: 'ranged', feet: 120 },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'instant' },
+    traditions: ['arcane', 'divine', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 3,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'instant',
+    },
     concentration: false,
     ritual: false,
     description:

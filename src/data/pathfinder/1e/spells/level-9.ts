@@ -8,15 +8,33 @@ export const level9Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 9,
     school: 'conjuration',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 100 },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'concentration', maxDuration: '1 round per level' },
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 100,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 round per level',
+    },
     concentration: true,
     ritual: false,
     description:
       'Casting a gate spell has two effects. First, it creates an interdimensional connection between your plane of existence and a plane you specify, allowing travel between those two planes in either direction. Second, you may then call a particular individual or kind of being through the gate.',
     classes: ['cleric', 'sorcerer', 'wizard'],
+    levelsByClass: {
+      cleric: 9,
+      sorcerer: 9,
+      wizard: 9,
+    },
   },
   {
     id: 'pf1e-power-word-kill',
@@ -25,15 +43,31 @@ export const level9Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 9,
     school: 'enchantment',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 25 },
-    components: { verbal: true, somatic: false, material: false },
-    duration: { type: 'instant' },
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 25,
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
     concentration: false,
     ritual: false,
     description:
       'You utter a single word of power that instantly kills one creature of your choice, whether the creature can hear the word or not. Any creature that currently has 101 or more hit points is unaffected by power word kill.',
     classes: ['sorcerer', 'wizard'],
+    levelsByClass: {
+      sorcerer: 9,
+      wizard: 9,
+    },
   },
   {
     id: 'pf1e-time-stop',
@@ -42,15 +76,31 @@ export const level9Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 9,
     school: 'transmutation',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'self' },
-    components: { verbal: true, somatic: false, material: false },
-    duration: { type: 'special', description: '1d4+1 apparent rounds' },
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'special',
+      description: '1d4+1 apparent rounds',
+    },
     concentration: false,
     ritual: false,
     description:
       'This spell seems to make time cease to flow for everyone but you. In fact, you speed up so greatly that all other creatures seem frozen, though they are actually still moving at their normal speeds. You are free to act for 1d4+1 rounds of apparent time.',
     classes: ['sorcerer', 'wizard'],
+    levelsByClass: {
+      sorcerer: 9,
+      wizard: 9,
+    },
   },
   {
     id: 'pf1e-wish',
@@ -59,14 +109,30 @@ export const level9Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 9,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'unlimited' },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'special', description: 'See text' },
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'unlimited',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'special',
+      description: 'See text',
+    },
     concentration: false,
     ritual: false,
     description:
       'Wish is the mightiest spell a wizard or sorcerer can cast. By simply speaking aloud, you can alter reality to better suit you. Even wish, however, has its limits. A wish can produce any one of the following effects: Duplicate any sorcerer/wizard spell of 8th level or lower, duplicate any other spell of 7th level or lower, undo harmful effects, grant a creature a +1 inherent bonus to an ability score, and more.',
     classes: ['sorcerer', 'wizard'],
+    levelsByClass: {
+      sorcerer: 9,
+      wizard: 9,
+    },
   },
 ];

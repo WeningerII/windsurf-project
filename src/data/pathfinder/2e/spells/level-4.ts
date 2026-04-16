@@ -8,10 +8,23 @@ export const level4Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 4,
     school: 'transmutation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 5 },
+    traditions: ['divine', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 5,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -25,10 +38,23 @@ export const level4Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 4,
     school: 'conjuration',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'self' },
-    components: { verbal: false, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: false,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -42,15 +68,33 @@ export const level4Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 4,
     school: 'enchantment',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'rounds', rounds: 1 },
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'rounds',
+      rounds: 1,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will save',
     concentration: true,
     ritual: false,
     description:
       'You befuddle your target with strange impulses. The target must attempt a Will save. On a failure, the target is confused for 1 round. On a critical failure, the target is confused for 1 minute.',
-    savingThrow: { attribute: 'wis', success: 'none' },
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -60,10 +104,23 @@ export const level4Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 4,
     school: 'conjuration',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 120 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
     concentration: false,
     ritual: false,
     description:
@@ -77,10 +134,29 @@ export const level4Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 4,
     school: 'abjuration',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['arcane', 'divine'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will save',
     concentration: false,
     ritual: false,
     description:
@@ -94,10 +170,23 @@ export const level4Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 4,
     school: 'transmutation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 5 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 5,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -111,10 +200,23 @@ export const level4Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 4,
     school: 'abjuration',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 10 },
+    traditions: ['divine', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -128,10 +230,24 @@ export const level4Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 4,
     school: 'abjuration',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 10 },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'minutes', minutes: 10 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 10,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -145,11 +261,28 @@ export const level4Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 4,
     school: 'conjuration',
-    castingTime: { type: 'action', amount: 3 },
-    range: { type: 'ranged', feet: 120 },
-    areaOfEffect: { type: 'sphere', radius: 20 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 3,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 20,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -163,10 +296,23 @@ export const level4Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 4,
     school: 'abjuration',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 10 },
+    traditions: ['divine'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -180,10 +326,23 @@ export const level4Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 4,
     school: 'abjuration',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 20 },
+    traditions: ['arcane', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 20,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -197,16 +356,40 @@ export const level4Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 4,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 3 },
-    range: { type: 'ranged', feet: 120 },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['arcane', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 3,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    damage: {
+      base: {
+        count: 4,
+        die: 'd6',
+        notation: '4d6',
+      },
+      type: 'fire',
+    },
     concentration: false,
     ritual: false,
     description:
       'You raise a blazing wall that burns creatures passing through it. You create either a 5-foot-thick wall of flame in a straight line up to 60 feet long and 10 feet high, or a 5-foot-thick, 10-foot-radius ring of flame with the same height.',
-    damage: { base: { count: 4, die: 'd6', notation: '4d6' }, type: 'fire' },
-    savingThrow: { attribute: 'dex', success: 'half' },
     classes: ['druid', 'sorcerer', 'wizard'],
   },
 ];

@@ -70,6 +70,38 @@ export const lifeDomainSubclass: Subclass = {
     'raise-dead',
     'revivify',
   ],
+  alwaysPreparedSpells: [
+    {
+      source: 'Life Domain Spells',
+      minLevel: 3,
+      spellIds: ['bless', 'cure-wounds'],
+      countsAgainstPreparedLimit: false,
+    },
+    {
+      source: 'Life Domain Spells',
+      minLevel: 5,
+      spellIds: ['aid', 'lesser-restoration'],
+      countsAgainstPreparedLimit: false,
+    },
+    {
+      source: 'Life Domain Spells',
+      minLevel: 7,
+      spellIds: ['beacon-of-hope', 'revivify'],
+      countsAgainstPreparedLimit: false,
+    },
+    {
+      source: 'Life Domain Spells',
+      minLevel: 9,
+      spellIds: ['death-ward', 'guardian-of-faith'],
+      countsAgainstPreparedLimit: false,
+    },
+    {
+      source: 'Life Domain Spells',
+      minLevel: 11,
+      spellIds: ['mass-cure-wounds', 'raise-dead'],
+      countsAgainstPreparedLimit: false,
+    },
+  ],
 
   description:
     'The Life domain focuses on the vibrant positive energy—one of the fundamental forces of the universe—that sustains all life.',

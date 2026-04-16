@@ -796,6 +796,7 @@ export const level6Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    attackRoll: true,
     concentration: false,
     ritual: false,
     description:

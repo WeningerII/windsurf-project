@@ -99,6 +99,9 @@ export const level9Spells: Spell[] = [
         'a target restraint, solid rope or chain, and a pit at least 5 feet deep',
     },
     duration: { type: 'special', description: 'until dispelled' },
+    target: '1 creature you can see within range',
+    savingThrow: { attribute: 'wis', success: 'none' },
+    savingThrowText: 'The target resists being bound on a successful Wisdom saving throw.',
     concentration: false,
     ritual: false,
     description:

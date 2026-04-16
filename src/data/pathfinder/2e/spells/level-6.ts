@@ -8,15 +8,32 @@ export const level6Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 6,
     school: 'transmutation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'permanent' },
+    traditions: ['arcane', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'permanent',
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+    },
+    savingThrowText: 'Fortitude save',
     concentration: false,
     ritual: false,
     description:
       'You transform the target into a harmless animal form. The target must attempt a Fortitude save. On a failure, it becomes a tiny animal.',
-    savingThrow: { attribute: 'con', success: 'none' },
     classes: ['druid', 'sorcerer', 'wizard'],
   },
   {
@@ -26,15 +43,40 @@ export const level6Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 6,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 500 },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'instant' },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 500,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    savingThrowText: 'basic Reflex save',
+    damage: {
+      base: {
+        count: 8,
+        die: 'd12',
+        notation: '8d12',
+      },
+      type: 'lightning',
+    },
     concentration: false,
     ritual: false,
     description:
       'You discharge a powerful bolt of lightning at the target, dealing 8d12 electricity damage. The target must attempt a basic Reflex save. The electricity arcs to another creature within 30 feet of the first target, and so on.',
-    damage: { base: { count: 8, die: 'd12', notation: '8d12' }, type: 'lightning' },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -44,16 +86,39 @@ export const level6Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 6,
     school: 'transmutation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 120 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    damage: {
+      base: {
+        count: 12,
+        die: 'd10',
+        notation: '12d10',
+      },
+      type: 'force',
+    },
     concentration: false,
     ritual: false,
     description:
       'A thin, green ray springs from your pointing finger. The target takes 12d10 force damage. A creature reduced to 0 HP is entirely disintegrated.',
-    damage: { base: { count: 12, die: 'd10', notation: '12d10' }, type: 'force' },
-    savingThrow: { attribute: 'dex', success: 'half' },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -63,17 +128,45 @@ export const level6Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 6,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 120 },
-    areaOfEffect: { type: 'cylinder', radius: 10, height: 60 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['arcane', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    areaOfEffect: {
+      type: 'cylinder',
+      radius: 10,
+      height: 60,
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    savingThrowText: 'basic Reflex save',
+    damage: {
+      base: {
+        count: 7,
+        die: 'd12',
+        notation: '7d12',
+      },
+      type: 'fire',
+    },
     concentration: false,
     ritual: false,
     description:
       'A geyser of boiling water erupts from the ground. Each creature in the area takes 7d12 fire damage with a basic Reflex save.',
-    damage: { base: { count: 7, die: 'd12', notation: '7d12' }, type: 'fire' },
-    savingThrow: { attribute: 'dex', success: 'half' },
     classes: ['druid', 'sorcerer', 'wizard'],
   },
   {
@@ -83,10 +176,24 @@ export const level6Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 6,
     school: 'illusion',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
     concentration: true,
     ritual: false,
     description:
@@ -100,10 +207,31 @@ export const level6Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 6,
     school: 'conjuration',
-    castingTime: { type: 'action', amount: 10 },
-    range: { type: 'unlimited' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 10,
+    },
+    range: {
+      type: 'unlimited',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    target: 'You and the other targets',
+    heightening: {
+      mode: 'fixed',
+      summary:
+        'Heightened (7th): You and up to 8 willing creatures are instantly transported to any location on the same plane that you can identify precisely.',
+      ranks: {
+        7: 'You and up to 8 willing creatures are instantly transported to any location on the same plane that you can identify precisely.',
+      },
+    },
     concentration: false,
     ritual: false,
     description:
@@ -117,10 +245,23 @@ export const level6Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 6,
     school: 'divination',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 10 },
+    traditions: ['arcane', 'divine'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -134,10 +275,24 @@ export const level6Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 6,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 3 },
-    range: { type: 'ranged', feet: 30 },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 3,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -151,10 +306,24 @@ export const level6Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 6,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 3 },
-    range: { type: 'ranged', feet: 120 },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 3,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
     concentration: false,
     ritual: false,
     description:

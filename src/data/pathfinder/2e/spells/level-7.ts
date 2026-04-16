@@ -8,17 +8,45 @@ export const level7Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 7,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 500 },
-    areaOfEffect: { type: 'sphere', radius: 20 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'rounds', rounds: 1 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 500,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'rounds',
+      rounds: 1,
+    },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 20,
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    savingThrowText: 'basic Reflex save',
+    damage: {
+      base: {
+        count: 10,
+        die: 'd6',
+        notation: '10d6',
+      },
+      type: 'fire',
+    },
     concentration: true,
     ritual: false,
     description:
       'A fireball explodes at a point you designate. You can delay the explosion for up to 5 rounds. Each creature takes 10d6 fire damage with a basic Reflex save.',
-    damage: { base: { count: 10, die: 'd6', notation: '10d6' }, type: 'fire' },
-    savingThrow: { attribute: 'dex', success: 'half' },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -28,10 +56,24 @@ export const level7Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 7,
     school: 'abjuration',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['arcane', 'divine'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    target: '1 creature touched',
     concentration: false,
     ritual: false,
     description:
@@ -45,10 +87,23 @@ export const level7Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 7,
     school: 'transmutation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'self' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['arcane', 'divine', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -62,15 +117,40 @@ export const level7Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 7,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 500 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['divine', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 500,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'none',
+    },
+    savingThrowText: 'Reflex save',
+    damage: {
+      base: {
+        count: 14,
+        die: 'd6',
+        notation: '14d6',
+      },
+      type: 'fire',
+    },
     concentration: false,
     ritual: false,
     description:
       'You call down a massive firestorm. Creatures in five 10-foot cubes within range must attempt a Reflex save, taking 14d6 fire damage on a failure or half on a success.',
-    damage: { base: { count: 14, die: 'd6', notation: '14d6' }, type: 'fire' },
     classes: ['cleric', 'druid'],
   },
   {
@@ -80,10 +160,25 @@ export const level7Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 7,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'ranged', feet: 120 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'hours', hours: 1 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'hours',
+      hours: 1,
+    },
+    effect: 'An invisible, immobile, cube-shaped prison of magical force',
     concentration: false,
     ritual: false,
     description:
@@ -97,10 +192,23 @@ export const level7Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 7,
     school: 'conjuration',
-    castingTime: { type: 'minutes', minutes: 10 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'instant' },
+    traditions: ['arcane', 'divine'],
+    castingTime: {
+      type: 'minutes',
+      minutes: 10,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'instant',
+    },
+    target: 'You and up to 8 willing creatures touched',
     concentration: false,
     ritual: false,
     description:
@@ -114,10 +222,24 @@ export const level7Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 7,
     school: 'enchantment',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 120 },
-    components: { verbal: true, somatic: false, material: false },
-    duration: { type: 'permanent' },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'permanent',
+    },
+    target: '1 creature you can see within range',
     concentration: false,
     ritual: false,
     description:
@@ -131,10 +253,23 @@ export const level7Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 7,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'cone', feet: 30 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'cone',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
     concentration: false,
     ritual: false,
     description:
@@ -148,10 +283,24 @@ export const level7Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 7,
     school: 'necromancy',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'touch' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['divine', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    target: '1 creature touched',
     concentration: false,
     ritual: false,
     description:
@@ -165,10 +314,29 @@ export const level7Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 7,
     school: 'evocation',
-    castingTime: { type: 'action', amount: 3 },
-    range: { type: 'ranged', feet: 120 },
-    components: { verbal: true, somatic: true, material: true },
-    duration: { type: 'minutes', minutes: 1 },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 3,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    areaOfEffect: {
+      type: 'cylinder',
+      radius: 20,
+      height: 40,
+    },
     concentration: false,
     ritual: false,
     description:
@@ -182,10 +350,22 @@ export const level7Spells: Spell[] = [
     source: 'Core Rulebook',
     level: 7,
     school: 'conjuration',
-    castingTime: { type: 'action', amount: 2 },
-    range: { type: 'unlimited' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'instant' },
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'unlimited',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
     concentration: false,
     ritual: false,
     description:

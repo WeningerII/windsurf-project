@@ -501,6 +501,14 @@ export const level4Spells: Spell[] = [
     range: { type: 'ranged', feet: 120 },
     components: { verbal: true, somatic: true, material: false },
     duration: { type: 'concentration', maxDuration: '10 minutes' },
+    areaOfEffect: { type: 'sphere', radius: 30 },
+    savingThrow: { attribute: 'con', success: 'none' },
+    savingThrowText:
+      'A creature that starts its turn in the area must succeed on a Constitution saving throw or take 2d8 poison damage.',
+    damage: {
+      base: { count: 2, die: 'd8', notation: '2d8' },
+      type: 'poison',
+    },
     concentration: true,
     ritual: false,
     description:
@@ -508,6 +516,24 @@ export const level4Spells: Spell[] = [
     atHigherLevels:
       'When you cast this spell using a spell slot of 5th level or higher, the damage increases by 1d8 for each slot level above 4th.',
     classes: ['wizard'],
+  },
+  {
+    id: 'guardian-of-faith',
+    name: 'Guardian of Faith',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 4,
+    school: 'conjuration',
+    castingTime: { type: 'action', amount: 1 },
+    range: { type: 'ranged', feet: 30 },
+    components: { verbal: true, somatic: false, material: false },
+    duration: { type: 'hours', hours: 8 },
+    savingThrow: { attribute: 'dex', success: 'half' },
+    concentration: false,
+    ritual: false,
+    description:
+      'A Large spectral guardian appears and hovers for the duration in an unoccupied space of your choice within range. Any hostile creature that moves to a space within 10 feet of the guardian for the first time on a turn must succeed on a Dexterity saving throw, taking 20 radiant damage on a failed save or half as much on a success. The guardian vanishes after dealing a total of 60 damage.',
+    classes: ['cleric'],
   },
 ];
 

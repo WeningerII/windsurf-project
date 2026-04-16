@@ -1553,4 +1553,71 @@ export const level2Spells: Spell[] = [
       "You conjure a mass of thick, sticky webbing at a point of your choice within range. The webs fill a 20-foot cube from that point for the duration. The webs are difficult terrain and lightly obscure their area. If the webs aren't anchored between two solid masses (such as walls or trees) or layered across a floor, wall, or ceiling, the conjured web collapses on itself, and the spell ends at the start of your next turn. Webs layered over a flat surface have a depth of 5 feet. Each creature that starts its turn in the webs or that enters them during its turn must make a Dexterity saving throw. On a failed save, the creature is restrained as long as it remains in the webs or until it breaks free.",
     classes: ['sorcerer', 'wizard'],
   },
+  {
+    id: 'find-steed',
+    name: 'Find Steed',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 2,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You summon an otherworldly steed that appears in an unoccupied space of your choice within range. The steed uses a spirit form tied to the spell and remains with you until it drops to 0 hit points or you dismiss it.',
+    classes: ['paladin'],
+  },
+  {
+    id: 'zone-of-truth',
+    name: 'Zone of Truth',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 2,
+    school: 'enchantment',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10,
+    },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 15,
+    },
+    savingThrow: {
+      attribute: 'cha',
+      success: 'none',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      "You create a magical zone that guards against deception in a 15-foot-radius sphere centered on a point within range. A creature that enters the area for the first time on a turn or starts its turn there must make a Charisma saving throw. On a failed save, a creature can't speak a deliberate lie while in the radius, and you know whether each creature succeeds or fails.",
+    classes: ['bard', 'cleric', 'paladin'],
+  },
 ];

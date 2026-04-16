@@ -442,6 +442,13 @@ export const level8Spells: Spell[] = [
       type: 'concentration',
       maxDuration: '10 minutes',
     },
+    target: '1 creature you can see within range',
+    savingThrow: {
+      attribute: 'cha',
+      success: 'none',
+    },
+    savingThrowText:
+      'The target avoids being trapped in the maze on a successful Charisma saving throw.',
     concentration: true,
     ritual: false,
     description:
@@ -500,6 +507,13 @@ export const level8Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: '1 creature you can see within range',
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+    },
+    savingThrowText:
+      'A stunned target repeats the Constitution saving throw at the end of each of its turns, ending the effect on a success.',
     concentration: false,
     ritual: false,
     description:
