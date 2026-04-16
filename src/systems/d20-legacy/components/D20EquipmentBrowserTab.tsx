@@ -1,0 +1,44 @@
+import React, { Suspense } from 'react';
+import type { Item } from '../../../types/equipment/items';
+import { lazyWithPreload } from '../../../utils/lazyWithPreload';
+
+const EquipmentBrowser = lazyWithPreload(async () => {
+  const module = await import('../../../components/EquipmentBrowser');
+  return { default: module.EquipmentBrowser };
+});
+
+interface Props {
+  equipmentLoaded: boolean;
+  equipmentItems: Item[];
+}
+
+type D20EquipmentBrowserTabComponent = React.FC<Props> & {
+  preload: () => Promise<unknown>;
+};
+
+export const D20EquipmentBrowserTab = (({ equipmentLoaded, equipmentItems }: Props) =>
+  !equipmentLoaded ? (
+    <div className="text-center py-8 text-muted-foreground">Click to load equipment...</div>
+  ) : (
+    <Suspense
+      fallback={
+        <div className="text-center py-8 text-muted-foreground text-sm">
+          Loading Equipment Browser...
+        </div>
+      }
+    >
+      <EquipmentBrowser
+        equipment={equipmentItems.map((item) => ({
+          id: item.id,
+          name: item.name,
+          type: item.type || 'gear',
+          rarity: item.rarity || 'common',
+          cost: item.cost ? `${item.cost.amount} ${item.cost.currency}` : '0 gp',
+          weight: item.weight ?? 0,
+          description: item.description,
+        }))}
+      />
+    </Suspense>
+  )) as D20EquipmentBrowserTabComponent;
+
+D20EquipmentBrowserTab.preload = () => EquipmentBrowser.preload();

@@ -2,13 +2,14 @@ import { SystemDefinition } from '../../registry/types';
 import { Dnd35eDataModel, createDefaultDnd35eData } from './data-model';
 import { Dnd35eEngine } from './engine';
 import { makeD20LegacySheet } from '../d20-legacy/wrapper';
+import { SYSTEM_SUPPORT_NOTES } from '../../utils/documentationCopy';
 
 export const Dnd35eSystemDef: SystemDefinition<Dnd35eDataModel> = {
   id: 'dnd-3.5e',
   label: 'D&D 3.5e',
   version: 'SRD 3.5',
   supportLevel: 'partial',
-  supportNotes: 'Base classes only in current product flows',
+  supportNotes: SYSTEM_SUPPORT_NOTES['dnd-3.5e'],
   attributes: [
     { id: 'str', name: 'Strength', abbreviation: 'STR', description: 'Physical power' },
     { id: 'dex', name: 'Dexterity', abbreviation: 'DEX', description: 'Agility and reflexes' },

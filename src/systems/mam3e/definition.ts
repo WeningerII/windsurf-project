@@ -1,7 +1,7 @@
 import { SystemDefinition } from '../../registry/types';
 import { Mam3eDataModel, createDefaultMam3eData } from './data-model';
 import { Mam3eEngine } from './engine';
-import { Mam3eCharacterSheet } from './sheet';
+import { lazyWithPreload } from '../../utils/lazyWithPreload';
 
 export const Mam3eSystemDef: SystemDefinition<Mam3eDataModel> = {
   id: 'mam3e',
@@ -53,5 +53,7 @@ export const Mam3eSystemDef: SystemDefinition<Mam3eDataModel> = {
   ],
   createDefaultData: createDefaultMam3eData,
   engine: new Mam3eEngine(),
-  SheetComponent: Mam3eCharacterSheet,
+  SheetComponent: lazyWithPreload(() =>
+    import('./sheet').then((m) => ({ default: m.Mam3eCharacterSheet }))
+  ),
 };

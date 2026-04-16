@@ -1,0 +1,104 @@
+import React, { Suspense } from 'react';
+import type { Spell } from '../../../types/magic/spells';
+import type { Power } from '../../../types/mam/powers';
+import type { PowerModifier } from '../../../data/mutants-and-masterminds/3e/modifiers/extras';
+import { lazyWithPreload } from '../../../utils/lazyWithPreload';
+
+const SpellBrowser = lazyWithPreload(async () => {
+  const module = await import('../../../components/SpellBrowser');
+  return { default: module.SpellBrowser };
+});
+
+const MamPowerModifierBrowser = lazyWithPreload(async () => {
+  const module = await import('../../../components/MamPowerModifierBrowser');
+  return { default: module.MamPowerModifierBrowser };
+});
+
+function humanizeMamToken(value: string): string {
+  return value
+    .split(/[-_]/g)
+    .filter(Boolean)
+    .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
+    .join(' ');
+}
+
+function formatMamPowerAction(power: Power): string {
+  return humanizeMamToken(power.action);
+}
+
+function formatMamPowerRange(power: Power): string {
+  return humanizeMamToken(power.range);
+}
+
+function formatMamPowerDuration(power: Power): string {
+  return humanizeMamToken(power.duration);
+}
+
+interface Props {
+  powersLoaded: boolean;
+  powers: Spell[];
+  powerModifiersLoaded: boolean;
+  modifierCatalog: PowerModifier[];
+}
+
+type MamPowerBrowserTabComponent = React.FC<Props> & {
+  preload: () => Promise<unknown>;
+};
+
+export const MamPowerBrowserTab = (({
+  powersLoaded,
+  powers,
+  powerModifiersLoaded,
+  modifierCatalog,
+}) => (
+  <div className="space-y-4">
+    {!powersLoaded ? (
+      <div className="text-center py-8 text-muted-foreground">Click to load powers...</div>
+    ) : (
+      <Suspense
+        fallback={
+          <div className="text-center py-8 text-muted-foreground text-sm">
+            Loading Power Browser...
+          </div>
+        }
+      >
+        <SpellBrowser
+          spells={powers.map((spell) => {
+            const power = spell as unknown as Power;
+
+            return {
+              id: spell.id,
+              name: spell.name,
+              level: power.rank ?? 0,
+              school: humanizeMamToken(power.type).toLowerCase(),
+              castingTime: formatMamPowerAction(power),
+              range: formatMamPowerRange(power),
+              components: '',
+              duration: formatMamPowerDuration(power),
+              description: spell.description,
+              source: spell.source,
+              classes: [humanizeMamToken(power.type)],
+            };
+          })}
+        />
+      </Suspense>
+    )}
+
+    {powerModifiersLoaded ? (
+      <Suspense
+        fallback={
+          <div className="text-center py-8 text-muted-foreground text-sm">
+            Loading Modifier Catalog...
+          </div>
+        }
+      >
+        <MamPowerModifierBrowser modifiers={modifierCatalog} />
+      </Suspense>
+    ) : (
+      <div className="text-center py-8 text-muted-foreground">Loading modifier catalog...</div>
+    )}
+  </div>
+)) as MamPowerBrowserTabComponent;
+
+MamPowerBrowserTab.preload = () =>
+  Promise.all([SpellBrowser.preload(), MamPowerModifierBrowser.preload()]);

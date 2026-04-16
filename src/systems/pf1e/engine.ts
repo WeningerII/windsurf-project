@@ -4,8 +4,10 @@ import { Pf1eDataModel } from './data-model';
 import { abilityMod } from '../../utils/math';
 import { CMB_SIZE_MODS, baseSave, classBAB } from '../shared/d20-helpers';
 import { computeD20LegacyAC } from '../../utils/armorClass';
-import { pf1eClassSpellSlotTables } from '../../data/pathfinder/1e/classSpellSlotTables';
-import { getSpellSlotsAtClassLevel, mergeVancianSpellSlots } from '../../utils/classSpellcasting';
+import { mergeVancianSpellSlots } from '../../utils/classSpellcasting';
+import { pf1eClasses } from '../../data/pathfinder/1e/classes';
+import { pf1ePrestigeClasses } from '../../data/pathfinder/1e/prestige-classes';
+import { buildD20LegacySpellSlotTotals } from '../../utils/d20LegacySpellcasting';
 
 const SKILL_ABILITIES: Record<string, string> = {
   acrobatics: 'dex',
@@ -115,25 +117,17 @@ export class Pf1eEngine implements SystemEngine<Pf1eDataModel> {
     data.hitPoints.current = Math.min(data.hitPoints.current, maxHP);
 
     // --- Spell Slots (class spell tables) ---
-    const slotTotals: Record<number, number> = {};
-    for (const cl of data.classLevels) {
-      const classSlots = getSpellSlotsAtClassLevel(
-        pf1eClassSpellSlotTables[cl.classId] as Record<number, number[]> | undefined,
-        cl.level
-      );
-      for (const [spellLevel, total] of Object.entries(classSlots)) {
-        const level = Number(spellLevel);
-        slotTotals[level] = (slotTotals[level] ?? 0) + total;
-      }
-    }
+    const slotTotals = buildD20LegacySpellSlotTotals(
+      'pf1e',
+      data.classLevels,
+      new Map(
+        [...Object.values(pf1eClasses), ...pf1ePrestigeClasses].map((klass) => [klass.id, klass])
+      )
+    );
     data.spellsPerDay = mergeVancianSpellSlots(data.spellsPerDay, slotTotals);
 
     // --- AC (from equipped armor items + size) ---
-    const ac = computeD20LegacyAC(
-      data.baseAttributes.dex ?? 10,
-      data.sizeCategory,
-      data.equipment
-    );
+    const ac = computeD20LegacyAC(data.baseAttributes.dex ?? 10, data.sizeCategory, data.equipment);
     data.armorClass.total = ac.total;
     data.armorClass.touch = ac.touch;
     data.armorClass.flatFooted = ac.flatFooted;

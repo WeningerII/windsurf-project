@@ -2,14 +2,14 @@ import { SystemDefinition } from '../../registry/types';
 import { Pf1eDataModel, createDefaultPf1eData } from './data-model';
 import { Pf1eEngine } from './engine';
 import { makeD20LegacySheet } from '../d20-legacy/wrapper';
+import { SYSTEM_SUPPORT_NOTES } from '../../utils/documentationCopy';
 
 export const Pf1eSystemDef: SystemDefinition<Pf1eDataModel> = {
   id: 'pf1e',
   label: 'Pathfinder 1e',
   version: 'PF1e SRD',
   supportLevel: 'partial',
-  supportNotes:
-    'Base classes and vetted CRB prestige classes are selectable; prestige spellcasting progression remains manual',
+  supportNotes: SYSTEM_SUPPORT_NOTES.pf1e,
   attributes: [
     { id: 'str', name: 'Strength', abbreviation: 'STR', description: 'Physical power' },
     { id: 'dex', name: 'Dexterity', abbreviation: 'DEX', description: 'Agility and reflexes' },

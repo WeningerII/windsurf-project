@@ -107,14 +107,25 @@ export class Mam3eEngine implements SystemEngine<Mam3eDataModel> {
     // 2. Calculate Defense Totals & Costs
     // Defense Base = Ability + Purchased Rank
     // Dodge (Agi), Parry (Fgt), Fort (Sta), Will (Awe), Toughness (Sta + Powers)
-
-    // Note: This is a simplified calculation for the pilot.
-    // In a full implementation, we'd loop through powers to find "Enhanced Trait" effects.
     data.defenses.dodge.total = data.abilities.agi + data.defenses.dodge.rank;
     data.defenses.parry.total = data.abilities.fgt + data.defenses.parry.rank;
     data.defenses.fortitude.total = data.abilities.sta + data.defenses.fortitude.rank;
     data.defenses.will.total = data.abilities.awe + data.defenses.will.rank;
-    data.defenses.toughness.total = data.abilities.sta + data.defenses.toughness.rank; // + Protection power
+    data.defenses.toughness.total = data.abilities.sta + data.defenses.toughness.rank;
+
+    // Add power contributions to defenses (Protection, Enhanced Trait, etc.)
+    data.powers.forEach((power) => {
+      const rank = getPowerRank(power);
+      if (power.id === 'protection' || power.id === 'force-field') {
+        data.defenses.toughness.total += rank;
+      } else if (power.id === 'enhanced-trait' && power.descriptors) {
+        for (const descriptor of power.descriptors) {
+          if (descriptor in data.defenses) {
+            data.defenses[descriptor as keyof typeof data.defenses].total += rank;
+          }
+        }
+      }
+    });
 
     const defenseRankCost =
       data.defenses.dodge.rank +

@@ -1,7 +1,7 @@
 import { SystemDefinition } from '../../registry/types';
 import { Pf2eDataModel, createDefaultPf2eData } from './data-model';
 import { Pf2eEngine } from './engine';
-import { Pf2eCharacterSheet } from './sheet';
+import { lazyWithPreload } from '../../utils/lazyWithPreload';
 
 export const Pf2eSystemDef: SystemDefinition<Pf2eDataModel> = {
   id: 'pf2e',
@@ -37,5 +37,7 @@ export const Pf2eSystemDef: SystemDefinition<Pf2eDataModel> = {
   ],
   createDefaultData: createDefaultPf2eData,
   engine: new Pf2eEngine(),
-  SheetComponent: Pf2eCharacterSheet,
+  SheetComponent: lazyWithPreload(() =>
+    import('./sheet').then((m) => ({ default: m.Pf2eCharacterSheet }))
+  ),
 };

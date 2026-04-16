@@ -16,6 +16,7 @@ export interface Pf1eClassLevel {
   classId: string;
   level: number;
   hitDieRolls: number[];
+  spellcastingSelections?: string[];
   bab: 'full' | 'three-quarter' | 'half';
   fortSave: 'good' | 'poor';
   refSave: 'good' | 'poor';
@@ -86,6 +87,8 @@ export interface Pf1eDataModel extends SystemDataModel {
 
   spellsPerDay?: Record<number, { total: number; used: number }>;
   spellsKnown?: string[];
+  preparedSpellsByLevel?: Record<number, string[]>;
+  alwaysPreparedSpellIds?: string[];
 
   equipment: Array<{
     itemId: string;

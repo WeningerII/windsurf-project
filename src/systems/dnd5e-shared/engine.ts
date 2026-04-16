@@ -78,7 +78,10 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
         ...document.system,
         hitPoints: { ...document.system.hitPoints },
         spellcasting: document.system.spellcasting
-          ? { ...document.system.spellcasting, spellSlots: { ...document.system.spellcasting.spellSlots } }
+          ? {
+              ...document.system.spellcasting,
+              spellSlots: { ...document.system.spellcasting.spellSlots },
+            }
           : undefined,
       },
     };
@@ -92,7 +95,9 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
     const conMod = abilityMod(data.baseAttributes.con ?? 10);
     const dexMod = abilityMod(data.baseAttributes.dex ?? 10);
     const totalLevel =
-      data.classLevels.length > 0 ? data.classLevels.reduce((sum, cl) => sum + cl.level, 0) : data.level;
+      data.classLevels.length > 0
+        ? data.classLevels.reduce((sum, cl) => sum + cl.level, 0)
+        : data.level;
     data.level = totalLevel;
     // Give derived classes a chance to alter initiative/AC base rules
     this.applySubsystemRules(clonedDoc, dexMod);
@@ -112,11 +117,11 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
         }
       }
       maxHP = Math.max(maxHP, totalLevel); // minimum 1 HP per level
-      
+
       maxHP = this.applyExhaustionMaxHP(data.exhaustionLevel, maxHP);
       data.hitPoints.max = maxHP;
     }
-    
+
     data.hitPoints.current = Math.min(data.hitPoints.current, data.hitPoints.max);
     if (this.isExhaustionLethal(data.exhaustionLevel)) {
       data.hitPoints.current = 0;
@@ -167,7 +172,7 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
     data.armorClass = compute5eAC(data.baseAttributes.dex ?? 10, data.equipment);
     data.initiative = dexMod;
   }
-  
+
   protected applyExhaustionMaxHP(_exhaustion: number, maxHP: number): number {
     return maxHP; // overridden in 2014 engine
   }
@@ -235,7 +240,7 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
         hasDnd5eCondition(d.conditions, 'petrified') ||
         hasDnd5eCondition(d.conditions, 'stunned') ||
         hasDnd5eCondition(d.conditions, 'unconscious'));
-        
+
     if (autoFailDexStrSave) {
       return {
         total: modifier,
@@ -248,19 +253,20 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
     const hasDisadvantage =
       (isAbilityCheck && (this.getExhaustionSkillPenalty(d.exhaustionLevel) || isPoisoned)) ||
       (isSavingThrow && this.getExhaustionSavePenalty(d.exhaustionLevel));
-      
+
     const isInitiative = checkId === 'dex';
     const hasAdvantage = isInitiative && this.hasInitiativeAdvantage(document);
-    
+
     let rollMode: RollMode = 'normal';
     if (hasDisadvantage && !hasAdvantage) rollMode = 'disadvantage';
     else if (hasAdvantage && !hasDisadvantage) rollMode = 'advantage';
 
     let rollFlavor = flavor;
-    if (rollMode !== 'normal') rollFlavor += ` (${rollMode.charAt(0).toUpperCase() + rollMode.slice(1)})`;
+    if (rollMode !== 'normal')
+      rollFlavor += ` (${rollMode.charAt(0).toUpperCase() + rollMode.slice(1)})`;
 
     const d20 = rollD20(rollMode);
-    
+
     // Apply numerical D20 modifier penalty for 2024 exhaustion
     const extraMod = this.getExhaustionD20Penalty(d.exhaustionLevel);
 
@@ -273,15 +279,18 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
       flavor: rollFlavor,
     };
   }
-  
-  protected applyInitiativeModifiers(_doc: CharacterDocument<Dnd5eDataModel>, modifier: number): number {
+
+  protected applyInitiativeModifiers(
+    _doc: CharacterDocument<Dnd5eDataModel>,
+    modifier: number
+  ): number {
     return modifier;
   }
-  
+
   protected hasInitiativeAdvantage(_doc: CharacterDocument<Dnd5eDataModel>): boolean {
     return false;
   }
-  
+
   protected getExhaustionD20Penalty(_exhaustion: number): number {
     return 0; // overridden in 2024
   }

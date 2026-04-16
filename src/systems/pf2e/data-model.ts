@@ -45,6 +45,8 @@ export interface Pf2eSpellcasting {
   proficiency: Pf2eProficiency;
   spellSlots: Record<number, { max: number; used: number }>; // level 1-10
   spellsKnown: string[];
+  preparedSpellsByRank?: Record<number, string[]>;
+  alwaysPreparedSpellIds?: string[];
   focusPoints: { current: number; max: number };
 }
 
@@ -58,6 +60,10 @@ export interface Pf2eDataModel extends SystemDataModel {
   backgroundId?: string;
   classId?: string;
   selectedArchetypeIds?: string[];
+  ancestryAbilityBoostSelections?: string[];
+  backgroundAbilityBoostSelections?: string[];
+  backgroundSkillTrainingSelection?: string;
+  backgroundLoreTrainingSelection?: string;
   ancestryHP: number; // HP from ancestry (e.g., Human=8, Dwarf=10, Elf=6)
   size: 'tiny' | 'small' | 'medium' | 'large' | 'huge' | 'gargantuan';
   languages: string[];
@@ -134,6 +140,8 @@ export const createDefaultPf2eData = (): Pf2eDataModel => ({
   experiencePoints: 0,
   heroPoints: 1,
   selectedArchetypeIds: [],
+  ancestryAbilityBoostSelections: [],
+  backgroundAbilityBoostSelections: [],
   ancestryHP: 8,
   size: 'medium',
   languages: [],

@@ -5,8 +5,9 @@ import { abilityMod } from '../../utils/math';
 import { GRAPPLE_SIZE_MODS, baseSave, classBAB } from '../shared/d20-helpers';
 import { computeD20LegacyAC } from '../../utils/armorClass';
 import { dnd35eClasses } from '../../data/dnd/3.5e/classes';
-import { pf1eClassSpellSlotTables } from '../../data/pathfinder/1e/classSpellSlotTables';
-import { getSpellSlotsAtClassLevel, mergeVancianSpellSlots } from '../../utils/classSpellcasting';
+import { dnd35eNormalizedPrestigeClasses } from '../../data/dnd/3.5e/prestige-classes';
+import { mergeVancianSpellSlots } from '../../utils/classSpellcasting';
+import { buildD20LegacySpellSlotTotals } from '../../utils/d20LegacySpellcasting';
 
 const SKILL_ABILITIES: Record<string, string> = {
   appraise: 'int',
@@ -40,6 +41,8 @@ const SKILL_ABILITIES: Record<string, string> = {
   'use-magic': 'cha',
   'use-rope': 'dex',
 };
+
+const DND35E_CLASS_CATALOG = [...dnd35eClasses, ...dnd35eNormalizedPrestigeClasses];
 
 /**
  * D&D 3.5e Logic Engine
@@ -116,26 +119,15 @@ export class Dnd35eEngine implements SystemEngine<Dnd35eDataModel> {
     // NOTE: 3.5e class files currently lack full `spellcasting.spellSlots` tables.
     // We use native 3.5e spell tables when present and fall back to PF1e core tables
     // for matching class IDs to automate baseline slot totals.
-    const slotTotals: Record<number, number> = {};
-    for (const cl of data.classLevels) {
-      const dndClass = dnd35eClasses.find((klass) => klass.id === cl.classId);
-      const spellSlotsTable = (dndClass?.spellcasting?.spellSlots ??
-        pf1eClassSpellSlotTables[cl.classId]) as Record<number, number[]> | undefined;
-
-      const classSlots = getSpellSlotsAtClassLevel(spellSlotsTable, cl.level);
-      for (const [spellLevel, total] of Object.entries(classSlots)) {
-        const level = Number(spellLevel);
-        slotTotals[level] = (slotTotals[level] ?? 0) + total;
-      }
-    }
+    const slotTotals = buildD20LegacySpellSlotTotals(
+      'dnd-3.5e',
+      data.classLevels,
+      new Map(DND35E_CLASS_CATALOG.map((klass) => [klass.id, klass]))
+    );
     data.spellsPerDay = mergeVancianSpellSlots(data.spellsPerDay, slotTotals);
 
     // --- AC (from equipped armor items + size) ---
-    const ac = computeD20LegacyAC(
-      data.baseAttributes.dex ?? 10,
-      data.sizeCategory,
-      data.equipment
-    );
+    const ac = computeD20LegacyAC(data.baseAttributes.dex ?? 10, data.sizeCategory, data.equipment);
     data.armorClass.total = ac.total;
     data.armorClass.touch = ac.touch;
     data.armorClass.flatFooted = ac.flatFooted;

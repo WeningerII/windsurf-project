@@ -23,6 +23,10 @@ export interface Dnd5eTemplateState {
     tools: string[];
     savingThrows: string[];
   };
+  backgroundDerived: {
+    tools: string[];
+    languages: string[];
+  };
   featDerivedAutomation: {
     abilityScores: Record<string, number>;
     armor: string[];
@@ -46,8 +50,14 @@ export interface Dnd5eDataModel extends SystemDataModel {
 
   // Character options
   speciesId?: string;
+  speciesAbilitySelections?: string[];
+  speciesLanguageSelections?: string[];
+  speciesSkillSelections?: string[];
+  speciesToolSelections?: string[];
   classLevels: ClassLevel[];
   backgroundId?: string;
+  backgroundLanguageSelections?: string[];
+  backgroundToolSelections?: string[];
   alignmentId?: string;
 
   // Base attributes
@@ -96,6 +106,10 @@ export const createDefaultDnd5eData = (): Dnd5eDataModel => ({
   level: 1,
   experiencePoints: 0,
   classLevels: [],
+  speciesAbilitySelections: [],
+  speciesLanguageSelections: [],
+  speciesSkillSelections: [],
+  speciesToolSelections: [],
   baseAttributes: {
     str: 10,
     dex: 10,
@@ -121,6 +135,8 @@ export const createDefaultDnd5eData = (): Dnd5eDataModel => ({
   features: [],
   feats: [],
   featureOptionSelections: [],
+  backgroundLanguageSelections: [],
+  backgroundToolSelections: [],
   equipment: [],
   inventory: [],
   currency: { copper: 0, silver: 0, electrum: 0, gold: 0, platinum: 0 },
@@ -130,6 +146,10 @@ export const createDefaultDnd5eData = (): Dnd5eDataModel => ({
       weapons: [],
       tools: [],
       savingThrows: [],
+    },
+    backgroundDerived: {
+      tools: [],
+      languages: [],
     },
     featDerivedAutomation: {
       abilityScores: {},

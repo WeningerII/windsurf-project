@@ -16,6 +16,7 @@ export interface Dnd35eClassLevel {
   classId: string;
   level: number;
   hitDieRolls: number[];
+  spellcastingSelections?: string[];
   bab: 'full' | 'three-quarter' | 'half';
   fortSave: 'good' | 'poor';
   refSave: 'good' | 'poor';
@@ -79,6 +80,8 @@ export interface Dnd35eDataModel extends SystemDataModel {
   // Spellcasting (Vancian)
   spellsPerDay?: Record<number, { total: number; used: number }>; // level -> slots
   spellsKnown?: string[];
+  preparedSpellsByLevel?: Record<number, string[]>;
+  alwaysPreparedSpellIds?: string[];
 
   // Equipment
   equipment: Array<{
