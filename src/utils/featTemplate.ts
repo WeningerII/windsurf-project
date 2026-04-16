@@ -299,10 +299,7 @@ function removeFeatSkillSources(sys: Dnd5eLikeDataModel): void {
   });
 }
 
-function applyFeatSkillSources(
-  sys: Dnd5eLikeDataModel,
-  feats: Feat[]
-): void {
+function applyFeatSkillSources(sys: Dnd5eLikeDataModel, feats: Feat[]): void {
   feats.forEach((feat) => {
     const source = featSourceId(feat.id);
     Object.keys(feat.automation?.skills || {}).forEach((skillId) => {
@@ -329,7 +326,12 @@ function syncFeatState<T extends Dnd5eLikeDataModel>(
 ): CharacterDocument<T> {
   const sys = document.system;
   const previousDerived = sys.templateState?.featDerivedAutomation || emptyDerivedAutomation();
-  const classDerivedProficiencies = sys.templateState?.classDerivedProficiencies || emptyClassDerivedProficiencies();
+  const classDerivedProficiencies =
+    sys.templateState?.classDerivedProficiencies || emptyClassDerivedProficiencies();
+  const backgroundDerived = sys.templateState?.backgroundDerived || {
+    tools: [],
+    languages: [],
+  };
   const nextDerived = aggregateFeatAutomation(sys.feats || []);
 
   Object.entries(previousDerived.abilityScores || {}).forEach(([ability, bonus]) => {
@@ -377,6 +379,10 @@ function syncFeatState<T extends Dnd5eLikeDataModel>(
       weapons: [...classDerivedProficiencies.weapons],
       tools: [...classDerivedProficiencies.tools],
       savingThrows: [...classDerivedProficiencies.savingThrows],
+    },
+    backgroundDerived: {
+      tools: [...backgroundDerived.tools],
+      languages: [...backgroundDerived.languages],
     },
     featDerivedAutomation: {
       abilityScores: nextDerived.abilityScores,
@@ -575,7 +581,9 @@ export function getDnd5eFeatAutomationRequirements(
     const requirement = choiceRequirementFromGrant(kind, value);
     if (
       requirement &&
-      !requirements.some((existing) => existing.id === requirement.id && existing.category === requirement.category)
+      !requirements.some(
+        (existing) => existing.id === requirement.id && existing.category === requirement.category
+      )
     ) {
       requirements.push(requirement);
     }
@@ -637,7 +645,8 @@ function resolveSelections(
   baseAttributes: Record<string, number>
 ): string[] {
   const provided = selections[requirement.id] || [];
-  const resolved = provided.length > 0 ? provided : defaultSelectionsForRequirement(requirement, baseAttributes);
+  const resolved =
+    provided.length > 0 ? provided : defaultSelectionsForRequirement(requirement, baseAttributes);
 
   if (resolved.length !== requirement.count) {
     throw new Error(`${requirement.label} requires ${requirement.count} selection(s)`);
@@ -652,13 +661,17 @@ function resolveSelections(
     }
 
     if (count > requirement.maxPerOption) {
-      throw new Error(`${requirement.label} cannot choose "${value}" more than ${requirement.maxPerOption} time(s)`);
+      throw new Error(
+        `${requirement.label} cannot choose "${value}" more than ${requirement.maxPerOption} time(s)`
+      );
     }
 
     if (requirement.category === 'ability' && requirement.maxScore != null) {
       const current = baseAttributes[value] || 10;
       if (current + count > requirement.maxScore) {
-        throw new Error(`${humanizeId(value)} cannot exceed ${requirement.maxScore} from ${requirement.label}`);
+        throw new Error(
+          `${humanizeId(value)} cannot exceed ${requirement.maxScore} from ${requirement.label}`
+        );
       }
     }
   });
@@ -776,7 +789,9 @@ function skillAutomationFromSelections(
   const skillAutomation: Record<string, ProficiencyLevel> = {};
 
   getDnd5eFeatAutomationRequirements(feat)
-    .filter((requirement) => requirement.category === 'skill' || requirement.category === 'skill-or-tool')
+    .filter(
+      (requirement) => requirement.category === 'skill' || requirement.category === 'skill-or-tool'
+    )
     .forEach((requirement) => {
       const resolved = resolveSelections(requirement, selections, baseAttributes);
       resolved.forEach((value) => {
@@ -798,7 +813,9 @@ function toolAutomationFromSelections(
   const tools = [...(concreteFeatAutomation(feat).tools || [])];
 
   getDnd5eFeatAutomationRequirements(feat)
-    .filter((requirement) => requirement.category === 'tool' || requirement.category === 'skill-or-tool')
+    .filter(
+      (requirement) => requirement.category === 'tool' || requirement.category === 'skill-or-tool'
+    )
     .forEach((requirement) => {
       const resolved = resolveSelections(requirement, selections, baseAttributes);
       resolved.forEach((value) => {

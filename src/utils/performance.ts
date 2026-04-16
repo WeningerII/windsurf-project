@@ -1,15 +1,15 @@
-export function debounce<T extends (...args: any[]) => void>(
-  func: T,
+export function debounce<TArgs extends unknown[]>(
+  func: (...args: TArgs) => void,
   wait: number
 ): {
-  (...args: Parameters<T>): void;
+  (...args: TArgs): void;
   cancel: () => void;
   flush: () => void;
 } {
   let timeoutId: ReturnType<typeof setTimeout> | undefined;
-  let lastArgs: Parameters<T> | undefined;
+  let lastArgs: TArgs | undefined;
 
-  const debounced = function (...args: Parameters<T>) {
+  const debounced = function (...args: TArgs) {
     lastArgs = args;
     if (timeoutId !== undefined) {
       clearTimeout(timeoutId);
@@ -41,12 +41,12 @@ export function debounce<T extends (...args: any[]) => void>(
   return debounced;
 }
 
-export function throttle<T extends (...args: any[]) => any>(
-  func: T,
+export function throttle<TThis, TArgs extends unknown[], TResult>(
+  func: (this: TThis, ...args: TArgs) => TResult,
   limit: number
-): (...args: Parameters<T>) => void {
-  let inThrottle: boolean;
-  return function (this: any, ...args: Parameters<T>) {
+): (this: TThis, ...args: TArgs) => void {
+  let inThrottle = false;
+  return function (this: TThis, ...args: TArgs) {
     if (!inThrottle) {
       func.apply(this, args);
       inThrottle = true;

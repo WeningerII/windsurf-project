@@ -57,13 +57,13 @@ function tryLoadV2Documents(): CharacterDocument<SystemDataModel>[] | null {
       throw new Error('V2 storage payload is missing documents[]');
     }
 
-    if (data.version !== STORAGE_VERSION && process.env.NODE_ENV !== 'production') {
+    if (data.version !== STORAGE_VERSION && !import.meta.env.PROD) {
       console.warn('Document storage version mismatch, attempting migration...');
     }
 
     return hydrateDocuments(data.documents);
   } catch (error) {
-    if (process.env.NODE_ENV !== 'production') {
+    if (!import.meta.env.PROD) {
       console.warn('Failed to parse V2 document storage:', error);
     }
     return null;
@@ -87,7 +87,7 @@ export function saveDocuments(documents: CharacterDocument<SystemDataModel>[]): 
   try {
     saveToLocalStorage(documents);
   } catch (error) {
-    if (process.env.NODE_ENV !== 'production') {
+    if (!import.meta.env.PROD) {
       console.error('Failed to save documents to localStorage:', error);
     }
     throw new Error('Failed to save document data. Storage may be full.');

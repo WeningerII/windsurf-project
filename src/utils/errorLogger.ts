@@ -1,8 +1,11 @@
 /**
  * Error Logging and Monitoring Utilities
  *
- * Provides centralized error logging with categorization and context
+ * Provides centralized error logging with categorization and context.
+ * Integrates with Sentry for production error monitoring when VITE_SENTRY_DSN is set.
  */
+
+import * as Sentry from '@sentry/browser';
 
 export enum ErrorSeverity {
   LOW = 'low',
@@ -77,8 +80,18 @@ class ErrorLogger {
   }
 
   private sendToMonitoring(errorLog: ErrorLog): void {
-    // Placeholder for production error monitoring
-    // Could integrate with Sentry, LogRocket, etc.
+    if (Sentry.getClient()) {
+      const error = errorLog.stack
+        ? Object.assign(new Error(errorLog.message), { stack: errorLog.stack })
+        : new Error(errorLog.message);
+      Sentry.captureException(error, {
+        tags: { category: errorLog.category, severity: errorLog.severity },
+        extra: errorLog.context,
+      });
+      return;
+    }
+
+    // Fallback when Sentry is not configured (dev / CI)
     try {
       if (typeof window !== 'undefined' && 'localStorage' in window) {
         const criticalErrors = JSON.parse(localStorage.getItem('critical-errors') || '[]');

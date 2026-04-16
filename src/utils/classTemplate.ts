@@ -10,6 +10,9 @@ import { Prerequisite } from '../types/core/common';
 import { CharacterDocument } from '../types/core/document';
 import { Dnd5e2024DataModel } from '../systems/dnd5e-2024/data-model';
 import { Dnd5eDataModel } from '../systems/dnd5e/data-model';
+import { getDnd5eAlwaysPreparedSpellIds } from '../systems/dnd5e/shared/spellPreparation';
+import { Choice } from '../types/core/common';
+import { expandDnd5eToolChoiceValue, formatDnd5eToolLabel } from './dnd5eToolChoices';
 
 type Dnd5eLikeDataModel = Dnd5eDataModel | Dnd5e2024DataModel;
 
@@ -18,6 +21,11 @@ type DerivedClassProficiencies = {
   weapons: string[];
   tools: string[];
   savingThrows: string[];
+};
+
+export type Dnd5eClassChoiceSlot = {
+  label: string;
+  options: string[];
 };
 
 type DerivedFeatAutomation = {
@@ -35,6 +43,8 @@ export interface Dnd5eClassTemplateOptions {
   mode?: Dnd5eClassTemplateMode;
   targetClassId?: string;
   enforceMulticlassRequirements?: boolean;
+  skillSelections?: string[];
+  toolSelections?: string[];
 }
 
 const ATTRIBUTE_NAME_TO_ID: Record<string, string> = {
@@ -155,6 +165,10 @@ function dedupe(values: string[]): string[] {
   return [...new Set(values)];
 }
 
+function removeValues(current: string[] | undefined, removed: string[]): string[] {
+  return (current || []).filter((value) => !removed.includes(value));
+}
+
 function mergeDerivedList(
   current: string[],
   previousDerived: string[],
@@ -163,10 +177,120 @@ function mergeDerivedList(
   return dedupe([...current.filter((value) => !previousDerived.includes(value)), ...nextDerived]);
 }
 
+function buildChoiceSlots(
+  choice: Choice<string>,
+  optionResolver?: (value: string) => string[] | null
+): Dnd5eClassChoiceSlot[] {
+  const options = dedupe(choice.options.flatMap((option) => optionResolver?.(option) || [option]));
+
+  if (options.length <= choice.count) {
+    return [];
+  }
+
+  return Array.from({ length: choice.count }, (_, index) => ({
+    label: choice.count > 1 ? `${choice.label} ${index + 1}` : choice.label,
+    options,
+  }));
+}
+
+function fixedChoiceValues(
+  choice: Choice<string>,
+  optionResolver?: (value: string) => string[] | null
+): string[] {
+  const options = dedupe(choice.options.flatMap((option) => optionResolver?.(option) || [option]));
+
+  return options.length <= choice.count ? options : [];
+}
+
+export function getDnd5eClassSkillChoiceSlots(classData: CharacterClass): Dnd5eClassChoiceSlot[] {
+  return buildChoiceSlots(classData.skillProficiencies);
+}
+
+export function getDnd5eClassToolChoiceSlots(classData: CharacterClass): Dnd5eClassChoiceSlot[] {
+  return classData.toolProficiencies.flatMap((choice) =>
+    buildChoiceSlots(choice, expandDnd5eToolChoiceValue)
+  );
+}
+
+export function formatDnd5eClassToolChoiceLabel(toolId: string): string {
+  return formatDnd5eToolLabel(toolId);
+}
+
+function fixedSkillProficiencies(classData: CharacterClass): string[] {
+  return fixedChoiceValues(classData.skillProficiencies);
+}
+
 function fixedToolProficiencies(classData: CharacterClass): string[] {
   return classData.toolProficiencies.flatMap((choice) =>
-    choice.count === choice.options.length ? choice.options : []
+    fixedChoiceValues(choice, expandDnd5eToolChoiceValue)
   );
+}
+
+function sanitizeSelectionsForSlots(
+  slots: Dnd5eClassChoiceSlot[],
+  rawSelections: string[] | undefined,
+  unavailable: string[]
+): string[] {
+  if (slots.length === 0) {
+    return [];
+  }
+
+  const blocked = new Set(unavailable);
+  const selections: string[] = [];
+
+  slots.forEach((slot, index) => {
+    const candidate = rawSelections?.[index] ?? '';
+    if (candidate && slot.options.includes(candidate) && !blocked.has(candidate)) {
+      selections[index] = candidate;
+      blocked.add(candidate);
+      return;
+    }
+
+    const fallback = slot.options.find((option) => !blocked.has(option));
+    selections[index] = fallback || '';
+    if (fallback) {
+      blocked.add(fallback);
+    }
+  });
+
+  return selections;
+}
+
+function mergeSkillSource(sys: Dnd5eLikeDataModel, skillId: string, source: string): void {
+  const existing = sys.skillProficiencies[skillId];
+
+  if (!existing) {
+    sys.skillProficiencies[skillId] = {
+      level: 'proficient',
+      source: [source],
+    };
+    return;
+  }
+
+  sys.skillProficiencies[skillId] = {
+    ...existing,
+    level:
+      existing.level === 'expertise' || existing.level === 'double' ? existing.level : 'proficient',
+    source: [...new Set([...(existing.source || []), source])],
+  };
+}
+
+function removeSkillSource(sys: Dnd5eLikeDataModel, skillId: string, source: string): void {
+  const existing = sys.skillProficiencies[skillId];
+  if (!existing) {
+    return;
+  }
+
+  const remainingSources = (existing.source || []).filter((entry) => entry !== source);
+  if (remainingSources.length === 0) {
+    delete sys.skillProficiencies[skillId];
+    return;
+  }
+
+  sys.skillProficiencies[skillId] = {
+    ...existing,
+    source: remainingSources,
+  };
 }
 
 function buildDerivedProficiencies(
@@ -285,6 +409,7 @@ function buildSpellcastingState(
   classLevels: Dnd5eLikeDataModel['classLevels'],
   classCatalog: Map<string, CharacterClass>
 ): Dnd5eLikeDataModel['spellcasting'] {
+  const classList = [...classCatalog.values()];
   const classes = classLevels.flatMap((classLevel) => {
     const classData = classCatalog.get(classLevel.classId);
     if (!classData?.spellcasting) {
@@ -308,6 +433,7 @@ function buildSpellcastingState(
     classes,
     spellsKnown: existing?.spellsKnown || [],
     spellsPrepared: existing?.spellsPrepared || [],
+    alwaysPreparedSpellIds: getDnd5eAlwaysPreparedSpellIds(classLevels, classList),
     spellSlots: existing?.spellSlots || createEmptySpellSlots(),
   };
 }
@@ -398,13 +524,16 @@ function assertMulticlassRequirements(
 function createClassLevel(
   classData: CharacterClass,
   level: number,
-  existing?: Dnd5eLikeDataModel['classLevels'][number]
+  existing?: Dnd5eLikeDataModel['classLevels'][number],
+  selections?: Pick<Dnd5eClassTemplateOptions, 'skillSelections' | 'toolSelections'>
 ): Dnd5eLikeDataModel['classLevels'][number] {
   return {
     classId: classData.id,
     subclassId: existing?.subclassId,
     level,
     hitDieRolls: seedHitDieRolls(existing?.hitDieRolls || [], classData.hitDie, level),
+    skillSelections: [...(selections?.skillSelections ?? existing?.skillSelections ?? [])],
+    toolSelections: [...(selections?.toolSelections ?? existing?.toolSelections ?? [])],
   };
 }
 
@@ -417,6 +546,28 @@ function syncClassState<T extends Dnd5eLikeDataModel>(
   const previousDerived =
     sys.templateState?.classDerivedProficiencies || emptyDerivedProficiencies();
   const nextDerived = buildDerivedProficiencies(sys.classLevels, classCatalog);
+  const previousStartingClassLevel = previousClassLevels[0];
+  const previousStartingClassData = previousStartingClassLevel
+    ? classCatalog.get(previousStartingClassLevel.classId)
+    : undefined;
+  const previousClassSkillSource = previousStartingClassData?.name;
+
+  if (previousClassSkillSource) {
+    const previousStartingSkills = dedupe([
+      ...fixedSkillProficiencies(previousStartingClassData),
+      ...(previousStartingClassLevel.skillSelections || []),
+    ]);
+    previousStartingSkills.forEach((skillId) => {
+      removeSkillSource(sys, skillId, previousClassSkillSource);
+    });
+  }
+
+  if (previousStartingClassLevel?.toolSelections?.length) {
+    sys.toolProficiencies = removeValues(
+      sys.toolProficiencies || [],
+      previousStartingClassLevel.toolSelections
+    );
+  }
 
   sys.savingThrowProficiencies = mergeDerivedList(
     sys.savingThrowProficiencies || [],
@@ -438,6 +589,37 @@ function syncClassState<T extends Dnd5eLikeDataModel>(
     previousDerived.tools,
     nextDerived.tools
   );
+
+  const startingClassLevel = sys.classLevels[0];
+  const startingClassData = startingClassLevel
+    ? classCatalog.get(startingClassLevel.classId)
+    : undefined;
+
+  if (startingClassLevel && startingClassData) {
+    const skillSlots = getDnd5eClassSkillChoiceSlots(startingClassData);
+    const skillSelections = sanitizeSelectionsForSlots(
+      skillSlots,
+      startingClassLevel.skillSelections,
+      Object.keys(sys.skillProficiencies || {})
+    );
+    const fixedSkills = fixedSkillProficiencies(startingClassData);
+    startingClassLevel.skillSelections = skillSelections;
+    dedupe([...fixedSkills, ...skillSelections.filter(Boolean)]).forEach((skillId) => {
+      mergeSkillSource(sys, skillId, startingClassData.name);
+    });
+
+    const toolSlots = getDnd5eClassToolChoiceSlots(startingClassData);
+    const toolSelections = sanitizeSelectionsForSlots(
+      toolSlots,
+      startingClassLevel.toolSelections,
+      sys.toolProficiencies || []
+    );
+    startingClassLevel.toolSelections = toolSelections;
+    sys.toolProficiencies = dedupe([
+      ...(sys.toolProficiencies || []),
+      ...toolSelections.filter(Boolean),
+    ]);
+  }
 
   const relevantClassIds = new Set([
     ...previousClassLevels.map((classLevel) => classLevel.classId),
@@ -487,9 +669,18 @@ function syncClassState<T extends Dnd5eLikeDataModel>(
     sys.classLevels.length > 0
       ? sys.classLevels.reduce((total, classLevel) => total + classLevel.level, 0)
       : 1;
-  const featDerivedAutomation = sys.templateState?.featDerivedAutomation || emptyDerivedFeatAutomation();
+  const backgroundDerived = sys.templateState?.backgroundDerived || {
+    tools: [],
+    languages: [],
+  };
+  const featDerivedAutomation =
+    sys.templateState?.featDerivedAutomation || emptyDerivedFeatAutomation();
   sys.templateState = {
     classDerivedProficiencies: nextDerived,
+    backgroundDerived: {
+      tools: [...backgroundDerived.tools],
+      languages: [...backgroundDerived.languages],
+    },
     featDerivedAutomation: {
       abilityScores: { ...featDerivedAutomation.abilityScores },
       armor: [...featDerivedAutomation.armor],
@@ -544,7 +735,7 @@ export function applyDnd5eClassTemplate<T extends Dnd5eLikeDataModel>(
     if (existingClassIndex >= 0) {
       throw new Error(`${classData.name} is already present in this multiclass build`);
     }
-    nextClassLevels.push(createClassLevel(classData, level));
+    nextClassLevels.push(createClassLevel(classData, level, undefined, options));
   } else if (mode === 'replace') {
     if (targetClassIndex < 0) {
       throw new Error(`Cannot replace missing class entry "${targetClassId}"`);
@@ -555,17 +746,18 @@ export function applyDnd5eClassTemplate<T extends Dnd5eLikeDataModel>(
 
     const existingRow =
       classData.id === targetClassId ? nextClassLevels[targetClassIndex] : undefined;
-    nextClassLevels[targetClassIndex] = createClassLevel(classData, level, existingRow);
+    nextClassLevels[targetClassIndex] = createClassLevel(classData, level, existingRow, options);
   } else if (existingClassIndex >= 0) {
     nextClassLevels[existingClassIndex] = createClassLevel(
       classData,
       level,
-      nextClassLevels[existingClassIndex]
+      nextClassLevels[existingClassIndex],
+      options
     );
   } else if (nextClassLevels.length === 1) {
-    nextClassLevels[0] = createClassLevel(classData, level);
+    nextClassLevels[0] = createClassLevel(classData, level, undefined, options);
   } else {
-    nextClassLevels.push(createClassLevel(classData, level));
+    nextClassLevels.push(createClassLevel(classData, level, undefined, options));
   }
 
   const totalLevel = nextClassLevels.reduce((total, classLevel) => total + classLevel.level, 0);

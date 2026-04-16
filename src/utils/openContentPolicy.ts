@@ -3,6 +3,8 @@ import { GameSystemId } from '../types/game-systems';
 export type OpenContentCategory =
   | 'spells'
   | 'classes'
+  | 'domains'
+  | 'domainCards'
   | 'species'
   | 'backgrounds'
   | 'featureOptions'
@@ -47,7 +49,12 @@ export const strictOpenContentPolicy: Record<GameSystemId, SystemOpenContentPoli
     allowMissingSourceFor: [],
   },
   daggerheart: {
-    allowedSources: ['Daggerheart Core Rulebook', 'Daggerheart'],
+    allowedSources: [
+      'Daggerheart Core Rulebook',
+      'Daggerheart',
+      'Daggerheart SRD 1.0',
+      'System Reference Document 1.0',
+    ],
     allowMissingSourceFor: [],
   },
 };

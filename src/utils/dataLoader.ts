@@ -27,6 +27,17 @@ import type { Pf2eBackgroundDefinition } from '../data/pathfinder/2e/backgrounds
 import type { Complication } from '../data/mutants-and-masterminds/3e/complications';
 import type { PowerModifier } from '../data/mutants-and-masterminds/3e/modifiers/extras';
 import type { Pf1eTrait } from '../systems/pf1e/data-model';
+import type {
+  DaggerheartAncestry,
+  DaggerheartArmor,
+  DaggerheartClass,
+  DaggerheartConsumable,
+  DaggerheartCommunity,
+  DaggerheartDomain,
+  DaggerheartDomainCard,
+  DaggerheartLoot,
+  DaggerheartWeapon,
+} from '../types/daggerheart';
 import { errorLogger, ErrorCategory, ErrorSeverity } from './errorLogger';
 import { loadDnd5e2014FeatureOptions } from './dnd5eFeatureOptions';
 import { OpenContentCategory, filterOpenContentBySource } from './openContentPolicy';
@@ -72,31 +83,8 @@ function finalizeLoadedItems<T extends LoadedEntity>(
  * @private
  */
 async function loadDnd5e2024Spells(): Promise<Spell[]> {
-  const modules = await Promise.all([
-    import('../data/dnd/5e-2024/spells/cantrips'),
-    import('../data/dnd/5e-2024/spells/level-1'),
-    import('../data/dnd/5e-2024/spells/level-2'),
-    import('../data/dnd/5e-2024/spells/level-3'),
-    import('../data/dnd/5e-2024/spells/level-4'),
-    import('../data/dnd/5e-2024/spells/level-5'),
-    import('../data/dnd/5e-2024/spells/level-6'),
-    import('../data/dnd/5e-2024/spells/level-7'),
-    import('../data/dnd/5e-2024/spells/level-8'),
-    import('../data/dnd/5e-2024/spells/level-9'),
-  ]);
-
-  const spells: Spell[] = [];
-  modules.forEach((module) => {
-    Object.values(module).forEach((value) => {
-      if (Array.isArray(value)) {
-        spells.push(...value);
-      } else if (value && typeof value === 'object' && 'id' in value && 'name' in value) {
-        spells.push(value as Spell);
-      }
-    });
-  });
-
-  return spells;
+  const spellModule = await import('../data/dnd/5e-2024/spells');
+  return spellModule.allSpells || spellModule.dnd5e2024AllSpells || [];
 }
 
 /**
@@ -215,31 +203,8 @@ async function loadDnd5e2024Feats(): Promise<FeatDefinition[]> {
 // D&D 5e-2014 Loaders
 async function loadDnd5e2014Spells(): Promise<Spell[]> {
   try {
-    const modules = await Promise.all([
-      import('../data/dnd/5e-2014/spells/cantrips'),
-      import('../data/dnd/5e-2014/spells/level-1'),
-      import('../data/dnd/5e-2014/spells/level-2'),
-      import('../data/dnd/5e-2014/spells/level-3'),
-      import('../data/dnd/5e-2014/spells/level-4'),
-      import('../data/dnd/5e-2014/spells/level-5'),
-      import('../data/dnd/5e-2014/spells/level-6'),
-      import('../data/dnd/5e-2014/spells/level-7'),
-      import('../data/dnd/5e-2014/spells/level-8'),
-      import('../data/dnd/5e-2014/spells/level-9'),
-    ]);
-
-    const spells: Spell[] = [];
-    modules.forEach((module) => {
-      Object.values(module).forEach((value) => {
-        if (Array.isArray(value)) {
-          spells.push(...value);
-        } else if (value && typeof value === 'object' && 'id' in value && 'name' in value) {
-          spells.push(value as Spell);
-        }
-      });
-    });
-
-    return spells;
+    const spellModule = await import('../data/dnd/5e-2014/spells');
+    return spellModule.allSpells || spellModule.dnd5eSpells || [];
   } catch (error) {
     errorLogger.log(
       ErrorCategory.DATA_LOAD,
@@ -289,14 +254,15 @@ async function loadDnd5e2014Equipment(): Promise<Item[]> {
 }
 
 async function loadDnd5e2014Feats(): Promise<FeatDefinition[]> {
-  return [];
+  const featModule = await import('../data/dnd/5e-2014/feats');
+  return featModule.dnd5e2014Feats || [];
 }
 
 // Pathfinder 2e Loaders
 async function loadPf2eSpells(): Promise<Spell[]> {
   try {
     const spellModule = await import('../data/pathfinder/2e/spells');
-    return spellModule.pf2eSpells || [];
+    return spellModule.allSpells || spellModule.pf2eSpells || [];
   } catch (error) {
     errorLogger.log(
       ErrorCategory.DATA_LOAD,
@@ -342,12 +308,18 @@ async function loadPf2eArchetypes(): Promise<Archetype[]> {
 // D&D 3.5e Loaders
 async function loadDnd35eSpells(): Promise<Spell[]> {
   const spellModule = await import('../data/dnd/3.5e/spells');
-  return spellModule.dnd35eSpells || [];
+  return spellModule.allSpells || spellModule.dnd35eSpells || [];
 }
 
 async function loadDnd35eClasses(): Promise<CharacterClass[]> {
-  const classModule = await import('../data/dnd/3.5e/classes');
-  return classModule.dnd35eClasses || [];
+  const [classModule, prestigeModule] = await Promise.all([
+    import('../data/dnd/3.5e/classes'),
+    import('../data/dnd/3.5e/prestige-classes'),
+  ]);
+  return [
+    ...(classModule.dnd35eClasses || []),
+    ...(prestigeModule.dnd35eProductPrestigeClasses || []),
+  ];
 }
 
 async function loadDnd35eSpecies(): Promise<Species[]> {
@@ -384,7 +356,7 @@ async function loadDnd35eFeats(): Promise<FeatDefinition[]> {
 async function loadPf1eSpells(): Promise<Spell[]> {
   try {
     const spellModule = await import('../data/pathfinder/1e/spells');
-    return spellModule.pf1eSpells || [];
+    return spellModule.allSpells || spellModule.pf1eSpells || [];
   } catch (error) {
     errorLogger.log(
       ErrorCategory.DATA_LOAD,
@@ -500,6 +472,52 @@ async function loadMam3ePowerModifiers(): Promise<PowerModifier[]> {
   const modifierModule = await import('../data/mutants-and-masterminds/3e/modifiers');
   const { extras = [], flaws = [] } = modifierModule.powerModifiers || {};
   return [...extras, ...flaws];
+}
+
+// Daggerheart Loaders
+async function loadDaggerheartClasses(): Promise<DaggerheartClass[]> {
+  const classModule = await import('../data/daggerheart/1.0/classes');
+  return classModule.daggerheartClasses || [];
+}
+
+async function loadDaggerheartAncestries(): Promise<DaggerheartAncestry[]> {
+  const ancestryModule = await import('../data/daggerheart/1.0/ancestries');
+  return ancestryModule.daggerheartAncestries || [];
+}
+
+async function loadDaggerheartCommunities(): Promise<DaggerheartCommunity[]> {
+  const communityModule = await import('../data/daggerheart/1.0/communities');
+  return communityModule.daggerheartCommunities || [];
+}
+
+async function loadDaggerheartDomains(): Promise<DaggerheartDomain[]> {
+  const domainModule = await import('../data/daggerheart/1.0/domains');
+  return domainModule.daggerheartDomains || [];
+}
+
+async function loadDaggerheartDomainCards(): Promise<DaggerheartDomainCard[]> {
+  const cardModule = await import('../data/daggerheart/1.0/domain-cards');
+  return cardModule.daggerheartDomainCards || [];
+}
+
+async function loadDaggerheartWeapons(): Promise<DaggerheartWeapon[]> {
+  const equipmentModule = await import('../data/daggerheart/1.0/equipment');
+  return equipmentModule.daggerheartWeapons || [];
+}
+
+async function loadDaggerheartArmor(): Promise<DaggerheartArmor[]> {
+  const equipmentModule = await import('../data/daggerheart/1.0/equipment');
+  return equipmentModule.daggerheartArmor || [];
+}
+
+async function loadDaggerheartLoot(): Promise<DaggerheartLoot[]> {
+  const equipmentModule = await import('../data/daggerheart/1.0/equipment');
+  return equipmentModule.daggerheartLoot || [];
+}
+
+async function loadDaggerheartConsumables(): Promise<DaggerheartConsumable[]> {
+  const equipmentModule = await import('../data/daggerheart/1.0/equipment');
+  return equipmentModule.daggerheartConsumables || [];
 }
 
 // Main Loader Functions
@@ -668,6 +686,105 @@ export async function loadMam3eArchetypesForSystem(
 
   const archetypes = await loadMam3eArchetypes();
   return finalizeLoadedItems(systemId, 'archetypes', archetypes);
+}
+
+export async function loadDaggerheartClassesForSystem(
+  systemId: GameSystemId
+): Promise<DaggerheartClass[]> {
+  if (systemId !== 'daggerheart') {
+    return [];
+  }
+
+  const classes = await loadDaggerheartClasses();
+  return finalizeLoadedItems(systemId, 'classes', classes);
+}
+
+export async function loadDaggerheartAncestriesForSystem(
+  systemId: GameSystemId
+): Promise<DaggerheartAncestry[]> {
+  if (systemId !== 'daggerheart') {
+    return [];
+  }
+
+  const ancestries = await loadDaggerheartAncestries();
+  return finalizeLoadedItems(systemId, 'species', ancestries);
+}
+
+export async function loadDaggerheartCommunitiesForSystem(
+  systemId: GameSystemId
+): Promise<DaggerheartCommunity[]> {
+  if (systemId !== 'daggerheart') {
+    return [];
+  }
+
+  const communities = await loadDaggerheartCommunities();
+  return finalizeLoadedItems(systemId, 'backgrounds', communities);
+}
+
+export async function loadDaggerheartDomainsForSystem(
+  systemId: GameSystemId
+): Promise<DaggerheartDomain[]> {
+  if (systemId !== 'daggerheart') {
+    return [];
+  }
+
+  const domains = await loadDaggerheartDomains();
+  return finalizeLoadedItems(systemId, 'domains', domains);
+}
+
+export async function loadDaggerheartDomainCardsForSystem(
+  systemId: GameSystemId
+): Promise<DaggerheartDomainCard[]> {
+  if (systemId !== 'daggerheart') {
+    return [];
+  }
+
+  const cards = await loadDaggerheartDomainCards();
+  return finalizeLoadedItems(systemId, 'domainCards', cards);
+}
+
+export async function loadDaggerheartWeaponsForSystem(
+  systemId: GameSystemId
+): Promise<DaggerheartWeapon[]> {
+  if (systemId !== 'daggerheart') {
+    return [];
+  }
+
+  const weapons = await loadDaggerheartWeapons();
+  return finalizeLoadedItems(systemId, 'equipment', weapons);
+}
+
+export async function loadDaggerheartArmorForSystem(
+  systemId: GameSystemId
+): Promise<DaggerheartArmor[]> {
+  if (systemId !== 'daggerheart') {
+    return [];
+  }
+
+  const armor = await loadDaggerheartArmor();
+  return finalizeLoadedItems(systemId, 'equipment', armor);
+}
+
+export async function loadDaggerheartLootForSystem(
+  systemId: GameSystemId
+): Promise<DaggerheartLoot[]> {
+  if (systemId !== 'daggerheart') {
+    return [];
+  }
+
+  const loot = await loadDaggerheartLoot();
+  return finalizeLoadedItems(systemId, 'equipment', loot);
+}
+
+export async function loadDaggerheartConsumablesForSystem(
+  systemId: GameSystemId
+): Promise<DaggerheartConsumable[]> {
+  if (systemId !== 'daggerheart') {
+    return [];
+  }
+
+  const consumables = await loadDaggerheartConsumables();
+  return finalizeLoadedItems(systemId, 'equipment', consumables);
 }
 
 /**

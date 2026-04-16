@@ -1,4 +1,4 @@
-import type { Duration, Range } from '../types/core/common';
+import type { AreaOfEffect, Duration, Range } from '../types/core/common';
 import type { CastingTime } from '../types/magic/spells';
 
 export function formatCastingTime(ct: CastingTime): string {
@@ -68,5 +68,30 @@ export function formatDuration(d: Duration): string {
       return d.description;
     default:
       return 'Unknown';
+  }
+}
+
+export function formatAreaOfEffect(area: AreaOfEffect | undefined): string | undefined {
+  if (!area) {
+    return undefined;
+  }
+
+  switch (area.type) {
+    case 'cone':
+      return `${area.feet}-foot cone`;
+    case 'cube':
+      return `${area.feet}-foot cube`;
+    case 'cylinder':
+      return `${area.radius}-foot-radius, ${area.height}-foot-high cylinder`;
+    case 'line':
+      return `${area.length}-foot by ${area.width}-foot line`;
+    case 'sphere':
+      return `${area.radius}-foot-radius sphere`;
+    case 'emanation':
+      return `${area.radius}-foot emanation`;
+    case 'spread':
+      return `${area.radius}-foot spread`;
+    default:
+      return undefined;
   }
 }

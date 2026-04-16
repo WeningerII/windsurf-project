@@ -4,6 +4,7 @@ import { CharacterDocument } from '../types/core/document';
 import { Species } from '../types/character-options/species';
 import { abilityMod } from './math';
 import { dnd35eClasses } from '../data/dnd/3.5e/classes';
+import { dnd35eProductPrestigeClasses } from '../data/dnd/3.5e/prestige-classes';
 import { pf1eClasses } from '../data/pathfinder/1e/classes';
 import { pf1ePrestigeClasses } from '../data/pathfinder/1e/prestige-classes';
 import {
@@ -12,6 +13,8 @@ import {
   Dnd35eDataModel,
 } from '../systems/dnd35e/data-model';
 import { Pf1eClassLevel, Pf1eDataModel } from '../systems/pf1e/data-model';
+import { syncD20LegacySpellcastingSelections } from './d20LegacySpellcasting';
+import { GameSystemId } from '../types/game-systems';
 
 type D20LegacyDataModel = Dnd35eDataModel | Pf1eDataModel;
 type D20Progression = 'full' | 'three-quarter' | 'half';
@@ -43,6 +46,26 @@ const DND35E_CLASS_PROFILES: Record<string, D20ClassProfile> = {
   rogue: { bab: 'three-quarter', fortSave: 'poor', refSave: 'good', willSave: 'poor' },
   sorcerer: { bab: 'half', fortSave: 'poor', refSave: 'poor', willSave: 'good' },
   wizard: { bab: 'half', fortSave: 'poor', refSave: 'poor', willSave: 'good' },
+  'arcane-archer-35e': { bab: 'full', fortSave: 'good', refSave: 'good', willSave: 'poor' },
+  'arcane-trickster-35e': { bab: 'half', fortSave: 'poor', refSave: 'good', willSave: 'good' },
+  'archmage-35e': { bab: 'half', fortSave: 'poor', refSave: 'poor', willSave: 'good' },
+  'assassin-35e': { bab: 'three-quarter', fortSave: 'poor', refSave: 'good', willSave: 'poor' },
+  'blackguard-35e': { bab: 'full', fortSave: 'good', refSave: 'poor', willSave: 'poor' },
+  'dragon-disciple-35e': {
+    bab: 'three-quarter',
+    fortSave: 'good',
+    refSave: 'poor',
+    willSave: 'good',
+  },
+  'duelist-35e': { bab: 'full', fortSave: 'poor', refSave: 'good', willSave: 'poor' },
+  'eldritch-knight-35e': { bab: 'full', fortSave: 'good', refSave: 'poor', willSave: 'poor' },
+  'hierophant-35e': { bab: 'half', fortSave: 'good', refSave: 'poor', willSave: 'good' },
+  'shadowdancer-35e': { bab: 'three-quarter', fortSave: 'poor', refSave: 'good', willSave: 'poor' },
+  'horizon-walker-35e': { bab: 'full', fortSave: 'good', refSave: 'poor', willSave: 'poor' },
+  'dwarven-defender-35e': { bab: 'full', fortSave: 'good', refSave: 'poor', willSave: 'good' },
+  'loremaster-35e': { bab: 'half', fortSave: 'poor', refSave: 'poor', willSave: 'good' },
+  'mystic-theurge-35e': { bab: 'half', fortSave: 'poor', refSave: 'poor', willSave: 'good' },
+  'thaumaturgist-35e': { bab: 'half', fortSave: 'poor', refSave: 'poor', willSave: 'good' },
 };
 
 const PF1E_CLASS_PROFILES: Record<string, D20ClassProfile> = {
@@ -270,7 +293,12 @@ function getD20ClassCatalog(
     );
   }
 
-  return new Map(dnd35eClasses.map((classData) => [classData.id, classData]));
+  return new Map(
+    [...dnd35eClasses, ...dnd35eProductPrestigeClasses].map((classData) => [
+      classData.id,
+      classData,
+    ])
+  );
 }
 
 function buildClassSkills(
@@ -331,6 +359,7 @@ function create35eClassLevel(
     classId: classData.id,
     level,
     hitDieRolls: seedHitDieRolls(existing?.hitDieRolls || [], classData.hitDie, level),
+    spellcastingSelections: existing?.spellcastingSelections,
     bab: profile.bab,
     fortSave: profile.fortSave,
     refSave: profile.refSave,
@@ -350,6 +379,7 @@ function createPf1eClassLevel(
     classId: classData.id,
     level,
     hitDieRolls: seedHitDieRolls(existing?.hitDieRolls || [], classData.hitDie, level),
+    spellcastingSelections: existing?.spellcastingSelections,
     bab: profile.bab,
     fortSave: profile.fortSave,
     refSave: profile.refSave,
@@ -439,6 +469,7 @@ export function applyD20LegacyClassTemplate<T extends D20LegacyDataModel>(
 ): CharacterDocument<T> {
   const nextDocument = cloneDocument(document);
   const sys = nextDocument.system;
+  const classCatalog = getD20ClassCatalog(document.systemId);
   const previousClassLevels = structuredClone(sys.classLevels || []);
   const wasAtFullHp = sys.hitPoints.current >= sys.hitPoints.max;
   const nextClassLevels: Array<Dnd35eClassLevel | Pf1eClassLevel> = structuredClone(
@@ -500,6 +531,11 @@ export function applyD20LegacyClassTemplate<T extends D20LegacyDataModel>(
   }
 
   sys.classLevels = nextClassLevels as T['classLevels'];
+  sys.classLevels = syncD20LegacySpellcastingSelections(
+    document.systemId as GameSystemId,
+    sys.classLevels,
+    classCatalog
+  ) as T['classLevels'];
   return syncClassState(nextDocument, previousClassLevels, wasAtFullHp);
 }
 
@@ -526,6 +562,11 @@ export function removeD20LegacyClassTemplate<T extends D20LegacyDataModel>(
 
   sys.classLevels = sys.classLevels.filter(
     (classLevel) => classLevel.classId !== classId
+  ) as T['classLevels'];
+  sys.classLevels = syncD20LegacySpellcastingSelections(
+    document.systemId as GameSystemId,
+    sys.classLevels,
+    getD20ClassCatalog(document.systemId)
   ) as T['classLevels'];
   return syncClassState(nextDocument, previousClassLevels, wasAtFullHp);
 }

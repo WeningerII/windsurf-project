@@ -33,6 +33,141 @@ const PF2E_ANCESTRY_HP: Record<string, number> = {
   orc: 10,
 };
 
+const PF2E_ABILITY_IDS = ['str', 'dex', 'con', 'int', 'wis', 'cha'] as const;
+
+function abilityBoostValue(values: number[] | undefined, index: number): number {
+  if (!values || values.length === 0) {
+    return 2;
+  }
+
+  return values[index] ?? values[values.length - 1] ?? 2;
+}
+
+function sanitizeChoiceAbilitySelections(
+  increases: Array<{ type: 'fixed' | 'choice'; choice?: { count: number; options: string[] } }>,
+  rawSelections: string[] | undefined
+): string[] {
+  const sanitized: string[] = [];
+  let offset = 0;
+
+  increases.forEach((increase) => {
+    if (increase.type !== 'choice' || !increase.choice) {
+      return;
+    }
+
+    const used = new Set<string>();
+    for (let index = 0; index < increase.choice.count; index += 1) {
+      const candidate = rawSelections?.[offset + index] ?? '';
+      if (candidate && increase.choice.options.includes(candidate) && !used.has(candidate)) {
+        sanitized[offset + index] = candidate;
+        used.add(candidate);
+      } else {
+        sanitized[offset + index] = '';
+      }
+    }
+
+    offset += increase.choice.count;
+  });
+
+  return sanitized;
+}
+
+function collectChoiceAbilityAdjustments(
+  increases: Array<{
+    type: 'fixed' | 'choice';
+    choice?: { count: number; options: string[] };
+    values?: number[];
+  }>,
+  selections: string[] | undefined
+): Record<string, number> {
+  const adjustments: Record<string, number> = {};
+  let offset = 0;
+
+  increases.forEach((increase) => {
+    if (increase.type !== 'choice' || !increase.choice) {
+      return;
+    }
+
+    const used = new Set<string>();
+    for (let index = 0; index < increase.choice.count; index += 1) {
+      const ability = selections?.[offset + index];
+      if (!ability || !increase.choice.options.includes(ability) || used.has(ability)) {
+        continue;
+      }
+
+      used.add(ability);
+      adjustments[ability] =
+        (adjustments[ability] || 0) + abilityBoostValue(increase.values, index);
+    }
+
+    offset += increase.choice.count;
+  });
+
+  return adjustments;
+}
+
+function sanitizeBackgroundAbilityBoostSelections(
+  background: Pf2eBackgroundDefinition | undefined,
+  rawSelections: string[] | undefined
+): string[] {
+  if (!background) {
+    return [];
+  }
+
+  const restricted = rawSelections?.[0] ?? '';
+  const free = rawSelections?.[1] ?? '';
+  const nextRestricted = background.abilityBoosts.options.includes(restricted) ? restricted : '';
+  const nextFree =
+    PF2E_ABILITY_IDS.includes(free as (typeof PF2E_ABILITY_IDS)[number]) && free !== nextRestricted
+      ? free
+      : '';
+
+  return [nextRestricted, nextFree];
+}
+
+function collectBackgroundAbilityAdjustments(
+  background: Pf2eBackgroundDefinition | undefined,
+  selections: string[] | undefined
+): Record<string, number> {
+  const [restricted, free] = sanitizeBackgroundAbilityBoostSelections(background, selections);
+  const adjustments: Record<string, number> = {};
+
+  if (restricted) {
+    adjustments[restricted] = (adjustments[restricted] || 0) + 2;
+  }
+
+  if (free) {
+    adjustments[free] = (adjustments[free] || 0) + 2;
+  }
+
+  return adjustments;
+}
+
+function sanitizeOptionalTrainingSelection(
+  training: string | Pf2eBackgroundDefinition['skillTraining'],
+  rawSelection: string | undefined
+): string | undefined {
+  if (typeof training === 'string') {
+    return training;
+  }
+
+  if (rawSelection && training.options.includes(rawSelection)) {
+    return rawSelection;
+  }
+
+  return training.options.length === 1 ? training.options[0] : undefined;
+}
+
+function isPrimaryAbilitySelection(
+  classData: CharacterClass,
+  value: string | undefined
+): value is CharacterClass['primaryAbility'][number] {
+  return (
+    typeof value === 'string' &&
+    classData.primaryAbility.includes(value as CharacterClass['primaryAbility'][number])
+  );
+}
+
 type Pf2eClassProfile = {
   perception: Pf2eProficiencyTier;
   saves: Record<'fortitude' | 'reflex' | 'will', Pf2eProficiencyTier>;
@@ -418,10 +553,9 @@ export function applyPf2eClassTemplate(
   const profile = PF2E_CLASS_PROFILES[classData.id];
   sys.classId = classData.id;
 
-  const existingKeyAbility =
-    sys.keyAbility && classData.primaryAbility.includes(sys.keyAbility as any)
-      ? sys.keyAbility
-      : undefined;
+  const existingKeyAbility = isPrimaryAbilitySelection(classData, sys.keyAbility)
+    ? sys.keyAbility
+    : undefined;
   sys.keyAbility = existingKeyAbility || classData.primaryAbility[0];
 
   const shouldResetBaseProficiencies = isClassChange || oldClassId == null || !profile;
@@ -482,16 +616,23 @@ export function applyPf2eClassTemplate(
     const focusMax = parseFixedPositiveInt(focusResource?.maxFormula) ?? 0;
     const existingSpellcasting = !isClassChange ? sys.spellcasting : undefined;
     const proficiencyTier = existingSpellcasting?.proficiency.tier || 'trained';
+    const castingType = inferCastingType(
+      classData.spellcasting.preparedCasterFormula,
+      classData.spellcasting.spellsKnown
+    );
 
     sys.spellcasting = {
       tradition: inferTradition(classData.spellcasting.spellListId),
-      type: inferCastingType(
-        classData.spellcasting.preparedCasterFormula,
-        classData.spellcasting.spellsKnown
-      ),
+      type: castingType,
       proficiency: createProficiency(proficiencyTier, [classData.name]),
       spellSlots: existingSpellcasting?.spellSlots || {},
       spellsKnown: existingSpellcasting?.spellsKnown || [],
+      alwaysPreparedSpellIds: existingSpellcasting?.alwaysPreparedSpellIds || [],
+      ...(castingType === 'prepared'
+        ? {
+            preparedSpellsByRank: existingSpellcasting?.preparedSpellsByRank || {},
+          }
+        : {}),
       focusPoints: {
         current: Math.min(existingSpellcasting?.focusPoints.current ?? focusMax, focusMax),
         max: Math.max(existingSpellcasting?.focusPoints.max ?? 0, focusMax),
@@ -508,10 +649,13 @@ export function applyPf2eAncestryTemplate(
   document: CharacterDocument<Pf2eDataModel>,
   ancestry?: Species,
   heritage?: Subrace,
-  previous?: { ancestry?: Species; heritage?: Subrace }
+  previous?: { ancestry?: Species; heritage?: Subrace },
+  nextAbilityBoostSelections?: string[]
 ): CharacterDocument<Pf2eDataModel> {
   const nextDocument = cloneDocument(document);
   const sys = nextDocument.system;
+  const currentAncestryId = sys.ancestryId;
+  const currentAbilityBoostSelections = sys.ancestryAbilityBoostSelections || [];
 
   if (previous?.heritage) {
     applyAbilityAdjustments(
@@ -527,6 +671,14 @@ export function applyPf2eAncestryTemplate(
       collectFixedAbilityAdjustments(previous.ancestry.abilityScoreIncrease),
       -1
     );
+    applyAbilityAdjustments(
+      sys.baseAttributes,
+      collectChoiceAbilityAdjustments(
+        previous.ancestry.abilityScoreIncrease,
+        currentAbilityBoostSelections
+      ),
+      -1
+    );
     const oldLanguages = new Set(previous.ancestry.languages.automatic || []);
     sys.languages = (sys.languages || []).filter((language) => !oldLanguages.has(language));
 
@@ -540,11 +692,20 @@ export function applyPf2eAncestryTemplate(
   sys.heritageId = heritage?.id;
 
   if (!ancestry) {
+    sys.ancestryAbilityBoostSelections = [];
     sys.ancestryHP = DEFAULT_ANCESTRY_HP;
     sys.size = DEFAULT_SIZE;
     sys.speed = DEFAULT_SPEED;
     return nextDocument;
   }
+
+  const shouldPreserveAbilitySelections =
+    ancestry.id === previous?.ancestry?.id || ancestry.id === currentAncestryId;
+  sys.ancestryAbilityBoostSelections = sanitizeChoiceAbilitySelections(
+    ancestry.abilityScoreIncrease,
+    nextAbilityBoostSelections ??
+      (shouldPreserveAbilitySelections ? currentAbilityBoostSelections : undefined)
+  );
 
   sys.ancestryHP = PF2E_ANCESTRY_HP[ancestry.id] ?? DEFAULT_ANCESTRY_HP;
   sys.size = ancestry.size;
@@ -553,6 +714,14 @@ export function applyPf2eAncestryTemplate(
   applyAbilityAdjustments(
     sys.baseAttributes,
     collectFixedAbilityAdjustments(ancestry.abilityScoreIncrease),
+    1
+  );
+  applyAbilityAdjustments(
+    sys.baseAttributes,
+    collectChoiceAbilityAdjustments(
+      ancestry.abilityScoreIncrease,
+      sys.ancestryAbilityBoostSelections
+    ),
     1
   );
 
@@ -583,27 +752,46 @@ export function applyPf2eAncestryTemplate(
 export function applyPf2eBackgroundTemplate(
   document: CharacterDocument<Pf2eDataModel>,
   background?: Pf2eBackgroundDefinition,
-  previousBackground?: Pf2eBackgroundDefinition
+  previousBackground?: Pf2eBackgroundDefinition,
+  selections?: {
+    abilityBoostSelections?: string[];
+    skillTrainingSelection?: string;
+    loreTrainingSelection?: string;
+  }
 ): CharacterDocument<Pf2eDataModel> {
   const nextDocument = cloneDocument(document);
   const sys = nextDocument.system;
+  const currentBackgroundId = sys.backgroundId;
+  const currentAbilityBoostSelections = sys.backgroundAbilityBoostSelections || [];
+  const currentSkillTrainingSelection = sys.backgroundSkillTrainingSelection;
+  const currentLoreTrainingSelection = sys.backgroundLoreTrainingSelection;
 
   if (previousBackground) {
-    if (typeof previousBackground.skillTraining === 'string') {
+    const previousSkillTraining = sanitizeOptionalTrainingSelection(
+      previousBackground.skillTraining,
+      currentSkillTrainingSelection
+    );
+    if (previousSkillTraining) {
       removeProficiencySource(
         sys.skillProficiencies,
-        previousBackground.skillTraining,
+        previousSkillTraining,
         previousBackground.name
       );
     }
 
-    if (typeof previousBackground.loreTraining === 'string') {
-      removeProficiencySource(
-        sys.loreProficiencies,
-        previousBackground.loreTraining,
-        previousBackground.name
-      );
+    const previousLoreTraining = sanitizeOptionalTrainingSelection(
+      previousBackground.loreTraining,
+      currentLoreTrainingSelection
+    );
+    if (previousLoreTraining) {
+      removeProficiencySource(sys.loreProficiencies, previousLoreTraining, previousBackground.name);
     }
+
+    applyAbilityAdjustments(
+      sys.baseAttributes,
+      collectBackgroundAbilityAdjustments(previousBackground, currentAbilityBoostSelections),
+      -1
+    );
 
     const previousFeat = backgroundFeat(previousBackground);
     const previousSignature = featSignature(previousFeat);
@@ -611,17 +799,52 @@ export function applyPf2eBackgroundTemplate(
   }
 
   sys.backgroundId = background?.id;
+  sys.backgroundAbilityBoostSelections = [];
+  sys.backgroundSkillTrainingSelection = undefined;
+  sys.backgroundLoreTrainingSelection = undefined;
 
   if (!background) {
     return nextDocument;
   }
 
-  if (typeof background.skillTraining === 'string') {
-    mergeProficiencySource(sys.skillProficiencies, background.skillTraining, background.name);
+  const shouldPreserveSelections =
+    background.id === previousBackground?.id || background.id === currentBackgroundId;
+  sys.backgroundAbilityBoostSelections = sanitizeBackgroundAbilityBoostSelections(
+    background,
+    selections?.abilityBoostSelections ??
+      (shouldPreserveSelections ? currentAbilityBoostSelections : undefined)
+  );
+  sys.backgroundSkillTrainingSelection = sanitizeOptionalTrainingSelection(
+    background.skillTraining,
+    selections?.skillTrainingSelection ??
+      (shouldPreserveSelections ? currentSkillTrainingSelection : undefined)
+  );
+  sys.backgroundLoreTrainingSelection = sanitizeOptionalTrainingSelection(
+    background.loreTraining,
+    selections?.loreTrainingSelection ??
+      (shouldPreserveSelections ? currentLoreTrainingSelection : undefined)
+  );
+
+  applyAbilityAdjustments(
+    sys.baseAttributes,
+    collectBackgroundAbilityAdjustments(background, sys.backgroundAbilityBoostSelections),
+    1
+  );
+
+  if (sys.backgroundSkillTrainingSelection) {
+    mergeProficiencySource(
+      sys.skillProficiencies,
+      sys.backgroundSkillTrainingSelection,
+      background.name
+    );
   }
 
-  if (typeof background.loreTraining === 'string') {
-    mergeProficiencySource(sys.loreProficiencies, background.loreTraining, background.name);
+  if (sys.backgroundLoreTrainingSelection) {
+    mergeProficiencySource(
+      sys.loreProficiencies,
+      sys.backgroundLoreTrainingSelection,
+      background.name
+    );
   }
 
   const nextFeat = backgroundFeat(background);
@@ -668,7 +891,9 @@ export function removePf2eArchetypeTemplate(
   const nextDocument = cloneDocument(document);
   const sys = nextDocument.system;
 
-  sys.selectedArchetypeIds = (sys.selectedArchetypeIds || []).filter((entry) => entry !== archetype.id);
+  sys.selectedArchetypeIds = (sys.selectedArchetypeIds || []).filter(
+    (entry) => entry !== archetype.id
+  );
 
   const signatures = new Set(archetypeTemplateFeatures(archetype).map(featureSignature));
   sys.features = removeFeaturesBySignatures(sys.features || [], signatures);
