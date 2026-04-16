@@ -1,10 +1,10 @@
-_Generated: <normalized>_
+_Generated: 2026-04-16T18:12:00.740Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
 | System | Spells/Powers | Classes | Species/Races | Backgrounds | Traits | Feature Options | Monsters | Equipment | Feats | Advantages |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| D&D 5e (2014) | 244 | 12 | 9 | 6 | 0 | 106 | 41 | 230 | 0 | 0 |
+| D&D 5e (2014) | 244 | 12 | 9 | 6 | 0 | 106 | 41 | 230 | 39 | 0 |
 | D&D 5e (2024) | 320 | 12 | 9 | 6 | 0 | 0 | 99 | 204 | 87 | 0 |
 | D&D 3.5e | 501 | 26 | 7 | 0 | 0 | 0 | 0 | 207 | 515 | 0 |
 | Pathfinder 1e | 134 | 18 | 7 | 0 | 12 | 0 | 0 | 70 | 86 | 0 |
@@ -33,6 +33,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | D&D 5e (2014) | Feature Options | 106 | 0 | 0 | 0 |
 | D&D 5e (2014) | Monsters | 41 | 0 | 0 | 0 |
 | D&D 5e (2014) | Equipment | 230 | 0 | 0 | 0 |
+| D&D 5e (2014) | Feats | 39 | 0 | 0 | 0 |
 | D&D 5e (2024) | Spells/Powers | 320 | 0 | 0 | 0 |
 | D&D 5e (2024) | Classes | 12 | 0 | 0 | 0 |
 | D&D 5e (2024) | Species/Races | 9 | 0 | 0 | 0 |
