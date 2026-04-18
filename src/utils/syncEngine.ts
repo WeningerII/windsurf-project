@@ -1,8 +1,10 @@
 import type { CharacterDocument, SystemDataModel } from '../types/core/document';
+import type { Campaign } from '../types/core/campaign';
 import { getSupabaseClient } from './supabaseClient';
 import { retryWithBackoff } from './retry';
 
 const SYNC_QUEUE_KEY = 'rpg-sync-queue-v1';
+const CAMPAIGN_SYNC_QUEUE_KEY = 'rpg-campaign-sync-queue-v1';
 
 export interface RemoteDocument {
   id: string;
@@ -205,6 +207,189 @@ export function subscribeToRemoteDocuments(
         event: '*',
         schema: 'public',
         table: 'documents',
+        filter: `user_id=eq.${userId}`,
+      },
+      () => {
+        onChange();
+      }
+    )
+    .subscribe();
+
+  return () => {
+    void client.removeChannel(channel);
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Campaigns
+//
+// Campaigns are structurally simpler than character documents: they have no
+// `version` field (low-churn metadata, last-writer-wins on updatedAt is
+// acceptable) and the payload itself is just name + optional systemId +
+// notes + characterIds.  The server schema lives in
+// supabase/migrations/001_initial.sql.
+// ---------------------------------------------------------------------------
+
+export interface RemoteCampaign {
+  id: string;
+  user_id: string;
+  name: string;
+  system_id: string | null;
+  notes: string;
+  character_ids: string[];
+  created_at: string;
+  updated_at: string;
+}
+
+function hydrateQueuedCampaigns(campaigns: Campaign[]): Campaign[] {
+  return campaigns.map((c) => ({
+    ...c,
+    createdAt: new Date(c.createdAt),
+    updatedAt: new Date(c.updatedAt),
+  }));
+}
+
+async function toRemoteCampaign(campaign: Campaign): Promise<RemoteCampaign> {
+  const userId = await getCurrentUserId();
+
+  return {
+    id: campaign.id,
+    user_id: userId,
+    name: campaign.name,
+    system_id: campaign.systemId ?? null,
+    notes: campaign.notes,
+    character_ids: campaign.characterIds,
+    created_at: campaign.createdAt.toISOString(),
+    updated_at: campaign.updatedAt.toISOString(),
+  };
+}
+
+function fromRemoteCampaign(row: RemoteCampaign): Campaign {
+  return {
+    id: row.id,
+    name: row.name,
+    systemId: row.system_id ?? undefined,
+    notes: row.notes,
+    characterIds: row.character_ids,
+    createdAt: new Date(row.created_at),
+    updatedAt: new Date(row.updated_at),
+  };
+}
+
+export async function fetchRemoteCampaigns(): Promise<Campaign[]> {
+  const client = getSupabaseClient();
+  if (!client) return [];
+
+  return retryWithBackoff(async () => {
+    const { data, error } = await client
+      .from('campaigns')
+      .select('*')
+      .order('updated_at', { ascending: false });
+
+    if (error) throw new Error(error.message);
+    return (data as RemoteCampaign[]).map(fromRemoteCampaign);
+  });
+}
+
+export async function pushCampaign(campaign: Campaign): Promise<void> {
+  const client = getSupabaseClient();
+  if (!client) return;
+
+  const payload = await toRemoteCampaign(campaign);
+  await retryWithBackoff(async () => {
+    const { error } = await client.from('campaigns').upsert(payload, { onConflict: 'id' });
+    if (error) throw new Error(error.message);
+  });
+}
+
+export async function pushCampaigns(campaigns: Campaign[]): Promise<void> {
+  const client = getSupabaseClient();
+  if (!client) return;
+  if (campaigns.length === 0) return;
+
+  const payload = await Promise.all(campaigns.map((c) => toRemoteCampaign(c)));
+
+  await retryWithBackoff(async () => {
+    const { error } = await client.from('campaigns').upsert(payload, { onConflict: 'id' });
+    if (error) throw new Error(error.message);
+  });
+}
+
+export async function deleteRemoteCampaign(id: string): Promise<void> {
+  const client = getSupabaseClient();
+  if (!client) return;
+
+  await retryWithBackoff(async () => {
+    const { error } = await client.from('campaigns').delete().eq('id', id);
+    if (error) throw new Error(error.message);
+  });
+}
+
+/**
+ * Merge local and remote campaign collections.  Unlike documents, campaigns
+ * have no version field, so the tiebreaker is `updatedAt` alone — strictly
+ * last-writer-wins.  For a shared-DM-one-player deployment this is fine;
+ * true multi-editor conflict resolution is a future concern.
+ */
+export function mergeCampaigns(local: Campaign[], remote: Campaign[]): Campaign[] {
+  const merged = new Map<string, Campaign>();
+
+  for (const c of remote) {
+    merged.set(c.id, c);
+  }
+
+  for (const c of local) {
+    const existing = merged.get(c.id);
+    if (!existing || c.updatedAt > existing.updatedAt) {
+      merged.set(c.id, c);
+    }
+  }
+
+  return Array.from(merged.values()).sort(
+    (a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()
+  );
+}
+
+export function queueCampaignsSnapshot(campaigns: Campaign[]): void {
+  if (typeof localStorage === 'undefined') return;
+  localStorage.setItem(CAMPAIGN_SYNC_QUEUE_KEY, JSON.stringify(campaigns));
+}
+
+export function getQueuedCampaignsSnapshot(): Campaign[] {
+  if (typeof localStorage === 'undefined') return [];
+
+  const raw = localStorage.getItem(CAMPAIGN_SYNC_QUEUE_KEY);
+  if (!raw) return [];
+
+  try {
+    return hydrateQueuedCampaigns(JSON.parse(raw) as Campaign[]);
+  } catch {
+    return [];
+  }
+}
+
+export function clearQueuedCampaignsSnapshot(): void {
+  if (typeof localStorage === 'undefined') return;
+  localStorage.removeItem(CAMPAIGN_SYNC_QUEUE_KEY);
+}
+
+export function subscribeToRemoteCampaigns(
+  userId: string,
+  onChange: () => void
+): (() => void) | undefined {
+  const client = getSupabaseClient();
+  if (!client) {
+    return undefined;
+  }
+
+  const channel = client
+    .channel(`campaigns-sync-${userId}`)
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'campaigns',
         filter: `user_id=eq.${userId}`,
       },
       () => {

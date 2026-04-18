@@ -125,6 +125,30 @@ export const useCampaigns = () => {
     [debouncedPersist, persistVersionRef]
   );
 
+  const addCampaigns = useCallback(
+    (incoming: Campaign[]) => {
+      if (incoming.length === 0) return;
+      const persistVersion = ++persistVersionRef.current;
+      setCampaigns((prev) => {
+        // Upsert-merge: incoming campaigns with a matching id replace the
+        // existing one iff their updatedAt is strictly newer (last-writer
+        // wins, matching `mergeCampaigns` on the sync side).  Brand new
+        // ids are appended.
+        const byId = new Map(prev.map((c) => [c.id, c] as const));
+        for (const c of incoming) {
+          const existing = byId.get(c.id);
+          if (!existing || c.updatedAt > existing.updatedAt) {
+            byId.set(c.id, c);
+          }
+        }
+        const next = Array.from(byId.values());
+        debouncedPersist(next, persistVersion);
+        return next;
+      });
+    },
+    [debouncedPersist]
+  );
+
   const clearAllCampaigns = useCallback(() => {
     persistVersionRef.current += 1;
     debouncedPersist.cancel();
@@ -136,6 +160,7 @@ export const useCampaigns = () => {
     campaigns,
     isLoading,
     addCampaign,
+    addCampaigns,
     updateCampaign,
     deleteCampaign,
     addCharacterToCampaign,

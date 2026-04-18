@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
-import { sameDocumentSignatures } from '../../utils/documentSignature';
+import type { Campaign } from '../../types/core/campaign';
+import { sameCampaignSignatures, sameDocumentSignatures } from '../../utils/documentSignature';
 
 function makeDoc(
   id: string,
@@ -80,5 +81,59 @@ describe('sameDocumentSignatures', () => {
 
   it('returns true for two empty arrays', () => {
     expect(sameDocumentSignatures([], [])).toBe(true);
+  });
+});
+
+function makeCampaign(id: string, overrides: Partial<Campaign> = {}): Campaign {
+  return {
+    id,
+    name: `Campaign ${id}`,
+    systemId: 'dnd-5e-2024',
+    notes: '',
+    characterIds: [],
+    createdAt: new Date('2026-01-01T00:00:00.000Z'),
+    updatedAt: new Date('2026-01-02T00:00:00.000Z'),
+    ...overrides,
+  };
+}
+
+describe('sameCampaignSignatures', () => {
+  it('returns true for identical array references', () => {
+    const campaigns = [makeCampaign('a'), makeCampaign('b')];
+    expect(sameCampaignSignatures(campaigns, campaigns)).toBe(true);
+  });
+
+  it('returns true when ids, updatedAt, and member lists all match', () => {
+    const a = [makeCampaign('a', { characterIds: ['x', 'y'] })];
+    const b = [makeCampaign('a', { characterIds: ['x', 'y'] })];
+    expect(sameCampaignSignatures(a, b)).toBe(true);
+  });
+
+  it('treats member-list reordering as equivalent (sorted before compare)', () => {
+    const a = [makeCampaign('a', { characterIds: ['x', 'y', 'z'] })];
+    const b = [makeCampaign('a', { characterIds: ['z', 'x', 'y'] })];
+    expect(sameCampaignSignatures(a, b)).toBe(true);
+  });
+
+  it('returns false when a member is added', () => {
+    const a = [makeCampaign('a', { characterIds: ['x', 'y'] })];
+    const b = [makeCampaign('a', { characterIds: ['x', 'y', 'z'] })];
+    expect(sameCampaignSignatures(a, b)).toBe(false);
+  });
+
+  it('returns false when updatedAt changes', () => {
+    const a = [makeCampaign('a', { updatedAt: new Date('2026-01-02T00:00:00.000Z') })];
+    const b = [makeCampaign('a', { updatedAt: new Date('2026-01-03T00:00:00.000Z') })];
+    expect(sameCampaignSignatures(a, b)).toBe(false);
+  });
+
+  it('returns false when lengths differ', () => {
+    const a = [makeCampaign('a'), makeCampaign('b')];
+    const b = [makeCampaign('a')];
+    expect(sameCampaignSignatures(a, b)).toBe(false);
+  });
+
+  it('returns true for two empty arrays', () => {
+    expect(sameCampaignSignatures([], [])).toBe(true);
   });
 });

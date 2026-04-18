@@ -22,6 +22,7 @@ import { ThemeToggle } from './components/ui/ThemeToggle';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { UserMenu } from './components/UserMenu';
 import { useSync } from './hooks/useSync';
+import { useCampaignSync } from './hooks/useCampaignSync';
 import { generateUUID, initBrowserCompat } from './utils/browserCompat';
 import { SystemSheetRenderer } from './components/SystemSheetRenderer';
 import { CharacterDocument, SystemDataModel } from './types/core/document';
@@ -163,12 +164,17 @@ function AppContent() {
   const {
     campaigns,
     addCampaign,
+    addCampaigns,
     updateCampaign,
     deleteCampaign,
     addCharacterToCampaign,
     removeCharacterFromCampaign,
     flushPendingSaves: flushPendingCampaignSaves,
   } = useCampaigns();
+  useCampaignSync({
+    campaigns,
+    onMerge: addCampaigns,
+  });
   const handleAppInstalled = useCallback(() => {
     toast('App installed for offline-friendly access.', 'success');
   }, [toast]);
