@@ -30,10 +30,16 @@ function normalizeGeneratedContent(filePath, contents) {
 }
 
 const beforeState = new Map(
-  generatedFiles.map((filePath) => [
-    filePath,
-    normalizeGeneratedContent(filePath, existsSync(filePath) ? readFileSync(filePath, 'utf8') : null),
-  ])
+  generatedFiles.map((filePath) => {
+    const raw = existsSync(filePath) ? readFileSync(filePath, 'utf8') : null;
+    return [
+      filePath,
+      {
+        raw,
+        normalized: normalizeGeneratedContent(filePath, raw),
+      },
+    ];
+  })
 );
 
 const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
@@ -49,19 +55,19 @@ const changedFiles = generatedFiles.filter((filePath) => {
     filePath,
     existsSync(filePath) ? readFileSync(filePath, 'utf8') : null
   );
-  return before !== after;
+  return before.normalized !== after;
 });
 
 for (const filePath of generatedFiles) {
-  const before = beforeState.get(filePath);
-  if (before === null) {
+  const { raw } = beforeState.get(filePath);
+  if (raw === null) {
     if (existsSync(filePath)) {
       rmSync(filePath);
     }
     continue;
   }
 
-  writeFileSync(filePath, before, 'utf8');
+  writeFileSync(filePath, raw, 'utf8');
 }
 
 if (changedFiles.length > 0) {
