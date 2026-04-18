@@ -12,6 +12,7 @@ import {
   subscribeToRemoteDocuments,
 } from '../utils/syncEngine';
 import { debounce } from '../utils/performance';
+import { sameDocumentSignatures } from '../utils/documentSignature';
 
 export type SyncState = 'idle' | 'syncing' | 'error' | 'offline';
 
@@ -126,10 +127,10 @@ export function useSync({ documents, onMerge }: UseSyncOptions) {
     }
 
     const previous = previousDocumentsRef.current;
-    const previousSerialized = JSON.stringify(previous);
-    const currentSerialized = JSON.stringify(documents);
 
-    if (previousSerialized === currentSerialized) {
+    // Hot path: runs on every documents change. Cheap signature compare is
+    // sufficient because every mutation stamps a fresh `updatedAt`.
+    if (sameDocumentSignatures(previous, documents)) {
       return;
     }
 

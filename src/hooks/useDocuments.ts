@@ -8,6 +8,7 @@ import {
 } from '../utils/documentStorage';
 import { systemRegistry } from '../registry';
 import { debounce } from '../utils/performance';
+import { sameDocumentSignatures } from '../utils/documentSignature';
 
 const MAX_HISTORY = 50;
 
@@ -210,7 +211,9 @@ export const useDocuments = () => {
       const persistVersion = ++persistVersionRef.current;
       setDocuments((prev) => {
         const next = updater(prev);
-        if (!documentsChanged(prev, next)) {
+        // Hot path: runs on every mutation. Cheap signature compare is
+        // sufficient because all mutations stamp a fresh `updatedAt`.
+        if (sameDocumentSignatures(prev, next)) {
           return prev;
         }
 
@@ -241,13 +244,19 @@ export const useDocuments = () => {
 
   const updateDocument = useCallback(
     (doc: CharacterDocument<SystemDataModel>) => {
-      const prepared = prepareDocumentWithEngine({
-        ...doc,
-        updatedAt: new Date(),
-        version: (doc.version ?? 1) + 1,
+      applyDocumentsUpdate((prev) => {
+        // Read the current version from in-memory state, not from the caller's
+        // input. A stale `doc` reused across rapid successive updates would
+        // otherwise collide on the same version and drop the later edit.
+        const existing = prev.find((d) => d.id === doc.id);
+        const nextVersion = (existing?.version ?? doc.version ?? 1) + 1;
+        const prepared = prepareDocumentWithEngine({
+          ...doc,
+          updatedAt: new Date(),
+          version: nextVersion,
+        });
+        return prev.map((d) => (d.id === prepared.id ? prepared : d));
       });
-
-      applyDocumentsUpdate((prev) => prev.map((d) => (d.id === prepared.id ? prepared : d)));
     },
     [applyDocumentsUpdate]
   );
