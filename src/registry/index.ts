@@ -19,9 +19,6 @@ class SystemRegistry {
     // We cast to SystemDefinition<SystemDataModel> because T extends SystemDataModel
     // This implies that the registry holds generic system definitions.
     this.systems.set(def.id, def as unknown as SystemDefinition<SystemDataModel>);
-    if (import.meta.env.DEV) {
-      console.log(`SystemRegistry: Registered '${def.id}'`);
-    }
   }
 
   /**

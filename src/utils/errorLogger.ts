@@ -70,6 +70,7 @@ class ErrorLogger {
     } else if (severity === ErrorSeverity.MEDIUM) {
       console.warn(`[${category}] ${message}`, context);
     } else if (import.meta.env.DEV) {
+      // eslint-disable-next-line no-console -- Intentional low-severity dev-only trace; gated on import.meta.env.DEV and tree-shaken from production builds.
       console.log(`[${category}] ${message}`, context);
     }
 
