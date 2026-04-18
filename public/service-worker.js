@@ -1,11 +1,17 @@
-const CACHE_NAME = 'rpg-character-sheet-v2';
+// Bump CACHE_NAME whenever the app shell contract changes.  On activate the
+// SW deletes any cache whose name does not match, so bumping this string is
+// how old per-release chunks get pruned.
+const CACHE_NAME = 'rpg-character-sheet-v3';
 const APP_SHELL = ['/', '/index.html', '/manifest.webmanifest'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
   );
-  self.skipWaiting();
+  // Intentionally do NOT call skipWaiting() here.  We want the new SW to
+  // stay in the "installed/waiting" state until the user explicitly opts in
+  // via the in-app update banner.  That avoids asset-mismatch errors on
+  // tabs that are already running the previous bundle.
 });
 
 self.addEventListener('activate', (event) => {
@@ -19,6 +25,16 @@ self.addEventListener('activate', (event) => {
     )
   );
   self.clients.claim();
+});
+
+// Message contract with the app:
+//   { type: 'SKIP_WAITING' } — user accepted the update banner.  Activate
+//                              the new SW immediately so the follow-up
+//                              reload loads fresh bytes.
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
 
 self.addEventListener('fetch', (event) => {

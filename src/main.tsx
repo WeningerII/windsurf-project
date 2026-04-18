@@ -20,11 +20,9 @@ if (sentryDsn) {
 // Initialize Game Systems
 registerAllSystems();
 
-if (import.meta.env.PROD && typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js').catch(() => undefined);
-  });
-}
+// Service-worker registration is owned by `useServiceWorkerUpdate` so the
+// client stays in sync with the app's update banner component.  See
+// src/hooks/useServiceWorkerUpdate.ts.
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

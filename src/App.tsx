@@ -31,6 +31,7 @@ import { useKeyboardNavigation } from './hooks/useKeyboardNavigation';
 import { Skeleton } from './components/ui/Skeleton';
 import { ConfirmDialog } from './components/ui/ConfirmDialog';
 import { ToastProvider, useToast } from './components/ui/Toast';
+import { ServiceWorkerUpdateBanner } from './components/ServiceWorkerUpdateBanner';
 import { useCampaigns } from './hooks/useCampaigns';
 import { CampaignManager } from './components/CampaignManager';
 import { prefetchSystemAssetsForIds } from './utils/systemAssetPrefetch';
@@ -821,6 +822,7 @@ function App() {
     <ErrorBoundary>
       <ToastProvider>
         <AppContent />
+        <ServiceWorkerUpdateBanner />
       </ToastProvider>
     </ErrorBoundary>
   );
