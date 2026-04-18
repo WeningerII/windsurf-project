@@ -78,7 +78,7 @@
     "tsx": "^4.7.0",
     "typedoc": "^0.28.16",
     "typescript": "^5.2.2",
-    "vite": "^5.0.8",
+    "vite": "^7.3.2",
     "vite-plugin-compression": "^0.5.1",
     "vitest": "^4.0.17"
   }
