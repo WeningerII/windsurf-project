@@ -1,5 +1,6 @@
 import type { CharacterDocument, SystemDataModel } from '../types/core/document';
 import { getSupabaseClient } from './supabaseClient';
+import { retryWithBackoff } from './retry';
 
 const SYNC_QUEUE_KEY = 'rpg-sync-queue-v1';
 
@@ -81,13 +82,15 @@ export async function fetchRemoteDocuments(): Promise<CharacterDocument<SystemDa
   const client = getSupabaseClient();
   if (!client) return [];
 
-  const { data, error } = await client
-    .from('documents')
-    .select('*')
-    .order('updated_at', { ascending: false });
+  return retryWithBackoff(async () => {
+    const { data, error } = await client
+      .from('documents')
+      .select('*')
+      .order('updated_at', { ascending: false });
 
-  if (error) throw new Error(error.message);
-  return (data as RemoteDocument[]).map(fromRemote);
+    if (error) throw new Error(error.message);
+    return (data as RemoteDocument[]).map(fromRemote);
+  });
 }
 
 export async function pushDocument(doc: CharacterDocument<SystemDataModel>): Promise<void> {
@@ -95,9 +98,10 @@ export async function pushDocument(doc: CharacterDocument<SystemDataModel>): Pro
   if (!client) return;
 
   const payload = await toRemote(doc);
-  const { error } = await client.from('documents').upsert(payload, { onConflict: 'id' });
-
-  if (error) throw new Error(error.message);
+  await retryWithBackoff(async () => {
+    const { error } = await client.from('documents').upsert(payload, { onConflict: 'id' });
+    if (error) throw new Error(error.message);
+  });
 }
 
 export async function pushDocuments(docs: CharacterDocument<SystemDataModel>[]): Promise<void> {
@@ -108,17 +112,20 @@ export async function pushDocuments(docs: CharacterDocument<SystemDataModel>[]):
 
   const payload = await Promise.all(docs.map((doc) => toRemote(doc)));
 
-  const { error } = await client.from('documents').upsert(payload, { onConflict: 'id' });
-
-  if (error) throw new Error(error.message);
+  await retryWithBackoff(async () => {
+    const { error } = await client.from('documents').upsert(payload, { onConflict: 'id' });
+    if (error) throw new Error(error.message);
+  });
 }
 
 export async function deleteRemoteDocument(id: string): Promise<void> {
   const client = getSupabaseClient();
   if (!client) return;
 
-  const { error } = await client.from('documents').delete().eq('id', id);
-  if (error) throw new Error(error.message);
+  await retryWithBackoff(async () => {
+    const { error } = await client.from('documents').delete().eq('id', id);
+    if (error) throw new Error(error.message);
+  });
 }
 
 export function mergeDocuments(
