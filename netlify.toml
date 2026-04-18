@@ -1,0 +1,106 @@
+# Netlify deploy configuration for RPG Character Sheet.
+#
+# CI uploads a pre-built `dist/` artifact and deploys it directly
+# (see .github/workflows/ci.yml), so Netlify does not re-run `npm run build`
+# in the normal path. The [build] block below is kept for:
+#   - direct deploys from the Netlify UI (no GitHub Actions)
+#   - local `netlify deploy` invocations
+#   - documentation of the canonical build flow
+#
+# Redirects, headers, and security policies below ARE applied to every
+# deploy regardless of whether the build ran here or in CI.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# -----------------------------------------------------------------------------
+# SPA fallback. The app is a state-based single-page app today (no router),
+# so deep URLs do not exist in practice, but this rule future-proofs any
+# client-side routing added later and eliminates 404s on hard refreshes.
+# -----------------------------------------------------------------------------
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# -----------------------------------------------------------------------------
+# Global security headers for every response.
+# -----------------------------------------------------------------------------
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Block framing to defeat clickjacking. frame-ancestors in CSP is the
+    # modern equivalent; X-Frame-Options is kept for older clients.
+    X-Frame-Options = "DENY"
+
+    # Stop browsers from sniffing MIME types, which can turn user content
+    # into executable resources.
+    X-Content-Type-Options = "nosniff"
+
+    # Only send full referrer within our own origin; send only the origin
+    # to cross-origin destinations. Balances analytics usefulness with
+    # privacy leakage.
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+    # Force HTTPS for a year, including subdomains. Netlify terminates TLS
+    # for us, so this is safe to enable on all environments.
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+
+    # Deny hardware/API access the app does not use today. Add entries
+    # here only when a feature genuinely needs them.
+    Permissions-Policy = "geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()"
+
+    # Content Security Policy.
+    #
+    # script-src 'self'              — the built bundle; no inline scripts in index.html.
+    # style-src  'self' 'unsafe-inline' — component libs (lucide, shadcn-style)
+    #                                    emit inline style attributes; disallowing
+    #                                    'unsafe-inline' would break rendering.
+    # img-src    'self' data: https: — allows gradient/SVG data URIs and any HTTPS
+    #                                   SRD asset the data loaders might reference.
+    # font-src   'self' data:        — inlined font metrics in component libraries.
+    # connect-src self + supabase + sentry
+    #                                — Supabase REST (https) and Realtime (wss)
+    #                                  wildcarded because the project URL lives in
+    #                                  env vars; Sentry ingest endpoints similarly.
+    # frame-ancestors 'none'         — modern equivalent of X-Frame-Options: DENY.
+    # worker-src 'self'              — allows /service-worker.js.
+    # manifest-src 'self'            — allows /manifest.webmanifest.
+    # object-src 'none'              — no <object>/<embed> Flash-era surfaces.
+    # base-uri 'self', form-action 'self' — lock down base tag and form posts.
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.sentry.io https://*.ingest.sentry.io; frame-ancestors 'none'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
+
+# -----------------------------------------------------------------------------
+# Long-cache hashed build assets. Vite emits content-hashed filenames under
+# /assets, so they are safely immutable. The HTML shell stays on the default
+# short cache so users pick up new builds immediately.
+# -----------------------------------------------------------------------------
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# The service worker must never be cached aggressively — browsers need to see
+# changes within a day for the update flow to work at all.
+
+[[headers]]
+  for = "/service-worker.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Icons and the manifest are small and rarely change; cache for a week.
+
+[[headers]]
+  for = "/icons/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/manifest.webmanifest"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+    Content-Type = "application/manifest+json"
