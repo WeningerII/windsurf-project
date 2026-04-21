@@ -58,10 +58,7 @@ function campaignSignatureFor(c: Campaign): string {
   return `${c.id}|${updatedAt}|${members}`;
 }
 
-export function sameCampaignSignatures(
-  a: readonly Campaign[],
-  b: readonly Campaign[]
-): boolean {
+export function sameCampaignSignatures(a: readonly Campaign[], b: readonly Campaign[]): boolean {
   if (a === b) return true;
   if (a.length !== b.length) return false;
 

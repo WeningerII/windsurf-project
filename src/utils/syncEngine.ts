@@ -345,9 +345,7 @@ export function mergeCampaigns(local: Campaign[], remote: Campaign[]): Campaign[
     }
   }
 
-  return Array.from(merged.values()).sort(
-    (a, b) => b.updatedAt.getTime() - a.updatedAt.getTime()
-  );
+  return Array.from(merged.values()).sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime());
 }
 
 export function queueCampaignsSnapshot(campaigns: Campaign[]): void {

@@ -27,8 +27,8 @@ export function ServiceWorkerUpdateBanner() {
         <div className="flex items-center gap-3">
           <RefreshCw className="h-5 w-5 text-sky-400" aria-hidden="true" />
           <span>
-            <strong className="font-semibold">A new version is available.</strong>{' '}
-            Reload to pick up the latest changes.
+            <strong className="font-semibold">A new version is available.</strong> Reload to pick up
+            the latest changes.
           </span>
         </div>
         <Button size="sm" onClick={applyUpdate}>
