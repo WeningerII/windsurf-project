@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 /**
  * Owns the production service-worker lifecycle and surfaces a user-consent
@@ -27,6 +27,20 @@ function isServiceWorkerSupported(): boolean {
 
 export function useServiceWorkerUpdate(): ServiceWorkerUpdateState {
   const [waitingWorker, setWaitingWorker] = useState<ServiceWorker | null>(null);
+  // Tracks whether the user has clicked "Refresh" in the update banner.
+  //
+  // `controllerchange` fires in TWO distinct scenarios:
+  //   (a) first-ever SW install on this origin — the SW activates and
+  //       calls `clients.claim()`, which promotes our page from "no
+  //       controller" to "controlled".
+  //   (b) user-consented update — we post SKIP_WAITING, the waiting SW
+  //       activates, and takes over from the previous controller.
+  //
+  // Only (b) should reload the page.  Reloading on (a) aborts whatever
+  // navigation the user (or a test) just initiated and yields
+  // `net::ERR_ABORTED` the first time the app is ever visited.  Gate the
+  // reload behind this ref, which is flipped only by `applyUpdate`.
+  const userInitiatedUpdateRef = useRef(false);
 
   useEffect(() => {
     if (!import.meta.env.PROD || !isServiceWorkerSupported()) {
@@ -68,8 +82,14 @@ export function useServiceWorkerUpdate(): ServiceWorkerUpdateState {
     };
 
     const handleControllerChange = () => {
-      // Fires once the waiting SW takes over.  Reload so the active page
-      // runs against the fresh asset manifest.
+      // Only reload on user-consented updates.  First-install
+      // controllerchange (clients.claim promoting the page) is ignored
+      // because reloading there would abort the current navigation for
+      // zero user benefit — the page was just loaded.
+      if (!userInitiatedUpdateRef.current) {
+        return;
+      }
+      userInitiatedUpdateRef.current = false;
       window.location.reload();
     };
 
@@ -99,8 +119,10 @@ export function useServiceWorkerUpdate(): ServiceWorkerUpdateState {
 
   const applyUpdate = useCallback(() => {
     if (!waitingWorker) return;
-    // The `controllerchange` listener above handles the reload.  Sending
-    // SKIP_WAITING promotes the waiting SW to active.
+    // Mark the upcoming controllerchange as user-initiated so the
+    // listener actually reloads.  SKIP_WAITING promotes the waiting SW
+    // to active, which fires controllerchange.
+    userInitiatedUpdateRef.current = true;
     waitingWorker.postMessage({ type: 'SKIP_WAITING' });
   }, [waitingWorker]);
 
