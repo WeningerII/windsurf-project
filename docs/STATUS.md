@@ -8,7 +8,7 @@ This file is a current-state summary only. `docs/MASTER_PLAN.md` is the sole pla
 
 - 7 registered systems are live in the registry.
 - Netlify is the canonical deployment target.
-- The app is browser-local today: IndexedDB primary, localStorage fallback, dual-write persistence.
+- The app is local-first with an optional cloud sync layer. Signed-out and unconfigured paths remain pure browser-local (IndexedDB primary, localStorage fallback, dual-write persistence). Signed-in users on a configured Supabase project get per-user document and campaign sync with offline queueing, realtime change propagation, and exponential-backoff retry. See `docs/rfc/001-backend-sync.md` for the shipped design.
 - Loader-backed counts, support levels, and source-filtered categories are generated from the runtime data/reporting path.
 - Spell catalogs across 5e, D&D 3.5e, PF1e, and PF2e now share normalized index surfaces with alias-safe lookup, and the shared spell browser now derives its level filter from loaded data instead of a hardcoded `0-9` list.
 - Shared controller/section-host convergence is shipped across 5e, PF2e, legacy d20, M&M, and Daggerheart. The remaining shared-host work is localized cleanup and documentation, not another decomposition push.

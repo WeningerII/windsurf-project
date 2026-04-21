@@ -35,7 +35,7 @@ Every inherited item below is classified as one of:
 - The repo currently ships 7 registered systems.
 - The documented repo-wide verification baseline is green as of April 16, 2026 via `npm run verify` under Node `20.19.0`. Verification claims and scripted re-checks must stay tied to the supported runtime policy (`20.19+`, `22.12+`, or `24+`).
 - Netlify is the canonical deployment target represented in repo docs and CI.
-- The app is browser-local today: IndexedDB is the primary store, localStorage is the fallback, and there is no checked-in backend or sync layer.
+- The app is **local-first with an optional cloud sync layer**. Signed-out users and users without Supabase env vars configured behave exactly as the historical browser-local product: IndexedDB primary, localStorage fallback, dual-write persistence. Signed-in users get character-document and campaign sync against Supabase with per-user RLS, last-writer-wins merge semantics, offline queueing, realtime change propagation, and exponential-backoff retry on transient failures. The shipped design is documented in `docs/rfc/001-backend-sync.md`.
 - Loader-backed counts and support summaries live in `docs/generated/roadmap-metrics.md` and `docs/generated/roadmap-metrics.json`. Narrative docs should summarize them, not compete with them, and must stay aligned with the metadata-backed selector/dashboard summary path already used in-app.
 - Spell catalogs across 5e 2014/2024, D&D 3.5e, PF1e, and PF2e now share a normalized index/helper surface with alias-safe lookup. The shared spell browser derives levels from loaded data, so PF2e rank 10 is now a first-class browser path.
 - Shared controller/section convergence is already shipped across the active sheet hosts for 5e, PF2e, legacy d20, M&M, and Daggerheart. The remaining 5e host work is a final cleanup/documentation pass, not another large decomposition project.
@@ -59,7 +59,7 @@ The following older backlog claims are no longer true and must not re-enter the 
 ## Non-Negotiable Constraints
 
 - `SRD/open-content only`: shipped content must remain inside the source strings enforced by `src/utils/openContentPolicy.ts`.
-- `Frontend-first/browser-local reality`: the app stays browser-local until a backend/sync track produces an explicit spec and implementation plan.
+- `Local-first remains the default`: the app must continue to work fully when signed out and when Supabase env vars are unset. Cloud sync is additive, never required. Any change that makes a core flow depend on a live backend requires a new RFC superseding `docs/rfc/001-backend-sync.md`.
 - `Loader-backed reporting only`: if a content family is shown as product support, it must be reachable through loaders and reflected in `docs/generated/roadmap-metrics.*`.
 - `Reporting-path parity`: support notes, reachable categories, and generated counts must stay aligned across the loader-backed metrics path and the metadata-backed selector/dashboard summary path.
 - `Anti-overengineering`: do not create repo-wide controller, form, or section abstractions unless at least 3 concrete consumers share the same interaction shape and the extraction target is explicit.
@@ -75,6 +75,7 @@ The following older backlog claims are no longer true and must not re-enter the 
 - `Completed foundation`: product-reachable counts and source-filtered categories now flow through the shared system-catalog/reporting layer and generated roadmap metrics.
 - `Completed foundation`: service-worker caching, install prompt support, top-level sheet lazy loading, and bundle-budget enforcement are shipped.
 - `Completed foundation`: storage hardening, pending-save handling, and browser-local document persistence are shipped.
+- `Completed foundation`: local-first backend sync is shipped per `docs/rfc/001-backend-sync.md`. Supabase Auth (email/password + OAuth), per-user RLS on `documents` and `campaigns`, versioned last-writer-wins merge for documents, timestamp-only merge for campaigns, offline queue replay on reconnect, realtime subscriptions keyed by user id, and exponential-backoff retry with jitter on transient network failures are all live. Signed-out and unconfigured paths continue to behave as the historical browser-local product.
 - `Completed foundation`: the shared 5e engine base is shipped and edition engines are reduced to rules overrides.
 - `Completed foundation`: `D20LegacySheet`, PF2e sheet, and M&M sheet decomposition work is shipped; sheet-local orchestration now lives outside the largest rendered tab bodies.
 - `Completed foundation`: the shared controller/section-host convergence across 5e, PF2e, legacy d20, M&M, and Daggerheart is shipped. Remaining host cleanup is now local polish and documentation, not architecture extraction.
@@ -151,9 +152,6 @@ The following older backlog claims are no longer true and must not re-enter the 
 
 ## Discovery Tracks
 
-- `Discovery track`: backend sync/accounts.
-  - Current truth: the app is browser-local and there is no checked-in sync/backend module.
-  - Entry requirement: an RFC covering auth, storage model, sync/conflict semantics, migration from browser-local documents, and Netlify/runtime implications.
 - `Discovery track`: guided character-creation wizard.
   - Current truth: users create blank sheets and/or use template selectors.
   - Entry requirement: an RFC covering first-release system scope, step order, draft persistence, resumability, and how wizard output maps onto existing document shapes.
@@ -169,6 +167,7 @@ The following older backlog claims are no longer true and must not re-enter the 
 | `docs/EVIDENCE_LINKED_PARITY_REMEDIATION_PLAN.md` | Historical context | Exhaustive remediation sequencing, row-to-workstream mapping, and parity decision matrix |
 | `docs/EVIDENCE_LINKED_PARITY_AUDIT.md` | Historical context | Evidence snapshot showing what the repo looked like before the March 2026 parity/productization push landed |
 | `docs/DAGGERHEART_DATA_ORGANIZATION_PLAN.md` | Historical context | Original Daggerheart data-shape rationale, plus superseded early structure proposals that informed the shipped data tree |
+| `docs/rfc/001-backend-sync.md` | Accepted RFC | Canonical description of the shipped local-first sync architecture: auth, schema, merge semantics, offline queue, realtime, retry, migration-from-local, Netlify/runtime implications, accepted boundaries |
 
 ## Maintenance Rule
 

@@ -4,7 +4,8 @@ export type DocDriftSurfaceKind =
   | 'historical'
   | 'workflow'
   | 'runtime-copy'
-  | 'data-readme';
+  | 'data-readme'
+  | 'rfc';
 
 export type DocDriftRuleType =
   | 'count_rule'
@@ -84,6 +85,12 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     kind: 'generated',
     owner: 'verification-baseline',
     rules: [],
+  },
+  {
+    path: 'docs/rfc/001-backend-sync.md',
+    kind: 'rfc',
+    owner: 'backend-sync-rfc',
+    rules: ['path_ref_rule'],
   },
   {
     path: 'docs/PRODUCTION_PLAN.md',
