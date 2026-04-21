@@ -4,7 +4,7 @@ Multi-system RPG character sheet using **only open-license SRD content** across 
 
 ## 🎯 Project Status
 
-- ✅ **Verification**: `npm run verify` passed on April 16, 2026 under Node `20.19.0`
+- ✅ **Verification**: `npm run verify` passed on April 21, 2026 under Node `20.19.0`
 - ✅ **D&D 5e 2014 + 2024**: full SRD-backed character management with shared 5e sheet flows and structured always-prepared support
 - ✅ **Pathfinder 2e**: native sheet with loader-backed archetypes, backgrounds, feats, spells, and equipment
 - ✅ **D&D 3.5e + Pathfinder 1e**: shared legacy sheet with base/prestige-class product reachability and Vancian tracked/prepared spell workflows
@@ -274,7 +274,7 @@ Counts below summarize the current generated metrics in [docs/generated/roadmap-
 | Metric | Status |
 |--------|--------|
 | **Build** | Passing ✅ |
-| **Verification** | `npm run verify` green on April 16, 2026 ✅ |
+| **Verification** | `npm run verify` green on April 21, 2026 ✅ |
 | **Coverage Gate** | Passing under Node 20.19+ ✅ |
 | **Lint** | 0 Errors ✅ |
 | **Type Safety** | 100% Strict ✅ |
@@ -372,4 +372,4 @@ Built with a focus on:
 
 ---
 
-**Last Updated**: April 16, 2026
+**Last Updated**: April 21, 2026
