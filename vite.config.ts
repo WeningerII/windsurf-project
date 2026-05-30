@@ -68,6 +68,13 @@ export default defineConfig({
         },
       },
     },
+    // Do not <link rel="modulepreload"> the large per-system SRD data chunks on
+    // first load. They are imported on demand when a user opens a system, so
+    // prefetching all seven systems wastes bandwidth in the typical
+    // single-system session. They still load lazily via the async dataLoader.
+    modulePreload: {
+      resolveDependencies: (_filename, deps) => deps.filter((dep) => !dep.includes('-data-')),
+    },
     chunkSizeWarningLimit: 1000,
     sourcemap: false,
   },
