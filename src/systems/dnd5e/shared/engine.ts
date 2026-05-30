@@ -1,12 +1,12 @@
-import { SystemEngine, RollResult } from '../../registry/types';
-import { CharacterDocument } from '../../types/core/document';
-import { Dnd5eDataModel } from '../dnd5e/data-model';
-import { abilityMod } from '../../utils/math';
-import { hitDieSize } from '../../constants/hit-dice';
-import { compute5eAC } from '../../utils/armorClass';
-import { compute5eSpellSlots } from '../../utils/spellSlots';
-import { hasDnd5eCondition, normalizeDnd5eConditions } from '../dnd5e/conditions';
-import { getDnd5eDefenseStyleArmorClassBonus } from '../dnd5e/shared/activityState';
+import { SystemEngine, RollResult } from '../../../registry/types';
+import { CharacterDocument } from '../../../types/core/document';
+import { Dnd5eDataModel } from '../data-model';
+import { abilityMod } from '../../../utils/math';
+import { hitDieSize } from '../../../constants/hit-dice';
+import { compute5eAC } from '../../../utils/armorClass';
+import { compute5eSpellSlots } from '../../../utils/spellSlots';
+import { hasDnd5eCondition, normalizeDnd5eConditions } from '../conditions';
+import { getDnd5eDefenseStyleArmorClassBonus } from './activityState';
 
 /** Proficiency bonus by total character level (D&D 5e SRD) */
 export function profBonus(level: number): number {

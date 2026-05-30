@@ -4,4 +4,3 @@
 export * from './gear';
 export * from './weapons';
 export * from './armor';
-export * from './magic-items';
