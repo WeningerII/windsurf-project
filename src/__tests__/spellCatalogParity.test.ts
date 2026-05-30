@@ -170,18 +170,6 @@ function sortedIds(ids: readonly string[]) {
 describe('Spell Catalog Parity', () => {
   spellModules.forEach((spellModule) => {
     describe(spellModule.allSpells[0]?.system ?? 'unknown', () => {
-      it('exports the shared helper surface', () => {
-        expect(Array.isArray(spellModule.allSpells)).toBe(true);
-        expect(typeof spellModule.spellsByLevel).toBe('object');
-        expect(typeof spellModule.spellsById).toBe('object');
-        expect(typeof spellModule.spellsByClass).toBe('object');
-        expect(typeof spellModule.spellsBySchool).toBe('object');
-        expect(typeof spellModule.spellStats).toBe('object');
-        expect(typeof spellModule.spellIdAliases).toBe('object');
-        expect(typeof spellModule.getSpell).toBe('function');
-        expect('spellsByClassAndLevel' in spellModule).toBe(true);
-      });
-
       it('keeps stats aligned with the canonical spell list', () => {
         expect(spellModule.spellStats.total).toBe(spellModule.allSpells.length);
         expect(

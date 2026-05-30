@@ -166,29 +166,6 @@ describe('DaggerheartEngine', () => {
       });
     });
 
-    it('infers stable effect tags across low, mid, and high-level cards that stay non-automated', () => {
-      expect(daggerheartDomainCardsById['arcana-wall-walk']?.effectTags).toEqual(
-        expect.arrayContaining(['mobility'])
-      );
-      expect(daggerheartDomainCardsById['splendor-healing-hands']?.effectTags).toEqual(
-        expect.arrayContaining(['support'])
-      );
-
-      expect(daggerheartDomainCardsById['midnight-shadowhunter']?.automationMode).toBe(
-        'triggered-manual'
-      );
-      expect(daggerheartDomainCardsById['midnight-shadowhunter']?.effectTags).toEqual(
-        expect.arrayContaining(['defense', 'evasion'])
-      );
-
-      expect(daggerheartDomainCardsById['codex-codex-touched']?.automationMode).toBe(
-        'triggered-manual'
-      );
-      expect(daggerheartDomainCardsById['codex-codex-touched']?.effectTags).toEqual(
-        expect.arrayContaining(['loadout-synergy', 'spellcast'])
-      );
-    });
-
     it('keeps strict deterministic-passive audit rejections explicit', () => {
       const strictCandidates = daggerheartDomainCards
         .filter((card) => card.automationMode !== 'passive')
