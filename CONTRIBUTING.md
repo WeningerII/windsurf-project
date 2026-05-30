@@ -30,7 +30,7 @@ This document outlines engineering principles and practices for maintaining code
 - Manual fallback: if the host shell is below Node 18 or has no usable Node install, install Node `20.19.0` directly or fix the version manager before working in the repo.
 - `npm run test:coverage` is stricter than plain `npm test`: `@vitest/coverage-v8` requires `node:inspector/promises`, so Node 18 shells fail before any tests execute.
 - Current baseline: run `npm run verify` under Node `20.19+` and capture exact counts from the command output.
-- Latest recorded full pass: May 1, 2026 under Node `v20.19.0`. Treat the exact Vitest and Playwright totals as command output, not a hardcoded invariant in this file.
+- Latest recorded full pass: May 30, 2026 under Node `v20.19.0`. Treat the exact Vitest and Playwright totals as command output, not a hardcoded invariant in this file.
 - Update `docs/generated/verification-baseline.json` via `npm run record:verify-baseline -- --date "Month DD, YYYY" --node-version 20.19.0 [...]`; `npm run check:doc-drift` enforces the mirrored live-doc verification claims.
 - `npm run runtime:doctor` is the first stop when local Node policy, cached bootstrap runtime, or CI/runtime drift looks suspicious.
 - `docs/MASTER_PLAN.md` is the sole planning authority. If a roadmap statement in another doc drifts, update that doc to point back to the master plan instead of creating a competing backlog.
