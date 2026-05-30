@@ -2,7 +2,7 @@ import type { CharacterDocument, SystemDataModel } from '../types/core/document'
 import type { Campaign } from '../types/core/campaign';
 import { getSupabaseClient } from './supabaseClient';
 import { retryWithBackoff } from './retry';
-import { parseCharacterDocument } from './documentValidation';
+import { parseCharacterDocument, parseCampaign } from './boundaryValidation';
 
 const SYNC_QUEUE_KEY = 'rpg-sync-queue-v1';
 const SYNC_DELETE_QUEUE_KEY = 'rpg-sync-delete-queue-v1';
@@ -304,14 +304,6 @@ export interface RemoteCampaign {
   updated_at: string;
 }
 
-function hydrateQueuedCampaigns(campaigns: Campaign[]): Campaign[] {
-  return campaigns.map((c) => ({
-    ...c,
-    createdAt: new Date(c.createdAt),
-    updatedAt: new Date(c.updatedAt),
-  }));
-}
-
 async function toRemoteCampaign(campaign: Campaign): Promise<RemoteCampaign> {
   const userId = await getCurrentUserId();
 
@@ -327,16 +319,21 @@ async function toRemoteCampaign(campaign: Campaign): Promise<RemoteCampaign> {
   };
 }
 
-function fromRemoteCampaign(row: RemoteCampaign): Campaign {
-  return {
-    id: row.id,
-    name: row.name,
-    systemId: row.system_id ?? undefined,
-    notes: row.notes,
-    characterIds: row.character_ids,
-    createdAt: new Date(row.created_at),
-    updatedAt: new Date(row.updated_at),
-  };
+function fromRemoteCampaign(row: unknown): Campaign | null {
+  if (!row || typeof row !== 'object') {
+    return null;
+  }
+  const remote = row as Partial<RemoteCampaign>;
+  const parsed = parseCampaign({
+    id: remote.id,
+    name: remote.name,
+    systemId: remote.system_id ?? undefined,
+    notes: remote.notes,
+    characterIds: remote.character_ids,
+    createdAt: remote.created_at,
+    updatedAt: remote.updated_at,
+  });
+  return parsed.ok ? parsed.value : null;
 }
 
 export async function fetchRemoteCampaigns(): Promise<Campaign[]> {
@@ -350,7 +347,10 @@ export async function fetchRemoteCampaigns(): Promise<Campaign[]> {
       .order('updated_at', { ascending: false });
 
     if (error) throw new Error(error.message);
-    return (data as RemoteCampaign[]).map(fromRemoteCampaign);
+    const rows: unknown[] = Array.isArray(data) ? data : [];
+    return rows
+      .map(fromRemoteCampaign)
+      .filter((campaign): campaign is Campaign => campaign !== null);
   });
 }
 
@@ -423,7 +423,19 @@ export function getQueuedCampaignsSnapshot(): Campaign[] {
   if (!raw) return [];
 
   try {
-    return hydrateQueuedCampaigns(JSON.parse(raw) as Campaign[]);
+    const parsed: unknown = JSON.parse(raw);
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+    const now = new Date();
+    const campaigns: Campaign[] = [];
+    for (const candidate of parsed) {
+      const result = parseCampaign(candidate, now);
+      if (result.ok) {
+        campaigns.push(result.value);
+      }
+    }
+    return campaigns;
   } catch {
     return [];
   }

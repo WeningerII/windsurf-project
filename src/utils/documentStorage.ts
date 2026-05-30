@@ -8,7 +8,7 @@ import {
   idbSetMigrated,
 } from './indexedDBAdapter';
 import { emitToast } from './notifications';
-import { parseCharacterDocument } from './documentValidation';
+import { parseCharacterDocument } from './boundaryValidation';
 
 const STORAGE_KEY = 'rpg-documents-v2';
 const STORAGE_VERSION = '2.0';
