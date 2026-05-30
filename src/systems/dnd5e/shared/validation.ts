@@ -314,23 +314,11 @@ function validateCharacterOptions(
     });
   }
 
-  if (system.featIds) {
-    for (const featId of system.featIds) {
-      if (!validationData.featIds.has(featId)) {
-        addIssue(issues, context, {
-          code: 'dnd5e-unknown-feat',
-          severity: 'error',
-          path: 'system.featIds',
-          message: `Feat '${featId}' is not in the loader-backed feats catalog.`,
-          recoverable: true,
-          details: { featId },
-        });
-      }
-    }
-  }
+  validateFeats(issues, context, system.feats, validationData.featIds);
+  validateFeatureOptions(issues, context, system, validationData);
 }
 
-function _validateFeats(
+function validateFeats(
   issues: ValidationIssue[],
   context: ValidationContext,
   feats: Feat[],
@@ -350,7 +338,7 @@ function _validateFeats(
   });
 }
 
-function _validateFeatureOptions(
+function validateFeatureOptions(
   issues: ValidationIssue[],
   context: ValidationContext,
   system: Dnd5eValidationDataModel,

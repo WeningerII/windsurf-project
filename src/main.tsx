@@ -14,6 +14,9 @@ if (sentryDsn) {
     dsn: sentryDsn,
     environment: import.meta.env.MODE,
     enabled: import.meta.env.PROD,
+    // Keep IP addresses and other SDK-default PII out of events; the error
+    // logger forwards only non-identifying metadata (see utils/errorLogger.ts).
+    sendDefaultPii: false,
   });
 }
 

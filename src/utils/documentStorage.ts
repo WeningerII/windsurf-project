@@ -8,6 +8,7 @@ import {
   idbSetMigrated,
 } from './indexedDBAdapter';
 import { emitToast } from './notifications';
+import { parseCharacterDocument } from './documentValidation';
 
 const STORAGE_KEY = 'rpg-documents-v2';
 const STORAGE_VERSION = '2.0';
@@ -161,21 +162,30 @@ export function exportDocuments(documents: CharacterDocument<SystemDataModel>[])
 }
 
 export function importDocuments(jsonString: string): CharacterDocument<SystemDataModel>[] {
+  let data: unknown;
   try {
-    const data: DocumentStorageData = JSON.parse(jsonString);
-
-    if (!data.documents || !Array.isArray(data.documents)) {
-      throw new Error('Invalid document data format');
-    }
-
-    return data.documents.map((doc) => ({
-      ...doc,
-      createdAt: new Date(doc.createdAt),
-      updatedAt: new Date(doc.updatedAt),
-    }));
+    data = JSON.parse(jsonString);
   } catch {
     throw new Error('Failed to import documents. Invalid JSON format.');
   }
+
+  const documentsField =
+    data && typeof data === 'object' ? (data as { documents?: unknown }).documents : undefined;
+  if (!Array.isArray(documentsField)) {
+    throw new Error('Failed to import documents. Invalid JSON format.');
+  }
+
+  // Parse, don't cast: drop records that are not structurally valid documents
+  // rather than letting malformed data masquerade as a character.
+  const documents: CharacterDocument<SystemDataModel>[] = [];
+  for (const candidate of documentsField) {
+    const parsed = parseCharacterDocument(candidate);
+    if (parsed.ok) {
+      documents.push(parsed.value);
+    }
+  }
+
+  return documents;
 }
 
 /**

@@ -41,7 +41,7 @@ Every inherited item below is classified as one of:
 ## Current Repo Truth
 
 - The repo currently ships 7 registered systems.
-- The documented repo-wide verification baseline is green as of May 1, 2026 via `npm run verify` under Node `20.19.0`. Verification claims and scripted re-checks must stay tied to the supported runtime policy (`20.19+`, `22.12+`, or `24+`).
+- The documented repo-wide verification baseline is green as of May 30, 2026 via `npm run verify` under Node `20.19.0`. Verification claims and scripted re-checks must stay tied to the supported runtime policy (`20.19+`, `22.12+`, or `24+`).
 - Netlify is the canonical deployment target represented in repo docs and CI.
 - The app is **local-first with an optional cloud sync layer**. Signed-out users and users without Supabase env vars configured behave exactly as the historical browser-local product: IndexedDB primary, localStorage fallback, dual-write persistence. Signed-in users get character-document and campaign sync against Supabase with per-user RLS, last-writer-wins merge semantics, offline queueing, realtime change propagation, and exponential-backoff retry on transient failures. The shipped design is documented in `docs/rfc/001-backend-sync.md`.
 - Loader-backed counts and support summaries live in `docs/generated/roadmap-metrics.md` and `docs/generated/roadmap-metrics.json`. Narrative docs should summarize them, not compete with them, and must stay aligned with the metadata-backed selector/dashboard summary path already used in-app.

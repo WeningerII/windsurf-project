@@ -2,7 +2,7 @@
 
 This file is a current-state summary only. `docs/MASTER_PLAN.md` is the sole planning authority, and `docs/generated/roadmap-metrics.md` remains the authoritative count source.
 
-**Last repo-wide verification:** May 1, 2026 via `npm run verify` under Node `20.19.0`
+**Last repo-wide verification:** May 30, 2026 via `npm run verify` under Node `20.19.0`
 
 ## Current Product Snapshot
 

@@ -5,7 +5,8 @@ export type DocDriftSurfaceKind =
   | 'workflow'
   | 'runtime-copy'
   | 'data-readme'
-  | 'rfc';
+  | 'rfc'
+  | 'plan';
 
 export type DocDriftRuleType =
   | 'count_rule'
@@ -67,6 +68,12 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
       'path_ref_rule',
       'capability_phrase_rule',
     ],
+  },
+  {
+    path: 'docs/REMEDIATION_PLAN.md',
+    kind: 'plan',
+    owner: 'active-remediation-plan',
+    rules: [],
   },
   {
     path: 'docs/generated/roadmap-metrics.md',

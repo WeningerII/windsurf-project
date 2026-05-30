@@ -1,0 +1,25 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "entry": [
+    "src/scripts/**/*.ts",
+    "scripts/**/*.mjs",
+    "netlify/functions/**/*.{mjs,ts}",
+    "e2e/**/*.spec.ts",
+    "src/__tests__/**/*.{test,spec}.{ts,tsx}",
+    "*.config.{ts,js,mjs}",
+    "docs/doc-drift.manifest.ts",
+    "docs/doc-drift.rules.ts"
+  ],
+  "project": ["src/**/*.{ts,tsx}", "scripts/**/*.mjs", "netlify/**/*.mjs"],
+  "ignore": ["src/data/**", "src/__tests__/vitest.d.ts"],
+  "ignoreDependencies": ["playwright-core"],
+  "rules": {
+    "types": "off",
+    "exports": "off",
+    "enumMembers": "off",
+    "classMembers": "off",
+    "nsTypes": "off",
+    "nsExports": "off",
+    "duplicates": "off"
+  }
+}

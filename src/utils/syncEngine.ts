@@ -2,6 +2,7 @@ import type { CharacterDocument, SystemDataModel } from '../types/core/document'
 import type { Campaign } from '../types/core/campaign';
 import { getSupabaseClient } from './supabaseClient';
 import { retryWithBackoff } from './retry';
+import { parseCharacterDocument } from './documentValidation';
 
 const SYNC_QUEUE_KEY = 'rpg-sync-queue-v1';
 const SYNC_DELETE_QUEUE_KEY = 'rpg-sync-delete-queue-v1';
@@ -17,16 +18,6 @@ export interface RemoteDocument {
   created_at: string;
   updated_at: string;
   version: number;
-}
-
-function hydrateQueuedDocuments(
-  docs: CharacterDocument<SystemDataModel>[]
-): CharacterDocument<SystemDataModel>[] {
-  return docs.map((doc) => ({
-    ...doc,
-    createdAt: new Date(doc.createdAt),
-    updatedAt: new Date(doc.updatedAt),
-  }));
 }
 
 function getDocumentVersion(doc: CharacterDocument<SystemDataModel>): number {
@@ -108,16 +99,21 @@ async function toRemote(doc: CharacterDocument<SystemDataModel>): Promise<Remote
   };
 }
 
-function fromRemote(row: RemoteDocument): CharacterDocument<SystemDataModel> {
-  return {
-    id: row.id,
-    name: row.name,
-    systemId: row.system_id,
-    system: row.system_data,
-    createdAt: new Date(row.created_at),
-    updatedAt: new Date(row.updated_at),
-    version: row.version,
-  };
+function fromRemote(row: unknown): CharacterDocument<SystemDataModel> | null {
+  if (!row || typeof row !== 'object') {
+    return null;
+  }
+  const remote = row as Partial<RemoteDocument>;
+  const parsed = parseCharacterDocument({
+    id: remote.id,
+    name: remote.name,
+    systemId: remote.system_id,
+    system: remote.system_data,
+    createdAt: remote.created_at,
+    updatedAt: remote.updated_at,
+    version: remote.version,
+  });
+  return parsed.ok ? parsed.value : null;
 }
 
 export async function fetchRemoteDocuments(): Promise<CharacterDocument<SystemDataModel>[]> {
@@ -131,7 +127,10 @@ export async function fetchRemoteDocuments(): Promise<CharacterDocument<SystemDa
       .order('updated_at', { ascending: false });
 
     if (error) throw new Error(error.message);
-    return (data as RemoteDocument[]).map(fromRemote);
+    const rows: unknown[] = Array.isArray(data) ? data : [];
+    return rows
+      .map(fromRemote)
+      .filter((doc): doc is CharacterDocument<SystemDataModel> => doc !== null);
   });
 }
 
@@ -216,7 +215,19 @@ export function getQueuedSyncSnapshot(): CharacterDocument<SystemDataModel>[] {
   }
 
   try {
-    return hydrateQueuedDocuments(JSON.parse(raw) as CharacterDocument<SystemDataModel>[]);
+    const parsed: unknown = JSON.parse(raw);
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+    const now = new Date();
+    const documents: CharacterDocument<SystemDataModel>[] = [];
+    for (const candidate of parsed) {
+      const result = parseCharacterDocument(candidate, now);
+      if (result.ok) {
+        documents.push(result.value);
+      }
+    }
+    return documents;
   } catch {
     return [];
   }
