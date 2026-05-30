@@ -18,6 +18,7 @@
     "check:doc-drift": "npm run node:check && tsx scripts/check-doc-drift.mjs",
     "check:generated-docs": "npm run node:check && node scripts/check-generated-docs.mjs",
     "check:repo-hygiene": "npm run node:check && node scripts/check-repo-hygiene.mjs",
+    "check:dead-code": "npm run node:check && knip",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "record:verify-baseline": "npm run node:check && tsx scripts/record-verification-baseline.mjs",
@@ -37,7 +38,7 @@
     "enhance": "tsx src/scripts/enhance-classes.ts",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx}\"",
-    "verify": "npm run node:check && npm run lint && npm run format:check && npm run test:coverage -- --run --maxWorkers=1 && npm run validate && npm run build && npm run check:bundle-size && npm run test:e2e && npm run check:repo-hygiene && npm run check:generated-docs && npm run check:doc-drift"
+    "verify": "npm run node:check && npm run lint && npm run format:check && npm run test:coverage -- --run --maxWorkers=1 && npm run validate && npm run build && npm run check:bundle-size && npm run test:e2e && npm run check:repo-hygiene && npm run check:generated-docs && npm run check:doc-drift && npm run check:dead-code"
   },
   "dependencies": {
     "@sentry/browser": "^10.44.0",
@@ -71,6 +72,7 @@
     "fake-indexeddb": "^6.2.5",
     "happy-dom": "^20.3.7",
     "jsdom": "^27.4.0",
+    "knip": "^5.88.1",
     "postcss": "^8.4.32",
     "prettier": "^3.8.1",
     "rollup-plugin-visualizer": "^6.0.5",
