@@ -38,9 +38,9 @@ describe('characterPresenter', () => {
 
   describe('getClassLabel', () => {
     it('humanizes a single class from classLevels', () => {
-      expect(getClassLabel({ classLevels: [{ classId: 'fighter', level: 3 }] } as SystemDataModel)).toBe(
-        'Fighter'
-      );
+      expect(
+        getClassLabel({ classLevels: [{ classId: 'fighter', level: 3 }] } as SystemDataModel)
+      ).toBe('Fighter');
     });
 
     it('appends a multiclass count', () => {
