@@ -1,14 +1,13 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { appendSceneEvent as appendRuntimeSceneEvent } from '../scene/runtime';
 import type { SceneDocument, SceneEvent } from '../types/core/scene';
 import { clearSceneStorage, loadScenes, saveScenes } from '../utils/sceneStorage';
-import { debounce } from '../utils/performance';
+import { useDebouncedPersistence } from './useDebouncedPersistence';
 
 export const useScenes = () => {
   const [scenes, setScenes] = useState<SceneDocument[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const persistVersionRef = useRef(0);
 
   useEffect(() => {
     setScenes(loadScenes());
@@ -24,51 +23,18 @@ export const useScenes = () => {
     }
   }, []);
 
-  const debouncedPersist = useMemo(
-    () =>
-      debounce((nextScenes: SceneDocument[], version: number) => {
-        if (version !== persistVersionRef.current) return;
-        persist(nextScenes);
-      }, 300),
-    [persist]
-  );
-
-  useEffect(() => () => debouncedPersist.flush(), [debouncedPersist]);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return undefined;
-
-    const flushPersist = () => {
-      debouncedPersist.flush();
-    };
-
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden') {
-        flushPersist();
-      }
-    };
-
-    window.addEventListener('pagehide', flushPersist);
-    window.addEventListener('beforeunload', flushPersist);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    return () => {
-      window.removeEventListener('pagehide', flushPersist);
-      window.removeEventListener('beforeunload', flushPersist);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [debouncedPersist]);
+  const persistence = useDebouncedPersistence(persist);
 
   const applySceneUpdate = useCallback(
     (updater: (current: SceneDocument[]) => SceneDocument[]) => {
-      const persistVersion = ++persistVersionRef.current;
+      const persistVersion = persistence.beginVersion();
       setScenes((current) => {
         const next = updater(current);
-        debouncedPersist(next, persistVersion);
+        persistence.persist(next, persistVersion);
         return next;
       });
     },
-    [debouncedPersist]
+    [persistence]
   );
 
   const addScene = useCallback(
@@ -125,12 +91,12 @@ export const useScenes = () => {
   );
 
   const clearAllScenes = useCallback(() => {
-    persistVersionRef.current += 1;
-    debouncedPersist.cancel();
+    persistence.beginVersion();
+    persistence.cancel();
     setScenes([]);
     clearSceneStorage();
     setError(null);
-  }, [debouncedPersist]);
+  }, [persistence]);
 
   const clearError = useCallback(() => {
     setError(null);
@@ -147,6 +113,6 @@ export const useScenes = () => {
     appendSceneEvent,
     deleteScene,
     clearAllScenes,
-    flushPendingSaves: debouncedPersist.flush,
+    flushPendingSaves: persistence.flush,
   };
 };
