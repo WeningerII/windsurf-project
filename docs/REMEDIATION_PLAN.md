@@ -2,6 +2,23 @@
 
 **Status:** Active · **Owner:** engineering · **Created:** 2026-05-30
 
+### Progress log (2026-05-30)
+
+| Phase | State | Commit |
+|---|---|---|
+| 0 · Truthful green build | ✅ Done | `creationDraftStorage` + 5e validators restored |
+| 1 · Real safety net | ✅ Done | CI gates all PRs; baseline de-fictionalized |
+| 2 · Delete trash | ✅ Done | 11 orphans removed; `knip` gate added |
+| 3 · Boundary parsing | ✅ Done | import + Supabase + offline-queue validated (union retype 3.1 deferred) |
+| 4 · Defer per-system load | ⏸ Blocked | needs app/E2E validation (sandbox browser CDN blocked); do where the app can run |
+| 5 · Security/privacy | ✅ Done | Sentry PII fix; `npm audit` 0 vulns |
+| 6 · Slim docs/process | ⏳ Pending | check-in point per owner |
+| 7 · Toolchain | ⏳ Pending | ESLint 8 EOL is the priority |
+
+Verified locally each step: `tsc`, vitest (929 green), lint, format, `knip`,
+doc-drift, build, bundle-size. Playwright E2E runs in CI only (browser binaries
+cannot be fetched in the dev sandbox).
+
 This is an evidence-based, sequenced plan to take the repository from "red and
 inaccurately documented" to "green, gated, lean, and type-safe," and then to
 resume feature work on a trustworthy foundation. It supersedes ad-hoc cleanup.
