@@ -10,7 +10,7 @@
 | 1 · Real safety net | ✅ Done | CI gates all PRs; baseline de-fictionalized |
 | 2 · Delete trash | ✅ Done | 11 orphans removed; `knip` gate added |
 | 3 · Boundary parsing | ✅ Done | import + Supabase + offline-queue validated (union retype 3.1 deferred) |
-| 4 · Defer per-system load | ⏸ Blocked | needs app/E2E validation (sandbox browser CDN blocked); do where the app can run |
+| 4 · Defer per-system load | ✅ Done | `modulePreload` filter: initial prefetch ~2.4 MB → ~0.57 MB; data loads on demand |
 | 5 · Security/privacy | ✅ Done | Sentry PII fix; `npm audit` 0 vulns |
 | 6 · Slim docs/process | ⏳ Pending | check-in point per owner |
 | 7 · Toolchain | ⏳ Pending | ESLint 8 EOL is the priority |
