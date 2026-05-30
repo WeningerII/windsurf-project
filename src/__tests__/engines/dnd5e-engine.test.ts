@@ -71,6 +71,18 @@ describe('Dnd5eEngine', () => {
       expect(result.system.hitPoints.current).toBe(10);
     });
 
+    it('applies exhaustion to max HP even when no class levels are tracked', () => {
+      const doc = makeDoc({
+        exhaustionLevel: 4,
+        hitPoints: { current: 50, max: 50, temp: 0 },
+      });
+      const result = engine.prepareData(doc);
+      // No class levels: the existing max (50) is preserved, then 2014
+      // exhaustion level 4 halves it to 25.
+      expect(result.system.hitPoints.max).toBe(25);
+      expect(result.system.hitPoints.current).toBe(25);
+    });
+
     it('calculates AC = 10 + DEX mod', () => {
       const doc = makeDoc({
         baseAttributes: { str: 10, dex: 16, con: 10, int: 10, wis: 10, cha: 10 },

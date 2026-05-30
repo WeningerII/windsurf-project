@@ -104,8 +104,11 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
     this.applySubsystemRules(clonedDoc, dexMod);
 
     // --- Max HP ---
+    // Recompute from class hit dice when they're tracked; otherwise preserve the
+    // existing max (5e HP can't be derived without per-class hit dice).
+    let maxHP = data.hitPoints.max;
     if (data.classLevels.length > 0) {
-      let maxHP = 0;
+      maxHP = 0;
       for (const cl of data.classLevels) {
         const die = hitDieSize(cl.classId);
         if (cl.hitDieRolls.length === 0) {
@@ -118,10 +121,12 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
         }
       }
       maxHP = Math.max(maxHP, totalLevel); // minimum 1 HP per level
-
-      maxHP = this.applyExhaustionMaxHP(data.exhaustionLevel, maxHP);
-      data.hitPoints.max = maxHP;
     }
+
+    // Exhaustion (2014 halves max HP at level 4) applies regardless of how max
+    // HP was derived, so it must run even when class levels aren't tracked.
+    maxHP = this.applyExhaustionMaxHP(data.exhaustionLevel, maxHP);
+    data.hitPoints.max = maxHP;
 
     data.hitPoints.current = Math.min(data.hitPoints.current, data.hitPoints.max);
     if (this.isExhaustionLethal(data.exhaustionLevel)) {

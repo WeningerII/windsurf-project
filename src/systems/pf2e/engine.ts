@@ -6,6 +6,7 @@ import { SKILL_ABILITIES, SAVE_ABILITIES } from './constants';
 import { computePf2eAC } from '../../utils/armorClass';
 import { pf2eClasses } from '../../data/pathfinder/2e/classes';
 import { getSpellSlotsAtClassLevel, mergeMaxUsedSpellSlots } from '../../utils/classSpellcasting';
+import { hitDieFaces } from '../../utils/templateShared';
 
 type Pf2eSpellcastingData = NonNullable<Pf2eDataModel['spellcasting']>;
 
@@ -68,26 +69,6 @@ function parseFixedPositiveInt(formula: string | undefined): number | null {
   if (!Number.isFinite(parsed) || parsed < 0) return null;
   return parsed;
 }
-
-/** PF2e class HP per level (hit die size from CRB) */
-const PF2E_CLASS_HP: Record<string, number> = {
-  alchemist: 8,
-  barbarian: 12,
-  bard: 8,
-  champion: 10,
-  cleric: 8,
-  druid: 8,
-  fighter: 10,
-  investigator: 8,
-  monk: 10,
-  oracle: 8,
-  ranger: 10,
-  rogue: 8,
-  sorcerer: 6,
-  swashbuckler: 10,
-  witch: 6,
-  wizard: 6,
-};
 
 /** PF2e CRB p.445: determine degree of success, then adjust for nat 20/1 */
 function pf2eDegreeOfSuccess(
@@ -198,18 +179,21 @@ export class Pf2eEngine implements SystemEngine<Pf2eDataModel> {
     data.armorClass = computePf2eAC(effectiveDex, armorProf, data.equipment);
 
     // --- HP = ancestryHP + level × (class HP die + CON mod) ---
-    // PF2e CRB p.26: Ancestry HP (flat) + level × (class HP + CON mod)
+    // PF2e CRB p.26: Ancestry HP (flat) + level × (class HP + CON mod). Class HP
+    // per level is the class hit-die size, read from the class definition (the
+    // single source of truth) instead of a duplicated lookup table.
     const conMod = abilityMod(data.baseAttributes.con ?? 10);
-    const classHitDie = data.classId ? (PF2E_CLASS_HP[data.classId] ?? 8) : 8;
+    const classDef = data.classId
+      ? pf2eClasses[data.classId as keyof typeof pf2eClasses]
+      : undefined;
+    const parsedHitDie = classDef?.hitDie ? hitDieFaces(classDef.hitDie) : NaN;
+    const classHitDie = Number.isFinite(parsedHitDie) ? parsedHitDie : 8;
     let maxHP = (data.ancestryHP ?? 0) + data.level * (classHitDie + conMod);
     maxHP = Math.max(maxHP, data.level);
     data.hitPoints.max = maxHP;
     data.hitPoints.current = Math.min(data.hitPoints.current, maxHP);
 
     // --- Spellcasting slots/focus from class progression ---
-    const classDef = data.classId
-      ? pf2eClasses[data.classId as keyof typeof pf2eClasses]
-      : undefined;
     const classSpellcasting = classDef?.spellcasting;
     if (classSpellcasting) {
       const slotMaxes = getSpellSlotsAtClassLevel(

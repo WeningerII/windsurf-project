@@ -127,11 +127,18 @@ export class Mam3eEngine implements SystemEngine<Mam3eDataModel> {
       }
     });
 
+    // Each defense rank costs 1 PP. By M&M 3e RAW, Toughness improves only via
+    // Stamina, the Protection effect, or the Defensive Roll advantage (all
+    // accounted for elsewhere: Stamina is free, Protection is charged as a
+    // power, Defensive Roll as an advantage). But the sheet exposes a direct
+    // Toughness rank input that adds to the total, so any rank entered there
+    // must be charged too — otherwise it grants a free defense.
     const defenseRankCost =
       data.defenses.dodge.rank +
       data.defenses.parry.rank +
       data.defenses.fortitude.rank +
-      data.defenses.will.rank; // Toughness rank is usually from Powers (Protection) or Advantages (Defensive Roll)
+      data.defenses.toughness.rank +
+      data.defenses.will.rank;
 
     data.powerPoints.spent.defenses = defenseRankCost;
 

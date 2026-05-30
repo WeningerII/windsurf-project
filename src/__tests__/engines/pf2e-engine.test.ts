@@ -38,6 +38,21 @@ describe('Pf2eEngine', () => {
       expect(doc.system.armorClass).toBe(10);
     });
 
+    it('derives max HP from the class hit die (barbarian d12 vs wizard d6)', () => {
+      const attributes = { str: 10, dex: 10, con: 14, int: 10, wis: 10, cha: 10 };
+      const barbarian = engine.prepareData(
+        makeDoc({ level: 1, classId: 'barbarian', ancestryHP: 8, baseAttributes: attributes })
+      );
+      // Ancestry 8 + level 1 × (d12 → 12 + CON +2) = 22
+      expect(barbarian.system.hitPoints.max).toBe(22);
+
+      const wizard = engine.prepareData(
+        makeDoc({ level: 1, classId: 'wizard', ancestryHP: 8, baseAttributes: attributes })
+      );
+      // Ancestry 8 + level 1 × (d6 → 6 + CON +2) = 16
+      expect(wizard.system.hitPoints.max).toBe(16);
+    });
+
     it('computes proficiency totals: trained = level + 2', () => {
       const doc = makeDoc({
         level: 5,
