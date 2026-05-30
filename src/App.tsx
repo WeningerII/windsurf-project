@@ -40,6 +40,13 @@ import { SceneManager } from './components/SceneManager';
 import { prefetchSystemAssetsForIds } from './utils/systemAssetPrefetch';
 import { usePwaInstallPrompt } from './hooks/usePwaInstallPrompt';
 import { combineSyncStates, getMostRecentSyncDate, getPendingSyncCount } from './utils/syncStatus';
+import {
+  getClassLabel,
+  getDocumentLevelValue,
+  getHitPointLabel,
+  getLevelLabel,
+  getSpeciesLabel,
+} from './utils/characterPresenter';
 
 type CharacterSortOption =
   | 'updated-desc'
@@ -51,78 +58,6 @@ type CharacterSortOption =
 
 const STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const STORAGE_WARNING_THRESHOLD = Math.floor(STORAGE_LIMIT_BYTES * 0.8);
-
-function humanizeToken(value: string): string {
-  return value.replace(/[-_]/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
-}
-
-function asRecord(value: unknown): Record<string, unknown> | null {
-  if (!value || typeof value !== 'object') return null;
-  return value as Record<string, unknown>;
-}
-
-function asNumber(value: unknown): number | null {
-  return typeof value === 'number' && Number.isFinite(value) ? value : null;
-}
-
-function asString(value: unknown): string | null {
-  return typeof value === 'string' && value.trim().length > 0 ? value : null;
-}
-
-function getDocumentLevelValue(doc: CharacterDocument<SystemDataModel>): number {
-  const sys = doc.system as Record<string, unknown>;
-  return asNumber(sys.level) ?? asNumber(sys.powerLevel) ?? 0;
-}
-
-function getLevelLabel(doc: CharacterDocument<SystemDataModel>): string | null {
-  const sys = doc.system as Record<string, unknown>;
-  const level = asNumber(sys.level);
-  if (level !== null) return `Level ${level}`;
-
-  const powerLevel = asNumber(sys.powerLevel);
-  if (powerLevel !== null) return `Power Level ${powerLevel}`;
-
-  return null;
-}
-
-function getClassLabel(system: SystemDataModel): string | null {
-  const data = system as Record<string, unknown>;
-  const classLevels = data.classLevels;
-  if (Array.isArray(classLevels) && classLevels.length > 0) {
-    const first = asRecord(classLevels[0]);
-    const classId = first ? asString(first.classId) : null;
-    if (classId) {
-      const extraClasses = classLevels.length - 1;
-      return `${humanizeToken(classId)}${extraClasses > 0 ? ` +${extraClasses}` : ''}`;
-    }
-  }
-
-  const classId = asString(data.classId);
-  return classId ? humanizeToken(classId) : null;
-}
-
-function getSpeciesLabel(system: SystemDataModel): string | null {
-  const data = system as Record<string, unknown>;
-  const speciesId = asString(data.speciesId);
-  if (speciesId) return humanizeToken(speciesId);
-
-  const ancestryId = asString(data.ancestryId);
-  if (ancestryId) return humanizeToken(ancestryId);
-
-  return null;
-}
-
-function getHitPointLabel(system: SystemDataModel): string | null {
-  const data = system as Record<string, unknown>;
-  const hp = asRecord(data.hitPoints);
-  if (!hp) return null;
-
-  const current = asNumber(hp.current);
-  const max = asNumber(hp.max);
-  if (current === null || max === null) return null;
-
-  return `${current}/${max} HP`;
-}
 
 function cloneSystemData(system: SystemDataModel): SystemDataModel {
   if (typeof structuredClone === 'function') {
