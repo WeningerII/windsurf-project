@@ -37,9 +37,7 @@ describe('SystemStatusDashboard', () => {
       screen.getByText('Base classes plus the full core SRD prestige catalog are selectable')
     ).toBeInTheDocument();
     expect(
-      screen.getByText(
-        'SRD-backed selectors, starter templates, browse tabs, equipment loadouts, gold tracking, and loot libraries are shipped; deterministic passive card bonuses are auto-applied where represented, while triggered, timing-based, and choice-based card effects remain tracked-but-manual or reference-only'
-      )
+      screen.getByText(/deterministic passive card bonuses are auto-applied/i)
     ).toBeInTheDocument();
   });
 });

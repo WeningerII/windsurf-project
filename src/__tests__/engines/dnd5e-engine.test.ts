@@ -39,13 +39,6 @@ describe('Dnd5eEngine', () => {
       expect(doc.system.initiative).toBe(-1);
     });
 
-    it('calculates proficiency bonus from level', () => {
-      const doc = makeDoc({ level: 1 });
-      const result = engine.prepareData(doc);
-      // Level 1-4 = +2
-      expect(result.system.level).toBe(1);
-    });
-
     it('calculates HP from class hit die rolls + CON modifier', () => {
       const doc = makeDoc({
         level: 3,

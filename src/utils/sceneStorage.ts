@@ -1,4 +1,5 @@
 import type { SceneDocument, SceneEvent } from '../types/core/scene';
+import { parseSceneDocument } from './boundaryValidation';
 
 const STORAGE_KEY = 'rpg-scenes-v1';
 const STORAGE_VERSION = '1.0';
@@ -7,6 +8,30 @@ interface SceneStorageData {
   version: typeof STORAGE_VERSION;
   scenes: SceneDocument[];
   lastModified: string;
+}
+
+function readScenesField(raw: string): unknown[] | null {
+  const parsed: unknown = JSON.parse(raw);
+  const scenesField =
+    parsed && typeof parsed === 'object' && !Array.isArray(parsed)
+      ? (parsed as { scenes?: unknown }).scenes
+      : undefined;
+  return Array.isArray(scenesField) ? scenesField : null;
+}
+
+// Parse, don't cast: validate each candidate scene and drop structurally
+// invalid ones, so a single malformed record can neither crash hydration nor
+// masquerade as a scene.
+function collectValidScenes(candidates: unknown[]): SceneDocument[] {
+  const now = new Date();
+  const scenes: SceneDocument[] = [];
+  for (const candidate of candidates) {
+    const result = parseSceneDocument(candidate, now);
+    if (result.ok) {
+      scenes.push(hydrateScene(result.value));
+    }
+  }
+  return scenes;
 }
 
 export function loadScenes(): SceneDocument[] {
@@ -20,11 +45,11 @@ export function loadScenes(): SceneDocument[] {
   }
 
   try {
-    const parsed = JSON.parse(raw) as SceneStorageData;
-    if (!Array.isArray(parsed.scenes)) {
+    const scenesField = readScenesField(raw);
+    if (scenesField === null) {
       return [];
     }
-    return parsed.scenes.map(hydrateScene);
+    return collectValidScenes(scenesField);
   } catch {
     return [];
   }
@@ -83,15 +108,16 @@ export function exportScenes(scenes: SceneDocument[]): string {
 }
 
 export function importScenes(jsonString: string): SceneDocument[] {
+  let scenesField: unknown[] | null;
   try {
-    const parsed = JSON.parse(jsonString) as SceneStorageData;
-    if (!Array.isArray(parsed.scenes)) {
-      throw new Error('Invalid scene export.');
-    }
-    return parsed.scenes.map(hydrateScene);
+    scenesField = readScenesField(jsonString);
   } catch {
     throw new Error('Failed to import scenes. Invalid JSON format.');
   }
+  if (scenesField === null) {
+    throw new Error('Failed to import scenes. Invalid JSON format.');
+  }
+  return collectValidScenes(scenesField);
 }
 
 function hydrateScene(scene: SceneDocument): SceneDocument {
