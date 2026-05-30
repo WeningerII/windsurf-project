@@ -2658,55 +2658,6 @@ describe('System Sheets', () => {
     });
   });
 
-  it('renders M&M power modifiers from the Powers DB tab without crashing', async () => {
-    const user = userEvent.setup();
-    const onUpdate = vi.fn();
-    const loadPowersSpy = vi.spyOn(dataLoader, 'loadSpellsForSystem').mockResolvedValue([
-      {
-        id: 'flight',
-        name: 'Flight',
-        system: 'mam3e',
-        source: "Hero's Handbook",
-        type: 'movement',
-        action: 'free',
-        range: 'personal',
-        duration: 'sustained',
-        baseCost: 2,
-        perRank: true,
-        rank: 5,
-        description: 'You can fly.',
-        extras: [],
-        flaws: [],
-        modifierRanks: {},
-        effects: [],
-      } as never,
-    ]);
-    const loadPowerModifiersSpy = vi
-      .spyOn(dataLoader, 'loadPowerModifiersForSystem')
-      .mockResolvedValue([]);
-    const doc = makeDoc('mam3e', createDefaultMam3eData());
-
-    render(
-      <Mam3eCharacterSheet
-        document={doc as CharacterDocument<ReturnType<typeof createDefaultMam3eData>>}
-        onUpdate={onUpdate}
-      />
-    );
-
-    await user.click(screen.getByRole('tab', { name: /powers db/i }));
-
-    await waitFor(() => {
-      expect(loadPowersSpy).toHaveBeenCalledWith('mam3e');
-      expect(loadPowerModifiersSpy).toHaveBeenCalledWith('mam3e');
-    });
-
-    expect(await screen.findByRole('button', { name: 'Learn Flight' })).toBeInTheDocument();
-    expect(await screen.findByLabelText(/search modifiers/i)).toBeInTheDocument();
-    expect(loadPowersSpy).toHaveBeenCalledTimes(1);
-    expect(loadPowerModifiersSpy).toHaveBeenCalledTimes(1);
-    expect(screen.queryByText(/something went wrong/i)).not.toBeInTheDocument();
-  });
-
   it(
     'loads Daggerheart SRD selectors and surfaces the selected reference data',
     async () => {

@@ -120,7 +120,7 @@ describe('systemCatalog integration — real loaders', () => {
     expect(ids).toContain('daggerheart');
 
     for (const [, summary] of Object.entries(summaries)) {
-      expect(summary.totalReachableCount).toBeGreaterThanOrEqual(0);
+      expect(summary.totalReachableCount).toBeGreaterThan(0);
     }
   });
 
