@@ -146,7 +146,10 @@ export function withErrorLogging<T extends (...args: any[]) => Promise<any>>(
         ErrorSeverity.HIGH,
         `Error in ${fn.name || 'anonymous function'}`,
         error as Error,
-        { ...context, args }
+        // Do not forward raw call arguments to monitoring: they can contain
+        // character documents, names, and other user content (PII). Capture
+        // only non-identifying metadata.
+        { ...context, argCount: args.length }
       );
       throw error;
     }

@@ -93,7 +93,7 @@ describe('errorLogger', () => {
     await expect(wrapped(4)).resolves.toBe(8);
   });
 
-  it('withErrorLogging logs and rethrows failures with args/context', async () => {
+  it('withErrorLogging logs and rethrows failures with arg metadata, not raw args', async () => {
     const err = new Error('explode');
     const logSpy = vi.spyOn(errorLogger, 'log').mockImplementation(() => {});
     const fn = async (x: number) => {
@@ -108,7 +108,7 @@ describe('errorLogger', () => {
       ErrorSeverity.HIGH,
       'Error in fn',
       err,
-      { requestId: 'xyz', args: [1] }
+      { requestId: 'xyz', argCount: 1 }
     );
   });
 
