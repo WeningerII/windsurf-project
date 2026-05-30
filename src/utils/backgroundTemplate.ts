@@ -1,3 +1,4 @@
+import { cloneDocument, dedupe } from './templateShared';
 import { Background } from '../types/character-options/backgrounds';
 import { CharacterDocument } from '../types/core/document';
 import { Dnd5e2024DataModel } from '../systems/dnd5e-2024/data-model';
@@ -32,12 +33,6 @@ const COMMON_LANGUAGE_OPTIONS = [
   'Undercommon',
   'Deep Speech',
 ];
-
-function cloneDocument<T extends Dnd5eLikeDataModel>(
-  document: CharacterDocument<T>
-): CharacterDocument<T> {
-  return structuredClone(document);
-}
 
 function isChoiceValue(value: unknown): value is BackgroundChoiceValue {
   return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
@@ -102,10 +97,6 @@ function toolChoiceOptionsForValue(value: string): string[] | null {
 
 function toolChoiceLabelForValue(value: string): string {
   return formatDnd5eToolLabel(value);
-}
-
-function dedupe(values: string[]): string[] {
-  return [...new Set(values)];
 }
 
 function removeDerivedList(current: string[] | undefined, derived: string[]): string[] {

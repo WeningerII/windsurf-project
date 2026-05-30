@@ -1,3 +1,4 @@
+import { cloneDocument } from './templateShared';
 import { Subrace, Species } from '../types/character-options/species';
 import type { Archetype } from '../types/character-options/archetypes';
 import { CharacterClass } from '../types/character-options/classes';
@@ -293,12 +294,6 @@ const PF2E_CLASS_PROFILES: Record<string, Pf2eClassProfile> = {
     mandatorySkills: ['arcana'],
   },
 };
-
-function cloneDocument(
-  document: CharacterDocument<Pf2eDataModel>
-): CharacterDocument<Pf2eDataModel> {
-  return structuredClone(document);
-}
 
 function createProficiency(tier: Pf2eProficiencyTier, source?: string[]): Pf2eProficiency {
   return source && source.length > 0 ? { tier, total: 0, source } : { tier, total: 0 };
