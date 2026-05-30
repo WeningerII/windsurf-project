@@ -47,6 +47,13 @@ export interface Pf1eTrait {
   description: string;
 }
 
+export interface Pf1eManualSpellcastingExtras {
+  domainSlotConsumedByLevel?: Record<number, boolean>;
+  specialistSlotConsumedByLevel?: Record<number, boolean>;
+  spontaneousConversionReference?: 'cure' | 'inflict' | 'both';
+  dragonDiscipleBonusSlots?: { total: number; used: number };
+}
+
 export interface Pf1eDataModel extends SystemDataModel {
   level: number;
   experiencePoints: number;
@@ -89,6 +96,7 @@ export interface Pf1eDataModel extends SystemDataModel {
   spellsKnown?: string[];
   preparedSpellsByLevel?: Record<number, string[]>;
   alwaysPreparedSpellIds?: string[];
+  manualSpellcastingExtras?: Pf1eManualSpellcastingExtras;
 
   equipment: Array<{
     itemId: string;

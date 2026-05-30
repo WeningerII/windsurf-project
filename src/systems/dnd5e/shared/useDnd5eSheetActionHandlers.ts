@@ -4,7 +4,12 @@ import type {
   Dnd5eFeatureOptionDefinition,
   Dnd5eFeatureOptionSelection,
 } from '../../../types/character-options/feature-options';
-import type { SpellSlots } from '../../../types/core/character';
+import type {
+  Currency,
+  DeathSaves,
+  PersonalityInfo,
+  SpellSlots,
+} from '../../../types/core/character';
 import type { CharacterDocument, SystemDataModel } from '../../../types/core/document';
 import type { Item } from '../../../types/equipment/items';
 import type { Spell } from '../../../types/magic/spells';
@@ -39,6 +44,20 @@ interface UseDnd5eSheetActionHandlersProps<T extends Dnd5eLikeDataModel> {
   replaceSystem: Dnd5eSheetMutators<T>['replaceSystem'];
   update: Dnd5eSheetMutators<T>['update'];
 }
+
+type HitPointsPatch = {
+  current?: number;
+  max?: number;
+};
+
+type InventoryBrowserItem = {
+  id: string;
+  name: string;
+  quantity: number;
+  description?: string;
+};
+
+type PersonalityField = 'traits' | 'ideals' | 'bonds' | 'flaws';
 
 export function useDnd5eSheetActionHandlers<T extends Dnd5eLikeDataModel>({
   document,
@@ -139,6 +158,33 @@ export function useDnd5eSheetActionHandlers<T extends Dnd5eLikeDataModel>({
     [system.hitDice, update]
   );
 
+  const handleHitPointsChange = useCallback(
+    (patch: HitPointsPatch) => {
+      update({
+        hitPoints: {
+          ...system.hitPoints,
+          ...(patch.current != null ? { current: patch.current } : {}),
+          ...(patch.max != null ? { max: patch.max } : {}),
+        },
+      } as Partial<T>);
+    },
+    [system.hitPoints, update]
+  );
+
+  const handleExhaustionChange = useCallback(
+    (exhaustionLevel: number) => {
+      update({ exhaustionLevel } as Partial<T>);
+    },
+    [update]
+  );
+
+  const handleDeathSavesChange = useCallback(
+    (deathSaves: DeathSaves) => {
+      update({ deathSaves } as Partial<T>);
+    },
+    [update]
+  );
+
   const handleSpellSlotChange = useCallback(
     (level: number, delta: number) => {
       if (!system.spellcasting) {
@@ -200,6 +246,59 @@ export function useDnd5eSheetActionHandlers<T extends Dnd5eLikeDataModel>({
       } as Partial<T>);
     },
     [system.equipment, system.inventory, update]
+  );
+
+  const handleCurrencyChange = useCallback(
+    (currency: Record<string, number>) => {
+      update({ currency: currency as unknown as Currency } as Partial<T>);
+    },
+    [update]
+  );
+
+  const handleUnequip = useCallback(
+    (itemId: string) => {
+      update({
+        equipment: system.equipment.filter((entry) => entry.itemId !== itemId),
+      } as Partial<T>);
+    },
+    [system.equipment, update]
+  );
+
+  const handleToggleAttune = useCallback(
+    (itemId: string) => {
+      update({
+        equipment: system.equipment.map((entry) =>
+          entry.itemId === itemId ? { ...entry, attuned: !entry.attuned } : entry
+        ),
+      } as Partial<T>);
+    },
+    [system.equipment, update]
+  );
+
+  const handleAddInventoryItem = useCallback(
+    (item: InventoryBrowserItem) => {
+      update({
+        inventory: [
+          ...system.inventory,
+          {
+            itemId: item.id,
+            quantity: item.quantity,
+            customName: item.name,
+            notes: item.description,
+          },
+        ],
+      } as Partial<T>);
+    },
+    [system.inventory, update]
+  );
+
+  const handleRemoveInventoryItem = useCallback(
+    (itemId: string) => {
+      update({
+        inventory: system.inventory.filter((entry) => entry.itemId !== itemId),
+      } as Partial<T>);
+    },
+    [system.inventory, update]
   );
 
   const handleSpellSelect = useCallback(
@@ -370,6 +469,46 @@ export function useDnd5eSheetActionHandlers<T extends Dnd5eLikeDataModel>({
     } as Partial<T>);
   }, [system.spellcasting, update]);
 
+  const handlePersonalityPatch = useCallback(
+    (patch: PersonalityInfo) => {
+      update({
+        personality: {
+          ...(system.personality ?? {}),
+          ...patch,
+        },
+      } as Partial<T>);
+    },
+    [system.personality, update]
+  );
+
+  const handleAppearanceChange = useCallback(
+    (appearance: string) => {
+      handlePersonalityPatch({ appearance });
+    },
+    [handlePersonalityPatch]
+  );
+
+  const handleBackstoryChange = useCallback(
+    (backstory: string) => {
+      handlePersonalityPatch({ backstory });
+    },
+    [handlePersonalityPatch]
+  );
+
+  const handlePersonalityFieldChange = useCallback(
+    (field: PersonalityField, value: string) => {
+      handlePersonalityPatch({ [field]: value });
+    },
+    [handlePersonalityPatch]
+  );
+
+  const handleNotesChange = useCallback(
+    (notes: string) => {
+      update({ notes } as Partial<T>);
+    },
+    [update]
+  );
+
   return {
     featTemplateError,
     featureOptionError,
@@ -377,9 +516,17 @@ export function useDnd5eSheetActionHandlers<T extends Dnd5eLikeDataModel>({
     toggleSaveProficiency,
     handleFeatureUse,
     handleHitDiceChange,
+    handleHitPointsChange,
+    handleExhaustionChange,
+    handleDeathSavesChange,
     handleSpellSlotChange,
     handleDamageHeal,
     handleEquipmentSelect,
+    handleCurrencyChange,
+    handleUnequip,
+    handleToggleAttune,
+    handleAddInventoryItem,
+    handleRemoveInventoryItem,
     handleSpellSelect,
     handleTogglePreparedSpell,
     handleFeatSelect,
@@ -389,6 +536,10 @@ export function useDnd5eSheetActionHandlers<T extends Dnd5eLikeDataModel>({
     handleFeatureOptionRemove,
     toggleWeaponMastery,
     recoverAllSpellSlots,
+    handleAppearanceChange,
+    handleBackstoryChange,
+    handlePersonalityFieldChange,
+    handleNotesChange,
     resolveFeatSelections,
     optionDisabledForRequirement,
   };

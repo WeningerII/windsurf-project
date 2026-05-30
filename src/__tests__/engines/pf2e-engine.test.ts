@@ -146,6 +146,30 @@ describe('Pf2eEngine', () => {
       expect(result.system.armorClass).toBe(17);
     });
 
+    it('keeps frightened and sickened out of static AC while roll checks apply status penalties', async () => {
+      const doc = makeDoc({
+        level: 4,
+        baseAttributes: { str: 10, dex: 16, con: 10, int: 10, wis: 16, cha: 10 },
+        armorProficiencies: {
+          unarmored: { tier: 'trained', total: 0 },
+          light: { tier: 'untrained', total: 0 },
+          medium: { tier: 'untrained', total: 0 },
+          heavy: { tier: 'untrained', total: 0 },
+        },
+        perceptionProficiency: { tier: 'trained', total: 0 },
+        conditions: [
+          { id: 'cond-frightened', name: 'Frightened', value: 2 },
+          { id: 'cond-sickened', name: 'Sickened', value: 1 },
+        ],
+      });
+
+      const result = engine.prepareData(doc);
+      const roll = await engine.rollCheck(result, 'perception');
+
+      expect(result.system.armorClass).toBe(19);
+      expect(roll.formula).toBe('1d20 + 9 - 2');
+    });
+
     it('computes perception proficiency', () => {
       const doc = makeDoc({
         level: 7,

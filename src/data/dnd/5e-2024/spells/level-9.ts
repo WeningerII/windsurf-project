@@ -58,6 +58,7 @@ export const level9Spells: Spell[] = [
       type: 'hours',
       hours: 8,
     },
+    target: '1 willing creature you touch',
     concentration: false,
     ritual: false,
     description:
@@ -449,6 +450,7 @@ export const level9Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: '1 creature you touch',
     concentration: false,
     ritual: false,
     description:

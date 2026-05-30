@@ -4,13 +4,14 @@ Multi-system RPG character sheet using **only open-license SRD content** across 
 
 ## 🎯 Project Status
 
-- ✅ **Verification**: `npm run verify` passed on April 21, 2026 under Node `20.19.0`
+- ✅ **Verification**: `npm run verify` passed on May 1, 2026 under Node `20.19.0`
 - ✅ **D&D 5e 2014 + 2024**: full SRD-backed character management with shared 5e sheet flows and structured always-prepared support
 - ✅ **Pathfinder 2e**: native sheet with loader-backed archetypes, backgrounds, feats, spells, and equipment
 - ✅ **D&D 3.5e + Pathfinder 1e**: shared legacy sheet with base/prestige-class product reachability and Vancian tracked/prepared spell workflows
 - ✅ **Spell catalog parity baseline**: shared spell indexes and alias-safe lookups across all five spell systems, including PF2e rank-10 browser support
 - ✅ **Mutants & Masterminds 3e**: native point-buy sheet with browseable SRD reference surfaces
-- ✅ **Daggerheart**: partial SRD-backed support with selectors, templates, equipment, domains, and domain-card loadouts
+- ✅ **Daggerheart**: partial SRD-backed support with selectors, templates, equipment, domains, domain-card loadouts, and bounded deterministic passive automation
+- ✅ **Manual scenes**: local scene/grid manager with event-backed tokens, queued loader-backed D&D 5e encounter seeding, party-level XP preview, terrain or hazard markers, initiative controls, and scene import/export
 - ✅ **Open-content policy**: strict source-filtered SRD/core-only shipping
 
 ## 🚀 Quick Start
@@ -119,7 +120,8 @@ npx tsc --noEmit
 ```
 
 **Storage Issues (Browser):**
-- Clear localStorage: Open DevTools → Application → Local Storage → Clear
+- Clear documents: use the Data Management screen's clear action (clears both IndexedDB primary and localStorage fallback)
+- Manual clear (both stores): DevTools → Application → Storage → clear the IndexedDB database *and* Local Storage for this origin
 - Check storage quota: Data Management screen shows current usage
 
 ### Key Features
@@ -233,10 +235,10 @@ Counts below summarize the current generated metrics in [docs/generated/roadmap-
 
 ### D&D 3.5e - Base Product Support ✅ (SRD-Only)
 **Implemented**: 
-- Spells: 501 canonical loader-backed spells (after alias-safe duplicate collapse)
+- Spells: 428 canonical loader-backed spells (after alias-safe duplicate collapse)
 - Classes: 26 loader-backed classes (11 core + 15 core SRD prestige classes)
 - Feats: 515 (after open-content filtering)
-- Equipment: 38 weapons, 19 armor, 153 gear, 19 magic items
+- Equipment: 207 loader-backed items (37 weapons, 11 armor, 6 shields, 153 gear); 37 magic items are repo-resident but excluded from the product loader
 - Races: 7
 
 **Status**: Reachable counts now include the full core SRD prestige catalog: Arcane Archer, Arcane Trickster, Archmage, Assassin, Blackguard, Dragon Disciple, Duelist, Dwarven Defender, Eldritch Knight, Hierophant, Horizon Walker, Loremaster, Mystic Theurge, Shadowdancer, and Thaumaturgist. Prestige-caster rows now surface in-sheet spellcasting-advancement selectors for the normalized dual-progression classes, and the canonical spell catalog now resolves collapsed class-split duplicates through aliases.
@@ -265,16 +267,16 @@ Counts below summarize the current generated metrics in [docs/generated/roadmap-
 - Starter templates: class, ancestry, and community selections seed supported starting stats and inventory
 - Browse tabs: in-sheet class, ancestry, community, weapon, and armor libraries with direct apply actions
 - Card library: in-sheet domain-card browser with real add-to-loadout / add-to-vault flows
-- Loadout automation: active armor now derives Armor Score and damage thresholds; equipped weapons enforce burden and slot rules
+- Loadout automation: active armor derives Armor Score and damage thresholds; equipped weapons enforce burden and slot rules; supported passive domain-card bonuses apply only from loadout
 
-**Status**: Daggerheart now ships official SRD-backed identity data, domains, domain cards, weapons, armor, loot, consumables, starter templates for supported starting stats and inventory, and browseable in-sheet reference libraries. Deeper card-effect automation remains future work.
+**Status**: Daggerheart now ships official SRD-backed identity data, domains, domain cards, weapons, armor, loot, consumables, starter templates for supported starting stats and inventory, browseable in-sheet reference libraries, and deterministic passive automation bounded by the existing metadata model. Triggered, timing-based, rest-based, choice-based, and narrative effects remain manual/reference.
 
 ## 📊 Quality Metrics
 
 | Metric | Status |
 |--------|--------|
 | **Build** | Passing ✅ |
-| **Verification** | `npm run verify` green on April 21, 2026 ✅ |
+| **Verification** | `npm run verify` green on May 1, 2026 ✅ |
 | **Coverage Gate** | Passing under Node 20.19+ ✅ |
 | **Lint** | 0 Errors ✅ |
 | **Type Safety** | 100% Strict ✅ |
@@ -372,4 +374,4 @@ Built with a focus on:
 
 ---
 
-**Last Updated**: April 21, 2026
+**Last Updated**: April 30, 2026

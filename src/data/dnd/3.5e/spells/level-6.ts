@@ -7,10 +7,11 @@ export const level6Spells: Spell[] = [
     name: 'Acid Fog',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/acidFog.htm',
     level: 6,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -26,11 +27,16 @@ export const level6Spells: Spell[] = [
       somatic: true,
       material: true,
       materialDescription: "Piece of rhubarb leaf and an adder's stomach",
+      divineFocus: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    effect: 'Fog spreads in 20-ft. radius, 20 ft. high',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description:
@@ -54,10 +60,11 @@ export const level6Spells: Spell[] = [
     name: 'Analyze Dweomer',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/analyzeDweomer.htm',
     level: 6,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -67,13 +74,22 @@ export const level6Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
-      materialDescription: 'Ruby and owl feather worth 1,500 gp',
+      material: false,
+      focus: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    target: 'One object or creature per caster level',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'special',
+      description: 'None or Will negates; see text',
+    },
+    savingThrowText: 'None or Will negates; see text',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: true,
     ritual: false,
     description:
@@ -90,10 +106,11 @@ export const level6Spells: Spell[] = [
     name: 'Animate Objects',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/animateObjects.htm',
     level: 6,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -109,6 +126,10 @@ export const level6Spells: Spell[] = [
       type: 'rounds',
       rounds: 1,
     },
+    target: 'One Small object per caster level; see text',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Objects attack your foes.',
@@ -122,11 +143,12 @@ export const level6Spells: Spell[] = [
     name: 'Antilife Shell',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/antilifeShell.htm',
     level: 6,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
-      amount: 1,
+      type: 'rounds',
+      rounds: 1,
     },
     range: {
       type: 'ranged',
@@ -136,11 +158,16 @@ export const level6Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    area: '10-ft.-radius emanation, centered on you',
+    savingThrowText: 'None',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: '10-ft. field hedges out living creatures.',
@@ -154,11 +181,12 @@ export const level6Spells: Spell[] = [
     name: 'Antilife Shell',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/antilifeShell.htm',
     level: 6,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
-      amount: 1,
+      type: 'rounds',
+      rounds: 1,
     },
     range: {
       type: 'ranged',
@@ -168,11 +196,16 @@ export const level6Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    area: '10-ft.-radius emanation, centered on you',
+    savingThrowText: 'None',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: '10-ft.-radius field hedges out living creatures.',
@@ -186,10 +219,11 @@ export const level6Spells: Spell[] = [
     name: 'Antimagic Field',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/antimagicField.htm',
     level: 6,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -205,11 +239,16 @@ export const level6Spells: Spell[] = [
       somatic: true,
       material: true,
       materialDescription: 'Pinch of powdered iron or iron filings',
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    area: '10-ft.-radius emanation, centered on you',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'see-text',
     concentration: false,
     ritual: false,
     description:
@@ -226,10 +265,11 @@ export const level6Spells: Spell[] = [
     name: 'Banishment',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/banishment.htm',
     level: 6,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -240,10 +280,20 @@ export const level6Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      focus: true,
     },
     duration: {
       type: 'instant',
     },
+    target: 'One or more extraplanar creatures, no two of which can be more than 30 ft. apart',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates',
+    },
+    savingThrowText: 'Will negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Banishes 2 HD/level of extraplanar creatures.',
@@ -257,6 +307,7 @@ export const level6Spells: Spell[] = [
     name: "Bear's Endurance, Mass",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/bearsEnduranceMass.htm',
     level: 6,
     school: 'transmutation',
     castingTime: {
@@ -277,6 +328,7 @@ export const level6Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    target: 'One creature/level, no two of which can be more than 30 ft. apart',
     concentration: false,
     ritual: false,
     description:
@@ -294,6 +346,7 @@ export const level6Spells: Spell[] = [
     name: "Bear's Endurance, Mass",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/bearsEnduranceMass.htm',
     level: 6,
     school: 'transmutation',
     castingTime: {
@@ -313,6 +366,7 @@ export const level6Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    target: 'One creature/level, no two of which can be more than 30 ft. apart',
     concentration: false,
     ritual: false,
     description: "As bear's endurance, affects one subject/level.",
@@ -326,6 +380,7 @@ export const level6Spells: Spell[] = [
     name: "Bear's Endurance, Mass",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/bearsEnduranceMass.htm',
     level: 6,
     school: 'transmutation',
     castingTime: {
@@ -345,6 +400,7 @@ export const level6Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    target: 'One creature/level, no two of which can be more than 30 ft. apart',
     concentration: false,
     ritual: false,
     description: "As bear's endurance, affects one subject/level.",
@@ -358,10 +414,11 @@ export const level6Spells: Spell[] = [
     name: 'Blade Barrier',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/bladeBarrier.htm',
     level: 6,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -377,6 +434,16 @@ export const level6Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    effect:
+      'Wall of whirling blades up to 20 ft. long/ level, or a ringed wall of whirling blades with a radius of up to 5 ft. per two levels; either form 20 ft. high',
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+      description: 'Reflex half or Reflex negates; see text',
+    },
+    savingThrowText: 'Reflex half or Reflex negates; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Wall of blades deals 1d6/level damage.',
@@ -390,6 +457,7 @@ export const level6Spells: Spell[] = [
     name: "Bull's Strength, Mass",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/bullsStrengthMass.htm',
     level: 6,
     school: 'transmutation',
     castingTime: {
@@ -409,6 +477,7 @@ export const level6Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    target: 'One creature/level, no two of which can be more than 30 ft. apart',
     concentration: false,
     ritual: false,
     description: "As bull's strength, affects one subject/level.",
@@ -422,6 +491,7 @@ export const level6Spells: Spell[] = [
     name: "Bull's Strength, Mass",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/bullsStrengthMass.htm',
     level: 6,
     school: 'transmutation',
     castingTime: {
@@ -441,6 +511,7 @@ export const level6Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    target: 'One creature/level, no two of which can be more than 30 ft. apart',
     concentration: false,
     ritual: false,
     description: "As bull's strength, affects one subject/level.",
@@ -454,6 +525,7 @@ export const level6Spells: Spell[] = [
     name: "Cat's Grace, Mass",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/catsGraceMass.htm',
     level: 6,
     school: 'transmutation',
     castingTime: {
@@ -473,6 +545,7 @@ export const level6Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    target: 'One creature/level, no two of which can be more than 30 ft. apart',
     concentration: false,
     ritual: false,
     description: "As cat's grace, affects one subject/level.",
@@ -486,10 +559,11 @@ export const level6Spells: Spell[] = [
     name: 'Chain Lightning',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/chainLightning.htm',
     level: 6,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -499,13 +573,17 @@ export const level6Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
-      materialDescription:
-        'Bit of fur, an amber, glass, or crystal rod, plus one silver pin per caster level',
+      material: false,
+      focus: true,
     },
     duration: {
       type: 'instant',
     },
+    target:
+      'One primary target, plus one secondary target/level (each of which must be within 30 ft. of the primary target)',
+    savingThrowText: 'Reflex half',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -521,6 +599,7 @@ export const level6Spells: Spell[] = [
     savingThrow: {
       attribute: 'dex',
       success: 'half',
+      description: 'Reflex half',
     },
     classes: ['sorcerer', 'wizard'],
     levelsByClass: {
@@ -533,10 +612,11 @@ export const level6Spells: Spell[] = [
     name: 'Chain Lightning',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/chainLightning.htm',
     level: 6,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -546,13 +626,22 @@ export const level6Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
-      materialDescription:
-        'A bit of fur; a piece of amber, crystal, or glass; and a small wooden stick or wand',
+      material: false,
+      focus: true,
     },
     duration: {
       type: 'instant',
     },
+    target:
+      'One primary target, plus one secondary target/level (each of which must be within 30 ft. of the primary target)',
+    savingThrowText: 'Reflex half',
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+      description: 'Reflex half',
+    },
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -576,10 +665,11 @@ export const level6Spells: Spell[] = [
     name: 'Circle of Death',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/circleOfDeath.htm',
     level: 6,
     school: 'necromancy',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -595,10 +685,20 @@ export const level6Spells: Spell[] = [
       somatic: true,
       material: true,
       materialDescription: 'Powdered black pearl worth 500 gp',
+      materialCost: 500,
     },
     duration: {
       type: 'instant',
     },
+    area: 'Several living creatures within a 40-ft.-radius burst',
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+      description: 'Fortitude negates',
+    },
+    savingThrowText: 'Fortitude negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -614,6 +714,7 @@ export const level6Spells: Spell[] = [
     name: 'Contingency',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/contingency.htm',
     level: 6,
     school: 'evocation',
     castingTime: {
@@ -628,11 +729,13 @@ export const level6Spells: Spell[] = [
       somatic: true,
       material: true,
       materialDescription: 'Quicksilver, eyelash of ogre mage, and 1,500 gp worth of powdered gems',
+      focus: true,
     },
     duration: {
       type: 'hours',
       hours: 24,
     },
+    target: 'You',
     concentration: false,
     ritual: false,
     description:
@@ -648,11 +751,12 @@ export const level6Spells: Spell[] = [
     name: 'Create Undead',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/createUndead.htm',
     level: 6,
     school: 'necromancy',
     castingTime: {
-      type: 'action',
-      amount: 1,
+      type: 'hour',
+      hours: 1,
     },
     range: {
       type: 'ranged',
@@ -664,10 +768,16 @@ export const level6Spells: Spell[] = [
       material: true,
       materialDescription:
         'Clay pot filled with grave dirt and onyx gems worth 50 gp per HD of undead',
+      materialCost: 50,
+      materialConsumed: true,
     },
     duration: {
       type: 'instant',
     },
+    target: 'One corpse',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description:
@@ -684,11 +794,12 @@ export const level6Spells: Spell[] = [
     name: 'Create Undead',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/createUndead.htm',
     level: 6,
     school: 'necromancy',
     castingTime: {
       type: 'hour',
-      amount: 1,
+      hours: 1,
     },
     range: {
       type: 'ranged',
@@ -698,10 +809,18 @@ export const level6Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription:
+        'A clay pot filled with grave dirt and another filled with brackish water. The spell must be cast on a dead body. You must place a black onyx gem worth at least 50 gp per HD of the undead to be created into the mouth or eye socket of each corpse. The magic of the spell turns these gems into worthless shells.',
+      materialCost: 50,
+      materialConsumed: true,
     },
     duration: {
       type: 'instant',
     },
+    target: 'One corpse',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Create ghouls, ghasts, mummies, or mohrgs.',
@@ -715,10 +834,11 @@ export const level6Spells: Spell[] = [
     name: 'Cure Light Wounds, Mass',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/cureLightWoundsMass.htm',
     level: 6,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -733,6 +853,15 @@ export const level6Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'One creature/level, no two of which can be more than 30 ft. apart',
+    savingThrowText: 'Will half (harmless) or Will half; see text',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'half',
+      description: 'Will half (harmless) or Will half; see text',
+    },
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: 'Cures 1d8 damage +1/level for many creatures.',
@@ -746,6 +875,7 @@ export const level6Spells: Spell[] = [
     name: 'Cure Moderate Wounds, Mass',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/cureModerateWoundsMass.htm',
     level: 6,
     school: 'conjuration',
     castingTime: {
@@ -777,10 +907,11 @@ export const level6Spells: Spell[] = [
     name: 'Disintegrate',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/disintegrate.htm',
     level: 6,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -792,10 +923,15 @@ export const level6Spells: Spell[] = [
       somatic: true,
       material: true,
       materialDescription: 'Lodestone and pinch of dust',
+      divineFocus: true,
     },
     duration: {
       type: 'instant',
     },
+    effect: 'Ray',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    savingThrowText: 'Fortitude partial (object)',
     attackRoll: true,
     concentration: false,
     ritual: false,
@@ -811,7 +947,8 @@ export const level6Spells: Spell[] = [
     },
     savingThrow: {
       attribute: 'con',
-      success: 'half',
+      success: 'special',
+      description: 'Fortitude partial (object)',
     },
     classes: ['sorcerer', 'wizard'],
     levelsByClass: {
@@ -824,6 +961,7 @@ export const level6Spells: Spell[] = [
     name: 'Dispel Magic, Greater',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/dispelMagicGreater.htm',
     level: 6,
     school: 'abjuration',
     castingTime: {
@@ -860,6 +998,7 @@ export const level6Spells: Spell[] = [
     name: 'Dispel Magic, Greater',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/dispelMagicGreater.htm',
     level: 6,
     school: 'abjuration',
     castingTime: {
@@ -891,6 +1030,7 @@ export const level6Spells: Spell[] = [
     name: 'Dispel Magic, Greater',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/dispelMagicGreater.htm',
     level: 6,
     school: 'abjuration',
     castingTime: {
@@ -922,6 +1062,7 @@ export const level6Spells: Spell[] = [
     name: "Eagle's Splendor, Mass",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/eaglesSplendorMass.htm',
     level: 6,
     school: 'transmutation',
     castingTime: {
@@ -941,6 +1082,7 @@ export const level6Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    target: 'One creature/level, no two of which can be more than 30 ft. apart',
     concentration: false,
     ritual: false,
     description: "As eagle's splendor, affects one subject/level.",
@@ -954,10 +1096,11 @@ export const level6Spells: Spell[] = [
     name: 'Eyebite',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/eyebite.htm',
     level: 6,
     school: 'necromancy',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -973,6 +1116,10 @@ export const level6Spells: Spell[] = [
       type: 'rounds',
       rounds: 1,
     },
+    target: 'One living creature',
+    savingThrowText: 'Fortitude negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -980,6 +1127,7 @@ export const level6Spells: Spell[] = [
     savingThrow: {
       attribute: 'con',
       success: 'none',
+      description: 'Fortitude negates',
     },
     classes: ['bard', 'sorcerer', 'wizard'],
     levelsByClass: {
@@ -993,11 +1141,12 @@ export const level6Spells: Spell[] = [
     name: 'Find the Path',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/findThePath.htm',
     level: 6,
     school: 'divination',
     castingTime: {
-      type: 'minutes',
-      minutes: 3,
+      type: 'rounds',
+      rounds: 3,
     },
     range: {
       type: 'self',
@@ -1006,11 +1155,21 @@ export const level6Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      focus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'You or creature touched',
+    savingThrowText: 'None or Will negates (harmless)',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'None or Will negates (harmless)',
+    },
+    spellResistance: false,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: 'Shows most direct way to a location.',
@@ -1024,11 +1183,12 @@ export const level6Spells: Spell[] = [
     name: 'Find the Path',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/findThePath.htm',
     level: 6,
     school: 'divination',
     castingTime: {
-      type: 'minutes',
-      minutes: 3,
+      type: 'rounds',
+      rounds: 3,
     },
     range: {
       type: 'self',
@@ -1037,11 +1197,21 @@ export const level6Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      focus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'You or creature touched',
+    savingThrowText: 'None or Will negates (harmless)',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'None or Will negates (harmless)',
+    },
+    spellResistance: false,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: 'Shows most direct way to a location.',
@@ -1055,11 +1225,12 @@ export const level6Spells: Spell[] = [
     name: 'Find the Path',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/findThePath.htm',
     level: 6,
     school: 'divination',
     castingTime: {
-      type: 'action',
-      amount: 3,
+      type: 'rounds',
+      rounds: 3,
     },
     range: {
       type: 'touch',
@@ -1067,13 +1238,22 @@ export const level6Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
-      materialDescription: 'Set of divination counters worth 100 gp',
+      material: false,
+      focus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'You or creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'None or Will negates (harmless)',
+    },
+    savingThrowText: 'None or Will negates (harmless)',
+    spellResistance: false,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description:
@@ -1090,10 +1270,11 @@ export const level6Spells: Spell[] = [
     name: 'Fire Seeds',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/fireSeeds.htm',
     level: 6,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1102,12 +1283,21 @@ export const level6Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'Up to four touched acorns or up to eight touched holly berries',
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+      description: 'None or Reflex half; see text',
+    },
+    savingThrowText: 'None or Reflex half; see text',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Acorns and berries become grenades and bombs.',
@@ -1121,10 +1311,11 @@ export const level6Spells: Spell[] = [
     name: 'Flesh to Stone',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/fleshToStone.htm',
     level: 6,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1140,6 +1331,10 @@ export const level6Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'One creature',
+    savingThrowText: 'Fortitude negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -1147,6 +1342,7 @@ export const level6Spells: Spell[] = [
     savingThrow: {
       attribute: 'con',
       success: 'none',
+      description: 'Fortitude negates',
     },
     classes: ['sorcerer', 'wizard'],
     levelsByClass: {
@@ -1159,11 +1355,12 @@ export const level6Spells: Spell[] = [
     name: 'Forbiddance',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/forbiddance.htm',
     level: 6,
     school: 'abjuration',
     castingTime: {
-      type: 'minutes',
-      minutes: 6,
+      type: 'rounds',
+      rounds: 6,
     },
     range: {
       type: 'ranged',
@@ -1173,10 +1370,18 @@ export const level6Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription:
+        'A sprinkling of holy water and rare incenses worth at least 1,500 gp, plus 1,500 gp per 60-foot cube. If a password is desired, this requires the burning of additional rare incenses worth at least 1,000 gp, plus 1,000 gp per 60-foot cube.',
+      materialCost: 1500,
+      divineFocus: true,
     },
     duration: {
       type: 'permanent',
     },
+    area: '60-ft. cube/level (S)',
+    savingThrowText: 'See text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Blocks planar travel, damages creatures of different alignment.',
@@ -1190,10 +1395,11 @@ export const level6Spells: Spell[] = [
     name: 'Freezing Sphere',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/freezingSphere.htm',
     level: 6,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1208,10 +1414,14 @@ export const level6Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      focus: true,
     },
     duration: {
       type: 'instant',
     },
+    savingThrowText: 'Reflex half; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -1227,6 +1437,7 @@ export const level6Spells: Spell[] = [
     savingThrow: {
       attribute: 'dex',
       success: 'half',
+      description: 'Reflex half; see text',
     },
     classes: ['sorcerer', 'wizard'],
     levelsByClass: {
@@ -1239,6 +1450,7 @@ export const level6Spells: Spell[] = [
     name: 'Geas/Quest',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/geasQuest.htm',
     level: 6,
     school: 'enchantment',
     castingTime: {
@@ -1257,6 +1469,8 @@ export const level6Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'One living creature',
+    savingThrowText: 'None',
     concentration: false,
     ritual: false,
     description: 'As lesser geas, plus it affects any creature.',
@@ -1270,11 +1484,12 @@ export const level6Spells: Spell[] = [
     name: 'Geas/Quest',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/geasQuest.htm',
     level: 6,
     school: 'enchantment',
     castingTime: {
-      type: 'action',
-      amount: 10,
+      type: 'minutes',
+      minutes: 10,
     },
     range: {
       type: 'ranged',
@@ -1288,6 +1503,8 @@ export const level6Spells: Spell[] = [
     duration: {
       type: 'permanent',
     },
+    target: 'One living creature',
+    savingThrowText: 'None',
     concentration: false,
     ritual: false,
     description:
@@ -1313,6 +1530,7 @@ export const level6Spells: Spell[] = [
     name: 'Globe of Invulnerability, Greater',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/globeOfInvulnerability.htm',
     level: 6,
     school: 'abjuration',
     castingTime: {
@@ -1348,6 +1566,7 @@ export const level6Spells: Spell[] = [
     name: 'Glyph of Warding, Greater',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/glyphOfWardingGreater.htm',
     level: 6,
     school: 'abjuration',
     castingTime: {
@@ -1361,6 +1580,9 @@ export const level6Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription:
+        'You trace the glyph with incense, which must first be sprinkled with powdered diamond worth at least 400 gp.',
+      materialCost: 400,
     },
     duration: {
       type: 'permanent',
@@ -1378,11 +1600,12 @@ export const level6Spells: Spell[] = [
     name: 'Guards and Wards',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/guardsAndWards.htm',
     level: 6,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
-      amount: 30,
+      type: 'minutes',
+      minutes: 30,
     },
     range: {
       type: 'unlimited',
@@ -1397,11 +1620,16 @@ export const level6Spells: Spell[] = [
       material: true,
       materialDescription:
         'Burning incense, small measure of brimstone and oil, knotted string, small amount of blood',
+      focus: true,
     },
     duration: {
       type: 'hours',
       hours: 2,
     },
+    area: 'Up to 200 sq. ft./level (S)',
+    savingThrowText: 'See text',
+    spellResistance: false,
+    spellResistanceDetail: 'see-text',
     concentration: false,
     ritual: false,
     description:
@@ -1417,10 +1645,11 @@ export const level6Spells: Spell[] = [
     name: 'Harm',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/harm.htm',
     level: 6,
     school: 'necromancy',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1434,6 +1663,15 @@ export const level6Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'Creature touched',
+    savingThrowText: 'Will half; see text',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'half',
+      description: 'Will half; see text',
+    },
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Deals 10 points/level damage to target.',
@@ -1447,10 +1685,11 @@ export const level6Spells: Spell[] = [
     name: 'Harm',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/harm.htm',
     level: 6,
     school: 'necromancy',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1464,6 +1703,10 @@ export const level6Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'Creature touched',
+    savingThrowText: 'Will half; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -1479,6 +1722,7 @@ export const level6Spells: Spell[] = [
     savingThrow: {
       attribute: 'wis',
       success: 'half',
+      description: 'Will half; see text',
     },
     classes: ['cleric'],
     levelsByClass: {
@@ -1490,10 +1734,11 @@ export const level6Spells: Spell[] = [
     name: 'Heal',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/heal.htm',
     level: 6,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1507,6 +1752,15 @@ export const level6Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'Creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: 'Cures 10 points/level of damage, all diseases and mental conditions.',
@@ -1520,6 +1774,7 @@ export const level6Spells: Spell[] = [
     name: "Heroes' Feast",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/heroesFeast.htm',
     level: 6,
     school: 'conjuration',
     castingTime: {
@@ -1534,11 +1789,16 @@ export const level6Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'hours',
       hours: 1,
     },
+    effect: 'Feast for one creature/level',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Food for one creature/level cures and grants combat bonuses.',
@@ -1552,11 +1812,12 @@ export const level6Spells: Spell[] = [
     name: "Heroes' Feast",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/heroesFeast.htm',
     level: 6,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
-      amount: 10,
+      type: 'minutes',
+      minutes: 10,
     },
     range: {
       type: 'ranged',
@@ -1565,13 +1826,17 @@ export const level6Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
-      materialDescription: 'Holy water and diamond dust worth 500 gp',
+      material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'hours',
       hours: 1,
     },
+    effect: 'Feast for one creature/level',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description:
@@ -1587,6 +1852,7 @@ export const level6Spells: Spell[] = [
     name: 'Heroism, Greater',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/heroismGreater.htm',
     level: 6,
     school: 'enchantment',
     castingTime: {
@@ -1621,6 +1887,7 @@ export const level6Spells: Spell[] = [
     name: 'Heroism, Greater',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/heroismGreater.htm',
     level: 6,
     school: 'enchantment',
     castingTime: {
@@ -1655,6 +1922,7 @@ export const level6Spells: Spell[] = [
     name: 'Inflict Moderate Wounds, Mass',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/inflictModerateWoundsMass.htm',
     level: 6,
     school: 'necromancy',
     castingTime: {
@@ -1686,6 +1954,7 @@ export const level6Spells: Spell[] = [
     name: 'Ironwood',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/ironwood.htm',
     level: 6,
     school: 'transmutation',
     castingTime: {
@@ -1699,12 +1968,16 @@ export const level6Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
     },
     duration: {
       type: 'hours',
       hours: 24,
     },
+    effect: 'An ironwood object weighing up to 5 lb./level',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Magic wood is strong as steel.',
@@ -1718,6 +1991,7 @@ export const level6Spells: Spell[] = [
     name: 'Liveoak',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/liveoak.htm',
     level: 6,
     school: 'transmutation',
     castingTime: {
@@ -1736,6 +2010,10 @@ export const level6Spells: Spell[] = [
       type: 'hours',
       hours: 24,
     },
+    target: 'Tree touched',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Oak becomes treant guardian.',
@@ -1749,10 +2027,11 @@ export const level6Spells: Spell[] = [
     name: 'Mislead',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/mislead.htm',
     level: 6,
     school: 'illusion',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1768,6 +2047,14 @@ export const level6Spells: Spell[] = [
       type: 'rounds',
       rounds: 1,
     },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'special',
+      description: 'None or Will disbelief (if interacted with); see text',
+    },
+    savingThrowText: 'None or Will disbelief (if interacted with); see text',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description:
@@ -1784,6 +2071,7 @@ export const level6Spells: Spell[] = [
     name: 'Move Earth',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/moveEarth.htm',
     level: 6,
     school: 'transmutation',
     castingTime: {
@@ -1797,11 +2085,15 @@ export const level6Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
     },
     duration: {
       type: 'instant',
     },
+    area: 'Dirt in an area up to 750 ft. square and up to 10 ft. deep (S)',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Digs trenches and builds hills.',
@@ -1815,6 +2107,7 @@ export const level6Spells: Spell[] = [
     name: 'Move Earth',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/moveEarth.htm',
     level: 6,
     school: 'transmutation',
     castingTime: {
@@ -1838,6 +2131,10 @@ export const level6Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    area: 'Dirt in an area up to 750 ft. square and up to 10 ft. deep (S)',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description:
@@ -1854,6 +2151,7 @@ export const level6Spells: Spell[] = [
     name: "Owl's Wisdom, Mass",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/owlsWisdomMass.htm',
     level: 6,
     school: 'transmutation',
     castingTime: {
@@ -1873,6 +2171,7 @@ export const level6Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    target: 'One creature/level, no two of which can be more than 30 ft. apart',
     concentration: false,
     ritual: false,
     description: "As owl's wisdom, affects one subject/level.",
@@ -1886,6 +2185,7 @@ export const level6Spells: Spell[] = [
     name: "Owl's Wisdom, Mass",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/owlsWisdomMass.htm',
     level: 6,
     school: 'transmutation',
     castingTime: {
@@ -1905,6 +2205,7 @@ export const level6Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    target: 'One creature/level, no two of which can be more than 30 ft. apart',
     concentration: false,
     ritual: false,
     description: "As owl's wisdom, affects one subject/level.",
@@ -1918,6 +2219,7 @@ export const level6Spells: Spell[] = [
     name: 'Permanent Image',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/permanentImage.htm',
     level: 6,
     school: 'illusion',
     castingTime: {
@@ -1933,10 +2235,13 @@ export const level6Spells: Spell[] = [
       somatic: true,
       material: true,
       materialDescription: 'Bit of fleece plus 25 gp worth of powdered jade',
+      materialCost: 100,
+      focus: true,
     },
     duration: {
       type: 'permanent',
     },
+    effect: 'Figment that cannot extend beyond a 20-ft. cube + one 10-ft. cube/level (S)',
     concentration: false,
     ritual: false,
     description:
@@ -1953,6 +2258,7 @@ export const level6Spells: Spell[] = [
     name: 'Planar Ally',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/planarAlly.htm',
     level: 6,
     school: 'conjuration',
     castingTime: {
@@ -1971,6 +2277,8 @@ export const level6Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    effect:
+      'One or two called elementals or outsiders, totaling no more than 12 HD, which cannot be more than 30 ft. apart when they appear',
     concentration: false,
     ritual: false,
     description: 'As lesser planar ally, but up to 12 HD.',
@@ -1984,6 +2292,7 @@ export const level6Spells: Spell[] = [
     name: 'Planar Binding',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/planarBinding.htm',
     level: 6,
     school: 'conjuration',
     castingTime: {
@@ -1997,12 +2306,13 @@ export const level6Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
-      materialDescription: 'Offerings worth 1,000 gp plus payment',
+      material: false,
     },
     duration: {
       type: 'instant',
     },
+    target:
+      'Up to three elementals or outsiders, totaling no more than 12 HD, no two of which can be more than 30 ft. apart when they appear',
     concentration: false,
     ritual: false,
     description:
@@ -2022,6 +2332,7 @@ export const level6Spells: Spell[] = [
     name: 'Programmed Image',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/programmedImage.htm',
     level: 6,
     school: 'illusion',
     castingTime: {
@@ -2037,10 +2348,12 @@ export const level6Spells: Spell[] = [
       somatic: true,
       material: true,
       materialDescription: 'Fleece and jade dust worth 25 gp',
+      materialCost: 25,
     },
     duration: {
       type: 'permanent',
     },
+    effect: 'Visual figment that cannot extend beyond a 20-ft. cube + one 10-ft. cube/level (S)',
     concentration: false,
     ritual: false,
     description:
@@ -2057,10 +2370,11 @@ export const level6Spells: Spell[] = [
     name: 'Repel Wood',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/repelWood.htm',
     level: 6,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -2076,6 +2390,10 @@ export const level6Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    area: '60-ft. line-shaped emanation from you',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Pushes away wooden objects.',
@@ -2089,10 +2407,11 @@ export const level6Spells: Spell[] = [
     name: 'Repulsion',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/repulsion.htm',
     level: 6,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -2106,13 +2425,18 @@ export const level6Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
-      materialDescription: 'Pair of small iron bars attached to two small canine statuettes',
+      material: false,
+      focus: true,
+      divineFocus: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    area: 'Up to 10-ft.-radius/level emanation centered on you',
+    savingThrowText: 'Will negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -2120,6 +2444,7 @@ export const level6Spells: Spell[] = [
     savingThrow: {
       attribute: 'wis',
       success: 'none',
+      description: 'Will negates',
     },
     classes: ['cleric', 'sorcerer', 'wizard'],
     levelsByClass: {
@@ -2133,10 +2458,11 @@ export const level6Spells: Spell[] = [
     name: 'Shadow Walk',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/shadowWalk.htm',
     level: 6,
     school: 'illusion',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -2151,6 +2477,15 @@ export const level6Spells: Spell[] = [
       type: 'hours',
       hours: 1,
     },
+    target: 'Up to one touched creature/ level',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates',
+    },
+    savingThrowText: 'Will negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -2167,6 +2502,7 @@ export const level6Spells: Spell[] = [
     name: 'Spellstaff',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/spellstaff.htm',
     level: 6,
     school: 'transmutation',
     castingTime: {
@@ -2180,10 +2516,20 @@ export const level6Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      focus: true,
     },
     duration: {
       type: 'permanent',
     },
+    target: 'Wooden quarterstaff touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (object)',
+    },
+    savingThrowText: 'Will negates (object)',
+    spellResistance: true,
+    spellResistanceDetail: 'object',
     concentration: false,
     ritual: false,
     description: 'Stores one spell in wooden quarterstaff.',
@@ -2197,6 +2543,7 @@ export const level6Spells: Spell[] = [
     name: 'Stone Tell',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/stoneTell.htm',
     level: 6,
     school: 'divination',
     castingTime: {
@@ -2210,11 +2557,13 @@ export const level6Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'You',
     concentration: false,
     ritual: false,
     description: 'Talk to natural or worked stone.',
@@ -2228,10 +2577,11 @@ export const level6Spells: Spell[] = [
     name: 'Stone to Flesh',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/stoneToFlesh.htm',
     level: 6,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -2247,13 +2597,19 @@ export const level6Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target:
+      'One petrified creature or a cylinder of stone from 1 ft. to 3 ft. in diameter and up to 10 ft. long',
+    savingThrowText: 'Fortitude negates (object); see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
       'This spell restores a petrified creature to its normal state, restoring life and goods. The creature must make a DC 15 Fortitude save to survive the process. Any petrified creature, regardless of size, can be restored.',
     savingThrow: {
       attribute: 'con',
-      success: 'none',
+      success: 'special',
+      description: 'Fortitude negates (object); see text',
     },
     classes: ['sorcerer', 'wizard'],
     levelsByClass: {
@@ -2266,6 +2622,7 @@ export const level6Spells: Spell[] = [
     name: 'Suggestion, Mass',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/suggestionMass.htm',
     level: 6,
     school: 'enchantment',
     castingTime: {
@@ -2286,6 +2643,7 @@ export const level6Spells: Spell[] = [
       type: 'hours',
       hours: 1,
     },
+    target: 'One creature/level, no two of which can be more than 30 ft. apart',
     concentration: false,
     ritual: false,
     description:
@@ -2306,6 +2664,7 @@ export const level6Spells: Spell[] = [
     name: 'Suggestion, Mass',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/suggestionMass.htm',
     level: 6,
     school: 'enchantment',
     castingTime: {
@@ -2326,6 +2685,7 @@ export const level6Spells: Spell[] = [
       type: 'hours',
       hours: 1,
     },
+    target: 'One creature/level, no two of which can be more than 30 ft. apart',
     concentration: false,
     ritual: false,
     description:
@@ -2346,6 +2706,7 @@ export const level6Spells: Spell[] = [
     name: 'Summon Monster VI',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/summonMonsterVI.htm',
     level: 6,
     school: 'conjuration',
     castingTime: {
@@ -2365,6 +2726,7 @@ export const level6Spells: Spell[] = [
       type: 'rounds',
       rounds: 1,
     },
+    effect: 'One or more summoned creatures, no two of which can be more than 30 ft. apart',
     concentration: false,
     ritual: false,
     description: 'Calls extraplanar creature to fight for you.',
@@ -2378,6 +2740,7 @@ export const level6Spells: Spell[] = [
     name: 'Summon Monster VI',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/summonMonsterVI.htm',
     level: 6,
     school: 'conjuration',
     castingTime: {
@@ -2397,6 +2760,7 @@ export const level6Spells: Spell[] = [
       type: 'rounds',
       rounds: 1,
     },
+    effect: 'One or more summoned creatures, no two of which can be more than 30 ft. apart',
     concentration: false,
     ritual: false,
     description:
@@ -2414,6 +2778,7 @@ export const level6Spells: Spell[] = [
     name: "Summon Nature's Ally VI",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/summonNaturesAllyVI.htm',
     level: 6,
     school: 'conjuration',
     castingTime: {
@@ -2433,6 +2798,7 @@ export const level6Spells: Spell[] = [
       type: 'rounds',
       rounds: 1,
     },
+    effect: 'One or more creatures, no two of which can be more than 30 ft. apart',
     concentration: false,
     ritual: false,
     description: 'Calls creature to fight.',
@@ -2446,6 +2812,7 @@ export const level6Spells: Spell[] = [
     name: 'Symbol of Fear',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/symbolOfFear.htm',
     level: 6,
     school: 'necromancy',
     castingTime: {
@@ -2460,9 +2827,17 @@ export const level6Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription:
+        'Mercury and phosphorus, plus powdered diamond and opal with a total value of at least 1,000 gp.',
     },
     duration: {
       type: 'permanent',
+    },
+    savingThrowText: 'Will negates',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates',
     },
     concentration: false,
     ritual: false,
@@ -2477,6 +2852,7 @@ export const level6Spells: Spell[] = [
     name: 'Symbol of Fear',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/symbolOfFear.htm',
     level: 6,
     school: 'necromancy',
     castingTime: {
@@ -2497,6 +2873,7 @@ export const level6Spells: Spell[] = [
     duration: {
       type: 'permanent',
     },
+    savingThrowText: 'Will negates',
     concentration: false,
     ritual: false,
     description:
@@ -2504,6 +2881,7 @@ export const level6Spells: Spell[] = [
     savingThrow: {
       attribute: 'wis',
       success: 'none',
+      description: 'Will negates',
     },
     classes: ['cleric', 'sorcerer', 'wizard'],
     levelsByClass: {
@@ -2517,6 +2895,7 @@ export const level6Spells: Spell[] = [
     name: 'Symbol of Persuasion',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/symbolOfPersuasion.htm',
     level: 6,
     school: 'enchantment',
     castingTime: {
@@ -2531,9 +2910,17 @@ export const level6Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription:
+        'Mercury and phosphorus, plus powdered diamond and opal with a total value of at least 5,000 gp.',
     },
     duration: {
       type: 'permanent',
+    },
+    savingThrowText: 'Will negates',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates',
     },
     concentration: false,
     ritual: false,
@@ -2548,6 +2935,7 @@ export const level6Spells: Spell[] = [
     name: 'Symbol of Persuasion',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/symbolOfPersuasion.htm',
     level: 6,
     school: 'enchantment',
     castingTime: {
@@ -2568,6 +2956,7 @@ export const level6Spells: Spell[] = [
     duration: {
       type: 'permanent',
     },
+    savingThrowText: 'Will negates',
     concentration: false,
     ritual: false,
     description:
@@ -2575,6 +2964,7 @@ export const level6Spells: Spell[] = [
     savingThrow: {
       attribute: 'wis',
       success: 'none',
+      description: 'Will negates',
     },
     classes: ['cleric', 'sorcerer', 'wizard'],
     levelsByClass: {
@@ -2588,10 +2978,11 @@ export const level6Spells: Spell[] = [
     name: 'Transformation',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/transformation.htm',
     level: 6,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -2602,11 +2993,13 @@ export const level6Spells: Spell[] = [
       somatic: true,
       material: true,
       materialDescription: "Potion of bull's strength (consumed)",
+      materialConsumed: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    target: 'You',
     concentration: false,
     ritual: false,
     description:
@@ -2622,10 +3015,11 @@ export const level6Spells: Spell[] = [
     name: 'Transport via Plants',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/transportViaPlants.htm',
     level: 6,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -2640,6 +3034,10 @@ export const level6Spells: Spell[] = [
       type: 'rounds',
       rounds: 1,
     },
+    target: 'You and touched objects or other touched willing creatures',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Move instantly from one plant to another of the same kind.',
@@ -2653,6 +3051,7 @@ export const level6Spells: Spell[] = [
     name: 'Undeath to Death',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/undeathToDeath.htm',
     level: 6,
     school: 'necromancy',
     castingTime: {
@@ -2667,9 +3066,19 @@ export const level6Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'The powder of a crushed diamond worth at least 500 gp.',
+      materialCost: 500,
+      divineFocus: true,
     },
     duration: {
       type: 'instant',
+    },
+    area: 'Several undead creatures within a 40-ft.-radius burst',
+    savingThrowText: 'Will negates',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates',
     },
     concentration: false,
     ritual: false,
@@ -2684,6 +3093,7 @@ export const level6Spells: Spell[] = [
     name: 'Undeath to Death',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/undeathToDeath.htm',
     level: 6,
     school: 'necromancy',
     castingTime: {
@@ -2703,10 +3113,19 @@ export const level6Spells: Spell[] = [
       somatic: true,
       material: true,
       materialDescription: 'Diamond powder worth 500 gp',
+      materialCost: 500,
+      divineFocus: true,
     },
     duration: {
       type: 'instant',
     },
+    area: 'Several undead creatures within a 40-ft.-radius burst',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates',
+    },
+    savingThrowText: 'Will negates',
     concentration: false,
     ritual: false,
     description:
@@ -2723,10 +3142,11 @@ export const level6Spells: Spell[] = [
     name: 'Veil',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/veil.htm',
     level: 6,
     school: 'illusion',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -2742,6 +3162,15 @@ export const level6Spells: Spell[] = [
       type: 'hours',
       hours: 1,
     },
+    target: 'One or more creatures, no two of which can be more than 30 ft. apart',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'special',
+      description: 'Will negates; see text',
+    },
+    savingThrowText: 'Will negates; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -2758,10 +3187,11 @@ export const level6Spells: Spell[] = [
     name: 'Wall of Iron',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/wallOfIron.htm',
     level: 6,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -2773,10 +3203,15 @@ export const level6Spells: Spell[] = [
       somatic: true,
       material: true,
       materialDescription: 'Small piece of sheet iron',
+      materialCost: 50,
     },
     duration: {
       type: 'instant',
     },
+    effect: 'Iron wall whose area is up to one 5-ft. square/level; see text',
+    savingThrowText: 'See text',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description:
@@ -2792,10 +3227,11 @@ export const level6Spells: Spell[] = [
     name: 'Wall of Stone',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/wallOfStone.htm',
     level: 6,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -2805,11 +3241,16 @@ export const level6Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
+      divineFocus: true,
     },
     duration: {
       type: 'instant',
     },
+    effect: 'Stone wall whose area is up to one 5-ft. square/level (S)',
+    savingThrowText: 'See text',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Creates a stone wall that can be shaped.',
@@ -2823,10 +3264,11 @@ export const level6Spells: Spell[] = [
     name: 'Wind Walk',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/windWalk.htm',
     level: 6,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -2836,11 +3278,21 @@ export const level6Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'hours',
       hours: 1,
     },
+    target: 'You and one touched creature per three levels',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'No and Will negates (harmless)',
+    },
+    savingThrowText: 'No and Will negates (harmless)',
+    spellResistance: false,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: 'You and your allies turn vaporous and travel fast.',
@@ -2854,10 +3306,11 @@ export const level6Spells: Spell[] = [
     name: 'Word of Recall',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/wordOfRecall.htm',
     level: 6,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -2871,6 +3324,15 @@ export const level6Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'You and touched objects or other willing creatures',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'None or Will negates (harmless, object)',
+    },
+    savingThrowText: 'None or Will negates (harmless, object)',
+    spellResistance: false,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: 'Teleports you back to designated place.',

@@ -6,10 +6,11 @@ export const level2Spells: Spell[] = [
     name: 'Acid Arrow',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Acid%20Arrow',
     level: 2,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -20,11 +21,16 @@ export const level2Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: "rhubarb leaf and an adder's stomach",
+      focus: true,
+      focusDescription: 'a dart',
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    effect: 'one arrow of acid',
+    savingThrowText: 'none',
     attackRoll: true,
     damage: {
       base: {
@@ -49,10 +55,11 @@ export const level2Spells: Spell[] = [
     name: 'Aid',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Aid',
     level: 2,
     school: 'enchantment',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -61,12 +68,15 @@ export const level2Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
+      material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'living creature touched',
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:
@@ -81,10 +91,11 @@ export const level2Spells: Spell[] = [
     name: 'Alter Self',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Alter%20Self',
     level: 2,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -94,11 +105,13 @@ export const level2Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'a piece of the creature whose form you plan to assume',
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'you',
     concentration: false,
     ritual: false,
     description:
@@ -115,10 +128,11 @@ export const level2Spells: Spell[] = [
     name: "Bear's Endurance",
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Bear%27s%20Endurance',
     level: 2,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -128,11 +142,20 @@ export const level2Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'a few hairs, or a pinch of dung, from a bear',
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
     concentration: false,
     ritual: false,
     description:
@@ -151,10 +174,11 @@ export const level2Spells: Spell[] = [
     name: 'Blur',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Blur',
     level: 2,
     school: 'illusion',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -169,6 +193,13 @@ export const level2Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    target: 'creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
     concentration: false,
     ritual: false,
     description:
@@ -185,10 +216,11 @@ export const level2Spells: Spell[] = [
     name: "Bull's Strength",
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Bull%27s%20Strength',
     level: 2,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -198,11 +230,20 @@ export const level2Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'a few hairs, or a pinch of dung, from a bull',
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
     concentration: false,
     ritual: false,
     description:
@@ -220,10 +261,11 @@ export const level2Spells: Spell[] = [
     name: "Cat's Grace",
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Cat%27s%20Grace',
     level: 2,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -233,11 +275,19 @@ export const level2Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'pinch of cat fur',
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
     concentration: false,
     ritual: false,
     description:
@@ -256,10 +306,11 @@ export const level2Spells: Spell[] = [
     name: 'Darkness',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Darkness',
     level: 2,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -269,11 +320,15 @@ export const level2Spells: Spell[] = [
       verbal: true,
       somatic: false,
       material: true,
+      materialDescription: 'bat fur and a piece of coal',
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'object touched',
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:
@@ -291,10 +346,11 @@ export const level2Spells: Spell[] = [
     name: 'Detect Thoughts',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Detect%20Thoughts',
     level: 2,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -303,7 +359,10 @@ export const level2Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
+      material: false,
+      focus: true,
+      focusDescription: 'a copper piece',
+      divineFocus: true,
     },
     duration: {
       type: 'concentration',
@@ -313,10 +372,13 @@ export const level2Spells: Spell[] = [
       type: 'cone',
       feet: 60,
     },
+    area: 'cone-shaped emanation',
     savingThrow: {
       attribute: 'wis',
-      success: 'none',
+      success: 'special',
+      description: 'Will negates; see text',
     },
+    savingThrowText: 'Will negates; see text',
     concentration: true,
     ritual: false,
     description:
@@ -333,10 +395,11 @@ export const level2Spells: Spell[] = [
     name: "Eagle's Splendor",
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Eagle%27s%20Splendor',
     level: 2,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -346,11 +409,20 @@ export const level2Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'feathers or droppings from an eagle',
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
     concentration: false,
     ritual: false,
     description:
@@ -368,10 +440,11 @@ export const level2Spells: Spell[] = [
     name: "Fox's Cunning",
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Fox%27s%20Cunning',
     level: 2,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -381,11 +454,20 @@ export const level2Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'hairs or dung from a fox',
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'you',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
     concentration: false,
     ritual: false,
     description:
@@ -402,10 +484,11 @@ export const level2Spells: Spell[] = [
     name: 'Invisibility',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Invisibility',
     level: 2,
     school: 'illusion',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -415,11 +498,20 @@ export const level2Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'an eyelash encased in gum arabic',
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'you or a creature or object weighing no more than 100 lbs./level',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless) or Will negates (harmless, object)',
+    },
+    savingThrowText: 'Will negates (harmless) or Will negates (harmless, object)',
     concentration: false,
     ritual: false,
     description:
@@ -436,10 +528,11 @@ export const level2Spells: Spell[] = [
     name: 'Knock',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Knock',
     level: 2,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -454,6 +547,8 @@ export const level2Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'one door, box, or chest with an area of up to 10 sq. ft./level',
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:
@@ -469,10 +564,11 @@ export const level2Spells: Spell[] = [
     name: 'Levitate',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Levitate',
     level: 2,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -481,12 +577,16 @@ export const level2Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
+      material: false,
+      focus: true,
+      focusDescription: 'a leather loop or golden wire bent into a cup shape',
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'you or one willing creature or one object (total weight up to 100 lbs./level)',
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:
@@ -502,10 +602,11 @@ export const level2Spells: Spell[] = [
     name: 'Mirror Image',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Mirror%20Image',
     level: 2,
     school: 'illusion',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -520,6 +621,7 @@ export const level2Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    target: 'you',
     concentration: false,
     ritual: false,
     description:
@@ -536,10 +638,11 @@ export const level2Spells: Spell[] = [
     name: "Owl's Wisdom",
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Owl%27s%20Wisdom',
     level: 2,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -549,11 +652,20 @@ export const level2Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'feathers or droppings from an owl',
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
     concentration: false,
     ritual: false,
     description:
@@ -572,10 +684,11 @@ export const level2Spells: Spell[] = [
     name: 'Protection from Arrows',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Protection%20from%20Arrows',
     level: 2,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -584,12 +697,21 @@ export const level2Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
+      material: false,
+      focus: true,
+      focusDescription: 'a piece of tortoiseshell or turtle shell',
     },
     duration: {
       type: 'hours',
       hours: 1,
     },
+    target: 'creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
     concentration: false,
     ritual: false,
     description:
@@ -605,10 +727,11 @@ export const level2Spells: Spell[] = [
     name: 'Resist Energy',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Resist%20Energy',
     level: 2,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -617,12 +740,20 @@ export const level2Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
+      material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'creature touched',
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+      description: 'Fortitude negates (harmless)',
+    },
+    savingThrowText: 'Fortitude negates (harmless)',
     concentration: false,
     ritual: false,
     description:
@@ -641,10 +772,11 @@ export const level2Spells: Spell[] = [
     name: 'Rope Trick',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Rope%20Trick',
     level: 2,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -654,11 +786,14 @@ export const level2Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'powdered corn and a twisted loop of parchment',
     },
     duration: {
       type: 'hours',
       hours: 1,
     },
+    target: 'one touched piece of rope from 5 ft. to 30 ft. long',
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:
@@ -674,10 +809,11 @@ export const level2Spells: Spell[] = [
     name: 'Scorching Ray',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Scorching%20Ray',
     level: 2,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -692,6 +828,8 @@ export const level2Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    effect: 'one or more rays',
+    savingThrowText: 'none',
     attackRoll: true,
     damage: {
       base: {
@@ -716,10 +854,11 @@ export const level2Spells: Spell[] = [
     name: 'See Invisibility',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=See%20Invisibility',
     level: 2,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -729,11 +868,19 @@ export const level2Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'talc and powdered silver',
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'you',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
     concentration: false,
     ritual: false,
     description:
@@ -750,10 +897,11 @@ export const level2Spells: Spell[] = [
     name: 'Spider Climb',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Spider%20Climb',
     level: 2,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -763,11 +911,19 @@ export const level2Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'a live spider',
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
     concentration: false,
     ritual: false,
     description:
@@ -785,10 +941,11 @@ export const level2Spells: Spell[] = [
     name: 'Web',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Web',
     level: 2,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -799,15 +956,19 @@ export const level2Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'spider web',
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    effect: 'webs in a 20-ft.-radius spread',
     savingThrow: {
       attribute: 'dex',
-      success: 'none',
+      success: 'special',
+      description: 'Reflex negates; see text',
     },
+    savingThrowText: 'Reflex negates; see text',
     concentration: false,
     ritual: false,
     description:

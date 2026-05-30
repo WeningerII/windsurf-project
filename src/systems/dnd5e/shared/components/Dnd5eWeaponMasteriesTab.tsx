@@ -1,3 +1,4 @@
+// purpose: Weapon Masteries tab body — 2024-only mastery selection grid (gated by enableWeaponMasteries).
 import { Badge } from '../../../../components/ui/Badge';
 import { TabsContent } from '../../../../components/ui/Tabs';
 

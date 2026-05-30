@@ -3,7 +3,15 @@ import type { CharacterDocument, SystemDataModel } from '../../types/core/docume
 import type { Spell } from '../../types/magic/spells';
 import type { Pf1eTrait } from '../pf1e/data-model';
 import type { Pf1eDataModel } from '../pf1e/data-model';
-import { resetD20LegacySpellSlots, type D20LegacyData } from './d20LegacySheetShared';
+import {
+  recoverD20LegacySpellSlot,
+  resetD20LegacyManualSpellcastingExtras,
+  resetD20LegacySpellSlots,
+  setD20LegacyPreparedSpell,
+  setD20LegacySpellSlotTotal,
+  spendD20LegacySpellSlot,
+  type D20LegacyData,
+} from './d20LegacySheetShared';
 
 interface UseD20LegacyMutationHandlersProps {
   typedDocument: CharacterDocument<D20LegacyData>;
@@ -77,6 +85,9 @@ export function useD20LegacyMutationHandlers({
         update({
           hitPoints: { ...sys.hitPoints, current: sys.hitPoints.max, temp: 0 },
           spellsPerDay: resetD20LegacySpellSlots(sys.spellsPerDay),
+          manualSpellcastingExtras: resetD20LegacyManualSpellcastingExtras(
+            sys.manualSpellcastingExtras
+          ),
         } as Partial<D20LegacyData>);
       }
     : undefined;
@@ -175,22 +186,13 @@ export function useD20LegacyMutationHandlers({
 
   const setPreparedSpell = useCallback(
     (level: number, slotIndex: number, spellId: string) => {
-      const nextPreparedSpellsByLevel = { ...(sys.preparedSpellsByLevel ?? {}) };
-      const nextLevelSelections = [...(nextPreparedSpellsByLevel[level] ?? [])];
-
-      nextLevelSelections[slotIndex] = spellId;
-      while (nextLevelSelections.length > 0 && !nextLevelSelections.at(-1)) {
-        nextLevelSelections.pop();
-      }
-
-      if (nextLevelSelections.length > 0) {
-        nextPreparedSpellsByLevel[level] = nextLevelSelections;
-      } else {
-        delete nextPreparedSpellsByLevel[level];
-      }
-
       update({
-        preparedSpellsByLevel: nextPreparedSpellsByLevel,
+        preparedSpellsByLevel: setD20LegacyPreparedSpell(
+          sys.preparedSpellsByLevel,
+          level,
+          slotIndex,
+          spellId
+        ),
       } as Partial<D20LegacyData>);
     },
     [sys.preparedSpellsByLevel, update]
@@ -198,17 +200,13 @@ export function useD20LegacyMutationHandlers({
 
   const useSpellSlot = useCallback(
     (level: number) => {
-      const spellSlots = sys.spellsPerDay ?? {};
-      const slot = spellSlots[level];
-      if (!slot) {
+      const nextSpellsPerDay = spendD20LegacySpellSlot(sys.spellsPerDay, level);
+      if (nextSpellsPerDay === sys.spellsPerDay) {
         return;
       }
 
       update({
-        spellsPerDay: {
-          ...spellSlots,
-          [level]: { ...slot, used: Math.min(slot.total, slot.used + 1) },
-        },
+        spellsPerDay: nextSpellsPerDay,
       } as Partial<D20LegacyData>);
     },
     [sys.spellsPerDay, update]
@@ -216,17 +214,13 @@ export function useD20LegacyMutationHandlers({
 
   const recoverSpellSlot = useCallback(
     (level: number) => {
-      const spellSlots = sys.spellsPerDay ?? {};
-      const slot = spellSlots[level];
-      if (!slot) {
+      const nextSpellsPerDay = recoverD20LegacySpellSlot(sys.spellsPerDay, level);
+      if (nextSpellsPerDay === sys.spellsPerDay) {
         return;
       }
 
       update({
-        spellsPerDay: {
-          ...spellSlots,
-          [level]: { ...slot, used: Math.max(0, slot.used - 1) },
-        },
+        spellsPerDay: nextSpellsPerDay,
       } as Partial<D20LegacyData>);
     },
     [sys.spellsPerDay, update]
@@ -234,24 +228,72 @@ export function useD20LegacyMutationHandlers({
 
   const setSpellSlotTotal = useCallback(
     (level: number, total: number) => {
-      const spellSlots = sys.spellsPerDay ?? {};
-      const slot = spellSlots[level];
-      if (!slot) {
+      const nextSpellsPerDay = setD20LegacySpellSlotTotal(sys.spellsPerDay, level, total);
+      if (nextSpellsPerDay === sys.spellsPerDay) {
         return;
       }
 
-      const nextTotal = Math.max(0, total);
       update({
-        spellsPerDay: {
-          ...spellSlots,
-          [level]: {
-            total: nextTotal,
-            used: Math.min(slot.used, nextTotal),
-          },
-        },
+        spellsPerDay: nextSpellsPerDay,
       } as Partial<D20LegacyData>);
     },
     [sys.spellsPerDay, update]
+  );
+
+  const setManualExtraConsumed = useCallback(
+    (kind: 'domain' | 'specialist', level: number, consumed: boolean) => {
+      const current = sys.manualSpellcastingExtras ?? {};
+      update({
+        manualSpellcastingExtras: {
+          ...current,
+          ...(kind === 'domain'
+            ? {
+                domainSlotConsumedByLevel: {
+                  ...(current.domainSlotConsumedByLevel ?? {}),
+                  [level]: consumed,
+                },
+              }
+            : {
+                specialistSlotConsumedByLevel: {
+                  ...(current.specialistSlotConsumedByLevel ?? {}),
+                  [level]: consumed,
+                },
+              }),
+        },
+      } as Partial<D20LegacyData>);
+    },
+    [sys.manualSpellcastingExtras, update]
+  );
+
+  const setSpontaneousConversionReference = useCallback(
+    (reference: 'cure' | 'inflict' | 'both') => {
+      update({
+        manualSpellcastingExtras: {
+          ...(sys.manualSpellcastingExtras ?? {}),
+          spontaneousConversionReference: reference,
+        },
+      } as Partial<D20LegacyData>);
+    },
+    [sys.manualSpellcastingExtras, update]
+  );
+
+  const setDragonDiscipleBonusSlots = useCallback(
+    (patch: Partial<{ total: number; used: number }>) => {
+      const current = sys.manualSpellcastingExtras?.dragonDiscipleBonusSlots ?? {
+        total: 0,
+        used: 0,
+      };
+      const total = Math.max(0, patch.total ?? current.total);
+      const used = Math.min(total, Math.max(0, patch.used ?? current.used));
+
+      update({
+        manualSpellcastingExtras: {
+          ...(sys.manualSpellcastingExtras ?? {}),
+          dragonDiscipleBonusSlots: { total, used },
+        },
+      } as Partial<D20LegacyData>);
+    },
+    [sys.manualSpellcastingExtras, update]
   );
 
   const addFeat = useCallback(() => {
@@ -303,6 +345,9 @@ export function useD20LegacyMutationHandlers({
     useSpellSlot,
     recoverSpellSlot,
     setSpellSlotTotal,
+    setManualExtraConsumed,
+    setSpontaneousConversionReference,
+    setDragonDiscipleBonusSlots,
     addFeat,
     addItem,
   };

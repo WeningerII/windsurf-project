@@ -14,13 +14,16 @@ import { mysticTheurge as mysticTheurge35 } from '../../data/dnd/3.5e/prestige-c
 import { elf as elf35 } from '../../data/dnd/3.5e/races/elf';
 import { human as human35 } from '../../data/dnd/3.5e/races/human';
 import { createDefaultDnd35eData, Dnd35eDataModel } from '../../systems/dnd35e/data-model';
+import { Dnd35eEngine } from '../../systems/dnd35e/engine';
 import { createDefaultPf1eData, Pf1eDataModel } from '../../systems/pf1e/data-model';
+import { Pf1eEngine } from '../../systems/pf1e/engine';
 import { CharacterDocument } from '../../types/core/document';
 import {
   applyD20LegacyClassTemplate,
   applyD20LegacyRaceTemplate,
   removeD20LegacyClassTemplate,
 } from '../../utils/d20LegacyTemplate';
+import { exportDocuments, importDocuments } from '../../utils/documentStorage';
 import { wizard as wizardPf1 } from '../../data/pathfinder/1e/classes/wizard';
 import { cleric as clericPf1 } from '../../data/pathfinder/1e/classes/cleric';
 import { sorcerer as sorcererPf1 } from '../../data/pathfinder/1e/classes/sorcerer';
@@ -421,6 +424,199 @@ describe('applyD20LegacyClassTemplate', () => {
       classId: 'dragon-disciple',
       spellcastingSelections: ['sorcerer'],
     });
+  });
+
+  it('clears stale prestige spellcasting advancement on class row replacement and removal without deleting manual spell state', () => {
+    const dnd35eEngine = new Dnd35eEngine();
+    const pf1eEngine = new Pf1eEngine();
+    const dnd35eManualExtras: NonNullable<Dnd35eDataModel['manualSpellcastingExtras']> = {
+      domainSlotConsumedByLevel: { 1: true },
+      spontaneousConversionReference: 'cure',
+    };
+    const pf1eManualExtras: NonNullable<Pf1eDataModel['manualSpellcastingExtras']> = {
+      specialistSlotConsumedByLevel: { 1: true },
+      dragonDiscipleBonusSlots: { total: 1, used: 1 },
+    };
+
+    const eldritchKnightDoc = applyD20LegacyClassTemplate(
+      applyD20LegacyClassTemplate(
+        make35Doc({
+          spellsKnown: ['magic-missile-1-35e', 'shield-1-35e'],
+          preparedSpellsByLevel: { 1: ['magic-missile-1-35e'] },
+          manualSpellcastingExtras: dnd35eManualExtras,
+        }),
+        wizard35,
+        5
+      ),
+      eldritchKnight35,
+      3,
+      { mode: 'add' }
+    );
+    const preparedEldritchKnightDoc = dnd35eEngine.prepareData({
+      ...eldritchKnightDoc,
+      system: {
+        ...eldritchKnightDoc.system,
+        spellsPerDay: { 4: { total: 0, used: 1 } },
+      },
+    });
+    const replacedEldritchKnightDoc = dnd35eEngine.prepareData(
+      applyD20LegacyClassTemplate(preparedEldritchKnightDoc, fighter35, 2, {
+        mode: 'replace',
+        targetClassId: 'eldritch-knight-35e',
+      })
+    );
+    const removedEldritchKnightDoc = dnd35eEngine.prepareData(
+      removeD20LegacyClassTemplate(preparedEldritchKnightDoc, 'eldritch-knight-35e')
+    );
+
+    expect(preparedEldritchKnightDoc.system.classLevels[1]).toMatchObject({
+      classId: 'eldritch-knight-35e',
+      spellcastingSelections: ['wizard'],
+    });
+    expect(preparedEldritchKnightDoc.system.spellsPerDay?.[4]?.total).toBeGreaterThan(0);
+    expect(replacedEldritchKnightDoc.system.classLevels[1]).toMatchObject({ classId: 'fighter' });
+    expect(replacedEldritchKnightDoc.system.classLevels[1]).not.toHaveProperty(
+      'spellcastingSelections'
+    );
+    expect(replacedEldritchKnightDoc.system.spellsPerDay?.[4]).toEqual({ total: 0, used: 0 });
+    expect(replacedEldritchKnightDoc.system.spellsKnown).toEqual([
+      'magic-missile-1-35e',
+      'shield-1-35e',
+    ]);
+    expect(replacedEldritchKnightDoc.system.preparedSpellsByLevel).toEqual({
+      1: ['magic-missile-1-35e'],
+    });
+    expect(replacedEldritchKnightDoc.system.manualSpellcastingExtras).toEqual(dnd35eManualExtras);
+    expect(removedEldritchKnightDoc.system.classLevels).toMatchObject([{ classId: 'wizard' }]);
+    expect(removedEldritchKnightDoc.system.spellsPerDay?.[4]).toEqual({ total: 0, used: 0 });
+    expect(removedEldritchKnightDoc.system.manualSpellcastingExtras).toEqual(dnd35eManualExtras);
+
+    const mysticTheurgeDoc = applyD20LegacyClassTemplate(
+      applyD20LegacyClassTemplate(
+        applyD20LegacyClassTemplate(
+          makePf1Doc({
+            spellsKnown: ['magic-missile-pf1e', 'cure-light-wounds-pf1e'],
+            preparedSpellsByLevel: { 1: ['magic-missile-pf1e'] },
+            manualSpellcastingExtras: pf1eManualExtras,
+          }),
+          wizardPf1,
+          3
+        ),
+        clericPf1,
+        3,
+        { mode: 'add' }
+      ),
+      mysticTheurgePf1,
+      2,
+      { mode: 'add' }
+    );
+    const preparedMysticTheurgeDoc = pf1eEngine.prepareData({
+      ...mysticTheurgeDoc,
+      system: {
+        ...mysticTheurgeDoc.system,
+        spellsPerDay: { 3: { total: 0, used: 1 } },
+      },
+    });
+    const replacedMysticTheurgeDoc = pf1eEngine.prepareData(
+      applyD20LegacyClassTemplate(preparedMysticTheurgeDoc, fighterPf1, 2, {
+        mode: 'replace',
+        targetClassId: 'mystic-theurge',
+      })
+    );
+    const removedMysticTheurgeDoc = pf1eEngine.prepareData(
+      removeD20LegacyClassTemplate(preparedMysticTheurgeDoc, 'mystic-theurge')
+    );
+
+    expect(preparedMysticTheurgeDoc.system.classLevels[2]).toMatchObject({
+      classId: 'mystic-theurge',
+      spellcastingSelections: ['wizard', 'cleric'],
+    });
+    expect(preparedMysticTheurgeDoc.system.spellsPerDay?.[3]?.total).toBeGreaterThan(0);
+    expect(replacedMysticTheurgeDoc.system.classLevels[2]).toMatchObject({ classId: 'fighter' });
+    expect(replacedMysticTheurgeDoc.system.classLevels[2]).not.toHaveProperty(
+      'spellcastingSelections'
+    );
+    expect(replacedMysticTheurgeDoc.system.spellsPerDay?.[3]).toEqual({ total: 0, used: 0 });
+    expect(replacedMysticTheurgeDoc.system.spellsKnown).toEqual([
+      'magic-missile-pf1e',
+      'cure-light-wounds-pf1e',
+    ]);
+    expect(replacedMysticTheurgeDoc.system.preparedSpellsByLevel).toEqual({
+      1: ['magic-missile-pf1e'],
+    });
+    expect(replacedMysticTheurgeDoc.system.manualSpellcastingExtras).toEqual(pf1eManualExtras);
+    expect(removedMysticTheurgeDoc.system.classLevels).toMatchObject([
+      { classId: 'wizard' },
+      { classId: 'cleric' },
+    ]);
+    expect(removedMysticTheurgeDoc.system.spellsPerDay?.[3]).toEqual({ total: 0, used: 0 });
+    expect(removedMysticTheurgeDoc.system.manualSpellcastingExtras).toEqual(pf1eManualExtras);
+  });
+
+  it('round-trips prestige spellcasting selections and merged slots through import/export', () => {
+    const dnd35eEngine = new Dnd35eEngine();
+    const pf1eEngine = new Pf1eEngine();
+    const dndMysticTheurgeDoc = applyD20LegacyClassTemplate(
+      applyD20LegacyClassTemplate(
+        applyD20LegacyClassTemplate(make35Doc(), wizard35, 3),
+        cleric35,
+        3,
+        { mode: 'add' }
+      ),
+      mysticTheurge35,
+      2,
+      { mode: 'add' }
+    );
+    const pf1MysticTheurgeDoc = applyD20LegacyClassTemplate(
+      applyD20LegacyClassTemplate(
+        applyD20LegacyClassTemplate(makePf1Doc(), wizardPf1, 3),
+        clericPf1,
+        3,
+        { mode: 'add' }
+      ),
+      mysticTheurgePf1,
+      2,
+      { mode: 'add' }
+    );
+    const preparedDnd35e = dnd35eEngine.prepareData({
+      ...dndMysticTheurgeDoc,
+      system: {
+        ...dndMysticTheurgeDoc.system,
+        spellsPerDay: {
+          1: { total: 0, used: 1 },
+          2: { total: 0, used: 1 },
+        },
+      },
+    });
+    const preparedPf1e = pf1eEngine.prepareData({
+      ...pf1MysticTheurgeDoc,
+      system: {
+        ...pf1MysticTheurgeDoc.system,
+        spellsPerDay: {
+          1: { total: 0, used: 1 },
+          2: { total: 0, used: 1 },
+        },
+      },
+    });
+
+    const [importedDnd35e, importedPf1e] = importDocuments(
+      exportDocuments([preparedDnd35e, preparedPf1e])
+    ) as [CharacterDocument<Dnd35eDataModel>, CharacterDocument<Pf1eDataModel>];
+    const hydratedDnd35e = dnd35eEngine.prepareData(importedDnd35e);
+    const hydratedPf1e = pf1eEngine.prepareData(importedPf1e);
+
+    expect(hydratedDnd35e.system.classLevels[2]).toMatchObject({
+      classId: 'mystic-theurge-35e',
+      spellcastingSelections: ['wizard', 'cleric'],
+    });
+    expect(hydratedPf1e.system.classLevels[2]).toMatchObject({
+      classId: 'mystic-theurge',
+      spellcastingSelections: ['wizard', 'cleric'],
+    });
+    expect(hydratedDnd35e.system.spellsPerDay?.[2]?.total).toBeGreaterThan(0);
+    expect(hydratedPf1e.system.spellsPerDay?.[2]?.total).toBeGreaterThan(0);
+    expect(hydratedDnd35e.system.spellsPerDay?.[1]?.used).toBe(1);
+    expect(hydratedPf1e.system.spellsPerDay?.[1]?.used).toBe(1);
   });
 });
 

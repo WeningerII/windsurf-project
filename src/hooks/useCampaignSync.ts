@@ -3,11 +3,14 @@ import type { Campaign } from '../types/core/campaign';
 import { useAuth } from './useAuth';
 import {
   clearQueuedCampaignsSnapshot,
+  clearQueuedDeletedCampaignIds,
   deleteRemoteCampaign,
   fetchRemoteCampaigns,
   getQueuedCampaignsSnapshot,
+  getQueuedDeletedCampaignIds,
   mergeCampaigns,
   pushCampaigns,
+  queueDeletedCampaignIds,
   queueCampaignsSnapshot,
   subscribeToRemoteCampaigns,
 } from '../utils/syncEngine';
@@ -97,15 +100,34 @@ export function useCampaignSync({ campaigns, onMerge }: UseCampaignSyncOptions) 
 
     try {
       const queued = getQueuedCampaignsSnapshot();
+      const queuedDeletedIds = getQueuedDeletedCampaignIds();
       const remote = await fetchRemoteCampaigns();
       const localWithQueued = mergeCampaigns(campaignsRef.current, queued);
-      const merged = mergeCampaigns(localWithQueued, remote);
+      const queuedDeletedIdSet = new Set(queuedDeletedIds);
+      const merged = mergeCampaigns(
+        localWithQueued.filter((campaign) => !queuedDeletedIdSet.has(campaign.id)),
+        remote.filter((campaign) => !queuedDeletedIdSet.has(campaign.id))
+      );
       previousCampaignsRef.current = merged;
       initialSyncCompleteRef.current = true;
       onMerge(merged);
 
+      if (queuedDeletedIds.length > 0) {
+        const results = await Promise.allSettled(
+          queuedDeletedIds.map((id) => deleteRemoteCampaign(id))
+        );
+
+        if (results.some((result) => result.status === 'rejected')) {
+          queueCampaignsSnapshot(merged);
+          queueDeletedCampaignIds(queuedDeletedIds);
+          setSyncState('error');
+          return;
+        }
+      }
+
       await pushCampaigns(merged);
       clearQueuedCampaignsSnapshot();
+      clearQueuedDeletedCampaignIds();
       setLastSyncedAt(new Date());
       setSyncState('idle');
     } catch {
@@ -149,20 +171,25 @@ export function useCampaignSync({ campaigns, onMerge }: UseCampaignSyncOptions) 
 
     if (typeof navigator !== 'undefined' && !navigator.onLine) {
       queueCampaignsSnapshot(campaigns);
+      queueDeletedCampaignIds(removedIds);
       setSyncState('offline');
       return;
     }
 
-    if (removedIds.length > 0) {
-      void Promise.allSettled(removedIds.map((id) => deleteRemoteCampaign(id))).then((results) => {
-        if (results.some((r) => r.status === 'rejected')) {
-          queueCampaignsSnapshot(campaigns);
-          setSyncState('error');
-        }
-      });
-    }
+    void (async () => {
+      if (removedIds.length > 0) {
+        const results = await Promise.allSettled(removedIds.map((id) => deleteRemoteCampaign(id)));
 
-    debouncedPush(campaigns);
+        if (results.some((result) => result.status === 'rejected')) {
+          queueCampaignsSnapshot(campaigns);
+          queueDeletedCampaignIds(removedIds);
+          setSyncState('error');
+          return;
+        }
+      }
+
+      debouncedPush(campaigns);
+    })();
   }, [debouncedPush, campaigns, isConfigured, user]);
 
   useEffect(() => {

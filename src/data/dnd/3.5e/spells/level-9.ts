@@ -7,11 +7,12 @@ export const level9Spells: Spell[] = [
     name: 'Antipathy',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/antipathy.htm',
     level: 9,
     school: 'enchantment',
     castingTime: {
       type: 'hour',
-      amount: 1,
+      hours: 1,
     },
     range: {
       type: 'ranged',
@@ -20,12 +21,22 @@ export const level9Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
+      divineFocus: true,
     },
     duration: {
       type: 'hours',
       hours: 2,
     },
+    target: 'One location (up to a 10-ft. cube/level) or one object',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'special',
+      description: 'Will partial',
+    },
+    savingThrowText: 'Will partial',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Object or location affected by spell repels certain creatures.',
@@ -39,6 +50,7 @@ export const level9Spells: Spell[] = [
     name: 'Astral Projection',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/astralProjection.htm',
     level: 9,
     school: 'necromancy',
     castingTime: {
@@ -52,10 +64,17 @@ export const level9Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription:
+        'A jacinth worth at least 1,000 gp, plus a silver bar worth 5 gp for each person to be affected.',
+      materialCost: 5,
     },
     duration: {
       type: 'instant',
     },
+    target: 'You plus one additional willing creature touched per two caster levels',
+    savingThrowText: 'None',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Projects you and companions onto Astral Plane.',
@@ -69,6 +88,7 @@ export const level9Spells: Spell[] = [
     name: 'Cure Critical Wounds, Mass',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/cureCriticalWoundsMass.htm',
     level: 9,
     school: 'conjuration',
     castingTime: {
@@ -100,6 +120,7 @@ export const level9Spells: Spell[] = [
     name: 'Elemental Swarm',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/elementalSwarm.htm',
     level: 9,
     school: 'conjuration',
     castingTime: {
@@ -119,6 +140,10 @@ export const level9Spells: Spell[] = [
       type: 'minutes',
       minutes: 10,
     },
+    effect: 'Two or more summoned creatures, no two of which can be more than 30 ft. apart',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Summons multiple elementals.',
@@ -132,6 +157,7 @@ export const level9Spells: Spell[] = [
     name: 'Energy Drain',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/energyDrain.htm',
     level: 9,
     school: 'necromancy',
     castingTime: {
@@ -150,6 +176,12 @@ export const level9Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    savingThrow: {
+      attribute: 'con',
+      success: 'special',
+      description: 'Fortitude partial; see text for enervation',
+    },
+    savingThrowText: 'Fortitude partial; see text for enervation',
     concentration: false,
     ritual: false,
     description: 'Subject gains 2d4 negative levels.',
@@ -163,6 +195,7 @@ export const level9Spells: Spell[] = [
     name: 'Etherealness',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/etherealness.htm',
     level: 9,
     school: 'transmutation',
     castingTime: {
@@ -181,6 +214,9 @@ export const level9Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    target: 'You and one other touched creature per three levels',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Travel to Ethereal Plane with companions.',
@@ -194,10 +230,11 @@ export const level9Spells: Spell[] = [
     name: 'Foresight',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/foresight.htm',
     level: 9,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -206,12 +243,22 @@ export const level9Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'See text',
+    savingThrowText: 'None or Will negates (harmless)',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'None or Will negates (harmless)',
+    },
+    spellResistance: false,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: "'Sixth sense' warns of impending danger.",
@@ -225,10 +272,11 @@ export const level9Spells: Spell[] = [
     name: 'Foresight',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/foresight.htm',
     level: 9,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -237,12 +285,22 @@ export const level9Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'See text',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'None or Will negates (harmless)',
+    },
+    savingThrowText: 'None or Will negates (harmless)',
+    spellResistance: false,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description:
@@ -260,10 +318,11 @@ export const level9Spells: Spell[] = [
     name: 'Gate',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/gate.htm',
     level: 9,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -273,11 +332,15 @@ export const level9Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
+      material: false,
     },
     duration: {
       type: 'instant',
     },
+    effect: 'See text',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Connects two planes for travel or summoning.',
@@ -291,10 +354,11 @@ export const level9Spells: Spell[] = [
     name: 'Gate',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/gate.htm',
     level: 9,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -304,12 +368,15 @@ export const level9Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
-      materialDescription: 'Diamond worth at least 5,000 gp',
+      material: false,
     },
     duration: {
       type: 'instant',
     },
+    effect: 'See text',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description:
@@ -326,6 +393,7 @@ export const level9Spells: Spell[] = [
     name: 'Heal, Mass',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/healMass.htm',
     level: 9,
     school: 'conjuration',
     castingTime: {
@@ -344,6 +412,7 @@ export const level9Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'One or more creatures, no two of which can be more than 30 ft. apart',
     concentration: false,
     ritual: false,
     description: 'As heal, but with several subjects.',
@@ -357,10 +426,11 @@ export const level9Spells: Spell[] = [
     name: 'Implosion',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/implosion.htm',
     level: 9,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -376,6 +446,15 @@ export const level9Spells: Spell[] = [
       type: 'rounds',
       rounds: 4,
     },
+    target: 'One corporeal creature/round',
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+      description: 'Fortitude negates',
+    },
+    savingThrowText: 'Fortitude negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: true,
     ritual: false,
     description: 'Kills one creature/round.',
@@ -389,10 +468,11 @@ export const level9Spells: Spell[] = [
     name: 'Meteor Swarm',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/meteorSwarm.htm',
     level: 9,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -411,6 +491,10 @@ export const level9Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    area: 'Four 40-ft.-radius spreads; see text',
+    savingThrowText: 'None or Reflex half; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -426,6 +510,7 @@ export const level9Spells: Spell[] = [
     savingThrow: {
       attribute: 'dex',
       success: 'half',
+      description: 'None or Reflex half; see text',
     },
     classes: ['sorcerer', 'wizard'],
     levelsByClass: {
@@ -438,10 +523,11 @@ export const level9Spells: Spell[] = [
     name: 'Miracle',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/miracle.htm',
     level: 9,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -450,11 +536,14 @@ export const level9Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
+      material: false,
     },
     duration: {
       type: 'instant',
     },
+    savingThrowText: 'See text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: "Requests a deity's intercession.",
@@ -468,10 +557,11 @@ export const level9Spells: Spell[] = [
     name: 'Power Word Kill',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/powerWordKill.htm',
     level: 9,
     school: 'enchantment',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -486,6 +576,10 @@ export const level9Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'One living creature with 100 hp or less',
+    savingThrowText: 'None',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -501,6 +595,7 @@ export const level9Spells: Spell[] = [
     name: 'Prismatic Sphere',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/prismaticSphere.htm',
     level: 9,
     school: 'abjuration',
     castingTime: {
@@ -516,13 +611,14 @@ export const level9Spells: Spell[] = [
     },
     components: {
       verbal: true,
-      somatic: true,
+      somatic: false,
       material: false,
     },
     duration: {
       type: 'hours',
       hours: 10,
     },
+    effect: '10-ft.-radius sphere centered on you',
     concentration: false,
     ritual: false,
     description:
@@ -538,11 +634,12 @@ export const level9Spells: Spell[] = [
     name: 'Prismatic Wall',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/prismaticWall.htm',
     level: 9,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
-      amount: 10,
+      type: 'standard',
+      amount: 1,
     },
     range: {
       type: 'ranged',
@@ -557,6 +654,10 @@ export const level9Spells: Spell[] = [
       type: 'hours',
       hours: 10,
     },
+    effect: 'Wall 4 ft./level wide, 2 ft./level high',
+    savingThrowText: 'See text',
+    spellResistance: false,
+    spellResistanceDetail: 'see-text',
     concentration: false,
     ritual: false,
     description:
@@ -572,11 +673,12 @@ export const level9Spells: Spell[] = [
     name: 'Regenerate',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/regenerate.htm',
     level: 9,
     school: 'conjuration',
     castingTime: {
-      type: 'minutes',
-      minutes: 3,
+      type: 'full-round',
+      amount: 3,
     },
     range: {
       type: 'touch',
@@ -585,10 +687,20 @@ export const level9Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'instant',
     },
+    target: 'Living creature touched',
+    savingThrowText: 'Fortitude negates (harmless)',
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+      description: 'Fortitude negates (harmless)',
+    },
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: "Subject's severed limbs grow back, cures 4d8 damage +1/level (max +35).",
@@ -602,6 +714,7 @@ export const level9Spells: Spell[] = [
     name: 'Shades',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/shades.htm',
     level: 9,
     school: 'illusion',
     castingTime: {
@@ -636,10 +749,11 @@ export const level9Spells: Spell[] = [
     name: 'Shambler',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/shambler.htm',
     level: 9,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -655,6 +769,11 @@ export const level9Spells: Spell[] = [
       type: 'hours',
       hours: 7,
     },
+    effect:
+      'Three or more shambling mounds, no two of which can be more than 30 ft. apart; see text',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Summons 1d4+2 shambling mounds to fight for you.',
@@ -668,10 +787,11 @@ export const level9Spells: Spell[] = [
     name: 'Shapechange',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/shapechange.htm',
     level: 9,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -680,12 +800,14 @@ export const level9Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
+      material: false,
+      focus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'You',
     concentration: false,
     ritual: false,
     description: 'Transforms you into any creature, and change forms once per round.',
@@ -699,10 +821,11 @@ export const level9Spells: Spell[] = [
     name: 'Shapechange',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/shapechange.htm',
     level: 9,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -711,13 +834,14 @@ export const level9Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
-      materialDescription: 'Jade circlet worth at least 1,500 gp',
+      material: false,
+      focus: true,
     },
     duration: {
       type: 'hours',
       hours: 1,
     },
+    target: 'You',
     concentration: false,
     ritual: false,
     description:
@@ -732,10 +856,11 @@ export const level9Spells: Spell[] = [
     name: 'Soul Bind',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/soulBind.htm',
     level: 9,
     school: 'necromancy',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -745,11 +870,21 @@ export const level9Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
+      material: false,
+      focus: true,
     },
     duration: {
       type: 'permanent',
     },
+    target: 'Corpse',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates',
+    },
+    savingThrowText: 'Will negates',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Traps newly dead soul to prevent resurrection.',
@@ -763,11 +898,12 @@ export const level9Spells: Spell[] = [
     name: 'Storm of Vengeance',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/stormOfVengeance.htm',
     level: 9,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
-      amount: 1,
+      type: 'rounds',
+      rounds: 1,
     },
     range: {
       type: 'ranged',
@@ -782,6 +918,10 @@ export const level9Spells: Spell[] = [
       type: 'rounds',
       rounds: 10,
     },
+    effect: '360-ft.-radius storm cloud',
+    savingThrowText: 'See text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: true,
     ritual: false,
     description: 'Storm rains acid, lightning, and hail.',
@@ -795,11 +935,12 @@ export const level9Spells: Spell[] = [
     name: 'Storm of Vengeance',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/stormOfVengeance.htm',
     level: 9,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
-      amount: 1,
+      type: 'rounds',
+      rounds: 1,
     },
     range: {
       type: 'ranged',
@@ -814,6 +955,10 @@ export const level9Spells: Spell[] = [
       type: 'rounds',
       rounds: 10,
     },
+    effect: '360-ft.-radius storm cloud',
+    savingThrowText: 'See text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: true,
     ritual: false,
     description: 'Storm rains acid, lightning, and hail.',
@@ -827,6 +972,7 @@ export const level9Spells: Spell[] = [
     name: 'Summon Monster IX',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/summonMonsterIX.htm',
     level: 9,
     school: 'conjuration',
     castingTime: {
@@ -859,6 +1005,7 @@ export const level9Spells: Spell[] = [
     name: 'Summon Monster IX',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/summonMonsterIX.htm',
     level: 9,
     school: 'conjuration',
     castingTime: {
@@ -895,6 +1042,7 @@ export const level9Spells: Spell[] = [
     name: "Summon Nature's Ally IX",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/summonNaturesAllyIX.htm',
     level: 9,
     school: 'conjuration',
     castingTime: {
@@ -914,6 +1062,7 @@ export const level9Spells: Spell[] = [
       type: 'rounds',
       rounds: 1,
     },
+    effect: 'One or more creatures, no two of which can be more than 30 ft. apart',
     concentration: false,
     ritual: false,
     description: 'Calls creature to fight.',
@@ -927,11 +1076,12 @@ export const level9Spells: Spell[] = [
     name: 'Sympathy',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/sympathy.htm',
     level: 9,
     school: 'enchantment',
     castingTime: {
       type: 'hour',
-      amount: 1,
+      hours: 1,
     },
     range: {
       type: 'ranged',
@@ -941,11 +1091,22 @@ export const level9Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: '1,500 gp worth of crushed pearls and a drop of honey.',
+      materialCost: 1500,
     },
     duration: {
       type: 'hours',
       hours: 2,
     },
+    target: 'One location (up to a 10-ft. cube/level) or one object',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'special',
+      description: 'Will negates; see text',
+    },
+    savingThrowText: 'Will negates; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Object or location attracts certain creatures.',
@@ -959,10 +1120,11 @@ export const level9Spells: Spell[] = [
     name: 'Time Stop',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/timeStop.htm',
     level: 9,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -970,12 +1132,13 @@ export const level9Spells: Spell[] = [
     },
     components: {
       verbal: true,
-      somatic: true,
+      somatic: false,
       material: false,
     },
     duration: {
       type: 'instant',
     },
+    target: 'You',
     concentration: false,
     ritual: false,
     description:
@@ -991,6 +1154,7 @@ export const level9Spells: Spell[] = [
     name: 'True Resurrection',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/trueResurrection.htm',
     level: 9,
     school: 'conjuration',
     castingTime: {
@@ -1004,6 +1168,8 @@ export const level9Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription:
+        'A sprinkle of holy water and diamonds worth a total of at least 25,000 gp.',
     },
     duration: {
       type: 'instant',
@@ -1021,10 +1187,11 @@ export const level9Spells: Spell[] = [
     name: 'Wail of the Banshee',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/wailOfTheBanshee.htm',
     level: 9,
     school: 'necromancy',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1042,6 +1209,10 @@ export const level9Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    area: 'One living creature/level within a 40-ft.-radius spread',
+    savingThrowText: 'Fortitude negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -1056,7 +1227,8 @@ export const level9Spells: Spell[] = [
     },
     savingThrow: {
       attribute: 'con',
-      success: 'half',
+      success: 'none',
+      description: 'Fortitude negates',
     },
     classes: ['sorcerer', 'wizard'],
     levelsByClass: {
@@ -1069,10 +1241,11 @@ export const level9Spells: Spell[] = [
     name: 'Wish',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/wish.htm',
     level: 9,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1086,6 +1259,9 @@ export const level9Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    savingThrowText: 'See text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:

@@ -6,7 +6,7 @@
 >
 > Internal references to `docs/STATUS.md` below reflect the repo state at the time of writing and are not current planning instructions.
 >
-> Current repo truth note (March 16, 2026): use `docs/MASTER_PLAN.md`, `docs/STATUS.md`, and `docs/generated/roadmap-metrics.md` for live status. Since this snapshot, shared controller convergence, Daggerheart data productization, cross-system spell preparation, and the spell-catalog parity baseline have landed; the canonical loader-backed spell counts are now 501 for D&D 3.5e and 143 for PF2e.
+> Current repo truth note (March 16, 2026): use `docs/MASTER_PLAN.md`, `docs/STATUS.md`, and `docs/generated/roadmap-metrics.md` for live status. Since this snapshot, shared controller convergence, Daggerheart data productization, cross-system spell preparation, and the spell-catalog parity baseline have landed; the canonical loader-backed spell counts are now 428 for D&D 3.5e and 143 for PF2e.
 
 **Created:** March 7, 2026
 **Source:** Deep codebase audit of every engine, hook, storage layer, data loader, sheet component, type system, test suite, and config file.

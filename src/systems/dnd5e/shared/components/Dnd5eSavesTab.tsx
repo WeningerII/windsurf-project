@@ -1,3 +1,4 @@
+// purpose: Saves tab body — saving-throw proficiency grid with derived totals.
 import { Shield } from 'lucide-react';
 import { DiceRollButton } from '../../../../components/DiceRollButton';
 import { TabsContent } from '../../../../components/ui/Tabs';

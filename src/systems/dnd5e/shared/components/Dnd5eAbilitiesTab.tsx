@@ -1,3 +1,4 @@
+// purpose: Abilities tab body — renders the shared 5e ability-score grid with the 27-point planner.
 import { AbilityScoreGrid } from '../../../../components/sheet';
 import { TabsContent } from '../../../../components/ui/Tabs';
 

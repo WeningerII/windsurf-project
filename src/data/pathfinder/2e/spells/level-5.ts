@@ -1,6 +1,7 @@
 import { Spell } from '../../../../types/magic/spells';
+import { withPf2eSpellTraits } from './traits';
 
-export const level5Spells: Spell[] = [
+export const level5Spells: Spell[] = withPf2eSpellTraits([
   {
     id: 'banishment-pf2e',
     name: 'Banishment',
@@ -35,6 +36,14 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description:
       "You banish the target to another plane of existence. The target must attempt a Will save. On a failure, if the target is native to this plane, it's sent to a random location on a different plane. If it's not native, it returns to its home plane.",
+    heightening: {
+      mode: 'fixed',
+      summary:
+        'Heightened (9th): You can target up to 10 creatures. The extra material component affects targets to which it is anathema.',
+      ranks: {
+        9: 'You can target up to 10 creatures. The extra material component affects targets to which it is anathema.',
+      },
+    },
     classes: ['cleric', 'sorcerer', 'wizard'],
   },
   {
@@ -83,6 +92,11 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description:
       'You conjure a poisonous fog. This functions as obscuring mist, except the area moves 10 feet away from you each round. Each creature that starts its turn in the cloud takes 6d8 poison damage with a basic Fortitude save.',
+    heightening: {
+      mode: 'interval',
+      interval: 1,
+      summary: 'Heightened (+1): The damage increases by 1d8.',
+    },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -129,6 +143,11 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description:
       'Icy cold rushes forth from your hands. You deal 12d6 cold damage to creatures in the area; they must each attempt a basic Reflex save.',
+    heightening: {
+      mode: 'interval',
+      interval: 1,
+      summary: 'Heightened (+1): The damage increases by 2d6.',
+    },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -160,6 +179,13 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description:
       'You inflict despair on creatures in the area. Affected creatures take a -2 status penalty to attack rolls, saving throws, ability checks, and skill checks.',
+    heightening: {
+      mode: 'fixed',
+      summary: 'Heightened (7th): The area increases to a 60-foot cone.',
+      ranks: {
+        7: 'The area increases to a 60-foot cone.',
+      },
+    },
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -225,6 +251,14 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description:
       'You create a visible tunnel through the wall in the chosen area, replacing the area with empty space. If the wall is thicker than 10 feet, the tunnel ends 10 feet in.',
+    heightening: {
+      mode: 'fixed',
+      summary:
+        "Heightened (7th): The tunnel can be up to 20 feet deep. The areas of the wall that contain your tunnel's entrance appear completely normal (unless viewed with true seeing or a similar effect), despite the tunnel's existence. The tunnel's entrance functions as a solid wall, but you can specify a password or a trigger, allowing creatures to enter the tunnel freely.",
+      ranks: {
+        7: "The tunnel can be up to 20 feet deep. The areas of the wall that contain your tunnel's entrance appear completely normal (unless viewed with true seeing or a similar effect), despite the tunnel's existence. The tunnel's entrance functions as a solid wall, but you can specify a password or a trigger, allowing creatures to enter the tunnel freely.",
+      },
+    },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -359,6 +393,11 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description:
       "You shape a wall of solid stone. You create a 1-inch-thick wall of stone up to 120 feet long, and 20 feet high. The wall doesn't need to stand vertically, so you can use it to form a bridge or set of stairs, for example.",
+    heightening: {
+      mode: 'interval',
+      interval: 2,
+      summary: 'Heightened (+2): The Hit Points of each section of the wall increase by 15.',
+    },
     classes: ['cleric', 'druid', 'sorcerer', 'wizard'],
   },
-];
+]);

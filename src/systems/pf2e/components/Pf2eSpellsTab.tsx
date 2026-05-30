@@ -74,6 +74,13 @@ export const Pf2eSpellsTab = (({
   );
   const knownSpellEntries = spellConcepts.trackedSpells;
   const alwaysPreparedSpellEntries = spellConcepts.alwaysPreparedSpells;
+  const focusSpellEntries = React.useMemo(
+    () =>
+      (spellcasting?.focusSpells ?? []).map((spellId) =>
+        resolveSpellPreparationEntry(spellId, spellsById)
+      ),
+    [spellcasting?.focusSpells, spellsById]
+  );
 
   const handleLearnSpell = React.useCallback(
     (spell: Spell) => {
@@ -200,6 +207,36 @@ export const Pf2eSpellsTab = (({
               {spellcasting.focusPoints.current}/{spellcasting.focusPoints.max}
             </span>
           </div>
+
+          <section className="space-y-2 rounded-md border p-3">
+            <div className="flex items-center justify-between gap-3">
+              <h4 className="text-sm font-semibold">Focus Spells</h4>
+              <Badge variant="outline">Manual</Badge>
+            </div>
+            {focusSpellEntries.length === 0 ? (
+              <p className="text-sm text-muted-foreground italic">No focus spells tracked.</p>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {focusSpellEntries.map((spell) => (
+                  <span
+                    key={spell.id}
+                    className={`inline-flex items-center gap-1 rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-1 text-xs text-amber-700 ${
+                      spell.unresolved ? 'border-dashed' : ''
+                    }`}
+                    title={
+                      spell.unresolved
+                        ? 'Loader data for this focus spell is currently unresolved.'
+                        : undefined
+                    }
+                  >
+                    <span>{spell.name}</span>
+                    <Badge variant="outline">Applied manually</Badge>
+                    {spell.unresolved && <Badge variant="destructive">Unresolved</Badge>}
+                  </span>
+                ))}
+              </div>
+            )}
+          </section>
 
           <div className="grid grid-cols-5 sm:grid-cols-10 gap-2">
             {Array.from({ length: 10 }, (_, index) => index + 1).map((level) => {

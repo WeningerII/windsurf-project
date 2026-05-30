@@ -6,10 +6,11 @@ export const level5Spells: Spell[] = [
     name: 'Cloudkill',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Cloudkill',
     level: 5,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -25,10 +26,13 @@ export const level5Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    effect: 'cloud spreads in 20-ft. radius, 20 ft. high',
     savingThrow: {
       attribute: 'con',
       success: 'special',
+      description: 'Fortitude partial; see text',
     },
+    savingThrowText: 'Fortitude partial; see text',
     concentration: false,
     ritual: false,
     description:
@@ -44,10 +48,11 @@ export const level5Spells: Spell[] = [
     name: 'Cone of Cold',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Cone%20of%20Cold',
     level: 5,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -57,6 +62,7 @@ export const level5Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'a small crystal or glass cone',
     },
     duration: {
       type: 'instant',
@@ -65,9 +71,11 @@ export const level5Spells: Spell[] = [
       type: 'cone',
       feet: 60,
     },
+    area: 'cone-shaped burst',
     savingThrow: {
       attribute: 'dex',
       success: 'half',
+      description: 'Reflex half',
     },
     damage: {
       base: {
@@ -77,6 +85,7 @@ export const level5Spells: Spell[] = [
       },
       type: 'cold',
     },
+    savingThrowText: 'Reflex half',
     concentration: false,
     ritual: false,
     description:
@@ -92,6 +101,7 @@ export const level5Spells: Spell[] = [
     name: 'Contact Other Plane',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Contact%20Other%20Plane',
     level: 5,
     school: 'divination',
     castingTime: {
@@ -110,6 +120,7 @@ export const level5Spells: Spell[] = [
       type: 'concentration',
       maxDuration: '1 minute per level',
     },
+    target: 'you',
     concentration: true,
     ritual: false,
     description:
@@ -125,11 +136,12 @@ export const level5Spells: Spell[] = [
     name: 'Dominate Person',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Dominate%20Person',
     level: 5,
     school: 'enchantment',
     castingTime: {
-      type: 'action',
-      amount: 1,
+      type: 'rounds',
+      rounds: 1,
     },
     range: {
       type: 'ranged',
@@ -144,10 +156,13 @@ export const level5Spells: Spell[] = [
       type: 'hours',
       hours: 24,
     },
+    target: 'one humanoid',
     savingThrow: {
       attribute: 'wis',
       success: 'none',
+      description: 'Will negates',
     },
+    savingThrowText: 'Will negates',
     concentration: false,
     ritual: false,
     description:
@@ -164,10 +179,11 @@ export const level5Spells: Spell[] = [
     name: 'Feeblemind',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Feeblemind',
     level: 5,
     school: 'enchantment',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -178,14 +194,18 @@ export const level5Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'a handful of clay, crystal, or glass spheres',
     },
     duration: {
       type: 'instant',
     },
+    target: 'one creature',
     savingThrow: {
       attribute: 'wis',
-      success: 'none',
+      success: 'special',
+      description: 'Will negates; see text',
     },
+    savingThrowText: 'Will negates; see text',
     concentration: false,
     ritual: false,
     description:
@@ -201,10 +221,11 @@ export const level5Spells: Spell[] = [
     name: 'Hold Monster',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Hold%20Monster',
     level: 5,
     school: 'enchantment',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -215,15 +236,20 @@ export const level5Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'one hard metal bar or rod, which can be as small as a three-penny nail',
+      divineFocus: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    target: 'one living creature',
     savingThrow: {
       attribute: 'wis',
-      success: 'none',
+      success: 'special',
+      description: 'Will negates; see text',
     },
+    savingThrowText: 'Will negates; see text',
     concentration: false,
     ritual: false,
     description:
@@ -240,10 +266,11 @@ export const level5Spells: Spell[] = [
     name: 'Passwall',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Passwall',
     level: 5,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -253,11 +280,14 @@ export const level5Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'sesame seeds',
     },
     duration: {
       type: 'hours',
       hours: 1,
     },
+    effect: '5-ft.-by-8-ft. opening, 10 ft. deep plus 5 ft. deep per three additional levels',
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:
@@ -273,10 +303,11 @@ export const level5Spells: Spell[] = [
     name: 'Telekinesis',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Telekinesis',
     level: 5,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -292,6 +323,13 @@ export const level5Spells: Spell[] = [
       type: 'concentration',
       maxDuration: '1 round per level',
     },
+    target: 'or Targets see text',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'special',
+      description: 'Will negates (object) or none; see text',
+    },
+    savingThrowText: 'Will negates (object) or none; see text',
     concentration: true,
     ritual: false,
     description:
@@ -307,10 +345,11 @@ export const level5Spells: Spell[] = [
     name: 'Teleport',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Teleport',
     level: 5,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -324,6 +363,13 @@ export const level5Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'you and touched objects or other touched willing creatures',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'none and Will negates (object)',
+    },
+    savingThrowText: 'none and Will negates (object)',
     concentration: false,
     ritual: false,
     description:
@@ -339,10 +385,11 @@ export const level5Spells: Spell[] = [
     name: 'Wall of Force',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Wall%20of%20Force',
     level: 5,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -353,11 +400,14 @@ export const level5Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'powdered quartz',
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    effect: 'wall whose area is up to one 10-ft. square/level',
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:
@@ -373,10 +423,11 @@ export const level5Spells: Spell[] = [
     name: 'Wall of Stone',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Wall%20of%20Stone',
     level: 5,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -387,10 +438,14 @@ export const level5Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'a small block of granite',
+      divineFocus: true,
     },
     duration: {
       type: 'instant',
     },
+    effect: 'stone wall whose area is up to one 5-ft. square/level (S)',
+    savingThrowText: 'see text',
     concentration: false,
     ritual: false,
     description:

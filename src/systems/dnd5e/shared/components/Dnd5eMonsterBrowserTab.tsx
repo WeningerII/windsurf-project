@@ -1,3 +1,4 @@
+// purpose: Monster browser tab body — lazy-loads the loader-backed 5e SRD monster browser.
 import { Suspense, type ComponentType } from 'react';
 import { TabsContent } from '../../../../components/ui/Tabs';
 import type { Monster } from '../../../../types/creatures/monsters';

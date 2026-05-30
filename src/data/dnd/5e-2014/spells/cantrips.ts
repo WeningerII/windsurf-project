@@ -120,6 +120,7 @@ export const cantrips: Spell[] = [
       materialDescription: 'two lodestones',
     },
     duration: { type: 'instant' },
+    target: '1 object you touch',
     concentration: false,
     ritual: false,
     description:
@@ -165,6 +166,7 @@ export const cantrips: Spell[] = [
     range: { type: 'touch' },
     components: { verbal: true, somatic: true, material: false },
     duration: { type: 'concentration', maxDuration: '1 minute' },
+    target: '1 willing creature you touch',
     concentration: true,
     ritual: false,
     description:
@@ -212,6 +214,7 @@ export const cantrips: Spell[] = [
     range: { type: 'touch' },
     components: { verbal: true, somatic: true, material: false },
     duration: { type: 'instant' },
+    target: '1 creature you touch',
     attackRoll: true,
     damage: {
       base: { count: 1, die: 'd8', notation: '1d8' },
@@ -485,6 +488,7 @@ export const cantrips: Spell[] = [
       materialDescription: 'a miniature cloak',
     },
     duration: { type: 'concentration', maxDuration: '1 minute' },
+    target: '1 willing creature you touch',
     concentration: true,
     ritual: false,
     description:
@@ -508,6 +512,7 @@ export const cantrips: Spell[] = [
       materialDescription: 'mistletoe, a shamrock leaf, and a club or quarterstaff',
     },
     duration: { type: 'minutes', minutes: 1 },
+    target: '1 club or quarterstaff you are holding',
     concentration: false,
     ritual: false,
     description:
@@ -526,6 +531,7 @@ export const cantrips: Spell[] = [
     range: { type: 'touch' },
     components: { verbal: true, somatic: true, material: false },
     duration: { type: 'instant' },
+    target: '1 living creature with 0 hit points you touch',
     concentration: false,
     ritual: false,
     description:

@@ -1,8 +1,10 @@
+// purpose: Feat browser tab body — lazy-loads the shared feat browser with manual-rider badge wiring.
 import { Suspense, type ComponentType } from 'react';
 import { TabsContent } from '../../../../components/ui/Tabs';
 import type { FeatDefinition } from '../../../../types/character-options/feats';
 import { lazyWithPreload } from '../../../../utils/lazyWithPreload';
 import { DND5E_FEAT_COPY } from '../../../../utils/documentationCopy';
+import { shouldShowDnd5eManualFeatBadge } from '../../../../utils/featManualBadge';
 
 type BrowserFeat = {
   id: string;
@@ -12,6 +14,7 @@ type BrowserFeat = {
   description: string;
   benefits: string[];
   prerequisites?: Array<{ type: string; description: string }>;
+  manual?: boolean;
 };
 
 type FeatBrowserProps = {
@@ -74,6 +77,7 @@ export const Dnd5eFeatBrowserTab = (({
             source: feat.source,
             description: feat.description,
             benefits: feat.benefits,
+            manual: shouldShowDnd5eManualFeatBadge(feat),
             prerequisites: feat.prerequisites?.map((entry) => ({
               type: entry.type,
               description: entry.description || entry.type,

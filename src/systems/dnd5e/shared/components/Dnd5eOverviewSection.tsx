@@ -1,3 +1,4 @@
+// purpose: Overview section — at-a-glance HP/AC/initiative/spell-attack snapshot above the tabs.
 import { BookOpen, Heart, Shield, Sparkles, Target } from 'lucide-react';
 import { DamageHealControl } from '../../../../components/DamageHealControl';
 import { DeathSavesTracker } from '../../../../components/DeathSavesTracker';

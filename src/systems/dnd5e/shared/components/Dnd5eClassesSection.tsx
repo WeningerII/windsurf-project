@@ -1,3 +1,4 @@
+// purpose: Classes section — manages multiclass class/level rows, subclass selection, and template provenance.
 import { Plus, X } from 'lucide-react';
 import { Badge } from '../../../../components/ui/Badge';
 import { Button } from '../../../../components/ui/Button';

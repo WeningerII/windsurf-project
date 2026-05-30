@@ -7,10 +7,11 @@ export const level7Spells: Spell[] = [
     name: 'Animate Plants',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/animatePlants.htm',
     level: 7,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -26,6 +27,10 @@ export const level7Spells: Spell[] = [
       type: 'rounds',
       rounds: 1,
     },
+    target: 'One Large plant per three caster levels or all plants within range; see text',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'One or more plants animate and fight for you.',
@@ -39,10 +44,11 @@ export const level7Spells: Spell[] = [
     name: 'Blasphemy',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/blasphemy.htm',
     level: 7,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -57,6 +63,15 @@ export const level7Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    area: 'Nonevil creatures in a 40-ft.-radius spread centered on you',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'special',
+      description: 'None or Will negates; see text',
+    },
+    savingThrowText: 'None or Will negates; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Kills, paralyzes, weakens, or dazes nonevil subjects.',
@@ -70,11 +85,12 @@ export const level7Spells: Spell[] = [
     name: 'Changestaff',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/changestaff.htm',
     level: 7,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
-      amount: 1,
+      type: 'rounds',
+      rounds: 1,
     },
     range: {
       type: 'touch',
@@ -83,11 +99,16 @@ export const level7Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      focus: true,
     },
     duration: {
       type: 'hours',
       hours: 1,
     },
+    target: 'Your touched staff',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Your staff becomes a treant on command.',
@@ -101,6 +122,7 @@ export const level7Spells: Spell[] = [
     name: 'Control Weather',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/controlWeather.htm',
     level: 7,
     school: 'transmutation',
     castingTime: {
@@ -120,6 +142,10 @@ export const level7Spells: Spell[] = [
       type: 'hours',
       hours: 4,
     },
+    area: '2-mile-radius circle, centered on you; see text',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Changes weather in local area.',
@@ -133,6 +159,7 @@ export const level7Spells: Spell[] = [
     name: 'Control Weather',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/controlWeather.htm',
     level: 7,
     school: 'transmutation',
     castingTime: {
@@ -152,6 +179,10 @@ export const level7Spells: Spell[] = [
       type: 'hours',
       hours: 4,
     },
+    area: '2-mile-radius circle, centered on you; see text',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Changes weather in local area.',
@@ -165,11 +196,12 @@ export const level7Spells: Spell[] = [
     name: 'Creeping Doom',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/creepingDoom.htm',
     level: 7,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
-      amount: 1,
+      type: 'rounds',
+      rounds: 1,
     },
     range: {
       type: 'ranged',
@@ -184,6 +216,10 @@ export const level7Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    effect: 'One swarm of centipedes per two levels',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Swarms of centipedes attack at your command.',
@@ -197,6 +233,7 @@ export const level7Spells: Spell[] = [
     name: 'Cure Moderate Wounds, Mass',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/cureModerateWoundsMass.htm',
     level: 7,
     school: 'conjuration',
     castingTime: {
@@ -228,6 +265,7 @@ export const level7Spells: Spell[] = [
     name: 'Cure Serious Wounds, Mass',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/cureSeriousWoundsMass.htm',
     level: 7,
     school: 'conjuration',
     castingTime: {
@@ -259,10 +297,11 @@ export const level7Spells: Spell[] = [
     name: 'Destruction',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/destruction.htm',
     level: 7,
     school: 'necromancy',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -272,11 +311,21 @@ export const level7Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
+      material: false,
+      focus: true,
     },
     duration: {
       type: 'instant',
     },
+    target: 'One creature',
+    savingThrow: {
+      attribute: 'con',
+      success: 'special',
+      description: 'Fortitude partial',
+    },
+    savingThrowText: 'Fortitude partial',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Kills subject and destroys remains.',
@@ -290,10 +339,11 @@ export const level7Spells: Spell[] = [
     name: 'Dictum',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/dictum.htm',
     level: 7,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -308,6 +358,15 @@ export const level7Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    area: 'Nonlawful creatures in a 40-ft.-radius spread centered on you',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'special',
+      description: 'None or Will negates; see text',
+    },
+    savingThrowText: 'None or Will negates; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Kills, paralyzes, slows, or deafens nonlawful subjects.',
@@ -321,10 +380,11 @@ export const level7Spells: Spell[] = [
     name: 'Ethereal Jaunt',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/etherealJaunt.htm',
     level: 7,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -339,6 +399,7 @@ export const level7Spells: Spell[] = [
       type: 'rounds',
       rounds: 1,
     },
+    target: 'You',
     concentration: false,
     ritual: false,
     description: 'You become ethereal for 1 round/level.',
@@ -352,11 +413,12 @@ export const level7Spells: Spell[] = [
     name: 'Fire Storm',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/fireStorm.htm',
     level: 7,
     school: 'evocation',
     castingTime: {
-      type: 'action',
-      amount: 1,
+      type: 'rounds',
+      rounds: 1,
     },
     range: {
       type: 'ranged',
@@ -370,6 +432,15 @@ export const level7Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    area: 'Two 10-ft. cubes per level (S)',
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+      description: 'Reflex half',
+    },
+    savingThrowText: 'Reflex half',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Deals 1d6/level fire damage.',
@@ -383,6 +454,7 @@ export const level7Spells: Spell[] = [
     name: 'Forceful Hand',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/forcefulHand.htm',
     level: 7,
     school: 'evocation',
     castingTime: {
@@ -397,6 +469,7 @@ export const level7Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      focus: true,
     },
     duration: {
       type: 'rounds',
@@ -417,6 +490,7 @@ export const level7Spells: Spell[] = [
     name: 'Greater Shadow Evocation',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/shadowEvocationGreater.htm',
     level: 7,
     school: 'illusion',
     castingTime: {
@@ -449,10 +523,11 @@ export const level7Spells: Spell[] = [
     name: 'Heal',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/heal.htm',
     level: 7,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -466,6 +541,15 @@ export const level7Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'Creature touched',
+    savingThrowText: 'Will negates (harmless)',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: 'Cures 10 points/level of damage, all diseases and mental conditions.',
@@ -479,10 +563,11 @@ export const level7Spells: Spell[] = [
     name: 'Holy Word',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/holyWord.htm',
     level: 7,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -497,6 +582,15 @@ export const level7Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    area: 'Nongood creatures in a 40-ft.-radius spread centered on you',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'special',
+      description: 'None or Will negates; see text',
+    },
+    savingThrowText: 'None or Will negates; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Kills, paralyzes, blinds, or deafens nongood subjects.',
@@ -510,6 +604,7 @@ export const level7Spells: Spell[] = [
     name: 'Inflict Serious Wounds, Mass',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/inflictSeriousWoundsMass.htm',
     level: 7,
     school: 'necromancy',
     castingTime: {
@@ -541,10 +636,11 @@ export const level7Spells: Spell[] = [
     name: 'Limited Wish',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/limitedWish.htm',
     level: 7,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -552,12 +648,15 @@ export const level7Spells: Spell[] = [
     },
     components: {
       verbal: true,
-      somatic: false,
+      somatic: true,
       material: false,
     },
     duration: {
       type: 'instant',
     },
+    savingThrowText: 'None; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -608,10 +707,11 @@ export const level7Spells: Spell[] = [
     name: 'Power Word Blind',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/powerWordBlind.htm',
     level: 7,
     school: 'enchantment',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -626,6 +726,10 @@ export const level7Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'One creature with 200 hp or less',
+    savingThrowText: 'None',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -641,10 +745,11 @@ export const level7Spells: Spell[] = [
     name: 'Refuge',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/refuge.htm',
     level: 7,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -654,10 +759,17 @@ export const level7Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription:
+        'The specially prepared object, whose construction requires gems worth 1,500 gp.',
+      materialCost: 1500,
     },
     duration: {
       type: 'permanent',
     },
+    target: 'Object touched',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Alters item to transport its possessor to you.',
@@ -671,11 +783,12 @@ export const level7Spells: Spell[] = [
     name: 'Regenerate',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/regenerate.htm',
     level: 7,
     school: 'conjuration',
     castingTime: {
-      type: 'minutes',
-      minutes: 3,
+      type: 'full-round',
+      amount: 3,
     },
     range: {
       type: 'touch',
@@ -684,10 +797,20 @@ export const level7Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'instant',
     },
+    target: 'Living creature touched',
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+      description: 'Fortitude negates (harmless)',
+    },
+    savingThrowText: 'Fortitude negates (harmless)',
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: "Subject's severed limbs grow back, cures 4d8 damage +1/level (max +35).",
@@ -701,10 +824,11 @@ export const level7Spells: Spell[] = [
     name: 'Repulsion',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/repulsion.htm',
     level: 7,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -715,11 +839,22 @@ export const level7Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      focus: true,
+      divineFocus: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    area: 'Up to 10-ft.-radius/level emanation centered on you',
+    savingThrowText: 'Will negates',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates',
+    },
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: "Creatures can't approach you.",
@@ -733,11 +868,12 @@ export const level7Spells: Spell[] = [
     name: 'Restoration, Greater',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/restorationGreater.htm',
     level: 7,
     school: 'conjuration',
     castingTime: {
       type: 'minutes',
-      minutes: 3,
+      minutes: 10,
     },
     range: {
       type: 'touch',
@@ -745,7 +881,7 @@ export const level7Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
+      material: false,
     },
     duration: {
       type: 'instant',
@@ -763,6 +899,7 @@ export const level7Spells: Spell[] = [
     name: 'Resurrection',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/resurrection.htm',
     level: 7,
     school: 'conjuration',
     castingTime: {
@@ -776,6 +913,8 @@ export const level7Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription:
+        'A sprinkle of holy water and diamonds worth a total of at least 10,000 gp.',
     },
     duration: {
       type: 'instant',
@@ -826,10 +965,11 @@ export const level7Spells: Spell[] = [
     name: 'Scrying, Greater',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/scryingGreater.htm',
     level: 7,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -857,10 +997,11 @@ export const level7Spells: Spell[] = [
     name: 'Scrying, Greater',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/scryingGreater.htm',
     level: 7,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -888,10 +1029,11 @@ export const level7Spells: Spell[] = [
     name: 'Sequester',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/sequester.htm',
     level: 7,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -903,10 +1045,20 @@ export const level7Spells: Spell[] = [
       material: true,
       materialDescription:
         'A basilisk eyelash, gum arabic, and a dram of liquified diamond (worth 1,500 gp)',
+      materialCost: 1500,
     },
     duration: {
       type: 'permanent',
     },
+    target: 'One willing creature or object (up to a 2-ft. cube/level) touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'None or Will negates (object)',
+    },
+    savingThrowText: 'None or Will negates (object)',
+    spellResistance: false,
+    spellResistanceDetail: 'object',
     concentration: false,
     ritual: false,
     description:
@@ -922,10 +1074,11 @@ export const level7Spells: Spell[] = [
     name: 'Shadow Evocation',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/shadowEvocation.htm',
     level: 7,
     school: 'illusion',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -940,6 +1093,15 @@ export const level7Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    effect: 'See text',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will disbelief (if interacted with)',
+    },
+    savingThrowText: 'Will disbelief (if interacted with)',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -955,6 +1117,7 @@ export const level7Spells: Spell[] = [
     name: 'Summon Monster VII',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/summonMonsterVII.htm',
     level: 7,
     school: 'conjuration',
     castingTime: {
@@ -987,6 +1150,7 @@ export const level7Spells: Spell[] = [
     name: 'Summon Monster VII',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/summonMonsterVII.htm',
     level: 7,
     school: 'conjuration',
     castingTime: {
@@ -1023,6 +1187,7 @@ export const level7Spells: Spell[] = [
     name: "Summon Nature's Ally VII",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/summonNaturesAllyVII.htm',
     level: 7,
     school: 'conjuration',
     castingTime: {
@@ -1042,6 +1207,7 @@ export const level7Spells: Spell[] = [
       type: 'rounds',
       rounds: 1,
     },
+    effect: 'One or more creatures, no two of which can be more than 30 ft. apart',
     concentration: false,
     ritual: false,
     description: 'Calls creature to fight.',
@@ -1055,10 +1221,11 @@ export const level7Spells: Spell[] = [
     name: 'Sunbeam',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/sunbeam.htm',
     level: 7,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1069,11 +1236,21 @@ export const level7Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    area: 'Line from your hand',
+    savingThrowText: 'Reflex negates and Reflex half; see text',
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+      description: 'Reflex negates and Reflex half; see text',
+    },
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Beam blinds and deals 4d6 damage.',
@@ -1087,10 +1264,11 @@ export const level7Spells: Spell[] = [
     name: 'Sunbeam',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/sunbeam.htm',
     level: 7,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1105,13 +1283,17 @@ export const level7Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
-      materialDescription: 'Sunstone and fire source',
+      material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    area: 'Line from your hand',
+    savingThrowText: 'Reflex negates and Reflex half; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -1127,6 +1309,7 @@ export const level7Spells: Spell[] = [
     savingThrow: {
       attribute: 'dex',
       success: 'half',
+      description: 'Reflex negates and Reflex half; see text',
     },
     classes: ['druid'],
     levelsByClass: {
@@ -1138,6 +1321,7 @@ export const level7Spells: Spell[] = [
     name: 'Symbol of Stunning',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/symbolOfStunning.htm',
     level: 7,
     school: 'enchantment',
     castingTime: {
@@ -1152,10 +1336,18 @@ export const level7Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription:
+        'Mercury and phosphorus, plus powdered diamond and opal with a total value of at least 5,000 gp.',
     },
     duration: {
       type: 'permanent',
     },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates',
+    },
+    savingThrowText: 'Will negates',
     concentration: false,
     ritual: false,
     description: 'Triggered rune stuns nearby creatures.',
@@ -1169,6 +1361,7 @@ export const level7Spells: Spell[] = [
     name: 'Symbol of Weakness',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/symbolOfWeakness.htm',
     level: 7,
     school: 'necromancy',
     castingTime: {
@@ -1183,6 +1376,8 @@ export const level7Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription:
+        'Mercury and phosphorus, plus powdered diamond and opal with a total value of at least 5,000 gp.',
     },
     duration: {
       type: 'permanent',
@@ -1200,6 +1395,7 @@ export const level7Spells: Spell[] = [
     name: 'Teleport, Greater',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/teleportGreater.htm',
     level: 7,
     school: 'conjuration',
     castingTime: {
@@ -1232,10 +1428,11 @@ export const level7Spells: Spell[] = [
     name: 'Transmute Metal to Wood',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/transmuteMetalToWood.htm',
     level: 7,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1246,10 +1443,15 @@ export const level7Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'instant',
     },
+    area: 'All metal objects within a 40-ft.-radius burst',
+    savingThrowText: 'None',
+    spellResistance: true,
+    spellResistanceDetail: 'object',
     concentration: false,
     ritual: false,
     description: 'Metal within 40 ft. becomes wood.',
@@ -1263,10 +1465,11 @@ export const level7Spells: Spell[] = [
     name: 'True Seeing',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/trueSeeing.htm',
     level: 7,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1276,11 +1479,23 @@ export const level7Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription:
+        'An ointment for the eyes that costs 250 gp and is made from mushroom powder, saffron, and fat.',
+      materialCost: 250,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'Creature touched',
+    savingThrowText: 'Will negates (harmless)',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: 'Lets you see all things as they really are.',
@@ -1294,10 +1509,11 @@ export const level7Spells: Spell[] = [
     name: 'Wind Walk',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/windWalk.htm',
     level: 7,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1307,11 +1523,21 @@ export const level7Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'hours',
       hours: 1,
     },
+    target: 'You and one touched creature per three levels',
+    savingThrowText: 'No and Will negates (harmless)',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'No and Will negates (harmless)',
+    },
+    spellResistance: false,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: 'You and your allies turn vaporous and travel fast.',
@@ -1325,10 +1551,11 @@ export const level7Spells: Spell[] = [
     name: 'Word of Chaos',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/wordOfChaos.htm',
     level: 7,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1343,6 +1570,15 @@ export const level7Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    area: 'Nonchaotic creatures in a 40-ft.- radius spread centered on you',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'special',
+      description: 'None or Will negates; see text',
+    },
+    savingThrowText: 'None or Will negates; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Kills, confuses, stuns, or deafens nonchaotic subjects.',

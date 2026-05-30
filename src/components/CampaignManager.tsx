@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { Button } from './ui/Button';
 import { Badge } from './ui/Badge';
+import { Select } from './ui/Select';
 import type { Campaign } from '../types/core/campaign';
 import type { CharacterDocument, SystemDataModel } from '../types/core/document';
 import { systemRegistry } from '../registry';
@@ -41,15 +42,18 @@ export const CampaignManager: React.FC<Props> = ({
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [creatingNew, setCreatingNew] = useState(false);
   const [newName, setNewName] = useState('');
+  const [newSystemId, setNewSystemId] = useState('all');
   const [addingCharTo, setAddingCharTo] = useState<string | null>(null);
 
   const documentMap = useMemo(() => new Map(documents.map((d) => [d.id, d])), [documents]);
+  const systemOptions = useMemo(() => systemRegistry.getAll(), []);
 
   const handleCreate = () => {
     if (!newName.trim()) return;
     const campaign: Campaign = {
       id: generateUUID(),
       name: newName.trim(),
+      systemId: newSystemId === 'all' ? undefined : newSystemId,
       characterIds: [],
       notes: '',
       createdAt: new Date(),
@@ -57,12 +61,16 @@ export const CampaignManager: React.FC<Props> = ({
     };
     onAddCampaign(campaign);
     setNewName('');
+    setNewSystemId('all');
     setCreatingNew(false);
     setExpandedId(campaign.id);
   };
 
   const availableCharacters = (campaign: Campaign) =>
-    documents.filter((d) => !campaign.characterIds.includes(d.id));
+    documents.filter((d) => {
+      if (campaign.characterIds.includes(d.id)) return false;
+      return !campaign.systemId || d.systemId === campaign.systemId;
+    });
 
   return (
     <section className="space-y-4">
@@ -86,7 +94,7 @@ export const CampaignManager: React.FC<Props> = ({
 
       {/* New campaign form */}
       {creatingNew && (
-        <div className="flex items-center gap-2 p-3 rounded-lg border bg-card">
+        <div className="grid gap-2 p-3 rounded-lg border bg-card sm:grid-cols-[minmax(0,1fr)_minmax(12rem,16rem)_auto_auto] sm:items-center">
           <input
             autoFocus
             value={newName}
@@ -96,8 +104,20 @@ export const CampaignManager: React.FC<Props> = ({
               if (e.key === 'Escape') setCreatingNew(false);
             }}
             placeholder="Campaign name..."
-            className="flex-1 px-3 py-1.5 text-sm border border-input rounded bg-transparent focus:outline-none focus:border-primary"
+            className="h-10 min-w-0 px-3 py-2 text-sm border border-input rounded bg-transparent focus:outline-none focus:border-primary"
           />
+          <Select
+            aria-label="Campaign system"
+            value={newSystemId}
+            onChange={(e) => setNewSystemId(e.target.value)}
+          >
+            <option value="all">All systems</option>
+            {systemOptions.map((system) => (
+              <option key={system.id} value={system.id}>
+                {system.label}
+              </option>
+            ))}
+          </Select>
           <Button size="sm" onClick={handleCreate} disabled={!newName.trim()}>
             Create
           </Button>
@@ -107,6 +127,7 @@ export const CampaignManager: React.FC<Props> = ({
             onClick={() => {
               setCreatingNew(false);
               setNewName('');
+              setNewSystemId('all');
             }}
           >
             <X className="w-4 h-4" />
@@ -118,10 +139,21 @@ export const CampaignManager: React.FC<Props> = ({
       <div className="space-y-2">
         {campaigns.map((campaign) => {
           const isExpanded = expandedId === campaign.id;
+          const campaignSystem = campaign.systemId
+            ? systemRegistry.get(campaign.systemId)
+            : undefined;
           const members = campaign.characterIds
             .map((id) => documentMap.get(id))
             .filter(Boolean) as CharacterDocument<SystemDataModel>[];
           const available = availableCharacters(campaign);
+          const eligibleCharacterCount = documents.filter(
+            (doc) => !campaign.systemId || doc.systemId === campaign.systemId
+          ).length;
+          const noAvailableCharactersMessage = campaign.systemId
+            ? eligibleCharacterCount === 0
+              ? `No ${campaignSystem?.label ?? 'matching system'} characters are available.`
+              : `All ${campaignSystem?.label ?? 'matching system'} characters are already in this campaign.`
+            : 'All characters are already in this campaign.';
 
           return (
             <div
@@ -144,6 +176,14 @@ export const CampaignManager: React.FC<Props> = ({
                     <span className="ml-2 text-xs text-muted-foreground">
                       {members.length} member{members.length !== 1 ? 's' : ''}
                     </span>
+                    {campaignSystem && (
+                      <Badge
+                        variant="outline"
+                        className="ml-2 text-[10px] px-1.5 py-0 align-middle"
+                      >
+                        {campaignSystem.label}
+                      </Badge>
+                    )}
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0">
@@ -170,6 +210,29 @@ export const CampaignManager: React.FC<Props> = ({
               {/* Expanded content */}
               {isExpanded && (
                 <div className="border-t px-4 pb-4 pt-3 space-y-4">
+                  <div className="space-y-1.5">
+                    <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                      System
+                    </div>
+                    <Select
+                      aria-label={`System for ${campaign.name}`}
+                      value={campaign.systemId ?? 'all'}
+                      onChange={(e) =>
+                        onUpdateCampaign({
+                          ...campaign,
+                          systemId: e.target.value === 'all' ? undefined : e.target.value,
+                        })
+                      }
+                    >
+                      <option value="all">All systems</option>
+                      {systemOptions.map((system) => (
+                        <option key={system.id} value={system.id}>
+                          {system.label}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+
                   {/* Party members */}
                   {members.length > 0 ? (
                     <div className="space-y-1.5">
@@ -226,7 +289,7 @@ export const CampaignManager: React.FC<Props> = ({
                       </div>
                       {available.length === 0 ? (
                         <p className="text-xs text-muted-foreground italic">
-                          All characters are already in this campaign.
+                          {noAvailableCharactersMessage}
                         </p>
                       ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 max-h-48 overflow-y-auto">

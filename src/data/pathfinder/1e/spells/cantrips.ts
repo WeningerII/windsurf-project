@@ -6,10 +6,11 @@ export const cantrips: Spell[] = [
     name: 'Acid Splash',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Acid%20Splash',
     level: 0,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -24,6 +25,8 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    effect: 'one missile of acid',
+    savingThrowText: 'none',
     attackRoll: true,
     damage: {
       base: {
@@ -48,10 +51,11 @@ export const cantrips: Spell[] = [
     name: 'Arcane Mark',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Arcane%20Mark',
     level: 0,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -65,6 +69,8 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'permanent',
     },
+    effect: 'one personal rune or mark, all of which must fit within 1 sq. ft.',
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:
@@ -80,10 +86,11 @@ export const cantrips: Spell[] = [
     name: 'Bleed',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Bleed',
     level: 0,
     school: 'necromancy',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -98,10 +105,13 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'one living creature',
     savingThrow: {
-      attribute: 'con',
+      attribute: 'wis',
       success: 'none',
+      description: 'Will negates',
     },
+    savingThrowText: 'Will negates',
     concentration: false,
     ritual: false,
     description:
@@ -118,10 +128,11 @@ export const cantrips: Spell[] = [
     name: 'Dancing Lights',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Dancing%20Lights',
     level: 0,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -130,13 +141,15 @@ export const cantrips: Spell[] = [
     },
     components: {
       verbal: true,
-      somatic: false,
+      somatic: true,
       material: false,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    effect: 'up to four lights, all within a 10-ft.-radius area',
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:
@@ -153,10 +166,11 @@ export const cantrips: Spell[] = [
     name: 'Daze',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Daze',
     level: 0,
     school: 'enchantment',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -167,15 +181,19 @@ export const cantrips: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'a pinch of wool or similar substance',
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    target: 'one humanoid creature of 4 HD or less',
     savingThrow: {
       attribute: 'wis',
       success: 'none',
+      description: 'Will negates',
     },
+    savingThrowText: 'Will negates',
     concentration: false,
     ritual: false,
     description:
@@ -192,10 +210,11 @@ export const cantrips: Spell[] = [
     name: 'Detect Magic',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Detect%20Magic',
     level: 0,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -214,6 +233,8 @@ export const cantrips: Spell[] = [
       type: 'cone',
       feet: 60,
     },
+    area: 'cone-shaped emanation',
+    savingThrowText: 'none',
     concentration: true,
     ritual: false,
     description:
@@ -232,10 +253,11 @@ export const cantrips: Spell[] = [
     name: 'Detect Poison',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Detect%20Poison',
     level: 0,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -250,6 +272,8 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'or Area one creature, one object, or a 5-ft. cube',
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:
@@ -266,10 +290,11 @@ export const cantrips: Spell[] = [
     name: 'Disrupt Undead',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Disrupt%20Undead',
     level: 0,
     school: 'necromancy',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -284,6 +309,8 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    effect: 'ray',
+    savingThrowText: 'none',
     attackRoll: true,
     damage: {
       base: {
@@ -308,10 +335,11 @@ export const cantrips: Spell[] = [
     name: 'Flare',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Flare',
     level: 0,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -319,17 +347,20 @@ export const cantrips: Spell[] = [
       feet: 25,
     },
     components: {
-      verbal: false,
+      verbal: true,
       somatic: false,
       material: false,
     },
     duration: {
       type: 'instant',
     },
+    effect: 'burst of light',
     savingThrow: {
-      attribute: 'dex',
+      attribute: 'con',
       success: 'none',
+      description: 'Fortitude negates',
     },
+    savingThrowText: 'Fortitude negates',
     concentration: false,
     ritual: false,
     description:
@@ -347,10 +378,11 @@ export const cantrips: Spell[] = [
     name: 'Ghost Sound',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Ghost%20Sound',
     level: 0,
     school: 'illusion',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -361,15 +393,19 @@ export const cantrips: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'a bit of wool or a small lump of wax',
     },
     duration: {
       type: 'concentration',
       maxDuration: '1 round per level',
     },
+    effect: 'illusory sounds',
     savingThrow: {
       attribute: 'wis',
       success: 'none',
+      description: 'Will disbelief',
     },
+    savingThrowText: 'Will disbelief',
     concentration: true,
     ritual: false,
     description:
@@ -386,10 +422,11 @@ export const cantrips: Spell[] = [
     name: 'Guidance',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Guidance',
     level: 0,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -404,6 +441,13 @@ export const cantrips: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    target: 'creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
     concentration: false,
     ritual: false,
     description:
@@ -419,10 +463,11 @@ export const cantrips: Spell[] = [
     name: 'Know Direction',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Know%20Direction',
     level: 0,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -436,6 +481,7 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'you',
     concentration: false,
     ritual: false,
     description:
@@ -451,10 +497,11 @@ export const cantrips: Spell[] = [
     name: 'Light',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Light',
     level: 0,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -464,11 +511,15 @@ export const cantrips: Spell[] = [
       verbal: true,
       somatic: false,
       material: true,
+      materialDescription: 'a firefly',
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'object touched',
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:
@@ -487,10 +538,11 @@ export const cantrips: Spell[] = [
     name: 'Mage Hand',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Mage%20Hand',
     level: 0,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -506,6 +558,8 @@ export const cantrips: Spell[] = [
       type: 'concentration',
       maxDuration: '1 minute per level',
     },
+    target: 'one nonmagical, unattended object weighing up to 5 lbs.',
+    savingThrowText: 'none',
     concentration: true,
     ritual: false,
     description:
@@ -522,6 +576,7 @@ export const cantrips: Spell[] = [
     name: 'Mending',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Mending',
     level: 0,
     school: 'transmutation',
     castingTime: {
@@ -539,6 +594,13 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'one object up to 1 lb./level',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless, object)',
+    },
+    savingThrowText: 'Will negates (harmless, object)',
     concentration: false,
     ritual: false,
     description:
@@ -557,10 +619,11 @@ export const cantrips: Spell[] = [
     name: 'Message',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Message',
     level: 0,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -570,12 +633,16 @@ export const cantrips: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
+      material: false,
+      focus: true,
+      focusDescription: 'a piece of copper wire',
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'one creature/level',
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:
@@ -592,10 +659,11 @@ export const cantrips: Spell[] = [
     name: 'Open/Close',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Open%2FClose',
     level: 0,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -605,11 +673,20 @@ export const cantrips: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
+      material: false,
+      focus: true,
+      focusDescription: 'a brass key',
     },
     duration: {
       type: 'instant',
     },
+    target: 'object weighing up to 30 lbs. or portal that can be opened or closed',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (object)',
+    },
+    savingThrowText: 'Will negates (object)',
     concentration: false,
     ritual: false,
     description:
@@ -626,10 +703,11 @@ export const cantrips: Spell[] = [
     name: 'Prestidigitation',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Prestidigitation',
     level: 0,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -645,6 +723,7 @@ export const cantrips: Spell[] = [
       type: 'hours',
       hours: 1,
     },
+    savingThrowText: 'see text',
     concentration: false,
     ritual: false,
     description:
@@ -661,10 +740,11 @@ export const cantrips: Spell[] = [
     name: 'Purify Food and Drink',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Purify%20Food%20and%20Drink',
     level: 0,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -679,6 +759,13 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: '1 cu. ft./level of contaminated food and water',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (object)',
+    },
+    savingThrowText: 'Will negates (object)',
     concentration: false,
     ritual: false,
     description:
@@ -694,10 +781,11 @@ export const cantrips: Spell[] = [
     name: 'Ray of Frost',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Ray%20of%20Frost',
     level: 0,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -712,6 +800,8 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    effect: 'ray',
+    savingThrowText: 'none',
     attackRoll: true,
     damage: {
       base: {
@@ -736,10 +826,11 @@ export const cantrips: Spell[] = [
     name: 'Read Magic',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Read%20Magic',
     level: 0,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -748,12 +839,15 @@ export const cantrips: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
+      material: false,
+      focus: true,
+      focusDescription: 'a clear crystal or mineral prism',
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'you',
     concentration: false,
     ritual: false,
     description:
@@ -773,10 +867,11 @@ export const cantrips: Spell[] = [
     name: 'Resistance',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Resistance',
     level: 0,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -786,11 +881,20 @@ export const cantrips: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'a miniature cloak',
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
     concentration: false,
     ritual: false,
     description:
@@ -809,10 +913,11 @@ export const cantrips: Spell[] = [
     name: 'Stabilize',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Stabilize',
     level: 0,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -827,6 +932,13 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'one living creature',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
     concentration: false,
     ritual: false,
     description:
@@ -842,10 +954,11 @@ export const cantrips: Spell[] = [
     name: 'Touch of Fatigue',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Touch%20of%20Fatigue',
     level: 0,
     school: 'necromancy',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -855,15 +968,19 @@ export const cantrips: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'a drop of sweat',
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    target: 'creature touched',
     savingThrow: {
       attribute: 'con',
       success: 'none',
+      description: 'Fortitude negates',
     },
+    savingThrowText: 'Fortitude negates',
     concentration: false,
     ritual: false,
     description:
@@ -879,10 +996,11 @@ export const cantrips: Spell[] = [
     name: 'Virtue',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Virtue',
     level: 0,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -891,12 +1009,15 @@ export const cantrips: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
+      material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'creature touched',
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:

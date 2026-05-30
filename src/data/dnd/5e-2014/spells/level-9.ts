@@ -54,6 +54,7 @@ export const level9Spells: Spell[] = [
       materialConsumed: true,
     },
     duration: { type: 'instant' },
+    target: '1 creature you touch',
     concentration: false,
     ritual: false,
     description:

@@ -633,7 +633,7 @@ describe('System Sheets', () => {
     });
   });
 
-  it('applies 5e-2014 feature options from the shared sheet features tab', async () => {
+  it('persists 5e-2014 feature options through shared sheet rerenders', async () => {
     const user = userEvent.setup();
     const onUpdate = vi.fn();
     const loadFeatureOptionsSpy = vi
@@ -653,14 +653,21 @@ describe('System Sheets', () => {
     const system = createDefaultDnd5eData();
     system.classLevels = [{ classId: 'warlock', level: 3, hitDieRolls: [8, 5, 5] }];
     system.level = 3;
-    const doc = makeDoc('dnd-5e-2014', system);
+    let currentDoc = makeDoc('dnd-5e-2014', system) as CharacterDocument<
+      ReturnType<typeof createDefaultDnd5eData>
+    >;
 
-    render(
-      <Dnd5eSheet
-        document={doc as CharacterDocument<ReturnType<typeof createDefaultDnd5eData>>}
-        onUpdate={onUpdate}
-      />
-    );
+    const { rerender } = render(<Dnd5eSheet document={currentDoc} onUpdate={onUpdate} />);
+
+    const applyLatestUpdate = () => {
+      const updatedDoc = onUpdate.mock.calls.at(-1)?.[0] as CharacterDocument<
+        ReturnType<typeof createDefaultDnd5eData>
+      >;
+      expect(updatedDoc).toBeDefined();
+      currentDoc = updatedDoc;
+      onUpdate.mockClear();
+      rerender(<Dnd5eSheet document={currentDoc} onUpdate={onUpdate} />);
+    };
 
     const featuresTab = screen.getByRole('tab', { name: /features/i });
     fireEvent.focus(featuresTab);
@@ -677,15 +684,13 @@ describe('System Sheets', () => {
     await waitFor(() => {
       expect(onUpdate).toHaveBeenCalled();
     });
+    applyLatestUpdate();
     expect(loadFeatureOptionsSpy).toHaveBeenCalledTimes(1);
 
-    const updatedDoc = onUpdate.mock.calls.at(-1)?.[0] as CharacterDocument<
-      ReturnType<typeof createDefaultDnd5eData>
-    >;
-    expect(updatedDoc.system.featureOptionSelections).toEqual([
+    expect(currentDoc.system.featureOptionSelections).toEqual([
       { id: 'agonizing-blast', group: 'invocations' },
     ]);
-    expect(updatedDoc.system.features).toEqual(
+    expect(currentDoc.system.features).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           id: 'feature-option:invocations:agonizing-blast',
@@ -694,6 +699,46 @@ describe('System Sheets', () => {
         }),
       ])
     );
+
+    const selectedFeatureOptionsSection = screen
+      .getByText('Selected Feature Options')
+      .closest('section');
+    expect(selectedFeatureOptionsSection).toBeTruthy();
+    expect(within(selectedFeatureOptionsSection!).getByText('Agonizing Blast')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Add Agonizing Blast' }));
+    await waitFor(() => {
+      expect(onUpdate).toHaveBeenCalled();
+    });
+    applyLatestUpdate();
+
+    expect(currentDoc.system.featureOptionSelections).toEqual([
+      { id: 'agonizing-blast', group: 'invocations' },
+    ]);
+    expect(
+      currentDoc.system.features.filter(
+        (feature) => feature.id === 'feature-option:invocations:agonizing-blast'
+      )
+    ).toHaveLength(1);
+
+    const selectedFeatureOptionsSectionAfterDuplicate = screen
+      .getByText('Selected Feature Options')
+      .closest('section');
+    expect(selectedFeatureOptionsSectionAfterDuplicate).toBeTruthy();
+    await user.click(
+      within(selectedFeatureOptionsSectionAfterDuplicate!).getByRole('button', { name: 'Remove' })
+    );
+    await waitFor(() => {
+      expect(onUpdate).toHaveBeenCalled();
+    });
+    applyLatestUpdate();
+
+    expect(currentDoc.system.featureOptionSelections).toEqual([]);
+    expect(
+      currentDoc.system.features.some(
+        (feature) => feature.id === 'feature-option:invocations:agonizing-blast'
+      )
+    ).toBe(false);
   });
 
   it('warms and renders the extracted shared 5e feat browser tab', async () => {
@@ -1365,6 +1410,7 @@ describe('System Sheets', () => {
 
     expect(screen.getByText('D&D 3.5e')).toBeInTheDocument();
     expect(screen.getByText('AC')).toBeInTheDocument();
+    expect(screen.queryByRole('tab', { name: /monsters/i })).not.toBeInTheDocument();
 
     await user.click(screen.getByTitle('Add class'));
     await waitFor(() => {
@@ -1614,6 +1660,19 @@ describe('System Sheets', () => {
     await waitFor(() => {
       expect(dataLoader.loadSpellsForSystem).toHaveBeenCalledWith('dnd-3.5e');
     });
+
+    expect(
+      screen.getByText('Cleric and druid domain slots are applied manually.')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('Wizard specialist-school bonus slots are applied manually.')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('Spontaneous cure/inflict conversion is applied manually.')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('Dragon Disciple bonus arcane slots are applied manually.')
+    ).toBeInTheDocument();
 
     await user.click(await screen.findByRole('button', { name: 'Learn Magic Missile' }));
     await waitFor(() => {
@@ -1998,6 +2057,106 @@ describe('System Sheets', () => {
     await waitFor(() => {
       expect(loadArchetypesSpy).toHaveBeenCalledWith('pf2e');
     });
+  });
+
+  it('persists PF2e archetype selections through sheet rerenders', async () => {
+    const user = userEvent.setup();
+    const onUpdate = vi.fn();
+    const wizardDedication = {
+      id: 'wizard-dedication',
+      name: 'Wizard Dedication',
+      system: 'pf2e',
+      source: 'Core Rulebook',
+      parentClassId: 'wizard',
+      description: 'A spellcasting archetype.',
+      features: [
+        {
+          level: 2,
+          name: 'Dedication Spellcasting',
+          description: 'You gain basic wizard spellcasting.',
+        },
+      ],
+    };
+
+    vi.spyOn(dataLoader, 'loadClassesForSystem').mockResolvedValue([]);
+    vi.spyOn(dataLoader, 'loadSpeciesForSystem').mockResolvedValue([]);
+    vi.spyOn(dataLoader, 'loadPf2eBackgroundsForSystem').mockResolvedValue([]);
+    const loadArchetypesSpy = vi
+      .spyOn(dataLoader, 'loadArchetypesForSystem')
+      .mockResolvedValue([wizardDedication as never]);
+
+    let currentDoc = makeDoc('pf2e', {
+      ...createDefaultPf2eData(),
+      classId: 'wizard',
+    }) as CharacterDocument<ReturnType<typeof createDefaultPf2eData>>;
+
+    const { rerender } = render(<Pf2eCharacterSheet document={currentDoc} onUpdate={onUpdate} />);
+
+    const applyLatestUpdate = () => {
+      const updatedDoc = onUpdate.mock.calls.at(-1)?.[0] as CharacterDocument<
+        ReturnType<typeof createDefaultPf2eData>
+      >;
+      expect(updatedDoc).toBeDefined();
+      currentDoc = updatedDoc;
+      onUpdate.mockClear();
+      rerender(<Pf2eCharacterSheet document={currentDoc} onUpdate={onUpdate} />);
+    };
+
+    const archetypesTab = screen.getByRole('tab', { name: /archetypes/i });
+    fireEvent.focus(archetypesTab);
+    fireEvent.pointerEnter(archetypesTab);
+
+    await waitFor(
+      () => {
+        expect(loadArchetypesSpy).toHaveBeenCalledWith('pf2e');
+      },
+      { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS }
+    );
+
+    await user.click(archetypesTab);
+    expect(
+      await screen.findByText('Wizard Dedication', {}, { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS })
+    ).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Add' }));
+    await waitFor(
+      () => {
+        expect(onUpdate).toHaveBeenCalled();
+      },
+      { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS }
+    );
+    applyLatestUpdate();
+
+    expect(currentDoc.system.selectedArchetypeIds).toEqual(['wizard-dedication']);
+    expect(currentDoc.system.features).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: 'wizard-dedication:2:dedication-spellcasting',
+          source: 'Archetype: Wizard Dedication',
+        }),
+      ])
+    );
+
+    const selectedArchetypesSection = screen.getByText('Selected Archetypes').closest('section');
+    expect(selectedArchetypesSection).toBeTruthy();
+    expect(within(selectedArchetypesSection!).getByText('Wizard Dedication')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'Remove' }));
+    await waitFor(
+      () => {
+        expect(onUpdate).toHaveBeenCalled();
+      },
+      { timeout: HEAVY_SHEET_WAIT_TIMEOUT_MS }
+    );
+    applyLatestUpdate();
+
+    expect(currentDoc.system.selectedArchetypeIds).toEqual([]);
+    expect(
+      currentDoc.system.features.some(
+        (feature) => feature.id === 'wizard-dedication:2:dedication-spellcasting'
+      )
+    ).toBe(false);
+    expect(screen.getByText('No archetypes selected.')).toBeInTheDocument();
   });
 
   it(

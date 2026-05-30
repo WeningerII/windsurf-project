@@ -53,6 +53,8 @@ export interface CharacterClass {
   spellcasting?: SpellcastingProgression;
   d20SpellcastingAdvancement?: D20SpellcastingAdvancement;
   alwaysPreparedSpells?: AlwaysPreparedSpellGrant[];
+  alwaysPreparedSpellsByLevel?: Record<number, string[]>;
+  alwaysPreparedSpellSourceLabel?: string;
 
   // Class-specific resources
   classResources?: ClassResource[];
@@ -89,6 +91,8 @@ export interface Subclass {
   features: ClassFeatureProgression[];
   spellListExpansion?: string[]; // Additional spells available
   alwaysPreparedSpells?: AlwaysPreparedSpellGrant[];
+  alwaysPreparedSpellsByLevel?: Record<number, string[]>;
+  alwaysPreparedSpellSourceLabel?: string;
 }
 
 export interface AlwaysPreparedSpellGrant {

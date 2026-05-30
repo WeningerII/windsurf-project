@@ -160,14 +160,7 @@ describe('Spell Data Validation', () => {
       const duplicateNames = getDuplicateNames(allSpells);
 
       if (systemId === 'dnd-3.5e') {
-        duplicateNames.forEach((name) => {
-          const spells = allSpells.filter((spell) => spell.name === name);
-          expect(spells.length).toBeGreaterThan(1);
-          spells.forEach((spell) => {
-            expect(spell.levelsByClass).toBeTruthy();
-            expect(Object.keys(spell.levelsByClass ?? {}).length).toBeGreaterThan(0);
-          });
-        });
+        expect(duplicateNames).toEqual([]);
         return;
       }
 
@@ -264,6 +257,196 @@ describe('Spell Data Validation', () => {
     );
   });
 
+  it('merges purely-level-divergent 3.5e class-split variants and preserves per-class levels', () => {
+    const cureModerate = dnd35eSpellsModule.getSpell('cure-moderate-wounds-cleric-35e');
+    expect(cureModerate?.level).toBe(2);
+    expect(cureModerate?.classes).toEqual(['cleric', 'druid']);
+    expect(cureModerate?.levelsByClass).toMatchObject({ cleric: 2, druid: 3 });
+
+    const druidAlias = dnd35eSpellsModule.spellIdAliases['cure-moderate-wounds-druid-35e'];
+    expect(druidAlias).toBe('cure-moderate-wounds-cleric-35e');
+    expect(dnd35eSpellsModule.getSpell('cure-moderate-wounds-druid-35e')?.id).toBe(
+      'cure-moderate-wounds-cleric-35e'
+    );
+
+    const heal = dnd35eSpellsModule.getSpell('heal-cleric-35e');
+    expect(heal?.level).toBe(6);
+    expect(heal?.levelsByClass).toMatchObject({ cleric: 6, druid: 7 });
+    expect(dnd35eSpellsModule.getSpell('heal-druid-35e')?.id).toBe('heal-cleric-35e');
+
+    const levelDivergentAliases: Record<
+      string,
+      { canonical: string; levelsByClass: Record<string, number> }
+    > = {
+      'fire-trap-druid-35e': {
+        canonical: 'fire-trap-35e',
+        levelsByClass: { druid: 2, sorcerer: 4, wizard: 4 },
+      },
+      'animate-dead-cleric-35e': {
+        canonical: 'animate-dead-35e',
+        levelsByClass: { cleric: 3, sorcerer: 4, wizard: 4 },
+      },
+      'bestow-curse-cleric-35e': {
+        canonical: 'bestow-curse-35e',
+        levelsByClass: { cleric: 3, sorcerer: 4, wizard: 4 },
+      },
+      'contagion-druid-35e': {
+        canonical: 'contagion-35e',
+        levelsByClass: { cleric: 3, druid: 3, sorcerer: 4, wizard: 4 },
+      },
+      'stone-shape-druid-35e': {
+        canonical: 'stone-shape-35e',
+        levelsByClass: { cleric: 3, druid: 3, sorcerer: 4, wizard: 4 },
+      },
+      'tongues-cleric-35e': {
+        canonical: 'tongues-35e',
+        levelsByClass: { bard: 3, cleric: 4, sorcerer: 3, wizard: 3 },
+      },
+      'dismissal-cleric-35e': {
+        canonical: 'dismissal-35e',
+        levelsByClass: { cleric: 4, sorcerer: 5, wizard: 5 },
+      },
+      'stoneskin-druid-35e': {
+        canonical: 'stoneskin-35e',
+        levelsByClass: { druid: 5, sorcerer: 4, wizard: 4 },
+      },
+      'wall-fire-druid-35e': {
+        canonical: 'wall-of-fire-35e',
+        levelsByClass: { druid: 5, sorcerer: 4, wizard: 4 },
+      },
+      'antimagic-field-cleric-35e': {
+        canonical: 'antimagic-field-35e',
+        levelsByClass: { cleric: 8, sorcerer: 6, wizard: 6 },
+      },
+      'repulsion-cleric-35e': {
+        canonical: 'repulsion-35e',
+        levelsByClass: { cleric: 7, sorcerer: 6, wizard: 6 },
+      },
+    };
+
+    Object.entries(levelDivergentAliases).forEach(([aliasId, { canonical, levelsByClass }]) => {
+      const spell = dnd35eSpellsModule.getSpell(aliasId);
+      expect(spell?.id).toBe(canonical);
+      expect(spell?.levelsByClass).toEqual(levelsByClass);
+    });
+  });
+
+  it('reconciles 3.5e school-divergent canonical/stub entries to their SRD school', () => {
+    const detectMagic = dnd35eSpellsModule.getSpell('detect-magic-35e');
+    expect(detectMagic?.school).toBe('divination');
+    expect(dnd35eSpellsModule.getSpell('detect-magic-druid-35e')?.id).toBe('detect-magic-35e');
+
+    const removeDisease = dnd35eSpellsModule.getSpell('remove-disease-35e');
+    expect(removeDisease?.school).toBe('conjuration');
+    expect(dnd35eSpellsModule.getSpell('remove-disease-druid-35e')?.id).toBe('remove-disease-35e');
+
+    const detectPoison = dnd35eSpellsModule.getSpell('detect-poison-35e');
+    expect(detectPoison?.school).toBe('divination');
+    expect(dnd35eSpellsModule.getSpell('detect-poison-druid-35e')?.id).toBe('detect-poison-35e');
+
+    const light = dnd35eSpellsModule.getSpell('light-35e');
+    expect(light?.school).toBe('evocation');
+    expect(dnd35eSpellsModule.getSpell('light-cleric-35e')?.id).toBe('light-35e');
+    expect(dnd35eSpellsModule.getSpell('light-druid-35e')?.id).toBe('light-35e');
+  });
+
+  it('collapses 3.5e description stubs into the canonical spell entry', () => {
+    const stubAliases: Record<string, string> = {
+      'mending-druid-35e': 'mending-35e',
+      'read-magic-druid-35e': 'read-magic-35e',
+      'hold-person-cleric-35e': 'hold-person-35e',
+      'dispel-magic-cleric-35e': 'dispel-magic-35e',
+      'summon-monster-iii-cleric-35e': 'summon-monster-3-35e',
+      'death-ward-cleric-35e': 'death-ward-35e',
+      'dimensional-anchor-cleric-35e': 'dimensional-anchor-35e',
+      'divination-cleric-35e': 'divination-35e',
+      'freedom-movement-druid-35e': 'freedom-of-movement-35e',
+      'ice-storm-druid-35e': 'ice-storm-35e',
+      'scrying-druid-35e': 'scrying-35e',
+      'spell-immunity-cleric-35e': 'spell-immunity-35e',
+      'spell-resistance-cleric-35e': 'spell-resistance-35e',
+      'summon-monster-v-cleric-35e': 'summon-monster-5-35e',
+      'true-seeing-cleric-35e': 'true-seeing-6-35e',
+      'true-seeing-35e': 'true-seeing-6-35e',
+      'bears-endurance-mass-druid-35e': 'bears-endurance-mass-35e',
+      'create-undead-cleric-35e': 'create-undead-35e',
+      'dispel-magic-greater-cleric-35e': 'dispel-magic-greater-6-35e',
+      'find-path-druid-35e': 'find-the-path-35e',
+      'geas-quest-cleric-35e': 'geas-quest-35e',
+      'harm-cleric-35e': 'harm-35e',
+      'heroes-feast-cleric-35e': 'heroes-feast-35e',
+      'move-earth-druid-35e': 'move-earth-35e',
+      'symbol-fear-cleric-35e': 'symbol-of-fear-35e',
+      'symbol-persuasion-cleric-35e': 'symbol-of-persuasion-35e',
+      'undeath-death-cleric-35e': 'undeath-to-death-35e',
+      'sunbeam-druid-35e': 'sunbeam-35e',
+      'discern-location-cleric-35e': 'discern-location-35e',
+      'foresight-druid-35e': 'foresight-35e',
+    };
+
+    Object.entries(stubAliases).forEach(([aliasId, canonicalId]) => {
+      expect(dnd35eSpellsModule.getSpell(aliasId)?.id).toBe(canonicalId);
+    });
+
+    expect(dnd35eSpellsModule.getSpell('read-magic-druid-35e')?.classes).toEqual([
+      'bard',
+      'cleric',
+      'druid',
+      'paladin',
+      'ranger',
+      'sorcerer',
+      'wizard',
+    ]);
+    expect(dnd35eSpellsModule.getSpell('true-seeing-cleric-35e')?.levelsByClass).toEqual({
+      cleric: 5,
+      druid: 7,
+      sorcerer: 5,
+      wizard: 5,
+    });
+  });
+
+  it('records explicit 3.5e unknown-divergent duplicate resolutions', () => {
+    const manuallyResolvedAliases: Record<
+      string,
+      { canonical: string; levelsByClass: Record<string, number> }
+    > = {
+      'flare-druid-35e': {
+        canonical: 'flare-35e',
+        levelsByClass: { druid: 0, sorcerer: 0, wizard: 0 },
+      },
+      'protection-energy-druid-35e': {
+        canonical: 'protection-from-energy-35e',
+        levelsByClass: { cleric: 3, druid: 3, ranger: 3, sorcerer: 3, wizard: 3 },
+      },
+      'chain-lightning-35e': {
+        canonical: 'chain-lightning-6-35e',
+        levelsByClass: { sorcerer: 6, wizard: 6 },
+      },
+      'suggestion-mass-8-35e': {
+        canonical: 'suggestion-mass-35e',
+        levelsByClass: { bard: 6, sorcerer: 6, wizard: 6 },
+      },
+      'summon-monster-vii-cleric-35e': {
+        canonical: 'summon-monster-7-35e',
+        levelsByClass: { bard: 7, cleric: 7, sorcerer: 7, wizard: 7 },
+      },
+      'gate-cleric-35e': {
+        canonical: 'gate-35e',
+        levelsByClass: { cleric: 9, sorcerer: 9, wizard: 9 },
+      },
+      'shapechange-druid-35e': {
+        canonical: 'shapechange-35e',
+        levelsByClass: { druid: 9, wizard: 9 },
+      },
+    };
+
+    Object.entries(manuallyResolvedAliases).forEach(([aliasId, { canonical, levelsByClass }]) => {
+      const spell = dnd35eSpellsModule.getSpell(aliasId);
+      expect(spell?.id).toBe(canonical);
+      expect(spell?.levelsByClass).toEqual(levelsByClass);
+    });
+  });
+
   it('stores explicit 5e spell attack rolls in raw spell files for both editions', () => {
     [dnd5e2014SpellsModule, dnd5e2024SpellsModule].forEach((spellModule) => {
       collectRawSpells(spellModule as SpellModule, 9)
@@ -323,6 +506,19 @@ describe('Spell Data Validation', () => {
       'maze',
       'power-word-stun',
       'imprisonment',
+      'guidance',
+      'resistance',
+      'jump',
+      'longstrider',
+      'mage-armor',
+      'barkskin',
+      'darkvision',
+      'fly',
+      'revivify',
+      'bestow-curse',
+      'feign-death',
+      'beast-sense',
+      'freedom-of-movement',
     ];
     const curated5e2024MetadataIds = [
       'friends',
@@ -334,6 +530,19 @@ describe('Spell Data Validation', () => {
       'chain-lightning',
       'maze',
       'power-word-stun',
+      'resistance',
+      'spare-the-dying',
+      'jump',
+      'longstrider',
+      'mage-armor',
+      'barkskin',
+      'darkvision',
+      'beast-sense',
+      'fly',
+      'revivify',
+      'freedom-of-movement',
+      'otilukes-resilience',
+      'foresight',
     ];
     const curatedPf2eMetadataIds = ['teleport-pf2e', 'time-stop-9-pf2e', 'wish-pf2e'];
 
@@ -350,6 +559,89 @@ describe('Spell Data Validation', () => {
     curatedPf2eMetadataIds.forEach((id) => {
       const spell = getRawSpellById(pf2eSpellsModule as SpellModule, 10, id);
       expect(Boolean(spell.target || spell.effect)).toBe(true);
+    });
+  });
+
+  it('stores explicit touch targets for curated 5e touch-spell metadata', () => {
+    const curated2014TouchTargets: Record<string, string> = {
+      'spare-the-dying': '1 living creature with 0 hit points you touch',
+      'cure-wounds': '1 creature you touch',
+      mending: '1 object you touch',
+      'shocking-grasp': '1 creature you touch',
+      shillelagh: '1 club or quarterstaff you are holding',
+      identify: '1 object you touch',
+      'inflict-wounds': '1 creature you touch',
+      heroism: '1 willing creature you touch',
+      'protection-from-evil-and-good': '1 willing creature you touch',
+      invisibility: '1 creature you touch',
+      'lesser-restoration': '1 creature you touch',
+      'enhance-ability': '1 creature you touch',
+      'arcane-lock': '1 closed door, window, gate, chest, or other entryway you touch',
+      'continual-flame': '1 object you touch',
+      'gentle-repose': '1 corpse or other remains you touch',
+      'protection-from-energy': '1 willing creature you touch',
+      nondetection:
+        '1 willing creature, place, or object no larger than 10 feet in any dimension you touch',
+      'remove-curse': '1 creature or object you touch',
+      tongues: '1 creature you touch',
+      'stone-shape':
+        '1 stone object of Medium size or smaller or a section of stone no more than 5 feet in any dimension',
+      'death-ward': '1 creature you touch',
+      stoneskin: '1 willing creature you touch',
+      'raise-dead': '1 dead creature you touch',
+      'greater-restoration': '1 creature you touch',
+      'true-seeing': '1 willing creature you touch',
+      'livening-stone': '1 stone you touch',
+      resurrection: '1 dead creature you touch',
+      'true-resurrection': '1 creature you touch',
+    };
+
+    const curated2024TouchTargets: Record<string, string> = {
+      'cure-wounds': '1 creature you touch',
+      mending: '1 object you touch',
+      'shocking-grasp': '1 creature you touch',
+      shillelagh: '1 club or quarterstaff you are holding',
+      identify: '1 object you touch',
+      heroism: '1 willing creature you touch',
+      'inflict-wounds': '1 creature you touch',
+      'protection-from-evil-and-good': '1 willing creature you touch',
+      'arcane-lock': '1 closed door, window, gate, chest, or other entryway you touch',
+      'continual-flame': '1 object you touch',
+      'enhance-ability': '1 creature you touch',
+      'gentle-repose': '1 corpse or other remains you touch',
+      invisibility: '1 creature you touch',
+      'lesser-restoration': '1 creature you touch',
+      'magic-weapon': '1 nonmagical weapon you touch',
+      'protection-from-poison': '1 creature you touch',
+      'spider-climb': '1 willing creature you touch',
+      'bestow-curse': '1 creature you touch',
+      'feign-death': '1 corpse or other remains you touch',
+      'gaseous-form': '1 willing creature you touch',
+      nondetection:
+        '1 willing creature, place, or object no larger than 10 feet in any dimension you touch',
+      'protection-from-energy': '1 willing creature you touch',
+      'remove-curse': '1 creature or object you touch',
+      tongues: '1 creature you touch',
+      'death-ward': '1 creature you touch',
+      'stone-shape':
+        '1 stone object of Medium size or smaller or a section of stone no more than 5 feet in any dimension',
+      stoneskin: '1 willing creature you touch',
+      'greater-restoration': '1 creature you touch',
+      'raise-dead': '1 dead creature you touch',
+      'livening-stone': '1 stone you touch',
+      'true-seeing': '1 willing creature you touch',
+      regenerate: '1 creature you touch',
+      resurrection: '1 dead creature you touch',
+      'mind-blank': '1 willing creature you touch',
+      'true-resurrection': '1 creature you touch',
+    };
+
+    Object.entries(curated2014TouchTargets).forEach(([id, target]) => {
+      expect(getRawSpellById(dnd5e2014SpellsModule as SpellModule, 9, id).target).toBe(target);
+    });
+
+    Object.entries(curated2024TouchTargets).forEach(([id, target]) => {
+      expect(getRawSpellById(dnd5e2024SpellsModule as SpellModule, 9, id).target).toBe(target);
     });
   });
 
@@ -401,9 +693,43 @@ describe('Spell Data Validation', () => {
     });
   });
 
+  it('stores spell-resistance detail for legacy raw spells that expose spell resistance', () => {
+    [dnd35eSpellsModule, pf1eSpellsModule].forEach((spellModule) => {
+      collectRawSpells(spellModule as SpellModule, 9)
+        .filter((spell) => spell.spellResistance)
+        .forEach((spell) => {
+          expect(spell.spellResistanceDetail).toBeTruthy();
+        });
+    });
+  });
+
   it('stores traditions directly in PF2e raw spell files', () => {
     collectRawSpells(pf2eSpellsModule as SpellModule, 10).forEach((spell) => {
       expect(spell.traditions?.length).toBeGreaterThan(0);
+    });
+  });
+
+  it('stores derived PF2e spell traits directly in raw spell files', () => {
+    collectRawSpells(pf2eSpellsModule as SpellModule, 10).forEach((spell) => {
+      expect(spell.traits?.length).toBeGreaterThan(0);
+      expect(new Set(spell.traits).size).toBe(spell.traits?.length);
+      expect(spell.traits).toContain(spell.school);
+
+      if (spell.level === 0) {
+        expect(spell.traits).toContain('cantrip');
+      }
+
+      if (spell.attackRoll) {
+        expect(spell.traits).toContain('attack');
+      }
+
+      if (spell.components.verbal) {
+        expect(spell.traits).toContain('concentrate');
+      }
+
+      if (spell.components.somatic || spell.components.material) {
+        expect(spell.traits).toContain('manipulate');
+      }
     });
   });
 
@@ -411,6 +737,39 @@ describe('Spell Data Validation', () => {
     (((pf2eSpellsModule as SpellModule).cantrips as Spell[] | undefined) ?? []).forEach((spell) => {
       expect(spell.heightening).toBeTruthy();
       expect(spell.heightening?.mode).toBe('cantrip');
+    });
+  });
+
+  it('stores AoN-verified heightening for the curated PF2e CRB parity set', () => {
+    const intervalHeightening = [
+      { id: 'burning-hands-pf2e', interval: 1 },
+      { id: 'magic-missile-pf2e', interval: 2 },
+      { id: 'sound-burst-pf2e', interval: 1 },
+      { id: 'fireball-pf2e', interval: 1 },
+      { id: 'lightning-bolt-pf2e', interval: 1 },
+      { id: 'disintegrate-6-pf2e', interval: 1 },
+    ];
+    const fixedHeightening = [
+      'command-pf2e',
+      'fear-pf2e',
+      'jump-pf2e',
+      'haste-pf2e',
+      'slow-pf2e',
+      'heroism-pf2e',
+    ];
+
+    intervalHeightening.forEach(({ id, interval }) => {
+      const spell = getRawSpellById(pf2eSpellsModule as SpellModule, 10, id);
+      expect(spell.heightening, `${id} heightening`).toBeTruthy();
+      expect(spell.heightening?.mode, `${id} heightening mode`).toBe('interval');
+      expect(spell.heightening?.interval, `${id} heightening interval`).toBe(interval);
+    });
+
+    fixedHeightening.forEach((id) => {
+      const spell = getRawSpellById(pf2eSpellsModule as SpellModule, 10, id);
+      expect(spell.heightening, `${id} heightening`).toBeTruthy();
+      expect(spell.heightening?.mode, `${id} heightening mode`).toBe('fixed');
+      expect(spell.heightening?.ranks, `${id} heightening ranks`).toBeTruthy();
     });
   });
 
@@ -444,7 +803,8 @@ describe('Spell Data Validation', () => {
   it('resolves canonical spell aliases for 5e 2024 duplicates', () => {
     expect(dnd5e2024SpellsModule.spellIdAliases).toMatchObject({
       'tensors-floating-disk': 'tensers-floating-disk',
-      'otilukes-resilience-6': 'otilukes-resilience-4',
+      'otilukes-resilience-4': 'otilukes-resilience',
+      'otilukes-resilience-6': 'otilukes-resilience',
     });
     expect(dnd5e2024SpellsModule.getSpell('tensors-floating-disk')?.id).toBe(
       'tensers-floating-disk'
@@ -452,6 +812,11 @@ describe('Spell Data Validation', () => {
     expect(dnd5e2024SpellsModule.spellsById['tensors-floating-disk']?.id).toBe(
       'tensers-floating-disk'
     );
+    expect(dnd5e2024SpellsModule.getSpell('otilukes-resilience-4')?.id).toBe('otilukes-resilience');
+    expect(dnd5e2024SpellsModule.getSpell('otilukes-resilience-6')?.id).toBe('otilukes-resilience');
+    expect(
+      dnd5e2024SpellsModule.allSpells.some((spell) => /^otilukes-resilience-\d+$/.test(spell.id))
+    ).toBe(false);
   });
 
   it('resolves canonical spell aliases for PF2e cross-rank duplicates', () => {

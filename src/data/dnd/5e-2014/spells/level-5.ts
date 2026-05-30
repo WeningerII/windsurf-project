@@ -95,6 +95,7 @@ export const level5Spells: Spell[] = [
       materialConsumed: true,
     },
     duration: { type: 'instant' },
+    target: '1 dead creature you touch',
     concentration: false,
     ritual: false,
     description:
@@ -119,6 +120,7 @@ export const level5Spells: Spell[] = [
       materialConsumed: true,
     },
     duration: { type: 'instant' },
+    target: '1 creature you touch',
     concentration: false,
     ritual: false,
     description:

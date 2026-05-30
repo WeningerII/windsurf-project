@@ -7,10 +7,11 @@ export const level4Spells: Spell[] = [
     name: 'Air Walk',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/airWalk.htm',
     level: 4,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -20,11 +21,16 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'Creature (Gargantuan or smaller) touched',
+    savingThrowText: 'None',
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: 'Subject treads on air as if solid (climb at 45-degree angle).',
@@ -38,10 +44,11 @@ export const level4Spells: Spell[] = [
     name: 'Air Walk',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/airWalk.htm',
     level: 4,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -51,11 +58,16 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'Creature (Gargantuan or smaller) touched',
+    savingThrowText: 'None',
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: 'Subject treads on air as if solid (climb at 45-degree angle).',
@@ -69,10 +81,11 @@ export const level4Spells: Spell[] = [
     name: 'Animate Dead',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/animateDead.htm',
     level: 4,
     school: 'necromancy',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -83,10 +96,16 @@ export const level4Spells: Spell[] = [
       somatic: true,
       material: true,
       materialDescription: 'Onyx gem worth 25 gp per Hit Die of undead',
+      materialCost: 25,
+      materialConsumed: true,
     },
     duration: {
       type: 'instant',
     },
+    target: 'One or more corpses touched',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description:
@@ -103,10 +122,11 @@ export const level4Spells: Spell[] = [
     name: 'Antiplant Shell',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/antiplantShell.htm',
     level: 4,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -117,11 +137,16 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    area: '10-ft.-radius emanation, centered on you',
+    savingThrowText: 'None',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Keeps animated plants at bay.',
@@ -135,11 +160,12 @@ export const level4Spells: Spell[] = [
     name: 'Arcane Eye',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/arcaneEye.htm',
     level: 4,
     school: 'divination',
     castingTime: {
-      type: 'action',
-      amount: 10,
+      type: 'minutes',
+      minutes: 10,
     },
     range: {
       type: 'unlimited',
@@ -154,6 +180,10 @@ export const level4Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    effect: 'Magical sensor',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description:
@@ -169,10 +199,11 @@ export const level4Spells: Spell[] = [
     name: 'Bestow Curse',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/bestowCurse.htm',
     level: 4,
     school: 'necromancy',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -186,6 +217,10 @@ export const level4Spells: Spell[] = [
     duration: {
       type: 'permanent',
     },
+    target: 'Creature touched',
+    savingThrowText: 'Will negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -193,6 +228,7 @@ export const level4Spells: Spell[] = [
     savingThrow: {
       attribute: 'wis',
       success: 'none',
+      description: 'Will negates',
     },
     classes: ['cleric', 'sorcerer', 'wizard'],
     levelsByClass: {
@@ -206,10 +242,11 @@ export const level4Spells: Spell[] = [
     name: 'Black Tentacles',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/blackTentacles.htm',
     level: 4,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -230,6 +267,10 @@ export const level4Spells: Spell[] = [
       type: 'rounds',
       rounds: 1,
     },
+    area: '20-ft.-radius spread',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: true,
     ritual: false,
     description:
@@ -253,10 +294,11 @@ export const level4Spells: Spell[] = [
     name: 'Blight',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/blight.htm',
     level: 4,
     school: 'necromancy',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -266,10 +308,19 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'instant',
     },
+    savingThrow: {
+      attribute: 'con',
+      success: 'half',
+      description: 'Fortitude half; see text',
+    },
+    savingThrowText: 'Fortitude half; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Withers one plant or deals 1d6/level damage to plant creature.',
@@ -283,6 +334,7 @@ export const level4Spells: Spell[] = [
     name: 'Charm Monster',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/charmMonster.htm',
     level: 4,
     school: 'enchantment',
     castingTime: {
@@ -302,6 +354,7 @@ export const level4Spells: Spell[] = [
       type: 'hours',
       hours: 24,
     },
+    target: 'One living creature',
     concentration: false,
     ritual: false,
     description:
@@ -322,10 +375,11 @@ export const level4Spells: Spell[] = [
     name: 'Command Plants',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/commandPlants.htm',
     level: 4,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -334,13 +388,22 @@ export const level4Spells: Spell[] = [
     },
     components: {
       verbal: true,
-      somatic: true,
+      somatic: false,
       material: false,
     },
     duration: {
       type: 'hours',
       hours: 24,
     },
+    target: 'Up to 2 HD/level of plant creatures, no two of which can be more than 30 ft. apart',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates',
+    },
+    savingThrowText: 'Will negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Sway the actions of one or more plant creatures.',
@@ -354,10 +417,11 @@ export const level4Spells: Spell[] = [
     name: 'Confusion',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/confusion.htm',
     level: 4,
     school: 'enchantment',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -373,11 +437,16 @@ export const level4Spells: Spell[] = [
       somatic: true,
       material: true,
       materialDescription: 'Set of three nut shells',
+      divineFocus: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    target: 'All creatures in a 15-ft. radius burst',
+    savingThrowText: 'Will negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -385,6 +454,7 @@ export const level4Spells: Spell[] = [
     savingThrow: {
       attribute: 'wis',
       success: 'none',
+      description: 'Will negates',
     },
     classes: ['bard', 'sorcerer', 'wizard'],
     levelsByClass: {
@@ -398,10 +468,11 @@ export const level4Spells: Spell[] = [
     name: 'Contagion',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/contagion.htm',
     level: 4,
     school: 'necromancy',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -415,6 +486,10 @@ export const level4Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'Living creature touched',
+    savingThrowText: 'Fortitude negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -422,6 +497,7 @@ export const level4Spells: Spell[] = [
     savingThrow: {
       attribute: 'con',
       success: 'none',
+      description: 'Fortitude negates',
     },
     classes: ['cleric', 'druid', 'sorcerer', 'wizard'],
     levelsByClass: {
@@ -436,10 +512,11 @@ export const level4Spells: Spell[] = [
     name: 'Control Water',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/controlWater.htm',
     level: 4,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -449,12 +526,17 @@ export const level4Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    area: 'Water in a volume of 10 ft./level by 10 ft./level by 2 ft./level (S)',
+    savingThrowText: 'None; see text',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Raises or lowers bodies of water.',
@@ -468,10 +550,11 @@ export const level4Spells: Spell[] = [
     name: 'Control Water',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/controlWater.htm',
     level: 4,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -481,12 +564,17 @@ export const level4Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    area: 'Water in a volume of 10 ft./level by 10 ft./level by 2 ft./level (S)',
+    savingThrowText: 'None; see text',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Raises or lowers bodies of water.',
@@ -500,10 +588,11 @@ export const level4Spells: Spell[] = [
     name: 'Crushing Despair',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/crushingDespair.htm',
     level: 4,
     school: 'enchantment',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -517,12 +606,16 @@ export const level4Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    area: 'Cone-shaped burst',
+    savingThrowText: 'Will negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -530,6 +623,7 @@ export const level4Spells: Spell[] = [
     savingThrow: {
       attribute: 'wis',
       success: 'none',
+      description: 'Will negates',
     },
     classes: ['bard', 'sorcerer', 'wizard'],
     levelsByClass: {
@@ -543,6 +637,7 @@ export const level4Spells: Spell[] = [
     name: 'Cure Critical Wounds',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/cureCriticalWounds.htm',
     level: 4,
     school: 'conjuration',
     castingTime: {
@@ -573,6 +668,7 @@ export const level4Spells: Spell[] = [
     name: 'Cure Serious Wounds',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/cureSeriousWounds.htm',
     level: 4,
     school: 'conjuration',
     castingTime: {
@@ -603,10 +699,11 @@ export const level4Spells: Spell[] = [
     name: 'Death Ward',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/deathWard.htm',
     level: 4,
     school: 'necromancy',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -616,11 +713,21 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'hours',
       hours: 8,
     },
+    target: 'Living creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description:
@@ -637,10 +744,11 @@ export const level4Spells: Spell[] = [
     name: 'Death Ward',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/deathWard.htm',
     level: 4,
     school: 'necromancy',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -650,11 +758,21 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'Living creature touched',
+    savingThrowText: 'Will negates (harmless)',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: 'Grants immunity to death spells and negative energy effects.',
@@ -668,10 +786,11 @@ export const level4Spells: Spell[] = [
     name: 'Detect Scrying',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/detectScrying.htm',
     level: 4,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -683,11 +802,16 @@ export const level4Spells: Spell[] = [
       somatic: true,
       material: true,
       materialDescription: 'Bronze piece worth 1 gp',
+      materialCost: 1,
     },
     duration: {
       type: 'hours',
       hours: 24,
     },
+    area: '40-ft.-radius emanation centered on you',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description:
@@ -704,10 +828,11 @@ export const level4Spells: Spell[] = [
     name: 'Dimension Door',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/dimensionDoor.htm',
     level: 4,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -722,6 +847,15 @@ export const level4Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'You and touched objects or other touched willing creatures',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'None and Will negates (object)',
+    },
+    savingThrowText: 'None and Will negates (object)',
+    spellResistance: false,
+    spellResistanceDetail: 'object',
     concentration: false,
     ritual: false,
     description:
@@ -738,10 +872,11 @@ export const level4Spells: Spell[] = [
     name: 'Dimensional Anchor',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/dimensionalAnchor.htm',
     level: 4,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -757,6 +892,10 @@ export const level4Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    effect: 'Ray',
+    spellResistance: true,
+    spellResistanceDetail: 'object',
+    savingThrowText: 'None',
     attackRoll: true,
     concentration: false,
     ritual: false,
@@ -774,10 +913,11 @@ export const level4Spells: Spell[] = [
     name: 'Dimensional Anchor',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/dimensionalAnchor.htm',
     level: 4,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -793,6 +933,10 @@ export const level4Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    effect: 'Ray',
+    savingThrowText: 'None',
+    spellResistance: true,
+    spellResistanceDetail: 'object',
     concentration: false,
     ritual: false,
     description: 'Bars extradimensional movement.',
@@ -806,10 +950,11 @@ export const level4Spells: Spell[] = [
     name: 'Discern Lies',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/discernLies.htm',
     level: 4,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -820,11 +965,21 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'rounds',
       rounds: 10,
     },
+    target: 'One creature/level, no two of which can be more than 30 ft. apart',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates',
+    },
+    savingThrowText: 'Will negates',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: true,
     ritual: false,
     description: 'Reveals deliberate falsehoods.',
@@ -838,10 +993,11 @@ export const level4Spells: Spell[] = [
     name: 'Dismissal',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/dismissal.htm',
     level: 4,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -852,10 +1008,20 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'instant',
     },
+    target: 'One extraplanar creature',
+    savingThrowText: 'Will negates; see text',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'special',
+      description: 'Will negates; see text',
+    },
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Forces a creature to return to native plane.',
@@ -869,10 +1035,11 @@ export const level4Spells: Spell[] = [
     name: 'Dispel Magic',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/dispelMagic.htm',
     level: 4,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -887,6 +1054,10 @@ export const level4Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'One spellcaster, creature, or object; or 20-ft.-radius burst',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Cancels spells and magical effects.',
@@ -900,11 +1071,12 @@ export const level4Spells: Spell[] = [
     name: 'Divination',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/divination.htm',
     level: 4,
     school: 'divination',
     castingTime: {
-      type: 'action',
-      amount: 10,
+      type: 'minutes',
+      minutes: 10,
     },
     range: {
       type: 'self',
@@ -914,10 +1086,12 @@ export const level4Spells: Spell[] = [
       somatic: true,
       material: true,
       materialDescription: 'Incense and sacrificial offering worth 25 gp',
+      materialCost: 25,
     },
     duration: {
       type: 'instant',
     },
+    target: 'You',
     concentration: false,
     ritual: false,
     description:
@@ -933,6 +1107,7 @@ export const level4Spells: Spell[] = [
     name: 'Divination',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/divination.htm',
     level: 4,
     school: 'divination',
     castingTime: {
@@ -946,10 +1121,14 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription:
+        'Incense and a sacrificial offering appropriate to your religion, together worth at least 25 gp.',
+      materialCost: 25,
     },
     duration: {
       type: 'instant',
     },
+    target: 'You',
     concentration: false,
     ritual: false,
     description: 'Provides useful advice for specific proposed actions.',
@@ -963,10 +1142,11 @@ export const level4Spells: Spell[] = [
     name: 'Divine Power',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/divinePower.htm',
     level: 4,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -976,11 +1156,13 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    target: 'You',
     concentration: false,
     ritual: false,
     description: 'You gain attack bonus, +6 to Str, and 1 hp/level.',
@@ -994,11 +1176,12 @@ export const level4Spells: Spell[] = [
     name: 'Dominate Person',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/dominatePerson.htm',
     level: 4,
     school: 'enchantment',
     castingTime: {
-      type: 'action',
-      amount: 1,
+      type: 'rounds',
+      rounds: 1,
     },
     range: {
       type: 'ranged',
@@ -1013,6 +1196,10 @@ export const level4Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    target: 'One humanoid',
+    savingThrowText: 'Will negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: true,
     ritual: false,
     description:
@@ -1020,6 +1207,7 @@ export const level4Spells: Spell[] = [
     savingThrow: {
       attribute: 'wis',
       success: 'none',
+      description: 'Will negates',
     },
     classes: ['bard', 'sorcerer', 'wizard'],
     levelsByClass: {
@@ -1033,10 +1221,11 @@ export const level4Spells: Spell[] = [
     name: 'Enervation',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/enervation.htm',
     level: 4,
     school: 'necromancy',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1051,6 +1240,10 @@ export const level4Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    effect: 'Ray of negative energy',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    savingThrowText: 'None',
     attackRoll: true,
     concentration: false,
     ritual: false,
@@ -1067,6 +1260,7 @@ export const level4Spells: Spell[] = [
     name: 'Enlarge Person, Mass',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/enlargePersonMass.htm',
     level: 4,
     school: 'transmutation',
     castingTime: {
@@ -1087,6 +1281,7 @@ export const level4Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    target: 'One humanoid creature/level, no two of which can be more than 30 ft. apart',
     concentration: false,
     ritual: false,
     description:
@@ -1102,10 +1297,11 @@ export const level4Spells: Spell[] = [
     name: 'Fear',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/fear.htm',
     level: 4,
     school: 'necromancy',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1126,13 +1322,18 @@ export const level4Spells: Spell[] = [
       type: 'rounds',
       rounds: 1,
     },
+    area: 'Cone-shaped burst',
+    savingThrowText: 'Will partial',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
       'An invisible cone of terror causes each living creature in the area to become panicked unless it succeeds on a Will save. If cornered, a panicked creature begins cowering. If the Will save succeeds, the creature is shaken for 1 round.',
     savingThrow: {
       attribute: 'wis',
-      success: 'half',
+      success: 'special',
+      description: 'Will partial',
     },
     classes: ['bard', 'sorcerer', 'wizard'],
     levelsByClass: {
@@ -1146,10 +1347,11 @@ export const level4Spells: Spell[] = [
     name: 'Fire Shield',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/fireShield.htm',
     level: 4,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1160,11 +1362,13 @@ export const level4Spells: Spell[] = [
       somatic: true,
       material: true,
       materialDescription: 'Phosphorus for warm shield; bit of ice for chill shield',
+      divineFocus: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    target: 'You',
     concentration: false,
     ritual: false,
     description:
@@ -1188,11 +1392,12 @@ export const level4Spells: Spell[] = [
     name: 'Fire Trap',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/fireTrap.htm',
     level: 4,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
-      amount: 10,
+      type: 'minutes',
+      minutes: 10,
     },
     range: {
       type: 'touch',
@@ -1202,10 +1407,20 @@ export const level4Spells: Spell[] = [
       somatic: true,
       material: true,
       materialDescription: 'Gold dust worth 25 gp',
+      materialCost: 25,
     },
     duration: {
       type: 'permanent',
     },
+    target: 'Object touched',
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+      description: 'Reflex half; see text',
+    },
+    savingThrowText: 'Reflex half; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -1230,10 +1445,11 @@ export const level4Spells: Spell[] = [
     name: 'Flame Strike',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/flameStrike.htm',
     level: 4,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1244,10 +1460,20 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'instant',
     },
+    area: 'Cylinder (10-ft. radius, 40 ft. high)',
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+      description: 'Reflex half',
+    },
+    savingThrowText: 'Reflex half',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Smite foes with divine fire (1d6/level damage).',
@@ -1261,10 +1487,11 @@ export const level4Spells: Spell[] = [
     name: 'Freedom of Movement',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/freedomOfMovement.htm',
     level: 4,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1273,12 +1500,22 @@ export const level4Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'You or creature touched',
+    savingThrowText: 'Will negates (harmless)',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: 'Subject moves normally despite impediments.',
@@ -1292,10 +1529,11 @@ export const level4Spells: Spell[] = [
     name: 'Freedom of Movement',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/freedomOfMovement.htm',
     level: 4,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1304,12 +1542,22 @@ export const level4Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'You or creature touched',
+    savingThrowText: 'Will negates (harmless)',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: 'Subject moves normally despite impediments.',
@@ -1323,10 +1571,11 @@ export const level4Spells: Spell[] = [
     name: 'Freedom of Movement',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/freedomOfMovement.htm',
     level: 4,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1337,11 +1586,21 @@ export const level4Spells: Spell[] = [
       somatic: true,
       material: true,
       materialDescription: 'Leather strap bound to the target',
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'You or creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description:
@@ -1359,11 +1618,12 @@ export const level4Spells: Spell[] = [
     name: 'Geas, Lesser',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/geasLesser.htm',
     level: 4,
     school: 'enchantment',
     castingTime: {
-      type: 'action',
-      amount: 1,
+      type: 'rounds',
+      rounds: 1,
     },
     range: {
       type: 'ranged',
@@ -1378,6 +1638,10 @@ export const level4Spells: Spell[] = [
       type: 'hours',
       hours: 24,
     },
+    target: 'One living creature with 7 HD or less',
+    savingThrowText: 'Will negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -1385,6 +1649,7 @@ export const level4Spells: Spell[] = [
     savingThrow: {
       attribute: 'wis',
       success: 'none',
+      description: 'Will negates',
     },
     classes: ['bard', 'sorcerer', 'wizard'],
     levelsByClass: {
@@ -1398,10 +1663,11 @@ export const level4Spells: Spell[] = [
     name: 'Giant Vermin',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/giantVermin.htm',
     level: 4,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1412,11 +1678,16 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'Up to three vermin, no two of which can be more than 30 ft. apart',
+    savingThrowText: 'None',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Turns centipedes, scorpions, or spiders into giant vermin.',
@@ -1430,10 +1701,11 @@ export const level4Spells: Spell[] = [
     name: 'Giant Vermin',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/giantVermin.htm',
     level: 4,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1444,11 +1716,16 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'Up to three vermin, no two of which can be more than 30 ft. apart',
+    savingThrowText: 'None',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Turns centipedes, scorpions, or spiders into giant vermin.',
@@ -1462,10 +1739,11 @@ export const level4Spells: Spell[] = [
     name: 'Globe of Invulnerability, Lesser',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/globeOfInvulnerabilityLesser.htm',
     level: 4,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1482,6 +1760,10 @@ export const level4Spells: Spell[] = [
       type: 'rounds',
       rounds: 1,
     },
+    area: '10-ft.-radius spherical emanation, centered on you',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: true,
     ritual: false,
     description:
@@ -1497,11 +1779,12 @@ export const level4Spells: Spell[] = [
     name: 'Hallucinatory Terrain',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/hallucinatoryTerrain.htm',
     level: 4,
     school: 'illusion',
     castingTime: {
-      type: 'action',
-      amount: 10,
+      type: 'minutes',
+      minutes: 10,
     },
     range: {
       type: 'ranged',
@@ -1521,6 +1804,15 @@ export const level4Spells: Spell[] = [
       type: 'hours',
       hours: 2,
     },
+    area: 'One 30-ft. cube/level (S)',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will disbelief (if interacted with)',
+    },
+    savingThrowText: 'Will disbelief (if interacted with)',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description:
@@ -1537,10 +1829,11 @@ export const level4Spells: Spell[] = [
     name: 'Ice Storm',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/iceStorm.htm',
     level: 4,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1550,11 +1843,16 @@ export const level4Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
+      divineFocus: true,
     },
     duration: {
       type: 'instant',
     },
+    area: 'Cylinder (20-ft. radius, 40 ft. high)',
+    savingThrowText: 'None',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Hail deals 5d6 damage in cylinder 40 ft. across.',
@@ -1568,10 +1866,11 @@ export const level4Spells: Spell[] = [
     name: 'Ice Storm',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/iceStorm.htm',
     level: 4,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1588,10 +1887,15 @@ export const level4Spells: Spell[] = [
       somatic: true,
       material: true,
       materialDescription: 'Dust and water',
+      divineFocus: true,
     },
     duration: {
       type: 'instant',
     },
+    area: 'Cylinder (20-ft. radius, 40 ft. high)',
+    savingThrowText: 'None',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -1616,6 +1920,7 @@ export const level4Spells: Spell[] = [
     name: 'Imbue with Spell Ability',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/imbueWithSpellAbility.htm',
     level: 4,
     school: 'evocation',
     castingTime: {
@@ -1629,10 +1934,20 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'permanent',
     },
+    target: 'Creature touched; see text',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: 'Transfer spells to subject.',
@@ -1646,6 +1961,7 @@ export const level4Spells: Spell[] = [
     name: 'Inflict Critical Wounds',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/inflictCriticalWounds.htm',
     level: 4,
     school: 'necromancy',
     castingTime: {
@@ -1676,6 +1992,7 @@ export const level4Spells: Spell[] = [
     name: 'Invisibility, Greater',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/invisibilityGreater.htm',
     level: 4,
     school: 'illusion',
     castingTime: {
@@ -1694,6 +2011,13 @@ export const level4Spells: Spell[] = [
       type: 'rounds',
       rounds: 1,
     },
+    target: 'You or creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
     concentration: false,
     ritual: false,
     description:
@@ -1710,6 +2034,7 @@ export const level4Spells: Spell[] = [
     name: 'Locate Creature',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/locateCreature.htm',
     level: 4,
     school: 'divination',
     castingTime: {
@@ -1746,10 +2071,11 @@ export const level4Spells: Spell[] = [
     name: 'Magic Weapon, Greater',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/magicWeaponGreater.htm',
     level: 4,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1759,12 +2085,23 @@ export const level4Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
+      divineFocus: true,
     },
     duration: {
       type: 'hours',
       hours: 1,
     },
+    target:
+      'One weapon or fifty projectiles (all of which must be in contact with each other at the time of casting)',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless, object)',
+    },
+    savingThrowText: 'Will negates (harmless, object)',
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: '+1 bonus/four levels (max +5).',
@@ -1778,11 +2115,12 @@ export const level4Spells: Spell[] = [
     name: 'Minor Creation',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/minorCreation.htm',
     level: 4,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
-      amount: 1,
+      type: 'minutes',
+      minutes: 1,
     },
     range: {
       type: 'ranged',
@@ -1798,6 +2136,10 @@ export const level4Spells: Spell[] = [
       type: 'hours',
       hours: 1,
     },
+    effect: 'Unattended, nonmagical object of nonliving plant matter, up to 1 cu. ft./level',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description:
@@ -1813,10 +2155,11 @@ export const level4Spells: Spell[] = [
     name: 'Neutralize Poison',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/neutralizePoison.htm',
     level: 4,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1825,11 +2168,21 @@ export const level4Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
+      divineFocus: true,
     },
     duration: {
       type: 'instant',
     },
+    target: 'Creature or object of up to 1 cu. ft./level touched',
+    savingThrowText: 'Will negates (harmless, object)',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless, object)',
+    },
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: 'Immunizes subject against poison, detoxifies venom in or on subject.',
@@ -1843,10 +2196,11 @@ export const level4Spells: Spell[] = [
     name: 'Phantasmal Killer',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/phantasmalKiller.htm',
     level: 4,
     school: 'illusion',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1861,13 +2215,18 @@ export const level4Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'One living creature',
+    savingThrowText: 'Will disbelief (if interacted with), then Fortitude partial; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
       "You create a phantasmal image of the most fearsome creature imaginable to the subject simply by forming the fears of the subject's subconscious mind into something that its conscious mind can visualize. Only the spell's subject can see the phantasmal killer. If the subject of a phantasmal killer attack succeeds in disbelieving and possesses more than twice your caster level in Hit Dice, the phantasmal killer can turn on you and attack you.",
     savingThrow: {
-      attribute: 'wis',
-      success: 'none',
+      attribute: 'con',
+      success: 'special',
+      description: 'Will disbelief (if interacted with), then Fortitude partial; see text',
     },
     classes: ['sorcerer', 'wizard'],
     levelsByClass: {
@@ -1880,6 +2239,7 @@ export const level4Spells: Spell[] = [
     name: 'Planar Ally, Lesser',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/planarAllyLesser.htm',
     level: 4,
     school: 'conjuration',
     castingTime: {
@@ -1893,11 +2253,16 @@ export const level4Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
+      material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'instant',
     },
+    effect: 'One called elemental or outsider of 6 HD or less',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Exchange services with a 6 HD extraplanar creature.',
@@ -1911,10 +2276,11 @@ export const level4Spells: Spell[] = [
     name: 'Poison',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/poison.htm',
     level: 4,
     school: 'necromancy',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1924,10 +2290,20 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'instant',
     },
+    target: 'Living creature touched',
+    savingThrowText: 'Fortitude negates; see text',
+    savingThrow: {
+      attribute: 'con',
+      success: 'special',
+      description: 'Fortitude negates; see text',
+    },
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Touch deals 1d10 Con damage, repeats in 1 min.',
@@ -1941,10 +2317,11 @@ export const level4Spells: Spell[] = [
     name: 'Polymorph',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/polymorph.htm',
     level: 4,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1961,6 +2338,10 @@ export const level4Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    target: 'Willing living creature touched',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description:
@@ -1976,10 +2357,11 @@ export const level4Spells: Spell[] = [
     name: 'Rainbow Pattern',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/rainbowPattern.htm',
     level: 4,
     school: 'illusion',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1991,15 +2373,20 @@ export const level4Spells: Spell[] = [
       feet: 20,
     },
     components: {
-      verbal: false,
-      somatic: false,
+      verbal: true,
+      somatic: true,
       material: true,
       materialDescription: 'Piece of phosphor',
+      focus: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    effect: 'Colorful lights with a 20-ft.-radius spread',
+    savingThrowText: 'Will negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: true,
     ritual: false,
     description:
@@ -2007,6 +2394,7 @@ export const level4Spells: Spell[] = [
     savingThrow: {
       attribute: 'wis',
       success: 'none',
+      description: 'Will negates',
     },
     classes: ['bard', 'sorcerer', 'wizard'],
     levelsByClass: {
@@ -2020,6 +2408,7 @@ export const level4Spells: Spell[] = [
     name: 'Reincarnate',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/reincarnate.htm',
     level: 4,
     school: 'transmutation',
     castingTime: {
@@ -2032,11 +2421,16 @@ export const level4Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
+      divineFocus: true,
     },
     duration: {
       type: 'instant',
     },
+    target: 'Dead creature touched',
+    savingThrowText: 'None; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: 'Brings dead subject back in a random body.',
@@ -2050,10 +2444,11 @@ export const level4Spells: Spell[] = [
     name: 'Repel Vermin',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/repelVermin.htm',
     level: 4,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -2064,11 +2459,21 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    area: '10-ft.-radius emanation centered on you',
+    savingThrowText: 'None or Will negates; see text',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'special',
+      description: 'None or Will negates; see text',
+    },
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Insects, spiders, and other vermin stay 10 ft. away.',
@@ -2082,10 +2487,11 @@ export const level4Spells: Spell[] = [
     name: 'Repel Vermin',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/repelVermin.htm',
     level: 4,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -2096,11 +2502,21 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    area: '10-ft.-radius emanation centered on you',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'special',
+      description: 'None or Will negates; see text',
+    },
+    savingThrowText: 'None or Will negates; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Insects, spiders, and other vermin stay 10 ft. away.',
@@ -2114,10 +2530,11 @@ export const level4Spells: Spell[] = [
     name: 'Resilient Sphere',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/resilientSphere.htm',
     level: 4,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -2135,6 +2552,15 @@ export const level4Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    effect: '1-ft.-diameter/level sphere, centered around a creature',
+    savingThrow: {
+      attribute: 'dex',
+      success: 'none',
+      description: 'Reflex negates',
+    },
+    savingThrowText: 'Reflex negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -2150,6 +2576,7 @@ export const level4Spells: Spell[] = [
     name: 'Restoration',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/restoration.htm',
     level: 4,
     school: 'conjuration',
     castingTime: {
@@ -2163,6 +2590,8 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'Diamond dust worth 100 gp that is sprinkled over the target.',
+      materialCost: 100,
     },
     duration: {
       type: 'instant',
@@ -2180,10 +2609,11 @@ export const level4Spells: Spell[] = [
     name: 'Rusting Grasp',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/rustingGrasp.htm',
     level: 4,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -2193,11 +2623,17 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    target:
+      'One nonmagical ferrous object (or the volume of the object within 3 ft. of the touched point) or one ferrous creature',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Your touch corrodes iron and alloys.',
@@ -2211,11 +2647,12 @@ export const level4Spells: Spell[] = [
     name: 'Scrying',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/scrying.htm',
     level: 4,
     school: 'divination',
     castingTime: {
       type: 'hour',
-      amount: 1,
+      hours: 1,
     },
     range: {
       type: 'sight',
@@ -2224,11 +2661,22 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      focus: true,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    effect: 'Magical sensor',
+    savingThrowText: 'Will negates',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates',
+    },
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Spies on subject from a distance.',
@@ -2242,11 +2690,12 @@ export const level4Spells: Spell[] = [
     name: 'Scrying',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/scrying.htm',
     level: 4,
     school: 'divination',
     castingTime: {
-      type: 'action',
-      amount: 1,
+      type: 'hour',
+      hours: 1,
     },
     range: {
       type: 'unlimited',
@@ -2257,11 +2706,18 @@ export const level4Spells: Spell[] = [
       material: true,
       materialDescription:
         'Focus worth 1,000 gp such as crystal ball, silver mirror, or font of holy water',
+      materialCost: 1000,
+      focus: true,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    effect: 'Magical sensor',
+    savingThrowText: 'Will negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -2269,6 +2725,7 @@ export const level4Spells: Spell[] = [
     savingThrow: {
       attribute: 'wis',
       success: 'none',
+      description: 'Will negates',
     },
     classes: ['bard', 'cleric', 'druid', 'sorcerer', 'wizard'],
     levelsByClass: {
@@ -2284,11 +2741,12 @@ export const level4Spells: Spell[] = [
     name: 'Secure Shelter',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/secureShelter.htm',
     level: 4,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
-      amount: 10,
+      type: 'minutes',
+      minutes: 10,
     },
     range: {
       type: 'ranged',
@@ -2299,11 +2757,16 @@ export const level4Spells: Spell[] = [
       somatic: true,
       material: true,
       materialDescription: 'Square chip of stone, clay, loam, or sand',
+      focus: true,
     },
     duration: {
       type: 'hours',
       hours: 2,
     },
+    effect: '20-ft.-square structure',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description:
@@ -2320,6 +2783,7 @@ export const level4Spells: Spell[] = [
     name: 'Sending',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/sending.htm',
     level: 4,
     school: 'evocation',
     castingTime: {
@@ -2332,12 +2796,17 @@ export const level4Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
+      divineFocus: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    target: 'One creature',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Delivers short message anywhere, instantly.',
@@ -2351,10 +2820,11 @@ export const level4Spells: Spell[] = [
     name: 'Shadow Conjuration',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/shadowConjuration.htm',
     level: 4,
     school: 'illusion',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -2369,6 +2839,15 @@ export const level4Spells: Spell[] = [
       type: 'rounds',
       rounds: 1,
     },
+    effect: 'See text',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'special',
+      description: 'Will disbelief (if interacted with); varies; see text',
+    },
+    savingThrowText: 'Will disbelief (if interacted with); varies; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -2385,10 +2864,11 @@ export const level4Spells: Spell[] = [
     name: 'Shout',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/shout.htm',
     level: 4,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -2407,6 +2887,10 @@ export const level4Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    area: 'Cone-shaped burst',
+    savingThrowText: 'Fortitude partial or Reflex negates (object); see text',
+    spellResistance: true,
+    spellResistanceDetail: 'object',
     concentration: false,
     ritual: false,
     description:
@@ -2421,7 +2905,8 @@ export const level4Spells: Spell[] = [
     },
     savingThrow: {
       attribute: 'con',
-      success: 'half',
+      success: 'special',
+      description: 'Fortitude partial or Reflex negates (object); see text',
     },
     classes: ['bard', 'sorcerer', 'wizard'],
     levelsByClass: {
@@ -2435,10 +2920,11 @@ export const level4Spells: Spell[] = [
     name: 'Spell Immunity',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/spellImmunity.htm',
     level: 4,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -2448,11 +2934,21 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'Creature touched',
+    savingThrowText: 'Will negates (harmless)',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: 'Subject is immune to one spell per four levels.',
@@ -2466,10 +2962,11 @@ export const level4Spells: Spell[] = [
     name: 'Spell Immunity',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/spellImmunity.htm',
     level: 4,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -2478,17 +2975,26 @@ export const level4Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
-      materialDescription: 'Diamond worth 500 gp',
+      material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'Creature touched',
     concentration: false,
     ritual: false,
     description:
       'The warded creature is immune to the effects of one specified spell for every four levels you have. The spells must be of 4th level or lower. The warded creature effectively has unbeatable spell resistance regarding the specified spell(s).',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     classes: ['cleric', 'paladin'],
     levelsByClass: {
       cleric: 4,
@@ -2500,10 +3006,11 @@ export const level4Spells: Spell[] = [
     name: 'Spike Stones',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/spikeStones.htm',
     level: 4,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -2514,11 +3021,21 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'hours',
       hours: 1,
     },
+    area: 'One 20-ft. square/level',
+    savingThrow: {
+      attribute: 'dex',
+      success: 'special',
+      description: 'Reflex partial',
+    },
+    savingThrowText: 'Reflex partial',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Creatures in area take 1d8 damage, may be slowed.',
@@ -2532,10 +3049,11 @@ export const level4Spells: Spell[] = [
     name: 'Stone Shape',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/stoneShape.htm',
     level: 4,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -2546,10 +3064,15 @@ export const level4Spells: Spell[] = [
       somatic: true,
       material: true,
       materialDescription: 'Soft clay',
+      divineFocus: true,
     },
     duration: {
       type: 'instant',
     },
+    target: 'Stone or stone object touched, up to 10 cu. ft. + 1 cu. ft./level',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description:
@@ -2567,10 +3090,11 @@ export const level4Spells: Spell[] = [
     name: 'Stoneskin',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/stoneskin.htm',
     level: 4,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -2581,11 +3105,21 @@ export const level4Spells: Spell[] = [
       somatic: true,
       material: true,
       materialDescription: 'Diamond dust worth 250 gp',
+      materialCost: 250,
     },
     duration: {
       type: 'hours',
       hours: 10,
     },
+    target: 'Creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description:
@@ -2602,6 +3136,7 @@ export const level4Spells: Spell[] = [
     name: 'Summon Monster IV',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/summonMonsterIV.htm',
     level: 4,
     school: 'conjuration',
     castingTime: {
@@ -2621,6 +3156,7 @@ export const level4Spells: Spell[] = [
       type: 'rounds',
       rounds: 1,
     },
+    effect: 'One or more summoned creatures, no two of which can be more than 30 ft. apart',
     concentration: false,
     ritual: false,
     description: 'Calls extraplanar creature to fight for you.',
@@ -2634,6 +3170,7 @@ export const level4Spells: Spell[] = [
     name: 'Summon Monster IV',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/summonMonsterIV.htm',
     level: 4,
     school: 'conjuration',
     castingTime: {
@@ -2653,6 +3190,7 @@ export const level4Spells: Spell[] = [
       type: 'rounds',
       rounds: 1,
     },
+    effect: 'One or more summoned creatures, no two of which can be more than 30 ft. apart',
     concentration: false,
     ritual: false,
     description:
@@ -2670,6 +3208,7 @@ export const level4Spells: Spell[] = [
     name: "Summon Nature's Ally IV",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/summonNaturesAllyIV.htm',
     level: 4,
     school: 'conjuration',
     castingTime: {
@@ -2689,6 +3228,7 @@ export const level4Spells: Spell[] = [
       type: 'rounds',
       rounds: 1,
     },
+    effect: 'One or more creatures, no two of which can be more than 30 ft. apart',
     concentration: false,
     ritual: false,
     description: 'Calls creature to fight.',
@@ -2702,10 +3242,11 @@ export const level4Spells: Spell[] = [
     name: 'Tongues',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/tongues.htm',
     level: 4,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -2714,12 +3255,22 @@ export const level4Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: false,
-      material: false,
+      material: true,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'Creature touched',
+    savingThrowText: 'Will negates (harmless)',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Speak any language.',
@@ -2733,10 +3284,11 @@ export const level4Spells: Spell[] = [
     name: 'Wall of Fire',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/wallOfFire.htm',
     level: 4,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -2748,11 +3300,17 @@ export const level4Spells: Spell[] = [
       somatic: true,
       material: true,
       materialDescription: 'Small piece of phosphorus',
+      divineFocus: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    effect:
+      'Opaque sheet of flame up to 20 ft. long/level or a ring of fire with a radius of up to 5 ft. per two levels; either form 20 ft. high',
+    savingThrowText: 'None',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: true,
     ritual: false,
     description:
@@ -2777,10 +3335,11 @@ export const level4Spells: Spell[] = [
     name: 'Wall of Ice',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/wallOfIce.htm',
     level: 4,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -2797,6 +3356,16 @@ export const level4Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    effect:
+      'Anchored plane of ice, up to one 10-ft. square/level, or hemisphere of ice with a radius of up to 3 ft. + 1 ft./level',
+    savingThrow: {
+      attribute: 'dex',
+      success: 'special',
+      description: 'Reflex negates; see text',
+    },
+    savingThrowText: 'Reflex negates; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:

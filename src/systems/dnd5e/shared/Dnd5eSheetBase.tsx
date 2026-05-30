@@ -1,3 +1,13 @@
+/**
+ * Shared D&D 5e sheet host (2014 + 2024 editions).
+ *
+ * Role: Tabs container + top-level section orchestration only. Sheet-local
+ * state lives in `useDnd5eSheetController`; tab bodies live in `./components/`.
+ *
+ * Budget: enforced at <=400 LOC by `src/__tests__/hostSizeBudget.test.ts`.
+ * Do not add: inline state management, feature-specific logic, or per-tab data
+ * loaders here. New tabs go in `./components/Dnd5e*.tsx` and register below.
+ */
 import { Tabs, TabsContent } from '../../../components/ui/Tabs';
 import { CharacterDocument, SystemDataModel } from '../../../types/core/document';
 import { Dnd5eAbilitiesTab } from './components/Dnd5eAbilitiesTab';
@@ -14,6 +24,12 @@ import { Dnd5eSkillsTab } from './components/Dnd5eSkillsTab';
 import { Dnd5eSpellsTab } from './components/Dnd5eSpellsTab';
 import { Dnd5eTabsNavigation } from './components/Dnd5eTabsNavigation';
 import { Dnd5eWeaponMasteriesTab } from './components/Dnd5eWeaponMasteriesTab';
+import {
+  DND5E_ABILITY_NAMES,
+  DND5E_SKILLS,
+  DND5E_SKILL_NAMES,
+  DND5E_WEAPON_MASTERY_OPTIONS,
+} from './dnd5eSheetConstants';
 import type { Dnd5eLikeDataModel } from './dnd5eSheetShared';
 import { useDnd5eSheetController } from './useDnd5eSheetController';
 
@@ -22,48 +38,6 @@ interface Props<T extends Dnd5eLikeDataModel> {
   onUpdate?: (document: CharacterDocument<SystemDataModel>) => void;
   enableWeaponMasteries?: boolean;
 }
-
-const ABILITY_NAMES: Record<string, string> = {
-  str: 'Strength',
-  dex: 'Dexterity',
-  con: 'Constitution',
-  int: 'Intelligence',
-  wis: 'Wisdom',
-  cha: 'Charisma',
-};
-
-const SKILLS: Array<{ id: string; name: string; ability: string }> = [
-  { id: 'acrobatics', name: 'Acrobatics', ability: 'dex' },
-  { id: 'animal-handling', name: 'Animal Handling', ability: 'wis' },
-  { id: 'arcana', name: 'Arcana', ability: 'int' },
-  { id: 'athletics', name: 'Athletics', ability: 'str' },
-  { id: 'deception', name: 'Deception', ability: 'cha' },
-  { id: 'history', name: 'History', ability: 'int' },
-  { id: 'insight', name: 'Insight', ability: 'wis' },
-  { id: 'intimidation', name: 'Intimidation', ability: 'cha' },
-  { id: 'investigation', name: 'Investigation', ability: 'int' },
-  { id: 'medicine', name: 'Medicine', ability: 'wis' },
-  { id: 'nature', name: 'Nature', ability: 'int' },
-  { id: 'perception', name: 'Perception', ability: 'wis' },
-  { id: 'performance', name: 'Performance', ability: 'cha' },
-  { id: 'persuasion', name: 'Persuasion', ability: 'cha' },
-  { id: 'religion', name: 'Religion', ability: 'int' },
-  { id: 'sleight-of-hand', name: 'Sleight of Hand', ability: 'dex' },
-  { id: 'stealth', name: 'Stealth', ability: 'dex' },
-  { id: 'survival', name: 'Survival', ability: 'wis' },
-];
-const SKILL_NAMES = new Map(SKILLS.map((skill) => [skill.id, skill.name]));
-
-const WEAPON_MASTERY_OPTIONS = [
-  'Cleave',
-  'Graze',
-  'Nick',
-  'Push',
-  'Sap',
-  'Slow',
-  'Topple',
-  'Vex',
-] as const;
 
 export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
   document,
@@ -106,7 +80,7 @@ export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
         pendingClassId={controller.pendingClassId}
         pendingClassLevel={controller.pendingClassLevel}
         classTemplateError={controller.classTemplateError}
-        skillNames={SKILL_NAMES}
+        skillNames={DND5E_SKILL_NAMES}
         canUpdate={controller.canUpdate}
         onPendingClassIdChange={controller.setPendingClassId}
         onPendingClassLevelChange={controller.setPendingClassLevel}
@@ -129,20 +103,12 @@ export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
         deathSaves={d.deathSaves}
         hitDice={d.hitDice}
         canUpdate={Boolean(onUpdate)}
-        onHitPointsChange={(patch) =>
-          updatePatch({
-            hitPoints: {
-              ...d.hitPoints,
-              ...(patch.current != null ? { current: patch.current } : {}),
-              ...(patch.max != null ? { max: patch.max } : {}),
-            },
-          })
-        }
+        onHitPointsChange={onUpdate ? controller.handleHitPointsChange : undefined}
         onDamageHeal={controller.handleDamageHeal}
-        onExhaustionChange={(exhaustionLevel) => updatePatch({ exhaustionLevel })}
+        onExhaustionChange={onUpdate ? controller.handleExhaustionChange : undefined}
         onShortRest={() => controller.replaceSystem(controller.applyDnd5eShortRest(d) as T)}
         onLongRest={() => controller.replaceSystem(controller.applyDnd5eLongRest(d) as T)}
-        onDeathSavesChange={(deathSaves) => updatePatch({ deathSaves })}
+        onDeathSavesChange={onUpdate ? controller.handleDeathSavesChange : undefined}
         onSpendHitDie={(index) => controller.handleHitDiceChange(index, -1)}
         onRecoverHitDie={(index) => controller.handleHitDiceChange(index, 1)}
         onUseSpellSlot={(level) => controller.handleSpellSlotChange(level, 1)}
@@ -163,13 +129,13 @@ export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
 
         <Dnd5eAbilitiesTab
           attributes={d.baseAttributes}
-          abilityNames={ABILITY_NAMES}
+          abilityNames={DND5E_ABILITY_NAMES}
           canUpdate={Boolean(onUpdate)}
           onUpdate={(attributes) => updatePatch({ baseAttributes: attributes })}
         />
 
         <Dnd5eSavesTab
-          abilityNames={ABILITY_NAMES}
+          abilityNames={DND5E_ABILITY_NAMES}
           attributes={d.baseAttributes}
           savingThrowProficiencies={d.savingThrowProficiencies}
           profBonus={controller.profBonus}
@@ -183,7 +149,7 @@ export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
         />
 
         <Dnd5eSkillsTab
-          skills={SKILLS}
+          skills={DND5E_SKILLS}
           attributes={d.baseAttributes}
           skillProficiencies={d.skillProficiencies}
           profBonus={controller.profBonus}
@@ -221,8 +187,8 @@ export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
           featureOptionSelections={controller.featureOptionSelections}
           featureOptionsLoaded={controller.featureOptionsLoaded}
           showFeatureOptionBrowser={controller.showFeatureOptionBrowser}
-          abilityNames={ABILITY_NAMES}
-          skillNames={SKILL_NAMES}
+          abilityNames={DND5E_ABILITY_NAMES}
+          skillNames={DND5E_SKILL_NAMES}
           canUpdate={controller.canUpdate}
           resolveFeatSelections={controller.resolveFeatSelections}
           optionDisabledForRequirement={controller.optionDisabledForRequirement}
@@ -254,6 +220,7 @@ export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
           spells={controller.spells}
           spellNames={controller.spellNames}
           alwaysPreparedSpellIds={controller.alwaysPreparedSpellIds}
+          alwaysPreparedSpellSources={controller.alwaysPreparedSpellSources}
           preparedSpellIds={controller.preparedSpellIds}
           preparedCasterSummaries={controller.preparedCasterSummaries}
           onTogglePreparedSpell={onUpdate ? controller.handleTogglePreparedSpell : undefined}
@@ -278,53 +245,11 @@ export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
             equipmentItems={controller.equipmentItems}
             equippedNames={controller.equippedNames}
             equipmentLoaded={controller.equipmentLoaded}
-            onCurrencyChange={
-              onUpdate
-                ? (currency) => updatePatch({ currency: currency as unknown as typeof d.currency })
-                : undefined
-            }
-            onUnequip={
-              onUpdate
-                ? (itemId) =>
-                    updatePatch({
-                      equipment: d.equipment.filter((entry) => entry.itemId !== itemId),
-                    })
-                : undefined
-            }
-            onToggleAttune={
-              onUpdate
-                ? (itemId) =>
-                    updatePatch({
-                      equipment: d.equipment.map((entry) =>
-                        entry.itemId === itemId ? { ...entry, attuned: !entry.attuned } : entry
-                      ),
-                    })
-                : undefined
-            }
-            onAddInventoryItem={
-              onUpdate
-                ? (item) =>
-                    updatePatch({
-                      inventory: [
-                        ...d.inventory,
-                        {
-                          itemId: item.id,
-                          quantity: item.quantity,
-                          customName: item.name,
-                          notes: item.description,
-                        },
-                      ],
-                    })
-                : undefined
-            }
-            onRemoveInventoryItem={
-              onUpdate
-                ? (itemId) =>
-                    updatePatch({
-                      inventory: d.inventory.filter((entry) => entry.itemId !== itemId),
-                    })
-                : undefined
-            }
+            onCurrencyChange={onUpdate ? controller.handleCurrencyChange : undefined}
+            onUnequip={onUpdate ? controller.handleUnequip : undefined}
+            onToggleAttune={onUpdate ? controller.handleToggleAttune : undefined}
+            onAddInventoryItem={onUpdate ? controller.handleAddInventoryItem : undefined}
+            onRemoveInventoryItem={onUpdate ? controller.handleRemoveInventoryItem : undefined}
             onSelectEquipment={onUpdate ? controller.handleEquipmentSelect : undefined}
           />
         </TabsContent>
@@ -338,46 +263,16 @@ export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
           personality={d.personality}
           notes={d.notes}
           canUpdate={Boolean(onUpdate)}
-          onAppearanceChange={
-            onUpdate
-              ? (appearance) =>
-                  updatePatch({
-                    personality: {
-                      ...d.personality,
-                      appearance,
-                    },
-                  })
-              : undefined
-          }
-          onBackstoryChange={
-            onUpdate
-              ? (backstory) =>
-                  updatePatch({
-                    personality: {
-                      ...d.personality,
-                      backstory,
-                    },
-                  })
-              : undefined
-          }
-          onPersonalityFieldChange={
-            onUpdate
-              ? (field, value) =>
-                  updatePatch({
-                    personality: {
-                      ...d.personality,
-                      [field]: value,
-                    },
-                  })
-              : undefined
-          }
-          onNotesChange={onUpdate ? (notes) => updatePatch({ notes }) : undefined}
+          onAppearanceChange={onUpdate ? controller.handleAppearanceChange : undefined}
+          onBackstoryChange={onUpdate ? controller.handleBackstoryChange : undefined}
+          onPersonalityFieldChange={onUpdate ? controller.handlePersonalityFieldChange : undefined}
+          onNotesChange={onUpdate ? controller.handleNotesChange : undefined}
         />
 
         {enableWeaponMasteries && (
           <Dnd5eWeaponMasteriesTab
             weaponMasteries={controller.weaponMasteries}
-            options={WEAPON_MASTERY_OPTIONS}
+            options={DND5E_WEAPON_MASTERY_OPTIONS}
             canUpdate={Boolean(onUpdate)}
             onToggleMastery={onUpdate ? controller.toggleWeaponMastery : undefined}
           />

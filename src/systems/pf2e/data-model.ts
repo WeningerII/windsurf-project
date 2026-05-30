@@ -47,6 +47,7 @@ export interface Pf2eSpellcasting {
   spellsKnown: string[];
   preparedSpellsByRank?: Record<number, string[]>;
   alwaysPreparedSpellIds?: string[];
+  focusSpells: string[];
   focusPoints: { current: number; max: number };
 }
 

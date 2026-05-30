@@ -1,3 +1,4 @@
+// purpose: Feature options section — surfaces 5e-2014 invocations/styles/metamagic/etc. with provenance.
 import { Suspense, type ComponentType } from 'react';
 import type {
   Dnd5eFeatureOptionDefinition,

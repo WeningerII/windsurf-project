@@ -6,10 +6,11 @@ export const level8Spells: Spell[] = [
     name: 'Horrid Wilting',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Horrid%20Wilting',
     level: 8,
     school: 'necromancy',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -20,13 +21,17 @@ export const level8Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'a bit of sponge',
+      divineFocus: true,
     },
     duration: {
       type: 'instant',
     },
+    target: 'living creatures, no two of which can be more than 60 ft. apart',
     savingThrow: {
       attribute: 'con',
       success: 'half',
+      description: 'Fortitude half',
     },
     damage: {
       base: {
@@ -36,6 +41,7 @@ export const level8Spells: Spell[] = [
       },
       type: 'necrotic',
     },
+    savingThrowText: 'Fortitude half',
     concentration: false,
     ritual: false,
     description:
@@ -51,10 +57,11 @@ export const level8Spells: Spell[] = [
     name: 'Meteor Swarm',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Meteor%20Swarm',
     level: 8,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -69,9 +76,11 @@ export const level8Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    area: 'four 40-ft.-radius spreads, see text',
     savingThrow: {
       attribute: 'dex',
       success: 'half',
+      description: 'none or Reflex half, see text',
     },
     damage: {
       base: {
@@ -81,6 +90,7 @@ export const level8Spells: Spell[] = [
       },
       type: 'fire',
     },
+    savingThrowText: 'none or Reflex half, see text',
     concentration: false,
     ritual: false,
     description:
@@ -96,10 +106,11 @@ export const level8Spells: Spell[] = [
     name: 'Power Word Stun',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Power%20Word%20Stun',
     level: 8,
     school: 'enchantment',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -115,6 +126,8 @@ export const level8Spells: Spell[] = [
       type: 'special',
       description: 'See text',
     },
+    target: 'one creature with 150 hp or less',
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:

@@ -13,10 +13,6 @@ import {
   dnd5eAdventuringGear,
   dnd5eMagicItems,
 } from './equipment/index';
-import { magicWeapons } from './equipment/magic-weapons';
-import { magicArmor } from './equipment/magic-armor';
-import { potions } from './equipment/potions';
-import { wondrousItems } from './equipment/wondrous-items';
 import { eldritchInvocations } from './special-abilities/eldritch-invocations';
 import { divineSmites } from './special-abilities/divine-smites';
 import { sorcererMetamagic } from './special-abilities/sorcerer-metamagic';
@@ -67,12 +63,7 @@ export const dnd5eMetadata = {
       weapons: dnd5eWeapons.length,
       armor: dnd5eArmor.length + dnd5eShields.length,
       adventuringGear: dnd5eAdventuringGear.length,
-      magicItems:
-        dnd5eMagicItems.length +
-        magicWeapons.length +
-        magicArmor.length +
-        potions.length +
-        wondrousItems.length,
+      magicItems: dnd5eMagicItems.length,
     },
 
     specialAbilities: {

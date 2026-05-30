@@ -240,6 +240,9 @@ export class Pf2eEngine implements SystemEngine<Pf2eDataModel> {
         },
         spellSlots: mergeMaxUsedSpellSlots(existing?.spellSlots, slotMaxes),
         spellsKnown: existing?.spellsKnown ?? [],
+        preparedSpellsByRank: existing?.preparedSpellsByRank,
+        alwaysPreparedSpellIds: existing?.alwaysPreparedSpellIds,
+        focusSpells: existing?.focusSpells ?? [],
         focusPoints: {
           current: focusCurrent,
           max: focusMax,

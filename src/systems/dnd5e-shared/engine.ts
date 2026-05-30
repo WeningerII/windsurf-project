@@ -6,6 +6,7 @@ import { hitDieSize } from '../../constants/hit-dice';
 import { compute5eAC } from '../../utils/armorClass';
 import { compute5eSpellSlots } from '../../utils/spellSlots';
 import { hasDnd5eCondition, normalizeDnd5eConditions } from '../dnd5e/conditions';
+import { getDnd5eDefenseStyleArmorClassBonus } from '../dnd5e/shared/activityState';
 
 /** Proficiency bonus by total character level (D&D 5e SRD) */
 export function profBonus(level: number): number {
@@ -169,7 +170,9 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
   // Hook for 2014 vs 2024 specifics
   protected applySubsystemRules(doc: CharacterDocument<Dnd5eDataModel>, dexMod: number): void {
     const data = doc.system;
-    data.armorClass = compute5eAC(data.baseAttributes.dex ?? 10, data.equipment);
+    data.armorClass =
+      compute5eAC(data.baseAttributes.dex ?? 10, data.equipment) +
+      getDnd5eDefenseStyleArmorClassBonus(data);
     data.initiative = dexMod;
   }
 

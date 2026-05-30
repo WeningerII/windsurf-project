@@ -4,7 +4,9 @@ import { getSupabaseClient } from './supabaseClient';
 import { retryWithBackoff } from './retry';
 
 const SYNC_QUEUE_KEY = 'rpg-sync-queue-v1';
+const SYNC_DELETE_QUEUE_KEY = 'rpg-sync-delete-queue-v1';
 const CAMPAIGN_SYNC_QUEUE_KEY = 'rpg-campaign-sync-queue-v1';
+const CAMPAIGN_SYNC_DELETE_QUEUE_KEY = 'rpg-campaign-sync-delete-queue-v1';
 
 export interface RemoteDocument {
   id: string;
@@ -29,6 +31,44 @@ function hydrateQueuedDocuments(
 
 function getDocumentVersion(doc: CharacterDocument<SystemDataModel>): number {
   return doc.version ?? 1;
+}
+
+function readQueuedIds(key: string): string[] {
+  if (typeof localStorage === 'undefined') {
+    return [];
+  }
+
+  const raw = localStorage.getItem(key);
+  if (!raw) {
+    return [];
+  }
+
+  try {
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+    return Array.from(new Set(parsed.filter((id): id is string => typeof id === 'string')));
+  } catch {
+    return [];
+  }
+}
+
+function queueIds(key: string, ids: string[]): void {
+  if (typeof localStorage === 'undefined' || ids.length === 0) {
+    return;
+  }
+
+  const next = Array.from(new Set([...readQueuedIds(key), ...ids]));
+  localStorage.setItem(key, JSON.stringify(next));
+}
+
+function clearQueuedIds(key: string): void {
+  if (typeof localStorage === 'undefined') {
+    return;
+  }
+
+  localStorage.removeItem(key);
 }
 
 async function getCurrentUserId(): Promise<string> {
@@ -188,6 +228,18 @@ export function clearQueuedSyncSnapshot(): void {
   }
 
   localStorage.removeItem(SYNC_QUEUE_KEY);
+}
+
+export function queueDeletedDocumentIds(ids: string[]): void {
+  queueIds(SYNC_DELETE_QUEUE_KEY, ids);
+}
+
+export function getQueuedDeletedDocumentIds(): string[] {
+  return readQueuedIds(SYNC_DELETE_QUEUE_KEY);
+}
+
+export function clearQueuedDeletedDocumentIds(): void {
+  clearQueuedIds(SYNC_DELETE_QUEUE_KEY);
 }
 
 export function subscribeToRemoteDocuments(
@@ -369,6 +421,18 @@ export function getQueuedCampaignsSnapshot(): Campaign[] {
 export function clearQueuedCampaignsSnapshot(): void {
   if (typeof localStorage === 'undefined') return;
   localStorage.removeItem(CAMPAIGN_SYNC_QUEUE_KEY);
+}
+
+export function queueDeletedCampaignIds(ids: string[]): void {
+  queueIds(CAMPAIGN_SYNC_DELETE_QUEUE_KEY, ids);
+}
+
+export function getQueuedDeletedCampaignIds(): string[] {
+  return readQueuedIds(CAMPAIGN_SYNC_DELETE_QUEUE_KEY);
+}
+
+export function clearQueuedDeletedCampaignIds(): void {
+  clearQueuedIds(CAMPAIGN_SYNC_DELETE_QUEUE_KEY);
 }
 
 export function subscribeToRemoteCampaigns(

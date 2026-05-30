@@ -492,6 +492,7 @@ export const level1Spells: Spell[] = [
       die: 'd8',
       notation: '1d8',
     },
+    target: '1 creature you touch',
     concentration: false,
     ritual: false,
     description:
@@ -989,6 +990,7 @@ export const level1Spells: Spell[] = [
       type: 'concentration',
       maxDuration: '1 minute',
     },
+    target: '1 willing creature you touch',
     concentration: true,
     ritual: false,
     description:
@@ -1086,6 +1088,7 @@ export const level1Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: '1 object you touch',
     concentration: false,
     ritual: true,
     description:
@@ -1123,6 +1126,7 @@ export const level1Spells: Spell[] = [
       },
       type: 'necrotic',
     },
+    target: '1 creature you touch',
     concentration: false,
     ritual: false,
     description:
@@ -1154,6 +1158,7 @@ export const level1Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    target: '1 willing creature you touch',
     concentration: false,
     ritual: false,
     description:
@@ -1184,6 +1189,7 @@ export const level1Spells: Spell[] = [
       type: 'hours',
       hours: 1,
     },
+    target: '1 creature you touch',
     concentration: false,
     ritual: false,
     description:
@@ -1216,6 +1222,7 @@ export const level1Spells: Spell[] = [
       type: 'hours',
       hours: 8,
     },
+    target: "1 willing creature you touch who isn't wearing armor",
     concentration: false,
     ritual: false,
     description:
@@ -1287,6 +1294,7 @@ export const level1Spells: Spell[] = [
       type: 'concentration',
       maxDuration: '10 minutes',
     },
+    target: '1 willing creature you touch',
     concentration: true,
     ritual: false,
     description:

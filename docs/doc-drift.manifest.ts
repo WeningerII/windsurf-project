@@ -93,6 +93,12 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: ['path_ref_rule'],
   },
   {
+    path: 'docs/rfc/002-ai-control-plane.md',
+    kind: 'rfc',
+    owner: 'ai-control-plane-rfc',
+    rules: ['path_ref_rule'],
+  },
+  {
     path: 'docs/PRODUCTION_PLAN.md',
     kind: 'historical',
     owner: 'historical-planning',

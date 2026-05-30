@@ -628,6 +628,7 @@ export function applyPf2eClassTemplate(
       spellSlots: existingSpellcasting?.spellSlots || {},
       spellsKnown: existingSpellcasting?.spellsKnown || [],
       alwaysPreparedSpellIds: existingSpellcasting?.alwaysPreparedSpellIds || [],
+      focusSpells: existingSpellcasting?.focusSpells || [],
       ...(castingType === 'prepared'
         ? {
             preparedSpellsByRank: existingSpellcasting?.preparedSpellsByRank || {},

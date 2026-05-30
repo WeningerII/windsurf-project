@@ -6,6 +6,7 @@ import {
   resolveSpellPreparationEntry,
 } from '../../../utils/spellPreparation';
 import { D20_LEGACY_MANUAL_NOTES } from '../../../utils/documentationCopy';
+import type { D20LegacyData } from '../d20LegacySheetShared';
 import { D20SpellBrowserPanel } from './D20SpellBrowserPanel';
 
 function compareSpells(left: Spell, right: Spell): number {
@@ -29,6 +30,7 @@ interface Props {
   alwaysPreparedSpellIds: string[];
   spellSlots: Record<number, { total: number; used: number }>;
   spellSlotLevels: number[];
+  manualSpellcastingExtras?: D20LegacyData['manualSpellcastingExtras'];
   canUpdate: boolean;
   onAddSpellLevel: () => void;
   onAddKnownSpell: (spell: Spell) => void;
@@ -37,6 +39,13 @@ interface Props {
   onUseSpellSlot: (level: number) => void;
   onRecoverSpellSlot: (level: number) => void;
   onSetSpellSlotTotal: (level: number, total: number) => void;
+  onSetManualExtraConsumed: (
+    kind: 'domain' | 'specialist',
+    level: number,
+    consumed: boolean
+  ) => void;
+  onSetSpontaneousConversionReference: (reference: 'cure' | 'inflict' | 'both') => void;
+  onSetDragonDiscipleBonusSlots: (patch: Partial<{ total: number; used: number }>) => void;
 }
 
 export const D20SpellsTab: React.FC<Props> = ({
@@ -48,6 +57,7 @@ export const D20SpellsTab: React.FC<Props> = ({
   alwaysPreparedSpellIds,
   spellSlots,
   spellSlotLevels,
+  manualSpellcastingExtras,
   canUpdate,
   onAddSpellLevel,
   onAddKnownSpell,
@@ -56,6 +66,9 @@ export const D20SpellsTab: React.FC<Props> = ({
   onUseSpellSlot,
   onRecoverSpellSlot,
   onSetSpellSlotTotal,
+  onSetManualExtraConsumed,
+  onSetSpontaneousConversionReference,
+  onSetDragonDiscipleBonusSlots,
 }) => {
   const browseableSpells = React.useMemo(() => {
     const sortedSpells = [...spells].sort(compareSpells);
@@ -93,6 +106,29 @@ export const D20SpellsTab: React.FC<Props> = ({
       }),
     [preparedSpellsByLevel, spellSlotLevels, spellSlots]
   );
+  const manualExtraLevels = React.useMemo(
+    () => spellSlotLevels.filter((level) => level > 0),
+    [spellSlotLevels]
+  );
+  const spontaneousReference = manualSpellcastingExtras?.spontaneousConversionReference ?? 'both';
+  const spontaneousSpellReferences = React.useMemo(
+    () =>
+      browseableSpells.filter((spell) => {
+        const normalizedName = spell.name.toLowerCase();
+        if (spontaneousReference === 'cure') {
+          return normalizedName.startsWith('cure ');
+        }
+        if (spontaneousReference === 'inflict') {
+          return normalizedName.startsWith('inflict ');
+        }
+        return normalizedName.startsWith('cure ') || normalizedName.startsWith('inflict ');
+      }),
+    [browseableSpells, spontaneousReference]
+  );
+  const dragonDiscipleSlots = manualSpellcastingExtras?.dragonDiscipleBonusSlots ?? {
+    total: 0,
+    used: 0,
+  };
 
   return (
     <>
@@ -163,6 +199,155 @@ export const D20SpellsTab: React.FC<Props> = ({
             })}
           </div>
         )}
+      </section>
+
+      <section className="bg-card p-4 rounded-lg border mb-4 space-y-4">
+        <div className="flex items-center justify-between gap-3">
+          <h3 className="text-lg font-semibold">Manual Extras</h3>
+          <Badge variant="outline">Manual</Badge>
+        </div>
+
+        <div className="grid gap-3 lg:grid-cols-2">
+          <div className="rounded-md border p-3 space-y-2">
+            <div className="flex items-center justify-between">
+              <h4 className="text-sm font-semibold">Domain Slots</h4>
+              <Badge variant="secondary">1/level</Badge>
+            </div>
+            {manualExtraLevels.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No spell levels configured.</p>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {manualExtraLevels.map((level) => {
+                  const consumed = Boolean(
+                    manualSpellcastingExtras?.domainSlotConsumedByLevel?.[level]
+                  );
+                  return (
+                    <label
+                      key={level}
+                      className="inline-flex items-center gap-1 rounded border px-2 py-1 text-xs"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={consumed}
+                        disabled={!canUpdate}
+                        onChange={(event) =>
+                          onSetManualExtraConsumed('domain', level, event.target.checked)
+                        }
+                      />
+                      <span>{formatSpellLevel(level)}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          <div className="rounded-md border p-3 space-y-2">
+            <div className="flex items-center justify-between">
+              <h4 className="text-sm font-semibold">Specialist Slots</h4>
+              <Badge variant="secondary">1/level</Badge>
+            </div>
+            {manualExtraLevels.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No spell levels configured.</p>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {manualExtraLevels.map((level) => {
+                  const consumed = Boolean(
+                    manualSpellcastingExtras?.specialistSlotConsumedByLevel?.[level]
+                  );
+                  return (
+                    <label
+                      key={level}
+                      className="inline-flex items-center gap-1 rounded border px-2 py-1 text-xs"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={consumed}
+                        disabled={!canUpdate}
+                        onChange={(event) =>
+                          onSetManualExtraConsumed('specialist', level, event.target.checked)
+                        }
+                      />
+                      <span>{formatSpellLevel(level)}</span>
+                    </label>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="grid gap-3 lg:grid-cols-2">
+          <div className="rounded-md border p-3 space-y-3">
+            <div className="flex items-center justify-between">
+              <h4 className="text-sm font-semibold">Spontaneous Conversion</h4>
+              <select
+                value={spontaneousReference}
+                disabled={!canUpdate}
+                onChange={(event) =>
+                  onSetSpontaneousConversionReference(
+                    event.target.value as 'cure' | 'inflict' | 'both'
+                  )
+                }
+                className="rounded-md border border-input bg-background px-2 py-1 text-xs"
+                aria-label="Spontaneous conversion reference"
+              >
+                <option value="both">Cure + Inflict</option>
+                <option value="cure">Cure</option>
+                <option value="inflict">Inflict</option>
+              </select>
+            </div>
+            {spontaneousSpellReferences.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No cure or inflict spells loaded.</p>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {spontaneousSpellReferences.slice(0, 12).map((spell) => (
+                  <span key={spell.id} className="rounded-full border px-2 py-1 text-xs">
+                    {spell.name}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="rounded-md border p-3 space-y-3">
+            <div className="flex items-center justify-between">
+              <h4 className="text-sm font-semibold">Dragon Disciple Bonus Slots</h4>
+              <Badge variant="outline">
+                {dragonDiscipleSlots.total - dragonDiscipleSlots.used}/{dragonDiscipleSlots.total}
+              </Badge>
+            </div>
+            <div className="flex items-center gap-3">
+              <label className="text-xs text-muted-foreground space-y-1">
+                <span className="block font-medium">Total</span>
+                <input
+                  type="number"
+                  min={0}
+                  value={dragonDiscipleSlots.total}
+                  disabled={!canUpdate}
+                  onChange={(event) =>
+                    onSetDragonDiscipleBonusSlots({ total: Number(event.target.value) })
+                  }
+                  className="w-20 rounded-md border border-input bg-background px-2 py-1 text-sm"
+                />
+              </label>
+              <label className="text-xs text-muted-foreground space-y-1">
+                <span className="block font-medium">Used</span>
+                <input
+                  type="number"
+                  min={0}
+                  max={dragonDiscipleSlots.total}
+                  value={dragonDiscipleSlots.used}
+                  disabled={!canUpdate}
+                  onChange={(event) =>
+                    onSetDragonDiscipleBonusSlots({ used: Number(event.target.value) })
+                  }
+                  className="w-20 rounded-md border border-input bg-background px-2 py-1 text-sm"
+                />
+              </label>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section className="bg-card p-4 rounded-lg border mb-4 space-y-4">

@@ -7,10 +7,11 @@ export const level8Spells: Spell[] = [
     name: 'Animal Shapes',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/animalShapes.htm',
     level: 8,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -21,11 +22,16 @@ export const level8Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'hours',
       hours: 1,
     },
+    target: 'Up to one willing creature per level, all within 30 ft. of each other',
+    savingThrowText: 'None; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: 'One ally/level polymorphs into chosen animal.',
@@ -39,10 +45,11 @@ export const level8Spells: Spell[] = [
     name: 'Antimagic Field',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/antimagicField.htm',
     level: 8,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -52,12 +59,17 @@ export const level8Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    area: '10-ft.-radius emanation, centered on you',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'see-text',
     concentration: false,
     ritual: false,
     description: 'Negates magic within 10 ft.',
@@ -71,10 +83,11 @@ export const level8Spells: Spell[] = [
     name: 'Cloak of Chaos',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/cloakOfChaos.htm',
     level: 8,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -84,15 +97,20 @@ export const level8Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
+      material: false,
+      focus: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    target: 'One creature/level in a 20-ft.-radius burst centered on you',
     concentration: false,
     ritual: false,
     description: '+4 to AC, +4 resistance, and SR 25 against lawful spells.',
+    savingThrowText: 'See text',
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     classes: ['cleric'],
     levelsByClass: {
       cleric: 8,
@@ -103,11 +121,12 @@ export const level8Spells: Spell[] = [
     name: 'Clone',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/clone.htm',
     level: 8,
     school: 'necromancy',
     castingTime: {
-      type: 'action',
-      amount: 1,
+      type: 'minutes',
+      minutes: 10,
     },
     range: {
       type: 'touch',
@@ -117,10 +136,16 @@ export const level8Spells: Spell[] = [
       somatic: true,
       material: true,
       materialDescription: 'A diamond worth at least 1,000 gp per HD of the creature',
+      materialCost: 1000,
+      focus: true,
     },
     duration: {
       type: 'instant',
     },
+    effect: 'One clone',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description:
@@ -135,10 +160,11 @@ export const level8Spells: Spell[] = [
     name: 'Control Plants',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/controlPlants.htm',
     level: 8,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -149,11 +175,21 @@ export const level8Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'Up to 2 HD/level of plant creatures, no two of which can be more than 30 ft. apart',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates',
+    },
+    savingThrowText: 'Will negates',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Control actions of one or more plant creatures.',
@@ -167,6 +203,7 @@ export const level8Spells: Spell[] = [
     name: 'Create Greater Undead',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/createGreaterUndead.htm',
     level: 8,
     school: 'necromancy',
     castingTime: {
@@ -198,6 +235,7 @@ export const level8Spells: Spell[] = [
     name: 'Cure Critical Wounds, Mass',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/cureCriticalWoundsMass.htm',
     level: 8,
     school: 'conjuration',
     castingTime: {
@@ -229,6 +267,7 @@ export const level8Spells: Spell[] = [
     name: 'Cure Serious Wounds, Mass',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/cureSeriousWoundsMass.htm',
     level: 8,
     school: 'conjuration',
     castingTime: {
@@ -260,10 +299,11 @@ export const level8Spells: Spell[] = [
     name: 'Dimensional Lock',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/dimensionalLock.htm',
     level: 8,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -279,6 +319,10 @@ export const level8Spells: Spell[] = [
       type: 'hours',
       hours: 24,
     },
+    area: '20-ft.-radius emanation centered on a point in space',
+    savingThrowText: 'None',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Teleportation and interplanar travel blocked for one day/level.',
@@ -292,11 +336,12 @@ export const level8Spells: Spell[] = [
     name: 'Discern Location',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/discernLocation.htm',
     level: 8,
     school: 'divination',
     castingTime: {
-      type: 'action',
-      amount: 3,
+      type: 'minutes',
+      minutes: 10,
     },
     range: {
       type: 'unlimited',
@@ -304,12 +349,16 @@ export const level8Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
-      materialDescription: 'A holy reliquary worth at least 1,000 gp',
+      material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'instant',
     },
+    target: 'One creature or object',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description:
@@ -325,6 +374,7 @@ export const level8Spells: Spell[] = [
     name: 'Discern Location',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/discernLocation.htm',
     level: 8,
     school: 'divination',
     castingTime: {
@@ -338,10 +388,15 @@ export const level8Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'instant',
     },
+    target: 'One creature or object',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Reveals exact location of creature or object.',
@@ -355,10 +410,11 @@ export const level8Spells: Spell[] = [
     name: 'Earthquake',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/earthquake.htm',
     level: 8,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -369,11 +425,16 @@ export const level8Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    area: '80-ft.-radius spread (S)',
+    savingThrowText: 'See text',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Intense tremor shakes 80-ft.-radius.',
@@ -387,10 +448,11 @@ export const level8Spells: Spell[] = [
     name: 'Earthquake',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/earthquake.htm',
     level: 8,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -401,11 +463,16 @@ export const level8Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    area: '80-ft.-radius spread (S)',
+    savingThrowText: 'See text',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Intense tremor shakes 80-ft.-radius.',
@@ -419,10 +486,11 @@ export const level8Spells: Spell[] = [
     name: 'Finger of Death',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/fingerOfDeath.htm',
     level: 8,
     school: 'necromancy',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -437,6 +505,15 @@ export const level8Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'One living creature',
+    savingThrow: {
+      attribute: 'con',
+      success: 'special',
+      description: 'Fortitude partial',
+    },
+    savingThrowText: 'Fortitude partial',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Kills one subject.',
@@ -450,11 +527,12 @@ export const level8Spells: Spell[] = [
     name: 'Fire Storm',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/fireStorm.htm',
     level: 8,
     school: 'evocation',
     castingTime: {
-      type: 'action',
-      amount: 1,
+      type: 'rounds',
+      rounds: 1,
     },
     range: {
       type: 'ranged',
@@ -468,6 +546,15 @@ export const level8Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    area: 'Two 10-ft. cubes per level (S)',
+    savingThrowText: 'Reflex half',
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+      description: 'Reflex half',
+    },
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Deals 1d6/level fire damage.',
@@ -481,10 +568,11 @@ export const level8Spells: Spell[] = [
     name: 'Holy Aura',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/holyAura.htm',
     level: 8,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -494,15 +582,20 @@ export const level8Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
+      material: false,
+      focus: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    target: 'One creature/level in a 20-ft.-radius burst centered on you',
     concentration: false,
     ritual: false,
     description: '+4 to AC, +4 resistance, and SR 25 against evil spells.',
+    savingThrowText: 'See text',
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     classes: ['cleric'],
     levelsByClass: {
       cleric: 8,
@@ -513,10 +606,11 @@ export const level8Spells: Spell[] = [
     name: 'Horrid Wilting',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/horridWilting.htm',
     level: 8,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -530,11 +624,16 @@ export const level8Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
+      divineFocus: true,
     },
     duration: {
       type: 'instant',
     },
+    target: 'Living creatures, no two of which can be more than 60 ft. apart',
+    savingThrowText: 'Fortitude half',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -550,6 +649,7 @@ export const level8Spells: Spell[] = [
     savingThrow: {
       attribute: 'con',
       success: 'half',
+      description: 'Fortitude half',
     },
     classes: ['sorcerer', 'wizard'],
     levelsByClass: {
@@ -562,6 +662,7 @@ export const level8Spells: Spell[] = [
     name: 'Inflict Critical Wounds, Mass',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/inflictCriticalWoundsMass.htm',
     level: 8,
     school: 'necromancy',
     castingTime: {
@@ -593,10 +694,11 @@ export const level8Spells: Spell[] = [
     name: 'Moment of Prescience',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/momentOfPrescience.htm',
     level: 8,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -611,6 +713,7 @@ export const level8Spells: Spell[] = [
       type: 'hours',
       hours: 1,
     },
+    target: 'You',
     concentration: false,
     ritual: false,
     description:
@@ -626,6 +729,7 @@ export const level8Spells: Spell[] = [
     name: 'Planar Ally, Greater',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/planarAllyGreater.htm',
     level: 8,
     school: 'conjuration',
     castingTime: {
@@ -644,6 +748,8 @@ export const level8Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    effect:
+      'Up to three called elementals or outsiders, totaling no more than 18 HD, no two of which can be more than 30 ft. apart when they appear.',
     concentration: false,
     ritual: false,
     description: 'As lesser planar ally, but up to 18 HD.',
@@ -657,6 +763,7 @@ export const level8Spells: Spell[] = [
     name: 'Planar Binding, Greater',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/planarBindingGreater.htm',
     level: 8,
     school: 'conjuration',
     castingTime: {
@@ -670,12 +777,13 @@ export const level8Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
-      materialDescription: 'Offerings worth 2,000 gp plus payment',
+      material: false,
     },
     duration: {
       type: 'instant',
     },
+    target:
+      'Up to three elementals or outsiders, totaling no more than 18 HD, no two of which can be more than 30 ft. apart when they appear.',
     concentration: false,
     ritual: false,
     description:
@@ -695,10 +803,11 @@ export const level8Spells: Spell[] = [
     name: 'Polymorph Any Object',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/polymorphAnyObject.htm',
     level: 8,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -710,11 +819,21 @@ export const level8Spells: Spell[] = [
       somatic: true,
       material: true,
       materialDescription: 'Jade dust worth at least 1,500 gp',
+      divineFocus: true,
     },
     duration: {
       type: 'hours',
       hours: 1,
     },
+    target: 'One creature, or one nonmagical object of up to 100 cu. ft./level',
+    savingThrow: {
+      attribute: 'con',
+      success: 'special',
+      description: 'Fortitude negates (object); see text',
+    },
+    savingThrowText: 'Fortitude negates (object); see text',
+    spellResistance: true,
+    spellResistanceDetail: 'object',
     concentration: false,
     ritual: false,
     description:
@@ -730,10 +849,11 @@ export const level8Spells: Spell[] = [
     name: 'Power Word Stun',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/powerWordStun.htm',
     level: 8,
     school: 'enchantment',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -748,6 +868,10 @@ export const level8Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'One creature with 150 hp or less',
+    savingThrowText: 'None',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -763,10 +887,11 @@ export const level8Spells: Spell[] = [
     name: 'Protection from Spells',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/protectionFromSpells.htm',
     level: 8,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -777,11 +902,22 @@ export const level8Spells: Spell[] = [
       somatic: true,
       material: true,
       materialDescription: 'Diamond dust worth 500 gp',
+      materialCost: 500,
+      focus: true,
     },
     duration: {
       type: 'hours',
       hours: 1,
     },
+    target: 'Up to one creature touched per four levels',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description:
@@ -798,10 +934,11 @@ export const level8Spells: Spell[] = [
     name: 'Repel Metal or Stone',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/repelMetalOrStone.htm',
     level: 8,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -817,6 +954,10 @@ export const level8Spells: Spell[] = [
       type: 'rounds',
       rounds: 1,
     },
+    area: '60-ft. line from you',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Pushes away metal and stone.',
@@ -830,10 +971,11 @@ export const level8Spells: Spell[] = [
     name: 'Reverse Gravity',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/reverseGravity.htm',
     level: 8,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -843,12 +985,17 @@ export const level8Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
+      divineFocus: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    area: 'Up to one 10-ft. cube per two levels (S)',
+    savingThrowText: 'None; see text',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Objects and creatures fall upward.',
@@ -862,11 +1009,12 @@ export const level8Spells: Spell[] = [
     name: 'Screen',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/screen.htm',
     level: 8,
     school: 'illusion',
     castingTime: {
-      type: 'action',
-      amount: 10,
+      type: 'minutes',
+      minutes: 10,
     },
     range: {
       type: 'ranged',
@@ -875,13 +1023,21 @@ export const level8Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
-      materialDescription: 'A piece of lead-lined silk',
+      material: false,
     },
     duration: {
       type: 'hours',
       hours: 24,
     },
+    area: '30-ft. cube/level (S)',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'special',
+      description: 'None or Will disbelief (if interacted with); see text',
+    },
+    savingThrowText: 'None or Will disbelief (if interacted with); see text',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description:
@@ -897,10 +1053,11 @@ export const level8Spells: Spell[] = [
     name: 'Shield of Law',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/shieldOfLaw.htm',
     level: 8,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -910,15 +1067,20 @@ export const level8Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
+      material: false,
+      focus: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    target: 'One creature/level in a 20-ft.-radius burst centered on you',
     concentration: false,
     ritual: false,
     description: '+4 to AC, +4 resistance, and SR 25 against chaotic spells.',
+    savingThrowText: 'See text',
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     classes: ['cleric'],
     levelsByClass: {
       cleric: 8,
@@ -929,6 +1091,7 @@ export const level8Spells: Spell[] = [
     name: 'Spell Immunity, Greater',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/spellImmunityGreater.htm',
     level: 8,
     school: 'abjuration',
     castingTime: {
@@ -960,6 +1123,7 @@ export const level8Spells: Spell[] = [
     name: 'Summon Monster VIII',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/summonMonsterVIII.htm',
     level: 8,
     school: 'conjuration',
     castingTime: {
@@ -992,6 +1156,7 @@ export const level8Spells: Spell[] = [
     name: 'Summon Monster VIII',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/summonMonsterVIII.htm',
     level: 8,
     school: 'conjuration',
     castingTime: {
@@ -1028,6 +1193,7 @@ export const level8Spells: Spell[] = [
     name: "Summon Nature's Ally VIII",
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/summonNaturesAllyVIII.htm',
     level: 8,
     school: 'conjuration',
     castingTime: {
@@ -1047,6 +1213,7 @@ export const level8Spells: Spell[] = [
       type: 'rounds',
       rounds: 1,
     },
+    effect: 'One or more creatures, no two of which can be more than 30 ft. apart',
     concentration: false,
     ritual: false,
     description: 'Calls creature to fight.',
@@ -1060,10 +1227,11 @@ export const level8Spells: Spell[] = [
     name: 'Sunburst',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/sunburst.htm',
     level: 8,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1073,11 +1241,21 @@ export const level8Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
+      divineFocus: true,
     },
     duration: {
       type: 'instant',
     },
+    area: '80-ft.-radius burst',
+    savingThrow: {
+      attribute: 'dex',
+      success: 'special',
+      description: 'Reflex partial; see text',
+    },
+    savingThrowText: 'Reflex partial; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Blinds all within 10 ft., deals 6d6 damage.',
@@ -1091,6 +1269,7 @@ export const level8Spells: Spell[] = [
     name: 'Symbol of Death',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/symbolOfDeath.htm',
     level: 8,
     school: 'necromancy',
     castingTime: {
@@ -1105,10 +1284,21 @@ export const level8Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription:
+        'Mercury and phosphorus, plus powdered diamond and opal with a total value of at least 5,000 gp each.',
     },
     duration: {
       type: 'permanent',
     },
+    effect: 'One symbol',
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+      description: 'Fortitude negates',
+    },
+    savingThrowText: 'Fortitude negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Triggered rune slays nearby creatures.',
@@ -1122,6 +1312,7 @@ export const level8Spells: Spell[] = [
     name: 'Symbol of Insanity',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/symbolOfInsanity.htm',
     level: 8,
     school: 'enchantment',
     castingTime: {
@@ -1136,10 +1327,18 @@ export const level8Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription:
+        'Mercury and phosphorus, plus powdered diamond and opal with a total value of at least 5,000 gp.',
     },
     duration: {
       type: 'permanent',
     },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates',
+    },
+    savingThrowText: 'Will negates',
     concentration: false,
     ritual: false,
     description: 'Triggered rune renders nearby creatures insane.',
@@ -1153,10 +1352,11 @@ export const level8Spells: Spell[] = [
     name: 'Trap the Soul',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/trapTheSoul.htm',
     level: 8,
     school: 'necromancy',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1172,14 +1372,14 @@ export const level8Spells: Spell[] = [
     duration: {
       type: 'permanent',
     },
+    target: 'One creature',
+    savingThrowText: 'See text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
       'You attempt to trap the soul of a creature you can see within range. The target must make a Charisma saving throw.',
-    savingThrow: {
-      attribute: 'cha',
-      success: 'none',
-    },
     classes: ['wizard'],
     levelsByClass: {
       wizard: 8,
@@ -1190,10 +1390,11 @@ export const level8Spells: Spell[] = [
     name: 'Unholy Aura',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/unholyAura.htm',
     level: 8,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1203,15 +1404,20 @@ export const level8Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
+      material: false,
+      focus: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    target: 'One creature/level in a 20-ft.-radius burst centered on you',
     concentration: false,
     ritual: false,
     description: '+4 to AC, +4 resistance, and SR 25 against good spells.',
+    savingThrowText: 'See text',
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     classes: ['cleric'],
     levelsByClass: {
       cleric: 8,
@@ -1222,10 +1428,11 @@ export const level8Spells: Spell[] = [
     name: 'Whirlwind',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/whirlwind.htm',
     level: 8,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1236,11 +1443,21 @@ export const level8Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    effect: 'Cyclone 10 ft. wide at base, 30 ft. wide at top, and 30 ft. tall',
+    savingThrow: {
+      attribute: 'dex',
+      success: 'special',
+      description: 'Reflex negates; see text',
+    },
+    savingThrowText: 'Reflex negates; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Cyclone deals damage and can pick up creatures.',
@@ -1254,10 +1471,11 @@ export const level8Spells: Spell[] = [
     name: 'Word of Recall',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/wordOfRecall.htm',
     level: 8,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1271,6 +1489,15 @@ export const level8Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'You and touched objects or other willing creatures',
+    savingThrowText: 'None or Will negates (harmless, object)',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'None or Will negates (harmless, object)',
+    },
+    spellResistance: false,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: 'Teleports you back to designated place.',

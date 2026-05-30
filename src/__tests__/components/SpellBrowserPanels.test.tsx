@@ -74,6 +74,34 @@ describe('Spell Browser Panels', () => {
     ).toBeInTheDocument();
   });
 
+  it('renders always-prepared source labels in the shared 5e spell surface', async () => {
+    render(
+      <Tabs defaultValue="spells">
+        <Dnd5eSpellsTab
+          spellcasting={{ spellsKnown: [], spellsPrepared: [] }}
+          spellsLoaded={false}
+          spells={[stinkingCloudSpell]}
+          spellNames={new Map()}
+          alwaysPreparedSpellIds={new Set(['stinking-cloud-test'])}
+          alwaysPreparedSpellSources={[
+            {
+              spellId: 'stinking-cloud-test',
+              source: 'Life Domain Spells',
+              minLevel: 5,
+              countsAgainstPreparedLimit: false,
+            },
+          ]}
+          preparedSpellIds={new Set()}
+          preparedCasterSummaries={[]}
+        />
+      </Tabs>
+    );
+
+    expect(await screen.findByText('Always Prepared')).toBeInTheDocument();
+    expect(screen.getByText('Stinking Cloud')).toBeInTheDocument();
+    expect(screen.getByText('Life Domain Spells')).toBeInTheDocument();
+  });
+
   it('surfaces target and fixed heightening in the PF2e spell browser panel', async () => {
     render(<Pf2eSpellBrowserPanel spells={[teleportSpell]} />);
 

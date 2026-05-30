@@ -6,6 +6,7 @@ import { applyDnd5eLongRest, applyDnd5eShortRest } from '../../../utils/dnd5eRes
 import { getEligibleDnd5eFeatureOptions } from '../../../utils/dnd5eFeatureOptions';
 import {
   getDnd5eAlwaysPreparedSpellIds,
+  getDnd5eAlwaysPreparedSpellSources,
   getDnd5ePreparedCasterSummaries,
 } from './spellPreparation';
 import { Dnd5eLikeDataModel, featureOptionSelectionKey } from './dnd5eSheetShared';
@@ -79,6 +80,10 @@ export function useDnd5eSheetController<T extends Dnd5eLikeDataModel>({
 
   const equippedNames = new Map(equipmentItems.map((item) => [item.id, item.name]));
   const spellNames = new Map(spells.map((spell) => [spell.id, spell.name]));
+  const derivedAlwaysPreparedSpellSources = getDnd5eAlwaysPreparedSpellSources(
+    d.classLevels,
+    classes
+  );
   const derivedAlwaysPreparedSpellIds = getDnd5eAlwaysPreparedSpellIds(d.classLevels, classes);
   const alwaysPreparedSpellIds = new Set([
     ...(d.spellcasting?.alwaysPreparedSpellIds ?? []),
@@ -174,6 +179,7 @@ export function useDnd5eSheetController<T extends Dnd5eLikeDataModel>({
     spellsLoaded,
     spellNames,
     alwaysPreparedSpellIds,
+    alwaysPreparedSpellSources: derivedAlwaysPreparedSpellSources,
     preparedSpellIds,
     preparedCasterSummaries,
     featDefinitionsById,
@@ -209,9 +215,17 @@ export function useDnd5eSheetController<T extends Dnd5eLikeDataModel>({
     toggleSaveProficiency: actionHandlers.toggleSaveProficiency,
     handleFeatureUse: actionHandlers.handleFeatureUse,
     handleHitDiceChange: actionHandlers.handleHitDiceChange,
+    handleHitPointsChange: actionHandlers.handleHitPointsChange,
+    handleExhaustionChange: actionHandlers.handleExhaustionChange,
+    handleDeathSavesChange: actionHandlers.handleDeathSavesChange,
     handleSpellSlotChange: actionHandlers.handleSpellSlotChange,
     handleDamageHeal: actionHandlers.handleDamageHeal,
     handleEquipmentSelect: actionHandlers.handleEquipmentSelect,
+    handleCurrencyChange: actionHandlers.handleCurrencyChange,
+    handleUnequip: actionHandlers.handleUnequip,
+    handleToggleAttune: actionHandlers.handleToggleAttune,
+    handleAddInventoryItem: actionHandlers.handleAddInventoryItem,
+    handleRemoveInventoryItem: actionHandlers.handleRemoveInventoryItem,
     handleSpellSelect: actionHandlers.handleSpellSelect,
     handleTogglePreparedSpell: actionHandlers.handleTogglePreparedSpell,
     handleFeatSelect: actionHandlers.handleFeatSelect,
@@ -221,6 +235,10 @@ export function useDnd5eSheetController<T extends Dnd5eLikeDataModel>({
     handleFeatureOptionRemove: actionHandlers.handleFeatureOptionRemove,
     toggleWeaponMastery: actionHandlers.toggleWeaponMastery,
     recoverAllSpellSlots: actionHandlers.recoverAllSpellSlots,
+    handleAppearanceChange: actionHandlers.handleAppearanceChange,
+    handleBackstoryChange: actionHandlers.handleBackstoryChange,
+    handlePersonalityFieldChange: actionHandlers.handlePersonalityFieldChange,
+    handleNotesChange: actionHandlers.handleNotesChange,
     applyDnd5eLongRest,
     applyDnd5eShortRest,
     resolveFeatSelections: actionHandlers.resolveFeatSelections,

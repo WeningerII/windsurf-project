@@ -478,6 +478,7 @@ export const level8Spells: Spell[] = [
       type: 'hours',
       hours: 24,
     },
+    target: '1 willing creature you touch',
     concentration: false,
     ritual: false,
     description:

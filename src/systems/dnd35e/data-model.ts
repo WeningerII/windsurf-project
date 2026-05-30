@@ -38,6 +38,13 @@ export interface Dnd35eFeat {
   prerequisites?: string;
 }
 
+export interface Dnd35eManualSpellcastingExtras {
+  domainSlotConsumedByLevel?: Record<number, boolean>;
+  specialistSlotConsumedByLevel?: Record<number, boolean>;
+  spontaneousConversionReference?: 'cure' | 'inflict' | 'both';
+  dragonDiscipleBonusSlots?: { total: number; used: number };
+}
+
 export interface Dnd35eDataModel extends SystemDataModel {
   level: number;
   experiencePoints: number;
@@ -82,6 +89,7 @@ export interface Dnd35eDataModel extends SystemDataModel {
   spellsKnown?: string[];
   preparedSpellsByLevel?: Record<number, string[]>;
   alwaysPreparedSpellIds?: string[];
+  manualSpellcastingExtras?: Dnd35eManualSpellcastingExtras;
 
   // Equipment
   equipment: Array<{

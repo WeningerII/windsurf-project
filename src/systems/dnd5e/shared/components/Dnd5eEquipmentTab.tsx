@@ -1,3 +1,4 @@
+// purpose: Equipment tab body — wraps the lazy equipment browser plus inventory/currency state surface.
 import { Suspense, type ComponentType } from 'react';
 import { EquippedItem } from '../../../../types/core/character';
 import { Item } from '../../../../types/equipment/items';

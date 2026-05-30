@@ -668,6 +668,7 @@ export const level6Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: '1 stone you touch',
     concentration: false,
     ritual: false,
     description:
@@ -1022,6 +1023,7 @@ export const level6Spells: Spell[] = [
       type: 'hours',
       hours: 1,
     },
+    target: '1 willing creature you touch',
     concentration: false,
     ritual: false,
     description:

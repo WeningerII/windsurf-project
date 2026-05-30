@@ -117,6 +117,30 @@ function collectAlwaysPreparedGrantSources(
   }));
 }
 
+function collectAlwaysPreparedByLevelSources(
+  spellIdsByLevel: Record<number, string[]> | undefined,
+  sourceLabel: string,
+  characterLevel: number
+): Dnd5eAlwaysPreparedSpellSource[] {
+  if (!spellIdsByLevel) {
+    return [];
+  }
+
+  return Object.entries(spellIdsByLevel).flatMap(([level, spellIds]) => {
+    const minLevel = Number(level);
+    if (characterLevel < minLevel) {
+      return [];
+    }
+
+    return spellIds.map((spellId) => ({
+      spellId,
+      source: sourceLabel,
+      minLevel,
+      countsAgainstPreparedLimit: false as const,
+    }));
+  });
+}
+
 function getMatchingSubclass(
   classLevel: ClassLevel,
   classData: CharacterClass | undefined
@@ -133,20 +157,40 @@ export function getDnd5eAlwaysPreparedSpellSources(
   classes: CharacterClass[]
 ): Dnd5eAlwaysPreparedSpellSource[] {
   const classCatalog = new Map(classes.map((entry) => [entry.id, entry]));
-
-  return classLevels.flatMap((classLevel) => {
+  const sources = classLevels.flatMap((classLevel) => {
     const classData = classCatalog.get(classLevel.classId);
     const subclass = getMatchingSubclass(classLevel, classData);
 
+    const classSourceLabel = classData?.alwaysPreparedSpellSourceLabel ?? classData?.name;
+    const subclassSourceLabel = subclass?.alwaysPreparedSpellSourceLabel ?? subclass?.name;
     return [
       ...(classData?.alwaysPreparedSpells ?? []).flatMap((grant) =>
         collectAlwaysPreparedGrantSources(grant, classLevel.level)
       ),
+      ...collectAlwaysPreparedByLevelSources(
+        classData?.alwaysPreparedSpellsByLevel,
+        classSourceLabel ?? 'Class Spells',
+        classLevel.level
+      ),
       ...(subclass?.alwaysPreparedSpells ?? []).flatMap((grant) =>
         collectAlwaysPreparedGrantSources(grant, classLevel.level)
       ),
+      ...collectAlwaysPreparedByLevelSources(
+        subclass?.alwaysPreparedSpellsByLevel,
+        subclassSourceLabel ?? 'Subclass Spells',
+        classLevel.level
+      ),
     ];
   });
+
+  const deduped = new Map<string, Dnd5eAlwaysPreparedSpellSource>();
+  sources.forEach((source) => {
+    const key = `${source.spellId}::${source.source}`;
+    if (!deduped.has(key)) {
+      deduped.set(key, source);
+    }
+  });
+  return [...deduped.values()];
 }
 
 export function getDnd5eAlwaysPreparedSpellIds(

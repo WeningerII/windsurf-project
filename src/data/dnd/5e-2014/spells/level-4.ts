@@ -94,6 +94,8 @@ export const level4Spells: Spell[] = [
     range: { type: 'touch' },
     components: { verbal: true, somatic: true, material: true, materialDescription: 'soft clay' },
     duration: { type: 'instant' },
+    target:
+      '1 stone object of Medium size or smaller or a section of stone no more than 5 feet in any dimension',
     concentration: false,
     ritual: false,
     description:
@@ -116,6 +118,7 @@ export const level4Spells: Spell[] = [
       materialDescription: 'a leather strap, bound around the arm or a similar appendage',
     },
     duration: { type: 'hours', hours: 1 },
+    target: '1 willing creature you touch',
     concentration: false,
     ritual: false,
     description:
@@ -133,6 +136,7 @@ export const level4Spells: Spell[] = [
     range: { type: 'touch' },
     components: { verbal: true, somatic: true, material: false },
     duration: { type: 'hours', hours: 8 },
+    target: '1 creature you touch',
     concentration: false,
     ritual: false,
     description:
@@ -439,6 +443,7 @@ export const level4Spells: Spell[] = [
       materialConsumed: true,
     },
     duration: { type: 'concentration', maxDuration: '1 hour' },
+    target: '1 willing creature you touch',
     concentration: true,
     ritual: false,
     description:

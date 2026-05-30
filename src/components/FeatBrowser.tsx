@@ -9,6 +9,7 @@ interface Feat {
   description: string;
   benefits: string[];
   prerequisites?: Array<{ type: string; description: string }>;
+  manual?: boolean;
 }
 
 interface FeatBrowserProps {
@@ -76,7 +77,14 @@ export const FeatBrowser: React.FC<FeatBrowserProps> = ({ feats, onSelectFeat })
                   className="w-full p-4 hover:bg-muted transition-all flex justify-between items-center"
                 >
                   <div className="text-left">
-                    <h4 className="font-semibold">{feat.name}</h4>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h4 className="font-semibold">{feat.name}</h4>
+                      {feat.manual && (
+                        <span className="rounded-full border border-amber-300 bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-800">
+                          Manual
+                        </span>
+                      )}
+                    </div>
                     <p className="text-sm text-muted-foreground">
                       {feat.source} • {feat.system}
                     </p>

@@ -1,4 +1,5 @@
 // Pathfinder 1e Classes Index
+import { alchemist } from './alchemist';
 import { barbarian } from './barbarian';
 import { bard } from './bard';
 import { cleric } from './cleric';
@@ -12,6 +13,7 @@ import { sorcerer } from './sorcerer';
 import { wizard } from './wizard';
 
 export const pf1eClasses = {
+  alchemist,
   barbarian,
   bard,
   cleric,
@@ -25,4 +27,17 @@ export const pf1eClasses = {
   wizard,
 };
 
-export { barbarian, bard, cleric, druid, fighter, monk, paladin, ranger, rogue, sorcerer, wizard };
+export {
+  alchemist,
+  barbarian,
+  bard,
+  cleric,
+  druid,
+  fighter,
+  monk,
+  paladin,
+  ranger,
+  rogue,
+  sorcerer,
+  wizard,
+};

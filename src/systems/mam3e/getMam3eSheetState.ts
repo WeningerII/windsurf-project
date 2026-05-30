@@ -9,6 +9,23 @@ interface GetMam3eSheetStateProps {
   modifierCatalog: PowerModifier[];
 }
 
+function uniqueNonEmptyStrings(values: Array<string | undefined>): string[] {
+  const seen = new Set<string>();
+  const result: string[] = [];
+
+  values.forEach((value) => {
+    const normalized = value?.trim();
+    if (!normalized || seen.has(normalized)) {
+      return;
+    }
+
+    seen.add(normalized);
+    result.push(normalized);
+  });
+
+  return result;
+}
+
 export function getMam3eSheetState({ data, archetypes, modifierCatalog }: GetMam3eSheetStateProps) {
   const conditionTrack = data.conditionTrack ?? createEmptyMam3eConditionTrack();
   const ppSpent =
@@ -18,13 +35,13 @@ export function getMam3eSheetState({ data, archetypes, modifierCatalog }: GetMam
     data.powerPoints.spent.advantages +
     data.powerPoints.spent.skills;
   const ppOver = ppSpent > data.powerPoints.total;
-  const pinnedArchetypeIds = data.selectedArchetypeIds ?? [];
+  const pinnedArchetypeIds = uniqueNonEmptyStrings(data.selectedArchetypeIds ?? []);
   const pinnedArchetypes = archetypes.filter((archetype) =>
     pinnedArchetypeIds.includes(archetype.id)
   );
-  const insertedComplicationIds = data.complications
-    .map((complication) => complication.id)
-    .filter((id): id is string => typeof id === 'string' && id.trim().length > 0);
+  const insertedComplicationIds = uniqueNonEmptyStrings(
+    data.complications.map((complication) => complication.id)
+  );
   const extraModifiers = modifierCatalog
     .filter((modifier) => modifier.type === 'extra')
     .sort((left, right) => left.name.localeCompare(right.name));

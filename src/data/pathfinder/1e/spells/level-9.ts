@@ -6,10 +6,11 @@ export const level9Spells: Spell[] = [
     name: 'Gate',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Gate',
     level: 9,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -20,11 +21,14 @@ export const level9Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'see text',
     },
     duration: {
       type: 'concentration',
       maxDuration: '1 round per level',
     },
+    effect: 'see text',
+    savingThrowText: 'none',
     concentration: true,
     ritual: false,
     description:
@@ -41,10 +45,11 @@ export const level9Spells: Spell[] = [
     name: 'Power Word Kill',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Power%20Word%20Kill',
     level: 9,
     school: 'enchantment',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -59,6 +64,8 @@ export const level9Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'one living creature with 100 hp or less',
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:
@@ -74,10 +81,11 @@ export const level9Spells: Spell[] = [
     name: 'Time Stop',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Time%20Stop',
     level: 9,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -92,6 +100,7 @@ export const level9Spells: Spell[] = [
       type: 'special',
       description: '1d4+1 apparent rounds',
     },
+    target: 'you',
     concentration: false,
     ritual: false,
     description:
@@ -107,10 +116,11 @@ export const level9Spells: Spell[] = [
     name: 'Wish',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Wish',
     level: 9,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -120,11 +130,15 @@ export const level9Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'diamond worth 25,000 gp',
+      materialCost: 25000,
+      materialConsumed: true,
     },
     duration: {
       type: 'special',
       description: 'See text',
     },
+    savingThrowText: 'none, see text',
     concentration: false,
     ritual: false,
     description:

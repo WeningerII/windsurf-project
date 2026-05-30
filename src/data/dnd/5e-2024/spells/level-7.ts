@@ -443,6 +443,7 @@ export const level7Spells: Spell[] = [
       type: 'hours',
       hours: 1,
     },
+    target: '1 creature you touch',
     concentration: false,
     ritual: false,
     description:
@@ -474,6 +475,7 @@ export const level7Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: '1 dead creature you touch',
     concentration: false,
     ritual: false,
     description:

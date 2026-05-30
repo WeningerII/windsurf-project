@@ -74,6 +74,7 @@ interface Props {
   alwaysPreparedSpellIds: string[];
   spellSlots: Record<number, { total: number; used: number }>;
   spellSlotLevels: number[];
+  manualSpellcastingExtras?: D20LegacyData['manualSpellcastingExtras'];
   onLoadSpells: () => void | Promise<void>;
   equipmentLoaded: boolean;
   equipmentItems: Item[];
@@ -101,6 +102,13 @@ interface Props {
   onUseSpellSlot: (level: number) => void;
   onRecoverSpellSlot: (level: number) => void;
   onSetSpellSlotTotal: (level: number, total: number) => void;
+  onSetManualExtraConsumed: (
+    kind: 'domain' | 'specialist',
+    level: number,
+    consumed: boolean
+  ) => void;
+  onSetSpontaneousConversionReference: (reference: 'cure' | 'inflict' | 'both') => void;
+  onSetDragonDiscipleBonusSlots: (patch: Partial<{ total: number; used: number }>) => void;
   onCurrencyChange: (currency: D20InventoryCurrency) => void;
   onAddItem: (item: { id: string; name: string; quantity: number; weight: number }) => void;
   onRemoveItem: (itemId: string) => void;
@@ -140,6 +148,7 @@ export const D20LegacyTabs: React.FC<Props> = ({
   alwaysPreparedSpellIds,
   spellSlots,
   spellSlotLevels,
+  manualSpellcastingExtras,
   onLoadSpells,
   equipmentLoaded,
   equipmentItems,
@@ -164,6 +173,9 @@ export const D20LegacyTabs: React.FC<Props> = ({
   onUseSpellSlot,
   onRecoverSpellSlot,
   onSetSpellSlotTotal,
+  onSetManualExtraConsumed,
+  onSetSpontaneousConversionReference,
+  onSetDragonDiscipleBonusSlots,
   onCurrencyChange,
   onAddItem,
   onRemoveItem,
@@ -315,6 +327,7 @@ export const D20LegacyTabs: React.FC<Props> = ({
           alwaysPreparedSpellIds={alwaysPreparedSpellIds}
           spellSlots={spellSlots}
           spellSlotLevels={spellSlotLevels}
+          manualSpellcastingExtras={manualSpellcastingExtras}
           canUpdate={canUpdate}
           onAddSpellLevel={onAddSpellLevel}
           onAddKnownSpell={onAddKnownSpell}
@@ -323,6 +336,9 @@ export const D20LegacyTabs: React.FC<Props> = ({
           onUseSpellSlot={onUseSpellSlot}
           onRecoverSpellSlot={onRecoverSpellSlot}
           onSetSpellSlotTotal={onSetSpellSlotTotal}
+          onSetManualExtraConsumed={onSetManualExtraConsumed}
+          onSetSpontaneousConversionReference={onSetSpontaneousConversionReference}
+          onSetDragonDiscipleBonusSlots={onSetDragonDiscipleBonusSlots}
         />
       </TabsContent>
 

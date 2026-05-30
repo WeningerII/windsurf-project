@@ -1,3 +1,4 @@
+// purpose: Selected feats section — lists chosen feats with manual-rider badge and removal/option editing.
 import { FeatDefinition } from '../../../../types/character-options/feats';
 import { Feat } from '../../../../types/core/character';
 import type {
@@ -6,6 +7,7 @@ import type {
 } from '../../../../utils/featTemplate';
 import { DND5E_FEAT_COPY } from '../../../../utils/documentationCopy';
 import { getDnd5eFeatAutomationRequirements } from '../../../../utils/featTemplate';
+import { shouldShowDnd5eManualFeatBadge } from '../../../../utils/featManualBadge';
 
 interface Props {
   feats: Feat[];
@@ -62,7 +64,21 @@ export function Dnd5eSelectedFeatsSection({
         <div key={feat.id} className="rounded border bg-muted/30 p-3">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <div className="font-medium">{feat.name}</div>
+              <div className="flex flex-wrap items-center gap-2">
+                <div className="font-medium">{feat.name}</div>
+                {(() => {
+                  const featDefinition = featDefinitionsById.get(feat.id);
+                  if (!featDefinition || !shouldShowDnd5eManualFeatBadge(featDefinition, feat)) {
+                    return null;
+                  }
+
+                  return (
+                    <span className="rounded-full border border-amber-300 bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-800">
+                      Manual
+                    </span>
+                  );
+                })()}
+              </div>
               <div className="text-xs text-muted-foreground">{feat.source}</div>
               <p className="mt-1 text-sm text-muted-foreground">{feat.description}</p>
             </div>

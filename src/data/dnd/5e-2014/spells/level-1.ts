@@ -244,6 +244,7 @@ export const level1Spells: Spell[] = [
     components: { verbal: true, somatic: true, material: false },
     duration: { type: 'instant' },
     healing: { count: 1, die: 'd8', notation: '1d8' },
+    target: '1 creature you touch',
     concentration: false,
     ritual: false,
     description:
@@ -560,6 +561,7 @@ export const level1Spells: Spell[] = [
     range: { type: 'touch' },
     components: { verbal: true, somatic: true, material: false },
     duration: { type: 'concentration', maxDuration: '1 minute' },
+    target: '1 willing creature you touch',
     concentration: true,
     ritual: false,
     description:
@@ -628,6 +630,7 @@ export const level1Spells: Spell[] = [
       materialCost: 100,
     },
     duration: { type: 'instant' },
+    target: '1 object you touch',
     concentration: false,
     ritual: true,
     description:
@@ -645,6 +648,7 @@ export const level1Spells: Spell[] = [
     range: { type: 'touch' },
     components: { verbal: true, somatic: true, material: false },
     duration: { type: 'instant' },
+    target: '1 creature you touch',
     attackRoll: true,
     damage: { base: { count: 3, die: 'd10', notation: '3d10' }, type: 'necrotic' },
     concentration: false,
@@ -671,6 +675,7 @@ export const level1Spells: Spell[] = [
       materialDescription: "a grasshopper's hind leg",
     },
     duration: { type: 'minutes', minutes: 1 },
+    target: '1 creature you touch',
     concentration: false,
     ritual: false,
     description:
@@ -693,6 +698,7 @@ export const level1Spells: Spell[] = [
       materialDescription: 'a pinch of dirt',
     },
     duration: { type: 'hours', hours: 1 },
+    target: '1 creature you touch',
     concentration: false,
     ritual: false,
     description:
@@ -717,6 +723,7 @@ export const level1Spells: Spell[] = [
       materialDescription: 'a piece of cured leather',
     },
     duration: { type: 'hours', hours: 8 },
+    target: "1 willing creature you touch who isn't wearing armor",
     concentration: false,
     ritual: false,
     description:
@@ -760,6 +767,7 @@ export const level1Spells: Spell[] = [
       materialConsumed: true,
     },
     duration: { type: 'concentration', maxDuration: '10 minutes' },
+    target: '1 willing creature you touch',
     concentration: true,
     ritual: false,
     description:

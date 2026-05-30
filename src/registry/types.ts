@@ -56,6 +56,43 @@ export interface SystemEngine<T extends SystemDataModel> {
   applyDamage(document: CharacterDocument<T>, amount: number, type: string): CharacterDocument<T>;
 }
 
+export type ValidationSeverity = 'info' | 'warning' | 'error';
+
+export type ValidationReason = 'edit' | 'import' | 'creation' | 'sync' | 'ai-draft';
+
+export interface ValidationIssue {
+  code: string;
+  message: string;
+  severity: ValidationSeverity;
+  path?: string;
+  source?: string;
+  recoverable?: boolean;
+  details?: Record<string, unknown>;
+}
+
+export interface ValidationContext {
+  systemId: string;
+  reason?: ValidationReason;
+  source?: string;
+}
+
+export interface ValidationResult {
+  issues: ValidationIssue[];
+}
+
+/**
+ * Optional per-system validation hook.
+ *
+ * Validators report structured issues but do not mutate or persist documents.
+ * Callers decide how to display or act on the returned issue list.
+ */
+export interface SystemValidator<T extends SystemDataModel> {
+  validateDocument(
+    document: CharacterDocument<T>,
+    context: ValidationContext
+  ): ValidationResult | Promise<ValidationResult>;
+}
+
 /**
  * A complete definition of a Game System module.
  */
@@ -85,6 +122,9 @@ export interface SystemDefinition<T extends SystemDataModel> {
 
   // The Logic Engine implementation
   engine: SystemEngine<T>;
+
+  // Optional validation hook for import, guided creation, and AI draft review.
+  validator?: SystemValidator<T>;
 
   // The Main Character Sheet Component
   SheetComponent: SystemSheetComponent<T>;

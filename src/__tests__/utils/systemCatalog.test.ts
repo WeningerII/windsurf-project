@@ -255,6 +255,23 @@ describe('systemCatalog', () => {
     expect(loadTraitsForSystemMock).toHaveBeenCalledWith('pf1e');
   });
 
+  it('keeps d20 legacy monster data out of product reporting', async () => {
+    loadSpellsForSystemMock.mockResolvedValue(makeItems('spell', 1));
+    loadClassesForSystemMock.mockResolvedValue(makeItems('class', 1));
+    loadSpeciesForSystemMock.mockResolvedValue(makeItems('species', 1));
+    loadEquipmentForSystemMock.mockResolvedValue(makeItems('equipment', 1));
+    loadFeatsForSystemMock.mockResolvedValue(makeItems('feat', 1));
+    loadTraitsForSystemMock.mockResolvedValue(makeItems('trait', 1));
+    loadMonstersForSystemMock.mockResolvedValue(makeItems('monster', 99));
+
+    const dnd35e = await loadSystemCatalogSummary('dnd-3.5e');
+    const pf1e = await loadSystemCatalogSummary('pf1e');
+
+    expect(dnd35e.categories.some((category) => category.id === 'monsters')).toBe(false);
+    expect(pf1e.categories.some((category) => category.id === 'monsters')).toBe(false);
+    expect(loadMonstersForSystemMock).not.toHaveBeenCalled();
+  });
+
   it('falls back to default metadata for systems missing registry entries', async () => {
     systemRegistryGetMock.mockImplementation((systemId: GameSystemId) =>
       systemId === 'mam3e' ? undefined : registryMeta[systemId]

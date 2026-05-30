@@ -6,10 +6,11 @@ export const level6Spells: Spell[] = [
     name: 'Chain Lightning',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Chain%20Lightning',
     level: 6,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -19,14 +20,20 @@ export const level6Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
+      material: false,
+      focus: true,
+      focusDescription:
+        'a bit of fur, a piece of amber, glass, or a crystal rod; plus one silver pin per caster level',
     },
     duration: {
       type: 'instant',
     },
+    target:
+      'one primary target, plus one secondary target/level (each of which must be within 30 ft. of the primary target)',
     savingThrow: {
       attribute: 'dex',
       success: 'half',
+      description: 'Reflex half',
     },
     damage: {
       base: {
@@ -36,6 +43,7 @@ export const level6Spells: Spell[] = [
       },
       type: 'lightning',
     },
+    savingThrowText: 'Reflex half',
     concentration: false,
     ritual: false,
     description:
@@ -51,10 +59,11 @@ export const level6Spells: Spell[] = [
     name: 'Disintegrate',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Disintegrate',
     level: 6,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -65,14 +74,19 @@ export const level6Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'a lodestone and a pinch of dust',
+      divineFocus: true,
     },
     duration: {
       type: 'instant',
     },
+    effect: 'ray',
     savingThrow: {
       attribute: 'con',
-      success: 'half',
+      success: 'special',
+      description: 'Fortitude partial (object)',
     },
+    savingThrowText: 'Fortitude partial (object)',
     attackRoll: true,
     damage: {
       base: {
@@ -97,10 +111,11 @@ export const level6Spells: Spell[] = [
     name: 'Greater Dispel Magic',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Dispel%20Magic%2C%20Greater',
     level: 6,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -115,6 +130,9 @@ export const level6Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'or Area one spellcaster, creature, object, or a 20-ft.-radius burst',
+    area: 'Dispel: When greater dispel magic is used in this way, the spell affects everything within a 20-foot-radius burst. Roll one dispel check and apply that check to each creature in the area, as if targeted by dispel magic. For each object within the area that is the target of one or more spells, apply the dispel check as with creatures. Magic items are not affected by an area dispel.',
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:
@@ -133,10 +151,11 @@ export const level6Spells: Spell[] = [
     name: 'True Seeing',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=True%20Seeing',
     level: 6,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -146,11 +165,21 @@ export const level6Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'an eye ointment that costs 250 gp',
+      materialCost: 250,
+      materialConsumed: true,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
     concentration: false,
     ritual: false,
     description:

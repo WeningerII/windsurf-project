@@ -12,7 +12,7 @@ export default defineConfig({
     globals: true,
     environment: 'happy-dom',
     setupFiles: './src/__tests__/setup.ts',
-    exclude: [...configDefaults.exclude, 'e2e/**'],
+    exclude: [...configDefaults.exclude, 'e2e/**', '.tmp/**'],
     testTimeout: isCoverageRun ? 15000 : 10000,
     fileParallelism: !isCoverageRun,
     minWorkers: isCoverageRun ? 1 : undefined,

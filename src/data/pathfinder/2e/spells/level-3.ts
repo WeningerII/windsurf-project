@@ -1,6 +1,7 @@
 import { Spell } from '../../../../types/magic/spells';
+import { withPf2eSpellTraits } from './traits';
 
-export const level3Spells: Spell[] = [
+export const level3Spells: Spell[] = withPf2eSpellTraits([
   {
     id: 'bind-undead-pf2e',
     name: 'Bind Undead',
@@ -152,6 +153,11 @@ export const level3Spells: Spell[] = [
     ritual: false,
     description:
       'A roaring blast of fire appears at a spot you designate, dealing 6d6 fire damage. Each creature in the area must attempt a basic Reflex save.',
+    heightening: {
+      mode: 'interval',
+      interval: 1,
+      summary: 'Heightened (+1): The damage increases by 2d6.',
+    },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -213,6 +219,11 @@ export const level3Spells: Spell[] = [
     ritual: false,
     description:
       'Magic empowers the target to act faster. It gains the quickened condition and can use the extra action only to Stride or Strike.',
+    heightening: {
+      mode: 'fixed',
+      summary: 'Heightened (7th): You can target up to 6 creatures.',
+      ranks: { 7: 'You can target up to 6 creatures.' },
+    },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -243,6 +254,15 @@ export const level3Spells: Spell[] = [
     ritual: false,
     description:
       "You tap into the target's inner heroism, granting it a +1 status bonus to attack rolls, Perception checks, saving throws, and skill checks.",
+    heightening: {
+      mode: 'fixed',
+      summary:
+        'Heightened (6th): The status bonus increases to +2. Heightened (9th): The status bonus increases to +3.',
+      ranks: {
+        6: 'The status bonus increases to +2.',
+        9: 'The status bonus increases to +3.',
+      },
+    },
     classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
   },
   {
@@ -327,6 +347,11 @@ export const level3Spells: Spell[] = [
     ritual: false,
     description:
       'A bolt of lightning strikes outward from your hand, dealing 4d12 electricity damage. Each creature in the area must attempt a basic Reflex save.',
+    heightening: {
+      mode: 'interval',
+      interval: 1,
+      summary: 'Heightened (+1): The damage increases by 1d12.',
+    },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -363,6 +388,13 @@ export const level3Spells: Spell[] = [
     ritual: false,
     description:
       "You block the target's motor impulses. The target must attempt a Will save. On a failure, the target is paralyzed for the duration.",
+    heightening: {
+      mode: 'fixed',
+      summary: 'Heightened (7th): You can target up to 10 creatures.',
+      ranks: {
+        7: 'You can target up to 10 creatures.',
+      },
+    },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -399,6 +431,11 @@ export const level3Spells: Spell[] = [
     ritual: false,
     description:
       'You dilate the flow of time around the target, making it slowed 1. The target must attempt a Will save. On a critical failure, the target is slowed 2.',
+    heightening: {
+      mode: 'fixed',
+      summary: 'Heightened (6th): You can target up to 10 creatures.',
+      ranks: { 6: 'You can target up to 10 creatures.' },
+    },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -476,6 +513,11 @@ export const level3Spells: Spell[] = [
     ritual: false,
     description:
       'Your touch leeches the lifeblood out of a target to empower yourself. You deal 6d6 negative damage to the touched creature and you gain temporary Hit Points equal to half the damage the target takes (after applying resistances, weaknesses, and the like).',
+    heightening: {
+      mode: 'interval',
+      interval: 1,
+      summary: 'Heightened (+1): The damage increases by 2d6.',
+    },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -514,4 +556,4 @@ export const level3Spells: Spell[] = [
       "You create a wall of gusting wind. The wall is 60 feet long, 20 feet high, and 5 feet thick. Ranged attacks can't pass through the wall, and creatures trying to move through must attempt a Fortitude save or be pushed back.",
     classes: ['druid', 'sorcerer', 'wizard'],
   },
-];
+]);

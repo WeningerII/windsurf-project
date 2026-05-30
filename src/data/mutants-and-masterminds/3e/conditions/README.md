@@ -10,7 +10,7 @@ This directory contains all conditions from the M&M 3e SRD. Conditions represent
 
 ```typescript
 conditions/
-└── index.ts               # All 26 conditions (16 basic + 10 combined)
+└── index.ts               # All 29 conditions (16 basic + 13 combined)
 ```
 
 ## Condition Types
@@ -36,12 +36,14 @@ Basic conditions are single game modifiers that represent a specific state:
 - **Vulnerable** - Susceptible to additional damage
 - **Weakened** - One or more traits reduced in rank
 
-### Combined Conditions (10)
+### Combined Conditions (13)
 
 Combined conditions are composed of multiple basic conditions:
 
 - **Asleep** - Defenseless + Stunned + Unaware
+- **Blind** - Full visual concealment + Hindered + Visually unaware + Vulnerable
 - **Bound** - Defenseless + Immobile + Impaired
+- **Deaf** - Total auditory concealment; surprise-vulnerable; limited verbal interaction
 - **Dying** - Incapacitated + near death
 - **Entranced** - Stunned, paying attention only to entrancing effect
 - **Exhausted** - Impaired + Hindered
@@ -50,6 +52,7 @@ Combined conditions are composed of multiple basic conditions:
 - **Prone** - Lying on ground with penalties
 - **Restrained** - Hindered + Vulnerable
 - **Staggered** - Dazed + Hindered
+- **Surprised** - Stunned + Vulnerable
 
 ## Usage
 
@@ -58,7 +61,7 @@ Combined conditions are composed of multiple basic conditions:
 ```typescript
 import { allConditions } from './conditions';
 
-console.log(allConditions.length); // 26 conditions
+console.log(allConditions.length); // 29 conditions
 ```
 
 ### Import Specific Conditions
@@ -76,7 +79,7 @@ console.log(stunned.effects); // ["Cannot take any actions", ...]
 import { basicConditions, combinedConditions } from './conditions';
 
 console.log(basicConditions.length); // 16
-console.log(combinedConditions.length); // 10
+console.log(combinedConditions.length); // 13
 ```
 
 ### Use Condition Lookups
@@ -206,6 +209,8 @@ function applyCondition(currentConditions: string[], newCondition: string) {
 
 ---
 
-**Total Conditions**: 26 (16 basic + 10 combined)  
-**Source**: Hero's Handbook  
+**Total Conditions**: 29 (16 basic + 13 combined)
+
+**Source**: Hero's Handbook
+
 **SRD Compliance**: 100%

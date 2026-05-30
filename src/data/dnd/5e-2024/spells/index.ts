@@ -28,7 +28,8 @@ const catalog = buildSpellCatalog(rawSpellsByLevel, {
   omittedSpellIds: ['tensors-floating-disk', 'otilukes-resilience-6'],
   spellIdAliases: {
     'tensors-floating-disk': 'tensers-floating-disk',
-    'otilukes-resilience-6': 'otilukes-resilience-4',
+    'otilukes-resilience-4': 'otilukes-resilience',
+    'otilukes-resilience-6': 'otilukes-resilience',
   },
 });
 

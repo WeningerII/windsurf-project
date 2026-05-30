@@ -1,6 +1,7 @@
 import { Spell } from '../../../../types/magic/spells';
+import { withPf2eSpellTraits } from './traits';
 
-export const level9Spells: Spell[] = [
+export const level9Spells: Spell[] = withPf2eSpellTraits([
   {
     id: 'disjunction-pf2e',
     name: 'Disjunction',
@@ -127,6 +128,11 @@ export const level9Spells: Spell[] = [
     ritual: false,
     description:
       'You crush the target with telekinetic force. The target takes 75 damage with a basic Fortitude save. If the target critically fails the save, it is crushed into a tiny ball and dies.',
+    heightening: {
+      mode: 'interval',
+      interval: 1,
+      summary: 'Heightened (+1): The damage increases by 10.',
+    },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -165,6 +171,12 @@ export const level9Spells: Spell[] = [
     ritual: false,
     description:
       'You call down four meteors that explode in a fiery blast. Each meteor deals 6d10 bludgeoning damage to any creatures in the 10-foot burst and 14d6 fire damage to creatures in the 40-foot burst.',
+    heightening: {
+      mode: 'interval',
+      interval: 1,
+      summary:
+        'Heightened (+1): The bludgeoning damage increases by 1d10, and the fire damage increases by 2d6.',
+    },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -196,6 +208,13 @@ export const level9Spells: Spell[] = [
     ritual: false,
     description:
       "You utter a single word of power that instantly kills one creature with 50 or fewer Hit Points. If the target has more than 50 HP, it's stunned 1 instead.",
+    heightening: {
+      mode: 'fixed',
+      summary: 'Heightened (10th): The levels at which each outcome applies increase by 2.',
+      ranks: {
+        10: 'The levels at which each outcome applies increase by 2.',
+      },
+    },
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -339,4 +358,4 @@ export const level9Spells: Spell[] = [
       'You state a wish, making your greatest desire come true. A wish spell can produce any one of the following effects: duplicate any spell of 9th level or lower, produce any effect whose power level is in line with the above effects, grant a creature a +1 circumstance bonus to one ability score for 1 hour.',
     classes: ['sorcerer', 'wizard'],
   },
-];
+]);

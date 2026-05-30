@@ -59,6 +59,7 @@ export const level2Spells: Spell[] = [
       materialDescription: 'an eyelash encased in gum arabic',
     },
     duration: { type: 'concentration', maxDuration: '1 hour' },
+    target: '1 creature you touch',
     concentration: true,
     ritual: false,
     description:
@@ -78,6 +79,7 @@ export const level2Spells: Spell[] = [
     range: { type: 'touch' },
     components: { verbal: true, somatic: true, material: false },
     duration: { type: 'instant' },
+    target: '1 creature you touch',
     concentration: false,
     ritual: false,
     description:
@@ -120,6 +122,7 @@ export const level2Spells: Spell[] = [
       materialDescription: 'fur or a feather from a beast',
     },
     duration: { type: 'concentration', maxDuration: '1 hour' },
+    target: '1 creature you touch',
     concentration: true,
     ritual: false,
     description:
@@ -296,6 +299,7 @@ export const level2Spells: Spell[] = [
       materialConsumed: true,
     },
     duration: { type: 'permanent' },
+    target: '1 closed door, window, gate, chest, or other entryway you touch',
     concentration: false,
     ritual: false,
     description:
@@ -341,6 +345,7 @@ export const level2Spells: Spell[] = [
       materialDescription: 'a handful of oak bark',
     },
     duration: { type: 'concentration', maxDuration: '1 hour' },
+    target: '1 willing creature you touch',
     concentration: true,
     ritual: false,
     description:
@@ -421,6 +426,7 @@ export const level2Spells: Spell[] = [
       materialConsumed: true,
     },
     duration: { type: 'permanent' },
+    target: '1 object you touch',
     concentration: false,
     ritual: false,
     description:
@@ -461,6 +467,7 @@ export const level2Spells: Spell[] = [
       materialDescription: 'either a pinch of dried carrot or an agate',
     },
     duration: { type: 'hours', hours: 8 },
+    target: '1 willing creature you touch',
     concentration: false,
     ritual: false,
     description:
@@ -548,6 +555,7 @@ export const level2Spells: Spell[] = [
       materialCost: 2,
     },
     duration: { type: 'hours', hours: 240 },
+    target: '1 corpse or other remains you touch',
     concentration: false,
     ritual: true,
     description:

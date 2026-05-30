@@ -1,6 +1,7 @@
 import { Spell } from '../../../../types/magic/spells';
+import { withPf2eSpellTraits } from './traits';
 
-export const level6Spells: Spell[] = [
+export const level6Spells: Spell[] = withPf2eSpellTraits([
   {
     id: 'baleful-polymorph-pf2e',
     name: 'Baleful Polymorph',
@@ -77,6 +78,11 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description:
       'You discharge a powerful bolt of lightning at the target, dealing 8d12 electricity damage. The target must attempt a basic Reflex save. The electricity arcs to another creature within 30 feet of the first target, and so on.',
+    heightening: {
+      mode: 'interval',
+      interval: 1,
+      summary: 'Heightened (+1): The damage increases by 1d12.',
+    },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -119,6 +125,11 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description:
       'A thin, green ray springs from your pointing finger. The target takes 12d10 force damage. A creature reduced to 0 HP is entirely disintegrated.',
+    heightening: {
+      mode: 'interval',
+      interval: 1,
+      summary: 'Heightened (+1): The damage increases by 2d10.',
+    },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -297,6 +308,11 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description:
       'You form an invisible wall of pure magical force up to 50 feet long and up to 20 feet high. The wall has no discernible thickness. It must be a straight line, though you can shape it into a curve.',
+    heightening: {
+      mode: 'interval',
+      interval: 2,
+      summary: 'Heightened (+2): The Hit Points of the wall increases by 20.',
+    },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -330,4 +346,4 @@ export const level6Spells: Spell[] = [
       'You create a wall of solid ice. The wall is 1 foot thick and composed of up to 10 contiguous 10-foot sections. Each section has AC 10, Hardness 10, and 40 Hit Points. It melts slowly in warm environments.',
     classes: ['sorcerer', 'wizard'],
   },
-];
+]);

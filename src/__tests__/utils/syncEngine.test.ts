@@ -3,11 +3,14 @@ import type { CharacterDocument, SystemDataModel } from '../../types/core/docume
 import { getSupabaseClient } from '../../utils/supabaseClient';
 import type { RemoteDocument } from '../../utils/syncEngine';
 import {
+  clearQueuedDeletedDocumentIds,
   clearQueuedSyncSnapshot,
   deleteRemoteDocument,
   fetchRemoteDocuments,
+  getQueuedDeletedDocumentIds,
   getQueuedSyncSnapshot,
   mergeDocuments,
+  queueDeletedDocumentIds,
   pushDocument,
   pushDocuments,
   queueSyncSnapshot,
@@ -235,6 +238,19 @@ describe('syncEngine', () => {
 
     localStorage.setItem('rpg-sync-queue-v1', '{invalid-json');
     expect(getQueuedSyncSnapshot()).toEqual([]);
+  });
+
+  it('deduplicates queued deleted document ids and clears them', () => {
+    queueDeletedDocumentIds(['doc-a', 'doc-b']);
+    queueDeletedDocumentIds(['doc-a', 'doc-c']);
+
+    expect(getQueuedDeletedDocumentIds()).toEqual(['doc-a', 'doc-b', 'doc-c']);
+
+    clearQueuedDeletedDocumentIds();
+    expect(getQueuedDeletedDocumentIds()).toEqual([]);
+
+    localStorage.setItem('rpg-sync-delete-queue-v1', '{invalid-json');
+    expect(getQueuedDeletedDocumentIds()).toEqual([]);
   });
 
   it('subscribes to realtime changes, deletes remote documents, and unsubscribes cleanly', async () => {

@@ -1,6 +1,7 @@
 import { Spell } from '../../../../types/magic/spells';
+import { withPf2eSpellTraits } from './traits';
 
-export const level8Spells: Spell[] = [
+export const level8Spells: Spell[] = withPf2eSpellTraits([
   {
     id: 'earthquake-pf2e',
     name: 'Earthquake',
@@ -30,6 +31,14 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description:
       'You shake the ground, topple creatures into fissures, and collapse structures. The GM might add additional effects in certain areas. Cliffs might collapse, causing creatures to fall, or a lake might drain as fissures open up below its surface.',
+    heightening: {
+      mode: 'fixed',
+      summary:
+        'Heightened (10th): You create a massive earthquake that can devastate a settlement. The range increases to half a mile and the area to a quarter-mile burst.',
+      ranks: {
+        10: 'You create a massive earthquake that can devastate a settlement. The range increases to half a mile and the area to a quarter-mile burst.',
+      },
+    },
     classes: ['cleric', 'druid'],
   },
   {
@@ -68,6 +77,11 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description:
       "You pull the moisture from the targets' bodies, dealing 10d10 negative damage. Creatures made of water or with the water trait, such as water elementals, take double damage from horrid wilting.",
+    heightening: {
+      mode: 'interval',
+      interval: 1,
+      summary: 'Heightened (+1): The damage increases by 1d10.',
+    },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -173,6 +187,11 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description:
       'You fire a blue-white ray of freezing air and sleet that deals 10d8 cold damage. The target must attempt a Fortitude save. On a critical failure, the target is also drained 2.',
+    heightening: {
+      mode: 'interval',
+      interval: 1,
+      summary: 'Heightened (+1): The damage increases by 2d8.',
+    },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -204,6 +223,11 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description:
       'You utter a word of power that stuns one creature you can see. If the creature has fewer than 150 HP, it is stunned.',
+    heightening: {
+      mode: 'interval',
+      interval: 1,
+      summary: 'Heightened (+1): The levels at which each outcome applies increase by 2.',
+    },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -282,4 +306,4 @@ export const level8Spells: Spell[] = [
       'You cause brilliant sunlight to explode in a 60-foot burst. Creatures in the area take 8d10 damage and are blinded. Undead and creatures with light blindness take double damage. Targets attempt a Reflex save.',
     classes: ['cleric', 'druid', 'sorcerer', 'wizard'],
   },
-];
+]);

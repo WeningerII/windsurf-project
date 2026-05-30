@@ -1,3 +1,4 @@
+// purpose: Header section — character name/level/HP summary plus rest controls and dice roll button.
 import { SheetHeader } from '../../../../components/sheet';
 import { parseNum } from '../../../../utils/math';
 

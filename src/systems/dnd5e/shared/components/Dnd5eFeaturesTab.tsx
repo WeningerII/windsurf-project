@@ -1,3 +1,4 @@
+// purpose: Features tab body — renders class/subclass/feat features and the condition picker.
 import { ConditionPicker } from '../../../../components/ConditionPicker';
 import { FeaturesSection } from '../../../../components/FeaturesSection';
 import { ProficiencyListSection } from '../../../../components/ProficiencyListSection';

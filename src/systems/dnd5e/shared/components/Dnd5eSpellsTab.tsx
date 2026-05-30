@@ -1,3 +1,4 @@
+// purpose: Spells tab body — tracked/prepared/always-prepared spell surface with manual-edge honesty copy.
 import { Suspense, type ComponentType } from 'react';
 import type { SpellBrowserSpell } from '../../../../components/SpellBrowser';
 import { Badge } from '../../../../components/ui/Badge';
@@ -12,7 +13,10 @@ import {
 import { lazyWithPreload } from '../../../../utils/lazyWithPreload';
 import { buildSpellPreparationConcepts } from '../../../../utils/spellPreparation';
 import { DND5E_SPELLS_COPY } from '../../../../utils/documentationCopy';
-import type { Dnd5ePreparedCasterSummary } from '../spellPreparation';
+import type {
+  Dnd5eAlwaysPreparedSpellSource,
+  Dnd5ePreparedCasterSummary,
+} from '../spellPreparation';
 
 type SpellBrowserProps = {
   spells: SpellBrowserSpell[];
@@ -36,6 +40,7 @@ interface Props {
   spells: Spell[];
   spellNames: Map<string, string>;
   alwaysPreparedSpellIds: Set<string>;
+  alwaysPreparedSpellSources?: Dnd5eAlwaysPreparedSpellSource[];
   preparedSpellIds: Set<string>;
   preparedCasterSummaries: Dnd5ePreparedCasterSummary[];
   onTogglePreparedSpell?: (spellId: string) => void;
@@ -52,6 +57,7 @@ export const Dnd5eSpellsTab = (({
   spells,
   spellNames,
   alwaysPreparedSpellIds,
+  alwaysPreparedSpellSources = [],
   preparedSpellIds,
   preparedCasterSummaries,
   onTogglePreparedSpell,
@@ -65,6 +71,12 @@ export const Dnd5eSpellsTab = (({
     spellById,
     manualNotes: [],
   });
+  const alwaysPreparedSourcesBySpellId = alwaysPreparedSpellSources.reduce((index, source) => {
+    const sources = index.get(source.spellId) ?? [];
+    sources.push(source.source);
+    index.set(source.spellId, sources);
+    return index;
+  }, new Map<string, string[]>());
   const singlePreparedCaster =
     preparedCasterSummaries.length === 1 ? preparedCasterSummaries[0] : null;
   const hasPreparedCasters = preparedCasterSummaries.length > 0;
@@ -123,22 +135,30 @@ export const Dnd5eSpellsTab = (({
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {spellConcepts.alwaysPreparedSpells.map((spell) => (
-                    <span
-                      key={spell.id}
-                      className={`inline-flex items-center gap-1 rounded-full border border-primary/40 bg-primary/10 px-2 py-1 text-xs text-primary ${
-                        spell.unresolved ? 'border-dashed' : ''
-                      }`}
-                      title={
-                        spell.unresolved
-                          ? 'Loader data for this spell is currently unresolved.'
-                          : undefined
-                      }
-                    >
-                      <span>{spell.name}</span>
-                      {spell.unresolved && <Badge variant="destructive">Unresolved</Badge>}
-                    </span>
-                  ))}
+                  {spellConcepts.alwaysPreparedSpells.map((spell) => {
+                    const sourceLabels = alwaysPreparedSourcesBySpellId.get(spell.id) ?? [];
+                    return (
+                      <span
+                        key={spell.id}
+                        className={`inline-flex items-center gap-1 rounded-full border border-primary/40 bg-primary/10 px-2 py-1 text-xs text-primary ${
+                          spell.unresolved ? 'border-dashed' : ''
+                        }`}
+                        title={
+                          spell.unresolved
+                            ? 'Loader data for this spell is currently unresolved.'
+                            : sourceLabels.length > 0
+                              ? `Source: ${sourceLabels.join(', ')}`
+                              : undefined
+                        }
+                      >
+                        <span>{spell.name}</span>
+                        {sourceLabels.length > 0 && (
+                          <Badge variant="outline">{sourceLabels.join(', ')}</Badge>
+                        )}
+                        {spell.unresolved && <Badge variant="destructive">Unresolved</Badge>}
+                      </span>
+                    );
+                  })}
                 </div>
               </div>
             )}

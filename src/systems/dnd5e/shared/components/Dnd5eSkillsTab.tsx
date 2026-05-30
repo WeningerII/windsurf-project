@@ -1,3 +1,4 @@
+// purpose: Skills tab body — skill-proficiency selector with derived modifiers and roll buttons.
 import { Target } from 'lucide-react';
 import { DiceRollButton } from '../../../../components/DiceRollButton';
 import { TabsContent } from '../../../../components/ui/Tabs';

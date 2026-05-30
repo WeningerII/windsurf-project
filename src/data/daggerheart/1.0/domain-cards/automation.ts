@@ -14,6 +14,18 @@ type DomainCardAutomationOverride = Pick<
 >;
 
 const DOMAIN_CARD_AUTOMATION_OVERRIDES: Record<string, DomainCardAutomationOverride> = {
+  'arcana-telekinesis': {
+    automationMode: 'passive',
+    passiveBonuses: { spellcast: 1 },
+    passiveCondition: {
+      kind: 'loadout-domain-count-at-least',
+      domain: 'arcana',
+      count: 4,
+    },
+    effectTags: ['loadout-synergy', 'spellcast', 'mobility', 'offense'],
+    automationNote:
+      'Auto-applies +1 Spellcast while 4 or more Arcana cards remain in your loadout. Movement, thrown-target attacks, and the spell text remain manual.',
+  },
   'arcana-arcana-touched': {
     automationMode: 'passive',
     passiveBonuses: { spellcast: 1 },
@@ -56,6 +68,12 @@ const DOMAIN_CARD_AUTOMATION_OVERRIDES: Record<string, DomainCardAutomationOverr
     effectTags: ['attributes', 'loadout-synergy'],
     automationNote:
       'Auto-applies +1 Agility while 4 or more Bone cards remain in your loadout. The once-per-rest defensive rider remains manual.',
+  },
+  'bone-i-see-it-coming': {
+    automationMode: 'passive',
+    passiveDerivedBonuses: [{ kind: 'evasion-half-trait', trait: 'agility' }],
+    effectTags: ['defense', 'evasion'],
+    automationNote: 'Auto-applies an Evasion bonus equal to half your current Agility.',
   },
   'bone-untouchable': {
     automationMode: 'passive',

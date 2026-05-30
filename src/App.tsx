@@ -35,8 +35,11 @@ import { ToastProvider, useToast } from './components/ui/Toast';
 import { ServiceWorkerUpdateBanner } from './components/ServiceWorkerUpdateBanner';
 import { useCampaigns } from './hooks/useCampaigns';
 import { CampaignManager } from './components/CampaignManager';
+import { useScenes } from './hooks/useScenes';
+import { SceneManager } from './components/SceneManager';
 import { prefetchSystemAssetsForIds } from './utils/systemAssetPrefetch';
 import { usePwaInstallPrompt } from './hooks/usePwaInstallPrompt';
+import { combineSyncStates, getMostRecentSyncDate, getPendingSyncCount } from './utils/syncStatus';
 
 type CharacterSortOption =
   | 'updated-desc'
@@ -146,12 +149,17 @@ function AppContent() {
     flushPendingSaves: flushPendingDocumentSaves,
   } = useDocuments();
 
-  const { syncState, lastSyncedAt, sync } = useSync({
+  const {
+    syncState: documentSyncState,
+    lastSyncedAt: lastDocumentSyncedAt,
+    sync: syncDocuments,
+  } = useSync({
     documents,
     onMerge: addDocuments,
   });
   const [currentDocId, setCurrentDocId] = useState<string | null>(null);
   const [selectedSystem, setSelectedSystem] = useState<GameSystemId | null>(null);
+
   const [systemFilter, setSystemFilter] = useState<GameSystemId | 'all'>('all');
   const [sortOption, setSortOption] = useState<CharacterSortOption>('updated-desc');
   const [confirmDialog, setConfirmDialog] = useState<{
@@ -171,10 +179,40 @@ function AppContent() {
     removeCharacterFromCampaign,
     flushPendingSaves: flushPendingCampaignSaves,
   } = useCampaigns();
-  useCampaignSync({
+  const {
+    scenes,
+    isLoading: scenesLoading,
+    error: sceneError,
+    clearError: clearSceneError,
+    addScene,
+    addScenes,
+    appendSceneEvent,
+    deleteScene,
+    flushPendingSaves: flushPendingSceneSaves,
+  } = useScenes();
+  const {
+    syncState: campaignSyncState,
+    lastSyncedAt: lastCampaignSyncedAt,
+    sync: syncCampaigns,
+  } = useCampaignSync({
     campaigns,
     onMerge: addCampaigns,
   });
+  const syncState = combineSyncStates([documentSyncState, campaignSyncState]);
+  const lastSyncedAt = getMostRecentSyncDate([lastDocumentSyncedAt, lastCampaignSyncedAt]);
+  // `getPendingSyncCount` reads the four localStorage queues directly, so the
+  // value is impure with respect to React state.  We re-derive it whenever a
+  // sync transition or an entity-collection edit fires (those are the only
+  // events that grow or drain the queues) and stash the result so the
+  // dropdown does not need to know about the storage layer.
+  const [pendingSyncCount, setPendingSyncCount] = useState<number>(() => getPendingSyncCount());
+  useEffect(() => {
+    setPendingSyncCount(getPendingSyncCount());
+  }, [syncState, documents, campaigns]);
+  const syncAll = useCallback(() => {
+    void syncDocuments();
+    void syncCampaigns();
+  }, [syncCampaigns, syncDocuments]);
   const handleAppInstalled = useCallback(() => {
     toast('App installed for offline-friendly access.', 'success');
   }, [toast]);
@@ -193,8 +231,9 @@ function AppContent() {
   const handleReturnToList = useCallback(() => {
     flushPendingDocumentSaves();
     flushPendingCampaignSaves();
+    flushPendingSceneSaves();
     setCurrentDocId(null);
-  }, [flushPendingCampaignSaves, flushPendingDocumentSaves]);
+  }, [flushPendingCampaignSaves, flushPendingDocumentSaves, flushPendingSceneSaves]);
 
   const filteredAndSortedDocuments = useMemo(() => {
     const filtered =
@@ -409,6 +448,8 @@ function AppContent() {
   ]);
 
   const currentDoc = documents.find((d) => d.id === currentDocId);
+  const appError = error ?? sceneError;
+  const clearAppError = error ? clearError : clearSceneError;
 
   return (
     <div className="min-h-screen bg-background">
@@ -523,7 +564,12 @@ function AppContent() {
                   </Button>
                 </>
               )}
-              <UserMenu syncState={syncState} lastSyncedAt={lastSyncedAt} onSyncNow={sync} />
+              <UserMenu
+                syncState={syncState}
+                lastSyncedAt={lastSyncedAt}
+                onSyncNow={syncAll}
+                pendingSyncCount={pendingSyncCount}
+              />
               <ThemeToggle />
             </div>
           </div>
@@ -531,15 +577,15 @@ function AppContent() {
       </header>
 
       {/* Error Banner */}
-      {error && (
+      {appError && (
         <div className="border-b border-destructive/30 bg-destructive/10 px-4 py-2">
           <div className="container mx-auto flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 text-sm text-destructive">
               <AlertCircle className="w-4 h-4 shrink-0" />
-              <span>{error}</span>
+              <span>{appError}</span>
             </div>
             <button
-              onClick={clearError}
+              onClick={clearAppError}
               className="text-destructive hover:text-destructive/80 transition-colors"
               title="Dismiss"
               aria-label="Dismiss error"
@@ -552,7 +598,7 @@ function AppContent() {
 
       {/* Main Content */}
       <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8">
-        {isLoading ? (
+        {isLoading || scenesLoading ? (
           <div className="max-w-6xl mx-auto space-y-6 pt-4">
             <Skeleton className="h-10 w-64 mx-auto" />
             <Skeleton className="h-6 w-96 mx-auto" />
@@ -789,6 +835,26 @@ function AppContent() {
                 if (doc) toast(`Removed ${doc.name} from campaign`, 'success');
               }}
               onOpenCharacter={(charId) => setCurrentDocId(charId)}
+            />
+
+            {/* Scenes */}
+            <SceneManager
+              scenes={scenes}
+              documents={documents}
+              campaigns={campaigns}
+              onAddScene={addScene}
+              onAddScenes={addScenes}
+              onAppendSceneEvent={appendSceneEvent}
+              onDeleteScene={(id) =>
+                showConfirm(
+                  'Delete Scene',
+                  'This will delete the scene and its event log. Characters and campaigns will not be affected.',
+                  () => {
+                    deleteScene(id);
+                    toast('Scene deleted', 'success');
+                  }
+                )
+              }
             />
 
             {/* System Dashboard */}

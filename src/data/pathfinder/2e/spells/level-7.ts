@@ -1,6 +1,7 @@
 import { Spell } from '../../../../types/magic/spells';
+import { withPf2eSpellTraits } from './traits';
 
-export const level7Spells: Spell[] = [
+export const level7Spells: Spell[] = withPf2eSpellTraits([
   {
     id: 'delayed-blast-fireball-7-pf2e',
     name: 'Delayed Blast Fireball',
@@ -78,6 +79,13 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description:
       'You protect the target with a powerful, multi-layered defense. The target gains resistance 5 to acid, cold, electricity, fire, force, negative, positive, and sonic damage.',
+    heightening: {
+      mode: 'fixed',
+      summary: 'Heightened (9th): The resistances increase to 10.',
+      ranks: {
+        9: 'The resistances increase to 10.',
+      },
+    },
     classes: ['cleric', 'sorcerer', 'wizard'],
   },
   {
@@ -108,6 +116,14 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description:
       'You step into the Ethereal Plane. You can see into the Material Plane from the Ethereal Plane, but not vice versa.',
+    heightening: {
+      mode: 'fixed',
+      summary:
+        'Heightened (9th): You can target up to five additional willing creatures at a range of 30 feet. The duration is up to 10 minutes.',
+      ranks: {
+        9: 'You can target up to five additional willing creatures at a range of 30 feet. The duration is up to 10 minutes.',
+      },
+    },
     classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
   },
   {
@@ -244,6 +260,11 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description:
       'You utter a word of power that blinds one creature you can see. If the creature has fewer than 200 HP, it is blinded.',
+    heightening: {
+      mode: 'interval',
+      interval: 1,
+      summary: 'Heightened (+1): The levels at which each outcome applies increase by 2.',
+    },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -305,6 +326,13 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description:
       'The target regains 15 Hit Points per round for 1 minute. The target also regrows severed body parts and removes the drained condition.',
+    heightening: {
+      mode: 'fixed',
+      summary: 'Heightened (9th): The regeneration increases to 20.',
+      ranks: {
+        9: 'The regeneration increases to 20.',
+      },
+    },
     classes: ['cleric', 'druid'],
   },
   {
@@ -372,4 +400,4 @@ export const level7Spells: Spell[] = [
       'You and up to 8 willing creatures are instantly transported to any location on the same plane that you can identify precisely.',
     classes: ['sorcerer', 'wizard'],
   },
-];
+]);

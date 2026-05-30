@@ -1,10 +1,16 @@
-import { SystemDefinition, SystemDataModel } from './types';
+import {
+  SystemDefinition,
+  SystemDataModel,
+  type ValidationContext,
+  type ValidationResult,
+} from './types';
+import type { CharacterDocument } from '../types/core/document';
 
 /**
  * Central Registry for all Game Systems.
  * This singleton manages the mapping between systemId strings and their implementations.
  */
-class SystemRegistry {
+export class SystemRegistry {
   private systems: Map<string, SystemDefinition<SystemDataModel>> = new Map();
 
   /**
@@ -33,6 +39,42 @@ class SystemRegistry {
    */
   getAll(): SystemDefinition<SystemDataModel>[] {
     return Array.from(this.systems.values());
+  }
+
+  /**
+   * Run a system validator when the definition exposes one.
+   *
+   * Systems opt in independently; missing validators are treated as no issues
+   * so existing sheets, storage, and sync behavior remain unchanged.
+   */
+  async validateDocument<T extends SystemDataModel = SystemDataModel>(
+    document: CharacterDocument<T>,
+    context: Omit<ValidationContext, 'systemId'> = {}
+  ): Promise<ValidationResult> {
+    const systemDef = this.get<T>(document.systemId);
+
+    if (!systemDef) {
+      return {
+        issues: [
+          {
+            code: 'unknown-system',
+            severity: 'error',
+            path: 'systemId',
+            message: `No registered system found for '${document.systemId}'.`,
+            recoverable: false,
+          },
+        ],
+      };
+    }
+
+    if (!systemDef.validator) {
+      return { issues: [] };
+    }
+
+    return systemDef.validator.validateDocument(document, {
+      ...context,
+      systemId: systemDef.id,
+    });
   }
 }
 

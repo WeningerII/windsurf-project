@@ -1,3 +1,4 @@
+// purpose: Background section — renders the selected 5e background with proficiency/feature provenance.
 import { Badge } from '../../../../components/ui/Badge';
 import { Background } from '../../../../types/character-options/backgrounds';
 import { formatBackgroundToolLabel } from '../../../../utils/backgroundTemplate';

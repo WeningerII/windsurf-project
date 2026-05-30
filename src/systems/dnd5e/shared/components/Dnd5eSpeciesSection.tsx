@@ -1,3 +1,4 @@
+// purpose: Species section — selected species/lineage with size, speed, and template-driven trait provenance.
 import { Badge } from '../../../../components/ui/Badge';
 import { Species } from '../../../../types/character-options/species';
 import { formatDnd5eSpeciesToolLabel } from '../../../../utils/speciesTemplate';

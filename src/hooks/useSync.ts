@@ -3,12 +3,15 @@ import type { CharacterDocument, SystemDataModel } from '../types/core/document'
 import { useAuth } from './useAuth';
 import {
   clearQueuedSyncSnapshot,
+  clearQueuedDeletedDocumentIds,
   getQueuedSyncSnapshot,
+  getQueuedDeletedDocumentIds,
   fetchRemoteDocuments,
   pushDocuments,
   deleteRemoteDocument,
   mergeDocuments,
   queueSyncSnapshot,
+  queueDeletedDocumentIds,
   subscribeToRemoteDocuments,
 } from '../utils/syncEngine';
 import { debounce } from '../utils/performance';
@@ -87,15 +90,34 @@ export function useSync({ documents, onMerge }: UseSyncOptions) {
 
     try {
       const queued = getQueuedSyncSnapshot();
+      const queuedDeletedIds = getQueuedDeletedDocumentIds();
       const remote = await fetchRemoteDocuments();
       const localWithQueued = mergeDocuments(documentsRef.current, queued);
-      const merged = mergeDocuments(localWithQueued, remote);
+      const queuedDeletedIdSet = new Set(queuedDeletedIds);
+      const merged = mergeDocuments(
+        localWithQueued.filter((doc) => !queuedDeletedIdSet.has(doc.id)),
+        remote.filter((doc) => !queuedDeletedIdSet.has(doc.id))
+      );
       previousDocumentsRef.current = merged;
       initialSyncCompleteRef.current = true;
       onMerge(merged);
 
+      if (queuedDeletedIds.length > 0) {
+        const results = await Promise.allSettled(
+          queuedDeletedIds.map((id) => deleteRemoteDocument(id))
+        );
+
+        if (results.some((result) => result.status === 'rejected')) {
+          queueSyncSnapshot(merged);
+          queueDeletedDocumentIds(queuedDeletedIds);
+          setSyncState('error');
+          return;
+        }
+      }
+
       await pushDocuments(merged);
       clearQueuedSyncSnapshot();
+      clearQueuedDeletedDocumentIds();
       setLastSyncedAt(new Date());
       setSyncState('idle');
     } catch {
@@ -141,20 +163,25 @@ export function useSync({ documents, onMerge }: UseSyncOptions) {
 
     if (typeof navigator !== 'undefined' && !navigator.onLine) {
       queueSyncSnapshot(documents);
+      queueDeletedDocumentIds(removedIds);
       setSyncState('offline');
       return;
     }
 
-    if (removedIds.length > 0) {
-      void Promise.allSettled(removedIds.map((id) => deleteRemoteDocument(id))).then((results) => {
+    void (async () => {
+      if (removedIds.length > 0) {
+        const results = await Promise.allSettled(removedIds.map((id) => deleteRemoteDocument(id)));
+
         if (results.some((result) => result.status === 'rejected')) {
           queueSyncSnapshot(documents);
+          queueDeletedDocumentIds(removedIds);
           setSyncState('error');
+          return;
         }
-      });
-    }
+      }
 
-    debouncedPush(documents);
+      debouncedPush(documents);
+    })();
   }, [debouncedPush, documents, isConfigured, user]);
 
   useEffect(() => {

@@ -59,6 +59,7 @@ export const level3Spells: Spell[] = [
       materialDescription: 'a wing feather from any bird',
     },
     duration: { type: 'concentration', maxDuration: '10 minutes' },
+    target: '1 willing creature you touch',
     concentration: true,
     ritual: false,
     description:
@@ -132,6 +133,7 @@ export const level3Spells: Spell[] = [
       materialConsumed: true,
     },
     duration: { type: 'instant' },
+    target: '1 creature that has died within the last minute',
     concentration: false,
     ritual: false,
     description:
@@ -230,6 +232,7 @@ export const level3Spells: Spell[] = [
     range: { type: 'touch' },
     components: { verbal: true, somatic: true, material: false },
     duration: { type: 'concentration', maxDuration: '1 hour' },
+    target: '1 willing creature you touch',
     concentration: true,
     ritual: false,
     description:
@@ -288,6 +291,7 @@ export const level3Spells: Spell[] = [
     range: { type: 'touch' },
     components: { verbal: true, somatic: true, material: false },
     duration: { type: 'concentration', maxDuration: '1 minute' },
+    target: '1 creature you touch',
     savingThrow: { attribute: 'wis', success: 'none' },
     concentration: true,
     ritual: false,
@@ -415,6 +419,7 @@ export const level3Spells: Spell[] = [
       materialDescription: 'a pinch of graveyard dirt',
     },
     duration: { type: 'hours', hours: 1 },
+    target: '1 willing creature you touch',
     concentration: false,
     ritual: true,
     description:
@@ -585,6 +590,8 @@ export const level3Spells: Spell[] = [
       materialConsumed: true,
     },
     duration: { type: 'hours', hours: 8 },
+    target:
+      '1 willing creature, place, or object no larger than 10 feet in any dimension you touch',
     concentration: false,
     ritual: false,
     description:
@@ -619,6 +626,7 @@ export const level3Spells: Spell[] = [
     range: { type: 'touch' },
     components: { verbal: true, somatic: true, material: false },
     duration: { type: 'instant' },
+    target: '1 creature or object you touch',
     concentration: false,
     ritual: false,
     description:
@@ -726,6 +734,7 @@ export const level3Spells: Spell[] = [
       materialDescription: 'a small clay model of a ziggurat',
     },
     duration: { type: 'hours', hours: 1 },
+    target: '1 creature you touch',
     concentration: false,
     ritual: false,
     description:
@@ -743,6 +752,7 @@ export const level3Spells: Spell[] = [
     range: { type: 'touch' },
     components: { verbal: true, somatic: true, material: false },
     duration: { type: 'concentration', maxDuration: '1 hour' },
+    target: '1 willing beast you touch',
     concentration: true,
     ritual: true,
     description:

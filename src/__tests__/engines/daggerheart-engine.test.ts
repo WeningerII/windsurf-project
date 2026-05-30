@@ -5,10 +5,18 @@ import {
   daggerheartDomainCards,
 } from '../../data/daggerheart/1.0/domain-cards';
 import {
+  getDaggerheartDerivedStats,
+  getDaggerheartEffectiveAttribute,
+} from '../../utils/daggerheartDerived';
+import { exportDocuments, importDocuments } from '../../utils/documentStorage';
+import {
   DaggerheartDataModel,
   createDefaultDaggerheartData,
 } from '../../systems/daggerheart/data-model';
 import { DaggerheartEngine } from '../../systems/daggerheart/engine';
+import type { DaggerheartDomainCard } from '../../types/daggerheart';
+
+type DaggerheartDomainCardEntry = DaggerheartDataModel['domainCards'][number];
 
 function makeDoc(
   overrides: Partial<DaggerheartDataModel> = {}
@@ -20,6 +28,96 @@ function makeDoc(
     system: { ...createDefaultDaggerheartData(), ...overrides },
     createdAt: new Date('2026-03-07T00:00:00.000Z'),
     updatedAt: new Date('2026-03-07T00:00:00.000Z'),
+  };
+}
+
+function makeDomainCardEntry(
+  cardId: string,
+  location: NonNullable<DaggerheartDomainCardEntry['location']> = 'loadout'
+): DaggerheartDomainCardEntry {
+  const card = daggerheartDomainCardsById[cardId];
+  if (!card) {
+    throw new Error(`Expected Daggerheart domain card fixture for ${cardId}`);
+  }
+
+  return {
+    id: `${card.id}:${location}`,
+    cardId: card.id,
+    name: card.name,
+    domain: card.domain,
+    level: card.level,
+    type: card.type,
+    recallCost: card.recallCost,
+    location,
+    description: card.description,
+  };
+}
+
+const daggerheartPassiveAuditAttributes = {
+  agility: 4,
+  strength: 2,
+  finesse: 0,
+  instinct: 0,
+  presence: 0,
+  knowledge: 0,
+};
+
+function hasPassivePayload(card: DaggerheartDomainCard): boolean {
+  const passiveBonuses = card.passiveBonuses;
+  const hasFlatBonuses = Boolean(
+    passiveBonuses &&
+    ((passiveBonuses.evasion ?? 0) !== 0 ||
+      (passiveBonuses.armorScore ?? 0) !== 0 ||
+      (passiveBonuses.majorThreshold ?? 0) !== 0 ||
+      (passiveBonuses.severeThreshold ?? 0) !== 0 ||
+      (passiveBonuses.spellcast ?? 0) !== 0 ||
+      Object.keys(passiveBonuses.attributes ?? {}).length > 0)
+  );
+
+  return hasFlatBonuses || (card.passiveDerivedBonuses?.length ?? 0) > 0;
+}
+
+function makePassiveAuditSystem(
+  card: DaggerheartDomainCard,
+  location: NonNullable<DaggerheartDomainCardEntry['location']>
+): Partial<DaggerheartDataModel> {
+  const condition = card.passiveCondition;
+  const domainFillers =
+    condition?.kind === 'loadout-domain-count-at-least'
+      ? daggerheartDomainCards
+          .filter(
+            (candidate) =>
+              candidate.id !== card.id &&
+              candidate.domain === condition.domain &&
+              candidate.automationMode !== 'passive'
+          )
+          .slice(0, location === 'loadout' ? condition.count - 1 : condition.count)
+          .map((candidate) => makeDomainCardEntry(candidate.id, 'loadout'))
+      : [];
+
+  return {
+    level: 7,
+    class: 'Guardian',
+    heritage: 'Human',
+    attributes: daggerheartPassiveAuditAttributes,
+    armorId: condition?.kind === 'while-armored' ? 'daggerheart-armor-chainmail-armor-tier-1' : '',
+    armor:
+      condition?.kind === 'while-armored'
+        ? { current: 4, max: 4 }
+        : createDefaultDaggerheartData().armor,
+    domainCards: [makeDomainCardEntry(card.id, location), ...domainFillers],
+  };
+}
+
+function passiveAuditSignature(system: DaggerheartDataModel) {
+  const derived = getDaggerheartDerivedStats(system);
+
+  return {
+    evasion: derived.evasion,
+    armorScore: derived.armorScore,
+    majorThreshold: derived.majorThreshold,
+    severeThreshold: derived.severeThreshold,
+    passiveBonuses: derived.passiveBonuses,
   };
 }
 
@@ -43,6 +141,18 @@ describe('DaggerheartEngine', () => {
     'summoning',
     'utility',
   ]);
+  const strictPassiveDescriptionPattern = /^(You gain|You have|Your [A-Z][a-z]+|While\b)/;
+  const strictPassiveBlockers = [
+    /Spend a Hope/i,
+    /Spend a Stress/i,
+    /once per/i,
+    /you can choose/i,
+    /your next/i,
+  ];
+  const strictPassiveAuditRejections: Record<string, string> = {
+    'midnight-pick-and-pull':
+      'requires a situational advantage metadata kind that passiveBonuses/passiveCondition/passiveDerivedBonuses do not support',
+  };
 
   describe('domain card automation metadata', () => {
     it('keeps every shipped domain card classified with a supported automation mode, note, and tag set', () => {
@@ -77,6 +187,53 @@ describe('DaggerheartEngine', () => {
       expect(daggerheartDomainCardsById['codex-codex-touched']?.effectTags).toEqual(
         expect.arrayContaining(['loadout-synergy', 'spellcast'])
       );
+    });
+
+    it('keeps strict deterministic-passive audit rejections explicit', () => {
+      const strictCandidates = daggerheartDomainCards
+        .filter((card) => card.automationMode !== 'passive')
+        .filter((card) => strictPassiveDescriptionPattern.test(card.description.trim()))
+        .filter((card) => !strictPassiveBlockers.some((blocker) => blocker.test(card.description)))
+        .map((card) => card.id)
+        .sort();
+
+      expect(strictCandidates).toEqual(Object.keys(strictPassiveAuditRejections).sort());
+      strictCandidates.forEach((cardId) => {
+        expect(daggerheartDomainCardsById[cardId]?.automationMode).toBe('triggered-manual');
+        expect(strictPassiveAuditRejections[cardId]).toContain('metadata kind');
+      });
+    });
+
+    it('keeps passive automation bounded to supported payloads and active loadout cards', () => {
+      const passiveCards = daggerheartDomainCards.filter(
+        (card) => card.automationMode === 'passive'
+      );
+
+      expect(passiveCards.map((card) => card.id).sort()).toEqual([
+        'arcana-arcana-touched',
+        'arcana-telekinesis',
+        'blade-blade-touched',
+        'blade-fortified-armor',
+        'bone-bone-touched',
+        'bone-i-see-it-coming',
+        'bone-untouchable',
+        'splendor-splendor-touched',
+        'valor-armorer',
+        'valor-bare-bones',
+        'valor-rise-up',
+        'valor-valor-touched',
+      ]);
+
+      passiveCards.forEach((card) => {
+        expect(hasPassivePayload(card), `${card.id} has supported passive metadata`).toBe(true);
+
+        const loadout = engine.prepareData(makeDoc(makePassiveAuditSystem(card, 'loadout')));
+        const vault = engine.prepareData(makeDoc(makePassiveAuditSystem(card, 'vault')));
+
+        expect(passiveAuditSignature(loadout.system), `${card.id} active from loadout`).not.toEqual(
+          passiveAuditSignature(vault.system)
+        );
+      });
     });
   });
 
@@ -166,6 +323,36 @@ describe('DaggerheartEngine', () => {
 
       expect(result.system.currency).toEqual({ handfuls: 0, bags: 1, chests: 0 });
       expect(result.system.inventory[0].quantity).toBe(5);
+    });
+
+    it('scales carried inventory passive bonuses by quantity for spellcast and trait math', () => {
+      const result = engine.prepareData(
+        makeDoc({
+          attributes: {
+            ...createDefaultDaggerheartData().attributes,
+            agility: 1,
+          },
+          inventory: [
+            {
+              itemId: 'daggerheart-loot-arcane-prism',
+              name: 'Arcane Prism',
+              quantity: 2,
+              description: '',
+            },
+            {
+              itemId: 'daggerheart-loot-stride-relic',
+              name: 'Stride Relic',
+              quantity: 3,
+              description: '',
+            },
+          ],
+        })
+      );
+      const derivedStats = getDaggerheartDerivedStats(result.system);
+
+      expect(derivedStats.passiveBonuses.spellcast).toBe(2);
+      expect(derivedStats.passiveBonuses.attributes?.agility).toBe(3);
+      expect(getDaggerheartEffectiveAttribute(result.system, 'agility')).toBe(4);
     });
 
     it('normalizes legacy identifiers and names onto canonical SRD-backed references', () => {
@@ -402,6 +589,250 @@ describe('DaggerheartEngine', () => {
       expect(result.system.armorScore).toBe(baseline.system.armorScore + 2);
       expect(result.system.armor.max).toBe(baseline.system.armor.max + 2);
       expect(result.system.severeThreshold).toBe(baseline.system.severeThreshold);
+    });
+
+    it('does not apply a passive domain card while the card is only in the vault', () => {
+      const baseline = engine.prepareData(
+        makeDoc({
+          level: 7,
+          class: 'Guardian',
+          heritage: 'Human',
+          attributes: {
+            agility: 4,
+            strength: 0,
+            finesse: 0,
+            instinct: 0,
+            presence: 0,
+            knowledge: 0,
+          },
+          domainCards: [],
+        })
+      );
+
+      const result = engine.prepareData(
+        makeDoc({
+          level: 7,
+          class: 'Guardian',
+          heritage: 'Human',
+          attributes: {
+            agility: 4,
+            strength: 0,
+            finesse: 0,
+            instinct: 0,
+            presence: 0,
+            knowledge: 0,
+          },
+          domainCards: [
+            {
+              id: 'bone-untouchable:1',
+              cardId: 'bone-untouchable',
+              name: 'Untouchable',
+              domain: 'bone',
+              level: 1,
+              type: 'ability',
+              recallCost: 1,
+              location: 'vault',
+              description: '',
+            },
+          ],
+        })
+      );
+
+      expect(result.system.evasion).toBe(baseline.system.evasion);
+      expect(getDaggerheartDerivedStats(result.system).passiveBonuses.evasion ?? 0).toBe(0);
+    });
+
+    it('updates passive aggregation when a card moves between loadout and vault', () => {
+      const baseSystem = {
+        level: 7,
+        class: 'Guardian',
+        heritage: 'Human',
+        attributes: {
+          agility: 4,
+          strength: 0,
+          finesse: 0,
+          instinct: 0,
+          presence: 0,
+          knowledge: 0,
+        },
+      } satisfies Partial<DaggerheartDataModel>;
+      const loadout = engine.prepareData(
+        makeDoc({
+          ...baseSystem,
+          domainCards: [makeDomainCardEntry('bone-untouchable', 'loadout')],
+        })
+      );
+      const vault = engine.prepareData(
+        makeDoc({
+          ...baseSystem,
+          domainCards: [makeDomainCardEntry('bone-untouchable', 'vault')],
+        })
+      );
+
+      expect(getDaggerheartDerivedStats(loadout.system).passiveBonuses.evasion ?? 0).toBe(2);
+      expect(loadout.system.evasion).toBe(vault.system.evasion + 2);
+      expect(getDaggerheartDerivedStats(vault.system).passiveBonuses.evasion ?? 0).toBe(0);
+    });
+
+    it('fires and unfires Blade-touched from loadout domain counts', () => {
+      const threeBladeCards = [
+        makeDomainCardEntry('blade-blade-touched', 'loadout'),
+        makeDomainCardEntry('blade-get-back-up', 'loadout'),
+        makeDomainCardEntry('blade-not-good-enough', 'loadout'),
+      ];
+      const fourBladeCards = [
+        ...threeBladeCards,
+        makeDomainCardEntry('blade-fortified-armor', 'loadout'),
+      ];
+      const oneMovedToVault = [
+        ...threeBladeCards,
+        makeDomainCardEntry('blade-fortified-armor', 'vault'),
+      ];
+
+      const belowThreshold = engine.prepareData(
+        makeDoc({
+          level: 7,
+          domainCards: threeBladeCards,
+        })
+      );
+      const atThreshold = engine.prepareData(
+        makeDoc({
+          level: 7,
+          domainCards: fourBladeCards,
+        })
+      );
+      const afterVaultMove = engine.prepareData(
+        makeDoc({
+          level: 7,
+          domainCards: oneMovedToVault,
+        })
+      );
+
+      expect(getDaggerheartDerivedStats(belowThreshold.system).passiveBonuses.severeThreshold).toBe(
+        0
+      );
+      expect(getDaggerheartDerivedStats(atThreshold.system).passiveBonuses.severeThreshold).toBe(4);
+      expect(getDaggerheartDerivedStats(afterVaultMove.system).passiveBonuses.severeThreshold).toBe(
+        0
+      );
+    });
+
+    it('fires and unfires Arcana Telekinesis spellcast from Arcana loadout counts', () => {
+      const threeArcanaCards = [
+        makeDomainCardEntry('arcana-telekinesis', 'loadout'),
+        makeDomainCardEntry('arcana-rune-ward', 'loadout'),
+        makeDomainCardEntry('arcana-unleash-chaos', 'loadout'),
+      ];
+      const fourArcanaCards = [
+        ...threeArcanaCards,
+        makeDomainCardEntry('arcana-wall-walk', 'loadout'),
+      ];
+      const oneMovedToVault = [
+        ...threeArcanaCards,
+        makeDomainCardEntry('arcana-wall-walk', 'vault'),
+      ];
+
+      const belowThreshold = engine.prepareData(
+        makeDoc({
+          level: 7,
+          domainCards: threeArcanaCards,
+        })
+      );
+      const atThreshold = engine.prepareData(
+        makeDoc({
+          level: 7,
+          domainCards: fourArcanaCards,
+        })
+      );
+      const afterVaultMove = engine.prepareData(
+        makeDoc({
+          level: 7,
+          domainCards: oneMovedToVault,
+        })
+      );
+
+      expect(getDaggerheartDerivedStats(belowThreshold.system).passiveBonuses.spellcast ?? 0).toBe(
+        0
+      );
+      expect(getDaggerheartDerivedStats(atThreshold.system).passiveBonuses.spellcast).toBe(1);
+      expect(getDaggerheartDerivedStats(afterVaultMove.system).passiveBonuses.spellcast ?? 0).toBe(
+        0
+      );
+    });
+
+    it('round-trips loadout and vault passive cards through document export/import', () => {
+      const doc = makeDoc({
+        level: 7,
+        class: 'Guardian',
+        heritage: 'Human',
+        attributes: {
+          agility: 4,
+          strength: 0,
+          finesse: 0,
+          instinct: 0,
+          presence: 0,
+          knowledge: 0,
+        },
+        domainCards: [
+          makeDomainCardEntry('bone-untouchable', 'loadout'),
+          makeDomainCardEntry('valor-rise-up', 'loadout'),
+          makeDomainCardEntry('blade-blade-touched', 'vault'),
+          makeDomainCardEntry('valor-bare-bones', 'vault'),
+        ],
+      });
+
+      const imported = importDocuments(exportDocuments([doc]));
+      const importedDaggerheart = imported[0] as CharacterDocument<DaggerheartDataModel>;
+      const importedLocations = Object.fromEntries(
+        importedDaggerheart.system.domainCards.map((entry) => [entry.cardId, entry.location])
+      );
+      const importedStats = getDaggerheartDerivedStats(importedDaggerheart.system);
+
+      expect(importedLocations).toMatchObject({
+        'bone-untouchable': 'loadout',
+        'valor-rise-up': 'loadout',
+        'blade-blade-touched': 'vault',
+        'valor-bare-bones': 'vault',
+      });
+      expect(importedStats.passiveBonuses.evasion).toBe(2);
+      expect(importedStats.passiveBonuses.severeThreshold).toBe(3);
+      expect(importedStats.passiveBonuses.armorScore ?? 0).toBe(0);
+      expect(importedStats.armorScore).toBe(0);
+      expect(importedStats.majorThreshold).toBe(7);
+    });
+
+    it('applies I See It Coming as half-Agility evasion only from loadout', () => {
+      const baseSystem = {
+        level: 7,
+        class: 'Guardian',
+        heritage: 'Human',
+        attributes: {
+          agility: 5,
+          strength: 0,
+          finesse: 0,
+          instinct: 0,
+          presence: 0,
+          knowledge: 0,
+        },
+      } satisfies Partial<DaggerheartDataModel>;
+      const baseline = engine.prepareData(makeDoc(baseSystem));
+      const loadout = engine.prepareData(
+        makeDoc({
+          ...baseSystem,
+          domainCards: [makeDomainCardEntry('bone-i-see-it-coming', 'loadout')],
+        })
+      );
+      const vault = engine.prepareData(
+        makeDoc({
+          ...baseSystem,
+          domainCards: [makeDomainCardEntry('bone-i-see-it-coming', 'vault')],
+        })
+      );
+
+      expect(getDaggerheartDerivedStats(loadout.system).passiveBonuses.evasion).toBe(2);
+      expect(loadout.system.evasion).toBe(baseline.system.evasion + 2);
+      expect(vault.system.evasion).toBe(baseline.system.evasion);
+      expect(getDaggerheartDerivedStats(vault.system).passiveBonuses.evasion ?? 0).toBe(0);
     });
 
     it('applies deterministic passive formula cards for evasion and proficiency-scaled thresholds', () => {

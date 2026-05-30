@@ -87,6 +87,7 @@ export const level3Spells: Spell[] = [
       type: 'concentration',
       maxDuration: '1 hour',
     },
+    target: '1 willing beast you touch',
     concentration: true,
     ritual: true,
     description:
@@ -120,6 +121,7 @@ export const level3Spells: Spell[] = [
       attribute: 'wis',
       success: 'none',
     },
+    target: '1 creature you touch',
     concentration: true,
     ritual: false,
     description:
@@ -547,6 +549,7 @@ export const level3Spells: Spell[] = [
       type: 'concentration',
       maxDuration: '1 hour',
     },
+    target: '1 corpse or other remains you touch',
     concentration: true,
     ritual: true,
     description:
@@ -625,6 +628,7 @@ export const level3Spells: Spell[] = [
       type: 'concentration',
       maxDuration: '10 minutes',
     },
+    target: '1 willing creature you touch',
     concentration: true,
     ritual: false,
     description:
@@ -657,6 +661,7 @@ export const level3Spells: Spell[] = [
       type: 'concentration',
       maxDuration: '1 hour',
     },
+    target: '1 willing creature you touch',
     concentration: true,
     ritual: false,
     description:
@@ -1053,6 +1058,8 @@ export const level3Spells: Spell[] = [
       type: 'hours',
       hours: 8,
     },
+    target:
+      '1 willing creature, place, or object no larger than 10 feet in any dimension you touch',
     concentration: false,
     ritual: false,
     description:
@@ -1141,6 +1148,7 @@ export const level3Spells: Spell[] = [
       type: 'concentration',
       maxDuration: '1 hour',
     },
+    target: '1 willing creature you touch',
     concentration: true,
     ritual: false,
     description:
@@ -1169,6 +1177,7 @@ export const level3Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: '1 creature or object you touch',
     concentration: false,
     ritual: false,
     description:
@@ -1200,6 +1209,7 @@ export const level3Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: '1 creature that has died within the last minute',
     concentration: false,
     ritual: false,
     description:
@@ -1518,6 +1528,7 @@ export const level3Spells: Spell[] = [
       type: 'hours',
       hours: 1,
     },
+    target: '1 creature you touch',
     concentration: false,
     ritual: false,
     description:

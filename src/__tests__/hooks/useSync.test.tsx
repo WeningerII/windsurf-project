@@ -5,33 +5,42 @@ import { AuthContext, type AuthContextValue } from '../../contexts/auth-context'
 import { useSync } from '../../hooks/useSync';
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
 import {
+  clearQueuedDeletedDocumentIds,
   clearQueuedSyncSnapshot,
   deleteRemoteDocument,
   fetchRemoteDocuments,
+  getQueuedDeletedDocumentIds,
   getQueuedSyncSnapshot,
   mergeDocuments,
   pushDocuments,
+  queueDeletedDocumentIds,
   queueSyncSnapshot,
   subscribeToRemoteDocuments,
 } from '../../utils/syncEngine';
 
 vi.mock('../../utils/syncEngine', () => ({
+  clearQueuedDeletedDocumentIds: vi.fn(),
   clearQueuedSyncSnapshot: vi.fn(),
   deleteRemoteDocument: vi.fn(),
   fetchRemoteDocuments: vi.fn(),
+  getQueuedDeletedDocumentIds: vi.fn(),
   getQueuedSyncSnapshot: vi.fn(),
   mergeDocuments: vi.fn(),
   pushDocuments: vi.fn(),
+  queueDeletedDocumentIds: vi.fn(),
   queueSyncSnapshot: vi.fn(),
   subscribeToRemoteDocuments: vi.fn(),
 }));
 
+const mockedClearQueuedDeletedDocumentIds = vi.mocked(clearQueuedDeletedDocumentIds);
 const mockedClearQueuedSyncSnapshot = vi.mocked(clearQueuedSyncSnapshot);
 const mockedDeleteRemoteDocument = vi.mocked(deleteRemoteDocument);
 const mockedFetchRemoteDocuments = vi.mocked(fetchRemoteDocuments);
+const mockedGetQueuedDeletedDocumentIds = vi.mocked(getQueuedDeletedDocumentIds);
 const mockedGetQueuedSyncSnapshot = vi.mocked(getQueuedSyncSnapshot);
 const mockedMergeDocuments = vi.mocked(mergeDocuments);
 const mockedPushDocuments = vi.mocked(pushDocuments);
+const mockedQueueDeletedDocumentIds = vi.mocked(queueDeletedDocumentIds);
 const mockedQueueSyncSnapshot = vi.mocked(queueSyncSnapshot);
 const mockedSubscribeToRemoteDocuments = vi.mocked(subscribeToRemoteDocuments);
 
@@ -97,6 +106,7 @@ describe('useSync', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     setNavigatorOnline(true);
+    mockedGetQueuedDeletedDocumentIds.mockReturnValue([]);
     mockedGetQueuedSyncSnapshot.mockReturnValue([]);
     mockedFetchRemoteDocuments.mockResolvedValue([]);
     mockedPushDocuments.mockResolvedValue(undefined);
@@ -125,6 +135,7 @@ describe('useSync', () => {
     const mergedDocuments = onMerge.mock.calls[0][0] as CharacterDocument<SystemDataModel>[];
     expect(mockedFetchRemoteDocuments).toHaveBeenCalledTimes(1);
     expect(mockedPushDocuments).toHaveBeenCalledWith(mergedDocuments);
+    expect(mockedClearQueuedDeletedDocumentIds).toHaveBeenCalled();
     expect(mockedClearQueuedSyncSnapshot).toHaveBeenCalled();
     expect(mockedSubscribeToRemoteDocuments).toHaveBeenCalledWith('user-1', expect.any(Function));
     expect(result.current.syncState).toBe('idle');
@@ -165,6 +176,29 @@ describe('useSync', () => {
     expect(result.current.syncState).toBe('offline');
   });
 
+  it('replays queued document deletes before pushing the merged snapshot', async () => {
+    const remoteDeleted = makeDoc('deleted-doc');
+    const remoteKept = makeDoc('kept-doc');
+    const onMerge = vi.fn();
+
+    mockedGetQueuedDeletedDocumentIds.mockReturnValue(['deleted-doc']);
+    mockedFetchRemoteDocuments.mockResolvedValue([remoteDeleted, remoteKept]);
+
+    const { result } = renderHook(() => useSync({ documents: [], onMerge }), {
+      wrapper: createWrapper(),
+    });
+
+    await waitFor(() => {
+      expect(mockedDeleteRemoteDocument).toHaveBeenCalledWith('deleted-doc');
+    });
+
+    const mergedDocuments = onMerge.mock.calls[0][0] as CharacterDocument<SystemDataModel>[];
+    expect(mergedDocuments.map((doc) => doc.id)).toEqual(['kept-doc']);
+    expect(mockedPushDocuments).toHaveBeenCalledWith(mergedDocuments);
+    expect(mockedClearQueuedDeletedDocumentIds).toHaveBeenCalled();
+    expect(result.current.syncState).toBe('idle');
+  });
+
   it('queues the latest snapshot and marks the sync state as error when remote deletions fail', async () => {
     const existingDocument = makeDoc('existing-doc');
     const onMerge = vi.fn();
@@ -179,6 +213,7 @@ describe('useSync', () => {
     });
 
     mockedDeleteRemoteDocument.mockRejectedValueOnce(new Error('delete failed'));
+    mockedQueueDeletedDocumentIds.mockClear();
     mockedQueueSyncSnapshot.mockClear();
 
     act(() => {
@@ -191,6 +226,7 @@ describe('useSync', () => {
 
     await waitFor(() => {
       expect(mockedQueueSyncSnapshot).toHaveBeenCalledWith([]);
+      expect(mockedQueueDeletedDocumentIds).toHaveBeenCalledWith(['existing-doc']);
       expect(result.current.syncState).toBe('error');
     });
   });

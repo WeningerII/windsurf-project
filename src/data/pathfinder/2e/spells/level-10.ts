@@ -1,6 +1,7 @@
 import { Spell } from '../../../../types/magic/spells';
+import { withPf2eSpellTraits } from './traits';
 
-export const level10Spells: Spell[] = [
+export const level10Spells: Spell[] = withPf2eSpellTraits([
   {
     id: 'cataclysm-10-pf2e',
     name: 'Cataclysm',
@@ -170,4 +171,4 @@ export const level10Spells: Spell[] = [
       'Wish is the mightiest spell a mortal creature can cast. By speaking aloud, you can alter the very foundations of reality.',
     classes: ['sorcerer', 'wizard'],
   },
-];
+]);

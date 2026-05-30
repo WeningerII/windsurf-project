@@ -30,12 +30,13 @@ This document outlines engineering principles and practices for maintaining code
 - Manual fallback: if the host shell is below Node 18 or has no usable Node install, install Node `20.19.0` directly or fix the version manager before working in the repo.
 - `npm run test:coverage` is stricter than plain `npm test`: `@vitest/coverage-v8` requires `node:inspector/promises`, so Node 18 shells fail before any tests execute.
 - Current baseline: run `npm run verify` under Node `20.19+` and capture exact counts from the command output.
-- Latest recorded full pass: April 21, 2026 under Node `v20.19.0`. Treat the exact Vitest and Playwright totals as command output, not a hardcoded invariant in this file.
+- Latest recorded full pass: May 1, 2026 under Node `v20.19.0`. Treat the exact Vitest and Playwright totals as command output, not a hardcoded invariant in this file.
 - Update `docs/generated/verification-baseline.json` via `npm run record:verify-baseline -- --date "Month DD, YYYY" --node-version 20.19.0 [...]`; `npm run check:doc-drift` enforces the mirrored live-doc verification claims.
 - `npm run runtime:doctor` is the first stop when local Node policy, cached bootstrap runtime, or CI/runtime drift looks suspicious.
 - `docs/MASTER_PLAN.md` is the sole planning authority. If a roadmap statement in another doc drifts, update that doc to point back to the master plan instead of creating a competing backlog.
 - When you make a previously repo-only content family product-reachable, wire it through a loader first and rerun `npm run roadmap:metrics` so `docs/generated/roadmap-metrics.*` stays aligned with runtime reality.
 - Spell datasets now use normalized `spells/index.ts` catalog surfaces plus `spellIdAliases`. When canonicalizing spell ids or collapsing duplicates, preserve alias compatibility, rerun the spell parity suites, and regenerate roadmap metrics if the canonical counts change.
+- Legacy d20 spell metadata is source-strict. If a D&D 3.5e source URL cannot be resolved or a PF1e source page lacks a Saving Throw row, document the exact exception in `spellCatalogParity.test.ts`; do not infer metadata to satisfy a coverage floor.
 - `npm run verify` now includes `check:doc-drift` after `check:generated-docs`; keep live docs, historical banners, workflow/runtime claims, and audited support-honesty copy aligned with the registered truth sources.
 
 ## Core Principles
@@ -83,12 +84,13 @@ This document outlines engineering principles and practices for maintaining code
 ## Engineering Philosophy
 
 ### Constraints Breed Creativity
-This project has strict constraints (SRD-only, type-safe, no backend). These aren't limitations—they're guardrails that force better design.
+This project has strict constraints (SRD-only, type-safe, local-first; optional Supabase sync; no server-side content/rules hosting). These aren't limitations—they're guardrails that force better design.
 
 **Examples:**
-- No backend → Design data structures that are efficient to load and search client-side
+- Local-first → Design data structures that are efficient to load and search client-side; cloud sync is additive, never required
 - Type-safe → Catch errors at compile time, not runtime
 - SRD-only → Build a solid foundation before considering extensions
+- No server-side content/rules hosting → All SRD data and rule logic ships in the client bundle
 
 ### Optimize for Reading, Not Writing
 
@@ -438,11 +440,11 @@ import { VirtualList } from 'react-virtual';
 # Analyze bundle
 npm run build -- --analyze
 
-# Enforced CI budgets:
+# Enforced CI budgets (see scripts/check-bundle-size.mjs for the source of truth):
 # - App chunk: <80KB gzipped
 # - Vendor chunk: <200KB gzipped
-# - Largest system-data chunk: <130KB gzipped
-# - Total JS: <700KB gzipped
+# - Largest system-data chunk: <140KB gzipped
+# - Total JS: <800KB gzipped
 #
 # Stretch target:
 # - Per-system data: <100KB gzipped
@@ -572,7 +574,7 @@ L - Long rest
   <button role="tab" aria-selected={isActive} tabIndex={isActive ? 0 : -1}>
 ```
 
-**Screen reader tested:**
+**Target screen-reader test matrix** (manual; no dated evidence artifact or automated gate yet — see `docs/PRODUCTION_PLAN.md` §6.3):
 - VoiceOver (macOS/iOS)
 - NVDA (Windows)
 - TalkBack (Android)

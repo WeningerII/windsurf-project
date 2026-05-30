@@ -314,26 +314,12 @@ export const ranger: CharacterClass = {
       ],
     },
   ],
-  alwaysPreparedSpells: [
-    {
-      source: 'Favored Enemy',
-      minLevel: 1,
-      spellIds: ['hunters-mark'],
-      countsAgainstPreparedLimit: false,
-    },
-    {
-      source: 'Conjure Barrage',
-      minLevel: 9,
-      spellIds: ['conjure-barrage'],
-      countsAgainstPreparedLimit: false,
-    },
-    {
-      source: 'Conjure Volley',
-      minLevel: 13,
-      spellIds: ['conjure-volley'],
-      countsAgainstPreparedLimit: false,
-    },
-  ],
+  alwaysPreparedSpellSourceLabel: 'Ranger Class Spells',
+  alwaysPreparedSpellsByLevel: {
+    1: ['hunters-mark'],
+    9: ['conjure-barrage'],
+    13: ['conjure-volley'],
+  },
 
   subclassLevel: 3,
   subclasses: [hunterSubclass],

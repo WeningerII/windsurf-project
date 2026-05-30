@@ -2,16 +2,23 @@ import { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { SignIn } from './SignIn';
 import { Button } from './ui/Button';
-import { User, LogOut, RefreshCw, CheckCircle, AlertCircle, Cloud } from 'lucide-react';
+import { User, LogOut, RefreshCw, CheckCircle, AlertCircle, Cloud, CloudOff } from 'lucide-react';
 import type { SyncState } from '../hooks/useSync';
+import { formatLastSyncedAt } from '../utils/syncStatus';
 
 interface UserMenuProps {
   syncState?: SyncState;
   lastSyncedAt?: Date | null;
   onSyncNow?: () => void;
+  pendingSyncCount?: number;
 }
 
-export function UserMenu({ syncState, lastSyncedAt, onSyncNow }: UserMenuProps) {
+export function UserMenu({
+  syncState,
+  lastSyncedAt,
+  onSyncNow,
+  pendingSyncCount = 0,
+}: UserMenuProps) {
   const { user, signOut, isConfigured, isLoading } = useAuth();
   const [showSignIn, setShowSignIn] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -39,6 +46,7 @@ export function UserMenu({ syncState, lastSyncedAt, onSyncNow }: UserMenuProps) 
   const syncIcon = (() => {
     if (syncState === 'syncing') return <RefreshCw className="w-3 h-3 animate-spin" />;
     if (syncState === 'error') return <AlertCircle className="w-3 h-3 text-red-500" />;
+    if (syncState === 'offline') return <CloudOff className="w-3 h-3 text-amber-500" />;
     if (syncState === 'idle' && lastSyncedAt)
       return <CheckCircle className="w-3 h-3 text-green-500" />;
     return <Cloud className="w-3 h-3" />;
@@ -66,10 +74,18 @@ export function UserMenu({ syncState, lastSyncedAt, onSyncNow }: UserMenuProps) 
               </p>
               {lastSyncedAt && (
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                  Synced {lastSyncedAt.toLocaleTimeString()}
+                  Synced {formatLastSyncedAt(lastSyncedAt) ?? lastSyncedAt.toLocaleTimeString()}
+                </p>
+              )}
+              {pendingSyncCount > 0 && (
+                <p className="text-xs text-amber-600 dark:text-amber-400 mt-0.5">
+                  {pendingSyncCount === 1
+                    ? '1 unsynced change'
+                    : `${pendingSyncCount} unsynced changes`}
                 </p>
               )}
               {syncState === 'error' && <p className="text-xs text-red-500 mt-0.5">Sync failed</p>}
+              {syncState === 'offline' && <p className="text-xs text-amber-600 mt-0.5">Offline</p>}
             </div>
 
             {onSyncNow && (

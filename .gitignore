@@ -34,6 +34,12 @@ test-results/
 
 # Local scratch workspace for one-off scripts and notes
 scratch/
+.tmp/
+
+# Local agent/tooling artifacts (never commit)
+.codex
+.aider*
+.claude/
 
 # Editor directories and files
 .vscode/*

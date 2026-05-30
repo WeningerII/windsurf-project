@@ -406,6 +406,7 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: '1 object you touch',
     concentration: false,
     ritual: false,
     description:
@@ -671,6 +672,7 @@ export const cantrips: Spell[] = [
       type: 'concentration',
       maxDuration: '1 minute',
     },
+    target: '1 willing creature you touch',
     concentration: true,
     ritual: false,
     description:
@@ -752,6 +754,7 @@ export const cantrips: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    target: '1 club or quarterstaff you are holding',
     concentration: false,
     ritual: false,
     description:
@@ -780,6 +783,7 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: '1 creature you touch',
     attackRoll: true,
     damage: {
       base: {
@@ -828,6 +832,7 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: "1 creature with 0 Hit Points within range that isn't dead",
     concentration: false,
     ritual: false,
     description:

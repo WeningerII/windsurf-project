@@ -10,15 +10,21 @@ import { dnd5e2024SpellsById } from '../../data/dnd/5e-2024/spells';
 import type { CharacterClass } from '../../types/character-options/classes';
 import {
   getDnd5eAlwaysPreparedSpellIds,
+  getDnd5eAlwaysPreparedSpellSources,
   getDnd5ePreparedCasterSummaries,
 } from '../../systems/dnd5e/shared/spellPreparation';
 
 function collectStructuredAlwaysPreparedSpellIds(classes: CharacterClass[]): string[] {
+  const collectByLevel = (entry: { alwaysPreparedSpellsByLevel?: Record<number, string[]> }) =>
+    Object.values(entry.alwaysPreparedSpellsByLevel ?? {}).flat();
+
   return classes.flatMap((classData) => [
     ...((classData.alwaysPreparedSpells ?? []).flatMap((grant) => grant.spellIds) || []),
-    ...classData.subclasses.flatMap((subclass) =>
-      (subclass.alwaysPreparedSpells ?? []).flatMap((grant) => grant.spellIds)
-    ),
+    ...collectByLevel(classData),
+    ...classData.subclasses.flatMap((subclass) => [
+      ...(subclass.alwaysPreparedSpells ?? []).flatMap((grant) => grant.spellIds),
+      ...collectByLevel(subclass),
+    ]),
   ]);
 }
 
@@ -106,6 +112,50 @@ describe('dnd5e spell preparation summaries', () => {
       'beacon-of-hope',
       'revivify',
     ]);
+  });
+
+  it('returns by-level always-prepared source labels and excludes higher-level grants', () => {
+    const sources = getDnd5eAlwaysPreparedSpellSources(
+      [{ classId: 'cleric', subclassId: 'life-domain', level: 3, hitDieRolls: [8, 5, 5] }],
+      [cleric]
+    );
+
+    expect(sources).toEqual([
+      {
+        spellId: 'bless',
+        source: 'Life Domain Spells',
+        minLevel: 1,
+        countsAgainstPreparedLimit: false,
+      },
+      {
+        spellId: 'cure-wounds',
+        source: 'Life Domain Spells',
+        minLevel: 1,
+        countsAgainstPreparedLimit: false,
+      },
+      {
+        spellId: 'lesser-restoration',
+        source: 'Life Domain Spells',
+        minLevel: 3,
+        countsAgainstPreparedLimit: false,
+      },
+      {
+        spellId: 'spiritual-weapon',
+        source: 'Life Domain Spells',
+        minLevel: 3,
+        countsAgainstPreparedLimit: false,
+      },
+    ]);
+    expect(sources.map((source) => source.spellId)).not.toContain('beacon-of-hope');
+  });
+
+  it('documents that SRD wizard schools do not invent always-prepared spell lists', () => {
+    const spellIds = getDnd5eAlwaysPreparedSpellIds(
+      [{ classId: 'wizard', subclassId: 'evocation', level: 20, hitDieRolls: [] }],
+      [wizard]
+    );
+
+    expect(spellIds).toEqual([]);
   });
 
   it('keeps every 2014 structured always-prepared grant backed by shipped spell data', () => {

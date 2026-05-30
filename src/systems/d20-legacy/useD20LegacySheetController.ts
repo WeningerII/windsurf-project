@@ -223,6 +223,7 @@ export function useD20LegacySheetController({
       alwaysPreparedSpellIds: sys.alwaysPreparedSpellIds ?? [],
       spellSlots,
       spellSlotLevels,
+      manualSpellcastingExtras: sys.manualSpellcastingExtras,
       onLoadSpells: loadSpells,
       equipmentLoaded,
       equipmentItems,
@@ -253,6 +254,9 @@ export function useD20LegacySheetController({
       onUseSpellSlot: mutationHandlers.useSpellSlot,
       onRecoverSpellSlot: mutationHandlers.recoverSpellSlot,
       onSetSpellSlotTotal: mutationHandlers.setSpellSlotTotal,
+      onSetManualExtraConsumed: mutationHandlers.setManualExtraConsumed,
+      onSetSpontaneousConversionReference: mutationHandlers.setSpontaneousConversionReference,
+      onSetDragonDiscipleBonusSlots: mutationHandlers.setDragonDiscipleBonusSlots,
       onCurrencyChange: (currency: typeof sys.currency) =>
         mutationHandlers.update({ currency } as Partial<D20LegacyData>),
       onAddItem: mutationHandlers.addItem,

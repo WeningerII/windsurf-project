@@ -6,6 +6,7 @@ export const level4Spells: Spell[] = [
     name: 'Arcane Eye',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Arcane%20Eye',
     level: 4,
     school: 'divination',
     castingTime: {
@@ -19,11 +20,14 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'a bit of bat fur',
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    effect: 'magical sensor',
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:
@@ -39,10 +43,11 @@ export const level4Spells: Spell[] = [
     name: 'Black Tentacles',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Black%20Tentacles',
     level: 4,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -53,11 +58,14 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'octopus or squid tentacle',
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    area: '20-ft.-radius spread',
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:
@@ -73,10 +81,11 @@ export const level4Spells: Spell[] = [
     name: 'Charm Monster',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Charm%20Monster',
     level: 4,
     school: 'enchantment',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -92,10 +101,13 @@ export const level4Spells: Spell[] = [
       type: 'hours',
       hours: 24,
     },
+    target: 'one living creature',
     savingThrow: {
       attribute: 'wis',
       success: 'none',
+      description: 'Will negates',
     },
+    savingThrowText: 'Will negates',
     concentration: false,
     ritual: false,
     description:
@@ -112,10 +124,11 @@ export const level4Spells: Spell[] = [
     name: 'Confusion',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Confusion',
     level: 4,
     school: 'enchantment',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -126,15 +139,20 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'three nutshells',
+      divineFocus: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    target: 'all creatures in a 15-ft.-radius burst',
     savingThrow: {
       attribute: 'wis',
       success: 'none',
+      description: 'Will negates',
     },
+    savingThrowText: 'Will negates',
     concentration: false,
     ritual: false,
     description:
@@ -151,10 +169,11 @@ export const level4Spells: Spell[] = [
     name: 'Dimension Door',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Dimension%20Door',
     level: 4,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -169,6 +188,13 @@ export const level4Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'you and touched objects or other touched willing creatures',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'none and Will negates (object)',
+    },
+    savingThrowText: 'none and Will negates (object)',
     concentration: false,
     ritual: false,
     description:
@@ -185,10 +211,11 @@ export const level4Spells: Spell[] = [
     name: 'Greater Invisibility',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Invisibility%2C%20Greater',
     level: 4,
     school: 'illusion',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -197,12 +224,20 @@ export const level4Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
+      divineFocus: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    target: 'you or creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless) or Will negates (harmless, object)',
+    },
+    savingThrowText: 'Will negates (harmless) or Will negates (harmless, object)',
     concentration: false,
     ritual: false,
     description:
@@ -219,10 +254,11 @@ export const level4Spells: Spell[] = [
     name: 'Ice Storm',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Ice%20Storm',
     level: 4,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -233,14 +269,13 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'dust and water',
+      divineFocus: true,
     },
     duration: {
       type: 'instant',
     },
-    savingThrow: {
-      attribute: 'dex',
-      success: 'none',
-    },
+    area: 'cylinder (20-ft. radius, 40 ft. high)',
     damage: {
       base: {
         count: 3,
@@ -249,6 +284,7 @@ export const level4Spells: Spell[] = [
       },
       type: 'cold',
     },
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:
@@ -265,10 +301,11 @@ export const level4Spells: Spell[] = [
     name: 'Polymorph',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Polymorph',
     level: 4,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -278,11 +315,19 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'a piece of the creature whose form you choose',
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'living creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
     concentration: false,
     ritual: false,
     description:
@@ -298,11 +343,12 @@ export const level4Spells: Spell[] = [
     name: 'Scrying',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Scrying',
     level: 4,
     school: 'divination',
     castingTime: {
       type: 'hour',
-      amount: 1,
+      hours: 1,
     },
     range: {
       type: 'unlimited',
@@ -311,15 +357,22 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'a pool of water',
+      focus: true,
+      focusDescription: 'a silver mirror worth 1,000 gp',
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    effect: 'magical sensor',
     savingThrow: {
       attribute: 'wis',
       success: 'none',
+      description: 'Will negates',
     },
+    savingThrowText: 'Will negates',
     concentration: false,
     ritual: false,
     description:
@@ -338,10 +391,11 @@ export const level4Spells: Spell[] = [
     name: 'Solid Fog',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Solid%20Fog',
     level: 4,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -352,11 +406,14 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'powdered peas and an animal hoof',
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    effect: 'fog spreads in 20-ft. radius',
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:
@@ -372,10 +429,11 @@ export const level4Spells: Spell[] = [
     name: 'Stone Shape',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Stone%20Shape',
     level: 4,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -385,10 +443,14 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'soft clay',
+      divineFocus: true,
     },
     duration: {
       type: 'instant',
     },
+    target: 'stone or stone object touched, up to 10 cu. ft. + 1 cu. ft./level',
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:
@@ -406,10 +468,11 @@ export const level4Spells: Spell[] = [
     name: 'Stoneskin',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Stoneskin',
     level: 4,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -419,11 +482,21 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'granite and diamond dust worth 250 gp',
+      materialCost: 250,
+      materialConsumed: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
     concentration: false,
     ritual: false,
     description:
@@ -440,10 +513,11 @@ export const level4Spells: Spell[] = [
     name: 'Wall of Fire',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Wall%20of%20Fire',
     level: 4,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -454,11 +528,15 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'a piece of phosphor',
+      divineFocus: true,
     },
     duration: {
       type: 'concentration',
       maxDuration: '1 round per level',
     },
+    effect:
+      'opaque sheet of flame up to 20 ft. long/level or a ring of fire with a radius of up to 5 ft./two levels; either form 20 ft. high',
     damage: {
       base: {
         count: 2,
@@ -467,6 +545,7 @@ export const level4Spells: Spell[] = [
       },
       type: 'fire',
     },
+    savingThrowText: 'none',
     concentration: true,
     ritual: false,
     description:
@@ -483,10 +562,11 @@ export const level4Spells: Spell[] = [
     name: 'Wall of Ice',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Wall%20of%20Ice',
     level: 4,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -497,11 +577,20 @@ export const level4Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'a piece of quartz or rock crystal',
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    effect:
+      'anchored plane of ice, up to one 10-ft. square/level, or hemisphere of ice with a radius of up to 3 ft. + 1 ft./level',
+    savingThrow: {
+      attribute: 'dex',
+      success: 'special',
+      description: 'Reflex negates; see text',
+    },
+    savingThrowText: 'Reflex negates; see text',
     concentration: false,
     ritual: false,
     description:

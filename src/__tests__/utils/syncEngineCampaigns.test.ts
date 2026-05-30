@@ -4,12 +4,15 @@ import { getSupabaseClient } from '../../utils/supabaseClient';
 import type { RemoteCampaign } from '../../utils/syncEngine';
 import {
   clearQueuedCampaignsSnapshot,
+  clearQueuedDeletedCampaignIds,
   deleteRemoteCampaign,
   fetchRemoteCampaigns,
   getQueuedCampaignsSnapshot,
+  getQueuedDeletedCampaignIds,
   mergeCampaigns,
   pushCampaign,
   pushCampaigns,
+  queueDeletedCampaignIds,
   queueCampaignsSnapshot,
   subscribeToRemoteCampaigns,
 } from '../../utils/syncEngine';
@@ -212,6 +215,19 @@ describe('syncEngine — campaigns', () => {
   it('getQueuedCampaignsSnapshot tolerates malformed JSON by returning []', () => {
     localStorage.setItem('rpg-campaign-sync-queue-v1', 'not json');
     expect(getQueuedCampaignsSnapshot()).toEqual([]);
+  });
+
+  it('deduplicates queued deleted campaign ids and clears them', () => {
+    queueDeletedCampaignIds(['c1', 'c2']);
+    queueDeletedCampaignIds(['c1', 'c3']);
+
+    expect(getQueuedDeletedCampaignIds()).toEqual(['c1', 'c2', 'c3']);
+
+    clearQueuedDeletedCampaignIds();
+    expect(getQueuedDeletedCampaignIds()).toEqual([]);
+
+    localStorage.setItem('rpg-campaign-sync-delete-queue-v1', 'not json');
+    expect(getQueuedDeletedCampaignIds()).toEqual([]);
   });
 
   it('subscribeToRemoteCampaigns wires a postgres_changes listener filtered by user_id', () => {

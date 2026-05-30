@@ -20,6 +20,7 @@ export const level6Spells: Spell[] = [
       materialConsumed: true,
     },
     duration: { type: 'hours', hours: 1 },
+    target: '1 willing creature you touch',
     concentration: false,
     ritual: false,
     description:
@@ -281,6 +282,7 @@ export const level6Spells: Spell[] = [
       materialDescription: 'a stone worth at least 100 gp',
     },
     duration: { type: 'instant' },
+    target: '1 stone you touch',
     concentration: false,
     ritual: false,
     description:

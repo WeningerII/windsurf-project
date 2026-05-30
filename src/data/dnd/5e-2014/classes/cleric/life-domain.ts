@@ -94,38 +94,14 @@ export const lifeDomainSubclass: Subclass = {
     'mass-cure-wounds',
     'raise-dead',
   ],
-  alwaysPreparedSpells: [
-    {
-      source: 'Life Domain Spells',
-      minLevel: 1,
-      spellIds: ['bless', 'cure-wounds'],
-      countsAgainstPreparedLimit: false,
-    },
-    {
-      source: 'Life Domain Spells',
-      minLevel: 3,
-      spellIds: ['lesser-restoration', 'spiritual-weapon'],
-      countsAgainstPreparedLimit: false,
-    },
-    {
-      source: 'Life Domain Spells',
-      minLevel: 5,
-      spellIds: ['beacon-of-hope', 'revivify'],
-      countsAgainstPreparedLimit: false,
-    },
-    {
-      source: 'Life Domain Spells',
-      minLevel: 7,
-      spellIds: ['death-ward', 'guardian-of-faith'],
-      countsAgainstPreparedLimit: false,
-    },
-    {
-      source: 'Life Domain Spells',
-      minLevel: 9,
-      spellIds: ['mass-cure-wounds', 'raise-dead'],
-      countsAgainstPreparedLimit: false,
-    },
-  ],
+  alwaysPreparedSpellSourceLabel: 'Life Domain Spells',
+  alwaysPreparedSpellsByLevel: {
+    1: ['bless', 'cure-wounds'],
+    3: ['lesser-restoration', 'spiritual-weapon'],
+    5: ['beacon-of-hope', 'revivify'],
+    7: ['death-ward', 'guardian-of-faith'],
+    9: ['mass-cure-wounds', 'raise-dead'],
+  },
 
   description:
     'The Life domain focuses on the vibrant positive energy—one of the fundamental forces of the universe—that sustains all life. The gods of life promote vitality and health through healing the sick and wounded, caring for those in need, and driving away the forces of death and undeath.',

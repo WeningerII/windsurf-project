@@ -1,6 +1,7 @@
 import { Spell } from '../../../../types/magic/spells';
+import { withPf2eSpellTraits } from './traits';
 
-export const level4Spells: Spell[] = [
+export const level4Spells: Spell[] = withPf2eSpellTraits([
   {
     id: 'air-walk-pf2e',
     name: 'Air Walk',
@@ -59,6 +60,11 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description:
       "You phase in and out of existence. You gain resistance 5 to all damage. At the start of each of your turns, roll 1d4. On a result of 1, you're incorporeal until the start of your next turn.",
+    heightening: {
+      mode: 'interval',
+      interval: 2,
+      summary: 'Heightened (+2): The resistance increases by 3.',
+    },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -95,6 +101,13 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description:
       'You befuddle your target with strange impulses. The target must attempt a Will save. On a failure, the target is confused for 1 round. On a critical failure, the target is confused for 1 minute.',
+    heightening: {
+      mode: 'fixed',
+      summary: 'Heightened (8th): You can target up to 10 creatures.',
+      ranks: {
+        8: 'You can target up to 10 creatures.',
+      },
+    },
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
@@ -125,6 +138,14 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description:
       "Opening a door that bypasses normal space, you instantly transport yourself and any items you're wearing and holding from your current space to a clear space within range you can see. If this would bring another creature with you, the spell is lost.",
+    heightening: {
+      mode: 'fixed',
+      summary:
+        "Heightened (5th): The range increases to 1 mile. You don't need to be able to see your destination, as long as you have been there in the past and know its relative location and distance from you. You are temporarily immune for 1 hour.",
+      ranks: {
+        5: "The range increases to 1 mile. You don't need to be able to see your destination, as long as you have been there in the past and know its relative location and distance from you. You are temporarily immune for 1 hour.",
+      },
+    },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -191,6 +212,13 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description:
       'The target can soar through the air, gaining a fly Speed equal to its Speed or 20 feet, whichever is greater.',
+    heightening: {
+      mode: 'fixed',
+      summary: 'Heightened (7th): The duration increases to 1 hour.',
+      ranks: {
+        7: 'The duration increases to 1 hour.',
+      },
+    },
     classes: ['sorcerer', 'wizard'],
   },
   {
@@ -347,6 +375,16 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description:
       "The target's skin hardens like stone. The target gains resistance 5 to physical damage, except adamantine. Each time the target is hit by a bludgeoning, piercing, or slashing attack, stoneskin's duration decreases by 1 minute.",
+    heightening: {
+      mode: 'fixed',
+      summary:
+        'Heightened (6th): The resistance increases to 10. Heightened (8th): The resistance increases to 15. Heightened (10th): The resistance increases to 20.',
+      ranks: {
+        6: 'The resistance increases to 10.',
+        8: 'The resistance increases to 15.',
+        10: 'The resistance increases to 20.',
+      },
+    },
     classes: ['druid', 'sorcerer', 'wizard'],
   },
   {
@@ -390,6 +428,11 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description:
       'You raise a blazing wall that burns creatures passing through it. You create either a 5-foot-thick wall of flame in a straight line up to 60 feet long and 10 feet high, or a 5-foot-thick, 10-foot-radius ring of flame with the same height.',
+    heightening: {
+      mode: 'interval',
+      interval: 1,
+      summary: 'Heightened (+1): The fire damage increases by 1d6.',
+    },
     classes: ['druid', 'sorcerer', 'wizard'],
   },
-];
+]);

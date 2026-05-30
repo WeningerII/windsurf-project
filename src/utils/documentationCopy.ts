@@ -6,9 +6,10 @@ export const SYSTEM_SUPPORT_NOTES = {
 } as const;
 
 export const D20_LEGACY_MANUAL_NOTES = [
-  'Domain, deity, specialist-school, and other bonus-slot extras remain manual.',
-  'Prepared-slot conversion or spontaneous swap effects remain manual.',
-  'Dragon Disciple bonus arcane slots still require manual tracking.',
+  'Cleric and druid domain slots are applied manually.',
+  'Wizard specialist-school bonus slots are applied manually.',
+  'Spontaneous cure/inflict conversion is applied manually.',
+  'Dragon Disciple bonus arcane slots are applied manually.',
 ] as const;
 
 export const DND5E_SPELLS_COPY = {

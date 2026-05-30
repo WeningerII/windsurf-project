@@ -160,6 +160,7 @@ export const level2Spells: Spell[] = [
     duration: {
       type: 'permanent',
     },
+    target: '1 closed door, window, gate, chest, or other entryway you touch',
     concentration: false,
     ritual: false,
     description:
@@ -220,6 +221,7 @@ export const level2Spells: Spell[] = [
       type: 'hours',
       hours: 1,
     },
+    target: '1 willing creature you touch',
     concentration: false,
     ritual: false,
     description:
@@ -354,6 +356,7 @@ export const level2Spells: Spell[] = [
     duration: {
       type: 'permanent',
     },
+    target: '1 object you touch',
     concentration: false,
     ritual: false,
     description:
@@ -453,6 +456,7 @@ export const level2Spells: Spell[] = [
       type: 'hours',
       hours: 8,
     },
+    target: '1 willing creature you touch',
     concentration: false,
     ritual: false,
     description:
@@ -517,6 +521,7 @@ export const level2Spells: Spell[] = [
       type: 'concentration',
       maxDuration: '1 hour',
     },
+    target: '1 creature you touch',
     concentration: true,
     ritual: false,
     description:
@@ -699,6 +704,7 @@ export const level2Spells: Spell[] = [
       type: 'special',
       description: '10 days',
     },
+    target: '1 corpse or other remains you touch',
     concentration: false,
     ritual: true,
     description:
@@ -850,6 +856,7 @@ export const level2Spells: Spell[] = [
       type: 'concentration',
       maxDuration: '1 hour',
     },
+    target: '1 creature you touch',
     concentration: true,
     ritual: false,
     description:
@@ -909,6 +916,7 @@ export const level2Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: '1 creature you touch',
     concentration: false,
     ritual: false,
     description:
@@ -1065,6 +1073,7 @@ export const level2Spells: Spell[] = [
       type: 'hours',
       hours: 1,
     },
+    target: '1 nonmagical weapon you touch',
     concentration: false,
     ritual: false,
     description:
@@ -1220,6 +1229,7 @@ export const level2Spells: Spell[] = [
       type: 'hours',
       hours: 1,
     },
+    target: '1 creature you touch',
     concentration: false,
     ritual: false,
     description:
@@ -1432,6 +1442,7 @@ export const level2Spells: Spell[] = [
       type: 'concentration',
       maxDuration: '1 hour',
     },
+    target: '1 willing creature you touch',
     concentration: true,
     ritual: false,
     description:

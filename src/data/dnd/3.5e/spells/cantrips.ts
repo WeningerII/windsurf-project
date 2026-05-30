@@ -7,10 +7,11 @@ export const cantrips: Spell[] = [
     name: 'Acid Splash',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/acidSplash.htm',
     level: 0,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -25,6 +26,10 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    effect: 'One missile of acid',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
+    savingThrowText: 'None',
     attackRoll: true,
     concentration: false,
     ritual: false,
@@ -49,10 +54,11 @@ export const cantrips: Spell[] = [
     name: 'Arcane Mark',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/arcaneMark.htm',
     level: 0,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -66,6 +72,10 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'permanent',
     },
+    effect: 'One personal rune or mark, all of which must fit within 1 sq. ft.',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description:
@@ -115,10 +125,11 @@ export const cantrips: Spell[] = [
     name: 'Chill Touch',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/chillTouch.htm',
     level: 0,
     school: 'necromancy',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -133,6 +144,15 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'Creature or creatures touched (up to one/level)',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    savingThrow: {
+      attribute: 'con',
+      success: 'special',
+      description: 'Fortitude partial or Will negates; see text',
+    },
+    savingThrowText: 'Fortitude partial or Will negates; see text',
     attackRoll: true,
     concentration: false,
     ritual: false,
@@ -157,10 +177,11 @@ export const cantrips: Spell[] = [
     name: 'Create Water',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/createWater.htm',
     level: 0,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -175,6 +196,10 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    effect: 'Up to 2 gallons of water/level',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description:
@@ -192,10 +217,11 @@ export const cantrips: Spell[] = [
     name: 'Create Water',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/createWater.htm',
     level: 0,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -210,6 +236,10 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    effect: 'Up to 2 gallons of water/level',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Creates 2 gallons/level of pure water.',
@@ -223,10 +253,11 @@ export const cantrips: Spell[] = [
     name: 'Create Water',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/createWater.htm',
     level: 0,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -241,6 +272,10 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    effect: 'Up to 2 gallons of water/level',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Creates 2 gallons/level of pure water.',
@@ -254,6 +289,7 @@ export const cantrips: Spell[] = [
     name: 'Cure Minor Wounds',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/cureMinorWounds.htm',
     level: 0,
     school: 'conjuration',
     castingTime: {
@@ -284,6 +320,7 @@ export const cantrips: Spell[] = [
     name: 'Cure Minor Wounds',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/cureMinorWounds.htm',
     level: 0,
     school: 'conjuration',
     castingTime: {
@@ -314,10 +351,11 @@ export const cantrips: Spell[] = [
     name: 'Dancing Lights',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/dancingLights.htm',
     level: 0,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -327,13 +365,16 @@ export const cantrips: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
-      materialDescription: 'A bit of phosphorus or wychwood, or a glowing insect',
+      material: false,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    effect: 'Up to four lights, all within a 10-ft.-radius area',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: true,
     ritual: false,
     description:
@@ -350,10 +391,11 @@ export const cantrips: Spell[] = [
     name: 'Daze',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/daze.htm',
     level: 0,
     school: 'enchantment',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -363,19 +405,24 @@ export const cantrips: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    target: 'One humanoid creature of 4 HD or less',
+    savingThrowText: 'Will negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
       'This spell clouds the mind of a humanoid creature with 4 or fewer Hit Dice so that it takes no actions. Undead are not affected, nor are creatures with more than 4 Hit Dice.',
     savingThrow: {
-      attribute: 'will',
+      attribute: 'wis',
       success: 'none',
+      description: 'Will negates',
     },
     classes: ['bard', 'sorcerer', 'wizard'],
     levelsByClass: {
@@ -389,10 +436,11 @@ export const cantrips: Spell[] = [
     name: 'Detect Magic',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/detectMagic.htm',
     level: 0,
-    school: 'abjuration',
+    school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -408,6 +456,10 @@ export const cantrips: Spell[] = [
       type: 'rounds',
       rounds: 10,
     },
+    area: 'Cone-shaped emanation',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: true,
     ritual: false,
     description:
@@ -428,10 +480,11 @@ export const cantrips: Spell[] = [
     name: 'Detect Magic',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/detectMagic.htm',
     level: 0,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -447,6 +500,10 @@ export const cantrips: Spell[] = [
       type: 'rounds',
       rounds: 10,
     },
+    area: 'Cone-shaped emanation',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: true,
     ritual: false,
     description: 'Detects spells and magic items within 60 ft.',
@@ -460,10 +517,11 @@ export const cantrips: Spell[] = [
     name: 'Detect Magic',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/detectMagic.htm',
     level: 0,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -479,6 +537,10 @@ export const cantrips: Spell[] = [
       type: 'rounds',
       rounds: 10,
     },
+    area: 'Cone-shaped emanation',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: true,
     ritual: false,
     description: 'Detects spells and magic items within 60 ft.',
@@ -492,10 +554,11 @@ export const cantrips: Spell[] = [
     name: 'Detect Poison',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/detectPoison.htm',
     level: 0,
-    school: 'abjuration',
+    school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -509,6 +572,10 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'One creature, one object, or a 5-ft. cube',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description:
@@ -526,10 +593,11 @@ export const cantrips: Spell[] = [
     name: 'Detect Poison',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/detectPoison.htm',
     level: 0,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -544,6 +612,10 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'One creature, one object, or a 5-ft. cube',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Detects poison in one creature or object.',
@@ -557,10 +629,11 @@ export const cantrips: Spell[] = [
     name: 'Detect Poison',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/detectPoison.htm',
     level: 0,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -575,6 +648,10 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'One creature, one object, or a 5-ft. cube',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Detects poison in one creature or object.',
@@ -588,10 +665,11 @@ export const cantrips: Spell[] = [
     name: 'Disrupt Undead',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/disruptUndead.htm',
     level: 0,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -606,6 +684,10 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    effect: 'Ray',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    savingThrowText: 'None',
     attackRoll: true,
     concentration: false,
     ritual: false,
@@ -629,10 +711,11 @@ export const cantrips: Spell[] = [
     name: 'Flare',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/flare.htm',
     level: 0,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -640,13 +723,22 @@ export const cantrips: Spell[] = [
       feet: 25,
     },
     components: {
-      verbal: false,
+      verbal: true,
       somatic: false,
       material: false,
     },
     duration: {
       type: 'instant',
     },
+    effect: 'Burst of light',
+    savingThrowText: 'Fortitude negates',
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+      description: 'Fortitude negates',
+    },
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: 'Dazzles one creature (-1 penalty on attack rolls).',
@@ -660,10 +752,11 @@ export const cantrips: Spell[] = [
     name: 'Flare',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/flare.htm',
     level: 0,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -672,12 +765,21 @@ export const cantrips: Spell[] = [
     },
     components: {
       verbal: true,
-      somatic: true,
+      somatic: false,
       material: false,
     },
     duration: {
       type: 'instant',
     },
+    effect: 'Burst of light',
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+      description: 'Fortitude negates',
+    },
+    savingThrowText: 'Fortitude negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description:
@@ -693,10 +795,11 @@ export const cantrips: Spell[] = [
     name: 'Ghost Sound',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/ghostSound.htm',
     level: 0,
     school: 'illusion',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -713,6 +816,15 @@ export const cantrips: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    effect: 'Illusory sounds',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will disbelief (if interacted with)',
+    },
+    savingThrowText: 'Will disbelief (if interacted with)',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: true,
     ritual: false,
     description:
@@ -729,10 +841,11 @@ export const cantrips: Spell[] = [
     name: 'Guidance',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/guidance.htm',
     level: 0,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -747,6 +860,15 @@ export const cantrips: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    target: 'Creature touched',
+    savingThrowText: 'Will negates (harmless)',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: '+1 on one attack roll, saving throw, or skill check.',
@@ -760,10 +882,11 @@ export const cantrips: Spell[] = [
     name: 'Guidance',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/guidance.htm',
     level: 0,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -778,6 +901,15 @@ export const cantrips: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    target: 'Creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
     concentration: false,
     ritual: false,
     description: '+1 on one attack roll, saving throw, or skill check.',
@@ -791,6 +923,7 @@ export const cantrips: Spell[] = [
     name: 'Inflict Minor Wounds',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/inflictMinorWounds.htm',
     level: 0,
     school: 'necromancy',
     castingTime: {
@@ -808,6 +941,12 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates',
+    },
+    savingThrowText: 'Will negates',
     concentration: false,
     ritual: false,
     description: 'Touch attack, 1 point of damage.',
@@ -821,10 +960,11 @@ export const cantrips: Spell[] = [
     name: 'Know Direction',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/knowDirection.htm',
     level: 0,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -838,6 +978,7 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'You',
     concentration: false,
     ritual: false,
     description: 'You discern north.',
@@ -851,10 +992,11 @@ export const cantrips: Spell[] = [
     name: 'Know Direction',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/knowDirection.htm',
     level: 0,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -868,6 +1010,7 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'You',
     concentration: false,
     ritual: false,
     description:
@@ -884,10 +1027,11 @@ export const cantrips: Spell[] = [
     name: 'Light',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/light.htm',
     level: 0,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -895,13 +1039,18 @@ export const cantrips: Spell[] = [
     },
     components: {
       verbal: true,
-      somatic: true,
-      material: false,
+      somatic: false,
+      material: true,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'Object touched',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Object shines like a torch.',
@@ -915,10 +1064,11 @@ export const cantrips: Spell[] = [
     name: 'Light',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/light.htm',
     level: 0,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -926,13 +1076,18 @@ export const cantrips: Spell[] = [
     },
     components: {
       verbal: true,
-      somatic: true,
-      material: false,
+      somatic: false,
+      material: true,
+      divineFocus: true,
     },
     duration: {
       type: 'hours',
       hours: 1,
     },
+    target: 'Object touched',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description: 'Object shines like a torch.',
@@ -946,10 +1101,11 @@ export const cantrips: Spell[] = [
     name: 'Light',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/light.htm',
     level: 0,
-    school: 'abjuration',
+    school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -957,13 +1113,18 @@ export const cantrips: Spell[] = [
     },
     components: {
       verbal: true,
-      somatic: true,
-      material: false,
+      somatic: false,
+      material: true,
+      divineFocus: true,
     },
     duration: {
       type: 'hours',
       hours: 1,
     },
+    target: 'Object touched',
+    savingThrowText: 'None',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description:
@@ -982,10 +1143,11 @@ export const cantrips: Spell[] = [
     name: 'Mending',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/mending.htm',
     level: 0,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1000,6 +1162,15 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'One object of up to 1 lb.',
+    savingThrowText: 'Will negates (harmless, object)',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless, object)',
+    },
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: 'Makes minor repairs on an object.',
@@ -1013,10 +1184,11 @@ export const cantrips: Spell[] = [
     name: 'Mending',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/mending.htm',
     level: 0,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1031,6 +1203,15 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'One object of up to 1 lb.',
+    savingThrowText: 'Will negates (harmless, object)',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless, object)',
+    },
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: 'Makes minor repairs on an object.',
@@ -1044,10 +1225,11 @@ export const cantrips: Spell[] = [
     name: 'Mending',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/mending.htm',
     level: 0,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1061,6 +1243,15 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'One object of up to 1 lb.',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless, object)',
+    },
+    savingThrowText: 'Will negates (harmless, object)',
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description:
@@ -1079,10 +1270,11 @@ export const cantrips: Spell[] = [
     name: 'Prestidigitation',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/prestidigitation.htm',
     level: 0,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1098,6 +1290,9 @@ export const cantrips: Spell[] = [
       type: 'hours',
       hours: 1,
     },
+    savingThrowText: 'See text',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
     concentration: false,
     ritual: false,
     description:
@@ -1114,10 +1309,11 @@ export const cantrips: Spell[] = [
     name: 'Purify Food and Drink',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/purifyFoodAndDrink.htm',
     level: 0,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1132,6 +1328,15 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: '1 cu. ft./level of contaminated food and water',
+    savingThrowText: 'Will negates (object)',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (object)',
+    },
+    spellResistance: true,
+    spellResistanceDetail: 'object',
     concentration: false,
     ritual: false,
     description: 'Purifies 1 cu. ft./level of food or water.',
@@ -1145,10 +1350,11 @@ export const cantrips: Spell[] = [
     name: 'Purify Food and Drink',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/purifyFoodAndDrink.htm',
     level: 0,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1163,6 +1369,15 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: '1 cu. ft./level of contaminated food and water',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (object)',
+    },
+    savingThrowText: 'Will negates (object)',
+    spellResistance: true,
+    spellResistanceDetail: 'object',
     concentration: false,
     ritual: false,
     description: 'Purifies 1 cu. ft./level of food or water.',
@@ -1176,10 +1391,11 @@ export const cantrips: Spell[] = [
     name: 'Ray of Frost',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/rayOfFrost.htm',
     level: 0,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1194,6 +1410,10 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    effect: 'Ray',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    savingThrowText: 'None',
     attackRoll: true,
     concentration: false,
     ritual: false,
@@ -1218,10 +1438,11 @@ export const cantrips: Spell[] = [
     name: 'Read Magic',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/readMagic.htm',
     level: 0,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1231,11 +1452,13 @@ export const cantrips: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      focus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'You',
     concentration: false,
     ritual: false,
     description: 'Read scrolls and spellbooks.',
@@ -1249,10 +1472,11 @@ export const cantrips: Spell[] = [
     name: 'Read Magic',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/readMagic.htm',
     level: 0,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1262,11 +1486,13 @@ export const cantrips: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      focus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'You',
     concentration: false,
     ritual: false,
     description: 'Read scrolls and spellbooks.',
@@ -1280,10 +1506,11 @@ export const cantrips: Spell[] = [
     name: 'Read Magic',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/readMagic.htm',
     level: 0,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1293,11 +1520,13 @@ export const cantrips: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      focus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'You',
     concentration: true,
     ritual: false,
     description:
@@ -1318,10 +1547,11 @@ export const cantrips: Spell[] = [
     name: 'Resistance',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/resistance.htm',
     level: 0,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1330,12 +1560,22 @@ export const cantrips: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'Creature touched',
+    savingThrowText: 'Will negates (harmless)',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: 'Subject gains +1 on saving throws.',
@@ -1349,10 +1589,11 @@ export const cantrips: Spell[] = [
     name: 'Resistance',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/resistance.htm',
     level: 0,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1361,12 +1602,22 @@ export const cantrips: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'Creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: 'Subject gains +1 bonus on saving throws.',
@@ -1380,10 +1631,11 @@ export const cantrips: Spell[] = [
     name: 'Shocking Grasp',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/shockingGrasp.htm',
     level: 0,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1397,6 +1649,10 @@ export const cantrips: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'Creature or object touched',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    savingThrowText: 'None',
     attackRoll: true,
     concentration: false,
     ritual: false,
@@ -1421,10 +1677,11 @@ export const cantrips: Spell[] = [
     name: 'Virtue',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/virtue.htm',
     level: 0,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1434,11 +1691,21 @@ export const cantrips: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'Creature touched',
+    savingThrowText: 'Fortitude negates (harmless)',
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+      description: 'Fortitude negates (harmless)',
+    },
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: 'Subject gains 1 temporary hp.',
@@ -1452,10 +1719,11 @@ export const cantrips: Spell[] = [
     name: 'Virtue',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/virtue.htm',
     level: 0,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -1465,11 +1733,21 @@ export const cantrips: Spell[] = [
       verbal: true,
       somatic: true,
       material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'Creature touched',
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+      description: 'Fortitude negates (harmless)',
+    },
+    savingThrowText: 'Fortitude negates (harmless)',
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
     concentration: false,
     ritual: false,
     description: 'Subject gains 1 temporary hp.',

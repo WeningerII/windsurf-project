@@ -75,38 +75,14 @@ export const fiendSubclass: Subclass = {
     'flame-strike',
     'hallow',
   ],
-  alwaysPreparedSpells: [
-    {
-      source: 'Fiend Spells',
-      minLevel: 3,
-      spellIds: ['burning-hands', 'command'],
-      countsAgainstPreparedLimit: false,
-    },
-    {
-      source: 'Fiend Spells',
-      minLevel: 5,
-      spellIds: ['blindness-deafness', 'scorching-ray'],
-      countsAgainstPreparedLimit: false,
-    },
-    {
-      source: 'Fiend Spells',
-      minLevel: 7,
-      spellIds: ['fireball', 'stinking-cloud'],
-      countsAgainstPreparedLimit: false,
-    },
-    {
-      source: 'Fiend Spells',
-      minLevel: 9,
-      spellIds: ['fire-shield', 'wall-of-fire'],
-      countsAgainstPreparedLimit: false,
-    },
-    {
-      source: 'Fiend Spells',
-      minLevel: 11,
-      spellIds: ['flame-strike', 'hallow'],
-      countsAgainstPreparedLimit: false,
-    },
-  ],
+  alwaysPreparedSpellSourceLabel: 'Fiend Spells',
+  alwaysPreparedSpellsByLevel: {
+    3: ['burning-hands', 'command'],
+    5: ['blindness-deafness', 'scorching-ray'],
+    7: ['fireball', 'stinking-cloud'],
+    9: ['fire-shield', 'wall-of-fire'],
+    11: ['flame-strike', 'hallow'],
+  },
 
   description:
     'You have made a pact with a fiend from the lower planes of existence, a being whose aims are evil, even if you strive against those aims. Such beings desire the corruption or destruction of all things, ultimately including you.',

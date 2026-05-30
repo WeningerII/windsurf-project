@@ -1,3 +1,4 @@
+// purpose: Notes tab body — free-text character notes/biography editor.
 import { TabsContent } from '../../../../components/ui/Tabs';
 
 type Dnd5ePersonality = Partial<{

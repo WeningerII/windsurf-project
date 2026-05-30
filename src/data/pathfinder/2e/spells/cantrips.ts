@@ -1,6 +1,7 @@
 import { Spell } from '../../../../types/magic/spells';
+import { withPf2eSpellTraits } from './traits';
 
-export const cantrips: Spell[] = [
+export const cantrips: Spell[] = withPf2eSpellTraits([
   {
     id: 'acid-splash-pf2e',
     name: 'Acid Splash',
@@ -600,4 +601,4 @@ export const cantrips: Spell[] = [
     },
     classes: ['sorcerer', 'wizard'],
   },
-];
+]);

@@ -6,10 +6,11 @@ export const level1Spells: Spell[] = [
     name: 'Alarm',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Alarm',
     level: 1,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -19,12 +20,17 @@ export const level1Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
+      material: false,
+      focus: true,
+      focusDescription: 'a tiny bell and a piece of very fine silver wire',
+      divineFocus: true,
     },
     duration: {
       type: 'hours',
       hours: 2,
     },
+    area: '20-ft.-radius emanation centered on a point in space',
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:
@@ -42,10 +48,11 @@ export const level1Spells: Spell[] = [
     name: 'Bless',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Bless',
     level: 1,
     school: 'enchantment',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -55,12 +62,15 @@ export const level1Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
+      material: false,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    area: 'The caster and all allies within a 50-ft. burst, centered on the caster',
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:
@@ -75,10 +85,11 @@ export const level1Spells: Spell[] = [
     name: 'Burning Hands',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Burning%20Hands',
     level: 1,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -96,9 +107,11 @@ export const level1Spells: Spell[] = [
       type: 'cone',
       feet: 15,
     },
+    area: 'cone-shaped burst',
     savingThrow: {
       attribute: 'dex',
       success: 'half',
+      description: 'Reflex half',
     },
     damage: {
       base: {
@@ -108,6 +121,7 @@ export const level1Spells: Spell[] = [
       },
       type: 'fire',
     },
+    savingThrowText: 'Reflex half',
     concentration: false,
     ritual: false,
     description:
@@ -123,10 +137,11 @@ export const level1Spells: Spell[] = [
     name: 'Charm Person',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Charm%20Person',
     level: 1,
     school: 'enchantment',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -142,10 +157,13 @@ export const level1Spells: Spell[] = [
       type: 'hours',
       hours: 1,
     },
+    target: 'one humanoid creature',
     savingThrow: {
       attribute: 'wis',
       success: 'none',
+      description: 'Will negates',
     },
+    savingThrowText: 'Will negates',
     concentration: false,
     ritual: false,
     description:
@@ -162,10 +180,11 @@ export const level1Spells: Spell[] = [
     name: 'Color Spray',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Color%20Spray',
     level: 1,
     school: 'illusion',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -175,6 +194,7 @@ export const level1Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'red, yellow, and blue powder or colored sand',
     },
     duration: {
       type: 'instant',
@@ -183,10 +203,13 @@ export const level1Spells: Spell[] = [
       type: 'cone',
       feet: 15,
     },
+    area: 'cone-shaped burst',
     savingThrow: {
       attribute: 'wis',
       success: 'none',
+      description: 'Will negates',
     },
+    savingThrowText: 'Will negates',
     concentration: false,
     ritual: false,
     description:
@@ -202,10 +225,11 @@ export const level1Spells: Spell[] = [
     name: 'Comprehend Languages',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Comprehend%20Languages',
     level: 1,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -215,11 +239,14 @@ export const level1Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'pinch of soot and salt',
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 10,
     },
+    target: 'you',
     concentration: false,
     ritual: false,
     description:
@@ -237,10 +264,11 @@ export const level1Spells: Spell[] = [
     name: 'Cure Light Wounds',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Cure%20Light%20Wounds',
     level: 1,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -254,6 +282,13 @@ export const level1Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'half',
+      description: 'Will half (harmless)',
+    },
+    savingThrowText: 'Will half (harmless)',
     concentration: false,
     ritual: false,
     description:
@@ -271,10 +306,11 @@ export const level1Spells: Spell[] = [
     name: 'Detect Secret Doors',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Detect%20Secret%20Doors',
     level: 1,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -293,6 +329,8 @@ export const level1Spells: Spell[] = [
       type: 'cone',
       feet: 60,
     },
+    area: 'cone-shaped emanation',
+    savingThrowText: 'none',
     concentration: true,
     ritual: false,
     description:
@@ -309,10 +347,11 @@ export const level1Spells: Spell[] = [
     name: 'Endure Elements',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Endure%20Elements',
     level: 1,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -327,6 +366,13 @@ export const level1Spells: Spell[] = [
       type: 'hours',
       hours: 24,
     },
+    target: 'creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
     concentration: false,
     ritual: false,
     description:
@@ -345,11 +391,12 @@ export const level1Spells: Spell[] = [
     name: 'Enlarge Person',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Enlarge%20Person',
     level: 1,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
-      amount: 1,
+      type: 'rounds',
+      rounds: 1,
     },
     range: {
       type: 'ranged',
@@ -359,15 +406,19 @@ export const level1Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'powdered iron',
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'one humanoid creature',
     savingThrow: {
       attribute: 'con',
       success: 'none',
+      description: 'Fortitude negates',
     },
+    savingThrowText: 'Fortitude negates',
     concentration: false,
     ritual: false,
     description:
@@ -383,10 +434,11 @@ export const level1Spells: Spell[] = [
     name: 'Expeditious Retreat',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Expeditious%20Retreat',
     level: 1,
     school: 'transmutation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -401,6 +453,7 @@ export const level1Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    target: 'you',
     concentration: false,
     ritual: false,
     description:
@@ -417,10 +470,11 @@ export const level1Spells: Spell[] = [
     name: 'Feather Fall',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Feather%20Fall',
     level: 1,
     school: 'transmutation',
     castingTime: {
-      type: 'reaction',
+      type: 'immediate',
       amount: 1,
     },
     range: {
@@ -436,6 +490,14 @@ export const level1Spells: Spell[] = [
       type: 'special',
       description: 'until landing or 1 round per level',
     },
+    target:
+      'one Medium or smaller freefalling object or creature/level, no two of which may be more than 20 ft. apart',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless) or Will negates (object)',
+    },
+    savingThrowText: 'Will negates (harmless) or Will negates (object)',
     concentration: false,
     ritual: false,
     description:
@@ -452,10 +514,11 @@ export const level1Spells: Spell[] = [
     name: 'Grease',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Grease',
     level: 1,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -465,16 +528,15 @@ export const level1Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: false,
+      material: true,
+      materialDescription: 'butter',
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
-    savingThrow: {
-      attribute: 'dex',
-      success: 'special',
-    },
+    target: 'one object or 10-ft. square',
+    savingThrowText: 'see text',
     concentration: false,
     ritual: false,
     description:
@@ -491,10 +553,11 @@ export const level1Spells: Spell[] = [
     name: 'Identify',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Identify',
     level: 1,
     school: 'divination',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -504,10 +567,13 @@ export const level1Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: "wine stirred with an owl's feather",
     },
     duration: {
       type: 'instant',
     },
+    area: 'cone-shaped emanation',
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:
@@ -524,10 +590,11 @@ export const level1Spells: Spell[] = [
     name: 'Mage Armor',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Mage%20Armor',
     level: 1,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -536,12 +603,21 @@ export const level1Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
+      material: false,
+      focus: true,
+      focusDescription: 'a piece of cured leather',
     },
     duration: {
       type: 'hours',
       hours: 1,
     },
+    target: 'creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
     concentration: false,
     ritual: false,
     description:
@@ -557,10 +633,11 @@ export const level1Spells: Spell[] = [
     name: 'Magic Missile',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Magic%20Missile',
     level: 1,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -575,6 +652,7 @@ export const level1Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'up to five creatures, no two of which can be more than 15 ft. apart',
     damage: {
       base: {
         count: 1,
@@ -583,6 +661,7 @@ export const level1Spells: Spell[] = [
       },
       type: 'force',
     },
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:
@@ -598,10 +677,11 @@ export const level1Spells: Spell[] = [
     name: 'Obscuring Mist',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Obscuring%20Mist',
     level: 1,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -620,6 +700,8 @@ export const level1Spells: Spell[] = [
       type: 'sphere',
       radius: 20,
     },
+    effect: 'cloud spreads in 20-ft. radius from you, 20 ft. high',
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:
@@ -637,10 +719,11 @@ export const level1Spells: Spell[] = [
     name: 'Protection from Evil',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Protection%20from%20Evil',
     level: 1,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -650,11 +733,19 @@ export const level1Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      divineFocus: true,
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    target: 'creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
     concentration: false,
     ritual: false,
     description:
@@ -671,10 +762,11 @@ export const level1Spells: Spell[] = [
     name: 'Shield',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Shield',
     level: 1,
     school: 'abjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -689,6 +781,7 @@ export const level1Spells: Spell[] = [
       type: 'minutes',
       minutes: 1,
     },
+    target: 'you',
     concentration: false,
     ritual: false,
     description:
@@ -704,10 +797,11 @@ export const level1Spells: Spell[] = [
     name: 'Silent Image',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Silent%20Image',
     level: 1,
     school: 'illusion',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -717,16 +811,22 @@ export const level1Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
+      material: false,
+      focus: true,
+      focusDescription: 'a bit of fleece',
     },
     duration: {
       type: 'concentration',
       maxDuration: '1 minute per level',
     },
+    effect:
+      'visual figment that cannot extend beyond four 10-ft. cubes + one 10-ft. cube/level (S)',
     savingThrow: {
       attribute: 'wis',
       success: 'none',
+      description: 'Will disbelief (if interacted with)',
     },
+    savingThrowText: 'Will disbelief (if interacted with)',
     concentration: true,
     ritual: false,
     description:
@@ -743,11 +843,12 @@ export const level1Spells: Spell[] = [
     name: 'Sleep',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Sleep',
     level: 1,
     school: 'enchantment',
     castingTime: {
-      type: 'action',
-      amount: 1,
+      type: 'rounds',
+      rounds: 1,
     },
     range: {
       type: 'ranged',
@@ -757,15 +858,19 @@ export const level1Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'fine sand, rose petals, or a live cricket',
     },
     duration: {
       type: 'minutes',
       minutes: 1,
     },
+    area: 'one or more living creatures within a 10-ft.-radius burst',
     savingThrow: {
       attribute: 'wis',
       success: 'none',
+      description: 'Will negates',
     },
+    savingThrowText: 'Will negates',
     concentration: false,
     ritual: false,
     description:
@@ -782,11 +887,12 @@ export const level1Spells: Spell[] = [
     name: 'Summon Monster I',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Summon%20Monster%201',
     level: 1,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
-      amount: 1,
+      type: 'rounds',
+      rounds: 1,
     },
     range: {
       type: 'ranged',
@@ -795,12 +901,17 @@ export const level1Spells: Spell[] = [
     components: {
       verbal: true,
       somatic: true,
-      material: true,
+      material: false,
+      focus: true,
+      focusDescription: 'a tiny bag and a small candle',
+      divineFocus: true,
     },
     duration: {
       type: 'rounds',
       rounds: 1,
     },
+    effect: 'one summoned creature',
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:

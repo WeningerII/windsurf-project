@@ -26,6 +26,34 @@ const rawSpellsByLevel: Record<number, Spell[]> = {
 
 const CLASS_SPECIFIC_ID_PATTERN = /-(bard|cleric|druid|paladin|ranger|sorcerer|wizard)-35e$/;
 
+type SpellEntry = {
+  spell: Spell;
+  level: number;
+  sourceOrder: number;
+};
+
+const MANUAL_CLASS_STUB_CANONICAL_IDS: Record<string, string> = {
+  'fire trap': 'fire-trap-35e',
+  'animate dead': 'animate-dead-35e',
+  'bestow curse': 'bestow-curse-35e',
+  contagion: 'contagion-35e',
+  'stone shape': 'stone-shape-35e',
+  tongues: 'tongues-35e',
+  dismissal: 'dismissal-35e',
+  stoneskin: 'stoneskin-35e',
+  'wall of fire': 'wall-of-fire-35e',
+  'antimagic field': 'antimagic-field-35e',
+  repulsion: 'repulsion-35e',
+  flare: 'flare-35e',
+  'protection from energy': 'protection-from-energy-35e',
+  'chain lightning': 'chain-lightning-6-35e',
+  'suggestion, mass': 'suggestion-mass-35e',
+  'summon monster vii': 'summon-monster-7-35e',
+  gate: 'gate-35e',
+  shapechange: 'shapechange-35e',
+  'true seeing': 'true-seeing-6-35e',
+};
+
 function stableFingerprintValue(value: unknown): unknown {
   if (Array.isArray(value)) {
     return value.map(stableFingerprintValue);
@@ -48,9 +76,17 @@ function getStructuredVariantFingerprint(spell: Spell): string {
     classes: _classes,
     levelsByClass: _levelsByClass,
     description: _description,
+    level: _level,
+    components: rawComponents,
     ...rest
   } = spell;
-  return JSON.stringify(stableFingerprintValue(rest));
+  const { materialDescription: _materialDescription, ...components } = rawComponents;
+
+  return JSON.stringify(stableFingerprintValue({ ...rest, components }));
+}
+
+function getNameAndStructureKey(spell: Spell): string {
+  return `${spell.name}::${getStructuredVariantFingerprint(spell)}`;
 }
 
 function compareCanonicalPreference(left: Spell, right: Spell): number {
@@ -75,78 +111,220 @@ function compareCanonicalPreference(left: Spell, right: Spell): number {
   return left.id.localeCompare(right.id);
 }
 
+function getNormalizedSpellName(spell: Spell): string {
+  return spell.name.toLowerCase();
+}
+
+function getEntriesByCanonicalLevel(entries: SpellEntry[]): Record<number, Spell[]> {
+  const byLevel: Record<number, Array<{ spell: Spell; sourceOrder: number }>> = {};
+
+  entries.forEach(({ spell, level, sourceOrder }) => {
+    if (!byLevel[level]) byLevel[level] = [];
+    byLevel[level].push({ spell, sourceOrder });
+  });
+
+  return Object.fromEntries(
+    Object.entries(byLevel).map(([level, levelEntries]) => [
+      Number(level),
+      [...levelEntries]
+        .sort((left, right) => left.sourceOrder - right.sourceOrder)
+        .map(({ spell }) => spell),
+    ])
+  ) as Record<number, Spell[]>;
+}
+
+function getClassLevelSpecificity(spell: Spell, className: string, classLevel: number): number {
+  if (spell.id.endsWith(`-${className}-35e`)) return 2;
+  if (classLevel !== spell.level) return 2;
+  if (spell.classes.length === 1 && spell.classes[0] === className) return 1;
+  return 0;
+}
+
+function getLevelIndex(entries: SpellEntry[]): Record<string, number> {
+  return Object.fromEntries(
+    Object.entries(
+      entries.reduce(
+        (index, { spell, level }) => {
+          const explicitLevels =
+            spell.levelsByClass && Object.keys(spell.levelsByClass).length > 0
+              ? spell.levelsByClass
+              : Object.fromEntries(spell.classes.map((className) => [className, level]));
+
+          Object.entries(explicitLevels).forEach(([className, classLevel]) => {
+            const specificity = getClassLevelSpecificity(spell, className, classLevel);
+            const existing = index[className];
+            if (
+              !existing ||
+              specificity > existing.specificity ||
+              (specificity === existing.specificity && classLevel < existing.level)
+            ) {
+              index[className] = { level: classLevel, specificity };
+            }
+          });
+
+          return index;
+        },
+        {} as Record<string, { level: number; specificity: number }>
+      )
+    )
+      .sort(([left], [right]) => left.localeCompare(right))
+      .map(([className, { level }]) => [className, level])
+  );
+}
+
+function mergeSpellEntries(
+  entries: SpellEntry[],
+  spellIdAliases: Record<string, string>,
+  canonicalId?: string
+): SpellEntry {
+  const canonicalEntry =
+    (canonicalId ? entries.find(({ spell }) => spell.id === canonicalId) : undefined) ??
+    [...entries].sort((left, right) => {
+      if (left.level !== right.level) return left.level - right.level;
+      return compareCanonicalPreference(left.spell, right.spell);
+    })[0];
+  const canonicalLevel = Math.min(...entries.map(({ level }) => level));
+  const longestDescription = [...entries].sort(
+    (left, right) => right.spell.description.length - left.spell.description.length
+  )[0].spell.description;
+
+  entries
+    .filter(({ spell }) => spell.id !== canonicalEntry.spell.id)
+    .forEach(({ spell }) => {
+      spellIdAliases[spell.id] = canonicalEntry.spell.id;
+    });
+
+  return {
+    spell: {
+      ...canonicalEntry.spell,
+      level: canonicalLevel,
+      description: longestDescription,
+      classes: [...new Set(entries.flatMap(({ spell }) => spell.classes))].sort(),
+      levelsByClass: getLevelIndex(entries),
+    },
+    level: canonicalLevel,
+    sourceOrder: Math.min(...entries.map(({ sourceOrder }) => sourceOrder)),
+  };
+}
+
+function mergeGroupedEntries(
+  entries: SpellEntry[],
+  spellIdAliases: Record<string, string>,
+  getKey: (entry: SpellEntry) => string,
+  shouldMerge: (entries: SpellEntry[]) => boolean,
+  getCanonicalId: (entries: SpellEntry[]) => string | undefined = () => undefined
+): SpellEntry[] {
+  const groups = new Map<string, SpellEntry[]>();
+
+  entries.forEach((entry) => {
+    const key = getKey(entry);
+    const existing = groups.get(key);
+    if (existing) {
+      existing.push(entry);
+      return;
+    }
+    groups.set(key, [entry]);
+  });
+
+  return [...groups.values()]
+    .map((group) =>
+      group.length > 1 && shouldMerge(group)
+        ? mergeSpellEntries(group, spellIdAliases, getCanonicalId(group))
+        : group
+    )
+    .flat()
+    .sort((left, right) => left.sourceOrder - right.sourceOrder);
+}
+
+function isExactClassSplitGroup(entries: SpellEntry[]): boolean {
+  return entries.length > 1;
+}
+
+function isDescriptionStubGroup(entries: SpellEntry[]): boolean {
+  if (entries.length < 2) return false;
+
+  const schools = new Set(entries.map(({ spell }) => spell.school));
+  if (schools.size !== 1) return false;
+
+  const levels = new Set(entries.map(({ level }) => level));
+  if (levels.size !== 1) return false;
+
+  const descriptionLengths = entries.map(({ spell }) => spell.description.length);
+  const shortest = Math.min(...descriptionLengths);
+  const longest = Math.max(...descriptionLengths);
+
+  return longest >= shortest * 2 + 50;
+}
+
+function isManualClassStubGroup(entries: SpellEntry[]): boolean {
+  const canonicalId = MANUAL_CLASS_STUB_CANONICAL_IDS[getNormalizedSpellName(entries[0].spell)];
+  if (!canonicalId) return false;
+
+  const schools = new Set(entries.map(({ spell }) => spell.school));
+  return schools.size === 1 && entries.some(({ spell }) => spell.id === canonicalId);
+}
+
 function mergeExactClassSplitVariants(spellsByLevel: Record<number, Spell[]>): {
   mergedSpellsByLevel: Record<number, Spell[]>;
   spellIdAliases: Record<string, string>;
 } {
   const spellIdAliases: Record<string, string> = {};
 
-  const mergedSpellsByLevel = Object.fromEntries(
-    Object.entries(spellsByLevel).map(([level, spells]) => {
-      const groups = new Map<
-        string,
-        {
-          order: number;
-          spells: Spell[];
-        }
-      >();
+  // Collect all spells across all levels, preserving original ordering.
+  const allRawSpells: SpellEntry[] = [];
+  Object.entries(spellsByLevel).forEach(([level, spells]) => {
+    spells.forEach((spell) => {
+      allRawSpells.push({ spell, level: Number(level), sourceOrder: allRawSpells.length });
+    });
+  });
 
-      spells.forEach((spell, index) => {
-        const fingerprint = getStructuredVariantFingerprint(spell);
-        const existing = groups.get(fingerprint);
-        if (existing) {
-          existing.spells.push(spell);
-          return;
-        }
-        groups.set(fingerprint, { order: index, spells: [spell] });
-      });
+  // Group by name + structural fingerprint (level is excluded from the fingerprint
+  // so that purely-level-divergent class splits, e.g. Cure Moderate Wounds at
+  // cleric L2 vs druid L3, collapse into one canonical entry whose `level` is
+  // the lowest in the group and whose `levelsByClass` captures per-class levels.
+  const descriptionStubMergedEntries = mergeGroupedEntries(
+    allRawSpells,
+    spellIdAliases,
+    (entry) => getNormalizedSpellName(entry.spell),
+    isDescriptionStubGroup
+  );
 
-      const mergedSpells = [...groups.values()]
-        .sort((left, right) => left.order - right.order)
-        .map(({ spells: group }) => {
-          if (group.length === 1) {
-            return group[0];
-          }
+  const manualMergedEntries = mergeGroupedEntries(
+    descriptionStubMergedEntries,
+    spellIdAliases,
+    (entry) => getNormalizedSpellName(entry.spell),
+    isManualClassStubGroup,
+    (entries) => MANUAL_CLASS_STUB_CANONICAL_IDS[getNormalizedSpellName(entries[0].spell)]
+  );
 
-          const sortedGroup = [...group].sort(compareCanonicalPreference);
-          const canonical = sortedGroup[0];
-          const mergedClasses = [...new Set(sortedGroup.flatMap((spell) => spell.classes))].sort();
-          const mergedLevelsByClass = Object.fromEntries(
-            Object.entries(
-              sortedGroup.reduce(
-                (index, spell) => ({
-                  ...index,
-                  ...(spell.levelsByClass ?? {}),
-                }),
-                {} as Record<string, number>
-              )
-            ).sort(([left], [right]) => left.localeCompare(right))
-          );
+  const exactMergedEntries = mergeGroupedEntries(
+    manualMergedEntries,
+    spellIdAliases,
+    (entry) => getNameAndStructureKey(entry.spell),
+    isExactClassSplitGroup
+  );
 
-          sortedGroup.slice(1).forEach((spell) => {
-            spellIdAliases[spell.id] = canonical.id;
-          });
-
-          return {
-            ...canonical,
-            description: sortedGroup[0].description,
-            classes: mergedClasses,
-            levelsByClass: mergedLevelsByClass,
-          };
-        });
-
-      return [Number(level), mergedSpells];
-    })
-  ) as Record<number, Spell[]>;
+  const mergedEntries = mergeGroupedEntries(
+    exactMergedEntries,
+    spellIdAliases,
+    (entry) => getNormalizedSpellName(entry.spell),
+    isDescriptionStubGroup
+  );
 
   return {
-    mergedSpellsByLevel,
+    mergedSpellsByLevel: getEntriesByCanonicalLevel(mergedEntries),
     spellIdAliases,
   };
 }
 
 const { mergedSpellsByLevel, spellIdAliases: exactVariantAliases } =
   mergeExactClassSplitVariants(rawSpellsByLevel);
+
+Object.assign(exactVariantAliases, {
+  'dispel-magic-druid-35e': 'dispel-magic-35e',
+  'death-ward-druid-35e': 'death-ward-35e',
+  'scrying-cleric-35e': 'scrying-35e',
+});
 
 const catalog = buildSpellCatalog(mergedSpellsByLevel, {
   spellIdAliases: exactVariantAliases,

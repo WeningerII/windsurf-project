@@ -2,13 +2,35 @@
 // no vi.mock on dataLoader or systemRegistry.
 import { beforeAll, describe, expect, it } from 'vitest';
 import { registerAllSystems } from '../../systems';
-import { loadSystemCatalogSummary, loadAllSystemCatalogSummaries } from '../../utils/systemCatalog';
-import { loadSystemCatalogSummaryFromMetadata } from '../../utils/systemCatalogMetadata';
+import {
+  KNOWN_SYSTEM_IDS,
+  loadSystemCatalogSummary,
+  loadAllSystemCatalogSummaries,
+} from '../../utils/systemCatalog';
+import {
+  loadSystemCatalogSummaryFromMetadata,
+  loadAllSystemCatalogSummariesFromMetadata,
+} from '../../utils/systemCatalogMetadata';
 import { loadFeatsForSystem } from '../../utils/dataLoader';
+import type { SystemCatalogSummary } from '../../types/system-catalog';
 
 beforeAll(() => {
   registerAllSystems();
 });
+
+function reportingSignature(summary: SystemCatalogSummary) {
+  return {
+    supportLevel: summary.supportLevel,
+    supportNotes: summary.supportNotes,
+    categories: summary.categories
+      .map((category) => ({
+        id: category.id,
+        count: category.count,
+        reachability: category.reachability,
+      }))
+      .sort((left, right) => left.id.localeCompare(right.id)),
+  };
+}
 
 describe('systemCatalog integration — real loaders', () => {
   it('dnd-5e-2024: loads non-zero counts for all categories', async () => {
@@ -112,5 +134,28 @@ describe('systemCatalog integration — real loaders', () => {
 
     expect(loaderFeats.length).toBe(metaFeats?.count);
     expect(metaFeats?.reachability).toBe('product');
+  });
+
+  it('keeps loader-backed and metadata-backed reporting summaries aligned for every system', async () => {
+    const [loaderSummaries, metadataSummaries] = await Promise.all([
+      loadAllSystemCatalogSummaries(KNOWN_SYSTEM_IDS),
+      loadAllSystemCatalogSummariesFromMetadata(KNOWN_SYSTEM_IDS),
+    ]);
+
+    for (const systemId of KNOWN_SYSTEM_IDS) {
+      expect(reportingSignature(loaderSummaries[systemId]), systemId).toEqual(
+        reportingSignature(metadataSummaries[systemId])
+      );
+    }
+
+    expect(loaderSummaries['dnd-3.5e'].supportLevel).toBe('partial');
+    expect(loaderSummaries.pf1e.supportLevel).toBe('partial');
+    expect(loaderSummaries.daggerheart.supportLevel).toBe('partial');
+    expect(loaderSummaries['dnd-3.5e'].categories.map((category) => category.id)).not.toContain(
+      'monsters'
+    );
+    expect(loaderSummaries.pf1e.categories.map((category) => category.id)).not.toContain(
+      'monsters'
+    );
   });
 });

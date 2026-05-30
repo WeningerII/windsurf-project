@@ -34,6 +34,7 @@ export interface Spell {
   name: string;
   system: string;
   source: string;
+  sourceUrl?: string;
 
   level: number; // 0 for cantrips
   school: MagicSchool;

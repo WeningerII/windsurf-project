@@ -6,10 +6,11 @@ export const level7Spells: Spell[] = [
     name: 'Delayed Blast Fireball',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Delayed%20Blast%20Fireball',
     level: 7,
     school: 'evocation',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -20,14 +21,17 @@ export const level7Spells: Spell[] = [
       verbal: true,
       somatic: true,
       material: true,
+      materialDescription: 'a ball of bat guano and sulfur',
     },
     duration: {
       type: 'rounds',
       rounds: 5,
     },
+    area: '20-ft.-radius spread',
     savingThrow: {
       attribute: 'dex',
       success: 'half',
+      description: 'Reflex half',
     },
     damage: {
       base: {
@@ -37,6 +41,7 @@ export const level7Spells: Spell[] = [
       },
       type: 'fire',
     },
+    savingThrowText: 'Reflex half',
     concentration: false,
     ritual: false,
     description:
@@ -52,10 +57,11 @@ export const level7Spells: Spell[] = [
     name: 'Finger of Death',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Finger%20of%20Death',
     level: 7,
     school: 'necromancy',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -70,9 +76,11 @@ export const level7Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'one creature',
     savingThrow: {
       attribute: 'con',
-      success: 'half',
+      success: 'special',
+      description: 'Fortitude partial',
     },
     damage: {
       base: {
@@ -82,6 +90,7 @@ export const level7Spells: Spell[] = [
       },
       type: 'necrotic',
     },
+    savingThrowText: 'Fortitude partial',
     concentration: false,
     ritual: false,
     description:
@@ -98,10 +107,11 @@ export const level7Spells: Spell[] = [
     name: 'Power Word Blind',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Power%20Word%20Blind',
     level: 7,
     school: 'enchantment',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -117,6 +127,8 @@ export const level7Spells: Spell[] = [
       type: 'special',
       description: 'See text',
     },
+    target: 'one creature with 200 hp or less',
+    savingThrowText: 'none',
     concentration: false,
     ritual: false,
     description:
@@ -132,10 +144,11 @@ export const level7Spells: Spell[] = [
     name: 'Greater Teleport',
     system: 'pf1e',
     source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Teleport%2C%20Greater',
     level: 7,
     school: 'conjuration',
     castingTime: {
-      type: 'action',
+      type: 'standard',
       amount: 1,
     },
     range: {
@@ -149,6 +162,13 @@ export const level7Spells: Spell[] = [
     duration: {
       type: 'instant',
     },
+    target: 'you and touched objects or other touched willing creatures',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'none and Will negates (object)',
+    },
+    savingThrowText: 'none and Will negates (object)',
     concentration: false,
     ritual: false,
     description:

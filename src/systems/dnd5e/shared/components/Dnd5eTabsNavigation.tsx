@@ -1,3 +1,4 @@
+// purpose: Tabs navigation — top-level tab strip with conditional weapon-mastery tab for 2024 edition.
 import {
   Backpack,
   BookOpen,

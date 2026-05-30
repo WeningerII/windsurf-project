@@ -62,6 +62,7 @@ export const level7Spells: Spell[] = [
       materialConsumed: true,
     },
     duration: { type: 'instant' },
+    target: '1 dead creature you touch',
     concentration: false,
     ritual: false,
     description:

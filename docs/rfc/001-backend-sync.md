@@ -86,9 +86,11 @@ Engine primitives live in `@/src/utils/syncEngine.ts:1-404`. Hooks at `@/src/hoo
 Separate `localStorage` queues per entity, flushed on reconnect:
 
 - `rpg-sync-queue-v1` — document snapshot
+- `rpg-sync-delete-queue-v1` — deleted document ids awaiting remote DELETE replay
 - `rpg-campaign-sync-queue-v1` — campaign snapshot
+- `rpg-campaign-sync-delete-queue-v1` — deleted campaign ids awaiting remote DELETE replay
 
-When `navigator.onLine` is `false`, pushes are queued rather than attempted. On the `online` event, `sync()` is re-invoked, which folds queued state into the next merge.
+When `navigator.onLine` is `false`, pushes are queued rather than attempted. If a locally removed row cannot be deleted remotely because the browser is offline or the DELETE fails, its id is recorded in the matching delete queue. On the `online` event, `sync()` is re-invoked, which folds queued state into the next merge, filters queued-deleted ids out of both local and remote inputs so they cannot be resurrected, replays DELETEs, and only then pushes the merged snapshot. Failed delete replay leaves both queues intact and reports an error state.
 
 ### Realtime
 
@@ -151,10 +153,88 @@ Runtime:
 
 ## Future work
 
-- **Cross-account campaign sharing.** Would require an explicit `campaign_members` table, RLS rewrite, and an invitation flow. Out of scope for this RFC.
-- **Per-document conflict UI.** Today a loss is silent (the older write simply does not land). If the product grows into genuine multi-device mid-session editing, a conflict-resolution modal becomes needed.
-- **Server-side rules validation.** The client currently trusts itself. Server-side validation of character data against system rules would require Supabase Edge Functions.
-- **Email verification / password reset UX.** The Supabase primitives exist; the client UX surfaces do not.
+Each item below is a deliberate non-shipped extension. They are grouped together so a future implementer can read this section as a contract sketch instead of a wish list. None of them is on the active implementation track at the time of this RFC update.
+
+### Cross-device delete tombstones
+
+**Problem.** The local delete queues (`rpg-sync-delete-queue-v1`, `rpg-campaign-sync-delete-queue-v1`) protect this device's offline or failed deletes. But if device A deletes a row while device B is offline, when device B reconnects it pulls the remote table (which no longer contains the row) and merges with its still-present local copy. `mergeDocuments` and `mergeCampaigns` keep the local row because there is nothing remote to compare against — the deletion is silently undone on push.
+
+**Sketch.**
+
+- Add `deleted_at TIMESTAMPTZ NULL` to both `documents` and `campaigns`. When the column is non-null the row is a tombstone.
+- DELETE flows become soft-deletes: `UPDATE … SET deleted_at = now()` instead of `DELETE FROM …`.
+- RLS continues to scope `auth.uid() = user_id`. No policy changes are required because the column is owned by the same user.
+- `fetchRemoteDocuments` / `fetchRemoteCampaigns` start including tombstones. The merge functions gain a third rule: if either side has `deleted_at` set, the row is removed locally and the local id is added to a tombstone-acknowledged set so it cannot resurface on the next merge.
+- A scheduled Postgres job (or Supabase scheduled Edge Function) hard-deletes rows where `deleted_at < now() - interval '30 days'`. The window is intentionally generous so a device that has been offline for weeks can still observe the tombstone.
+- Existing local delete queues continue to apply but now post tombstone updates rather than DELETEs. The local deletion UX is unchanged.
+- Migration: a new SQL migration (`003_soft_deletes.sql`) adds the column with a partial index `(user_id) WHERE deleted_at IS NULL` so the hot-path read filter stays cheap.
+- Rollout: the column ships first with no client behavior change. Once deployed, the client switches DELETE → soft-delete. Old clients still hard-delete; the cleanup job tolerates either shape.
+
+### Per-document conflict UI
+
+**Problem.** When two devices push divergent versions of the same document, the merge engine silently picks the higher `(version, updatedAt)` tuple. The losing edits are gone with no notification.
+
+**Sketch.**
+
+- Persist the loser snapshot. Extend `mergeDocuments` to surface a `conflicts: ConflictRecord[]` alongside the merged set. A `ConflictRecord` is `{ id, winning: Document, losing: Document, reason: 'version' | 'updatedAt' }`.
+- `useSync` propagates conflicts through a new `onConflict(conflicts)` callback. Conflicts are stored in a `useState` slice in `useDocuments` keyed by document id; only the most recent conflict per id is retained.
+- A new `ConflictBanner` component appears in the document header when a conflict is recorded. It exposes "Keep current", "Restore other version", and "Show diff" actions. "Restore other version" replays the losing snapshot through `setDocument` and bumps `version` again so the resolution itself becomes the next push.
+- No schema change is required.
+- Local-first invariant: conflicts are stored in `localStorage` under `rpg-conflicts-v1` so the banner survives reload even when offline.
+- Suppression: if the loser's `updatedAt` is older than 5 minutes the conflict is auto-dismissed. The 5-minute window is deliberate — older edits on a stale tab are almost always the unintended write.
+
+### Cross-account campaign sharing
+
+**Problem.** Today each player who is a member of the same campaign has their own `campaigns` row scoped to their own `auth.uid()`. Updates by one member do not propagate to another.
+
+**Sketch.**
+
+- New `campaign_members` table:
+  - `campaign_id UUID REFERENCES campaigns(id) ON DELETE CASCADE`
+  - `user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE`
+  - `role TEXT CHECK (role IN ('owner', 'editor', 'viewer'))`
+  - `accepted_at TIMESTAMPTZ` — null while the invite is pending
+  - PRIMARY KEY `(campaign_id, user_id)`
+- New `campaign_invites` table:
+  - `token UUID PRIMARY KEY DEFAULT gen_random_uuid()`
+  - `campaign_id UUID NOT NULL`
+  - `email TEXT NOT NULL`
+  - `role TEXT CHECK (role IN ('editor', 'viewer'))`
+  - `expires_at TIMESTAMPTZ NOT NULL`
+- RLS rewrite on `campaigns` to allow `SELECT` and `UPDATE` when the requesting user has an `accepted_at IS NOT NULL` row in `campaign_members`. `DELETE` stays restricted to `role = 'owner'`. `INSERT` semantics do not change — a user always creates campaigns under their own id.
+- Realtime publication continues to broadcast every `campaigns` row change; clients filter by membership in the local view.
+- Client invitation flow: an "Invite player" modal in the campaign view writes to `campaign_invites` and shows the token-bearing URL the inviter copies out-of-band. Visiting the URL while signed in writes a row to `campaign_members` and sets `accepted_at`. The accepted-at semantic is what the RLS policy reads; merely receiving the invite token does not grant access.
+- Out of scope of this sketch: an authenticated email-delivery path. The client surfaces the URL; the user delivers it.
+- Per-character ownership remains scoped to `documents.user_id`. A campaign can list character ids that the requesting user does not own — those characters render as read-only references with the owning player's display name. This is intentional: the campaign is shared, the sheets stay personal.
+
+### Server-side rules validation
+
+**Problem.** The client trusts itself. A user can hand-edit local storage to bypass class-level requirements, ability-score caps, or HP totals. For sync, the trust boundary is RLS — the server happily stores whatever shape the client uploads.
+
+**Sketch.**
+
+- Use Supabase Edge Functions, not the client bundle. The same TypeScript validation modules already used by the React app (`src/utils/d20LegacyTemplate.ts`, `src/systems/pf2e/data-model.ts`, etc.) move to a new shared validation directory under `src/` consumable by both runtimes. The exact path is not pre-allocated here; it is created at the time the work lands so this RFC does not assert a path that does not yet exist.
+- A new Edge Function `validate-document` receives `{ system_id, system_data }` and returns `{ ok: boolean, errors: ValidationError[] }`. Validation per system is handled by a registry keyed on `system_id`.
+- Postgres trigger on `documents`: `BEFORE INSERT OR UPDATE FOR EACH ROW EXECUTE FUNCTION http_validate_document();`. The trigger calls the Edge Function via `pg_net`. On a non-OK response the trigger raises an exception, the write fails, and the client surfaces the validation error through the existing retry/error path (errors prefixed with `validation:` are non-retryable, parallel to the auth/RLS short-circuit list in `isRetryableError`).
+- Local-first guarantee: validation happens on the server side of sync, not on the local edit path. A signed-out or offline user is never blocked by validation; their local edits replay against the server only when they sign in and reconnect. If the server then rejects them, the user sees the same conflict-style banner as the document conflict UI.
+- Performance: the trigger runs synchronously on the request path. The Edge Function's cold-start is ~150ms in Supabase's published numbers; the sync path is already debounced 300ms so a one-time cost stacks with the existing delay.
+- Boundaries: cross-document or campaign-wide validation (e.g., "no two PCs can claim the same magic item") is explicitly out of scope. The trigger validates a single row in isolation.
+
+### Email verification and password reset UX
+
+**Problem.** Supabase Auth supports both flows out of the box. The client surfaces neither. A user who forgets their password has no in-app recovery path.
+
+**Sketch.**
+
+- Extend `AuthContext` with two new handlers:
+  - `sendPasswordResetEmail(email: string): Promise<{ error: string | null }>` wraps `supabase.auth.resetPasswordForEmail(email, { redirectTo: <SITE_URL>/reset-password })`.
+  - `updatePassword(newPassword: string): Promise<{ error: string | null }>` wraps `supabase.auth.updateUser({ password: newPassword })`. Used both by the post-reset flow and by an in-app "Change password" surface.
+- Add two route surfaces in the existing single-page-app shell:
+  - `/forgot-password` — email entry form. On submit, calls `sendPasswordResetEmail` and shows a "check your inbox" confirmation regardless of whether the email exists. (Avoids account-enumeration via timing.)
+  - `/reset-password` — landing target for the email link. Supabase appends an access token; the page calls `client.auth.exchangeCodeForSession()` then prompts for a new password and calls `updatePassword`.
+- Email verification: Supabase project setting "Enable email confirmations" already controls this; no client change is strictly required because Supabase blocks unverified sign-ins. Surface the state by adding `user.email_confirmed_at` to `useAuth()`'s exposed user shape and rendering a banner ("Verify your email to enable cloud sync") in `Dashboard` when the user is signed in but unconfirmed. Resend uses `client.auth.resend({ type: 'signup', email })`.
+- Out of scope: SMS / phone OTP, magic links. Both are Supabase-supported but multiply the surface area without changing the sync contract.
+- Tests: extend `useSync` integration tests with an unconfirmed-email path that asserts (a) signed-in unconfirmed users still operate fully local-first and (b) sync attempts return the existing non-retryable auth-error code without bothering the retry queue.
 
 ## Maintenance
 
