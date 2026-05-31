@@ -249,7 +249,8 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       inputs: ['class levels', 'previous hit dice'],
       edgeCases: ['level-up gains', 'die-size change resets'],
       source: `${SRD}: Hit Dice; Resting`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: `${T} :: L7 hit-dice pool tracking`,
     },
 
     // ── L8 active-play state ──
@@ -334,7 +335,8 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       inputs: ['active conditions', 'check type'],
       edgeCases: ['poisoned', 'incapacitating conditions auto-fail'],
       source: `${SRD}: Conditions`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: `${T} :: L8 poisoned condition`,
     },
     {
       id: 'dnd5e2014.L8.concentration-dc',

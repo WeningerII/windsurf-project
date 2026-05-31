@@ -1,4 +1,4 @@
-_Generated: 2026-05-31T04:49:18.804Z_
+_Generated: 2026-05-31T04:51:15.863Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -100,7 +100,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 ### Engine-Math Completion (vs Compute Register — Denominator B)
 | System | Verified | In-Scope | Complete |
 | --- | ---: | ---: | ---: |
-| D&D 5e (2014) | 18 | 28 | 64.3% |
+| D&D 5e (2014) | 20 | 28 | 71.4% |
 | D&D 5e (2024) | 14 | 19 | 73.7% |
 | D&D 3.5e | 10 | 17 | 58.8% |
 | Pathfinder 1e | 13 | 19 | 68.4% |

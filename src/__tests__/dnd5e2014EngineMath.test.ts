@@ -380,3 +380,42 @@ describe('L5 multiclass spell slots', () => {
     expect(recomputed[1].max).toBe(2);
   });
 });
+
+// ── L8 conditions + L7 hit-dice pool ────────────────────────────────────────
+describe('L8 poisoned condition', () => {
+  beforeEach(() => {
+    vi.spyOn(Math, 'random').mockReturnValue(0);
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+  it('poisoned imposes disadvantage on ability checks', async () => {
+    const out = await engine.rollCheck(
+      doc({ ...createDefaultDnd5eData(), conditions: [{ id: 'poisoned', name: 'Poisoned' }] }),
+      'str'
+    );
+    expect(out.formula).toContain('2d20kl1');
+  });
+});
+
+describe('L7 hit-dice pool tracking', () => {
+  it('builds one pool entry per class at its level', () => {
+    const out = engine.prepareData(
+      doc({
+        ...createDefaultDnd5eData(),
+        classLevels: [{ classId: 'fighter', level: 3, hitDieRolls: [10, 6, 5] }],
+      })
+    );
+    expect(out.system.hitDice).toEqual([{ die: 'd10', total: 3, remaining: 3 }]);
+  });
+  it('preserves remaining (spent) hit dice across prepareData', () => {
+    const out = engine.prepareData(
+      doc({
+        ...createDefaultDnd5eData(),
+        classLevels: [{ classId: 'fighter', level: 3, hitDieRolls: [10, 6, 5] }],
+        hitDice: [{ die: 'd10', total: 3, remaining: 1 }],
+      })
+    );
+    expect(out.system.hitDice[0].remaining).toBe(1);
+  });
+});
