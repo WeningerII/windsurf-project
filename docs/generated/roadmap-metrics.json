@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-31T14:32:51.531Z",
+  "generatedAt": "2026-05-31T14:34:36.681Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -855,21 +855,21 @@
     {
       "systemId": "daggerheart",
       "systemLabel": "Daggerheart",
-      "verified": 22,
-      "inScope": 22,
+      "verified": 24,
+      "inScope": 24,
       "percent": 100,
       "byLayer": {
         "L1": {
-          "verified": 5,
-          "inScope": 5
+          "verified": 6,
+          "inScope": 6
         },
         "L2": {
           "verified": 5,
           "inScope": 5
         },
         "L7": {
-          "verified": 3,
-          "inScope": 3
+          "verified": 4,
+          "inScope": 4
         },
         "L3": {
           "verified": 3,

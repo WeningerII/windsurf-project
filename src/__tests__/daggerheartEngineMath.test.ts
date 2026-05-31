@@ -22,6 +22,8 @@ import {
   getDaggerheartStressOverflowHp,
   getDaggerheartRiskItAll,
   getDaggerheartAvoidDeathScar,
+  getDaggerheartStartingTraitArray,
+  DAGGERHEART_STARTING_HOPE,
 } from '../utils/daggerheartDerived';
 import {
   createDefaultDaggerheartData,
@@ -253,6 +255,13 @@ describe('L7 Daggerheart progression and recovery', () => {
   it('short-rest moves clear 1d4 + Tier', () => {
     expect(getDaggerheartShortRestRecovery(1, 1)).toBe(2); // min d4 + tier 1
     expect(getDaggerheartShortRestRecovery(4, 3)).toBe(7); // max d4 + tier 3
+  });
+  it('character creation assigns the +2/+1/+1/+0/+0/-1 trait array and starts with 2 Hope', () => {
+    const array = getDaggerheartStartingTraitArray();
+    expect([...array].sort((a, b) => b - a)).toEqual([2, 1, 1, 0, 0, -1]);
+    expect(array).toHaveLength(6);
+    expect(array.reduce((a, b) => a + b, 0)).toBe(3);
+    expect(DAGGERHEART_STARTING_HOPE).toBe(2);
   });
   it('Vulnerable once the last Stress is marked; overflow marks 1 HP when full', () => {
     expect(getDaggerheartIsVulnerable(6, 6)).toBe(true);

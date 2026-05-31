@@ -209,6 +209,18 @@ export function getDaggerheartExperienceBonus(increases = 0): number {
 }
 
 /**
+ * Trait modifiers assigned across the six traits at character creation, in any
+ * order: +2, +1, +1, +0, +0, −1 (Daggerheart SRD: Character Creation — Assign
+ * Character Traits). Returned as a fresh array so callers can sort/assign freely.
+ */
+export function getDaggerheartStartingTraitArray(): number[] {
+  return [2, 1, 1, 0, 0, -1];
+}
+
+/** Hope a PC starts a new campaign with (Daggerheart SRD: Character Creation). */
+export const DAGGERHEART_STARTING_HOPE = 2;
+
+/**
  * Hit Points / Stress / Armor Slots cleared by a short-rest downtime move
  * (Tend to Wounds, Clear Stress, Repair Armor): 1d4 + Tier. The caller supplies
  * the d4 roll; the deterministic "+ Tier" is what is verified here
