@@ -1,22 +1,45 @@
 import { render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { Tabs } from '../../components/ui/Tabs';
-import { heavilyArmored, savageAttacker } from '../../data/dnd/5e-2014/feats';
+import { FeatDefinition } from '../../types/character-options/feats';
 import { Dnd5eFeatBrowserTab } from '../../systems/dnd5e/shared/components/Dnd5eFeatBrowserTab';
 import { Dnd5eSelectedFeatsSection } from '../../systems/dnd5e/shared/components/Dnd5eSelectedFeatsSection';
 import type { Feat } from '../../types/core/character';
 
+// Neutral fixtures: one feat with no automatable grants (so the browser marks it
+// "Manual") and one with structured grants (no badge). The 5e-2014 PHB feats this
+// test originally used were removed as non-SRD content.
+const manualFeat: FeatDefinition = {
+  id: 'test-manual-feat',
+  name: 'Test Manual Feat',
+  system: 'dnd-5e-2014',
+  source: 'Test Fixture',
+  description: 'A feat whose benefit cannot be automated.',
+  benefits: ['Manual benefit only.'],
+};
+
+const automatedFeat: FeatDefinition = {
+  id: 'test-automated-feat',
+  name: 'Test Automated Feat',
+  system: 'dnd-5e-2014',
+  source: 'Test Fixture',
+  abilityScoreIncrease: { type: 'fixed', attributes: { strength: 1 } },
+  proficienciesGranted: { armor: ['heavy armor'] },
+  description: 'A feat whose benefits are fully automated.',
+  benefits: ['Ability Score Increase: Increase your Strength by 1, to a maximum of 20.'],
+};
+
 const featDefinitionsById = new Map([
-  [savageAttacker.id, savageAttacker],
-  [heavilyArmored.id, heavilyArmored],
+  [manualFeat.id, manualFeat],
+  [automatedFeat.id, automatedFeat],
 ]);
 
 const selectedFeats: Feat[] = [
   {
-    id: savageAttacker.id,
-    name: savageAttacker.name,
-    description: savageAttacker.description,
-    source: savageAttacker.source,
+    id: manualFeat.id,
+    name: manualFeat.name,
+    description: manualFeat.description,
+    source: manualFeat.source,
     automation: {
       abilityScores: {},
       armor: [],
@@ -28,10 +51,10 @@ const selectedFeats: Feat[] = [
     },
   },
   {
-    id: heavilyArmored.id,
-    name: heavilyArmored.name,
-    description: heavilyArmored.description,
-    source: heavilyArmored.source,
+    id: automatedFeat.id,
+    name: automatedFeat.name,
+    description: automatedFeat.description,
+    source: automatedFeat.source,
     automation: {
       abilityScores: { str: 1 },
       armor: ['heavy'],
@@ -52,16 +75,16 @@ describe('D&D 5e feat manual badges', () => {
           systemId="dnd-5e-2014"
           featsLoaded
           featTemplateError={null}
-          featDefs={[savageAttacker, heavilyArmored]}
+          featDefs={[manualFeat, automatedFeat]}
         />
       </Tabs>
     );
 
-    const savageButton = await screen.findByRole('button', { name: /savage attacker/i });
-    const heavilyArmoredButton = screen.getByRole('button', { name: /heavily armored/i });
+    const manualButton = await screen.findByRole('button', { name: /test manual feat/i });
+    const automatedButton = screen.getByRole('button', { name: /test automated feat/i });
 
-    expect(within(savageButton).getByText('Manual')).toBeInTheDocument();
-    expect(within(heavilyArmoredButton).queryByText('Manual')).not.toBeInTheDocument();
+    expect(within(manualButton).getByText('Manual')).toBeInTheDocument();
+    expect(within(automatedButton).queryByText('Manual')).not.toBeInTheDocument();
   });
 
   it('marks manual-only selected feats without marking selected feats with automation', () => {
@@ -80,10 +103,10 @@ describe('D&D 5e feat manual badges', () => {
     );
 
     expect(
-      within(screen.getByText('Savage Attacker').parentElement!).getByText('Manual')
+      within(screen.getByText('Test Manual Feat').parentElement!).getByText('Manual')
     ).toBeInTheDocument();
     expect(
-      within(screen.getByText('Heavily Armored').parentElement!).queryByText('Manual')
+      within(screen.getByText('Test Automated Feat').parentElement!).queryByText('Manual')
     ).not.toBeInTheDocument();
   });
 });

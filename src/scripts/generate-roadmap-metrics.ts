@@ -41,6 +41,10 @@ import { mm3eArchetypes } from '../data/mutants-and-masterminds/3e/archetypes';
 import { complications as mam3eComplications } from '../data/mutants-and-masterminds/3e/complications';
 import { powerModifiers as mam3ePowerModifiers } from '../data/mutants-and-masterminds/3e/modifiers';
 import { allPf2eArchetypes } from '../data/pathfinder/2e/archetypes';
+import { SRD_MANIFESTS } from '../../docs/srd-manifest';
+import type { ManifestCategory } from '../../docs/srd-manifest';
+import { COMPUTE_REGISTERS } from '../../docs/compute-register';
+import { MANUAL_EXCLUSIONS } from '../../docs/srd-manifest/_exclusions';
 
 type LoaderCategory =
   | 'spells'
@@ -259,6 +263,108 @@ function markdownTableRow(cells: Array<string | number>): string {
   return `| ${cells.join(' | ')} |`;
 }
 
+type ContentCompletionRow = {
+  systemId: string;
+  systemLabel: string;
+  category: ManifestCategory;
+  encoded: number;
+  target: number;
+  percent: number;
+};
+
+type ComputeCompletionRow = {
+  systemId: string;
+  systemLabel: string;
+  verified: number;
+  inScope: number;
+  percent: number;
+  byLayer: Record<string, { verified: number; inScope: number }>;
+};
+
+/** Manifest categories that map directly to a loader, enabling an id-join. */
+const MANIFEST_LOADER_KEY: Partial<Record<ManifestCategory, LoaderCategory>> = {
+  spells: 'spells',
+  classes: 'classes',
+  species: 'species',
+  backgrounds: 'backgrounds',
+  traits: 'traits',
+  featureOptions: 'featureOptions',
+  archetypes: 'archetypes',
+  complications: 'complications',
+  monsters: 'monsters',
+  equipment: 'equipment',
+  feats: 'feats',
+  advantages: 'advantages',
+  powerModifiers: 'powerModifiers',
+};
+
+function systemLabelFor(systemId: string): string {
+  return systems.find((system) => system.id === systemId)?.label ?? systemId;
+}
+
+function toPercent(numerator: number, denominator: number): number {
+  return denominator === 0 ? 0 : Math.round((numerator / denominator) * 1000) / 10;
+}
+
+/**
+ * Content completeness (Denominator A). Where a manifest category maps to a
+ * loader, completeness is the JOIN of manifest ids with actually-loaded ids, so
+ * a wrong/absent id surfaces as a real gap rather than a self-asserted 100%.
+ */
+function buildContentCompletion(idsByKey: Map<string, Set<string>>): ContentCompletionRow[] {
+  const rows: ContentCompletionRow[] = [];
+  for (const manifest of SRD_MANIFESTS) {
+    const inScope = manifest.entries.filter(
+      (entry) => entry.status === 'encoded' || entry.status === 'missing'
+    );
+    const categories = [...new Set(inScope.map((entry) => entry.category))];
+    for (const category of categories) {
+      const entries = inScope.filter((entry) => entry.category === category);
+      const loaderKey = MANIFEST_LOADER_KEY[category];
+      const loadedIds = loaderKey ? idsByKey.get(`${manifest.systemId}:${loaderKey}`) : undefined;
+      const encoded = loadedIds
+        ? entries.filter((entry) => loadedIds.has(entry.id)).length
+        : entries.filter((entry) => entry.status === 'encoded').length;
+      rows.push({
+        systemId: manifest.systemId,
+        systemLabel: systemLabelFor(manifest.systemId),
+        category,
+        encoded,
+        target: entries.length,
+        percent: toPercent(encoded, entries.length),
+      });
+    }
+  }
+  return rows;
+}
+
+/** Engine-math completeness (Denominator B): verified / in-scope per system. */
+function buildComputeCompletion(): ComputeCompletionRow[] {
+  return COMPUTE_REGISTERS.map((register) => {
+    const inScopeEntries = register.entries.filter(
+      (entry) =>
+        entry.status === 'verified' || entry.status === 'implemented' || entry.status === 'missing'
+    );
+    const verified = inScopeEntries.filter((entry) => entry.status === 'verified').length;
+    const byLayer: Record<string, { verified: number; inScope: number }> = {};
+    for (const entry of inScopeEntries) {
+      const bucket = (byLayer[entry.layer] ??= { verified: 0, inScope: 0 });
+      bucket.inScope += 1;
+      if (entry.status === 'verified') {
+        bucket.verified += 1;
+      }
+    }
+    return {
+      systemId: register.systemId,
+      systemLabel: systemLabelFor(register.systemId),
+      verified,
+      inScope: inScopeEntries.length,
+      percent: toPercent(verified, inScopeEntries.length),
+      byLayer,
+    };
+  });
+}
+
 function createEmptyCategoryCounts(): Record<LoaderCategory, number> {
   return {
     spells: 0,
@@ -334,7 +440,9 @@ function applyRepoResidentOverrides(
 function buildMarkdownReport(
   generatedAtIso: string,
   loaderRows: LoaderAuditRow[],
-  moduleRows: ModuleAuditRow[]
+  moduleRows: ModuleAuditRow[],
+  contentCompletion: ContentCompletionRow[],
+  computeCompletion: ComputeCompletionRow[]
 ): string {
   const loaderBySystem = createSummaryBySystem(loaderRows);
 
@@ -474,16 +582,80 @@ function buildMarkdownReport(
   lines.push(
     '- Keep roadmap counts synced by running `npm run roadmap:metrics` after content changes.'
   );
+  lines.push('');
+
+  lines.push(
+    '### Content Catalog Parity (Denominator A — provenance; loader-derived, NOT independent SRD parity)'
+  );
+  lines.push(
+    '_The manifests in docs/srd-manifest/ are generated from the loaders, so this measures CATALOG PARITY + provenance (every shipped open-content entry is encoded, loader-backed, and cited) — it is NOT independent data-parity against the full published SRD. Genuine SRD parity (comparing the shipped product to an external authoritative SRD index to detect omitted entries) requires that external index, which is unavailable in this environment and is flagged unresolved per the "cite, never invent" policy. A 100% here does not assert published-SRD coverage._'
+  );
+  if (contentCompletion.length === 0) {
+    lines.push('_No content denominators authored yet._');
+  } else {
+    lines.push(markdownTableRow(['System', 'Category', 'Encoded', 'Target', 'Complete']));
+    lines.push(markdownTableRow(['---', '---', '---:', '---:', '---:']));
+    contentCompletion.forEach((row) => {
+      lines.push(
+        markdownTableRow([
+          row.systemLabel,
+          row.category,
+          row.encoded,
+          row.target,
+          `${row.percent}%`,
+        ])
+      );
+    });
+  }
+  lines.push('');
+
+  lines.push('### Engine-Math Completion (vs Compute Register — Denominator B)');
+  if (computeCompletion.length === 0) {
+    lines.push('_No compute registers authored yet._');
+  } else {
+    lines.push(markdownTableRow(['System', 'Verified', 'In-Scope', 'Complete']));
+    lines.push(markdownTableRow(['---', '---:', '---:', '---:']));
+    computeCompletion.forEach((row) => {
+      lines.push(markdownTableRow([row.systemLabel, row.verified, row.inScope, `${row.percent}%`]));
+    });
+  }
+  lines.push('');
+  lines.push(
+    `_Denominators: cited open-content manifests in docs/srd-manifest/ and docs/compute-register/. Enumerated manual boundaries excluded from both: ${MANUAL_EXCLUSIONS.length}._`
+  );
+  lines.push('');
+
+  lines.push('### Content Integrity (Denominator A — provenance + policy)');
+  lines.push(
+    "_Share of each system's loader-backed entries that are source-tagged AND open-content-policy-clean — i.e. the content DONE conditions 'encoded, loader-backed, source-tagged, policy-clean'. This certifies CATALOG INTEGRITY (every shipped open-content entry is cited and compliant). It is NOT coverage vs the full published SRD: measuring which SRD entries are MISSING requires an external authoritative SRD index that is unavailable in this environment, so that coverage dimension is flagged unresolved rather than asserted._"
+  );
+  lines.push(markdownTableRow(['System', 'Loader Entries', 'Cited + Policy-Clean', 'Integrity']));
+  lines.push(markdownTableRow(['---', '---:', '---:', '---:']));
+  systems.forEach((system) => {
+    const rows = loaderRows.filter((row) => row.systemId === system.id);
+    const total = rows.reduce((sum, row) => sum + row.metrics.uniqueCount, 0);
+    const violations = rows.reduce(
+      (sum, row) => sum + row.metrics.missingSourceCount + row.metrics.nonCompliantCount,
+      0
+    );
+    const clean = total - violations;
+    lines.push(markdownTableRow([system.label, total, clean, `${toPercent(clean, total)}%`]));
+  });
 
   return lines.join('\n');
 }
 
 async function main(): Promise<void> {
   const loaderRows: LoaderAuditRow[] = [];
+  const idsByKey = new Map<string, Set<string>>();
 
   for (const system of systems) {
     for (const loader of loaderDefinitions) {
       const items = await loader.load(system.id);
+      idsByKey.set(
+        `${system.id}:${loader.key}`,
+        new Set(items.filter(isItemRecord).map((item) => item.id))
+      );
       const metrics = computeMetrics(system.id, loader.key, items);
 
       if (metrics.rawCount === 0 && metrics.uniqueCount === 0) {
@@ -543,7 +715,15 @@ async function main(): Promise<void> {
   ];
 
   const generatedAtIso = new Date().toISOString();
-  const markdown = buildMarkdownReport(generatedAtIso, loaderRows, moduleRows);
+  const contentCompletion = buildContentCompletion(idsByKey);
+  const computeCompletion = buildComputeCompletion();
+  const markdown = buildMarkdownReport(
+    generatedAtIso,
+    loaderRows,
+    moduleRows,
+    contentCompletion,
+    computeCompletion
+  );
 
   const productReachableSummaryMap = createSummaryBySystem(loaderRows);
   const repoResidentSummaryMap = applyRepoResidentOverrides(productReachableSummaryMap, moduleRows);
@@ -560,6 +740,8 @@ async function main(): Promise<void> {
     policy: strictOpenContentPolicy,
     productReachableSummary,
     repoResidentSummary,
+    contentCompletion,
+    computeCompletion,
     loaderAudit: loaderRows,
     moduleAudit: moduleRows,
   };

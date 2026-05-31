@@ -6,7 +6,7 @@ import type { Spell } from '../../types/magic/spells';
 import { registerAllSystems } from '../../systems';
 import { systemRegistry } from '../../registry';
 import * as dataLoader from '../../utils/dataLoader';
-import { resilient } from '../../data/dnd/5e-2024/feats/general';
+import { FeatDefinition } from '../../types/character-options/feats';
 import { bard as bardClass } from '../../data/dnd/5e-2014/classes/bard';
 import { cleric as clericClass } from '../../data/dnd/5e-2014/classes/cleric';
 import { wizard as wizardClass } from '../../data/dnd/5e-2014/classes/wizard';
@@ -31,7 +31,6 @@ import { DaggerheartSheet } from '../../systems/daggerheart/sheet';
 import { createDefaultDaggerheartData } from '../../systems/daggerheart/data-model';
 import { applyDnd5eFeatTemplate } from '../../utils/featTemplate';
 import { acolyte as acolyteBackground } from '../../data/dnd/5e-2014/backgrounds/acolyte';
-import { criminal as criminalBackground } from '../../data/dnd/5e-2014/backgrounds/criminal';
 import { ranger as rangerClass2024 } from '../../data/dnd/5e-2024/classes/ranger';
 import { battlesuitArchetype } from '../../data/mutants-and-masterminds/3e/archetypes/battlesuit';
 import { accident } from '../../data/mutants-and-masterminds/3e/complications';
@@ -42,6 +41,38 @@ import { cleric as clericPf1 } from '../../data/pathfinder/1e/classes/cleric';
 import { sorcerer as sorcererPf1 } from '../../data/pathfinder/1e/classes/sorcerer';
 import { dragonDisciple as dragonDisciplePf1 } from '../../data/pathfinder/1e/prestige-classes/dragon-disciple';
 import { mysticTheurge as mysticTheurgePf1 } from '../../data/pathfinder/1e/prestige-classes/mystic-theurge';
+
+// Neutral feat fixture (the 5e-2024 Resilient feat was removed as non-SRD
+// content). It keeps id 'resilient' so the engine's ability-choice + saving
+// throw handling still applies, and the mechanical ability benefit line.
+const resilient: FeatDefinition = {
+  id: 'resilient',
+  name: 'Resilient',
+  system: 'dnd-5e-2024',
+  source: 'Test Fixture',
+  prerequisites: [{ type: 'level', value: 4 }],
+  abilityScoreIncrease: { type: 'choice', totalIncrease: 1 },
+  description: 'Test fixture: ability choice plus the matching saving throw.',
+  benefits: ['Ability Score Increase: Increase any ability score by 1, to a maximum of 20.'],
+};
+
+// Neutral background fixture (the 5e-2014 Criminal was removed as non-SRD
+// content). It keeps the `one-gaming-set` choice token the test resolves.
+const outlawBackground = {
+  ...acolyteBackground,
+  id: 'outlaw',
+  name: 'Outlaw',
+  skillProficiencies: ['deception', 'stealth'],
+  toolProficiencies: ['thieves-tools', 'one-gaming-set'],
+  equipment: ['pouch'],
+  gold: 15,
+  feature: {
+    id: 'outlaw-contact',
+    name: 'Outlaw Contact',
+    source: 'Outlaw Background',
+    description: 'Test fixture feature.',
+  },
+};
 
 vi.mock('../../components/FeatBrowser', () => ({
   FeatBrowser: ({
@@ -404,7 +435,18 @@ describe('System Sheets', () => {
 
   it('shows unresolved shared 5e always-prepared grants explicitly when the spell dataset does not ship them', async () => {
     const user = userEvent.setup();
-    vi.spyOn(dataLoader, 'loadClassesForSystem').mockResolvedValue([rangerClass2024]);
+    // Grant a fictional always-prepared spell the dataset does not ship, so it
+    // must surface as an unresolved grant. (The real SRD Ranger only grants
+    // Hunter's Mark, which is shipped and resolves normally.)
+    vi.spyOn(dataLoader, 'loadClassesForSystem').mockResolvedValue([
+      {
+        ...rangerClass2024,
+        alwaysPreparedSpellsByLevel: {
+          ...rangerClass2024.alwaysPreparedSpellsByLevel,
+          9: ['test-unresolved-grant'],
+        },
+      },
+    ]);
     vi.spyOn(dataLoader, 'loadSpellsForSystem').mockResolvedValue([
       dnd5e2024SpellsById['hunters-mark'],
     ]);
@@ -430,9 +472,8 @@ describe('System Sheets', () => {
 
     expect(await screen.findByText('Always Prepared')).toBeInTheDocument();
     expect(screen.getByText("Hunter's Mark")).toBeInTheDocument();
-    expect(screen.getByText('Conjure Barrage')).toBeInTheDocument();
-    expect(screen.getByText('Conjure Volley')).toBeInTheDocument();
-    expect(screen.getAllByText('Unresolved')).toHaveLength(2);
+    expect(screen.getByText('Test Unresolved Grant')).toBeInTheDocument();
+    expect(screen.getAllByText('Unresolved')).toHaveLength(1);
   });
 
   it('keeps shared 5e equipment loading and selection wired through the host', async () => {
@@ -552,7 +593,7 @@ describe('System Sheets', () => {
     const onUpdate = vi.fn();
     vi.spyOn(dataLoader, 'loadClassesForSystem').mockResolvedValue([]);
     vi.spyOn(dataLoader, 'loadSpeciesForSystem').mockResolvedValue([]);
-    vi.spyOn(dataLoader, 'loadBackgroundsForSystem').mockResolvedValue([criminalBackground]);
+    vi.spyOn(dataLoader, 'loadBackgroundsForSystem').mockResolvedValue([outlawBackground]);
 
     let currentDoc = makeDoc('dnd-5e-2014', createDefaultDnd5eData()) as CharacterDocument<
       ReturnType<typeof createDefaultDnd5eData>
@@ -574,10 +615,10 @@ describe('System Sheets', () => {
       expect(dataLoader.loadBackgroundsForSystem).toHaveBeenCalledWith('dnd-5e-2014');
     });
     await waitFor(() => {
-      expect(screen.getByRole('option', { name: 'Criminal' })).toBeInTheDocument();
+      expect(screen.getByRole('option', { name: 'Outlaw' })).toBeInTheDocument();
     });
 
-    await user.selectOptions(screen.getByTitle('Background'), 'criminal');
+    await user.selectOptions(screen.getByTitle('Background'), 'outlaw');
     await waitFor(() => {
       expect(onUpdate).toHaveBeenCalled();
     });
@@ -591,10 +632,10 @@ describe('System Sheets', () => {
     });
     applyLatestUpdate();
 
-    expect(currentDoc.system.backgroundId).toBe('criminal');
+    expect(currentDoc.system.backgroundId).toBe('outlaw');
     expect(currentDoc.system.backgroundToolSelections).toEqual(['playing-card-set']);
     expect(currentDoc.system.toolProficiencies).toEqual(['thieves-tools', 'playing-card-set']);
-    expect(currentDoc.system.features.some((feature) => feature.id === 'criminal-contact')).toBe(
+    expect(currentDoc.system.features.some((feature) => feature.id === 'outlaw-contact')).toBe(
       true
     );
 
@@ -607,7 +648,7 @@ describe('System Sheets', () => {
     expect(currentDoc.system.backgroundId).toBeUndefined();
     expect(currentDoc.system.backgroundToolSelections).toEqual([]);
     expect(currentDoc.system.toolProficiencies).toEqual([]);
-    expect(currentDoc.system.features.some((feature) => feature.id === 'criminal-contact')).toBe(
+    expect(currentDoc.system.features.some((feature) => feature.id === 'outlaw-contact')).toBe(
       false
     );
   });

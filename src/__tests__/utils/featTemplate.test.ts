@@ -1,15 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import {
-  abilityScoreImprovement,
-  keen_mind,
-  linguist,
-  moderately_armored,
-  observant,
-  resilient,
-  weapon_master,
-} from '../../data/dnd/5e-2024/feats/general';
-import { boonOfSkill } from '../../data/dnd/5e-2024/feats/epic-boons';
-import { crafter, musician, skilled } from '../../data/dnd/5e-2024/feats/origin';
+import { abilityScoreImprovement } from '../../data/dnd/5e-2024/feats/general';
+import { skilled } from '../../data/dnd/5e-2024/feats/origin';
+import { FeatDefinition } from '../../types/character-options/feats';
 import {
   createDefaultDnd5e2024Data,
   Dnd5e2024DataModel,
@@ -20,6 +12,136 @@ import {
   getCurrentDnd5eFeatSelections,
   removeDnd5eFeatTemplate,
 } from '../../utils/featTemplate';
+
+// Neutral feat fixtures. Only Grappler, Ability Score Improvement, Magic Initiate
+// (Cleric/Druid/Wizard), the four SRD fighting styles, the SRD epic boons, and
+// the SRD origin feats ship as data; the feats below were removed as non-SRD
+// (Player's Handbook) content. They are recreated here purely to exercise the
+// feat-template engine: each keeps the mechanical fields and the id the engine
+// keys on (resilient/observant/boon-of-skill have id-specific handling), but
+// the descriptive prose is replaced with neutral placeholders.
+const fixtureBenefits = ['Test fixture benefit.'];
+
+const resilient: FeatDefinition = {
+  id: 'resilient',
+  name: 'Resilient',
+  system: 'dnd-5e-2024',
+  source: 'Test Fixture',
+  prerequisites: [{ type: 'level', value: 4 }],
+  abilityScoreIncrease: { type: 'choice', totalIncrease: 1 },
+  description: 'Test fixture: ability choice plus the matching saving throw.',
+  benefits: fixtureBenefits,
+};
+
+const keen_mind: FeatDefinition = {
+  id: 'keen-mind',
+  name: 'Keen Mind',
+  system: 'dnd-5e-2024',
+  source: 'Test Fixture',
+  prerequisites: [
+    { type: 'level', value: 4 },
+    { type: 'ability', ability: 'int', value: 13 },
+  ],
+  abilityScoreIncrease: { type: 'fixed', attributes: { intelligence: 1 } },
+  proficienciesGranted: { skills: ['one Intelligence skill of your choice'] },
+  description: 'Test fixture: fixed ability plus a skill choice.',
+  // The engine parses the "Ability Score Increase:" benefit to derive allowed
+  // abilities, so that mechanical line is retained (rules text, not flavor).
+  benefits: ['Ability Score Increase: Increase your Intelligence by 1, to a maximum of 20.'],
+};
+
+const observant: FeatDefinition = {
+  id: 'observant',
+  name: 'Observant',
+  system: 'dnd-5e-2024',
+  source: 'Test Fixture',
+  prerequisites: [
+    { type: 'level', value: 4 },
+    { type: 'ability', ability: 'int', value: 13 },
+  ],
+  abilityScoreIncrease: { type: 'fixed', attributes: { intelligence: 1 } },
+  description: 'Test fixture: ability plus an id-specific skill choice.',
+  benefits: [
+    'Ability Score Increase: Increase your Intelligence or Wisdom by 1, to a maximum of 20.',
+  ],
+};
+
+const weapon_master: FeatDefinition = {
+  id: 'weapon-master',
+  name: 'Weapon Master',
+  system: 'dnd-5e-2024',
+  source: 'Test Fixture',
+  prerequisites: [{ type: 'level', value: 4 }],
+  abilityScoreIncrease: { type: 'fixed', attributes: { strength: 1 } },
+  proficienciesGranted: { weapons: ['four weapons of your choice'] },
+  description: 'Test fixture: fixed ability plus a weapon choice.',
+  benefits: [
+    'Ability Score Increase: Increase your Strength or Dexterity by 1, to a maximum of 20.',
+  ],
+};
+
+const linguist: FeatDefinition = {
+  id: 'linguist',
+  name: 'Linguist',
+  system: 'dnd-5e-2024',
+  source: 'Test Fixture',
+  prerequisites: [
+    { type: 'level', value: 4 },
+    { type: 'ability', ability: 'int', value: 13 },
+  ],
+  abilityScoreIncrease: { type: 'fixed', attributes: { intelligence: 1 } },
+  proficienciesGranted: { languages: ['three languages of your choice'] },
+  description: 'Test fixture: fixed ability plus a language choice.',
+  benefits: fixtureBenefits,
+};
+
+const moderately_armored: FeatDefinition = {
+  id: 'moderately-armored',
+  name: 'Moderately Armored',
+  system: 'dnd-5e-2024',
+  source: 'Test Fixture',
+  prerequisites: [
+    { type: 'level', value: 4 },
+    { type: 'other', description: 'Light Armor Training' },
+  ],
+  abilityScoreIncrease: { type: 'fixed', attributes: { strength: 1 } },
+  proficienciesGranted: { armor: ['medium armor', 'shields'] },
+  description: 'Test fixture: fixed ability plus concrete armor grants.',
+  benefits: [
+    'Ability Score Increase: Increase your Strength or Dexterity by 1, to a maximum of 20.',
+  ],
+};
+
+const crafter: FeatDefinition = {
+  id: 'crafter',
+  name: 'Crafter',
+  system: 'dnd-5e-2024',
+  source: 'Test Fixture',
+  proficienciesGranted: { tools: ['three artisan tools of your choice'] },
+  description: 'Test fixture: artisan tool choices.',
+  benefits: fixtureBenefits,
+};
+
+const musician: FeatDefinition = {
+  id: 'musician',
+  name: 'Musician',
+  system: 'dnd-5e-2024',
+  source: 'Test Fixture',
+  proficienciesGranted: { tools: ['three musical instruments of your choice'] },
+  description: 'Test fixture: musical instrument choices.',
+  benefits: fixtureBenefits,
+};
+
+const boonOfSkill: FeatDefinition = {
+  id: 'boon-of-skill',
+  name: 'Boon of Skill',
+  system: 'dnd-5e-2024',
+  source: 'Test Fixture',
+  prerequisites: [{ type: 'level', value: 19 }],
+  abilityScoreIncrease: { type: 'choice', totalIncrease: 1 },
+  description: 'Test fixture: ability plus an id-specific all-skills grant.',
+  benefits: fixtureBenefits,
+};
 
 function makeDoc(
   overrides: Partial<Dnd5e2024DataModel> = {}

@@ -52,7 +52,9 @@ describe('Data Loader Integration Tests', () => {
   describe('D&D 5e-2014 Loaders', () => {
     it('should load spells for dnd-5e-2014', async () => {
       const spells = await loadSpellsForSystem('dnd-5e-2014');
-      expect(spells.length).toBe(244);
+      // 22 non-SRD-5.1 spells (PHB + homebrew) were removed; 8 Product-Identity
+      // names (Tasha's/Tenser's/etc.) were renamed to their SRD names.
+      expect(spells.length).toBe(222);
       expect(spells.every((s) => s.id && s.name && s.system === 'dnd-5e-2014')).toBe(true);
     });
 
@@ -70,7 +72,8 @@ describe('Data Loader Integration Tests', () => {
 
     it('should load backgrounds for dnd-5e-2014', async () => {
       const backgrounds = await loadBackgroundsForSystem('dnd-5e-2014');
-      expect(backgrounds.length).toBe(6);
+      // SRD 5.1 contains exactly one background (Acolyte).
+      expect(backgrounds.length).toBe(1);
       expect(backgrounds.every((bg) => bg.id && bg.name && bg.system === 'dnd-5e-2014')).toBe(true);
     });
 
@@ -102,7 +105,9 @@ describe('Data Loader Integration Tests', () => {
   describe('D&D 5e-2024 Loaders', () => {
     it('should load spells for dnd-5e-2024', async () => {
       const spells = await loadSpellsForSystem('dnd-5e-2024');
-      expect(spells.length).toBe(320);
+      // 26 non-SRD-5.2 spells (PHB + homebrew) removed; 7 Product-Identity names
+      // renamed to their SRD names.
+      expect(spells.length).toBe(294);
       expect(spells.every((s) => s.id && s.name && s.system === 'dnd-5e-2024')).toBe(true);
     });
 
@@ -113,19 +118,22 @@ describe('Data Loader Integration Tests', () => {
 
     it('should load species for dnd-5e-2024', async () => {
       const species = await loadSpeciesForSystem('dnd-5e-2024');
-      expect(species.length).toBe(9);
+      // SRD 5.2 dropped Half-Elf and Half-Orc as standalone species.
+      expect(species.length).toBe(7);
       expect(species.every((s) => s.id && s.name && s.system === 'dnd-5e-2024')).toBe(true);
     });
 
     it('should load backgrounds for dnd-5e-2024', async () => {
       const backgrounds = await loadBackgroundsForSystem('dnd-5e-2024');
-      expect(backgrounds.length).toBe(6);
+      // SRD 5.2 backgrounds: Acolyte, Criminal, Sage, Soldier.
+      expect(backgrounds.length).toBe(4);
       expect(backgrounds.every((bg) => bg.id && bg.name && bg.system === 'dnd-5e-2024')).toBe(true);
     });
 
     it('should load feats for dnd-5e-2024', async () => {
       const feats = await loadFeatsForSystem('dnd-5e-2024');
-      expect(feats.length).toBe(87);
+      // SRD 5.2 feats (19 entries; Magic Initiate has 3 class variants).
+      expect(feats.length).toBe(19);
       expect(new Set(feats.map((f) => f.id)).size).toBe(feats.length);
     });
 

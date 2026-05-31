@@ -115,6 +115,203 @@ export function getDaggerheartProficiency(level: number): number {
   return getDaggerheartTier(level);
 }
 
+/**
+ * HP marked by an incoming hit, per Daggerheart damage thresholds:
+ * below Major → 1, at/above Major (below Severe) → 2, at/above Severe → 3.
+ * Zero or negative damage marks nothing. With the optional Massive Damage rule,
+ * damage at or above twice the Severe threshold marks 4 HP instead of 3.
+ */
+export function getDaggerheartHpMarked(
+  damage: number,
+  majorThreshold: number,
+  severeThreshold: number,
+  options?: { massiveDamage?: boolean }
+): number {
+  if (damage <= 0) return 0;
+  if (options?.massiveDamage && damage >= severeThreshold * 2) return 4;
+  if (damage >= severeThreshold) return 3;
+  if (damage >= majorThreshold) return 2;
+  return 1;
+}
+
+/**
+ * Critical damage: a critical success on an attack adds the maximum possible
+ * result of the damage dice (diceCount × dieSize) to the rolled total — the
+ * modifier is not multiplied (Daggerheart SRD: Critical Damage).
+ */
+export function getDaggerheartCriticalDamage(
+  rolledTotal: number,
+  diceCount: number,
+  dieSize: number
+): number {
+  return rolledTotal + Math.max(0, diceCount) * Math.max(0, dieSize);
+}
+
+/**
+ * Number of damage dice rolled when an effect deals damage using the Spellcast
+ * trait: equal to the Spellcast trait, or none if it is +0 or lower
+ * (Daggerheart SRD: Damage Rolls).
+ */
+export function getDaggerheartSpellcastDamageDiceCount(spellcastTrait: number): number {
+  return Math.max(0, spellcastTrait);
+}
+
+/**
+ * Incoming damage after resistance/immunity, applied before Hit Point
+ * Thresholds and before any Armor Slots (Daggerheart SRD: Resistance, Immunity,
+ * and Direct Damage). Immunity ignores the damage entirely; resistance halves
+ * it (rounded down by convention — the SRD says "by half"); multiple
+ * resistances to the same type don't stack.
+ */
+export function getDaggerheartDamageAfterResistance(
+  damage: number,
+  options: { resistant?: boolean; immune?: boolean }
+): number {
+  if (options.immune) return 0;
+  const reduced = options.resistant ? Math.floor(damage / 2) : damage;
+  return Math.max(0, reduced);
+}
+
+/**
+ * HP marked after spending Armor Slots: each marked slot reduces the HP marked
+ * by one (Daggerheart SRD: Reducing Incoming Damage). A character with Armor
+ * Score 0 has no slots to mark, so no reduction applies. Direct damage (which
+ * can't be reduced by Armor Slots) should pass 0 slots.
+ */
+export function getDaggerheartHpMarkedAfterArmor(
+  baseHpMarked: number,
+  armorSlotsMarked: number,
+  armorScore: number
+): number {
+  if (armorScore <= 0) return baseHpMarked;
+  return Math.max(0, baseHpMarked - Math.max(0, Math.floor(armorSlotsMarked)));
+}
+
+/**
+ * Mechanical outcome of a Daggerheart duality (Hope/Fear) roll: which die is
+ * higher determines Hope vs Fear; matched dice are a critical success. (The
+ * narrative consequences of Hope/Fear are an accepted manual boundary — see
+ * docs/srd-manifest/_exclusions.ts; only this numeric resolution is computed.)
+ */
+export function getDaggerheartDualityOutcome(
+  hopeDie: number,
+  fearDie: number
+): 'critical' | 'hope' | 'fear' {
+  if (hopeDie === fearDie) return 'critical';
+  return hopeDie > fearDie ? 'hope' : 'fear';
+}
+
+/** Base bonus of an Experience (+2), plus +1 per "increase your Experience"
+ * advancement taken on it (Daggerheart SRD: Leveling Up). */
+export const DAGGERHEART_EXPERIENCE_BASE_BONUS = 2;
+export function getDaggerheartExperienceBonus(increases = 0): number {
+  return DAGGERHEART_EXPERIENCE_BASE_BONUS + Math.max(0, Math.floor(increases));
+}
+
+/**
+ * Trait modifiers assigned across the six traits at character creation, in any
+ * order: +2, +1, +1, +0, +0, −1 (Daggerheart SRD: Character Creation — Assign
+ * Character Traits). Returned as a fresh array so callers can sort/assign freely.
+ */
+export function getDaggerheartStartingTraitArray(): number[] {
+  return [2, 1, 1, 0, 0, -1];
+}
+
+/** Hope a PC starts a new campaign with (Daggerheart SRD: Character Creation). */
+export const DAGGERHEART_STARTING_HOPE = 2;
+
+/**
+ * Total gold expressed in handfuls, the base denomination (Daggerheart SRD:
+ * Gold) — 10 handfuls make a bag and 10 bags make a chest, so value =
+ * handfuls + 10 × bags + 100 × chests. (A character can hold at most 1 chest.)
+ */
+export function getDaggerheartGoldInHandfuls(
+  handfuls: number,
+  bags: number,
+  chests: number
+): number {
+  return Math.max(0, handfuls) + 10 * Math.max(0, bags) + 100 * Math.max(0, chests);
+}
+
+export type DaggerheartRange = 'melee' | 'very-close' | 'close' | 'far' | 'very-far';
+
+/**
+ * Range band converted to battle-map squares under the optional Defined Ranges
+ * rule (Daggerheart SRD: Maps, Range, and Movement) — Melee 1, Very Close 3,
+ * Close 6, Far 12, Very Far 13+ (one square ≈ 5 feet). Very Far returns its
+ * lower bound of 13.
+ */
+export function getDaggerheartRangeSquares(range: DaggerheartRange): number {
+  switch (range) {
+    case 'melee':
+      return 1;
+    case 'very-close':
+      return 3;
+    case 'close':
+      return 6;
+    case 'far':
+      return 12;
+    case 'very-far':
+      return 13;
+  }
+}
+
+/**
+ * Hit Points / Stress / Armor Slots cleared by a short-rest downtime move
+ * (Tend to Wounds, Clear Stress, Repair Armor): 1d4 + Tier. The caller supplies
+ * the d4 roll; the deterministic "+ Tier" is what is verified here
+ * (Daggerheart SRD: Downtime). A long rest clears the corresponding track fully.
+ */
+export function getDaggerheartShortRestRecovery(d4Roll: number, tier: number): number {
+  return Math.max(0, Math.floor(d4Roll)) + Math.max(0, Math.floor(tier));
+}
+
+/**
+ * A character is Vulnerable once their last Stress is marked (current ≥ max),
+ * until they clear at least 1 Stress (Daggerheart SRD: Stress).
+ */
+export function getDaggerheartIsVulnerable(currentStress: number, maxStress: number): boolean {
+  return currentStress >= maxStress;
+}
+
+/**
+ * When a character must mark Stress but their Stress track is full, they mark
+ * 1 HP instead (Daggerheart SRD: Stress). Returns the HP that overflow onto the
+ * HP track (0 when there is room to mark the Stress).
+ */
+export function getDaggerheartStressOverflowHp(
+  currentStress: number,
+  maxStress: number,
+  stressToMark: number
+): number {
+  if (stressToMark <= 0) return 0;
+  return currentStress >= maxStress ? 1 : 0;
+}
+
+/**
+ * Risk It All death move: roll the Duality Dice. Hope higher → stay up and clear
+ * HP/Stress equal to the Hope Die; Fear higher → cross through the veil (death);
+ * matching dice → stay up but clear nothing (Daggerheart SRD: Death).
+ */
+export function getDaggerheartRiskItAll(
+  hopeDie: number,
+  fearDie: number
+): { survives: boolean; clears: number } {
+  const outcome = getDaggerheartDualityOutcome(hopeDie, fearDie);
+  if (outcome === 'fear') return { survives: false, clears: 0 };
+  if (outcome === 'critical') return { survives: true, clears: 0 };
+  return { survives: true, clears: hopeDie };
+}
+
+/**
+ * Avoid Death death move: after falling unconscious, roll the Hope Die; if its
+ * value is at or below the character's level, they gain a scar (cross out a Hope
+ * slot) (Daggerheart SRD: Death).
+ */
+export function getDaggerheartAvoidDeathScar(hopeDie: number, level: number): boolean {
+  return hopeDie <= level;
+}
+
 export function getDaggerheartAncestryAdjustments(
   ancestry?: Pick<DaggerheartAncestry, 'id'> | null
 ): DaggerheartAncestryAdjustments {

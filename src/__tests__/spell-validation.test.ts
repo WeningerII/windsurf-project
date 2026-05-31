@@ -458,10 +458,11 @@ describe('Spell Data Validation', () => {
   });
 
   it('stores curated 5e save metadata directly in raw spell files', () => {
+    // Sickening Radiance is SRD 5.2 / 2024-only; it is not in SRD 5.1, so it was
+    // removed from the 2014 catalog and no longer appears in this 2014 list.
     const curated2014SaveIds = [
       'light',
       'stinking-cloud',
-      'sickening-radiance',
       'wall-of-stone',
       'awaken',
       'reverse-gravity',
@@ -469,13 +470,12 @@ describe('Spell Data Validation', () => {
       'maze',
       'imprisonment',
     ];
+    // Friends, Blinding Smite, and Sickening Radiance are not in SRD 5.2 and were
+    // removed from the 2024 catalog.
     const curated2024SaveIds = [
-      'friends',
       'light',
       'ray-of-sickness',
-      'blinding-smite',
       'stinking-cloud',
-      'sickening-radiance',
       'awaken',
       'wall-of-stone',
       'chain-lightning',
@@ -499,10 +499,11 @@ describe('Spell Data Validation', () => {
 
   it('stores browser-visible target or effect metadata for the curated parity spell set', () => {
     const curated5e2014MetadataIds = [
+      // Blinding Smite, Feign Death, and Beast Sense are SRD 5.2 / 2024-only and
+      // were removed from the 2014 catalog (not in SRD 5.1).
       'light',
       'awaken',
       'wall-of-stone',
-      'blinding-smite',
       'maze',
       'power-word-stun',
       'imprisonment',
@@ -516,15 +517,13 @@ describe('Spell Data Validation', () => {
       'fly',
       'revivify',
       'bestow-curse',
-      'feign-death',
-      'beast-sense',
       'freedom-of-movement',
     ];
+    // Friends, Blinding Smite, Beast Sense, and the homebrew Otiluke's Resilience
+    // are not in SRD 5.2 and were removed from the 2024 catalog.
     const curated5e2024MetadataIds = [
-      'friends',
       'light',
       'ray-of-sickness',
-      'blinding-smite',
       'awaken',
       'wall-of-stone',
       'chain-lightning',
@@ -537,11 +536,9 @@ describe('Spell Data Validation', () => {
       'mage-armor',
       'barkskin',
       'darkvision',
-      'beast-sense',
       'fly',
       'revivify',
       'freedom-of-movement',
-      'otilukes-resilience',
       'foresight',
     ];
     const curatedPf2eMetadataIds = ['teleport-pf2e', 'time-stop-9-pf2e', 'wish-pf2e'];
@@ -591,7 +588,6 @@ describe('Spell Data Validation', () => {
       'raise-dead': '1 dead creature you touch',
       'greater-restoration': '1 creature you touch',
       'true-seeing': '1 willing creature you touch',
-      'livening-stone': '1 stone you touch',
       resurrection: '1 dead creature you touch',
       'true-resurrection': '1 creature you touch',
     };
@@ -615,7 +611,6 @@ describe('Spell Data Validation', () => {
       'protection-from-poison': '1 creature you touch',
       'spider-climb': '1 willing creature you touch',
       'bestow-curse': '1 creature you touch',
-      'feign-death': '1 corpse or other remains you touch',
       'gaseous-form': '1 willing creature you touch',
       nondetection:
         '1 willing creature, place, or object no larger than 10 feet in any dimension you touch',
@@ -628,7 +623,6 @@ describe('Spell Data Validation', () => {
       stoneskin: '1 willing creature you touch',
       'greater-restoration': '1 creature you touch',
       'raise-dead': '1 dead creature you touch',
-      'livening-stone': '1 stone you touch',
       'true-seeing': '1 willing creature you touch',
       regenerate: '1 creature you touch',
       resurrection: '1 dead creature you touch',
@@ -674,7 +668,8 @@ describe('Spell Data Validation', () => {
   });
 
   it('keeps core 5e shared spell save and area metadata aligned across editions', () => {
-    const sharedParityIds = ['light', 'stinking-cloud', 'sickening-radiance', 'reverse-gravity'];
+    // Sickening Radiance dropped: SRD 5.2-only, removed from the 2014 catalog.
+    const sharedParityIds = ['light', 'stinking-cloud', 'reverse-gravity'];
 
     sharedParityIds.forEach((id) => {
       const spell2014 = getRawSpellById(dnd5e2014SpellsModule as SpellModule, 9, id);
@@ -800,22 +795,16 @@ describe('Spell Data Validation', () => {
       });
   });
 
-  it('resolves canonical spell aliases for 5e 2024 duplicates', () => {
+  it('resolves the canonical Floating Disk alias for the 5e 2024 typo id', () => {
+    // Tenser's Floating Disk was renamed to its SRD name (Floating Disk); the
+    // Otiluke's Resilience duplicates were non-SRD and removed.
     expect(dnd5e2024SpellsModule.spellIdAliases).toMatchObject({
-      'tensors-floating-disk': 'tensers-floating-disk',
-      'otilukes-resilience-4': 'otilukes-resilience',
-      'otilukes-resilience-6': 'otilukes-resilience',
+      'tensors-floating-disk': 'floating-disk',
     });
-    expect(dnd5e2024SpellsModule.getSpell('tensors-floating-disk')?.id).toBe(
-      'tensers-floating-disk'
-    );
-    expect(dnd5e2024SpellsModule.spellsById['tensors-floating-disk']?.id).toBe(
-      'tensers-floating-disk'
-    );
-    expect(dnd5e2024SpellsModule.getSpell('otilukes-resilience-4')?.id).toBe('otilukes-resilience');
-    expect(dnd5e2024SpellsModule.getSpell('otilukes-resilience-6')?.id).toBe('otilukes-resilience');
+    expect(dnd5e2024SpellsModule.getSpell('tensors-floating-disk')?.id).toBe('floating-disk');
+    expect(dnd5e2024SpellsModule.spellsById['tensors-floating-disk']?.id).toBe('floating-disk');
     expect(
-      dnd5e2024SpellsModule.allSpells.some((spell) => /^otilukes-resilience-\d+$/.test(spell.id))
+      dnd5e2024SpellsModule.allSpells.some((spell) => /^otilukes-resilience(-\d+)?$/.test(spell.id))
     ).toBe(false);
   });
 

@@ -169,29 +169,6 @@ export const level8Spells: Spell[] = [
       "For the spell's duration, one willing creature you touch is immune to psychic damage, any effect that senses emotions or reads thoughts, divination magic, and the charmed condition. The spell even foils wish spells and magic that allows other creatures to sense the target's location. This spell can't be dispelled by dispel magic.",
     classes: ['bard', 'wizard'],
   },
-  {
-    id: 'trap',
-    name: 'Trap',
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 8,
-    school: 'abjuration',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 30 },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription:
-        'a piece of wire, string, or leather; a small mechanical trap or snare; and powdered diamond worth at least 100 gp',
-    },
-    duration: { type: 'special', description: 'until dispelled' },
-    concentration: false,
-    ritual: false,
-    description:
-      'You place an invisible magical trap on an object or in a location of your choice within range. The trap is nearly impossible to spot, requiring a successful Intelligence (Investigation) check against your spell save DC to be found. When a creature comes within 5 feet of the trap, it triggers, and you choose what happens. The trap can deal damage, restrain, or have other effects.',
-    classes: ['wizard'],
-  },
 ];
 
 // Helper function for lookups
