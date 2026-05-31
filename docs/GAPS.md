@@ -31,10 +31,20 @@ unlike the loader-derived `docs/srd-manifest/`.
 - **Daggerheart:** domain cards 189/189, domains 9/9 — **genuinely complete.**
 - So two non-5e systems (M&M, Daggerheart) are at true 100% independent coverage on
   the wired categories; the Pathfinder/5e *spell* catalogs carry real gaps.
-- **Provenance finding:** SRD 5.1 contains exactly **1 background (Acolyte)** and
-  **1 feat (Grappler)**, but the loader ships 6 backgrounds and 39 feats tagged to
-  pass the SRD-5.1 policy — i.e. it carries non-SRD-5.1 content. Audit against
-  `src/utils/openContentPolicy.ts` (open-content-only is a hard product rule).
+- **Provenance — feats/backgrounds [REMEDIATED]:** the loaders shipped PHB feats
+  and backgrounds mislabeled with an SRD source tag (SRD 5.1 has only Acolyte +
+  Grappler; SRD 5.2 has 4 backgrounds + 17 feats). The non-SRD entries were
+  deleted (see the over-inclusion table in `docs/generated/srd-coverage.md`, now
+  0 genuine suspects for these categories). The reverse-diff audit (loader entries
+  absent from the independent SRD) is the standing guard against re-introduction.
+- **Provenance — still open:** (a) **5e-2024 species** ships Half-Elf and Half-Orc,
+  which are SRD 5.1 species dropped from SRD 5.2 — a wrong-edition scope violation
+  (clean to remove). (b) **5e-2014 spells** show ~30 reverse-diff hits that are
+  *mixed*: some are name variants that ARE SRD ("Tasha's Hideous Laughter" = SRD
+  "Hideous Laughter"), some are PHB spells (Hex, Witch Bolt, Crown of Madness),
+  and some look like homebrew/non-D&D ("Glass Staff", "Airwalk", "Mordenkainen's
+  Lodestone"). These need per-entry classification (keep variants, remove genuine
+  non-SRD) plus name-variant aliasing before the count is trustworthy.
 - The 5e-database 2024 monsters file looks partial (~3 entries) — validate that
   source before trusting the 2024 monster row.
 
