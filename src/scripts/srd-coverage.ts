@@ -353,6 +353,8 @@ type Row = {
   covered: number;
   pct: number;
   missing: string[];
+  loaderCount: number;
+  extra: string[];
 };
 
 async function main(): Promise<void> {
@@ -361,8 +363,14 @@ async function main(): Promise<void> {
     try {
       const [srdNames, loaderRaw] = await Promise.all([t.srd(), t.loader()]);
       const loaderSet = new Set(loaderRaw.map(norm));
+      const srdSet = new Set(srdNames.map(norm));
       const srdUnique = [...new Map(srdNames.map((n) => [norm(n), n])).values()];
+      const loaderUnique = [...new Map(loaderRaw.map((n) => [norm(n), n])).values()];
       const missing = srdUnique.filter((n) => !loaderSet.has(norm(n)));
+      // Provenance suspects: loader entries absent from the independent SRD list.
+      // The loaders already pass the source-tag policy, so these are entries whose
+      // tag claims an allowed SRD they are not actually part of (or name variants).
+      const extra = loaderUnique.filter((n) => !srdSet.has(norm(n)));
       const covered = srdUnique.length - missing.length;
       rows.push({
         systemLabel: t.systemLabel,
@@ -372,9 +380,11 @@ async function main(): Promise<void> {
         covered,
         pct: srdUnique.length ? Math.round((covered / srdUnique.length) * 1000) / 10 : 0,
         missing,
+        loaderCount: loaderUnique.length,
+        extra,
       });
       console.log(
-        `${t.systemLabel} ${t.category}: ${covered}/${srdUnique.length} (${rows[rows.length - 1].pct}%)`
+        `${t.systemLabel} ${t.category}: ${covered}/${srdUnique.length} (${rows[rows.length - 1].pct}%) — loader ${loaderUnique.length}, ${extra.length} not in SRD`
       );
     } catch (e) {
       console.error(`SKIP ${t.systemLabel} ${t.category}: ${(e as Error).message}`);
@@ -405,6 +415,21 @@ async function main(): Promise<void> {
     const shown = r.missing.slice(0, 60);
     lines.push(
       `- **${r.systemLabel} / ${r.category}** — ${r.missing.length} missing: ${shown.join(', ')}${r.missing.length > shown.length ? ', …' : ''}`
+    );
+  }
+  lines.push('');
+  lines.push('## Over-inclusion (loader entries NOT in the independent SRD — provenance suspects)');
+  lines.push('');
+  lines.push(
+    '_Loaders already pass the source-tag policy (`src/utils/openContentPolicy.ts`), so a high count here means entries whose tag claims an allowed SRD they are **not actually part of** — i.e. content from outside the respective SRD analog (the strict open-content rule). A small count can also be name variants (e.g. legacy "Melf\'s" prefixes); verify before removing._'
+  );
+  lines.push('');
+  lines.push('| System | Category | Loader | Not in SRD | Suspects |');
+  lines.push('| --- | --- | ---: | ---: | --- |');
+  for (const r of rows) {
+    const shown = r.extra.slice(0, 40);
+    lines.push(
+      `| ${r.systemLabel} | ${r.category} | ${r.loaderCount} | ${r.extra.length} | ${r.extra.length ? shown.join(', ') + (r.extra.length > shown.length ? ', …' : '') : '—'} |`
     );
   }
   lines.push('');
