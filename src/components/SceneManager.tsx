@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Download, Map, MousePointer2, Plus, Trash2, Upload } from 'lucide-react';
 import {
   MAX_MONSTERS_PER_SELECTION,
@@ -7,7 +7,19 @@ import {
   summarizeEncounterPlan,
   type EncounterMonsterSelection,
 } from '../scene/encounterBuilder';
-import { createSceneDocument, foldSceneEvents, resolveSceneAction } from '../scene/runtime';
+import {
+  appendSceneEvent,
+  createSceneDocument,
+  foldSceneEvents,
+  resolveSceneAction,
+} from '../scene/runtime';
+import {
+  buildCharacterCombatant,
+  buildMonsterCombatant,
+  resolveSceneAttack,
+  runSceneRound,
+  type ResolveCombatStats,
+} from '../rules';
 import type { Campaign } from '../types/core/campaign';
 import type { CharacterDocument, SystemDataModel } from '../types/core/document';
 import type { Monster } from '../types/creatures/monsters';
