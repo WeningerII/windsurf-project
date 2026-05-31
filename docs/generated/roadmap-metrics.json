@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-31T14:23:07.433Z",
+  "generatedAt": "2026-05-31T14:26:57.657Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -654,8 +654,8 @@
     {
       "systemId": "dnd-5e-2024",
       "systemLabel": "D&D 5e (2024)",
-      "verified": 19,
-      "inScope": 19,
+      "verified": 23,
+      "inScope": 23,
       "percent": 100,
       "byLayer": {
         "L1": {
@@ -663,16 +663,16 @@
           "inScope": 2
         },
         "L2": {
-          "verified": 3,
-          "inScope": 3
+          "verified": 6,
+          "inScope": 6
+        },
+        "L5": {
+          "verified": 2,
+          "inScope": 2
         },
         "L4": {
           "verified": 4,
           "inScope": 4
-        },
-        "L5": {
-          "verified": 1,
-          "inScope": 1
         },
         "L7": {
           "verified": 2,
