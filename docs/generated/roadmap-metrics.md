@@ -1,4 +1,4 @@
-_Generated: 2026-05-31T04:46:53.064Z_
+_Generated: 2026-05-31T04:49:18.804Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -104,7 +104,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | D&D 5e (2024) | 14 | 19 | 73.7% |
 | D&D 3.5e | 10 | 17 | 58.8% |
 | Pathfinder 1e | 13 | 19 | 68.4% |
-| Mutants & Masterminds 3e | 12 | 17 | 70.6% |
+| Mutants & Masterminds 3e | 15 | 17 | 88.2% |
 | Pathfinder 2e | 9 | 18 | 50% |
 | Daggerheart | 7 | 10 | 70% |
 

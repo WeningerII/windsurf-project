@@ -220,3 +220,59 @@ describe('L8 toughness failure track', () => {
     expect(out.system.conditionTrack.incapacitated).toBe(true);
   });
 });
+
+// ── L9: remaining Power-Level caps ──────────────────────────────────────────
+describe('L9 Power-Level caps (parry/ranged/perception)', () => {
+  it('Parry + Toughness over 2×PL is flagged', () => {
+    const out = engine.prepareData(
+      doc({
+        powerLevel: 10,
+        abilities: { str: 0, sta: 10, agi: 0, dex: 0, fgt: 10, int: 0, awe: 0, pre: 0 },
+        defenses: {
+          dodge: { rank: 0, total: 0 },
+          parry: { rank: 1, total: 0 },
+          fortitude: { rank: 0, total: 0 },
+          toughness: { rank: 0, total: 0 },
+          will: { rank: 0, total: 0 },
+        },
+      })
+    );
+    expect(out.system.plViolations).toContainEqual({
+      label: 'Parry + Toughness',
+      value: 21,
+      limit: 20,
+    });
+  });
+
+  it('Ranged attack bonus + effect rank over 2×PL is flagged', () => {
+    const out = engine.prepareData(
+      doc({
+        powerLevel: 10,
+        abilities: { str: 0, sta: 0, agi: 0, dex: 10, fgt: 0, int: 0, awe: 0, pre: 0 },
+        powers: [power({ id: 'blast', type: 'attack', range: 'ranged', perRank: true, rank: 12, baseCost: 2 })],
+      })
+    );
+    expect(out.system.plViolations).toContainEqual({
+      label: 'Ranged Attack + Effect',
+      value: 22,
+      limit: 20,
+    });
+  });
+
+  it('Perception-ranged effect rank over PL is flagged', () => {
+    const out = engine.prepareData(
+      doc({
+        powerLevel: 10,
+        abilities: { str: 0, sta: 0, agi: 0, dex: 0, fgt: 0, int: 0, awe: 0, pre: 0 },
+        powers: [
+          power({ id: 'mind-blast', type: 'attack', range: 'perception', perRank: true, rank: 12, baseCost: 2 }),
+        ],
+      })
+    );
+    expect(out.system.plViolations).toContainEqual({
+      label: 'Perception Effect Rank',
+      value: 12,
+      limit: 10,
+    });
+  });
+});

@@ -145,7 +145,8 @@ export const mam3eComputeRegister: SystemComputeRegister = {
       inputs: ['parry', 'toughness', 'powerLevel'],
       edgeCases: ['exactly at limit legal'],
       source: `${HH}: Power Level`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: `${T} :: L9 Power-Level caps (parry/ranged/perception)`,
     },
     {
       id: 'mam3e.L9.pl-cap-close-attack',
@@ -166,7 +167,8 @@ export const mam3eComputeRegister: SystemComputeRegister = {
       inputs: ['Dex', 'ranged-combat skill', 'attack powers'],
       edgeCases: ['only when a ranged attack power exists'],
       source: `${HH}: Power Level — Attack/Effect`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: `${T} :: L9 Power-Level caps (parry/ranged/perception)`,
     },
     {
       id: 'mam3e.L9.pl-cap-perception',
@@ -176,7 +178,8 @@ export const mam3eComputeRegister: SystemComputeRegister = {
       inputs: ['attack powers', 'powerLevel'],
       edgeCases: ['perception range only'],
       source: `${HH}: Power Level`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: `${T} :: L9 Power-Level caps (parry/ranged/perception)`,
     },
     {
       id: 'mam3e.L9.pp-budget-conservation',
