@@ -137,6 +137,9 @@ export function validateSceneEvent(state: SceneState, event: SceneEvent): SceneI
     case 'token.removed':
       validateKnownToken(state, event.payload.tokenId, issues, event, 'payload.tokenId');
       break;
+    case 'token.damaged':
+      validateDamages(state, event.payload.damages, issues, event);
+      break;
     case 'marker.added':
       validateMarkerForAdd(state, event.payload.marker, issues, event);
       break;
@@ -182,6 +185,15 @@ function buildEventFromIntent(
       };
     case 'remove-token':
       return { ...base, type: 'token.removed', payload: { tokenId: intent.tokenId } };
+    case 'apply-damage':
+      return {
+        ...base,
+        type: 'token.damaged',
+        payload: {
+          damages: intent.damages.map((damage) => ({ ...damage })),
+          cause: intent.cause,
+        },
+      };
     case 'add-marker':
       return { ...base, type: 'marker.added', payload: { marker: cloneMarker(intent.marker) } };
     case 'remove-marker':
@@ -224,6 +236,14 @@ function applySceneEvent(state: SceneState, event: SceneEvent): void {
       );
       if (state.activeTokenId === event.payload.tokenId) {
         state.activeTokenId = state.initiative[0]?.tokenId;
+      }
+      break;
+    case 'token.damaged':
+      for (const damage of event.payload.damages) {
+        const token = state.tokens[damage.tokenId];
+        if (token?.hp) {
+          token.hp = applyHitPointDelta(token.hp, damage.amount);
+        }
       }
       break;
     case 'marker.added':
@@ -492,7 +512,57 @@ function cloneToken(token: SceneToken): SceneToken {
   return {
     ...token,
     position: { ...token.position },
+    hp: token.hp ? { ...token.hp } : undefined,
   };
+}
+
+/**
+ * Apply a hit-point delta. Positive amount is damage (temp HP absorbs first,
+ * current floors at 0); negative is healing (capped at max). Pure — returns a
+ * new hp object.
+ */
+function applyHitPointDelta(
+  hp: NonNullable<SceneToken['hp']>,
+  amount: number
+): NonNullable<SceneToken['hp']> {
+  const next = { ...hp, temp: hp.temp ?? 0 };
+  if (amount > 0) {
+    let remaining = amount;
+    const absorbed = Math.min(next.temp, remaining);
+    next.temp -= absorbed;
+    remaining -= absorbed;
+    next.current = Math.max(0, next.current - remaining);
+  } else if (amount < 0) {
+    next.current = Math.min(next.max, next.current - amount);
+  }
+  return next;
+}
+
+function validateDamages(
+  state: SceneState,
+  damages: Array<{ tokenId: string; amount: number }>,
+  issues: SceneIssue[],
+  event: SceneEvent
+): void {
+  if (!Array.isArray(damages) || damages.length === 0) {
+    pushIssue(issues, event, {
+      code: 'scene-damage-empty',
+      message: 'A damage event must include at least one token delta.',
+      path: 'payload.damages',
+    });
+    return;
+  }
+
+  damages.forEach((damage, index) => {
+    validateKnownToken(state, damage.tokenId, issues, event, `payload.damages.${index}.tokenId`);
+    if (!Number.isFinite(damage.amount)) {
+      pushIssue(issues, event, {
+        code: 'scene-damage-amount-invalid',
+        message: 'Damage amounts must be finite numbers.',
+        path: `payload.damages.${index}.amount`,
+      });
+    }
+  });
 }
 
 function cloneMarker(marker: SceneMarker): SceneMarker {

@@ -43,6 +43,12 @@ export {
 export type { AreaShape } from './resolver/areaTargeting';
 export { cellInArea, gridDistance, tokensInArea } from './resolver/areaTargeting';
 
+export {
+  areaEffectToDamageIntent,
+  attackToDamageIntent,
+  multiTargetAttackToDamageIntent,
+} from './resolver/sceneCombat';
+
 export { collectTerrainEffectsAt, markerCoversCell, markerToEffects } from './terrain/sceneTerrain';
 
 export { effectToLedgerEntry, toContributionLedger } from './ir/ledgerView';
