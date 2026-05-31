@@ -118,6 +118,12 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: ['path_ref_rule'],
   },
   {
+    path: 'docs/rfc/004-monster-product-surface.md',
+    kind: 'rfc',
+    owner: 'monster-product-surface-rfc',
+    rules: ['path_ref_rule'],
+  },
+  {
     path: 'docs/PRODUCTION_PLAN.md',
     kind: 'historical',
     owner: 'historical-planning',
