@@ -59,6 +59,15 @@ export type {
 } from './tactical/tacticalExecutor';
 export { executeTacticalTurn } from './tactical/tacticalExecutor';
 
+export type { MonsterCombatant } from './combatants/monsterCombatant';
+export {
+  buildMonsterCombatant,
+  monsterAttackEffects,
+  monsterAverageHitPoints,
+  monsterDamageEffects,
+  primaryAttackAction,
+} from './combatants/monsterCombatant';
+
 export { collectTerrainEffectsAt, markerCoversCell, markerToEffects } from './terrain/sceneTerrain';
 
 export { effectToLedgerEntry, toContributionLedger } from './ir/ledgerView';
