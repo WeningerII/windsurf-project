@@ -38,3 +38,9 @@ export {
   conditionImposesDisadvantage,
   hasDnd5eConditionEffects,
 } from './conditions/dnd5eConditions';
+
+export type { Pf2eConditionLike } from './conditions/pf2eConditions';
+export {
+  collectPf2eConditionEffects,
+  getPf2eConditionStatusPenalty,
+} from './conditions/pf2eConditions';

@@ -169,13 +169,21 @@ function foldTarget(target: string, group: EffectInstance[], ctx: ResolveContext
     total += value;
   }
 
-  // PF2e buckets: highest within each bucket, buckets sum.
+  // PF2e buckets: within each bucket the single highest BONUS and the single
+  // worst PENALTY both apply (bonuses and penalties of the same type do not
+  // stack among themselves, but a bonus and a penalty of the same type both
+  // count). Buckets then sum.
   for (const bucket of ['pf2e-item', 'pf2e-status', 'pf2e-circumstance'] as const) {
     const values = additive
       .filter((effect) => effect.stackPolicy === bucket)
       .map((effect) => signed(effect));
-    if (values.length > 0) {
-      total += Math.max(...values);
+    const bonuses = values.filter((value) => value > 0);
+    const penalties = values.filter((value) => value < 0);
+    if (bonuses.length > 0) {
+      total += Math.max(...bonuses);
+    }
+    if (penalties.length > 0) {
+      total += Math.min(...penalties);
     }
   }
 
