@@ -12,6 +12,16 @@ import {
   getDaggerheartEffectiveAttribute,
   getDaggerheartHpMarked,
   getDaggerheartDualityOutcome,
+  getDaggerheartCriticalDamage,
+  getDaggerheartSpellcastDamageDiceCount,
+  getDaggerheartDamageAfterResistance,
+  getDaggerheartHpMarkedAfterArmor,
+  getDaggerheartExperienceBonus,
+  getDaggerheartShortRestRecovery,
+  getDaggerheartIsVulnerable,
+  getDaggerheartStressOverflowHp,
+  getDaggerheartRiskItAll,
+  getDaggerheartAvoidDeathScar,
 } from '../utils/daggerheartDerived';
 import {
   createDefaultDaggerheartData,
@@ -186,5 +196,81 @@ describe('L8 Daggerheart duality resolution', () => {
     expect(getDaggerheartDualityOutcome(9, 4)).toBe('hope');
     expect(getDaggerheartDualityOutcome(3, 8)).toBe('fear');
     expect(getDaggerheartDualityOutcome(6, 6)).toBe('critical');
+  });
+});
+
+// ── L8: optional Massive Damage rule (≥ 2× Severe → mark 4) ──────────────────
+describe('L8 Daggerheart massive damage (optional rule)', () => {
+  it('marks 4 HP at or above twice the Severe threshold only when enabled', () => {
+    expect(getDaggerheartHpMarked(24, 7, 12)).toBe(3); // default: capped at 3
+    expect(getDaggerheartHpMarked(24, 7, 12, { massiveDamage: true })).toBe(4); // 24 ≥ 2×12
+    expect(getDaggerheartHpMarked(23, 7, 12, { massiveDamage: true })).toBe(3); // below 2×12
+  });
+});
+
+// ── L3: critical damage and Spellcast damage dice ───────────────────────────
+describe('L3 Daggerheart damage rolls', () => {
+  it('critical damage adds the max of the damage dice (not the modifier)', () => {
+    // 2d8+1 rolled as 9 → crit adds 2×8 = 16 → 25
+    expect(getDaggerheartCriticalDamage(9, 2, 8)).toBe(25);
+    // unarmed [Prof 3]d4 rolled as 7 → crit adds 3×4 = 12 → 19
+    expect(getDaggerheartCriticalDamage(7, 3, 4)).toBe(19);
+  });
+  it('Spellcast damage rolls a number of dice equal to the Spellcast trait (0 if ≤ 0)', () => {
+    expect(getDaggerheartSpellcastDamageDiceCount(3)).toBe(3);
+    expect(getDaggerheartSpellcastDamageDiceCount(0)).toBe(0);
+    expect(getDaggerheartSpellcastDamageDiceCount(-2)).toBe(0);
+  });
+});
+
+// ── L8: resistance/immunity and Armor Slot reduction ────────────────────────
+describe('L8 Daggerheart damage reduction', () => {
+  it('immunity ignores damage; resistance halves it before thresholds', () => {
+    expect(getDaggerheartDamageAfterResistance(20, { immune: true })).toBe(0);
+    expect(getDaggerheartDamageAfterResistance(20, { resistant: true })).toBe(10);
+    expect(getDaggerheartDamageAfterResistance(20, {})).toBe(20);
+  });
+  it('each marked Armor Slot reduces HP marked by 1 (none if Armor Score 0)', () => {
+    expect(getDaggerheartHpMarkedAfterArmor(3, 1, 4)).toBe(2);
+    expect(getDaggerheartHpMarkedAfterArmor(3, 2, 4)).toBe(1);
+    expect(getDaggerheartHpMarkedAfterArmor(1, 5, 4)).toBe(0); // floors at 0
+    expect(getDaggerheartHpMarkedAfterArmor(3, 1, 0)).toBe(3); // no slots when Armor Score 0
+  });
+  it('resistance then armor compose the full reduction pipeline', () => {
+    // 20 damage, resistant → 10; vs major 7 / severe 12 → marks 2; 1 armor slot → 1
+    const reduced = getDaggerheartDamageAfterResistance(20, { resistant: true });
+    const base = getDaggerheartHpMarked(reduced, 7, 12);
+    expect(getDaggerheartHpMarkedAfterArmor(base, 1, 6)).toBe(1);
+  });
+});
+
+// ── L7: experience bonus, short-rest recovery, Stress/Vulnerable ────────────
+describe('L7 Daggerheart progression and recovery', () => {
+  it('Experience bonus is +2, +1 per increase advancement', () => {
+    expect(getDaggerheartExperienceBonus()).toBe(2);
+    expect(getDaggerheartExperienceBonus(1)).toBe(3);
+  });
+  it('short-rest moves clear 1d4 + Tier', () => {
+    expect(getDaggerheartShortRestRecovery(1, 1)).toBe(2); // min d4 + tier 1
+    expect(getDaggerheartShortRestRecovery(4, 3)).toBe(7); // max d4 + tier 3
+  });
+  it('Vulnerable once the last Stress is marked; overflow marks 1 HP when full', () => {
+    expect(getDaggerheartIsVulnerable(6, 6)).toBe(true);
+    expect(getDaggerheartIsVulnerable(5, 6)).toBe(false);
+    expect(getDaggerheartStressOverflowHp(6, 6, 1)).toBe(1); // full → 1 HP
+    expect(getDaggerheartStressOverflowHp(4, 6, 1)).toBe(0); // room → no overflow
+  });
+});
+
+// ── L8: death moves (Risk It All, Avoid Death) ──────────────────────────────
+describe('L8 Daggerheart death moves', () => {
+  it('Risk It All: Hope clears = Hope Die, Fear = death, matching = stay but clear nothing', () => {
+    expect(getDaggerheartRiskItAll(9, 4)).toEqual({ survives: true, clears: 9 });
+    expect(getDaggerheartRiskItAll(3, 8)).toEqual({ survives: false, clears: 0 });
+    expect(getDaggerheartRiskItAll(6, 6)).toEqual({ survives: true, clears: 0 });
+  });
+  it('Avoid Death: a Hope Die at or below level leaves a scar', () => {
+    expect(getDaggerheartAvoidDeathScar(3, 5)).toBe(true); // 3 ≤ 5
+    expect(getDaggerheartAvoidDeathScar(8, 5)).toBe(false); // 8 > 5
   });
 });
