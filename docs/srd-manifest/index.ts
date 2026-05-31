@@ -9,8 +9,9 @@
 import type { ManifestSystemId, SystemManifest } from './types';
 import { dnd5e2014Manifest } from './dnd5e-2014';
 import { dnd5e2024Manifest } from './dnd5e-2024';
+import { pf2eManifest } from './pf2e';
 
-export const SRD_MANIFESTS: SystemManifest[] = [dnd5e2014Manifest, dnd5e2024Manifest];
+export const SRD_MANIFESTS: SystemManifest[] = [dnd5e2014Manifest, dnd5e2024Manifest, pf2eManifest];
 
 export function manifestForSystem(systemId: ManifestSystemId): SystemManifest | undefined {
   return SRD_MANIFESTS.find((m) => m.systemId === systemId);

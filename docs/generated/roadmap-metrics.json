@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-31T05:41:39.096Z",
+  "generatedAt": "2026-05-31T05:47:57.846Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -302,6 +302,22 @@
       "category": "species",
       "encoded": 9,
       "target": 9,
+      "percent": 100
+    },
+    {
+      "systemId": "pf2e",
+      "systemLabel": "Pathfinder 2e",
+      "category": "classes",
+      "encoded": 12,
+      "target": 12,
+      "percent": 100
+    },
+    {
+      "systemId": "pf2e",
+      "systemLabel": "Pathfinder 2e",
+      "category": "species",
+      "encoded": 6,
+      "target": 6,
       "percent": 100
     }
   ],

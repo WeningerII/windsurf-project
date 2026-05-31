@@ -1,4 +1,4 @@
-_Generated: 2026-05-31T05:41:39.096Z_
+_Generated: 2026-05-31T05:47:57.846Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -96,6 +96,8 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | D&D 5e (2014) | species | 9 | 9 | 100% |
 | D&D 5e (2024) | classes | 12 | 12 | 100% |
 | D&D 5e (2024) | species | 9 | 9 | 100% |
+| Pathfinder 2e | classes | 12 | 12 | 100% |
+| Pathfinder 2e | species | 6 | 6 | 100% |
 
 ### Engine-Math Completion (vs Compute Register — Denominator B)
 | System | Verified | In-Scope | Complete |
