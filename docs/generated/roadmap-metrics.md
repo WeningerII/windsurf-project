@@ -1,4 +1,4 @@
-_Generated: 2026-05-01T13:08:28.818Z_
+_Generated: 2026-05-31T04:12:43.879Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -88,3 +88,16 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Derived Next Steps
 - Keep roadmap counts synced by running `npm run roadmap:metrics` after content changes.
+
+### Content Completion (vs SRD Manifest — Denominator A)
+| System | Category | Encoded | Target | Complete |
+| --- | --- | ---: | ---: | ---: |
+| D&D 5e (2014) | classes | 12 | 12 | 100% |
+| D&D 5e (2014) | species | 9 | 9 | 100% |
+
+### Engine-Math Completion (vs Compute Register — Denominator B)
+| System | Verified | In-Scope | Complete |
+| --- | ---: | ---: | ---: |
+| D&D 5e (2014) | 14 | 28 | 50% |
+
+_Denominators: cited open-content manifests in docs/srd-manifest/ and docs/compute-register/. Enumerated manual boundaries excluded from both: 8._
