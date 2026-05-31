@@ -181,6 +181,17 @@ export const pf1eComputeRegister: SystemComputeRegister = {
       testRef: 'src/__tests__/derivedCasterMath.test.ts :: d20 legacy spell save DC',
     },
     {
+      id: 'pf1e.L5.bonus-spells',
+      layer: 'L5',
+      quantity: 'Bonus spells per day from casting ability',
+      formula: 'spell level ≥ 1 and mod ≥ level → floor((mod − level) / 4) + 1; else 0',
+      inputs: ['casting ability mod', 'spell level'],
+      edgeCases: ['no bonus cantrips', 'mod must reach the spell level'],
+      source: `${CRB}: Magic — Bonus Spells`,
+      status: 'verified',
+      testRef: `${T} :: L5 d20 bonus spells from a high casting ability`,
+    },
+    {
       id: 'pf1e.L6.carrying-capacity',
       layer: 'L6',
       quantity: 'Carrying capacity (light/medium/heavy thresholds)',

@@ -161,3 +161,15 @@ export function d20LiftDragLimits(strength: number): D20LiftDragLimits {
   const max = d20HeavyLoad(strength);
   return { overHead: max, offGround: max * 2, pushDrag: max * 5 };
 }
+
+/**
+ * Bonus spells per day granted by a high casting-ability modifier, for a given
+ * spell level (SRD 3.5 / PF1e CRB — Ability Modifiers and Bonus Spells). You
+ * gain bonus spells of spell level L only once your casting-ability modifier is
+ * at least L, then one more for every 4 points of modifier beyond that. Spell
+ * level 0 (cantrips/orisons) never gets bonus spells.
+ */
+export function d20BonusSpells(abilityMod: number, spellLevel: number): number {
+  if (spellLevel < 1 || abilityMod < spellLevel) return 0;
+  return Math.floor((abilityMod - spellLevel) / 4) + 1;
+}

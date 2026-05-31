@@ -15,6 +15,7 @@ import {
   d20LoadCategory,
   d20EncumbrancePenalties,
   d20LiftDragLimits,
+  d20BonusSpells,
 } from '../systems/shared/d20-helpers';
 import {
   dnd35eXpForLevel,
@@ -493,6 +494,23 @@ describe('L1 D&D 3.5e XP-to-level table', () => {
     expect(dnd35eXpForLevel(5)).toBe(10000);
     expect(dnd35eXpForLevel(8)).toBe(28000);
     expect(dnd35eXpForLevel(20)).toBe(190000);
+  });
+});
+
+describe('L5 d20 bonus spells from a high casting ability', () => {
+  it('grants a bonus spell of level L once the mod reaches L, +1 per 4 beyond', () => {
+    // +1 mod (score 12-13): one bonus 1st, none higher
+    expect(d20BonusSpells(1, 1)).toBe(1);
+    expect(d20BonusSpells(1, 2)).toBe(0);
+    // +5 mod (score 20-21): 2/1/1/1/1 for levels 1-5, none at 6
+    expect(d20BonusSpells(5, 1)).toBe(2);
+    expect(d20BonusSpells(5, 2)).toBe(1);
+    expect(d20BonusSpells(5, 5)).toBe(1);
+    expect(d20BonusSpells(5, 6)).toBe(0);
+  });
+  it('never grants bonus cantrips (spell level 0) and ignores low modifiers', () => {
+    expect(d20BonusSpells(5, 0)).toBe(0);
+    expect(d20BonusSpells(0, 1)).toBe(0);
   });
 });
 
