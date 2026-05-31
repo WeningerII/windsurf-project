@@ -9,6 +9,9 @@ import {
   getDaggerheartAncestryAdjustments,
   getDaggerheartDerivedStats,
   getDaggerheartPassiveBonuses,
+  getDaggerheartEffectiveAttribute,
+  getDaggerheartHpMarked,
+  getDaggerheartDualityOutcome,
 } from '../utils/daggerheartDerived';
 import {
   createDefaultDaggerheartData,
@@ -154,5 +157,34 @@ describe('L2 Daggerheart passive bonus aggregation', () => {
       armorId: 'daggerheart-armor-gambeson-armor-tier-1',
     });
     expect(bonuses.evasion).toBe(1);
+  });
+  it('effective attribute = base trait + equipped-gear passive bonus', () => {
+    const system = {
+      ...createDefaultDaggerheartData(),
+      armorId: 'daggerheart-armor-full-plate-armor-tier-1', // attributes: { agility: -1 }
+    };
+    system.attributes = { ...system.attributes, agility: 2 };
+    expect(getDaggerheartEffectiveAttribute(system, 'agility')).toBe(1); // 2 + (-1)
+  });
+});
+
+// ── L8: damage thresholds → HP marked (the defining Daggerheart damage calc) ─
+describe('L8 Daggerheart damage thresholds → HP marked', () => {
+  it('marks 1 / 2 / 3 HP by Major / Severe thresholds (major 7, severe 12)', () => {
+    expect(getDaggerheartHpMarked(0, 7, 12)).toBe(0);
+    expect(getDaggerheartHpMarked(5, 7, 12)).toBe(1);
+    expect(getDaggerheartHpMarked(7, 7, 12)).toBe(2);
+    expect(getDaggerheartHpMarked(11, 7, 12)).toBe(2);
+    expect(getDaggerheartHpMarked(12, 7, 12)).toBe(3);
+    expect(getDaggerheartHpMarked(20, 7, 12)).toBe(3);
+  });
+});
+
+// ── L8: duality (Hope/Fear/crit) mechanical resolution ──────────────────────
+describe('L8 Daggerheart duality resolution', () => {
+  it('higher die picks Hope vs Fear; matched dice are a critical', () => {
+    expect(getDaggerheartDualityOutcome(9, 4)).toBe('hope');
+    expect(getDaggerheartDualityOutcome(3, 8)).toBe('fear');
+    expect(getDaggerheartDualityOutcome(6, 6)).toBe('critical');
   });
 });

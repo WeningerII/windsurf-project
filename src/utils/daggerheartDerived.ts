@@ -115,6 +115,36 @@ export function getDaggerheartProficiency(level: number): number {
   return getDaggerheartTier(level);
 }
 
+/**
+ * HP marked by an incoming hit, per Daggerheart damage thresholds:
+ * below Major → 1, at/above Major (below Severe) → 2, at/above Severe → 3.
+ * Zero or negative damage marks nothing.
+ */
+export function getDaggerheartHpMarked(
+  damage: number,
+  majorThreshold: number,
+  severeThreshold: number
+): number {
+  if (damage <= 0) return 0;
+  if (damage >= severeThreshold) return 3;
+  if (damage >= majorThreshold) return 2;
+  return 1;
+}
+
+/**
+ * Mechanical outcome of a Daggerheart duality (Hope/Fear) roll: which die is
+ * higher determines Hope vs Fear; matched dice are a critical success. (The
+ * narrative consequences of Hope/Fear are an accepted manual boundary — see
+ * docs/srd-manifest/_exclusions.ts; only this numeric resolution is computed.)
+ */
+export function getDaggerheartDualityOutcome(
+  hopeDie: number,
+  fearDie: number
+): 'critical' | 'hope' | 'fear' {
+  if (hopeDie === fearDie) return 'critical';
+  return hopeDie > fearDie ? 'hope' : 'fear';
+}
+
 export function getDaggerheartAncestryAdjustments(
   ancestry?: Pick<DaggerheartAncestry, 'id'> | null
 ): DaggerheartAncestryAdjustments {
