@@ -31,6 +31,30 @@ export interface SceneMarker {
   position: SceneCoordinate;
   width: number;
   height: number;
+  /**
+   * Optional functional-terrain effects, drawn from the system-agnostic rules IR
+   * (docs/rfc/003-rules-ir-and-effects.md). When present, the terrain becomes
+   * mechanically real: a cell covered by this marker contributes these effects to
+   * resolution (e.g. deep water halving fire damage, difficult terrain raising
+   * movement cost). Additive and optional — markers without effects render and
+   * behave exactly as before. The field is typed loosely here (the core scene
+   * types do not depend on the rules module); the terrain helper validates shape.
+   */
+  effects?: SceneTerrainEffect[];
+}
+
+/**
+ * A structurally-typed terrain effect stored on a scene marker. Mirrors the
+ * shape of the rules IR `EffectInstance` without importing it, so `scene.ts`
+ * stays free of a rules-module dependency. The terrain resolution helper in
+ * `src/rules` maps these onto real `EffectInstance`s.
+ */
+export interface SceneTerrainEffect {
+  target: string;
+  operation: string;
+  value: number | string | number[] | null;
+  label: string;
+  stackPolicy?: unknown;
 }
 
 export interface SceneInitiativeEntry {

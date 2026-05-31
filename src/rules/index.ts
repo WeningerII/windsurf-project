@@ -25,6 +25,8 @@ export { effectApplies, resolveEffects } from './resolver/resolve';
 export type { AttackResolution, AttackResolutionInput } from './resolver/attackResolution';
 export { resolveAttack } from './resolver/attackResolution';
 
+export { collectTerrainEffectsAt, markerCoversCell, markerToEffects } from './terrain/sceneTerrain';
+
 export { effectToLedgerEntry, toContributionLedger } from './ir/ledgerView';
 
 export type { MagicBonusItem } from './compile/equipEffects';
