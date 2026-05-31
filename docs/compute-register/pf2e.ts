@@ -75,7 +75,8 @@ export const pf2eComputeRegister: SystemComputeRegister = {
       inputs: ['Wis', 'level', 'perception tier'],
       edgeCases: ['its own proficiency, not a skill'],
       source: `${CRB}: Perception`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: `${T} :: L2/L8 PF2e perception and damage`,
     },
     {
       id: 'pf2e.L2.class-spell-dc',
@@ -140,7 +141,8 @@ export const pf2eComputeRegister: SystemComputeRegister = {
       inputs: ['HP', 'damage'],
       edgeCases: ['temp absorb'],
       source: `${CRB}: Hit Points, Healing, and Dying`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: `${T} :: L2/L8 PF2e perception and damage`,
     },
     {
       id: 'pf2e.L5.spell-slots',

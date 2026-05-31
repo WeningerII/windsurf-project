@@ -156,3 +156,27 @@ describe('L8 valued conditions', () => {
     expect(r.total).toBe(11 - 2);
   });
 });
+
+// ── L2/L8: perception and damage application ────────────────────────────────
+describe('L2/L8 PF2e perception and damage', () => {
+  it('perception = Wis mod + perception proficiency (trained@1 = 3)', async () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0.5); // d20 = 11
+    const prepared = engine.prepareData(doc({})); // perception trained by default
+    const r = await engine.rollCheck(prepared, 'perception');
+    expect(r.total).toBe(11 + 3);
+    vi.restoreAllMocks();
+  });
+  it('apply damage: temp HP absorbs first, current floors at 0', () => {
+    const out = engine.applyDamage(
+      doc({ hitPoints: { current: 10, max: 10, temp: 5 } }),
+      8,
+      'slashing'
+    );
+    expect(out.system.hitPoints.temp).toBe(0);
+    expect(out.system.hitPoints.current).toBe(7);
+  });
+  it('overkill floors current HP at 0', () => {
+    const out = engine.applyDamage(doc({ hitPoints: { current: 5, max: 10, temp: 0 } }), 12, 'fire');
+    expect(out.system.hitPoints.current).toBe(0);
+  });
+});
