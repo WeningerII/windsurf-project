@@ -458,10 +458,11 @@ describe('Spell Data Validation', () => {
   });
 
   it('stores curated 5e save metadata directly in raw spell files', () => {
+    // Sickening Radiance is SRD 5.2 / 2024-only; it is not in SRD 5.1, so it was
+    // removed from the 2014 catalog and no longer appears in this 2014 list.
     const curated2014SaveIds = [
       'light',
       'stinking-cloud',
-      'sickening-radiance',
       'wall-of-stone',
       'awaken',
       'reverse-gravity',
@@ -499,10 +500,11 @@ describe('Spell Data Validation', () => {
 
   it('stores browser-visible target or effect metadata for the curated parity spell set', () => {
     const curated5e2014MetadataIds = [
+      // Blinding Smite, Feign Death, and Beast Sense are SRD 5.2 / 2024-only and
+      // were removed from the 2014 catalog (not in SRD 5.1).
       'light',
       'awaken',
       'wall-of-stone',
-      'blinding-smite',
       'maze',
       'power-word-stun',
       'imprisonment',
@@ -516,8 +518,6 @@ describe('Spell Data Validation', () => {
       'fly',
       'revivify',
       'bestow-curse',
-      'feign-death',
-      'beast-sense',
       'freedom-of-movement',
     ];
     const curated5e2024MetadataIds = [
@@ -591,7 +591,6 @@ describe('Spell Data Validation', () => {
       'raise-dead': '1 dead creature you touch',
       'greater-restoration': '1 creature you touch',
       'true-seeing': '1 willing creature you touch',
-      'livening-stone': '1 stone you touch',
       resurrection: '1 dead creature you touch',
       'true-resurrection': '1 creature you touch',
     };
@@ -674,7 +673,8 @@ describe('Spell Data Validation', () => {
   });
 
   it('keeps core 5e shared spell save and area metadata aligned across editions', () => {
-    const sharedParityIds = ['light', 'stinking-cloud', 'sickening-radiance', 'reverse-gravity'];
+    // Sickening Radiance dropped: SRD 5.2-only, removed from the 2014 catalog.
+    const sharedParityIds = ['light', 'stinking-cloud', 'reverse-gravity'];
 
     sharedParityIds.forEach((id) => {
       const spell2014 = getRawSpellById(dnd5e2014SpellsModule as SpellModule, 9, id);

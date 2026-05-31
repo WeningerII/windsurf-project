@@ -571,30 +571,6 @@ export const level1Spells: Spell[] = [
     classes: ['bard', 'paladin'],
   },
   {
-    id: 'hex',
-    name: 'Hex',
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 1,
-    school: 'enchantment',
-    castingTime: { type: 'bonus-action', amount: 1 },
-    range: { type: 'ranged', feet: 90 },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'the petrified eye of a newt',
-    },
-    duration: { type: 'concentration', maxDuration: '1 hour' },
-    concentration: true,
-    ritual: false,
-    description:
-      'You place a curse on a creature that you can see within range. Until the spell ends, you deal an extra 1d6 necrotic damage to the target whenever you hit it with an attack. Also, choose one ability when you cast the spell. The target has disadvantage on ability checks made with the chosen ability. If the target drops to 0 hit points before this spell ends, you can use a bonus action on a subsequent turn of yours to curse a new creature.',
-    atHigherLevels:
-      'When you cast this spell using a spell slot of 3rd or 4th level, you can maintain your concentration on the spell for up to 8 hours. When you use a spell slot of 5th level or higher, you can maintain your concentration on the spell for up to 24 hours.',
-    classes: ['warlock'],
-  },
-  {
     id: 'hunters-mark',
     name: "Hunter's Mark",
     system: 'dnd-5e-2014',
@@ -921,8 +897,8 @@ export const level1Spells: Spell[] = [
     classes: ['bard', 'druid', 'ranger'],
   },
   {
-    id: 'tashas-hideous-laughter',
-    name: "Tasha's Hideous Laughter",
+    id: 'hideous-laughter',
+    name: 'Hideous Laughter',
     system: 'dnd-5e-2014',
     source: 'SRD 5.1',
     level: 1,
@@ -944,8 +920,8 @@ export const level1Spells: Spell[] = [
     classes: ['bard', 'wizard'],
   },
   {
-    id: 'tensers-floating-disk',
-    name: "Tenser's Floating Disk",
+    id: 'floating-disk',
+    name: 'Floating Disk',
     system: 'dnd-5e-2014',
     source: 'SRD 5.1',
     level: 1,
@@ -1008,32 +984,6 @@ export const level1Spells: Spell[] = [
     description:
       "This spell creates an invisible, mindless, shapeless force that performs simple tasks at your command until the spell ends. The servant springs into existence in an unoccupied space on the ground within range. It has AC 10, 1 hit point, and a Strength of 2, and it can't attack. If it drops to 0 hit points, the spell ends. Once on each of your turns as a bonus action, you can mentally command the servant to move up to 15 feet and interact with an object. The servant can perform simple tasks that a human servant could do, such as fetching things, cleaning, mending, folding clothes, lighting fires, serving food, and pouring wine. Once you give the command, the servant performs the task to the best of its ability until it completes the task, then waits for your next command.",
     classes: ['bard', 'warlock', 'wizard'],
-  },
-  {
-    id: 'witch-bolt',
-    name: 'Witch Bolt',
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 1,
-    school: 'evocation',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 30 },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'a twig from a tree that has been struck by lightning',
-    },
-    duration: { type: 'concentration', maxDuration: '1 minute' },
-    attackRoll: true,
-    damage: { base: { count: 1, die: 'd12', notation: '1d12' }, type: 'lightning' },
-    concentration: true,
-    ritual: false,
-    description:
-      "A beam of crackling, blue energy lances out toward a creature within range, forming a sustained arc of lightning between you and the target. Make a ranged spell attack against that creature. On a hit, the target takes 1d12 lightning damage, and on each of your turns for the duration, you can use your action to deal 1d12 lightning damage to the target automatically. The spell ends if you use your action to do anything else. The spell also ends if the target is ever outside the spell's range or if it has total cover from you.",
-    atHigherLevels:
-      'When you cast this spell using a spell slot of 2nd level or higher, the initial damage increases by 1d12 for each slot level above 1st.',
-    classes: ['sorcerer', 'warlock', 'wizard'],
   },
 ];
 

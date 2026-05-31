@@ -365,28 +365,6 @@ export const level5Spells: Spell[] = [
     classes: ['sorcerer', 'wizard'],
   },
   {
-    id: 'transmute-rock',
-    name: 'Transmute Rock',
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 5,
-    school: 'transmutation',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 120 },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'clay and stone worth at least 1 gp',
-    },
-    duration: { type: 'instant' },
-    concentration: false,
-    ritual: false,
-    description:
-      'You choose an area of stone or mud that you can see that fits within a 40-foot cube and is within range, and choose one of the following effects. Transmute Rock to Mud, Transmute Mud to Rock.',
-    classes: ['druid', 'wizard'],
-  },
-  {
     id: 'wall-of-force',
     name: 'Wall of Force',
     system: 'dnd-5e-2014',
@@ -407,29 +385,6 @@ export const level5Spells: Spell[] = [
     description:
       'An invisible wall of force springs into existence at a point you choose within range. The wall appears in any orientation you choose, as a horizontal or vertical barrier or at an angle. It can be free floating or resting on a solid surface. You can form it into a hemispherical dome or a sphere with a radius of up to 15 feet, or you can shape a flat surface made up of ten 10-foot-by-10-foot panels. Each panel must be contiguous with another panel. In any form, the wall is 1/4 inch thick. It lasts for the duration.',
     classes: ['wizard'],
-  },
-  {
-    id: 'circle-of-teleportation',
-    name: 'Circle of Teleportation',
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 5,
-    school: 'conjuration',
-    castingTime: { type: 'minute', amount: 1 },
-    range: { type: 'ranged', feet: 10 },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription:
-        'rare chalks and inks infused with precious gems worth 50 gp, which the spell consumes',
-    },
-    duration: { type: 'hours', hours: 1 },
-    concentration: false,
-    ritual: false,
-    description:
-      'As you cast this spell, you draw a 10-foot-diameter circle on the ground inscribed with sigils that link your location to a permanent teleportation circle of your choice whose sigil sequence you know and that is on the same plane of existence as you. A shimmering portal opens within the circle you drew and remains open until the end of your next turn. Any creature that enters the portal instantly appears within 5 feet of the destination circle or in the nearest unoccupied space if that space is occupied.',
-    classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
     id: 'commune',

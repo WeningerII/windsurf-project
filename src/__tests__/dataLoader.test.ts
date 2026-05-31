@@ -52,7 +52,9 @@ describe('Data Loader Integration Tests', () => {
   describe('D&D 5e-2014 Loaders', () => {
     it('should load spells for dnd-5e-2014', async () => {
       const spells = await loadSpellsForSystem('dnd-5e-2014');
-      expect(spells.length).toBe(244);
+      // 22 non-SRD-5.1 spells (PHB + homebrew) were removed; 8 Product-Identity
+      // names (Tasha's/Tenser's/etc.) were renamed to their SRD names.
+      expect(spells.length).toBe(222);
       expect(spells.every((s) => s.id && s.name && s.system === 'dnd-5e-2014')).toBe(true);
     });
 
@@ -114,7 +116,8 @@ describe('Data Loader Integration Tests', () => {
 
     it('should load species for dnd-5e-2024', async () => {
       const species = await loadSpeciesForSystem('dnd-5e-2024');
-      expect(species.length).toBe(9);
+      // SRD 5.2 dropped Half-Elf and Half-Orc as standalone species.
+      expect(species.length).toBe(7);
       expect(species.every((s) => s.id && s.name && s.system === 'dnd-5e-2024')).toBe(true);
     });
 

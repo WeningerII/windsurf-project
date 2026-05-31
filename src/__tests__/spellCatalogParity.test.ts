@@ -59,8 +59,9 @@ const fieldCoverageBaselines: Array<{
     label: 'dnd-5e-2014',
     module: dnd5e2014SpellsModule,
     minimums: {
-      browserMetadata: 77,
-      heightening: 63,
+      // Lowered after removing 22 non-SRD-5.1 spells from the 2014 catalog.
+      browserMetadata: 71,
+      heightening: 59,
     },
   },
   {

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-31T16:07:00.047Z",
+  "generatedAt": "2026-05-31T16:23:59.659Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -59,7 +59,7 @@
   },
   "productReachableSummary": {
     "dnd-5e-2014": {
-      "spells": 244,
+      "spells": 222,
       "classes": 12,
       "species": 9,
       "backgrounds": 1,
@@ -76,7 +76,7 @@
     "dnd-5e-2024": {
       "spells": 320,
       "classes": 12,
-      "species": 9,
+      "species": 7,
       "backgrounds": 4,
       "traits": 0,
       "featureOptions": 0,
@@ -166,7 +166,7 @@
   },
   "repoResidentSummary": {
     "dnd-5e-2014": {
-      "spells": 244,
+      "spells": 222,
       "classes": 12,
       "species": 9,
       "backgrounds": 1,
@@ -183,7 +183,7 @@
     "dnd-5e-2024": {
       "spells": 320,
       "classes": 12,
-      "species": 9,
+      "species": 7,
       "backgrounds": 4,
       "traits": 0,
       "featureOptions": 0,
@@ -276,8 +276,8 @@
       "systemId": "dnd-5e-2014",
       "systemLabel": "D&D 5e (2014)",
       "category": "spells",
-      "encoded": 244,
-      "target": 244,
+      "encoded": 222,
+      "target": 222,
       "percent": 100
     },
     {
@@ -356,8 +356,8 @@
       "systemId": "dnd-5e-2024",
       "systemLabel": "D&D 5e (2024)",
       "category": "species",
-      "encoded": 9,
-      "target": 9,
+      "encoded": 7,
+      "target": 7,
       "percent": 100
     },
     {
@@ -901,13 +901,13 @@
       "category": "spells",
       "categoryLabel": "Spells/Powers",
       "metrics": {
-        "rawCount": 244,
-        "uniqueCount": 244,
+        "rawCount": 222,
+        "uniqueCount": 222,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 5.1": 244
+          "SRD 5.1": 222
         }
       }
     },
@@ -1061,13 +1061,13 @@
       "category": "species",
       "categoryLabel": "Species/Races",
       "metrics": {
-        "rawCount": 9,
-        "uniqueCount": 9,
+        "rawCount": 7,
+        "uniqueCount": 7,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 5.2": 9
+          "SRD 5.2": 7
         }
       }
     },
