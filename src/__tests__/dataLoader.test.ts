@@ -105,7 +105,9 @@ describe('Data Loader Integration Tests', () => {
   describe('D&D 5e-2024 Loaders', () => {
     it('should load spells for dnd-5e-2024', async () => {
       const spells = await loadSpellsForSystem('dnd-5e-2024');
-      expect(spells.length).toBe(320);
+      // 26 non-SRD-5.2 spells (PHB + homebrew) removed; 7 Product-Identity names
+      // renamed to their SRD names.
+      expect(spells.length).toBe(294);
       expect(spells.every((s) => s.id && s.name && s.system === 'dnd-5e-2024')).toBe(true);
     });
 

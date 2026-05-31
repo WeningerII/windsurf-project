@@ -177,17 +177,6 @@ export const ranger: CharacterClass = {
       ],
     },
     {
-      level: 9,
-      features: [
-        {
-          id: 'conjure-barrage',
-          name: 'Conjure Barrage',
-          source: 'Ranger 9',
-          description: 'You always have the Conjure Barrage spell prepared.',
-        },
-      ],
-    },
-    {
       level: 10,
       features: [
         {
@@ -218,17 +207,6 @@ export const ranger: CharacterClass = {
           name: 'Ability Score Improvement',
           source: 'Ranger 12',
           description: 'Increase one ability score by 2, or increase two ability scores by 1.',
-        },
-      ],
-    },
-    {
-      level: 13,
-      features: [
-        {
-          id: 'conjure-volley',
-          name: 'Conjure Volley',
-          source: 'Ranger 13',
-          description: 'You always have the Conjure Volley spell prepared.',
         },
       ],
     },
@@ -316,9 +294,9 @@ export const ranger: CharacterClass = {
   ],
   alwaysPreparedSpellSourceLabel: 'Ranger Class Spells',
   alwaysPreparedSpellsByLevel: {
+    // Conjure Barrage (9) and Conjure Volley (13) are not in SRD 5.2 and were
+    // removed; the SRD 5.2 Ranger's base always-prepared spell is Hunter's Mark.
     1: ['hunters-mark'],
-    9: ['conjure-barrage'],
-    13: ['conjure-volley'],
   },
 
   subclassLevel: 3,

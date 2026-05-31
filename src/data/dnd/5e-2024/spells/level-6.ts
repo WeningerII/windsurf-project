@@ -3,36 +3,6 @@ import { Spell } from '../../../../types/magic/spells';
 // D&D 5e (2024) Level 6 Spells - SRD 5.2
 export const level6Spells: Spell[] = [
   {
-    id: 'arcane-gate',
-    name: 'Arcane Gate',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 6,
-    school: 'conjuration',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 500,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'concentration',
-      maxDuration: '10 minutes',
-    },
-    concentration: true,
-    ritual: false,
-    description:
-      'You create linked teleportation portals that remain open for the duration. Choose two points on the ground that you can see, one point within 10 feet and one within 500 feet.',
-    classes: ['sorcerer', 'warlock', 'wizard'],
-  },
-  {
     id: 'blade-barrier',
     name: 'Blade Barrier',
     system: 'dnd-5e-2024',
@@ -169,40 +139,6 @@ export const level6Spells: Spell[] = [
     atHigherLevels:
       'When you cast this spell using a spell slot of level 7 or higher, the damage increases by 2d6 for each slot level above 6.',
     classes: ['sorcerer', 'warlock', 'wizard'],
-  },
-  {
-    id: 'conjure-elementals',
-    name: 'Conjure Elementals',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 6,
-    school: 'conjuration',
-    castingTime: {
-      type: 'minute',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 90,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription:
-        'burning incense for air, soft clay for earth, salt water for water, or sulfur for fire',
-    },
-    duration: {
-      type: 'concentration',
-      maxDuration: '1 hour',
-    },
-    concentration: true,
-    ritual: false,
-    description:
-      'You call forth elementals that appear in unoccupied spaces that you can see within range. You choose one of the following options for what appears: Four elementals of challenge rating 1 or lower, Two elementals of challenge rating 2 or lower, One elemental of challenge rating 3 or lower. An elemental summoned by this spell disappears when it drops to 0 hit points or when the spell ends.',
-    atHigherLevels:
-      'When you cast this spell using certain higher-level spell slots, you choose one of the summoning options above, and more creatures appear: twice as many with a 7th-level slot and three times as many with a 9th-level slot.',
-    classes: ['druid', 'wizard'],
   },
   {
     id: 'contingency',
@@ -444,37 +380,6 @@ export const level6Spells: Spell[] = [
     classes: ['cleric'],
   },
   {
-    id: 'glass-staff',
-    name: 'Glass Staff',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 6,
-    school: 'transmutation',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 60,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'a small glass rod',
-    },
-    duration: {
-      type: 'concentration',
-      maxDuration: '1 minute',
-    },
-    concentration: true,
-    ritual: false,
-    description:
-      'You cause a nonmagical wooden staff or quarterstaff to become a staff of glass. For the duration, the staff is transparent and has resistance to bludgeoning, piercing, and slashing damage. If the staff is used as a weapon, it deals an extra 1d6 force damage on a hit.',
-    classes: ['wizard'],
-  },
-  {
     id: 'globe-of-invulnerability',
     name: 'Globe of Invulnerability',
     system: 'dnd-5e-2024',
@@ -646,36 +551,6 @@ export const level6Spells: Spell[] = [
     classes: ['cleric', 'druid'],
   },
   {
-    id: 'livening-stone',
-    name: 'Livening Stone',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 6,
-    school: 'transmutation',
-    castingTime: {
-      type: 'minute',
-      amount: 1,
-    },
-    range: {
-      type: 'touch',
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'a stone worth at least 100 gp',
-    },
-    duration: {
-      type: 'instant',
-    },
-    target: '1 stone you touch',
-    concentration: false,
-    ritual: false,
-    description:
-      "You touch a stone and cause it to become a stone golem under your control. The stone must be at least 2 feet in any dimension. The golem obeys your verbal commands. If you don't issue any commands to the golem, it defends itself against hostile creatures but otherwise takes no actions.",
-    classes: ['wizard'],
-  },
-  {
     id: 'magic-jar',
     name: 'Magic Jar',
     system: 'dnd-5e-2024',
@@ -782,8 +657,8 @@ export const level6Spells: Spell[] = [
     classes: ['druid', 'sorcerer', 'wizard'],
   },
   {
-    id: 'otilukes-freezing-sphere',
-    name: "Otiluke's Freezing Sphere",
+    id: 'freezing-sphere',
+    name: 'Freezing Sphere',
     system: 'dnd-5e-2024',
     source: 'SRD 5.2',
     level: 6,
@@ -828,37 +703,6 @@ export const level6Spells: Spell[] = [
     atHigherLevels:
       'When you cast this spell using a spell slot of level 7 or higher, the damage increases by 1d6 for each slot level above 6.',
     classes: ['sorcerer', 'wizard'],
-  },
-  {
-    id: 'otiluke-resilience',
-    name: "Otiluke's Resilience",
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 6,
-    school: 'abjuration',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 30,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'a diamond worth at least 1,500 gp',
-    },
-    duration: {
-      type: 'concentration',
-      maxDuration: '1 hour',
-    },
-    concentration: true,
-    ritual: false,
-    description:
-      "You grant yourself or a creature you touch resistance to one damage type of your choice for the duration. At the end of each of the target's turns, it can end this effect and choose a different damage type to have resistance to.",
-    classes: ['wizard'],
   },
   {
     id: 'planar-ally',

@@ -9,7 +9,8 @@
  * static). Re-run to refresh.
  *
  * Sources (open-content, cited; each scoped to the policy's allowedSources):
- *   - D&D 5e SRD 5.1/5.2: 5e-bits/5e-database (CC-BY-4.0 / OGL 1.0a)
+ *   - D&D 5e SRD 5.1/5.2: 5e-bits/5e-database (CC-BY-4.0 / OGL 1.0a); SRD 5.2
+ *     spells from downfallx/dnd-5e-srd-markdown (CC-BY-4.0; 339 spells, ≠ 5.1)
  *   - Pathfinder 2e (CRB): Pf2eToolsOrg/Pf2eTools spells-crb.json
  *   - Pathfinder 1e (Core): wolfgangcodes/pathfinder-spellbook spells.csv (source="PFRPG Core")
  *   - Mutants & Masterminds 3e (Hero's Handbook): frnprt/mm3e-character-creator data.js
@@ -165,6 +166,26 @@ async function fetchMarkdownHeadings(url: string, stripSuffix?: string): Promise
   );
 }
 
+/**
+ * Spell names from the SRD 5.2 markdown (downfallx/dnd-5e-srd-markdown): each
+ * spell is a `#### Name` heading immediately followed by an italic
+ * `_Level N School_` / `_School Cantrip_` descriptor, which distinguishes real
+ * spells from the section sub-headings. SRD 5.2 has no 5e-database JSON, so this
+ * markdown is the authoritative 2024 spell denominator (SRD 5.2 ≠ SRD 5.1).
+ */
+async function fetchSrd52SpellNames(url: string): Promise<string[]> {
+  const lines = (await fetchText(url)).split('\n');
+  const names: string[] = [];
+  for (let i = 0; i < lines.length; i++) {
+    const m = lines[i].match(/^####\s+(.+?)\s*$/);
+    if (!m) continue;
+    let j = i + 1;
+    while (j < lines.length && lines[j].trim() === '') j++;
+    if (/^_.*(Level\s+\d|Cantrip).*_$/i.test((lines[j] ?? '').trim())) names.push(m[1]);
+  }
+  return names;
+}
+
 async function loaderNames(load: (s: GameSystemId) => Promise<unknown[]>, system: GameSystemId) {
   const items = (await load(system)) as Array<{ name?: unknown }>;
   return items.filter((i) => typeof i.name === 'string').map((i) => i.name as string);
@@ -231,12 +252,16 @@ for (const [category, srd, loader] of cats5e2014) {
   });
 }
 
-// --- D&D 5e 2024 (SRD 5.2) — 2024 set has no Spells file; SRD 5.2 spells == 5.1 ---
+// --- D&D 5e 2024 (SRD 5.2) — 5e-database has no 2024 spells file, and SRD 5.2
+// genuinely differs from 5.1 (339 vs 319 spells), so spells use the authoritative
+// SRD 5.2.1 markdown; other categories use 5e-database's 2024 set. ---
 const en2024 = `${RAW5E}/2024/en`;
+const SRD52_SPELLS_MD =
+  'https://raw.githubusercontent.com/downfallx/dnd-5e-srd-markdown/master/spells.md';
 const cats5e2024: Array<[string, () => Promise<string[]>, () => Promise<string[]>]> = [
   [
     'spells',
-    () => fetchNames(`${en2014}/5e-SRD-Spells.json`),
+    () => fetchSrd52SpellNames(SRD52_SPELLS_MD),
     () => loaderNames(loadSpellsForSystem, 'dnd-5e-2024'),
   ],
   [
@@ -275,7 +300,7 @@ for (const [category, srd, loader] of cats5e2024) {
     systemId: 'dnd-5e-2024',
     systemLabel: 'D&D 5e (2024)',
     category,
-    srdSource: 'SRD 5.2 (5e-bits/5e-database; spells per SRD 5.1)',
+    srdSource: 'SRD 5.2 (5e-bits/5e-database; spells per downfallx SRD 5.2.1 markdown)',
     srd,
     loader,
   });

@@ -651,8 +651,8 @@ export const level4Spells: Spell[] = [
     classes: ['druid', 'sorcerer', 'wizard'],
   },
   {
-    id: 'leomunds-secret-chest',
-    name: "Leomund's Secret Chest",
+    id: 'secret-chest',
+    name: 'Secret Chest',
     system: 'dnd-5e-2024',
     source: 'SRD 5.2',
     level: 4,
@@ -711,8 +711,8 @@ export const level4Spells: Spell[] = [
     classes: ['bard', 'cleric', 'druid', 'paladin', 'ranger', 'wizard'],
   },
   {
-    id: 'mordenkainen-faithful-hound',
-    name: "Mordenkainen's Faithful Hound",
+    id: 'faithful-hound',
+    name: 'Faithful Hound',
     system: 'dnd-5e-2024',
     source: 'SRD 5.2',
     level: 4,
@@ -739,37 +739,6 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description:
       "You conjure a phantom watchdog in an unoccupied space that you can see within range, where it remains for the duration. The hound is invisible to all creatures except you and can't be harmed. When a Small or larger creature comes within 30 feet of it without first speaking the password that you specify when you cast this spell, the hound starts barking loudly. The hound sees invisible creatures and can see into the Ethereal Plane. It ignores illusions.",
-    classes: ['wizard'],
-  },
-  {
-    id: 'otilukes-resilience',
-    name: "Otilukes's Resilience",
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 4,
-    school: 'abjuration',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'touch',
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription:
-        'a gem, crystal, reliquary, or some other ornamental container worth at least 500 gp',
-    },
-    duration: {
-      type: 'permanent',
-    },
-    target: '1 willing creature you touch',
-    concentration: false,
-    ritual: false,
-    description:
-      'You touch a willing creature and grant it a magical reserve of resilience. For the duration, the target has resistance to nonmagical damage. When the target takes damage, it can use its reaction to roll a d6. The target reduces the damage taken by the number rolled plus your spellcasting ability modifier.',
     classes: ['wizard'],
   },
   {
@@ -908,56 +877,6 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description:
       "A sphere of shimmering force springs into existence centered on a point of your choice within range. The sphere can have a radius of up to 15 feet. If the sphere overlaps with a creature, the creature is pushed away from the sphere's center until it is outside the sphere.",
-    classes: ['wizard'],
-  },
-  {
-    id: 'sickening-radiance',
-    name: 'Sickening Radiance',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 4,
-    school: 'evocation',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 120,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'concentration',
-      maxDuration: '10 minutes',
-    },
-    areaOfEffect: {
-      type: 'sphere',
-      radius: 30,
-    },
-    savingThrow: {
-      attribute: 'con',
-      success: 'none',
-    },
-    savingThrowText:
-      'A creature that starts its turn in the area must succeed on a Constitution saving throw or take 2d8 poison damage.',
-    damage: {
-      base: {
-        count: 2,
-        die: 'd8',
-        notation: '2d8',
-      },
-      type: 'poison',
-    },
-    concentration: true,
-    ritual: false,
-    description:
-      'Dim, sickly green light spreads within a 30-foot-radius sphere centered on a point of your choice within range. The light spreads around corners. If a creature starts its turn in the area, it must succeed on a Constitution saving throw or take 2d8 poison damage.',
-    atHigherLevels:
-      'When you cast this spell using a spell slot of 5th level or higher, the damage increases by 1d8 for each slot level above 4th.',
     classes: ['wizard'],
   },
   {

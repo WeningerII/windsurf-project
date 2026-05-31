@@ -45,17 +45,15 @@ unlike the loader-derived `docs/srd-manifest/`.
   Laughter" → "Hideous Laughter", …, "Mordenkainen's Sword" → "Arcane Sword") and
   22 genuine non-SRD entries were deleted (PHB spells like Hex/Witch Bolt and
   homebrew like Glass Staff/Airwalk). 2014 spells: 222/222, 0 over-inclusion.
-- **Provenance — 5e-2024 spells [BLOCKED on denominator]:** the 2024 loader shows
-  ~37 reverse-diff hits, but the diff uses the **SRD 5.1** spell list because
-  5e-database has no 2024 spells file. SRD 5.2 may have *expanded* the open spell
-  list beyond 5.1 (the suspects include Armor of Agathys, Cause Fear, Chromatic
-  Orb, Divine Smite, …), so the SRD-5.1 denominator is unsafe for deletions here —
-  doing so could remove legitimate SRD 5.2 content. Only the edition-independent
-  fixes are safe without the authoritative SRD 5.2 spell list: the 7 PI renames
-  and the clearly-homebrew entries (Glass Staff, Livening Stone, Airwalk, Mirage,
-  Mordenkainen's Lodestone, Otiluke's Resilience). Resolving the rest needs a
-  machine-readable SRD 5.2 spell list (e.g. parsed from the official SRD 5.2 PDF or
-  a CC-BY mirror such as Tabyltop/CC-SRD).
+- **Provenance — 5e-2024 spells [REMEDIATED]:** the denominator was sourced — SRD
+  5.2 genuinely differs from 5.1 (**339 vs 319** spells; 5.2 adds Chromatic Orb,
+  Divine Smite, Hex, Ray of Sickness, Power Word Heal, etc.), parsed from
+  `downfallx/dnd-5e-srd-markdown` (CC-BY) and wired as the 2024 spell denominator.
+  Against it: 7 Product-Identity names renamed to their SRD names and 26 genuine
+  non-SRD-5.2 entries deleted (PHB spells like Witch Bolt/Crown of Madness/
+  Feeblemind + homebrew like Glass Staff). The Ranger's non-SRD always-prepared
+  grants (Conjure Barrage/Volley) were removed accordingly. 2024 spells: 294/294
+  in-SRD (86.7% of the 339), 0 over-inclusion.
 - The 5e-database 2024 monsters file looks partial (~3 entries) — validate that
   source before trusting the 2024 monster row.
 

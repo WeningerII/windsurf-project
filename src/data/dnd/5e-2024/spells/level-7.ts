@@ -290,8 +290,8 @@ export const level7Spells: Spell[] = [
     classes: ['bard', 'druid', 'wizard'],
   },
   {
-    id: 'mordenkainens-magnificent-mansion',
-    name: "Mordenkainen's Magnificent Mansion",
+    id: 'magnificent-mansion',
+    name: 'Magnificent Mansion',
     system: 'dnd-5e-2024',
     source: 'SRD 5.2',
     level: 7,

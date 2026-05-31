@@ -54,35 +54,6 @@ export const cantrips: Spell[] = [
     classes: ['sorcerer', 'wizard'],
   },
   {
-    id: 'blade-ward',
-    name: 'Blade Ward',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 0,
-    school: 'abjuration',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'self',
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'concentration',
-      maxDuration: '1 minute',
-    },
-    concentration: true,
-    ritual: false,
-    description:
-      'Whenever a creature makes an attack roll against you before the spell ends, the attacker subtracts 1d4 from the attack roll.',
-    classes: ['bard', 'sorcerer', 'warlock', 'wizard'],
-  },
-  {
     id: 'chill-touch',
     name: 'Chill Touch',
     system: 'dnd-5e-2024',
@@ -247,44 +218,6 @@ export const cantrips: Spell[] = [
     atHigherLevels:
       'The damage increases by 1d10 when you reach levels 5 (2d10), 11 (3d10), and 17 (4d10).',
     classes: ['sorcerer', 'wizard'],
-  },
-  {
-    id: 'friends',
-    name: 'Friends',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 0,
-    school: 'enchantment',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 10,
-    },
-    components: {
-      verbal: false,
-      somatic: true,
-      material: true,
-      materialDescription: 'some makeup',
-    },
-    duration: {
-      type: 'concentration',
-      maxDuration: '1 minute',
-    },
-    target: '1 creature you can see within range',
-    savingThrow: {
-      attribute: 'wis',
-      success: 'none',
-    },
-    savingThrowText:
-      "The target succeeds automatically if it isn't a Humanoid, if you're fighting it, or if you cast Friends on it within the past 24 hours.",
-    concentration: true,
-    ritual: false,
-    description:
-      "You magically emanate a sense of friendship toward one creature you can see within range. The target must succeed on a Wisdom saving throw or have the Charmed condition for the duration. The target succeeds automatically if it isn't a Humanoid, if you're fighting it, or if you have cast this spell on it within the past 24 hours.",
-    classes: ['bard', 'sorcerer', 'warlock', 'wizard'],
   },
   {
     id: 'guidance',
@@ -868,54 +801,6 @@ export const cantrips: Spell[] = [
     description:
       'You manifest a minor wonder, a sign of supernatural power. You create one of several effects within range.',
     classes: ['cleric'],
-  },
-  {
-    id: 'thorn-whip',
-    name: 'Thorn Whip',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 0,
-    school: 'transmutation',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 30,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'instant',
-    },
-    attackRoll: true,
-    damage: {
-      base: {
-        count: 1,
-        die: 'd6',
-        notation: '1d6',
-      },
-      type: 'piercing',
-      scaling: {
-        type: 'character-level',
-        increment: {
-          count: 1,
-          die: 'd6',
-          notation: '1d6',
-        },
-      },
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      'You create a long, vine-like whip covered in thorns that lashes out at your command. Make a melee spell attack. On a hit, the target takes 1d6 Piercing damage, and if it is Large or smaller, you can pull it up to 10 feet closer.',
-    atHigherLevels:
-      'The damage increases by 1d6 when you reach levels 5 (2d6), 11 (3d6), and 17 (4d6).',
-    classes: ['druid'],
   },
   {
     id: 'true-strike',

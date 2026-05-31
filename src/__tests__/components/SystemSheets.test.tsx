@@ -435,7 +435,18 @@ describe('System Sheets', () => {
 
   it('shows unresolved shared 5e always-prepared grants explicitly when the spell dataset does not ship them', async () => {
     const user = userEvent.setup();
-    vi.spyOn(dataLoader, 'loadClassesForSystem').mockResolvedValue([rangerClass2024]);
+    // Grant a fictional always-prepared spell the dataset does not ship, so it
+    // must surface as an unresolved grant. (The real SRD Ranger only grants
+    // Hunter's Mark, which is shipped and resolves normally.)
+    vi.spyOn(dataLoader, 'loadClassesForSystem').mockResolvedValue([
+      {
+        ...rangerClass2024,
+        alwaysPreparedSpellsByLevel: {
+          ...rangerClass2024.alwaysPreparedSpellsByLevel,
+          9: ['test-unresolved-grant'],
+        },
+      },
+    ]);
     vi.spyOn(dataLoader, 'loadSpellsForSystem').mockResolvedValue([
       dnd5e2024SpellsById['hunters-mark'],
     ]);
@@ -461,9 +472,8 @@ describe('System Sheets', () => {
 
     expect(await screen.findByText('Always Prepared')).toBeInTheDocument();
     expect(screen.getByText("Hunter's Mark")).toBeInTheDocument();
-    expect(screen.getByText('Conjure Barrage')).toBeInTheDocument();
-    expect(screen.getByText('Conjure Volley')).toBeInTheDocument();
-    expect(screen.getAllByText('Unresolved')).toHaveLength(2);
+    expect(screen.getByText('Test Unresolved Grant')).toBeInTheDocument();
+    expect(screen.getAllByText('Unresolved')).toHaveLength(1);
   });
 
   it('keeps shared 5e equipment loading and selection wired through the host', async () => {

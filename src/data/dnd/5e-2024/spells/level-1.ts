@@ -71,38 +71,6 @@ export const level1Spells: Spell[] = [
     classes: ['bard', 'druid', 'ranger'],
   },
   {
-    id: 'armor-of-agathys',
-    name: 'Armor of Agathys',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 1,
-    school: 'abjuration',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'self',
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'a cup of water',
-    },
-    duration: {
-      type: 'hours',
-      hours: 1,
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      'A protective magical force surrounds you, manifesting as a spectral frost that covers you and your gear. You gain 5 temporary hit points for the duration. If a creature hits you with a melee attack while you have these hit points, the creature takes 5 cold damage.',
-    atHigherLevels:
-      'When you cast this spell using a spell slot of 2nd level or higher, both the temporary hit points and the cold damage increase by 5 for each slot level above 1st.',
-    classes: ['warlock'],
-  },
-  {
     id: 'bane',
     name: 'Bane',
     system: 'dnd-5e-2024',
@@ -217,40 +185,6 @@ export const level1Spells: Spell[] = [
     atHigherLevels:
       'When you cast this spell using a spell slot of level 2 or higher, the damage increases by 1d6 for each slot level above 1.',
     classes: ['sorcerer', 'wizard'],
-  },
-  {
-    id: 'cause-fear',
-    name: 'Cause Fear',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 1,
-    school: 'necromancy',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 60,
-    },
-    components: {
-      verbal: true,
-      somatic: false,
-      material: false,
-    },
-    duration: {
-      type: 'concentration',
-      maxDuration: '1 minute',
-    },
-    savingThrow: {
-      attribute: 'wis',
-      success: 'none',
-    },
-    concentration: true,
-    ritual: false,
-    description:
-      "You awaken the sense of mortality in one creature you can see within range that is not undead. A finite creature has 1 minute to make a Wisdom saving throw or become frightened of you until the spell ends. The frightened creature's speed is halved, and it can't move closer to you. On each of the creature's turns before the spell ends, it can make another Wisdom saving throw, ending the spell on itself on a success.",
-    classes: ['warlock'],
   },
   {
     id: 'charm-person',
@@ -1575,8 +1509,8 @@ export const level1Spells: Spell[] = [
     classes: ['bard', 'druid', 'ranger'],
   },
   {
-    id: 'tashas-hideous-laughter',
-    name: "Tasha's Hideous Laughter",
+    id: 'hideous-laughter',
+    name: 'Hideous Laughter',
     system: 'dnd-5e-2024',
     source: 'SRD 5.2',
     level: 1,
@@ -1610,8 +1544,8 @@ export const level1Spells: Spell[] = [
     classes: ['bard', 'wizard'],
   },
   {
-    id: 'tensers-floating-disk',
-    name: "Tenser's Floating Disk",
+    id: 'floating-disk',
+    name: 'Floating Disk',
     system: 'dnd-5e-2024',
     source: 'SRD 5.2',
     level: 1,
@@ -1716,81 +1650,6 @@ export const level1Spells: Spell[] = [
     description:
       "This spell creates an invisible, mindless, shapeless, Medium force that performs simple tasks at your command until the spell ends. The servant springs into existence in an unoccupied space on the ground within range. It has AC 10, 1 hit point, and a Strength of 2, and it can't attack. If it drops to 0 hit points, the spell ends. Once on each of your turns as a bonus action, you can mentally command the servant to move up to 15 feet and interact with an object. The servant can perform simple tasks that a human servant could do, such as fetching things, cleaning, mending, folding clothes, lighting fires, serving food, and pouring wine.",
     classes: ['bard', 'warlock', 'wizard'],
-  },
-  {
-    id: 'witch-bolt',
-    name: 'Witch Bolt',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 1,
-    school: 'evocation',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 60,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'a twig struck by lightning',
-    },
-    duration: {
-      type: 'concentration',
-      maxDuration: '1 minute',
-    },
-    attackRoll: true,
-    damage: {
-      base: {
-        count: 2,
-        die: 'd12',
-        notation: '2d12',
-      },
-      type: 'lightning',
-    },
-    concentration: true,
-    ritual: false,
-    description:
-      'A beam of crackling energy lances toward a creature within range, forming a sustained arc of lightning between you and the target. Make a ranged spell attack. On a hit, the target takes 2d12 Lightning damage. On each of your subsequent turns, you can use your action to deal 1d12 Lightning damage automatically.',
-    atHigherLevels:
-      'When you cast this spell using a spell slot of level 2 or higher, the initial damage increases by 1d12 for each slot level above 1.',
-    classes: ['sorcerer', 'warlock', 'wizard'],
-  },
-  {
-    id: 'wrathful-smite',
-    name: 'Wrathful Smite',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 1,
-    school: 'evocation',
-    castingTime: {
-      type: 'bonus-action',
-      amount: 1,
-    },
-    range: {
-      type: 'self',
-    },
-    components: {
-      verbal: true,
-      somatic: false,
-      material: false,
-    },
-    duration: {
-      type: 'concentration',
-      maxDuration: '1 minute',
-    },
-    savingThrow: {
-      attribute: 'wis',
-      success: 'none',
-    },
-    concentration: true,
-    ritual: false,
-    description:
-      "The next time you hit with a melee weapon attack during this spell's duration, your attack deals an extra 1d6 psychic damage. Additionally, if the target is a creature, it must make a Wisdom saving throw or be frightened of you until the spell ends. As an action, the creature can make a Wisdom check against your spell save DC to steel its resolve and end this spell.",
-    classes: ['paladin'],
   },
   {
     id: 'divine-smite',

@@ -73,38 +73,6 @@ export const level5Spells: Spell[] = [
     classes: ['bard', 'druid'],
   },
   {
-    id: 'circle-of-teleportation',
-    name: 'Circle of Teleportation',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 5,
-    school: 'conjuration',
-    castingTime: {
-      type: 'minute',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 10,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription:
-        'rare chalks and inks infused with precious gems worth 50 gp, which the spell consumes',
-    },
-    duration: {
-      type: 'hours',
-      hours: 1,
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      'As you cast this spell, you draw a 10-foot-diameter circle on the ground inscribed with sigils that link your location to a permanent teleportation circle of your choice whose sigil sequence you know and that is on the same plane of existence as you. A shimmering portal opens within the circle you drew and remains open until the end of your next turn. Any creature that enters the portal instantly appears within 5 feet of the destination circle or in the nearest unoccupied space if that space is occupied.',
-    classes: ['bard', 'sorcerer', 'wizard'],
-  },
-  {
     id: 'cloudkill',
     name: 'Cloudkill',
     system: 'dnd-5e-2024',
@@ -259,55 +227,6 @@ export const level5Spells: Spell[] = [
     description:
       'You mentally contact a demigod, the spirit of a long-dead sage, or some other mysterious entity from another plane. You can ask the entity up to five questions. You must ask your questions before the spell ends.',
     classes: ['warlock', 'wizard'],
-  },
-  {
-    id: 'conjure-volley',
-    name: 'Conjure Volley',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 5,
-    school: 'conjuration',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 150,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'a Melee or Ranged weapon worth at least 1 CP',
-    },
-    duration: {
-      type: 'instant',
-    },
-    areaOfEffect: {
-      type: 'cylinder',
-      radius: 10,
-      height: 20,
-    },
-    savingThrow: {
-      attribute: 'dex',
-      success: 'half',
-    },
-    damage: {
-      base: {
-        count: 8,
-        die: 'd8',
-        notation: '8d8',
-      },
-      type: 'force',
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      'You throw a weapon or fire a piece of ammunition into the air and choose a point you can see within range. Countless spectral weapons rain down in a 20-foot-high, 10-foot-radius cylinder centered on that point and disappear. Each creature of your choice that you can see in the area must make a Dexterity saving throw, taking 8d8 Force damage on a failed save or half as much damage on a successful one. The spell then teleports the material component back to your hand.',
-    atHigherLevels:
-      'When you cast this spell using a spell slot of level 6 or higher, the damage increases by 1d8 for each slot level above 5.',
-    classes: ['ranger'],
   },
   {
     id: 'contagion',
@@ -1017,36 +936,6 @@ export const level5Spells: Spell[] = [
     description:
       'As you cast the spell, you draw a 10-foot-diameter circle on the ground inscribed with sigils that link your location to a permanent teleportation circle of your choice whose sigil sequence you know.',
     classes: ['bard', 'sorcerer', 'warlock', 'wizard'],
-  },
-  {
-    id: 'transmute-rock',
-    name: 'Transmute Rock',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 5,
-    school: 'transmutation',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 120,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'clay and stone worth at least 1 gp',
-    },
-    duration: {
-      type: 'instant',
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      'You choose an area of stone or mud that you can see that fits within a 40-foot cube and is within range, and choose one of the following effects. Transmute Rock to Mud, Transmute Mud to Rock.',
-    classes: ['druid', 'wizard'],
   },
   {
     id: 'wall-of-force',

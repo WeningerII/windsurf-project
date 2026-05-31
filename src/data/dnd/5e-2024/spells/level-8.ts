@@ -267,48 +267,6 @@ export const level8Spells: Spell[] = [
     classes: ['cleric', 'druid', 'sorcerer'],
   },
   {
-    id: 'feeblemind',
-    name: 'Feeblemind',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 8,
-    school: 'enchantment',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 150,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'a handful of clay, crystal, glass, or mineral spheres',
-    },
-    duration: {
-      type: 'instant',
-    },
-    savingThrow: {
-      attribute: 'int',
-      success: 'none',
-    },
-    damage: {
-      base: {
-        count: 4,
-        die: 'd6',
-        notation: '4d6',
-      },
-      type: 'psychic',
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      "You blast the mind of a creature that you can see within range. The target makes an Intelligence saving throw. On a failed save, the target takes 4d6 Psychic damage and can't cast spells, activate magic items, understand language, or communicate intelligibly.",
-    classes: ['bard', 'druid', 'warlock', 'wizard'],
-  },
-  {
     id: 'glibness',
     name: 'Glibness',
     system: 'dnd-5e-2024',

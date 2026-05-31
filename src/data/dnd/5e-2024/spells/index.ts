@@ -25,11 +25,11 @@ const rawSpellsByLevel: Record<number, Spell[]> = {
 };
 
 const catalog = buildSpellCatalog(rawSpellsByLevel, {
-  omittedSpellIds: ['tensors-floating-disk', 'otilukes-resilience-6'],
+  // Tenser's Floating Disk was renamed to its SRD name (Floating Disk); the
+  // Otiluke's Resilience duplicates were non-SRD and removed entirely.
+  omittedSpellIds: ['tensors-floating-disk'],
   spellIdAliases: {
-    'tensors-floating-disk': 'tensers-floating-disk',
-    'otilukes-resilience-4': 'otilukes-resilience',
-    'otilukes-resilience-6': 'otilukes-resilience',
+    'tensors-floating-disk': 'floating-disk',
   },
 });
 
