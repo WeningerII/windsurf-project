@@ -6,9 +6,9 @@
  * suite; 2024-specific deltas (Alert initiative, no HP halving, d20 exhaustion
  * penalty) are verified by the dedicated 2024 engine test.
  *
- * NOTE — known RAW discrepancy flagged (not faked): the 2024 exhaustion d20
- * penalty is implemented as -1 × level, but SRD 5.2 RAW is -2 × level. Marked
- * `missing` with a note pending confirmation/fix rather than asserted.
+ * The 2024 exhaustion d20 penalty was previously implemented as -1 × level; it
+ * has been corrected to the SRD 5.2 RAW -2 × level (Dnd5e2024Engine
+ * .getExhaustionD20Penalty) and verified by test.
  */
 
 import type { SystemComputeRegister } from './types';
@@ -172,8 +172,9 @@ export const dnd5e2024ComputeRegister: SystemComputeRegister = {
       inputs: ['exhaustion level'],
       edgeCases: ['scales per level'],
       source: `${SRD}: Exhaustion (2024)`,
-      status: 'missing',
-      note: 'Engine computes -1 × level (getExhaustionD20Penalty returns -exhaustion); SRD 5.2 RAW is -2 × level. Flagged for confirmation/fix — not asserted to avoid blessing a non-RAW value.',
+      status: 'verified',
+      testRef:
+        'src/__tests__/engines/dnd5e-2024-engine.test.ts :: imposes a -2 per level penalty on d20 tests',
     },
     {
       id: 'dnd5e2024.L8.exhaustion-lethal',
@@ -183,7 +184,9 @@ export const dnd5e2024ComputeRegister: SystemComputeRegister = {
       inputs: ['exhaustion level'],
       edgeCases: ['level 6'],
       source: `${SRD}: Exhaustion (2024)`,
-      status: 'implemented',
+      status: 'verified',
+      testRef:
+        'src/__tests__/engines/dnd5e-2024-engine.test.ts :: is lethal at level 6 (current HP 0, three failed death saves)',
     },
     {
       id: 'dnd5e2024.L8.apply-damage',

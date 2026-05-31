@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { Dnd5e2024Engine } from '../../systems/dnd5e-2024/engine';
 import { createDefaultDnd5e2024Data } from '../../systems/dnd5e-2024/data-model';
 import { CharacterDocument } from '../../types/core/document';
@@ -134,6 +134,31 @@ describe('Dnd5e2024Engine', () => {
       const result = engine.applyDamage(doc, -3, 'healing');
       expect(result.system.hitPoints.current).toBe(3);
       expect(result.system.deathSaves).toEqual({ successes: 0, failures: 0 });
+    });
+  });
+
+  describe('exhaustion (2024)', () => {
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+    it('imposes a -2 per level penalty on d20 tests', async () => {
+      vi.spyOn(Math, 'random').mockReturnValue(0); // d20 = 1
+      const doc = makeDoc({
+        baseAttributes: { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+        exhaustionLevel: 2,
+      });
+      const result = await engine.rollCheck(doc, 'str');
+      expect(result.total).toBe(1 - 4); // d20 1 + mod 0 + (-2 × 2)
+    });
+    it('is lethal at level 6 (current HP 0, three failed death saves)', () => {
+      const doc = makeDoc({
+        baseAttributes: { str: 10, dex: 10, con: 14, int: 10, wis: 10, cha: 10 },
+        classLevels: [{ classId: 'fighter', level: 1, hitDieRolls: [10] }],
+        exhaustionLevel: 6,
+      });
+      const result = engine.prepareData(doc);
+      expect(result.system.hitPoints.current).toBe(0);
+      expect(result.system.deathSaves.failures).toBe(3);
     });
   });
 });

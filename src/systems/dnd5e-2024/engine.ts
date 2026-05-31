@@ -36,8 +36,8 @@ export class Dnd5e2024Engine extends Dnd5eEngineBase {
   }
 
   protected getExhaustionD20Penalty(exhaustion: number): number {
-    // 2024 exhaustion linearly subtracts its level from d20 rolls (levels 1-5)
-    return -exhaustion;
+    // 2024 exhaustion (SRD 5.2): each level imposes a -2 penalty on all d20 Tests.
+    return -2 * exhaustion;
   }
 
   protected isExhaustionLethal(exhaustion: number): boolean {

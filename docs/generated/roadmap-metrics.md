@@ -1,4 +1,4 @@
-_Generated: 2026-05-31T05:04:15.455Z_
+_Generated: 2026-05-31T05:11:13.852Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -101,7 +101,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | System | Verified | In-Scope | Complete |
 | --- | ---: | ---: | ---: |
 | D&D 5e (2014) | 27 | 28 | 96.4% |
-| D&D 5e (2024) | 17 | 19 | 89.5% |
+| D&D 5e (2024) | 19 | 19 | 100% |
 | D&D 3.5e | 16 | 17 | 94.1% |
 | Pathfinder 1e | 18 | 19 | 94.7% |
 | Mutants & Masterminds 3e | 15 | 17 | 88.2% |
