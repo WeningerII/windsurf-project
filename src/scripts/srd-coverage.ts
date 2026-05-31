@@ -8,10 +8,14 @@
  * MISSING. Run with network; writes docs/generated/srd-coverage.md (committed
  * static). Re-run to refresh.
  *
- * Sources (open-content, cited):
+ * Sources (open-content, cited; each scoped to the policy's allowedSources):
  *   - D&D 5e SRD 5.1/5.2: 5e-bits/5e-database (CC-BY-4.0 / OGL 1.0a)
- * Additional systems are added as their independent sources are wired in
- * (see docs/GAPS.md and docs/srd-sources.md).
+ *   - Pathfinder 2e (CRB): Pf2eToolsOrg/Pf2eTools spells-crb.json
+ *   - Pathfinder 1e (Core): wolfgangcodes/pathfinder-spellbook spells.csv (source="PFRPG Core")
+ *   - Mutants & Masterminds 3e (Hero's Handbook): frnprt/mm3e-character-creator data.js
+ *   - Daggerheart (SRD 1.0): Batres3/daggerheart-srd Domain Card Reference
+ * D&D 3.5e is pending a clean core-only filter (its source mixes Psionics/Epic).
+ * Remaining categories are documented in docs/srd-sources.md and added incrementally.
  */
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
@@ -24,6 +28,9 @@ import {
   loadEquipmentForSystem,
   loadMonstersForSystem,
   loadBackgroundsForSystem,
+  loadAdvantagesForSystem,
+  loadDaggerheartDomainCardsForSystem,
+  loadDaggerheartDomainsForSystem,
 } from '../utils/dataLoader';
 import { GameSystemId } from '../types/game-systems';
 
@@ -42,6 +49,121 @@ async function fetchNames(...urls: string[]): Promise<string[]> {
     for (const e of data) if (typeof e.name === 'string') names.push(e.name);
   }
   return names;
+}
+
+async function fetchText(url: string): Promise<string> {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+  return res.text();
+}
+
+/** Names from a JSON object whose `prop` holds an array of `{ name }` (e.g. Pf2eTools `{ spell: [...] }`). */
+async function fetchJsonPropNames(url: string, prop: string): Promise<string[]> {
+  const data = JSON.parse(await fetchText(url)) as Record<string, NamedEntry[]>;
+  const arr = data[prop] ?? [];
+  return arr.filter((e) => typeof e.name === 'string').map((e) => e.name as string);
+}
+
+/** Minimal RFC4180 CSV row reader (handles quoted fields with embedded commas, quotes, and newlines). */
+function* csvRows(text: string): Generator<string[]> {
+  let field = '';
+  let row: string[] = [];
+  let inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQuotes) {
+      if (c === '"') {
+        if (text[i + 1] === '"') {
+          field += '"';
+          i++;
+        } else inQuotes = false;
+      } else field += c;
+    } else if (c === '"') inQuotes = true;
+    else if (c === ',') {
+      row.push(field);
+      field = '';
+    } else if (c === '\n') {
+      row.push(field);
+      yield row;
+      row = [];
+      field = '';
+    } else if (c !== '\r') field += c;
+  }
+  if (field.length || row.length) {
+    row.push(field);
+    yield row;
+  }
+}
+
+/** CSV `name` column, optionally filtered to rows whose `source` column equals `sourceFilter`. */
+async function fetchCsvNames(url: string, sourceFilter?: string): Promise<string[]> {
+  const text = await fetchText(url);
+  let header: string[] | null = null;
+  let nameIdx = 0;
+  let srcIdx = -1;
+  const names: string[] = [];
+  for (const r of csvRows(text)) {
+    if (!header) {
+      header = r;
+      nameIdx = header.indexOf('name');
+      srcIdx = header.indexOf('source');
+      continue;
+    }
+    if (sourceFilter && r[srcIdx] !== sourceFilter) continue;
+    if (r[nameIdx]) names.push(r[nameIdx]);
+  }
+  return names;
+}
+
+/** Extract a top-level `const NAME = [ ... ]` array literal from a JS data file (string-aware bracket match) and eval it. */
+function extractJsArray(text: string, name: string): Array<{ name?: unknown }> {
+  const start = text.indexOf(`const ${name}`);
+  if (start < 0) throw new Error(`const ${name} not found`);
+  const lb = text.indexOf('[', start);
+  let depth = 0;
+  let quote: string | null = null;
+  let escaped = false;
+  let i = lb;
+  for (; i < text.length; i++) {
+    const c = text[i];
+    if (quote) {
+      if (escaped) escaped = false;
+      else if (c === '\\') escaped = true;
+      else if (c === quote) quote = null;
+      continue;
+    }
+    if (c === '"' || c === "'" || c === '`') quote = c;
+    else if (c === '[') depth++;
+    else if (c === ']' && --depth === 0) {
+      i++;
+      break;
+    }
+  }
+  // eslint-disable-next-line @typescript-eslint/no-implied-eval
+  return new Function(`return (${text.slice(lb, i)})`)() as Array<{ name?: unknown }>;
+}
+
+async function fetchJsArrayNames(url: string, constName: string): Promise<string[]> {
+  const arr = extractJsArray(await fetchText(url), constName);
+  return arr.filter((e) => typeof e.name === 'string').map((e) => e.name as string);
+}
+
+/** Markdown link display texts (`[Name](href)`), optionally filtered to hrefs containing `hrefIncludes`. */
+async function fetchMarkdownLinkNames(url: string, hrefIncludes?: string): Promise<string[]> {
+  const text = await fetchText(url);
+  const names: string[] = [];
+  for (const m of text.matchAll(/\[([^\]]+)\]\(([^)]+)\)/g)) {
+    if (!hrefIncludes || m[2].includes(hrefIncludes)) names.push(m[1]);
+  }
+  return names;
+}
+
+/** Markdown `## Headings`, optionally stripping a trailing word (e.g. " DOMAIN"). */
+async function fetchMarkdownHeadings(url: string, stripSuffix?: string): Promise<string[]> {
+  const text = await fetchText(url);
+  return [...text.matchAll(/^##\s+(.+?)\s*$/gm)].map((m) =>
+    stripSuffix && m[1].endsWith(stripSuffix) ? m[1].slice(0, -stripSuffix.length).trim() : m[1]
+  );
 }
 
 async function loaderNames(load: (s: GameSystemId) => Promise<unknown[]>, system: GameSystemId) {
@@ -160,6 +282,70 @@ for (const [category, srd, loader] of cats5e2024) {
   });
 }
 
+// --- Pathfinder 2e (Core Rulebook) ---
+const PF2E_SPELLS_CRB =
+  'https://raw.githubusercontent.com/Pf2eToolsOrg/Pf2eTools/master/data/spells/spells-crb.json';
+TARGETS.push({
+  systemId: 'pf2e',
+  systemLabel: 'Pathfinder 2e',
+  category: 'spells',
+  srdSource: 'Core Rulebook (Pf2eToolsOrg/Pf2eTools spells-crb.json)',
+  srd: () => fetchJsonPropNames(PF2E_SPELLS_CRB, 'spell'),
+  loader: () => loaderNames(loadSpellsForSystem, 'pf2e'),
+});
+
+// --- Pathfinder 1e (Core Rulebook — filter spells.csv source column to "PFRPG Core") ---
+const PF1E_SPELLS_CSV =
+  'https://raw.githubusercontent.com/wolfgangcodes/pathfinder-spellbook/master/data/spells.csv';
+TARGETS.push({
+  systemId: 'pf1e',
+  systemLabel: 'Pathfinder 1e',
+  category: 'spells',
+  srdSource: 'Core Rulebook (wolfgangcodes/pathfinder-spellbook spells.csv, source="PFRPG Core")',
+  srd: () => fetchCsvNames(PF1E_SPELLS_CSV, 'PFRPG Core'),
+  loader: () => loaderNames(loadSpellsForSystem, 'pf1e'),
+});
+
+// --- Mutants & Masterminds 3e (Hero's Handbook — whole DHH open content in scope) ---
+const MM_DATA_JS =
+  'https://raw.githubusercontent.com/frnprt/mm3e-character-creator/master/js/data.js';
+TARGETS.push({
+  systemId: 'mam3e',
+  systemLabel: 'Mutants & Masterminds 3e',
+  category: 'powers',
+  srdSource: "Hero's Handbook (frnprt/mm3e-character-creator POWER_EFFECTS)",
+  srd: () => fetchJsArrayNames(MM_DATA_JS, 'POWER_EFFECTS'),
+  loader: () => loaderNames(loadSpellsForSystem, 'mam3e'),
+});
+TARGETS.push({
+  systemId: 'mam3e',
+  systemLabel: 'Mutants & Masterminds 3e',
+  category: 'advantages',
+  srdSource: "Hero's Handbook (frnprt/mm3e-character-creator ADVANTAGES)",
+  srd: () => fetchJsArrayNames(MM_DATA_JS, 'ADVANTAGES'),
+  loader: () => loaderNames(loadAdvantagesForSystem, 'mam3e'),
+});
+
+// --- Daggerheart (SRD 1.0 — whole SRD in scope) ---
+const DH_DOMAIN_REF =
+  'https://raw.githubusercontent.com/Batres3/daggerheart-srd/main/contents/Domain%20Card%20Reference.md';
+TARGETS.push({
+  systemId: 'daggerheart',
+  systemLabel: 'Daggerheart',
+  category: 'domain cards',
+  srdSource: 'SRD 1.0 (Batres3/daggerheart-srd Domain Card Reference)',
+  srd: () => fetchMarkdownLinkNames(DH_DOMAIN_REF, '/abilities/'),
+  loader: () => loaderNames(loadDaggerheartDomainCardsForSystem, 'daggerheart'),
+});
+TARGETS.push({
+  systemId: 'daggerheart',
+  systemLabel: 'Daggerheart',
+  category: 'domains',
+  srdSource: 'SRD 1.0 (Batres3/daggerheart-srd Domain Card Reference headings)',
+  srd: () => fetchMarkdownHeadings(DH_DOMAIN_REF, 'DOMAIN'),
+  loader: () => loaderNames(loadDaggerheartDomainsForSystem, 'daggerheart'),
+});
+
 type Row = {
   systemLabel: string;
   category: string;
@@ -222,6 +408,14 @@ async function main(): Promise<void> {
       `- **${r.systemLabel} / ${r.category}** — ${r.missing.length} missing: ${shown.join(', ')}${r.missing.length > shown.length ? ', …' : ''}`
     );
   }
+  lines.push('');
+  lines.push('## Pending (independent source not yet wired or not cleanly scopable)');
+  lines.push(
+    '- **D&D 3.5e** — `Rughalt/D35E` packs mix SRD-3.5 core with Psionics and Epic; a clean core-only filter is not yet implemented, so 3.5e is omitted here rather than reported against a wrong (inflated) denominator. See `docs/srd-sources.md`.'
+  );
+  lines.push(
+    '- **Remaining categories** — PF2e/PF1e non-spell categories, M&M skills/conditions/equipment, Daggerheart classes/ancestries/communities/weapons/armor, and all monsters are documented in `docs/srd-sources.md` and pending wiring.'
+  );
   lines.push('');
 
   const scriptDir = path.dirname(fileURLToPath(import.meta.url));
