@@ -166,7 +166,8 @@ export const pf2eComputeRegister: SystemComputeRegister = {
       inputs: ['class resources'],
       edgeCases: ['cap at 3'],
       source: `${CRB}: Focus Spells`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: `${T} :: L5 PF2e focus points`,
     },
     {
       id: 'pf2e.L5.heightening',

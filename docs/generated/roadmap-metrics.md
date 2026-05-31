@@ -1,4 +1,4 @@
-_Generated: 2026-05-31T05:28:42.928Z_
+_Generated: 2026-05-31T05:35:31.703Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -105,7 +105,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | D&D 3.5e | 17 | 17 | 100% |
 | Pathfinder 1e | 19 | 19 | 100% |
 | Mutants & Masterminds 3e | 16 | 17 | 94.1% |
-| Pathfinder 2e | 17 | 18 | 94.4% |
-| Daggerheart | 9 | 10 | 90% |
+| Pathfinder 2e | 18 | 18 | 100% |
+| Daggerheart | 10 | 10 | 100% |
 
 _Denominators: cited open-content manifests in docs/srd-manifest/ and docs/compute-register/. Enumerated manual boundaries excluded from both: 8._

@@ -100,7 +100,8 @@ export const daggerheartComputeRegister: SystemComputeRegister = {
       inputs: ['weapons', 'armor', 'passive domain cards', 'inventory'],
       edgeCases: ['only passive-mode cards; conditional passives'],
       source: `${SRD}: Equipment; Domain Cards`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: `${T} :: L2 Daggerheart passive bonus aggregation`,
     },
     {
       id: 'daggerheart.L7.tracks',

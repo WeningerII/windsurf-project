@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-31T05:28:42.928Z",
+  "generatedAt": "2026-05-31T05:35:31.703Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -478,9 +478,9 @@
     {
       "systemId": "pf2e",
       "systemLabel": "Pathfinder 2e",
-      "verified": 17,
+      "verified": 18,
       "inScope": 18,
-      "percent": 94.4,
+      "percent": 100,
       "byLayer": {
         "L1": {
           "verified": 2,
@@ -503,7 +503,7 @@
           "inScope": 3
         },
         "L5": {
-          "verified": 2,
+          "verified": 3,
           "inScope": 3
         },
         "L3": {
@@ -519,16 +519,16 @@
     {
       "systemId": "daggerheart",
       "systemLabel": "Daggerheart",
-      "verified": 9,
+      "verified": 10,
       "inScope": 10,
-      "percent": 90,
+      "percent": 100,
       "byLayer": {
         "L1": {
           "verified": 3,
           "inScope": 3
         },
         "L2": {
-          "verified": 4,
+          "verified": 5,
           "inScope": 5
         },
         "L7": {

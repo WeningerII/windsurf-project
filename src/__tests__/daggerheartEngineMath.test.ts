@@ -8,6 +8,7 @@ import {
   getDaggerheartProficiency,
   getDaggerheartAncestryAdjustments,
   getDaggerheartDerivedStats,
+  getDaggerheartPassiveBonuses,
 } from '../utils/daggerheartDerived';
 import {
   createDefaultDaggerheartData,
@@ -142,5 +143,16 @@ describe('L7 Daggerheart track clamping', () => {
     );
     expect(out.system.hitPoints.current).toBe(6);
     expect(out.system.stress.current).toBe(6);
+  });
+});
+
+// ── L2: passive bonus aggregation from equipped gear ────────────────────────
+describe('L2 Daggerheart passive bonus aggregation', () => {
+  it('aggregates passive bonuses from equipped armor (Gambeson +1 Evasion)', () => {
+    const bonuses = getDaggerheartPassiveBonuses({
+      ...createDefaultDaggerheartData(),
+      armorId: 'daggerheart-armor-gambeson-armor-tier-1',
+    });
+    expect(bonuses.evasion).toBe(1);
   });
 });

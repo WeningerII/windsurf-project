@@ -195,3 +195,10 @@ describe('L4 PF2e skill check', () => {
     vi.restoreAllMocks();
   });
 });
+
+describe('L5 PF2e focus points', () => {
+  it('derives the focus pool from the class resource (wizard maxFormula "1")', () => {
+    const out = engine.prepareData(doc({ classId: 'wizard' }));
+    expect(out.system.spellcasting?.focusPoints.max).toBe(1);
+  });
+});
