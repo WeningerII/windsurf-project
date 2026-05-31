@@ -251,3 +251,94 @@ describe('L3 Pathfinder 1e CMB / CMD and favored-class HP', () => {
     expect(out.system.favoredClassSkillBonus).toBe(3);
   });
 });
+
+// ── 3.5e check resolution: initiative, attack, skill ────────────────────────
+describe('L3/L4 D&D 3.5e check resolution', () => {
+  it('initiative = Dex mod', () => {
+    const out = dnd35Engine.prepareData(
+      doc35({
+        baseAttributes: { str: 10, dex: 14, con: 10, int: 10, wis: 10, cha: 10 },
+        classLevels: [cl35({ level: 1 })],
+      })
+    );
+    expect(out.system.initiative).toBe(2);
+  });
+  it('attack roll modifier = BAB + Str mod', async () => {
+    const prepared = dnd35Engine.prepareData(
+      doc35({
+        baseAttributes: { str: 16, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+        classLevels: [cl35({ level: 5, bab: 'full' })],
+      })
+    );
+    const r = await dnd35Engine.rollCheck(prepared, 'attack');
+    expect(r.formula).toBe('1d20 + 8'); // BAB 5 + Str +3
+  });
+  it('skill check modifier = ability mod + ranks', async () => {
+    const prepared = dnd35Engine.prepareData(
+      doc35({
+        baseAttributes: { str: 16, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+        skillRanks: { climb: 5 },
+        classLevels: [cl35({ level: 1 })],
+      })
+    );
+    const r = await dnd35Engine.rollCheck(prepared, 'climb'); // climb → Str
+    expect(r.formula).toBe('1d20 + 8'); // Str +3 + 5 ranks
+  });
+});
+
+// ── PF1e check resolution: initiative, saves, class-skill, attack ───────────
+describe('L2/L4 Pathfinder 1e check resolution', () => {
+  it('initiative = Dex mod', () => {
+    const out = pf1Engine.prepareData(
+      docPF({
+        baseAttributes: { str: 10, dex: 14, con: 10, int: 10, wis: 10, cha: 10 },
+        classLevels: [clPF({ level: 1 })],
+      })
+    );
+    expect(out.system.initiative).toBe(2);
+  });
+  it('save check surfaces the computed save total', async () => {
+    const prepared = pf1Engine.prepareData(
+      docPF({
+        baseAttributes: { str: 10, dex: 10, con: 14, int: 10, wis: 10, cha: 10 },
+        classLevels: [clPF({ level: 5, fortSave: 'good' })],
+      })
+    );
+    const r = await pf1Engine.rollCheck(prepared, 'save-fort');
+    expect(r.formula).toBe('1d20 + 6'); // good@5 = 4 + Con +2
+  });
+  it('class skill grants +3 when trained (1+ rank)', async () => {
+    const prepared = pf1Engine.prepareData(
+      docPF({
+        baseAttributes: { str: 14, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+        skillRanks: { climb: 2 },
+        classSkills: ['climb'],
+        classLevels: [clPF({ level: 1 })],
+      })
+    );
+    const r = await pf1Engine.rollCheck(prepared, 'climb');
+    expect(r.formula).toBe('1d20 + 7'); // Str +2 + 2 ranks + 3 class skill
+  });
+  it('untrained class skill gets no +3 bonus', async () => {
+    const prepared = pf1Engine.prepareData(
+      docPF({
+        baseAttributes: { str: 14, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+        skillRanks: { climb: 0 },
+        classSkills: ['climb'],
+        classLevels: [clPF({ level: 1 })],
+      })
+    );
+    const r = await pf1Engine.rollCheck(prepared, 'climb');
+    expect(r.formula).toBe('1d20 + 2'); // Str +2 only (no ranks → no +3)
+  });
+  it('attack roll modifier = BAB + Str mod', async () => {
+    const prepared = pf1Engine.prepareData(
+      docPF({
+        baseAttributes: { str: 16, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+        classLevels: [clPF({ level: 5, bab: 'full' })],
+      })
+    );
+    const r = await pf1Engine.rollCheck(prepared, 'attack');
+    expect(r.formula).toBe('1d20 + 8'); // BAB 5 + Str +3
+  });
+});

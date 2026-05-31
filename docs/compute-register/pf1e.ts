@@ -65,7 +65,8 @@ export const pf1eComputeRegister: SystemComputeRegister = {
       inputs: ['class levels', 'Con/Dex/Wis', 'misc'],
       edgeCases: ['multiclass base sum'],
       source: `${CRB}: Combat — Saving Throws`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: `${T} :: L2/L4 Pathfinder 1e check resolution`,
     },
     {
       id: 'pf1e.L3.bab-sum',
@@ -109,7 +110,8 @@ export const pf1eComputeRegister: SystemComputeRegister = {
       inputs: ['BAB', 'Str'],
       edgeCases: ['melee vs ranged'],
       source: `${CRB}: Combat — Attack Roll`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: `${T} :: L2/L4 Pathfinder 1e check resolution`,
     },
     {
       id: 'pf1e.L3.iterative-attacks',
@@ -139,7 +141,8 @@ export const pf1eComputeRegister: SystemComputeRegister = {
       inputs: ['ability', 'ranks', 'class skill?'],
       edgeCases: ['+3 only when trained', 'max ranks = level'],
       source: `${CRB}: Skills`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: `${T} :: L2/L4 Pathfinder 1e check resolution`,
     },
     {
       id: 'pf1e.L4.initiative',
@@ -149,7 +152,8 @@ export const pf1eComputeRegister: SystemComputeRegister = {
       inputs: ['Dex'],
       edgeCases: ['Improved Initiative +4 via misc'],
       source: `${CRB}: Combat — Initiative`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: `${T} :: L2/L4 Pathfinder 1e check resolution`,
     },
     {
       id: 'pf1e.L5.vancian-slots',

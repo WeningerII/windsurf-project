@@ -99,7 +99,8 @@ export const dnd35eComputeRegister: SystemComputeRegister = {
       inputs: ['BAB', 'Str'],
       edgeCases: ['melee vs ranged ability'],
       source: `${SRD}: Combat — Attack Roll`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: `${T} :: L3/L4 D&D 3.5e check resolution`,
     },
     {
       id: 'dnd35e.L3.iterative-attacks',
@@ -119,7 +120,8 @@ export const dnd35eComputeRegister: SystemComputeRegister = {
       inputs: ['ability', 'ranks'],
       edgeCases: ['cross-class half ranks'],
       source: `${SRD}: Skills`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: `${T} :: L3/L4 D&D 3.5e check resolution`,
     },
     {
       id: 'dnd35e.L4.skill-synergy',
@@ -149,7 +151,8 @@ export const dnd35eComputeRegister: SystemComputeRegister = {
       inputs: ['Dex'],
       edgeCases: ['Improved Initiative +4 via misc'],
       source: `${SRD}: Combat — Initiative`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: `${T} :: L3/L4 D&D 3.5e check resolution`,
     },
     {
       id: 'dnd35e.L5.vancian-slots',

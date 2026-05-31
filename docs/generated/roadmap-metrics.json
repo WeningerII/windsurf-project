@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-31T04:37:04.133Z",
+  "generatedAt": "2026-05-31T04:44:56.831Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -375,9 +375,9 @@
     {
       "systemId": "dnd-3.5e",
       "systemLabel": "D&D 3.5e",
-      "verified": 7,
+      "verified": 10,
       "inScope": 17,
-      "percent": 41.2,
+      "percent": 58.8,
       "byLayer": {
         "L1": {
           "verified": 2,
@@ -388,11 +388,11 @@
           "inScope": 2
         },
         "L3": {
-          "verified": 2,
+          "verified": 3,
           "inScope": 4
         },
         "L4": {
-          "verified": 0,
+          "verified": 2,
           "inScope": 4
         },
         "L5": {
@@ -412,24 +412,24 @@
     {
       "systemId": "pf1e",
       "systemLabel": "Pathfinder 1e",
-      "verified": 9,
+      "verified": 13,
       "inScope": 19,
-      "percent": 47.4,
+      "percent": 68.4,
       "byLayer": {
         "L1": {
           "verified": 2,
           "inScope": 3
         },
         "L2": {
-          "verified": 1,
+          "verified": 2,
           "inScope": 2
         },
         "L3": {
-          "verified": 3,
+          "verified": 4,
           "inScope": 6
         },
         "L4": {
-          "verified": 0,
+          "verified": 2,
           "inScope": 2
         },
         "L5": {
