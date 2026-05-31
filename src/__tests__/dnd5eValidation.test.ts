@@ -134,7 +134,7 @@ describe('D&D 5e validation', () => {
       level: 2,
       classLevels: [{ classId: 'fighter', level: 2, hitDieRolls: [6] }],
       speciesId: 'human',
-      backgroundId: 'soldier',
+      backgroundId: 'acolyte',
       featureOptionSelections: [{ group: 'fighting-styles', id: 'defense' }],
     };
 

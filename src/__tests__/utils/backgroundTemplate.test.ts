@@ -1,11 +1,48 @@
 import { describe, expect, it } from 'vitest';
 import { acolyte } from '../../data/dnd/5e-2014/backgrounds/acolyte';
-import { criminal } from '../../data/dnd/5e-2014/backgrounds/criminal';
-import { noble } from '../../data/dnd/5e-2014/backgrounds/noble';
 import { Background } from '../../types/character-options/backgrounds';
 import { createDefaultDnd5eData, Dnd5eDataModel } from '../../systems/dnd5e/data-model';
 import { CharacterDocument } from '../../types/core/document';
 import { applyDnd5eBackgroundTemplate } from '../../utils/backgroundTemplate';
+
+// Neutral test fixtures. The only SRD 5.1 background is Acolyte (imported above);
+// these generic backgrounds exist purely to exercise the template logic (skill
+// source merging, the gaming-set choice token, a language choice, and feature
+// swap/removal) without depending on non-open content.
+const outlaw: Background = {
+  id: 'outlaw',
+  name: 'Outlaw',
+  system: 'dnd-5e-2014',
+  source: 'Test Fixture',
+  skillProficiencies: ['deception', 'stealth'],
+  toolProficiencies: ['thieves-tools', 'one-gaming-set'],
+  equipment: ['pouch'],
+  gold: 15,
+  feature: {
+    id: 'outlaw-contact',
+    name: 'Outlaw Contact',
+    source: 'Outlaw Background',
+    description: 'Test fixture feature.',
+  },
+};
+
+const envoy: Background = {
+  id: 'envoy',
+  name: 'Envoy',
+  system: 'dnd-5e-2014',
+  source: 'Test Fixture',
+  skillProficiencies: ['history', 'persuasion'],
+  toolProficiencies: ['one-gaming-set'],
+  languageProficiencies: { count: 1, options: ['any'], label: 'One language of your choice' },
+  equipment: ['purse'],
+  gold: 25,
+  feature: {
+    id: 'envoy-position',
+    name: 'Envoy Position',
+    source: 'Envoy Background',
+    description: 'Test fixture feature.',
+  },
+};
 
 function makeDoc(overrides: Partial<Dnd5eDataModel> = {}): CharacterDocument<Dnd5eDataModel> {
   return {
@@ -40,18 +77,16 @@ describe('applyDnd5eBackgroundTemplate', () => {
 
   it('replaces background skill sources and feature on background change without duplicating inventory', () => {
     const acolyteDoc = applyDnd5eBackgroundTemplate(makeDoc(), acolyte);
-    const criminalDoc = applyDnd5eBackgroundTemplate(acolyteDoc, criminal, acolyte);
+    const outlawDoc = applyDnd5eBackgroundTemplate(acolyteDoc, outlaw, acolyte);
 
-    expect(criminalDoc.system.backgroundId).toBe('criminal');
-    expect(criminalDoc.system.skillProficiencies.insight).toBeUndefined();
-    expect(criminalDoc.system.skillProficiencies.deception?.source).toEqual(['Criminal']);
+    expect(outlawDoc.system.backgroundId).toBe('outlaw');
+    expect(outlawDoc.system.skillProficiencies.insight).toBeUndefined();
+    expect(outlawDoc.system.skillProficiencies.deception?.source).toEqual(['Outlaw']);
     expect(
-      criminalDoc.system.features.some((feature) => feature.id === 'shelter-of-the-faithful')
+      outlawDoc.system.features.some((feature) => feature.id === 'shelter-of-the-faithful')
     ).toBe(false);
-    expect(criminalDoc.system.features.some((feature) => feature.id === 'criminal-contact')).toBe(
-      true
-    );
-    expect(criminalDoc.system.inventory.map((item) => item.itemId)).toEqual(acolyte.equipment);
+    expect(outlawDoc.system.features.some((feature) => feature.id === 'outlaw-contact')).toBe(true);
+    expect(outlawDoc.system.inventory.map((item) => item.itemId)).toEqual(acolyte.equipment);
   });
 
   it('preserves stronger existing skill proficiency levels while merging background sources', () => {
@@ -61,39 +96,39 @@ describe('applyDnd5eBackgroundTemplate', () => {
       },
     });
 
-    const updated = applyDnd5eBackgroundTemplate(document, criminal);
+    const updated = applyDnd5eBackgroundTemplate(document, outlaw);
 
     expect(updated.system.skillProficiencies.deception).toEqual({
       level: 'expertise',
-      source: ['class', 'Criminal'],
+      source: ['class', 'Outlaw'],
     });
   });
 
   it('applies selected background languages and removes them cleanly on background change', () => {
-    const nobleDoc = applyDnd5eBackgroundTemplate(makeDoc(), noble, undefined, {
+    const envoyDoc = applyDnd5eBackgroundTemplate(makeDoc(), envoy, undefined, {
       toolSelections: ['dice-set'],
       languageSelections: ['Draconic'],
     });
-    const criminalDoc = applyDnd5eBackgroundTemplate(nobleDoc, criminal, noble, {
+    const outlawDoc = applyDnd5eBackgroundTemplate(envoyDoc, outlaw, envoy, {
       toolSelections: ['playing-card-set'],
     });
 
-    expect(nobleDoc.system.backgroundId).toBe('noble');
-    expect(nobleDoc.system.backgroundLanguageSelections).toEqual(['Draconic']);
-    expect(nobleDoc.system.backgroundToolSelections).toEqual(['dice-set']);
-    expect(nobleDoc.system.languageProficiencies).toEqual(['Draconic']);
-    expect(nobleDoc.system.toolProficiencies).toEqual(['dice-set']);
-    expect(nobleDoc.system.templateState?.backgroundDerived).toEqual({
+    expect(envoyDoc.system.backgroundId).toBe('envoy');
+    expect(envoyDoc.system.backgroundLanguageSelections).toEqual(['Draconic']);
+    expect(envoyDoc.system.backgroundToolSelections).toEqual(['dice-set']);
+    expect(envoyDoc.system.languageProficiencies).toEqual(['Draconic']);
+    expect(envoyDoc.system.toolProficiencies).toEqual(['dice-set']);
+    expect(envoyDoc.system.templateState?.backgroundDerived).toEqual({
       tools: ['dice-set'],
       languages: ['Draconic'],
     });
 
-    expect(criminalDoc.system.backgroundId).toBe('criminal');
-    expect(criminalDoc.system.backgroundLanguageSelections).toEqual([]);
-    expect(criminalDoc.system.backgroundToolSelections).toEqual(['playing-card-set']);
-    expect(criminalDoc.system.languageProficiencies).toEqual([]);
-    expect(criminalDoc.system.toolProficiencies).toEqual(['thieves-tools', 'playing-card-set']);
-    expect(criminalDoc.system.templateState?.backgroundDerived).toEqual({
+    expect(outlawDoc.system.backgroundId).toBe('outlaw');
+    expect(outlawDoc.system.backgroundLanguageSelections).toEqual([]);
+    expect(outlawDoc.system.backgroundToolSelections).toEqual(['playing-card-set']);
+    expect(outlawDoc.system.languageProficiencies).toEqual([]);
+    expect(outlawDoc.system.toolProficiencies).toEqual(['thieves-tools', 'playing-card-set']);
+    expect(outlawDoc.system.templateState?.backgroundDerived).toEqual({
       tools: ['thieves-tools', 'playing-card-set'],
       languages: [],
     });
@@ -101,7 +136,7 @@ describe('applyDnd5eBackgroundTemplate', () => {
 
   it('removes background-derived languages and tools while preserving other sources', () => {
     const document = makeDoc({
-      backgroundId: noble.id,
+      backgroundId: envoy.id,
       backgroundLanguageSelections: ['Draconic'],
       backgroundToolSelections: ['dice-set'],
       languageProficiencies: ['Common', 'Draconic'],
@@ -115,7 +150,7 @@ describe('applyDnd5eBackgroundTemplate', () => {
       },
     });
 
-    const cleared = applyDnd5eBackgroundTemplate(document, undefined, noble);
+    const cleared = applyDnd5eBackgroundTemplate(document, undefined, envoy);
 
     expect(cleared.system.backgroundId).toBeUndefined();
     expect(cleared.system.backgroundLanguageSelections).toEqual([]);
@@ -168,7 +203,7 @@ describe('applyDnd5eBackgroundTemplate', () => {
 
   it('handles missing optional arrays and removes only the old background source on change', () => {
     const scholar: Background = {
-      ...criminal,
+      ...outlaw,
       id: 'scholar',
       name: 'Scholar',
       skillProficiencies: ['insight', 'arcana'],
@@ -211,7 +246,7 @@ describe('applyDnd5eBackgroundTemplate', () => {
 
   it('upgrades weaker skill proficiencies and removes old features matched by source as well as id', () => {
     const scholar: Background = {
-      ...criminal,
+      ...outlaw,
       id: 'scholar-2',
       name: 'Scholar',
       skillProficiencies: ['arcana'],

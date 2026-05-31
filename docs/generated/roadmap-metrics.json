@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-31T14:51:17.303Z",
+  "generatedAt": "2026-05-31T16:07:00.047Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -62,14 +62,14 @@
       "spells": 244,
       "classes": 12,
       "species": 9,
-      "backgrounds": 6,
+      "backgrounds": 1,
       "traits": 0,
       "featureOptions": 106,
       "archetypes": 0,
       "complications": 0,
       "monsters": 41,
       "equipment": 230,
-      "feats": 39,
+      "feats": 1,
       "advantages": 0,
       "powerModifiers": 0
     },
@@ -77,14 +77,14 @@
       "spells": 320,
       "classes": 12,
       "species": 9,
-      "backgrounds": 6,
+      "backgrounds": 4,
       "traits": 0,
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
       "monsters": 99,
       "equipment": 204,
-      "feats": 87,
+      "feats": 19,
       "advantages": 0,
       "powerModifiers": 0
     },
@@ -169,14 +169,14 @@
       "spells": 244,
       "classes": 12,
       "species": 9,
-      "backgrounds": 6,
+      "backgrounds": 1,
       "traits": 0,
       "featureOptions": 106,
       "archetypes": 0,
       "complications": 0,
       "monsters": 41,
       "equipment": 230,
-      "feats": 39,
+      "feats": 1,
       "advantages": 0,
       "powerModifiers": 0
     },
@@ -184,14 +184,14 @@
       "spells": 320,
       "classes": 12,
       "species": 9,
-      "backgrounds": 6,
+      "backgrounds": 4,
       "traits": 0,
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
       "monsters": 99,
       "equipment": 204,
-      "feats": 87,
+      "feats": 19,
       "advantages": 0,
       "powerModifiers": 0
     },
@@ -300,8 +300,8 @@
       "systemId": "dnd-5e-2014",
       "systemLabel": "D&D 5e (2014)",
       "category": "backgrounds",
-      "encoded": 6,
-      "target": 6,
+      "encoded": 1,
+      "target": 1,
       "percent": 100
     },
     {
@@ -332,8 +332,8 @@
       "systemId": "dnd-5e-2014",
       "systemLabel": "D&D 5e (2014)",
       "category": "feats",
-      "encoded": 39,
-      "target": 39,
+      "encoded": 1,
+      "target": 1,
       "percent": 100
     },
     {
@@ -364,8 +364,8 @@
       "systemId": "dnd-5e-2024",
       "systemLabel": "D&D 5e (2024)",
       "category": "backgrounds",
-      "encoded": 6,
-      "target": 6,
+      "encoded": 4,
+      "target": 4,
       "percent": 100
     },
     {
@@ -388,8 +388,8 @@
       "systemId": "dnd-5e-2024",
       "systemLabel": "D&D 5e (2024)",
       "category": "feats",
-      "encoded": 87,
-      "target": 87,
+      "encoded": 19,
+      "target": 19,
       "percent": 100
     },
     {
@@ -949,13 +949,13 @@
       "category": "backgrounds",
       "categoryLabel": "Backgrounds",
       "metrics": {
-        "rawCount": 6,
-        "uniqueCount": 6,
+        "rawCount": 1,
+        "uniqueCount": 1,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 5.1": 6
+          "SRD 5.1": 1
         }
       }
     },
@@ -1013,13 +1013,13 @@
       "category": "feats",
       "categoryLabel": "Feats",
       "metrics": {
-        "rawCount": 39,
-        "uniqueCount": 39,
+        "rawCount": 1,
+        "uniqueCount": 1,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 5.1": 39
+          "SRD 5.1": 1
         }
       }
     },
@@ -1077,13 +1077,13 @@
       "category": "backgrounds",
       "categoryLabel": "Backgrounds",
       "metrics": {
-        "rawCount": 6,
-        "uniqueCount": 6,
+        "rawCount": 4,
+        "uniqueCount": 4,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 5.2": 6
+          "SRD 5.2": 4
         }
       }
     },
@@ -1125,13 +1125,13 @@
       "category": "feats",
       "categoryLabel": "Feats",
       "metrics": {
-        "rawCount": 87,
-        "uniqueCount": 87,
+        "rawCount": 19,
+        "uniqueCount": 19,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 5.2": 87
+          "SRD 5.2": 19
         }
       }
     },

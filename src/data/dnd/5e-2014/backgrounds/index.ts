@@ -1,13 +1,9 @@
 import { Background } from '../../../../types/character-options/backgrounds';
 import { acolyte } from './acolyte';
-import { criminal } from './criminal';
-import { folkHero } from './folk-hero';
-import { noble } from './noble';
-import { sage } from './sage';
-import { soldier } from './soldier';
 
-// SRD 5.1: 6 backgrounds included
-export const dnd5eBackgrounds: Background[] = [acolyte, criminal, folkHero, noble, sage, soldier];
+// SRD 5.1 contains exactly one background (Acolyte). The other backgrounds are
+// Player's Handbook content (not open) and are intentionally excluded.
+export const dnd5eBackgrounds: Background[] = [acolyte];
 
 export function getBackgroundById(id: string): Background | undefined {
   return dnd5eBackgrounds.find((bg) => bg.id === id);

@@ -70,7 +70,8 @@ describe('Data Loader Integration Tests', () => {
 
     it('should load backgrounds for dnd-5e-2014', async () => {
       const backgrounds = await loadBackgroundsForSystem('dnd-5e-2014');
-      expect(backgrounds.length).toBe(6);
+      // SRD 5.1 contains exactly one background (Acolyte).
+      expect(backgrounds.length).toBe(1);
       expect(backgrounds.every((bg) => bg.id && bg.name && bg.system === 'dnd-5e-2014')).toBe(true);
     });
 
@@ -119,13 +120,15 @@ describe('Data Loader Integration Tests', () => {
 
     it('should load backgrounds for dnd-5e-2024', async () => {
       const backgrounds = await loadBackgroundsForSystem('dnd-5e-2024');
-      expect(backgrounds.length).toBe(6);
+      // SRD 5.2 backgrounds: Acolyte, Criminal, Sage, Soldier.
+      expect(backgrounds.length).toBe(4);
       expect(backgrounds.every((bg) => bg.id && bg.name && bg.system === 'dnd-5e-2024')).toBe(true);
     });
 
     it('should load feats for dnd-5e-2024', async () => {
       const feats = await loadFeatsForSystem('dnd-5e-2024');
-      expect(feats.length).toBe(87);
+      // SRD 5.2 feats (19 entries; Magic Initiate has 3 class variants).
+      expect(feats.length).toBe(19);
       expect(new Set(feats.map((f) => f.id)).size).toBe(feats.length);
     });
 
