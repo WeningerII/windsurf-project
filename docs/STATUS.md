@@ -30,9 +30,21 @@ This file is a current-state summary only. `docs/MASTER_PLAN.md` is the sole pla
 - Maintain source-strict preparation surfaces across shared 5e, PF2e focus spells, and legacy d20 manual extras without expanding into choice-dependent automation.
 - Keep Daggerheart passive automation, M&M reference surfaces, PF2e preparation/archetype behavior, legacy d20 prestige/manual extras, and 5e feature-option persistence covered by regression as future work enters through `docs/MASTER_PLAN.md`.
 
+## Completion Tracking (Denominators)
+
+Completeness is measured against two cited, open-content denominators, so "done" is a defined, reachable state rather than an open-ended judgment:
+
+- **Content (Denominator A)** — `docs/srd-manifest/`: per-system catalogs of the open-content SRD entries each system should contain. The generated metric joins manifest ids against actually-loaded ids, so the reported `content%` reflects real loader data rather than a self-asserted number.
+- **Engine math (Denominator B)** — `docs/compute-register/`: per-system registers of every derived quantity the rules define, indexed by system × quantity, each marked verified (test-pinned), implemented, or missing. `compute%` is verified ÷ in-scope.
+- **Manual boundaries** — `docs/srd-manifest/_exclusions.ts`: the enumerated manual, reference-only, and narrative items excluded from both denominators so the metric is never gamed by fake automation.
+
+Live `content%` and `compute%` per system are reported in `docs/generated/roadmap-metrics.md` (regenerate with `npm run roadmap:metrics`). All seven systems have engine-math registers; D&D 3.5e and PF1e gained their first engine-math tests under this tracking. The monster category is governed by `docs/rfc/004-monster-product-surface.md`.
+
 ## Source Of Truth
 
 - `docs/MASTER_PLAN.md` - canonical roadmap and planning classifications
 - `docs/generated/roadmap-metrics.md` - generated product-reachable counts and repo-resident audit
+- `docs/srd-manifest/` - content denominators (Denominator A) and the manual-exclusion registry
+- `docs/compute-register/` - engine-math denominators (Denominator B)
 - `README.md` - public product overview
 - `CONTRIBUTING.md` - engineering policy and workflow guardrails
