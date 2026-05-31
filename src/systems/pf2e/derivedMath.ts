@@ -78,6 +78,34 @@ export function pf2eCreatureXP(levelDifference: number): number {
   return CREATURE_XP_BY_LEVEL_DIFF.get(diff) ?? 0;
 }
 
+// ── L3: attack rolls and Shield Block ───────────────────────────────────────
+
+/**
+ * Strike / spell attack roll modifier (CRB: Attack Rolls; Spell Attacks) — the
+ * relevant ability modifier + proficiency total (level + tier) + any item bonus.
+ * Pass the already-computed proficiency total (see profTotal); the multiple
+ * attack penalty (pf2eMultipleAttackPenalty) is applied separately.
+ */
+export function pf2eAttackModifier(abilityMod: number, proficiency: number, itemBonus = 0): number {
+  return abilityMod + proficiency + itemBonus;
+}
+
+/**
+ * Damage taken after a Shield Block reaction (CRB: Raise a Shield / Shield
+ * Block): reduce the incoming damage by the shield's Hardness, to a minimum of
+ * 0. (The shield itself takes the remaining damage against its own HP.)
+ */
+export function pf2eShieldBlockDamage(damage: number, hardness: number): number {
+  return Math.max(0, damage - Math.max(0, hardness));
+}
+
+/**
+ * Hero Points a character has at the start of a session (CRB: Hero Points) — 1,
+ * up to a maximum of 3 held at once.
+ */
+export const PF2E_HERO_POINTS_AT_SESSION_START = 1;
+export const PF2E_HERO_POINTS_MAX = 3;
+
 export type Pf2eThreat = 'trivial' | 'low' | 'moderate' | 'severe' | 'extreme';
 
 const THREAT_MULTIPLIER: Readonly<Record<Pf2eThreat, number>> = {

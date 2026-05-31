@@ -22,6 +22,10 @@ import {
   pf2eWoundedAfterRecovery,
   pf2eCreatureXP,
   pf2eEncounterBudget,
+  pf2eAttackModifier,
+  pf2eShieldBlockDamage,
+  PF2E_HERO_POINTS_AT_SESSION_START,
+  PF2E_HERO_POINTS_MAX,
 } from '../systems/pf2e/derivedMath';
 import type { CharacterDocument } from '../types/core/document';
 
@@ -249,6 +253,22 @@ describe('L8 PF2e dying and recovery', () => {
     expect(pf2eIsDead(4)).toBe(true);
     expect(pf2eWoundedAfterRecovery(0)).toBe(1);
     expect(pf2eWoundedAfterRecovery(2)).toBe(3);
+  });
+});
+
+// ── L3: attack modifier, Shield Block, hero points ──────────────────────────
+describe('L3 PF2e attack rolls and shields', () => {
+  it('attack modifier = ability + proficiency total + item bonus', () => {
+    expect(pf2eAttackModifier(4, 7)).toBe(11); // +4 ability, level1 trained (1+2)+... example
+    expect(pf2eAttackModifier(4, 7, 1)).toBe(12); // +1 potency rune
+  });
+  it('Shield Block reduces damage by the shield Hardness (min 0)', () => {
+    expect(pf2eShieldBlockDamage(10, 5)).toBe(5);
+    expect(pf2eShieldBlockDamage(3, 5)).toBe(0); // fully blocked
+  });
+  it('hero points start at 1 per session, capped at 3', () => {
+    expect(PF2E_HERO_POINTS_AT_SESSION_START).toBe(1);
+    expect(PF2E_HERO_POINTS_MAX).toBe(3);
   });
 });
 
