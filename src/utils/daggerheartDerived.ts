@@ -221,6 +221,42 @@ export function getDaggerheartStartingTraitArray(): number[] {
 export const DAGGERHEART_STARTING_HOPE = 2;
 
 /**
+ * Total gold expressed in handfuls, the base denomination (Daggerheart SRD:
+ * Gold) — 10 handfuls make a bag and 10 bags make a chest, so value =
+ * handfuls + 10 × bags + 100 × chests. (A character can hold at most 1 chest.)
+ */
+export function getDaggerheartGoldInHandfuls(
+  handfuls: number,
+  bags: number,
+  chests: number
+): number {
+  return Math.max(0, handfuls) + 10 * Math.max(0, bags) + 100 * Math.max(0, chests);
+}
+
+export type DaggerheartRange = 'melee' | 'very-close' | 'close' | 'far' | 'very-far';
+
+/**
+ * Range band converted to battle-map squares under the optional Defined Ranges
+ * rule (Daggerheart SRD: Maps, Range, and Movement) — Melee 1, Very Close 3,
+ * Close 6, Far 12, Very Far 13+ (one square ≈ 5 feet). Very Far returns its
+ * lower bound of 13.
+ */
+export function getDaggerheartRangeSquares(range: DaggerheartRange): number {
+  switch (range) {
+    case 'melee':
+      return 1;
+    case 'very-close':
+      return 3;
+    case 'close':
+      return 6;
+    case 'far':
+      return 12;
+    case 'very-far':
+      return 13;
+  }
+}
+
+/**
  * Hit Points / Stress / Armor Slots cleared by a short-rest downtime move
  * (Tend to Wounds, Clear Stress, Repair Armor): 1d4 + Tier. The caller supplies
  * the d4 roll; the deterministic "+ Tier" is what is verified here

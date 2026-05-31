@@ -1,4 +1,4 @@
-_Generated: 2026-05-31T14:47:14.636Z_
+_Generated: 2026-05-31T14:49:01.053Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -146,7 +146,7 @@ _The manifests in docs/srd-manifest/ are generated from the loaders, so this mea
 | Pathfinder 1e | 26 | 26 | 100% |
 | Mutants & Masterminds 3e | 25 | 25 | 100% |
 | Pathfinder 2e | 26 | 26 | 100% |
-| Daggerheart | 24 | 24 | 100% |
+| Daggerheart | 26 | 26 | 100% |
 
 _Denominators: cited open-content manifests in docs/srd-manifest/ and docs/compute-register/. Enumerated manual boundaries excluded from both: 8._
 

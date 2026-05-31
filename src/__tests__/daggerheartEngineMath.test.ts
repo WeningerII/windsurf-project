@@ -24,6 +24,8 @@ import {
   getDaggerheartAvoidDeathScar,
   getDaggerheartStartingTraitArray,
   DAGGERHEART_STARTING_HOPE,
+  getDaggerheartGoldInHandfuls,
+  getDaggerheartRangeSquares,
 } from '../utils/daggerheartDerived';
 import {
   createDefaultDaggerheartData,
@@ -268,6 +270,20 @@ describe('L7 Daggerheart progression and recovery', () => {
     expect(getDaggerheartIsVulnerable(5, 6)).toBe(false);
     expect(getDaggerheartStressOverflowHp(6, 6, 1)).toBe(1); // full → 1 HP
     expect(getDaggerheartStressOverflowHp(4, 6, 1)).toBe(0); // room → no overflow
+  });
+});
+
+// ── L10/L6: gold economy and range bands ────────────────────────────────────
+describe('L10 Daggerheart gold and L6 ranges', () => {
+  it('gold totals in handfuls (10 handfuls/bag, 10 bags/chest)', () => {
+    expect(getDaggerheartGoldInHandfuls(0, 1, 0)).toBe(10);
+    expect(getDaggerheartGoldInHandfuls(9, 9, 1)).toBe(199);
+  });
+  it('range bands map to Defined-Ranges squares', () => {
+    expect(getDaggerheartRangeSquares('melee')).toBe(1);
+    expect(getDaggerheartRangeSquares('close')).toBe(6);
+    expect(getDaggerheartRangeSquares('far')).toBe(12);
+    expect(getDaggerheartRangeSquares('very-far')).toBe(13);
   });
 });
 
