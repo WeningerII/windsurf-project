@@ -55,7 +55,8 @@ const CATEGORY_LOADERS: CategoryLoader[] = [
   { category: 'spells', load: (s) => loadSpellsForSystem(s) },
   {
     category: 'classes',
-    load: (s) => (s === 'daggerheart' ? loadDaggerheartClassesForSystem(s) : loadClassesForSystem(s)),
+    load: (s) =>
+      s === 'daggerheart' ? loadDaggerheartClassesForSystem(s) : loadClassesForSystem(s),
   },
   {
     category: 'species',
@@ -109,8 +110,18 @@ const SYSTEMS: SystemConfig[] = [
   { id: 'dnd-3.5e', file: 'dnd35e', exportName: 'dnd35eManifest', srdVersion: 'SRD 3.5' },
   { id: 'pf1e', file: 'pf1e', exportName: 'pf1eManifest', srdVersion: 'PF1e Core Rulebook (OGC)' },
   { id: 'pf2e', file: 'pf2e', exportName: 'pf2eManifest', srdVersion: 'PF2e Core Rulebook (OGC)' },
-  { id: 'mam3e', file: 'mam3e', exportName: 'mam3eManifest', srdVersion: "M&M 3e Hero's Handbook (DHH OGC)" },
-  { id: 'daggerheart', file: 'daggerheart', exportName: 'daggerheartManifest', srdVersion: 'Daggerheart SRD 1.0' },
+  {
+    id: 'mam3e',
+    file: 'mam3e',
+    exportName: 'mam3eManifest',
+    srdVersion: "M&M 3e Hero's Handbook (DHH OGC)",
+  },
+  {
+    id: 'daggerheart',
+    file: 'daggerheart',
+    exportName: 'daggerheartManifest',
+    srdVersion: 'Daggerheart SRD 1.0',
+  },
 ];
 
 function isRecord(value: unknown): value is Loaded {

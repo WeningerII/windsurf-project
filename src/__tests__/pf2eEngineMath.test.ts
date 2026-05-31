@@ -8,7 +8,12 @@
  * Pins docs/compute-register/pf2e.ts.
  */
 import { Pf2eEngine } from '../systems/pf2e/engine';
-import { profTotal, tierBonus, createDefaultPf2eData, type Pf2eDataModel } from '../systems/pf2e/data-model';
+import {
+  profTotal,
+  tierBonus,
+  createDefaultPf2eData,
+  type Pf2eDataModel,
+} from '../systems/pf2e/data-model';
 import type { CharacterDocument } from '../types/core/document';
 
 const TEST_DATE = new Date('2026-05-01T00:00:00.000Z');
@@ -73,9 +78,7 @@ describe('L2 PF2e AC', () => {
     expect(out.system.armorClass).toBe(16); // 10 + 3 + 3
   });
   it('clumsy reduces effective Dex (−2 score per value) before AC', () => {
-    const out = engine.prepareData(
-      doc({ conditions: [{ id: 'c', name: 'clumsy', value: 1 }] })
-    );
+    const out = engine.prepareData(doc({ conditions: [{ id: 'c', name: 'clumsy', value: 1 }] }));
     expect(out.system.armorClass).toBe(12); // Dex 10→8 (mod −1): 10 − 1 + 3
   });
 });
@@ -136,11 +139,17 @@ describe('L8 valued conditions', () => {
   });
 
   it('frightened N is an N status penalty to checks', async () => {
-    const r = await engine.rollCheck(doc({ conditions: [{ id: 'f', name: 'frightened', value: 2 }] }), 'str');
+    const r = await engine.rollCheck(
+      doc({ conditions: [{ id: 'f', name: 'frightened', value: 2 }] }),
+      'str'
+    );
     expect(r.total).toBe(11 - 2);
   });
   it('enfeebled penalizes Strength-based checks', async () => {
-    const r = await engine.rollCheck(doc({ conditions: [{ id: 'e', name: 'enfeebled', value: 3 }] }), 'str');
+    const r = await engine.rollCheck(
+      doc({ conditions: [{ id: 'e', name: 'enfeebled', value: 3 }] }),
+      'str'
+    );
     expect(r.total).toBe(11 - 3);
   });
   it('only the highest status penalty applies (frightened vs sickened)', async () => {
@@ -176,7 +185,11 @@ describe('L2/L8 PF2e perception and damage', () => {
     expect(out.system.hitPoints.current).toBe(7);
   });
   it('overkill floors current HP at 0', () => {
-    const out = engine.applyDamage(doc({ hitPoints: { current: 5, max: 10, temp: 0 } }), 12, 'fire');
+    const out = engine.applyDamage(
+      doc({ hitPoints: { current: 5, max: 10, temp: 0 } }),
+      12,
+      'fire'
+    );
     expect(out.system.hitPoints.current).toBe(0);
   });
 });

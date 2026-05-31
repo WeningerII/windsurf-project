@@ -220,7 +220,16 @@ describe('L9 Power-Level caps (PL10 → limit 20)', () => {
       doc({
         powerLevel: 10,
         abilities: { str: 0, sta: 0, agi: 0, dex: 0, fgt: 10, int: 0, awe: 0, pre: 0 },
-        powers: [power({ id: 'strike', type: 'attack', range: 'close', perRank: true, rank: 12, baseCost: 1 })],
+        powers: [
+          power({
+            id: 'strike',
+            type: 'attack',
+            range: 'close',
+            perRank: true,
+            rank: 12,
+            baseCost: 1,
+          }),
+        ],
       })
     );
     // close attack bonus (Fgt 10) + effect 12 = 22 > 20
@@ -282,7 +291,16 @@ describe('L9 Power-Level caps (parry/ranged/perception)', () => {
       doc({
         powerLevel: 10,
         abilities: { str: 0, sta: 0, agi: 0, dex: 10, fgt: 0, int: 0, awe: 0, pre: 0 },
-        powers: [power({ id: 'blast', type: 'attack', range: 'ranged', perRank: true, rank: 12, baseCost: 2 })],
+        powers: [
+          power({
+            id: 'blast',
+            type: 'attack',
+            range: 'ranged',
+            perRank: true,
+            rank: 12,
+            baseCost: 2,
+          }),
+        ],
       })
     );
     expect(out.system.plViolations).toContainEqual({
@@ -298,7 +316,14 @@ describe('L9 Power-Level caps (parry/ranged/perception)', () => {
         powerLevel: 10,
         abilities: { str: 0, sta: 0, agi: 0, dex: 0, fgt: 0, int: 0, awe: 0, pre: 0 },
         powers: [
-          power({ id: 'mind-blast', type: 'attack', range: 'perception', perRank: true, rank: 12, baseCost: 2 }),
+          power({
+            id: 'mind-blast',
+            type: 'attack',
+            range: 'perception',
+            perRank: true,
+            rank: 12,
+            baseCost: 2,
+          }),
         ],
       })
     );
