@@ -22,6 +22,12 @@ import {
   dnd35eTriggersMassiveDamage,
   dnd35eHpState,
 } from '../systems/dnd35e/derivedMath';
+import {
+  pf1eConcentrationDCDefensive,
+  pf1eConcentrationDCDamage,
+  pf1eHpState,
+  pf1eFeatsFromLevel,
+} from '../systems/pf1e/derivedMath';
 import { computeD20LegacyAC } from '../utils/armorClass';
 import { Dnd35eEngine } from '../systems/dnd35e/engine';
 import { Pf1eEngine } from '../systems/pf1e/engine';
@@ -526,5 +532,29 @@ describe('L8 D&D 3.5e massive damage and HP state', () => {
     expect(dnd35eHpState(-9)).toBe('dying');
     expect(dnd35eHpState(-10)).toBe('dead');
     expect(dnd35eHpState(-15)).toBe('dead');
+  });
+});
+
+// ── PF1e: concentration DCs, death at −Con, and feat cadence ────────────────
+describe('L5/L8 Pathfinder 1e concentration, death, and feats', () => {
+  it('defensive casting DC is 15 + twice the spell level', () => {
+    expect(pf1eConcentrationDCDefensive(0)).toBe(15);
+    expect(pf1eConcentrationDCDefensive(3)).toBe(21);
+  });
+  it('casting-through-damage DC is 10 + damage + spell level', () => {
+    expect(pf1eConcentrationDCDamage(8, 2)).toBe(20);
+  });
+  it('death threshold is negative Constitution (not −10)', () => {
+    expect(pf1eHpState(3, 14)).toBe('healthy');
+    expect(pf1eHpState(0, 14)).toBe('disabled');
+    expect(pf1eHpState(-5, 14)).toBe('dying');
+    expect(pf1eHpState(-14, 14)).toBe('dead'); // −Con
+    expect(pf1eHpState(-10, 14)).toBe('dying'); // still alive (unlike 3.5e)
+  });
+  it('feats from level = one at 1st and every odd level (ceil(level/2))', () => {
+    expect(pf1eFeatsFromLevel(1)).toBe(1);
+    expect(pf1eFeatsFromLevel(3)).toBe(2);
+    expect(pf1eFeatsFromLevel(19)).toBe(10);
+    expect(pf1eFeatsFromLevel(20)).toBe(10);
   });
 });
