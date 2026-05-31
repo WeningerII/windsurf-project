@@ -238,6 +238,39 @@ Because the compiler produces IR and the resolver folds it **identically
 regardless of `systemId`**, the same flow runs in all seven systems; only each
 system's compiler and `stackPolicy` choices differ.
 
+## Participant-aware resolution (N participants per interaction)
+
+Every interaction loop has **N participants**, and an action by one participant
+has downstream effects on more than a single receiver. This is a first-class
+design constraint, not an edge case, and it recurs across loops:
+
+- **Combat targeting.** An action resolves against *one or more* targets.
+  Area-of-effect (a fireball, a breath weapon) hits every token in a region;
+  multiattack/cleave hits several chosen targets; and the same action may change
+  which targets it affects between uses. Resolution must produce a *per-target
+  outcome*, and where the rules roll shared damage once (5e/PF2e area spells roll
+  damage a single time and each target saves independently), the structure must
+  reflect that — shared rolls plus per-participant saves and per-participant
+  damage.
+- **Initiative / the turn loop.** The loop is over *all* combatants; each must be
+  acknowledged in order, and effects (e.g. an aura, difficult terrain, a
+  condition that ends "at the start of your next turn") are evaluated per
+  participant as the loop advances.
+- **Social / conversation loops (future, AI-DM).** A scene can contain multiple
+  NPCs; depending on variables (proximity, relationship, awareness) a beat may
+  involve +1 participants, and an utterance can have downstream effects on every
+  NPC who heard it, not just the addressee.
+
+The unifying shape: an interaction names a **participant set** (one or more
+actors, one or more targets, and potentially observers), and resolution returns
+**per-participant outcomes** plus any shared rolls/effects. The deterministic
+resolver stays per-effect; the participant layer sits above it, deriving an
+independent seeded sub-stream per participant (keyed by base seed + actor +
+target) so each participant's resolution is independent and replay-stable
+regardless of target order. Combat resolution implements this now; the same
+participant-set shape is intended to generalize to the social/conversation loop
+when the AI-DM layer lands, rather than being reinvented per loop.
+
 ## Functional terrain
 
 Terrain features carry `effects: EffectInstance[]` from the same IR, drawn from a

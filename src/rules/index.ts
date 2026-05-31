@@ -25,6 +25,24 @@ export { effectApplies, resolveEffects } from './resolver/resolve';
 export type { AttackResolution, AttackResolutionInput } from './resolver/attackResolution';
 export { resolveAttack } from './resolver/attackResolution';
 
+export type {
+  AttackTarget,
+  AreaEffectInput,
+  AreaEffectOutcome,
+  AreaEffectResult,
+  MultiTargetAttackInput,
+  MultiTargetAttackResult,
+  SaveParticipant,
+} from './resolver/participantResolution';
+export {
+  participantRng,
+  resolveAreaEffect,
+  resolveMultiTargetAttack,
+} from './resolver/participantResolution';
+
+export type { AreaShape } from './resolver/areaTargeting';
+export { cellInArea, gridDistance, tokensInArea } from './resolver/areaTargeting';
+
 export { collectTerrainEffectsAt, markerCoversCell, markerToEffects } from './terrain/sceneTerrain';
 
 export { effectToLedgerEntry, toContributionLedger } from './ir/ledgerView';
