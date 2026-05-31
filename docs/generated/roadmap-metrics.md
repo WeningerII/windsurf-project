@@ -1,4 +1,4 @@
-_Generated: 2026-05-31T14:19:44.475Z_
+_Generated: 2026-05-31T14:23:07.433Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -142,7 +142,7 @@ _The manifests in docs/srd-manifest/ are generated from the loaders, so this mea
 | --- | ---: | ---: | ---: |
 | D&D 5e (2014) | 28 | 28 | 100% |
 | D&D 5e (2024) | 19 | 19 | 100% |
-| D&D 3.5e | 20 | 20 | 100% |
+| D&D 3.5e | 23 | 23 | 100% |
 | Pathfinder 1e | 22 | 22 | 100% |
 | Mutants & Masterminds 3e | 22 | 22 | 100% |
 | Pathfinder 2e | 23 | 23 | 100% |

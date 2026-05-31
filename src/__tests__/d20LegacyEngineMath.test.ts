@@ -16,6 +16,11 @@ import {
   d20EncumbrancePenalties,
   d20LiftDragLimits,
 } from '../systems/shared/d20-helpers';
+import {
+  dnd35eXpForLevel,
+  dnd35eTriggersMassiveDamage,
+  dnd35eHpState,
+} from '../systems/dnd35e/derivedMath';
 import { computeD20LegacyAC } from '../utils/armorClass';
 import { Dnd35eEngine } from '../systems/dnd35e/engine';
 import { Pf1eEngine } from '../systems/pf1e/engine';
@@ -476,5 +481,32 @@ describe('L6 d20-legacy carrying capacity', () => {
   it('derives lift/drag limits as x1 / x2 / x5 of the maximum load', () => {
     // Str 15 → max 200
     expect(d20LiftDragLimits(15)).toEqual({ overHead: 200, offGround: 400, pushDrag: 1000 });
+  });
+});
+
+// ── L1/L8: D&D 3.5e XP table, massive damage, and the HP-state track ─────────
+describe('L1 D&D 3.5e XP-to-level table', () => {
+  it('matches the published Character Advancement thresholds', () => {
+    expect(dnd35eXpForLevel(1)).toBe(0);
+    expect(dnd35eXpForLevel(2)).toBe(1000);
+    expect(dnd35eXpForLevel(3)).toBe(3000);
+    expect(dnd35eXpForLevel(5)).toBe(10000);
+    expect(dnd35eXpForLevel(8)).toBe(28000);
+    expect(dnd35eXpForLevel(20)).toBe(190000);
+  });
+});
+
+describe('L8 D&D 3.5e massive damage and HP state', () => {
+  it('a single hit of 50+ triggers the massive-damage save', () => {
+    expect(dnd35eTriggersMassiveDamage(49)).toBe(false);
+    expect(dnd35eTriggersMassiveDamage(50)).toBe(true);
+  });
+  it('classifies the disabled / dying / dead HP track', () => {
+    expect(dnd35eHpState(5)).toBe('healthy');
+    expect(dnd35eHpState(0)).toBe('disabled');
+    expect(dnd35eHpState(-1)).toBe('dying');
+    expect(dnd35eHpState(-9)).toBe('dying');
+    expect(dnd35eHpState(-10)).toBe('dead');
+    expect(dnd35eHpState(-15)).toBe('dead');
   });
 });

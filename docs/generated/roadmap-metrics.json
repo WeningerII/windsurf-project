@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-31T14:19:44.475Z",
+  "generatedAt": "2026-05-31T14:23:07.433Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -687,13 +687,13 @@
     {
       "systemId": "dnd-3.5e",
       "systemLabel": "D&D 3.5e",
-      "verified": 20,
-      "inScope": 20,
+      "verified": 23,
+      "inScope": 23,
       "percent": 100,
       "byLayer": {
         "L1": {
-          "verified": 3,
-          "inScope": 3
+          "verified": 4,
+          "inScope": 4
         },
         "L2": {
           "verified": 2,
@@ -720,8 +720,8 @@
           "inScope": 1
         },
         "L8": {
-          "verified": 1,
-          "inScope": 1
+          "verified": 3,
+          "inScope": 3
         }
       }
     },
