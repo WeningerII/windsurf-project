@@ -59,6 +59,14 @@ export type {
 } from './tactical/tacticalExecutor';
 export { executeTacticalTurn } from './tactical/tacticalExecutor';
 
+export type {
+  RoundCombatant,
+  RoundResult,
+  RoundTurnRecord,
+  RunRoundInput,
+} from './tactical/roundDriver';
+export { isRoundConclusive, runCombatRound } from './tactical/roundDriver';
+
 export type { MonsterCombatant } from './combatants/monsterCombatant';
 export {
   buildMonsterCombatant,
