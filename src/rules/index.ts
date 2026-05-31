@@ -49,6 +49,16 @@ export {
   multiTargetAttackToDamageIntent,
 } from './resolver/sceneCombat';
 
+export type { ScoredTarget, TacticalActor, TacticalTarget } from './tactical/targetScoring';
+export { isHostile, maxPossibleDamage, scoreTarget, scoreTargets } from './tactical/targetScoring';
+
+export type {
+  TacticalDecisionKind,
+  TacticalTurnInput,
+  TacticalTurnResult,
+} from './tactical/tacticalExecutor';
+export { executeTacticalTurn } from './tactical/tacticalExecutor';
+
 export { collectTerrainEffectsAt, markerCoversCell, markerToEffects } from './terrain/sceneTerrain';
 
 export { effectToLedgerEntry, toContributionLedger } from './ir/ledgerView';
