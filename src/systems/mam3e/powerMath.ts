@@ -40,6 +40,16 @@ export function mam3ePointsRemaining(total: number, spent: Mam3eSpent): number {
   return total - sumMam3ePointsSpent(spent);
 }
 
+/**
+ * M&M 3e measurements scale on a doubling track: each rank doubles the measure
+ * (Hero's Handbook "Measurements" — distance/mass/time/volume). `rank0Value` is
+ * the per-measure anchor (data, supplied by the caller); the doubling per rank
+ * is the computation verified here.
+ */
+export function mam3eMeasurementByRank(rank0Value: number, rank: number): number {
+  return rank0Value * 2 ** rank;
+}
+
 export function calculatePowerPointCost(power: Power): number {
   const rank = getPowerRank(power);
   let costPerRank = Number.isFinite(power.baseCost) ? power.baseCost : 0;

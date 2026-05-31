@@ -12,6 +12,7 @@ import {
   getPowerRank,
   sumMam3ePointsSpent,
   mam3ePointsRemaining,
+  mam3eMeasurementByRank,
 } from '../systems/mam3e/powerMath';
 import { createDefaultMam3eData, type Mam3eDataModel } from '../systems/mam3e/data-model';
 import type { CharacterDocument } from '../types/core/document';
@@ -103,6 +104,20 @@ describe('L9 PP budget accounting', () => {
   it('a fully-spent PL10 build (150 PP) has 0 remaining', () => {
     const spent = { abilities: 100, powers: 30, advantages: 5, skills: 5, defenses: 10 };
     expect(mam3ePointsRemaining(150, spent)).toBe(0);
+  });
+});
+
+// ── L10: measurements doubling track ────────────────────────────────────────
+describe('L10 M&M measurements doubling track', () => {
+  it('each rank doubles the measure from its anchor', () => {
+    expect(mam3eMeasurementByRank(30, 0)).toBe(30);
+    expect(mam3eMeasurementByRank(30, 1)).toBe(60);
+    expect(mam3eMeasurementByRank(30, 4)).toBe(480);
+  });
+  it('satisfies the doubling property f(r+1) = 2 * f(r)', () => {
+    for (let r = 0; r < 6; r++) {
+      expect(mam3eMeasurementByRank(100, r + 1)).toBe(mam3eMeasurementByRank(100, r) * 2);
+    }
   });
 });
 
