@@ -1,5 +1,6 @@
 import { SystemDataModel } from '../../types/core/document';
 import { Feature } from '../../types/core/character';
+import type { BonusType } from '../../types/core/common';
 
 /**
  * Pathfinder 1e Data Model
