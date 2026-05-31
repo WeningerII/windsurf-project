@@ -193,7 +193,8 @@ export const dnd35eComputeRegister: SystemComputeRegister = {
       inputs: ['current/temp/max HP', 'damage'],
       edgeCases: ['temp absorb', 'overkill floors at 0'],
       source: `${SRD}: Combat — Injury and Death`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: `${T} :: L8 d20-legacy damage application`,
     },
   ],
 };

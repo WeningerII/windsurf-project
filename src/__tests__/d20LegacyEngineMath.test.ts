@@ -342,3 +342,21 @@ describe('L2/L4 Pathfinder 1e check resolution', () => {
     expect(r.formula).toBe('1d20 + 8'); // BAB 5 + Str +3
   });
 });
+
+// ── L8: d20-legacy damage application ───────────────────────────────────────
+describe('L8 d20-legacy damage application', () => {
+  it('3.5e: temp HP absorbs first, current floors at 0', () => {
+    const out = dnd35Engine.applyDamage(doc35({ hitPoints: { current: 8, max: 8, temp: 3 } }), 5, 'slashing');
+    expect(out.system.hitPoints.temp).toBe(0);
+    expect(out.system.hitPoints.current).toBe(6);
+  });
+  it('PF1e: temp HP absorbs first, current floors at 0', () => {
+    const out = pf1Engine.applyDamage(docPF({ hitPoints: { current: 8, max: 8, temp: 3 } }), 5, 'slashing');
+    expect(out.system.hitPoints.temp).toBe(0);
+    expect(out.system.hitPoints.current).toBe(6);
+  });
+  it('PF1e: overkill floors current HP at 0', () => {
+    const out = pf1Engine.applyDamage(docPF({ hitPoints: { current: 5, max: 8, temp: 0 } }), 10, 'fire');
+    expect(out.system.hitPoints.current).toBe(0);
+  });
+});
