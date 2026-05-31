@@ -1,4 +1,4 @@
-_Generated: 2026-05-31T13:52:41.394Z_
+_Generated: 2026-05-31T13:58:50.665Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -144,7 +144,7 @@ _The manifests in docs/srd-manifest/ are generated from the loaders, so this mea
 | D&D 5e (2024) | 19 | 19 | 100% |
 | D&D 3.5e | 17 | 17 | 100% |
 | Pathfinder 1e | 19 | 19 | 100% |
-| Mutants & Masterminds 3e | 17 | 17 | 100% |
+| Mutants & Masterminds 3e | 22 | 22 | 100% |
 | Pathfinder 2e | 18 | 18 | 100% |
 | Daggerheart | 13 | 13 | 100% |
 

@@ -14,6 +14,15 @@ import {
   mam3ePointsRemaining,
   mam3eMeasurementByRank,
 } from '../systems/mam3e/powerMath';
+import {
+  mam3eDegreesOfSuccess,
+  mam3eDegreesOfFailure,
+  mam3eAttackDC,
+  mam3eAttackHits,
+  mam3eDamageResistanceDC,
+  mam3eInitiative,
+  mam3eStartingPowerPoints,
+} from '../systems/mam3e/derivedMath';
 import { createDefaultMam3eData, type Mam3eDataModel } from '../systems/mam3e/data-model';
 import type { CharacterDocument } from '../types/core/document';
 import type { Power } from '../types/mam/powers';
@@ -260,6 +269,60 @@ describe('L8 toughness failure track', () => {
   it('margin 15+ → incapacitated', () => {
     const out = engine.applyDamage(doc({}), 15, 'damage');
     expect(out.system.conditionTrack.incapacitated).toBe(true);
+  });
+});
+
+// ── The Basics: universal degrees of success / failure ──────────────────────
+describe('M&M degrees of success and failure', () => {
+  it('success gains a degree for every full 5 over the DC', () => {
+    expect(mam3eDegreesOfSuccess(15, 15)).toBe(1); // exact
+    expect(mam3eDegreesOfSuccess(19, 15)).toBe(1); // +4
+    expect(mam3eDegreesOfSuccess(20, 15)).toBe(2); // +5
+    expect(mam3eDegreesOfSuccess(25, 15)).toBe(3); // +10
+  });
+  it('failure loses a degree for every full 5 under the DC', () => {
+    expect(mam3eDegreesOfSuccess(14, 15)).toBe(-1); // short 1
+    expect(mam3eDegreesOfSuccess(11, 15)).toBe(-1); // short 4
+    expect(mam3eDegreesOfSuccess(10, 15)).toBe(-2); // short 5
+    expect(mam3eDegreesOfSuccess(0, 15)).toBe(-4); // short 15
+  });
+  it('failure margin maps to the same 1-4 degree bands the Toughness track uses', () => {
+    expect(mam3eDegreesOfFailure(0)).toBe(0); // success
+    expect(mam3eDegreesOfFailure(4)).toBe(1); // bruised
+    expect(mam3eDegreesOfFailure(5)).toBe(2); // +dazed
+    expect(mam3eDegreesOfFailure(10)).toBe(3); // +staggered
+    expect(mam3eDegreesOfFailure(15)).toBe(4); // incapacitated
+  });
+});
+
+// ── L3: attack checks and Damage resistance DCs ─────────────────────────────
+describe('L3 attack and resistance DCs', () => {
+  it('attack DC is 10 + the active defense', () => {
+    expect(mam3eAttackDC(8)).toBe(18);
+    expect(mam3eAttackHits(18, 8)).toBe(true); // meets DC
+    expect(mam3eAttackHits(17, 8)).toBe(false); // misses by 1
+  });
+  it('Damage resistance DC is 15 + the damage rank', () => {
+    expect(mam3eDamageResistanceDC(0)).toBe(15);
+    expect(mam3eDamageResistanceDC(10)).toBe(25);
+  });
+  it('resistance shortfall feeds the degrees-of-failure band', () => {
+    // Damage rank 10 → DC 25; a Toughness total of 12 fails by 13 → 3 degrees.
+    const dc = mam3eDamageResistanceDC(10);
+    expect(mam3eDegreesOfFailure(dc - 12)).toBe(3);
+  });
+});
+
+// ── L1: initiative / L7: starting power-point budget ────────────────────────
+describe('L1 initiative and L7 starting power points', () => {
+  it('initiative is Agility plus +4 per Improved Initiative rank', () => {
+    expect(mam3eInitiative(3)).toBe(3);
+    expect(mam3eInitiative(3, 1)).toBe(7);
+    expect(mam3eInitiative(3, 2)).toBe(11);
+  });
+  it('starting power points are 15 × the power level', () => {
+    expect(mam3eStartingPowerPoints(10)).toBe(150);
+    expect(mam3eStartingPowerPoints(8)).toBe(120);
   });
 });
 
