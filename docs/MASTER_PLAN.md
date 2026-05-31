@@ -10,6 +10,8 @@ The product direction is to make tabletop creation, preparation, play, and sessi
 
 The long-term user experience is: describe a character, encounter, scene, or desired moment in natural language; receive a structured draft constrained by shipped open-content data; review deterministic validation and provenance; then accept changes through the same character, campaign, and scene paths that manual users use. When provider keys are absent or a model call fails, the deterministic/manual product must still work.
 
+**All seven systems are 1:1 equal.** D&D 5e (2014), D&D 5e (2024), D&D 3.5e, Pathfinder 1e, Pathfinder 2e, Mutants & Masterminds 3e, and Daggerheart must each reach full rules-as-written (RAW) parity for both creation and play. No system is privileged and none is a "pilot." The bar is **full deterministic auto-resolution everywhere**: equipment effects on attack/AC, magical bonuses, feats, spells, class features, and conditions all resolve in code, identically across systems; the only rules that stay non-mechanical are those written as pure GM judgment, which are labeled, never faked. The way this is achieved without privileging any one system is the **system-agnostic rules intermediate representation (IR) and deterministic effect resolver** in `docs/rfc/003-rules-ir-and-effects.md` (Accepted) — one shared mechanical backbone every engine compiles its RAW into. That connective layer is now the spine of the roadmap below, and its first proof point is explicitly cross-system: equipping an item resolves attack, AC, magical bonuses, and feats through one resolver, identically in all seven systems.
+
 The durable *why* behind this direction — the thesis the product exists to test — lives in `docs/VISION.md`. This plan is the *what* and *how* and changes often; `docs/VISION.md` is the *why* and changes rarely. If the two disagree about scope, this plan wins.
 
 ## Purpose And Source Documents
@@ -49,7 +51,7 @@ Every inherited item below is classified as one of:
 - Loader-backed counts and support summaries live in `docs/generated/roadmap-metrics.md` and `docs/generated/roadmap-metrics.json`. Narrative docs should summarize them, not compete with them, and must stay aligned with the metadata-backed selector/dashboard summary path already used in-app.
 - Spell catalogs across 5e 2014/2024, D&D 3.5e, PF1e, and PF2e now share a normalized index/helper surface with alias-safe lookup, legacy d20 source-backed save/component/casting metadata, and a cross-system identity regression matrix. The only D&D 3.5e source-blocked spell exclusions are documented in the parity regression, and PF1e source-backed rows without a Saving Throw line are explicit fixtures. The shared spell browser derives levels from loaded data, so PF2e rank 10 is now a first-class browser path.
 - Shared controller/section convergence is already shipped across the active sheet hosts for 5e, PF2e, legacy d20, M&M, and Daggerheart. The 5e host closeout is regression-gated by the sub-400-line host budget and shared-host behavior tests, not another decomposition project.
-- The next major product program is rule truth, provenance, executable activities, and guided character creation. It is not a cosmetic wizard and it is not just an AI spike: it is a multi-phase implementation program across validation, derivation, system-local action execution, draft persistence, template application, and UX.
+- The next major product program is the system-agnostic rules IR and deterministic effect resolver (`docs/rfc/003-rules-ir-and-effects.md`), and on top of it rule truth, provenance, executable activities, and guided creation for all seven systems equally. It is not a cosmetic wizard and it is not just an AI spike: it is a multi-phase implementation program across a shared effect resolver, per-system effect compilers, validation, derivation, action execution, draft persistence, template application, and UX — built once and applied to every system rather than deepened one system at a time.
 - The app is currently a local-first multi-system character sheet built around `CharacterDocument`, `SystemEngine`, loader-backed data, template applicators, campaigns, import/export, and optional Supabase sync. It now also has a provider-free scene-runtime substrate in code: `SceneDocument`, browser-local scene storage, typed scene actions/events, a pure fold from initial scene plus append-only events to current state, seeded RNG helpers, and a first visible manual scene/grid manager for local scenes, tokens, markers, initiative, scene import/export, queued loader-backed D&D 5e encounter seeding, and party-level XP preview. It is not yet a full VTT/game-runtime app.
 - AI-DM, AI-generated encounter drafting, tactical AI, and "make me a game" work is an active roadmap product expansion, not a current repo capability. The plan must keep building the VTT/game-runtime substrate explicitly; do not claim the repo already has full encounter generation, tactical executors, provider-backed AI orchestration, direct server-side model calls, or a Foundry-style modifier registry.
 
@@ -62,6 +64,8 @@ Every inherited item below is classified as one of:
 | Pathfinder 1e | Partial | Shared legacy sheet, vetted prestige support is product-reachable, raw `levelsByClass` and source-backed legacy spell metadata live in spell files, Vancian tracked/prepared workflow, manual extras, no monster product surface |
 | M&M 3e | Full | Native point-buy sheet, archetype pinning, complications insertion, modifier catalog reachability |
 | Daggerheart | Partial | Native sheet, SRD-backed selectors/templates/libraries/domains/domain cards/equipment, loadout-vault persistence, unresolved/manual fallback, export/import roundtrip, and deterministic passive automation with explicit manual/reference boundaries |
+
+The `Support level` column above is a **current-state snapshot, not a permanent boundary.** Under the all-systems-equal direction, `Partial` marks where deterministic RAW coverage is still being built, not a system that is intentionally lesser. The parity *target* for every one of the seven systems is full RAW auto-resolution for creation and play; the support table will move toward `Full` across the board as the shared effect resolver and per-system effect compilers land.
 
 The following older backlog claims are no longer true and must not re-enter the live roadmap:
 
@@ -132,6 +136,43 @@ The following older backlog claims are no longer true and must not re-enter the 
 ## Active Implementation Tracks
 
 ### Rule Truth, Provenance, Activities, And Guided Creation
+
+> **Direction update (2026-05-31): system-agnostic, all-seven-equal sequencing.**
+> The phase table further down in this section was originally written
+> D&D-5e-first (a "5e validation depth" pass, a "5e activity pilot," a "5e 2024
+> wizard" as the first user-visible creator). That sequencing is **superseded**.
+> Under the locked-in direction, all seven systems are equal and the foundation
+> is the shared rules IR + effect resolver in `docs/rfc/003-rules-ir-and-effects.md`
+> (Accepted). The corrected critical path is:
+>
+> 1. **Phase 0 — IR + resolver (additive, isolated).** Define the system-agnostic
+>    `EffectInstance` shape plus stacking/operation grammar; implement the pure
+>    deterministic resolver fold and the contribution-ledger view; prove the
+>    cross-system worked encodings (5e magic weapon, PF2e three-bucket stack,
+>    3.5e enhancement, PF1e size+enhancement, M&M cost, Daggerheart threshold).
+>    New files only; no engine changes.
+> 2. **Phase 1 — the cross-system proof point.** Each of the seven systems gets an
+>    `effectCompiler`; equipment shapes gain optional bonus fields (additive, not
+>    a content-pack rewrite); every engine routes AC and new attack/damage through
+>    the shared resolver. Acceptance: equipping an item resolves attack, AC,
+>    magical bonuses, and feats deterministically through one resolver,
+>    **identically in all seven systems**, with the ledger naming the source, and
+>    non-magic outputs unchanged.
+> 3. **Phase 2 — conditions as IR** across all systems with condition rules.
+> 4. **Phase 3 — ledger unification** (re-back existing ledger builders onto the
+>    resolver; existing ledger tests pass unchanged).
+> 5. **Phase 4 — functional terrain + seeded scene resolution.**
+> 6. **Phase 5 — grounded AI seam** (candidate pools from loaders + resolver
+>    legal actions; validators for all seven systems; server-side draft gateway
+>    with fixtures and a no-keys fallback).
+>
+> Any creation UI is system-agnostic by construction: it renders the choices a
+> system's loaders and validators expose, so it serves all seven equally. The
+> 5e-named rows in the legacy table below are retained as historical context and
+> should be read as "first test fixture," not "privileged path." The
+> anti-overengineering "three named consumers before extraction" rule is
+> satisfied immediately and overwhelmingly: seven effect compilers feed one
+> resolver.
 
 - `Active implementation track`: this is the main research-informed build program. It should be treated as a large product and architecture effort, not a small enhancement. The work touches `src/registry/types.ts`, `src/registry/index.ts`, `src/types/core/document.ts`, system engines, template handlers, loader-backed data, import/export behavior, local draft persistence, and visible sheet/wizard UX.
 - `Active implementation track`: keep the current repo stack while building the missing primitives. React/Vite/npm, the system registry, per-system engines, loader-backed SRD data, browser-local persistence, optional Supabase sync, and Netlify remain the implementation frame. External research informs the shape of validation, structured draft output, and form/action modeling, but does not authorize a stack replacement.
@@ -254,7 +295,7 @@ Research anchors for this track: Vercel AI SDK provider abstraction and telemetr
 | `docs/DAGGERHEART_DATA_ORGANIZATION_PLAN.md` | Historical context | Original Daggerheart data-shape rationale, plus superseded early structure proposals that informed the shipped data tree |
 | `docs/rfc/001-backend-sync.md` | Accepted RFC | Canonical description of the shipped local-first sync architecture: auth, schema, merge semantics, offline queue, realtime, retry, migration-from-local, Netlify/runtime implications, accepted boundaries |
 | `docs/rfc/002-ai-control-plane.md` | Draft RFC | AI integration contract for frictionless creation and play: server-side task gateway, loader-derived candidate pools, deterministic validation/repair, user approval, typed action/event boundaries, fixture replay, and cost/timeout fallbacks |
-| `docs/rfc/003-rules-ir-and-effects.md` | Draft RFC | System-independent rules intermediate representation and deterministic effect resolver that unify the contribution ledger with scene resolution, enabling mechanical condition application and functional terrain; gated by the anti-overengineering three-consumer rule and a content-pack-rewrite prohibition |
+| `docs/rfc/003-rules-ir-and-effects.md` | Accepted RFC | System-independent, system-agnostic rules intermediate representation and deterministic effect resolver that unify the contribution ledger with scene resolution across all seven systems equally, enabling RAW auto-resolution of equipment/feat/spell/condition effects, mechanical condition application, and functional terrain; first proof point is cross-system equip resolution; the three-consumer extraction rule is satisfied by seven per-system effect compilers, and the content-pack-rewrite prohibition still holds (the IR is computed from loaded data) |
 
 ## Maintenance Rule
 

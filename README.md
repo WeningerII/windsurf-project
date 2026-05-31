@@ -311,7 +311,7 @@ Validates:
 - **docs/VISION.md** - Project thesis and long-horizon direction (the *why*)
 - **docs/MASTER_PLAN.md** - Canonical roadmap and planning authority
 - **docs/STATUS.md** - Current-state summary and verified test baseline
-- **docs/rfc/** - Design RFCs: 001 backend sync (accepted), 002 AI control plane (withdrawn), 003 rules IR & effects (draft)
+- **docs/rfc/** - Design RFCs: 001 backend sync (accepted), 002 AI control plane (withdrawn), 003 rules IR & effects (accepted)
 - **docs/generated/roadmap-metrics.md** - Generated product-reachable counts plus raw-export audit
 - **docs/EVIDENCE_LINKED_PARITY_AUDIT.md** - Historical March 2026 audit snapshot
 - **docs/EVIDENCE_LINKED_PARITY_REMEDIATION_PLAN.md** - Historical remediation sequencing record
