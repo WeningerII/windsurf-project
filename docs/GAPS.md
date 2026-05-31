@@ -5,10 +5,14 @@ are tracked explicitly rather than implied. Live numbers: `docs/generated/roadma
 Current-state summary: `docs/STATUS.md`. Both denominators' tooling lives in
 `docs/srd-manifest/` (content) and `docs/compute-register/` (engine math).
 
-**Snapshot:** Engine math (Denominator B) is verified across the quantities the
-compute registers enumerate. Content (Denominator A) is provenance-complete
-(catalog parity — every shipped open-content entry is encoded, loader-backed,
-source-tagged, policy-clean) but is **not** independent published-SRD coverage.
+**Snapshot:** Engine math (Denominator B) is verified and levelled to even depth —
+each of the 7 systems' compute registers now holds 26–28 test-pinned quantities
+across L1–L10 (was 13–28). Content (Denominator A) is provenance-clean (every
+shipped entry is encoded, loader-backed, source-tagged, policy-clean, and — for
+the categories with an authoritative SRD list — verified by reverse-diff to
+contain **no** non-SRD entries). Independent published-SRD *coverage* is now
+measured for 6 of 7 systems (`docs/generated/srd-coverage.md`); D&D 3.5e is the
+one unwired denominator.
 
 ---
 
@@ -143,10 +147,10 @@ game-rule behavior change (vs. test-only additions) and warrants a human review.
 
 ## 6. Reconsider artifact
 
-The 4,216-entry loader-mirror manifests under `docs/srd-manifest/` are honest
+The 4,053-entry loader-mirror manifests under `docs/srd-manifest/` are honest
 (catalog/provenance) but somewhat redundant with the loaders. Decide whether they
-belong in-repo as committed files or should be regenerated on demand once a real
-independent denominator exists.
+belong in-repo as committed files or should be regenerated on demand now that a real
+independent denominator (`docs/generated/srd-coverage.md`) exists for most systems.
 
 ---
 

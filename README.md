@@ -187,23 +187,25 @@ Counts below summarize the current generated metrics in [docs/generated/roadmap-
 ### D&D 5th Edition (2024) - SRD 5.2 ✅
 
 **SRD Subset Implemented**:
-- Species: 9/9 core species
+- Species: 7 core species (Half-Elf and Half-Orc are SRD 5.1-only and not in SRD 5.2)
 - Classes: 12/12 with full 1-20 progressions
 - Subclasses: 12/12 (one per class)
-- Spells: 320 (26 cantrips + 294 leveled spells)
+- Spells: 294 (23 cantrips + 271 leveled spells), verified against the SRD 5.2.1 spell list
 - Monsters: 99 creatures across 14 types
-- Backgrounds: 6 core backgrounds
+- Backgrounds: 4 core backgrounds (Acolyte, Criminal, Sage, Soldier)
 - Equipment: 204 items (39 weapons, 13 armor, 50 gear, 102 magic items)
-- Feats: 87 feats (15 origin, 45 general, 15 fighting styles, 12 epic boons)
+- Feats: 19 feats (6 origin, 2 general, 4 fighting styles, 7 epic boons)
 
-**Note**: SRD 5.2 full contents not officially documented; implementation represents core verified content
+**Note**: The full SRD 5.2 spell list (parsed from the official CC-BY SRD 5.2.1) is the independent denominator; non-SRD-5.2 Player's Handbook and homebrew entries have been removed (see `docs/generated/srd-coverage.md`).
 
 ### D&D 5th Edition (2014) - SRD 5.1 ✅
 
 **SRD Subset Implemented**:
 - Species: 9/9 core species
 - Classes: 12/12 with subclasses
-- Spells: 244 (SRD only)
+- Spells: 222 (22 cantrips + 200 leveled spells), SRD 5.1 only
+- Feats: 1 (Grappler — the only feat in SRD 5.1)
+- Backgrounds: 1 (Acolyte — the only background in SRD 5.1)
 - Monsters: 41
 - Equipment: 230 items
 - Feature Options: 106 loader-backed entries surfaced through the shared Features tab
