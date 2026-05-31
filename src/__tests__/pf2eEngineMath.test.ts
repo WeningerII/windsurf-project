@@ -14,6 +14,15 @@ import {
   createDefaultPf2eData,
   type Pf2eDataModel,
 } from '../systems/pf2e/data-model';
+import {
+  pf2eInitialDying,
+  pf2eRecoveryCheckDC,
+  pf2eDyingAfterRecovery,
+  pf2eIsDead,
+  pf2eWoundedAfterRecovery,
+  pf2eCreatureXP,
+  pf2eEncounterBudget,
+} from '../systems/pf2e/derivedMath';
 import type { CharacterDocument } from '../types/core/document';
 
 const TEST_DATE = new Date('2026-05-01T00:00:00.000Z');
@@ -213,5 +222,57 @@ describe('L5 PF2e focus points', () => {
   it('derives the focus pool from the class resource (wizard maxFormula "1")', () => {
     const out = engine.prepareData(doc({ classId: 'wizard' }));
     expect(out.system.spellcasting?.focusPoints.max).toBe(1);
+  });
+});
+
+// ── L8: dying / wounded / recovery track ────────────────────────────────────
+describe('L8 PF2e dying and recovery', () => {
+  it('initial dying is 1 (or 2 from a crit) plus the current wounded value', () => {
+    expect(pf2eInitialDying(false)).toBe(1);
+    expect(pf2eInitialDying(true)).toBe(2);
+    expect(pf2eInitialDying(false, 1)).toBe(2); // wounded 1
+    expect(pf2eInitialDying(true, 2)).toBe(4); // crit + wounded 2 → instant death threshold
+  });
+  it('recovery check DC is 10 + the current dying value', () => {
+    expect(pf2eRecoveryCheckDC(1)).toBe(11);
+    expect(pf2eRecoveryCheckDC(3)).toBe(13);
+  });
+  it('recovery adjusts dying by degree (crit -2 / success -1 / fail +1 / crit-fail +2)', () => {
+    expect(pf2eDyingAfterRecovery(2, 'critical-success')).toBe(0);
+    expect(pf2eDyingAfterRecovery(2, 'success')).toBe(1);
+    expect(pf2eDyingAfterRecovery(2, 'failure')).toBe(3);
+    expect(pf2eDyingAfterRecovery(2, 'critical-failure')).toBe(4);
+    expect(pf2eDyingAfterRecovery(1, 'critical-success')).toBe(0); // floors at 0
+  });
+  it('death at dying 4; wounded climbs by 1 each recovery', () => {
+    expect(pf2eIsDead(3)).toBe(false);
+    expect(pf2eIsDead(4)).toBe(true);
+    expect(pf2eWoundedAfterRecovery(0)).toBe(1);
+    expect(pf2eWoundedAfterRecovery(2)).toBe(3);
+  });
+});
+
+// ── L10: encounter building (creature XP + threat budget) ───────────────────
+describe('L10 PF2e encounter math', () => {
+  it('creature XP scales by level relative to the party (-4..+4 table)', () => {
+    expect(pf2eCreatureXP(-4)).toBe(10);
+    expect(pf2eCreatureXP(-1)).toBe(30);
+    expect(pf2eCreatureXP(0)).toBe(40);
+    expect(pf2eCreatureXP(3)).toBe(120);
+    expect(pf2eCreatureXP(4)).toBe(160);
+  });
+  it('creatures more than 4 levels below the party count for nothing', () => {
+    expect(pf2eCreatureXP(-5)).toBe(0);
+  });
+  it('a 4-character party reproduces the printed Table 10-1 budgets', () => {
+    expect(pf2eEncounterBudget('trivial')).toBe(40);
+    expect(pf2eEncounterBudget('low')).toBe(60);
+    expect(pf2eEncounterBudget('moderate')).toBe(80);
+    expect(pf2eEncounterBudget('severe')).toBe(120);
+    expect(pf2eEncounterBudget('extreme')).toBe(160);
+  });
+  it('the budget scales at 20 XP per character', () => {
+    expect(pf2eEncounterBudget('moderate', 5)).toBe(100); // 5 × 20
+    expect(pf2eEncounterBudget('severe', 6)).toBe(180); // floor(120 × 1.5)
   });
 });
