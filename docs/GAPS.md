@@ -37,14 +37,25 @@ unlike the loader-derived `docs/srd-manifest/`.
   deleted (see the over-inclusion table in `docs/generated/srd-coverage.md`, now
   0 genuine suspects for these categories). The reverse-diff audit (loader entries
   absent from the independent SRD) is the standing guard against re-introduction.
-- **Provenance — still open:** (a) **5e-2024 species** ships Half-Elf and Half-Orc,
-  which are SRD 5.1 species dropped from SRD 5.2 — a wrong-edition scope violation
-  (clean to remove). (b) **5e-2014 spells** show ~30 reverse-diff hits that are
-  *mixed*: some are name variants that ARE SRD ("Tasha's Hideous Laughter" = SRD
-  "Hideous Laughter"), some are PHB spells (Hex, Witch Bolt, Crown of Madness),
-  and some look like homebrew/non-D&D ("Glass Staff", "Airwalk", "Mordenkainen's
-  Lodestone"). These need per-entry classification (keep variants, remove genuine
-  non-SRD) plus name-variant aliasing before the count is trustworthy.
+- **Provenance — 5e-2024 species [REMEDIATED]:** Half-Elf and Half-Orc (SRD 5.1
+  species dropped from SRD 5.2) were removed from the SRD-5.2-only 2024 loader;
+  srd-coverage now reports 0 over-inclusion for 2024 species.
+- **Provenance — 5e-2014 spells [REMEDIATED]:** of the 30 reverse-diff hits, 8
+  were Product-Identity names renamed to their SRD names ("Tasha's Hideous
+  Laughter" → "Hideous Laughter", …, "Mordenkainen's Sword" → "Arcane Sword") and
+  22 genuine non-SRD entries were deleted (PHB spells like Hex/Witch Bolt and
+  homebrew like Glass Staff/Airwalk). 2014 spells: 222/222, 0 over-inclusion.
+- **Provenance — 5e-2024 spells [BLOCKED on denominator]:** the 2024 loader shows
+  ~37 reverse-diff hits, but the diff uses the **SRD 5.1** spell list because
+  5e-database has no 2024 spells file. SRD 5.2 may have *expanded* the open spell
+  list beyond 5.1 (the suspects include Armor of Agathys, Cause Fear, Chromatic
+  Orb, Divine Smite, …), so the SRD-5.1 denominator is unsafe for deletions here —
+  doing so could remove legitimate SRD 5.2 content. Only the edition-independent
+  fixes are safe without the authoritative SRD 5.2 spell list: the 7 PI renames
+  and the clearly-homebrew entries (Glass Staff, Livening Stone, Airwalk, Mirage,
+  Mordenkainen's Lodestone, Otiluke's Resilience). Resolving the rest needs a
+  machine-readable SRD 5.2 spell list (e.g. parsed from the official SRD 5.2 PDF or
+  a CC-BY mirror such as Tabyltop/CC-SRD).
 - The 5e-database 2024 monsters file looks partial (~3 entries) — validate that
   source before trusting the 2024 monster row.
 
