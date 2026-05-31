@@ -7,7 +7,12 @@
  * docs/compute-register/mam3e.ts.
  */
 import { Mam3eEngine } from '../systems/mam3e/engine';
-import { calculatePowerPointCost, getPowerRank } from '../systems/mam3e/powerMath';
+import {
+  calculatePowerPointCost,
+  getPowerRank,
+  sumMam3ePointsSpent,
+  mam3ePointsRemaining,
+} from '../systems/mam3e/powerMath';
 import { createDefaultMam3eData, type Mam3eDataModel } from '../systems/mam3e/data-model';
 import type { CharacterDocument } from '../types/core/document';
 import type { Power } from '../types/mam/powers';
@@ -85,6 +90,19 @@ describe('L9 calculatePowerPointCost', () => {
   });
   it('rank floors at 1 for per-rank powers', () => {
     expect(getPowerRank(power({ perRank: true, rank: 0 }))).toBe(1);
+  });
+});
+
+// ── L9: PP budget accounting (PP = PL × 15) ─────────────────────────────────
+describe('L9 PP budget accounting', () => {
+  it('sums spent across categories and computes remaining', () => {
+    const spent = { abilities: 30, powers: 20, advantages: 4, skills: 3, defenses: 6 };
+    expect(sumMam3ePointsSpent(spent)).toBe(63);
+    expect(mam3ePointsRemaining(150, spent)).toBe(87);
+  });
+  it('a fully-spent PL10 build (150 PP) has 0 remaining', () => {
+    const spent = { abilities: 100, powers: 30, advantages: 5, skills: 5, defenses: 10 };
+    expect(mam3ePointsRemaining(150, spent)).toBe(0);
   });
 });
 

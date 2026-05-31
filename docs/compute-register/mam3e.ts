@@ -189,8 +189,8 @@ export const mam3eComputeRegister: SystemComputeRegister = {
       inputs: ['spent categories', 'total'],
       edgeCases: ['over/under spend'],
       source: `${HH}: Power Points`,
-      status: 'missing',
-      note: 'Engine computes spent per category but does not validate spent == total.',
+      status: 'verified',
+      testRef: 'src/__tests__/mam3eEngineMath.test.ts :: L9 PP budget accounting',
     },
     {
       id: 'mam3e.L10.measurements-track',

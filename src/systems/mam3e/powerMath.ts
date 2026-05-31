@@ -22,6 +22,24 @@ export function getPowerModifierRank(power: Power, modifierId: string): number {
   return normalizeRank(power.modifierRanks?.[modifierId]);
 }
 
+type Mam3eSpent = {
+  abilities: number;
+  powers: number;
+  advantages: number;
+  skills: number;
+  defenses: number;
+};
+
+/** Total power points spent across all categories. */
+export function sumMam3ePointsSpent(spent: Mam3eSpent): number {
+  return spent.abilities + spent.powers + spent.advantages + spent.skills + spent.defenses;
+}
+
+/** Power points remaining = total budget − total spent (0 = fully-spent, balanced build). */
+export function mam3ePointsRemaining(total: number, spent: Mam3eSpent): number {
+  return total - sumMam3ePointsSpent(spent);
+}
+
 export function calculatePowerPointCost(power: Power): number {
   const rank = getPowerRank(power);
   let costPerRank = Number.isFinite(power.baseCost) ? power.baseCost : 0;
