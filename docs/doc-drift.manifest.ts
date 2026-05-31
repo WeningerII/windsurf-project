@@ -82,6 +82,12 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: [],
   },
   {
+    path: 'docs/GAPS.md',
+    kind: 'plan',
+    owner: 'completion-gaps',
+    rules: [],
+  },
+  {
     path: 'docs/generated/roadmap-metrics.md',
     kind: 'generated',
     owner: 'generated-reporting',
