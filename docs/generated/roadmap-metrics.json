@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-31T04:23:04.299Z",
+  "generatedAt": "2026-05-31T04:26:48.922Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -392,6 +392,35 @@
           "inScope": 3
         },
         "L8": {
+          "verified": 0,
+          "inScope": 1
+        }
+      }
+    },
+    {
+      "systemId": "mam3e",
+      "systemLabel": "Mutants & Masterminds 3e",
+      "verified": 12,
+      "inScope": 17,
+      "percent": 70.6,
+      "byLayer": {
+        "L2": {
+          "verified": 2,
+          "inScope": 2
+        },
+        "L4": {
+          "verified": 1,
+          "inScope": 1
+        },
+        "L8": {
+          "verified": 1,
+          "inScope": 1
+        },
+        "L9": {
+          "verified": 8,
+          "inScope": 12
+        },
+        "L10": {
           "verified": 0,
           "inScope": 1
         }

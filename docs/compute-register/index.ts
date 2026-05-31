@@ -9,11 +9,13 @@ import type { SystemComputeRegister } from './types';
 import { dnd5e2014ComputeRegister } from './dnd5e-2014';
 import { dnd35eComputeRegister } from './dnd35e';
 import { pf1eComputeRegister } from './pf1e';
+import { mam3eComputeRegister } from './mam3e';
 
 export const COMPUTE_REGISTERS: SystemComputeRegister[] = [
   dnd5e2014ComputeRegister,
   dnd35eComputeRegister,
   pf1eComputeRegister,
+  mam3eComputeRegister,
 ];
 
 export function registerForSystem(systemId: ManifestSystemId): SystemComputeRegister | undefined {
