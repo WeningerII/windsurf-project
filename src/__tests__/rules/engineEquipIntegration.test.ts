@@ -58,11 +58,8 @@ function acFeat(): Record<string, unknown> {
 
 interface EngineCase {
   systemId: GameSystemId;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   engine: { prepareData: (d: CharacterDocument<any>) => CharacterDocument<any> };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   makeSystem: () => any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ac: (system: any) => number;
 }
 
@@ -155,7 +152,6 @@ describe('engine AC integration — 3.5e enhancement AC bonuses do not double-st
     const baseline = engine.prepareData(doc('dnd-3.5e', baseSystem)).system.armorClass.total;
 
     const withTwo = createDefaultDnd35eData();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (withTwo as any).equipment = [
       { itemId: 'cloak-1', name: 'Cloak', equipped: true, acBonus: 1, bonusType: 'enhancement' },
       { itemId: 'cloak-2', name: 'Cloak', equipped: true, acBonus: 2, bonusType: 'enhancement' },
@@ -172,7 +168,6 @@ describe('engine AC integration — unequipped magic items do not contribute (d2
       .total;
 
     const withUnequipped = createDefaultPf1eData();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (withUnequipped as any).equipment = [
       { itemId: 'ring-1', name: 'Ring', equipped: false, acBonus: 1 },
     ];

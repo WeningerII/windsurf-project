@@ -13,7 +13,6 @@ import { createDefaultPf1eData } from '../../systems/pf1e/data-model';
  * d20 does not affect the check.
  */
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function doc(systemId: string, system: any): CharacterDocument {
   return {
     id: `test-${systemId}`,
@@ -43,7 +42,6 @@ describe('3.5e attack resolution — equipped +1 weapon raises the attack modifi
 
     const armed = createDefaultDnd35eData();
     armed.baseAttributes = { str: 12, dex: 10, con: 10, int: 10, wis: 10, cha: 10 };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (armed as any).equipment = [
       { itemId: 'longsword-1', name: '+1 Longsword', equipped: true, attackBonus: 1 },
     ];
@@ -62,7 +60,6 @@ describe('3.5e attack resolution — equipped +1 weapon raises the attack modifi
     );
 
     const carried = createDefaultDnd35eData();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (carried as any).equipment = [
       { itemId: 'longsword-1', name: '+1 Longsword', equipped: false, attackBonus: 1 },
     ];
@@ -84,7 +81,6 @@ describe('PF1e attack resolution — equipped +1 weapon raises the attack modifi
 
     const armed = createDefaultPf1eData();
     armed.baseAttributes = { str: 14, dex: 10, con: 10, int: 10, wis: 10, cha: 10 };
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (armed as any).equipment = [
       { itemId: 'mace-1', name: '+1 Mace', equipped: true, attackBonus: 1 },
     ];
