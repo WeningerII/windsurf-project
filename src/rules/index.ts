@@ -76,6 +76,12 @@ export {
   primaryAttackAction,
 } from './combatants/monsterCombatant';
 
+export type {
+  BuildCharacterCombatantResult,
+  CharacterCombatant,
+} from './combatants/characterCombatant';
+export { buildCharacterCombatant } from './combatants/characterCombatant';
+
 export { collectTerrainEffectsAt, markerCoversCell, markerToEffects } from './terrain/sceneTerrain';
 
 export { effectToLedgerEntry, toContributionLedger } from './ir/ledgerView';
