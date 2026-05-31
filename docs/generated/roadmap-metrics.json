@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-31T05:54:32.923Z",
+  "generatedAt": "2026-05-31T06:02:37.157Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -275,6 +275,14 @@
     {
       "systemId": "dnd-5e-2014",
       "systemLabel": "D&D 5e (2014)",
+      "category": "spells",
+      "encoded": 244,
+      "target": 244,
+      "percent": 100
+    },
+    {
+      "systemId": "dnd-5e-2014",
+      "systemLabel": "D&D 5e (2014)",
       "category": "classes",
       "encoded": 12,
       "target": 12,
@@ -289,6 +297,54 @@
       "percent": 100
     },
     {
+      "systemId": "dnd-5e-2014",
+      "systemLabel": "D&D 5e (2014)",
+      "category": "backgrounds",
+      "encoded": 6,
+      "target": 6,
+      "percent": 100
+    },
+    {
+      "systemId": "dnd-5e-2014",
+      "systemLabel": "D&D 5e (2014)",
+      "category": "featureOptions",
+      "encoded": 106,
+      "target": 106,
+      "percent": 100
+    },
+    {
+      "systemId": "dnd-5e-2014",
+      "systemLabel": "D&D 5e (2014)",
+      "category": "monsters",
+      "encoded": 41,
+      "target": 41,
+      "percent": 100
+    },
+    {
+      "systemId": "dnd-5e-2014",
+      "systemLabel": "D&D 5e (2014)",
+      "category": "equipment",
+      "encoded": 230,
+      "target": 230,
+      "percent": 100
+    },
+    {
+      "systemId": "dnd-5e-2014",
+      "systemLabel": "D&D 5e (2014)",
+      "category": "feats",
+      "encoded": 39,
+      "target": 39,
+      "percent": 100
+    },
+    {
+      "systemId": "dnd-5e-2024",
+      "systemLabel": "D&D 5e (2024)",
+      "category": "spells",
+      "encoded": 320,
+      "target": 320,
+      "percent": 100
+    },
+    {
       "systemId": "dnd-5e-2024",
       "systemLabel": "D&D 5e (2024)",
       "category": "classes",
@@ -302,6 +358,134 @@
       "category": "species",
       "encoded": 9,
       "target": 9,
+      "percent": 100
+    },
+    {
+      "systemId": "dnd-5e-2024",
+      "systemLabel": "D&D 5e (2024)",
+      "category": "backgrounds",
+      "encoded": 6,
+      "target": 6,
+      "percent": 100
+    },
+    {
+      "systemId": "dnd-5e-2024",
+      "systemLabel": "D&D 5e (2024)",
+      "category": "monsters",
+      "encoded": 99,
+      "target": 99,
+      "percent": 100
+    },
+    {
+      "systemId": "dnd-5e-2024",
+      "systemLabel": "D&D 5e (2024)",
+      "category": "equipment",
+      "encoded": 204,
+      "target": 204,
+      "percent": 100
+    },
+    {
+      "systemId": "dnd-5e-2024",
+      "systemLabel": "D&D 5e (2024)",
+      "category": "feats",
+      "encoded": 87,
+      "target": 87,
+      "percent": 100
+    },
+    {
+      "systemId": "dnd-3.5e",
+      "systemLabel": "D&D 3.5e",
+      "category": "spells",
+      "encoded": 428,
+      "target": 428,
+      "percent": 100
+    },
+    {
+      "systemId": "dnd-3.5e",
+      "systemLabel": "D&D 3.5e",
+      "category": "classes",
+      "encoded": 26,
+      "target": 26,
+      "percent": 100
+    },
+    {
+      "systemId": "dnd-3.5e",
+      "systemLabel": "D&D 3.5e",
+      "category": "species",
+      "encoded": 7,
+      "target": 7,
+      "percent": 100
+    },
+    {
+      "systemId": "dnd-3.5e",
+      "systemLabel": "D&D 3.5e",
+      "category": "equipment",
+      "encoded": 207,
+      "target": 207,
+      "percent": 100
+    },
+    {
+      "systemId": "dnd-3.5e",
+      "systemLabel": "D&D 3.5e",
+      "category": "feats",
+      "encoded": 515,
+      "target": 515,
+      "percent": 100
+    },
+    {
+      "systemId": "pf1e",
+      "systemLabel": "Pathfinder 1e",
+      "category": "spells",
+      "encoded": 134,
+      "target": 134,
+      "percent": 100
+    },
+    {
+      "systemId": "pf1e",
+      "systemLabel": "Pathfinder 1e",
+      "category": "classes",
+      "encoded": 18,
+      "target": 18,
+      "percent": 100
+    },
+    {
+      "systemId": "pf1e",
+      "systemLabel": "Pathfinder 1e",
+      "category": "species",
+      "encoded": 7,
+      "target": 7,
+      "percent": 100
+    },
+    {
+      "systemId": "pf1e",
+      "systemLabel": "Pathfinder 1e",
+      "category": "traits",
+      "encoded": 12,
+      "target": 12,
+      "percent": 100
+    },
+    {
+      "systemId": "pf1e",
+      "systemLabel": "Pathfinder 1e",
+      "category": "equipment",
+      "encoded": 70,
+      "target": 70,
+      "percent": 100
+    },
+    {
+      "systemId": "pf1e",
+      "systemLabel": "Pathfinder 1e",
+      "category": "feats",
+      "encoded": 86,
+      "target": 86,
+      "percent": 100
+    },
+    {
+      "systemId": "pf2e",
+      "systemLabel": "Pathfinder 2e",
+      "category": "spells",
+      "encoded": 143,
+      "target": 143,
       "percent": 100
     },
     {
@@ -318,6 +502,118 @@
       "category": "species",
       "encoded": 6,
       "target": 6,
+      "percent": 100
+    },
+    {
+      "systemId": "pf2e",
+      "systemLabel": "Pathfinder 2e",
+      "category": "backgrounds",
+      "encoded": 16,
+      "target": 16,
+      "percent": 100
+    },
+    {
+      "systemId": "pf2e",
+      "systemLabel": "Pathfinder 2e",
+      "category": "archetypes",
+      "encoded": 5,
+      "target": 5,
+      "percent": 100
+    },
+    {
+      "systemId": "pf2e",
+      "systemLabel": "Pathfinder 2e",
+      "category": "equipment",
+      "encoded": 188,
+      "target": 188,
+      "percent": 100
+    },
+    {
+      "systemId": "pf2e",
+      "systemLabel": "Pathfinder 2e",
+      "category": "feats",
+      "encoded": 93,
+      "target": 93,
+      "percent": 100
+    },
+    {
+      "systemId": "mam3e",
+      "systemLabel": "Mutants & Masterminds 3e",
+      "category": "spells",
+      "encoded": 61,
+      "target": 61,
+      "percent": 100
+    },
+    {
+      "systemId": "mam3e",
+      "systemLabel": "Mutants & Masterminds 3e",
+      "category": "archetypes",
+      "encoded": 15,
+      "target": 15,
+      "percent": 100
+    },
+    {
+      "systemId": "mam3e",
+      "systemLabel": "Mutants & Masterminds 3e",
+      "category": "complications",
+      "encoded": 28,
+      "target": 28,
+      "percent": 100
+    },
+    {
+      "systemId": "mam3e",
+      "systemLabel": "Mutants & Masterminds 3e",
+      "category": "equipment",
+      "encoded": 150,
+      "target": 150,
+      "percent": 100
+    },
+    {
+      "systemId": "mam3e",
+      "systemLabel": "Mutants & Masterminds 3e",
+      "category": "advantages",
+      "encoded": 74,
+      "target": 74,
+      "percent": 100
+    },
+    {
+      "systemId": "mam3e",
+      "systemLabel": "Mutants & Masterminds 3e",
+      "category": "powerModifiers",
+      "encoded": 101,
+      "target": 101,
+      "percent": 100
+    },
+    {
+      "systemId": "daggerheart",
+      "systemLabel": "Daggerheart",
+      "category": "classes",
+      "encoded": 9,
+      "target": 9,
+      "percent": 100
+    },
+    {
+      "systemId": "daggerheart",
+      "systemLabel": "Daggerheart",
+      "category": "species",
+      "encoded": 19,
+      "target": 19,
+      "percent": 100
+    },
+    {
+      "systemId": "daggerheart",
+      "systemLabel": "Daggerheart",
+      "category": "backgrounds",
+      "encoded": 9,
+      "target": 9,
+      "percent": 100
+    },
+    {
+      "systemId": "daggerheart",
+      "systemLabel": "Daggerheart",
+      "category": "equipment",
+      "encoded": 353,
+      "target": 353,
       "percent": 100
     }
   ],

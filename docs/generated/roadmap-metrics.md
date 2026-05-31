@@ -1,4 +1,4 @@
-_Generated: 2026-05-31T05:54:32.923Z_
+_Generated: 2026-05-31T06:02:37.157Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -92,12 +92,49 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 ### Content Completion (vs SRD Manifest — Denominator A)
 | System | Category | Encoded | Target | Complete |
 | --- | --- | ---: | ---: | ---: |
+| D&D 5e (2014) | spells | 244 | 244 | 100% |
 | D&D 5e (2014) | classes | 12 | 12 | 100% |
 | D&D 5e (2014) | species | 9 | 9 | 100% |
+| D&D 5e (2014) | backgrounds | 6 | 6 | 100% |
+| D&D 5e (2014) | featureOptions | 106 | 106 | 100% |
+| D&D 5e (2014) | monsters | 41 | 41 | 100% |
+| D&D 5e (2014) | equipment | 230 | 230 | 100% |
+| D&D 5e (2014) | feats | 39 | 39 | 100% |
+| D&D 5e (2024) | spells | 320 | 320 | 100% |
 | D&D 5e (2024) | classes | 12 | 12 | 100% |
 | D&D 5e (2024) | species | 9 | 9 | 100% |
+| D&D 5e (2024) | backgrounds | 6 | 6 | 100% |
+| D&D 5e (2024) | monsters | 99 | 99 | 100% |
+| D&D 5e (2024) | equipment | 204 | 204 | 100% |
+| D&D 5e (2024) | feats | 87 | 87 | 100% |
+| D&D 3.5e | spells | 428 | 428 | 100% |
+| D&D 3.5e | classes | 26 | 26 | 100% |
+| D&D 3.5e | species | 7 | 7 | 100% |
+| D&D 3.5e | equipment | 207 | 207 | 100% |
+| D&D 3.5e | feats | 515 | 515 | 100% |
+| Pathfinder 1e | spells | 134 | 134 | 100% |
+| Pathfinder 1e | classes | 18 | 18 | 100% |
+| Pathfinder 1e | species | 7 | 7 | 100% |
+| Pathfinder 1e | traits | 12 | 12 | 100% |
+| Pathfinder 1e | equipment | 70 | 70 | 100% |
+| Pathfinder 1e | feats | 86 | 86 | 100% |
+| Pathfinder 2e | spells | 143 | 143 | 100% |
 | Pathfinder 2e | classes | 12 | 12 | 100% |
 | Pathfinder 2e | species | 6 | 6 | 100% |
+| Pathfinder 2e | backgrounds | 16 | 16 | 100% |
+| Pathfinder 2e | archetypes | 5 | 5 | 100% |
+| Pathfinder 2e | equipment | 188 | 188 | 100% |
+| Pathfinder 2e | feats | 93 | 93 | 100% |
+| Mutants & Masterminds 3e | spells | 61 | 61 | 100% |
+| Mutants & Masterminds 3e | archetypes | 15 | 15 | 100% |
+| Mutants & Masterminds 3e | complications | 28 | 28 | 100% |
+| Mutants & Masterminds 3e | equipment | 150 | 150 | 100% |
+| Mutants & Masterminds 3e | advantages | 74 | 74 | 100% |
+| Mutants & Masterminds 3e | powerModifiers | 101 | 101 | 100% |
+| Daggerheart | classes | 9 | 9 | 100% |
+| Daggerheart | species | 19 | 19 | 100% |
+| Daggerheart | backgrounds | 9 | 9 | 100% |
+| Daggerheart | equipment | 353 | 353 | 100% |
 
 ### Engine-Math Completion (vs Compute Register — Denominator B)
 | System | Verified | In-Scope | Complete |
