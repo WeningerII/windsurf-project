@@ -26,6 +26,21 @@ export type { AttackResolution, AttackResolutionInput } from './resolver/attackR
 export { resolveAttack } from './resolver/attackResolution';
 
 export type {
+  DaggerheartAttackInput,
+  DaggerheartAttackResult,
+  DaggerheartThresholds,
+} from './resolver/daggerheartResolution';
+export { daggerheartHpMarked, resolveDaggerheartAttack } from './resolver/daggerheartResolution';
+
+export type {
+  Mam3eAttackInput,
+  Mam3eAttackResult,
+  Mam3eConditionDelta,
+  Mam3eDefenseKind,
+} from './resolver/mam3eResolution';
+export { applyToughnessDegrees, resolveMam3eAttack } from './resolver/mam3eResolution';
+
+export type {
   AttackTarget,
   AreaEffectInput,
   AreaEffectOutcome,
