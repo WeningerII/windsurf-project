@@ -584,7 +584,12 @@ function buildMarkdownReport(
   );
   lines.push('');
 
-  lines.push('### Content Completion (vs SRD Manifest — Denominator A)');
+  lines.push(
+    '### Content Catalog Parity (Denominator A — provenance; loader-derived, NOT independent SRD parity)'
+  );
+  lines.push(
+    '_The manifests in docs/srd-manifest/ are generated from the loaders, so this measures CATALOG PARITY + provenance (every shipped open-content entry is encoded, loader-backed, and cited) — it is NOT independent data-parity against the full published SRD. Genuine SRD parity (comparing the shipped product to an external authoritative SRD index to detect omitted entries) requires that external index, which is unavailable in this environment and is flagged unresolved per the "cite, never invent" policy. A 100% here does not assert published-SRD coverage._'
+  );
   if (contentCompletion.length === 0) {
     lines.push('_No content denominators authored yet._');
   } else {

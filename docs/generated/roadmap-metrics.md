@@ -1,4 +1,4 @@
-_Generated: 2026-05-31T06:02:37.157Z_
+_Generated: 2026-05-31T06:09:44.583Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -89,7 +89,8 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 ### Derived Next Steps
 - Keep roadmap counts synced by running `npm run roadmap:metrics` after content changes.
 
-### Content Completion (vs SRD Manifest — Denominator A)
+### Content Catalog Parity (Denominator A — provenance; loader-derived, NOT independent SRD parity)
+_The manifests in docs/srd-manifest/ are generated from the loaders, so this measures CATALOG PARITY + provenance (every shipped open-content entry is encoded, loader-backed, and cited) — it is NOT independent data-parity against the full published SRD. Genuine SRD parity (comparing the shipped product to an external authoritative SRD index to detect omitted entries) requires that external index, which is unavailable in this environment and is flagged unresolved per the "cite, never invent" policy. A 100% here does not assert published-SRD coverage._
 | System | Category | Encoded | Target | Complete |
 | --- | --- | ---: | ---: | ---: |
 | D&D 5e (2014) | spells | 244 | 244 | 100% |
