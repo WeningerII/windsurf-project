@@ -136,7 +136,8 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
         'auto-fail Str/Dex while paralyzed/petrified/stunned/unconscious',
       ],
       source: `${SRD}: Saving Throws`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: `${T} :: L2/L4 rollCheck modifiers`,
     },
     {
       id: 'dnd5e2014.L2.spell-save-dc',
@@ -169,7 +170,8 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       inputs: ['ability score', 'skill proficiency level', 'level'],
       edgeCases: ['expertise doubles', 'half (round down)', 'no proficiency'],
       source: `${SRD}: Using Each Ability; Expertise`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: `${T} :: L2/L4 rollCheck modifiers`,
     },
     {
       id: 'dnd5e2014.L4.initiative',
@@ -213,7 +215,8 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       inputs: ['class levels', 'caster type per class'],
       edgeCases: ['full vs half vs third casters', 'preserve used counts'],
       source: `${SRD}: Multiclassing — Spellcasting`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: `${T} :: L5 multiclass spell slots`,
     },
     {
       id: 'dnd5e2014.L5.cantrip-scaling',
@@ -291,7 +294,8 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       inputs: ['exhaustion level', 'check type'],
       edgeCases: ['ability check ≥1', 'save ≥3'],
       source: `${SRD}: Exhaustion`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: `${T} :: L8 exhaustion disadvantage (2014)`,
     },
     {
       id: 'dnd5e2014.L8.apply-damage',

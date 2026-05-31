@@ -12,6 +12,7 @@ import { Dnd5eEngine } from '../systems/dnd5e/engine';
 import { abilityMod } from '../utils/math';
 import { profBonus, rollD20, normalizeDeathSaves } from '../systems/dnd5e/shared/engine';
 import { compute5eAC } from '../utils/armorClass';
+import { compute5eSpellSlots } from '../utils/spellSlots';
 import { createDefaultDnd5eData, type Dnd5eDataModel } from '../systems/dnd5e/data-model';
 import type { CharacterDocument } from '../types/core/document';
 
@@ -242,5 +243,140 @@ describe('L4 d20 roll modes', () => {
     const r = rollD20('disadvantage');
     expect(r.terms).toHaveLength(2);
     expect(r.chosen).toBe(Math.min(...r.terms));
+  });
+});
+
+// ── L2/L4: rollCheck modifiers (deterministic via mocked d20 = 1) ────────────
+describe('L2/L4 rollCheck modifiers', () => {
+  beforeEach(() => {
+    // Math.random() = 0 → d20 = floor(0 * 20) + 1 = 1, so total = 1 + modifier.
+    vi.spyOn(Math, 'random').mockReturnValue(0);
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  const withScores = (over: Partial<Dnd5eDataModel>): Dnd5eDataModel => ({
+    ...createDefaultDnd5eData(),
+    baseAttributes: { str: 14, dex: 14, con: 14, int: 10, wis: 10, cha: 10 },
+    ...over,
+  });
+
+  it('ability check = d20 + ability mod', async () => {
+    const r = await engine.rollCheck(doc(withScores({})), 'str');
+    expect(r.total).toBe(1 + 2);
+  });
+  it('skill check adds proficiency when proficient (level 1 → +2)', async () => {
+    const r = await engine.rollCheck(
+      doc(withScores({ skillProficiencies: { acrobatics: { level: 'proficient' } } })),
+      'acrobatics'
+    );
+    expect(r.total).toBe(1 + 2 + 2);
+  });
+  it('expertise doubles proficiency', async () => {
+    const r = await engine.rollCheck(
+      doc(withScores({ skillProficiencies: { acrobatics: { level: 'expertise' } } })),
+      'acrobatics'
+    );
+    expect(r.total).toBe(1 + 2 + 4);
+  });
+  it('half proficiency (Jack of All Trades) rounds down', async () => {
+    const r = await engine.rollCheck(
+      doc(withScores({ skillProficiencies: { acrobatics: { level: 'half' } } })),
+      'acrobatics'
+    );
+    expect(r.total).toBe(1 + 2 + 1);
+  });
+  it('skill with no proficiency = ability mod only', async () => {
+    const r = await engine.rollCheck(doc(withScores({})), 'acrobatics');
+    expect(r.total).toBe(1 + 2);
+  });
+  it('saving throw adds proficiency when proficient', async () => {
+    const r = await engine.rollCheck(
+      doc(withScores({ savingThrowProficiencies: ['con'] })),
+      'save-con'
+    );
+    expect(r.total).toBe(1 + 2 + 2);
+  });
+  it('non-proficient saving throw = ability mod only', async () => {
+    const r = await engine.rollCheck(
+      doc(withScores({ baseAttributes: { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 } })),
+      'save-str'
+    );
+    expect(r.total).toBe(1 + 0);
+  });
+});
+
+// ── L8: exhaustion imposes disadvantage (2014) ──────────────────────────────
+describe('L8 exhaustion disadvantage (2014)', () => {
+  beforeEach(() => {
+    vi.spyOn(Math, 'random').mockReturnValue(0);
+  });
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  const atExhaustion = (level: number): Dnd5eDataModel => ({
+    ...createDefaultDnd5eData(),
+    exhaustionLevel: level,
+  });
+
+  it('level 1 imposes disadvantage on ability checks', async () => {
+    const r = await engine.rollCheck(doc(atExhaustion(1)), 'str');
+    expect(r.formula).toContain('2d20kl1');
+  });
+  it('level 1 does not yet impose disadvantage on saves (needs level 3)', async () => {
+    const r = await engine.rollCheck(doc(atExhaustion(1)), 'save-con');
+    expect(r.formula).toContain('1d20');
+    expect(r.formula).not.toContain('2d20kl1');
+  });
+  it('level 3 imposes disadvantage on saving throws', async () => {
+    const r = await engine.rollCheck(doc(atExhaustion(3)), 'save-con');
+    expect(r.formula).toContain('2d20kl1');
+  });
+});
+
+// ── L5: multiclass spell slots (SRD combined-caster-level table) ─────────────
+describe('L5 multiclass spell slots', () => {
+  it('full caster: Cleric 1 → caster level 1 → two 1st-level slots', () => {
+    const slots = compute5eSpellSlots([{ classId: 'cleric', level: 1 }]);
+    expect(slots[1].max).toBe(2);
+    expect(slots[2].max).toBe(0);
+  });
+  it('full caster: Wizard 5 → caster level 5', () => {
+    const slots = compute5eSpellSlots([{ classId: 'wizard', level: 5 }]);
+    expect(slots[1].max).toBe(4);
+    expect(slots[2].max).toBe(3);
+    expect(slots[3].max).toBe(2);
+  });
+  it('half caster floors: Paladin 1 → 0 slots, Paladin 2 → caster level 1', () => {
+    expect(compute5eSpellSlots([{ classId: 'paladin', level: 1 }])[1].max).toBe(0);
+    expect(compute5eSpellSlots([{ classId: 'paladin', level: 2 }])[1].max).toBe(2);
+  });
+  it('multiclass sums caster levels: Cleric 5 + Paladin 4 → level 7', () => {
+    const slots = compute5eSpellSlots([
+      { classId: 'cleric', level: 5 },
+      { classId: 'paladin', level: 4 },
+    ]);
+    expect(slots[1].max).toBe(4); // table[7]
+    expect(slots[4].max).toBe(1);
+    expect(slots[5].max).toBe(0);
+  });
+  it('Warlock pact magic is excluded from the multiclass table', () => {
+    const slots = compute5eSpellSlots([{ classId: 'warlock', level: 5 }]);
+    expect(slots[1].max).toBe(0);
+  });
+  it('third caster: Eldritch Knight Fighter 3 → caster level 1', () => {
+    const slots = compute5eSpellSlots([
+      { classId: 'fighter', level: 3, subclassId: 'eldritch-knight' },
+    ]);
+    expect(slots[1].max).toBe(2);
+  });
+  it('preserves used counts, clamped to the new max', () => {
+    const existing = compute5eSpellSlots([{ classId: 'cleric', level: 1 }]);
+    existing[1].used = 2;
+    const recomputed = compute5eSpellSlots([{ classId: 'cleric', level: 1 }], existing);
+    expect(recomputed[1].used).toBe(2);
+    expect(recomputed[1].max).toBe(2);
   });
 });

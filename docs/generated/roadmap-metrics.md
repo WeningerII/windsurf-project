@@ -1,4 +1,4 @@
-_Generated: 2026-05-31T04:12:43.879Z_
+_Generated: 2026-05-31T04:17:45.077Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -98,6 +98,6 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 ### Engine-Math Completion (vs Compute Register — Denominator B)
 | System | Verified | In-Scope | Complete |
 | --- | ---: | ---: | ---: |
-| D&D 5e (2014) | 14 | 28 | 50% |
+| D&D 5e (2014) | 18 | 28 | 64.3% |
 
 _Denominators: cited open-content manifests in docs/srd-manifest/ and docs/compute-register/. Enumerated manual boundaries excluded from both: 8._
