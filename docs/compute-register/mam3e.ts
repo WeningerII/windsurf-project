@@ -58,6 +58,17 @@ export const mam3eComputeRegister: SystemComputeRegister = {
       testRef: `${T} :: L3 attack and resistance DCs`,
     },
     {
+      id: 'mam3e.L3.critical-hit',
+      layer: 'L3',
+      quantity: 'Critical hit resistance-DC bonus',
+      formula: 'natural 20 that hits → resistance DC + 5',
+      inputs: ['base resistance DC'],
+      edgeCases: ['applies to any effect DC'],
+      source: `${HH}: Action & Adventure — Critical Hit`,
+      status: 'verified',
+      testRef: `${T} :: L3 attack and resistance DCs`,
+    },
+    {
       id: 'mam3e.L10.equipment-points',
       layer: 'L10',
       quantity: 'Equipment points from the Equipment advantage',

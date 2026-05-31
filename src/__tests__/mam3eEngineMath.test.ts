@@ -25,6 +25,7 @@ import {
   mam3eAfflictionDC,
   mam3eEquipmentPoints,
   mam3eHeroPoints,
+  mam3eCriticalDC,
 } from '../systems/mam3e/derivedMath';
 import { createDefaultMam3eData, type Mam3eDataModel } from '../systems/mam3e/data-model';
 import type { CharacterDocument } from '../types/core/document';
@@ -312,6 +313,10 @@ describe('L3 attack and resistance DCs', () => {
   it('Affliction (and the general effect) DC is 10 + the rank', () => {
     expect(mam3eAfflictionDC(0)).toBe(10);
     expect(mam3eAfflictionDC(8)).toBe(18);
+  });
+  it('a critical hit raises the resistance DC by 5', () => {
+    expect(mam3eCriticalDC(mam3eDamageResistanceDC(10))).toBe(30); // (15+10) + 5
+    expect(mam3eCriticalDC(mam3eAfflictionDC(8))).toBe(23); // (10+8) + 5
   });
   it('resistance shortfall feeds the degrees-of-failure band', () => {
     // Damage rank 10 → DC 25; a Toughness total of 12 fails by 13 → 3 degrees.

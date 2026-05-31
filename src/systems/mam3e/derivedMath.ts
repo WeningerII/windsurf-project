@@ -56,6 +56,14 @@ export function mam3eDamageResistanceDC(damageRank: number): number {
 }
 
 /**
+ * Resistance DC on a critical hit (Hero's Handbook: Critical Hit) — a natural 20
+ * that hits raises the effect's resistance DC by 5.
+ */
+export function mam3eCriticalDC(baseDC: number): number {
+  return baseDC + 5;
+}
+
+/**
  * Initiative bonus (Hero's Handbook: Initiative) — Agility, plus +4 per rank of
  * the Improved Initiative advantage.
  */
