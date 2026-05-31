@@ -172,7 +172,8 @@ export const dnd35eComputeRegister: SystemComputeRegister = {
       inputs: ['spell level', 'casting ability'],
       edgeCases: ['per spell level'],
       source: `${SRD}: Magic — Saving Throws`,
-      status: 'missing',
+      status: 'verified',
+      testRef: 'src/__tests__/derivedCasterMath.test.ts :: d20 legacy spell save DC',
     },
     {
       id: 'dnd35e.L7.max-hp',

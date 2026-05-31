@@ -147,8 +147,8 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       inputs: ['level', 'spellcasting ability'],
       edgeCases: ['per spellcasting class'],
       source: `${SRD}: Spellcasting — Spell save DC`,
-      status: 'missing',
-      note: 'Not computed in any engine (confirmed by compute-layer audit).',
+      status: 'verified',
+      testRef: 'src/__tests__/derivedCasterMath.test.ts :: 5e spell save DC and attack',
     },
     {
       id: 'dnd5e2014.L2.spell-attack',
@@ -158,7 +158,8 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       inputs: ['level', 'spellcasting ability'],
       edgeCases: ['per spellcasting class'],
       source: `${SRD}: Spellcasting — Spell attack modifier`,
-      status: 'missing',
+      status: 'verified',
+      testRef: 'src/__tests__/derivedCasterMath.test.ts :: 5e spell save DC and attack',
     },
 
     // ── L4 skills & derived checks ──
@@ -192,7 +193,8 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       inputs: ['Wis score', 'Perception proficiency'],
       edgeCases: ['advantage +5', 'disadvantage -5'],
       source: `${SRD}: Passive Checks`,
-      status: 'missing',
+      status: 'verified',
+      testRef: 'src/__tests__/derivedCasterMath.test.ts :: 5e passive Perception',
     },
     {
       id: 'dnd5e2014.L4.d20-modes',
@@ -226,7 +228,8 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       inputs: ['character level'],
       edgeCases: ['per-cantrip dice progression'],
       source: `${SRD}: Cantrips`,
-      status: 'missing',
+      status: 'verified',
+      testRef: 'src/__tests__/derivedCasterMath.test.ts :: 5e cantrip scaling tier',
     },
 
     // ── L7 resources & progression ──
@@ -346,7 +349,8 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       inputs: ['damage taken'],
       edgeCases: ['low damage floors at 10'],
       source: `${SRD}: Concentration`,
-      status: 'missing',
+      status: 'verified',
+      testRef: 'src/__tests__/derivedCasterMath.test.ts :: 5e concentration DC',
     },
   ],
 };

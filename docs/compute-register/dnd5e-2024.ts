@@ -73,7 +73,8 @@ export const dnd5e2024ComputeRegister: SystemComputeRegister = {
       inputs: ['level', 'spell ability'],
       edgeCases: ['per class'],
       source: `${SRD}: Spellcasting`,
-      status: 'missing',
+      status: 'verified',
+      testRef: 'src/__tests__/derivedCasterMath.test.ts :: 5e spell save DC and attack',
     },
     {
       id: 'dnd5e2024.L4.skill-check',
@@ -116,7 +117,8 @@ export const dnd5e2024ComputeRegister: SystemComputeRegister = {
       inputs: ['Wis', 'proficiency'],
       edgeCases: ['advantage/disadvantage ±5'],
       source: `${SRD}: Passive Checks`,
-      status: 'missing',
+      status: 'verified',
+      testRef: 'src/__tests__/derivedCasterMath.test.ts :: 5e passive Perception',
     },
     {
       id: 'dnd5e2024.L5.multiclass-spell-slots',
@@ -224,7 +226,8 @@ export const dnd5e2024ComputeRegister: SystemComputeRegister = {
       inputs: ['damage'],
       edgeCases: ['floors at 10'],
       source: `${SRD}: Concentration`,
-      status: 'missing',
+      status: 'verified',
+      testRef: 'src/__tests__/derivedCasterMath.test.ts :: 5e concentration DC',
     },
   ],
 };

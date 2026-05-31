@@ -86,7 +86,8 @@ export const pf2eComputeRegister: SystemComputeRegister = {
       inputs: ['level', 'key/spell ability', 'tier'],
       edgeCases: ['per tradition'],
       source: `${CRB}: Class DC; Spellcasting`,
-      status: 'missing',
+      status: 'verified',
+      testRef: 'src/__tests__/derivedCasterMath.test.ts :: PF2e class/spell DC',
     },
     {
       id: 'pf2e.L4.skill-check',

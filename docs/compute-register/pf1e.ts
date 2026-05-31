@@ -173,7 +173,8 @@ export const pf1eComputeRegister: SystemComputeRegister = {
       inputs: ['spell level', 'casting ability'],
       edgeCases: ['per spell level'],
       source: `${CRB}: Magic — Saving Throws`,
-      status: 'missing',
+      status: 'verified',
+      testRef: 'src/__tests__/derivedCasterMath.test.ts :: d20 legacy spell save DC',
     },
     {
       id: 'pf1e.L7.max-hp',
