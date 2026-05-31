@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Download, Map, MousePointer2, Plus, Trash2, Upload } from 'lucide-react';
+import { Download, Map as MapIcon, MousePointer2, Plus, Trash2, Upload } from 'lucide-react';
 import {
   MAX_MONSTERS_PER_SELECTION,
   buildEncounterSceneEvents,
@@ -44,6 +44,7 @@ import { EncounterPanel } from './scene/EncounterPanel';
 import { InitiativeTracker } from './scene/InitiativeTracker';
 import { MarkerPanel } from './scene/MarkerPanel';
 import { TokenPanel } from './scene/TokenPanel';
+import { CombatPanel } from './scene/CombatPanel';
 
 type PlacementMode = 'none' | 'token' | 'marker';
 
@@ -96,6 +97,8 @@ export function SceneManager({
   const [monsterLoadError, setMonsterLoadError] = useState<string | null>(null);
   const [initiativeValues, setInitiativeValues] = useState<Record<string, string>>({});
   const [actionIssues, setActionIssues] = useState<string[]>([]);
+  const [combatTargetId, setCombatTargetId] = useState('');
+  const [combatLog, setCombatLog] = useState<string[]>([]);
 
   useEffect(() => {
     if (selectedSceneId && scenes.some((scene) => scene.id === selectedSceneId)) return;
@@ -580,7 +583,7 @@ export function SceneManager({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h3 className="flex items-center gap-2 text-2xl font-semibold tracking-tight">
-            <Map className="h-6 w-6" /> Scenes
+            <MapIcon className="h-6 w-6" /> Scenes
           </h3>
           <p className="text-sm text-muted-foreground">
             {scenes.length} scene{scenes.length !== 1 ? 's' : ''} saved

@@ -1,5 +1,5 @@
 import { Swords, Zap } from 'lucide-react';
-import type { SceneState, SceneToken } from '../../types/core/scene';
+import type { SceneState } from '../../types/core/scene';
 import { Button } from '../ui/Button';
 import { Select } from '../ui/Select';
 import { Badge } from '../ui/Badge';
