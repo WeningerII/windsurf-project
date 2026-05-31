@@ -97,6 +97,19 @@ export type {
 } from './combatants/characterCombatant';
 export { buildCharacterCombatant } from './combatants/characterCombatant';
 
+export type {
+  ResolveCombatStats,
+  SceneAttackOutcome,
+  SceneCombatStats,
+  SceneRoundOutcome,
+} from './combat/sceneCombat';
+export {
+  buildSceneCombatants,
+  factionForToken,
+  resolveSceneAttack,
+  runSceneRound,
+} from './combat/sceneCombat';
+
 export { collectTerrainEffectsAt, markerCoversCell, markerToEffects } from './terrain/sceneTerrain';
 
 export { effectToLedgerEntry, toContributionLedger } from './ir/ledgerView';
