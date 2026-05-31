@@ -70,3 +70,29 @@ export function mam3eInitiative(agility: number, improvedInitiativeRank = 0): nu
 export function mam3eStartingPowerPoints(powerLevel: number): number {
   return 15 * Math.max(0, Math.floor(powerLevel));
 }
+
+/**
+ * Resistance DC for the Affliction effect — and for M&M effects generally
+ * (Hero's Handbook): 10 + the effect's rank. (The Damage effect is the
+ * exception at 15 + rank; see {@link mam3eDamageResistanceDC}.)
+ */
+export function mam3eAfflictionDC(rank: number): number {
+  return 10 + rank;
+}
+
+/**
+ * Equipment points granted by the Equipment advantage (Hero's Handbook):
+ * 5 EP per rank, spent on gear at 1 EP per power point.
+ */
+export function mam3eEquipmentPoints(advantageRank: number): number {
+  return 5 * Math.max(0, Math.floor(advantageRank));
+}
+
+/**
+ * Hero points available (Hero's Handbook: Hero Points) — each player starts a
+ * session with 1, gaining 1 more each time the GM activates one of their
+ * complications.
+ */
+export function mam3eHeroPoints(complicationsActivated = 0): number {
+  return 1 + Math.max(0, Math.floor(complicationsActivated));
+}

@@ -22,6 +22,9 @@ import {
   mam3eDamageResistanceDC,
   mam3eInitiative,
   mam3eStartingPowerPoints,
+  mam3eAfflictionDC,
+  mam3eEquipmentPoints,
+  mam3eHeroPoints,
 } from '../systems/mam3e/derivedMath';
 import { createDefaultMam3eData, type Mam3eDataModel } from '../systems/mam3e/data-model';
 import type { CharacterDocument } from '../types/core/document';
@@ -306,6 +309,10 @@ describe('L3 attack and resistance DCs', () => {
     expect(mam3eDamageResistanceDC(0)).toBe(15);
     expect(mam3eDamageResistanceDC(10)).toBe(25);
   });
+  it('Affliction (and the general effect) DC is 10 + the rank', () => {
+    expect(mam3eAfflictionDC(0)).toBe(10);
+    expect(mam3eAfflictionDC(8)).toBe(18);
+  });
   it('resistance shortfall feeds the degrees-of-failure band', () => {
     // Damage rank 10 → DC 25; a Toughness total of 12 fails by 13 → 3 degrees.
     const dc = mam3eDamageResistanceDC(10);
@@ -323,6 +330,18 @@ describe('L1 initiative and L7 starting power points', () => {
   it('starting power points are 15 × the power level', () => {
     expect(mam3eStartingPowerPoints(10)).toBe(150);
     expect(mam3eStartingPowerPoints(8)).toBe(120);
+  });
+});
+
+// ── L10/L7: equipment points and hero points ────────────────────────────────
+describe('L10 M&M equipment and hero points', () => {
+  it('the Equipment advantage grants 5 EP per rank', () => {
+    expect(mam3eEquipmentPoints(1)).toBe(5);
+    expect(mam3eEquipmentPoints(4)).toBe(20);
+  });
+  it('hero points start at 1 per session, +1 per activated complication', () => {
+    expect(mam3eHeroPoints()).toBe(1);
+    expect(mam3eHeroPoints(2)).toBe(3);
   });
 });
 
