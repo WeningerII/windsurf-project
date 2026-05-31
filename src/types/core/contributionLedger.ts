@@ -24,11 +24,12 @@ export type ContributionSourceKind =
   | 'domain-card'
   | 'power'
   | 'power-modifier'
-  // Added for the system-agnostic rules IR (RFC 003): conditions and terrain
-  // features are first-class effect sources. They are additive members; no
-  // existing code switches exhaustively on this union.
+  // Added for the system-agnostic rules IR (RFC 003): conditions, terrain
+  // features, and class/racial features are first-class effect sources. They are
+  // additive members; no existing code switches exhaustively on this union.
   | 'condition'
   | 'terrain'
+  | 'feature'
   | 'custom';
 
 export type ContributionValue =

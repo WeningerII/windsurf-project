@@ -5,6 +5,8 @@ import { abilityMod } from '../../../utils/math';
 import { hitDieSize } from '../../../constants/hit-dice';
 import { compute5eAC } from '../../../utils/armorClass';
 import { compute5eSpellSlots } from '../../../utils/spellSlots';
+import { resolveCharacterEffects } from '../../../rules';
+import type { GameSystemId } from '../../../types/game-systems';
 import { hasDnd5eCondition, normalizeDnd5eConditions } from '../conditions';
 import { getDnd5eDefenseStyleArmorClassBonus } from './activityState';
 
@@ -175,9 +177,18 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
   // Hook for 2014 vs 2024 specifics
   protected applySubsystemRules(doc: CharacterDocument<Dnd5eDataModel>, dexMod: number): void {
     const data = doc.system;
+    // Base AC from armor/shield + Defense fighting style, then layer magic-item
+    // and feat/feature AC bonuses through the shared rules resolver (RFC 003).
+    // Additive: with no bonus-bearing gear or modifiers this contributes 0, so
+    // existing AC outputs are unchanged.
     data.armorClass =
       compute5eAC(data.baseAttributes.dex ?? 10, data.equipment) +
-      getDnd5eDefenseStyleArmorClassBonus(data);
+      getDnd5eDefenseStyleArmorClassBonus(data) +
+      resolveCharacterEffects(doc.systemId as GameSystemId, {
+        equipment: data.equipment,
+        feats: data.feats,
+        features: data.features,
+      }).bonus('ac');
     data.initiative = dexMod;
   }
 

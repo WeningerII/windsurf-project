@@ -4,6 +4,7 @@ import { Pf1eDataModel } from './data-model';
 import { abilityMod } from '../../utils/math';
 import { CMB_SIZE_MODS, baseSave, classBAB } from '../shared/d20-helpers';
 import { computeD20LegacyAC } from '../../utils/armorClass';
+import { resolveCharacterEffects } from '../../rules';
 import { mergeVancianSpellSlots } from '../../utils/classSpellcasting';
 import { pf1eClasses } from '../../data/pathfinder/1e/classes';
 import { pf1ePrestigeClasses } from '../../data/pathfinder/1e/prestige-classes';
@@ -127,8 +128,17 @@ export class Pf1eEngine implements SystemEngine<Pf1eDataModel> {
     data.spellsPerDay = mergeVancianSpellSlots(data.spellsPerDay, slotTotals);
 
     // --- AC (from equipped armor items + size) ---
+    // Base AC, then layer magic-item and feat/feature AC bonuses through the
+    // shared rules resolver (RFC 003). Per-bonus-type routing to touch/flat-
+    // footed is a Phase 2 refinement; the resolved delta applies to total here.
+    // Additive: contributes 0 without bonus-bearing gear/modifiers.
     const ac = computeD20LegacyAC(data.baseAttributes.dex ?? 10, data.sizeCategory, data.equipment);
-    data.armorClass.total = ac.total;
+    const acBonus = resolveCharacterEffects('pf1e', {
+      equipment: data.equipment.filter((item) => item.equipped),
+      feats: data.feats,
+      features: data.features,
+    }).bonus('ac');
+    data.armorClass.total = ac.total + acBonus;
     data.armorClass.touch = ac.touch;
     data.armorClass.flatFooted = ac.flatFooted;
 

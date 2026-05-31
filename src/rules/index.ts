@@ -29,3 +29,6 @@ export { compileEquipmentEffects, equipStackPolicy } from './compile/equipEffect
 
 export type { ModifierSource } from './compile/modifierEffects';
 export { compileModifierEffects, compileModifierSource } from './compile/modifierEffects';
+
+export type { CharacterEffectInputs, ResolvedCharacterEffects } from './compile/characterEffects';
+export { resolveCharacterEffects } from './compile/characterEffects';

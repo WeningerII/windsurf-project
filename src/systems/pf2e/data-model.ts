@@ -1,5 +1,6 @@
 import { Feature } from '../../types/core/character';
 import { SystemDataModel } from '../../types/core/document';
+import type { BonusType } from '../../types/core/common';
 
 /**
  * Pathfinder 2e Data Model
@@ -107,6 +108,14 @@ export interface Pf2eDataModel extends SystemDataModel {
     armorType?: 'light' | 'medium' | 'heavy';
     dexBonusMax?: number;
     shieldBonus?: number;
+    // Magic/effect bonuses consumed by the system-agnostic rules IR (RFC 003).
+    // Optional and additive; base AC math is unaffected. PF2e bonuses default to
+    // the item bucket unless pf2eBucket says otherwise.
+    attackBonus?: number;
+    damageBonus?: number;
+    acBonus?: number;
+    bonusType?: BonusType;
+    pf2eBucket?: 'item' | 'status' | 'circumstance';
   }>;
   inventory: Array<{ itemId: string; name: string; quantity: number; bulk: number }>;
   currency: { copper: number; silver: number; gold: number; platinum: number };

@@ -4,6 +4,7 @@ import { Pf2eDataModel, profTotal } from './data-model';
 import { abilityMod } from '../../utils/math';
 import { SKILL_ABILITIES, SAVE_ABILITIES } from './constants';
 import { computePf2eAC } from '../../utils/armorClass';
+import { resolveCharacterEffects } from '../../rules';
 import { pf2eClasses } from '../../data/pathfinder/2e/classes';
 import { getSpellSlotsAtClassLevel, mergeMaxUsedSpellSlots } from '../../utils/classSpellcasting';
 import { hitDieFaces } from '../../utils/templateShared';
@@ -176,7 +177,16 @@ export class Pf2eEngine implements SystemEngine<Pf2eDataModel> {
       0;
     const clumsyPenalty = normalizedConditionValue(data.conditions, 'clumsy');
     const effectiveDex = Math.max(1, (data.baseAttributes.dex ?? 10) - clumsyPenalty * 2);
-    data.armorClass = computePf2eAC(effectiveDex, armorProf, data.equipment);
+    // Base AC, then layer magic-item (item bonus) and feat/feature AC bonuses
+    // through the shared rules resolver (RFC 003). PF2e item bonuses take the
+    // highest per bucket; buckets sum. Additive without bonus-bearing gear.
+    data.armorClass =
+      computePf2eAC(effectiveDex, armorProf, data.equipment) +
+      resolveCharacterEffects('pf2e', {
+        equipment: data.equipment.filter((item) => item.equipped),
+        feats: data.feats,
+        features: data.features,
+      }).bonus('ac');
 
     // --- HP = ancestryHP + level × (class HP die + CON mod) ---
     // PF2e CRB p.26: Ancestry HP (flat) + level × (class HP + CON mod). Class HP
