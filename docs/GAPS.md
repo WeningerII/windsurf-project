@@ -49,7 +49,7 @@ by normalized name) — real coverage, unlike the loader-derived `docs/srd-manif
 The registers read 100%, but two real gaps sit behind that:
 
 **Rebalancing pass (done):** the registers were levelled so no system is
-neglected — each now holds 23–28 verified quantities across L1–L10 (previously
+neglected — each now holds 26–28 verified quantities across L1–L10 (previously
 13–28, with Daggerheart the outlier at 13). All additions were genuine,
 SRD-cited RAW math, not padding (see `docs/STATUS.md` for the list). This closed
 several items below; the remainder is the honest residual.
