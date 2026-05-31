@@ -166,7 +166,8 @@ export const pf1eComputeRegister: SystemComputeRegister = {
       inputs: ['class levels', 'casting ability'],
       edgeCases: ['domain slots'],
       source: `${CRB}: Magic — Spells Per Day`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: 'src/__tests__/d20LegacyEngineMath.test.ts :: L5 d20 Vancian spell-slot totals',
     },
     {
       id: 'pf1e.L5.spell-save-dc',

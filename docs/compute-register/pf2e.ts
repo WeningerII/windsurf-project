@@ -155,7 +155,8 @@ export const pf2eComputeRegister: SystemComputeRegister = {
       inputs: ['class', 'level'],
       edgeCases: ['prepared vs spontaneous'],
       source: `${CRB}: Spellcasting`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: 'src/__tests__/utils/classSpellcasting.test.ts :: classSpellcasting helpers',
     },
     {
       id: 'pf2e.L5.focus-points',

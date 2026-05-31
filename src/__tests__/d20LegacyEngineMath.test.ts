@@ -22,6 +22,8 @@ import {
   type Pf1eDataModel,
 } from '../systems/pf1e/data-model';
 import type { CharacterDocument } from '../types/core/document';
+import { buildD20LegacySpellSlotTotals } from '../utils/d20LegacySpellcasting';
+import type { CharacterClass } from '../types/character-options/classes';
 
 const TEST_DATE = new Date('2026-05-01T00:00:00.000Z');
 
@@ -358,5 +360,49 @@ describe('L8 d20-legacy damage application', () => {
   it('PF1e: overkill floors current HP at 0', () => {
     const out = pf1Engine.applyDamage(docPF({ hitPoints: { current: 5, max: 8, temp: 0 } }), 10, 'fire');
     expect(out.system.hitPoints.current).toBe(0);
+  });
+});
+
+// ── L5: Vancian spell-slot totals (class table → per-level totals) ──────────
+describe('L5 d20 Vancian spell-slot totals', () => {
+  const caster = (id: string, spellSlots: Record<number, number[]>): CharacterClass =>
+    ({ id, name: id, spellcasting: { spellSlots } }) as unknown as CharacterClass;
+
+  it('reads the class slot table at the character level', () => {
+    const map = new Map([['wiz', caster('wiz', { 1: [2, 3], 2: [0, 1] })]]);
+    expect(buildD20LegacySpellSlotTotals('dnd-3.5e', [{ classId: 'wiz', level: 1 }], map)).toEqual({
+      1: 2,
+      2: 0,
+    });
+    expect(buildD20LegacySpellSlotTotals('dnd-3.5e', [{ classId: 'wiz', level: 2 }], map)).toEqual({
+      1: 3,
+      2: 1,
+    });
+  });
+
+  it('sums slot totals across multiclass casters', () => {
+    const map = new Map([
+      ['a', caster('a', { 1: [2] })],
+      ['b', caster('b', { 1: [2] })],
+    ]);
+    expect(
+      buildD20LegacySpellSlotTotals(
+        'pf1e',
+        [
+          { classId: 'a', level: 1 },
+          { classId: 'b', level: 1 },
+        ],
+        map
+      )
+    ).toEqual({ 1: 4 });
+  });
+
+  it('returns no slots for a non-casting class', () => {
+    const map = new Map([
+      ['noncaster-xyz', { id: 'noncaster-xyz', name: 'Noncaster' } as unknown as CharacterClass],
+    ]);
+    expect(
+      buildD20LegacySpellSlotTotals('dnd-3.5e', [{ classId: 'noncaster-xyz', level: 5 }], map)
+    ).toEqual({});
   });
 });
