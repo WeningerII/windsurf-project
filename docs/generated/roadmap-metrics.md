@@ -1,4 +1,4 @@
-_Generated: 2026-05-31T04:17:45.077Z_
+_Generated: 2026-05-31T04:23:04.299Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -99,5 +99,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | System | Verified | In-Scope | Complete |
 | --- | ---: | ---: | ---: |
 | D&D 5e (2014) | 18 | 28 | 64.3% |
+| D&D 3.5e | 7 | 17 | 41.2% |
+| Pathfinder 1e | 9 | 19 | 47.4% |
 
 _Denominators: cited open-content manifests in docs/srd-manifest/ and docs/compute-register/. Enumerated manual boundaries excluded from both: 8._

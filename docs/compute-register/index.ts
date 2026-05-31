@@ -7,8 +7,14 @@
 import type { ManifestSystemId } from '../srd-manifest/types';
 import type { SystemComputeRegister } from './types';
 import { dnd5e2014ComputeRegister } from './dnd5e-2014';
+import { dnd35eComputeRegister } from './dnd35e';
+import { pf1eComputeRegister } from './pf1e';
 
-export const COMPUTE_REGISTERS: SystemComputeRegister[] = [dnd5e2014ComputeRegister];
+export const COMPUTE_REGISTERS: SystemComputeRegister[] = [
+  dnd5e2014ComputeRegister,
+  dnd35eComputeRegister,
+  pf1eComputeRegister,
+];
 
 export function registerForSystem(systemId: ManifestSystemId): SystemComputeRegister | undefined {
   return COMPUTE_REGISTERS.find((r) => r.systemId === systemId);
