@@ -184,7 +184,17 @@ export class Pf1eEngine implements SystemEngine<Pf1eDataModel> {
       modifier = d.cmb;
       flavor = 'Combat Maneuver';
     } else if (checkId === 'attack') {
-      modifier = d.baseAttackBonus + abilityMod(d.baseAttributes.str ?? 10);
+      // Base attack = BAB + STR, then layer equipped-weapon and feat/feature
+      // attack bonuses through the shared rules resolver (RFC 003). The resolver
+      // contributes deterministically; only the d20 below is random.
+      modifier =
+        d.baseAttackBonus +
+        abilityMod(d.baseAttributes.str ?? 10) +
+        resolveCharacterEffects('pf1e', {
+          equipment: d.equipment.filter((item) => item.equipped),
+          feats: d.feats,
+          features: d.features,
+        }).bonus('attack');
       flavor = 'Attack Roll';
     }
 
