@@ -75,14 +75,15 @@ export function SceneGridView({
                       key={token.id}
                       type="button"
                       className={cn(
-                        'flex h-7 w-7 items-center justify-center rounded-full border text-[11px] font-semibold shadow-sm transition-colors',
+                        'relative flex h-7 w-7 items-center justify-center rounded-full border text-[11px] font-semibold shadow-sm transition-colors',
                         token.kind === 'character'
                           ? 'border-primary/40 bg-primary/15 text-primary'
                           : 'border-muted-foreground/30 bg-muted text-foreground',
-                        selectedTokenId === token.id && 'ring-2 ring-ring ring-offset-1'
+                        selectedTokenId === token.id && 'ring-2 ring-ring ring-offset-1',
+                        token.hp && token.hp.current <= 0 && 'opacity-40 grayscale'
                       )}
                       title={token.name}
-                      aria-label={`Token ${token.name}`}
+                      aria-label={buildTokenLabel(token)}
                       aria-pressed={selectedTokenId === token.id}
                       onClick={(event) => {
                         event.stopPropagation();
@@ -90,6 +91,7 @@ export function SceneGridView({
                       }}
                     >
                       {getTokenInitials(token)}
+                      {token.hp && <TokenHpBar hp={token.hp} />}
                     </button>
                   ))}
                 </div>
@@ -155,4 +157,29 @@ function getTokenInitials(token: SceneToken): string {
     .map((part) => part[0].toUpperCase())
     .join('');
   return initials || token.id.slice(0, 2).toUpperCase();
+}
+
+/** Token aria-label, including current/max HP when the token is a combatant. */
+function buildTokenLabel(token: SceneToken): string {
+  if (token.hp) {
+    return `Token ${token.name}, ${Math.max(0, token.hp.current)} of ${token.hp.max} HP`;
+  }
+  return `Token ${token.name}`;
+}
+
+/** A thin HP bar under a combatant token, green→amber→red by fraction. */
+function TokenHpBar({ hp }: { hp: NonNullable<SceneToken['hp']> }) {
+  const fraction = hp.max > 0 ? Math.max(0, Math.min(1, hp.current / hp.max)) : 0;
+  const color = fraction > 0.5 ? 'bg-emerald-500' : fraction > 0.25 ? 'bg-amber-500' : 'bg-red-500';
+  return (
+    <span
+      className="absolute -bottom-1 left-1/2 h-1 w-6 -translate-x-1/2 overflow-hidden rounded-full bg-border"
+      aria-hidden="true"
+    >
+      <span
+        className={cn('block h-full rounded-full transition-all', color)}
+        style={{ width: `${Math.round(fraction * 100)}%` }}
+      />
+    </span>
+  );
 }
