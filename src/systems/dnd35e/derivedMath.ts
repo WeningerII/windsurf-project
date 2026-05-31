@@ -29,6 +29,41 @@ export function dnd35eTriggersMassiveDamage(damage: number): boolean {
   return damage >= DND35E_MASSIVE_DAMAGE_THRESHOLD;
 }
 
+/**
+ * Concentration check DC to cast defensively (SRD 3.5: Concentration skill) —
+ * 15 + the spell's level. The check is a Concentration skill check (d20 + ranks
+ * + Con mod). (Distinct from PF1e's 15 + 2 × level.)
+ */
+export function dnd35eConcentrationDCDefensive(spellLevel: number): number {
+  return 15 + spellLevel;
+}
+
+/**
+ * Concentration check DC to keep a spell while taking damage (SRD 3.5) —
+ * 10 + damage dealt + the spell's level.
+ */
+export function dnd35eConcentrationDCDamage(damageTaken: number, spellLevel: number): number {
+  return 10 + Math.max(0, damageTaken) + spellLevel;
+}
+
+/**
+ * Feats gained from level (SRD 3.5: Character Advancement) — one at 1st level
+ * and one at every third level thereafter (1st, 3rd, 6th, 9th, …) = 1 +
+ * floor(level / 3). Racial and class bonus feats are added separately.
+ */
+export function dnd35eFeatsFromLevel(level: number): number {
+  const l = Math.max(1, Math.floor(level));
+  return 1 + Math.floor(l / 3);
+}
+
+/**
+ * Ability score increases gained from level (SRD 3.5: Character Advancement) —
+ * +1 to one ability at every fourth level (4th, 8th, 12th, …) = floor(level / 4).
+ */
+export function dnd35eAbilityIncreases(level: number): number {
+  return Math.floor(Math.max(0, level) / 4);
+}
+
 export type Dnd35eHpState = 'healthy' | 'disabled' | 'dying' | 'dead';
 
 /**

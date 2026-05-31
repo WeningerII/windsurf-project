@@ -21,6 +21,10 @@ import {
   dnd35eXpForLevel,
   dnd35eTriggersMassiveDamage,
   dnd35eHpState,
+  dnd35eConcentrationDCDefensive,
+  dnd35eConcentrationDCDamage,
+  dnd35eFeatsFromLevel,
+  dnd35eAbilityIncreases,
 } from '../systems/dnd35e/derivedMath';
 import {
   pf1eConcentrationDCDefensive,
@@ -532,6 +536,24 @@ describe('L8 D&D 3.5e massive damage and HP state', () => {
     expect(dnd35eHpState(-9)).toBe('dying');
     expect(dnd35eHpState(-10)).toBe('dead');
     expect(dnd35eHpState(-15)).toBe('dead');
+  });
+});
+
+describe('L5/L7 D&D 3.5e concentration, feats, and ability increases', () => {
+  it('defensive casting DC is 15 + spell level (10 + damage + level while hit)', () => {
+    expect(dnd35eConcentrationDCDefensive(3)).toBe(18);
+    expect(dnd35eConcentrationDCDamage(8, 2)).toBe(20);
+  });
+  it('feats arrive at 1st level and every third level thereafter', () => {
+    expect(dnd35eFeatsFromLevel(1)).toBe(1);
+    expect(dnd35eFeatsFromLevel(3)).toBe(2);
+    expect(dnd35eFeatsFromLevel(6)).toBe(3);
+    expect(dnd35eFeatsFromLevel(18)).toBe(7);
+  });
+  it('ability increases arrive every fourth level', () => {
+    expect(dnd35eAbilityIncreases(3)).toBe(0);
+    expect(dnd35eAbilityIncreases(4)).toBe(1);
+    expect(dnd35eAbilityIncreases(20)).toBe(5);
   });
 });
 
