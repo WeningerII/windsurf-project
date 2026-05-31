@@ -2,6 +2,12 @@
 
 Multi-system RPG character sheet using **only open-license SRD content** across 7 registered game systems. The repo ships a mix of full and partial product slices; use [docs/MASTER_PLAN.md](docs/MASTER_PLAN.md) for the canonical roadmap, [docs/STATUS.md](docs/STATUS.md) for the current-state summary, and [docs/generated/roadmap-metrics.md](docs/generated/roadmap-metrics.md) for authoritative loader-backed counts.
 
+## 🧭 Where This Is Heading
+
+Today this is a deterministic, multi-system character-sheet and scene toolkit — everything under **Project Status** below actually ships. The longer arc is to make tabletop creation and play feel frictionless by layering AI-assisted drafting and orchestration **on top of** that deterministic core: describe a character, encounter, or scene in plain language and get a validated, rules-legal draft you apply through the same paths a manual user would.
+
+**None of the AI layer ships yet.** The deterministic engine is the authority; AI is planned strictly as a draft/orchestration surface that never decides rules legality, and the product must always work with no provider keys configured. The thesis behind this direction is in [docs/VISION.md](docs/VISION.md); the phased roadmap is in [docs/MASTER_PLAN.md](docs/MASTER_PLAN.md).
+
 ## 🎯 Project Status
 
 - ✅ **Verification**: `npm run verify` passed on May 30, 2026 under Node `20.19.0`
@@ -302,8 +308,10 @@ Validates:
 
 ## 📚 Documentation
 
+- **docs/VISION.md** - Project thesis and long-horizon direction (the *why*)
 - **docs/MASTER_PLAN.md** - Canonical roadmap and planning authority
 - **docs/STATUS.md** - Current-state summary and verified test baseline
+- **docs/rfc/** - Design RFCs: 001 backend sync (accepted), 002 AI control plane (withdrawn), 003 rules IR & effects (draft)
 - **docs/generated/roadmap-metrics.md** - Generated product-reachable counts plus raw-export audit
 - **docs/EVIDENCE_LINKED_PARITY_AUDIT.md** - Historical March 2026 audit snapshot
 - **docs/EVIDENCE_LINKED_PARITY_REMEDIATION_PLAN.md** - Historical remediation sequencing record

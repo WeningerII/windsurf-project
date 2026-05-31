@@ -10,6 +10,8 @@ The product direction is to make tabletop creation, preparation, play, and sessi
 
 The long-term user experience is: describe a character, encounter, scene, or desired moment in natural language; receive a structured draft constrained by shipped open-content data; review deterministic validation and provenance; then accept changes through the same character, campaign, and scene paths that manual users use. When provider keys are absent or a model call fails, the deterministic/manual product must still work.
 
+The durable *why* behind this direction — the thesis the product exists to test — lives in `docs/VISION.md`. This plan is the *what* and *how* and changes often; `docs/VISION.md` is the *why* and changes rarely. If the two disagree about scope, this plan wins.
+
 ## Purpose And Source Documents
 
 This file merges the still-valid planning content from these repo planning documents:
@@ -152,6 +154,7 @@ The following older backlog claims are no longer true and must not re-enter the 
 
 - `Active implementation track`: Phase 1 is the first real code gate. Until the validation registry exists, AI repair has no machine-readable error loop, and import warnings cannot distinguish malformed data from merely manual data.
 - `Active implementation track`: Phase 2 is the second real code gate. Until the ledger exists, the app cannot explain why a value changed and cannot safely promote one-off activity outputs into shared derived behavior.
+- `Active implementation track`: the contribution-ledger primitive and a deterministic effect resolver are two views of one shape — explaining a value versus producing it. `docs/rfc/003-rules-ir-and-effects.md` (Draft) proposes unifying them into a system-independent rules intermediate representation. It is the connective tissue under this track's ledger work and the scene runtime's resolution and functional-terrain phases, and it is bound by the same anti-overengineering rule: no shared abstraction is extracted before at least three named consumers share the shape. It is a connective-layer specification, not a new track.
 - `Active implementation track`: Phase 3 deliberately stays D&D 5e-local. The goal is to learn what executable feature/action definitions need in this repo before extracting a shared contract. Graduation requires Daggerheart triggered/manual cards and one additional system to need the same input/eligibility/cost/output shape.
 - `Active implementation track`: Phase 4 is optional and subordinate to the automation foundations. AI can speed up drafting only after validation, candidate-pool construction, and template application are already working without it.
 - `Active implementation track`: the critical path is Phase 0 -> Phase 1A -> Phase 1B -> Phase 3. Phase 2 can begin after Phase 1A, Phase 3 should wait for at least the first 5e validator and ledger shape, and Phase 4 must wait for working validation and ledger infrastructure.
@@ -251,6 +254,7 @@ Research anchors for this track: Vercel AI SDK provider abstraction and telemetr
 | `docs/DAGGERHEART_DATA_ORGANIZATION_PLAN.md` | Historical context | Original Daggerheart data-shape rationale, plus superseded early structure proposals that informed the shipped data tree |
 | `docs/rfc/001-backend-sync.md` | Accepted RFC | Canonical description of the shipped local-first sync architecture: auth, schema, merge semantics, offline queue, realtime, retry, migration-from-local, Netlify/runtime implications, accepted boundaries |
 | `docs/rfc/002-ai-control-plane.md` | Draft RFC | AI integration contract for frictionless creation and play: server-side task gateway, loader-derived candidate pools, deterministic validation/repair, user approval, typed action/event boundaries, fixture replay, and cost/timeout fallbacks |
+| `docs/rfc/003-rules-ir-and-effects.md` | Draft RFC | System-independent rules intermediate representation and deterministic effect resolver that unify the contribution ledger with scene resolution, enabling mechanical condition application and functional terrain; gated by the anti-overengineering three-consumer rule and a content-pack-rewrite prohibition |
 
 ## Maintenance Rule
 
