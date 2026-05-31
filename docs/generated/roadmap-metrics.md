@@ -1,4 +1,4 @@
-_Generated: 2026-05-31T05:47:57.846Z_
+_Generated: 2026-05-31T05:54:32.923Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -111,3 +111,15 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | Daggerheart | 10 | 10 | 100% |
 
 _Denominators: cited open-content manifests in docs/srd-manifest/ and docs/compute-register/. Enumerated manual boundaries excluded from both: 8._
+
+### Content Integrity (Denominator A — provenance + policy)
+_Share of each system's loader-backed entries that are source-tagged AND open-content-policy-clean — i.e. the content DONE conditions 'encoded, loader-backed, source-tagged, policy-clean'. This certifies CATALOG INTEGRITY (every shipped open-content entry is cited and compliant). It is NOT coverage vs the full published SRD: measuring which SRD entries are MISSING requires an external authoritative SRD index that is unavailable in this environment, so that coverage dimension is flagged unresolved rather than asserted._
+| System | Loader Entries | Cited + Policy-Clean | Integrity |
+| --- | ---: | ---: | ---: |
+| D&D 5e (2014) | 687 | 687 | 100% |
+| D&D 5e (2024) | 737 | 737 | 100% |
+| D&D 3.5e | 1183 | 1183 | 100% |
+| Pathfinder 1e | 327 | 327 | 100% |
+| Pathfinder 2e | 463 | 463 | 100% |
+| Mutants & Masterminds 3e | 429 | 429 | 100% |
+| Daggerheart | 390 | 390 | 100% |

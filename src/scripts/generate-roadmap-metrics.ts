@@ -618,6 +618,24 @@ function buildMarkdownReport(
   lines.push(
     `_Denominators: cited open-content manifests in docs/srd-manifest/ and docs/compute-register/. Enumerated manual boundaries excluded from both: ${MANUAL_EXCLUSIONS.length}._`
   );
+  lines.push('');
+
+  lines.push('### Content Integrity (Denominator A — provenance + policy)');
+  lines.push(
+    "_Share of each system's loader-backed entries that are source-tagged AND open-content-policy-clean — i.e. the content DONE conditions 'encoded, loader-backed, source-tagged, policy-clean'. This certifies CATALOG INTEGRITY (every shipped open-content entry is cited and compliant). It is NOT coverage vs the full published SRD: measuring which SRD entries are MISSING requires an external authoritative SRD index that is unavailable in this environment, so that coverage dimension is flagged unresolved rather than asserted._"
+  );
+  lines.push(markdownTableRow(['System', 'Loader Entries', 'Cited + Policy-Clean', 'Integrity']));
+  lines.push(markdownTableRow(['---', '---:', '---:', '---:']));
+  systems.forEach((system) => {
+    const rows = loaderRows.filter((row) => row.systemId === system.id);
+    const total = rows.reduce((sum, row) => sum + row.metrics.uniqueCount, 0);
+    const violations = rows.reduce(
+      (sum, row) => sum + row.metrics.missingSourceCount + row.metrics.nonCompliantCount,
+      0
+    );
+    const clean = total - violations;
+    lines.push(markdownTableRow([system.label, total, clean, `${toPercent(clean, total)}%`]));
+  });
 
   return lines.join('\n');
 }
