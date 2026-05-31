@@ -88,6 +88,18 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: [],
   },
   {
+    path: 'docs/srd-sources.md',
+    kind: 'plan',
+    owner: 'srd-sources',
+    rules: [],
+  },
+  {
+    path: 'docs/generated/srd-coverage.md',
+    kind: 'generated',
+    owner: 'srd-coverage',
+    rules: [],
+  },
+  {
     path: 'docs/generated/roadmap-metrics.md',
     kind: 'generated',
     owner: 'generated-reporting',

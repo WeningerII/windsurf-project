@@ -33,6 +33,7 @@
     "generate:indexes": "tsx src/scripts/generators/generate-spell-indexes.ts",
     "generate:all-systems": "tsx src/scripts/generators/generate-all-system-indexes.ts",
     "roadmap:metrics": "npm run node:check && tsx src/scripts/generate-roadmap-metrics.ts",
+    "srd:coverage": "npm run node:check && tsx src/scripts/srd-coverage.ts",
     "progress": "tsx src/scripts/show-progress.ts",
     "validate": "npm run node:check && tsx src/scripts/validate-classes.ts",
     "enhance": "tsx src/scripts/enhance-classes.ts",

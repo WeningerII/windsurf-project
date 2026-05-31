@@ -12,32 +12,37 @@ source-tagged, policy-clean) but is **not** independent published-SRD coverage.
 
 ---
 
-## 1. Content (Denominator A) — independent SRD coverage [BLOCKED on external data]
+## 1. Content (Denominator A) — independent SRD coverage [UNBLOCKED; 5e measured, 5 systems pending wiring]
 
-The manifests are **loader-derived**, so they cannot detect entries the published
-SRD contains but the loaders omit. The coverage figures below are unmeasured;
-counts are approximate recall (verifying them is the gap).
+**Update:** the blocker is resolved. The container's Node runtime fetches the
+open-content SRD datasets from GitHub raw in full (the `WebFetch` *tool* truncates;
+Node `fetch()` does not). Verified independent sources for all 7 systems are in
+`docs/srd-sources.md`. `npm run srd:coverage` builds the genuine coverage report at
+`docs/generated/srd-coverage.md` (independent SRD lists diffed against the loaders
+by normalized name) — real coverage, unlike the loader-derived `docs/srd-manifest/`.
 
-- **Spells (likely large shortfalls, unquantified):** PF1e 134 vs CRB ~600+;
-  PF2e 143 vs CRB ~1,500+; D&D 3.5e 428 vs full SRD ~700+; 5e-2014 244 vs
-  SRD 5.1 ~319; 5e-2024 320.
-- **Monsters / bestiary — absent for 5 systems:** D&D 3.5e, PF1e, PF2e, M&M, and
-  Daggerheart have 0 monsters (5e-2014 41, 5e-2024 99).
-- **Categories never independently enumerated:** subclasses / archetypes /
-  prestige as their own denominators; heritages; backgrounds (independent
-  counts); feats with gate/prereq metadata; equipment subtypes incl. PF2e runes;
-  M&M devices/adversaries; Daggerheart domains / all domain cards / adversaries /
-  environments.
-- **Root blocker (tested, not assumed):** an independent SRD index is reachable
-  on public GitHub raw, but `WebFetch` truncates large files (returned 12 of
-  ~300 spells, no reliable total), `api.github.com` returns 403, and the GitHub
-  MCP tools are scoped to this repo only. A complete, accurate independent
-  denominator cannot be extracted with current tooling; an incomplete one would
-  be a wrong denominator, so it is not used.
-- **Unblock:** drop authoritative SRD/CRB index files (raw JSON of ids/names per
-  category per system) into the repo, or provide a non-truncating fetch. Then a
-  generator compares them against the loaders to produce a real coverage/gap
-  report, and `docs/srd-manifest/` becomes a genuine independent denominator.
+**Measured so far (D&D 5e, both editions):**
+- 5e-2014: spells 214/319 (67%), monsters 38/334 (11%), equipment 189/598 (32%),
+  classes 12/12, species 9/9. 5e-2024: spells 283/319 (89%), feats 12/17,
+  species 7/9, equipment 145/443 (33%).
+- **Provenance finding:** SRD 5.1 contains exactly **1 background (Acolyte)** and
+  **1 feat (Grappler)**, but the loader ships 6 backgrounds and 39 feats tagged to
+  pass the SRD-5.1 policy — i.e. it carries non-SRD-5.1 content. Audit against
+  `src/utils/openContentPolicy.ts` (open-content-only is a hard product rule).
+- The 5e-database 2024 monsters file looks partial (~3 entries) — validate that
+  source before trusting the 2024 monster row.
+
+**Still to do (sources in `docs/srd-sources.md`):**
+- Wire the other 5 systems into `src/scripts/srd-coverage.ts`, scoping each to the
+  policy's `allowedSources`: D&D 3.5e → core SRD (exclude D35E's psionics/epic);
+  PF1e → Core Rulebook (filter `wolfgangcodes` `spells.csv` `source`=PFRPG Core;
+  Foundry `pf1` for other categories); PF2e → Core Rulebook (`Pf2eTools` CRB files);
+  M&M 3e → Hero's Handbook (`mm3e-character-creator` data); Daggerheart → SRD 1.0
+  (`Batres3/daggerheart-srd`).
+- Remediate under-covered categories (encode missing SRD entries) and the
+  provenance over-inclusion (re-source or re-scope mislabeled entries).
+- Fold genuine coverage into the main metric / replace the loader-mirror
+  `docs/srd-manifest/` numbers once all 7 systems are wired.
 
 ## 2. Compute (Denominator B) — register completeness + engine wiring
 
