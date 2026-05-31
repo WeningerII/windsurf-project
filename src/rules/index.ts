@@ -22,6 +22,9 @@ export { makeEffectId } from './ir/types';
 export type { ResolveContext, ResolveResult, ResolvedTarget, RollMode } from './resolver/resolve';
 export { effectApplies, resolveEffects } from './resolver/resolve';
 
+export type { AttackResolution, AttackResolutionInput } from './resolver/attackResolution';
+export { resolveAttack } from './resolver/attackResolution';
+
 export { effectToLedgerEntry, toContributionLedger } from './ir/ledgerView';
 
 export type { MagicBonusItem } from './compile/equipEffects';
