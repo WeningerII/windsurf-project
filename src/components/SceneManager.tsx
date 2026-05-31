@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Download, Map as MapIcon, MousePointer2, Plus, Trash2, Upload } from 'lucide-react';
 import {
   MAX_MONSTERS_PER_SELECTION,
@@ -99,6 +99,9 @@ export function SceneManager({
   const [actionIssues, setActionIssues] = useState<string[]>([]);
   const [combatTargetId, setCombatTargetId] = useState('');
   const [combatLog, setCombatLog] = useState<string[]>([]);
+  // Per-click nonce so a missed attack (which appends no event) still advances
+  // the RNG stream — otherwise re-clicking Attack would reproduce the same miss.
+  const attackNonce = useRef(0);
 
   useEffect(() => {
     if (selectedSceneId && scenes.some((scene) => scene.id === selectedSceneId)) return;
@@ -351,7 +354,7 @@ export function SceneManager({
     const outcome = runSceneRound({
       state,
       resolveStats: resolveCombatStats,
-      seed: `${selectedScene.initialState.seed}:round:${state.round}:${selectedScene.events.length}`,
+      seed: `${selectedScene.initialState.seed}:round:${state.round}:${selectedScene.events.length}:${attackNonce.current++}`,
       round: state.round,
     });
 
