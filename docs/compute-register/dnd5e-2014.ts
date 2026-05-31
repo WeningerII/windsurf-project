@@ -101,7 +101,8 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       edgeCases: ['no bonus while unarmored'],
       stacking: 'adds on top of armor AC',
       source: `${SRD}: Fighting Style (Defense)`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: `${T} :: L2 Defense fighting style`,
     },
     {
       id: 'dnd5e2014.L2.ac.unarmored-defense-barbarian',

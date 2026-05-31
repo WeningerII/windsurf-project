@@ -1,4 +1,4 @@
-_Generated: 2026-05-31T05:15:22.482Z_
+_Generated: 2026-05-31T05:20:28.367Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -100,12 +100,12 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 ### Engine-Math Completion (vs Compute Register — Denominator B)
 | System | Verified | In-Scope | Complete |
 | --- | ---: | ---: | ---: |
-| D&D 5e (2014) | 27 | 28 | 96.4% |
+| D&D 5e (2014) | 28 | 28 | 100% |
 | D&D 5e (2024) | 19 | 19 | 100% |
 | D&D 3.5e | 16 | 17 | 94.1% |
 | Pathfinder 1e | 18 | 19 | 94.7% |
 | Mutants & Masterminds 3e | 16 | 17 | 94.1% |
-| Pathfinder 2e | 15 | 18 | 83.3% |
+| Pathfinder 2e | 16 | 18 | 88.9% |
 | Daggerheart | 8 | 10 | 80% |
 
 _Denominators: cited open-content manifests in docs/srd-manifest/ and docs/compute-register/. Enumerated manual boundaries excluded from both: 8._

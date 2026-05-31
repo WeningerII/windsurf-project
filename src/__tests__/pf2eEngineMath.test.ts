@@ -180,3 +180,18 @@ describe('L2/L8 PF2e perception and damage', () => {
     expect(out.system.hitPoints.current).toBe(0);
   });
 });
+
+describe('L4 PF2e skill check', () => {
+  it('= ability mod + proficiency (trained@1)', async () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0.5); // d20 = 11
+    const prepared = engine.prepareData(
+      doc({
+        baseAttributes: { str: 10, dex: 14, con: 10, int: 10, wis: 10, cha: 10 },
+        skillProficiencies: { acrobatics: { tier: 'trained', total: 0 } },
+      })
+    );
+    const r = await engine.rollCheck(prepared, 'acrobatics'); // acrobatics → Dex
+    expect(r.total).toBe(11 + 2 + 3); // Dex +2, trained@1 = +3
+    vi.restoreAllMocks();
+  });
+});

@@ -419,3 +419,20 @@ describe('L7 hit-dice pool tracking', () => {
     expect(out.system.hitDice[0].remaining).toBe(1);
   });
 });
+
+describe('L2 Defense fighting style', () => {
+  const withDefenseStyle = (extra: Partial<Dnd5eDataModel>): Dnd5eDataModel => ({
+    ...createDefaultDnd5eData(),
+    baseAttributes: { str: 10, dex: 14, con: 10, int: 10, wis: 10, cha: 10 },
+    featureOptionSelections: [{ group: 'fighting-styles', id: 'defense' }],
+    ...extra,
+  });
+  it('adds +1 AC while wearing armor', () => {
+    const out = engine.prepareData(doc(withDefenseStyle({ equipment: [chest(13, 'medium')] })));
+    expect(out.system.armorClass).toBe(16); // 13 + min(2,2) + 1
+  });
+  it('grants no bonus while unarmored', () => {
+    const out = engine.prepareData(doc(withDefenseStyle({})));
+    expect(out.system.armorClass).toBe(12); // 10 + Dex 2, no Defense bonus
+  });
+});

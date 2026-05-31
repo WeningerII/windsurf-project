@@ -98,7 +98,8 @@ export const pf2eComputeRegister: SystemComputeRegister = {
       inputs: ['ability', 'skill tier', 'conditions'],
       edgeCases: ['item/circumstance/status bonuses'],
       source: `${CRB}: Skills`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: `${T} :: L4 PF2e skill check`,
     },
     {
       id: 'pf2e.L7.hp',
