@@ -23,3 +23,9 @@ export type { ResolveContext, ResolveResult, ResolvedTarget, RollMode } from './
 export { effectApplies, resolveEffects } from './resolver/resolve';
 
 export { effectToLedgerEntry, toContributionLedger } from './ir/ledgerView';
+
+export type { MagicBonusItem } from './compile/equipEffects';
+export { compileEquipmentEffects, equipStackPolicy } from './compile/equipEffects';
+
+export type { ModifierSource } from './compile/modifierEffects';
+export { compileModifierEffects, compileModifierSource } from './compile/modifierEffects';
