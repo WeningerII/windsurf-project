@@ -48,24 +48,37 @@ by normalized name) — real coverage, unlike the loader-derived `docs/srd-manif
 
 The registers read 100%, but two real gaps sit behind that:
 
+**Rebalancing pass (done):** the registers were levelled so no system is
+neglected — each now holds 23–28 verified quantities across L1–L10 (previously
+13–28, with Daggerheart the outlier at 13). All additions were genuine,
+SRD-cited RAW math, not padding (see `docs/STATUS.md` for the list). This closed
+several items below; the remainder is the honest residual.
+
 - **Registers are a curated subset of the goal's full L1–L10 spec, not the
   exhaustive enumeration.** A complete register would be much larger and partly
   `missing`. Notably absent / uncounted today:
   - L3: full damage assembly with riders wired (Sneak Attack / Rage / Divine
     Smite / GWM / Sharpshooter / two-weapon / versatile); 5e Extra Attack counts;
-    3.5e/PF1e crit confirmation.
+    3.5e/PF1e crit confirmation. (Daggerheart critical damage + Spellcast dice,
+    and M&M attack/Affliction/Damage DCs, are now covered.)
   - L5: prepared/known spell counts; upcasting; full PF2e heightening (only
-    auto-heighten rank is covered).
-  - L6: speed with armor/Str penalty; 3.5e/PF1e load tables; (PF2e Bulk limits
-    are covered as a helper).
-  - L7: ASI/feat cadence; XP-to-level tables; attunement slots; inspiration / hero
-    points.
-  - L8: resist/vuln/immune damage transforms; PF2e dying/wounded/recovery track;
-    death saves outside 5e.
+    auto-heighten rank is covered). (3.5e/PF1e bonus-spells-by-ability done.)
+  - L6: speed with armor/Str penalty still open. **Done:** 3.5e/PF1e carrying
+    capacity, load categories, encumbrance penalties, and lift/drag limits;
+    PF2e Bulk limits.
+  - L7: ASI/feat cadence still open. **Done:** 3.5e XP-to-level table; M&M
+    starting power points + hero points; Daggerheart short-rest recovery,
+    Experience bonus, starting Hope; PF2e/3.5e HP/death state.
+  - L8: resist/vuln/immune transforms outside Daggerheart still open. **Done:**
+    PF2e dying/wounded/recovery track; 3.5e disabled/dying/dead track + massive
+    damage; Daggerheart resistance/immunity, Armor-Slot reduction, massive-damage
+    option, and death moves.
   - L9: point-buy ability arrays; feat/prereq gating; multiclass slot/save/BAB/prof
-    stacking as *validators* (only M&M PL caps exist).
-  - L10: 3.5e/PF1e CR↔XP & Encounter Level; PF2e encounter budget; wealth-by-level
-    (only M&M measurements doubling is covered).
+    stacking as *validators* (M&M PL caps + point-buy costs exist; M&M degrees of
+    success now covered).
+  - L10: 3.5e/PF1e CR↔XP & Encounter Level and wealth-by-level still open.
+    **Done:** PF2e creature XP by level difference and encounter budget; M&M
+    equipment points and measurements doubling.
 - **Several "verified" quantities are tested helpers, not engine-wired.** Spell
   save DC, spell attack, passive Perception, concentration DC, cantrip scaling,
   Monk/Barbarian Unarmored Defense, iterative attacks, PF2e MAP/striking/bulk/
