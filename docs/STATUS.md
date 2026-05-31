@@ -40,6 +40,8 @@ Completeness is measured against two cited, open-content denominators, so "done"
 
 Live `content%` and `compute%` per system are reported in `docs/generated/roadmap-metrics.md` (regenerate with `npm run roadmap:metrics`). All seven systems have engine-math registers; D&D 3.5e and PF1e gained their first engine-math tests under this tracking. The monster category is governed by `docs/rfc/004-monster-product-surface.md`.
 
+**Current state:** Engine math (Denominator B) is verified at 100% across all seven systems — every derived quantity in the compute registers is test-pinned. Content (Denominator A) integrity is 100% — every loader-backed open-content entry is source-tagged and open-content-policy-clean. Full-SRD *coverage* (detecting entries the published SRD contains but the loaders omit) requires an external authoritative SRD index that is unavailable in this environment; per the "cite, never invent" policy it is flagged unresolved rather than asserted, so a blanket RAW-coverage-complete claim is intentionally **not** made here.
+
 ## Source Of Truth
 
 - `docs/MASTER_PLAN.md` - canonical roadmap and planning classifications
