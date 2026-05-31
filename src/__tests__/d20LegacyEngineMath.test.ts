@@ -7,7 +7,15 @@
  * CMB/CMD and favored-class HP). Pins the compute registers
  * docs/compute-register/dnd-3.5e.ts and docs/compute-register/pf1e.ts.
  */
-import { baseSave, classBAB } from '../systems/shared/d20-helpers';
+import {
+  baseSave,
+  classBAB,
+  d20HeavyLoad,
+  d20CarryingCapacity,
+  d20LoadCategory,
+  d20EncumbrancePenalties,
+  d20LiftDragLimits,
+} from '../systems/shared/d20-helpers';
 import { computeD20LegacyAC } from '../utils/armorClass';
 import { Dnd35eEngine } from '../systems/dnd35e/engine';
 import { Pf1eEngine } from '../systems/pf1e/engine';
@@ -416,5 +424,57 @@ describe('L5 d20 Vancian spell-slot totals', () => {
     expect(
       buildD20LegacySpellSlotTotals('dnd-3.5e', [{ classId: 'noncaster-xyz', level: 5 }], map)
     ).toEqual({});
+  });
+});
+
+// ── L6: carrying capacity & encumbrance (shared SRD 3.5 / PF1e CRB) ──────────
+describe('L6 d20-legacy carrying capacity', () => {
+  it('matches the published heavy-load table for Strength 1-19', () => {
+    const table = [
+      0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 115, 130, 150, 175, 200, 230, 260, 300, 350,
+    ];
+    table.forEach((expected, str) => expect(d20HeavyLoad(str)).toBe(expected));
+  });
+  it('quadruples per +10 Strength above the table (Str 20 = Str 10 x4)', () => {
+    expect(d20HeavyLoad(20)).toBe(400); // 100 x4
+    expect(d20HeavyLoad(25)).toBe(800); // 200 x4
+    expect(d20HeavyLoad(29)).toBe(1400); // 350 x4
+    expect(d20HeavyLoad(30)).toBe(1600); // 400 x4
+  });
+  it('Strength 0 (helpless) carries nothing', () => {
+    expect(d20HeavyLoad(0)).toBe(0);
+  });
+  it('splits light/medium/heavy at 1/3 and 2/3 of the maximum', () => {
+    // Str 15 → heavy 200: light ≤66, medium ≤133, heavy ≤200
+    expect(d20CarryingCapacity(15)).toEqual({ light: 66, medium: 133, heavy: 200 });
+    // Str 10 → heavy 100: light ≤33, medium ≤66
+    expect(d20CarryingCapacity(10)).toEqual({ light: 33, medium: 66, heavy: 100 });
+  });
+  it('categorizes a carried weight by the thresholds', () => {
+    expect(d20LoadCategory(15, 60)).toBe('light'); // ≤66
+    expect(d20LoadCategory(15, 100)).toBe('medium'); // 67-133
+    expect(d20LoadCategory(15, 180)).toBe('heavy'); // 134-200
+    expect(d20LoadCategory(15, 250)).toBe('heavy'); // beyond max still 'heavy'
+  });
+  it('applies the load-based max Dex / check penalty / run multiplier', () => {
+    expect(d20EncumbrancePenalties('light')).toEqual({
+      maxDex: null,
+      checkPenalty: 0,
+      runMultiplier: 4,
+    });
+    expect(d20EncumbrancePenalties('medium')).toEqual({
+      maxDex: 3,
+      checkPenalty: -3,
+      runMultiplier: 4,
+    });
+    expect(d20EncumbrancePenalties('heavy')).toEqual({
+      maxDex: 1,
+      checkPenalty: -6,
+      runMultiplier: 3,
+    });
+  });
+  it('derives lift/drag limits as x1 / x2 / x5 of the maximum load', () => {
+    // Str 15 → max 200
+    expect(d20LiftDragLimits(15)).toEqual({ overHead: 200, offGround: 400, pushDrag: 1000 });
   });
 });

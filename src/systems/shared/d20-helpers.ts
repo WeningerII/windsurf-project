@@ -62,3 +62,102 @@ export function classBAB(level: number, progression: 'full' | 'three-quarter' | 
   if (progression === 'three-quarter') return Math.floor((level * 3) / 4);
   return Math.floor(level / 2);
 }
+
+// ── Carrying capacity & encumbrance ─────────────────────────────────────────
+// The Carrying Capacity table and load rules are identical between SRD 3.5
+// (Carrying Capacity) and the PF1e Core Rulebook (Carrying Capacity), so the
+// math is shared by both d20-legacy systems.
+
+/**
+ * Heavy-load (maximum load) anchors in pounds for Strength 1-19. Index = the
+ * Strength score (index 0 is unused — Strength 0 is helpless, 0 lbs). For
+ * Strength >= 20 the capacity is the value ten Strength points lower, times 4
+ * (the table's documented doubling-by-four pattern). SRD 3.5 / PF1e CRB.
+ */
+const HEAVY_LOAD_BY_STR: readonly number[] = [
+  0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 115, 130, 150, 175, 200, 230, 260, 300, 350,
+];
+
+/** Maximum (heavy) load in pounds for a Strength score (SRD 3.5 / PF1e CRB). */
+export function d20HeavyLoad(strength: number): number {
+  const str = Math.floor(strength);
+  if (str <= 0) return 0;
+  if (str < HEAVY_LOAD_BY_STR.length) return HEAVY_LOAD_BY_STR[str];
+  return d20HeavyLoad(str - 10) * 4;
+}
+
+export type D20LoadCategory = 'light' | 'medium' | 'heavy';
+
+export interface D20CarryingCapacity {
+  /** Maximum weight still counting as a light load. */
+  light: number;
+  /** Maximum weight still counting as a medium load. */
+  medium: number;
+  /** Maximum (heavy) load; weight above this exceeds carrying capacity. */
+  heavy: number;
+}
+
+/**
+ * Light / medium / heavy load thresholds in pounds: heavy is the table maximum,
+ * with light = up to 1/3 and medium = up to 2/3 of it (SRD 3.5 / PF1e CRB).
+ */
+export function d20CarryingCapacity(strength: number): D20CarryingCapacity {
+  const heavy = d20HeavyLoad(strength);
+  return {
+    light: Math.floor(heavy / 3),
+    medium: Math.floor((heavy * 2) / 3),
+    heavy,
+  };
+}
+
+/**
+ * Load category for a carried weight. Weight beyond the heavy threshold still
+ * returns 'heavy' — exceeding it invokes the separate lift/drag limits
+ * ({@link d20LiftDragLimits}); callers compare against `capacity.heavy` to detect that.
+ */
+export function d20LoadCategory(strength: number, weight: number): D20LoadCategory {
+  const cap = d20CarryingCapacity(strength);
+  if (weight <= cap.light) return 'light';
+  if (weight <= cap.medium) return 'medium';
+  return 'heavy';
+}
+
+export interface D20EncumbrancePenalties {
+  /** Maximum Dexterity bonus to AC imposed by the load (null = no limit). */
+  maxDex: number | null;
+  /** Armor check penalty imposed by the load. */
+  checkPenalty: number;
+  /** Run speed multiplier (x4 light/medium, x3 heavy). */
+  runMultiplier: number;
+}
+
+/**
+ * Encumbrance penalties by load category (SRD 3.5 / PF1e CRB): a light load is
+ * unencumbered; medium imposes max Dex +3 / -3 check penalty; heavy imposes max
+ * Dex +1 / -6 check penalty and drops the run multiplier from x4 to x3.
+ */
+export function d20EncumbrancePenalties(category: D20LoadCategory): D20EncumbrancePenalties {
+  switch (category) {
+    case 'light':
+      return { maxDex: null, checkPenalty: 0, runMultiplier: 4 };
+    case 'medium':
+      return { maxDex: 3, checkPenalty: -3, runMultiplier: 4 };
+    case 'heavy':
+      return { maxDex: 1, checkPenalty: -6, runMultiplier: 3 };
+  }
+}
+
+export interface D20LiftDragLimits {
+  /** Lift over head: up to the maximum (heavy) load. */
+  overHead: number;
+  /** Lift off the ground: up to 2x maximum load (can only stagger). */
+  offGround: number;
+  /** Push or drag: up to 5x maximum load. */
+  pushDrag: number;
+}
+
+/** Lift/drag limits in pounds, as multiples of the maximum load (SRD 3.5 / PF1e CRB). */
+export function d20LiftDragLimits(strength: number): D20LiftDragLimits {
+  const max = d20HeavyLoad(strength);
+  return { overHead: max, offGround: max * 2, pushDrag: max * 5 };
+}
