@@ -32,3 +32,9 @@ export { compileModifierEffects, compileModifierSource } from './compile/modifie
 
 export type { CharacterEffectInputs, ResolvedCharacterEffects } from './compile/characterEffects';
 export { resolveCharacterEffects } from './compile/characterEffects';
+
+export {
+  collectDnd5eConditionEffects,
+  conditionImposesDisadvantage,
+  hasDnd5eConditionEffects,
+} from './conditions/dnd5eConditions';
