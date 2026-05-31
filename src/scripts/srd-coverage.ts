@@ -139,7 +139,6 @@ function extractJsArray(text: string, name: string): Array<{ name?: unknown }> {
       break;
     }
   }
-  // eslint-disable-next-line @typescript-eslint/no-implied-eval
   return new Function(`return (${text.slice(lb, i)})`)() as Array<{ name?: unknown }>;
 }
 
