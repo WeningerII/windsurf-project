@@ -4,6 +4,7 @@ import type {
   DaggerheartCommunity,
 } from '../types/daggerheart';
 import type { CharacterDocument } from '../types/core/document';
+import { cloneDocument } from './templateShared';
 import {
   createDefaultDaggerheartData,
   type DaggerheartDataModel,
@@ -15,12 +16,6 @@ const CLASS_ITEM_PREFIX = 'template:class-item:';
 const COMMUNITY_ITEM_PREFIX = 'template:community-item:';
 
 type DaggerheartInventoryEntry = DaggerheartDataModel['inventory'][number];
-
-function cloneDocument(
-  document: CharacterDocument<DaggerheartDataModel>
-): CharacterDocument<DaggerheartDataModel> {
-  return structuredClone(document);
-}
 
 function replaceTemplateInventoryItems(
   inventory: DaggerheartDataModel['inventory'],

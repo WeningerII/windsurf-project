@@ -1,0 +1,167 @@
+import { ArrowLeft, BookOpen, Copy, Download, Redo2, Trash2, Undo2, Upload } from 'lucide-react';
+import type { CharacterDocument, SystemDataModel } from '../types/core/document';
+import type { SyncState } from '../hooks/useSync';
+import { systemRegistry } from '../registry';
+import { Button } from './ui/Button';
+import { Select } from './ui/Select';
+import { ThemeToggle } from './ui/ThemeToggle';
+import { UserMenu } from './UserMenu';
+
+interface AppHeaderProps {
+  currentDoc: CharacterDocument<SystemDataModel> | null;
+  currentDocId: string | null;
+  documents: CharacterDocument<SystemDataModel>[];
+  canUndo: boolean;
+  canRedo: boolean;
+  onUndo: () => void;
+  onRedo: () => void;
+  onReturnToList: () => void;
+  onSelectCharacter: (id: string) => void;
+  onClone: (document: CharacterDocument<SystemDataModel>) => void;
+  onExport: (document: CharacterDocument<SystemDataModel>) => void;
+  onImport: () => void;
+  onDelete: (id: string) => void;
+  syncState: SyncState;
+  lastSyncedAt: Date | null;
+  onSyncNow: () => void;
+  pendingSyncCount: number;
+}
+
+/** Sticky top toolbar: title/back, undo/redo, current-character actions, sync, theme. */
+export function AppHeader({
+  currentDoc,
+  currentDocId,
+  documents,
+  canUndo,
+  canRedo,
+  onUndo,
+  onRedo,
+  onReturnToList,
+  onSelectCharacter,
+  onClone,
+  onExport,
+  onImport,
+  onDelete,
+  syncState,
+  lastSyncedAt,
+  onSyncNow,
+  pendingSyncCount,
+}: AppHeaderProps) {
+  return (
+    <header className="sticky top-0 z-50 border-b bg-card/95 backdrop-blur supports-[backdrop-filter]:bg-card/60">
+      <div className="container mx-auto px-4 py-3">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 min-w-0">
+            {currentDoc ? (
+              <Button
+                variant="ghost"
+                onClick={onReturnToList}
+                title="Back to character list"
+                className="shrink-0"
+              >
+                <ArrowLeft className="w-4 h-4 mr-1.5" />
+                Back
+              </Button>
+            ) : (
+              <div className="p-2 rounded-lg bg-primary/10 shrink-0">
+                <BookOpen className="w-5 h-5 text-primary" />
+              </div>
+            )}
+            <div className="min-w-0">
+              <h1 className="text-lg font-bold truncate">
+                {currentDoc ? currentDoc.name : 'RPG Character Sheet'}
+              </h1>
+              <p className="text-xs text-muted-foreground truncate hidden sm:block">
+                {currentDoc
+                  ? systemRegistry.get(currentDoc.systemId)?.label
+                  : 'Multi-system tabletop character manager'}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-1.5 shrink-0">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onUndo}
+              disabled={!canUndo}
+              title="Undo (Ctrl+Z)"
+              aria-label="Undo"
+            >
+              <Undo2 className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onRedo}
+              disabled={!canRedo}
+              title="Redo (Ctrl+Shift+Z)"
+              aria-label="Redo"
+            >
+              <Redo2 className="w-4 h-4" />
+            </Button>
+            {currentDoc && (
+              <>
+                <Select
+                  value={currentDocId || ''}
+                  onChange={(e) => onSelectCharacter(e.target.value)}
+                  className="w-40 md:w-56 hidden sm:flex"
+                >
+                  <option value="">Switch character...</option>
+                  {documents.map((doc) => (
+                    <option key={doc.id} value={doc.id}>
+                      {doc.name} ({systemRegistry.get(doc.systemId)?.label})
+                    </option>
+                  ))}
+                </Select>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => onClone(currentDoc)}
+                  title="Clone character"
+                  aria-label="Clone character"
+                >
+                  <Copy className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => onExport(currentDoc)}
+                  title="Export character"
+                  aria-label="Export character"
+                >
+                  <Download className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={onImport}
+                  title="Import character"
+                  aria-label="Import Character"
+                >
+                  <Upload className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                  onClick={() => currentDocId && onDelete(currentDocId)}
+                  title="Delete character"
+                  aria-label="Delete character"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </>
+            )}
+            <UserMenu
+              syncState={syncState}
+              lastSyncedAt={lastSyncedAt}
+              onSyncNow={onSyncNow}
+              pendingSyncCount={pendingSyncCount}
+            />
+            <ThemeToggle />
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+}

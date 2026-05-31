@@ -23,15 +23,3 @@ export interface DnD35eWeapon extends WeaponItem {
   damageType?: 'slashing' | 'piercing' | 'bludgeoning';
   cost: string; // e.g., "15 gp"
 }
-
-export interface DnD5eWeapon extends WeaponItem {
-  damage: { dice: string; type: string };
-  range?: { normal: number; long?: number };
-  cost: number; // In gold pieces
-}
-
-export interface PathfinderWeapon extends WeaponItem {
-  damage: { dice: string; type: string };
-  traits?: string[];
-  bulk?: number;
-}

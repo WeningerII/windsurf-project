@@ -70,6 +70,12 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     ],
   },
   {
+    path: 'docs/VISION.md',
+    kind: 'live',
+    owner: 'vision',
+    rules: ['path_ref_rule'],
+  },
+  {
     path: 'docs/REMEDIATION_PLAN.md',
     kind: 'plan',
     owner: 'active-remediation-plan',
@@ -103,6 +109,12 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     path: 'docs/rfc/002-ai-control-plane.md',
     kind: 'rfc',
     owner: 'ai-control-plane-rfc',
+    rules: ['path_ref_rule'],
+  },
+  {
+    path: 'docs/rfc/003-rules-ir-and-effects.md',
+    kind: 'rfc',
+    owner: 'rules-ir-effects-rfc',
     rules: ['path_ref_rule'],
   },
   {

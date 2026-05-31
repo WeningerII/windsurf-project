@@ -1,4 +1,4 @@
-import { Dnd5eEngineBase } from '../dnd5e-shared/engine';
+import { Dnd5eEngineBase } from './shared/engine';
 
 export class Dnd5eEngine extends Dnd5eEngineBase {
   protected applyExhaustionMaxHP(exhaustion: number, maxHP: number): number {

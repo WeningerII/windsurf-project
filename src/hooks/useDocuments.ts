@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { CharacterDocument, SystemDataModel } from '../types/core/document';
 import {
   saveDocuments,
@@ -7,8 +7,8 @@ import {
   clearDocumentStorage,
 } from '../utils/documentStorage';
 import { systemRegistry } from '../registry';
-import { debounce } from '../utils/performance';
 import { sameDocumentSignatures } from '../utils/documentSignature';
+import { useDebouncedPersistence } from './useDebouncedPersistence';
 
 const MAX_HISTORY = 50;
 
@@ -89,7 +89,6 @@ export const useDocuments = () => {
   const documentsRef = useRef<CharacterDocument<SystemDataModel>[]>([]);
   const historyPastRef = useRef<CharacterDocument<SystemDataModel>[][]>([]);
   const hasLocalEditsRef = useRef(false);
-  const persistVersionRef = useRef(0);
   const historySnapshotQueuedRef = useRef(false);
 
   useEffect(() => {
@@ -107,6 +106,8 @@ export const useDocuments = () => {
       setError(err instanceof Error ? err.message : 'Failed to save documents');
     }
   }, []);
+
+  const persistence = useDebouncedPersistence(persist);
 
   useEffect(() => {
     // Fast synchronous load from localStorage first
@@ -143,41 +144,6 @@ export const useDocuments = () => {
       });
   }, [persist]);
 
-  const debouncedPersist = useMemo(
-    () =>
-      debounce((docs: CharacterDocument<SystemDataModel>[], version: number) => {
-        if (version !== persistVersionRef.current) return;
-        persist(docs);
-      }, 300),
-    [persist]
-  );
-
-  useEffect(() => () => debouncedPersist.flush(), [debouncedPersist]);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return undefined;
-
-    const flushPersist = () => {
-      debouncedPersist.flush();
-    };
-
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden') {
-        flushPersist();
-      }
-    };
-
-    window.addEventListener('pagehide', flushPersist);
-    window.addEventListener('beforeunload', flushPersist);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    return () => {
-      window.removeEventListener('pagehide', flushPersist);
-      window.removeEventListener('beforeunload', flushPersist);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [debouncedPersist]);
-
   const pushHistorySnapshot = useCallback((snapshot: CharacterDocument<SystemDataModel>[]) => {
     setHistoryPast((prev) => [...prev.slice(-(MAX_HISTORY - 1)), cloneDocumentsSnapshot(snapshot)]);
     setHistoryFuture([]);
@@ -208,7 +174,7 @@ export const useDocuments = () => {
     (
       updater: (prev: CharacterDocument<SystemDataModel>[]) => CharacterDocument<SystemDataModel>[]
     ) => {
-      const persistVersion = ++persistVersionRef.current;
+      const persistVersion = persistence.beginVersion();
       setDocuments((prev) => {
         const next = updater(prev);
         // Hot path: runs on every mutation. Cheap signature compare is
@@ -223,11 +189,11 @@ export const useDocuments = () => {
         } else {
           pushHistorySnapshot(prev);
         }
-        debouncedPersist(next, persistVersion);
+        persistence.persist(next, persistVersion);
         return next;
       });
     },
-    [debouncedPersist, pushHistorySnapshot, queueHistorySnapshot]
+    [persistence, pushHistorySnapshot, queueHistorySnapshot]
   );
 
   const addDocument = useCallback(
@@ -285,9 +251,9 @@ export const useDocuments = () => {
 
   const clearAllDocuments = useCallback(() => {
     hasLocalEditsRef.current = true;
-    persistVersionRef.current += 1;
+    persistence.beginVersion();
     pushHistorySnapshot(documentsRef.current);
-    debouncedPersist.cancel();
+    persistence.cancel();
     setDocuments([]);
     try {
       clearDocumentStorage();
@@ -295,10 +261,10 @@ export const useDocuments = () => {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to clear document data');
     }
-  }, [debouncedPersist, pushHistorySnapshot]);
+  }, [persistence, pushHistorySnapshot]);
 
   const undo = useCallback(() => {
-    const persistVersion = ++persistVersionRef.current;
+    const persistVersion = persistence.beginVersion();
     setHistoryPast((past) => {
       if (past.length === 0) return past;
 
@@ -310,14 +276,14 @@ export const useDocuments = () => {
       ]);
       hasLocalEditsRef.current = true;
       setDocuments(cloneDocumentsSnapshot(previous));
-      debouncedPersist(previous, persistVersion);
+      persistence.persist(previous, persistVersion);
 
       return past.slice(0, -1);
     });
-  }, [debouncedPersist]);
+  }, [persistence]);
 
   const redo = useCallback(() => {
-    const persistVersion = ++persistVersionRef.current;
+    const persistVersion = persistence.beginVersion();
     setHistoryFuture((future) => {
       if (future.length === 0) return future;
 
@@ -329,11 +295,11 @@ export const useDocuments = () => {
       ]);
       hasLocalEditsRef.current = true;
       setDocuments(cloneDocumentsSnapshot(next));
-      debouncedPersist(next, persistVersion);
+      persistence.persist(next, persistVersion);
 
       return future.slice(1);
     });
-  }, [debouncedPersist]);
+  }, [persistence]);
 
   const clearError = useCallback(() => {
     setError(null);
@@ -353,6 +319,6 @@ export const useDocuments = () => {
     canUndo: historyPast.length > 0,
     canRedo: historyFuture.length > 0,
     clearError,
-    flushPendingSaves: debouncedPersist.flush,
+    flushPendingSaves: persistence.flush,
   };
 };

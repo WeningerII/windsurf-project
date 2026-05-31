@@ -1,3 +1,4 @@
+import { cloneDocument, dedupe } from './templateShared';
 import { dnd5e2024Weapons } from '../data/dnd/5e-2024/equipment/weapons';
 import {
   ArtisanToolProficiency,
@@ -182,12 +183,6 @@ const WEAPON_OPTIONS: Dnd5eFeatChoiceOption[] = dnd5e2024Weapons
     (weapon, index, weapons) => weapons.findIndex((entry) => entry.id === weapon.id) === index
   );
 
-function cloneDocument<T extends Dnd5eLikeDataModel>(
-  document: CharacterDocument<T>
-): CharacterDocument<T> {
-  return structuredClone(document);
-}
-
 function humanizeId(value: string): string {
   return value
     .split('-')
@@ -212,10 +207,6 @@ function normalizeToolGrant(value: string): string {
   const normalized = value.trim().toLowerCase();
   if (normalized === "cook's utensils") return 'cooks-utensils';
   return normalized.replace(/'/g, '').replace(/\s+/g, '-');
-}
-
-function dedupe(values: string[]): string[] {
-  return [...new Set(values)];
 }
 
 function mergeDerivedList(

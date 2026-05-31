@@ -1,4 +1,4 @@
-import { Dnd5eEngineBase } from '../dnd5e-shared/engine';
+import { Dnd5eEngineBase } from '../dnd5e/shared/engine';
 import { CharacterDocument } from '../../types/core/document';
 import { Dnd5e2024DataModel } from './data-model';
 import { abilityMod } from '../../utils/math';

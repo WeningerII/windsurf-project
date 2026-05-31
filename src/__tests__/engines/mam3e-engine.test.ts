@@ -83,6 +83,22 @@ describe('Mam3eEngine', () => {
       expect(result.system.powerPoints.spent.defenses).toBe(14);
     });
 
+    it('charges PP for a directly-entered Toughness rank', () => {
+      const doc = makeDoc({
+        defenses: {
+          dodge: { rank: 1, total: 0 },
+          parry: { rank: 0, total: 0 },
+          fortitude: { rank: 0, total: 0 },
+          toughness: { rank: 3, total: 0 },
+          will: { rank: 0, total: 0 },
+        },
+      });
+      const result = engine.prepareData(doc);
+      // Toughness rank contributes to total, so it must be charged like the
+      // other defenses: 1 + 0 + 0 + 3 + 0 = 4 PP.
+      expect(result.system.powerPoints.spent.defenses).toBe(4);
+    });
+
     it('calculates power costs using rank plus extras/flaws modifiers', () => {
       const doc = makeDoc({
         powers: [

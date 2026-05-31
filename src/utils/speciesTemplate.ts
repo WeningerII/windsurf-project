@@ -1,3 +1,4 @@
+import { cloneDocument, dedupe } from './templateShared';
 import { Feature, ProficiencyLevel } from '../types/core/character';
 import { CharacterDocument } from '../types/core/document';
 import { Species } from '../types/character-options/species';
@@ -67,16 +68,6 @@ const SKILL_OPTIONS = [
   'stealth',
   'survival',
 ];
-
-function cloneDocument<T extends Dnd5eLikeDataModel>(
-  document: CharacterDocument<T>
-): CharacterDocument<T> {
-  return structuredClone(document);
-}
-
-function dedupe(values: string[]): string[] {
-  return [...new Set(values)];
-}
 
 function removeValues(current: string[] | undefined, removed: string[]): string[] {
   return (current || []).filter((value) => !removed.includes(value));

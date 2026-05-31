@@ -1,6 +1,6 @@
 # RFC 002: AI Control Plane For Frictionless Creation And Play
 
-**Status:** Draft
+**Status:** Withdrawn (2026-05-30) — the provider-free AI control-plane scaffolding and the guided-creation draft substrate this RFC describes were removed as orphaned, non-functional code. Retained as historical design intent should an AI layer be built later; it does not describe shipped code.
 **Author:** product/engineering planning
 **Consolidated:** May 1, 2026
 

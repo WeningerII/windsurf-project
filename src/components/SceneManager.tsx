@@ -1,15 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import {
-  Download,
-  Map,
-  MousePointer2,
-  Plus,
-  RotateCcw,
-  Skull,
-  Swords,
-  Trash2,
-  Upload,
-} from 'lucide-react';
+import { Download, Map, MousePointer2, Plus, Trash2, Upload } from 'lucide-react';
 import {
   MAX_MONSTERS_PER_SELECTION,
   buildEncounterSceneEvents,
@@ -38,6 +28,10 @@ import { Badge } from './ui/Badge';
 import { Input } from './ui/Input';
 import { Select } from './ui/Select';
 import { SceneGridView } from './SceneGridView';
+import { EncounterPanel } from './scene/EncounterPanel';
+import { InitiativeTracker } from './scene/InitiativeTracker';
+import { MarkerPanel } from './scene/MarkerPanel';
+import { TokenPanel } from './scene/TokenPanel';
 
 type PlacementMode = 'none' | 'token' | 'marker';
 
@@ -322,6 +316,15 @@ export function SceneManager({
         tokenId: selectedTokenId,
         position,
       });
+    }
+  };
+
+  const handleSelectLinkedDocument = (documentId: string) => {
+    setTokenDocumentId(documentId);
+    const doc = documents.find((entry) => entry.id === documentId);
+    if (doc) {
+      setTokenName(doc.name);
+      setTokenKind('character');
     }
   };
 
@@ -681,307 +684,72 @@ export function SceneManager({
                 />
 
                 <div className="space-y-3">
-                  <div className="rounded-lg border bg-card p-3">
-                    <div className="mb-2 flex items-center justify-between gap-2">
-                      <h5 className="text-sm font-semibold">Token</h5>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                        disabled={!selectedTokenId}
-                        onClick={handleDeleteSelectedToken}
-                        title="Remove token"
-                        aria-label="Remove token"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <div className="space-y-2">
-                      <Select
-                        aria-label="Linked character"
-                        value={tokenDocumentId}
-                        onChange={(event) => {
-                          const docId = event.target.value;
-                          setTokenDocumentId(docId);
-                          const doc = documents.find((entry) => entry.id === docId);
-                          if (doc) {
-                            setTokenName(doc.name);
-                            setTokenKind('character');
-                          }
-                        }}
-                      >
-                        <option value="">Manual token</option>
-                        {eligibleDocuments.map((doc) => (
-                          <option key={doc.id} value={doc.id}>
-                            {doc.name}
-                          </option>
-                        ))}
-                      </Select>
-                      <div className="grid grid-cols-[minmax(0,1fr)_7.5rem] gap-2">
-                        <Input
-                          aria-label="Token name"
-                          value={tokenName}
-                          onChange={(event) => setTokenName(event.target.value)}
-                          placeholder="Token name"
-                        />
-                        <Select
-                          aria-label="Token kind"
-                          value={tokenKind}
-                          onChange={(event) => setTokenKind(event.target.value as SceneTokenKind)}
-                          disabled={Boolean(tokenDocumentId)}
-                        >
-                          <option value="character">Character</option>
-                          <option value="monster">Monster</option>
-                          <option value="npc">NPC</option>
-                          <option value="object">Object</option>
-                        </Select>
-                      </div>
-                      <Button
-                        variant={placementMode === 'token' ? 'default' : 'outline'}
-                        size="sm"
-                        className="w-full"
-                        onClick={() =>
-                          setPlacementMode((current) => (current === 'token' ? 'none' : 'token'))
-                        }
-                        disabled={!tokenName.trim() && !tokenDocumentId}
-                      >
-                        <Plus className="mr-1.5 h-4 w-4" />
-                        Place Token
-                      </Button>
-                    </div>
-                  </div>
+                  <TokenPanel
+                    eligibleDocuments={eligibleDocuments}
+                    tokenDocumentId={tokenDocumentId}
+                    onSelectLinkedDocument={handleSelectLinkedDocument}
+                    tokenName={tokenName}
+                    onTokenNameChange={setTokenName}
+                    tokenKind={tokenKind}
+                    onTokenKindChange={setTokenKind}
+                    isPlacing={placementMode === 'token'}
+                    onTogglePlace={() =>
+                      setPlacementMode((current) => (current === 'token' ? 'none' : 'token'))
+                    }
+                    canDeleteToken={Boolean(selectedTokenId)}
+                    onDeleteSelectedToken={handleDeleteSelectedToken}
+                  />
 
-                  <div className="rounded-lg border bg-card p-3">
-                    <div className="mb-2 flex items-center justify-between gap-2">
-                      <h5 className="text-sm font-semibold">Encounter</h5>
-                      <Skull className="h-4 w-4 text-muted-foreground" />
-                    </div>
-                    <div className="space-y-2">
-                      <Select
-                        aria-label="Encounter monster"
-                        value={encounterMonsterId}
-                        onChange={(event) => setEncounterMonsterId(event.target.value)}
-                        disabled={monstersLoading || encounterMonsters.length === 0}
-                      >
-                        {encounterMonsters.length === 0 ? (
-                          <option value="">
-                            {monstersLoading ? 'Loading monsters...' : 'No monsters'}
-                          </option>
-                        ) : (
-                          encounterMonsters.map((monster) => (
-                            <option key={monster.id} value={monster.id}>
-                              {monster.name} (CR {monster.challengeRating})
-                            </option>
-                          ))
-                        )}
-                      </Select>
-                      <div className="grid grid-cols-3 gap-2">
-                        <Input
-                          aria-label="Encounter count"
-                          inputMode="numeric"
-                          value={encounterCount}
-                          onChange={(event) => setEncounterCount(event.target.value)}
-                        />
-                        <Input
-                          aria-label="Encounter start x"
-                          inputMode="numeric"
-                          value={encounterOriginX}
-                          onChange={(event) => setEncounterOriginX(event.target.value)}
-                        />
-                        <Input
-                          aria-label="Encounter start y"
-                          inputMode="numeric"
-                          value={encounterOriginY}
-                          onChange={(event) => setEncounterOriginY(event.target.value)}
-                        />
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        {selectedEncounterMonster
-                          ? `${selectedEncounterTotalXp} XP / ${selectedEncounterMonster.source}`
-                          : monsterLoadError || 'Loader-backed monsters only'}
-                      </div>
-                      <div className="grid grid-cols-2 gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          disabled={!encounterMonsterId || monstersLoading}
-                          onClick={handleQueueEncounterMonster}
-                        >
-                          <Plus className="mr-1.5 h-4 w-4" />
-                          Queue Monster
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          disabled={pendingEncounterSelections.length === 0 || monstersLoading}
-                          onClick={handleAddEncounter}
-                        >
-                          <Plus className="mr-1.5 h-4 w-4" />
-                          Add Encounter
-                        </Button>
-                      </div>
-                      {encounterSelections.length > 0 && (
-                        <div className="space-y-1 rounded border bg-muted/30 p-2">
-                          {encounterPlan.entries.map((entry) => (
-                            <div
-                              key={entry.monsterId}
-                              className="flex items-center justify-between gap-2 text-xs"
-                            >
-                              <span className="min-w-0 truncate">
-                                {entry.count} x {entry.name} ({entry.totalXp} XP)
-                              </span>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-6 w-6 shrink-0"
-                                onClick={() => handleRemoveEncounterSelection(entry.monsterId)}
-                                title={`Remove ${entry.name} from encounter`}
-                                aria-label={`Remove ${entry.name} from encounter`}
-                              >
-                                <Trash2 className="h-3.5 w-3.5" />
-                              </Button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                      <div className="space-y-1 text-xs text-muted-foreground">
-                        {encounterPlan.issues.length > 0 ? (
-                          <div className="text-destructive">{encounterPlan.issues[0].message}</div>
-                        ) : (
-                          <div>
-                            Plan: {encounterPlan.totalCount} monster
-                            {encounterPlan.totalCount === 1 ? '' : 's'} / {encounterPlan.totalXp} XP
-                          </div>
-                        )}
-                        {encounterParty.members.length > 0 ? (
-                          <div>
-                            Party: {encounterParty.members.length} PC
-                            {encounterParty.members.length === 1 ? '' : 's'} / avg level{' '}
-                            {formatAverageLevel(encounterParty.averageLevel)} /{' '}
-                            {encounterXpPerPartyLevel} XP per party level
-                          </div>
-                        ) : (
-                          <div>Party: no linked character levels</div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+                  <EncounterPanel
+                    monsters={encounterMonsters}
+                    monsterId={encounterMonsterId}
+                    onMonsterChange={setEncounterMonsterId}
+                    count={encounterCount}
+                    onCountChange={setEncounterCount}
+                    originX={encounterOriginX}
+                    onOriginXChange={setEncounterOriginX}
+                    originY={encounterOriginY}
+                    onOriginYChange={setEncounterOriginY}
+                    loading={monstersLoading}
+                    loadError={monsterLoadError}
+                    selectedMonster={selectedEncounterMonster}
+                    selectedMonsterTotalXp={selectedEncounterTotalXp}
+                    canAddEncounter={pendingEncounterSelections.length > 0}
+                    hasSelections={encounterSelections.length > 0}
+                    plan={encounterPlan}
+                    party={encounterParty}
+                    xpPerPartyLevel={encounterXpPerPartyLevel}
+                    onQueueMonster={handleQueueEncounterMonster}
+                    onAddEncounter={handleAddEncounter}
+                    onRemoveSelection={handleRemoveEncounterSelection}
+                  />
 
-                  <div className="rounded-lg border bg-card p-3">
-                    <h5 className="mb-2 text-sm font-semibold">Marker</h5>
-                    <div className="space-y-2">
-                      <Input
-                        aria-label="Marker label"
-                        value={markerLabel}
-                        onChange={(event) => setMarkerLabel(event.target.value)}
-                        placeholder="Marker label"
-                      />
-                      <div className="grid grid-cols-[minmax(0,1fr)_4rem_4rem] gap-2">
-                        <Select
-                          aria-label="Marker kind"
-                          value={markerKind}
-                          onChange={(event) => setMarkerKind(event.target.value as SceneMarkerKind)}
-                        >
-                          <option value="hazard">Hazard</option>
-                          <option value="terrain">Terrain</option>
-                        </Select>
-                        <Input
-                          aria-label="Marker width"
-                          inputMode="numeric"
-                          value={markerWidth}
-                          onChange={(event) => setMarkerWidth(event.target.value)}
-                        />
-                        <Input
-                          aria-label="Marker height"
-                          inputMode="numeric"
-                          value={markerHeight}
-                          onChange={(event) => setMarkerHeight(event.target.value)}
-                        />
-                      </div>
-                      <Button
-                        variant={placementMode === 'marker' ? 'default' : 'outline'}
-                        size="sm"
-                        className="w-full"
-                        onClick={() =>
-                          setPlacementMode((current) => (current === 'marker' ? 'none' : 'marker'))
-                        }
-                        disabled={!markerLabel.trim()}
-                      >
-                        <Plus className="mr-1.5 h-4 w-4" />
-                        Place Marker
-                      </Button>
-                      {Object.values(state.markers).length > 0 && (
-                        <div className="space-y-1 pt-1">
-                          {Object.values(state.markers).map((marker) => (
-                            <div
-                              key={marker.id}
-                              className="flex items-center justify-between gap-2 rounded border px-2 py-1 text-sm"
-                            >
-                              <span className="min-w-0 truncate">
-                                {marker.label} ({marker.kind})
-                              </span>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-7 w-7 shrink-0"
-                                onClick={() => handleDeleteMarker(marker.id)}
-                                title={`Remove ${marker.label}`}
-                                aria-label={`Remove ${marker.label}`}
-                              >
-                                <Trash2 className="h-3.5 w-3.5" />
-                              </Button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                  <MarkerPanel
+                    markerLabel={markerLabel}
+                    onMarkerLabelChange={setMarkerLabel}
+                    markerKind={markerKind}
+                    onMarkerKindChange={setMarkerKind}
+                    markerWidth={markerWidth}
+                    onMarkerWidthChange={setMarkerWidth}
+                    markerHeight={markerHeight}
+                    onMarkerHeightChange={setMarkerHeight}
+                    isPlacing={placementMode === 'marker'}
+                    onTogglePlace={() =>
+                      setPlacementMode((current) => (current === 'marker' ? 'none' : 'marker'))
+                    }
+                    markers={state.markers}
+                    onDeleteMarker={handleDeleteMarker}
+                  />
 
-                  <div className="rounded-lg border bg-card p-3">
-                    <div className="mb-2 flex items-center justify-between gap-2">
-                      <h5 className="text-sm font-semibold">Initiative</h5>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={Object.keys(state.tokens).length === 0}
-                        onClick={handleAdvanceTurn}
-                      >
-                        <RotateCcw className="mr-1.5 h-4 w-4" />
-                        Next Turn
-                      </Button>
-                    </div>
-                    <div className="space-y-2">
-                      {Object.values(state.tokens).map((token) => (
-                        <label
-                          key={token.id}
-                          className="grid grid-cols-[minmax(0,1fr)_4.5rem] items-center gap-2 text-sm"
-                        >
-                          <span className="truncate">{token.name}</span>
-                          <Input
-                            aria-label={`${token.name} initiative`}
-                            inputMode="numeric"
-                            value={initiativeValues[token.id] ?? '10'}
-                            onChange={(event) =>
-                              setInitiativeValues((current) => ({
-                                ...current,
-                                [token.id]: event.target.value,
-                              }))
-                            }
-                          />
-                        </label>
-                      ))}
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="w-full"
-                        disabled={Object.keys(state.tokens).length === 0}
-                        onClick={handleSetInitiative}
-                      >
-                        <Swords className="mr-1.5 h-4 w-4" />
-                        Set Order
-                      </Button>
-                    </div>
-                  </div>
+                  <InitiativeTracker
+                    tokens={state.tokens}
+                    initiativeValues={initiativeValues}
+                    onInitiativeChange={(tokenId, value) =>
+                      setInitiativeValues((current) => ({ ...current, [tokenId]: value }))
+                    }
+                    onAdvanceTurn={handleAdvanceTurn}
+                    onSetOrder={handleSetInitiative}
+                  />
                 </div>
               </div>
             </div>
@@ -995,10 +763,6 @@ export function SceneManager({
 function positiveIntegerOrDefault(value: string, fallback: number): number {
   const parsed = Number.parseInt(value, 10);
   return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
-}
-
-function formatAverageLevel(level: number): string {
-  return Number.isInteger(level) ? String(level) : level.toFixed(1);
 }
 
 function isMonsterSystemId(systemId: string): systemId is GameSystemId {

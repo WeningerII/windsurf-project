@@ -27,13 +27,3 @@ export interface DnD35eGear extends GearItem {
     | 'mount-gear';
   cost: string; // e.g., "2 gp"
 }
-
-export interface DnD5eGear extends GearItem {
-  category: string;
-  cost: number; // In copper pieces
-}
-
-export interface PathfinderGear extends GearItem {
-  category: string;
-  bulk?: number; // PF2e uses bulk instead of weight
-}

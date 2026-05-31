@@ -1,3 +1,4 @@
+import { cloneDocument, dedupe, hitDieFaces, seedHitDieRolls } from './templateShared';
 import { dnd5eClasses } from '../data/dnd/5e-2014/classes';
 import { dnd5e2024Classes } from '../data/dnd/5e-2024/classes';
 import {
@@ -56,12 +57,6 @@ const ATTRIBUTE_NAME_TO_ID: Record<string, string> = {
   charisma: 'cha',
 };
 
-function cloneDocument<T extends Dnd5eLikeDataModel>(
-  document: CharacterDocument<T>
-): CharacterDocument<T> {
-  return structuredClone(document);
-}
-
 function emptyDerivedFeatAutomation(): DerivedFeatAutomation {
   return {
     abilityScores: {},
@@ -85,32 +80,6 @@ function createEmptySpellSlots(): SpellSlots {
     8: { max: 0, used: 0 },
     9: { max: 0, used: 0 },
   };
-}
-
-function hitDieFaces(hitDie: string): number {
-  return Number.parseInt(hitDie.replace('d', ''), 10);
-}
-
-function averageHitDieRoll(hitDie: string): number {
-  return Math.floor(hitDieFaces(hitDie) / 2) + 1;
-}
-
-function seedHitDieRolls(existingRolls: number[], hitDie: string, level: number): number[] {
-  const maxAtLevelOne = hitDieFaces(hitDie);
-  const averagePerLevel = averageHitDieRoll(hitDie);
-  const rolls: number[] = [];
-
-  for (let index = 0; index < level; index += 1) {
-    const existing = existingRolls[index];
-    if (typeof existing === 'number' && Number.isFinite(existing) && existing > 0) {
-      rolls.push(existing);
-      continue;
-    }
-
-    rolls.push(index === 0 ? maxAtLevelOne : averagePerLevel);
-  }
-
-  return rolls;
 }
 
 function featureSignature(feature: Pick<Feature, 'id' | 'source'>): string {
@@ -147,9 +116,17 @@ function collectFeatureSignatures(
   return signatures;
 }
 
+const dnd5eClassCatalogCache = new Map<string, Map<string, CharacterClass>>();
+
 function get5eClassCatalog(systemId: string): Map<string, CharacterClass> {
+  const cached = dnd5eClassCatalogCache.get(systemId);
+  if (cached) {
+    return cached;
+  }
   const catalog = systemId === 'dnd-5e-2024' ? dnd5e2024Classes : dnd5eClasses;
-  return new Map(catalog.map((classData) => [classData.id, classData]));
+  const map = new Map(catalog.map((classData) => [classData.id, classData]));
+  dnd5eClassCatalogCache.set(systemId, map);
+  return map;
 }
 
 function emptyDerivedProficiencies(): DerivedClassProficiencies {
@@ -159,10 +136,6 @@ function emptyDerivedProficiencies(): DerivedClassProficiencies {
     tools: [],
     savingThrows: [],
   };
-}
-
-function dedupe(values: string[]): string[] {
-  return [...new Set(values)];
 }
 
 function removeValues(current: string[] | undefined, removed: string[]): string[] {

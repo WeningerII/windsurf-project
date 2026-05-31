@@ -1,3 +1,4 @@
+import { cloneDocument, dedupe, seedHitDieRolls } from './templateShared';
 import { CharacterClass } from '../types/character-options/classes';
 import { Feature } from '../types/core/character';
 import { CharacterDocument } from '../types/core/document';
@@ -95,16 +96,6 @@ function isPf1eDocument(
   return document.systemId === 'pf1e';
 }
 
-function cloneDocument<T extends D20LegacyDataModel>(
-  document: CharacterDocument<T>
-): CharacterDocument<T> {
-  return structuredClone(document);
-}
-
-function dedupe(values: string[]): string[] {
-  return [...new Set(values)];
-}
-
 function isPf1eClassLevel(
   classLevel: Dnd35eClassLevel | Pf1eClassLevel | undefined
 ): classLevel is Pf1eClassLevel {
@@ -114,32 +105,6 @@ function isPf1eClassLevel(
     'favoredClassBonus' in classLevel &&
     typeof classLevel.favoredClassBonus === 'string'
   );
-}
-
-function hitDieFaces(hitDie: string): number {
-  return Number.parseInt(hitDie.replace('d', ''), 10);
-}
-
-function averageHitDieRoll(hitDie: string): number {
-  return Math.floor(hitDieFaces(hitDie) / 2) + 1;
-}
-
-function seedHitDieRolls(existingRolls: number[], hitDie: string, level: number): number[] {
-  const maxAtLevelOne = hitDieFaces(hitDie);
-  const averagePerLevel = averageHitDieRoll(hitDie);
-  const rolls: number[] = [];
-
-  for (let index = 0; index < level; index += 1) {
-    const existing = existingRolls[index];
-    if (typeof existing === 'number' && Number.isFinite(existing) && existing > 0) {
-      rolls.push(existing);
-      continue;
-    }
-
-    rolls.push(index === 0 ? maxAtLevelOne : averagePerLevel);
-  }
-
-  return rolls;
 }
 
 function getClassProfile(
@@ -281,24 +246,23 @@ function classSkillOptions(classData: CharacterClass): string[] {
   return dedupe(classData.skillProficiencies.options);
 }
 
+const d20ClassCatalogCache = new Map<string, Map<string, CharacterClass>>();
+
 function getD20ClassCatalog(
   systemId: CharacterDocument<D20LegacyDataModel>['systemId']
 ): Map<string, CharacterClass> {
-  if (systemId === 'pf1e') {
-    return new Map(
-      [...Object.values(pf1eClasses), ...pf1ePrestigeClasses].map((classData) => [
-        classData.id,
-        classData,
-      ])
-    );
+  const cached = d20ClassCatalogCache.get(systemId);
+  if (cached) {
+    return cached;
   }
 
-  return new Map(
-    [...dnd35eClasses, ...dnd35eProductPrestigeClasses].map((classData) => [
-      classData.id,
-      classData,
-    ])
-  );
+  const entries =
+    systemId === 'pf1e'
+      ? [...Object.values(pf1eClasses), ...pf1ePrestigeClasses]
+      : [...dnd35eClasses, ...dnd35eProductPrestigeClasses];
+  const map = new Map(entries.map((classData) => [classData.id, classData]));
+  d20ClassCatalogCache.set(systemId, map);
+  return map;
 }
 
 function buildClassSkills(
