@@ -105,12 +105,20 @@ export const daggerheartComputeRegister: SystemComputeRegister = {
     {
       id: 'daggerheart.L7.tracks',
       layer: 'L7',
-      quantity: 'HP / Stress / Hope tracks',
-      formula: 'class + ancestry derived track maxima',
-      inputs: ['class', 'ancestry'],
-      edgeCases: ['ancestry HP/stress adjustments'],
-      source: `${SRD}: Hit Points, Stress, Hope`,
-      status: 'implemented',
+      quantity: 'HP / Stress / Armor track clamping + damage/heal/armor-absorption',
+      formula:
+        'current clamped to max; physical damage absorbed by armor then HP; stress fills the stress track (bypasses armor); heal restores up to max',
+      inputs: ['HP/Stress/Armor tracks', 'damage amount', 'damage type'],
+      edgeCases: [
+        'armor absorbs before HP',
+        'stress bypasses armor',
+        'heal caps at max',
+        'clamp current ≤ max',
+      ],
+      source: `${SRD}: Hit Points, Stress, Armor`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/daggerheartEngineMath.test.ts :: L8 Daggerheart damage / heal / armor',
     },
     {
       id: 'daggerheart.L3.attack-vs-difficulty',

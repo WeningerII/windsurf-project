@@ -9,7 +9,12 @@ import {
   getDaggerheartAncestryAdjustments,
   getDaggerheartDerivedStats,
 } from '../utils/daggerheartDerived';
-import { createDefaultDaggerheartData } from '../systems/daggerheart/data-model';
+import {
+  createDefaultDaggerheartData,
+  type DaggerheartDataModel,
+} from '../systems/daggerheart/data-model';
+import { DaggerheartEngine } from '../systems/daggerheart/engine';
+import type { CharacterDocument } from '../types/core/document';
 
 // ── L1: tier by level, proficiency = tier ───────────────────────────────────
 describe('L1 Daggerheart tier and proficiency', () => {
@@ -90,5 +95,52 @@ describe('L2 Daggerheart derived stats (unarmored)', () => {
       evasion: 7,
     });
     expect(stats.evasion).toBe(7);
+  });
+});
+
+const dhEngine = new DaggerheartEngine();
+const dhDoc = (over: Partial<DaggerheartDataModel>): CharacterDocument<DaggerheartDataModel> => ({
+  id: 'dh-engine-math',
+  name: 'DH',
+  systemId: 'daggerheart',
+  system: { ...createDefaultDaggerheartData(), ...over },
+  createdAt: new Date('2026-05-01'),
+  updatedAt: new Date('2026-05-01'),
+});
+
+// ── L8: damage / heal / armor application ───────────────────────────────────
+describe('L8 Daggerheart damage / heal / armor', () => {
+  it('armor absorbs physical damage before HP', () => {
+    const out = dhEngine.applyDamage(
+      dhDoc({ hitPoints: { current: 6, max: 6 }, armor: { current: 3, max: 3 } }),
+      5,
+      'physical'
+    );
+    expect(out.system.armor.current).toBe(0);
+    expect(out.system.hitPoints.current).toBe(4); // 5 damage − 3 armor = 2 to HP
+  });
+  it('stress damage fills the stress track and bypasses armor', () => {
+    const out = dhEngine.applyDamage(
+      dhDoc({ stress: { current: 0, max: 6 }, armor: { current: 3, max: 3 } }),
+      2,
+      'stress'
+    );
+    expect(out.system.stress.current).toBe(2);
+    expect(out.system.armor.current).toBe(3);
+  });
+  it('healing restores HP up to max', () => {
+    const out = dhEngine.applyDamage(dhDoc({ hitPoints: { current: 2, max: 6 } }), 3, 'heal');
+    expect(out.system.hitPoints.current).toBe(5);
+  });
+});
+
+// ── L7: track clamping ──────────────────────────────────────────────────────
+describe('L7 Daggerheart track clamping', () => {
+  it('clamps current HP/Stress to their max in prepareData', () => {
+    const out = dhEngine.prepareData(
+      dhDoc({ hitPoints: { current: 99, max: 6 }, stress: { current: 99, max: 6 } })
+    );
+    expect(out.system.hitPoints.current).toBe(6);
+    expect(out.system.stress.current).toBe(6);
   });
 });
