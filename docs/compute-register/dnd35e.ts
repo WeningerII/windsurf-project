@@ -21,7 +21,8 @@ export const dnd35eComputeRegister: SystemComputeRegister = {
       inputs: ['ability score'],
       edgeCases: ['negative scores'],
       source: `${SRD}: Abilities`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: 'src/__tests__/derivedCombatMath.test.ts :: shared ability modifier',
     },
     {
       id: 'dnd35e.L1.bab-track',
@@ -110,7 +111,8 @@ export const dnd35eComputeRegister: SystemComputeRegister = {
       inputs: ['BAB'],
       edgeCases: ['full attack action only'],
       source: `${SRD}: Combat — Attacks of Opportunity / Full Attack`,
-      status: 'missing',
+      status: 'verified',
+      testRef: 'src/__tests__/derivedCombatMath.test.ts :: d20 iterative attacks',
     },
     {
       id: 'dnd35e.L4.skill-ranks',
@@ -131,7 +133,8 @@ export const dnd35eComputeRegister: SystemComputeRegister = {
       inputs: ['ranks in related skill'],
       edgeCases: ['exactly 5 ranks threshold'],
       source: `${SRD}: Skills — Synergy`,
-      status: 'missing',
+      status: 'verified',
+      testRef: 'src/__tests__/derivedCombatMath.test.ts :: 3.5e skill synergy and max ranks',
     },
     {
       id: 'dnd35e.L4.max-rank-cap',
@@ -141,7 +144,8 @@ export const dnd35eComputeRegister: SystemComputeRegister = {
       inputs: ['level', 'class skill?'],
       edgeCases: ['cross-class half cap'],
       source: `${SRD}: Skills — Ranks`,
-      status: 'missing',
+      status: 'verified',
+      testRef: 'src/__tests__/derivedCombatMath.test.ts :: 3.5e skill synergy and max ranks',
     },
     {
       id: 'dnd35e.L4.initiative',

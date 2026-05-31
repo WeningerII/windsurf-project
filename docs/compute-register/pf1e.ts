@@ -21,7 +21,8 @@ export const pf1eComputeRegister: SystemComputeRegister = {
       inputs: ['ability score'],
       edgeCases: ['negative scores'],
       source: `${CRB}: Getting Started`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: 'src/__tests__/derivedCombatMath.test.ts :: shared ability modifier',
     },
     {
       id: 'pf1e.L1.bab-track',
@@ -121,7 +122,8 @@ export const pf1eComputeRegister: SystemComputeRegister = {
       inputs: ['BAB'],
       edgeCases: ['full attack only'],
       source: `${CRB}: Combat — Full Attack`,
-      status: 'missing',
+      status: 'verified',
+      testRef: 'src/__tests__/derivedCombatMath.test.ts :: d20 iterative attacks',
     },
     {
       id: 'pf1e.L3.maneuver-types',
@@ -131,7 +133,8 @@ export const pf1eComputeRegister: SystemComputeRegister = {
       inputs: ['CMB', 'target CMD'],
       edgeCases: ['per-maneuver modifiers'],
       source: `${CRB}: Combat — Combat Maneuvers`,
-      status: 'missing',
+      status: 'verified',
+      testRef: 'src/__tests__/derivedCombatMath.test.ts :: PF1e max ranks and maneuvers',
     },
     {
       id: 'pf1e.L4.skill-ranks',

@@ -31,7 +31,8 @@ export const pf2eComputeRegister: SystemComputeRegister = {
       inputs: ['ability score'],
       edgeCases: ['negative scores'],
       source: `${CRB}: Ability Scores`,
-      status: 'implemented',
+      status: 'verified',
+      testRef: 'src/__tests__/derivedCombatMath.test.ts :: shared ability modifier',
     },
     {
       id: 'pf2e.L2.ac',
@@ -173,7 +174,8 @@ export const pf2eComputeRegister: SystemComputeRegister = {
       inputs: ['spell', 'rank'],
       edgeCases: ['cantrip auto-heighten'],
       source: `${CRB}: Heightening Spells`,
-      status: 'missing',
+      status: 'verified',
+      testRef: 'src/__tests__/derivedCombatMath.test.ts :: PF2e MAP, striking, bulk, heightening',
     },
     {
       id: 'pf2e.L3.map',
@@ -183,7 +185,8 @@ export const pf2eComputeRegister: SystemComputeRegister = {
       inputs: ['attack number', 'agile trait'],
       edgeCases: ['agile reduces penalty'],
       source: `${CRB}: Multiple Attack Penalty`,
-      status: 'missing',
+      status: 'verified',
+      testRef: 'src/__tests__/derivedCombatMath.test.ts :: PF2e MAP, striking, bulk, heightening',
     },
     {
       id: 'pf2e.L3.striking-runes',
@@ -193,7 +196,8 @@ export const pf2eComputeRegister: SystemComputeRegister = {
       inputs: ['striking rune', 'proficiency'],
       edgeCases: ['greater/major striking'],
       source: `${CRB}: Runes; Weapon Specialization`,
-      status: 'missing',
+      status: 'verified',
+      testRef: 'src/__tests__/derivedCombatMath.test.ts :: PF2e MAP, striking, bulk, heightening',
     },
     {
       id: 'pf2e.L6.bulk',
@@ -203,7 +207,8 @@ export const pf2eComputeRegister: SystemComputeRegister = {
       inputs: ['Str', 'carried bulk'],
       edgeCases: ['encumbered threshold'],
       source: `${CRB}: Bulk`,
-      status: 'missing',
+      status: 'verified',
+      testRef: 'src/__tests__/derivedCombatMath.test.ts :: PF2e MAP, striking, bulk, heightening',
     },
   ],
 };

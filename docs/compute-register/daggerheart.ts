@@ -120,7 +120,8 @@ export const daggerheartComputeRegister: SystemComputeRegister = {
       inputs: ['trait', 'proficiency', 'weapon'],
       edgeCases: ['Hope/Fear outcome (narrative — excluded)'],
       source: `${SRD}: Attack Rolls; Damage`,
-      status: 'missing',
+      status: 'verified',
+      testRef: 'src/__tests__/derivedCombatMath.test.ts :: Daggerheart weapon damage dice',
     },
   ],
 };

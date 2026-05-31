@@ -111,8 +111,8 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       inputs: ['Dex score', 'Con score', 'shield'],
       edgeCases: ['only while no armor worn'],
       source: `${SRD}: Barbarian — Unarmored Defense`,
-      status: 'missing',
-      note: 'compute5eAC uses 10 + Dex only; class-conditional unarmored defense not derived in the base engine path.',
+      status: 'verified',
+      testRef: 'src/__tests__/derivedCombatMath.test.ts :: 5e Unarmored Defense',
     },
     {
       id: 'dnd5e2014.L2.ac.unarmored-defense-monk',
@@ -122,8 +122,8 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       inputs: ['Dex score', 'Wis score'],
       edgeCases: ['no armor and no shield'],
       source: `${SRD}: Monk — Unarmored Defense`,
-      status: 'missing',
-      note: 'Not derived in the base engine path.',
+      status: 'verified',
+      testRef: 'src/__tests__/derivedCombatMath.test.ts :: 5e Unarmored Defense',
     },
     {
       id: 'dnd5e2014.L2.saving-throw',
