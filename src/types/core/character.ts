@@ -8,7 +8,7 @@
  */
 
 import type { GameSystemId } from '../game-systems';
-import { Modifier } from './common';
+import { BonusType, Modifier } from './common';
 
 /**
  * Character - Single source of truth for all character data
@@ -219,6 +219,19 @@ export interface EquippedItem {
   armorType?: 'light' | 'medium' | 'heavy';
   dexBonusMax?: number; // Max DEX bonus (undefined = unlimited, 0 = none)
   shieldBonus?: number; // AC bonus from shield (e.g. 2)
+  // Magic/effect bonuses (additive; consumed by the system-agnostic rules IR —
+  // see docs/rfc/003-rules-ir-and-effects.md). Optional so existing AC math and
+  // all non-magic gear are unaffected.
+  attackBonus?: number; // e.g. +1 from a magic weapon, to attack rolls
+  damageBonus?: number; // e.g. +1 from a magic weapon, to damage rolls
+  acBonus?: number; // e.g. +1 from magic armor/shield or a ring of protection
+  /**
+   * Named bonus type, for d20/PF stacking (defaults applied per system by the
+   * equipment compiler when omitted). Ignored by 5e/Daggerheart/M&M, which sum.
+   */
+  bonusType?: BonusType;
+  /** PF2e stacking bucket for this item's bonuses (defaults to 'item'). */
+  pf2eBucket?: 'item' | 'status' | 'circumstance';
 }
 
 export type EquipmentSlot =

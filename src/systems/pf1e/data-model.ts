@@ -1,5 +1,6 @@
 import { SystemDataModel } from '../../types/core/document';
 import { Feature } from '../../types/core/character';
+import type { BonusType } from '../../types/core/common';
 
 /**
  * Pathfinder 1e Data Model
@@ -107,6 +108,12 @@ export interface Pf1eDataModel extends SystemDataModel {
     armorType?: 'light' | 'medium' | 'heavy';
     dexBonusMax?: number;
     shieldBonus?: number;
+    // Magic/effect bonuses consumed by the system-agnostic rules IR (RFC 003).
+    // Optional and additive; base AC math is unaffected.
+    attackBonus?: number;
+    damageBonus?: number;
+    acBonus?: number;
+    bonusType?: BonusType;
   }>;
   inventory: Array<{ itemId: string; name: string; quantity: number; weight: number }>;
   currency: { copper: number; silver: number; gold: number; platinum: number };

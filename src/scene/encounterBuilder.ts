@@ -3,6 +3,7 @@ import type { CharacterDocument, SystemDataModel } from '../types/core/document'
 import type { SceneCoordinate, SceneDocument, SceneEvent } from '../types/core/scene';
 import { appendSceneEvent, foldSceneEvents, resolveSceneAction } from './runtime';
 import { createSeededRng } from './seededRng';
+import { monsterAverageHitPoints } from '../rules/combatants/monsterCombatant';
 
 export interface EncounterMonsterSelection {
   monsterId: string;
@@ -194,6 +195,11 @@ export function buildEncounterSceneEvents({
           position: token.position,
           size: token.size,
           refId: token.refId,
+          // Average statblock HP so encounter monsters are combat-ready on the grid.
+          hp: (() => {
+            const max = monsterAverageHitPoints(token.monster);
+            return { current: max, max, temp: 0 };
+          })(),
         },
       },
       { eventId: nextEventId(scene, events, eventIdFactory), createdAt }

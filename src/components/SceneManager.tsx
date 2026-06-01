@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Download, Map, MousePointer2, Plus, Trash2, Upload } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Download, Map as MapIcon, MousePointer2, Plus, Trash2, Upload } from 'lucide-react';
 import {
   MAX_MONSTERS_PER_SELECTION,
   buildEncounterSceneEvents,
@@ -7,7 +7,19 @@ import {
   summarizeEncounterPlan,
   type EncounterMonsterSelection,
 } from '../scene/encounterBuilder';
-import { createSceneDocument, foldSceneEvents, resolveSceneAction } from '../scene/runtime';
+import {
+  appendSceneEvent,
+  createSceneDocument,
+  foldSceneEvents,
+  resolveSceneAction,
+} from '../scene/runtime';
+import {
+  buildCharacterCombatant,
+  buildMonsterCombatant,
+  resolveSceneAttack,
+  runSceneRound,
+  type ResolveCombatStats,
+} from '../rules';
 import type { Campaign } from '../types/core/campaign';
 import type { CharacterDocument, SystemDataModel } from '../types/core/document';
 import type { Monster } from '../types/creatures/monsters';
@@ -32,6 +44,7 @@ import { EncounterPanel } from './scene/EncounterPanel';
 import { InitiativeTracker } from './scene/InitiativeTracker';
 import { MarkerPanel } from './scene/MarkerPanel';
 import { TokenPanel } from './scene/TokenPanel';
+import { CombatPanel } from './scene/CombatPanel';
 
 type PlacementMode = 'none' | 'token' | 'marker';
 
@@ -84,6 +97,11 @@ export function SceneManager({
   const [monsterLoadError, setMonsterLoadError] = useState<string | null>(null);
   const [initiativeValues, setInitiativeValues] = useState<Record<string, string>>({});
   const [actionIssues, setActionIssues] = useState<string[]>([]);
+  const [combatTargetId, setCombatTargetId] = useState('');
+  const [combatLog, setCombatLog] = useState<string[]>([]);
+  // Per-click nonce so a missed attack (which appends no event) still advances
+  // the RNG stream — otherwise re-clicking Attack would reproduce the same miss.
+  const attackNonce = useRef(0);
 
   useEffect(() => {
     if (selectedSceneId && scenes.some((scene) => scene.id === selectedSceneId)) return;
@@ -259,6 +277,106 @@ export function SceneManager({
     return true;
   };
 
+  // Combat stats are resolved at action time from a token's refId (monster
+  // statblock or character document), never stored on the token. Tokens whose
+  // stats can't be resolved (no refId, unsupported system) simply can't fight.
+  const monstersById = useMemo(() => {
+    const map = new Map<string, Monster>();
+    encounterMonsters.forEach((monster) => map.set(monster.id, monster));
+    return map;
+  }, [encounterMonsters]);
+  const documentsById = useMemo(() => {
+    const map = new Map<string, CharacterDocument<SystemDataModel>>();
+    documents.forEach((doc) => map.set(doc.id, doc));
+    return map;
+  }, [documents]);
+
+  const resolveCombatStats = useCallback<ResolveCombatStats>(
+    (token) => {
+      if (token.kind === 'monster' && token.refId) {
+        const monster = monstersById.get(token.refId);
+        if (!monster) return undefined;
+        const built = buildMonsterCombatant(monster, {
+          tokenId: token.id,
+          position: token.position,
+        });
+        return {
+          attackEffects: built.attackEffects,
+          damageEffects: built.damageEffects,
+          armorClass: built.armorClass,
+          reach: built.reach,
+        };
+      }
+      if (token.kind === 'character' && token.refId) {
+        const doc = documentsById.get(token.refId);
+        if (!doc) return undefined;
+        const built = buildCharacterCombatant(doc, { tokenId: token.id, position: token.position });
+        if (!built.supported) return undefined;
+        return {
+          attackEffects: built.combatant.attackEffects,
+          damageEffects: built.combatant.damageEffects,
+          armorClass: built.combatant.armorClass,
+          reach: built.combatant.reach,
+        };
+      }
+      return undefined;
+    },
+    [monstersById, documentsById]
+  );
+
+  const combatReadyIds = useMemo(() => {
+    const ids = new Set<string>();
+    if (!state) return ids;
+    Object.values(state.tokens).forEach((token) => {
+      if (resolveCombatStats(token)) ids.add(token.id);
+    });
+    return ids;
+  }, [state, resolveCombatStats]);
+
+  const handleCombatAttack = () => {
+    if (!selectedScene || !state || !selectedTokenId || !combatTargetId) return;
+    const outcome = resolveSceneAttack({
+      state,
+      attackerId: selectedTokenId,
+      targetId: combatTargetId,
+      resolveStats: resolveCombatStats,
+      seed: `${selectedScene.initialState.seed}:attack:${selectedScene.events.length}`,
+      cause: 'attack',
+    });
+    if (outcome.intent) {
+      emitSceneAction(selectedScene, outcome.intent);
+    }
+    setCombatLog((current) => [outcome.log, ...current].slice(0, 30));
+  };
+
+  const handleRunRound = () => {
+    if (!selectedScene || !state) return;
+    const outcome = runSceneRound({
+      state,
+      resolveStats: resolveCombatStats,
+      seed: `${selectedScene.initialState.seed}:round:${state.round}:${selectedScene.events.length}:${attackNonce.current++}`,
+      round: state.round,
+    });
+
+    // Thread a local copy so each emitted event gets a correct sequence, then
+    // dispatch them all through the event-sourced persistence path.
+    let working = selectedScene;
+    const events: SceneEvent[] = [];
+    for (const intent of outcome.intents) {
+      const result = resolveSceneAction(working, intent, {
+        eventId: generateUUID(),
+        createdAt: new Date(),
+      });
+      if (result.event) {
+        events.push(result.event);
+        working = appendSceneEvent(working, result.event);
+      }
+    }
+    events.forEach((event) => onAppendSceneEvent(selectedScene.id, event));
+    setCombatLog((current) => [...outcome.log.slice().reverse(), ...current].slice(0, 30));
+    setActionIssues([]);
+  };
+
   const handleCellActivate = (position: { x: number; y: number }) => {
     if (!selectedScene || !state) return;
 
@@ -266,6 +384,12 @@ export function SceneManager({
       const linkedDoc = documents.find((doc) => doc.id === tokenDocumentId);
       const name = tokenName.trim() || linkedDoc?.name.trim();
       if (!name) return;
+
+      // A linked character token carries combat HP so it is grid-combat-ready.
+      const built = linkedDoc
+        ? buildCharacterCombatant(linkedDoc, { tokenId: linkedDoc.id, position })
+        : undefined;
+      const hp = built && built.supported ? built.combatant.token.hp : undefined;
 
       const placed = emitSceneAction(selectedScene, {
         type: 'place-token',
@@ -276,6 +400,7 @@ export function SceneManager({
           position,
           size: 1,
           refId: linkedDoc?.id,
+          ...(hp ? { hp } : {}),
         },
       });
 
@@ -461,7 +586,7 @@ export function SceneManager({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h3 className="flex items-center gap-2 text-2xl font-semibold tracking-tight">
-            <Map className="h-6 w-6" /> Scenes
+            <MapIcon className="h-6 w-6" /> Scenes
           </h3>
           <p className="text-sm text-muted-foreground">
             {scenes.length} scene{scenes.length !== 1 ? 's' : ''} saved
@@ -749,6 +874,17 @@ export function SceneManager({
                     }
                     onAdvanceTurn={handleAdvanceTurn}
                     onSetOrder={handleSetInitiative}
+                  />
+
+                  <CombatPanel
+                    state={state}
+                    attackerId={selectedTokenId}
+                    combatReadyIds={combatReadyIds}
+                    targetId={combatTargetId}
+                    onTargetChange={setCombatTargetId}
+                    onAttack={handleCombatAttack}
+                    onRunRound={handleRunRound}
+                    log={combatLog}
                   />
                 </div>
               </div>

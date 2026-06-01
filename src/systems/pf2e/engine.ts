@@ -4,6 +4,8 @@ import { Pf2eDataModel, profTotal } from './data-model';
 import { abilityMod } from '../../utils/math';
 import { SKILL_ABILITIES, SAVE_ABILITIES } from './constants';
 import { computePf2eAC } from '../../utils/armorClass';
+import { resolveCharacterEffects } from '../../rules';
+import { getPf2eConditionStatusPenalty } from '../../rules/conditions/pf2eConditions';
 import { pf2eClasses } from '../../data/pathfinder/2e/classes';
 import { getSpellSlotsAtClassLevel, mergeMaxUsedSpellSlots } from '../../utils/classSpellcasting';
 import { hitDieFaces } from '../../utils/templateShared';
@@ -28,23 +30,12 @@ function normalizedConditionValue(conditions: Pf2eDataModel['conditions'], name:
   return highest;
 }
 
+// Condition status-penalty selection now lives in the shared condition IR
+// (src/rules/conditions/pf2eConditions.ts) so the rule is defined once and
+// also surfaces as ledger provenance. This thin wrapper preserves the engine's
+// call sites and signature.
 function getPf2eStatusPenalty(conditions: Pf2eDataModel['conditions'], ability?: string): number {
-  const frightened = normalizedConditionValue(conditions, 'frightened');
-  const sickened = normalizedConditionValue(conditions, 'sickened');
-
-  let abilityPenalty = 0;
-  if (ability === 'dex') {
-    abilityPenalty = normalizedConditionValue(conditions, 'clumsy');
-  } else if (ability === 'str') {
-    abilityPenalty = normalizedConditionValue(conditions, 'enfeebled');
-  } else if (ability === 'con') {
-    abilityPenalty = normalizedConditionValue(conditions, 'drained');
-  } else if (ability === 'int' || ability === 'wis' || ability === 'cha') {
-    abilityPenalty = normalizedConditionValue(conditions, 'stupefied');
-  }
-
-  // These are all status penalties, so only the highest applies.
-  return Math.max(frightened, sickened, abilityPenalty);
+  return getPf2eConditionStatusPenalty(conditions, ability);
 }
 
 function inferPf2eTradition(spellListId: string): Pf2eSpellcastingData['tradition'] {
@@ -176,7 +167,16 @@ export class Pf2eEngine implements SystemEngine<Pf2eDataModel> {
       0;
     const clumsyPenalty = normalizedConditionValue(data.conditions, 'clumsy');
     const effectiveDex = Math.max(1, (data.baseAttributes.dex ?? 10) - clumsyPenalty * 2);
-    data.armorClass = computePf2eAC(effectiveDex, armorProf, data.equipment);
+    // Base AC, then layer magic-item (item bonus) and feat/feature AC bonuses
+    // through the shared rules resolver (RFC 003). PF2e item bonuses take the
+    // highest per bucket; buckets sum. Additive without bonus-bearing gear.
+    data.armorClass =
+      computePf2eAC(effectiveDex, armorProf, data.equipment) +
+      resolveCharacterEffects('pf2e', {
+        equipment: data.equipment.filter((item) => item.equipped),
+        feats: data.feats,
+        features: data.features,
+      }).bonus('ac');
 
     // --- HP = ancestryHP + level × (class HP die + CON mod) ---
     // PF2e CRB p.26: Ancestry HP (flat) + level × (class HP + CON mod). Class HP
