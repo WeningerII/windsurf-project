@@ -37,6 +37,12 @@ export const blackPudding: Monster = {
       name: 'Pseudopod',
       description:
         'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) bludgeoning damage plus 7 (2d6) acid damage.',
+      attackBonus: 5,
+      reach: 5,
+      damage: [
+        { dice: { count: 1, die: 'd6', modifier: 3, notation: '1d6+3' }, type: 'bludgeoning' },
+        { dice: { count: 2, die: 'd6', notation: '2d6' }, type: 'acid' },
+      ],
     },
   ],
   environment: ['dungeon', 'underdark'],

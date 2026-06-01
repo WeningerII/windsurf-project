@@ -39,16 +39,30 @@ export const adultRedDragon: Monster = {
       name: 'Bite',
       description:
         'Melee Weapon Attack: +11 to hit, reach 15 ft., one target. Hit: 19 (2d10 + 8) piercing damage plus 11 (2d10) fire damage.',
+      attackBonus: 11,
+      reach: 15,
+      damage: [
+        { dice: { count: 2, die: 'd10', modifier: 8, notation: '2d10+8' }, type: 'piercing' },
+        { dice: { count: 2, die: 'd10', notation: '2d10' }, type: 'fire' },
+      ],
     },
     {
       name: 'Claw',
       description:
         'Melee Weapon Attack: +11 to hit, reach 10 ft., one target. Hit: 15 (2d8 + 8) slashing damage.',
+      attackBonus: 11,
+      reach: 10,
+      damage: [{ dice: { count: 2, die: 'd8', modifier: 8, notation: '2d8+8' }, type: 'slashing' }],
     },
     {
       name: 'Tail',
       description:
         'Melee Weapon Attack: +11 to hit, reach 20 ft., one target. Hit: 17 (2d10 + 8) bludgeoning damage.',
+      attackBonus: 11,
+      reach: 20,
+      damage: [
+        { dice: { count: 2, die: 'd10', modifier: 8, notation: '2d10+8' }, type: 'bludgeoning' },
+      ],
     },
     {
       name: 'Frightful Presence',
@@ -118,16 +132,32 @@ export const ancientRedDragon: Monster = {
       name: 'Bite',
       description:
         'Melee Weapon Attack: +15 to hit, reach 20 ft., one target. Hit: 25 (3d10 + 10) piercing damage plus 13 (2d10) fire damage.',
+      attackBonus: 15,
+      reach: 20,
+      damage: [
+        { dice: { count: 3, die: 'd10', modifier: 10, notation: '3d10+10' }, type: 'piercing' },
+        { dice: { count: 2, die: 'd10', notation: '2d10' }, type: 'fire' },
+      ],
     },
     {
       name: 'Claw',
       description:
         'Melee Weapon Attack: +15 to hit, reach 15 ft., one target. Hit: 20 (3d8 + 10) slashing damage.',
+      attackBonus: 15,
+      reach: 15,
+      damage: [
+        { dice: { count: 3, die: 'd8', modifier: 10, notation: '3d8+10' }, type: 'slashing' },
+      ],
     },
     {
       name: 'Tail',
       description:
         'Melee Weapon Attack: +15 to hit, reach 25 ft., one target. Hit: 22 (3d10 + 10) bludgeoning damage.',
+      attackBonus: 15,
+      reach: 25,
+      damage: [
+        { dice: { count: 3, die: 'd10', modifier: 10, notation: '3d10+10' }, type: 'bludgeoning' },
+      ],
     },
     {
       name: 'Frightful Presence',

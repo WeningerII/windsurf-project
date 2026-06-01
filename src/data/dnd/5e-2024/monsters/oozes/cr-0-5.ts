@@ -37,6 +37,9 @@ export const gelatinousCube: Monster = {
       name: 'Engulf',
       description:
         'Melee Weapon Attack: +4 to hit, reach 5 ft., one creature. Hit: 13 (2d8 + 4) acid damage. If the cube hits a Medium or smaller creature, the target is also grappled (escape DC 12). Until this grapple ends, the target is restrained and unable to breathe unless it can breathe water. If the cube moves, the grappled creature moves with it.',
+      attackBonus: 4,
+      reach: 5,
+      damage: [{ dice: { count: 2, die: 'd8', modifier: 4, notation: '2d8+4' }, type: 'acid' }],
     },
   ],
   environment: ['dungeon', 'underdark'],

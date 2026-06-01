@@ -47,6 +47,9 @@ export const elderBrain: Monster = {
       name: 'Tentacles',
       description:
         'Melee Weapon Attack: +9 to hit, reach 30 ft., one target. Hit: 15 (2d8 + 6) psychic damage. If the target is a creature, it must succeed on a DC 16 Intelligence saving throw or be stunned until the end of its next turn.',
+      attackBonus: 9,
+      reach: 30,
+      damage: [{ dice: { count: 2, die: 'd8', modifier: 6, notation: '2d8+6' }, type: 'psychic' }],
     },
   ],
   legendaryActions: [

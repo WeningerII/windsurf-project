@@ -41,11 +41,21 @@ export const treant: Monster = {
       name: 'Slam',
       description:
         'Melee Weapon Attack: +9 to hit, reach 5 ft., one target. Hit: 15 (3d6 + 5) bludgeoning damage.',
+      attackBonus: 9,
+      reach: 5,
+      damage: [
+        { dice: { count: 3, die: 'd6', modifier: 5, notation: '3d6+5' }, type: 'bludgeoning' },
+      ],
     },
     {
       name: 'Rock',
       description:
         'Ranged Weapon Attack: +9 to hit, range 60/240 ft., one target. Hit: 28 (4d10 + 5) bludgeoning damage.',
+      attackBonus: 9,
+      reach: 60,
+      damage: [
+        { dice: { count: 4, die: 'd10', modifier: 5, notation: '4d10+5' }, type: 'bludgeoning' },
+      ],
     },
   ],
   environment: ['forest'],

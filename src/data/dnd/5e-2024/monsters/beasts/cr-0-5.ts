@@ -37,6 +37,9 @@ export const wolf: Monster = {
       name: 'Bite',
       description:
         'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 7 (2d4 + 2) piercing damage. If the target is a creature, it must succeed on a DC 11 Strength saving throw or be knocked prone.',
+      attackBonus: 4,
+      reach: 5,
+      damage: [{ dice: { count: 2, die: 'd4', modifier: 2, notation: '2d4+2' }, type: 'piercing' }],
     },
   ],
   environment: ['forest', 'grassland', 'hill'],
@@ -76,6 +79,9 @@ export const direwolf: Monster = {
       name: 'Bite',
       description:
         'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 10 (2d6 + 3) piercing damage. If the target is a creature, it must succeed on a DC 13 Strength saving throw or be knocked prone.',
+      attackBonus: 5,
+      reach: 5,
+      damage: [{ dice: { count: 2, die: 'd6', modifier: 3, notation: '2d6+3' }, type: 'piercing' }],
     },
   ],
   environment: ['forest', 'hill'],
@@ -113,11 +119,17 @@ export const brownBear: Monster = {
       name: 'Bite',
       description:
         'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 8 (1d8 + 4) piercing damage.',
+      attackBonus: 6,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd8', modifier: 4, notation: '1d8+4' }, type: 'piercing' }],
     },
     {
       name: 'Claws',
       description:
         'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 11 (2d6 + 4) slashing damage.',
+      attackBonus: 6,
+      reach: 5,
+      damage: [{ dice: { count: 2, die: 'd6', modifier: 4, notation: '2d6+4' }, type: 'slashing' }],
     },
   ],
   environment: ['forest', 'hill'],
@@ -161,11 +173,19 @@ export const giantSpider: Monster = {
       name: 'Bite',
       description:
         'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 7 (1d8 + 3) piercing damage, and the target must make a DC 11 Constitution saving throw, taking 9 (2d8) poison damage on a failed save, or half as much damage on a successful one. If the poison damage reduces the target to 0 hit points, the target is stable but poisoned for 1 hour, even after regaining hit points, and is paralyzed while poisoned in this way.',
+      attackBonus: 5,
+      reach: 5,
+      damage: [
+        { dice: { count: 1, die: 'd8', modifier: 3, notation: '1d8+3' }, type: 'piercing' },
+        { dice: { count: 2, die: 'd8', notation: '2d8' }, type: 'poison' },
+      ],
     },
     {
       name: 'Web',
       description:
         'Ranged Weapon Attack: +5 to hit, range 30/60 ft., one creature. Hit: The target is restrained by webbing. As an action, the restrained target can make a DC 12 Strength check, bursting the webbing on a success. The webbing can also be attacked and destroyed (AC 10; hp 5; vulnerability to fire damage; immunity to bludgeoning, poison, and psychic damage).',
+      attackBonus: 5,
+      reach: 30,
     },
   ],
   environment: ['underdark', 'forest'],
@@ -199,6 +219,11 @@ export const crocodile: Monster = {
       name: 'Bite',
       description:
         "Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 7 (1d10 + 2) piercing damage, and the target is grappled (escape DC 12). Until this grapple ends, the target is restrained, and the crocodile can't bite another target.",
+      attackBonus: 4,
+      reach: 5,
+      damage: [
+        { dice: { count: 1, die: 'd10', modifier: 2, notation: '1d10+2' }, type: 'piercing' },
+      ],
     },
   ],
   environment: ['swamp', 'water'],
@@ -246,11 +271,17 @@ export const lion: Monster = {
       name: 'Bite',
       description:
         'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 7 (1d8 + 3) piercing damage.',
+      attackBonus: 5,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd8', modifier: 3, notation: '1d8+3' }, type: 'piercing' }],
     },
     {
       name: 'Claw',
       description:
         'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) slashing damage.',
+      attackBonus: 5,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd6', modifier: 3, notation: '1d6+3' }, type: 'slashing' }],
     },
   ],
   environment: ['grassland', 'hill'],
@@ -288,6 +319,9 @@ export const giantRat: Monster = {
       name: 'Bite',
       description:
         'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 4 (1d4 + 2) piercing damage.',
+      attackBonus: 4,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd4', modifier: 2, notation: '1d4+2' }, type: 'piercing' }],
     },
   ],
   environment: ['urban', 'underdark'],
@@ -321,11 +355,21 @@ export const elk: Monster = {
       name: 'Ram',
       description:
         'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) bludgeoning damage.',
+      attackBonus: 5,
+      reach: 5,
+      damage: [
+        { dice: { count: 1, die: 'd6', modifier: 3, notation: '1d6+3' }, type: 'bludgeoning' },
+      ],
     },
     {
       name: 'Hooves',
       description:
         'Melee Weapon Attack: +5 to hit, reach 5 ft., one prone creature. Hit: 8 (2d4 + 3) bludgeoning damage.',
+      attackBonus: 5,
+      reach: 5,
+      damage: [
+        { dice: { count: 2, die: 'd4', modifier: 3, notation: '2d4+3' }, type: 'bludgeoning' },
+      ],
     },
   ],
   environment: ['forest', 'grassland', 'hill'],
@@ -359,6 +403,9 @@ export const eagle: Monster = {
       name: 'Talons',
       description:
         'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 4 (1d4 + 2) slashing damage.',
+      attackBonus: 4,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd4', modifier: 2, notation: '1d4+2' }, type: 'slashing' }],
     },
   ],
   environment: ['mountain', 'grassland'],
@@ -397,11 +444,17 @@ export const panther: Monster = {
       name: 'Bite',
       description:
         'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
+      attackBonus: 4,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd6', modifier: 2, notation: '1d6+2' }, type: 'piercing' }],
     },
     {
       name: 'Claw',
       description:
         'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 4 (1d4 + 2) slashing damage.',
+      attackBonus: 4,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd4', modifier: 2, notation: '1d4+2' }, type: 'slashing' }],
     },
   ],
   environment: ['forest', 'jungle'],
@@ -440,6 +493,9 @@ export const boar: Monster = {
       name: 'Tusk',
       description:
         'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) slashing damage.',
+      attackBonus: 3,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd6', modifier: 1, notation: '1d6+1' }, type: 'slashing' }],
     },
   ],
   environment: ['forest', 'grassland'],
@@ -466,11 +522,19 @@ export const constrictor_snake: Monster = {
       name: 'Bite',
       description:
         'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
+      attackBonus: 4,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd6', modifier: 2, notation: '1d6+2' }, type: 'piercing' }],
     },
     {
       name: 'Constrict',
       description:
         "Melee Weapon Attack: +4 to hit, reach 5 ft., one creature. Hit: 6 (1d8 + 2) bludgeoning damage, and the target is grappled (escape DC 14). Until this grapple ends, the creature is restrained, and the snake can't constrict another target.",
+      attackBonus: 4,
+      reach: 5,
+      damage: [
+        { dice: { count: 1, die: 'd8', modifier: 2, notation: '1d8+2' }, type: 'bludgeoning' },
+      ],
     },
   ],
   environment: ['swamp', 'jungle'],
@@ -509,6 +573,9 @@ export const reef_shark: Monster = {
       name: 'Bite',
       description:
         'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 6 (1d8 + 2) piercing damage.',
+      attackBonus: 4,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd8', modifier: 2, notation: '1d8+2' }, type: 'piercing' }],
     },
   ],
   environment: ['water'],
@@ -542,6 +609,11 @@ export const warhorse: Monster = {
       name: 'Hooves',
       description:
         'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 11 (2d6 + 4) bludgeoning damage.',
+      attackBonus: 6,
+      reach: 5,
+      damage: [
+        { dice: { count: 2, die: 'd6', modifier: 4, notation: '2d6+4' }, type: 'bludgeoning' },
+      ],
     },
   ],
   environment: ['grassland'],
@@ -573,11 +645,21 @@ export const ape: Monster = {
       name: 'Fist',
       description:
         'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) bludgeoning damage.',
+      attackBonus: 5,
+      reach: 5,
+      damage: [
+        { dice: { count: 1, die: 'd6', modifier: 3, notation: '1d6+3' }, type: 'bludgeoning' },
+      ],
     },
     {
       name: 'Rock',
       description:
         'Ranged Weapon Attack: +5 to hit, range 25/50 ft., one target. Hit: 6 (1d6 + 3) bludgeoning damage.',
+      attackBonus: 5,
+      reach: 25,
+      damage: [
+        { dice: { count: 1, die: 'd6', modifier: 3, notation: '1d6+3' }, type: 'bludgeoning' },
+      ],
     },
   ],
   environment: ['forest', 'jungle'],
@@ -615,11 +697,17 @@ export const blackBear: Monster = {
       name: 'Bite',
       description:
         'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
+      attackBonus: 4,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd6', modifier: 2, notation: '1d6+2' }, type: 'piercing' }],
     },
     {
       name: 'Claws',
       description:
         'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 7 (2d4 + 2) slashing damage.',
+      attackBonus: 4,
+      reach: 5,
+      damage: [{ dice: { count: 2, die: 'd4', modifier: 2, notation: '2d4+2' }, type: 'slashing' }],
     },
   ],
   environment: ['forest'],
@@ -656,6 +744,9 @@ export const giantBat: Monster = {
       name: 'Bite',
       description:
         'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
+      attackBonus: 4,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd6', modifier: 2, notation: '1d6+2' }, type: 'piercing' }],
     },
   ],
   environment: ['underdark', 'cave'],
@@ -682,6 +773,9 @@ export const giantCentipede: Monster = {
       name: 'Bite',
       description:
         'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 4 (1d4 + 2) piercing damage, and the target must succeed on a DC 11 Constitution saving throw or take 10 (3d6) poison damage. If the poison damage reduces the target to 0 hit points, the target is stable but poisoned for 1 hour, even after regaining hit points, and is paralyzed while poisoned in this way.',
+      attackBonus: 4,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd4', modifier: 2, notation: '1d4+2' }, type: 'piercing' }],
     },
   ],
   environment: ['underdark', 'forest'],
@@ -720,6 +814,9 @@ export const giantFrog: Monster = {
       name: 'Bite',
       description:
         "Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) piercing damage, and the target is grappled (escape DC 11). Until this grapple ends, the target is restrained, and the frog can't bite another target.",
+      attackBonus: 3,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd6', modifier: 1, notation: '1d6+1' }, type: 'piercing' }],
     },
     {
       name: 'Swallow',
@@ -751,6 +848,12 @@ export const giantWasp: Monster = {
       name: 'Sting',
       description:
         'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage, and the target must make a DC 11 Constitution saving throw, taking 10 (3d6) poison damage on a failed save, or half as much damage on a successful one. If the poison damage reduces the target to 0 hit points, the target is stable but poisoned for 1 hour, even after regaining hit points, and is paralyzed while poisoned in this way.',
+      attackBonus: 4,
+      reach: 5,
+      damage: [
+        { dice: { count: 1, die: 'd6', modifier: 2, notation: '1d6+2' }, type: 'piercing' },
+        { dice: { count: 3, die: 'd6', notation: '3d6' }, type: 'poison' },
+      ],
     },
   ],
   environment: ['forest', 'grassland'],

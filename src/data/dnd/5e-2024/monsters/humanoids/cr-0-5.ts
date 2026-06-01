@@ -24,6 +24,9 @@ export const commoner: Monster = {
       name: 'Club',
       description:
         'Melee Weapon Attack: +2 to hit, reach 5 ft., one target. Hit: 2 (1d4) bludgeoning damage.',
+      attackBonus: 2,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd4', notation: '1d4' }, type: 'bludgeoning' }],
     },
   ],
   environment: ['urban', 'any'],
@@ -51,6 +54,9 @@ export const guard: Monster = {
       name: 'Spear',
       description:
         'Melee or Ranged Weapon Attack: +3 to hit, reach 5 ft. or range 20/60 ft., one target. Hit: 4 (1d6 + 1) piercing damage, or 5 (1d8 + 1) piercing damage if used with two hands to make a melee attack.',
+      attackBonus: 3,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd6', modifier: 1, notation: '1d6+1' }, type: 'piercing' }],
     },
   ],
   environment: ['urban'],
@@ -77,11 +83,17 @@ export const bandit: Monster = {
       name: 'Scimitar',
       description:
         'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) slashing damage.',
+      attackBonus: 3,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd6', modifier: 1, notation: '1d6+1' }, type: 'slashing' }],
     },
     {
       name: 'Light Crossbow',
       description:
         'Ranged Weapon Attack: +3 to hit, range 80/320 ft., one target. Hit: 5 (1d8 + 1) piercing damage.',
+      attackBonus: 3,
+      reach: 80,
+      damage: [{ dice: { count: 1, die: 'd8', modifier: 1, notation: '1d8+1' }, type: 'piercing' }],
     },
   ],
   environment: ['forest', 'road'],
@@ -109,6 +121,9 @@ export const cultist: Monster = {
       name: 'Scimitar',
       description:
         'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) slashing damage.',
+      attackBonus: 3,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd6', modifier: 1, notation: '1d6+1' }, type: 'slashing' }],
     },
   ],
   environment: ['urban', 'dungeon'],
@@ -136,6 +151,9 @@ export const noble: Monster = {
       name: 'Rapier',
       description:
         'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 5 (1d8 + 1) piercing damage.',
+      attackBonus: 3,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd8', modifier: 1, notation: '1d8+1' }, type: 'piercing' }],
     },
   ],
   reactions: [
@@ -177,11 +195,17 @@ export const goblin: Monster = {
       name: 'Scimitar',
       description:
         'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) slashing damage.',
+      attackBonus: 4,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd6', modifier: 2, notation: '1d6+2' }, type: 'slashing' }],
     },
     {
       name: 'Shortbow',
       description:
         'Ranged Weapon Attack: +4 to hit, range 80/320 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
+      attackBonus: 4,
+      reach: 80,
+      damage: [{ dice: { count: 1, die: 'd6', modifier: 2, notation: '1d6+2' }, type: 'piercing' }],
     },
   ],
   environment: ['forest', 'hill', 'underdark'],
@@ -216,11 +240,19 @@ export const orc: Monster = {
       name: 'Greataxe',
       description:
         'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 9 (1d12 + 3) slashing damage.',
+      attackBonus: 5,
+      reach: 5,
+      damage: [
+        { dice: { count: 1, die: 'd12', modifier: 3, notation: '1d12+3' }, type: 'slashing' },
+      ],
     },
     {
       name: 'Javelin',
       description:
         'Melee or Ranged Weapon Attack: +5 to hit, reach 5 ft. or range 30/120 ft., one target. Hit: 6 (1d6 + 3) piercing damage.',
+      attackBonus: 5,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd6', modifier: 3, notation: '1d6+3' }, type: 'piercing' }],
     },
   ],
   environment: ['mountain', 'underdark'],
@@ -248,6 +280,9 @@ export const acolyte: Monster = {
       name: 'Club',
       description:
         'Melee Weapon Attack: +2 to hit, reach 5 ft., one target. Hit: 2 (1d4) bludgeoning damage.',
+      attackBonus: 2,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd4', notation: '1d4' }, type: 'bludgeoning' }],
     },
   ],
   environment: ['urban', 'temple'],
@@ -286,11 +321,19 @@ export const kobold: Monster = {
       name: 'Dagger',
       description:
         'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 4 (1d4 + 2) piercing damage.',
+      attackBonus: 4,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd4', modifier: 2, notation: '1d4+2' }, type: 'piercing' }],
     },
     {
       name: 'Sling',
       description:
         'Ranged Weapon Attack: +4 to hit, range 30/120 ft., one target. Hit: 4 (1d4 + 2) bludgeoning damage.',
+      attackBonus: 4,
+      reach: 30,
+      damage: [
+        { dice: { count: 1, die: 'd4', modifier: 2, notation: '1d4+2' }, type: 'bludgeoning' },
+      ],
     },
   ],
   environment: ['underdark', 'forest'],
@@ -324,11 +367,17 @@ export const hobgoblin: Monster = {
       name: 'Longsword',
       description:
         'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 5 (1d8 + 1) slashing damage, or 6 (1d10 + 1) slashing damage if used with two hands.',
+      attackBonus: 3,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd8', modifier: 1, notation: '1d8+1' }, type: 'slashing' }],
     },
     {
       name: 'Longbow',
       description:
         'Ranged Weapon Attack: +3 to hit, range 150/600 ft., one target. Hit: 5 (1d8 + 1) piercing damage.',
+      attackBonus: 3,
+      reach: 150,
+      damage: [{ dice: { count: 1, die: 'd8', modifier: 1, notation: '1d8+1' }, type: 'piercing' }],
     },
   ],
   environment: ['forest', 'mountain'],
@@ -368,11 +417,17 @@ export const bugbear: Monster = {
       name: 'Morningstar',
       description:
         'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 11 (2d8 + 2) piercing damage.',
+      attackBonus: 4,
+      reach: 5,
+      damage: [{ dice: { count: 2, die: 'd8', modifier: 2, notation: '2d8+2' }, type: 'piercing' }],
     },
     {
       name: 'Javelin',
       description:
         'Melee or Ranged Weapon Attack: +4 to hit, reach 5 ft. or range 30/120 ft., one target. Hit: 9 (2d6 + 2) piercing damage in melee or 5 (1d6 + 2) piercing damage at range.',
+      attackBonus: 4,
+      reach: 5,
+      damage: [{ dice: { count: 2, die: 'd6', modifier: 2, notation: '2d6+2' }, type: 'piercing' }],
     },
   ],
   environment: ['forest', 'underdark'],
@@ -411,11 +466,17 @@ export const scout: Monster = {
       name: 'Shortsword',
       description:
         'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
+      attackBonus: 4,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd6', modifier: 2, notation: '1d6+2' }, type: 'piercing' }],
     },
     {
       name: 'Longbow',
       description:
         'Ranged Weapon Attack: +4 to hit, range 150/600 ft., one target. Hit: 6 (1d8 + 2) piercing damage.',
+      attackBonus: 4,
+      reach: 150,
+      damage: [{ dice: { count: 1, die: 'd8', modifier: 2, notation: '1d8+2' }, type: 'piercing' }],
     },
   ],
   environment: ['forest', 'grassland'],
@@ -467,11 +528,17 @@ export const spy: Monster = {
       name: 'Shortsword',
       description:
         'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
+      attackBonus: 4,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd6', modifier: 2, notation: '1d6+2' }, type: 'piercing' }],
     },
     {
       name: 'Hand Crossbow',
       description:
         'Ranged Weapon Attack: +4 to hit, range 30/120 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
+      attackBonus: 4,
+      reach: 30,
+      damage: [{ dice: { count: 1, die: 'd6', modifier: 2, notation: '1d6+2' }, type: 'piercing' }],
     },
   ],
   environment: ['urban'],
@@ -510,11 +577,19 @@ export const thug: Monster = {
       name: 'Mace',
       description:
         'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) bludgeoning damage.',
+      attackBonus: 4,
+      reach: 5,
+      damage: [
+        { dice: { count: 1, die: 'd6', modifier: 2, notation: '1d6+2' }, type: 'bludgeoning' },
+      ],
     },
     {
       name: 'Heavy Crossbow',
       description:
         'Ranged Weapon Attack: +2 to hit, range 100/400 ft., one target. Hit: 5 (1d10) piercing damage.',
+      attackBonus: 2,
+      reach: 100,
+      damage: [{ dice: { count: 1, die: 'd10', notation: '1d10' }, type: 'piercing' }],
     },
   ],
   environment: ['urban'],
@@ -547,16 +622,27 @@ export const veteran: Monster = {
       name: 'Longsword',
       description:
         'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 7 (1d8 + 3) slashing damage, or 8 (1d10 + 3) slashing damage if used with two hands.',
+      attackBonus: 5,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd8', modifier: 3, notation: '1d8+3' }, type: 'slashing' }],
     },
     {
       name: 'Shortsword',
       description:
         'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) piercing damage.',
+      attackBonus: 5,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd6', modifier: 3, notation: '1d6+3' }, type: 'piercing' }],
     },
     {
       name: 'Heavy Crossbow',
       description:
         'Ranged Weapon Attack: +3 to hit, range 100/400 ft., one target. Hit: 6 (1d10 + 1) piercing damage.',
+      attackBonus: 3,
+      reach: 100,
+      damage: [
+        { dice: { count: 1, die: 'd10', modifier: 1, notation: '1d10+1' }, type: 'piercing' },
+      ],
     },
   ],
   environment: ['urban', 'any'],
@@ -590,6 +676,11 @@ export const berserker: Monster = {
       name: 'Greataxe',
       description:
         'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 9 (1d12 + 3) slashing damage.',
+      attackBonus: 5,
+      reach: 5,
+      damage: [
+        { dice: { count: 1, die: 'd12', modifier: 3, notation: '1d12+3' }, type: 'slashing' },
+      ],
     },
   ],
   environment: ['any'],
@@ -624,6 +715,9 @@ export const druid: Monster = {
       name: 'Quarterstaff',
       description:
         'Melee Weapon Attack: +2 to hit (+4 to hit with shillelagh), reach 5 ft., one target. Hit: 3 (1d6) bludgeoning damage, or 4 (1d8) bludgeoning damage if wielded with two hands, or 6 (1d8 + 2) bludgeoning damage with shillelagh.',
+      attackBonus: 2,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd6', notation: '1d6' }, type: 'bludgeoning' }],
     },
   ],
   environment: ['forest', 'grassland'],
@@ -663,6 +757,9 @@ export const priest: Monster = {
       name: 'Mace',
       description:
         'Melee Weapon Attack: +2 to hit, reach 5 ft., one target. Hit: 3 (1d6) bludgeoning damage.',
+      attackBonus: 2,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd6', notation: '1d6' }, type: 'bludgeoning' }],
     },
   ],
   environment: ['urban', 'temple'],
@@ -700,11 +797,17 @@ export const knight: Monster = {
       name: 'Greatsword',
       description:
         'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 10 (2d6 + 3) slashing damage.',
+      attackBonus: 5,
+      reach: 5,
+      damage: [{ dice: { count: 2, die: 'd6', modifier: 3, notation: '2d6+3' }, type: 'slashing' }],
     },
     {
       name: 'Heavy Crossbow',
       description:
         'Ranged Weapon Attack: +2 to hit, range 100/400 ft., one target. Hit: 5 (1d10) piercing damage.',
+      attackBonus: 2,
+      reach: 100,
+      damage: [{ dice: { count: 1, die: 'd10', notation: '1d10' }, type: 'piercing' }],
     },
   ],
   reactions: [
@@ -755,11 +858,19 @@ export const gladiator: Monster = {
       name: 'Spear',
       description:
         'Melee or Ranged Weapon Attack: +7 to hit, reach 5 ft. and range 20/60 ft., one target. Hit: 11 (2d6 + 4) piercing damage, or 13 (2d8 + 4) piercing damage if used with two hands to make a melee attack.',
+      attackBonus: 7,
+      reach: 5,
+      damage: [{ dice: { count: 2, die: 'd6', modifier: 4, notation: '2d6+4' }, type: 'piercing' }],
     },
     {
       name: 'Shield Bash',
       description:
         'Melee Weapon Attack: +7 to hit, reach 5 ft., one creature. Hit: 9 (2d4 + 4) bludgeoning damage. If the target is a Medium or smaller creature, it must succeed on a DC 15 Strength saving throw or be knocked prone.',
+      attackBonus: 7,
+      reach: 5,
+      damage: [
+        { dice: { count: 2, die: 'd4', modifier: 4, notation: '2d4+4' }, type: 'bludgeoning' },
+      ],
     },
   ],
   reactions: [
@@ -817,11 +928,23 @@ export const assassin: Monster = {
       name: 'Shortsword',
       description:
         'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) piercing damage, and the target must make a DC 15 Constitution saving throw, taking 24 (7d6) poison damage on a failed save, or half as much damage on a successful one.',
+      attackBonus: 6,
+      reach: 5,
+      damage: [
+        { dice: { count: 1, die: 'd6', modifier: 3, notation: '1d6+3' }, type: 'piercing' },
+        { dice: { count: 7, die: 'd6', notation: '7d6' }, type: 'poison' },
+      ],
     },
     {
       name: 'Light Crossbow',
       description:
         'Ranged Weapon Attack: +6 to hit, range 80/320 ft., one target. Hit: 7 (1d8 + 3) piercing damage, and the target must make a DC 15 Constitution saving throw, taking 24 (7d6) poison damage on a failed save, or half as much damage on a successful one.',
+      attackBonus: 6,
+      reach: 80,
+      damage: [
+        { dice: { count: 1, die: 'd8', modifier: 3, notation: '1d8+3' }, type: 'piercing' },
+        { dice: { count: 7, die: 'd6', notation: '7d6' }, type: 'poison' },
+      ],
     },
   ],
   environment: ['urban'],

@@ -37,6 +37,11 @@ export const dryad: Monster = {
       name: 'Quarterstaff',
       description:
         'Melee Weapon Attack: +2 to hit, reach 5 ft., one target. Hit: 2 (1d6 - 1) bludgeoning damage, or 3 (1d8 - 1) bludgeoning damage if used with two hands.',
+      attackBonus: 2,
+      reach: 5,
+      damage: [
+        { dice: { count: 1, die: 'd6', modifier: -1, notation: '1d6-1' }, type: 'bludgeoning' },
+      ],
     },
   ],
   environment: ['forest'],

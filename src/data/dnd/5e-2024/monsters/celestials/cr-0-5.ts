@@ -42,6 +42,12 @@ export const deva: Monster = {
       name: 'Mace',
       description:
         'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 10 (1d8 + 4) bludgeoning damage plus 16 (3d10) radiant damage.',
+      attackBonus: 7,
+      reach: 5,
+      damage: [
+        { dice: { count: 1, die: 'd8', modifier: 4, notation: '1d8+4' }, type: 'bludgeoning' },
+        { dice: { count: 3, die: 'd10', notation: '3d10' }, type: 'radiant' },
+      ],
     },
   ],
   environment: ['celestial'],

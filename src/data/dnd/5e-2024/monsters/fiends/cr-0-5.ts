@@ -39,6 +39,9 @@ export const imp: Monster = {
       name: 'Sting',
       description:
         'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 5 (1d4 + 3) piercing damage, and the target must succeed on a DC 11 Constitution saving throw or take 10 (3d6) poison damage.',
+      attackBonus: 5,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd4', modifier: 3, notation: '1d4+3' }, type: 'piercing' }],
     },
   ],
   environment: ['underdark', 'urban'],
@@ -76,6 +79,9 @@ export const quasit: Monster = {
       name: 'Claws',
       description:
         'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d4 + 3) slashing damage.',
+      attackBonus: 4,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd4', modifier: 3, notation: '1d4+3' }, type: 'slashing' }],
     },
   ],
   environment: ['underdark'],

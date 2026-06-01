@@ -45,6 +45,11 @@ export const hydra: Monster = {
       name: 'Bite',
       description:
         'Melee Weapon Attack: +8 to hit, reach 10 ft., one target. Hit: 10 (1d10 + 5) piercing damage.',
+      attackBonus: 8,
+      reach: 10,
+      damage: [
+        { dice: { count: 1, die: 'd10', modifier: 5, notation: '1d10+5' }, type: 'piercing' },
+      ],
     },
   ],
   environment: ['swamp', 'water'],
@@ -88,16 +93,25 @@ export const manticore: Monster = {
       name: 'Bite',
       description:
         'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 8 (1d6 + 4) piercing damage.',
+      attackBonus: 7,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd6', modifier: 4, notation: '1d6+4' }, type: 'piercing' }],
     },
     {
       name: 'Claw',
       description:
         'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 8 (1d6 + 4) slashing damage.',
+      attackBonus: 7,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd6', modifier: 4, notation: '1d6+4' }, type: 'slashing' }],
     },
     {
       name: 'Tail Spike',
       description:
         'Ranged Weapon Attack: +7 to hit, range 100/400 ft., one target. Hit: 8 (1d6 + 4) piercing damage.',
+      attackBonus: 7,
+      reach: 100,
+      damage: [{ dice: { count: 1, die: 'd6', modifier: 4, notation: '1d6+4' }, type: 'piercing' }],
     },
   ],
   environment: ['desert', 'grassland', 'mountain'],

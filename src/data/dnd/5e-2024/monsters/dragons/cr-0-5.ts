@@ -33,6 +33,12 @@ export const redDragonWyrmling: Monster = {
       name: 'Bite',
       description:
         'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 7 (1d10 + 2) piercing damage plus 3 (1d6) fire damage.',
+      attackBonus: 4,
+      reach: 5,
+      damage: [
+        { dice: { count: 1, die: 'd10', modifier: 2, notation: '1d10+2' }, type: 'piercing' },
+        { dice: { count: 1, die: 'd6', notation: '1d6' }, type: 'fire' },
+      ],
     },
     {
       name: 'Fire Breath',

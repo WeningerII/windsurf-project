@@ -57,6 +57,9 @@ export const wraith: Monster = {
       name: 'Life Drain',
       description:
         'Melee Weapon Attack: +6 to hit, reach 5 ft., one creature. Hit: 22 (4d8 + 4) necrotic damage. The target must succeed on a DC 14 Constitution saving throw or its hit point maximum is reduced by an amount equal to the damage taken. This reduction lasts until the target finishes a long rest. The target dies if this effect reduces its hit point maximum to 0.',
+      attackBonus: 6,
+      reach: 5,
+      damage: [{ dice: { count: 4, die: 'd8', modifier: 4, notation: '4d8+4' }, type: 'necrotic' }],
     },
   ],
   environment: ['underdark', 'ruins'],
@@ -98,6 +101,12 @@ export const mummy: Monster = {
       name: 'Rotting Fist',
       description:
         'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 10 (2d6 + 3) bludgeoning damage plus 10 (3d6) necrotic damage.',
+      attackBonus: 5,
+      reach: 5,
+      damage: [
+        { dice: { count: 2, die: 'd6', modifier: 3, notation: '2d6+3' }, type: 'bludgeoning' },
+        { dice: { count: 3, die: 'd6', notation: '3d6' }, type: 'necrotic' },
+      ],
     },
   ],
   environment: ['dungeon', 'ruins', 'tomb'],
@@ -148,11 +157,20 @@ export const vampireSpawn: Monster = {
       name: 'Claw',
       description:
         'Melee Weapon Attack: +5 to hit, reach 5 ft., one creature. Hit: 6 (1d6 + 3) slashing damage. Instead of dealing damage, the spawn can grapple the target (escape DC 13).',
+      attackBonus: 5,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd6', modifier: 3, notation: '1d6+3' }, type: 'slashing' }],
     },
     {
       name: 'Bite',
       description:
         "Melee Weapon Attack: +5 to hit, reach 5 ft., one willing creature, or a creature that is grappled by the spawn, incapacitated, or restrained. Hit: 6 (1d6 + 3) piercing damage plus 7 (2d6) necrotic damage. The target's hit point maximum is reduced by an amount equal to the necrotic damage taken, and the spawn regains hit points equal to that amount. The reduction lasts until the target finishes a long rest. The target dies if this effect reduces its hit point maximum to 0.",
+      attackBonus: 5,
+      reach: 5,
+      damage: [
+        { dice: { count: 1, die: 'd6', modifier: 3, notation: '1d6+3' }, type: 'piercing' },
+        { dice: { count: 2, die: 'd6', notation: '2d6' }, type: 'necrotic' },
+      ],
     },
   ],
   environment: ['urban', 'underdark'],

@@ -29,11 +29,17 @@ export const hillGiant: Monster = {
       name: 'Greatclub',
       description:
         'Melee Weapon Attack: +8 to hit, reach 10 ft., one target. Hit: 18 (4d8) bludgeoning damage.',
+      attackBonus: 8,
+      reach: 10,
+      damage: [{ dice: { count: 4, die: 'd8', notation: '4d8' }, type: 'bludgeoning' }],
     },
     {
       name: 'Rock',
       description:
         'Ranged Weapon Attack: +8 to hit, range 60/240 ft., one target. Hit: 21 (6d6) bludgeoning damage.',
+      attackBonus: 8,
+      reach: 60,
+      damage: [{ dice: { count: 6, die: 'd6', notation: '6d6' }, type: 'bludgeoning' }],
     },
   ],
   environment: ['mountain', 'hill'],

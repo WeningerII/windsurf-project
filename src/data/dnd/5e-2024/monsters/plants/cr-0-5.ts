@@ -26,6 +26,11 @@ export const awakenedShrub: Monster = {
       name: 'Rake',
       description:
         'Melee Weapon Attack: +1 to hit, reach 5 ft., one target. Hit: 1 (1d4 - 1) slashing damage.',
+      attackBonus: 1,
+      reach: 5,
+      damage: [
+        { dice: { count: 1, die: 'd4', modifier: -1, notation: '1d4-1' }, type: 'slashing' },
+      ],
     },
   ],
   environment: ['forest'],

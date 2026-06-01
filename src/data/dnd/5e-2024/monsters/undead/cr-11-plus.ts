@@ -49,11 +49,22 @@ export const vampire: Monster = {
       name: 'Unarmed Strike',
       description:
         'Melee Weapon Attack: +8 to hit, reach 5 ft., one creature. Hit: 8 (1d8 + 4) bludgeoning damage. Instead of dealing damage, the vampire can grapple the target (escape DC 16).',
+      attackBonus: 8,
+      reach: 5,
+      damage: [
+        { dice: { count: 1, die: 'd8', modifier: 4, notation: '1d8+4' }, type: 'bludgeoning' },
+      ],
     },
     {
       name: 'Bite',
       description:
         "Melee Weapon Attack: +8 to hit, reach 5 ft., one willing creature, or a creature that is grappled by the vampire, incapacitated, or restrained. Hit: 8 (1d8 + 4) piercing damage plus 14 (4d6) necrotic damage. The target's hit point maximum is reduced by an amount equal to the necrotic damage taken, and the vampire regains hit points equal to that amount. The reduction lasts until the target finishes a long rest. The target dies if this effect reduces its hit point maximum to 0.",
+      attackBonus: 8,
+      reach: 5,
+      damage: [
+        { dice: { count: 1, die: 'd8', modifier: 4, notation: '1d8+4' }, type: 'piercing' },
+        { dice: { count: 4, die: 'd6', notation: '4d6' }, type: 'necrotic' },
+      ],
     },
   ],
   legendaryActions: [
@@ -123,6 +134,9 @@ export const lich: Monster = {
       name: 'Paralyzing Touch',
       description:
         'Melee Spell Attack: +9 to hit, reach 5 ft., one creature. Hit: 10 (3d6) cold damage. The target must succeed on a DC 17 Constitution saving throw or be paralyzed for 1 minute. The target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success.',
+      attackBonus: 9,
+      reach: 5,
+      damage: [{ dice: { count: 3, die: 'd6', notation: '3d6' }, type: 'cold' }],
     },
   ],
   legendaryActions: [

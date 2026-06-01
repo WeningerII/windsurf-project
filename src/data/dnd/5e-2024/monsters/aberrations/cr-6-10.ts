@@ -39,16 +39,29 @@ export const mindFlayer: Monster = {
       name: 'Bite',
       description:
         'Melee Weapon Attack: +5 to hit, reach 5 ft., one creature. Hit: 32 (4d12 + 2) piercing damage.',
+      attackBonus: 5,
+      reach: 5,
+      damage: [
+        { dice: { count: 4, die: 'd12', modifier: 2, notation: '4d12+2' }, type: 'piercing' },
+      ],
     },
     {
       name: 'Tentacles',
       description:
         'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 15 (2d10 + 2) psychic damage. If the target is Medium or smaller, it is grappled (escape DC 15) and unable to breathe unless it can breathe water. If the mind flayer loses its concentration, the grapple ends.',
+      attackBonus: 5,
+      reach: 5,
+      damage: [
+        { dice: { count: 2, die: 'd10', modifier: 2, notation: '2d10+2' }, type: 'psychic' },
+      ],
     },
     {
       name: 'Extract Brain',
       description:
         'Melee Weapon Attack: +5 to hit, reach 5 ft., one incapacitated humanoid grappled by the mind flayer. Hit: The target takes 55 (10d10) piercing damage. If this damage reduces the target to 0 hit points, the mind flayer kills the target by extracting and devouring its brain.',
+      attackBonus: 5,
+      reach: 5,
+      damage: [{ dice: { count: 10, die: 'd10', notation: '10d10' }, type: 'piercing' }],
     },
   ],
   environment: ['underdark'],
@@ -108,6 +121,11 @@ export const aboleth: Monster = {
       name: 'Tentacle',
       description:
         "Melee Weapon Attack: +9 to hit, reach 30 ft., one target. Hit: 12 (2d6 + 5) bludgeoning damage. If the target is a creature, it must succeed on a DC 16 Constitution saving throw or become diseased. The disease has no effect for 1 minute and can be removed by any magic that cures disease. After 1 minute, the diseased creature's skin becomes translucent and slimy, the creature can't regain hit points unless it is underwater, and the disease can be removed only by heal or another disease-curing spell of 6th level or higher. When the creature is outside a body of salt water, it takes 6 (1d12) acid damage every 10 minutes unless moisture is applied to the skin before the 10 minutes have elapsed.",
+      attackBonus: 9,
+      reach: 30,
+      damage: [
+        { dice: { count: 2, die: 'd6', modifier: 5, notation: '2d6+5' }, type: 'bludgeoning' },
+      ],
     },
   ],
   legendaryActions: [

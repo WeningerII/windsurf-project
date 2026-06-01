@@ -49,22 +49,41 @@ interface NormalizedAttack {
 }
 
 /**
- * Parse an SRD-style action description into attack/damage numbers, e.g.
+ * Parse an SRD-style action description into a to-hit attack, e.g.
  * "Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2)
  * slashing damage." Many 5e-2024 statblocks carry these numbers ONLY in prose
  * (no structured fields), so this lets the engine use the values the statblock
- * already prints rather than inventing them. Returns undefined when the text has
- * no recognizable attack.
+ * already prints rather than inventing them.
+ *
+ * Scope: ATTACK-ROLL actions only. A "+N to hit" is REQUIRED. An action with a
+ * damage clause but no to-hit (a breath weapon / save-or-suck such as "DC 15
+ * Dexterity saving throw, taking 31 (7d8) fire damage") is a save-based effect,
+ * not an attack, and is intentionally NOT returned here — it belongs to the
+ * area/save resolver. Returns undefined for non-attacks (Multiattack references,
+ * save-based actions, passive abilities).
  */
 export function parseAttackFromDescription(description: string): NormalizedAttack | undefined {
   if (!description) return undefined;
 
   const toHit = /([+-]\d+)\s+to hit/i.exec(description);
-  // Damage clauses: "(1d6 + 2) slashing damage", "1 (1d4 - 1) slashing damage".
+  // No to-hit -> not an attack-roll action.
+  if (!toHit) return undefined;
+
+  // Damage lives after the "Hit:" marker in SRD prose. Scope parsing to it so a
+  // " or " in the attack-type prefix ("Melee or Ranged Weapon Attack") is never
+  // mistaken for an alternative damage mode.
+  const hitIndex = description.search(/\bHit:\s*/i);
+  const damageScope = hitIndex >= 0 ? description.slice(hitIndex) : description;
+  // Versatile / two-handed wording ("... or 11 (1d10 + 4) ... if used with two
+  // hands") lists an ALTERNATIVE damage; take only the primary mode (before the
+  // first " or "). Additive damage uses "plus", which we keep, so multi-type
+  // hits ("X slashing plus Y fire") still parse fully.
+  const primaryScope = hitIndex >= 0 ? damageScope.split(/\bor\b/i)[0] : damageScope;
+
   const damage: NormalizedAttack['damage'] = [];
   const damageRe = /\((\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\)\s*([a-z]+)?\s*damage/gi;
   let match: RegExpExecArray | null;
-  while ((match = damageRe.exec(description)) !== null) {
+  while ((match = damageRe.exec(primaryScope)) !== null) {
     const [, count, faces, sign, mod, type] = match;
     const modifier = mod ? (sign === '-' ? -Number(mod) : Number(mod)) : 0;
     damage.push({
@@ -75,9 +94,6 @@ export function parseAttackFromDescription(description: string): NormalizedAttac
     });
   }
 
-  // Require at least an attack bonus or a damage clause to count as an attack.
-  if (!toHit && damage.length === 0) return undefined;
-
   const reachMatch = /reach (\d+)\s*ft/i.exec(description);
   const rangeMatch = /range (\d+)\s*\/\s*\d+\s*ft/i.exec(description);
   const reachFeet = reachMatch
@@ -87,18 +103,22 @@ export function parseAttackFromDescription(description: string): NormalizedAttac
       : FEET_PER_CELL;
 
   return {
-    attackBonus: toHit ? Number(toHit[1]) : 0,
+    attackBonus: Number(toHit[1]),
     reachCells: Math.max(1, Math.floor(reachFeet / FEET_PER_CELL)),
     damage,
   };
 }
 
-/** Normalize an action: structured fields take precedence, prose fills gaps. */
+/**
+ * Normalize an action into a to-hit attack. Structured fields are authoritative
+ * when present: an action with `attackBonus` IS an attack (damage may be empty —
+ * a to-hit that only applies a condition, like a Web/grapple). Prose parsing is
+ * the fallback for actions that have not been backfilled.
+ */
 export function normalizeAttack(action: Action): NormalizedAttack | undefined {
-  const hasStructured = action.attackBonus != null && (action.damage?.length ?? 0) > 0;
-  if (hasStructured) {
+  if (action.attackBonus != null) {
     return {
-      attackBonus: action.attackBonus ?? 0,
+      attackBonus: action.attackBonus,
       reachCells: actionReachCells(action),
       damage: (action.damage ?? []).map((d) => ({
         count: d.dice.count,

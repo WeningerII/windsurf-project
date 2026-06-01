@@ -27,11 +27,17 @@ export const skeleton: Monster = {
       name: 'Shortsword',
       description:
         'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
+      attackBonus: 4,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd6', modifier: 2, notation: '1d6+2' }, type: 'piercing' }],
     },
     {
       name: 'Shortbow',
       description:
         'Ranged Weapon Attack: +4 to hit, range 80/320 ft., one target. Hit: 5 (1d6 + 2) piercing damage.',
+      attackBonus: 4,
+      reach: 80,
+      damage: [{ dice: { count: 1, die: 'd6', modifier: 2, notation: '1d6+2' }, type: 'piercing' }],
     },
   ],
   environment: ['dungeon', 'ruins'],
@@ -68,6 +74,11 @@ export const zombie: Monster = {
       name: 'Slam',
       description:
         'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 4 (1d6 + 1) bludgeoning damage.',
+      attackBonus: 3,
+      reach: 5,
+      damage: [
+        { dice: { count: 1, die: 'd6', modifier: 1, notation: '1d6+1' }, type: 'bludgeoning' },
+      ],
     },
   ],
   environment: ['dungeon', 'ruins', 'graveyard'],
@@ -96,11 +107,17 @@ export const ghoul: Monster = {
       name: 'Bite',
       description:
         'Melee Weapon Attack: +2 to hit, reach 5 ft., one target. Hit: 9 (2d6 + 2) piercing damage.',
+      attackBonus: 2,
+      reach: 5,
+      damage: [{ dice: { count: 2, die: 'd6', modifier: 2, notation: '2d6+2' }, type: 'piercing' }],
     },
     {
       name: 'Claws',
       description:
         'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 7 (2d4 + 2) slashing damage. If the target is a creature other than an elf or undead, it must succeed on a DC 10 Constitution saving throw or be paralyzed for 1 minute. The target can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success.',
+      attackBonus: 4,
+      reach: 5,
+      damage: [{ dice: { count: 2, die: 'd4', modifier: 2, notation: '2d4+2' }, type: 'slashing' }],
     },
   ],
   environment: ['dungeon', 'ruins', 'graveyard'],
@@ -167,6 +184,9 @@ export const shadow: Monster = {
       name: 'Strength Drain',
       description:
         "Melee Weapon Attack: +4 to hit, reach 5 ft., one creature. Hit: 9 (2d6 + 2) necrotic damage, and the target's Strength score is reduced by 1d4. The target dies if this reduces its Strength to 0. Otherwise, the reduction lasts until the target finishes a short or long rest.",
+      attackBonus: 4,
+      reach: 5,
+      damage: [{ dice: { count: 2, die: 'd6', modifier: 2, notation: '2d6+2' }, type: 'necrotic' }],
     },
   ],
   environment: ['dungeon', 'ruins'],

@@ -36,6 +36,9 @@ export const pixie: Monster = {
       name: 'Dagger',
       description:
         'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d4 + 4) piercing damage.',
+      attackBonus: 5,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd4', modifier: 4, notation: '1d4+4' }, type: 'piercing' }],
     },
     {
       name: 'Polymorph',

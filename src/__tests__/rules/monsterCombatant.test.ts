@@ -181,8 +181,39 @@ describe('description parsing — statblocks that carry attacks only in prose', 
     expect(parsed!.reachCells).toBe(16); // 80 ft / 5
   });
 
+  it('takes only the PRIMARY mode of a versatile weapon (ignores the "or ... two hands" alt)', () => {
+    const parsed = parseAttackFromDescription(
+      'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 10 (1d8 + 4) slashing damage, or 11 (1d10 + 4) slashing damage if used with two hands.'
+    );
+    // Only the one-handed 1d8+4 is counted, not both clauses.
+    expect(parsed!.damage).toEqual([{ count: 1, faces: 8, modifier: 4, type: 'slashing' }]);
+  });
+
+  it('keeps ADDITIVE "plus" damage as multiple clauses (multi-type hit)', () => {
+    const parsed = parseAttackFromDescription(
+      'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) piercing damage plus 3 (1d6) fire damage.'
+    );
+    expect(parsed!.damage).toEqual([
+      { count: 1, faces: 6, modifier: 3, type: 'piercing' },
+      { count: 1, faces: 6, modifier: 0, type: 'fire' },
+    ]);
+  });
+
+  it('does not mistake "Melee or Ranged Weapon Attack" for an alternative damage mode', () => {
+    const parsed = parseAttackFromDescription(
+      'Melee or Ranged Weapon Attack: +5 to hit, reach 5 ft. or range 20/60 ft., one target. Hit: 5 (1d4 + 3) piercing damage.'
+    );
+    expect(parsed!.damage).toEqual([{ count: 1, faces: 4, modifier: 3, type: 'piercing' }]);
+  });
+
   it('returns undefined for non-attack prose', () => {
     expect(parseAttackFromDescription('The creature can breathe air and water.')).toBeUndefined();
+  });
+
+  it('returns undefined for a Multiattack reference action (no to-hit, no damage)', () => {
+    expect(
+      parseAttackFromDescription('The captain makes three melee attacks: two with its longsword.')
+    ).toBeUndefined();
   });
 
   it('REGRESSION: a real 2024 statblock (prose-only) now yields a working attack', () => {

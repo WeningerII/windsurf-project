@@ -38,11 +38,20 @@ export const youngRedDragon: Monster = {
       name: 'Bite',
       description:
         'Melee Weapon Attack: +7 to hit, reach 10 ft., one target. Hit: 15 (2d10 + 4) piercing damage plus 7 (2d6) fire damage.',
+      attackBonus: 7,
+      reach: 10,
+      damage: [
+        { dice: { count: 2, die: 'd10', modifier: 4, notation: '2d10+4' }, type: 'piercing' },
+        { dice: { count: 2, die: 'd6', notation: '2d6' }, type: 'fire' },
+      ],
     },
     {
       name: 'Claw',
       description:
         'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 11 (2d6 + 4) slashing damage.',
+      attackBonus: 7,
+      reach: 5,
+      damage: [{ dice: { count: 2, die: 'd6', modifier: 4, notation: '2d6+4' }, type: 'slashing' }],
     },
     {
       name: 'Fire Breath',

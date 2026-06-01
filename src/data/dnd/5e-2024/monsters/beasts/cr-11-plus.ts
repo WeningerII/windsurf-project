@@ -30,11 +30,21 @@ export const tyrannosaurusRex: Monster = {
       name: 'Bite',
       description:
         "Melee Weapon Attack: +10 to hit, reach 10 ft., one target. Hit: 33 (4d12 + 7) piercing damage. If the target is a Medium or smaller creature, it is grappled (escape DC 17). Until this grapple ends, the target is restrained, and the tyrannosaurus can't bite another target.",
+      attackBonus: 10,
+      reach: 10,
+      damage: [
+        { dice: { count: 4, die: 'd12', modifier: 7, notation: '4d12+7' }, type: 'piercing' },
+      ],
     },
     {
       name: 'Tail',
       description:
         'Melee Weapon Attack: +10 to hit, reach 10 ft., one target. Hit: 20 (3d8 + 7) bludgeoning damage.',
+      attackBonus: 10,
+      reach: 10,
+      damage: [
+        { dice: { count: 3, die: 'd8', modifier: 7, notation: '3d8+7' }, type: 'bludgeoning' },
+      ],
     },
   ],
   environment: ['grassland', 'forest'],

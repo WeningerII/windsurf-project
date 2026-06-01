@@ -29,11 +29,21 @@ export const giantApe: Monster = {
       name: 'Fist',
       description:
         'Melee Weapon Attack: +9 to hit, reach 10 ft., one target. Hit: 22 (3d10 + 6) bludgeoning damage.',
+      attackBonus: 9,
+      reach: 10,
+      damage: [
+        { dice: { count: 3, die: 'd10', modifier: 6, notation: '3d10+6' }, type: 'bludgeoning' },
+      ],
     },
     {
       name: 'Rock',
       description:
         'Ranged Weapon Attack: +9 to hit, range 50/100 ft., one target. Hit: 30 (7d6 + 6) bludgeoning damage.',
+      attackBonus: 9,
+      reach: 50,
+      damage: [
+        { dice: { count: 7, die: 'd6', modifier: 6, notation: '7d6+6' }, type: 'bludgeoning' },
+      ],
     },
   ],
   environment: ['jungle', 'forest'],
@@ -67,11 +77,19 @@ export const mammoth: Monster = {
       name: 'Gore',
       description:
         'Melee Weapon Attack: +10 to hit, reach 10 ft., one target. Hit: 25 (4d8 + 7) piercing damage.',
+      attackBonus: 10,
+      reach: 10,
+      damage: [{ dice: { count: 4, die: 'd8', modifier: 7, notation: '4d8+7' }, type: 'piercing' }],
     },
     {
       name: 'Stomp',
       description:
         'Melee Weapon Attack: +10 to hit, reach 5 ft., one prone creature. Hit: 29 (4d10 + 7) bludgeoning damage.',
+      attackBonus: 10,
+      reach: 5,
+      damage: [
+        { dice: { count: 4, die: 'd10', modifier: 7, notation: '4d10+7' }, type: 'bludgeoning' },
+      ],
     },
   ],
   environment: ['arctic', 'grassland'],
@@ -109,11 +127,21 @@ export const giantCrocodile: Monster = {
       name: 'Bite',
       description:
         "Melee Weapon Attack: +8 to hit, reach 5 ft., one target. Hit: 21 (3d10 + 5) piercing damage, and the target is grappled (escape DC 16). Until this grapple ends, the target is restrained, and the crocodile can't bite another target.",
+      attackBonus: 8,
+      reach: 5,
+      damage: [
+        { dice: { count: 3, die: 'd10', modifier: 5, notation: '3d10+5' }, type: 'piercing' },
+      ],
     },
     {
       name: 'Tail',
       description:
         'Melee Weapon Attack: +8 to hit, reach 10 ft., one target not grappled by the crocodile. Hit: 14 (2d8 + 5) bludgeoning damage. If the target is a creature, it must succeed on a DC 16 Strength saving throw or be knocked prone.',
+      attackBonus: 8,
+      reach: 10,
+      damage: [
+        { dice: { count: 2, die: 'd8', modifier: 5, notation: '2d8+5' }, type: 'bludgeoning' },
+      ],
     },
   ],
   environment: ['swamp', 'water'],
@@ -152,6 +180,9 @@ export const hunterShark: Monster = {
       name: 'Bite',
       description:
         'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 13 (2d8 + 4) piercing damage.',
+      attackBonus: 6,
+      reach: 5,
+      damage: [{ dice: { count: 2, die: 'd8', modifier: 4, notation: '2d8+4' }, type: 'piercing' }],
     },
   ],
   environment: ['water'],
@@ -189,11 +220,17 @@ export const polarBear: Monster = {
       name: 'Bite',
       description:
         'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 9 (1d8 + 5) piercing damage.',
+      attackBonus: 7,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd8', modifier: 5, notation: '1d8+5' }, type: 'piercing' }],
     },
     {
       name: 'Claws',
       description:
         'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 12 (2d6 + 5) slashing damage.',
+      attackBonus: 7,
+      reach: 5,
+      damage: [{ dice: { count: 2, die: 'd6', modifier: 5, notation: '2d6+5' }, type: 'slashing' }],
     },
   ],
   environment: ['arctic'],
@@ -227,6 +264,11 @@ export const rhinoceros: Monster = {
       name: 'Gore',
       description:
         'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 14 (2d8 + 5) bludgeoning damage.',
+      attackBonus: 7,
+      reach: 5,
+      damage: [
+        { dice: { count: 2, die: 'd8', modifier: 5, notation: '2d8+5' }, type: 'bludgeoning' },
+      ],
     },
   ],
   environment: ['grassland'],
@@ -265,11 +307,19 @@ export const saberToothedTiger: Monster = {
       name: 'Bite',
       description:
         'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 10 (1d10 + 5) piercing damage.',
+      attackBonus: 6,
+      reach: 5,
+      damage: [
+        { dice: { count: 1, die: 'd10', modifier: 5, notation: '1d10+5' }, type: 'piercing' },
+      ],
     },
     {
       name: 'Claw',
       description:
         'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 12 (2d6 + 5) slashing damage.',
+      attackBonus: 6,
+      reach: 5,
+      damage: [{ dice: { count: 2, die: 'd6', modifier: 5, notation: '2d6+5' }, type: 'slashing' }],
     },
   ],
   environment: ['arctic', 'mountain'],
@@ -304,11 +354,21 @@ export const giantElk: Monster = {
       name: 'Ram',
       description:
         'Melee Weapon Attack: +6 to hit, reach 10 ft., one target. Hit: 11 (2d6 + 4) bludgeoning damage.',
+      attackBonus: 6,
+      reach: 10,
+      damage: [
+        { dice: { count: 2, die: 'd6', modifier: 4, notation: '2d6+4' }, type: 'bludgeoning' },
+      ],
     },
     {
       name: 'Hooves',
       description:
         'Melee Weapon Attack: +6 to hit, reach 5 ft., one prone creature. Hit: 22 (4d8 + 4) bludgeoning damage.',
+      attackBonus: 6,
+      reach: 5,
+      damage: [
+        { dice: { count: 4, die: 'd8', modifier: 4, notation: '4d8+4' }, type: 'bludgeoning' },
+      ],
     },
   ],
   environment: ['forest', 'grassland'],

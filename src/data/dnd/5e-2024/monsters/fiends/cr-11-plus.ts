@@ -48,11 +48,23 @@ export const balor: Monster = {
       name: 'Longsword',
       description:
         'Melee Weapon Attack: +12 to hit, reach 10 ft., one target. Hit: 21 (3d8 + 8) slashing damage plus 11 (2d10) fire damage.',
+      attackBonus: 12,
+      reach: 10,
+      damage: [
+        { dice: { count: 3, die: 'd8', modifier: 8, notation: '3d8+8' }, type: 'slashing' },
+        { dice: { count: 2, die: 'd10', notation: '2d10' }, type: 'fire' },
+      ],
     },
     {
       name: 'Whip',
       description:
         'Melee Weapon Attack: +12 to hit, reach 30 ft., one target. Hit: 20 (2d10 + 8) slashing damage plus 11 (2d10) fire damage, and the target must succeed on a DC 19 Strength saving throw or be knocked prone.',
+      attackBonus: 12,
+      reach: 30,
+      damage: [
+        { dice: { count: 2, die: 'd10', modifier: 8, notation: '2d10+8' }, type: 'slashing' },
+        { dice: { count: 2, die: 'd10', notation: '2d10' }, type: 'fire' },
+      ],
     },
   ],
   legendaryActions: [

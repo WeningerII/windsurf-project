@@ -37,11 +37,17 @@ export const captain: Monster = {
       name: 'Longsword',
       description:
         'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 7 (1d8 + 3) slashing damage.',
+      attackBonus: 5,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd8', modifier: 3, notation: '1d8+3' }, type: 'slashing' }],
     },
     {
       name: 'Dagger',
       description:
         'Melee or Ranged Weapon Attack: +5 to hit, reach 5 ft. or range 20/60 ft., one target. Hit: 5 (1d4 + 3) piercing damage.',
+      attackBonus: 5,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd4', modifier: 3, notation: '1d4+3' }, type: 'piercing' }],
     },
   ],
   reactions: [
@@ -88,6 +94,9 @@ export const mage: Monster = {
       name: 'Dagger',
       description:
         'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 2 (1d4) piercing damage.',
+      attackBonus: 3,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd4', notation: '1d4' }, type: 'piercing' }],
     },
   ],
   environment: ['urban', 'tower'],
@@ -131,6 +140,9 @@ export const warlord: Monster = {
       name: 'Longsword',
       description:
         'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 10 (1d8 + 4) slashing damage, or 11 (1d10 + 4) slashing damage if used with two hands.',
+      attackBonus: 7,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd8', modifier: 4, notation: '1d8+4' }, type: 'slashing' }],
     },
   ],
   environment: ['any'],
@@ -167,6 +179,9 @@ export const necromancer: Monster = {
       name: 'Dagger',
       description:
         'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 2 (1d4) piercing damage.',
+      attackBonus: 3,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd4', notation: '1d4' }, type: 'piercing' }],
     },
   ],
   environment: ['underdark', 'tower'],

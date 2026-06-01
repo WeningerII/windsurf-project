@@ -34,6 +34,9 @@ export const succubus: Monster = {
       name: 'Claw',
       description:
         'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 6 (1d6 + 3) slashing damage.',
+      attackBonus: 5,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd6', modifier: 3, notation: '1d6+3' }, type: 'slashing' }],
     },
     {
       name: 'Charm',

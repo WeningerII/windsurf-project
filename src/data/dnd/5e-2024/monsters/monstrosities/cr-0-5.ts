@@ -35,11 +35,17 @@ export const griffon: Monster = {
       name: 'Beak',
       description:
         'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 8 (1d8 + 4) piercing damage.',
+      attackBonus: 6,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd8', modifier: 4, notation: '1d8+4' }, type: 'piercing' }],
     },
     {
       name: 'Claws',
       description:
         'Melee Weapon Attack: +6 to hit, reach 5 ft., one target. Hit: 11 (2d6 + 4) slashing damage.',
+      attackBonus: 6,
+      reach: 5,
+      damage: [{ dice: { count: 2, die: 'd6', modifier: 4, notation: '2d6+4' }, type: 'slashing' }],
     },
   ],
   environment: ['mountain', 'grassland'],

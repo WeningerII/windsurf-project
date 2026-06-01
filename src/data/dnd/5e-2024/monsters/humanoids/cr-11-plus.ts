@@ -38,6 +38,9 @@ export const archmage: Monster = {
       name: 'Dagger',
       description:
         'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 2 (1d4) piercing damage.',
+      attackBonus: 4,
+      reach: 5,
+      damage: [{ dice: { count: 1, die: 'd4', notation: '1d4' }, type: 'piercing' }],
     },
   ],
   legendaryActions: [

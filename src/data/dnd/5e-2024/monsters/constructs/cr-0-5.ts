@@ -51,6 +51,11 @@ export const clayGolem: Monster = {
       name: 'Slam',
       description:
         'Melee Weapon Attack: +8 to hit, reach 5 ft., one target. Hit: 13 (2d8 + 5) bludgeoning damage.',
+      attackBonus: 8,
+      reach: 5,
+      damage: [
+        { dice: { count: 2, die: 'd8', modifier: 5, notation: '2d8+5' }, type: 'bludgeoning' },
+      ],
     },
   ],
   environment: ['dungeon', 'tower'],

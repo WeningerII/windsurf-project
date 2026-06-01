@@ -53,6 +53,11 @@ export const airElemental: Monster = {
       name: 'Slam',
       description:
         'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 13 (2d8 + 4) bludgeoning damage.',
+      attackBonus: 7,
+      reach: 5,
+      damage: [
+        { dice: { count: 2, die: 'd8', modifier: 4, notation: '2d8+4' }, type: 'bludgeoning' },
+      ],
     },
   ],
   environment: ['coastal', 'grassland'],
@@ -107,6 +112,11 @@ export const earthElemental: Monster = {
       name: 'Slam',
       description:
         'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 13 (2d8 + 4) bludgeoning damage.',
+      attackBonus: 7,
+      reach: 5,
+      damage: [
+        { dice: { count: 2, die: 'd8', modifier: 4, notation: '2d8+4' }, type: 'bludgeoning' },
+      ],
     },
   ],
   environment: ['cave', 'mountain'],
@@ -167,6 +177,9 @@ export const fireElemental: Monster = {
       name: 'Touch',
       description:
         'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 10 (2d6 + 3) fire damage. If the target is a creature or a flammable object, it ignites. If not dealt with, the fire spreads.',
+      attackBonus: 5,
+      reach: 5,
+      damage: [{ dice: { count: 2, die: 'd6', modifier: 3, notation: '2d6+3' }, type: 'fire' }],
     },
   ],
   environment: ['underdark', 'volcano'],
@@ -226,6 +239,11 @@ export const waterElemental: Monster = {
       name: 'Slam',
       description:
         'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 13 (2d8 + 4) bludgeoning damage.',
+      attackBonus: 5,
+      reach: 5,
+      damage: [
+        { dice: { count: 2, die: 'd8', modifier: 4, notation: '2d8+4' }, type: 'bludgeoning' },
+      ],
     },
   ],
   environment: ['coastal', 'ocean'],

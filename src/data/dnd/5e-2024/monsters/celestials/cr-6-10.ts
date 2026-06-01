@@ -43,6 +43,12 @@ export const planetar: Monster = {
       name: 'Greatsword',
       description:
         'Melee Weapon Attack: +12 to hit, reach 5 ft., one target. Hit: 21 (4d6 + 7) slashing damage plus 22 (4d10) radiant damage.',
+      attackBonus: 12,
+      reach: 5,
+      damage: [
+        { dice: { count: 4, die: 'd6', modifier: 7, notation: '4d6+7' }, type: 'slashing' },
+        { dice: { count: 4, die: 'd10', notation: '4d10' }, type: 'radiant' },
+      ],
     },
   ],
   environment: ['celestial'],

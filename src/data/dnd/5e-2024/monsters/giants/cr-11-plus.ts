@@ -42,11 +42,17 @@ export const stormGiant: Monster = {
       name: 'Greatsword',
       description:
         'Melee Weapon Attack: +12 to hit, reach 15 ft., one target. Hit: 28 (6d6 + 8) slashing damage.',
+      attackBonus: 12,
+      reach: 15,
+      damage: [{ dice: { count: 6, die: 'd6', modifier: 8, notation: '6d6+8' }, type: 'slashing' }],
     },
     {
       name: 'Rock',
       description:
         'Ranged Weapon Attack: +12 to hit, range 60/240 ft., one target. Hit: 35 (10d6) bludgeoning damage.',
+      attackBonus: 12,
+      reach: 60,
+      damage: [{ dice: { count: 10, die: 'd6', notation: '10d6' }, type: 'bludgeoning' }],
     },
     {
       name: 'Lightning Strike',
