@@ -44,6 +44,8 @@ export const redDragonWyrmling: Monster = {
       name: 'Fire Breath',
       description:
         'The dragon exhales fire in a 15-foot cone. Each creature in that area must make a DC 11 Dexterity saving throw, taking 22 (5d8) fire damage on a failed save, or half as much on a successful one.',
+      savingThrow: { attribute: 'dex', dc: 11, effect: 'half as much damage on a success' },
+      damage: [{ dice: { count: 5, die: 'd8', notation: '5d8' }, type: 'fire' }],
     },
   ],
   environment: ['mountain'],

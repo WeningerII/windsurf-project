@@ -73,6 +73,8 @@ export const adultRedDragon: Monster = {
       name: 'Fire Breath',
       description:
         'The dragon exhales fire in a 90-foot cone. Each creature in that area must make a DC 19 Dexterity saving throw, taking 66 (12d8) fire damage on a failed save, or half as much on a successful one.',
+      savingThrow: { attribute: 'dex', dc: 19, effect: 'half as much damage on a success' },
+      damage: [{ dice: { count: 12, die: 'd8', notation: '12d8' }, type: 'fire' }],
     },
   ],
   legendaryActions: [
@@ -168,6 +170,8 @@ export const ancientRedDragon: Monster = {
       name: 'Fire Breath',
       description:
         'The dragon exhales fire in a 120-foot cone. Each creature in that area must make a DC 22 Dexterity saving throw, taking 91 (16d8) fire damage on a failed save, or half as much on a successful one.',
+      savingThrow: { attribute: 'dex', dc: 22, effect: 'half as much damage on a success' },
+      damage: [{ dice: { count: 16, die: 'd8', notation: '16d8' }, type: 'fire' }],
     },
   ],
   legendaryActions: [

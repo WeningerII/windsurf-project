@@ -82,15 +82,19 @@ export type {
 } from './tactical/roundDriver';
 export { isRoundConclusive, runCombatRound } from './tactical/roundDriver';
 
-export type { MonsterCombatant } from './combatants/monsterCombatant';
+export type { MonsterCombatant, MonsterSaveAction } from './combatants/monsterCombatant';
 export {
   buildMonsterCombatant,
   monsterAttackEffects,
   monsterAverageHitPoints,
   monsterDamageEffects,
+  monsterSaveActions,
   normalizeAttack,
+  normalizeSaveAction,
   parseAttackFromDescription,
+  parseSaveActionFromDescription,
   primaryAttackAction,
+  saveActionDamageEffects,
 } from './combatants/monsterCombatant';
 
 export type {

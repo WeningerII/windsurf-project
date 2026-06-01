@@ -58,6 +58,8 @@ export const stormGiant: Monster = {
       name: 'Lightning Strike',
       description:
         'The giant casts lightning bolt as a 6th-level spell, centered on itself. Each creature within 100 feet of the giant must make a DC 17 Dexterity saving throw, taking 54 (12d8) lightning damage on a failed save, or half as much on a successful one.',
+      savingThrow: { attribute: 'dex', dc: 17, effect: 'half as much damage on a success' },
+      damage: [{ dice: { count: 12, die: 'd8', notation: '12d8' }, type: 'lightning' }],
     },
   ],
   legendaryActions: [

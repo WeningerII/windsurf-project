@@ -41,11 +41,51 @@ export function monsterAverageHitPoints(monster: Monster): number {
   return Math.max(1, Math.floor(avg));
 }
 
+/** A single damage clause: N dice of M faces + a flat modifier, of a type. */
+interface DamageClause {
+  count: number;
+  faces: number;
+  modifier: number;
+  type: string;
+}
+
 /** A normalized attack: structured fields when present, else parsed from prose. */
 interface NormalizedAttack {
   attackBonus: number;
   reachCells: number;
-  damage: Array<{ count: number; faces: number; modifier: number; type: string }>;
+  damage: DamageClause[];
+}
+
+/** A normalized save-based action (breath weapon / AoE): DC + save + damage. */
+interface NormalizedSaveAction {
+  /** Ability the target saves with, lowercased (e.g. 'dex'). */
+  saveAbility: string;
+  saveDC: number;
+  /** When true (5e default for "half as much"), a success halves damage. */
+  halfOnSave: boolean;
+  damage: DamageClause[];
+}
+
+/**
+ * Parse the damage dice clauses out of a scoped string, e.g.
+ * "(1d6 + 2) slashing damage plus (1d6) fire damage" → two clauses. Pure helper
+ * shared by the attack and save-action parsers.
+ */
+function parseDamageClauses(scope: string): DamageClause[] {
+  const damage: DamageClause[] = [];
+  const damageRe = /\((\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\)\s*([a-z]+)?\s*damage/gi;
+  let match: RegExpExecArray | null;
+  while ((match = damageRe.exec(scope)) !== null) {
+    const [, count, faces, sign, mod, type] = match;
+    const modifier = mod ? (sign === '-' ? -Number(mod) : Number(mod)) : 0;
+    damage.push({
+      count: Number(count),
+      faces: Number(faces),
+      modifier,
+      type: (type ?? 'untyped').toLowerCase(),
+    });
+  }
+  return damage;
 }
 
 /**
@@ -80,19 +120,7 @@ export function parseAttackFromDescription(description: string): NormalizedAttac
   // hits ("X slashing plus Y fire") still parse fully.
   const primaryScope = hitIndex >= 0 ? damageScope.split(/\bor\b/i)[0] : damageScope;
 
-  const damage: NormalizedAttack['damage'] = [];
-  const damageRe = /\((\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\)\s*([a-z]+)?\s*damage/gi;
-  let match: RegExpExecArray | null;
-  while ((match = damageRe.exec(primaryScope)) !== null) {
-    const [, count, faces, sign, mod, type] = match;
-    const modifier = mod ? (sign === '-' ? -Number(mod) : Number(mod)) : 0;
-    damage.push({
-      count: Number(count),
-      faces: Number(faces),
-      modifier,
-      type: (type ?? 'untyped').toLowerCase(),
-    });
-  }
+  const damage = parseDamageClauses(primaryScope);
 
   const reachMatch = /reach (\d+)\s*ft/i.exec(description);
   const rangeMatch = /range (\d+)\s*\/\s*\d+\s*ft/i.exec(description);
@@ -105,6 +133,51 @@ export function parseAttackFromDescription(description: string): NormalizedAttac
   return {
     attackBonus: Number(toHit[1]),
     reachCells: Math.max(1, Math.floor(reachFeet / FEET_PER_CELL)),
+    damage,
+  };
+}
+
+const SAVE_ABILITY_WORDS: Record<string, string> = {
+  strength: 'str',
+  dexterity: 'dex',
+  constitution: 'con',
+  intelligence: 'int',
+  wisdom: 'wis',
+  charisma: 'cha',
+};
+
+/**
+ * Parse a save-based action (breath weapon / area effect) from SRD prose, e.g.
+ * "Each creature in that area must make a DC 11 Dexterity saving throw, taking
+ * 22 (5d8) fire damage on a failed save, or half as much on a successful one."
+ *
+ * Scope: requires a "DC N <Ability> saving throw" and at least one damage clause,
+ * and must NOT be a to-hit attack (those are handled by the attack parser). This
+ * is the complement of `parseAttackFromDescription`: between them every damaging
+ * monster action resolves through either the attack or the area/save path.
+ */
+export function parseSaveActionFromDescription(
+  description: string
+): NormalizedSaveAction | undefined {
+  if (!description) return undefined;
+  // A to-hit attack is not a save-based area action — keep the two disjoint.
+  if (/\bto hit\b/i.test(description)) return undefined;
+
+  const save =
+    /DC\s+(\d+)\s+(Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)\s+saving throw/i.exec(
+      description
+    );
+  if (!save) return undefined;
+
+  const damage = parseDamageClauses(description);
+  if (damage.length === 0) return undefined;
+
+  return {
+    saveAbility: SAVE_ABILITY_WORDS[save[2].toLowerCase()] ?? save[2].toLowerCase(),
+    saveDC: Number(save[1]),
+    // "half as much" (the SRD default for AoE damage) → half on save; absent it
+    // negates on a success.
+    halfOnSave: /half as much/i.test(description),
     damage,
   };
 }
@@ -129,6 +202,92 @@ export function normalizeAttack(action: Action): NormalizedAttack | undefined {
     };
   }
   return parseAttackFromDescription(action.description);
+}
+
+/**
+ * Normalize an action into a save-based area effect. Structured `savingThrow` +
+ * `damage` are authoritative when present; otherwise the prose parser fills in.
+ * Returns undefined for to-hit attacks and non-damaging actions.
+ */
+export function normalizeSaveAction(action: Action): NormalizedSaveAction | undefined {
+  if (action.attackBonus != null) return undefined; // it's a to-hit attack
+  if (action.savingThrow && (action.damage?.length ?? 0) > 0) {
+    return {
+      saveAbility: action.savingThrow.attribute.toLowerCase(),
+      saveDC: action.savingThrow.dc,
+      halfOnSave: /half/i.test(action.savingThrow.effect),
+      damage: (action.damage ?? []).map((d) => ({
+        count: d.dice.count,
+        faces: dieFaces(d.dice.die),
+        modifier: d.dice.modifier ?? 0,
+        type: d.type,
+      })),
+    };
+  }
+  return parseSaveActionFromDescription(action.description);
+}
+
+/** Build damage effects (IR) for a save-based action's primary damage. */
+export function saveActionDamageEffects(monster: Monster, action: Action): EffectInstance[] {
+  const normalized = normalizeSaveAction(action);
+  if (!normalized) return [];
+  const systemId = monster.system as EffectInstance['systemId'];
+  const effects: EffectInstance[] = [];
+  for (const [index, clause] of normalized.damage.entries()) {
+    const target = `damage.${clause.type}`;
+    for (let dieIndex = 0; dieIndex < clause.count; dieIndex += 1) {
+      effects.push({
+        id: makeEffectId(systemId, target, monster.id, action.name, 'die', index, dieIndex),
+        systemId,
+        target,
+        operation: 'add-die',
+        value: clause.faces,
+        stackPolicy: 'sum',
+        source: { kind: 'custom', id: monster.id, label: `${monster.name}: ${action.name}` },
+        label: `${action.name} d${clause.faces}`,
+        category: 'other',
+      });
+    }
+    if (clause.modifier) {
+      effects.push({
+        id: makeEffectId(systemId, target, monster.id, action.name, 'flat', index),
+        systemId,
+        target,
+        operation: 'add',
+        value: clause.modifier,
+        stackPolicy: 'sum',
+        source: { kind: 'custom', id: monster.id, label: `${monster.name}: ${action.name}` },
+        label: `${action.name} damage bonus`,
+        category: 'other',
+      });
+    }
+  }
+  return effects;
+}
+
+/** The monster's save-based actions (breath weapons / AoE), normalized. */
+export interface MonsterSaveAction {
+  name: string;
+  saveAbility: string;
+  saveDC: number;
+  halfOnSave: boolean;
+  damageEffects: EffectInstance[];
+}
+
+export function monsterSaveActions(monster: Monster): MonsterSaveAction[] {
+  const result: MonsterSaveAction[] = [];
+  for (const action of monster.actions ?? []) {
+    const normalized = normalizeSaveAction(action);
+    if (!normalized) continue;
+    result.push({
+      name: action.name,
+      saveAbility: normalized.saveAbility,
+      saveDC: normalized.saveDC,
+      halfOnSave: normalized.halfOnSave,
+      damageEffects: saveActionDamageEffects(monster, action),
+    });
+  }
+  return result;
 }
 
 /** Reach (in grid cells) of a structured action; melee defaults to 1 cell. */

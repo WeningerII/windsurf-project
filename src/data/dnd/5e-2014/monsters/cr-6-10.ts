@@ -356,6 +356,8 @@ export const chimera: Monster = {
       name: 'Fire Breath',
       description:
         'The dragon head exhales fire in a 15-foot cone. Each creature in that area must make a DC 15 Dexterity saving throw, taking 31 (7d8) fire damage on a failed save, or half as much on a successful one.',
+      savingThrow: { attribute: 'dex', dc: 15, effect: 'half as much damage on a success' },
+      damage: [{ dice: { count: 7, die: 'd8', notation: '7d8' }, type: 'fire' }],
       recharge: '5-6',
     },
   ],

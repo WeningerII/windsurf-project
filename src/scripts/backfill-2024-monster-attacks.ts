@@ -23,42 +23,84 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { execSync } from 'node:child_process';
 import { join } from 'node:path';
 import { dnd5e2024Monsters } from '../data/dnd/5e-2024/monsters';
-import { parseAttackFromDescription } from '../rules/combatants/monsterCombatant';
+import {
+  parseAttackFromDescription,
+  parseSaveActionFromDescription,
+} from '../rules/combatants/monsterCombatant';
 import type { Action, Monster } from '../types/creatures/monsters';
 
 const WRITE = process.argv.includes('--write');
 const MONSTERS_DIR = join(process.cwd(), 'src/data/dnd/5e-2024/monsters');
 
-interface PlannedEdit {
-  monsterId: string;
-  actionName: string;
-  attackBonus: number;
-  reachFeet: number;
-  damage: Array<{ count: number; faces: number; modifier: number; type: string }>;
-}
+type DamageClause = { count: number; faces: number; modifier: number; type: string };
 
-/** Build the structured-field source snippet to inject for one parsed action. */
-function fieldsSnippet(edit: PlannedEdit, indent: string): string {
-  const dmg = edit.damage
+type PlannedEdit =
+  | {
+      kind: 'attack';
+      monsterId: string;
+      actionName: string;
+      attackBonus: number;
+      reachFeet: number;
+      damage: DamageClause[];
+    }
+  | {
+      kind: 'save';
+      monsterId: string;
+      actionName: string;
+      saveAbility: string;
+      saveDC: number;
+      halfOnSave: boolean;
+      damage: DamageClause[];
+    };
+
+const ABILITY_FULL: Record<string, string> = {
+  str: 'str',
+  dex: 'dex',
+  con: 'con',
+  int: 'int',
+  wis: 'wis',
+  cha: 'cha',
+};
+
+function damageSnippet(damage: DamageClause[], indent: string): string {
+  return damage
     .map((d) => {
       const notation = `${d.count}d${d.faces}${d.modifier ? (d.modifier > 0 ? `+${d.modifier}` : d.modifier) : ''}`;
       const mod = d.modifier ? `, modifier: ${d.modifier}` : '';
       return `${indent}    { dice: { count: ${d.count}, die: 'd${d.faces}'${mod}, notation: '${notation}' }, type: '${d.type}' },`;
     })
     .join('\n');
+}
+
+/** Build the structured-field source snippet to inject for one parsed action. */
+function fieldsSnippet(edit: PlannedEdit, indent: string): string {
+  if (edit.kind === 'attack') {
+    const lines = [
+      `${indent}  attackBonus: ${edit.attackBonus},`,
+      `${indent}  reach: ${edit.reachFeet},`,
+    ];
+    if (edit.damage.length > 0) {
+      lines.push(`${indent}  damage: [`, damageSnippet(edit.damage, indent), `${indent}  ],`);
+    }
+    return lines.join('\n');
+  }
+  // save action
+  const effect = edit.halfOnSave ? 'half as much damage on a success' : 'no damage on a success';
   const lines = [
-    `${indent}  attackBonus: ${edit.attackBonus},`,
-    `${indent}  reach: ${edit.reachFeet},`,
+    `${indent}  savingThrow: { attribute: '${ABILITY_FULL[edit.saveAbility] ?? edit.saveAbility}', dc: ${edit.saveDC}, effect: '${effect}' },`,
   ];
   if (edit.damage.length > 0) {
-    lines.push(`${indent}  damage: [`, dmg, `${indent}  ],`);
+    lines.push(`${indent}  damage: [`, damageSnippet(edit.damage, indent), `${indent}  ],`);
   }
   return lines.join('\n');
 }
 
-/** Does this action already carry structured fields? */
-function hasStructured(action: Action): boolean {
-  return action.attackBonus != null && (action.damage?.length ?? 0) > 0;
+/** Already has the structured fields for its kind? */
+function hasAttackFields(action: Action): boolean {
+  return action.attackBonus != null;
+}
+function hasSaveFields(action: Action): boolean {
+  return action.savingThrow != null;
 }
 
 function reachFeetFor(description: string): number {
@@ -86,26 +128,43 @@ for (const [file, monsters] of byFile) {
 
   for (const monster of monsters) {
     for (const action of monster.actions ?? []) {
-      if (hasStructured(action)) {
-        skippedStructured += 1;
+      let edit: PlannedEdit | undefined;
+
+      const attack = !hasAttackFields(action)
+        ? parseAttackFromDescription(action.description)
+        : undefined;
+      if (attack) {
+        edit = {
+          kind: 'attack',
+          monsterId: monster.id,
+          actionName: action.name,
+          attackBonus: attack.attackBonus,
+          reachFeet: reachFeetFor(action.description),
+          damage: attack.damage,
+        };
+      } else if (!hasSaveFields(action)) {
+        const save = parseSaveActionFromDescription(action.description);
+        if (save) {
+          edit = {
+            kind: 'save',
+            monsterId: monster.id,
+            actionName: action.name,
+            saveAbility: save.saveAbility,
+            saveDC: save.saveDC,
+            halfOnSave: save.halfOnSave,
+            damage: save.damage,
+          };
+        }
+      }
+
+      if (!edit) {
+        if (hasAttackFields(action) || hasSaveFields(action)) skippedStructured += 1;
+        else skippedNoAttack += 1;
         continue;
       }
-      const parsed = parseAttackFromDescription(action.description);
-      if (!parsed) {
-        skippedNoAttack += 1;
-        continue;
-      }
-      const edit: PlannedEdit = {
-        monsterId: monster.id,
-        actionName: action.name,
-        attackBonus: parsed.attackBonus,
-        reachFeet: reachFeetFor(action.description),
-        damage: parsed.damage,
-      };
 
       // Locate the action's description string in the file and insert fields
-      // after the line that closes it. We match on the exact description text so
-      // the insertion is anchored unambiguously.
+      // after the line that closes it, anchored on the exact description text.
       const result = injectAfterDescription(content, action.description, edit);
       if (result.changed) {
         content = result.content;
@@ -155,9 +214,10 @@ function injectAfterDescription(
   let match: RegExpExecArray | null;
   while ((match = descRe.exec(content)) !== null) {
     const insertAt = match.index + match[0].length;
-    // Skip if this action object already has the fields injected.
+    // Skip if this action object already has the structured fields injected
+    // (either an attack's attackBonus or a save action's savingThrow).
     const trailing = content.slice(insertAt, insertAt + 80);
-    if (/^\s*attackBonus:/.test(trailing)) continue;
+    if (/^\s*(attackBonus|savingThrow):/.test(trailing)) continue;
 
     const lineStart = content.lastIndexOf('\n', match.index) + 1;
     const indentMatch = /^(\s*)/.exec(content.slice(lineStart));

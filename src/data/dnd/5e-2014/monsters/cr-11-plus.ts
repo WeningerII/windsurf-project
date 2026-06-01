@@ -584,6 +584,8 @@ export const kraken: Monster = {
       name: 'Lightning Storm',
       description:
         'The kraken magically creates three bolts of lightning, each of which can strike a target within 120 feet. A target must make a DC 23 Dexterity saving throw, taking 22 (4d10) lightning damage on a failed save, or half as much on a successful one.',
+      savingThrow: { attribute: 'dex', dc: 23, effect: 'half as much damage on a success' },
+      damage: [{ dice: { count: 4, die: 'd10', notation: '4d10' }, type: 'lightning' }],
     },
   ],
   legendaryActions: [

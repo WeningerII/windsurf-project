@@ -57,6 +57,8 @@ export const youngRedDragon: Monster = {
       name: 'Fire Breath',
       description:
         'The dragon exhales fire in a 30-foot cone. Each creature in that area must make a DC 14 Dexterity saving throw, taking 56 (16d6) fire damage on a failed save, or half as much on a successful one.',
+      savingThrow: { attribute: 'dex', dc: 14, effect: 'half as much damage on a success' },
+      damage: [{ dice: { count: 16, die: 'd6', notation: '16d6' }, type: 'fire' }],
     },
   ],
   environment: ['mountain'],
