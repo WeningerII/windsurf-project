@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 
 import { dnd5eMonstersById } from '../../data/dnd/5e-2014/monsters';
+import { dnd5e2024MonstersById } from '../../data/dnd/5e-2024/monsters';
 import {
   appendSceneEvent,
   createSceneDocument,
@@ -11,7 +12,9 @@ import {
   buildMonsterCombatant,
   executeTacticalTurn,
   monsterAverageHitPoints,
+  parseAttackFromDescription,
   primaryAttackAction,
+  resolveEffects,
   type TacticalTarget,
 } from '../../rules';
 import type { SceneDocument } from '../../types/core/scene';
@@ -149,5 +152,61 @@ describe('monster → combatant adapter (real shipped SRD monsters)', () => {
         seed: 'same',
       });
     expect(JSON.stringify(run())).toBe(JSON.stringify(run()));
+  });
+});
+
+describe('description parsing — statblocks that carry attacks only in prose', () => {
+  it('parses an SRD attack line into bonus, reach, and damage', () => {
+    const parsed = parseAttackFromDescription(
+      'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) slashing damage.'
+    );
+    expect(parsed).toBeDefined();
+    expect(parsed!.attackBonus).toBe(4);
+    expect(parsed!.reachCells).toBe(1);
+    expect(parsed!.damage).toEqual([{ count: 1, faces: 6, modifier: 2, type: 'slashing' }]);
+  });
+
+  it('handles a negative damage modifier (1d4 - 1)', () => {
+    const parsed = parseAttackFromDescription(
+      'Melee Weapon Attack: +1 to hit, reach 5 ft., one target. Hit: 1 (1d4 - 1) slashing damage.'
+    );
+    expect(parsed!.attackBonus).toBe(1);
+    expect(parsed!.damage[0]).toEqual({ count: 1, faces: 4, modifier: -1, type: 'slashing' });
+  });
+
+  it('maps a ranged "range N/M ft." to reach cells', () => {
+    const parsed = parseAttackFromDescription(
+      'Ranged Weapon Attack: +5 to hit, range 80/320 ft., one target. Hit: 6 (1d8 + 2) piercing damage.'
+    );
+    expect(parsed!.reachCells).toBe(16); // 80 ft / 5
+  });
+
+  it('returns undefined for non-attack prose', () => {
+    expect(parseAttackFromDescription('The creature can breathe air and water.')).toBeUndefined();
+  });
+
+  it('REGRESSION: a real 2024 statblock (prose-only) now yields a working attack', () => {
+    // This is the exact fixture that read "+0 to hit / for 0" in the live UI
+    // before the parser landed: its action carries no structured fields.
+    const shrub = dnd5e2024MonstersById['awakened-shrub-2024'];
+    expect(shrub).toBeDefined();
+    const action = primaryAttackAction(shrub);
+    expect(action).toBeDefined();
+
+    const combatant = buildMonsterCombatant(shrub, { tokenId: 's1', position: { x: 0, y: 0 } });
+    // Attack bonus parsed from "+1 to hit".
+    expect(combatant.attackEffects[0].value).toBe(1);
+    // Damage: 1d4 - 1 slashing -> one add-die(4) + one add(-1) on damage.slashing.
+    const die = combatant.damageEffects.find((e) => e.operation === 'add-die');
+    expect(die?.target).toBe('damage.slashing');
+    expect(die?.value).toBe(4);
+    const flat = combatant.damageEffects.find((e) => e.operation === 'add');
+    expect(flat?.value).toBe(-1);
+
+    // The damage actually resolves to a positive number on a hit (1d4-1, min 1).
+    const resolved = resolveEffects(combatant.damageEffects);
+    // No rng -> dice not rolled; flat -1 alone. With a forced max die it would be
+    // 4-1=3. Assert the structure is present rather than a rolled value here.
+    expect(resolved.byTarget['damage.slashing']).toBeDefined();
   });
 });

@@ -88,6 +88,8 @@ export {
   monsterAttackEffects,
   monsterAverageHitPoints,
   monsterDamageEffects,
+  normalizeAttack,
+  parseAttackFromDescription,
   primaryAttackAction,
 } from './combatants/monsterCombatant';
 

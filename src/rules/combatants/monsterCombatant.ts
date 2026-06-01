@@ -41,7 +41,77 @@ export function monsterAverageHitPoints(monster: Monster): number {
   return Math.max(1, Math.floor(avg));
 }
 
-/** Reach (in grid cells) of an action; melee actions default to 1 cell. */
+/** A normalized attack: structured fields when present, else parsed from prose. */
+interface NormalizedAttack {
+  attackBonus: number;
+  reachCells: number;
+  damage: Array<{ count: number; faces: number; modifier: number; type: string }>;
+}
+
+/**
+ * Parse an SRD-style action description into attack/damage numbers, e.g.
+ * "Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2)
+ * slashing damage." Many 5e-2024 statblocks carry these numbers ONLY in prose
+ * (no structured fields), so this lets the engine use the values the statblock
+ * already prints rather than inventing them. Returns undefined when the text has
+ * no recognizable attack.
+ */
+export function parseAttackFromDescription(description: string): NormalizedAttack | undefined {
+  if (!description) return undefined;
+
+  const toHit = /([+-]\d+)\s+to hit/i.exec(description);
+  // Damage clauses: "(1d6 + 2) slashing damage", "1 (1d4 - 1) slashing damage".
+  const damage: NormalizedAttack['damage'] = [];
+  const damageRe = /\((\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\)\s*([a-z]+)?\s*damage/gi;
+  let match: RegExpExecArray | null;
+  while ((match = damageRe.exec(description)) !== null) {
+    const [, count, faces, sign, mod, type] = match;
+    const modifier = mod ? (sign === '-' ? -Number(mod) : Number(mod)) : 0;
+    damage.push({
+      count: Number(count),
+      faces: Number(faces),
+      modifier,
+      type: (type ?? 'untyped').toLowerCase(),
+    });
+  }
+
+  // Require at least an attack bonus or a damage clause to count as an attack.
+  if (!toHit && damage.length === 0) return undefined;
+
+  const reachMatch = /reach (\d+)\s*ft/i.exec(description);
+  const rangeMatch = /range (\d+)\s*\/\s*\d+\s*ft/i.exec(description);
+  const reachFeet = reachMatch
+    ? Number(reachMatch[1])
+    : rangeMatch
+      ? Number(rangeMatch[1])
+      : FEET_PER_CELL;
+
+  return {
+    attackBonus: toHit ? Number(toHit[1]) : 0,
+    reachCells: Math.max(1, Math.floor(reachFeet / FEET_PER_CELL)),
+    damage,
+  };
+}
+
+/** Normalize an action: structured fields take precedence, prose fills gaps. */
+export function normalizeAttack(action: Action): NormalizedAttack | undefined {
+  const hasStructured = action.attackBonus != null && (action.damage?.length ?? 0) > 0;
+  if (hasStructured) {
+    return {
+      attackBonus: action.attackBonus ?? 0,
+      reachCells: actionReachCells(action),
+      damage: (action.damage ?? []).map((d) => ({
+        count: d.dice.count,
+        faces: dieFaces(d.dice.die),
+        modifier: d.dice.modifier ?? 0,
+        type: d.type,
+      })),
+    };
+  }
+  return parseAttackFromDescription(action.description);
+}
+
+/** Reach (in grid cells) of a structured action; melee defaults to 1 cell. */
 function actionReachCells(action: Action): number {
   if (action.range) {
     return Math.max(1, Math.floor(action.range.normal / FEET_PER_CELL));
@@ -52,14 +122,18 @@ function actionReachCells(action: Action): number {
   return 1;
 }
 
-/** Pick the monster's primary attack action (first with an attack bonus). */
+/**
+ * Pick the monster's primary attack action: the first action that normalizes to
+ * an attack (structured fields OR a parseable description).
+ */
 export function primaryAttackAction(monster: Monster): Action | undefined {
-  return monster.actions.find((action) => action.attackBonus != null && action.damage?.length);
+  return monster.actions.find((action) => normalizeAttack(action) !== undefined);
 }
 
 /** Build attack-roll effects for a monster's primary attack. */
 export function monsterAttackEffects(monster: Monster, action: Action): EffectInstance[] {
-  const bonus = action.attackBonus ?? 0;
+  const normalized = normalizeAttack(action);
+  const bonus = normalized?.attackBonus ?? 0;
   return [
     {
       id: makeEffectId(monster.system, 'attack', monster.id, action.name),
@@ -79,16 +153,17 @@ export function monsterAttackEffects(monster: Monster, action: Action): EffectIn
  * Build damage effects for an action: each damage entry's dice become `add-die`
  * effects (one per die) plus a flat `add` for the modifier. Damage type
  * namespaces the target (`damage.piercing`), so resistances/terrain can key off
- * it later.
+ * it later. Uses structured fields when present, else the parsed description.
  */
 export function monsterDamageEffects(monster: Monster, action: Action): EffectInstance[] {
   const effects: EffectInstance[] = [];
   const systemId = monster.system as EffectInstance['systemId'];
+  const normalized = normalizeAttack(action);
+  if (!normalized) return effects;
 
-  for (const [damageIndex, damage] of (action.damage ?? []).entries()) {
+  for (const [damageIndex, damage] of normalized.damage.entries()) {
     const target = `damage.${damage.type}`;
-    const faces = dieFaces(damage.dice.die);
-    const count = Number.isFinite(faces) ? damage.dice.count : 0;
+    const count = Number.isFinite(damage.faces) ? damage.count : 0;
 
     for (let dieIndex = 0; dieIndex < count; dieIndex += 1) {
       effects.push({
@@ -96,21 +171,21 @@ export function monsterDamageEffects(monster: Monster, action: Action): EffectIn
         systemId,
         target,
         operation: 'add-die',
-        value: faces,
+        value: damage.faces,
         stackPolicy: 'sum',
         source: { kind: 'custom', id: monster.id, label: `${monster.name}: ${action.name}` },
-        label: `${action.name} ${damage.dice.die}`,
+        label: `${action.name} d${damage.faces}`,
         category: 'other',
       });
     }
 
-    if (damage.dice.modifier) {
+    if (damage.modifier) {
       effects.push({
         id: makeEffectId(systemId, target, monster.id, action.name, 'flat', damageIndex),
         systemId,
         target,
         operation: 'add',
-        value: damage.dice.modifier,
+        value: damage.modifier,
         stackPolicy: 'sum',
         source: { kind: 'custom', id: monster.id, label: `${monster.name}: ${action.name}` },
         label: `${action.name} damage bonus`,
@@ -155,7 +230,7 @@ export function buildMonsterCombatant(
     },
     attackEffects: action ? monsterAttackEffects(monster, action) : [],
     damageEffects: action ? monsterDamageEffects(monster, action) : [],
-    reach: action ? actionReachCells(action) : 1,
+    reach: action ? (normalizeAttack(action)?.reachCells ?? 1) : 1,
     armorClass: monster.armorClass,
   };
 }
