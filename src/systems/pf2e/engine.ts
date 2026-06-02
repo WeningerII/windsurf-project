@@ -237,6 +237,20 @@ export class Pf2eEngine implements SystemEngine<Pf2eDataModel> {
     return clonedDoc;
   }
 
+  /** Sheet modifier for an ability or skill check (mirrors rollCheck, no dice). */
+  checkModifier(document: CharacterDocument<Pf2eDataModel>, checkId: string): number | undefined {
+    const d = document.system;
+    if (checkId === 'perception') {
+      return abilityMod(d.baseAttributes.wis ?? 10) + d.perceptionProficiency.total;
+    }
+    if (checkId in SKILL_ABILITIES) {
+      const attr = SKILL_ABILITIES[checkId];
+      return abilityMod(d.baseAttributes[attr] ?? 10) + (d.skillProficiencies[checkId]?.total ?? 0);
+    }
+    if (checkId in d.baseAttributes) return abilityMod(d.baseAttributes[checkId]);
+    return undefined;
+  }
+
   async rollCheck(
     document: CharacterDocument<Pf2eDataModel>,
     checkId: string,

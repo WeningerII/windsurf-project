@@ -152,6 +152,18 @@ export class Dnd35eEngine implements SystemEngine<Dnd35eDataModel> {
     return clonedDoc;
   }
 
+  /** Sheet modifier for an ability or skill check (mirrors rollCheck, no dice). */
+  checkModifier(document: CharacterDocument<Dnd35eDataModel>, checkId: string): number | undefined {
+    const d = document.system;
+    if (checkId in d.baseAttributes) return abilityMod(d.baseAttributes[checkId]);
+    if (checkId in SKILL_ABILITIES) {
+      return (
+        abilityMod(d.baseAttributes[SKILL_ABILITIES[checkId]] ?? 10) + (d.skillRanks[checkId] ?? 0)
+      );
+    }
+    return undefined;
+  }
+
   async rollCheck(
     document: CharacterDocument<Dnd35eDataModel>,
     checkId: string

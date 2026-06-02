@@ -71,6 +71,18 @@ export class DaggerheartEngine implements SystemEngine<DaggerheartDataModel> {
     return d;
   }
 
+  /** Sheet modifier for a trait check (mirrors rollCheck, no dice). */
+  checkModifier(
+    document: CharacterDocument<DaggerheartDataModel>,
+    checkId: string
+  ): number | undefined {
+    const attrs = document.system.attributes;
+    if (checkId in attrs) {
+      return getDaggerheartEffectiveAttribute(document.system, checkId as DaggerheartTrait);
+    }
+    return undefined;
+  }
+
   async rollCheck(
     document: CharacterDocument<DaggerheartDataModel>,
     checkId: string

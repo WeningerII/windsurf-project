@@ -209,6 +209,25 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
     return false;
   }
 
+  /** Sheet modifier for an ability or skill check (mirrors rollCheck, no dice). */
+  checkModifier(document: CharacterDocument<Dnd5eDataModel>, checkId: string): number | undefined {
+    const d = document.system;
+    const id = checkId.toLowerCase();
+    if (id in d.baseAttributes) return abilityMod(d.baseAttributes[id]);
+    if (id in SKILL_ABILITIES) {
+      const base = abilityMod(d.baseAttributes[SKILL_ABILITIES[id]] ?? 10);
+      const totalLevel =
+        d.classLevels.length > 0 ? d.classLevels.reduce((sum, cl) => sum + cl.level, 0) : d.level;
+      const pb = profBonus(totalLevel);
+      const level = d.skillProficiencies[id]?.level;
+      if (level === 'expertise' || level === 'double') return base + pb * 2;
+      if (level === 'proficient') return base + pb;
+      if (level === 'half') return base + Math.floor(pb / 2);
+      return base;
+    }
+    return undefined;
+  }
+
   async rollCheck(
     document: CharacterDocument<Dnd5eDataModel>,
     checkId: string

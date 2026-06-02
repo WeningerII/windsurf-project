@@ -152,6 +152,19 @@ export class Pf1eEngine implements SystemEngine<Pf1eDataModel> {
     return clonedDoc;
   }
 
+  /** Sheet modifier for an ability or skill check (mirrors rollCheck, no dice). */
+  checkModifier(document: CharacterDocument<Pf1eDataModel>, checkId: string): number | undefined {
+    const d = document.system;
+    if (checkId in d.baseAttributes) return abilityMod(d.baseAttributes[checkId]);
+    if (checkId in SKILL_ABILITIES) {
+      const ranks = d.skillRanks[checkId] ?? 0;
+      let modifier = abilityMod(d.baseAttributes[SKILL_ABILITIES[checkId]] ?? 10) + ranks;
+      if (ranks > 0 && d.classSkills.includes(checkId)) modifier += 3; // class-skill bonus
+      return modifier;
+    }
+    return undefined;
+  }
+
   async rollCheck(
     document: CharacterDocument<Pf1eDataModel>,
     checkId: string

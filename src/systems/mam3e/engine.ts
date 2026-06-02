@@ -245,6 +245,22 @@ export class Mam3eEngine implements SystemEngine<Mam3eDataModel> {
     return clonedDoc;
   }
 
+  /** Sheet modifier for an ability or skill check (mirrors rollCheck, no dice). */
+  checkModifier(document: CharacterDocument<Mam3eDataModel>, checkId: string): number | undefined {
+    const data = document.system;
+    if (checkId in data.abilities) {
+      return data.abilities[checkId as keyof typeof data.abilities];
+    }
+    if (checkId in data.skills) {
+      const abilityKey = SKILL_ABILITY_MAP[checkId];
+      const abilityRank = abilityKey
+        ? (data.abilities[abilityKey as keyof typeof data.abilities] ?? 0)
+        : 0;
+      return abilityRank + data.skills[checkId].rank;
+    }
+    return undefined;
+  }
+
   async rollCheck(
     document: CharacterDocument<Mam3eDataModel>,
     checkId: string

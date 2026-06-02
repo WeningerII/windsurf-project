@@ -18,7 +18,6 @@ import {
   buildCharacterCombatant,
   buildMonsterCombatant,
   casterSpellAreaActions,
-  characterCheckModifier,
   characterSaveBonus,
   diagonalRuleForSystem,
   monsterAuras,
@@ -522,9 +521,7 @@ export function SceneManager({
     const speakerDoc =
       speaker?.kind === 'character' && speaker.refId ? documentsById.get(speaker.refId) : undefined;
     const typedMod = Number.parseInt(conversationModifier, 10) || 0;
-    const derived = speakerDoc
-      ? characterCheckModifier(speakerDoc, conversationApproach, state.systemId as GameSystemId)
-      : undefined;
+    const derived = speakerDoc ? deriveCheckModifier(speakerDoc, conversationApproach) : undefined;
     const outcome = resolveSceneSocialAction({
       state,
       speakerId: selectedTokenId,
@@ -564,10 +561,7 @@ export function SceneManager({
       .filter((token) => token.kind === 'character')
       .map((token) => {
         const doc = token.refId ? documentsById.get(token.refId) : undefined;
-        const derived =
-          doc && skill
-            ? characterCheckModifier(doc, skill, state.systemId as GameSystemId)
-            : undefined;
+        const derived = doc && skill ? deriveCheckModifier(doc, skill) : undefined;
         return { id: token.id, modifier: derived ?? typedMod };
       });
     if (participants.length === 0) return;
@@ -1171,6 +1165,18 @@ function positiveIntegerOrDefault(value: string, fallback: number): number {
 
 function isMonsterSystemId(systemId: string): systemId is GameSystemId {
   return systemId === 'dnd-5e-2014' || systemId === 'dnd-5e-2024';
+}
+
+/**
+ * A character's sheet modifier for an ability/skill check, via its system engine
+ * (faithful per-system); undefined when the engine can't derive it (the caller
+ * then uses the GM-entered modifier).
+ */
+function deriveCheckModifier(
+  doc: CharacterDocument<SystemDataModel>,
+  checkId: string
+): number | undefined {
+  return systemRegistry.get(doc.systemId)?.engine.checkModifier?.(doc, checkId);
 }
 
 /** Systems whose characters become combatants and can therefore cast AoE spells. */

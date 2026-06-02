@@ -51,6 +51,14 @@ export interface SystemEngine<T extends SystemDataModel> {
   ): Promise<RollResult>;
 
   /**
+   * The character's modifier for an ability or skill check, derived from the
+   * sheet (the deterministic core of `rollCheck`, without rolling dice). Returns
+   * undefined when the check id isn't a known ability/skill, so callers can fall
+   * back to a manual modifier. Used by the non-combat scene panels.
+   */
+  checkModifier?(document: CharacterDocument<T>, checkId: string): number | undefined;
+
+  /**
    * Apply damage/healing to the character.
    */
   applyDamage(document: CharacterDocument<T>, amount: number, type: string): CharacterDocument<T>;
