@@ -24,6 +24,7 @@ import type {
   SceneToken,
 } from '../../types/core/scene';
 import type { EffectInstance } from '../ir/types';
+import type { RollMode } from '../resolver/resolve';
 import { runCombatRound, type RoundCombatant, type RoundResult } from '../tactical/roundDriver';
 import { critModelForSystem, resolveAttack } from '../resolver/attackResolution';
 import type { DamageDefenses } from '../resolver/damageDefenses';
@@ -195,6 +196,8 @@ export function resolveSceneAttack(params: {
   resolveStats: ResolveCombatStats;
   seed: string;
   cause?: string;
+  /** 5e advantage/disadvantage on the attack roll (d20 path only). */
+  rollMode?: RollMode;
 }): SceneAttackOutcome {
   const { state, attackerId, targetId, resolveStats, seed } = params;
   const attacker = state.tokens[attackerId];
@@ -283,6 +286,7 @@ export function resolveSceneAttack(params: {
     critModel: critModelForSystem(state.systemId),
     critMultiplier: attackerStats.critMultiplier,
     targetDefenses: targetStats.damageDefenses,
+    rollMode: params.rollMode,
     rng: participantRng(seed, attackerId, targetId),
   });
 

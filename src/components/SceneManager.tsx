@@ -36,6 +36,7 @@ import {
   type ResolveAreaActions,
   type ResolveAuras,
   type ResolveCombatStats,
+  type RollMode,
   type SceneAreaAction,
   type SocialApproach,
 } from '../rules';
@@ -122,6 +123,7 @@ export function SceneManager({
   const [initiativeValues, setInitiativeValues] = useState<Record<string, string>>({});
   const [actionIssues, setActionIssues] = useState<string[]>([]);
   const [combatTargetId, setCombatTargetId] = useState('');
+  const [combatRollMode, setCombatRollMode] = useState<RollMode>('normal');
   const [combatSaveActionName, setCombatSaveActionName] = useState('');
   const [combatLog, setCombatLog] = useState<string[]>([]);
   const [conversationApproach, setConversationApproach] = useState<SocialApproach>('persuasion');
@@ -440,6 +442,7 @@ export function SceneManager({
       resolveStats: resolveCombatStats,
       seed: `${selectedScene.initialState.seed}:attack:${selectedScene.events.length}`,
       cause: 'attack',
+      rollMode: combatRollMode,
     });
     if (outcome.intent) {
       emitSceneAction(selectedScene, outcome.intent);
@@ -1167,6 +1170,8 @@ export function SceneManager({
                     onTargetChange={setCombatTargetId}
                     onAttack={handleCombatAttack}
                     onRunRound={handleRunRound}
+                    rollMode={combatRollMode}
+                    onRollModeChange={setCombatRollMode}
                     saveActions={attackerAreaActions}
                     selectedSaveActionName={selectedSaveAction?.name ?? ''}
                     onSaveActionChange={setCombatSaveActionName}

@@ -60,6 +60,12 @@ export interface AttackResolutionInput {
   /** Weapon critical multiplier for `'d20-confirm'` (×2 default, e.g. ×3/×4). */
   critMultiplier?: number;
   /**
+   * Roll-mode override (5e advantage/disadvantage), taking precedence over any
+   * advantage folded from the attack effects. Omitted leaves the effect-derived
+   * mode (normally 'normal').
+   */
+  rollMode?: RollMode;
+  /**
    * The target's damage resistances/immunities/vulnerabilities, applied per
    * damage type AFTER the crit rule. Omitted means no adjustment.
    */
@@ -132,7 +138,7 @@ export function resolveAttack(input: AttackResolutionInput): AttackResolution {
   const attackResolved = resolveEffects(input.attackEffects, ctx);
   const attackTarget = attackResolved.byTarget.attack;
   const attackBonus = attackTarget?.total ?? 0;
-  const rollMode = attackTarget?.rollMode ?? 'normal';
+  const rollMode = input.rollMode ?? attackTarget?.rollMode ?? 'normal';
 
   const { chosen, terms } = rollD20(input.rng, rollMode);
   const attackTotal = chosen + attackBonus;

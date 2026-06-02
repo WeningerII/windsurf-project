@@ -1,10 +1,15 @@
 import { Flame, Swords, Zap } from 'lucide-react';
 import type { SceneState } from '../../types/core/scene';
 import type { AreaOfEffect } from '../../types/core/common';
-import type { SceneAreaAction } from '../../rules';
+import type { RollMode, SceneAreaAction } from '../../rules';
 import { Button } from '../ui/Button';
 import { Select } from '../ui/Select';
 import { Badge } from '../ui/Badge';
+
+/** 5e (2014/2024) is the family that resolves attacks with advantage/disadvantage. */
+function supportsAdvantage(systemId: string): boolean {
+  return systemId === 'dnd-5e-2014' || systemId === 'dnd-5e-2024';
+}
 
 /** Human label for a canonical area template, in feet (the table-facing unit). */
 function describeArea(area: AreaOfEffect | undefined): string {
@@ -40,6 +45,9 @@ interface CombatPanelProps {
   onTargetChange: (targetId: string) => void;
   onAttack: () => void;
   onRunRound: () => void;
+  /** 5e advantage/disadvantage for the manual attack (shown only for 5e). */
+  rollMode: RollMode;
+  onRollModeChange: (mode: RollMode) => void;
   /** Save-based area actions (breath weapons / spells) the attacker can use. */
   saveActions: SceneAreaAction[];
   /** Currently chosen area action name (aimed at `targetId`). */
@@ -65,6 +73,8 @@ export function CombatPanel({
   onTargetChange,
   onAttack,
   onRunRound,
+  rollMode,
+  onRollModeChange,
   saveActions,
   selectedSaveActionName,
   onSaveActionChange,
@@ -111,6 +121,19 @@ export function CombatPanel({
             'Select a token on the grid to attack with.'
           )}
         </div>
+
+        {supportsAdvantage(state.systemId) && (
+          <Select
+            aria-label="Attack roll mode"
+            value={rollMode}
+            onChange={(event) => onRollModeChange(event.target.value as RollMode)}
+            disabled={!attackerReady}
+          >
+            <option value="normal">Normal roll</option>
+            <option value="advantage">Advantage</option>
+            <option value="disadvantage">Disadvantage</option>
+          </Select>
+        )}
 
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
           <Select
