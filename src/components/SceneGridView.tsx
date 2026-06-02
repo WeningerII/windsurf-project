@@ -80,7 +80,8 @@ export function SceneGridView({
                           ? 'border-primary/40 bg-primary/15 text-primary'
                           : 'border-muted-foreground/30 bg-muted text-foreground',
                         selectedTokenId === token.id && 'ring-2 ring-ring ring-offset-1',
-                        token.hp && token.hp.current <= 0 && 'opacity-40 grayscale'
+                        ((token.hp && token.hp.current <= 0) || token.conditions?.incapacitated) &&
+                          'opacity-40 grayscale'
                       )}
                       title={token.name}
                       aria-label={buildTokenLabel(token)}
@@ -92,6 +93,9 @@ export function SceneGridView({
                     >
                       {getTokenInitials(token)}
                       {token.hp && <TokenHpBar hp={token.hp} />}
+                      {!token.hp && token.conditions && (
+                        <TokenConditionBadge conditions={token.conditions} />
+                      )}
                     </button>
                   ))}
                 </div>
@@ -159,12 +163,51 @@ function getTokenInitials(token: SceneToken): string {
   return initials || token.id.slice(0, 2).toUpperCase();
 }
 
-/** Token aria-label, including current/max HP when the token is a combatant. */
+/** The most severe active condition's short label, or undefined when unharmed. */
+function topCondition(conditions: NonNullable<SceneToken['conditions']>): string | undefined {
+  if (conditions.incapacitated) return 'Incap';
+  if (conditions.staggered) return 'Stag';
+  if (conditions.dazed) return 'Dazed';
+  if (conditions.bruised > 0) return `Bruise×${conditions.bruised}`;
+  return undefined;
+}
+
+/** Token aria-label, including HP or condition state when the token is a combatant. */
 function buildTokenLabel(token: SceneToken): string {
   if (token.hp) {
     return `Token ${token.name}, ${Math.max(0, token.hp.current)} of ${token.hp.max} HP`;
   }
+  if (token.conditions) {
+    const top = topCondition(token.conditions);
+    return top ? `Token ${token.name}, ${top}` : `Token ${token.name}, unharmed`;
+  }
   return `Token ${token.name}`;
+}
+
+/** A small condition badge for HP-less combatants (M&M condition track). */
+function TokenConditionBadge({
+  conditions,
+}: {
+  conditions: NonNullable<SceneToken['conditions']>;
+}) {
+  const top = topCondition(conditions);
+  if (!top) return null;
+  const color = conditions.incapacitated
+    ? 'bg-red-600'
+    : conditions.staggered
+      ? 'bg-amber-600'
+      : 'bg-slate-500';
+  return (
+    <span
+      className={cn(
+        'absolute -bottom-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded px-1 text-[8px] font-bold leading-tight text-white',
+        color
+      )}
+      aria-hidden="true"
+    >
+      {top}
+    </span>
+  );
 }
 
 /** A thin HP bar under a combatant token, green→amber→red by fraction. */
