@@ -248,6 +248,7 @@ function resolveStrike(
     critOn: actor.critOn,
     critModel: critModelForSystem(input.systemId),
     critMultiplier: actor.critMultiplier,
+    targetDefenses: target.damageDefenses,
     rng,
   });
   return {

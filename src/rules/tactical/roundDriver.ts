@@ -35,6 +35,7 @@ import {
 } from '../resolver/areaParticipants';
 import { resolveAreaEffect, type SaveModel } from '../resolver/participantResolution';
 import { areaEffectToDamageIntent } from '../resolver/sceneCombat';
+import type { DamageDefenses } from '../resolver/damageDefenses';
 import type { BlockPredicate } from '../resolver/lineOfEffect';
 import type { DiagonalRule } from '../resolver/areaTargeting';
 
@@ -67,6 +68,8 @@ export interface RoundCombatant {
   effectRank?: number;
   /** M&M Toughness save bonus — present makes attacks force a Toughness save. */
   toughness?: number;
+  /** Damage resistances/immunities/vulnerabilities, applied per type after crit. */
+  damageDefenses?: DamageDefenses;
   /**
    * M&M condition track. HP-less M&M combatants ride a synthetic `hp` proxy
    * (1 = up, 0 = incapacitated); the real harm folds here so the round can
@@ -208,6 +211,7 @@ function toTarget(
     saveBonus: combatant.saveBonus,
     thresholds: combatant.thresholds,
     toughness: combatant.toughness,
+    damageDefenses: combatant.damageDefenses,
   };
 }
 

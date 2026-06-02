@@ -20,6 +20,7 @@
 import type { SceneCoordinate } from '../../types/core/scene';
 import { gridDistance } from '../resolver/areaTargeting';
 import type { SceneAreaAction } from '../resolver/areaParticipants';
+import type { DamageDefenses } from '../resolver/damageDefenses';
 import type { EffectInstance } from '../ir/types';
 
 /** A combatant taking a turn. Assembled by the caller from character/monster data. */
@@ -59,6 +60,8 @@ export interface TacticalTarget {
   thresholds?: { major: number; severe: number };
   /** M&M Toughness save bonus — present makes attacks force a Toughness save. */
   toughness?: number;
+  /** Damage resistances/immunities/vulnerabilities, applied per type after crit. */
+  damageDefenses?: DamageDefenses;
 }
 
 /** A scored candidate — every eligible target is acknowledged with a score. */

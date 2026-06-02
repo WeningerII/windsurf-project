@@ -24,6 +24,8 @@ export { effectApplies, resolveEffects } from './resolver/resolve';
 
 export type { AttackResolution, AttackResolutionInput } from './resolver/attackResolution';
 export { critModelForSystem, resolveAttack } from './resolver/attackResolution';
+export type { DamageDefenses } from './resolver/damageDefenses';
+export { adjustTypedDamage, hasDamageDefenses } from './resolver/damageDefenses';
 
 export type {
   ChallengeAttempt,

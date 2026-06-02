@@ -26,6 +26,7 @@ import type {
 import type { EffectInstance } from '../ir/types';
 import { runCombatRound, type RoundCombatant, type RoundResult } from '../tactical/roundDriver';
 import { critModelForSystem, resolveAttack } from '../resolver/attackResolution';
+import type { DamageDefenses } from '../resolver/damageDefenses';
 import {
   resolveDaggerheartAttack,
   type DaggerheartThresholds,
@@ -77,6 +78,8 @@ export interface SceneCombatStats {
    * defense (`armorClass` = Parry) forces a Toughness save → condition track.
    */
   toughness?: number;
+  /** Damage resistances/immunities/vulnerabilities, applied per type after crit. */
+  damageDefenses?: DamageDefenses;
   /** M&M effect rank of this combatant's attack (Toughness DC = 15 + rank). */
   effectRank?: number;
   /**
@@ -162,6 +165,7 @@ export function buildSceneCombatants(
       thresholds: stats.thresholds,
       toughness: stats.toughness,
       effectRank: stats.effectRank,
+      damageDefenses: stats.damageDefenses,
       conditions: token.conditions,
       areaActions: areaActions && areaActions.length > 0 ? areaActions : undefined,
       auras: auras && auras.length > 0 ? auras : undefined,
@@ -278,6 +282,7 @@ export function resolveSceneAttack(params: {
     critOn: attackerStats.critOn,
     critModel: critModelForSystem(state.systemId),
     critMultiplier: attackerStats.critMultiplier,
+    targetDefenses: targetStats.damageDefenses,
     rng: participantRng(seed, attackerId, targetId),
   });
 

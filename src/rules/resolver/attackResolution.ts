@@ -22,6 +22,7 @@
 import type { SeededRng } from '../../scene/seededRng';
 import { resolveEffects, type ResolveContext, type RollMode } from './resolve';
 import { pf2eDegreeOfSuccess, type DegreeOfSuccess } from './degreeOfSuccess';
+import { adjustTypedDamage, type DamageDefenses } from './damageDefenses';
 import type { EffectInstance } from '../ir/types';
 
 export interface AttackResolutionInput {
@@ -58,6 +59,11 @@ export interface AttackResolutionInput {
   critModel?: 'd20-threshold' | 'd20-confirm' | 'pf2e';
   /** Weapon critical multiplier for `'d20-confirm'` (×2 default, e.g. ×3/×4). */
   critMultiplier?: number;
+  /**
+   * The target's damage resistances/immunities/vulnerabilities, applied per
+   * damage type AFTER the crit rule. Omitted means no adjustment.
+   */
+  targetDefenses?: DamageDefenses;
 }
 
 export interface AttackResolution {
@@ -79,11 +85,13 @@ export interface AttackResolution {
   confirmationRoll?: number;
   /** Whether a `'d20-confirm'` threat confirmed into a critical hit. */
   confirmed?: boolean;
-  /** Total damage (only rolled on a hit; 0 on a miss). */
+  /** Total damage (only rolled on a hit; 0 on a miss), after crit and defenses. */
   damage: number;
   /** Individual damage dice rolled (empty on a miss or with no dice). */
   damageDiceTerms: number[];
   damageBonus: number;
+  /** Final damage per type key (`damage` / `damage.fire`), after crit + defenses. */
+  damageByType?: Record<string, number>;
   /** The applied effects that explain attack + damage (provenance). */
   ledger: EffectInstance[];
 }
@@ -163,37 +171,42 @@ export function resolveAttack(input: AttackResolutionInput): AttackResolution {
   let damage = 0;
   let damageDiceTerms: number[] = [];
   let damageBonus = 0;
+  let damageByType: Record<string, number> | undefined;
 
   if (isHit && input.damageEffects && input.damageEffects.length > 0) {
     const damageResolved = resolveEffects(input.damageEffects, ctx);
-    // Sum every damage target (e.g. 'damage', 'damage.fire'); each carries its
-    // rolled dice and flat bonuses.
-    for (const resolved of Object.values(damageResolved.byTarget)) {
-      damage += resolved.total;
-      if (resolved.diceTerms) {
-        damageDiceTerms = [...damageDiceTerms, ...resolved.diceTerms];
-      }
-    }
-    // Flat damage bonus = total minus the rolled dice.
-    const diceSum = damageDiceTerms.reduce((sum, term) => sum + term, 0);
-    damageBonus = damage - diceSum;
+    const critMultiplier = Math.max(2, input.critMultiplier ?? 2);
+    damageByType = {};
+    let baseTotal = 0;
 
-    // Critical-hit damage differs by system:
-    // - d20-threshold (5e): double the damage DICE only (modifiers added once).
-    // - d20-confirm (3.5e/PF1e): multiply the whole base damage (dice AND
-    //   modifiers) by the weapon's ×N multiplier.
-    // - pf2e: double the whole damage TOTAL (dice AND modifiers) (CRB p.451).
-    if (isCriticalHit) {
-      if (critModel === 'pf2e') {
-        damage *= 2;
-      } else if (critModel === 'd20-confirm') {
-        damage *= Math.max(2, input.critMultiplier ?? 2);
-      } else {
-        const critDice = damageDiceTerms.reduce((sum, term) => sum + term, 0);
-        damage += critDice;
+    // Each damage target ('damage' / 'damage.fire' …) is adjusted on its own so
+    // the crit rule and per-type resistances apply correctly to mixed-type hits.
+    for (const [key, resolved] of Object.entries(damageResolved.byTarget)) {
+      const type = key === 'damage' ? '' : key.replace(/^damage\./, '');
+      const dice = resolved.diceTerms ?? [];
+      damageDiceTerms = [...damageDiceTerms, ...dice];
+      baseTotal += resolved.total;
+
+      // Critical-hit damage differs by system:
+      // - d20-threshold (5e): double the damage DICE only (modifiers once).
+      // - d20-confirm (3.5e/PF1e): multiply the whole type total by the ×N.
+      // - pf2e: double the whole type total (dice AND modifiers) (CRB p.451).
+      let typed = resolved.total;
+      if (isCriticalHit) {
+        if (critModel === 'pf2e') typed *= 2;
+        else if (critModel === 'd20-confirm') typed *= critMultiplier;
+        else typed += dice.reduce((sum, term) => sum + term, 0);
       }
+
+      // Resistance/immunity/vulnerability is applied last, per type.
+      if (input.targetDefenses) typed = adjustTypedDamage(type, typed, input.targetDefenses);
+
+      damage += typed;
+      damageByType[key] = typed;
     }
 
+    // Flat damage bonus = pre-crit base total minus the rolled dice.
+    damageBonus = baseTotal - damageDiceTerms.reduce((sum, term) => sum + term, 0);
     ledger.push(...damageResolved.ledger);
   }
 
@@ -213,6 +226,7 @@ export function resolveAttack(input: AttackResolutionInput): AttackResolution {
     damage,
     damageDiceTerms,
     damageBonus,
+    damageByType,
     ledger,
   };
 }
