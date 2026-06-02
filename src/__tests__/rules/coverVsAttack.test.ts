@@ -138,4 +138,16 @@ describe('resolveSceneAttack — cover', () => {
     expect(out.log).toContain('vs AC 10)');
     expect(out.log).not.toMatch(/cover/i);
   });
+
+  it('notes advantage in the log when a 5e target is restrained', () => {
+    const restrained: SceneToken = { ...token('foe', 1, 0), statuses: ['restrained'] };
+    const out = resolveSceneAttack({
+      state: scene(token('archer', 0, 0), restrained, []),
+      attackerId: 'archer',
+      targetId: 'foe',
+      resolveStats: STATS,
+      seed: 'shot',
+    });
+    expect(out.log).toMatch(/with advantage \(\d+\/\d+\)/);
+  });
 });

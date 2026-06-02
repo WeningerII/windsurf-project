@@ -354,9 +354,14 @@ export function resolveSceneAttack(params: {
         : resolution.degree === 'critical-failure'
           ? 'critically misses'
           : 'misses';
+  // Surface advantage/disadvantage (and the pair of dice) so the player sees why.
+  const modeNote =
+    resolution.rollMode !== 'normal'
+      ? ` with ${resolution.rollMode} (${resolution.d20Terms.join('/')})`
+      : '';
   const detail = resolution.isHit
-    ? ` for ${resolution.damage} (rolled ${resolution.naturalRoll}+${resolution.attackBonus} vs AC ${armorClass}${coverNote})`
-    : ` (rolled ${resolution.naturalRoll}+${resolution.attackBonus} vs AC ${armorClass}${coverNote})`;
+    ? ` for ${resolution.damage} (rolled ${resolution.naturalRoll}+${resolution.attackBonus} vs AC ${armorClass}${coverNote})${modeNote}`
+    : ` (rolled ${resolution.naturalRoll}+${resolution.attackBonus} vs AC ${armorClass}${coverNote})${modeNote}`;
 
   return {
     intent,
