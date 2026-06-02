@@ -25,7 +25,12 @@ import type {
   SceneCoordinate,
   SceneActionIntent,
 } from '../../types/core/scene';
-import { executeTacticalTurn, type TacticalTurnResult } from './tacticalExecutor';
+import {
+  executeTacticalTurn,
+  resolveStrike,
+  type TacticalTurnInput,
+  type TacticalTurnResult,
+} from './tacticalExecutor';
 import type { TacticalActor, TacticalTarget } from './targetScoring';
 import {
   computeAreaParticipants,
@@ -33,9 +38,14 @@ import {
   type AuraTrigger,
   type SceneAreaAction,
 } from '../resolver/areaParticipants';
-import { resolveAreaEffect, type SaveModel } from '../resolver/participantResolution';
+import {
+  participantRng,
+  resolveAreaEffect,
+  type SaveModel,
+} from '../resolver/participantResolution';
 import { areaEffectToDamageIntent } from '../resolver/sceneCombat';
 import { cannotAct } from '../resolver/conditions';
+import { gridDistance } from '../resolver/areaTargeting';
 import type { DamageDefenses } from '../resolver/damageDefenses';
 import type { BlockPredicate } from '../resolver/lineOfEffect';
 import type { DiagonalRule } from '../resolver/areaTargeting';
@@ -88,6 +98,8 @@ export interface RoundTurnRecord {
   intent?: SceneActionIntent;
   /** Damage from this combatant's recurring auras pulsing on its turn. */
   auraIntents?: SceneActionIntent[];
+  /** Opportunity attacks this combatant provoked by moving out of reach. */
+  oaIntents?: SceneActionIntent[];
   /** Whether the turn was skipped because the actor was already down. */
   skipped: boolean;
 }
@@ -224,6 +236,85 @@ function toTarget(
 }
 
 /**
+ * Systems where every melee combatant threatens its reach and so gets an
+ * opportunity attack: 5e and the d20-legacy line. PF2e's reaction is conditional
+ * (not in the data) and M&M/Daggerheart have other action economies, so they
+ * don't provoke universally here.
+ */
+function oaSystemProvokes(systemId: string | undefined): boolean {
+  return (
+    systemId === 'dnd-5e-2014' ||
+    systemId === 'dnd-5e-2024' ||
+    systemId === 'dnd-3.5e' ||
+    systemId === 'pf1e'
+  );
+}
+
+/**
+ * Opportunity attacks a mover provokes by leaving an enemy's reach. Each living,
+ * able enemy that threatened the START cell but not the END cell strikes the
+ * mover (resolved as it leaves, from the start cell). Damage folds into the
+ * working HP; the intents are returned for the caller to apply. RAW-baseline:
+ * one reaction per threatener, resolved after the move (not a mid-move interrupt).
+ */
+function resolveOpportunityAttacks(params: {
+  mover: RoundCombatant;
+  start: SceneCoordinate;
+  end: SceneCoordinate;
+  order: readonly RoundCombatant[];
+  hp: Record<string, number>;
+  pos: Record<string, SceneCoordinate>;
+  seed: string;
+  round: number;
+  systemId?: string;
+  isBlocked?: BlockPredicate;
+  diagonalRule?: DiagonalRule;
+}): SceneActionIntent[] {
+  if (!oaSystemProvokes(params.systemId)) return [];
+  const intents: SceneActionIntent[] = [];
+  const moverTarget = toTarget(params.mover, params.hp[params.mover.tokenId], params.start);
+
+  for (const threatener of params.order) {
+    if (threatener.tokenId === params.mover.tokenId) continue;
+    if (params.hp[threatener.tokenId] <= 0 || cannotAct(threatener.statuses)) continue;
+    if (threatener.faction === params.mover.faction) continue; // only enemies threaten
+
+    const reach = threatener.reach ?? 1;
+    const from = params.pos[threatener.tokenId];
+    const threatenedStart = gridDistance(from, params.start, params.diagonalRule) <= reach;
+    const threatenedEnd = gridDistance(from, params.end, params.diagonalRule) <= reach;
+    if (!threatenedStart || threatenedEnd) continue; // only when the mover leaves reach
+
+    const oaInput: TacticalTurnInput = {
+      actor: toActor(threatener, from),
+      targets: [],
+      seed: `${params.seed}::oa::round${params.round}::${threatener.tokenId}`,
+      cause: 'opportunity attack',
+      isBlocked: params.isBlocked,
+      diagonalRule: params.diagonalRule,
+      systemId: params.systemId,
+    };
+    const rng = participantRng(
+      params.seed,
+      `oa::round${params.round}`,
+      threatener.tokenId,
+      params.mover.tokenId
+    );
+    const strike = resolveStrike(oaInput, moverTarget, rng);
+    if (!strike.intent) continue;
+    if (strike.intent.type === 'apply-damage') {
+      for (const damage of strike.intent.damages) {
+        if (params.hp[damage.tokenId] != null) {
+          params.hp[damage.tokenId] = Math.max(0, params.hp[damage.tokenId] - damage.amount);
+        }
+      }
+    }
+    intents.push(strike.intent);
+  }
+  return intents;
+}
+
+/**
  * Run one full round. For each combatant in initiative order (skipping the
  * already-downed), build the live participant set from every OTHER combatant's
  * current HP, run the tactical turn, and fold any damage into the working HP so
@@ -299,9 +390,29 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
       enterCost: input.enterCost,
     });
 
-    // Apply movement first: update the working position and emit a move event so
-    // later turns (and the scene) see the combatant in its new cell.
+    // Apply movement first: any enemy whose reach the combatant leaves gets an
+    // opportunity attack (resolved from the start cell, folded into working HP),
+    // then update the working position and emit a move event so later turns (and
+    // the scene) see the combatant in its new cell.
+    let oaIntents: SceneActionIntent[] | undefined;
     if (turn.moveTo) {
+      const oas = resolveOpportunityAttacks({
+        mover: combatant,
+        start: pos[combatant.tokenId],
+        end: turn.moveTo,
+        order: input.order,
+        hp,
+        pos,
+        seed: input.seed,
+        round: input.round,
+        systemId: input.systemId,
+        isBlocked: input.isBlocked,
+        diagonalRule: input.diagonalRule,
+      });
+      if (oas.length > 0) {
+        oaIntents = oas;
+        oas.forEach((intent) => intents.push(intent));
+      }
       pos[combatant.tokenId] = { ...turn.moveTo };
       intents.push({ type: 'move-token', tokenId: combatant.tokenId, position: turn.moveTo });
     }
@@ -344,6 +455,7 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
       turn,
       intent: turn.intent,
       auraIntents: auraIntents.length > 0 ? auraIntents : undefined,
+      oaIntents,
       skipped: false,
     });
   });

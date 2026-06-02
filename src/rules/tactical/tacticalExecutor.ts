@@ -165,7 +165,7 @@ function bestAreaPlan(input: TacticalTurnInput): AreaPlan | undefined {
   return best;
 }
 
-interface StrikeOutcome {
+export interface StrikeOutcome {
   intent?: SceneActionIntent;
   resolution?: AttackResolution;
   hit: boolean;
@@ -179,8 +179,11 @@ interface StrikeOutcome {
  * damage. Each lands as a single scene intent, so the round driver folds it
  * uniformly (damage decrements working HP; an incapacitating M&M hit drops the
  * target to the down proxy).
+ *
+ * Exported as `resolveTacticalStrike` for reuse by reactions (opportunity
+ * attacks) that resolve a one-off strike outside the turn loop.
  */
-function resolveStrike(
+export function resolveStrike(
   input: TacticalTurnInput,
   target: TacticalTarget,
   rng: ReturnType<typeof participantRng>

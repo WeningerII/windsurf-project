@@ -586,6 +586,16 @@ export function runSceneRound(params: {
   };
   const log = result.turns.flatMap((turn) => {
     const lines: string[] = [];
+    // Opportunity attacks the mover provoked resolve before its own action.
+    for (const oa of turn.oaIntents ?? []) {
+      if (oa.type !== 'apply-damage') continue;
+      const total = oa.damages.reduce((sum, d) => sum + d.amount, 0);
+      lines.push(
+        `${nameOf(turn.tokenId)} provokes an opportunity attack from ${nameOf(
+          oa.actorId ?? ''
+        )} — takes ${total}.`
+      );
+    }
     for (const aura of turn.auraIntents ?? []) {
       if (aura.type !== 'apply-damage') continue;
       const hit = aura.damages.map((d) => `${nameOf(d.tokenId)} (${d.amount})`).join(', ');
