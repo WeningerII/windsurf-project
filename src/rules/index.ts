@@ -77,8 +77,17 @@ export {
   spreadCells,
 } from './resolver/lineOfEffect';
 
-export type { AreaCandidate, AreaParticipantSelection } from './resolver/areaParticipants';
-export { computeAreaParticipants, shapeForArea } from './resolver/areaParticipants';
+export type {
+  AreaCandidate,
+  AreaParticipantSelection,
+  AuraAction,
+  AuraTrigger,
+} from './resolver/areaParticipants';
+export {
+  AUTO_HIT_SAVE_DC,
+  computeAreaParticipants,
+  shapeForArea,
+} from './resolver/areaParticipants';
 
 export {
   areaEffectToDamageIntent,
@@ -108,6 +117,7 @@ export type { MonsterCombatant, MonsterSaveAction } from './combatants/monsterCo
 export {
   buildMonsterCombatant,
   monsterAttackEffects,
+  monsterAuras,
   monsterAverageHitPoints,
   monsterDamageEffects,
   monsterSaveActions,
@@ -116,6 +126,7 @@ export {
   normalizeSaveAction,
   parseAreaFromDescription,
   parseAttackFromDescription,
+  parseAuraFromDescription,
   parseSaveActionFromDescription,
   primaryAttackAction,
   saveActionDamageEffects,
@@ -136,6 +147,7 @@ export {
 
 export type {
   ResolveAreaActions,
+  ResolveAuras,
   ResolveCombatStats,
   SceneAreaAction,
   SceneAreaEffectOutcome,

@@ -23,10 +23,16 @@ import type { EffectInstance } from '../ir/types';
 import type { SceneCoordinate, SceneActionIntent } from '../../types/core/scene';
 import { executeTacticalTurn, type TacticalTurnResult } from './tacticalExecutor';
 import type { TacticalActor, TacticalTarget } from './targetScoring';
-import type { SceneAreaAction } from '../resolver/areaParticipants';
+import {
+  computeAreaParticipants,
+  type AuraAction,
+  type AuraTrigger,
+  type SceneAreaAction,
+} from '../resolver/areaParticipants';
+import { resolveAreaEffect, type SaveModel } from '../resolver/participantResolution';
+import { areaEffectToDamageIntent } from '../resolver/sceneCombat';
 import type { BlockPredicate } from '../resolver/lineOfEffect';
 import type { DiagonalRule } from '../resolver/areaTargeting';
-import type { SaveModel } from '../resolver/participantResolution';
 
 /** A combatant in the round: identity, faction, position, stats, and live HP. */
 export interface RoundCombatant {
@@ -41,6 +47,8 @@ export interface RoundCombatant {
   critOn?: number;
   /** Save-based area actions this combatant may unleash (breath / spells). */
   areaActions?: readonly SceneAreaAction[];
+  /** Recurring auras this combatant emits each round (e.g. a Balor's Fire Aura). */
+  auras?: readonly AuraAction[];
   /** Saving-throw bonus accessor (for being caught in an area effect). */
   saveBonus?: (ability: string) => number;
 }
@@ -50,6 +58,8 @@ export interface RoundTurnRecord {
   turn: TacticalTurnResult;
   /** The damage intent this turn produced, if any (for scene application). */
   intent?: SceneActionIntent;
+  /** Damage from this combatant's recurring auras pulsing on its turn. */
+  auraIntents?: SceneActionIntent[];
   /** Whether the turn was skipped because the actor was already down. */
   skipped: boolean;
 }
@@ -91,6 +101,69 @@ function toActor(combatant: RoundCombatant): TacticalActor {
     critOn: combatant.critOn,
     areaActions: combatant.areaActions,
   };
+}
+
+/**
+ * Pulse a combatant's auras of the given trigger: each aura is a self-centered
+ * emanation re-resolved from the owner's current cell against every other living
+ * combatant in range (line of effect applied). Folds damage into the working HP
+ * and returns the intents. RAW-indiscriminate — allies in the aura are hit too.
+ */
+function pulseAuras(params: {
+  owner: RoundCombatant;
+  trigger: AuraTrigger;
+  order: readonly RoundCombatant[];
+  hp: Record<string, number>;
+  seed: string;
+  round: number;
+  rule?: DiagonalRule;
+  isBlocked?: BlockPredicate;
+  saveModel?: SaveModel;
+  systemId?: string;
+}): SceneActionIntent[] {
+  const auras = (params.owner.auras ?? []).filter((aura) => aura.trigger === params.trigger);
+  if (auras.length === 0) return [];
+
+  const intents: SceneActionIntent[] = [];
+  for (const aura of auras) {
+    const candidates = params.order
+      .filter((other) => other.tokenId !== params.owner.tokenId && params.hp[other.tokenId] > 0)
+      .map((other) => ({
+        id: other.tokenId,
+        position: other.position,
+        saveBonus: other.saveBonus?.(aura.saveAbility) ?? 0,
+      }));
+    const selection = computeAreaParticipants({
+      area: aura.area,
+      emitter: params.owner.position,
+      aim: params.owner.position,
+      candidates,
+      systemId: params.systemId ?? '',
+      rule: params.rule,
+      isBlocked: params.isBlocked,
+    });
+    if (selection.participants.length === 0) continue;
+
+    const result = resolveAreaEffect({
+      sourceId: params.owner.tokenId,
+      seed: `${params.seed}::round${params.round}::aura::${params.owner.tokenId}::${aura.name}::${params.trigger}`,
+      damageEffects: aura.damageEffects,
+      saveDC: aura.saveDC,
+      halfOnSave: aura.halfOnSave,
+      saveModel: params.saveModel,
+      participants: selection.participants,
+    });
+    const intent = areaEffectToDamageIntent(result, aura.name);
+    if (intent && intent.type === 'apply-damage') {
+      for (const damage of intent.damages) {
+        if (params.hp[damage.tokenId] != null) {
+          params.hp[damage.tokenId] = Math.max(0, params.hp[damage.tokenId] - damage.amount);
+        }
+      }
+      intents.push(intent);
+    }
+  }
+  return intents;
 }
 
 function toTarget(combatant: RoundCombatant, currentHp: number): TacticalTarget {
@@ -138,6 +211,21 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
       return;
     }
 
+    const auraOpts = {
+      order: input.order,
+      hp,
+      seed: input.seed,
+      round: input.round,
+      rule: input.diagonalRule,
+      isBlocked: input.isBlocked,
+      saveModel: input.saveModel,
+      systemId: input.systemId,
+    };
+    // Start-of-turn auras pulse before the action; their damage is folded so the
+    // actor (and its target scoring) see the post-aura participant set.
+    const startAuras = pulseAuras({ owner: combatant, trigger: 'start-of-turn', ...auraOpts });
+    startAuras.forEach((intent) => intents.push(intent));
+
     // The participant set: every OTHER living combatant, with up-to-date HP.
     const targets: TacticalTarget[] = input.order
       .filter((other) => other.tokenId !== combatant.tokenId && hp[other.tokenId] > 0)
@@ -163,7 +251,17 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
       intents.push(turn.intent);
     }
 
-    turns.push({ tokenId: combatant.tokenId, turn, intent: turn.intent, skipped: false });
+    const endAuras = pulseAuras({ owner: combatant, trigger: 'end-of-turn', ...auraOpts });
+    endAuras.forEach((intent) => intents.push(intent));
+
+    const auraIntents = [...startAuras, ...endAuras];
+    turns.push({
+      tokenId: combatant.tokenId,
+      turn,
+      intent: turn.intent,
+      auraIntents: auraIntents.length > 0 ? auraIntents : undefined,
+      skipped: false,
+    });
   });
 
   return { round: input.round, turns, finalHp: hp, intents };

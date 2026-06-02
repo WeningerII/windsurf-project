@@ -20,6 +20,7 @@ import {
   casterSpellAreaActions,
   characterSaveBonus,
   diagonalRuleForSystem,
+  monsterAuras,
   monsterSaveActions,
   monsterSaveBonus,
   resolveSceneAreaEffect,
@@ -27,6 +28,7 @@ import {
   runSceneRound,
   tokensInArea,
   type ResolveAreaActions,
+  type ResolveAuras,
   type ResolveCombatStats,
   type SceneAreaAction,
 } from '../rules';
@@ -391,6 +393,7 @@ export function SceneManager({
       state,
       resolveStats: resolveCombatStats,
       resolveAreaActions,
+      resolveAuras,
       seed: `${selectedScene.initialState.seed}:round:${state.round}:${selectedScene.events.length}:${attackNonce.current++}`,
       round: state.round,
     });
@@ -438,6 +441,17 @@ export function SceneManager({
     const token = state.tokens[selectedTokenId];
     return token ? resolveAreaActions(token) : [];
   }, [state, selectedTokenId, resolveAreaActions]);
+
+  // Recurring auras (e.g. a Balor's Fire Aura) a token emits each round, for the
+  // auto round-runner to pulse on its turn.
+  const resolveAuras = useCallback<ResolveAuras>(
+    (token) => {
+      if (token.kind !== 'monster' || !token.refId) return [];
+      const monster = monstersById.get(token.refId);
+      return monster ? monsterAuras(monster) : [];
+    },
+    [monstersById]
+  );
 
   const selectedSaveAction = useMemo(
     () => attackerAreaActions.find((action) => action.name === combatSaveActionName),

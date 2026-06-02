@@ -19,6 +19,7 @@ import type { Monster, Action } from '../../types/creatures/monsters';
 import type { AbilityScore, AreaOfEffect, DiceType } from '../../types/core/common';
 import type { SceneCoordinate, SceneToken } from '../../types/core/scene';
 import { makeEffectId, type EffectInstance } from '../ir/types';
+import { AUTO_HIT_SAVE_DC, type AuraAction, type AuraTrigger } from '../resolver/areaParticipants';
 
 const FEET_PER_CELL = 5;
 
@@ -381,6 +382,116 @@ export function monsterSaveBonus(monster: Monster, ability: string): number {
   if (typeof explicit === 'number') return explicit;
   const score = monster.abilities[key];
   return typeof score === 'number' ? Math.floor((score - 10) / 2) : 0;
+}
+
+/** A normalized recurring aura: a self-centered emanation that pulses each turn. */
+interface NormalizedAura {
+  trigger: AuraTrigger;
+  radiusFeet: number;
+  /** Present only for save-based auras; absent → automatic (no save). */
+  saveAbility?: string;
+  saveDC?: number;
+  halfOnSave: boolean;
+  damage: DamageClause[];
+}
+
+/**
+ * Parse a recurring damage aura from a special ability's prose, e.g. the Balor's
+ * "At the start of each of the balor's turns, each creature within 5 feet of it
+ * takes 11 (2d10) fire damage." Requires a per-turn trigger, a radius, and at
+ * least one damage clause; a saving throw is optional (most such auras are
+ * automatic). Returns undefined for non-aura abilities.
+ */
+export function parseAuraFromDescription(description: string): NormalizedAura | undefined {
+  if (!description) return undefined;
+  const trigger = /at the (start|end) of (?:each of )?(?:its|the [^.]+?'s)\s+turns?/i.exec(
+    description
+  );
+  if (!trigger) return undefined;
+  const within = /within (\d+)\s*(?:feet|ft)/i.exec(description);
+  if (!within) return undefined;
+  const damage = parseDamageClauses(description);
+  if (damage.length === 0) return undefined;
+
+  const save =
+    /DC\s+(\d+)\s+(?:basic\s+)?(Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma|Fortitude|Reflex|Will)\s+(?:saving throw|save)\b/i.exec(
+      description
+    );
+
+  return {
+    trigger: trigger[1].toLowerCase() === 'end' ? 'end-of-turn' : 'start-of-turn',
+    radiusFeet: Number(within[1]),
+    saveAbility: save
+      ? (SAVE_ABILITY_WORDS[save[2].toLowerCase()] ?? save[2].toLowerCase())
+      : undefined,
+    saveDC: save ? Number(save[1]) : undefined,
+    halfOnSave: /half as much/i.test(description),
+    damage,
+  };
+}
+
+/** Build IR damage effects for an aura's damage clauses. */
+function auraDamageEffects(
+  monster: Monster,
+  name: string,
+  clauses: DamageClause[]
+): EffectInstance[] {
+  const systemId = monster.system as EffectInstance['systemId'];
+  const source = { kind: 'custom' as const, id: monster.id, label: `${monster.name}: ${name}` };
+  const effects: EffectInstance[] = [];
+  for (const [index, clause] of clauses.entries()) {
+    const target = `damage.${clause.type}`;
+    for (let dieIndex = 0; dieIndex < clause.count; dieIndex += 1) {
+      effects.push({
+        id: makeEffectId(systemId, target, monster.id, name, 'aura-die', index, dieIndex),
+        systemId,
+        target,
+        operation: 'add-die',
+        value: clause.faces,
+        stackPolicy: 'sum',
+        source,
+        label: `${name} d${clause.faces}`,
+        category: 'other',
+      });
+    }
+    if (clause.modifier) {
+      effects.push({
+        id: makeEffectId(systemId, target, monster.id, name, 'aura-flat', index),
+        systemId,
+        target,
+        operation: 'add',
+        value: clause.modifier,
+        stackPolicy: 'sum',
+        source,
+        label: `${name} damage bonus`,
+        category: 'other',
+      });
+    }
+  }
+  return effects;
+}
+
+/**
+ * A monster's recurring damage auras (e.g. a Balor's Fire Aura), normalized to
+ * `AuraAction`s — emanations that pulse each round. A no-save aura uses an
+ * unreachable DC so it lands automatically through the same area path.
+ */
+export function monsterAuras(monster: Monster): AuraAction[] {
+  const result: AuraAction[] = [];
+  for (const ability of monster.specialAbilities ?? []) {
+    const aura = parseAuraFromDescription(ability.description);
+    if (!aura) continue;
+    result.push({
+      name: ability.name,
+      trigger: aura.trigger,
+      saveAbility: aura.saveAbility ?? 'con',
+      saveDC: aura.saveDC ?? AUTO_HIT_SAVE_DC,
+      halfOnSave: aura.halfOnSave,
+      damageEffects: auraDamageEffects(monster, ability.name, aura.damage),
+      area: { type: 'emanation', radius: aura.radiusFeet },
+    });
+  }
+  return result;
 }
 
 /** Reach (in grid cells) of a structured action; melee defaults to 1 cell. */

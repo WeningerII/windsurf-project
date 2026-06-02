@@ -50,6 +50,22 @@ export interface SceneAreaAction {
   area?: AreaOfEffect;
 }
 
+/** When a recurring aura pulses relative to its owner's turn. */
+export type AuraTrigger = 'start-of-turn' | 'end-of-turn';
+
+/**
+ * A persistent, creature-anchored emanation that pulses each round (a Balor's
+ * Fire Aura, spirit guardians). Mechanically a `SceneAreaAction` with an
+ * emanation area, centered on the owner each time it ticks — so it reuses the
+ * whole area path. A no-save aura uses an unreachable save DC (everyone "fails").
+ */
+export interface AuraAction extends SceneAreaAction {
+  trigger: AuraTrigger;
+}
+
+/** A save DC no roll can meet — models a no-save (automatic) aura through the save path. */
+export const AUTO_HIT_SAVE_DC = 999;
+
 /** A creature an area effect might catch: identity, cell, and its base save bonus. */
 export interface AreaCandidate {
   id: string;

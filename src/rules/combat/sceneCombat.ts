@@ -41,6 +41,7 @@ import {
   computeAreaParticipants,
   shapeForArea,
   type AreaCandidate,
+  type AuraAction,
   type SceneAreaAction,
 } from '../resolver/areaParticipants';
 import { sceneBlockPredicate } from '../terrain/sceneTerrain';
@@ -68,6 +69,9 @@ export type ResolveCombatStats = (token: SceneToken) => SceneCombatStats | undef
 /** Resolve a token's save-based area actions (breath / spells), for the AI to use. */
 export type ResolveAreaActions = (token: SceneToken) => SceneAreaAction[];
 
+/** Resolve a token's recurring auras (emanations that pulse each round). */
+export type ResolveAuras = (token: SceneToken) => AuraAction[];
+
 /** Map a token kind to a combat faction (allies vs enemies for targeting). */
 export function factionForToken(token: SceneToken): string {
   switch (token.kind) {
@@ -90,7 +94,8 @@ export function factionForToken(token: SceneToken): string {
 export function buildSceneCombatants(
   state: SceneState,
   resolveStats: ResolveCombatStats,
-  resolveAreaActions?: ResolveAreaActions
+  resolveAreaActions?: ResolveAreaActions,
+  resolveAuras?: ResolveAuras
 ): RoundCombatant[] {
   // Order: initiative first (highest value), then any remaining tokens.
   const initiativeOrder = state.initiative.map((entry) => entry.tokenId);
@@ -106,6 +111,7 @@ export function buildSceneCombatants(
     const stats = resolveStats(token);
     if (!stats) continue;
     const areaActions = resolveAreaActions?.(token);
+    const auras = resolveAuras?.(token);
     combatants.push({
       tokenId: token.id,
       faction: factionForToken(token),
@@ -117,6 +123,7 @@ export function buildSceneCombatants(
       reach: stats.reach,
       critOn: stats.critOn,
       areaActions: areaActions && areaActions.length > 0 ? areaActions : undefined,
+      auras: auras && auras.length > 0 ? auras : undefined,
       saveBonus: stats.saveBonus,
     });
   }
@@ -320,10 +327,17 @@ export function runSceneRound(params: {
   resolveStats: ResolveCombatStats;
   /** Optional: lets combatants unleash breath/spell AoE during the auto-round. */
   resolveAreaActions?: ResolveAreaActions;
+  /** Optional: recurring auras that pulse each round (e.g. a Balor's Fire Aura). */
+  resolveAuras?: ResolveAuras;
   seed: string;
   round: number;
 }): SceneRoundOutcome {
-  const order = buildSceneCombatants(params.state, params.resolveStats, params.resolveAreaActions);
+  const order = buildSceneCombatants(
+    params.state,
+    params.resolveStats,
+    params.resolveAreaActions,
+    params.resolveAuras
+  );
   const result = runCombatRound({
     order,
     seed: params.seed,
@@ -335,7 +349,7 @@ export function runSceneRound(params: {
   });
 
   const nameOf = (tokenId: string): string => params.state.tokens[tokenId]?.name ?? tokenId;
-  const log = result.turns.map((turn) => {
+  const turnLine = (turn: RoundResult['turns'][number]): string => {
     if (turn.skipped) return `${nameOf(turn.tokenId)} is down and skips its turn.`;
     if (turn.turn.decision === 'no-target') return `${nameOf(turn.tokenId)} has no target.`;
     if (turn.turn.decision === 'area-effect') {
@@ -350,6 +364,16 @@ export function runSceneRound(params: {
     if (!res) return `${nameOf(turn.tokenId)} acts.`;
     if (!res.isHit) return `${nameOf(turn.tokenId)} misses ${target}.`;
     return `${nameOf(turn.tokenId)} ${res.isCriticalHit ? 'crits' : 'hits'} ${target} for ${res.damage}.`;
+  };
+  const log = result.turns.flatMap((turn) => {
+    const lines: string[] = [];
+    for (const aura of turn.auraIntents ?? []) {
+      if (aura.type !== 'apply-damage') continue;
+      const hit = aura.damages.map((d) => `${nameOf(d.tokenId)} (${d.amount})`).join(', ');
+      lines.push(`${nameOf(turn.tokenId)}'s ${aura.cause ?? 'aura'} sears ${hit}.`);
+    }
+    lines.push(turnLine(turn));
+    return lines;
   });
 
   return { result, intents: result.intents, log };
