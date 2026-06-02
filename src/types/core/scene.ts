@@ -41,6 +41,20 @@ export interface SceneToken {
    * tokens that aren't part of a social scene.
    */
   attitude?: string;
+  /**
+   * Optional M&M-style condition track (the systems without hit points track
+   * harm as conditions, not HP). Accumulated by `token.conditions-changed`
+   * events; `incapacitated` is the "down" state for such combatants.
+   */
+  conditions?: SceneConditionTrack;
+}
+
+/** A condition track for non-HP combatants (M&M 3e). Bruised stacks; the rest are flags. */
+export interface SceneConditionTrack {
+  bruised: number;
+  dazed: boolean;
+  staggered: boolean;
+  incapacitated: boolean;
 }
 
 export interface SceneMarker {
@@ -101,6 +115,7 @@ export type SceneEventType =
   | 'token.removed'
   | 'token.damaged'
   | 'token.attitude-changed'
+  | 'token.conditions-changed'
   | 'marker.added'
   | 'marker.removed'
   | 'initiative.set'
@@ -132,6 +147,7 @@ export type SceneEvent =
   | SceneEventBase<'token.removed', { tokenId: string }>
   | SceneEventBase<'token.damaged', { damages: SceneTokenDamage[]; cause?: string }>
   | SceneEventBase<'token.attitude-changed', { tokenId: string; attitude: string }>
+  | SceneEventBase<'token.conditions-changed', { tokenId: string; delta: SceneConditionTrack }>
   | SceneEventBase<'marker.added', { marker: SceneMarker }>
   | SceneEventBase<'marker.removed', { markerId: string }>
   | SceneEventBase<'initiative.set', { entries: SceneInitiativeEntry[]; activeTokenId?: string }>
@@ -165,6 +181,7 @@ export type SceneActionIntent =
   | { type: 'remove-token'; actorId?: string; tokenId: string }
   | { type: 'apply-damage'; actorId?: string; damages: SceneTokenDamage[]; cause?: string }
   | { type: 'set-attitude'; actorId?: string; tokenId: string; attitude: string }
+  | { type: 'apply-conditions'; actorId?: string; tokenId: string; delta: SceneConditionTrack }
   | { type: 'add-marker'; actorId?: string; marker: SceneMarker }
   | { type: 'remove-marker'; actorId?: string; markerId: string }
   | {

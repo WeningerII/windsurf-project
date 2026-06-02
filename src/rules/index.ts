@@ -177,6 +177,9 @@ export { buildCharacterCombatant, characterSaveBonus } from './combatants/charac
 export type { DaggerheartCombatant } from './combatants/daggerheartCombatant';
 export { buildDaggerheartCombatant } from './combatants/daggerheartCombatant';
 
+export type { Mam3eCombatant } from './combatants/mam3eCombatant';
+export { buildMam3eCombatant } from './combatants/mam3eCombatant';
+
 export {
   casterSpellAreaActions,
   spellAreaAction,

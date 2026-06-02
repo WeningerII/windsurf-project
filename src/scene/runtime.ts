@@ -143,6 +143,9 @@ export function validateSceneEvent(state: SceneState, event: SceneEvent): SceneI
     case 'token.attitude-changed':
       validateKnownToken(state, event.payload.tokenId, issues, event, 'payload.tokenId');
       break;
+    case 'token.conditions-changed':
+      validateKnownToken(state, event.payload.tokenId, issues, event, 'payload.tokenId');
+      break;
     case 'marker.added':
       validateMarkerForAdd(state, event.payload.marker, issues, event);
       break;
@@ -203,6 +206,12 @@ function buildEventFromIntent(
         type: 'token.attitude-changed',
         payload: { tokenId: intent.tokenId, attitude: intent.attitude },
       };
+    case 'apply-conditions':
+      return {
+        ...base,
+        type: 'token.conditions-changed',
+        payload: { tokenId: intent.tokenId, delta: { ...intent.delta } },
+      };
     case 'add-marker':
       return { ...base, type: 'marker.added', payload: { marker: cloneMarker(intent.marker) } };
     case 'remove-marker':
@@ -258,6 +267,25 @@ function applySceneEvent(state: SceneState, event: SceneEvent): void {
     case 'token.attitude-changed': {
       const token = state.tokens[event.payload.tokenId];
       if (token) token.attitude = event.payload.attitude;
+      break;
+    }
+    case 'token.conditions-changed': {
+      const token = state.tokens[event.payload.tokenId];
+      if (token) {
+        const current = token.conditions ?? {
+          bruised: 0,
+          dazed: false,
+          staggered: false,
+          incapacitated: false,
+        };
+        const d = event.payload.delta;
+        token.conditions = {
+          bruised: current.bruised + d.bruised,
+          dazed: current.dazed || d.dazed,
+          staggered: current.staggered || d.staggered,
+          incapacitated: current.incapacitated || d.incapacitated,
+        };
+      }
       break;
     }
     case 'marker.added':

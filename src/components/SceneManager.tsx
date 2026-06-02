@@ -17,6 +17,7 @@ import {
   areaShapeForAction,
   buildCharacterCombatant,
   buildDaggerheartCombatant,
+  buildMam3eCombatant,
   buildMonsterCombatant,
   casterSpellAreaActions,
   characterSaveBonus,
@@ -368,6 +369,20 @@ export function SceneManager({
       if (token.kind === 'character' && token.refId) {
         const doc = documentsById.get(token.refId);
         if (!doc) return undefined;
+        // M&M fights on Parry/Dodge + a Toughness save → condition track (no HP).
+        if (doc.systemId === 'mam3e') {
+          const mm = buildMam3eCombatant(doc, { tokenId: token.id, position: token.position });
+          return {
+            attackEffects: mm.attackEffects,
+            damageEffects: [],
+            armorClass: mm.parry,
+            reach: mm.reach,
+            speed: 6,
+            toughness: mm.toughness,
+            effectRank: mm.effectRank,
+            saveBonus: (ability: string) => characterSaveBonus(doc, ability),
+          };
+        }
         // Daggerheart fights on Evasion + damage thresholds, not attack-vs-AC.
         if (doc.systemId === 'daggerheart') {
           const dh = buildDaggerheartCombatant(doc, {

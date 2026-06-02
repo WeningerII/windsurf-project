@@ -30,6 +30,7 @@ import {
   resolveDaggerheartAttack,
   type DaggerheartThresholds,
 } from '../resolver/daggerheartResolution';
+import { resolveMam3eAttack } from '../resolver/mam3eResolution';
 import {
   participantRng,
   resolveAreaEffect,
@@ -67,6 +68,13 @@ export interface SceneCombatStats {
    * subtracting raw damage. `armorClass` holds its Evasion.
    */
   thresholds?: DaggerheartThresholds;
+  /**
+   * M&M Toughness save bonus. Present makes this an M&M target: an attack vs its
+   * defense (`armorClass` = Parry) forces a Toughness save → condition track.
+   */
+  toughness?: number;
+  /** M&M effect rank of this combatant's attack (Toughness DC = 15 + rank). */
+  effectRank?: number;
   /**
    * This combatant's saving-throw bonus for an ability (e.g. 'dex'), used when
    * it is a participant in someone else's area effect. Omitted when unknown — the
@@ -202,6 +210,44 @@ export function resolveSceneAttack(params: {
       intent,
       hit: dh.isHit,
       log: `${attacker.name} ${dh.isHit ? 'hits' : 'misses'} ${target.name}${detail}.`,
+    };
+  }
+
+  // M&M: attack vs the target's defense (= armorClass = Parry); on a hit, a
+  // Toughness save whose shortfall drives the condition track (no hit points).
+  if (state.systemId === 'mam3e' && targetStats.toughness != null) {
+    const mm = resolveMam3eAttack({
+      attackEffects: attackerStats.attackEffects,
+      targetDefense: targetStats.armorClass,
+      effectRank: attackerStats.effectRank ?? 0,
+      toughness: targetStats.toughness,
+      rng: participantRng(seed, attackerId, targetId),
+    });
+    const hasCondition =
+      mm.condition.bruised > 0 ||
+      mm.condition.dazed ||
+      mm.condition.staggered ||
+      mm.condition.incapacitated;
+    const intent: SceneActionIntent | undefined =
+      mm.isHit && hasCondition
+        ? { type: 'apply-conditions', actorId: attackerId, tokenId: targetId, delta: mm.condition }
+        : undefined;
+    const effect = mm.condition.incapacitated
+      ? 'incapacitated'
+      : mm.condition.staggered
+        ? 'staggered'
+        : mm.condition.dazed
+          ? 'dazed and bruised'
+          : mm.condition.bruised > 0
+            ? 'bruised'
+            : 'unharmed (saved)';
+    const detail = mm.isHit
+      ? ` (rolled ${mm.attackTotal} vs defense ${targetStats.armorClass}; Toughness ${mm.saveTotal} vs DC ${mm.saveDC} → ${effect})`
+      : ` (rolled ${mm.attackTotal} vs defense ${targetStats.armorClass})`;
+    return {
+      intent,
+      hit: mm.isHit,
+      log: `${attacker.name} ${mm.isHit ? 'hits' : 'misses'} ${target.name}${detail}.`,
     };
   }
 
