@@ -184,6 +184,38 @@ describe('Mam3eEngine', () => {
       // d20 + AGI rank (4)
       expect(result.formula).toBe('1d20 + 4');
     });
+
+    it('rolls an UNTRAINED known skill at its governing ability (no ranks)', async () => {
+      const doc = makeDoc({
+        abilities: { str: 0, sta: 0, agi: 0, dex: 0, fgt: 0, int: 0, awe: 0, pre: 5 },
+        skills: {}, // Persuasion is untrained
+      });
+      const result = await engine.rollCheck(doc, 'persuasion');
+      expect(result.formula).toBe('1d20 + 5'); // PRE 5 + 0 ranks
+    });
+  });
+
+  describe('checkModifier', () => {
+    it('returns the governing ability for an untrained known skill', () => {
+      const doc = makeDoc({
+        abilities: { str: 0, sta: 0, agi: 0, dex: 0, fgt: 0, int: 0, awe: 0, pre: 4 },
+        skills: {}, // untrained
+      });
+      // Persuasion is governed by Presence; untrained = PRE (4) + 0 ranks.
+      expect(engine.checkModifier(doc, 'persuasion')).toBe(4);
+    });
+
+    it('adds skill ranks on top of the ability when trained', () => {
+      const doc = makeDoc({
+        abilities: { str: 0, sta: 0, agi: 0, dex: 0, fgt: 0, int: 0, awe: 0, pre: 4 },
+        skills: { persuasion: { rank: 3, total: 7 } },
+      });
+      expect(engine.checkModifier(doc, 'persuasion')).toBe(7); // PRE 4 + 3 ranks
+    });
+
+    it('returns undefined for an unknown check id', () => {
+      expect(engine.checkModifier(makeDoc(), 'not-a-skill')).toBeUndefined();
+    });
   });
 
   describe('applyDamage', () => {

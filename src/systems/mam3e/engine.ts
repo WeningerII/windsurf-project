@@ -251,12 +251,17 @@ export class Mam3eEngine implements SystemEngine<Mam3eDataModel> {
     if (checkId in data.abilities) {
       return data.abilities[checkId as keyof typeof data.abilities];
     }
+    const abilityKey = SKILL_ABILITY_MAP[checkId];
     if (checkId in data.skills) {
-      const abilityKey = SKILL_ABILITY_MAP[checkId];
       const abilityRank = abilityKey
         ? (data.abilities[abilityKey as keyof typeof data.abilities] ?? 0)
         : 0;
       return abilityRank + data.skills[checkId].rank;
+    }
+    // A known skill the character hasn't trained: in M&M an untrained skill check
+    // is still made — the governing ability modifier with 0 ranks.
+    if (abilityKey) {
+      return data.abilities[abilityKey as keyof typeof data.abilities] ?? 0;
     }
     return undefined;
   }
@@ -283,6 +288,11 @@ export class Mam3eEngine implements SystemEngine<Mam3eDataModel> {
         : 0;
       mod = abilityRank + skill.rank;
       flavor = `${checkId.replace(/-/g, ' ')} Check`;
+    } else if (SKILL_ABILITY_MAP[checkId]) {
+      // Untrained but known skill: the governing ability modifier, 0 ranks.
+      const abilityKey = SKILL_ABILITY_MAP[checkId];
+      mod = data.abilities[abilityKey as keyof typeof data.abilities] ?? 0;
+      flavor = `${checkId.replace(/-/g, ' ')} Check (untrained)`;
     } else if (checkId in data.defenses) {
       // Defense check (e.g., Toughness save)
       mod = data.defenses[checkId as keyof typeof data.defenses].total;
