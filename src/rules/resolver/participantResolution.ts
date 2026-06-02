@@ -20,6 +20,7 @@
 import { createSeededRng, type SeededRng } from '../../scene/seededRng';
 import { resolveAttack, type AttackResolution } from './attackResolution';
 import { resolveEffects, type ResolveContext } from './resolve';
+import { pf2eDegreeOfSuccess, type DegreeOfSuccess } from './degreeOfSuccess';
 import type { EffectInstance } from '../ir/types';
 
 /**
@@ -119,27 +120,14 @@ export interface SaveParticipant {
  */
 export type SaveModel = 'binary' | 'pf2e-basic';
 
-/** PF2e degree of success on a save. */
-export type SaveDegree = 'critical-success' | 'success' | 'failure' | 'critical-failure';
-
-const STEP_TO_DEGREE: readonly SaveDegree[] = [
-  'critical-failure',
-  'failure',
-  'success',
-  'critical-success',
-];
+/** PF2e degree of success on a save — an alias of the shared {@link DegreeOfSuccess}. */
+export type SaveDegree = DegreeOfSuccess;
 
 /**
- * PF2e basic-save degree (CRB p.449): beat the DC by 10+ → critical success;
- * meet the DC → success; miss by ≤9 → failure; miss by 10+ → critical failure.
- * A natural 20 improves the result one degree, a natural 1 worsens it one degree.
+ * PF2e basic-save degree (CRB p.449) — an application of the universal
+ * {@link pf2eDegreeOfSuccess} engine (saves, attacks, and checks all share it).
  */
-export function pf2eSaveDegree(roll: number, total: number, dc: number): SaveDegree {
-  let step = total >= dc + 10 ? 3 : total >= dc ? 2 : total <= dc - 10 ? 0 : 1;
-  if (roll === 20) step = Math.min(3, step + 1);
-  else if (roll === 1) step = Math.max(0, step - 1);
-  return STEP_TO_DEGREE[step];
-}
+export const pf2eSaveDegree = pf2eDegreeOfSuccess;
 
 export interface AreaEffectInput {
   /** The origin of the effect (caster/trap); seeds the shared damage roll. */

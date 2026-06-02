@@ -90,6 +90,8 @@ export {
   resolveAreaEffect,
   resolveMultiTargetAttack,
 } from './resolver/participantResolution';
+export type { DegreeOfSuccess } from './resolver/degreeOfSuccess';
+export { pf2eDegreeOfSuccess } from './resolver/degreeOfSuccess';
 
 export type { AreaShape, DiagonalRule } from './resolver/areaTargeting';
 export {

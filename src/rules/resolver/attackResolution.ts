@@ -21,6 +21,7 @@
 
 import type { SeededRng } from '../../scene/seededRng';
 import { resolveEffects, type ResolveContext, type RollMode } from './resolve';
+import { pf2eDegreeOfSuccess, type DegreeOfSuccess } from './degreeOfSuccess';
 import type { EffectInstance } from '../ir/types';
 
 export interface AttackResolutionInput {
@@ -36,10 +37,19 @@ export interface AttackResolutionInput {
   context?: Omit<ResolveContext, 'rng'>;
   /**
    * Natural roll that auto-hits/crits (d20 default 20). Natural 1 auto-misses.
-   * PF2e's degree-of-success model is layered on top by the caller when a DC is
-   * supplied; this core reports the raw hit and the natural roll.
+   * Used only by the `'d20-threshold'` crit model.
    */
   critOn?: number;
+  /**
+   * Critical-hit model:
+   * - `'d20-threshold'` (default, 5e/3.5e/PF1e): a natural `critOn` (20) is a
+   *   crit; a crit doubles the damage DICE only (flat bonuses are not doubled).
+   * - `'pf2e'`: the four-degree model — the attack total beating AC by 10 (or a
+   *   natural 20 stepping the degree up) is a critical hit, a natural 1 (or
+   *   missing AC by 10) is a critical miss, and a crit doubles the whole damage
+   *   TOTAL (dice AND modifiers). `targetValue` must be the target's AC.
+   */
+  critModel?: 'd20-threshold' | 'pf2e';
 }
 
 export interface AttackResolution {
@@ -55,6 +65,8 @@ export interface AttackResolution {
   isCriticalHit: boolean;
   isCriticalMiss: boolean;
   isHit: boolean;
+  /** PF2e degree of success, when resolved with the `'pf2e'` crit model. */
+  degree?: DegreeOfSuccess;
   /** Total damage (only rolled on a hit; 0 on a miss). */
   damage: number;
   /** Individual damage dice rolled (empty on a miss or with no dice). */
@@ -96,10 +108,23 @@ export function resolveAttack(input: AttackResolutionInput): AttackResolution {
   const { chosen, terms } = rollD20(input.rng, rollMode);
   const attackTotal = chosen + attackBonus;
 
-  const isCriticalHit = chosen >= critOn;
-  const isCriticalMiss = chosen === 1;
-  // Natural crit always hits; natural 1 always misses; otherwise compare totals.
-  const isHit = isCriticalHit || (!isCriticalMiss && attackTotal >= input.targetValue);
+  const critModel = input.critModel ?? 'd20-threshold';
+  let isCriticalHit: boolean;
+  let isCriticalMiss: boolean;
+  let isHit: boolean;
+  let degree: DegreeOfSuccess | undefined;
+  if (critModel === 'pf2e') {
+    // PF2e: the same d20 roll, read through the four-degree engine vs AC.
+    degree = pf2eDegreeOfSuccess(chosen, attackTotal, input.targetValue);
+    isCriticalHit = degree === 'critical-success';
+    isHit = degree === 'critical-success' || degree === 'success';
+    isCriticalMiss = degree === 'critical-failure';
+  } else {
+    isCriticalHit = chosen >= critOn;
+    isCriticalMiss = chosen === 1;
+    // Natural crit always hits; natural 1 always misses; otherwise compare totals.
+    isHit = isCriticalHit || (!isCriticalMiss && attackTotal >= input.targetValue);
+  }
 
   const ledger: EffectInstance[] = [...attackResolved.ledger];
   let damage = 0;
@@ -120,11 +145,16 @@ export function resolveAttack(input: AttackResolutionInput): AttackResolution {
     const diceSum = damageDiceTerms.reduce((sum, term) => sum + term, 0);
     damageBonus = damage - diceSum;
 
-    // On a critical hit (d20 model), double the dice rolled (5e/PF crit rule:
-    // roll the damage dice twice; flat bonuses are not doubled).
+    // Critical-hit damage differs by system:
+    // - d20-threshold (5e/3.5e/PF1e): double the damage DICE only.
+    // - pf2e: double the whole damage TOTAL (dice AND modifiers) (CRB p.451).
     if (isCriticalHit) {
-      const critDice = damageDiceTerms.reduce((sum, term) => sum + term, 0);
-      damage += critDice;
+      if (critModel === 'pf2e') {
+        damage *= 2;
+      } else {
+        const critDice = damageDiceTerms.reduce((sum, term) => sum + term, 0);
+        damage += critDice;
+      }
     }
 
     ledger.push(...damageResolved.ledger);
@@ -140,6 +170,7 @@ export function resolveAttack(input: AttackResolutionInput): AttackResolution {
     isCriticalHit,
     isCriticalMiss,
     isHit,
+    degree,
     damage,
     damageDiceTerms,
     damageBonus,

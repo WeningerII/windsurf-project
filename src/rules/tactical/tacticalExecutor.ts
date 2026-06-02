@@ -235,6 +235,7 @@ function resolveStrike(input: TacticalTurnInput, target: TacticalTarget): Strike
     damageEffects: actor.damageEffects,
     targetValue: target.armorClass,
     critOn: actor.critOn,
+    critModel: input.systemId === 'pf2e' ? 'pf2e' : 'd20-threshold',
     rng,
   });
   return {

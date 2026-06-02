@@ -270,11 +270,18 @@ export function resolveSceneAttack(params: {
     damageEffects: attackerStats.damageEffects,
     targetValue: targetStats.armorClass,
     critOn: attackerStats.critOn,
+    critModel: state.systemId === 'pf2e' ? 'pf2e' : 'd20-threshold',
     rng: participantRng(seed, attackerId, targetId),
   });
 
   const intent = attackToDamageIntent(attackerId, targetId, resolution, params.cause);
-  const verb = resolution.isCriticalHit ? 'crits' : resolution.isHit ? 'hits' : 'misses';
+  const verb = resolution.isCriticalHit
+    ? 'crits'
+    : resolution.isHit
+      ? 'hits'
+      : resolution.degree === 'critical-failure'
+        ? 'critically misses'
+        : 'misses';
   const detail = resolution.isHit
     ? ` for ${resolution.damage} (rolled ${resolution.naturalRoll}+${resolution.attackBonus} vs AC ${targetStats.armorClass})`
     : ` (rolled ${resolution.naturalRoll}+${resolution.attackBonus} vs AC ${targetStats.armorClass})`;
