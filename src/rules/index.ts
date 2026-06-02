@@ -56,7 +56,12 @@ export {
 } from './resolver/participantResolution';
 
 export type { AreaShape } from './resolver/areaTargeting';
-export { cellInArea, gridDistance, tokensInArea } from './resolver/areaTargeting';
+export {
+  cellInArea,
+  DEFAULT_CONE_HALF_ANGLE_DEG,
+  gridDistance,
+  tokensInArea,
+} from './resolver/areaTargeting';
 
 export {
   areaEffectToDamageIntent,
@@ -82,15 +87,21 @@ export type {
 } from './tactical/roundDriver';
 export { isRoundConclusive, runCombatRound } from './tactical/roundDriver';
 
-export type { MonsterCombatant, MonsterSaveAction } from './combatants/monsterCombatant';
+export type {
+  MonsterCombatant,
+  MonsterSaveAction,
+  SaveActionArea,
+} from './combatants/monsterCombatant';
 export {
   buildMonsterCombatant,
   monsterAttackEffects,
   monsterAverageHitPoints,
   monsterDamageEffects,
   monsterSaveActions,
+  monsterSaveBonus,
   normalizeAttack,
   normalizeSaveAction,
+  parseAreaFromDescription,
   parseAttackFromDescription,
   parseSaveActionFromDescription,
   primaryAttackAction,
@@ -101,17 +112,21 @@ export type {
   BuildCharacterCombatantResult,
   CharacterCombatant,
 } from './combatants/characterCombatant';
-export { buildCharacterCombatant } from './combatants/characterCombatant';
+export { buildCharacterCombatant, characterSaveBonus } from './combatants/characterCombatant';
 
 export type {
   ResolveCombatStats,
+  SceneAreaAction,
+  SceneAreaEffectOutcome,
   SceneAttackOutcome,
   SceneCombatStats,
   SceneRoundOutcome,
 } from './combat/sceneCombat';
 export {
+  areaShapeForAction,
   buildSceneCombatants,
   factionForToken,
+  resolveSceneAreaEffect,
   resolveSceneAttack,
   runSceneRound,
 } from './combat/sceneCombat';

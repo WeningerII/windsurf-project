@@ -17,12 +17,23 @@
  * the resolvers, so a given (scene, seed) replays identically.
  */
 
-import type { SceneActionIntent, SceneState, SceneToken } from '../../types/core/scene';
+import type {
+  SceneActionIntent,
+  SceneCoordinate,
+  SceneState,
+  SceneToken,
+} from '../../types/core/scene';
 import type { EffectInstance } from '../ir/types';
 import { runCombatRound, type RoundCombatant, type RoundResult } from '../tactical/roundDriver';
 import { resolveAttack } from '../resolver/attackResolution';
-import { participantRng } from '../resolver/participantResolution';
-import { attackToDamageIntent } from '../resolver/sceneCombat';
+import {
+  participantRng,
+  resolveAreaEffect,
+  type SaveParticipant,
+} from '../resolver/participantResolution';
+import { areaEffectToDamageIntent, attackToDamageIntent } from '../resolver/sceneCombat';
+import { tokensInArea, type AreaShape } from '../resolver/areaTargeting';
+import type { SaveActionArea } from '../combatants/monsterCombatant';
 
 /** Combat stats for a token, resolved from its statblock or character sheet. */
 export interface SceneCombatStats {
@@ -32,6 +43,12 @@ export interface SceneCombatStats {
   /** Reach in grid cells (melee = 1). */
   reach: number;
   critOn?: number;
+  /**
+   * This combatant's saving-throw bonus for an ability (e.g. 'dex'), used when
+   * it is a participant in someone else's area effect. Omitted when unknown — the
+   * area resolver then treats the bonus as 0.
+   */
+  saveBonus?: (ability: string) => number;
 }
 
 /** Resolve a token's combat stats, or undefined when it cannot fight. */
@@ -139,6 +156,141 @@ export function resolveSceneAttack(params: {
     intent,
     hit: resolution.isHit,
     log: `${attacker.name} ${verb} ${target.name}${detail}.`,
+  };
+}
+
+/** A save-based area action ready to resolve on a scene (e.g. a breath weapon). */
+export interface SceneAreaAction {
+  name: string;
+  /** Ability targets save with (e.g. 'dex'), lowercased. */
+  saveAbility: string;
+  saveDC: number;
+  /** When true, a successful save halves damage; else it negates. */
+  halfOnSave: boolean;
+  damageEffects: EffectInstance[];
+  /** Template (cone/line/sphere/cube); undefined → affects only the aimed cell. */
+  area?: SaveActionArea;
+}
+
+/**
+ * Build the grid `AreaShape` an action fills, given where it originates (the
+ * emitter's cell) and the cell it's aimed at. Cones and lines emanate from the
+ * origin toward the aim; spheres/cubes are centered on the aim. An action with
+ * no parsed template degenerates to a single-cell burst on the aim, so it still
+ * resolves (against just the aimed creature) rather than silently doing nothing.
+ */
+export function areaShapeForAction(
+  area: SaveActionArea | undefined,
+  origin: SceneCoordinate,
+  aim: SceneCoordinate
+): AreaShape {
+  if (!area) return { kind: 'burst', origin: aim, radius: 0 };
+  switch (area.shape) {
+    case 'cone':
+      return { kind: 'cone', origin, aim, length: area.lengthCells };
+    case 'line': {
+      const dx = aim.x - origin.x;
+      const dy = aim.y - origin.y;
+      const mag = Math.hypot(dx, dy) || 1;
+      const to = {
+        x: origin.x + Math.round((dx / mag) * area.lengthCells),
+        y: origin.y + Math.round((dy / mag) * area.lengthCells),
+      };
+      return { kind: 'line', origin, to };
+    }
+    case 'burst':
+      return { kind: 'burst', origin: aim, radius: area.radiusCells };
+    case 'cube': {
+      const half = Math.floor(area.sizeCells / 2);
+      return {
+        kind: 'rect',
+        origin: { x: aim.x - half, y: aim.y - half },
+        width: area.sizeCells,
+        height: area.sizeCells,
+      };
+    }
+    default: {
+      const exhaustive: never = area;
+      return exhaustive;
+    }
+  }
+}
+
+export interface SceneAreaEffectOutcome {
+  /** Single apply-damage intent covering everyone who took damage, or undefined. */
+  intent?: SceneActionIntent;
+  /** Header + per-target lines for the combat log. */
+  log: string[];
+  /** The resolved template (for an aiming preview / highlight). */
+  shape: AreaShape;
+  /** Token ids the template caught (excludes the emitter). */
+  affectedIds: string[];
+}
+
+/**
+ * Resolve a save-based area action (breath weapon / AoE) emanating from a source
+ * token toward an aim cell. Every living token the template catches (other than
+ * the emitter) becomes a participant: damage is rolled ONCE and shared, each
+ * target saves independently (its own seeded sub-stream), and the whole blast
+ * lands as a single `apply-damage` intent — the N-participant path, RAW.
+ */
+export function resolveSceneAreaEffect(params: {
+  state: SceneState;
+  sourceId: string;
+  action: SceneAreaAction;
+  aim: SceneCoordinate;
+  resolveStats: ResolveCombatStats;
+  seed: string;
+  cause?: string;
+}): SceneAreaEffectOutcome {
+  const { state, sourceId, action, aim, resolveStats, seed } = params;
+  const source = state.tokens[sourceId];
+  const shape = areaShapeForAction(action.area, source?.position ?? aim, aim);
+
+  if (!source) {
+    return { log: ['Area effect failed: the source token is missing.'], shape, affectedIds: [] };
+  }
+
+  // Participants: every other living token inside the template. AoE is RAW
+  // indiscriminate — allies in the blast are caught too.
+  const caught = tokensInArea(state, shape).filter(
+    (token) => token.id !== sourceId && (token.hp ? token.hp.current > 0 : false)
+  );
+
+  const participants: SaveParticipant[] = caught.map((token) => ({
+    targetId: token.id,
+    saveBonus: resolveStats(token)?.saveBonus?.(action.saveAbility) ?? 0,
+  }));
+
+  if (participants.length === 0) {
+    return {
+      log: [`${source.name} unleashes ${action.name}, but it catches no one.`],
+      shape,
+      affectedIds: [],
+    };
+  }
+
+  const result = resolveAreaEffect({
+    sourceId,
+    seed,
+    damageEffects: action.damageEffects,
+    saveDC: action.saveDC,
+    halfOnSave: action.halfOnSave,
+    participants,
+  });
+
+  const nameOf = (id: string): string => state.tokens[id]?.name ?? id;
+  const header = `${source.name} unleashes ${action.name} — ${result.sharedDamage} damage, DC ${action.saveDC} ${action.saveAbility.toUpperCase()} (${participants.length} caught).`;
+  const lines = result.perTarget.map((outcome) => {
+    const verb = outcome.saved ? 'saves' : 'fails';
+    return `  ${nameOf(outcome.targetId)} ${verb} (rolled ${outcome.saveRoll}+${outcome.saveTotal - outcome.saveRoll}) — takes ${outcome.damageTaken}.`;
+  });
+
+  return {
+    intent: areaEffectToDamageIntent(result, params.cause),
+    log: [header, ...lines],
+    shape,
+    affectedIds: caught.map((token) => token.id),
   };
 }
 

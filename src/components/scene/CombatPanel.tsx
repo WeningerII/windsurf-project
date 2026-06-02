@@ -1,8 +1,28 @@
-import { Swords, Zap } from 'lucide-react';
+import { Flame, Swords, Zap } from 'lucide-react';
 import type { SceneState } from '../../types/core/scene';
+import type { MonsterSaveAction, SaveActionArea } from '../../rules';
 import { Button } from '../ui/Button';
 import { Select } from '../ui/Select';
 import { Badge } from '../ui/Badge';
+
+const FEET_PER_CELL = 5;
+
+/** Human label for an area template, in feet (the table-facing unit). */
+function describeArea(area: SaveActionArea | undefined): string {
+  if (!area) return 'targeted';
+  switch (area.shape) {
+    case 'cone':
+      return `${area.lengthCells * FEET_PER_CELL}-ft cone`;
+    case 'line':
+      return `${area.lengthCells * FEET_PER_CELL}-ft line`;
+    case 'burst':
+      return `${area.radiusCells * FEET_PER_CELL}-ft radius`;
+    case 'cube':
+      return `${area.sizeCells * FEET_PER_CELL}-ft cube`;
+    default:
+      return 'area';
+  }
+}
 
 interface CombatPanelProps {
   state: SceneState;
@@ -15,6 +35,14 @@ interface CombatPanelProps {
   onTargetChange: (targetId: string) => void;
   onAttack: () => void;
   onRunRound: () => void;
+  /** Save-based area actions (breath weapons / AoE) the attacker can use. */
+  saveActions: MonsterSaveAction[];
+  /** Currently chosen area action name (aimed at `targetId`). */
+  selectedSaveActionName: string;
+  onSaveActionChange: (name: string) => void;
+  onAreaEffect: () => void;
+  /** How many tokens the chosen area action would catch, aimed at the target. */
+  areaPreviewCount: number;
   log: string[];
 }
 
@@ -32,6 +60,11 @@ export function CombatPanel({
   onTargetChange,
   onAttack,
   onRunRound,
+  saveActions,
+  selectedSaveActionName,
+  onSaveActionChange,
+  onAreaEffect,
+  areaPreviewCount,
   log,
 }: CombatPanelProps) {
   const attacker = attackerId ? state.tokens[attackerId] : undefined;
@@ -42,6 +75,8 @@ export function CombatPanel({
   );
   const canAttack = attackerReady && Boolean(targetId) && combatReadyIds.has(targetId);
   const hasCombatants = combatReadyIds.size >= 2;
+  const aimName = targetId ? state.tokens[targetId]?.name : undefined;
+  const canUnleash = attackerReady && Boolean(selectedSaveActionName) && Boolean(targetId);
 
   return (
     <div className="rounded-lg border bg-card p-3">
@@ -93,6 +128,46 @@ export function CombatPanel({
             Attack
           </Button>
         </div>
+
+        {saveActions.length > 0 && (
+          <div className="space-y-2 border-t pt-2">
+            <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+              <Flame className="h-3.5 w-3.5" /> Area / Breath
+            </div>
+            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
+              <Select
+                aria-label="Area action"
+                value={selectedSaveActionName}
+                onChange={(event) => onSaveActionChange(event.target.value)}
+                disabled={!attackerReady}
+              >
+                <option value="">Choose area action…</option>
+                {saveActions.map((action) => (
+                  <option key={action.name} value={action.name}>
+                    {action.name} · DC {action.saveDC} {action.saveAbility.toUpperCase()} ·{' '}
+                    {describeArea(action.area)}
+                  </option>
+                ))}
+              </Select>
+              <Button size="sm" variant="outline" disabled={!canUnleash} onClick={onAreaEffect}>
+                <Flame className="mr-1.5 h-4 w-4" />
+                Unleash
+              </Button>
+            </div>
+            {selectedSaveActionName && (
+              <div className="text-xs text-muted-foreground">
+                {targetId ? (
+                  <>
+                    Aimed at <span className="font-medium text-foreground">{aimName}</span> —{' '}
+                    {areaPreviewCount} creature{areaPreviewCount === 1 ? '' : 's'} in area.
+                  </>
+                ) : (
+                  'Choose a target to aim the area at.'
+                )}
+              </div>
+            )}
+          </div>
+        )}
 
         {log.length > 0 && (
           <ol className="mt-2 max-h-40 space-y-1 overflow-y-auto rounded-md border bg-muted/40 p-2 text-xs">

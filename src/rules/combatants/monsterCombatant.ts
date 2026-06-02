@@ -16,7 +16,7 @@
  */
 
 import type { Monster, Action } from '../../types/creatures/monsters';
-import type { DiceType } from '../../types/core/common';
+import type { AbilityScore, DiceType } from '../../types/core/common';
 import type { SceneCoordinate, SceneToken } from '../../types/core/scene';
 import { makeEffectId, type EffectInstance } from '../ir/types';
 
@@ -56,6 +56,18 @@ interface NormalizedAttack {
   damage: DamageClause[];
 }
 
+/**
+ * The geometric template a save-based action fills, in grid cells. Parsed from
+ * prose ("15-foot cone", "60-foot line", "20-foot-radius sphere", "10-foot
+ * cube"); this is what lets the UI aim/place the effect and select the N targets
+ * it catches, rather than applying it to a single creature.
+ */
+export type SaveActionArea =
+  | { shape: 'cone'; lengthCells: number }
+  | { shape: 'line'; lengthCells: number }
+  | { shape: 'burst'; radiusCells: number }
+  | { shape: 'cube'; sizeCells: number };
+
 /** A normalized save-based action (breath weapon / AoE): DC + save + damage. */
 interface NormalizedSaveAction {
   /** Ability the target saves with, lowercased (e.g. 'dex'). */
@@ -64,6 +76,8 @@ interface NormalizedSaveAction {
   /** When true (5e default for "half as much"), a success halves damage. */
   halfOnSave: boolean;
   damage: DamageClause[];
+  /** The area template, when the prose names one (cone/line/sphere/cube). */
+  area?: SaveActionArea;
 }
 
 /**
@@ -146,6 +160,40 @@ const SAVE_ABILITY_WORDS: Record<string, string> = {
   charisma: 'cha',
 };
 
+/** Feet → grid cells, rounded to the nearest cell (minimum one). */
+function feetToCells(feet: number): number {
+  return Math.max(1, Math.round(feet / FEET_PER_CELL));
+}
+
+/**
+ * Parse the area template a save-based action fills from its prose. Recognizes
+ * the four shapes SRD breath weapons / AoE actions use: cone, line, sphere
+ * (radius/within), and cube. Returns undefined when no template is named — the
+ * caller then treats the action as affecting only the aimed creature.
+ */
+export function parseAreaFromDescription(description: string): SaveActionArea | undefined {
+  if (!description) return undefined;
+
+  const cone = /(\d+)[- ]?foot[- ]?cone/i.exec(description);
+  if (cone) return { shape: 'cone', lengthCells: feetToCells(Number(cone[1])) };
+
+  const line = /(\d+)[- ]?foot[- ](?:long[, -]*(?:\d+[- ]?foot[- ]?wide[, -]*)?)?line/i.exec(
+    description
+  );
+  if (line) return { shape: 'line', lengthCells: feetToCells(Number(line[1])) };
+
+  const cube = /(\d+)[- ]?foot[- ]?cube/i.exec(description);
+  if (cube) return { shape: 'cube', sizeCells: feetToCells(Number(cube[1])) };
+
+  const radius = /(\d+)[- ]?foot[- ]?(?:radius|sphere)/i.exec(description);
+  if (radius) return { shape: 'burst', radiusCells: feetToCells(Number(radius[1])) };
+
+  const within = /within (\d+)\s*(?:feet|ft)/i.exec(description);
+  if (within) return { shape: 'burst', radiusCells: feetToCells(Number(within[1])) };
+
+  return undefined;
+}
+
 /**
  * Parse a save-based action (breath weapon / area effect) from SRD prose, e.g.
  * "Each creature in that area must make a DC 11 Dexterity saving throw, taking
@@ -179,6 +227,7 @@ export function parseSaveActionFromDescription(
     // negates on a success.
     halfOnSave: /half as much/i.test(description),
     damage,
+    area: parseAreaFromDescription(description),
   };
 }
 
@@ -222,6 +271,9 @@ export function normalizeSaveAction(action: Action): NormalizedSaveAction | unde
         modifier: d.dice.modifier ?? 0,
         type: d.type,
       })),
+      // The area template is geometry, orthogonal to the structured DC/damage —
+      // it always comes from the description prose.
+      area: parseAreaFromDescription(action.description),
     };
   }
   return parseSaveActionFromDescription(action.description);
@@ -272,6 +324,8 @@ export interface MonsterSaveAction {
   saveDC: number;
   halfOnSave: boolean;
   damageEffects: EffectInstance[];
+  /** The area template (cone/line/sphere/cube) when the prose names one. */
+  area?: SaveActionArea;
 }
 
 export function monsterSaveActions(monster: Monster): MonsterSaveAction[] {
@@ -285,9 +339,24 @@ export function monsterSaveActions(monster: Monster): MonsterSaveAction[] {
       saveDC: normalized.saveDC,
       halfOnSave: normalized.halfOnSave,
       damageEffects: saveActionDamageEffects(monster, action),
+      area: normalized.area,
     });
   }
   return result;
+}
+
+/**
+ * A creature's saving-throw bonus for one ability. A monster's `savingThrows`
+ * entry (when present) is its TOTAL save bonus (proficiency already folded in);
+ * otherwise it's the bare ability modifier. Used to seed each participant's save
+ * against an area effect.
+ */
+export function monsterSaveBonus(monster: Monster, ability: string): number {
+  const key = ability.toLowerCase() as AbilityScore;
+  const explicit = monster.savingThrows?.[key];
+  if (typeof explicit === 'number') return explicit;
+  const score = monster.abilities[key];
+  return typeof score === 'number' ? Math.floor((score - 10) / 2) : 0;
 }
 
 /** Reach (in grid cells) of a structured action; melee defaults to 1 cell. */

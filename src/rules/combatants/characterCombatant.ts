@@ -134,6 +134,25 @@ function normalizeSheet(document: CharacterDocument<SystemDataModel>): Normalize
   };
 }
 
+/**
+ * A character's saving-throw bonus for one ability (e.g. 'dex'), for when the PC
+ * is a participant in an area effect. Ability modifier plus the proficiency bonus
+ * when the sheet marks that save proficient (the 5e model; an honest baseline for
+ * the d20-legacy systems pending their distinct save-progression math).
+ */
+export function characterSaveBonus(
+  document: CharacterDocument<SystemDataModel>,
+  ability: string
+): number {
+  const system = document.system as Record<string, unknown>;
+  const abilities = (system.baseAttributes as Record<string, number>) ?? {};
+  const mod = abilityMod(num(abilities[ability.toLowerCase()], 10));
+  const level = Math.max(1, num(system.level, 1));
+  const profs = (system.savingThrowProficiencies as string[] | undefined) ?? [];
+  const proficient = profs.some((p) => p.toLowerCase().startsWith(ability.toLowerCase()));
+  return mod + (proficient ? profBonus(level) : 0);
+}
+
 /** Which equipped items are "active" for combat, per the system's convention. */
 function activeWeapons(systemId: GameSystemId, equipment: EquippedItem[]): MagicBonusItem[] {
   const isActive = (item: EquippedItem): boolean => {

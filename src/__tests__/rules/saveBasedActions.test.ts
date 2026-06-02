@@ -5,6 +5,7 @@ import { createSeededRng } from '../../scene/seededRng';
 import {
   monsterSaveActions,
   normalizeSaveAction,
+  parseAreaFromDescription,
   parseSaveActionFromDescription,
   resolveAreaEffect,
   saveActionDamageEffects,
@@ -53,6 +54,42 @@ describe('parseSaveActionFromDescription', () => {
   });
 });
 
+describe('parseAreaFromDescription — every AoE template, in grid cells', () => {
+  it('cone (15 ft → 3 cells)', () => {
+    expect(parseAreaFromDescription('exhales fire in a 15-foot cone.')).toEqual({
+      shape: 'cone',
+      lengthCells: 3,
+    });
+  });
+  it('line, even with a width clause (90-foot-long, 5-foot-wide line)', () => {
+    expect(parseAreaFromDescription('lightning in a 90-foot-long, 5-foot-wide line.')).toEqual({
+      shape: 'line',
+      lengthCells: 18,
+    });
+  });
+  it('sphere / radius (20-foot-radius → 4 cells)', () => {
+    expect(parseAreaFromDescription('a 20-foot-radius sphere centered on a point')).toEqual({
+      shape: 'burst',
+      radiusCells: 4,
+    });
+  });
+  it('cube (10-foot cube → 2 cells)', () => {
+    expect(parseAreaFromDescription('frost fills a 10-foot cube')).toEqual({
+      shape: 'cube',
+      sizeCells: 2,
+    });
+  });
+  it('"within N feet" falls back to a burst radius', () => {
+    expect(parseAreaFromDescription('each creature within 10 feet must save')).toEqual({
+      shape: 'burst',
+      radiusCells: 2,
+    });
+  });
+  it('returns undefined when no template is named', () => {
+    expect(parseAreaFromDescription('one creature the dragon can see')).toBeUndefined();
+  });
+});
+
 describe('normalizeSaveAction — structured fields are authoritative', () => {
   it('uses structured savingThrow + damage when present', () => {
     const result = normalizeSaveAction({
@@ -81,6 +118,8 @@ describe('a real shipped dragon breathes fire end to end (AoE resolver)', () => 
     expect(breath!.saveAbility).toBe('dex');
     expect(breath!.saveDC).toBe(11);
     expect(breath!.halfOnSave).toBe(true);
+    // The 15-foot cone surfaces as a 3-cell cone template for aiming.
+    expect(breath!.area).toEqual({ shape: 'cone', lengthCells: 3 });
 
     // Feed the breath's damage effects into the area/save resolver.
     const participants: SaveParticipant[] = [

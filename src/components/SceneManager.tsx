@@ -14,10 +14,17 @@ import {
   resolveSceneAction,
 } from '../scene/runtime';
 import {
+  areaShapeForAction,
   buildCharacterCombatant,
   buildMonsterCombatant,
+  characterSaveBonus,
+  monsterSaveActions,
+  monsterSaveBonus,
+  resolveSceneAreaEffect,
   resolveSceneAttack,
   runSceneRound,
+  tokensInArea,
+  type MonsterSaveAction,
   type ResolveCombatStats,
 } from '../rules';
 import type { Campaign } from '../types/core/campaign';
@@ -98,6 +105,7 @@ export function SceneManager({
   const [initiativeValues, setInitiativeValues] = useState<Record<string, string>>({});
   const [actionIssues, setActionIssues] = useState<string[]>([]);
   const [combatTargetId, setCombatTargetId] = useState('');
+  const [combatSaveActionName, setCombatSaveActionName] = useState('');
   const [combatLog, setCombatLog] = useState<string[]>([]);
   // Per-click nonce so a missed attack (which appends no event) still advances
   // the RNG stream — otherwise re-clicking Attack would reproduce the same miss.
@@ -305,6 +313,7 @@ export function SceneManager({
           damageEffects: built.damageEffects,
           armorClass: built.armorClass,
           reach: built.reach,
+          saveBonus: (ability: string) => monsterSaveBonus(monster, ability),
         };
       }
       if (token.kind === 'character' && token.refId) {
@@ -317,6 +326,7 @@ export function SceneManager({
           damageEffects: built.combatant.damageEffects,
           armorClass: built.combatant.armorClass,
           reach: built.combatant.reach,
+          saveBonus: (ability: string) => characterSaveBonus(doc, ability),
         };
       }
       return undefined;
@@ -375,6 +385,56 @@ export function SceneManager({
     events.forEach((event) => onAppendSceneEvent(selectedScene.id, event));
     setCombatLog((current) => [...outcome.log.slice().reverse(), ...current].slice(0, 30));
     setActionIssues([]);
+  };
+
+  // Save-based area actions (breath weapons / AoE) the SELECTED token can use,
+  // resolved from its monster statblock. (PC area spells are a later adapter.)
+  const attackerSaveActions = useMemo<MonsterSaveAction[]>(() => {
+    if (!state || !selectedTokenId) return [];
+    const token = state.tokens[selectedTokenId];
+    if (token?.kind !== 'monster' || !token.refId) return [];
+    const monster = monstersById.get(token.refId);
+    return monster ? monsterSaveActions(monster) : [];
+  }, [state, selectedTokenId, monstersById]);
+
+  const selectedSaveAction = useMemo(
+    () => attackerSaveActions.find((action) => action.name === combatSaveActionName),
+    [attackerSaveActions, combatSaveActionName]
+  );
+
+  // Live count of tokens the chosen area action would catch, aimed at the current
+  // target — drives the "N creatures in area" hint before committing.
+  const areaPreviewCount = useMemo(() => {
+    if (!state || !selectedTokenId || !selectedSaveAction || !combatTargetId) return 0;
+    const source = state.tokens[selectedTokenId];
+    const aim = state.tokens[combatTargetId];
+    if (!source || !aim) return 0;
+    const shape = areaShapeForAction(selectedSaveAction.area, source.position, aim.position);
+    return tokensInArea(state, shape).filter(
+      (token) => token.id !== selectedTokenId && (token.hp ? token.hp.current > 0 : false)
+    ).length;
+  }, [state, selectedTokenId, selectedSaveAction, combatTargetId]);
+
+  const handleAreaEffect = () => {
+    if (!selectedScene || !state || !selectedTokenId || !selectedSaveAction || !combatTargetId) {
+      return;
+    }
+    const aim = state.tokens[combatTargetId];
+    if (!aim) return;
+
+    const outcome = resolveSceneAreaEffect({
+      state,
+      sourceId: selectedTokenId,
+      action: selectedSaveAction,
+      aim: aim.position,
+      resolveStats: resolveCombatStats,
+      seed: `${selectedScene.initialState.seed}:area:${selectedScene.events.length}:${attackNonce.current++}`,
+      cause: selectedSaveAction.name,
+    });
+    if (outcome.intent) {
+      emitSceneAction(selectedScene, outcome.intent);
+    }
+    setCombatLog((current) => [...outcome.log, ...current].slice(0, 30));
   };
 
   const handleCellActivate = (position: { x: number; y: number }) => {
@@ -884,6 +944,11 @@ export function SceneManager({
                     onTargetChange={setCombatTargetId}
                     onAttack={handleCombatAttack}
                     onRunRound={handleRunRound}
+                    saveActions={attackerSaveActions}
+                    selectedSaveActionName={selectedSaveAction?.name ?? ''}
+                    onSaveActionChange={setCombatSaveActionName}
+                    onAreaEffect={handleAreaEffect}
+                    areaPreviewCount={areaPreviewCount}
                     log={combatLog}
                   />
                 </div>
