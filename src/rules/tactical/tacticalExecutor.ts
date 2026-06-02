@@ -424,9 +424,15 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
       rule: input.diagonalRule,
     });
 
-    // If the move closes to reach, attack from the new position (move + strike).
+    // If the move closes to reach, attack FROM the new cell: cover and flanking
+    // are position-dependent, so the strike must see the destination, not the
+    // pre-move position. (The roll is seeded by token ids, so it is unchanged.)
     if (move.inReach) {
-      const strike = resolveStrikes(input, nearestTarget);
+      const movedInput = {
+        ...input,
+        actor: { ...input.actor, position: move.destination },
+      };
+      const strike = resolveStrikes(movedInput, nearestTarget);
       return {
         actorId: input.actor.tokenId,
         decision: 'attack',

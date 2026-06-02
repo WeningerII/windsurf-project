@@ -147,4 +147,45 @@ describe('the executor applies flanking to the effective defense', () => {
     });
     expect(turn.resolution?.targetValue).toBe(15);
   });
+
+  it('a charge into a flank applies it from the destination, not the origin', () => {
+    // Charger far from the foe; an ally sits beyond the foe. After moving to the
+    // near side, the actor and ally bracket the foe → flanking from the new cell.
+    const charger: TacticalActor = {
+      tokenId: 'A',
+      faction: 'party',
+      position: { x: 0, y: 0 },
+      attackEffects: [atk(5)],
+      damageEffects: [],
+      reach: 1,
+      speed: 6,
+    };
+    const farFoe: TacticalTarget = {
+      tokenId: 'T',
+      faction: 'monsters',
+      position: { x: 5, y: 0 },
+      armorClass: 15,
+    };
+    const beyondAlly: TacticalTarget = {
+      tokenId: 'B',
+      faction: 'party',
+      position: { x: 6, y: 0 },
+      armorClass: 12,
+    };
+    const turn = executeTacticalTurn({
+      actor: charger,
+      targets: [farFoe, beyondAlly],
+      seed: 'charge',
+      systemId: 'dnd-3.5e',
+      // Wall the other cells adjacent to the foe so the only approach is (4,0),
+      // the cell opposite the ally. These walls don't sit between (4,0) and the
+      // foe, so they grant no cover on the strike itself.
+      isBlocked: (c) => c.x === 4 && c.y !== 0,
+    });
+    expect(turn.decision).toBe('attack');
+    expect(turn.moveTo).toEqual({ x: 4, y: 0 }); // ended adjacent, opposite the ally
+    // Flanking is read from (4,0): had the strike used the origin (0,0), it would
+    // have been out of reach and not flanked, leaving AC at 15.
+    expect(turn.resolution?.targetValue).toBe(13);
+  });
 });
