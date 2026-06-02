@@ -26,6 +26,18 @@ export type { AttackResolution, AttackResolutionInput } from './resolver/attackR
 export { resolveAttack } from './resolver/attackResolution';
 
 export type {
+  ChallengeAttempt,
+  ChallengeParticipant,
+  CheckInput,
+  CheckOutcome,
+  CheckResult,
+  CheckRollMode,
+  SkillChallengeInput,
+  SkillChallengeResult,
+} from './resolver/checkResolution';
+export { resolveCheck, resolveSkillChallenge } from './resolver/checkResolution';
+
+export type {
   DaggerheartAttackInput,
   DaggerheartAttackResult,
   DaggerheartThresholds,
