@@ -66,6 +66,8 @@ export interface SceneCombatStats {
   armorClass: number;
   /** Reach in grid cells (melee = 1). */
   reach: number;
+  /** Initiative modifier (Dexterity / Agility / trait), for rolling initiative. */
+  initiativeBonus?: number;
   /** Movement budget in grid cells per turn (defaults applied when absent). */
   speed?: number;
   critOn?: number;

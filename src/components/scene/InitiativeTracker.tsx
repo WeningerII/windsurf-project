@@ -1,4 +1,4 @@
-import { RotateCcw, Swords } from 'lucide-react';
+import { Dices, RotateCcw, Swords } from 'lucide-react';
 import type { SceneToken } from '../../types/core/scene';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
@@ -9,15 +9,18 @@ interface InitiativeTrackerProps {
   onInitiativeChange: (tokenId: string, value: string) => void;
   onAdvanceTurn: () => void;
   onSetOrder: () => void;
+  /** Roll initiative (d20 + modifier) for every combat-ready token. */
+  onRollInitiative?: () => void;
 }
 
-/** Per-token initiative inputs, "Set Order", and "Next Turn". */
+/** Per-token initiative inputs, "Roll", "Set Order", and "Next Turn". */
 export function InitiativeTracker({
   tokens,
   initiativeValues,
   onInitiativeChange,
   onAdvanceTurn,
   onSetOrder,
+  onRollInitiative,
 }: InitiativeTrackerProps) {
   const tokenList = Object.values(tokens);
   const hasTokens = tokenList.length > 0;
@@ -56,6 +59,18 @@ export function InitiativeTracker({
           <Swords className="mr-1.5 h-4 w-4" />
           Set Order
         </Button>
+        {onRollInitiative && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full"
+            disabled={!hasTokens}
+            onClick={onRollInitiative}
+          >
+            <Dices className="mr-1.5 h-4 w-4" />
+            Roll Initiative
+          </Button>
+        )}
       </div>
     </div>
   );

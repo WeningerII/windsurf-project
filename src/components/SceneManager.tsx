@@ -29,6 +29,7 @@ import {
   resolveSceneAttack,
   resolveSceneChallenge,
   resolveSceneSocialAction,
+  rollInitiative,
   runSceneRound,
   socialSkillId,
   tokensInArea,
@@ -52,6 +53,7 @@ import type {
   SceneTokenKind,
 } from '../types/core/scene';
 import { systemRegistry } from '../registry';
+import { createSeededRng } from '../scene/seededRng';
 import { loadMonstersForSystem, loadSpellsForSystem } from '../utils/dataLoader';
 import type { Spell } from '../types/magic/spells';
 import { exportScenes, importScenes } from '../utils/sceneStorage';
@@ -365,6 +367,7 @@ export function SceneManager({
           armorClass: built.armorClass,
           reach: built.reach,
           speed: Math.max(1, Math.floor((monster.speed?.walk ?? 30) / 5)),
+          initiativeBonus: Math.floor(((monster.abilities?.dex ?? 10) - 10) / 2),
           attacksPerTurn: built.attacksPerTurn,
           damageDefenses: {
             resistant: monster.damageResistances,
@@ -386,6 +389,7 @@ export function SceneManager({
             armorClass: mm.parry,
             reach: mm.reach,
             speed: 6,
+            initiativeBonus: (doc.system as { abilities?: { agi?: number } }).abilities?.agi ?? 0,
             toughness: mm.toughness,
             effectRank: mm.effectRank,
             saveBonus: (ability: string) => characterSaveBonus(doc, ability),
@@ -403,6 +407,8 @@ export function SceneManager({
             armorClass: dh.evasion,
             reach: dh.reach,
             speed: 6,
+            initiativeBonus:
+              (doc.system as { attributes?: { agility?: number } }).attributes?.agility ?? 0,
             thresholds: dh.thresholds,
             saveBonus: (ability: string) => characterSaveBonus(doc, ability),
           };
@@ -416,6 +422,11 @@ export function SceneManager({
           armorClass: built.combatant.armorClass,
           reach: built.combatant.reach,
           speed: Math.max(1, Math.floor((typeof docSpeed === 'number' ? docSpeed : 30) / 5)),
+          initiativeBonus: Math.floor(
+            (((doc.system as { baseAttributes?: { dex?: number } }).baseAttributes?.dex ?? 10) -
+              10) /
+              2
+          ),
           saveBonus: (ability: string) => characterSaveBonus(doc, ability),
         };
       }
@@ -796,6 +807,31 @@ export function SceneManager({
       type: 'set-initiative',
       entries,
       activeTokenId: entries[0]?.tokenId,
+    });
+  };
+
+  // Roll initiative for every combat-ready token (d20 + its initiative modifier),
+  // order them highest-first, and update both the inputs and the scene order.
+  const handleRollInitiative = () => {
+    if (!selectedScene || !state) return;
+    const combatants = Object.values(state.tokens)
+      .filter((token) => combatReadyIds.has(token.id))
+      .map((token) => ({
+        tokenId: token.id,
+        modifier: resolveCombatStats(token)?.initiativeBonus ?? 0,
+      }));
+    if (combatants.length === 0) return;
+    const seed = `${selectedScene.initialState.seed}:initiative:${selectedScene.events.length}:${attackNonce.current++}`;
+    const rolled = rollInitiative(combatants, createSeededRng(seed));
+    setInitiativeValues((current) => {
+      const next = { ...current };
+      rolled.forEach((entry) => (next[entry.tokenId] = String(entry.total)));
+      return next;
+    });
+    emitSceneAction(selectedScene, {
+      type: 'set-initiative',
+      entries: rolled.map((entry) => ({ tokenId: entry.tokenId, value: entry.total })),
+      activeTokenId: rolled[0]?.tokenId,
     });
   };
 
@@ -1199,6 +1235,7 @@ export function SceneManager({
                     }
                     onAdvanceTurn={handleAdvanceTurn}
                     onSetOrder={handleSetInitiative}
+                    onRollInitiative={handleRollInitiative}
                   />
 
                   <CombatPanel

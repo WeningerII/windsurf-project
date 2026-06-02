@@ -5,7 +5,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { TokenPanel } from '../../components/scene/TokenPanel';
 import { CombatPanel } from '../../components/scene/CombatPanel';
-import type { SceneState } from '../../types/core/scene';
+import { InitiativeTracker } from '../../components/scene/InitiativeTracker';
+import type { SceneState, SceneToken } from '../../types/core/scene';
 
 /**
  * Real-DOM checks for the two scene controls added for running a campaign: the
@@ -163,5 +164,45 @@ describe('CombatPanel — 5e roll mode', () => {
       />
     );
     expect(screen.queryByLabelText('Attack roll mode')).not.toBeInTheDocument();
+  });
+});
+
+describe('InitiativeTracker — roll', () => {
+  const token = (id: string): SceneToken => ({
+    id,
+    name: id,
+    kind: 'character',
+    position: { x: 0, y: 0 },
+    size: 1,
+  });
+
+  it('offers a Roll Initiative button that fires the handler', async () => {
+    const user = userEvent.setup();
+    const onRollInitiative = vi.fn();
+    render(
+      <InitiativeTracker
+        tokens={{ a: token('a'), b: token('b') }}
+        initiativeValues={{}}
+        onInitiativeChange={vi.fn()}
+        onAdvanceTurn={vi.fn()}
+        onSetOrder={vi.fn()}
+        onRollInitiative={onRollInitiative}
+      />
+    );
+    await user.click(screen.getByRole('button', { name: /roll initiative/i }));
+    expect(onRollInitiative).toHaveBeenCalled();
+  });
+
+  it('omits the roll button when no handler is provided', () => {
+    render(
+      <InitiativeTracker
+        tokens={{ a: token('a') }}
+        initiativeValues={{}}
+        onInitiativeChange={vi.fn()}
+        onAdvanceTurn={vi.fn()}
+        onSetOrder={vi.fn()}
+      />
+    );
+    expect(screen.queryByRole('button', { name: /roll initiative/i })).not.toBeInTheDocument();
   });
 });
