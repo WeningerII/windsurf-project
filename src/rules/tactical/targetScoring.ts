@@ -34,6 +34,8 @@ export interface TacticalActor {
   /** Reach in grid cells (melee = 1). Undefined means unlimited (ranged). */
   reach?: number;
   critOn?: number;
+  /** Movement budget in grid cells per turn (for closing distance). */
+  speed?: number;
   /** Save-based area actions (breath / spells) this combatant may unleash. */
   areaActions?: readonly SceneAreaAction[];
 }

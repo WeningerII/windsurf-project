@@ -360,6 +360,7 @@ export function SceneManager({
           damageEffects: built.damageEffects,
           armorClass: built.armorClass,
           reach: built.reach,
+          speed: Math.max(1, Math.floor((monster.speed?.walk ?? 30) / 5)),
           saveBonus: (ability: string) => monsterSaveBonus(monster, ability),
         };
       }
@@ -368,11 +369,13 @@ export function SceneManager({
         if (!doc) return undefined;
         const built = buildCharacterCombatant(doc, { tokenId: token.id, position: token.position });
         if (!built.supported) return undefined;
+        const docSpeed = (doc.system as { speed?: number }).speed;
         return {
           attackEffects: built.combatant.attackEffects,
           damageEffects: built.combatant.damageEffects,
           armorClass: built.combatant.armorClass,
           reach: built.combatant.reach,
+          speed: Math.max(1, Math.floor((typeof docSpeed === 'number' ? docSpeed : 30) / 5)),
           saveBonus: (ability: string) => characterSaveBonus(doc, ability),
         };
       }

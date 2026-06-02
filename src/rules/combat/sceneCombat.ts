@@ -54,6 +54,8 @@ export interface SceneCombatStats {
   armorClass: number;
   /** Reach in grid cells (melee = 1). */
   reach: number;
+  /** Movement budget in grid cells per turn (defaults applied when absent). */
+  speed?: number;
   critOn?: number;
   /**
    * This combatant's saving-throw bonus for an ability (e.g. 'dex'), used when
@@ -121,6 +123,7 @@ export function buildSceneCombatants(
       attackEffects: stats.attackEffects,
       damageEffects: stats.damageEffects,
       reach: stats.reach,
+      speed: stats.speed,
       critOn: stats.critOn,
       areaActions: areaActions && areaActions.length > 0 ? areaActions : undefined,
       auras: auras && auras.length > 0 ? auras : undefined,
@@ -357,13 +360,14 @@ export function runSceneRound(params: {
       return `${nameOf(turn.tokenId)} unleashes ${turn.turn.chosenAreaActionName} on ${caught}.`;
     }
     if (turn.turn.decision === 'move-to-engage') {
-      return `${nameOf(turn.tokenId)} moves to engage ${nameOf(turn.turn.chosenTargetId ?? '')}.`;
+      return `${nameOf(turn.tokenId)} moves toward ${nameOf(turn.turn.chosenTargetId ?? '')}.`;
     }
     const target = nameOf(turn.turn.chosenTargetId ?? '');
     const res = turn.turn.resolution;
     if (!res) return `${nameOf(turn.tokenId)} acts.`;
-    if (!res.isHit) return `${nameOf(turn.tokenId)} misses ${target}.`;
-    return `${nameOf(turn.tokenId)} ${res.isCriticalHit ? 'crits' : 'hits'} ${target} for ${res.damage}.`;
+    const moved = turn.turn.moveTo ? 'moves in and ' : '';
+    if (!res.isHit) return `${nameOf(turn.tokenId)} ${moved}misses ${target}.`;
+    return `${nameOf(turn.tokenId)} ${moved}${res.isCriticalHit ? 'crits' : 'hits'} ${target} for ${res.damage}.`;
   };
   const log = result.turns.flatMap((turn) => {
     const lines: string[] = [];

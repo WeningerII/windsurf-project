@@ -45,6 +45,8 @@ export interface RoundCombatant {
   damageEffects: readonly EffectInstance[];
   reach?: number;
   critOn?: number;
+  /** Movement budget in grid cells per turn. */
+  speed?: number;
   /** Save-based area actions this combatant may unleash (breath / spells). */
   areaActions?: readonly SceneAreaAction[];
   /** Recurring auras this combatant emits each round (e.g. a Balor's Fire Aura). */
@@ -90,15 +92,16 @@ export interface RunRoundInput {
   systemId?: string;
 }
 
-function toActor(combatant: RoundCombatant): TacticalActor {
+function toActor(combatant: RoundCombatant, position: SceneCoordinate): TacticalActor {
   return {
     tokenId: combatant.tokenId,
     faction: combatant.faction,
-    position: combatant.position,
+    position,
     attackEffects: combatant.attackEffects,
     damageEffects: combatant.damageEffects,
     reach: combatant.reach,
     critOn: combatant.critOn,
+    speed: combatant.speed,
     areaActions: combatant.areaActions,
   };
 }
@@ -166,11 +169,15 @@ function pulseAuras(params: {
   return intents;
 }
 
-function toTarget(combatant: RoundCombatant, currentHp: number): TacticalTarget {
+function toTarget(
+  combatant: RoundCombatant,
+  currentHp: number,
+  position: SceneCoordinate
+): TacticalTarget {
   return {
     tokenId: combatant.tokenId,
     faction: combatant.faction,
-    position: combatant.position,
+    position,
     armorClass: combatant.armorClass,
     hp: { current: currentHp, max: combatant.hp.max },
     saveBonus: combatant.saveBonus,
@@ -187,8 +194,10 @@ function toTarget(combatant: RoundCombatant, currentHp: number): TacticalTarget 
 export function runCombatRound(input: RunRoundInput): RoundResult {
   // Working HP starts from each combatant's current HP.
   const hp: Record<string, number> = {};
+  const pos: Record<string, SceneCoordinate> = {};
   for (const combatant of input.order) {
     hp[combatant.tokenId] = combatant.hp.current;
+    pos[combatant.tokenId] = { ...combatant.position };
   }
 
   const byId = new Map(input.order.map((combatant) => [combatant.tokenId, combatant]));
@@ -226,13 +235,14 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
     const startAuras = pulseAuras({ owner: combatant, trigger: 'start-of-turn', ...auraOpts });
     startAuras.forEach((intent) => intents.push(intent));
 
-    // The participant set: every OTHER living combatant, with up-to-date HP.
+    // The participant set: every OTHER living combatant, with up-to-date HP and
+    // current (post-movement) position.
     const targets: TacticalTarget[] = input.order
       .filter((other) => other.tokenId !== combatant.tokenId && hp[other.tokenId] > 0)
-      .map((other) => toTarget(other, hp[other.tokenId]));
+      .map((other) => toTarget(other, hp[other.tokenId], pos[other.tokenId]));
 
     const turn = executeTacticalTurn({
-      actor: toActor(combatant),
+      actor: toActor(combatant, pos[combatant.tokenId]),
       targets,
       seed: `${input.seed}::round${input.round}::turn${turnIndex}`,
       isBlocked: input.isBlocked,
@@ -240,6 +250,13 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
       saveModel: input.saveModel,
       systemId: input.systemId,
     });
+
+    // Apply movement first: update the working position and emit a move event so
+    // later turns (and the scene) see the combatant in its new cell.
+    if (turn.moveTo) {
+      pos[combatant.tokenId] = { ...turn.moveTo };
+      intents.push({ type: 'move-token', tokenId: combatant.tokenId, position: turn.moveTo });
+    }
 
     // Fold this turn's damage into working HP so later turns see it.
     if (turn.intent && turn.intent.type === 'apply-damage') {

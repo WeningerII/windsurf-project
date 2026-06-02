@@ -146,6 +146,9 @@ export type {
 } from './tactical/roundDriver';
 export { isRoundConclusive, runCombatRound } from './tactical/roundDriver';
 
+export type { MoveResult } from './tactical/pathfinding';
+export { moveToward } from './tactical/pathfinding';
+
 export type { MonsterCombatant, MonsterSaveAction } from './combatants/monsterCombatant';
 export {
   buildMonsterCombatant,

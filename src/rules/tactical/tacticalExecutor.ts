@@ -24,6 +24,7 @@ import {
 } from '../resolver/participantResolution';
 import { areaEffectToDamageIntent, attackToDamageIntent } from '../resolver/sceneCombat';
 import { computeAreaParticipants, type SceneAreaAction } from '../resolver/areaParticipants';
+import { moveToward } from './pathfinding';
 import type { BlockPredicate } from '../resolver/lineOfEffect';
 import type { DiagonalRule } from '../resolver/areaTargeting';
 import {
@@ -67,6 +68,8 @@ export interface TacticalTurnResult {
   areaAim?: SceneCoordinate;
   /** Token ids the area action caught. */
   areaCaughtIds?: string[];
+  /** The cell the actor moved to this turn (when it closed distance). */
+  moveTo?: SceneCoordinate;
   /** The scene action to apply, when damage was dealt. */
   intent?: SceneActionIntent;
   /** Why this decision was reached. */
@@ -196,13 +199,56 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
 
   const reachable = scored.find((target) => target.inReach);
   if (!reachable) {
+    // Out of reach: actually move toward the best target, around walls and bodies.
     const nearest = scored[0];
+    const nearestTarget = input.targets.find((t) => t.tokenId === nearest.tokenId)!;
+    const reach = input.actor.reach ?? 1;
+    const occupied: BlockPredicate = (cell) =>
+      input.targets.some(
+        (t) => t.tokenId !== nearest.tokenId && t.position.x === cell.x && t.position.y === cell.y
+      );
+    const move = moveToward({
+      from: input.actor.position,
+      target: nearestTarget.position,
+      speed: input.actor.speed ?? 6,
+      reach,
+      isBlocked: input.isBlocked,
+      isOccupied: occupied,
+      rule: input.diagonalRule,
+    });
+
+    // If the move closes to reach, attack from the new position (move + strike).
+    if (move.inReach) {
+      const rng = participantRng(input.seed, input.actor.tokenId, nearest.tokenId);
+      const resolution = resolveAttack({
+        attackEffects: input.actor.attackEffects,
+        damageEffects: input.actor.damageEffects,
+        targetValue: nearestTarget.armorClass,
+        critOn: input.actor.critOn,
+        rng,
+      });
+      return {
+        actorId: input.actor.tokenId,
+        decision: 'attack',
+        scored,
+        chosenTargetId: nearest.tokenId,
+        moveTo: move.destination,
+        resolution,
+        intent: attackToDamageIntent(input.actor.tokenId, nearest.tokenId, resolution, input.cause),
+        rationale: `Moved ${move.cost} to engage ${nearest.tokenId}, then ${resolution.isHit ? `hit for ${resolution.damage}` : 'missed'}.`,
+      };
+    }
+
     return {
       actorId: input.actor.tokenId,
       decision: 'move-to-engage',
       scored,
       chosenTargetId: nearest.tokenId,
-      rationale: `Best target ${nearest.tokenId} is ${nearest.distance} cells away, beyond reach; close to engage.`,
+      moveTo: move.destination,
+      rationale:
+        move.cost > 0
+          ? `Closed ${move.cost} cells toward ${nearest.tokenId} (still out of reach).`
+          : `Cannot path toward ${nearest.tokenId}.`,
     };
   }
 
