@@ -55,6 +55,9 @@ export {
 export type { SceneSocialOutcome } from './social/sceneSocial';
 export { resolveSceneSocialAction, socialSkillId, tokenAttitude } from './social/sceneSocial';
 
+export type { SceneChallengeOutcome, TrapDamage } from './exploration/sceneChallenge';
+export { resolveSceneChallenge } from './exploration/sceneChallenge';
+
 export type {
   DaggerheartAttackInput,
   DaggerheartAttackResult,

@@ -16,6 +16,9 @@ interface SkillChallengePanelProps {
   onModifierChange: (value: string) => void;
   skill: string;
   onSkillChange: (value: string) => void;
+  /** Trap damage (e.g. "3d6") the party suffers if the challenge fails. */
+  trap: string;
+  onTrapChange: (value: string) => void;
   onAttempt: () => void;
   /** Result outcome ('success' | 'failure') once attempted, else undefined. */
   outcome?: 'success' | 'failure';
@@ -40,6 +43,8 @@ export function SkillChallengePanel({
   onModifierChange,
   skill,
   onSkillChange,
+  trap,
+  onTrapChange,
   onAttempt,
   outcome,
   log,
@@ -68,12 +73,20 @@ export function SkillChallengePanel({
           {party.length === 1 ? '' : 's'} contributing.
         </div>
 
-        <Input
-          aria-label="Challenge skill"
-          value={skill}
-          onChange={(event) => onSkillChange(event.target.value)}
-          placeholder="Skill (e.g. survival)"
-        />
+        <div className="grid grid-cols-2 gap-2">
+          <Input
+            aria-label="Challenge skill"
+            value={skill}
+            onChange={(event) => onSkillChange(event.target.value)}
+            placeholder="Skill (e.g. survival)"
+          />
+          <Input
+            aria-label="Trap damage on failure"
+            value={trap}
+            onChange={(event) => onTrapChange(event.target.value)}
+            placeholder="Trap on fail (3d6)"
+          />
+        </div>
         <div className="grid grid-cols-4 gap-2">
           <Input
             aria-label="Successes needed"

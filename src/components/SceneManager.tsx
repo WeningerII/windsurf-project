@@ -25,8 +25,8 @@ import {
   monsterSaveBonus,
   resolveSceneAreaEffect,
   resolveSceneAttack,
+  resolveSceneChallenge,
   resolveSceneSocialAction,
-  resolveSkillChallenge,
   runSceneRound,
   socialSkillId,
   tokensInArea,
@@ -131,6 +131,7 @@ export function SceneManager({
   const [challengeDC, setChallengeDC] = useState('15');
   const [challengeModifier, setChallengeModifier] = useState('0');
   const [challengeSkill, setChallengeSkill] = useState('');
+  const [challengeTrap, setChallengeTrap] = useState('');
   const [challengeLog, setChallengeLog] = useState<string[]>([]);
   const [challengeOutcome, setChallengeOutcome] = useState<'success' | 'failure' | undefined>();
   // Per-click nonce so a missed attack (which appends no event) still advances
@@ -552,8 +553,9 @@ export function SceneManager({
     emitSceneAction(selectedScene, { type: 'set-attitude', tokenId, attitude });
   };
 
-  // The party (every character token) attempts a group skill challenge. A
-  // transient group check — no token state changes — so it just logs the verdict.
+  // The party (every character token) attempts a group skill challenge. On
+  // failure a trap can spring, damaging the whole party (event-sourced) — the
+  // exploration consequence that makes a challenge change the scene.
   const handleAttemptChallenge = () => {
     if (!selectedScene || !state) return;
     // Each party member contributes its OWN skill modifier off its sheet (5e),
@@ -569,24 +571,19 @@ export function SceneManager({
       });
     if (participants.length === 0) return;
 
-    const result = resolveSkillChallenge({
-      systemId: state.systemId,
+    const outcome = resolveSceneChallenge({
+      state,
+      participants,
       dc: positiveIntegerOrDefault(challengeDC, 15),
       successesNeeded: positiveIntegerOrDefault(challengeSuccesses, 3),
       failuresAllowed: positiveIntegerOrDefault(challengeFailures, 3),
-      participants,
-      seed: `${selectedScene.initialState.seed}:challenge:${selectedScene.events.length}:${attackNonce.current++}`,
       skill: challengeSkill.trim() || undefined,
+      trap: parseDiceNotation(challengeTrap),
+      seed: `${selectedScene.initialState.seed}:challenge:${selectedScene.events.length}:${attackNonce.current++}`,
     });
-
-    const nameOf = (id: string): string => state.tokens[id]?.name ?? id;
-    const header = `Challenge ${result.outcome.toUpperCase()} — ${result.successes} success / ${result.failures} failure.`;
-    const lines = result.attempts.map(
-      (attempt) =>
-        `  ${nameOf(attempt.participantId)}: ${attempt.result.outcome} (rolled ${attempt.result.total}).`
-    );
-    setChallengeOutcome(result.outcome);
-    setChallengeLog([header, ...lines]);
+    if (outcome.intent) emitSceneAction(selectedScene, outcome.intent);
+    setChallengeOutcome(outcome.result.outcome);
+    setChallengeLog(outcome.log);
   };
 
   const handleCellActivate = (position: { x: number; y: number }) => {
@@ -1147,6 +1144,8 @@ export function SceneManager({
                     onModifierChange={setChallengeModifier}
                     skill={challengeSkill}
                     onSkillChange={setChallengeSkill}
+                    trap={challengeTrap}
+                    onTrapChange={setChallengeTrap}
                     onAttempt={handleAttemptChallenge}
                     outcome={challengeOutcome}
                     log={challengeLog}
@@ -1164,6 +1163,19 @@ export function SceneManager({
 function positiveIntegerOrDefault(value: string, fallback: number): number {
   const parsed = Number.parseInt(value, 10);
   return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
+}
+
+/** Parse dice notation like "3d6" or "2d8+2"; undefined when it doesn't match. */
+function parseDiceNotation(
+  notation: string
+): { count: number; faces: number; modifier: number } | undefined {
+  const match = /^\s*(\d+)\s*d\s*(\d+)\s*([+-]\s*\d+)?\s*$/i.exec(notation);
+  if (!match) return undefined;
+  return {
+    count: Number(match[1]),
+    faces: Number(match[2]),
+    modifier: match[3] ? Number(match[3].replace(/\s/g, '')) : 0,
+  };
 }
 
 function isMonsterSystemId(systemId: string): systemId is GameSystemId {
