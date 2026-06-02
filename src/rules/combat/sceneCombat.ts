@@ -54,6 +54,7 @@ import {
 import { sceneBlockPredicate, sceneMoveCost } from '../terrain/sceneTerrain';
 import { coverAcBonus, coverBetween } from '../resolver/lineOfEffect';
 import { flankToHitBonus, isFlanking } from '../tactical/flanking';
+import { collapseRollMode, statusAdvantage } from '../resolver/conditions';
 import type { AreaOfEffect } from '../../types/core/common';
 
 /** Combat stats for a token, resolved from its statblock or character sheet. */
@@ -169,6 +170,7 @@ export function buildSceneCombatants(
       toughness: stats.toughness,
       effectRank: stats.effectRank,
       damageDefenses: stats.damageDefenses,
+      statuses: token.statuses,
       conditions: token.conditions,
       areaActions: areaActions && areaActions.length > 0 ? areaActions : undefined,
       auras: auras && auras.length > 0 ? auras : undefined,
@@ -318,6 +320,17 @@ export function resolveSceneAttack(params: {
   }
 
   const armorClass = targetStats.armorClass + defenseBonus;
+  // 5e: fold the attacker's and target's conditions into advantage/disadvantage,
+  // combined with any manual choice (advantage and disadvantage cancel).
+  const is5e = state.systemId === 'dnd-5e-2014' || state.systemId === 'dnd-5e-2024';
+  const statusMode = is5e
+    ? statusAdvantage(attacker.statuses, target.statuses)
+    : { advantage: false, disadvantage: false };
+  const advantage = statusMode.advantage || params.rollMode === 'advantage';
+  const disadvantage = statusMode.disadvantage || params.rollMode === 'disadvantage';
+  // Only override when a source applies, so effect-derived modes survive.
+  const rollMode =
+    advantage || disadvantage ? collapseRollMode(advantage, disadvantage) : undefined;
   const resolution = resolveAttack({
     attackEffects: attackerStats.attackEffects,
     damageEffects: attackerStats.damageEffects,
@@ -326,7 +339,7 @@ export function resolveSceneAttack(params: {
     critModel: critModelForSystem(state.systemId),
     critMultiplier: attackerStats.critMultiplier,
     targetDefenses: targetStats.damageDefenses,
-    rollMode: params.rollMode,
+    rollMode,
     rng: participantRng(seed, attackerId, targetId),
   });
 

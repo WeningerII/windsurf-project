@@ -70,6 +70,8 @@ export interface RoundCombatant {
   toughness?: number;
   /** Damage resistances/immunities/vulnerabilities, applied per type after crit. */
   damageDefenses?: DamageDefenses;
+  /** Active named conditions (5e advantage/disadvantage on attacks). */
+  statuses?: readonly string[];
   /**
    * M&M condition track. HP-less M&M combatants ride a synthetic `hp` proxy
    * (1 = up, 0 = incapacitated); the real harm folds here so the round can
@@ -132,6 +134,7 @@ function toActor(combatant: RoundCombatant, position: SceneCoordinate): Tactical
     speed: combatant.speed,
     attacksPerTurn: combatant.attacksPerTurn,
     effectRank: combatant.effectRank,
+    statuses: combatant.statuses,
     areaActions: combatant.areaActions,
   };
 }
@@ -215,6 +218,7 @@ function toTarget(
     thresholds: combatant.thresholds,
     toughness: combatant.toughness,
     damageDefenses: combatant.damageDefenses,
+    statuses: combatant.statuses,
   };
 }
 

@@ -32,6 +32,7 @@ import { resolveMam3eAttack } from '../resolver/mam3eResolution';
 import { computeAreaParticipants, type SceneAreaAction } from '../resolver/areaParticipants';
 import { moveToward } from './pathfinding';
 import { flankToHitBonus, isFlanking } from './flanking';
+import { collapseRollMode, statusAdvantage } from '../resolver/conditions';
 import { coverAcBonus, coverBetween, type BlockPredicate } from '../resolver/lineOfEffect';
 import type { DiagonalRule } from '../resolver/areaTargeting';
 import {
@@ -267,6 +268,11 @@ function resolveStrike(
     };
   }
 
+  // 5e: the actor's and target's conditions become advantage/disadvantage.
+  const is5e = input.systemId === 'dnd-5e-2014' || input.systemId === 'dnd-5e-2024';
+  const status = is5e
+    ? statusAdvantage(actor.statuses, target.statuses)
+    : { advantage: false, disadvantage: false };
   const resolution = resolveAttack({
     attackEffects: actor.attackEffects,
     damageEffects: actor.damageEffects,
@@ -275,6 +281,11 @@ function resolveStrike(
     critModel: critModelForSystem(input.systemId),
     critMultiplier: actor.critMultiplier,
     targetDefenses: target.damageDefenses,
+    // Only override when a condition applies, so effect-derived modes survive.
+    rollMode:
+      status.advantage || status.disadvantage
+        ? collapseRollMode(status.advantage, status.disadvantage)
+        : undefined,
     rng,
   });
   return {

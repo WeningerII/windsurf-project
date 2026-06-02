@@ -43,6 +43,8 @@ export interface TacticalActor {
   attacksPerTurn?: number;
   /** M&M effect rank of this combatant's attack (Toughness DC = 15 + rank). */
   effectRank?: number;
+  /** Active named conditions (5e advantage/disadvantage on attacks). */
+  statuses?: readonly string[];
   /** Save-based area actions (breath / spells) this combatant may unleash. */
   areaActions?: readonly SceneAreaAction[];
 }
@@ -62,6 +64,8 @@ export interface TacticalTarget {
   toughness?: number;
   /** Damage resistances/immunities/vulnerabilities, applied per type after crit. */
   damageDefenses?: DamageDefenses;
+  /** Active named conditions (5e advantage/disadvantage on attacks against it). */
+  statuses?: readonly string[];
 }
 
 /** A scored candidate — every eligible target is acknowledged with a score. */

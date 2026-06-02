@@ -12,7 +12,11 @@ const budgets = {
   // templates + the participant-aware AoE bridge, ~2.5 KiB in the app chunk);
   // the per-chunk guards below are unchanged. Overridable via env for CI tuning.
   totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 816 * 1024,
-  appChunkGzipBytes: parseInt(process.env.BUNDLE_BUDGET_APP_GZIP_BYTES || '', 10) || 80 * 1024,
+  // App chunk gzip ceiling. Raised 80→82 KiB to absorb the combat-fidelity pass
+  // that lives in the resolver chain pulled into the app chunk: per-system crit
+  // models, damage resistances, cover/flanking/line-of-sight, difficult terrain,
+  // multiattack, and condition→advantage. Total JS stays under its 816 KiB cap.
+  appChunkGzipBytes: parseInt(process.env.BUNDLE_BUDGET_APP_GZIP_BYTES || '', 10) || 82 * 1024,
   vendorChunkGzipBytes: parseInt(process.env.BUNDLE_BUDGET_VENDOR_GZIP_BYTES || '', 10) || 200 * 1024,
   largestDataChunkGzipBytes: parseInt(process.env.BUNDLE_BUDGET_DATA_GZIP_BYTES || '', 10) || 140 * 1024,
 };

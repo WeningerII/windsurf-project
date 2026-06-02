@@ -146,6 +146,9 @@ export function validateSceneEvent(state: SceneState, event: SceneEvent): SceneI
     case 'token.conditions-changed':
       validateKnownToken(state, event.payload.tokenId, issues, event, 'payload.tokenId');
       break;
+    case 'token.statuses-changed':
+      validateKnownToken(state, event.payload.tokenId, issues, event, 'payload.tokenId');
+      break;
     case 'marker.added':
       validateMarkerForAdd(state, event.payload.marker, issues, event);
       break;
@@ -211,6 +214,20 @@ function buildEventFromIntent(
         ...base,
         type: 'token.conditions-changed',
         payload: { tokenId: intent.tokenId, delta: { ...intent.delta } },
+      };
+    case 'set-statuses':
+      return {
+        ...base,
+        type: 'token.statuses-changed',
+        payload: {
+          tokenId: intent.tokenId,
+          // Normalize: lowercase, trim, drop blanks, de-duplicate.
+          statuses: [
+            ...new Set(
+              intent.statuses.map((s) => s.trim().toLowerCase()).filter((s) => s.length > 0)
+            ),
+          ],
+        },
       };
     case 'add-marker':
       return { ...base, type: 'marker.added', payload: { marker: cloneMarker(intent.marker) } };
@@ -286,6 +303,12 @@ function applySceneEvent(state: SceneState, event: SceneEvent): void {
           incapacitated: current.incapacitated || d.incapacitated,
         };
       }
+      break;
+    }
+    case 'token.statuses-changed': {
+      const token = state.tokens[event.payload.tokenId];
+      // Authoritative set (already normalized at intent time); empty clears them.
+      if (token) token.statuses = [...event.payload.statuses];
       break;
     }
     case 'marker.added':

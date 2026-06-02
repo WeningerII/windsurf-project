@@ -42,6 +42,13 @@ export interface SceneToken {
    */
   attitude?: string;
   /**
+   * Active named conditions on this token (prone, frightened, poisoned, …),
+   * system-agnostic for tracking and set by `token.statuses-changed`. The rules
+   * layer maps the ones it knows onto mechanics (e.g. 5e advantage/disadvantage);
+   * the rest are still tracked and shown. Stored lowercased and de-duplicated.
+   */
+  statuses?: string[];
+  /**
    * Optional M&M-style condition track (the systems without hit points track
    * harm as conditions, not HP). Accumulated by `token.conditions-changed`
    * events; `incapacitated` is the "down" state for such combatants.
@@ -116,6 +123,7 @@ export type SceneEventType =
   | 'token.damaged'
   | 'token.attitude-changed'
   | 'token.conditions-changed'
+  | 'token.statuses-changed'
   | 'marker.added'
   | 'marker.removed'
   | 'initiative.set'
@@ -148,6 +156,7 @@ export type SceneEvent =
   | SceneEventBase<'token.damaged', { damages: SceneTokenDamage[]; cause?: string }>
   | SceneEventBase<'token.attitude-changed', { tokenId: string; attitude: string }>
   | SceneEventBase<'token.conditions-changed', { tokenId: string; delta: SceneConditionTrack }>
+  | SceneEventBase<'token.statuses-changed', { tokenId: string; statuses: string[] }>
   | SceneEventBase<'marker.added', { marker: SceneMarker }>
   | SceneEventBase<'marker.removed', { markerId: string }>
   | SceneEventBase<'initiative.set', { entries: SceneInitiativeEntry[]; activeTokenId?: string }>
@@ -182,6 +191,7 @@ export type SceneActionIntent =
   | { type: 'apply-damage'; actorId?: string; damages: SceneTokenDamage[]; cause?: string }
   | { type: 'set-attitude'; actorId?: string; tokenId: string; attitude: string }
   | { type: 'apply-conditions'; actorId?: string; tokenId: string; delta: SceneConditionTrack }
+  | { type: 'set-statuses'; actorId?: string; tokenId: string; statuses: string[] }
   | { type: 'add-marker'; actorId?: string; marker: SceneMarker }
   | { type: 'remove-marker'; actorId?: string; markerId: string }
   | {

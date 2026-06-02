@@ -227,3 +227,50 @@ describe('scene runtime — damage and healing', () => {
     expect(foldSceneEvents(scene).state.tokens.hero.hp).toEqual({ current: 30, max: 30, temp: 0 });
   });
 });
+
+describe('scene runtime — token statuses', () => {
+  function plainToken(id: string): SceneToken {
+    return { id, name: id, kind: 'character', position: { x: 1, y: 1 }, size: 1 };
+  }
+
+  it('normalizes, de-duplicates, and can clear named conditions', () => {
+    let scene = createSceneDocument({
+      id: 'status-scene',
+      name: 'Hexed',
+      systemId: 'dnd-5e-2014',
+      grid: { width: 8, height: 8 },
+      seed: 'hex',
+      now: NOW,
+    });
+    scene = appendResolved(
+      scene,
+      resolveSceneAction(
+        scene,
+        { type: 'place-token', token: plainToken('hero') },
+        { eventId: 'evt-place', createdAt: NOW }
+      )
+    );
+
+    // Mixed case, blanks, and a duplicate all normalize to a clean set.
+    scene = appendResolved(
+      scene,
+      resolveSceneAction(
+        scene,
+        { type: 'set-statuses', tokenId: 'hero', statuses: ['Prone', 'poisoned', '  ', 'PRONE'] },
+        { eventId: 'evt-set', createdAt: NOW }
+      )
+    );
+    expect(foldSceneEvents(scene).state.tokens.hero.statuses).toEqual(['prone', 'poisoned']);
+
+    // An empty set clears them (authoritative replace, not merge).
+    scene = appendResolved(
+      scene,
+      resolveSceneAction(
+        scene,
+        { type: 'set-statuses', tokenId: 'hero', statuses: [] },
+        { eventId: 'evt-clear', createdAt: NOW }
+      )
+    );
+    expect(foldSceneEvents(scene).state.tokens.hero.statuses).toEqual([]);
+  });
+});
