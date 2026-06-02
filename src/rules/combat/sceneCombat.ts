@@ -25,7 +25,7 @@ import type {
 } from '../../types/core/scene';
 import type { EffectInstance } from '../ir/types';
 import { runCombatRound, type RoundCombatant, type RoundResult } from '../tactical/roundDriver';
-import { resolveAttack } from '../resolver/attackResolution';
+import { critModelForSystem, resolveAttack } from '../resolver/attackResolution';
 import {
   resolveDaggerheartAttack,
   type DaggerheartThresholds,
@@ -62,6 +62,8 @@ export interface SceneCombatStats {
   /** Movement budget in grid cells per turn (defaults applied when absent). */
   speed?: number;
   critOn?: number;
+  /** Weapon critical multiplier (3.5e/PF1e ×2/×3/×4); defaults to ×2 when absent. */
+  critMultiplier?: number;
   /**
    * Daggerheart damage thresholds (Major/Severe). Present makes this combatant a
    * Daggerheart target: an attack marks 1-3 HP slots by threshold instead of
@@ -153,6 +155,7 @@ export function buildSceneCombatants(
       reach: stats.reach,
       speed: stats.speed,
       critOn: stats.critOn,
+      critMultiplier: stats.critMultiplier,
       thresholds: stats.thresholds,
       toughness: stats.toughness,
       effectRank: stats.effectRank,
@@ -270,18 +273,22 @@ export function resolveSceneAttack(params: {
     damageEffects: attackerStats.damageEffects,
     targetValue: targetStats.armorClass,
     critOn: attackerStats.critOn,
-    critModel: state.systemId === 'pf2e' ? 'pf2e' : 'd20-threshold',
+    critModel: critModelForSystem(state.systemId),
+    critMultiplier: attackerStats.critMultiplier,
     rng: participantRng(seed, attackerId, targetId),
   });
 
   const intent = attackToDamageIntent(attackerId, targetId, resolution, params.cause);
+  // A 3.5e/PF1e threat that failed to confirm landed as a normal hit, not a crit.
   const verb = resolution.isCriticalHit
     ? 'crits'
-    : resolution.isHit
-      ? 'hits'
-      : resolution.degree === 'critical-failure'
-        ? 'critically misses'
-        : 'misses';
+    : resolution.confirmed === false
+      ? 'hits (crit unconfirmed)'
+      : resolution.isHit
+        ? 'hits'
+        : resolution.degree === 'critical-failure'
+          ? 'critically misses'
+          : 'misses';
   const detail = resolution.isHit
     ? ` for ${resolution.damage} (rolled ${resolution.naturalRoll}+${resolution.attackBonus} vs AC ${targetStats.armorClass})`
     : ` (rolled ${resolution.naturalRoll}+${resolution.attackBonus} vs AC ${targetStats.armorClass})`;

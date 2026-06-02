@@ -49,6 +49,8 @@ export interface RoundCombatant {
   damageEffects: readonly EffectInstance[];
   reach?: number;
   critOn?: number;
+  /** Weapon critical multiplier (3.5e/PF1e ×2/×3/×4); defaults to ×2 when absent. */
+  critMultiplier?: number;
   /** Movement budget in grid cells per turn. */
   speed?: number;
   /** Save-based area actions this combatant may unleash (breath / spells). */
@@ -119,6 +121,7 @@ function toActor(combatant: RoundCombatant, position: SceneCoordinate): Tactical
     damageEffects: combatant.damageEffects,
     reach: combatant.reach,
     critOn: combatant.critOn,
+    critMultiplier: combatant.critMultiplier,
     speed: combatant.speed,
     effectRank: combatant.effectRank,
     areaActions: combatant.areaActions,

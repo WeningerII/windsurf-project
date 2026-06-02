@@ -34,6 +34,8 @@ export interface TacticalActor {
   /** Reach in grid cells (melee = 1). Undefined means unlimited (ranged). */
   reach?: number;
   critOn?: number;
+  /** Weapon critical multiplier (3.5e/PF1e ×2/×3/×4); defaults to ×2 when absent. */
+  critMultiplier?: number;
   /** Movement budget in grid cells per turn (for closing distance). */
   speed?: number;
   /** M&M effect rank of this combatant's attack (Toughness DC = 15 + rank). */

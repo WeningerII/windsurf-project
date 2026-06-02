@@ -42,14 +42,22 @@ export interface AttackResolutionInput {
   critOn?: number;
   /**
    * Critical-hit model:
-   * - `'d20-threshold'` (default, 5e/3.5e/PF1e): a natural `critOn` (20) is a
-   *   crit; a crit doubles the damage DICE only (flat bonuses are not doubled).
+   * - `'d20-threshold'` (default, 5e): a natural roll in the threat range
+   *   (`critOn`, 20) auto-confirms; a crit doubles the damage DICE only (flat
+   *   bonuses are not doubled).
+   * - `'d20-confirm'` (3.5e/PF1e): a natural roll in the threat range is only a
+   *   *threat* — it must be CONFIRMED by a second attack roll (d20 + bonus) vs
+   *   the same AC. A confirmed crit multiplies the whole base damage (dice AND
+   *   modifiers) by `critMultiplier` (×2/×3/×4); an unconfirmed threat is a
+   *   normal hit.
    * - `'pf2e'`: the four-degree model — the attack total beating AC by 10 (or a
    *   natural 20 stepping the degree up) is a critical hit, a natural 1 (or
    *   missing AC by 10) is a critical miss, and a crit doubles the whole damage
    *   TOTAL (dice AND modifiers). `targetValue` must be the target's AC.
    */
-  critModel?: 'd20-threshold' | 'pf2e';
+  critModel?: 'd20-threshold' | 'd20-confirm' | 'pf2e';
+  /** Weapon critical multiplier for `'d20-confirm'` (×2 default, e.g. ×3/×4). */
+  critMultiplier?: number;
 }
 
 export interface AttackResolution {
@@ -67,6 +75,10 @@ export interface AttackResolution {
   isHit: boolean;
   /** PF2e degree of success, when resolved with the `'pf2e'` crit model. */
   degree?: DegreeOfSuccess;
+  /** The confirmation d20 rolled for a threat, under the `'d20-confirm'` model. */
+  confirmationRoll?: number;
+  /** Whether a `'d20-confirm'` threat confirmed into a critical hit. */
+  confirmed?: boolean;
   /** Total damage (only rolled on a hit; 0 on a miss). */
   damage: number;
   /** Individual damage dice rolled (empty on a miss or with no dice). */
@@ -74,6 +86,15 @@ export interface AttackResolution {
   damageBonus: number;
   /** The applied effects that explain attack + damage (provenance). */
   ledger: EffectInstance[];
+}
+
+/** The attack crit model a system uses: PF2e degrees, 3.5e/PF1e confirm, else 5e threshold. */
+export function critModelForSystem(
+  systemId: string | undefined
+): 'd20-threshold' | 'd20-confirm' | 'pf2e' {
+  if (systemId === 'pf2e') return 'pf2e';
+  if (systemId === 'dnd-3.5e' || systemId === 'pf1e') return 'd20-confirm';
+  return 'd20-threshold';
 }
 
 /** Roll a d20 under the given mode using only the seeded RNG. */
@@ -113,6 +134,8 @@ export function resolveAttack(input: AttackResolutionInput): AttackResolution {
   let isCriticalMiss: boolean;
   let isHit: boolean;
   let degree: DegreeOfSuccess | undefined;
+  let confirmationRoll: number | undefined;
+  let confirmed: boolean | undefined;
   if (critModel === 'pf2e') {
     // PF2e: the same d20 roll, read through the four-degree engine vs AC.
     degree = pf2eDegreeOfSuccess(chosen, attackTotal, input.targetValue);
@@ -120,10 +143,20 @@ export function resolveAttack(input: AttackResolutionInput): AttackResolution {
     isHit = degree === 'critical-success' || degree === 'success';
     isCriticalMiss = degree === 'critical-failure';
   } else {
-    isCriticalHit = chosen >= critOn;
+    // d20 family: a natural 1 auto-misses, a natural 20 auto-hits, and a roll in
+    // the threat range (>= critOn) threatens a crit.
     isCriticalMiss = chosen === 1;
-    // Natural crit always hits; natural 1 always misses; otherwise compare totals.
-    isHit = isCriticalHit || (!isCriticalMiss && attackTotal >= input.targetValue);
+    isHit = chosen === 20 || (!isCriticalMiss && attackTotal >= input.targetValue);
+    const threatens = chosen >= critOn && isHit;
+    if (critModel === 'd20-confirm' && threatens) {
+      // 3.5e/PF1e: confirm the threat with a second attack roll vs the same AC.
+      confirmationRoll = input.rng.rollDie(20);
+      confirmed = confirmationRoll + attackBonus >= input.targetValue;
+      isCriticalHit = confirmed;
+    } else {
+      // d20-threshold (5e): a threat that hits is automatically a critical hit.
+      isCriticalHit = threatens;
+    }
   }
 
   const ledger: EffectInstance[] = [...attackResolved.ledger];
@@ -146,11 +179,15 @@ export function resolveAttack(input: AttackResolutionInput): AttackResolution {
     damageBonus = damage - diceSum;
 
     // Critical-hit damage differs by system:
-    // - d20-threshold (5e/3.5e/PF1e): double the damage DICE only.
+    // - d20-threshold (5e): double the damage DICE only (modifiers added once).
+    // - d20-confirm (3.5e/PF1e): multiply the whole base damage (dice AND
+    //   modifiers) by the weapon's ×N multiplier.
     // - pf2e: double the whole damage TOTAL (dice AND modifiers) (CRB p.451).
     if (isCriticalHit) {
       if (critModel === 'pf2e') {
         damage *= 2;
+      } else if (critModel === 'd20-confirm') {
+        damage *= Math.max(2, input.critMultiplier ?? 2);
       } else {
         const critDice = damageDiceTerms.reduce((sum, term) => sum + term, 0);
         damage += critDice;
@@ -171,6 +208,8 @@ export function resolveAttack(input: AttackResolutionInput): AttackResolution {
     isCriticalMiss,
     isHit,
     degree,
+    confirmationRoll,
+    confirmed,
     damage,
     damageDiceTerms,
     damageBonus,

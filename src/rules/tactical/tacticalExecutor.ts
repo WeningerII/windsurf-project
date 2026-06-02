@@ -16,7 +16,11 @@
  */
 
 import type { SceneActionIntent, SceneCoordinate } from '../../types/core/scene';
-import { resolveAttack, type AttackResolution } from '../resolver/attackResolution';
+import {
+  critModelForSystem,
+  resolveAttack,
+  type AttackResolution,
+} from '../resolver/attackResolution';
 import {
   participantRng,
   resolveAreaEffect,
@@ -235,7 +239,8 @@ function resolveStrike(input: TacticalTurnInput, target: TacticalTarget): Strike
     damageEffects: actor.damageEffects,
     targetValue: target.armorClass,
     critOn: actor.critOn,
-    critModel: input.systemId === 'pf2e' ? 'pf2e' : 'd20-threshold',
+    critModel: critModelForSystem(input.systemId),
+    critMultiplier: actor.critMultiplier,
     rng,
   });
   return {
