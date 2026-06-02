@@ -185,32 +185,55 @@ export async function narrateWithClaude(
   return text;
 }
 
+/** Default ceiling on how long the client waits before degrading to deterministic. */
+export const DEFAULT_NARRATION_TIMEOUT_MS = 8000;
+
 /** Browser-side dependencies for talking to our own narration gateway. */
 export interface GatewayNarrationDeps {
   /** Our same-origin gateway path (e.g. `/.netlify/functions/ai-narrate`). */
   endpoint: string;
   /** Injectable fetch (defaults to the platform global) — for tests. */
   fetch?: FetchLike;
+  /**
+   * Abort the request (and fall back to deterministic) after this many ms.
+   * Narration is an enhancement, never a blocker — a slow gateway must not stall
+   * play. Defaults to {@link DEFAULT_NARRATION_TIMEOUT_MS}; set 0 to disable.
+   */
+  timeoutMs?: number;
+  /** Caller's own abort signal (combined with the timeout). */
   signal?: AbortSignal;
 }
 
 /**
  * Browser-safe narration request: POST the resolved summary to our own gateway
  * (which holds the key) and return the prose. Any failure — no gateway, network
- * error, non-2xx, or empty body — resolves to `undefined`, the signal to keep
- * the deterministic narration already on screen. Never throws.
+ * error, non-2xx, empty body, or timeout — resolves to `undefined`, the signal
+ * to keep the deterministic narration already on screen. Never throws.
  */
 export async function requestNarration(
   summary: RoundNarrationSummary,
   deps: GatewayNarrationDeps
 ): Promise<string | undefined> {
   const doFetch: FetchLike = deps.fetch ?? fetch;
+  const timeoutMs = deps.timeoutMs ?? DEFAULT_NARRATION_TIMEOUT_MS;
+
+  // Bound the wait: a hung or slow gateway must degrade to deterministic within
+  // a fixed budget. We own a controller that the timer aborts, and forward the
+  // caller's signal into it so either source cancels the request.
+  const controller = timeoutMs > 0 || deps.signal ? new AbortController() : undefined;
+  const timer =
+    controller && timeoutMs > 0 ? setTimeout(() => controller.abort(), timeoutMs) : undefined;
+  if (controller && deps.signal) {
+    if (deps.signal.aborted) controller.abort();
+    else deps.signal.addEventListener('abort', () => controller.abort(), { once: true });
+  }
+
   try {
     const response = await doFetch(deps.endpoint, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(summary),
-      signal: deps.signal,
+      signal: controller?.signal ?? deps.signal,
     });
     if (!response.ok) return undefined;
     const payload = (await response.json()) as { narration?: unknown };
@@ -219,5 +242,7 @@ export async function requestNarration(
       : undefined;
   } catch {
     return undefined;
+  } finally {
+    if (timer !== undefined) clearTimeout(timer);
   }
 }

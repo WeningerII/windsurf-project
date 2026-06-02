@@ -151,4 +151,17 @@ describe('requestNarration (browser client)', () => {
     const fetch = vi.fn<FetchLike>(() => Promise.reject(new Error('offline')));
     expect(await requestNarration(summary, { endpoint: '/x', fetch })).toBeUndefined();
   });
+
+  it('aborts and falls back when the gateway exceeds the timeout', async () => {
+    // A gateway that never settles on its own — only the timeout's abort ends it.
+    const fetch: FetchLike = (_url, init) =>
+      new Promise((_resolve, reject) => {
+        init.signal?.addEventListener('abort', () => reject(new Error('aborted')));
+      });
+    const started = Date.now();
+    const prose = await requestNarration(summary, { endpoint: '/x', fetch, timeoutMs: 10 });
+    expect(prose).toBeUndefined();
+    // It degraded promptly rather than hanging on the unresponsive gateway.
+    expect(Date.now() - started).toBeLessThan(2000);
+  });
 });
