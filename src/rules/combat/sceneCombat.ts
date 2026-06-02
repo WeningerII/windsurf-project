@@ -127,9 +127,19 @@ export function buildSceneCombatants(
   const combatants: RoundCombatant[] = [];
   for (const tokenId of orderedIds) {
     const token = state.tokens[tokenId];
-    if (!token?.hp) continue;
+    if (!token) continue;
     const stats = resolveStats(token);
     if (!stats) continue;
+    // HP-based combatant, or an M&M condition-track combatant (no HP): the latter
+    // rides a synthetic up/down proxy — 1 while standing, 0 once incapacitated —
+    // so the HP-driven round loop can skip it when it goes down while the real
+    // harm is tracked as conditions.
+    const hp = token.hp
+      ? { current: token.hp.current, max: token.hp.max }
+      : stats.toughness != null
+        ? { current: token.conditions?.incapacitated ? 0 : 1, max: 1 }
+        : undefined;
+    if (!hp) continue;
     const areaActions = resolveAreaActions?.(token);
     const auras = resolveAuras?.(token);
     combatants.push({
@@ -137,13 +147,16 @@ export function buildSceneCombatants(
       faction: factionForToken(token),
       position: { ...token.position },
       armorClass: stats.armorClass,
-      hp: { current: token.hp.current, max: token.hp.max },
+      hp,
       attackEffects: stats.attackEffects,
       damageEffects: stats.damageEffects,
       reach: stats.reach,
       speed: stats.speed,
       critOn: stats.critOn,
       thresholds: stats.thresholds,
+      toughness: stats.toughness,
+      effectRank: stats.effectRank,
+      conditions: token.conditions,
       areaActions: areaActions && areaActions.length > 0 ? areaActions : undefined,
       auras: auras && auras.length > 0 ? auras : undefined,
       saveBonus: stats.saveBonus,
@@ -449,9 +462,26 @@ export function runSceneRound(params: {
       return `${nameOf(turn.tokenId)} moves toward ${nameOf(turn.turn.chosenTargetId ?? '')}.`;
     }
     const target = nameOf(turn.turn.chosenTargetId ?? '');
-    const res = turn.turn.resolution;
-    if (!res) return `${nameOf(turn.tokenId)} acts.`;
     const moved = turn.turn.moveTo ? 'moves in and ' : '';
+    // M&M strikes land as a condition delta (no HP / no AttackResolution).
+    if (turn.turn.intent?.type === 'apply-conditions') {
+      const d = turn.turn.intent.delta;
+      const effect = d.incapacitated
+        ? 'incapacitates'
+        : d.staggered
+          ? 'staggers'
+          : d.dazed
+            ? 'dazes'
+            : 'bruises';
+      return `${nameOf(turn.tokenId)} ${moved}${effect} ${target}.`;
+    }
+    const res = turn.turn.resolution;
+    if (!res) {
+      // An M&M attack that connected but was shrugged off (saved), or a no-op.
+      return turn.turn.decision === 'attack' && turn.turn.chosenTargetId
+        ? `${nameOf(turn.tokenId)} ${moved}attacks ${target} to no effect.`
+        : `${nameOf(turn.tokenId)} acts.`;
+    }
     if (!res.isHit) return `${nameOf(turn.tokenId)} ${moved}misses ${target}.`;
     return `${nameOf(turn.tokenId)} ${moved}${res.isCriticalHit ? 'crits' : 'hits'} ${target} for ${res.damage}.`;
   };

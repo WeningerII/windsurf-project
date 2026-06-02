@@ -36,6 +36,8 @@ export interface TacticalActor {
   critOn?: number;
   /** Movement budget in grid cells per turn (for closing distance). */
   speed?: number;
+  /** M&M effect rank of this combatant's attack (Toughness DC = 15 + rank). */
+  effectRank?: number;
   /** Save-based area actions (breath / spells) this combatant may unleash. */
   areaActions?: readonly SceneAreaAction[];
 }
@@ -51,6 +53,8 @@ export interface TacticalTarget {
   saveBonus?: (ability: string) => number;
   /** Daggerheart damage thresholds — present makes attacks mark HP slots. */
   thresholds?: { major: number; severe: number };
+  /** M&M Toughness save bonus — present makes attacks force a Toughness save. */
+  toughness?: number;
 }
 
 /** A scored candidate — every eligible target is acknowledged with a score. */

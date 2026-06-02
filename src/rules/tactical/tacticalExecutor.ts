@@ -24,6 +24,7 @@ import {
 } from '../resolver/participantResolution';
 import { areaEffectToDamageIntent, attackToDamageIntent } from '../resolver/sceneCombat';
 import { resolveDaggerheartAttack } from '../resolver/daggerheartResolution';
+import { resolveMam3eAttack } from '../resolver/mam3eResolution';
 import { computeAreaParticipants, type SceneAreaAction } from '../resolver/areaParticipants';
 import { moveToward } from './pathfinding';
 import type { BlockPredicate } from '../resolver/lineOfEffect';
@@ -161,10 +162,11 @@ interface StrikeOutcome {
 
 /**
  * Resolve one attacker→target strike, dispatching per system: Daggerheart marks
- * 1-3 HP slots by threshold; everyone else is d20 attack-vs-AC → damage. Both
- * land as a single apply-damage intent, so the round driver folds either the same
- * way. (M&M's condition track isn't auto-resolved here — its tokens have no HP and
- * so aren't in the round; it remains a manual-attack path for now.)
+ * 1-3 HP slots by threshold; M&M forces a Toughness save → condition track (no
+ * HP, lands as an apply-conditions intent); everyone else is d20 attack-vs-AC →
+ * damage. Each lands as a single scene intent, so the round driver folds it
+ * uniformly (damage decrements working HP; an incapacitating M&M hit drops the
+ * target to the down proxy).
  */
 function resolveStrike(input: TacticalTurnInput, target: TacticalTarget): StrikeOutcome {
   const { actor } = input;
@@ -188,6 +190,44 @@ function resolveStrike(input: TacticalTurnInput, target: TacticalTarget): Strike
           }
         : undefined;
     return { intent, hit: dh.isHit, narration: dh.isHit ? `marked ${dh.hpMarked} HP` : 'missed' };
+  }
+
+  if (input.systemId === 'mam3e' && target.toughness != null) {
+    const mm = resolveMam3eAttack({
+      attackEffects: actor.attackEffects,
+      targetDefense: target.armorClass,
+      effectRank: actor.effectRank ?? 0,
+      toughness: target.toughness,
+      rng,
+    });
+    const landed =
+      mm.condition.bruised > 0 ||
+      mm.condition.dazed ||
+      mm.condition.staggered ||
+      mm.condition.incapacitated;
+    const intent: SceneActionIntent | undefined =
+      mm.isHit && landed
+        ? {
+            type: 'apply-conditions',
+            actorId: actor.tokenId,
+            tokenId: target.tokenId,
+            delta: mm.condition,
+          }
+        : undefined;
+    const effect = mm.condition.incapacitated
+      ? 'incapacitated'
+      : mm.condition.staggered
+        ? 'staggered'
+        : mm.condition.dazed
+          ? 'dazed'
+          : mm.condition.bruised > 0
+            ? 'bruised'
+            : 'shrugged it off';
+    return {
+      intent,
+      hit: mm.isHit,
+      narration: mm.isHit ? effect : 'missed',
+    };
   }
 
   const resolution = resolveAttack({

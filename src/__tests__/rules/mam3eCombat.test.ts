@@ -9,8 +9,11 @@ import {
 import {
   buildMam3eCombatant,
   resolveSceneAttack,
+  runCombatRound,
+  runSceneRound,
   type EffectInstance,
   type ResolveCombatStats,
+  type RoundCombatant,
 } from '../../rules';
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
 import type {
@@ -143,6 +146,135 @@ describe('resolveSceneAttack — M&M condition track', () => {
     });
     expect(out.hit).toBe(false);
     expect(out.intent).toBeUndefined();
+  });
+});
+
+describe('M&M in the auto-round (runCombatRound)', () => {
+  const attack = (value: number): EffectInstance => ({
+    id: `atk-${value}`,
+    systemId: 'mam3e',
+    target: 'attack',
+    operation: 'add',
+    value,
+    stackPolicy: 'sum',
+    source: { kind: 'custom', id: 'x', label: 'x' },
+    label: 'atk',
+    category: 'other',
+  });
+  function combatant(
+    id: string,
+    x: number,
+    faction: string,
+    overrides: Partial<RoundCombatant> = {}
+  ): RoundCombatant {
+    return {
+      tokenId: id,
+      faction,
+      position: { x, y: 0 },
+      armorClass: 1, // feeble defense → reliably hit
+      hp: { current: 1, max: 1 }, // synthetic up/down proxy (M&M has no HP)
+      attackEffects: [attack(20)],
+      damageEffects: [],
+      reach: 1,
+      toughness: -100, // hopeless save
+      effectRank: 20, // DC 35 → shortfall ≥ 15 → incapacitated
+      conditions: { bruised: 0, dazed: false, staggered: false, incapacitated: false },
+      ...overrides,
+    };
+  }
+
+  it('a Toughness rout incapacitates a target → down proxy + latched track', () => {
+    const result = runCombatRound({
+      order: [combatant('hero', 0, 'party'), combatant('foe', 1, 'monsters')],
+      seed: 'mm-round',
+      round: 1,
+      systemId: 'mam3e',
+    });
+    const heroTurn = result.turns.find((t) => t.tokenId === 'hero')!;
+    expect(heroTurn.intent?.type).toBe('apply-conditions');
+    const delta = heroTurn.intent && 'delta' in heroTurn.intent ? heroTurn.intent.delta : undefined;
+    expect(delta?.incapacitated).toBe(true);
+    // The incapacitated foe drops to the down proxy and its track latches.
+    expect(result.finalHp.foe).toBe(0);
+    expect(result.finalConditions.foe.incapacitated).toBe(true);
+    // Down at the start of its turn, the foe is skipped — the loop re-derived it out.
+    const foeTurn = result.turns.find((t) => t.tokenId === 'foe')!;
+    expect(foeTurn.skipped).toBe(true);
+  });
+
+  it('a target that saves keeps standing (no condition, still up)', () => {
+    const result = runCombatRound({
+      order: [
+        combatant('hero', 0, 'party'),
+        combatant('foe', 1, 'monsters', { toughness: 100 }), // shrugs everything off
+      ],
+      seed: 'mm-save',
+      round: 1,
+      systemId: 'mam3e',
+    });
+    const heroTurn = result.turns.find((t) => t.tokenId === 'hero')!;
+    expect(heroTurn.intent).toBeUndefined(); // hit, but saved → no condition
+    expect(result.finalHp.foe).toBe(1); // still up
+    expect(result.finalConditions.foe.incapacitated).toBe(false);
+  });
+});
+
+describe('M&M through runSceneRound (HP-less tokens admitted)', () => {
+  const attack = (value: number): EffectInstance => ({
+    id: `atk-${value}`,
+    systemId: 'mam3e',
+    target: 'attack',
+    operation: 'add',
+    value,
+    stackPolicy: 'sum',
+    source: { kind: 'custom', id: 'x', label: 'x' },
+    label: 'atk',
+    category: 'other',
+  });
+  function token(id: string, x: number, kind: SceneToken['kind']): SceneToken {
+    return {
+      id,
+      name: id,
+      kind,
+      position: { x, y: 0 },
+      size: 1,
+      conditions: { bruised: 0, dazed: false, staggered: false, incapacitated: false },
+    };
+  }
+  function scene(): SceneState {
+    return {
+      sceneId: 's',
+      name: 'M&M',
+      systemId: 'mam3e',
+      grid: { width: 8, height: 8, cellSize: 5 },
+      // Different kinds → opposing factions (party vs monsters), so they fight.
+      tokens: { hero: token('hero', 0, 'character'), foe: token('foe', 1, 'monster') },
+      markers: {},
+      initiative: [
+        { tokenId: 'hero', value: 20 },
+        { tokenId: 'foe', value: 10 },
+      ],
+      round: 1,
+      seed: 'seed',
+    };
+  }
+  const stats: ResolveCombatStats = () => ({
+    attackEffects: [attack(20)],
+    damageEffects: [],
+    armorClass: 1,
+    reach: 1,
+    toughness: -100,
+    effectRank: 20,
+  });
+
+  it('admits HP-less M&M tokens to the round and narrates the condition outcome', () => {
+    const out = runSceneRound({ state: scene(), resolveStats: stats, seed: 'mm', round: 1 });
+    // Both HP-less tokens were admitted (not silently dropped for lacking HP).
+    expect(out.result.turns).toHaveLength(2);
+    // The hero (acts first) incapacitates the foe → an apply-conditions intent flows out.
+    const cond = out.intents.find((i) => i.type === 'apply-conditions');
+    expect(cond).toBeDefined();
+    expect(out.log.some((line) => line.includes('incapacitates'))).toBe(true);
   });
 });
 

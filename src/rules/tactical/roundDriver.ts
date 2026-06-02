@@ -20,7 +20,11 @@
  */
 
 import type { EffectInstance } from '../ir/types';
-import type { SceneCoordinate, SceneActionIntent } from '../../types/core/scene';
+import type {
+  SceneConditionTrack,
+  SceneCoordinate,
+  SceneActionIntent,
+} from '../../types/core/scene';
 import { executeTacticalTurn, type TacticalTurnResult } from './tacticalExecutor';
 import type { TacticalActor, TacticalTarget } from './targetScoring';
 import {
@@ -55,6 +59,16 @@ export interface RoundCombatant {
   saveBonus?: (ability: string) => number;
   /** Daggerheart damage thresholds — present makes attacks mark HP slots. */
   thresholds?: { major: number; severe: number };
+  /** M&M effect rank of this combatant's attack (Toughness DC = 15 + rank). */
+  effectRank?: number;
+  /** M&M Toughness save bonus — present makes attacks force a Toughness save. */
+  toughness?: number;
+  /**
+   * M&M condition track. HP-less M&M combatants ride a synthetic `hp` proxy
+   * (1 = up, 0 = incapacitated); the real harm folds here so the round can
+   * report it and the scene can apply it.
+   */
+  conditions?: SceneConditionTrack;
 }
 
 export interface RoundTurnRecord {
@@ -73,7 +87,9 @@ export interface RoundResult {
   turns: RoundTurnRecord[];
   /** Final current-HP per combatant after the round. */
   finalHp: Record<string, number>;
-  /** All damage intents produced this round, in turn order. */
+  /** Final condition track per HP-less (M&M) combatant after the round. */
+  finalConditions: Record<string, SceneConditionTrack>;
+  /** All damage/condition intents produced this round, in turn order. */
   intents: SceneActionIntent[];
 }
 
@@ -104,6 +120,7 @@ function toActor(combatant: RoundCombatant, position: SceneCoordinate): Tactical
     reach: combatant.reach,
     critOn: combatant.critOn,
     speed: combatant.speed,
+    effectRank: combatant.effectRank,
     areaActions: combatant.areaActions,
   };
 }
@@ -184,6 +201,7 @@ function toTarget(
     hp: { current: currentHp, max: combatant.hp.max },
     saveBonus: combatant.saveBonus,
     thresholds: combatant.thresholds,
+    toughness: combatant.toughness,
   };
 }
 
@@ -195,12 +213,15 @@ function toTarget(
  * damage intents for the caller to apply as scene events.
  */
 export function runCombatRound(input: RunRoundInput): RoundResult {
-  // Working HP starts from each combatant's current HP.
+  // Working HP starts from each combatant's current HP; M&M combatants also carry
+  // a working condition track (their `hp` is the synthetic up/down proxy).
   const hp: Record<string, number> = {};
   const pos: Record<string, SceneCoordinate> = {};
+  const conditions: Record<string, SceneConditionTrack> = {};
   for (const combatant of input.order) {
     hp[combatant.tokenId] = combatant.hp.current;
     pos[combatant.tokenId] = { ...combatant.position };
+    if (combatant.conditions) conditions[combatant.tokenId] = { ...combatant.conditions };
   }
 
   const byId = new Map(input.order.map((combatant) => [combatant.tokenId, combatant]));
@@ -261,13 +282,32 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
       intents.push({ type: 'move-token', tokenId: combatant.tokenId, position: turn.moveTo });
     }
 
-    // Fold this turn's damage into working HP so later turns see it.
+    // Fold this turn's outcome into working state so later turns see it.
     if (turn.intent && turn.intent.type === 'apply-damage') {
       for (const damage of turn.intent.damages) {
         if (hp[damage.tokenId] != null && byId.get(damage.tokenId)?.hp) {
           hp[damage.tokenId] = Math.max(0, hp[damage.tokenId] - damage.amount);
         }
       }
+      intents.push(turn.intent);
+    } else if (turn.intent && turn.intent.type === 'apply-conditions') {
+      // M&M: accumulate the condition delta (Bruised stacks, flags latch — the
+      // same semantics the scene's apply-conditions event uses) and drop an
+      // incapacitated combatant to the down proxy (working hp 0) so the rest of
+      // the loop treats it as out of the fight.
+      const { tokenId, delta } = turn.intent;
+      const track = conditions[tokenId] ?? {
+        bruised: 0,
+        dazed: false,
+        staggered: false,
+        incapacitated: false,
+      };
+      track.bruised += delta.bruised;
+      track.dazed = track.dazed || delta.dazed;
+      track.staggered = track.staggered || delta.staggered;
+      track.incapacitated = track.incapacitated || delta.incapacitated;
+      conditions[tokenId] = track;
+      if (track.incapacitated && hp[tokenId] != null) hp[tokenId] = 0;
       intents.push(turn.intent);
     }
 
@@ -284,7 +324,7 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
     });
   });
 
-  return { round: input.round, turns, finalHp: hp, intents };
+  return { round: input.round, turns, finalHp: hp, finalConditions: conditions, intents };
 }
 
 /** True when every living combatant belongs to a single faction (combat over). */
