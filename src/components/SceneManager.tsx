@@ -18,6 +18,7 @@ import {
   buildCharacterCombatant,
   buildMonsterCombatant,
   casterSpellAreaActions,
+  characterCheckModifier,
   characterSaveBonus,
   diagonalRuleForSystem,
   monsterAuras,
@@ -515,10 +516,19 @@ export function SceneManager({
   // attitude-adjusted DC, and shifts land as event-sourced set-attitude actions.
   const handleAddress = () => {
     if (!selectedScene || !state || !selectedTokenId) return;
+    // Prefer the speaker's actual social-skill modifier off its sheet (5e);
+    // otherwise fall back to the GM-entered modifier.
+    const speaker = state.tokens[selectedTokenId];
+    const speakerDoc =
+      speaker?.kind === 'character' && speaker.refId ? documentsById.get(speaker.refId) : undefined;
+    const typedMod = Number.parseInt(conversationModifier, 10) || 0;
+    const derived = speakerDoc
+      ? characterCheckModifier(speakerDoc, conversationApproach, state.systemId as GameSystemId)
+      : undefined;
     const outcome = resolveSceneSocialAction({
       state,
       speakerId: selectedTokenId,
-      modifier: Number.parseInt(conversationModifier, 10) || 0,
+      modifier: derived ?? typedMod,
       baseDC: positiveIntegerOrDefault(conversationDC, 15),
       approach: conversationApproach,
       seed: `${selectedScene.initialState.seed}:social:${selectedScene.events.length}:${attackNonce.current++}`,
@@ -546,12 +556,20 @@ export function SceneManager({
   // transient group check — no token state changes — so it just logs the verdict.
   const handleAttemptChallenge = () => {
     if (!selectedScene || !state) return;
+    // Each party member contributes its OWN skill modifier off its sheet (5e),
+    // falling back to the GM-entered modifier when it can't be derived.
+    const typedMod = Number.parseInt(challengeModifier, 10) || 0;
+    const skill = challengeSkill.trim();
     const participants = Object.values(state.tokens)
       .filter((token) => token.kind === 'character')
-      .map((token) => ({
-        id: token.id,
-        modifier: Number.parseInt(challengeModifier, 10) || 0,
-      }));
+      .map((token) => {
+        const doc = token.refId ? documentsById.get(token.refId) : undefined;
+        const derived =
+          doc && skill
+            ? characterCheckModifier(doc, skill, state.systemId as GameSystemId)
+            : undefined;
+        return { id: token.id, modifier: derived ?? typedMod };
+      });
     if (participants.length === 0) return;
 
     const result = resolveSkillChallenge({

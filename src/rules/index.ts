@@ -168,6 +168,8 @@ export type {
 } from './combatants/characterCombatant';
 export { buildCharacterCombatant, characterSaveBonus } from './combatants/characterCombatant';
 
+export { characterCheckModifier } from './combatants/characterChecks';
+
 export {
   casterSpellAreaActions,
   spellAreaAction,
