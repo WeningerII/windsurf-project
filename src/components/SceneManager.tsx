@@ -489,7 +489,9 @@ export function SceneManager({
       }
     }
     events.forEach((event) => onAppendSceneEvent(selectedScene.id, event));
-    setCombatLog((current) => [...outcome.log.slice().reverse(), ...current].slice(0, 30));
+    // Show the flavorful narration (the no-key narration fallback); the terse
+    // mechanical log remains on each outcome for any consumer that wants it.
+    setCombatLog((current) => [...outcome.narration.slice().reverse(), ...current].slice(0, 30));
     setActionIssues([]);
   };
 

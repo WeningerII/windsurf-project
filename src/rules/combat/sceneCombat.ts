@@ -56,6 +56,7 @@ import { coverAcBonus, coverBetween } from '../resolver/lineOfEffect';
 import { flankToHitBonus, isFlanking } from '../tactical/flanking';
 import { collapseRollMode, statusAdvantage } from '../resolver/conditions';
 import { concentrationBreak } from '../resolver/concentration';
+import { narrateAttack, type AttackTone } from '../narration/combatNarrator';
 import type { AreaOfEffect } from '../../types/core/common';
 
 /** Combat stats for a token, resolved from its statblock or character sheet. */
@@ -523,7 +524,10 @@ export function resolveSceneAreaEffect(params: {
 export interface SceneRoundOutcome {
   result: RoundResult;
   intents: SceneActionIntent[];
+  /** Terse, mechanical per-line log (rolls, AC, damage). */
   log: string[];
+  /** Flavorful prose for the same events — the deterministic narration fallback. */
+  narration: string[];
 }
 
 /**
@@ -627,5 +631,40 @@ export function runSceneRound(params: {
     return lines;
   });
 
-  return { result, intents: result.intents, log };
+  // Flavorful narration of the same turns: a single d20 strike gets seeded prose
+  // from the narrator; everything else reuses the terse line (already readable).
+  const narrationFor = (turn: RoundResult['turns'][number]): string => {
+    const res = turn.turn.resolution;
+    if (turn.skipped || turn.turn.decision !== 'attack' || !res || (turn.turn.attacks ?? 1) > 1) {
+      return turnLine(turn);
+    }
+    const tone: AttackTone = res.isCriticalHit
+      ? 'crit'
+      : res.isHit
+        ? 'hit'
+        : res.isCriticalMiss || res.degree === 'critical-failure'
+          ? 'fumble'
+          : 'miss';
+    return narrateAttack({
+      attacker: nameOf(turn.tokenId),
+      target: nameOf(turn.turn.chosenTargetId ?? ''),
+      tone,
+      damage: res.damage,
+      seed: `${params.seed}::round${params.round}`,
+    });
+  };
+  const narration = result.turns.flatMap((turn) => {
+    const lines: string[] = [];
+    for (const oa of turn.oaIntents ?? []) {
+      if (oa.type !== 'apply-damage') continue;
+      const total = oa.damages.reduce((sum, d) => sum + d.amount, 0);
+      lines.push(
+        `${nameOf(oa.actorId ?? '')} catches ${nameOf(turn.tokenId)} fleeing — ${total} damage.`
+      );
+    }
+    lines.push(narrationFor(turn));
+    return lines;
+  });
+
+  return { result, intents: result.intents, log, narration };
 }

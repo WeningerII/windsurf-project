@@ -153,6 +153,8 @@ export type {
   RunRoundInput,
 } from './tactical/roundDriver';
 export { isRoundConclusive, runCombatRound } from './tactical/roundDriver';
+export type { AttackTone } from './narration/combatNarrator';
+export { narrateAttack } from './narration/combatNarrator';
 export { flankToHitBonus, isFlanking } from './tactical/flanking';
 
 export type { MoveResult } from './tactical/pathfinding';
