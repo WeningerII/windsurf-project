@@ -22,6 +22,27 @@ import {
 
 const DEFAULT_ATTITUDE: Attitude = 'indifferent';
 
+/**
+ * The skill/trait id a social approach maps to, per system — the systems name
+ * their social skills differently (5e Persuasion vs Pathfinder Diplomacy vs the
+ * Bluff/Intimidate of d20-legacy, and Daggerheart resolves social on Presence).
+ * Used to pull the speaker's real sheet modifier for the chosen approach.
+ */
+const SOCIAL_SKILL: Record<string, Record<SocialApproach, string>> = {
+  'dnd-5e-2014': { persuasion: 'persuasion', deception: 'deception', intimidation: 'intimidation' },
+  'dnd-5e-2024': { persuasion: 'persuasion', deception: 'deception', intimidation: 'intimidation' },
+  mam3e: { persuasion: 'persuasion', deception: 'deception', intimidation: 'intimidation' },
+  pf2e: { persuasion: 'diplomacy', deception: 'deception', intimidation: 'intimidation' },
+  'dnd-3.5e': { persuasion: 'diplomacy', deception: 'bluff', intimidation: 'intimidate' },
+  pf1e: { persuasion: 'diplomacy', deception: 'bluff', intimidation: 'intimidate' },
+  daggerheart: { persuasion: 'presence', deception: 'presence', intimidation: 'presence' },
+};
+
+/** The check id (skill or trait) a social approach uses for a given system. */
+export function socialSkillId(systemId: string, approach: SocialApproach): string {
+  return SOCIAL_SKILL[systemId]?.[approach] ?? approach;
+}
+
 /** Read a token's stored attitude string as a valid Attitude (default indifferent). */
 export function tokenAttitude(token: SceneToken): Attitude {
   return (ATTITUDES as readonly string[]).includes(token.attitude ?? '')

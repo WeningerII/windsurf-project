@@ -28,6 +28,7 @@ import {
   resolveSceneSocialAction,
   resolveSkillChallenge,
   runSceneRound,
+  socialSkillId,
   tokensInArea,
   type Attitude,
   type ResolveAreaActions,
@@ -521,7 +522,9 @@ export function SceneManager({
     const speakerDoc =
       speaker?.kind === 'character' && speaker.refId ? documentsById.get(speaker.refId) : undefined;
     const typedMod = Number.parseInt(conversationModifier, 10) || 0;
-    const derived = speakerDoc ? deriveCheckModifier(speakerDoc, conversationApproach) : undefined;
+    const derived = speakerDoc
+      ? deriveCheckModifier(speakerDoc, socialSkillId(state.systemId, conversationApproach))
+      : undefined;
     const outcome = resolveSceneSocialAction({
       state,
       speakerId: selectedTokenId,

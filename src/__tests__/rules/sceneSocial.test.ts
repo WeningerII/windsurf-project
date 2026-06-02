@@ -6,7 +6,7 @@ import {
   foldSceneEvents,
   resolveSceneAction,
 } from '../../scene/runtime';
-import { resolveSceneSocialAction, tokenAttitude } from '../../rules';
+import { resolveSceneSocialAction, socialSkillId, tokenAttitude } from '../../rules';
 import type { SceneActionIntent, SceneDocument, SceneToken } from '../../types/core/scene';
 
 /**
@@ -46,6 +46,21 @@ function buildScene(): SceneDocument {
   scene = apply(scene, { type: 'place-token', token: npc('friend', 4, 'friendly') });
   return scene;
 }
+
+describe('socialSkillId — approach maps to each system’s social skill', () => {
+  it('uses each system’s own skill/trait name', () => {
+    expect(socialSkillId('dnd-5e-2024', 'persuasion')).toBe('persuasion');
+    expect(socialSkillId('pf2e', 'persuasion')).toBe('diplomacy');
+    expect(socialSkillId('pf2e', 'deception')).toBe('deception');
+    expect(socialSkillId('dnd-3.5e', 'deception')).toBe('bluff');
+    expect(socialSkillId('pf1e', 'intimidation')).toBe('intimidate');
+    expect(socialSkillId('daggerheart', 'persuasion')).toBe('presence');
+    expect(socialSkillId('mam3e', 'intimidation')).toBe('intimidation');
+  });
+  it('falls back to the approach name for an unknown system', () => {
+    expect(socialSkillId('unknown', 'deception')).toBe('deception');
+  });
+});
 
 describe('set-attitude scene event', () => {
   it('folds a set-attitude action into the token state', () => {
