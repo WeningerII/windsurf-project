@@ -97,6 +97,8 @@ export { pf2eDegreeOfSuccess } from './resolver/degreeOfSuccess';
 export { cannotAct, collapseRollMode, statusAdvantage } from './resolver/conditions';
 export type { ConcentrationCheck } from './resolver/concentration';
 export { concentrationBreak, resolveConcentrationCheck } from './resolver/concentration';
+export type { DeathSaveResult, DeathSaveStatus } from './resolver/deathSaves';
+export { rollDeathSave } from './resolver/deathSaves';
 
 export type { AreaShape, DiagonalRule } from './resolver/areaTargeting';
 export {

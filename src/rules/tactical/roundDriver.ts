@@ -46,6 +46,7 @@ import {
 import { areaEffectToDamageIntent } from '../resolver/sceneCombat';
 import { cannotAct } from '../resolver/conditions';
 import { concentrationBreak } from '../resolver/concentration';
+import { rollDeathSave } from '../resolver/deathSaves';
 import { gridDistance } from '../resolver/areaTargeting';
 import type { DamageDefenses } from '../resolver/damageDefenses';
 import type { BlockPredicate } from '../resolver/lineOfEffect';
@@ -86,6 +87,10 @@ export interface RoundCombatant {
   statuses?: readonly string[];
   /** Spell this combatant is concentrating on (5e); damage may break it. */
   concentration?: string;
+  /** When true (a 5e character), being at 0 HP makes a death save each turn. */
+  makesDeathSaves?: boolean;
+  /** Running death-save tally when downed. */
+  deathSaves?: { successes: number; failures: number };
   /**
    * M&M condition track. HP-less M&M combatants ride a synthetic `hp` proxy
    * (1 = up, 0 = incapacitated); the real harm folds here so the round can
@@ -353,6 +358,58 @@ function breakConcentration(params: {
 }
 
 /**
+ * Roll a downed 5e character's death save for its turn: update the working tally
+ * and produce the scene intents. A revive (nat 20) heals it to 1 HP and clears
+ * the tally; a stabilize keeps it at 0 but no longer dying; three failures kill
+ * it. Returns undefined once it's already settled (stable or dead).
+ */
+function rollTurnDeathSave(params: {
+  combatant: RoundCombatant;
+  deathSaves: Record<string, { successes: number; failures: number }>;
+  hp: Record<string, number>;
+  seed: string;
+  round: number;
+}): { intents: SceneActionIntent[]; rationale: string } | undefined {
+  const id = params.combatant.tokenId;
+  const tally = params.deathSaves[id] ?? { successes: 0, failures: 0 };
+  if (tally.successes >= 3 || tally.failures >= 3) return undefined; // already settled
+
+  const result = rollDeathSave({
+    rng: participantRng(params.seed, `death::round${params.round}`, id),
+    successes: tally.successes,
+    failures: tally.failures,
+  });
+  const intents: SceneActionIntent[] = [];
+
+  if (result.status === 'revived') {
+    params.hp[id] = 1;
+    delete params.deathSaves[id];
+    intents.push({
+      type: 'apply-damage',
+      actorId: id,
+      cause: 'death save',
+      damages: [{ tokenId: id, amount: -1 }],
+    });
+    intents.push({ type: 'set-death-saves', tokenId: id });
+    return { intents, rationale: `Rolls a natural 20 on its death save — back up with 1 HP!` };
+  }
+
+  params.deathSaves[id] = { successes: result.successes, failures: result.failures };
+  intents.push({
+    type: 'set-death-saves',
+    tokenId: id,
+    deathSaves: { successes: result.successes, failures: result.failures },
+  });
+  const rationale =
+    result.status === 'dead'
+      ? `Fails its third death save and dies.`
+      : result.status === 'stable'
+        ? `Stabilizes (three death-save successes).`
+        : `Death save: ${result.successes} success(es), ${result.failures} failure(s).`;
+  return { intents, rationale };
+}
+
+/**
  * Run one full round. For each combatant in initiative order (skipping the
  * already-downed), build the live participant set from every OTHER combatant's
  * current HP, run the tactical turn, and fold any damage into the working HP so
@@ -366,11 +423,13 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
   const pos: Record<string, SceneCoordinate> = {};
   const conditions: Record<string, SceneConditionTrack> = {};
   const concentrating: Record<string, string | undefined> = {};
+  const deathSaves: Record<string, { successes: number; failures: number }> = {};
   for (const combatant of input.order) {
     hp[combatant.tokenId] = combatant.hp.current;
     pos[combatant.tokenId] = { ...combatant.position };
     if (combatant.conditions) conditions[combatant.tokenId] = { ...combatant.conditions };
     if (combatant.concentration) concentrating[combatant.tokenId] = combatant.concentration;
+    if (combatant.deathSaves) deathSaves[combatant.tokenId] = { ...combatant.deathSaves };
   }
 
   const byId = new Map(input.order.map((combatant) => [combatant.tokenId, combatant]));
@@ -383,6 +442,21 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
     const down = hp[combatant.tokenId] <= 0;
     const held = cannotAct(combatant.statuses);
     if (down || held) {
+      // A downed 5e character makes a death save instead of acting.
+      let deathRationale: string | undefined;
+      if (down && !held && combatant.makesDeathSaves) {
+        const ds = rollTurnDeathSave({
+          combatant,
+          deathSaves,
+          hp,
+          seed: input.seed,
+          round: input.round,
+        });
+        if (ds) {
+          deathRationale = ds.rationale;
+          ds.intents.forEach((intent) => intents.push(intent));
+        }
+      }
       turns.push({
         tokenId: combatant.tokenId,
         skipped: true,
@@ -390,9 +464,11 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
           actorId: combatant.tokenId,
           decision: 'no-target',
           scored: [],
-          rationale: down
-            ? 'Down at the start of its turn; skipped.'
-            : 'Incapacitated by a condition; skipped.',
+          rationale:
+            deathRationale ??
+            (down
+              ? 'Down at the start of its turn; skipped.'
+              : 'Incapacitated by a condition; skipped.'),
         },
       });
       return;

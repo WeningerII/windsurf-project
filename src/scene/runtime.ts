@@ -152,6 +152,9 @@ export function validateSceneEvent(state: SceneState, event: SceneEvent): SceneI
     case 'token.concentration-changed':
       validateKnownToken(state, event.payload.tokenId, issues, event, 'payload.tokenId');
       break;
+    case 'token.death-saves-changed':
+      validateKnownToken(state, event.payload.tokenId, issues, event, 'payload.tokenId');
+      break;
     case 'marker.added':
       validateMarkerForAdd(state, event.payload.marker, issues, event);
       break;
@@ -240,6 +243,12 @@ function buildEventFromIntent(
         payload: { tokenId: intent.tokenId, spell: spell ? spell : undefined },
       };
     }
+    case 'set-death-saves':
+      return {
+        ...base,
+        type: 'token.death-saves-changed',
+        payload: { tokenId: intent.tokenId, deathSaves: intent.deathSaves },
+      };
     case 'add-marker':
       return { ...base, type: 'marker.added', payload: { marker: cloneMarker(intent.marker) } };
     case 'remove-marker':
@@ -326,6 +335,12 @@ function applySceneEvent(state: SceneState, event: SceneEvent): void {
       const token = state.tokens[event.payload.tokenId];
       // A present spell starts/sets concentration; absent clears it.
       if (token) token.concentration = event.payload.spell;
+      break;
+    }
+    case 'token.death-saves-changed': {
+      const token = state.tokens[event.payload.tokenId];
+      // Present sets the tally; absent clears it (stabilized, revived, or up).
+      if (token) token.deathSaves = event.payload.deathSaves;
       break;
     }
     case 'marker.added':

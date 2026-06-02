@@ -183,8 +183,11 @@ function topCondition(conditions: NonNullable<SceneToken['conditions']>): string
 function buildTokenLabel(token: SceneToken): string {
   const statuses =
     token.statuses && token.statuses.length > 0 ? `, ${token.statuses.join(', ')}` : '';
+  const death = token.deathSaves
+    ? `, death saves ${token.deathSaves.successes}/3 successes, ${token.deathSaves.failures}/3 failures`
+    : '';
   if (token.hp) {
-    return `Token ${token.name}, ${Math.max(0, token.hp.current)} of ${token.hp.max} HP${statuses}`;
+    return `Token ${token.name}, ${Math.max(0, token.hp.current)} of ${token.hp.max} HP${statuses}${death}`;
   }
   if (token.conditions) {
     const top = topCondition(token.conditions);

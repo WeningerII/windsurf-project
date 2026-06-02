@@ -174,6 +174,10 @@ export function buildSceneCombatants(
       damageDefenses: stats.damageDefenses,
       statuses: token.statuses,
       concentration: token.concentration,
+      makesDeathSaves:
+        token.kind === 'character' &&
+        (state.systemId === 'dnd-5e-2014' || state.systemId === 'dnd-5e-2024'),
+      deathSaves: token.deathSaves,
       conditions: token.conditions,
       areaActions: areaActions && areaActions.length > 0 ? areaActions : undefined,
       auras: auras && auras.length > 0 ? auras : undefined,

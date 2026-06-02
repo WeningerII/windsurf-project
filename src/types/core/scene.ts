@@ -55,6 +55,12 @@ export interface SceneToken {
    */
   concentration?: string;
   /**
+   * 5e death-saving-throw tally for a downed character (at 0 HP, not yet dead).
+   * Set by `token.death-saves-changed`; three successes stabilize, three
+   * failures kill. Absent while the token is up.
+   */
+  deathSaves?: { successes: number; failures: number };
+  /**
    * Optional M&M-style condition track (the systems without hit points track
    * harm as conditions, not HP). Accumulated by `token.conditions-changed`
    * events; `incapacitated` is the "down" state for such combatants.
@@ -131,6 +137,7 @@ export type SceneEventType =
   | 'token.conditions-changed'
   | 'token.statuses-changed'
   | 'token.concentration-changed'
+  | 'token.death-saves-changed'
   | 'marker.added'
   | 'marker.removed'
   | 'initiative.set'
@@ -165,6 +172,10 @@ export type SceneEvent =
   | SceneEventBase<'token.conditions-changed', { tokenId: string; delta: SceneConditionTrack }>
   | SceneEventBase<'token.statuses-changed', { tokenId: string; statuses: string[] }>
   | SceneEventBase<'token.concentration-changed', { tokenId: string; spell?: string }>
+  | SceneEventBase<
+      'token.death-saves-changed',
+      { tokenId: string; deathSaves?: { successes: number; failures: number } }
+    >
   | SceneEventBase<'marker.added', { marker: SceneMarker }>
   | SceneEventBase<'marker.removed', { markerId: string }>
   | SceneEventBase<'initiative.set', { entries: SceneInitiativeEntry[]; activeTokenId?: string }>
@@ -201,6 +212,12 @@ export type SceneActionIntent =
   | { type: 'apply-conditions'; actorId?: string; tokenId: string; delta: SceneConditionTrack }
   | { type: 'set-statuses'; actorId?: string; tokenId: string; statuses: string[] }
   | { type: 'set-concentration'; actorId?: string; tokenId: string; spell?: string }
+  | {
+      type: 'set-death-saves';
+      actorId?: string;
+      tokenId: string;
+      deathSaves?: { successes: number; failures: number };
+    }
   | { type: 'add-marker'; actorId?: string; marker: SceneMarker }
   | { type: 'remove-marker'; actorId?: string; markerId: string }
   | {
