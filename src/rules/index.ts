@@ -144,7 +144,7 @@ export type {
   TacticalTurnInput,
   TacticalTurnResult,
 } from './tactical/tacticalExecutor';
-export { executeTacticalTurn } from './tactical/tacticalExecutor';
+export { executeTacticalTurn, pf2eMapPenalty, resolveStrike } from './tactical/tacticalExecutor';
 
 export type {
   RoundCombatant,

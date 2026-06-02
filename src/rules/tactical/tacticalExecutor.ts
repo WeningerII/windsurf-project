@@ -186,13 +186,15 @@ export interface StrikeOutcome {
 export function resolveStrike(
   input: TacticalTurnInput,
   target: TacticalTarget,
-  rng: ReturnType<typeof participantRng>
+  rng: ReturnType<typeof participantRng>,
+  toHitPenalty = 0
 ): StrikeOutcome {
   const { actor } = input;
 
   // Cover between attacker and target: total cover is no line of sight; otherwise
   // a per-system bonus folded into the target's defense. Flanking (3.5e/PF1e/PF2e)
-  // pulls the other way, lowering the effective defense by its to-hit value.
+  // pulls the other way, lowering the effective defense by its to-hit value, while
+  // a to-hit penalty (PF2e's multiple attack penalty) raises it.
   const cover = input.isBlocked
     ? coverBetween(actor.position, target.position, input.isBlocked)
     : 'none';
@@ -211,7 +213,8 @@ export function resolveStrike(
         .map((other) => other.position),
       rule: input.diagonalRule,
     });
-  const defenseBonus = coverAcBonus(cover, input.systemId ?? '') - (flanked ? flank : 0);
+  const defenseBonus =
+    coverAcBonus(cover, input.systemId ?? '') - (flanked ? flank : 0) + toHitPenalty;
 
   if (input.systemId === 'daggerheart' && target.thresholds) {
     const dh = resolveDaggerheartAttack({
@@ -307,6 +310,16 @@ function damageToTarget(intent: SceneActionIntent | undefined, tokenId: string):
   return intent.damages.find((d) => d.tokenId === tokenId)?.amount ?? 0;
 }
 
+/**
+ * PF2e multiple attack penalty (CRB p.446): the second attack in a turn is at
+ * −5 and the third+ at −10 (non-agile baseline; agile weapons take −4/−8, which
+ * the data doesn't reliably mark). Returned as a positive to-hit penalty.
+ */
+export function pf2eMapPenalty(attackIndex: number): number {
+  if (attackIndex <= 0) return 0;
+  return attackIndex === 1 ? 5 : 10;
+}
+
 interface MultiStrikeOutcome {
   intent?: SceneActionIntent;
   /** The first swing's resolution (for crit/hit logging). */
@@ -327,14 +340,20 @@ interface MultiStrikeOutcome {
  */
 function resolveStrikes(input: TacticalTurnInput, target: TacticalTarget): MultiStrikeOutcome {
   const { actor } = input;
-  const attacks = Math.max(1, Math.floor(actor.attacksPerTurn ?? 1));
+  // PF2e's three-action economy: a creature with no explicit count Strikes twice
+  // (spending two of its three actions), the second at the multiple-attack
+  // penalty. Other systems make a single attack unless they carry a count.
+  const isPf2e = input.systemId === 'pf2e';
+  const attacks = Math.max(1, Math.floor(actor.attacksPerTurn ?? (isPf2e ? 2 : 1)));
 
   const strikes = Array.from({ length: attacks }, (_, i) => {
     const rng =
       i === 0
         ? participantRng(input.seed, actor.tokenId, target.tokenId)
         : participantRng(input.seed, actor.tokenId, target.tokenId, `attack${i}`);
-    return resolveStrike(input, target, rng);
+    // PF2e MAP: −5 on the second Strike, −10 on the third+ (non-agile baseline).
+    const toHitPenalty = isPf2e ? pf2eMapPenalty(i) : 0;
+    return resolveStrike(input, target, rng, toHitPenalty);
   });
 
   if (attacks === 1) {
