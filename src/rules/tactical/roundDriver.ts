@@ -51,6 +51,8 @@ export interface RoundCombatant {
   critOn?: number;
   /** Weapon critical multiplier (3.5e/PF1e ×2/×3/×4); defaults to ×2 when absent. */
   critMultiplier?: number;
+  /** Attacks made per turn (Multiattack / Extra Attack); defaults to 1. */
+  attacksPerTurn?: number;
   /** Movement budget in grid cells per turn. */
   speed?: number;
   /** Save-based area actions this combatant may unleash (breath / spells). */
@@ -123,6 +125,7 @@ function toActor(combatant: RoundCombatant, position: SceneCoordinate): Tactical
     critOn: combatant.critOn,
     critMultiplier: combatant.critMultiplier,
     speed: combatant.speed,
+    attacksPerTurn: combatant.attacksPerTurn,
     effectRank: combatant.effectRank,
     areaActions: combatant.areaActions,
   };

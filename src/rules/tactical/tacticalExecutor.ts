@@ -66,8 +66,12 @@ export interface TacticalTurnResult {
   scored: ScoredTarget[];
   /** The chosen target id, when a single target was selected. */
   chosenTargetId?: string;
-  /** The resolved attack, when a single attack was made. */
+  /** The resolved attack (the first swing, when several were made). */
   resolution?: AttackResolution;
+  /** Number of swings this attack action made (Multiattack / Extra Attack). */
+  attacks?: number;
+  /** How many of those swings hit. */
+  hits?: number;
   /** The area action unleashed, when the decision was `area-effect`. */
   chosenAreaActionName?: string;
   /** Where the area action was aimed. */
@@ -172,9 +176,12 @@ interface StrikeOutcome {
  * uniformly (damage decrements working HP; an incapacitating M&M hit drops the
  * target to the down proxy).
  */
-function resolveStrike(input: TacticalTurnInput, target: TacticalTarget): StrikeOutcome {
+function resolveStrike(
+  input: TacticalTurnInput,
+  target: TacticalTarget,
+  rng: ReturnType<typeof participantRng>
+): StrikeOutcome {
   const { actor } = input;
-  const rng = participantRng(input.seed, actor.tokenId, target.tokenId);
 
   if (input.systemId === 'daggerheart' && target.thresholds) {
     const dh = resolveDaggerheartAttack({
@@ -253,6 +260,79 @@ function resolveStrike(input: TacticalTurnInput, target: TacticalTarget): Strike
   };
 }
 
+/** The damage an apply-damage intent deals to a specific token (0 otherwise). */
+function damageToTarget(intent: SceneActionIntent | undefined, tokenId: string): number {
+  if (!intent || intent.type !== 'apply-damage') return 0;
+  return intent.damages.find((d) => d.tokenId === tokenId)?.amount ?? 0;
+}
+
+interface MultiStrikeOutcome {
+  intent?: SceneActionIntent;
+  /** The first swing's resolution (for crit/hit logging). */
+  resolution?: AttackResolution;
+  attacks: number;
+  hits: number;
+  totalDamage: number;
+  narration: string;
+}
+
+/**
+ * Resolve a full attack action — all the actor's swings (Multiattack / Extra
+ * Attack) against one target. The first swing uses the same seeded stream as a
+ * lone attack, so single-attack outcomes are unchanged; extra swings draw their
+ * own sub-streams. Damage across swings folds into ONE apply-damage intent so
+ * the round driver applies the turn once. (M&M's condition track and other
+ * non-damage intents only ever occur at one swing, so they pass through.)
+ */
+function resolveStrikes(input: TacticalTurnInput, target: TacticalTarget): MultiStrikeOutcome {
+  const { actor } = input;
+  const attacks = Math.max(1, Math.floor(actor.attacksPerTurn ?? 1));
+
+  const strikes = Array.from({ length: attacks }, (_, i) => {
+    const rng =
+      i === 0
+        ? participantRng(input.seed, actor.tokenId, target.tokenId)
+        : participantRng(input.seed, actor.tokenId, target.tokenId, `attack${i}`);
+    return resolveStrike(input, target, rng);
+  });
+
+  if (attacks === 1) {
+    const only = strikes[0];
+    return {
+      intent: only.intent,
+      resolution: only.resolution,
+      attacks: 1,
+      hits: only.hit ? 1 : 0,
+      totalDamage: damageToTarget(only.intent, target.tokenId),
+      narration: only.narration,
+    };
+  }
+
+  let hits = 0;
+  let totalDamage = 0;
+  for (const strike of strikes) {
+    if (strike.hit) hits += 1;
+    totalDamage += damageToTarget(strike.intent, target.tokenId);
+  }
+  const intent: SceneActionIntent | undefined =
+    totalDamage > 0
+      ? {
+          type: 'apply-damage',
+          actorId: actor.tokenId,
+          cause: input.cause,
+          damages: [{ tokenId: target.tokenId, amount: totalDamage }],
+        }
+      : undefined;
+  return {
+    intent,
+    resolution: strikes[0].resolution,
+    attacks,
+    hits,
+    totalDamage,
+    narration: `${hits}/${attacks} attacks hit for ${totalDamage}`,
+  };
+}
+
 /**
  * Decide and resolve one combatant's turn.
  *
@@ -321,7 +401,7 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
 
     // If the move closes to reach, attack from the new position (move + strike).
     if (move.inReach) {
-      const strike = resolveStrike(input, nearestTarget);
+      const strike = resolveStrikes(input, nearestTarget);
       return {
         actorId: input.actor.tokenId,
         decision: 'attack',
@@ -329,6 +409,8 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
         chosenTargetId: nearest.tokenId,
         moveTo: move.destination,
         resolution: strike.resolution,
+        attacks: strike.attacks,
+        hits: strike.hits,
         intent: strike.intent,
         rationale: `Moved ${move.cost} to engage ${nearest.tokenId}, then ${strike.narration}.`,
       };
@@ -348,13 +430,15 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
   }
 
   const target = input.targets.find((candidate) => candidate.tokenId === reachable.tokenId)!;
-  const strike = resolveStrike(input, target);
+  const strike = resolveStrikes(input, target);
   return {
     actorId: input.actor.tokenId,
     decision: 'attack',
     scored,
     chosenTargetId: reachable.tokenId,
     resolution: strike.resolution,
+    attacks: strike.attacks,
+    hits: strike.hits,
     intent: strike.intent,
     rationale: `Attacked ${reachable.tokenId} (score ${reachable.score}): ${strike.narration}.`,
   };

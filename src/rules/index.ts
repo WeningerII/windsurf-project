@@ -155,6 +155,7 @@ export type { MonsterCombatant, MonsterSaveAction } from './combatants/monsterCo
 export {
   buildMonsterCombatant,
   monsterAttackEffects,
+  monsterAttacksPerTurn,
   monsterAuras,
   monsterAverageHitPoints,
   monsterDamageEffects,

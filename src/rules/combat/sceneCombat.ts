@@ -64,6 +64,8 @@ export interface SceneCombatStats {
   critOn?: number;
   /** Weapon critical multiplier (3.5e/PF1e ×2/×3/×4); defaults to ×2 when absent. */
   critMultiplier?: number;
+  /** Attacks made per turn (Multiattack / Extra Attack); defaults to 1. */
+  attacksPerTurn?: number;
   /**
    * Daggerheart damage thresholds (Major/Severe). Present makes this combatant a
    * Daggerheart target: an attack marks 1-3 HP slots by threshold instead of
@@ -156,6 +158,7 @@ export function buildSceneCombatants(
       speed: stats.speed,
       critOn: stats.critOn,
       critMultiplier: stats.critMultiplier,
+      attacksPerTurn: stats.attacksPerTurn,
       thresholds: stats.thresholds,
       toughness: stats.toughness,
       effectRank: stats.effectRank,
@@ -488,6 +491,19 @@ export function runSceneRound(params: {
             ? 'dazes'
             : 'bruises';
       return `${nameOf(turn.tokenId)} ${moved}${effect} ${target}.`;
+    }
+    // A full attack action of several swings (Multiattack / Extra Attack).
+    if ((turn.turn.attacks ?? 1) > 1) {
+      const attacks = turn.turn.attacks ?? 1;
+      const hits = turn.turn.hits ?? 0;
+      const total =
+        turn.turn.intent?.type === 'apply-damage'
+          ? (turn.turn.intent.damages.find((d) => d.tokenId === turn.turn.chosenTargetId)?.amount ??
+            0)
+          : 0;
+      return hits > 0
+        ? `${nameOf(turn.tokenId)} ${moved}makes ${attacks} attacks on ${target}, ${hits} hitting for ${total}.`
+        : `${nameOf(turn.tokenId)} ${moved}makes ${attacks} attacks on ${target}, all missing.`;
     }
     const res = turn.turn.resolution;
     if (!res) {

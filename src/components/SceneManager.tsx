@@ -363,6 +363,7 @@ export function SceneManager({
           armorClass: built.armorClass,
           reach: built.reach,
           speed: Math.max(1, Math.floor((monster.speed?.walk ?? 30) / 5)),
+          attacksPerTurn: built.attacksPerTurn,
           saveBonus: (ability: string) => monsterSaveBonus(monster, ability),
         };
       }

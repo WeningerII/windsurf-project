@@ -38,6 +38,8 @@ export interface TacticalActor {
   critMultiplier?: number;
   /** Movement budget in grid cells per turn (for closing distance). */
   speed?: number;
+  /** Attacks made per turn (Multiattack / Extra Attack); defaults to 1. */
+  attacksPerTurn?: number;
   /** M&M effect rank of this combatant's attack (Toughness DC = 15 + rank). */
   effectRank?: number;
   /** Save-based area actions (breath / spells) this combatant may unleash. */

@@ -513,6 +513,40 @@ export function primaryAttackAction(monster: Monster): Action | undefined {
   return monster.actions.find((action) => normalizeAttack(action) !== undefined);
 }
 
+const NUMBER_WORDS: Record<string, number> = {
+  one: 1,
+  two: 2,
+  three: 3,
+  four: 4,
+  five: 5,
+  six: 6,
+  seven: 7,
+  eight: 8,
+};
+
+/**
+ * How many attacks the monster makes per turn, from its "Multiattack" action.
+ * 5e statblocks phrase the total as "… makes N (weapon) attacks", so we anchor
+ * on "makes" and read the count governing the first "attack(s)". Honest
+ * baseline: the count drives the action economy (the primary attack repeated);
+ * mixed routines like "one bite and two claws" approximate per-hit damage with
+ * the primary attack while getting the number of swings right. Defaults to 1
+ * when there is no Multiattack or no parseable count.
+ */
+export function monsterAttacksPerTurn(monster: Monster): number {
+  const action = (monster.actions ?? []).find(
+    (candidate) => candidate.name?.toLowerCase() === 'multiattack'
+  );
+  if (!action?.description) return 1;
+  const match = /makes\s+(\d+|one|two|three|four|five|six|seven|eight)\b[^.]*?\battacks?\b/i.exec(
+    action.description
+  );
+  if (!match) return 1;
+  const raw = match[1].toLowerCase();
+  const count = /^\d+$/.test(raw) ? Number(raw) : (NUMBER_WORDS[raw] ?? 1);
+  return Math.min(Math.max(1, count), 8);
+}
+
 /** Build attack-roll effects for a monster's primary attack. */
 export function monsterAttackEffects(monster: Monster, action: Action): EffectInstance[] {
   const normalized = normalizeAttack(action);
@@ -586,6 +620,8 @@ export interface MonsterCombatant {
   damageEffects: EffectInstance[];
   reach: number;
   armorClass: number;
+  /** Attacks per turn from a "Multiattack" action (1 when none). */
+  attacksPerTurn: number;
 }
 
 /**
@@ -615,5 +651,6 @@ export function buildMonsterCombatant(
     damageEffects: action ? monsterDamageEffects(monster, action) : [],
     reach: action ? (normalizeAttack(action)?.reachCells ?? 1) : 1,
     armorClass: monster.armorClass,
+    attacksPerTurn: monsterAttacksPerTurn(monster),
   };
 }
