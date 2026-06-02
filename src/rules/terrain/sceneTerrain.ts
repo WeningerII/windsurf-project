@@ -91,6 +91,40 @@ export function sceneBlockPredicate(state: SceneState): BlockPredicate {
   return (cell) => walls.some((marker) => markerCoversCell(marker, cell));
 }
 
+/**
+ * The cost multiplier to ENTER a cell covered by this marker, when it declares
+ * difficult terrain (`target: 'difficult-terrain'` or `'movement-cost'`). The
+ * value is the multiplier (≥2); a bare flag defaults to ×2 (5e difficult
+ * terrain — each cell costs double). Non-terrain markers return 1.
+ */
+export function markerMoveCostMultiplier(marker: SceneMarker): number {
+  const effect = (marker.effects ?? []).find(
+    (entry) => entry.target === 'difficult-terrain' || entry.target === 'movement-cost'
+  );
+  if (!effect) return 1;
+  return typeof effect.value === 'number' && effect.value > 1 ? effect.value : 2;
+}
+
+/**
+ * A per-cell entering-cost function over the scene's difficult-terrain markers:
+ * 1 on open ground, the marker's multiplier (≥2) on difficult terrain, taking
+ * the worst when markers overlap. Feeds `moveToward` so the auto-round spends
+ * the right movement crossing mud, rubble, or undergrowth.
+ */
+export function sceneMoveCost(state: SceneState): (cell: SceneCoordinate) => number {
+  const rough = Object.values(state.markers)
+    .map((marker) => ({ marker, mult: markerMoveCostMultiplier(marker) }))
+    .filter((entry) => entry.mult > 1);
+  if (rough.length === 0) return () => 1;
+  return (cell) => {
+    let mult = 1;
+    for (const { marker, mult: m } of rough) {
+      if (markerCoversCell(marker, cell)) mult = Math.max(mult, m);
+    }
+    return mult;
+  };
+}
+
 /** Map a single marker's stored terrain effects onto real EffectInstances. */
 export function markerToEffects(marker: SceneMarker, systemId: string): EffectInstance[] {
   if (!marker.effects || marker.effects.length === 0) {

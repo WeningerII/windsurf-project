@@ -213,7 +213,13 @@ export {
   runSceneRound,
 } from './combat/sceneCombat';
 
-export { collectTerrainEffectsAt, markerCoversCell, markerToEffects } from './terrain/sceneTerrain';
+export {
+  collectTerrainEffectsAt,
+  markerCoversCell,
+  markerMoveCostMultiplier,
+  markerToEffects,
+  sceneMoveCost,
+} from './terrain/sceneTerrain';
 
 export { effectToLedgerEntry, toContributionLedger } from './ir/ledgerView';
 

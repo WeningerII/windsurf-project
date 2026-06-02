@@ -51,7 +51,7 @@ import {
   type AuraAction,
   type SceneAreaAction,
 } from '../resolver/areaParticipants';
-import { sceneBlockPredicate } from '../terrain/sceneTerrain';
+import { sceneBlockPredicate, sceneMoveCost } from '../terrain/sceneTerrain';
 import { coverAcBonus, coverBetween } from '../resolver/lineOfEffect';
 import { flankToHitBonus, isFlanking } from '../tactical/flanking';
 import type { AreaOfEffect } from '../../types/core/common';
@@ -515,6 +515,7 @@ export function runSceneRound(params: {
     diagonalRule: diagonalRuleForSystem(params.state.systemId),
     saveModel: params.state.systemId === 'pf2e' ? 'pf2e-basic' : 'binary',
     systemId: params.state.systemId,
+    enterCost: sceneMoveCost(params.state),
   });
 
   const nameOf = (tokenId: string): string => params.state.tokens[tokenId]?.name ?? tokenId;

@@ -44,12 +44,15 @@ export function moveToward(params: {
   isBlocked?: BlockPredicate;
   /** Cells occupied by other creatures (cannot be ended on). */
   isOccupied?: BlockPredicate;
+  /** Cost multiplier to ENTER a cell (≥1; e.g. 2 for difficult terrain). Default 1. */
+  enterCost?: (cell: SceneCoordinate) => number;
   rule?: DiagonalRule;
 }): MoveResult {
   const { from, target, speed, reach } = params;
   const rule = params.rule ?? 'chebyshev';
   const isBlocked = params.isBlocked ?? NO_BLOCK;
   const baseOccupied = params.isOccupied ?? NO_BLOCK;
+  const enterCost = params.enterCost ?? (() => 1);
   // The target's own cell is impassable — a melee mover ends adjacent, never on it.
   const isOccupied: BlockPredicate = (c) =>
     baseOccupied(c) || (c.x === target.x && c.y === target.y);
@@ -85,7 +88,8 @@ export function moveToward(params: {
         if (dx === 0 && dy === 0) continue;
         const next = { x: cell.x + dx, y: cell.y + dy };
         if (isBlocked(next) || isOccupied(next)) continue;
-        const nextCost = cost + gridDistance(cell, next, rule);
+        // Difficult terrain multiplies the cost of entering a cell.
+        const nextCost = cost + gridDistance(cell, next, rule) * enterCost(next);
         if (nextCost > speed) continue;
         if (nextCost < (best.get(key(next)) ?? Infinity)) {
           best.set(key(next), nextCost);

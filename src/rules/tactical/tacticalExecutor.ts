@@ -56,6 +56,8 @@ export interface TacticalTurnInput {
   saveModel?: SaveModel;
   /** System id (drives cover→save bonus); default unset. */
   systemId?: string;
+  /** Per-cell movement entering cost (≥1; difficult terrain). Default 1. */
+  enterCost?: (cell: SceneCoordinate) => number;
 }
 
 export type TacticalDecisionKind = 'attack' | 'area-effect' | 'move-to-engage' | 'no-target';
@@ -433,6 +435,7 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
       reach,
       isBlocked: input.isBlocked,
       isOccupied: occupied,
+      enterCost: input.enterCost,
       rule: input.diagonalRule,
     });
 

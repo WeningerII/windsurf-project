@@ -115,6 +115,8 @@ export interface RunRoundInput {
   saveModel?: SaveModel;
   /** System id (drives cover→save bonus). */
   systemId?: string;
+  /** Per-cell movement entering cost (≥1; difficult terrain). Default 1. */
+  enterCost?: (cell: SceneCoordinate) => number;
 }
 
 function toActor(combatant: RoundCombatant, position: SceneCoordinate): TacticalActor {
@@ -284,6 +286,7 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
       diagonalRule: input.diagonalRule,
       saveModel: input.saveModel,
       systemId: input.systemId,
+      enterCost: input.enterCost,
     });
 
     // Apply movement first: update the working position and emit a move event so
