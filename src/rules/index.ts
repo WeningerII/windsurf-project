@@ -124,6 +124,13 @@ export type {
 } from './combatants/characterCombatant';
 export { buildCharacterCombatant, characterSaveBonus } from './combatants/characterCombatant';
 
+export {
+  casterSpellAreaActions,
+  spellAreaAction,
+  spellDamageEffects,
+  spellSaveDC,
+} from './combatants/spellCaster';
+
 export type {
   ResolveCombatStats,
   SceneAreaAction,

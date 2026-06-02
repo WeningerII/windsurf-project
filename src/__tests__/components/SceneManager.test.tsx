@@ -52,6 +52,7 @@ const encounterMonsterFixtures = vi.hoisted(() => [
 
 vi.mock('../../utils/dataLoader', () => ({
   loadMonstersForSystem: vi.fn(async () => encounterMonsterFixtures),
+  loadSpellsForSystem: vi.fn(async () => []),
 }));
 
 const now = new Date('2026-05-01T12:00:00.000Z');

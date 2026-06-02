@@ -1,7 +1,7 @@
 import { Flame, Swords, Zap } from 'lucide-react';
 import type { SceneState } from '../../types/core/scene';
 import type { AreaOfEffect } from '../../types/core/common';
-import type { MonsterSaveAction } from '../../rules';
+import type { SceneAreaAction } from '../../rules';
 import { Button } from '../ui/Button';
 import { Select } from '../ui/Select';
 import { Badge } from '../ui/Badge';
@@ -40,8 +40,8 @@ interface CombatPanelProps {
   onTargetChange: (targetId: string) => void;
   onAttack: () => void;
   onRunRound: () => void;
-  /** Save-based area actions (breath weapons / AoE) the attacker can use. */
-  saveActions: MonsterSaveAction[];
+  /** Save-based area actions (breath weapons / spells) the attacker can use. */
+  saveActions: SceneAreaAction[];
   /** Currently chosen area action name (aimed at `targetId`). */
   selectedSaveActionName: string;
   onSaveActionChange: (name: string) => void;
@@ -137,7 +137,7 @@ export function CombatPanel({
         {saveActions.length > 0 && (
           <div className="space-y-2 border-t pt-2">
             <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-              <Flame className="h-3.5 w-3.5" /> Area / Breath
+              <Flame className="h-3.5 w-3.5" /> Area Effect (breath / spell)
             </div>
             <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
               <Select

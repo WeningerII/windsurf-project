@@ -17,6 +17,7 @@ import {
   areaShapeForAction,
   buildCharacterCombatant,
   buildMonsterCombatant,
+  casterSpellAreaActions,
   characterSaveBonus,
   diagonalRuleForSystem,
   monsterSaveActions,
@@ -25,8 +26,8 @@ import {
   resolveSceneAttack,
   runSceneRound,
   tokensInArea,
-  type MonsterSaveAction,
   type ResolveCombatStats,
+  type SceneAreaAction,
 } from '../rules';
 import type { Campaign } from '../types/core/campaign';
 import type { CharacterDocument, SystemDataModel } from '../types/core/document';
@@ -40,7 +41,8 @@ import type {
   SceneTokenKind,
 } from '../types/core/scene';
 import { systemRegistry } from '../registry';
-import { loadMonstersForSystem } from '../utils/dataLoader';
+import { loadMonstersForSystem, loadSpellsForSystem } from '../utils/dataLoader';
+import type { Spell } from '../types/magic/spells';
 import { exportScenes, importScenes } from '../utils/sceneStorage';
 import { generateUUID } from '../utils/browserCompat';
 import { Button } from './ui/Button';
@@ -104,6 +106,7 @@ export function SceneManager({
   const [encounterSelections, setEncounterSelections] = useState<EncounterMonsterSelection[]>([]);
   const [monstersLoading, setMonstersLoading] = useState(false);
   const [monsterLoadError, setMonsterLoadError] = useState<string | null>(null);
+  const [spellsById, setSpellsById] = useState<Map<string, Spell>>(() => new Map());
   const [initiativeValues, setInitiativeValues] = useState<Record<string, string>>({});
   const [actionIssues, setActionIssues] = useState<string[]>([]);
   const [combatTargetId, setCombatTargetId] = useState('');
@@ -172,6 +175,26 @@ export function SceneManager({
         if (!cancelled) setMonstersLoading(false);
       });
 
+    return () => {
+      cancelled = true;
+    };
+  }, [sceneSystemId]);
+
+  // Load the system's spells so a selected PC caster can unleash its known AoE
+  // spells (fireball, etc.); skipped for systems without character combatants.
+  useEffect(() => {
+    if (!sceneSystemId || !isSpellcasterSystem(sceneSystemId)) {
+      setSpellsById(new Map());
+      return undefined;
+    }
+    let cancelled = false;
+    loadSpellsForSystem(sceneSystemId)
+      .then((spells) => {
+        if (!cancelled) setSpellsById(new Map(spells.map((spell) => [spell.id, spell])));
+      })
+      .catch(() => {
+        if (!cancelled) setSpellsById(new Map());
+      });
     return () => {
       cancelled = true;
     };
@@ -389,19 +412,26 @@ export function SceneManager({
     setActionIssues([]);
   };
 
-  // Save-based area actions (breath weapons / AoE) the SELECTED token can use,
-  // resolved from its monster statblock. (PC area spells are a later adapter.)
-  const attackerSaveActions = useMemo<MonsterSaveAction[]>(() => {
+  // Save-based area actions the SELECTED token can unleash: a monster's breath /
+  // AoE from its statblock, or a PC caster's known AoE spells (fireball, etc.).
+  const attackerAreaActions = useMemo<SceneAreaAction[]>(() => {
     if (!state || !selectedTokenId) return [];
     const token = state.tokens[selectedTokenId];
-    if (token?.kind !== 'monster' || !token.refId) return [];
-    const monster = monstersById.get(token.refId);
-    return monster ? monsterSaveActions(monster) : [];
-  }, [state, selectedTokenId, monstersById]);
+    if (!token?.refId) return [];
+    if (token.kind === 'monster') {
+      const monster = monstersById.get(token.refId);
+      return monster ? monsterSaveActions(monster) : [];
+    }
+    if (token.kind === 'character') {
+      const doc = documentsById.get(token.refId);
+      return doc ? casterSpellAreaActions(doc, spellsById, doc.systemId as GameSystemId) : [];
+    }
+    return [];
+  }, [state, selectedTokenId, monstersById, documentsById, spellsById]);
 
   const selectedSaveAction = useMemo(
-    () => attackerSaveActions.find((action) => action.name === combatSaveActionName),
-    [attackerSaveActions, combatSaveActionName]
+    () => attackerAreaActions.find((action) => action.name === combatSaveActionName),
+    [attackerAreaActions, combatSaveActionName]
   );
 
   // Live count of tokens the chosen area action would catch, aimed at the current
@@ -964,7 +994,7 @@ export function SceneManager({
                     onTargetChange={setCombatTargetId}
                     onAttack={handleCombatAttack}
                     onRunRound={handleRunRound}
-                    saveActions={attackerSaveActions}
+                    saveActions={attackerAreaActions}
                     selectedSaveActionName={selectedSaveAction?.name ?? ''}
                     onSaveActionChange={setCombatSaveActionName}
                     onAreaEffect={handleAreaEffect}
@@ -988,4 +1018,15 @@ function positiveIntegerOrDefault(value: string, fallback: number): number {
 
 function isMonsterSystemId(systemId: string): systemId is GameSystemId {
   return systemId === 'dnd-5e-2014' || systemId === 'dnd-5e-2024';
+}
+
+/** Systems whose characters become combatants and can therefore cast AoE spells. */
+function isSpellcasterSystem(systemId: string): systemId is GameSystemId {
+  return (
+    systemId === 'dnd-5e-2014' ||
+    systemId === 'dnd-5e-2024' ||
+    systemId === 'dnd-3.5e' ||
+    systemId === 'pf1e' ||
+    systemId === 'pf2e'
+  );
 }
