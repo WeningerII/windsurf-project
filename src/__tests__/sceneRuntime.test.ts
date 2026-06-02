@@ -180,3 +180,50 @@ describe('scene runtime', () => {
     ]);
   });
 });
+
+describe('scene runtime — damage and healing', () => {
+  function hpToken(id: string, hp: { current: number; max: number; temp?: number }): SceneToken {
+    return { id, name: id, kind: 'character', position: { x: 1, y: 1 }, size: 1, hp };
+  }
+
+  it('spends temp HP first on damage and caps healing at max', () => {
+    let scene = createSceneDocument({
+      id: 'heal-scene',
+      name: 'Infirmary',
+      systemId: 'dnd-5e-2024',
+      grid: { width: 8, height: 8 },
+      seed: 'heal',
+      now: NOW,
+    });
+    scene = appendResolved(
+      scene,
+      resolveSceneAction(
+        scene,
+        { type: 'place-token', token: hpToken('hero', { current: 20, max: 30, temp: 5 }) },
+        { eventId: 'evt-place', createdAt: NOW }
+      )
+    );
+
+    // 8 damage: temp (5) absorbs first, the remaining 3 comes off current.
+    scene = appendResolved(
+      scene,
+      resolveSceneAction(
+        scene,
+        { type: 'apply-damage', damages: [{ tokenId: 'hero', amount: 8 }] },
+        { eventId: 'evt-dmg', createdAt: NOW }
+      )
+    );
+    expect(foldSceneEvents(scene).state.tokens.hero.hp).toEqual({ current: 17, max: 30, temp: 0 });
+
+    // Healing is a negative amount; it restores current and never exceeds max.
+    scene = appendResolved(
+      scene,
+      resolveSceneAction(
+        scene,
+        { type: 'apply-damage', cause: 'heal', damages: [{ tokenId: 'hero', amount: -20 }] },
+        { eventId: 'evt-heal', createdAt: NOW }
+      )
+    );
+    expect(foldSceneEvents(scene).state.tokens.hero.hp).toEqual({ current: 30, max: 30, temp: 0 });
+  });
+});

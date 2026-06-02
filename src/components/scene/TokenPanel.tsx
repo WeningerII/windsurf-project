@@ -1,4 +1,5 @@
-import { Plus, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import { Heart, Plus, Trash2 } from 'lucide-react';
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
 import type { SceneTokenKind } from '../../types/core/scene';
 import { Button } from '../ui/Button';
@@ -17,6 +18,10 @@ interface TokenPanelProps {
   onTogglePlace: () => void;
   canDeleteToken: boolean;
   onDeleteSelectedToken: () => void;
+  /** The selected token's HP, when it has any — enables the damage/heal control. */
+  selectedTokenHp?: { current: number; max: number; temp?: number };
+  /** Apply a signed HP delta (apply-damage semantics: positive damages, negative heals). */
+  onApplyHpDelta?: (amount: number) => void;
 }
 
 /** Token controls: link a character (or define a manual token) and place it. */
@@ -32,7 +37,15 @@ export function TokenPanel({
   onTogglePlace,
   canDeleteToken,
   onDeleteSelectedToken,
+  selectedTokenHp,
+  onApplyHpDelta,
 }: TokenPanelProps) {
+  const [hpAmount, setHpAmount] = useState('');
+  const amount = Math.max(0, Math.floor(Number(hpAmount) || 0));
+  const applyHp = (signed: number) => {
+    onApplyHpDelta?.(signed);
+    setHpAmount('');
+  };
   return (
     <div className="rounded-lg border bg-card p-3">
       <div className="mb-2 flex items-center justify-between gap-2">
@@ -91,6 +104,44 @@ export function TokenPanel({
           <Plus className="mr-1.5 h-4 w-4" />
           Place Token
         </Button>
+
+        {selectedTokenHp && onApplyHpDelta && (
+          <div className="space-y-1.5 border-t pt-2">
+            <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+              <Heart className="h-3.5 w-3.5" />
+              Hit Points: {Math.max(0, selectedTokenHp.current)}/{selectedTokenHp.max}
+              {selectedTokenHp.temp ? ` (+${selectedTokenHp.temp} temp)` : ''}
+            </div>
+            <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] gap-2">
+              <Input
+                aria-label="HP amount"
+                type="number"
+                min={0}
+                value={hpAmount}
+                onChange={(event) => setHpAmount(event.target.value)}
+                placeholder="Amount"
+              />
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={amount <= 0}
+                onClick={() => applyHp(amount)}
+                title="Apply damage"
+              >
+                Damage
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={amount <= 0}
+                onClick={() => applyHp(-amount)}
+                title="Restore hit points"
+              >
+                Heal
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -727,6 +727,18 @@ export function SceneManager({
     if (removed) setSelectedTokenId(undefined);
   };
 
+  // Manual HP change on the selected token (heal a potion, narrate damage, a
+  // rest). Positive damages, negative heals — the runtime spends temp HP first
+  // and caps healing at max.
+  const handleApplyHpDelta = (amount: number) => {
+    if (!selectedScene || !selectedTokenId || amount === 0) return;
+    emitSceneAction(selectedScene, {
+      type: 'apply-damage',
+      cause: amount < 0 ? 'heal' : 'manual damage',
+      damages: [{ tokenId: selectedTokenId, amount }],
+    });
+  };
+
   const handleDeleteMarker = (markerId: string) => {
     if (!selectedScene) return;
     emitSceneAction(selectedScene, {
@@ -1088,6 +1100,10 @@ export function SceneManager({
                     }
                     canDeleteToken={Boolean(selectedTokenId)}
                     onDeleteSelectedToken={handleDeleteSelectedToken}
+                    selectedTokenHp={
+                      selectedTokenId ? state?.tokens[selectedTokenId]?.hp : undefined
+                    }
+                    onApplyHpDelta={handleApplyHpDelta}
                   />
 
                   <EncounterPanel
