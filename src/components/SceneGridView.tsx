@@ -92,6 +92,13 @@ export function SceneGridView({
                       }}
                     >
                       {getTokenInitials(token)}
+                      {token.statuses && token.statuses.length > 0 && (
+                        <span
+                          className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full border border-background bg-amber-500"
+                          title={token.statuses.join(', ')}
+                          aria-hidden="true"
+                        />
+                      )}
                       {token.hp && <TokenHpBar hp={token.hp} />}
                       {!token.hp && token.conditions && (
                         <TokenConditionBadge conditions={token.conditions} />
@@ -174,14 +181,18 @@ function topCondition(conditions: NonNullable<SceneToken['conditions']>): string
 
 /** Token aria-label, including HP or condition state when the token is a combatant. */
 function buildTokenLabel(token: SceneToken): string {
+  const statuses =
+    token.statuses && token.statuses.length > 0 ? `, ${token.statuses.join(', ')}` : '';
   if (token.hp) {
-    return `Token ${token.name}, ${Math.max(0, token.hp.current)} of ${token.hp.max} HP`;
+    return `Token ${token.name}, ${Math.max(0, token.hp.current)} of ${token.hp.max} HP${statuses}`;
   }
   if (token.conditions) {
     const top = topCondition(token.conditions);
-    return top ? `Token ${token.name}, ${top}` : `Token ${token.name}, unharmed`;
+    return top
+      ? `Token ${token.name}, ${top}${statuses}`
+      : `Token ${token.name}, unharmed${statuses}`;
   }
-  return `Token ${token.name}`;
+  return `Token ${token.name}${statuses}`;
 }
 
 /** A small condition badge for HP-less combatants (M&M condition track). */

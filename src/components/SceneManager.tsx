@@ -742,6 +742,12 @@ export function SceneManager({
     });
   };
 
+  // Replace the selected token's named conditions (prone, poisoned, …).
+  const handleSetStatuses = (statuses: string[]) => {
+    if (!selectedScene || !selectedTokenId) return;
+    emitSceneAction(selectedScene, { type: 'set-statuses', tokenId: selectedTokenId, statuses });
+  };
+
   const handleDeleteMarker = (markerId: string) => {
     if (!selectedScene) return;
     emitSceneAction(selectedScene, {
@@ -1107,6 +1113,12 @@ export function SceneManager({
                       selectedTokenId ? state?.tokens[selectedTokenId]?.hp : undefined
                     }
                     onApplyHpDelta={handleApplyHpDelta}
+                    selectedTokenStatuses={
+                      selectedTokenId
+                        ? (state?.tokens[selectedTokenId]?.statuses ?? [])
+                        : undefined
+                    }
+                    onSetStatuses={handleSetStatuses}
                   />
 
                   <EncounterPanel

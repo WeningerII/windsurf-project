@@ -54,6 +54,36 @@ describe('TokenPanel — HP control', () => {
   });
 });
 
+describe('TokenPanel — conditions', () => {
+  it('toggles a condition on and off, replacing the set', async () => {
+    const user = userEvent.setup();
+    const onSetStatuses = vi.fn();
+    render(
+      <TokenPanel
+        {...tokenBase}
+        selectedTokenStatuses={['poisoned']}
+        onSetStatuses={onSetStatuses}
+      />
+    );
+    // The active condition is pressed.
+    expect(screen.getByRole('button', { name: 'poisoned' })).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
+    // Adding one keeps the existing condition.
+    await user.click(screen.getByRole('button', { name: 'prone' }));
+    expect(onSetStatuses).toHaveBeenCalledWith(['poisoned', 'prone']);
+    // Clicking an active one removes it.
+    await user.click(screen.getByRole('button', { name: 'poisoned' }));
+    expect(onSetStatuses).toHaveBeenCalledWith([]);
+  });
+
+  it('hides conditions when no token is selected', () => {
+    render(<TokenPanel {...tokenBase} onSetStatuses={vi.fn()} />);
+    expect(screen.queryByRole('button', { name: 'prone' })).not.toBeInTheDocument();
+  });
+});
+
 function sceneState(systemId: string): SceneState {
   return {
     sceneId: 's',

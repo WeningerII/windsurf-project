@@ -1,10 +1,24 @@
 import { useState } from 'react';
 import { Heart, Plus, Trash2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
 import type { SceneTokenKind } from '../../types/core/scene';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { Select } from '../ui/Select';
+
+/** Common tabletop conditions a token can carry (5e drives advantage from some). */
+const COMMON_CONDITIONS = [
+  'prone',
+  'grappled',
+  'restrained',
+  'blinded',
+  'frightened',
+  'poisoned',
+  'stunned',
+  'unconscious',
+  'invisible',
+] as const;
 
 interface TokenPanelProps {
   eligibleDocuments: CharacterDocument<SystemDataModel>[];
@@ -22,6 +36,10 @@ interface TokenPanelProps {
   selectedTokenHp?: { current: number; max: number; temp?: number };
   /** Apply a signed HP delta (apply-damage semantics: positive damages, negative heals). */
   onApplyHpDelta?: (amount: number) => void;
+  /** The selected token's active conditions (present when a token is selected). */
+  selectedTokenStatuses?: string[];
+  /** Replace the selected token's conditions. */
+  onSetStatuses?: (statuses: string[]) => void;
 }
 
 /** Token controls: link a character (or define a manual token) and place it. */
@@ -39,9 +57,18 @@ export function TokenPanel({
   onDeleteSelectedToken,
   selectedTokenHp,
   onApplyHpDelta,
+  selectedTokenStatuses,
+  onSetStatuses,
 }: TokenPanelProps) {
   const [hpAmount, setHpAmount] = useState('');
   const amount = Math.max(0, Math.floor(Number(hpAmount) || 0));
+  const active = new Set(selectedTokenStatuses ?? []);
+  const toggleStatus = (condition: string) => {
+    const next = new Set(active);
+    if (next.has(condition)) next.delete(condition);
+    else next.add(condition);
+    onSetStatuses?.([...next]);
+  };
   const applyHp = (signed: number) => {
     onApplyHpDelta?.(signed);
     setHpAmount('');
@@ -139,6 +166,33 @@ export function TokenPanel({
               >
                 Heal
               </Button>
+            </div>
+          </div>
+        )}
+
+        {selectedTokenStatuses && onSetStatuses && (
+          <div className="space-y-1.5 border-t pt-2">
+            <div className="text-xs font-medium text-muted-foreground">Conditions</div>
+            <div className="flex flex-wrap gap-1">
+              {COMMON_CONDITIONS.map((condition) => {
+                const on = active.has(condition);
+                return (
+                  <button
+                    key={condition}
+                    type="button"
+                    aria-pressed={on}
+                    onClick={() => toggleStatus(condition)}
+                    className={cn(
+                      'rounded border px-1.5 py-0.5 text-[11px] capitalize transition-colors',
+                      on
+                        ? 'border-amber-500 bg-amber-500/20 text-amber-700 dark:text-amber-300'
+                        : 'border-border text-muted-foreground hover:bg-muted'
+                    )}
+                  >
+                    {condition}
+                  </button>
+                );
+              })}
             </div>
           </div>
         )}
