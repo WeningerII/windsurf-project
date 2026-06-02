@@ -26,6 +26,7 @@ import {
   resolveSceneAreaEffect,
   resolveSceneAttack,
   resolveSceneSocialAction,
+  resolveSkillChallenge,
   runSceneRound,
   tokensInArea,
   type Attitude,
@@ -62,6 +63,7 @@ import { MarkerPanel } from './scene/MarkerPanel';
 import { TokenPanel } from './scene/TokenPanel';
 import { CombatPanel } from './scene/CombatPanel';
 import { ConversationPanel } from './scene/ConversationPanel';
+import { SkillChallengePanel } from './scene/SkillChallengePanel';
 
 type PlacementMode = 'none' | 'token' | 'marker';
 
@@ -123,6 +125,13 @@ export function SceneManager({
   const [conversationDC, setConversationDC] = useState('15');
   const [conversationModifier, setConversationModifier] = useState('0');
   const [conversationLog, setConversationLog] = useState<string[]>([]);
+  const [challengeSuccesses, setChallengeSuccesses] = useState('3');
+  const [challengeFailures, setChallengeFailures] = useState('3');
+  const [challengeDC, setChallengeDC] = useState('15');
+  const [challengeModifier, setChallengeModifier] = useState('0');
+  const [challengeSkill, setChallengeSkill] = useState('');
+  const [challengeLog, setChallengeLog] = useState<string[]>([]);
+  const [challengeOutcome, setChallengeOutcome] = useState<'success' | 'failure' | undefined>();
   // Per-click nonce so a missed attack (which appends no event) still advances
   // the RNG stream — otherwise re-clicking Attack would reproduce the same miss.
   const attackNonce = useRef(0);
@@ -531,6 +540,38 @@ export function SceneManager({
   const handleSetAttitude = (tokenId: string, attitude: Attitude) => {
     if (!selectedScene) return;
     emitSceneAction(selectedScene, { type: 'set-attitude', tokenId, attitude });
+  };
+
+  // The party (every character token) attempts a group skill challenge. A
+  // transient group check — no token state changes — so it just logs the verdict.
+  const handleAttemptChallenge = () => {
+    if (!selectedScene || !state) return;
+    const participants = Object.values(state.tokens)
+      .filter((token) => token.kind === 'character')
+      .map((token) => ({
+        id: token.id,
+        modifier: Number.parseInt(challengeModifier, 10) || 0,
+      }));
+    if (participants.length === 0) return;
+
+    const result = resolveSkillChallenge({
+      systemId: state.systemId,
+      dc: positiveIntegerOrDefault(challengeDC, 15),
+      successesNeeded: positiveIntegerOrDefault(challengeSuccesses, 3),
+      failuresAllowed: positiveIntegerOrDefault(challengeFailures, 3),
+      participants,
+      seed: `${selectedScene.initialState.seed}:challenge:${selectedScene.events.length}:${attackNonce.current++}`,
+      skill: challengeSkill.trim() || undefined,
+    });
+
+    const nameOf = (id: string): string => state.tokens[id]?.name ?? id;
+    const header = `Challenge ${result.outcome.toUpperCase()} — ${result.successes} success / ${result.failures} failure.`;
+    const lines = result.attempts.map(
+      (attempt) =>
+        `  ${nameOf(attempt.participantId)}: ${attempt.result.outcome} (rolled ${attempt.result.total}).`
+    );
+    setChallengeOutcome(result.outcome);
+    setChallengeLog([header, ...lines]);
   };
 
   const handleCellActivate = (position: { x: number; y: number }) => {
@@ -1077,6 +1118,23 @@ export function SceneManager({
                     onSetAttitude={handleSetAttitude}
                     onAddress={handleAddress}
                     log={conversationLog}
+                  />
+
+                  <SkillChallengePanel
+                    state={state}
+                    successesNeeded={challengeSuccesses}
+                    onSuccessesNeededChange={setChallengeSuccesses}
+                    failuresAllowed={challengeFailures}
+                    onFailuresAllowedChange={setChallengeFailures}
+                    dc={challengeDC}
+                    onDcChange={setChallengeDC}
+                    modifier={challengeModifier}
+                    onModifierChange={setChallengeModifier}
+                    skill={challengeSkill}
+                    onSkillChange={setChallengeSkill}
+                    onAttempt={handleAttemptChallenge}
+                    outcome={challengeOutcome}
+                    log={challengeLog}
                   />
                 </div>
               </div>
