@@ -1,11 +1,14 @@
 import { describe, it, expect } from 'vitest';
 
 import {
+  cannotAct,
   collapseRollMode,
   executeTacticalTurn,
+  runCombatRound,
   statusAdvantage,
   makeEffectId,
   type EffectInstance,
+  type RoundCombatant,
   type TacticalActor,
   type TacticalTarget,
 } from '../../rules';
@@ -117,5 +120,54 @@ describe('the executor applies condition-derived advantage (5e only)', () => {
       systemId: 'pf2e',
     });
     expect(turn.resolution?.rollMode).toBe('normal');
+  });
+});
+
+describe('cannotAct', () => {
+  it('is true for incapacitating conditions and false otherwise', () => {
+    expect(cannotAct(['stunned'])).toBe(true);
+    expect(cannotAct(['Unconscious'])).toBe(true); // case-insensitive
+    expect(cannotAct(['paralyzed', 'prone'])).toBe(true);
+    expect(cannotAct(['poisoned'])).toBe(false); // poisoned still acts
+    expect(cannotAct([])).toBe(false);
+    expect(cannotAct(undefined)).toBe(false);
+  });
+});
+
+describe('the auto-round skips an incapacitated combatant', () => {
+  const atk = (bonus: number): EffectInstance => ({
+    id: makeEffectId('dnd-5e-2014', 'attack', 'base', bonus),
+    systemId: 'dnd-5e-2014',
+    target: 'attack',
+    operation: 'add',
+    value: bonus,
+    stackPolicy: 'sum',
+    source: { kind: 'system', label: 'attack' },
+    label: 'attack',
+  });
+  const combatant = (id: string, faction: string, statuses?: string[]): RoundCombatant => ({
+    tokenId: id,
+    faction,
+    position: { x: id === 'foe' ? 1 : 0, y: 0 },
+    armorClass: 12,
+    hp: { current: 20, max: 20 },
+    attackEffects: [atk(5)],
+    damageEffects: [],
+    reach: 1,
+    statuses,
+  });
+
+  it('a stunned combatant takes no turn', () => {
+    const result = runCombatRound({
+      order: [combatant('hero', 'party', ['stunned']), combatant('foe', 'monsters')],
+      seed: 'stun',
+      round: 1,
+      systemId: 'dnd-5e-2014',
+    });
+    const heroTurn = result.turns.find((t) => t.tokenId === 'hero')!;
+    expect(heroTurn.skipped).toBe(true);
+    expect(heroTurn.turn.rationale).toMatch(/incapacitated/i);
+    // The unaffected foe still acts.
+    expect(result.turns.find((t) => t.tokenId === 'foe')!.skipped).toBe(false);
   });
 });

@@ -23,6 +23,14 @@ const TARGET_GRANTS_ADVANTAGE = new Set([
 /** Conditions on the ATTACKER that impose disadvantage on its attacks. */
 const ATTACKER_HAS_DISADVANTAGE = new Set(['blinded', 'frightened', 'poisoned', 'restrained']);
 
+/** Conditions that stop a creature from acting at all (it skips its turn). */
+const CANNOT_ACT = new Set(['incapacitated', 'paralyzed', 'petrified', 'stunned', 'unconscious']);
+
+/** Whether any active condition prevents the creature from taking its turn. */
+export function cannotAct(statuses: readonly string[] | undefined): boolean {
+  return (statuses ?? []).some((s) => CANNOT_ACT.has(s.toLowerCase()));
+}
+
 /** Whether the attacker's and target's conditions yield advantage / disadvantage sources. */
 export function statusAdvantage(
   attackerStatuses: readonly string[] | undefined,

@@ -35,6 +35,7 @@ import {
 } from '../resolver/areaParticipants';
 import { resolveAreaEffect, type SaveModel } from '../resolver/participantResolution';
 import { areaEffectToDamageIntent } from '../resolver/sceneCombat';
+import { cannotAct } from '../resolver/conditions';
 import type { DamageDefenses } from '../resolver/damageDefenses';
 import type { BlockPredicate } from '../resolver/lineOfEffect';
 import type { DiagonalRule } from '../resolver/areaTargeting';
@@ -246,8 +247,11 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
   const intents: SceneActionIntent[] = [];
 
   input.order.forEach((combatant, turnIndex) => {
-    // Skip combatants already down at the start of their turn.
-    if (hp[combatant.tokenId] <= 0) {
+    // Skip combatants that can't act: already down, or held by an incapacitating
+    // condition (stunned / paralyzed / unconscious / …).
+    const down = hp[combatant.tokenId] <= 0;
+    const held = cannotAct(combatant.statuses);
+    if (down || held) {
       turns.push({
         tokenId: combatant.tokenId,
         skipped: true,
@@ -255,7 +259,9 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
           actorId: combatant.tokenId,
           decision: 'no-target',
           scored: [],
-          rationale: 'Down at the start of its turn; skipped.',
+          rationale: down
+            ? 'Down at the start of its turn; skipped.'
+            : 'Incapacitated by a condition; skipped.',
         },
       });
       return;

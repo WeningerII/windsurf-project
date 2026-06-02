@@ -94,7 +94,7 @@ export {
 } from './resolver/participantResolution';
 export type { DegreeOfSuccess } from './resolver/degreeOfSuccess';
 export { pf2eDegreeOfSuccess } from './resolver/degreeOfSuccess';
-export { collapseRollMode, statusAdvantage } from './resolver/conditions';
+export { cannotAct, collapseRollMode, statusAdvantage } from './resolver/conditions';
 
 export type { AreaShape, DiagonalRule } from './resolver/areaTargeting';
 export {
