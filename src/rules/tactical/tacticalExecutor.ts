@@ -15,11 +15,19 @@
  * the choice without ever being in the per-turn loop.
  */
 
-import type { SceneActionIntent } from '../../types/core/scene';
+import type { SceneActionIntent, SceneCoordinate } from '../../types/core/scene';
 import { resolveAttack, type AttackResolution } from '../resolver/attackResolution';
-import { participantRng } from '../resolver/participantResolution';
-import { attackToDamageIntent } from '../resolver/sceneCombat';
 import {
+  participantRng,
+  resolveAreaEffect,
+  type SaveModel,
+} from '../resolver/participantResolution';
+import { areaEffectToDamageIntent, attackToDamageIntent } from '../resolver/sceneCombat';
+import { computeAreaParticipants, type SceneAreaAction } from '../resolver/areaParticipants';
+import type { BlockPredicate } from '../resolver/lineOfEffect';
+import type { DiagonalRule } from '../resolver/areaTargeting';
+import {
+  isHostile,
   scoreTargets,
   type ScoredTarget,
   type TacticalActor,
@@ -32,23 +40,112 @@ export interface TacticalTurnInput {
   /** Base seed (scene seed + round/turn nonce) for the resolved attack. */
   seed: string;
   cause?: string;
+  /** Walls (for area line of effect/cover); default: no walls. */
+  isBlocked?: BlockPredicate;
+  /** Diagonal counting rule for area range; default chebyshev. */
+  diagonalRule?: DiagonalRule;
+  /** Save model for area effects; default binary (5e/3.5e/PF1e). */
+  saveModel?: SaveModel;
+  /** System id (drives cover→save bonus); default unset. */
+  systemId?: string;
 }
 
-export type TacticalDecisionKind = 'attack' | 'move-to-engage' | 'no-target';
+export type TacticalDecisionKind = 'attack' | 'area-effect' | 'move-to-engage' | 'no-target';
 
 export interface TacticalTurnResult {
   actorId: string;
   decision: TacticalDecisionKind;
   /** Every hostile target, scored — the full transparent decision. */
   scored: ScoredTarget[];
-  /** The chosen target id, when a target was selected. */
+  /** The chosen target id, when a single target was selected. */
   chosenTargetId?: string;
-  /** The resolved attack, when an attack was made. */
+  /** The resolved attack, when a single attack was made. */
   resolution?: AttackResolution;
-  /** The scene action to apply, when the attack dealt damage. */
+  /** The area action unleashed, when the decision was `area-effect`. */
+  chosenAreaActionName?: string;
+  /** Where the area action was aimed. */
+  areaAim?: SceneCoordinate;
+  /** Token ids the area action caught. */
+  areaCaughtIds?: string[];
+  /** The scene action to apply, when damage was dealt. */
   intent?: SceneActionIntent;
   /** Why this decision was reached. */
   rationale: string;
+}
+
+/**
+ * Minimum (enemies − allies) an area action must catch to be preferred over a
+ * single attack: an AoE is worth it when it hits at least two more foes than
+ * friends. A lone enemy is better served by a focused attack.
+ */
+const AOE_MIN_NET = 2;
+
+interface AreaPlan {
+  action: SceneAreaAction;
+  aim: SceneCoordinate;
+  caughtIds: string[];
+  participants: ReturnType<typeof computeAreaParticipants>['participants'];
+  enemies: number;
+  allies: number;
+  net: number;
+}
+
+/**
+ * Pick the best placement of the actor's best area action: for each action and
+ * each candidate aim (every living target's cell, plus the actor's own for
+ * self-centered emanations), count the enemies vs allies the template would
+ * catch (line of effect applied) and keep the highest net-enemy placement. AoE
+ * is RAW indiscriminate, so allies in the blast count against the placement —
+ * the AI aims to spare them. Returns undefined when no placement clears the bar.
+ */
+function bestAreaPlan(input: TacticalTurnInput): AreaPlan | undefined {
+  const { actor, targets } = input;
+  if (!actor.areaActions || actor.areaActions.length === 0) return undefined;
+
+  const living = targets.filter((target) => !target.hp || target.hp.current > 0);
+  const factionOf = new Map(targets.map((target) => [target.tokenId, target.faction]));
+  let best: AreaPlan | undefined;
+
+  for (const action of actor.areaActions) {
+    const aims: SceneCoordinate[] = [actor.position, ...living.map((target) => target.position)];
+    for (const aim of aims) {
+      const candidates = living.map((target) => ({
+        id: target.tokenId,
+        position: target.position,
+        saveBonus: target.saveBonus?.(action.saveAbility) ?? 0,
+      }));
+      const selection = computeAreaParticipants({
+        area: action.area,
+        emitter: actor.position,
+        aim,
+        candidates,
+        systemId: input.systemId ?? '',
+        rule: input.diagonalRule,
+        isBlocked: input.isBlocked,
+      });
+      let enemies = 0;
+      let allies = 0;
+      for (const id of selection.caughtIds) {
+        if (isHostile(actor.faction, factionOf.get(id) ?? actor.faction)) enemies += 1;
+        else allies += 1;
+      }
+      const net = enemies - allies;
+      if (enemies >= 2 && net >= AOE_MIN_NET) {
+        if (!best || net > best.net || (net === best.net && enemies > best.enemies)) {
+          best = {
+            action,
+            aim,
+            caughtIds: selection.caughtIds,
+            participants: selection.participants,
+            enemies,
+            allies,
+            net,
+          };
+        }
+      }
+    }
+  }
+  return best;
 }
 
 /**
@@ -69,6 +166,31 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
       decision: 'no-target',
       scored,
       rationale: 'No hostile, living targets remain.',
+    };
+  }
+
+  // Prefer an area action when it catches enough foes (and not too many friends).
+  const areaPlan = bestAreaPlan(input);
+  if (areaPlan) {
+    const result = resolveAreaEffect({
+      sourceId: input.actor.tokenId,
+      seed: input.seed,
+      damageEffects: areaPlan.action.damageEffects,
+      saveDC: areaPlan.action.saveDC,
+      halfOnSave: areaPlan.action.halfOnSave,
+      saveModel: input.saveModel ?? 'binary',
+      participants: areaPlan.participants,
+    });
+    const allies = areaPlan.allies > 0 ? ` (${areaPlan.allies} ally/allies caught)` : '';
+    return {
+      actorId: input.actor.tokenId,
+      decision: 'area-effect',
+      scored,
+      chosenAreaActionName: areaPlan.action.name,
+      areaAim: areaPlan.aim,
+      areaCaughtIds: areaPlan.caughtIds,
+      intent: areaEffectToDamageIntent(result, input.cause),
+      rationale: `Unleashed ${areaPlan.action.name}: ${areaPlan.enemies} enemies${allies} caught for ${result.totalDamageDealt} total damage.`,
     };
   }
 

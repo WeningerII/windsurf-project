@@ -77,6 +77,9 @@ export {
   spreadCells,
 } from './resolver/lineOfEffect';
 
+export type { AreaCandidate, AreaParticipantSelection } from './resolver/areaParticipants';
+export { computeAreaParticipants, shapeForArea } from './resolver/areaParticipants';
+
 export {
   areaEffectToDamageIntent,
   attackToDamageIntent,
@@ -132,6 +135,7 @@ export {
 } from './combatants/spellCaster';
 
 export type {
+  ResolveAreaActions,
   ResolveCombatStats,
   SceneAreaAction,
   SceneAreaEffectOutcome,

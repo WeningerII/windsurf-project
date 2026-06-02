@@ -30,21 +30,19 @@ import {
   participantRng,
   resolveAreaEffect,
   type SaveDegree,
-  type SaveParticipant,
 } from '../resolver/participantResolution';
 import { areaEffectToDamageIntent, attackToDamageIntent } from '../resolver/sceneCombat';
 import {
   areaOfEffectToShape,
   diagonalRuleForSystem,
-  tokensInArea,
   type AreaShape,
 } from '../resolver/areaTargeting';
 import {
-  coverBetween,
-  coverSaveBonus,
-  spreadCells,
-  type CoverLevel,
-} from '../resolver/lineOfEffect';
+  computeAreaParticipants,
+  shapeForArea,
+  type AreaCandidate,
+  type SceneAreaAction,
+} from '../resolver/areaParticipants';
 import { sceneBlockPredicate } from '../terrain/sceneTerrain';
 import type { AreaOfEffect } from '../../types/core/common';
 
@@ -67,6 +65,9 @@ export interface SceneCombatStats {
 /** Resolve a token's combat stats, or undefined when it cannot fight. */
 export type ResolveCombatStats = (token: SceneToken) => SceneCombatStats | undefined;
 
+/** Resolve a token's save-based area actions (breath / spells), for the AI to use. */
+export type ResolveAreaActions = (token: SceneToken) => SceneAreaAction[];
+
 /** Map a token kind to a combat faction (allies vs enemies for targeting). */
 export function factionForToken(token: SceneToken): string {
   switch (token.kind) {
@@ -88,7 +89,8 @@ export function factionForToken(token: SceneToken): string {
  */
 export function buildSceneCombatants(
   state: SceneState,
-  resolveStats: ResolveCombatStats
+  resolveStats: ResolveCombatStats,
+  resolveAreaActions?: ResolveAreaActions
 ): RoundCombatant[] {
   // Order: initiative first (highest value), then any remaining tokens.
   const initiativeOrder = state.initiative.map((entry) => entry.tokenId);
@@ -103,6 +105,7 @@ export function buildSceneCombatants(
     if (!token?.hp) continue;
     const stats = resolveStats(token);
     if (!stats) continue;
+    const areaActions = resolveAreaActions?.(token);
     combatants.push({
       tokenId: token.id,
       faction: factionForToken(token),
@@ -113,6 +116,8 @@ export function buildSceneCombatants(
       damageEffects: stats.damageEffects,
       reach: stats.reach,
       critOn: stats.critOn,
+      areaActions: areaActions && areaActions.length > 0 ? areaActions : undefined,
+      saveBonus: stats.saveBonus,
     });
   }
   return combatants;
@@ -172,22 +177,10 @@ export function resolveSceneAttack(params: {
   };
 }
 
-/** A save-based area action ready to resolve on a scene (e.g. a breath weapon). */
-export interface SceneAreaAction {
-  name: string;
-  /** Ability targets save with (e.g. 'dex'), lowercased. */
-  saveAbility: string;
-  saveDC: number;
-  /** When true, a successful save halves damage; else it negates. */
-  halfOnSave: boolean;
-  damageEffects: EffectInstance[];
-  /**
-   * Canonical area template; undefined → affects only the aimed cell. Every shape
-   * (cone/cube/cylinder/line/sphere/emanation/spread) is supported via the shared
-   * geometry layer.
-   */
-  area?: AreaOfEffect;
-}
+// SceneAreaAction lives with the shared area selector (resolver/areaParticipants)
+// so the scene-free tactical layer can use it without an import cycle; re-exported
+// here for existing importers.
+export type { SceneAreaAction };
 
 /**
  * Build the grid `AreaShape` an action fills, given where it originates (the
@@ -203,18 +196,6 @@ export function areaShapeForAction(
 ): AreaShape {
   if (!area) return { kind: 'burst', origin: aim, radius: 0 };
   return areaOfEffectToShape(area, origin, aim);
-}
-
-/** The cell an area resolves line of effect FROM (its RAW point of origin). */
-function areaOriginPoint(shape: AreaShape): SceneCoordinate {
-  if (shape.kind === 'rect') {
-    return {
-      x: shape.origin.x + Math.floor(shape.width / 2),
-      y: shape.origin.y + Math.floor(shape.height / 2),
-    };
-  }
-  // burst (sphere/emanation), cone (apex), and line (start) all originate at .origin
-  return shape.origin;
 }
 
 /** Human labels for PF2e save degrees, shown in the combat log. */
@@ -254,7 +235,7 @@ export function resolveSceneAreaEffect(params: {
 }): SceneAreaEffectOutcome {
   const { state, sourceId, action, aim, resolveStats, seed } = params;
   const source = state.tokens[sourceId];
-  const shape = areaShapeForAction(action.area, source?.position ?? aim, aim);
+  const emitter = source?.position ?? aim;
   // Diagonals (range/radius) and the save model both depend on the system: 5e
   // uses Chebyshev + a binary save; Pathfinder 2e uses the 1-2-1 diagonal + a
   // four-degree basic save.
@@ -262,51 +243,31 @@ export function resolveSceneAreaEffect(params: {
   const saveModel = state.systemId === 'pf2e' ? 'pf2e-basic' : 'binary';
 
   if (!source) {
+    const shape = shapeForArea(action.area, emitter, aim);
     return { log: ['Area effect failed: the source token is missing.'], shape, affectedIds: [] };
   }
 
-  // Candidates: every other living token inside the template. AoE is RAW
+  // Every other living token is a candidate; the shared selector applies the
+  // geometry, line of effect, cover, and spread flood-fill. AoE is RAW
   // indiscriminate — allies in the blast are caught too.
-  const candidates = tokensInArea(state, shape, rule).filter(
-    (token) => token.id !== sourceId && (token.hp ? token.hp.current > 0 : false)
-  );
+  const candidates: AreaCandidate[] = Object.values(state.tokens)
+    .filter((token) => token.id !== sourceId && (token.hp ? token.hp.current > 0 : false))
+    .map((token) => ({
+      id: token.id,
+      position: token.position,
+      saveBonus: resolveStats(token)?.saveBonus?.(action.saveAbility) ?? 0,
+    }));
 
-  // Line of effect + cover: a wall stops the blast (total cover → excluded),
-  // partial cover adds to the save, and a SPREAD bends around corners (flood
-  // fill) where a sphere/cone cannot.
-  const isBlocked = sceneBlockPredicate(state);
-  const originPoint = areaOriginPoint(shape);
-  const spreadReach =
-    action.area?.type === 'spread' && shape.kind === 'burst'
-      ? spreadCells(shape.origin, shape.radius, isBlocked, rule)
-      : undefined;
-
-  let shieldedByCover = 0;
-  const caught: SceneToken[] = [];
-  const coverByToken = new Map<string, CoverLevel>();
-  for (const token of candidates) {
-    if (spreadReach) {
-      if (!spreadReach.has(`${token.position.x},${token.position.y}`)) {
-        shieldedByCover += 1; // a wall the spread couldn't bend around
-        continue;
-      }
-      caught.push(token); // inside the spread → fully affected, no cover
-      continue;
-    }
-    const cover = coverBetween(originPoint, token.position, isBlocked);
-    if (cover === 'total') {
-      shieldedByCover += 1; // no line of effect — a wall fully shields it
-      continue;
-    }
-    coverByToken.set(token.id, cover);
-    caught.push(token);
-  }
-
-  const participants: SaveParticipant[] = caught.map((token) => {
-    const base = resolveStats(token)?.saveBonus?.(action.saveAbility) ?? 0;
-    const cover = coverByToken.get(token.id) ?? 'none';
-    return { targetId: token.id, saveBonus: base + coverSaveBonus(cover, state.systemId) };
+  const selection = computeAreaParticipants({
+    area: action.area,
+    emitter,
+    aim,
+    candidates,
+    systemId: state.systemId,
+    rule,
+    isBlocked: sceneBlockPredicate(state),
   });
+  const { shape, participants, caughtIds, shieldedByCover } = selection;
 
   if (participants.length === 0) {
     const why = shieldedByCover > 0 ? ` (${shieldedByCover} shielded by cover)` : '';
@@ -339,7 +300,7 @@ export function resolveSceneAreaEffect(params: {
     intent: areaEffectToDamageIntent(result, params.cause),
     log: [header, ...lines],
     shape,
-    affectedIds: caught.map((token) => token.id),
+    affectedIds: caughtIds,
   };
 }
 
@@ -357,16 +318,30 @@ export interface SceneRoundOutcome {
 export function runSceneRound(params: {
   state: SceneState;
   resolveStats: ResolveCombatStats;
+  /** Optional: lets combatants unleash breath/spell AoE during the auto-round. */
+  resolveAreaActions?: ResolveAreaActions;
   seed: string;
   round: number;
 }): SceneRoundOutcome {
-  const order = buildSceneCombatants(params.state, params.resolveStats);
-  const result = runCombatRound({ order, seed: params.seed, round: params.round });
+  const order = buildSceneCombatants(params.state, params.resolveStats, params.resolveAreaActions);
+  const result = runCombatRound({
+    order,
+    seed: params.seed,
+    round: params.round,
+    isBlocked: sceneBlockPredicate(params.state),
+    diagonalRule: diagonalRuleForSystem(params.state.systemId),
+    saveModel: params.state.systemId === 'pf2e' ? 'pf2e-basic' : 'binary',
+    systemId: params.state.systemId,
+  });
 
   const nameOf = (tokenId: string): string => params.state.tokens[tokenId]?.name ?? tokenId;
   const log = result.turns.map((turn) => {
     if (turn.skipped) return `${nameOf(turn.tokenId)} is down and skips its turn.`;
     if (turn.turn.decision === 'no-target') return `${nameOf(turn.tokenId)} has no target.`;
+    if (turn.turn.decision === 'area-effect') {
+      const caught = (turn.turn.areaCaughtIds ?? []).map(nameOf).join(', ');
+      return `${nameOf(turn.tokenId)} unleashes ${turn.turn.chosenAreaActionName} on ${caught}.`;
+    }
     if (turn.turn.decision === 'move-to-engage') {
       return `${nameOf(turn.tokenId)} moves to engage ${nameOf(turn.turn.chosenTargetId ?? '')}.`;
     }

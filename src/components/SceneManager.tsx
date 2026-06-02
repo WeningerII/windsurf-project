@@ -26,6 +26,7 @@ import {
   resolveSceneAttack,
   runSceneRound,
   tokensInArea,
+  type ResolveAreaActions,
   type ResolveCombatStats,
   type SceneAreaAction,
 } from '../rules';
@@ -389,6 +390,7 @@ export function SceneManager({
     const outcome = runSceneRound({
       state,
       resolveStats: resolveCombatStats,
+      resolveAreaActions,
       seed: `${selectedScene.initialState.seed}:round:${state.round}:${selectedScene.events.length}:${attackNonce.current++}`,
       round: state.round,
     });
@@ -412,22 +414,30 @@ export function SceneManager({
     setActionIssues([]);
   };
 
-  // Save-based area actions the SELECTED token can unleash: a monster's breath /
-  // AoE from its statblock, or a PC caster's known AoE spells (fireball, etc.).
+  // Save-based area actions a token can unleash: a monster's breath / AoE from
+  // its statblock, or a PC caster's known AoE spells (fireball, etc.). Shared by
+  // the manual panel (selected token) and the auto round-runner (every token).
+  const resolveAreaActions = useCallback<ResolveAreaActions>(
+    (token) => {
+      if (!token.refId) return [];
+      if (token.kind === 'monster') {
+        const monster = monstersById.get(token.refId);
+        return monster ? monsterSaveActions(monster) : [];
+      }
+      if (token.kind === 'character') {
+        const doc = documentsById.get(token.refId);
+        return doc ? casterSpellAreaActions(doc, spellsById, doc.systemId as GameSystemId) : [];
+      }
+      return [];
+    },
+    [monstersById, documentsById, spellsById]
+  );
+
   const attackerAreaActions = useMemo<SceneAreaAction[]>(() => {
     if (!state || !selectedTokenId) return [];
     const token = state.tokens[selectedTokenId];
-    if (!token?.refId) return [];
-    if (token.kind === 'monster') {
-      const monster = monstersById.get(token.refId);
-      return monster ? monsterSaveActions(monster) : [];
-    }
-    if (token.kind === 'character') {
-      const doc = documentsById.get(token.refId);
-      return doc ? casterSpellAreaActions(doc, spellsById, doc.systemId as GameSystemId) : [];
-    }
-    return [];
-  }, [state, selectedTokenId, monstersById, documentsById, spellsById]);
+    return token ? resolveAreaActions(token) : [];
+  }, [state, selectedTokenId, resolveAreaActions]);
 
   const selectedSaveAction = useMemo(
     () => attackerAreaActions.find((action) => action.name === combatSaveActionName),

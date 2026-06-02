@@ -23,6 +23,10 @@ import type { EffectInstance } from '../ir/types';
 import type { SceneCoordinate, SceneActionIntent } from '../../types/core/scene';
 import { executeTacticalTurn, type TacticalTurnResult } from './tacticalExecutor';
 import type { TacticalActor, TacticalTarget } from './targetScoring';
+import type { SceneAreaAction } from '../resolver/areaParticipants';
+import type { BlockPredicate } from '../resolver/lineOfEffect';
+import type { DiagonalRule } from '../resolver/areaTargeting';
+import type { SaveModel } from '../resolver/participantResolution';
 
 /** A combatant in the round: identity, faction, position, stats, and live HP. */
 export interface RoundCombatant {
@@ -35,6 +39,10 @@ export interface RoundCombatant {
   damageEffects: readonly EffectInstance[];
   reach?: number;
   critOn?: number;
+  /** Save-based area actions this combatant may unleash (breath / spells). */
+  areaActions?: readonly SceneAreaAction[];
+  /** Saving-throw bonus accessor (for being caught in an area effect). */
+  saveBonus?: (ability: string) => number;
 }
 
 export interface RoundTurnRecord {
@@ -62,6 +70,14 @@ export interface RunRoundInput {
   seed: string;
   /** Round number (1-based); part of the per-turn seed and the result. */
   round: number;
+  /** Walls for area line-of-effect/cover; default: no walls. */
+  isBlocked?: BlockPredicate;
+  /** Diagonal counting rule for area range; default chebyshev. */
+  diagonalRule?: DiagonalRule;
+  /** Save model for area effects; default binary. */
+  saveModel?: SaveModel;
+  /** System id (drives cover→save bonus). */
+  systemId?: string;
 }
 
 function toActor(combatant: RoundCombatant): TacticalActor {
@@ -73,6 +89,7 @@ function toActor(combatant: RoundCombatant): TacticalActor {
     damageEffects: combatant.damageEffects,
     reach: combatant.reach,
     critOn: combatant.critOn,
+    areaActions: combatant.areaActions,
   };
 }
 
@@ -83,6 +100,7 @@ function toTarget(combatant: RoundCombatant, currentHp: number): TacticalTarget 
     position: combatant.position,
     armorClass: combatant.armorClass,
     hp: { current: currentHp, max: combatant.hp.max },
+    saveBonus: combatant.saveBonus,
   };
 }
 
@@ -129,6 +147,10 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
       actor: toActor(combatant),
       targets,
       seed: `${input.seed}::round${input.round}::turn${turnIndex}`,
+      isBlocked: input.isBlocked,
+      diagonalRule: input.diagonalRule,
+      saveModel: input.saveModel,
+      systemId: input.systemId,
     });
 
     // Fold this turn's damage into working HP so later turns see it.

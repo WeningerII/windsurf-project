@@ -19,6 +19,7 @@
 
 import type { SceneCoordinate } from '../../types/core/scene';
 import { gridDistance } from '../resolver/areaTargeting';
+import type { SceneAreaAction } from '../resolver/areaParticipants';
 import type { EffectInstance } from '../ir/types';
 
 /** A combatant taking a turn. Assembled by the caller from character/monster data. */
@@ -33,6 +34,8 @@ export interface TacticalActor {
   /** Reach in grid cells (melee = 1). Undefined means unlimited (ranged). */
   reach?: number;
   critOn?: number;
+  /** Save-based area actions (breath / spells) this combatant may unleash. */
+  areaActions?: readonly SceneAreaAction[];
 }
 
 /** A potential target on the grid. */
@@ -42,6 +45,8 @@ export interface TacticalTarget {
   position: SceneCoordinate;
   armorClass: number;
   hp?: { current: number; max: number };
+  /** Saving-throw bonus accessor (for being caught in someone's area effect). */
+  saveBonus?: (ability: string) => number;
 }
 
 /** A scored candidate — every eligible target is acknowledged with a score. */

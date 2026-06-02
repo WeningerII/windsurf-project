@@ -188,6 +188,18 @@ export function areaOfEffectToShape(
   }
 }
 
+/** The cell an area resolves line of effect FROM (its RAW point of origin). */
+export function areaOriginPoint(shape: AreaShape): SceneCoordinate {
+  if (shape.kind === 'rect') {
+    return {
+      x: shape.origin.x + Math.floor(shape.width / 2),
+      y: shape.origin.y + Math.floor(shape.height / 2),
+    };
+  }
+  // burst (sphere/emanation), cone (apex), and line (start) originate at .origin.
+  return shape.origin;
+}
+
 /**
  * Square-grid cone test. A cell is in the cone when it is within range
  * (grid distance ≤ length, under the diagonal rule) and the angle between the
