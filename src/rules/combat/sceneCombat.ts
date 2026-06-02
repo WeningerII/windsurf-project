@@ -387,6 +387,7 @@ export function resolveSceneAreaEffect(params: {
       id: token.id,
       position: token.position,
       saveBonus: resolveStats(token)?.saveBonus?.(action.saveAbility) ?? 0,
+      defenses: resolveStats(token)?.damageDefenses,
     }));
 
   const selection = computeAreaParticipants({

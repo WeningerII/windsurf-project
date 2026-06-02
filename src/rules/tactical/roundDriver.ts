@@ -163,6 +163,7 @@ function pulseAuras(params: {
         id: other.tokenId,
         position: other.position,
         saveBonus: other.saveBonus?.(aura.saveAbility) ?? 0,
+        defenses: other.damageDefenses,
       }));
     const selection = computeAreaParticipants({
       area: aura.area,

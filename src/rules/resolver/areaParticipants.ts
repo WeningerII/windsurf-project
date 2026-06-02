@@ -30,6 +30,7 @@ import {
   type CoverLevel,
 } from './lineOfEffect';
 import type { SaveParticipant } from './participantResolution';
+import type { DamageDefenses } from './damageDefenses';
 
 /**
  * A save-based area action ready to resolve (a breath weapon or a spell). The
@@ -72,6 +73,8 @@ export interface AreaCandidate {
   position: SceneCoordinate;
   /** Save bonus for the action's save ability, BEFORE cover (cover is added here). */
   saveBonus: number;
+  /** Damage resistances/immunities/vulnerabilities, applied per type after the save. */
+  defenses?: DamageDefenses;
 }
 
 export interface AreaParticipantSelection {
@@ -140,7 +143,11 @@ export function computeAreaParticipants(input: {
       }
       caughtIds.push(candidate.id);
       coverById.set(candidate.id, 'none');
-      participants.push({ targetId: candidate.id, saveBonus: candidate.saveBonus });
+      participants.push({
+        targetId: candidate.id,
+        saveBonus: candidate.saveBonus,
+        defenses: candidate.defenses,
+      });
       continue;
     }
 
@@ -154,6 +161,7 @@ export function computeAreaParticipants(input: {
     participants.push({
       targetId: candidate.id,
       saveBonus: candidate.saveBonus + coverSaveBonus(cover, input.systemId),
+      defenses: candidate.defenses,
     });
   }
 

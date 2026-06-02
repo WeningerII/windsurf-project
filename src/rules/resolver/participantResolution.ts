@@ -21,6 +21,7 @@ import { createSeededRng, type SeededRng } from '../../scene/seededRng';
 import { resolveAttack, type AttackResolution } from './attackResolution';
 import { resolveEffects, type ResolveContext } from './resolve';
 import { pf2eDegreeOfSuccess, type DegreeOfSuccess } from './degreeOfSuccess';
+import { adjustTypedDamage, hasDamageDefenses, type DamageDefenses } from './damageDefenses';
 import type { EffectInstance } from '../ir/types';
 
 /**
@@ -108,6 +109,8 @@ export interface SaveParticipant {
   saveBonus: number;
   /** Per-participant gating context (their conditions, etc.). */
   context?: Omit<ResolveContext, 'rng'>;
+  /** Damage resistances/immunities/vulnerabilities, applied per type after the save. */
+  defenses?: DamageDefenses;
 }
 
 /**
@@ -171,13 +174,16 @@ export interface AreaEffectResult {
 export function resolveAreaEffect(input: AreaEffectInput): AreaEffectResult {
   const halfOnSave = input.halfOnSave ?? true;
 
-  // Shared damage: rolled once from the source stream.
+  // Shared damage: rolled once from the source stream. Kept per type so each
+  // participant's resistances can be applied to the right slice.
   const sourceRng = createSeededRng(`${input.seed}::area::${input.sourceId}`);
   const damageResolved = resolveEffects(input.damageEffects, { rng: sourceRng });
   let sharedDamage = 0;
   let sharedDamageDiceTerms: number[] = [];
-  for (const resolved of Object.values(damageResolved.byTarget)) {
+  const sharedByType: Record<string, number> = {};
+  for (const [key, resolved] of Object.entries(damageResolved.byTarget)) {
     sharedDamage += resolved.total;
+    sharedByType[key] = resolved.total;
     if (resolved.diceTerms) {
       sharedDamageDiceTerms = [...sharedDamageDiceTerms, ...resolved.diceTerms];
     }
@@ -186,6 +192,23 @@ export function resolveAreaEffect(input: AreaEffectInput): AreaEffectResult {
   const saveModel = input.saveModel ?? 'binary';
   const half = Math.floor(sharedDamage / 2);
 
+  // A save fraction (0 / ½ / full / ×2) applied to the shared damage. When the
+  // target has resistances, the fraction is applied PER TYPE and then the
+  // defense, so save-for-half and resistance stack (5e). Without defenses the
+  // aggregate value is used verbatim, so existing outcomes are unchanged.
+  const damageFor = (fraction: number, defenses?: DamageDefenses): number => {
+    if (!hasDamageDefenses(defenses)) {
+      return fraction === 0 ? 0 : fraction === 0.5 ? half : Math.round(sharedDamage * fraction);
+    }
+    let total = 0;
+    for (const [key, amount] of Object.entries(sharedByType)) {
+      const type = key === 'damage' ? '' : key.replace(/^damage\./, '');
+      const afterSave = fraction === 0.5 ? Math.floor(amount / 2) : Math.round(amount * fraction);
+      total += adjustTypedDamage(type, afterSave, defenses!);
+    }
+    return total;
+  };
+
   const perTarget = input.participants.map((participant): AreaEffectOutcome => {
     const rng = participantRng(input.seed, input.sourceId, participant.targetId, 'save');
     const saveRoll = rng.rollDie(20);
@@ -193,20 +216,22 @@ export function resolveAreaEffect(input: AreaEffectInput): AreaEffectResult {
 
     if (saveModel === 'pf2e-basic') {
       const degree = pf2eSaveDegree(saveRoll, saveTotal, input.saveDC);
-      const damageTaken =
+      const fraction =
         degree === 'critical-success'
           ? 0
           : degree === 'success'
-            ? half
+            ? 0.5
             : degree === 'failure'
-              ? sharedDamage
-              : sharedDamage * 2; // critical failure → double
+              ? 1
+              : 2; // critical failure → double
       const saved = degree === 'success' || degree === 'critical-success';
+      const damageTaken = damageFor(fraction, participant.defenses);
       return { targetId: participant.targetId, saveRoll, saveTotal, saved, damageTaken, degree };
     }
 
     const saved = saveTotal >= input.saveDC;
-    const damageTaken = saved ? (halfOnSave ? half : 0) : sharedDamage;
+    const fraction = saved ? (halfOnSave ? 0.5 : 0) : 1;
+    const damageTaken = damageFor(fraction, participant.defenses);
     return { targetId: participant.targetId, saveRoll, saveTotal, saved, damageTaken };
   });
 
