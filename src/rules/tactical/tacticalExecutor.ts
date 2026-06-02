@@ -23,6 +23,7 @@ import {
   type SaveModel,
 } from '../resolver/participantResolution';
 import { areaEffectToDamageIntent, attackToDamageIntent } from '../resolver/sceneCombat';
+import { resolveDaggerheartAttack } from '../resolver/daggerheartResolution';
 import { computeAreaParticipants, type SceneAreaAction } from '../resolver/areaParticipants';
 import { moveToward } from './pathfinding';
 import type { BlockPredicate } from '../resolver/lineOfEffect';
@@ -151,6 +152,61 @@ function bestAreaPlan(input: TacticalTurnInput): AreaPlan | undefined {
   return best;
 }
 
+interface StrikeOutcome {
+  intent?: SceneActionIntent;
+  resolution?: AttackResolution;
+  hit: boolean;
+  narration: string;
+}
+
+/**
+ * Resolve one attacker→target strike, dispatching per system: Daggerheart marks
+ * 1-3 HP slots by threshold; everyone else is d20 attack-vs-AC → damage. Both
+ * land as a single apply-damage intent, so the round driver folds either the same
+ * way. (M&M's condition track isn't auto-resolved here — its tokens have no HP and
+ * so aren't in the round; it remains a manual-attack path for now.)
+ */
+function resolveStrike(input: TacticalTurnInput, target: TacticalTarget): StrikeOutcome {
+  const { actor } = input;
+  const rng = participantRng(input.seed, actor.tokenId, target.tokenId);
+
+  if (input.systemId === 'daggerheart' && target.thresholds) {
+    const dh = resolveDaggerheartAttack({
+      attackEffects: actor.attackEffects,
+      damageEffects: actor.damageEffects,
+      evasion: target.armorClass,
+      thresholds: target.thresholds,
+      rng,
+    });
+    const intent: SceneActionIntent | undefined =
+      dh.isHit && dh.hpMarked > 0
+        ? {
+            type: 'apply-damage',
+            actorId: actor.tokenId,
+            cause: input.cause,
+            damages: [{ tokenId: target.tokenId, amount: dh.hpMarked }],
+          }
+        : undefined;
+    return { intent, hit: dh.isHit, narration: dh.isHit ? `marked ${dh.hpMarked} HP` : 'missed' };
+  }
+
+  const resolution = resolveAttack({
+    attackEffects: actor.attackEffects,
+    damageEffects: actor.damageEffects,
+    targetValue: target.armorClass,
+    critOn: actor.critOn,
+    rng,
+  });
+  return {
+    intent: attackToDamageIntent(actor.tokenId, target.tokenId, resolution, input.cause),
+    resolution,
+    hit: resolution.isHit,
+    narration: resolution.isHit
+      ? `${resolution.isCriticalHit ? 'crit for' : 'hit for'} ${resolution.damage}`
+      : 'missed',
+  };
+}
+
 /**
  * Decide and resolve one combatant's turn.
  *
@@ -219,23 +275,16 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
 
     // If the move closes to reach, attack from the new position (move + strike).
     if (move.inReach) {
-      const rng = participantRng(input.seed, input.actor.tokenId, nearest.tokenId);
-      const resolution = resolveAttack({
-        attackEffects: input.actor.attackEffects,
-        damageEffects: input.actor.damageEffects,
-        targetValue: nearestTarget.armorClass,
-        critOn: input.actor.critOn,
-        rng,
-      });
+      const strike = resolveStrike(input, nearestTarget);
       return {
         actorId: input.actor.tokenId,
         decision: 'attack',
         scored,
         chosenTargetId: nearest.tokenId,
         moveTo: move.destination,
-        resolution,
-        intent: attackToDamageIntent(input.actor.tokenId, nearest.tokenId, resolution, input.cause),
-        rationale: `Moved ${move.cost} to engage ${nearest.tokenId}, then ${resolution.isHit ? `hit for ${resolution.damage}` : 'missed'}.`,
+        resolution: strike.resolution,
+        intent: strike.intent,
+        rationale: `Moved ${move.cost} to engage ${nearest.tokenId}, then ${strike.narration}.`,
       };
     }
 
@@ -253,31 +302,14 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
   }
 
   const target = input.targets.find((candidate) => candidate.tokenId === reachable.tokenId)!;
-  const rng = participantRng(input.seed, input.actor.tokenId, reachable.tokenId);
-  const resolution = resolveAttack({
-    attackEffects: input.actor.attackEffects,
-    damageEffects: input.actor.damageEffects,
-    targetValue: target.armorClass,
-    critOn: input.actor.critOn,
-    rng,
-  });
-
-  const intent = attackToDamageIntent(
-    input.actor.tokenId,
-    reachable.tokenId,
-    resolution,
-    input.cause
-  );
-
+  const strike = resolveStrike(input, target);
   return {
     actorId: input.actor.tokenId,
     decision: 'attack',
     scored,
     chosenTargetId: reachable.tokenId,
-    resolution,
-    intent,
-    rationale: resolution.isHit
-      ? `Attacked ${reachable.tokenId} (score ${reachable.score}): hit for ${resolution.damage}.`
-      : `Attacked ${reachable.tokenId} (score ${reachable.score}): missed.`,
+    resolution: strike.resolution,
+    intent: strike.intent,
+    rationale: `Attacked ${reachable.tokenId} (score ${reachable.score}): ${strike.narration}.`,
   };
 }

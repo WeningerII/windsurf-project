@@ -53,6 +53,8 @@ export interface RoundCombatant {
   auras?: readonly AuraAction[];
   /** Saving-throw bonus accessor (for being caught in an area effect). */
   saveBonus?: (ability: string) => number;
+  /** Daggerheart damage thresholds — present makes attacks mark HP slots. */
+  thresholds?: { major: number; severe: number };
 }
 
 export interface RoundTurnRecord {
@@ -181,6 +183,7 @@ function toTarget(
     armorClass: combatant.armorClass,
     hp: { current: currentHp, max: combatant.hp.max },
     saveBonus: combatant.saveBonus,
+    thresholds: combatant.thresholds,
   };
 }
 

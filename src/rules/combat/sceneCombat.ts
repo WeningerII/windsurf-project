@@ -143,6 +143,7 @@ export function buildSceneCombatants(
       reach: stats.reach,
       speed: stats.speed,
       critOn: stats.critOn,
+      thresholds: stats.thresholds,
       areaActions: areaActions && areaActions.length > 0 ? areaActions : undefined,
       auras: auras && auras.length > 0 ? auras : undefined,
       saveBonus: stats.saveBonus,

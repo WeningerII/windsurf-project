@@ -3,8 +3,10 @@ import { describe, it, expect } from 'vitest';
 import {
   buildDaggerheartCombatant,
   resolveSceneAttack,
+  runCombatRound,
   type EffectInstance,
   type ResolveCombatStats,
+  type RoundCombatant,
 } from '../../rules';
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
 import type { SceneState, SceneToken } from '../../types/core/scene';
@@ -150,5 +152,37 @@ describe('resolveSceneAttack — Daggerheart marks HP slots by threshold', () =>
     });
     expect(out.hit).toBe(false);
     expect(out.intent).toBeUndefined();
+  });
+
+  it('the auto-round marks HP slots (not raw damage) for a Daggerheart scene', () => {
+    const combatant = (
+      id: string,
+      x: number,
+      faction: string,
+      thresholds?: { major: number; severe: number }
+    ): RoundCombatant => ({
+      tokenId: id,
+      faction,
+      position: { x, y: 0 },
+      armorClass: 1, // low Evasion → reliably hit
+      hp: { current: 6, max: 6 },
+      attackEffects: [attack(20)],
+      damageEffects: dmg,
+      reach: 1,
+      thresholds,
+    });
+    const result = runCombatRound({
+      order: [
+        combatant('hero', 0, 'party', { major: 100, severe: 200 }), // damage never reaches Major → 1 HP
+        combatant('foe', 1, 'monsters', { major: 100, severe: 200 }),
+      ],
+      seed: 'dh-round',
+      round: 1,
+      systemId: 'daggerheart',
+    });
+    const heroTurn = result.turns.find((t) => t.tokenId === 'hero')!;
+    const damages = heroTurn.intent && 'damages' in heroTurn.intent ? heroTurn.intent.damages : [];
+    // Raw 1d8+4 is 5-12, but Daggerheart marks just 1 HP slot below Major.
+    expect(damages[0].amount).toBe(1);
   });
 });

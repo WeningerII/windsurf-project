@@ -49,6 +49,8 @@ export interface TacticalTarget {
   hp?: { current: number; max: number };
   /** Saving-throw bonus accessor (for being caught in someone's area effect). */
   saveBonus?: (ability: string) => number;
+  /** Daggerheart damage thresholds — present makes attacks mark HP slots. */
+  thresholds?: { major: number; severe: number };
 }
 
 /** A scored candidate — every eligible target is acknowledged with a score. */
