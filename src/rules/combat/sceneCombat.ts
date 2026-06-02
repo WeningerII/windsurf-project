@@ -52,6 +52,7 @@ import {
   type SceneAreaAction,
 } from '../resolver/areaParticipants';
 import { sceneBlockPredicate } from '../terrain/sceneTerrain';
+import { coverAcBonus, coverBetween } from '../resolver/lineOfEffect';
 import type { AreaOfEffect } from '../../types/core/common';
 
 /** Combat stats for a token, resolved from its statblock or character sheet. */
@@ -211,13 +212,26 @@ export function resolveSceneAttack(params: {
     return { log: `${attacker.name} cannot resolve combat stats for this attack.`, hit: false };
   }
 
+  // Cover between attacker and target (walls/terrain): total cover is no line of
+  // sight (the attack can't be made); otherwise a per-system bonus to the
+  // target's defense.
+  const cover = coverBetween(attacker.position, target.position, sceneBlockPredicate(state));
+  if (cover === 'total') {
+    return {
+      hit: false,
+      log: `${attacker.name} has no line of sight to ${target.name} (total cover).`,
+    };
+  }
+  const coverBonus = coverAcBonus(cover, state.systemId);
+  const coverNote = coverBonus > 0 ? ` incl. +${coverBonus} cover` : '';
+
   // Daggerheart: attack vs Evasion (= armorClass), then mark 1-3 HP slots by the
   // target's thresholds rather than subtracting raw damage.
   if (state.systemId === 'daggerheart' && targetStats.thresholds) {
     const dh = resolveDaggerheartAttack({
       attackEffects: attackerStats.attackEffects,
       damageEffects: attackerStats.damageEffects,
-      evasion: targetStats.armorClass,
+      evasion: targetStats.armorClass + coverBonus,
       thresholds: targetStats.thresholds,
       rng: participantRng(seed, attackerId, targetId),
     });
@@ -230,9 +244,10 @@ export function resolveSceneAttack(params: {
             damages: [{ tokenId: targetId, amount: dh.hpMarked }],
           }
         : undefined;
+    const evasion = targetStats.armorClass + coverBonus;
     const detail = dh.isHit
-      ? ` for ${dh.damage} damage → marks ${dh.hpMarked} HP (rolled ${dh.attackTotal} vs Evasion ${targetStats.armorClass})`
-      : ` (rolled ${dh.attackTotal} vs Evasion ${targetStats.armorClass})`;
+      ? ` for ${dh.damage} damage → marks ${dh.hpMarked} HP (rolled ${dh.attackTotal} vs Evasion ${evasion}${coverNote})`
+      : ` (rolled ${dh.attackTotal} vs Evasion ${evasion}${coverNote})`;
     return {
       intent,
       hit: dh.isHit,
@@ -243,9 +258,10 @@ export function resolveSceneAttack(params: {
   // M&M: attack vs the target's defense (= armorClass = Parry); on a hit, a
   // Toughness save whose shortfall drives the condition track (no hit points).
   if (state.systemId === 'mam3e' && targetStats.toughness != null) {
+    const defense = targetStats.armorClass + coverBonus;
     const mm = resolveMam3eAttack({
       attackEffects: attackerStats.attackEffects,
-      targetDefense: targetStats.armorClass,
+      targetDefense: defense,
       effectRank: attackerStats.effectRank ?? 0,
       toughness: targetStats.toughness,
       rng: participantRng(seed, attackerId, targetId),
@@ -269,8 +285,8 @@ export function resolveSceneAttack(params: {
             ? 'bruised'
             : 'unharmed (saved)';
     const detail = mm.isHit
-      ? ` (rolled ${mm.attackTotal} vs defense ${targetStats.armorClass}; Toughness ${mm.saveTotal} vs DC ${mm.saveDC} → ${effect})`
-      : ` (rolled ${mm.attackTotal} vs defense ${targetStats.armorClass})`;
+      ? ` (rolled ${mm.attackTotal} vs defense ${defense}${coverNote}; Toughness ${mm.saveTotal} vs DC ${mm.saveDC} → ${effect})`
+      : ` (rolled ${mm.attackTotal} vs defense ${defense}${coverNote})`;
     return {
       intent,
       hit: mm.isHit,
@@ -278,10 +294,11 @@ export function resolveSceneAttack(params: {
     };
   }
 
+  const armorClass = targetStats.armorClass + coverBonus;
   const resolution = resolveAttack({
     attackEffects: attackerStats.attackEffects,
     damageEffects: attackerStats.damageEffects,
-    targetValue: targetStats.armorClass,
+    targetValue: armorClass,
     critOn: attackerStats.critOn,
     critModel: critModelForSystem(state.systemId),
     critMultiplier: attackerStats.critMultiplier,
@@ -302,8 +319,8 @@ export function resolveSceneAttack(params: {
           ? 'critically misses'
           : 'misses';
   const detail = resolution.isHit
-    ? ` for ${resolution.damage} (rolled ${resolution.naturalRoll}+${resolution.attackBonus} vs AC ${targetStats.armorClass})`
-    : ` (rolled ${resolution.naturalRoll}+${resolution.attackBonus} vs AC ${targetStats.armorClass})`;
+    ? ` for ${resolution.damage} (rolled ${resolution.naturalRoll}+${resolution.attackBonus} vs AC ${armorClass}${coverNote})`
+    : ` (rolled ${resolution.naturalRoll}+${resolution.attackBonus} vs AC ${armorClass}${coverNote})`;
 
   return {
     intent,

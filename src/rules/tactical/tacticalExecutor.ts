@@ -31,7 +31,7 @@ import { resolveDaggerheartAttack } from '../resolver/daggerheartResolution';
 import { resolveMam3eAttack } from '../resolver/mam3eResolution';
 import { computeAreaParticipants, type SceneAreaAction } from '../resolver/areaParticipants';
 import { moveToward } from './pathfinding';
-import type { BlockPredicate } from '../resolver/lineOfEffect';
+import { coverAcBonus, coverBetween, type BlockPredicate } from '../resolver/lineOfEffect';
 import type { DiagonalRule } from '../resolver/areaTargeting';
 import {
   isHostile,
@@ -183,11 +183,21 @@ function resolveStrike(
 ): StrikeOutcome {
   const { actor } = input;
 
+  // Cover between attacker and target: total cover is no line of sight; otherwise
+  // a per-system bonus folded into the target's defense.
+  const cover = input.isBlocked
+    ? coverBetween(actor.position, target.position, input.isBlocked)
+    : 'none';
+  if (cover === 'total') {
+    return { hit: false, narration: 'no line of sight' };
+  }
+  const coverBonus = coverAcBonus(cover, input.systemId ?? '');
+
   if (input.systemId === 'daggerheart' && target.thresholds) {
     const dh = resolveDaggerheartAttack({
       attackEffects: actor.attackEffects,
       damageEffects: actor.damageEffects,
-      evasion: target.armorClass,
+      evasion: target.armorClass + coverBonus,
       thresholds: target.thresholds,
       rng,
     });
@@ -206,7 +216,7 @@ function resolveStrike(
   if (input.systemId === 'mam3e' && target.toughness != null) {
     const mm = resolveMam3eAttack({
       attackEffects: actor.attackEffects,
-      targetDefense: target.armorClass,
+      targetDefense: target.armorClass + coverBonus,
       effectRank: actor.effectRank ?? 0,
       toughness: target.toughness,
       rng,
@@ -244,7 +254,7 @@ function resolveStrike(
   const resolution = resolveAttack({
     attackEffects: actor.attackEffects,
     damageEffects: actor.damageEffects,
-    targetValue: target.armorClass,
+    targetValue: target.armorClass + coverBonus,
     critOn: actor.critOn,
     critModel: critModelForSystem(input.systemId),
     critMultiplier: actor.critMultiplier,

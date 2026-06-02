@@ -141,6 +141,28 @@ export function coverSaveBonus(level: CoverLevel, systemId: string): number {
 }
 
 /**
+ * AC bonus a target gets from cover against an attack roll, per system: 5e half
+ * +2 / three-quarters +5; 3.5e/PF1e +4; PF2e standard +2 / greater +4. Total
+ * cover returns 0 here — callers must treat it as no line of sight (the attack
+ * cannot be made) rather than a mere bonus.
+ */
+export function coverAcBonus(level: CoverLevel, systemId: string): number {
+  if (level === 'none' || level === 'total') return 0;
+  switch (systemId) {
+    case 'dnd-5e-2014':
+    case 'dnd-5e-2024':
+      return level === 'three-quarters' ? 5 : 2;
+    case 'dnd-3.5e':
+    case 'pf1e':
+      return 4;
+    case 'pf2e':
+      return level === 'three-quarters' ? 4 : 2;
+    default:
+      return 2;
+  }
+}
+
+/**
  * Cells a SPREAD reaches from its origin: flood fill outward through non-blocking
  * cells, entering a cell only if the path to it (around corners) is within
  * `radius`. Unlike a sphere, a spread bends around a wall; like a sphere, it

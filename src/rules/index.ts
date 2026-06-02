@@ -107,6 +107,7 @@ export {
 
 export type { BlockPredicate, CoverLevel } from './resolver/lineOfEffect';
 export {
+  coverAcBonus,
   coverBetween,
   coverSaveBonus,
   hasLineOfEffect,
