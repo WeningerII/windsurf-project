@@ -159,6 +159,8 @@ export type {
 export { isRoundConclusive, runCombatRound } from './tactical/roundDriver';
 export type { AttackTone } from './narration/combatNarrator';
 export { narrateAttack } from './narration/combatNarrator';
+export type { AiProvider, Narrator, Strategist } from './ai/provider';
+export { deterministicAiProvider, resolveAiProvider } from './ai/provider';
 export { flankToHitBonus, isFlanking } from './tactical/flanking';
 
 export type { MoveResult } from './tactical/pathfinding';

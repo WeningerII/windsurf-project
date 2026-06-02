@@ -56,7 +56,8 @@ import { coverAcBonus, coverBetween } from '../resolver/lineOfEffect';
 import { flankToHitBonus, isFlanking } from '../tactical/flanking';
 import { collapseRollMode, statusAdvantage } from '../resolver/conditions';
 import { concentrationBreak } from '../resolver/concentration';
-import { narrateAttack, type AttackTone } from '../narration/combatNarrator';
+import { type AttackTone } from '../narration/combatNarrator';
+import { resolveAiProvider, type AiProvider } from '../ai/provider';
 import type { AreaOfEffect } from '../../types/core/common';
 
 /** Combat stats for a token, resolved from its statblock or character sheet. */
@@ -550,7 +551,10 @@ export function runSceneRound(params: {
   resolveAuras?: ResolveAuras;
   seed: string;
   round: number;
+  /** AI provider (strategist + narrator); defaults to the deterministic fallback. */
+  provider?: AiProvider;
 }): SceneRoundOutcome {
+  const provider = params.provider ?? resolveAiProvider();
   const order = buildSceneCombatants(
     params.state,
     params.resolveStats,
@@ -566,6 +570,7 @@ export function runSceneRound(params: {
     saveModel: params.state.systemId === 'pf2e' ? 'pf2e-basic' : 'binary',
     systemId: params.state.systemId,
     enterCost: sceneMoveCost(params.state),
+    chooseTarget: provider.strategist,
   });
 
   const nameOf = (tokenId: string): string => params.state.tokens[tokenId]?.name ?? tokenId;
@@ -651,7 +656,7 @@ export function runSceneRound(params: {
         : res.isCriticalMiss || res.degree === 'critical-failure'
           ? 'fumble'
           : 'miss';
-    return narrateAttack({
+    return provider.narrator({
       attacker: nameOf(turn.tokenId),
       target: nameOf(turn.turn.chosenTargetId ?? ''),
       tone,

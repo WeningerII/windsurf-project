@@ -140,6 +140,8 @@ export interface RunRoundInput {
   systemId?: string;
   /** Per-cell movement entering cost (≥1; difficult terrain). Default 1. */
   enterCost?: (cell: SceneCoordinate) => number;
+  /** Strategist seam: bias each turn's target among legal candidates (or defer). */
+  chooseTarget?: TacticalTurnInput['chooseTarget'];
 }
 
 function toActor(combatant: RoundCombatant, position: SceneCoordinate): TacticalActor {
@@ -504,6 +506,7 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
       saveModel: input.saveModel,
       systemId: input.systemId,
       enterCost: input.enterCost,
+      chooseTarget: input.chooseTarget,
     });
 
     // Apply movement first: any enemy whose reach the combatant leaves gets an
