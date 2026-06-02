@@ -27,6 +27,10 @@ import type { EffectInstance } from '../ir/types';
 import { runCombatRound, type RoundCombatant, type RoundResult } from '../tactical/roundDriver';
 import { resolveAttack } from '../resolver/attackResolution';
 import {
+  resolveDaggerheartAttack,
+  type DaggerheartThresholds,
+} from '../resolver/daggerheartResolution';
+import {
   participantRng,
   resolveAreaEffect,
   type SaveDegree,
@@ -57,6 +61,12 @@ export interface SceneCombatStats {
   /** Movement budget in grid cells per turn (defaults applied when absent). */
   speed?: number;
   critOn?: number;
+  /**
+   * Daggerheart damage thresholds (Major/Severe). Present makes this combatant a
+   * Daggerheart target: an attack marks 1-3 HP slots by threshold instead of
+   * subtracting raw damage. `armorClass` holds its Evasion.
+   */
+  thresholds?: DaggerheartThresholds;
   /**
    * This combatant's saving-throw bonus for an ability (e.g. 'dex'), used when
    * it is a participant in someone else's area effect. Omitted when unknown — the
@@ -164,6 +174,35 @@ export function resolveSceneAttack(params: {
   const targetStats = resolveStats(target);
   if (!attackerStats || !targetStats) {
     return { log: `${attacker.name} cannot resolve combat stats for this attack.`, hit: false };
+  }
+
+  // Daggerheart: attack vs Evasion (= armorClass), then mark 1-3 HP slots by the
+  // target's thresholds rather than subtracting raw damage.
+  if (state.systemId === 'daggerheart' && targetStats.thresholds) {
+    const dh = resolveDaggerheartAttack({
+      attackEffects: attackerStats.attackEffects,
+      damageEffects: attackerStats.damageEffects,
+      evasion: targetStats.armorClass,
+      thresholds: targetStats.thresholds,
+      rng: participantRng(seed, attackerId, targetId),
+    });
+    const intent: SceneActionIntent | undefined =
+      dh.isHit && dh.hpMarked > 0
+        ? {
+            type: 'apply-damage',
+            actorId: attackerId,
+            cause: params.cause,
+            damages: [{ tokenId: targetId, amount: dh.hpMarked }],
+          }
+        : undefined;
+    const detail = dh.isHit
+      ? ` for ${dh.damage} damage → marks ${dh.hpMarked} HP (rolled ${dh.attackTotal} vs Evasion ${targetStats.armorClass})`
+      : ` (rolled ${dh.attackTotal} vs Evasion ${targetStats.armorClass})`;
+    return {
+      intent,
+      hit: dh.isHit,
+      log: `${attacker.name} ${dh.isHit ? 'hits' : 'misses'} ${target.name}${detail}.`,
+    };
   }
 
   const resolution = resolveAttack({

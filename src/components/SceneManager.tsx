@@ -16,6 +16,7 @@ import {
 import {
   areaShapeForAction,
   buildCharacterCombatant,
+  buildDaggerheartCombatant,
   buildMonsterCombatant,
   casterSpellAreaActions,
   characterSaveBonus,
@@ -367,6 +368,22 @@ export function SceneManager({
       if (token.kind === 'character' && token.refId) {
         const doc = documentsById.get(token.refId);
         if (!doc) return undefined;
+        // Daggerheart fights on Evasion + damage thresholds, not attack-vs-AC.
+        if (doc.systemId === 'daggerheart') {
+          const dh = buildDaggerheartCombatant(doc, {
+            tokenId: token.id,
+            position: token.position,
+          });
+          return {
+            attackEffects: dh.attackEffects,
+            damageEffects: dh.damageEffects,
+            armorClass: dh.evasion,
+            reach: dh.reach,
+            speed: 6,
+            thresholds: dh.thresholds,
+            saveBonus: (ability: string) => characterSaveBonus(doc, ability),
+          };
+        }
         const built = buildCharacterCombatant(doc, { tokenId: token.id, position: token.position });
         if (!built.supported) return undefined;
         const docSpeed = (doc.system as { speed?: number }).speed;
