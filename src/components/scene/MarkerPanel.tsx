@@ -13,6 +13,9 @@ interface MarkerPanelProps {
   onMarkerWidthChange: (value: string) => void;
   markerHeight: string;
   onMarkerHeightChange: (value: string) => void;
+  /** When true, the placed marker blocks line of effect (a wall). */
+  markerBlocksLoE: boolean;
+  onMarkerBlocksLoEChange: (value: boolean) => void;
   isPlacing: boolean;
   onTogglePlace: () => void;
   markers: Record<string, SceneMarker>;
@@ -29,6 +32,8 @@ export function MarkerPanel({
   onMarkerWidthChange,
   markerHeight,
   onMarkerHeightChange,
+  markerBlocksLoE,
+  onMarkerBlocksLoEChange,
   isPlacing,
   onTogglePlace,
   markers,
@@ -68,6 +73,14 @@ export function MarkerPanel({
             onChange={(event) => onMarkerHeightChange(event.target.value)}
           />
         </div>
+        <label className="flex items-center gap-2 text-xs text-muted-foreground">
+          <input
+            type="checkbox"
+            checked={markerBlocksLoE}
+            onChange={(event) => onMarkerBlocksLoEChange(event.target.checked)}
+          />
+          Blocks line of effect (wall)
+        </label>
         <Button
           variant={isPlacing ? 'default' : 'outline'}
           size="sm"

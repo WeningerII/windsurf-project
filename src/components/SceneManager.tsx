@@ -93,6 +93,7 @@ export function SceneManager({
   const [tokenKind, setTokenKind] = useState<SceneTokenKind>('character');
   const [markerLabel, setMarkerLabel] = useState('');
   const [markerKind, setMarkerKind] = useState<SceneMarkerKind>('hazard');
+  const [markerBlocksLoE, setMarkerBlocksLoE] = useState(false);
   const [markerWidth, setMarkerWidth] = useState('1');
   const [markerHeight, setMarkerHeight] = useState('1');
   const [encounterMonsters, setEncounterMonsters] = useState<Monster[]>([]);
@@ -487,12 +488,27 @@ export function SceneManager({
           position,
           width: positiveIntegerOrDefault(markerWidth, 1),
           height: positiveIntegerOrDefault(markerHeight, 1),
+          // A wall carries a `cover` terrain effect so area resolution treats it
+          // as blocking line of effect (and casts the cover gradient behind it).
+          ...(markerBlocksLoE
+            ? {
+                effects: [
+                  {
+                    target: 'cover',
+                    operation: 'set',
+                    value: 'total',
+                    label: 'Blocks line of effect',
+                  },
+                ],
+              }
+            : {}),
         },
       });
 
       if (placed) {
         setPlacementMode('none');
         setMarkerLabel('');
+        setMarkerBlocksLoE(false);
       }
       return;
     }
@@ -920,6 +936,8 @@ export function SceneManager({
                     onMarkerWidthChange={setMarkerWidth}
                     markerHeight={markerHeight}
                     onMarkerHeightChange={setMarkerHeight}
+                    markerBlocksLoE={markerBlocksLoE}
+                    onMarkerBlocksLoEChange={setMarkerBlocksLoE}
                     isPlacing={placementMode === 'marker'}
                     onTogglePlace={() =>
                       setPlacementMode((current) => (current === 'marker' ? 'none' : 'marker'))

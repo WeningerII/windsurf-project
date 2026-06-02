@@ -68,6 +68,15 @@ export {
   tokensInArea,
 } from './resolver/areaTargeting';
 
+export type { BlockPredicate, CoverLevel } from './resolver/lineOfEffect';
+export {
+  coverBetween,
+  coverSaveBonus,
+  hasLineOfEffect,
+  segmentCells,
+  spreadCells,
+} from './resolver/lineOfEffect';
+
 export {
   areaEffectToDamageIntent,
   attackToDamageIntent,

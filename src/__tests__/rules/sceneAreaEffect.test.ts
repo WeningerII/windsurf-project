@@ -16,7 +16,7 @@ import {
   type ResolveCombatStats,
 } from '../../rules';
 import type { AreaOfEffect } from '../../types/core/common';
-import type { SceneState, SceneToken } from '../../types/core/scene';
+import type { SceneMarker, SceneState, SceneToken } from '../../types/core/scene';
 
 /**
  * Wiring save-based area actions (every AoE geometry, across the d20 family) into
@@ -36,17 +36,34 @@ function token(
   return { id, name: id, kind, position: { x, y }, size: 1, hp: { current: 20, max: 20, temp: 0 } };
 }
 
-function sceneWith(tokens: SceneToken[], systemId = 'dnd-5e-2024'): SceneState {
+function sceneWith(
+  tokens: SceneToken[],
+  systemId = 'dnd-5e-2024',
+  markers: SceneMarker[] = []
+): SceneState {
   return {
     sceneId: 'scene-1',
     name: 'Test',
     systemId,
     grid: { width: 30, height: 30, cellSize: 5 },
     tokens: Object.fromEntries(tokens.map((t) => [t.id, t])),
-    markers: {},
+    markers: Object.fromEntries(markers.map((m) => [m.id, m])),
     initiative: [],
     round: 1,
     seed: 'seed',
+  };
+}
+
+/** A wall marker (blocks line of effect) occupying a vertical span at column x. */
+function wall(id: string, x: number, y: number, height: number): SceneMarker {
+  return {
+    id,
+    kind: 'terrain',
+    label: 'Wall',
+    position: { x, y },
+    width: 1,
+    height,
+    effects: [{ target: 'cover', operation: 'set', value: 'total', label: 'Wall' }],
   };
 }
 
@@ -279,6 +296,42 @@ describe('resolveSceneAreaEffect — a dragon breathes on N creatures', () => {
       seed: 's',
     });
     expect(out.affectedIds).toEqual(['near']);
+  });
+
+  it('a wall blocks line of effect: a creature behind it is not caught', () => {
+    // Dragon at origin breathes east; B sits behind a wall at (2,0), A in the open.
+    const state = sceneWith(
+      [token('dragon', 0, 0, 'monster'), token('A', 1, 0), token('B', 3, 0)],
+      'dnd-5e-2024',
+      [wall('w', 2, 0, 1)]
+    );
+    const out = resolveSceneAreaEffect({
+      state,
+      sourceId: 'dragon',
+      action: breath, // 15-ft cone reaches both A (1,0) and B (3,0)
+      aim: { x: 3, y: 0 },
+      resolveStats,
+      seed: 'cover',
+    });
+    expect(out.affectedIds).toContain('A');
+    expect(out.affectedIds).not.toContain('B'); // total cover → excluded
+    expect(out.log[0]).toMatch(/behind cover/);
+  });
+
+  it('a SPREAD bends around the wall and catches the creature a cone could not', () => {
+    const state = sceneWith([token('dragon', 0, 0, 'monster'), token('B', 3, 0)], 'dnd-5e-2024', [
+      wall('w', 2, 0, 1),
+    ]);
+    const spreadAction = { ...breath, area: { type: 'spread', radius: 40 } as AreaOfEffect };
+    const out = resolveSceneAreaEffect({
+      state,
+      sourceId: 'dragon',
+      action: spreadAction,
+      aim: { x: 0, y: 0 }, // spread centered on the dragon, fills around the wall
+      resolveStats,
+      seed: 'spread',
+    });
+    expect(out.affectedIds).toContain('B'); // reached by flooding around the wall
   });
 
   it('a PF2e scene routes to the four-degree basic save (not the binary model)', () => {

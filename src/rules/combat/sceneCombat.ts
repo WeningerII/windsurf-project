@@ -39,6 +39,13 @@ import {
   tokensInArea,
   type AreaShape,
 } from '../resolver/areaTargeting';
+import {
+  coverBetween,
+  coverSaveBonus,
+  spreadCells,
+  type CoverLevel,
+} from '../resolver/lineOfEffect';
+import { sceneBlockPredicate } from '../terrain/sceneTerrain';
 import type { AreaOfEffect } from '../../types/core/common';
 
 /** Combat stats for a token, resolved from its statblock or character sheet. */
@@ -198,6 +205,18 @@ export function areaShapeForAction(
   return areaOfEffectToShape(area, origin, aim);
 }
 
+/** The cell an area resolves line of effect FROM (its RAW point of origin). */
+function areaOriginPoint(shape: AreaShape): SceneCoordinate {
+  if (shape.kind === 'rect') {
+    return {
+      x: shape.origin.x + Math.floor(shape.width / 2),
+      y: shape.origin.y + Math.floor(shape.height / 2),
+    };
+  }
+  // burst (sphere/emanation), cone (apex), and line (start) all originate at .origin
+  return shape.origin;
+}
+
 /** Human labels for PF2e save degrees, shown in the combat log. */
 const DEGREE_LABEL: Record<SaveDegree, string> = {
   'critical-success': 'crit-saves',
@@ -246,20 +265,53 @@ export function resolveSceneAreaEffect(params: {
     return { log: ['Area effect failed: the source token is missing.'], shape, affectedIds: [] };
   }
 
-  // Participants: every other living token inside the template. AoE is RAW
+  // Candidates: every other living token inside the template. AoE is RAW
   // indiscriminate — allies in the blast are caught too.
-  const caught = tokensInArea(state, shape, rule).filter(
+  const candidates = tokensInArea(state, shape, rule).filter(
     (token) => token.id !== sourceId && (token.hp ? token.hp.current > 0 : false)
   );
 
-  const participants: SaveParticipant[] = caught.map((token) => ({
-    targetId: token.id,
-    saveBonus: resolveStats(token)?.saveBonus?.(action.saveAbility) ?? 0,
-  }));
+  // Line of effect + cover: a wall stops the blast (total cover → excluded),
+  // partial cover adds to the save, and a SPREAD bends around corners (flood
+  // fill) where a sphere/cone cannot.
+  const isBlocked = sceneBlockPredicate(state);
+  const originPoint = areaOriginPoint(shape);
+  const spreadReach =
+    action.area?.type === 'spread' && shape.kind === 'burst'
+      ? spreadCells(shape.origin, shape.radius, isBlocked, rule)
+      : undefined;
+
+  let shieldedByCover = 0;
+  const caught: SceneToken[] = [];
+  const coverByToken = new Map<string, CoverLevel>();
+  for (const token of candidates) {
+    if (spreadReach) {
+      if (!spreadReach.has(`${token.position.x},${token.position.y}`)) {
+        shieldedByCover += 1; // a wall the spread couldn't bend around
+        continue;
+      }
+      caught.push(token); // inside the spread → fully affected, no cover
+      continue;
+    }
+    const cover = coverBetween(originPoint, token.position, isBlocked);
+    if (cover === 'total') {
+      shieldedByCover += 1; // no line of effect — a wall fully shields it
+      continue;
+    }
+    coverByToken.set(token.id, cover);
+    caught.push(token);
+  }
+
+  const participants: SaveParticipant[] = caught.map((token) => {
+    const base = resolveStats(token)?.saveBonus?.(action.saveAbility) ?? 0;
+    const cover = coverByToken.get(token.id) ?? 'none';
+    return { targetId: token.id, saveBonus: base + coverSaveBonus(cover, state.systemId) };
+  });
 
   if (participants.length === 0) {
+    const why = shieldedByCover > 0 ? ` (${shieldedByCover} shielded by cover)` : '';
     return {
-      log: [`${source.name} unleashes ${action.name}, but it catches no one.`],
+      log: [`${source.name} unleashes ${action.name}, but it catches no one${why}.`],
       shape,
       affectedIds: [],
     };
@@ -276,7 +328,8 @@ export function resolveSceneAreaEffect(params: {
   });
 
   const nameOf = (id: string): string => state.tokens[id]?.name ?? id;
-  const header = `${source.name} unleashes ${action.name} — ${result.sharedDamage} damage, DC ${action.saveDC} ${action.saveAbility.toUpperCase()} (${participants.length} caught).`;
+  const shielded = shieldedByCover > 0 ? `, ${shieldedByCover} behind cover` : '';
+  const header = `${source.name} unleashes ${action.name} — ${result.sharedDamage} damage, DC ${action.saveDC} ${action.saveAbility.toUpperCase()} (${participants.length} caught${shielded}).`;
   const lines = result.perTarget.map((outcome) => {
     const label = outcome.degree ? DEGREE_LABEL[outcome.degree] : outcome.saved ? 'saves' : 'fails';
     return `  ${nameOf(outcome.targetId)} ${label} (rolled ${outcome.saveRoll}+${outcome.saveTotal - outcome.saveRoll}) — takes ${outcome.damageTaken}.`;
