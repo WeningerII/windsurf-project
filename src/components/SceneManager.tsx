@@ -18,6 +18,7 @@ import {
   buildCharacterCombatant,
   buildMonsterCombatant,
   characterSaveBonus,
+  diagonalRuleForSystem,
   monsterSaveActions,
   monsterSaveBonus,
   resolveSceneAreaEffect,
@@ -410,7 +411,8 @@ export function SceneManager({
     const aim = state.tokens[combatTargetId];
     if (!source || !aim) return 0;
     const shape = areaShapeForAction(selectedSaveAction.area, source.position, aim.position);
-    return tokensInArea(state, shape).filter(
+    const rule = diagonalRuleForSystem(state.systemId);
+    return tokensInArea(state, shape, rule).filter(
       (token) => token.id !== selectedTokenId && (token.hp ? token.hp.current > 0 : false)
     ).length;
   }, [state, selectedTokenId, selectedSaveAction, combatTargetId]);

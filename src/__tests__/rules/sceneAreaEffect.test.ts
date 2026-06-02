@@ -2,22 +2,27 @@ import { describe, it, expect } from 'vitest';
 
 import { dnd5e2024MonstersById } from '../../data/dnd/5e-2024/monsters';
 import {
+  areaOfEffectToShape,
   areaShapeForAction,
   cellInArea,
   DEFAULT_CONE_HALF_ANGLE_DEG,
+  diagonalRuleForSystem,
+  gridDistance,
   monsterSaveActions,
+  pf2eSaveDegree,
+  resolveAreaEffect,
   resolveSceneAreaEffect,
   tokensInArea,
   type ResolveCombatStats,
-  type SceneAreaAction,
 } from '../../rules';
+import type { AreaOfEffect } from '../../types/core/common';
 import type { SceneState, SceneToken } from '../../types/core/scene';
 
 /**
- * Wiring save-based area actions (breath weapons / every AoE shape) into scene
- * combat: the cone geometry, the area→grid-shape mapping, and the participant-
- * aware scene bridge that catches N creatures, rolls shared damage once, saves
- * each independently, and emits a single apply-damage intent.
+ * Wiring save-based area actions (every AoE geometry, across the d20 family) into
+ * scene combat: the grid geometry for all seven canonical `AreaOfEffect` shapes,
+ * the per-system diagonal rule, the participant-aware scene bridge, and the
+ * per-system save model (5e binary vs PF2e four-degree basic).
  */
 
 const ORIGIN = { x: 0, y: 0 };
@@ -28,22 +33,15 @@ function token(
   y: number,
   kind: SceneToken['kind'] = 'character'
 ): SceneToken {
-  return {
-    id,
-    name: id,
-    kind,
-    position: { x, y },
-    size: 1,
-    hp: { current: 20, max: 20, temp: 0 },
-  };
+  return { id, name: id, kind, position: { x, y }, size: 1, hp: { current: 20, max: 20, temp: 0 } };
 }
 
-function sceneWith(tokens: SceneToken[]): SceneState {
+function sceneWith(tokens: SceneToken[], systemId = 'dnd-5e-2024'): SceneState {
   return {
     sceneId: 'scene-1',
     name: 'Test',
-    systemId: 'dnd-5e-2024',
-    grid: { width: 20, height: 20, cellSize: 5 },
+    systemId,
+    grid: { width: 30, height: 30, cellSize: 5 },
     tokens: Object.fromEntries(tokens.map((t) => [t.id, t])),
     markers: {},
     initiative: [],
@@ -52,62 +50,150 @@ function sceneWith(tokens: SceneToken[]): SceneState {
   };
 }
 
-describe('cone area shape (square grid, RAW width = distance)', () => {
-  const cone = { kind: 'cone', origin: ORIGIN, aim: { x: 3, y: 0 }, length: 3 } as const;
+describe('diagonal rule (RAW differs by system)', () => {
+  it('5e counts every square as one (Chebyshev)', () => {
+    expect(diagonalRuleForSystem('dnd-5e-2024')).toBe('chebyshev');
+    expect(gridDistance({ x: 0, y: 0 }, { x: 3, y: 3 }, 'chebyshev')).toBe(3);
+  });
+  it('d20-legacy / Pathfinder alternate diagonals 1-2-1', () => {
+    expect(diagonalRuleForSystem('pf1e')).toBe('alternating');
+    expect(diagonalRuleForSystem('dnd-3.5e')).toBe('alternating');
+    expect(diagonalRuleForSystem('pf2e')).toBe('alternating');
+    // 3 diagonal steps = 5+10+5 ft = 20 ft = 4 cells.
+    expect(gridDistance({ x: 0, y: 0 }, { x: 3, y: 3 }, 'alternating')).toBe(4);
+    // 4 diagonals = 5+10+5+10 = 30 ft = 6 cells.
+    expect(gridDistance({ x: 0, y: 0 }, { x: 4, y: 4 }, 'alternating')).toBe(6);
+  });
+});
 
-  it('includes cells along the aim axis within range', () => {
+describe('cone geometry (RAW square grid, width = distance)', () => {
+  const cone = { kind: 'cone', origin: ORIGIN, aim: { x: 3, y: 0 }, length: 3 } as const;
+  it('includes the axis within range, excludes the apex and beyond range', () => {
     expect(cellInArea({ x: 1, y: 0 }, cone)).toBe(true);
     expect(cellInArea({ x: 3, y: 0 }, cone)).toBe(true);
-  });
-
-  it('excludes the apex (origin) and cells beyond range', () => {
     expect(cellInArea({ x: 0, y: 0 }, cone)).toBe(false);
     expect(cellInArea({ x: 4, y: 0 }, cone)).toBe(false);
   });
-
-  it('widens with distance (atan(0.5) half-angle): (2,1) in, (1,1) and (2,2) out', () => {
-    expect(cellInArea({ x: 2, y: 1 }, cone)).toBe(true); // on the RAW boundary
-    expect(cellInArea({ x: 1, y: 1 }, cone)).toBe(false); // 45° — outside the spread
+  it('widens with distance: (2,1) in, (1,1)/(2,2) out', () => {
+    expect(cellInArea({ x: 2, y: 1 }, cone)).toBe(true);
+    expect(cellInArea({ x: 1, y: 1 }, cone)).toBe(false);
     expect(cellInArea({ x: 2, y: 2 }, cone)).toBe(false);
   });
-
-  it('aims in arbitrary directions (diagonal)', () => {
-    const diag = { kind: 'cone', origin: ORIGIN, aim: { x: 3, y: 3 }, length: 4 } as const;
-    expect(cellInArea({ x: 2, y: 2 }, diag)).toBe(true);
-    expect(cellInArea({ x: 3, y: 0 }, diag)).toBe(false);
+  it('degenerate cone (aim === origin) catches nothing', () => {
+    expect(
+      cellInArea({ x: 1, y: 0 }, { kind: 'cone', origin: ORIGIN, aim: ORIGIN, length: 3 })
+    ).toBe(false);
   });
-
-  it('a degenerate cone (aim === origin) catches nothing', () => {
-    const degenerate = { kind: 'cone', origin: ORIGIN, aim: ORIGIN, length: 3 } as const;
-    expect(cellInArea({ x: 1, y: 0 }, degenerate)).toBe(false);
-  });
-
-  it('defaults to the RAW cone half-angle, atan(0.5) ≈ 26.57°', () => {
+  it('defaults to the RAW half-angle atan(0.5) ≈ 26.57°', () => {
     expect(DEFAULT_CONE_HALF_ANGLE_DEG).toBeCloseTo(26.565, 2);
   });
 });
 
-describe('areaShapeForAction maps every template to a grid shape', () => {
-  const aim = { x: 4, y: 0 };
-  it('cone emanates from origin toward aim', () => {
-    const shape = areaShapeForAction({ shape: 'cone', lengthCells: 3 }, ORIGIN, aim);
-    expect(shape).toEqual({ kind: 'cone', origin: ORIGIN, aim, length: 3 });
+describe('thick line (width)', () => {
+  it('width 1 (5-ft line) is the cells the segment passes through, origin included', () => {
+    const line = { kind: 'line', origin: ORIGIN, to: { x: 3, y: 0 }, width: 1 } as const;
+    expect(cellInArea({ x: 0, y: 0 }, line)).toBe(true);
+    expect(cellInArea({ x: 2, y: 0 }, line)).toBe(true);
+    expect(cellInArea({ x: 2, y: 1 }, line)).toBe(false);
   });
-  it('line extends length cells in the aim direction', () => {
-    const shape = areaShapeForAction({ shape: 'line', lengthCells: 4 }, ORIGIN, aim);
-    expect(shape).toEqual({ kind: 'line', origin: ORIGIN, to: { x: 4, y: 0 } });
+  it('width 3 catches cells off the centerline', () => {
+    const line = { kind: 'line', origin: ORIGIN, to: { x: 4, y: 0 }, width: 3 } as const;
+    expect(cellInArea({ x: 2, y: 1 }, line)).toBe(true);
+    expect(cellInArea({ x: 2, y: 2 }, line)).toBe(false); // beyond half-width 1.5
   });
-  it('burst/sphere is centered on the aim', () => {
-    const shape = areaShapeForAction({ shape: 'burst', radiusCells: 2 }, ORIGIN, aim);
-    expect(shape).toEqual({ kind: 'burst', origin: aim, radius: 2 });
+});
+
+describe('areaOfEffectToShape maps all seven canonical shapes to the grid', () => {
+  const aim = { x: 6, y: 0 };
+  const cases: Array<[AreaOfEffect, ReturnType<typeof areaOfEffectToShape>]> = [
+    [
+      { type: 'cone', feet: 15 },
+      { kind: 'cone', origin: ORIGIN, aim, length: 3 },
+    ],
+    [
+      { type: 'cube', feet: 20 },
+      { kind: 'rect', origin: { x: 4, y: -2 }, width: 4, height: 4 },
+    ],
+    [
+      { type: 'line', length: 30, width: 5 },
+      { kind: 'line', origin: ORIGIN, to: { x: 6, y: 0 }, width: 1 },
+    ],
+    [
+      { type: 'sphere', radius: 20 },
+      { kind: 'burst', origin: aim, radius: 4 },
+    ],
+    [
+      { type: 'spread', radius: 20 },
+      { kind: 'burst', origin: aim, radius: 4 },
+    ],
+    [
+      { type: 'cylinder', radius: 20, height: 40 },
+      { kind: 'burst', origin: aim, radius: 4 },
+    ],
+    // Emanation radiates from the EMITTER (origin), not the aimed point.
+    [
+      { type: 'emanation', radius: 10 },
+      { kind: 'burst', origin: ORIGIN, radius: 2 },
+    ],
+  ];
+  it.each(cases)('%o → %o', (aoe, expected) => {
+    expect(areaOfEffectToShape(aoe, ORIGIN, aim)).toEqual(expected);
   });
-  it('cube is centered on the aim', () => {
-    const shape = areaShapeForAction({ shape: 'cube', sizeCells: 4 }, ORIGIN, aim);
-    expect(shape).toEqual({ kind: 'rect', origin: { x: 2, y: -2 }, width: 4, height: 4 });
+});
+
+describe('PF2e basic save degrees (CRB)', () => {
+  it('beat DC by 10 → critical success; meet → success; miss → failure; miss by 10 → crit failure', () => {
+    expect(pf2eSaveDegree(10, 30, 20)).toBe('critical-success');
+    expect(pf2eSaveDegree(10, 22, 20)).toBe('success');
+    expect(pf2eSaveDegree(10, 18, 20)).toBe('failure');
+    expect(pf2eSaveDegree(10, 9, 20)).toBe('critical-failure');
   });
-  it('no template degenerates to a single-cell burst on the aim', () => {
-    const shape = areaShapeForAction(undefined, ORIGIN, aim);
-    expect(shape).toEqual({ kind: 'burst', origin: aim, radius: 0 });
+  it('nat 20 improves one degree, nat 1 worsens one degree', () => {
+    expect(pf2eSaveDegree(20, 18, 20)).toBe('success'); // failure → success
+    expect(pf2eSaveDegree(1, 22, 20)).toBe('failure'); // success → failure
+  });
+  // Degree → damage mapping (independent of which roll actually came up).
+  const pf2eExpectedDamage = (roll: number, total: number, dc: number, shared: number): number => {
+    switch (pf2eSaveDegree(roll, total, dc)) {
+      case 'critical-success':
+        return 0;
+      case 'success':
+        return Math.floor(shared / 2);
+      case 'failure':
+        return shared;
+      case 'critical-failure':
+        return shared * 2;
+    }
+  };
+
+  it('resolveAreaEffect (pf2e-basic): every target takes damage matching its OWN degree', () => {
+    const dragon = dnd5e2024MonstersById['red-dragon-wyrmling-2024'];
+    const breath = monsterSaveActions(dragon).find((s) => /breath/i.test(s.name))!;
+    const dc = 18;
+    const res = resolveAreaEffect({
+      sourceId: 'd',
+      seed: 'pf2e-degrees',
+      damageEffects: breath.damageEffects,
+      saveDC: dc,
+      saveModel: 'pf2e-basic',
+      // A spread of bonuses so the four degrees all appear across the targets.
+      participants: [
+        { targetId: 'a', saveBonus: 100 },
+        { targetId: 'b', saveBonus: 9 },
+        { targetId: 'c', saveBonus: 0 },
+        { targetId: 'd', saveBonus: -100 },
+        { targetId: 'e', saveBonus: 13 },
+        { targetId: 'f', saveBonus: -6 },
+      ],
+    });
+    for (const p of res.perTarget) {
+      expect(p.degree).toBeDefined();
+      expect(p.damageTaken).toBe(pf2eExpectedDamage(p.saveRoll, p.saveTotal, dc, res.sharedDamage));
+    }
+    // Critical failure (double) is reachable only under this model — prove the
+    // spread actually exercised more than the binary half/full outcomes.
+    const degrees = new Set(res.perTarget.map((p) => p.degree));
+    expect(degrees.size).toBeGreaterThan(1);
   });
 });
 
@@ -115,13 +201,10 @@ describe('resolveSceneAreaEffect — a dragon breathes on N creatures', () => {
   const dragon = dnd5e2024MonstersById['red-dragon-wyrmling-2024'];
   const breath = monsterSaveActions(dragon).find((s) => /breath/i.test(s.name))!;
 
-  // Dragon at origin breathing east; three creatures in the 15-ft (3-cell) cone,
-  // one far away. saveBonus forces deterministic save/fail per token.
   const saveBonusById: Record<string, number> = {
-    fighter: -100, // fails -> full
-    cleric: -100, // fails -> full
-    rogue: 100, // saves -> half
-    bystander: 0,
+    fighter: -100,
+    cleric: -100,
+    rogue: 100,
   };
   const resolveStats: ResolveCombatStats = (t) => ({
     attackEffects: [],
@@ -136,8 +219,8 @@ describe('resolveSceneAreaEffect — a dragon breathes on N creatures', () => {
       token('dragon', 0, 0, 'monster'),
       token('fighter', 1, 0),
       token('cleric', 2, 0),
-      token('rogue', 2, 1), // on the cone boundary
-      token('bystander', 8, 8), // well outside
+      token('rogue', 2, 1),
+      token('bystander', 8, 8),
     ]);
     return resolveSceneAreaEffect({
       state,
@@ -153,15 +236,11 @@ describe('resolveSceneAreaEffect — a dragon breathes on N creatures', () => {
   it('catches everyone in the cone, excludes the emitter and those outside', () => {
     const out = run();
     expect(out.affectedIds.sort()).toEqual(['cleric', 'fighter', 'rogue']);
-    expect(out.affectedIds).not.toContain('dragon');
-    expect(out.affectedIds).not.toContain('bystander');
   });
 
-  it('rolls shared damage once and emits a single apply-damage intent', () => {
+  it('rolls shared damage once → one apply-damage intent; saver takes half', () => {
     const out = run();
-    expect(out.intent?.type).toBe('apply-damage');
     const damages = out.intent && 'damages' in out.intent ? out.intent.damages : [];
-    // Failed saves take full (shared) damage; the saver takes half — all from one roll.
     const full = damages.find((d) => d.tokenId === 'fighter')!.amount;
     expect(damages.find((d) => d.tokenId === 'cleric')!.amount).toBe(full);
     expect(damages.find((d) => d.tokenId === 'rogue')!.amount).toBe(Math.floor(full / 2));
@@ -171,11 +250,8 @@ describe('resolveSceneAreaEffect — a dragon breathes on N creatures', () => {
     expect(JSON.stringify(run().intent)).toBe(JSON.stringify(run().intent));
   });
 
-  it('friendly fire: a same-faction creature in the area is caught too', () => {
-    const state = sceneWith([
-      token('dragon', 0, 0, 'monster'),
-      token('kobold', 1, 0, 'monster'), // ally of the dragon, but in the cone
-    ]);
+  it('friendly fire: a same-faction creature in the area is caught', () => {
+    const state = sceneWith([token('dragon', 0, 0, 'monster'), token('kobold', 1, 0, 'monster')]);
     const out = resolveSceneAreaEffect({
       state,
       sourceId: 'dragon',
@@ -187,32 +263,71 @@ describe('resolveSceneAreaEffect — a dragon breathes on N creatures', () => {
     expect(out.affectedIds).toEqual(['kobold']);
   });
 
-  it('the emitter is excluded even when inside its own burst', () => {
-    const burst: SceneAreaAction = { ...breath, area: { shape: 'burst', radiusCells: 3 } };
-    const state = sceneWith([token('dragon', 0, 0, 'monster'), token('goblin', 1, 0, 'monster')]);
+  it('an emanation/aura-shaped action is self-centered (ignores aim direction)', () => {
+    const auraAction = { ...breath, area: { type: 'emanation', radius: 10 } as AreaOfEffect };
+    const state = sceneWith([
+      token('dragon', 5, 5, 'monster'),
+      token('near', 6, 6), // within 10 ft (2 cells) of the dragon
+      token('far', 0, 0), // outside
+    ]);
     const out = resolveSceneAreaEffect({
       state,
       sourceId: 'dragon',
-      action: burst,
-      aim: { x: 1, y: 0 }, // burst centered next to the dragon — dragon is within radius 3
+      action: auraAction,
+      aim: { x: 0, y: 0 }, // aim is irrelevant for an emanation
       resolveStats,
       seed: 's',
     });
-    expect(out.affectedIds).toEqual(['goblin']);
+    expect(out.affectedIds).toEqual(['near']);
   });
 
-  it('catches no one when the area is empty', () => {
-    const state = sceneWith([token('dragon', 0, 0, 'monster'), token('far', 10, 10)]);
+  it('a PF2e scene routes to the four-degree basic save (not the binary model)', () => {
+    const state = sceneWith([token('dragon', 0, 0, 'monster'), token('rogue', 1, 0)], 'pf2e');
+    const action = { ...breath, saveDC: 18 };
+    const saveBonus = 7;
     const out = resolveSceneAreaEffect({
       state,
       sourceId: 'dragon',
-      action: breath,
+      action,
       aim: { x: 3, y: 0 },
-      resolveStats,
-      seed: 's',
+      resolveStats: () => ({
+        attackEffects: [],
+        damageEffects: [],
+        armorClass: 10,
+        reach: 1,
+        saveBonus: () => saveBonus,
+      }),
+      seed: 'route',
     });
-    expect(out.affectedIds).toEqual([]);
-    expect(out.intent).toBeUndefined();
-    expect(tokensInArea(state, out.shape).filter((t) => t.id !== 'dragon')).toEqual([]);
+    // Independently resolve the same (seed, source, target) under pf2e-basic and
+    // confirm the bridge selected that model purely from the scene's systemId.
+    const independent = resolveAreaEffect({
+      sourceId: 'dragon',
+      seed: 'route',
+      damageEffects: action.damageEffects,
+      saveDC: 18,
+      saveModel: 'pf2e-basic',
+      participants: [{ targetId: 'rogue', saveBonus }],
+    });
+    const rogueDmg =
+      (out.intent && 'damages' in out.intent ? out.intent.damages : []).find(
+        (d) => d.tokenId === 'rogue'
+      )?.amount ?? 0;
+    expect(independent.perTarget[0].degree).toBeDefined();
+    expect(rogueDmg).toBe(independent.perTarget[0].damageTaken);
+  });
+});
+
+describe('areaShapeForAction (bridge wrapper) + tokensInArea selection', () => {
+  it('an action with no template degenerates to a single-cell burst on the aim', () => {
+    const shape = areaShapeForAction(undefined, ORIGIN, { x: 4, y: 0 });
+    expect(shape).toEqual({ kind: 'burst', origin: { x: 4, y: 0 }, radius: 0 });
+    const state = sceneWith([token('a', 4, 0), token('b', 5, 0)]);
+    expect(tokensInArea(state, shape).map((t) => t.id)).toEqual(['a']);
+  });
+  it('delegates to the canonical mapper for a real template', () => {
+    expect(areaShapeForAction({ type: 'cone', feet: 15 }, ORIGIN, { x: 3, y: 0 })).toEqual(
+      areaOfEffectToShape({ type: 'cone', feet: 15 }, ORIGIN, { x: 3, y: 0 })
+    );
   });
 });

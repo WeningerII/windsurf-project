@@ -1,24 +1,29 @@
 import { Flame, Swords, Zap } from 'lucide-react';
 import type { SceneState } from '../../types/core/scene';
-import type { MonsterSaveAction, SaveActionArea } from '../../rules';
+import type { AreaOfEffect } from '../../types/core/common';
+import type { MonsterSaveAction } from '../../rules';
 import { Button } from '../ui/Button';
 import { Select } from '../ui/Select';
 import { Badge } from '../ui/Badge';
 
-const FEET_PER_CELL = 5;
-
-/** Human label for an area template, in feet (the table-facing unit). */
-function describeArea(area: SaveActionArea | undefined): string {
+/** Human label for a canonical area template, in feet (the table-facing unit). */
+function describeArea(area: AreaOfEffect | undefined): string {
   if (!area) return 'targeted';
-  switch (area.shape) {
+  switch (area.type) {
     case 'cone':
-      return `${area.lengthCells * FEET_PER_CELL}-ft cone`;
-    case 'line':
-      return `${area.lengthCells * FEET_PER_CELL}-ft line`;
-    case 'burst':
-      return `${area.radiusCells * FEET_PER_CELL}-ft radius`;
+      return `${area.feet}-ft cone`;
     case 'cube':
-      return `${area.sizeCells * FEET_PER_CELL}-ft cube`;
+      return `${area.feet}-ft cube`;
+    case 'cylinder':
+      return `${area.radius}-ft radius cylinder`;
+    case 'line':
+      return `${area.length}-ft line`;
+    case 'sphere':
+      return `${area.radius}-ft radius`;
+    case 'emanation':
+      return `${area.radius}-ft emanation`;
+    case 'spread':
+      return `${area.radius}-ft spread`;
     default:
       return 'area';
   }

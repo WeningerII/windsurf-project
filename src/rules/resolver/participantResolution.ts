@@ -109,6 +109,38 @@ export interface SaveParticipant {
   context?: Omit<ResolveContext, 'rng'>;
 }
 
+/**
+ * How a saving throw maps to damage:
+ *   - 'binary'     : 5e / 3.5e / PF1e — meet the DC and take half (or none),
+ *                    else full. Driven by `halfOnSave`.
+ *   - 'pf2e-basic' : Pathfinder 2e basic save — four degrees of success map to
+ *                    none / half / full / double, with nat 20 and nat 1 shifting
+ *                    the degree one step.
+ */
+export type SaveModel = 'binary' | 'pf2e-basic';
+
+/** PF2e degree of success on a save. */
+export type SaveDegree = 'critical-success' | 'success' | 'failure' | 'critical-failure';
+
+const STEP_TO_DEGREE: readonly SaveDegree[] = [
+  'critical-failure',
+  'failure',
+  'success',
+  'critical-success',
+];
+
+/**
+ * PF2e basic-save degree (CRB p.449): beat the DC by 10+ → critical success;
+ * meet the DC → success; miss by ≤9 → failure; miss by 10+ → critical failure.
+ * A natural 20 improves the result one degree, a natural 1 worsens it one degree.
+ */
+export function pf2eSaveDegree(roll: number, total: number, dc: number): SaveDegree {
+  let step = total >= dc + 10 ? 3 : total >= dc ? 2 : total <= dc - 10 ? 0 : 1;
+  if (roll === 20) step = Math.min(3, step + 1);
+  else if (roll === 1) step = Math.max(0, step - 1);
+  return STEP_TO_DEGREE[step];
+}
+
 export interface AreaEffectInput {
   /** The origin of the effect (caster/trap); seeds the shared damage roll. */
   sourceId: string;
@@ -119,6 +151,8 @@ export interface AreaEffectInput {
   saveDC: number;
   /** When true (5e default), a successful save halves damage; else negates. */
   halfOnSave?: boolean;
+  /** Save→damage mapping; defaults to the binary (5e/3.5e/PF1e) model. */
+  saveModel?: SaveModel;
   participants: readonly SaveParticipant[];
 }
 
@@ -128,6 +162,8 @@ export interface AreaEffectOutcome {
   saveTotal: number;
   saved: boolean;
   damageTaken: number;
+  /** PF2e degree of success, present only under the 'pf2e-basic' model. */
+  degree?: SaveDegree;
 }
 
 export interface AreaEffectResult {
@@ -159,12 +195,30 @@ export function resolveAreaEffect(input: AreaEffectInput): AreaEffectResult {
     }
   }
 
+  const saveModel = input.saveModel ?? 'binary';
+  const half = Math.floor(sharedDamage / 2);
+
   const perTarget = input.participants.map((participant): AreaEffectOutcome => {
     const rng = participantRng(input.seed, input.sourceId, participant.targetId, 'save');
     const saveRoll = rng.rollDie(20);
     const saveTotal = saveRoll + participant.saveBonus;
+
+    if (saveModel === 'pf2e-basic') {
+      const degree = pf2eSaveDegree(saveRoll, saveTotal, input.saveDC);
+      const damageTaken =
+        degree === 'critical-success'
+          ? 0
+          : degree === 'success'
+            ? half
+            : degree === 'failure'
+              ? sharedDamage
+              : sharedDamage * 2; // critical failure → double
+      const saved = degree === 'success' || degree === 'critical-success';
+      return { targetId: participant.targetId, saveRoll, saveTotal, saved, damageTaken, degree };
+    }
+
     const saved = saveTotal >= input.saveDC;
-    const damageTaken = saved ? (halfOnSave ? Math.floor(sharedDamage / 2) : 0) : sharedDamage;
+    const damageTaken = saved ? (halfOnSave ? half : 0) : sharedDamage;
     return { targetId: participant.targetId, saveRoll, saveTotal, saved, damageTaken };
   });
 

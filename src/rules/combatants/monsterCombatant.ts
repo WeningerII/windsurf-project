@@ -16,7 +16,7 @@
  */
 
 import type { Monster, Action } from '../../types/creatures/monsters';
-import type { AbilityScore, DiceType } from '../../types/core/common';
+import type { AbilityScore, AreaOfEffect, DiceType } from '../../types/core/common';
 import type { SceneCoordinate, SceneToken } from '../../types/core/scene';
 import { makeEffectId, type EffectInstance } from '../ir/types';
 
@@ -56,28 +56,19 @@ interface NormalizedAttack {
   damage: DamageClause[];
 }
 
-/**
- * The geometric template a save-based action fills, in grid cells. Parsed from
- * prose ("15-foot cone", "60-foot line", "20-foot-radius sphere", "10-foot
- * cube"); this is what lets the UI aim/place the effect and select the N targets
- * it catches, rather than applying it to a single creature.
- */
-export type SaveActionArea =
-  | { shape: 'cone'; lengthCells: number }
-  | { shape: 'line'; lengthCells: number }
-  | { shape: 'burst'; radiusCells: number }
-  | { shape: 'cube'; sizeCells: number };
-
 /** A normalized save-based action (breath weapon / AoE): DC + save + damage. */
 interface NormalizedSaveAction {
   /** Ability the target saves with, lowercased (e.g. 'dex'). */
   saveAbility: string;
   saveDC: number;
-  /** When true (5e default for "half as much"), a success halves damage. */
+  /** When true (5e "half as much"), a success halves damage; else it negates. */
   halfOnSave: boolean;
   damage: DamageClause[];
-  /** The area template, when the prose names one (cone/line/sphere/cube). */
-  area?: SaveActionArea;
+  /**
+   * The area template (canonical `AreaOfEffect`, shared with spells), when the
+   * prose names one — cone/cube/cylinder/line/sphere/emanation/spread.
+   */
+  area?: AreaOfEffect;
 }
 
 /**
@@ -152,44 +143,75 @@ export function parseAttackFromDescription(description: string): NormalizedAttac
 }
 
 const SAVE_ABILITY_WORDS: Record<string, string> = {
+  // 5e / d20 ability-named saves.
   strength: 'str',
   dexterity: 'dex',
   constitution: 'con',
   intelligence: 'int',
   wisdom: 'wis',
   charisma: 'cha',
+  // Pathfinder / 3.5e save names map onto their governing ability.
+  fortitude: 'con',
+  reflex: 'dex',
+  will: 'wis',
 };
 
-/** Feet → grid cells, rounded to the nearest cell (minimum one). */
-function feetToCells(feet: number): number {
-  return Math.max(1, Math.round(feet / FEET_PER_CELL));
-}
-
 /**
- * Parse the area template a save-based action fills from its prose. Recognizes
- * the four shapes SRD breath weapons / AoE actions use: cone, line, sphere
- * (radius/within), and cube. Returns undefined when no template is named — the
- * caller then treats the action as affecting only the aimed creature.
+ * Parse the canonical area template a save-based action fills, from its prose.
+ * Recognizes every `AreaOfEffect` shape across the d20 family — cone, cube,
+ * cylinder, line (with width), sphere, Pathfinder emanation, and spread/burst —
+ * keeping values in FEET (the canonical unit; grid conversion happens in
+ * `areaOfEffectToShape`). Returns undefined when no template is named, so the
+ * caller treats the action as affecting only the aimed creature.
  */
-export function parseAreaFromDescription(description: string): SaveActionArea | undefined {
+export function parseAreaFromDescription(description: string): AreaOfEffect | undefined {
   if (!description) return undefined;
+  const ft = (s: string): number => Number(s);
 
-  const cone = /(\d+)[- ]?foot[- ]?cone/i.exec(description);
-  if (cone) return { shape: 'cone', lengthCells: feetToCells(Number(cone[1])) };
+  const cone = /(\d+)[- ]?(?:foot|ft)[- ]?cone/i.exec(description);
+  if (cone) return { type: 'cone', feet: ft(cone[1]) };
 
-  const line = /(\d+)[- ]?foot[- ](?:long[, -]*(?:\d+[- ]?foot[- ]?wide[, -]*)?)?line/i.exec(
+  const cube = /(\d+)[- ]?(?:foot|ft)[- ]?cube/i.exec(description);
+  if (cube) return { type: 'cube', feet: ft(cube[1]) };
+
+  // "20-foot-radius, 40-foot-high cylinder" (height optional).
+  const cylinder =
+    /(\d+)[- ]?(?:foot|ft)[- ]?radius[, -]*(?:(\d+)[- ]?(?:foot|ft)[- ]?(?:high|tall)[, -]*)?cylinder/i.exec(
+      description
+    );
+  if (cylinder) {
+    return { type: 'cylinder', radius: ft(cylinder[1]), height: cylinder[2] ? ft(cylinder[2]) : 0 };
+  }
+
+  // "90-foot-long, 5-foot-wide Line" or "Line 100 feet long and 5 feet wide".
+  const lineA =
+    /(\d+)[- ]?(?:foot|ft)[- ](?:long[, -]*)?(?:(\d+)[- ]?(?:foot|ft)[- ]?wide[, -]*)?line/i.exec(
+      description
+    );
+  if (lineA) return { type: 'line', length: ft(lineA[1]), width: lineA[2] ? ft(lineA[2]) : 5 };
+  const lineB =
+    /line[, ]*(\d+)\s*(?:feet|ft)\s*long(?:[, -]*and[, -]*(\d+)\s*(?:feet|ft)\s*wide)?/i.exec(
+      description
+    );
+  if (lineB) return { type: 'line', length: ft(lineB[1]), width: lineB[2] ? ft(lineB[2]) : 5 };
+
+  // Pathfinder emanation radiates from the creature itself (auras, close areas).
+  const emanation = /(\d+)[- ]?(?:foot|ft)[- ]?emanation/i.exec(description);
+  if (emanation) return { type: 'emanation', radius: ft(emanation[1]) };
+
+  // 3.5e/PF1 spread (spreads around corners).
+  const spread = /(\d+)[- ]?(?:foot|ft)[- ]?(?:radius[- ]?)?spread/i.exec(description);
+  if (spread) return { type: 'spread', radius: ft(spread[1]) };
+
+  // Sphere / radius / PF2e burst → a sphere footprint.
+  const sphere = /(\d+)[- ]?(?:foot|ft)[- ]?(?:radius(?:\s*sphere)?|sphere|burst)/i.exec(
     description
   );
-  if (line) return { shape: 'line', lengthCells: feetToCells(Number(line[1])) };
+  if (sphere) return { type: 'sphere', radius: ft(sphere[1]) };
 
-  const cube = /(\d+)[- ]?foot[- ]?cube/i.exec(description);
-  if (cube) return { shape: 'cube', sizeCells: feetToCells(Number(cube[1])) };
-
-  const radius = /(\d+)[- ]?foot[- ]?(?:radius|sphere)/i.exec(description);
-  if (radius) return { shape: 'burst', radiusCells: feetToCells(Number(radius[1])) };
-
+  // "within N feet" → a self-centered emanation (auras / close bursts).
   const within = /within (\d+)\s*(?:feet|ft)/i.exec(description);
-  if (within) return { shape: 'burst', radiusCells: feetToCells(Number(within[1])) };
+  if (within) return { type: 'emanation', radius: ft(within[1]) };
 
   return undefined;
 }
@@ -211,8 +233,10 @@ export function parseSaveActionFromDescription(
   // A to-hit attack is not a save-based area action — keep the two disjoint.
   if (/\bto hit\b/i.test(description)) return undefined;
 
+  // d20 ("DC 11 Dexterity saving throw") and Pathfinder ("DC 24 basic Reflex
+  // save") wording both resolve here.
   const save =
-    /DC\s+(\d+)\s+(Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma)\s+saving throw/i.exec(
+    /DC\s+(\d+)\s+(?:basic\s+)?(Strength|Dexterity|Constitution|Intelligence|Wisdom|Charisma|Fortitude|Reflex|Will)\s+(?:saving throw|save)\b/i.exec(
       description
     );
   if (!save) return undefined;
@@ -324,8 +348,8 @@ export interface MonsterSaveAction {
   saveDC: number;
   halfOnSave: boolean;
   damageEffects: EffectInstance[];
-  /** The area template (cone/line/sphere/cube) when the prose names one. */
-  area?: SaveActionArea;
+  /** The canonical area template when the prose names one (any AreaOfEffect). */
+  area?: AreaOfEffect;
 }
 
 export function monsterSaveActions(monster: Monster): MonsterSaveAction[] {

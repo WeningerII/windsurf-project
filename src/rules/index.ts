@@ -47,18 +47,23 @@ export type {
   AreaEffectResult,
   MultiTargetAttackInput,
   MultiTargetAttackResult,
+  SaveDegree,
+  SaveModel,
   SaveParticipant,
 } from './resolver/participantResolution';
 export {
   participantRng,
+  pf2eSaveDegree,
   resolveAreaEffect,
   resolveMultiTargetAttack,
 } from './resolver/participantResolution';
 
-export type { AreaShape } from './resolver/areaTargeting';
+export type { AreaShape, DiagonalRule } from './resolver/areaTargeting';
 export {
+  areaOfEffectToShape,
   cellInArea,
   DEFAULT_CONE_HALF_ANGLE_DEG,
+  diagonalRuleForSystem,
   gridDistance,
   tokensInArea,
 } from './resolver/areaTargeting';
@@ -87,11 +92,7 @@ export type {
 } from './tactical/roundDriver';
 export { isRoundConclusive, runCombatRound } from './tactical/roundDriver';
 
-export type {
-  MonsterCombatant,
-  MonsterSaveAction,
-  SaveActionArea,
-} from './combatants/monsterCombatant';
+export type { MonsterCombatant, MonsterSaveAction } from './combatants/monsterCombatant';
 export {
   buildMonsterCombatant,
   monsterAttackEffects,

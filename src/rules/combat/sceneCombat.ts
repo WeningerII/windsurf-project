@@ -29,11 +29,17 @@ import { resolveAttack } from '../resolver/attackResolution';
 import {
   participantRng,
   resolveAreaEffect,
+  type SaveDegree,
   type SaveParticipant,
 } from '../resolver/participantResolution';
 import { areaEffectToDamageIntent, attackToDamageIntent } from '../resolver/sceneCombat';
-import { tokensInArea, type AreaShape } from '../resolver/areaTargeting';
-import type { SaveActionArea } from '../combatants/monsterCombatant';
+import {
+  areaOfEffectToShape,
+  diagonalRuleForSystem,
+  tokensInArea,
+  type AreaShape,
+} from '../resolver/areaTargeting';
+import type { AreaOfEffect } from '../../types/core/common';
 
 /** Combat stats for a token, resolved from its statblock or character sheet. */
 export interface SceneCombatStats {
@@ -168,53 +174,37 @@ export interface SceneAreaAction {
   /** When true, a successful save halves damage; else it negates. */
   halfOnSave: boolean;
   damageEffects: EffectInstance[];
-  /** Template (cone/line/sphere/cube); undefined → affects only the aimed cell. */
-  area?: SaveActionArea;
+  /**
+   * Canonical area template; undefined → affects only the aimed cell. Every shape
+   * (cone/cube/cylinder/line/sphere/emanation/spread) is supported via the shared
+   * geometry layer.
+   */
+  area?: AreaOfEffect;
 }
 
 /**
  * Build the grid `AreaShape` an action fills, given where it originates (the
- * emitter's cell) and the cell it's aimed at. Cones and lines emanate from the
- * origin toward the aim; spheres/cubes are centered on the aim. An action with
- * no parsed template degenerates to a single-cell burst on the aim, so it still
- * resolves (against just the aimed creature) rather than silently doing nothing.
+ * emitter's cell) and the cell it's aimed at. Delegates to the canonical
+ * `areaOfEffectToShape` for every shape; an action with no parsed template
+ * degenerates to a single-cell burst on the aim, so it still resolves (against
+ * just the aimed creature) rather than silently doing nothing.
  */
 export function areaShapeForAction(
-  area: SaveActionArea | undefined,
+  area: AreaOfEffect | undefined,
   origin: SceneCoordinate,
   aim: SceneCoordinate
 ): AreaShape {
   if (!area) return { kind: 'burst', origin: aim, radius: 0 };
-  switch (area.shape) {
-    case 'cone':
-      return { kind: 'cone', origin, aim, length: area.lengthCells };
-    case 'line': {
-      const dx = aim.x - origin.x;
-      const dy = aim.y - origin.y;
-      const mag = Math.hypot(dx, dy) || 1;
-      const to = {
-        x: origin.x + Math.round((dx / mag) * area.lengthCells),
-        y: origin.y + Math.round((dy / mag) * area.lengthCells),
-      };
-      return { kind: 'line', origin, to };
-    }
-    case 'burst':
-      return { kind: 'burst', origin: aim, radius: area.radiusCells };
-    case 'cube': {
-      const half = Math.floor(area.sizeCells / 2);
-      return {
-        kind: 'rect',
-        origin: { x: aim.x - half, y: aim.y - half },
-        width: area.sizeCells,
-        height: area.sizeCells,
-      };
-    }
-    default: {
-      const exhaustive: never = area;
-      return exhaustive;
-    }
-  }
+  return areaOfEffectToShape(area, origin, aim);
 }
+
+/** Human labels for PF2e save degrees, shown in the combat log. */
+const DEGREE_LABEL: Record<SaveDegree, string> = {
+  'critical-success': 'crit-saves',
+  success: 'saves',
+  failure: 'fails',
+  'critical-failure': 'crit-fails',
+};
 
 export interface SceneAreaEffectOutcome {
   /** Single apply-damage intent covering everyone who took damage, or undefined. */
@@ -246,6 +236,11 @@ export function resolveSceneAreaEffect(params: {
   const { state, sourceId, action, aim, resolveStats, seed } = params;
   const source = state.tokens[sourceId];
   const shape = areaShapeForAction(action.area, source?.position ?? aim, aim);
+  // Diagonals (range/radius) and the save model both depend on the system: 5e
+  // uses Chebyshev + a binary save; Pathfinder 2e uses the 1-2-1 diagonal + a
+  // four-degree basic save.
+  const rule = diagonalRuleForSystem(state.systemId);
+  const saveModel = state.systemId === 'pf2e' ? 'pf2e-basic' : 'binary';
 
   if (!source) {
     return { log: ['Area effect failed: the source token is missing.'], shape, affectedIds: [] };
@@ -253,7 +248,7 @@ export function resolveSceneAreaEffect(params: {
 
   // Participants: every other living token inside the template. AoE is RAW
   // indiscriminate — allies in the blast are caught too.
-  const caught = tokensInArea(state, shape).filter(
+  const caught = tokensInArea(state, shape, rule).filter(
     (token) => token.id !== sourceId && (token.hp ? token.hp.current > 0 : false)
   );
 
@@ -276,14 +271,15 @@ export function resolveSceneAreaEffect(params: {
     damageEffects: action.damageEffects,
     saveDC: action.saveDC,
     halfOnSave: action.halfOnSave,
+    saveModel,
     participants,
   });
 
   const nameOf = (id: string): string => state.tokens[id]?.name ?? id;
   const header = `${source.name} unleashes ${action.name} — ${result.sharedDamage} damage, DC ${action.saveDC} ${action.saveAbility.toUpperCase()} (${participants.length} caught).`;
   const lines = result.perTarget.map((outcome) => {
-    const verb = outcome.saved ? 'saves' : 'fails';
-    return `  ${nameOf(outcome.targetId)} ${verb} (rolled ${outcome.saveRoll}+${outcome.saveTotal - outcome.saveRoll}) — takes ${outcome.damageTaken}.`;
+    const label = outcome.degree ? DEGREE_LABEL[outcome.degree] : outcome.saved ? 'saves' : 'fails';
+    return `  ${nameOf(outcome.targetId)} ${label} (rolled ${outcome.saveRoll}+${outcome.saveTotal - outcome.saveRoll}) — takes ${outcome.damageTaken}.`;
   });
 
   return {

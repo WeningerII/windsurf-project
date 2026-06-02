@@ -54,39 +54,86 @@ describe('parseSaveActionFromDescription', () => {
   });
 });
 
-describe('parseAreaFromDescription — every AoE template, in grid cells', () => {
-  it('cone (15 ft → 3 cells)', () => {
+describe('parseAreaFromDescription — every canonical AreaOfEffect, in feet', () => {
+  it('cone', () => {
     expect(parseAreaFromDescription('exhales fire in a 15-foot cone.')).toEqual({
-      shape: 'cone',
-      lengthCells: 3,
+      type: 'cone',
+      feet: 15,
     });
   });
-  it('line, even with a width clause (90-foot-long, 5-foot-wide line)', () => {
-    expect(parseAreaFromDescription('lightning in a 90-foot-long, 5-foot-wide line.')).toEqual({
-      shape: 'line',
-      lengthCells: 18,
-    });
-  });
-  it('sphere / radius (20-foot-radius → 4 cells)', () => {
-    expect(parseAreaFromDescription('a 20-foot-radius sphere centered on a point')).toEqual({
-      shape: 'burst',
-      radiusCells: 4,
-    });
-  });
-  it('cube (10-foot cube → 2 cells)', () => {
+  it('cube', () => {
     expect(parseAreaFromDescription('frost fills a 10-foot cube')).toEqual({
-      shape: 'cube',
-      sizeCells: 2,
+      type: 'cube',
+      feet: 10,
     });
   });
-  it('"within N feet" falls back to a burst radius', () => {
+  it('cylinder (radius + height)', () => {
+    expect(parseAreaFromDescription('a 20-foot-radius, 40-foot-high cylinder of flame')).toEqual({
+      type: 'cylinder',
+      radius: 20,
+      height: 40,
+    });
+  });
+  it('line with an explicit width clause', () => {
+    expect(parseAreaFromDescription('lightning in a 90-foot-long, 5-foot-wide line.')).toEqual({
+      type: 'line',
+      length: 90,
+      width: 5,
+    });
+  });
+  it('line phrased "Line 100 feet long and 5 feet wide"', () => {
+    expect(parseAreaFromDescription('a Line 100 feet long and 5 feet wide')).toEqual({
+      type: 'line',
+      length: 100,
+      width: 5,
+    });
+  });
+  it('Pathfinder emanation', () => {
+    expect(parseAreaFromDescription('a 30-foot emanation centered on the caster')).toEqual({
+      type: 'emanation',
+      radius: 30,
+    });
+  });
+  it('spread (3.5e/PF1)', () => {
+    expect(parseAreaFromDescription('a 20-foot-radius spread')).toEqual({
+      type: 'spread',
+      radius: 20,
+    });
+  });
+  it('sphere / radius', () => {
+    expect(parseAreaFromDescription('a 20-foot-radius sphere centered on a point')).toEqual({
+      type: 'sphere',
+      radius: 20,
+    });
+  });
+  it('PF2e burst → sphere footprint', () => {
+    expect(parseAreaFromDescription('a 60-foot burst')).toEqual({ type: 'sphere', radius: 60 });
+  });
+  it('"within N feet" → a self-centered emanation', () => {
     expect(parseAreaFromDescription('each creature within 10 feet must save')).toEqual({
-      shape: 'burst',
-      radiusCells: 2,
+      type: 'emanation',
+      radius: 10,
     });
   });
   it('returns undefined when no template is named', () => {
     expect(parseAreaFromDescription('one creature the dragon can see')).toBeUndefined();
+  });
+});
+
+describe('parseSaveActionFromDescription — d20 family save wording', () => {
+  it('parses Pathfinder "DC N basic Reflex save" (Reflex → dex)', () => {
+    const parsed = parseSaveActionFromDescription(
+      'each creature in a 30-foot cone takes 11 (3d6) fire damage with a DC 18 basic Reflex save.'
+    );
+    expect(parsed).toBeDefined();
+    expect(parsed!.saveAbility).toBe('dex');
+    expect(parsed!.saveDC).toBe(18);
+  });
+  it('parses a Fortitude save (Fortitude → con)', () => {
+    const parsed = parseSaveActionFromDescription(
+      'A creature must succeed on a DC 15 Fortitude save or take 9 (2d8) poison damage.'
+    );
+    expect(parsed!.saveAbility).toBe('con');
   });
 });
 
@@ -118,8 +165,8 @@ describe('a real shipped dragon breathes fire end to end (AoE resolver)', () => 
     expect(breath!.saveAbility).toBe('dex');
     expect(breath!.saveDC).toBe(11);
     expect(breath!.halfOnSave).toBe(true);
-    // The 15-foot cone surfaces as a 3-cell cone template for aiming.
-    expect(breath!.area).toEqual({ shape: 'cone', lengthCells: 3 });
+    // The 15-foot cone surfaces as a canonical cone template for aiming.
+    expect(breath!.area).toEqual({ type: 'cone', feet: 15 });
 
     // Feed the breath's damage effects into the area/save resolver.
     const participants: SaveParticipant[] = [
