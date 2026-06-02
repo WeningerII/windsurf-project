@@ -404,7 +404,19 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
     };
   }
 
-  const reachable = scored.find((target) => target.inReach);
+  // Prefer a target we actually have a line of sight to: a totally-covered foe
+  // can't be hit, so attacking it would waste the turn. With no walls every
+  // target is visible, so this is a no-op until cover is in play.
+  const hasLineOfSight = (tokenId: string): boolean => {
+    if (!input.isBlocked) return true;
+    const candidate = input.targets.find((t) => t.tokenId === tokenId);
+    return (
+      !candidate ||
+      coverBetween(input.actor.position, candidate.position, input.isBlocked) !== 'total'
+    );
+  };
+
+  const reachable = scored.find((target) => target.inReach && hasLineOfSight(target.tokenId));
   if (!reachable) {
     // Out of reach: actually move toward the best target, around walls and bodies.
     const nearest = scored[0];
