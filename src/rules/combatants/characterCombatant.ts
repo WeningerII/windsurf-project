@@ -136,20 +136,45 @@ function normalizeSheet(document: CharacterDocument<SystemDataModel>): Normalize
 
 /**
  * A character's saving-throw bonus for one ability (e.g. 'dex'), for when the PC
- * is a participant in an area effect. Ability modifier plus the proficiency bonus
- * when the sheet marks that save proficient (the 5e model; an honest baseline for
- * the d20-legacy systems pending their distinct save-progression math).
+ * is a participant in an area effect. Per system: 5e uses the ability modifier
+ * plus its proficiency bonus across six saves, while the Fortitude/Reflex/Will
+ * systems (3.5e, PF1e, PF2e) read the engine-computed save total mapped from the
+ * spell's save ability (con→Fort, dex→Ref, wis→Will). Falls back to the ability
+ * modifier when no computed total is available.
  */
+const FORT_REF_WILL: Record<string, 'fortitude' | 'reflex' | 'will'> = {
+  con: 'fortitude',
+  dex: 'reflex',
+  wis: 'will',
+};
+
 export function characterSaveBonus(
   document: CharacterDocument<SystemDataModel>,
   ability: string
 ): number {
   const system = document.system as Record<string, unknown>;
+  const abilityKey = ability.toLowerCase();
+  const save = FORT_REF_WILL[abilityKey];
+
+  // 3.5e / PF1e store computed { saves: { fortitude/reflex/will: { total } } }.
+  if (save && (document.systemId === 'dnd-3.5e' || document.systemId === 'pf1e')) {
+    const saves = system.saves as Record<string, { total?: number }> | undefined;
+    const total = saves?.[save]?.total;
+    if (typeof total === 'number') return total;
+  }
+  // PF2e stores { saveProficiencies: { fortitude/reflex/will: { total } } }.
+  if (save && document.systemId === 'pf2e') {
+    const saves = system.saveProficiencies as Record<string, { total?: number }> | undefined;
+    const total = saves?.[save]?.total;
+    if (typeof total === 'number') return total;
+  }
+
+  // 5e (six ability saves) and any fallback: ability modifier + proficiency.
   const abilities = (system.baseAttributes as Record<string, number>) ?? {};
-  const mod = abilityMod(num(abilities[ability.toLowerCase()], 10));
+  const mod = abilityMod(num(abilities[abilityKey], 10));
   const level = Math.max(1, num(system.level, 1));
   const profs = (system.savingThrowProficiencies as string[] | undefined) ?? [];
-  const proficient = profs.some((p) => p.toLowerCase().startsWith(ability.toLowerCase()));
+  const proficient = profs.some((p) => p.toLowerCase().startsWith(abilityKey));
   return mod + (proficient ? profBonus(level) : 0);
 }
 
