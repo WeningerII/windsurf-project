@@ -140,6 +140,9 @@ export function validateSceneEvent(state: SceneState, event: SceneEvent): SceneI
     case 'token.damaged':
       validateDamages(state, event.payload.damages, issues, event);
       break;
+    case 'token.attitude-changed':
+      validateKnownToken(state, event.payload.tokenId, issues, event, 'payload.tokenId');
+      break;
     case 'marker.added':
       validateMarkerForAdd(state, event.payload.marker, issues, event);
       break;
@@ -194,6 +197,12 @@ function buildEventFromIntent(
           cause: intent.cause,
         },
       };
+    case 'set-attitude':
+      return {
+        ...base,
+        type: 'token.attitude-changed',
+        payload: { tokenId: intent.tokenId, attitude: intent.attitude },
+      };
     case 'add-marker':
       return { ...base, type: 'marker.added', payload: { marker: cloneMarker(intent.marker) } };
     case 'remove-marker':
@@ -246,6 +255,11 @@ function applySceneEvent(state: SceneState, event: SceneEvent): void {
         }
       }
       break;
+    case 'token.attitude-changed': {
+      const token = state.tokens[event.payload.tokenId];
+      if (token) token.attitude = event.payload.attitude;
+      break;
+    }
     case 'marker.added':
       state.markers[event.payload.marker.id] = cloneMarker(event.payload.marker);
       break;

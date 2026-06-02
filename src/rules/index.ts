@@ -52,6 +52,9 @@ export {
   shiftAttitude,
 } from './resolver/socialResolution';
 
+export type { SceneSocialOutcome } from './social/sceneSocial';
+export { resolveSceneSocialAction, tokenAttitude } from './social/sceneSocial';
+
 export type {
   DaggerheartAttackInput,
   DaggerheartAttackResult,

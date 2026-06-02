@@ -25,12 +25,15 @@ import {
   monsterSaveBonus,
   resolveSceneAreaEffect,
   resolveSceneAttack,
+  resolveSceneSocialAction,
   runSceneRound,
   tokensInArea,
+  type Attitude,
   type ResolveAreaActions,
   type ResolveAuras,
   type ResolveCombatStats,
   type SceneAreaAction,
+  type SocialApproach,
 } from '../rules';
 import type { Campaign } from '../types/core/campaign';
 import type { CharacterDocument, SystemDataModel } from '../types/core/document';
@@ -58,6 +61,7 @@ import { InitiativeTracker } from './scene/InitiativeTracker';
 import { MarkerPanel } from './scene/MarkerPanel';
 import { TokenPanel } from './scene/TokenPanel';
 import { CombatPanel } from './scene/CombatPanel';
+import { ConversationPanel } from './scene/ConversationPanel';
 
 type PlacementMode = 'none' | 'token' | 'marker';
 
@@ -115,6 +119,10 @@ export function SceneManager({
   const [combatTargetId, setCombatTargetId] = useState('');
   const [combatSaveActionName, setCombatSaveActionName] = useState('');
   const [combatLog, setCombatLog] = useState<string[]>([]);
+  const [conversationApproach, setConversationApproach] = useState<SocialApproach>('persuasion');
+  const [conversationDC, setConversationDC] = useState('15');
+  const [conversationModifier, setConversationModifier] = useState('0');
+  const [conversationLog, setConversationLog] = useState<string[]>([]);
   // Per-click nonce so a missed attack (which appends no event) still advances
   // the RNG stream — otherwise re-clicking Attack would reproduce the same miss.
   const attackNonce = useRef(0);
@@ -492,6 +500,37 @@ export function SceneManager({
       emitSceneAction(selectedScene, outcome.intent);
     }
     setCombatLog((current) => [...outcome.log, ...current].slice(0, 30));
+  };
+
+  // The selected token addresses every NPC in the scene; each reacts on its own
+  // attitude-adjusted DC, and shifts land as event-sourced set-attitude actions.
+  const handleAddress = () => {
+    if (!selectedScene || !state || !selectedTokenId) return;
+    const outcome = resolveSceneSocialAction({
+      state,
+      speakerId: selectedTokenId,
+      modifier: Number.parseInt(conversationModifier, 10) || 0,
+      baseDC: positiveIntegerOrDefault(conversationDC, 15),
+      approach: conversationApproach,
+      seed: `${selectedScene.initialState.seed}:social:${selectedScene.events.length}:${attackNonce.current++}`,
+    });
+    let working = selectedScene;
+    for (const intent of outcome.intents) {
+      const result = resolveSceneAction(working, intent, {
+        eventId: generateUUID(),
+        createdAt: new Date(),
+      });
+      if (result.event) {
+        working = appendSceneEvent(working, result.event);
+        onAppendSceneEvent(selectedScene.id, result.event);
+      }
+    }
+    setConversationLog((current) => [...outcome.log, ...current].slice(0, 30));
+  };
+
+  const handleSetAttitude = (tokenId: string, attitude: Attitude) => {
+    if (!selectedScene) return;
+    emitSceneAction(selectedScene, { type: 'set-attitude', tokenId, attitude });
   };
 
   const handleCellActivate = (position: { x: number; y: number }) => {
@@ -1024,6 +1063,20 @@ export function SceneManager({
                     onAreaEffect={handleAreaEffect}
                     areaPreviewCount={areaPreviewCount}
                     log={combatLog}
+                  />
+
+                  <ConversationPanel
+                    state={state}
+                    speakerId={selectedTokenId}
+                    approach={conversationApproach}
+                    onApproachChange={setConversationApproach}
+                    baseDC={conversationDC}
+                    onBaseDCChange={setConversationDC}
+                    modifier={conversationModifier}
+                    onModifierChange={setConversationModifier}
+                    onSetAttitude={handleSetAttitude}
+                    onAddress={handleAddress}
+                    log={conversationLog}
                   />
                 </div>
               </div>

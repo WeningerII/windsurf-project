@@ -34,6 +34,13 @@ export interface SceneToken {
    * without hp behave exactly as before.
    */
   hp?: SceneTokenHitPoints;
+  /**
+   * Optional social attitude toward the party for NPC tokens, on the classic
+   * hostile→helpful track (stored as a string to keep this layer decoupled from
+   * the rules engine). Shifted by `token.attitude-changed` events; absent for
+   * tokens that aren't part of a social scene.
+   */
+  attitude?: string;
 }
 
 export interface SceneMarker {
@@ -93,6 +100,7 @@ export type SceneEventType =
   | 'token.moved'
   | 'token.removed'
   | 'token.damaged'
+  | 'token.attitude-changed'
   | 'marker.added'
   | 'marker.removed'
   | 'initiative.set'
@@ -123,6 +131,7 @@ export type SceneEvent =
   | SceneEventBase<'token.moved', { tokenId: string; position: SceneCoordinate }>
   | SceneEventBase<'token.removed', { tokenId: string }>
   | SceneEventBase<'token.damaged', { damages: SceneTokenDamage[]; cause?: string }>
+  | SceneEventBase<'token.attitude-changed', { tokenId: string; attitude: string }>
   | SceneEventBase<'marker.added', { marker: SceneMarker }>
   | SceneEventBase<'marker.removed', { markerId: string }>
   | SceneEventBase<'initiative.set', { entries: SceneInitiativeEntry[]; activeTokenId?: string }>
@@ -155,6 +164,7 @@ export type SceneActionIntent =
   | { type: 'move-token'; actorId?: string; tokenId: string; position: SceneCoordinate }
   | { type: 'remove-token'; actorId?: string; tokenId: string }
   | { type: 'apply-damage'; actorId?: string; damages: SceneTokenDamage[]; cause?: string }
+  | { type: 'set-attitude'; actorId?: string; tokenId: string; attitude: string }
   | { type: 'add-marker'; actorId?: string; marker: SceneMarker }
   | { type: 'remove-marker'; actorId?: string; markerId: string }
   | {
