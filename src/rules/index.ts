@@ -38,6 +38,21 @@ export type {
 export { resolveCheck, resolveSkillChallenge } from './resolver/checkResolution';
 
 export type {
+  Attitude,
+  SocialApproach,
+  SocialActionInput,
+  SocialActionResult,
+  SocialNpc,
+  SocialNpcOutcome,
+} from './resolver/socialResolution';
+export {
+  ATTITUDES,
+  attitudeSwayDC,
+  resolveSocialAction,
+  shiftAttitude,
+} from './resolver/socialResolution';
+
+export type {
   DaggerheartAttackInput,
   DaggerheartAttackResult,
   DaggerheartThresholds,
