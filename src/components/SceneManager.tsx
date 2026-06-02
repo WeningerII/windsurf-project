@@ -29,6 +29,7 @@ import {
   resolveSceneAttack,
   resolveSceneChallenge,
   resolveSceneSocialAction,
+  requestNarration,
   rollInitiative,
   runSceneRound,
   socialSkillId,
@@ -504,6 +505,20 @@ export function SceneManager({
     // mechanical log remains on each outcome for any consumer that wants it.
     setCombatLog((current) => [...outcome.narration.slice().reverse(), ...current].slice(0, 30));
     setActionIssues([]);
+
+    // Progressive enhancement: if an AI narration gateway is configured, ask it
+    // to enrich the resolved round into prose. It receives the already-adjudicated
+    // mechanical log (never authoring mechanics) and runs off the hot path; any
+    // failure silently keeps the deterministic narration already on screen.
+    const narrateEndpoint = import.meta.env.VITE_AI_NARRATE_ENDPOINT as string | undefined;
+    if (narrateEndpoint && outcome.log.length > 0) {
+      void requestNarration(
+        { systemId: state.systemId, round: state.round, beats: outcome.log },
+        { endpoint: narrateEndpoint }
+      ).then((prose) => {
+        if (prose) setCombatLog((current) => [prose, ...current].slice(0, 30));
+      });
+    }
   };
 
   // Save-based area actions a token can unleash: a monster's breath / AoE from

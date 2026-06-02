@@ -10,7 +10,7 @@
     "docs/doc-drift.manifest.ts",
     "docs/doc-drift.rules.ts"
   ],
-  "project": ["src/**/*.{ts,tsx}", "scripts/**/*.mjs", "netlify/**/*.mjs"],
+  "project": ["src/**/*.{ts,tsx}", "scripts/**/*.mjs", "netlify/**/*.{mjs,ts}"],
   "ignore": ["src/data/**", "src/__tests__/vitest.d.ts"],
   "ignoreDependencies": ["playwright-core"],
   "rules": {

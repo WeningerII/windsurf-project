@@ -161,6 +161,8 @@ export type { AttackTone } from './narration/combatNarrator';
 export { narrateAttack } from './narration/combatNarrator';
 export type { AiProvider, Narrator, Strategist } from './ai/provider';
 export { deterministicAiProvider, resolveAiProvider } from './ai/provider';
+export type { RoundNarrationSummary } from './ai/llmNarration';
+export { requestNarration } from './ai/llmNarration';
 export { flankToHitBonus, isFlanking } from './tactical/flanking';
 
 export type { MoveResult } from './tactical/pathfinding';
