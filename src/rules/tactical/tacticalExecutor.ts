@@ -59,6 +59,17 @@ export interface TacticalTurnInput {
   systemId?: string;
   /** Per-cell movement entering cost (≥1; difficult terrain). Default 1. */
   enterCost?: (cell: SceneCoordinate) => number;
+  /**
+   * Optional strategist seam (RFC 003): given the enumerated LEGAL targets (in
+   * reach, with line of sight) and the full target list, return the chosen
+   * target id. An out-of-set or undefined result falls back to the deterministic
+   * highest-score pick — the no-key default. This is where a later LLM or
+   * scripted tactics biases the choice without ever authoring mechanics.
+   */
+  chooseTarget?: (
+    legal: readonly ScoredTarget[],
+    targets: readonly TacticalTarget[]
+  ) => string | undefined;
 }
 
 export type TacticalDecisionKind = 'attack' | 'area-effect' | 'move-to-engage' | 'no-target';
@@ -451,7 +462,15 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
     );
   };
 
-  const reachable = scored.find((target) => target.inReach && hasLineOfSight(target.tokenId));
+  // The legal target set: in reach with a line of sight. A strategist (e.g. a
+  // later LLM, or scripted tactics) may pick among these enumerated, validated
+  // ids; an out-of-set or absent pick falls back to the highest-scored legal
+  // target — so the deterministic default is unchanged and the AI never authors
+  // an illegal action.
+  const legal = scored.filter((target) => target.inReach && hasLineOfSight(target.tokenId));
+  const chosenId = input.chooseTarget?.(legal, input.targets);
+  const reachable =
+    (chosenId !== undefined && legal.find((target) => target.tokenId === chosenId)) || legal[0];
   if (!reachable) {
     // Out of reach: actually move toward the best target, around walls and bodies.
     const nearest = scored[0];
