@@ -31,6 +31,7 @@ import { resolveDaggerheartAttack } from '../resolver/daggerheartResolution';
 import { resolveMam3eAttack } from '../resolver/mam3eResolution';
 import { computeAreaParticipants, type SceneAreaAction } from '../resolver/areaParticipants';
 import { moveToward } from './pathfinding';
+import { flankToHitBonus, isFlanking } from './flanking';
 import { coverAcBonus, coverBetween, type BlockPredicate } from '../resolver/lineOfEffect';
 import type { DiagonalRule } from '../resolver/areaTargeting';
 import {
@@ -184,20 +185,33 @@ function resolveStrike(
   const { actor } = input;
 
   // Cover between attacker and target: total cover is no line of sight; otherwise
-  // a per-system bonus folded into the target's defense.
+  // a per-system bonus folded into the target's defense. Flanking (3.5e/PF1e/PF2e)
+  // pulls the other way, lowering the effective defense by its to-hit value.
   const cover = input.isBlocked
     ? coverBetween(actor.position, target.position, input.isBlocked)
     : 'none';
   if (cover === 'total') {
     return { hit: false, narration: 'no line of sight' };
   }
-  const coverBonus = coverAcBonus(cover, input.systemId ?? '');
+  const flank = flankToHitBonus(input.systemId);
+  const flanked =
+    flank > 0 &&
+    isFlanking({
+      attacker: actor.position,
+      target: target.position,
+      reach: actor.reach ?? 1,
+      allies: input.targets
+        .filter((other) => other.faction === actor.faction)
+        .map((other) => other.position),
+      rule: input.diagonalRule,
+    });
+  const defenseBonus = coverAcBonus(cover, input.systemId ?? '') - (flanked ? flank : 0);
 
   if (input.systemId === 'daggerheart' && target.thresholds) {
     const dh = resolveDaggerheartAttack({
       attackEffects: actor.attackEffects,
       damageEffects: actor.damageEffects,
-      evasion: target.armorClass + coverBonus,
+      evasion: target.armorClass + defenseBonus,
       thresholds: target.thresholds,
       rng,
     });
@@ -216,7 +230,7 @@ function resolveStrike(
   if (input.systemId === 'mam3e' && target.toughness != null) {
     const mm = resolveMam3eAttack({
       attackEffects: actor.attackEffects,
-      targetDefense: target.armorClass + coverBonus,
+      targetDefense: target.armorClass + defenseBonus,
       effectRank: actor.effectRank ?? 0,
       toughness: target.toughness,
       rng,
@@ -254,7 +268,7 @@ function resolveStrike(
   const resolution = resolveAttack({
     attackEffects: actor.attackEffects,
     damageEffects: actor.damageEffects,
-    targetValue: target.armorClass + coverBonus,
+    targetValue: target.armorClass + defenseBonus,
     critOn: actor.critOn,
     critModel: critModelForSystem(input.systemId),
     critMultiplier: actor.critMultiplier,

@@ -53,6 +53,7 @@ import {
 } from '../resolver/areaParticipants';
 import { sceneBlockPredicate } from '../terrain/sceneTerrain';
 import { coverAcBonus, coverBetween } from '../resolver/lineOfEffect';
+import { flankToHitBonus, isFlanking } from '../tactical/flanking';
 import type { AreaOfEffect } from '../../types/core/common';
 
 /** Combat stats for a token, resolved from its statblock or character sheet. */
@@ -214,7 +215,7 @@ export function resolveSceneAttack(params: {
 
   // Cover between attacker and target (walls/terrain): total cover is no line of
   // sight (the attack can't be made); otherwise a per-system bonus to the
-  // target's defense.
+  // target's defense. Flanking (3.5e/PF1e/PF2e) pulls the other way.
   const cover = coverBetween(attacker.position, target.position, sceneBlockPredicate(state));
   if (cover === 'total') {
     return {
@@ -223,7 +224,29 @@ export function resolveSceneAttack(params: {
     };
   }
   const coverBonus = coverAcBonus(cover, state.systemId);
-  const coverNote = coverBonus > 0 ? ` incl. +${coverBonus} cover` : '';
+  const attackerFaction = factionForToken(attacker);
+  const flank = flankToHitBonus(state.systemId);
+  const flanked =
+    flank > 0 &&
+    isFlanking({
+      attacker: attacker.position,
+      target: target.position,
+      reach: attackerStats.reach,
+      allies: Object.values(state.tokens)
+        .filter(
+          (t) =>
+            t.id !== attackerId &&
+            t.id !== targetId &&
+            factionForToken(t) === attackerFaction &&
+            (t.hp ? t.hp.current > 0 : true)
+        )
+        .map((t) => t.position),
+      rule: diagonalRuleForSystem(state.systemId),
+    });
+  const defenseBonus = coverBonus - (flanked ? flank : 0);
+  const coverNote = `${coverBonus > 0 ? ` incl. +${coverBonus} cover` : ''}${
+    flanked ? ` incl. -${flank} flanked` : ''
+  }`;
 
   // Daggerheart: attack vs Evasion (= armorClass), then mark 1-3 HP slots by the
   // target's thresholds rather than subtracting raw damage.
@@ -231,7 +254,7 @@ export function resolveSceneAttack(params: {
     const dh = resolveDaggerheartAttack({
       attackEffects: attackerStats.attackEffects,
       damageEffects: attackerStats.damageEffects,
-      evasion: targetStats.armorClass + coverBonus,
+      evasion: targetStats.armorClass + defenseBonus,
       thresholds: targetStats.thresholds,
       rng: participantRng(seed, attackerId, targetId),
     });
@@ -244,7 +267,7 @@ export function resolveSceneAttack(params: {
             damages: [{ tokenId: targetId, amount: dh.hpMarked }],
           }
         : undefined;
-    const evasion = targetStats.armorClass + coverBonus;
+    const evasion = targetStats.armorClass + defenseBonus;
     const detail = dh.isHit
       ? ` for ${dh.damage} damage → marks ${dh.hpMarked} HP (rolled ${dh.attackTotal} vs Evasion ${evasion}${coverNote})`
       : ` (rolled ${dh.attackTotal} vs Evasion ${evasion}${coverNote})`;
@@ -258,7 +281,7 @@ export function resolveSceneAttack(params: {
   // M&M: attack vs the target's defense (= armorClass = Parry); on a hit, a
   // Toughness save whose shortfall drives the condition track (no hit points).
   if (state.systemId === 'mam3e' && targetStats.toughness != null) {
-    const defense = targetStats.armorClass + coverBonus;
+    const defense = targetStats.armorClass + defenseBonus;
     const mm = resolveMam3eAttack({
       attackEffects: attackerStats.attackEffects,
       targetDefense: defense,
@@ -294,7 +317,7 @@ export function resolveSceneAttack(params: {
     };
   }
 
-  const armorClass = targetStats.armorClass + coverBonus;
+  const armorClass = targetStats.armorClass + defenseBonus;
   const resolution = resolveAttack({
     attackEffects: attackerStats.attackEffects,
     damageEffects: attackerStats.damageEffects,

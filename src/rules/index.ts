@@ -150,6 +150,7 @@ export type {
   RunRoundInput,
 } from './tactical/roundDriver';
 export { isRoundConclusive, runCombatRound } from './tactical/roundDriver';
+export { flankToHitBonus, isFlanking } from './tactical/flanking';
 
 export type { MoveResult } from './tactical/pathfinding';
 export { moveToward } from './tactical/pathfinding';
