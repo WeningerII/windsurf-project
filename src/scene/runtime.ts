@@ -149,6 +149,9 @@ export function validateSceneEvent(state: SceneState, event: SceneEvent): SceneI
     case 'token.statuses-changed':
       validateKnownToken(state, event.payload.tokenId, issues, event, 'payload.tokenId');
       break;
+    case 'token.concentration-changed':
+      validateKnownToken(state, event.payload.tokenId, issues, event, 'payload.tokenId');
+      break;
     case 'marker.added':
       validateMarkerForAdd(state, event.payload.marker, issues, event);
       break;
@@ -229,6 +232,14 @@ function buildEventFromIntent(
           ],
         },
       };
+    case 'set-concentration': {
+      const spell = intent.spell?.trim();
+      return {
+        ...base,
+        type: 'token.concentration-changed',
+        payload: { tokenId: intent.tokenId, spell: spell ? spell : undefined },
+      };
+    }
     case 'add-marker':
       return { ...base, type: 'marker.added', payload: { marker: cloneMarker(intent.marker) } };
     case 'remove-marker':
@@ -309,6 +320,12 @@ function applySceneEvent(state: SceneState, event: SceneEvent): void {
       const token = state.tokens[event.payload.tokenId];
       // Authoritative set (already normalized at intent time); empty clears them.
       if (token) token.statuses = [...event.payload.statuses];
+      break;
+    }
+    case 'token.concentration-changed': {
+      const token = state.tokens[event.payload.tokenId];
+      // A present spell starts/sets concentration; absent clears it.
+      if (token) token.concentration = event.payload.spell;
       break;
     }
     case 'marker.added':

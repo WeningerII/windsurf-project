@@ -84,6 +84,27 @@ describe('TokenPanel — conditions', () => {
   });
 });
 
+describe('TokenPanel — concentration', () => {
+  it('sets and clears the concentrated spell', async () => {
+    const user = userEvent.setup();
+    const onSetConcentration = vi.fn();
+    render(
+      <TokenPanel
+        {...tokenBase}
+        selectedTokenStatuses={[]}
+        selectedTokenConcentration="Bless"
+        onSetConcentration={onSetConcentration}
+      />
+    );
+    await user.type(screen.getByLabelText('Concentration spell'), 'Haste');
+    await user.click(screen.getByRole('button', { name: 'Set' }));
+    expect(onSetConcentration).toHaveBeenCalledWith('Haste');
+
+    await user.click(screen.getByRole('button', { name: 'Clear' }));
+    expect(onSetConcentration).toHaveBeenCalledWith(''); // empty clears
+  });
+});
+
 function sceneState(systemId: string): SceneState {
   return {
     sceneId: 's',

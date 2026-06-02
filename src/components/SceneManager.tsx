@@ -444,9 +444,22 @@ export function SceneManager({
       cause: 'attack',
       rollMode: combatRollMode,
     });
-    if (outcome.intent) {
-      emitSceneAction(selectedScene, outcome.intent);
+    // The damage, then any follow-on (a broken concentration), threaded so each
+    // event gets a correct sequence.
+    let working = selectedScene;
+    const events: SceneEvent[] = [];
+    for (const intent of [outcome.intent, ...(outcome.extraIntents ?? [])]) {
+      if (!intent) continue;
+      const result = resolveSceneAction(working, intent, {
+        eventId: generateUUID(),
+        createdAt: new Date(),
+      });
+      if (result.event) {
+        events.push(result.event);
+        working = appendSceneEvent(working, result.event);
+      }
     }
+    events.forEach((event) => onAppendSceneEvent(selectedScene.id, event));
     setCombatLog((current) => [outcome.log, ...current].slice(0, 30));
   };
 
@@ -746,6 +759,16 @@ export function SceneManager({
   const handleSetStatuses = (statuses: string[]) => {
     if (!selectedScene || !selectedTokenId) return;
     emitSceneAction(selectedScene, { type: 'set-statuses', tokenId: selectedTokenId, statuses });
+  };
+
+  // Set or clear the spell the selected token is concentrating on (5e).
+  const handleSetConcentration = (spell: string) => {
+    if (!selectedScene || !selectedTokenId) return;
+    emitSceneAction(selectedScene, {
+      type: 'set-concentration',
+      tokenId: selectedTokenId,
+      spell: spell || undefined,
+    });
   };
 
   const handleDeleteMarker = (markerId: string) => {
@@ -1114,11 +1137,13 @@ export function SceneManager({
                     }
                     onApplyHpDelta={handleApplyHpDelta}
                     selectedTokenStatuses={
-                      selectedTokenId
-                        ? (state?.tokens[selectedTokenId]?.statuses ?? [])
-                        : undefined
+                      selectedTokenId ? (state?.tokens[selectedTokenId]?.statuses ?? []) : undefined
                     }
                     onSetStatuses={handleSetStatuses}
+                    selectedTokenConcentration={
+                      selectedTokenId ? state?.tokens[selectedTokenId]?.concentration : undefined
+                    }
+                    onSetConcentration={handleSetConcentration}
                   />
 
                   <EncounterPanel

@@ -55,6 +55,7 @@ import { sceneBlockPredicate, sceneMoveCost } from '../terrain/sceneTerrain';
 import { coverAcBonus, coverBetween } from '../resolver/lineOfEffect';
 import { flankToHitBonus, isFlanking } from '../tactical/flanking';
 import { collapseRollMode, statusAdvantage } from '../resolver/conditions';
+import { concentrationBreak } from '../resolver/concentration';
 import type { AreaOfEffect } from '../../types/core/common';
 
 /** Combat stats for a token, resolved from its statblock or character sheet. */
@@ -171,6 +172,7 @@ export function buildSceneCombatants(
       effectRank: stats.effectRank,
       damageDefenses: stats.damageDefenses,
       statuses: token.statuses,
+      concentration: token.concentration,
       conditions: token.conditions,
       areaActions: areaActions && areaActions.length > 0 ? areaActions : undefined,
       auras: auras && auras.length > 0 ? auras : undefined,
@@ -183,6 +185,8 @@ export function buildSceneCombatants(
 export interface SceneAttackOutcome {
   /** The apply-damage intent to emit, or undefined on a miss / no damage. */
   intent?: SceneActionIntent;
+  /** Follow-on intents (e.g. a broken-concentration clear) to apply after the hit. */
+  extraIntents?: SceneActionIntent[];
   /** One-line, human-readable summary for the combat log. */
   log: string;
   hit: boolean;
@@ -363,10 +367,28 @@ export function resolveSceneAttack(params: {
     ? ` for ${resolution.damage} (rolled ${resolution.naturalRoll}+${resolution.attackBonus} vs AC ${armorClass}${coverNote})${modeNote}`
     : ` (rolled ${resolution.naturalRoll}+${resolution.attackBonus} vs AC ${armorClass}${coverNote})${modeNote}`;
 
+  // 5e: damage to a concentrating target forces a CON save or the spell drops.
+  let concentrationNote = '';
+  const extraIntents: SceneActionIntent[] = [];
+  if (is5e && target.concentration && resolution.damage > 0) {
+    const broken = concentrationBreak({
+      tokenId: targetId,
+      concentration: target.concentration,
+      conSaveBonus: targetStats.saveBonus?.('con') ?? 0,
+      damage: resolution.damage,
+      rng: participantRng(seed, attackerId, targetId, 'concentration'),
+    });
+    if (broken) {
+      extraIntents.push(broken.intent);
+      concentrationNote = ` ${target.name} loses concentration on ${target.concentration} (rolled ${broken.check.total} vs DC ${broken.check.dc}).`;
+    }
+  }
+
   return {
     intent,
+    extraIntents: extraIntents.length > 0 ? extraIntents : undefined,
     hit: resolution.isHit,
-    log: `${attacker.name} ${verb} ${target.name}${detail}.`,
+    log: `${attacker.name} ${verb} ${target.name}${detail}.${concentrationNote}`,
   };
 }
 

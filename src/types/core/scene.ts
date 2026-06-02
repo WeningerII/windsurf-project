@@ -49,6 +49,12 @@ export interface SceneToken {
    */
   statuses?: string[];
   /**
+   * The spell this token is concentrating on (5e), or absent when not. Set by
+   * `token.concentration-changed`; cleared when a failed concentration save on
+   * taking damage breaks it.
+   */
+  concentration?: string;
+  /**
    * Optional M&M-style condition track (the systems without hit points track
    * harm as conditions, not HP). Accumulated by `token.conditions-changed`
    * events; `incapacitated` is the "down" state for such combatants.
@@ -124,6 +130,7 @@ export type SceneEventType =
   | 'token.attitude-changed'
   | 'token.conditions-changed'
   | 'token.statuses-changed'
+  | 'token.concentration-changed'
   | 'marker.added'
   | 'marker.removed'
   | 'initiative.set'
@@ -157,6 +164,7 @@ export type SceneEvent =
   | SceneEventBase<'token.attitude-changed', { tokenId: string; attitude: string }>
   | SceneEventBase<'token.conditions-changed', { tokenId: string; delta: SceneConditionTrack }>
   | SceneEventBase<'token.statuses-changed', { tokenId: string; statuses: string[] }>
+  | SceneEventBase<'token.concentration-changed', { tokenId: string; spell?: string }>
   | SceneEventBase<'marker.added', { marker: SceneMarker }>
   | SceneEventBase<'marker.removed', { markerId: string }>
   | SceneEventBase<'initiative.set', { entries: SceneInitiativeEntry[]; activeTokenId?: string }>
@@ -192,6 +200,7 @@ export type SceneActionIntent =
   | { type: 'set-attitude'; actorId?: string; tokenId: string; attitude: string }
   | { type: 'apply-conditions'; actorId?: string; tokenId: string; delta: SceneConditionTrack }
   | { type: 'set-statuses'; actorId?: string; tokenId: string; statuses: string[] }
+  | { type: 'set-concentration'; actorId?: string; tokenId: string; spell?: string }
   | { type: 'add-marker'; actorId?: string; marker: SceneMarker }
   | { type: 'remove-marker'; actorId?: string; markerId: string }
   | {

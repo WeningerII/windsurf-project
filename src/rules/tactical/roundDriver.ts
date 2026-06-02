@@ -45,6 +45,7 @@ import {
 } from '../resolver/participantResolution';
 import { areaEffectToDamageIntent } from '../resolver/sceneCombat';
 import { cannotAct } from '../resolver/conditions';
+import { concentrationBreak } from '../resolver/concentration';
 import { gridDistance } from '../resolver/areaTargeting';
 import type { DamageDefenses } from '../resolver/damageDefenses';
 import type { BlockPredicate } from '../resolver/lineOfEffect';
@@ -83,6 +84,8 @@ export interface RoundCombatant {
   damageDefenses?: DamageDefenses;
   /** Active named conditions (5e advantage/disadvantage on attacks). */
   statuses?: readonly string[];
+  /** Spell this combatant is concentrating on (5e); damage may break it. */
+  concentration?: string;
   /**
    * M&M condition track. HP-less M&M combatants ride a synthetic `hp` proxy
    * (1 = up, 0 = incapacitated); the real harm folds here so the round can
@@ -315,6 +318,41 @@ function resolveOpportunityAttacks(params: {
 }
 
 /**
+ * 5e: when damage lands on a concentrating combatant, roll its concentration
+ * save; on a failure clear the working concentration and return a set-
+ * concentration intent. Only applies for 5e; a held save returns undefined.
+ */
+function breakConcentration(params: {
+  tokenId: string;
+  damage: number;
+  combatant: RoundCombatant | undefined;
+  concentrating: Record<string, string | undefined>;
+  seed: string;
+  round: number;
+  turnIndex: number;
+  systemId?: string;
+}): SceneActionIntent | undefined {
+  const is5e = params.systemId === 'dnd-5e-2014' || params.systemId === 'dnd-5e-2024';
+  if (!is5e) return undefined;
+  const spell = params.concentrating[params.tokenId];
+  if (!spell) return undefined;
+  const broken = concentrationBreak({
+    tokenId: params.tokenId,
+    concentration: spell,
+    conSaveBonus: params.combatant?.saveBonus?.('con') ?? 0,
+    damage: params.damage,
+    rng: participantRng(
+      params.seed,
+      `conc::round${params.round}::turn${params.turnIndex}`,
+      params.tokenId
+    ),
+  });
+  if (!broken) return undefined;
+  params.concentrating[params.tokenId] = undefined; // it dropped; don't re-check
+  return broken.intent;
+}
+
+/**
  * Run one full round. For each combatant in initiative order (skipping the
  * already-downed), build the live participant set from every OTHER combatant's
  * current HP, run the tactical turn, and fold any damage into the working HP so
@@ -327,10 +365,12 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
   const hp: Record<string, number> = {};
   const pos: Record<string, SceneCoordinate> = {};
   const conditions: Record<string, SceneConditionTrack> = {};
+  const concentrating: Record<string, string | undefined> = {};
   for (const combatant of input.order) {
     hp[combatant.tokenId] = combatant.hp.current;
     pos[combatant.tokenId] = { ...combatant.position };
     if (combatant.conditions) conditions[combatant.tokenId] = { ...combatant.conditions };
+    if (combatant.concentration) concentrating[combatant.tokenId] = combatant.concentration;
   }
 
   const byId = new Map(input.order.map((combatant) => [combatant.tokenId, combatant]));
@@ -423,6 +463,18 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
         if (hp[damage.tokenId] != null && byId.get(damage.tokenId)?.hp) {
           hp[damage.tokenId] = Math.max(0, hp[damage.tokenId] - damage.amount);
         }
+        // 5e: damage to a concentrating combatant may break its spell.
+        const broken = breakConcentration({
+          tokenId: damage.tokenId,
+          damage: damage.amount,
+          combatant: byId.get(damage.tokenId),
+          concentrating,
+          seed: input.seed,
+          round: input.round,
+          turnIndex,
+          systemId: input.systemId,
+        });
+        if (broken) intents.push(broken);
       }
       intents.push(turn.intent);
     } else if (turn.intent && turn.intent.type === 'apply-conditions') {

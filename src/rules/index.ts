@@ -95,6 +95,8 @@ export {
 export type { DegreeOfSuccess } from './resolver/degreeOfSuccess';
 export { pf2eDegreeOfSuccess } from './resolver/degreeOfSuccess';
 export { cannotAct, collapseRollMode, statusAdvantage } from './resolver/conditions';
+export type { ConcentrationCheck } from './resolver/concentration';
+export { concentrationBreak, resolveConcentrationCheck } from './resolver/concentration';
 
 export type { AreaShape, DiagonalRule } from './resolver/areaTargeting';
 export {

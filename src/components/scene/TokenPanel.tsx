@@ -40,6 +40,10 @@ interface TokenPanelProps {
   selectedTokenStatuses?: string[];
   /** Replace the selected token's conditions. */
   onSetStatuses?: (statuses: string[]) => void;
+  /** The spell the selected token is concentrating on (5e), or empty. */
+  selectedTokenConcentration?: string;
+  /** Set (or clear, with '') the selected token's concentration. */
+  onSetConcentration?: (spell: string) => void;
 }
 
 /** Token controls: link a character (or define a manual token) and place it. */
@@ -59,8 +63,11 @@ export function TokenPanel({
   onApplyHpDelta,
   selectedTokenStatuses,
   onSetStatuses,
+  selectedTokenConcentration,
+  onSetConcentration,
 }: TokenPanelProps) {
   const [hpAmount, setHpAmount] = useState('');
+  const [spell, setSpell] = useState('');
   const amount = Math.max(0, Math.floor(Number(hpAmount) || 0));
   const active = new Set(selectedTokenStatuses ?? []);
   const toggleStatus = (condition: string) => {
@@ -193,6 +200,43 @@ export function TokenPanel({
                   </button>
                 );
               })}
+            </div>
+          </div>
+        )}
+
+        {selectedTokenStatuses && onSetConcentration && (
+          <div className="space-y-1.5 border-t pt-2">
+            <div className="text-xs font-medium text-muted-foreground">
+              Concentration
+              {selectedTokenConcentration ? `: ${selectedTokenConcentration}` : ''}
+            </div>
+            <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] gap-2">
+              <Input
+                aria-label="Concentration spell"
+                value={spell}
+                onChange={(event) => setSpell(event.target.value)}
+                placeholder="Spell name"
+              />
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={!spell.trim()}
+                onClick={() => {
+                  onSetConcentration(spell.trim());
+                  setSpell('');
+                }}
+              >
+                Set
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={!selectedTokenConcentration}
+                onClick={() => onSetConcentration('')}
+                title="Stop concentrating"
+              >
+                Clear
+              </Button>
             </div>
           </div>
         )}
