@@ -52,6 +52,7 @@ import { rollDeathSave } from '../resolver/deathSaves';
 import { resolveFall } from '../resolver/falling';
 import { gridDistance } from '../resolver/areaTargeting';
 import type { DamageDefenses } from '../resolver/damageDefenses';
+import { coverBetweenElevated } from '../resolver/lineOfEffect';
 import type { BlockPredicate, WallTopAt } from '../resolver/lineOfEffect';
 import type { DiagonalRule } from '../resolver/areaTargeting';
 
@@ -476,12 +477,17 @@ function fallToGround(params: {
   return intents;
 }
 
+/** Cells a ranged attacker's fire reaches for threat purposes (caps the LoS scan). */
+const RANGED_THREAT_RANGE = 24;
+
 /**
- * Build the threat-based approach penalty for one combatant from its living melee
+ * Build the threat-based approach penalty for one combatant from its living
  * enemies (at their current cells): a danger field where movement prefers the
- * least-exposed of equally-close cells. Returns undefined when the grid bounds
- * are unknown or no melee enemy threatens — then movement closes by plain
- * distance. Ranged threat (broad, line-of-sight-dependent) is deferred.
+ * least-exposed of equally-close cells. Melee foes stamp a sharp envelope
+ * (move + reach); ranged foes add threat lazily to cells they have line of sight
+ * to within range — so a wall between the cell and an archer reads as cover and
+ * the mover prefers it. Returns undefined when the grid bounds are unknown or no
+ * enemy threatens (then movement closes by plain distance).
  */
 function buildApproachPenalty(
   combatant: RoundCombatant,
@@ -490,26 +496,47 @@ function buildApproachPenalty(
   pos: Record<string, SceneCoordinate>
 ): ((cell: SceneCoordinate) => number) | undefined {
   if (input.gridWidth == null || input.gridHeight == null) return undefined;
-  const sources: ThreatSource[] = [];
+  const meleeSources: ThreatSource[] = [];
+  const rangedSources: { position: SceneCoordinate; threat: number }[] = [];
   for (const other of input.order) {
     if (other.tokenId === combatant.tokenId || hp[other.tokenId] <= 0) continue;
     if (!isHostile(combatant.faction, other.faction)) continue;
-    if (other.reach == null) continue; // ranged threat deferred
-    sources.push({
-      position: pos[other.tokenId],
-      reach: other.reach,
-      speed: other.speed ?? 6,
-      threat: Math.max(1, expectedDamage(other.damageEffects)),
-    });
+    const threat = Math.max(1, expectedDamage(other.damageEffects));
+    if (other.reach == null) {
+      rangedSources.push({ position: pos[other.tokenId], threat }); // ranged (unlimited reach)
+    } else {
+      meleeSources.push({
+        position: pos[other.tokenId],
+        reach: other.reach,
+        speed: other.speed ?? 6,
+        threat,
+      });
+    }
   }
-  if (sources.length === 0) return undefined;
-  const threat = buildThreatMap({
-    sources,
-    width: input.gridWidth,
-    height: input.gridHeight,
-    rule: input.diagonalRule,
-  });
-  return (cell) => influenceAt(threat, cell);
+  if (meleeSources.length === 0 && rangedSources.length === 0) return undefined;
+
+  const meleeMap =
+    meleeSources.length > 0
+      ? buildThreatMap({
+          sources: meleeSources,
+          width: input.gridWidth,
+          height: input.gridHeight,
+          rule: input.diagonalRule,
+        })
+      : undefined;
+  const wallTop = input.wallTopAt;
+  const rule = input.diagonalRule;
+
+  return (cell) => {
+    let penalty = meleeMap ? influenceAt(meleeMap, cell) : 0;
+    for (const ranged of rangedSources) {
+      if (gridDistance(ranged.position, cell, rule) > RANGED_THREAT_RANGE) continue;
+      // No line of sight (a wall fully shields the cell) → safe from this archer.
+      if (wallTop && coverBetweenElevated(ranged.position, cell, wallTop) === 'total') continue;
+      penalty += ranged.threat;
+    }
+    return penalty;
+  };
 }
 
 /**
