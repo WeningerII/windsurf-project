@@ -133,6 +133,14 @@ export interface TacticalTurnResult {
  */
 const AOE_MIN_NET = 2;
 
+/**
+ * Threat the AI will trade to claim a flank, as a destination tie-break: a
+ * flanking cell is preferred over an equally-close one unless it is at least this
+ * much more dangerous. A tuning weight (Phase 2's position-evaluation function
+ * will replace this ad-hoc combination with principled per-term weights).
+ */
+const FLANK_PREFERENCE = 6;
+
 interface AreaPlan {
   action: SceneAreaAction;
   aim: SceneCoordinate;
@@ -513,6 +521,29 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
           t.position.y === cell.y &&
           (!canFly || (t.position.z ?? 0) === (cell.z ?? 0))
       );
+    // Seek a flank: in systems with flanking, prefer a reachable cell that puts an
+    // ally on the target's far side — the resolver then grants the flank bonus when
+    // the strike resolves from there. Folded into the threat penalty as a tie-break
+    // among equally-close cells (closing the distance still dominates).
+    const flankValue = flankToHitBonus(input.systemId);
+    const allyPositions =
+      flankValue > 0
+        ? input.targets
+            .filter((other) => other.faction === input.actor.faction)
+            .map((other) => other.position)
+        : [];
+    const movePenalty = (cell: SceneCoordinate): number => {
+      const threat = input.cellPenalty?.(cell) ?? 0;
+      if (flankValue <= 0) return threat;
+      const flanks = isFlanking({
+        attacker: cell,
+        target: nearestTarget.position,
+        reach,
+        allies: allyPositions,
+        rule: input.diagonalRule,
+      });
+      return flanks ? threat - FLANK_PREFERENCE : threat;
+    };
     const move = moveToward({
       from: input.actor.position,
       target: nearestTarget.position,
@@ -523,7 +554,7 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
       enterCost: input.enterCost,
       rule: input.diagonalRule,
       canFly,
-      cellPenalty: input.cellPenalty,
+      cellPenalty: movePenalty,
     });
 
     // If the move closes to reach, attack FROM the new cell: cover and flanking
