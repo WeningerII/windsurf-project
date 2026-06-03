@@ -47,6 +47,7 @@ import { areaEffectToDamageIntent } from '../resolver/sceneCombat';
 import { cannotAct } from '../resolver/conditions';
 import { concentrationBreak } from '../resolver/concentration';
 import { rollDeathSave } from '../resolver/deathSaves';
+import { resolveFall } from '../resolver/falling';
 import { gridDistance } from '../resolver/areaTargeting';
 import type { DamageDefenses } from '../resolver/damageDefenses';
 import type { BlockPredicate } from '../resolver/lineOfEffect';
@@ -110,6 +111,8 @@ export interface RoundTurnRecord {
   auraIntents?: SceneActionIntent[];
   /** Opportunity attacks this combatant provoked by moving out of reach. */
   oaIntents?: SceneActionIntent[];
+  /** Descent + falling damage when this combatant fell at the start of its turn. */
+  fallIntents?: SceneActionIntent[];
   /** Whether the turn was skipped because the actor was already down. */
   skipped: boolean;
 }
@@ -415,6 +418,54 @@ function rollTurnDeathSave(params: {
 }
 
 /**
+ * Drop an airborne combatant to the ground: zero its working elevation, emit the
+ * descent move, and — only if it was conscious as it fell — roll system falling
+ * damage and fold it in. A creature already at 0 HP simply plummets (no extra
+ * damage). Returns the intents (empty when it was not actually airborne).
+ */
+function fallToGround(params: {
+  tokenId: string;
+  pos: Record<string, SceneCoordinate>;
+  hp: Record<string, number>;
+  conscious: boolean;
+  seed: string;
+  round: number;
+  turnIndex: number;
+  systemId?: string;
+}): SceneActionIntent[] {
+  const { tokenId, pos, hp } = params;
+  const height = pos[tokenId]?.z ?? 0;
+  if (height <= 0) return [];
+
+  // Land on the same cell at ground level (z dropped).
+  const grounded: SceneCoordinate = { x: pos[tokenId].x, y: pos[tokenId].y };
+  pos[tokenId] = grounded;
+  const intents: SceneActionIntent[] = [{ type: 'move-token', tokenId, position: grounded }];
+
+  if (params.conscious) {
+    const fall = resolveFall({
+      systemId: params.systemId,
+      heightCells: height,
+      rng: participantRng(
+        params.seed,
+        `fall::round${params.round}::turn${params.turnIndex}`,
+        tokenId
+      ),
+    });
+    if (fall.damage > 0) {
+      if (hp[tokenId] != null) hp[tokenId] = Math.max(0, hp[tokenId] - fall.damage);
+      intents.push({
+        type: 'apply-damage',
+        actorId: tokenId,
+        cause: 'fall',
+        damages: [{ tokenId, amount: fall.damage }],
+      });
+    }
+  }
+  return intents;
+}
+
+/**
  * Run one full round. For each combatant in initiative order (skipping the
  * already-downed), build the live participant set from every OTHER combatant's
  * current HP, run the tactical turn, and fold any damage into the working HP so
@@ -442,6 +493,27 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
   const intents: SceneActionIntent[] = [];
 
   input.order.forEach((combatant, turnIndex) => {
+    // Gravity, before anything else: a combatant that is airborne but cannot
+    // sustain flight — it has no fly speed, or it is already down — drops to the
+    // ground at the start of its turn, taking falling damage if it was conscious.
+    const airborne = (pos[combatant.tokenId]?.z ?? 0) > 0;
+    const conscious = hp[combatant.tokenId] > 0;
+    const fallIntents =
+      airborne && ((combatant.flySpeed ?? 0) <= 0 || !conscious)
+        ? fallToGround({
+            tokenId: combatant.tokenId,
+            pos,
+            hp,
+            conscious,
+            seed: input.seed,
+            round: input.round,
+            turnIndex,
+            systemId: input.systemId,
+          })
+        : [];
+    fallIntents.forEach((intent) => intents.push(intent));
+    const falls = fallIntents.length > 0 ? fallIntents : undefined;
+
     // Skip combatants that can't act: already down, or held by an incapacitating
     // condition (stunned / paralyzed / unconscious / …).
     const down = hp[combatant.tokenId] <= 0;
@@ -465,6 +537,7 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
       turns.push({
         tokenId: combatant.tokenId,
         skipped: true,
+        fallIntents: falls,
         turn: {
           actorId: combatant.tokenId,
           decision: 'no-target',
@@ -542,8 +615,24 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
     // Fold this turn's outcome into working state so later turns see it.
     if (turn.intent && turn.intent.type === 'apply-damage') {
       for (const damage of turn.intent.damages) {
-        if (hp[damage.tokenId] != null && byId.get(damage.tokenId)?.hp) {
-          hp[damage.tokenId] = Math.max(0, hp[damage.tokenId] - damage.amount);
+        const before = hp[damage.tokenId];
+        if (before != null && byId.get(damage.tokenId)?.hp) {
+          hp[damage.tokenId] = Math.max(0, before - damage.amount);
+        }
+        // Shot out of the sky: a combatant knocked to 0 HP while airborne loses
+        // flight and plummets to the ground (it is already out, so no extra
+        // damage). Its descent lands after the attack that downed it.
+        if (before != null && before > 0 && hp[damage.tokenId] <= 0) {
+          fallToGround({
+            tokenId: damage.tokenId,
+            pos,
+            hp,
+            conscious: false,
+            seed: input.seed,
+            round: input.round,
+            turnIndex,
+            systemId: input.systemId,
+          }).forEach((intent) => intents.push(intent));
         }
         // 5e: damage to a concentrating combatant may break its spell.
         const broken = breakConcentration({
@@ -590,6 +679,7 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
       intent: turn.intent,
       auraIntents: auraIntents.length > 0 ? auraIntents : undefined,
       oaIntents,
+      fallIntents: falls,
       skipped: false,
     });
   });

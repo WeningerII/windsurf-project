@@ -624,6 +624,17 @@ export function runSceneRound(params: {
     if (!res.isHit) return `${nameOf(turn.tokenId)} ${moved}misses ${target}.`;
     return `${nameOf(turn.tokenId)} ${moved}${res.isCriticalHit ? 'crits' : 'hits'} ${target} for ${res.damage}.`;
   };
+  // A start-of-turn fall (lost flight / shot down) precedes the actor's action.
+  const fallLine = (turn: RoundResult['turns'][number]): string | undefined => {
+    const falls = turn.fallIntents;
+    if (!falls || falls.length === 0) return undefined;
+    const dmg = falls.find((intent) => intent.type === 'apply-damage');
+    const amount =
+      dmg?.type === 'apply-damage' ? dmg.damages.reduce((sum, d) => sum + d.amount, 0) : 0;
+    return amount > 0
+      ? `${nameOf(turn.tokenId)} plummets to the ground, taking ${amount}.`
+      : `${nameOf(turn.tokenId)} drops out of the air and crashes down.`;
+  };
   const log = result.turns.flatMap((turn) => {
     const lines: string[] = [];
     // Opportunity attacks the mover provoked resolve before its own action.
@@ -641,6 +652,8 @@ export function runSceneRound(params: {
       const hit = aura.damages.map((d) => `${nameOf(d.tokenId)} (${d.amount})`).join(', ');
       lines.push(`${nameOf(turn.tokenId)}'s ${aura.cause ?? 'aura'} sears ${hit}.`);
     }
+    const fell = fallLine(turn);
+    if (fell) lines.push(fell);
     lines.push(turnLine(turn));
     return lines;
   });
@@ -676,6 +689,8 @@ export function runSceneRound(params: {
         `${nameOf(oa.actorId ?? '')} catches ${nameOf(turn.tokenId)} fleeing — ${total} damage.`
       );
     }
+    const fell = fallLine(turn);
+    if (fell) lines.push(fell);
     lines.push(narrationFor(turn));
     return lines;
   });
