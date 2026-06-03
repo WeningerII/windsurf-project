@@ -21,7 +21,7 @@ import {
   type EffectOperation,
   type StackPolicy,
 } from '../ir/types';
-import type { BlockPredicate } from '../resolver/lineOfEffect';
+import type { BlockPredicate, WallTopAt } from '../resolver/lineOfEffect';
 
 /** Operations the terrain bridge accepts (a safe subset of EffectOperation). */
 const TERRAIN_OPERATIONS = new Set<EffectOperation>([
@@ -89,6 +89,28 @@ export function markerBlocksLineOfEffect(marker: SceneMarker): boolean {
 export function sceneBlockPredicate(state: SceneState): BlockPredicate {
   const walls = Object.values(state.markers).filter(markerBlocksLineOfEffect);
   return (cell) => walls.some((marker) => markerCoversCell(marker, cell));
+}
+
+/** A wall marker's top elevation in cells: its `wallHeight`, or Infinity (full-height). */
+export function markerWallTop(marker: SceneMarker): number {
+  return marker.wallHeight != null && marker.wallHeight > 0 ? marker.wallHeight : Infinity;
+}
+
+/**
+ * A `WallTopAt` over the scene: the tallest wall covering a cell (0 where none).
+ * Feeds elevation-aware line of effect, so a sight line can clear a low wall a
+ * flyer is above while it still blocks creatures on the ground.
+ */
+export function sceneWallTopAt(state: SceneState): WallTopAt {
+  const walls = Object.values(state.markers).filter(markerBlocksLineOfEffect);
+  if (walls.length === 0) return () => 0;
+  return (cell) => {
+    let top = 0;
+    for (const marker of walls) {
+      if (markerCoversCell(marker, cell)) top = Math.max(top, markerWallTop(marker));
+    }
+    return top;
+  };
 }
 
 /**

@@ -16,6 +16,9 @@ interface MarkerPanelProps {
   /** When true, the placed marker blocks line of effect (a wall). */
   markerBlocksLoE: boolean;
   onMarkerBlocksLoEChange: (value: boolean) => void;
+  /** Wall height in feet (blank = full-height); only used when it blocks LoE. */
+  markerWallHeightFeet: string;
+  onMarkerWallHeightFeetChange: (value: string) => void;
   isPlacing: boolean;
   onTogglePlace: () => void;
   markers: Record<string, SceneMarker>;
@@ -34,6 +37,8 @@ export function MarkerPanel({
   onMarkerHeightChange,
   markerBlocksLoE,
   onMarkerBlocksLoEChange,
+  markerWallHeightFeet,
+  onMarkerWallHeightFeetChange,
   isPlacing,
   onTogglePlace,
   markers,
@@ -81,6 +86,17 @@ export function MarkerPanel({
           />
           Blocks line of effect (wall)
         </label>
+        {markerBlocksLoE && (
+          <Input
+            aria-label="Wall height in feet"
+            type="number"
+            min={0}
+            step={5}
+            value={markerWallHeightFeet}
+            onChange={(event) => onMarkerWallHeightFeetChange(event.target.value)}
+            placeholder="Wall height (ft, blank = full)"
+          />
+        )}
         <Button
           variant={isPlacing ? 'default' : 'outline'}
           size="sm"

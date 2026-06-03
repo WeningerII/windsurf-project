@@ -51,8 +51,8 @@ import {
   type AuraAction,
   type SceneAreaAction,
 } from '../resolver/areaParticipants';
-import { sceneBlockPredicate, sceneMoveCost } from '../terrain/sceneTerrain';
-import { coverAcBonus, coverBetween } from '../resolver/lineOfEffect';
+import { sceneBlockPredicate, sceneMoveCost, sceneWallTopAt } from '../terrain/sceneTerrain';
+import { coverAcBonus, coverBetweenElevated } from '../resolver/lineOfEffect';
 import { flankToHitBonus, isFlanking } from '../tactical/flanking';
 import { collapseRollMode, statusAdvantage } from '../resolver/conditions';
 import { concentrationBreak } from '../resolver/concentration';
@@ -233,7 +233,7 @@ export function resolveSceneAttack(params: {
   // Cover between attacker and target (walls/terrain): total cover is no line of
   // sight (the attack can't be made); otherwise a per-system bonus to the
   // target's defense. Flanking (3.5e/PF1e/PF2e) pulls the other way.
-  const cover = coverBetween(attacker.position, target.position, sceneBlockPredicate(state));
+  const cover = coverBetweenElevated(attacker.position, target.position, sceneWallTopAt(state));
   if (cover === 'total') {
     return {
       hit: false,
@@ -569,6 +569,7 @@ export function runSceneRound(params: {
     seed: params.seed,
     round: params.round,
     isBlocked: sceneBlockPredicate(params.state),
+    wallTopAt: sceneWallTopAt(params.state),
     diagonalRule: diagonalRuleForSystem(params.state.systemId),
     saveModel: params.state.systemId === 'pf2e' ? 'pf2e-basic' : 'binary',
     systemId: params.state.systemId,

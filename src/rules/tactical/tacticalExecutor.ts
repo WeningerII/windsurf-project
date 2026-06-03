@@ -33,7 +33,12 @@ import { computeAreaParticipants, type SceneAreaAction } from '../resolver/areaP
 import { moveToward } from './pathfinding';
 import { flankToHitBonus, isFlanking } from './flanking';
 import { collapseRollMode, statusAdvantage } from '../resolver/conditions';
-import { coverAcBonus, coverBetween, type BlockPredicate } from '../resolver/lineOfEffect';
+import {
+  coverAcBonus,
+  coverBetweenElevated,
+  type BlockPredicate,
+  type WallTopAt,
+} from '../resolver/lineOfEffect';
 import type { DiagonalRule } from '../resolver/areaTargeting';
 import {
   isHostile,
@@ -43,6 +48,16 @@ import {
   type TacticalTarget,
 } from './targetScoring';
 
+/** Wall heights for cover: the explicit map, or full-height walls from `isBlocked`. */
+function resolveWallTop(input: {
+  wallTopAt?: WallTopAt;
+  isBlocked?: BlockPredicate;
+}): WallTopAt | undefined {
+  if (input.wallTopAt) return input.wallTopAt;
+  const blocked = input.isBlocked;
+  return blocked ? (cell) => (blocked(cell) ? Infinity : 0) : undefined;
+}
+
 export interface TacticalTurnInput {
   actor: TacticalActor;
   targets: readonly TacticalTarget[];
@@ -51,6 +66,11 @@ export interface TacticalTurnInput {
   cause?: string;
   /** Walls (for area line of effect/cover); default: no walls. */
   isBlocked?: BlockPredicate;
+  /**
+   * Wall heights for elevation-aware line of sight; default: derived from
+   * `isBlocked` as full-height walls. Lets a flyer see over a low wall.
+   */
+  wallTopAt?: WallTopAt;
   /** Diagonal counting rule for area range; default chebyshev. */
   diagonalRule?: DiagonalRule;
   /** Save model for area effects; default binary (5e/3.5e/PF1e). */
@@ -206,9 +226,8 @@ export function resolveStrike(
   // a per-system bonus folded into the target's defense. Flanking (3.5e/PF1e/PF2e)
   // pulls the other way, lowering the effective defense by its to-hit value, while
   // a to-hit penalty (PF2e's multiple attack penalty) raises it.
-  const cover = input.isBlocked
-    ? coverBetween(actor.position, target.position, input.isBlocked)
-    : 'none';
+  const wallTop = resolveWallTop(input);
+  const cover = wallTop ? coverBetweenElevated(actor.position, target.position, wallTop) : 'none';
   if (cover === 'total') {
     return { hit: false, narration: 'no line of sight' };
   }
@@ -453,12 +472,13 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
   // Prefer a target we actually have a line of sight to: a totally-covered foe
   // can't be hit, so attacking it would waste the turn. With no walls every
   // target is visible, so this is a no-op until cover is in play.
+  const wallTop = resolveWallTop(input);
   const hasLineOfSight = (tokenId: string): boolean => {
-    if (!input.isBlocked) return true;
+    if (!wallTop) return true;
     const candidate = input.targets.find((t) => t.tokenId === tokenId);
     return (
       !candidate ||
-      coverBetween(input.actor.position, candidate.position, input.isBlocked) !== 'total'
+      coverBetweenElevated(input.actor.position, candidate.position, wallTop) !== 'total'
     );
   };
 

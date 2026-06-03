@@ -91,6 +91,13 @@ export interface SceneMarker {
   width: number;
   height: number;
   /**
+   * Optional wall height in grid cells (one cell = 5 ft), for a line-of-effect
+   * marker. Absent means a full-height wall (blocks at every elevation, the prior
+   * behavior); a finite value lets a sight line pass over the top — a flyer can
+   * see and shoot over a low wall that still blocks creatures on the ground.
+   */
+  wallHeight?: number;
+  /**
    * Optional functional-terrain effects, drawn from the system-agnostic rules IR
    * (docs/rfc/003-rules-ir-and-effects.md). When present, the terrain becomes
    * mechanically real: a cell covered by this marker contributes these effects to

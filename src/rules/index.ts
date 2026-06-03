@@ -115,10 +115,11 @@ export {
   tokensInArea,
 } from './resolver/areaTargeting';
 
-export type { BlockPredicate, CoverLevel } from './resolver/lineOfEffect';
+export type { BlockPredicate, CoverLevel, WallTopAt } from './resolver/lineOfEffect';
 export {
   coverAcBonus,
   coverBetween,
+  coverBetweenElevated,
   coverSaveBonus,
   hasLineOfEffect,
   segmentCells,
@@ -234,7 +235,9 @@ export {
   markerCoversCell,
   markerMoveCostMultiplier,
   markerToEffects,
+  markerWallTop,
   sceneMoveCost,
+  sceneWallTopAt,
 } from './terrain/sceneTerrain';
 
 export { effectToLedgerEntry, toContributionLedger } from './ir/ledgerView';

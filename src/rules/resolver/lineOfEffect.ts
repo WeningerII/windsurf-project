@@ -21,6 +21,14 @@ import { gridDistance, type DiagonalRule } from './areaTargeting';
 /** Does this cell fully block line of effect (a wall / total cover)? */
 export type BlockPredicate = (cell: SceneCoordinate) => boolean;
 
+/**
+ * The top elevation of a wall at a cell, in cells: 0 = no wall, a finite value =
+ * the wall's height (its top), Infinity = a full-height/opaque wall. This is the
+ * elevation-aware blocking model — a sight line clears a finite wall when it
+ * passes above its top.
+ */
+export type WallTopAt = (cell: SceneCoordinate) => number;
+
 /** RAW cover levels (5e granularity; other systems map onto these). */
 export type CoverLevel = 'none' | 'half' | 'three-quarters' | 'total';
 
@@ -63,49 +71,109 @@ export function segmentCells(p: SceneCoordinate, q: SceneCoordinate): SceneCoord
   return cells;
 }
 
-/** True when the segment from p to q crosses no blocking cell (endpoints' own cells ignored). */
-function segmentBlocked(
+/**
+ * True when the 3D segment p→q is blocked by a wall. Walking the 2D cells the
+ * segment crosses, the sight line's interpolated elevation is evaluated over each
+ * cell; the wall there blocks if the line dips to or below its top anywhere in
+ * the cell (the lower of the entry/exit heights, since the line is linear in z).
+ * Endpoints' own cells (in `ignore`) never block. Full-height walls (Infinity)
+ * block at every elevation, reducing this to the flat 2D footprint test.
+ */
+function segmentBlockedElevated(
   p: SceneCoordinate,
   q: SceneCoordinate,
-  isBlocked: BlockPredicate,
+  wallTopAt: WallTopAt,
   ignore: ReadonlySet<string>
 ): boolean {
-  for (const cell of segmentCells(p, q)) {
-    if (ignore.has(key(cell))) continue;
-    if (isBlocked(cell)) return true;
+  const pz = p.z ?? 0;
+  const dz = (q.z ?? 0) - pz;
+  const zAt = (t: number): number => pz + t * dz;
+
+  let x = Math.floor(p.x);
+  let y = Math.floor(p.y);
+  const endX = Math.floor(q.x);
+  const endY = Math.floor(q.y);
+  const dx = q.x - p.x;
+  const dy = q.y - p.y;
+  const stepX = dx > 0 ? 1 : -1;
+  const stepY = dy > 0 ? 1 : -1;
+  const tDeltaX = dx !== 0 ? Math.abs(1 / dx) : Infinity;
+  const tDeltaY = dy !== 0 ? Math.abs(1 / dy) : Infinity;
+  let tMaxX =
+    dx !== 0 ? (dx > 0 ? Math.floor(p.x) + 1 - p.x : p.x - Math.floor(p.x)) * tDeltaX : Infinity;
+  let tMaxY =
+    dy !== 0 ? (dy > 0 ? Math.floor(p.y) + 1 - p.y : p.y - Math.floor(p.y)) * tDeltaY : Infinity;
+
+  let tEnter = 0;
+  let guard = 0;
+  for (;;) {
+    const tExit = Math.min(tMaxX, tMaxY, 1);
+    const cell = { x, y };
+    if (!ignore.has(key(cell))) {
+      const top = wallTopAt(cell);
+      // The wall blocks when the line's lowest height over this cell is at or
+      // below the wall's top — i.e. the line grazes or passes through it.
+      if (top > 0 && Math.min(zAt(tEnter), zAt(tExit)) <= top) return true;
+    }
+    if (x === endX && y === endY) break;
+    tEnter = tExit;
+    if (tMaxX < tMaxY) {
+      tMaxX += tDeltaX;
+      x += stepX;
+    } else {
+      tMaxY += tDeltaY;
+      y += stepY;
+    }
+    if ((guard += 1) > 10000) break;
   }
   return false;
 }
 
 /**
- * Cover a target cell has from an area's origin cell, by casting rays from the
- * origin's center to the four (inset) corners of the target and counting how many
- * are blocked: 0 → none, 1–2 → half, 3 → three-quarters, 4 → total (no line of
- * effect — the target is unaffected). The origin's and target's own cells never
- * block (a wall a creature stands on doesn't shield it from a blast in its space).
+ * Cover a target cell has from an origin cell, accounting for wall heights and
+ * the elevations of both ends. Rays are cast from the origin's center to the four
+ * inset corners of the target; each is blocked when the sight line clips a wall
+ * along the way. 0 blocked → none, 1–2 → half, 3 → three-quarters, 4 → total (no
+ * line of effect). A flyer above a low wall clears it; a creature on the ground
+ * behind it does not. The origin's and target's own cells never block.
+ */
+export function coverBetweenElevated(
+  origin: SceneCoordinate,
+  target: SceneCoordinate,
+  wallTopAt: WallTopAt
+): CoverLevel {
+  if (origin.x === target.x && origin.y === target.y) return 'none';
+  const from = { x: origin.x + 0.5, y: origin.y + 0.5, z: origin.z ?? 0 };
+  const tz = target.z ?? 0;
+  const corners: SceneCoordinate[] = [
+    { x: target.x + 0.05, y: target.y + 0.05, z: tz },
+    { x: target.x + 0.95, y: target.y + 0.05, z: tz },
+    { x: target.x + 0.05, y: target.y + 0.95, z: tz },
+    { x: target.x + 0.95, y: target.y + 0.95, z: tz },
+  ];
+  const ignore = new Set([key(origin), key(target)]);
+  let blocked = 0;
+  for (const corner of corners) {
+    if (segmentBlockedElevated(from, corner, wallTopAt, ignore)) blocked += 1;
+  }
+  if (blocked === 0) return 'none';
+  if (blocked >= 4) return 'total';
+  if (blocked === 3) return 'three-quarters';
+  return 'half';
+}
+
+/**
+ * Cover a target cell has from an origin cell over a flat 2D wall footprint —
+ * the elevation-agnostic form. Delegates to {@link coverBetweenElevated} treating
+ * every blocking cell as a full-height wall, so the result is identical to the
+ * pure 2D model for ground play and conservative (full-height) for everything else.
  */
 export function coverBetween(
   origin: SceneCoordinate,
   target: SceneCoordinate,
   isBlocked: BlockPredicate
 ): CoverLevel {
-  if (origin.x === target.x && origin.y === target.y) return 'none';
-  const from = { x: origin.x + 0.5, y: origin.y + 0.5 };
-  const corners: SceneCoordinate[] = [
-    { x: target.x + 0.05, y: target.y + 0.05 },
-    { x: target.x + 0.95, y: target.y + 0.05 },
-    { x: target.x + 0.05, y: target.y + 0.95 },
-    { x: target.x + 0.95, y: target.y + 0.95 },
-  ];
-  const ignore = new Set([key(origin), key(target)]);
-  let blocked = 0;
-  for (const corner of corners) {
-    if (segmentBlocked(from, corner, isBlocked, ignore)) blocked += 1;
-  }
-  if (blocked === 0) return 'none';
-  if (blocked >= 4) return 'total';
-  if (blocked === 3) return 'three-quarters';
-  return 'half';
+  return coverBetweenElevated(origin, target, (cell) => (isBlocked(cell) ? Infinity : 0));
 }
 
 /** Convenience: is there ANY line of effect (cover less than total)? */

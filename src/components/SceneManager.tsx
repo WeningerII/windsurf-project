@@ -113,6 +113,7 @@ export function SceneManager({
   const [markerLabel, setMarkerLabel] = useState('');
   const [markerKind, setMarkerKind] = useState<SceneMarkerKind>('hazard');
   const [markerBlocksLoE, setMarkerBlocksLoE] = useState(false);
+  const [markerWallHeightFeet, setMarkerWallHeightFeet] = useState('');
   const [markerWidth, setMarkerWidth] = useState('1');
   const [markerHeight, setMarkerHeight] = useState('1');
   const [encounterMonsters, setEncounterMonsters] = useState<Monster[]>([]);
@@ -735,6 +736,16 @@ export function SceneManager({
                     label: 'Blocks line of effect',
                   },
                 ],
+                // A finite height lets sight lines pass over the top (a flyer can
+                // shoot over it); blank means a full-height wall.
+                ...(markerWallHeightFeet.trim() !== '' && Number(markerWallHeightFeet) > 0
+                  ? {
+                      wallHeight: Math.max(
+                        1,
+                        Math.round(Number(markerWallHeightFeet) / FEET_PER_CELL)
+                      ),
+                    }
+                  : {}),
               }
             : {}),
         },
@@ -744,6 +755,7 @@ export function SceneManager({
         setPlacementMode('none');
         setMarkerLabel('');
         setMarkerBlocksLoE(false);
+        setMarkerWallHeightFeet('');
       }
       return;
     }
@@ -1262,6 +1274,8 @@ export function SceneManager({
                     onMarkerHeightChange={setMarkerHeight}
                     markerBlocksLoE={markerBlocksLoE}
                     onMarkerBlocksLoEChange={setMarkerBlocksLoE}
+                    markerWallHeightFeet={markerWallHeightFeet}
+                    onMarkerWallHeightFeetChange={setMarkerWallHeightFeet}
                     isPlacing={placementMode === 'marker'}
                     onTogglePlace={() =>
                       setPlacementMode((current) => (current === 'marker' ? 'none' : 'marker'))

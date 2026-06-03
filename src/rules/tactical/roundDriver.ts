@@ -50,7 +50,7 @@ import { rollDeathSave } from '../resolver/deathSaves';
 import { resolveFall } from '../resolver/falling';
 import { gridDistance } from '../resolver/areaTargeting';
 import type { DamageDefenses } from '../resolver/damageDefenses';
-import type { BlockPredicate } from '../resolver/lineOfEffect';
+import type { BlockPredicate, WallTopAt } from '../resolver/lineOfEffect';
 import type { DiagonalRule } from '../resolver/areaTargeting';
 
 /** A combatant in the round: identity, faction, position, stats, and live HP. */
@@ -137,6 +137,8 @@ export interface RunRoundInput {
   round: number;
   /** Walls for area line-of-effect/cover; default: no walls. */
   isBlocked?: BlockPredicate;
+  /** Wall heights for elevation-aware line of sight; default: full-height walls. */
+  wallTopAt?: WallTopAt;
   /** Diagonal counting rule for area range; default chebyshev. */
   diagonalRule?: DiagonalRule;
   /** Save model for area effects; default binary. */
@@ -578,6 +580,7 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
       targets,
       seed: `${input.seed}::round${input.round}::turn${turnIndex}`,
       isBlocked: input.isBlocked,
+      wallTopAt: input.wallTopAt,
       diagonalRule: input.diagonalRule,
       saveModel: input.saveModel,
       systemId: input.systemId,
