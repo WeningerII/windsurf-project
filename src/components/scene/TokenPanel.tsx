@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Heart, Plus, Trash2 } from 'lucide-react';
+import { Heart, MoveVertical, Plus, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
 import type { SceneTokenKind } from '../../types/core/scene';
@@ -44,6 +44,10 @@ interface TokenPanelProps {
   selectedTokenConcentration?: string;
   /** Set (or clear, with '') the selected token's concentration. */
   onSetConcentration?: (spell: string) => void;
+  /** The selected token's elevation in feet (0 = ground), for flight. */
+  selectedTokenElevationFeet?: number;
+  /** Set the selected token's elevation in feet (the engine stores it in cells). */
+  onSetElevation?: (feet: number) => void;
 }
 
 /** Token controls: link a character (or define a manual token) and place it. */
@@ -65,9 +69,12 @@ export function TokenPanel({
   onSetStatuses,
   selectedTokenConcentration,
   onSetConcentration,
+  selectedTokenElevationFeet,
+  onSetElevation,
 }: TokenPanelProps) {
   const [hpAmount, setHpAmount] = useState('');
   const [spell, setSpell] = useState('');
+  const [elevationFeet, setElevationFeet] = useState('');
   const amount = Math.max(0, Math.floor(Number(hpAmount) || 0));
   const active = new Set(selectedTokenStatuses ?? []);
   const toggleStatus = (condition: string) => {
@@ -236,6 +243,49 @@ export function TokenPanel({
                 title="Stop concentrating"
               >
                 Clear
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {selectedTokenStatuses && onSetElevation && (
+          <div className="space-y-1.5 border-t pt-2">
+            <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+              <MoveVertical className="h-3.5 w-3.5" />
+              Elevation: {selectedTokenElevationFeet ?? 0} ft
+            </div>
+            <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] gap-2">
+              <Input
+                aria-label="Elevation in feet"
+                type="number"
+                min={0}
+                step={5}
+                value={elevationFeet}
+                onChange={(event) => setElevationFeet(event.target.value)}
+                placeholder="Feet up"
+              />
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={elevationFeet.trim() === '' || Number(elevationFeet) < 0}
+                onClick={() => {
+                  onSetElevation(Math.max(0, Math.round(Number(elevationFeet) || 0)));
+                  setElevationFeet('');
+                }}
+              >
+                Set
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={(selectedTokenElevationFeet ?? 0) === 0}
+                onClick={() => {
+                  onSetElevation(0);
+                  setElevationFeet('');
+                }}
+                title="Return to ground level"
+              >
+                Land
               </Button>
             </div>
           </div>

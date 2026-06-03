@@ -1,6 +1,7 @@
 import type { KeyboardEvent } from 'react';
 import { cn } from '@/lib/utils';
 import type { SceneCoordinate, SceneMarker, SceneState, SceneToken } from '../types/core/scene';
+import { FEET_PER_CELL } from '../rules/resolver/areaTargeting';
 
 export interface SceneGridViewProps {
   state: SceneState;
@@ -99,6 +100,15 @@ export function SceneGridView({
                           aria-hidden="true"
                         />
                       )}
+                      {token.position.z != null && token.position.z > 0 && (
+                        <span
+                          className="absolute -left-1 -top-1 rounded-sm border border-background bg-sky-500 px-0.5 text-[8px] font-bold leading-tight text-white"
+                          title={`Elevation ${token.position.z * FEET_PER_CELL} ft`}
+                          aria-hidden="true"
+                        >
+                          ↑{token.position.z * FEET_PER_CELL}
+                        </span>
+                      )}
                       {token.hp && <TokenHpBar hp={token.hp} />}
                       {!token.hp && token.conditions && (
                         <TokenConditionBadge conditions={token.conditions} />
@@ -183,19 +193,23 @@ function topCondition(conditions: NonNullable<SceneToken['conditions']>): string
 function buildTokenLabel(token: SceneToken): string {
   const statuses =
     token.statuses && token.statuses.length > 0 ? `, ${token.statuses.join(', ')}` : '';
+  const elevation =
+    token.position.z != null && token.position.z > 0
+      ? `, elevation ${token.position.z * FEET_PER_CELL} ft`
+      : '';
   const death = token.deathSaves
     ? `, death saves ${token.deathSaves.successes}/3 successes, ${token.deathSaves.failures}/3 failures`
     : '';
   if (token.hp) {
-    return `Token ${token.name}, ${Math.max(0, token.hp.current)} of ${token.hp.max} HP${statuses}${death}`;
+    return `Token ${token.name}, ${Math.max(0, token.hp.current)} of ${token.hp.max} HP${statuses}${elevation}${death}`;
   }
   if (token.conditions) {
     const top = topCondition(token.conditions);
     return top
-      ? `Token ${token.name}, ${top}${statuses}`
-      : `Token ${token.name}, unharmed${statuses}`;
+      ? `Token ${token.name}, ${top}${statuses}${elevation}`
+      : `Token ${token.name}, unharmed${statuses}${elevation}`;
   }
-  return `Token ${token.name}${statuses}`;
+  return `Token ${token.name}${statuses}${elevation}`;
 }
 
 /** A small condition badge for HP-less combatants (M&M condition track). */

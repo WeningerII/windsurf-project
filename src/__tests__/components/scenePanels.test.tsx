@@ -6,6 +6,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { TokenPanel } from '../../components/scene/TokenPanel';
 import { CombatPanel } from '../../components/scene/CombatPanel';
 import { InitiativeTracker } from '../../components/scene/InitiativeTracker';
+import { SceneGridView } from '../../components/SceneGridView';
 import type { SceneState, SceneToken } from '../../types/core/scene';
 
 /**
@@ -164,6 +165,63 @@ describe('CombatPanel — 5e roll mode', () => {
       />
     );
     expect(screen.queryByLabelText('Attack roll mode')).not.toBeInTheDocument();
+  });
+});
+
+describe('TokenPanel — elevation', () => {
+  it('sets the selected token elevation in feet and lands it', async () => {
+    const user = userEvent.setup();
+    const onSetElevation = vi.fn();
+    const { rerender } = render(
+      <TokenPanel {...tokenBase} selectedTokenStatuses={[]} onSetElevation={onSetElevation} />
+    );
+    await user.type(screen.getByLabelText('Elevation in feet'), '30');
+    await user.click(screen.getByRole('button', { name: 'Set' }));
+    expect(onSetElevation).toHaveBeenCalledWith(30);
+
+    // Once aloft, "Land" returns the token to the ground.
+    rerender(
+      <TokenPanel
+        {...tokenBase}
+        selectedTokenStatuses={[]}
+        selectedTokenElevationFeet={30}
+        onSetElevation={onSetElevation}
+      />
+    );
+    await user.click(screen.getByRole('button', { name: 'Land' }));
+    expect(onSetElevation).toHaveBeenCalledWith(0);
+  });
+
+  it('hides the elevation control when no token is selected', () => {
+    render(<TokenPanel {...tokenBase} onSetElevation={vi.fn()} />);
+    expect(screen.queryByLabelText('Elevation in feet')).not.toBeInTheDocument();
+  });
+});
+
+describe('SceneGridView — elevation', () => {
+  it('surfaces a flying token altitude in its accessible label', () => {
+    const state: SceneState = {
+      sceneId: 's',
+      name: 'S',
+      systemId: 'dnd-5e-2014',
+      grid: { width: 8, height: 8, cellSize: 5 },
+      tokens: {
+        drake: {
+          id: 'drake',
+          name: 'Drake',
+          kind: 'monster',
+          position: { x: 2, y: 2, z: 6 }, // 6 cells = 30 ft up
+          size: 1,
+          hp: { current: 20, max: 20 },
+        },
+      },
+      markers: {},
+      initiative: [],
+      round: 1,
+      seed: 's',
+    };
+    render(<SceneGridView state={state} />);
+    expect(screen.getByRole('button', { name: /Drake.*elevation 30 ft/i })).toBeInTheDocument();
   });
 });
 

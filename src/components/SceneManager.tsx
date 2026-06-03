@@ -22,6 +22,7 @@ import {
   casterSpellAreaActions,
   characterSaveBonus,
   diagonalRuleForSystem,
+  FEET_PER_CELL,
   monsterAuras,
   monsterSaveActions,
   monsterSaveBonus,
@@ -799,6 +800,24 @@ export function SceneManager({
     });
   };
 
+  // Set the selected token's flight elevation (feet from the UI → cells stored).
+  // Routed through move-token so it rides the same validated, event-sourced path
+  // as any other position change, keeping the token on its (x, y) cell.
+  const handleSetElevation = (feet: number) => {
+    if (!selectedScene || !selectedTokenId || !state) return;
+    const token = state.tokens[selectedTokenId];
+    if (!token) return;
+    emitSceneAction(selectedScene, {
+      type: 'move-token',
+      tokenId: selectedTokenId,
+      position: {
+        x: token.position.x,
+        y: token.position.y,
+        z: Math.max(0, Math.round(feet / FEET_PER_CELL)),
+      },
+    });
+  };
+
   const handleDeleteMarker = (markerId: string) => {
     if (!selectedScene) return;
     emitSceneAction(selectedScene, {
@@ -1197,6 +1216,12 @@ export function SceneManager({
                       selectedTokenId ? state?.tokens[selectedTokenId]?.concentration : undefined
                     }
                     onSetConcentration={handleSetConcentration}
+                    selectedTokenElevationFeet={
+                      selectedTokenId
+                        ? (state?.tokens[selectedTokenId]?.position.z ?? 0) * FEET_PER_CELL
+                        : undefined
+                    }
+                    onSetElevation={handleSetElevation}
                   />
 
                   <EncounterPanel
