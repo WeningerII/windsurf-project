@@ -178,7 +178,7 @@ export { requestNarration } from './ai/llmNarration';
 export { flankToHitBonus, isFlanking } from './tactical/flanking';
 
 export type { MoveResult } from './tactical/pathfinding';
-export { moveToward } from './tactical/pathfinding';
+export { moveToward, reachableCells } from './tactical/pathfinding';
 
 export type { MonsterCombatant, MonsterSaveAction } from './combatants/monsterCombatant';
 export {

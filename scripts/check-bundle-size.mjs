@@ -11,12 +11,14 @@ const budgets = {
   // across the area-of-effect combat feature and the tabletop-loop pass below
   // (conditions, concentration, opportunity attacks). Overridable via env.
   totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 824 * 1024,
-  // App chunk gzip ceiling. Raised 80→82→85→86 KiB for the resolver chain pulled
-  // into the app chunk: per-system crit models, damage resistances, cover/
+  // App chunk gzip ceiling. Raised 80→82→85→86→87 KiB for the resolver chain
+  // pulled into the app chunk: per-system crit models, damage resistances, cover/
   // flanking/line-of-sight, difficult terrain, multiattack, conditions
-  // (advantage + can't-act), concentration, opportunity attacks, and the
-  // verticality layer (elevation-aware LoS/cover, flight, falling, level selector).
-  appChunkGzipBytes: parseInt(process.env.BUNDLE_BUDGET_APP_GZIP_BYTES || '', 10) || 86 * 1024,
+  // (advantage + can't-act), concentration, opportunity attacks, the verticality
+  // layer (elevation-aware LoS/cover, flight, falling, level selector), and the
+  // tactical-AI layer (threat/influence maps, threat-aware approach, flanking,
+  // expected-value scoring, cover-seeking, kiting).
+  appChunkGzipBytes: parseInt(process.env.BUNDLE_BUDGET_APP_GZIP_BYTES || '', 10) || 87 * 1024,
   vendorChunkGzipBytes: parseInt(process.env.BUNDLE_BUDGET_VENDOR_GZIP_BYTES || '', 10) || 200 * 1024,
   largestDataChunkGzipBytes: parseInt(process.env.BUNDLE_BUDGET_DATA_GZIP_BYTES || '', 10) || 140 * 1024,
 };

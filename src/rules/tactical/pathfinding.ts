@@ -141,3 +141,61 @@ export function moveToward(params: {
     (c.z ?? 0) === 0 ? { x: c.x, y: c.y } : { x: c.x, y: c.y, z: c.z };
   return { destination: clean(chosen.destination), cost: chosen.cost, inReach: chosen.inReach };
 }
+
+/**
+ * Every cell reachable within `speed` (including the origin, at cost 0), each
+ * with its minimum movement cost — a budget-bounded Dijkstra flood. Used for
+ * repositioning decisions (kiting, seeking cover) that score reachable cells
+ * rather than just close on a target. Pure and deterministic.
+ */
+export function reachableCells(params: {
+  from: SceneCoordinate;
+  speed: number;
+  isBlocked?: BlockPredicate;
+  isOccupied?: BlockPredicate;
+  enterCost?: (cell: SceneCoordinate) => number;
+  rule?: DiagonalRule;
+  canFly?: boolean;
+}): Array<{ cell: SceneCoordinate; cost: number }> {
+  const { from, speed } = params;
+  const rule = params.rule ?? 'chebyshev';
+  const isBlocked = params.isBlocked ?? NO_BLOCK;
+  const isOccupied = params.isOccupied ?? NO_BLOCK;
+  const enterCost = params.enterCost ?? (() => 1);
+  const canFly = params.canFly ?? false;
+  const dzs = canFly ? [-1, 0, 1] : [0];
+  const clean = (c: SceneCoordinate): SceneCoordinate =>
+    (c.z ?? 0) === 0 ? { x: c.x, y: c.y } : { x: c.x, y: c.y, z: c.z };
+
+  const best = new Map<string, number>([[key(from), 0]]);
+  const reached = new Map<string, { cell: SceneCoordinate; cost: number }>([
+    [key(from), { cell: clean(from), cost: 0 }],
+  ]);
+  const queue: Array<{ cell: SceneCoordinate; cost: number }> = [{ cell: { ...from }, cost: 0 }];
+
+  while (queue.length > 0) {
+    queue.sort((a, b) => a.cost - b.cost);
+    const { cell, cost } = queue.shift()!;
+    if (cost > (best.get(key(cell)) ?? Infinity)) continue;
+    for (let dx = -1; dx <= 1; dx += 1) {
+      for (let dy = -1; dy <= 1; dy += 1) {
+        for (const dz of dzs) {
+          if (dx === 0 && dy === 0 && dz === 0) continue;
+          const nz = (cell.z ?? 0) + dz;
+          if (nz < 0) continue;
+          const next = { x: cell.x + dx, y: cell.y + dy, z: nz };
+          if (isBlocked(next) || isOccupied(next)) continue;
+          const enter = nz > 0 ? 1 : enterCost(next);
+          const nextCost = cost + gridDistance(cell, next, rule) * enter;
+          if (nextCost > speed) continue;
+          if (nextCost < (best.get(key(next)) ?? Infinity)) {
+            best.set(key(next), nextCost);
+            reached.set(key(next), { cell: clean(next), cost: nextCost });
+            queue.push({ cell: next, cost: nextCost });
+          }
+        }
+      }
+    }
+  }
+  return [...reached.values()];
+}

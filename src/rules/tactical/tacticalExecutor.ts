@@ -30,7 +30,7 @@ import { areaEffectToDamageIntent, attackToDamageIntent } from '../resolver/scen
 import { resolveDaggerheartAttack } from '../resolver/daggerheartResolution';
 import { resolveMam3eAttack } from '../resolver/mam3eResolution';
 import { computeAreaParticipants, type SceneAreaAction } from '../resolver/areaParticipants';
-import { moveToward } from './pathfinding';
+import { moveToward, reachableCells } from './pathfinding';
 import { flankToHitBonus, isFlanking } from './flanking';
 import { collapseRollMode, statusAdvantage } from '../resolver/conditions';
 import {
@@ -594,6 +594,60 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
   }
 
   const target = input.targets.find((candidate) => candidate.tokenId === reachable.tokenId)!;
+
+  // Kite: a ranged attacker (unlimited reach) standing in a threatened cell steps
+  // to the safest reachable cell that keeps line of sight to its target, then
+  // shoots from there. Melee attackers (finite reach) hold their ground. Moving
+  // off may still provoke an opportunity attack — the round driver resolves it.
+  const threatHere = input.cellPenalty?.(input.actor.position) ?? 0;
+  if (input.actor.reach === undefined && threatHere > 0 && input.cellPenalty) {
+    const penalty = input.cellPenalty;
+    const wallTop = resolveWallTop(input);
+    const occupiedByOther: BlockPredicate = (cell) =>
+      input.targets.some(
+        (c) =>
+          c.position.x === cell.x &&
+          c.position.y === cell.y &&
+          (c.position.z ?? 0) === (cell.z ?? 0)
+      );
+    const canFly = (input.actor.flySpeed ?? 0) > 0;
+    let bestCell = input.actor.position;
+    let bestThreat = threatHere;
+    let bestCost = 0;
+    for (const { cell, cost } of reachableCells({
+      from: input.actor.position,
+      speed: (canFly ? input.actor.flySpeed : input.actor.speed) ?? 6,
+      isBlocked: input.isBlocked,
+      isOccupied: occupiedByOther,
+      enterCost: input.enterCost,
+      rule: input.diagonalRule,
+      canFly,
+    })) {
+      const t = penalty(cell);
+      if (!(t < bestThreat || (t === bestThreat && cost < bestCost))) continue;
+      if (wallTop && coverBetweenElevated(cell, target.position, wallTop) === 'total') continue;
+      bestCell = cell;
+      bestThreat = t;
+      bestCost = cost;
+    }
+    if (bestCost > 0) {
+      const movedInput = { ...input, actor: { ...input.actor, position: bestCell } };
+      const strike = resolveStrikes(movedInput, target);
+      return {
+        actorId: input.actor.tokenId,
+        decision: 'attack',
+        scored,
+        chosenTargetId: reachable.tokenId,
+        moveTo: bestCell,
+        resolution: strike.resolution,
+        attacks: strike.attacks,
+        hits: strike.hits,
+        intent: strike.intent,
+        rationale: `Kited to safety, then ${strike.narration}.`,
+      };
+    }
+  }
+
   const strike = resolveStrikes(input, target);
   return {
     actorId: input.actor.tokenId,
