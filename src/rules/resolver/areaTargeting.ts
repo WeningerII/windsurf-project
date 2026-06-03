@@ -29,8 +29,20 @@ function feetToCells(feet: number): number {
 
 /** Supported grid primitives (square-grid approximations of the RAW areas). */
 export type AreaShape =
+  // A burst is a 3D ball: membership uses 3D distance, so a sphere does not catch
+  // a flyer above its radius (and an emanation surrounds its source in all axes).
   | { kind: 'burst'; origin: SceneCoordinate; radius: number }
-  | { kind: 'rect'; origin: SceneCoordinate; width: number; height: number }
+  | {
+      kind: 'rect';
+      origin: SceneCoordinate;
+      width: number;
+      height: number;
+      /** Optional vertical extent in cells (a 3D box, e.g. a cube); absent = unbounded in z. */
+      zMin?: number;
+      zMax?: number;
+    }
+  // A vertical column: a 2D radius footprint bounded between zMin and zMax.
+  | { kind: 'cylinder'; origin: SceneCoordinate; radius: number; zMin: number; zMax: number }
   | { kind: 'line'; origin: SceneCoordinate; to: SceneCoordinate; width?: number }
   | {
       kind: 'cone';
@@ -105,6 +117,13 @@ export function gridDistance(
   }
 }
 
+/** True when a cell's elevation is within an optional [zMin, zMax] vertical extent. */
+function withinZ(cell: SceneCoordinate, zMin?: number, zMax?: number): boolean {
+  if (zMin === undefined || zMax === undefined) return true;
+  const z = cell.z ?? 0;
+  return z >= zMin && z <= zMax;
+}
+
 /** True when a cell lies within the given area shape, under a diagonal rule. */
 export function cellInArea(
   cell: SceneCoordinate,
@@ -119,7 +138,14 @@ export function cellInArea(
         cell.x >= shape.origin.x &&
         cell.x < shape.origin.x + shape.width &&
         cell.y >= shape.origin.y &&
-        cell.y < shape.origin.y + shape.height
+        cell.y < shape.origin.y + shape.height &&
+        withinZ(cell, shape.zMin, shape.zMax)
+      );
+    case 'cylinder':
+      // 2D radius footprint (ignore elevation for the radial test), bounded in z.
+      return (
+        gridDistance({ x: cell.x, y: cell.y }, { x: shape.origin.x, y: shape.origin.y }, rule) <=
+          shape.radius && withinZ(cell, shape.zMin, shape.zMax)
       );
     case 'line':
       return cellOnLine(cell, shape.origin, shape.to, shape.width ?? 1);
@@ -166,11 +192,16 @@ export function areaOfEffectToShape(
     case 'cube': {
       const side = feetToCells(aoe.feet);
       const half = Math.floor(side / 2);
+      // Centered horizontally on the aim; a 3D box rising from the aim's plane,
+      // so a flyer above the cube's top is not caught.
+      const baseZ = aim.z ?? 0;
       return {
         kind: 'rect',
         origin: { x: aim.x - half, y: aim.y - half },
         width: side,
         height: side,
+        zMin: baseZ,
+        zMax: baseZ + side,
       };
     }
     case 'line': {
@@ -184,9 +215,20 @@ export function areaOfEffectToShape(
       };
       return { kind: 'line', origin, to, width: feetToCells(aoe.width) };
     }
+    case 'cylinder': {
+      // A vertical column: a circular footprint of the given radius, rising the
+      // cylinder's height from the aim's plane.
+      const baseZ = aim.z ?? 0;
+      return {
+        kind: 'cylinder',
+        origin: aim,
+        radius: feetToCells(aoe.radius),
+        zMin: baseZ,
+        zMax: baseZ + feetToCells(aoe.height),
+      };
+    }
     case 'sphere':
     case 'spread':
-    case 'cylinder':
       return { kind: 'burst', origin: aim, radius: feetToCells(aoe.radius) };
     case 'emanation':
       // Radiates from the emitter's own square, not an aimed point.
