@@ -14,7 +14,7 @@
  * scenes are unaffected.
  */
 
-import type { SceneCoordinate, SceneMarker, SceneState } from '../../types/core/scene';
+import type { SceneCoordinate, SceneMarker, SceneState, SceneToken } from '../../types/core/scene';
 import {
   makeEffectId,
   type EffectInstance,
@@ -86,9 +86,26 @@ export function markerBlocksLineOfEffect(marker: SceneMarker): boolean {
  * marker covers it. Used by area resolution so a blast cannot reach through walls
  * and creatures behind cover get the right save bonus.
  */
+/** A standing `object` token that blocks line of effect (intact destructible cover). */
+export function tokenBlocksLineOfEffect(token: SceneToken): boolean {
+  return (
+    token.kind === 'object' &&
+    token.blocksLineOfEffect === true &&
+    (token.hp ? token.hp.current > 0 : true) // destroyed (0 HP) cover no longer blocks
+  );
+}
+
+/** A blocking object token's top elevation in cells: its `wallHeight`, or Infinity. */
+function objectWallTop(token: SceneToken): number {
+  return token.wallHeight != null && token.wallHeight > 0 ? token.wallHeight : Infinity;
+}
+
 export function sceneBlockPredicate(state: SceneState): BlockPredicate {
   const walls = Object.values(state.markers).filter(markerBlocksLineOfEffect);
-  return (cell) => walls.some((marker) => markerCoversCell(marker, cell));
+  const objects = Object.values(state.tokens).filter(tokenBlocksLineOfEffect);
+  return (cell) =>
+    walls.some((marker) => markerCoversCell(marker, cell)) ||
+    objects.some((o) => o.position.x === cell.x && o.position.y === cell.y);
 }
 
 /** A wall marker's top elevation in cells: its `wallHeight`, or Infinity (full-height). */
@@ -97,17 +114,22 @@ export function markerWallTop(marker: SceneMarker): number {
 }
 
 /**
- * A `WallTopAt` over the scene: the tallest wall covering a cell (0 where none).
- * Feeds elevation-aware line of effect, so a sight line can clear a low wall a
- * flyer is above while it still blocks creatures on the ground.
+ * A `WallTopAt` over the scene: the tallest wall (a marker, or a standing object
+ * token) covering a cell (0 where none). Feeds elevation-aware line of effect, so
+ * a sight line can clear a low wall a flyer is above while it still blocks
+ * creatures on the ground — and a destructible object stops blocking once felled.
  */
 export function sceneWallTopAt(state: SceneState): WallTopAt {
   const walls = Object.values(state.markers).filter(markerBlocksLineOfEffect);
-  if (walls.length === 0) return () => 0;
+  const objects = Object.values(state.tokens).filter(tokenBlocksLineOfEffect);
+  if (walls.length === 0 && objects.length === 0) return () => 0;
   return (cell) => {
     let top = 0;
     for (const marker of walls) {
       if (markerCoversCell(marker, cell)) top = Math.max(top, markerWallTop(marker));
+    }
+    for (const o of objects) {
+      if (o.position.x === cell.x && o.position.y === cell.y) top = Math.max(top, objectWallTop(o));
     }
     return top;
   };

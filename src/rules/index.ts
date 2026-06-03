@@ -246,6 +246,7 @@ export {
   markerWallTop,
   sceneMoveCost,
   sceneWallTopAt,
+  tokenBlocksLineOfEffect,
 } from './terrain/sceneTerrain';
 
 export { effectToLedgerEntry, toContributionLedger } from './ir/ledgerView';

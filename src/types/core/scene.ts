@@ -36,6 +36,17 @@ export interface SceneToken {
   refId?: string;
   hidden?: boolean;
   /**
+   * For an `object` token (a crate, statue, door): blocks line of effect like a
+   * wall while it stands. With optional hit points it can be attacked and
+   * destroyed, after which it no longer blocks — destructible cover.
+   */
+  blocksLineOfEffect?: boolean;
+  /**
+   * Optional wall height in cells for a blocking object (absent = full height),
+   * so a low object can be seen and shot over, exactly like a low wall marker.
+   */
+  wallHeight?: number;
+  /**
    * Optional combat hit points. Present for combatant tokens so applied damage
    * and healing land on the grid; absent for objects/markers. Additive — tokens
    * without hp behave exactly as before.
