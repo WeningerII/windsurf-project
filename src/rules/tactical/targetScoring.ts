@@ -39,6 +39,12 @@ export interface TacticalActor {
   critMultiplier?: number;
   /** Movement budget in grid cells per turn (for closing distance). */
   speed?: number;
+  /**
+   * Fly speed in grid cells per turn. When > 0 the actor can change elevation to
+   * engage (and won't fall). Absent / 0 means ground-bound: it moves on the floor
+   * plane and falls if it ends up airborne.
+   */
+  flySpeed?: number;
   /** Attacks made per turn (Multiattack / Extra Attack); defaults to 1. */
   attacksPerTurn?: number;
   /** M&M effect rank of this combatant's attack (Toughness DC = 15 + rank). */

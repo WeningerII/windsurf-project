@@ -476,19 +476,28 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
     const nearest = scored[0];
     const nearestTarget = input.targets.find((t) => t.tokenId === nearest.tokenId)!;
     const reach = input.actor.reach ?? 1;
+    // A flyer closes in three dimensions, spending its fly speed; a ground mover
+    // stays on the floor plane. Occupancy is 3D for flyers (it may end above or
+    // below another creature) and column-based on the ground (the prior rule).
+    const canFly = (input.actor.flySpeed ?? 0) > 0;
     const occupied: BlockPredicate = (cell) =>
       input.targets.some(
-        (t) => t.tokenId !== nearest.tokenId && t.position.x === cell.x && t.position.y === cell.y
+        (t) =>
+          t.tokenId !== nearest.tokenId &&
+          t.position.x === cell.x &&
+          t.position.y === cell.y &&
+          (!canFly || (t.position.z ?? 0) === (cell.z ?? 0))
       );
     const move = moveToward({
       from: input.actor.position,
       target: nearestTarget.position,
-      speed: input.actor.speed ?? 6,
+      speed: (canFly ? input.actor.flySpeed : input.actor.speed) ?? 6,
       reach,
       isBlocked: input.isBlocked,
       isOccupied: occupied,
       enterCost: input.enterCost,
       rule: input.diagonalRule,
+      canFly,
     });
 
     // If the move closes to reach, attack FROM the new cell: cover and flanking

@@ -69,6 +69,8 @@ export interface RoundCombatant {
   attacksPerTurn?: number;
   /** Movement budget in grid cells per turn. */
   speed?: number;
+  /** Fly speed in grid cells per turn; > 0 means this combatant can fly. */
+  flySpeed?: number;
   /** Save-based area actions this combatant may unleash (breath / spells). */
   areaActions?: readonly SceneAreaAction[];
   /** Recurring auras this combatant emits each round (e.g. a Balor's Fire Aura). */
@@ -155,6 +157,7 @@ function toActor(combatant: RoundCombatant, position: SceneCoordinate): Tactical
     critOn: combatant.critOn,
     critMultiplier: combatant.critMultiplier,
     speed: combatant.speed,
+    flySpeed: combatant.flySpeed,
     attacksPerTurn: combatant.attacksPerTurn,
     effectRank: combatant.effectRank,
     statuses: combatant.statuses,

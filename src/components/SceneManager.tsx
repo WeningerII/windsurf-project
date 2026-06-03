@@ -369,6 +369,9 @@ export function SceneManager({
           armorClass: built.armorClass,
           reach: built.reach,
           speed: Math.max(1, Math.floor((monster.speed?.walk ?? 30) / 5)),
+          flySpeed: monster.speed?.fly
+            ? Math.max(1, Math.floor(monster.speed.fly / FEET_PER_CELL))
+            : undefined,
           initiativeBonus: Math.floor(((monster.abilities?.dex ?? 10) - 10) / 2),
           attacksPerTurn: built.attacksPerTurn,
           damageDefenses: {

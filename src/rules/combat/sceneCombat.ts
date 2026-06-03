@@ -71,6 +71,8 @@ export interface SceneCombatStats {
   initiativeBonus?: number;
   /** Movement budget in grid cells per turn (defaults applied when absent). */
   speed?: number;
+  /** Fly speed in grid cells per turn; > 0 lets this combatant change elevation. */
+  flySpeed?: number;
   critOn?: number;
   /** Weapon critical multiplier (3.5e/PF1e ×2/×3/×4); defaults to ×2 when absent. */
   critMultiplier?: number;
@@ -168,6 +170,7 @@ export function buildSceneCombatants(
       damageEffects: stats.damageEffects,
       reach: stats.reach,
       speed: stats.speed,
+      flySpeed: stats.flySpeed,
       critOn: stats.critOn,
       critMultiplier: stats.critMultiplier,
       attacksPerTurn: stats.attacksPerTurn,
