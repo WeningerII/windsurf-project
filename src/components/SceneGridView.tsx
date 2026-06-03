@@ -1,7 +1,8 @@
-import type { KeyboardEvent } from 'react';
+import { useMemo, useState, type KeyboardEvent } from 'react';
 import { cn } from '@/lib/utils';
 import type { SceneCoordinate, SceneMarker, SceneState, SceneToken } from '../types/core/scene';
 import { FEET_PER_CELL } from '../rules/resolver/areaTargeting';
+import { Select } from './ui/Select';
 
 export interface SceneGridViewProps {
   state: SceneState;
@@ -19,6 +20,19 @@ export function SceneGridView({
   const tokensByCell = buildTokensByCell(state);
   const markers = Object.values(state.markers);
 
+  // Distinct elevations present, for the multi-floor view selector. With one
+  // band (the flat default) there's nothing to choose, so the control is hidden.
+  const elevations = useMemo(() => {
+    const set = new Set<number>();
+    for (const token of Object.values(state.tokens)) set.add(token.position.z ?? 0);
+    return [...set].sort((a, b) => a - b);
+  }, [state.tokens]);
+  const [focusElevation, setFocusElevation] = useState<number | null>(null);
+  // Fall back to "all" if the focused band emptied out (tokens moved/left).
+  const activeFocus =
+    focusElevation != null && elevations.includes(focusElevation) ? focusElevation : null;
+  const elevationLabel = (z: number): string => (z === 0 ? 'Ground' : `${z * FEET_PER_CELL} ft`);
+
   return (
     <section className="space-y-3" aria-label={`${state.name} scene`}>
       <div className="flex flex-wrap items-end justify-between gap-3">
@@ -31,8 +45,32 @@ export function SceneGridView({
               : ''}
           </p>
         </div>
-        <div className="text-sm text-muted-foreground">
-          {state.grid.width} x {state.grid.height}
+        <div className="flex items-end gap-3">
+          {elevations.length > 1 && (
+            <label className="flex items-center gap-1.5 text-sm text-muted-foreground">
+              View level
+              <Select
+                aria-label="View level"
+                className="h-8 w-28"
+                value={activeFocus ?? 'all'}
+                onChange={(event) =>
+                  setFocusElevation(
+                    event.target.value === 'all' ? null : Number(event.target.value)
+                  )
+                }
+              >
+                <option value="all">All levels</option>
+                {elevations.map((z) => (
+                  <option key={z} value={z}>
+                    {elevationLabel(z)}
+                  </option>
+                ))}
+              </Select>
+            </label>
+          )}
+          <div className="text-sm text-muted-foreground">
+            {state.grid.width} x {state.grid.height}
+          </div>
         </div>
       </div>
       <div
@@ -71,50 +109,57 @@ export function SceneGridView({
                   </span>
                 )}
                 <div className="flex h-full w-full items-center justify-center gap-0.5">
-                  {cellTokens.map((token) => (
-                    <button
-                      key={token.id}
-                      type="button"
-                      className={cn(
-                        'relative flex h-7 w-7 items-center justify-center rounded-full border text-[11px] font-semibold shadow-sm transition-colors',
-                        token.kind === 'character'
-                          ? 'border-primary/40 bg-primary/15 text-primary'
-                          : 'border-muted-foreground/30 bg-muted text-foreground',
-                        selectedTokenId === token.id && 'ring-2 ring-ring ring-offset-1',
-                        ((token.hp && token.hp.current <= 0) || token.conditions?.incapacitated) &&
-                          'opacity-40 grayscale'
-                      )}
-                      title={token.name}
-                      aria-label={buildTokenLabel(token)}
-                      aria-pressed={selectedTokenId === token.id}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        onTokenActivate?.(token);
-                      }}
-                    >
-                      {getTokenInitials(token)}
-                      {token.statuses && token.statuses.length > 0 && (
-                        <span
-                          className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full border border-background bg-amber-500"
-                          title={token.statuses.join(', ')}
-                          aria-hidden="true"
-                        />
-                      )}
-                      {token.position.z != null && token.position.z > 0 && (
-                        <span
-                          className="absolute -left-1 -top-1 rounded-sm border border-background bg-sky-500 px-0.5 text-[8px] font-bold leading-tight text-white"
-                          title={`Elevation ${token.position.z * FEET_PER_CELL} ft`}
-                          aria-hidden="true"
-                        >
-                          ↑{token.position.z * FEET_PER_CELL}
-                        </span>
-                      )}
-                      {token.hp && <TokenHpBar hp={token.hp} />}
-                      {!token.hp && token.conditions && (
-                        <TokenConditionBadge conditions={token.conditions} />
-                      )}
-                    </button>
-                  ))}
+                  {cellTokens.map((token) => {
+                    const offLevel = activeFocus != null && (token.position.z ?? 0) !== activeFocus;
+                    return (
+                      <button
+                        key={token.id}
+                        type="button"
+                        className={cn(
+                          'relative flex h-7 w-7 items-center justify-center rounded-full border text-[11px] font-semibold shadow-sm transition-colors',
+                          token.kind === 'character'
+                            ? 'border-primary/40 bg-primary/15 text-primary'
+                            : 'border-muted-foreground/30 bg-muted text-foreground',
+                          selectedTokenId === token.id && 'ring-2 ring-ring ring-offset-1',
+                          ((token.hp && token.hp.current <= 0) ||
+                            token.conditions?.incapacitated) &&
+                            'opacity-40 grayscale',
+                          // A token on another floor is faded so the focused level reads clearly.
+                          offLevel && 'opacity-20'
+                        )}
+                        data-elevation-dimmed={offLevel ? 'true' : undefined}
+                        title={token.name}
+                        aria-label={buildTokenLabel(token)}
+                        aria-pressed={selectedTokenId === token.id}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          onTokenActivate?.(token);
+                        }}
+                      >
+                        {getTokenInitials(token)}
+                        {token.statuses && token.statuses.length > 0 && (
+                          <span
+                            className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full border border-background bg-amber-500"
+                            title={token.statuses.join(', ')}
+                            aria-hidden="true"
+                          />
+                        )}
+                        {token.position.z != null && token.position.z > 0 && (
+                          <span
+                            className="absolute -left-1 -top-1 rounded-sm border border-background bg-sky-500 px-0.5 text-[8px] font-bold leading-tight text-white"
+                            title={`Elevation ${token.position.z * FEET_PER_CELL} ft`}
+                            aria-hidden="true"
+                          >
+                            ↑{token.position.z * FEET_PER_CELL}
+                          </span>
+                        )}
+                        {token.hp && <TokenHpBar hp={token.hp} />}
+                        {!token.hp && token.conditions && (
+                          <TokenConditionBadge conditions={token.conditions} />
+                        )}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             );

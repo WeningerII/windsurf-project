@@ -225,6 +225,62 @@ describe('SceneGridView — elevation', () => {
   });
 });
 
+describe('SceneGridView — level selector', () => {
+  function towerScene(): SceneState {
+    return {
+      sceneId: 's',
+      name: 'Tower',
+      systemId: 'dnd-5e-2014',
+      grid: { width: 8, height: 8, cellSize: 5 },
+      tokens: {
+        knight: {
+          id: 'knight',
+          name: 'Knight',
+          kind: 'character',
+          position: { x: 1, y: 1 }, // ground
+          size: 1,
+          hp: { current: 20, max: 20 },
+        },
+        wyvern: {
+          id: 'wyvern',
+          name: 'Wyvern',
+          kind: 'monster',
+          position: { x: 2, y: 2, z: 6 }, // 30 ft up
+          size: 1,
+          hp: { current: 30, max: 30 },
+        },
+      },
+      markers: {},
+      initiative: [],
+      round: 1,
+      seed: 's',
+    };
+  }
+
+  it('focuses a level and fades creatures on the others', async () => {
+    const user = userEvent.setup();
+    render(<SceneGridView state={towerScene()} />);
+
+    const knight = screen.getByRole('button', { name: /Knight/i });
+    const wyvern = screen.getByRole('button', { name: /Wyvern/i });
+    // No level focused yet: nobody is dimmed.
+    expect(knight).not.toHaveAttribute('data-elevation-dimmed');
+    expect(wyvern).not.toHaveAttribute('data-elevation-dimmed');
+
+    // Focus the 30 ft band: the grounded knight fades, the airborne wyvern stays.
+    await user.selectOptions(screen.getByLabelText('View level'), '6');
+    expect(knight).toHaveAttribute('data-elevation-dimmed', 'true');
+    expect(wyvern).not.toHaveAttribute('data-elevation-dimmed');
+  });
+
+  it('hides the selector when every token is on one level', () => {
+    const flat = towerScene();
+    flat.tokens.wyvern.position = { x: 2, y: 2 }; // bring it to the ground
+    render(<SceneGridView state={flat} />);
+    expect(screen.queryByLabelText('View level')).not.toBeInTheDocument();
+  });
+});
+
 describe('InitiativeTracker — roll', () => {
   const token = (id: string): SceneToken => ({
     id,
