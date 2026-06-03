@@ -12,6 +12,13 @@ export interface SceneGrid {
 export interface SceneCoordinate {
   x: number;
   y: number;
+  /**
+   * Optional elevation in grid cells (same unit as x/y; one cell = 5 ft), for
+   * flight and verticality. Absent means ground level (0). Stored as cells so the
+   * per-system diagonal math stays integer; the UI shows/sets it in feet. The
+   * grid footprint does not bound it — a token can be any height above its cell.
+   */
+  z?: number;
 }
 
 export interface SceneTokenHitPoints {

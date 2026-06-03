@@ -108,6 +108,7 @@ export {
   cellInArea,
   DEFAULT_CONE_HALF_ANGLE_DEG,
   diagonalRuleForSystem,
+  FEET_PER_CELL,
   gridDistance,
   tokensInArea,
 } from './resolver/areaTargeting';

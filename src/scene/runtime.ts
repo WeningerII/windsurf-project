@@ -540,12 +540,16 @@ function validateKnownMarker(
 
 function validateCoordinateInGrid(
   state: SceneState,
-  position: { x: number; y: number },
+  position: { x: number; y: number; z?: number },
   issues: SceneIssue[],
   event: SceneEvent,
   path: string
 ): void {
-  if (!Number.isInteger(position.x) || !Number.isInteger(position.y)) {
+  if (
+    !Number.isInteger(position.x) ||
+    !Number.isInteger(position.y) ||
+    (position.z !== undefined && !Number.isInteger(position.z))
+  ) {
     pushIssue(issues, event, {
       code: 'scene-coordinate-invalid',
       message: 'Scene coordinates must be integer grid cells.',
@@ -553,6 +557,9 @@ function validateCoordinateInGrid(
     });
     return;
   }
+
+  // Elevation (z) is intentionally NOT bounded by the grid footprint — a token
+  // may fly to any height above its cell. Only the x/y footprint is bounded.
 
   if (
     position.x < 0 ||

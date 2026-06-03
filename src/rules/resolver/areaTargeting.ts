@@ -19,7 +19,8 @@
 import type { SceneCoordinate, SceneState, SceneToken } from '../../types/core/scene';
 import type { AreaOfEffect } from '../../types/core/common';
 
-const FEET_PER_CELL = 5;
+/** Feet per grid cell — the engine's fixed square size (matches RAW 5-ft squares). */
+export const FEET_PER_CELL = 5;
 
 /** Feet → grid cells, rounded to the nearest cell (minimum one). */
 function feetToCells(feet: number): number {
@@ -72,7 +73,13 @@ export function diagonalRuleForSystem(systemId: string): DiagonalRule {
   }
 }
 
-/** Grid distance between two cells under the given diagonal rule. */
+/**
+ * Grid distance between two cells under the given diagonal rule, in three
+ * dimensions. Elevation (`z`, in cells) is just a third axis; when both cells
+ * omit it (`z = 0`) every rule collapses to the original 2D result exactly, so
+ * existing flat-grid callers are unaffected. This is the single chokepoint that
+ * makes reach, flanking, opportunity attacks, and ranged distance flight-aware.
+ */
 export function gridDistance(
   a: SceneCoordinate,
   b: SceneCoordinate,
@@ -80,18 +87,21 @@ export function gridDistance(
 ): number {
   const dx = Math.abs(a.x - b.x);
   const dy = Math.abs(a.y - b.y);
+  const dz = Math.abs((a.z ?? 0) - (b.z ?? 0));
   switch (rule) {
     case 'euclidean':
-      return Math.hypot(dx, dy);
+      return Math.hypot(dx, dy, dz);
     case 'alternating': {
-      // Straight steps cost 1; each pair of diagonal steps costs 3 (5+10 ft),
-      // i.e. diagonals are 1, 2, 1, 2… cumulative = diag + floor(diag/2).
-      const diag = Math.min(dx, dy);
-      return Math.abs(dx - dy) + diag + Math.floor(diag / 2);
+      // The 1-2-1 rule generalized to 3D: of the deltas sorted lo ≤ mid ≤ hi,
+      // `hi` steps reach the target, `mid` of them are diagonal (move ≥2 axes),
+      // and diagonals alternate 5/10 ft → cost = hi + floor(mid/2). With dz = 0
+      // this is exactly the 2D `max + floor(min/2)`.
+      const [, mid, hi] = [dx, dy, dz].sort((m, n) => m - n);
+      return hi + Math.floor(mid / 2);
     }
     case 'chebyshev':
     default:
-      return Math.max(dx, dy);
+      return Math.max(dx, dy, dz);
   }
 }
 

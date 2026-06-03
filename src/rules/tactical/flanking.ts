@@ -39,6 +39,14 @@ export function isFlanking(params: {
 }): boolean {
   const { attacker, target, reach, allies, rule } = params;
   if (gridDistance(attacker, target, rule) > reach) return false;
+  // Flanking is a horizontal pincer: the attacker and the opposite ally must
+  // share the target's elevation. A flyer hovering above (or below) the target
+  // is not "on the opposite side" and grants no flank. With no elevation set
+  // everywhere, every z is 0 and this reduces to the flat-grid rule.
+  const plane = target.z ?? 0;
+  if ((attacker.z ?? 0) !== plane) return false;
   const opposite = { x: 2 * target.x - attacker.x, y: 2 * target.y - attacker.y };
-  return allies.some((ally) => ally.x === opposite.x && ally.y === opposite.y);
+  return allies.some(
+    (ally) => ally.x === opposite.x && ally.y === opposite.y && (ally.z ?? 0) === plane
+  );
 }
