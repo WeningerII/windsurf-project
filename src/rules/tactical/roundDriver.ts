@@ -31,7 +31,9 @@ import {
   type TacticalTurnInput,
   type TacticalTurnResult,
 } from './tacticalExecutor';
+import { isHostile, maxPossibleDamage } from './targetScoring';
 import type { TacticalActor, TacticalTarget } from './targetScoring';
+import { buildThreatMap, influenceAt, type ThreatSource } from './influenceMap';
 import {
   computeAreaParticipants,
   type AuraAction,
@@ -139,6 +141,13 @@ export interface RunRoundInput {
   isBlocked?: BlockPredicate;
   /** Wall heights for elevation-aware line of sight; default: full-height walls. */
   wallTopAt?: WallTopAt;
+  /**
+   * Grid bounds. When provided, movement becomes threat-aware: combatants prefer
+   * the least-exposed of equally-close cells when closing on a target. Omit for
+   * the prior plain distance-closing behavior.
+   */
+  gridWidth?: number;
+  gridHeight?: number;
   /** Diagonal counting rule for area range; default chebyshev. */
   diagonalRule?: DiagonalRule;
   /** Save model for area effects; default binary. */
@@ -468,6 +477,42 @@ function fallToGround(params: {
 }
 
 /**
+ * Build the threat-based approach penalty for one combatant from its living melee
+ * enemies (at their current cells): a danger field where movement prefers the
+ * least-exposed of equally-close cells. Returns undefined when the grid bounds
+ * are unknown or no melee enemy threatens — then movement closes by plain
+ * distance. Ranged threat (broad, line-of-sight-dependent) is deferred.
+ */
+function buildApproachPenalty(
+  combatant: RoundCombatant,
+  input: RunRoundInput,
+  hp: Record<string, number>,
+  pos: Record<string, SceneCoordinate>
+): ((cell: SceneCoordinate) => number) | undefined {
+  if (input.gridWidth == null || input.gridHeight == null) return undefined;
+  const sources: ThreatSource[] = [];
+  for (const other of input.order) {
+    if (other.tokenId === combatant.tokenId || hp[other.tokenId] <= 0) continue;
+    if (!isHostile(combatant.faction, other.faction)) continue;
+    if (other.reach == null) continue; // ranged threat deferred
+    sources.push({
+      position: pos[other.tokenId],
+      reach: other.reach,
+      speed: other.speed ?? 6,
+      threat: Math.max(1, maxPossibleDamage(other.damageEffects)),
+    });
+  }
+  if (sources.length === 0) return undefined;
+  const threat = buildThreatMap({
+    sources,
+    width: input.gridWidth,
+    height: input.gridHeight,
+    rule: input.diagonalRule,
+  });
+  return (cell) => influenceAt(threat, cell);
+}
+
+/**
  * Run one full round. For each combatant in initiative order (skipping the
  * already-downed), build the live participant set from every OTHER combatant's
  * current HP, run the tactical turn, and fold any damage into the working HP so
@@ -575,6 +620,12 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
       .filter((other) => other.tokenId !== combatant.tokenId && hp[other.tokenId] > 0)
       .map((other) => toTarget(other, hp[other.tokenId], pos[other.tokenId]));
 
+    // Threat-aware approach: when the grid bounds are known, build the danger
+    // field from this actor's living melee enemies (at their current cells) so
+    // movement prefers the least-exposed of equally-close destinations. Ranged
+    // threat (broad, line-of-sight-dependent) is deferred.
+    const cellPenalty = buildApproachPenalty(combatant, input, hp, pos);
+
     const turn = executeTacticalTurn({
       actor: toActor(combatant, pos[combatant.tokenId]),
       targets,
@@ -585,6 +636,7 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
       saveModel: input.saveModel,
       systemId: input.systemId,
       enterCost: input.enterCost,
+      cellPenalty,
       chooseTarget: input.chooseTarget,
     });
 

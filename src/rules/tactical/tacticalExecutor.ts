@@ -80,6 +80,11 @@ export interface TacticalTurnInput {
   /** Per-cell movement entering cost (≥1; difficult terrain). Default 1. */
   enterCost?: (cell: SceneCoordinate) => number;
   /**
+   * Optional tactical penalty for ending a move on a cell (e.g. a threat-map
+   * value): among equally-close destinations the safest is chosen. Default 0.
+   */
+  cellPenalty?: (cell: SceneCoordinate) => number;
+  /**
    * Optional strategist seam (RFC 003): given the enumerated LEGAL targets (in
    * reach, with line of sight) and the full target list, return the chosen
    * target id. An out-of-set or undefined result falls back to the deterministic
@@ -518,6 +523,7 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
       enterCost: input.enterCost,
       rule: input.diagonalRule,
       canFly,
+      cellPenalty: input.cellPenalty,
     });
 
     // If the move closes to reach, attack FROM the new cell: cover and flanking

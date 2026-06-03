@@ -57,6 +57,13 @@ export function moveToward(params: {
    * starting plane — the exact prior 2D behavior.
    */
   canFly?: boolean;
+  /**
+   * Optional tactical penalty for ENDING on a cell (e.g. a threat-map value), used
+   * to break ties between equally-close destinations: among the cells that get
+   * the same distance to the target, the least-penalized (safest) is chosen.
+   * Closing the distance still dominates, so a mover always advances. Default: 0.
+   */
+  cellPenalty?: (cell: SceneCoordinate) => number;
 }): MoveResult {
   const { from, target, speed, reach } = params;
   const rule = params.rule ?? 'chebyshev';
@@ -64,6 +71,7 @@ export function moveToward(params: {
   const baseOccupied = params.isOccupied ?? NO_BLOCK;
   const enterCost = params.enterCost ?? (() => 1);
   const canFly = params.canFly ?? false;
+  const cellPenalty = params.cellPenalty ?? (() => 0);
   // The target's own cell is impassable — a mover ends adjacent, never on it. In
   // flight this is the exact 3D cell (ending directly above/below is allowed); on
   // the ground it is the whole column (z is 0 for both), identical to before.
@@ -75,13 +83,14 @@ export function moveToward(params: {
   }
 
   // Dijkstra outward from `from`, bounded by `speed`. Track the best end cell by
-  // (distance-to-target, then movement cost) for a deterministic choice. Flyers
-  // also step in z; grounded movers keep dz = 0, the exact prior search.
+  // (distance-to-target, then tactical penalty, then movement cost) for a
+  // deterministic choice. Flyers also step in z; grounded movers keep dz = 0.
   const dzs = canFly ? [-1, 0, 1] : [0];
   const best = new Map<string, number>([[key(from), 0]]);
   const queue: Array<{ cell: SceneCoordinate; cost: number }> = [{ cell: { ...from }, cost: 0 }];
   let chosen = { destination: { ...from } as SceneCoordinate, cost: 0, inReach: false };
   let chosenDist = gridDistance(from, target, rule);
+  let chosenPenalty = cellPenalty(from);
 
   while (queue.length > 0) {
     queue.sort((a, b) => a.cost - b.cost);
@@ -91,10 +100,17 @@ export function moveToward(params: {
     // Consider this cell as a destination (except the origin, already the default).
     if (!sameCell(cell, from)) {
       const dist = gridDistance(cell, target, rule);
-      const better = dist < chosenDist || (dist === chosenDist && cost < chosen.cost);
+      const penalty = cellPenalty(cell);
+      // Closeness dominates (a mover must engage); among equally-close cells prefer
+      // the least-penalized (safest), then the cheapest to reach.
+      const better =
+        dist < chosenDist ||
+        (dist === chosenDist &&
+          (penalty < chosenPenalty || (penalty === chosenPenalty && cost < chosen.cost)));
       if (better) {
         chosen = { destination: { ...cell }, cost, inReach: dist <= reach };
         chosenDist = dist;
+        chosenPenalty = penalty;
       }
     }
 

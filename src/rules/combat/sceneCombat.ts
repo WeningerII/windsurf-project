@@ -570,6 +570,8 @@ export function runSceneRound(params: {
     round: params.round,
     isBlocked: sceneBlockPredicate(params.state),
     wallTopAt: sceneWallTopAt(params.state),
+    gridWidth: params.state.grid.width,
+    gridHeight: params.state.grid.height,
     diagonalRule: diagonalRuleForSystem(params.state.systemId),
     saveModel: params.state.systemId === 'pf2e' ? 'pf2e-basic' : 'binary',
     systemId: params.state.systemId,
