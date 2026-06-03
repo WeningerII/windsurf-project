@@ -145,7 +145,13 @@ export {
 } from './resolver/sceneCombat';
 
 export type { ScoredTarget, TacticalActor, TacticalTarget } from './tactical/targetScoring';
-export { isHostile, maxPossibleDamage, scoreTarget, scoreTargets } from './tactical/targetScoring';
+export {
+  expectedDamage,
+  isHostile,
+  maxPossibleDamage,
+  scoreTarget,
+  scoreTargets,
+} from './tactical/targetScoring';
 export type { InfluenceMap, ThreatSource } from './tactical/influenceMap';
 export { buildThreatMap, influenceAt } from './tactical/influenceMap';
 

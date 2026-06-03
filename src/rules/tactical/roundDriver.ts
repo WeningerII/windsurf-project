@@ -31,7 +31,7 @@ import {
   type TacticalTurnInput,
   type TacticalTurnResult,
 } from './tacticalExecutor';
-import { isHostile, maxPossibleDamage } from './targetScoring';
+import { expectedDamage, isHostile } from './targetScoring';
 import type { TacticalActor, TacticalTarget } from './targetScoring';
 import { buildThreatMap, influenceAt, type ThreatSource } from './influenceMap';
 import {
@@ -499,7 +499,7 @@ function buildApproachPenalty(
       position: pos[other.tokenId],
       reach: other.reach,
       speed: other.speed ?? 6,
-      threat: Math.max(1, maxPossibleDamage(other.damageEffects)),
+      threat: Math.max(1, expectedDamage(other.damageEffects)),
     });
   }
   if (sources.length === 0) return undefined;

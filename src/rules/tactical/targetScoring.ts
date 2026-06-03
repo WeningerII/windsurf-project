@@ -82,6 +82,8 @@ export interface ScoredTarget {
   inReach: boolean;
   /** True when the actor's MAX possible damage could drop the target this hit. */
   canFinish: boolean;
+  /** True when the actor's EXPECTED damage drops the target — a reliable kill. */
+  expectedFinish?: boolean;
   /** Human-readable reasons that composed the score (provenance for the choice). */
   reasons: string[];
 }
@@ -92,7 +94,25 @@ const SCORE_BASE = 100;
 const DISTANCE_WEIGHT = 2; // each cell of distance reduces desirability
 const WOUND_WEIGHT = 20; // prefer wounded targets (focus fire)
 const IN_REACH_BONUS = 10; // attackable now without moving
-const FINISHER_BONUS = 25; // can remove this combatant from the loop now
+const FINISHER_BONUS = 25; // can remove this combatant from the loop now (max roll)
+const EXPECTED_FINISHER_BONUS = 10; // ...and expected to — a reliable kill beats a lucky one
+
+/**
+ * Expected (mean) damage from a set of damage effects: a d{value} averages
+ * (value + 1) / 2, flat adds count in full. The closed-form expectation — no
+ * sampling — so scoring stays deterministic while reflecting the likely, not the
+ * best-case, outcome (the expectiminimax principle).
+ */
+export function expectedDamage(damageEffects: readonly EffectInstance[]): number {
+  let total = 0;
+  for (const effect of damageEffects) {
+    const value = typeof effect.value === 'number' ? effect.value : 0;
+    if (effect.operation === 'add-die') total += (value + 1) / 2;
+    else if (effect.operation === 'add') total += value;
+    else if (effect.operation === 'subtract') total -= value;
+  }
+  return Math.max(0, total);
+}
 
 /** Max possible damage from a set of damage effects (die faces + flat adds). */
 export function maxPossibleDamage(damageEffects: readonly EffectInstance[]): number {
@@ -148,12 +168,30 @@ export function scoreTarget(actor: TacticalActor, target: TacticalTarget): Score
     maxPossibleDamage(actor.damageEffects) >= target.hp.current &&
     target.hp.current > 0
   );
+  const expectedFinish = Boolean(
+    target.hp && expectedDamage(actor.damageEffects) >= target.hp.current && target.hp.current > 0
+  );
   if (canFinish && inReach) {
     score += FINISHER_BONUS;
     reasons.push(`+${FINISHER_BONUS} can eliminate`);
+    // A reliable (expected) kill is worth more than a best-case-only one. This
+    // only ever stacks on an already-finishable target (expected ≤ max damage),
+    // so it sharpens focus fire toward sure kills without promoting weaker picks.
+    if (expectedFinish) {
+      score += EXPECTED_FINISHER_BONUS;
+      reasons.push(`+${EXPECTED_FINISHER_BONUS} likely kill`);
+    }
   }
 
-  return { tokenId: target.tokenId, score, distance, inReach, canFinish, reasons };
+  return {
+    tokenId: target.tokenId,
+    score,
+    distance,
+    inReach,
+    canFinish,
+    expectedFinish,
+    reasons,
+  };
 }
 
 /**
