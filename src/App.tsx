@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, lazy, Suspense } from 'react';
 import { GameSystemSelector } from './components/GameSystemSelector';
 import { SystemStatusDashboard } from './components/SystemStatusDashboard';
 import { GameSystemId } from './types/game-systems';
@@ -21,7 +21,12 @@ import { ServiceWorkerUpdateBanner } from './components/ServiceWorkerUpdateBanne
 import { useCampaigns } from './hooks/useCampaigns';
 import { CampaignManager } from './components/CampaignManager';
 import { useScenes } from './hooks/useScenes';
-import { SceneManager } from './components/SceneManager';
+// Lazy-loaded: SceneManager pulls the whole combat/tactical-AI/verticality engine
+// (via the rules module), so code-splitting it keeps that chain out of the eager
+// app chunk — it loads on demand when a system's scene tools are shown.
+const SceneManager = lazy(() =>
+  import('./components/SceneManager').then((m) => ({ default: m.SceneManager }))
+);
 import { prefetchSystemAssetsForIds } from './utils/systemAssetPrefetch';
 import { usePwaInstallPrompt } from './hooks/usePwaInstallPrompt';
 import { combineSyncStates, getMostRecentSyncDate, getPendingSyncCount } from './utils/syncStatus';
@@ -535,24 +540,32 @@ function AppContent() {
             />
 
             {/* Scenes */}
-            <SceneManager
-              scenes={scenes}
-              documents={documents}
-              campaigns={campaigns}
-              onAddScene={addScene}
-              onAddScenes={addScenes}
-              onAppendSceneEvent={appendSceneEvent}
-              onDeleteScene={(id) =>
-                showConfirm(
-                  'Delete Scene',
-                  'This will delete the scene and its event log. Characters and campaigns will not be affected.',
-                  () => {
-                    deleteScene(id);
-                    toast('Scene deleted', 'success');
-                  }
-                )
+            <Suspense
+              fallback={
+                <div className="rounded-lg border bg-card p-6 text-sm text-muted-foreground">
+                  Loading scene tools…
+                </div>
               }
-            />
+            >
+              <SceneManager
+                scenes={scenes}
+                documents={documents}
+                campaigns={campaigns}
+                onAddScene={addScene}
+                onAddScenes={addScenes}
+                onAppendSceneEvent={appendSceneEvent}
+                onDeleteScene={(id) =>
+                  showConfirm(
+                    'Delete Scene',
+                    'This will delete the scene and its event log. Characters and campaigns will not be affected.',
+                    () => {
+                      deleteScene(id);
+                      toast('Scene deleted', 'success');
+                    }
+                  )
+                }
+              />
+            </Suspense>
 
             {/* System Dashboard */}
             <SystemStatusDashboard />
