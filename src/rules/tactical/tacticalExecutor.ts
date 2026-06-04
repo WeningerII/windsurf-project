@@ -446,7 +446,7 @@ function resolveStrikes(input: TacticalTurnInput, target: TacticalTarget): Multi
  *   produces an apply-damage intent (a miss produces none, but still `attack`).
  */
 export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResult {
-  const scored = scoreTargets(input.actor, input.targets);
+  const scored = scoreTargets(input.actor, input.targets, input.diagonalRule);
 
   if (scored.length === 0) {
     return {

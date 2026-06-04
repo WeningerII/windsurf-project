@@ -74,3 +74,25 @@ describe('scoreTarget — expected vs possible kills', () => {
     expect(r.score).toBeGreaterThan(l.score);
   });
 });
+
+describe('scoreTarget — honors the system diagonal rule', () => {
+  const actor: TacticalActor = {
+    tokenId: 'hero',
+    faction: 'party',
+    position: { x: 0, y: 0 },
+    attackEffects: [],
+    damageEffects: [],
+  };
+  const diagonalFoe: TacticalTarget = {
+    tokenId: 'foe',
+    faction: 'monsters',
+    position: { x: 4, y: 4 }, // 4 diagonal steps away
+    armorClass: 10,
+  };
+
+  it('measures a diagonal target by the rule (Chebyshev 4 vs 1-2-1 alternating 6)', () => {
+    expect(scoreTarget(actor, diagonalFoe).distance).toBe(4); // default Chebyshev (5e)
+    expect(scoreTarget(actor, diagonalFoe, 'chebyshev').distance).toBe(4);
+    expect(scoreTarget(actor, diagonalFoe, 'alternating').distance).toBe(6); // 3.5e/PF/PF2e
+  });
+});

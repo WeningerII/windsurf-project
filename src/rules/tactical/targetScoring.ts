@@ -18,7 +18,7 @@
  */
 
 import type { SceneCoordinate } from '../../types/core/scene';
-import { gridDistance } from '../resolver/areaTargeting';
+import { gridDistance, type DiagonalRule } from '../resolver/areaTargeting';
 import type { SceneAreaAction } from '../resolver/areaParticipants';
 import type { DamageDefenses } from '../resolver/damageDefenses';
 import type { EffectInstance } from '../ir/types';
@@ -139,8 +139,12 @@ export function isHostile(actorFaction: string, targetFaction: string): boolean 
  * Score a single target for the actor. Pure; deterministic. Returns the score
  * and the reasons that composed it.
  */
-export function scoreTarget(actor: TacticalActor, target: TacticalTarget): ScoredTarget {
-  const distance = gridDistance(actor.position, target.position);
+export function scoreTarget(
+  actor: TacticalActor,
+  target: TacticalTarget,
+  rule: DiagonalRule = 'chebyshev'
+): ScoredTarget {
+  const distance = gridDistance(actor.position, target.position, rule);
   const inReach = actor.reach === undefined || distance <= actor.reach;
   const reasons: string[] = [];
 
@@ -201,11 +205,12 @@ export function scoreTarget(actor: TacticalActor, target: TacticalTarget): Score
  */
 export function scoreTargets(
   actor: TacticalActor,
-  targets: readonly TacticalTarget[]
+  targets: readonly TacticalTarget[],
+  rule: DiagonalRule = 'chebyshev'
 ): ScoredTarget[] {
   return targets
     .filter((target) => isHostile(actor.faction, target.faction))
     .filter((target) => !target.hp || target.hp.current > 0)
-    .map((target) => scoreTarget(actor, target))
+    .map((target) => scoreTarget(actor, target, rule))
     .sort((a, b) => b.score - a.score || a.tokenId.localeCompare(b.tokenId));
 }
