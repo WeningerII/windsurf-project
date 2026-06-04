@@ -26,6 +26,9 @@ export default defineConfig({
         'src/systems/**/*.{ts,tsx}',
         'src/hooks/**/*.{ts,tsx}',
         'src/registry/**/*.{ts,tsx}',
+        // The engine — the most-tested code, previously unmeasured.
+        'src/rules/**/*.{ts,tsx}',
+        'src/scene/**/*.{ts,tsx}',
       ],
       exclude: [
         'node_modules/',
