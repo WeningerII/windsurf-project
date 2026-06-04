@@ -14,6 +14,7 @@
  */
 
 import type { SceneCoordinate } from '../../types/core/scene';
+import { MinHeap } from '../../scene/minHeap';
 import { gridDistance, type DiagonalRule } from '../resolver/areaTargeting';
 import type { BlockPredicate } from '../resolver/lineOfEffect';
 
@@ -87,14 +88,14 @@ export function moveToward(params: {
   // deterministic choice. Flyers also step in z; grounded movers keep dz = 0.
   const dzs = canFly ? [-1, 0, 1] : [0];
   const best = new Map<string, number>([[key(from), 0]]);
-  const queue: Array<{ cell: SceneCoordinate; cost: number }> = [{ cell: { ...from }, cost: 0 }];
+  const queue = new MinHeap<{ cell: SceneCoordinate; cost: number }>();
+  queue.push({ cell: { ...from }, cost: 0 }, 0);
   let chosen = { destination: { ...from } as SceneCoordinate, cost: 0, inReach: false };
   let chosenDist = gridDistance(from, target, rule);
   let chosenPenalty = cellPenalty(from);
 
-  while (queue.length > 0) {
-    queue.sort((a, b) => a.cost - b.cost);
-    const { cell, cost } = queue.shift()!;
+  while (queue.size > 0) {
+    const { cell, cost } = queue.pop()!;
     if (cost > (best.get(key(cell)) ?? Infinity)) continue;
 
     // Consider this cell as a destination (except the origin, already the default).
@@ -129,7 +130,7 @@ export function moveToward(params: {
           if (nextCost > speed) continue;
           if (nextCost < (best.get(key(next)) ?? Infinity)) {
             best.set(key(next), nextCost);
-            queue.push({ cell: next, cost: nextCost });
+            queue.push({ cell: next, cost: nextCost }, nextCost);
           }
         }
       }
@@ -171,11 +172,11 @@ export function reachableCells(params: {
   const reached = new Map<string, { cell: SceneCoordinate; cost: number }>([
     [key(from), { cell: clean(from), cost: 0 }],
   ]);
-  const queue: Array<{ cell: SceneCoordinate; cost: number }> = [{ cell: { ...from }, cost: 0 }];
+  const queue = new MinHeap<{ cell: SceneCoordinate; cost: number }>();
+  queue.push({ cell: { ...from }, cost: 0 }, 0);
 
-  while (queue.length > 0) {
-    queue.sort((a, b) => a.cost - b.cost);
-    const { cell, cost } = queue.shift()!;
+  while (queue.size > 0) {
+    const { cell, cost } = queue.pop()!;
     if (cost > (best.get(key(cell)) ?? Infinity)) continue;
     for (let dx = -1; dx <= 1; dx += 1) {
       for (let dy = -1; dy <= 1; dy += 1) {
@@ -191,7 +192,7 @@ export function reachableCells(params: {
           if (nextCost < (best.get(key(next)) ?? Infinity)) {
             best.set(key(next), nextCost);
             reached.set(key(next), { cell: clean(next), cost: nextCost });
-            queue.push({ cell: next, cost: nextCost });
+            queue.push({ cell: next, cost: nextCost }, nextCost);
           }
         }
       }

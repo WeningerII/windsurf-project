@@ -16,6 +16,7 @@
  */
 
 import type { SceneCoordinate } from '../../types/core/scene';
+import { MinHeap } from '../../scene/minHeap';
 import { gridDistance, type DiagonalRule } from './areaTargeting';
 
 /** Does this cell fully block line of effect (a wall / total cover)? */
@@ -249,10 +250,10 @@ export function spreadCells(
   if (isBlocked(origin)) return reached;
   const best = new Map<string, number>([[key(origin), 0]]);
   // Dijkstra over the 8-neighborhood; edge cost = the rule's single-step distance.
-  const queue: Array<{ cell: SceneCoordinate; cost: number }> = [{ cell: origin, cost: 0 }];
-  while (queue.length > 0) {
-    queue.sort((a, b) => a.cost - b.cost);
-    const { cell, cost } = queue.shift()!;
+  const queue = new MinHeap<{ cell: SceneCoordinate; cost: number }>();
+  queue.push({ cell: origin, cost: 0 }, 0);
+  while (queue.size > 0) {
+    const { cell, cost } = queue.pop()!;
     if (cost > (best.get(key(cell)) ?? Infinity)) continue;
     reached.add(key(cell));
     for (let dxi = -1; dxi <= 1; dxi += 1) {
@@ -265,7 +266,7 @@ export function spreadCells(
         if (nextCost > radius) continue;
         if (nextCost < (best.get(key(next)) ?? Infinity)) {
           best.set(key(next), nextCost);
-          queue.push({ cell: next, cost: nextCost });
+          queue.push({ cell: next, cost: nextCost }, nextCost);
         }
       }
     }
