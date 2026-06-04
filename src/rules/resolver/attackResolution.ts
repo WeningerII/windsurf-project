@@ -201,11 +201,12 @@ export function resolveAttack(input: AttackResolutionInput): AttackResolution {
       if (isCriticalHit) {
         if (critModel === 'pf2e') typed *= 2;
         else if (critModel === 'd20-confirm') typed *= critMultiplier;
-        // 5e: add the rolled dice again (double the dice, modifiers once). Known
-        // limitation: this adds the RAW dice terms, so a `min`/`max` clamp applied
-        // to this damage type is not re-applied to the doubled dice — a clamped
-        // crit can exceed its cap. Rare (needs a clamp + crit on one type); the
-        // faithful fix is to re-roll the dice, a larger change to the fold.
+        // 5e: add the rolled dice again (double the dice, modifiers once) — a
+        // standard crit interpretation, pinned in attackResolution.test.ts. Edge:
+        // a `min`/`max` clamp on this damage type would NOT re-apply to the doubled
+        // dice, so a clamped crit could exceed its cap. Unreachable in practice —
+        // no system emits a damage clamp (grep `operation: 'min'|'max'` on a damage
+        // target); the faithful fix (re-roll the dice) would only matter if one did.
         else typed += dice.reduce((sum, term) => sum + term, 0);
       }
 

@@ -126,7 +126,9 @@ describe('resolveAttack — hit/miss math', () => {
         found = true;
         expect(result.isCriticalHit).toBe(true);
         expect(result.isHit).toBe(true);
-        expect(result.damage).toBeGreaterThan(0);
+        // 5e crit (1d8 + 2): the dice are doubled, the flat modifier counted once.
+        const diceSum = result.damageDiceTerms.reduce((sum, d) => sum + d, 0);
+        expect(result.damage).toBe(2 * diceSum + result.damageBonus);
       }
     }
     expect(found).toBe(true);
