@@ -28,5 +28,5 @@ export function pf2eDegreeOfSuccess(roll: number, total: number, dc: number): De
   let step = total >= dc + 10 ? 3 : total >= dc ? 2 : total <= dc - 10 ? 0 : 1;
   if (roll === 20) step = Math.min(3, step + 1);
   else if (roll === 1) step = Math.max(0, step - 1);
-  return STEP_TO_DEGREE[step];
+  return STEP_TO_DEGREE[step]!; // step is clamped to 0..3
 }

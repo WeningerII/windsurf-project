@@ -108,8 +108,8 @@ export function gridDistance(
       // `hi` steps reach the target, `mid` of them are diagonal (move ≥2 axes),
       // and diagonals alternate 5/10 ft → cost = hi + floor(mid/2). With dz = 0
       // this is exactly the 2D `max + floor(min/2)`.
-      const [, mid, hi] = [dx, dy, dz].sort((m, n) => m - n);
-      return hi + Math.floor(mid / 2);
+      const sorted = [dx, dy, dz].sort((m, n) => m - n); // exactly three elements
+      return sorted[2]! + Math.floor(sorted[1]! / 2); // hi + floor(mid / 2)
     }
     case 'chebyshev':
     default:

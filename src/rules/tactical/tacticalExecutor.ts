@@ -400,7 +400,7 @@ function resolveStrikes(input: TacticalTurnInput, target: TacticalTarget): Multi
   });
 
   if (attacks === 1) {
-    const only = strikes[0];
+    const only = strikes[0]!; // attacks >= 1 (Math.max(1, …)), so strikes is non-empty
     return {
       intent: only.intent,
       resolution: only.resolution,
@@ -428,7 +428,7 @@ function resolveStrikes(input: TacticalTurnInput, target: TacticalTarget): Multi
       : undefined;
   return {
     intent,
-    resolution: strikes[0].resolution,
+    resolution: strikes[0]!.resolution,
     attacks,
     hits,
     totalDamage,
@@ -506,7 +506,7 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
     (chosenId !== undefined && legal.find((target) => target.tokenId === chosenId)) || legal[0];
   if (!reachable) {
     // Out of reach: actually move toward the best target, around walls and bodies.
-    const nearest = scored[0];
+    const nearest = scored[0]!; // scored is non-empty here (length checked above)
     const nearestTarget = input.targets.find((t) => t.tokenId === nearest.tokenId)!;
     const reach = input.actor.reach ?? 1;
     // A flyer closes in three dimensions, spending its fly speed; a ground mover

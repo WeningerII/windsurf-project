@@ -56,5 +56,5 @@ export function narrateAttack(params: {
   const index = createSeededRng(
     `${params.seed}::narrate::${params.attacker}->${params.target}::${params.tone}`
   ).nextInt(variants.length);
-  return variants[index](params.attacker, params.target, params.damage ?? 0);
+  return variants[index]!(params.attacker, params.target, params.damage ?? 0); // index < length
 }

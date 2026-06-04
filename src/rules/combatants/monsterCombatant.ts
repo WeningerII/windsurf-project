@@ -124,7 +124,7 @@ export function parseAttackFromDescription(description: string): NormalizedAttac
   // hands") lists an ALTERNATIVE damage; take only the primary mode (before the
   // first " or "). Additive damage uses "plus", which we keep, so multi-type
   // hits ("X slashing plus Y fire") still parse fully.
-  const primaryScope = hitIndex >= 0 ? damageScope.split(/\bor\b/i)[0] : damageScope;
+  const primaryScope = hitIndex >= 0 ? damageScope.split(/\bor\b/i)[0]! : damageScope; // split yields >= 1
 
   const damage = parseDamageClauses(primaryScope);
 
@@ -167,7 +167,9 @@ const SAVE_ABILITY_WORDS: Record<string, string> = {
  */
 export function parseAreaFromDescription(description: string): AreaOfEffect | undefined {
   if (!description) return undefined;
-  const ft = (s: string): number => Number(s);
+  // Every capture below is a required `(\d+)`, so it is present whenever its match
+  // succeeds; accept undefined so the strict index check passes without a cast per site.
+  const ft = (s: string | undefined): number => Number(s);
 
   const cone = /(\d+)[- ]?(?:foot|ft)[- ]?cone/i.exec(description);
   if (cone) return { type: 'cone', feet: ft(cone[1]) };
@@ -246,7 +248,7 @@ export function parseSaveActionFromDescription(
   if (damage.length === 0) return undefined;
 
   return {
-    saveAbility: SAVE_ABILITY_WORDS[save[2].toLowerCase()] ?? save[2].toLowerCase(),
+    saveAbility: SAVE_ABILITY_WORDS[save[2]!.toLowerCase()] ?? save[2]!.toLowerCase(),
     saveDC: Number(save[1]),
     // "half as much" (the SRD default for AoE damage) → half on save; absent it
     // negates on a success.
@@ -419,10 +421,10 @@ export function parseAuraFromDescription(description: string): NormalizedAura | 
     );
 
   return {
-    trigger: trigger[1].toLowerCase() === 'end' ? 'end-of-turn' : 'start-of-turn',
+    trigger: trigger[1]!.toLowerCase() === 'end' ? 'end-of-turn' : 'start-of-turn',
     radiusFeet: Number(within[1]),
     saveAbility: save
-      ? (SAVE_ABILITY_WORDS[save[2].toLowerCase()] ?? save[2].toLowerCase())
+      ? (SAVE_ABILITY_WORDS[save[2]!.toLowerCase()] ?? save[2]!.toLowerCase())
       : undefined,
     saveDC: save ? Number(save[1]) : undefined,
     halfOnSave: /half as much/i.test(description),
@@ -542,7 +544,7 @@ export function monsterAttacksPerTurn(monster: Monster): number {
     action.description
   );
   if (!match) return 1;
-  const raw = match[1].toLowerCase();
+  const raw = match[1]!.toLowerCase();
   const count = /^\d+$/.test(raw) ? Number(raw) : (NUMBER_WORDS[raw] ?? 1);
   return Math.min(Math.max(1, count), 8);
 }

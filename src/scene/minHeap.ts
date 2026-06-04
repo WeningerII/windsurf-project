@@ -27,10 +27,11 @@ export class MinHeap<T> {
     const node = { item, priority, seq: this.counter++ };
     this.nodes.push(node);
     let i = this.nodes.length - 1;
+    // parent and i are always valid indices (0 <= parent < i < length) here.
     while (i > 0) {
       const parent = (i - 1) >> 1;
-      if (this.before(this.nodes[parent], this.nodes[i])) break;
-      [this.nodes[parent], this.nodes[i]] = [this.nodes[i], this.nodes[parent]];
+      if (this.before(this.nodes[parent]!, this.nodes[i]!)) break;
+      [this.nodes[parent], this.nodes[i]] = [this.nodes[i]!, this.nodes[parent]!];
       i = parent;
     }
   }
@@ -38,7 +39,7 @@ export class MinHeap<T> {
   pop(): T | undefined {
     const n = this.nodes.length;
     if (n === 0) return undefined;
-    const top = this.nodes[0];
+    const top = this.nodes[0]!; // defined: n > 0
     const last = this.nodes.pop()!;
     if (n > 1) {
       this.nodes[0] = last;
@@ -47,14 +48,14 @@ export class MinHeap<T> {
         const left = 2 * i + 1;
         const right = 2 * i + 2;
         let smallest = i;
-        if (left < this.nodes.length && this.before(this.nodes[left], this.nodes[smallest])) {
+        if (left < this.nodes.length && this.before(this.nodes[left]!, this.nodes[smallest]!)) {
           smallest = left;
         }
-        if (right < this.nodes.length && this.before(this.nodes[right], this.nodes[smallest])) {
+        if (right < this.nodes.length && this.before(this.nodes[right]!, this.nodes[smallest]!)) {
           smallest = right;
         }
         if (smallest === i) break;
-        [this.nodes[i], this.nodes[smallest]] = [this.nodes[smallest], this.nodes[i]];
+        [this.nodes[i], this.nodes[smallest]] = [this.nodes[smallest]!, this.nodes[i]!];
         i = smallest;
       }
     }

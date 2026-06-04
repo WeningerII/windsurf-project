@@ -302,7 +302,7 @@ export function compute5eSpellSlots(
     return { ...EMPTY_SLOTS };
   }
 
-  const table = MULTICLASS_SPELL_SLOTS[casterLevel];
+  const table = MULTICLASS_SPELL_SLOTS[casterLevel]!; // casterLevel clamped to 1..20 above
 
   // Preserve existing `used` counts so we don't reset tracking on re-prepare
   const result: SpellSlots = { ...EMPTY_SLOTS };

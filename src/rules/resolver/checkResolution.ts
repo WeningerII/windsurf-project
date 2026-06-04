@@ -180,8 +180,13 @@ export function resolveSkillChallenge(input: SkillChallengeInput): SkillChalleng
   let successes = 0;
   let failures = 0;
   let attemptIndex = 0;
-  while (successes < input.successesNeeded && failures < input.failuresAllowed) {
-    const participant = input.participants[attemptIndex % input.participants.length];
+  while (
+    input.participants.length > 0 &&
+    successes < input.successesNeeded &&
+    failures < input.failuresAllowed
+  ) {
+    // length > 0 is guarded by the loop condition, so the modulo index is valid.
+    const participant = input.participants[attemptIndex % input.participants.length]!;
     const rng = createSeededRng(
       `${input.seed}::challenge::${input.skill ?? 'check'}::${attemptIndex}::${participant.id}`
     );

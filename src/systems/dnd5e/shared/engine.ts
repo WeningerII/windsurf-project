@@ -213,9 +213,9 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
   checkModifier(document: CharacterDocument<Dnd5eDataModel>, checkId: string): number | undefined {
     const d = document.system;
     const id = checkId.toLowerCase();
-    if (id in d.baseAttributes) return abilityMod(d.baseAttributes[id]);
+    if (id in d.baseAttributes) return abilityMod(d.baseAttributes[id]!);
     if (id in SKILL_ABILITIES) {
-      const base = abilityMod(d.baseAttributes[SKILL_ABILITIES[id]] ?? 10);
+      const base = abilityMod(d.baseAttributes[SKILL_ABILITIES[id]!] ?? 10);
       const totalLevel =
         d.classLevels.length > 0 ? d.classLevels.reduce((sum, cl) => sum + cl.level, 0) : d.level;
       const pb = profBonus(totalLevel);
@@ -243,11 +243,11 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
     let saveAttribute = '';
 
     if (checkId in d.baseAttributes) {
-      modifier = abilityMod(d.baseAttributes[checkId]);
+      modifier = abilityMod(d.baseAttributes[checkId]!);
       flavor = `${checkId.toUpperCase()} Check`;
       isAbilityCheck = true;
     } else if (checkId in SKILL_ABILITIES) {
-      const attr = SKILL_ABILITIES[checkId];
+      const attr = SKILL_ABILITIES[checkId]!;
       modifier = abilityMod(d.baseAttributes[attr] ?? 10);
       const prof = d.skillProficiencies[checkId];
       if (prof) {

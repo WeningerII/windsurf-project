@@ -49,7 +49,7 @@ export type SocialApproach = 'persuasion' | 'deception' | 'intimidation';
 export function shiftAttitude(attitude: Attitude, steps: number): Attitude {
   const index = ATTITUDES.indexOf(attitude);
   const next = Math.max(0, Math.min(ATTITUDES.length - 1, index + steps));
-  return ATTITUDES[next];
+  return ATTITUDES[next]!; // next is clamped to a valid index
 }
 
 /** The effective DC to sway an NPC of a given attitude, from a base difficulty. */

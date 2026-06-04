@@ -1,0 +1,11 @@
+{
+  // Enforces noUncheckedIndexedAccess on the engine (the deterministic core),
+  // where an undefined array/record element is a real bug class. The rest of the
+  // app is not yet ready for this flag (296 sites); the engine is.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "noUncheckedIndexedAccess": true
+  },
+  "include": ["src/rules", "src/scene"]
+}

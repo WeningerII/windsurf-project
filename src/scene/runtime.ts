@@ -278,12 +278,17 @@ function applySceneEvent(state: SceneState, event: SceneEvent): void {
     case 'token.added':
       state.tokens[event.payload.token.id] = cloneToken(event.payload.token);
       break;
-    case 'token.moved':
-      state.tokens[event.payload.tokenId] = {
-        ...state.tokens[event.payload.tokenId],
-        position: { ...event.payload.position },
-      };
+    case 'token.moved': {
+      const moving = state.tokens[event.payload.tokenId];
+      if (moving) {
+        // Only move an existing token — never fabricate one from a move event.
+        state.tokens[event.payload.tokenId] = {
+          ...moving,
+          position: { ...event.payload.position },
+        };
+      }
       break;
+    }
     case 'token.removed': {
       // Note the active token's place BEFORE filtering, so that if it is the one
       // being removed we can hand the turn to the NEXT combatant in order (the

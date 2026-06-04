@@ -204,7 +204,7 @@ function pulseAuras(params: {
   const intents: SceneActionIntent[] = [];
   for (const aura of auras) {
     const candidates = params.order
-      .filter((other) => other.tokenId !== params.owner.tokenId && params.hp[other.tokenId] > 0)
+      .filter((other) => other.tokenId !== params.owner.tokenId && params.hp[other.tokenId]! > 0)
       .map((other) => ({
         id: other.tokenId,
         position: other.position,
@@ -234,8 +234,9 @@ function pulseAuras(params: {
     const intent = areaEffectToDamageIntent(result, aura.name);
     if (intent && intent.type === 'apply-damage') {
       for (const damage of intent.damages) {
-        if (params.hp[damage.tokenId] != null) {
-          params.hp[damage.tokenId] = Math.max(0, params.hp[damage.tokenId] - damage.amount);
+        const current = params.hp[damage.tokenId];
+        if (current != null) {
+          params.hp[damage.tokenId] = Math.max(0, current - damage.amount);
         }
       }
       intents.push(intent);
@@ -300,15 +301,15 @@ function resolveOpportunityAttacks(params: {
 }): SceneActionIntent[] {
   if (!oaSystemProvokes(params.systemId)) return [];
   const intents: SceneActionIntent[] = [];
-  const moverTarget = toTarget(params.mover, params.hp[params.mover.tokenId], params.start);
+  const moverTarget = toTarget(params.mover, params.hp[params.mover.tokenId]!, params.start);
 
   for (const threatener of params.order) {
     if (threatener.tokenId === params.mover.tokenId) continue;
-    if (params.hp[threatener.tokenId] <= 0 || cannotAct(threatener.statuses)) continue;
+    if (params.hp[threatener.tokenId]! <= 0 || cannotAct(threatener.statuses)) continue;
     if (threatener.faction === params.mover.faction) continue; // only enemies threaten
 
     const reach = threatener.reach ?? 1;
-    const from = params.pos[threatener.tokenId];
+    const from = params.pos[threatener.tokenId]!; // every combatant has a working position
     const threatenedStart = gridDistance(from, params.start, params.diagonalRule) <= reach;
     const threatenedEnd = gridDistance(from, params.end, params.diagonalRule) <= reach;
     if (!threatenedStart || threatenedEnd) continue; // only when the mover leaves reach
@@ -332,8 +333,9 @@ function resolveOpportunityAttacks(params: {
     if (!strike.intent) continue;
     if (strike.intent.type === 'apply-damage') {
       for (const damage of strike.intent.damages) {
-        if (params.hp[damage.tokenId] != null) {
-          params.hp[damage.tokenId] = Math.max(0, params.hp[damage.tokenId] - damage.amount);
+        const current = params.hp[damage.tokenId];
+        if (current != null) {
+          params.hp[damage.tokenId] = Math.max(0, current - damage.amount);
         }
       }
     }
@@ -446,11 +448,12 @@ function fallToGround(params: {
   systemId?: string;
 }): SceneActionIntent[] {
   const { tokenId, pos, hp } = params;
-  const height = pos[tokenId]?.z ?? 0;
-  if (height <= 0) return [];
+  const from = pos[tokenId];
+  const height = from?.z ?? 0;
+  if (!from || height <= 0) return [];
 
   // Land on the same cell at ground level (z dropped).
-  const grounded: SceneCoordinate = { x: pos[tokenId].x, y: pos[tokenId].y };
+  const grounded: SceneCoordinate = { x: from.x, y: from.y };
   pos[tokenId] = grounded;
   const intents: SceneActionIntent[] = [{ type: 'move-token', tokenId, position: grounded }];
 
@@ -499,14 +502,14 @@ function buildApproachPenalty(
   const meleeSources: ThreatSource[] = [];
   const rangedSources: { position: SceneCoordinate; threat: number }[] = [];
   for (const other of input.order) {
-    if (other.tokenId === combatant.tokenId || hp[other.tokenId] <= 0) continue;
+    if (other.tokenId === combatant.tokenId || hp[other.tokenId]! <= 0) continue;
     if (!isHostile(combatant.faction, other.faction)) continue;
     const threat = Math.max(1, expectedDamage(other.damageEffects));
     if (other.reach == null) {
-      rangedSources.push({ position: pos[other.tokenId], threat }); // ranged (unlimited reach)
+      rangedSources.push({ position: pos[other.tokenId]!, threat }); // ranged (unlimited reach)
     } else {
       meleeSources.push({
-        position: pos[other.tokenId],
+        position: pos[other.tokenId]!,
         reach: other.reach,
         speed: other.speed ?? 6,
         threat,
@@ -571,7 +574,7 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
     // sustain flight — it has no fly speed, or it is already down — drops to the
     // ground at the start of its turn, taking falling damage if it was conscious.
     const airborne = (pos[combatant.tokenId]?.z ?? 0) > 0;
-    const conscious = hp[combatant.tokenId] > 0;
+    const conscious = hp[combatant.tokenId]! > 0;
     const fallIntents =
       airborne && ((combatant.flySpeed ?? 0) <= 0 || !conscious)
         ? fallToGround({
@@ -590,7 +593,7 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
 
     // Skip combatants that can't act: already down, or held by an incapacitating
     // condition (stunned / paralyzed / unconscious / …).
-    const down = hp[combatant.tokenId] <= 0;
+    const down = hp[combatant.tokenId]! <= 0;
     const held = cannotAct(combatant.statuses);
     if (down || held) {
       // A downed 5e character makes a death save instead of acting.
@@ -644,8 +647,8 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
     // The participant set: every OTHER living combatant, with up-to-date HP and
     // current (post-movement) position.
     const targets: TacticalTarget[] = input.order
-      .filter((other) => other.tokenId !== combatant.tokenId && hp[other.tokenId] > 0)
-      .map((other) => toTarget(other, hp[other.tokenId], pos[other.tokenId]));
+      .filter((other) => other.tokenId !== combatant.tokenId && hp[other.tokenId]! > 0)
+      .map((other) => toTarget(other, hp[other.tokenId]!, pos[other.tokenId]!));
 
     // Threat-aware approach: when the grid bounds are known, build the danger
     // field from this actor's living melee enemies (at their current cells) so
@@ -654,7 +657,7 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
     const cellPenalty = buildApproachPenalty(combatant, input, hp, pos);
 
     const turn = executeTacticalTurn({
-      actor: toActor(combatant, pos[combatant.tokenId]),
+      actor: toActor(combatant, pos[combatant.tokenId]!),
       targets,
       seed: `${input.seed}::round${input.round}::turn${turnIndex}`,
       isBlocked: input.isBlocked,
@@ -675,7 +678,7 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
     if (turn.moveTo) {
       const oas = resolveOpportunityAttacks({
         mover: combatant,
-        start: pos[combatant.tokenId],
+        start: pos[combatant.tokenId]!,
         end: turn.moveTo,
         order: input.order,
         hp,
@@ -701,10 +704,11 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
         if (before != null && byId.get(damage.tokenId)?.hp) {
           hp[damage.tokenId] = Math.max(0, before - damage.amount);
         }
+        const after = hp[damage.tokenId];
         // Shot out of the sky: a combatant knocked to 0 HP while airborne loses
         // flight and plummets to the ground (it is already out, so no extra
         // damage). Its descent lands after the attack that downed it.
-        if (before != null && before > 0 && hp[damage.tokenId] <= 0) {
+        if (before != null && before > 0 && after != null && after <= 0) {
           fallToGround({
             tokenId: damage.tokenId,
             pos,
