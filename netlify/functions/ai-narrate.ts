@@ -10,11 +10,18 @@
  * Configuration (Netlify environment, server-only — never `VITE_`-prefixed):
  *   ANTHROPIC_API_KEY  — the secret key (never sent to the browser).
  *   ANTHROPIC_MODEL    — a current Claude model id, chosen by the operator.
+ *   ALLOWED_ORIGIN     — optional; when set, only requests with a matching
+ *                        `Origin` header are served (blocks cross-site browser abuse).
  *
- * The mechanics never run here; only the resolved outcome is narrated.
+ * Abuse hardening: every valid POST triggers a paid Claude call, so the input is
+ * size-capped (`isValidSummary`) and an optional origin allowlist is enforced.
+ * RATE LIMITING is intentionally NOT done in-process — serverless instances don't
+ * share memory, so an in-memory limiter is security theater. Enable Netlify's
+ * built-in rate limiting (or a gateway/WAF rule) in front of this function for a
+ * real per-IP cap. The mechanics never run here; only the resolved outcome is narrated.
  */
 
-import { narrateWithClaude, type RoundNarrationSummary } from '../../src/rules/ai/llmNarration';
+import { isValidSummary, narrateWithClaude } from '../../src/rules/ai/llmNarration';
 
 function json(status: number, body: unknown): Response {
   return new Response(JSON.stringify(body), {
@@ -23,21 +30,19 @@ function json(status: number, body: unknown): Response {
   });
 }
 
-function isSummary(value: unknown): value is RoundNarrationSummary {
-  const candidate = value as Partial<RoundNarrationSummary> | null;
-  return (
-    !!candidate &&
-    typeof candidate.systemId === 'string' &&
-    typeof candidate.round === 'number' &&
-    Array.isArray(candidate.beats) &&
-    candidate.beats.length > 0 &&
-    candidate.beats.every((beat) => typeof beat === 'string')
-  );
-}
-
 export default async function handler(request: Request): Promise<Response> {
   if (request.method !== 'POST') {
     return json(405, { error: 'Method not allowed.' });
+  }
+
+  // Optional origin allowlist: when configured, reject requests whose Origin
+  // doesn't match (defeats casual cross-site browser abuse of the paid endpoint).
+  const allowedOrigin = process.env.ALLOWED_ORIGIN;
+  if (allowedOrigin) {
+    const origin = request.headers.get('origin');
+    if (origin && origin !== allowedOrigin) {
+      return json(403, { error: 'Origin not allowed.' });
+    }
   }
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -55,8 +60,10 @@ export default async function handler(request: Request): Promise<Response> {
   } catch {
     return json(400, { error: 'Request body must be JSON.' });
   }
-  if (!isSummary(payload)) {
-    return json(400, { error: 'Body must be a round summary with at least one beat.' });
+  // Validate shape AND bound the size (beat count + length) so a huge payload
+  // can't inflate token cost / latency.
+  if (!isValidSummary(payload)) {
+    return json(400, { error: 'Body must be a round summary within size limits.' });
   }
 
   try {

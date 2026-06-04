@@ -3,6 +3,9 @@ import { describe, it, expect, vi } from 'vitest';
 import {
   ANTHROPIC_VERSION,
   buildNarrationRequest,
+  isValidSummary,
+  MAX_BEAT_LENGTH,
+  MAX_NARRATION_BEATS,
   narrateWithClaude,
   requestNarration,
   type FetchLike,
@@ -20,6 +23,31 @@ const summary: RoundNarrationSummary = {
   round: 3,
   beats: ['Aria hits the Goblin for 7 (rolled 18+5 vs AC 14).', 'The Goblin misses Aria.'],
 };
+
+describe('isValidSummary (gateway input guard)', () => {
+  it('accepts a well-formed, in-bounds summary', () => {
+    expect(isValidSummary(summary)).toBe(true);
+  });
+
+  it('rejects malformed or empty payloads', () => {
+    expect(isValidSummary(null)).toBe(false);
+    expect(isValidSummary({ systemId: '', round: 1, beats: ['x'] })).toBe(false);
+    expect(isValidSummary({ systemId: 's', round: 1, beats: [] })).toBe(false); // empty
+    expect(isValidSummary({ systemId: 's', round: NaN, beats: ['x'] })).toBe(false);
+    expect(isValidSummary({ systemId: 's', round: 1, beats: ['x', 42] })).toBe(false); // non-string beat
+  });
+
+  it('rejects oversized payloads (the cost-abuse guard)', () => {
+    const tooMany = { systemId: 's', round: 1, beats: Array(MAX_NARRATION_BEATS + 1).fill('x') };
+    expect(isValidSummary(tooMany)).toBe(false);
+    const tooLong = { systemId: 's', round: 1, beats: ['x'.repeat(MAX_BEAT_LENGTH + 1)] };
+    expect(isValidSummary(tooLong)).toBe(false);
+    // The boundary is allowed.
+    expect(isValidSummary({ systemId: 's', round: 1, beats: ['x'.repeat(MAX_BEAT_LENGTH)] })).toBe(
+      true
+    );
+  });
+});
 
 /** A fetch double that records its call and returns a scripted response. */
 function mockFetch(response: { ok: boolean; status: number; json: () => Promise<unknown> }): {

@@ -50,6 +50,33 @@ export interface RoundNarrationSummary {
   beats: string[];
 }
 
+/** Caps that bound a narration request's size — the gateway rejects anything larger,
+ * so an attacker can't inflate token cost or latency with a giant payload. */
+export const MAX_NARRATION_BEATS = 80;
+export const MAX_BEAT_LENGTH = 500;
+
+/**
+ * Validate an untrusted value as a {@link RoundNarrationSummary} within size
+ * limits — the gateway's input guard. Shared with the server adapter so the
+ * (untyped, untested) Netlify function and the typed client agree on what's
+ * acceptable. Rejects empty, oversized, and malformed payloads.
+ */
+export function isValidSummary(value: unknown): value is RoundNarrationSummary {
+  const s = value as Partial<RoundNarrationSummary> | null;
+  return (
+    !!s &&
+    typeof s.systemId === 'string' &&
+    s.systemId.length > 0 &&
+    s.systemId.length <= 64 &&
+    typeof s.round === 'number' &&
+    Number.isFinite(s.round) &&
+    Array.isArray(s.beats) &&
+    s.beats.length > 0 &&
+    s.beats.length <= MAX_NARRATION_BEATS &&
+    s.beats.every((beat) => typeof beat === 'string' && beat.length <= MAX_BEAT_LENGTH)
+  );
+}
+
 /** One Anthropic system block; the stable prefix carries a cache breakpoint. */
 export interface NarrationSystemBlock {
   type: 'text';
