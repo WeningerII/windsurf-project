@@ -201,7 +201,9 @@ export function areaOfEffectToShape(
         width: side,
         height: side,
         zMin: baseZ,
-        zMax: baseZ + side,
+        // zMax is INCLUSIVE: a side of N cells spans zMin..zMin+N-1, matching the
+        // half-open horizontal footprint (N columns) — not N+1 layers.
+        zMax: baseZ + side - 1,
       };
     }
     case 'line': {
@@ -224,7 +226,9 @@ export function areaOfEffectToShape(
         origin: aim,
         radius: feetToCells(aoe.radius),
         zMin: baseZ,
-        zMax: baseZ + feetToCells(aoe.height),
+        // zMax is INCLUSIVE, so a height of N cells spans zMin..zMin+N-1 — matching
+        // the half-open horizontal footprint (N columns), not N+1 layers.
+        zMax: baseZ + feetToCells(aoe.height) - 1,
       };
     }
     case 'sphere':

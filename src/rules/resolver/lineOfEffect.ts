@@ -134,8 +134,11 @@ function segmentBlockedElevated(
  * the elevations of both ends. Rays are cast from the origin's center to the four
  * inset corners of the target; each is blocked when the sight line clips a wall
  * along the way. 0 blocked → none, 1–2 → half, 3 → three-quarters, 4 → total (no
- * line of effect). A flyer above a low wall clears it; a creature on the ground
- * behind it does not. The origin's and target's own cells never block.
+ * line of effect). The sight line's height is interpolated across each wall it
+ * crosses (the lower of its entry/exit height in that cell), so it clears a wall
+ * only where the line genuinely passes above the wall's top — a flyer shooting
+ * level over a low wall clears it, but a steep shot down at a grounded target can
+ * still clip the wall's near edge. The origin's and target's own cells never block.
  */
 export function coverBetweenElevated(
   origin: SceneCoordinate,

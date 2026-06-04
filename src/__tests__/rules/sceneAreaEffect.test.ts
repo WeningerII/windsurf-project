@@ -130,7 +130,7 @@ describe('areaOfEffectToShape maps all seven canonical shapes to the grid', () =
     [
       // A cube is a 3D box: a square footprint with a vertical extent of its side.
       { type: 'cube', feet: 20 },
-      { kind: 'rect', origin: { x: 4, y: -2 }, width: 4, height: 4, zMin: 0, zMax: 4 },
+      { kind: 'rect', origin: { x: 4, y: -2 }, width: 4, height: 4, zMin: 0, zMax: 3 },
     ],
     [
       { type: 'line', length: 30, width: 5 },
@@ -147,7 +147,7 @@ describe('areaOfEffectToShape maps all seven canonical shapes to the grid', () =
     [
       // A cylinder is a vertical column: a circular footprint bounded in z.
       { type: 'cylinder', radius: 20, height: 40 },
-      { kind: 'cylinder', origin: aim, radius: 4, zMin: 0, zMax: 8 },
+      { kind: 'cylinder', origin: aim, radius: 4, zMin: 0, zMax: 7 },
     ],
     // Emanation radiates from the EMITTER (origin), not the aimed point.
     [

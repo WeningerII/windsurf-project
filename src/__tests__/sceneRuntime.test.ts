@@ -169,6 +169,66 @@ describe('scene runtime', () => {
     expect(state.round).toBe(2);
   });
 
+  it('hands the turn to the NEXT combatant when the active token is removed', () => {
+    let scene = createSceneDocument({
+      id: 'scene-rm',
+      name: 'Removal',
+      systemId: 'dnd-5e-2024',
+      now: NOW,
+    });
+    let n = 0;
+    const act = (intent: Parameters<typeof resolveSceneAction>[1]) => {
+      scene = appendResolved(
+        scene,
+        resolveSceneAction(scene, intent, { eventId: `e${n++}`, createdAt: NOW })
+      );
+    };
+    act({ type: 'place-token', token: makeToken('a', 1, 1) });
+    act({ type: 'place-token', token: makeToken('b', 2, 1) });
+    act({ type: 'place-token', token: makeToken('c', 3, 1) });
+    act({
+      type: 'set-initiative',
+      entries: [
+        { tokenId: 'a', value: 18 },
+        { tokenId: 'b', value: 15 },
+        { tokenId: 'c', value: 10 },
+      ],
+      activeTokenId: 'b',
+    });
+    // Remove the active combatant (b): play passes to c (the next in order), NOT
+    // back to a — the bug this guards against reset to initiative[0].
+    act({ type: 'remove-token', tokenId: 'b' });
+    expect(foldSceneEvents(scene).state.activeTokenId).toBe('c');
+  });
+
+  it('wraps the turn to the top when the active token was last in initiative', () => {
+    let scene = createSceneDocument({
+      id: 'scene-rm2',
+      name: 'Removal',
+      systemId: 'dnd-5e-2024',
+      now: NOW,
+    });
+    let n = 0;
+    const act = (intent: Parameters<typeof resolveSceneAction>[1]) => {
+      scene = appendResolved(
+        scene,
+        resolveSceneAction(scene, intent, { eventId: `e${n++}`, createdAt: NOW })
+      );
+    };
+    act({ type: 'place-token', token: makeToken('a', 1, 1) });
+    act({ type: 'place-token', token: makeToken('b', 2, 1) });
+    act({
+      type: 'set-initiative',
+      entries: [
+        { tokenId: 'a', value: 18 },
+        { tokenId: 'b', value: 12 },
+      ],
+      activeTokenId: 'b',
+    });
+    act({ type: 'remove-token', tokenId: 'b' });
+    expect(foldSceneEvents(scene).state.activeTokenId).toBe('a'); // wrapped to the top
+  });
+
   it('produces repeatable seeded random rolls', () => {
     const first = createSeededRng('scene-seed');
     const second = createSeededRng('scene-seed');

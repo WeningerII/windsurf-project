@@ -201,6 +201,11 @@ export function resolveAttack(input: AttackResolutionInput): AttackResolution {
       if (isCriticalHit) {
         if (critModel === 'pf2e') typed *= 2;
         else if (critModel === 'd20-confirm') typed *= critMultiplier;
+        // 5e: add the rolled dice again (double the dice, modifiers once). Known
+        // limitation: this adds the RAW dice terms, so a `min`/`max` clamp applied
+        // to this damage type is not re-applied to the doubled dice — a clamped
+        // crit can exceed its cap. Rare (needs a clamp + crit on one type); the
+        // faithful fix is to re-roll the dice, a larger change to the fold.
         else typed += dice.reduce((sum, term) => sum + term, 0);
       }
 

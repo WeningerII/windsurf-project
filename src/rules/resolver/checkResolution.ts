@@ -52,8 +52,6 @@ export interface CheckInput {
   rollMode?: CheckRollMode;
 }
 
-const D20_FAMILY = new Set(['dnd-5e-2014', 'dnd-5e-2024', 'dnd-3.5e', 'pf1e', 'pf2e']);
-
 /** Roll a d20 from the seeded stream, honoring advantage/disadvantage. */
 function rollD20(
   rng: SeededRng,
@@ -116,10 +114,8 @@ export function resolveCheck(input: CheckInput): CheckResult {
     return { systemId, total, dice, modifier, dc, success, outcome };
   }
 
-  // D&D 5e (both), 3.5e, PF1e (and any other d20 system): binary pass/fail.
-  if (!D20_FAMILY.has(systemId)) {
-    // Unknown system: treat as a plain d20 check rather than throwing.
-  }
+  // D&D 5e (both), 3.5e, PF1e — and any unrecognized system — resolve as a plain
+  // d20 binary pass/fail rather than throwing.
   const success = total >= dc;
   return { systemId, total, dice, modifier, dc, success, outcome: success ? 'success' : 'failure' };
 }

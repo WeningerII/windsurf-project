@@ -284,15 +284,26 @@ function applySceneEvent(state: SceneState, event: SceneEvent): void {
         position: { ...event.payload.position },
       };
       break;
-    case 'token.removed':
-      delete state.tokens[event.payload.tokenId];
-      state.initiative = state.initiative.filter(
-        (entry) => entry.tokenId !== event.payload.tokenId
-      );
-      if (state.activeTokenId === event.payload.tokenId) {
-        state.activeTokenId = state.initiative[0]?.tokenId;
+    case 'token.removed': {
+      // Note the active token's place BEFORE filtering, so that if it is the one
+      // being removed we can hand the turn to the NEXT combatant in order (the
+      // entry that slides into its slot), wrapping to the top — not jump back to
+      // initiative[0], which would desync whose turn it is and miscount rounds.
+      const removedId = event.payload.tokenId;
+      const wasActive = state.activeTokenId === removedId;
+      const slot = state.initiative.findIndex((entry) => entry.tokenId === removedId);
+      delete state.tokens[removedId];
+      state.initiative = state.initiative.filter((entry) => entry.tokenId !== removedId);
+      if (wasActive) {
+        if (state.initiative.length === 0) {
+          state.activeTokenId = undefined;
+        } else {
+          const next = slot < 0 ? 0 : slot % state.initiative.length;
+          state.activeTokenId = state.initiative[next]?.tokenId;
+        }
       }
       break;
+    }
     case 'token.damaged':
       for (const damage of event.payload.damages) {
         const token = state.tokens[damage.tokenId];

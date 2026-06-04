@@ -27,15 +27,16 @@ describe('a sphere is a 3D ball', () => {
 });
 
 describe('a cube is a 3D box', () => {
-  const shape = areaOfEffectToShape({ type: 'cube', feet: 20 }, emitter, at(6, 6)); // 4-cell box, z 0..4
+  const shape = areaOfEffectToShape({ type: 'cube', feet: 20 }, emitter, at(6, 6)); // 4 cells: z 0..3
 
   it('catches creatures inside the box footprint and height', () => {
     expect(cellInArea(at(5, 5, 0), shape)).toBe(true);
-    expect(cellInArea(at(5, 5, 3), shape)).toBe(true);
+    expect(cellInArea(at(5, 5, 3), shape)).toBe(true); // top layer (4th cell) — inclusive
   });
 
-  it('does not catch a flyer above the top face', () => {
-    expect(cellInArea(at(5, 5, 6), shape)).toBe(false); // above the 20 ft top
+  it('is exactly as tall as it is wide (no off-by-one): z=4 is above the top', () => {
+    expect(cellInArea(at(5, 5, 4), shape)).toBe(false); // the 5th layer is outside a 4-cell cube
+    expect(cellInArea(at(5, 5, 6), shape)).toBe(false); // and well above
   });
 });
 
@@ -49,10 +50,12 @@ describe('a cylinder is a vertical column', () => {
   it('catches anything in the footprint up to its height', () => {
     expect(cellInArea(at(8, 5, 0), shape)).toBe(true); // within radius, ground
     expect(cellInArea(at(8, 5, 6), shape)).toBe(true); // within radius and height
+    expect(cellInArea(at(8, 5, 7), shape)).toBe(true); // top layer (8th cell) — inclusive
   });
 
   it('excludes creatures over the top or outside the radius', () => {
-    expect(cellInArea(at(8, 5, 10), shape)).toBe(false); // above the 40 ft cap
+    expect(cellInArea(at(8, 5, 8), shape)).toBe(false); // the 9th layer is above a 8-cell column
+    expect(cellInArea(at(8, 5, 10), shape)).toBe(false); // well above the 40 ft cap
     expect(cellInArea(at(11, 5, 0), shape)).toBe(false); // outside the radius
   });
 });
