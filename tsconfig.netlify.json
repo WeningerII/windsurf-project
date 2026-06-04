@@ -1,0 +1,13 @@
+{
+  // Type-checks the Netlify serverless functions, which the main tsconfig
+  // (include: ["src"]) does not cover. They run on Node with the web fetch/
+  // Request/Response globals, so we pair Node types with the DOM lib. noEmit —
+  // esbuild does the actual bundling at deploy.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["node"],
+    "lib": ["ES2020", "DOM", "DOM.Iterable"]
+  },
+  "include": ["netlify/**/*.ts"]
+}
