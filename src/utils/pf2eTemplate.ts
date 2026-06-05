@@ -397,6 +397,15 @@ function applyAbilityAdjustments(
   });
 }
 
+/** Reverse a previously-applied class key-ability boost (+2) off the score. */
+function removeClassKeyAbilityBoost(
+  attributes: Record<string, number>,
+  keyAbility: string | undefined
+): void {
+  if (!keyAbility) return;
+  attributes[keyAbility] = (attributes[keyAbility] ?? 10) - 2;
+}
+
 function ancestryFeatures(ancestry?: Species, heritage?: Subrace): Feature[] {
   const ancestryTraits = ancestry?.traits || [];
   const heritageTraits = heritage?.traits || [];
@@ -526,6 +535,8 @@ export function applyPf2eClassTemplate(
   const sys = nextDocument.system;
   const oldClassId = sys.classId;
   const isClassChange = oldClassId !== classData?.id;
+  // The key ability currently boosted on the sheet (if a class was applied).
+  const previousKeyAbility = oldClassId != null ? sys.keyAbility : undefined;
 
   if (previousClass && (isClassChange || !classData)) {
     const previousFeatureSignatures = collectClassFeatureSignatures(previousClass, () => true);
@@ -539,6 +550,8 @@ export function applyPf2eClassTemplate(
   sys.level = level;
 
   if (!classData) {
+    // Dropping the class removes its key-ability boost from the score.
+    removeClassKeyAbilityBoost(sys.baseAttributes, previousKeyAbility);
     sys.classId = undefined;
     sys.keyAbility = undefined;
     sys.spellcasting = undefined;
@@ -552,6 +565,15 @@ export function applyPf2eClassTemplate(
     ? sys.keyAbility
     : undefined;
   sys.keyAbility = existingKeyAbility || classData.primaryAbility[0];
+
+  // Class key-ability boost (CRB p.68): +2 to the class key ability at level 1.
+  // Tracked incrementally like the ancestry/background boosts — applied when the
+  // class is first chosen or swapped, reversing the prior class's boost first so
+  // scores never double-count across re-application (level-ups keep the boost).
+  if (isClassChange) {
+    removeClassKeyAbilityBoost(sys.baseAttributes, previousKeyAbility);
+    sys.baseAttributes[sys.keyAbility] = (sys.baseAttributes[sys.keyAbility] ?? 10) + 2;
+  }
 
   const shouldResetBaseProficiencies = isClassChange || oldClassId == null || !profile;
   if (profile && shouldResetBaseProficiencies) {
