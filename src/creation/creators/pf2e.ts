@@ -18,11 +18,16 @@ import type { CreationDraft, CreationIntent, SystemCreator } from '../types';
  * pure template appliers the sheet uses: pick class / ancestry / heritage /
  * background from the loader-backed catalogs, apply them in order (class sets
  * the key-ability boost, ancestry/heritage and background set their boosts),
- * and let the engine derive AC/HP/spellcasting. Free ability boosts are not yet
- * modeled, but the result is a legal, in-catalog build the validator accepts.
+ * then lay the four free level-1 ability boosts on top. The engine derives
+ * AC/HP/spellcasting; the result is a complete, in-catalog, legal build.
  */
 
 const MAX_LEVEL = 20;
+/** Level-1 grants four free ability boosts to four different abilities (CRB p.20). */
+const FREE_BOOSTS = 4;
+/** Abilities never exceed 18 at level 1, so a +2 only lands on a score ≤ 16. */
+const LEVEL_ONE_ABILITY_CAP = 18;
+const PF2E_ABILITY_IDS = ['str', 'dex', 'con', 'int', 'wis', 'cha'] as const;
 
 export const pf2eCreator: SystemCreator<Pf2eDataModel> = {
   systemId: 'pf2e',
@@ -67,8 +72,32 @@ export const pf2eCreator: SystemCreator<Pf2eDataModel> = {
     document = applyPf2eClassTemplate(document, cls, level);
     document = applyPf2eAncestryTemplate(document, ancestry, heritage);
     document = applyPf2eBackgroundTemplate(document, background);
+    applyFreeBoosts(document.system.baseAttributes, document.system.keyAbility);
 
     const name = intent.name ?? `${ancestry.name} ${cls.name}`;
     return { name, system: document.system };
   },
 };
+
+/**
+ * Apply the four free level-1 ability boosts to four different abilities, leading
+ * with the class key ability and then a survivability-first spread. A boost only
+ * lands where it keeps the score within the level-1 cap of 18.
+ */
+function applyFreeBoosts(scores: Record<string, number>, keyAbility: string | undefined): void {
+  const priority = [keyAbility, 'con', 'dex', 'wis', 'cha', 'str', 'int'].filter(
+    (ability): ability is string =>
+      typeof ability === 'string' && (PF2E_ABILITY_IDS as readonly string[]).includes(ability)
+  );
+  const order = Array.from(new Set(priority));
+
+  let applied = 0;
+  for (const ability of order) {
+    if (applied >= FREE_BOOSTS) break;
+    const current = scores[ability] ?? 10;
+    if (current <= LEVEL_ONE_ABILITY_CAP - 2) {
+      scores[ability] = current + 2;
+      applied += 1;
+    }
+  }
+}

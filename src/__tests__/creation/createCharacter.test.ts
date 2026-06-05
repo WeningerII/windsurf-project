@@ -117,9 +117,13 @@ describe('createCharacterFromPrompt — Pathfinder 2e', () => {
     // The engine derived combat stats.
     expect(system.hitPoints.max).toBeGreaterThan(0);
     expect(system.armorClass).toBeGreaterThan(0);
-    // The class key-ability boost was applied (key ability above the 10 base).
+    // The class key-ability boost + a free boost land on the key ability.
     expect(system.keyAbility).toBeTruthy();
-    expect(system.baseAttributes[system.keyAbility!]).toBeGreaterThanOrEqual(12);
+    expect(system.baseAttributes[system.keyAbility!]).toBeGreaterThanOrEqual(14);
+    // The four free level-1 boosts spread across distinct abilities, none over 18.
+    const scores = Object.values(system.baseAttributes);
+    expect(scores.filter((score) => score >= 12).length).toBeGreaterThanOrEqual(4);
+    expect(Math.max(...scores)).toBeLessThanOrEqual(18);
   });
 
   it('honors an explicit level from the prompt', async () => {
