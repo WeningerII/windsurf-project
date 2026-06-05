@@ -240,14 +240,21 @@ describe.each([
     expect(system.hitPoints.max).toBeGreaterThan(0);
     const topScore = Math.max(...Object.values(system.baseAttributes));
     expect(topScore).toBeGreaterThanOrEqual(15);
+    // Class-skill ranks were assigned, each within the per-skill cap.
+    const ranks = Object.values(system.skillRanks);
+    expect(ranks.length).toBeGreaterThan(0);
+    const cap = systemId === 'pf1e' ? 1 : 1 + 3; // level 1
+    expect(Math.max(...ranks)).toBeLessThanOrEqual(cap);
   });
 
-  it('honors an explicit level and keeps class levels consistent', async () => {
+  it('honors an explicit level and keeps class levels + skill caps consistent', async () => {
     const result = await createCharacterFromPrompt({ systemId, prompt, level: 3 });
     expect(result.ok).toBe(true);
     expect(result.document.system.level).toBe(3);
     const total = result.document.system.classLevels.reduce((sum, cl) => sum + cl.level, 0);
     expect(total).toBe(3);
+    const cap = systemId === 'pf1e' ? 3 : 3 + 3;
+    expect(Math.max(...Object.values(result.document.system.skillRanks))).toBeLessThanOrEqual(cap);
   });
 
   it('registers a creator', () => {

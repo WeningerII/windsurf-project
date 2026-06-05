@@ -34,12 +34,15 @@ const applyRace = applyD20LegacyRaceTemplate as <U extends D20LegacyLike>(
  * loader-backed catalogs, lay the standard array (15/14/13/12/10/8) with the 15
  * on the class's primary ability, and apply the class and race templates (the
  * class template seeds the single class level; the race template adds racial
- * ability adjustments and traits). The engine derives BAB, saves, AC, and HP.
+ * ability adjustments and traits) and assign class-skill ranks within the cap.
+ * The engine derives BAB, saves, AC, and HP.
  */
 
 const MAX_LEVEL = 20;
 const STANDARD_ARRAY = [15, 14, 13, 12, 10, 8];
 const ABILITY_PRIORITY = ['con', 'dex', 'wis', 'str', 'int', 'cha'];
+/** Per-skill rank cap: PF1e = level, 3.5e = level + 3 (class-skill maximum). */
+const SKILL_CAP_OVER_LEVEL: Record<string, number> = { pf1e: 0, 'dnd-3.5e': 3 };
 
 function createD20LegacyCreator<T extends D20LegacyLike>(
   systemId: GameSystemId,
@@ -83,11 +86,35 @@ function createD20LegacyCreator<T extends D20LegacyLike>(
       document = applyClass(document, cls, level);
       document = applyRace(document, race);
       document.system.level = level;
+      document.system.skillRanks = assignSkillRanks(document.system, systemId, level);
 
       const name = intent.name ?? `${race.name} ${cls.name}`;
       return { name, system: document.system };
     },
   };
+}
+
+/**
+ * Spend skill ranks on the class's own class skills, capped per skill. The class
+ * grants `skillPointsPerLevel` ranks/level; maxing one class skill costs the
+ * per-skill cap, so filling that many class skills to the cap spends the budget
+ * while keeping every skill at or under the legal maximum the validator enforces.
+ */
+function assignSkillRanks(
+  system: D20LegacyLike,
+  systemId: GameSystemId,
+  level: number
+): Record<string, number> {
+  const maxRanks = level + (SKILL_CAP_OVER_LEVEL[systemId] ?? 0);
+  const pointsPerLevel = system.classLevels[0]?.skillPointsPerLevel ?? 2;
+  const classSkills = system.classSkills ?? [];
+  const skillsToFill = Math.min(Math.max(1, pointsPerLevel), classSkills.length);
+
+  const ranks: Record<string, number> = {};
+  for (let index = 0; index < skillsToFill; index += 1) {
+    ranks[classSkills[index]] = maxRanks;
+  }
+  return ranks;
 }
 
 function assignStandardArray(cls: CharacterClass): Record<string, number> {
