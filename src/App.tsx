@@ -27,6 +27,13 @@ import { useScenes } from './hooks/useScenes';
 const SceneManager = lazy(() =>
   import('./components/SceneManager').then((m) => ({ default: m.SceneManager }))
 );
+// Lazy so the prompt-driven creation module (orchestrator + per-system creators
+// and the catalogs they pull) stays out of the eager app chunk.
+const PromptCreateCharacter = lazy(() =>
+  import('./components/PromptCreateCharacter').then((m) => ({
+    default: m.PromptCreateCharacter,
+  }))
+);
 import { prefetchSystemAssetsForIds } from './utils/systemAssetPrefetch';
 import { usePwaInstallPrompt } from './hooks/usePwaInstallPrompt';
 import { combineSyncStates, getMostRecentSyncDate, getPendingSyncCount } from './utils/syncStatus';
@@ -471,15 +478,27 @@ function AppContent() {
 
             {/* Action Bar */}
             {selectedSystem && (
-              <div className="flex justify-center gap-3 animate-in fade-in-0">
-                <Button variant="outline" size="lg" onClick={handleImportDocument}>
-                  <Upload className="w-4 h-4 mr-2" />
-                  Import Character
-                </Button>
-                <Button onClick={handleCreateCharacter} size="lg">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Create New Character
-                </Button>
+              <div className="space-y-4 animate-in fade-in-0">
+                <Suspense fallback={<div className="h-36 w-full max-w-2xl mx-auto" />}>
+                  <PromptCreateCharacter
+                    systemId={selectedSystem}
+                    onCreated={(doc) => {
+                      addDocument(doc);
+                      setCurrentDocId(doc.id);
+                    }}
+                    onNotify={toast}
+                  />
+                </Suspense>
+                <div className="flex items-center justify-center gap-3">
+                  <Button variant="outline" size="lg" onClick={handleImportDocument}>
+                    <Upload className="w-4 h-4 mr-2" />
+                    Import Character
+                  </Button>
+                  <Button variant="outline" onClick={handleCreateCharacter} size="lg">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Create New Character
+                  </Button>
+                </div>
               </div>
             )}
 
