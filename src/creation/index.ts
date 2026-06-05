@@ -7,11 +7,19 @@ import { mam3eCreator } from './creators/mam3e';
 
 export {
   createCharacterFromPrompt,
+  createCharacterFromIntent,
   getCreator,
   hasCreator,
   registerCreator,
 } from './createCharacter';
 export { parseCreationIntent, pickByKeywords, pickByKeywordsOrDefault } from './intent';
+export {
+  requestCreationHints,
+  applyHintsToIntent,
+  DRAFT_ENDPOINT,
+  type CreationHints,
+  type CreationPromptInput,
+} from './llmIntent';
 export type {
   CreationRequest,
   CreationResult,

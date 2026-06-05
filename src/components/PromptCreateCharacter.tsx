@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import { Sparkles, Loader2 } from 'lucide-react';
 import { Button } from './ui/Button';
-import { createCharacterFromPrompt } from '../creation';
+import {
+  applyHintsToIntent,
+  createCharacterFromIntent,
+  parseCreationIntent,
+  requestCreationHints,
+} from '../creation';
 import type { CharacterDocument, SystemDataModel } from '../types/core/document';
 import type { GameSystemId } from '../types/game-systems';
 
@@ -22,10 +27,12 @@ const EXAMPLE_PROMPTS: Partial<Record<GameSystemId, string>> = {
 };
 
 /**
- * The prompt box: type a description, get a finished character. Submitting runs
- * the deterministic creation pipeline (parse → draft → derive → validate) and
- * hands the finished document up to be saved and opened. Residual validator
- * issues are surfaced as a notification so nothing is hidden.
+ * The prompt box: type a description, get a finished character. Submitting first
+ * asks the optional LLM gateway to draft creation hints from the description; if
+ * the gateway is unconfigured or slow it silently falls back to deterministic
+ * parsing. Either way the same per-system creator derives and the validator
+ * judges the result, which is handed up to be saved and opened. Residual issues
+ * surface as a notification so nothing is hidden.
  */
 export const PromptCreateCharacter: React.FC<Props> = ({ systemId, onCreated, onNotify }) => {
   const [prompt, setPrompt] = useState('');
@@ -40,7 +47,11 @@ export const PromptCreateCharacter: React.FC<Props> = ({ systemId, onCreated, on
 
     setBusy(true);
     try {
-      const result = await createCharacterFromPrompt({ systemId, prompt: trimmed });
+      // AI proposes (optional), the deterministic rules decide. Hints only steer
+      // catalog selection; with no gateway this resolves to deterministic parsing.
+      const hints = await requestCreationHints({ systemId, prompt: trimmed });
+      const intent = hints ? applyHintsToIntent(trimmed, hints) : parseCreationIntent(trimmed);
+      const result = await createCharacterFromIntent(systemId, intent);
       onCreated(result.document);
 
       const errors = result.issues.filter((issue) => issue.severity === 'error');

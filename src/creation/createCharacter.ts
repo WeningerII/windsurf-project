@@ -3,7 +3,7 @@ import type { SystemDataModel } from '../types/core/document';
 import type { GameSystemId } from '../types/game-systems';
 import { generateUUID } from '../utils/browserCompat';
 import { parseCreationIntent } from './intent';
-import type { CreationRequest, CreationResult, SystemCreator } from './types';
+import type { CreationIntent, CreationRequest, CreationResult, SystemCreator } from './types';
 
 /**
  * The prompt → draft → derive → validate pipeline. This is the single entry
@@ -27,25 +27,34 @@ export function hasCreator(systemId: GameSystemId): boolean {
   return creators.has(systemId);
 }
 
-export async function createCharacterFromPrompt(request: CreationRequest): Promise<CreationResult> {
-  const systemDef = systemRegistry.get(request.systemId);
+/**
+ * Build a finished character from an already-parsed {@link CreationIntent}. This
+ * is the shared core: the deterministic offline path parses the intent itself,
+ * while the LLM path folds model hints into the intent first — both land here, so
+ * the derive-and-validate gate is identical regardless of how the intent formed.
+ */
+export async function createCharacterFromIntent(
+  systemId: GameSystemId,
+  intent: CreationIntent,
+  id?: string
+): Promise<CreationResult> {
+  const systemDef = systemRegistry.get(systemId);
   if (!systemDef) {
-    throw new Error(`No registered system found for '${request.systemId}'.`);
+    throw new Error(`No registered system found for '${systemId}'.`);
   }
 
-  const creator = creators.get(request.systemId);
+  const creator = creators.get(systemId);
   if (!creator) {
-    throw new Error(`No character creator is registered for '${request.systemId}'.`);
+    throw new Error(`No character creator is registered for '${systemId}'.`);
   }
 
-  const intent = parseCreationIntent(request.prompt, request.level);
   const draft = await creator.build(intent);
 
   const now = new Date();
   const rawDocument = {
-    id: request.id ?? generateUUID(),
+    id: id ?? generateUUID(),
     name: draft.name || 'New Character',
-    systemId: request.systemId,
+    systemId,
     system: draft.system,
     createdAt: now,
     updatedAt: now,
@@ -57,4 +66,9 @@ export async function createCharacterFromPrompt(request: CreationRequest): Promi
   const ok = !issues.some((issue) => issue.severity === 'error');
 
   return { document, issues, ok };
+}
+
+export async function createCharacterFromPrompt(request: CreationRequest): Promise<CreationResult> {
+  const intent = parseCreationIntent(request.prompt, request.level);
+  return createCharacterFromIntent(request.systemId, intent, request.id);
 }
