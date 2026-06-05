@@ -1,4 +1,5 @@
 import { powerById } from '../../data/mutants-and-masterminds/3e/powers/aggregations';
+import { mam3eAdvantagesById } from '../../data/mutants-and-masterminds/3e/advantages';
 import { createDefaultMam3eData, type Mam3eDataModel } from '../../systems/mam3e/data-model';
 import type { CreationDraft, CreationIntent, SystemCreator } from '../types';
 
@@ -7,14 +8,16 @@ import type { CreationDraft, CreationIntent, SystemCreator } from '../types';
  * which sets both the trait caps (2 × PL) and the build budget (15 × PL). The
  * creator reads a PL from the prompt (or defaults to the standard starting PL
  * 10) and lays down a melee bruiser scaled to it: traits, defenses, a close
- * Damage power, and a couple of skills, all kept comfortably inside every PL
- * cap and well under the point budget so the build is unambiguously legal.
+ * Damage power, a couple of combat advantages, and skills — all kept comfortably
+ * inside every PL cap and well under the point budget so the build is legal.
  */
 
 const DEFAULT_PL = 10;
 const MIN_PL = 1;
 const MAX_PL = 20;
 const STANDARD_PP_PER_PL = 15;
+/** Signature combat advantages for a bruiser; filtered against the catalog. */
+const PREFERRED_ADVANTAGE_IDS = ['all-out-attack', 'power-attack', 'improved-initiative'];
 
 export const mam3eCreator: SystemCreator<Mam3eDataModel> = {
   systemId: 'mam3e',
@@ -53,6 +56,8 @@ export const mam3eCreator: SystemCreator<Mam3eDataModel> = {
       system.powers = [{ ...damage, rank: attackRank }];
     }
 
+    system.advantages = startingAdvantages();
+
     system.skills = {
       perception: { rank: 2, total: 0 },
       intimidation: { rank: half, total: 0 },
@@ -62,6 +67,13 @@ export const mam3eCreator: SystemCreator<Mam3eDataModel> = {
     return { name, system };
   },
 };
+
+/** Resolve the preferred advantage ids against the catalog (unranked, 1 PP each). */
+function startingAdvantages(): Mam3eDataModel['advantages'] {
+  return PREFERRED_ADVANTAGE_IDS.map((id) => mam3eAdvantagesById[id])
+    .filter((advantage): advantage is NonNullable<typeof advantage> => Boolean(advantage))
+    .map((advantage) => ({ id: advantage.id, name: advantage.name }));
+}
 
 function resolvePowerLevel(intent: CreationIntent): number {
   const explicit = intent.prompt.toLowerCase().match(/\b(?:pl|power\s*level)\s*(\d{1,2})\b/);

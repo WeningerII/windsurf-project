@@ -86,11 +86,27 @@ export const daggerheartCreator: SystemCreator<DaggerheartDataModel> = {
     system.community = community.name;
     system.attributes = assignTraitArray(cls, intent);
     system.domainCards = startingCards(cls, level);
+    system.experiences = startingExperiences(cls, intent);
 
     const name = intent.name ?? `${ancestry.name} ${cls.name}`;
     return { name, system };
   },
 };
+
+/** A short, themed experience for each trait — the +2 trait seeds the first one. */
+const TRAIT_EXPERIENCE: Record<DaggerheartTrait, string> = {
+  strength: 'Brawler',
+  agility: 'Acrobat',
+  finesse: 'Burglar',
+  instinct: 'Wilderness Tracker',
+  presence: 'Silver Tongue',
+  knowledge: 'Loremaster',
+};
+
+/** Two starting experiences (Daggerheart grants two at +2): trait-themed + general. */
+function startingExperiences(cls: DaggerheartClass, intent: CreationIntent): string[] {
+  return [TRAIT_EXPERIENCE[leadTrait(cls, intent)], 'Adventurer'];
+}
 
 /** Assign the fixed +2/+1/+1/0/0/-1 array, +2 on the class/prompt-led trait. */
 function assignTraitArray(

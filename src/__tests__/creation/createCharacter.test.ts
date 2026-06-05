@@ -60,6 +60,10 @@ describe('createCharacterFromPrompt — Daggerheart', () => {
     // Starting loadout came from the class domains and is within the cap.
     expect(system.domainCards.length).toBeGreaterThan(0);
     expect(system.domainCards.length).toBeLessThanOrEqual(5);
+
+    // Two starting experiences, themed off the +2 trait (Knowledge → Loremaster).
+    expect(system.experiences).toHaveLength(2);
+    expect(system.experiences).toContain('Loremaster');
   });
 
   it('reads an explicit level from the prompt', async () => {
@@ -189,8 +193,9 @@ describe('createCharacterFromPrompt — Mutants & Masterminds 3e', () => {
     expect(system.plViolations ?? []).toEqual([]);
     const spent = Object.values(system.powerPoints.spent).reduce((a, b) => a + b, 0);
     expect(spent).toBeLessThanOrEqual(system.powerPoints.total);
-    // It has a signature power.
+    // It has a signature power and a few combat advantages.
     expect(system.powers.length).toBeGreaterThan(0);
+    expect(system.advantages.length).toBeGreaterThan(0);
   });
 
   it('reads an explicit power level from the prompt', async () => {
