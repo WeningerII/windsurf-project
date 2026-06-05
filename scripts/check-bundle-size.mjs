@@ -8,9 +8,11 @@ const assetsDir = path.resolve(process.cwd(), 'dist/assets');
 
 const budgets = {
   // Total JS (code + per-system data chunks) gzip ceiling. Raised 800→816→824 KiB
-  // across the area-of-effect combat feature and the tabletop-loop pass below
-  // (conditions, concentration, opportunity attacks). Overridable via env.
-  totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 824 * 1024,
+  // across the area-of-effect combat feature and the tabletop-loop pass (conditions,
+  // concentration, opportunity attacks), then 824→828 KiB for the cross-system
+  // creation legality gate (per-system validators for all 7 systems, the
+  // deterministic "rules decide" half of prompt-driven creation). Overridable via env.
+  totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 828 * 1024,
   // App (eager) chunk gzip ceiling. SceneManager — which pulls the whole combat /
   // tactical-AI / verticality engine via the rules module — is now React.lazy'd,
   // so that chain lives in an on-demand chunk, NOT the eager app chunk. That drops

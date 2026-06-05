@@ -2,6 +2,7 @@ import { SystemDefinition } from '../../registry/types';
 import { Pf1eDataModel, createDefaultPf1eData } from './data-model';
 import { Pf1eEngine } from './engine';
 import { makeD20LegacySheet } from '../d20-legacy/wrapper';
+import { createD20LegacyValidator } from '../d20-legacy/validation';
 import { SYSTEM_SUPPORT_NOTES } from '../../utils/documentationCopy';
 
 export const Pf1eSystemDef: SystemDefinition<Pf1eDataModel> = {
@@ -45,5 +46,6 @@ export const Pf1eSystemDef: SystemDefinition<Pf1eDataModel> = {
   ],
   createDefaultData: createDefaultPf1eData,
   engine: new Pf1eEngine(),
+  validator: createD20LegacyValidator<Pf1eDataModel>('pf1e'),
   SheetComponent: makeD20LegacySheet<Pf1eDataModel>(),
 };
