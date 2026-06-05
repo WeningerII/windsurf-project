@@ -208,6 +208,42 @@ describe('createCharacterFromPrompt — Mutants & Masterminds 3e', () => {
   });
 });
 
+describe('createCharacterFromPrompt — D&D 5e spell selection', () => {
+  it('fills a prepared caster with cantrips + prepared leveled spells', async () => {
+    const result = await createCharacterFromPrompt({
+      systemId: 'dnd-5e-2024',
+      prompt: 'a wise dwarf cleric',
+    });
+    expect(result.ok).toBe(true);
+    const sc = result.document.system.spellcasting;
+    expect(sc?.spellsKnown.length).toBeGreaterThan(0);
+    expect(sc?.spellsPrepared.length).toBeGreaterThan(0);
+    // Prepared spells are a subset of what's known (validator invariant).
+    const known = new Set(sc?.spellsKnown ?? []);
+    expect((sc?.spellsPrepared ?? []).every((id) => known.has(id))).toBe(true);
+  });
+
+  it('gives a known caster spells but nothing "prepared"', async () => {
+    const result = await createCharacterFromPrompt({
+      systemId: 'dnd-5e-2014',
+      prompt: 'a halfling sorcerer',
+    });
+    expect(result.ok).toBe(true);
+    const sc = result.document.system.spellcasting;
+    expect(sc?.spellsKnown.length).toBeGreaterThan(0);
+    expect(sc?.spellsPrepared).toEqual([]);
+  });
+
+  it('leaves a non-caster without a spell list', async () => {
+    const result = await createCharacterFromPrompt({
+      systemId: 'dnd-5e-2014',
+      prompt: 'a stealthy rogue',
+    });
+    expect(result.ok).toBe(true);
+    expect(result.document.system.spellcasting?.spellsKnown ?? []).toEqual([]);
+  });
+});
+
 describe('createCharacterFromPrompt — all seven systems', () => {
   it('produces an error-free, derived sheet for every system from one prompt', async () => {
     for (const systemId of ALL_SYSTEMS) {
