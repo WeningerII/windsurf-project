@@ -16,6 +16,8 @@
 
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
 import type { SceneCoordinate, SceneToken } from '../../types/core/scene';
+import type { Power } from '../../types/mam/powers';
+import { getPowerRank } from '../../systems/mam3e/powerMath';
 import { makeEffectId, type EffectInstance } from '../ir/types';
 
 export interface Mam3eCombatant {
@@ -46,10 +48,18 @@ export function buildMam3eCombatant(
   const abilities = (system.abilities as Record<string, number>) ?? {};
   const skills = (system.skills as Record<string, { rank?: number }>) ?? {};
   const defenses = (system.defenses as Record<string, { total?: number }>) ?? {};
+  const powers = (system.powers as Power[] | undefined) ?? [];
   const id = document.id;
 
   const closeAttack = num(abilities.fgt) + num(skills['close-combat']?.rank);
-  const effectRank = num(abilities.str); // close-combat damage baseline
+
+  // Effect rank (attack severity → Toughness DC = 15 + rank). Strength is the
+  // unarmed/close-combat baseline; a close-range Damage power refines it upward
+  // when the hero leads with a power rather than a punch.
+  const bestClosePowerRank = powers
+    .filter((power) => power.type === 'attack' && power.range === 'close')
+    .reduce((max, power) => Math.max(max, getPowerRank(power)), 0);
+  const effectRank = Math.max(num(abilities.str), bestClosePowerRank);
 
   const attackEffects: EffectInstance[] = [
     {

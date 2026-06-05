@@ -74,8 +74,16 @@ export function useMam3eSheetController({ document, onUpdate }: UseMam3eSheetCon
       ppSpent: derivedState.ppSpent,
       ppOver: derivedState.ppOver,
       onNameChange: mutationHandlers.onNameChange,
-      onPowerLevelChange: (value: string) =>
-        mutationHandlers.update({ powerLevel: parseNum(value, 1) }),
+      onPowerLevelChange: (value: string) => {
+        // Standard build budget tracks Power Level at 15 PP/PL (Hero's Handbook
+        // p.24). Keep the two in sync as PL changes; a GM can still override the
+        // total afterward via the total-PP input.
+        const powerLevel = parseNum(value, 1);
+        mutationHandlers.update({
+          powerLevel,
+          powerPoints: { ...powerPoints, total: powerLevel * 15 },
+        });
+      },
       onTotalPowerPointsChange: (value: string) =>
         mutationHandlers.update({
           powerPoints: { ...powerPoints, total: parseNum(value, 0) },

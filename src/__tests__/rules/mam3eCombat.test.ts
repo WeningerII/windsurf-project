@@ -62,6 +62,70 @@ describe('buildMam3eCombatant', () => {
       incapacitated: false,
     });
   });
+
+  it('lifts effect rank to a close Damage power that outranks Strength', () => {
+    const doc = {
+      id: 'hero',
+      name: 'Hero',
+      systemId: 'mam3e',
+      system: {
+        abilities: { fgt: 8, str: 2 },
+        skills: { 'close-combat': { rank: 2 } },
+        defenses: { parry: { total: 12 }, dodge: { total: 10 }, toughness: { total: 6 } },
+        powers: [
+          {
+            id: 'claws',
+            name: 'Claws',
+            system: 'mam3e',
+            source: 'test',
+            type: 'attack',
+            action: 'standard',
+            range: 'close',
+            duration: 'instant',
+            baseCost: 1,
+            perRank: true,
+            rank: 9,
+            description: '',
+            effects: [],
+          },
+        ],
+      },
+    } as unknown as CharacterDocument<SystemDataModel>;
+    const c = buildMam3eCombatant(doc, { tokenId: 't', position: { x: 0, y: 0 } });
+    expect(c.effectRank).toBe(9); // close Damage rank 9 beats STR 2
+  });
+
+  it('ignores a ranged Damage power for the close effect rank', () => {
+    const doc = {
+      id: 'hero',
+      name: 'Hero',
+      systemId: 'mam3e',
+      system: {
+        abilities: { fgt: 8, str: 4 },
+        skills: { 'close-combat': { rank: 2 } },
+        defenses: { parry: { total: 12 }, dodge: { total: 10 }, toughness: { total: 6 } },
+        powers: [
+          {
+            id: 'blast',
+            name: 'Blast',
+            system: 'mam3e',
+            source: 'test',
+            type: 'attack',
+            action: 'standard',
+            range: 'ranged',
+            duration: 'instant',
+            baseCost: 2,
+            perRank: true,
+            rank: 12,
+            description: '',
+            effects: [],
+          },
+        ],
+      },
+    } as unknown as CharacterDocument<SystemDataModel>;
+    const c = buildMam3eCombatant(doc, { tokenId: 't', position: { x: 0, y: 0 } });
+    expect(c.effectRank).toBe(4); // ranged Blast doesn't set the close baseline; STR 4 stands
+  });
 });
 
 describe('resolveSceneAttack — M&M condition track', () => {
