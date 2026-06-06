@@ -204,11 +204,12 @@ export const level1Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'One creature of 5 HD or less flees for 1d4 rounds.',
-    classes: ['cleric', 'sorcerer', 'wizard'],
+    classes: ['cleric', 'sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       cleric: 1,
       sorcerer: 1,
       wizard: 1,
+      bard: 1,
     },
   },
   {
@@ -316,11 +317,12 @@ export const level1Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'You understand all spoken and written languages.',
-    classes: ['cleric', 'sorcerer', 'wizard'],
+    classes: ['cleric', 'sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       cleric: 1,
       sorcerer: 1,
       wizard: 1,
+      bard: 1,
     },
   },
   {
@@ -358,9 +360,10 @@ export const level1Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Cures 1d8 damage +1/level (max +5).',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 1,
+      bard: 1,
     },
   },
   {
@@ -398,9 +401,10 @@ export const level1Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Cures 1d8 damage +1/level (max +5).',
-    classes: ['druid'],
+    classes: ['druid', 'bard'],
     levelsByClass: {
       druid: 1,
+      bard: 1,
     },
   },
   {
@@ -1755,9 +1759,10 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description:
       'Suppresses fear or gives +4 on saves against fear for one subject + one per four levels.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 1,
+      bard: 1,
     },
   },
   {
@@ -1953,11 +1958,12 @@ export const level1Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Calls extraplanar creature to fight for you.',
-    classes: ['cleric', 'sorcerer', 'wizard'],
+    classes: ['cleric', 'sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       cleric: 1,
       sorcerer: 1,
       wizard: 1,
+      bard: 1,
     },
   },
   {
@@ -2029,10 +2035,11 @@ export const level1Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Wards an area; a mental or audible alarm sounds when a creature enters.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 1,
       wizard: 1,
+      bard: 1,
     },
   },
   {
@@ -2065,10 +2072,11 @@ export const level1Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Animates a nonliving rope to move, coil, knot, or entangle as you command.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 1,
       wizard: 1,
+      bard: 1,
     },
   },
   {
@@ -2148,10 +2156,11 @@ export const level1Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Makes one humanoid regard you as a trusted friend and ally.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 1,
       wizard: 1,
+      bard: 1,
     },
   },
   {
@@ -2225,10 +2234,11 @@ export const level1Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Detects secret doors and hidden compartments within 60 ft.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 1,
       wizard: 1,
+      bard: 1,
     },
   },
   {
@@ -2260,10 +2270,11 @@ export const level1Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'You alter your appearance, clothing, and equipment as a visual illusion.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 1,
       wizard: 1,
+      bard: 1,
     },
   },
   {
@@ -2337,10 +2348,11 @@ export const level1Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Removes writings, either magical (with a check) or mundane, from a surface.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 1,
       wizard: 1,
+      bard: 1,
     },
   },
   {
@@ -2372,10 +2384,11 @@ export const level1Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Your base land speed increases by 30 ft.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 1,
       wizard: 1,
+      bard: 1,
     },
   },
   {
@@ -2414,10 +2427,11 @@ export const level1Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Falling creatures or objects descend slowly, taking no damage on landing.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 1,
       wizard: 1,
+      bard: 1,
     },
   },
   {
@@ -2570,10 +2584,11 @@ export const level1Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Fascinates 2d4 HD of creatures, making them more susceptible to suggestion.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 1,
       wizard: 1,
+      bard: 1,
     },
   },
   {
@@ -2604,10 +2619,11 @@ export const level1Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Determines the properties of a single magic item.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 1,
       wizard: 1,
+      bard: 1,
     },
   },
   {
@@ -2754,10 +2770,11 @@ export const level1Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Alters an object’s magic aura to mislead detection magic.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 1,
       wizard: 1,
+      bard: 1,
     },
   },
   {
@@ -2916,10 +2933,11 @@ export const level1Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Creates a silent visual illusion of your design.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 1,
       wizard: 1,
+      bard: 1,
     },
   },
   {
@@ -2958,10 +2976,11 @@ export const level1Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Puts 4 HD of creatures into a magical slumber.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 1,
       wizard: 1,
+      bard: 1,
     },
   },
   {
@@ -3029,10 +3048,11 @@ export const level1Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'An invisible, mindless force performs simple tasks at your command.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 1,
       wizard: 1,
+      bard: 1,
     },
   },
   {
@@ -3072,10 +3092,52 @@ export const level1Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Throws your voice so sounds seem to come from elsewhere.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 1,
       wizard: 1,
+      bard: 1,
+    },
+  },
+  {
+    id: 'lesser-confusion-35e',
+    name: 'Lesser Confusion',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/lesserConfusion.htm',
+    level: 1,
+    school: 'enchantment',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'rounds',
+      rounds: 1,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates',
+    },
+    savingThrowText: 'Will negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    concentration: false,
+    ritual: false,
+    description: 'One creature behaves randomly (as confusion) for 1 round.',
+    classes: ['bard'],
+    levelsByClass: {
+      bard: 1,
     },
   },
 ];

@@ -316,6 +316,7 @@ const iconicSpellExpectations: Array<{
     systems: {
       'dnd-5e-2014': e(0, 'conjuration'),
       'dnd-5e-2024': e(0, 'conjuration'),
+      'dnd-3.5e': e(0, 'transmutation'),
       pf1e: e(0, 'transmutation'),
       pf2e: e(0, 'evocation'),
     },

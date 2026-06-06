@@ -260,8 +260,8 @@ describe('Spell Data Validation', () => {
   it('merges purely-level-divergent 3.5e class-split variants and preserves per-class levels', () => {
     const cureModerate = dnd35eSpellsModule.getSpell('cure-moderate-wounds-cleric-35e');
     expect(cureModerate?.level).toBe(2);
-    expect(cureModerate?.classes).toEqual(['cleric', 'druid']);
-    expect(cureModerate?.levelsByClass).toMatchObject({ cleric: 2, druid: 3 });
+    expect(cureModerate?.classes).toEqual(['bard', 'cleric', 'druid']);
+    expect(cureModerate?.levelsByClass).toMatchObject({ bard: 2, cleric: 2, druid: 3 });
 
     const druidAlias = dnd35eSpellsModule.spellIdAliases['cure-moderate-wounds-druid-35e'];
     expect(druidAlias).toBe('cure-moderate-wounds-cleric-35e');
@@ -300,7 +300,7 @@ describe('Spell Data Validation', () => {
       },
       'tongues-cleric-35e': {
         canonical: 'tongues-35e',
-        levelsByClass: { bard: 3, cleric: 4, sorcerer: 3, wizard: 3 },
+        levelsByClass: { bard: 2, cleric: 4, sorcerer: 3, wizard: 3 },
       },
       'dismissal-cleric-35e': {
         canonical: 'dismissal-35e',
@@ -412,7 +412,7 @@ describe('Spell Data Validation', () => {
     > = {
       'flare-druid-35e': {
         canonical: 'flare-35e',
-        levelsByClass: { druid: 0, sorcerer: 0, wizard: 0 },
+        levelsByClass: { bard: 0, druid: 0, sorcerer: 0, wizard: 0 },
       },
       'protection-energy-druid-35e': {
         canonical: 'protection-from-energy-35e',

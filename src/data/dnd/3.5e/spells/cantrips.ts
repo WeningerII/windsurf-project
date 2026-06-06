@@ -1,6 +1,6 @@
 import { Spell } from '../../../../types/magic/spells';
 
-// D&D 3.5e Cantrips Spells (SRD)
+// D&D 3.5e Level 0 Spells (SRD)
 export const cantrips: Spell[] = [
   {
     id: 'acid-splash-35e',
@@ -507,9 +507,10 @@ export const cantrips: Spell[] = [
     concentration: true,
     ritual: false,
     description: 'Detects spells and magic items within 60 ft.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 0,
+      bard: 0,
     },
   },
   {
@@ -544,9 +545,10 @@ export const cantrips: Spell[] = [
     concentration: true,
     ritual: false,
     description: 'Detects spells and magic items within 60 ft.',
-    classes: ['druid'],
+    classes: ['druid', 'bard'],
     levelsByClass: {
       druid: 0,
+      bard: 0,
     },
   },
   {
@@ -742,9 +744,10 @@ export const cantrips: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Dazzles one creature (-1 penalty on attack rolls).',
-    classes: ['druid'],
+    classes: ['druid', 'bard'],
     levelsByClass: {
       druid: 0,
+      bard: 0,
     },
   },
   {
@@ -784,10 +787,11 @@ export const cantrips: Spell[] = [
     ritual: false,
     description:
       'A burst of bright light springs from your hand. If this spell is cast against a light-sensitive creature, that creature is blinded for 1 round.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 0,
       wizard: 0,
+      bard: 0,
     },
   },
   {
@@ -982,9 +986,10 @@ export const cantrips: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'You discern north.',
-    classes: ['druid'],
+    classes: ['druid', 'bard'],
     levelsByClass: {
       druid: 0,
+      bard: 0,
     },
   },
   {
@@ -1054,9 +1059,10 @@ export const cantrips: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Object shines like a torch.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 0,
+      bard: 0,
     },
   },
   {
@@ -1091,9 +1097,10 @@ export const cantrips: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Object shines like a torch.',
-    classes: ['druid'],
+    classes: ['druid', 'bard'],
     levelsByClass: {
       druid: 0,
+      bard: 0,
     },
   },
   {
@@ -1174,9 +1181,10 @@ export const cantrips: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Makes minor repairs on an object.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 0,
+      bard: 0,
     },
   },
   {
@@ -1215,9 +1223,10 @@ export const cantrips: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Makes minor repairs on an object.',
-    classes: ['druid'],
+    classes: ['druid', 'bard'],
     levelsByClass: {
       druid: 0,
+      bard: 0,
     },
   },
   {
@@ -1462,9 +1471,10 @@ export const cantrips: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Read scrolls and spellbooks.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 0,
+      bard: 0,
     },
   },
   {
@@ -1496,9 +1506,10 @@ export const cantrips: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Read scrolls and spellbooks.',
-    classes: ['druid'],
+    classes: ['druid', 'bard'],
     levelsByClass: {
       druid: 0,
+      bard: 0,
     },
   },
   {
@@ -1579,9 +1590,10 @@ export const cantrips: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Subject gains +1 on saving throws.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 0,
+      bard: 0,
     },
   },
   {
@@ -1621,9 +1633,10 @@ export const cantrips: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Subject gains +1 bonus on saving throws.',
-    classes: ['druid'],
+    classes: ['druid', 'bard'],
     levelsByClass: {
       druid: 0,
+      bard: 0,
     },
   },
   {
@@ -1754,6 +1767,202 @@ export const cantrips: Spell[] = [
     classes: ['druid'],
     levelsByClass: {
       druid: 0,
+    },
+  },
+  {
+    id: 'lullaby-35e',
+    name: 'Lullaby',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/lullaby.htm',
+    level: 0,
+    school: 'enchantment',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 110,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates',
+    },
+    savingThrowText: 'Will negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    concentration: false,
+    ritual: false,
+    description:
+      'Makes subjects within a 10-ft radius drowsy (-5 on Listen and Spot, -2 on Will saves vs sleep).',
+    classes: ['bard'],
+    levelsByClass: {
+      bard: 0,
+    },
+  },
+  {
+    id: 'mage-hand-35e',
+    name: 'Mage Hand',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/mageHand.htm',
+    level: 0,
+    school: 'transmutation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: 'concentration',
+    },
+    spellResistance: false,
+    spellResistanceDetail: 'no',
+    concentration: false,
+    ritual: false,
+    description:
+      'You point at an object and can lift and move it at will from a distance (up to 5 lbs).',
+    classes: ['bard', 'sorcerer', 'wizard'],
+    levelsByClass: {
+      bard: 0,
+      sorcerer: 0,
+      wizard: 0,
+    },
+  },
+  {
+    id: 'message-35e',
+    name: 'Message',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/message.htm',
+    level: 0,
+    school: 'transmutation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 110,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+      focus: true,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10,
+    },
+    spellResistance: false,
+    spellResistanceDetail: 'no',
+    concentration: false,
+    ritual: false,
+    description: 'You whisper messages and receive whispered replies with creatures you can see.',
+    classes: ['bard', 'sorcerer', 'wizard'],
+    levelsByClass: {
+      bard: 0,
+      sorcerer: 0,
+      wizard: 0,
+    },
+  },
+  {
+    id: 'open-close-35e',
+    name: 'Open/Close',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/openClose.htm',
+    level: 0,
+    school: 'transmutation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+      focus: true,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (object)',
+    },
+    savingThrowText: 'Will negates (object)',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
+    concentration: false,
+    ritual: false,
+    description:
+      'Opens or closes a small unlocked door, chest, box, window, bottle, or similar object.',
+    classes: ['bard', 'sorcerer', 'wizard'],
+    levelsByClass: {
+      bard: 0,
+      sorcerer: 0,
+      wizard: 0,
+    },
+  },
+  {
+    id: 'summon-instrument-35e',
+    name: 'Summon Instrument',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/summonInstrument.htm',
+    level: 0,
+    school: 'conjuration',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    spellResistance: false,
+    spellResistanceDetail: 'no',
+    concentration: false,
+    ritual: false,
+    description: 'Summons one handheld musical instrument of your choice for the duration.',
+    classes: ['bard'],
+    levelsByClass: {
+      bard: 0,
     },
   },
 ];

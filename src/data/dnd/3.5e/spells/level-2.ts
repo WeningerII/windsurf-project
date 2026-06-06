@@ -114,9 +114,10 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Sends a Tiny animal to a specific place.',
-    classes: ['druid'],
+    classes: ['druid', 'bard'],
     levelsByClass: {
       druid: 2,
+      bard: 2,
     },
   },
   {
@@ -156,9 +157,10 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Fascinates 2d6 HD of animals.',
-    classes: ['druid'],
+    classes: ['druid', 'bard'],
     levelsByClass: {
       druid: 2,
+      bard: 2,
     },
   },
   {
@@ -443,9 +445,10 @@ export const level2Spells: Spell[] = [
     concentration: true,
     ritual: false,
     description: 'Calms creatures, negating emotion effects.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 2,
+      bard: 2,
     },
   },
   {
@@ -484,11 +487,12 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Subject gains +4 to Dex for 1 min./level.',
-    classes: ['druid', 'sorcerer', 'wizard'],
+    classes: ['druid', 'sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       druid: 2,
       sorcerer: 2,
       wizard: 2,
+      bard: 2,
     },
   },
   {
@@ -602,9 +606,10 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Cures 2d8 damage +1/level (max +10).',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 2,
+      bard: 2,
     },
   },
   {
@@ -639,11 +644,12 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: '20-ft. radius of supernatural shadow.',
-    classes: ['cleric', 'sorcerer', 'wizard'],
+    classes: ['cleric', 'sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       cleric: 2,
       sorcerer: 2,
       wizard: 2,
+      bard: 2,
     },
   },
   {
@@ -723,9 +729,10 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Stops poison from harming subject for 1 hour/level.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 2,
+      bard: 2,
     },
   },
   {
@@ -765,9 +772,10 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Stops poison from harming subject for 1 hour/level.',
-    classes: ['druid'],
+    classes: ['druid', 'bard'],
     levelsByClass: {
       druid: 2,
+      bard: 2,
     },
   },
   {
@@ -848,11 +856,12 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Subject gains +4 to Cha for 1 min./level.',
-    classes: ['cleric', 'sorcerer', 'wizard'],
+    classes: ['cleric', 'sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       cleric: 2,
       sorcerer: 2,
       wizard: 2,
+      bard: 2,
     },
   },
   {
@@ -892,9 +901,10 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Captivates all within 100 ft. + 10 ft./level.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 2,
+      bard: 2,
     },
   },
   {
@@ -1297,9 +1307,10 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Paralyzes one humanoid for 1 round/level.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 2,
+      bard: 2,
     },
   },
   {
@@ -1780,11 +1791,12 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Sonic vibration damages objects or crystalline creatures.',
-    classes: ['cleric', 'sorcerer', 'wizard'],
+    classes: ['cleric', 'sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       cleric: 2,
       sorcerer: 2,
       wizard: 2,
+      bard: 2,
     },
   },
   {
@@ -1867,9 +1879,10 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Negates sound in 20-ft. radius.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 2,
+      bard: 2,
     },
   },
   {
@@ -1947,9 +1960,10 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Deals 1d8 sonic damage to subjects; may stun them.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 2,
+      bard: 2,
     },
   },
   {
@@ -2103,11 +2117,12 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Calls extraplanar creature to fight for you.',
-    classes: ['cleric', 'sorcerer', 'wizard'],
+    classes: ['cleric', 'sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       cleric: 2,
       sorcerer: 2,
       wizard: 2,
+      bard: 2,
     },
   },
   {
@@ -2177,11 +2192,12 @@ export const level2Spells: Spell[] = [
     concentration: true,
     ritual: false,
     description: 'Summons swarm of bats, rats, or spiders.',
-    classes: ['druid', 'sorcerer', 'wizard'],
+    classes: ['druid', 'sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       druid: 2,
       sorcerer: 2,
       wizard: 2,
+      bard: 2,
     },
   },
   {
@@ -2255,9 +2271,10 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Conceals alignment for 24 hours.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 2,
+      bard: 1,
     },
   },
   {
@@ -2453,10 +2470,11 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'You assume the form of a Small or Medium creature of your own type.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 2,
       wizard: 2,
+      bard: 2,
     },
   },
   {
@@ -2528,10 +2546,11 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Attacks have a 20% miss chance against the blurred subject.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 2,
       wizard: 2,
+      bard: 2,
     },
   },
   {
@@ -2570,10 +2589,11 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'A living creature of 6 HD or less loses its next action.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 2,
       wizard: 2,
+      bard: 2,
     },
   },
   {
@@ -2613,10 +2633,11 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'You detect the surface thoughts of creatures in a cone.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 2,
       wizard: 2,
+      bard: 2,
     },
   },
   {
@@ -2683,10 +2704,11 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Subject gains +4 to Intelligence.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 2,
       wizard: 2,
+      bard: 2,
     },
   },
   {
@@ -2766,10 +2788,11 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Creatures in a 10-ft radius are blinded and outlined in golden particles.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 2,
       wizard: 2,
+      bard: 2,
     },
   },
   {
@@ -2808,10 +2831,11 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'A creature perceives everything as hilarious and falls down laughing.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 2,
       wizard: 2,
+      bard: 1,
     },
   },
   {
@@ -2850,10 +2874,11 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'A twisting pattern of colors fascinates 2d4 HD +1/level of creatures.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 2,
       wizard: 2,
+      bard: 2,
     },
   },
   {
@@ -2891,10 +2916,11 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'A creature or object becomes invisible until it attacks.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 2,
       wizard: 2,
+      bard: 2,
     },
   },
   {
@@ -3002,10 +3028,11 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'An enchanted mouth speaks a message when a specified event occurs.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 2,
       wizard: 2,
+      bard: 1,
     },
   },
   {
@@ -3045,10 +3072,11 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'As silent image, but with some sound.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 2,
       wizard: 2,
+      bard: 2,
     },
   },
   {
@@ -3080,10 +3108,11 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Creates 1d4 +1/three levels decoy duplicates of you (max 8).',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 2,
       wizard: 2,
+      bard: 2,
     },
   },
   {
@@ -3116,10 +3145,11 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Misleads divinations directed at one creature or object.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 2,
       wizard: 2,
+      bard: 2,
     },
   },
   {
@@ -3200,10 +3230,11 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Turns a fire into blinding fireworks or a thick cloud of choking smoke.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 2,
       wizard: 2,
+      bard: 2,
     },
   },
   {
@@ -3277,10 +3308,11 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Panics creatures of less than 6 HD.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 2,
       wizard: 2,
+      bard: 2,
     },
   },
   {
@@ -3347,10 +3379,11 @@ export const level2Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Reveals invisible creatures and objects.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 2,
       wizard: 2,
+      bard: 3,
     },
   },
   {
@@ -3461,6 +3494,43 @@ export const level2Spells: Spell[] = [
     description: 'Fills a 20-ft-radius spread with sticky strands that entangle creatures.',
     classes: ['sorcerer', 'wizard'],
     levelsByClass: {
+      sorcerer: 2,
+      wizard: 2,
+    },
+  },
+  {
+    id: 'whispering-wind-35e',
+    name: 'Whispering Wind',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/whisperingWind.htm',
+    level: 2,
+    school: 'transmutation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 1000,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'hours',
+      hours: 1,
+    },
+    spellResistance: false,
+    spellResistanceDetail: 'no',
+    concentration: false,
+    ritual: false,
+    description: 'Sends a short spoken message up to a mile to a location you have been.',
+    classes: ['bard', 'sorcerer', 'wizard'],
+    levelsByClass: {
+      bard: 2,
       sorcerer: 2,
       wizard: 2,
     },

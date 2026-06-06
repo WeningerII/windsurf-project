@@ -236,11 +236,12 @@ export const level5Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Frees subjects from enchantments, alterations, curses, and petrification.',
-    classes: ['cleric', 'sorcerer', 'wizard'],
+    classes: ['cleric', 'sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       cleric: 5,
       sorcerer: 5,
       wizard: 5,
+      bard: 4,
     },
   },
   {
@@ -479,9 +480,10 @@ export const level5Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Cures 4d8 damage +1/level (max +20).',
-    classes: ['druid'],
+    classes: ['druid', 'bard'],
     levelsByClass: {
       druid: 5,
+      bard: 4,
     },
   },
   {
@@ -1212,9 +1214,10 @@ export const level5Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Spies on subject from a distance.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 5,
+      bard: 3,
     },
   },
   {
@@ -1419,9 +1422,10 @@ export const level5Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Calls extraplanar creature to fight for you.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 5,
+      bard: 5,
     },
   },
   {
@@ -1454,10 +1458,11 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description:
       'You summon a creature from the Outer Planes to fight on your behalf. The creature appears where you designate and acts immediately on your turn.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 5,
       wizard: 5,
+      bard: 5,
     },
   },
   {
@@ -2296,10 +2301,11 @@ export const level5Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Fools scrying with an illusion of your devising.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 5,
       wizard: 5,
+      bard: 5,
     },
   },
   {
@@ -2379,10 +2385,11 @@ export const level5Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'As hold person, but affects any one living creature.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 5,
       wizard: 5,
+      bard: 4,
     },
   },
   {
@@ -2650,10 +2657,11 @@ export const level5Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'A fog lowers the Wisdom and Will saves of creatures within it.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 5,
       wizard: 5,
+      bard: 5,
     },
   },
   {
@@ -2692,10 +2700,11 @@ export const level5Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'As hallucinatory terrain, plus illusory structures.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 5,
       wizard: 5,
+      bard: 5,
     },
   },
   {
@@ -2805,10 +2814,11 @@ export const level5Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'As major image, but no concentration required.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 5,
       wizard: 5,
+      bard: 5,
     },
   },
   {
@@ -2883,10 +2893,11 @@ export const level5Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Changes the appearance of one creature per two levels.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 5,
       wizard: 5,
+      bard: 5,
     },
   },
   {
@@ -2957,6 +2968,165 @@ export const level5Spells: Spell[] = [
     levelsByClass: {
       sorcerer: 5,
       wizard: 5,
+    },
+  },
+  {
+    id: 'dream-35e',
+    name: 'Dream',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/dream.htm',
+    level: 5,
+    school: 'illusion',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'unlimited',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: 'see text',
+    },
+    spellResistance: false,
+    spellResistanceDetail: 'no',
+    concentration: false,
+    ritual: false,
+    description: 'Sends a message to a sleeping creature through its dreams.',
+    classes: ['bard', 'sorcerer', 'wizard'],
+    levelsByClass: {
+      bard: 5,
+      sorcerer: 5,
+      wizard: 5,
+    },
+  },
+  {
+    id: 'greater-heroism-35e',
+    name: 'Greater Heroism',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/greaterHeroism.htm',
+    level: 5,
+    school: 'enchantment',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10,
+    },
+    savingThrow: {
+      attribute: 'fort',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
+    concentration: false,
+    ritual: false,
+    description:
+      'Subject gains +4 on attacks and saves, immunity to fear, and temporary hit points.',
+    classes: ['bard'],
+    levelsByClass: {
+      bard: 5,
+    },
+  },
+  {
+    id: 'nightmare-35e',
+    name: 'Nightmare',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/nightmare.htm',
+    level: 5,
+    school: 'illusion',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'unlimited',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates',
+    },
+    savingThrowText: 'Will negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    concentration: false,
+    ritual: false,
+    description: 'Haunts a creature with a dream, dealing 1d10 damage and fatigue.',
+    classes: ['bard', 'sorcerer', 'wizard'],
+    levelsByClass: {
+      bard: 5,
+      sorcerer: 5,
+      wizard: 5,
+    },
+  },
+  {
+    id: 'song-of-discord-35e',
+    name: 'Song of Discord',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/songOfDiscord.htm',
+    level: 5,
+    school: 'enchantment',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 110,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'rounds',
+      rounds: 1,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates',
+    },
+    savingThrowText: 'Will negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    concentration: false,
+    ritual: false,
+    description: 'Creatures in a 20-ft radius turn on each other for the duration.',
+    classes: ['bard'],
+    levelsByClass: {
+      bard: 5,
     },
   },
 ];

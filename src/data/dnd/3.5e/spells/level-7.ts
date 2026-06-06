@@ -1108,10 +1108,11 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description:
       "You tap into the Shadowfell to cast a spell that mimics an evocation spell of 4th level or lower. The spell must be one that creates a physical effect, and the spell's effects appear shadowy and unreal.",
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 7,
       wizard: 7,
+      bard: 5,
     },
   },
   {
@@ -1863,10 +1864,11 @@ export const level7Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'You see and cast spells through an illusory double of yourself.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 7,
       wizard: 7,
+      bard: 6,
     },
   },
   {

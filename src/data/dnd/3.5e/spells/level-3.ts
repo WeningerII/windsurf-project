@@ -118,9 +118,10 @@ export const level3Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Makes subject blinded or deafened.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 3,
+      bard: 2,
     },
   },
   {
@@ -389,9 +390,10 @@ export const level3Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Cures 2d8 damage +1/level (max +10).',
-    classes: ['druid'],
+    classes: ['druid', 'bard'],
     levelsByClass: {
       druid: 3,
+      bard: 2,
     },
   },
   {
@@ -420,9 +422,10 @@ export const level3Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Cures 3d8 damage +1/level (max +15).',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 3,
+      bard: 3,
     },
   },
   {
@@ -456,11 +459,12 @@ export const level3Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: '60-ft. radius of bright light.',
-    classes: ['cleric', 'sorcerer', 'wizard'],
+    classes: ['cleric', 'sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       cleric: 3,
       sorcerer: 3,
       wizard: 3,
+      bard: 3,
     },
   },
   {
@@ -494,9 +498,10 @@ export const level3Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: '60-ft. radius of bright light.',
-    classes: ['druid'],
+    classes: ['druid', 'bard'],
     levelsByClass: {
       druid: 3,
+      bard: 3,
     },
   },
   {
@@ -641,9 +646,10 @@ export const level3Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Cancels spells and magical effects.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 3,
+      bard: 3,
     },
   },
   {
@@ -821,10 +827,11 @@ export const level3Spells: Spell[] = [
     ritual: false,
     description:
       "Choose a willing creature that you can see within range. Until the spell ends, the creature's speed is doubled, it gains a +2 bonus to AC, it has advantage on Dexterity saving throws, and it gains an additional action on each of its turns.",
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 3,
       wizard: 3,
+      bard: 3,
     },
   },
   {
@@ -1019,9 +1026,10 @@ export const level3Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Senses direction toward object (specific or type).',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 3,
+      bard: 2,
     },
   },
   {
@@ -1351,9 +1359,10 @@ export const level3Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Immunizes subject against poison, detoxifies venom in or on subject.',
-    classes: ['druid'],
+    classes: ['druid', 'bard'],
     levelsByClass: {
       druid: 3,
+      bard: 4,
     },
   },
   {
@@ -1393,9 +1402,10 @@ export const level3Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Masks object against scrying.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 3,
+      bard: 1,
     },
   },
   {
@@ -1761,9 +1771,10 @@ export const level3Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Frees object or person from curse.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 3,
+      bard: 3,
     },
   },
   {
@@ -2007,10 +2018,11 @@ export const level3Spells: Spell[] = [
       success: 'none',
       description: 'Will negates',
     },
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 3,
       wizard: 3,
+      bard: 3,
     },
   },
   {
@@ -2120,9 +2132,10 @@ export const level3Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'You can talk to normal plants and plant creatures.',
-    classes: ['druid'],
+    classes: ['druid', 'bard'],
     levelsByClass: {
       druid: 3,
+      bard: 4,
     },
   },
   {
@@ -2318,9 +2331,10 @@ export const level3Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Calls extraplanar creature to fight for you.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 3,
+      bard: 3,
     },
   },
   {
@@ -2353,10 +2367,11 @@ export const level3Spells: Spell[] = [
     ritual: false,
     description:
       'You summon a creature from the Outer Planes to fight on your behalf. The creature appears where you designate and acts immediately on your turn.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 3,
       wizard: 3,
+      bard: 3,
     },
   },
   {
@@ -2755,10 +2770,11 @@ export const level3Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'You flicker between the Material and Ethereal planes, gaining concealment.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 3,
       wizard: 3,
+      bard: 3,
     },
   },
   {
@@ -2797,10 +2813,11 @@ export const level3Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Puts 10 HD of creatures into a magical slumber.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 3,
       wizard: 3,
+      bard: 3,
     },
   },
   {
@@ -2838,10 +2855,11 @@ export const level3Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Attacks against the subject have a 50% miss chance.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 3,
       wizard: 3,
+      bard: 3,
     },
   },
   {
@@ -2991,10 +3009,11 @@ export const level3Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Subject becomes insubstantial and can fly slowly.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 3,
       wizard: 3,
+      bard: 3,
     },
   },
   {
@@ -3074,10 +3093,11 @@ export const level3Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Subject gains +2 on attacks, saves, and skill checks.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 3,
       wizard: 3,
+      bard: 2,
     },
   },
   {
@@ -3114,10 +3134,11 @@ export const level3Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Only intended readers can decipher the writing; others may be suggestible.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 3,
       wizard: 3,
+      bard: 3,
     },
   },
   {
@@ -3155,10 +3176,11 @@ export const level3Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Makes everyone within 10 ft of the recipient invisible.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 3,
       wizard: 3,
+      bard: 3,
     },
   },
   {
@@ -3240,10 +3262,11 @@ export const level3Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'As silent image, plus sound, smell, and thermal illusions.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 3,
       wizard: 3,
+      bard: 3,
     },
   },
   {
@@ -3316,10 +3339,11 @@ export const level3Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Conjures a quasi-real, horselike creature to ride.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 3,
       wizard: 3,
+      bard: 3,
     },
   },
   {
@@ -3352,10 +3376,11 @@ export const level3Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Subjects gain +2 Str and Con, +1 on Will saves, -2 AC.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 3,
       wizard: 3,
+      bard: 2,
     },
   },
   {
@@ -3428,10 +3453,11 @@ export const level3Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Changes one page to hide its true content.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 3,
       wizard: 3,
+      bard: 3,
     },
   },
   {
@@ -3468,10 +3494,11 @@ export const level3Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'A serpentine sigil immobilizes the reader in suspended animation.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 3,
       wizard: 3,
+      bard: 3,
     },
   },
   {
@@ -3551,10 +3578,11 @@ export const level3Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Compels a subject to follow a stated, reasonable course of action.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 3,
       wizard: 3,
+      bard: 2,
     },
   },
   {
@@ -3587,10 +3615,127 @@ export const level3Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Creates a 20-ft sphere of tranquil shelter for up to ten creatures.',
-    classes: ['sorcerer', 'wizard'],
+    classes: ['sorcerer', 'wizard', 'bard'],
     levelsByClass: {
       sorcerer: 3,
       wizard: 3,
+      bard: 3,
+    },
+  },
+  {
+    id: 'glibness-35e',
+    name: 'Glibness',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/glibness.htm',
+    level: 3,
+    school: 'transmutation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10,
+    },
+    spellResistance: false,
+    spellResistanceDetail: 'no',
+    concentration: false,
+    ritual: false,
+    description: 'You gain +30 on Bluff checks to convince others of the truth of your words.',
+    classes: ['bard'],
+    levelsByClass: {
+      bard: 3,
+    },
+  },
+  {
+    id: 'good-hope-35e',
+    name: 'Good Hope',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/goodHope.htm',
+    level: 3,
+    school: 'enchantment',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    concentration: false,
+    ritual: false,
+    description: 'Subjects gain +2 on saves, attacks, ability/skill checks, and damage.',
+    classes: ['bard'],
+    levelsByClass: {
+      bard: 3,
+    },
+  },
+  {
+    id: 'sculpt-sound-35e',
+    name: 'Sculpt Sound',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/sculptSound.htm',
+    level: 3,
+    school: 'transmutation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'hours',
+      hours: 1,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (object)',
+    },
+    savingThrowText: 'Will negates (object)',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    concentration: false,
+    ritual: false,
+    description: 'Creates, changes, or removes the sounds that objects or creatures produce.',
+    classes: ['bard'],
+    levelsByClass: {
+      bard: 3,
     },
   },
 ];

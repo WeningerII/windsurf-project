@@ -658,9 +658,10 @@ export const level4Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Cures 4d8 damage +1/level (max +20).',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 4,
+      bard: 4,
     },
   },
   {
@@ -689,9 +690,10 @@ export const level4Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Cures 3d8 damage +1/level (max +15).',
-    classes: ['druid'],
+    classes: ['druid', 'bard'],
     levelsByClass: {
       druid: 4,
+      bard: 3,
     },
   },
   {
@@ -1061,9 +1063,10 @@ export const level4Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Cancels spells and magical effects.',
-    classes: ['druid'],
+    classes: ['druid', 'bard'],
     levelsByClass: {
       druid: 4,
+      bard: 3,
     },
   },
   {
@@ -1519,9 +1522,10 @@ export const level4Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Subject moves normally despite impediments.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 4,
+      bard: 4,
     },
   },
   {
@@ -1561,9 +1565,10 @@ export const level4Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Subject moves normally despite impediments.',
-    classes: ['druid'],
+    classes: ['druid', 'bard'],
     levelsByClass: {
       druid: 4,
+      bard: 4,
     },
   },
   {
@@ -2186,9 +2191,10 @@ export const level4Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Immunizes subject against poison, detoxifies venom in or on subject.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 4,
+      bard: 4,
     },
   },
   {
@@ -2477,9 +2483,10 @@ export const level4Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Insects, spiders, and other vermin stay 10 ft. away.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 4,
+      bard: 4,
     },
   },
   {
@@ -2520,9 +2527,10 @@ export const level4Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Insects, spiders, and other vermin stay 10 ft. away.',
-    classes: ['druid'],
+    classes: ['druid', 'bard'],
     levelsByClass: {
       druid: 4,
+      bard: 4,
     },
   },
   {
@@ -2680,9 +2688,10 @@ export const level4Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Spies on subject from a distance.',
-    classes: ['druid'],
+    classes: ['druid', 'bard'],
     levelsByClass: {
       druid: 4,
+      bard: 3,
     },
   },
   {
@@ -3160,9 +3169,10 @@ export const level4Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Calls extraplanar creature to fight for you.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 4,
+      bard: 4,
     },
   },
   {
@@ -3274,9 +3284,10 @@ export const level4Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Speak any language.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 4,
+      bard: 2,
     },
   },
   {
@@ -3374,6 +3385,157 @@ export const level4Spells: Spell[] = [
     levelsByClass: {
       sorcerer: 4,
       wizard: 4,
+    },
+  },
+  {
+    id: 'greater-invisibility-35e',
+    name: 'Greater Invisibility',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/greaterInvisibility.htm',
+    level: 4,
+    school: 'illusion',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'rounds',
+      rounds: 1,
+    },
+    savingThrow: {
+      attribute: 'fort',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
+    spellResistance: false,
+    spellResistanceDetail: 'no',
+    concentration: false,
+    ritual: false,
+    description: 'As invisibility, but the subject can attack and remain invisible.',
+    classes: ['bard', 'sorcerer', 'wizard'],
+    levelsByClass: {
+      bard: 4,
+      sorcerer: 4,
+      wizard: 4,
+    },
+  },
+  {
+    id: 'legend-lore-35e',
+    name: 'Legend Lore',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/legendLore.htm',
+    level: 4,
+    school: 'divination',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: 'see text',
+    },
+    spellResistance: false,
+    spellResistanceDetail: 'no',
+    concentration: false,
+    ritual: false,
+    description: 'Reveals tales or lore about a person, place, or thing.',
+    classes: ['bard'],
+    levelsByClass: {
+      bard: 4,
+    },
+  },
+  {
+    id: 'modify-memory-35e',
+    name: 'Modify Memory',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/modifyMemory.htm',
+    level: 4,
+    school: 'enchantment',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: 'see text',
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates',
+    },
+    savingThrowText: 'Will negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    concentration: false,
+    ritual: false,
+    description: 'Changes 5 minutes of a subject’s memories.',
+    classes: ['bard'],
+    levelsByClass: {
+      bard: 4,
+    },
+  },
+  {
+    id: 'zone-of-silence-35e',
+    name: 'Zone of Silence',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/zoneOfSilence.htm',
+    level: 4,
+    school: 'illusion',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'hours',
+      hours: 1,
+    },
+    spellResistance: false,
+    spellResistanceDetail: 'no',
+    concentration: false,
+    ritual: false,
+    description: 'Prevents anyone from overhearing conversations within 5 ft of you.',
+    classes: ['bard'],
+    levelsByClass: {
+      bard: 4,
     },
   },
 ];

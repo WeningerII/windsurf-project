@@ -133,9 +133,10 @@ export const level6Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Objects attack your foes.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 6,
+      bard: 6,
     },
   },
   {
@@ -1020,9 +1021,10 @@ export const level6Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'As dispel magic, but up to +20 on check.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 6,
+      bard: 5,
     },
   },
   {
@@ -1052,9 +1054,10 @@ export const level6Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'As dispel magic, but +20 on check.',
-    classes: ['druid'],
+    classes: ['druid', 'bard'],
     levelsByClass: {
       druid: 6,
+      bard: 5,
     },
   },
   {
@@ -1173,9 +1176,10 @@ export const level6Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Shows most direct way to a location.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 6,
+      bard: 6,
     },
   },
   {
@@ -1215,9 +1219,10 @@ export const level6Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Shows most direct way to a location.',
-    classes: ['druid'],
+    classes: ['druid', 'bard'],
     levelsByClass: {
       druid: 6,
+      bard: 6,
     },
   },
   {
@@ -1474,9 +1479,10 @@ export const level6Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'As lesser geas, plus it affects any creature.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 6,
+      bard: 6,
     },
   },
   {
@@ -1802,9 +1808,10 @@ export const level6Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Food for one creature/level cures and grants combat bonuses.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 6,
+      bard: 6,
     },
   },
   {
@@ -2730,9 +2737,10 @@ export const level6Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Calls extraplanar creature to fight for you.',
-    classes: ['cleric'],
+    classes: ['cleric', 'bard'],
     levelsByClass: {
       cleric: 6,
+      bard: 6,
     },
   },
   {
@@ -3339,6 +3347,82 @@ export const level6Spells: Spell[] = [
     classes: ['cleric'],
     levelsByClass: {
       cleric: 6,
+    },
+  },
+  {
+    id: 'greater-scrying-35e',
+    name: 'Greater Scrying',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/greaterScrying.htm',
+    level: 6,
+    school: 'divination',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      focus: true,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates',
+    },
+    savingThrowText: 'Will negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    concentration: false,
+    ritual: false,
+    description: 'As scrying, with a longer duration and several spells active through the sensor.',
+    classes: ['bard'],
+    levelsByClass: {
+      bard: 6,
+    },
+  },
+  {
+    id: 'sympathetic-vibration-35e',
+    name: 'Sympathetic Vibration',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    sourceUrl: 'https://www.d20srd.org/srd/spells/sympatheticVibration.htm',
+    level: 6,
+    school: 'evocation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+      focus: true,
+    },
+    duration: {
+      type: 'rounds',
+      rounds: 1,
+    },
+    spellResistance: false,
+    spellResistanceDetail: 'no',
+    concentration: false,
+    ritual: false,
+    description: 'Deals 2d10 damage each round to a freestanding structure you touch.',
+    classes: ['bard'],
+    levelsByClass: {
+      bard: 6,
     },
   },
 ];
