@@ -1523,9 +1523,11 @@ export const level5Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Triggered rune wracks nearby creatures with pain.',
-    classes: ['cleric'],
+    classes: ['cleric', 'sorcerer', 'wizard'],
     levelsByClass: {
       cleric: 5,
+      sorcerer: 5,
+      wizard: 5,
     },
   },
   {
@@ -1563,9 +1565,11 @@ export const level5Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Triggered rune puts nearby creatures into catatonic slumber.',
-    classes: ['cleric'],
+    classes: ['cleric', 'sorcerer', 'wizard'],
     levelsByClass: {
       cleric: 5,
+      sorcerer: 5,
+      wizard: 5,
     },
   },
   {
@@ -1685,9 +1689,11 @@ export const level5Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Transforms two 10-ft. cubes per level.',
-    classes: ['druid'],
+    classes: ['druid', 'sorcerer', 'wizard'],
     levelsByClass: {
       druid: 5,
+      sorcerer: 5,
+      wizard: 5,
     },
   },
   {
@@ -1722,9 +1728,11 @@ export const level5Spells: Spell[] = [
     concentration: false,
     ritual: false,
     description: 'Transforms two 10-ft. cubes per level.',
-    classes: ['druid'],
+    classes: ['druid', 'sorcerer', 'wizard'],
     levelsByClass: {
       druid: 5,
+      sorcerer: 5,
+      wizard: 5,
     },
   },
   {

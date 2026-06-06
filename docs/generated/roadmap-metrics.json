@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-06T18:43:06.605Z",
+  "generatedAt": "2026-06-06T18:56:36.044Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -89,7 +89,7 @@
       "powerModifiers": 0
     },
     "dnd-3.5e": {
-      "spells": 528,
+      "spells": 554,
       "classes": 26,
       "species": 7,
       "backgrounds": 0,
@@ -196,7 +196,7 @@
       "powerModifiers": 0
     },
     "dnd-3.5e": {
-      "spells": 528,
+      "spells": 554,
       "classes": 26,
       "species": 7,
       "backgrounds": 0,
@@ -518,13 +518,13 @@
       "category": "spells",
       "categoryLabel": "Spells/Powers",
       "metrics": {
-        "rawCount": 528,
-        "uniqueCount": 528,
+        "rawCount": 554,
+        "uniqueCount": 554,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 3.5": 528
+          "SRD 3.5": 554
         }
       }
     },
