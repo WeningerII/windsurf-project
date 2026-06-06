@@ -1094,6 +1094,54 @@ export const level3Spells: Spell[] = [
       'This spell grants the ability to move across any liquid surface—such as water, acid, mud, snow, quicksand, or lava—as if it were harmless solid ground (creatures crossing molten lava can still take damage from the heat).',
     classes: ['cleric', 'druid', 'ranger', 'sorcerer'],
   },
+  {
+    id: 'wind-wall',
+    name: 'Wind Wall',
+    level: 3,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a tiny fan and a feather of exotic origin',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 minute',
+    },
+    areaOfEffect: {
+      type: 'line',
+      length: 50,
+      width: 15,
+    },
+    savingThrow: {
+      attribute: 'str',
+      success: 'half',
+    },
+    damage: {
+      base: {
+        count: 3,
+        die: 'd8',
+        notation: '3d8',
+      },
+      type: 'bludgeoning',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'A wall of strong wind up to 50 feet long, 15 feet high, and 1 foot thick rises. It deflects arrows and small flying creatures; a creature in its area takes 3d8 bludgeoning damage (half on a Strength save).',
+    classes: ['druid', 'ranger'],
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+  },
 ];
 
 // Helper function for lookups

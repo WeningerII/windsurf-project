@@ -1015,4 +1015,33 @@ export const cantrips: Spell[] = [
       'The damage increases by 1d6 when you reach levels 5 (2d6), 11 (3d6), and 17 (4d6).',
     classes: ['bard'],
   },
+  {
+    id: 'druidcraft',
+    name: 'Druidcraft',
+    level: 0,
+    school: 'transmutation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'Whispering to the spirits of nature, you create a tiny harmless sensory effect that predicts the weather, make a flower bloom, create a faint sensory effect, or light/snuff a small flame.',
+    classes: ['druid'],
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+  },
 ];

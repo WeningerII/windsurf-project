@@ -1631,4 +1631,96 @@ export const level2Spells: Spell[] = [
       "You create a magical zone that guards against deception in a 15-foot-radius sphere centered on a point within range. A creature that enters the area for the first time on a turn or starts its turn there must make a Charisma saving throw. On a failed save, a creature can't speak a deliberate lie while in the radius, and you know whether each creature succeeds or fails.",
     classes: ['bard', 'cleric', 'paladin'],
   },
+  {
+    id: 'moonbeam',
+    name: 'Moonbeam',
+    level: 2,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'several seeds of any moonseed plant and a piece of opalescent feldspar',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 minute',
+    },
+    areaOfEffect: {
+      type: 'cylinder',
+      radius: 5,
+      height: 40,
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'half',
+    },
+    damage: {
+      base: {
+        count: 2,
+        die: 'd10',
+        notation: '2d10',
+      },
+      type: 'radiant',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'A silvery beam of pale light shines down in a 5-foot-radius, 40-foot-high cylinder. A creature in the area takes 2d10 radiant damage on a failed Constitution save (half on success), and shapechangers have disadvantage.',
+    atHigherLevels: 'The damage increases by 1d10 for each slot level above 2nd.',
+    classes: ['druid'],
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+  },
+  {
+    id: 'spike-growth',
+    name: 'Spike Growth',
+    level: 2,
+    school: 'transmutation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 150,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'seven sharp thorns or seven small twigs, each sharpened to a point',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '10 minutes',
+    },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 20,
+    },
+    damage: {
+      base: {
+        count: 2,
+        die: 'd4',
+        notation: '2d4',
+      },
+      type: 'piercing',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'The ground in a 20-foot radius twists with spikes and thorns, becoming difficult terrain. A creature takes 2d4 piercing damage for every 5 feet it travels through the area.',
+    classes: ['druid', 'ranger'],
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+  },
 ];
