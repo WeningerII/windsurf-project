@@ -1066,4 +1066,144 @@ export const level2Spells: Spell[] = withPf2eSpellTraits([
       'You snuff out the life of a dying creature you touch, killing it if it has dying 1 or more; you gain temporary Hit Points and a status bonus to attacks.',
     classes: ['cleric', 'sorcerer', 'wizard'],
   },
+  {
+    id: 'comprehend-language-pf2e',
+    name: 'Comprehend Language',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 2,
+    school: 'divination',
+    traditions: ['arcane', 'divine', 'occult', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'hours',
+      hours: 1,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'The target understands one spoken or written language it hears or reads for the duration.',
+    heightening: {
+      mode: 'fixed',
+      ranks: {
+        '3': 'The target can also speak the language.',
+        '4': 'Affects up to 10 creatures.',
+      },
+      summary: 'Heightened: also speak the language; more targets.',
+    },
+    classes: ['sorcerer', 'wizard', 'cleric', 'bard', 'druid'],
+  },
+  {
+    id: 'augury-pf2e',
+    name: 'Augury',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 2,
+    school: 'divination',
+    traditions: ['divine', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 10,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'instant',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You learn whether a course of action over the next 30 minutes is likely to bring weal, woe, both, or nothing.',
+    classes: ['cleric', 'bard'],
+  },
+  {
+    id: 'status-pf2e',
+    name: 'Status',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 2,
+    school: 'divination',
+    traditions: ['divine', 'occult', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'hours',
+      hours: 1,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You maintain a magical connection to a willing creature, sensing its direction, distance, and general condition.',
+    heightening: {
+      mode: 'fixed',
+      ranks: {
+        '4': 'You can target up to 10 creatures.',
+      },
+      summary: 'Heightened (4th): up to 10 targets.',
+    },
+    classes: ['cleric', 'bard', 'druid'],
+  },
+  {
+    id: 'remove-fear-pf2e',
+    name: 'Remove Fear',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 2,
+    school: 'enchantment',
+    traditions: ['divine', 'occult', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You comfort a creature, ending one fear effect and granting a bonus to recover from new ones.',
+    heightening: {
+      mode: 'fixed',
+      ranks: {
+        '6': 'Affects up to 10 creatures within 30 feet.',
+      },
+      summary: 'Heightened (6th): up to 10 targets.',
+    },
+    classes: ['cleric', 'bard', 'druid'],
+  },
 ]);

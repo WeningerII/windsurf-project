@@ -510,4 +510,47 @@ export const level4Spells: Spell[] = withPf2eSpellTraits([
     },
     classes: ['sorcerer', 'wizard', 'druid'],
   },
+  {
+    id: 'suggestion-pf2e',
+    name: 'Suggestion',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 4,
+    school: 'enchantment',
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will',
+    concentration: false,
+    ritual: false,
+    description:
+      'You suggest a single reasonable course of action; the target pursues it unless it succeeds at a Will save.',
+    heightening: {
+      mode: 'fixed',
+      ranks: {
+        '6': 'The maximum duration increases to 1 hour.',
+      },
+      summary: 'Heightened (6th): duration up to 1 hour.',
+    },
+    classes: ['sorcerer', 'wizard', 'bard'],
+  },
 ]);

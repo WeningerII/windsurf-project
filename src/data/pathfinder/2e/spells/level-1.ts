@@ -1360,4 +1360,82 @@ export const level1Spells: Spell[] = withPf2eSpellTraits([
       'You move with extraordinary speed, gaining a +30-foot status bonus to your Speed.',
     classes: ['druid', 'sorcerer'],
   },
+  {
+    id: 'item-facade-pf2e',
+    name: 'Item Facade',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 1,
+    school: 'illusion',
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'hours',
+      hours: 1,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You make an object look decrepit or pristine, masking its true appearance with a visual illusion.',
+    heightening: {
+      mode: 'fixed',
+      ranks: {
+        '2': 'The duration is unlimited.',
+        '3': 'You can disguise a 10-foot-cube object.',
+      },
+      summary: 'Heightened: longer duration and larger objects.',
+    },
+    classes: ['sorcerer', 'wizard', 'bard'],
+  },
+  {
+    id: 'illusory-object-pf2e',
+    name: 'Illusory Object',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 1,
+    school: 'illusion',
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 3,
+    },
+    range: {
+      type: 'ranged',
+      feet: 500,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You create an immobile visual illusion of an object no larger than a 20-foot cube within range.',
+    heightening: {
+      mode: 'fixed',
+      ranks: {
+        '2': 'The illusion includes sound, scent, and texture, and lasts 1 hour.',
+        '5': 'The illusion is permanent.',
+      },
+      summary: 'Heightened: adds sensory detail and longer duration.',
+    },
+    classes: ['sorcerer', 'wizard', 'bard'],
+  },
 ]);

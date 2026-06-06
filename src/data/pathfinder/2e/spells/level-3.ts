@@ -556,4 +556,115 @@ export const level3Spells: Spell[] = withPf2eSpellTraits([
       "You create a wall of gusting wind. The wall is 60 feet long, 20 feet high, and 5 feet thick. Ranged attacks can't pass through the wall, and creatures trying to move through must attempt a Fortitude save or be pushed back.",
     classes: ['druid', 'sorcerer', 'wizard'],
   },
+  {
+    id: 'mind-reading-pf2e',
+    name: 'Mind Reading',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 3,
+    school: 'divination',
+    traditions: ['occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will',
+    concentration: false,
+    ritual: false,
+    description:
+      'You read the surface thoughts of a creature, learning its general state of mind and possibly a deeper read on a failed save.',
+    classes: ['bard'],
+  },
+  {
+    id: 'crisis-of-faith-pf2e',
+    name: 'Crisis of Faith',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 3,
+    school: 'enchantment',
+    traditions: ['divine'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'half',
+    },
+    savingThrowText: 'basic Will',
+    concentration: false,
+    ritual: false,
+    description:
+      'You assault a creature with doubt, dealing 6d6 mental damage (or 6d8 to a divine caster), with a chance to stupefy it.',
+    heightening: {
+      mode: 'interval',
+      interval: 1,
+      summary: 'Heightened (+1): The damage increases by 2d6 (or 2d8 vs divine casters).',
+    },
+    classes: ['cleric'],
+  },
+  {
+    id: 'wall-of-thorns-pf2e',
+    name: 'Wall of Thorns',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 3,
+    school: 'conjuration',
+    traditions: ['primal'],
+    castingTime: {
+      type: 'action',
+      amount: 3,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You grow a thicket of thorny brush that is difficult terrain and deals piercing damage to creatures passing through it.',
+    heightening: {
+      mode: 'interval',
+      interval: 1,
+      summary: 'Heightened (+1): The Hit Points and damage of the wall increase.',
+    },
+    classes: ['druid'],
+  },
 ]);
