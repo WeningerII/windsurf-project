@@ -231,7 +231,7 @@ describe('Data Loader Integration Tests', () => {
   describe('Pathfinder 1e Loaders', () => {
     it('should load spells with stored class-level mappings for pf1e', async () => {
       const spells = await loadSpellsForSystem('pf1e');
-      expect(spells.length).toBe(185);
+      expect(spells.length).toBe(188);
       expect(
         spells.every(
           (spell) =>

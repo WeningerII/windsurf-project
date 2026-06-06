@@ -1302,4 +1302,43 @@ export const level3Spells: Spell[] = [
       wizard: 3,
     },
   },
+  {
+    id: 'pf1e-wind-wall',
+    name: 'Wind Wall',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Wind%20Wall',
+    level: 3,
+    school: 'evocation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'medium',
+      feet: 110,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'rounds',
+      rounds: 1,
+    },
+    savingThrowText: 'none',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    concentration: false,
+    ritual: false,
+    description: 'A wall of strong wind deflects arrows, small creatures, and gases.',
+    classes: ['cleric', 'druid', 'sorcerer', 'wizard'],
+    levelsByClass: {
+      cleric: 3,
+      druid: 3,
+      sorcerer: 3,
+      wizard: 3,
+    },
+  },
 ];
