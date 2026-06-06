@@ -1438,4 +1438,34 @@ export const level1Spells: Spell[] = withPf2eSpellTraits([
     },
     classes: ['sorcerer', 'wizard', 'bard'],
   },
+  {
+    id: 'floating-disk-pf2e',
+    name: 'Floating Disk',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 1,
+    school: 'evocation',
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'hours',
+      hours: 8,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'A disk of magical force follows you at a fixed distance, carrying up to 5 Bulk of your goods.',
+    classes: ['sorcerer', 'wizard', 'bard'],
+  },
 ]);

@@ -1206,4 +1206,34 @@ export const level2Spells: Spell[] = withPf2eSpellTraits([
     },
     classes: ['cleric', 'bard', 'druid'],
   },
+  {
+    id: 'knock-pf2e',
+    name: 'Knock',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 2,
+    school: 'transmutation',
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You attempt to open a stuck, barred, locked, or magically sealed door or container, granting a large bonus to the attempt and suppressing locking effects briefly.',
+    classes: ['sorcerer', 'wizard', 'bard'],
+  },
 ]);

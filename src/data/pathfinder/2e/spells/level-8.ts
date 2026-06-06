@@ -306,4 +306,34 @@ export const level8Spells: Spell[] = withPf2eSpellTraits([
       'You cause brilliant sunlight to explode in a 60-foot burst. Creatures in the area take 8d10 damage and are blinded. Undead and creatures with light blindness take double damage. Targets attempt a Reflex save.',
     classes: ['cleric', 'druid', 'sorcerer', 'wizard'],
   },
+  {
+    id: 'disappearance-pf2e',
+    name: 'Disappearance',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 8,
+    school: 'illusion',
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You make a creature undetectable to all senses, not merely sight, for the duration.',
+    classes: ['sorcerer', 'wizard', 'bard'],
+  },
 ]);

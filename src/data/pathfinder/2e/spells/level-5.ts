@@ -440,4 +440,77 @@ export const level5Spells: Spell[] = withPf2eSpellTraits([
     },
     classes: ['cleric'],
   },
+  {
+    id: 'death-ward-pf2e',
+    name: 'Death Ward',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 5,
+    school: 'necromancy',
+    traditions: ['divine', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You ward a creature against the forces of death, granting a bonus against death and negative effects and reducing its doomed condition.',
+    classes: ['cleric', 'bard'],
+  },
+  {
+    id: 'chromatic-wall-pf2e',
+    name: 'Chromatic Wall',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 5,
+    school: 'abjuration',
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 3,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10,
+    },
+    savingThrow: {
+      attribute: 'ref',
+      success: 'none',
+    },
+    savingThrowText: 'see text',
+    concentration: false,
+    ritual: false,
+    description:
+      'You create a shimmering wall of four colored layers, each imposing a different effect on creatures that pass through or attack through it.',
+    heightening: {
+      mode: 'fixed',
+      ranks: {
+        '7': 'The wall becomes a prismatic wall with seven layers.',
+      },
+      summary: 'Heightened (7th): becomes a seven-layer prismatic wall.',
+    },
+    classes: ['sorcerer', 'wizard', 'bard'],
+  },
 ]);

@@ -424,6 +424,7 @@ const iconicSpellExpectations: Array<{
       'dnd-5e-2024': e(4, 'abjuration'),
       'dnd-3.5e': e(4, 'necromancy'),
       pf1e: e(4, 'necromancy'),
+      pf2e: e(5, 'necromancy'),
     },
   },
   {

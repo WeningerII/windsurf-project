@@ -417,4 +417,44 @@ export const level6Spells: Spell[] = withPf2eSpellTraits([
       'You begin turning a creature to stone; it becomes slowed and increasingly petrified unless it recovers, turning permanently to stone on repeated failures.',
     classes: ['sorcerer', 'wizard', 'druid'],
   },
+  {
+    id: 'vampiric-exsanguination-pf2e',
+    name: 'Vampiric Exsanguination',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 6,
+    school: 'necromancy',
+    traditions: ['arcane', 'divine'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'fort',
+      success: 'half',
+    },
+    savingThrowText: 'basic Fortitude',
+    concentration: false,
+    ritual: false,
+    description:
+      'You drain vitality from creatures in a 30-foot cone, dealing 12d6 negative damage and healing yourself for a portion of the total dealt.',
+    heightening: {
+      mode: 'interval',
+      interval: 1,
+      summary:
+        'Heightened (+1): The damage increases by 2d6 and the healing increases accordingly.',
+    },
+    classes: ['sorcerer', 'wizard', 'cleric'],
+  },
 ]);

@@ -553,4 +553,33 @@ export const level4Spells: Spell[] = withPf2eSpellTraits([
     },
     classes: ['sorcerer', 'wizard', 'bard'],
   },
+  {
+    id: 'read-omens-pf2e',
+    name: 'Read Omens',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 4,
+    school: 'divination',
+    traditions: ['divine', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 10,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'instant',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You receive a cryptic clue or piece of advice about a specific course of action set to occur within a week.',
+    classes: ['cleric', 'bard'],
+  },
 ]);
