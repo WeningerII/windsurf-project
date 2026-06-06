@@ -19,8 +19,10 @@ const budgets = {
   // spell catalog (Fireball, Lightning Bolt, Cone of Cold and 66 other missing
   // SRD spells the authoring path surfaced as unresolvable), then 852 KiB up for
   // filling the 3.5e SRD Sorcerer/Wizard spell list (the level-1..5 arcane catalog
-  // was largely absent). Overridable via env.
-  totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 864 * 1024,
+  // was largely absent), then 864→920 KiB for expanding the Pathfinder 1e/2e
+  // spell catalogs toward their full published lists (the per-system data chunks
+  // are lazy-loaded, off the eager path). Overridable via env.
+  totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 920 * 1024,
   // App (eager) chunk gzip ceiling. SceneManager — which pulls the whole combat /
   // tactical-AI / verticality engine via the rules module — is now React.lazy'd,
   // so that chain lives in an on-demand chunk, NOT the eager app chunk. That drops

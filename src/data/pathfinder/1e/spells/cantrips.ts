@@ -1028,4 +1028,102 @@ export const cantrips: Spell[] = [
       druid: 0,
     },
   },
+  {
+    id: 'pf1e-chill-touch',
+    name: 'Chill Touch',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Chill%20Touch',
+    level: 0,
+    school: 'necromancy',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    target: 'Creature or creatures touched (up to one/level)',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    savingThrow: {
+      attribute: 'con',
+      success: 'special',
+      description: 'Fortitude partial or Will negates; see text',
+    },
+    savingThrowText: 'Fortitude partial or Will negates; see text',
+    attackRoll: true,
+    concentration: false,
+    ritual: false,
+    description:
+      'A touch from you, whether from a distance or close up, saps vital energy from a living creature or makes an undead creature stagger. You must make a melee touch attack. The target takes 1d6 points of damage, and you gain temporary hit points equal to the damage dealt.',
+    damage: {
+      base: {
+        count: 1,
+        die: 'd6',
+        notation: '1d6',
+      },
+      type: 'cold',
+    },
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: {
+      sorcerer: 0,
+      wizard: 0,
+    },
+  },
+  {
+    id: 'pf1e-shocking-grasp',
+    name: 'Shocking Grasp',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Shocking%20Grasp',
+    level: 0,
+    school: 'evocation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    target: 'Creature or object touched',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    savingThrowText: 'None',
+    attackRoll: true,
+    concentration: false,
+    ritual: false,
+    description:
+      'Your touch delivers a shock. You must make a melee touch attack. The target takes 1d6 points of lightning damage. If the target is wearing metal armor, you gain a +2 bonus to your touch attack roll.',
+    damage: {
+      base: {
+        count: 1,
+        die: 'd6',
+        notation: '1d6',
+      },
+      type: 'lightning',
+    },
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: {
+      sorcerer: 0,
+      wizard: 0,
+    },
+  },
 ];
