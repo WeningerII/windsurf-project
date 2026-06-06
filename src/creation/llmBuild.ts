@@ -22,13 +22,29 @@
 
 import { ANTHROPIC_BASE_URL, ANTHROPIC_VERSION, type FetchLike } from '../rules/ai/llmNarration';
 
+/**
+ * Feedback for a repair round: the model's previous selections plus the issues
+ * (rule violations and choices that didn't resolve) the deterministic layer
+ * found, so it can correct its own attempt instead of starting over.
+ */
+export interface BuildRepairContext {
+  previousSelections: Record<string, unknown>;
+  issues: string[];
+}
+
 /** The untrusted input a browser sends to the build gateway. */
 export interface BuildPromptInput {
   systemId: string;
   prompt: string;
   /** Machine-readable options manifest (catalog names + rules) for the system. */
   manifest: unknown;
+  /** Present on repair rounds of the validate-and-repair loop. */
+  repair?: BuildRepairContext;
 }
+
+/** Caps on repair feedback so the loop can't grow the request unboundedly. */
+export const MAX_REPAIR_ISSUES = 20;
+export const MAX_REPAIR_ISSUE_LENGTH = 300;
 
 /**
  * A model-authored build: a name, a level, and a loose, system-specific bag of
@@ -71,10 +87,32 @@ export function isValidBuildInput(value: unknown): value is BuildPromptInput {
   }
   // Bound the manifest's serialized size.
   try {
-    return JSON.stringify(input.manifest).length <= MAX_MANIFEST_LENGTH;
+    if (JSON.stringify(input.manifest).length > MAX_MANIFEST_LENGTH) return false;
   } catch {
     return false;
   }
+  // Repair context, when present, must be well-formed and bounded.
+  if (input.repair !== undefined) {
+    const repair = input.repair as Partial<BuildRepairContext> | null;
+    if (
+      !repair ||
+      typeof repair.previousSelections !== 'object' ||
+      repair.previousSelections === null ||
+      !Array.isArray(repair.issues) ||
+      repair.issues.length > MAX_REPAIR_ISSUES ||
+      !repair.issues.every(
+        (issue) => typeof issue === 'string' && issue.length <= MAX_REPAIR_ISSUE_LENGTH
+      )
+    ) {
+      return false;
+    }
+    try {
+      if (JSON.stringify(repair.previousSelections).length > MAX_SELECTIONS_LENGTH) return false;
+    } catch {
+      return false;
+    }
+  }
+  return true;
 }
 
 /** One Anthropic system block; the stable prefix carries a cache breakpoint. */
@@ -121,12 +159,22 @@ export const BUILD_SYSTEM_PROMPT = [
 
 /** Render the input + manifest into the user turn the model designs against. */
 function formatInput(input: BuildPromptInput): string {
-  return [
+  const lines = [
     `System: ${input.systemId}`,
     `Concept: ${input.prompt.trim()}`,
     'Options manifest (choose only from these):',
     JSON.stringify(input.manifest),
-  ].join('\n');
+  ];
+  if (input.repair) {
+    lines.push(
+      '',
+      'Your previous attempt needs correction. Previous selections:',
+      JSON.stringify(input.repair.previousSelections),
+      'Problems the rules engine found (fix every one and return a corrected full BuildSpec):',
+      ...input.repair.issues.map((issue, index) => `${index + 1}. ${issue}`)
+    );
+  }
+  return lines.join('\n');
 }
 
 /**

@@ -182,3 +182,87 @@ export async function buildOptionsManifest(systemId: GameSystemId): Promise<unkn
 export function hasOptionsManifest(systemId: GameSystemId): boolean {
   return systemId in MANIFEST_BUILDERS;
 }
+
+/**
+ * Which discrete name selections to check against which manifest list, per system.
+ * These are the choices the creators resolve by exact name (and silently fall
+ * back on) — surfacing a mismatch lets the repair loop tell the model "that name
+ * isn't valid; pick one of these" instead of accepting a low-fidelity fallback.
+ */
+const SELECTION_LINT: Partial<
+  Record<GameSystemId, Array<{ key: string; listKey: string; label: string }>>
+> = {
+  daggerheart: [
+    { key: 'class', listKey: 'classes', label: 'class' },
+    { key: 'heritage', listKey: 'ancestries', label: 'heritage (ancestry)' },
+    { key: 'community', listKey: 'communities', label: 'community' },
+  ],
+  'dnd-5e-2014': [
+    { key: 'class', listKey: 'classes', label: 'class' },
+    { key: 'species', listKey: 'species', label: 'species' },
+    { key: 'background', listKey: 'backgrounds', label: 'background' },
+  ],
+  'dnd-5e-2024': [
+    { key: 'class', listKey: 'classes', label: 'class' },
+    { key: 'species', listKey: 'species', label: 'species' },
+    { key: 'background', listKey: 'backgrounds', label: 'background' },
+  ],
+  pf2e: [
+    { key: 'class', listKey: 'classes', label: 'class' },
+    { key: 'ancestry', listKey: 'ancestries', label: 'ancestry' },
+    { key: 'background', listKey: 'backgrounds', label: 'background' },
+  ],
+  pf1e: [
+    { key: 'class', listKey: 'classes', label: 'class' },
+    { key: 'race', listKey: 'races', label: 'race' },
+  ],
+  'dnd-3.5e': [
+    { key: 'class', listKey: 'classes', label: 'class' },
+    { key: 'race', listKey: 'races', label: 'race' },
+  ],
+};
+
+const MAX_LISTED_NAMES = 14;
+
+function nameOf(entry: unknown): string | undefined {
+  if (typeof entry === 'string') return entry;
+  if (
+    entry &&
+    typeof entry === 'object' &&
+    typeof (entry as { name?: unknown }).name === 'string'
+  ) {
+    return (entry as { name: string }).name;
+  }
+  return undefined;
+}
+
+/**
+ * Report the model's discrete name picks that don't resolve against the manifest
+ * (e.g. class "Vigilante" when no such class exists). Each message names the
+ * offending value and lists valid options, so a repair round can correct it.
+ */
+export function lintSelections(
+  systemId: GameSystemId,
+  manifest: unknown,
+  selections: Record<string, unknown>
+): string[] {
+  const rules = SELECTION_LINT[systemId];
+  if (!rules || !manifest || typeof manifest !== 'object') return [];
+  const record = manifest as Record<string, unknown>;
+  const issues: string[] = [];
+
+  for (const { key, listKey, label } of rules) {
+    const value = selections[key];
+    if (typeof value !== 'string' || value.trim() === '') continue;
+    const list = record[listKey];
+    if (!Array.isArray(list)) continue;
+    const names = list.map(nameOf).filter((name): name is string => Boolean(name));
+    if (names.length === 0) continue;
+    if (!names.some((name) => name.toLowerCase() === value.toLowerCase())) {
+      const shown = names.slice(0, MAX_LISTED_NAMES).join(', ');
+      const suffix = names.length > MAX_LISTED_NAMES ? ', …' : '';
+      issues.push(`'${value}' is not a valid ${label}. Choose one of: ${shown}${suffix}.`);
+    }
+  }
+  return issues;
+}

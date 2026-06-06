@@ -28,6 +28,26 @@ function gatewayUnconfigured(): { fetch: ReturnType<typeof vi.fn>; timeoutMs: nu
   };
 }
 
+/** A gateway that returns each spec in turn (repeating the last) — one per round. */
+function gatewaySequence(specs: unknown[]): { fetch: ReturnType<typeof vi.fn>; timeoutMs: number } {
+  let call = 0;
+  const fetch = vi.fn<FetchLike>(async () => {
+    const spec = specs[Math.min(call, specs.length - 1)];
+    call += 1;
+    return { ok: true, status: 200, json: async () => ({ spec }) };
+  });
+  return { timeoutMs: 0, fetch };
+}
+
+const DH_TRAITS = {
+  finesse: 2,
+  agility: 1,
+  knowledge: 1,
+  instinct: 0,
+  presence: 0,
+  strength: -1,
+};
+
 describe('createCharacterWithAi — Daggerheart "Batman"', () => {
   it('builds the LLM-authored selections (stealthy Rogue named Batman), validated by the rules', async () => {
     // The model authors a real build against the manifest: Batman = a finesse
@@ -90,6 +110,51 @@ describe('createCharacterWithAi — Daggerheart "Batman"', () => {
       expect(hasOptionsManifest(systemId), `${systemId} manifest`).toBe(true);
       expect(await buildOptionsManifest(systemId), `${systemId} manifest`).toBeTruthy();
     }
+  });
+});
+
+describe('createCharacterWithAi — validate-and-repair loop', () => {
+  it('re-prompts with the unresolved pick, then uses the corrected build', async () => {
+    const gateway = gatewaySequence([
+      // Round 1: a class that doesn't exist — silently falls back without repair.
+      { name: 'Batman', selections: { class: 'Vigilante', heritage: 'Human', traits: DH_TRAITS } },
+      // Round 2 (repair): a real class.
+      { name: 'Batman', selections: { class: 'Rogue', heritage: 'Human', traits: DH_TRAITS } },
+    ]);
+
+    const result = await createCharacterWithAi('daggerheart', 'Batman', { gateway });
+
+    expect(result.ok).toBe(true);
+    expect((result.document.system as DaggerheartDataModel).class).toBe('Rogue');
+    // Two gateway calls: the initial draft + one repair round.
+    expect(gateway.fetch).toHaveBeenCalledTimes(2);
+    const repairBody = JSON.parse(gateway.fetch.mock.calls[1][1].body as string);
+    expect(repairBody.repair.previousSelections.class).toBe('Vigilante');
+    expect(repairBody.repair.issues.join(' ')).toContain('Vigilante');
+  });
+
+  it('does not repair when the first build is already clean', async () => {
+    const gateway = gatewaySequence([
+      { name: 'Vell', selections: { class: 'Rogue', heritage: 'Human', traits: DH_TRAITS } },
+    ]);
+    const result = await createCharacterWithAi('daggerheart', 'a rogue', { gateway });
+    expect(result.ok).toBe(true);
+    expect(gateway.fetch).toHaveBeenCalledTimes(1); // no repair round
+  });
+
+  it('stops after the round budget and returns the best (legal) result', async () => {
+    // The model never picks a valid class; the loop gives up and keeps the
+    // legal deterministic fallback (Bard), having spent 1 draft + 2 repairs.
+    const gateway = gatewaySequence([
+      { name: 'Batman', selections: { class: 'Vigilante', heritage: 'Human', traits: DH_TRAITS } },
+    ]);
+    const result = await createCharacterWithAi('daggerheart', 'Batman', {
+      gateway,
+      maxRepairRounds: 2,
+    });
+    expect(result.ok).toBe(true); // still a legal sheet
+    expect((result.document.system as DaggerheartDataModel).class).toBe('Bard'); // fallback
+    expect(gateway.fetch).toHaveBeenCalledTimes(3); // 1 draft + 2 repair rounds
   });
 });
 
