@@ -111,21 +111,29 @@ function createDnd5eCreator<T extends Dnd5eLike>(
 
 // --- LLM-resolution helpers (return undefined/false → deterministic path) ---
 
-/** Use the model's ability spread only if it's exactly the standard array. */
+/**
+ * Use the model's authored pre-racial ability spread (any integer per ability;
+ * missing abilities default to 10). The validator caps each final score to
+ * 1..30 and the repair loop fixes anything out of range — no fixed-array
+ * straitjacket. Returns undefined only when nothing was authored (→ standard array).
+ */
 function resolveAbilities(resolved?: ResolvedSelections): Record<string, number> | undefined {
   const raw = resolved?.abilities;
   if (!raw || typeof raw !== 'object') return undefined;
   const source = raw as Record<string, unknown>;
 
   const scores: Record<string, number> = {};
+  let authored = false;
   for (const ability of ABILITY_IDS) {
     const value = source[ability];
-    if (typeof value !== 'number' || !Number.isInteger(value)) return undefined;
-    scores[ability] = value;
+    if (typeof value === 'number' && Number.isInteger(value)) {
+      scores[ability] = value;
+      authored = true;
+    } else {
+      scores[ability] = 10;
+    }
   }
-  const sorted = ABILITY_IDS.map((ability) => scores[ability]).sort((a, b) => b - a);
-  if (!sorted.every((value, index) => value === STANDARD_ARRAY[index])) return undefined;
-  return scores;
+  return authored ? scores : undefined;
 }
 
 /** Fill the spell list from the model's chosen spell names; false → caller auto-fills. */

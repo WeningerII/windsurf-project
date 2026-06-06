@@ -272,6 +272,26 @@ describe('createCharacterWithAi — D&D 5e "Batman"', () => {
     expect(system.baseAttributes.dex).toBeGreaterThanOrEqual(15); // array 15 + racial
   });
 
+  it('honors a non-standard ability spread as-authored (no fixed-array straitjacket)', async () => {
+    const result = await createCharacterWithAi('dnd-5e-2014', 'a brute fighter', {
+      gateway: gatewayReturning({
+        name: 'Grok',
+        selections: {
+          class: 'Fighter',
+          species: 'Human',
+          // Not the standard array — must be used, not discarded.
+          abilities: { str: 16, dex: 13, con: 15, int: 8, wis: 12, cha: 10 },
+        },
+      }),
+    });
+
+    expect(result.ok).toBe(true);
+    const scores = (result.document.system as { baseAttributes: Record<string, number> })
+      .baseAttributes;
+    expect(scores.str).toBe(17); // 16 authored + 1 human racial — not coerced to 15
+    expect(scores.int).toBe(9); // 8 authored + 1 — a value the standard array never has at that slot
+  });
+
   it("fills a caster's spell list from the model's chosen spell names", async () => {
     const result = await createCharacterWithAi('dnd-5e-2024', 'a fire wizard', {
       gateway: gatewayReturning({
