@@ -174,6 +174,7 @@ const iconicSpellExpectations: Array<{
     systems: {
       'dnd-5e-2014': e(2, 'illusion'),
       'dnd-5e-2024': e(2, 'illusion'),
+      'dnd-3.5e': e(2, 'illusion'),
       pf1e: e(2, 'illusion'),
       pf2e: e(2, 'illusion'),
     },
@@ -183,6 +184,7 @@ const iconicSpellExpectations: Array<{
     systems: {
       'dnd-5e-2014': e(3, 'transmutation'),
       'dnd-5e-2024': e(3, 'transmutation'),
+      'dnd-3.5e': e(3, 'transmutation'),
       pf1e: e(3, 'transmutation'),
       pf2e: e(4, 'transmutation'),
     },
@@ -266,6 +268,7 @@ const iconicSpellExpectations: Array<{
     systems: {
       'dnd-5e-2014': e(2, 'conjuration'),
       'dnd-5e-2024': e(2, 'conjuration'),
+      'dnd-3.5e': e(2, 'conjuration'),
       pf1e: e(2, 'conjuration'),
       pf2e: e(2, 'conjuration'),
     },
@@ -275,6 +278,7 @@ const iconicSpellExpectations: Array<{
     systems: {
       'dnd-5e-2014': e(2, 'evocation'),
       'dnd-5e-2024': e(2, 'evocation'),
+      'dnd-3.5e': e(2, 'evocation'),
       pf1e: e(2, 'evocation'),
     },
   },
@@ -283,6 +287,7 @@ const iconicSpellExpectations: Array<{
     systems: {
       'dnd-5e-2014': e(5, 'evocation'),
       'dnd-5e-2024': e(5, 'evocation'),
+      'dnd-3.5e': e(5, 'evocation'),
       pf1e: e(5, 'evocation'),
       pf2e: e(5, 'evocation'),
     },
@@ -292,6 +297,7 @@ const iconicSpellExpectations: Array<{
     systems: {
       'dnd-5e-2014': e(7, 'conjuration'),
       'dnd-5e-2024': e(7, 'conjuration'),
+      'dnd-3.5e': e(5, 'conjuration'),
       pf1e: e(5, 'conjuration'),
       pf2e: e(6, 'conjuration'),
     },
