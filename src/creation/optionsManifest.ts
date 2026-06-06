@@ -11,6 +11,8 @@ import {
   loadBackgroundsForSystem,
   loadPf2eBackgroundsForSystem,
 } from '../utils/dataLoader';
+import { getDnd5eClassSkillChoiceSlots } from '../utils/classTemplate';
+import type { CharacterClass } from '../types/character-options/classes';
 import type { GameSystemId } from '../types/game-systems';
 
 const STANDARD_ARRAY = [15, 14, 13, 12, 10, 8];
@@ -55,6 +57,17 @@ function daggerheartManifest(): unknown {
   };
 }
 
+/**
+ * Summarize a 5e class's skill-proficiency choice for the manifest: how many to
+ * pick and the allowed skill ids. Returns undefined when the class grants its
+ * skills fixed (no choice to author).
+ */
+function dnd5eSkillChoice(entry: CharacterClass): { choose: number; from: string[] } | undefined {
+  const slots = getDnd5eClassSkillChoiceSlots(entry);
+  if (slots.length === 0) return undefined;
+  return { choose: slots.length, from: slots[0].options };
+}
+
 async function dnd5eManifest(systemId: GameSystemId): Promise<unknown> {
   const [classes, species, backgrounds] = await Promise.all([
     loadClassesForSystem(systemId),
@@ -75,6 +88,7 @@ async function dnd5eManifest(systemId: GameSystemId): Promise<unknown> {
       primaryAbility: entry.primaryAbility,
       caster: Boolean(entry.spellcasting),
       subclasses: entry.subclasses?.map((subclass) => subclass.name) ?? [],
+      skillChoices: dnd5eSkillChoice(entry),
     })),
     species: species.map((entry) => entry.name),
     backgrounds: backgrounds.map((entry) => entry.name),
@@ -86,6 +100,8 @@ async function dnd5eManifest(systemId: GameSystemId): Promise<unknown> {
       species: 'a species name from species[]',
       background: 'a background name from backgrounds[]',
       abilities: 'object mapping each ability (str/dex/con/int/wis/cha) to one array value',
+      skills:
+        "optional: array of skill ids for the starting class's proficiencies, chosen from that class.skillChoices.from (pick up to skillChoices.choose)",
       spells:
         'for caster classes only: an array of spell names this class can learn at this level (cantrips + low level)',
       feats: 'optional: an array of feat names (applied with their automation)',
@@ -113,12 +129,17 @@ async function pf2eManifest(): Promise<unknown> {
       heritages: (entry.subraces ?? []).map((subrace) => subrace.name),
     })),
     backgrounds: backgrounds.map((entry) => entry.name),
+    skills: (systemRegistry.get('pf2e')?.skills ?? [])
+      .map((skill) => skill.id)
+      .filter((id) => id !== 'lore'),
     selectionKeys: {
       class: 'a class name from classes[].name',
       ancestry: 'an ancestry name from ancestries[].name',
       heritage: 'a heritage name from the chosen ancestry.heritages[]',
       background: 'a background name from backgrounds[]',
       freeBoosts: 'array of 4 ability ids (str/dex/con/int/wis/cha) for the free boosts',
+      skills:
+        'optional: array of skill ids from skills[] to train (the class and background already train some; these are your free trained-skill picks)',
       spells:
         'for caster classes only: an array of spell names from the class tradition (arcane/divine/occult/primal)',
       feats: 'optional: an array of feat names',

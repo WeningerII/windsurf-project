@@ -303,7 +303,7 @@ function strongerTier(left: Pf2eProficiencyTier, right: Pf2eProficiencyTier): Pf
   return PROFICIENCY_RANK[left] >= PROFICIENCY_RANK[right] ? left : right;
 }
 
-function mergeProficiencySource(
+export function mergeProficiencySource(
   proficiencies: Record<string, Pf2eProficiency>,
   id: string,
   source: string,

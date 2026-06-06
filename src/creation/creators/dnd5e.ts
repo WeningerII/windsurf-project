@@ -5,7 +5,11 @@ import {
   loadSpellsForSystem,
   loadFeatsForSystem,
 } from '../../utils/dataLoader';
-import { applyDnd5eClassTemplate, applyDnd5eSubclassTemplate } from '../../utils/classTemplate';
+import {
+  applyDnd5eClassTemplate,
+  applyDnd5eSubclassTemplate,
+  getDnd5eClassSkillChoiceSlots,
+} from '../../utils/classTemplate';
 import { applyDnd5eSpeciesTemplate } from '../../utils/speciesTemplate';
 import { applyDnd5eBackgroundTemplate } from '../../utils/backgroundTemplate';
 import { applyDnd5eFeatTemplate } from '../../utils/featTemplate';
@@ -103,13 +107,16 @@ function createDnd5eCreator<T extends Dnd5eLike>(
       // Standard array first so the species template's bonuses stack on top.
       document.system.baseAttributes = resolveAbilities(resolved) ?? assignStandardArray(cls);
 
+      // 5e skill proficiencies come from the starting class, so the model's
+      // authored skills apply to the primary class only.
+      const skillSelections = resolveSkillSelections(resolved, cls);
       if (multiclass) {
         multiclass.forEach((entry, index) => {
           try {
             // enforceMulticlassRequirements off: the model authors freely; the
             // validator gates what it gates. Guarded so over-leveling can't crash.
             document = applyDnd5eClassTemplate(document, entry.cls, entry.level, {
-              ...(index === 0 ? {} : { mode: 'add' }),
+              ...(index === 0 ? { skillSelections } : { mode: 'add' }),
               enforceMulticlassRequirements: false,
             });
             document = applySubclass(document, entry.cls, entry.subclass);
@@ -118,7 +125,7 @@ function createDnd5eCreator<T extends Dnd5eLike>(
           }
         });
       } else {
-        document = applyDnd5eClassTemplate(document, cls, level);
+        document = applyDnd5eClassTemplate(document, cls, level, { skillSelections });
         document = applySubclass(document, cls, asString(resolved?.subclass));
       }
       document = applyDnd5eSpeciesTemplate(document, speciesChoice);
@@ -163,6 +170,35 @@ function resolveClasses(
         ? levelValue
         : 1;
     result.push({ cls, level, subclass: asString(fields.subclass) });
+  }
+  return result.length > 0 ? result : undefined;
+}
+
+/**
+ * Resolve the model's chosen skill proficiencies to the starting class's
+ * allowed skill ids (5e grants a fixed number of skill choices from a class
+ * list). Names are normalized to ids ("Sleight of Hand" → "sleight-of-hand"),
+ * deduped, and capped at the number of slots; the template auto-fills any it
+ * doesn't cover. Returns undefined when nothing valid was authored.
+ */
+function resolveSkillSelections(
+  resolved: ResolvedSelections | undefined,
+  cls: CharacterClass
+): string[] | undefined {
+  const names = asStringArray(resolved?.skills);
+  if (!names) return undefined;
+  const slots = getDnd5eClassSkillChoiceSlots(cls);
+  if (slots.length === 0) return undefined;
+  const allowed = new Set(slots.flatMap((slot) => slot.options));
+  const result: string[] = [];
+  const seen = new Set<string>();
+  for (const raw of names) {
+    const id = raw.trim().toLowerCase().replace(/\s+/g, '-');
+    if (allowed.has(id) && !seen.has(id)) {
+      seen.add(id);
+      result.push(id);
+      if (result.length >= slots.length) break;
+    }
   }
   return result.length > 0 ? result : undefined;
 }

@@ -9,7 +9,9 @@ import {
   applyPf2eClassTemplate,
   applyPf2eAncestryTemplate,
   applyPf2eBackgroundTemplate,
+  mergeProficiencySource,
 } from '../../utils/pf2eTemplate';
+import { systemRegistry } from '../../registry';
 import { createDefaultPf2eData, type Pf2eDataModel } from '../../systems/pf2e/data-model';
 import type { CharacterDocument } from '../../types/core/document';
 import type { FeatDefinition } from '../../types/character-options/feats';
@@ -96,6 +98,7 @@ export const pf2eCreator: SystemCreator<Pf2eDataModel> = {
       asStringArray(resolved?.freeBoosts)
     );
     applyResolvedSpells(document.system, spells, asStringArray(resolved?.spells));
+    applyResolvedSkills(document.system, asStringArray(resolved?.skills));
     const authoredFeats = resolveFeats(feats, asStringArray(resolved?.feats));
     if (authoredFeats.length > 0) {
       document.system.feats = [...document.system.feats, ...authoredFeats];
@@ -163,6 +166,30 @@ function applyResolvedSpells(
   }
   if (known.length > 0) {
     spellcasting.spellsKnown = known;
+  }
+}
+
+/**
+ * Train the model's chosen skills. PF2e grants free skill trainings (a class
+ * count plus the Intelligence modifier) on top of the class's mandatory skills
+ * and the background skill; this lets the model author those free picks. Each
+ * authored name is normalized to a registry skill id and trained (merged so it
+ * never downgrades a higher tier the templates already set). `lore` is excluded
+ * — Lores are topic-keyed and tracked separately. Unknown ids are skipped; the
+ * validator only requires a valid tier, which `trained` always is.
+ */
+function applyResolvedSkills(system: Pf2eDataModel, names: string[] | undefined): void {
+  if (!names) return;
+  const validSkillIds = new Set(
+    (systemRegistry.get('pf2e')?.skills ?? [])
+      .map((skill) => skill.id)
+      .filter((id) => id !== 'lore')
+  );
+  for (const raw of names) {
+    const id = raw.trim().toLowerCase().replace(/\s+/g, '-');
+    if (validSkillIds.has(id)) {
+      mergeProficiencySource(system.skillProficiencies, id, 'Player Choice');
+    }
   }
 }
 

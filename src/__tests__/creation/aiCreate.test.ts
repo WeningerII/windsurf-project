@@ -367,6 +367,29 @@ describe('createCharacterWithAi — D&D 5e "Batman"', () => {
     expect(byId.get('wizard')?.level).toBe(2);
     expect(system.level).toBe(5); // levels sum to the character level
   });
+
+  it('applies the model-chosen skill proficiencies (normalizing names to ids)', async () => {
+    const result = await createCharacterWithAi('dnd-5e-2014', 'a sneaky rogue', {
+      gateway: gatewayReturning({
+        name: 'Vex',
+        selections: {
+          class: 'Rogue',
+          species: 'Human',
+          // A hyphenated id, a display-name form, and two plain ids — all valid Rogue picks.
+          skills: ['Stealth', 'Sleight of Hand', 'perception', 'deception'],
+        },
+      }),
+    });
+
+    expect(result.ok).toBe(true);
+    const profs = Object.keys(
+      (result.document.system as { skillProficiencies: Record<string, unknown> }).skillProficiencies
+    );
+    expect(profs).toContain('stealth');
+    expect(profs).toContain('sleight-of-hand'); // "Sleight of Hand" normalized to its id
+    expect(profs).toContain('perception');
+    expect(profs).toContain('deception');
+  });
 });
 
 describe('createCharacterWithAi — Pathfinder 2e "Batman"', () => {
@@ -397,6 +420,32 @@ describe('createCharacterWithAi — Pathfinder 2e "Batman"', () => {
     expect(system.backgroundId).toBe('pf2e-bg-criminal');
     // Dex got the class key-ability boost plus a free boost.
     expect(system.baseAttributes.dex).toBeGreaterThanOrEqual(14);
+  });
+
+  it('trains the model-chosen free skills on top of the class/background skills', async () => {
+    const result = await createCharacterWithAi('pf2e', 'a versatile rogue', {
+      gateway: gatewayReturning({
+        name: 'Mercer',
+        level: 1,
+        selections: {
+          class: 'Rogue',
+          ancestry: 'Human',
+          background: 'Criminal',
+          skills: ['Acrobatics', 'Athletics', 'Society', 'Thievery'],
+        },
+      }),
+    });
+
+    expect(result.ok).toBe(true);
+    const skills = (
+      result.document.system as { skillProficiencies: Record<string, { tier: string }> }
+    ).skillProficiencies;
+    // The four authored picks are trained...
+    for (const id of ['acrobatics', 'athletics', 'society', 'thievery']) {
+      expect(skills[id]?.tier).toBe('trained');
+    }
+    // ...without clobbering the Rogue's mandatory Stealth training.
+    expect(skills.stealth?.tier).toBe('trained');
   });
 });
 
