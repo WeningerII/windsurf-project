@@ -5,7 +5,7 @@ import {
   loadSpellsForSystem,
   loadFeatsForSystem,
 } from '../../utils/dataLoader';
-import { applyDnd5eClassTemplate } from '../../utils/classTemplate';
+import { applyDnd5eClassTemplate, applyDnd5eSubclassTemplate } from '../../utils/classTemplate';
 import { applyDnd5eSpeciesTemplate } from '../../utils/speciesTemplate';
 import { applyDnd5eBackgroundTemplate } from '../../utils/backgroundTemplate';
 import { applyDnd5eFeatTemplate } from '../../utils/featTemplate';
@@ -58,7 +58,12 @@ function createDnd5eCreator<T extends Dnd5eLike>(
         loadFeatsForSystem(systemId),
       ]);
 
+      // Multiclass when the model authored a `classes` array; otherwise a single
+      // class (authored `class` or keyword). The first class is "primary" — it
+      // seeds the default ability spread and the spell list.
+      const multiclass = resolveClasses(resolved, classes);
       const cls =
+        multiclass?.[0]?.cls ??
         byName(classes, asString(resolved?.class)) ??
         pickByKeywordsOrDefault(
           intent.tokens,
@@ -98,7 +103,24 @@ function createDnd5eCreator<T extends Dnd5eLike>(
       // Standard array first so the species template's bonuses stack on top.
       document.system.baseAttributes = resolveAbilities(resolved) ?? assignStandardArray(cls);
 
-      document = applyDnd5eClassTemplate(document, cls, level);
+      if (multiclass) {
+        multiclass.forEach((entry, index) => {
+          try {
+            // enforceMulticlassRequirements off: the model authors freely; the
+            // validator gates what it gates. Guarded so over-leveling can't crash.
+            document = applyDnd5eClassTemplate(document, entry.cls, entry.level, {
+              ...(index === 0 ? {} : { mode: 'add' }),
+              enforceMulticlassRequirements: false,
+            });
+            document = applySubclass(document, entry.cls, entry.subclass);
+          } catch {
+            // Skip a class that can't be applied (e.g., would exceed level 20).
+          }
+        });
+      } else {
+        document = applyDnd5eClassTemplate(document, cls, level);
+        document = applySubclass(document, cls, asString(resolved?.subclass));
+      }
       document = applyDnd5eSpeciesTemplate(document, speciesChoice);
       if (background) {
         document = applyDnd5eBackgroundTemplate(document, background);
@@ -115,6 +137,49 @@ function createDnd5eCreator<T extends Dnd5eLike>(
 }
 
 // --- LLM-resolution helpers (return undefined/false → deterministic path) ---
+
+interface ResolvedClassLevel {
+  cls: CharacterClass;
+  level: number;
+  subclass?: string;
+}
+
+/** Resolve an authored multiclass list to catalog classes with per-class levels. */
+function resolveClasses(
+  resolved: ResolvedSelections | undefined,
+  classes: CharacterClass[]
+): ResolvedClassLevel[] | undefined {
+  const raw = resolved?.classes;
+  if (!Array.isArray(raw)) return undefined;
+  const result: ResolvedClassLevel[] = [];
+  for (const entry of raw) {
+    if (!entry || typeof entry !== 'object') continue;
+    const fields = entry as Record<string, unknown>;
+    const cls = byName(classes, asString(fields.class));
+    if (!cls || result.some((existing) => existing.cls.id === cls.id)) continue; // skip unknown/dupes
+    const levelValue = fields.level;
+    const level =
+      typeof levelValue === 'number' && Number.isInteger(levelValue) && levelValue >= 1
+        ? levelValue
+        : 1;
+    result.push({ cls, level, subclass: asString(fields.subclass) });
+  }
+  return result.length > 0 ? result : undefined;
+}
+
+/** Apply a subclass by name within a class, when it resolves; otherwise a no-op. */
+function applySubclass<T extends Dnd5eLike>(
+  document: CharacterDocument<T>,
+  cls: CharacterClass,
+  subclassName: string | undefined
+): CharacterDocument<T> {
+  if (!subclassName) return document;
+  const subclass = cls.subclasses?.find(
+    (entry) => entry.name.toLowerCase() === subclassName.toLowerCase()
+  );
+  if (!subclass) return document;
+  return applyDnd5eSubclassTemplate(document, cls.id, subclass.id);
+}
 
 /**
  * Use the model's authored pre-racial ability spread (any integer per ability;

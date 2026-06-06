@@ -29,7 +29,8 @@ const ABILITY_IDS = ['str', 'dex', 'con', 'int', 'wis', 'cha'] as const;
 const applyClass = applyD20LegacyClassTemplate as <U extends D20LegacyLike>(
   document: CharacterDocument<U>,
   classData: CharacterClass,
-  level?: number
+  level?: number,
+  options?: { mode?: 'add' | 'upsert' | 'replace' }
 ) => CharacterDocument<U>;
 const applyRace = applyD20LegacyRaceTemplate as <U extends D20LegacyLike>(
   document: CharacterDocument<U>,
@@ -67,7 +68,12 @@ function createD20LegacyCreator<T extends D20LegacyLike>(
         loadFeatsForSystem(systemId),
       ]);
 
+      // Multiclass when the model authored a `classes` array; otherwise a single
+      // class (authored `class` or keyword). The first class is "primary" — it
+      // seeds the default ability spread and the deterministic skill ranks.
+      const multiclass = resolveClasses(resolved, classes);
       const cls =
+        multiclass?.[0]?.cls ??
         byName(classes, asString(resolved?.class)) ??
         pickByKeywordsOrDefault(
           intent.tokens,
@@ -98,14 +104,41 @@ function createD20LegacyCreator<T extends D20LegacyLike>(
       // Standard array first; the race template stacks racial adjustments on top.
       document.system.baseAttributes = resolveAbilities(resolved) ?? assignStandardArray(cls);
 
-      document = applyClass(document, cls, level);
+      if (multiclass) {
+        // Apply each class in order; the template sums their levels into the
+        // character level. Clamp the running total to the cap and guard each
+        // application so a duplicate/invalid entry can't crash the build.
+        let remaining = MAX_LEVEL;
+        multiclass.forEach((entry, index) => {
+          if (remaining <= 0) return;
+          const classLevel = Math.min(entry.level, remaining);
+          try {
+            document = applyClass(
+              document,
+              entry.cls,
+              classLevel,
+              index === 0 ? undefined : { mode: 'add' }
+            );
+            remaining -= classLevel;
+          } catch {
+            // Skip a class that can't be applied (duplicate/invalid level).
+          }
+        });
+      } else {
+        document = applyClass(document, cls, level);
+      }
       document = applyRace(document, race);
-      document.system.level = level;
+      // True character level = sum of applied class levels (the template already
+      // set this); fall back to the intent level if nothing applied.
+      const characterLevel =
+        document.system.classLevels.reduce((total, entry) => total + entry.level, 0) || level;
+      document.system.level = characterLevel;
       const validSkillIds = new Set((systemRegistry.get(systemId)?.skills ?? []).map((s) => s.id));
       document.system.skillRanks =
         resolveSkillRanks(resolved, validSkillIds) ??
-        assignSkillRanks(document.system, systemId, level);
-      const knownSpells = resolveSpells(resolved, spells, cls.id);
+        assignSkillRanks(document.system, systemId, characterLevel);
+      const classIds = multiclass ? multiclass.map((entry) => entry.cls.id) : [cls.id];
+      const knownSpells = resolveSpells(resolved, spells, classIds);
       if (knownSpells) {
         document.system.spellsKnown = knownSpells;
       }
@@ -204,20 +237,47 @@ function resolveAbilities(resolved?: ResolvedSelections): Record<string, number>
 }
 
 /**
- * Resolve the model's chosen spell names to ids the chosen class can learn
- * (d20 spells carry a `classes` list). Returns undefined when nothing valid was
- * authored, leaving the caster's spellbook to be filled in play.
+ * Resolve an authored multiclass list (`classes: [{ class, level }]`) to catalog
+ * classes with per-class levels, skipping unknown names and duplicates. Returns
+ * undefined when nothing was authored (→ single-class path).
+ */
+function resolveClasses(
+  resolved: ResolvedSelections | undefined,
+  classes: CharacterClass[]
+): Array<{ cls: CharacterClass; level: number }> | undefined {
+  const raw = resolved?.classes;
+  if (!Array.isArray(raw)) return undefined;
+  const result: Array<{ cls: CharacterClass; level: number }> = [];
+  for (const entry of raw) {
+    if (!entry || typeof entry !== 'object') continue;
+    const fields = entry as Record<string, unknown>;
+    const cls = byName(classes, asString(fields.class));
+    if (!cls || result.some((existing) => existing.cls.id === cls.id)) continue;
+    const levelValue = fields.level;
+    const level =
+      typeof levelValue === 'number' && Number.isInteger(levelValue) && levelValue >= 1
+        ? levelValue
+        : 1;
+    result.push({ cls, level });
+  }
+  return result.length > 0 ? result : undefined;
+}
+
+/**
+ * Resolve the model's chosen spell names to ids one of the character's classes
+ * can learn (d20 spells carry a `classes` list). Returns undefined when nothing
+ * valid was authored, leaving the caster's spellbook to be filled in play.
  */
 function resolveSpells(
   resolved: ResolvedSelections | undefined,
   spells: Spell[],
-  classId: string
+  classIds: string[]
 ): string[] | undefined {
   const names = asStringArray(resolved?.spells);
   if (!names) return undefined;
   // d20 spells associate with classes via `classes` and/or `levelsByClass`.
-  const classSpells = spells.filter(
-    (spell) => spell.classes?.includes(classId) || spell.levelsByClass?.[classId] != null
+  const classSpells = spells.filter((spell) =>
+    classIds.some((id) => spell.classes?.includes(id) || spell.levelsByClass?.[id] != null)
   );
 
   const known: string[] = [];

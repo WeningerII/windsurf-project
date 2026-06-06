@@ -74,11 +74,15 @@ async function dnd5eManifest(systemId: GameSystemId): Promise<unknown> {
       name: entry.name,
       primaryAbility: entry.primaryAbility,
       caster: Boolean(entry.spellcasting),
+      subclasses: entry.subclasses?.map((subclass) => subclass.name) ?? [],
     })),
     species: species.map((entry) => entry.name),
     backgrounds: backgrounds.map((entry) => entry.name),
     selectionKeys: {
-      class: 'a class name from classes[].name',
+      class: 'a class name from classes[].name (single-class build)',
+      classes:
+        'multiclass alternative: array of { class, level, subclass? }; per-class levels sum to the character level',
+      subclass: 'optional (single-class): a subclass name from the chosen class.subclasses[]',
       species: 'a species name from species[]',
       background: 'a background name from backgrounds[]',
       abilities: 'object mapping each ability (str/dex/con/int/wis/cha) to one array value',
@@ -140,12 +144,14 @@ async function d20LegacyManifest(systemId: GameSystemId): Promise<unknown> {
     races: species.map((entry) => entry.name),
     skills: (systemRegistry.get(systemId)?.skills ?? []).map((skill) => skill.id),
     selectionKeys: {
-      class: 'a class name from classes[].name',
+      class: 'a class name from classes[].name (single-class build)',
+      classes:
+        'multiclass alternative: array of { class, level }; per-class levels sum to the character level',
       race: 'a race name from races[]',
       abilities: 'object mapping each ability (str/dex/con/int/wis/cha) to one array value',
       skills:
         'optional: object mapping skill ids (from skills[]) to integer ranks (cap: PF1e=level, 3.5e=level+3)',
-      spells: 'for caster classes only: an array of spell names this class can learn',
+      spells: 'for caster classes only: an array of spell names your class(es) can learn',
       feats: 'optional: an array of feat names',
     },
   };

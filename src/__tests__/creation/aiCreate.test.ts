@@ -340,6 +340,33 @@ describe('createCharacterWithAi — D&D 5e "Batman"', () => {
     expect(known).toContain('fire-bolt'); // resolved from "Fire Bolt"
     expect(known).toContain('burning-hands');
   });
+
+  it('builds an authored multiclass with a per-class subclass, validated', async () => {
+    const result = await createCharacterWithAi('dnd-5e-2014', 'a gish fighter-mage', {
+      gateway: gatewayReturning({
+        name: 'Eldra',
+        selections: {
+          classes: [
+            { class: 'Fighter', level: 3, subclass: 'Champion' },
+            { class: 'Wizard', level: 2 },
+          ],
+          species: 'Human',
+          abilities: { str: 15, con: 14, int: 13, dex: 12, wis: 10, cha: 8 },
+        },
+      }),
+    });
+
+    expect(result.ok).toBe(true);
+    const system = result.document.system as {
+      classLevels: Array<{ classId: string; subclassId?: string; level: number }>;
+      level: number;
+    };
+    const byId = new Map(system.classLevels.map((entry) => [entry.classId, entry]));
+    expect(byId.get('fighter')?.level).toBe(3);
+    expect(byId.get('fighter')?.subclassId).toBe('champion'); // per-class subclass landed
+    expect(byId.get('wizard')?.level).toBe(2);
+    expect(system.level).toBe(5); // levels sum to the character level
+  });
 });
 
 describe('createCharacterWithAi — Pathfinder 2e "Batman"', () => {
@@ -471,5 +498,31 @@ describe.each(['pf1e', 'dnd-3.5e'] as const)('createCharacterWithAi — %s "Batm
     expect(ranks.climb).toBe(5); // authored, not the deterministic class-skill default
     expect(ranks.bluff).toBe(5);
     expect(ranks['not-a-real-skill']).toBeUndefined(); // unknown id dropped
+  });
+
+  it('builds an authored multiclass whose levels sum to the character level', async () => {
+    const result = await createCharacterWithAi(systemId, 'a fighter who dabbles in roguery', {
+      gateway: gatewayReturning({
+        name: 'Duarte',
+        selections: {
+          classes: [
+            { class: 'Fighter', level: 2 },
+            { class: 'Rogue', level: 3 },
+          ],
+          race: 'Human',
+          abilities: { str: 15, con: 14, dex: 13, wis: 12, int: 10, cha: 8 },
+        },
+      }),
+    });
+
+    expect(result.ok).toBe(true);
+    const system = result.document.system as {
+      classLevels: Array<{ classId: string; level: number }>;
+      level: number;
+    };
+    const byId = new Map(system.classLevels.map((entry) => [entry.classId, entry.level]));
+    expect(byId.get('fighter')).toBe(2);
+    expect(byId.get('rogue')).toBe(3);
+    expect(system.level).toBe(5); // per-class levels sum to the character level
   });
 });
