@@ -2,6 +2,7 @@ import {
   loadClassesForSystem,
   loadSpeciesForSystem,
   loadPf2eBackgroundsForSystem,
+  loadSpellsForSystem,
 } from '../../utils/dataLoader';
 import {
   applyPf2eClassTemplate,
@@ -10,6 +11,7 @@ import {
 } from '../../utils/pf2eTemplate';
 import { createDefaultPf2eData, type Pf2eDataModel } from '../../systems/pf2e/data-model';
 import type { CharacterDocument } from '../../types/core/document';
+import type { Spell } from '../../types/magic/spells';
 import { pickByKeywordsOrDefault } from '../intent';
 import type { CreationDraft, CreationIntent, ResolvedSelections, SystemCreator } from '../types';
 
@@ -37,10 +39,11 @@ export const pf2eCreator: SystemCreator<Pf2eDataModel> = {
     intent: CreationIntent,
     resolved?: ResolvedSelections
   ): Promise<CreationDraft<Pf2eDataModel>> {
-    const [classes, ancestries, backgrounds] = await Promise.all([
+    const [classes, ancestries, backgrounds, spells] = await Promise.all([
       loadClassesForSystem('pf2e'),
       loadSpeciesForSystem('pf2e'),
       loadPf2eBackgroundsForSystem('pf2e'),
+      loadSpellsForSystem('pf2e'),
     ]);
 
     const cls =
@@ -89,6 +92,7 @@ export const pf2eCreator: SystemCreator<Pf2eDataModel> = {
       document.system.keyAbility,
       asStringArray(resolved?.freeBoosts)
     );
+    applyResolvedSpells(document.system, spells, asStringArray(resolved?.spells));
 
     const name = intent.name ?? `${ancestry.name} ${cls.name}`;
     return { name, system: document.system };
@@ -121,6 +125,37 @@ function applyFreeBoosts(
       scores[ability] = current + 2;
       applied += 1;
     }
+  }
+}
+
+/**
+ * Fill a caster's known spells from the model's chosen spell names, resolved to
+ * ids within the character's spell tradition. The class template already set up
+ * `spellcasting` (tradition + slots) for casters; non-casters have none, so this
+ * is a no-op for them. The validator checks the slot math; spells known is the
+ * model's call.
+ */
+function applyResolvedSpells(
+  system: Pf2eDataModel,
+  spells: Spell[],
+  names: string[] | undefined
+): void {
+  const spellcasting = system.spellcasting;
+  if (!spellcasting || !names) return;
+  const tradition = spellcasting.tradition;
+  const traditionSpells = spells.filter((spell) => spell.traditions?.includes(tradition));
+
+  const known: string[] = [];
+  const seen = new Set<string>();
+  for (const name of names) {
+    const spell = traditionSpells.find((entry) => entry.name.toLowerCase() === name.toLowerCase());
+    if (spell && !seen.has(spell.id)) {
+      seen.add(spell.id);
+      known.push(spell.id);
+    }
+  }
+  if (known.length > 0) {
+    spellcasting.spellsKnown = known;
   }
 }
 

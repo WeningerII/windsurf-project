@@ -1,4 +1,8 @@
-import { loadClassesForSystem, loadSpeciesForSystem } from '../../utils/dataLoader';
+import {
+  loadClassesForSystem,
+  loadSpeciesForSystem,
+  loadSpellsForSystem,
+} from '../../utils/dataLoader';
 import { systemRegistry } from '../../registry';
 import {
   applyD20LegacyClassTemplate,
@@ -8,6 +12,7 @@ import { createDefaultPf1eData, type Pf1eDataModel } from '../../systems/pf1e/da
 import { createDefaultDnd35eData, type Dnd35eDataModel } from '../../systems/dnd35e/data-model';
 import type { CharacterClass } from '../../types/character-options/classes';
 import type { Species } from '../../types/character-options/species';
+import type { Spell } from '../../types/magic/spells';
 import type { CharacterDocument } from '../../types/core/document';
 import type { GameSystemId } from '../../types/game-systems';
 import { pickByKeywordsOrDefault } from '../intent';
@@ -53,9 +58,10 @@ function createD20LegacyCreator<T extends D20LegacyLike>(
   return {
     systemId,
     async build(intent: CreationIntent, resolved?: ResolvedSelections): Promise<CreationDraft<T>> {
-      const [classes, species] = await Promise.all([
+      const [classes, species, spells] = await Promise.all([
         loadClassesForSystem(systemId),
         loadSpeciesForSystem(systemId),
+        loadSpellsForSystem(systemId),
       ]);
 
       const cls =
@@ -96,6 +102,10 @@ function createD20LegacyCreator<T extends D20LegacyLike>(
       document.system.skillRanks =
         resolveSkillRanks(resolved, validSkillIds) ??
         assignSkillRanks(document.system, systemId, level);
+      const knownSpells = resolveSpells(resolved, spells, cls.id);
+      if (knownSpells) {
+        document.system.spellsKnown = knownSpells;
+      }
 
       const name = intent.name ?? `${race.name} ${cls.name}`;
       return { name, system: document.system };
@@ -186,8 +196,43 @@ function resolveAbilities(resolved?: ResolvedSelections): Record<string, number>
   return authored ? scores : undefined;
 }
 
+/**
+ * Resolve the model's chosen spell names to ids the chosen class can learn
+ * (d20 spells carry a `classes` list). Returns undefined when nothing valid was
+ * authored, leaving the caster's spellbook to be filled in play.
+ */
+function resolveSpells(
+  resolved: ResolvedSelections | undefined,
+  spells: Spell[],
+  classId: string
+): string[] | undefined {
+  const names = asStringArray(resolved?.spells);
+  if (!names) return undefined;
+  // d20 spells associate with classes via `classes` and/or `levelsByClass`.
+  const classSpells = spells.filter(
+    (spell) => spell.classes?.includes(classId) || spell.levelsByClass?.[classId] != null
+  );
+
+  const known: string[] = [];
+  const seen = new Set<string>();
+  for (const name of names) {
+    const spell = classSpells.find((entry) => entry.name.toLowerCase() === name.toLowerCase());
+    if (spell && !seen.has(spell.id)) {
+      seen.add(spell.id);
+      known.push(spell.id);
+    }
+  }
+  return known.length > 0 ? known : undefined;
+}
+
 function asString(value: unknown): string | undefined {
   return typeof value === 'string' && value.trim().length > 0 ? value.trim() : undefined;
+}
+
+function asStringArray(value: unknown): string[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const strings = value.filter((entry): entry is string => typeof entry === 'string');
+  return strings.length > 0 ? strings : undefined;
 }
 
 function byName<T extends { name: string }>(list: T[], value: string | undefined): T | undefined {

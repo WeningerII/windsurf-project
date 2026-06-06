@@ -114,6 +114,8 @@ async function pf2eManifest(): Promise<unknown> {
       heritage: 'a heritage name from the chosen ancestry.heritages[]',
       background: 'a background name from backgrounds[]',
       freeBoosts: 'array of 4 ability ids (str/dex/con/int/wis/cha) for the free boosts',
+      spells:
+        'for caster classes only: an array of spell names from the class tradition (arcane/divine/occult/primal)',
     },
   };
 }
@@ -141,6 +143,7 @@ async function d20LegacyManifest(systemId: GameSystemId): Promise<unknown> {
       abilities: 'object mapping each ability (str/dex/con/int/wis/cha) to one array value',
       skills:
         'optional: object mapping skill ids (from skills[]) to integer ranks (cap: PF1e=level, 3.5e=level+3)',
+      spells: 'for caster classes only: an array of spell names this class can learn',
     },
   };
 }

@@ -372,6 +372,35 @@ describe('createCharacterWithAi — Pathfinder 2e "Batman"', () => {
   });
 });
 
+describe('createCharacterWithAi — caster spell authoring (PF2e + d20)', () => {
+  it('fills a PF2e caster from the model-chosen spell names (by tradition)', async () => {
+    const result = await createCharacterWithAi('pf2e', 'an arcane wizard', {
+      gateway: gatewayReturning({
+        name: 'Mara',
+        selections: { class: 'Wizard', ancestry: 'Elf', spells: ['Shield', 'Fireball'] },
+      }),
+    });
+    expect(result.ok).toBe(true);
+    const known = (result.document.system as { spellcasting?: { spellsKnown: string[] } })
+      .spellcasting?.spellsKnown;
+    expect(known).toContain('shield-pf2e');
+    expect(known).toContain('fireball-pf2e');
+  });
+
+  it('fills a PF1e caster from the model-chosen spell names (by class list)', async () => {
+    const result = await createCharacterWithAi('pf1e', 'an arcane wizard', {
+      gateway: gatewayReturning({
+        name: 'Zed',
+        selections: { class: 'Wizard', race: 'Human', spells: ['Fireball', 'Mage Armor'] },
+      }),
+    });
+    expect(result.ok).toBe(true);
+    const known = (result.document.system as { spellsKnown?: string[] }).spellsKnown ?? [];
+    expect(known).toContain('pf1e-fireball');
+    expect(known.length).toBeGreaterThanOrEqual(2);
+  });
+});
+
 describe.each(['pf1e', 'dnd-3.5e'] as const)('createCharacterWithAi — %s "Batman"', (systemId) => {
   it('builds the LLM-authored class/race/abilities, validated', async () => {
     const result = await createCharacterWithAi(systemId, 'Batman', {
