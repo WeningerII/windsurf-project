@@ -76,17 +76,47 @@ describe('createCharacterWithAi — Daggerheart "Batman"', () => {
     expect((result.document.system as DaggerheartDataModel).class).toBe('Bard');
   });
 
-  it('skips the gateway entirely for systems without a manifest yet', async () => {
-    const gateway = gatewayUnconfigured();
-    const result = await createCharacterWithAi('mam3e', 'a brawler', { gateway });
-    expect(result.ok).toBe(true);
-    expect(gateway.fetch).not.toHaveBeenCalled(); // no manifest => no LLM call
+  it('exposes an options manifest for every one of the seven systems', async () => {
+    const systems = [
+      'dnd-5e-2014',
+      'dnd-5e-2024',
+      'dnd-3.5e',
+      'pf1e',
+      'pf2e',
+      'mam3e',
+      'daggerheart',
+    ] as const;
+    for (const systemId of systems) {
+      expect(hasOptionsManifest(systemId), `${systemId} manifest`).toBe(true);
+      expect(await buildOptionsManifest(systemId), `${systemId} manifest`).toBeTruthy();
+    }
   });
+});
 
-  it('exposes a manifest for daggerheart but not (yet) for mam3e', async () => {
-    expect(hasOptionsManifest('daggerheart')).toBe(true);
-    expect(await buildOptionsManifest('daggerheart')).toBeTruthy();
-    expect(await buildOptionsManifest('mam3e')).toBeUndefined();
+describe('createCharacterWithAi — M&M 3e', () => {
+  it('builds a PL-legal hero for the authored power level and archetype', async () => {
+    const result = await createCharacterWithAi('mam3e', 'a cunning mastermind', {
+      gateway: gatewayReturning({
+        name: 'The Director',
+        selections: { powerLevel: 12, archetype: 'mastermind' },
+      }),
+    });
+
+    expect(result.ok).toBe(true);
+    expect(result.document.name).toBe('The Director');
+    const system = result.document.system as {
+      powerLevel: number;
+      powerPoints: { total: number; spent: Record<string, number> };
+      abilities: Record<string, number>;
+      plViolations?: unknown[];
+    };
+    expect(system.powerLevel).toBe(12);
+    expect(system.powerPoints.total).toBe(180); // 15 × PL
+    // The archetype led with mental abilities, and the build broke no PL cap.
+    expect(system.abilities.int).toBeGreaterThan(system.abilities.str);
+    expect(system.plViolations ?? []).toEqual([]);
+    const spent = Object.values(system.powerPoints.spent).reduce((a, b) => a + b, 0);
+    expect(spent).toBeLessThanOrEqual(system.powerPoints.total);
   });
 });
 

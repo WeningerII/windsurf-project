@@ -139,6 +139,25 @@ async function d20LegacyManifest(systemId: GameSystemId): Promise<unknown> {
   };
 }
 
+function mam3eManifest(): unknown {
+  return {
+    system: 'mam3e',
+    powerLevelRange: [1, 20],
+    note: 'M&M trait caps (2 × PL) and the 15 × PL point budget are tight, so abilities, defenses, powers, and advantages are auto-built to be PL-legal. Steer the build by choosing a Power Level and an archetype.',
+    archetypes: [
+      { name: 'brawler', focus: 'Strength/Stamina/Fighting — a melee powerhouse' },
+      { name: 'skirmisher', focus: 'Agility/Dexterity/Fighting — fast and evasive' },
+      { name: 'mastermind', focus: 'Intellect/Awareness/Presence — a cunning leader' },
+    ],
+    selectionKeys: {
+      powerLevel: 'an integer power level within powerLevelRange (default 10)',
+      archetype: 'one of the archetype names',
+      leadAbility:
+        'optional: a lead ability id (str/sta/agi/dex/fgt/int/awe/pre) — maps to an archetype',
+    },
+  };
+}
+
 const MANIFEST_BUILDERS: Partial<Record<GameSystemId, () => unknown | Promise<unknown>>> = {
   daggerheart: daggerheartManifest,
   'dnd-5e-2014': () => dnd5eManifest('dnd-5e-2014'),
@@ -146,6 +165,7 @@ const MANIFEST_BUILDERS: Partial<Record<GameSystemId, () => unknown | Promise<un
   pf2e: pf2eManifest,
   pf1e: () => d20LegacyManifest('pf1e'),
   'dnd-3.5e': () => d20LegacyManifest('dnd-3.5e'),
+  mam3e: mam3eManifest,
 };
 
 /**
