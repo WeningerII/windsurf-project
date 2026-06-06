@@ -80,6 +80,7 @@ const iconicSpellExpectations: Array<{
     systems: {
       'dnd-5e-2014': e(1, 'evocation'),
       'dnd-5e-2024': e(1, 'evocation'),
+      'dnd-3.5e': e(1, 'evocation'),
       pf1e: e(1, 'evocation'),
       pf2e: e(1, 'evocation'),
     },
@@ -107,6 +108,7 @@ const iconicSpellExpectations: Array<{
     systems: {
       'dnd-5e-2014': e(1, 'abjuration'),
       'dnd-5e-2024': e(1, 'abjuration'),
+      'dnd-3.5e': e(1, 'abjuration'),
       pf1e: e(1, 'abjuration'),
       pf2e: e(0, 'abjuration'),
     },
@@ -116,6 +118,7 @@ const iconicSpellExpectations: Array<{
     systems: {
       'dnd-5e-2014': e(1, 'abjuration'),
       'dnd-5e-2024': e(1, 'abjuration'),
+      'dnd-3.5e': e(1, 'conjuration'),
       pf1e: e(1, 'conjuration'),
     },
   },
@@ -124,6 +127,7 @@ const iconicSpellExpectations: Array<{
     systems: {
       'dnd-5e-2014': e(1, 'abjuration'),
       'dnd-5e-2024': e(1, 'abjuration'),
+      'dnd-3.5e': e(1, 'abjuration'),
       pf1e: e(1, 'abjuration'),
     },
   },
@@ -132,6 +136,7 @@ const iconicSpellExpectations: Array<{
     systems: {
       'dnd-5e-2014': e(1, 'enchantment'),
       'dnd-5e-2024': e(1, 'enchantment'),
+      'dnd-3.5e': e(1, 'enchantment'),
       pf1e: e(1, 'enchantment'),
     },
   },
@@ -140,6 +145,7 @@ const iconicSpellExpectations: Array<{
     systems: {
       'dnd-5e-2014': e(1, 'evocation'),
       'dnd-5e-2024': e(1, 'evocation'),
+      'dnd-3.5e': e(1, 'evocation'),
       pf1e: e(1, 'evocation'),
       pf2e: e(1, 'evocation'),
     },
@@ -251,6 +257,7 @@ const iconicSpellExpectations: Array<{
     systems: {
       'dnd-5e-2014': e(1, 'enchantment'),
       'dnd-5e-2024': e(1, 'enchantment'),
+      'dnd-3.5e': e(1, 'enchantment'),
       pf1e: e(1, 'enchantment'),
     },
   },
@@ -294,6 +301,7 @@ const iconicSpellExpectations: Array<{
     systems: {
       'dnd-5e-2014': e(1, 'divination'),
       'dnd-5e-2024': e(1, 'divination'),
+      'dnd-3.5e': e(1, 'divination'),
       pf1e: e(1, 'divination'),
     },
   },

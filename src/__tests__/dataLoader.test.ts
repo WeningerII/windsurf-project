@@ -183,7 +183,7 @@ describe('Data Loader Integration Tests', () => {
   describe('D&D 3.5e Loaders', () => {
     it('should load the canonicalized 3.5e spell catalog without exact class-split duplicates', async () => {
       const spells = await loadSpellsForSystem('dnd-3.5e');
-      expect(spells.length).toBe(428);
+      expect(spells.length).toBe(456);
       const fingerprints = spells.map((spell) => {
         const {
           id: _id,
