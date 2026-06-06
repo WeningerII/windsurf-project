@@ -448,6 +448,7 @@ const iconicSpellExpectations: Array<{
       'dnd-5e-2014': e(2, 'enchantment'),
       'dnd-5e-2024': e(2, 'enchantment'),
       'dnd-3.5e': e(2, 'enchantment'),
+      pf1e: e(2, 'enchantment'),
     },
   },
   {
@@ -466,6 +467,7 @@ const iconicSpellExpectations: Array<{
       'dnd-5e-2014': e(5, 'divination'),
       'dnd-5e-2024': e(5, 'divination'),
       'dnd-3.5e': e(5, 'divination'),
+      pf1e: e(5, 'divination'),
     },
   },
   {
@@ -483,6 +485,7 @@ const iconicSpellExpectations: Array<{
       'dnd-5e-2014': e(4, 'abjuration'),
       'dnd-5e-2024': e(4, 'abjuration'),
       'dnd-3.5e': e(6, 'abjuration'),
+      pf1e: e(6, 'abjuration'),
       pf2e: e(5, 'abjuration'),
     },
   },
