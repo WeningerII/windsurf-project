@@ -223,6 +223,7 @@ const iconicSpellExpectations: Array<{
       'dnd-5e-2014': e(5, 'necromancy'),
       'dnd-5e-2024': e(5, 'necromancy'),
       'dnd-3.5e': e(5, 'conjuration'),
+      pf1e: e(5, 'conjuration'),
     },
   },
   {
@@ -394,7 +395,11 @@ const iconicSpellExpectations: Array<{
   },
   {
     name: 'Lesser Restoration',
-    systems: { 'dnd-5e-2014': e(2, 'abjuration'), 'dnd-5e-2024': e(2, 'abjuration') },
+    systems: {
+      'dnd-5e-2014': e(2, 'abjuration'),
+      'dnd-5e-2024': e(2, 'abjuration'),
+      pf1e: e(2, 'conjuration'),
+    },
   },
   {
     name: 'Spiritual Weapon',
@@ -402,6 +407,7 @@ const iconicSpellExpectations: Array<{
       'dnd-5e-2014': e(2, 'evocation'),
       'dnd-5e-2024': e(2, 'evocation'),
       'dnd-3.5e': e(2, 'evocation'),
+      pf1e: e(2, 'evocation'),
     },
   },
   {
@@ -414,6 +420,7 @@ const iconicSpellExpectations: Array<{
       'dnd-5e-2014': e(4, 'abjuration'),
       'dnd-5e-2024': e(4, 'abjuration'),
       'dnd-3.5e': e(4, 'necromancy'),
+      pf1e: e(4, 'necromancy'),
     },
   },
   {
@@ -430,6 +437,7 @@ const iconicSpellExpectations: Array<{
       'dnd-5e-2014': e(1, 'abjuration'),
       'dnd-5e-2024': e(1, 'abjuration'),
       'dnd-3.5e': e(1, 'abjuration'),
+      pf1e: e(1, 'abjuration'),
       pf2e: e(1, 'abjuration'),
     },
   },
@@ -447,6 +455,7 @@ const iconicSpellExpectations: Array<{
       'dnd-5e-2014': e(4, 'abjuration'),
       'dnd-5e-2024': e(4, 'abjuration'),
       'dnd-3.5e': e(4, 'abjuration'),
+      pf1e: e(4, 'abjuration'),
       pf2e: e(4, 'abjuration'),
     },
   },
@@ -464,6 +473,7 @@ const iconicSpellExpectations: Array<{
       'dnd-5e-2014': e(5, 'evocation'),
       'dnd-5e-2024': e(5, 'evocation'),
       'dnd-3.5e': e(4, 'evocation'),
+      pf1e: e(4, 'evocation'),
     },
   },
   {
