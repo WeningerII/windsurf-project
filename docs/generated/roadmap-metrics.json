@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-01T13:08:28.818Z",
+  "generatedAt": "2026-06-06T18:25:32.395Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -59,7 +59,7 @@
   },
   "productReachableSummary": {
     "dnd-5e-2014": {
-      "spells": 244,
+      "spells": 313,
       "classes": 12,
       "species": 9,
       "backgrounds": 6,
@@ -89,7 +89,7 @@
       "powerModifiers": 0
     },
     "dnd-3.5e": {
-      "spells": 428,
+      "spells": 456,
       "classes": 26,
       "species": 7,
       "backgrounds": 0,
@@ -166,7 +166,7 @@
   },
   "repoResidentSummary": {
     "dnd-5e-2014": {
-      "spells": 244,
+      "spells": 313,
       "classes": 12,
       "species": 9,
       "backgrounds": 6,
@@ -196,7 +196,7 @@
       "powerModifiers": 0
     },
     "dnd-3.5e": {
-      "spells": 428,
+      "spells": 456,
       "classes": 26,
       "species": 7,
       "backgrounds": 0,
@@ -278,13 +278,13 @@
       "category": "spells",
       "categoryLabel": "Spells/Powers",
       "metrics": {
-        "rawCount": 244,
-        "uniqueCount": 244,
+        "rawCount": 313,
+        "uniqueCount": 313,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 5.1": 244
+          "SRD 5.1": 313
         }
       }
     },
@@ -518,13 +518,13 @@
       "category": "spells",
       "categoryLabel": "Spells/Powers",
       "metrics": {
-        "rawCount": 428,
-        "uniqueCount": 428,
+        "rawCount": 456,
+        "uniqueCount": 456,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 3.5": 428
+          "SRD 3.5": 456
         }
       }
     },
