@@ -168,3 +168,30 @@ describe('createCharacterWithAi — Pathfinder 2e "Batman"', () => {
     expect(system.baseAttributes.dex).toBeGreaterThanOrEqual(14);
   });
 });
+
+describe.each(['pf1e', 'dnd-3.5e'] as const)('createCharacterWithAi — %s "Batman"', (systemId) => {
+  it('builds the LLM-authored class/race/abilities, validated', async () => {
+    const result = await createCharacterWithAi(systemId, 'Batman', {
+      gateway: gatewayReturning({
+        name: 'Batman',
+        level: 2,
+        selections: {
+          class: 'Rogue',
+          race: 'Human',
+          abilities: { dex: 15, con: 14, wis: 13, int: 12, cha: 10, str: 8 },
+        },
+      }),
+    });
+
+    expect(result.ok).toBe(true);
+    expect(result.document.name).toBe('Batman');
+    const system = result.document.system as {
+      classLevels: Array<{ classId: string }>;
+      speciesId?: string;
+      baseAttributes: Record<string, number>;
+    };
+    expect(system.classLevels[0].classId).toBe('rogue');
+    expect(system.speciesId).toBe('human');
+    expect(system.baseAttributes.dex).toBeGreaterThanOrEqual(15);
+  });
+});

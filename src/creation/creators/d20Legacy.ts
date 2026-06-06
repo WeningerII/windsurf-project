@@ -10,9 +10,10 @@ import type { Species } from '../../types/character-options/species';
 import type { CharacterDocument } from '../../types/core/document';
 import type { GameSystemId } from '../../types/game-systems';
 import { pickByKeywordsOrDefault } from '../intent';
-import type { CreationDraft, CreationIntent, SystemCreator } from '../types';
+import type { CreationDraft, CreationIntent, ResolvedSelections, SystemCreator } from '../types';
 
 type D20LegacyLike = Pf1eDataModel | Dnd35eDataModel;
+const ABILITY_IDS = ['str', 'dex', 'con', 'int', 'wis', 'cha'] as const;
 
 // The d20 template appliers expose per-edition overloads, but their
 // implementations are generic over the union (they branch on document.systemId).
@@ -50,24 +51,28 @@ function createD20LegacyCreator<T extends D20LegacyLike>(
 ): SystemCreator<T> {
   return {
     systemId,
-    async build(intent: CreationIntent): Promise<CreationDraft<T>> {
+    async build(intent: CreationIntent, resolved?: ResolvedSelections): Promise<CreationDraft<T>> {
       const [classes, species] = await Promise.all([
         loadClassesForSystem(systemId),
         loadSpeciesForSystem(systemId),
       ]);
 
-      const cls = pickByKeywordsOrDefault(
-        intent.tokens,
-        classes,
-        (entry) => [entry.name, entry.id],
-        classes[0]
-      );
-      const race = pickByKeywordsOrDefault(
-        intent.tokens,
-        species,
-        (entry) => [entry.name, entry.id],
-        species[0]
-      );
+      const cls =
+        byName(classes, asString(resolved?.class)) ??
+        pickByKeywordsOrDefault(
+          intent.tokens,
+          classes,
+          (entry) => [entry.name, entry.id],
+          classes[0]
+        );
+      const race =
+        byName(species, asString(resolved?.race)) ??
+        pickByKeywordsOrDefault(
+          intent.tokens,
+          species,
+          (entry) => [entry.name, entry.id],
+          species[0]
+        );
 
       const level = Math.min(MAX_LEVEL, intent.level);
 
@@ -81,7 +86,7 @@ function createD20LegacyCreator<T extends D20LegacyLike>(
       };
 
       // Standard array first; the race template stacks racial adjustments on top.
-      document.system.baseAttributes = assignStandardArray(cls);
+      document.system.baseAttributes = resolveAbilities(resolved) ?? assignStandardArray(cls);
 
       document = applyClass(document, cls, level);
       document = applyRace(document, race);
@@ -124,6 +129,32 @@ function assignStandardArray(cls: CharacterClass): Record<string, number> {
     result[ability] = STANDARD_ARRAY[index] ?? 10;
     return result;
   }, {});
+}
+
+/** Use the model's pre-racial ability spread only if it's exactly the standard array. */
+function resolveAbilities(resolved?: ResolvedSelections): Record<string, number> | undefined {
+  const raw = resolved?.abilities;
+  if (!raw || typeof raw !== 'object') return undefined;
+  const source = raw as Record<string, unknown>;
+
+  const scores: Record<string, number> = {};
+  for (const ability of ABILITY_IDS) {
+    const value = source[ability];
+    if (typeof value !== 'number' || !Number.isInteger(value)) return undefined;
+    scores[ability] = value;
+  }
+  const sorted = ABILITY_IDS.map((ability) => scores[ability]).sort((a, b) => b - a);
+  if (!sorted.every((value, index) => value === STANDARD_ARRAY[index])) return undefined;
+  return scores;
+}
+
+function asString(value: unknown): string | undefined {
+  return typeof value === 'string' && value.trim().length > 0 ? value.trim() : undefined;
+}
+
+function byName<T extends { name: string }>(list: T[], value: string | undefined): T | undefined {
+  if (value === undefined) return undefined;
+  return list.find((entry) => entry.name.toLowerCase() === value.toLowerCase());
 }
 
 export const pf1eCreator: SystemCreator<Pf1eDataModel> = createD20LegacyCreator(

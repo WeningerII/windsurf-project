@@ -115,11 +115,37 @@ async function pf2eManifest(): Promise<unknown> {
   };
 }
 
+async function d20LegacyManifest(systemId: GameSystemId): Promise<unknown> {
+  const [classes, species] = await Promise.all([
+    loadClassesForSystem(systemId),
+    loadSpeciesForSystem(systemId),
+  ]);
+  return {
+    system: systemId,
+    levelRange: [1, 20],
+    abilityMethod: {
+      kind: 'standard-array',
+      array: STANDARD_ARRAY,
+      abilities: D20_ABILITIES,
+      note: 'Assign each array value to exactly one ability (before racial adjustments).',
+    },
+    classes: classes.map((entry) => ({ name: entry.name, primaryAbility: entry.primaryAbility })),
+    races: species.map((entry) => entry.name),
+    selectionKeys: {
+      class: 'a class name from classes[].name',
+      race: 'a race name from races[]',
+      abilities: 'object mapping each ability (str/dex/con/int/wis/cha) to one array value',
+    },
+  };
+}
+
 const MANIFEST_BUILDERS: Partial<Record<GameSystemId, () => unknown | Promise<unknown>>> = {
   daggerheart: daggerheartManifest,
   'dnd-5e-2014': () => dnd5eManifest('dnd-5e-2014'),
   'dnd-5e-2024': () => dnd5eManifest('dnd-5e-2024'),
   pf2e: pf2eManifest,
+  pf1e: () => d20LegacyManifest('pf1e'),
+  'dnd-3.5e': () => d20LegacyManifest('dnd-3.5e'),
 };
 
 /**
