@@ -1230,4 +1230,134 @@ export const level1Spells: Spell[] = withPf2eSpellTraits([
     },
     classes: ['bard', 'sorcerer', 'wizard'],
   },
+  {
+    id: 'mage-armor-pf2e',
+    name: 'Mage Armor',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 1,
+    school: 'abjuration',
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'hours',
+      hours: 8,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You ward yourself with shimmering magical energy, gaining a +1 item bonus to AC and a maximum Dexterity modifier of +5.',
+    heightening: {
+      mode: 'fixed',
+      ranks: {
+        '4': '+1 AC and +1 to saving throws.',
+        '6': '+2 AC and +1 to saves.',
+        '8': '+2 AC and +2 to saves.',
+        '10': '+3 AC and +3 to saves.',
+      },
+      summary: 'Heightened: increases the AC bonus and adds a bonus to saving throws.',
+    },
+    classes: ['sorcerer', 'wizard'],
+  },
+  {
+    id: 'create-water-pf2e',
+    name: 'Create Water',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 1,
+    school: 'conjuration',
+    traditions: ['arcane', 'divine', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 0,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You conjure 2 gallons of fresh water in your cupped hands or an adjacent container.',
+    classes: ['cleric', 'druid', 'sorcerer', 'wizard'],
+  },
+  {
+    id: 'protection-pf2e',
+    name: 'Protection',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 1,
+    school: 'abjuration',
+    traditions: ['divine', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You ward a creature against a chosen alignment, granting a +1 status bonus to AC and saves against creatures and effects of that alignment.',
+    classes: ['cleric', 'sorcerer', 'wizard'],
+  },
+  {
+    id: 'fleet-step-pf2e',
+    name: 'Fleet Step',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 1,
+    school: 'transmutation',
+    traditions: ['primal'],
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You move with extraordinary speed, gaining a +30-foot status bonus to your Speed.',
+    classes: ['druid', 'sorcerer'],
+  },
 ]);

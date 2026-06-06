@@ -139,7 +139,7 @@ describe('Data Loader Integration Tests', () => {
   describe('Pathfinder 2e Loaders', () => {
     it('should load spells for pf2e', async () => {
       const spells = await loadSpellsForSystem('pf2e');
-      expect(spells.length).toBe(149);
+      expect(spells.length).toBe(164);
       expect(spells.every((spell) => spell.traditions && spell.traditions.length > 0)).toBe(true);
       expect(
         spells

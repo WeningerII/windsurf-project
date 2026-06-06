@@ -671,4 +671,144 @@ export const cantrips: Spell[] = withPf2eSpellTraits([
     },
     classes: ['cleric'],
   },
+  {
+    id: 'detect-magic-pf2e',
+    name: 'Detect Magic',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 0,
+    school: 'divination',
+    traditions: ['arcane', 'divine', 'occult', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You send out a pulse that registers the presence of magic. You learn whether magic is present within 30 feet, though not its location or kind.',
+    heightening: {
+      mode: 'cantrip',
+      summary:
+        'Heightened (3rd): You learn the school of the most powerful magical effect. (4th): You also pinpoint a magical illusion if its level is no higher than the spell rank.',
+    },
+    classes: ['bard', 'cleric', 'druid', 'sorcerer', 'wizard'],
+  },
+  {
+    id: 'read-aura-pf2e',
+    name: 'Read Aura',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 0,
+    school: 'divination',
+    traditions: ['arcane', 'divine', 'occult', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: false,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'instant',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You focus on one item and detect whether it is magical, learning the school of magic if so.',
+    heightening: {
+      mode: 'cantrip',
+      summary:
+        'Heightened (3rd): You can read the auras of up to 10 items at once. (6th): up to 100 items.',
+    },
+    classes: ['bard', 'cleric', 'druid', 'sorcerer', 'wizard'],
+  },
+  {
+    id: 'dancing-lights-pf2e',
+    name: 'Dancing Lights',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 0,
+    school: 'evocation',
+    traditions: ['arcane', 'occult', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'special',
+      description: 'sustained',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'You create four floating lights that you can move up to 60 feet as you Sustain the spell. Each sheds dim light in a 10-foot radius.',
+    heightening: {
+      mode: 'cantrip',
+      summary:
+        'This cantrip is automatically heightened to a spell rank equal to half your level rounded up.',
+    },
+    classes: ['bard', 'druid', 'sorcerer', 'wizard'],
+  },
+  {
+    id: 'sigil-pf2e',
+    name: 'Sigil',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 0,
+    school: 'transmutation',
+    traditions: ['arcane', 'divine', 'occult', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: false,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'instant',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You etch a small magical mark or symbol of your choice onto a creature or object, lasting one week (or permanently on an object).',
+    heightening: {
+      mode: 'cantrip',
+      summary:
+        'Heightened (3rd): the sigil lasts one month. (5th): one year. (7th): permanently on a creature.',
+    },
+    classes: ['bard', 'cleric', 'druid', 'sorcerer', 'wizard'],
+  },
 ]);

@@ -860,4 +860,210 @@ export const level2Spells: Spell[] = withPf2eSpellTraits([
     },
     classes: ['sorcerer', 'wizard'],
   },
+  {
+    id: 'obscuring-mist-pf2e',
+    name: 'Obscuring Mist',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 2,
+    school: 'conjuration',
+    traditions: ['arcane', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 3,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'A cloud of mist fills a 20-foot burst, concealing creatures within it and blocking sight beyond it.',
+    classes: ['druid', 'sorcerer', 'wizard'],
+  },
+  {
+    id: 'shatter-pf2e',
+    name: 'Shatter',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 2,
+    school: 'evocation',
+    traditions: ['arcane'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'fort',
+      success: 'none',
+    },
+    savingThrowText: 'none (object)',
+    concentration: false,
+    ritual: false,
+    description:
+      'You emit a high-frequency sonic attack that deals 2d10 sonic damage to an unattended object, ignoring its Hardness up to 4.',
+    heightening: {
+      mode: 'interval',
+      interval: 1,
+      summary: 'Heightened (+1): The damage increases by 1d10 and the Hardness ignored by 2.',
+    },
+    classes: ['sorcerer', 'wizard'],
+  },
+  {
+    id: 'spider-climb-pf2e',
+    name: 'Spider Climb',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 2,
+    school: 'transmutation',
+    traditions: ['arcane', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'The target gains a climb Speed equal to its Speed, letting it walk on walls and ceilings.',
+    heightening: {
+      mode: 'fixed',
+      ranks: {
+        '5': 'The duration increases to 1 hour.',
+      },
+      summary: 'Heightened (5th): duration 1 hour.',
+    },
+    classes: ['druid', 'sorcerer', 'wizard'],
+  },
+  {
+    id: 'touch-of-idiocy-pf2e',
+    name: 'Touch of Idiocy',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 2,
+    school: 'enchantment',
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will',
+    concentration: false,
+    ritual: false,
+    description:
+      'You dull the target’s mind; it becomes stupefied 2 (stupefied 1 on a successful Will save, longer on a failure).',
+    classes: ['sorcerer', 'wizard'],
+  },
+  {
+    id: 'humanoid-form-pf2e',
+    name: 'Humanoid Form',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 2,
+    school: 'transmutation',
+    traditions: ['arcane', 'occult', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You transform into a Small or Medium humanoid, gaining a disguise and possibly low-light vision or darkvision.',
+    classes: ['druid', 'sorcerer', 'wizard'],
+  },
+  {
+    id: 'death-knell-pf2e',
+    name: 'Death Knell',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 2,
+    school: 'necromancy',
+    traditions: ['divine', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will',
+    concentration: false,
+    ritual: false,
+    description:
+      'You snuff out the life of a dying creature you touch, killing it if it has dying 1 or more; you gain temporary Hit Points and a status bonus to attacks.',
+    classes: ['cleric', 'sorcerer', 'wizard'],
+  },
 ]);

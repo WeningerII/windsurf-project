@@ -346,4 +346,40 @@ export const level6Spells: Spell[] = withPf2eSpellTraits([
       'You create a wall of solid ice. The wall is 1 foot thick and composed of up to 10 contiguous 10-foot sections. Each section has AC 10, Hardness 10, and 40 Hit Points. It melts slowly in warm environments.',
     classes: ['sorcerer', 'wizard'],
   },
+  {
+    id: 'dominate-pf2e',
+    name: 'Dominate',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 6,
+    school: 'enchantment',
+    traditions: ['arcane', 'divine', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will',
+    concentration: false,
+    ritual: false,
+    description:
+      'You take command of a creature, controlling its actions; the effect’s duration depends on its Will save outcome.',
+    classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
+  },
 ]);

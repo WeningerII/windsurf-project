@@ -120,6 +120,7 @@ const iconicSpellExpectations: Array<{
       'dnd-5e-2024': e(1, 'abjuration'),
       'dnd-3.5e': e(1, 'conjuration'),
       pf1e: e(1, 'conjuration'),
+      pf2e: e(1, 'abjuration'),
     },
   },
   {
@@ -157,6 +158,7 @@ const iconicSpellExpectations: Array<{
       'dnd-5e-2024': e(1, 'divination'),
       'dnd-3.5e': e(0, 'divination'),
       pf1e: e(0, 'divination'),
+      pf2e: e(0, 'divination'),
     },
   },
   {
