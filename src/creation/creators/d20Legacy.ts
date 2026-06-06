@@ -2,6 +2,7 @@ import {
   loadClassesForSystem,
   loadSpeciesForSystem,
   loadSpellsForSystem,
+  loadFeatsForSystem,
 } from '../../utils/dataLoader';
 import { systemRegistry } from '../../registry';
 import {
@@ -11,6 +12,7 @@ import {
 import { createDefaultPf1eData, type Pf1eDataModel } from '../../systems/pf1e/data-model';
 import { createDefaultDnd35eData, type Dnd35eDataModel } from '../../systems/dnd35e/data-model';
 import type { CharacterClass } from '../../types/character-options/classes';
+import type { FeatDefinition } from '../../types/character-options/feats';
 import type { Species } from '../../types/character-options/species';
 import type { Spell } from '../../types/magic/spells';
 import type { CharacterDocument } from '../../types/core/document';
@@ -58,10 +60,11 @@ function createD20LegacyCreator<T extends D20LegacyLike>(
   return {
     systemId,
     async build(intent: CreationIntent, resolved?: ResolvedSelections): Promise<CreationDraft<T>> {
-      const [classes, species, spells] = await Promise.all([
+      const [classes, species, spells, feats] = await Promise.all([
         loadClassesForSystem(systemId),
         loadSpeciesForSystem(systemId),
         loadSpellsForSystem(systemId),
+        loadFeatsForSystem(systemId),
       ]);
 
       const cls =
@@ -105,6 +108,10 @@ function createD20LegacyCreator<T extends D20LegacyLike>(
       const knownSpells = resolveSpells(resolved, spells, cls.id);
       if (knownSpells) {
         document.system.spellsKnown = knownSpells;
+      }
+      const authoredFeats = resolveFeats(resolved, feats);
+      if (authoredFeats.length > 0) {
+        document.system.feats = [...document.system.feats, ...authoredFeats];
       }
 
       const name = intent.name ?? `${race.name} ${cls.name}`;
@@ -223,6 +230,30 @@ function resolveSpells(
     }
   }
   return known.length > 0 ? known : undefined;
+}
+
+/** Resolve the model's chosen feat names to catalog feats (deduped). */
+function resolveFeats(
+  resolved: ResolvedSelections | undefined,
+  feats: FeatDefinition[]
+): D20LegacyLike['feats'] {
+  const names = asStringArray(resolved?.feats);
+  if (!names) return [];
+  const result: D20LegacyLike['feats'] = [];
+  const seen = new Set<string>();
+  for (const name of names) {
+    const definition = feats.find((feat) => feat.name.toLowerCase() === name.toLowerCase());
+    if (definition && !seen.has(definition.id)) {
+      seen.add(definition.id);
+      result.push({
+        id: definition.id,
+        name: definition.name,
+        description: definition.description ?? '',
+        source: definition.source ?? '',
+      });
+    }
+  }
+  return result;
 }
 
 function asString(value: unknown): string | undefined {

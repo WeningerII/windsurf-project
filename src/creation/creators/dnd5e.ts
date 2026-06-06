@@ -3,10 +3,13 @@ import {
   loadSpeciesForSystem,
   loadBackgroundsForSystem,
   loadSpellsForSystem,
+  loadFeatsForSystem,
 } from '../../utils/dataLoader';
 import { applyDnd5eClassTemplate } from '../../utils/classTemplate';
 import { applyDnd5eSpeciesTemplate } from '../../utils/speciesTemplate';
 import { applyDnd5eBackgroundTemplate } from '../../utils/backgroundTemplate';
+import { applyDnd5eFeatTemplate } from '../../utils/featTemplate';
+import type { FeatDefinition } from '../../types/character-options/feats';
 import { createDefaultDnd5eData, type Dnd5eDataModel } from '../../systems/dnd5e/data-model';
 import {
   createDefaultDnd5e2024Data,
@@ -47,11 +50,12 @@ function createDnd5eCreator<T extends Dnd5eLike>(
   return {
     systemId,
     async build(intent: CreationIntent, resolved?: ResolvedSelections): Promise<CreationDraft<T>> {
-      const [classes, species, backgrounds, spells] = await Promise.all([
+      const [classes, species, backgrounds, spells, feats] = await Promise.all([
         loadClassesForSystem(systemId),
         loadSpeciesForSystem(systemId),
         loadBackgroundsForSystem(systemId),
         loadSpellsForSystem(systemId),
+        loadFeatsForSystem(systemId),
       ]);
 
       const cls =
@@ -102,6 +106,7 @@ function createDnd5eCreator<T extends Dnd5eLike>(
       if (!applyResolvedSpells(document.system, cls, spells, resolved)) {
         selectStartingSpells(document.system, cls, spells);
       }
+      document = applyResolvedFeats(document, feats, asStringArray(resolved?.feats));
 
       const name = intent.name ?? `${speciesChoice.name} ${cls.name}`;
       return { name, system: document.system };
@@ -165,6 +170,30 @@ function applyResolvedSpells(
   spellcasting.spellsKnown = [...cantrips, ...leveled];
   spellcasting.spellsPrepared = progression.preparedCasterFormula ? leveled : [];
   return true;
+}
+
+/**
+ * Apply the model's chosen feats by name, each through the feat template so its
+ * automation (ability-score increases, proficiencies) lands too — not just a
+ * name on the sheet. Unknown names and duplicates are skipped.
+ */
+function applyResolvedFeats<T extends Dnd5eLike>(
+  document: CharacterDocument<T>,
+  feats: FeatDefinition[],
+  names: string[] | undefined
+): CharacterDocument<T> {
+  if (!names) return document;
+  let next = document;
+  for (const name of names) {
+    const definition = feats.find((feat) => feat.name.toLowerCase() === name.toLowerCase());
+    if (!definition) continue;
+    try {
+      next = applyDnd5eFeatTemplate(next, definition);
+    } catch {
+      // Already selected — skip the duplicate.
+    }
+  }
+  return next;
 }
 
 // --- Deterministic helpers (the fallback path) ---

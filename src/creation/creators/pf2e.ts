@@ -3,6 +3,7 @@ import {
   loadSpeciesForSystem,
   loadPf2eBackgroundsForSystem,
   loadSpellsForSystem,
+  loadFeatsForSystem,
 } from '../../utils/dataLoader';
 import {
   applyPf2eClassTemplate,
@@ -11,6 +12,7 @@ import {
 } from '../../utils/pf2eTemplate';
 import { createDefaultPf2eData, type Pf2eDataModel } from '../../systems/pf2e/data-model';
 import type { CharacterDocument } from '../../types/core/document';
+import type { FeatDefinition } from '../../types/character-options/feats';
 import type { Spell } from '../../types/magic/spells';
 import { pickByKeywordsOrDefault } from '../intent';
 import type { CreationDraft, CreationIntent, ResolvedSelections, SystemCreator } from '../types';
@@ -39,11 +41,12 @@ export const pf2eCreator: SystemCreator<Pf2eDataModel> = {
     intent: CreationIntent,
     resolved?: ResolvedSelections
   ): Promise<CreationDraft<Pf2eDataModel>> {
-    const [classes, ancestries, backgrounds, spells] = await Promise.all([
+    const [classes, ancestries, backgrounds, spells, feats] = await Promise.all([
       loadClassesForSystem('pf2e'),
       loadSpeciesForSystem('pf2e'),
       loadPf2eBackgroundsForSystem('pf2e'),
       loadSpellsForSystem('pf2e'),
+      loadFeatsForSystem('pf2e'),
     ]);
 
     const cls =
@@ -93,6 +96,10 @@ export const pf2eCreator: SystemCreator<Pf2eDataModel> = {
       asStringArray(resolved?.freeBoosts)
     );
     applyResolvedSpells(document.system, spells, asStringArray(resolved?.spells));
+    const authoredFeats = resolveFeats(feats, asStringArray(resolved?.feats));
+    if (authoredFeats.length > 0) {
+      document.system.feats = [...document.system.feats, ...authoredFeats];
+    }
 
     const name = intent.name ?? `${ancestry.name} ${cls.name}`;
     return { name, system: document.system };
@@ -157,6 +164,31 @@ function applyResolvedSpells(
   if (known.length > 0) {
     spellcasting.spellsKnown = known;
   }
+}
+
+/** Resolve the model's chosen feat names to catalog feats (deduped). */
+function resolveFeats(
+  feats: FeatDefinition[],
+  names: string[] | undefined
+): Pf2eDataModel['feats'] {
+  if (!names) return [];
+  const result: Pf2eDataModel['feats'] = [];
+  const seen = new Set<string>();
+  for (const name of names) {
+    const definition = feats.find((feat) => feat.name.toLowerCase() === name.toLowerCase());
+    if (definition && !seen.has(definition.id)) {
+      seen.add(definition.id);
+      result.push({
+        id: definition.id,
+        name: definition.name,
+        description: definition.description ?? '',
+        level: 1,
+        type: 'class',
+        source: definition.source ?? '',
+      });
+    }
+  }
+  return result;
 }
 
 function asString(value: unknown): string | undefined {

@@ -3,6 +3,7 @@ import { registerAllSystems } from '../../systems';
 import '../../creation'; // side-effect: registers the per-system creators
 import { createCharacterWithAi } from '../../creation/aiCreate';
 import { buildOptionsManifest, hasOptionsManifest } from '../../creation/optionsManifest';
+import { loadFeatsForSystem } from '../../utils/dataLoader';
 import type { DaggerheartDataModel } from '../../systems/daggerheart/data-model';
 import type { FetchLike } from '../../rules/ai/llmNarration';
 
@@ -369,6 +370,29 @@ describe('createCharacterWithAi — Pathfinder 2e "Batman"', () => {
     expect(system.backgroundId).toBe('pf2e-bg-criminal');
     // Dex got the class key-ability boost plus a free boost.
     expect(system.baseAttributes.dex).toBeGreaterThanOrEqual(14);
+  });
+});
+
+describe.each([
+  ['dnd-5e-2014', { class: 'Fighter', species: 'Human' }] as const,
+  ['pf2e', { class: 'Fighter', ancestry: 'Human' }] as const,
+  ['pf1e', { class: 'Fighter', race: 'Human' }] as const,
+])('createCharacterWithAi — %s feat authoring', (systemId, baseSelections) => {
+  it('applies a model-chosen feat from the catalog', async () => {
+    const feats = await loadFeatsForSystem(systemId);
+    const featName = feats[0].name; // a real catalog feat
+
+    const result = await createCharacterWithAi(systemId, 'a veteran fighter', {
+      gateway: gatewayReturning({
+        name: 'Vet',
+        level: 4,
+        selections: { ...baseSelections, feats: [featName] },
+      }),
+    });
+
+    expect(result.ok).toBe(true);
+    const ids = (result.document.system as { feats: Array<{ id: string }> }).feats.map((f) => f.id);
+    expect(ids).toContain(feats[0].id); // the authored feat landed on the sheet
   });
 });
 

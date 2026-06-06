@@ -84,6 +84,7 @@ async function dnd5eManifest(systemId: GameSystemId): Promise<unknown> {
       abilities: 'object mapping each ability (str/dex/con/int/wis/cha) to one array value',
       spells:
         'for caster classes only: an array of spell names this class can learn at this level (cantrips + low level)',
+      feats: 'optional: an array of feat names (applied with their automation)',
     },
   };
 }
@@ -116,6 +117,7 @@ async function pf2eManifest(): Promise<unknown> {
       freeBoosts: 'array of 4 ability ids (str/dex/con/int/wis/cha) for the free boosts',
       spells:
         'for caster classes only: an array of spell names from the class tradition (arcane/divine/occult/primal)',
+      feats: 'optional: an array of feat names',
     },
   };
 }
@@ -144,6 +146,7 @@ async function d20LegacyManifest(systemId: GameSystemId): Promise<unknown> {
       skills:
         'optional: object mapping skill ids (from skills[]) to integer ranks (cap: PF1e=level, 3.5e=level+3)',
       spells: 'for caster classes only: an array of spell names this class can learn',
+      feats: 'optional: an array of feat names',
     },
   };
 }
