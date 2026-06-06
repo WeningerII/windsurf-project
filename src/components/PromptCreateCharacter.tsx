@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
 import { Sparkles, Loader2 } from 'lucide-react';
 import { Button } from './ui/Button';
-import {
-  applyHintsToIntent,
-  createCharacterFromIntent,
-  parseCreationIntent,
-  requestCreationHints,
-} from '../creation';
+import { createCharacterWithAi } from '../creation';
 import type { CharacterDocument, SystemDataModel } from '../types/core/document';
 import type { GameSystemId } from '../types/game-systems';
 
@@ -27,12 +22,12 @@ const EXAMPLE_PROMPTS: Partial<Record<GameSystemId, string>> = {
 };
 
 /**
- * The prompt box: type a description, get a finished character. Submitting first
- * asks the optional LLM gateway to draft creation hints from the description; if
- * the gateway is unconfigured or slow it silently falls back to deterministic
- * parsing. Either way the same per-system creator derives and the validator
- * judges the result, which is handed up to be saved and opened. Residual issues
- * surface as a notification so nothing is hidden.
+ * The prompt box: type a description, get a finished character. Submitting runs
+ * the AI-authored creation path — the LLM proposes a full build against the
+ * system's machine-readable options, then the deterministic rules validate,
+ * apply, and derive it. With no gateway (or any failure) it degrades to
+ * deterministic creation. The finished document is handed up to be saved and
+ * opened; residual validator issues surface as a notification so nothing is hidden.
  */
 export const PromptCreateCharacter: React.FC<Props> = ({ systemId, onCreated, onNotify }) => {
   const [prompt, setPrompt] = useState('');
@@ -47,11 +42,9 @@ export const PromptCreateCharacter: React.FC<Props> = ({ systemId, onCreated, on
 
     setBusy(true);
     try {
-      // AI proposes (optional), the deterministic rules decide. Hints only steer
-      // catalog selection; with no gateway this resolves to deterministic parsing.
-      const hints = await requestCreationHints({ systemId, prompt: trimmed });
-      const intent = hints ? applyHintsToIntent(trimmed, hints) : parseCreationIntent(trimmed);
-      const result = await createCharacterFromIntent(systemId, intent);
+      // AI proposes a full build; the deterministic rules decide. Falls back to
+      // deterministic creation when the gateway is unconfigured or fails.
+      const result = await createCharacterWithAi(systemId, trimmed);
       onCreated(result.document);
 
       const errors = result.issues.filter((issue) => issue.severity === 'error');

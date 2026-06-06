@@ -54,9 +54,9 @@ describe('PromptCreateCharacter', () => {
     await user.click(screen.getByRole('button', { name: /generate character/i }));
 
     await waitFor(() => expect(onCreated).toHaveBeenCalledTimes(1));
-    // The AI path was attempted (gateway hit) and the 503 fell back to deterministic.
+    // The AI build path was attempted (gateway hit) and the 503 fell back to deterministic.
     expect(globalThis.fetch).toHaveBeenCalledWith(
-      expect.stringContaining('ai-draft-character'),
+      expect.stringContaining('ai-build-character'),
       expect.anything()
     );
     expect(onCreated.mock.calls[0][0].systemId).toBe('daggerheart');

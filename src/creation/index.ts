@@ -12,19 +12,16 @@ export {
   hasCreator,
   registerCreator,
 } from './createCharacter';
+export { createCharacterWithAi, type AiCreateOptions } from './aiCreate';
 export { parseCreationIntent, pickByKeywords, pickByKeywordsOrDefault } from './intent';
-export {
-  requestCreationHints,
-  applyHintsToIntent,
-  DRAFT_ENDPOINT,
-  type CreationHints,
-  type CreationPromptInput,
-} from './llmIntent';
+export { buildOptionsManifest } from './optionsManifest';
+export { requestBuild, type BuildSpec, type BuildPromptInput } from './llmBuild';
 export type {
   CreationRequest,
   CreationResult,
   CreationIntent,
   CreationDraft,
+  ResolvedSelections,
   SystemCreator,
 } from './types';
 
