@@ -57,13 +57,17 @@ export const mam3eCreator: SystemCreator<Mam3eDataModel> = {
     system.powerLevel = pl;
     system.powerPoints.total = pl * STANDARD_PP_PER_PL;
 
+    // Author picks that don't resolve against the catalog are collected here and
+    // surfaced to the repair loop instead of being silently dropped.
+    const unresolved: string[] = [];
+
     const authored = resolveAbilities(resolved);
     if (authored) {
       // Free-form, model-authored build — the validator judges and the loop repairs.
       system.abilities = authored;
       system.defenses = resolveDefenses(resolved);
-      system.powers = resolvePowers(resolved);
-      system.advantages = resolveAdvantages(resolved) ?? [];
+      system.powers = resolvePowers(resolved, unresolved);
+      system.advantages = resolveAdvantages(resolved, unresolved) ?? [];
       system.skills = resolveSkills(resolved) ?? {};
     } else {
       // Deterministic, cap-safe archetype build.
@@ -87,7 +91,7 @@ export const mam3eCreator: SystemCreator<Mam3eDataModel> = {
     }
 
     const name = intent.name ?? 'New Hero';
-    return { name, system };
+    return { name, system, unresolved: unresolved.length ? unresolved : undefined };
   },
 };
 
@@ -134,7 +138,7 @@ function resolveDefenses(resolved?: ResolvedSelections): Mam3eDataModel['defense
  * the PL effect-rank caps are computed by the engine and judged by the validator,
  * so the loop repairs any over-budget or cap-breaking power suite.
  */
-function resolvePowers(resolved?: ResolvedSelections): Power[] {
+function resolvePowers(resolved: ResolvedSelections | undefined, unresolved: string[]): Power[] {
   const raw = resolved?.powers;
   if (!Array.isArray(raw)) return [];
 
@@ -143,7 +147,11 @@ function resolvePowers(resolved?: ResolvedSelections): Power[] {
     if (!entry || typeof entry !== 'object') continue;
     const fields = entry as Record<string, unknown>;
     const base = resolvePowerBase(fields.id, fields.name);
-    if (!base) continue;
+    if (!base) {
+      const label = asString(fields.id) ?? asString(fields.name);
+      if (label) unresolved.push(`power "${label}" isn't in the M&M power catalog.`);
+      continue;
+    }
 
     const power: Power = { ...base };
     const rank = fields.rank;
@@ -200,7 +208,8 @@ function filterModifierRanks(value: unknown): Record<string, number> | undefined
 }
 
 function resolveAdvantages(
-  resolved?: ResolvedSelections
+  resolved: ResolvedSelections | undefined,
+  unresolved: string[]
 ): Mam3eDataModel['advantages'] | undefined {
   const names = asStringArray(resolved?.advantages);
   if (!names) return undefined;
@@ -208,7 +217,11 @@ function resolveAdvantages(
   const seen = new Set<string>();
   for (const name of names) {
     const advantage = mam3eAdvantagesById[name] ?? findAdvantageByName(name);
-    if (advantage && !seen.has(advantage.id)) {
+    if (!advantage) {
+      unresolved.push(`advantage "${name}" isn't in the M&M advantage catalog.`);
+      continue;
+    }
+    if (!seen.has(advantage.id)) {
       seen.add(advantage.id);
       result.push({ id: advantage.id, name: advantage.name });
     }

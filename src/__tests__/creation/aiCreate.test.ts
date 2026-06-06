@@ -157,6 +157,31 @@ describe('createCharacterWithAi — validate-and-repair loop', () => {
     expect((result.document.system as DaggerheartDataModel).class).toBe('Bard'); // fallback
     expect(gateway.fetch).toHaveBeenCalledTimes(3); // 1 draft + 2 repair rounds
   });
+
+  it('re-prompts on a creator-reported drop (a hallucinated spell), not just bad identity picks', async () => {
+    // The sheet is legal either way, but a spell that isn't on the class list is
+    // a silent drop — the creator reports it and the loop feeds it back so the
+    // model can correct the name instead of quietly losing the spell.
+    const gateway = gatewaySequence([
+      {
+        name: 'Pyra',
+        level: 1,
+        selections: { class: 'Wizard', species: 'Human', spells: ['Notaspell'] },
+      },
+      {
+        name: 'Pyra',
+        level: 1,
+        selections: { class: 'Wizard', species: 'Human', spells: ['Fire Bolt'] },
+      },
+    ]);
+
+    const result = await createCharacterWithAi('dnd-5e-2014', 'a wizard', { gateway });
+
+    expect(result.ok).toBe(true);
+    expect(gateway.fetch).toHaveBeenCalledTimes(2); // draft + one repair round
+    const repairBody = JSON.parse(gateway.fetch.mock.calls[1][1].body as string);
+    expect(repairBody.repair.issues.join(' ')).toContain('Notaspell'); // the dropped spell drove the repair
+  });
 });
 
 describe('createCharacterWithAi — M&M 3e', () => {

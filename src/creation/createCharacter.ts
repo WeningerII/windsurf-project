@@ -74,7 +74,7 @@ export async function createCharacterFromIntent(
   const { issues } = await systemRegistry.validateDocument(document, { reason: 'creation' });
   const ok = !issues.some((issue) => issue.severity === 'error');
 
-  return { document, issues, ok };
+  return { document, issues, ok, unresolved: draft.unresolved };
 }
 
 export async function createCharacterFromPrompt(request: CreationRequest): Promise<CreationResult> {

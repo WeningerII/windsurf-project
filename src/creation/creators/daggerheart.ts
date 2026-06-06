@@ -75,9 +75,16 @@ export const daggerheartCreator: SystemCreator<DaggerheartDataModel> = {
         (entry) => [entry.name, ...entry.domains],
         daggerheartClasses[0]
       );
-    const subclass =
-      cls.subclasses.find((entry) => matchesName(entry.name, asString(resolved?.subclass))) ??
-      cls.subclasses[0];
+    // Author picks that don't resolve against the catalog are collected here and
+    // surfaced to the repair loop instead of being silently dropped.
+    const unresolved: string[] = [];
+
+    const subclassName = asString(resolved?.subclass);
+    const subclassMatch = cls.subclasses.find((entry) => matchesName(entry.name, subclassName));
+    if (subclassName && !subclassMatch) {
+      unresolved.push(`subclass "${subclassName}" isn't a subclass of ${cls.name}.`);
+    }
+    const subclass = subclassMatch ?? cls.subclasses[0];
     const ancestry =
       byName(daggerheartAncestries, asString(resolved?.heritage)) ??
       pickByKeywordsOrDefault(
@@ -104,11 +111,12 @@ export const daggerheartCreator: SystemCreator<DaggerheartDataModel> = {
     system.heritage = ancestry.name;
     system.community = community.name;
     system.attributes = resolveTraits(cls, intent, resolved) ?? assignTraitArray(cls, intent);
-    system.domainCards = resolveCards(cls, level, resolved) ?? startingCards(cls, level);
+    system.domainCards =
+      resolveCards(cls, level, resolved, unresolved) ?? startingCards(cls, level);
     system.experiences = resolveExperiences(resolved) ?? startingExperiences(cls, intent);
 
     const name = intent.name ?? `${ancestry.name} ${cls.name}`;
-    return { name, system };
+    return { name, system, unresolved: unresolved.length ? unresolved : undefined };
   },
 };
 
@@ -140,7 +148,8 @@ function resolveTraits(
 function resolveCards(
   cls: DaggerheartClass,
   level: number,
-  resolved?: ResolvedSelections
+  resolved: ResolvedSelections | undefined,
+  unresolved: string[]
 ): DaggerheartDataModel['domainCards'] | undefined {
   const names = asStringArray(resolved?.domainCards);
   if (!names || names.length === 0) return undefined;
@@ -153,7 +162,13 @@ function resolveCards(
   for (const name of names) {
     if (chosen.length >= MAX_LOADOUT) break;
     const card = pool.find((entry) => matchesName(entry.name, name) && entry.level <= level);
-    if (card && !used.has(card.id)) {
+    if (!card) {
+      unresolved.push(
+        `domain card "${name}" isn't available to a level-${level} ${cls.name} (domains: ${cls.domains.join('/')}).`
+      );
+      continue;
+    }
+    if (!used.has(card.id)) {
       used.add(card.id);
       chosen.push(toCardEntry(card));
     }

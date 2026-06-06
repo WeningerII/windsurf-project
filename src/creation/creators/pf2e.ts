@@ -67,8 +67,15 @@ export const pf2eCreator: SystemCreator<Pf2eDataModel> = {
         (entry) => [entry.name, entry.id],
         ancestries[0]
       );
-    const heritage =
-      byName(ancestry.subraces ?? [], asString(resolved?.heritage)) ?? ancestry.subraces?.[0];
+    // Author picks that don't resolve against the catalog are collected here and
+    // surfaced to the repair loop instead of being silently dropped.
+    const unresolved: string[] = [];
+
+    const heritageName = asString(resolved?.heritage);
+    const heritage = byName(ancestry.subraces ?? [], heritageName) ?? ancestry.subraces?.[0];
+    if (heritageName && !byName(ancestry.subraces ?? [], heritageName)) {
+      unresolved.push(`heritage "${heritageName}" isn't a heritage of ${ancestry.name}.`);
+    }
     const background =
       byName(backgrounds, asString(resolved?.background)) ??
       pickByKeywordsOrDefault(
@@ -97,15 +104,19 @@ export const pf2eCreator: SystemCreator<Pf2eDataModel> = {
       document.system.keyAbility,
       asStringArray(resolved?.freeBoosts)
     );
-    applyResolvedSpells(document.system, spells, asStringArray(resolved?.spells));
-    applyResolvedSkills(document.system, asStringArray(resolved?.skills));
-    const authoredFeats = resolveFeats(feats, asStringArray(resolved?.feats));
+    applyResolvedSpells(document.system, spells, asStringArray(resolved?.spells), unresolved);
+    applyResolvedSkills(document.system, asStringArray(resolved?.skills), unresolved);
+    const authoredFeats = resolveFeats(feats, asStringArray(resolved?.feats), unresolved);
     if (authoredFeats.length > 0) {
       document.system.feats = [...document.system.feats, ...authoredFeats];
     }
 
     const name = intent.name ?? `${ancestry.name} ${cls.name}`;
-    return { name, system: document.system };
+    return {
+      name,
+      system: document.system,
+      unresolved: unresolved.length ? unresolved : undefined,
+    };
   },
 };
 
@@ -148,10 +159,16 @@ function applyFreeBoosts(
 function applyResolvedSpells(
   system: Pf2eDataModel,
   spells: Spell[],
-  names: string[] | undefined
+  names: string[] | undefined,
+  unresolved: string[]
 ): void {
   const spellcasting = system.spellcasting;
-  if (!spellcasting || !names) return;
+  if (!names) return;
+  if (!spellcasting) {
+    // A non-caster build authored spells — tell the model so it can drop them.
+    unresolved.push('this class has no spellcasting, so the authored spells were ignored.');
+    return;
+  }
   const tradition = spellcasting.tradition;
   const traditionSpells = spells.filter((spell) => spell.traditions?.includes(tradition));
 
@@ -159,7 +176,11 @@ function applyResolvedSpells(
   const seen = new Set<string>();
   for (const name of names) {
     const spell = traditionSpells.find((entry) => entry.name.toLowerCase() === name.toLowerCase());
-    if (spell && !seen.has(spell.id)) {
+    if (!spell) {
+      unresolved.push(`spell "${name}" isn't on the ${tradition} spell list.`);
+      continue;
+    }
+    if (!seen.has(spell.id)) {
       seen.add(spell.id);
       known.push(spell.id);
     }
@@ -178,7 +199,11 @@ function applyResolvedSpells(
  * — Lores are topic-keyed and tracked separately. Unknown ids are skipped; the
  * validator only requires a valid tier, which `trained` always is.
  */
-function applyResolvedSkills(system: Pf2eDataModel, names: string[] | undefined): void {
+function applyResolvedSkills(
+  system: Pf2eDataModel,
+  names: string[] | undefined,
+  unresolved: string[]
+): void {
   if (!names) return;
   const validSkillIds = new Set(
     (systemRegistry.get('pf2e')?.skills ?? [])
@@ -189,6 +214,8 @@ function applyResolvedSkills(system: Pf2eDataModel, names: string[] | undefined)
     const id = raw.trim().toLowerCase().replace(/\s+/g, '-');
     if (validSkillIds.has(id)) {
       mergeProficiencySource(system.skillProficiencies, id, 'Player Choice');
+    } else {
+      unresolved.push(`skill "${raw}" isn't a valid PF2e skill.`);
     }
   }
 }
@@ -196,14 +223,19 @@ function applyResolvedSkills(system: Pf2eDataModel, names: string[] | undefined)
 /** Resolve the model's chosen feat names to catalog feats (deduped). */
 function resolveFeats(
   feats: FeatDefinition[],
-  names: string[] | undefined
+  names: string[] | undefined,
+  unresolved: string[]
 ): Pf2eDataModel['feats'] {
   if (!names) return [];
   const result: Pf2eDataModel['feats'] = [];
   const seen = new Set<string>();
   for (const name of names) {
     const definition = feats.find((feat) => feat.name.toLowerCase() === name.toLowerCase());
-    if (definition && !seen.has(definition.id)) {
+    if (!definition) {
+      unresolved.push(`feat "${name}" isn't a known feat.`);
+      continue;
+    }
+    if (!seen.has(definition.id)) {
       seen.add(definition.id);
       result.push({
         id: definition.id,

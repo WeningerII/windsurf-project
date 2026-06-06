@@ -62,10 +62,14 @@ function createDnd5eCreator<T extends Dnd5eLike>(
         loadFeatsForSystem(systemId),
       ]);
 
+      // Author picks that don't resolve against the catalog are collected here
+      // and surfaced to the repair loop instead of being silently dropped.
+      const unresolved: string[] = [];
+
       // Multiclass when the model authored a `classes` array; otherwise a single
       // class (authored `class` or keyword). The first class is "primary" — it
       // seeds the default ability spread and the spell list.
-      const multiclass = resolveClasses(resolved, classes);
+      const multiclass = resolveClasses(resolved, classes, unresolved);
       const cls =
         multiclass?.[0]?.cls ??
         byName(classes, asString(resolved?.class)) ??
@@ -109,7 +113,7 @@ function createDnd5eCreator<T extends Dnd5eLike>(
 
       // 5e skill proficiencies come from the starting class, so the model's
       // authored skills apply to the primary class only.
-      const skillSelections = resolveSkillSelections(resolved, cls);
+      const skillSelections = resolveSkillSelections(resolved, cls, unresolved);
       if (multiclass) {
         multiclass.forEach((entry, index) => {
           try {
@@ -119,26 +123,30 @@ function createDnd5eCreator<T extends Dnd5eLike>(
               ...(index === 0 ? { skillSelections } : { mode: 'add' }),
               enforceMulticlassRequirements: false,
             });
-            document = applySubclass(document, entry.cls, entry.subclass);
+            document = applySubclass(document, entry.cls, entry.subclass, unresolved);
           } catch {
             // Skip a class that can't be applied (e.g., would exceed level 20).
           }
         });
       } else {
         document = applyDnd5eClassTemplate(document, cls, level, { skillSelections });
-        document = applySubclass(document, cls, asString(resolved?.subclass));
+        document = applySubclass(document, cls, asString(resolved?.subclass), unresolved);
       }
       document = applyDnd5eSpeciesTemplate(document, speciesChoice);
       if (background) {
         document = applyDnd5eBackgroundTemplate(document, background);
       }
-      if (!applyResolvedSpells(document.system, cls, spells, resolved)) {
+      if (!applyResolvedSpells(document.system, cls, spells, resolved, unresolved)) {
         selectStartingSpells(document.system, cls, spells);
       }
-      document = applyResolvedFeats(document, feats, asStringArray(resolved?.feats));
+      document = applyResolvedFeats(document, feats, asStringArray(resolved?.feats), unresolved);
 
       const name = intent.name ?? `${speciesChoice.name} ${cls.name}`;
-      return { name, system: document.system };
+      return {
+        name,
+        system: document.system,
+        unresolved: unresolved.length ? unresolved : undefined,
+      };
     },
   };
 }
@@ -154,7 +162,8 @@ interface ResolvedClassLevel {
 /** Resolve an authored multiclass list to catalog classes with per-class levels. */
 function resolveClasses(
   resolved: ResolvedSelections | undefined,
-  classes: CharacterClass[]
+  classes: CharacterClass[],
+  unresolved: string[]
 ): ResolvedClassLevel[] | undefined {
   const raw = resolved?.classes;
   if (!Array.isArray(raw)) return undefined;
@@ -162,8 +171,13 @@ function resolveClasses(
   for (const entry of raw) {
     if (!entry || typeof entry !== 'object') continue;
     const fields = entry as Record<string, unknown>;
-    const cls = byName(classes, asString(fields.class));
-    if (!cls || result.some((existing) => existing.cls.id === cls.id)) continue; // skip unknown/dupes
+    const className = asString(fields.class);
+    const cls = byName(classes, className);
+    if (!cls) {
+      if (className) unresolved.push(`multiclass class "${className}" isn't a valid class name.`);
+      continue;
+    }
+    if (result.some((existing) => existing.cls.id === cls.id)) continue; // skip dupes
     const levelValue = fields.level;
     const level =
       typeof levelValue === 'number' && Number.isInteger(levelValue) && levelValue >= 1
@@ -183,7 +197,8 @@ function resolveClasses(
  */
 function resolveSkillSelections(
   resolved: ResolvedSelections | undefined,
-  cls: CharacterClass
+  cls: CharacterClass,
+  unresolved: string[]
 ): string[] | undefined {
   const names = asStringArray(resolved?.skills);
   if (!names) return undefined;
@@ -194,11 +209,14 @@ function resolveSkillSelections(
   const seen = new Set<string>();
   for (const raw of names) {
     const id = raw.trim().toLowerCase().replace(/\s+/g, '-');
-    if (allowed.has(id) && !seen.has(id)) {
-      seen.add(id);
-      result.push(id);
-      if (result.length >= slots.length) break;
+    if (!allowed.has(id)) {
+      unresolved.push(`skill "${raw}" isn't a valid skill choice for ${cls.name}.`);
+      continue;
     }
+    if (seen.has(id)) continue;
+    seen.add(id);
+    result.push(id);
+    if (result.length >= slots.length) break;
   }
   return result.length > 0 ? result : undefined;
 }
@@ -207,13 +225,17 @@ function resolveSkillSelections(
 function applySubclass<T extends Dnd5eLike>(
   document: CharacterDocument<T>,
   cls: CharacterClass,
-  subclassName: string | undefined
+  subclassName: string | undefined,
+  unresolved: string[]
 ): CharacterDocument<T> {
   if (!subclassName) return document;
   const subclass = cls.subclasses?.find(
     (entry) => entry.name.toLowerCase() === subclassName.toLowerCase()
   );
-  if (!subclass) return document;
+  if (!subclass) {
+    unresolved.push(`subclass "${subclassName}" isn't a subclass of ${cls.name}.`);
+    return document;
+  }
   return applyDnd5eSubclassTemplate(document, cls.id, subclass.id);
 }
 
@@ -247,7 +269,8 @@ function applyResolvedSpells(
   system: Dnd5eLike,
   classData: CharacterClass,
   spells: Spell[],
-  resolved?: ResolvedSelections
+  resolved: ResolvedSelections | undefined,
+  unresolved: string[]
 ): boolean {
   const spellcasting = system.spellcasting;
   const progression = classData.spellcasting;
@@ -262,7 +285,17 @@ function applyResolvedSpells(
   const used = new Set<string>();
   for (const name of names) {
     const spell = classSpells.find((entry) => matchesName(entry.name, name));
-    if (!spell || used.has(spell.id) || spell.level > topLevel) continue;
+    if (!spell) {
+      unresolved.push(`spell "${name}" isn't on the ${classData.name} spell list.`);
+      continue;
+    }
+    if (spell.level > topLevel) {
+      unresolved.push(
+        `spell "${name}" (level ${spell.level}) is above your highest available spell level (${topLevel}).`
+      );
+      continue;
+    }
+    if (used.has(spell.id)) continue;
     used.add(spell.id);
     (spell.level === 0 ? cantrips : leveled).push(spell.id);
   }
@@ -281,13 +314,17 @@ function applyResolvedSpells(
 function applyResolvedFeats<T extends Dnd5eLike>(
   document: CharacterDocument<T>,
   feats: FeatDefinition[],
-  names: string[] | undefined
+  names: string[] | undefined,
+  unresolved: string[]
 ): CharacterDocument<T> {
   if (!names) return document;
   let next = document;
   for (const name of names) {
     const definition = feats.find((feat) => feat.name.toLowerCase() === name.toLowerCase());
-    if (!definition) continue;
+    if (!definition) {
+      unresolved.push(`feat "${name}" isn't a known feat.`);
+      continue;
+    }
     try {
       next = applyDnd5eFeatTemplate(next, definition);
     } catch {

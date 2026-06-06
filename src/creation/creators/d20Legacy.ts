@@ -68,10 +68,14 @@ function createD20LegacyCreator<T extends D20LegacyLike>(
         loadFeatsForSystem(systemId),
       ]);
 
+      // Author picks that don't resolve against the catalog are collected here
+      // and surfaced to the repair loop instead of being silently dropped.
+      const unresolved: string[] = [];
+
       // Multiclass when the model authored a `classes` array; otherwise a single
       // class (authored `class` or keyword). The first class is "primary" — it
       // seeds the default ability spread and the deterministic skill ranks.
-      const multiclass = resolveClasses(resolved, classes);
+      const multiclass = resolveClasses(resolved, classes, unresolved);
       const cls =
         multiclass?.[0]?.cls ??
         byName(classes, asString(resolved?.class)) ??
@@ -135,20 +139,24 @@ function createD20LegacyCreator<T extends D20LegacyLike>(
       document.system.level = characterLevel;
       const validSkillIds = new Set((systemRegistry.get(systemId)?.skills ?? []).map((s) => s.id));
       document.system.skillRanks =
-        resolveSkillRanks(resolved, validSkillIds) ??
+        resolveSkillRanks(resolved, validSkillIds, unresolved) ??
         assignSkillRanks(document.system, systemId, characterLevel);
       const classIds = multiclass ? multiclass.map((entry) => entry.cls.id) : [cls.id];
-      const knownSpells = resolveSpells(resolved, spells, classIds);
+      const knownSpells = resolveSpells(resolved, spells, classIds, unresolved);
       if (knownSpells) {
         document.system.spellsKnown = knownSpells;
       }
-      const authoredFeats = resolveFeats(resolved, feats);
+      const authoredFeats = resolveFeats(resolved, feats, unresolved);
       if (authoredFeats.length > 0) {
         document.system.feats = [...document.system.feats, ...authoredFeats];
       }
 
       const name = intent.name ?? `${race.name} ${cls.name}`;
-      return { name, system: document.system };
+      return {
+        name,
+        system: document.system,
+        unresolved: unresolved.length ? unresolved : undefined,
+      };
     },
   };
 }
@@ -161,19 +169,18 @@ function createD20LegacyCreator<T extends D20LegacyLike>(
  */
 function resolveSkillRanks(
   resolved: ResolvedSelections | undefined,
-  validSkillIds: Set<string>
+  validSkillIds: Set<string>,
+  unresolved: string[]
 ): Record<string, number> | undefined {
   const raw = resolved?.skills;
   if (!raw || typeof raw !== 'object') return undefined;
   const result: Record<string, number> = {};
   for (const [skillId, rank] of Object.entries(raw as Record<string, unknown>)) {
-    if (
-      validSkillIds.has(skillId) &&
-      typeof rank === 'number' &&
-      Number.isInteger(rank) &&
-      rank > 0
-    ) {
+    if (typeof rank !== 'number' || !Number.isInteger(rank) || rank <= 0) continue;
+    if (validSkillIds.has(skillId)) {
       result[skillId] = rank;
+    } else {
+      unresolved.push(`skill id "${skillId}" isn't a valid skill in this system.`);
     }
   }
   return Object.keys(result).length > 0 ? result : undefined;
@@ -243,7 +250,8 @@ function resolveAbilities(resolved?: ResolvedSelections): Record<string, number>
  */
 function resolveClasses(
   resolved: ResolvedSelections | undefined,
-  classes: CharacterClass[]
+  classes: CharacterClass[],
+  unresolved: string[]
 ): Array<{ cls: CharacterClass; level: number }> | undefined {
   const raw = resolved?.classes;
   if (!Array.isArray(raw)) return undefined;
@@ -251,8 +259,13 @@ function resolveClasses(
   for (const entry of raw) {
     if (!entry || typeof entry !== 'object') continue;
     const fields = entry as Record<string, unknown>;
-    const cls = byName(classes, asString(fields.class));
-    if (!cls || result.some((existing) => existing.cls.id === cls.id)) continue;
+    const className = asString(fields.class);
+    const cls = byName(classes, className);
+    if (!cls) {
+      if (className) unresolved.push(`multiclass class "${className}" isn't a valid class name.`);
+      continue;
+    }
+    if (result.some((existing) => existing.cls.id === cls.id)) continue;
     const levelValue = fields.level;
     const level =
       typeof levelValue === 'number' && Number.isInteger(levelValue) && levelValue >= 1
@@ -271,7 +284,8 @@ function resolveClasses(
 function resolveSpells(
   resolved: ResolvedSelections | undefined,
   spells: Spell[],
-  classIds: string[]
+  classIds: string[],
+  unresolved: string[]
 ): string[] | undefined {
   const names = asStringArray(resolved?.spells);
   if (!names) return undefined;
@@ -284,7 +298,11 @@ function resolveSpells(
   const seen = new Set<string>();
   for (const name of names) {
     const spell = classSpells.find((entry) => entry.name.toLowerCase() === name.toLowerCase());
-    if (spell && !seen.has(spell.id)) {
+    if (!spell) {
+      unresolved.push(`spell "${name}" isn't on your class spell list.`);
+      continue;
+    }
+    if (!seen.has(spell.id)) {
       seen.add(spell.id);
       known.push(spell.id);
     }
@@ -295,7 +313,8 @@ function resolveSpells(
 /** Resolve the model's chosen feat names to catalog feats (deduped). */
 function resolveFeats(
   resolved: ResolvedSelections | undefined,
-  feats: FeatDefinition[]
+  feats: FeatDefinition[],
+  unresolved: string[]
 ): D20LegacyLike['feats'] {
   const names = asStringArray(resolved?.feats);
   if (!names) return [];
@@ -303,7 +322,11 @@ function resolveFeats(
   const seen = new Set<string>();
   for (const name of names) {
     const definition = feats.find((feat) => feat.name.toLowerCase() === name.toLowerCase());
-    if (definition && !seen.has(definition.id)) {
+    if (!definition) {
+      unresolved.push(`feat "${name}" isn't a known feat.`);
+      continue;
+    }
+    if (!seen.has(definition.id)) {
       seen.add(definition.id);
       result.push({
         id: definition.id,

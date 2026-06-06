@@ -38,6 +38,13 @@ export interface CreationIntent {
 export interface CreationDraft<T extends SystemDataModel = SystemDataModel> {
   name: string;
   system: T;
+  /**
+   * Author-supplied picks (spell/feat/skill/power names, etc.) that didn't
+   * resolve against the catalog and were skipped. Empty/absent on the
+   * deterministic path; the AI-author repair loop re-prompts on these so a
+   * hallucinated name is corrected instead of silently dropped.
+   */
+  unresolved?: string[];
 }
 
 /**
@@ -71,4 +78,10 @@ export interface CreationResult {
   issues: ValidationIssue[];
   /** True when no error-severity issues remain. */
   ok: boolean;
+  /**
+   * Author picks the creator couldn't resolve against the catalog (see
+   * `CreationDraft.unresolved`). The AI-author repair loop folds these into its
+   * re-prompt; the deterministic path leaves it empty.
+   */
+  unresolved?: string[];
 }

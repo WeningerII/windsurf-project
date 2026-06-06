@@ -98,9 +98,11 @@ async function applySpec(
 }
 
 /**
- * The issues a repair round should fix: validator errors (illegal sheet) and
- * name picks that didn't resolve (silently fell back). Both are things the model
- * can correct; warnings and legal-but-default fields are left alone.
+ * The issues a repair round should fix: validator errors (illegal sheet), the
+ * discrete identity picks that didn't resolve (class/species/… — surfaced from
+ * the manifest), and every other author pick the creator couldn't resolve
+ * (spell/feat/skill/power names it skipped). All are things the model can
+ * correct; warnings and legal-but-default fields are left alone.
  */
 function collectRepairIssues(
   systemId: GameSystemId,
@@ -111,6 +113,7 @@ function collectRepairIssues(
   const validatorErrors = result.issues
     .filter((issue) => issue.severity === 'error')
     .map((issue) => (issue.path ? `${issue.path}: ${issue.message}` : issue.message));
-  const unresolved = lintSelections(systemId, manifest, spec.selections);
-  return [...validatorErrors, ...unresolved];
+  const unresolvedPicks = lintSelections(systemId, manifest, spec.selections);
+  const droppedByCreator = result.unresolved ?? [];
+  return [...validatorErrors, ...unresolvedPicks, ...droppedByCreator];
 }
