@@ -400,4 +400,44 @@ export const level5Spells: Spell[] = withPf2eSpellTraits([
     },
     classes: ['cleric', 'druid', 'sorcerer', 'wizard'],
   },
+  {
+    id: 'flame-strike-pf2e',
+    name: 'Flame Strike',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 5,
+    school: 'evocation',
+    traditions: ['divine'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'ref',
+      success: 'half',
+    },
+    savingThrowText: 'basic Reflex',
+    concentration: false,
+    ritual: false,
+    description:
+      'A column of righteous fire deals 8d6 fire damage in a 10-foot radius (half of it unaffected by fire resistance).',
+    heightening: {
+      mode: 'interval',
+      interval: 1,
+      summary: 'Heightened (+1): The damage increases by 2d6.',
+    },
+    classes: ['cleric'],
+  },
 ]);

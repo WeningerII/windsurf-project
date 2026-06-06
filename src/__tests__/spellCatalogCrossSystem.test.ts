@@ -479,6 +479,7 @@ const iconicSpellExpectations: Array<{
       'dnd-5e-2024': e(5, 'evocation'),
       'dnd-3.5e': e(4, 'evocation'),
       pf1e: e(4, 'evocation'),
+      pf2e: e(5, 'evocation'),
     },
   },
   {

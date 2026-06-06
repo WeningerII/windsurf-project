@@ -435,4 +435,79 @@ export const level4Spells: Spell[] = withPf2eSpellTraits([
     },
     classes: ['druid', 'sorcerer', 'wizard'],
   },
+  {
+    id: 'phantasmal-killer-pf2e',
+    name: 'Phantasmal Killer',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 4,
+    school: 'illusion',
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will',
+    concentration: false,
+    ritual: false,
+    description:
+      'You conjure an illusory monster only the target perceives, dealing 8d6 mental damage and frightening it (with death possible on a critical failure).',
+    heightening: {
+      mode: 'interval',
+      interval: 1,
+      summary: 'Heightened (+1): The mental damage increases by 2d6.',
+    },
+    classes: ['sorcerer', 'wizard', 'bard'],
+  },
+  {
+    id: 'fire-shield-pf2e',
+    name: 'Fire Shield',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 4,
+    school: 'evocation',
+    traditions: ['arcane', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'A shield of flame wreathes you, granting cold resistance and dealing 2d6 fire damage to creatures that hit you with melee attacks.',
+    heightening: {
+      mode: 'interval',
+      interval: 2,
+      summary: 'Heightened (+2): The cold resistance increases by 5 and the fire damage by 1d6.',
+    },
+    classes: ['sorcerer', 'wizard', 'druid'],
+  },
 ]);

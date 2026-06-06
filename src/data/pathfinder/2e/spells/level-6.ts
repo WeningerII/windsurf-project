@@ -382,4 +382,39 @@ export const level6Spells: Spell[] = withPf2eSpellTraits([
       'You take command of a creature, controlling its actions; the effect’s duration depends on its Will save outcome.',
     classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
   },
+  {
+    id: 'flesh-to-stone-pf2e',
+    name: 'Flesh to Stone',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 6,
+    school: 'transmutation',
+    traditions: ['arcane', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'fort',
+      success: 'none',
+    },
+    savingThrowText: 'Fortitude',
+    concentration: false,
+    ritual: false,
+    description:
+      'You begin turning a creature to stone; it becomes slowed and increasingly petrified unless it recovers, turning permanently to stone on repeated failures.',
+    classes: ['sorcerer', 'wizard', 'druid'],
+  },
 ]);

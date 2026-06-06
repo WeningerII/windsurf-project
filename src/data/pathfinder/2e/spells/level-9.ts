@@ -358,4 +358,73 @@ export const level9Spells: Spell[] = withPf2eSpellTraits([
       'You state a wish, making your greatest desire come true. A wish spell can produce any one of the following effects: duplicate any spell of 9th level or lower, produce any effect whose power level is in line with the above effects, grant a creature a +1 circumstance bonus to one ability score for 1 hour.',
     classes: ['sorcerer', 'wizard'],
   },
+  {
+    id: 'weird-pf2e',
+    name: 'Weird',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 9,
+    school: 'illusion',
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will',
+    concentration: false,
+    ritual: false,
+    description:
+      'As phantasmal killer, but affecting all creatures in the area; each sees its own deadly phantasm and may die on a critical failure.',
+    classes: ['sorcerer', 'wizard', 'bard'],
+  },
+  {
+    id: 'wail-of-the-banshee-pf2e',
+    name: 'Wail of the Banshee',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 9,
+    school: 'necromancy',
+    traditions: ['occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'fort',
+      success: 'none',
+    },
+    savingThrowText: 'Fortitude',
+    concentration: false,
+    ritual: false,
+    description:
+      'You loose a keening wail in a 40-foot emanation, dealing 8d10 negative damage and enfeebling creatures that fail their Fortitude saves.',
+    classes: ['bard'],
+  },
 ]);
