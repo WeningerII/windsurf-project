@@ -4,6 +4,7 @@ import { daggerheartCommunities } from '../data/daggerheart/1.0/communities';
 import { allPowers } from '../data/mutants-and-masterminds/3e/powers/aggregations';
 import { MAM3E_EXTRA_MODIFIERS, MAM3E_FLAW_MODIFIERS } from '../systems/mam3e/powerMath';
 import { LOADOUT_LIMIT } from '../systems/daggerheart/daggerheartSheetConstants';
+import { systemRegistry } from '../registry';
 import {
   loadClassesForSystem,
   loadSpeciesForSystem,
@@ -133,10 +134,13 @@ async function d20LegacyManifest(systemId: GameSystemId): Promise<unknown> {
     },
     classes: classes.map((entry) => ({ name: entry.name, primaryAbility: entry.primaryAbility })),
     races: species.map((entry) => entry.name),
+    skills: (systemRegistry.get(systemId)?.skills ?? []).map((skill) => skill.id),
     selectionKeys: {
       class: 'a class name from classes[].name',
       race: 'a race name from races[]',
       abilities: 'object mapping each ability (str/dex/con/int/wis/cha) to one array value',
+      skills:
+        'optional: object mapping skill ids (from skills[]) to integer ranks (cap: PF1e=level, 3.5e=level+3)',
     },
   };
 }

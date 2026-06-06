@@ -1,4 +1,5 @@
 import { loadClassesForSystem, loadSpeciesForSystem } from '../../utils/dataLoader';
+import { systemRegistry } from '../../registry';
 import {
   applyD20LegacyClassTemplate,
   applyD20LegacyRaceTemplate,
@@ -91,12 +92,41 @@ function createD20LegacyCreator<T extends D20LegacyLike>(
       document = applyClass(document, cls, level);
       document = applyRace(document, race);
       document.system.level = level;
-      document.system.skillRanks = assignSkillRanks(document.system, systemId, level);
+      const validSkillIds = new Set((systemRegistry.get(systemId)?.skills ?? []).map((s) => s.id));
+      document.system.skillRanks =
+        resolveSkillRanks(resolved, validSkillIds) ??
+        assignSkillRanks(document.system, systemId, level);
 
       const name = intent.name ?? `${race.name} ${cls.name}`;
       return { name, system: document.system };
     },
   };
+}
+
+/**
+ * Use the model's authored skill ranks, keeping only real skill ids with a
+ * positive integer rank. The validator enforces the per-skill cap (PF1e=level,
+ * 3.5e=level+3) and the repair loop trims anything over it. Returns undefined
+ * when nothing valid was authored (→ deterministic class-skill ranks).
+ */
+function resolveSkillRanks(
+  resolved: ResolvedSelections | undefined,
+  validSkillIds: Set<string>
+): Record<string, number> | undefined {
+  const raw = resolved?.skills;
+  if (!raw || typeof raw !== 'object') return undefined;
+  const result: Record<string, number> = {};
+  for (const [skillId, rank] of Object.entries(raw as Record<string, unknown>)) {
+    if (
+      validSkillIds.has(skillId) &&
+      typeof rank === 'number' &&
+      Number.isInteger(rank) &&
+      rank > 0
+    ) {
+      result[skillId] = rank;
+    }
+  }
+  return Object.keys(result).length > 0 ? result : undefined;
 }
 
 /**

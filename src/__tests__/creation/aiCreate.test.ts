@@ -397,4 +397,26 @@ describe.each(['pf1e', 'dnd-3.5e'] as const)('createCharacterWithAi — %s "Batm
     expect(system.speciesId).toBe('human');
     expect(system.baseAttributes.dex).toBeGreaterThanOrEqual(15);
   });
+
+  it('uses the model-authored skill ranks (real skill ids only)', async () => {
+    const result = await createCharacterWithAi(systemId, 'a skilled rogue', {
+      gateway: gatewayReturning({
+        name: 'Sly',
+        level: 5,
+        selections: {
+          class: 'Rogue',
+          race: 'Human',
+          abilities: { dex: 15, con: 14, wis: 13, int: 12, cha: 10, str: 8 },
+          // climb/bluff exist in both editions; the bogus id must be dropped.
+          skills: { climb: 5, bluff: 5, 'not-a-real-skill': 9 },
+        },
+      }),
+    });
+
+    expect(result.ok).toBe(true);
+    const ranks = (result.document.system as { skillRanks: Record<string, number> }).skillRanks;
+    expect(ranks.climb).toBe(5); // authored, not the deterministic class-skill default
+    expect(ranks.bluff).toBe(5);
+    expect(ranks['not-a-real-skill']).toBeUndefined(); // unknown id dropped
+  });
 });
