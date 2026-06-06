@@ -137,3 +137,34 @@ describe('createCharacterWithAi — D&D 5e "Batman"', () => {
     expect(known).toContain('burning-hands');
   });
 });
+
+describe('createCharacterWithAi — Pathfinder 2e "Batman"', () => {
+  it('builds the LLM-authored class/ancestry/background and free boosts, validated', async () => {
+    const result = await createCharacterWithAi('pf2e', 'Batman', {
+      gateway: gatewayReturning({
+        name: 'Batman',
+        level: 1,
+        selections: {
+          class: 'Rogue',
+          ancestry: 'Human',
+          background: 'Criminal',
+          freeBoosts: ['dex', 'con', 'wis', 'int'],
+        },
+      }),
+    });
+
+    expect(result.ok).toBe(true);
+    expect(result.document.name).toBe('Batman');
+    const system = result.document.system as {
+      classId?: string;
+      ancestryId?: string;
+      backgroundId?: string;
+      baseAttributes: Record<string, number>;
+    };
+    expect(system.classId).toBe('rogue');
+    expect(system.ancestryId).toBe('human');
+    expect(system.backgroundId).toBe('pf2e-bg-criminal');
+    // Dex got the class key-ability boost plus a free boost.
+    expect(system.baseAttributes.dex).toBeGreaterThanOrEqual(14);
+  });
+});

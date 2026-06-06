@@ -6,6 +6,7 @@ import {
   loadClassesForSystem,
   loadSpeciesForSystem,
   loadBackgroundsForSystem,
+  loadPf2eBackgroundsForSystem,
 } from '../utils/dataLoader';
 import type { GameSystemId } from '../types/game-systems';
 
@@ -84,10 +85,41 @@ async function dnd5eManifest(systemId: GameSystemId): Promise<unknown> {
   };
 }
 
+async function pf2eManifest(): Promise<unknown> {
+  const [classes, ancestries, backgrounds] = await Promise.all([
+    loadClassesForSystem('pf2e'),
+    loadSpeciesForSystem('pf2e'),
+    loadPf2eBackgroundsForSystem('pf2e'),
+  ]);
+  return {
+    system: 'pf2e',
+    levelRange: [1, 20],
+    abilityMethod: {
+      kind: 'boosts',
+      abilities: D20_ABILITIES,
+      note: 'Ancestry, background, and class boosts apply automatically; you also choose four free boosts to four different abilities (+2 each, capped at 18 at level 1).',
+    },
+    classes: classes.map((entry) => ({ name: entry.name, keyAbility: entry.primaryAbility })),
+    ancestries: ancestries.map((entry) => ({
+      name: entry.name,
+      heritages: (entry.subraces ?? []).map((subrace) => subrace.name),
+    })),
+    backgrounds: backgrounds.map((entry) => entry.name),
+    selectionKeys: {
+      class: 'a class name from classes[].name',
+      ancestry: 'an ancestry name from ancestries[].name',
+      heritage: 'a heritage name from the chosen ancestry.heritages[]',
+      background: 'a background name from backgrounds[]',
+      freeBoosts: 'array of 4 ability ids (str/dex/con/int/wis/cha) for the free boosts',
+    },
+  };
+}
+
 const MANIFEST_BUILDERS: Partial<Record<GameSystemId, () => unknown | Promise<unknown>>> = {
   daggerheart: daggerheartManifest,
   'dnd-5e-2014': () => dnd5eManifest('dnd-5e-2014'),
   'dnd-5e-2024': () => dnd5eManifest('dnd-5e-2024'),
+  pf2e: pf2eManifest,
 };
 
 /**

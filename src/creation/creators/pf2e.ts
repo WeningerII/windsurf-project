@@ -11,15 +11,17 @@ import {
 import { createDefaultPf2eData, type Pf2eDataModel } from '../../systems/pf2e/data-model';
 import type { CharacterDocument } from '../../types/core/document';
 import { pickByKeywordsOrDefault } from '../intent';
-import type { CreationDraft, CreationIntent, SystemCreator } from '../types';
+import type { CreationDraft, CreationIntent, ResolvedSelections, SystemCreator } from '../types';
 
 /**
- * Pathfinder 2e creator. PF2e construction is selection-driven through the same
- * pure template appliers the sheet uses: pick class / ancestry / heritage /
- * background from the loader-backed catalogs, apply them in order (class sets
- * the key-ability boost, ancestry/heritage and background set their boosts),
- * then lay the four free level-1 ability boosts on top. The engine derives
- * AC/HP/spellcasting; the result is a complete, in-catalog, legal build.
+ * Pathfinder 2e creator. With no `resolved`, it picks class/ancestry/heritage/
+ * background by keyword, applies the pure templates (which set the class
+ * key-ability and ancestry/background boosts), and lays the four free level-1
+ * boosts on a survivability-first spread. With `resolved` (the LLM author's
+ * picks), it takes the authored class/ancestry/heritage/background when they
+ * resolve against the catalog and uses the authored free-boost abilities,
+ * falling back per field — so the model designs the build and the engine derives
+ * a complete, in-catalog, legal sheet.
  */
 
 const MAX_LEVEL = 20;
@@ -31,32 +33,42 @@ const PF2E_ABILITY_IDS = ['str', 'dex', 'con', 'int', 'wis', 'cha'] as const;
 
 export const pf2eCreator: SystemCreator<Pf2eDataModel> = {
   systemId: 'pf2e',
-  async build(intent: CreationIntent): Promise<CreationDraft<Pf2eDataModel>> {
+  async build(
+    intent: CreationIntent,
+    resolved?: ResolvedSelections
+  ): Promise<CreationDraft<Pf2eDataModel>> {
     const [classes, ancestries, backgrounds] = await Promise.all([
       loadClassesForSystem('pf2e'),
       loadSpeciesForSystem('pf2e'),
       loadPf2eBackgroundsForSystem('pf2e'),
     ]);
 
-    const cls = pickByKeywordsOrDefault(
-      intent.tokens,
-      classes,
-      (entry) => [entry.name, entry.id],
-      classes[0]
-    );
-    const ancestry = pickByKeywordsOrDefault(
-      intent.tokens,
-      ancestries,
-      (entry) => [entry.name, entry.id],
-      ancestries[0]
-    );
-    const heritage = ancestry.subraces?.[0];
-    const background = pickByKeywordsOrDefault(
-      intent.tokens,
-      backgrounds,
-      (entry) => [entry.name, entry.id],
-      backgrounds[0]
-    );
+    const cls =
+      byName(classes, asString(resolved?.class)) ??
+      pickByKeywordsOrDefault(
+        intent.tokens,
+        classes,
+        (entry) => [entry.name, entry.id],
+        classes[0]
+      );
+    const ancestry =
+      byName(ancestries, asString(resolved?.ancestry)) ??
+      pickByKeywordsOrDefault(
+        intent.tokens,
+        ancestries,
+        (entry) => [entry.name, entry.id],
+        ancestries[0]
+      );
+    const heritage =
+      byName(ancestry.subraces ?? [], asString(resolved?.heritage)) ?? ancestry.subraces?.[0];
+    const background =
+      byName(backgrounds, asString(resolved?.background)) ??
+      pickByKeywordsOrDefault(
+        intent.tokens,
+        backgrounds,
+        (entry) => [entry.name, entry.id],
+        backgrounds[0]
+      );
 
     const level = Math.min(MAX_LEVEL, intent.level);
 
@@ -72,7 +84,11 @@ export const pf2eCreator: SystemCreator<Pf2eDataModel> = {
     document = applyPf2eClassTemplate(document, cls, level);
     document = applyPf2eAncestryTemplate(document, ancestry, heritage);
     document = applyPf2eBackgroundTemplate(document, background);
-    applyFreeBoosts(document.system.baseAttributes, document.system.keyAbility);
+    applyFreeBoosts(
+      document.system.baseAttributes,
+      document.system.keyAbility,
+      asStringArray(resolved?.freeBoosts)
+    );
 
     const name = intent.name ?? `${ancestry.name} ${cls.name}`;
     return { name, system: document.system };
@@ -80,16 +96,22 @@ export const pf2eCreator: SystemCreator<Pf2eDataModel> = {
 };
 
 /**
- * Apply the four free level-1 ability boosts to four different abilities, leading
- * with the class key ability and then a survivability-first spread. A boost only
+ * Apply the four free level-1 boosts to four different abilities. The LLM's
+ * chosen abilities (when valid) lead, then the class key ability and a
+ * survivability-first spread back-fill so four always land; each boost only
  * lands where it keeps the score within the level-1 cap of 18.
  */
-function applyFreeBoosts(scores: Record<string, number>, keyAbility: string | undefined): void {
-  const priority = [keyAbility, 'con', 'dex', 'wis', 'cha', 'str', 'int'].filter(
+function applyFreeBoosts(
+  scores: Record<string, number>,
+  keyAbility: string | undefined,
+  preferred: string[] | undefined
+): void {
+  const requested = (preferred ?? []).map((ability) => ability.toLowerCase());
+  const candidates = [...requested, keyAbility, 'con', 'dex', 'wis', 'cha', 'str', 'int'].filter(
     (ability): ability is string =>
       typeof ability === 'string' && (PF2E_ABILITY_IDS as readonly string[]).includes(ability)
   );
-  const order = Array.from(new Set(priority));
+  const order = Array.from(new Set(candidates));
 
   let applied = 0;
   for (const ability of order) {
@@ -100,4 +122,19 @@ function applyFreeBoosts(scores: Record<string, number>, keyAbility: string | un
       applied += 1;
     }
   }
+}
+
+function asString(value: unknown): string | undefined {
+  return typeof value === 'string' && value.trim().length > 0 ? value.trim() : undefined;
+}
+
+function asStringArray(value: unknown): string[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const strings = value.filter((entry): entry is string => typeof entry === 'string');
+  return strings.length > 0 ? strings : undefined;
+}
+
+function byName<T extends { name: string }>(list: T[], value: string | undefined): T | undefined {
+  if (value === undefined) return undefined;
+  return list.find((entry) => entry.name.toLowerCase() === value.toLowerCase());
 }
