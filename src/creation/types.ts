@@ -41,13 +41,27 @@ export interface CreationDraft<T extends SystemDataModel = SystemDataModel> {
 }
 
 /**
- * Builds a complete document body from a parsed intent, deterministically.
- * Creators read the same loader/catalog data the sheets use and must produce a
- * build the system engine can derive and the validator accepts (no errors).
+ * Already-validated, system-specific selections handed to a creator by the LLM
+ * "author" path. Each field is optional and catalog-checked before it gets here;
+ * a creator uses what's present and falls back to its deterministic logic for
+ * anything missing or unusable. Loosely typed because each system reads its own
+ * keys (classId, ancestryId, abilities, spell names, …).
+ */
+export type ResolvedSelections = Record<string, unknown>;
+
+/**
+ * Builds a complete document body from a parsed intent. With no `resolved`, the
+ * creator runs fully deterministically (keyword selection + sensible defaults).
+ * With `resolved`, it uses the LLM-authored, pre-validated selections where
+ * present and falls back to the deterministic logic per field — so the result is
+ * always a complete build the engine can derive and the validator accepts.
  */
 export interface SystemCreator<T extends SystemDataModel = SystemDataModel> {
   systemId: GameSystemId;
-  build(intent: CreationIntent): CreationDraft<T> | Promise<CreationDraft<T>>;
+  build(
+    intent: CreationIntent,
+    resolved?: ResolvedSelections
+  ): CreationDraft<T> | Promise<CreationDraft<T>>;
 }
 
 /** The finished, derived, validated character plus any residual issues. */

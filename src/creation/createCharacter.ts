@@ -3,7 +3,13 @@ import type { SystemDataModel } from '../types/core/document';
 import type { GameSystemId } from '../types/game-systems';
 import { generateUUID } from '../utils/browserCompat';
 import { parseCreationIntent } from './intent';
-import type { CreationIntent, CreationRequest, CreationResult, SystemCreator } from './types';
+import type {
+  CreationIntent,
+  CreationRequest,
+  CreationResult,
+  ResolvedSelections,
+  SystemCreator,
+} from './types';
 
 /**
  * The prompt → draft → derive → validate pipeline. This is the single entry
@@ -28,15 +34,18 @@ export function hasCreator(systemId: GameSystemId): boolean {
 }
 
 /**
- * Build a finished character from an already-parsed {@link CreationIntent}. This
- * is the shared core: the deterministic offline path parses the intent itself,
- * while the LLM path folds model hints into the intent first — both land here, so
- * the derive-and-validate gate is identical regardless of how the intent formed.
+ * Build a finished character from an already-parsed {@link CreationIntent} and
+ * optional LLM-authored, pre-validated {@link ResolvedSelections}. This is the
+ * shared core: the deterministic offline path passes no `resolved` and the
+ * creator picks by keyword; the AI path passes `resolved` and the creator uses
+ * those selections (falling back per field). Both land here, so the
+ * derive-and-validate gate is identical regardless of how the build was chosen.
  */
 export async function createCharacterFromIntent(
   systemId: GameSystemId,
   intent: CreationIntent,
-  id?: string
+  id?: string,
+  resolved?: ResolvedSelections
 ): Promise<CreationResult> {
   const systemDef = systemRegistry.get(systemId);
   if (!systemDef) {
@@ -48,7 +57,7 @@ export async function createCharacterFromIntent(
     throw new Error(`No character creator is registered for '${systemId}'.`);
   }
 
-  const draft = await creator.build(intent);
+  const draft = await creator.build(intent, resolved);
 
   const now = new Date();
   const rawDocument = {
