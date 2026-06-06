@@ -196,7 +196,7 @@ const LEGAL_MM_BUILD = {
   powerLevel: 10,
   abilities: { fgt: 8, sta: 6, agi: 4, dex: 0, str: 4, int: 0, awe: 4, pre: 0 },
   defenses: { dodge: 6, parry: 4, fortitude: 4, will: 6, toughness: 0 },
-  attack: { rank: 8 },
+  powers: [{ id: 'damage', rank: 8 }],
 };
 const OVER_BUDGET_MM_BUILD = {
   powerLevel: 10,
@@ -214,6 +214,33 @@ describe('createCharacterWithAi — M&M free-form authoring + repair', () => {
     expect(system.powers.length).toBe(1);
     expect(system.plViolations ?? []).toEqual([]);
     expect(gateway.fetch).toHaveBeenCalledTimes(1); // legal first try → no repair
+  });
+
+  it('authors multiple powers, not just one Damage (Protection raises Toughness)', async () => {
+    const gateway = gatewaySequence([
+      {
+        name: 'Sentinel',
+        selections: {
+          powerLevel: 10,
+          abilities: { fgt: 5, sta: 5, agi: 3, dex: 0, str: 3, int: 2, awe: 3, pre: 0 },
+          defenses: { dodge: 3, parry: 3, fortitude: 3, will: 4, toughness: 0 },
+          powers: [
+            { id: 'damage', rank: 5, range: 'close' },
+            { id: 'protection', rank: 3 },
+          ],
+        },
+      },
+    ]);
+    const result = await createCharacterWithAi('mam3e', 'an armored sentinel', { gateway });
+
+    expect(result.ok).toBe(true);
+    const system = result.document.system as Mam3eSheet & {
+      defenses: { toughness: { total: number } };
+      powers: Array<{ id: string }>;
+    };
+    expect(system.powers.map((power) => power.id).sort()).toEqual(['damage', 'protection']);
+    expect(system.defenses.toughness.total).toBe(8); // Stamina 5 + Protection 3
+    expect(system.plViolations ?? []).toEqual([]);
   });
 
   it('repairs an over-budget free-form build the model then fixes', async () => {

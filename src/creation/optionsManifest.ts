@@ -1,6 +1,8 @@
 import { daggerheartClasses } from '../data/daggerheart/1.0/classes';
 import { daggerheartAncestries } from '../data/daggerheart/1.0/ancestries';
 import { daggerheartCommunities } from '../data/daggerheart/1.0/communities';
+import { allPowers } from '../data/mutants-and-masterminds/3e/powers/aggregations';
+import { MAM3E_EXTRA_MODIFIERS, MAM3E_FLAW_MODIFIERS } from '../systems/mam3e/powerMath';
 import { LOADOUT_LIMIT } from '../systems/daggerheart/daggerheartSheetConstants';
 import {
   loadClassesForSystem,
@@ -166,6 +168,18 @@ function mam3eManifest(): unknown {
       note: 'Defenses add to abilities: Dodge=Agility+rank, Parry=Fighting+rank, Fortitude/Toughness=Stamina(+rank), Will=Awareness+rank.',
     },
     note: 'Author a full build via the free-form keys below, OR omit `abilities` to get an auto-built, cap-safe archetype hero (choose `archetype`/`leadAbility`).',
+    powers: allPowers.map((power) => ({
+      id: power.id,
+      name: power.name,
+      type: power.type,
+      range: power.range,
+      cost: power.baseCost,
+      perRank: power.perRank,
+    })),
+    powerModifiers: {
+      extras: MAM3E_EXTRA_MODIFIERS.map((modifier) => ({ id: modifier.id, name: modifier.name })),
+      flaws: MAM3E_FLAW_MODIFIERS.map((modifier) => ({ id: modifier.id, name: modifier.name })),
+    },
     archetypes: [
       { name: 'brawler', focus: 'Strength/Stamina/Fighting — a melee powerhouse' },
       { name: 'skirmisher', focus: 'Agility/Dexterity/Fighting — fast and evasive' },
@@ -177,7 +191,8 @@ function mam3eManifest(): unknown {
         'free-form: object mapping ability ids to integer ranks (e.g. {fgt:8, agi:6, sta:6})',
       defenses:
         'free-form: object of purchased defense ranks {dodge,parry,fortitude,will,toughness}',
-      attack: 'free-form: { rank } for a close Damage power',
+      powers:
+        'free-form: array of { id (from powers[]), rank, range?, extras?, flaws?, modifierRanks? }',
       advantages: 'free-form: array of advantage names',
       skills: 'free-form: object mapping skill ids to integer ranks',
       archetype: 'auto-build alternative: one of the archetype names',

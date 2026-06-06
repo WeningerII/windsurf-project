@@ -1,11 +1,14 @@
-import { powerById } from '../../data/mutants-and-masterminds/3e/powers/aggregations';
+import { allPowers, powerById } from '../../data/mutants-and-masterminds/3e/powers/aggregations';
 import {
   mam3eAdvantages,
   mam3eAdvantagesById,
 } from '../../data/mutants-and-masterminds/3e/advantages';
+import { MAM3E_MODIFIER_BY_ID } from '../../systems/mam3e/powerMath';
 import { createDefaultMam3eData, type Mam3eDataModel } from '../../systems/mam3e/data-model';
-import type { Power } from '../../types/mam/powers';
+import type { Power, PowerRange } from '../../types/mam/powers';
 import type { CreationDraft, CreationIntent, ResolvedSelections, SystemCreator } from '../types';
+
+const POWER_RANGES: readonly PowerRange[] = ['personal', 'close', 'ranged', 'perception'];
 
 /**
  * Mutants & Masterminds 3e creator.
@@ -14,8 +17,9 @@ import type { CreationDraft, CreationIntent, ResolvedSelections, SystemCreator }
  * budget. Two authoring modes:
  *
  *  - FREE-FORM (the model authored `abilities`): build exactly what the model
- *    specified — abilities, defense ranks, a close Damage power, advantages,
- *    skills — and let the validator judge it. Over-budget or cap-breaking builds
+ *    specified — abilities, defense ranks, any number of powers (each with rank,
+ *    range, and extras/flaws), advantages, and skills — and let the validator
+ *    judge it. Over-budget or cap-breaking builds
  *    surface as validator errors, which the orchestrator's validate-and-repair
  *    loop feeds back so the model fixes them; if repair never lands a legal
  *    build, the orchestrator falls back to the deterministic build below.
@@ -58,8 +62,7 @@ export const mam3eCreator: SystemCreator<Mam3eDataModel> = {
       // Free-form, model-authored build — the validator judges and the loop repairs.
       system.abilities = authored;
       system.defenses = resolveDefenses(resolved);
-      const power = resolveAttack(resolved);
-      system.powers = power ? [power] : [];
+      system.powers = resolvePowers(resolved);
       system.advantages = resolveAdvantages(resolved) ?? [];
       system.skills = resolveSkills(resolved) ?? {};
     } else {
@@ -124,14 +127,76 @@ function resolveDefenses(resolved?: ResolvedSelections): Mam3eDataModel['defense
   };
 }
 
-/** A close Damage power at the authored rank (the validator caps Fighting + rank). */
-function resolveAttack(resolved?: ResolvedSelections): Power | undefined {
-  const raw = resolved?.attack;
-  if (!raw || typeof raw !== 'object') return undefined;
-  const rank = (raw as Record<string, unknown>).rank;
-  const damage = powerById['damage'];
-  if (!damage || typeof rank !== 'number' || !Number.isInteger(rank) || rank < 1) return undefined;
-  return { ...damage, rank };
+/**
+ * Resolve a full array of model-authored powers against the M&M catalog. Each
+ * entry names a base power (by id or name) and may set rank, range, and
+ * extras/flaws/modifier ranks (filtered to real modifiers). Power-point cost and
+ * the PL effect-rank caps are computed by the engine and judged by the validator,
+ * so the loop repairs any over-budget or cap-breaking power suite.
+ */
+function resolvePowers(resolved?: ResolvedSelections): Power[] {
+  const raw = resolved?.powers;
+  if (!Array.isArray(raw)) return [];
+
+  const powers: Power[] = [];
+  for (const entry of raw) {
+    if (!entry || typeof entry !== 'object') continue;
+    const fields = entry as Record<string, unknown>;
+    const base = resolvePowerBase(fields.id, fields.name);
+    if (!base) continue;
+
+    const power: Power = { ...base };
+    const rank = fields.rank;
+    power.rank =
+      typeof rank === 'number' && Number.isInteger(rank) && rank >= 1 ? rank : (base.rank ?? 1);
+    if (
+      typeof fields.range === 'string' &&
+      (POWER_RANGES as readonly string[]).includes(fields.range)
+    ) {
+      power.range = fields.range as PowerRange;
+    }
+    const extras = filterModifierIds(fields.extras, 'extra');
+    const flaws = filterModifierIds(fields.flaws, 'flaw');
+    if (extras.length > 0) power.extras = extras;
+    if (flaws.length > 0) power.flaws = flaws;
+    const modifierRanks = filterModifierRanks(fields.modifierRanks);
+    if (modifierRanks) power.modifierRanks = modifierRanks;
+
+    powers.push(power);
+  }
+  return powers;
+}
+
+function resolvePowerBase(id: unknown, name: unknown): Power | undefined {
+  if (typeof id === 'string' && powerById[id]) return powerById[id];
+  if (typeof name === 'string') {
+    const lower = name.toLowerCase();
+    return allPowers.find((power) => power.name.toLowerCase() === lower || power.id === lower);
+  }
+  return undefined;
+}
+
+function filterModifierIds(value: unknown, type: 'extra' | 'flaw'): string[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter(
+    (id): id is string => typeof id === 'string' && MAM3E_MODIFIER_BY_ID.get(id)?.type === type
+  );
+}
+
+function filterModifierRanks(value: unknown): Record<string, number> | undefined {
+  if (!value || typeof value !== 'object') return undefined;
+  const result: Record<string, number> = {};
+  for (const [id, rank] of Object.entries(value as Record<string, unknown>)) {
+    if (
+      MAM3E_MODIFIER_BY_ID.has(id) &&
+      typeof rank === 'number' &&
+      Number.isInteger(rank) &&
+      rank >= 1
+    ) {
+      result[id] = rank;
+    }
+  }
+  return Object.keys(result).length > 0 ? result : undefined;
 }
 
 function resolveAdvantages(
