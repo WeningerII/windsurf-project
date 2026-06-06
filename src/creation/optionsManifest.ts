@@ -143,7 +143,29 @@ function mam3eManifest(): unknown {
   return {
     system: 'mam3e',
     powerLevelRange: [1, 20],
-    note: 'M&M trait caps (2 × PL) and the 15 × PL point budget are tight, so abilities, defenses, powers, and advantages are auto-built to be PL-legal. Steer the build by choosing a Power Level and an archetype.',
+    abilityMethod: {
+      kind: 'point-buy',
+      budget: '15 × PL power points',
+      abilities: ['str', 'sta', 'agi', 'dex', 'fgt', 'int', 'awe', 'pre'],
+      costs: {
+        ability: '2 points per rank',
+        defenseRank:
+          '1 point per rank (dodge/parry/fortitude/will; toughness usually from stamina)',
+        attack: '1 point per rank (a close Damage power)',
+        advantage: '1 point each',
+        skill: '1 point per 2 ranks (summed across skills)',
+      },
+      caps: [
+        'Dodge + Toughness ≤ 2 × PL',
+        'Parry + Toughness ≤ 2 × PL',
+        'Fortitude + Will ≤ 2 × PL',
+        'Fighting + close attack (Damage) rank ≤ 2 × PL',
+        'each skill bonus (ability + ranks) ≤ PL + 10',
+        'total points spent ≤ 15 × PL',
+      ],
+      note: 'Defenses add to abilities: Dodge=Agility+rank, Parry=Fighting+rank, Fortitude/Toughness=Stamina(+rank), Will=Awareness+rank.',
+    },
+    note: 'Author a full build via the free-form keys below, OR omit `abilities` to get an auto-built, cap-safe archetype hero (choose `archetype`/`leadAbility`).',
     archetypes: [
       { name: 'brawler', focus: 'Strength/Stamina/Fighting — a melee powerhouse' },
       { name: 'skirmisher', focus: 'Agility/Dexterity/Fighting — fast and evasive' },
@@ -151,9 +173,15 @@ function mam3eManifest(): unknown {
     ],
     selectionKeys: {
       powerLevel: 'an integer power level within powerLevelRange (default 10)',
-      archetype: 'one of the archetype names',
-      leadAbility:
-        'optional: a lead ability id (str/sta/agi/dex/fgt/int/awe/pre) — maps to an archetype',
+      abilities:
+        'free-form: object mapping ability ids to integer ranks (e.g. {fgt:8, agi:6, sta:6})',
+      defenses:
+        'free-form: object of purchased defense ranks {dodge,parry,fortitude,will,toughness}',
+      attack: 'free-form: { rank } for a close Damage power',
+      advantages: 'free-form: array of advantage names',
+      skills: 'free-form: object mapping skill ids to integer ranks',
+      archetype: 'auto-build alternative: one of the archetype names',
+      leadAbility: 'auto-build alternative: a lead ability id that maps to an archetype',
     },
   };
 }

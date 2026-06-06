@@ -185,6 +185,67 @@ describe('createCharacterWithAi — M&M 3e', () => {
   });
 });
 
+type Mam3eSheet = {
+  abilities: Record<string, number>;
+  powers: unknown[];
+  powerPoints: { total: number; spent: Record<string, number> };
+  plViolations?: unknown[];
+};
+
+const LEGAL_MM_BUILD = {
+  powerLevel: 10,
+  abilities: { fgt: 8, sta: 6, agi: 4, dex: 0, str: 4, int: 0, awe: 4, pre: 0 },
+  defenses: { dodge: 6, parry: 4, fortitude: 4, will: 6, toughness: 0 },
+  attack: { rank: 8 },
+};
+const OVER_BUDGET_MM_BUILD = {
+  powerLevel: 10,
+  abilities: { str: 12, sta: 12, agi: 12, dex: 12, fgt: 12, int: 12, awe: 12, pre: 12 },
+};
+
+describe('createCharacterWithAi — M&M free-form authoring + repair', () => {
+  it('uses a legal free-form build exactly as authored', async () => {
+    const gateway = gatewaySequence([{ name: 'Tactician', selections: LEGAL_MM_BUILD }]);
+    const result = await createCharacterWithAi('mam3e', 'a tactical fighter', { gateway });
+
+    expect(result.ok).toBe(true);
+    const system = result.document.system as Mam3eSheet;
+    expect(system.abilities.fgt).toBe(8); // the model's own abilities, not an archetype
+    expect(system.powers.length).toBe(1);
+    expect(system.plViolations ?? []).toEqual([]);
+    expect(gateway.fetch).toHaveBeenCalledTimes(1); // legal first try → no repair
+  });
+
+  it('repairs an over-budget free-form build the model then fixes', async () => {
+    const gateway = gatewaySequence([
+      { name: 'Overlord', selections: OVER_BUDGET_MM_BUILD }, // 192/150 + cap breaks
+      { name: 'Overlord', selections: LEGAL_MM_BUILD }, // corrected
+    ]);
+    const result = await createCharacterWithAi('mam3e', 'an overpowered brute', { gateway });
+
+    expect(result.ok).toBe(true);
+    expect((result.document.system as Mam3eSheet).abilities.fgt).toBe(8); // the repaired build
+    expect(gateway.fetch).toHaveBeenCalledTimes(2);
+    const repairBody = JSON.parse(gateway.fetch.mock.calls[1][1].body as string);
+    expect(repairBody.repair.issues.join(' ')).toContain('power points'); // over-budget fed back
+  });
+
+  it('falls back to a legal deterministic build when repair never lands', async () => {
+    const gateway = gatewaySequence([{ name: 'Overlord', selections: OVER_BUDGET_MM_BUILD }]);
+    const result = await createCharacterWithAi('mam3e', 'an overpowered brute', {
+      gateway,
+      maxRepairRounds: 1,
+    });
+
+    expect(result.ok).toBe(true); // guaranteed-legal floor
+    expect(result.document.name).toBe('Overlord'); // authored name preserved
+    const system = result.document.system as Mam3eSheet;
+    expect(system.plViolations ?? []).toEqual([]);
+    expect(system.abilities.str).not.toBe(12); // not the illegal authored spread
+    expect(gateway.fetch).toHaveBeenCalledTimes(2); // 1 draft + 1 repair, then fall back
+  });
+});
+
 describe('createCharacterWithAi — D&D 5e "Batman"', () => {
   it('builds the LLM-authored Rogue with the chosen abilities, validated', async () => {
     const result = await createCharacterWithAi('dnd-5e-2014', 'Batman', {

@@ -50,7 +50,7 @@ export async function createCharacterWithAi(
 
   let result = await applySpec(systemId, prompt, spec, options.id);
   let issues = collectRepairIssues(systemId, manifest, spec, result);
-  let best = { result, count: issues.length };
+  let best = { result, spec, count: issues.length };
 
   for (let round = 0; issues.length > 0 && round < maxRounds; round += 1) {
     const repaired = await requestBuild(
@@ -63,11 +63,26 @@ export async function createCharacterWithAi(
     result = await applySpec(systemId, prompt, spec, options.id);
     issues = collectRepairIssues(systemId, manifest, spec, result);
     if (issues.length < best.count) {
-      best = { result, count: issues.length };
+      best = { result, spec, count: issues.length };
     }
   }
 
+  // Safety net: if repair never reached a legal sheet (e.g. a free-form M&M
+  // build the model couldn't fit under the caps/budget), fall back to a
+  // guaranteed-legal deterministic build, preserving the authored name/level.
+  if (hasValidatorErrors(best.result)) {
+    return applySpec(
+      systemId,
+      prompt,
+      { name: best.spec.name, level: best.spec.level, selections: {} },
+      options.id
+    );
+  }
   return best.result;
+}
+
+function hasValidatorErrors(result: CreationResult): boolean {
+  return result.issues.some((issue) => issue.severity === 'error');
 }
 
 /** Apply a model build through the shared derive-and-validate gate. */
