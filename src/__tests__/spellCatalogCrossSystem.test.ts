@@ -262,6 +262,7 @@ const iconicSpellExpectations: Array<{
       'dnd-5e-2024': e(1, 'enchantment'),
       'dnd-3.5e': e(1, 'enchantment'),
       pf1e: e(1, 'enchantment'),
+      pf2e: e(1, 'enchantment'),
     },
   },
   {

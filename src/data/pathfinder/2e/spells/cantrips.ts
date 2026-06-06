@@ -601,4 +601,74 @@ export const cantrips: Spell[] = withPf2eSpellTraits([
     },
     classes: ['sorcerer', 'wizard'],
   },
+  {
+    id: 'stabilize-pf2e',
+    name: 'Stabilize',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 0,
+    school: 'necromancy',
+    traditions: ['divine', 'primal'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'Positive energy halts a dying creature’s decline. The target loses the dying condition, though it remains unconscious at 0 Hit Points.',
+    heightening: {
+      mode: 'cantrip',
+      summary:
+        'This cantrip is automatically heightened to a spell rank equal to half your level rounded up.',
+    },
+    classes: ['cleric', 'druid'],
+  },
+  {
+    id: 'divine-lance-pf2e',
+    name: 'Divine Lance',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 0,
+    school: 'evocation',
+    traditions: ['divine'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    attackRoll: true,
+    concentration: false,
+    ritual: false,
+    description:
+      'You hurl a ray of divine energy. Make a spell attack roll; on a hit it deals 1d4 + spellcasting ability modifier spirit damage (good or evil, chosen when cast), or double on a critical hit.',
+    heightening: {
+      mode: 'cantrip',
+      summary: 'The damage increases by 1d4 for every 2 spell ranks.',
+    },
+    classes: ['cleric'],
+  },
 ]);

@@ -1068,4 +1068,166 @@ export const level1Spells: Spell[] = withPf2eSpellTraits([
     },
     classes: ['bard', 'sorcerer', 'wizard'],
   },
+  {
+    id: 'harm-pf2e',
+    name: 'Harm',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 1,
+    school: 'necromancy',
+    traditions: ['divine'],
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'half',
+    },
+    savingThrowText: 'basic Fortitude save',
+    concentration: false,
+    ritual: false,
+    description:
+      'You channel negative energy to damage the living or heal the undead. A living target takes 1d8 negative damage (basic Fortitude save); an undead target regains 1d8 Hit Points. Using more actions increases the range and adds an area.',
+    heightening: {
+      mode: 'interval',
+      interval: 1,
+      summary:
+        'Heightened (+1): The amount of healing or damage increases by 1d8, and the extra healing for the 2-action version increases by 8.',
+    },
+    classes: ['cleric'],
+  },
+  {
+    id: 'bane-pf2e',
+    name: 'Bane',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 1,
+    school: 'enchantment',
+    traditions: ['divine'],
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will negates',
+    concentration: true,
+    ritual: false,
+    description:
+      'Malign energy fills a 5-foot emanation around you. Enemies in the area take a -1 status penalty to attack rolls unless they succeed at a Will save. Each round you can Sustain the spell to increase the emanation by 5 feet.',
+    classes: ['cleric'],
+  },
+  {
+    id: 'sleep-pf2e',
+    name: 'Sleep',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 1,
+    school: 'enchantment',
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will save',
+    concentration: false,
+    ritual: false,
+    description:
+      'Each creature in a 5-foot burst becomes drowsy and falls unconscious if it takes no damage, with effects ranging from a -1 penalty to falling asleep based on its Will save.',
+    heightening: {
+      mode: 'fixed',
+      ranks: {
+        '4': 'The creatures fall unconscious for 1 minute on a failure (longer on a critical failure), and the burst no longer wakes them when they take damage.',
+      },
+      summary:
+        'Heightened (4th): Targets fall unconscious for 1 minute and damage no longer wakes them.',
+    },
+    classes: ['bard', 'sorcerer', 'wizard'],
+  },
+  {
+    id: 'charm-pf2e',
+    name: 'Charm',
+    system: 'pf2e',
+    source: 'Core Rulebook',
+    level: 1,
+    school: 'enchantment',
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'action',
+      amount: 2,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'hours',
+      hours: 1,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will negates',
+    concentration: false,
+    ritual: false,
+    description:
+      'You make one creature regard you as a trusted friend. It takes a penalty to its Will save if you are currently friendly, and the spell ends if you or your allies act hostile toward it.',
+    heightening: {
+      mode: 'fixed',
+      ranks: {
+        '4': 'You can target up to 10 creatures.',
+        '6': 'The duration increases to 1 day.',
+      },
+      summary: 'Heightened (4th): up to 10 targets. (6th): duration 1 day.',
+    },
+    classes: ['bard', 'sorcerer', 'wizard'],
+  },
 ]);
