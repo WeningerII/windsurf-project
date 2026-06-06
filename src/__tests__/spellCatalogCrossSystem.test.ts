@@ -68,6 +68,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Fireball',
     systems: {
+      'dnd-5e-2014': e(3, 'evocation'),
       'dnd-5e-2024': e(3, 'evocation'),
       'dnd-3.5e': e(3, 'evocation'),
       pf1e: e(3, 'evocation'),
@@ -193,6 +194,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Lightning Bolt',
     systems: {
+      'dnd-5e-2014': e(3, 'evocation'),
       'dnd-5e-2024': e(3, 'evocation'),
       'dnd-3.5e': e(3, 'evocation'),
       pf1e: e(3, 'evocation'),
@@ -228,6 +230,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Meteor Swarm',
     systems: {
+      'dnd-5e-2014': e(9, 'evocation'),
       'dnd-5e-2024': e(9, 'evocation'),
       'dnd-3.5e': e(9, 'evocation'),
       pf1e: e(8, 'evocation'),
@@ -260,10 +263,22 @@ const iconicSpellExpectations: Array<{
       pf2e: e(2, 'conjuration'),
     },
   },
-  { name: 'Scorching Ray', systems: { 'dnd-5e-2024': e(2, 'evocation'), pf1e: e(2, 'evocation') } },
+  {
+    name: 'Scorching Ray',
+    systems: {
+      'dnd-5e-2014': e(2, 'evocation'),
+      'dnd-5e-2024': e(2, 'evocation'),
+      pf1e: e(2, 'evocation'),
+    },
+  },
   {
     name: 'Cone of Cold',
-    systems: { 'dnd-5e-2024': e(5, 'evocation'), pf1e: e(5, 'evocation'), pf2e: e(5, 'evocation') },
+    systems: {
+      'dnd-5e-2014': e(5, 'evocation'),
+      'dnd-5e-2024': e(5, 'evocation'),
+      pf1e: e(5, 'evocation'),
+      pf2e: e(5, 'evocation'),
+    },
   },
   {
     name: 'Teleport',

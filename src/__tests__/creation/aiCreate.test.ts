@@ -366,6 +366,31 @@ describe('createCharacterWithAi — D&D 5e "Batman"', () => {
     expect(known).toContain('burning-hands');
   });
 
+  it('lets a high-level caster author leveled spells (Fireball on a L5 wizard)', async () => {
+    // Gating is computed from the class levels (same as the engine derives), so a
+    // L5 wizard can take a 3rd-level spell — not capped at 1st as it was when the
+    // gate read the not-yet-derived slot table. Fireball is now in the 2014 SRD set.
+    const result = await createCharacterWithAi('dnd-5e-2014', 'a fire wizard', {
+      gateway: gatewayReturning({
+        name: 'Pyra',
+        level: 5,
+        selections: {
+          class: 'Wizard',
+          species: 'Human',
+          spells: ['Fire Bolt', 'Fireball', 'Scorching Ray'],
+        },
+      }),
+    });
+
+    expect(result.ok).toBe(true);
+    const known =
+      (result.document.system as { spellcasting?: { spellsKnown: string[] } }).spellcasting
+        ?.spellsKnown ?? [];
+    expect(known).toContain('fireball'); // 3rd-level, now resolvable for a L5 wizard
+    expect(known).toContain('scorching-ray'); // 2nd-level
+    expect(result.unresolved ?? []).toEqual([]); // nothing dropped
+  });
+
   it('builds an authored multiclass with a per-class subclass, validated', async () => {
     const result = await createCharacterWithAi('dnd-5e-2014', 'a gish fighter-mage', {
       gateway: gatewayReturning({

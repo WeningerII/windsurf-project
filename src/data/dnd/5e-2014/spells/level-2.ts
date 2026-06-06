@@ -782,6 +782,423 @@ export const level2Spells: Spell[] = [
       "You create a magical zone that guards against deception in a 15-foot-radius sphere centered on a point of your choice within range. Until the spell ends, a creature that enters the area for the first time on a turn or starts its turn there must make a Charisma saving throw. On a failed save, a creature can't speak a deliberate lie while in the radius, and you know whether each creature succeeds or fails.",
     classes: ['bard', 'cleric', 'paladin'],
   },
+  {
+    id: 'acid-arrow',
+    name: 'Acid Arrow',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 2,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 90,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    attackRoll: true,
+    damage: {
+      base: {
+        count: 4,
+        die: 'd4',
+        notation: '4d4',
+      },
+      type: 'acid',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'A shimmering green arrow streaks toward a target within range. Make a ranged spell attack against the target. On a hit, the target takes 4d4 Acid damage immediately and 2d4 Acid damage at the end of its next turn.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of level 3 or higher, the damage increases by 1d4 for each slot level above 2.',
+    classes: ['wizard'],
+  },
+  {
+    id: 'flame-blade',
+    name: 'Flame Blade',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 2,
+    school: 'evocation',
+    castingTime: {
+      type: 'bonus-action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'sumac leaf',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '10 minutes',
+    },
+    attackRoll: true,
+    damage: {
+      base: {
+        count: 3,
+        die: 'd6',
+        notation: '3d6',
+      },
+      type: 'fire',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'You evoke a fiery blade in your free hand. The blade is similar in size and shape to a scimitar, and it lasts for the duration. You can use your action to make a melee spell attack, dealing 3d6 Fire damage on a hit.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of level 4 or higher, the damage increases by 1d6 for every 2 slot levels above 2.',
+    classes: ['druid', 'sorcerer'],
+  },
+  {
+    id: 'flaming-sphere',
+    name: 'Flaming Sphere',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 2,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a ball of wax',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 minute',
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    damage: {
+      base: {
+        count: 2,
+        die: 'd6',
+        notation: '2d6',
+      },
+      type: 'fire',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'A 5-foot-diameter sphere of fire appears in an unoccupied space. Any creature that ends its turn within 5 feet of the sphere must make a Dexterity saving throw, taking 2d6 Fire damage on a failed save.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of level 3 or higher, the damage increases by 1d6 for each slot level above 2.',
+    classes: ['druid', 'sorcerer', 'wizard'],
+  },
+  {
+    id: 'heat-metal',
+    name: 'Heat Metal',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 2,
+    school: 'transmutation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a piece of iron and a flame',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 minute',
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+    },
+    damage: {
+      base: {
+        count: 2,
+        die: 'd8',
+        notation: '2d8',
+      },
+      type: 'fire',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      "Choose a manufactured metal object, such as a metal weapon or a suit of heavy or medium metal armor, that you can see within range. You cause the object to glow red-hot. Any creature in physical contact with the object takes 2d8 fire damage when you cast the spell. Until the spell ends, you can use a bonus action on each of your subsequent turns to cause this damage again. If a creature is holding or wearing the object and takes the damage from it, the creature must succeed on a Constitution saving throw or drop the object if it can. If it doesn't drop the object, it has disadvantage on attack rolls and ability checks until the start of your next turn.",
+    atHigherLevels:
+      'When you cast this spell using a spell slot of 3rd level or higher, the damage increases by 1d8 for each slot level above 2nd.',
+    classes: ['bard', 'druid'],
+  },
+  {
+    id: 'magic-weapon',
+    name: 'Magic Weapon',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 2,
+    school: 'transmutation',
+    castingTime: {
+      type: 'bonus-action',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'hours',
+      hours: 1,
+    },
+    target: '1 nonmagical weapon you touch',
+    concentration: false,
+    ritual: false,
+    description:
+      'You touch a nonmagical weapon. Until the spell ends, that weapon becomes a magic weapon with a +1 bonus to attack rolls and damage rolls.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of level 4 or higher, the bonus increases to +2. With a level 6 or higher slot, the bonus increases to +3.',
+    classes: ['paladin', 'ranger', 'sorcerer', 'wizard'],
+  },
+  {
+    id: 'protection-from-poison',
+    name: 'Protection from Poison',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 2,
+    school: 'abjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'hours',
+      hours: 1,
+    },
+    target: '1 creature you touch',
+    concentration: false,
+    ritual: false,
+    description:
+      'You touch a creature and end the Poisoned condition on it. For the duration, the target has Advantage on saving throws against being poisoned and has Resistance to Poison damage.',
+    classes: ['cleric', 'druid', 'paladin', 'ranger'],
+  },
+  {
+    id: 'scorching-ray',
+    name: 'Scorching Ray',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 2,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    attackRoll: true,
+    damage: {
+      base: {
+        count: 2,
+        die: 'd6',
+        notation: '2d6',
+      },
+      type: 'fire',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You create three rays of fire and hurl them at targets within range. You can hurl them at one target or several. Make a ranged spell attack for each ray. On a hit, the target takes 2d6 Fire damage.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of level 3 or higher, you create one additional ray for each slot level above 2.',
+    classes: ['sorcerer', 'wizard'],
+  },
+  {
+    id: 'see-invisibility',
+    name: 'See Invisibility',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 2,
+    school: 'divination',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a pinch of talc',
+    },
+    duration: {
+      type: 'hours',
+      hours: 1,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'For the duration, you see creatures and objects that have the Invisible condition as if they were visible, and you can see into the Ethereal Plane.',
+    classes: ['bard', 'sorcerer', 'wizard'],
+  },
+  {
+    id: 'shatter',
+    name: 'Shatter',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 2,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a chip of mica',
+    },
+    duration: {
+      type: 'instant',
+    },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 10,
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'half',
+    },
+    damage: {
+      base: {
+        count: 3,
+        die: 'd8',
+        notation: '3d8',
+      },
+      type: 'thunder',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'A sudden loud ringing noise, painfully intense, erupts from a point of your choice within range. Each creature in a 10-foot-radius Sphere centered on that point must make a Constitution saving throw, taking 3d8 Thunder damage on a failed save.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of level 3 or higher, the damage increases by 1d8 for each slot level above 2.',
+    classes: ['bard', 'sorcerer', 'warlock', 'wizard'],
+  },
+  {
+    id: 'spider-climb',
+    name: 'Spider Climb',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 2,
+    school: 'transmutation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a drop of bitumen',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 hour',
+    },
+    target: '1 willing creature you touch',
+    concentration: true,
+    ritual: false,
+    description:
+      'Until the spell ends, one willing creature you touch gains the ability to move up, down, and across vertical surfaces and upside down along ceilings, while leaving its hands free. The target also gains a Climbing Speed equal to its walking Speed.',
+    classes: ['sorcerer', 'warlock', 'wizard'],
+  },
+  {
+    id: 'suggestion',
+    name: 'Suggestion',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 2,
+    school: 'enchantment',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: true,
+      materialDescription: 'a drop of honey',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '8 hours',
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'You suggest a course of activity (limited to a sentence or two) and magically influence a creature you can see within range that can hear and understand you. The suggestion must be worded in such a manner as to make the course of action sound reasonable.',
+    classes: ['bard', 'sorcerer', 'warlock', 'wizard'],
+  },
 ];
 
 // Helper function for lookups

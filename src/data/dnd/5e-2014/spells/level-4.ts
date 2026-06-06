@@ -540,6 +540,217 @@ export const level4Spells: Spell[] = [
       'A Large spectral guardian appears and hovers for the duration in an unoccupied space of your choice within range. Any hostile creature that moves to a space within 10 feet of the guardian for the first time on a turn must succeed on a Dexterity saving throw, taking 20 radiant damage on a failed save or half as much on a success. The guardian vanishes after dealing a total of 60 damage.',
     classes: ['cleric'],
   },
+  {
+    id: 'blight',
+    name: 'Blight',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 4,
+    school: 'necromancy',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'half',
+    },
+    damage: {
+      base: {
+        count: 8,
+        die: 'd8',
+        notation: '8d8',
+      },
+      type: 'necrotic',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'Necromantic energy washes over a creature of your choice that you can see within range, draining moisture and vitality from it. The target must make a Constitution saving throw, taking 8d8 Necrotic damage on a failed save.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of level 5 or higher, the damage increases by 1d8 for each slot level above 4.',
+    classes: ['druid', 'sorcerer', 'warlock', 'wizard'],
+  },
+  {
+    id: 'fire-shield',
+    name: 'Fire Shield',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 4,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a piece of phosphorus',
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 10,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'Thin and wispy flames wreathe your body for the duration. You choose whether the flames shed Bright Light in a 10-foot radius. The flames provide a warm shield or a chill shield. Whenever a creature hits you with a melee attack while within 5 feet, that creature takes 2d8 Fire or Cold damage.',
+    classes: ['druid', 'sorcerer', 'wizard'],
+  },
+  {
+    id: 'ice-storm',
+    name: 'Ice Storm',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 4,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 300,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a pinch of dust and a few drops of water',
+    },
+    duration: {
+      type: 'instant',
+    },
+    areaOfEffect: {
+      type: 'cylinder',
+      radius: 20,
+      height: 40,
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    damage: {
+      base: {
+        count: 2,
+        die: 'd8',
+        notation: '2d8',
+      },
+      type: 'bludgeoning',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'A hail of rock-hard ice pounds to the ground in a 20-foot-radius, 40-foot-high Cylinder centered on a point within range. Each creature in the Cylinder must make a Dexterity saving throw, taking 2d8 Bludgeoning damage and 4d6 Cold damage on a failed save.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of level 5 or higher, the Bludgeoning damage increases by 1d8 for each slot level above 4.',
+    classes: ['druid', 'sorcerer', 'wizard'],
+  },
+  {
+    id: 'phantasmal-killer',
+    name: 'Phantasmal Killer',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 4,
+    school: 'illusion',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 minute',
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    damage: {
+      base: {
+        count: 4,
+        die: 'd10',
+        notation: '4d10',
+      },
+      type: 'psychic',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'You tap into the nightmares of a creature you can see within range and create an illusory manifestation of its deepest fears, visible only to that creature. The target must make a Wisdom saving throw. On a failed save, the target has the Frightened condition for the duration.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of level 5 or higher, the damage increases by 1d10 for each slot level above 4.',
+    classes: ['bard', 'wizard'],
+  },
+  {
+    id: 'wall-of-fire',
+    name: 'Wall of Fire',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 4,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a piece of phosphorus',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 minute',
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    damage: {
+      base: {
+        count: 5,
+        die: 'd8',
+        notation: '5d8',
+      },
+      type: 'fire',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'You create a wall of fire on a solid surface within range. The wall can be up to 60 feet long, 20 feet high, and 1 foot thick, or a ringed wall up to 20 feet in diameter, 20 feet high, and 1 foot thick.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of level 5 or higher, the damage increases by 1d8 for each slot level above 4.',
+    classes: ['druid', 'sorcerer', 'wizard'],
+  },
 ];
 
 // Helper function for lookups

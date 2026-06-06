@@ -20,6 +20,7 @@ import {
   type Dnd5e2024DataModel,
 } from '../../systems/dnd5e-2024/data-model';
 import type { CharacterClass } from '../../types/character-options/classes';
+import { compute5eSpellSlots } from '../../utils/spellSlots';
 import type { CharacterDocument } from '../../types/core/document';
 import type { GameSystemId } from '../../types/game-systems';
 import type { Spell } from '../../types/magic/spells';
@@ -383,13 +384,25 @@ function assignStandardArray(cls: CharacterClass): Record<string, number> {
 
 // --- Small utilities ---
 
+/**
+ * Highest spell level the character can cast, computed with the same
+ * `compute5eSpellSlots` the engine uses to derive the sheet. The document's
+ * `spellcasting.spellSlots` isn't filled until the engine runs (after the
+ * creator), so we recompute from the class levels here — gating authored spells
+ * against exactly what the finished sheet will be able to cast, including
+ * multiclass caster-level stacking.
+ */
 function maxSpellLevel(system: Dnd5eLike): number {
-  const slots = system.spellcasting?.spellSlots;
+  const slots = compute5eSpellSlots(
+    system.classLevels.map((cl) => ({
+      classId: cl.classId,
+      level: cl.level,
+      subclassId: cl.subclassId,
+    }))
+  );
   let top = 0;
-  if (slots) {
-    for (let slot = 1; slot <= 9; slot += 1) {
-      if (slots[slot as keyof typeof slots].max > 0) top = slot;
-    }
+  for (let slot = 1; slot <= 9; slot += 1) {
+    if (slots[slot as keyof typeof slots].max > 0) top = slot;
   }
   return Math.max(1, top);
 }

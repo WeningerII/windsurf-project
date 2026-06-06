@@ -574,6 +574,136 @@ export const cantrips: Spell[] = [
       "You extend your hand and point a finger at a target in range. Your magic grants you a brief insight into the target's defenses. On your next turn, you gain advantage on your first attack roll against the target, provided that this spell hasn't ended.",
     classes: ['bard', 'sorcerer', 'warlock', 'wizard'],
   },
+  {
+    id: 'message',
+    name: 'Message',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 0,
+    school: 'transmutation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a copper wire',
+    },
+    duration: {
+      type: 'rounds',
+      rounds: 1,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You point toward a creature within range and whisper a message. The target (and only the target) hears the message and can reply in a whisper that only you can hear.',
+    classes: ['bard', 'sorcerer', 'wizard'],
+  },
+  {
+    id: 'thorn-whip',
+    name: 'Thorn Whip',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 0,
+    school: 'transmutation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    attackRoll: true,
+    damage: {
+      base: {
+        count: 1,
+        die: 'd6',
+        notation: '1d6',
+      },
+      type: 'piercing',
+      scaling: {
+        type: 'character-level',
+        increment: {
+          count: 1,
+          die: 'd6',
+          notation: '1d6',
+        },
+      },
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You create a long, vine-like whip covered in thorns that lashes out at your command. Make a melee spell attack. On a hit, the target takes 1d6 Piercing damage, and if it is Large or smaller, you can pull it up to 10 feet closer.',
+    atHigherLevels:
+      'The damage increases by 1d6 when you reach levels 5 (2d6), 11 (3d6), and 17 (4d6).',
+    classes: ['druid'],
+  },
+  {
+    id: 'vicious-mockery',
+    name: 'Vicious Mockery',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 0,
+    school: 'enchantment',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    damage: {
+      base: {
+        count: 1,
+        die: 'd6',
+        notation: '1d6',
+      },
+      type: 'psychic',
+      scaling: {
+        type: 'character-level',
+        increment: {
+          count: 1,
+          die: 'd6',
+          notation: '1d6',
+        },
+      },
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You unleash a string of insults laced with subtle enchantments at one creature you can see within range. The target must succeed on a Wisdom saving throw or take 1d6 Psychic damage and have Disadvantage on the next attack roll it makes before the end of its next turn.',
+    atHigherLevels:
+      'The damage increases by 1d6 when you reach levels 5 (2d6), 11 (3d6), and 17 (4d6).',
+    classes: ['bard'],
+  },
 ];
 
 // Helper function for lookups

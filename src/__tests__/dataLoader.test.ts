@@ -52,7 +52,7 @@ describe('Data Loader Integration Tests', () => {
   describe('D&D 5e-2014 Loaders', () => {
     it('should load spells for dnd-5e-2014', async () => {
       const spells = await loadSpellsForSystem('dnd-5e-2014');
-      expect(spells.length).toBe(244);
+      expect(spells.length).toBe(313);
       expect(spells.every((s) => s.id && s.name && s.system === 'dnd-5e-2014')).toBe(true);
     });
 

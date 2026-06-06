@@ -512,6 +512,381 @@ export const level5Spells: Spell[] = [
       'When you cast this spell using a spell slot of 6th level or higher, the healing increases by 1d8 for each slot level above 5th.',
     classes: ['bard', 'cleric', 'druid'],
   },
+  {
+    id: 'cloudkill',
+    name: 'Cloudkill',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 5,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '10 minutes',
+    },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 20,
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'half',
+    },
+    damage: {
+      base: {
+        count: 5,
+        die: 'd8',
+        notation: '5d8',
+      },
+      type: 'poison',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'You create a 20-foot-radius Sphere of poisonous, yellow-green fog centered on a point you choose within range. A creature that enters the Sphere for the first time or starts its turn there makes a Constitution saving throw, taking 5d8 Poison damage on a failed save.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of level 6 or higher, the damage increases by 1d8 for each slot level above 5.',
+    classes: ['sorcerer', 'wizard'],
+  },
+  {
+    id: 'cone-of-cold',
+    name: 'Cone of Cold',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 5,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a small crystal or glass cone',
+    },
+    duration: {
+      type: 'instant',
+    },
+    areaOfEffect: {
+      type: 'cone',
+      feet: 60,
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'half',
+    },
+    damage: {
+      base: {
+        count: 8,
+        die: 'd8',
+        notation: '8d8',
+      },
+      type: 'cold',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'A blast of cold air springs from your hands. Each creature in a 60-foot cone must make a Constitution saving throw. A creature takes 8d8 cold damage on a failed save, or half as much damage on a successful one.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of 6th level or higher, the damage increases by 1d8 for each slot level above 5th.',
+    classes: ['sorcerer', 'wizard'],
+  },
+  {
+    id: 'contagion',
+    name: 'Contagion',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 5,
+    school: 'necromancy',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'special',
+      description: '7 days',
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'Your touch inflicts a disease. The target must make a Constitution saving throw. On a failed save, the target has the Poisoned condition. While Poisoned, the target makes another Constitution saving throw at the end of each of its turns.',
+    classes: ['cleric', 'druid'],
+  },
+  {
+    id: 'creation',
+    name: 'Creation',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 5,
+    school: 'illusion',
+    castingTime: {
+      type: 'minute',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a piece of the material to be created',
+    },
+    duration: {
+      type: 'special',
+      description: 'varies',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You pull wisps of shadow material from the Shadowfell to create a nonliving object of vegetable matter within range: soft goods, rope, wood, or something similar.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of level 6 or higher, the size of the object increases by one category for each slot level above 5.',
+    classes: ['sorcerer', 'wizard'],
+  },
+  {
+    id: 'dispel-evil-and-good',
+    name: 'Dispel Evil and Good',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 5,
+    school: 'abjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'powdered silver and iron',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 minute',
+    },
+    attackRoll: true,
+    concentration: true,
+    ritual: false,
+    description:
+      'Shimmering energy surrounds and protects you from Aberrations, Celestials, Elementals, Fey, Fiends, and Undead. You can end the spell early using an action to make a melee spell attack to end possession or send a creature back to its plane.',
+    classes: ['cleric', 'paladin'],
+  },
+  {
+    id: 'insect-plague',
+    name: 'Insect Plague',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 5,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 300,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a sugar cube',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '10 minutes',
+    },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 20,
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'half',
+    },
+    damage: {
+      base: {
+        count: 4,
+        die: 'd10',
+        notation: '4d10',
+      },
+      type: 'piercing',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'Swarming, biting locusts fill a 20-foot-radius Sphere centered on a point you choose within range. A creature that enters or starts its turn in the Sphere must make a Constitution saving throw, taking 4d10 Piercing damage on a failed save.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of level 6 or higher, the damage increases by 1d10 for each slot level above 5.',
+    classes: ['cleric', 'druid', 'sorcerer'],
+  },
+  {
+    id: 'mislead',
+    name: 'Mislead',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 5,
+    school: 'illusion',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: false,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 hour',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'You become Invisible at the same time that an illusory double of you appears where you are standing. The double lasts for the duration, but the invisibility ends if you attack or cast a spell.',
+    classes: ['bard', 'warlock', 'wizard'],
+  },
+  {
+    id: 'planar-binding',
+    name: 'Planar Binding',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 5,
+    school: 'abjuration',
+    castingTime: {
+      type: 'hour',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a jewel worth 1,000 gp',
+      materialCost: 1000,
+      materialConsumed: true,
+    },
+    duration: {
+      type: 'hours',
+      hours: 24,
+    },
+    savingThrow: {
+      attribute: 'cha',
+      success: 'none',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'With this spell, you attempt to bind a Celestial, an Elemental, a Fey, or a Fiend to your service. The creature must be within range for the entire casting of the spell.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of level 6, the duration increases to 10 days. Level 7: 30 days. Level 8: 180 days. Level 9: a year and a day.',
+    classes: ['bard', 'cleric', 'druid', 'warlock', 'wizard'],
+  },
+  {
+    id: 'seeming',
+    name: 'Seeming',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 5,
+    school: 'illusion',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'hours',
+      hours: 8,
+    },
+    savingThrow: {
+      attribute: 'cha',
+      success: 'none',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell allows you to change the appearance of any number of creatures that you can see within range. You give each target a new, illusory appearance. An unwilling target can make a Charisma saving throw, and if it succeeds, it is unaffected.',
+    classes: ['bard', 'sorcerer', 'wizard'],
+  },
+  {
+    id: 'hallow',
+    name: 'Hallow',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 5,
+    school: 'evocation',
+    castingTime: {
+      type: 'hour',
+      amount: 24,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'herbs, oils, and incense worth at least 1,000 gp, which the spell consumes',
+      materialCost: 1000,
+      materialConsumed: true,
+    },
+    duration: {
+      type: 'unlimited',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You touch a point and infuse an area around it with holy or unholy power. The area can’t overlap with another active Hallow spell, and you can bind an additional sacred or profane rider to the warded space, such as fear warding, silence, or planar exclusion.',
+    classes: ['cleric'],
+  },
 ];
 
 // Helper function for lookups

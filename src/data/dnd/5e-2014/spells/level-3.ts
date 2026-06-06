@@ -844,6 +844,256 @@ export const level3Spells: Spell[] = [
       'When you cast this spell using a spell slot of 4th level or higher, the damage increases by 1d6 for each slot level above 3rd.',
     classes: ['wizard'],
   },
+  {
+    id: 'call-lightning',
+    name: 'Call Lightning',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 3,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '10 minutes',
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    damage: {
+      base: {
+        count: 3,
+        die: 'd10',
+        notation: '3d10',
+      },
+      type: 'lightning',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'A storm cloud appears above you. Each time you use an action to call down lightning, each creature under the cloud must make a Dexterity saving throw, taking 3d10 Lightning damage on a failed save.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of level 4 or higher, the damage increases by 1d10 for each slot level above 3.',
+    classes: ['druid'],
+  },
+  {
+    id: 'fireball',
+    name: 'Fireball',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 3,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 150,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a ball of bat guano and sulfur',
+    },
+    duration: {
+      type: 'instant',
+    },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 20,
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    damage: {
+      base: {
+        count: 8,
+        die: 'd6',
+        notation: '8d6',
+      },
+      type: 'fire',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'A bright streak flashes from you to a point you choose within range and then blossoms with a low roar into an explosion of flame. Each creature in a 20-foot-radius Sphere centered on that point must make a Dexterity saving throw, taking 8d6 Fire damage on a failed save.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of level 4 or higher, the damage increases by 1d6 for each slot level above 3.',
+    classes: ['sorcerer', 'wizard'],
+  },
+  {
+    id: 'gaseous-form',
+    name: 'Gaseous Form',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 3,
+    school: 'transmutation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'gauze',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 hour',
+    },
+    target: '1 willing creature you touch',
+    concentration: true,
+    ritual: false,
+    description:
+      "You transform a willing creature you touch, along with everything it's wearing and carrying, into a misty cloud for the duration. The target's only method of movement is a Fly Speed of 10 feet.",
+    classes: ['sorcerer', 'warlock', 'wizard'],
+  },
+  {
+    id: 'lightning-bolt',
+    name: 'Lightning Bolt',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 3,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a bit of fur and a glass rod',
+    },
+    duration: {
+      type: 'instant',
+    },
+    areaOfEffect: {
+      type: 'line',
+      length: 100,
+      width: 5,
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    damage: {
+      base: {
+        count: 8,
+        die: 'd6',
+        notation: '8d6',
+      },
+      type: 'lightning',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'A stroke of lightning forming a 100-foot-long, 5-foot-wide Line blasts out from you in a direction you choose. Each creature in the Line must make a Dexterity saving throw, taking 8d6 Lightning damage on a failed save.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of level 4 or higher, the damage increases by 1d6 for each slot level above 3.',
+    classes: ['sorcerer', 'wizard'],
+  },
+  {
+    id: 'spirit-guardians',
+    name: 'Spirit Guardians',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 3,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a holy symbol',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '10 minutes',
+    },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 15,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'half',
+    },
+    damage: {
+      base: {
+        count: 3,
+        die: 'd8',
+        notation: '3d8',
+      },
+      type: 'radiant',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'You call forth spirits to protect you. They flit around you in a 15-foot-radius Sphere. When a creature enters the area for the first time or starts its turn there, it must make a Wisdom saving throw, taking 3d8 Radiant or Necrotic damage (your choice) on a failed save.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of level 4 or higher, the damage increases by 1d8 for each slot level above 3.',
+    classes: ['cleric'],
+  },
+  {
+    id: 'water-walk',
+    name: 'Water Walk',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 3,
+    school: 'transmutation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a piece of cork',
+    },
+    duration: {
+      type: 'hours',
+      hours: 1,
+    },
+    concentration: false,
+    ritual: true,
+    description:
+      'This spell grants the ability to move across any liquid surface—such as water, acid, mud, snow, quicksand, or lava—as if it were harmless solid ground (creatures crossing molten lava can still take damage from the heat).',
+    classes: ['cleric', 'druid', 'ranger', 'sorcerer'],
+  },
 ];
 
 // Helper function for lookups

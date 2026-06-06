@@ -429,6 +429,491 @@ export const level6Spells: Spell[] = [
       "Choose one creature or nonmagical object that you can see within range. You transform the creature into a different creature, the creature into a nonmagical object, or the object into a creature. A creature can't be transformed into an object if it has at least 1 hit point. An object can't be transformed into a creature.",
     classes: ['bard', 'warlock', 'wizard'],
   },
+  {
+    id: 'blade-barrier',
+    name: 'Blade Barrier',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 6,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 90,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '10 minutes',
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    damage: {
+      base: {
+        count: 6,
+        die: 'd10',
+        notation: '6d10',
+      },
+      type: 'slashing',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      "You create a vertical wall of whirling, razor-sharp blades made of magical energy. Any creature that enters the wall's area for the first time or starts its turn there must make a Dexterity saving throw, taking 6d10 Slashing damage on a failed save.",
+    classes: ['cleric'],
+  },
+  {
+    id: 'chain-lightning',
+    name: 'Chain Lightning',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 6,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 150,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a piece of glass or a crystal rod',
+    },
+    duration: {
+      type: 'instant',
+    },
+    target: '1 creature you can see within range, plus up to 3 secondary creatures within 30 feet',
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    savingThrowText:
+      'The primary target and each secondary target make a Dexterity saving throw against the lightning arc.',
+    damage: {
+      base: {
+        count: 10,
+        die: 'd8',
+        notation: '10d8',
+      },
+      type: 'lightning',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You hurl a bolt of lightning at a creature of your choice that you can see within range. The target must make a Dexterity saving throw. On a failed save, the creature takes 10d8 lightning damage. On a successful save, it takes half as much damage. The lightning arcs from that creature to up to three other creatures within 30 feet of it that you can see. Each of those creatures must make a Dexterity saving throw.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of 7th level or higher, the number of secondary targets increases by one for each slot level above 6th.',
+    classes: ['sorcerer', 'wizard'],
+  },
+  {
+    id: 'circle-of-death',
+    name: 'Circle of Death',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 6,
+    school: 'necromancy',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 150,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a crushed black pearl worth 500 gp',
+      materialCost: 500,
+    },
+    duration: {
+      type: 'instant',
+    },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 60,
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'half',
+    },
+    damage: {
+      base: {
+        count: 8,
+        die: 'd6',
+        notation: '8d6',
+      },
+      type: 'necrotic',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'A sphere of negative energy ripples out in a 60-foot-radius Sphere from a point within range. Each creature in that area must make a Constitution saving throw, taking 8d6 Necrotic damage on a failed save.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of level 7 or higher, the damage increases by 2d6 for each slot level above 6.',
+    classes: ['sorcerer', 'warlock', 'wizard'],
+  },
+  {
+    id: 'create-undead',
+    name: 'Create Undead',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 6,
+    school: 'necromancy',
+    castingTime: {
+      type: 'minute',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 10,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'a clay pot with grave dirt and a black onyx stone worth 150 gp per corpse',
+      materialCost: 150,
+    },
+    duration: {
+      type: 'instant',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You can cast this spell only at night. Choose up to three corpses of Medium or Small Humanoids within range. Each corpse becomes a Ghoul under your control.',
+    atHigherLevels:
+      'When you cast this spell using a level 7 slot, you can create Ghasts. Level 8: Wights. Level 9: Mummies.',
+    classes: ['cleric', 'warlock', 'wizard'],
+  },
+  {
+    id: 'disintegrate',
+    name: 'Disintegrate',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 6,
+    school: 'transmutation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a lodestone and pinch of dust',
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'none',
+    },
+    damage: {
+      base: {
+        count: 10,
+        die: 'd6',
+        modifier: 40,
+        notation: '10d6+40',
+      },
+      type: 'force',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'A thin green ray springs from your pointing finger to a target within range. The target can be a creature, an object, or a creation of magical force. A creature takes 10d6 + 40 Force damage. If this damage reduces the creature to 0 HP, it is disintegrated.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of level 7 or higher, the damage increases by 3d6 for each slot level above 6.',
+    classes: ['sorcerer', 'wizard'],
+  },
+  {
+    id: 'flesh-to-stone',
+    name: 'Flesh to Stone',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 6,
+    school: 'transmutation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a pinch of powite and water',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 minute',
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'You attempt to turn one creature that you can see within range into stone. The target must make a Constitution saving throw. On a failed save, it has the Restrained condition as its flesh begins to harden.',
+    classes: ['druid', 'sorcerer', 'warlock', 'wizard'],
+  },
+  {
+    id: 'harm',
+    name: 'Harm',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 6,
+    school: 'necromancy',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'half',
+    },
+    damage: {
+      base: {
+        count: 14,
+        die: 'd6',
+        notation: '14d6',
+      },
+      type: 'necrotic',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You unleash a virulent disease on a creature that you can see within range. The target must make a Constitution saving throw. On a failed save, it takes 14d6 Necrotic damage, and its HP maximum is reduced by an amount equal to the damage taken.',
+    classes: ['cleric'],
+  },
+  {
+    id: 'magic-jar',
+    name: 'Magic Jar',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 6,
+    school: 'necromancy',
+    castingTime: {
+      type: 'minute',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a gem or crystal worth 500 gp',
+      materialCost: 500,
+    },
+    duration: {
+      type: 'permanent',
+    },
+    savingThrow: {
+      attribute: 'cha',
+      success: 'none',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      "Your body falls into a catatonic state as your soul leaves it and enters the container you used for the spell's material component. While your soul inhabits the container, you are aware of your surroundings as if you were in the container's space.",
+    classes: ['wizard'],
+  },
+  {
+    id: 'mass-suggestion',
+    name: 'Mass Suggestion',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 6,
+    school: 'enchantment',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: true,
+      materialDescription: 'a snake tongue',
+    },
+    duration: {
+      type: 'hours',
+      hours: 24,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You suggest a course of activity to up to twelve creatures of your choice that you can see within range and that can hear and understand you. The suggestion must be worded reasonably.',
+    atHigherLevels:
+      'When you cast this spell using a level 7 slot, the duration is 10 days. Level 8: 30 days. Level 9: a year and a day.',
+    classes: ['bard', 'sorcerer', 'warlock', 'wizard'],
+  },
+  {
+    id: 'sunbeam',
+    name: 'Sunbeam',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 6,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a magnifying glass',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 minute',
+    },
+    areaOfEffect: {
+      type: 'line',
+      length: 60,
+      width: 5,
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'half',
+    },
+    damage: {
+      base: {
+        count: 6,
+        die: 'd8',
+        notation: '6d8',
+      },
+      type: 'radiant',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'A beam of brilliant light flashes out from your hand in a 5-foot-wide, 60-foot-long Line. Each creature in the Line must make a Constitution saving throw, taking 6d8 Radiant damage on a failed save and has the Blinded condition until your next turn.',
+    classes: ['cleric', 'druid', 'sorcerer', 'wizard'],
+  },
+  {
+    id: 'wall-of-ice',
+    name: 'Wall of Ice',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 6,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a small piece of quartz',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '10 minutes',
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    damage: {
+      base: {
+        count: 10,
+        die: 'd6',
+        notation: '10d6',
+      },
+      type: 'cold',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'You create a wall of ice on a solid surface within range. You can form it into a hemispherical dome or a sphere with a radius up to 10 feet, or shape it as a flat surface made up of ten 10-foot-square panels.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of level 7 or higher, the damage increases by 2d6 for each slot level above 6.',
+    classes: ['wizard'],
+  },
+  {
+    id: 'word-of-recall',
+    name: 'Word of Recall',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 6,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 5,
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You and up to five willing creatures within 5 feet of you instantly teleport to a previously designated sanctuary. You and any creatures that teleport with you appear in the nearest unoccupied space to the spot you designated when you prepared your sanctuary.',
+    classes: ['cleric'],
+  },
 ];
 
 // Helper function for lookups

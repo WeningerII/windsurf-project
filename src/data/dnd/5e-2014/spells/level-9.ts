@@ -165,6 +165,226 @@ export const level9Spells: Spell[] = [
       'You briefly stop the flow of time for everyone but yourself. No time passes for other creatures, while you take 1d4 + 1 turns in a row, during which you can use actions and move as normal. This spell ends if one of the actions you use during this period, or any effects that you create during this period, affects a creature other than you or an object owned by someone other than you. In addition, the spell ends if you move to a place more than 1,000 feet from the location where you cast it.',
     classes: ['wizard'],
   },
+  {
+    id: 'astral-projection',
+    name: 'Astral Projection',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 9,
+    school: 'necromancy',
+    castingTime: {
+      type: 'hour',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 10,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'jacinth worth 1,000 gp and silver bar worth 100 gp per creature',
+      materialCost: 1100,
+    },
+    duration: {
+      type: 'special',
+      description: 'Until dispelled',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You and up to eight willing creatures project your astral bodies into the Astral Plane.',
+    classes: ['cleric', 'warlock', 'wizard'],
+  },
+  {
+    id: 'foresight',
+    name: 'Foresight',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 9,
+    school: 'divination',
+    castingTime: {
+      type: 'minute',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a hummingbird feather',
+    },
+    duration: {
+      type: 'hours',
+      hours: 8,
+    },
+    target: '1 willing creature you touch',
+    concentration: false,
+    ritual: false,
+    description:
+      'You touch a willing creature and bestow a limited ability to see into the immediate future. The target has Advantage on attack rolls, ability checks, and saving throws. Other creatures have Disadvantage on attack rolls against it.',
+    classes: ['bard', 'druid', 'warlock', 'wizard'],
+  },
+  {
+    id: 'meteor-swarm',
+    name: 'Meteor Swarm',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 9,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 5280,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 40,
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    damage: {
+      base: {
+        count: 20,
+        die: 'd6',
+        notation: '20d6',
+      },
+      type: 'fire',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'Blazing orbs of fire plummet to the ground at four different points you can see within range. Each creature in a 40-foot-radius Sphere takes 20d6 Fire damage and 20d6 Bludgeoning damage.',
+    classes: ['sorcerer', 'wizard'],
+  },
+  {
+    id: 'power-word-heal',
+    name: 'Power Word Heal',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 9,
+    school: 'enchantment',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'A wave of healing energy washes over one creature you can see within range. The target regains all its Hit Points. If the creature has the Charmed, Frightened, Paralyzed, Poisoned, or Stunned condition, the condition ends.',
+    classes: ['bard', 'cleric'],
+  },
+  {
+    id: 'storm-of-vengeance',
+    name: 'Storm of Vengeance',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 9,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'sight',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 minute',
+    },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 360,
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'A churning storm cloud forms, centered on a point you can see and spreading to a radius of 360 feet. Lightning flashes, thunder booms, and strong winds roar.',
+    classes: ['druid'],
+  },
+  {
+    id: 'weird',
+    name: 'Weird',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 9,
+    school: 'illusion',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 minute',
+    },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 30,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    damage: {
+      base: {
+        count: 4,
+        die: 'd10',
+        notation: '4d10',
+      },
+      type: 'psychic',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'Drawing on the deepest fears of a group of creatures, you create illusory creatures in their minds. Each creature in a 30-foot-radius Sphere must make a Wisdom saving throw.',
+    classes: ['warlock', 'wizard'],
+  },
 ];
 
 // Helper function for lookups
