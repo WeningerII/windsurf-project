@@ -83,9 +83,57 @@ describe('createCharacterWithAi — Daggerheart "Batman"', () => {
     expect(gateway.fetch).not.toHaveBeenCalled(); // no manifest => no LLM call
   });
 
-  it('exposes a manifest for daggerheart but not (yet) for mam3e', () => {
+  it('exposes a manifest for daggerheart but not (yet) for mam3e', async () => {
     expect(hasOptionsManifest('daggerheart')).toBe(true);
-    expect(buildOptionsManifest('daggerheart')).toBeTruthy();
-    expect(buildOptionsManifest('mam3e')).toBeUndefined();
+    expect(await buildOptionsManifest('daggerheart')).toBeTruthy();
+    expect(await buildOptionsManifest('mam3e')).toBeUndefined();
+  });
+});
+
+describe('createCharacterWithAi — D&D 5e "Batman"', () => {
+  it('builds the LLM-authored Rogue with the chosen abilities, validated', async () => {
+    const result = await createCharacterWithAi('dnd-5e-2014', 'Batman', {
+      gateway: gatewayReturning({
+        name: 'Batman',
+        level: 3,
+        selections: {
+          class: 'Rogue',
+          species: 'Human',
+          abilities: { dex: 15, con: 14, wis: 13, int: 12, cha: 10, str: 8 },
+        },
+      }),
+    });
+
+    expect(result.ok).toBe(true);
+    expect(result.document.name).toBe('Batman');
+    const system = result.document.system as {
+      classLevels: Array<{ classId: string }>;
+      level: number;
+      baseAttributes: Record<string, number>;
+    };
+    expect(system.classLevels[0].classId).toBe('rogue'); // authored, not keyword Bard-equivalent
+    expect(system.level).toBe(3);
+    expect(system.baseAttributes.dex).toBeGreaterThanOrEqual(15); // array 15 + racial
+  });
+
+  it("fills a caster's spell list from the model's chosen spell names", async () => {
+    const result = await createCharacterWithAi('dnd-5e-2024', 'a fire wizard', {
+      gateway: gatewayReturning({
+        name: 'Pyra',
+        level: 1,
+        selections: {
+          class: 'Wizard',
+          species: 'Elf',
+          abilities: { int: 15, con: 14, dex: 13, wis: 12, cha: 10, str: 8 },
+          spells: ['Fire Bolt', 'Burning Hands', 'Mage Armor', 'Magic Missile'],
+        },
+      }),
+    });
+
+    expect(result.ok).toBe(true);
+    const known = (result.document.system as { spellcasting?: { spellsKnown: string[] } })
+      .spellcasting?.spellsKnown;
+    expect(known).toContain('fire-bolt'); // resolved from "Fire Bolt"
+    expect(known).toContain('burning-hands');
   });
 });

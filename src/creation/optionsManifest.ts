@@ -2,7 +2,15 @@ import { daggerheartClasses } from '../data/daggerheart/1.0/classes';
 import { daggerheartAncestries } from '../data/daggerheart/1.0/ancestries';
 import { daggerheartCommunities } from '../data/daggerheart/1.0/communities';
 import { LOADOUT_LIMIT } from '../systems/daggerheart/daggerheartSheetConstants';
+import {
+  loadClassesForSystem,
+  loadSpeciesForSystem,
+  loadBackgroundsForSystem,
+} from '../utils/dataLoader';
 import type { GameSystemId } from '../types/game-systems';
+
+const STANDARD_ARRAY = [15, 14, 13, 12, 10, 8];
+const D20_ABILITIES = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
 
 /**
  * Per-system "options manifest" — the compact, machine-readable menu of legal
@@ -43,16 +51,53 @@ function daggerheartManifest(): unknown {
   };
 }
 
-const MANIFEST_BUILDERS: Partial<Record<GameSystemId, () => unknown>> = {
+async function dnd5eManifest(systemId: GameSystemId): Promise<unknown> {
+  const [classes, species, backgrounds] = await Promise.all([
+    loadClassesForSystem(systemId),
+    loadSpeciesForSystem(systemId),
+    loadBackgroundsForSystem(systemId),
+  ]);
+  return {
+    system: systemId,
+    levelRange: [1, 20],
+    abilityMethod: {
+      kind: 'standard-array',
+      array: STANDARD_ARRAY,
+      abilities: D20_ABILITIES,
+      note: 'Assign each array value to exactly one ability (before racial bonuses).',
+    },
+    classes: classes.map((entry) => ({
+      name: entry.name,
+      primaryAbility: entry.primaryAbility,
+      caster: Boolean(entry.spellcasting),
+    })),
+    species: species.map((entry) => entry.name),
+    backgrounds: backgrounds.map((entry) => entry.name),
+    selectionKeys: {
+      class: 'a class name from classes[].name',
+      species: 'a species name from species[]',
+      background: 'a background name from backgrounds[]',
+      abilities: 'object mapping each ability (str/dex/con/int/wis/cha) to one array value',
+      spells:
+        'for caster classes only: an array of spell names this class can learn at this level (cantrips + low level)',
+    },
+  };
+}
+
+const MANIFEST_BUILDERS: Partial<Record<GameSystemId, () => unknown | Promise<unknown>>> = {
   daggerheart: daggerheartManifest,
+  'dnd-5e-2014': () => dnd5eManifest('dnd-5e-2014'),
+  'dnd-5e-2024': () => dnd5eManifest('dnd-5e-2024'),
 };
 
 /**
  * Build the options manifest for a system, or `undefined` if the LLM-author path
- * isn't wired for it yet (the caller then uses deterministic creation).
+ * isn't wired for it yet (the caller then uses deterministic creation). Async so
+ * loader-backed systems can pull their catalogs.
  */
-export function buildOptionsManifest(systemId: GameSystemId): unknown | undefined {
-  return MANIFEST_BUILDERS[systemId]?.();
+export async function buildOptionsManifest(systemId: GameSystemId): Promise<unknown | undefined> {
+  const builder = MANIFEST_BUILDERS[systemId];
+  return builder ? builder() : undefined;
 }
 
 /** Whether the LLM-author path is available for a system. */

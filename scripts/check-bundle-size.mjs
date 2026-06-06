@@ -12,9 +12,11 @@ const budgets = {
   // concentration, opportunity attacks), then 824→828 KiB for the cross-system
   // creation legality gate (per-system validators for all 7 systems), then
   // 828→834 KiB for prompt-driven creation (the orchestrator, per-system creators,
-  // and the prompt-box UI — lazy-loaded, so it stays out of the eager app chunk).
-  // Overridable via env.
-  totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 834 * 1024,
+  // and the prompt-box UI — lazy-loaded, so it stays out of the eager app chunk),
+  // then 834→840 KiB for the LLM-authored build path (the build gateway, the
+  // per-system options manifests, and the creators' selection-resolution layer,
+  // all in the same lazy chunk). Overridable via env.
+  totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 840 * 1024,
   // App (eager) chunk gzip ceiling. SceneManager — which pulls the whole combat /
   // tactical-AI / verticality engine via the rules module — is now React.lazy'd,
   // so that chain lives in an on-demand chunk, NOT the eager app chunk. That drops

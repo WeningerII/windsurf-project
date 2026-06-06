@@ -27,7 +27,7 @@ export async function createCharacterWithAi(
   prompt: string,
   options: AiCreateOptions = {}
 ): Promise<CreationResult> {
-  const manifest = buildOptionsManifest(systemId);
+  const manifest = await buildOptionsManifest(systemId);
   const spec: BuildSpec | undefined = manifest
     ? await requestBuild({ systemId, prompt, manifest }, options.gateway)
     : undefined;

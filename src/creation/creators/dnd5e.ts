@@ -18,22 +18,23 @@ import type { GameSystemId } from '../../types/game-systems';
 import type { Spell } from '../../types/magic/spells';
 import { abilityMod } from '../../utils/math';
 import { pickByKeywordsOrDefault } from '../intent';
-import type { CreationDraft, CreationIntent, SystemCreator } from '../types';
+import type { CreationDraft, CreationIntent, ResolvedSelections, SystemCreator } from '../types';
 
 /**
  * D&D 5e creator, shared by the 2014 and 2024 editions (their data models and
- * the template appliers are interchangeable). It picks class / species /
- * background from the loader-backed catalogs, lays the standard array
- * (15/14/13/12/10/8) with the 15 on the class's primary ability, applies the
- * same templates the sheet uses (which add racial/background grants and set up
- * spell slots), and — for casters — fills a starting spell list from the class's
- * own spells. The engine derives level, proficiency, and HP.
+ * the template appliers are interchangeable). With no `resolved`, it picks
+ * class/species/background by keyword, lays the standard array (15 on the
+ * class's primary ability), and auto-fills a caster's spells. With `resolved`
+ * (the LLM author's pre-sanitized picks), each of those is taken from the model
+ * when it resolves against the catalog and falls back per field otherwise — so
+ * a "Batman" lands as a stealthy Rogue with the abilities/spells the model chose.
  */
 
 type Dnd5eLike = Dnd5eDataModel | Dnd5e2024DataModel;
 
 const MAX_LEVEL = 20;
 const STANDARD_ARRAY = [15, 14, 13, 12, 10, 8];
+const ABILITY_IDS = ['str', 'dex', 'con', 'int', 'wis', 'cha'] as const;
 // Fallback priority for the non-primary abilities (survivability first).
 const ABILITY_PRIORITY = ['con', 'dex', 'wis', 'str', 'int', 'cha'];
 const DEFAULT_CANTRIPS_KNOWN = 3;
@@ -45,7 +46,7 @@ function createDnd5eCreator<T extends Dnd5eLike>(
 ): SystemCreator<T> {
   return {
     systemId,
-    async build(intent: CreationIntent): Promise<CreationDraft<T>> {
+    async build(intent: CreationIntent, resolved?: ResolvedSelections): Promise<CreationDraft<T>> {
       const [classes, species, backgrounds, spells] = await Promise.all([
         loadClassesForSystem(systemId),
         loadSpeciesForSystem(systemId),
@@ -53,25 +54,30 @@ function createDnd5eCreator<T extends Dnd5eLike>(
         loadSpellsForSystem(systemId),
       ]);
 
-      const cls = pickByKeywordsOrDefault(
-        intent.tokens,
-        classes,
-        (entry) => [entry.name, entry.id],
-        classes[0]
-      );
-      const speciesChoice = pickByKeywordsOrDefault(
-        intent.tokens,
-        species,
-        (entry) => [entry.name, entry.id],
-        species[0]
-      );
+      const cls =
+        byName(classes, asString(resolved?.class)) ??
+        pickByKeywordsOrDefault(
+          intent.tokens,
+          classes,
+          (entry) => [entry.name, entry.id],
+          classes[0]
+        );
+      const speciesChoice =
+        byName(species, asString(resolved?.species)) ??
+        pickByKeywordsOrDefault(
+          intent.tokens,
+          species,
+          (entry) => [entry.name, entry.id],
+          species[0]
+        );
       const background = backgrounds.length
-        ? pickByKeywordsOrDefault(
+        ? (byName(backgrounds, asString(resolved?.background)) ??
+          pickByKeywordsOrDefault(
             intent.tokens,
             backgrounds,
             (entry) => [entry.name, entry.id],
             backgrounds[0]
-          )
+          ))
         : undefined;
 
       const level = Math.min(MAX_LEVEL, intent.level);
@@ -85,16 +91,17 @@ function createDnd5eCreator<T extends Dnd5eLike>(
         updatedAt: new Date(0),
       };
 
-      // Standard array first so the species template's ability bonuses stack on
-      // top, matching point-buy-then-racial order.
-      document.system.baseAttributes = assignStandardArray(cls);
+      // Standard array first so the species template's bonuses stack on top.
+      document.system.baseAttributes = resolveAbilities(resolved) ?? assignStandardArray(cls);
 
       document = applyDnd5eClassTemplate(document, cls, level);
       document = applyDnd5eSpeciesTemplate(document, speciesChoice);
       if (background) {
         document = applyDnd5eBackgroundTemplate(document, background);
       }
-      selectStartingSpells(document.system, cls, spells);
+      if (!applyResolvedSpells(document.system, cls, spells, resolved)) {
+        selectStartingSpells(document.system, cls, spells);
+      }
 
       const name = intent.name ?? `${speciesChoice.name} ${cls.name}`;
       return { name, system: document.system };
@@ -102,33 +109,72 @@ function createDnd5eCreator<T extends Dnd5eLike>(
   };
 }
 
-/**
- * Fill a caster's starting spell list from the class's own spells. The class
- * template has already set up `spellcasting` with slots; this picks cantrips and
- * leveled spells (lowest level first, deterministic by name) up to the class's
- * known/prepared counts. Prepared casters also get those leveled spells marked
- * prepared. Non-casters (no spellcasting) are left untouched.
- */
+// --- LLM-resolution helpers (return undefined/false → deterministic path) ---
+
+/** Use the model's ability spread only if it's exactly the standard array. */
+function resolveAbilities(resolved?: ResolvedSelections): Record<string, number> | undefined {
+  const raw = resolved?.abilities;
+  if (!raw || typeof raw !== 'object') return undefined;
+  const source = raw as Record<string, unknown>;
+
+  const scores: Record<string, number> = {};
+  for (const ability of ABILITY_IDS) {
+    const value = source[ability];
+    if (typeof value !== 'number' || !Number.isInteger(value)) return undefined;
+    scores[ability] = value;
+  }
+  const sorted = ABILITY_IDS.map((ability) => scores[ability]).sort((a, b) => b - a);
+  if (!sorted.every((value, index) => value === STANDARD_ARRAY[index])) return undefined;
+  return scores;
+}
+
+/** Fill the spell list from the model's chosen spell names; false → caller auto-fills. */
+function applyResolvedSpells(
+  system: Dnd5eLike,
+  classData: CharacterClass,
+  spells: Spell[],
+  resolved?: ResolvedSelections
+): boolean {
+  const spellcasting = system.spellcasting;
+  const progression = classData.spellcasting;
+  const names = asStringArray(resolved?.spells);
+  if (!spellcasting || !progression || !names) return false;
+
+  const classSpells = spells.filter((spell) => spell.classes?.includes(classData.id));
+  const topLevel = maxSpellLevel(system);
+
+  const cantrips: string[] = [];
+  const leveled: string[] = [];
+  const used = new Set<string>();
+  for (const name of names) {
+    const spell = classSpells.find((entry) => matchesName(entry.name, name));
+    if (!spell || used.has(spell.id) || spell.level > topLevel) continue;
+    used.add(spell.id);
+    (spell.level === 0 ? cantrips : leveled).push(spell.id);
+  }
+  if (cantrips.length === 0 && leveled.length === 0) return false;
+
+  spellcasting.spellsKnown = [...cantrips, ...leveled];
+  spellcasting.spellsPrepared = progression.preparedCasterFormula ? leveled : [];
+  return true;
+}
+
+// --- Deterministic helpers (the fallback path) ---
+
 function selectStartingSpells(system: Dnd5eLike, classData: CharacterClass, spells: Spell[]): void {
   const spellcasting = system.spellcasting;
   const progression = classData.spellcasting;
   if (!spellcasting || !progression) return;
 
   const levelIndex = Math.max(0, system.level - 1);
-  let maxSpellLevel = 0;
-  for (let slot = 1; slot <= 9; slot += 1) {
-    if (spellcasting.spellSlots[slot as keyof typeof spellcasting.spellSlots].max > 0) {
-      maxSpellLevel = slot;
-    }
-  }
-  const topLevel = Math.max(1, maxSpellLevel);
+  const topLevel = maxSpellLevel(system);
 
   const classSpells = spells.filter((spell) => spell.classes?.includes(classData.id));
-  const byName = (a: Spell, b: Spell) => a.name.localeCompare(b.name);
-  const cantrips = classSpells.filter((spell) => spell.level === 0).sort(byName);
+  const byNameSort = (a: Spell, b: Spell) => a.name.localeCompare(b.name);
+  const cantrips = classSpells.filter((spell) => spell.level === 0).sort(byNameSort);
   const leveled = classSpells
     .filter((spell) => spell.level >= 1 && spell.level <= topLevel)
-    .sort((a, b) => a.level - b.level || byName(a, b));
+    .sort((a, b) => a.level - b.level || byNameSort(a, b));
 
   const cantripCount = clamp(
     progression.cantripsKnown?.[levelIndex] ?? DEFAULT_CANTRIPS_KNOWN,
@@ -151,10 +197,6 @@ function selectStartingSpells(system: Dnd5eLike, classData: CharacterClass, spel
   spellcasting.spellsPrepared = isPrepared ? chosenLeveled : [];
 }
 
-function clamp(value: number, min: number, max: number): number {
-  return Math.min(max, Math.max(min, Math.floor(value)));
-}
-
 function assignStandardArray(cls: CharacterClass): Record<string, number> {
   const primary = (cls.primaryAbility?.[0] ?? 'str').toLowerCase();
   const order = [primary, ...ABILITY_PRIORITY.filter((ability) => ability !== primary)];
@@ -162,6 +204,42 @@ function assignStandardArray(cls: CharacterClass): Record<string, number> {
     result[ability] = STANDARD_ARRAY[index] ?? 10;
     return result;
   }, {});
+}
+
+// --- Small utilities ---
+
+function maxSpellLevel(system: Dnd5eLike): number {
+  const slots = system.spellcasting?.spellSlots;
+  let top = 0;
+  if (slots) {
+    for (let slot = 1; slot <= 9; slot += 1) {
+      if (slots[slot as keyof typeof slots].max > 0) top = slot;
+    }
+  }
+  return Math.max(1, top);
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, Math.floor(value)));
+}
+
+function asString(value: unknown): string | undefined {
+  return typeof value === 'string' && value.trim().length > 0 ? value.trim() : undefined;
+}
+
+function asStringArray(value: unknown): string[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const strings = value.filter((entry): entry is string => typeof entry === 'string');
+  return strings.length > 0 ? strings : undefined;
+}
+
+function matchesName(candidate: string, value: string): boolean {
+  return candidate.toLowerCase() === value.toLowerCase();
+}
+
+function byName<T extends { name: string }>(list: T[], value: string | undefined): T | undefined {
+  if (value === undefined) return undefined;
+  return list.find((entry) => matchesName(entry.name, value));
 }
 
 export const dnd5e2014Creator: SystemCreator<Dnd5eDataModel> = createDnd5eCreator(

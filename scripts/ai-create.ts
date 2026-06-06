@@ -46,7 +46,7 @@ async function main(): Promise<void> {
 
   registerAllSystems();
 
-  const manifest = buildOptionsManifest(systemId as GameSystemId);
+  const manifest = await buildOptionsManifest(systemId as GameSystemId);
   if (!manifest) {
     console.error(`No LLM-author manifest is wired for '${systemId}' yet (deterministic only).`);
     process.exit(1);
