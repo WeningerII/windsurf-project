@@ -87,40 +87,6 @@ export const cantrips: Spell[] = [
     },
   },
   {
-    id: 'bleed-35e',
-    name: 'Bleed',
-    system: 'dnd-3.5e',
-    source: 'SRD 3.5',
-    level: 0,
-    school: 'necromancy',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 30,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'instant',
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      'You cause a living creature that has 0 hit points but is still alive to resume dying. The creature drops to -1 hit points and is dying.',
-    classes: ['cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 0,
-      sorcerer: 0,
-      wizard: 0,
-    },
-  },
-  {
     id: 'chill-35e',
     name: 'Chill Touch',
     system: 'dnd-3.5e',

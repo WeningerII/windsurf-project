@@ -668,41 +668,6 @@ export const level7Spells: Spell[] = [
     },
   },
   {
-    id: 'mass-misdirection-35e',
-    name: 'Mass Misdirection',
-    system: 'dnd-3.5e',
-    source: 'SRD 3.5',
-    level: 7,
-    school: 'illusion',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 30,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'A small object from the creature that the illusion is to be based on',
-    },
-    duration: {
-      type: 'hours',
-      hours: 8,
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      "This spell functions like misdirection, except that it affects up to one creature per caster level, and you can redirect each creature's sensory input separately.",
-    classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 7,
-      wizard: 7,
-    },
-  },
-  {
     id: 'power-word-blind-35e',
     name: 'Power Word Blind',
     system: 'dnd-3.5e',
@@ -925,39 +890,6 @@ export const level7Spells: Spell[] = [
     classes: ['cleric'],
     levelsByClass: {
       cleric: 7,
-    },
-  },
-  {
-    id: 'reversal-of-fortune-35e',
-    name: 'Reversal of Fortune',
-    system: 'dnd-3.5e',
-    source: 'SRD 3.5',
-    level: 7,
-    school: 'evocation',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 30,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'instant',
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      'You can reverse the results of a single d20 roll made by a creature you can see within range. You can choose to use this ability after the roll is made but before the outcome is determined.',
-    classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 7,
-      wizard: 7,
     },
   },
   {

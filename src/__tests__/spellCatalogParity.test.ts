@@ -18,11 +18,10 @@ type SpellModule = {
   allSpells: Spell[];
 };
 
-const DND35E_SOURCE_BLOCKED_SPELL_IDS = [
-  'bleed-35e',
-  'mass-misdirection-35e',
-  'reversal-of-fortune-35e',
-] as const;
+// Every shipped 3.5e spell now carries a canonical d20srd.org source URL.
+// The three previously source-blocked entries (Bleed, Mass Misdirection,
+// Reversal of Fortune) were not part of the SRD 3.5 and have been removed.
+const DND35E_SOURCE_BLOCKED_SPELL_IDS: readonly string[] = [];
 
 // These AoN source pages do not expose a Saving Throw row. Keep this list
 // explicit so source-backed PF1e save coverage cannot regress silently.
