@@ -2741,8 +2741,8 @@ export const level1Spells: Spell[] = [
     },
   },
   {
-    id: 'nystuls-magic-aura-35e',
-    name: 'Nystul’s Magic Aura',
+    id: 'magic-aura-35e',
+    name: 'Magic Aura',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     sourceUrl: 'https://www.d20srd.org/srd/spells/nystulsMagicAura.htm',

@@ -1357,8 +1357,8 @@ export const level9Spells: Spell[] = [
     },
   },
   {
-    id: 'mordenkainens-disjunction-35e',
-    name: "Mordenkainen's Disjunction",
+    id: 'disjunction-35e',
+    name: 'Disjunction',
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     sourceUrl: 'https://www.d20srd.org/srd/spells/mordenkainensDisjunction.htm',

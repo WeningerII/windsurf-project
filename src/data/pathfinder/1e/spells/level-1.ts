@@ -1816,11 +1816,11 @@ export const level1Spells: Spell[] = [
     },
   },
   {
-    id: 'pf1e-nystuls-magic-aura',
-    name: 'Nystul’s Magic Aura',
+    id: 'pf1e-magic-aura',
+    name: 'Magic Aura',
     system: 'pf1e',
     source: 'Core Rulebook',
-    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Nystul%E2%80%99s%20Magic%20Aura',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Magic%20Aura',
     level: 1,
     school: 'illusion',
     castingTime: {

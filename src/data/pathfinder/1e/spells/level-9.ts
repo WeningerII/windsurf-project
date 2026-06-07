@@ -667,11 +667,11 @@ export const level9Spells: Spell[] = [
     },
   },
   {
-    id: 'pf1e-mordenkainens-disjunction',
-    name: "Mordenkainen's Disjunction",
+    id: 'pf1e-disjunction',
+    name: 'Disjunction',
     system: 'pf1e',
     source: 'Core Rulebook',
-    sourceUrl: "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Mordenkainen's%20Disjunction",
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Disjunction',
     level: 9,
     school: 'abjuration',
     castingTime: {

@@ -104,7 +104,7 @@ const PF1E_SOURCE_ROWS_WITHOUT_SAVING_THROW = [
   'pf1e-misdirection',
   'pf1e-moment-of-prescience',
   'pf1e-mount',
-  'pf1e-nystuls-magic-aura',
+  'pf1e-magic-aura',
   'pf1e-overland-flight',
   'pf1e-owls-wisdom-mass',
   'pf1e-permanent-image',
