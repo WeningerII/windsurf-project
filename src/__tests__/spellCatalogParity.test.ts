@@ -196,7 +196,11 @@ const fieldCoverageBaselines: Array<{
     label: 'dnd-5e-2024',
     module: dnd5e2024SpellsModule,
     minimums: {
-      browserMetadata: 113,
+      // Recalibrated after realigning the catalog to the SRD 5.2 spell list
+      // (open5e, CC-BY): non-SRD entries removed, missing SRD spells added.
+      // The added spells carry full mechanical data; the curated browser
+      // target/effect summaries (absent on most of the catalog) recount here.
+      browserMetadata: 109,
       heightening: 101,
     },
   },

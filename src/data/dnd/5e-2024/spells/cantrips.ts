@@ -54,35 +54,6 @@ export const cantrips: Spell[] = [
     classes: ['sorcerer', 'wizard'],
   },
   {
-    id: 'blade-ward',
-    name: 'Blade Ward',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 0,
-    school: 'abjuration',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'self',
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'concentration',
-      maxDuration: '1 minute',
-    },
-    concentration: true,
-    ritual: false,
-    description:
-      'Whenever a creature makes an attack roll against you before the spell ends, the attacker subtracts 1d4 from the attack roll.',
-    classes: ['bard', 'sorcerer', 'warlock', 'wizard'],
-  },
-  {
     id: 'chill-touch',
     name: 'Chill Touch',
     system: 'dnd-5e-2024',
@@ -247,44 +218,6 @@ export const cantrips: Spell[] = [
     atHigherLevels:
       'The damage increases by 1d10 when you reach levels 5 (2d10), 11 (3d10), and 17 (4d10).',
     classes: ['sorcerer', 'wizard'],
-  },
-  {
-    id: 'friends',
-    name: 'Friends',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 0,
-    school: 'enchantment',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 10,
-    },
-    components: {
-      verbal: false,
-      somatic: true,
-      material: true,
-      materialDescription: 'some makeup',
-    },
-    duration: {
-      type: 'concentration',
-      maxDuration: '1 minute',
-    },
-    target: '1 creature you can see within range',
-    savingThrow: {
-      attribute: 'wis',
-      success: 'none',
-    },
-    savingThrowText:
-      "The target succeeds automatically if it isn't a Humanoid, if you're fighting it, or if you cast Friends on it within the past 24 hours.",
-    concentration: true,
-    ritual: false,
-    description:
-      "You magically emanate a sense of friendship toward one creature you can see within range. The target must succeed on a Wisdom saving throw or have the Charmed condition for the duration. The target succeeds automatically if it isn't a Humanoid, if you're fighting it, or if you have cast this spell on it within the past 24 hours.",
-    classes: ['bard', 'sorcerer', 'warlock', 'wizard'],
   },
   {
     id: 'guidance',
@@ -870,54 +803,6 @@ export const cantrips: Spell[] = [
     classes: ['cleric'],
   },
   {
-    id: 'thorn-whip',
-    name: 'Thorn Whip',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 0,
-    school: 'transmutation',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 30,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'instant',
-    },
-    attackRoll: true,
-    damage: {
-      base: {
-        count: 1,
-        die: 'd6',
-        notation: '1d6',
-      },
-      type: 'piercing',
-      scaling: {
-        type: 'character-level',
-        increment: {
-          count: 1,
-          die: 'd6',
-          notation: '1d6',
-        },
-      },
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      'You create a long, vine-like whip covered in thorns that lashes out at your command. Make a melee spell attack. On a hit, the target takes 1d6 Piercing damage, and if it is Large or smaller, you can pull it up to 10 feet closer.',
-    atHigherLevels:
-      'The damage increases by 1d6 when you reach levels 5 (2d6), 11 (3d6), and 17 (4d6).',
-    classes: ['druid'],
-  },
-  {
     id: 'true-strike',
     name: 'True Strike',
     system: 'dnd-5e-2024',
@@ -1043,5 +928,114 @@ export const cantrips: Spell[] = [
     classes: ['druid'],
     system: 'dnd-5e-2024',
     source: 'SRD 5.2',
+  },
+  {
+    id: 'elementalism',
+    name: 'Elementalism',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 0,
+    school: 'transmutation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      "You exert control over the elements, creating one of the following effects within range.\n\n***Beckon Air.*** You create a breeze strong enough to ripple cloth, stir dust, rustle leaves, and close open doors and shutters, all in a 5-foot Cube. Doors and shutters being held open by someone or something aren't affected.\n\n***Beckon Earth.*** You create a thin shroud of dust or sand that covers surfaces in a 5-foot-square area, or you cause a single word to appear in your handwriting in a patch of dirt or sand.\n\n***Beckon Fire.*** You create a thin cloud of harmless embers and colored, scented smoke in a 5-foot Cube. You choose the color and scent, and the embers can light candles, torches, or lamps in that area. The smoke's scent lingers for 1 minute.\n\n***Beckon Water.*** You create a spray of cool mist that lightly dampens creatures and objects in a 5-foot Cube. Alternatively, you create 1 cup of clean water either in an open container or on a surface, and the water evaporates in 1 minute.\n\n***Sculpt Element.*** You cause dirt, sand, fire, smoke, mist, or water that can fit in a 1-foot Cube to assume a crude shape (such as that of a creature) for 1 hour.",
+    classes: ['druid', 'sorcerer', 'wizard'],
+  },
+  {
+    id: 'sorcerous-burst',
+    name: 'Sorcerous Burst',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 0,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    attackRoll: true,
+    concentration: false,
+    ritual: false,
+    description:
+      "You cast sorcerous energy at one creature or object within range. Make a ranged spell attack against the target. On a hit, the target takes 1d8 damage of a type you choose: Acid, Cold, Fire, Lightning, Poison, Psychic, or Thunder. If you roll an 8 on a d8 for this spell, you can roll another d8, and add it to the damage. When you cast this spell, the maximum number of these d8s you can add to the spell's damage equals your spellcasting ability modifier.",
+    atHigherLevels:
+      'The damage increases by 1d8 when you reach levels 5 (2d8), 11 (3d8), and 17 (4d8).',
+    classes: ['sorcerer'],
+  },
+  {
+    id: 'starry-wisp',
+    name: 'Starry Wisp',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 0,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    attackRoll: true,
+    damage: {
+      base: {
+        count: 1,
+        die: 'd8',
+        notation: '1d8',
+      },
+      type: 'radiant',
+      scaling: {
+        type: 'character-level',
+        increment: {
+          count: 1,
+          die: 'd8',
+          notation: '1d8',
+        },
+      },
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      "You launch a mote of light at one creature or object within range. Make a ranged spell attack against the target. On a hit, the target takes 1d8 Radiant damage, and until the end of your next turn, it emits Dim Light in a 10-foot radius and can't benefit from the Invisible condition.",
+    atHigherLevels:
+      'The damage increases by 1d8 when you reach levels 5 (2d8), 11 (3d8), and 17 (4d8).',
+    classes: ['bard', 'druid'],
   },
 ];

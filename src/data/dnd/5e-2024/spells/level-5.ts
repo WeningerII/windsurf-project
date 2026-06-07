@@ -73,38 +73,6 @@ export const level5Spells: Spell[] = [
     classes: ['bard', 'druid'],
   },
   {
-    id: 'circle-of-teleportation',
-    name: 'Circle of Teleportation',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 5,
-    school: 'conjuration',
-    castingTime: {
-      type: 'minute',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 10,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription:
-        'rare chalks and inks infused with precious gems worth 50 gp, which the spell consumes',
-    },
-    duration: {
-      type: 'hours',
-      hours: 1,
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      'As you cast this spell, you draw a 10-foot-diameter circle on the ground inscribed with sigils that link your location to a permanent teleportation circle of your choice whose sigil sequence you know and that is on the same plane of existence as you. A shimmering portal opens within the circle you drew and remains open until the end of your next turn. Any creature that enters the portal instantly appears within 5 feet of the destination circle or in the nearest unoccupied space if that space is occupied.',
-    classes: ['bard', 'sorcerer', 'wizard'],
-  },
-  {
     id: 'cloudkill',
     name: 'Cloudkill',
     system: 'dnd-5e-2024',
@@ -259,55 +227,6 @@ export const level5Spells: Spell[] = [
     description:
       'You mentally contact a demigod, the spirit of a long-dead sage, or some other mysterious entity from another plane. You can ask the entity up to five questions. You must ask your questions before the spell ends.',
     classes: ['warlock', 'wizard'],
-  },
-  {
-    id: 'conjure-volley',
-    name: 'Conjure Volley',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 5,
-    school: 'conjuration',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 150,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'a Melee or Ranged weapon worth at least 1 CP',
-    },
-    duration: {
-      type: 'instant',
-    },
-    areaOfEffect: {
-      type: 'cylinder',
-      radius: 10,
-      height: 20,
-    },
-    savingThrow: {
-      attribute: 'dex',
-      success: 'half',
-    },
-    damage: {
-      base: {
-        count: 8,
-        die: 'd8',
-        notation: '8d8',
-      },
-      type: 'force',
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      'You throw a weapon or fire a piece of ammunition into the air and choose a point you can see within range. Countless spectral weapons rain down in a 20-foot-high, 10-foot-radius cylinder centered on that point and disappear. Each creature of your choice that you can see in the area must make a Dexterity saving throw, taking 8d8 Force damage on a failed save or half as much damage on a successful one. The spell then teleports the material component back to your hand.',
-    atHigherLevels:
-      'When you cast this spell using a spell slot of level 6 or higher, the damage increases by 1d8 for each slot level above 5.',
-    classes: ['ranger'],
   },
   {
     id: 'contagion',
@@ -1019,36 +938,6 @@ export const level5Spells: Spell[] = [
     classes: ['bard', 'sorcerer', 'warlock', 'wizard'],
   },
   {
-    id: 'transmute-rock',
-    name: 'Transmute Rock',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 5,
-    school: 'transmutation',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 120,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'clay and stone worth at least 1 gp',
-    },
-    duration: {
-      type: 'instant',
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      'You choose an area of stone or mud that you can see that fits within a 40-foot cube and is within range, and choose one of the following effects. Transmute Rock to Mud, Transmute Mud to Rock.',
-    classes: ['druid', 'wizard'],
-  },
-  {
     id: 'wall-of-force',
     name: 'Wall of Force',
     system: 'dnd-5e-2024',
@@ -1178,5 +1067,256 @@ export const level5Spells: Spell[] = [
     description:
       'You touch a point and infuse an area around it with holy or unholy power. The area can’t overlap with another active Hallow spell, and you can bind an additional sacred or profane rider to the warded space, such as fear warding, silence, or planar exclusion.',
     classes: ['cleric'],
+  },
+  {
+    id: 'antilife-shell',
+    name: 'Antilife Shell',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 5,
+    school: 'abjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: 'see text',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'An aura extends from you in a 10-foot Emanation for the duration. The aura prevents creatures other than Constructs and Undead from passing or reaching through it. An affected creature can cast spells or make attacks with Ranged or Reach weapons through the barrier. If you move so that an affected creature is forced to pass through the barrier, the spell ends.',
+    classes: ['druid'],
+  },
+  {
+    id: 'arcane-hand',
+    name: 'Arcane Hand',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 5,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'an eggshell and a glove',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: 'see text',
+    },
+    concentration: true,
+    ritual: false,
+    attackRoll: true,
+    description:
+      "You create a Large hand of shimmering magical energy in an unoccupied space that you can see within range. The hand lasts for the duration, and it moves at your command, mimicking the movements of your own hand. The hand is an object that has AC 20 and Hit Points equal to your Hit Point maximum. If it drops to 0 Hit Points, the spell ends. The hand doesn't occupy its space. When you cast the spell and as a Bonus Action on your later turns, you can move the hand up to 60 feet and then cause one of the following effects:\n\n**Clenched Fist.** The hand strikes a target within 5 feet of it. Make a melee spell attack. On a hit, the target takes 5d8 Force damage.\n\n**Forceful Hand.** The hand attempts to push a Huge or smaller creature within 5 feet of it. The target must succeed on a Strength saving throw, or the hand pushes the target up to 5 feet plus a number of feet equal to five times your spellcasting ability modifier. The hand moves with the target, remaining within 5 feet of it.\n\n**Grasping Hand.** The hand attempts to grapple a Huge or smaller creature within 5 feet of it. The target must succeed on a Dexterity saving throw, or the target has the Grappled condition, with an escape DC equal to your spell save DC. While the hand grapples the target, you can take a Bonus Action to cause the hand to crush it, dealing Bludgeoning damage to the target equal to 4d6 plus your spellcasting ability modifier.\n\n**Interposing Hand.** The hand grants you Half Cover against attacks and other effects that originate from its space or that pass through it. In addition, its space counts as Difficult Terrain for your enemies.",
+    atHigherLevels:
+      'The damage of the Clenched Fist increases by 2d8 and the damage of the Grasping Hand increases by 2d6 for each spell slot level above 5.',
+    classes: ['sorcerer', 'wizard'],
+  },
+  {
+    id: 'commune-with-nature',
+    name: 'Commune with Nature',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 5,
+    school: 'divination',
+    castingTime: {
+      type: 'minute',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    concentration: false,
+    ritual: true,
+    description:
+      "You commune with nature spirits and gain knowledge of the surrounding area. In the outdoors, the spell gives you knowledge of the area within 3 miles of you. In caves and other natural underground settings, the radius is limited to 300 feet. The spell doesn't function where nature has been replaced by construction, such as in castles and settlements. Choose three of the following facts; you learn those facts as they pertain to the spell's area: - Locations of settlements - Locations of portals to other planes of existence - Location of one Challenge Rating 10+ creature (GM's choice) that is a Celestial, an Elemental, a Fey, a Fiend, or an Undead - The most prevalent kind of plant, mineral, or Beast (you choose which to learn) - Locations of bodies of water For example, you could determine the location of a powerful monster in the area, the locations of bodies of water, and the locations of any towns.",
+    classes: ['druid', 'ranger'],
+  },
+  {
+    id: 'modify-memory',
+    name: 'Modify Memory',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 5,
+    school: 'enchantment',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: 'see text',
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Wisdom saving throw',
+    concentration: true,
+    ritual: false,
+    description:
+      "You attempt to reshape another creature's memories. One creature that you can see within range makes a Wisdom saving throw. If you are fighting the creature, it has Advantage on the save. On a failed save, the target has the Charmed condition for the duration. While Charmed in this way, the target also has the Incapacitated condition and is unaware of its surroundings, though it can hear you. If it takes any damage or is targeted by another spell, this spell ends, and no memories are modified. While this charm lasts, you can affect the target's memory of an event that it experienced within the last 24 hours and that lasted no more than 10 minutes. You can permanently eliminate all memory of the event, allow the target to recall the event with perfect clarity, change its memory of the event's details, or create a memory of some other event. You must speak to the target to describe how its memories are affected, and it must be able to understand your language for the modified memories to take root. Its mind fills in any gaps in the details of your description. If the spell ends before you finish describing the modified memories, the creature's memory isn't altered. Otherwise, the modified memories take hold when the spell ends. A modified memory doesn't necessarily affect how a creature behaves, particularly if the memory contradicts the creature's natural inclinations, alignment, or beliefs. An illogical modified memory, such as a false memory of how much the creature enjoyed swimming in acid, is dismissed as a bad dream. The GM might deem a modified memory too nonsensical to affect a creature. A Remove Curse or Greater Restoration spell cast on the target restores the creature's true memory.",
+    atHigherLevels:
+      "You can alter the target's memories of an event that took place up to 7 days ago (level 6 spell slot), 30 days ago (level 7 spell slot), 365 days ago (level 8 spell slot), or any time in the creature's past (level 9 spell slot).",
+    classes: ['bard', 'wizard'],
+  },
+  {
+    id: 'reincarnate',
+    name: 'Reincarnate',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 5,
+    school: 'necromancy',
+    castingTime: {
+      type: 'hour',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'rare oils worth 1,000+ GP, which the spell consumes',
+      materialConsumed: true,
+    },
+    duration: {
+      type: 'instant',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      "You touch a dead Humanoid or a piece of one. If the creature has been dead no longer than 10 days, the spell forms a new body for it and calls the soul to enter that body. Roll 1d10 and consult the table below to determine the body's species, or the GM chooses another playable species.\n\n| 1d10 | Species |\n|---|---|\n| 1 | Roll again. |\n| 2 | Dragonborn |\n| 3 | Dwarf |\n| 4 | Elf |\n| 5 | Gnome |\n| 6 | Goliath |\n| 7 | Halfling |\n| 8 | Human |\n| 9 | Orc |\n| 10 | Tiefling |\n\nThe reincarnated creature makes any choices that a species' description offers, and the creature recalls its former life. It retains the capabilities it had in its original form, except it loses the traits of its previous species and gains the traits of its new one.",
+    classes: ['druid'],
+  },
+  {
+    id: 'summon-dragon',
+    name: 'Summon Dragon',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 5,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'an object with the image of a dragon engraved on it worth 500+ GP',
+      materialConsumed: true,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: 'see text',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      "You call forth a Dragon spirit. It manifests in an unoccupied space that you can see within range and uses the Draconic Spirit stat block. The creature disappears when it drops to 0 Hit Points or when the spell ends. The creature is an ally to you and your allies. In combat, the creature shares your Initiative count, but it takes its turn immediately after yours. It obeys your verbal commands (no action required by you). If you don't issue any, it takes the Dodge action and uses its movement to avoid danger.",
+    atHigherLevels: "Use the spell slot's level for the spell's level in the stat block.",
+    classes: ['wizard'],
+  },
+  {
+    id: 'telepathic-bond',
+    name: 'Telepathic Bond',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 5,
+    school: 'divination',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'two eggs',
+    },
+    duration: {
+      type: 'hours',
+      hours: 1,
+    },
+    concentration: false,
+    ritual: true,
+    description:
+      "You forge a telepathic link among up to eight willing creatures of your choice within range, psychically linking each creature to all the others for the duration. Creatures that can't communicate in any languages aren't affected by this spell. Until the spell ends, the targets can communicate telepathically through the bond whether or not they share a language. The communication is possible over any distance, though it can't extend to other planes of existence.",
+    classes: ['bard', 'wizard'],
+  },
+  {
+    id: 'tree-stride',
+    name: 'Tree Stride',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 5,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: 'see text',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      "You gain the ability to enter a tree and move from inside it to inside another tree of the same kind within 500 feet. Both trees must be living and at least the same size as you. You must use 5 feet of movement to enter a tree. You instantly know the location of all other trees of the same kind within 500 feet and, as part of the move used to enter the tree, can either pass into one of those trees or step out of the tree you're in. You appear in a spot of your choice within 5 feet of the destination tree, using another 5 feet of movement. If you have no movement left, you appear within 5 feet of the tree you entered. You can use this transportation ability only once on each of your turns. You must end each turn outside a tree.",
+    classes: ['druid', 'ranger'],
   },
 ];

@@ -290,38 +290,6 @@ export const level7Spells: Spell[] = [
     classes: ['bard', 'druid', 'wizard'],
   },
   {
-    id: 'mordenkainens-magnificent-mansion',
-    name: "Mordenkainen's Magnificent Mansion",
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 7,
-    school: 'conjuration',
-    castingTime: {
-      type: 'minute',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 300,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'a miniature portal carved from ivory worth 5 gp',
-      materialCost: 5,
-    },
-    duration: {
-      type: 'hours',
-      hours: 24,
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      'You conjure an extradimensional dwelling in range that lasts for the duration. You choose where its one entrance is located. The dwelling has 50 rooms. The atmosphere is clean, fresh, and warm.',
-    classes: ['bard', 'wizard'],
-  },
-  {
     id: 'plane-shift',
     name: 'Plane Shift',
     system: 'dnd-5e-2024',
@@ -649,5 +617,82 @@ export const level7Spells: Spell[] = [
     description:
       'This spell instantly transports you and up to eight willing creatures of your choice that you can see within range, or a single object, to a destination you select. The accuracy of teleportation depends on your familiarity.',
     classes: ['bard', 'sorcerer', 'wizard'],
+  },
+  {
+    id: 'arcane-sword',
+    name: 'Arcane Sword',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 7,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 90,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a miniature sword worth 250+ GP',
+      materialConsumed: true,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: 'see text',
+    },
+    attackRoll: true,
+    damage: {
+      base: {
+        count: 4,
+        die: 'd12',
+        notation: '4d12',
+      },
+      type: 'force',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'You create a spectral sword that hovers within range. It lasts for the duration. When the sword appears, you make a melee spell attack against a target within 5 feet of the sword. On a hit, the target takes Force damage equal to 4d12 plus your spellcasting ability modifier. On your later turns, you can take a Bonus Action to move the sword up to 30 feet to a spot you can see and repeat the attack against the same target or a different one.',
+    classes: ['bard', 'wizard'],
+  },
+  {
+    id: 'magnificent-mansion',
+    name: 'Magnificent Mansion',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 7,
+    school: 'conjuration',
+    castingTime: {
+      type: 'minute',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 300,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a miniature door worth 15+ GP',
+      materialConsumed: true,
+    },
+    duration: {
+      type: 'hours',
+      hours: 24,
+    },
+    areaOfEffect: {
+      type: 'cube',
+      feet: 10,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      "You conjure a shimmering door in range that lasts for the duration. The door leads to an extradimensional dwelling and is 5 feet wide and 10 feet tall. You and any creature you designate when you cast the spell can enter the extradimensional dwelling as long as the door remains open. You can open or close it (no action required) if you are within 30 feet of it. While closed, the door is imperceptible. Beyond the door is a magnificent foyer with numerous chambers beyond. The dwelling's atmosphere is clean, fresh, and warm. You can create any floor plan you like for the dwelling, but it can't exceed 50 contiguous 10-foot Cubes. The place is furnished and decorated as you choose. It contains sufficient food to serve a ninecourse banquet for up to 100 people. Furnishings and other objects created by this spell dissipate into smoke if removed from it. A staff of 100 near-transparent servants attends all who enter. You determine the appearance of these servants and their attire. They are invulnerable and obey your commands. Each servant can perform tasks that a human could perform, but they can't attack or take any action that would directly harm another creature. Thus the servants can fetch things, clean, mend, fold clothes, light fires, serve food, pour wine, and so on. The servants can't leave the dwelling. When the spell ends, any creatures or objects left inside the extradimensional space are expelled into the unoccupied spaces nearest to the entrance.",
+    classes: ['bard', 'wizard'],
   },
 ];

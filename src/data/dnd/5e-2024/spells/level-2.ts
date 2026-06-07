@@ -364,40 +364,6 @@ export const level2Spells: Spell[] = [
     classes: ['cleric', 'druid', 'wizard'],
   },
   {
-    id: 'crown-of-madness',
-    name: 'Crown of Madness',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 2,
-    school: 'enchantment',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 120,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'concentration',
-      maxDuration: '1 minute',
-    },
-    savingThrow: {
-      attribute: 'wis',
-      success: 'none',
-    },
-    concentration: true,
-    ritual: false,
-    description:
-      'One humanoid of your choice that you can see within range must succeed on a Wisdom saving throw or become charmed by you for the duration. While the target is charmed in this way, a twisted crown of jagged iron appears on its head, and a madness glows in its eyes. The charmed target must use its action before moving on each of its turns to make a melee attack against a creature other than itself that you mentally choose.',
-    classes: ['bard', 'sorcerer', 'warlock', 'wizard'],
-  },
-  {
     id: 'darkness',
     name: 'Darkness',
     system: 'dnd-5e-2024',
@@ -1722,5 +1688,309 @@ export const level2Spells: Spell[] = [
     classes: ['druid', 'ranger'],
     system: 'dnd-5e-2024',
     source: 'SRD 5.2',
+  },
+  {
+    id: 'arcanists-magic-aura',
+    name: "Arcanist's Magic Aura",
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 2,
+    school: 'illusion',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a small square of silk',
+    },
+    duration: {
+      type: 'hours',
+      hours: 24,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      "With a touch, you place an illusion on a willing creature or an object that isn't being worn or carried. A creature gains the Mask effect below, and an object gains the False Aura effect below. The effect lasts for the duration. If you cast the spell on the same target every day for 30 days, the illusion lasts until dispelled.\n\n**Mask (Creature).** Choose a creature type other than the target's actual type. Spells and other magical effects treat the target as if it were a creature of the chosen type.\n\n**False Aura (Object).** You change the way the target appears to spells and magical effects that detect magical auras, such as Detect Magic. You can make a nonmagical object appear magical, make a magic item appear nonmagical, or change the object's aura so that it appears to belong to a school of magic you choose.",
+    classes: ['wizard'],
+  },
+  {
+    id: 'dragons-breath',
+    name: "Dragon's Breath",
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 2,
+    school: 'transmutation',
+    castingTime: {
+      type: 'bonus-action',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a hot pepper',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: 'see text',
+    },
+    areaOfEffect: {
+      type: 'cone',
+      feet: 15,
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    savingThrowText: 'Dexterity saving throw',
+    concentration: true,
+    ritual: false,
+    description:
+      'You touch one willing creature, and choose Acid, Cold, Fire, Lightning, or Poison. Until the spell ends, the target can take a Magic action to exhale a 15-foot Cone. Each creature in that area makes a Dexterity saving throw, taking 3d6 damage of the chosen type on a failed save or half as much damage on a successful one.',
+    atHigherLevels: 'The damage increases by 1d6 for each spell slot level above 2.',
+    classes: ['sorcerer', 'wizard'],
+  },
+  {
+    id: 'enthrall',
+    name: 'Enthrall',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 2,
+    school: 'enchantment',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: 'see text',
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Wisdom saving throw',
+    concentration: true,
+    ritual: false,
+    description:
+      'You weave a distracting string of words, causing creatures of your choice that you can see within range to make a Wisdom saving throw. Any creature you or your companions are fighting automatically succeeds on this save. On a failed save, a target has a −10 penalty to Wisdom (Perception) checks and Passive Perception until the spell ends.',
+    classes: ['bard', 'warlock'],
+  },
+  {
+    id: 'mind-spike',
+    name: 'Mind Spike',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 2,
+    school: 'divination',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: false,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: 'see text',
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'half',
+    },
+    savingThrowText: 'Wisdom saving throw',
+    damage: {
+      base: {
+        count: 3,
+        die: 'd8',
+        notation: '3d8',
+      },
+      type: 'psychic',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      "You drive a spike of psionic energy into the mind of one creature you can see within range. The target makes a Wisdom saving throw, taking 3d8 Psychic damage on a failed save or half as much damage on a successful one. On a failed save, you also always know the target's location until the spell ends, but only while the two of you are on the same plane of existence. While you have this knowledge, the target can't become hidden from you, and if it has the Invisible condition, it gains no benefit from that condition against you.",
+    atHigherLevels: 'The damage increases by 1d8 for each spell slot level above 2.',
+    classes: ['sorcerer', 'warlock', 'wizard'],
+  },
+  {
+    id: 'phantasmal-force',
+    name: 'Phantasmal Force',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 2,
+    school: 'illusion',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a bit of fleece',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: 'see text',
+    },
+    areaOfEffect: {
+      type: 'cube',
+      feet: 10,
+    },
+    savingThrow: {
+      attribute: 'int',
+      success: 'none',
+    },
+    savingThrowText: 'Intelligence saving throw',
+    damage: {
+      base: {
+        count: 2,
+        die: 'd8',
+        notation: '2d8',
+      },
+      type: 'psychic',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      "You attempt to craft an illusion in the mind of a creature you can see within range. The target makes an Intelligence saving throw. On a failed save, you create a phantasmal object, creature, or other phenomenon that is no larger than a 10-foot Cube and that is perceivable only to the target for the duration. The phantasm includes sound, temperature, and other stimuli. The target can take a Study action to examine the phantasm with an Intelligence (Investigation) check against your spell save DC. If the check succeeds, the target realizes that the phantasm is an illusion, and the spell ends. While affected by the spell, the target treats the phantasm as if it were real and rationalizes any illogical outcomes from interacting with it. For example, if the target steps through a phantasmal bridge and survives the fall, it believes the bridge exists and something else caused it to fall. An affected target can even take damage from the illusion if the phantasm represents a dangerous creature or hazard. On each of your turns, such a phantasm can deal 2d8 Psychic damage to the target if it is in the phantasm's area or within 5 feet of the phantasm. The target perceives the damage as a type appropriate to the illusion.",
+    classes: ['bard', 'sorcerer', 'wizard'],
+  },
+  {
+    id: 'ray-of-enfeeblement',
+    name: 'Ray of Enfeeblement',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 2,
+    school: 'necromancy',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: 'see text',
+    },
+    attackRoll: true,
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+    },
+    savingThrowText: 'Constitution saving throw',
+    concentration: true,
+    ritual: false,
+    description:
+      'A beam of enervating energy shoots from you toward a creature within range. The target must make a Constitution saving throw. On a successful save, the target has Disadvantage on the next attack roll it makes until the start of your next turn. On a failed save, the target has Disadvantage on Strength-based D20 Tests for the duration. During that time, it also subtracts 1d8 from all its damage rolls. The target repeats the save at the end of each of its turns, ending the spell on a success.',
+    classes: ['warlock', 'wizard'],
+  },
+  {
+    id: 'shining-smite',
+    name: 'Shining Smite',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 2,
+    school: 'transmutation',
+    castingTime: {
+      type: 'bonus-action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: 'see text',
+    },
+    attackRoll: true,
+    damage: {
+      base: {
+        count: 2,
+        die: 'd6',
+        notation: '2d6',
+      },
+      type: 'radiant',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      "The target hit by the strike takes an extra 2d6 Radiant damage from the attack. Until the spell ends, the target sheds Bright Light in a 5-foot radius, attack rolls against it have Advantage, and it can't benefit from the Invisible condition.",
+    atHigherLevels: 'The damage increases by 1d6 for each spell slot level above 2.',
+    classes: ['paladin'],
+  },
+  {
+    id: 'warding-bond',
+    name: 'Warding Bond',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 2,
+    school: 'abjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'a pair of platinum rings worth 50+ GP each, which you and the target must wear for the duration',
+      materialConsumed: true,
+    },
+    duration: {
+      type: 'hours',
+      hours: 1,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You touch another creature that is willing and create a mystic connection between you and the target until the spell ends. While the target is within 60 feet of you, it gains a +1 bonus to AC and saving throws, and it has Resistance to all damage. Also, each time it takes damage, you take the same amount of damage. The spell ends if you drop to 0 Hit Points or if you and the target become separated by more than 60 feet. It also ends if the spell is cast again on either of the connected creatures.',
+    classes: ['cleric', 'paladin'],
   },
 ];

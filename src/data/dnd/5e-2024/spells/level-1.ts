@@ -71,38 +71,6 @@ export const level1Spells: Spell[] = [
     classes: ['bard', 'druid', 'ranger'],
   },
   {
-    id: 'armor-of-agathys',
-    name: 'Armor of Agathys',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 1,
-    school: 'abjuration',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'self',
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'a cup of water',
-    },
-    duration: {
-      type: 'hours',
-      hours: 1,
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      'A protective magical force surrounds you, manifesting as a spectral frost that covers you and your gear. You gain 5 temporary hit points for the duration. If a creature hits you with a melee attack while you have these hit points, the creature takes 5 cold damage.',
-    atHigherLevels:
-      'When you cast this spell using a spell slot of 2nd level or higher, both the temporary hit points and the cold damage increase by 5 for each slot level above 1st.',
-    classes: ['warlock'],
-  },
-  {
     id: 'bane',
     name: 'Bane',
     system: 'dnd-5e-2024',
@@ -217,40 +185,6 @@ export const level1Spells: Spell[] = [
     atHigherLevels:
       'When you cast this spell using a spell slot of level 2 or higher, the damage increases by 1d6 for each slot level above 1.',
     classes: ['sorcerer', 'wizard'],
-  },
-  {
-    id: 'cause-fear',
-    name: 'Cause Fear',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 1,
-    school: 'necromancy',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 60,
-    },
-    components: {
-      verbal: true,
-      somatic: false,
-      material: false,
-    },
-    duration: {
-      type: 'concentration',
-      maxDuration: '1 minute',
-    },
-    savingThrow: {
-      attribute: 'wis',
-      success: 'none',
-    },
-    concentration: true,
-    ritual: false,
-    description:
-      "You awaken the sense of mortality in one creature you can see within range that is not undead. A finite creature has 1 minute to make a Wisdom saving throw or become frightened of you until the spell ends. The frightened creature's speed is halved, and it can't move closer to you. On each of the creature's turns before the spell ends, it can make another Wisdom saving throw, ending the spell on itself on a success.",
-    classes: ['warlock'],
   },
   {
     id: 'charm-person',
@@ -1575,72 +1509,6 @@ export const level1Spells: Spell[] = [
     classes: ['bard', 'druid', 'ranger'],
   },
   {
-    id: 'tashas-hideous-laughter',
-    name: "Tasha's Hideous Laughter",
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 1,
-    school: 'enchantment',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 30,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'tiny tarts and a feather that is waved in the air',
-    },
-    duration: {
-      type: 'concentration',
-      maxDuration: '1 minute',
-    },
-    savingThrow: {
-      attribute: 'wis',
-      success: 'none',
-    },
-    concentration: true,
-    ritual: false,
-    description:
-      "A creature of your choice that you can see within range perceives everything as hilariously funny and falls into fits of laughter if this spell affects it. The target must succeed on a Wisdom saving throw or fall prone, becoming incapacitated and unable to stand up for the duration. A creature with an Intelligence score of 4 or less isn't affected. At the end of each of its turns, and each time it takes damage, the target can make another Wisdom saving throw. The target has advantage on the saving throw if it's triggered by damage. On a success, the spell ends.",
-    classes: ['bard', 'wizard'],
-  },
-  {
-    id: 'tensers-floating-disk',
-    name: "Tenser's Floating Disk",
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 1,
-    school: 'conjuration',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 30,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'a drop of mercury',
-    },
-    duration: {
-      type: 'hours',
-      hours: 1,
-    },
-    concentration: false,
-    ritual: true,
-    description:
-      'You create a circular, horizontal plane of force, 3 feet in diameter and 1 inch thick, that floats 3 feet above the ground in an unoccupied space of your choice that you can see within range. The disk remains for the duration. It can hold up to 500 pounds. If you move more than 100 feet away from the disk, the spell ends.',
-    classes: ['wizard'],
-  },
-  {
     id: 'thunderwave',
     name: 'Thunderwave',
     system: 'dnd-5e-2024',
@@ -1718,81 +1586,6 @@ export const level1Spells: Spell[] = [
     classes: ['bard', 'warlock', 'wizard'],
   },
   {
-    id: 'witch-bolt',
-    name: 'Witch Bolt',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 1,
-    school: 'evocation',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 60,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'a twig struck by lightning',
-    },
-    duration: {
-      type: 'concentration',
-      maxDuration: '1 minute',
-    },
-    attackRoll: true,
-    damage: {
-      base: {
-        count: 2,
-        die: 'd12',
-        notation: '2d12',
-      },
-      type: 'lightning',
-    },
-    concentration: true,
-    ritual: false,
-    description:
-      'A beam of crackling energy lances toward a creature within range, forming a sustained arc of lightning between you and the target. Make a ranged spell attack. On a hit, the target takes 2d12 Lightning damage. On each of your subsequent turns, you can use your action to deal 1d12 Lightning damage automatically.',
-    atHigherLevels:
-      'When you cast this spell using a spell slot of level 2 or higher, the initial damage increases by 1d12 for each slot level above 1.',
-    classes: ['sorcerer', 'warlock', 'wizard'],
-  },
-  {
-    id: 'wrathful-smite',
-    name: 'Wrathful Smite',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 1,
-    school: 'evocation',
-    castingTime: {
-      type: 'bonus-action',
-      amount: 1,
-    },
-    range: {
-      type: 'self',
-    },
-    components: {
-      verbal: true,
-      somatic: false,
-      material: false,
-    },
-    duration: {
-      type: 'concentration',
-      maxDuration: '1 minute',
-    },
-    savingThrow: {
-      attribute: 'wis',
-      success: 'none',
-    },
-    concentration: true,
-    ritual: false,
-    description:
-      "The next time you hit with a melee weapon attack during this spell's duration, your attack deals an extra 1d6 psychic damage. Additionally, if the target is a creature, it must make a Wisdom saving throw or be frightened of you until the spell ends. As an action, the creature can make a Wisdom check against your spell save DC to steel its resolve and end this spell.",
-    classes: ['paladin'],
-  },
-  {
     id: 'divine-smite',
     name: 'Divine Smite',
     system: 'dnd-5e-2024',
@@ -1821,6 +1614,383 @@ export const level1Spells: Spell[] = [
       'The next time you hit a target with a melee weapon or an unarmed strike before the spell ends, your attack deals an extra 2d8 Radiant damage. If the target is a Fiend or Undead, the attack deals an extra 1d8 Radiant damage to it.',
     atHigherLevels:
       'When you cast this spell using a spell slot of level 2 or higher, the damage increases by 1d8 for each slot level above 1.',
+    classes: ['paladin'],
+  },
+  {
+    id: 'detect-evil-and-good',
+    name: 'Detect Evil and Good',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 1,
+    school: 'divination',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: 'see text',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'For the duration, you sense the location of any Aberration, Celestial, Elemental, Fey, Fiend, or Undead within 30 feet of yourself. You also sense whether the Hallow spell is active there and, if so, where. The spell is blocked by 1 foot of stone, dirt, or wood; 1 inch of metal; or a thin sheet of lead.',
+    classes: ['cleric', 'paladin'],
+  },
+  {
+    id: 'dissonant-whispers',
+    name: 'Dissonant Whispers',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 1,
+    school: 'enchantment',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'half',
+    },
+    savingThrowText: 'Wisdom saving throw',
+    damage: {
+      base: {
+        count: 3,
+        die: 'd6',
+        notation: '3d6',
+      },
+      type: 'psychic',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'One creature of your choice that you can see within range hears a discordant melody in its mind. The target makes a Wisdom saving throw. On a failed save, it takes 3d6 Psychic damage and must immediately use its Reaction, if available, to move as far away from you as it can, using the safest route. On a successful save, the target takes half as much damage only.',
+    classes: ['bard'],
+  },
+  {
+    id: 'ensnaring-strike',
+    name: 'Ensnaring Strike',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 1,
+    school: 'conjuration',
+    castingTime: {
+      type: 'bonus-action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: 'see text',
+    },
+    savingThrow: {
+      attribute: 'str',
+      success: 'none',
+    },
+    savingThrowText: 'Strength saving throw',
+    damage: {
+      base: {
+        count: 1,
+        die: 'd6',
+        notation: '1d6',
+      },
+      type: 'piercing',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'As you hit the target, grasping vines appear on it, and it makes a Strength saving throw. A Large or larger creature has Advantage on this save. On a failed save, the target has the Restrained condition until the spell ends. On a successful save, the vines shrivel away, and the spell ends. While Restrained, the target takes 1d6 Piercing damage at the start of each of its turns. The target or a creature within reach of it can take an action to make a Strength (Athletics) check against your spell save DC. On a success, the spell ends.',
+    atHigherLevels: 'The damage increases by 1d6 for each spell slot level above 1.',
+    classes: ['ranger'],
+  },
+  {
+    id: 'find-familiar',
+    name: 'Find Familiar',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 1,
+    school: 'conjuration',
+    castingTime: {
+      type: 'hour',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 10,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'burning incense worth 10+ GP, which the spell consumes',
+      materialConsumed: true,
+    },
+    duration: {
+      type: 'instant',
+    },
+    concentration: false,
+    ritual: true,
+    description:
+      "You gain the service of a familiar, a spirit that takes an animal form you choose: Bat, Cat, Frog, Hawk, Lizard, Octopus, Owl, Rat, Raven, Spider, Weasel, or another Beast that has a Challenge Rating of 0. Appearing in an unoccupied space within range, the familiar has the statistics of the chosen form (see \"Monsters\"), though it is a Celestial, Fey, or Fiend (your choice) instead of a Beast. Your familiar acts independently of you, but it obeys your commands.\n\n**_Telepathic Connection._** While your familiar is within 100 feet of you, you can communicate with it telepathically. Additionally, as a Bonus Action, you can see through the familiar's eyes and hear what it hears until the start of your next turn, gaining the benefits of any special senses it has.\n\nFinally, when you cast a spell with a range of touch, your familiar can deliver the touch. Your familiar must be within 100 feet of you, and it must take a Reaction to deliver the touch when you cast the spell.\n\n**_Combat._** The familiar is an ally to you and your allies. It rolls its own Initiative and acts on its own turn. A familiar can't attack, but it can take other actions as normal.\n\n**_Disappearance of the Familiar._** When the familiar drops to 0 Hit Points, it disappears. It reappears after you cast this spell again. As a Magic action, you can temporarily dismiss the familiar to a pocket dimension. Alternatively, you can dismiss it forever. As a Magic action while it is temporarily dismissed, you can cause it to reappear in an unoccupied space within 30 feet of you. Whenever the familiar drops to 0 Hit Points or disappears into the pocket dimension, it leaves behind in its space anything it was wearing or carrying.\n\n**_One Familiar Only._** You can't have more than one familiar at a time. If you cast this spell while you have a familiar, you instead cause it to adopt a new eligible form.",
+    classes: ['wizard'],
+  },
+  {
+    id: 'floating-disk',
+    name: 'Floating Disk',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 1,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a drop of mercury',
+    },
+    duration: {
+      type: 'hours',
+      hours: 1,
+    },
+    concentration: false,
+    ritual: true,
+    description:
+      "This spell creates a circular, horizontal plane of force, 3 feet in diameter and 1 inch thick, that floats 3 feet above the ground in an unoccupied space of your choice that you can see within range. The disk remains for the duration and can hold up to 500 pounds. If more weight is placed on it, the spell ends, and everything on the disk falls to the ground. The disk is immobile while you are within 20 feet of it. If you move more than 20 feet away from it, the disk follows you so that it remains within 20 feet of you. It can move across uneven terrain, up or down stairs, slopes and the like, but it can't cross an elevation change of 10 feet or more. For example, the disk can't move across a 10-foot-deep pit, nor could it leave such a pit if it was created at the bottom. If you move more than 100 feet from the disk (typically because it can't move around an obstacle to follow you), the spell ends.",
+    classes: ['wizard'],
+  },
+  {
+    id: 'hellish-rebuke',
+    name: 'Hellish Rebuke',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 1,
+    school: 'evocation',
+    castingTime: {
+      type: 'reaction',
+      amount: 1,
+      condition:
+        'which you take in response to taking damage from a creature that you can see within 60 feet of yourself',
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    savingThrowText: 'Dexterity saving throw',
+    damage: {
+      base: {
+        count: 2,
+        die: 'd10',
+        notation: '2d10',
+      },
+      type: 'fire',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'The creature that damaged you is momentarily surrounded by green flames. It makes a Dexterity saving throw, taking 2d10 Fire damage on a failed save or half as much damage on a successful one.',
+    atHigherLevels: 'The damage increases by 1d10 for each spell slot level above 1.',
+    classes: ['warlock'],
+  },
+  {
+    id: 'hideous-laughter',
+    name: 'Hideous Laughter',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 1,
+    school: 'enchantment',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a tart and a feather',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: 'see text',
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Wisdom saving throw',
+    concentration: true,
+    ritual: false,
+    description:
+      "One creature of your choice that you can see within range makes a Wisdom saving throw. On a failed save, it has the Prone and Incapacitated conditions for the duration. During that time, it laughs uncontrollably if it's capable of laughter, and it can't end the Prone condition on itself. At the end of each of its turns and each time it takes damage, it makes another Wisdom saving throw. The target has Advantage on the save if the save is triggered by damage. On a successful save, the spell ends.",
+    atHigherLevels: 'You can target one additional creature for each spell slot level above 1.',
+    classes: ['bard', 'warlock', 'wizard'],
+  },
+  {
+    id: 'ice-knife',
+    name: 'Ice Knife',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 1,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: false,
+      somatic: true,
+      material: true,
+      materialDescription: 'a drop of water or a piece of ice',
+    },
+    duration: {
+      type: 'instant',
+    },
+    attackRoll: true,
+    savingThrow: {
+      attribute: 'dex',
+      success: 'none',
+    },
+    savingThrowText: 'Dexterity saving throw',
+    damage: {
+      base: {
+        count: 1,
+        die: 'd10',
+        notation: '1d10',
+      },
+      type: 'piercing',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You create a shard of ice and fling it at one creature within range. Make a ranged spell attack against the target. On a hit, the target takes 1d10 Piercing damage. Hit or miss, the shard then explodes. The target and each creature within 5 feet of it must succeed on a Dexterity saving throw or take 2d6 Cold damage.',
+    atHigherLevels: 'The Cold damage increases by 1d6 for each spell slot level above 1.',
+    classes: ['druid', 'sorcerer', 'wizard'],
+  },
+  {
+    id: 'illusory-script',
+    name: 'Illusory Script',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 1,
+    school: 'illusion',
+    castingTime: {
+      type: 'minute',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: false,
+      somatic: true,
+      material: true,
+      materialDescription: 'ink worth 10+ GP, which the spell consumes',
+      materialConsumed: true,
+    },
+    duration: {
+      type: 'special',
+      description: '10 days',
+    },
+    concentration: false,
+    ritual: true,
+    description:
+      'You write on parchment, paper, or another suitable material and imbue it with an illusion that lasts for the duration. To you and any creatures you designate when you cast the spell, the writing appears normal, seems to be written in your hand, and conveys whatever meaning you intended when you wrote the text. To all others, the writing appears as if it were written in an unknown or magical script that is unintelligible. Alternatively, the illusion can alter the meaning, handwriting, and language of the text, though the language must be one you know. If the spell is dispelled, the original script and the illusion both disappear. A creature that has Truesight can read the hidden message.',
+    classes: ['bard', 'warlock', 'wizard'],
+  },
+  {
+    id: 'searing-smite',
+    name: 'Searing Smite',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 1,
+    school: 'evocation',
+    castingTime: {
+      type: 'bonus-action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+    },
+    savingThrowText: 'Constitution saving throw',
+    damage: {
+      base: {
+        count: 1,
+        die: 'd6',
+        notation: '1d6',
+      },
+      type: 'fire',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'As you hit the target, it takes an extra 1d6 Fire damage from the attack. At the start of each of its turns until the spell ends, the target takes 1d6 Fire damage and then makes a Constitution saving throw. On a failed save, the spell continues. On a successful save, the spell ends.',
+    atHigherLevels: 'All the damage increases by 1d6 for each spell slot level above 1.',
     classes: ['paladin'],
   },
 ];

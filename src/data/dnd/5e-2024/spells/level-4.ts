@@ -651,36 +651,6 @@ export const level4Spells: Spell[] = [
     classes: ['druid', 'sorcerer', 'wizard'],
   },
   {
-    id: 'leomunds-secret-chest',
-    name: "Leomund's Secret Chest",
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 4,
-    school: 'conjuration',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'touch',
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription:
-        'an exquisite chest and a key made from rare materials worth at least 5,000 gp',
-    },
-    duration: {
-      type: 'instant',
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      'You hide a chest, and all its contents, on the Ethereal Plane. You must touch the chest and the miniature replica that serves as a key for the spell. The chest can contain up to 12 cubic feet of nonliving material (3 feet by 2 feet by 2 feet). While closed, the miniature replica is all that can be seen of the chest.',
-    classes: ['wizard'],
-  },
-  {
     id: 'locate-creature',
     name: 'Locate Creature',
     system: 'dnd-5e-2024',
@@ -709,68 +679,6 @@ export const level4Spells: Spell[] = [
     description:
       "Describe or name a creature that is familiar to you. You sense the direction to the creature's location, as long as that creature is within 1,000 feet of you.",
     classes: ['bard', 'cleric', 'druid', 'paladin', 'ranger', 'wizard'],
-  },
-  {
-    id: 'mordenkainen-faithful-hound',
-    name: "Mordenkainen's Faithful Hound",
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 4,
-    school: 'conjuration',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 30,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'a tiny silver whistle, a piece of bone, and a thread',
-    },
-    duration: {
-      type: 'hours',
-      hours: 8,
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      "You conjure a phantom watchdog in an unoccupied space that you can see within range, where it remains for the duration. The hound is invisible to all creatures except you and can't be harmed. When a Small or larger creature comes within 30 feet of it without first speaking the password that you specify when you cast this spell, the hound starts barking loudly. The hound sees invisible creatures and can see into the Ethereal Plane. It ignores illusions.",
-    classes: ['wizard'],
-  },
-  {
-    id: 'otilukes-resilience',
-    name: "Otilukes's Resilience",
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 4,
-    school: 'abjuration',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'touch',
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription:
-        'a gem, crystal, reliquary, or some other ornamental container worth at least 500 gp',
-    },
-    duration: {
-      type: 'permanent',
-    },
-    target: '1 willing creature you touch',
-    concentration: false,
-    ritual: false,
-    description:
-      'You touch a willing creature and grant it a magical reserve of resilience. For the duration, the target has resistance to nonmagical damage. When the target takes damage, it can use its reaction to roll a d6. The target reduces the damage taken by the number rolled plus your spellcasting ability modifier.',
-    classes: ['wizard'],
   },
   {
     id: 'phantasmal-killer',
@@ -911,56 +819,6 @@ export const level4Spells: Spell[] = [
     classes: ['wizard'],
   },
   {
-    id: 'sickening-radiance',
-    name: 'Sickening Radiance',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 4,
-    school: 'evocation',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 120,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'concentration',
-      maxDuration: '10 minutes',
-    },
-    areaOfEffect: {
-      type: 'sphere',
-      radius: 30,
-    },
-    savingThrow: {
-      attribute: 'con',
-      success: 'none',
-    },
-    savingThrowText:
-      'A creature that starts its turn in the area must succeed on a Constitution saving throw or take 2d8 poison damage.',
-    damage: {
-      base: {
-        count: 2,
-        die: 'd8',
-        notation: '2d8',
-      },
-      type: 'poison',
-    },
-    concentration: true,
-    ritual: false,
-    description:
-      'Dim, sickly green light spreads within a 30-foot-radius sphere centered on a point of your choice within range. The light spreads around corners. If a creature starts its turn in the area, it must succeed on a Constitution saving throw or take 2d8 poison damage.',
-    atHigherLevels:
-      'When you cast this spell using a spell slot of 5th level or higher, the damage increases by 1d8 for each slot level above 4th.',
-    classes: ['wizard'],
-  },
-  {
     id: 'stone-shape',
     name: 'Stone Shape',
     system: 'dnd-5e-2024',
@@ -1069,5 +927,272 @@ export const level4Spells: Spell[] = [
     atHigherLevels:
       'When you cast this spell using a spell slot of level 5 or higher, the damage increases by 1d8 for each slot level above 4.',
     classes: ['druid', 'sorcerer', 'wizard'],
+  },
+  {
+    id: 'aura-of-life',
+    name: 'Aura of Life',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 4,
+    school: 'abjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: 'see text',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      "An aura radiates from you in a 30-foot Emanation for the duration. While in the aura, you and your allies have Resistance to Necrotic damage, and your Hit Point maximums can't be reduced. If an ally with 0 Hit Points starts its turn in the aura, that ally regains 1 Hit Point.",
+    classes: ['cleric', 'paladin'],
+  },
+  {
+    id: 'black-tentacles',
+    name: 'Black Tentacles',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 4,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 90,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a tentacle',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: 'see text',
+    },
+    savingThrow: {
+      attribute: 'str',
+      success: 'none',
+    },
+    savingThrowText: 'Strength saving throw',
+    damage: {
+      base: {
+        count: 3,
+        die: 'd6',
+        notation: '3d6',
+      },
+      type: 'bludgeoning',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'Squirming, ebony tentacles fill a 20-foot square on ground that you can see within range. For the duration, these tentacles turn the ground in that area into Difficult Terrain. Each creature in that area makes a Strength saving throw. On a failed save, it takes 3d6 Bludgeoning damage, and it has the Restrained condition until the spell ends. A creature also makes that save if it enters the area or ends it turn there. A creature makes that save only once per turn. A Restrained creature can take an action to make a Strength (Athletics) check against your spell save DC, ending the condition on itself on a success.',
+    classes: ['wizard'],
+  },
+  {
+    id: 'charm-monster',
+    name: 'Charm Monster',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 4,
+    school: 'enchantment',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'hours',
+      hours: 1,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Wisdom saving throw',
+    concentration: false,
+    ritual: false,
+    description:
+      'One creature you can see within range makes a Wisdom saving throw. It does so with Advantage if you or your allies are fighting it. On a failed save, the target has the Charmed condition until the spell ends or until you or your allies damage it. The Charmed creature is Friendly to you. When the spell ends, the target knows it was Charmed by you.',
+    atHigherLevels: 'You can target one additional creature for each spell slot level above 4.',
+    classes: ['bard', 'druid', 'sorcerer', 'warlock', 'wizard'],
+  },
+  {
+    id: 'compulsion',
+    name: 'Compulsion',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 4,
+    school: 'enchantment',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: 'see text',
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Wisdom saving throw',
+    concentration: true,
+    ritual: false,
+    description:
+      'Each creature of your choice that you can see within range must succeed on a Wisdom saving throw or have the Charmed condition until the spell ends. For the duration, you can take a Bonus Action to designate a direction that is horizontal to you. Each Charmed target must use as much of its movement as possible to move in that direction on its next turn, taking the safest route. After moving in this way, a target repeats the save, ending the spell on itself on a success.',
+    classes: ['bard'],
+  },
+  {
+    id: 'faithful-hound',
+    name: 'Faithful Hound',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 4,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a silver whistle',
+    },
+    duration: {
+      type: 'hours',
+      hours: 8,
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'none',
+    },
+    savingThrowText: 'Dexterity saving throw',
+    damage: {
+      base: {
+        count: 4,
+        die: 'd8',
+        notation: '4d8',
+      },
+      type: 'force',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You conjure a phantom watchdog in an unoccupied space that you can see within range. The hound remains for the duration or until the two of you are more than 300 feet apart from each other. No one but you can see the hound, and it is intangible and invulnerable. When a Small or larger creature comes within 30 feet of it without first speaking the password that you specify when you cast this spell, the hound starts barking loudly. The hound has Truesight with a range of 30 feet. At the start of each of your turns, the hound attempts to bite one enemy within 5 feet of it. That enemy must succeed on a Dexterity saving throw or take 4d8 Force damage. On your later turns, you can take a Magic action to move the hound up to 30 feet.',
+    classes: ['wizard'],
+  },
+  {
+    id: 'secret-chest',
+    name: 'Secret Chest',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 4,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'a chest, 3 feet by 2 feet by 2 feet, constructed from rare materials worth 5,000+ GP, and a Tiny replica of the chest made from the same materials worth 50+ GP',
+      materialConsumed: true,
+    },
+    duration: {
+      type: 'permanent',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You hide a chest and all its contents on the Ethereal Plane. You must touch the chest and the miniature replica that serve as Material components for the spell. The chest can contain up to 12 cubic feet of nonliving material (3 feet by 2 feet by 2 feet). While the chest remains on the Ethereal Plane, you can take a Magic action and touch the replica to recall the chest. It appears in an unoccupied space on the ground within 5 feet of you. You can send the chest back to the Ethereal Plane by taking a Magic action to touch the chest and the replica. After 60 days, there is a cumulative 5 percent chance at the end of each day that the spell ends. The spell also ends if you cast this spell again or if the Tiny replica chest is destroyed. If the spell ends and the larger chest is on the Ethereal Plane, the chest remains there for you or someone else to find.',
+    classes: ['wizard'],
+  },
+  {
+    id: 'vitriolic-sphere',
+    name: 'Vitriolic Sphere',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 4,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 150,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a drop of bile',
+    },
+    duration: {
+      type: 'instant',
+    },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 20,
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    savingThrowText: 'Dexterity saving throw',
+    damage: {
+      base: {
+        count: 10,
+        die: 'd4',
+        notation: '10d4',
+      },
+      type: 'acid',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You point at a location within range, and a glowing, 1-foot-diameter ball of acid streaks there and explodes in a 20-foot-radius Sphere. Each creature in that area makes a Dexterity saving throw. On a failed save, a creature takes 10d4 Acid damage and another 5d4 Acid damage at the end of its next turn. On a successful save, a creature takes half the initial damage only.',
+    atHigherLevels: 'The initial damage increases by 2d4 for each spell slot level above 4.',
+    classes: ['sorcerer', 'wizard'],
   },
 ];

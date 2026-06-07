@@ -166,9 +166,14 @@ describe('dnd5e spell preparation summaries', () => {
     expect(missing).toEqual([]);
   });
 
-  it('keeps every 2024 structured always-prepared grant backed by shipped spell data', () => {
+  it('backs every 2024 structured always-prepared grant with shipped spell data, except non-SRD grants surfaced as unresolved', () => {
+    // Conjure Barrage and Conjure Volley are referenced by the 2024 Ranger but
+    // are not part of the CC-BY SRD 5.2, so their text is intentionally not
+    // shipped. They surface as unresolved always-prepared grants in the sheet
+    // (covered by SystemSheets "shows unresolved ... grants explicitly").
+    const intentionallyUnshippedNonSrd = new Set(['conjure-barrage', 'conjure-volley']);
     const missing = collectStructuredAlwaysPreparedSpellIds(dnd5e2024Classes).filter(
-      (spellId) => !dnd5e2024SpellsById[spellId]
+      (spellId) => !dnd5e2024SpellsById[spellId] && !intentionallyUnshippedNonSrd.has(spellId)
     );
 
     expect(missing).toEqual([]);

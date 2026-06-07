@@ -25,11 +25,11 @@ const rawSpellsByLevel: Record<number, Spell[]> = {
 };
 
 const catalog = buildSpellCatalog(rawSpellsByLevel, {
-  omittedSpellIds: ['tensors-floating-disk', 'otilukes-resilience-6'],
   spellIdAliases: {
-    'tensors-floating-disk': 'tensers-floating-disk',
-    'otilukes-resilience-4': 'otilukes-resilience',
-    'otilukes-resilience-6': 'otilukes-resilience',
+    // Back-compat: legacy Product Identity spell ids now resolve to their
+    // open-content SRD 5.2 equivalent.
+    'tensers-floating-disk': 'floating-disk',
+    'tensors-floating-disk': 'floating-disk',
   },
 });
 

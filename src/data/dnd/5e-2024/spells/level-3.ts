@@ -65,36 +65,6 @@ export const level3Spells: Spell[] = [
     classes: ['cleric'],
   },
   {
-    id: 'beast-sense',
-    name: 'Beast Sense',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 3,
-    school: 'divination',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'touch',
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'concentration',
-      maxDuration: '1 hour',
-    },
-    target: '1 willing beast you touch',
-    concentration: true,
-    ritual: true,
-    description:
-      "You touch a willing beast. For the duration, you can use your action to perceive through the beast's senses as if you were in its space. You gain the benefits of any special senses possessed by that creature.",
-    classes: ['druid', 'ranger'],
-  },
-  {
     id: 'bestow-curse',
     name: 'Bestow Curse',
     system: 'dnd-5e-2024',
@@ -129,42 +99,6 @@ export const level3Spells: Spell[] = [
     atHigherLevels:
       'With level 4 slot: 10 minutes. Level 5: 8 hours. Level 7: 24 hours. Level 9: permanent.',
     classes: ['bard', 'cleric', 'wizard'],
-  },
-  {
-    id: 'blinding-smite',
-    name: 'Blinding Smite',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 3,
-    school: 'evocation',
-    castingTime: {
-      type: 'bonus-action',
-      amount: 1,
-    },
-    range: {
-      type: 'self',
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'concentration',
-      maxDuration: '1 minute',
-    },
-    effect: 'Your next weapon hit deals extra radiant damage and can blind the target',
-    savingThrow: {
-      attribute: 'con',
-      success: 'none',
-    },
-    savingThrowText:
-      'The target of the triggering weapon hit makes a Constitution saving throw to avoid the extra radiant burst and the Blinded condition.',
-    concentration: true,
-    ritual: false,
-    description:
-      'The next time you hit a creature with a weapon attack before this spell ends, your weapon flares with bright light, and the attack deals an extra 3d6 radiant damage to the target. Additionally, the target must succeed on a Constitution saving throw, or it takes 3d6 radiant damage and has the Blinded condition until the end of your next turn.',
-    classes: ['paladin'],
   },
   {
     id: 'call-lightning',
@@ -271,53 +205,6 @@ export const level3Spells: Spell[] = [
     description:
       'You summon fey creatures that appear in unoccupied spaces you can see within range. Choose from the following options for what appears: One creature of challenge rating 2 or lower, or two creatures of challenge rating 1 or lower, or four creatures of challenge rating 1/4 or lower, or eight creatures of challenge rating 1/8 or lower.',
     classes: ['druid', 'ranger'],
-  },
-  {
-    id: 'conjure-barrage',
-    name: 'Conjure Barrage',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 3,
-    school: 'conjuration',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'self',
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'a Melee or Ranged weapon worth at least 1 CP',
-    },
-    duration: {
-      type: 'instant',
-    },
-    areaOfEffect: {
-      type: 'cone',
-      feet: 60,
-    },
-    savingThrow: {
-      attribute: 'dex',
-      success: 'half',
-    },
-    damage: {
-      base: {
-        count: 5,
-        die: 'd8',
-        notation: '5d8',
-      },
-      type: 'force',
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      'You throw a weapon or fire a piece of ammunition into the air. Countless spectral weapons then fall in a 60-foot cone originating from you and disappear. Each creature of your choice that you can see in the area must make a Dexterity saving throw, taking 5d8 Force damage on a failed save or half as much damage on a successful one. The spell then teleports the material component back to your hand.',
-    atHigherLevels:
-      'When you cast this spell using a spell slot of level 4 or higher, the damage increases by 1d8 for each slot level above 3.',
-    classes: ['ranger'],
   },
   {
     id: 'counterspell',
@@ -442,53 +329,6 @@ export const level3Spells: Spell[] = [
     classes: ['bard', 'cleric', 'druid', 'paladin', 'sorcerer', 'warlock', 'wizard'],
   },
   {
-    id: 'eruption',
-    name: 'Eruption',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 3,
-    school: 'evocation',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 120,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'instant',
-    },
-    areaOfEffect: {
-      type: 'sphere',
-      radius: 20,
-    },
-    savingThrow: {
-      attribute: 'dex',
-      success: 'half',
-    },
-    damage: {
-      base: {
-        count: 6,
-        die: 'd6',
-        notation: '6d6',
-      },
-      type: 'fire',
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      'A geyser of boiling water erupts from a point on the ground that you can see within range. Each creature in that area must make a Dexterity saving throw. A creature takes 6d6 fire damage on a failed save, or half as much damage on a successful one.',
-    atHigherLevels:
-      'When you cast this spell using a spell slot of 4th level or higher, the damage increases by 1d6 for each slot level above 3rd.',
-    classes: ['druid', 'sorcerer'],
-  },
-  {
     id: 'fear',
     name: 'Fear',
     system: 'dnd-5e-2024',
@@ -525,36 +365,6 @@ export const level3Spells: Spell[] = [
     description:
       "You project a phantasmal image of a creature's worst fears. Each creature in a 30-foot Cone must succeed on a Wisdom saving throw or drop whatever it is holding and have the Frightened condition for the duration.",
     classes: ['bard', 'sorcerer', 'warlock', 'wizard'],
-  },
-  {
-    id: 'feign-death',
-    name: 'Feign Death',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 3,
-    school: 'necromancy',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'touch',
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'concentration',
-      maxDuration: '1 hour',
-    },
-    target: '1 corpse or other remains you touch',
-    concentration: true,
-    ritual: true,
-    description:
-      "You touch a corpse or other remains. For the duration, the target is protected from decay and can't become undead. The spell also effectively extends the time limit on raising the target from the dead, since days spent under the influence of this spell don't count against the time limit of spells such as raise dead.",
-    classes: ['bard', 'cleric', 'wizard'],
   },
   {
     id: 'fireball',
@@ -739,41 +549,6 @@ export const level3Spells: Spell[] = [
     classes: ['sorcerer', 'wizard'],
   },
   {
-    id: 'hunger-of-hadar',
-    name: 'Hunger of Hadar',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 3,
-    school: 'conjuration',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 150,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'a pickled octopus tentacle',
-    },
-    duration: {
-      type: 'concentration',
-      maxDuration: '1 minute',
-    },
-    areaOfEffect: {
-      type: 'sphere',
-      radius: 20,
-    },
-    concentration: true,
-    ritual: false,
-    description:
-      'You open a gateway to the dark between the stars, a region infested with unknown horrors. A 20-foot-radius sphere of blackness and bitter cold appears, centered on a point with range and lasting for the duration. This void is filled with a cacophony of soft whispers and slurping noises that can be heard up to 30 feet away. No light, magical or otherwise, can illuminate the area, and creatures fully within the area are blinded.',
-    classes: ['warlock'],
-  },
-  {
     id: 'hypnotic-pattern',
     name: 'Hypnotic Pattern',
     system: 'dnd-5e-2024',
@@ -811,35 +586,6 @@ export const level3Spells: Spell[] = [
     description:
       'You create a twisting pattern of colors that weaves through the air inside a 30-foot Cube within range. Each creature in the area must make a Wisdom saving throw. On a failed save, the creature has the Charmed condition for the duration and also has the Incapacitated condition and a Speed of 0.',
     classes: ['bard', 'sorcerer', 'warlock', 'wizard'],
-  },
-  {
-    id: 'leomunds-tiny-hut',
-    name: "Leomund's Tiny Hut",
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 3,
-    school: 'evocation',
-    castingTime: {
-      type: 'minute',
-      amount: 1,
-    },
-    range: {
-      type: 'self',
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'hours',
-      hours: 8,
-    },
-    concentration: false,
-    ritual: true,
-    description:
-      'A 10-foot-radius immobile dome of magical force springs into existence around and above you. The spell ends if you leave its area. Nine creatures of Medium size or smaller can fit inside the dome with you. If the space the dome occupies is larger than that, or if roughly spherical unobstructed space around you is larger, the spell fails, and the casting is wasted.',
-    classes: ['bard', 'wizard'],
   },
   {
     id: 'lightning-bolt',
@@ -1474,37 +1220,6 @@ export const level3Spells: Spell[] = [
     classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
-    id: 'summon-lesser-demons',
-    name: 'Summon Lesser Demons',
-    system: 'dnd-5e-2024',
-    source: 'SRD 5.2',
-    level: 3,
-    school: 'conjuration',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 60,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'a vial of blood from a humanoid killed within the past 24 hours',
-    },
-    duration: {
-      type: 'concentration',
-      maxDuration: '1 hour',
-    },
-    concentration: true,
-    ritual: false,
-    description:
-      "You utter foul words of power summoning demons from the lower planes. Up to eight demonlings or one demon of challenge rating 3 or lower appears in unoccupied spaces you can see within range. A summoned demon disappears when it drops to 0 hit points or when the spell ends. A demon summoned by this spell is friendly to you and your companions for the duration. Roll initiative for the summoned demon as a group, which has its own turns. It obeys any verbal commands that you issue to it (no action required by you), as long as they don't violate its alignment.",
-    classes: ['wizard'],
-  },
-  {
     id: 'tongues',
     name: 'Tongues',
     system: 'dnd-5e-2024',
@@ -1676,5 +1391,64 @@ export const level3Spells: Spell[] = [
     classes: ['druid', 'ranger'],
     system: 'dnd-5e-2024',
     source: 'SRD 5.2',
+  },
+  {
+    id: 'blink',
+    name: 'Blink',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 3,
+    school: 'transmutation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      "Roll 1d6 at the end of each of your turns for the duration. On a roll of 4–6, you vanish from your current plane of existence and appear in the Ethereal Plane (the spell ends instantly if you are already on that plane). While on the Ethereal Plane, you can perceive the plane you left, which is cast in shades of gray, but you can't see anything there more than 60 feet away. You can affect and be affected only by other creatures on the Ethereal Plane, and creatures on the other plane can't perceive you unless they have a special ability that lets them perceive things on the Ethereal Plane. You return to the other plane at the start of your next turn and when the spell ends if you are on the Ethereal Plane. You return to an unoccupied space of your choice that you can see within 10 feet of the space you left. If no unoccupied space is available within that range, you appear in the nearest unoccupied space.",
+    classes: ['sorcerer', 'wizard'],
+  },
+  {
+    id: 'tiny-hut',
+    name: 'Tiny Hut',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2',
+    level: 3,
+    school: 'evocation',
+    castingTime: {
+      type: 'minute',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a crystal bead',
+    },
+    duration: {
+      type: 'hours',
+      hours: 8,
+    },
+    concentration: false,
+    ritual: true,
+    description:
+      "A 10-foot Emanation springs into existence around you and remains stationary for the duration. The spell fails when you cast it if the Emanation isn't big enough to fully encapsulate all creatures in its area. Creatures and objects within the Emanation when you cast the spell can move through it freely. All other creatures and objects are barred from passing through it. Spells of level 3 or lower can't be cast through it, and the effects of such spells can't extend into it. The atmosphere inside the Emanation is comfortable and dry, regardless of the weather outside. Until the spell ends, you can command the interior to have Dim Light or Darkness (no action required). The Emanation is opaque from the outside and of any color you choose, but it's transparent from the inside. The spell ends early if you leave the Emanation or if you cast it again.",
+    classes: ['bard', 'wizard'],
   },
 ];
