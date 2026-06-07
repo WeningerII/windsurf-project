@@ -130,6 +130,7 @@ const iconicSpellExpectations: Array<{
       'dnd-5e-2024': e(1, 'abjuration'),
       'dnd-3.5e': e(1, 'abjuration'),
       pf1e: e(1, 'abjuration'),
+      pf2e: e(1, 'arcane'),
     },
   },
   {
@@ -226,6 +227,7 @@ const iconicSpellExpectations: Array<{
       'dnd-5e-2024': e(5, 'necromancy'),
       'dnd-3.5e': e(5, 'conjuration'),
       pf1e: e(5, 'conjuration'),
+      pf2e: e(6, 'divine'),
     },
   },
   {
@@ -342,6 +344,7 @@ const iconicSpellExpectations: Array<{
       'dnd-5e-2024': e(0, 'transmutation'),
       'dnd-3.5e': e(0, 'transmutation'),
       pf1e: e(0, 'transmutation'),
+      pf2e: e(1, 'arcane'),
     },
   },
   {
@@ -390,6 +393,7 @@ const iconicSpellExpectations: Array<{
       'dnd-5e-2024': e(0, 'transmutation'),
       'dnd-3.5e': e(0, 'evocation'),
       pf1e: e(0, 'transmutation'),
+      pf2e: e(0, 'arcane'),
     },
   },
   {
@@ -500,6 +504,7 @@ const iconicSpellExpectations: Array<{
       'dnd-5e-2024': e(5, 'divination'),
       'dnd-3.5e': e(4, 'divination'),
       pf1e: e(4, 'divination'),
+      pf2e: e(6, 'arcane'),
     },
   },
 ];

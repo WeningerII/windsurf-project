@@ -762,6 +762,11 @@ export const level5Spells: Spell[] = withPf2eSpellTraits([
       type: 'minutes',
       minutes: 1,
     },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will',
     concentration: false,
     ritual: false,
     description:
@@ -899,6 +904,7 @@ export const level5Spells: Spell[] = withPf2eSpellTraits([
       type: 'minutes',
       minutes: 1,
     },
+    attackRoll: true,
     concentration: false,
     ritual: false,
     description:
@@ -1537,6 +1543,11 @@ export const level5Spells: Spell[] = withPf2eSpellTraits([
       type: 'minutes',
       minutes: 1,
     },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will',
     concentration: false,
     ritual: false,
     description:
@@ -1802,6 +1813,7 @@ export const level5Spells: Spell[] = withPf2eSpellTraits([
       type: 'concentration',
       maxDuration: 'sustained, 1 minute',
     },
+    attackRoll: true,
     concentration: true,
     ritual: false,
     description:
@@ -2249,6 +2261,12 @@ export const level5Spells: Spell[] = withPf2eSpellTraits([
       type: 'minutes',
       minutes: 1,
     },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'none',
+    },
+    savingThrowText: 'Reflex',
+    attackRoll: true,
     concentration: false,
     ritual: false,
     description:

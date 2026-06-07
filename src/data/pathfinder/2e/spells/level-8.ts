@@ -633,6 +633,7 @@ export const level8Spells: Spell[] = withPf2eSpellTraits([
     duration: {
       type: 'instant',
     },
+    attackRoll: true,
     concentration: false,
     ritual: false,
     description:
@@ -950,6 +951,11 @@ export const level8Spells: Spell[] = withPf2eSpellTraits([
       type: 'special',
       description: 'until the end of your next turn',
     },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'none',
+    },
+    savingThrowText: 'Reflex',
     concentration: false,
     ritual: false,
     description:
@@ -1046,6 +1052,11 @@ export const level8Spells: Spell[] = withPf2eSpellTraits([
       type: 'special',
       description: 'varies',
     },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will',
     concentration: false,
     ritual: false,
     description:

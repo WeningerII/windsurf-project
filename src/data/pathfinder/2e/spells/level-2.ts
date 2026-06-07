@@ -1449,6 +1449,7 @@ export const level2Spells: Spell[] = withPf2eSpellTraits([
     duration: {
       type: 'instant',
     },
+    attackRoll: true,
     concentration: false,
     ritual: false,
     description:
@@ -2338,6 +2339,7 @@ export const level2Spells: Spell[] = withPf2eSpellTraits([
       type: 'minutes',
       minutes: 1,
     },
+    attackRoll: true,
     concentration: false,
     ritual: false,
     description:
@@ -2537,6 +2539,7 @@ export const level2Spells: Spell[] = withPf2eSpellTraits([
       type: 'concentration',
       maxDuration: 'sustained',
     },
+    attackRoll: true,
     concentration: true,
     ritual: false,
     description:

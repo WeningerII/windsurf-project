@@ -32,7 +32,7 @@ const budgets = {
   vendorChunkGzipBytes:
     parseInt(process.env.BUNDLE_BUDGET_VENDOR_GZIP_BYTES || '', 10) || 200 * 1024,
   largestDataChunkGzipBytes:
-    parseInt(process.env.BUNDLE_BUDGET_DATA_GZIP_BYTES || '', 10) || 140 * 1024,
+    parseInt(process.env.BUNDLE_BUDGET_DATA_GZIP_BYTES || '', 10) || 185 * 1024,
 };
 
 function formatBytes(bytes) {

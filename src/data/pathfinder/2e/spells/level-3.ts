@@ -925,6 +925,7 @@ export const level3Spells: Spell[] = withPf2eSpellTraits([
     duration: {
       type: 'instant',
     },
+    attackRoll: true,
     concentration: false,
     ritual: false,
     description:
@@ -1451,6 +1452,7 @@ export const level3Spells: Spell[] = withPf2eSpellTraits([
     duration: {
       type: 'instant',
     },
+    attackRoll: true,
     concentration: false,
     ritual: false,
     description:
@@ -1693,6 +1695,11 @@ export const level3Spells: Spell[] = withPf2eSpellTraits([
       type: 'concentration',
       maxDuration: 'sustained, 1 minute',
     },
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+    },
+    savingThrowText: 'Fortitude',
     concentration: true,
     ritual: false,
     description:
@@ -1723,6 +1730,7 @@ export const level3Spells: Spell[] = withPf2eSpellTraits([
     duration: {
       type: 'instant',
     },
+    attackRoll: true,
     concentration: false,
     ritual: false,
     description:
@@ -1790,6 +1798,11 @@ export const level3Spells: Spell[] = withPf2eSpellTraits([
       type: 'concentration',
       maxDuration: 'sustained, 1 minute',
     },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will',
     concentration: true,
     ritual: false,
     description:

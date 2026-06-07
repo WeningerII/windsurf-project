@@ -452,6 +452,11 @@ export const level9Spells: Spell[] = withPf2eSpellTraits([
       type: 'special',
       description: 'until the end of your next turn',
     },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    savingThrowText: 'basic Reflex',
     concentration: false,
     ritual: false,
     description:
@@ -989,6 +994,7 @@ export const level9Spells: Spell[] = withPf2eSpellTraits([
       type: 'minutes',
       minutes: 1,
     },
+    attackRoll: true,
     concentration: false,
     ritual: false,
     description:
@@ -1027,6 +1033,11 @@ export const level9Spells: Spell[] = withPf2eSpellTraits([
       type: 'concentration',
       maxDuration: 'sustained, 1 minute',
     },
+    savingThrow: {
+      attribute: 'con',
+      success: 'half',
+    },
+    savingThrowText: 'basic Fortitude',
     concentration: true,
     ritual: false,
     description:

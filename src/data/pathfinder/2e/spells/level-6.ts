@@ -733,6 +733,11 @@ export const level6Spells: Spell[] = withPf2eSpellTraits([
       type: 'minutes',
       minutes: 1,
     },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'none',
+    },
+    savingThrowText: 'Reflex',
     concentration: false,
     ritual: false,
     description:
@@ -1446,6 +1451,11 @@ export const level6Spells: Spell[] = withPf2eSpellTraits([
       type: 'minutes',
       minutes: 10,
     },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will',
     concentration: false,
     ritual: false,
     description:

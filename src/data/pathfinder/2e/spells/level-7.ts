@@ -721,6 +721,11 @@ export const level7Spells: Spell[] = withPf2eSpellTraits([
       type: 'special',
       description: 'until the end of your next turn',
     },
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+    },
+    savingThrowText: 'Fortitude',
     concentration: false,
     ritual: false,
     description:
@@ -1104,6 +1109,7 @@ export const level7Spells: Spell[] = withPf2eSpellTraits([
       success: 'half',
     },
     savingThrowText: 'basic Fortitude',
+    attackRoll: true,
     concentration: false,
     ritual: false,
     description:
@@ -1200,6 +1206,11 @@ export const level7Spells: Spell[] = withPf2eSpellTraits([
       type: 'concentration',
       maxDuration: 'sustained',
     },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will',
     concentration: true,
     ritual: false,
     description:

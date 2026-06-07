@@ -255,6 +255,11 @@ export const level10Spells: Spell[] = withPf2eSpellTraits([
       type: 'special',
       description: 'until the end of your next turn',
     },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    savingThrowText: 'basic Reflex',
     concentration: false,
     ritual: false,
     description:
@@ -344,6 +349,11 @@ export const level10Spells: Spell[] = withPf2eSpellTraits([
       type: 'minutes',
       minutes: 1,
     },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'none',
+    },
+    savingThrowText: 'Reflex',
     concentration: false,
     ritual: false,
     description:
@@ -375,6 +385,11 @@ export const level10Spells: Spell[] = withPf2eSpellTraits([
       type: 'minutes',
       minutes: 1,
     },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    savingThrowText: 'basic Reflex',
     concentration: false,
     ritual: false,
     description:
@@ -436,6 +451,11 @@ export const level10Spells: Spell[] = withPf2eSpellTraits([
       type: 'special',
       description: 'until the end of your next turn',
     },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    savingThrowText: 'basic Reflex',
     concentration: false,
     ritual: false,
     description:
