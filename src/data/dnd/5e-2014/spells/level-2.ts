@@ -434,24 +434,6 @@ export const level2Spells: Spell[] = [
     classes: ['cleric', 'wizard'],
   },
   {
-    id: 'crown-of-madness',
-    name: 'Crown of Madness',
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 2,
-    school: 'enchantment',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 120 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'concentration', maxDuration: '1 minute' },
-    savingThrow: { attribute: 'wis', success: 'none' },
-    concentration: true,
-    ritual: false,
-    description:
-      'One humanoid of your choice that you can see within range must succeed on a Wisdom saving throw or become charmed by you for the duration. While the target is charmed in this way, a twisted crown of jagged iron appears on its head, and a madness glows in its eyes. The charmed target must use its action before moving on each of its turns to make a melee attack against a creature other than itself that you mentally choose.',
-    classes: ['bard', 'sorcerer', 'warlock', 'wizard'],
-  },
-  {
     id: 'darkvision',
     name: 'Darkvision',
     system: 'dnd-5e-2014',
@@ -1290,6 +1272,206 @@ export const level2Spells: Spell[] = [
     classes: ['druid', 'ranger'],
     system: 'dnd-5e-2014',
     source: 'SRD 5.1',
+  },
+  {
+    id: 'arcanists-magic-aura',
+    name: "Arcanist's Magic Aura",
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 2,
+    school: 'illusion',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'A small square of silk.',
+    },
+    duration: {
+      type: 'hours',
+      hours: 24,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      "You place an illusion on a creature or an object you touch so that divination spells reveal false information about it. The target can be a willing creature or an object that isn't being carried or worn by another creature.\nWhen you cast the spell, choose one or both of the following effects. The effect lasts for the duration. If you cast this spell on the same creature or object every day for 30 days, placing the same effect on it each time, the illusion lasts until it is dispelled.\n***False Aura.*** You change the way the target appears to spells and magical effects, such as detect magic, that detect magical auras. You can make a nonmagical object appear magical, a magical object appear nonmagical, or change the object's magical aura so that it appears to belong to a specific school of magic that you choose. When you use this effect on an object, you can make the false magic apparent to any creature that handles the item.\n***Mask.*** You change the way the target appears to spells and magical effects that detect creature types, such as a paladin's Divine Sense or the trigger of a symbol spell. You choose a creature type and other spells and magical effects treat the target as if it were a creature of that type or of that alignment.",
+    classes: ['wizard'],
+  },
+  {
+    id: 'branding-smite',
+    name: 'Branding Smite',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 2,
+    school: 'evocation',
+    castingTime: {
+      type: 'bonus-action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 minute',
+    },
+    damage: {
+      base: {
+        count: 2,
+        die: 'd6',
+        notation: '2d6',
+      },
+      type: 'radiant',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      "The next time you hit a creature with a weapon attack before this spell ends, the weapon gleams with astral radiance as you strike. The attack deals an extra 2d6 radiant damage to the target, which becomes visible if it's invisible, and the target sheds dim light in a 5-foot radius and can't become invisible until the spell ends.",
+    atHigherLevels:
+      'When you cast this spell using a spell slot of 3rd level or higher, the extra damage increases by 1d6 for each slot level above 2nd.',
+    classes: ['paladin'],
+  },
+  {
+    id: 'enthrall',
+    name: 'Enthrall',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 2,
+    school: 'enchantment',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes',
+      minutes: 1,
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'WIS save',
+    concentration: false,
+    ritual: false,
+    description:
+      "You weave a distracting string of words, causing creatures of your choice that you can see within range and that can hear you to make a wisdom saving throw. Any creature that can't be charmed succeeds on this saving throw automatically, and if you or your companions are fighting a creature, it has advantage on the save. On a failed save, the target has disadvantage on Wisdom (Perception) checks made to perceive any creature other than you until the spell ends or until the target can no longer hear you. The spell ends if you are incapacitated or can no longer speak.",
+    classes: ['bard', 'warlock'],
+  },
+  {
+    id: 'find-steed',
+    name: 'Find Steed',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 2,
+    school: 'conjuration',
+    castingTime: {
+      type: 'minutes',
+      amount: 10,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      "You summon a spirit that assumes the form of an unusually intelligent, strong, and loyal steed, creating a long-lasting bond with it. Appearing in an unoccupied space within range, the steed takes on a form that you choose, such as a warhorse, a pony, a camel, an elk, or a mastiff. (Your GM might allow other animals to be summoned as steeds.) The steed has the statistics of the chosen form, though it is a celestial, fey, or fiend (your choice) instead of its normal type. Additionally, if your steed has an Intelligence of 5 or less, its Intelligence becomes 6, and it gains the ability to understand one language of your choice that you speak.\nYour steed serves you as a mount, both in combat and out, and you have an instinctive bond with it that allows you to fight as a seamless unit. While mounted on your steed, you can make any spell you cast that targets only you also target your steed.\nWhen the steed drops to 0 hit points, it disappears, leaving behind no physical form. You can also dismiss your steed at any time as an action, causing it to disappear. In either case, casting this spell again summons the same steed, restored to its hit point maximum.\nWhile your steed is within 1 mile of you, you can communicate with it telepathically.\nYou can't have more than one steed bonded by this spell at a time. As an action, you can release the steed from its bond at any time, causing it to disappear.",
+    classes: ['paladin'],
+  },
+  {
+    id: 'ray-of-enfeeblement',
+    name: 'Ray of Enfeeblement',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 2,
+    school: 'necromancy',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 minute',
+    },
+    attackRoll: true,
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+    },
+    savingThrowText: 'CON save',
+    concentration: true,
+    ritual: false,
+    description:
+      "A black beam of enervating energy springs from your finger toward a creature within range. Make a ranged spell attack against the target. On a hit, the target deals only half damage with weapon attacks that use Strength until the spell ends.\nAt the end of each of the target's turns, it can make a constitution saving throw against the spell. On a success, the spell ends.",
+    classes: ['warlock', 'wizard'],
+  },
+  {
+    id: 'warding-bond',
+    name: 'Warding Bond',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 2,
+    school: 'abjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'A pair of platinum rings worth at least 50gp each, which you and the target must wear for the duration.',
+    },
+    duration: {
+      type: 'hours',
+      hours: 1,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell wards a willing creature you touch and creates a mystic connection between you and the target until the spell ends. While the target is within 60 feet of you, it gains a +1 bonus to AC and saving throws, and it has resistance to all damage. Also, each time it takes damage, you take the same amount of damage.\nThe spell ends if you drop to 0 hit points or if you and the target become separated by more than 60 feet.\nIt also ends if the spell is cast again on either of the connected creatures. You can also dismiss the spell as an action.',
+    classes: ['cleric'],
   },
 ];
 

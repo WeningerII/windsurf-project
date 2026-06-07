@@ -274,35 +274,6 @@ export const level9Spells: Spell[] = [
     classes: ['sorcerer', 'wizard'],
   },
   {
-    id: 'power-word-heal',
-    name: 'Power Word Heal',
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 9,
-    school: 'enchantment',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 60,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'instant',
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      'A wave of healing energy washes over one creature you can see within range. The target regains all its Hit Points. If the creature has the Charmed, Frightened, Paralyzed, Poisoned, or Stunned condition, the condition ends.',
-    classes: ['bard', 'cleric'],
-  },
-  {
     id: 'storm-of-vengeance',
     name: 'Storm of Vengeance',
     system: 'dnd-5e-2014',

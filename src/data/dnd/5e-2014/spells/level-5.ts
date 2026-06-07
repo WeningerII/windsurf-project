@@ -365,28 +365,6 @@ export const level5Spells: Spell[] = [
     classes: ['sorcerer', 'wizard'],
   },
   {
-    id: 'transmute-rock',
-    name: 'Transmute Rock',
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 5,
-    school: 'transmutation',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 120 },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'clay and stone worth at least 1 gp',
-    },
-    duration: { type: 'instant' },
-    concentration: false,
-    ritual: false,
-    description:
-      'You choose an area of stone or mud that you can see that fits within a 40-foot cube and is within range, and choose one of the following effects. Transmute Rock to Mud, Transmute Mud to Rock.',
-    classes: ['druid', 'wizard'],
-  },
-  {
     id: 'wall-of-force',
     name: 'Wall of Force',
     system: 'dnd-5e-2014',
@@ -407,29 +385,6 @@ export const level5Spells: Spell[] = [
     description:
       'An invisible wall of force springs into existence at a point you choose within range. The wall appears in any orientation you choose, as a horizontal or vertical barrier or at an angle. It can be free floating or resting on a solid surface. You can form it into a hemispherical dome or a sphere with a radius of up to 15 feet, or you can shape a flat surface made up of ten 10-foot-by-10-foot panels. Each panel must be contiguous with another panel. In any form, the wall is 1/4 inch thick. It lasts for the duration.',
     classes: ['wizard'],
-  },
-  {
-    id: 'circle-of-teleportation',
-    name: 'Circle of Teleportation',
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 5,
-    school: 'conjuration',
-    castingTime: { type: 'minute', amount: 1 },
-    range: { type: 'ranged', feet: 10 },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription:
-        'rare chalks and inks infused with precious gems worth 50 gp, which the spell consumes',
-    },
-    duration: { type: 'hours', hours: 1 },
-    concentration: false,
-    ritual: false,
-    description:
-      'As you cast this spell, you draw a 10-foot-diameter circle on the ground inscribed with sigils that link your location to a permanent teleportation circle of your choice whose sigil sequence you know and that is on the same plane of existence as you. A shimmering portal opens within the circle you drew and remains open until the end of your next turn. Any creature that enters the portal instantly appears within 5 feet of the destination circle or in the nearest unoccupied space if that space is occupied.',
-    classes: ['bard', 'sorcerer', 'wizard'],
   },
   {
     id: 'commune',
@@ -886,6 +841,228 @@ export const level5Spells: Spell[] = [
     description:
       'You touch a point and infuse an area around it with holy or unholy power. The area can’t overlap with another active Hallow spell, and you can bind an additional sacred or profane rider to the warded space, such as fear warding, silence, or planar exclusion.',
     classes: ['cleric'],
+  },
+  {
+    id: 'antilife-shell',
+    name: 'Antilife Shell',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 5,
+    school: 'abjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 hour',
+    },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 10,
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'A shimmering barrier extends out from you in a 10-foot radius and moves with you, remaining centered on you and hedging out creatures other than undead and constructs. The barrier lasts for the duration.\nThe barrier prevents an affected creature from passing or reaching through. An affected creature can cast spells or make attacks with ranged or reach weapons through the barrier.\nIf you move so that an affected creature is forced to pass through the barrier, the spell ends.',
+    classes: ['druid'],
+  },
+  {
+    id: 'arcane-hand',
+    name: 'Arcane Hand',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 5,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'An eggshell and a snakeskin glove.',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 minute',
+    },
+    attackRoll: true,
+    concentration: true,
+    ritual: false,
+    description:
+      "You create a Large hand of shimmering, translucent force in an unoccupied space that you can see within range. The hand lasts for the spell's duration, and it moves at your command, mimicking the movements of your own hand.\nThe hand is an object that has AC 20 and hit points equal to your hit point maximum. If it drops to 0 hit points, the spell ends. It has a Strength of 26 (+8) and a Dexterity of 10 (+0). The hand doesn't fill its space.\nWhen you cast the spell and as a bonus action on your subsequent turns, you can move the hand up to 60 feet and then cause one of the following effects with it.\n***Clenched Fist.*** The hand strikes one creature or object within 5 feet of it. Make a melee spell attack for the hand using your game statistics. On a hit, the target takes 4d8 force damage.\n***Forceful Hand.*** The hand attempts to push a creature within 5 feet of it in a direction you choose. Make a check with the hand's Strength contested by the Strength (Athletics) check of the target. If the target is Medium or smaller, you have advantage on the check. If you succeed, the hand pushes the target up to 5 feet plus a number of feet equal to five times your spellcasting ability modifier. The hand moves with the target to remain within 5 feet of it.\n***Grasping Hand.*** The hand attempts to grapple a Huge or smaller creature within 5 feet of it. You use the hand's Strength score to resolve the grapple. If the target is Medium or smaller, you have advantage on the check. While the hand is grappling the target, you can use a bonus action to have the hand crush it. When you do so, the target takes bludgeoning damage equal to 2d6 + your spellcasting ability modifier.\n***Interposing Hand.*** The hand interposes itself between you and a creature you choose until you give the hand a different command. The hand moves to stay between you and the target, providing you with half cover against the target. The target can't move through the hand's space if its Strength score is less than or equal to the hand's Strength score. If its Strength score is higher than the hand's Strength score, the target can move toward you through the hand's space, but that space is difficult terrain for the target.",
+    atHigherLevels:
+      'When you cast this spell using a spell slot of 6th level or higher, the damage from the clenched fist option increases by 2d8 and the damage from the grasping hand increases by 2d6 for each slot level above 5th.',
+    classes: ['wizard'],
+  },
+  {
+    id: 'commune-with-nature',
+    name: 'Commune With Nature',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 5,
+    school: 'divination',
+    castingTime: {
+      type: 'minute',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    concentration: false,
+    ritual: true,
+    description:
+      "You briefly become one with nature and gain knowledge of the surrounding territory. In the outdoors, the spell gives you knowledge of the land within 3 miles of you. In caves and other natural underground settings, the radius is limited to 300 feet. The spell doesn't function where nature has been replaced by construction, such as in dungeons and towns.\nYou instantly gain knowledge of up to three facts of your choice about any of the following subjects as they relate to the area:\n- terrain and bodies of water\n- prevalent plants, minerals, animals, or peoples\n- powerful celestials, fey, fiends, elementals, or undead\n- influence from other planes of existence\n- buildings\nFor example, you could determine the location of powerful undead in the area, the location of major sources of safe drinking water, and the location of any nearby towns.",
+    classes: ['druid', 'ranger'],
+  },
+  {
+    id: 'modify-memory',
+    name: 'Modify Memory',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 5,
+    school: 'enchantment',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 minute',
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'WIS save',
+    concentration: true,
+    ritual: false,
+    description:
+      "You attempt to reshape another creature's memories. One creature that you can see must make a wisdom saving throw. If you are fighting the creature, it has advantage on the saving throw. On a failed save, the target becomes charmed by you for the duration. The charmed target is incapacitated and unaware of its surroundings, though it can still hear you. If it takes any damage or is targeted by another spell, this spell ends, and none of the target's memories are modified.\nWhile this charm lasts, you can affect the target's memory of an event that it experienced within the last 24 hours and that lasted no more than 10 minutes. You can permanently eliminate all memory of the event, allow the target to recall the event with perfect clarity and exacting detail, change its memory of the details of the event, or create a memory of some other event.\nYou must speak to the target to describe how its memories are affected, and it must be able to understand your language for the modified memories to take root. Its mind fills in any gaps in the details of your description. If the spell ends before you have finished describing the modified memories, the creature's memory isn't altered. Otherwise, the modified memories take hold when the spell ends.\nA modified memory doesn't necessarily affect how a creature behaves, particularly if the memory contradicts the creature's natural inclinations, alignment, or beliefs. An illogical modified memory, such as implanting a memory of how much the creature enjoyed dousing itself in acid, is dismissed, perhaps as a bad dream. The GM might deem a modified memory too nonsensical to affect a creature in a significant manner.\nA remove curse or greater restoration spell cast on the target restores the creature's true memory.",
+    atHigherLevels:
+      "If you cast this spell using a spell slot of 6th level or higher, you can alter the target's memories of an event that took place up to 7 days ago (6th level), 30 days ago (7th level), 1 year ago (8th level), or any time in the creature's past (9th level).",
+    classes: ['bard', 'wizard'],
+  },
+  {
+    id: 'reincarnate',
+    name: 'Reincarnate',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 5,
+    school: 'transmutation',
+    castingTime: {
+      type: 'hour',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'Rare oils and unguents worth at least 1,000 gp, which the spell consumes.',
+    },
+    duration: {
+      type: 'instant',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      "You touch a dead humanoid or a piece of a dead humanoid. Provided that the creature has been dead no longer than 10 days, the spell forms a new adult body for it and then calls the soul to enter that body. If the target's soul isn't free or willing to do so, the spell fails.\nThe magic fashions a new body for the creature to inhabit, which likely causes the creature's race to change. The GM rolls a d 100 and consults the following table to determine what form the creature takes when restored to life, or the GM chooses a form.\n| d100 | Race |\n|---|---|\n| 01-04 | Dragonborn |\n| 05-13 | Dwarf, hill |\n| 14-21 | Dwarf, mountain |\n| 22-25 | Elf, dark |\n| 26-34 | Elf, high |\n| 35-42 | Elf, wood |\n| 43-46 | Gnome, forest |\n| 47-52 | Gnome, rock |\n| 53-56 | Half-elf |\n| 57-60 | Half-orc |\n| 61-68 | Halfling, lightfoot |\n| 69-76 | Halfling, stout |\n| 77-96 | Human |\n| 97-00 | Tiefling |\nThe reincarnated creature recalls its former life and experiences. It retains the capabilities it had in its original form, except it exchanges its original race for the new one and changes its racial traits accordingly.",
+    classes: ['druid'],
+  },
+  {
+    id: 'telepathic-bond',
+    name: 'Telepathic Bond',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 5,
+    school: 'divination',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'Pieces of eggshell from two different kinds of creatures',
+    },
+    duration: {
+      type: 'hours',
+      hours: 1,
+    },
+    concentration: false,
+    ritual: true,
+    description:
+      "You forge a telepathic link among up to eight willing creatures of your choice within range, psychically linking each creature to all the others for the duration. Creatures with Intelligence scores of 2 or less aren't affected by this spell.\nUntil the spell ends, the targets can communicate telepathically through the bond whether or not they have a common language. The communication is possible over any distance, though it can't extend to other planes of existence.",
+    classes: ['wizard'],
+  },
+  {
+    id: 'tree-stride',
+    name: 'Tree Stride',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 5,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'self',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 minute',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      "You gain the ability to enter a tree and move from inside it to inside another tree of the same kind within 500 feet. Both trees must be living and at least the same size as you. You must use 5 feet of movement to enter a tree. You instantly know the location of all other trees of the same kind within 500 feet and, as part of the move used to enter the tree, can either pass into one of those trees or step out of the tree you're in. You appear in a spot of your choice within 5 feet of the destination tree, using another 5 feet of movement. If you have no movement left, you appear within 5 feet of the tree you entered.\nYou can use this transportation ability once per round for the duration. You must end each turn outside a tree.",
+    classes: ['druid', 'ranger'],
   },
 ];
 

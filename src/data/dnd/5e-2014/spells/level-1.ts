@@ -571,30 +571,6 @@ export const level1Spells: Spell[] = [
     classes: ['bard', 'paladin'],
   },
   {
-    id: 'hex',
-    name: 'Hex',
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 1,
-    school: 'enchantment',
-    castingTime: { type: 'bonus-action', amount: 1 },
-    range: { type: 'ranged', feet: 90 },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'the petrified eye of a newt',
-    },
-    duration: { type: 'concentration', maxDuration: '1 hour' },
-    concentration: true,
-    ritual: false,
-    description:
-      'You place a curse on a creature that you can see within range. Until the spell ends, you deal an extra 1d6 necrotic damage to the target whenever you hit it with an attack. Also, choose one ability when you cast the spell. The target has disadvantage on ability checks made with the chosen ability. If the target drops to 0 hit points before this spell ends, you can use a bonus action on a subsequent turn of yours to curse a new creature.',
-    atHigherLevels:
-      'When you cast this spell using a spell slot of 3rd or 4th level, you can maintain your concentration on the spell for up to 8 hours. When you use a spell slot of 5th level or higher, you can maintain your concentration on the spell for up to 24 hours.',
-    classes: ['warlock'],
-  },
-  {
     id: 'hunters-mark',
     name: "Hunter's Mark",
     system: 'dnd-5e-2014',
@@ -921,51 +897,6 @@ export const level1Spells: Spell[] = [
     classes: ['bard', 'druid', 'ranger'],
   },
   {
-    id: 'tashas-hideous-laughter',
-    name: "Tasha's Hideous Laughter",
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 1,
-    school: 'enchantment',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 30 },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'tiny tarts and a feather that is waved in the air',
-    },
-    duration: { type: 'concentration', maxDuration: '1 minute' },
-    savingThrow: { attribute: 'wis', success: 'none' },
-    concentration: true,
-    ritual: false,
-    description:
-      "A creature of your choice that you can see within range perceives everything as hilariously funny and falls into fits of laughter if this spell affects it. The target must succeed on a Wisdom saving throw or fall prone, becoming incapacitated and unable to stand up for the duration. A creature with an Intelligence score of 4 or less isn't affected. At the end of each of its turns, and each time it takes damage, the target can make another Wisdom saving throw. The target has advantage on the saving throw if it's triggered by damage. On a success, the spell ends.",
-    classes: ['bard', 'wizard'],
-  },
-  {
-    id: 'tensers-floating-disk',
-    name: "Tenser's Floating Disk",
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 1,
-    school: 'conjuration',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 30 },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'a drop of mercury',
-    },
-    duration: { type: 'hours', hours: 1 },
-    concentration: false,
-    ritual: true,
-    description:
-      "This spell creates a circular, horizontal plane of force, 3 feet in diameter and 1 inch thick, that floats 3 feet above the ground in an unoccupied space of your choice that you can see within range. The disk remains for the duration, and can hold up to 500 pounds. If more weight is placed on it, the spell ends, and everything on the disk falls to the ground. The disk is immobile while you are within 20 feet of it. If you move more than 20 feet away from it, the disk follows you so that it remains within 20 feet of you. It can move across uneven terrain, up or down stairs, slopes and the like, but it can't cross an elevation change of 10 feet or more. For example, the disk can't move across a 10-foot-deep pit, nor could it leave such a pit if it was created at the bottom. If you move more than 100 feet from the disk (typically because it can't move around an obstacle to follow you), the spell ends.",
-    classes: ['wizard'],
-  },
-  {
     id: 'thunderwave',
     name: 'Thunderwave',
     system: 'dnd-5e-2014',
@@ -1010,30 +941,176 @@ export const level1Spells: Spell[] = [
     classes: ['bard', 'warlock', 'wizard'],
   },
   {
-    id: 'witch-bolt',
-    name: 'Witch Bolt',
+    id: 'find-familiar',
+    name: 'Find Familiar',
     system: 'dnd-5e-2014',
     source: 'SRD 5.1',
     level: 1,
-    school: 'evocation',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 30 },
+    school: 'conjuration',
+    castingTime: {
+      type: 'hour',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 10,
+    },
     components: {
       verbal: true,
       somatic: true,
       material: true,
-      materialDescription: 'a twig from a tree that has been struck by lightning',
+      materialDescription:
+        '10gp worth of charcoal, incense, and herbs that must be consumed by fire in a brass brazier.',
     },
-    duration: { type: 'concentration', maxDuration: '1 minute' },
-    attackRoll: true,
-    damage: { base: { count: 1, die: 'd12', notation: '1d12' }, type: 'lightning' },
+    duration: {
+      type: 'instant',
+    },
+    concentration: false,
+    ritual: true,
+    description:
+      "You gain the service of a familiar, a spirit that takes an animal form you choose: bat, cat, crab, frog (toad), hawk, lizard, octopus, owl, poisonous snake, fish (quipper), rat, raven, sea horse, spider, or weasel. Appearing in an unoccupied space within range, the familiar has the statistics of the chosen form, though it is a celestial, fey, or fiend (your choice) instead of a beast.\nYour familiar acts independently of you, but it always obeys your commands. In combat, it rolls its own initiative and acts on its own turn. A familiar can't attack, but it can take other actions as normal.\nWhen the familiar drops to 0 hit points, it disappears, leaving behind no physical form. It reappears after you cast this spell again.\nWhile your familiar is within 100 feet of you, you can communicate with it telepathically. Additionally, as an action, you can see through your familiar's eyes and hear what it hears until the start of your next turn, gaining the benefits of any special senses that the familiar has. During this time, you are deaf and blind with regard to your own senses.\nAs an action, you can temporarily dismiss your familiar. It disappears into a pocket dimension where it awaits your summons. Alternatively, you can dismiss it forever. As an action while it is temporarily dismissed, you can cause it to reappear in any unoccupied space within 30 feet of you.\nYou can't have more than one familiar at a time. If you cast this spell while you already have a familiar, you instead cause it to adopt a new form. Choose one of the forms from the above list. Your familiar transforms into the chosen creature.\nFinally, when you cast a spell with a range of touch, your familiar can deliver the spell as if it had cast the spell. Your familiar must be within 100 feet of you, and it must use its reaction to deliver the spell when you cast it. If the spell requires an attack roll, you use your action modifier for the roll.",
+    classes: ['wizard'],
+  },
+  {
+    id: 'floating-disk',
+    name: 'Floating Disk',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 1,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'A drop of mercury.',
+    },
+    duration: {
+      type: 'hours',
+      hours: 1,
+    },
+    concentration: false,
+    ritual: true,
+    description:
+      "This spell creates a circular, horizontal plane of force, 3 feet in diameter and 1 inch thick, that floats 3 feet above the ground in an unoccupied space of your choice that you can see within range. The disk remains for the duration, and can hold up to 500 pounds. If more weight is placed on it, the spell ends, and everything on the disk falls to the ground.\nThe disk is immobile while you are within 20 feet of it. If you move more than 20 feet away from it, the disk follows you so that it remains within 20 feet of you. If can move across uneven terrain, up or down stairs, slopes and the like, but it can't cross an elevation change of 10 feet or more. For example, the disk can't move across a 10-foot-deep pit, nor could it leave such a pit if it was created at the bottom.\nIf you move more than 100 feet away from the disk (typically because it can't move around an obstacle to follow you), the spell ends.",
+    classes: ['wizard'],
+  },
+  {
+    id: 'hellish-rebuke',
+    name: 'Hellish Rebuke',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 1,
+    school: 'evocation',
+    castingTime: {
+      type: 'reaction',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    savingThrowText: 'DEX save',
+    damage: {
+      base: {
+        count: 2,
+        die: 'd10',
+        notation: '2d10',
+      },
+      type: 'fire',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You point your finger, and the creature that damaged you is momentarily surrounded by hellish flames. The creature must make a dexterity saving throw. It takes 2d10 fire damage on a failed save, or half as much damage on a successful one.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of 2nd level or higher, the damage increases by 1d10 for each slot level above 1st.',
+    classes: ['warlock'],
+  },
+  {
+    id: 'hideous-laughter',
+    name: 'Hideous Laughter',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 1,
+    school: 'enchantment',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'Tiny tarts and a feather that is waved in the air.',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 minute',
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'WIS save',
     concentration: true,
     ritual: false,
     description:
-      "A beam of crackling, blue energy lances out toward a creature within range, forming a sustained arc of lightning between you and the target. Make a ranged spell attack against that creature. On a hit, the target takes 1d12 lightning damage, and on each of your turns for the duration, you can use your action to deal 1d12 lightning damage to the target automatically. The spell ends if you use your action to do anything else. The spell also ends if the target is ever outside the spell's range or if it has total cover from you.",
-    atHigherLevels:
-      'When you cast this spell using a spell slot of 2nd level or higher, the initial damage increases by 1d12 for each slot level above 1st.',
-    classes: ['sorcerer', 'warlock', 'wizard'],
+      "A creature of your choice that you can see within range perceives everything as hilariously funny and falls into fits of laughter if this spell affects it. The target must succeed on a wisdom saving throw or fall prone, becoming incapacitated and unable to stand up for the duration. A creature with an Intelligence score of 4 or less isn't affected.\nAt the end of each of its turns, and each time it takes damage, the target can make another wisdom saving throw. The target had advantage on the saving throw if it's triggered by damage. On a success, the spell ends.",
+    classes: ['bard', 'wizard'],
+  },
+  {
+    id: 'illusory-script',
+    name: 'Illusory Script',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 1,
+    school: 'illusion',
+    castingTime: {
+      type: 'minute',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: false,
+      somatic: true,
+      material: true,
+      materialDescription: 'A lead-based ink worth at least 10gp, which this spell consumes.',
+    },
+    duration: {
+      type: 'special',
+      description: '10 days',
+    },
+    concentration: false,
+    ritual: true,
+    description:
+      'You write on parchment, paper, or some other suitable writing material and imbue it with a potent illusion that lasts for the duration.\nTo you and any creatures you designate when you cast the spell, the writing appears normal, written in your hand, and conveys whatever meaning you intended when you wrote the text. To all others, the writing appears as if it were written in an unknown or magical script that is unintelligible. Alternatively, you can cause the writing to appear to be an entirely different message, written in a different hand and language, though the language must be one you know.\nShould the spell be dispelled, the original script and the illusion both disappear.\nA creature with truesight can read the hidden message.',
+    classes: ['bard', 'warlock', 'wizard'],
   },
 ];
 

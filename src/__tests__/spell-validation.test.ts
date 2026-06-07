@@ -461,7 +461,6 @@ describe('Spell Data Validation', () => {
     const curated2014SaveIds = [
       'light',
       'stinking-cloud',
-      'sickening-radiance',
       'wall-of-stone',
       'awaken',
       'reverse-gravity',
@@ -502,7 +501,6 @@ describe('Spell Data Validation', () => {
       'light',
       'awaken',
       'wall-of-stone',
-      'blinding-smite',
       'maze',
       'power-word-stun',
       'imprisonment',
@@ -516,8 +514,6 @@ describe('Spell Data Validation', () => {
       'fly',
       'revivify',
       'bestow-curse',
-      'feign-death',
-      'beast-sense',
       'freedom-of-movement',
     ];
     const curated5e2024MetadataIds = [
@@ -591,7 +587,6 @@ describe('Spell Data Validation', () => {
       'raise-dead': '1 dead creature you touch',
       'greater-restoration': '1 creature you touch',
       'true-seeing': '1 willing creature you touch',
-      'livening-stone': '1 stone you touch',
       resurrection: '1 dead creature you touch',
       'true-resurrection': '1 creature you touch',
     };
@@ -674,7 +669,7 @@ describe('Spell Data Validation', () => {
   });
 
   it('keeps core 5e shared spell save and area metadata aligned across editions', () => {
-    const sharedParityIds = ['light', 'stinking-cloud', 'sickening-radiance', 'reverse-gravity'];
+    const sharedParityIds = ['light', 'stinking-cloud', 'reverse-gravity'];
 
     sharedParityIds.forEach((id) => {
       const spell2014 = getRawSpellById(dnd5e2014SpellsModule as SpellModule, 9, id);

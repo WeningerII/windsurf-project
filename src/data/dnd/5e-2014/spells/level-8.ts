@@ -170,29 +170,6 @@ export const level8Spells: Spell[] = [
     classes: ['bard', 'wizard'],
   },
   {
-    id: 'trap',
-    name: 'Trap',
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 8,
-    school: 'abjuration',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 30 },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription:
-        'a piece of wire, string, or leather; a small mechanical trap or snare; and powdered diamond worth at least 100 gp',
-    },
-    duration: { type: 'special', description: 'until dispelled' },
-    concentration: false,
-    ritual: false,
-    description:
-      'You place an invisible magical trap on an object or in a location of your choice within range. The trap is nearly impossible to spot, requiring a successful Intelligence (Investigation) check against your spell save DC to be found. When a creature comes within 5 feet of the trap, it triggers, and you choose what happens. The trap can deal damage, restrain, or have other effects.',
-    classes: ['wizard'],
-  },
-  {
     id: 'animal-shapes',
     name: 'Animal Shapes',
     system: 'dnd-5e-2014',
@@ -443,6 +420,42 @@ export const level8Spells: Spell[] = [
     description:
       'Brilliant sunlight flashes in a 60-foot-radius Sphere centered on a point you choose within range. Each creature in that light must make a Constitution saving throw, taking 12d6 Radiant damage on a failed save and has the Blinded condition for 1 minute.',
     classes: ['cleric', 'druid', 'sorcerer', 'wizard'],
+  },
+  {
+    id: 'antipathy-sympathy',
+    name: 'Antipathy/Sympathy',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 8,
+    school: 'enchantment',
+    castingTime: {
+      type: 'hour',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'Either a lump of alum soaked in vinegar for the antipathy effect or a drop of honey for the sympathy effect.',
+    },
+    duration: {
+      type: 'special',
+      description: '10 days',
+    },
+    areaOfEffect: {
+      type: 'cube',
+      feet: 200,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      "This spell attracts or repels creatures of your choice. You target something within range, either a Huge or smaller object or creature or an area that is no larger than a 200-foot cube. Then specify a kind of intelligent creature, such as red dragons, goblins, or vampires. You invest the target with an aura that either attracts or repels the specified creatures for the duration. Choose antipathy or sympathy as the aura's effect.\n***Antipathy.*** The enchantment causes creatures of the kind you designated to feel an intense urge to leave the area and avoid the target. When such a creature can see the target or comes within 60 feet of it, the creature must succeed on a wisdom saving throw or become frightened. The creature remains frightened while it can see the target or is within 60 feet of it. While frightened by the target, the creature must use its movement to move to the nearest safe spot from which it can't see the target. If the creature moves more than 60 feet from the target and can't see it, the creature is no longer frightened, but the creature becomes frightened again if it regains sight of the target or moves within 60 feet of it.\n***Sympathy.*** The enchantment causes the specified creatures to feel an intense urge to approach the target while within 60 feet of it or able to see it. When such a creature can see the target or comes within 60 feet of it, the creature must succeed on a wisdom saving throw or use its movement on each of its turns to enter the area or move within reach of the target. When the creature has done so, it can't willingly move away from the target.\nIf the target damages or otherwise harms an affected creature, the affected creature can make a wisdom saving throw to end the effect, as described below.\n***Ending the Effect.*** If an affected creature ends its turn while not within 60 feet of the target or able to see it, the creature makes a wisdom saving throw. On a successful save, the creature is no longer affected by the target and recognizes the feeling of repugnance or attraction as magical. In addition, a creature affected by the spell is allowed another wisdom saving throw every 24 hours while the spell persists.\nA creature that successfully saves against this effect is immune to it for 1 minute, after which time it can be affected again.",
+    classes: ['druid', 'wizard'],
   },
 ];
 

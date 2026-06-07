@@ -89,28 +89,6 @@ export const level7Spells: Spell[] = [
     classes: ['bard', 'cleric', 'sorcerer', 'warlock', 'wizard'],
   },
   {
-    id: 'airwalk',
-    name: 'Airwalk',
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 7,
-    school: 'transmutation',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 30 },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'a piece of wood or ivory fashioned into a ring and worth at least 5 gp',
-    },
-    duration: { type: 'concentration', maxDuration: '10 minutes' },
-    concentration: true,
-    ritual: false,
-    description:
-      'You grant yourself or a creature you touch the ability to walk on air as if it were solid ground. The target can move in any direction, including vertically, at its normal speed while in the air. The creature must still obey the normal rules for movement, including the ground speed limit. The effect ends if the target is knocked prone, if the target voluntarily ends the effect, or if you lose concentration.',
-    classes: ['cleric', 'druid'],
-  },
-  {
     id: 'forcecage',
     name: 'Forcecage',
     system: 'dnd-5e-2014',
@@ -131,69 +109,6 @@ export const level7Spells: Spell[] = [
     description:
       'An invisible, immobile, cube-shaped prison composed of magical force springs into existence around an area you choose within range. The prison can be a cage or a solid box, as you choose. A prison built as a cage can be up to 20 feet on a side and is made from 1/2-inch diameter bars spaced 1/2 inch apart. A prison constructed as a solid box can be up to 15 feet on a side, creating a solid barrier that prevents any matter from passing through and blocking any spells cast into or out from the area.',
     classes: ['bard', 'warlock', 'wizard'],
-  },
-  {
-    id: 'mirage',
-    name: 'Mirage',
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 7,
-    school: 'illusion',
-    castingTime: { type: 'minute', amount: 10 },
-    range: { type: 'ranged', feet: 300 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'hours', hours: 10 },
-    concentration: false,
-    ritual: false,
-    description:
-      "You create the image of an object, a creature, or some other visible phenomenon within range. The image appears at a spot within range where you can see. It lasts for the duration. It seems completely real, including sounds, smells, and temperature appropriate to the thing imaged. You can't create sufficient heat or cold to cause damage, a sound loud enough to deal thunder damage or deafen a creature, or a smell that might sicken a creature.",
-    classes: ['bard', 'wizard'],
-  },
-  {
-    id: 'mordenkainen-lodestone',
-    name: "Mordenkainen's Lodestone",
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 7,
-    school: 'transmutation',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 60 },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'a lodestone and iron filings',
-    },
-    duration: { type: 'concentration', maxDuration: '1 hour' },
-    concentration: true,
-    ritual: false,
-    description:
-      "You touch an object that weighs at least 50 pounds and isn't being worn or carried. The object becomes magnetic, attracting ferrous objects within 30 feet of it. Any ferrous creature or object that starts its turn within 30 feet of the object is pulled 5 feet toward it unless the creature uses an action to resist the pull.",
-    classes: ['wizard'],
-  },
-  {
-    id: 'mordenkainen-sword',
-    name: "Mordenkainen's Sword",
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 7,
-    school: 'evocation',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 60 },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription:
-        'a miniature platinum sword with a grip and pommel of copper and zinc worth 250 gp',
-    },
-    duration: { type: 'concentration', maxDuration: '1 minute' },
-    attackRoll: true,
-    concentration: true,
-    ritual: false,
-    description:
-      'You create a sword-shaped plane of force that hovers within range. It lasts for the duration. When you cast this spell, you can make up to two melee spell attacks with the sword against creatures within 5 feet of the sword. On a hit, the target takes 4d6 force damage. As a bonus action on each of your turns, you can move the sword up to 20 feet to an unoccupied space you can see and repeat the attacks against creatures within 5 feet of it.',
-    classes: ['bard', 'wizard'],
   },
   {
     id: 'reverse-gravity',
@@ -608,6 +523,83 @@ export const level7Spells: Spell[] = [
     description:
       'You touch a creature and stimulate its natural healing ability. The target regains 4d8 + 15 Hit Points. For the duration of the spell, the target regains 1 Hit Point at the start of each of its turns.',
     classes: ['bard', 'cleric', 'druid'],
+  },
+  {
+    id: 'arcane-sword',
+    name: 'Arcane Sword',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 7,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'A miniature platinum sword with a grip and pommel of copper and zinc, worth 250 gp.',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 minute',
+    },
+    attackRoll: true,
+    damage: {
+      base: {
+        count: 3,
+        die: 'd10',
+        notation: '3d10',
+      },
+      type: 'force',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'You create a sword-shaped plane of force that hovers within range. It lasts for the duration.\nWhen the sword appears, you make a melee spell attack against a target of your choice within 5 feet of the sword. On a hit, the target takes 3d10 force damage. Until the spell ends, you can use a bonus action on each of your turns to move the sword up to 20 feet to a spot you can see and repeat this attack against the same target or a different one.',
+    classes: ['bard', 'wizard'],
+  },
+  {
+    id: 'magnificent-mansion',
+    name: 'Magnificent Mansion',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 7,
+    school: 'conjuration',
+    castingTime: {
+      type: 'minute',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 300,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'A miniature portal carved from ivory, a small piece of polished marble, and a tiny silver spoon, each item worth at least 5 gp.',
+    },
+    duration: {
+      type: 'hours',
+      hours: 24,
+    },
+    areaOfEffect: {
+      type: 'cube',
+      feet: 5,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      "You conjure an extradimensional dwelling in range that lasts for the duration. You choose where its one entrance is located. The entrance shimmers faintly and is 5 feet wide and 10 feet tall. You and any creature you designate when you cast the spell can enter the extradimensional dwelling as long as the portal remains open. You can open or close the portal if you are within 30 feet of it. While closed, the portal is invisible.\nBeyond the portal is a magnificent foyer with numerous chambers beyond. The atmosphere is clean, fresh, and warm.\nYou can create any floor plan you like, but the space can't exceed 50 cubes, each cube being 10 feet on each side. The place is furnished and decorated as you choose. It contains sufficient food to serve a nine course banquet for up to 100 people. A staff of 100 near-transparent servants attends all who enter. You decide the visual appearance of these servants and their attire. They are completely obedient to your orders. Each servant can perform any task a normal human servant could perform, but they can't attack or take any action that would directly harm another creature. Thus the servants can fetch things, clean, mend, fold clothes, light fires, serve food, pour wine, and so on. The servants can go anywhere in the mansion but can't leave it. Furnishings and other objects created by this spell dissipate into smoke if removed from the mansion. When the spell ends, any creatures inside the extradimensional space are expelled into the open spaces nearest to the entrance.",
+    classes: ['bard', 'wizard'],
   },
 ];
 

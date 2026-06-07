@@ -378,54 +378,6 @@ export const level4Spells: Spell[] = [
     classes: ['bard', 'cleric', 'druid', 'paladin', 'ranger', 'wizard'],
   },
   {
-    id: 'private-sanctum',
-    name: "Mordenkainen's Private Sanctum",
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 4,
-    school: 'abjuration',
-    castingTime: { type: 'minute', amount: 10 },
-    range: { type: 'ranged', feet: 120 },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription:
-        'a thin sheet of lead, a piece of opaque glass, a wad of cotton or cloth, and powdered chrysolite',
-    },
-    duration: { type: 'hours', hours: 24 },
-    areaOfEffect: { type: 'cube', feet: 100 },
-    concentration: false,
-    ritual: false,
-    description:
-      "You make an area within range magically secure. The area is a cube that can be as small as 5 feet to as large as 100 feet on each side. The spell lasts for the duration or until you use an action to dismiss it. When you cast the spell, you decide what sort of security the spell provides, choosing any or all of the following properties: Sound can't pass through the barrier at the edge of the warded area. The barrier of the warded area appears dark and foggy, preventing vision (including darkvision) through it. Sensors created by divination spells can't appear inside the protected area or pass through the barrier at its perimeter. Creatures in the area can't be targeted by divination spells. Nothing can teleport into or out of the warded area. Planar travel is blocked within the warded area.",
-    classes: ['wizard'],
-  },
-  {
-    id: 'resilient-sphere',
-    name: "Otiluke's Resilient Sphere",
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 4,
-    school: 'evocation',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 30 },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription:
-        'a hemispherical piece of clear crystal and a matching hemispherical piece of gum arabic',
-    },
-    duration: { type: 'concentration', maxDuration: '1 minute' },
-    savingThrow: { attribute: 'dex', success: 'none' },
-    concentration: true,
-    ritual: false,
-    description:
-      "A sphere of shimmering force encloses a creature or object of Large size or smaller within range. An unwilling creature must make a Dexterity saving throw. On a failed save, the creature is enclosed for the duration. Nothing—not physical objects, energy, or other spell effects—can pass through the barrier, in or out, though a creature in the sphere can breathe there. The sphere is immune to all damage, and a creature or object inside can't be damaged by attacks or effects originating from outside, nor can a creature inside the sphere damage anything outside it.",
-    classes: ['wizard'],
-  },
-  {
     id: 'stoneskin',
     name: 'Stoneskin',
     system: 'dnd-5e-2014',
@@ -449,78 +401,6 @@ export const level4Spells: Spell[] = [
     description:
       'This spell turns the flesh of a willing creature you touch as hard as stone. Until the spell ends, the target has resistance to nonmagical bludgeoning, piercing, and slashing damage.',
     classes: ['druid', 'ranger', 'sorcerer', 'wizard'],
-  },
-  {
-    id: 'leomunds-secret-chest',
-    name: "Leomund's Secret Chest",
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 4,
-    school: 'conjuration',
-    castingTime: { type: 'minute', amount: 1 },
-    range: { type: 'touch' },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription:
-        'an exquisite chest, 3 feet by 2 feet by 2 feet, constructed from rare wood with an iron lock and key. The chest costs at least 5,000 gp',
-    },
-    duration: { type: 'instant' },
-    concentration: false,
-    ritual: false,
-    description:
-      'You hide a chest, and all its contents, on the Ethereal Plane. You must touch the chest and the miniature replica that serves as a material component for this spell. The chest can contain up to 12 cubic feet of nonliving matter (3 feet by 2 feet by 2 feet). While closed, the miniature replica weighs 1 pound. You can retrieve the chest by speaking its name and touching the replica. A creature within 5 feet of the replica can then pull the chest back to the Material Plane. A detect magic spell reveals an aura of conjuration magic on both the replica and the chest. A dispel magic spell cast on the replica destroys the spell and returns the chest to the Material Plane.',
-    classes: ['wizard'],
-  },
-  {
-    id: 'mordenkainen-faithful-hound',
-    name: "Mordenkainen's Faithful Hound",
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 4,
-    school: 'conjuration',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 30 },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'a tiny silver whistle, a piece of bone, and a thread',
-    },
-    duration: { type: 'hours', hours: 8 },
-    concentration: false,
-    ritual: false,
-    description:
-      "You conjure a phantom watchdog in an unoccupied space that you can see within range, where it remains for the duration. The hound is invisible to all creatures except you and can't be harmed. When a Small or larger creature comes within 30 feet of it without first speaking the password that you specify when you cast this spell, the hound starts barking loudly. The hound sees invisible creatures and can see into the Ethereal Plane. It ignores illusions.",
-    classes: ['wizard'],
-  },
-  {
-    id: 'sickening-radiance',
-    name: 'Sickening Radiance',
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 4,
-    school: 'evocation',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 120 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'concentration', maxDuration: '10 minutes' },
-    areaOfEffect: { type: 'sphere', radius: 30 },
-    savingThrow: { attribute: 'con', success: 'none' },
-    savingThrowText:
-      'A creature that starts its turn in the area must succeed on a Constitution saving throw or take 2d8 poison damage.',
-    damage: {
-      base: { count: 2, die: 'd8', notation: '2d8' },
-      type: 'poison',
-    },
-    concentration: true,
-    ritual: false,
-    description:
-      'Dim, sickly green light spreads within a 30-foot-radius sphere centered on a point of your choice within range. The light spreads around corners. If a creature starts its turn in the area, it must succeed on a Constitution saving throw or take 2d8 poison damage.',
-    atHigherLevels:
-      'When you cast this spell using a spell slot of 5th level or higher, the damage increases by 1d8 for each slot level above 4th.',
-    classes: ['wizard'],
   },
   {
     id: 'guardian-of-faith',
@@ -750,6 +630,234 @@ export const level4Spells: Spell[] = [
     atHigherLevels:
       'When you cast this spell using a spell slot of level 5 or higher, the damage increases by 1d8 for each slot level above 4.',
     classes: ['druid', 'sorcerer', 'wizard'],
+  },
+  {
+    id: 'black-tentacles',
+    name: 'Black Tentacles',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 4,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 90,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'A piece of tentacle from a giant octopus or a giant squid',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 minute',
+    },
+    areaOfEffect: {
+      type: 'cube',
+      feet: 20,
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'none',
+    },
+    savingThrowText: 'DEX save',
+    damage: {
+      base: {
+        count: 3,
+        die: 'd6',
+        notation: '3d6',
+      },
+      type: 'bludgeoning',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'Squirming, ebony tentacles fill a 20-foot square on ground that you can see within range. For the duration, these tentacles turn the ground in the area into difficult terrain.\nWhen a creature enters the affected area for the first time on a turn or starts its turn there, the creature must succeed on a Dexterity saving throw or take 3d6 bludgeoning damage and be restrained by the tentacles until the spell ends. A creature that starts its turn in the area and is already restrained by the tentacles takes 3d6 bludgeoning damage.\nA creature restrained by the tentacles can use its action to make a Strength or Dexterity check (its choice) against your spell save DC. On a success, it frees itself.',
+    classes: ['wizard'],
+  },
+  {
+    id: 'compulsion',
+    name: 'Compulsion',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 4,
+    school: 'enchantment',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 minute',
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'WIS save',
+    concentration: true,
+    ritual: false,
+    description:
+      "Creatures of your choice that you can see within range and that can hear you must make a wisdom saving throw. A target automatically succeeds on this saving throw if it can't be charmed. On a failed save, a target is affected by this spell. Until the spell ends, you can use a bonus action on each of your turns to designate a direction that is horizontal to you. Each affected target must use as much of its movement as possible to move in that direction on its next turn. It can take any action before it moves. After moving in this way, it can make another Wisdom save to try to end the effect.\nA target isn't compelled to move into an obviously deadly hazard, such as a fire or a pit, but it will provoke opportunity attacks to move in the designated direction.",
+    classes: ['bard'],
+  },
+  {
+    id: 'faithful-hound',
+    name: 'Faithful Hound',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 4,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'A tiny silver whistle, a piece of bone, and a thread',
+    },
+    duration: {
+      type: 'hours',
+      hours: 8,
+    },
+    attackRoll: true,
+    damage: {
+      base: {
+        count: 4,
+        die: 'd8',
+        notation: '4d8',
+      },
+      type: 'piercing',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      "You conjure a phantom watchdog in an unoccupied space that you can see within range, where it remains for the duration, until you dismiss it as an action, or until you move more than 100 feet away from it.\nThe hound is invisible to all creatures except you and can't be harmed. When a Small or larger creature comes within 30 feet of it without first speaking the password that you specify when you cast this spell, the hound starts barking loudly. The hound sees invisible creatures and can see into the Ethereal Plane. It ignores illusions.\nAt the start of each of your turns, the hound attempts to bite one creature within 5 feet of it that is hostile to you. The hound's attack bonus is equal to your spellcasting ability modifier + your proficiency bonus. On a hit, it deals 4d8 piercing damage.",
+    classes: ['wizard'],
+  },
+  {
+    id: 'private-sanctum',
+    name: 'Private Sanctum',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 4,
+    school: 'abjuration',
+    castingTime: {
+      type: 'minutes',
+      amount: 10,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'A thin sheet of lead, a piece of opaque glass, a wad of cotton or cloth, and powdered chrysolite.',
+    },
+    duration: {
+      type: 'hours',
+      hours: 24,
+    },
+    areaOfEffect: {
+      type: 'cube',
+      feet: 100,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      "You make an area within range magically secure. The area is a cube that can be as small as 5 feet to as large as 100 feet on each side. The spell lasts for the duration or until you use an action to dismiss it.\nWhen you cast the spell, you decide what sort of security the spell provides, choosing any or all of the following properties:\n- Sound can't pass through the barrier at the edge of the warded area.\n- The barrier of the warded area appears dark and foggy, preventing vision (including darkvision) through it.\n- Sensors created by divination spells can't appear inside the protected area or pass through the barrier at its perimeter.\n- Creatures in the area can't be targeted by divination spells.\n- Nothing can teleport into or out of the warded area.\n- Planar travel is blocked within the warded area.\nCasting this spell on the same spot every day for a year makes this effect permanent.",
+    atHigherLevels:
+      'When you cast this spell using a spell slot of 5th level or higher, you can increase the size of the cube by 100 feet for each slot level beyond 4th. Thus you could protect a cube that can be up to 200 feet on one side by using a spell slot of 5th level.',
+    classes: ['wizard'],
+  },
+  {
+    id: 'resilient-sphere',
+    name: 'Resilient Sphere',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 4,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'A hemispherical piece of clear crystal and a matching hemispherical piece of gum arabic.',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 minute',
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'none',
+    },
+    savingThrowText: 'DEX save',
+    concentration: true,
+    ritual: false,
+    description:
+      "A sphere of shimmering force encloses a creature or object of Large size or smaller within range. An unwilling creature must make a dexterity saving throw. On a failed save, the creature is enclosed for the duration.\nNothing--not physical objects, energy, or other spell effects--can pass through the barrier, in or out, though a creature in the sphere can breathe there. The sphere is immune to all damage, and a creature or object inside can't be damaged by attacks or effects originating from outside, nor can a creature inside the sphere damage anything outside it.\nThe sphere is weightless and just large enough to contain the creature or object inside. An enclosed creature can use its action to push against the sphere's walls and thus roll the sphere at up to half the creature's speed. Similarly, the globe can be picked up and moved by other creatures.\nA disintegrate spell targeting the globe destroys it without harming anything inside it.",
+    classes: ['wizard'],
+  },
+  {
+    id: 'secret-chest',
+    name: 'Secret Chest',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 4,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'An exquisite chest, 3 feet by 2 feet by 2 feet, constructed from rare materials worth at least 5,000 gp, and a Tiny replica made from the same materials worth at least 50 gp.',
+    },
+    duration: {
+      type: 'instant',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      "You hide a chest, and all its contents, on the Ethereal Plane. You must touch the chest and the miniature replica that serves as a material component for the spell. The chest can contain up to 12 cubic feet of nonliving material (3 feet by 2 feet by 2 feet).\nWhile the chest remains on the Ethereal Plane, you can use an action and touch the replica to recall the chest. It appears in an unoccupied space on the ground within 5 feet of you. You can send the chest back to the Ethereal Plane by using an action and touching both the chest and the replica.\nAfter 60 days, there is a cumulative 5 percent chance per day that the spell's effect ends. This effect ends if you cast this spell again, if the smaller replica chest is destroyed, or if you choose to end the spell as an action. If the spell ends and the larger chest is on the Ethereal Plane, it is irretrievably lost.",
+    classes: ['wizard'],
   },
 ];
 

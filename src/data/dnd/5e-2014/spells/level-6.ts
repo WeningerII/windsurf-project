@@ -95,48 +95,6 @@ export const level6Spells: Spell[] = [
     classes: ['bard', 'cleric', 'druid'],
   },
   {
-    id: 'arcane-gate',
-    name: 'Arcane Gate',
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 6,
-    school: 'transmutation',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 500 },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'concentration', maxDuration: '10 minutes' },
-    concentration: true,
-    ritual: false,
-    description:
-      'You create linked teleportation portals that remain open for the duration. Choose two points on the ground that you can see, one point within 10 feet of you and one point within 500 feet of you. A circular portal, 10 feet in diameter, opens over each point. If the portal would open in a space occupied by a creature, the spell fails, and the casting is wasted.',
-    classes: ['sorcerer', 'wizard'],
-  },
-  {
-    id: 'conjure-elementals',
-    name: 'Conjure Elementals',
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 6,
-    school: 'conjuration',
-    castingTime: { type: 'minute', amount: 1 },
-    range: { type: 'ranged', feet: 90 },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription:
-        'burning incense for air, soft clay for earth, salt water for water, or sulfur for fire',
-    },
-    duration: { type: 'concentration', maxDuration: '1 hour' },
-    concentration: true,
-    ritual: false,
-    description:
-      'You call forth elementals that appear in unoccupied spaces that you can see within range. You choose one of the following options for what appears: Four elementals of challenge rating 1 or lower, Two elementals of challenge rating 2 or lower, One elemental of challenge rating 3 or lower. An elemental summoned by this spell disappears when it drops to 0 hit points or when the spell ends.',
-    atHigherLevels:
-      'When you cast this spell using certain higher-level spell slots, you choose one of the summoning options above, and more creatures appear: twice as many with a 7th-level slot and three times as many with a 9th-level slot.',
-    classes: ['druid', 'wizard'],
-  },
-  {
     id: 'contingency',
     name: 'Contingency',
     system: 'dnd-5e-2014',
@@ -200,28 +158,6 @@ export const level6Spells: Spell[] = [
     classes: ['cleric'],
   },
   {
-    id: 'glass-staff',
-    name: 'Glass Staff',
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 6,
-    school: 'transmutation',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 60 },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'a small glass rod',
-    },
-    duration: { type: 'concentration', maxDuration: '1 minute' },
-    concentration: true,
-    ritual: false,
-    description:
-      'You cause a nonmagical wooden staff or quarterstaff to become a staff of glass. For the duration, the staff is transparent and has resistance to bludgeoning, piercing, and slashing damage. If the staff is used as a weapon, it deals an extra 1d6 force damage on a hit.',
-    classes: ['wizard'],
-  },
-  {
     id: 'globe-of-invulnerability',
     name: 'Globe of Invulnerability',
     system: 'dnd-5e-2014',
@@ -267,29 +203,6 @@ export const level6Spells: Spell[] = [
     classes: ['bard', 'wizard'],
   },
   {
-    id: 'livening-stone',
-    name: 'Livening Stone',
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 6,
-    school: 'transmutation',
-    castingTime: { type: 'minute', amount: 1 },
-    range: { type: 'touch' },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'a stone worth at least 100 gp',
-    },
-    duration: { type: 'instant' },
-    target: '1 stone you touch',
-    concentration: false,
-    ritual: false,
-    description:
-      "You touch a stone and cause it to become a stone golem under your control. The stone must be at least 2 feet in any dimension. The golem obeys your verbal commands. If you don't issue any commands to the golem, it defends itself against hostile creatures but otherwise takes no actions.",
-    classes: ['wizard'],
-  },
-  {
     id: 'mass-heal',
     name: 'Mass Heal',
     system: 'dnd-5e-2014',
@@ -323,28 +236,6 @@ export const level6Spells: Spell[] = [
     description:
       "Choose an area of terrain no larger than 40 feet on each side within range. You can reshape dirt, sand, or clay in the area in any manner you choose for the duration. You can raise or lower the elevation of the terrain, create or fill in a trench, erect or flatten a wall, or form a pillar. The extent of any such changes can't exceed twice the spell's range.",
     classes: ['druid', 'wizard'],
-  },
-  {
-    id: 'otiluke-resilience',
-    name: "Otiluke's Resilience",
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 6,
-    school: 'abjuration',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'ranged', feet: 30 },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'a diamond worth at least 1,500 gp',
-    },
-    duration: { type: 'concentration', maxDuration: '1 hour' },
-    concentration: true,
-    ritual: false,
-    description:
-      "You grant yourself or a creature you touch resistance to one damage type of your choice for the duration. At the end of each of the target's turns, it can end this effect and choose a different damage type to have resistance to.",
-    classes: ['wizard'],
   },
   {
     id: 'planar-ally',
@@ -913,6 +804,228 @@ export const level6Spells: Spell[] = [
     description:
       'You and up to five willing creatures within 5 feet of you instantly teleport to a previously designated sanctuary. You and any creatures that teleport with you appear in the nearest unoccupied space to the spot you designated when you prepared your sanctuary.',
     classes: ['cleric'],
+  },
+  {
+    id: 'conjure-fey',
+    name: 'Conjure Fey',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 6,
+    school: 'conjuration',
+    castingTime: {
+      type: 'minute',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 90,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 hour',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      "You summon a fey creature of challenge rating 6 or lower, or a fey spirit that takes the form of a beast of challenge rating 6 or lower. It appears in an unoccupied space that you can see within range. The fey creature disappears when it drops to 0 hit points or when the spell ends.\nThe fey creature is friendly to you and your companions for the duration. Roll initiative for the creature, which has its own turns. It obeys any verbal commands that you issue to it (no action required by you), as long as they don't violate its alignment. If you don't issue any commands to the fey creature, it defends itself from hostile creatures but otherwise takes no actions.\nIf your concentration is broken, the fey creature doesn't disappear. Instead, you lose control of the fey creature, it becomes hostile toward you and your companions, and it might attack. An uncontrolled fey creature can't be dismissed by you, and it disappears 1 hour after you summoned it.\nThe GM has the fey creature's statistics.",
+    atHigherLevels:
+      'When you cast this spell using a spell slot of 7th level or higher, the challenge rating increases by 1 for each slot level above 6th.',
+    classes: ['druid', 'warlock'],
+  },
+  {
+    id: 'freezing-sphere',
+    name: 'Freezing Sphere',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 6,
+    school: 'evocation',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 300,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'A small crystal sphere.',
+    },
+    duration: {
+      type: 'instant',
+    },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 60,
+    },
+    savingThrow: {
+      attribute: 'con',
+      success: 'half',
+    },
+    savingThrowText: 'CON save',
+    damage: {
+      base: {
+        count: 10,
+        die: 'd6',
+        notation: '10d6',
+      },
+      type: 'cold',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      "A frigid globe of cold energy streaks from your fingertips to a point of your choice within range, where it explodes in a 60-foot-radius sphere. Each creature within the area must make a constitution saving throw. On a failed save, a creature takes 10d6 cold damage. On a successful save, it takes half as much damage.\nIf the globe strikes a body of water or a liquid that is principally water (not including water-based creatures), it freezes the liquid to a depth of 6 inches over an area 30 feet square. This ice lasts for 1 minute. Creatures that were swimming on the surface of frozen water are trapped in the ice. A trapped creature can use an action to make a Strength check against your spell save DC to break free.\nYou can refrain from firing the globe after completing the spell, if you wish. A small globe about the size of a sling stone, cool to the touch, appears in your hand. At any time, you or a creature you give the globe to can throw the globe (to a range of 40 feet) or hurl it with a sling (to the sling's normal range). It shatters on impact, with the same effect as the normal casting of the spell. You can also set the globe down without shattering it. After 1 minute, if the globe hasn't already shattered, it explodes.",
+    atHigherLevels:
+      'When you cast this spell using a spell slot of 7th level or higher, the damage increases by 1d6 for each slot level above 6th.',
+    classes: ['wizard'],
+  },
+  {
+    id: 'instant-summons',
+    name: 'Instant Summons',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 6,
+    school: 'conjuration',
+    castingTime: {
+      type: 'minute',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'A sapphire worth 1,000 gp.',
+    },
+    duration: {
+      type: 'permanent',
+    },
+    concentration: false,
+    ritual: true,
+    description:
+      "You touch an object weighing 10 pounds or less whose longest dimension is 6 feet or less. The spell leaves an invisible mark on its surface and invisibly inscribes the name of the item on the sapphire you use as the material component. Each time you cast this spell, you must use a different sapphire.\nAt any time thereafter, you can use your action to speak the item's name and crush the sapphire. The item instantly appears in your hand regardless of physical or planar distances, and the spell ends.\nIf another creature is holding or carrying the item, crushing the sapphire doesn't transport the item to you, but instead you learn who the creature possessing the object is and roughly where that creature is located at that moment.\nDispel magic or a similar effect successfully applied to the sapphire ends this spell's effect.",
+    classes: ['wizard'],
+  },
+  {
+    id: 'irresistible-dance',
+    name: 'Irresistible Dance',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 6,
+    school: 'enchantment',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '1 minute',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      "Choose one creature that you can see within range. The target begins a comic dance in place: shuffling, tapping its feet, and capering for the duration. Creatures that can't be charmed are immune to this spell.\nA dancing creature must use all its movement to dance without leaving its space and has disadvantage on dexterity saving throws and attack rolls. While the target is affected by this spell, other creatures have advantage on attack rolls against it. As an action, a dancing creature makes a wisdom saving throw to regain control of itself. On a successful save, the spell ends.",
+    classes: ['bard', 'wizard'],
+  },
+  {
+    id: 'wall-of-thorns',
+    name: 'Wall of Thorns',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 6,
+    school: 'conjuration',
+    castingTime: {
+      type: 'action',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 120,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'A handful of thorns.',
+    },
+    duration: {
+      type: 'concentration',
+      maxDuration: '10 minutes',
+    },
+    areaOfEffect: {
+      type: 'line',
+      length: 60,
+      width: 5,
+    },
+    savingThrow: {
+      attribute: 'dex',
+      success: 'half',
+    },
+    savingThrowText: 'DEX save',
+    damage: {
+      base: {
+        count: 7,
+        die: 'd8',
+        notation: '7d8',
+      },
+      type: 'piercing',
+    },
+    concentration: true,
+    ritual: false,
+    description:
+      'You create a wall of tough, pliable, tangled brush bristling with needle-sharp thorns. The wall appears within range on a solid surface and lasts for the duration. You choose to make the wall up to 60 feet long, 10 feet high, and 5 feet thick or a circle that has a 20-foot diameter and is up to 20 feet high and 5 feet thick. The wall blocks line of sight.\nWhen the wall appears, each creature within its area must make a dexterity saving throw. On a failed save, a creature takes 7d8 piercing damage, or half as much damage on a successful save.\nA creature can move through the wall, albeit slowly and painfully. For every 1 foot a creature moves through the wall, it must spend 4 feet of movement. Furthermore, the first time a creature enters the wall on a turn or ends its turn there, the creature must make a dexterity saving throw. It takes 7d8 slashing damage on a failed save, or half as much damage on a successful one.',
+    atHigherLevels:
+      'When you cast this spell using a spell slot of 7th level or higher, both types of damage increase by 1d8 for each slot level above 6th.',
+    classes: ['druid'],
+  },
+  {
+    id: 'wind-walk',
+    name: 'Wind Walk',
+    system: 'dnd-5e-2014',
+    source: 'SRD 5.1',
+    level: 6,
+    school: 'transmutation',
+    castingTime: {
+      type: 'minute',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 30,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'Fire and holy water.',
+    },
+    duration: {
+      type: 'hours',
+      hours: 8,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      "You and up to ten willing creatures you can see within range assume a gaseous form for the duration, appearing as wisps of cloud. While in this cloud form, a creature has a flying speed of 300 feet and has resistance to damage from nonmagical weapons. The only actions a creature can take in this form are the Dash action or to revert to its normal form. Reverting takes 1 minute, during which time a creature is incapacitated and can't move. Until the spell ends, a creature can revert to cloud form, which also requires the 1-minute transformation.\nIf a creature is in cloud form and flying when the effect ends, the creature descends 60 feet per round for 1 minute until it lands, which it does safely. If it can't land after 1 minute, the creature falls the remaining distance.",
+    classes: ['druid'],
   },
 ];
 

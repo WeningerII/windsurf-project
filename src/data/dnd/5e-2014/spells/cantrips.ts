@@ -85,7 +85,6 @@ export const cantrips: Spell[] = [
       "The spell's damage increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8).",
     classes: ['cleric'],
   },
-
   {
     id: 'prestidigitation',
     name: 'Prestidigitation',
@@ -103,7 +102,6 @@ export const cantrips: Spell[] = [
       'This spell is a minor magical trick that novice spellcasters use for practice. You create one of the following magical effects within range:\n\n• You create an instantaneous, harmless sensory effect, such as a shower of sparks, a puff of wind, faint musical notes, or an odd odor.\n• You instantaneously light or snuff out a candle, a torch, or a small campfire.\n• You instantaneously clean or soil an object no larger than 1 cubic foot.\n• You chill, warm, or flavor up to 1 cubic foot of nonliving material for 1 hour.\n• You make a color, a small mark, or a symbol appear on an object or a surface for 1 hour.\n• You create a nonmagical trinket or an illusory image that can fit in your hand and that lasts until the end of your next turn.\n\nIf you cast this spell multiple times, you can have up to three of its non-instantaneous effects active at a time, and you can dismiss such an effect as an action.',
     classes: ['bard', 'sorcerer', 'warlock', 'wizard'],
   },
-
   {
     id: 'mending',
     name: 'Mending',
@@ -127,7 +125,6 @@ export const cantrips: Spell[] = [
       "This spell repairs a single break or tear in an object you touch, such as a broken chain link, two halves of a broken key, a torn cloak, or a leaking wineskin. As long as the break or tear is no larger than 1 foot in any dimension, you mend it, leaving no trace of the former damage. This spell can physically repair a magic item or construct, but the spell can't restore magic to such an object.",
     classes: ['bard', 'cleric', 'druid', 'sorcerer', 'wizard'],
   },
-
   {
     id: 'light',
     name: 'Light',
@@ -154,7 +151,6 @@ export const cantrips: Spell[] = [
       'You touch one object that is no larger than 10 feet in any dimension. Until the spell ends, the object sheds bright light in a 20-foot radius and dim light for an additional 20 feet. The light can be colored as you like. Completely covering the object with something opaque blocks the light. The spell ends if you cast it again or dismiss it as an action. If you target an object held or worn by a hostile creature, that creature must succeed on a Dexterity saving throw to avoid the spell.',
     classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
   },
-
   {
     id: 'guidance',
     name: 'Guidance',
@@ -173,7 +169,6 @@ export const cantrips: Spell[] = [
       'You touch one willing creature. Once before the spell ends, the target can roll a d4 and add the number rolled to one ability check of its choice. It can roll the die before or after making the ability check. The spell then ends.',
     classes: ['cleric', 'druid'],
   },
-
   {
     id: 'ray-of-frost',
     name: 'Ray of Frost',
@@ -202,7 +197,6 @@ export const cantrips: Spell[] = [
       "The spell's damage increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8).",
     classes: ['sorcerer', 'wizard'],
   },
-
   {
     id: 'shocking-grasp',
     name: 'Shocking Grasp',
@@ -232,7 +226,6 @@ export const cantrips: Spell[] = [
       "The spell's damage increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8).",
     classes: ['sorcerer', 'wizard'],
   },
-
   {
     id: 'acid-splash',
     name: 'Acid Splash',
@@ -261,25 +254,6 @@ export const cantrips: Spell[] = [
       "This spell's damage increases by 1d6 when you reach 5th level (2d6), 11th level (3d6), and 17th level (4d6).",
     classes: ['sorcerer', 'wizard'],
   },
-
-  {
-    id: 'blade-ward',
-    name: 'Blade Ward',
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 0,
-    school: 'abjuration',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'self' },
-    components: { verbal: true, somatic: true, material: false },
-    duration: { type: 'rounds', rounds: 1 },
-    concentration: false,
-    ritual: false,
-    description:
-      'You extend your hand and trace a sigil of warding in the air. Until the end of your next turn, you have resistance against bludgeoning, piercing, and slashing damage dealt by weapon attacks.',
-    classes: ['bard', 'sorcerer', 'warlock', 'wizard'],
-  },
-
   {
     id: 'chill-touch',
     name: 'Chill Touch',
@@ -308,7 +282,6 @@ export const cantrips: Spell[] = [
       "This spell's damage increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8).",
     classes: ['sorcerer', 'warlock', 'wizard'],
   },
-
   {
     id: 'dancing-lights',
     name: 'Dancing Lights',
@@ -331,7 +304,6 @@ export const cantrips: Spell[] = [
       "You create up to four torch-sized lights within range, making them appear as torches, lanterns, or glowing orbs that hover in the air for the duration. You can also combine the four lights into one glowing vaguely humanoid form of Medium size. Whichever form you choose, each light sheds dim light in a 10-foot radius. As a bonus action on your turn, you can move the lights up to 60 feet to a new spot within range. A light must be within 20 feet of another light created by this spell, and a light winks out if it exceeds the spell's range.",
     classes: ['bard', 'sorcerer', 'wizard'],
   },
-
   {
     id: 'druidcraft',
     name: 'Druidcraft',
@@ -349,30 +321,6 @@ export const cantrips: Spell[] = [
       'Whispering to the spirits of nature, you create one of the following effects within range:\n\n• You create a tiny, harmless sensory effect that predicts what the weather will be at your location for the next 24 hours.\n• You instantly make a flower blossom, a seed pod open, or a leaf bud bloom.\n• You create an instantaneous, harmless sensory effect, such as falling leaves, a puff of wind, the sound of a small animal, or the faint odor of skunk.\n• You instantly light or snuff out a candle, a torch, or a small campfire.',
     classes: ['druid'],
   },
-
-  {
-    id: 'friends',
-    name: 'Friends',
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 0,
-    school: 'enchantment',
-    castingTime: { type: 'action', amount: 1 },
-    range: { type: 'self' },
-    components: {
-      verbal: false,
-      somatic: true,
-      material: true,
-      materialDescription: 'a small amount of makeup applied to the face as this spell is cast',
-    },
-    duration: { type: 'concentration', maxDuration: '1 minute' },
-    concentration: true,
-    ritual: false,
-    description:
-      "For the duration, you have advantage on all Charisma checks directed at one creature of your choice that isn't hostile toward you. When the spell ends, the creature realizes that you used magic to influence its mood and becomes hostile toward you. A creature prone to violence might attack you. Another creature might seek retribution in other ways (at the DM's discretion), depending on the nature of your interaction with it.",
-    classes: ['bard', 'sorcerer', 'warlock', 'wizard'],
-  },
-
   {
     id: 'mage-hand',
     name: 'Mage Hand',
@@ -390,7 +338,6 @@ export const cantrips: Spell[] = [
       "A spectral, floating hand appears at a point you choose within range. The hand lasts for the duration or until you dismiss it as an action. The hand vanishes if it is ever more than 30 feet away from you or if you cast this spell again. You can use your action to control the hand. You can use the hand to manipulate an object, open an unlocked door or container, stow or retrieve an item from an open container, or pour the contents out of a vial. You can move the hand up to 30 feet each time you use it. The hand can't attack, activate magic items, or carry more than 10 pounds.",
     classes: ['bard', 'sorcerer', 'warlock', 'wizard'],
   },
-
   {
     id: 'minor-illusion',
     name: 'Minor Illusion',
@@ -413,7 +360,6 @@ export const cantrips: Spell[] = [
       "You create a sound or an image of an object within range that lasts for the duration. The illusion also ends if you dismiss it as an action or cast this spell again. If you create a sound, its volume can range from a whisper to a scream. It can be your voice, someone else's voice, a lion's roar, a beating of drums, or any other sound you choose. The sound continues unabated throughout the duration, or you can make discrete sounds at different times before the spell ends. If you create an image of an object—such as a chair, muddy footprints, or a small chest—it must be no larger than a 5-foot cube. The image can't create sound, light, smell, or any other sensory effect. Physical interaction with the image reveals it to be an illusion, because things can pass through it. If a creature uses its action to examine the sound or image, the creature can determine that it is an illusion with a successful Intelligence (Investigation) check against your spell save DC. If a creature discerns the illusion for what it is, the illusion becomes faint to the creature.",
     classes: ['bard', 'sorcerer', 'warlock', 'wizard'],
   },
-
   {
     id: 'poison-spray',
     name: 'Poison Spray',
@@ -442,7 +388,6 @@ export const cantrips: Spell[] = [
       "This spell's damage increases by 1d12 when you reach 5th level (2d12), 11th level (3d12), and 17th level (4d12).",
     classes: ['druid', 'sorcerer', 'warlock', 'wizard'],
   },
-
   {
     id: 'produce-flame',
     name: 'Produce Flame',
@@ -471,7 +416,6 @@ export const cantrips: Spell[] = [
       "This spell's damage increases by 1d8 when you reach 5th level (2d8), 11th level (3d8), and 17th level (4d8).",
     classes: ['druid'],
   },
-
   {
     id: 'resistance',
     name: 'Resistance',
@@ -495,7 +439,6 @@ export const cantrips: Spell[] = [
       'You touch one willing creature. Once before the spell ends, the target can roll a d4 and add the number rolled to one saving throw of its choice. It can roll the die before or after making the saving throw. The spell then ends.',
     classes: ['cleric', 'druid'],
   },
-
   {
     id: 'shillelagh',
     name: 'Shillelagh',
@@ -519,7 +462,6 @@ export const cantrips: Spell[] = [
       "The wood of a club or quarterstaff you are holding is imbued with nature's power. For the duration, you can use your spellcasting ability instead of Strength for the attack and damage rolls of melee attacks using that weapon, and the weapon's damage die becomes a d8. The weapon also becomes magical, if it isn't already. The spell ends if you cast it again or if you let go of the weapon.",
     classes: ['druid'],
   },
-
   {
     id: 'spare-the-dying',
     name: 'Spare the Dying',
@@ -538,7 +480,6 @@ export const cantrips: Spell[] = [
       'You touch a living creature that has 0 hit points. The creature becomes stable. This spell has no effect on undead or constructs.',
     classes: ['cleric'],
   },
-
   {
     id: 'thaumaturgy',
     name: 'Thaumaturgy',
@@ -556,7 +497,6 @@ export const cantrips: Spell[] = [
       'You manifest a minor wonder, a sign of supernatural power, within range. You create one of the following magical effects within range:\n\n• Your voice booms up to three times as loud as normal for 1 minute.\n• You cause flames to flicker, brighten, dim, or change color for 1 minute.\n• You cause harmless tremors in the ground for 1 minute.\n• You create an instantaneous sound that originates from a point of your choice within range, such as a rumble of thunder, the cry of a raven, or ominous whispers.\n• You instantaneously cause an unlocked door or window to fly open or slam shut.\n• You alter the appearance of your eyes for 1 minute.\n\nIf you cast this spell multiple times, you can have up to three of its 1-minute effects active at a time, and you can dismiss such an effect as an action.',
     classes: ['cleric'],
   },
-
   {
     id: 'true-strike',
     name: 'True Strike',
@@ -604,54 +544,6 @@ export const cantrips: Spell[] = [
     description:
       'You point toward a creature within range and whisper a message. The target (and only the target) hears the message and can reply in a whisper that only you can hear.',
     classes: ['bard', 'sorcerer', 'wizard'],
-  },
-  {
-    id: 'thorn-whip',
-    name: 'Thorn Whip',
-    system: 'dnd-5e-2014',
-    source: 'SRD 5.1',
-    level: 0,
-    school: 'transmutation',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 30,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'instant',
-    },
-    attackRoll: true,
-    damage: {
-      base: {
-        count: 1,
-        die: 'd6',
-        notation: '1d6',
-      },
-      type: 'piercing',
-      scaling: {
-        type: 'character-level',
-        increment: {
-          count: 1,
-          die: 'd6',
-          notation: '1d6',
-        },
-      },
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      'You create a long, vine-like whip covered in thorns that lashes out at your command. Make a melee spell attack. On a hit, the target takes 1d6 Piercing damage, and if it is Large or smaller, you can pull it up to 10 feet closer.',
-    atHigherLevels:
-      'The damage increases by 1d6 when you reach levels 5 (2d6), 11 (3d6), and 17 (4d6).',
-    classes: ['druid'],
   },
   {
     id: 'vicious-mockery',
