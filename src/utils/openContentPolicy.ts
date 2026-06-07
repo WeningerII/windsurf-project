@@ -41,7 +41,29 @@ export const strictOpenContentPolicy: Record<GameSystemId, SystemOpenContentPoli
     allowMissingSourceFor: [],
   },
   pf2e: {
-    allowedSources: ['Core Rulebook', 'CRB'],
+    // 'Core Rulebook' is the legacy OGL content; the rest are Paizo's Remaster
+    // books published under the ORC License (explicit open-content permission),
+    // imported from the official Foundry VTT pf2e dataset.
+    allowedSources: [
+      'Core Rulebook',
+      'CRB',
+      'Pathfinder Player Core',
+      'Pathfinder Player Core 2',
+      'Pathfinder GM Core',
+      'Pathfinder NPC Core',
+      'Pathfinder Monster Core',
+      'Pathfinder War of Immortals',
+      'Pathfinder Howl of the Wild',
+      'Pathfinder Lost Omens Divine Mysteries',
+      'Pathfinder Lost Omens Rival Academies',
+      'Pathfinder #201: Pactbreaker',
+      'Pathfinder #203: Shepherd of Decay',
+      'Pathfinder #205: Singer, Stalker, Skinsaw Man',
+      "Pathfinder #209: Destroyer's Doom",
+      'Pathfinder #211: The Secret of Deathstalk Tower',
+      'Pathfinder #212: A Voice in the Blight',
+      'Pathfinder Adventure: Prey for Death',
+    ],
     allowMissingSourceFor: [],
   },
   mam3e: {

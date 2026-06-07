@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-06T22:05:49.107Z",
+  "generatedAt": "2026-06-07T16:52:46.083Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -35,7 +35,23 @@
     "pf2e": {
       "allowedSources": [
         "Core Rulebook",
-        "CRB"
+        "CRB",
+        "Pathfinder Player Core",
+        "Pathfinder Player Core 2",
+        "Pathfinder GM Core",
+        "Pathfinder NPC Core",
+        "Pathfinder Monster Core",
+        "Pathfinder War of Immortals",
+        "Pathfinder Howl of the Wild",
+        "Pathfinder Lost Omens Divine Mysteries",
+        "Pathfinder Lost Omens Rival Academies",
+        "Pathfinder #201: Pactbreaker",
+        "Pathfinder #203: Shepherd of Decay",
+        "Pathfinder #205: Singer, Stalker, Skinsaw Man",
+        "Pathfinder #209: Destroyer's Doom",
+        "Pathfinder #211: The Secret of Deathstalk Tower",
+        "Pathfinder #212: A Voice in the Blight",
+        "Pathfinder Adventure: Prey for Death"
       ],
       "allowMissingSourceFor": []
     },
@@ -119,7 +135,7 @@
       "powerModifiers": 0
     },
     "pf2e": {
-      "spells": 187,
+      "spells": 617,
       "classes": 12,
       "species": 6,
       "backgrounds": 16,
@@ -226,7 +242,7 @@
       "powerModifiers": 0
     },
     "pf2e": {
-      "spells": 187,
+      "spells": 617,
       "classes": 12,
       "species": 6,
       "backgrounds": 16,
@@ -695,13 +711,28 @@
       "category": "spells",
       "categoryLabel": "Spells/Powers",
       "metrics": {
-        "rawCount": 187,
-        "uniqueCount": 187,
+        "rawCount": 617,
+        "uniqueCount": 617,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "Core Rulebook": 187
+          "Pathfinder Player Core": 227,
+          "Core Rulebook": 187,
+          "Pathfinder Player Core 2": 83,
+          "Pathfinder Lost Omens Divine Mysteries": 35,
+          "Pathfinder Lost Omens Rival Academies": 26,
+          "Pathfinder Howl of the Wild": 16,
+          "Pathfinder War of Immortals": 14,
+          "Pathfinder #203: Shepherd of Decay": 5,
+          "Pathfinder Adventure: Prey for Death": 5,
+          "Pathfinder #205: Singer, Stalker, Skinsaw Man": 5,
+          "Pathfinder NPC Core": 4,
+          "Pathfinder #209: Destroyer's Doom": 4,
+          "Pathfinder #211: The Secret of Deathstalk Tower": 2,
+          "Pathfinder #212: A Voice in the Blight": 2,
+          "Pathfinder #201: Pactbreaker": 1,
+          "Pathfinder GM Core": 1
         }
       }
     },
