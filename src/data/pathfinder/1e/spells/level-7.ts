@@ -732,6 +732,11 @@ export const level7Spells: Spell[] = [
       sorcerer: 7,
       wizard: 7,
     },
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+    },
+    savingThrowText: 'Fortitude negates',
   },
   {
     id: 'pf1e-forcecage',
@@ -1450,6 +1455,11 @@ export const level7Spells: Spell[] = [
       cleric: 7,
       druid: 7,
     },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'half',
+    },
+    savingThrowText: 'Will half (harmless)',
   },
   {
     id: 'pf1e-dictum',
@@ -1598,6 +1608,11 @@ export const level7Spells: Spell[] = [
     levelsByClass: {
       cleric: 7,
     },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'half',
+    },
+    savingThrowText: 'Will half',
   },
   {
     id: 'pf1e-refuge',

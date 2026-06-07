@@ -2689,6 +2689,11 @@ export const level2Spells: Spell[] = [
     levelsByClass: {
       druid: 2,
     },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will negates',
   },
   {
     id: 'pf1e-inflict-moderate-wounds',
@@ -2720,6 +2725,11 @@ export const level2Spells: Spell[] = [
     levelsByClass: {
       cleric: 2,
     },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'half',
+    },
+    savingThrowText: 'Will half',
   },
   {
     id: 'pf1e-make-whole',

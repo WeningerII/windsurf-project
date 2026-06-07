@@ -1896,6 +1896,11 @@ export const level6Spells: Spell[] = [
       cleric: 6,
       druid: 6,
     },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'half',
+    },
+    savingThrowText: 'Will half (harmless)',
   },
   {
     id: 'pf1e-eagles-splendor-mass',
@@ -2124,6 +2129,11 @@ export const level6Spells: Spell[] = [
     levelsByClass: {
       cleric: 6,
     },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'half',
+    },
+    savingThrowText: 'Will half',
   },
   {
     id: 'pf1e-ironwood',

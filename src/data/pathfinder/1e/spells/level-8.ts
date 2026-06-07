@@ -1101,6 +1101,11 @@ export const level8Spells: Spell[] = [
       cleric: 8,
       druid: 8,
     },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'half',
+    },
+    savingThrowText: 'Will half (harmless)',
   },
   {
     id: 'pf1e-dimensional-lock',
@@ -1209,6 +1214,11 @@ export const level8Spells: Spell[] = [
     levelsByClass: {
       cleric: 8,
     },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'half',
+    },
+    savingThrowText: 'Will half',
   },
   {
     id: 'pf1e-planar-ally-greater',

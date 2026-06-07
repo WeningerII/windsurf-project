@@ -2502,6 +2502,11 @@ export const level3Spells: Spell[] = [
     levelsByClass: {
       cleric: 3,
     },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'half',
+    },
+    savingThrowText: 'Will half',
   },
   {
     id: 'pf1e-invisibility-purge',

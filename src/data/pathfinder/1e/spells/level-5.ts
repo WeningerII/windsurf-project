@@ -868,6 +868,11 @@ export const level5Spells: Spell[] = [
       sorcerer: 5,
       wizard: 5,
     },
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+    },
+    savingThrowText: 'Fortitude negates',
   },
   {
     id: 'pf1e-symbol-of-sleep',
@@ -1846,6 +1851,11 @@ export const level5Spells: Spell[] = [
     levelsByClass: {
       cleric: 5,
     },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+    },
+    savingThrowText: 'Will negates',
   },
   {
     id: 'pf1e-commune',

@@ -933,6 +933,11 @@ export const level9Spells: Spell[] = [
     levelsByClass: {
       cleric: 9,
     },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'half',
+    },
+    savingThrowText: 'Will half (harmless)',
   },
   {
     id: 'pf1e-implosion',

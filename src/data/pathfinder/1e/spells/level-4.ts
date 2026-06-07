@@ -2130,6 +2130,11 @@ export const level4Spells: Spell[] = [
     levelsByClass: {
       cleric: 4,
     },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'half',
+    },
+    savingThrowText: 'Will half',
   },
   {
     id: 'pf1e-magic-weapon-greater',
