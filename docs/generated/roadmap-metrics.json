@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-08T02:10:31.219Z",
+  "generatedAt": "2026-06-08T02:22:29.924Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -162,7 +162,7 @@
       "equipment": 150,
       "feats": 0,
       "advantages": 74,
-      "powerModifiers": 101
+      "powerModifiers": 99
     },
     "daggerheart": {
       "spells": 0,
@@ -269,7 +269,7 @@
       "equipment": 150,
       "feats": 0,
       "advantages": 74,
-      "powerModifiers": 101
+      "powerModifiers": 99
     },
     "daggerheart": {
       "spells": 0,
@@ -918,13 +918,13 @@
       "category": "powerModifiers",
       "categoryLabel": "Power Modifiers",
       "metrics": {
-        "rawCount": 101,
-        "uniqueCount": 101,
+        "rawCount": 99,
+        "uniqueCount": 99,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "Hero's Handbook": 101
+          "Hero's Handbook": 99
         }
       }
     },
@@ -1059,13 +1059,13 @@
       "systemId": "mam3e",
       "category": "powerModifiers",
       "metrics": {
-        "rawCount": 101,
-        "uniqueCount": 101,
+        "rawCount": 99,
+        "uniqueCount": 99,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "Hero's Handbook": 101
+          "Hero's Handbook": 99
         }
       }
     },

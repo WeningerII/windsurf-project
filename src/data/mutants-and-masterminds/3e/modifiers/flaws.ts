@@ -405,18 +405,6 @@ export const proportional: PowerModifier = {
   effects: ['Effect rank equals another trait rank.'],
 };
 
-export const quirk_flaw: PowerModifier = {
-  id: 'quirk-flaw',
-  name: 'Quirk',
-  system: 'mam3e',
-  source: "Hero's Handbook",
-  type: 'flaw',
-  costPerRank: 0,
-  flatCost: -1,
-  description: 'Minor limitation or unusual aspect.',
-  effects: ['Very minor limitation that occasionally comes up.'],
-};
-
 export const random: PowerModifier = {
   id: 'random',
   name: 'Random',
@@ -448,17 +436,6 @@ export const uncontrollable: PowerModifier = {
   costPerRank: -1,
   description: 'You cannot control when or how the effect activates.',
   effects: ['Effect activates randomly or uncontrollably.'],
-};
-
-export const unreliable_flaw: PowerModifier = {
-  id: 'unreliable-flaw',
-  name: 'Unreliable',
-  system: 'mam3e',
-  source: "Hero's Handbook",
-  type: 'flaw',
-  costPerRank: -1,
-  description: 'Effect fails on a roll of 10 or less on d20.',
-  effects: ['Roll d20 each use: 10 or less = failure.'],
 };
 
 export const vulnerable: PowerModifier = {
@@ -552,11 +529,9 @@ export const flaws: PowerModifier[] = [
   nuisance,
   objects_only,
   proportional,
-  quirk_flaw,
   random,
   reaction_flaw,
   uncontrollable,
-  unreliable_flaw,
   vulnerable,
   wall,
   weak_point,

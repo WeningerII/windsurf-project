@@ -1,4 +1,4 @@
-_Generated: 2026-06-08T02:10:31.219Z_
+_Generated: 2026-06-08T02:22:29.924Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -20,7 +20,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | D&D 3.5e | 0 | 0 | 0 |
 | Pathfinder 1e | 0 | 0 | 0 |
 | Pathfinder 2e | 5 | 0 | 0 |
-| Mutants & Masterminds 3e | 15 | 28 | 101 |
+| Mutants & Masterminds 3e | 15 | 28 | 99 |
 | Daggerheart | 0 | 0 | 0 |
 
 ### Loader Compliance Audit
@@ -64,7 +64,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | Mutants & Masterminds 3e | Complications | 28 | 0 | 0 | 0 |
 | Mutants & Masterminds 3e | Equipment | 150 | 0 | 0 | 0 |
 | Mutants & Masterminds 3e | Advantages | 74 | 0 | 0 | 0 |
-| Mutants & Masterminds 3e | Power Modifiers | 101 | 0 | 0 | 0 |
+| Mutants & Masterminds 3e | Power Modifiers | 99 | 0 | 0 | 0 |
 | Daggerheart | Classes | 9 | 0 | 0 | 0 |
 | Daggerheart | Species/Races | 19 | 0 | 0 | 0 |
 | Daggerheart | Backgrounds | 9 | 0 | 0 | 0 |
@@ -77,7 +77,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | M&M 3e advantages | 74 | 0 | 0 | 0 |
 | M&M 3e archetypes | 15 | 0 | 0 | 0 |
 | M&M 3e complications | 28 | 0 | 0 | 0 |
-| M&M 3e power modifiers | 101 | 0 | 0 | 0 |
+| M&M 3e power modifiers | 99 | 0 | 0 | 0 |
 | PF2e archetypes | 5 | 0 | 0 | 0 |
 
 ### Policy Notes
