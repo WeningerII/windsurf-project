@@ -8,6 +8,7 @@ import {
   StickyNote,
   Sparkles,
   Sword,
+  Skull,
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/Tabs';
 import { Badge } from '../../../components/ui/Badge';
@@ -15,6 +16,7 @@ import type { FeatDefinition } from '../../../types/character-options/feats';
 import type { Feature } from '../../../types/core/character';
 import type { CharacterDocument } from '../../../types/core/document';
 import type { Item } from '../../../types/equipment/items';
+import type { Monster } from '../../../types/creatures/monsters';
 import type { GameSystemId, Skill } from '../../../types/game-systems';
 import type { Spell } from '../../../types/magic/spells';
 import { Dnd35eDataModel } from '../../dnd35e/data-model';
@@ -25,6 +27,7 @@ import { D20EquipmentBrowserTab } from './D20EquipmentBrowserTab';
 import { D20FeatBrowserTab } from './D20FeatBrowserTab';
 import { D20FeatsTab } from './D20FeatsTab';
 import { D20InventoryTab } from './D20InventoryTab';
+import { D20MonsterBrowserTab } from './D20MonsterBrowserTab';
 import { D20NotesTab } from './D20NotesTab';
 import { D20SavesTab } from './D20SavesTab';
 import { D20SpellBrowserPanel } from './D20SpellBrowserPanel';
@@ -79,6 +82,9 @@ interface Props {
   equipmentLoaded: boolean;
   equipmentItems: Item[];
   onLoadEquipment: () => void | Promise<void>;
+  monstersLoaded: boolean;
+  monsters: Monster[];
+  onLoadMonsters: () => void | Promise<void>;
   currency: D20InventoryCurrency;
   inventory: D20InventoryItem[];
   personality?: {
@@ -153,6 +159,9 @@ export const D20LegacyTabs: React.FC<Props> = ({
   equipmentLoaded,
   equipmentItems,
   onLoadEquipment,
+  monstersLoaded,
+  monsters,
+  onLoadMonsters,
   currency,
   inventory,
   personality,
@@ -200,9 +209,14 @@ export const D20LegacyTabs: React.FC<Props> = ({
     void D20EquipmentBrowserTab.preload();
   };
 
+  const warmMonsterBrowser = () => {
+    void onLoadMonsters();
+    void D20MonsterBrowserTab.preload();
+  };
+
   return (
     <Tabs defaultValue="abilities">
-      <TabsList className="w-full grid grid-cols-9">
+      <TabsList className="w-full grid grid-cols-10">
         <TabsTrigger value="abilities" className="flex items-center gap-1.5">
           <User className="w-4 h-4" /> Abilities
         </TabsTrigger>
@@ -251,6 +265,15 @@ export const D20LegacyTabs: React.FC<Props> = ({
           onPointerEnter={warmEquipmentBrowser}
         >
           <Sword className="w-4 h-4" /> Equipment
+        </TabsTrigger>
+        <TabsTrigger
+          value="monsters"
+          className="flex items-center gap-1.5"
+          onClick={warmMonsterBrowser}
+          onFocus={warmMonsterBrowser}
+          onPointerEnter={warmMonsterBrowser}
+        >
+          <Skull className="w-4 h-4" /> Monsters
         </TabsTrigger>
         <TabsTrigger value="inventory" className="flex items-center gap-1.5">
           <Backpack className="w-4 h-4" /> Inventory
@@ -344,6 +367,10 @@ export const D20LegacyTabs: React.FC<Props> = ({
 
       <TabsContent value="equipment-browser">
         <D20EquipmentBrowserTab equipmentLoaded={equipmentLoaded} equipmentItems={equipmentItems} />
+      </TabsContent>
+
+      <TabsContent value="monsters">
+        <D20MonsterBrowserTab monstersLoaded={monstersLoaded} monsters={monsters} />
       </TabsContent>
 
       <TabsContent value="inventory">

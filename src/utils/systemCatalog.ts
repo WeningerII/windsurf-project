@@ -83,7 +83,7 @@ export async function loadSystemCatalogSummary(
         break;
       }
       case 'pf2e': {
-        const [spells, classes, species, backgrounds, equipment, feats, archetypes] =
+        const [spells, classes, species, backgrounds, equipment, feats, archetypes, monsters] =
           await Promise.all([
             loaders.loadSpellsForSystem(systemId),
             loaders.loadClassesForSystem(systemId),
@@ -92,6 +92,7 @@ export async function loadSystemCatalogSummary(
             loaders.loadEquipmentForSystem(systemId),
             loaders.loadFeatsForSystem(systemId),
             loaders.loadArchetypesForSystem(systemId),
+            loaders.loadMonstersForSystem(systemId),
           ]);
 
         appendCategories(
@@ -101,6 +102,7 @@ export async function loadSystemCatalogSummary(
           productCategory('species', 'Species', species.length),
           productCategory('backgrounds', 'Backgrounds', backgrounds.length),
           productCategory('archetypes', 'Archetypes', archetypes.length),
+          productCategory('monsters', 'Monsters', monsters.length),
           productCategory('equipment', 'Equipment', equipment.length),
           productCategory('feats', 'Feats', feats.length)
         );
@@ -108,13 +110,14 @@ export async function loadSystemCatalogSummary(
       }
       case 'dnd-3.5e':
       case 'pf1e': {
-        const [spells, classes, species, equipment, feats, traits] = await Promise.all([
+        const [spells, classes, species, equipment, feats, traits, monsters] = await Promise.all([
           loaders.loadSpellsForSystem(systemId),
           loaders.loadClassesForSystem(systemId),
           loaders.loadSpeciesForSystem(systemId),
           loaders.loadEquipmentForSystem(systemId),
           loaders.loadFeatsForSystem(systemId),
           loaders.loadTraitsForSystem(systemId),
+          loaders.loadMonstersForSystem(systemId),
         ]);
 
         appendCategories(
@@ -122,6 +125,7 @@ export async function loadSystemCatalogSummary(
           productCategory('spells', 'Spells', spells.length),
           productCategory('classes', 'Classes', classes.length),
           productCategory('species', 'Species', species.length),
+          productCategory('monsters', 'Monsters', monsters.length),
           productCategory('equipment', 'Equipment', equipment.length),
           productCategory('feats', 'Feats', feats.length),
           productCategory('traits', 'Traits', traits.length)

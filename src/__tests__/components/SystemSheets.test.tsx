@@ -1415,7 +1415,7 @@ describe('System Sheets', () => {
 
     expect(screen.getByText('Pathfinder 1e')).toBeInTheDocument();
     expect(screen.getByText('AC')).toBeInTheDocument();
-    expect(screen.queryByRole('tab', { name: /monsters/i })).not.toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /monsters/i })).toBeInTheDocument();
 
     await user.click(screen.getByTitle('Add class'));
     await waitFor(() => {
@@ -1431,7 +1431,7 @@ describe('System Sheets', () => {
 
     expect(screen.getByText('D&D 3.5e')).toBeInTheDocument();
     expect(screen.getByText('AC')).toBeInTheDocument();
-    expect(screen.queryByRole('tab', { name: /monsters/i })).not.toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /monsters/i })).toBeInTheDocument();
 
     await user.click(screen.getByTitle('Add class'));
     await waitFor(() => {

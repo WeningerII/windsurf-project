@@ -151,11 +151,9 @@ describe('systemCatalog integration — real loaders', () => {
     expect(loaderSummaries['dnd-3.5e'].supportLevel).toBe('partial');
     expect(loaderSummaries.pf1e.supportLevel).toBe('partial');
     expect(loaderSummaries.daggerheart.supportLevel).toBe('partial');
-    expect(loaderSummaries['dnd-3.5e'].categories.map((category) => category.id)).not.toContain(
+    expect(loaderSummaries['dnd-3.5e'].categories.map((category) => category.id)).toContain(
       'monsters'
     );
-    expect(loaderSummaries.pf1e.categories.map((category) => category.id)).not.toContain(
-      'monsters'
-    );
+    expect(loaderSummaries.pf1e.categories.map((category) => category.id)).toContain('monsters');
   });
 });

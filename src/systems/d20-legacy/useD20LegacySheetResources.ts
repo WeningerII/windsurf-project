@@ -3,6 +3,7 @@ import type { CharacterClass } from '../../types/character-options/classes';
 import type { FeatDefinition } from '../../types/character-options/feats';
 import type { Species } from '../../types/character-options/species';
 import type { Item } from '../../types/equipment/items';
+import type { Monster } from '../../types/creatures/monsters';
 import type { GameSystemId } from '../../types/game-systems';
 import type { Spell } from '../../types/magic/spells';
 import type { Pf1eTrait } from '../pf1e/data-model';
@@ -10,6 +11,7 @@ import {
   loadClassesForSystem,
   loadEquipmentForSystem,
   loadFeatsForSystem,
+  loadMonstersForSystem,
   loadSpeciesForSystem,
   loadSpellsForSystem,
   loadTraitsForSystem,
@@ -83,6 +85,11 @@ export function useD20LegacySheetResources({ systemId, isPf1e }: UseD20LegacyShe
     loaded: equipmentLoaded,
     load: loadEquipment,
   } = useLazyResource<Item>(systemId, loadEquipmentForSystem);
+  const {
+    data: monsters,
+    loaded: monstersLoaded,
+    load: loadMonsters,
+  } = useLazyResource<Monster>(systemId, loadMonstersForSystem);
 
   const [classes, setClasses] = useState<CharacterClass[]>([]);
   const [species, setSpecies] = useState<Species[]>([]);
@@ -174,6 +181,9 @@ export function useD20LegacySheetResources({ systemId, isPf1e }: UseD20LegacyShe
     equipmentItems,
     equipmentLoaded,
     loadEquipment,
+    monsters,
+    monstersLoaded,
+    loadMonsters,
     classes,
     species,
     loadOptions,

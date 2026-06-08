@@ -1,10 +1,21 @@
 import React from 'react';
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
 import type { Pf2eDataModel } from './data-model';
-import { Shield, Zap, User, BookOpen, Backpack, StickyNote, Sparkles, Sword } from 'lucide-react';
+import {
+  Shield,
+  Zap,
+  User,
+  BookOpen,
+  Backpack,
+  StickyNote,
+  Sparkles,
+  Sword,
+  Skull,
+} from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { Badge } from '../../components/ui/Badge';
 import { Pf2eEquipmentBrowserTab } from './components/Pf2eEquipmentBrowserTab';
+import { Pf2eMonsterBrowserTab } from './components/Pf2eMonsterBrowserTab';
 import { Pf2eFeatBrowserTab } from './components/Pf2eFeatBrowserTab';
 import { Pf2eArchetypesTab } from './components/Pf2eArchetypesTab';
 import { Pf2eSpellsTab } from './components/Pf2eSpellsTab';
@@ -31,7 +42,7 @@ export const Pf2eCharacterSheet: React.FC<Props> = ({ document, onUpdate }) => {
       <Pf2eHeader {...controller.headerProps} />
       <Pf2eOverview {...controller.overviewProps} />
       <Tabs defaultValue="abilities">
-        <TabsList className="w-full grid grid-cols-10">
+        <TabsList className="w-full grid grid-cols-11">
           <TabsTrigger value="abilities" className="flex items-center gap-1.5">
             <User className="w-4 h-4" /> Abilities
           </TabsTrigger>
@@ -95,6 +106,15 @@ export const Pf2eCharacterSheet: React.FC<Props> = ({ document, onUpdate }) => {
           >
             <Sword className="w-4 h-4" /> Equipment
           </TabsTrigger>
+          <TabsTrigger
+            value="monsters"
+            className="flex items-center gap-1.5"
+            onClick={controller.warmMonsterBrowser}
+            onFocus={controller.warmMonsterBrowser}
+            onPointerEnter={controller.warmMonsterBrowser}
+          >
+            <Skull className="w-4 h-4" /> Monsters
+          </TabsTrigger>
           <TabsTrigger value="inventory" className="flex items-center gap-1.5">
             <Backpack className="w-4 h-4" /> Inventory
             {controller.data.inventory.length > 0 && (
@@ -138,6 +158,10 @@ export const Pf2eCharacterSheet: React.FC<Props> = ({ document, onUpdate }) => {
 
         <TabsContent value="equipment-browser">
           <Pf2eEquipmentBrowserTab {...controller.equipmentBrowserTabProps} />
+        </TabsContent>
+
+        <TabsContent value="monsters">
+          <Pf2eMonsterBrowserTab {...controller.monsterBrowserTabProps} />
         </TabsContent>
 
         <TabsContent value="inventory">

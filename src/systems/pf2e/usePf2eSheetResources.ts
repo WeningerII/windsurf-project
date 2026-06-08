@@ -6,18 +6,21 @@ import type { FeatDefinition } from '../../types/character-options/feats';
 import type { Species } from '../../types/character-options/species';
 import type { Item } from '../../types/equipment/items';
 import type { Spell } from '../../types/magic/spells';
+import type { Monster } from '../../types/creatures/monsters';
 import type { GameSystemId } from '../../types/game-systems';
 import {
   loadArchetypesForSystem,
   loadClassesForSystem,
   loadEquipmentForSystem,
   loadFeatsForSystem,
+  loadMonstersForSystem,
   loadPf2eBackgroundsForSystem,
   loadSpeciesForSystem,
   loadSpellsForSystem,
 } from '../../utils/dataLoader';
 import { Pf2eEquipmentBrowserTab } from './components/Pf2eEquipmentBrowserTab';
 import { Pf2eFeatBrowserTab } from './components/Pf2eFeatBrowserTab';
+import { Pf2eMonsterBrowserTab } from './components/Pf2eMonsterBrowserTab';
 import { Pf2eSpellsTab } from './components/Pf2eSpellsTab';
 
 interface UsePf2eSheetResourcesProps {
@@ -97,6 +100,11 @@ export function usePf2eSheetResources({ systemId }: UsePf2eSheetResourcesProps) 
     loaded: archetypesLoaded,
     load: loadArchetypes,
   } = useLazyResource<Archetype>(systemId, loadArchetypesForSystem);
+  const {
+    data: monsters,
+    loaded: monstersLoaded,
+    load: loadMonsters,
+  } = useLazyResource<Monster>(systemId, loadMonstersForSystem);
 
   const [classes, setClasses] = useState<CharacterClass[]>([]);
   const [ancestries, setAncestries] = useState<Species[]>([]);
@@ -165,6 +173,11 @@ export function usePf2eSheetResources({ systemId }: UsePf2eSheetResourcesProps) 
     void Pf2eEquipmentBrowserTab.preload();
   }, [loadEquipment]);
 
+  const warmMonsterBrowser = useCallback(() => {
+    void loadMonsters();
+    void Pf2eMonsterBrowserTab.preload();
+  }, [loadMonsters]);
+
   return {
     featDefs,
     featsLoaded,
@@ -184,9 +197,13 @@ export function usePf2eSheetResources({ systemId }: UsePf2eSheetResourcesProps) 
     archetypes,
     archetypesLoaded,
     loadArchetypes,
+    monsters,
+    monstersLoaded,
+    loadMonsters,
     warmFeatBrowser,
     warmArchetypes,
     warmSpellsTab,
     warmEquipmentBrowser,
+    warmMonsterBrowser,
   };
 }

@@ -38,10 +38,13 @@ export function usePf2eSheetController({ document, onUpdate }: UsePf2eSheetContr
     loadBackgrounds,
     archetypes,
     archetypesLoaded,
+    monsters,
+    monstersLoaded,
     warmFeatBrowser,
     warmArchetypes,
     warmSpellsTab,
     warmEquipmentBrowser,
+    warmMonsterBrowser,
   } = usePf2eSheetResources({
     systemId: document.systemId as GameSystemId,
   });
@@ -113,6 +116,7 @@ export function usePf2eSheetController({ document, onUpdate }: UsePf2eSheetContr
     warmArchetypes,
     warmSpellsTab,
     warmEquipmentBrowser,
+    warmMonsterBrowser,
     headerProps: {
       document,
       canUpdate: mutationHandlers.canUpdate,
@@ -216,6 +220,10 @@ export function usePf2eSheetController({ document, onUpdate }: UsePf2eSheetContr
     equipmentBrowserTabProps: {
       equipmentLoaded,
       equipmentItems,
+    },
+    monsterBrowserTabProps: {
+      monstersLoaded,
+      monsters,
     },
     inventoryTabProps: {
       document,

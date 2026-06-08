@@ -90,13 +90,19 @@ async function loadSystemCatalogSummaryFromMetadataInternal(
       break;
     }
     case 'pf2e': {
-      const [{ pf2eMetadata }, { pf2eBackgrounds }, { pf2eAncestries }, pf2eEquipment] =
-        await Promise.all([
-          import('../data/pathfinder/2e/metadata'),
-          import('../data/pathfinder/2e/backgrounds'),
-          import('../data/pathfinder/2e/ancestries'),
-          import('../data/pathfinder/2e/equipment'),
-        ]);
+      const [
+        { pf2eMetadata },
+        { pf2eBackgrounds },
+        { pf2eAncestries },
+        pf2eEquipment,
+        { pf2eMonsters },
+      ] = await Promise.all([
+        import('../data/pathfinder/2e/metadata'),
+        import('../data/pathfinder/2e/backgrounds'),
+        import('../data/pathfinder/2e/ancestries'),
+        import('../data/pathfinder/2e/equipment'),
+        import('../data/pathfinder/2e/monsters'),
+      ]);
       const productAncestryCount = countProductItems(
         'pf2e',
         'species',
@@ -117,17 +123,24 @@ async function loadSystemCatalogSummaryFromMetadataInternal(
         productCategory('species', 'Species', productAncestryCount),
         productCategory('backgrounds', 'Backgrounds', pf2eBackgrounds.length),
         productCategory('archetypes', 'Archetypes', pf2eMetadata.stats.archetypes.count),
+        productCategory(
+          'monsters',
+          'Monsters',
+          countProductItems('pf2e', 'monsters', pf2eMonsters)
+        ),
         productCategory('equipment', 'Equipment', productEquipmentCount),
         productCategory('feats', 'Feats', pf2eMetadata.stats.feats.count)
       );
       break;
     }
     case 'dnd-3.5e': {
-      const [{ dnd35eMetadata }, { dnd35eFeats }, { dnd35eEquipment }] = await Promise.all([
-        import('../data/dnd/3.5e/metadata'),
-        import('../data/dnd/3.5e/feats'),
-        import('../data/dnd/3.5e/equipment'),
-      ]);
+      const [{ dnd35eMetadata }, { dnd35eFeats }, { dnd35eEquipment }, { dnd35eMonsters }] =
+        await Promise.all([
+          import('../data/dnd/3.5e/metadata'),
+          import('../data/dnd/3.5e/feats'),
+          import('../data/dnd/3.5e/equipment'),
+          import('../data/dnd/3.5e/monsters'),
+        ]);
       const productFeatCount = countProductItems('dnd-3.5e', 'feats', [
         ...dnd35eFeats.general,
         ...dnd35eFeats.metamagic,
@@ -153,6 +166,11 @@ async function loadSystemCatalogSummaryFromMetadataInternal(
           dnd35eMetadata.stats.classes.count + dnd35eMetadata.stats.prestigeClasses.count
         ),
         productCategory('species', 'Species', dnd35eMetadata.stats.races.count),
+        productCategory(
+          'monsters',
+          'Monsters',
+          countProductItems('dnd-3.5e', 'monsters', dnd35eMonsters)
+        ),
         productCategory('equipment', 'Equipment', productEquipmentCount),
         productCategory('feats', 'Feats', productFeatCount)
       );
@@ -167,6 +185,7 @@ async function loadSystemCatalogSummaryFromMetadataInternal(
         { pf1eFeats },
         { pf1eTraits },
         pf1eEquipment,
+        { pf1eMonsters },
       ] = await Promise.all([
         import('../data/pathfinder/1e/metadata'),
         import('../data/pathfinder/1e/classes'),
@@ -175,6 +194,7 @@ async function loadSystemCatalogSummaryFromMetadataInternal(
         import('../data/pathfinder/1e/feats'),
         import('../data/pathfinder/1e/traits'),
         import('../data/pathfinder/1e/equipment'),
+        import('../data/pathfinder/1e/monsters'),
       ]);
       const productClassCount = countProductItems('pf1e', 'classes', [
         ...Object.values(pf1eClasses),
@@ -199,6 +219,11 @@ async function loadSystemCatalogSummaryFromMetadataInternal(
         productCategory('spells', 'Spells', pf1eMetadata.stats.spells.count),
         productCategory('classes', 'Classes', productClassCount),
         productCategory('species', 'Species', productRaceCount),
+        productCategory(
+          'monsters',
+          'Monsters',
+          countProductItems('pf1e', 'monsters', pf1eMonsters)
+        ),
         productCategory('equipment', 'Equipment', productEquipmentCount),
         productCategory('feats', 'Feats', productFeatCount),
         productCategory('traits', 'Traits', productTraitCount)
