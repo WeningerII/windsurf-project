@@ -56,6 +56,11 @@ export default defineConfig({
           if (id.includes('src/data/pathfinder/1e')) {
             return 'pf1e-data';
           }
+          // The pf2e Monster Core bestiary is large; keep it in its own lazy
+          // data chunk so the main pf2e catalog chunk stays within budget.
+          if (id.includes('src/data/pathfinder/2e/monsters')) {
+            return 'pf2e-monsters-data';
+          }
           if (id.includes('src/data/pathfinder/2e')) {
             return 'pf2e-data';
           }

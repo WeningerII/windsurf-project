@@ -29,9 +29,11 @@ const budgets = {
   // (the full goods-and-services gear list and the full CRB weapon table, both
   // in the lazy pf1e data chunk, off the eager path), then 1130→1180 KiB for the
   // Pathfinder 1e Bestiary (330 OGL creature stat blocks added to that same lazy
-  // pf1e data chunk — which stays under the per-chunk ceiling).
+  // pf1e data chunk — which stays under the per-chunk ceiling), then 1180→1330
+  // KiB for the Pathfinder 2e Monster Core bestiary (492 ORC creature stat
+  // blocks in their own lazy pf2e-monsters-data chunk, off the eager path).
   // Overridable via env.
-  totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 1180 * 1024,
+  totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 1330 * 1024,
   // App (eager) chunk gzip ceiling. SceneManager — which pulls the whole combat /
   // tactical-AI / verticality engine via the rules module — is now React.lazy'd,
   // so that chain lives in an on-demand chunk, NOT the eager app chunk. That drops
