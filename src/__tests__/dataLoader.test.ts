@@ -70,7 +70,7 @@ describe('Data Loader Integration Tests', () => {
 
     it('should load backgrounds for dnd-5e-2014', async () => {
       const backgrounds = await loadBackgroundsForSystem('dnd-5e-2014');
-      expect(backgrounds.length).toBe(6);
+      expect(backgrounds.length).toBe(1);
       expect(backgrounds.every((bg) => bg.id && bg.name && bg.system === 'dnd-5e-2014')).toBe(true);
     });
 
@@ -119,7 +119,7 @@ describe('Data Loader Integration Tests', () => {
 
     it('should load backgrounds for dnd-5e-2024', async () => {
       const backgrounds = await loadBackgroundsForSystem('dnd-5e-2024');
-      expect(backgrounds.length).toBe(6);
+      expect(backgrounds.length).toBe(4);
       expect(backgrounds.every((bg) => bg.id && bg.name && bg.system === 'dnd-5e-2024')).toBe(true);
     });
 

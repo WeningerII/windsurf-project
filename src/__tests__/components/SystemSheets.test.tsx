@@ -31,7 +31,7 @@ import { DaggerheartSheet } from '../../systems/daggerheart/sheet';
 import { createDefaultDaggerheartData } from '../../systems/daggerheart/data-model';
 import { applyDnd5eFeatTemplate } from '../../utils/featTemplate';
 import { acolyte as acolyteBackground } from '../../data/dnd/5e-2014/backgrounds/acolyte';
-import { criminal as criminalBackground } from '../../data/dnd/5e-2014/backgrounds/criminal';
+import type { Background } from '../../types/character-options/backgrounds';
 import { ranger as rangerClass2024 } from '../../data/dnd/5e-2024/classes/ranger';
 import { battlesuitArchetype } from '../../data/mutants-and-masterminds/3e/archetypes/battlesuit';
 import { accident } from '../../data/mutants-and-masterminds/3e/complications';
@@ -42,6 +42,26 @@ import { cleric as clericPf1 } from '../../data/pathfinder/1e/classes/cleric';
 import { sorcerer as sorcererPf1 } from '../../data/pathfinder/1e/classes/sorcerer';
 import { dragonDisciple as dragonDisciplePf1 } from '../../data/pathfinder/1e/prestige-classes/dragon-disciple';
 import { mysticTheurge as mysticTheurgePf1 } from '../../data/pathfinder/1e/prestige-classes/mystic-theurge';
+
+// Criminal is not part of SRD 5.1 and was removed from the catalog; defined
+// inline here only to exercise the background browser/template UI.
+const criminalBackground: Background = {
+  id: 'criminal',
+  name: 'Criminal',
+  system: 'dnd-5e-2014',
+  source: 'SRD 5.1',
+  skillProficiencies: ['deception', 'stealth'],
+  toolProficiencies: ['thieves-tools', 'one-gaming-set'],
+  equipment: ['crowbar', 'pouch'],
+  gold: 15,
+  feature: {
+    id: 'criminal-contact',
+    name: 'Criminal Contact',
+    source: 'Criminal Background',
+    description: 'You have a reliable contact in the criminal underworld.',
+  },
+  description: 'An experienced criminal with a history of breaking the law.',
+};
 
 vi.mock('../../components/FeatBrowser', () => ({
   FeatBrowser: ({

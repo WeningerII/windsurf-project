@@ -1,8 +1,45 @@
 import { describe, expect, it } from 'vitest';
 import { acolyte } from '../../data/dnd/5e-2014/backgrounds/acolyte';
-import { criminal } from '../../data/dnd/5e-2014/backgrounds/criminal';
-import { noble } from '../../data/dnd/5e-2014/backgrounds/noble';
 import { Background } from '../../types/character-options/backgrounds';
+
+// Criminal and Noble are not part of SRD 5.1 and were removed from the shipped
+// catalog; defined inline here purely as fixtures to exercise the background
+// template engine (skill/feature/language/tool merge and removal paths).
+const criminal: Background = {
+  id: 'criminal',
+  name: 'Criminal',
+  system: 'dnd-5e-2014',
+  source: 'SRD 5.1',
+  skillProficiencies: ['deception', 'stealth'],
+  toolProficiencies: ['thieves-tools', 'one-gaming-set'],
+  equipment: ['crowbar', 'dark-common-clothes-with-hood', 'pouch'],
+  gold: 15,
+  feature: {
+    id: 'criminal-contact',
+    name: 'Criminal Contact',
+    source: 'Criminal Background',
+    description: 'You have a reliable and trustworthy contact in the criminal underworld.',
+  },
+  description: 'You are an experienced criminal with a history of breaking the law.',
+};
+const noble: Background = {
+  id: 'noble',
+  name: 'Noble',
+  system: 'dnd-5e-2014',
+  source: 'SRD 5.1',
+  skillProficiencies: ['history', 'persuasion'],
+  toolProficiencies: ['one-gaming-set'],
+  languageProficiencies: { count: 1, options: ['any'], label: 'One language of your choice' },
+  equipment: ['fine-clothes', 'signet-ring', 'scroll-of-pedigree', 'purse'],
+  gold: 25,
+  feature: {
+    id: 'position-of-privilege',
+    name: 'Position of Privilege',
+    source: 'Noble Background',
+    description: 'People are inclined to think the best of you; you are welcome in high society.',
+  },
+  description: 'You carry a noble title and your family wields significant political influence.',
+};
 import { createDefaultDnd5eData, Dnd5eDataModel } from '../../systems/dnd5e/data-model';
 import { CharacterDocument } from '../../types/core/document';
 import { applyDnd5eBackgroundTemplate } from '../../utils/backgroundTemplate';

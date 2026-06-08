@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-08T03:59:54.952Z",
+  "generatedAt": "2026-06-08T04:15:53.222Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -78,7 +78,7 @@
       "spells": 319,
       "classes": 12,
       "species": 9,
-      "backgrounds": 6,
+      "backgrounds": 1,
       "traits": 0,
       "featureOptions": 106,
       "archetypes": 0,
@@ -93,7 +93,7 @@
       "spells": 339,
       "classes": 12,
       "species": 9,
-      "backgrounds": 6,
+      "backgrounds": 4,
       "traits": 0,
       "featureOptions": 0,
       "archetypes": 0,
@@ -185,7 +185,7 @@
       "spells": 319,
       "classes": 12,
       "species": 9,
-      "backgrounds": 6,
+      "backgrounds": 1,
       "traits": 0,
       "featureOptions": 106,
       "archetypes": 0,
@@ -200,7 +200,7 @@
       "spells": 339,
       "classes": 12,
       "species": 9,
-      "backgrounds": 6,
+      "backgrounds": 4,
       "traits": 0,
       "featureOptions": 0,
       "archetypes": 0,
@@ -342,13 +342,13 @@
       "category": "backgrounds",
       "categoryLabel": "Backgrounds",
       "metrics": {
-        "rawCount": 6,
-        "uniqueCount": 6,
+        "rawCount": 1,
+        "uniqueCount": 1,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 5.1": 6
+          "SRD 5.1": 1
         }
       }
     },
@@ -470,13 +470,13 @@
       "category": "backgrounds",
       "categoryLabel": "Backgrounds",
       "metrics": {
-        "rawCount": 6,
-        "uniqueCount": 6,
+        "rawCount": 4,
+        "uniqueCount": 4,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 5.2": 6
+          "SRD 5.2": 4
         }
       }
     },
