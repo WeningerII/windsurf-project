@@ -1,4 +1,4 @@
-_Generated: 2026-06-08T10:02:19.917Z_
+_Generated: 2026-06-08T10:13:00.428Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -7,7 +7,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | D&D 5e (2014) | 319 | 12 | 9 | 1 | 0 | 106 | 337 | 230 | 1 | 0 |
 | D&D 5e (2024) | 339 | 12 | 9 | 4 | 0 | 0 | 99 | 204 | 19 | 0 |
 | D&D 3.5e | 571 | 26 | 7 | 0 | 0 | 0 | 0 | 207 | 118 | 0 |
-| Pathfinder 1e | 625 | 18 | 7 | 0 | 12 | 0 | 0 | 70 | 86 | 0 |
+| Pathfinder 1e | 625 | 18 | 7 | 0 | 12 | 0 | 0 | 70 | 175 | 0 |
 | Pathfinder 2e | 618 | 12 | 6 | 16 | 0 | 0 | 0 | 188 | 93 | 0 |
 | Mutants & Masterminds 3e | 61 | 0 | 0 | 0 | 0 | 0 | 0 | 150 | 0 | 74 |
 | Daggerheart | 0 | 9 | 19 | 9 | 0 | 0 | 0 | 353 | 0 | 0 |
@@ -51,7 +51,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | Pathfinder 1e | Species/Races | 7 | 0 | 0 | 0 |
 | Pathfinder 1e | Traits | 12 | 0 | 0 | 0 |
 | Pathfinder 1e | Equipment | 70 | 0 | 0 | 0 |
-| Pathfinder 1e | Feats | 86 | 0 | 0 | 0 |
+| Pathfinder 1e | Feats | 175 | 0 | 0 | 0 |
 | Pathfinder 2e | Spells/Powers | 618 | 0 | 0 | 0 |
 | Pathfinder 2e | Classes | 12 | 0 | 0 | 0 |
 | Pathfinder 2e | Species/Races | 6 | 0 | 0 | 0 |
