@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-08T01:57:07.328Z",
+  "generatedAt": "2026-06-08T02:10:31.219Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -135,7 +135,7 @@
       "powerModifiers": 0
     },
     "pf2e": {
-      "spells": 617,
+      "spells": 618,
       "classes": 12,
       "species": 6,
       "backgrounds": 16,
@@ -242,7 +242,7 @@
       "powerModifiers": 0
     },
     "pf2e": {
-      "spells": 617,
+      "spells": 618,
       "classes": 12,
       "species": 6,
       "backgrounds": 16,
@@ -711,13 +711,13 @@
       "category": "spells",
       "categoryLabel": "Spells/Powers",
       "metrics": {
-        "rawCount": 617,
-        "uniqueCount": 617,
+        "rawCount": 618,
+        "uniqueCount": 618,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "Pathfinder Player Core": 227,
+          "Pathfinder Player Core": 228,
           "Core Rulebook": 187,
           "Pathfinder Player Core 2": 83,
           "Pathfinder Lost Omens Divine Mysteries": 35,

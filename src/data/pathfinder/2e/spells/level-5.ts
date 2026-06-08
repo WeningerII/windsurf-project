@@ -2315,4 +2315,34 @@ export const level5Spells: Spell[] = withPf2eSpellTraits([
     },
     classes: ['sorcerer', 'wizard', 'bard'],
   },
+  {
+    id: 'umbral-journey-pf2e',
+    name: 'Umbral Journey',
+    system: 'pf2e',
+    source: 'Pathfinder Player Core',
+    level: 5,
+    school: 'conjuration',
+    traditions: ['arcane', 'occult'],
+    castingTime: {
+      type: 'minute',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'hours',
+      hours: 8,
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'You move partially into the Netherworld, using its warped nature to speed your travels. Each hour, you cover roughly as much ground as you normally would in 3 days. The landmarks are vague and symbolic rather than concrete, leaving you within a mile of your intended destination when you Dismiss the spell or its duration ends.',
+    classes: ['bard', 'sorcerer', 'wizard'],
+  },
 ]);
