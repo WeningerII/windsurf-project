@@ -36,10 +36,33 @@ Open Game Content under the **Open Game License v1.0a**. Section 15 chain:
 - Pathfinder Roleplaying Game Core Rulebook © 2009, Paizo Inc.; Author: Jason Bulmahn, based on material by Jonathan Tweet, Monte Cook, and Skip Williams.
 - Pathfinder Core Rulebook (Second Edition) © 2019, Paizo Inc.; Authors: Logan Bonner, Jason Bulmahn, Stephen Radney-MacFarland, and Mark Seifter.
 
-## Not yet imported (open licenses available)
+## Mutants & Masterminds 3e — OGL v1.0a
 
-- **Mutants & Masterminds 3e** — Open Game Content © Green Ronin Publishing, OGL v1.0a (d20HeroSRD).
-- **Daggerheart** — System Reference Document 1.0 © Darrington Press, under the Darrington Press Community Gaming License (DPCGL).
+Open Game Content © Green Ronin Publishing, reproduced from the d20 Hero SRD
+(https://www.d20herosrd.com) under the **Open Game License v1.0a**. Per-entry
+`source` is recorded as "Hero's Handbook". Section 15 addition:
+
+- Mutants & Masterminds Hero's Handbook, Third Edition © 2011, Green Ronin Publishing, LLC; Author Steve Kenson.
+
+## Daggerheart — DPCGL
+
+Reproduced from the **Daggerheart System Reference Document 1.0** under the
+**Darrington Press Community Gaming License (DPCGL)**:
+https://www.daggerheart.com/wp-content/uploads/2025/05/DH-CGL.pdf
+
+> This work includes material from the Daggerheart System Reference Document 1.0,
+> © Darrington Press LLC, used under the Darrington Press Community Gaming
+> License. Daggerheart and associated marks are trademarks of Darrington Press
+> LLC; no challenge to those marks is intended.
+
+## Data provenance
+
+The open SRD/OGL/ORC text above was sourced from these public, openly-licensed
+datasets (each redistributing the original licensed material): the 5e SRD 5.1/5.2
+from `5e-bits/5e-database` and `open5e/open5e-api` (CC-BY-4.0), the Pathfinder 1e
+Core Rulebook from the Pathfinder Reference Document (`devonjones/PSRD-Data`,
+OGL), the Pathfinder 2e Remaster from the official Foundry VTT `pf2e` dataset
+(ORC), and the Daggerheart SRD from `seansbox/daggerheart-srd` (DPCGL).
 
 ## Note
 
