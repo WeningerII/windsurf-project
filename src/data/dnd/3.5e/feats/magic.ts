@@ -81,4 +81,75 @@ export const magicFeats: FeatDefinition[] = [
     description: 'Your spells are more likely to overcome spell resistance.',
     benefits: ['+4 bonus on caster level checks to overcome spell resistance'],
   },
+  {
+    id: 'eschew-materials-35e',
+    name: 'Eschew Materials',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    description: 'You can cast spells without minor material components.',
+    benefits: [
+      'Cast any spell with a material component costing 1 gp or less without that component',
+    ],
+  },
+  {
+    id: 'greater-spell-focus-35e',
+    name: 'Greater Spell Focus',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    description: 'Your spells of a chosen school are even harder to resist.',
+    benefits: ['+1 to save DCs for spells of the chosen school (stacks with Spell Focus)'],
+    special:
+      'You can gain this feat multiple times; each time it applies to a new school for which you have Spell Focus.',
+  },
+  {
+    id: 'improved-counterspell-35e',
+    name: 'Improved Counterspell',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    description: 'You are skilled at countering the spells of others.',
+    benefits: [
+      'Counterspell using any spell of the same school that is one or more levels higher than the target',
+    ],
+  },
+  {
+    id: 'improved-familiar-35e',
+    name: 'Improved Familiar',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Ability to acquire a new familiar',
+      },
+      {
+        type: 'other',
+        description: 'compatible alignment',
+      },
+      {
+        type: 'other',
+        description: 'sufficiently high level (see below)',
+      },
+    ],
+    description: 'You can call a more exotic and powerful familiar.',
+    benefits: [
+      'Choose your familiar from an expanded list of more powerful creatures based on your caster level',
+    ],
+  },
+  {
+    id: 'spell-mastery-35e',
+    name: 'Spell Mastery',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Wizard level 1st',
+      },
+    ],
+    description: 'You have mastered spells you can prepare from memory.',
+    benefits: [
+      'Choose spells equal to your Intelligence modifier; prepare them without a spellbook',
+    ],
+    special: 'You can gain this feat multiple times; each time choose new spells.',
+  },
 ];

@@ -656,4 +656,720 @@ export const generalFeats: FeatDefinition[] = [
     description: 'You deal extra damage when using a chosen weapon.',
     benefits: ['+2 bonus on all damage rolls you make using the selected weapon'],
   },
+  {
+    id: 'deflect-arrows-35e',
+    name: 'Deflect Arrows',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Dex 13',
+      },
+      {
+        type: 'other',
+        description: 'Improved Unarmed Strike',
+      },
+    ],
+    description: 'You can knock aside incoming ranged attacks.',
+    benefits: [
+      'Once per round, deflect one ranged weapon attack that would hit you, taking no damage',
+      'You must have a hand free and be aware of the attack (not flat-footed)',
+    ],
+  },
+  {
+    id: 'diehard-35e',
+    name: 'Diehard',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Endurance',
+      },
+    ],
+    description: 'You can remain conscious and active at the brink of death.',
+    benefits: [
+      'When between -1 and -9 hit points you automatically become stable',
+      'You may stay conscious and act (as if disabled) while at negative hit points',
+    ],
+  },
+  {
+    id: 'exotic-weapon-proficiency-35e',
+    name: 'Exotic Weapon Proficiency',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Base attack bonus +1 (plus Str 13 for bastard sword or dwarven waraxe)',
+      },
+    ],
+    description: 'You understand how to use an exotic weapon in combat.',
+    benefits: ['Make attack rolls normally with the selected exotic weapon'],
+    special: 'You can gain this feat multiple times; each time it applies to a new exotic weapon.',
+  },
+  {
+    id: 'extra-turning-35e',
+    name: 'Extra Turning',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Ability to turn or rebuke creatures',
+      },
+    ],
+    description: 'You can turn or rebuke undead more often.',
+    benefits: ['Use each of your turn/rebuke abilities four additional times per day'],
+    special: 'You can gain this feat multiple times; its effects stack.',
+  },
+  {
+    id: 'far-shot-35e',
+    name: 'Far Shot',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Point Blank Shot',
+      },
+    ],
+    description: 'You can throw or shoot a weapon farther than normal.',
+    benefits: [
+      'Projectile weapon range increments increase by one-half',
+      'Thrown weapon range increments are doubled',
+    ],
+  },
+  {
+    id: 'greater-two-weapon-fighting-35e',
+    name: 'Greater Two-Weapon Fighting',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Dex 19',
+      },
+      {
+        type: 'other',
+        description: 'Improved Two-Weapon Fighting',
+      },
+      {
+        type: 'other',
+        description: 'Two-Weapon Fighting',
+      },
+      {
+        type: 'other',
+        description: 'base attack bonus +11',
+      },
+    ],
+    description: 'You are a master of fighting with two weapons.',
+    benefits: ['Gain a third attack with your off-hand weapon at a -10 penalty'],
+  },
+  {
+    id: 'greater-weapon-focus-35e',
+    name: 'Greater Weapon Focus',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Proficiency with selected weapon',
+      },
+      {
+        type: 'other',
+        description: 'Weapon Focus with selected weapon',
+      },
+      {
+        type: 'other',
+        description: 'fighter level 8th',
+      },
+    ],
+    description: 'You are particularly deadly with your chosen weapon.',
+    benefits: ['+1 bonus on attack rolls with the selected weapon (stacks with Weapon Focus)'],
+    special: 'You can gain this feat multiple times; each time it applies to a new weapon.',
+  },
+  {
+    id: 'greater-weapon-specialization-35e',
+    name: 'Greater Weapon Specialization',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Proficiency with selected weapon',
+      },
+      {
+        type: 'other',
+        description: 'Greater Weapon Focus with selected weapon',
+      },
+      {
+        type: 'other',
+        description: 'Weapon Focus with selected weapon',
+      },
+      {
+        type: 'other',
+        description: 'Weapon Specialization with selected weapon',
+      },
+      {
+        type: 'other',
+        description: 'fighter level 12th',
+      },
+    ],
+    description: 'You deal exceptional damage with your chosen weapon.',
+    benefits: [
+      '+2 bonus on damage rolls with the selected weapon (stacks with Weapon Specialization)',
+    ],
+    special: 'You can gain this feat multiple times; each time it applies to a new weapon.',
+  },
+  {
+    id: 'improved-bull-rush-35e',
+    name: 'Improved Bull Rush',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Str 13',
+      },
+      {
+        type: 'other',
+        description: 'Power Attack',
+      },
+    ],
+    description: 'You are skilled at pushing opponents back.',
+    benefits: [
+      'No attack of opportunity when you bull rush',
+      '+4 bonus on the opposed Strength check',
+    ],
+  },
+  {
+    id: 'improved-disarm-35e',
+    name: 'Improved Disarm',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Int 13',
+      },
+      {
+        type: 'other',
+        description: 'Combat Expertise',
+      },
+    ],
+    description: 'You are skilled at knocking weapons from your opponents’ hands.',
+    benefits: [
+      'No attack of opportunity when you attempt a disarm',
+      '+4 bonus on the opposed disarm attack roll',
+    ],
+  },
+  {
+    id: 'improved-feint-35e',
+    name: 'Improved Feint',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Int 13',
+      },
+      {
+        type: 'other',
+        description: 'Combat Expertise',
+      },
+    ],
+    description: 'You are skilled at fooling opponents in combat.',
+    benefits: [
+      'Make a Bluff check to feint in combat as a move action instead of a standard action',
+    ],
+  },
+  {
+    id: 'improved-grapple-35e',
+    name: 'Improved Grapple',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Dex 13',
+      },
+      {
+        type: 'other',
+        description: 'Improved Unarmed Strike',
+      },
+    ],
+    description: 'You are skilled at grappling opponents.',
+    benefits: ['No attack of opportunity when you start a grapple', '+4 bonus on grapple checks'],
+  },
+  {
+    id: 'improved-overrun-35e',
+    name: 'Improved Overrun',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Str 13',
+      },
+      {
+        type: 'other',
+        description: 'Power Attack',
+      },
+    ],
+    description: 'You are skilled at knocking down and running past opponents.',
+    benefits: [
+      'Overrun targets may not choose to avoid you',
+      '+4 bonus on the Strength check to knock them down',
+    ],
+  },
+  {
+    id: 'improved-precise-shot-35e',
+    name: 'Improved Precise Shot',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Dex 19',
+      },
+      {
+        type: 'other',
+        description: 'Point Blank Shot',
+      },
+      {
+        type: 'other',
+        description: 'Precise Shot',
+      },
+      {
+        type: 'other',
+        description: 'base attack bonus +11',
+      },
+    ],
+    description: 'Your ranged attacks find their mark despite cover and concealment.',
+    benefits: [
+      'Ignore AC bonuses from less than total cover and miss chances from less than total concealment',
+      'Automatically strike your chosen target when firing into a grapple',
+    ],
+  },
+  {
+    id: 'improved-shield-bash-35e',
+    name: 'Improved Shield Bash',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Shield Proficiency',
+      },
+    ],
+    description: 'You can bash with a shield while retaining its protection.',
+    benefits: ['Keep your shield’s bonus to AC when you make a shield bash'],
+  },
+  {
+    id: 'improved-sunder-35e',
+    name: 'Improved Sunder',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Str 13',
+      },
+      {
+        type: 'other',
+        description: 'Power Attack',
+      },
+    ],
+    description: 'You are skilled at attacking your opponents’ weapons and gear.',
+    benefits: [
+      'No attack of opportunity when you strike a held or carried object',
+      '+4 bonus on attack rolls against held or carried objects',
+    ],
+  },
+  {
+    id: 'improved-trip-35e',
+    name: 'Improved Trip',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Int 13',
+      },
+      {
+        type: 'other',
+        description: 'Combat Expertise',
+      },
+    ],
+    description: 'You are skilled at tripping opponents.',
+    benefits: [
+      'No attack of opportunity when you trip while unarmed',
+      '+4 bonus on the Strength check to trip',
+      'Make an immediate melee attack against a tripped opponent',
+    ],
+  },
+  {
+    id: 'improved-turning-35e',
+    name: 'Improved Turning',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Ability to turn or rebuke creatures',
+      },
+    ],
+    description: 'You turn undead as a more experienced character would.',
+    benefits: ['Turn or rebuke creatures as if you were one level higher'],
+  },
+  {
+    id: 'improved-two-weapon-fighting-35e',
+    name: 'Improved Two-Weapon Fighting',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Dex 17',
+      },
+      {
+        type: 'other',
+        description: 'Two-Weapon Fighting',
+      },
+      {
+        type: 'other',
+        description: 'base attack bonus +6',
+      },
+    ],
+    description: 'You are skilled at fighting with two weapons.',
+    benefits: ['Gain a second attack with your off-hand weapon at a -5 penalty'],
+  },
+  {
+    id: 'magical-aptitude-35e',
+    name: 'Magical Aptitude',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    description: 'You have a knack for magical endeavors.',
+    benefits: ['+2 bonus on Spellcraft checks', '+2 bonus on Use Magic Device checks'],
+  },
+  {
+    id: 'manyshot-35e',
+    name: 'Manyshot',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Dex 17',
+      },
+      {
+        type: 'other',
+        description: 'Point Blank Shot',
+      },
+      {
+        type: 'other',
+        description: 'Rapid Shot',
+      },
+      {
+        type: 'other',
+        description: 'base attack bonus +6',
+      },
+    ],
+    description: 'You can fire multiple arrows at a single opponent.',
+    benefits: [
+      'As a standard action, fire two arrows at one target within 30 ft using a single attack roll at a -4 penalty',
+      'Fire additional arrows at higher base attack bonus, with cumulative penalties',
+    ],
+  },
+  {
+    id: 'mounted-archery-35e',
+    name: 'Mounted Archery',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Ride 1 rank',
+      },
+      {
+        type: 'other',
+        description: 'Mounted Combat',
+      },
+    ],
+    description: 'You are skilled at using ranged weapons from horseback.',
+    benefits: ['Halve the penalty for using a ranged weapon while mounted'],
+  },
+  {
+    id: 'rapid-reload-35e',
+    name: 'Rapid Reload',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Weapon Proficiency (crossbow type chosen)',
+      },
+    ],
+    description: 'You can reload a crossbow with exceptional speed.',
+    benefits: [
+      'Reload your chosen crossbow as a free action (hand or light) or a move action (heavy)',
+    ],
+    special:
+      'You can gain this feat multiple times; each time it applies to a new type of crossbow.',
+  },
+  {
+    id: 'ride-by-attack-35e',
+    name: 'Ride-by Attack',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Ride 1 rank',
+      },
+      {
+        type: 'other',
+        description: 'Mounted Combat',
+      },
+    ],
+    description: 'You are skilled at attacking on the move from horseback.',
+    benefits: [
+      'When mounted and charging, move both before and after the attack without provoking an attack of opportunity from your target',
+    ],
+  },
+  {
+    id: 'shot-on-the-run-35e',
+    name: 'Shot on the Run',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Dex 13',
+      },
+      {
+        type: 'other',
+        description: 'Dodge',
+      },
+      {
+        type: 'other',
+        description: 'Mobility',
+      },
+      {
+        type: 'other',
+        description: 'Point Blank Shot',
+      },
+      {
+        type: 'other',
+        description: 'base attack bonus +4',
+      },
+    ],
+    description: 'You are skilled at moving and shooting.',
+    benefits: [
+      'When using the attack action with a ranged weapon, move both before and after the attack',
+    ],
+  },
+  {
+    id: 'snatch-arrows-35e',
+    name: 'Snatch Arrows',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Dex 15',
+      },
+      {
+        type: 'other',
+        description: 'Deflect Arrows',
+      },
+      {
+        type: 'other',
+        description: 'Improved Unarmed Strike',
+      },
+    ],
+    description: 'You can catch incoming ranged attacks.',
+    benefits: [
+      'Catch deflected ranged weapons instead of just deflecting them',
+      'Immediately throw caught thrown weapons back at the attacker',
+    ],
+  },
+  {
+    id: 'spirited-charge-35e',
+    name: 'Spirited Charge',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Ride 1 rank',
+      },
+      {
+        type: 'other',
+        description: 'Mounted Combat',
+      },
+      {
+        type: 'other',
+        description: 'Ride-By Attack',
+      },
+    ],
+    description: 'You deal devastating damage on a mounted charge.',
+    benefits: ['On a mounted charge, deal double damage with a melee weapon (triple with a lance)'],
+  },
+  {
+    id: 'spring-attack-35e',
+    name: 'Spring Attack',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Dex 13',
+      },
+      {
+        type: 'other',
+        description: 'Dodge',
+      },
+      {
+        type: 'other',
+        description: 'Mobility',
+      },
+      {
+        type: 'other',
+        description: 'base attack bonus +4',
+      },
+    ],
+    description: 'You are skilled at moving in and out of melee.',
+    benefits: [
+      'When using the attack action with a melee weapon, move both before and after the attack',
+      'No attack of opportunity from the target you attack',
+    ],
+  },
+  {
+    id: 'stunning-fist-35e',
+    name: 'Stunning Fist',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Dex 13',
+      },
+      {
+        type: 'other',
+        description: 'Wis 13',
+      },
+      {
+        type: 'other',
+        description: 'Improved Unarmed Strike',
+      },
+      {
+        type: 'other',
+        description: 'base attack bonus +8',
+      },
+    ],
+    description: 'You can stun an opponent with an unarmed strike.',
+    benefits: [
+      'A struck foe must make a Fortitude save (DC 10 + 1/2 your level + Wis modifier) or be stunned for 1 round',
+      'Usable once per day per four character levels, no more than once per round',
+    ],
+  },
+  {
+    id: 'tower-shield-proficiency-35e',
+    name: 'Tower Shield Proficiency',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Shield Proficiency',
+      },
+    ],
+    description: 'You are proficient with tower shields.',
+    benefits: ['Use a tower shield with only the standard penalties'],
+  },
+  {
+    id: 'trample-35e',
+    name: 'Trample',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Ride 1 rank',
+      },
+      {
+        type: 'other',
+        description: 'Mounted Combat',
+      },
+    ],
+    description: 'You can ride down opponents while mounted.',
+    benefits: [
+      'Mounted overrun targets may not avoid you',
+      'Your mount makes a hoof attack against any target it knocks prone',
+    ],
+  },
+  {
+    id: 'two-weapon-defense-35e',
+    name: 'Two-Weapon Defense',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Dex 15',
+      },
+      {
+        type: 'other',
+        description: 'Two-Weapon Fighting',
+      },
+    ],
+    description: 'You are skilled at defending yourself while dual-wielding.',
+    benefits: [
+      '+1 shield bonus to AC when wielding two weapons',
+      'The bonus increases to +2 when fighting defensively or using total defense',
+    ],
+  },
+  {
+    id: 'whirlwind-attack-35e',
+    name: 'Whirlwind Attack',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    prerequisites: [
+      {
+        type: 'other',
+        description: 'Dex 13',
+      },
+      {
+        type: 'other',
+        description: 'Int 13',
+      },
+      {
+        type: 'other',
+        description: 'Combat Expertise',
+      },
+      {
+        type: 'other',
+        description: 'Dodge',
+      },
+      {
+        type: 'other',
+        description: 'Mobility',
+      },
+      {
+        type: 'other',
+        description: 'Spring Attack',
+      },
+      {
+        type: 'other',
+        description: 'base attack bonus +4',
+      },
+    ],
+    description: 'You can strike many adjacent foes at once.',
+    benefits: [
+      'Give up your regular attacks to make one melee attack at full base attack bonus against each opponent within reach',
+    ],
+  },
 ];
