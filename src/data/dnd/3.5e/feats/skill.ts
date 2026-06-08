@@ -1,5 +1,131 @@
-// D&D 3.5e Skill Feats (SRD 3.5)
+// D&D 3.5e Skill Feats - System Reference Document v3.5
+//
+// Parsed from the OGL System Reference Document v3.5 (github.com/olimot/srd-v3.5-md),
+// which reproduces the SRD verbatim under the Open Game License v1.0a.
 
 import { FeatDefinition } from '../../../../types/character-options/feats';
 
-export const skillFeats: FeatDefinition[] = [];
+export const skillFeats: FeatDefinition[] = [
+  {
+    id: 'acrobatic-35e',
+    name: 'Acrobatic',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    description: 'You get a +2 bonus on all Jump checks and Tumble checks.',
+    benefits: ['You get a +2 bonus on all Jump checks and Tumble checks.'],
+  },
+  {
+    id: 'agile-35e',
+    name: 'Agile',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    description: 'You get a +2 bonus on all Balance checks and Escape Artist checks.',
+    benefits: ['You get a +2 bonus on all Balance checks and Escape Artist checks.'],
+  },
+  {
+    id: 'alertness-35e',
+    name: 'Alertness',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    description: 'You get a +2 bonus on all Listen checks and Spot checks.',
+    benefits: ['You get a +2 bonus on all Listen checks and Spot checks.'],
+    special:
+      'The master of a familiar gains the benefit of the Alertness feat whenever the familiar is within arm’s reach.',
+  },
+  {
+    id: 'animal-affinity-35e',
+    name: 'Animal Affinity',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    description: 'You get a +2 bonus on all Handle Animal checks and Ride checks.',
+    benefits: ['You get a +2 bonus on all Handle Animal checks and Ride checks.'],
+  },
+  {
+    id: 'athletic-35e',
+    name: 'Athletic',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    description: 'You get a +2 bonus on all Climb checks and Swim checks.',
+    benefits: ['You get a +2 bonus on all Climb checks and Swim checks.'],
+  },
+  {
+    id: 'deceitful-35e',
+    name: 'Deceitful',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    description: 'You get a +2 bonus on all Disguise checks and Forgery checks.',
+    benefits: ['You get a +2 bonus on all Disguise checks and Forgery checks.'],
+  },
+  {
+    id: 'deft-hands-35e',
+    name: 'Deft Hands',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    description: 'You get a +2 bonus on all Sleight of Hand checks and Use Rope checks.',
+    benefits: ['You get a +2 bonus on all Sleight of Hand checks and Use Rope checks.'],
+  },
+  {
+    id: 'diligent-35e',
+    name: 'Diligent',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    description: 'You get a +2 bonus on all Appraise checks and Decipher Script checks.',
+    benefits: ['You get a +2 bonus on all Appraise checks and Decipher Script checks.'],
+  },
+  {
+    id: 'investigator-35e',
+    name: 'Investigator',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    description: 'You get a +2 bonus on all Gather Information checks and Search checks.',
+    benefits: ['You get a +2 bonus on all Gather Information checks and Search checks.'],
+  },
+  {
+    id: 'magical-aptitude-35e',
+    name: 'Magical Aptitude',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    description: 'You get a +2 bonus on all Spellcraft checks and Use Magic Device checks.',
+    benefits: ['You get a +2 bonus on all Spellcraft checks and Use Magic Device checks.'],
+  },
+  {
+    id: 'negotiator-35e',
+    name: 'Negotiator',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    description: 'You get a +2 bonus on all Diplomacy checks and Sense Motive checks.',
+    benefits: ['You get a +2 bonus on all Diplomacy checks and Sense Motive checks.'],
+  },
+  {
+    id: 'nimble-fingers-35e',
+    name: 'Nimble Fingers',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    description: 'You get a +2 bonus on all Disable Device checks and Open Lock checks.',
+    benefits: ['You get a +2 bonus on all Disable Device checks and Open Lock checks.'],
+  },
+  {
+    id: 'persuasive-35e',
+    name: 'Persuasive',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    description: 'You get a +2 bonus on all Bluff checks and Intimidate checks.',
+    benefits: ['You get a +2 bonus on all Bluff checks and Intimidate checks.'],
+  },
+  {
+    id: 'self-sufficient-35e',
+    name: 'Self-Sufficient',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    description: 'You get a +2 bonus on all Heal checks and Survival checks.',
+    benefits: ['You get a +2 bonus on all Heal checks and Survival checks.'],
+  },
+  {
+    id: 'stealthy-35e',
+    name: 'Stealthy',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    description: 'You get a +2 bonus on all Hide checks and Move Silently checks.',
+    benefits: ['You get a +2 bonus on all Hide checks and Move Silently checks.'],
+  },
+];
