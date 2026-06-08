@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-08T09:45:52.791Z",
+  "generatedAt": "2026-06-08T09:55:31.631Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -18,8 +18,7 @@
     },
     "dnd-3.5e": {
       "allowedSources": [
-        "SRD 3.5",
-        "PHB"
+        "SRD 3.5"
       ],
       "allowMissingSourceFor": []
     },
@@ -113,7 +112,7 @@
       "complications": 0,
       "monsters": 0,
       "equipment": 207,
-      "feats": 515,
+      "feats": 80,
       "advantages": 0,
       "powerModifiers": 0
     },
@@ -220,7 +219,7 @@
       "complications": 0,
       "monsters": 0,
       "equipment": 207,
-      "feats": 515,
+      "feats": 80,
       "advantages": 0,
       "powerModifiers": 0
     },
@@ -596,13 +595,13 @@
       "category": "feats",
       "categoryLabel": "Feats",
       "metrics": {
-        "rawCount": 515,
-        "uniqueCount": 515,
+        "rawCount": 80,
+        "uniqueCount": 80,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "PHB": 515
+          "SRD 3.5": 80
         }
       }
     },
