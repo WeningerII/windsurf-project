@@ -125,7 +125,7 @@ describe('Data Loader Integration Tests', () => {
 
     it('should load feats for dnd-5e-2024', async () => {
       const feats = await loadFeatsForSystem('dnd-5e-2024');
-      expect(feats.length).toBe(87);
+      expect(feats.length).toBe(19);
       expect(new Set(feats.map((f) => f.id)).size).toBe(feats.length);
     });
 

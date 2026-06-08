@@ -6,7 +6,7 @@ import type { Spell } from '../../types/magic/spells';
 import { registerAllSystems } from '../../systems';
 import { systemRegistry } from '../../registry';
 import * as dataLoader from '../../utils/dataLoader';
-import { resilient } from '../../data/dnd/5e-2024/feats/general';
+import { abilityScoreImprovement } from '../../data/dnd/5e-2024/feats/general';
 import { bard as bardClass } from '../../data/dnd/5e-2014/classes/bard';
 import { cleric as clericClass } from '../../data/dnd/5e-2014/classes/cleric';
 import { wizard as wizardClass } from '../../data/dnd/5e-2014/classes/wizard';
@@ -746,7 +746,9 @@ describe('System Sheets', () => {
     vi.spyOn(dataLoader, 'loadClassesForSystem').mockResolvedValue([]);
     vi.spyOn(dataLoader, 'loadSpeciesForSystem').mockResolvedValue([]);
     vi.spyOn(dataLoader, 'loadBackgroundsForSystem').mockResolvedValue([]);
-    const loadFeatsSpy = vi.spyOn(dataLoader, 'loadFeatsForSystem').mockResolvedValue([resilient]);
+    const loadFeatsSpy = vi
+      .spyOn(dataLoader, 'loadFeatsForSystem')
+      .mockResolvedValue([abilityScoreImprovement]);
     const doc = makeDoc('dnd-5e-2024', createDefaultDnd5e2024Data());
 
     render(
@@ -764,7 +766,9 @@ describe('System Sheets', () => {
       expect(loadFeatsSpy).toHaveBeenCalledWith('dnd-5e-2024');
     });
     await user.click(featsTab);
-    expect(await screen.findByRole('button', { name: 'Select Resilient' })).toBeInTheDocument();
+    expect(
+      await screen.findByRole('button', { name: 'Select Ability Score Improvement' })
+    ).toBeInTheDocument();
     await waitFor(() => {
       expect(loadFeatsSpy).toHaveBeenCalledTimes(1);
     });
@@ -996,7 +1000,7 @@ describe('System Sheets', () => {
   it('applies feat automation from the Dnd5e2024Sheet feat browser', async () => {
     const user = userEvent.setup();
     const onUpdate = vi.fn();
-    vi.spyOn(dataLoader, 'loadFeatsForSystem').mockResolvedValue([resilient]);
+    vi.spyOn(dataLoader, 'loadFeatsForSystem').mockResolvedValue([abilityScoreImprovement]);
     const doc = makeDoc('dnd-5e-2024', createDefaultDnd5e2024Data());
 
     render(
@@ -1011,7 +1015,9 @@ describe('System Sheets', () => {
       expect(dataLoader.loadFeatsForSystem).toHaveBeenCalledWith('dnd-5e-2024');
     });
 
-    await user.click(await screen.findByRole('button', { name: 'Select Resilient' }));
+    await user.click(
+      await screen.findByRole('button', { name: 'Select Ability Score Improvement' })
+    );
 
     await waitFor(() => {
       expect(onUpdate).toHaveBeenCalled();
@@ -1021,25 +1027,21 @@ describe('System Sheets', () => {
       ReturnType<typeof createDefaultDnd5e2024Data>
     >;
     expect(updatedDoc.system.feats[0]).toMatchObject({
-      id: 'resilient',
-      automation: {
-        abilityScores: { str: 1 },
-        savingThrows: ['str'],
-      },
+      id: 'ability-score-improvement',
     });
-    expect(updatedDoc.system.baseAttributes.str).toBe(11);
-    expect(updatedDoc.system.savingThrowProficiencies).toContain('str');
   });
 
   it('reconfigures selected feat choices from the Dnd5e2024Sheet features tab', async () => {
     const user = userEvent.setup();
     const onUpdate = vi.fn();
-    const loadFeatsSpy = vi.spyOn(dataLoader, 'loadFeatsForSystem').mockResolvedValue([resilient]);
+    const loadFeatsSpy = vi
+      .spyOn(dataLoader, 'loadFeatsForSystem')
+      .mockResolvedValue([abilityScoreImprovement]);
     const seededDoc = applyDnd5eFeatTemplate(
       makeDoc('dnd-5e-2024', createDefaultDnd5e2024Data()) as CharacterDocument<
         ReturnType<typeof createDefaultDnd5e2024Data>
       >,
-      resilient
+      abilityScoreImprovement
     );
 
     render(
@@ -1054,7 +1056,9 @@ describe('System Sheets', () => {
     });
 
     await user.click(screen.getByRole('tab', { name: /features/i }));
-    const selection = await screen.findByTitle('resilient ability-scores selection 1');
+    const selection = await screen.findByTitle(
+      'ability-score-improvement ability-scores selection 1'
+    );
 
     await user.selectOptions(selection, 'wis');
 
@@ -1065,12 +1069,9 @@ describe('System Sheets', () => {
     const updatedDoc = onUpdate.mock.calls.at(-1)?.[0] as CharacterDocument<
       ReturnType<typeof createDefaultDnd5e2024Data>
     >;
-    expect(updatedDoc.system.baseAttributes.str).toBe(10);
     expect(updatedDoc.system.baseAttributes.wis).toBe(11);
-    expect(updatedDoc.system.savingThrowProficiencies).toEqual(['wis']);
     expect(updatedDoc.system.feats[0].automation).toMatchObject({
       abilityScores: { wis: 1 },
-      savingThrows: ['wis'],
     });
   });
 

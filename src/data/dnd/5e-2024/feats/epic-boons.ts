@@ -31,21 +31,6 @@ export const boonOfDimensionalTravel: FeatDefinition = {
   ],
 };
 
-export const boonOfEnergy: FeatDefinition = {
-  id: 'boon-of-energy-resistance',
-  name: 'Boon of Energy Resistance',
-  system: 'dnd-5e-2024',
-  source: 'SRD 5.2',
-  prerequisites: [{ type: 'level', value: 19 }],
-  abilityScoreIncrease: { type: 'choice', totalIncrease: 1 },
-  description: 'You gain the following benefits.',
-  benefits: [
-    'Ability Score Increase: Increase one ability score by 1, to a maximum of 30.',
-    'Energy Resistance: You gain Resistance to two damage types of your choice from: Acid, Cold, Fire, Lightning, Necrotic, Poison, Psychic, Radiant, Thunder.',
-    'Energy Redirection: When you take damage of a type to which you have Resistance, you can take a Reaction to direct the damage at another creature within 60 feet.',
-  ],
-};
-
 export const boonOfFate: FeatDefinition = {
   id: 'boon-of-fate',
   name: 'Boon of Fate',
@@ -57,20 +42,6 @@ export const boonOfFate: FeatDefinition = {
   benefits: [
     'Ability Score Increase: Increase one ability score by 1, to a maximum of 30.',
     'Improve Fate: When you or another creature within 60 feet fails a d20 Test, you can roll 2d4 and apply the total rolled as a bonus or penalty to the d20 roll.',
-  ],
-};
-
-export const boonOfFortitude: FeatDefinition = {
-  id: 'boon-of-fortitude',
-  name: 'Boon of Fortitude',
-  system: 'dnd-5e-2024',
-  source: 'SRD 5.2',
-  prerequisites: [{ type: 'level', value: 19 }],
-  abilityScoreIncrease: { type: 'choice', totalIncrease: 1 },
-  description: 'You gain the following benefits.',
-  benefits: [
-    'Ability Score Increase: Increase one ability score by 1, to a maximum of 30.',
-    'Fortified Health: Your Hit Point maximum increases by 40. Whenever you gain a level after this, your HP maximum increases by 10 additional HP.',
   ],
 };
 
@@ -86,50 +57,6 @@ export const boonOfIrresistibleOffense: FeatDefinition = {
     'Ability Score Increase: Increase one ability score by 1, to a maximum of 30.',
     'Overcome Defenses: The Bludgeoning, Piercing, and Slashing damage you deal ignores Resistance.',
     'Overwhelming Strike: When you roll a 20 on the d20 for an attack roll, you can deal extra damage equal to the ability modifier used for the attack.',
-  ],
-};
-
-export const boonOfRecovery: FeatDefinition = {
-  id: 'boon-of-recovery',
-  name: 'Boon of Recovery',
-  system: 'dnd-5e-2024',
-  source: 'SRD 5.2',
-  prerequisites: [{ type: 'level', value: 19 }],
-  abilityScoreIncrease: { type: 'choice', totalIncrease: 1 },
-  description: 'You gain the following benefits.',
-  benefits: [
-    'Ability Score Increase: Increase one ability score by 1, to a maximum of 30.',
-    "Last Stand: When you would be reduced to 0 HP, you can drop to 1 HP instead and regain a number of HP equal to half your HP maximum. Once you use this benefit, you can't do so again until you finish a Long Rest.",
-    'Speedy Recovery: When you spend one or more Hit Point Dice during a Short Rest, regain an additional 2d10 HP.',
-  ],
-};
-
-export const boonOfSkill: FeatDefinition = {
-  id: 'boon-of-skill',
-  name: 'Boon of Skill',
-  system: 'dnd-5e-2024',
-  source: 'SRD 5.2',
-  prerequisites: [{ type: 'level', value: 19 }],
-  abilityScoreIncrease: { type: 'choice', totalIncrease: 1 },
-  description: 'You gain the following benefits.',
-  benefits: [
-    'Ability Score Increase: Increase one ability score by 1, to a maximum of 30.',
-    "Expertise: Gain Proficiency in all skills you're not already proficient in, and gain Expertise in any skills you're already proficient in.",
-  ],
-};
-
-export const boonOfSpeed: FeatDefinition = {
-  id: 'boon-of-speed',
-  name: 'Boon of Speed',
-  system: 'dnd-5e-2024',
-  source: 'SRD 5.2',
-  prerequisites: [{ type: 'level', value: 19 }],
-  abilityScoreIncrease: { type: 'choice', totalIncrease: 1 },
-  description: 'You gain the following benefits.',
-  benefits: [
-    'Ability Score Increase: Increase one ability score by 1, to a maximum of 30.',
-    'Speed Increase: Your Speed increases by 30 feet.',
-    "Peerless Agility: Difficult Terrain doesn't cost you extra movement. Opportunity Attacks have Disadvantage against you.",
   ],
 };
 
@@ -183,13 +110,8 @@ export const boonOfTruesight: FeatDefinition = {
 export const epicBoons: FeatDefinition[] = [
   boonOfCombatProwess,
   boonOfDimensionalTravel,
-  boonOfEnergy,
   boonOfFate,
-  boonOfFortitude,
   boonOfIrresistibleOffense,
-  boonOfRecovery,
-  boonOfSkill,
-  boonOfSpeed,
   boonOfSpellRecall,
   boonOfTheNightSpirit,
   boonOfTruesight,

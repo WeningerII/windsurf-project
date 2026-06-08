@@ -1,14 +1,14 @@
 import { render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { Tabs } from '../../components/ui/Tabs';
-import { heavilyArmored, savageAttacker } from '../../data/dnd/5e-2014/feats';
+import { savageAttacker, skilled } from '../../data/dnd/5e-2024/feats/origin';
 import { Dnd5eFeatBrowserTab } from '../../systems/dnd5e/shared/components/Dnd5eFeatBrowserTab';
 import { Dnd5eSelectedFeatsSection } from '../../systems/dnd5e/shared/components/Dnd5eSelectedFeatsSection';
 import type { Feat } from '../../types/core/character';
 
 const featDefinitionsById = new Map([
   [savageAttacker.id, savageAttacker],
-  [heavilyArmored.id, heavilyArmored],
+  [skilled.id, skilled],
 ]);
 
 const selectedFeats: Feat[] = [
@@ -28,17 +28,17 @@ const selectedFeats: Feat[] = [
     },
   },
   {
-    id: heavilyArmored.id,
-    name: heavilyArmored.name,
-    description: heavilyArmored.description,
-    source: heavilyArmored.source,
+    id: skilled.id,
+    name: skilled.name,
+    description: skilled.description,
+    source: skilled.source,
     automation: {
-      abilityScores: { str: 1 },
-      armor: ['heavy'],
+      abilityScores: {},
+      armor: [],
       weapons: [],
       tools: [],
       languages: [],
-      skills: {},
+      skills: { acrobatics: 'proficient', stealth: 'proficient', survival: 'proficient' },
       savingThrows: [],
     },
   },
@@ -49,19 +49,19 @@ describe('D&D 5e feat manual badges', () => {
     render(
       <Tabs defaultValue="feats">
         <Dnd5eFeatBrowserTab
-          systemId="dnd-5e-2014"
+          systemId="dnd-5e-2024"
           featsLoaded
           featTemplateError={null}
-          featDefs={[savageAttacker, heavilyArmored]}
+          featDefs={[savageAttacker, skilled]}
         />
       </Tabs>
     );
 
     const savageButton = await screen.findByRole('button', { name: /savage attacker/i });
-    const heavilyArmoredButton = screen.getByRole('button', { name: /heavily armored/i });
+    const skilledButton = screen.getByRole('button', { name: /skilled/i });
 
     expect(within(savageButton).getByText('Manual')).toBeInTheDocument();
-    expect(within(heavilyArmoredButton).queryByText('Manual')).not.toBeInTheDocument();
+    expect(within(skilledButton).queryByText('Manual')).not.toBeInTheDocument();
   });
 
   it('marks manual-only selected feats without marking selected feats with automation', () => {
@@ -83,7 +83,7 @@ describe('D&D 5e feat manual badges', () => {
       within(screen.getByText('Savage Attacker').parentElement!).getByText('Manual')
     ).toBeInTheDocument();
     expect(
-      within(screen.getByText('Heavily Armored').parentElement!).queryByText('Manual')
+      within(screen.getByText('Skilled').parentElement!).queryByText('Manual')
     ).not.toBeInTheDocument();
   });
 });

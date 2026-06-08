@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-08T02:22:29.924Z",
+  "generatedAt": "2026-06-08T03:59:54.952Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -85,7 +85,7 @@
       "complications": 0,
       "monsters": 41,
       "equipment": 230,
-      "feats": 39,
+      "feats": 1,
       "advantages": 0,
       "powerModifiers": 0
     },
@@ -100,7 +100,7 @@
       "complications": 0,
       "monsters": 99,
       "equipment": 204,
-      "feats": 87,
+      "feats": 19,
       "advantages": 0,
       "powerModifiers": 0
     },
@@ -192,7 +192,7 @@
       "complications": 0,
       "monsters": 41,
       "equipment": 230,
-      "feats": 39,
+      "feats": 1,
       "advantages": 0,
       "powerModifiers": 0
     },
@@ -207,7 +207,7 @@
       "complications": 0,
       "monsters": 99,
       "equipment": 204,
-      "feats": 87,
+      "feats": 19,
       "advantages": 0,
       "powerModifiers": 0
     },
@@ -406,13 +406,13 @@
       "category": "feats",
       "categoryLabel": "Feats",
       "metrics": {
-        "rawCount": 39,
-        "uniqueCount": 39,
+        "rawCount": 1,
+        "uniqueCount": 1,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 5.1": 39
+          "SRD 5.1": 1
         }
       }
     },
@@ -518,13 +518,13 @@
       "category": "feats",
       "categoryLabel": "Feats",
       "metrics": {
-        "rawCount": 87,
-        "uniqueCount": 87,
+        "rawCount": 19,
+        "uniqueCount": 19,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 5.2": 87
+          "SRD 5.2": 19
         }
       }
     },
