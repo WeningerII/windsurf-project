@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-08T10:13:00.428Z",
+  "generatedAt": "2026-06-08T11:51:06.184Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -126,7 +126,7 @@
       "archetypes": 0,
       "complications": 0,
       "monsters": 0,
-      "equipment": 70,
+      "equipment": 198,
       "feats": 175,
       "advantages": 0,
       "powerModifiers": 0
@@ -233,7 +233,7 @@
       "archetypes": 0,
       "complications": 0,
       "monsters": 0,
-      "equipment": 70,
+      "equipment": 198,
       "feats": 175,
       "advantages": 0,
       "powerModifiers": 0
@@ -675,13 +675,13 @@
       "category": "equipment",
       "categoryLabel": "Equipment",
       "metrics": {
-        "rawCount": 70,
-        "uniqueCount": 70,
+        "rawCount": 198,
+        "uniqueCount": 198,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "Core Rulebook": 70
+          "Core Rulebook": 198
         }
       }
     },
