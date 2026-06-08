@@ -41,7 +41,11 @@ export const strictOpenContentPolicy: Record<GameSystemId, SystemOpenContentPoli
     allowMissingSourceFor: [],
   },
   pf1e: {
-    allowedSources: ['Core Rulebook', 'CRB'],
+    // 'Core Rulebook'/'CRB' covers the CRB classes, feats, spells, and equipment.
+    // 'Bestiary' is the Pathfinder RPG Bestiary, whose creature stat blocks Paizo
+    // released as Open Game Content under the OGL v1.0a (the same OGL basis as the
+    // CRB), imported here from the Pathfinder Reference Document.
+    allowedSources: ['Core Rulebook', 'CRB', 'Bestiary'],
     allowMissingSourceFor: [],
   },
   pf2e: {

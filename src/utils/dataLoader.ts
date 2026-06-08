@@ -248,6 +248,23 @@ async function loadDnd5e2014Monsters(): Promise<Monster[]> {
   }
 }
 
+async function loadPf1eMonsters(): Promise<Monster[]> {
+  try {
+    const monsterModule = await import('../data/pathfinder/1e/monsters');
+    const monsters = monsterModule.pf1eMonsters || [];
+
+    return monsters.filter((m) => m && m.id && m.name && m.system === 'pf1e');
+  } catch (error) {
+    errorLogger.log(
+      ErrorCategory.DATA_LOAD,
+      ErrorSeverity.HIGH,
+      'Failed to load pf1e monsters',
+      error as Error
+    );
+    return [];
+  }
+}
+
 async function loadDnd5e2014Equipment(): Promise<Item[]> {
   const equipModule = await import('../data/dnd/5e-2014/equipment');
   return equipModule.dnd5eEquipment || [];
@@ -804,6 +821,9 @@ export async function loadMonstersForSystem(systemId: GameSystemId): Promise<Mon
       break;
     case 'dnd-5e-2014':
       monsters = await loadDnd5e2014Monsters();
+      break;
+    case 'pf1e':
+      monsters = await loadPf1eMonsters();
       break;
     default:
       return [];
