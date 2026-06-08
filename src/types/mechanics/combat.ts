@@ -23,7 +23,15 @@ export type WeaponProperty =
   | 'special'
   | 'thrown'
   | 'two-handed'
-  | 'versatile';
+  | 'versatile'
+  // Pathfinder (3.5e/PF1) weapon special qualities, used by those systems'
+  // weapon catalogs in addition to the shared d20 properties above.
+  | 'brace'
+  | 'disarm'
+  | 'double'
+  | 'monk'
+  | 'nonlethal'
+  | 'trip';
 
 export interface ArmorClassCalculation {
   base: number;

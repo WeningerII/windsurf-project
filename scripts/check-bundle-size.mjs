@@ -25,8 +25,11 @@ const budgets = {
   // spell-catalog completion work, then 1060→1115 KiB for the full 5e-2014 SRD
   // bestiary (296 monster stat blocks importing the complete SRD 5.1 creature
   // list — all in the lazy dnd-5e-2014 data chunk, off the eager path).
+  // Then 1115→1130 KiB for completing the Pathfinder 1e Core Rulebook equipment
+  // (the full goods-and-services gear list and the full CRB weapon table, both
+  // in the lazy pf1e data chunk, off the eager path).
   // Overridable via env.
-  totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 1115 * 1024,
+  totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 1130 * 1024,
   // App (eager) chunk gzip ceiling. SceneManager — which pulls the whole combat /
   // tactical-AI / verticality engine via the rules module — is now React.lazy'd,
   // so that chain lives in an on-demand chunk, NOT the eager app chunk. That drops

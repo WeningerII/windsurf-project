@@ -1,6 +1,8 @@
 // Common types used across the application
 
-export type DiceType = 'd1' | 'd4' | 'd6' | 'd8' | 'd10' | 'd12' | 'd20' | 'd100';
+// d2 and d3 are used by Pathfinder/3.5e weapon damage (e.g. whip, gauntlet) and
+// some effects; they are valid d20-system dice alongside the standard polyhedrals.
+export type DiceType = 'd1' | 'd2' | 'd3' | 'd4' | 'd6' | 'd8' | 'd10' | 'd12' | 'd20' | 'd100';
 
 // Ability Scores - Type-safe enumeration
 export type AbilityScore = 'str' | 'dex' | 'con' | 'int' | 'wis' | 'cha';

@@ -38,7 +38,7 @@ export type Rarity = 'common' | 'uncommon' | 'rare' | 'very-rare' | 'legendary' 
 
 export interface Weapon extends Item {
   type: 'weapon';
-  weaponType: 'simple' | 'martial';
+  weaponType: 'simple' | 'martial' | 'exotic';
   category: 'melee' | 'ranged';
 
   damage: DiceRoll;
