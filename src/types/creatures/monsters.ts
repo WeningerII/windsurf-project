@@ -25,10 +25,13 @@ export interface Monster {
   savingThrows?: Partial<Record<AbilityScore, number>>;
   skills?: Record<string, number>;
 
-  // Resistances & Immunities
-  damageResistances?: DamageType[];
-  damageImmunities?: DamageType[];
-  damageVulnerabilities?: DamageType[];
+  // Resistances & Immunities. These are free-form strings rather than bare
+  // DamageType values because monster stat blocks routinely express compound,
+  // conditional entries (e.g. "bludgeoning, piercing, and slashing from
+  // nonmagical attacks").
+  damageResistances?: string[];
+  damageImmunities?: string[];
+  damageVulnerabilities?: string[];
   conditionImmunities?: string[];
 
   // Senses

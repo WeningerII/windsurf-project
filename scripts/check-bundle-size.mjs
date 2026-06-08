@@ -21,8 +21,12 @@ const budgets = {
   // filling the 3.5e SRD Sorcerer/Wizard spell list (the level-1..5 arcane catalog
   // was largely absent), then 864→920 KiB for expanding the Pathfinder 1e/2e
   // spell catalogs toward their full published lists (the per-system data chunks
-  // are lazy-loaded, off the eager path). Overridable via env.
-  totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 1060 * 1024,
+  // are lazy-loaded, off the eager path), then 920→1060 KiB across the remaining
+  // spell-catalog completion work, then 1060→1115 KiB for the full 5e-2014 SRD
+  // bestiary (296 monster stat blocks importing the complete SRD 5.1 creature
+  // list — all in the lazy dnd-5e-2014 data chunk, off the eager path).
+  // Overridable via env.
+  totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 1115 * 1024,
   // App (eager) chunk gzip ceiling. SceneManager — which pulls the whole combat /
   // tactical-AI / verticality engine via the rules module — is now React.lazy'd,
   // so that chain lives in an on-demand chunk, NOT the eager app chunk. That drops
@@ -31,8 +35,11 @@ const budgets = {
   appChunkGzipBytes: parseInt(process.env.BUNDLE_BUDGET_APP_GZIP_BYTES || '', 10) || 60 * 1024,
   vendorChunkGzipBytes:
     parseInt(process.env.BUNDLE_BUDGET_VENDOR_GZIP_BYTES || '', 10) || 200 * 1024,
+  // Largest single per-system data chunk. Raised 185→215 KiB when the 5e-2014
+  // chunk absorbed the full SRD 5.1 bestiary (337 monsters) on top of its spell,
+  // feat, species, and class catalogs.
   largestDataChunkGzipBytes:
-    parseInt(process.env.BUNDLE_BUDGET_DATA_GZIP_BYTES || '', 10) || 185 * 1024,
+    parseInt(process.env.BUNDLE_BUDGET_DATA_GZIP_BYTES || '', 10) || 215 * 1024,
 };
 
 function formatBytes(bytes) {
