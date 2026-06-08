@@ -49,8 +49,7 @@ export const generalFeats: FeatDefinition[] = [
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     prerequisites: [{ type: 'other', description: 'Endurance.' }],
-    description:
-      'When reduced to between –1 and –9 hit points, you automatically become stable. You don’t have to roll d% to see if you lose 1 hit point each round. When reduced to negative hit points, you may choose to act as if you were disabled, rather than dying. You must make this decision as soon as you are reduced to negative hit points (even if it isn’t your turn). If you do not choose to act as if you were disabled, you immediately fall unconscious. When using this feat, you can take either a single move or standard action each turn, but not both, and you cannot take a full round action. You can take a move action without further injuring yourself, but if you perform any standard action (or any other action deemed as strenuous, including some free actions, such as casting a quickened spell) you take 1 point of damage after completing the act. If you reach –10 hit points, you immediately die.',
+    description: 'When reduced to between –1 and –9 hit points, you automatically become stable.',
     benefits: [
       'When reduced to between –1 and –9 hit points, you automatically become stable.',
       'You don’t have to roll d% to see if you lose 1 hit point each round.',
@@ -68,7 +67,7 @@ export const generalFeats: FeatDefinition[] = [
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     description:
-      'You gain a +4 bonus on the following checks and saves: Swim checks made to resist nonlethal damage, Constitution checks made to continue running, Constitution checks made to avoid nonlethal damage from a forced march, Constitution checks made to hold your breath, Constitution checks made to avoid nonlethal damage from starvation or thirst, Fortitude saves made to avoid nonlethal damage from hot or cold environments, and Fortitude saves made to resist damage from suffocation. Also, you may sleep in light or medium armor without becoming fatigued.',
+      'You gain a +4 bonus on the following checks and saves: Swim checks made to resist nonlethal damage, Constitution checks made to continue running, Constitution checks made to avoid nonlethal damage from a forced march, Constitution checks made to hold your breath, Constitution checks made to avoid nonlethal damage from starvation or thirst, Fortitude saves made to avoid nonlethal damage from hot or cold environments, and Fortitude saves made to resist damage from suffocation.',
     benefits: [
       'You gain a +4 bonus on the following checks and saves: Swim checks made to resist nonlethal damage, Constitution checks made to continue running, Constitution checks made to avoid nonlethal damage from a forced march, Constitution checks made to hold your breath, Constitution checks made to avoid nonlethal damage from starvation or thirst, Fortitude saves made to avoid nonlethal damage from hot or cold environments, and Fortitude saves made to resist damage from suffocation.',
       'Also, you may sleep in light or medium armor without becoming fatigued.',
@@ -83,7 +82,7 @@ export const generalFeats: FeatDefinition[] = [
     source: 'SRD 3.5',
     prerequisites: [{ type: 'other', description: 'Ability to turn or rebuke creatures.' }],
     description:
-      'Each time you take this feat, you can use your ability to turn or rebuke creatures four more times per day than normal. If you have the ability to turn or rebuke more than one kind of creature each of your turning or rebuking abilities gains four additional uses per day.',
+      'Each time you take this feat, you can use your ability to turn or rebuke creatures four more times per day than normal.',
     benefits: [
       'Each time you take this feat, you can use your ability to turn or rebuke creatures four more times per day than normal.',
       'If you have the ability to turn or rebuke more than one kind of creature each of your turning or rebuking abilities gains four additional uses per day.',
@@ -145,8 +144,7 @@ export const generalFeats: FeatDefinition[] = [
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     prerequisites: [{ type: 'other', description: 'Character level 6th.' }],
-    description:
-      'Prerequisite: Character level 6th. Benefits: Having this feat enables the character to attract loyal companions and devoted followers, subordinates who assist her. See the table below for what sort of cohort and how many followers the character can recruit. Leadership Modifiers: Several factors can affect a character’s Leadership score, causing it to vary from the base score (character level + Cha',
+    description: 'Prerequisite: Character level 6th.',
     benefits: [
       'Prerequisite: Character level 6th.',
       'Benefits: Having this feat enables the character to attract loyal companions and devoted followers, subordinates who assist her.',
@@ -178,7 +176,7 @@ export const generalFeats: FeatDefinition[] = [
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     description:
-      'When running, you move five times your normal speed (if wearing medium, light, or no armor and carrying no more than a medium load) or four times your speed (if wearing heavy armor or carrying a heavy load). If you make a jump after a running start (see the Jump skill description), you gain a +4 bonus on your Jump check. While running, you retain your Dexterity bonus to AC.',
+      'When running, you move five times your normal speed (if wearing medium, light, or no armor and carrying no more than a medium load) or four times your speed (if wearing heavy armor or carrying a heavy load).',
     benefits: [
       'When running, you move five times your normal speed (if wearing medium, light, or no armor and carrying no more than a medium load) or four times your speed (if wearing heavy armor or carrying a heavy load).',
       'If you make a jump after a running start (see the Jump skill description), you gain a +4 bonus on your Jump check.',
@@ -241,7 +239,7 @@ export const generalFeats: FeatDefinition[] = [
     system: 'dnd-3.5e',
     source: 'SRD 3.5',
     description:
-      'To find tracks or to follow them for 1 mile requires a successful Survival check. You must make another Survival check every time the tracks become difficult to follow. You move at half your normal speed (or at your normal speed with a –5 penalty on the check, or at up to twice your normal speed with a –20 penalty on the check). The DC depends on the surface and the prevailing conditions, as given on the table below: <table data-debug="no-caption" class="half-width-table"><tbody><tr><th>Surface</th><th>Survival DC</th><th>Surface Survival</th><th>DC</th></tr><tr><td>Very soft ground</td><td>5</td><td>Firm ground</td><td>15</td></tr><tr><td>Soft ground</td><td>10</td><td>Hard ground</td><td>20</td></tr></tbody></table> Very Soft Ground: Any surface (fresh snow, thick dust, wet mud) that holds deep, clear impressions of footprints. Soft Ground: Any surface soft enough to yield to pressure, but firmer than wet mud or fresh snow, in which a creature leaves frequent but shallow footprints. Firm Ground: Most normal outdoor surfaces (such as lawns, fields, woods, and the like) or exceptionally soft or dirty indoor surfaces (thick rugs and very dirty or dusty floors). The creature might leave some traces (broken branches or tufts of hair), but it leaves only occasional or partial footprints. Hard Ground: Any surface that doesn’t hold footprints at all, such as bare rock or an indoor floor. Most streambeds fall into this category, since any footprints left behind are obscured or washed away. The creature leaves only traces (scuff marks or displaced pebbles). Several modifiers may apply to the Survival check, as given on the table below. <table data-debug="no-caption" class="half-width-table"><tbody><tr><th>Condition</th><th>Survival DC Modifier</th></tr><tr><td>Every three creatures in the group being tracked</td><td>–1</td></tr><tr><td>Size of creature or creatures being tracked:<sup>1</sup></td><td></td></tr><tr><td>Fine</td><td>+8</td></tr><tr><td>Diminutive</td><td>+4</td></tr><tr><td>Tiny</td><td>+2</td></tr><tr><td>Small</td><td>+1</td></tr><tr><td>Medium</td><td>+0</td></tr><tr><td>Large</td><td>–1</td></tr><tr><td>Huge</td><td>–2</td></tr><tr><td>Gargantuan</td><td>–4</td></tr><tr><td>Colossal</td><td>–8</td></tr><tr><td>Every 24 hours since the trail was made</td><td>+1</td></tr><tr><td>Every hour of rain since the trail was made</td><td>+1</td></tr><tr><td>Fresh snow cover since the trail was made</td><td>+10</td></tr><tr><td>Poor visibility:<sup>2</sup></td><td></td></tr><tr><td>Overcast or moonless night</td><td>+6</td></tr><tr><td>Moonlight</td><td>+3</td></tr><tr><td>Fog or precipitation</td><td>+3</td></tr><tr><td>Tracked party hides trail (and moves at half speed)</td><td>+5</td></tr><tr><td colspan="2">1 For a group of mixed sizes, apply only the modifier for the largest size category.</td></tr><tr><td colspan="2">2 Apply only the largest modifier from this category.</td></tr></tbody></table> If you fail a Survival check, you can retry after 1 hour (outdoors) or 10 minutes (indoors) of searching.',
+      'To find tracks or to follow them for 1 mile requires a successful Survival check.',
     benefits: [
       'To find tracks or to follow them for 1 mile requires a successful Survival check.',
       'You must make another Survival check every time the tracks become difficult to follow.',
