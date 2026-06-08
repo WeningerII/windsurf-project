@@ -282,6 +282,23 @@ async function loadPf2eMonsters(): Promise<Monster[]> {
   }
 }
 
+async function loadDnd35eMonsters(): Promise<Monster[]> {
+  try {
+    const monsterModule = await import('../data/dnd/3.5e/monsters');
+    const monsters = monsterModule.dnd35eMonsters || [];
+
+    return monsters.filter((m) => m && m.id && m.name && m.system === 'dnd-3.5e');
+  } catch (error) {
+    errorLogger.log(
+      ErrorCategory.DATA_LOAD,
+      ErrorSeverity.HIGH,
+      'Failed to load dnd-3.5e monsters',
+      error as Error
+    );
+    return [];
+  }
+}
+
 async function loadDnd5e2014Equipment(): Promise<Item[]> {
   const equipModule = await import('../data/dnd/5e-2014/equipment');
   return equipModule.dnd5eEquipment || [];
@@ -844,6 +861,9 @@ export async function loadMonstersForSystem(systemId: GameSystemId): Promise<Mon
       break;
     case 'pf2e':
       monsters = await loadPf2eMonsters();
+      break;
+    case 'dnd-3.5e':
+      monsters = await loadDnd35eMonsters();
       break;
     default:
       return [];
