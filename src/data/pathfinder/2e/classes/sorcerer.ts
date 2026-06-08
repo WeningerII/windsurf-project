@@ -163,7 +163,7 @@ export const sorcerer: CharacterClass = {
           ],
         },
       ],
-      spellListExpansion: ['true-strike', 'touch-of-idiocy', 'hypercognition'],
+      spellListExpansion: ['true-strike-pf2e', 'touch-of-idiocy-pf2e', 'hypercognition-pf2e'],
     },
     {
       id: 'angelic',
@@ -202,7 +202,7 @@ export const sorcerer: CharacterClass = {
           ],
         },
       ],
-      spellListExpansion: ['heal', 'spiritual-weapon', 'divine-wrath'],
+      spellListExpansion: ['heal-pf2e', 'spiritual-armament-pf2e', 'divine-wrath-pf2e'],
     },
     {
       id: 'demonic',
@@ -242,7 +242,7 @@ export const sorcerer: CharacterClass = {
           ],
         },
       ],
-      spellListExpansion: ['fear', 'harm', 'fireball'],
+      spellListExpansion: ['fear-pf2e', 'harm-pf2e', 'fireball-pf2e'],
     },
     {
       id: 'draconic',
@@ -298,7 +298,7 @@ export const sorcerer: CharacterClass = {
           ],
         },
       ],
-      spellListExpansion: ['true-strike', 'fear', 'haste'],
+      spellListExpansion: ['true-strike-pf2e', 'fear-pf2e', 'haste-pf2e'],
     },
     {
       id: 'fey',
@@ -349,7 +349,7 @@ export const sorcerer: CharacterClass = {
           ],
         },
       ],
-      spellListExpansion: ['charm', 'color-spray', 'suggestion'],
+      spellListExpansion: ['charm-pf2e', 'color-spray-pf2e', 'suggestion-pf2e'],
     },
     {
       id: 'undead',
@@ -401,7 +401,7 @@ export const sorcerer: CharacterClass = {
           ],
         },
       ],
-      spellListExpansion: ['chill-touch', 'false-life', 'animate-dead'],
+      spellListExpansion: ['chill-touch-pf2e', 'false-vitality-pf2e', 'summon-undead-pf2e'],
     },
   ],
   spellcasting: {

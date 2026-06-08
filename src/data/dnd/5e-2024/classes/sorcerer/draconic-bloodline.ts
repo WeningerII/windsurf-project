@@ -28,7 +28,7 @@ export const draconicBloodlineSubclass: Subclass = {
           name: 'Draconic Spells',
           source: 'Draconic Sorcery 3',
           description:
-            "You learn the following spells. They are Sorcerer spells for you, but they don't count against your number of Sorcerer spells known. If you later replace a spell, you must replace it with a spell from the Sorcerer spell list that deals the same damage type as the one you are replacing.\n\nLevel 1: Chromatic Orb, Command\nLevel 3: Dragon's Breath, Hold Person\nLevel 5: Fear, Fly\nLevel 7: Charm Monster, Elemental Bane\nLevel 9: Dominate Person, Legend Lore",
+            "You learn the following spells. They are Sorcerer spells for you, but they don't count against your number of Sorcerer spells known. If you later replace a spell, you must replace it with a spell from the Sorcerer spell list that deals the same damage type as the one you are replacing.\n\nLevel 1: Chromatic Orb, Command\nLevel 3: Dragon's Breath, Hold Person\nLevel 5: Fear, Fly\nLevel 7: Charm Monster\nLevel 9: Dominate Person, Legend Lore",
         },
       ],
     },
@@ -78,7 +78,6 @@ export const draconicBloodlineSubclass: Subclass = {
     'fear',
     'fly',
     'charm-monster',
-    'elemental-bane',
     'dominate-person',
     'legend-lore',
   ],
