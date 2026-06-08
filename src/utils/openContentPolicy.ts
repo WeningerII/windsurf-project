@@ -33,7 +33,12 @@ export const strictOpenContentPolicy: Record<GameSystemId, SystemOpenContentPoli
     allowMissingSourceFor: [],
   },
   'dnd-3.5e': {
-    allowedSources: ['SRD 3.5', 'PHB 3.5', 'PHB', "Player's Handbook 3.5"],
+    // SRD 3.5 is the OGL-licensed open subset of the 3.5 ruleset. The core
+    // classes, races, and prestige classes were all released into the SRD and
+    // are attributed accordingly. 'PHB' remains a temporary exception covering
+    // the legacy feat catalog, which is being audited down to the SRD-included
+    // feats (closed-book feats removed, survivors relabeled 'SRD 3.5').
+    allowedSources: ['SRD 3.5', 'PHB'],
     allowMissingSourceFor: [],
   },
   pf1e: {

@@ -216,15 +216,10 @@ describe('Data Loader Integration Tests', () => {
       expect(classes.some((entry) => entry.id === 'mystic-theurge-35e')).toBe(true);
       expect(classes.some((entry) => entry.id === 'thaumaturgist-35e')).toBe(true);
       expect(classes.some((entry) => entry.id === 'archmage')).toBe(false);
-      expect(
-        classes.every(
-          (entry) =>
-            entry.source === 'SRD 3.5' ||
-            entry.source === 'PHB' ||
-            entry.source === 'PHB 3.5' ||
-            entry.source === "Player's Handbook 3.5"
-        )
-      ).toBe(true);
+      // The 3.5e core classes and prestige classes are all SRD 3.5 content;
+      // they were previously mislabeled with closed-sourcebook names ('PHB 3.5',
+      // 'DMG') and are now correctly attributed to the SRD.
+      expect(classes.every((entry) => entry.source === 'SRD 3.5')).toBe(true);
     });
   });
 

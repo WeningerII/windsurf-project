@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-08T04:46:15.254Z",
+  "generatedAt": "2026-06-08T09:45:52.791Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -19,9 +19,7 @@
     "dnd-3.5e": {
       "allowedSources": [
         "SRD 3.5",
-        "PHB 3.5",
-        "PHB",
-        "Player's Handbook 3.5"
+        "PHB"
       ],
       "allowMissingSourceFor": []
     },
@@ -556,8 +554,7 @@
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 3.5": 15,
-          "PHB 3.5": 11
+          "SRD 3.5": 26
         }
       }
     },
@@ -573,7 +570,7 @@
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "PHB 3.5": 7
+          "SRD 3.5": 7
         }
       }
     },

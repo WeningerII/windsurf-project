@@ -48,7 +48,7 @@ export const assassin: PrestigeClass = {
     2: ['Uncanny Dodge'],
     3: ['Hide in Plain Sight'],
   },
-  source: 'DMG',
+  source: 'SRD 3.5',
 };
 
 export const blackguard: PrestigeClass = {
@@ -68,7 +68,7 @@ export const blackguard: PrestigeClass = {
     2: ['Dark Blessing'],
     3: ['Sneak Attack +1d6'],
   },
-  source: 'DMG',
+  source: 'SRD 3.5',
 };
 
 export const arcaneArcher: PrestigeClass = {
@@ -88,7 +88,7 @@ export const arcaneArcher: PrestigeClass = {
     2: ['Imbue Arrow'],
     3: ['Enhance Arrow +2'],
   },
-  source: 'DMG',
+  source: 'SRD 3.5',
 };
 
 export const arcaneTrickster: PrestigeClass = {
@@ -102,7 +102,7 @@ export const arcaneTrickster: PrestigeClass = {
     1: ['Ranged Legerdemain'],
     2: ['Sneak Attack +1d6'],
   },
-  source: 'DMG',
+  source: 'SRD 3.5',
 };
 
 export const archmage: PrestigeClass = {
@@ -120,7 +120,7 @@ export const archmage: PrestigeClass = {
     1: ['High Arcana'],
     2: ['Arcane Fire'],
   },
-  source: 'DMG',
+  source: 'SRD 3.5',
 };
 
 export const dragonDisciple: PrestigeClass = {
@@ -134,7 +134,7 @@ export const dragonDisciple: PrestigeClass = {
     1: ['Natural Armor +1'],
     2: ['Ability Boost (Str +2)'],
   },
-  source: 'DMG',
+  source: 'SRD 3.5',
 };
 
 export const duelist: PrestigeClass = {
@@ -148,7 +148,7 @@ export const duelist: PrestigeClass = {
     1: ['Canny Defense'],
     2: ['Improved Reaction +2'],
   },
-  source: 'DMG',
+  source: 'SRD 3.5',
 };
 
 export const dwarvenDefender: PrestigeClass = {
@@ -162,7 +162,7 @@ export const dwarvenDefender: PrestigeClass = {
     1: ['Defensive Stance'],
     2: ['Uncanny Dodge'],
   },
-  source: 'DMG',
+  source: 'SRD 3.5',
 };
 
 export const eldritchKnight: PrestigeClass = {
@@ -176,7 +176,7 @@ export const eldritchKnight: PrestigeClass = {
     1: ['Bonus Feat'],
     2: ['Diverse Training'],
   },
-  source: 'DMG',
+  source: 'SRD 3.5',
 };
 
 export const hierophant: PrestigeClass = {
@@ -190,7 +190,7 @@ export const hierophant: PrestigeClass = {
     1: ['Bonus Spells', 'Mastery of Energy'],
     2: ['Mastery of Shaping'],
   },
-  source: 'DMG',
+  source: 'SRD 3.5',
 };
 
 export const loremaster: PrestigeClass = {
@@ -208,7 +208,7 @@ export const loremaster: PrestigeClass = {
     1: ['Bonus Spells', 'Lore'],
     2: ['Secret'],
   },
-  source: 'DMG',
+  source: 'SRD 3.5',
 };
 
 export const mysticTheurge: PrestigeClass = {
@@ -227,7 +227,7 @@ export const mysticTheurge: PrestigeClass = {
     1: ['Spellcasting'],
     2: ['Bonus Spells'],
   },
-  source: 'DMG',
+  source: 'SRD 3.5',
 };
 
 export const shadowdancer: PrestigeClass = {
@@ -241,7 +241,7 @@ export const shadowdancer: PrestigeClass = {
     1: ['Hide in Plain Sight', 'Evasion'],
     2: ['Shadow Illusion'],
   },
-  source: 'DMG',
+  source: 'SRD 3.5',
 };
 
 export const horizonWalker: PrestigeClass = {
@@ -255,7 +255,7 @@ export const horizonWalker: PrestigeClass = {
     1: ['Terrain Mastery'],
     2: ['Planar Terrain Mastery'],
   },
-  source: 'DMG',
+  source: 'SRD 3.5',
 };
 
 export const thaumaturgist: PrestigeClass = {
@@ -273,7 +273,7 @@ export const thaumaturgist: PrestigeClass = {
     1: ['Improved Ally'],
     2: ['Augment Summoning'],
   },
-  source: 'DMG',
+  source: 'SRD 3.5',
 };
 
 // D&D 3.5e SRD Prestige Classes (DMG core prestige classes only - 15 total)

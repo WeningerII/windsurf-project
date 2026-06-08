@@ -4,7 +4,7 @@ export const gnome: Species = {
   id: 'gnome',
   name: 'Gnome',
   system: 'dnd-3.5e',
-  source: 'PHB 3.5',
+  source: 'SRD 3.5',
 
   abilityScoreIncrease: [
     {
