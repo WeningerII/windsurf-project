@@ -45,10 +45,7 @@ export const level2Spells: Spell[] = [
     description:
       'A magical arrow of acid springs from your hand and speeds to its target. You must succeed on a ranged touch attack to hit your target. The arrow deals 2d4 points of acid damage with no splash damage. For every three caster levels you possess, the acid lasts for another round (to a maximum of 6 additional rounds at 18th level).',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-aid',
@@ -82,9 +79,7 @@ export const level2Spells: Spell[] = [
     description:
       'Aid grants the target a +1 morale bonus on attack rolls and saves against fear effects, plus temporary hit points equal to 1d8 + caster level (to a maximum of 1d8+10 temporary hit points at caster level 10th).',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 2,
-    },
+    levelsByClass: { cleric: 2 },
   },
   {
     id: 'pf1e-alter-self',
@@ -117,11 +112,7 @@ export const level2Spells: Spell[] = [
     description:
       'When you cast this spell, you can assume the form of any Small or Medium creature of the humanoid type. If the form you assume has any of the following abilities, you gain the listed ability: darkvision 60 feet, low-light vision, scent, and swim 30 feet.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 2,
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { bard: 2, sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-bear-endurance',
@@ -161,13 +152,7 @@ export const level2Spells: Spell[] = [
     description:
       'The affected creature gains greater vitality and stamina. The spell grants the subject a +4 enhancement bonus to Constitution, which adds the usual benefits to hit points, Fortitude saves, Constitution checks, and so forth.',
     classes: ['cleric', 'druid', 'ranger', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 2,
-      druid: 2,
-      ranger: 2,
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { cleric: 2, druid: 2, ranger: 2, sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-blur',
@@ -205,11 +190,7 @@ export const level2Spells: Spell[] = [
     description:
       "The subject's outline appears blurred, shifting, and wavering. This distortion grants the subject concealment (20% miss chance). A see invisibility spell does not counteract the blur effect, but a true seeing spell does.",
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 2,
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { bard: 2, sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-bull-strength',
@@ -249,12 +230,7 @@ export const level2Spells: Spell[] = [
     description:
       'The subject becomes stronger. The spell grants a +4 enhancement bonus to Strength, adding the usual benefits to melee attack rolls, melee damage rolls, and other uses of the Strength modifier.',
     classes: ['cleric', 'druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 2,
-      druid: 2,
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { cleric: 2, druid: 2, sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-cat-grace',
@@ -293,13 +269,7 @@ export const level2Spells: Spell[] = [
     description:
       'The transmuted creature becomes more graceful, agile, and coordinated. The spell grants a +4 enhancement bonus to Dexterity, adding the usual benefits to AC, Reflex saves, and other uses of the Dexterity modifier.',
     classes: ['bard', 'druid', 'ranger', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 2,
-      druid: 2,
-      ranger: 2,
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { bard: 2, druid: 2, ranger: 2, sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-darkness',
@@ -334,12 +304,7 @@ export const level2Spells: Spell[] = [
     description:
       'This spell causes an object to radiate darkness out to a 20-foot radius. This darkness causes the illumination level in the area to drop one step, from bright light to normal light, from normal light to dim light, or from dim light to darkness.',
     classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 2,
-      cleric: 2,
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { bard: 2, cleric: 2, sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-detect-thoughts',
@@ -384,11 +349,7 @@ export const level2Spells: Spell[] = [
     description:
       'You detect surface thoughts. The amount of information revealed depends on how long you study a particular area or subject.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 2,
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { bard: 2, sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-eagle-splendor',
@@ -428,12 +389,7 @@ export const level2Spells: Spell[] = [
     description:
       'The transmuted creature becomes more poised, articulate, and personally forceful. The spell grants a +4 enhancement bonus to Charisma, adding the usual benefits to Charisma-based skill checks and other uses of the Charisma modifier.',
     classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 2,
-      cleric: 2,
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { bard: 2, cleric: 2, sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-fox-cunning',
@@ -473,11 +429,7 @@ export const level2Spells: Spell[] = [
     description:
       'The target becomes smarter. The spell grants a +4 enhancement bonus to Intelligence, adding the usual benefits to Intelligence-based skill checks and other uses of the Intelligence modifier.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 2,
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { bard: 2, sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-invisibility',
@@ -517,11 +469,7 @@ export const level2Spells: Spell[] = [
     description:
       'The creature or object touched becomes invisible. If the recipient is a creature carrying gear, that vanishes, too. If you cast the spell on someone else, neither you nor your allies can see the subject, unless you can normally see invisible things or you employ magic to do so. The spell ends if the subject attacks any creature.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 2,
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { bard: 2, sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-knock',
@@ -554,10 +502,7 @@ export const level2Spells: Spell[] = [
     description:
       'Knock opens stuck, barred, or locked doors, as well as those subject to hold portal or arcane lock. When you complete the casting of this spell, make a caster level check against the DC of the lock with a +10 bonus. If successful, knock opens up to two means of closure.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-levitate',
@@ -592,10 +537,7 @@ export const level2Spells: Spell[] = [
     description:
       'Levitate allows you to move yourself, another creature, or an object up and down as you wish. A creature must be willing to be levitated, and an object must be unattended or possessed by a willing creature. You can mentally direct the recipient to move up or down as much as 20 feet each round.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-mirror-image',
@@ -627,11 +569,7 @@ export const level2Spells: Spell[] = [
     description:
       'Several illusory duplicates of you pop into being, making it difficult for enemies to know which target to attack. Mirror image creates 1d4 images plus one image per three caster levels (maximum eight images total). These figments separate from you and remain in a cluster, each within 5 feet of at least one other figment or you.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 2,
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { bard: 2, sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-owl-wisdom',
@@ -671,13 +609,7 @@ export const level2Spells: Spell[] = [
     description:
       'The transmuted creature becomes wiser. The spell grants a +4 enhancement bonus to Wisdom, adding the usual benefits to Wisdom-related skills, Will saving throws, and other uses of the Wisdom modifier.',
     classes: ['cleric', 'druid', 'ranger', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 2,
-      druid: 2,
-      ranger: 2,
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { cleric: 2, druid: 2, ranger: 2, sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-protection-from-arrows',
@@ -717,10 +649,7 @@ export const level2Spells: Spell[] = [
     description:
       "The warded creature gains resistance to ranged weapons. The subject gains damage reduction 10/magic against ranged weapons. This spell doesn't grant you the ability to damage creatures with similar damage reduction.",
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-resist-energy',
@@ -759,13 +688,7 @@ export const level2Spells: Spell[] = [
     description:
       'This abjuration grants a creature limited protection from damage of whichever one of five energy types you select: acid, cold, electricity, fire, or sonic. The subject gains resist energy 10 against the energy type chosen, meaning that each time the creature is subjected to such damage, that damage is reduced by 10 points.',
     classes: ['cleric', 'druid', 'ranger', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 2,
-      druid: 2,
-      ranger: 2,
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { cleric: 2, druid: 2, ranger: 2, sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-rope-trick',
@@ -799,10 +722,7 @@ export const level2Spells: Spell[] = [
     description:
       'When this spell is cast upon a piece of rope from 5 to 30 feet long, one end of the rope rises into the air until the whole rope hangs perpendicular to the ground. The upper end is, in fact, fastened to an extradimensional space that is outside the multiverse.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-scorching-ray',
@@ -844,10 +764,7 @@ export const level2Spells: Spell[] = [
     description:
       'You blast your enemies with a searing beam of fire. You may fire one ray, plus one additional ray for every four levels beyond 3rd (to a maximum of three rays at 11th level). Each ray requires a ranged touch attack to hit and deals 4d6 points of fire damage.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-see-invisibility',
@@ -886,11 +803,7 @@ export const level2Spells: Spell[] = [
     description:
       'You can see any objects or beings that are invisible within your range of vision, as well as any that are ethereal, as if they were normally visible. Such creatures are visible to you as translucent shapes.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 2,
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { bard: 2, sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-spider-climb',
@@ -929,12 +842,7 @@ export const level2Spells: Spell[] = [
     description:
       'The subject can climb and travel on vertical surfaces or even traverse ceilings as well as a spider does. The affected creature must have its hands free to climb in this manner. The subject gains a climb speed of 20 feet.',
     classes: ['alchemist', 'druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      alchemist: 2,
-      druid: 2,
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { alchemist: 2, druid: 2, sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-web',
@@ -974,10 +882,7 @@ export const level2Spells: Spell[] = [
     description:
       'Web creates a many-layered mass of strong, sticky strands. These strands trap those caught in them. The strands are similar to spiderweb but far larger and tougher. Creatures caught within a web become grappled by the sticky fibers.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-cure-moderate-wounds',
@@ -1009,10 +914,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Cures 2d8 + 1/level (max +10) damage.',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 2,
-      druid: 2,
-    },
+    levelsByClass: { cleric: 2, druid: 2 },
   },
   {
     id: 'pf1e-spiritual-weapon',
@@ -1048,9 +950,7 @@ export const level2Spells: Spell[] = [
     description:
       'A weapon of pure force attacks foes at your direction for 1d8 + 1/three levels force damage.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 2,
-    },
+    levelsByClass: { cleric: 2 },
   },
   {
     id: 'pf1e-lesser-restoration',
@@ -1082,11 +982,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Dispels magical ability damage and heals 1d4 ability score damage.',
     classes: ['cleric', 'druid', 'paladin'],
-    levelsByClass: {
-      cleric: 2,
-      druid: 2,
-      paladin: 2,
-    },
+    levelsByClass: { cleric: 2, druid: 2, paladin: 2 },
   },
   {
     id: 'pf1e-silence',
@@ -1120,10 +1016,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Negates sound in a 15-ft radius.',
     classes: ['cleric', 'bard'],
-    levelsByClass: {
-      cleric: 2,
-      bard: 2,
-    },
+    levelsByClass: { cleric: 2, bard: 2 },
   },
   {
     id: 'pf1e-barkskin',
@@ -1157,10 +1050,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Grants a +2 (or better) enhancement bonus to natural armor.',
     classes: ['druid', 'ranger'],
-    levelsByClass: {
-      druid: 2,
-      ranger: 2,
-    },
+    levelsByClass: { druid: 2, ranger: 2 },
   },
   {
     id: 'pf1e-flame-blade',
@@ -1196,9 +1086,7 @@ export const level2Spells: Spell[] = [
     description:
       'A scimitar-shaped blade of fire deals 1d8 + 1/two levels fire damage on a touch attack.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 2,
-    },
+    levelsByClass: { druid: 2 },
   },
   {
     id: 'pf1e-heat-metal',
@@ -1233,9 +1121,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Makes metal searingly hot, damaging those touching it.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 2,
-    },
+    levelsByClass: { druid: 2 },
   },
   {
     id: 'pf1e-flaming-sphere',
@@ -1269,11 +1155,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'A rolling 5-ft sphere of fire deals 3d6 fire damage to creatures it touches.',
     classes: ['druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      druid: 2,
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { druid: 2, sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-hypnotic-pattern',
@@ -1307,11 +1189,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'A twisting pattern of colors fascinates 2d4 + 1/level HD of creatures.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 2,
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { bard: 2, sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-fire-trap',
@@ -1360,11 +1238,7 @@ export const level2Spells: Spell[] = [
       type: 'fire',
     },
     classes: ['druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      druid: 2,
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { druid: 2, sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-fog-cloud',
@@ -1399,11 +1273,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Fog obscures vision.',
     classes: ['druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      druid: 2,
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { druid: 2, sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-gust-of-wind',
@@ -1443,11 +1313,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Blows away or knocks down smaller creatures.',
     classes: ['druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      druid: 2,
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { druid: 2, sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-shatter',
@@ -1486,12 +1352,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Sonic vibration damages objects or crystalline creatures.',
     classes: ['cleric', 'sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      cleric: 2,
-      sorcerer: 2,
-      wizard: 2,
-      bard: 2,
-    },
+    levelsByClass: { cleric: 2, sorcerer: 2, wizard: 2, bard: 2 },
   },
   {
     id: 'pf1e-summon-monster-ii',
@@ -1523,12 +1384,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Calls extraplanar creature to fight for you.',
     classes: ['cleric', 'sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      cleric: 2,
-      sorcerer: 2,
-      wizard: 2,
-      bard: 2,
-    },
+    levelsByClass: { cleric: 2, sorcerer: 2, wizard: 2, bard: 2 },
   },
   {
     id: 'pf1e-summon-swarm',
@@ -1564,12 +1420,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Summons swarm of bats, rats, or spiders.',
     classes: ['druid', 'sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      druid: 2,
-      sorcerer: 2,
-      wizard: 2,
-      bard: 2,
-    },
+    levelsByClass: { druid: 2, sorcerer: 2, wizard: 2, bard: 2 },
   },
   {
     id: 'pf1e-arcane-lock',
@@ -1600,10 +1451,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Magically locks a door, chest, or portal as though held shut.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-daze-monster',
@@ -1642,11 +1490,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'A living creature of 6 HD or less loses its next action.',
     classes: ['sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      sorcerer: 2,
-      wizard: 2,
-      bard: 2,
-    },
+    levelsByClass: { sorcerer: 2, wizard: 2, bard: 2 },
   },
   {
     id: 'pf1e-false-life',
@@ -1678,10 +1522,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'You gain 1d10 +1/level (max +10) temporary hit points.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-ghoul-touch',
@@ -1719,10 +1560,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Your touch paralyzes a living humanoid and exudes a sickening stench.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-glitterdust',
@@ -1761,11 +1599,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Creatures in a 10-ft radius are blinded and outlined in golden particles.',
     classes: ['sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      sorcerer: 2,
-      wizard: 2,
-      bard: 2,
-    },
+    levelsByClass: { sorcerer: 2, wizard: 2, bard: 2 },
   },
   {
     id: 'pf1e-hideous-laughter',
@@ -1804,11 +1638,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'A creature perceives everything as hilarious and falls down laughing.',
     classes: ['sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      sorcerer: 2,
-      wizard: 2,
-      bard: 2,
-    },
+    levelsByClass: { sorcerer: 2, wizard: 2, bard: 2 },
   },
   {
     id: 'pf1e-magic-mouth',
@@ -1845,11 +1675,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'An enchanted mouth speaks a message when a specified event occurs.',
     classes: ['sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      sorcerer: 2,
-      wizard: 2,
-      bard: 2,
-    },
+    levelsByClass: { sorcerer: 2, wizard: 2, bard: 2 },
   },
   {
     id: 'pf1e-minor-image',
@@ -1889,11 +1715,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'As silent image, but with some sound.',
     classes: ['sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      sorcerer: 2,
-      wizard: 2,
-      bard: 2,
-    },
+    levelsByClass: { sorcerer: 2, wizard: 2, bard: 2 },
   },
   {
     id: 'pf1e-misdirection',
@@ -1926,11 +1748,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Misleads divinations directed at one creature or object.',
     classes: ['sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      sorcerer: 2,
-      wizard: 2,
-      bard: 2,
-    },
+    levelsByClass: { sorcerer: 2, wizard: 2, bard: 2 },
   },
   {
     id: 'pf1e-pyrotechnics',
@@ -1969,11 +1787,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Turns a fire into blinding fireworks or a thick cloud of choking smoke.',
     classes: ['sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      sorcerer: 2,
-      wizard: 2,
-      bard: 2,
-    },
+    levelsByClass: { sorcerer: 2, wizard: 2, bard: 2 },
   },
   {
     id: 'pf1e-scare',
@@ -2012,11 +1826,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Panics creatures of less than 6 HD.',
     classes: ['sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      sorcerer: 2,
-      wizard: 2,
-      bard: 2,
-    },
+    levelsByClass: { sorcerer: 2, wizard: 2, bard: 2 },
   },
   {
     id: 'pf1e-spectral-hand',
@@ -2048,10 +1858,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'A ghostly hand delivers your touch attacks at range.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-touch-of-idiocy',
@@ -2083,10 +1890,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'A melee touch deals 1d6 penalty to Intelligence, Wisdom, and Charisma.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-whispering-wind',
@@ -2119,11 +1923,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Sends a short spoken message up to a mile to a location you have been.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 2,
-      sorcerer: 2,
-      wizard: 2,
-    },
+    levelsByClass: { bard: 2, sorcerer: 2, wizard: 2 },
   },
   {
     id: 'pf1e-align-weapon',
@@ -2164,9 +1964,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Weapon becomes good, evil, lawful, or chaotic.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 2,
-    },
+    levelsByClass: { cleric: 2 },
   },
   {
     id: 'pf1e-animal-messenger',
@@ -2201,10 +1999,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Sends a Tiny animal to a specific place.',
     classes: ['druid', 'bard'],
-    levelsByClass: {
-      druid: 2,
-      bard: 2,
-    },
+    levelsByClass: { druid: 2, bard: 2 },
   },
   {
     id: 'pf1e-animal-trance',
@@ -2244,10 +2039,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Fascinates 2d6 HD of animals.',
     classes: ['druid', 'bard'],
-    levelsByClass: {
-      druid: 2,
-      bard: 2,
-    },
+    levelsByClass: { druid: 2, bard: 2 },
   },
   {
     id: 'pf1e-augury',
@@ -2280,9 +2072,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Learns whether an action will be good or bad.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 2,
-    },
+    levelsByClass: { cleric: 2 },
   },
   {
     id: 'pf1e-calm-emotions',
@@ -2323,10 +2113,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Calms creatures, negating emotion effects.',
     classes: ['cleric', 'bard'],
-    levelsByClass: {
-      cleric: 2,
-      bard: 2,
-    },
+    levelsByClass: { cleric: 2, bard: 2 },
   },
   {
     id: 'pf1e-chill-metal',
@@ -2368,9 +2155,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Cold metal damages those who touch it.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 2,
-    },
+    levelsByClass: { druid: 2 },
   },
   {
     id: 'pf1e-consecrate',
@@ -2409,9 +2194,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Fills area with positive energy, making undead weaker.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 2,
-    },
+    levelsByClass: { cleric: 2 },
   },
   {
     id: 'pf1e-death-knell',
@@ -2449,9 +2232,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Kills dying creature; you gain 1d8 temporary hp, +2 to Str, and +1 level.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 2,
-    },
+    levelsByClass: { cleric: 2 },
   },
   {
     id: 'pf1e-delay-poison',
@@ -2491,11 +2272,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Stops poison from harming subject for 1 hour/level.',
     classes: ['bard', 'cleric', 'druid'],
-    levelsByClass: {
-      bard: 2,
-      cleric: 2,
-      druid: 2,
-    },
+    levelsByClass: { bard: 2, cleric: 2, druid: 2 },
   },
   {
     id: 'pf1e-desecrate',
@@ -2534,9 +2311,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Fills area with negative energy, making undead stronger.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 2,
-    },
+    levelsByClass: { cleric: 2 },
   },
   {
     id: 'pf1e-enthrall',
@@ -2576,10 +2351,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Captivates all within 100 ft. + 10 ft./level.',
     classes: ['cleric', 'bard'],
-    levelsByClass: {
-      cleric: 2,
-      bard: 2,
-    },
+    levelsByClass: { cleric: 2, bard: 2 },
   },
   {
     id: 'pf1e-find-traps',
@@ -2610,9 +2382,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Notice traps as a rogue does.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 2,
-    },
+    levelsByClass: { cleric: 2 },
   },
   {
     id: 'pf1e-gentle-repose',
@@ -2652,9 +2422,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Preserves one corpse.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 2,
-    },
+    levelsByClass: { cleric: 2 },
   },
   {
     id: 'pf1e-hold-animal',
@@ -2686,9 +2454,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Paralyzes one animal for 1 round/level.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 2,
-    },
+    levelsByClass: { druid: 2 },
     savingThrow: {
       attribute: 'wis',
       success: 'none',
@@ -2722,9 +2488,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Touch attack, 2d8 damage +1/level (max +10).',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 2,
-    },
+    levelsByClass: { cleric: 2 },
     savingThrow: {
       attribute: 'wis',
       success: 'half',
@@ -2760,9 +2524,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Repairs an object.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 2,
-    },
+    levelsByClass: { cleric: 2 },
   },
   {
     id: 'pf1e-reduce-animal',
@@ -2796,9 +2558,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Shrinks one willing animal.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 2,
-    },
+    levelsByClass: { druid: 2 },
   },
   {
     id: 'pf1e-remove-paralysis',
@@ -2837,50 +2597,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Frees one or more creatures from paralysis or slow effect.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 2,
-    },
-  },
-  {
-    id: 'pf1e-restoration-lesser',
-    name: 'Restoration, Lesser',
-    system: 'pf1e',
-    source: 'Core Rulebook',
-    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Restoration%2C%20Lesser',
-    level: 2,
-    school: 'conjuration',
-    castingTime: {
-      type: 'rounds',
-      rounds: 3,
-    },
-    range: {
-      type: 'touch',
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'instant',
-    },
-    target: 'Creature touched',
-    savingThrow: {
-      attribute: 'wis',
-      success: 'none',
-      description: 'Will negates (harmless)',
-    },
-    savingThrowText: 'Will negates (harmless)',
-    spellResistance: true,
-    spellResistanceDetail: 'harmless',
-    concentration: false,
-    ritual: false,
-    description: 'Dispels magical ability penalty or repairs 1d4 ability damage.',
-    classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 2,
-      druid: 2,
-    },
+    levelsByClass: { cleric: 2 },
   },
   {
     id: 'pf1e-shield-other',
@@ -2921,9 +2638,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: "You take half of subject's damage.",
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 2,
-    },
+    levelsByClass: { cleric: 2 },
   },
   {
     id: 'pf1e-soften-earth-and-stone',
@@ -2958,9 +2673,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Turns stone to clay or dirt to sand or mud.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 2,
-    },
+    levelsByClass: { druid: 2 },
   },
   {
     id: 'pf1e-sound-burst',
@@ -3001,10 +2714,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Deals 1d8 sonic damage to subjects; may stun them.',
     classes: ['cleric', 'bard'],
-    levelsByClass: {
-      cleric: 2,
-      bard: 2,
-    },
+    levelsByClass: { cleric: 2, bard: 2 },
   },
   {
     id: 'pf1e-status',
@@ -3043,9 +2753,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Monitors condition, position of allies.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 2,
-    },
+    levelsByClass: { cleric: 2 },
   },
   {
     id: 'pf1e-summon-natures-ally-ii',
@@ -3077,9 +2785,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Calls creature to fight.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 2,
-    },
+    levelsByClass: { druid: 2 },
   },
   {
     id: 'pf1e-tree-shape',
@@ -3111,9 +2817,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'You look exactly like a tree for 1 hour/level.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 2,
-    },
+    levelsByClass: { druid: 2 },
   },
   {
     id: 'pf1e-undetectable-alignment',
@@ -3153,10 +2857,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Conceals alignment for 24 hours.',
     classes: ['cleric', 'bard'],
-    levelsByClass: {
-      cleric: 2,
-      bard: 2,
-    },
+    levelsByClass: { cleric: 2, bard: 2 },
   },
   {
     id: 'pf1e-warp-wood',
@@ -3195,9 +2896,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Bends wood (shaft, handle, door, plank).',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 2,
-    },
+    levelsByClass: { druid: 2 },
   },
   {
     id: 'pf1e-wood-shape',
@@ -3236,9 +2935,7 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Rearranges wooden objects to suit you.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 2,
-    },
+    levelsByClass: { druid: 2 },
   },
   {
     id: 'pf1e-zone-of-truth',
@@ -3279,8 +2976,121 @@ export const level2Spells: Spell[] = [
     ritual: false,
     description: 'Subjects within range cannot lie.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 2,
+    levelsByClass: { cleric: 2 },
+  },
+  {
+    id: 'pf1e-command-undead',
+    name: 'Command Undead',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Command%20Undead',
+    level: 2,
+    school: 'necromancy',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
     },
+    range: {
+      type: 'close',
+      feet: 25,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a shred of raw meat and a splinter of bone',
+    },
+    duration: {
+      type: 'days-per-level',
+      days: 1,
+    },
+    target: 'one undead creature',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates; see text',
+    },
+    savingThrowText: 'Will negates; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell allows you a degree of control over an undead creature. If the subject is intelligent, it perceives your words and actions favorably (treat its attitude as friendly). It will not attack you while the spell lasts. You can give the subject orders, but you must win an opposed Charisma check to convince it to do anything it wouldn\'t ordinarily do. Retries are not allowed. An intelligent commanded undead never obeys suicidal or obviously harmful orders, but it might be convinced that something very dangerous is worth doing.\nA nonintelligent undead creature gets no saving throw against this spell. When you control a mindless being, you can communicate only basic commands, such as "come here," "go there," "fight," "stand still," and so on. Nonintelligent undead won\'t resist suicidal or obviously harmful orders.\nAny act by you or your apparent allies that threatens the commanded undead (regardless of its Intelligence) breaks the spell.\nYour commands are not telepathic. The undead creature must be able to hear you.',
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 2, wizard: 2 },
+  },
+  {
+    id: 'pf1e-darkvision',
+    name: 'Darkvision',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Darkvision',
+    level: 2,
+    school: 'transmutation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'either a pinch of dried carrot or an agate',
+    },
+    duration: {
+      type: 'hours-per-level',
+      hours: 1,
+    },
+    target: 'creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
+    concentration: false,
+    ritual: false,
+    description:
+      'The subject gains the ability to see 60 feet even in total darkness. Darkvision is black and white only but otherwise like normal sight.\nDarkvision can be made permanent with a permanency spell.',
+    classes: ['alchemist', 'ranger', 'sorcerer', 'wizard'],
+    levelsByClass: { alchemist: 2, ranger: 2, sorcerer: 2, wizard: 2 },
+  },
+  {
+    id: 'pf1e-phantom-trap',
+    name: 'Phantom Trap',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Phantom%20Trap',
+    level: 2,
+    school: 'illusion',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'special dust worth 50 gp',
+    },
+    duration: {
+      type: 'permanent',
+    },
+    target: 'object touched',
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell makes a lock or other small mechanism seem to be trapped to anyone who can detect traps. You place the spell upon any small mechanism or device, such as a lock, hinge, hasp, cork, cap, or ratchet. Any character able to detect traps, or who uses any spell or device enabling trap detection, is certain a real trap exists. Of course, the effect is illusory and nothing happens if the trap is "sprung"; its primary purpose is to frighten away thieves or make them waste precious time.\nIf another phantom trap is active within 50 feet when the spell is cast, the casting fails.',
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 2, wizard: 2 },
   },
 ];

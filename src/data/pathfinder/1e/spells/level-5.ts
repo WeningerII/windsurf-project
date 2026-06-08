@@ -38,10 +38,7 @@ export const level5Spells: Spell[] = [
     description:
       'This spell generates a bank of fog, similar to a fog cloud, except that its vapors are yellowish green and poisonous. Living creatures with 3 or fewer HD die, and living creatures with 4 to 6 HD are slain unless they succeed on a Fortitude save.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-cone-of-cold',
@@ -91,10 +88,7 @@ export const level5Spells: Spell[] = [
     description:
       'Cone of cold creates an area of extreme cold, originating at your hand and extending outward in a cone. It drains heat, dealing 1d6 points of cold damage per caster level (maximum 15d6).',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-contact-other-plane',
@@ -126,10 +120,7 @@ export const level5Spells: Spell[] = [
     description:
       'You send your mind to another plane of existence in order to receive advice and information from powers there. The powers reply in a language you understand, but they resent such contact and give only brief answers to your questions.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-dominate-person',
@@ -168,11 +159,7 @@ export const level5Spells: Spell[] = [
     description:
       "You can control the actions of any humanoid creature through a telepathic link that you establish with the subject's mind. Once you have given a dominated creature a command, it continues to attempt to carry out that command to the exclusion of all other activities.",
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 5,
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { bard: 5, sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-feeblemind',
@@ -211,10 +198,7 @@ export const level5Spells: Spell[] = [
     description:
       "Target creature's Intelligence and Charisma scores each drop to 1. The affected creature is unable to use Intelligence- or Charisma-based skills, cast spells, understand language, or communicate coherently.",
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-hold-monster',
@@ -255,11 +239,7 @@ export const level5Spells: Spell[] = [
     description:
       'This spell functions like hold person, except that it affects any living creature that fails its Will save.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 5,
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { bard: 5, sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-passwall',
@@ -293,10 +273,7 @@ export const level5Spells: Spell[] = [
     description:
       'You create a passage through wooden, plaster, or stone walls, but not through metal or other harder materials. The passage is 10 feet deep plus an additional 5 feet deep per three caster levels above 9th (15 feet at 12th, 20 feet at 15th, and a maximum of 25 feet deep at 18th level).',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-telekinesis',
@@ -335,10 +312,7 @@ export const level5Spells: Spell[] = [
     description:
       'You move objects or creatures by concentrating on them. Depending on the version selected, the spell can provide a gentle, sustained force, perform a variety of combat maneuvers, or exert a single short, violent thrust.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-teleport',
@@ -375,10 +349,7 @@ export const level5Spells: Spell[] = [
     description:
       "This spell instantly transports you to a designated destination, which may be as distant as 100 miles per caster level. You can bring along objects as long as their weight doesn't exceed your maximum load. You may also bring one additional willing Medium or smaller creature per three caster levels.",
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-wall-of-force',
@@ -413,10 +384,7 @@ export const level5Spells: Spell[] = [
     description:
       "A wall of force creates an invisible wall of pure force. The wall cannot move and is not easily destroyed. A wall of force is immune to dispel magic, although a mage's disjunction can still dispel it.",
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-wall-of-stone',
@@ -451,12 +419,7 @@ export const level5Spells: Spell[] = [
     description:
       "This spell creates a wall of rock that merges into adjoining rock surfaces. A wall of stone is 1 inch thick per four caster levels and composed of up to one 5-foot square per level. You can double the wall's area by halving its thickness.",
     classes: ['cleric', 'druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 5,
-      druid: 5,
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { cleric: 5, druid: 5, sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-mass-cure-light-wounds',
@@ -489,10 +452,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Cures 1d8 + 1/level (max +25) to many creatures.',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 5,
-      druid: 5,
-    },
+    levelsByClass: { cleric: 5, druid: 5 },
   },
   {
     id: 'pf1e-raise-dead',
@@ -524,9 +484,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Restores life to a creature dead no longer than one day per level.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 5,
-    },
+    levelsByClass: { cleric: 5 },
   },
   {
     id: 'pf1e-breath-of-life',
@@ -558,9 +516,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Cures 5d8 + 1/level (max +25) and revives a creature that died within 1 round.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 5,
-    },
+    levelsByClass: { cleric: 5 },
   },
   {
     id: 'pf1e-insect-plague',
@@ -595,10 +551,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Locust swarms attack creatures in the area.',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 5,
-      druid: 5,
-    },
+    levelsByClass: { cleric: 5, druid: 5 },
   },
   {
     id: 'pf1e-baleful-polymorph',
@@ -631,11 +584,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Transforms the subject into a Small or Tiny animal.',
     classes: ['druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      druid: 5,
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { druid: 5, sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-animal-growth',
@@ -669,9 +618,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'One animal per two levels doubles in size, gaining Strength and Constitution.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 5,
-    },
+    levelsByClass: { druid: 5 },
   },
   {
     id: 'pf1e-wall-of-thorns',
@@ -705,9 +652,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'A barrier of thorny brush deals damage to creatures forcing through it.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 5,
-    },
+    levelsByClass: { druid: 5 },
   },
   {
     id: 'pf1e-break-enchantment',
@@ -741,12 +686,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Frees subjects from enchantments, alterations, curses, and petrification.',
     classes: ['cleric', 'sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      cleric: 5,
-      sorcerer: 5,
-      wizard: 5,
-      bard: 5,
-    },
+    levelsByClass: { cleric: 5, sorcerer: 5, wizard: 5, bard: 5 },
   },
   {
     id: 'pf1e-spell-resistance',
@@ -787,13 +727,7 @@ export const level5Spells: Spell[] = [
     spellResistance: true,
     spellResistanceDetail: 'harmless',
     classes: ['cleric', 'druid', 'ranger', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 5,
-      druid: 5,
-      ranger: 5,
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { cleric: 5, druid: 5, ranger: 5, sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-summon-monster-v',
@@ -826,12 +760,7 @@ export const level5Spells: Spell[] = [
     description:
       'You summon a creature from the Outer Planes to fight on your behalf. The creature appears where you designate and acts immediately on your turn.',
     classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 5,
-      cleric: 5,
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { bard: 5, cleric: 5, sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-symbol-of-pain',
@@ -863,11 +792,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Triggered rune wracks nearby creatures with pain.',
     classes: ['cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 5,
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { cleric: 5, sorcerer: 5, wizard: 5 },
     savingThrow: {
       attribute: 'con',
       success: 'none',
@@ -910,11 +835,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Triggered rune puts nearby creatures into catatonic slumber.',
     classes: ['cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 5,
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { cleric: 5, sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-teleportation-circle',
@@ -951,11 +872,7 @@ export const level5Spells: Spell[] = [
     description:
       'You create a magical circle on the ground. Any creature that steps into the circle is instantly transported to another teleportation circle you designate.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 5,
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { bard: 5, sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-transmute-mud-to-rock',
@@ -990,11 +907,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Transforms two 10-ft. cubes per level.',
     classes: ['druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      druid: 5,
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { druid: 5, sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-transmute-rock-to-mud',
@@ -1029,11 +942,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Transforms two 10-ft. cubes per level.',
     classes: ['druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      druid: 5,
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { druid: 5, sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-waves-of-fatigue',
@@ -1079,10 +988,7 @@ export const level5Spells: Spell[] = [
       type: 'necrotic',
     },
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-fabricate',
@@ -1114,10 +1020,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Transforms raw materials into finished items.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-false-vision',
@@ -1149,11 +1052,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Fools scrying with an illusion of your devising.',
     classes: ['sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      sorcerer: 5,
-      wizard: 5,
-      bard: 5,
-    },
+    levelsByClass: { sorcerer: 5, wizard: 5, bard: 5 },
   },
   {
     id: 'pf1e-interposing-hand',
@@ -1187,10 +1086,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'A Large hand of force provides cover against one opponent.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-lesser-planar-binding',
@@ -1228,10 +1124,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Traps an extraplanar creature of up to 6 HD to perform a service.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-mages-faithful-hound',
@@ -1264,10 +1157,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'A phantom watchdog guards an area and attacks intruders.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-mages-private-sanctum',
@@ -1300,10 +1190,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Prevents anyone from viewing or scrying an area for 24 hours.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-magic-jar',
@@ -1343,10 +1230,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Your soul possesses another creature via a receptacle.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-major-creation',
@@ -1379,10 +1263,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Creates a nonmagical, unattended object of vegetable or mineral matter.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-mind-fog',
@@ -1421,11 +1302,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'A fog lowers the Wisdom and Will saves of creatures within it.',
     classes: ['sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      sorcerer: 5,
-      wizard: 5,
-      bard: 5,
-    },
+    levelsByClass: { sorcerer: 5, wizard: 5, bard: 5 },
   },
   {
     id: 'pf1e-mirage-arcana',
@@ -1464,11 +1341,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'As hallucinatory terrain, plus illusory structures.',
     classes: ['sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      sorcerer: 5,
-      wizard: 5,
-      bard: 5,
-    },
+    levelsByClass: { sorcerer: 5, wizard: 5, bard: 5 },
   },
   {
     id: 'pf1e-overland-flight',
@@ -1500,10 +1373,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'You fly at 40 ft and can travel for hours.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-persistent-image',
@@ -1543,11 +1413,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'As major image, but no concentration required.',
     classes: ['sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      sorcerer: 5,
-      wizard: 5,
-      bard: 5,
-    },
+    levelsByClass: { sorcerer: 5, wizard: 5, bard: 5 },
   },
   {
     id: 'pf1e-prying-eyes',
@@ -1580,10 +1446,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Sends 1d4 +1/level floating eyes to scout for you.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-seeming',
@@ -1622,11 +1485,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Changes the appearance of one creature per two levels.',
     classes: ['sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      sorcerer: 5,
-      wizard: 5,
-      bard: 5,
-    },
+    levelsByClass: { sorcerer: 5, wizard: 5, bard: 5 },
   },
   {
     id: 'pf1e-dream',
@@ -1658,11 +1517,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Sends a message to a sleeping creature through its dreams.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 5,
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { bard: 5, sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-nightmare',
@@ -1699,11 +1554,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Haunts a creature with a dream, dealing 1d10 damage and fatigue.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 5,
-      sorcerer: 5,
-      wizard: 5,
-    },
+    levelsByClass: { bard: 5, sorcerer: 5, wizard: 5 },
   },
   {
     id: 'pf1e-atonement',
@@ -1739,10 +1590,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Removes burden of misdeeds from subject.',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 5,
-      druid: 5,
-    },
+    levelsByClass: { cleric: 5, druid: 5 },
   },
   {
     id: 'pf1e-awaken',
@@ -1781,9 +1629,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Animal or tree gains human intellect.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 5,
-    },
+    levelsByClass: { druid: 5 },
   },
   {
     id: 'pf1e-call-lightning-storm',
@@ -1814,9 +1660,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'As call lightning, but 5d6 damage per bolt.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 5,
-    },
+    levelsByClass: { druid: 5 },
   },
   {
     id: 'pf1e-command-greater',
@@ -1848,9 +1692,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'As command, but affects one subject/level.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 5,
-    },
+    levelsByClass: { cleric: 5 },
     savingThrow: {
       attribute: 'wis',
       success: 'none',
@@ -1888,9 +1730,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Deity answers one yes-or-no question/level.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 5,
-    },
+    levelsByClass: { cleric: 5 },
   },
   {
     id: 'pf1e-commune-with-nature',
@@ -1920,9 +1760,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Learn about terrain for 1 mile/level.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 5,
-    },
+    levelsByClass: { druid: 5 },
   },
   {
     id: 'pf1e-control-winds',
@@ -1962,51 +1800,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Change wind direction and speed.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 5,
-    },
-  },
-  {
-    id: 'pf1e-cure-light-wounds-mass',
-    name: 'Cure Light Wounds, Mass',
-    system: 'pf1e',
-    source: 'Core Rulebook',
-    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Cure%20Light%20Wounds%2C%20Mass',
-    level: 5,
-    school: 'conjuration',
-    castingTime: {
-      type: 'standard',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 30,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'instant',
-    },
-    target: 'One creature/level, no two of which can be more than 30 ft. apart',
-    savingThrow: {
-      attribute: 'wis',
-      success: 'half',
-      description: 'Will half (harmless) or Will half; see text',
-    },
-    savingThrowText: 'Will half (harmless) or Will half; see text',
-    spellResistance: true,
-    spellResistanceDetail: 'harmless',
-    concentration: false,
-    ritual: false,
-    description: 'Cures 1d8 damage +1/level for many creatures.',
-    classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 5,
-      druid: 5,
-    },
+    levelsByClass: { druid: 5 },
   },
   {
     id: 'pf1e-dispel-chaos',
@@ -2036,9 +1830,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: '+4 bonus against attacks.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 5,
-    },
+    levelsByClass: { cleric: 5 },
   },
   {
     id: 'pf1e-dispel-evil',
@@ -2074,9 +1866,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: '+4 bonus against attacks.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 5,
-    },
+    levelsByClass: { cleric: 5 },
   },
   {
     id: 'pf1e-dispel-good',
@@ -2106,9 +1896,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: '+4 bonus against attacks.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 5,
-    },
+    levelsByClass: { cleric: 5 },
   },
   {
     id: 'pf1e-dispel-law',
@@ -2138,9 +1926,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: '+4 bonus against attacks.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 5,
-    },
+    levelsByClass: { cleric: 5 },
   },
   {
     id: 'pf1e-disrupting-weapon',
@@ -2179,9 +1965,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Melee weapon destroys undead.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 5,
-    },
+    levelsByClass: { cleric: 5 },
   },
   {
     id: 'pf1e-hallow',
@@ -2218,10 +2002,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Designates location as holy.',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 5,
-      druid: 5,
-    },
+    levelsByClass: { cleric: 5, druid: 5 },
   },
   {
     id: 'pf1e-inflict-light-wounds-mass',
@@ -2261,9 +2042,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Deals 1d8 damage +1/level to many creatures.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 5,
-    },
+    levelsByClass: { cleric: 5 },
   },
   {
     id: 'pf1e-mark-of-justice',
@@ -2297,9 +2076,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Designates action that will trigger curse on subject.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 5,
-    },
+    levelsByClass: { cleric: 5 },
   },
   {
     id: 'pf1e-plane-shift',
@@ -2338,9 +2115,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'As many as eight subjects travel to another plane.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 5,
-    },
+    levelsByClass: { cleric: 5 },
   },
   {
     id: 'pf1e-righteous-might',
@@ -2372,9 +2147,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Your size increases, and you gain combat bonuses.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 5,
-    },
+    levelsByClass: { cleric: 5 },
   },
   {
     id: 'pf1e-slay-living',
@@ -2412,9 +2185,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Touch attack kills subject.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 5,
-    },
+    levelsByClass: { cleric: 5 },
   },
   {
     id: 'pf1e-summon-natures-ally-v',
@@ -2446,9 +2217,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Calls creature to fight.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 5,
-    },
+    levelsByClass: { druid: 5 },
   },
   {
     id: 'pf1e-tree-stride',
@@ -2480,9 +2249,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Step from one tree to another far away.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 5,
-    },
+    levelsByClass: { druid: 5 },
   },
   {
     id: 'pf1e-unhallow',
@@ -2518,10 +2285,7 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Designates location as unholy.',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 5,
-      druid: 5,
-    },
+    levelsByClass: { cleric: 5, druid: 5 },
   },
   {
     id: 'pf1e-greater-heroism',
@@ -2560,9 +2324,7 @@ export const level5Spells: Spell[] = [
     description:
       'Subject gains +4 on attacks and saves, immunity to fear, and temporary hit points.',
     classes: ['bard'],
-    levelsByClass: {
-      bard: 5,
-    },
+    levelsByClass: { bard: 5 },
   },
   {
     id: 'pf1e-song-of-discord',
@@ -2601,8 +2363,208 @@ export const level5Spells: Spell[] = [
     ritual: false,
     description: 'Creatures in a 20-ft radius turn on each other for the duration.',
     classes: ['bard'],
-    levelsByClass: {
-      bard: 5,
+    levelsByClass: { bard: 5 },
+  },
+  {
+    id: 'pf1e-beast-shape-iii',
+    name: 'Beast Shape III',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Beast%20Shape%20III',
+    level: 5,
+    school: 'transmutation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
     },
+    range: {
+      type: 'personal',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a piece of the creature whose form you plan to assume',
+    },
+    duration: {
+      type: 'minutes-per-level',
+      minutes: 1,
+    },
+    target: 'you',
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell functions as beast shape II, except that it also allows you to assume the form of a Diminutive or Huge creature of the animal type. This spell also allows you to take on the form of a Small or Medium creature of the magical beast type. If the form you assume has any of the following abilities, you gain the listed ability: burrow 30 feet, climb 90 feet, fly 90 feet (good maneuverability), swim 90 feet, blindsense 30 feet, darkvision 60 feet, low-light vision, scent, constrict, ferocity, grab, jet, poison, pounce, rake, trample, trip, and web.\nDiminutive animal: If the form you take is that of a Diminutive animal, you gain a +6 size bonus to your Dexterity, a –4 penalty to your Strength, and a +1 natural armor bonus.\nHuge animal: If the form you take is that of a Huge animal, you gain a +6 size bonus to your Strength, a –4 penalty to your Dexterity, and a +6 natural armor bonus.\nSmall magical beast: If the form you take is that of a Small magical beast, you gain a +4 size bonus to your Dexterity, and a +2 natural armor bonus.\nMedium magical beast: If the form you take is that of a Medium magical beast, you gain a +4 size bonus to your Strength, and a +4 natural armor bonus.',
+    classes: ['alchemist', 'sorcerer', 'wizard'],
+    levelsByClass: { alchemist: 5, sorcerer: 5, wizard: 5 },
+  },
+  {
+    id: 'pf1e-elemental-body-ii',
+    name: 'Elemental Body II',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Elemental%20Body%20II',
+    level: 5,
+    school: 'transmutation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'personal',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'the element you plan to assume',
+    },
+    duration: {
+      type: 'minutes-per-level',
+      minutes: 1,
+    },
+    target: 'you',
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell functions as elemental body I, except that it also allows you to assume the form of a Medium air, earth, fire, or water elemental. The abilities you gain depend upon the elemental.\nAir elemental: As elemental body I except that you gain a +4 size bonus to your Dexterity and a +3 natural armor bonus.\nEarth elemental: As elemental body I except that you gain a +4 size bonus to your Strength and a +5 natural armor bonus.\nFire elemental: As elemental body I except that you gain a +4 size bonus to your Dexterity and a +3 natural armor bonus.\nWater elemental: As elemental body I except that you gain a +4 size bonus to your Constitution and a +5 natural armor bonus.',
+    classes: ['alchemist', 'sorcerer', 'wizard'],
+    levelsByClass: { alchemist: 5, sorcerer: 5, wizard: 5 },
+  },
+  {
+    id: 'pf1e-permanency',
+    name: 'Permanency',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Permanency',
+    level: 5,
+    school: 'universal',
+    castingTime: {
+      type: 'rounds',
+      amount: 2,
+    },
+    range: {
+      type: 'special',
+      description: 'see text',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'see tables below',
+    },
+    duration: {
+      type: 'permanent',
+    },
+    target: 'see text',
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell makes the duration of certain other spells permanent. You first cast the desired spell and then follow it with the permanency spell.\nDepending on the spell, you must be of a minimum caster level and must expend a specific gp value of diamond dust as a material component.\nYou can make the following spells permanent in regard to yourself.',
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 5, wizard: 5 },
+  },
+  {
+    id: 'pf1e-plant-shape-i',
+    name: 'Plant Shape I',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Plant%20Shape%20I',
+    level: 5,
+    school: 'transmutation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'personal',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a piece of the creature whose form you plan to assume',
+    },
+    duration: {
+      type: 'minutes-per-level',
+      minutes: 1,
+    },
+    target: 'you',
+    concentration: false,
+    ritual: false,
+    description:
+      'When you cast this spell you can assume the form of any Small or Medium creature of the plant type. If the form you assume has any of the following abilities, you gain the listed ability: darkvision 60 feet, low-light vision, constrict, grab, and poison. If the form you assume does not possess the ability to move, your speed is reduced to 5 feet and you lose all other forms of movement. If the creature has vulnerability to an element, you gain that vulnerability.\nSmall plant: If the form you take is that of a Small plant, you gain a +2 size bonus to your Constitution and a +2 natural armor bonus.\nMedium plant: If the form you take is that of a Medium plant, you gain a +2 size bonus to your Strength, a +2 enhancement bonus to your Constitution, and a +2 natural armor bonus.',
+    classes: ['alchemist', 'sorcerer', 'wizard'],
+    levelsByClass: { alchemist: 5, sorcerer: 5, wizard: 5 },
+  },
+  {
+    id: 'pf1e-secret-chest',
+    name: 'Secret Chest',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Secret%20Chest',
+    level: 5,
+    school: 'conjuration',
+    castingTime: {
+      type: 'minutes',
+      amount: 10,
+    },
+    range: {
+      type: 'special',
+      description: 'see text',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+      focus: true,
+      focusDescription: 'the chest and its replica',
+    },
+    duration: {
+      type: 'special',
+      description: '60 days or until discharged',
+    },
+    target: 'one chest and up to 1 cu. ft. of goods/caster level',
+    concentration: false,
+    ritual: false,
+    description:
+      "You hide a chest on the Ethereal Plane for as long as 60 days and can retrieve it at will. The chest can contain up to 1 cubic foot of material per caster level (regardless of the chest's actual size, which is about 3 feet by 2 feet by 2 feet). If any living creatures are in the chest, there is a 75% chance that the spell simply fails. Once the chest is hidden, you can retrieve it by concentrating (a standard action), and it appears next to you.\nThe chest must be exceptionally well crafted and expensive, constructed for you by master crafters. The cost of such a chest is never less than 5,000 gp. Once it is constructed, you must make a tiny replica (of the same materials and perfect in every detail) so that the miniature of the chest appears to be a perfect copy. (The replica costs 50 gp.) The chests are nonmagical and can be fitted with locks, wards, and so on, just as any normal chest can be.\nTo hide the chest, you cast the spell while touching both the chest and the replica. The chest vanishes into the Ethereal Plane. You need the replica to recall the chest. After 60 days, there is a cumulative chance of 5% per day that the chest is irretrievably lost. If the miniature of the chest is lost or destroyed, there is no way, even with a wish spell, that the large chest can be summoned back, although an extraplanar expedition might be mounted to find it.\nLiving things in the chest eat, sleep, and age normally, and they die if they run out of food, air, water, or whatever they need to survive.",
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 5, wizard: 5 },
+  },
+  {
+    id: 'pf1e-telepathic-bond',
+    name: 'Telepathic Bond',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Telepathic%20Bond',
+    level: 5,
+    school: 'divination',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'close',
+      feet: 25,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'two eggshells from two different creatures',
+    },
+    duration: {
+      type: 'minutes-per-level',
+      minutes: 10,
+    },
+    target:
+      'you plus one willing creature per three levels, no two of which can be more than 30 ft. apart',
+    concentration: false,
+    ritual: false,
+    description:
+      'You forge a telepathic bond among yourself and a number of willing creatures, each of which must have an Intelligence score of 3 or higher. Each creature included in the link is linked to all the others. The creatures can communicate telepathically through the bond regardless of language. No special power or influence is established as a result of the bond. Once the bond is formed, it works over any distance (although not from one plane to another).\nIf desired, you may leave yourself out of the telepathic bond forged. This decision must be made at the time of casting.\nTelepathic bond can be made permanent with a permanency spell, though it only bonds two creatures per casting of permanency.',
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 5, wizard: 5 },
   },
 ];

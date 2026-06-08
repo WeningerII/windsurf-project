@@ -33,10 +33,7 @@ export const level4Spells: Spell[] = [
     description:
       'You create an invisible magical sensor that sends you visual information. The sensor moves at 30 feet per round. It can travel in any direction as long as the spell lasts.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-black-tentacles',
@@ -71,10 +68,7 @@ export const level4Spells: Spell[] = [
     description:
       'This spell causes a field of rubbery black tentacles to appear, burrowing up from the floor and reaching for any creature in the area. Every creature within the area of the spell must make a combat maneuver check or be grappled by the tentacles.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-charm-monster',
@@ -113,11 +107,7 @@ export const level4Spells: Spell[] = [
     description:
       "This charm makes a creature regard you as its trusted friend and ally (treat the target's attitude as friendly). This spell functions like charm person, except that the effect is not restricted by creature type or size.",
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 4,
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { bard: 4, sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-confusion',
@@ -158,11 +148,7 @@ export const level4Spells: Spell[] = [
     description:
       'This spell causes the targets to become confused, making them unable to determine their actions. Roll on the confusion behavior table each round to see what the subject does.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 4,
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { bard: 4, sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-dimension-door',
@@ -200,11 +186,7 @@ export const level4Spells: Spell[] = [
     description:
       "You instantly transfer yourself from your current location to any other spot within range. You always arrive at exactly the spot desired. After using this spell, you can't take any other actions until your next turn.",
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 4,
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { bard: 4, sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-greater-invisibility',
@@ -243,11 +225,7 @@ export const level4Spells: Spell[] = [
     description:
       "This spell functions like invisibility, except that it doesn't end if the subject attacks.",
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 4,
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { bard: 4, sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-ice-storm',
@@ -290,11 +268,7 @@ export const level4Spells: Spell[] = [
     description:
       'Great magical hailstones pound down, dealing 3d6 points of bludgeoning damage and 2d6 points of cold damage to every creature in the area.',
     classes: ['druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      druid: 4,
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { druid: 4, sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-polymorph',
@@ -333,10 +307,7 @@ export const level4Spells: Spell[] = [
     description:
       'This spell transforms a willing creature into an animal, humanoid, or elemental of your choosing. The spell has no effect on unwilling creatures, nor can the subject be forced into an inappropriate form.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-scrying',
@@ -378,13 +349,7 @@ export const level4Spells: Spell[] = [
     description:
       'You can observe a creature at any distance. If the subject succeeds on a Will save, the spell fails. The difficulty of the save depends on how well your knowledge of the subject and what sort of physical connection (if any) you have to that creature.',
     classes: ['bard', 'cleric', 'druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 4,
-      cleric: 4,
-      druid: 4,
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { bard: 4, cleric: 4, druid: 4, sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-solid-fog',
@@ -419,10 +384,7 @@ export const level4Spells: Spell[] = [
     description:
       'This spell functions like fog cloud, but in addition to obscuring sight, the solid fog is so thick that it impedes movement. Creatures moving through a solid fog move at half their normal speed and take a –2 penalty on all melee attack and melee damage rolls.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-stone-shape',
@@ -456,12 +418,7 @@ export const level4Spells: Spell[] = [
     description:
       'You can form an existing piece of stone into any shape that suits your purpose. For example, you can make a stone weapon, a special trapdoor, or a crude idol. Stone shape also permits you to reshape a stone door so as to make it fit more tightly in its frame.',
     classes: ['cleric', 'druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 4,
-      druid: 4,
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { cleric: 4, druid: 4, sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-stoneskin',
@@ -502,11 +459,7 @@ export const level4Spells: Spell[] = [
     description:
       'The warded creature gains resistance to blows, cuts, stabs, and slashes. The subject gains DR 10/adamantine. It ignores the first 10 points of damage each time it takes damage from a weapon, though an adamantine weapon bypasses the reduction.',
     classes: ['druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      druid: 4,
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { druid: 4, sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-wall-of-fire',
@@ -551,11 +504,7 @@ export const level4Spells: Spell[] = [
     description:
       'An immobile, blazing curtain of shimmering violet fire springs into existence. One side of the wall, selected by you, sends forth waves of heat, dealing 2d4 points of fire damage to creatures within 10 feet and 1d4 points of fire damage to those past 10 feet but within 20 feet.',
     classes: ['druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      druid: 4,
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { druid: 4, sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-wall-of-ice',
@@ -596,10 +545,7 @@ export const level4Spells: Spell[] = [
     description:
       'This spell creates an anchored plane of ice or a hemisphere of ice, depending on the version selected. A wall of ice cannot form in an area occupied by physical objects or creatures. Its surface must be smooth and unbroken when created.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-cure-critical-wounds',
@@ -631,10 +577,7 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description: 'Cures 4d8 + 1/level (max +20) damage.',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 4,
-      druid: 4,
-    },
+    levelsByClass: { cleric: 4, druid: 4 },
   },
   {
     id: 'pf1e-death-ward',
@@ -668,11 +611,7 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description: 'Grants immunity to death spells and negative energy effects.',
     classes: ['cleric', 'druid', 'paladin'],
-    levelsByClass: {
-      cleric: 4,
-      druid: 4,
-      paladin: 4,
-    },
+    levelsByClass: { cleric: 4, druid: 4, paladin: 4 },
   },
   {
     id: 'pf1e-divine-power',
@@ -706,9 +645,7 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description: 'You gain attack bonuses, +6 Strength, and temporary hit points.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 4,
-    },
+    levelsByClass: { cleric: 4 },
   },
   {
     id: 'pf1e-freedom-of-movement',
@@ -742,12 +679,7 @@ export const level4Spells: Spell[] = [
     description:
       'The subject moves normally despite impediments such as grapples and difficult terrain.',
     classes: ['cleric', 'druid', 'ranger', 'bard'],
-    levelsByClass: {
-      cleric: 4,
-      druid: 4,
-      ranger: 4,
-      bard: 4,
-    },
+    levelsByClass: { cleric: 4, druid: 4, ranger: 4, bard: 4 },
   },
   {
     id: 'pf1e-restoration',
@@ -779,10 +711,7 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description: 'Restores level and ability score drains.',
     classes: ['cleric', 'paladin'],
-    levelsByClass: {
-      cleric: 4,
-      paladin: 4,
-    },
+    levelsByClass: { cleric: 4, paladin: 4 },
   },
   {
     id: 'pf1e-flame-strike',
@@ -816,10 +745,7 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description: 'A column of divine fire deals 1d6/level (max 15d6) damage, half of it untyped.',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 4,
-      druid: 4,
-    },
+    levelsByClass: { cleric: 4, druid: 4 },
   },
   {
     id: 'pf1e-crushing-despair',
@@ -864,11 +790,7 @@ export const level4Spells: Spell[] = [
       description: 'Will negates',
     },
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 4,
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { bard: 4, sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-detect-scrying',
@@ -906,11 +828,7 @@ export const level4Spells: Spell[] = [
     description:
       "You immediately become aware of any attempt to observe you by means of a divination (scrying) spell or effect. The spell's area radiates from you and moves as you move. You know the location of every magical sensor within the spell's area.",
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 4,
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { bard: 4, sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-dimensional-anchor',
@@ -947,11 +865,7 @@ export const level4Spells: Spell[] = [
     description:
       'A green ray springs from your outstretched hand. You must make a ranged touch attack to hit the target. Any creature or object struck by the ray is covered with a shimmering emerald field that completely blocks extradimensional travel. Forms of movement barred by a dimensional anchor include astral projection, blink, dimension door, ethereal jaunt, etherealness, gate, maze, plane shift, shadow walk, teleport, and similar spell-like or psionic abilities.',
     classes: ['cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 4,
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { cleric: 4, sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-dismissal',
@@ -992,11 +906,7 @@ export const level4Spells: Spell[] = [
       description: 'Will negates; see text',
     },
     classes: ['cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 4,
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { cleric: 4, sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-divination',
@@ -1029,10 +939,7 @@ export const level4Spells: Spell[] = [
     description:
       'Similar to augury but more powerful, a divination spell can provide you with a useful piece of advice in reply to a question concerning a specific goal, event, or activity that is to occur within one week. The advice can be as simple as a short phrase, or it might take the form of a cryptic rhyme or omen.',
     classes: ['cleric', 'wizard'],
-    levelsByClass: {
-      cleric: 4,
-      wizard: 4,
-    },
+    levelsByClass: { cleric: 4, wizard: 4 },
   },
   {
     id: 'pf1e-enervation',
@@ -1068,10 +975,7 @@ export const level4Spells: Spell[] = [
     description:
       'You point your finger and utter the incantation, releasing a black ray of crackling negative energy that suppresses the life force of any living creature it strikes. You must make a ranged touch attack to hit. If the attack succeeds, the subject gains 1d4 temporary negative levels.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-enlarge-person-mass',
@@ -1105,10 +1009,7 @@ export const level4Spells: Spell[] = [
     description:
       "This spell functions like enlarge person, except that it affects multiple creatures. This spell causes instant growth of a humanoid creature, doubling its height and multiplying its weight by 8. This increase changes the creature's size category to the next larger one.",
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-fear',
@@ -1154,11 +1055,7 @@ export const level4Spells: Spell[] = [
       description: 'Will partial',
     },
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 4,
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { bard: 4, sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-fire-shield',
@@ -1200,10 +1097,7 @@ export const level4Spells: Spell[] = [
       type: 'fire',
     },
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-geas-lesser',
@@ -1244,11 +1138,7 @@ export const level4Spells: Spell[] = [
       description: 'Will negates',
     },
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 4,
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { bard: 4, sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-globe-of-invulnerability-lesser',
@@ -1286,10 +1176,7 @@ export const level4Spells: Spell[] = [
     description:
       'An immobile, faintly shimmering magical sphere surrounds you and excludes all spell effects of 3rd level or lower. The area or effect of any such spells does not include the area of the lesser globe of invulnerability.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-hallucinatory-terrain',
@@ -1335,53 +1222,7 @@ export const level4Spells: Spell[] = [
     description:
       'You make natural terrain look, sound, and smell like some other sort of natural terrain. Structures, equipment, and creatures within the area are not hidden or changed in appearance.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 4,
-      sorcerer: 4,
-      wizard: 4,
-    },
-  },
-  {
-    id: 'pf1e-invisibility-greater',
-    name: 'Invisibility, Greater',
-    system: 'pf1e',
-    source: 'Core Rulebook',
-    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Invisibility%2C%20Greater',
-    level: 4,
-    school: 'illusion',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'touch',
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'rounds',
-      rounds: 1,
-    },
-    target: 'You or creature touched',
-    savingThrow: {
-      attribute: 'wis',
-      success: 'none',
-      description: 'Will negates (harmless)',
-    },
-    savingThrowText: 'Will negates (harmless)',
-    concentration: false,
-    ritual: false,
-    description:
-      "This spell functions like invisibility, except that it doesn't end if the subject attacks. The spell ends if the subject makes an attack that directly affects the enemy (not just an area effect).",
-    classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 4,
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { bard: 4, sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-locate-creature',
@@ -1414,11 +1255,7 @@ export const level4Spells: Spell[] = [
     description:
       "This spell functions like locate object, except this spell locates a known or familiar creature. You slowly turn and sense when you are facing the direction of the creature, as long as the creature is within range. You can sense the general direction of the creature's location, as long as it is within range.",
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 4,
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { bard: 4, sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-minor-creation',
@@ -1455,10 +1292,7 @@ export const level4Spells: Spell[] = [
     description:
       'You create a nonmagical, unattended object of nonliving, vegetable matter. The volume of the item created cannot exceed 1 cubic foot per caster level. You must succeed on an appropriate skill check to make a complex item. Attempting to use any created object as a material component causes the spell to fail.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-phantasmal-killer',
@@ -1498,10 +1332,7 @@ export const level4Spells: Spell[] = [
       description: 'Will disbelief (if interacted with), then Fortitude partial; see text',
     },
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-rainbow-pattern',
@@ -1548,11 +1379,7 @@ export const level4Spells: Spell[] = [
       description: 'Will negates',
     },
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 4,
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { bard: 4, sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-resilient-sphere',
@@ -1595,10 +1422,7 @@ export const level4Spells: Spell[] = [
     description:
       "A globe of shimmering force encloses a creature, provided the creature is small enough to fit within the diameter of the sphere. The sphere contains its subject for the spell's duration. The sphere is not subject to damage of any sort except from a rod of cancellation, a rod of negation, a disintegrate spell, or a targeted dispel magic spell.",
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-secure-shelter',
@@ -1636,11 +1460,7 @@ export const level4Spells: Spell[] = [
     description:
       'You conjure a sturdy cottage or lodge made of material that is common in the area where the spell is cast. The floor is level, clean, and dry. The lodging has a sturdy door, two or more shuttered windows, and a small fireplace.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 4,
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { bard: 4, sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-shadow-conjuration',
@@ -1680,11 +1500,7 @@ export const level4Spells: Spell[] = [
     description:
       'You use material from the Plane of Shadow to shape quasi-real illusions of one or more creatures, objects, or forces. Shadow conjuration can mimic any sorcerer or wizard conjuration (summoning) or conjuration (creation) spell of 3rd level or lower. Shadow conjurations are only one-fifth (20%) as strong as the real things.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 4,
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { bard: 4, sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-shout',
@@ -1736,11 +1552,7 @@ export const level4Spells: Spell[] = [
       description: 'Fortitude partial or Reflex negates (object); see text',
     },
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 4,
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { bard: 4, sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-summon-monster-iv',
@@ -1773,12 +1585,7 @@ export const level4Spells: Spell[] = [
     description:
       'This spell summons an extraplanar creature (typically an outsider, elemental, or magical beast native to another plane). It appears where you designate and acts immediately, on your turn. It attacks your opponents to the best of its ability. The spell conjures one of the creatures from the 4th-level list, 1d3 creatures of the same kind from the 3rd-level list, or 1d4+1 creatures of the same kind from a lower-level list.',
     classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 4,
-      cleric: 4,
-      sorcerer: 4,
-      wizard: 4,
-    },
+    levelsByClass: { bard: 4, cleric: 4, sorcerer: 4, wizard: 4 },
   },
   {
     id: 'pf1e-air-walk',
@@ -1813,10 +1620,7 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description: 'Subject treads on air as if solid (climb at 45-degree angle).',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 4,
-      druid: 4,
-    },
+    levelsByClass: { cleric: 4, druid: 4 },
   },
   {
     id: 'pf1e-antiplant-shell',
@@ -1852,9 +1656,7 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description: 'Keeps animated plants at bay.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 4,
-    },
+    levelsByClass: { druid: 4 },
   },
   {
     id: 'pf1e-blight',
@@ -1892,9 +1694,7 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description: 'Withers one plant or deals 1d6/level damage to plant creature.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 4,
-    },
+    levelsByClass: { druid: 4 },
   },
   {
     id: 'pf1e-command-plants',
@@ -1934,9 +1734,7 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description: 'Sway the actions of one or more plant creatures.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 4,
-    },
+    levelsByClass: { druid: 4 },
   },
   {
     id: 'pf1e-control-water',
@@ -1972,10 +1770,7 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description: 'Raises or lowers bodies of water.',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 4,
-      druid: 4,
-    },
+    levelsByClass: { cleric: 4, druid: 4 },
   },
   {
     id: 'pf1e-discern-lies',
@@ -2016,9 +1811,7 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description: 'Reveals deliberate falsehoods.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 4,
-    },
+    levelsByClass: { cleric: 4 },
   },
   {
     id: 'pf1e-giant-vermin',
@@ -2054,10 +1847,7 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description: 'Turns centipedes, scorpions, or spiders into giant vermin.',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 4,
-      druid: 4,
-    },
+    levelsByClass: { cleric: 4, druid: 4 },
   },
   {
     id: 'pf1e-imbue-with-spell-ability',
@@ -2096,9 +1886,7 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description: 'Transfer spells to subject.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 4,
-    },
+    levelsByClass: { cleric: 4 },
   },
   {
     id: 'pf1e-inflict-critical-wounds',
@@ -2127,9 +1915,7 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description: 'Touch attack, 4d8 damage +1/level (max +20).',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 4,
-    },
+    levelsByClass: { cleric: 4 },
     savingThrow: {
       attribute: 'wis',
       success: 'half',
@@ -2176,9 +1962,7 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description: '+1 bonus/four levels (max +5).',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 4,
-    },
+    levelsByClass: { cleric: 4 },
   },
   {
     id: 'pf1e-planar-ally-lesser',
@@ -2213,9 +1997,7 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description: 'Exchange services with a 6 HD extraplanar creature.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 4,
-    },
+    levelsByClass: { cleric: 4 },
   },
   {
     id: 'pf1e-reincarnate',
@@ -2249,9 +2031,7 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description: 'Brings dead subject back in a random body.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 4,
-    },
+    levelsByClass: { druid: 4 },
   },
   {
     id: 'pf1e-repel-vermin',
@@ -2292,11 +2072,7 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description: 'Insects, spiders, and other vermin stay 10 ft. away.',
     classes: ['bard', 'cleric', 'druid'],
-    levelsByClass: {
-      bard: 4,
-      cleric: 4,
-      druid: 4,
-    },
+    levelsByClass: { bard: 4, cleric: 4, druid: 4 },
   },
   {
     id: 'pf1e-rusting-grasp',
@@ -2332,9 +2108,7 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description: 'Your touch corrodes iron and alloys.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 4,
-    },
+    levelsByClass: { druid: 4 },
   },
   {
     id: 'pf1e-sending',
@@ -2369,9 +2143,7 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description: 'Delivers short message anywhere, instantly.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 4,
-    },
+    levelsByClass: { cleric: 4 },
   },
   {
     id: 'pf1e-spell-immunity',
@@ -2412,10 +2184,7 @@ export const level4Spells: Spell[] = [
     spellResistance: true,
     spellResistanceDetail: 'harmless',
     classes: ['cleric', 'paladin'],
-    levelsByClass: {
-      cleric: 4,
-      paladin: 4,
-    },
+    levelsByClass: { cleric: 4, paladin: 4 },
   },
   {
     id: 'pf1e-spike-stones',
@@ -2456,9 +2225,7 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description: 'Creatures in area take 1d8 damage, may be slowed.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 4,
-    },
+    levelsByClass: { druid: 4 },
   },
   {
     id: 'pf1e-summon-natures-ally-iv',
@@ -2490,9 +2257,7 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description: 'Calls creature to fight.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 4,
-    },
+    levelsByClass: { druid: 4 },
   },
   {
     id: 'pf1e-legend-lore',
@@ -2524,9 +2289,7 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description: 'Reveals tales or lore about a person, place, or thing.',
     classes: ['bard'],
-    levelsByClass: {
-      bard: 4,
-    },
+    levelsByClass: { bard: 4 },
   },
   {
     id: 'pf1e-modify-memory',
@@ -2565,9 +2328,7 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description: 'Changes 5 minutes of a subject’s memories.',
     classes: ['bard'],
-    levelsByClass: {
-      bard: 4,
-    },
+    levelsByClass: { bard: 4 },
   },
   {
     id: 'pf1e-zone-of-silence',
@@ -2599,8 +2360,396 @@ export const level4Spells: Spell[] = [
     ritual: false,
     description: 'Prevents anyone from overhearing conversations within 5 ft of you.',
     classes: ['bard'],
-    levelsByClass: {
-      bard: 4,
+    levelsByClass: { bard: 4 },
+  },
+  {
+    id: 'pf1e-beast-shape-ii',
+    name: 'Beast Shape II',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Beast%20Shape%20II',
+    level: 4,
+    school: 'transmutation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
     },
+    range: {
+      type: 'personal',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a piece of the creature whose form you plan to assume',
+    },
+    duration: {
+      type: 'minutes-per-level',
+      minutes: 1,
+    },
+    target: 'you',
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell functions as beast shape I, except that it also allows you to assume the form of a Tiny or Large creature of the animal type. If the form you assume has any of the following abilities, you gain the listed ability: climb 60 feet, fly 60 feet (good maneuverability), swim 60 feet, darkvision 60 feet, low-light vision, scent, grab, pounce, and trip.\nTiny animal: If the form you take is that of a Tiny animal, you gain a +4 size bonus to your Dexterity, a –2 penalty to your Strength, and a +1 natural armor bonus.\nLarge animal: If the form you take is that of a Large animal, you gain a +4 size bonus to your Strength, a –2 penalty to your Dexterity, and a +4 natural armor bonus.',
+    classes: ['alchemist', 'sorcerer', 'wizard'],
+    levelsByClass: { alchemist: 4, sorcerer: 4, wizard: 4 },
+  },
+  {
+    id: 'pf1e-chaos-hammer',
+    name: 'Chaos Hammer',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Chaos%20Hammer',
+    level: 4,
+    school: 'evocation',
+    descriptors: ['chaotic'],
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'medium',
+      feet: 100,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 20,
+    },
+    area: '20-ft.-radius burst',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'special',
+      description: 'Will partial; see text',
+    },
+    savingThrowText: 'Will partial; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    concentration: false,
+    ritual: false,
+    description:
+      'You unleash chaotic power to smite your enemies. The power takes the form of a multicolored explosion of leaping, ricocheting energy. Only lawful and neutral (not chaotic) creatures are harmed by the spell.\nThe spell deals 1d8 points of damage per two caster levels (maximum 5d8) to lawful creatures (or 1d6 points of damage per caster level, maximum 10d6, to lawful outsiders) and slows them for 1d6 rounds (see the slow spell). A successful Will save reduces the damage by half and negates the slow effect.\nThe spell deals only half damage against creatures who are neither lawful nor chaotic, and they are not slowed. Such a creature can reduce the damage by half again (down to one-quarter) with a successful Will save.',
+    classes: ['cleric'],
+    levelsByClass: { cleric: 4 },
+  },
+  {
+    id: 'pf1e-elemental-body-i',
+    name: 'Elemental Body I',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Elemental%20Body%20I',
+    level: 4,
+    school: 'transmutation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'personal',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'the element you plan to assume',
+    },
+    duration: {
+      type: 'minutes-per-level',
+      minutes: 1,
+    },
+    target: 'you',
+    concentration: false,
+    ritual: false,
+    description:
+      'When you cast this spell, you can assume the form of a Small air, earth, fire, or water elemental. The abilities you gain depend upon the type of elemental into which you change. Elemental abilities based on size, such as burn, vortex, and whirlwind, use the size of the elemental you transform into to determine their effect.\nAir elemental: If the form you take is that of a Small air elemental, you gain a +2 size bonus to your Dexterity and a +2 natural armor bonus. You also gain fly 60 feet (perfect), darkvision 60 feet, and the ability to create a whirlwind.\nEarth elemental: If the form you take is that of a Small earth elemental, you gain a +2 size bonus to your Strength and a +4 natural armor bonus. You also gain darkvision 60 feet, and the ability to earth glide.\nFire elemental: If the form you take is that of a Small fire elemental, you gain a +2 size bonus to your Dexterity and a +2 natural armor bonus. You gain darkvision 60 feet, resist fire 20, vulnerability to cold, and the burn ability.\nWater elemental: If the form you take is that of a Small water elemental, you gain a +2 size bonus to your Constitution and a +4 natural armor bonus. You also gain swim 60 feet, darkvision 60 feet, the ability to create a vortex, and the ability to breathe water.',
+    classes: ['alchemist', 'sorcerer', 'wizard'],
+    levelsByClass: { alchemist: 4, sorcerer: 4, wizard: 4 },
+  },
+  {
+    id: 'pf1e-holy-smite',
+    name: 'Holy Smite',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Holy%20Smite',
+    level: 4,
+    school: 'evocation',
+    descriptors: ['good'],
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'medium',
+      feet: 100,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 20,
+    },
+    area: '20-ft.-radius burst',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'special',
+      description: 'Will partial; see text',
+    },
+    savingThrowText: 'Will partial; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    concentration: false,
+    ritual: false,
+    description:
+      'You draw down holy power to smite your enemies. Only evil and neutral creatures are harmed by the spell; good creatures are unaffected.\nThe spell deals 1d8 points of damage per two caster levels (maximum 5d8) to each evil creature in the area (or 1d6 points of damage per caster level, maximum 10d6, to an evil outsider) and causes it to become blinded for 1 round. A successful Will saving throw reduces damage to half and negates the blinded effect.\nThe spell deals only half damage to creatures who are neither good nor evil, and they are not blinded. Such a creature can reduce that damage by half (down to one-quarter of the roll) with a successful Will save.',
+    classes: ['cleric'],
+    levelsByClass: { cleric: 4 },
+  },
+  {
+    id: 'pf1e-holy-sword',
+    name: 'Holy Sword',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Holy%20Sword',
+    level: 4,
+    school: 'evocation',
+    descriptors: ['good'],
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'rounds-per-level',
+      rounds: 1,
+    },
+    target: 'melee weapon touched',
+    concentration: false,
+    ritual: false,
+    description:
+      "This spell allows you to channel holy power into your sword, or any other melee weapon you choose. The weapon acts as a +5 holy weapon (+5 enhancement bonus on attack and damage rolls, extra 2d6 damage against evil opponents). It also emits a magic circle against evil effect (as the spell). If the magic circle ends, the sword creates a new one on your turn as a free action. The spell is automatically canceled 1 round after the weapon leaves your hand. You cannot have more than one holy sword at a time.\nIf this spell is cast on a magic weapon, the powers of the spell supercede any that the weapon normally has, rendering the normal enhancement bonus and powers of the weapon inoperative for the duration of the spell. This spell is not cumulative with bless weapon or any other spell that might modify the weapon in any way. This spell does not work on artifacts. A masterwork weapon's bonus to attack does not stack with an enhancement bonus to attack.",
+    classes: ['paladin'],
+    levelsByClass: { paladin: 4 },
+  },
+  {
+    id: 'pf1e-illusory-wall',
+    name: 'Illusory Wall',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Illusory%20Wall',
+    level: 4,
+    school: 'illusion',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'close',
+      feet: 25,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'permanent',
+    },
+    effect: 'image 1 ft. by 10 ft. by 10 ft.',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'special',
+      description: 'Will disbelief (if interacted with)',
+    },
+    savingThrowText: 'Will disbelief (if interacted with)',
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell creates the illusion of a wall, floor, ceiling, or similar surface. It appears absolutely real when viewed, but physical objects can pass through it without difficulty. When the spell is used to hide pits, traps, or normal doors, any detection abilities that do not require sight work normally. Touch or a probing search reveals the true nature of the surface, though such measures do not cause the illusion to disappear. Although the caster can see through his illusory wall, other creatures cannot, even if they succeed at their will save (but they do learn that it is not real).',
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 4, wizard: 4 },
+  },
+  {
+    id: 'pf1e-mnemonic-enhancer',
+    name: 'Mnemonic Enhancer',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Mnemonic%20Enhancer',
+    level: 4,
+    school: 'transmutation',
+    castingTime: {
+      type: 'minutes',
+      amount: 10,
+    },
+    range: {
+      type: 'personal',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        "a piece of string, and ink consisting of squid secretion mixed with black dragon's blood",
+      focus: true,
+      focusDescription: 'an ivory plaque worth 50 gp',
+    },
+    duration: {
+      type: 'instant',
+    },
+    target: 'you',
+    concentration: false,
+    ritual: false,
+    description:
+      'Casting this spell allows you to prepare additional spells or retain spells recently cast. Pick one of these two versions when the spell is cast.\nPrepare: You prepare up to three additional levels of spells. A cantrip counts as 1/2 level for this purpose. You prepare and cast these spells normally.\nRetain: You retain any spell of 3rd level or lower that you had cast up to 1 round before you started casting the mnemonic enhancer. This restores the previously cast spell to your mind.\nIn either event, the spell or spells prepared or retained fade after 24 hours (if not cast).',
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 4, wizard: 4 },
+  },
+  {
+    id: 'pf1e-orders-wrath',
+    name: "Order's Wrath",
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Order's%20Wrath",
+    level: 4,
+    school: 'evocation',
+    descriptors: ['lawful'],
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'medium',
+      feet: 100,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    area: 'nonlawful creatures within a burst that fills a 30-ft. cube',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'special',
+      description: 'Will partial; see text',
+    },
+    savingThrowText: 'Will partial; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    concentration: false,
+    ritual: false,
+    description:
+      'You channel lawful power to smite enemies. The power takes the form of a three-dimensional grid of energy. Only chaotic and neutral (not lawful) creatures are harmed by the spell.\nThe spell deals 1d8 points of damage per two caster levels (maximum 5d8) to chaotic creatures (or 1d6 points of damage per caster level, maximum 10d6, to chaotic outsiders) and causes them to be dazed for 1 round. A successful Will save reduces the damage to half and negates the daze effect.\nThe spell deals only half damage to creatures who are neither chaotic nor lawful, and they are not dazed. They can reduce the damage in half again (down to one-quarter of the roll) with a successful Will save.',
+    classes: ['cleric'],
+    levelsByClass: { cleric: 4 },
+  },
+  {
+    id: 'pf1e-mass-reduce-person',
+    name: 'Mass Reduce Person',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Mass%20Reduce%20Person',
+    level: 4,
+    school: 'transmutation',
+    castingTime: {
+      type: 'rounds',
+      amount: 1,
+    },
+    range: {
+      type: 'close',
+      feet: 25,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a pinch of powdered iron',
+    },
+    duration: {
+      type: 'minutes-per-level',
+      minutes: 1,
+    },
+    target: 'one humanoid creature/level, no two of which can be more than 30 ft. apart',
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+      description: 'Fortitude negates',
+    },
+    savingThrowText: 'Fortitude negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell functions like reduce person, except that it affects multiple creatures.',
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 4, wizard: 4 },
+  },
+  {
+    id: 'pf1e-unholy-blight',
+    name: 'Unholy Blight',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Unholy%20Blight',
+    level: 4,
+    school: 'evocation',
+    descriptors: ['evil'],
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'medium',
+      feet: 100,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    areaOfEffect: {
+      type: 'sphere',
+      radius: 20,
+    },
+    area: '20-ft.-radius spread',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'special',
+      description: 'Will partial',
+    },
+    savingThrowText: 'Will partial',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    concentration: false,
+    ritual: false,
+    description:
+      'You call up unholy power to smite your enemies. The power takes the form of a cold, cloying miasma of greasy darkness. Only good and neutral (not evil) creatures are harmed by the spell.\nThe spell deals 1d8 points of damage per two caster levels (maximum 5d8) to a good creature (or 1d6 per caster level, maximum 10d6, to a good outsider) and causes it to be sickened for 1d4 rounds. A successful Will save reduces damage to half and negates the sickened effect. The effects cannot be negated by remove disease or heal, but remove curse is effective.\nThe spell deals only half damage to creatures who are neither evil nor good, and they are not sickened. Such a creature can reduce the damage by half again (down to one-quarter) with a successful Will save.',
+    classes: ['cleric'],
+    levelsByClass: { cleric: 4 },
   },
 ];

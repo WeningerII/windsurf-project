@@ -71,6 +71,7 @@ const VALID_SCHOOLS = [
   'illusion',
   'necromancy',
   'transmutation',
+  'universal',
   'arcane',
   'divine',
   'occult',

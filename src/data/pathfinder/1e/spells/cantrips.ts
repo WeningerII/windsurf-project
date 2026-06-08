@@ -41,10 +41,7 @@ export const cantrips: Spell[] = [
     description:
       'You fire a small orb of acid at the target. You must succeed on a ranged touch attack to hit your target. The orb deals 1d3 points of acid damage.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 0,
-      wizard: 0,
-    },
+    levelsByClass: { sorcerer: 0, wizard: 0 },
   },
   {
     id: 'pf1e-arcane-mark',
@@ -76,10 +73,7 @@ export const cantrips: Spell[] = [
     description:
       'This spell allows you to inscribe your personal rune or mark, which can consist of no more than six characters. The writing can be visible or invisible. An arcane mark spell enables you to etch the rune upon any substance without harm to the material upon which it is placed.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 0,
-      wizard: 0,
-    },
+    levelsByClass: { sorcerer: 0, wizard: 0 },
   },
   {
     id: 'pf1e-bleed',
@@ -117,11 +111,7 @@ export const cantrips: Spell[] = [
     description:
       'You cause a living creature that is below 0 hit points but stabilized to resume dying. Upon casting this spell, you target a living creature that has –1 or fewer hit points. That creature begins dying, taking 1 point of damage per round.',
     classes: ['cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 0,
-      sorcerer: 0,
-      wizard: 0,
-    },
+    levelsByClass: { cleric: 0, sorcerer: 0, wizard: 0 },
   },
   {
     id: 'pf1e-dancing-lights',
@@ -155,11 +145,7 @@ export const cantrips: Spell[] = [
     description:
       "Depending on the version selected, you create up to four lights that resemble lanterns or torches (and cast that amount of light), or up to four glowing spheres of light (which look like will-o'-wisps), or one faintly glowing, vaguely humanoid shape.",
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 0,
-      sorcerer: 0,
-      wizard: 0,
-    },
+    levelsByClass: { bard: 0, sorcerer: 0, wizard: 0 },
   },
   {
     id: 'pf1e-daze',
@@ -199,11 +185,7 @@ export const cantrips: Spell[] = [
     description:
       'This spell clouds the mind of a humanoid creature with 4 or fewer Hit Dice so that it takes no actions. Humanoids of 5 or more HD are not affected. A dazed subject is not stunned, so attackers get no special advantage against it.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 0,
-      sorcerer: 0,
-      wizard: 0,
-    },
+    levelsByClass: { bard: 0, sorcerer: 0, wizard: 0 },
   },
   {
     id: 'pf1e-detect-magic',
@@ -240,13 +222,7 @@ export const cantrips: Spell[] = [
     description:
       'You detect magical auras. The amount of information revealed depends on how long you study a particular area or subject.',
     classes: ['bard', 'cleric', 'druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 0,
-      cleric: 0,
-      druid: 0,
-      sorcerer: 0,
-      wizard: 0,
-    },
+    levelsByClass: { bard: 0, cleric: 0, druid: 0, sorcerer: 0, wizard: 0 },
   },
   {
     id: 'pf1e-detect-poison',
@@ -279,11 +255,7 @@ export const cantrips: Spell[] = [
     description:
       'You determine whether a creature, object, or area has been poisoned or is poisonous. You can determine the exact type of poison with a DC 20 Wisdom check. A character with the Craft (alchemy) skill may try a DC 20 Craft (alchemy) check if the Wisdom check fails, or may try the Craft (alchemy) check prior to the Wisdom check.',
     classes: ['cleric', 'druid', 'ranger'],
-    levelsByClass: {
-      cleric: 0,
-      druid: 0,
-      ranger: 0,
-    },
+    levelsByClass: { cleric: 0, druid: 0, ranger: 0 },
   },
   {
     id: 'pf1e-disrupt-undead',
@@ -325,10 +297,7 @@ export const cantrips: Spell[] = [
     description:
       'You direct a ray of positive energy. You must make a ranged touch attack to hit, and if the ray hits an undead creature, it deals 1d6 points of damage to it.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 0,
-      wizard: 0,
-    },
+    levelsByClass: { sorcerer: 0, wizard: 0 },
   },
   {
     id: 'pf1e-flare',
@@ -366,12 +335,7 @@ export const cantrips: Spell[] = [
     description:
       'This cantrip creates a burst of light. If you cause the light to burst in front of a single creature, that creature is dazzled for 1 minute unless it makes a successful Fortitude save. Sightless creatures, as well as creatures already dazzled, are not affected by flare.',
     classes: ['bard', 'druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 0,
-      druid: 0,
-      sorcerer: 0,
-      wizard: 0,
-    },
+    levelsByClass: { bard: 0, druid: 0, sorcerer: 0, wizard: 0 },
   },
   {
     id: 'pf1e-ghost-sound',
@@ -411,11 +375,7 @@ export const cantrips: Spell[] = [
     description:
       "Ghost sound allows you to create a volume of sound that rises, recedes, approaches, or remains at a fixed place. You choose what type of sound ghost sound creates when casting it and cannot thereafter change the sound's basic character.",
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 0,
-      sorcerer: 0,
-      wizard: 0,
-    },
+    levelsByClass: { bard: 0, sorcerer: 0, wizard: 0 },
   },
   {
     id: 'pf1e-guidance',
@@ -453,10 +413,7 @@ export const cantrips: Spell[] = [
     description:
       'This spell imbues the subject with a touch of divine guidance. The creature gets a +1 competence bonus on a single attack roll, saving throw, or skill check. It must choose to use the bonus before making the roll to which it applies.',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 0,
-      druid: 0,
-    },
+    levelsByClass: { cleric: 0, druid: 0 },
   },
   {
     id: 'pf1e-know-direction',
@@ -487,10 +444,7 @@ export const cantrips: Spell[] = [
     description:
       'You instantly know the direction of north from your current position. The spell is effective in any environment in which "north" exists, but it may not work in extraplanar settings.',
     classes: ['bard', 'druid'],
-    levelsByClass: {
-      bard: 0,
-      druid: 0,
-    },
+    levelsByClass: { bard: 0, druid: 0 },
   },
   {
     id: 'pf1e-light',
@@ -525,13 +479,7 @@ export const cantrips: Spell[] = [
     description:
       'This spell causes a touched object to glow like a torch, shedding normal light in a 20-foot radius, and increasing the light level for an additional 20 feet by one step, up to normal light (darkness becomes dim light, and dim light becomes normal light).',
     classes: ['bard', 'cleric', 'druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 0,
-      cleric: 0,
-      druid: 0,
-      sorcerer: 0,
-      wizard: 0,
-    },
+    levelsByClass: { bard: 0, cleric: 0, druid: 0, sorcerer: 0, wizard: 0 },
   },
   {
     id: 'pf1e-mage-hand',
@@ -565,11 +513,7 @@ export const cantrips: Spell[] = [
     description:
       "You point your finger at an object and can lift it and move it at will from a distance. As a move action, you can propel the object as far as 15 feet in any direction, though the spell ends if the distance between you and the object ever exceeds the spell's range.",
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 0,
-      sorcerer: 0,
-      wizard: 0,
-    },
+    levelsByClass: { bard: 0, sorcerer: 0, wizard: 0 },
   },
   {
     id: 'pf1e-mending',
@@ -606,13 +550,7 @@ export const cantrips: Spell[] = [
     description:
       'This spell repairs damaged objects, restoring 1d4 hit points to the object. If the object has the broken condition, this condition is removed if the object is restored to at least half its original hit points.',
     classes: ['bard', 'cleric', 'druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 0,
-      cleric: 0,
-      druid: 0,
-      sorcerer: 0,
-      wizard: 0,
-    },
+    levelsByClass: { bard: 0, cleric: 0, druid: 0, sorcerer: 0, wizard: 0 },
   },
   {
     id: 'pf1e-message',
@@ -648,11 +586,7 @@ export const cantrips: Spell[] = [
     description:
       'You can whisper messages and receive whispered replies. Those nearby can hear these messages with a DC 25 Perception check. You point your finger at each creature you want to receive the message.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 0,
-      sorcerer: 0,
-      wizard: 0,
-    },
+    levelsByClass: { bard: 0, sorcerer: 0, wizard: 0 },
   },
   {
     id: 'pf1e-open-close',
@@ -692,11 +626,7 @@ export const cantrips: Spell[] = [
     description:
       'You can open or close (your choice) a door, chest, box, window, bag, pouch, bottle, barrel, or other container. If anything resists this activity (such as a bar on a door or a lock on a chest), the spell fails.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 0,
-      sorcerer: 0,
-      wizard: 0,
-    },
+    levelsByClass: { bard: 0, sorcerer: 0, wizard: 0 },
   },
   {
     id: 'pf1e-prestidigitation',
@@ -729,11 +659,7 @@ export const cantrips: Spell[] = [
     description:
       'Prestidigitations are minor tricks that novice spellcasters use for practice. Once cast, a prestidigitation spell enables you to perform simple magical effects for 1 hour. The effects are minor and have severe limitations.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 0,
-      sorcerer: 0,
-      wizard: 0,
-    },
+    levelsByClass: { bard: 0, sorcerer: 0, wizard: 0 },
   },
   {
     id: 'pf1e-purify-food-and-drink',
@@ -771,10 +697,7 @@ export const cantrips: Spell[] = [
     description:
       'This spell makes spoiled, rotten, diseased, poisonous, or otherwise contaminated food and water pure and suitable for eating and drinking. This spell does not prevent subsequent natural decay or spoilage.',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 0,
-      druid: 0,
-    },
+    levelsByClass: { cleric: 0, druid: 0 },
   },
   {
     id: 'pf1e-ray-of-frost',
@@ -816,10 +739,7 @@ export const cantrips: Spell[] = [
     description:
       'A ray of freezing air and ice projects from your pointing finger. You must succeed on a ranged touch attack with the ray to deal damage to a target. The ray deals 1d3 points of cold damage.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 0,
-      wizard: 0,
-    },
+    levelsByClass: { sorcerer: 0, wizard: 0 },
   },
   {
     id: 'pf1e-read-magic',
@@ -853,14 +773,7 @@ export const cantrips: Spell[] = [
     description:
       'You can decipher magical inscriptions on objects—books, scrolls, weapons, and the like—that would otherwise be unintelligible. This deciphering does not normally invoke the magic contained in the writing, although it may do so in the case of a cursed or trapped scroll.',
     classes: ['bard', 'cleric', 'druid', 'ranger', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 0,
-      cleric: 0,
-      druid: 0,
-      ranger: 0,
-      sorcerer: 0,
-      wizard: 0,
-    },
+    levelsByClass: { bard: 0, cleric: 0, druid: 0, ranger: 0, sorcerer: 0, wizard: 0 },
   },
   {
     id: 'pf1e-resistance',
@@ -900,13 +813,7 @@ export const cantrips: Spell[] = [
     description:
       'You imbue the subject with magical energy that protects it from harm, granting it a +1 resistance bonus on saves.',
     classes: ['bard', 'cleric', 'druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 0,
-      cleric: 0,
-      druid: 0,
-      sorcerer: 0,
-      wizard: 0,
-    },
+    levelsByClass: { bard: 0, cleric: 0, druid: 0, sorcerer: 0, wizard: 0 },
   },
   {
     id: 'pf1e-stabilize',
@@ -944,10 +851,7 @@ export const cantrips: Spell[] = [
     description:
       'Upon casting this spell, you target a living creature that has –1 or fewer hit points. That creature is automatically stabilized and does not lose any further hit points. If the creature later takes damage, it continues dying normally.',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 0,
-      druid: 0,
-    },
+    levelsByClass: { cleric: 0, druid: 0 },
   },
   {
     id: 'pf1e-touch-of-fatigue',
@@ -986,10 +890,7 @@ export const cantrips: Spell[] = [
     description:
       "You channel negative energy through your touch, fatiguing the target. You must succeed on a touch attack to strike a target. The subject is immediately fatigued for the spell's duration.",
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 0,
-      wizard: 0,
-    },
+    levelsByClass: { sorcerer: 0, wizard: 0 },
   },
   {
     id: 'pf1e-virtue',
@@ -1023,10 +924,7 @@ export const cantrips: Spell[] = [
     description:
       'With a touch, you infuse a creature with a tiny surge of life, granting the subject 1 temporary hit point.',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 0,
-      druid: 0,
-    },
+    levelsByClass: { cleric: 0, druid: 0 },
   },
   {
     id: 'pf1e-chill-touch',
@@ -1075,10 +973,7 @@ export const cantrips: Spell[] = [
       type: 'cold',
     },
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 0,
-      wizard: 0,
-    },
+    levelsByClass: { sorcerer: 0, wizard: 0 },
   },
   {
     id: 'pf1e-shocking-grasp',
@@ -1121,10 +1016,7 @@ export const cantrips: Spell[] = [
       type: 'lightning',
     },
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 0,
-      wizard: 0,
-    },
+    levelsByClass: { sorcerer: 0, wizard: 0 },
   },
   {
     id: 'pf1e-create-water',
@@ -1159,81 +1051,7 @@ export const cantrips: Spell[] = [
     description:
       'This spell generates wholesome, drinkable water, just like clean rain water. Water created this way can be used for cooking, drinking, and washing. The water must be consumed within one day or it becomes stale.',
     classes: ['cleric', 'druid', 'paladin', 'ranger'],
-    levelsByClass: {
-      cleric: 0,
-      druid: 0,
-      paladin: 0,
-      ranger: 0,
-    },
-  },
-  {
-    id: 'pf1e-cure-minor-wounds',
-    name: 'Cure Minor Wounds',
-    system: 'pf1e',
-    source: 'Core Rulebook',
-    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Cure%20Minor%20Wounds',
-    level: 0,
-    school: 'conjuration',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'touch',
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'instant',
-    },
-    concentration: false,
-    ritual: false,
-    description: 'Cures 1 point of damage.',
-    classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 0,
-      druid: 0,
-    },
-  },
-  {
-    id: 'pf1e-inflict-minor-wounds',
-    name: 'Inflict Minor Wounds',
-    system: 'pf1e',
-    source: 'Core Rulebook',
-    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Inflict%20Minor%20Wounds',
-    level: 0,
-    school: 'necromancy',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'touch',
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'instant',
-    },
-    savingThrow: {
-      attribute: 'wis',
-      success: 'none',
-      description: 'Will negates',
-    },
-    savingThrowText: 'Will negates',
-    concentration: false,
-    ritual: false,
-    description: 'Touch attack, 1 point of damage.',
-    classes: ['cleric'],
-    levelsByClass: {
-      cleric: 0,
-    },
+    levelsByClass: { cleric: 0, druid: 0, paladin: 0, ranger: 0 },
   },
   {
     id: 'pf1e-lullaby',
@@ -1273,9 +1091,7 @@ export const cantrips: Spell[] = [
     description:
       'Makes subjects within a 10-ft radius drowsy (-5 on Listen and Spot, -2 on Will saves vs sleep).',
     classes: ['bard'],
-    levelsByClass: {
-      bard: 0,
-    },
+    levelsByClass: { bard: 0 },
   },
   {
     id: 'pf1e-summon-instrument',
@@ -1307,8 +1123,6 @@ export const cantrips: Spell[] = [
     ritual: false,
     description: 'Summons one handheld musical instrument of your choice for the duration.',
     classes: ['bard'],
-    levelsByClass: {
-      bard: 0,
-    },
+    levelsByClass: { bard: 0 },
   },
 ];

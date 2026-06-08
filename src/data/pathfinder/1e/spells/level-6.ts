@@ -49,10 +49,7 @@ export const level6Spells: Spell[] = [
     description:
       'This spell creates an electrical discharge that begins as a single stroke commencing from your fingertips. Unlike lightning bolt, chain lightning strikes one object or creature initially, then arcs to other targets. The bolt deals 1d6 points of electricity damage per caster level (maximum 20d6) to the primary target.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-disintegrate',
@@ -101,10 +98,7 @@ export const level6Spells: Spell[] = [
     description:
       'A thin, green ray springs from your pointing finger. You must make a successful ranged touch attack to hit. Any creature struck by the ray takes 2d6 points of damage per caster level (to a maximum of 40d6). Any creature reduced to 0 or fewer hit points by this spell is entirely disintegrated.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-greater-dispel-magic',
@@ -138,13 +132,7 @@ export const level6Spells: Spell[] = [
     description:
       'This spell functions like dispel magic, except that it can end more than one spell on a target and it can be used to target multiple creatures.',
     classes: ['bard', 'cleric', 'druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 6,
-      cleric: 6,
-      druid: 6,
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { bard: 6, cleric: 6, druid: 6, sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-true-seeing',
@@ -185,12 +173,7 @@ export const level6Spells: Spell[] = [
     description:
       'You confer on the subject the ability to see all things as they actually are. The subject sees through normal and magical darkness, notices secret doors hidden by magic, sees the exact locations of creatures or objects under blur or displacement effects, sees invisible creatures or objects normally, sees through illusions, and sees the true form of polymorphed, changed, or transmuted things.',
     classes: ['cleric', 'druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 6,
-      druid: 6,
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { cleric: 6, druid: 6, sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-heal',
@@ -222,10 +205,7 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: 'Cures 10/level (max 150) damage and removes many afflictions.',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 6,
-      druid: 6,
-    },
+    levelsByClass: { cleric: 6, druid: 6 },
   },
   {
     id: 'pf1e-harm',
@@ -257,9 +237,7 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: 'Deals 10/level (max 150) negative energy damage.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 6,
-    },
+    levelsByClass: { cleric: 6 },
   },
   {
     id: 'pf1e-blade-barrier',
@@ -294,9 +272,7 @@ export const level6Spells: Spell[] = [
     description:
       'A wall of whirling blades deals 1d6/level (max 15d6) damage to those passing through.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 6,
-    },
+    levelsByClass: { cleric: 6 },
   },
   {
     id: 'pf1e-heroes-feast',
@@ -331,10 +307,7 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: 'Creates a feast that cures and grants combat bonuses for 12 hours.',
     classes: ['cleric', 'bard'],
-    levelsByClass: {
-      cleric: 6,
-      bard: 6,
-    },
+    levelsByClass: { cleric: 6, bard: 6 },
   },
   {
     id: 'pf1e-acid-fog',
@@ -384,10 +357,7 @@ export const level6Spells: Spell[] = [
       type: 'acid',
     },
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-analyze-dweomer',
@@ -429,11 +399,7 @@ export const level6Spells: Spell[] = [
     description:
       'You discern all spells and magical properties present in a number of creatures or objects. Each round, you may examine a single creature or object that you can see as a free action. In the case of a magic item, you learn its functions, how to activate its functions (if appropriate), and how many charges are left (if it uses charges).',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 6,
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { bard: 6, sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-antimagic-field',
@@ -475,11 +441,7 @@ export const level6Spells: Spell[] = [
     description:
       'An invisible barrier surrounds you and moves with you. The space within this barrier is impervious to most magical effects, including spells, spell-like abilities, and supernatural abilities. Likewise, it prevents the functioning of any magic items or spells within its confines.',
     classes: ['cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 6,
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { cleric: 6, sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-bears-endurance-mass',
@@ -513,12 +475,7 @@ export const level6Spells: Spell[] = [
     description:
       "This spell functions like bear's endurance, except that it affects multiple creatures. The affected creature gains a +4 enhancement bonus to Constitution, which adds the usual benefits to hit points, Fortitude saves, Constitution checks, and so forth.",
     classes: ['cleric', 'druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 6,
-      druid: 6,
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { cleric: 6, druid: 6, sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-circle-of-death',
@@ -564,10 +521,7 @@ export const level6Spells: Spell[] = [
     description:
       "A circle of death snuffs out the life force of living creatures, killing them instantly. The spell slays 1d4 HD worth of living creatures per caster level (maximum 20d4). Creatures with the fewest HD are affected first; among creatures with equal HD, those who are closest to the burst's point of origin are affected first.",
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-contingency',
@@ -601,10 +555,7 @@ export const level6Spells: Spell[] = [
     description:
       'You can place another spell upon your person so that it comes into effect under some condition you dictate when casting contingency. The contingency spell and the companion spell are cast at the same time. The 10-minute casting time is the minimum total for both castings; if the companion spell has a casting time longer than 10 minutes, use that instead.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-create-undead',
@@ -643,48 +594,7 @@ export const level6Spells: Spell[] = [
     description:
       'A much more potent spell than animate dead, this evil spell allows you to create more powerful sorts of undead: ghouls, ghasts, mummies, and mohrgs. The type or types of undead you can create is based on your caster level.',
     classes: ['cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 6,
-      sorcerer: 6,
-      wizard: 6,
-    },
-  },
-  {
-    id: 'pf1e-dispel-magic-greater',
-    name: 'Dispel Magic, Greater',
-    system: 'pf1e',
-    source: 'Core Rulebook',
-    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Dispel%20Magic%2C%20Greater',
-    level: 6,
-    school: 'abjuration',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 120,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'instant',
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      "This spell functions like dispel magic, except that the maximum caster level on your dispel check is +20 instead of +10. Additionally, greater dispel magic has a chance to dispel any effect that remove curse can remove, even if dispel magic can't dispel that effect.",
-    classes: ['bard', 'cleric', 'druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 6,
-      cleric: 6,
-      druid: 6,
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { cleric: 6, sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-eyebite',
@@ -725,11 +635,7 @@ export const level6Spells: Spell[] = [
       description: 'Fortitude negates',
     },
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 6,
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { bard: 6, sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-flesh-to-stone',
@@ -770,10 +676,7 @@ export const level6Spells: Spell[] = [
       description: 'Fortitude negates',
     },
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-freezing-sphere',
@@ -825,10 +728,7 @@ export const level6Spells: Spell[] = [
       description: 'Reflex half; see text',
     },
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-geas-quest',
@@ -869,12 +769,7 @@ export const level6Spells: Spell[] = [
       type: 'psychic',
     },
     classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 6,
-      cleric: 6,
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { bard: 6, cleric: 6, sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-globe-of-invulnerability-greater',
@@ -908,10 +803,7 @@ export const level6Spells: Spell[] = [
     description:
       'This spell functions like lesser globe of invulnerability, except that it also excludes 4th-level spells and spell-like effects.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-guards-and-wards',
@@ -953,45 +845,7 @@ export const level6Spells: Spell[] = [
     description:
       'This powerful spell is primarily used to defend your stronghold. The ward protects 200 square feet per caster level. The spell creates multiple magical effects within the warded area. The whole warded area radiates strong magic of the abjuration school.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 6,
-      wizard: 6,
-    },
-  },
-  {
-    id: 'pf1e-heroism-greater',
-    name: 'Heroism, Greater',
-    system: 'pf1e',
-    source: 'Core Rulebook',
-    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Heroism%2C%20Greater',
-    level: 6,
-    school: 'enchantment',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'touch',
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'minutes',
-      minutes: 1,
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      'This spell functions like heroism, except the creature gains a +4 morale bonus on attack rolls, saves, and skill checks, immunity to fear effects, and temporary hit points equal to your caster level (maximum 20).',
-    classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 6,
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-mislead',
@@ -1031,11 +885,7 @@ export const level6Spells: Spell[] = [
     description:
       'You become invisible (as greater invisibility, a 4th-level spell), and at the same time, an illusory double of you (as major image, a 3rd-level spell) appears. You are then free to go elsewhere while your double moves away. The double appears within range but thereafter moves as you direct it (which requires concentration beginning on the first round after the casting).',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 6,
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { bard: 6, sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-move-earth',
@@ -1075,11 +925,7 @@ export const level6Spells: Spell[] = [
     description:
       'Move earth moves dirt (clay, loam, sand), possibly collapsing embankments, moving hillocks, shifting dunes, and so forth. However, in no event can rock formations be collapsed or moved. The area to be affected determines the casting time.',
     classes: ['druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      druid: 6,
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { druid: 6, sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-permanent-image',
@@ -1114,11 +960,7 @@ export const level6Spells: Spell[] = [
     description:
       'This spell functions like silent image, except that the figment includes visual, auditory, olfactory, and thermal elements, and the spell is permanent. By concentrating, you can move the image within the limits of the range, but it is static while you are not concentrating.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 6,
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { bard: 6, sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-planar-binding',
@@ -1155,10 +997,7 @@ export const level6Spells: Spell[] = [
       success: 'none',
     },
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-programmed-image',
@@ -1192,11 +1031,7 @@ export const level6Spells: Spell[] = [
     description:
       "This spell functions like major image, except that this spell's figment activates when a specific condition occurs. The figment includes visual, auditory, olfactory, and thermal elements, including intelligible speech.",
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 6,
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { bard: 6, sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-repulsion',
@@ -1243,11 +1078,7 @@ export const level6Spells: Spell[] = [
       description: 'Will negates',
     },
     classes: ['cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 6,
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { cleric: 6, sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-shadow-walk',
@@ -1287,11 +1118,7 @@ export const level6Spells: Spell[] = [
     description:
       'To use the shadow walk spell, you must be in an area of shadowy illumination. You and any creature you touch are then transported along a coiling path of shadowstuff to the edge of the Material Plane where it borders the Plane of Shadow. In the region of shadow, you move at a rate of 50 miles per hour, moving normally on the borders of the Plane of Shadow but much more rapidly relative to the Material Plane.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 6,
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { bard: 6, sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-stone-to-flesh',
@@ -1333,10 +1160,7 @@ export const level6Spells: Spell[] = [
       description: 'Fortitude negates (object); see text',
     },
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-suggestion-mass',
@@ -1374,11 +1198,7 @@ export const level6Spells: Spell[] = [
       success: 'none',
     },
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 6,
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { bard: 6, sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-summon-monster-vi',
@@ -1411,12 +1231,7 @@ export const level6Spells: Spell[] = [
     description:
       'This spell functions like summon monster I, except that you can summon one creature from the 6th-level list, 1d3 creatures of the same kind from the 5th-level list, or 1d4+1 creatures of the same kind from a lower-level list.',
     classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 6,
-      cleric: 6,
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { bard: 6, cleric: 6, sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-symbol-of-fear',
@@ -1455,11 +1270,7 @@ export const level6Spells: Spell[] = [
       description: 'Will negates',
     },
     classes: ['cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 6,
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { cleric: 6, sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-symbol-of-persuasion',
@@ -1498,11 +1309,7 @@ export const level6Spells: Spell[] = [
       description: 'Will negates',
     },
     classes: ['cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 6,
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { cleric: 6, sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-transformation',
@@ -1536,10 +1343,7 @@ export const level6Spells: Spell[] = [
     description:
       "You become a virtual fighting machine—stronger, tougher, faster, and more skilled in combat. Your mindset changes so that you relish combat and you can't cast spells, even from magic items. You gain a +4 enhancement bonus to Strength, Dexterity, and Constitution, a +4 natural armor bonus to AC, a +5 competence bonus on Fortitude saves, and proficiency with all simple and martial weapons.",
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-undeath-to-death',
@@ -1584,11 +1388,7 @@ export const level6Spells: Spell[] = [
     description:
       'This spell functions like circle of death, except that it destroys undead creatures as noted above. The spell slays 1d4 HD worth of undead creatures per caster level (maximum 20d4).',
     classes: ['cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 6,
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { cleric: 6, sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-veil',
@@ -1629,11 +1429,7 @@ export const level6Spells: Spell[] = [
     description:
       "You instantly change the appearance of the subjects and then maintain that appearance for the spell's duration. You can make the subjects appear to be anything you wish. The subjects look, feel, and smell just like the creatures the spell makes them resemble. Affected creatures resume their normal appearances if slain.",
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 6,
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { bard: 6, sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-wall-of-iron',
@@ -1670,10 +1466,7 @@ export const level6Spells: Spell[] = [
     description:
       'You cause a flat, vertical iron wall to spring into being. The wall inserts itself into any surrounding nonliving material if its area is sufficient to do so. The wall cannot be conjured so that it occupies the same space as a creature or another object. It must always be a flat plane.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 6,
-      wizard: 6,
-    },
+    levelsByClass: { sorcerer: 6, wizard: 6 },
   },
   {
     id: 'pf1e-animate-objects',
@@ -1708,10 +1501,7 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: 'Objects attack your foes.',
     classes: ['cleric', 'bard'],
-    levelsByClass: {
-      cleric: 6,
-      bard: 6,
-    },
+    levelsByClass: { cleric: 6, bard: 6 },
   },
   {
     id: 'pf1e-antilife-shell',
@@ -1747,10 +1537,7 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: '10-ft.-radius field hedges out living creatures.',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 6,
-      druid: 6,
-    },
+    levelsByClass: { cleric: 6, druid: 6 },
   },
   {
     id: 'pf1e-banishment',
@@ -1790,9 +1577,7 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: 'Banishes 2 HD/level of extraplanar creatures.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 6,
-    },
+    levelsByClass: { cleric: 6 },
   },
   {
     id: 'pf1e-bulls-strength-mass',
@@ -1824,10 +1609,7 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: "As bull's strength, affects one subject/level.",
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 6,
-      druid: 6,
-    },
+    levelsByClass: { cleric: 6, druid: 6 },
   },
   {
     id: 'pf1e-cats-grace-mass',
@@ -1859,9 +1641,7 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: "As cat's grace, affects one subject/level.",
     classes: ['druid'],
-    levelsByClass: {
-      druid: 6,
-    },
+    levelsByClass: { druid: 6 },
   },
   {
     id: 'pf1e-cure-moderate-wounds-mass',
@@ -1892,10 +1672,7 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: 'Cures 2d8 damage +1/level for many creatures.',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 6,
-      druid: 6,
-    },
+    levelsByClass: { cleric: 6, druid: 6 },
     savingThrow: {
       attribute: 'wis',
       success: 'half',
@@ -1932,9 +1709,7 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: "As eagle's splendor, affects one subject/level.",
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 6,
-    },
+    levelsByClass: { cleric: 6 },
   },
   {
     id: 'pf1e-find-the-path',
@@ -1975,11 +1750,7 @@ export const level6Spells: Spell[] = [
     description:
       'The recipient of this spell can find the shortest, most direct physical route to a specified destination, be it the way into or out of a locale. The locale can be outdoors, underground, or even inside a maze spell. Find the path works with respect to locations, not objects or creatures at a locale.',
     classes: ['bard', 'cleric', 'druid'],
-    levelsByClass: {
-      bard: 6,
-      cleric: 6,
-      druid: 6,
-    },
+    levelsByClass: { bard: 6, cleric: 6, druid: 6 },
   },
   {
     id: 'pf1e-fire-seeds',
@@ -2018,9 +1789,7 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: 'Acorns and berries become grenades and bombs.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 6,
-    },
+    levelsByClass: { druid: 6 },
   },
   {
     id: 'pf1e-forbiddance',
@@ -2058,9 +1827,7 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: 'Blocks planar travel, damages creatures of different alignment.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 6,
-    },
+    levelsByClass: { cleric: 6 },
   },
   {
     id: 'pf1e-glyph-of-warding-greater',
@@ -2093,9 +1860,7 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: 'As glyph of warding, but up to 10d8 damage or 6th-level spell.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 6,
-    },
+    levelsByClass: { cleric: 6 },
   },
   {
     id: 'pf1e-inflict-moderate-wounds-mass',
@@ -2126,9 +1891,7 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: 'Deals 2d8 damage +1/level to many creatures.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 6,
-    },
+    levelsByClass: { cleric: 6 },
     savingThrow: {
       attribute: 'wis',
       success: 'half',
@@ -2168,9 +1931,7 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: 'Magic wood is strong as steel.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 6,
-    },
+    levelsByClass: { druid: 6 },
   },
   {
     id: 'pf1e-liveoak',
@@ -2204,9 +1965,7 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: 'Oak becomes treant guardian.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 6,
-    },
+    levelsByClass: { druid: 6 },
   },
   {
     id: 'pf1e-owls-wisdom-mass',
@@ -2238,10 +1997,7 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: "As owl's wisdom, affects one subject/level.",
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 6,
-      druid: 6,
-    },
+    levelsByClass: { cleric: 6, druid: 6 },
   },
   {
     id: 'pf1e-planar-ally',
@@ -2273,9 +2029,7 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: 'As lesser planar ally, but up to 12 HD.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 6,
-    },
+    levelsByClass: { cleric: 6 },
   },
   {
     id: 'pf1e-repel-wood',
@@ -2310,9 +2064,7 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: 'Pushes away wooden objects.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 6,
-    },
+    levelsByClass: { druid: 6 },
   },
   {
     id: 'pf1e-spellstaff',
@@ -2351,9 +2103,7 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: 'Stores one spell in wooden quarterstaff.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 6,
-    },
+    levelsByClass: { druid: 6 },
   },
   {
     id: 'pf1e-stone-tell',
@@ -2385,9 +2135,7 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: 'Talk to natural or worked stone.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 6,
-    },
+    levelsByClass: { druid: 6 },
   },
   {
     id: 'pf1e-summon-natures-ally-vi',
@@ -2419,9 +2167,7 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: 'Calls creature to fight.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 6,
-    },
+    levelsByClass: { druid: 6 },
   },
   {
     id: 'pf1e-transport-via-plants',
@@ -2455,9 +2201,7 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: 'Move instantly from one plant to another of the same kind.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 6,
-    },
+    levelsByClass: { druid: 6 },
   },
   {
     id: 'pf1e-wind-walk',
@@ -2497,10 +2241,7 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: 'You and your allies turn vaporous and travel fast.',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 6,
-      druid: 6,
-    },
+    levelsByClass: { cleric: 6, druid: 6 },
   },
   {
     id: 'pf1e-word-of-recall',
@@ -2538,10 +2279,7 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: 'Teleports you back to designated place.',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 6,
-      druid: 6,
-    },
+    levelsByClass: { cleric: 6, druid: 6 },
   },
   {
     id: 'pf1e-greater-scrying',
@@ -2580,9 +2318,7 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: 'As scrying, with a longer duration and several spells active through the sensor.',
     classes: ['bard'],
-    levelsByClass: {
-      bard: 6,
-    },
+    levelsByClass: { bard: 6 },
   },
   {
     id: 'pf1e-sympathetic-vibration',
@@ -2615,8 +2351,395 @@ export const level6Spells: Spell[] = [
     ritual: false,
     description: 'Deals 2d10 damage each round to a freestanding structure you touch.',
     classes: ['bard'],
-    levelsByClass: {
-      bard: 6,
+    levelsByClass: { bard: 6 },
+  },
+  {
+    id: 'pf1e-beast-shape-iv',
+    name: 'Beast Shape IV',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Beast%20Shape%20IV',
+    level: 6,
+    school: 'transmutation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
     },
+    range: {
+      type: 'personal',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a piece of the creature whose form you plan to assume',
+    },
+    duration: {
+      type: 'minutes-per-level',
+      minutes: 1,
+    },
+    target: 'you',
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell functions as beast shape III except that it also allows you to assume the form of a Tiny or Large creature of the magical beast type. If the form you assume has any of the following abilities, you gain the listed ability: burrow 60 feet, climb 90 feet, fly 120 feet (good maneuverability), swim 120 feet, blindsense 60 feet, darkvision 90 feet, low-light vision, scent, tremorsense 60 feet, breath weapon, constrict, ferocity, grab, jet, poison, pounce, rake, rend, roar, spikes, trample, trip, and web. If the creature has immunity or resistance to any elements, you gain resistance 20 to those elements. If the creature has vulnerability to an element, you gain that vulnerability.\nTiny magical beast: If the form you take is that of a Tiny magical beast, you gain a –2 penalty to your Strength, a +8 size bonus to your Dexterity, and a +3 natural armor bonus.\nLarge magical beast: If the form you take is that of a Large magical beast, you gain a +6 size bonus to your Strength, a –2 penalty on your Dexterity, a +2 size bonus to your Constitution, and a +6 natural armor bonus.',
+    classes: ['alchemist', 'sorcerer', 'wizard'],
+    levelsByClass: { alchemist: 6, sorcerer: 6, wizard: 6 },
+  },
+  {
+    id: 'pf1e-mass-charm-monster',
+    name: 'Mass Charm Monster',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Mass%20Charm%20Monster',
+    level: 6,
+    school: 'enchantment',
+    descriptors: ['mind-affecting'],
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'special',
+      description: '',
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'days-per-level',
+      days: 1,
+    },
+    target: 'One or more creatures, no two of which can be more than 30 ft. apart',
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell functions like charm monster, except that mass charm monster affects a number of creatures whose combined HD do not exceed twice your level, or at least one creature regardless of HD. If there are more potential targets than you can affect, you choose them one at a time until you must choose a creature with too many HD to affect.',
+    classes: ['bard', 'sorcerer', 'wizard'],
+    levelsByClass: { bard: 6, sorcerer: 6, wizard: 6 },
+  },
+  {
+    id: 'pf1e-elemental-body-iii',
+    name: 'Elemental Body III',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Elemental%20Body%20III',
+    level: 6,
+    school: 'transmutation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'personal',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'the element you plan to assume',
+    },
+    duration: {
+      type: 'minutes-per-level',
+      minutes: 1,
+    },
+    target: 'you',
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell functions as elemental body II, except that it also allows you to assume the form of a Large air, earth, fire, or water elemental. The abilities you gain depend upon the type of elemental into which you change. You are also immune to bleed damage, critical hits, and sneak attacks while in elemental form.\nAir elemental: As elemental body I except that you gain a +2 size bonus to your Strength, +4 size bonus to your Dexterity, and a +4 natural armor bonus.\nEarth elemental: As elemental body I except that you gain a +6 size bonus to your Strength, a –2 penalty on your Dexterity, a +2 size bonus to your Constitution, and a +6 natural armor bonus.\nFire elemental: As elemental body I except that you gain a +4 size bonus to your Dexterity, a +2 size bonus to your Constitution, and a +4 natural armor bonus.\nWater elemental: As elemental body I except that you gain a +2 size bonus to your Strength, a –2 penalty on your Dexterity, a +6 size bonus to your Constitution, and a +6 natural armor bonus.',
+    classes: ['alchemist', 'sorcerer', 'wizard'],
+    levelsByClass: { alchemist: 6, sorcerer: 6, wizard: 6 },
+  },
+  {
+    id: 'pf1e-form-of-the-dragon-i',
+    name: 'Form Of The Dragon I',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Form%20Of%20The%20Dragon%20I',
+    level: 6,
+    school: 'transmutation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'personal',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a scale of the dragon type you plan to assume',
+    },
+    duration: {
+      type: 'minutes-per-level',
+      minutes: 1,
+    },
+    target: 'you',
+    savingThrowText: 'see text',
+    concentration: false,
+    ritual: false,
+    description:
+      'You become a Medium chromatic or metallic dragon. You gain a +4 size bonus to Strength, a +2 size bonus to Constitution, a +4 natural armor bonus, fly 60 feet (poor), darkvision 60 feet, a breath weapon, and resistance to one element. You also gain one bite (1d8), two claws (1d6), and two wing attacks (1d4). Your breath weapon and resistance depend on the type of dragon. You can only use the breath weapon once per casting of this spell. All breath weapons deal 6d8 points of damage and allow a Reflex save for half damage. In addition, some of the dragon types grant additional abilities, as noted below.\nBlack dragon60-foot line of acid, resist acid 20, swim 60 feet\nBlue dragon60-foot line of electricity, resist electricity 20, burrow 20 feet\nGreen dragon30-foot cone of acid, resist acid 20, swim 40 feet\nRed dragon30-foot cone of fire, resist fire 30, vulnerability to cold\nWhite dragon30-foot cone of cold, resist cold 20, swim 60 feet, vulnerability to fire\nBrass dragon60-foot line of fire, resist fire 20, burrow 30 feet, vulnerability to cold\nBronze dragon60-foot line of electricity, resist electricity 20, swim 60 feet\nCopper dragon60-foot line of acid, resist acid 20, spider climb (always active)\nGold dragon30-foot cone of fire, resist fire 20, swim 60 feet\nSilver dragon30-foot cone of cold, resist cold 30, vulnerability to fire',
+    classes: ['alchemist', 'sorcerer', 'wizard'],
+    levelsByClass: { alchemist: 6, sorcerer: 6, wizard: 6 },
+  },
+  {
+    id: 'pf1e-mass-foxs-cunning',
+    name: "Mass Fox's Cunning",
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Mass%20Fox's%20Cunning",
+    level: 6,
+    school: 'transmutation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'close',
+      feet: 25,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'hairs or dung from a fox',
+      divineFocus: true,
+    },
+    duration: {
+      type: 'minutes-per-level',
+      minutes: 1,
+    },
+    target: 'one creature/level, no two of which can be more than 30 ft. apart',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    concentration: false,
+    ritual: false,
+    description:
+      "This spell functions like fox's cunning, except that it affects multiple creatures.",
+    classes: ['bard', 'sorcerer', 'wizard'],
+    levelsByClass: { bard: 6, sorcerer: 6, wizard: 6 },
+  },
+  {
+    id: 'pf1e-giant-form-i',
+    name: 'Giant Form I',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Giant%20Form%20I',
+    level: 6,
+    school: 'transmutation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'personal',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a piece of the creature whose form you plan to assume',
+    },
+    duration: {
+      type: 'minutes-per-level',
+      minutes: 1,
+    },
+    target: 'you',
+    concentration: false,
+    ritual: false,
+    description:
+      'When you cast this spell you can assume the form of any Large humanoid creature of the giant subtype. Once you assume your new form, you gain the following abilities: a +6 size bonus to Strength, a –2 penalty to Dexterity, a +4 size bonus to Constitution, a +4 natural armor bonus, and low-light vision. If the form you assume has any of the following abilities, you gain the listed ability: darkvision 60 feet, rend (2d6 damage), regeneration 5, rock catching, and rock throwing (range 60 feet, 2d6 damage). If the creature has immunity or resistance to any elements, you gain resistance 20 to those elements. If the creature has vulnerability to an element, you gain that vulnerability.',
+    classes: ['alchemist', 'sorcerer', 'wizard'],
+    levelsByClass: { alchemist: 6, sorcerer: 6, wizard: 6 },
+  },
+  {
+    id: 'pf1e-globe-of-invulnerability',
+    name: 'Globe Of Invulnerability',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Globe%20Of%20Invulnerability',
+    level: 6,
+    school: 'abjuration',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'special',
+      description: '',
+    },
+    components: {
+      verbal: false,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell functions like lesser globe of invulnerability, except that it also excludes 4th-level spells and spell-like effects.',
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 6, wizard: 6 },
+  },
+  {
+    id: 'pf1e-irresistible-dance',
+    name: 'Irresistible Dance',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Irresistible%20Dance',
+    level: 6,
+    school: 'enchantment',
+    descriptors: ['mind-affecting'],
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'special',
+      description: '1d4+1 rounds',
+    },
+    target: 'living creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'special',
+      description: 'Will partial',
+    },
+    savingThrowText: 'Will partial',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    concentration: false,
+    ritual: false,
+    description:
+      'The subject feels an undeniable urge to dance and begins doing so, complete with foot shuffling and tapping. The spell effect makes it impossible for the subject to do anything other than caper and prance in place. The effect imposes a –4 penalty to Armor Class and a –10 penalty on Reflex saves, and it negates any AC bonus granted by a shield the target holds. The dancing subject provokes attacks of opportunity each round on its turn. A successful Will save reduces the duration of this effect to 1 round.',
+    classes: ['bard', 'sorcerer', 'wizard'],
+    levelsByClass: { bard: 6, sorcerer: 6, wizard: 6 },
+  },
+  {
+    id: 'pf1e-mages-lucubration',
+    name: "Mage's Lucubration",
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: "https://www.aonprd.com/SpellDisplay.aspx?ItemName=Mage's%20Lucubration",
+    level: 6,
+    school: 'transmutation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'personal',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    target: 'you',
+    concentration: false,
+    ritual: false,
+    description:
+      'You instantly prepare any one spell of 5th level or lower that you have used during the past 24 hours. The spell must have been actually cast during that period. The chosen spell is stored in your mind as through prepared in the normal fashion.\nIf the recalled spell requires material components, you must provide them. The recovered spell is not usable until the material components are available.',
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 6, wizard: 6 },
+  },
+  {
+    id: 'pf1e-plant-shape-ii',
+    name: 'Plant Shape II',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Plant%20Shape%20II',
+    level: 6,
+    school: 'transmutation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'personal',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a piece of the creature whose form you plan to assume',
+    },
+    duration: {
+      type: 'minutes-per-level',
+      minutes: 1,
+    },
+    target: 'you',
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell functions as plant shape I except that it also allows you to assume the form of a Large creature of the plant type. If the creature has immunity or resistance to any elements, you gain resistance 20 to those elements. If the creature has vulnerability to an element, you gain that vulnerability.\nLarge plant: If the form you take is that of a Large plant, you gain a +4 size bonus to your Strength, a +2 size bonus to your Constitution, and a +4 natural armor bonus.',
+    classes: ['alchemist', 'sorcerer', 'wizard'],
+    levelsByClass: { alchemist: 6, sorcerer: 6, wizard: 6 },
+  },
+  {
+    id: 'pf1e-greater-shout',
+    name: 'Greater Shout',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Greater%20Shout',
+    level: 6,
+    school: 'evocation',
+    descriptors: ['sonic'],
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'ranged',
+      feet: 60,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+      focus: true,
+      focusDescription: 'a metal or ivory horn',
+    },
+    duration: {
+      type: 'instant',
+    },
+    area: 'cone-shaped burst',
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+      description: 'Fortitude partial or Reflex negates (object); see text',
+    },
+    savingThrowText: 'Fortitude partial or Reflex negates (object); see text',
+    spellResistance: true,
+    spellResistanceDetail: 'object',
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell functions like shout, except that the cone deals 10d6 points of sonic damage (or 1d6 points of sonic damage per caster level, maximum 20d6, against exposed brittle or crystalline objects or crystalline creatures). It also causes creatures to be stunned for 1 round and deafened for 4d6 rounds. A creature in the area of the cone can negate the stunning and halve both the damage and the duration of the deafness with a successful Fortitude save. A creature holding vulnerable objects can attempt a Reflex save to negate the damage to those objects.',
+    classes: ['bard', 'sorcerer', 'wizard'],
+    levelsByClass: { bard: 6, sorcerer: 6, wizard: 6 },
   },
 ];

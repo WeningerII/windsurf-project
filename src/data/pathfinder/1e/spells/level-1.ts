@@ -36,12 +36,7 @@ export const level1Spells: Spell[] = [
     description:
       'Alarm creates a subtle ward on an area you select. Once the spell effect is in place, it thereafter sounds a mental or audible alarm each time a creature of Tiny or larger size enters the warded area or touches it. A creature that speaks the password (determined by you at the time of casting) does not set off the alarm.',
     classes: ['bard', 'ranger', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 1,
-      ranger: 1,
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { bard: 1, ranger: 1, sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-bless',
@@ -76,9 +71,7 @@ export const level1Spells: Spell[] = [
     description:
       'Bless fills your allies with courage. Each ally gains a +1 morale bonus on attack rolls and on saving throws against fear effects.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 1,
-    },
+    levelsByClass: { cleric: 1 },
   },
   {
     id: 'pf1e-burning-hands',
@@ -127,10 +120,7 @@ export const level1Spells: Spell[] = [
     description:
       'A cone of searing flame shoots from your fingertips. Any creature in the area of the flames takes 1d4 points of fire damage per caster level (maximum 5d4).',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-charm-person',
@@ -169,11 +159,7 @@ export const level1Spells: Spell[] = [
     description:
       "This charm makes a humanoid creature regard you as its trusted friend and ally (treat the target's attitude as friendly). If the creature is currently being threatened or attacked by you or your allies, however, it receives a +5 bonus on its saving throw.",
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 1,
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { bard: 1, sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-color-spray',
@@ -215,10 +201,7 @@ export const level1Spells: Spell[] = [
     description:
       'A vivid cone of clashing colors springs forth from your hand, causing creatures to become stunned, perhaps also blinded, and possibly knocking them unconscious. Each creature within the cone is affected according to its HD.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-comprehend-languages',
@@ -252,12 +235,7 @@ export const level1Spells: Spell[] = [
     description:
       'You can understand the spoken words of creatures or read otherwise incomprehensible written messages. The ability to read does not necessarily impart insight into the material, merely its literal meaning.',
     classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 1,
-      cleric: 1,
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { bard: 1, cleric: 1, sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-cure-light-wounds',
@@ -294,12 +272,7 @@ export const level1Spells: Spell[] = [
     description:
       'When laying your hand upon a living creature, you channel positive energy that cures 1d8 points of damage + 1 point per caster level (maximum +5).',
     classes: ['bard', 'cleric', 'druid', 'ranger'],
-    levelsByClass: {
-      bard: 1,
-      cleric: 1,
-      druid: 1,
-      ranger: 1,
-    },
+    levelsByClass: { bard: 1, cleric: 1, druid: 1, ranger: 1 },
   },
   {
     id: 'pf1e-detect-secret-doors',
@@ -336,11 +309,7 @@ export const level1Spells: Spell[] = [
     description:
       'You can detect secret doors, compartments, caches, and so forth. Only passages, doors, or openings that have been specifically constructed to escape detection are detected by this spell.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 1,
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { bard: 1, sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-endure-elements',
@@ -378,13 +347,7 @@ export const level1Spells: Spell[] = [
     description:
       'A creature protected by endure elements suffers no harm from being in a hot or cold environment. It can exist comfortably in conditions between –50 and 140 degrees Fahrenheit without having to make Fortitude saves.',
     classes: ['cleric', 'druid', 'ranger', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 1,
-      druid: 1,
-      ranger: 1,
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { cleric: 1, druid: 1, ranger: 1, sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-enlarge-person',
@@ -424,10 +387,7 @@ export const level1Spells: Spell[] = [
     description:
       "This spell causes instant growth of a humanoid creature, doubling its height and multiplying its weight by 8. This increase changes the creature's size category to the next larger one. The target gains a +2 size bonus to Strength, a –2 size penalty to Dexterity, and a –1 penalty on attack rolls and AC due to its increased size.",
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-expeditious-retreat',
@@ -459,11 +419,7 @@ export const level1Spells: Spell[] = [
     description:
       'This spell increases your base land speed by 30 feet. This adjustment is treated as an enhancement bonus. There is no effect on other modes of movement, such as burrow, climb, fly, or swim.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 1,
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { bard: 1, sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-feather-fall',
@@ -503,11 +459,7 @@ export const level1Spells: Spell[] = [
     description:
       'The affected creatures or objects fall slowly. Feather fall instantly changes the rate at which the targets fall to a mere 60 feet per round, equivalent to the end of a fall from a few feet. The spell affects one or more Medium or smaller creatures.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 1,
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { bard: 1, sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-grease',
@@ -542,11 +494,7 @@ export const level1Spells: Spell[] = [
     description:
       'A grease spell covers a solid surface with a layer of slippery grease. Any creature in the area when the spell is cast must make a successful Reflex save or fall. A creature can walk within or through the area of grease at half normal speed with a DC 10 Acrobatics check.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 1,
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { bard: 1, sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-identify',
@@ -579,11 +527,7 @@ export const level1Spells: Spell[] = [
     description:
       'This spell functions as detect magic, except that it gives you a +10 enhancement bonus on Spellcraft checks made to identify the properties and command words of magic items in your possession.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 1,
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { bard: 1, sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-mage-armor',
@@ -623,10 +567,7 @@ export const level1Spells: Spell[] = [
     description:
       'An invisible but tangible field of force surrounds the subject of a mage armor spell, providing a +4 armor bonus to AC. Unlike mundane armor, mage armor entails no armor check penalty, arcane spell failure chance, or speed reduction.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-magic-missile',
@@ -667,10 +608,7 @@ export const level1Spells: Spell[] = [
     description:
       'A missile of magical energy darts forth from your fingertip and strikes its target, dealing 1d4+1 points of force damage. The missile strikes unerringly, even if the target is in melee combat, so long as it has less than total cover or total concealment. You fire one additional missile for every two caster levels beyond 1st (max 5).',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-obscuring-mist',
@@ -707,12 +645,7 @@ export const level1Spells: Spell[] = [
     description:
       'A misty vapor arises around you. It is stationary. The vapor obscures all sight, including darkvision, beyond 5 feet. A creature 5 feet away has concealment. Creatures farther away have total concealment.',
     classes: ['cleric', 'druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 1,
-      druid: 1,
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { cleric: 1, druid: 1, sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-protection-from-evil',
@@ -751,11 +684,7 @@ export const level1Spells: Spell[] = [
     description:
       'This spell wards a creature from attacks by evil creatures, from mental control, and from summoned creatures. It creates a magical barrier around the subject at a distance of 1 foot. The barrier moves with the subject and has three major effects: +2 deflection bonus to AC and +2 resistance bonus on saves against evil creatures, blocks possession and mental influence, and prevents contact by summoned creatures.',
     classes: ['cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 1,
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { cleric: 1, sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-shield',
@@ -787,10 +716,7 @@ export const level1Spells: Spell[] = [
     description:
       'Shield creates an invisible shield of force that hovers in front of you. It negates magic missile attacks directed at you. The disk also provides a +4 shield bonus to AC. This bonus applies against incorporeal touch attacks.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-silent-image',
@@ -832,11 +758,7 @@ export const level1Spells: Spell[] = [
     description:
       'This spell creates the visual illusion of an object, creature, or force, as visualized by you. The illusion does not create sound, smell, texture, or temperature. You can move the image within the limits of the size of the effect.',
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 1,
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { bard: 1, sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-sleep',
@@ -876,11 +798,7 @@ export const level1Spells: Spell[] = [
     description:
       "A sleep spell causes a magical slumber to come upon 4 HD of creatures. Creatures with the fewest HD are affected first. Among creatures with equal HD, those who are closest to the spell's point of origin are affected first.",
     classes: ['bard', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 1,
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { bard: 1, sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-summon-monster-i',
@@ -917,12 +835,7 @@ export const level1Spells: Spell[] = [
     description:
       'This spell summons an extraplanar creature (typically an outsider, elemental, or magical beast native to another plane). It appears where you designate and acts immediately, on your turn. It attacks your opponents to the best of its ability.',
     classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 1,
-      cleric: 1,
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { bard: 1, cleric: 1, sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-inflict-light-wounds',
@@ -954,9 +867,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Deals 1d8 + 1/level (max +5) negative energy damage.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 1,
-    },
+    levelsByClass: { cleric: 1 },
   },
   {
     id: 'pf1e-command',
@@ -990,9 +901,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'One subject obeys a one-word command for 1 round.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 1,
-    },
+    levelsByClass: { cleric: 1 },
   },
   {
     id: 'pf1e-divine-favor',
@@ -1025,10 +934,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'You gain a +1/three levels luck bonus on attack and damage rolls (max +3).',
     classes: ['cleric', 'paladin'],
-    levelsByClass: {
-      cleric: 1,
-      paladin: 1,
-    },
+    levelsByClass: { cleric: 1, paladin: 1 },
   },
   {
     id: 'pf1e-shield-of-faith',
@@ -1061,9 +967,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Grants a +2 (or better) deflection bonus to AC.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 1,
-    },
+    levelsByClass: { cleric: 1 },
   },
   {
     id: 'pf1e-sanctuary',
@@ -1096,9 +1000,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Opponents can’t attack the warded creature unless they make a Will save.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 1,
-    },
+    levelsByClass: { cleric: 1 },
   },
   {
     id: 'pf1e-produce-flame',
@@ -1133,9 +1035,7 @@ export const level1Spells: Spell[] = [
     description:
       'A flame in your hand deals 1d6 + 1/level (max +5) fire damage by touch or thrown.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 1,
-    },
+    levelsByClass: { druid: 1 },
   },
   {
     id: 'pf1e-entangle',
@@ -1170,10 +1070,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Grasping plants entangle creatures in a 40-ft-radius spread.',
     classes: ['druid', 'ranger'],
-    levelsByClass: {
-      druid: 1,
-      ranger: 1,
-    },
+    levelsByClass: { druid: 1, ranger: 1 },
   },
   {
     id: 'pf1e-goodberry',
@@ -1205,9 +1102,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: '2d4 berries each cure 1 hp and nourish a creature for a day.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 1,
-    },
+    levelsByClass: { druid: 1 },
   },
   {
     id: 'pf1e-faerie-fire',
@@ -1241,9 +1136,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Outlines subjects with light, negating concealment and invisibility.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 1,
-    },
+    levelsByClass: { druid: 1 },
   },
   {
     id: 'pf1e-shillelagh',
@@ -1277,9 +1170,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Your club or quarterstaff becomes a +1 magic weapon dealing more damage.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 1,
-    },
+    levelsByClass: { druid: 1 },
   },
   {
     id: 'pf1e-cause-fear',
@@ -1319,12 +1210,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'One creature of 5 HD or less flees for 1d4 rounds.',
     classes: ['cleric', 'sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      cleric: 1,
-      sorcerer: 1,
-      wizard: 1,
-      bard: 1,
-    },
+    levelsByClass: { cleric: 1, sorcerer: 1, wizard: 1, bard: 1 },
   },
   {
     id: 'pf1e-detect-undead',
@@ -1360,11 +1246,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Reveals undead within 60 ft.',
     classes: ['cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 1,
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { cleric: 1, sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-jump',
@@ -1403,11 +1285,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Subject gets bonus on Jump checks.',
     classes: ['druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      druid: 1,
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { druid: 1, sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-magic-weapon',
@@ -1447,11 +1325,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Weapon gains +1 bonus.',
     classes: ['cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 1,
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { cleric: 1, sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-protection-from-chaos',
@@ -1481,11 +1355,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: '+2 to AC and saves, counter mind control, hedge out elementals and outsiders.',
     classes: ['cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 1,
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { cleric: 1, sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-protection-from-good',
@@ -1515,11 +1385,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: '+2 to AC and saves, counter mind control, hedge out elementals and outsiders.',
     classes: ['cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 1,
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { cleric: 1, sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-protection-from-law',
@@ -1549,11 +1415,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: '+2 to AC and saves, counter mind control, hedge out elementals and outsiders.',
     classes: ['cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 1,
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { cleric: 1, sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-animate-rope',
@@ -1586,11 +1448,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Animates a nonliving rope to move, coil, knot, or entangle as you command.',
     classes: ['sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      sorcerer: 1,
-      wizard: 1,
-      bard: 1,
-    },
+    levelsByClass: { sorcerer: 1, wizard: 1, bard: 1 },
   },
   {
     id: 'pf1e-disguise-self',
@@ -1622,11 +1480,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'You alter your appearance, clothing, and equipment as a visual illusion.',
     classes: ['sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      sorcerer: 1,
-      wizard: 1,
-      bard: 1,
-    },
+    levelsByClass: { sorcerer: 1, wizard: 1, bard: 1 },
   },
   {
     id: 'pf1e-erase',
@@ -1658,11 +1512,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Removes writings, either magical (with a check) or mundane, from a surface.',
     classes: ['sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      sorcerer: 1,
-      wizard: 1,
-      bard: 1,
-    },
+    levelsByClass: { sorcerer: 1, wizard: 1, bard: 1 },
   },
   {
     id: 'pf1e-floating-disk',
@@ -1695,10 +1545,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Creates a 3-ft circular plane of force that follows you and carries loads.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-hold-portal',
@@ -1731,10 +1578,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Magically holds a door, gate, or window shut as if bolted.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-hypnotism',
@@ -1773,11 +1617,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Fascinates 2d4 HD of creatures, making them more susceptible to suggestion.',
     classes: ['sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      sorcerer: 1,
-      wizard: 1,
-      bard: 1,
-    },
+    levelsByClass: { sorcerer: 1, wizard: 1, bard: 1 },
   },
   {
     id: 'pf1e-mount',
@@ -1810,10 +1650,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Summons a light horse or pony to serve as a mount.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-magic-aura',
@@ -1846,11 +1683,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Alters an object’s magic aura to mislead detection magic.',
     classes: ['sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      sorcerer: 1,
-      wizard: 1,
-      bard: 1,
-    },
+    levelsByClass: { sorcerer: 1, wizard: 1, bard: 1 },
   },
   {
     id: 'pf1e-ray-of-enfeeblement',
@@ -1889,10 +1722,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'A ray saps strength, dealing 1d6+1 per two levels (max 1d6+5) Str penalty.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-true-strike',
@@ -1924,10 +1754,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'You gain +20 insight bonus on your next attack roll.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 1,
-      wizard: 1,
-    },
+    levelsByClass: { sorcerer: 1, wizard: 1 },
   },
   {
     id: 'pf1e-unseen-servant',
@@ -1960,11 +1787,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'An invisible, mindless force performs simple tasks at your command.',
     classes: ['sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      sorcerer: 1,
-      wizard: 1,
-      bard: 1,
-    },
+    levelsByClass: { sorcerer: 1, wizard: 1, bard: 1 },
   },
   {
     id: 'pf1e-ventriloquism',
@@ -2004,11 +1827,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Throws your voice so sounds seem to come from elsewhere.',
     classes: ['sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      sorcerer: 1,
-      wizard: 1,
-      bard: 1,
-    },
+    levelsByClass: { sorcerer: 1, wizard: 1, bard: 1 },
   },
   {
     id: 'pf1e-bane',
@@ -2049,9 +1868,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Enemies take -1 on attack rolls and saves against fear.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 1,
-    },
+    levelsByClass: { cleric: 1 },
   },
   {
     id: 'pf1e-bless-water',
@@ -2091,9 +1908,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Makes holy water.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 1,
-    },
+    levelsByClass: { cleric: 1 },
   },
   {
     id: 'pf1e-calm-animals',
@@ -2133,9 +1948,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Calms (2d4 + level) HD of animals.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 1,
-    },
+    levelsByClass: { druid: 1 },
   },
   {
     id: 'pf1e-charm-animal',
@@ -2167,9 +1980,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Makes one animal your friend.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 1,
-    },
+    levelsByClass: { druid: 1 },
   },
   {
     id: 'pf1e-curse-water',
@@ -2209,9 +2020,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Makes unholy water.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 1,
-    },
+    levelsByClass: { cleric: 1 },
   },
   {
     id: 'pf1e-deathwatch',
@@ -2246,9 +2055,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Reveals how near death subjects within 30 ft. are.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 1,
-    },
+    levelsByClass: { cleric: 1 },
   },
   {
     id: 'pf1e-detect-animals-or-plants',
@@ -2283,9 +2090,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Detects kinds of animals or plants.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 1,
-    },
+    levelsByClass: { druid: 1 },
   },
   {
     id: 'pf1e-detect-chaos',
@@ -2316,9 +2121,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Reveals creatures, spells, or objects of chaotic alignment.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 1,
-    },
+    levelsByClass: { cleric: 1 },
   },
   {
     id: 'pf1e-detect-evil',
@@ -2354,9 +2157,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Reveals creatures, spells, or objects of evil alignment.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 1,
-    },
+    levelsByClass: { cleric: 1 },
   },
   {
     id: 'pf1e-detect-good',
@@ -2387,9 +2188,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Reveals creatures, spells, or objects of good alignment.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 1,
-    },
+    levelsByClass: { cleric: 1 },
   },
   {
     id: 'pf1e-detect-law',
@@ -2420,9 +2219,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Reveals creatures, spells, or objects of lawful alignment.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 1,
-    },
+    levelsByClass: { cleric: 1 },
   },
   {
     id: 'pf1e-detect-snares-and-pits',
@@ -2457,9 +2254,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Reveals natural or primitive traps.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 1,
-    },
+    levelsByClass: { druid: 1 },
   },
   {
     id: 'pf1e-doom',
@@ -2500,9 +2295,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'One subject takes -2 on attack rolls, saves, and checks.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 1,
-    },
+    levelsByClass: { cleric: 1 },
   },
   {
     id: 'pf1e-entropic-shield',
@@ -2533,9 +2326,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Ranged attacks against you have 20% miss chance.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 1,
-    },
+    levelsByClass: { cleric: 1 },
   },
   {
     id: 'pf1e-hide-from-animals',
@@ -2575,9 +2366,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: "Animals can't perceive one subject/level.",
     classes: ['druid'],
-    levelsByClass: {
-      druid: 1,
-    },
+    levelsByClass: { druid: 1 },
   },
   {
     id: 'pf1e-hide-from-undead',
@@ -2617,9 +2406,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: "Undead can't perceive one subject/level.",
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 1,
-    },
+    levelsByClass: { cleric: 1 },
   },
   {
     id: 'pf1e-longstrider',
@@ -2650,9 +2437,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Your speed increases by 10 ft.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 1,
-    },
+    levelsByClass: { druid: 1 },
   },
   {
     id: 'pf1e-magic-fang',
@@ -2692,9 +2477,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'One natural weapon of subject creature gets +1 on attack and damage rolls.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 1,
-    },
+    levelsByClass: { druid: 1 },
   },
   {
     id: 'pf1e-magic-stone',
@@ -2734,10 +2517,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Three stones gain +1 on attack rolls, deal 1d6+1 damage.',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 1,
-      druid: 1,
-    },
+    levelsByClass: { cleric: 1, druid: 1 },
   },
   {
     id: 'pf1e-pass-without-trace',
@@ -2777,9 +2557,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'One subject/level leaves no tracks.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 1,
-    },
+    levelsByClass: { druid: 1 },
   },
   {
     id: 'pf1e-remove-fear',
@@ -2821,10 +2599,7 @@ export const level1Spells: Spell[] = [
     description:
       'Suppresses fear or gives +4 on saves against fear for one subject + one per four levels.',
     classes: ['cleric', 'bard'],
-    levelsByClass: {
-      cleric: 1,
-      bard: 1,
-    },
+    levelsByClass: { cleric: 1, bard: 1 },
   },
   {
     id: 'pf1e-speak-with-animals',
@@ -2855,9 +2630,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'You can communicate with animals.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 1,
-    },
+    levelsByClass: { druid: 1 },
   },
   {
     id: 'pf1e-summon-natures-ally-i',
@@ -2893,9 +2666,7 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'Calls creature to fight.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 1,
-    },
+    levelsByClass: { druid: 1 },
   },
   {
     id: 'pf1e-lesser-confusion',
@@ -2934,8 +2705,80 @@ export const level1Spells: Spell[] = [
     ritual: false,
     description: 'One creature behaves randomly (as confusion) for 1 round.',
     classes: ['bard'],
-    levelsByClass: {
-      bard: 1,
+    levelsByClass: { bard: 1 },
+  },
+  {
+    id: 'pf1e-bless-weapon',
+    name: 'Bless Weapon',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Bless%20Weapon',
+    level: 1,
+    school: 'transmutation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
     },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'minutes-per-level',
+      minutes: 1,
+    },
+    target: 'weapon touched',
+    concentration: false,
+    ritual: false,
+    description:
+      "This transmutation makes a weapon strike true against evil foes. The weapon is treated as having a +1 enhancement bonus for the purpose of bypassing the DR of evil creatures or striking evil incorporeal creatures (though the spell doesn't grant an actual enhancement bonus). The weapon also becomes good-aligned, which means it can bypass the DR of certain creatures. (This effect overrides and suppresses any other alignment the weapon might have.) Individual arrows or bolts can be transmuted, but affected projectile weapons (such as bows) don't confer the benefit to the projectiles they shoot.\nIn addition, all critical hit rolls against evil foes are automatically successful, so every threat is a critical hit. This last effect does not apply to any weapon that already has a magical effect related to critical hits, such as a keen weapon or a vorpal sword.",
+    classes: ['paladin'],
+    levelsByClass: { paladin: 1 },
+  },
+  {
+    id: 'pf1e-reduce-person',
+    name: 'Reduce Person',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Reduce%20Person',
+    level: 1,
+    school: 'transmutation',
+    castingTime: {
+      type: 'rounds',
+      amount: 1,
+    },
+    range: {
+      type: 'close',
+      feet: 25,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a pinch of powdered iron',
+    },
+    duration: {
+      type: 'minutes-per-level',
+      minutes: 1,
+    },
+    target: 'one humanoid creature',
+    savingThrow: {
+      attribute: 'con',
+      success: 'none',
+      description: 'Fortitude negates',
+    },
+    savingThrowText: 'Fortitude negates',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    concentration: false,
+    ritual: false,
+    description:
+      "This spell causes instant diminution of a humanoid creature, halving its height, length, and width and dividing its weight by 8. This decrease changes the creature's size category to the next smaller one. The target gains a +2 size bonus to Dexterity, a –2 size penalty to Strength (to a minimum of 1), and a +1 bonus on attack rolls and AC due to its reduced size.\nA Small humanoid creature whose size decreases to Tiny has a space of 2-1/2 feet and a natural reach of 0 feet (meaning that it must enter an opponent's square to attack). A Large humanoid creature whose size decreases to Medium has a space of 5 feet and a natural reach of 5 feet. This spell doesn't change the target's speed.\nAll equipment worn or carried by a creature is similarly reduced by the spell.\nMelee and projectile weapons deal less damage. Other magical properties are not affected by this spell. Any reduced item that leaves the reduced creature's possession (including a projectile or thrown weapon) instantly returns to its normal size. This means that thrown weapons deal their normal damage (projectiles deal damage based on the size of the weapon that fired them).\nMultiple magical effects that reduce size do not stack. Reduce person counters and dispels enlarge person.\nReduce person can be made permanent with a permanency spell.",
+    classes: ['alchemist', 'sorcerer', 'wizard'],
+    levelsByClass: { alchemist: 1, sorcerer: 1, wizard: 1 },
   },
 ];

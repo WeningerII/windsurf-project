@@ -47,10 +47,7 @@ export const level7Spells: Spell[] = [
     description:
       'This spell creates a fireball like the fireball spell, except that it is more powerful and can detonate up to 5 rounds after the spell is cast. The burst of flame deals 1d6 points of fire damage per caster level (maximum 20d6).',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 7,
-      wizard: 7,
-    },
+    levelsByClass: { sorcerer: 7, wizard: 7 },
   },
   {
     id: 'pf1e-finger-of-death',
@@ -96,11 +93,7 @@ export const level7Spells: Spell[] = [
     description:
       'You can slay any one living creature within range. The target is entitled to a Fortitude saving throw to survive the attack. If the save is successful, the creature instead takes 3d6 points of damage +1 point per caster level (maximum +25).',
     classes: ['druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      druid: 7,
-      sorcerer: 7,
-      wizard: 7,
-    },
+    levelsByClass: { druid: 7, sorcerer: 7, wizard: 7 },
   },
   {
     id: 'pf1e-power-word-blind',
@@ -134,10 +127,7 @@ export const level7Spells: Spell[] = [
     description:
       "You utter a single word of power that causes one creature of your choice to become blinded, whether the creature can hear the word or not. The duration of the spell depends on the target's current hit point total. Any creature that currently has 201 or more hit points is unaffected by power word blind.",
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 7,
-      wizard: 7,
-    },
+    levelsByClass: { sorcerer: 7, wizard: 7 },
   },
   {
     id: 'pf1e-teleport-greater',
@@ -174,10 +164,7 @@ export const level7Spells: Spell[] = [
     description:
       'This spell functions like teleport, except that there is no range limit and there is no chance you arrive off target. In addition, you need not have seen the destination, but in that case you must have at least a reliable description of the place to which you are teleporting.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 7,
-      wizard: 7,
-    },
+    levelsByClass: { sorcerer: 7, wizard: 7 },
   },
   {
     id: 'pf1e-greater-restoration',
@@ -209,9 +196,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'Dispels negative levels, ability drains, and most debilitating conditions.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 7,
-    },
+    levelsByClass: { cleric: 7 },
   },
   {
     id: 'pf1e-resurrection',
@@ -243,9 +228,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'Fully restores a dead creature to life from a remnant of its body.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 7,
-    },
+    levelsByClass: { cleric: 7 },
   },
   {
     id: 'pf1e-destruction',
@@ -279,9 +262,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'Slays a creature and consumes its remains (10/level damage on a save).',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 7,
-    },
+    levelsByClass: { cleric: 7 },
   },
   {
     id: 'pf1e-sunbeam',
@@ -315,9 +296,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'A beam of light blinds and deals 4d6 damage, extra to undead and oozes.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 7,
-    },
+    levelsByClass: { druid: 7 },
   },
   {
     id: 'pf1e-forceful-hand',
@@ -350,10 +329,7 @@ export const level7Spells: Spell[] = [
     description:
       "You create a Large hand of shimmering, translucent force in an unoccupied space that you can see within range. The hand lasts for the spell's duration, and it moves at your command, mimicking the movements of your own hand.",
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 7,
-      wizard: 7,
-    },
+    levelsByClass: { sorcerer: 7, wizard: 7 },
   },
   {
     id: 'pf1e-greater-shadow-evocation',
@@ -384,9 +360,7 @@ export const level7Spells: Spell[] = [
     description:
       'You create a shadowy evocation of a spell of 6th level or lower. The shadowy evocation appears real, including interactions with the environment, but a creature that interacts with it can determine that it is an illusion with a successful Intelligence (Investigation) check.',
     classes: ['wizard'],
-    levelsByClass: {
-      wizard: 7,
-    },
+    levelsByClass: { wizard: 7 },
   },
   {
     id: 'pf1e-limited-wish',
@@ -419,115 +393,7 @@ export const level7Spells: Spell[] = [
     description:
       'A limited wish spell allows you to alter reality in a minor way. It can produce any one of the following effects: Duplicate any sorcerer/wizard spell of 6th level or lower, provided the spell is not of a school prohibited to you.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 7,
-      wizard: 7,
-    },
-  },
-  {
-    id: 'pf1e-mass-misdirection',
-    name: 'Mass Misdirection',
-    system: 'pf1e',
-    source: 'Core Rulebook',
-    level: 7,
-    school: 'illusion',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 30,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: true,
-      materialDescription: 'A small object from the creature that the illusion is to be based on',
-    },
-    duration: {
-      type: 'hours',
-      hours: 8,
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      "This spell functions like misdirection, except that it affects up to one creature per caster level, and you can redirect each creature's sensory input separately.",
-    classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 7,
-      wizard: 7,
-    },
-    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Mass%20Misdirection',
-  },
-  {
-    id: 'pf1e-reversal-of-fortune',
-    name: 'Reversal of Fortune',
-    system: 'pf1e',
-    source: 'Core Rulebook',
-    level: 7,
-    school: 'evocation',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 30,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'instant',
-    },
-    concentration: false,
-    ritual: false,
-    description:
-      'You can reverse the results of a single d20 roll made by a creature you can see within range. You can choose to use this ability after the roll is made but before the outcome is determined.',
-    classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 7,
-      wizard: 7,
-    },
-    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Reversal%20of%20Fortune',
-  },
-  {
-    id: 'pf1e-scrying-greater',
-    name: 'Scrying, Greater',
-    system: 'pf1e',
-    source: 'Core Rulebook',
-    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Scrying%2C%20Greater',
-    level: 7,
-    school: 'divination',
-    castingTime: {
-      type: 'standard',
-      amount: 1,
-    },
-    range: {
-      type: 'sight',
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'hours',
-      hours: 1,
-    },
-    concentration: false,
-    ritual: false,
-    description: 'As scrying, but faster and longer.',
-    classes: ['cleric', 'druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 7,
-      druid: 7,
-      sorcerer: 7,
-      wizard: 7,
-    },
+    levelsByClass: { sorcerer: 7, wizard: 7 },
   },
   {
     id: 'pf1e-sequester',
@@ -569,10 +435,7 @@ export const level7Spells: Spell[] = [
     description:
       "This spell protects a creature or object against scrying and magical location. The target is hidden from all divination magic. If the target is a creature, it can't be located by any means short of a wish spell or direct intervention by a deity.",
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 7,
-      wizard: 7,
-    },
+    levelsByClass: { sorcerer: 7, wizard: 7 },
   },
   {
     id: 'pf1e-shadow-evocation',
@@ -612,11 +475,7 @@ export const level7Spells: Spell[] = [
     description:
       "You tap into the Shadowfell to cast a spell that mimics an evocation spell of 4th level or lower. The spell must be one that creates a physical effect, and the spell's effects appear shadowy and unreal.",
     classes: ['sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      sorcerer: 7,
-      wizard: 7,
-      bard: 7,
-    },
+    levelsByClass: { sorcerer: 7, wizard: 7, bard: 7 },
   },
   {
     id: 'pf1e-summon-monster-vii',
@@ -648,12 +507,7 @@ export const level7Spells: Spell[] = [
     description:
       'You can summon one creature from the 7th-level list, or multiple creatures from lower-level lists.',
     classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 7,
-      cleric: 7,
-      sorcerer: 7,
-      wizard: 7,
-    },
+    levelsByClass: { bard: 7, cleric: 7, sorcerer: 7, wizard: 7 },
   },
   {
     id: 'pf1e-symbol-of-stunning',
@@ -691,11 +545,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'Triggered rune stuns nearby creatures.',
     classes: ['cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 7,
-      sorcerer: 7,
-      wizard: 7,
-    },
+    levelsByClass: { cleric: 7, sorcerer: 7, wizard: 7 },
   },
   {
     id: 'pf1e-symbol-of-weakness',
@@ -727,11 +577,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'Triggered rune weakens nearby creatures.',
     classes: ['cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 7,
-      sorcerer: 7,
-      wizard: 7,
-    },
+    levelsByClass: { cleric: 7, sorcerer: 7, wizard: 7 },
     savingThrow: {
       attribute: 'con',
       success: 'none',
@@ -769,10 +615,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'A cage or windowless cell of force traps creatures inside.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 7,
-      wizard: 7,
-    },
+    levelsByClass: { sorcerer: 7, wizard: 7 },
   },
   {
     id: 'pf1e-insanity',
@@ -810,10 +653,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'The subject suffers continuous confusion.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 7,
-      wizard: 7,
-    },
+    levelsByClass: { sorcerer: 7, wizard: 7 },
   },
   {
     id: 'pf1e-mages-magnificent-mansion',
@@ -847,10 +687,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'Creates an extradimensional luxury dwelling with staff.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 7,
-      wizard: 7,
-    },
+    levelsByClass: { sorcerer: 7, wizard: 7 },
   },
   {
     id: 'pf1e-mages-sword',
@@ -884,10 +721,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'A floating magical blade strikes opponents at your direction.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 7,
-      wizard: 7,
-    },
+    levelsByClass: { sorcerer: 7, wizard: 7 },
   },
   {
     id: 'pf1e-prismatic-spray',
@@ -925,10 +759,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'Seven shimmering rays each strike creatures in a cone with a different effect.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 7,
-      wizard: 7,
-    },
+    levelsByClass: { sorcerer: 7, wizard: 7 },
   },
   {
     id: 'pf1e-project-image',
@@ -967,11 +798,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'You see and cast spells through an illusory double of yourself.',
     classes: ['sorcerer', 'wizard', 'bard'],
-    levelsByClass: {
-      sorcerer: 7,
-      wizard: 7,
-      bard: 7,
-    },
+    levelsByClass: { sorcerer: 7, wizard: 7, bard: 7 },
   },
   {
     id: 'pf1e-spell-turning',
@@ -1003,10 +830,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'Reflects 1d4+6 levels of spells back at the caster.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 7,
-      wizard: 7,
-    },
+    levelsByClass: { sorcerer: 7, wizard: 7 },
   },
   {
     id: 'pf1e-waves-of-exhaustion',
@@ -1038,10 +862,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'All creatures in a 60-ft cone become exhausted.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 7,
-      wizard: 7,
-    },
+    levelsByClass: { sorcerer: 7, wizard: 7 },
   },
   {
     id: 'pf1e-control-undead',
@@ -1080,10 +901,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'Undead under your command will not attack you.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 7,
-      wizard: 7,
-    },
+    levelsByClass: { sorcerer: 7, wizard: 7 },
   },
   {
     id: 'pf1e-grasping-hand',
@@ -1117,10 +935,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'A Huge hand provides cover, pushes, or grapples a foe.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 7,
-      wizard: 7,
-    },
+    levelsByClass: { sorcerer: 7, wizard: 7 },
   },
   {
     id: 'pf1e-statue',
@@ -1158,10 +973,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'The subject can become a statue at will.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 7,
-      wizard: 7,
-    },
+    levelsByClass: { sorcerer: 7, wizard: 7 },
   },
   {
     id: 'pf1e-simulacrum',
@@ -1192,10 +1004,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'Creates a partial, lesser duplicate of a creature.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 7,
-      wizard: 7,
-    },
+    levelsByClass: { sorcerer: 7, wizard: 7 },
   },
   {
     id: 'pf1e-greater-arcane-sight',
@@ -1227,10 +1036,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'As arcane sight, and you automatically identify spells in effect.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 7,
-      wizard: 7,
-    },
+    levelsByClass: { sorcerer: 7, wizard: 7 },
   },
   {
     id: 'pf1e-animate-plants',
@@ -1265,9 +1071,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'One or more plants animate and fight for you.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 7,
-    },
+    levelsByClass: { druid: 7 },
   },
   {
     id: 'pf1e-blasphemy',
@@ -1306,9 +1110,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'Kills, paralyzes, weakens, or dazes nonevil subjects.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 7,
-    },
+    levelsByClass: { cleric: 7 },
   },
   {
     id: 'pf1e-changestaff',
@@ -1343,9 +1145,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'Your staff becomes a treant on command.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 7,
-    },
+    levelsByClass: { druid: 7 },
   },
   {
     id: 'pf1e-control-weather',
@@ -1380,10 +1180,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'Changes weather in local area.',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 7,
-      druid: 7,
-    },
+    levelsByClass: { cleric: 7, druid: 7 },
   },
   {
     id: 'pf1e-creeping-doom',
@@ -1418,9 +1215,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'Swarms of centipedes attack at your command.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 7,
-    },
+    levelsByClass: { druid: 7 },
   },
   {
     id: 'pf1e-cure-serious-wounds-mass',
@@ -1451,10 +1246,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'Cures 3d8 damage +1/level for many creatures.',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 7,
-      druid: 7,
-    },
+    levelsByClass: { cleric: 7, druid: 7 },
     savingThrow: {
       attribute: 'wis',
       success: 'half',
@@ -1498,9 +1290,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'Kills, paralyzes, slows, or deafens nonlawful subjects.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 7,
-    },
+    levelsByClass: { cleric: 7 },
   },
   {
     id: 'pf1e-ethereal-jaunt',
@@ -1531,9 +1321,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'You become ethereal for 1 round/level.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 7,
-    },
+    levelsByClass: { cleric: 7 },
   },
   {
     id: 'pf1e-holy-word',
@@ -1572,9 +1360,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'Kills, paralyzes, blinds, or deafens nongood subjects.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 7,
-    },
+    levelsByClass: { cleric: 7 },
   },
   {
     id: 'pf1e-inflict-serious-wounds-mass',
@@ -1605,9 +1391,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'Deals 3d8 damage +1/level to many creatures.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 7,
-    },
+    levelsByClass: { cleric: 7 },
     savingThrow: {
       attribute: 'wis',
       success: 'half',
@@ -1648,9 +1432,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'Alters item to transport its possessor to you.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 7,
-    },
+    levelsByClass: { cleric: 7 },
   },
   {
     id: 'pf1e-regenerate',
@@ -1689,41 +1471,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: "Subject's severed limbs grow back, cures 4d8 damage +1/level (max +35).",
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 7,
-      druid: 7,
-    },
-  },
-  {
-    id: 'pf1e-restoration-greater',
-    name: 'Restoration, Greater',
-    system: 'pf1e',
-    source: 'Core Rulebook',
-    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Restoration%2C%20Greater',
-    level: 7,
-    school: 'conjuration',
-    castingTime: {
-      type: 'minutes',
-      minutes: 10,
-    },
-    range: {
-      type: 'touch',
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'instant',
-    },
-    concentration: false,
-    ritual: false,
-    description: 'As restoration, plus restores all levels and ability scores.',
-    classes: ['cleric'],
-    levelsByClass: {
-      cleric: 7,
-    },
+    levelsByClass: { cleric: 7, druid: 7 },
   },
   {
     id: 'pf1e-summon-natures-ally-vii',
@@ -1755,9 +1503,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'Calls creature to fight.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 7,
-    },
+    levelsByClass: { druid: 7 },
   },
   {
     id: 'pf1e-transmute-metal-to-wood',
@@ -1792,9 +1538,7 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'Metal within 40 ft. becomes wood.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 7,
-    },
+    levelsByClass: { druid: 7 },
   },
   {
     id: 'pf1e-word-of-chaos',
@@ -1833,8 +1577,411 @@ export const level7Spells: Spell[] = [
     ritual: false,
     description: 'Kills, confuses, stuns, or deafens nonchaotic subjects.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 7,
+    levelsByClass: { cleric: 7 },
+  },
+  {
+    id: 'pf1e-elemental-body-iv',
+    name: 'Elemental Body IV',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Elemental%20Body%20IV',
+    level: 7,
+    school: 'transmutation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
     },
+    range: {
+      type: 'personal',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'the element you plan to assume',
+    },
+    duration: {
+      type: 'minutes-per-level',
+      minutes: 1,
+    },
+    target: 'you',
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell functions as elemental body III, except that it also allows you to assume the form of a Huge air, earth, fire, or water elemental. The abilities you gain depend upon the type of elemental into which you change. You are also immune to bleed damage, critical hits, and sneak attacks while in elemental form and gain DR 5/—.\nAir elemental: As elemental body I except that you gain a +4 size bonus to your Strength, +6 size bonus to your Dexterity, and a +4 natural armor bonus. You also gain fly 120 feet (perfect).\nEarth elemental: As elemental body I except that you gain a +8 size bonus to your Strength, a –2 penalty on your Dexterity, a +4 size bonus to your Constitution, and a +6 natural armor bonus.\nFire elemental: As elemental body I except that you gain a +6 size bonus to your Dexterity, a +4 size bonus to your Constitution, and a +4 natural armor bonus.\nWater elemental: As elemental body I except that you gain a +4 size bonus to your Strength, a –2 penalty on your Dexterity, a +8 size bonus to your Constitution, and a +6 natural armor bonus. You also gain swim 120 feet.',
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 7, wizard: 7 },
+  },
+  {
+    id: 'pf1e-form-of-the-dragon-ii',
+    name: 'Form Of The Dragon II',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Form%20Of%20The%20Dragon%20II',
+    level: 7,
+    school: 'transmutation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'personal',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a scale of the dragon type you plan to assume',
+    },
+    duration: {
+      type: 'minutes-per-level',
+      minutes: 1,
+    },
+    target: 'you',
+    savingThrowText: 'see text',
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell functions as form of the dragon I except that it also allows you to assume the form of a Large chromatic or metallic dragon. You gain the following abilities: a +6 size bonus to Strength, a +4 size bonus to Constitution, a +6 natural armor bonus, fly 90 feet (poor), darkvision 60 feet, a breath weapon, DR 5/magic, and resistance to one element. You also gain one bite (2d6), two claws (1d8), two wing attacks (1d6), and one tail slap attack (1d8). You can only use the breath weapon twice per casting of this spell, and you must wait 1d4 rounds between uses. All breath weapons deal 8d8 points of damage and allow a Reflex save for half damage. Line breath weapons increase to 80-foot lines and cones increase to 40-foot cones.',
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 7, wizard: 7 },
+  },
+  {
+    id: 'pf1e-mass-hold-person',
+    name: 'Mass Hold Person',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Mass%20Hold%20Person',
+    level: 7,
+    school: 'enchantment',
+    descriptors: ['mind-affecting'],
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'medium',
+      feet: 100,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+      focus: true,
+      focusDescription: 'a small, straight piece of iron',
+      divineFocus: true,
+    },
+    duration: {
+      type: 'rounds-per-level',
+      rounds: 1,
+    },
+    target: 'one or more humanoid creatures, no two of which can be more than 30 ft. apart',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates; see text',
+    },
+    savingThrowText: 'Will negates; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    concentration: false,
+    ritual: false,
+    description: 'This spell functions like hold person, except as noted above.',
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 7, wizard: 7 },
+  },
+  {
+    id: 'pf1e-instant-summons',
+    name: 'Instant Summons',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Instant%20Summons',
+    level: 7,
+    school: 'conjuration',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'special',
+      description: 'see text',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'sapphire worth 1,000 gp',
+    },
+    duration: {
+      type: 'permanent',
+    },
+    target: 'one object weighing 10 lbs. or less whose longest dimension is 6 ft. or less',
+    concentration: false,
+    ritual: false,
+    description:
+      'You call some nonliving item directly to your hand from virtually any location.\nFirst, you must place your arcane mark on the item. Then you cast this spell, which magically and invisibly inscribes the name of the item on a sapphire worth at least 1,000 gp. Thereafter, you can summon the item by speaking a special word (set by you when the spell is cast) and crushing the gem. The item appears instantly in your hand. Only you can use the gem in this way.\nIf the item is in the possession of another creature, the spell does not work, but you know who the possessor is and roughly where that creature is located when the summons occurs.\nThe inscription on the gem is invisible. It is also unreadable, except by means of a read magic spell, to anyone but you.\nThe item can be summoned from another plane, but only if no other creature has claimed ownership of it.',
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 7, wizard: 7 },
+  },
+  {
+    id: 'pf1e-mass-invisibility',
+    name: 'Mass Invisibility',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Mass%20Invisibility',
+    level: 7,
+    school: 'illusion',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'long',
+      feet: 400,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'an eyelash encased in gum arabic',
+      divineFocus: true,
+    },
+    duration: {
+      type: 'minutes-per-level',
+      minutes: 1,
+    },
+    target: 'any number of creatures, no two of which can be more than 180 ft. apart',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless) or Will negates (harmless, object)',
+    },
+    savingThrowText: 'Will negates (harmless) or Will negates (harmless, object)',
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell functions like invisibility, except that the effect moves with the group and is broken when anyone in the group attacks. Individuals in the group cannot see each other. The spell is broken for any individual who moves more than 180 feet from the nearest member of the group. If only two individuals are affected, the one moving away from the other one loses its invisibility. If both are moving away from each other, they both become visible when the distance between them exceeds 180 feet.',
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 7, wizard: 7 },
+  },
+  {
+    id: 'pf1e-phase-door',
+    name: 'Phase Door',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Phase%20Door',
+    level: 7,
+    school: 'conjuration',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'special',
+      description: 'one usage per two levels',
+    },
+    effect: 'ethereal 5-ft.-by-8-ft. opening, 10 ft. deep + 5 ft. deep per three levels',
+    concentration: false,
+    ritual: false,
+    description:
+      "This spell creates an ethereal passage through wooden, plaster, or stone walls, but not other materials. The phase door is invisible and inaccessible to all creatures except you, and only you can use the passage. You disappear when you enter the phase door and appear when you exit. If you desire, you can take one other creature (Medium or smaller) through the door. This counts as two uses of the door. The door does not allow light, sound, or spell effects through it, nor can you see through it without using it. Thus, the spell can provide an escape route, though certain creatures, such as phase spiders, can follow with ease. A gem of true seeing or similar magic reveals the presence of a phase door but does not allow its use.\nA phase door is subject to dispel magic. If anyone is within the passage when it is dispelled, he is harmlessly ejected just as if he were inside a passwall effect.\nYou can allow other creatures to use the phase door by setting some triggering condition for the door. Such conditions can be as simple or elaborate as you desire. They can be based on a creature's name, identity, or alignment, but otherwise must be based on observable actions or qualities. Intangibles such as level, class, HD, and hit points don't qualify.\nPhase door can be made permanent with a permanency spell.",
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 7, wizard: 7 },
+  },
+  {
+    id: 'pf1e-plant-shape-iii',
+    name: 'Plant Shape III',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Plant%20Shape%20III',
+    level: 7,
+    school: 'transmutation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'personal',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a piece of the creature whose form you plan to assume',
+    },
+    duration: {
+      type: 'minutes-per-level',
+      minutes: 1,
+    },
+    target: 'you',
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell functions as plant shape II except that it also allows you to assume the form of a Huge creature of the plant type. If the form you assume has any of the following abilities, you gain the listed ability: DR, regeneration 5, and trample.\nHuge plant: If the form you take is that of a Huge plant, you gain a +8 size bonus to your Strength, a –2 penalty to your Dexterity, a +4 size bonus to your Constitution, and a +6 natural armor bonus.',
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 7, wizard: 7 },
+  },
+  {
+    id: 'pf1e-greater-polymorph',
+    name: 'Greater Polymorph',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Greater%20Polymorph',
+    level: 7,
+    school: 'transmutation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a piece of the creature whose form you choose',
+    },
+    duration: {
+      type: 'minutes-per-level',
+      minutes: 1,
+    },
+    target: 'living creature touched',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
+    spellResistance: true,
+    spellResistanceDetail: 'harmless',
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell functions as polymorph except that it allows the creature to take on the form of a dragon or plant creature. If you use this spell to cause the target to take on the form of an animal or magical beast, it functions as beast shape IV. If the form is that of an elemental, the spell functions as elemental body III. If the form is that of a humanoid, the spell functions as alter self. If the form is that of a plant, the spell functions as plant shape II. If the form is that of a dragon, the spell functions as form of the dragon I. The subject may choose to resume its normal form as a full-round action; doing so ends the spell.',
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 7, wizard: 7 },
+  },
+  {
+    id: 'pf1e-greater-shadow-conjuration',
+    name: 'Greater Shadow Conjuration',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Greater%20Shadow%20Conjuration',
+    level: 7,
+    school: 'illusion',
+    descriptors: ['shadow'],
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'special',
+      description: 'see text',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'special',
+      description: 'see text',
+    },
+    effect: 'see text',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'special',
+      description: 'Will disbelief (if interacted with); varies; see text',
+    },
+    savingThrowText: 'Will disbelief (if interacted with); varies; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'see-text',
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell functions like shadow conjuration, except that it duplicates any sorcerer or wizard conjuration (summoning) or conjuration (creation) spell of 6th level or lower. The illusory conjurations created deal three-fifths (60%) damage to nonbelievers, and nondamaging effects are 60% likely to work against nonbelievers.',
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 7, wizard: 7 },
+  },
+  {
+    id: 'pf1e-teleport-object',
+    name: 'Teleport Object',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Teleport%20Object',
+    level: 7,
+    school: 'conjuration',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'touch',
+    },
+    components: {
+      verbal: false,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    target: 'one touched object of up to 50 lbs./level and 3 cu. ft./level',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (object)',
+    },
+    savingThrowText: 'Will negates (object)',
+    spellResistance: true,
+    spellResistanceDetail: 'object',
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell functions like teleport, except that it teleports an object, not you. Creatures and magical forces cannot be teleported.\nIf desired, the target object can be sent to a distant location on the Ethereal Plane. In this case, the point from which the object was teleported remains faintly magical until the item is retrieved. A successful targeted dispel magic spell cast on that point brings the vanished item back from the Ethereal Plane.',
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 7, wizard: 7 },
+  },
+  {
+    id: 'pf1e-vision',
+    name: 'Vision',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Vision',
+    level: 7,
+    school: 'divination',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'special',
+      description: '',
+    },
+    components: {
+      verbal: false,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell functions like legend lore, except that it works more quickly and produces some strain on you. You pose a question about some person, place, or object, then cast the spell. If the person or object is at hand or if you are in the place in question, you receive a vision about it by succeeding on a caster level check (1d20 + 1 per caster level; maximum +25) against DC 20. If only detailed information on the person, place, or object is known, the DC is 25, and the information gained is incomplete. If only rumors are known, the DC is 30, and the information gained is vague. After this spell is complete, you are fatigued.',
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 7, wizard: 7 },
   },
 ];

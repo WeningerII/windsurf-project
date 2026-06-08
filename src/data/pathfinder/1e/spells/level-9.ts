@@ -34,11 +34,7 @@ export const level9Spells: Spell[] = [
     description:
       'Casting a gate spell has two effects. First, it creates an interdimensional connection between your plane of existence and a plane you specify, allowing travel between those two planes in either direction. Second, you may then call a particular individual or kind of being through the gate.',
     classes: ['cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 9,
-      sorcerer: 9,
-      wizard: 9,
-    },
+    levelsByClass: { cleric: 9, sorcerer: 9, wizard: 9 },
   },
   {
     id: 'pf1e-power-word-kill',
@@ -71,10 +67,7 @@ export const level9Spells: Spell[] = [
     description:
       'You utter a single word of power that instantly kills one creature of your choice, whether the creature can hear the word or not. Any creature that currently has 101 or more hit points is unaffected by power word kill.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 9,
-      wizard: 9,
-    },
+    levelsByClass: { sorcerer: 9, wizard: 9 },
   },
   {
     id: 'pf1e-time-stop',
@@ -106,10 +99,7 @@ export const level9Spells: Spell[] = [
     description:
       'This spell seems to make time cease to flow for everyone but you. In fact, you speed up so greatly that all other creatures seem frozen, though they are actually still moving at their normal speeds. You are free to act for 1d4+1 rounds of apparent time.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 9,
-      wizard: 9,
-    },
+    levelsByClass: { sorcerer: 9, wizard: 9 },
   },
   {
     id: 'pf1e-wish',
@@ -144,10 +134,7 @@ export const level9Spells: Spell[] = [
     description:
       'Wish is the mightiest spell a wizard or sorcerer can cast. By simply speaking aloud, you can alter reality to better suit you. Even wish, however, has its limits. A wish can produce any one of the following effects: Duplicate any sorcerer/wizard spell of 8th level or lower, duplicate any other spell of 7th level or lower, undo harmful effects, grant a creature a +1 inherent bonus to an ability score, and more.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 9,
-      wizard: 9,
-    },
+    levelsByClass: { sorcerer: 9, wizard: 9 },
   },
   {
     id: 'pf1e-mass-heal',
@@ -180,9 +167,7 @@ export const level9Spells: Spell[] = [
     ritual: false,
     description: 'Cures 10/level (max 250) damage among many creatures.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 9,
-    },
+    levelsByClass: { cleric: 9 },
   },
   {
     id: 'pf1e-miracle',
@@ -216,9 +201,7 @@ export const level9Spells: Spell[] = [
     ritual: false,
     description: 'Requests a deity’s intercession to duplicate almost any spell or effect.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 9,
-    },
+    levelsByClass: { cleric: 9 },
   },
   {
     id: 'pf1e-storm-of-vengeance',
@@ -253,10 +236,7 @@ export const level9Spells: Spell[] = [
     description:
       'A towering storm cloud deals acid, lightning, hail, and wind over several rounds.',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 9,
-      druid: 9,
-    },
+    levelsByClass: { cleric: 9, druid: 9 },
   },
   {
     id: 'pf1e-energy-drain',
@@ -292,11 +272,7 @@ export const level9Spells: Spell[] = [
     ritual: false,
     description: 'Subject gains 2d4 negative levels.',
     classes: ['cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 9,
-      sorcerer: 9,
-      wizard: 9,
-    },
+    levelsByClass: { cleric: 9, sorcerer: 9, wizard: 9 },
   },
   {
     id: 'pf1e-foresight',
@@ -337,12 +313,7 @@ export const level9Spells: Spell[] = [
     description:
       "You touch a willing creature and bestow a limited ability to see the future. For the duration, the target can't be surprised, and attack rolls against it have disadvantage.",
     classes: ['cleric', 'druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 9,
-      druid: 9,
-      sorcerer: 9,
-      wizard: 9,
-    },
+    levelsByClass: { cleric: 9, druid: 9, sorcerer: 9, wizard: 9 },
   },
   {
     id: 'pf1e-prismatic-sphere',
@@ -378,10 +349,7 @@ export const level9Spells: Spell[] = [
     description:
       'An immobile, invisible sphere of magical force surrounds you. Nothing can pass through the barrier from either side, but you can see out of it normally.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 9,
-      wizard: 9,
-    },
+    levelsByClass: { sorcerer: 9, wizard: 9 },
   },
   {
     id: 'pf1e-prismatic-wall',
@@ -417,10 +385,7 @@ export const level9Spells: Spell[] = [
     description:
       'A shimmering, multicolored plane of light springs into being. The wall is opaque to normal sight and to darkvision. Each color of the wall has a special effect.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 9,
-      wizard: 9,
-    },
+    levelsByClass: { sorcerer: 9, wizard: 9 },
   },
   {
     id: 'pf1e-shades',
@@ -452,10 +417,7 @@ export const level9Spells: Spell[] = [
     description:
       'This spell functions like shadow conjuration, except that it can mimic any sorcerer or wizard spell of 8th level or lower.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 9,
-      wizard: 9,
-    },
+    levelsByClass: { sorcerer: 9, wizard: 9 },
   },
   {
     id: 'pf1e-shapechange',
@@ -488,10 +450,7 @@ export const level9Spells: Spell[] = [
     description:
       'You assume the form of a different creature for the duration. You can have multiple forms prepared and switch between them as a bonus action.',
     classes: ['druid', 'wizard'],
-    levelsByClass: {
-      druid: 9,
-      wizard: 9,
-    },
+    levelsByClass: { druid: 9, wizard: 9 },
   },
   {
     id: 'pf1e-summon-monster-ix',
@@ -523,12 +482,7 @@ export const level9Spells: Spell[] = [
     description:
       'You can summon one creature from the 9th-level list, or multiple creatures from lower-level lists.',
     classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 9,
-      cleric: 9,
-      sorcerer: 9,
-      wizard: 9,
-    },
+    levelsByClass: { bard: 9, cleric: 9, sorcerer: 9, wizard: 9 },
   },
   {
     id: 'pf1e-wail-of-the-banshee',
@@ -579,10 +533,7 @@ export const level9Spells: Spell[] = [
       description: 'Fortitude negates',
     },
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 9,
-      wizard: 9,
-    },
+    levelsByClass: { sorcerer: 9, wizard: 9 },
   },
   {
     id: 'pf1e-dominate-monster',
@@ -621,10 +572,7 @@ export const level9Spells: Spell[] = [
     ritual: false,
     description: 'As dominate person, but affects any one creature.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 9,
-      wizard: 9,
-    },
+    levelsByClass: { sorcerer: 9, wizard: 9 },
   },
   {
     id: 'pf1e-imprisonment',
@@ -661,10 +609,7 @@ export const level9Spells: Spell[] = [
     ritual: false,
     description: 'Entombs the subject in suspended animation far beneath the earth.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 9,
-      wizard: 9,
-    },
+    levelsByClass: { sorcerer: 9, wizard: 9 },
   },
   {
     id: 'pf1e-disjunction',
@@ -702,10 +647,7 @@ export const level9Spells: Spell[] = [
     ritual: false,
     description: 'Dispels all magic in an area and can destroy antimagic and magic items.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 9,
-      wizard: 9,
-    },
+    levelsByClass: { sorcerer: 9, wizard: 9 },
   },
   {
     id: 'pf1e-weird',
@@ -743,10 +685,7 @@ export const level9Spells: Spell[] = [
     ritual: false,
     description: 'As phantasmal killer, but affects all creatures in an area.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 9,
-      wizard: 9,
-    },
+    levelsByClass: { sorcerer: 9, wizard: 9 },
   },
   {
     id: 'pf1e-antipathy',
@@ -787,9 +726,7 @@ export const level9Spells: Spell[] = [
     ritual: false,
     description: 'Object or location affected by spell repels certain creatures.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 9,
-    },
+    levelsByClass: { druid: 9 },
   },
   {
     id: 'pf1e-astral-projection',
@@ -825,9 +762,7 @@ export const level9Spells: Spell[] = [
     ritual: false,
     description: 'Projects you and companions onto Astral Plane.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 9,
-    },
+    levelsByClass: { cleric: 9 },
   },
   {
     id: 'pf1e-elemental-swarm',
@@ -862,9 +797,7 @@ export const level9Spells: Spell[] = [
     ritual: false,
     description: 'Summons multiple elementals.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 9,
-    },
+    levelsByClass: { druid: 9 },
   },
   {
     id: 'pf1e-etherealness',
@@ -897,47 +830,7 @@ export const level9Spells: Spell[] = [
     ritual: false,
     description: 'Travel to Ethereal Plane with companions.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 9,
-    },
-  },
-  {
-    id: 'pf1e-heal-mass',
-    name: 'Heal, Mass',
-    system: 'pf1e',
-    source: 'Core Rulebook',
-    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Heal%2C%20Mass',
-    level: 9,
-    school: 'conjuration',
-    castingTime: {
-      type: 'action',
-      amount: 1,
-    },
-    range: {
-      type: 'ranged',
-      feet: 30,
-    },
-    components: {
-      verbal: true,
-      somatic: true,
-      material: false,
-    },
-    duration: {
-      type: 'instant',
-    },
-    target: 'One or more creatures, no two of which can be more than 30 ft. apart',
-    concentration: false,
-    ritual: false,
-    description: 'As heal, but with several subjects.',
-    classes: ['cleric'],
-    levelsByClass: {
-      cleric: 9,
-    },
-    savingThrow: {
-      attribute: 'wis',
-      success: 'half',
-    },
-    savingThrowText: 'Will half (harmless)',
+    levelsByClass: { cleric: 9 },
   },
   {
     id: 'pf1e-implosion',
@@ -977,9 +870,7 @@ export const level9Spells: Spell[] = [
     ritual: false,
     description: 'Kills one creature/round.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 9,
-    },
+    levelsByClass: { cleric: 9 },
   },
   {
     id: 'pf1e-shambler',
@@ -1015,9 +906,7 @@ export const level9Spells: Spell[] = [
     ritual: false,
     description: 'Summons 1d4+2 shambling mounds to fight for you.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 9,
-    },
+    levelsByClass: { druid: 9 },
   },
   {
     id: 'pf1e-soul-bind',
@@ -1057,9 +946,7 @@ export const level9Spells: Spell[] = [
     ritual: false,
     description: 'Traps newly dead soul to prevent resurrection.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 9,
-    },
+    levelsByClass: { cleric: 9 },
   },
   {
     id: 'pf1e-summon-natures-ally-ix',
@@ -1091,9 +978,7 @@ export const level9Spells: Spell[] = [
     ritual: false,
     description: 'Calls creature to fight.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 9,
-    },
+    levelsByClass: { druid: 9 },
   },
   {
     id: 'pf1e-sympathy',
@@ -1135,9 +1020,7 @@ export const level9Spells: Spell[] = [
     ritual: false,
     description: 'Object or location attracts certain creatures.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 9,
-    },
+    levelsByClass: { druid: 9 },
   },
   {
     id: 'pf1e-true-resurrection',
@@ -1168,8 +1051,119 @@ export const level9Spells: Spell[] = [
     ritual: false,
     description: "As resurrection, plus remains aren't needed.",
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 9,
+    levelsByClass: { cleric: 9 },
+  },
+  {
+    id: 'pf1e-crushing-hand',
+    name: 'Crushing Hand',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Crushing%20Hand',
+    level: 9,
+    school: 'evocation',
+    descriptors: ['force'],
+    castingTime: {
+      type: 'standard',
+      amount: 1,
     },
+    range: {
+      type: 'medium',
+      feet: 100,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+      focus: true,
+      focusDescription: 'a soft glove',
+    },
+    duration: {
+      type: 'rounds-per-level',
+      rounds: 1,
+    },
+    effect: '10-ft. hand',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell functions as interposing hand, except that it can also grapple one opponent as grasping hand. Its CMB and CMD for grapple checks use your caster level in place of its base attack bonus, with a +12 bonus for its Strength score (35) and a +1 bonus for being Large (its Dexterity is 10, granting no bonus to the CMD). A crushing hand deals 2d6+12 points of damage on each successful grapple check against an opponent. The crushing hand can instead be directed to bull rush a target (as forceful hand), using the same bonuses outlined above, or it can be directed to interpose itself, as interposing hand does.',
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 9, wizard: 9 },
+  },
+  {
+    id: 'pf1e-freedom',
+    name: 'Freedom',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Freedom',
+    level: 9,
+    school: 'abjuration',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'close',
+      feet: 25,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    target: 'one creature',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates (harmless)',
+    },
+    savingThrowText: 'Will negates (harmless)',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    concentration: false,
+    ritual: false,
+    description:
+      'The subject is freed from spells and effects that restrict movement, including binding, entangle, grappling, imprisonment, maze, paralysis, petrification, pinning, sleep, slow, stunning, temporal stasis, and web. To free a creature from imprisonment or maze, you must know its name and background, and you must cast this spell at the spot where it was entombed or banished into the maze.',
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 9, wizard: 9 },
+  },
+  {
+    id: 'pf1e-mass-hold-monster',
+    name: 'Mass Hold Monster',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Mass%20Hold%20Monster',
+    level: 9,
+    school: 'enchantment',
+    descriptors: ['mind-affecting'],
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'special',
+      description: '',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'one hard metal bar or rod, which can be as small as a three-penny nail',
+      divineFocus: true,
+    },
+    duration: {
+      type: 'instant',
+    },
+    target: 'one or more creatures, no two of which can be more than 30 ft. apart',
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell functions like hold person, except that it affects multiple creatures and holds any living creature that fails its Will save.',
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 9, wizard: 9 },
   },
 ];

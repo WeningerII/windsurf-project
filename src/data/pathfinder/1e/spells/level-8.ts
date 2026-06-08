@@ -47,10 +47,7 @@ export const level8Spells: Spell[] = [
     description:
       'This spell evaporates moisture from the body of each subject living creature, causing flesh to wither and crack and crumble to dust. This deals 1d6 points of damage per caster level (maximum 20d6).',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 8,
-      wizard: 8,
-    },
+    levelsByClass: { sorcerer: 8, wizard: 8 },
   },
   {
     id: 'pf1e-meteor-swarm',
@@ -96,10 +93,7 @@ export const level8Spells: Spell[] = [
     description:
       'Meteor swarm is a very powerful and spectacular spell that is similar to fireball in many aspects. When you cast it, four 2-foot-diameter spheres spring from your outstretched hand and streak in straight lines to the spots you select. The meteor spheres leave a fiery trail of sparks. Each sphere deals 2d6 points of bludgeoning damage and 6d6 points of fire damage.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 8,
-      wizard: 8,
-    },
+    levelsByClass: { sorcerer: 8, wizard: 8 },
   },
   {
     id: 'pf1e-power-word-stun',
@@ -133,10 +127,7 @@ export const level8Spells: Spell[] = [
     description:
       "You utter a single word of power that instantly causes one creature of your choice to become stunned, whether the creature can hear the word or not. The duration of the spell depends on the target's current hit point total.",
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 8,
-      wizard: 8,
-    },
+    levelsByClass: { sorcerer: 8, wizard: 8 },
   },
   {
     id: 'pf1e-fire-storm',
@@ -169,10 +160,7 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description: 'A storm of fire deals 1d6/level (max 20d6) damage to chosen targets in the area.',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 8,
-      druid: 8,
-    },
+    levelsByClass: { cleric: 8, druid: 8 },
   },
   {
     id: 'pf1e-earthquake',
@@ -208,10 +196,7 @@ export const level8Spells: Spell[] = [
     description:
       'Intense tremor shakes a 80-ft-radius area, collapsing structures and opening fissures.',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 8,
-      druid: 8,
-    },
+    levelsByClass: { cleric: 8, druid: 8 },
   },
   {
     id: 'pf1e-sunburst',
@@ -244,11 +229,7 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description: 'A globe of light blinds creatures and deals 6d6 damage, devastating to undead.',
     classes: ['druid', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      druid: 8,
-      sorcerer: 8,
-      wizard: 8,
-    },
+    levelsByClass: { druid: 8, sorcerer: 8, wizard: 8 },
   },
   {
     id: 'pf1e-clone',
@@ -285,9 +266,7 @@ export const level8Spells: Spell[] = [
     description:
       'This spell makes an inert duplicate of a living creature. If the original dies, its soul transfers to the clone if the clone is within 1 mile of the death.',
     classes: ['wizard'],
-    levelsByClass: {
-      wizard: 8,
-    },
+    levelsByClass: { wizard: 8 },
   },
   {
     id: 'pf1e-discern-location',
@@ -322,10 +301,7 @@ export const level8Spells: Spell[] = [
     description:
       'You learn the exact location of a creature or object you are familiar with. The spell can penetrate barriers, but 2 feet of stone, 2 inches of common metal, or a thin sheet of lead blocks it.',
     classes: ['cleric', 'wizard'],
-    levelsByClass: {
-      cleric: 8,
-      wizard: 8,
-    },
+    levelsByClass: { cleric: 8, wizard: 8 },
   },
   {
     id: 'pf1e-moment-of-prescience',
@@ -357,10 +333,7 @@ export const level8Spells: Spell[] = [
     description:
       'You glimpse the immediate future. Once before the spell ends, you can use your reaction to gain advantage on one attack roll, ability check, or saving throw.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 8,
-      wizard: 8,
-    },
+    levelsByClass: { sorcerer: 8, wizard: 8 },
   },
   {
     id: 'pf1e-planar-binding-greater',
@@ -397,10 +370,7 @@ export const level8Spells: Spell[] = [
       success: 'none',
     },
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 8,
-      wizard: 8,
-    },
+    levelsByClass: { sorcerer: 8, wizard: 8 },
   },
   {
     id: 'pf1e-polymorph-any-object',
@@ -443,10 +413,7 @@ export const level8Spells: Spell[] = [
     description:
       'This spell functions like polymorph, except that it allows the target to change into any single nonmagical creature.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 8,
-      wizard: 8,
-    },
+    levelsByClass: { sorcerer: 8, wizard: 8 },
   },
   {
     id: 'pf1e-protection-from-spells',
@@ -489,11 +456,7 @@ export const level8Spells: Spell[] = [
     description:
       'The subject gains a +8 resistance bonus on saving throws against spells and spell-like abilities.',
     classes: ['cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      cleric: 8,
-      sorcerer: 8,
-      wizard: 8,
-    },
+    levelsByClass: { cleric: 8, sorcerer: 8, wizard: 8 },
   },
   {
     id: 'pf1e-screen',
@@ -534,10 +497,7 @@ export const level8Spells: Spell[] = [
     description:
       'You create an invisible magical barrier around an area you choose. Scrying spells cannot perceive anything within the screened area.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 8,
-      wizard: 8,
-    },
+    levelsByClass: { sorcerer: 8, wizard: 8 },
   },
   {
     id: 'pf1e-summon-monster-viii',
@@ -569,12 +529,7 @@ export const level8Spells: Spell[] = [
     description:
       'You can summon one creature from the 8th-level list, or multiple creatures from lower-level lists.',
     classes: ['bard', 'cleric', 'sorcerer', 'wizard'],
-    levelsByClass: {
-      bard: 8,
-      cleric: 8,
-      sorcerer: 8,
-      wizard: 8,
-    },
+    levelsByClass: { bard: 8, cleric: 8, sorcerer: 8, wizard: 8 },
   },
   {
     id: 'pf1e-trap-the-soul',
@@ -610,9 +565,7 @@ export const level8Spells: Spell[] = [
     description:
       'You attempt to trap the soul of a creature you can see within range. The target must make a Charisma saving throw.',
     classes: ['wizard'],
-    levelsByClass: {
-      wizard: 8,
-    },
+    levelsByClass: { wizard: 8 },
   },
   {
     id: 'pf1e-maze',
@@ -645,10 +598,7 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description: 'Banishes a creature into an extradimensional maze for a few rounds.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 8,
-      wizard: 8,
-    },
+    levelsByClass: { sorcerer: 8, wizard: 8 },
   },
   {
     id: 'pf1e-mind-blank',
@@ -687,10 +637,7 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description: 'Subject is immune to mind-affecting effects and divination.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 8,
-      wizard: 8,
-    },
+    levelsByClass: { sorcerer: 8, wizard: 8 },
   },
   {
     id: 'pf1e-polar-ray',
@@ -723,10 +670,7 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description: 'A ranged touch ray deals 1d6 cold damage per level (max 25d6).',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 8,
-      wizard: 8,
-    },
+    levelsByClass: { sorcerer: 8, wizard: 8 },
   },
   {
     id: 'pf1e-iron-body',
@@ -758,10 +702,7 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description: 'Your body becomes living iron, gaining strength and damage reduction.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 8,
-      wizard: 8,
-    },
+    levelsByClass: { sorcerer: 8, wizard: 8 },
   },
   {
     id: 'pf1e-incendiary-cloud',
@@ -800,10 +741,7 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description: 'A cloud of roiling flame deals 6d6 fire damage each round.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 8,
-      wizard: 8,
-    },
+    levelsByClass: { sorcerer: 8, wizard: 8 },
   },
   {
     id: 'pf1e-temporal-stasis',
@@ -840,10 +778,7 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description: 'Puts the subject into suspended animation indefinitely.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 8,
-      wizard: 8,
-    },
+    levelsByClass: { sorcerer: 8, wizard: 8 },
   },
   {
     id: 'pf1e-scintillating-pattern',
@@ -876,10 +811,7 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description: 'A twisting pattern confuses, stuns, or knocks out nearby creatures.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 8,
-      wizard: 8,
-    },
+    levelsByClass: { sorcerer: 8, wizard: 8 },
   },
   {
     id: 'pf1e-greater-prying-eyes',
@@ -912,10 +844,7 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description: 'As prying eyes, but the floating eyes have true seeing.',
     classes: ['sorcerer', 'wizard'],
-    levelsByClass: {
-      sorcerer: 8,
-      wizard: 8,
-    },
+    levelsByClass: { sorcerer: 8, wizard: 8 },
   },
   {
     id: 'pf1e-animal-shapes',
@@ -951,9 +880,7 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description: 'One ally/level polymorphs into chosen animal.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 8,
-    },
+    levelsByClass: { druid: 8 },
   },
   {
     id: 'pf1e-cloak-of-chaos',
@@ -989,9 +916,7 @@ export const level8Spells: Spell[] = [
     spellResistance: true,
     spellResistanceDetail: 'harmless',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 8,
-    },
+    levelsByClass: { cleric: 8 },
   },
   {
     id: 'pf1e-control-plants',
@@ -1032,9 +957,7 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description: 'Control actions of one or more plant creatures.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 8,
-    },
+    levelsByClass: { druid: 8 },
   },
   {
     id: 'pf1e-create-greater-undead',
@@ -1064,9 +987,7 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description: 'Create shadows, wraiths, spectres, or devourers.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 8,
-    },
+    levelsByClass: { cleric: 8 },
   },
   {
     id: 'pf1e-cure-critical-wounds-mass',
@@ -1097,10 +1018,7 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description: 'Cures 4d8 damage +1/level for many creatures.',
     classes: ['cleric', 'druid'],
-    levelsByClass: {
-      cleric: 8,
-      druid: 8,
-    },
+    levelsByClass: { cleric: 8, druid: 8 },
     savingThrow: {
       attribute: 'wis',
       success: 'half',
@@ -1140,9 +1058,7 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description: 'Teleportation and interplanar travel blocked for one day/level.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 8,
-    },
+    levelsByClass: { cleric: 8 },
   },
   {
     id: 'pf1e-holy-aura',
@@ -1178,9 +1094,7 @@ export const level8Spells: Spell[] = [
     spellResistance: true,
     spellResistanceDetail: 'harmless',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 8,
-    },
+    levelsByClass: { cleric: 8 },
   },
   {
     id: 'pf1e-inflict-critical-wounds-mass',
@@ -1211,9 +1125,7 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description: 'Deals 4d8 damage +1/level to many creatures.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 8,
-    },
+    levelsByClass: { cleric: 8 },
     savingThrow: {
       attribute: 'wis',
       success: 'half',
@@ -1250,9 +1162,7 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description: 'As lesser planar ally, but up to 18 HD.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 8,
-    },
+    levelsByClass: { cleric: 8 },
   },
   {
     id: 'pf1e-repel-metal-or-stone',
@@ -1287,9 +1197,7 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description: 'Pushes away metal and stone.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 8,
-    },
+    levelsByClass: { druid: 8 },
   },
   {
     id: 'pf1e-reverse-gravity',
@@ -1325,9 +1233,7 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description: 'Objects and creatures fall upward.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 8,
-    },
+    levelsByClass: { druid: 8 },
   },
   {
     id: 'pf1e-shield-of-law',
@@ -1363,9 +1269,7 @@ export const level8Spells: Spell[] = [
     spellResistance: true,
     spellResistanceDetail: 'harmless',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 8,
-    },
+    levelsByClass: { cleric: 8 },
   },
   {
     id: 'pf1e-spell-immunity-greater',
@@ -1395,9 +1299,7 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description: 'As spell immunity, but up to 8th-level spells.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 8,
-    },
+    levelsByClass: { cleric: 8 },
   },
   {
     id: 'pf1e-summon-natures-ally-viii',
@@ -1429,9 +1331,7 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description: 'Calls creature to fight.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 8,
-    },
+    levelsByClass: { druid: 8 },
   },
   {
     id: 'pf1e-symbol-of-death',
@@ -1472,9 +1372,7 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description: 'Triggered rune slays nearby creatures.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 8,
-    },
+    levelsByClass: { cleric: 8 },
   },
   {
     id: 'pf1e-symbol-of-insanity',
@@ -1512,9 +1410,7 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description: 'Triggered rune renders nearby creatures insane.',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 8,
-    },
+    levelsByClass: { cleric: 8 },
   },
   {
     id: 'pf1e-unholy-aura',
@@ -1550,9 +1446,7 @@ export const level8Spells: Spell[] = [
     spellResistance: true,
     spellResistanceDetail: 'harmless',
     classes: ['cleric'],
-    levelsByClass: {
-      cleric: 8,
-    },
+    levelsByClass: { cleric: 8 },
   },
   {
     id: 'pf1e-whirlwind',
@@ -1593,8 +1487,235 @@ export const level8Spells: Spell[] = [
     ritual: false,
     description: 'Cyclone deals damage and can pick up creatures.',
     classes: ['druid'],
-    levelsByClass: {
-      druid: 8,
+    levelsByClass: { druid: 8 },
+  },
+  {
+    id: 'pf1e-binding',
+    name: 'Binding',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Binding',
+    level: 8,
+    school: 'enchantment',
+    descriptors: ['mind-affecting'],
+    castingTime: {
+      type: 'minutes',
+      amount: 1,
     },
+    range: {
+      type: 'close',
+      feet: 25,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription:
+        'opals worth 500 gp per HD of the target creature, plus other components as specified below',
+    },
+    duration: {
+      type: 'special',
+      description: 'see text (D)',
+    },
+    target: 'one living creature',
+    savingThrow: {
+      attribute: 'wis',
+      success: 'none',
+      description: 'Will negates; see text',
+    },
+    savingThrowText: 'Will negates; see text',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    concentration: false,
+    ritual: false,
+    description:
+      "A binding spell creates a magical restraint to hold a creature. The target gets an initial saving throw only if its Hit Dice equal at least half your caster level.\nYou may have as many as six assistants help you with the spell. For each assistant who casts suggestion, your caster level for this casting of binding increases by 1. For each assistant who casts dominate animal, dominate person, or dominate monster, your caster level for this casting of binding increases by a number equal to a third of that assistant's level, provided that the spell's target is appropriate for a binding spell. Since the assistants' spells are cast simply to improve your caster level for the purpose of the binding spell, saving throws and spell resistance against the assistants' spells are irrelevant. Your caster level determines whether the target gets an initial Will saving throw and how long the binding lasts. All binding spells are dismissible.\nRegardless of the version of binding you cast, you can specify triggering conditions that end the spell and release the creature whenever they occur. These triggers can be as simple or elaborate as you desire, but the condition must be reasonable and have a likelihood of coming to pass. The conditions can be based on a creature's name, identity, or alignment, but otherwise must be based on observable actions or qualities. Intangibles such as level, class, Hit Dice, or hit points don't qualify. Once the spell is cast, its triggering conditions cannot be changed. Setting a release condition increases the save DC (assuming a saving throw is allowed) by 2.\nIf you cast any of the first three versions of binding (those with limited durations), you may cast additional binding spells to prolong the effect, overlapping the durations. If you do so, the target gets a saving throw at the end of the first spell's duration, even if your caster level was high enough to disallow an initial saving throw. If the creature's save succeeds, all binding spells it has received are broken.\nThe binding spell has six versions. Choose one of the following versions when you cast the spell.\nChaining: The subject is confined by restraints that generate an antipathy spell affecting all creatures who approach the subject, except you. The duration is 1 year per caster level. The subject of this form of binding is confined to the spot it occupied when it received the spell. Casting this version requires a chain that is long enough to wrap around the creature three times.\nSlumber: This version causes the subject to become comatose for as long as 1 year per caster level. The subject does not need to eat or drink while slumbering, nor does it age. This form of binding is slightly easier to resist. Reduce the spell's save DC by 1. Casting this version requires a jar of sand or rose petals. This is a sleep effect.\nBound Slumber: This combination of chaining and slumber lasts for as long as 1 month per caster level. Reduce the save DC by 2. Casting this version requires both a long chain and a jar of sand or rose petals. This is a sleep effect.\nHedged Prison: The subject is transported to or otherwise brought within a confined area from which it cannot wander by any means. This effect is permanent. Reduce the save DC by 3. Casting this version requires a tiny golden cage worth 100 gp that is consumed when the spell is cast.\nMetamorphosis: The subject assumes gaseous form, except for its head or face. It is held harmless in a jar or other container, which may be transparent if you so choose. The creature remains aware of its surroundings and can speak, but it cannot leave the container, attack, or use any of its powers or abilities. The binding is permanent. The subject does not need to breathe, eat, or drink while metamorphosed, nor does it age. Reduce the save DC by 4.\nMinimus Containment: The subject is shrunk to a height of 1 inch or less and held within some gem, jar, or similar object. The binding is permanent. The subject does not need to breathe, eat, or drink while contained, nor does it age. Reduce the save DC by 4.\nYou can't dispel a binding spell with dispel magic or a similar effect, though an antimagic field or mage's disjunction affects it normally. A bound extraplanar creature cannot be sent back to its home plane by dismissal, banishment, or a similar effect.",
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 8, wizard: 8 },
+  },
+  {
+    id: 'pf1e-clenched-fist',
+    name: 'Clenched Fist',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Clenched%20Fist',
+    level: 8,
+    school: 'evocation',
+    descriptors: ['force'],
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'special',
+      description: '',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: false,
+      focus: true,
+      focusDescription: 'a leather glove',
+      divineFocus: true,
+    },
+    duration: {
+      type: 'instant',
+    },
+    concentration: false,
+    ritual: false,
+    description:
+      "This spell functions like interposing hand, except that the hand can also push or strike one opponent that you select. The floating hand can move as far as 60 feet and can attack in the same round. Since this hand is directed by you, its ability to notice or attack invisible or concealed creatures is no better than yours.\nThe hand attacks once per round, and its attack bonus equals your caster level + your Intelligence, Wisdom, or Charisma modifier (for a wizard, cleric, or sorcerer, respectively) + 11 for the hand's Strength score (33), – 1 for being Large. The hand deals 1d8+11 points of damage on each attack, and any creature struck must make a Fortitude save (against this spell's save DC) or be stunned for 1 round. Directing the spell to a new target is a move action.\nThe clenched fist can also interpose itself as interposing hand does, or it can bull rush an opponent as forceful hand does. Its CMB for bull rush checks uses your caster level in place of its base attack bonus, with a +11 bonus for its Strength score and a +1 bonus for being Large.",
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 8, wizard: 8 },
+  },
+  {
+    id: 'pf1e-demand',
+    name: 'Demand',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Demand',
+    level: 8,
+    school: 'enchantment',
+    descriptors: ['mind-affecting'],
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'special',
+      description: '',
+    },
+    components: {
+      verbal: false,
+      somatic: false,
+      material: false,
+    },
+    duration: {
+      type: 'instant',
+    },
+    savingThrow: {
+      attribute: 'wis',
+      success: 'special',
+      description: 'Will partial',
+    },
+    savingThrowText: 'Will partial',
+    spellResistance: true,
+    spellResistanceDetail: 'yes',
+    concentration: false,
+    ritual: false,
+    description:
+      "This spell functions like sending, but the message can also contain a suggestion (see the suggestion spell), which the subject does its best to carry out. A successful Will save negates the suggestion effect but not the contact itself. The demand, if received, is understood even if the subject's Intelligence score is as low as 1. If the message is impossible or meaningless according to the circumstances that exist for the subject at the time the demand is issued, the message is understood but the suggestion is ineffective.\nThe demand's message to the creature must be 25 words or less, including the suggestion. The creature can also give a short reply immediately.",
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 8, wizard: 8 },
+  },
+  {
+    id: 'pf1e-form-of-the-dragon-iii',
+    name: 'Form Of The Dragon III',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Form%20Of%20The%20Dragon%20III',
+    level: 8,
+    school: 'transmutation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'personal',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a scale of the dragon type you plan to assume',
+    },
+    duration: {
+      type: 'minutes-per-level',
+      minutes: 1,
+    },
+    target: 'you',
+    savingThrowText: 'see text',
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell functions as form of the dragon II save that it also allows you to take the form of a Huge chromatic or metallic dragon. You gain the following abilities: a +10 size bonus to Strength, a +8 size bonus to Constitution, a +8 natural armor bonus, fly 120 feet (poor), blindsense 60 feet, darkvision 120 feet, a breath weapon, DR 10/magic, frightful presence (DC equal to the DC for this spell), and immunity to one element (of the same type form of the dragon I grants resistance to). You also gain one bite (2d8), two claws (2d6), two wing attacks (1d8), and one tail slap attack (2d6). You can use the breath weapon as often as you like, but you must wait 1d4 rounds between uses. All breath weapons deal 12d8 points of damage and allow a Reflex save for half damage. Line breath weapons increase to 100-foot lines and cones increase to 50-foot cones.',
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 8, wizard: 8 },
+  },
+  {
+    id: 'pf1e-giant-form-ii',
+    name: 'Giant Form II',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Giant%20Form%20II',
+    level: 8,
+    school: 'transmutation',
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'personal',
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a piece of the creature whose form you plan to assume',
+    },
+    duration: {
+      type: 'minutes-per-level',
+      minutes: 1,
+    },
+    target: 'you',
+    concentration: false,
+    ritual: false,
+    description:
+      'This spell functions as giant form I except that it also allows you to assume the form of any Huge creature of the giant type. You gain the following abilities: a +8 size bonus to Strength, a –2 penalty to Dexterity, a +6 size bonus to Constitution, a +6 natural armor bonus, low-light vision, and a +10 foot enhancement bonus to your speed. If the form you assume has any of the following abilities, you gain the listed ability: swim 60 feet, darkvision 60 feet, rend (2d8 damage), regeneration 5, rock catching, and rock throwing (range 120 feet, 2d10 damage). If the creature has immunity or resistance to one element, you gain that immunity or resistance. If the creature has vulnerability to an element, you gain that vulnerability.',
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 8, wizard: 8 },
+  },
+  {
+    id: 'pf1e-telekinetic-sphere',
+    name: 'Telekinetic Sphere',
+    system: 'pf1e',
+    source: 'Core Rulebook',
+    sourceUrl: 'https://www.aonprd.com/SpellDisplay.aspx?ItemName=Telekinetic%20Sphere',
+    level: 8,
+    school: 'evocation',
+    descriptors: ['force'],
+    castingTime: {
+      type: 'standard',
+      amount: 1,
+    },
+    range: {
+      type: 'close',
+      feet: 25,
+    },
+    components: {
+      verbal: true,
+      somatic: true,
+      material: true,
+      materialDescription: 'a crystal sphere and a pair of small magnets',
+    },
+    duration: {
+      type: 'minutes-per-level',
+      minutes: 1,
+    },
+    effect: '1-ft.-diameter/level sphere, centered around creatures or objects',
+    savingThrow: {
+      attribute: 'dex',
+      success: 'none',
+      description: 'Reflex negates (object)',
+    },
+    savingThrowText: 'Reflex negates (object)',
+    spellResistance: true,
+    spellResistanceDetail: 'object',
+    concentration: false,
+    ritual: false,
+    description:
+      "This spell functions like resilient sphere, but the creatures or objects caught inside the globe created by the spell are made nearly weightless. Anything contained within a telekinetic sphere, weighs only one-sixteenth of its normal weight. You can telekinetically lift anything in the sphere that normally weighs 5,000 pounds or less. The telekinetic control extends from you out to medium range (100 feet + 10 feet per caster level) after the sphere has succeeded in encapsulating its contents.\nYou can move the sphere, along with the objects and creatures it contains that weigh a total of 5,000 pounds or less, by concentrating on the sphere. You can begin moving a sphere in the round after casting the spell. If you concentrate on doing so (a standard action), you can move the sphere as much as 30 feet in a round. If you cease concentrating, the sphere does not move in that round (if on a level surface) or descends at its falling rate (if aloft) until it reaches a level surface. You can resume concentrating on your next turn or any later turn during the spell's duration.\nThe sphere falls at a rate of only 60 feet per round, which is not fast enough to cause damage to the contents of the sphere.\nYou can move the sphere telekinetically even if you are in it.",
+    classes: ['sorcerer', 'wizard'],
+    levelsByClass: { sorcerer: 8, wizard: 8 },
   },
 ];
