@@ -143,7 +143,9 @@ describe('L7 max HP from class hit dice', () => {
     );
     expect(out.system.hitPoints.max).toBe(7);
   });
-  it('Fighter 1 / Wizard 1 multiclass with Con 12: 11 + 7 = 18', () => {
+  it('Fighter 1 / Wizard 1 multiclass with Con 12: 11 + 5 = 16', () => {
+    // PHB multiclassing: only character level 1 (the first class row) takes
+    // the max hit die. The wizard dip's level seeds the d6 average (4) + Con.
     const out = engine.prepareData(
       doc({
         ...con(12),
@@ -153,7 +155,7 @@ describe('L7 max HP from class hit dice', () => {
         ],
       })
     );
-    expect(out.system.hitPoints.max).toBe(18);
+    expect(out.system.hitPoints.max).toBe(16);
   });
   it('explicit hit-die rolls sum per level + Con each', () => {
     const out = engine.prepareData(
@@ -446,7 +448,9 @@ describe('L7 hit-dice pool tracking', () => {
         classLevels: [{ classId: 'fighter', level: 3, hitDieRolls: [10, 6, 5] }],
       })
     );
-    expect(out.system.hitDice).toEqual([{ die: 'd10', total: 3, remaining: 3 }]);
+    expect(out.system.hitDice).toEqual([
+      { classId: 'fighter', die: 'd10', total: 3, remaining: 3 },
+    ]);
   });
   it('preserves remaining (spent) hit dice across prepareData', () => {
     const out = engine.prepareData(

@@ -2,19 +2,6 @@
  * Shared helpers for d20 3.x-family systems (D&D 3.5e and Pathfinder 1e).
  */
 
-/** Size modifier for AC and attack rolls */
-export const SIZE_MODS: Record<string, number> = {
-  fine: 8,
-  diminutive: 4,
-  tiny: 2,
-  small: 1,
-  medium: 0,
-  large: -1,
-  huge: -2,
-  gargantuan: -4,
-  colossal: -8,
-};
-
 /** Size modifier for grapple (D&D 3.5e — opposite sign, larger steps) */
 export const GRAPPLE_SIZE_MODS: Record<string, number> = {
   fine: -16,

@@ -106,6 +106,25 @@ describe('Dnd5e2024Engine', () => {
       expect(result.system.initiative).toBe(1);
     });
 
+    it("applies Alert to rollCheck('initiative') but never to a plain DEX ability check", async () => {
+      const doc = makeDoc({
+        baseAttributes: { str: 10, dex: 14, con: 10, int: 10, wis: 10, cha: 10 },
+        feats: [{ id: 'alert', name: 'Alert', description: '', source: 'test' }],
+      });
+
+      const initiative = await engine.rollCheck(doc, 'initiative');
+      // Dex +2 plus PB +2 at level 1; the d20 term is bounded 1..20.
+      expect(initiative.total - 4).toBeGreaterThanOrEqual(1);
+      expect(initiative.total - 4).toBeLessThanOrEqual(20);
+      expect(initiative.flavor).toContain('Initiative');
+
+      const plainDex = await engine.rollCheck(doc, 'dex');
+      // The bare DEX check carries only the +2 Dex mod — Alert must not leak.
+      expect(plainDex.total - 2).toBeGreaterThanOrEqual(1);
+      expect(plainDex.total - 2).toBeLessThanOrEqual(20);
+      expect(plainDex.flavor).toContain('DEX');
+    });
+
     it('does not halve max HP at exhaustion level 4 (2024 rules)', () => {
       const doc = makeDoc({
         baseAttributes: { str: 10, dex: 10, con: 14, int: 10, wis: 10, cha: 10 },
