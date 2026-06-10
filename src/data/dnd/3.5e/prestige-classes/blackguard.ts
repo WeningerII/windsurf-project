@@ -126,8 +126,13 @@ export const blackguard: CharacterClass = {
   description:
     'A fallen champion who mixes martial prowess, dark blessings, sneak attacks, and limited divine spellcasting.',
   hitDie: 'd10',
+  d20Profile: {
+    bab: 'full',
+    fortSave: 'good',
+    refSave: 'poor',
+    willSave: 'poor',
+  },
   primaryAbility: ['str', 'cha', 'wis'],
-  savingThrowProficiencies: ['str', 'cha'],
   armorProficiencies: ['light', 'medium', 'heavy', 'shields'],
   weaponProficiencies: ['simple', 'martial'],
   toolProficiencies: [],

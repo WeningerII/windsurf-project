@@ -14,8 +14,13 @@ export const sorcerer: CharacterClass = {
   },
 
   hitDie: 'd4',
+  d20Profile: {
+    bab: 'half',
+    fortSave: 'poor',
+    refSave: 'poor',
+    willSave: 'good',
+  },
   primaryAbility: ['cha'],
-  savingThrowProficiencies: ['con', 'cha'],
 
   armorProficiencies: [],
   weaponProficiencies: ['club', 'dagger', 'heavy-crossbow', 'light-crossbow', 'quarterstaff'],

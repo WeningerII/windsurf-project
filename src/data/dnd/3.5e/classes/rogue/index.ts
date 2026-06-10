@@ -14,8 +14,13 @@ export const rogue: CharacterClass = {
   },
 
   hitDie: 'd6',
+  d20Profile: {
+    bab: 'three-quarter',
+    fortSave: 'poor',
+    refSave: 'good',
+    willSave: 'poor',
+  },
   primaryAbility: ['dex'],
-  savingThrowProficiencies: ['dex', 'int'],
 
   armorProficiencies: ['light'],
   weaponProficiencies: ['simple', 'hand-crossbow', 'rapier', 'sap', 'shortbow', 'short-sword'],

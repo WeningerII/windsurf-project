@@ -279,7 +279,7 @@ function buildDerivedProficiencies(
     }
 
     if (index === 0) {
-      derived.savingThrows.push(...classData.savingThrowProficiencies);
+      derived.savingThrows.push(...(classData.savingThrowProficiencies ?? []));
       derived.armor.push(...classData.armorProficiencies);
       derived.weapons.push(...classData.weaponProficiencies);
       derived.tools.push(...fixedToolProficiencies(classData));

@@ -86,8 +86,13 @@ export const duelist: CharacterClass = {
   description:
     'A lightly armored swashbuckler who turns agility, wit, and precision into a deadly dueling style.',
   hitDie: 'd10',
+  d20Profile: {
+    bab: 'full',
+    fortSave: 'poor',
+    refSave: 'good',
+    willSave: 'poor',
+  },
   primaryAbility: ['dex', 'int'],
-  savingThrowProficiencies: ['dex', 'int'],
   armorProficiencies: [],
   weaponProficiencies: ['simple', 'martial'],
   toolProficiencies: [],

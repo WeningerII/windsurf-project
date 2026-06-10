@@ -1,5 +1,5 @@
 import { cloneDocument, dedupe, seedHitDieRolls } from './templateShared';
-import { CharacterClass } from '../types/character-options/classes';
+import { CharacterClass, D20ClassProfile } from '../types/character-options/classes';
 import { Feature } from '../types/core/character';
 import { CharacterDocument } from '../types/core/document';
 import { Species } from '../types/character-options/species';
@@ -18,15 +18,6 @@ import { syncD20LegacySpellcastingSelections } from './d20LegacySpellcasting';
 import { GameSystemId } from '../types/game-systems';
 
 type D20LegacyDataModel = Dnd35eDataModel | Pf1eDataModel;
-type D20Progression = 'full' | 'three-quarter' | 'half';
-type D20SaveProgression = 'good' | 'poor';
-
-type D20ClassProfile = {
-  bab: D20Progression;
-  fortSave: D20SaveProgression;
-  refSave: D20SaveProgression;
-  willSave: D20SaveProgression;
-};
 
 export type D20LegacyClassTemplateMode = 'upsert' | 'add' | 'replace';
 
@@ -34,61 +25,6 @@ export interface D20LegacyClassTemplateOptions {
   mode?: D20LegacyClassTemplateMode;
   targetClassId?: string;
 }
-
-const DND35E_CLASS_PROFILES: Record<string, D20ClassProfile> = {
-  barbarian: { bab: 'full', fortSave: 'good', refSave: 'poor', willSave: 'poor' },
-  bard: { bab: 'three-quarter', fortSave: 'poor', refSave: 'good', willSave: 'good' },
-  cleric: { bab: 'three-quarter', fortSave: 'good', refSave: 'poor', willSave: 'good' },
-  druid: { bab: 'three-quarter', fortSave: 'good', refSave: 'poor', willSave: 'good' },
-  fighter: { bab: 'full', fortSave: 'good', refSave: 'poor', willSave: 'poor' },
-  monk: { bab: 'three-quarter', fortSave: 'good', refSave: 'good', willSave: 'good' },
-  paladin: { bab: 'full', fortSave: 'good', refSave: 'poor', willSave: 'poor' },
-  ranger: { bab: 'full', fortSave: 'good', refSave: 'good', willSave: 'poor' },
-  rogue: { bab: 'three-quarter', fortSave: 'poor', refSave: 'good', willSave: 'poor' },
-  sorcerer: { bab: 'half', fortSave: 'poor', refSave: 'poor', willSave: 'good' },
-  wizard: { bab: 'half', fortSave: 'poor', refSave: 'poor', willSave: 'good' },
-  'arcane-archer-35e': { bab: 'full', fortSave: 'good', refSave: 'good', willSave: 'poor' },
-  'arcane-trickster-35e': { bab: 'half', fortSave: 'poor', refSave: 'good', willSave: 'good' },
-  'archmage-35e': { bab: 'half', fortSave: 'poor', refSave: 'poor', willSave: 'good' },
-  'assassin-35e': { bab: 'three-quarter', fortSave: 'poor', refSave: 'good', willSave: 'poor' },
-  'blackguard-35e': { bab: 'full', fortSave: 'good', refSave: 'poor', willSave: 'poor' },
-  'dragon-disciple-35e': {
-    bab: 'three-quarter',
-    fortSave: 'good',
-    refSave: 'poor',
-    willSave: 'good',
-  },
-  'duelist-35e': { bab: 'full', fortSave: 'poor', refSave: 'good', willSave: 'poor' },
-  'eldritch-knight-35e': { bab: 'full', fortSave: 'good', refSave: 'poor', willSave: 'poor' },
-  'hierophant-35e': { bab: 'half', fortSave: 'good', refSave: 'poor', willSave: 'good' },
-  'shadowdancer-35e': { bab: 'three-quarter', fortSave: 'poor', refSave: 'good', willSave: 'poor' },
-  'horizon-walker-35e': { bab: 'full', fortSave: 'good', refSave: 'poor', willSave: 'poor' },
-  'dwarven-defender-35e': { bab: 'full', fortSave: 'good', refSave: 'poor', willSave: 'good' },
-  'loremaster-35e': { bab: 'half', fortSave: 'poor', refSave: 'poor', willSave: 'good' },
-  'mystic-theurge-35e': { bab: 'half', fortSave: 'poor', refSave: 'poor', willSave: 'good' },
-  'thaumaturgist-35e': { bab: 'half', fortSave: 'poor', refSave: 'poor', willSave: 'good' },
-};
-
-const PF1E_CLASS_PROFILES: Record<string, D20ClassProfile> = {
-  barbarian: { bab: 'full', fortSave: 'good', refSave: 'poor', willSave: 'poor' },
-  bard: { bab: 'three-quarter', fortSave: 'poor', refSave: 'good', willSave: 'good' },
-  cleric: { bab: 'three-quarter', fortSave: 'good', refSave: 'poor', willSave: 'good' },
-  druid: { bab: 'three-quarter', fortSave: 'good', refSave: 'poor', willSave: 'good' },
-  fighter: { bab: 'full', fortSave: 'good', refSave: 'poor', willSave: 'poor' },
-  monk: { bab: 'three-quarter', fortSave: 'good', refSave: 'good', willSave: 'good' },
-  paladin: { bab: 'full', fortSave: 'good', refSave: 'poor', willSave: 'good' },
-  ranger: { bab: 'full', fortSave: 'good', refSave: 'good', willSave: 'poor' },
-  rogue: { bab: 'three-quarter', fortSave: 'poor', refSave: 'good', willSave: 'poor' },
-  sorcerer: { bab: 'half', fortSave: 'poor', refSave: 'poor', willSave: 'good' },
-  wizard: { bab: 'half', fortSave: 'poor', refSave: 'poor', willSave: 'good' },
-  'arcane-archer': { bab: 'full', fortSave: 'good', refSave: 'good', willSave: 'poor' },
-  assassin: { bab: 'three-quarter', fortSave: 'poor', refSave: 'good', willSave: 'poor' },
-  'dragon-disciple': { bab: 'three-quarter', fortSave: 'good', refSave: 'poor', willSave: 'good' },
-  duelist: { bab: 'full', fortSave: 'poor', refSave: 'good', willSave: 'poor' },
-  'lore-master': { bab: 'half', fortSave: 'poor', refSave: 'poor', willSave: 'good' },
-  'mystic-theurge': { bab: 'half', fortSave: 'poor', refSave: 'poor', willSave: 'good' },
-  shadowdancer: { bab: 'three-quarter', fortSave: 'poor', refSave: 'good', willSave: 'poor' },
-};
 
 function isPf1eDocument(
   document: CharacterDocument<D20LegacyDataModel>
@@ -105,21 +41,6 @@ function isPf1eClassLevel(
     'favoredClassBonus' in classLevel &&
     typeof classLevel.favoredClassBonus === 'string'
   );
-}
-
-function getClassProfile(
-  systemId: CharacterDocument<D20LegacyDataModel>['systemId'],
-  classId: string
-): D20ClassProfile | undefined {
-  if (systemId === 'pf1e') {
-    return PF1E_CLASS_PROFILES[classId];
-  }
-
-  if (systemId === 'dnd-3.5e') {
-    return DND35E_CLASS_PROFILES[classId];
-  }
-
-  return undefined;
 }
 
 function fixedAbilityAdjustments(species: Species): Record<string, number> {
@@ -298,12 +219,16 @@ function removeClassFeatures(
   return features.filter((feature) => !removableSignatures.has(featureSignature(feature)));
 }
 
-function defaultClassProfile(
-  systemId: CharacterDocument<D20LegacyDataModel>['systemId'],
-  classId: string
-): D20ClassProfile {
+/**
+ * The class data is the single source of truth for BAB/save progressions
+ * (review H-3: the old hardcoded tables drifted from the data and silently
+ * defaulted unknown classes — e.g. PF1e alchemist — to half BAB/all-poor).
+ * The conservative fallback remains only for hand-authored class data that
+ * omits a profile.
+ */
+function defaultClassProfile(classData: CharacterClass): D20ClassProfile {
   return (
-    getClassProfile(systemId, classId) || {
+    classData.d20Profile ?? {
       bab: 'half',
       fortSave: 'poor',
       refSave: 'poor',
@@ -318,7 +243,7 @@ function create35eClassLevel(
   existing?: Dnd35eClassLevel,
   isFirstClassRow = true
 ): Dnd35eClassLevel {
-  const profile = defaultClassProfile('dnd-3.5e', classData.id);
+  const profile = defaultClassProfile(classData);
 
   return {
     classId: classData.id,
@@ -346,7 +271,7 @@ function createPf1eClassLevel(
   existing?: Pf1eClassLevel,
   isFirstClassRow: boolean = true
 ): Pf1eClassLevel {
-  const profile = defaultClassProfile('pf1e', classData.id);
+  const profile = defaultClassProfile(classData);
 
   return {
     classId: classData.id,

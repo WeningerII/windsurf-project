@@ -27,8 +27,13 @@ export const eldritchKnight: CharacterClass = {
   description:
     'A battle mage who keeps nearly full arcane progression while pushing BAB to fighter territory.',
   hitDie: 'd6',
+  d20Profile: {
+    bab: 'full',
+    fortSave: 'good',
+    refSave: 'poor',
+    willSave: 'poor',
+  },
   primaryAbility: ['str', 'int'],
-  savingThrowProficiencies: ['str', 'con'],
   armorProficiencies: [],
   weaponProficiencies: [],
   toolProficiencies: [],

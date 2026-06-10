@@ -121,8 +121,13 @@ export const dwarvenDefender: CharacterClass = {
   description:
     'A stubborn bulwark who anchors the battlefield with defensive stances and dwarven resilience.',
   hitDie: 'd12',
+  d20Profile: {
+    bab: 'full',
+    fortSave: 'good',
+    refSave: 'poor',
+    willSave: 'good',
+  },
   primaryAbility: ['str', 'con'],
-  savingThrowProficiencies: ['str', 'wis'],
   armorProficiencies: ['light', 'medium', 'heavy', 'shields'],
   weaponProficiencies: ['simple', 'martial'],
   toolProficiencies: [],

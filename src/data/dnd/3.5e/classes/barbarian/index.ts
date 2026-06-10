@@ -14,8 +14,13 @@ export const barbarian: CharacterClass = {
   },
 
   hitDie: 'd12',
+  d20Profile: {
+    bab: 'full',
+    fortSave: 'good',
+    refSave: 'poor',
+    willSave: 'poor',
+  },
   primaryAbility: ['str'],
-  savingThrowProficiencies: ['str', 'con'],
 
   armorProficiencies: ['light', 'medium', 'shields'],
   weaponProficiencies: ['simple', 'martial'],

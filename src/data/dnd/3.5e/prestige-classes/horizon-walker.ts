@@ -82,8 +82,13 @@ export const horizonWalker: CharacterClass = {
   description:
     'A seasoned traveler who adapts to hostile terrain and eventually masters planar environments.',
   hitDie: 'd8',
+  d20Profile: {
+    bab: 'full',
+    fortSave: 'good',
+    refSave: 'poor',
+    willSave: 'poor',
+  },
   primaryAbility: ['wis', 'dex'],
-  savingThrowProficiencies: ['str', 'con'],
   armorProficiencies: [],
   weaponProficiencies: [],
   toolProficiencies: [],

@@ -14,8 +14,13 @@ export const monk: CharacterClass = {
   },
 
   hitDie: 'd8',
+  d20Profile: {
+    bab: 'three-quarter',
+    fortSave: 'good',
+    refSave: 'good',
+    willSave: 'good',
+  },
   primaryAbility: ['dex', 'wis'],
-  savingThrowProficiencies: ['dex', 'wis'],
 
   armorProficiencies: [],
   weaponProficiencies: [

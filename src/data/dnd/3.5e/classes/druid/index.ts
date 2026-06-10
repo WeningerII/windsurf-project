@@ -14,8 +14,13 @@ export const druid: CharacterClass = {
   },
 
   hitDie: 'd8',
+  d20Profile: {
+    bab: 'three-quarter',
+    fortSave: 'good',
+    refSave: 'poor',
+    willSave: 'good',
+  },
   primaryAbility: ['wis'],
-  savingThrowProficiencies: ['int', 'wis'],
 
   armorProficiencies: ['light', 'medium', 'shields'],
   weaponProficiencies: [

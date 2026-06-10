@@ -53,8 +53,13 @@ export const thaumaturgist: CharacterClass = {
   description:
     'A summoning-focused divine caster who keeps full spell progression while improving called and summoned allies.',
   hitDie: 'd4',
+  d20Profile: {
+    bab: 'half',
+    fortSave: 'poor',
+    refSave: 'poor',
+    willSave: 'good',
+  },
   primaryAbility: ['wis', 'cha'],
-  savingThrowProficiencies: ['int', 'wis'],
   armorProficiencies: [],
   weaponProficiencies: [],
   toolProficiencies: [],

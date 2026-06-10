@@ -1,6 +1,19 @@
 import { DiceType, Choice, Prerequisite, AbilityScore } from '../core/common';
 import { Feature } from '../core/character';
 
+/**
+ * 3.5e/PF1e class progressions: BAB (full/three-quarter/half) and good/poor
+ * Fort/Ref/Will saves. Carried on the class DATA so engines and templates read
+ * the same truth the SRD states — 5e classes omit this and use
+ * savingThrowProficiencies instead.
+ */
+export interface D20ClassProfile {
+  bab: 'full' | 'three-quarter' | 'half';
+  fortSave: 'good' | 'poor';
+  refSave: 'good' | 'poor';
+  willSave: 'good' | 'poor';
+}
+
 export interface CharacterClass {
   id: string;
   name: string;
@@ -20,7 +33,14 @@ export interface CharacterClass {
   // Core properties
   hitDie: DiceType;
   primaryAbility: AbilityScore[];
-  savingThrowProficiencies: AbilityScore[];
+  /**
+   * 5e-style ability-keyed save proficiencies. 5e classes only — 3.5e/PF1e
+   * classes carry d20Profile instead (their saves are Fort/Ref/Will
+   * progressions, not ability pairs).
+   */
+  savingThrowProficiencies?: AbilityScore[];
+  /** 3.5e/PF1e BAB + save progressions. Unset for 5e classes. */
+  d20Profile?: D20ClassProfile;
 
   // Display metadata for UI
   displayMetadata?: ClassDisplayMetadata;

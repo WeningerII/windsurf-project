@@ -136,8 +136,13 @@ export const assassin: CharacterClass = {
   description:
     'A stealthy killer who mixes subterfuge, poison, sneak attacks, and limited arcane magic.',
   hitDie: 'd6',
+  d20Profile: {
+    bab: 'three-quarter',
+    fortSave: 'poor',
+    refSave: 'good',
+    willSave: 'poor',
+  },
   primaryAbility: ['dex', 'int'],
-  savingThrowProficiencies: ['dex', 'int'],
   armorProficiencies: ['light'],
   weaponProficiencies: ['simple', 'hand-crossbow', 'rapier', 'short-sword'],
   toolProficiencies: [],
