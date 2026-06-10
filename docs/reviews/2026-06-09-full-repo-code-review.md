@@ -1,5 +1,8 @@
 # Full-Repository Code Review
 
+> **Historical review snapshot.** This document records the state of the codebase at commit `128726d` and is not updated as findings are fixed.
+> Current repo truth note (June 10, 2026): findings below describe commit `128726d`; remediation is tracked on PR #7, and individual items may already be resolved on later commits.
+
 **Repo:** WeningerII/windsurf-project (multi-system RPG character sheet)
 **Reviewed at:** commit `128726d`, 2026-06-09
 **Method:** Twelve parallel deep-review passes over disjoint slices of the codebase (every production source file in `src/`, plus scripts, configs, CI, e2e, service worker, Supabase migrations, and a sampled audit of the 423-file `src/data` content layer). Every finding cites `file:line`, was verified against surrounding code and callers, and several were reproduced empirically (noted inline). Reviewer severities are preserved; cross-report duplicates are noted where two independent passes converged on the same defect.
