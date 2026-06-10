@@ -361,3 +361,26 @@ describe('Mam3eEngine', () => {
     });
   });
 });
+
+describe('roll outcome flags (review L5)', () => {
+  const engine = new Mam3eEngine();
+  // Hero's Handbook: a natural 20 is a critical success on checks; a natural
+  // 1 always fails. The badge previously never fired for M&M because the
+  // engine left isCritical/isFumble unset.
+  it('flags natural 20 as critical and natural 1 as fumble', async () => {
+    const doc = makeDoc({});
+    const randomSpy = vi.spyOn(Math, 'random');
+
+    randomSpy.mockReturnValueOnce(0.999); // d20 = 20
+    const crit = await engine.rollCheck(doc, 'str');
+    expect(crit.isCritical).toBe(true);
+    expect(crit.isFumble).toBe(false);
+
+    randomSpy.mockReturnValueOnce(0); // d20 = 1
+    const fumble = await engine.rollCheck(doc, 'str');
+    expect(fumble.isCritical).toBe(false);
+    expect(fumble.isFumble).toBe(true);
+
+    randomSpy.mockRestore();
+  });
+});

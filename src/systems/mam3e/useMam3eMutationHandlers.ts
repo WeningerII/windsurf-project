@@ -3,6 +3,7 @@ import type { CharacterDocument, SystemDataModel } from '../../types/core/docume
 import type { Power } from '../../types/mam/powers';
 import type { CharacterClass } from '../../types/character-options/classes';
 import type { Complication } from '../../data/mutants-and-masterminds/3e/complications';
+import type { Advantage } from '../../types/mam/advantages';
 import { systemRegistry } from '../../registry';
 import { generateUUID } from '../../utils/browserCompat';
 import { applyMam3eToughnessFailure } from './engine';
@@ -222,6 +223,29 @@ export function useMam3eMutationHandlers({
     [pinnedArchetypeIds, update]
   );
 
+  const addAdvantageFromCatalog = useCallback(
+    (advantage: Advantage) => {
+      // One copy per catalog entry — ranked advantages are represented by a
+      // single row whose rank is edited on the Skills & Advantages tab
+      // (ranked advantages cost their rank in PP).
+      if (data.advantages.some((entry) => entry.name === advantage.name)) {
+        return;
+      }
+
+      update({
+        advantages: [
+          ...data.advantages,
+          {
+            id: `adv-${generateUUID()}`,
+            name: advantage.name,
+            ...(advantage.ranked ? { rank: 1 } : {}),
+          },
+        ],
+      });
+    },
+    [data.advantages, update]
+  );
+
   const insertComplication = useCallback(
     (complication: Complication) => {
       if (insertedComplicationIds.includes(complication.id)) {
@@ -268,6 +292,7 @@ export function useMam3eMutationHandlers({
     updateConditionTrack,
     applyToughnessFailure,
     togglePinnedArchetype,
+    addAdvantageFromCatalog,
     insertComplication,
     resetConditionTrack,
     rollCheck,

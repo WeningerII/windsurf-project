@@ -89,7 +89,10 @@ export interface Mam3eDataModel extends SystemDataModel {
 
   notes?: string;
 
-  // PL cap violations (computed by engine)
+  // PL cap violations (computed by engine). Partial coverage: attack-bonus
+  // caps ignore Close/Ranged Attack advantages and Accurate/Inaccurate
+  // modifiers, and skill caps aren't validated — empty means "none detected",
+  // not "build is legal" (see the engine's PL Cap Validation block).
   plViolations?: Array<{ label: string; value: number; limit: number }>;
 }
 
