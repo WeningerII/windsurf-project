@@ -61,6 +61,19 @@ interface Props {
 
 const DEFAULT_SYSTEM_ID = 'dnd-5e-2024';
 
+// Conditions offered on tokens: exactly the ids the rules layer compiles into
+// combat effects (collectDnd5eConditionEffects); 5e vocabulary, so the section
+// only renders for 5e-family scenes.
+const DND5E_SCENE_CONDITIONS = [
+  'blinded',
+  'frightened',
+  'poisoned',
+  'prone',
+  'restrained',
+  'paralyzed',
+  'stunned',
+] as const;
+
 export function SceneManager({
   scenes,
   documents,
@@ -505,6 +518,24 @@ export function SceneManager({
     ]
   );
 
+  const handleToggleSelectedTokenCondition = useCallback(
+    (conditionId: string) => {
+      if (!selectedScene || !state || !selectedTokenId) return;
+      const token = state.tokens[selectedTokenId];
+      if (!token) return;
+      const current = token.conditions ?? [];
+      const next = current.includes(conditionId)
+        ? current.filter((entry) => entry !== conditionId)
+        : [...current, conditionId];
+      emitSceneAction(selectedScene, {
+        type: 'set-token-conditions',
+        tokenId: selectedTokenId,
+        conditions: next,
+      });
+    },
+    [selectedScene, state, selectedTokenId, emitSceneAction]
+  );
+
   const handleTokenActivate = useCallback((token: SceneToken) => {
     setSelectedTokenId(token.id);
     setPlacementMode('none');
@@ -918,6 +949,15 @@ export function SceneManager({
                     }
                     canDeleteToken={Boolean(selectedTokenId)}
                     onDeleteSelectedToken={handleDeleteSelectedToken}
+                    conditionOptions={
+                      sceneSystemId === 'dnd-5e-2014' || sceneSystemId === 'dnd-5e-2024'
+                        ? DND5E_SCENE_CONDITIONS
+                        : []
+                    }
+                    selectedTokenConditions={
+                      (selectedTokenId && state.tokens[selectedTokenId]?.conditions) || []
+                    }
+                    onToggleSelectedTokenCondition={handleToggleSelectedTokenCondition}
                   />
 
                   <EncounterPanel

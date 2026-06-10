@@ -168,6 +168,9 @@ export function validateSceneEvent(state: SceneState, event: SceneEvent): SceneI
     case 'token.removed':
       validateKnownToken(state, event.payload.tokenId, issues, event, 'payload.tokenId');
       break;
+    case 'token.conditions-set':
+      validateKnownToken(state, event.payload.tokenId, issues, event, 'payload.tokenId');
+      break;
     case 'token.damaged':
       validateDamages(state, event.payload.damages, issues, event);
       break;
@@ -225,6 +228,13 @@ function buildEventFromIntent(
           cause: intent.cause,
         },
       };
+    case 'set-token-conditions':
+      return {
+        ...base,
+        type: 'token.conditions-set',
+        // Dedupe while preserving order so replays are byte-stable.
+        payload: { tokenId: intent.tokenId, conditions: [...new Set(intent.conditions)] },
+      };
     case 'add-marker':
       return { ...base, type: 'marker.added', payload: { marker: cloneMarker(intent.marker) } };
     case 'remove-marker':
@@ -277,6 +287,16 @@ function applySceneEvent(state: SceneState, event: SceneEvent): void {
         }
       }
       break;
+    case 'token.conditions-set': {
+      const token = state.tokens[event.payload.tokenId];
+      if (token) {
+        state.tokens[event.payload.tokenId] = {
+          ...token,
+          conditions: [...event.payload.conditions],
+        };
+      }
+      break;
+    }
     case 'marker.added':
       state.markers[event.payload.marker.id] = cloneMarker(event.payload.marker);
       break;
@@ -552,6 +572,7 @@ function cloneToken(token: SceneToken): SceneToken {
     ...token,
     position: { ...token.position },
     hp: token.hp ? { ...token.hp } : undefined,
+    conditions: token.conditions ? [...token.conditions] : undefined,
   };
 }
 
