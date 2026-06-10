@@ -629,10 +629,15 @@ export function SceneManager({
   };
 
   const handleExportScenes = (targetScenes: SceneDocument[], filename: string) => {
+    // Blob URLs avoid Chromium's ~2MB cap on data: anchors, which silently
+    // no-ops exactly when a large scene log most needs exporting.
+    const blob = new Blob([exportScenes(targetScenes)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.href = `data:application/json;charset=utf-8,${encodeURIComponent(exportScenes(targetScenes))}`;
+    link.href = url;
     link.download = filename;
     link.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
