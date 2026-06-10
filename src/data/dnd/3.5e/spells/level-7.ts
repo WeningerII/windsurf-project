@@ -396,7 +396,7 @@ export const level7Spells: Spell[] = [
       material: false,
     },
     duration: {
-      type: 'rounds',
+      type: 'rounds-per-level',
       rounds: 1,
     },
     target: 'You',
