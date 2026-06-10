@@ -15,8 +15,10 @@ import {
   pushCampaigns,
   queueDeletedCampaignIds,
   queueCampaignsSnapshot,
+  restoreRemoteCampaign,
   subscribeToRemoteCampaigns,
 } from '../../utils/syncEngine';
+import { getSyncTombstonedIds, recordSyncTombstones } from '../../utils/syncTombstones';
 
 vi.mock('../../utils/syncEngine', () => ({
   clearQueuedCampaignsSnapshot: vi.fn(),
@@ -29,7 +31,14 @@ vi.mock('../../utils/syncEngine', () => ({
   pushCampaigns: vi.fn(),
   queueDeletedCampaignIds: vi.fn(),
   queueCampaignsSnapshot: vi.fn(),
+  restoreRemoteCampaign: vi.fn(),
   subscribeToRemoteCampaigns: vi.fn(),
+}));
+
+vi.mock('../../utils/syncTombstones', () => ({
+  recordSyncTombstones: vi.fn(),
+  getSyncTombstonedIds: vi.fn(),
+  removeSyncTombstones: vi.fn(),
 }));
 
 const mockedClearQueuedCampaignsSnapshot = vi.mocked(clearQueuedCampaignsSnapshot);
@@ -42,7 +51,10 @@ const mockedMergeCampaigns = vi.mocked(mergeCampaigns);
 const mockedPushCampaigns = vi.mocked(pushCampaigns);
 const mockedQueueDeletedCampaignIds = vi.mocked(queueDeletedCampaignIds);
 const mockedQueueCampaignsSnapshot = vi.mocked(queueCampaignsSnapshot);
+const mockedRestoreRemoteCampaign = vi.mocked(restoreRemoteCampaign);
 const mockedSubscribeToRemoteCampaigns = vi.mocked(subscribeToRemoteCampaigns);
+const mockedRecordSyncTombstones = vi.mocked(recordSyncTombstones);
+const mockedGetSyncTombstonedIds = vi.mocked(getSyncTombstonedIds);
 
 function makeCampaign(id: string, overrides: Partial<Campaign> = {}): Campaign {
   return {
@@ -68,6 +80,13 @@ function mergeNewest(primary: Campaign[], secondary: Campaign[]): Campaign[] {
   });
 
   return Array.from(merged.values());
+}
+
+function remoteResult(
+  entities: Campaign[] = [],
+  tombstones: { id: string; deletedAt: Date }[] = []
+) {
+  return { entities, tombstones };
 }
 
 function setNavigatorOnline(value: boolean) {
@@ -103,11 +122,13 @@ describe('useCampaignSync', () => {
     setNavigatorOnline(true);
     mockedGetQueuedCampaignsSnapshot.mockReturnValue([]);
     mockedGetQueuedDeletedCampaignIds.mockReturnValue([]);
-    mockedFetchRemoteCampaigns.mockResolvedValue([]);
+    mockedFetchRemoteCampaigns.mockResolvedValue(remoteResult());
     mockedPushCampaigns.mockResolvedValue(undefined);
     mockedDeleteRemoteCampaign.mockResolvedValue(undefined);
+    mockedRestoreRemoteCampaign.mockResolvedValue(undefined);
     mockedMergeCampaigns.mockImplementation(mergeNewest);
     mockedSubscribeToRemoteCampaigns.mockReturnValue(vi.fn());
+    mockedGetSyncTombstonedIds.mockReturnValue([]);
   });
 
   it('performs an initial local, queued, and remote merge, then re-syncs on realtime updates', async () => {
@@ -121,7 +142,7 @@ describe('useCampaignSync', () => {
     const onMerge = vi.fn();
 
     mockedGetQueuedCampaignsSnapshot.mockReturnValue(queuedCampaigns);
-    mockedFetchRemoteCampaigns.mockResolvedValue(remoteCampaigns);
+    mockedFetchRemoteCampaigns.mockResolvedValue(remoteResult(remoteCampaigns));
 
     const { result } = renderHook(() => useCampaignSync({ campaigns: localCampaigns, onMerge }), {
       wrapper: createWrapper(() => authValue),
@@ -219,13 +240,13 @@ describe('useCampaignSync', () => {
     expect(result.current.syncState).toBe('idle');
   });
 
-  it('replays queued campaign deletes before pushing the merged snapshot', async () => {
+  it('replays queued campaign deletes and skips the push when nothing else changed', async () => {
     const remoteDeleted = makeCampaign('deleted-campaign');
     const remoteKept = makeCampaign('kept-campaign');
     const onMerge = vi.fn();
 
     mockedGetQueuedDeletedCampaignIds.mockReturnValue(['deleted-campaign']);
-    mockedFetchRemoteCampaigns.mockResolvedValue([remoteDeleted, remoteKept]);
+    mockedFetchRemoteCampaigns.mockResolvedValue(remoteResult([remoteDeleted, remoteKept]));
 
     const { result } = renderHook(() => useCampaignSync({ campaigns: [], onMerge }), {
       wrapper: createWrapper(() => authValue),
@@ -237,9 +258,47 @@ describe('useCampaignSync', () => {
 
     const mergedCampaigns = onMerge.mock.calls[0][0] as Campaign[];
     expect(mergedCampaigns.map((campaign) => campaign.id)).toEqual(['kept-campaign']);
-    expect(mockedPushCampaigns).toHaveBeenCalledWith(mergedCampaigns);
     expect(mockedClearQueuedDeletedCampaignIds).toHaveBeenCalled();
-    expect(result.current.syncState).toBe('idle');
+
+    await waitFor(() => {
+      expect(result.current.syncState).toBe('idle');
+    });
+
+    // The merged collection equals the live remote rows after the delete
+    // replay, so the full-collection push is skipped.
+    expect(mockedPushCampaigns).not.toHaveBeenCalled();
+  });
+
+  it('removes locally held campaigns that are tombstoned remotely without re-pushing them', async () => {
+    const aliveCampaign = makeCampaign('alive-campaign');
+    const zombieCampaign = makeCampaign('zombie-campaign');
+    const deletedAt = new Date('2026-01-06T00:00:00.000Z');
+    const onMerge = vi.fn();
+
+    mockedFetchRemoteCampaigns.mockResolvedValue(
+      remoteResult([aliveCampaign], [{ id: 'zombie-campaign', deletedAt }])
+    );
+
+    const { result } = renderHook(
+      () => useCampaignSync({ campaigns: [aliveCampaign, zombieCampaign], onMerge }),
+      { wrapper: createWrapper(() => authValue) }
+    );
+
+    await waitFor(() => {
+      expect(onMerge).toHaveBeenCalledTimes(1);
+    });
+
+    const mergedCampaigns = onMerge.mock.calls[0][0] as Campaign[];
+    expect(mergedCampaigns.map((campaign) => campaign.id)).toEqual(['alive-campaign']);
+    expect(mockedRecordSyncTombstones).toHaveBeenCalledWith('campaigns', [
+      { id: 'zombie-campaign', deletedAt },
+    ]);
+
+    await waitFor(() => {
+      expect(result.current.syncState).toBe('idle');
+    });
+
+    expect(mockedPushCampaigns).not.toHaveBeenCalled();
   });
 
   it('deletes removed remote campaigns and pushes the latest snapshot', async () => {
@@ -367,6 +426,8 @@ describe('useCampaignSync', () => {
       expect(onMerge).toHaveBeenCalledTimes(2);
     });
 
-    expect(mockedPushCampaigns).toHaveBeenCalledWith([]);
+    // Empty local merged with empty remote — nothing to push.
+    expect(onMerge.mock.calls[1][0]).toEqual([]);
+    expect(mockedPushCampaigns).not.toHaveBeenCalled();
   });
 });

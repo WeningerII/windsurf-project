@@ -47,6 +47,7 @@ function AppContent() {
     clearError,
     addDocument,
     addDocuments,
+    applyMergedDocuments,
     updateDocument,
     deleteDocument,
     clearAllDocuments,
@@ -63,7 +64,10 @@ function AppContent() {
     sync: syncDocuments,
   } = useSync({
     documents,
-    onMerge: addDocuments,
+    // The sync merge is authoritative (it already applied tombstones), so it
+    // must replace the collection — an upsert-only merge could never remove
+    // an entity deleted on another device.
+    onMerge: applyMergedDocuments,
   });
   const [currentDocId, setCurrentDocId] = useState<string | null>(null);
   const [selectedSystem, setSelectedSystem] = useState<GameSystemId | null>(null);
@@ -80,7 +84,7 @@ function AppContent() {
   const {
     campaigns,
     addCampaign,
-    addCampaigns,
+    applyMergedCampaigns,
     updateCampaign,
     deleteCampaign,
     addCharacterToCampaign,
@@ -104,7 +108,8 @@ function AppContent() {
     sync: syncCampaigns,
   } = useCampaignSync({
     campaigns,
-    onMerge: addCampaigns,
+    // Replace, not upsert — see the documents onMerge above.
+    onMerge: applyMergedCampaigns,
   });
   const syncState = combineSyncStates([documentSyncState, campaignSyncState]);
   const lastSyncedAt = getMostRecentSyncDate([lastDocumentSyncedAt, lastCampaignSyncedAt]);

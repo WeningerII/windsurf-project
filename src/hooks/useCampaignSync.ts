@@ -4,6 +4,7 @@ import {
   clearQueuedCampaignsSnapshot,
   clearQueuedDeletedCampaignIds,
   deleteRemoteCampaign,
+  restoreRemoteCampaign,
   fetchRemoteCampaigns,
   getQueuedCampaignsSnapshot,
   getQueuedDeletedCampaignIds,
@@ -13,6 +14,11 @@ import {
   queueCampaignsSnapshot,
   subscribeToRemoteCampaigns,
 } from '../utils/syncEngine';
+import {
+  getSyncTombstonedIds,
+  recordSyncTombstones,
+  removeSyncTombstones,
+} from '../utils/syncTombstones';
 import { sameCampaignSignatures } from '../utils/documentSignature';
 import { useEntitySync, type EntitySyncAdapter } from './useEntitySync';
 
@@ -37,6 +43,7 @@ export function useCampaignSync({ campaigns, onMerge }: UseCampaignSyncOptions) 
       fetchRemote: fetchRemoteCampaigns,
       push: pushCampaigns,
       deleteRemote: deleteRemoteCampaign,
+      restoreRemote: restoreRemoteCampaign,
       subscribeToRemote: subscribeToRemoteCampaigns,
       queueSnapshot: queueCampaignsSnapshot,
       clearQueuedSnapshot: clearQueuedCampaignsSnapshot,
@@ -44,6 +51,9 @@ export function useCampaignSync({ campaigns, onMerge }: UseCampaignSyncOptions) 
       queueDeletedIds: queueDeletedCampaignIds,
       clearQueuedDeletedIds: clearQueuedDeletedCampaignIds,
       getQueuedDeletedIds: getQueuedDeletedCampaignIds,
+      recordTombstones: (tombstones) => recordSyncTombstones('campaigns', tombstones),
+      getTombstonedIds: () => getSyncTombstonedIds('campaigns'),
+      removeTombstones: (ids) => removeSyncTombstones('campaigns', ids),
     }),
     []
   );

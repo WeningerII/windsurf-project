@@ -249,6 +249,24 @@ export const useDocuments = () => {
     [applyDocumentsUpdate]
   );
 
+  // Replace the collection with a sync-merged snapshot. Unlike `addDocuments`
+  // (upsert-only, for imports), the merged collection is authoritative:
+  // entries missing from it — e.g. tombstoned on another device — are removed
+  // locally. History and debounced persistence behave as for any mutation.
+  const applyMergedDocuments = useCallback(
+    (merged: CharacterDocument<SystemDataModel>[]) => {
+      const prepared = prepareDocumentsWithEngines(
+        merged.map((doc) => ({
+          ...doc,
+          version: doc.version ?? 1,
+        }))
+      );
+
+      applyDocumentsUpdate(() => prepared);
+    },
+    [applyDocumentsUpdate]
+  );
+
   const clearAllDocuments = useCallback(() => {
     hasLocalEditsRef.current = true;
     persistence.beginVersion();
@@ -311,6 +329,7 @@ export const useDocuments = () => {
     error,
     addDocument,
     addDocuments,
+    applyMergedDocuments,
     updateDocument,
     deleteDocument,
     clearAllDocuments,

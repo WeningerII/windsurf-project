@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { Campaign } from '../types/core/campaign';
 import { loadCampaigns, saveCampaigns, clearCampaignStorage } from '../utils/campaignStorage';
+import { sameCampaignSignatures } from '../utils/documentSignature';
 import { useDebouncedPersistence } from './useDebouncedPersistence';
 
 export const useCampaigns = () => {
@@ -115,6 +116,23 @@ export const useCampaigns = () => {
     [persistence]
   );
 
+  // Replace the collection with a sync-merged snapshot. Unlike `addCampaigns`
+  // (upsert-only), the merged collection is authoritative: entries missing
+  // from it — e.g. tombstoned on another device — are removed locally.
+  const applyMergedCampaigns = useCallback(
+    (merged: Campaign[]) => {
+      const persistVersion = persistence.beginVersion();
+      setCampaigns((prev) => {
+        if (sameCampaignSignatures(prev, merged)) {
+          return prev;
+        }
+        persistence.persist(merged, persistVersion);
+        return merged;
+      });
+    },
+    [persistence]
+  );
+
   const clearAllCampaigns = useCallback(() => {
     persistence.beginVersion();
     persistence.cancel();
@@ -127,6 +145,7 @@ export const useCampaigns = () => {
     isLoading,
     addCampaign,
     addCampaigns,
+    applyMergedCampaigns,
     updateCampaign,
     deleteCampaign,
     addCharacterToCampaign,

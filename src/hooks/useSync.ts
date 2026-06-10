@@ -8,11 +8,17 @@ import {
   fetchRemoteDocuments,
   pushDocuments,
   deleteRemoteDocument,
+  restoreRemoteDocument,
   mergeDocuments,
   queueSyncSnapshot,
   queueDeletedDocumentIds,
   subscribeToRemoteDocuments,
 } from '../utils/syncEngine';
+import {
+  getSyncTombstonedIds,
+  recordSyncTombstones,
+  removeSyncTombstones,
+} from '../utils/syncTombstones';
 import { sameDocumentSignatures } from '../utils/documentSignature';
 import { useEntitySync, type EntitySyncAdapter } from './useEntitySync';
 
@@ -34,6 +40,7 @@ export function useSync({ documents, onMerge }: UseSyncOptions) {
       fetchRemote: fetchRemoteDocuments,
       push: pushDocuments,
       deleteRemote: deleteRemoteDocument,
+      restoreRemote: restoreRemoteDocument,
       subscribeToRemote: subscribeToRemoteDocuments,
       queueSnapshot: queueSyncSnapshot,
       clearQueuedSnapshot: clearQueuedSyncSnapshot,
@@ -41,6 +48,9 @@ export function useSync({ documents, onMerge }: UseSyncOptions) {
       queueDeletedIds: queueDeletedDocumentIds,
       clearQueuedDeletedIds: clearQueuedDeletedDocumentIds,
       getQueuedDeletedIds: getQueuedDeletedDocumentIds,
+      recordTombstones: (tombstones) => recordSyncTombstones('documents', tombstones),
+      getTombstonedIds: () => getSyncTombstonedIds('documents'),
+      removeTombstones: (ids) => removeSyncTombstones('documents', ids),
     }),
     []
   );
