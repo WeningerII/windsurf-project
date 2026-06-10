@@ -36,39 +36,53 @@ export const elf: Species = {
     },
   ],
 
+  // CRB heritages. PF2e heritages never grant ability boosts (those come from
+  // the ancestry itself) — each grants the feature in its description, so
+  // abilityScoreIncrease is truthfully empty on every entry.
   subraces: [
     {
-      id: 'drow',
-      name: 'Drow Heritage',
+      id: 'arctic',
+      name: 'Arctic Elf',
       parentSpeciesId: 'elf',
-      abilityScoreIncrease: [{ type: 'fixed', attributes: { cha: 2 } }],
-      traits: [],
-      description: 'You gain darkvision and a +1 status bonus to Stealth checks in darkness.',
-    },
-    {
-      id: 'wood-elf',
-      name: 'Wood Elf Heritage',
-      parentSpeciesId: 'elf',
-      abilityScoreIncrease: [{ type: 'fixed', attributes: { str: 2 } }],
+      abilityScoreIncrease: [],
       traits: [],
       description:
-        'You gain a +1 status bonus to Survival checks and can move through difficult terrain.',
+        'You gain cold resistance equal to half your level (minimum 1), and you treat environmental cold effects as if they were one step less extreme.',
     },
     {
-      id: 'high-elf',
-      name: 'High Elf Heritage',
+      id: 'cavern',
+      name: 'Cavern Elf',
       parentSpeciesId: 'elf',
-      abilityScoreIncrease: [{ type: 'fixed', attributes: { int: 2 } }],
+      abilityScoreIncrease: [],
       traits: [],
-      description: 'You gain a +1 status bonus to Arcana checks and can cast one cantrip.',
+      description: 'You gain darkvision.',
     },
     {
-      id: 'cavern-elf',
-      name: 'Cavern Elf Heritage',
+      id: 'seer',
+      name: 'Seer Elf',
       parentSpeciesId: 'elf',
-      abilityScoreIncrease: [{ type: 'fixed', attributes: { dex: 2 } }],
+      abilityScoreIncrease: [],
       traits: [],
-      description: 'You gain darkvision and a +1 status bonus to Acrobatics checks.',
+      description:
+        'You can cast the detect magic cantrip as an arcane innate spell at will, and you gain a +1 circumstance bonus to checks to Identify Magic and to Decipher Writing of a magical nature.',
+    },
+    {
+      id: 'whisper',
+      name: 'Whisper Elf',
+      parentSpeciesId: 'elf',
+      abilityScoreIncrease: [],
+      traits: [],
+      description:
+        'Your hearing is keen: you gain a +2 circumstance bonus to Perception checks to Seek hidden or undetected creatures within 30 feet.',
+    },
+    {
+      id: 'woodland',
+      name: 'Woodland Elf',
+      parentSpeciesId: 'elf',
+      abilityScoreIncrease: [],
+      traits: [],
+      description:
+        'When Climbing trees and other plants you move at half your Speed on a success (full Speed on a critical success), and you can always Take Cover when within forest terrain.',
     },
   ],
 

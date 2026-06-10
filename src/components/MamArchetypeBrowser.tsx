@@ -1,11 +1,11 @@
 import React, { useDeferredValue, useMemo, useState } from 'react';
 import { Check, Search, Shield } from 'lucide-react';
-import type { CharacterClass } from '../types/character-options/classes';
+import type { Mam3eArchetype } from '../types/mam/archetypes';
 
 interface MamArchetypeBrowserProps {
-  archetypes: CharacterClass[];
+  archetypes: Mam3eArchetype[];
   selectedArchetypeIds?: string[];
-  onToggleArchetype?: (archetype: CharacterClass) => void;
+  onToggleArchetype?: (archetype: Mam3eArchetype) => void;
 }
 
 export const MamArchetypeBrowser: React.FC<MamArchetypeBrowserProps> = ({
@@ -30,8 +30,7 @@ export const MamArchetypeBrowser: React.FC<MamArchetypeBrowserProps> = ({
         [
           archetype.name,
           archetype.description,
-          archetype.primaryAbility.join(' '),
-          archetype.skillProficiencies.options.join(' '),
+          (archetype.suggestedSkills ?? []).join(' '),
           featureText,
         ]
           .join(' ')
@@ -109,21 +108,19 @@ export const MamArchetypeBrowser: React.FC<MamArchetypeBrowserProps> = ({
                   )}
                 </div>
 
-                <div className="flex flex-wrap gap-1.5 text-[11px] text-muted-foreground">
-                  {archetype.primaryAbility.map((ability) => (
-                    <span
-                      key={`${archetype.id}-${ability}`}
-                      className="rounded-full border px-2 py-0.5 uppercase"
-                    >
-                      {ability}
-                    </span>
-                  ))}
-                  {archetype.skillProficiencies.options.length > 0 && (
-                    <span className="rounded-full border px-2 py-0.5">
-                      {archetype.skillProficiencies.options.length} class skills
-                    </span>
-                  )}
-                </div>
+                {(archetype.suggestedSkills?.length ?? 0) > 0 && (
+                  <div className="flex flex-wrap gap-1.5 text-[11px] text-muted-foreground">
+                    {archetype.suggestedSkills!.map((skill) => (
+                      <span
+                        key={`${archetype.id}-${skill}`}
+                        className="rounded-full border px-2 py-0.5 capitalize"
+                        title="Suggested skill from the published archetype"
+                      >
+                        {skill.replace(/-/g, ' ')}
+                      </span>
+                    ))}
+                  </div>
+                )}
 
                 <p className="text-sm text-muted-foreground">{archetype.description}</p>
 

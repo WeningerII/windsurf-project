@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { CharacterClass } from '../../types/character-options/classes';
+import type { Mam3eArchetype } from '../../types/mam/archetypes';
 import type { Item } from '../../types/equipment/items';
 import type { GameSystemId } from '../../types/game-systems';
 import type { Spell } from '../../types/magic/spells';
@@ -106,7 +106,7 @@ export function useMam3eSheetResources({ systemId }: UseMam3eSheetResourcesProps
     loaded: archetypesLoaded,
     error: archetypesError,
     load: loadArchetypes,
-  } = useLazyResource<CharacterClass>(systemId, loadMam3eArchetypesForSystem);
+  } = useLazyResource<Mam3eArchetype>(systemId, loadMam3eArchetypesForSystem);
   const {
     data: complicationCatalog,
     loaded: complicationsLoaded,

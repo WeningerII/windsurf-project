@@ -37,38 +37,52 @@ export const halfling: Species = {
     },
   ],
 
+  // CRB heritages. PF2e heritages never grant ability boosts (those come from
+  // the ancestry itself) — each grants the feature in its description, so
+  // abilityScoreIncrease is truthfully empty on every entry.
   subraces: [
     {
-      id: 'fortunate',
-      name: 'Fortunate Heritage',
+      id: 'gutsy',
+      name: 'Gutsy Halfling',
       parentSpeciesId: 'halfling',
-      abilityScoreIncrease: [{ type: 'fixed', attributes: { cha: 2 } }],
+      abilityScoreIncrease: [],
       traits: [],
-      description: 'You gain an extra reroll per day and can use it on any d20 roll.',
+      description:
+        'When you roll a success on a saving throw against an emotion effect, you get a critical success instead.',
+    },
+    {
+      id: 'hillock',
+      name: 'Hillock Halfling',
+      parentSpeciesId: 'halfling',
+      abilityScoreIncrease: [],
+      traits: [],
+      description:
+        'When you regain Hit Points overnight or from Treat Wounds, you regain additional Hit Points equal to your level.',
     },
     {
       id: 'nomadic',
-      name: 'Nomadic Heritage',
+      name: 'Nomadic Halfling',
       parentSpeciesId: 'halfling',
-      abilityScoreIncrease: [{ type: 'fixed', attributes: { dex: 2 } }],
+      abilityScoreIncrease: [],
       traits: [],
-      description: 'You gain a +1 status bonus to Survival checks and can navigate any terrain.',
-    },
-    {
-      id: 'stout',
-      name: 'Stout Heritage',
-      parentSpeciesId: 'halfling',
-      abilityScoreIncrease: [{ type: 'fixed', attributes: { con: 2 } }],
-      traits: [],
-      description: 'You gain a +1 status bonus to Fortitude saves and resistance to poison.',
+      description:
+        'You know two additional languages, and you learn another language each time you become expert, master, or legendary in Society.',
     },
     {
       id: 'twilight',
-      name: 'Twilight Heritage',
+      name: 'Twilight Halfling',
       parentSpeciesId: 'halfling',
-      abilityScoreIncrease: [{ type: 'fixed', attributes: { wis: 2 } }],
+      abilityScoreIncrease: [],
       traits: [],
-      description: 'You gain low-light vision and a +1 status bonus to Perception in dim light.',
+      description: 'You gain low-light vision.',
+    },
+    {
+      id: 'wildwood',
+      name: 'Wildwood Halfling',
+      parentSpeciesId: 'halfling',
+      abilityScoreIncrease: [],
+      traits: [],
+      description: 'You ignore difficult terrain from trees, foliage, and undergrowth.',
     },
   ],
 

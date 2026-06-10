@@ -8,9 +8,9 @@
  * License: OGL v1.0a
  */
 
-import { CharacterClass } from '../../../../types/character-options/classes';
+import { Mam3eArchetype } from '../../../../types/mam/archetypes';
 
-export const weaponMasterArchetype: CharacterClass = {
+export const weaponMasterArchetype: Mam3eArchetype = {
   id: 'mam3e-weapon-master',
   name: 'Weapon Master',
   system: 'mam3e',
@@ -22,19 +22,7 @@ export const weaponMasterArchetype: CharacterClass = {
     page: 1,
     url: 'https://www.d20herosrd.com/character-creation/archetypes/weapon-master/',
   },
-  hitDie: 'd8',
-  primaryAbility: ['dex', 'str'],
-  savingThrowProficiencies: ['dex', 'str'],
-  armorProficiencies: [],
-  weaponProficiencies: [],
-  toolProficiencies: [],
-  skillProficiencies: {
-    count: 3,
-    options: ['athletics', 'acrobatics', 'intimidation'],
-    label: 'Choose class skills',
-  },
-  equipmentChoices: [],
-  startingGold: { dice: '1d6', multiplier: 100 },
+  suggestedSkills: ['athletics', 'acrobatics', 'intimidation'],
   features: [
     {
       level: 1,
@@ -54,7 +42,5 @@ export const weaponMasterArchetype: CharacterClass = {
       ],
     },
   ],
-  subclassLevel: 1,
-  subclasses: [],
   description: 'A master of weapons and combat techniques with unparalleled skill.',
 };

@@ -101,28 +101,36 @@ describe('PF2e templates', () => {
     });
   });
 
-  it('swaps ancestry and heritage fixed boosts, languages, and features cleanly', () => {
-    const ironclad = dwarf.subraces?.find((heritage) => heritage.id === 'ironclad');
-    const highElf = elf.subraces?.find((heritage) => heritage.id === 'high-elf');
+  it('swaps ancestry boosts, languages, and features cleanly; heritages grant no boosts', () => {
+    // CRB heritages (re-sourced in review H-5): features only, never boosts.
+    const rockDwarf = dwarf.subraces?.find((heritage) => heritage.id === 'rock');
+    const cavernElf = elf.subraces?.find((heritage) => heritage.id === 'cavern');
 
-    if (!ironclad || !highElf) {
+    if (!rockDwarf || !cavernElf) {
       throw new Error('Expected test heritages to exist.');
     }
 
-    const dwarfDoc = applyPf2eAncestryTemplate(makeDoc(), dwarf, ironclad);
-    const elfDoc = applyPf2eAncestryTemplate(dwarfDoc, elf, highElf, {
+    // The heritage contributes nothing to ability scores: with or without it,
+    // the dwarf's attributes are identical (boosts are the ANCESTRY's).
+    const bareDwarfDoc = applyPf2eAncestryTemplate(makeDoc(), dwarf);
+    const dwarfDoc = applyPf2eAncestryTemplate(makeDoc(), dwarf, rockDwarf);
+    expect(dwarfDoc.system.baseAttributes).toEqual(bareDwarfDoc.system.baseAttributes);
+
+    const elfDoc = applyPf2eAncestryTemplate(dwarfDoc, elf, cavernElf, {
       ancestry: dwarf,
-      heritage: ironclad,
+      heritage: rockDwarf,
     });
 
+    // Ancestry fixed boosts ONLY — the old pins (con 14 / int 14) encoded the
+    // invented heritages' illegal +2s on top of the ancestry's +2.
     expect(dwarfDoc.system.baseAttributes).toMatchObject({
-      con: 14,
+      con: 12,
       wis: 12,
       cha: 8,
     });
     expect(elfDoc.system.baseAttributes).toMatchObject({
       dex: 12,
-      int: 14,
+      int: 12,
       con: 8,
     });
     expect(elfDoc.system.languages).toEqual(['Common', 'Elven']);

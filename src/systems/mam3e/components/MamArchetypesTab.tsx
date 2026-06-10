@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
+import type { Mam3eArchetype } from '../../../types/mam/archetypes';
 import { Shield, X } from 'lucide-react';
 import { Badge } from '../../../components/ui/Badge';
-import type { CharacterClass } from '../../../types/character-options/classes';
 import { lazyWithPreload } from '../../../utils/lazyWithPreload';
 import { MAM3E_ARCHETYPE_COPY } from '../../../utils/documentationCopy';
 import { MamResourceLoadError } from './MamResourceLoadError';
@@ -15,10 +15,10 @@ interface Props {
   archetypesLoaded: boolean;
   archetypesError?: boolean;
   onRetryArchetypes?: () => void;
-  archetypes: CharacterClass[];
+  archetypes: Mam3eArchetype[];
   pinnedArchetypeIds: string[];
-  pinnedArchetypes: CharacterClass[];
-  onToggleArchetype?: (archetype: CharacterClass) => void;
+  pinnedArchetypes: Mam3eArchetype[];
+  onToggleArchetype?: (archetype: Mam3eArchetype) => void;
 }
 
 type MamArchetypesTabComponent = React.FC<Props> & {

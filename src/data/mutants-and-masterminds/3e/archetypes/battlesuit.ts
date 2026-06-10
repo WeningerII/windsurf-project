@@ -8,9 +8,9 @@
  * License: OGL v1.0a
  */
 
-import { CharacterClass } from '../../../../types/character-options/classes';
+import { Mam3eArchetype } from '../../../../types/mam/archetypes';
 
-export const battlesuitArchetype: CharacterClass = {
+export const battlesuitArchetype: Mam3eArchetype = {
   id: 'mam3e-battlesuit',
   name: 'Battlesuit',
   system: 'mam3e',
@@ -22,19 +22,7 @@ export const battlesuitArchetype: CharacterClass = {
     page: 1,
     url: 'https://www.d20herosrd.com/character-creation/archetypes/battlesuit/',
   },
-  hitDie: 'd8',
-  primaryAbility: ['int', 'str'],
-  savingThrowProficiencies: ['int', 'str'],
-  armorProficiencies: [],
-  weaponProficiencies: [],
-  toolProficiencies: [],
-  skillProficiencies: {
-    count: 3,
-    options: ['technology', 'athletics', 'perception'],
-    label: 'Choose class skills',
-  },
-  equipmentChoices: [],
-  startingGold: { dice: '1d6', multiplier: 100 },
+  suggestedSkills: ['technology', 'athletics', 'perception'],
   features: [
     {
       level: 1,
@@ -54,7 +42,5 @@ export const battlesuitArchetype: CharacterClass = {
       ],
     },
   ],
-  subclassLevel: 1,
-  subclasses: [],
   description: 'A hero in a technological battlesuit with advanced weapons and protection.',
 };

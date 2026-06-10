@@ -14,6 +14,7 @@
 
 import { GameSystemId } from '../types/game-systems';
 import type { Advantage } from '../types/mam/advantages';
+import type { Mam3eArchetype } from '../types/mam/archetypes';
 import { Spell } from '../types/magic/spells';
 import { CharacterClass } from '../types/character-options/classes';
 import { Species } from '../types/character-options/species';
@@ -445,7 +446,7 @@ async function loadMam3eEquipment(): Promise<Item[]> {
   }) as Item[];
 }
 
-async function loadMam3eArchetypes(): Promise<CharacterClass[]> {
+async function loadMam3eArchetypes(): Promise<Mam3eArchetype[]> {
   const archetypeModule = await import('../data/mutants-and-masterminds/3e/archetypes');
   return Object.values(archetypeModule.mm3eArchetypes || {});
 }
@@ -666,7 +667,7 @@ export async function loadArchetypesForSystem(systemId: GameSystemId): Promise<A
 
 export async function loadMam3eArchetypesForSystem(
   systemId: GameSystemId
-): Promise<CharacterClass[]> {
+): Promise<Mam3eArchetype[]> {
   if (systemId !== 'mam3e') {
     return [];
   }

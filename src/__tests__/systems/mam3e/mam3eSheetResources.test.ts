@@ -1,6 +1,6 @@
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import type { CharacterClass } from '../../../types/character-options/classes';
+import type { Mam3eArchetype } from '../../../types/mam/archetypes';
 import type { GameSystemId } from '../../../types/game-systems';
 import {
   loadMam3eArchetypesForSystem,
@@ -40,7 +40,7 @@ describe('useMam3eSheetResources lazy-load error handling', () => {
     loadMock.mockReset();
     loadMock
       .mockRejectedValueOnce(new Error('network down'))
-      .mockResolvedValueOnce([{ id: 'speedster', name: 'Speedster' } as CharacterClass]);
+      .mockResolvedValueOnce([{ id: 'speedster', name: 'Speedster' } as Mam3eArchetype]);
 
     const { result } = renderHook(() => useMam3eSheetResources({ systemId: SYSTEM_ID }));
 

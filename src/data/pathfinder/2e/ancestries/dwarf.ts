@@ -43,40 +43,54 @@ export const dwarf: Species = {
     },
   ],
 
+  // CRB heritages. PF2e heritages never grant ability boosts (those come from
+  // the ancestry itself) — each grants the feature in its description, so
+  // abilityScoreIncrease is truthfully empty on every entry.
   subraces: [
     {
-      id: 'forge-blessed',
-      name: 'Forge-Blessed Heritage',
+      id: 'ancient-blooded',
+      name: 'Ancient-Blooded Dwarf',
       parentSpeciesId: 'dwarf',
-      abilityScoreIncrease: [{ type: 'fixed', attributes: { str: 2 } }],
+      abilityScoreIncrease: [],
       traits: [],
       description:
-        'You gain a +1 status bonus to Crafting checks and can use Crafting to repair metal items.',
+        'You gain the Call on Ancient Blood reaction: when you attempt a saving throw against a magical effect, you gain a +1 circumstance bonus to the save until the end of the encounter.',
     },
     {
-      id: 'stonecunning',
-      name: 'Stonecunning Heritage',
+      id: 'death-warden',
+      name: 'Death Warden Dwarf',
       parentSpeciesId: 'dwarf',
-      abilityScoreIncrease: [{ type: 'fixed', attributes: { int: 2 } }],
+      abilityScoreIncrease: [],
       traits: [],
       description:
-        'You gain a +1 status bonus to Perception checks to notice stonework and can identify stone materials.',
+        'When you roll a success on a saving throw against a necromancy effect, you get a critical success instead.',
     },
     {
-      id: 'ironclad',
-      name: 'Ironclad Heritage',
+      id: 'forge',
+      name: 'Forge Dwarf',
       parentSpeciesId: 'dwarf',
-      abilityScoreIncrease: [{ type: 'fixed', attributes: { con: 2 } }],
+      abilityScoreIncrease: [],
       traits: [],
-      description: 'You gain a +1 status bonus to AC when wearing metal armor.',
+      description:
+        'You gain fire resistance equal to half your level (minimum 1), and you treat environmental heat effects as if they were one step less extreme.',
     },
     {
-      id: 'mountainborn',
-      name: 'Mountainborn Heritage',
+      id: 'rock',
+      name: 'Rock Dwarf',
       parentSpeciesId: 'dwarf',
-      abilityScoreIncrease: [{ type: 'fixed', attributes: { wis: 2 } }],
+      abilityScoreIncrease: [],
       traits: [],
-      description: 'You gain a +1 status bonus to Survival checks in mountainous terrain.',
+      description:
+        'You gain a +2 circumstance bonus to your Fortitude or Reflex DC against attempts to Shove or Trip you, and against effects that would force you to move or knock you prone.',
+    },
+    {
+      id: 'strong-blooded',
+      name: 'Strong-Blooded Dwarf',
+      parentSpeciesId: 'dwarf',
+      abilityScoreIncrease: [],
+      traits: [],
+      description:
+        'You gain poison resistance equal to half your level (minimum 1), and each successful saving throw you make against an ongoing poison reduces its stage by 2 (or 1 for a virulent poison).',
     },
   ],
 

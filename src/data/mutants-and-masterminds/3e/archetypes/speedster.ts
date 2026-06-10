@@ -8,9 +8,9 @@
  * License: OGL v1.0a
  */
 
-import { CharacterClass } from '../../../../types/character-options/classes';
+import { Mam3eArchetype } from '../../../../types/mam/archetypes';
 
-export const speedsterArchetype: CharacterClass = {
+export const speedsterArchetype: Mam3eArchetype = {
   id: 'mam3e-speedster',
   name: 'Speedster',
   system: 'mam3e',
@@ -22,19 +22,7 @@ export const speedsterArchetype: CharacterClass = {
     page: 1,
     url: 'https://www.d20herosrd.com/character-creation/archetypes/speedster/',
   },
-  hitDie: 'd8',
-  primaryAbility: ['dex', 'con'],
-  savingThrowProficiencies: ['dex', 'con'],
-  armorProficiencies: [],
-  weaponProficiencies: [],
-  toolProficiencies: [],
-  skillProficiencies: {
-    count: 3,
-    options: ['acrobatics', 'athletics', 'perception'],
-    label: 'Choose class skills',
-  },
-  equipmentChoices: [],
-  startingGold: { dice: '1d6', multiplier: 100 },
+  suggestedSkills: ['acrobatics', 'athletics', 'perception'],
   features: [
     {
       level: 1,
@@ -54,7 +42,5 @@ export const speedsterArchetype: CharacterClass = {
       ],
     },
   ],
-  subclassLevel: 1,
-  subclasses: [],
   description: 'A hero with superhuman speed. Speedsters excel at mobility and quick strikes.',
 };

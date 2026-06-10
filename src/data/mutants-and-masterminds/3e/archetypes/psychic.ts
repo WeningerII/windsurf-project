@@ -8,9 +8,9 @@
  * License: OGL v1.0a
  */
 
-import { CharacterClass } from '../../../../types/character-options/classes';
+import { Mam3eArchetype } from '../../../../types/mam/archetypes';
 
-export const psychicArchetype: CharacterClass = {
+export const psychicArchetype: Mam3eArchetype = {
   id: 'mam3e-psychic',
   name: 'Psychic',
   system: 'mam3e',
@@ -22,19 +22,7 @@ export const psychicArchetype: CharacterClass = {
     page: 1,
     url: 'https://www.d20herosrd.com/character-creation/archetypes/psychic/',
   },
-  hitDie: 'd6',
-  primaryAbility: ['wis', 'int'],
-  savingThrowProficiencies: ['wis', 'dex'],
-  armorProficiencies: [],
-  weaponProficiencies: [],
-  toolProficiencies: [],
-  skillProficiencies: {
-    count: 2,
-    options: ['insight', 'perception'],
-    label: 'Choose class skills',
-  },
-  equipmentChoices: [],
-  startingGold: { dice: '1d6', multiplier: 100 },
+  suggestedSkills: ['insight', 'perception'],
   features: [
     {
       level: 1,
@@ -54,7 +42,5 @@ export const psychicArchetype: CharacterClass = {
       ],
     },
   ],
-  subclassLevel: 1,
-  subclasses: [],
   description: 'A powerful psychic with telepathy and mental attack powers.',
 };

@@ -32,55 +32,44 @@ export const human: Species = {
 
   traits: [],
 
+  // CRB heritages. PF2e heritages never grant ability boosts (those come from
+  // the ancestry itself) — each grants the feature in its description, so
+  // abilityScoreIncrease is truthfully empty on every entry.
   subraces: [
+    {
+      id: 'half-elf',
+      name: 'Half-Elf',
+      parentSpeciesId: 'human',
+      abilityScoreIncrease: [],
+      traits: [],
+      description:
+        'You gain the elf trait and low-light vision, and you can select elf and half-elf feats whenever you gain an ancestry feat.',
+    },
+    {
+      id: 'half-orc',
+      name: 'Half-Orc',
+      parentSpeciesId: 'human',
+      abilityScoreIncrease: [],
+      traits: [],
+      description:
+        'You gain the orc trait and low-light vision, and you can select orc and half-orc feats whenever you gain an ancestry feat.',
+    },
     {
       id: 'skilled',
       name: 'Skilled Heritage',
       parentSpeciesId: 'human',
-      abilityScoreIncrease: [{ type: 'fixed', attributes: { int: 2 } }],
+      abilityScoreIncrease: [],
       traits: [],
-      description: 'You gain an additional skill training and a +1 status bonus to skill checks.',
+      description:
+        'You become trained in one skill of your choice; at 5th level you become an expert in that skill.',
     },
     {
       id: 'versatile',
       name: 'Versatile Heritage',
       parentSpeciesId: 'human',
-      abilityScoreIncrease: [{ type: 'fixed', attributes: { cha: 2 } }],
+      abilityScoreIncrease: [],
       traits: [],
-      description: 'You gain an additional ancestry feat and can retrain one feat each day.',
-    },
-    {
-      id: 'natural-ambition',
-      name: 'Natural Ambition Heritage',
-      parentSpeciesId: 'human',
-      abilityScoreIncrease: [{ type: 'fixed', attributes: { str: 2 } }],
-      traits: [],
-      description: 'You gain an additional class feat at 1st level.',
-    },
-    {
-      id: 'general-training',
-      name: 'General Training Heritage',
-      parentSpeciesId: 'human',
-      abilityScoreIncrease: [{ type: 'fixed', attributes: { wis: 2 } }],
-      traits: [],
-      description: 'You gain an additional general feat at 1st level.',
-    },
-    {
-      id: 'heart-of-the-people',
-      name: 'Heart of the People Heritage',
-      parentSpeciesId: 'human',
-      abilityScoreIncrease: [{ type: 'fixed', attributes: { cha: 2 } }],
-      traits: [],
-      description:
-        'You gain a +1 status bonus to Diplomacy checks and can use Diplomacy to Make an Impression on animals.',
-    },
-    {
-      id: 'winged',
-      name: 'Winged Heritage',
-      parentSpeciesId: 'human',
-      abilityScoreIncrease: [{ type: 'fixed', attributes: { dex: 2 } }],
-      traits: [],
-      description: 'You gain vestigial wings and can glide, taking no fall damage when falling.',
+      description: 'You gain a general feat of your choice that you meet the prerequisites for.',
     },
   ],
 

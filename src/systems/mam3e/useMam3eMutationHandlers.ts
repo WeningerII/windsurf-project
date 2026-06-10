@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
+import type { Mam3eArchetype } from '../../types/mam/archetypes';
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
 import type { Power } from '../../types/mam/powers';
-import type { CharacterClass } from '../../types/character-options/classes';
 import type { Complication } from '../../data/mutants-and-masterminds/3e/complications';
 import type { Advantage } from '../../types/mam/advantages';
 import { systemRegistry } from '../../registry';
@@ -213,7 +213,7 @@ export function useMam3eMutationHandlers({
   );
 
   const togglePinnedArchetype = useCallback(
-    (archetype: CharacterClass) => {
+    (archetype: Mam3eArchetype) => {
       const nextPinnedIds = pinnedArchetypeIds.includes(archetype.id)
         ? pinnedArchetypeIds.filter((id) => id !== archetype.id)
         : [...pinnedArchetypeIds, archetype.id];
