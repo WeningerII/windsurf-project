@@ -2127,6 +2127,9 @@ describe('System Sheets', () => {
     let currentDoc = makeDoc('pf2e', {
       ...createDefaultPf2eData(),
       classId: 'wizard',
+      // Archetype features are level-gated at apply time; the fixture's
+      // dedication feature is level 2 (RAW: dedications start at level 2).
+      level: 2,
     }) as CharacterDocument<ReturnType<typeof createDefaultPf2eData>>;
 
     const { rerender } = render(<Pf2eCharacterSheet document={currentDoc} onUpdate={onUpdate} />);

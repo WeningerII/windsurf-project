@@ -516,14 +516,16 @@ function archetypeSource(archetype: Archetype): string {
   return `Archetype: ${archetype.name}`;
 }
 
-function archetypeTemplateFeatures(archetype: Archetype): Feature[] {
+function archetypeTemplateFeatures(archetype: Archetype, maxLevel?: number): Feature[] {
   const source = archetypeSource(archetype);
-  return archetype.features.map((feature) => ({
-    id: `${archetype.id}:${feature.level}:${feature.name.toLowerCase().replace(/\s+/g, '-')}`,
-    name: feature.name,
-    source,
-    description: feature.description,
-  }));
+  return archetype.features
+    .filter((feature) => maxLevel == null || feature.level <= maxLevel)
+    .map((feature) => ({
+      id: `${archetype.id}:${feature.level}:${feature.name.toLowerCase().replace(/\s+/g, '-')}`,
+      name: feature.name,
+      source,
+      description: feature.description,
+    }));
 }
 
 export function applyPf2eClassTemplate(
@@ -880,7 +882,12 @@ export function applyPf2eArchetypeTemplate(
   sys.selectedArchetypeIds = [...currentSelections, archetype.id];
 
   const existingFeatureSignatures = new Set((sys.features || []).map(featureSignature));
-  archetypeTemplateFeatures(archetype).forEach((feature) => {
+  // Grant only the features the character has reached: an archetype's
+  // higher-level feats stay listed in the browser but aren't added to a
+  // level-1 sheet (mirrors the class template's level gating). Removal stays
+  // unfiltered so features granted at a higher level are still cleaned up
+  // after leveling down.
+  archetypeTemplateFeatures(archetype, sys.level).forEach((feature) => {
     const signature = featureSignature(feature);
     if (existingFeatureSignatures.has(signature)) {
       return;

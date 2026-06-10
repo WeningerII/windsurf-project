@@ -23,6 +23,9 @@ function makeSystem(archetype: Archetype): Pf2eDataModel {
   return {
     ...createDefaultPf2eData(),
     classId: archetype.parentClassId,
+    // High enough that every fixture feature passes the apply-time level gate;
+    // the gate itself is covered in the "level gating" suite below.
+    level: 20,
   };
 }
 
@@ -116,5 +119,45 @@ describe('PF2e archetype persistence', () => {
     expect(
       cleared.system.features.some((feature) => archetypeFeatureIds.includes(feature.id))
     ).toBe(false);
+  });
+});
+
+describe('PF2e archetype level gating', () => {
+  const archetype = allPf2eArchetypes.find((entry) => entry.id === 'pf2e-wizard-archetype')!;
+  const featureId = (level: number, name: string) =>
+    `${archetype.id}:${level}:${name.toLowerCase().replace(/\s+/g, '-')}`;
+
+  it('grants only features at or below the character level', () => {
+    const lowLevel = makeDocument('gated', {
+      ...createDefaultPf2eData(),
+      classId: archetype.parentClassId,
+      level: 1,
+    });
+
+    const applied = applyPf2eArchetypeTemplate(lowLevel, archetype);
+    const grantedIds = applied.system.features.map((feature) => feature.id);
+    for (const feature of archetype.features) {
+      if (feature.level <= 1) {
+        expect(grantedIds).toContain(featureId(feature.level, feature.name));
+      } else {
+        expect(grantedIds).not.toContain(featureId(feature.level, feature.name));
+      }
+    }
+  });
+
+  it('removal cleans up features granted at a higher level after leveling down', () => {
+    const highLevel = makeDocument('level-down', {
+      ...createDefaultPf2eData(),
+      classId: archetype.parentClassId,
+      level: 20,
+    });
+
+    const applied = applyPf2eArchetypeTemplate(highLevel, archetype);
+    // Simulate leveling down before deselecting the archetype: removal builds
+    // its signature set unfiltered, so higher-level grants still come out.
+    applied.system.level = 1;
+    const removed = removePf2eArchetypeTemplate(applied, archetype);
+    const remainingSources = removed.system.features.map((feature) => feature.source);
+    expect(remainingSources).not.toContain(`Archetype: ${archetype.name}`);
   });
 });

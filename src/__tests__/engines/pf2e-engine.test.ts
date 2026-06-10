@@ -397,3 +397,27 @@ describe('shield AC (Raise a Shield)', () => {
     expect(result.system.equipment[0].raised).toBe(false);
   });
 });
+
+describe('spell proficiency (M3)', () => {
+  // The sheet's spell attack/DC badge persists only the TIER; the engine owns
+  // `total`, recomputing level + tier bonus on every prepare (CRB: proficiency
+  // bonus = level + 2/4/6/8 for T/E/M/L).
+  it('recomputes spellcasting proficiency total from the persisted tier', () => {
+    const doc = makeDoc({
+      level: 5,
+      classId: 'wizard',
+      spellcasting: {
+        tradition: 'arcane',
+        type: 'prepared',
+        proficiency: { tier: 'expert', total: 0 },
+        spellSlots: {},
+        spellsKnown: [],
+        focusSpells: [],
+        focusPoints: { current: 0, max: 0 },
+      },
+    });
+
+    const result = new Pf2eEngine().prepareData(doc);
+    expect(result.system.spellcasting?.proficiency).toEqual({ tier: 'expert', total: 9 });
+  });
+});
