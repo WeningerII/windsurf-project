@@ -46,7 +46,7 @@ export const daggerheartClasses: DaggerheartClass[] = [
     sourceBook,
     description:
       'A charismatic performer who rallies allies and turns art, wit, and presence into battlefield leverage.',
-    domains: ['Grace', 'Codex'],
+    domains: ['grace', 'codex'],
     startingEvasion: 10,
     startingHitPoints: 5,
     classItems: ['A romance novel', 'A letter never opened'],
@@ -134,7 +134,7 @@ export const daggerheartClasses: DaggerheartClass[] = [
     sourceBook,
     description:
       'A nature mystic who shifts into beast shapes and channels the wild in subtle or overwhelming ways.',
-    domains: ['Sage', 'Arcana'],
+    domains: ['sage', 'arcana'],
     startingEvasion: 10,
     startingHitPoints: 6,
     classItems: ['A small bag of rocks and bones', 'A strange pendant found in the dirt'],
@@ -232,7 +232,7 @@ export const daggerheartClasses: DaggerheartClass[] = [
     sourceBook,
     description:
       'A relentless protector who anchors the front line and punishes those who threaten allies.',
-    domains: ['Valor', 'Blade'],
+    domains: ['valor', 'blade'],
     startingEvasion: 9,
     startingHitPoints: 7,
     classItems: ['A totem from your mentor', 'A secret key'],
@@ -329,7 +329,7 @@ export const daggerheartClasses: DaggerheartClass[] = [
     sourceBook,
     description:
       'A hunter and wilderness tactician who either fights beside a companion or relentlessly tracks prey.',
-    domains: ['Bone', 'Sage'],
+    domains: ['bone', 'sage'],
     startingEvasion: 12,
     startingHitPoints: 6,
     classItems: ['A trophy from your first kill', 'A seemingly broken compass'],
@@ -427,7 +427,7 @@ export const daggerheartClasses: DaggerheartClass[] = [
     sourceBook,
     description:
       'A covert operator who exploits positioning, shadow, and social leverage to win fights unfairly.',
-    domains: ['Midnight', 'Grace'],
+    domains: ['midnight', 'grace'],
     startingEvasion: 12,
     startingHitPoints: 6,
     classItems: ['A set of forgery tools', 'A grappling hook'],
@@ -521,7 +521,7 @@ export const daggerheartClasses: DaggerheartClass[] = [
     sourceBook,
     description:
       'A divine champion who protects allies, heals wounds, and brings sacred force to battle.',
-    domains: ['Splendor', 'Valor'],
+    domains: ['splendor', 'valor'],
     startingEvasion: 9,
     startingHitPoints: 7,
     classItems: ['A bundle of offerings', 'A sigil of your god'],
@@ -614,7 +614,7 @@ export const daggerheartClasses: DaggerheartClass[] = [
     sourceBook,
     description:
       'An innate mage who channels inherited power as raw elemental force or flexible spell manipulation.',
-    domains: ['Arcana', 'Midnight'],
+    domains: ['arcana', 'midnight'],
     startingEvasion: 10,
     startingHitPoints: 6,
     classItems: ['A whispering orb', 'A family heirloom'],
@@ -707,7 +707,7 @@ export const daggerheartClasses: DaggerheartClass[] = [
     sourceBook,
     description:
       'A disciplined weapons master who controls melee space and turns courage or slaughter into momentum.',
-    domains: ['Blade', 'Bone'],
+    domains: ['blade', 'bone'],
     startingEvasion: 11,
     startingHitPoints: 6,
     classItems: ['The drawing of a lover', 'A sharpening stone'],
@@ -794,7 +794,7 @@ export const daggerheartClasses: DaggerheartClass[] = [
     sourceBook,
     description:
       'A learned mage who masters prepared magic through either broad scholarship or battlefield spellcraft.',
-    domains: ['Codex', 'Splendor'],
+    domains: ['codex', 'splendor'],
     startingEvasion: 11,
     startingHitPoints: 5,
     classItems: ['A book you’re trying to translate', 'A tiny harmless elemental pet'],

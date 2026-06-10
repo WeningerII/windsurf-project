@@ -159,30 +159,6 @@ export interface MulticlassProficiencies {
   skills?: Choice<string>;
 }
 
-// Type guard for spell slot array validation
-export type SpellSlotArray = readonly [
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-]; // Exactly 20 elements for levels 1-20
-
 // Display metadata for UI/UX
 export interface ClassDisplayMetadata {
   icon?: string; // Icon identifier (e.g., 'sword', 'book', 'fist')

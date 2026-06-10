@@ -1,4 +1,5 @@
 import { Heart, Shield, Star, Zap } from 'lucide-react';
+import { domainDisplayName } from '../daggerheartSheetConstants';
 import { Badge } from '../../../components/ui/Badge';
 import { DAGGERHEART_MAX_HOPE } from '../../../utils/daggerheartDerived';
 import { parseNum } from '../../../utils/math';
@@ -153,7 +154,9 @@ export function DaggerheartSheetHeader({ controller }: Props) {
         )}
         {controller.selectedClass && (
           <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-            <Badge variant="info">Domains: {controller.selectedClass.domains.join(' / ')}</Badge>
+            <Badge variant="info">
+              Domains: {controller.selectedClass.domains.map(domainDisplayName).join(' / ')}
+            </Badge>
             <Badge variant="secondary">
               SRD start: Evasion {controller.selectedClass.startingEvasion}, HP{' '}
               {controller.selectedClass.startingHitPoints}

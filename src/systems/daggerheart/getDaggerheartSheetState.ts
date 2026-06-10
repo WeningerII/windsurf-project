@@ -18,7 +18,7 @@ import {
   getDaggerheartInventoryDefinition,
   normalizeDaggerheartCurrency,
 } from '../../utils/daggerheartInventory';
-import { ATTRIBUTES, EMPTY_WEAPON_LOADOUT, normalizeDomainId } from './daggerheartSheetConstants';
+import { ATTRIBUTES, EMPTY_WEAPON_LOADOUT } from './daggerheartSheetConstants';
 import type { DaggerheartDataModel } from './data-model';
 
 interface GetDaggerheartSheetStateProps {
@@ -178,7 +178,7 @@ export function getDaggerheartSheetState({
     );
   });
 
-  const selectedDomainIds = selectedClass?.domains.map((entry) => normalizeDomainId(entry)) ?? [];
+  const selectedDomainIds = selectedClass?.domains ?? [];
   const selectedDomains = selectedDomainIds
     .map((domainId) => domainOptions.find((entry) => entry.id === domainId))
     .filter((entry): entry is DaggerheartDomain => Boolean(entry));
