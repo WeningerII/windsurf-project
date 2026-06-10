@@ -288,7 +288,9 @@ describe('applyD20LegacyClassTemplate', () => {
 
     expect(multiclassDoc.system.classLevels).toMatchObject([
       { classId: 'fighter', level: 2, hitDieRolls: [10, 6] },
-      { classId: 'wizard', level: 3, hitDieRolls: [4, 3, 3] },
+      // 3.5e PHB: max hit die only at character level 1 — the wizard levels
+      // taken later all seed the d4 average (3).
+      { classId: 'wizard', level: 3, hitDieRolls: [3, 3, 3] },
     ]);
     expect(multiclassDoc.system.level).toBe(5);
     expect(multiclassDoc.system.classSkills).toEqual(
@@ -384,7 +386,9 @@ describe('applyD20LegacyClassTemplate', () => {
     ]);
     expect(updatedFighterDoc.system.classLevels).toMatchObject([
       { classId: 'wizard', level: 2, favoredClassBonus: 'hp' },
-      { classId: 'fighter', level: 3, hitDieRolls: [10, 6, 6], favoredClassBonus: 'other' },
+      // The fighter row was added second, so even its first level seeds the
+      // d10 average (6) — max HP belongs to character level 1 only.
+      { classId: 'fighter', level: 3, hitDieRolls: [6, 6, 6], favoredClassBonus: 'other' },
     ]);
     expect(updatedFighterDoc.system.level).toBe(5);
     expect(updatedFighterDoc.system.classSkills).toEqual(

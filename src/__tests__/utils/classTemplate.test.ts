@@ -142,7 +142,9 @@ describe('applyDnd5eClassTemplate', () => {
 
     expect(multiclassDoc.system.classLevels).toMatchObject([
       { classId: 'fighter', level: 2, hitDieRolls: [10, 6] },
-      { classId: 'wizard', level: 3, hitDieRolls: [6, 4, 4] },
+      // PHB (multiclassing): only character level 1 grants the max hit die.
+      // The wizard dip's first level seeds the d6 average (4), not 6.
+      { classId: 'wizard', level: 3, hitDieRolls: [4, 4, 4] },
     ]);
     expect(multiclassDoc.system.level).toBe(5);
     expect(multiclassDoc.system.savingThrowProficiencies).toEqual(['str', 'con']);
@@ -154,7 +156,7 @@ describe('applyDnd5eClassTemplate', () => {
     ]);
     expect(updatedWizardDoc.system.classLevels).toMatchObject([
       { classId: 'fighter', level: 2, hitDieRolls: [10, 6] },
-      { classId: 'wizard', level: 4, hitDieRolls: [6, 4, 4, 4] },
+      { classId: 'wizard', level: 4, hitDieRolls: [4, 4, 4, 4] },
     ]);
     expect(updatedWizardDoc.system.level).toBe(6);
   });
@@ -459,5 +461,22 @@ describe('applyDnd5eClassTemplate', () => {
     expect(evokerDoc.system.features.map((feature) => feature.id)).toEqual(
       expect.arrayContaining(['evocation-savant', 'sculpt-spells'])
     );
+  });
+});
+
+describe('multiclass hit-die seeding (PHB: max at character level 1 only)', () => {
+  it('seeds the average for the first level of a class added via multiclass', () => {
+    const fighterDoc = applyDnd5eClassTemplate(
+      makeDoc({ baseAttributes: { str: 14, dex: 10, con: 10, int: 14, wis: 10, cha: 10 } }),
+      fighter,
+      1
+    );
+    const dipped = applyDnd5eClassTemplate(fighterDoc, wizard, 1, { mode: 'add' });
+
+    expect(dipped.system.classLevels).toMatchObject([
+      { classId: 'fighter', level: 1, hitDieRolls: [10] },
+      // Wizard d6 average = 4; a dip's first level is NOT maxed.
+      { classId: 'wizard', level: 1, hitDieRolls: [4] },
+    ]);
   });
 });
