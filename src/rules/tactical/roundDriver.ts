@@ -64,6 +64,8 @@ export interface RunRoundInput {
   seed: string;
   /** Round number (1-based); part of the per-turn seed and the result. */
   round: number;
+  /** Hit/crit model for the whole round (default 'd20'). */
+  degreeModel?: 'd20' | 'pf2e';
 }
 
 function toActor(combatant: RoundCombatant): TacticalActor {
@@ -133,6 +135,7 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
       actor: toActor(combatant),
       targets,
       seed: `${input.seed}::round${input.round}::turn${turnIndex}`,
+      degreeModel: input.degreeModel,
     });
 
     // Fold this turn's damage into working HP so later turns see it. Under

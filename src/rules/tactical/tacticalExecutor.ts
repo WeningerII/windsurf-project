@@ -40,6 +40,8 @@ export interface TacticalTurnInput {
   /** Base seed (scene seed + round/turn nonce) for the resolved attack. */
   seed: string;
   cause?: string;
+  /** Hit/crit model for every attack this turn (default 'd20'). */
+  degreeModel?: 'd20' | 'pf2e';
 }
 
 export type TacticalDecisionKind = 'attack' | 'move-to-engage' | 'no-target';
@@ -143,6 +145,7 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
       damageEffects: input.actor.damageEffects,
       targetValue: target.armorClass,
       critOn: input.actor.critOn,
+      degreeModel: input.degreeModel,
       rng: rngFor(currentTargetId),
     });
 

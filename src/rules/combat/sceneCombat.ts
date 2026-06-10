@@ -26,6 +26,11 @@ import { participantRng } from '../resolver/participantResolution';
 import { attackToDamageIntent } from '../resolver/sceneCombat';
 import { collectDnd5eConditionEffects } from '../conditions/dnd5eConditions';
 
+/** PF2e scenes resolve attacks by CRB degrees of success; others use d20 crits. */
+function degreeModelForScene(state: SceneState): 'd20' | 'pf2e' {
+  return state.systemId === 'pf2e' ? 'pf2e' : 'd20';
+}
+
 /** Combat stats for a token, resolved from its statblock or character sheet. */
 export interface SceneCombatStats {
   attackEffects: EffectInstance[];
@@ -171,6 +176,7 @@ export function resolveSceneAttack(params: {
     damageEffects: attackerStats.damageEffects,
     targetValue: targetStats.armorClass,
     critOn: attackerStats.critOn,
+    degreeModel: degreeModelForScene(state),
     rng: participantRng(seed, attackerId, targetId),
     context: {
       conditions: new Set(attackerConditions),
@@ -219,7 +225,12 @@ export function runSceneRound(params: {
   round: number;
 }): SceneRoundOutcome {
   const order = buildSceneCombatants(params.state, params.resolveStats);
-  const result = runCombatRound({ order, seed: params.seed, round: params.round });
+  const result = runCombatRound({
+    order,
+    seed: params.seed,
+    round: params.round,
+    degreeModel: degreeModelForScene(params.state),
+  });
 
   const nameOf = (tokenId: string): string => params.state.tokens[tokenId]?.name ?? tokenId;
   const log = result.turns.map((turn) => {
