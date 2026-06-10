@@ -53,7 +53,12 @@ export interface CharacterClass {
 
   // Starting equipment choices
   equipmentChoices: EquipmentChoice[];
-  startingGold?: { dice: string; multiplier: number }; // Alternative to equipment
+  /**
+   * Starting wealth, as either rolled dice (5e: '5d4' x 10 gp) or a flat
+   * amount in gp (PF2e: every class starts with 15 gp). A consumer rolling
+   * dice must handle the flat variant — '15' is not a dice expression.
+   */
+  startingGold?: { dice: string; multiplier: number } | { flat: number };
 
   // Level progression
   features: ClassFeatureProgression[];

@@ -18,13 +18,34 @@ export const rogue: CharacterClass = {
   armorProficiencies: ['light'],
   weaponProficiencies: ['simple', 'rapier', 'sap', 'shortbow', 'shortsword'],
   toolProficiencies: [],
+  // CRB: trained in the class's fixed skill(s) plus `count` free choices
+  // (+ Int). `options` is the truthful eligible list — every skill except
+  // the fixed grants — so a Choice-honoring consumer can't mis-render
+  // 'choose 7 from a 1-item list'. Fixed training (stealth) is granted by the class template.
   skillProficiencies: {
     count: 7,
-    options: ['stealth', 'acrobatics', 'thievery'],
+    options: [
+      'acrobatics',
+      'arcana',
+      'athletics',
+      'crafting',
+      'deception',
+      'diplomacy',
+      'intimidation',
+      'medicine',
+      'nature',
+      'occultism',
+      'performance',
+      'religion',
+      'society',
+      'survival',
+      'thievery',
+    ],
     label: 'Trained in 7 + Int skills',
   },
   equipmentChoices: [],
-  startingGold: { dice: '15', multiplier: 1 },
+  // CRB p.271: every PF2e class starts with 15 gp (150 sp) flat — not a dice roll.
+  startingGold: { flat: 15 },
   features: [
     {
       level: 1,
