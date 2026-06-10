@@ -106,371 +106,48 @@ export const cleric: CharacterClass = {
     },
   ],
   subclassLevel: 1,
+  // The former subclass list named 19 Golarion deities (Paizo Product
+  // Identity) with invented mechanics. It was replaced with the cleric's
+  // actual Core Rulebook subclass choice — the two doctrines. The deity
+  // itself is a roleplaying choice made with the GM (see the generic Deity
+  // feature above); no setting-specific deity names ship in this data.
   subclasses: [
     {
-      id: 'abadar',
-      name: 'Abadar',
-      parentClassId: 'cleric',
-      description: "God of wealth, trade, and cities. You gain the merchant's fortune focus spell.",
-      features: [
-        {
-          level: 1,
-          features: [
-            {
-              id: 'abadar-domain',
-              name: "Abadar's Blessing",
-              source: 'Abadar 1',
-              description: 'You gain a +1 status bonus to Diplomacy and Deception checks.',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'asmodeus',
-      name: 'Asmodeus',
+      id: 'cloistered-cleric',
+      name: 'Cloistered Cleric',
       parentClassId: 'cleric',
       description:
-        'God of tyranny, contracts, and pride. You gain the infernal bargain focus spell.',
+        'You are a cleric of the cloth, focusing on divine magic and your connection to your deity’s domains.',
       features: [
         {
           level: 1,
           features: [
             {
-              id: 'asmodeus-domain',
-              name: "Asmodeus's Pact",
-              source: 'Asmodeus 1',
-              description: 'You gain a +1 status bonus to Deception and Intimidation checks.',
+              id: 'cloistered-first-doctrine',
+              name: 'First Doctrine (Cloistered Cleric)',
+              source: 'Cloistered Cleric 1',
+              description: 'You gain the Domain Initiate cleric feat.',
             },
           ],
         },
       ],
     },
     {
-      id: 'calistria',
-      name: 'Calistria',
+      id: 'warpriest',
+      name: 'Warpriest',
       parentClassId: 'cleric',
       description:
-        "Goddess of trickery, lust, and revenge. You gain the trickster's mark focus spell.",
+        'Counted among the ranks of holy warriors, you’re a warpriest, trained in both divine magic and the art of war.',
       features: [
         {
           level: 1,
           features: [
             {
-              id: 'calistria-domain',
-              name: "Calistria's Cunning",
-              source: 'Calistria 1',
-              description: 'You gain a +1 status bonus to Deception and Stealth checks.',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'cayden-cailean',
-      name: 'Cayden Cailean',
-      parentClassId: 'cleric',
-      description: 'God of freedom, adventure, and wine. You gain the drunken courage focus spell.',
-      features: [
-        {
-          level: 1,
-          features: [
-            {
-              id: 'cayden-domain',
-              name: "Cayden's Fortune",
-              source: 'Cayden Cailean 1',
-              description: 'You gain a +1 status bonus to Athletics and Acrobatics checks.',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'desna',
-      name: 'Desna',
-      parentClassId: 'cleric',
-      description:
-        'Goddess of dreams, stars, and travelers. You gain the starlight step focus spell.',
-      features: [
-        {
-          level: 1,
-          features: [
-            {
-              id: 'desna-domain',
-              name: "Desna's Guidance",
-              source: 'Desna 1',
-              description: 'You gain a +1 status bonus to Perception and Navigation checks.',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'erastil',
-      name: 'Erastil',
-      parentClassId: 'cleric',
-      description: 'God of the hunt, family, and trade. You gain the animal companion focus spell.',
-      features: [
-        {
-          level: 1,
-          features: [
-            {
-              id: 'erastil-domain',
-              name: "Erastil's Blessing",
-              source: 'Erastil 1',
-              description: 'You gain a +1 status bonus to Survival and Crafting checks.',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'gorum',
-      name: 'Gorum',
-      parentClassId: 'cleric',
-      description: 'God of strength, battle, and weapons. You gain the weapon surge focus spell.',
-      features: [
-        {
-          level: 1,
-          features: [
-            {
-              id: 'gorum-domain',
-              name: "Gorum's Fury",
-              source: 'Gorum 1',
-              description: 'You gain a +1 status bonus to Athletics and weapon damage rolls.',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'iomedae',
-      name: 'Iomedae',
-      parentClassId: 'cleric',
-      description: 'Goddess of justice, valor, and honor. You gain the smite good focus spell.',
-      features: [
-        {
-          level: 1,
-          features: [
-            {
-              id: 'iomedae-domain',
-              name: "Iomedae's Justice",
-              source: 'Iomedae 1',
-              description: 'You gain a +1 status bonus to Perception and Will saves.',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'irori',
-      name: 'Irori',
-      parentClassId: 'cleric',
-      description:
-        'God of knowledge, self-perfection, and magic. You gain the perfect strike focus spell.',
-      features: [
-        {
-          level: 1,
-          features: [
-            {
-              id: 'irori-domain',
-              name: "Irori's Discipline",
-              source: 'Irori 1',
-              description: 'You gain a +1 status bonus to Arcana and Occultism checks.',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'lamashtu',
-      name: 'Lamashtu',
-      parentClassId: 'cleric',
-      description:
-        'Goddess of nightmares, madness, and trickery. You gain the nightmare focus spell.',
-      features: [
-        {
-          level: 1,
-          features: [
-            {
-              id: 'lamashtu-domain',
-              name: "Lamashtu's Curse",
-              source: 'Lamashtu 1',
-              description: 'You gain a +1 status bonus to Deception and Occultism checks.',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'nethys',
-      name: 'Nethys',
-      parentClassId: 'cleric',
-      description: 'God of magic, knowledge, and secrets. You gain the arcane surge focus spell.',
-      features: [
-        {
-          level: 1,
-          features: [
-            {
-              id: 'nethys-domain',
-              name: "Nethys's Insight",
-              source: 'Nethys 1',
-              description: 'You gain a +1 status bonus to Arcana and Occultism checks.',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'norgorber',
-      name: 'Norgorber',
-      parentClassId: 'cleric',
-      description: 'God of poison, murder, and secrets. You gain the poisonous cloud focus spell.',
-      features: [
-        {
-          level: 1,
-          features: [
-            {
-              id: 'norgorber-domain',
-              name: "Norgorber's Shadow",
-              source: 'Norgorber 1',
-              description: 'You gain a +1 status bonus to Stealth and Deception checks.',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'pharasma',
-      name: 'Pharasma',
-      parentClassId: 'cleric',
-      description: 'Goddess of death, fate, and prophecy. You gain the death knell focus spell.',
-      features: [
-        {
-          level: 1,
-          features: [
-            {
-              id: 'pharasma-domain',
-              name: "Pharasma's Judgment",
-              source: 'Pharasma 1',
-              description: 'You gain a +1 status bonus to Occultism and Medicine checks.',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'rovagug',
-      name: 'Rovagug',
-      parentClassId: 'cleric',
-      description:
-        'God of destruction, wrath, and catastrophe. You gain the earthquake focus spell.',
-      features: [
-        {
-          level: 1,
-          features: [
-            {
-              id: 'rovagug-domain',
-              name: "Rovagug's Wrath",
-              source: 'Rovagug 1',
-              description: 'You gain a +1 status bonus to Intimidation and weapon damage rolls.',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'sarenrae',
-      name: 'Sarenrae',
-      parentClassId: 'cleric',
-      description:
-        'Goddess of sun, healing, and redemption. You gain the healing light focus spell.',
-      features: [
-        {
-          level: 1,
-          features: [
-            {
-              id: 'sarenrae-domain',
-              name: "Sarenrae's Mercy",
-              source: 'Sarenrae 1',
-              description: 'You gain a +1 status bonus to Medicine and Diplomacy checks.',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'shelyn',
-      name: 'Shelyn',
-      parentClassId: 'cleric',
-      description: 'Goddess of beauty, love, and art. You gain the inspire beauty focus spell.',
-      features: [
-        {
-          level: 1,
-          features: [
-            {
-              id: 'shelyn-domain',
-              name: "Shelyn's Grace",
-              source: 'Shelyn 1',
-              description: 'You gain a +1 status bonus to Performance and Crafting checks.',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'torag',
-      name: 'Torag',
-      parentClassId: 'cleric',
-      description: 'God of forge, protection, and strategy. You gain the forge bond focus spell.',
-      features: [
-        {
-          level: 1,
-          features: [
-            {
-              id: 'torag-domain',
-              name: "Torag's Strength",
-              source: 'Torag 1',
-              description: 'You gain a +1 status bonus to Crafting and Fortitude saves.',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'urgathoa',
-      name: 'Urgathoa',
-      parentClassId: 'cleric',
-      description:
-        'Goddess of disease, gluttony, and undeath. You gain the plague carrier focus spell.',
-      features: [
-        {
-          level: 1,
-          features: [
-            {
-              id: 'urgathoa-domain',
-              name: "Urgathoa's Hunger",
-              source: 'Urgathoa 1',
-              description: 'You gain a +1 status bonus to Intimidation and Occultism checks.',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'zon-kuthon',
-      name: 'Zon-Kuthon',
-      parentClassId: 'cleric',
-      description: 'God of pain, loss, and shadow. You gain the shadow strike focus spell.',
-      features: [
-        {
-          level: 1,
-          features: [
-            {
-              id: 'zon-kuthon-domain',
-              name: "Zon-Kuthon's Agony",
-              source: 'Zon-Kuthon 1',
-              description: 'You gain a +1 status bonus to Stealth and Intimidation checks.',
+              id: 'warpriest-first-doctrine',
+              name: 'First Doctrine (Warpriest)',
+              source: 'Warpriest 1',
+              description:
+                'You gain the Shield Block general feat. If your deity’s favored weapon is a simple weapon, you gain the Deadly Simplicity cleric feat.',
             },
           ],
         },

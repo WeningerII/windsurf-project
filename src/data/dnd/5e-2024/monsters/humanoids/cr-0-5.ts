@@ -187,44 +187,11 @@ export const goblin: Monster = {
   environment: ['forest', 'hill', 'underdark'],
 };
 
-export const orc: Monster = {
-  id: 'orc-2024',
-  name: 'Orc',
-  system: 'dnd-5e-2024',
-  source: 'SRD 5.2',
-  size: 'medium',
-  type: 'humanoid',
-  alignment: 'chaotic evil',
-  armorClass: 13,
-  hitPoints: { count: 2, die: 'd8', modifier: 6, notation: '2d8+6' },
-  speed: { walk: 30 },
-  abilities: { str: 16, dex: 12, con: 16, int: 7, wis: 11, cha: 10 },
-  skills: { Intimidation: 2 },
-  senses: ['darkvision 60 ft.', 'passive Perception 10'],
-  languages: ['Common', 'Orc'],
-  challengeRating: 0.5,
-  experiencePoints: 100,
-  specialAbilities: [
-    {
-      name: 'Aggressive',
-      description:
-        'As a bonus action, the orc can move up to its speed toward a hostile creature that it can see.',
-    },
-  ],
-  actions: [
-    {
-      name: 'Greataxe',
-      description:
-        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 9 (1d12 + 3) slashing damage.',
-    },
-    {
-      name: 'Javelin',
-      description:
-        'Melee or Ranged Weapon Attack: +5 to hit, reach 5 ft. or range 30/120 ft., one target. Hit: 6 (1d6 + 3) piercing damage.',
-    },
-  ],
-  environment: ['mountain', 'underdark'],
-};
+// NOTE: The former 'orc-2024' entry was removed. The 2024 rules dropped orc
+// monster statblocks (orcs are a player species in the 2024 core), so this
+// SRD 5.1-era statblock cannot be verified against SRD 5.2; it was deleted
+// rather than shipped with an unverified citation. See
+// docs/srd-manifest/dnd5e-2024.ts.
 
 export const acolyte: Monster = {
   id: 'acolyte-2024',
@@ -834,7 +801,6 @@ export const humanoidsCR0to5: Monster[] = [
   cultist,
   noble,
   goblin,
-  orc,
   acolyte,
   kobold,
   hobgoblin,

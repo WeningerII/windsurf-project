@@ -57,11 +57,14 @@ export const dwarf: Species = {
     },
   ],
 
+  // SRD 5.1 ships exactly one dwarf subrace (Hill Dwarf). Mountain Dwarf is
+  // PHB-only content and was removed.
   subraces: [
     {
       id: 'hill-dwarf',
       name: 'Hill Dwarf',
       parentSpeciesId: 'dwarf',
+      source: 'SRD 5.1',
 
       abilityScoreIncrease: [
         {
@@ -82,30 +85,6 @@ export const dwarf: Species = {
 
       description:
         'As a hill dwarf, you have keen senses, deep intuition, and remarkable resilience.',
-    },
-    {
-      id: 'mountain-dwarf',
-      name: 'Mountain Dwarf',
-      parentSpeciesId: 'dwarf',
-
-      abilityScoreIncrease: [
-        {
-          type: 'fixed',
-          attributes: { str: 2 },
-        },
-      ],
-
-      traits: [
-        {
-          id: 'dwarven-armor-training',
-          name: 'Dwarven Armor Training',
-          source: 'Mountain Dwarf',
-          description: 'You have proficiency with light and medium armor.',
-        },
-      ],
-
-      description:
-        "As a mountain dwarf, you're strong and hardy, accustomed to a difficult life in rugged terrain.",
     },
   ],
 

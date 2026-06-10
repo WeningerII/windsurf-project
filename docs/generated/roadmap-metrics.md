@@ -1,12 +1,12 @@
-_Generated: 2026-05-31T16:45:56.987Z_
+_Generated: 2026-06-10T04:20:46.909Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
 | System | Spells/Powers | Classes | Species/Races | Backgrounds | Traits | Feature Options | Monsters | Equipment | Feats | Advantages |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| D&D 5e (2014) | 222 | 12 | 9 | 1 | 0 | 106 | 41 | 230 | 1 | 0 |
-| D&D 5e (2024) | 294 | 12 | 7 | 4 | 0 | 0 | 99 | 204 | 19 | 0 |
-| D&D 3.5e | 428 | 26 | 7 | 0 | 0 | 0 | 0 | 207 | 515 | 0 |
+| D&D 5e (2014) | 222 | 12 | 9 | 1 | 0 | 106 | 39 | 230 | 1 | 0 |
+| D&D 5e (2024) | 294 | 12 | 7 | 4 | 0 | 0 | 95 | 204 | 19 | 0 |
+| D&D 3.5e | 428 | 26 | 7 | 0 | 0 | 0 | 0 | 207 | 80 | 0 |
 | Pathfinder 1e | 134 | 18 | 7 | 0 | 12 | 0 | 0 | 70 | 86 | 0 |
 | Pathfinder 2e | 143 | 12 | 6 | 16 | 0 | 0 | 0 | 188 | 93 | 0 |
 | Mutants & Masterminds 3e | 61 | 0 | 0 | 0 | 0 | 0 | 0 | 150 | 0 | 74 |
@@ -20,7 +20,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | D&D 3.5e | 0 | 0 | 0 |
 | Pathfinder 1e | 0 | 0 | 0 |
 | Pathfinder 2e | 5 | 0 | 0 |
-| Mutants & Masterminds 3e | 15 | 28 | 101 |
+| Mutants & Masterminds 3e | 15 | 28 | 99 |
 | Daggerheart | 0 | 0 | 0 |
 
 ### Loader Compliance Audit
@@ -31,21 +31,21 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | D&D 5e (2014) | Species/Races | 9 | 0 | 0 | 0 |
 | D&D 5e (2014) | Backgrounds | 1 | 0 | 0 | 0 |
 | D&D 5e (2014) | Feature Options | 106 | 0 | 0 | 0 |
-| D&D 5e (2014) | Monsters | 41 | 0 | 0 | 0 |
+| D&D 5e (2014) | Monsters | 39 | 0 | 0 | 0 |
 | D&D 5e (2014) | Equipment | 230 | 0 | 0 | 0 |
 | D&D 5e (2014) | Feats | 1 | 0 | 0 | 0 |
 | D&D 5e (2024) | Spells/Powers | 294 | 0 | 0 | 0 |
 | D&D 5e (2024) | Classes | 12 | 0 | 0 | 0 |
 | D&D 5e (2024) | Species/Races | 7 | 0 | 0 | 0 |
 | D&D 5e (2024) | Backgrounds | 4 | 0 | 0 | 0 |
-| D&D 5e (2024) | Monsters | 99 | 0 | 0 | 0 |
+| D&D 5e (2024) | Monsters | 95 | 0 | 0 | 0 |
 | D&D 5e (2024) | Equipment | 204 | 0 | 0 | 0 |
 | D&D 5e (2024) | Feats | 19 | 0 | 0 | 0 |
 | D&D 3.5e | Spells/Powers | 428 | 0 | 0 | 0 |
 | D&D 3.5e | Classes | 26 | 0 | 0 | 0 |
 | D&D 3.5e | Species/Races | 7 | 0 | 0 | 0 |
 | D&D 3.5e | Equipment | 207 | 0 | 0 | 0 |
-| D&D 3.5e | Feats | 515 | 0 | 0 | 0 |
+| D&D 3.5e | Feats | 80 | 0 | 0 | 0 |
 | Pathfinder 1e | Spells/Powers | 134 | 0 | 0 | 0 |
 | Pathfinder 1e | Classes | 18 | 0 | 0 | 0 |
 | Pathfinder 1e | Species/Races | 7 | 0 | 0 | 0 |
@@ -64,7 +64,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | Mutants & Masterminds 3e | Complications | 28 | 0 | 0 | 0 |
 | Mutants & Masterminds 3e | Equipment | 150 | 0 | 0 | 0 |
 | Mutants & Masterminds 3e | Advantages | 74 | 0 | 0 | 0 |
-| Mutants & Masterminds 3e | Power Modifiers | 101 | 0 | 0 | 0 |
+| Mutants & Masterminds 3e | Power Modifiers | 99 | 0 | 0 | 0 |
 | Daggerheart | Classes | 9 | 0 | 0 | 0 |
 | Daggerheart | Species/Races | 19 | 0 | 0 | 0 |
 | Daggerheart | Backgrounds | 9 | 0 | 0 | 0 |
@@ -77,7 +77,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | M&M 3e advantages | 74 | 0 | 0 | 0 |
 | M&M 3e archetypes | 15 | 0 | 0 | 0 |
 | M&M 3e complications | 28 | 0 | 0 | 0 |
-| M&M 3e power modifiers | 101 | 0 | 0 | 0 |
+| M&M 3e power modifiers | 99 | 0 | 0 | 0 |
 | PF2e archetypes | 5 | 0 | 0 | 0 |
 
 ### Policy Notes
@@ -98,21 +98,21 @@ _The manifests in docs/srd-manifest/ are generated from the loaders, so this mea
 | D&D 5e (2014) | species | 9 | 9 | 100% |
 | D&D 5e (2014) | backgrounds | 1 | 1 | 100% |
 | D&D 5e (2014) | featureOptions | 106 | 106 | 100% |
-| D&D 5e (2014) | monsters | 41 | 41 | 100% |
+| D&D 5e (2014) | monsters | 39 | 39 | 100% |
 | D&D 5e (2014) | equipment | 230 | 230 | 100% |
 | D&D 5e (2014) | feats | 1 | 1 | 100% |
 | D&D 5e (2024) | spells | 294 | 294 | 100% |
 | D&D 5e (2024) | classes | 12 | 12 | 100% |
 | D&D 5e (2024) | species | 7 | 7 | 100% |
 | D&D 5e (2024) | backgrounds | 4 | 4 | 100% |
-| D&D 5e (2024) | monsters | 99 | 99 | 100% |
+| D&D 5e (2024) | monsters | 95 | 95 | 100% |
 | D&D 5e (2024) | equipment | 204 | 204 | 100% |
 | D&D 5e (2024) | feats | 19 | 19 | 100% |
 | D&D 3.5e | spells | 428 | 428 | 100% |
 | D&D 3.5e | classes | 26 | 26 | 100% |
 | D&D 3.5e | species | 7 | 7 | 100% |
 | D&D 3.5e | equipment | 207 | 207 | 100% |
-| D&D 3.5e | feats | 515 | 515 | 100% |
+| D&D 3.5e | feats | 80 | 80 | 100% |
 | Pathfinder 1e | spells | 134 | 134 | 100% |
 | Pathfinder 1e | classes | 18 | 18 | 100% |
 | Pathfinder 1e | species | 7 | 7 | 100% |
@@ -131,7 +131,7 @@ _The manifests in docs/srd-manifest/ are generated from the loaders, so this mea
 | Mutants & Masterminds 3e | complications | 28 | 28 | 100% |
 | Mutants & Masterminds 3e | equipment | 150 | 150 | 100% |
 | Mutants & Masterminds 3e | advantages | 74 | 74 | 100% |
-| Mutants & Masterminds 3e | powerModifiers | 101 | 101 | 100% |
+| Mutants & Masterminds 3e | powerModifiers | 99 | 99 | 100% |
 | Daggerheart | classes | 9 | 9 | 100% |
 | Daggerheart | species | 19 | 19 | 100% |
 | Daggerheart | backgrounds | 9 | 9 | 100% |
@@ -140,8 +140,8 @@ _The manifests in docs/srd-manifest/ are generated from the loaders, so this mea
 ### Engine-Math Completion (vs Compute Register — Denominator B)
 | System | Verified | In-Scope | Complete |
 | --- | ---: | ---: | ---: |
-| D&D 5e (2014) | 28 | 28 | 100% |
-| D&D 5e (2024) | 26 | 26 | 100% |
+| D&D 5e (2014) | 24 | 29 | 82.8% |
+| D&D 5e (2024) | 19 | 27 | 70.4% |
 | D&D 3.5e | 27 | 27 | 100% |
 | Pathfinder 1e | 26 | 26 | 100% |
 | Mutants & Masterminds 3e | 26 | 26 | 100% |
@@ -154,10 +154,10 @@ _Denominators: cited open-content manifests in docs/srd-manifest/ and docs/compu
 _Share of each system's loader-backed entries that are source-tagged AND open-content-policy-clean — i.e. the content DONE conditions 'encoded, loader-backed, source-tagged, policy-clean'. This certifies CATALOG INTEGRITY (every shipped open-content entry is cited and compliant). It is NOT coverage vs the full published SRD: measuring which SRD entries are MISSING requires an external authoritative SRD index that is unavailable in this environment, so that coverage dimension is flagged unresolved rather than asserted._
 | System | Loader Entries | Cited + Policy-Clean | Integrity |
 | --- | ---: | ---: | ---: |
-| D&D 5e (2014) | 622 | 622 | 100% |
-| D&D 5e (2024) | 639 | 639 | 100% |
-| D&D 3.5e | 1183 | 1183 | 100% |
+| D&D 5e (2014) | 620 | 620 | 100% |
+| D&D 5e (2024) | 635 | 635 | 100% |
+| D&D 3.5e | 748 | 748 | 100% |
 | Pathfinder 1e | 327 | 327 | 100% |
 | Pathfinder 2e | 463 | 463 | 100% |
-| Mutants & Masterminds 3e | 429 | 429 | 100% |
+| Mutants & Masterminds 3e | 427 | 427 | 100% |
 | Daggerheart | 390 | 390 | 100% |

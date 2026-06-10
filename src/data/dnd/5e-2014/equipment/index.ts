@@ -1,4 +1,5 @@
 import { Weapon, Armor, Shield, Item } from '../../../../types/equipment/items';
+import { indexById } from '../../../../utils/indexById';
 import { dnd5eWeapons } from './weapons';
 import { dnd5eArmor, dnd5eShields } from './armor';
 import { dnd5eAdventuringGear } from './adventuring-gear';
@@ -22,15 +23,11 @@ export const dnd5eEquipmentByType = {
   magicItems: dnd5eMagicItems,
 };
 
-// Index by ID
-export const dnd5eEquipmentById: Record<string, Weapon | Armor | Shield | Item> =
-  dnd5eEquipment.reduce(
-    (acc, item) => {
-      acc[item.id] = item;
-      return acc;
-    },
-    {} as Record<string, Weapon | Armor | Shield | Item>
-  );
+// Index by ID (dev-warns on duplicate ids)
+export const dnd5eEquipmentById: Record<string, Weapon | Armor | Shield | Item> = indexById(
+  dnd5eEquipment,
+  'dnd5eEquipmentById'
+);
 
 // Weapons by category
 export const dnd5eWeaponsByType = {

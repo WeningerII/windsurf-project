@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-31T16:45:56.987Z",
+  "generatedAt": "2026-06-10T04:20:46.909Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -18,10 +18,7 @@
     },
     "dnd-3.5e": {
       "allowedSources": [
-        "SRD 3.5",
-        "PHB 3.5",
-        "PHB",
-        "Player's Handbook 3.5"
+        "SRD 3.5"
       ],
       "allowMissingSourceFor": []
     },
@@ -67,7 +64,7 @@
       "featureOptions": 106,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 41,
+      "monsters": 39,
       "equipment": 230,
       "feats": 1,
       "advantages": 0,
@@ -82,7 +79,7 @@
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 99,
+      "monsters": 95,
       "equipment": 204,
       "feats": 19,
       "advantages": 0,
@@ -99,7 +96,7 @@
       "complications": 0,
       "monsters": 0,
       "equipment": 207,
-      "feats": 515,
+      "feats": 80,
       "advantages": 0,
       "powerModifiers": 0
     },
@@ -146,7 +143,7 @@
       "equipment": 150,
       "feats": 0,
       "advantages": 74,
-      "powerModifiers": 101
+      "powerModifiers": 99
     },
     "daggerheart": {
       "spells": 0,
@@ -174,7 +171,7 @@
       "featureOptions": 106,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 41,
+      "monsters": 39,
       "equipment": 230,
       "feats": 1,
       "advantages": 0,
@@ -189,7 +186,7 @@
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 99,
+      "monsters": 95,
       "equipment": 204,
       "feats": 19,
       "advantages": 0,
@@ -206,7 +203,7 @@
       "complications": 0,
       "monsters": 0,
       "equipment": 207,
-      "feats": 515,
+      "feats": 80,
       "advantages": 0,
       "powerModifiers": 0
     },
@@ -253,7 +250,7 @@
       "equipment": 150,
       "feats": 0,
       "advantages": 74,
-      "powerModifiers": 101
+      "powerModifiers": 99
     },
     "daggerheart": {
       "spells": 0,
@@ -316,8 +313,8 @@
       "systemId": "dnd-5e-2014",
       "systemLabel": "D&D 5e (2014)",
       "category": "monsters",
-      "encoded": 41,
-      "target": 41,
+      "encoded": 39,
+      "target": 39,
       "percent": 100
     },
     {
@@ -372,8 +369,8 @@
       "systemId": "dnd-5e-2024",
       "systemLabel": "D&D 5e (2024)",
       "category": "monsters",
-      "encoded": 99,
-      "target": 99,
+      "encoded": 95,
+      "target": 95,
       "percent": 100
     },
     {
@@ -428,8 +425,8 @@
       "systemId": "dnd-3.5e",
       "systemLabel": "D&D 3.5e",
       "category": "feats",
-      "encoded": 515,
-      "target": 515,
+      "encoded": 80,
+      "target": 80,
       "percent": 100
     },
     {
@@ -580,8 +577,8 @@
       "systemId": "mam3e",
       "systemLabel": "Mutants & Masterminds 3e",
       "category": "powerModifiers",
-      "encoded": 101,
-      "target": 101,
+      "encoded": 99,
+      "target": 99,
       "percent": 100
     },
     {
@@ -621,62 +618,25 @@
     {
       "systemId": "dnd-5e-2014",
       "systemLabel": "D&D 5e (2014)",
-      "verified": 28,
-      "inScope": 28,
-      "percent": 100,
+      "verified": 24,
+      "inScope": 29,
+      "percent": 82.8,
       "byLayer": {
         "L1": {
           "verified": 2,
           "inScope": 2
         },
         "L2": {
-          "verified": 10,
+          "verified": 8,
           "inScope": 10
         },
         "L4": {
-          "verified": 4,
-          "inScope": 4
-        },
-        "L5": {
-          "verified": 2,
-          "inScope": 2
-        },
-        "L7": {
-          "verified": 2,
-          "inScope": 2
-        },
-        "L8": {
-          "verified": 8,
-          "inScope": 8
-        }
-      }
-    },
-    {
-      "systemId": "dnd-5e-2024",
-      "systemLabel": "D&D 5e (2024)",
-      "verified": 26,
-      "inScope": 26,
-      "percent": 100,
-      "byLayer": {
-        "L1": {
-          "verified": 2,
-          "inScope": 2
-        },
-        "L2": {
-          "verified": 6,
-          "inScope": 6
-        },
-        "L5": {
-          "verified": 2,
-          "inScope": 2
-        },
-        "L6": {
           "verified": 3,
-          "inScope": 3
-        },
-        "L4": {
-          "verified": 4,
           "inScope": 4
+        },
+        "L5": {
+          "verified": 2,
+          "inScope": 3
         },
         "L7": {
           "verified": 2,
@@ -684,6 +644,43 @@
         },
         "L8": {
           "verified": 7,
+          "inScope": 8
+        }
+      }
+    },
+    {
+      "systemId": "dnd-5e-2024",
+      "systemLabel": "D&D 5e (2024)",
+      "verified": 19,
+      "inScope": 27,
+      "percent": 70.4,
+      "byLayer": {
+        "L1": {
+          "verified": 2,
+          "inScope": 2
+        },
+        "L2": {
+          "verified": 4,
+          "inScope": 6
+        },
+        "L5": {
+          "verified": 2,
+          "inScope": 3
+        },
+        "L6": {
+          "verified": 0,
+          "inScope": 3
+        },
+        "L4": {
+          "verified": 3,
+          "inScope": 4
+        },
+        "L7": {
+          "verified": 2,
+          "inScope": 2
+        },
+        "L8": {
+          "verified": 6,
           "inScope": 7
         }
       }
@@ -981,13 +978,13 @@
       "category": "monsters",
       "categoryLabel": "Monsters",
       "metrics": {
-        "rawCount": 41,
-        "uniqueCount": 41,
+        "rawCount": 39,
+        "uniqueCount": 39,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD": 41
+          "SRD": 39
         }
       }
     },
@@ -1093,13 +1090,13 @@
       "category": "monsters",
       "categoryLabel": "Monsters",
       "metrics": {
-        "rawCount": 99,
-        "uniqueCount": 99,
+        "rawCount": 95,
+        "uniqueCount": 95,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 5.2": 99
+          "SRD 5.2": 95
         }
       }
     },
@@ -1163,8 +1160,7 @@
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 3.5": 15,
-          "PHB 3.5": 11
+          "SRD 3.5": 26
         }
       }
     },
@@ -1180,7 +1176,7 @@
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "PHB 3.5": 7
+          "SRD 3.5": 7
         }
       }
     },
@@ -1206,13 +1202,13 @@
       "category": "feats",
       "categoryLabel": "Feats",
       "metrics": {
-        "rawCount": 515,
-        "uniqueCount": 515,
+        "rawCount": 80,
+        "uniqueCount": 80,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "PHB": 515
+          "SRD 3.5": 80
         }
       }
     },
@@ -1510,13 +1506,13 @@
       "category": "powerModifiers",
       "categoryLabel": "Power Modifiers",
       "metrics": {
-        "rawCount": 101,
-        "uniqueCount": 101,
+        "rawCount": 99,
+        "uniqueCount": 99,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "Hero's Handbook": 101
+          "Hero's Handbook": 99
         }
       }
     },
@@ -1651,13 +1647,13 @@
       "systemId": "mam3e",
       "category": "powerModifiers",
       "metrics": {
-        "rawCount": 101,
-        "uniqueCount": 101,
+        "rawCount": 99,
+        "uniqueCount": 99,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "Hero's Handbook": 101
+          "Hero's Handbook": 99
         }
       }
     },

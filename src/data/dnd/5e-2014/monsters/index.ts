@@ -1,4 +1,5 @@
 import { Monster } from '../../../../types/creatures/monsters';
+import { indexById } from '../../../../utils/indexById';
 import { dnd5eCR0to1Monsters } from './cr-0-1';
 import { dnd5eCR2to5Monsters } from './cr-2-5';
 import { dnd5eCR6to10Monsters } from './cr-6-10';
@@ -20,13 +21,10 @@ export const dnd5eMonstersByCR = {
   cr11Plus: dnd5eCR11PlusMonsters,
 };
 
-// Index by ID
-export const dnd5eMonstersById: Record<string, Monster> = dnd5eMonsters.reduce(
-  (acc, monster) => {
-    acc[monster.id] = monster;
-    return acc;
-  },
-  {} as Record<string, Monster>
+// Index by ID (dev-warns on duplicate ids)
+export const dnd5eMonstersById: Record<string, Monster> = indexById(
+  dnd5eMonsters,
+  'dnd5eMonstersById'
 );
 
 // Index by CR

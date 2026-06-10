@@ -1,4 +1,5 @@
 import type { Spell } from '../types/magic/spells';
+import { indexById } from './indexById';
 
 export interface SpellCatalog {
   allSpells: Spell[];
@@ -92,13 +93,8 @@ export function buildSpellCatalog(
   ) as Record<number, Spell[]>;
 
   const allSpells = Object.values(spellsByLevel).flat();
-  const spellsById = allSpells.reduce(
-    (index, spell) => {
-      index[spell.id] = spell;
-      return index;
-    },
-    {} as Record<string, Spell>
-  );
+  // Dev-warns on duplicate spell ids; alias keys are layered on afterwards.
+  const spellsById = indexById(allSpells, 'buildSpellCatalog.spellsById');
 
   Object.entries(spellIdAliases).forEach(([alias, canonicalId]) => {
     const resolvedId = resolveSpellIdAlias(canonicalId, spellIdAliases);

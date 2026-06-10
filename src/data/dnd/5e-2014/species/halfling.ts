@@ -43,11 +43,14 @@ export const halfling: Species = {
     },
   ],
 
+  // SRD 5.1 ships exactly one halfling subrace (Lightfoot). Stout Halfling is
+  // PHB-only content and was removed.
   subraces: [
     {
       id: 'lightfoot-halfling',
       name: 'Lightfoot Halfling',
       parentSpeciesId: 'halfling',
+      source: 'SRD 5.1',
 
       abilityScoreIncrease: [
         {
@@ -68,31 +71,6 @@ export const halfling: Species = {
 
       description:
         'As a lightfoot halfling, you can easily hide from notice, even using other people as cover.',
-    },
-    {
-      id: 'stout-halfling',
-      name: 'Stout Halfling',
-      parentSpeciesId: 'halfling',
-
-      abilityScoreIncrease: [
-        {
-          type: 'fixed',
-          attributes: { con: 1 },
-        },
-      ],
-
-      traits: [
-        {
-          id: 'stout-resilience',
-          name: 'Stout Resilience',
-          source: 'Stout Halfling',
-          description:
-            'You have advantage on saving throws against poison, and you have resistance against poison damage.',
-        },
-      ],
-
-      description:
-        "As a stout halfling, you're hardier than average and have some resistance to poison.",
     },
   ],
 

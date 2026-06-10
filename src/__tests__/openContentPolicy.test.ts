@@ -35,6 +35,47 @@ describe('openContentPolicy', () => {
     expect(isOpenContentCompliant('pf2e', 'feats', { id: 'feat-1' })).toBe(false);
   });
 
+  it('rejects closed-book citations for dnd-3.5e', () => {
+    expect(isOpenContentCompliant('dnd-3.5e', 'feats', { source: 'SRD 3.5' })).toBe(true);
+    expect(isOpenContentCompliant('dnd-3.5e', 'feats', { source: 'PHB' })).toBe(false);
+    expect(isOpenContentCompliant('dnd-3.5e', 'feats', { source: 'PHB 3.5' })).toBe(false);
+    expect(isOpenContentCompliant('dnd-3.5e', 'feats', { source: "Player's Handbook 3.5" })).toBe(
+      false
+    );
+  });
+
+  it('checks nested subrace sources for species when present', () => {
+    const compliantSpecies = {
+      source: 'SRD 5.1',
+      subraces: [{ id: 'high-elf', source: 'SRD 5.1' }],
+    };
+    const speciesWithClosedSubrace = {
+      source: 'SRD 5.1',
+      subraces: [
+        { id: 'high-elf', source: 'SRD 5.1' },
+        { id: 'wood-elf', source: 'PHB' },
+      ],
+    };
+    const speciesWithUnsourcedSubrace = {
+      source: 'SRD 5.1',
+      subraces: [{ id: 'high-elf' }],
+    };
+
+    expect(isOpenContentCompliant('dnd-5e-2014', 'species', compliantSpecies)).toBe(true);
+    expect(isOpenContentCompliant('dnd-5e-2014', 'species', speciesWithClosedSubrace)).toBe(false);
+    // Subrace attribution is only enforced when present.
+    expect(isOpenContentCompliant('dnd-5e-2014', 'species', speciesWithUnsourcedSubrace)).toBe(
+      true
+    );
+    // Nested checks only apply to the species category.
+    expect(
+      isOpenContentCompliant('dnd-5e-2014', 'feats', {
+        source: 'SRD 5.1',
+        subraces: [{ id: 'x', source: 'PHB' }],
+      })
+    ).toBe(true);
+  });
+
   it('filters arrays to compliant content only', () => {
     const items = [
       { id: 'a', source: 'SRD 5.1' },

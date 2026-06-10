@@ -3,7 +3,7 @@
 
 import { dnd35eSpells, dnd35eSpellsByLevel, dnd35eSpellsBySchool } from './spells/index';
 import { dnd35eClasses } from './classes/index';
-import { dnd35ePrestigeClasses } from './prestige-classes/index';
+import { dnd35eProductPrestigeClasses } from './prestige-classes/index';
 import { dnd35eRaces } from './races/index';
 import { dnd35eFeats } from './feats/index';
 import { dnd35eEquipment } from './equipment/index';
@@ -29,7 +29,7 @@ export const dnd35eMetadata = {
     },
 
     prestigeClasses: {
-      count: dnd35ePrestigeClasses.length,
+      count: dnd35eProductPrestigeClasses.length,
     },
 
     races: {

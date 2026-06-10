@@ -68,6 +68,16 @@ describe('Data Loader Integration Tests', () => {
       const species = await loadSpeciesForSystem('dnd-5e-2014');
       expect(species.length).toBe(9);
       expect(species.every((s) => s.id && s.name && s.system === 'dnd-5e-2014')).toBe(true);
+      // SRD 5.1 ships exactly one subrace per race; PHB-only subraces (Wood
+      // Elf, Drow, Mountain Dwarf, Stout Halfling, Forest Gnome) were removed.
+      const subraces = species.flatMap((s) => s.subraces ?? []);
+      expect(subraces.map((subrace) => subrace.id).sort()).toEqual([
+        'high-elf',
+        'hill-dwarf',
+        'lightfoot-halfling',
+        'rock-gnome',
+      ]);
+      expect(subraces.every((subrace) => subrace.source === 'SRD 5.1')).toBe(true);
     });
 
     it('should load backgrounds for dnd-5e-2014', async () => {
@@ -224,15 +234,21 @@ describe('Data Loader Integration Tests', () => {
       expect(classes.some((entry) => entry.id === 'mystic-theurge-35e')).toBe(true);
       expect(classes.some((entry) => entry.id === 'thaumaturgist-35e')).toBe(true);
       expect(classes.some((entry) => entry.id === 'archmage')).toBe(false);
-      expect(
-        classes.every(
-          (entry) =>
-            entry.source === 'SRD 3.5' ||
-            entry.source === 'PHB' ||
-            entry.source === 'PHB 3.5' ||
-            entry.source === "Player's Handbook 3.5"
-        )
-      ).toBe(true);
+      // Closed-book citations ('PHB', 'PHB 3.5') were removed from the policy
+      // whitelist; everything that loads must cite the SRD.
+      expect(classes.every((entry) => entry.source === 'SRD 3.5')).toBe(true);
+    });
+
+    it('should load only SRD-cited 3.5e feats with unique ids', async () => {
+      const feats = await loadFeatsForSystem('dnd-3.5e');
+      // The fabricated feat corpus (~450 invented entries labeled 'PHB') was
+      // purged; only SRD 3.5-verifiable feats remain.
+      expect(feats.length).toBe(80);
+      expect(new Set(feats.map((feat) => feat.id)).size).toBe(feats.length);
+      expect(feats.every((feat) => feat.source === 'SRD 3.5')).toBe(true);
+      expect(feats.some((feat) => feat.id === 'power-attack-35e')).toBe(true);
+      expect(feats.some((feat) => feat.id === 'backstab-35e')).toBe(false);
+      expect(feats.some((feat) => feat.id === 'intimidating-35e')).toBe(false);
     });
   });
 

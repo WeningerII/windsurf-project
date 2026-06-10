@@ -37,43 +37,14 @@ export const gnome: Species = {
     },
   ],
 
+  // SRD 5.1 ships exactly one gnome subrace (Rock Gnome). Forest Gnome is
+  // PHB-only content and was removed.
   subraces: [
-    {
-      id: 'forest-gnome',
-      name: 'Forest Gnome',
-      parentSpeciesId: 'gnome',
-
-      abilityScoreIncrease: [
-        {
-          type: 'fixed',
-          attributes: { dex: 1 },
-        },
-      ],
-
-      traits: [
-        {
-          id: 'natural-illusionist',
-          name: 'Natural Illusionist',
-          source: 'Forest Gnome',
-          description:
-            'You know the minor illusion cantrip. Intelligence is your spellcasting ability for it.',
-        },
-        {
-          id: 'speak-with-small-beasts',
-          name: 'Speak with Small Beasts',
-          source: 'Forest Gnome',
-          description:
-            'Through sounds and gestures, you can communicate simple ideas with Small or smaller beasts. Forest gnomes love animals and often keep squirrels, badgers, rabbits, moles, woodpeckers, and other creatures as beloved pets.',
-        },
-      ],
-
-      description:
-        'As a forest gnome, you have a natural knack for illusion and inherent quickness and stealth.',
-    },
     {
       id: 'rock-gnome',
       name: 'Rock Gnome',
       parentSpeciesId: 'gnome',
+      source: 'SRD 5.1',
 
       abilityScoreIncrease: [
         {

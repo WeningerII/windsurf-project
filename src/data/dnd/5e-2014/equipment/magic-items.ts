@@ -84,19 +84,9 @@ export const wandOfMissiles: Item = {
   requiresAttunement: false,
 };
 
-export const potionOfHealing: Item = {
-  id: 'potion-of-healing',
-  name: 'Potion of Healing',
-  system: 'dnd-5e-2014',
-  source: 'SRD 5.1',
-  type: 'consumable',
-  rarity: 'common',
-  weight: 0.5,
-  cost: { amount: 50, currency: 'gp' },
-  description:
-    "You regain 4d4 + 4 hit points when you drink this potion. The potion's red liquid glimmers when agitated.",
-  requiresAttunement: false,
-};
+// NOTE: a duplicate 'potion-of-healing' entry was removed from this file. It
+// carried Potion of Greater Healing dice (4d4+4) under the base potion's id;
+// the canonical SRD entry (2d4+2) lives in adventuring-gear.ts.
 
 export const scrollOfMissiles: Item = {
   id: 'scroll-of-magic-missile',
@@ -237,19 +227,8 @@ export const wandOfFireballs: Item = {
   requiresAttunement: true,
 };
 
-export const wandOfLightning: Item = {
-  id: 'wand-of-lightning-bolts',
-  name: 'Wand of Lightning Bolts',
-  system: 'dnd-5e-2014',
-  source: 'SRD 5.1',
-  type: 'magic-item',
-  rarity: 'rare',
-  weight: 1,
-  cost: { amount: 0, currency: 'gp' },
-  description:
-    'This wand has 7 charges. While holding it, you can use an action and expend 1 or more charges to cast the lightning bolt spell from it. For 1 charge, you cast the 3rd-level version of the spell.',
-  requiresAttunement: true,
-};
+// NOTE: a duplicate 'wand-of-lightning-bolts' entry was removed here; the
+// canonical entry (wired into dnd5eMagicItems) is defined later in this file.
 
 export const wandOfWonder: Item = {
   id: 'wand-of-wonder',
@@ -646,32 +625,8 @@ export const bowPlus1: Item = {
   requiresAttunement: false,
 };
 
-// Magical Armor - Enchanted Variants
-export const plateArmorPlus1: Item = {
-  id: 'plate-armor-plus-1',
-  name: '+1 Plate Armor',
-  system: 'dnd-5e-2014',
-  source: 'SRD 5.1',
-  type: 'magic-item',
-  rarity: 'rare',
-  weight: 65,
-  cost: { amount: 0, currency: 'gp' },
-  description: 'While wearing this armor, you have a +1 bonus to AC.',
-  requiresAttunement: false,
-};
-
-export const plateArmorPlus2: Item = {
-  id: 'plate-armor-plus-2',
-  name: '+2 Plate Armor',
-  system: 'dnd-5e-2014',
-  source: 'SRD 5.1',
-  type: 'magic-item',
-  rarity: 'very-rare',
-  weight: 65,
-  cost: { amount: 0, currency: 'gp' },
-  description: 'While wearing this armor, you have a +2 bonus to AC.',
-  requiresAttunement: false,
-};
+// NOTE: duplicate 'plate-armor-plus-1' / 'plate-armor-plus-2' entries were
+// removed here; the canonical +1/+2/+3 plate variants live in armor.ts.
 
 // Additional Rings
 export const ringOfXRayVision: Item = {

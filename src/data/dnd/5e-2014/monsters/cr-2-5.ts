@@ -250,55 +250,9 @@ export const blackDragonWyrmling: Monster = {
   environment: ['swamp', 'ruins'],
 };
 
-export const flameskull: Monster = {
-  id: 'flameskull',
-  name: 'Flameskull',
-  system: 'dnd-5e-2014',
-  source: 'SRD',
-  size: 'tiny',
-  type: 'undead',
-  alignment: 'neutral evil',
-  challengeRating: 4,
-  experiencePoints: 1100,
-  armorClass: 13,
-  hitPoints: { count: 8, die: 'd4', modifier: 24, notation: '8d4+24' },
-  speed: { fly: 40 },
-  abilities: { str: 1, dex: 17, con: 14, int: 16, wis: 10, cha: 11 },
-  skills: { Arcana: 5, Perception: 2 },
-  damageResistances: ['lightning', 'necrotic', 'piercing'],
-  damageImmunities: ['cold', 'fire', 'poison'],
-  conditionImmunities: ['charmed', 'frightened', 'paralyzed', 'poisoned', 'prone'],
-  senses: ['darkvision 60 ft.', 'passive Perception 12'],
-  languages: ['Common'],
-  specialAbilities: [
-    {
-      name: 'Illumination',
-      description:
-        'The flameskull sheds either dim light in a 15-foot radius, or bright light in a 15-foot radius and dim light for an additional 15 feet. It can switch between the options as an action.',
-    },
-    {
-      name: 'Rejuvenation',
-      description:
-        'If the flameskull is destroyed, it regains all its hit points in 1 hour unless holy water is sprinkled on its remains or a dispel magic or remove curse spell is cast on them.',
-    },
-  ],
-  actions: [
-    {
-      name: 'Multiattack',
-      description: 'The flameskull uses Fire Ray twice.',
-    },
-    {
-      name: 'Fire Ray',
-      description: 'Ranged Spell Attack: +5 to hit, range 30 ft., one target.',
-      attackBonus: 5,
-      range: { normal: 30, max: 30 },
-      damage: [{ dice: { count: 3, die: 'd6', notation: '3d6' }, type: 'fire' }],
-    },
-  ],
-  description:
-    'The burning skull of a dead wizard, animated by dark magic and bound to guard a location.',
-  environment: ['underground', 'ruins'],
-};
+// NOTE: The former 'flameskull' entry was removed. The flameskull is a
+// Forgotten Realms monster that does not appear in SRD 5.1, so it cannot ship
+// under an SRD citation.
 
 // CR 5
 export const gladiator: Monster = {
@@ -525,69 +479,9 @@ export const ankheg: Monster = {
   environment: ['forest', 'grassland'],
 };
 
-export const banshee: Monster = {
-  id: 'banshee',
-  name: 'Banshee',
-  system: 'dnd-5e-2014',
-  source: 'SRD',
-  size: 'medium',
-  type: 'undead',
-  alignment: 'chaotic evil',
-  challengeRating: 4,
-  experiencePoints: 1100,
-  armorClass: 12,
-  hitPoints: { count: 13, die: 'd8', notation: '13d8' },
-  speed: { walk: 0, fly: 40 },
-  abilities: { str: 1, dex: 14, con: 10, int: 12, wis: 11, cha: 17 },
-  savingThrows: { wis: 2, cha: 5 },
-  damageResistances: [
-    'acid',
-    'fire',
-    'lightning',
-    'thunder',
-    'bludgeoning',
-    'piercing',
-    'slashing',
-  ],
-  damageImmunities: ['cold', 'necrotic', 'poison'],
-  conditionImmunities: [
-    'charmed',
-    'exhaustion',
-    'frightened',
-    'grappled',
-    'paralyzed',
-    'petrified',
-    'poisoned',
-    'prone',
-    'restrained',
-  ],
-  senses: ['darkvision 60 ft.', 'passive Perception 10'],
-  languages: ['Common', 'Elvish'],
-  specialAbilities: [
-    {
-      name: 'Incorporeal Movement',
-      description:
-        'The banshee can move through other creatures and objects as if they were difficult terrain. It takes 5 (1d10) force damage if it ends its turn inside an object.',
-    },
-  ],
-  actions: [
-    {
-      name: 'Corrupting Touch',
-      description: 'Melee Spell Attack: +4 to hit, reach 5 ft., one target.',
-      attackBonus: 4,
-      reach: 5,
-      damage: [{ dice: { count: 3, die: 'd8', notation: '3d8+3' }, type: 'necrotic' }],
-    },
-    {
-      name: 'Wail',
-      description:
-        'The banshee releases a mournful wail. This wail has no effect on constructs and undead. All other creatures within 30 feet that can hear the banshee must make a DC 13 Constitution saving throw. On a failure, a creature drops to 0 hit points. On a success, a creature takes 3d6 psychic damage.',
-      recharge: '5-6',
-    },
-  ],
-  description: 'The woeful spirit of an elf, bound by tragedy.',
-  environment: ['any'],
-};
+// NOTE: The former 'banshee' entry was removed. The banshee statblock comes
+// from the 2014 Monster Manual and does not appear in SRD 5.1, so it cannot
+// ship under an SRD citation.
 
 export const basilisk: Monster = {
   id: 'basilisk',
@@ -636,8 +530,6 @@ export const dnd5eCR2to5Monsters: Monster[] = [
   basilisk,
   werewolf,
   blackDragonWyrmling,
-  banshee,
-  flameskull,
   gladiator,
   troll,
   youngWhiteDragon,
