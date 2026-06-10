@@ -3,7 +3,7 @@ import { CharacterDocument } from '../../types/core/document';
 import { Dnd35eDataModel } from './data-model';
 import { abilityMod } from '../../utils/math';
 import { GRAPPLE_SIZE_MODS, baseSave, classBAB } from '../shared/d20-helpers';
-import { computeD20LegacyAC } from '../../utils/armorClass';
+import { computeD20LegacyAC, D20_SIZE_MOD } from '../../utils/armorClass';
 import { resolveCharacterEffects } from '../../rules';
 import { dnd35eClasses } from '../../data/dnd/3.5e/classes';
 import { dnd35eNormalizedPrestigeClasses } from '../../data/dnd/3.5e/prestige-classes';
@@ -180,12 +180,14 @@ export class Dnd35eEngine implements SystemEngine<Dnd35eDataModel> {
       modifier = d.saves.will.total;
       flavor = 'Will Save';
     } else if (checkId === 'attack') {
-      // Base attack = BAB + STR, then layer equipped-weapon and feat/feature
-      // attack bonuses through the shared rules resolver (RFC 003). The resolver
-      // contributes deterministically; only the d20 below is random.
+      // Base attack = BAB + STR + size modifier (3.5e SRD: size applies to
+      // attack rolls exactly as to AC), then layer equipped-weapon and
+      // feat/feature attack bonuses through the shared rules resolver
+      // (RFC 003). Only the d20 below is random.
       modifier =
         d.baseAttackBonus +
         abilityMod(d.baseAttributes.str ?? 10) +
+        (D20_SIZE_MOD[d.sizeCategory] ?? 0) +
         resolveCharacterEffects('dnd-3.5e', {
           equipment: d.equipment.filter((item) => item.equipped),
           feats: d.feats,

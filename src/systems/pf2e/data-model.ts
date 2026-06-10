@@ -115,6 +115,11 @@ export interface Pf2eDataModel extends SystemDataModel {
     armorType?: 'light' | 'medium' | 'heavy';
     dexBonusMax?: number;
     shieldBonus?: number;
+    /**
+     * CRB: shields grant their AC bonus only while raised (the Raise a Shield
+     * action). Toggled per round from the sheet; cleared on unequip.
+     */
+    raised?: boolean;
     // Magic/effect bonuses consumed by the system-agnostic rules IR (RFC 003).
     // Optional and additive; base AC math is unaffected. PF2e bonuses default to
     // the item bucket unless pf2eBucket says otherwise.

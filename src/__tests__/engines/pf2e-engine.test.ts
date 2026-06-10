@@ -355,3 +355,45 @@ describe('Pf2eEngine', () => {
     });
   });
 });
+
+describe('shield AC (Raise a Shield)', () => {
+  const shieldDoc = (raised: boolean | undefined, equipped = true) =>
+    makeDoc({
+      level: 1,
+      baseAttributes: { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+      armorProficiencies: {
+        unarmored: { tier: 'untrained', total: 0 },
+        light: { tier: 'untrained', total: 0 },
+        medium: { tier: 'untrained', total: 0 },
+        heavy: { tier: 'untrained', total: 0 },
+      },
+      equipment: [
+        {
+          itemId: 'steel-shield',
+          name: 'Steel Shield',
+          bulk: 1,
+          equipped,
+          shieldBonus: 2,
+          ...(raised === undefined ? {} : { raised }),
+        },
+      ],
+    });
+
+  // CRB: a shield grants its circumstance bonus to AC only while raised (the
+  // Raise a Shield action) — holding an equipped shield grants nothing.
+  it('grants no AC from a merely equipped shield', () => {
+    const result = new Pf2eEngine().prepareData(shieldDoc(undefined));
+    expect(result.system.armorClass).toBe(10);
+  });
+
+  it('adds the shield bonus only while raised', () => {
+    const result = new Pf2eEngine().prepareData(shieldDoc(true));
+    expect(result.system.armorClass).toBe(12);
+  });
+
+  it('clears a stale raised flag when the shield is unequipped', () => {
+    const result = new Pf2eEngine().prepareData(shieldDoc(true, false));
+    expect(result.system.armorClass).toBe(10);
+    expect(result.system.equipment[0].raised).toBe(false);
+  });
+});

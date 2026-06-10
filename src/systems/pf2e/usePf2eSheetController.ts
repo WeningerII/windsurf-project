@@ -142,6 +142,7 @@ export function usePf2eSheetController({ document, onUpdate }: UsePf2eSheetContr
       onClassDcTierCycle: mutationHandlers.cycleClassDcTier,
       onPerceptionTierCycle: mutationHandlers.cyclePerceptionTier,
       onPerceptionRoll: () => mutationHandlers.rollCheck('perception'),
+      onToggleShieldRaised: mutationHandlers.toggleShieldRaised,
       onShortRest: mutationHandlers.onShortRest,
       onLongRest: mutationHandlers.onLongRest,
     },

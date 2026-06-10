@@ -360,3 +360,66 @@ describe('Pf1eEngine', () => {
     });
   });
 });
+
+describe('size modifiers (PF1e CRB)', () => {
+  const engine = new Pf1eEngine();
+  it('adds the size modifier to attack rolls (Small +1)', async () => {
+    const doc = engine.prepareData(
+      makeDoc({
+        sizeCategory: 'small',
+        baseAttributes: { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+        classLevels: [
+          {
+            classId: 'fighter',
+            level: 1,
+            hitDieRolls: [10],
+            bab: 'full',
+            fortSave: 'good',
+            refSave: 'poor',
+            willSave: 'poor',
+            skillPointsPerLevel: 2,
+            favoredClassBonus: 'hp',
+          },
+        ],
+      })
+    );
+    // BAB 1 + Str 0 + size +1 = +2; the d20 is bounded 1..20.
+    const roll = await engine.rollCheck(doc, 'attack');
+    expect(roll.total - 2).toBeGreaterThanOrEqual(1);
+    expect(roll.total - 2).toBeLessThanOrEqual(20);
+  });
+
+  it('Tiny creatures use Dex in place of Str for CMB', () => {
+    const result = engine.prepareData(
+      makeDoc({
+        sizeCategory: 'tiny',
+        baseAttributes: { str: 6, dex: 18, con: 10, int: 10, wis: 10, cha: 10 },
+      })
+    );
+    // CMB = BAB 0 + Dex +4 (not Str -2) + tiny CMB size mod (-2) = +2
+    expect(result.system.cmb).toBe(2);
+    // CMD keeps Str AND Dex: 10 + 0 - 2 + 4 - 2 = 10
+    expect(result.system.cmd).toBe(10);
+  });
+
+  it('caps Dex on touch AC by the armor max-Dex bonus', () => {
+    const result = engine.prepareData(
+      makeDoc({
+        baseAttributes: { str: 10, dex: 18, con: 10, int: 10, wis: 10, cha: 10 },
+        equipment: [
+          {
+            itemId: 'full-plate',
+            name: 'Full Plate',
+            equipped: true,
+            armorClass: 8,
+            dexBonusMax: 1,
+          },
+        ],
+      })
+    );
+    // SRD: the armor's Max Dex Bonus caps Dexterity-to-AC generally — touch
+    // included. Touch = 10 + min(+4, +1) = 11 (was 14 uncapped).
+    expect(result.system.armorClass.touch).toBe(11);
+    expect(result.system.armorClass.total).toBe(10 + 8 + 1);
+  });
+});

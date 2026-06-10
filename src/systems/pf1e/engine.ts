@@ -3,7 +3,7 @@ import { CharacterDocument } from '../../types/core/document';
 import { Pf1eDataModel } from './data-model';
 import { abilityMod } from '../../utils/math';
 import { CMB_SIZE_MODS, baseSave, classBAB } from '../shared/d20-helpers';
-import { computeD20LegacyAC } from '../../utils/armorClass';
+import { computeD20LegacyAC, D20_SIZE_MOD } from '../../utils/armorClass';
 import { resolveCharacterEffects } from '../../rules';
 import { mergeVancianSpellSlots } from '../../utils/classSpellcasting';
 import { pf1eClasses } from '../../data/pathfinder/1e/classes';
@@ -150,7 +150,13 @@ export class Pf1eEngine implements SystemEngine<Pf1eDataModel> {
     data.initiative = dexMod;
 
     // --- CMB / CMD ---
-    data.cmb = totalBAB + strMod + cmbSizeMod;
+    // PF1e CRB: Tiny or smaller creatures use their Dexterity modifier in
+    // place of Strength for CMB (CMD keeps both Str and Dex regardless).
+    const tinyOrSmaller =
+      data.sizeCategory === 'tiny' ||
+      data.sizeCategory === 'diminutive' ||
+      data.sizeCategory === 'fine';
+    data.cmb = totalBAB + (tinyOrSmaller ? dexMod : strMod) + cmbSizeMod;
     data.cmd = 10 + totalBAB + strMod + dexMod + cmbSizeMod;
 
     return clonedDoc;
@@ -188,12 +194,15 @@ export class Pf1eEngine implements SystemEngine<Pf1eDataModel> {
       modifier = d.cmb;
       flavor = 'Combat Maneuver';
     } else if (checkId === 'attack') {
-      // Base attack = BAB + STR, then layer equipped-weapon and feat/feature
-      // attack bonuses through the shared rules resolver (RFC 003). The resolver
-      // contributes deterministically; only the d20 below is random.
+      // Base attack = BAB + STR + size modifier (PF1e CRB: size applies to
+      // attack rolls exactly as to AC), then layer equipped-weapon and
+      // feat/feature attack bonuses through the shared rules resolver
+      // (RFC 003). The resolver contributes deterministically; only the d20
+      // below is random.
       modifier =
         d.baseAttackBonus +
         abilityMod(d.baseAttributes.str ?? 10) +
+        (D20_SIZE_MOD[d.sizeCategory] ?? 0) +
         resolveCharacterEffects('pf1e', {
           equipment: d.equipment.filter((item) => item.equipped),
           feats: d.feats,

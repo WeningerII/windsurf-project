@@ -219,6 +219,23 @@ export function usePf2eMutationHandlers({ document, onUpdate }: UsePf2eMutationH
     [document]
   );
 
+  const toggleShieldRaised = useCallback(() => {
+    // CRB: the Raise a Shield action — flip the equipped shield's raised flag;
+    // the engine re-derives AC (and clears the flag if the shield unequips).
+    const hasEquippedShield = data.equipment.some(
+      (item) => item.equipped && item.shieldBonus != null
+    );
+    if (!hasEquippedShield) {
+      return;
+    }
+
+    update({
+      equipment: data.equipment.map((item) =>
+        item.equipped && item.shieldBonus != null ? { ...item, raised: !item.raised } : item
+      ),
+    });
+  }, [data.equipment, update]);
+
   return {
     canUpdate,
     replaceDocument,
@@ -236,5 +253,6 @@ export function usePf2eMutationHandlers({ document, onUpdate }: UsePf2eMutationH
     addInventoryItem,
     removeInventoryItem,
     rollCheck,
+    toggleShieldRaised,
   };
 }
