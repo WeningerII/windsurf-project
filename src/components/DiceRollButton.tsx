@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Dice5 } from 'lucide-react';
 import { RollResult } from '../registry/types';
 
@@ -16,19 +16,48 @@ export const DiceRollButton: React.FC<DiceRollButtonProps> = ({
   size = 'sm',
 }) => {
   const [result, setResult] = useState<RollResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [rolling, setRolling] = useState(false);
+  const dismissTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const clearDismissTimer = useCallback(() => {
+    if (dismissTimerRef.current !== null) {
+      clearTimeout(dismissTimerRef.current);
+      dismissTimerRef.current = null;
+    }
+  }, []);
+
+  // A re-roll within the 4 s window must restart the countdown — otherwise
+  // the previous timer dismisses the new result early.
+  const scheduleDismiss = useCallback(() => {
+    clearDismissTimer();
+    dismissTimerRef.current = setTimeout(() => {
+      dismissTimerRef.current = null;
+      setResult(null);
+      setError(null);
+    }, 4000);
+  }, [clearDismissTimer]);
+
+  // Drop any pending dismiss timer on unmount.
+  useEffect(() => clearDismissTimer, [clearDismissTimer]);
 
   const handleRoll = useCallback(async () => {
     setRolling(true);
     try {
       const r = await onRoll();
       setResult(r);
-      // Auto-dismiss after 4 seconds
-      setTimeout(() => setResult(null), 4000);
+      setError(null);
+      scheduleDismiss();
+    } catch {
+      // Surface the failure inline instead of escaping as an unhandled
+      // promise rejection.
+      setResult(null);
+      setError('Roll failed');
+      scheduleDismiss();
     } finally {
       setRolling(false);
     }
-  }, [onRoll]);
+  }, [onRoll, scheduleDismiss]);
 
   const sizeClasses = size === 'sm' ? 'w-6 h-6 text-xs' : 'w-8 h-8 text-sm';
 
@@ -42,6 +71,14 @@ export const DiceRollButton: React.FC<DiceRollButtonProps> = ({
       >
         <Dice5 className={size === 'sm' ? 'w-3.5 h-3.5' : 'w-4 h-4'} />
       </button>
+      {error && !result && (
+        <div
+          role="alert"
+          className="absolute left-full ml-2 z-50 px-3 py-1.5 rounded-lg shadow-lg border text-sm whitespace-nowrap animate-in fade-in-0 slide-in-from-left-2 bg-red-500/10 border-red-500/30 text-red-600"
+        >
+          {error}
+        </div>
+      )}
       {result && (
         <div
           className={`absolute left-full ml-2 z-50 px-3 py-1.5 rounded-lg shadow-lg border text-sm whitespace-nowrap animate-in fade-in-0 slide-in-from-left-2 ${

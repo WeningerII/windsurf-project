@@ -1,5 +1,5 @@
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from '../App';
 import { createDefaultDnd5e2024Data } from '../systems/dnd5e-2024/data-model';
@@ -50,7 +50,7 @@ async function selectSystemAndStartCreation(
   );
 }
 
-async function createCharacter(user: ReturnType<typeof userEvent.setup>, name: string) {
+async function createCharacter(_user: ReturnType<typeof userEvent.setup>, name: string) {
   const nameInput = await screen.findByTitle(
     'Character name',
     {},
@@ -63,15 +63,6 @@ async function createCharacter(user: ReturnType<typeof userEvent.setup>, name: s
   await waitFor(
     () => {
       expect(screen.getByTitle('Character name')).toHaveValue(name);
-    },
-    { timeout: FLOW_WAIT_TIMEOUT_MS }
-  );
-}
-
-async function waitForStoredDocuments(expectedCount: number) {
-  await waitFor(
-    () => {
-      expect(getStoredDocuments()).toHaveLength(expectedCount);
     },
     { timeout: FLOW_WAIT_TIMEOUT_MS }
   );
@@ -232,7 +223,7 @@ describe('Character Management Flow', () => {
   );
 
   it(
-    'deletes the current character from the header action',
+    'deletes the current character from the header action after confirmation',
     async () => {
       const user = userEvent.setup();
       setStoredDocuments([makeStoredDocument('delete-me-doc', 'Delete Me')]);
@@ -253,6 +244,12 @@ describe('Character Management Flow', () => {
 
       await user.click(screen.getByTitle('Delete character'));
 
+      // The destructive header action requires confirmation and names the
+      // character being deleted.
+      const dialog = await screen.findByRole('alertdialog');
+      expect(dialog).toHaveTextContent('Delete Me');
+      await user.click(within(dialog).getByRole('button', { name: /^delete$/i }));
+
       await waitFor(
         () => {
           expect(screen.getByText('Choose a Game System')).toBeInTheDocument();
@@ -260,6 +257,34 @@ describe('Character Management Flow', () => {
         },
         { timeout: FLOW_WAIT_TIMEOUT_MS }
       );
+    },
+    FLOW_TEST_TIMEOUT_MS
+  );
+
+  it(
+    'keeps the character when the header delete confirmation is cancelled',
+    async () => {
+      const user = userEvent.setup();
+      setStoredDocuments([makeStoredDocument('keep-me-doc', 'Keep Me')]);
+      render(<App />);
+
+      const keepCard = await screen.findByText('Keep Me', {}, { timeout: FLOW_WAIT_TIMEOUT_MS });
+      const keepCardButton = keepCard.closest('button');
+
+      if (!keepCardButton) {
+        throw new Error('Expected stored character card button');
+      }
+
+      await user.click(keepCardButton);
+
+      await user.click(screen.getByTitle('Delete character'));
+      const dialog = await screen.findByRole('alertdialog');
+      await user.click(within(dialog).getByRole('button', { name: /cancel/i }));
+
+      expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument();
+      // Still on the open sheet with the document intact.
+      expect(screen.getByTitle('Delete character')).toBeInTheDocument();
+      expect(getStoredDocuments()).toHaveLength(1);
     },
     FLOW_TEST_TIMEOUT_MS
   );
@@ -352,16 +377,30 @@ describe('Character Management Flow', () => {
           return originalSetAttribute.call(this, name, value);
         });
       const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
+      // Exports must use Blob URLs: data: anchors are capped (~2 MB) in
+      // Chromium and would silently no-op near the storage limit.
+      let capturedBlob: Blob | null = null;
+      const createObjectURLSpy = vi
+        .spyOn(URL, 'createObjectURL')
+        .mockImplementation((blob: Blob | MediaSource) => {
+          capturedBlob = blob as Blob;
+          return 'blob:mock-export-url';
+        });
+      const revokeObjectURLSpy = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
 
       try {
         await user.click(screen.getByTitle('Export character'));
 
         expect(clickSpy).toHaveBeenCalledTimes(1);
         expect(capturedDownload).toBe('exportable_hero_character.json');
-        expect(capturedHref.startsWith('data:application/json;charset=utf-8,')).toBe(true);
+        expect(capturedHref).toBe('blob:mock-export-url');
+        expect(revokeObjectURLSpy).toHaveBeenCalledWith('blob:mock-export-url');
 
-        const encodedPayload = capturedHref.split(',', 2)[1] ?? '';
-        const exported = JSON.parse(decodeURIComponent(encodedPayload)) as {
+        if (!capturedBlob) {
+          throw new Error('Expected the export to create a Blob');
+        }
+        expect((capturedBlob as Blob).type).toBe('application/json');
+        const exported = JSON.parse(await (capturedBlob as Blob).text()) as {
           version?: string;
           documents?: Array<{ name?: string; systemId?: string }>;
         };
@@ -372,6 +411,8 @@ describe('Character Management Flow', () => {
       } finally {
         setAttributeSpy.mockRestore();
         clickSpy.mockRestore();
+        createObjectURLSpy.mockRestore();
+        revokeObjectURLSpy.mockRestore();
       }
     },
     HEAVY_FLOW_TEST_TIMEOUT_MS
@@ -399,16 +440,27 @@ describe('Character Management Flow', () => {
           return originalSetAttribute.call(this, name, value);
         });
       const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
+      let capturedBlob: Blob | null = null;
+      const createObjectURLSpy = vi
+        .spyOn(URL, 'createObjectURL')
+        .mockImplementation((blob: Blob | MediaSource) => {
+          capturedBlob = blob as Blob;
+          return 'blob:mock-export-all-url';
+        });
+      const revokeObjectURLSpy = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
 
       try {
         await user.click(screen.getByRole('button', { name: /export all characters/i }));
 
         expect(clickSpy).toHaveBeenCalledTimes(1);
         expect(capturedDownload).toMatch(/^all_characters_\d{4}-\d{2}-\d{2}\.json$/);
-        expect(capturedHref.startsWith('data:application/json;charset=utf-8,')).toBe(true);
+        expect(capturedHref).toBe('blob:mock-export-all-url');
+        expect(revokeObjectURLSpy).toHaveBeenCalledWith('blob:mock-export-all-url');
 
-        const encodedPayload = capturedHref.split(',', 2)[1] ?? '';
-        const exported = JSON.parse(decodeURIComponent(encodedPayload)) as {
+        if (!capturedBlob) {
+          throw new Error('Expected the export to create a Blob');
+        }
+        const exported = JSON.parse(await (capturedBlob as Blob).text()) as {
           version?: string;
           documents?: Array<{ name?: string; systemId?: string }>;
         };
@@ -417,6 +469,8 @@ describe('Character Management Flow', () => {
       } finally {
         setAttributeSpy.mockRestore();
         clickSpy.mockRestore();
+        createObjectURLSpy.mockRestore();
+        revokeObjectURLSpy.mockRestore();
       }
     },
     HEAVY_FLOW_TEST_TIMEOUT_MS
