@@ -1,8 +1,9 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   clearDocumentStorage,
   exportDocuments,
   importDocuments,
+  importDocumentsWithReport,
   loadDocuments,
   resetDocumentStorageDiagnosticsForTests,
   saveDocuments,
@@ -10,6 +11,7 @@ import {
 import type { CharacterDocument, SystemDataModel } from '../types/core/document';
 import * as indexedDBAdapter from '../utils/indexedDBAdapter';
 import * as notifications from '../utils/notifications';
+import { errorLogger } from '../utils/errorLogger';
 import { createDefaultDaggerheartData } from '../systems/daggerheart/data-model';
 import { createDefaultDnd5eData } from '../systems/dnd5e/data-model';
 import { createDefaultPf2eData } from '../systems/pf2e/data-model';
@@ -109,7 +111,8 @@ describe('documentStorage behavior', () => {
     );
   });
 
-  it('throws a descriptive error when saveDocuments fails', () => {
+  it('throws a descriptive error when localStorage fails and IndexedDB is unavailable', () => {
+    vi.spyOn(indexedDBAdapter, 'isIndexedDBAvailable').mockReturnValue(false);
     const setItemSpy = vi.spyOn(localStorage, 'setItem').mockImplementation(() => {
       throw new Error('cannot write');
     });
@@ -130,7 +133,7 @@ describe('documentStorage behavior', () => {
     setItemSpy.mockRestore();
   });
 
-  it('supports export/import helpers and clearDocumentStorage', () => {
+  it('supports export/import helpers and clearDocumentStorage', async () => {
     const json = exportDocuments([
       {
         id: 'doc-export-1',
@@ -152,7 +155,7 @@ describe('documentStorage behavior', () => {
     );
 
     localStorage.setItem(V2_KEY, json);
-    clearDocumentStorage();
+    await clearDocumentStorage();
     expect(localStorage.getItem(V2_KEY)).toBeNull();
   });
 
@@ -486,5 +489,152 @@ describe('documentStorage behavior', () => {
       'Changes are saving to browser storage only. Larger storage (IndexedDB) is unavailable.',
       'warning'
     );
+  });
+
+  // M1: a localStorage quota failure must not abort the IndexedDB write.
+  it('still writes to IndexedDB when localStorage fails, downgrading to a one-time warning', async () => {
+    vi.spyOn(indexedDBAdapter, 'isIndexedDBAvailable').mockReturnValue(true);
+    const idbSpy = vi.spyOn(indexedDBAdapter, 'idbSaveDocuments').mockResolvedValue(undefined);
+    const toastSpy = vi.spyOn(notifications, 'emitToast').mockImplementation(() => {});
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    // NOTE: localStorage spies survive vi.restoreAllMocks in jsdom — restore manually.
+    const setItemSpy = vi.spyOn(localStorage, 'setItem').mockImplementation(() => {
+      throw new Error('QuotaExceededError');
+    });
+
+    expect(() => saveDocuments([baseV2Document])).not.toThrow();
+    expect(idbSpy).toHaveBeenCalledTimes(1);
+    expect(idbSpy).toHaveBeenCalledWith([baseV2Document]);
+
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(toastSpy).toHaveBeenCalledTimes(1);
+    expect(toastSpy).toHaveBeenCalledWith(
+      'Browser storage is full. Changes are saving to larger storage (IndexedDB) only.',
+      'warning'
+    );
+
+    // Second failing save: data is still landing in IndexedDB, do not re-toast.
+    expect(() => saveDocuments([baseV2Document])).not.toThrow();
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(toastSpy).toHaveBeenCalledTimes(1);
+
+    setItemSpy.mockRestore();
+  });
+
+  // M1: an error is surfaced only when BOTH stores fail.
+  it('surfaces a loud error when both localStorage and IndexedDB fail', async () => {
+    vi.spyOn(indexedDBAdapter, 'isIndexedDBAvailable').mockReturnValue(true);
+    vi.spyOn(indexedDBAdapter, 'idbSaveDocuments').mockRejectedValue(new Error('idb down'));
+    const toastSpy = vi.spyOn(notifications, 'emitToast').mockImplementation(() => {});
+    const logSpy = vi.spyOn(errorLogger, 'log').mockImplementation(() => {});
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    // NOTE: localStorage spies survive vi.restoreAllMocks in jsdom — restore manually.
+    const setItemSpy = vi.spyOn(localStorage, 'setItem').mockImplementation(() => {
+      throw new Error('QuotaExceededError');
+    });
+
+    expect(() => saveDocuments([baseV2Document])).not.toThrow();
+
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(toastSpy).toHaveBeenCalledWith(
+      'Saving failed: both browser storage and IndexedDB are unavailable. Recent changes may be lost.',
+      'error'
+    );
+    expect(logSpy).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      'Document save failed in both localStorage and IndexedDB',
+      expect.any(Error),
+      expect.objectContaining({ idbError: 'idb down' })
+    );
+
+    setItemSpy.mockRestore();
+  });
+
+  // M2: clear-all must not swallow an IndexedDB clear failure.
+  it('clearDocumentStorage propagates an IndexedDB clear failure', async () => {
+    vi.spyOn(indexedDBAdapter, 'isIndexedDBAvailable').mockReturnValue(true);
+    vi.spyOn(indexedDBAdapter, 'idbClearDocuments').mockRejectedValue(new Error('clear failed'));
+    setV2Documents([baseV2Document]);
+
+    await expect(clearDocumentStorage()).rejects.toThrow('clear failed');
+    // The synchronous localStorage removal still happened.
+    expect(localStorage.getItem(V2_KEY)).toBeNull();
+  });
+
+  it('clearDocumentStorage also removes the corrupt-payload backup (privacy wipe)', async () => {
+    vi.spyOn(errorLogger, 'log').mockImplementation(() => {});
+    localStorage.setItem(V2_KEY, '{corrupt');
+    expect(() => loadDocuments()).toThrow();
+    expect(localStorage.getItem(`${V2_KEY}.corrupt`)).toBe('{corrupt');
+
+    await clearDocumentStorage();
+
+    expect(localStorage.getItem(V2_KEY)).toBeNull();
+    expect(localStorage.getItem(`${V2_KEY}.corrupt`)).toBeNull();
+  });
+
+  // M8: a corrupt payload is preserved before any save can overwrite it, and
+  // the failure is loud instead of a silent empty collection.
+  it('stashes a corrupt payload under .corrupt and throws a descriptive error', () => {
+    const logSpy = vi.spyOn(errorLogger, 'log').mockImplementation(() => {});
+    localStorage.setItem(V2_KEY, '{definitely not json');
+
+    expect(() => loadDocuments()).toThrow(/could not be read/);
+    expect(localStorage.getItem(`${V2_KEY}.corrupt`)).toBe('{definitely not json');
+    expect(logSpy).toHaveBeenCalledTimes(1);
+
+    // Re-loading the same corrupt payload does not re-stash or re-log.
+    expect(() => loadDocuments()).toThrow(/could not be read/);
+    expect(logSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('treats a structurally invalid payload (missing documents[]) as corrupt', () => {
+    vi.spyOn(errorLogger, 'log').mockImplementation(() => {});
+    const payload = JSON.stringify({ version: '2.0', nope: true });
+    localStorage.setItem(V2_KEY, payload);
+
+    expect(() => loadDocuments()).toThrow(/could not be read/);
+    expect(localStorage.getItem(`${V2_KEY}.corrupt`)).toBe(payload);
+  });
+
+  // L4: import reports how many records were dropped by validation.
+  it('importDocumentsWithReport counts dropped invalid records', () => {
+    const payload = JSON.stringify({
+      version: '2.0',
+      documents: [
+        {
+          ...baseV2Document,
+          createdAt: baseV2Document.createdAt.toISOString(),
+          updatedAt: baseV2Document.updatedAt.toISOString(),
+        },
+        { junk: true },
+        42,
+      ],
+      lastModified: new Date('2026-01-03T00:00:00.000Z').toISOString(),
+    });
+
+    const result = importDocumentsWithReport(payload);
+    expect(result.documents).toHaveLength(1);
+    expect(result.documents[0]?.name).toBe('V2 Test Hero');
+    expect(result.droppedCount).toBe(2);
+  });
+
+  it('importDocumentsWithReport reports an all-invalid import', () => {
+    const payload = JSON.stringify({
+      version: '2.0',
+      documents: [{ junk: true }, null],
+      lastModified: new Date('2026-01-03T00:00:00.000Z').toISOString(),
+    });
+
+    const result = importDocumentsWithReport(payload);
+    expect(result.documents).toHaveLength(0);
+    expect(result.droppedCount).toBe(2);
   });
 });

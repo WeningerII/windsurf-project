@@ -2,7 +2,10 @@ import type { Dnd35eDataModel } from '../dnd35e/data-model';
 import type { Pf1eDataModel } from '../pf1e/data-model';
 
 export type D20LegacyData = Dnd35eDataModel | Pf1eDataModel;
-export type D20LegacySpellSlots = Record<number, { total: number; used: number }>;
+export type D20LegacySpellSlots = Record<
+  number,
+  { total: number; used: number; manualBonus?: number }
+>;
 export type D20LegacyManualSpellcastingExtras = NonNullable<
   D20LegacyData['manualSpellcastingExtras']
 >;
@@ -105,12 +108,19 @@ export function setD20LegacySpellSlotTotal(
     return spellsPerDay;
   }
 
+  // The engine recomputes totals from the class tables on every prepare, so a
+  // raw total edit would be reverted. Record the edit as a delta from the
+  // automated baseline (current total minus the previously recorded delta);
+  // mergeVancianSpellSlots re-applies it after each recompute.
+  const automatedBaseline = slot.total - (slot.manualBonus ?? 0);
   const nextTotal = Math.max(0, total);
+  const nextManualBonus = nextTotal - automatedBaseline;
   return {
     ...spellsPerDay,
     [level]: {
       total: nextTotal,
       used: Math.min(slot.used, nextTotal),
+      ...(nextManualBonus !== 0 ? { manualBonus: nextManualBonus } : {}),
     },
   };
 }

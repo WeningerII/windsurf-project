@@ -1,8 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 
-type Theme = 'light' | 'dark' | 'system';
+const VALID_THEMES = ['light', 'dark', 'system'] as const;
+
+type Theme = (typeof VALID_THEMES)[number];
 
 const STORAGE_KEY = 'rpg-theme';
+
+function isTheme(value: unknown): value is Theme {
+  return typeof value === 'string' && (VALID_THEMES as readonly string[]).includes(value);
+}
 
 function getSystemTheme(): 'light' | 'dark' {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
@@ -18,7 +24,10 @@ function applyTheme(theme: Theme) {
 export function useTheme() {
   const [theme, setThemeState] = useState<Theme>(() => {
     try {
-      return (localStorage.getItem(STORAGE_KEY) as Theme) || 'system';
+      // Validate the stored value: a corrupted entry would otherwise put an
+      // arbitrary class on <html> and break the ThemeToggle icon.
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return isTheme(stored) ? stored : 'system';
     } catch {
       return 'system';
     }

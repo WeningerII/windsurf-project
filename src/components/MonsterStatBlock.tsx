@@ -13,6 +13,15 @@ export const MonsterStatBlock: React.FC<MonsterStatBlockProps> = ({ monster }) =
     return mod >= 0 ? `+${mod}` : `${mod}`;
   };
 
+  const formatHitPointsNotation = (): string => {
+    if (monster.hitPoints.notation) {
+      return monster.hitPoints.notation;
+    }
+    const { count, die, modifier } = monster.hitPoints;
+    const modifierText = modifier ? (modifier > 0 ? `+${modifier}` : `${modifier}`) : '';
+    return `${count}${die}${modifierText}`;
+  };
+
   const formatSpeed = () => {
     if (typeof monster.speed === 'number') {
       return `${monster.speed} ft.`;
@@ -58,10 +67,7 @@ export const MonsterStatBlock: React.FC<MonsterStatBlockProps> = ({ monster }) =
             <Heart className="w-5 h-5 text-destructive" />
             <div>
               <div className="text-xs text-muted-foreground">Hit Points</div>
-              <div className="text-lg font-bold">
-                {monster.hitPoints.notation ||
-                  `${monster.hitPoints.count}d${monster.hitPoints.die}${monster.hitPoints.modifier ? `+${monster.hitPoints.modifier}` : ''}`}
-              </div>
+              <div className="text-lg font-bold">{formatHitPointsNotation()}</div>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -151,8 +157,7 @@ export const MonsterStatBlock: React.FC<MonsterStatBlockProps> = ({ monster }) =
 
           {monster.languages && monster.languages.length > 0 && (
             <div>
-              <span className="font-semibold">Languages:</span>{' '}
-              {monster.languages.length === 0 ? '—' : monster.languages.join(', ')}
+              <span className="font-semibold">Languages:</span> {monster.languages.join(', ')}
             </div>
           )}
         </div>

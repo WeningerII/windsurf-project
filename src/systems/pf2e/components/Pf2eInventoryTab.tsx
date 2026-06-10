@@ -5,6 +5,7 @@ import { InventoryManager } from '../../../components/InventoryManager';
 import { abilityMod } from '../../../utils/math';
 import type { CharacterDocument } from '../../../types/core/document';
 import type { Pf2eDataModel } from '../data-model';
+import { getPf2eBulkState } from '../pf2eSheetShared';
 
 interface Props {
   document: CharacterDocument<Pf2eDataModel>;
@@ -29,10 +30,11 @@ export const Pf2eInventoryTab: React.FC<Props> = ({
   const inventoryBulk = data.inventory.reduce((sum, item) => sum + item.bulk * item.quantity, 0);
   const totalBulk = equippedBulk + inventoryBulk;
   const strengthModifier = abilityMod(data.baseAttributes.str ?? 10);
-  const encumbered = 5 + strengthModifier;
-  const maxBulk = 10 + strengthModifier;
-  const isEncumbered = totalBulk >= encumbered;
-  const isOverloaded = totalBulk >= maxBulk;
+  // CRB p.272: encumbered/overloaded only when Bulk *exceeds* the threshold.
+  const { encumbered, maxBulk, isEncumbered, isOverloaded } = getPf2eBulkState(
+    totalBulk,
+    strengthModifier
+  );
 
   return (
     <>
@@ -46,7 +48,7 @@ export const Pf2eInventoryTab: React.FC<Props> = ({
           </span>
         </div>
         <div className="text-xs text-muted-foreground">
-          Encumbered at <span className="font-medium">{encumbered}</span> &bull; Max{' '}
+          Encumbered over <span className="font-medium">{encumbered}</span> &bull; Max{' '}
           <span className="font-medium">{maxBulk}</span>
         </div>
         {isOverloaded && (

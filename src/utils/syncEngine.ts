@@ -3,6 +3,7 @@ import type { Campaign } from '../types/core/campaign';
 import { getSupabaseClient } from './supabaseClient';
 import { retryWithBackoff } from './retry';
 import { parseCharacterDocument, parseCampaign } from './boundaryValidation';
+import type { SyncTombstone } from './syncTombstones';
 
 const SYNC_QUEUE_KEY = 'rpg-sync-queue-v1';
 const SYNC_DELETE_QUEUE_KEY = 'rpg-sync-delete-queue-v1';
@@ -18,6 +19,41 @@ export interface RemoteDocument {
   created_at: string;
   updated_at: string;
   version: number;
+  /** Soft-delete tombstone (003 migration); null/absent for live rows. */
+  deleted_at?: string | null;
+}
+
+/**
+ * Result of a remote fetch: live entities plus the soft-delete tombstones the
+ * server holds. Tombstones are surfaced (not filtered) so the sync merge can
+ * distinguish "deleted remotely" (authoritative removal) from "missing
+ * remotely" (never uploaded — keep and push).
+ */
+export interface RemoteFetchResult<T> {
+  entities: T[];
+  tombstones: SyncTombstone[];
+}
+
+/**
+ * Extract a soft-delete tombstone from a remote row, or null for live rows.
+ * Only the id and deletion time are needed; the rest of the row is ignored.
+ */
+function extractTombstone(row: unknown): SyncTombstone | null {
+  if (!row || typeof row !== 'object') {
+    return null;
+  }
+  const remote = row as { id?: unknown; deleted_at?: unknown };
+  if (typeof remote.deleted_at !== 'string' || remote.deleted_at.length === 0) {
+    return null;
+  }
+  if (typeof remote.id !== 'string' || remote.id.length === 0) {
+    return null;
+  }
+  const deletedAt = new Date(remote.deleted_at);
+  if (Number.isNaN(deletedAt.getTime())) {
+    return null;
+  }
+  return { id: remote.id, deletedAt };
 }
 
 function getDocumentVersion(doc: CharacterDocument<SystemDataModel>): number {
@@ -51,7 +87,13 @@ function queueIds(key: string, ids: string[]): void {
   }
 
   const next = Array.from(new Set([...readQueuedIds(key), ...ids]));
-  localStorage.setItem(key, JSON.stringify(next));
+  try {
+    localStorage.setItem(key, JSON.stringify(next));
+  } catch (error) {
+    if (!import.meta.env.PROD) {
+      console.warn('Failed to queue sync ids:', error);
+    }
+  }
 }
 
 function clearQueuedIds(key: string): void {
@@ -68,25 +110,29 @@ async function getCurrentUserId(): Promise<string> {
     throw new Error('Supabase not configured');
   }
 
+  // getSession() reads the locally cached session — unlike getUser() it does
+  // not hit the auth server, so resolving the id once per push is cheap.
   const {
-    data: { user },
+    data: { session },
     error,
-  } = await client.auth.getUser();
+  } = await client.auth.getSession();
 
   if (error) {
     throw new Error(error.message);
   }
 
-  if (!user) {
+  if (!session?.user) {
     throw new Error('No authenticated Supabase user');
   }
 
-  return user.id;
+  return session.user.id;
 }
 
-async function toRemote(doc: CharacterDocument<SystemDataModel>): Promise<RemoteDocument> {
-  const userId = await getCurrentUserId();
-
+// `deleted_at` is deliberately NOT part of the upsert payload: PostgREST
+// leaves omitted columns untouched on conflict, so a stale device pushing its
+// full collection cannot resurrect a soft-deleted row. Revival goes through
+// the explicit restoreRemote* path only.
+function toRemote(doc: CharacterDocument<SystemDataModel>, userId: string): RemoteDocument {
   return {
     id: doc.id,
     user_id: userId,
@@ -116,9 +162,11 @@ function fromRemote(row: unknown): CharacterDocument<SystemDataModel> | null {
   return parsed.ok ? parsed.value : null;
 }
 
-export async function fetchRemoteDocuments(): Promise<CharacterDocument<SystemDataModel>[]> {
+export async function fetchRemoteDocuments(): Promise<
+  RemoteFetchResult<CharacterDocument<SystemDataModel>>
+> {
   const client = getSupabaseClient();
-  if (!client) return [];
+  if (!client) return { entities: [], tombstones: [] };
 
   return retryWithBackoff(async () => {
     const { data, error } = await client
@@ -128,9 +176,20 @@ export async function fetchRemoteDocuments(): Promise<CharacterDocument<SystemDa
 
     if (error) throw new Error(error.message);
     const rows: unknown[] = Array.isArray(data) ? data : [];
-    return rows
-      .map(fromRemote)
-      .filter((doc): doc is CharacterDocument<SystemDataModel> => doc !== null);
+    const entities: CharacterDocument<SystemDataModel>[] = [];
+    const tombstones: SyncTombstone[] = [];
+    for (const row of rows) {
+      const tombstone = extractTombstone(row);
+      if (tombstone) {
+        tombstones.push(tombstone);
+        continue;
+      }
+      const doc = fromRemote(row);
+      if (doc) {
+        entities.push(doc);
+      }
+    }
+    return { entities, tombstones };
   });
 }
 
@@ -138,7 +197,7 @@ export async function pushDocument(doc: CharacterDocument<SystemDataModel>): Pro
   const client = getSupabaseClient();
   if (!client) return;
 
-  const payload = await toRemote(doc);
+  const payload = toRemote(doc, await getCurrentUserId());
   await retryWithBackoff(async () => {
     const { error } = await client.from('documents').upsert(payload, { onConflict: 'id' });
     if (error) throw new Error(error.message);
@@ -151,7 +210,10 @@ export async function pushDocuments(docs: CharacterDocument<SystemDataModel>[]):
 
   if (docs.length === 0) return;
 
-  const payload = await Promise.all(docs.map((doc) => toRemote(doc)));
+  // Resolve the user id ONCE for the whole batch — one auth lookup per push,
+  // not one (network) round trip per entity.
+  const userId = await getCurrentUserId();
+  const payload = docs.map((doc) => toRemote(doc, userId));
 
   await retryWithBackoff(async () => {
     const { error } = await client.from('documents').upsert(payload, { onConflict: 'id' });
@@ -163,8 +225,30 @@ export async function deleteRemoteDocument(id: string): Promise<void> {
   const client = getSupabaseClient();
   if (!client) return;
 
+  // Soft delete: stamp a tombstone instead of removing the row, so other
+  // devices observe the deletion rather than re-uploading their stale copy.
+  // The client also stamps updated_at (003 dropped the server trigger).
+  const deletedAt = new Date().toISOString();
   await retryWithBackoff(async () => {
-    const { error } = await client.from('documents').delete().eq('id', id);
+    const { error } = await client
+      .from('documents')
+      .update({ deleted_at: deletedAt, updated_at: deletedAt })
+      .eq('id', id);
+    if (error) throw new Error(error.message);
+  });
+}
+
+/** Clear a soft-delete tombstone (deliberate local restore, e.g. undo). */
+export async function restoreRemoteDocument(id: string): Promise<void> {
+  const client = getSupabaseClient();
+  if (!client) return;
+
+  const restoredAt = new Date().toISOString();
+  await retryWithBackoff(async () => {
+    const { error } = await client
+      .from('documents')
+      .update({ deleted_at: null, updated_at: restoredAt })
+      .eq('id', id);
     if (error) throw new Error(error.message);
   });
 }
@@ -201,7 +285,16 @@ export function queueSyncSnapshot(docs: CharacterDocument<SystemDataModel>[]): v
     return;
   }
 
-  localStorage.setItem(SYNC_QUEUE_KEY, JSON.stringify(docs));
+  try {
+    localStorage.setItem(SYNC_QUEUE_KEY, JSON.stringify(docs));
+  } catch (error) {
+    // A full-collection snapshot can exceed the localStorage quota. Losing
+    // the queue entry is recoverable (the next sync re-merges live state);
+    // throwing here would break the offline/error path that called us.
+    if (!import.meta.env.PROD) {
+      console.warn('Failed to queue sync snapshot:', error);
+    }
+  }
 }
 
 export function getQueuedSyncSnapshot(): CharacterDocument<SystemDataModel>[] {
@@ -290,7 +383,9 @@ export function subscribeToRemoteDocuments(
 // `version` field (low-churn metadata, last-writer-wins on updatedAt is
 // acceptable) and the payload itself is just name + optional systemId +
 // notes + characterIds.  The server schema lives in
-// supabase/migrations/001_initial.sql.
+// supabase/migrations/001_initial.sql; since 003_soft_delete.sql the client
+// owns `updated_at`, so last-writer-wins compares real edit times rather than
+// server push times.
 // ---------------------------------------------------------------------------
 
 export interface RemoteCampaign {
@@ -302,11 +397,13 @@ export interface RemoteCampaign {
   character_ids: string[];
   created_at: string;
   updated_at: string;
+  /** Soft-delete tombstone (003 migration); null/absent for live rows. */
+  deleted_at?: string | null;
 }
 
-async function toRemoteCampaign(campaign: Campaign): Promise<RemoteCampaign> {
-  const userId = await getCurrentUserId();
-
+// `deleted_at` omitted for the same reason as `toRemote` — upserts must not
+// be able to resurrect a tombstoned row.
+function toRemoteCampaign(campaign: Campaign, userId: string): RemoteCampaign {
   return {
     id: campaign.id,
     user_id: userId,
@@ -336,9 +433,9 @@ function fromRemoteCampaign(row: unknown): Campaign | null {
   return parsed.ok ? parsed.value : null;
 }
 
-export async function fetchRemoteCampaigns(): Promise<Campaign[]> {
+export async function fetchRemoteCampaigns(): Promise<RemoteFetchResult<Campaign>> {
   const client = getSupabaseClient();
-  if (!client) return [];
+  if (!client) return { entities: [], tombstones: [] };
 
   return retryWithBackoff(async () => {
     const { data, error } = await client
@@ -348,9 +445,20 @@ export async function fetchRemoteCampaigns(): Promise<Campaign[]> {
 
     if (error) throw new Error(error.message);
     const rows: unknown[] = Array.isArray(data) ? data : [];
-    return rows
-      .map(fromRemoteCampaign)
-      .filter((campaign): campaign is Campaign => campaign !== null);
+    const entities: Campaign[] = [];
+    const tombstones: SyncTombstone[] = [];
+    for (const row of rows) {
+      const tombstone = extractTombstone(row);
+      if (tombstone) {
+        tombstones.push(tombstone);
+        continue;
+      }
+      const campaign = fromRemoteCampaign(row);
+      if (campaign) {
+        entities.push(campaign);
+      }
+    }
+    return { entities, tombstones };
   });
 }
 
@@ -358,7 +466,7 @@ export async function pushCampaign(campaign: Campaign): Promise<void> {
   const client = getSupabaseClient();
   if (!client) return;
 
-  const payload = await toRemoteCampaign(campaign);
+  const payload = toRemoteCampaign(campaign, await getCurrentUserId());
   await retryWithBackoff(async () => {
     const { error } = await client.from('campaigns').upsert(payload, { onConflict: 'id' });
     if (error) throw new Error(error.message);
@@ -370,7 +478,9 @@ export async function pushCampaigns(campaigns: Campaign[]): Promise<void> {
   if (!client) return;
   if (campaigns.length === 0) return;
 
-  const payload = await Promise.all(campaigns.map((c) => toRemoteCampaign(c)));
+  // One auth lookup per push (see pushDocuments).
+  const userId = await getCurrentUserId();
+  const payload = campaigns.map((c) => toRemoteCampaign(c, userId));
 
   await retryWithBackoff(async () => {
     const { error } = await client.from('campaigns').upsert(payload, { onConflict: 'id' });
@@ -382,8 +492,28 @@ export async function deleteRemoteCampaign(id: string): Promise<void> {
   const client = getSupabaseClient();
   if (!client) return;
 
+  // Soft delete — see deleteRemoteDocument.
+  const deletedAt = new Date().toISOString();
   await retryWithBackoff(async () => {
-    const { error } = await client.from('campaigns').delete().eq('id', id);
+    const { error } = await client
+      .from('campaigns')
+      .update({ deleted_at: deletedAt, updated_at: deletedAt })
+      .eq('id', id);
+    if (error) throw new Error(error.message);
+  });
+}
+
+/** Clear a soft-delete tombstone (deliberate local restore, e.g. undo). */
+export async function restoreRemoteCampaign(id: string): Promise<void> {
+  const client = getSupabaseClient();
+  if (!client) return;
+
+  const restoredAt = new Date().toISOString();
+  await retryWithBackoff(async () => {
+    const { error } = await client
+      .from('campaigns')
+      .update({ deleted_at: null, updated_at: restoredAt })
+      .eq('id', id);
     if (error) throw new Error(error.message);
   });
 }
@@ -413,7 +543,14 @@ export function mergeCampaigns(local: Campaign[], remote: Campaign[]): Campaign[
 
 export function queueCampaignsSnapshot(campaigns: Campaign[]): void {
   if (typeof localStorage === 'undefined') return;
-  localStorage.setItem(CAMPAIGN_SYNC_QUEUE_KEY, JSON.stringify(campaigns));
+  try {
+    localStorage.setItem(CAMPAIGN_SYNC_QUEUE_KEY, JSON.stringify(campaigns));
+  } catch (error) {
+    // See queueSyncSnapshot — never let a quota error escape the sync path.
+    if (!import.meta.env.PROD) {
+      console.warn('Failed to queue campaigns snapshot:', error);
+    }
+  }
 }
 
 export function getQueuedCampaignsSnapshot(): Campaign[] {

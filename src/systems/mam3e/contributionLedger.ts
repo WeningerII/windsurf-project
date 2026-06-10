@@ -6,7 +6,7 @@ import type { CharacterDocument } from '../../types/core/document';
 import type { Power } from '../../types/mam/powers';
 import type { Mam3eDataModel } from './data-model';
 import {
-  calculatePowerPointCost,
+  calculateMam3eFinalPowerCost,
   getPowerModifierRank,
   getPowerRank,
   MAM3E_MODIFIER_BY_ID,
@@ -97,6 +97,11 @@ export function buildMam3ePowerCostLedgerEntries(
     }
   });
 
+  // Mirrors calculatePowerPointCost: when the effective cost per rank drops
+  // below 1, the minimum-cost rule charges 1 point per (2 − costPerRank)
+  // ranks, rounded up, and the final cost never falls below 1 (Hero's
+  // Handbook, Powers — Modifiers).
+  const totalCost = calculateMam3eFinalPowerCost(rank, costPerRank, flatCost);
   entries.push(
     createPowerCostEntry(powerIndex, {
       target: 'totalCost',
@@ -105,8 +110,13 @@ export function buildMam3ePowerCostLedgerEntries(
       sourceKind: 'power',
       label: 'Total power cost',
       operation: 'set',
-      value: calculatePowerPointCost(power),
-      details: { rank, costPerRank, flatCost },
+      value: totalCost,
+      details: {
+        rank,
+        costPerRank,
+        flatCost,
+        ...(costPerRank < 1 ? { minimumCostRule: { ranksPerPoint: 2 - costPerRank } } : {}),
+      },
     })
   );
 

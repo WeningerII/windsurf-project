@@ -17,7 +17,7 @@ const monsters: Monster[] = [
     experiencePoints: 50,
     armorClass: 15,
     hitPoints: { count: 2, die: 'd6', notation: '2d6' },
-    speed: 30,
+    speed: { walk: 30 },
     abilities: { str: 8, dex: 14, con: 10, int: 10, wis: 8, cha: 8 },
     senses: ['darkvision 60 ft.'],
     languages: ['Common', 'Goblin'],
@@ -95,5 +95,45 @@ describe('MonsterBrowser', () => {
 
     expect(onSelectMonster).toHaveBeenCalledTimes(1);
     expect(onSelectMonster).toHaveBeenCalledWith(expect.objectContaining({ id: 'goblin' }));
+  });
+
+  it('exposes monster cards as buttons selectable via keyboard', async () => {
+    const user = userEvent.setup();
+    const onSelectMonster = vi.fn();
+
+    render(<MonsterBrowser monsters={monsters} onSelectMonster={onSelectMonster} />);
+
+    const card = screen.getByRole('button', { name: /Goblin/ });
+    card.focus();
+    expect(card).toHaveFocus();
+    await user.keyboard('{Enter}');
+
+    expect(onSelectMonster).toHaveBeenCalledTimes(1);
+    expect(onSelectMonster).toHaveBeenCalledWith(expect.objectContaining({ id: 'goblin' }));
+  });
+
+  it('shows correct 5e XP and book-style fractions for fractional CRs', () => {
+    render(<MonsterBrowser monsters={monsters} />);
+
+    // Filter options use the dataset XP (goblin: 50 XP at CR 1/4).
+    expect(screen.getByRole('option', { name: 'CR 1/4 (50 XP)' })).toBeInTheDocument();
+    expect(screen.getByRole('option', { name: 'CR 10' })).toBeInTheDocument();
+    expect(screen.queryByText(/25 XP/)).not.toBeInTheDocument();
+
+    // Card badge renders the fractional CR.
+    expect(screen.getByText('CR 1/4')).toBeInTheDocument();
+  });
+
+  it('falls back to the SRD XP table when a CR bucket lacks experience data', () => {
+    const tinyBeast = {
+      ...monsters[0],
+      id: 'rat',
+      name: 'Rat',
+      challengeRating: 0.125,
+      experiencePoints: undefined as unknown as number,
+    };
+    render(<MonsterBrowser monsters={[tinyBeast]} />);
+
+    expect(screen.getByRole('option', { name: 'CR 1/8 (25 XP)' })).toBeInTheDocument();
   });
 });

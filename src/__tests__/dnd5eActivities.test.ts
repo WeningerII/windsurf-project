@@ -143,7 +143,9 @@ describe('D&D 5e activity pilot', () => {
             }),
             expect.objectContaining({
               target: 'damage.radiant',
-              value: '2d8',
+              // SRD 5.1 Divine Smite: 2d8 for a 1st-level slot +1d8 per level
+              // above 1st (max 5d8) → a 2nd-level slot deals 3d8, not 2d8.
+              value: '3d8',
             }),
           ]),
           manualBoundary: expect.objectContaining({ kind: 'partial' }),
@@ -153,6 +155,42 @@ describe('D&D 5e activity pilot', () => {
     expect(result.issues).toEqual([]);
     expect(result.document.system.spellcasting?.spellSlots[2]).toEqual({ max: 1, used: 1 });
     expect(JSON.stringify(document)).toBe(serializedBeforeExecution);
+  });
+
+  it('caps Divine Smite radiant dice at 5d8 for high slot levels', () => {
+    // SRD 5.1: "...to a maximum of 5d8" — both 4th- and 5th-level slots hit
+    // the cap (min(slotLevel + 1, 5)).
+    const system: Dnd5eDataModel = {
+      ...createDefaultDnd5eData(),
+      level: 17,
+      classLevels: [{ classId: 'paladin', level: 17, hitDieRolls: [] }],
+      featureOptionSelections: [{ group: 'smites', id: 'divine-smite-5th' }],
+      spellcasting: {
+        classes: [{ classId: 'paladin', ability: 'cha', spellcastingLevel: 9 }],
+        spellsKnown: [],
+        spellsPrepared: [],
+        spellSlots: {
+          ...createEmptySpellSlots(),
+          5: { max: 1, used: 0 },
+        },
+      },
+    };
+    const document = createDocument(system);
+
+    const activities = buildDnd5eActivityDefinitions(document);
+    expect(activities).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: 'dnd5e-2014.feature-option.smites.divine-smite-5th',
+          outputs: expect.arrayContaining([
+            expect.objectContaining({
+              target: 'damage.radiant',
+              value: '5d8',
+            }),
+          ]),
+        }),
+      ])
+    );
   });
 
   it('returns structured errors when a Divine Smite spell-slot cost is unavailable', () => {

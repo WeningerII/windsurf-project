@@ -2,6 +2,8 @@ import type { SceneDocument, SceneEvent } from '../types/core/scene';
 import { parseSceneDocument } from './boundaryValidation';
 
 const STORAGE_KEY = 'rpg-scenes-v1';
+/** Exported for cross-tab `storage` event filtering in useScenes. */
+export const SCENES_STORAGE_KEY = STORAGE_KEY;
 const STORAGE_VERSION = '1.0';
 
 interface SceneStorageData {
@@ -34,6 +36,22 @@ function collectValidScenes(candidates: unknown[]): SceneDocument[] {
   return scenes;
 }
 
+/**
+ * Parse a raw scenes payload (e.g. a cross-tab `storage` event value).
+ * Returns null when the payload is not a structurally valid snapshot.
+ */
+export function parseScenesSnapshot(raw: string): SceneDocument[] | null {
+  try {
+    const scenesField = readScenesField(raw);
+    if (scenesField === null) {
+      return null;
+    }
+    return collectValidScenes(scenesField);
+  } catch {
+    return null;
+  }
+}
+
 export function loadScenes(): SceneDocument[] {
   if (!canUseLocalStorage()) {
     return [];
@@ -44,15 +62,7 @@ export function loadScenes(): SceneDocument[] {
     return [];
   }
 
-  try {
-    const scenesField = readScenesField(raw);
-    if (scenesField === null) {
-      return [];
-    }
-    return collectValidScenes(scenesField);
-  } catch {
-    return [];
-  }
+  return parseScenesSnapshot(raw) ?? [];
 }
 
 export function saveScenes(scenes: SceneDocument[]): void {

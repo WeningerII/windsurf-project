@@ -22,8 +22,22 @@ export interface DebouncedPersistence<T> {
    * Start a new write generation and return its token. Call this *outside* the
    * `setState` updater (the updater may run twice under StrictMode, which would
    * otherwise bump the token twice), then pass the token to `persist`.
+   *
+   * IMPORTANT: a begun generation must end in either `persist` or
+   * `abandonVersion`. Beginning and then doing neither silently invalidates
+   * (drops) a still-pending write from an earlier real edit — exactly what a
+   * no-op update would otherwise do to the last keystroke's save. (The one
+   * legitimate begin-without-persist is a deliberate invalidate-then-`cancel`,
+   * e.g. clear-all.)
    */
   beginVersion: () => number;
+  /**
+   * Roll back an unused generation (no-change branch of an updater) so it does
+   * not invalidate a still-pending older write. Only the newest generation can
+   * be rolled back; if newer generations have begun since, this is a no-op.
+   * Safe to call twice (StrictMode double-invocation).
+   */
+  abandonVersion: (version: number) => void;
   /** Schedule a debounced write, dropped if `version` is no longer current. */
   persist: (value: T, version: number) => void;
   /** Flush any pending write immediately. */
@@ -78,6 +92,15 @@ export function useDebouncedPersistence<T>(
   return useMemo(
     () => ({
       beginVersion: () => (versionRef.current += 1),
+      abandonVersion: (version: number) => {
+        // No timer can fire between beginVersion and the updater's abandon
+        // call (both happen within one task, and the debounce timer is a
+        // macrotask), so rolling back cannot resurrect an already-dropped
+        // write — it only re-validates a still-pending one.
+        if (versionRef.current === version) {
+          versionRef.current = version - 1;
+        }
+      },
       persist: (value: T, version: number) => debounced(value, version),
       flush: () => debounced.flush(),
       cancel: () => debounced.cancel(),

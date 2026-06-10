@@ -40,7 +40,7 @@ export const Mam3eCharacterSheet: React.FC<Props> = ({ document, onUpdate }) => 
     <div className="max-w-4xl mx-auto space-y-6 p-6">
       <MamHeader {...controller.headerProps} />
       <Tabs defaultValue="abilities">
-        <TabsList className="w-full grid grid-cols-2 md:grid-cols-5">
+        <TabsList className="w-full grid grid-cols-2 md:grid-cols-5 h-auto gap-1">
           <TabsTrigger value="abilities" className="flex items-center gap-1.5">
             <Brain className="w-4 h-4" /> Abilities
           </TabsTrigger>

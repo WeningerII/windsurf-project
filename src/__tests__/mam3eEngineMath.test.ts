@@ -7,7 +7,9 @@
  * docs/compute-register/mam3e.ts.
  */
 import { Mam3eEngine } from '../systems/mam3e/engine';
+import { buildMam3ePowerCostLedgerEntries } from '../systems/mam3e/contributionLedger';
 import {
+  calculateMam3eFinalPowerCost,
   calculatePowerPointCost,
   getPowerRank,
   sumMam3ePointsSpent,
@@ -104,6 +106,70 @@ describe('L9 calculatePowerPointCost', () => {
   });
   it('rank floors at 1 for per-rank powers', () => {
     expect(getPowerRank(power({ perRank: true, rank: 0 }))).toBe(1);
+  });
+});
+
+// ── H2: minimum-cost rule (Hero's Handbook, Powers — Modifiers): below
+// 1 point/rank an effect costs 1 point per 2 ranks (then 1 per 3, ...),
+// rounded up, and the final cost never drops below 1 point. ─────────────────
+describe('H2 minimum-cost rule for heavily flawed powers', () => {
+  it('Damage 10 + Limited (cost/rank 0) costs 5 PP, not 0', () => {
+    expect(
+      calculatePowerPointCost(power({ perRank: true, rank: 10, baseCost: 1, flaws: ['limited'] }))
+    ).toBe(5);
+  });
+  it('two per-rank flaws (cost/rank −1) charge 1 point per 3 ranks and never reach 0', () => {
+    const twoFlaws = power({
+      perRank: true,
+      rank: 10,
+      baseCost: 1,
+      flaws: ['limited', 'distracting'],
+    });
+    expect(calculatePowerPointCost(twoFlaws)).toBe(4); // ceil(10 / 3)
+    expect(
+      calculatePowerPointCost(
+        power({ perRank: true, rank: 1, baseCost: 1, flaws: ['limited', 'distracting'] })
+      )
+    ).toBe(1); // floor of 1 PP for any rank > 0
+  });
+  it('flat flaws cannot reduce the final cost below 1 either', () => {
+    // baseCost 1 × rank 1 + Activation (−1 flat) = 0 raw → 1 PP minimum.
+    expect(
+      calculatePowerPointCost(power({ perRank: true, rank: 1, baseCost: 1, flaws: ['activation'] }))
+    ).toBe(1);
+  });
+  it('calculateMam3eFinalPowerCost implements the reduced-cost ladder directly', () => {
+    expect(calculateMam3eFinalPowerCost(10, 0, 0)).toBe(5); // 1 per 2 ranks
+    expect(calculateMam3eFinalPowerCost(10, -1, 0)).toBe(4); // 1 per 3 ranks
+    expect(calculateMam3eFinalPowerCost(10, -2, 0)).toBe(3); // 1 per 4 ranks
+    expect(calculateMam3eFinalPowerCost(5, 2, 1)).toBe(11); // normal path unchanged
+  });
+  it('duration flaws (Permanent) reduce cost by 1 per rank per their catalog text', () => {
+    // Protection 6 (base 1) + Permanent (−1/rank) → 0/rank → 1 point per
+    // 2 ranks → ceil(6/2) = 3 PP (previously Permanent gave no discount).
+    expect(
+      calculatePowerPointCost(power({ perRank: true, rank: 6, baseCost: 1, flaws: ['permanent'] }))
+    ).toBe(3);
+  });
+  it('the contribution ledger mirrors the minimum-cost total and flags the rule', () => {
+    const flawedPower = power({
+      id: 'damage',
+      name: 'Damage',
+      perRank: true,
+      rank: 10,
+      baseCost: 1,
+      flaws: ['limited'],
+    });
+    const entries = buildMam3ePowerCostLedgerEntries(flawedPower);
+    const totalEntry = entries.find((entry) => entry.target === 'powers.0.totalCost');
+
+    expect(totalEntry?.value).toBe(calculatePowerPointCost(flawedPower));
+    expect(totalEntry?.value).toBe(5);
+    expect(totalEntry?.details).toMatchObject({
+      rank: 10,
+      costPerRank: 0,
+      minimumCostRule: { ranksPerPoint: 2 },
+    });
   });
 });
 
@@ -419,5 +485,29 @@ describe('L9 Power-Level caps (parry/ranged/perception)', () => {
       value: 12,
       limit: 10,
     });
+  });
+
+  it('does not count perception-range powers against the Ranged Attack + Effect cap', () => {
+    // Perception-range attacks require no attack check (Hero's Handbook,
+    // Ranges), so a legal rank-3 perception power must not trip the ranged
+    // attack-bonus trade-off for a Dex 10 + Ranged Combat 8 hero at PL10.
+    const out = engine.prepareData(
+      doc({
+        powerLevel: 10,
+        abilities: { str: 0, sta: 0, agi: 0, dex: 10, fgt: 0, int: 0, awe: 0, pre: 0 },
+        skills: { 'ranged-combat': { rank: 8, total: 0 } },
+        powers: [
+          power({
+            id: 'mind-blast',
+            type: 'attack',
+            range: 'perception',
+            perRank: true,
+            rank: 3,
+            baseCost: 2,
+          }),
+        ],
+      })
+    );
+    expect(out.system.plViolations).toEqual([]);
   });
 });

@@ -6,7 +6,12 @@ import { HitDiceTracker } from '../../../../components/HitDiceTracker';
 import { RestControls } from '../../../../components/RestControls';
 import { CombatStatCard } from '../../../../components/sheet';
 import { SpellSlotTracker } from '../../../../components/SpellSlotTracker';
-import type { DeathSaves, HitDice, SpellSlots } from '../../../../types/core/character';
+import type {
+  DeathSaves,
+  HitDice,
+  PactMagicSlots,
+  SpellSlots,
+} from '../../../../types/core/character';
 import { formatMod, parseNum } from '../../../../utils/math';
 
 type HitPoints = {
@@ -23,6 +28,7 @@ interface Props {
   spellcasting?: {
     classes: Array<unknown>;
     spellSlots: SpellSlots;
+    pactMagic?: PactMagicSlots;
   };
   exhaustionLevel?: number;
   deathSaves: DeathSaves;
@@ -38,15 +44,15 @@ interface Props {
   onRecoverHitDie?: (index: number) => void;
   onUseSpellSlot?: (level: number) => void;
   onRecoverSpellSlot?: (level: number) => void;
+  onUsePactSlot?: () => void;
+  onRecoverPactSlot?: () => void;
   onRecoverAllSpellSlots?: () => void;
 }
 
-function spellSlotCount(slots?: SpellSlots): number {
-  if (!slots) {
-    return 0;
-  }
+function spellSlotCount(slots?: SpellSlots, pactMagic?: PactMagicSlots): number {
+  const standard = slots ? Object.values(slots).reduce((total, slot) => total + slot.max, 0) : 0;
 
-  return Object.values(slots).reduce((total, slot) => total + slot.max, 0);
+  return standard + (pactMagic?.max ?? 0);
 }
 
 export function Dnd5eOverviewSection({
@@ -69,6 +75,8 @@ export function Dnd5eOverviewSection({
   onRecoverHitDie,
   onUseSpellSlot,
   onRecoverSpellSlot,
+  onUsePactSlot,
+  onRecoverPactSlot,
   onRecoverAllSpellSlots,
 }: Props) {
   return (
@@ -113,7 +121,7 @@ export function Dnd5eOverviewSection({
         <CombatStatCard
           icon={BookOpen}
           title="Spell Slots"
-          value={spellSlotCount(spellcasting?.spellSlots)}
+          value={spellSlotCount(spellcasting?.spellSlots, spellcasting?.pactMagic)}
           subtitle={
             spellcasting ? `${spellcasting.classes.length} casting class(es)` : 'No spellcasting'
           }
@@ -142,8 +150,11 @@ export function Dnd5eOverviewSection({
         {spellcasting && (
           <SpellSlotTracker
             slots={spellcasting.spellSlots}
+            pactMagic={spellcasting.pactMagic}
             onUseSlot={canUpdate ? onUseSpellSlot : undefined}
             onRecoverSlot={canUpdate ? onRecoverSpellSlot : undefined}
+            onUsePactSlot={canUpdate ? onUsePactSlot : undefined}
+            onRecoverPactSlot={canUpdate ? onRecoverPactSlot : undefined}
             onRecoverAll={canUpdate ? onRecoverAllSpellSlots : undefined}
           />
         )}

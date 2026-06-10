@@ -1,7 +1,7 @@
 import { Monster } from '../../../../../types/creatures/monsters';
 
 // D&D 5e-2024 Aberrations - CR 0-5 (SRD 5.2)
-// Mind flayers, grimlocks, and other aberrations
+// Grimlocks and other low-CR aberrations
 
 export const grimlock: Monster = {
   id: 'grimlock-2024',

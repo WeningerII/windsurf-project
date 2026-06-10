@@ -1,4 +1,5 @@
 import type { DaggerheartDomainCard, DaggerheartDomainId } from '../../../../types/daggerheart';
+import { indexById } from '../../../../utils/indexById';
 import { arcanaDomainCards } from './arcana';
 import { bladeDomainCards } from './blade';
 import { boneDomainCards } from './bone';
@@ -26,9 +27,10 @@ export const daggerheartDomainCards: DaggerheartDomainCard[] = daggerheartDomain
   normalizeDaggerheartDomainCardAutomation
 );
 
-export const daggerheartDomainCardsById = Object.fromEntries(
-  daggerheartDomainCards.map((card) => [card.id, card])
-) as Record<string, DaggerheartDomainCard>;
+export const daggerheartDomainCardsById: Record<string, DaggerheartDomainCard> = indexById(
+  daggerheartDomainCards,
+  'daggerheartDomainCardsById'
+);
 
 export const daggerheartDomainCardsByDomain = daggerheartDomainCards.reduce(
   (acc, card) => {

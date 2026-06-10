@@ -8,10 +8,14 @@ import {
   importDocuments,
   clearDocumentStorage,
 } from '../../utils/documentStorage';
-import { idbLoadDocuments, idbClearDocuments } from '../../utils/indexedDBAdapter';
+import { idbLoadDocuments, idbSaveDocuments } from '../../utils/indexedDBAdapter';
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
 
-function makeDoc(id: string, name: string): CharacterDocument<SystemDataModel> {
+function makeDoc(
+  id: string,
+  name: string,
+  overrides: Partial<CharacterDocument<SystemDataModel>> = {}
+): CharacterDocument<SystemDataModel> {
   return {
     id,
     name,
@@ -19,7 +23,19 @@ function makeDoc(id: string, name: string): CharacterDocument<SystemDataModel> {
     system: { level: 5 },
     createdAt: new Date('2026-02-24T00:00:00.000Z'),
     updatedAt: new Date('2026-02-24T12:00:00.000Z'),
+    ...overrides,
   };
+}
+
+function seedLocalStorage(documents: CharacterDocument<SystemDataModel>[]) {
+  localStorage.setItem(
+    'rpg-documents-v2',
+    JSON.stringify({
+      version: '2.0',
+      documents,
+      lastModified: new Date().toISOString(),
+    })
+  );
 }
 
 describe('documentStorage with IndexedDB', () => {
@@ -192,12 +208,80 @@ describe('documentStorage with IndexedDB', () => {
     saveDocuments([makeDoc('clear-1', 'Clear Me')]);
     await new Promise((r) => setTimeout(r, 50));
 
-    clearDocumentStorage();
-    await new Promise((r) => setTimeout(r, 50));
+    await clearDocumentStorage();
 
     expect(localStorage.getItem('rpg-documents-v2')).toBeNull();
 
     const idbDocs = await idbLoadDocuments();
     expect(idbDocs).toBeNull();
+  });
+
+  // H1: startup must MERGE the two stores instead of unconditionally
+  // preferring a non-empty IndexedDB snapshot — the IDB mirror is routinely
+  // stale because unload-time fire-and-forget IDB writes don't commit.
+  describe('loadDocumentsAsync merge of IndexedDB and localStorage', () => {
+    it('prefers newer localStorage versions over a stale IndexedDB mirror, keeping one-sided docs', async () => {
+      // Previous session: IDB mirror missed the final edits (version 1 of A),
+      // and holds a doc (B) that localStorage somehow lost.
+      await idbSaveDocuments([
+        makeDoc('doc-a', 'Stale A', { version: 1 }),
+        makeDoc('doc-b', 'IDB Only B', { version: 1 }),
+      ]);
+      // localStorage committed the final edits: A at version 3 + a local-only C.
+      seedLocalStorage([
+        makeDoc('doc-a', 'Fresh A', {
+          version: 3,
+          updatedAt: new Date('2026-02-24T18:00:00.000Z'),
+        }),
+        makeDoc('doc-c', 'Local Only C', { version: 1 }),
+      ]);
+
+      const result = await loadDocumentsAsync();
+      const byId = new Map(result.map((doc) => [doc.id, doc]));
+
+      expect(result).toHaveLength(3);
+      expect(byId.get('doc-a')?.name).toBe('Fresh A');
+      expect(byId.get('doc-a')?.version).toBe(3);
+      expect(byId.get('doc-b')?.name).toBe('IDB Only B');
+      expect(byId.get('doc-c')?.name).toBe('Local Only C');
+    });
+
+    it('keeps the newer IndexedDB copy when localStorage is the stale side', async () => {
+      // E.g. a previous save hit the localStorage quota and only landed in IDB.
+      await idbSaveDocuments([
+        makeDoc('doc-a', 'Newer In IDB', {
+          version: 5,
+          updatedAt: new Date('2026-02-25T08:00:00.000Z'),
+        }),
+      ]);
+      seedLocalStorage([makeDoc('doc-a', 'Older In LS', { version: 4 })]);
+
+      const result = await loadDocumentsAsync();
+
+      expect(result).toHaveLength(1);
+      expect(result[0].name).toBe('Newer In IDB');
+      expect(result[0].version).toBe(5);
+    });
+
+    it('breaks equal-version ties by updatedAt with localStorage winning exact ties', async () => {
+      await idbSaveDocuments([
+        makeDoc('doc-a', 'IDB Copy', {
+          version: 2,
+          updatedAt: new Date('2026-02-24T12:00:00.000Z'),
+        }),
+      ]);
+      seedLocalStorage([
+        makeDoc('doc-a', 'LS Copy', {
+          version: 2,
+          updatedAt: new Date('2026-02-24T12:00:00.000Z'),
+        }),
+      ]);
+
+      const result = await loadDocumentsAsync();
+
+      expect(result).toHaveLength(1);
+      // Same (version, updatedAt): the synchronously-committed store wins.
+      expect(result[0].name).toBe('LS Copy');
+    });
   });
 });

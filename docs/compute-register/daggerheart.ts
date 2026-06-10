@@ -307,9 +307,12 @@ export const daggerheartComputeRegister: SystemComputeRegister = {
       layer: 'L8',
       quantity: 'Death moves (Risk It All, Avoid Death scar)',
       formula:
-        'Risk It All: Hope>Fear → survive, clear = Hope Die; Fear>Hope → death; match → survive, clear 0. Avoid Death: Hope Die ≤ level → scar',
+        'Risk It All: Hope>Fear → survive, clear = Hope Die; Fear>Hope → death; match (critical) → survive, clear ALL marked HP and Stress. Avoid Death: Hope Die ≤ level → scar',
       inputs: ['Hope die', 'Fear die', 'level'],
-      edgeCases: ['matched dice survive but clear nothing', 'scar threshold at level'],
+      edgeCases: [
+        'matched dice are a critical success: survive and clear all marked HP/Stress',
+        'scar threshold at level',
+      ],
       source: `${SRD}: Death`,
       status: 'verified',
       testRef: `${T} :: L8 Daggerheart death moves`,

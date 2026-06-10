@@ -194,4 +194,14 @@ describe('isRoundConclusive — combat end detection', () => {
     expect(isRoundConclusive(order, { hero: 20, foe: 0 })).toBe(true);
     expect(isRoundConclusive(order, { hero: 20, foe: 5 })).toBe(false);
   });
+
+  it('REGRESSION (L-L1): a mutual KO (every faction at 0) is conclusive', () => {
+    // Kills the `<= 1` -> `=== 1` mutant: zero living factions still ends
+    // combat (e.g. an AoE drops the last member of both sides).
+    const order = [
+      combatant({ tokenId: 'hero', faction: 'party' }),
+      combatant({ tokenId: 'foe', faction: 'monsters' }),
+    ];
+    expect(isRoundConclusive(order, { hero: 0, foe: 0 })).toBe(true);
+  });
 });

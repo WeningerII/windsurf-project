@@ -4,6 +4,7 @@ import { Badge } from '../../../components/ui/Badge';
 import { DiceRollButton } from '../../../components/DiceRollButton';
 import type { RollResult } from '../../../registry/types';
 import type { CharacterDocument } from '../../../types/core/document';
+import { generateUUID } from '../../../utils/browserCompat';
 import type { Mam3eDataModel } from '../data-model';
 
 const MAM3E_SKILLS: Array<{
@@ -135,9 +136,12 @@ export const MamSkillsAdvantagesTab: React.FC<Props> = ({
             <button
               type="button"
               onClick={() =>
+                // UUID ids cannot collide on rapid double-adds the way
+                // Date.now() ids could (duplicate ids broke per-id updates
+                // and React keys).
                 onAdvantagesChange([
                   ...data.advantages,
-                  { id: `adv-${Date.now()}`, name: 'New Advantage' },
+                  { id: `adv-${generateUUID()}`, name: 'New Advantage' },
                 ])
               }
               className="w-full py-2 border border-dashed border-input rounded-lg text-sm text-muted-foreground hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-1"

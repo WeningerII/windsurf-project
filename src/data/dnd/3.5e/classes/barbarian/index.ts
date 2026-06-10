@@ -4,7 +4,7 @@ export const barbarian: CharacterClass = {
   id: 'barbarian',
   name: 'Barbarian',
   system: 'dnd-3.5e',
-  source: 'PHB 3.5',
+  source: 'SRD 3.5',
 
   version: '3.5',
   lastUpdated: '2026-01-13',

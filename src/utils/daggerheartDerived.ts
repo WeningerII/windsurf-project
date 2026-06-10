@@ -220,6 +220,9 @@ export function getDaggerheartStartingTraitArray(): number[] {
 /** Hope a PC starts a new campaign with (Daggerheart SRD: Character Creation). */
 export const DAGGERHEART_STARTING_HOPE = 2;
 
+/** Maximum Hope a PC can hold at once (Daggerheart SRD: Hope). */
+export const DAGGERHEART_MAX_HOPE = 6;
+
 /**
  * Total gold expressed in handfuls, the base denomination (Daggerheart SRD:
  * Gold) — 10 handfuls make a bag and 10 bags make a chest, so value =
@@ -291,15 +294,18 @@ export function getDaggerheartStressOverflowHp(
 /**
  * Risk It All death move: roll the Duality Dice. Hope higher → stay up and clear
  * HP/Stress equal to the Hope Die; Fear higher → cross through the veil (death);
- * matching dice → stay up but clear nothing (Daggerheart SRD: Death).
+ * matching dice are a critical success → stay up and clear ALL marked HP and
+ * Stress (Daggerheart SRD: Death Moves — Risk It All). The critical branch
+ * returns the `'all'` sentinel since the totals to clear depend on the
+ * character's current marks.
  */
 export function getDaggerheartRiskItAll(
   hopeDie: number,
   fearDie: number
-): { survives: boolean; clears: number } {
+): { survives: boolean; clears: number | 'all' } {
   const outcome = getDaggerheartDualityOutcome(hopeDie, fearDie);
   if (outcome === 'fear') return { survives: false, clears: 0 };
-  if (outcome === 'critical') return { survives: true, clears: 0 };
+  if (outcome === 'critical') return { survives: true, clears: 'all' };
   return { survives: true, clears: hopeDie };
 }
 
@@ -344,7 +350,12 @@ export function getEquippedDaggerheartArmor(
   return system.armorId ? getDaggerheartArmor(system.armorId) : undefined;
 }
 
-function getLoadoutDomainCounts(system: DaggerheartDataModel): Record<string, number> {
+/** Loadout (non-vault) domain card counts per domain id, used to evaluate
+ * loadout-count passive conditions. Shared by derived stats and the
+ * contribution ledger so the two can never diverge. */
+export function getDaggerheartLoadoutDomainCounts(
+  system: DaggerheartDataModel
+): Record<string, number> {
   return system.domainCards.reduce(
     (counts, entry) => {
       if (entry.location === 'vault') {
@@ -363,8 +374,13 @@ function getLoadoutDomainCounts(system: DaggerheartDataModel): Record<string, nu
   );
 }
 
-function getActivePassiveDomainCards(system: DaggerheartDataModel): DaggerheartDomainCard[] {
-  const loadoutDomainCounts = getLoadoutDomainCounts(system);
+/** Passive-automation domain cards currently active: in the loadout with their
+ * passive condition satisfied. Shared by derived stats and the contribution
+ * ledger. */
+export function getDaggerheartActivePassiveDomainCards(
+  system: DaggerheartDataModel
+): DaggerheartDomainCard[] {
+  const loadoutDomainCounts = getDaggerheartLoadoutDomainCounts(system);
 
   return system.domainCards
     .filter((entry) => entry.location !== 'vault')
@@ -373,7 +389,7 @@ function getActivePassiveDomainCards(system: DaggerheartDataModel): DaggerheartD
       Boolean(
         definition &&
         definition.automationMode === 'passive' &&
-        doesPassiveConditionApply(system, definition, loadoutDomainCounts)
+        doesDaggerheartPassiveConditionApply(system, definition, loadoutDomainCounts)
       )
     );
 }
@@ -381,7 +397,7 @@ function getActivePassiveDomainCards(system: DaggerheartDataModel): DaggerheartD
 function getDaggerheartPassiveDerivedBonuses(
   system: DaggerheartDataModel
 ): DaggerheartPassiveDerivedBonus[] {
-  return getActivePassiveDomainCards(system).flatMap(
+  return getDaggerheartActivePassiveDomainCards(system).flatMap(
     (definition) => definition.passiveDerivedBonuses ?? []
   );
 }
@@ -393,7 +409,9 @@ export function getDaggerheartPassiveBonuses(
     getEquippedDaggerheartWeapon(system, 'primary')?.passiveBonuses,
     getEquippedDaggerheartWeapon(system, 'secondary')?.passiveBonuses,
     getEquippedDaggerheartArmor(system)?.passiveBonuses,
-    ...getActivePassiveDomainCards(system).map((definition) => definition.passiveBonuses),
+    ...getDaggerheartActivePassiveDomainCards(system).map(
+      (definition) => definition.passiveBonuses
+    ),
     ...system.inventory.map((entry) =>
       scalePassiveBonuses(
         getDaggerheartInventoryDefinition(entry.itemId)?.passiveBonuses,
@@ -408,7 +426,10 @@ export function getDaggerheartPassiveBonuses(
   );
 }
 
-function doesPassiveConditionApply(
+/** Whether a passive card's condition (always / while-armored /
+ * while-unarmored / loadout-domain-count) is currently satisfied. Shared by
+ * derived stats and the contribution ledger. */
+export function doesDaggerheartPassiveConditionApply(
   system: DaggerheartDataModel,
   card: Pick<DaggerheartDomainCard, 'passiveCondition'>,
   loadoutDomainCounts: Record<string, number>

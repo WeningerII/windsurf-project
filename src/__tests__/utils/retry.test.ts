@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { isRetryableError, retryWithBackoff } from '../../utils/retry';
+import { isRetryableError, PROD_DEFAULTS, retryWithBackoff } from '../../utils/retry';
 
 /**
  * These tests exercise the retry mechanics directly, overriding the
@@ -20,7 +20,6 @@ describe('isRetryableError', () => {
 
   it.each([
     'Invalid API key',
-    'JWT expired',
     'JWT malformed',
     'No authenticated Supabase user',
     'new row violates row-level security policy',
@@ -32,9 +31,23 @@ describe('isRetryableError', () => {
     expect(isRetryableError(new Error(message))).toBe(false);
   });
 
+  // supabase-js auto-refreshes expired access tokens, so a retry after a
+  // brief backoff succeeds; an expired JWT must NOT be treated as permanent.
+  it('classifies an expired JWT as retryable', () => {
+    expect(isRetryableError(new Error('JWT expired'))).toBe(true);
+    expect(isRetryableError(new Error('jwt expired'))).toBe(true);
+  });
+
+  // Rate limiting is transient by definition — backoff-and-retry is the
+  // correct response to a 429.
+  it('classifies 429 / Too Many Requests as retryable', () => {
+    expect(isRetryableError(new Error('429: Too Many Requests'))).toBe(true);
+    expect(isRetryableError(new Error('too many requests'))).toBe(true);
+  });
+
   it('matches the non-retryable fragments case-insensitively', () => {
-    expect(isRetryableError(new Error('JWT EXPIRED'))).toBe(false);
-    expect(isRetryableError(new Error('jwt expired'))).toBe(false);
+    expect(isRetryableError(new Error('JWT MALFORMED'))).toBe(false);
+    expect(isRetryableError(new Error('jwt malformed'))).toBe(false);
   });
 
   it('handles non-Error thrown values by coercing to string', () => {
@@ -86,12 +99,36 @@ describe('retryWithBackoff', () => {
   });
 
   it('does not retry non-retryable errors even when attempts remain', async () => {
-    const op = vi.fn().mockRejectedValue(new Error('JWT expired'));
+    const op = vi.fn().mockRejectedValue(new Error('new row violates row-level security policy'));
 
     await expect(
       retryWithBackoff(op, { maxAttempts: 5, initialDelayMs: 1, maxDelayMs: 1 })
-    ).rejects.toThrow('JWT expired');
+    ).rejects.toThrow('row-level security');
     expect(op).toHaveBeenCalledTimes(1);
+  });
+
+  it('retries an expired-JWT failure and succeeds once the token is refreshed', async () => {
+    const op = vi
+      .fn()
+      .mockRejectedValueOnce(new Error('JWT expired'))
+      .mockResolvedValue('refreshed');
+
+    await expect(
+      retryWithBackoff(op, { maxAttempts: 3, initialDelayMs: 1, maxDelayMs: 1 })
+    ).resolves.toBe('refreshed');
+    expect(op).toHaveBeenCalledTimes(2);
+  });
+
+  it('retries a 429 rate-limit failure', async () => {
+    const op = vi
+      .fn()
+      .mockRejectedValueOnce(new Error('429: Too Many Requests'))
+      .mockResolvedValue('ok');
+
+    await expect(
+      retryWithBackoff(op, { maxAttempts: 3, initialDelayMs: 1, maxDelayMs: 1 })
+    ).resolves.toBe('ok');
+    expect(op).toHaveBeenCalledTimes(2);
   });
 
   it('honors a caller-supplied shouldRetry predicate', async () => {
@@ -156,6 +193,23 @@ describe('retryWithBackoff', () => {
     const op = vi.fn().mockRejectedValue(new Error('network flap'));
     await expect(retryWithBackoff(op)).rejects.toThrow('network flap');
     expect(op).toHaveBeenCalledTimes(1);
+  });
+
+  it('pins the shipped production defaults (never exercised under MODE=test)', () => {
+    // The module switches to TEST_DEFAULTS under Vitest, so these values are
+    // otherwise dead code in CI — pin them so a typo cannot ship silently.
+    expect(PROD_DEFAULTS).toEqual({
+      maxAttempts: 4,
+      initialDelayMs: 500,
+      maxDelayMs: 8000,
+    });
+
+    // And the production defaults drive retryWithBackoff when passed
+    // explicitly: 4 attempts for a persistently failing retryable op.
+    const op = vi.fn().mockRejectedValue(new Error('flaky network'));
+    return expect(retryWithBackoff(op, { ...PROD_DEFAULTS, initialDelayMs: 0, maxDelayMs: 0 }))
+      .rejects.toThrow('flaky network')
+      .then(() => expect(op).toHaveBeenCalledTimes(PROD_DEFAULTS.maxAttempts));
   });
 
   it('delay per retry is bounded above by the exponential cap', async () => {

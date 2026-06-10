@@ -7,6 +7,7 @@ import {
   removeDnd5eFeatureOptionSelection,
   synchronizeDnd5eFeatureOptionSelections,
 } from '../../utils/dnd5eFeatureOptions';
+import type { Feature } from '../../types/core/character';
 
 describe('dnd5eFeatureOptions', () => {
   it('loads the normalized 5e-2014 feature-option catalog', async () => {
@@ -41,7 +42,9 @@ describe('dnd5eFeatureOptions', () => {
     expect(agonizingBlast).toBeDefined();
 
     const nextState = applyDnd5eFeatureOptionSelection(
-      { features: [], featureOptionSelections: [] },
+      // `features` is typed explicitly so the generic does not infer never[]
+      // from the empty literal (the assertions below read features[0].id).
+      { features: [] as Feature[], featureOptionSelections: [] },
       agonizingBlast!
     );
 

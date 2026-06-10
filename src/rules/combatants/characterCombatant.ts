@@ -8,10 +8,17 @@
  * five d20-family systems that share the "attack roll vs AC, reduce HP" model:
  * D&D 5e (2014 + 2024), D&D 3.5e, Pathfinder 1e, and Pathfinder 2e.
  *
- * Per-system the only differences are how the base attack bonus and AC are read:
- *   - 5e: proficiency bonus (by level) + STR/DEX mod
- *   - 3.5e / PF1e: base attack bonus + STR mod; AC is { total, touch, flatFooted }
- *   - PF2e: martial weapon proficiency total + STR mod; AC is a flat number
+ * Per-system the only differences are how the base attack bonus and AC are read.
+ * The ability half of the attack bonus is the HIGHER of the STR/DEX modifiers — a
+ * finesse-agnostic baseline (a DEX rogue is not crippled, a STR fighter loses
+ * nothing) until equipped-weapon data drives the choice:
+ *   - 5e: proficiency bonus (by level) + max(STR, DEX) mod
+ *   - 3.5e / PF1e: base attack bonus + max(STR, DEX) mod; AC is
+ *     { total, touch, flatFooted }
+ *   - PF2e: martial weapon proficiency total + max(STR, DEX) mod; AC is a flat
+ *     number
+ * The flat DAMAGE modifier stays STR-based (RAW for 3.5e/PF1e even with Weapon
+ * Finesse; honest baseline for 5e until the equipped weapon pins an ability).
  * Equipped-weapon and feat/feature attack & damage bonuses are layered on via the
  * shared compile layer, so magic items and feats already resolve identically.
  *
@@ -48,6 +55,11 @@ const SUPPORTED: ReadonlySet<GameSystemId> = new Set<GameSystemId>([
 
 export interface CharacterCombatant {
   token: SceneToken;
+  /**
+   * Combat faction. An explicit `options.faction` wins; otherwise derived from
+   * the token kind ('character' → 'party', matching `factionForToken`).
+   */
+  faction: string;
   attackEffects: EffectInstance[];
   damageEffects: EffectInstance[];
   reach: number;
@@ -100,18 +112,23 @@ function baseAttackBonus(
   sheet: NormalizedSheet,
   system: Record<string, unknown>
 ): number {
-  const str = abilityMod(sheet.abilities.str ?? 10);
+  // Finesse-agnostic baseline: the better of STR/DEX drives the attack roll
+  // (5e finesse / 3.5e Weapon Finesse shaped) until weapon data pins one.
+  const ability = Math.max(
+    abilityMod(sheet.abilities.str ?? 10),
+    abilityMod(sheet.abilities.dex ?? 10)
+  );
   switch (systemId) {
     case 'dnd-5e-2014':
     case 'dnd-5e-2024':
-      return profBonus(sheet.level) + str;
+      return profBonus(sheet.level) + ability;
     case 'dnd-3.5e':
     case 'pf1e':
-      return num(system.baseAttackBonus) + str;
+      return num(system.baseAttackBonus) + ability;
     case 'pf2e':
-      return pf2eWeaponProficiency(system) + str;
+      return pf2eWeaponProficiency(system) + ability;
     default:
-      return str;
+      return ability;
   }
 }
 
@@ -272,6 +289,9 @@ export function buildCharacterCombatant(
         refId: document.id,
         hp: { current: sheet.hp.current, max: sheet.hp.max, temp: sheet.hp.temp },
       },
+      // Explicit faction wins; 'party' is what factionForToken derives for a
+      // 'character'-kind token.
+      faction: options.faction ?? 'party',
       attackEffects,
       damageEffects,
       reach: options.reach ?? 1,

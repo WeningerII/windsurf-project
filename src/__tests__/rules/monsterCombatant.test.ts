@@ -181,8 +181,107 @@ describe('description parsing — statblocks that carry attacks only in prose', 
     expect(parsed!.reachCells).toBe(16); // 80 ft / 5
   });
 
+  it('REGRESSION (05-M5): single-range "range N ft." prose maps to reach cells, not 1', () => {
+    // Fire-Bolt-style prose, verbatim from the 2014 Flameskull's Fire Ray as it
+    // shipped at review time (src/data/dnd/5e-2014/monsters/cr-2-5.ts:292; the
+    // entry has since been removed from data for SRD-citation reasons, so the
+    // prose is pinned here). Spell attacks routinely print a single range, not
+    // the N/M dual form; this used to fall through to the 5-ft melee default.
+    const parsed = parseAttackFromDescription(
+      'Ranged Spell Attack: +5 to hit, range 30 ft., one target.'
+    );
+    expect(parsed).toBeDefined();
+    expect(parsed!.attackBonus).toBe(5);
+    expect(parsed!.reachCells).toBe(6); // 30 ft / 5, NOT the 5-ft melee default
+
+    // A longer single range parses too.
+    const longRange = parseAttackFromDescription(
+      'Ranged Spell Attack: +5 to hit, range 120 ft., one target. Hit: 11 (2d10) fire damage.'
+    );
+    expect(longRange!.reachCells).toBe(24); // 120 ft / 5
+
+    // The dual form keeps winning when both appear ("reach 5 ft. or range
+    // 20/60 ft." — shipped 2024 hobgoblin/scout shape parses reach first).
+    const dual = parseAttackFromDescription(
+      'Ranged Weapon Attack: +3 to hit, range 150/600 ft., one target. Hit: 5 (1d8 + 1) piercing damage.'
+    );
+    expect(dual!.reachCells).toBe(30); // 150 ft / 5
+  });
+
   it('returns undefined for non-attack prose', () => {
     expect(parseAttackFromDescription('The creature can breathe air and water.')).toBeUndefined();
+  });
+
+  it('REGRESSION (05-H2): versatile ", or N (XdY)" alternatives are not summed (Warlord longsword prose)', () => {
+    // The 2024 Warlord longsword prose, verbatim as it shipped at review time
+    // (src/data/dnd/5e-2024/monsters/humanoids/cr-6-10.ts; the entry has since
+    // been removed from data for SRD-citation reasons, so the prose is pinned
+    // here). The parser used to sum BOTH clauses into 1d8+1d10+8 (~12 avg vs
+    // 8.5 RAW).
+    const parsed = parseAttackFromDescription(
+      'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 10 (1d8 + 4) slashing damage, or 11 (1d10 + 4) slashing damage if used with two hands.'
+    );
+    // Only the one-handed clause counts.
+    expect(parsed!.damage).toEqual([{ count: 1, faces: 8, modifier: 4, type: 'slashing' }]);
+    expect(parsed!.attackBonus).toBe(7);
+  });
+
+  it('REGRESSION (05-H2): a SHIPPED versatile monster compiles to a single damage clause (2024 Hobgoblin)', () => {
+    // Same versatile shape, still shipped (prose-only action — no structured
+    // attackBonus/damage fields, so the parser is the only source).
+    const hobgoblin = dnd5e2024MonstersById['hobgoblin-2024'];
+    const longsword = hobgoblin.actions.find((action) => action.name === 'Longsword')!;
+    expect(longsword.description).toBe(
+      'Melee Weapon Attack: +3 to hit, reach 5 ft., one target. Hit: 5 (1d8 + 1) slashing damage, or 6 (1d10 + 1) slashing damage if used with two hands.'
+    );
+
+    const parsed = parseAttackFromDescription(longsword.description);
+    expect(parsed!.damage).toEqual([{ count: 1, faces: 8, modifier: 1, type: 'slashing' }]);
+
+    // And the compiled combatant deals exactly one die + one flat bonus
+    // (previously 1d8 + 1d10 + 2 — roughly double RAW).
+    const combatant = buildMonsterCombatant(hobgoblin, { tokenId: 'h', position: { x: 0, y: 0 } });
+    const dice = combatant.damageEffects.filter((e) => e.operation === 'add-die');
+    const flats = combatant.damageEffects.filter((e) => e.operation === 'add');
+    expect(dice).toHaveLength(1);
+    expect(dice[0].value).toBe(8);
+    expect(flats).toHaveLength(1);
+    expect(flats[0].value).toBe(1);
+  });
+
+  it('REGRESSION (05-H2): multiple ", or" alternatives collapse to the first clause (2024 Druid quarterstaff)', () => {
+    // Shipped prose, src/data/dnd/5e-2024/monsters/humanoids/cr-0-5.ts (Druid):
+    // three mutually exclusive clauses previously summed to 1d6+1d8+1d8+2.
+    const druid = dnd5e2024MonstersById['druid-2024'];
+    const quarterstaff = druid.actions.find((action) => action.name === 'Quarterstaff')!;
+    expect(quarterstaff.description).toBe(
+      'Melee Weapon Attack: +2 to hit (+4 to hit with shillelagh), reach 5 ft., one target. Hit: 3 (1d6) bludgeoning damage, or 4 (1d8) bludgeoning damage if wielded with two hands, or 6 (1d8 + 2) bludgeoning damage with shillelagh.'
+    );
+
+    const parsed = parseAttackFromDescription(quarterstaff.description);
+    expect(parsed!.attackBonus).toBe(2);
+    expect(parsed!.damage).toEqual([{ count: 1, faces: 6, modifier: 0, type: 'bludgeoning' }]);
+  });
+
+  it('keeps genuine "plus N (XdY)" rider damage while truncating alternatives', () => {
+    // Rider damage (dragon bite shape) must still sum: weapon dice PLUS fire.
+    const parsed = parseAttackFromDescription(
+      'Melee Weapon Attack: +11 to hit, reach 15 ft., one target. Hit: 19 (2d10 + 8) piercing damage plus 11 (2d10) fire damage.'
+    );
+    expect(parsed!.damage).toEqual([
+      { count: 2, faces: 10, modifier: 8, type: 'piercing' },
+      { count: 2, faces: 10, modifier: 0, type: 'fire' },
+    ]);
+
+    // A non-damage ", or a creature…" clause before the Hit: line (2024 Vampire
+    // bite shape) must not truncate the rider either.
+    const vampireBite = parseAttackFromDescription(
+      'Melee Weapon Attack: +8 to hit, reach 5 ft., one willing creature, or a creature that is grappled by the vampire, incapacitated, or restrained. Hit: 8 (1d8 + 4) piercing damage plus 14 (4d6) necrotic damage.'
+    );
+    expect(vampireBite!.damage).toEqual([
+      { count: 1, faces: 8, modifier: 4, type: 'piercing' },
+      { count: 4, faces: 6, modifier: 0, type: 'necrotic' },
+    ]);
   });
 
   it('REGRESSION: a real 2024 statblock (prose-only) now yields a working attack', () => {

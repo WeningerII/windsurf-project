@@ -86,7 +86,10 @@ export interface Dnd35eDataModel extends SystemDataModel {
   feats: Dnd35eFeat[];
 
   // Spellcasting (Vancian)
-  spellsPerDay?: Record<number, { total: number; used: number }>; // level -> slots
+  // `total` is derived (class table + ability bonus spells + `manualBonus`);
+  // `manualBonus` is the persisted manual delta recorded by the sheet's slot
+  // editor so edits survive re-prepares.
+  spellsPerDay?: Record<number, { total: number; used: number; manualBonus?: number }>; // level -> slots
   spellsKnown?: string[];
   preparedSpellsByLevel?: Record<number, string[]>;
   alwaysPreparedSpellIds?: string[];

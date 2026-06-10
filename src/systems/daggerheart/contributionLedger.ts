@@ -1,4 +1,3 @@
-import { getDaggerheartDomainCard } from '../../data/daggerheart/1.0/domain-cards';
 import type {
   ContributionCategory,
   ContributionLedgerEntry,
@@ -7,14 +6,13 @@ import type {
   ContributionSourceKind,
 } from '../../types/core/contributionLedger';
 import type {
-  DaggerheartDomainCard,
   DaggerheartPassiveBonuses,
-  DaggerheartPassiveCondition,
   DaggerheartPassiveDerivedBonus,
 } from '../../types/daggerheart';
 import type { CharacterDocument } from '../../types/core/document';
 import { getDaggerheartInventoryDefinition } from '../../utils/daggerheartInventory';
 import {
+  getDaggerheartActivePassiveDomainCards,
   getDaggerheartEffectiveAttribute,
   getDaggerheartProficiency,
   getDaggerheartTier,
@@ -82,7 +80,9 @@ function getDaggerheartPassiveSources(system: DaggerheartDataModel): PassiveSour
     });
   }
 
-  getActivePassiveDomainCards(system).forEach((card) => {
+  // Active passive cards come from the same helper the derived stats use
+  // (utils/daggerheartDerived), so the ledger can never diverge from them.
+  getDaggerheartActivePassiveDomainCards(system).forEach((card) => {
     sources.push({
       kind: 'domain-card',
       id: card.id,
@@ -111,57 +111,6 @@ function getDaggerheartPassiveSources(system: DaggerheartDataModel): PassiveSour
   });
 
   return sources;
-}
-
-function getActivePassiveDomainCards(system: DaggerheartDataModel): DaggerheartDomainCard[] {
-  const loadoutDomainCounts = getLoadoutDomainCounts(system);
-
-  return system.domainCards
-    .filter((entry) => entry.location !== 'vault')
-    .map((entry) => getDaggerheartDomainCard(entry.cardId ?? entry.id))
-    .filter((card): card is DaggerheartDomainCard =>
-      Boolean(
-        card &&
-        card.automationMode === 'passive' &&
-        doesPassiveConditionApply(system, card.passiveCondition, loadoutDomainCounts)
-      )
-    );
-}
-
-function getLoadoutDomainCounts(system: DaggerheartDataModel): Record<string, number> {
-  return system.domainCards.reduce<Record<string, number>>((counts, entry) => {
-    if (entry.location === 'vault') {
-      return counts;
-    }
-
-    const definition = getDaggerheartDomainCard(entry.cardId ?? entry.id);
-    const domainId = definition?.domain ?? (typeof entry.domain === 'string' ? entry.domain : '');
-    if (domainId) {
-      counts[domainId] = (counts[domainId] || 0) + 1;
-    }
-
-    return counts;
-  }, {});
-}
-
-function doesPassiveConditionApply(
-  system: DaggerheartDataModel,
-  condition: DaggerheartPassiveCondition | undefined,
-  loadoutDomainCounts: Record<string, number>
-): boolean {
-  if (!condition || condition.kind === 'always') {
-    return true;
-  }
-
-  if (condition.kind === 'while-armored') {
-    return Boolean(system.armorId);
-  }
-
-  if (condition.kind === 'while-unarmored') {
-    return !system.armorId;
-  }
-
-  return (loadoutDomainCounts[condition.domain] || 0) >= condition.count;
 }
 
 function buildPassiveBonusEntries(source: PassiveSource): ContributionLedgerEntry[] {

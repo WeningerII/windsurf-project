@@ -80,9 +80,12 @@ export const D20SpellsTab: React.FC<Props> = ({
       spell.classes.some((classId) => spellListIds.includes(classId))
     );
   }, [spellListIds, spells]);
+  // Resolve tracked spells against the FULL loaded spell list, not the
+  // class-filtered browse list: spells tracked before a class change (or
+  // off-list spells) must still resolve instead of rendering "Unresolved".
   const spellById = React.useMemo(
-    () => new Map(browseableSpells.map((spell) => [spell.id, spell])),
-    [browseableSpells]
+    () => new Map(spells.map((spell) => [spell.id, spell])),
+    [spells]
   );
   const trackedSpellSet = React.useMemo(
     () => new Set([...trackedSpellIds, ...alwaysPreparedSpellIds]),

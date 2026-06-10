@@ -14,6 +14,12 @@ export interface BuildEncounterEventsParams {
   scene: SceneDocument;
   monsters: Monster[];
   selections: EncounterMonsterSelection[];
+  /**
+   * Character documents the caller already holds, used to roll seeded
+   * d20 + DEX initiative for pre-existing tokens whose `refId` points at one
+   * (so the party rolls like the monsters do instead of clumping at 10).
+   */
+  documents?: CharacterDocument<SystemDataModel>[];
   origin?: SceneCoordinate;
   createdAt?: Date;
   seed?: string;
@@ -110,6 +116,7 @@ export function buildEncounterSceneEvents({
   scene,
   monsters,
   selections,
+  documents,
   origin = { x: 0, y: 0 },
   createdAt = new Date(),
   seed,
@@ -223,6 +230,7 @@ export function buildEncounterSceneEvents({
 
   const initiativeEntries = buildInitiativeEntries(workingScene, generatedTokens, {
     seed: seed ?? `${scene.initialState.seed}:encounter:${scene.events.length}`,
+    documents,
   });
   if (initiativeEntries.length > 0) {
     const result = resolveSceneAction(
@@ -330,7 +338,7 @@ function buildInitiativeEntries(
       }
     | undefined
   >,
-  options: { seed: string }
+  options: { seed: string; documents?: CharacterDocument<SystemDataModel>[] }
 ) {
   const { state } = foldSceneEvents(scene);
   const existingByTokenId = new Map(state.initiative.map((entry) => [entry.tokenId, entry.value]));
@@ -339,6 +347,7 @@ function buildInitiativeEntries(
       .filter((token): token is { id: string; monster: Monster } => Boolean(token))
       .map((token) => [token.id, token.monster])
   );
+  const documentsById = new Map((options.documents ?? []).map((doc) => [doc.id, doc]));
 
   return Object.values(state.tokens)
     .map((token) => {
@@ -351,12 +360,52 @@ function buildInitiativeEntries(
         };
       }
 
-      return {
-        tokenId: token.id,
-        value: existingByTokenId.get(token.id) ?? 10,
-      };
+      // A token already in initiative keeps its value (a manual order or a
+      // previous encounter's roll is never re-rolled).
+      const existing = existingByTokenId.get(token.id);
+      if (existing !== undefined) {
+        return { tokenId: token.id, value: existing };
+      }
+
+      // Pre-existing tokens whose refId resolves to a character document roll
+      // seeded d20 + DEX exactly like the monsters (per-token sub-stream, so
+      // the result is deterministic and order-independent). The flat 10 is
+      // only the last resort when no stats are resolvable.
+      const dex = token.refId ? readDocumentDexterity(documentsById.get(token.refId)) : undefined;
+      if (dex !== undefined) {
+        const rng = createSeededRng(`${options.seed}:${token.id}:initiative`);
+        return {
+          tokenId: token.id,
+          value: rng.rollDie(20) + getAbilityModifier(dex),
+        };
+      }
+
+      return { tokenId: token.id, value: 10 };
     })
-    .sort((a, b) => b.value - a.value || a.tokenId.localeCompare(b.tokenId));
+    .sort((a, b) => b.value - a.value || compareTokenIds(a.tokenId, b.tokenId));
+}
+
+/**
+ * Read a character document's DEX score, or undefined when the sheet does not
+ * carry a finite number (the caller then falls back to the flat default).
+ */
+function readDocumentDexterity(
+  document: CharacterDocument<SystemDataModel> | undefined
+): number | undefined {
+  if (!document) return undefined;
+  const attributes = (document.system as Record<string, unknown>).baseAttributes;
+  if (!attributes || typeof attributes !== 'object') return undefined;
+  const dex = (attributes as Record<string, unknown>).dex;
+  return typeof dex === 'number' && Number.isFinite(dex) ? dex : undefined;
+}
+
+/**
+ * Codepoint comparison for the initiative tie-break. `localeCompare` (with no
+ * explicit locale) can order ids differently across user environments, which
+ * would desync a "deterministic, replayable" event log between devices.
+ */
+function compareTokenIds(a: string, b: string): number {
+  return a < b ? -1 : a > b ? 1 : 0;
 }
 
 function buildOccupiedCells(state: ReturnType<typeof foldSceneEvents>['state']): Set<string> {

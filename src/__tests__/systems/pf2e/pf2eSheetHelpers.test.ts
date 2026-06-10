@@ -2,10 +2,12 @@ import { describe, expect, it } from 'vitest';
 import { pf2eBackgrounds } from '../../../data/pathfinder/2e/backgrounds';
 import { human } from '../../../data/pathfinder/2e/ancestries/human';
 import type { Archetype } from '../../../types/character-options/archetypes';
+import { SKILL_ABILITIES } from '../../../systems/pf2e/constants';
 import { createDefaultPf2eData } from '../../../systems/pf2e/data-model';
 import { getPf2eSheetChoiceState } from '../../../systems/pf2e/getPf2eSheetChoiceState';
 import {
   countTrainedPf2eSkills,
+  getPf2eBulkState,
   longRestPf2eSpellcasting,
   nextPf2eTier,
   shortRestPf2eSpellcasting,
@@ -30,6 +32,44 @@ describe('PF2e sheet helpers', () => {
     ).toBe(2);
   });
 
+  it('excludes the generic "lore" placeholder from the skills grid mapping', () => {
+    // Lores are per-topic proficiencies in `loreProficiencies`; a generic
+    // 'lore' row in SKILL_ABILITIES wrote cycled tiers to the wrong store.
+    expect(SKILL_ABILITIES).not.toHaveProperty('lore');
+  });
+
+  it('flags encumbrance/overload only when Bulk strictly exceeds the limits (CRB p.272)', () => {
+    // Str +0: encumbered over 5, overloaded over 10 — exactly 5 or 10 is fine.
+    expect(getPf2eBulkState(5, 0)).toMatchObject({ isEncumbered: false, isOverloaded: false });
+    expect(getPf2eBulkState(6, 0)).toMatchObject({ isEncumbered: true, isOverloaded: false });
+    expect(getPf2eBulkState(10, 0)).toMatchObject({ isEncumbered: true, isOverloaded: false });
+    expect(getPf2eBulkState(11, 0)).toMatchObject({ isEncumbered: true, isOverloaded: true });
+    // Str +2 shifts both thresholds.
+    expect(getPf2eBulkState(7, 2)).toMatchObject({ isEncumbered: false, isOverloaded: false });
+    expect(getPf2eBulkState(8, 2)).toMatchObject({
+      encumbered: 7,
+      maxBulk: 12,
+      isEncumbered: true,
+    });
+  });
+
+  it('reports a null class DC score instead of guessing when no key ability is set', () => {
+    const state = getPf2eSheetChoiceState({
+      data: {
+        ...createDefaultPf2eData(),
+        keyAbility: undefined,
+        baseAttributes: { str: 10, dex: 14, con: 12, int: 18, wis: 16, cha: 8 },
+      },
+      archetypes: [],
+      selectedArchetypeIds: [],
+      selectedAncestry: undefined,
+      selectedBackground: undefined,
+    });
+
+    // Previously the highest ability (int 18) was silently substituted.
+    expect(state.classDcScore).toBeNull();
+  });
+
   it('recovers PF2e spellcasting resources correctly on short and long rest', () => {
     const spellcasting = {
       tradition: 'arcane' as const,
@@ -41,6 +81,7 @@ describe('PF2e sheet helpers', () => {
       },
       spellsKnown: ['magic-missile'],
       preparedSpellsByRank: { 1: ['magic-missile'] },
+      focusSpells: [],
       focusPoints: { current: 0, max: 2 },
     };
 

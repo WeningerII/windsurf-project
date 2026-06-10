@@ -47,7 +47,10 @@ const simpleMonster: Monster = {
   experiencePoints: 50,
   armorClass: 13,
   hitPoints: { count: 2, die: 'd8', notation: '2d8+2', modifier: 2 },
-  speed: 40,
+  // Deliberately a legacy numeric speed: the renderer tolerates numbers from
+  // older saved data, and the test below asserts that fallback formatting.
+  // The published Monster type only allows CreatureSpeed, hence the cast.
+  speed: 40 as unknown as Monster['speed'],
   abilities: { str: 12, dex: 15, con: 12, int: 3, wis: 12, cha: 6 },
   senses: ['passive Perception 13'],
   languages: [],
@@ -78,5 +81,19 @@ describe('MonsterStatBlock', () => {
     expect(screen.getByText('+2')).toBeInTheDocument();
     expect(screen.getByText('-4')).toBeInTheDocument();
     expect(screen.getByText('Bite')).toBeInTheDocument();
+  });
+
+  it('renders negative HP modifiers without a stray plus sign', () => {
+    render(
+      <MonsterStatBlock
+        monster={{
+          ...simpleMonster,
+          hitPoints: { count: 2, die: 'd8', modifier: -2, notation: '' },
+        }}
+      />
+    );
+
+    expect(screen.getByText('2d8-2')).toBeInTheDocument();
+    expect(screen.queryByText(/\+-/)).not.toBeInTheDocument();
   });
 });

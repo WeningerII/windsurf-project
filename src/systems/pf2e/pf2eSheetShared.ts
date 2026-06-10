@@ -20,6 +20,32 @@ export function countTrainedPf2eSkills(
     .length;
 }
 
+export interface Pf2eBulkState {
+  /** Encumbered threshold: Bulk above this is encumbered. */
+  encumbered: number;
+  /** Maximum Bulk: Bulk above this is overloaded. */
+  maxBulk: number;
+  isEncumbered: boolean;
+  isOverloaded: boolean;
+}
+
+/**
+ * PF2e CRB p.272 (Bulk Limits): "You are encumbered when you carry more Bulk
+ * than 5 + your Strength modifier" and "you can't hold or carry more Bulk than
+ * 10 + your Strength modifier" — both strictly greater-than, so carrying
+ * exactly 5 + Str is NOT encumbered.
+ */
+export function getPf2eBulkState(totalBulk: number, strengthModifier: number): Pf2eBulkState {
+  const encumbered = 5 + strengthModifier;
+  const maxBulk = 10 + strengthModifier;
+  return {
+    encumbered,
+    maxBulk,
+    isEncumbered: totalBulk > encumbered,
+    isOverloaded: totalBulk > maxBulk,
+  };
+}
+
 export function shortRestPf2eSpellcasting(
   spellcasting?: Pf2eSpellcasting
 ): Pf2eSpellcasting | undefined {

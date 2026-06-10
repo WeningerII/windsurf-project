@@ -139,5 +139,14 @@ export function scoreTargets(
     .filter((target) => isHostile(actor.faction, target.faction))
     .filter((target) => !target.hp || target.hp.current > 0)
     .map((target) => scoreTarget(actor, target))
-    .sort((a, b) => b.score - a.score || a.tokenId.localeCompare(b.tokenId));
+    .sort((a, b) => b.score - a.score || compareTokenIds(a.tokenId, b.tokenId));
+}
+
+/**
+ * Codepoint comparison for the id tie-break. `localeCompare` orders differently
+ * across user locales, which would make tie-broken target choices diverge
+ * between devices replaying the same event log.
+ */
+function compareTokenIds(a: string, b: string): number {
+  return a < b ? -1 : a > b ? 1 : 0;
 }

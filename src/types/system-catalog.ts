@@ -4,6 +4,7 @@ export type SystemSupportLevel = 'full' | 'partial' | 'scaffold';
 
 export type SystemContentCategoryId =
   | 'spells'
+  | 'powers'
   | 'classes'
   | 'domains'
   | 'domainCards'

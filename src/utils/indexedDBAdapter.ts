@@ -21,7 +21,24 @@ function openDB(): Promise<IDBDatabase> {
 
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(request.error);
+    // A version upgrade blocked by another open connection would otherwise
+    // leave this promise unsettled forever (and every caller hanging).
+    request.onblocked = () =>
+      reject(new Error('IndexedDB open blocked by another connection holding an older version.'));
   });
+}
+
+/**
+ * Reject the transaction's promise when the engine aborts it (e.g. a
+ * QuotaExceededError). Aborts do not always surface through `tx.onerror`, so
+ * without this the promise never settles and failure diagnostics (the
+ * 3-strikes warning in documentStorage) never fire.
+ */
+function rejectOnAbort(tx: IDBTransaction, db: IDBDatabase, reject: (reason?: unknown) => void) {
+  tx.onabort = () => {
+    db.close();
+    reject(tx.error ?? new DOMException('IndexedDB transaction aborted', 'AbortError'));
+  };
 }
 
 function hydrateDoc(doc: CharacterDocument<SystemDataModel>): CharacterDocument<SystemDataModel> {
@@ -66,6 +83,7 @@ export async function idbLoadDocuments(): Promise<CharacterDocument<SystemDataMo
         db.close();
         resolve(result.length > 0 ? result.map(hydrateDoc) : null);
       };
+      rejectOnAbort(tx, db, reject);
     });
   } catch {
     return null;
@@ -99,6 +117,7 @@ export async function idbSaveDocuments(
       db.close();
       reject(tx.error);
     };
+    rejectOnAbort(tx, db, reject);
   });
 }
 
@@ -122,6 +141,7 @@ export async function idbClearDocuments(): Promise<void> {
       db.close();
       reject(tx.error);
     };
+    rejectOnAbort(tx, db, reject);
   });
 }
 
@@ -149,6 +169,10 @@ export async function idbHasMigrated(): Promise<boolean> {
         db.close();
         resolve(migrated);
       };
+      tx.onabort = () => {
+        db.close();
+        resolve(false);
+      };
     });
   } catch {
     return false;
@@ -175,5 +199,6 @@ export async function idbSetMigrated(): Promise<void> {
       db.close();
       reject(tx.error);
     };
+    rejectOnAbort(tx, db, reject);
   });
 }

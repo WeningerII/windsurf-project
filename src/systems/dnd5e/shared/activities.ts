@@ -306,7 +306,9 @@ function buildDivineSmiteActivity(
         target: 'damage.radiant',
         label: 'Radiant damage dice',
         operation: 'set',
-        value: `${slotLevel}d8`,
+        // SRD 5.1 Divine Smite: 2d8 for a 1st-level slot, +1d8 per slot level
+        // above 1st, to a maximum of 5d8.
+        value: `${Math.min(slotLevel + 1, 5)}d8`,
       },
     ],
     inputs: [],

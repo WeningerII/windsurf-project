@@ -128,8 +128,92 @@ describe('Mam3eEngine', () => {
         ],
       });
       const result = engine.prepareData(doc);
-      // (base 2 + accurate 1 + limited -1) * rank 4 + subtle +1 + activation -1 = 8
-      expect(result.system.powerPoints.spent.powers).toBe(8);
+      // Accurate is a FLAT extra — 1 point per rank of Accurate, not +1 per
+      // effect rank (Hero's Handbook, Extras): (base 2 + limited −1) × rank 4
+      // + (accurate +1, subtle +1, activation −1) = 4 + 1 = 5.
+      expect(result.system.powerPoints.spent.powers).toBe(5);
+    });
+
+    it('applies the minimum-cost rule when flaws drive cost per rank below 1', () => {
+      // Hero's Handbook (Powers — Modifiers): below 1 point per rank, the
+      // effect costs 1 point per 2 ranks (then per 3, ...), rounded up — it
+      // never becomes free. Damage 10 (base 1) + Limited (−1/rank) = 5 PP.
+      const result = engine.prepareData(
+        makeDoc({
+          powers: [
+            {
+              id: 'damage',
+              name: 'Damage',
+              system: 'mam3e',
+              source: 'test',
+              type: 'attack',
+              action: 'standard',
+              range: 'close',
+              duration: 'instant',
+              baseCost: 1,
+              perRank: true,
+              rank: 10,
+              flaws: ['limited'],
+              modifierRanks: { limited: 1 },
+              description: '',
+              effects: [],
+            },
+          ],
+        })
+      );
+      expect(result.system.powerPoints.spent.powers).toBe(5);
+    });
+
+    it('never reduces a power to 0 PP, even with two per-rank flaws', () => {
+      // Damage 10 + Limited + Distracting → cost/rank −1 → 1 point per
+      // 3 ranks → ceil(10/3) = 4 PP, and the floor stays at 1 minimum.
+      const result = engine.prepareData(
+        makeDoc({
+          powers: [
+            {
+              id: 'damage',
+              name: 'Damage',
+              system: 'mam3e',
+              source: 'test',
+              type: 'attack',
+              action: 'standard',
+              range: 'close',
+              duration: 'instant',
+              baseCost: 1,
+              perRank: true,
+              rank: 10,
+              flaws: ['limited', 'distracting'],
+              modifierRanks: { limited: 1, distracting: 1 },
+              description: '',
+              effects: [],
+            },
+          ],
+        })
+      );
+      expect(result.system.powerPoints.spent.powers).toBe(4);
+      expect(result.system.powerPoints.spent.powers).toBeGreaterThanOrEqual(1);
+    });
+
+    it('clamps negative purchased defense and skill ranks to 0 (no PP refunds)', () => {
+      const result = engine.prepareData(
+        makeDoc({
+          abilities: { str: 0, sta: 2, agi: 0, dex: 0, fgt: 0, int: 0, awe: 0, pre: 0 },
+          defenses: {
+            dodge: { rank: -4, total: 0 },
+            parry: { rank: 0, total: 0 },
+            fortitude: { rank: 0, total: 0 },
+            toughness: { rank: 0, total: 0 },
+            will: { rank: 0, total: 0 },
+          },
+          skills: { acrobatics: { rank: -8, total: 0 } },
+        })
+      );
+
+      expect(result.system.defenses.dodge.rank).toBe(0);
+      expect(result.system.defenses.dodge.total).toBe(0); // Agi 0 + clamped 0
+      expect(result.system.powerPoints.spent.defenses).toBe(0);
+      expect(result.system.skills.acrobatics.rank).toBe(0);
+      expect(result.system.powerPoints.spent.skills).toBe(0); // not ceil(-8/2) = -4
     });
 
     it('flags close attack/effect PL cap violations', () => {
@@ -184,6 +268,31 @@ describe('Mam3eEngine', () => {
       // d20 + AGI rank (4)
       expect(result.formula).toBe('1d20 + 4');
     });
+
+    it('applies the cumulative -1 per Bruised to Toughness checks', async () => {
+      // Hero's Handbook (Damage): each Bruised result imposes a cumulative -1
+      // on further Toughness resistance checks.
+      const prepared = engine.prepareData(
+        makeDoc({
+          abilities: { str: 0, sta: 4, agi: 0, dex: 0, fgt: 0, int: 0, awe: 0, pre: 0 },
+          conditionTrack: { bruised: 2, dazed: false, staggered: false, incapacitated: false },
+        })
+      );
+      const result = await engine.rollCheck(prepared, 'toughness');
+      // Toughness total 4 (Sta) − 2 bruises = +2
+      expect(result.formula).toBe('1d20 + 2');
+    });
+
+    it('does not apply the Bruised penalty to other defense checks', async () => {
+      const prepared = engine.prepareData(
+        makeDoc({
+          abilities: { str: 0, sta: 4, agi: 0, dex: 0, fgt: 0, int: 0, awe: 0, pre: 0 },
+          conditionTrack: { bruised: 2, dazed: false, staggered: false, incapacitated: false },
+        })
+      );
+      const result = await engine.rollCheck(prepared, 'fortitude');
+      expect(result.formula).toBe('1d20 + 4');
+    });
   });
 
   describe('applyDamage', () => {
@@ -233,6 +342,22 @@ describe('Mam3eEngine', () => {
       expect(result.system.conditionTrack.bruised).toBe(3);
       expect(result.system.conditionTrack.dazed).toBe(true);
       expect(result.system.conditionTrack.staggered).toBe(true);
+    });
+
+    it('escalates a second Staggered result to Incapacitated', () => {
+      // Hero's Handbook (Damage): a Staggered target that is staggered again
+      // becomes Incapacitated — the result must not just re-set staggered.
+      const doc = makeDoc({
+        conditionTrack: {
+          bruised: 1,
+          dazed: false,
+          staggered: true,
+          incapacitated: false,
+        },
+      });
+      const result = engine.applyDamage(doc, 12, 'damage');
+      expect(result.system.conditionTrack.incapacitated).toBe(true);
+      expect(result.system.conditionTrack.bruised).toBe(2);
     });
   });
 });

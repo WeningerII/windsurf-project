@@ -63,11 +63,11 @@ export function CharacterCard({ document, onOpen, onClone }: CharacterCardProps)
       <Button
         variant="ghost"
         size="icon"
-        className="absolute bottom-2 right-2 h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-        onClick={(e) => {
-          e.stopPropagation();
-          onClone(document);
-        }}
+        // focus-visible:opacity-100 keeps the hover-revealed control usable
+        // for keyboard users. No stopPropagation needed: the clone button is
+        // a sibling of the open button, not nested inside it.
+        className="absolute bottom-2 right-2 h-8 w-8 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity"
+        onClick={() => onClone(document)}
         title={`Clone ${document.name}`}
         aria-label={`Clone ${document.name}`}
       >

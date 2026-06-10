@@ -50,4 +50,10 @@ export interface Subrace {
   abilityScoreIncrease: AbilityScoreIncrease[];
   traits: Feature[];
   description: string;
+  /**
+   * Open-content citation for this subrace (e.g. 'SRD 5.1'). Subraces can come
+   * from a different book than their parent species, so the open-content
+   * policy checks this nested attribution when present.
+   */
+  source?: string;
 }

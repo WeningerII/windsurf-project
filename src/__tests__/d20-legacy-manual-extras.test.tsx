@@ -32,6 +32,14 @@ const inflictLightWounds: Spell = {
   description: 'Harms a creature.',
 };
 
+const magicMissile: Spell = {
+  ...cureLightWounds,
+  id: 'magic-missile-test',
+  name: 'Magic Missile',
+  description: 'Darts of force.',
+  classes: ['wizard'],
+};
+
 function makeDnd35eDoc(): CharacterDocument<Dnd35eDataModel> {
   return {
     id: 'd20-manual-extras-35e',
@@ -152,5 +160,41 @@ describe('d20 legacy manual spellcasting extras', () => {
     const totalInput = within(dragonSection as HTMLElement).getByDisplayValue('2');
     fireEvent.change(totalInput, { target: { value: '3' } });
     expect(onSetDragonDiscipleBonusSlots).toHaveBeenCalledWith({ total: 3 });
+  });
+
+  it('resolves tracked spells outside the current class spell lists (regression: false "Unresolved")', () => {
+    // Magic Missile is wizard-only while the browse filter is cleric-only —
+    // e.g. a spell tracked before a class change. It must resolve from the
+    // full loaded spell list instead of rendering an "Unresolved" badge.
+    render(
+      <D20SpellsTab
+        spellsLoaded
+        spells={[cureLightWounds, inflictLightWounds, magicMissile]}
+        spellListIds={['cleric']}
+        trackedSpellIds={[magicMissile.id]}
+        preparedSpellsByLevel={{}}
+        alwaysPreparedSpellIds={[]}
+        spellSlots={{ 1: { total: 2, used: 0 } }}
+        spellSlotLevels={[1]}
+        manualSpellcastingExtras={undefined}
+        canUpdate
+        onAddSpellLevel={vi.fn()}
+        onAddKnownSpell={vi.fn()}
+        onRemoveKnownSpell={vi.fn()}
+        onSetPreparedSpell={vi.fn()}
+        onUseSpellSlot={vi.fn()}
+        onRecoverSpellSlot={vi.fn()}
+        onSetSpellSlotTotal={vi.fn()}
+        onSetManualExtraConsumed={vi.fn()}
+        onSetSpontaneousConversionReference={vi.fn()}
+        onSetDragonDiscipleBonusSlots={vi.fn()}
+      />
+    );
+
+    const trackedRow = screen.getByText('Magic Missile').closest('div')?.parentElement;
+    expect(trackedRow).toBeTruthy();
+    expect(screen.queryByText('Unresolved')).not.toBeInTheDocument();
+    expect(screen.queryByText('Unknown level')).not.toBeInTheDocument();
+    expect(within(trackedRow as HTMLElement).getByText('Level 1')).toBeInTheDocument();
   });
 });

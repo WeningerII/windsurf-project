@@ -18,9 +18,12 @@ export const accurate: PowerModifier = {
   system: 'mam3e',
   source: "Hero's Handbook",
   type: 'extra',
-  costPerRank: 1,
+  // Accurate is a flat extra: 1 point per rank of Accurate, regardless of the
+  // effect's rank (Hero's Handbook, Extras — flat modifiers).
+  costPerRank: 0,
+  flatCost: 1,
   description: 'An effect with this extra is especially accurate.',
-  effects: ['+2 bonus to attack checks per rank of this extra.'],
+  effects: ['+2 bonus to attack checks per rank of this extra.', 'Flat extra: 1 point per rank.'],
 };
 
 export const affects_corporeal: PowerModifier = {

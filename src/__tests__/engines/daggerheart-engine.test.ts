@@ -414,6 +414,69 @@ describe('DaggerheartEngine', () => {
       ]);
     });
 
+    it('keeps a legitimate 6/6 HP on a non-starter Bard instead of snapping back to class base', () => {
+      // Regression for the ungated HP hydration: a Bard (class base 5 HP)
+      // whose max was raised to 6 (import/manual edit/advancement) must keep
+      // 6/6 on every prepare. The inventory entry marks the sheet as a real,
+      // non-starter document.
+      const doc = makeDoc({
+        class: 'Bard',
+        heritage: 'Human',
+        hitPoints: { current: 6, max: 6 },
+        inventory: [
+          {
+            itemId: 'daggerheart-consumable-minor-health-potion',
+            name: 'Minor Health Potion',
+            quantity: 1,
+            description: '',
+          },
+        ],
+      });
+
+      const prepared = engine.prepareData(doc);
+      expect(prepared.system.hitPoints).toEqual({ current: 6, max: 6 });
+
+      // Stable across repeated prepares (prepareData runs on every update).
+      const reprepared = engine.prepareData(prepared);
+      expect(reprepared.system.hitPoints).toEqual({ current: 6, max: 6 });
+    });
+
+    it('spills loadout cards beyond the 5-card limit into the vault in stable order', () => {
+      const cardIds = [
+        'bone-untouchable',
+        'bone-cruel-precision',
+        'bone-breaking-blow',
+        'bone-wrangle',
+        'bone-ferocity',
+        'valor-rise-up',
+        'valor-armorer',
+        'blade-fortified-armor',
+      ];
+      // Location-less entries (legacy import shape) all default toward the
+      // loadout; normalization must cap the loadout at LOADOUT_LIMIT.
+      const result = engine.prepareData(
+        makeDoc({
+          level: 8,
+          domainCards: cardIds.map((cardId) => {
+            const { location: _location, ...entry } = makeDomainCardEntry(cardId, 'loadout');
+            return entry;
+          }),
+        })
+      );
+
+      expect(result.system.domainCards.map((entry) => entry.cardId)).toEqual(cardIds);
+      expect(result.system.domainCards.map((entry) => entry.location)).toEqual([
+        'loadout',
+        'loadout',
+        'loadout',
+        'loadout',
+        'loadout',
+        'vault',
+        'vault',
+        'vault',
+      ]);
+    });
+
     it('resolves a known subclass onto its owning class when only the subclass survives import', () => {
       const result = engine.prepareData(
         makeDoc({
@@ -813,155 +876,51 @@ describe('DaggerheartEngine', () => {
     });
 
     it('applies deterministic passive formula cards for evasion and proficiency-scaled thresholds', () => {
+      // Both builds keep a legal 5-card-max loadout (LOADOUT_LIMIT); the
+      // result swaps Wrangle for Untouchable (still 4 Bone cards so
+      // Bone-touched stays active) and adds Rise Up.
+      const baseSystem = {
+        level: 7,
+        class: 'Guardian',
+        heritage: 'Human',
+        armorId: 'daggerheart-armor-chainmail-armor-tier-1',
+        attributes: {
+          agility: 3,
+          strength: 2,
+          finesse: 0,
+          instinct: 0,
+          presence: 0,
+          knowledge: 0,
+        },
+      } satisfies Partial<DaggerheartDataModel>;
       const baseline = engine.prepareData(
         makeDoc({
-          level: 7,
-          class: 'Guardian',
-          heritage: 'Human',
-          armorId: 'daggerheart-armor-chainmail-armor-tier-1',
-          attributes: {
-            agility: 3,
-            strength: 2,
-            finesse: 0,
-            instinct: 0,
-            presence: 0,
-            knowledge: 0,
-          },
+          ...baseSystem,
           domainCards: [
-            {
-              id: 'bone-bone-touched:1',
-              cardId: 'bone-bone-touched',
-              name: 'Bone-touched',
-              domain: 'bone',
-              level: 7,
-              type: 'ability',
-              recallCost: 2,
-              location: 'loadout',
-              description: '',
-            },
-            {
-              id: 'bone-cruel-precision:1',
-              cardId: 'bone-cruel-precision',
-              name: 'Cruel Precision',
-              domain: 'bone',
-              level: 7,
-              type: 'ability',
-              recallCost: 1,
-              location: 'loadout',
-              description: '',
-            },
-            {
-              id: 'bone-breaking-blow:1',
-              cardId: 'bone-breaking-blow',
-              name: 'Breaking Blow',
-              domain: 'bone',
-              level: 8,
-              type: 'ability',
-              recallCost: 3,
-              location: 'loadout',
-              description: '',
-            },
-            {
-              id: 'bone-wrangle:1',
-              cardId: 'bone-wrangle',
-              name: 'Wrangle',
-              domain: 'bone',
-              level: 8,
-              type: 'ability',
-              recallCost: 1,
-              location: 'loadout',
-              description: '',
-            },
+            makeDomainCardEntry('bone-bone-touched', 'loadout'),
+            makeDomainCardEntry('bone-cruel-precision', 'loadout'),
+            makeDomainCardEntry('bone-breaking-blow', 'loadout'),
+            makeDomainCardEntry('bone-wrangle', 'loadout'),
           ],
         })
       );
 
       const result = engine.prepareData(
         makeDoc({
-          level: 7,
-          class: 'Guardian',
-          heritage: 'Human',
-          armorId: 'daggerheart-armor-chainmail-armor-tier-1',
-          attributes: {
-            agility: 3,
-            strength: 2,
-            finesse: 0,
-            instinct: 0,
-            presence: 0,
-            knowledge: 0,
-          },
+          ...baseSystem,
           domainCards: [
-            {
-              id: 'bone-bone-touched:1',
-              cardId: 'bone-bone-touched',
-              name: 'Bone-touched',
-              domain: 'bone',
-              level: 7,
-              type: 'ability',
-              recallCost: 2,
-              location: 'loadout',
-              description: '',
-            },
-            {
-              id: 'bone-cruel-precision:1',
-              cardId: 'bone-cruel-precision',
-              name: 'Cruel Precision',
-              domain: 'bone',
-              level: 7,
-              type: 'ability',
-              recallCost: 1,
-              location: 'loadout',
-              description: '',
-            },
-            {
-              id: 'bone-breaking-blow:1',
-              cardId: 'bone-breaking-blow',
-              name: 'Breaking Blow',
-              domain: 'bone',
-              level: 8,
-              type: 'ability',
-              recallCost: 3,
-              location: 'loadout',
-              description: '',
-            },
-            {
-              id: 'bone-wrangle:1',
-              cardId: 'bone-wrangle',
-              name: 'Wrangle',
-              domain: 'bone',
-              level: 8,
-              type: 'ability',
-              recallCost: 1,
-              location: 'loadout',
-              description: '',
-            },
-            {
-              id: 'bone-untouchable:1',
-              cardId: 'bone-untouchable',
-              name: 'Untouchable',
-              domain: 'bone',
-              level: 1,
-              type: 'ability',
-              recallCost: 1,
-              location: 'loadout',
-              description: '',
-            },
-            {
-              id: 'valor-rise-up:1',
-              cardId: 'valor-rise-up',
-              name: 'Rise Up',
-              domain: 'valor',
-              level: 6,
-              type: 'ability',
-              recallCost: 2,
-              location: 'loadout',
-              description: '',
-            },
+            makeDomainCardEntry('bone-bone-touched', 'loadout'),
+            makeDomainCardEntry('bone-cruel-precision', 'loadout'),
+            makeDomainCardEntry('bone-breaking-blow', 'loadout'),
+            makeDomainCardEntry('bone-untouchable', 'loadout'),
+            makeDomainCardEntry('valor-rise-up', 'loadout'),
           ],
         })
       );
 
+      // Untouchable: evasion + floor(effective Agility 4 / 2) = +2.
       expect(result.system.evasion).toBe(baseline.system.evasion + 2);
+      // Rise Up: severe threshold + Proficiency (3 at level 7).
       expect(result.system.severeThreshold).toBe(baseline.system.severeThreshold + 3);
     });
 
@@ -1028,18 +987,41 @@ describe('DaggerheartEngine', () => {
       randomSpy.mockRestore();
     });
 
-    it('flags critical success and fumble results for matching high and low dice', async () => {
+    it('flags ANY matched duality dice as a critical success and never as a fumble', async () => {
+      // Daggerheart SRD (Duality Dice): rolling matching values on the Hope
+      // and Fear dice is a critical success — at any value. The system has no
+      // fumble result, so matched 1s are still a crit, not a "NAT 1".
       const highSpy = vi.spyOn(Math, 'random').mockReturnValueOnce(0.75).mockReturnValueOnce(0.75);
       const critSuccess = await engine.rollCheck(makeDoc(), 'presence');
       expect(critSuccess.isCritical).toBe(true);
+      expect(critSuccess.isFumble).toBe(false);
       expect(critSuccess.flavor).toContain('Critical');
       highSpy.mockRestore();
 
+      // Matched mid dice (7,7) — previously dropped because only 10+ crit.
+      const midSpy = vi.spyOn(Math, 'random').mockReturnValueOnce(0.5).mockReturnValueOnce(0.5);
+      const midCrit = await engine.rollCheck(makeDoc(), 'presence');
+      expect(midCrit.isCritical).toBe(true);
+      expect(midCrit.isFumble).toBe(false);
+      expect(midCrit.flavor).toContain('Critical');
+      midSpy.mockRestore();
+
+      // Matched 1s — previously mis-reported as a fumble.
       const lowSpy = vi.spyOn(Math, 'random').mockReturnValueOnce(0).mockReturnValueOnce(0);
-      const critFail = await engine.rollCheck(makeDoc(), 'presence');
-      expect(critFail.isFumble).toBe(true);
-      expect(critFail.flavor).toContain('Critical');
+      const lowCrit = await engine.rollCheck(makeDoc(), 'presence');
+      expect(lowCrit.isCritical).toBe(true);
+      expect(lowCrit.isFumble).toBe(false);
+      expect(lowCrit.flavor).toContain('Critical');
       lowSpy.mockRestore();
+    });
+
+    it('never reports a fumble on lopsided with-Fear rolls either', async () => {
+      const randomSpy = vi.spyOn(Math, 'random').mockReturnValueOnce(0).mockReturnValueOnce(0.9);
+      const result = await engine.rollCheck(makeDoc(), 'presence');
+      expect(result.isCritical).toBe(false);
+      expect(result.isFumble).toBe(false);
+      expect(result.flavor).toContain('with Fear');
+      randomSpy.mockRestore();
     });
 
     it('includes carried relic bonuses in trait checks', async () => {
@@ -1137,18 +1119,57 @@ describe('DaggerheartEngine', () => {
   });
 
   describe('applyDamage', () => {
-    it('lets armor absorb normal damage before hit points', () => {
+    // Daggerheart SRD (Damage & Hit Points): incoming damage marks 1 HP below
+    // the Major threshold, 2 at/above Major, 3 at/above Severe; marking an
+    // Armor Slot reduces the HP marked by one. Damage is never subtracted from
+    // an HP pool point-for-point.
+    it('marks 2 HP for a Major hit and spends one armor slot to reduce it to 1', () => {
       const result = engine.applyDamage(
         makeDoc({
           armor: { current: 3, max: 3 },
-          hitPoints: { current: 10, max: 10 },
+          hitPoints: { current: 6, max: 6 },
+          majorThreshold: 5,
+          severeThreshold: 11,
         }),
         5,
         'physical'
       );
 
-      expect(result.system.armor.current).toBe(0);
-      expect(result.system.hitPoints.current).toBe(8);
+      expect(result.system.armor.current).toBe(2);
+      expect(result.system.hitPoints.current).toBe(5);
+    });
+
+    it('marks at most 3 HP on a Severe hit even when raw damage exceeds remaining HP', () => {
+      const result = engine.applyDamage(
+        makeDoc({
+          armor: { current: 0, max: 0 },
+          hitPoints: { current: 6, max: 6 },
+          majorThreshold: 1,
+          severeThreshold: 2,
+        }),
+        7,
+        'physical'
+      );
+
+      // A 7-damage hit against a 6-HP level-1 PC marks 3 HP — it is not an
+      // outright kill under the threshold model.
+      expect(result.system.hitPoints.current).toBe(3);
+    });
+
+    it('does not consume armor slots when no HP would be marked', () => {
+      const result = engine.applyDamage(
+        makeDoc({
+          armor: { current: 2, max: 2 },
+          hitPoints: { current: 6, max: 6 },
+          majorThreshold: 5,
+          severeThreshold: 11,
+        }),
+        0,
+        'physical'
+      );
+
+      expect(result.system.armor.current).toBe(2);
+      expect(result.system.hitPoints.current).toBe(6);
     });
 
     it('tracks stress separately from normal damage and caps healing at max hp', () => {

@@ -41,12 +41,13 @@ export function getPf2eSheetChoiceState({
     return left.name.localeCompare(right.name);
   });
   const loreIds = Object.keys(data.loreProficiencies ?? {});
+  // Class DC needs the class's key ability. When none is set we report null so
+  // the sheet renders an explicit "—" instead of silently substituting the
+  // highest ability score (which masked missing data with an inflated DC).
   const classDcAbility =
     data.keyAbility && data.baseAttributes[data.keyAbility] != null ? data.keyAbility : null;
-  const classDcScore =
-    classDcAbility != null
-      ? data.baseAttributes[classDcAbility]
-      : Math.max(...Object.values(data.baseAttributes));
+  const classDcScore: number | null =
+    classDcAbility != null ? data.baseAttributes[classDcAbility] : null;
 
   const ancestryChoiceSlots: Pf2eChoiceSlot[] = [];
   if (selectedAncestry) {

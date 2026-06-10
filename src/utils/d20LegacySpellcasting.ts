@@ -5,6 +5,8 @@ import type {
 } from '../types/character-options/classes';
 import type { GameSystemId } from '../types/game-systems';
 import { pf1eClassSpellSlotTables } from '../data/pathfinder/1e/classSpellSlotTables';
+import { d20BonusSpells } from '../systems/shared/d20-helpers';
+import { abilityMod } from './math';
 import { getSpellSlotsAtClassLevel } from './classSpellcasting';
 
 type D20LegacySpellSlotTable = Record<number, number[]>;
@@ -34,6 +36,47 @@ const D20_SPELLCASTING_KIND_OVERRIDES: Partial<
     paladin: 'divine',
   },
 };
+
+/**
+ * Casting abilities for caster classes whose data files carry no
+ * `spellcasting.ability` (the 3.5e base classes fall back to the shared PF1e
+ * slot tables and have no spellcasting block). PF1e class files all declare
+ * their ability natively, so only the 3.5e PHB values matter here — note the
+ * 3.5e paladin casts with Wisdom (PF1e moved it to Charisma).
+ */
+const D20_FALLBACK_CASTING_ABILITIES: Partial<Record<GameSystemId, Record<string, string>>> = {
+  'dnd-3.5e': {
+    bard: 'cha',
+    cleric: 'wis',
+    druid: 'wis',
+    paladin: 'wis',
+    ranger: 'wis',
+    sorcerer: 'cha',
+    wizard: 'int',
+  },
+  pf1e: {
+    bard: 'cha',
+    cleric: 'wis',
+    druid: 'wis',
+    paladin: 'cha',
+    ranger: 'wis',
+    sorcerer: 'cha',
+    wizard: 'int',
+  },
+};
+
+function getD20LegacyCastingAbility(
+  systemId: GameSystemId,
+  classData?: CharacterClass
+): string | undefined {
+  if (!classData) {
+    return undefined;
+  }
+
+  return (
+    classData.spellcasting?.ability ?? D20_FALLBACK_CASTING_ABILITIES[systemId]?.[classData.id]
+  );
+}
 
 function inferKindFromSpellListId(spellListId?: string): 'arcane' | 'divine' | undefined {
   if (!spellListId) return undefined;
@@ -77,7 +120,18 @@ export function getD20LegacySpellSlotTable(
   }
 
   if (classData.spellcasting?.spellSlots) {
-    return classData.spellcasting.spellSlots as unknown as D20LegacySpellSlotTable;
+    const native = classData.spellcasting.spellSlots as unknown as D20LegacySpellSlotTable;
+    if (systemId !== 'pf1e' && systemId !== 'dnd-3.5e') {
+      return native;
+    }
+
+    // The class files' SpellSlotProgression type only carries spell levels
+    // 1-9, so orisons/cantrips per day live in the shared PF1e SRD tables.
+    // Supplement the native table with that level-0 row when it has one.
+    const zeroRow = (
+      pf1eClassSpellSlotTables[classData.id] as unknown as D20LegacySpellSlotTable | undefined
+    )?.[0];
+    return native[0] == null && zeroRow ? { 0: zeroRow, ...native } : native;
   }
 
   if (systemId === 'pf1e' || systemId === 'dnd-3.5e') {
@@ -205,10 +259,23 @@ export function syncD20LegacySpellcastingSelections(
   });
 }
 
+/**
+ * Sum automated spells-per-day totals across the character's classes.
+ *
+ * When `baseAttributes` is provided, each casting class also receives the SRD
+ * bonus spells for a high casting-ability modifier ({@link d20BonusSpells}),
+ * keyed by that class's own casting ability. Bonus spells are added only at
+ * spell levels the class can already cast (base table value > 0 at the
+ * effective level) and never at level 0 (the SRD grants no bonus
+ * cantrips/orisons). Limitation: the slot tables store the published "—" and
+ * "0" entries both as 0, so a half-caster's bonus-spells-only level (e.g. a
+ * PF1e paladin 4 with high Cha) is conservatively treated as no slots.
+ */
 export function buildD20LegacySpellSlotTotals(
   systemId: GameSystemId,
   classLevels: D20LegacyClassLevel[],
-  classCatalog: Map<string, CharacterClass>
+  classCatalog: Map<string, CharacterClass>,
+  baseAttributes?: Record<string, number>
 ): Record<number, number> {
   const slotTotals: Record<number, number> = {};
   const baseSpellcastingLevels = new Map<string, number>();
@@ -255,11 +322,17 @@ export function buildD20LegacySpellSlotTotals(
       return;
     }
 
+    const castingAbility = getD20LegacyCastingAbility(systemId, classCatalog.get(classId));
+    const castingAbilityScore =
+      baseAttributes && castingAbility ? baseAttributes[castingAbility] : undefined;
+    const castingAbilityMod = castingAbilityScore != null ? abilityMod(castingAbilityScore) : 0;
+
     const effectiveLevel = baseLevel + (advancedLevels.get(classId) ?? 0);
     const classSlots = getSpellSlotsAtClassLevel(spellSlotTable, effectiveLevel);
     Object.entries(classSlots).forEach(([spellLevel, total]) => {
       const numericLevel = Number(spellLevel);
-      slotTotals[numericLevel] = (slotTotals[numericLevel] ?? 0) + total;
+      const bonusSpells = total > 0 ? d20BonusSpells(castingAbilityMod, numericLevel) : 0;
+      slotTotals[numericLevel] = (slotTotals[numericLevel] ?? 0) + total + bonusSpells;
     });
   });
 

@@ -93,48 +93,9 @@ export const mage: Monster = {
   environment: ['urban', 'tower'],
 };
 
-export const warlord: Monster = {
-  id: 'warlord-2024',
-  name: 'Warlord',
-  system: 'dnd-5e-2024',
-  source: 'SRD 5.2',
-  size: 'medium',
-  type: 'humanoid',
-  alignment: 'chaotic evil',
-  armorClass: 16,
-  hitPoints: { count: 11, die: 'd8', modifier: 22, notation: '11d8+22' },
-  speed: { walk: 30 },
-  abilities: { str: 19, dex: 13, con: 15, int: 12, wis: 12, cha: 15 },
-  savingThrows: { str: 7, con: 5, wis: 4 },
-  skills: { Athletics: 7, Intimidation: 5 },
-  senses: ['passive Perception 11'],
-  languages: ['Common'],
-  challengeRating: 7,
-  experiencePoints: 2900,
-  specialAbilities: [
-    {
-      name: 'Brave',
-      description: 'The warlord has advantage on saving throws against being frightened.',
-    },
-    {
-      name: 'Parry',
-      description:
-        'The warlord adds 3 to its AC against one melee attack that would hit it. To do so, the warlord must see the attacker and be wielding a melee weapon.',
-    },
-  ],
-  actions: [
-    {
-      name: 'Multiattack',
-      description: 'The warlord makes three longsword attacks.',
-    },
-    {
-      name: 'Longsword',
-      description:
-        'Melee Weapon Attack: +7 to hit, reach 5 ft., one target. Hit: 10 (1d8 + 4) slashing damage, or 11 (1d10 + 4) slashing damage if used with two hands.',
-    },
-  ],
-  environment: ['any'],
-};
+// NOTE: The former 'warlord-2024' entry was removed. Its statblock could not
+// be verified against the SRD 5.2 monster index, so it was deleted rather than
+// shipped with an unverified citation. See docs/srd-manifest/dnd5e-2024.ts.
 
 export const necromancer: Monster = {
   id: 'necromancer-2024',
@@ -172,4 +133,4 @@ export const necromancer: Monster = {
   environment: ['underdark', 'tower'],
 };
 
-export const humanoidsCR6to10: Monster[] = [captain, mage, warlord, necromancer];
+export const humanoidsCR6to10: Monster[] = [captain, mage, necromancer];

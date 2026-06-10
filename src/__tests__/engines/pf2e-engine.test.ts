@@ -113,7 +113,11 @@ describe('Pf2eEngine', () => {
       expect(result.system.armorClass).toBe(19);
     });
 
-    it('does not change heavy armor AC from clumsy when the armor dex cap is 0', () => {
+    // CRB Conditions Appendix: "Clumsy — you take a status penalty equal to
+    // the condition value to Dexterity-based checks and DCs, including AC".
+    // It is a flat status penalty to the AC DC, NOT a Dexterity-score
+    // reduction, so it applies in full even inside armor with a 0 Dex cap.
+    it('applies clumsy as a status penalty to AC even when the armor dex cap is 0', () => {
       const doc = makeDoc({
         level: 4,
         baseAttributes: { str: 10, dex: 16, con: 10, int: 10, wis: 10, cha: 10 },
@@ -138,10 +142,13 @@ describe('Pf2eEngine', () => {
       });
 
       const result = engine.prepareData(doc);
-      expect(result.system.armorClass).toBe(22);
+      // 10 + armor 6 + capped Dex 0 + heavy trained (4+2) = 22, − clumsy 2 = 20
+      expect(result.system.armorClass).toBe(20);
     });
 
-    it('reduces unarmored AC from clumsy via effective dexterity only', () => {
+    // CRB: status penalties of the same type do not stack — only the single
+    // worst of clumsy/frightened/sickened applies to AC.
+    it('applies only the worst status penalty to AC (clumsy 2 vs frightened 1)', () => {
       const doc = makeDoc({
         level: 4,
         baseAttributes: { str: 10, dex: 16, con: 10, int: 10, wis: 10, cha: 10 },
@@ -158,10 +165,14 @@ describe('Pf2eEngine', () => {
       });
 
       const result = engine.prepareData(doc);
+      // 10 + Dex 3 + unarmored trained (4+2) = 19, − worst status (clumsy 2) = 17
       expect(result.system.armorClass).toBe(17);
     });
 
-    it('keeps frightened and sickened out of static AC while roll checks apply status penalties', async () => {
+    // CRB Conditions Appendix: "Frightened — you take a status penalty equal
+    // to this value to all your checks and DCs" (sickened likewise). AC is a
+    // DC, so the worst of the two applies to static AC as well as to checks.
+    it('applies frightened/sickened status penalties to AC and to roll checks', async () => {
       const doc = makeDoc({
         level: 4,
         baseAttributes: { str: 10, dex: 16, con: 10, int: 10, wis: 16, cha: 10 },
@@ -181,7 +192,8 @@ describe('Pf2eEngine', () => {
       const result = engine.prepareData(doc);
       const roll = await engine.rollCheck(result, 'perception');
 
-      expect(result.system.armorClass).toBe(19);
+      // 10 + Dex 3 + unarmored trained (4+2) = 19, − frightened 2 = 17
+      expect(result.system.armorClass).toBe(17);
       expect(roll.formula).toBe('1d20 + 9 - 2');
     });
 
@@ -193,6 +205,41 @@ describe('Pf2eEngine', () => {
       const result = engine.prepareData(doc);
       // Master: 7 + 6 = 13
       expect(result.system.perceptionProficiency.total).toBe(13);
+    });
+
+    it('computes class DC proficiency and seeds trained for legacy documents', () => {
+      const doc = makeDoc({
+        level: 6,
+        classDcProficiency: { tier: 'expert', total: 0 },
+      });
+      const result = engine.prepareData(doc);
+      // Expert: 6 + 4 = 10
+      expect(result.system.classDcProficiency).toMatchObject({ tier: 'expert', total: 10 });
+
+      const legacyDoc = makeDoc({ level: 3, classDcProficiency: undefined });
+      const legacyResult = engine.prepareData(legacyDoc);
+      // Older documents lack the entry; every class starts trained: 3 + 2 = 5
+      expect(legacyResult.system.classDcProficiency).toMatchObject({ tier: 'trained', total: 5 });
+    });
+
+    it('preserves a manual max-HP bonus across prepares (regression: Max HP input reverted)', () => {
+      const attributes = { str: 10, dex: 10, con: 14, int: 10, wis: 10, cha: 10 };
+      const doc = makeDoc({
+        level: 1,
+        classId: 'wizard',
+        ancestryHP: 8,
+        baseAttributes: attributes,
+        // Toughness-style manual adjustment recorded by the sheet's Max HP editor
+        hitPoints: { current: 19, max: 19, temp: 0, maxBonus: 3 },
+      });
+
+      const once = engine.prepareData(doc);
+      // Ancestry 8 + 1 × (d6 6 + CON 2) = 16, + manual 3 = 19
+      expect(once.system.hitPoints.max).toBe(19);
+
+      const twice = engine.prepareData(once);
+      expect(twice.system.hitPoints.max).toBe(19);
+      expect(twice.system.hitPoints.maxBonus).toBe(3);
     });
 
     it('auto-populates spell slot maxima and focus points from class progression', () => {
@@ -208,6 +255,7 @@ describe('Pf2eEngine', () => {
             2: { max: 99, used: 6 },
           },
           spellsKnown: [],
+          focusSpells: [],
           focusPoints: { current: 3, max: 3 },
         },
       });
@@ -288,6 +336,22 @@ describe('Pf2eEngine', () => {
       const result = engine.applyDamage(doc, 15, 'slashing');
       expect(result.system.hitPoints.temp).toBe(0);
       expect(result.system.hitPoints.current).toBe(25);
+    });
+
+    it('treats negative damage as healing without consuming temp HP (parity with pf1e)', () => {
+      // Mirrors pf1e-engine.test.ts: healing restores current HP capped at max
+      // and never inflates temp HP (the old code grew temp via Math.min with a
+      // negative remaining).
+      const doc = makeDoc({ hitPoints: { current: 6, max: 20, temp: 5 } });
+      const result = engine.applyDamage(doc, -4, 'healing');
+      expect(result.system.hitPoints.current).toBe(10);
+      expect(result.system.hitPoints.temp).toBe(5);
+    });
+
+    it('caps healing at max HP', () => {
+      const doc = makeDoc({ hitPoints: { current: 18, max: 20, temp: 0 } });
+      const result = engine.applyDamage(doc, -10, 'healing');
+      expect(result.system.hitPoints.current).toBe(20);
     });
   });
 });

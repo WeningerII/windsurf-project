@@ -27,28 +27,48 @@ async function renameCharacter(page: Page, name: string) {
 
 async function installDownloadCapture(page: Page) {
   await page.evaluate(() => {
-    if ((window as Window & { __downloadCaptureInstalled?: boolean }).__downloadCaptureInstalled) {
-      (
-        window as Window & { __capturedDownloads?: Array<{ href: string; download: string }> }
-      ).__capturedDownloads = [];
-      return;
-    }
-
+    type CapturedDownload = { href: string; download: string };
     const downloadWindow = window as Window & {
-      __capturedDownloads?: Array<{ href: string; download: string }>;
+      __capturedDownloads?: Array<CapturedDownload>;
+      __blobText?: Record<string, string>;
       __downloadCaptureInstalled?: boolean;
     };
+
+    if (downloadWindow.__downloadCaptureInstalled) {
+      downloadWindow.__capturedDownloads = [];
+      return;
+    }
     downloadWindow.__capturedDownloads = [];
+    downloadWindow.__blobText = {};
+
+    // Exports now use Blob object URLs; capture the payload by reading the Blob
+    // before the app revokes its URL (the Blob reference outlives revocation).
+    const originalCreateObjectURL = URL.createObjectURL.bind(URL);
+    URL.createObjectURL = ((object: Blob | MediaSource) => {
+      const url = originalCreateObjectURL(object as Blob);
+      if (object instanceof Blob) {
+        void object
+          .text()
+          .then((text) => {
+            (downloadWindow.__blobText ??= {})[url] = text;
+          })
+          .catch(() => {
+            (downloadWindow.__blobText ??= {})[url] = '';
+          });
+      }
+      return url;
+    }) as typeof URL.createObjectURL;
 
     const originalCreateElement = document.createElement.bind(document);
     document.createElement = ((tagName: string, options?: ElementCreationOptions) => {
       const element = originalCreateElement(tagName, options);
       if (tagName.toLowerCase() === 'a') {
-        const originalClick = element.click.bind(element);
-        element.click = () => {
+        const anchor = element as HTMLAnchorElement;
+        const originalClick = anchor.click.bind(anchor);
+        anchor.click = () => {
           downloadWindow.__capturedDownloads?.push({
-            href: element.getAttribute('href') ?? '',
-            download: element.getAttribute('download') ?? '',
+            href: anchor.getAttribute('href') ?? '',
+            download: anchor.getAttribute('download') ?? '',
           });
           originalClick();
         };
@@ -65,26 +85,38 @@ async function waitForCapturedDownload(page: Page) {
     .poll(
       () =>
         page.evaluate(() => {
-          const captured = (
-            window as Window & {
-              __capturedDownloads?: Array<{ href: string; download: string }>;
-            }
-          ).__capturedDownloads;
-          return captured && captured.length > 0 ? captured[0] : null;
+          const downloadWindow = window as Window & {
+            __capturedDownloads?: Array<{ href: string; download: string }>;
+            __blobText?: Record<string, string>;
+          };
+          const captured = downloadWindow.__capturedDownloads?.[0];
+          if (!captured) return false;
+          // For blob: downloads, wait until the Blob payload has been read.
+          if (captured.href.startsWith('blob:')) {
+            return downloadWindow.__blobText?.[captured.href] != null;
+          }
+          return true;
         }),
       {
         message: 'expected export action to create a downloadable payload',
       }
     )
-    .not.toBeNull();
+    .toBe(true);
 
   return page.evaluate(() => {
-    const captured = (
-      window as Window & {
-        __capturedDownloads?: Array<{ href: string; download: string }>;
-      }
-    ).__capturedDownloads;
-    return captured?.[0] ?? null;
+    const downloadWindow = window as Window & {
+      __capturedDownloads?: Array<{ href: string; download: string }>;
+      __blobText?: Record<string, string>;
+    };
+    const captured = downloadWindow.__capturedDownloads?.[0];
+    if (!captured) return null;
+    let content = '';
+    if (captured.href.startsWith('blob:')) {
+      content = downloadWindow.__blobText?.[captured.href] ?? '';
+    } else if (captured.href.startsWith('data:')) {
+      content = decodeURIComponent(captured.href.split(',', 2)[1] ?? '');
+    }
+    return { href: captured.href, download: captured.download, content };
   });
 }
 
@@ -365,7 +397,7 @@ test('roundtrips a Daggerheart character with loadout, vault, and inventory stat
 
   await page.getByRole('button', { name: /Export All Characters/i }).click();
   const capturedDownload = await waitForCapturedDownload(page);
-  const exportedPayload = decodeURIComponent(capturedDownload?.href.split(',', 2)[1] ?? '');
+  const exportedPayload = capturedDownload?.content ?? '';
 
   await page.getByRole('button', { name: /Clear All Characters/i }).click();
   await page.getByRole('button', { name: /^Delete$/i }).click();
@@ -426,9 +458,9 @@ test('roundtrips exported characters through clear-all and import', async ({ pag
   await page.getByRole('button', { name: /Export All Characters/i }).click();
   const capturedDownload = await waitForCapturedDownload(page);
   expect(capturedDownload?.download).toMatch(/^all_characters_\d{4}-\d{2}-\d{2}\.json$/);
-  expect(capturedDownload?.href.startsWith('data:application/json;charset=utf-8,')).toBe(true);
+  expect(capturedDownload?.href).toMatch(/^(blob:|data:application\/json)/);
 
-  const exportedPayload = decodeURIComponent(capturedDownload?.href.split(',', 2)[1] ?? '');
+  const exportedPayload = capturedDownload?.content ?? '';
   expect(exportedPayload).toContain('Roundtrip E2E Hero');
 
   await page.getByRole('button', { name: /Clear All Characters/i }).click();

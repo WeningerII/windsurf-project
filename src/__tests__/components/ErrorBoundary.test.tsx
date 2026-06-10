@@ -3,7 +3,9 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { ErrorBoundary } from '../../components/ErrorBoundary';
 import { ErrorCategory, ErrorSeverity, errorLogger } from '../../utils/errorLogger';
 
-function CrashOnRender() {
+// Annotated `never` (function declarations infer `void`, which is not a
+// valid JSX element type) — this component always throws by design.
+function CrashOnRender(): never {
   throw new Error('render exploded');
 }
 

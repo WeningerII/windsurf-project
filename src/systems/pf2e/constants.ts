@@ -1,4 +1,10 @@
-/** Skill → Ability mapping (Pathfinder 2e) */
+/**
+ * Skill → Ability mapping (Pathfinder 2e).
+ *
+ * Deliberately excludes the generic 'lore' placeholder: lores are per-topic
+ * proficiencies stored in `loreProficiencies` and rendered by the dedicated
+ * Lore section, so a generic row here would write to the wrong store.
+ */
 export const SKILL_ABILITIES: Record<string, string> = {
   acrobatics: 'dex',
   arcana: 'int',
@@ -7,7 +13,6 @@ export const SKILL_ABILITIES: Record<string, string> = {
   deception: 'cha',
   diplomacy: 'cha',
   intimidation: 'cha',
-  lore: 'int',
   medicine: 'wis',
   nature: 'wis',
   occultism: 'int',

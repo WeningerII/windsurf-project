@@ -12,8 +12,10 @@ import { Pf2eProficiencyBadge } from './Pf2eProficiencyBadge';
 interface Props {
   document: CharacterDocument<Pf2eDataModel>;
   canUpdate: boolean;
-  classDcScore: number;
+  /** Key-ability score for the class DC, or null when no key ability is set. */
+  classDcScore: number | null;
   onHitPointsChange: (current: number, max: number) => void;
+  onClassDcTierCycle: () => void;
   onPerceptionTierCycle: () => void;
   onPerceptionRoll: () => Promise<RollResult>;
   onShortRest?: () => void;
@@ -25,12 +27,14 @@ export const Pf2eOverview: React.FC<Props> = ({
   canUpdate,
   classDcScore,
   onHitPointsChange,
+  onClassDcTierCycle,
   onPerceptionTierCycle,
   onPerceptionRoll,
   onShortRest,
   onLongRest,
 }) => {
   const data = document.system;
+  const classDcProficiency = data.classDcProficiency ?? { tier: 'trained' as const, total: 0 };
 
   return (
     <>
@@ -63,9 +67,14 @@ export const Pf2eOverview: React.FC<Props> = ({
               }
               className="w-14 text-center text-lg bg-transparent border-b border-input focus:outline-none focus:border-primary tabular-nums"
               disabled={!canUpdate}
-              title="Max HP"
+              title="Max HP. Edits persist as a manual bonus on top of the computed maximum."
             />
           </div>
+          {(data.hitPoints.maxBonus ?? 0) !== 0 && (
+            <div className="text-xs text-muted-foreground tabular-nums">
+              {formatMod(data.hitPoints.maxBonus ?? 0)} manual max
+            </div>
+          )}
           {data.hitPoints.temp > 0 && (
             <div className="text-xs text-blue-500 tabular-nums">+{data.hitPoints.temp} temp</div>
           )}
@@ -107,8 +116,17 @@ export const Pf2eOverview: React.FC<Props> = ({
           <div className="text-xs font-medium text-muted-foreground flex items-center justify-center gap-1">
             <Swords className="w-3 h-3" /> Class DC
           </div>
-          <div className="text-2xl font-bold tabular-nums">
-            {10 + data.level + 2 + abilityMod(classDcScore)}
+          <div className="flex items-center justify-center gap-2">
+            <Pf2eProficiencyBadge
+              proficiency={classDcProficiency}
+              canUpdate={canUpdate}
+              onClick={onClassDcTierCycle}
+            />
+            <span className="text-2xl font-bold tabular-nums">
+              {classDcScore != null
+                ? 10 + classDcProficiency.total + abilityMod(classDcScore)
+                : '—'}
+            </span>
           </div>
         </div>
       </div>

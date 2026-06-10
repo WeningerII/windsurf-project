@@ -7,6 +7,7 @@ import { Pf1eEngine } from '../systems/pf1e/engine';
 import {
   resetD20LegacySpellSlots,
   setD20LegacyPreparedSpell,
+  setD20LegacySpellSlotTotal,
   spendD20LegacySpellSlot,
   type D20LegacyData,
 } from '../systems/d20-legacy/d20LegacySheetShared';
@@ -154,5 +155,88 @@ describe('d20 legacy Vancian preparation', () => {
       preparedSpellId: 'pf1e-bless',
       spontaneousSpellIds: ['pf1e-cure-light-wounds'],
     });
+  });
+});
+
+describe('d20 legacy manual spell-slot totals (regression: prepareData reverted edits)', () => {
+  it('keeps a manually raised total across repeated prepares', () => {
+    const engine = new Pf1eEngine();
+    const prepared = engine.prepareData(makePf1eClericDoc());
+    // Cleric 3 table baseline at 1st level is 2 (Wis 10 → no bonus spells).
+    expect(prepared.system.spellsPerDay?.[1]).toMatchObject({ total: 2 });
+
+    // The sheet's slot editor raises the 1st-level total to 5 (e.g. a house
+    // bonus); the edit is recorded as a +3 delta over the automated baseline.
+    const edited = {
+      ...prepared,
+      system: {
+        ...prepared.system,
+        spellsPerDay: setD20LegacySpellSlotTotal(prepared.system.spellsPerDay, 1, 5),
+      },
+    };
+    expect(edited.system.spellsPerDay?.[1]).toEqual({ total: 5, used: 0, manualBonus: 3 });
+
+    const reprepared = engine.prepareData(engine.prepareData(edited));
+    expect(reprepared.system.spellsPerDay?.[1]).toEqual({ total: 5, used: 0, manualBonus: 3 });
+  });
+
+  it('survives level-down sanely: baseline shrinks, the manual delta is kept, totals floor at 0', () => {
+    const engine = new Pf1eEngine();
+    const doc = makePf1eClericDoc();
+    const prepared = engine.prepareData(doc);
+    const edited = {
+      ...prepared,
+      system: {
+        ...prepared.system,
+        spellsPerDay: setD20LegacySpellSlotTotal(prepared.system.spellsPerDay, 1, 3), // +1 over baseline 2
+      },
+    };
+
+    // Level the cleric down to 1: table baseline drops to 1, manual +1 stays.
+    const leveledDown = engine.prepareData({
+      ...edited,
+      system: {
+        ...edited.system,
+        classLevels: edited.system.classLevels.map((classLevel) => ({
+          ...classLevel,
+          level: 1,
+          hitDieRolls: [8],
+        })),
+      },
+    });
+    expect(leveledDown.system.spellsPerDay?.[1]).toEqual({ total: 2, used: 0, manualBonus: 1 });
+
+    // A manual reduction below the automated baseline floors at 0 after a
+    // level-down rather than going negative.
+    const reduced = {
+      ...prepared,
+      system: {
+        ...prepared.system,
+        spellsPerDay: setD20LegacySpellSlotTotal(prepared.system.spellsPerDay, 1, 0), // −2 under baseline
+      },
+    };
+    const reducedDown = engine.prepareData({
+      ...reduced,
+      system: {
+        ...reduced.system,
+        classLevels: reduced.system.classLevels.map((classLevel) => ({
+          ...classLevel,
+          level: 1,
+          hitDieRolls: [8],
+        })),
+      },
+    });
+    expect(reducedDown.system.spellsPerDay?.[1]).toEqual({ total: 0, used: 0, manualBonus: -2 });
+  });
+
+  it('keeps rows added via "Add Level" (whole total recorded as manualBonus) across prepares', () => {
+    const engine = new Dnd35eEngine();
+    const doc = makeDnd35eClericDoc({
+      // Shape written by addSpellLevel for a level the class table lacks.
+      spellsPerDay: { 9: { total: 1, used: 0, manualBonus: 1 } },
+    });
+
+    const prepared = engine.prepareData(doc);
+    expect(prepared.system.spellsPerDay?.[9]).toEqual({ total: 1, used: 0, manualBonus: 1 });
   });
 });

@@ -36,10 +36,13 @@ function normalizeConditionTrack(track?: Partial<Mam3eConditionTrack>): Mam3eCon
  * M&M 3e Toughness failure effects (Hero's Handbook p.191)
  * 1-4: Bruised
  * 5-9: Bruised + Dazed (or Staggered if already Dazed)
- * 10-14: Bruised + Staggered
+ * 10-14: Bruised + Staggered (or Incapacitated if already Staggered)
  * 15+: Incapacitated
+ *
+ * Exported so the conditions-tab mutation handlers share this banding instead
+ * of duplicating it.
  */
-function applyToughnessFailure(
+export function applyMam3eToughnessFailure(
   track: Mam3eConditionTrack,
   failureMargin: number
 ): Mam3eConditionTrack {
@@ -53,7 +56,13 @@ function applyToughnessFailure(
 
   if (failureMargin >= 10) {
     next.bruised += 1;
-    next.staggered = true;
+    // Per the Damage rules, a target that is Staggered again becomes
+    // Incapacitated.
+    if (next.staggered) {
+      next.incapacitated = true;
+    } else {
+      next.staggered = true;
+    }
     return next;
   }
 
@@ -96,6 +105,19 @@ export class Mam3eEngine implements SystemEngine<Mam3eDataModel> {
     };
     const data = clonedDoc.system;
     data.conditionTrack = normalizeConditionTrack(data.conditionTrack);
+
+    // Negative ability ranks are legitimate in M&M 3e, but negative purchased
+    // skill/defense ranks are not — they would refund points and lower
+    // totals. Clamp defensively (the mutation handlers also clamp).
+    (Object.keys(data.defenses) as Array<keyof typeof data.defenses>).forEach((key) => {
+      data.defenses[key] = {
+        ...data.defenses[key],
+        rank: Math.max(0, data.defenses[key].rank),
+      };
+    });
+    Object.entries(data.skills).forEach(([skillId, skill]) => {
+      data.skills[skillId] = { ...skill, rank: Math.max(0, skill.rank) };
+    });
 
     // 1. Calculate Ability Costs (2 PP per rank)
     let abilityCost = 0;
@@ -209,13 +231,12 @@ export class Mam3eEngine implements SystemEngine<Mam3eDataModel> {
       }
     }
 
-    // Ranged attack bonus + ranged effect rank ≤ 2 × PL
+    // Ranged attack bonus + ranged effect rank ≤ 2 × PL. Perception-range
+    // attacks require no attack check, so they are excluded here and capped
+    // only by the effect-rank ≤ PL check below.
     const rangedAttackBonus = data.abilities.dex + (data.skills['ranged-combat']?.rank ?? 0);
     const rangedEffectRank = data.powers
-      .filter(
-        (power) =>
-          power.type === 'attack' && (power.range === 'ranged' || power.range === 'perception')
-      )
+      .filter((power) => power.type === 'attack' && power.range === 'ranged')
       .reduce((max, power) => Math.max(max, getPowerRank(power)), 0);
     if (rangedEffectRank > 0) {
       const rangedAttackEffect = rangedAttackBonus + rangedEffectRank;
@@ -270,6 +291,11 @@ export class Mam3eEngine implements SystemEngine<Mam3eDataModel> {
     } else if (checkId in data.defenses) {
       // Defense check (e.g., Toughness save)
       mod = data.defenses[checkId as keyof typeof data.defenses].total;
+      // Each Bruised condition imposes a cumulative -1 on further Toughness
+      // resistance checks (Hero's Handbook, Damage).
+      if (checkId === 'toughness') {
+        mod -= normalizeConditionTrack(data.conditionTrack).bruised;
+      }
       flavor = `${checkId.charAt(0).toUpperCase() + checkId.slice(1)} Check`;
     }
 
@@ -298,7 +324,7 @@ export class Mam3eEngine implements SystemEngine<Mam3eDataModel> {
     if (margin <= 0) return clonedDoc;
 
     const current = normalizeConditionTrack(clonedDoc.system.conditionTrack);
-    clonedDoc.system.conditionTrack = applyToughnessFailure(current, margin);
+    clonedDoc.system.conditionTrack = applyMam3eToughnessFailure(current, margin);
     return clonedDoc;
   }
 }

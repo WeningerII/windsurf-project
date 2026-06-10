@@ -39,7 +39,11 @@ export function CurrencyEditor<T extends Record<string, number>>({
             <input
               type="number"
               value={(currency as Record<string, number>)[key] ?? 0}
-              onChange={(e) => onChange?.({ ...currency, [key]: parseNum(e.target.value, 0) } as T)}
+              onChange={(e) =>
+                // HTML min only affects spinners; clamp typed values so
+                // negative amounts can never be written into the document.
+                onChange?.({ ...currency, [key]: Math.max(0, parseNum(e.target.value, 0)) } as T)
+              }
               className="w-16 text-center bg-transparent border-b border-input focus:outline-none focus:border-primary tabular-nums text-sm"
               min={0}
               disabled={!onChange}

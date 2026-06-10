@@ -265,7 +265,7 @@ export const CampaignManager: React.FC<Props> = ({
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="h-7 w-7 opacity-0 group-hover/member:opacity-100 transition-opacity text-muted-foreground hover:text-destructive"
+                              className="h-7 w-7 opacity-0 group-hover/member:opacity-100 focus-visible:opacity-100 transition-opacity text-muted-foreground hover:text-destructive"
                               onClick={() => onRemoveCharacter(campaign.id, member.id)}
                               title={`Remove ${member.name} from campaign`}
                             >

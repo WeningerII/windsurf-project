@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useDeferredValue } from 'react';
 import { Search, Filter } from 'lucide-react';
 
 interface Equipment {
@@ -22,6 +22,7 @@ export const EquipmentBrowser: React.FC<EquipmentBrowserProps> = ({
   onSelectEquipment,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const deferredSearchTerm = useDeferredValue(searchTerm);
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [selectedRarity, setSelectedRarity] = useState<string | null>(null);
 
@@ -29,18 +30,28 @@ export const EquipmentBrowser: React.FC<EquipmentBrowserProps> = ({
 
   const rarities = useMemo(() => [...new Set(equipment.map((e) => e.rarity))].sort(), [equipment]);
 
+  const searchHaystacks = useMemo(() => {
+    const haystacks = new Map<string, string>();
+    for (const item of equipment) {
+      haystacks.set(item.id, `${item.name} ${item.description}`.toLowerCase());
+    }
+    return haystacks;
+  }, [equipment]);
+
   const filteredEquipment = useMemo(() => {
+    const normalizedSearch = deferredSearchTerm.trim().toLowerCase();
+
     return equipment.filter((item) => {
       const matchesSearch =
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.description.toLowerCase().includes(searchTerm.toLowerCase());
+        normalizedSearch.length === 0 ||
+        (searchHaystacks.get(item.id) ?? '').includes(normalizedSearch);
 
       const matchesType = selectedType === null || item.type === selectedType;
       const matchesRarity = selectedRarity === null || item.rarity === selectedRarity;
 
       return matchesSearch && matchesType && matchesRarity;
     });
-  }, [equipment, searchTerm, selectedType, selectedRarity]);
+  }, [equipment, searchHaystacks, deferredSearchTerm, selectedType, selectedRarity]);
 
   return (
     <div className="w-full space-y-6">
@@ -95,6 +106,7 @@ export const EquipmentBrowser: React.FC<EquipmentBrowserProps> = ({
         {/* Clear Filters */}
         <div className="flex items-end">
           <button
+            type="button"
             onClick={() => {
               setSearchTerm('');
               setSelectedType(null);
@@ -117,10 +129,11 @@ export const EquipmentBrowser: React.FC<EquipmentBrowserProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {filteredEquipment.length > 0 ? (
             filteredEquipment.map((item) => (
-              <div
+              <button
+                type="button"
                 key={item.id}
                 onClick={() => onSelectEquipment?.(item)}
-                className="p-4 border border-input rounded-lg hover:border-primary/50 hover:shadow-md transition-all cursor-pointer"
+                className="w-full p-4 border border-input rounded-lg text-left hover:border-primary/50 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-all cursor-pointer"
               >
                 <div className="flex justify-between items-start mb-2">
                   <div>
@@ -149,7 +162,7 @@ export const EquipmentBrowser: React.FC<EquipmentBrowserProps> = ({
                     ))}
                   </div>
                 )}
-              </div>
+              </button>
             ))
           ) : (
             <div className="col-span-full text-center py-8 text-muted-foreground">

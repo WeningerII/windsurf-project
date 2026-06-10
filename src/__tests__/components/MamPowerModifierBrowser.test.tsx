@@ -10,7 +10,9 @@ describe('MamPowerModifierBrowser', () => {
     render(<MamPowerModifierBrowser modifiers={[accurate, activation]} />);
 
     expect(screen.getByText('Accurate')).toBeInTheDocument();
-    expect(screen.getByText('+1/rank')).toBeInTheDocument();
+    // Accurate is a flat extra (1 point per rank of Accurate — Hero's
+    // Handbook, Extras), not +1 per effect rank.
+    expect(screen.getByText('+1 flat')).toBeInTheDocument();
     expect(screen.getByText('Activation')).toBeInTheDocument();
     expect(screen.getByText('-1 flat')).toBeInTheDocument();
   });

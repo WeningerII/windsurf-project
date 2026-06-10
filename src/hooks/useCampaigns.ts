@@ -1,11 +1,19 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { Campaign } from '../types/core/campaign';
-import { loadCampaigns, saveCampaigns, clearCampaignStorage } from '../utils/campaignStorage';
+import {
+  loadCampaigns,
+  saveCampaigns,
+  clearCampaignStorage,
+  parseCampaignsSnapshot,
+  CAMPAIGNS_STORAGE_KEY,
+} from '../utils/campaignStorage';
+import { sameCampaignSignatures } from '../utils/documentSignature';
 import { useDebouncedPersistence } from './useDebouncedPersistence';
 
 export const useCampaigns = () => {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setCampaigns(loadCampaigns());
@@ -13,7 +21,14 @@ export const useCampaigns = () => {
   }, []);
 
   const persist = useCallback((next: Campaign[]) => {
-    saveCampaigns(next);
+    // The write runs inside a debounce timer: an unguarded QuotaExceededError
+    // would become an uncaught exception and the failure would be invisible.
+    try {
+      saveCampaigns(next);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to save campaigns');
+    }
   }, []);
 
   const persistence = useDebouncedPersistence(persist);
@@ -108,6 +123,14 @@ export const useCampaigns = () => {
           }
         }
         const next = Array.from(byId.values());
+        if (sameCampaignSignatures(prev, next)) {
+          // No-op merge: keep state identity and roll the unused write
+          // generation back — leaving it consumed would drop a still-pending
+          // debounced save from a real edit (and would echo cross-tab storage
+          // events back and forth forever).
+          persistence.abandonVersion(persistVersion);
+          return prev;
+        }
         persistence.persist(next, persistVersion);
         return next;
       });
@@ -115,18 +138,63 @@ export const useCampaigns = () => {
     [persistence]
   );
 
+  // Cross-tab reconciliation: merge snapshots written by other tabs through
+  // the updatedAt-aware upsert above. Loop-safe via its signature
+  // short-circuit (a no-change merge schedules no write, so no event echo).
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key !== CAMPAIGNS_STORAGE_KEY || !event.newValue) return;
+      const incoming = parseCampaignsSnapshot(event.newValue);
+      if (incoming === null || incoming.length === 0) return;
+      addCampaigns(incoming);
+    };
+
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, [addCampaigns]);
+
+  // Replace the collection with a sync-merged snapshot. Unlike `addCampaigns`
+  // (upsert-only), the merged collection is authoritative: entries missing
+  // from it — e.g. tombstoned on another device — are removed locally.
+  const applyMergedCampaigns = useCallback(
+    (merged: Campaign[]) => {
+      const persistVersion = persistence.beginVersion();
+      setCampaigns((prev) => {
+        if (sameCampaignSignatures(prev, merged)) {
+          // See addCampaigns: a no-op merge must not consume a version token.
+          persistence.abandonVersion(persistVersion);
+          return prev;
+        }
+        persistence.persist(merged, persistVersion);
+        return merged;
+      });
+    },
+    [persistence]
+  );
+
   const clearAllCampaigns = useCallback(() => {
+    // Begin-without-persist is deliberate: it invalidates any pending write
+    // of the old collection so it cannot land after the clear.
     persistence.beginVersion();
     persistence.cancel();
     setCampaigns([]);
     clearCampaignStorage();
   }, [persistence]);
 
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
+
   return {
     campaigns,
     isLoading,
+    error,
+    clearError,
     addCampaign,
     addCampaigns,
+    applyMergedCampaigns,
     updateCampaign,
     deleteCampaign,
     addCharacterToCampaign,

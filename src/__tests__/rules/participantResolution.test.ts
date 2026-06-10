@@ -134,6 +134,74 @@ describe('resolveMultiTargetAttack — N targets, independent rolls', () => {
     );
   });
 
+  it('REGRESSION (05-L2): listing the same target twice rolls two distinct streams', () => {
+    // Two strikes at one foe must not be byte-identical rolls. The occurrence
+    // index feeds the nonce, so the pair stays order-independent for distinct
+    // targets while repeats separate.
+    const result = resolveMultiTargetAttack({
+      actorId: 'fighter',
+      seed: 'flurry',
+      attackEffects: [attackEffect(5)],
+      damageEffects: [
+        {
+          id: 'd',
+          systemId: SID,
+          target: 'damage',
+          operation: 'add-die',
+          value: 8,
+          stackPolicy: 'sum',
+          source: { kind: 'item', label: 'sword' },
+          label: '1d8',
+        },
+      ],
+      targets: [
+        { targetId: 'ogre', targetValue: 12 },
+        { targetId: 'ogre', targetValue: 12 },
+      ],
+    });
+    expect(result.perTarget).toHaveLength(2);
+    const [first, second] = result.perTarget.map((entry) => JSON.stringify(entry.resolution));
+    expect(first).not.toBe(second);
+
+    // The first occurrence shares the plain (seed, actor, target) stream, so a
+    // single-strike resolution of the same pairing is unchanged.
+    const single = resolveMultiTargetAttack({
+      actorId: 'fighter',
+      seed: 'flurry',
+      attackEffects: [attackEffect(5)],
+      damageEffects: [
+        {
+          id: 'd',
+          systemId: SID,
+          target: 'damage',
+          operation: 'add-die',
+          value: 8,
+          stackPolicy: 'sum',
+          source: { kind: 'item', label: 'sword' },
+          label: '1d8',
+        },
+      ],
+      targets: [{ targetId: 'ogre', targetValue: 12 }],
+    });
+    expect(JSON.stringify(single.perTarget[0].resolution)).toBe(first);
+  });
+
+  it('REGRESSION (05-L2): participant seeds cannot collide via separator injection', () => {
+    // Before length-prefixing, actor "a->b" vs "a" with targets "c" vs "b->c"
+    // (and ::-shaped ids) could join to the same seed string and share rolls.
+    const rolls = (actorId: string, targetId: string) => {
+      const result = resolveMultiTargetAttack({
+        actorId,
+        seed: 'base',
+        attackEffects: [attackEffect(0)],
+        targets: [{ targetId, targetValue: 10 }],
+      });
+      return JSON.stringify(result.perTarget[0].resolution.d20Terms);
+    };
+    expect(rolls('a->b', 'c')).not.toBe(rolls('a', 'b->c'));
+    expect(rolls('a::x', 'y')).not.toBe(rolls('a', 'x::y'));
+  });
+
   it('per-target context applies (a vulnerable target can have extra attack effects)', () => {
     const result = resolveMultiTargetAttack({
       actorId: 'a',

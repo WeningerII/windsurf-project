@@ -74,6 +74,31 @@ describe('InventoryManager', () => {
     );
   });
 
+  it('clamps typed quantity to at least 1 and weight to at least 0', async () => {
+    const user = userEvent.setup();
+    const onAddItem = vi.fn();
+
+    render(<InventoryManager items={[]} onAddItem={onAddItem} />);
+
+    await user.click(screen.getByRole('button', { name: /add item/i }));
+    await user.type(screen.getByPlaceholderText('e.g., Longsword'), 'Cursed Anvil');
+
+    const quantityInput = screen.getByDisplayValue('1');
+    fireEvent.change(quantityInput, { target: { value: '-3' } });
+    expect(quantityInput).toHaveValue(1);
+
+    const weightInput = screen.getByDisplayValue('0');
+    fireEvent.change(weightInput, { target: { value: '-12.5' } });
+    expect(weightInput).toHaveValue(0);
+
+    const addButtons = screen.getAllByRole('button', { name: /^add item$/i });
+    await user.click(addButtons[1]);
+
+    expect(onAddItem).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'Cursed Anvil', quantity: 1, weight: 0 })
+    );
+  });
+
   it('removes an item when remove button is clicked', async () => {
     const user = userEvent.setup();
     const onRemoveItem = vi.fn();

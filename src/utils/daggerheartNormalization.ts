@@ -21,6 +21,7 @@ import {
   findDaggerheartInventoryDefinitionByName,
   getDaggerheartInventoryDefinition,
 } from './daggerheartInventory';
+import { LOADOUT_LIMIT } from '../systems/daggerheart/daggerheartSheetConstants';
 import { stripDiacritics } from './unicode';
 
 const DEFAULTS = createDefaultDaggerheartData();
@@ -167,9 +168,22 @@ function normalizeInventoryEntries(
 function normalizeDomainCardEntries(
   domainCards: DaggerheartDataModel['domainCards']
 ): DaggerheartDataModel['domainCards'] {
+  // Legacy/imported documents may carry more than LOADOUT_LIMIT non-vault
+  // cards (the mutation layer enforces the cap, but nothing repairs
+  // pre-existing violations). Spill the excess into the vault in stable
+  // document order so passive bonuses cannot exceed the 5-card loadout.
+  let loadoutCount = 0;
+
   return domainCards.map((entry, index) => {
     const definition = resolveDomainCard(entry);
     const normalizedDomain = resolveNamedEntry(String(entry.domain ?? ''), domainLookup);
+    let location: 'loadout' | 'vault' = entry.location === 'vault' ? 'vault' : 'loadout';
+    if (location === 'loadout') {
+      loadoutCount += 1;
+      if (loadoutCount > LOADOUT_LIMIT) {
+        location = 'vault';
+      }
+    }
 
     return {
       ...entry,
@@ -182,7 +196,7 @@ function normalizeDomainCardEntries(
         Math.max(1, Number.isFinite(entry.level) ? Math.trunc(entry.level) : 1),
       type: definition?.type ?? entry.type,
       recallCost: definition?.recallCost ?? entry.recallCost,
-      location: entry.location === 'vault' ? 'vault' : 'loadout',
+      location,
       description: definition?.description ?? entry.description ?? '',
     };
   });
@@ -236,7 +250,8 @@ export function normalizeDaggerheartDocument(
     system.subclass = selectedSubclass.name;
   }
 
-  if (looksLikeLegacyStarterState(system)) {
+  const isLegacyStarterState = looksLikeLegacyStarterState(system);
+  if (isLegacyStarterState) {
     if (selectedClass) {
       nextDocument = applyDaggerheartClassTemplate(nextDocument, selectedClass, {
         ancestry: selectedAncestry,
@@ -272,12 +287,18 @@ export function normalizeDaggerheartDocument(
   system.inventory = normalizeInventoryEntries(system.inventory || []);
   system.domainCards = normalizeDomainCardEntries(system.domainCards || []);
 
+  // Hydrating HP/evasion from the class base is only safe for blank legacy
+  // starter sheets. Without the gate, any legitimate document whose HP happens
+  // to equal the default {6, 6} (e.g. a Bard whose max was raised to 6 by an
+  // import or future advancement) would silently snap back to the class base
+  // on every prepareData.
   const ancestryAdjustments = getDaggerheartAncestryAdjustments(selectedAncestry);
-  if (selectedClass && system.evasion === DEFAULTS.evasion) {
+  if (isLegacyStarterState && selectedClass && system.evasion === DEFAULTS.evasion) {
     system.evasion = selectedClass.startingEvasion + ancestryAdjustments.evasion;
   }
 
   if (
+    isLegacyStarterState &&
     selectedClass &&
     system.hitPoints.current === DEFAULTS.hitPoints.current &&
     system.hitPoints.max === DEFAULTS.hitPoints.max

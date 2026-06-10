@@ -4,7 +4,7 @@ export const human: Species = {
   id: 'human',
   name: 'Human',
   system: 'dnd-3.5e',
-  source: 'PHB 3.5',
+  source: 'SRD 3.5',
 
   abilityScoreIncrease: [],
 

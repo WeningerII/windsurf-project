@@ -12,7 +12,7 @@ import { generateUUID, initBrowserCompat } from './utils/browserCompat';
 import { SystemSheetRenderer } from './components/SystemSheetRenderer';
 import { CharacterDocument, SystemDataModel } from './types/core/document';
 import { useDocuments } from './hooks/useDocuments';
-import { exportDocuments, importDocuments } from './utils/documentStorage';
+import { exportDocuments, importDocumentsWithReport } from './utils/documentStorage';
 import { useKeyboardNavigation } from './hooks/useKeyboardNavigation';
 import { Skeleton } from './components/ui/Skeleton';
 import { ConfirmDialog } from './components/ui/ConfirmDialog';
@@ -31,6 +31,10 @@ import { AppHeader } from './components/AppHeader';
 
 const STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const STORAGE_WARNING_THRESHOLD = Math.floor(STORAGE_LIMIT_BYTES * 0.8);
+// Trailing debounce for the pending-sync-count recomputation: reading the
+// queues re-parses full collection snapshots from localStorage, which must
+// not happen on every keystroke of a controlled sheet/notes field.
+const PENDING_SYNC_COUNT_DEBOUNCE_MS = 2000;
 
 function cloneSystemData(system: SystemDataModel): SystemDataModel {
   if (typeof structuredClone === 'function') {
@@ -47,6 +51,7 @@ function AppContent() {
     clearError,
     addDocument,
     addDocuments,
+    applyMergedDocuments,
     updateDocument,
     deleteDocument,
     clearAllDocuments,
@@ -63,7 +68,10 @@ function AppContent() {
     sync: syncDocuments,
   } = useSync({
     documents,
-    onMerge: addDocuments,
+    // The sync merge is authoritative (it already applied tombstones), so it
+    // must replace the collection — an upsert-only merge could never remove
+    // an entity deleted on another device.
+    onMerge: applyMergedDocuments,
   });
   const [currentDocId, setCurrentDocId] = useState<string | null>(null);
   const [selectedSystem, setSelectedSystem] = useState<GameSystemId | null>(null);
@@ -79,8 +87,10 @@ function AppContent() {
   const { toast } = useToast();
   const {
     campaigns,
+    error: campaignError,
+    clearError: clearCampaignError,
     addCampaign,
-    addCampaigns,
+    applyMergedCampaigns,
     updateCampaign,
     deleteCampaign,
     addCharacterToCampaign,
@@ -104,7 +114,8 @@ function AppContent() {
     sync: syncCampaigns,
   } = useCampaignSync({
     campaigns,
-    onMerge: addCampaigns,
+    // Replace, not upsert — see the documents onMerge above.
+    onMerge: applyMergedCampaigns,
   });
   const syncState = combineSyncStates([documentSyncState, campaignSyncState]);
   const lastSyncedAt = getMostRecentSyncDate([lastDocumentSyncedAt, lastCampaignSyncedAt]);
@@ -112,10 +123,15 @@ function AppContent() {
   // value is impure with respect to React state.  We re-derive it whenever a
   // sync transition or an entity-collection edit fires (those are the only
   // events that grow or drain the queues) and stash the result so the
-  // dropdown does not need to know about the storage layer.
+  // dropdown does not need to know about the storage layer.  The read is
+  // debounced (trailing) because `documents`/`campaigns` change per keystroke
+  // in controlled fields, and each read re-parses the queued snapshots.
   const [pendingSyncCount, setPendingSyncCount] = useState<number>(() => getPendingSyncCount());
   useEffect(() => {
-    setPendingSyncCount(getPendingSyncCount());
+    const timer = window.setTimeout(() => {
+      setPendingSyncCount(getPendingSyncCount());
+    }, PENDING_SYNC_COUNT_DEBOUNCE_MS);
+    return () => window.clearTimeout(timer);
   }, [syncState, documents, campaigns]);
   const syncAll = useCallback(() => {
     void syncDocuments();
@@ -170,7 +186,14 @@ function AppContent() {
     return filtered;
   }, [documents, sortOption, systemFilter]);
 
+  // Only the character-list view renders the storage warning, so skip the
+  // full-collection serialization entirely while a sheet is open — otherwise
+  // it would re-run on every keystroke in a controlled sheet field.
+  const isCharacterListVisible = currentDocId === null;
   const storageUsageBytes = useMemo(() => {
+    if (!isCharacterListVisible) {
+      return 0;
+    }
     try {
       const serialized = JSON.stringify({
         version: '2.0',
@@ -181,7 +204,7 @@ function AppContent() {
     } catch {
       return 0;
     }
-  }, [documents]);
+  }, [documents, isCharacterListVisible]);
 
   const storageUsagePercent = Math.min(
     100,
@@ -191,11 +214,15 @@ function AppContent() {
   const storageUsageMb = (storageUsageBytes / (1024 * 1024)).toFixed(2);
 
   const triggerJsonDownload = useCallback((jsonPayload: string, filename: string) => {
-    const dataUri = `data:application/json;charset=utf-8,${encodeURIComponent(jsonPayload)}`;
+    // Blob URLs avoid Chromium's ~2 MB cap on data: anchors — "Export All"
+    // must keep working exactly when storage is near the ~5 MB limit.
+    const blob = new Blob([jsonPayload], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.setAttribute('href', dataUri);
+    link.setAttribute('href', url);
     link.setAttribute('download', filename);
     link.click();
+    URL.revokeObjectURL(url);
   }, []);
 
   // Initialize browser compatibility checks on mount
@@ -230,8 +257,15 @@ function AppContent() {
   };
 
   const handleDeleteDocument = (id: string) => {
-    deleteDocument(id);
-    if (currentDocId === id) setCurrentDocId(null);
+    const doc = documents.find((d) => d.id === id);
+    if (!doc) return;
+    // Destructive: route through the same confirm flow as "Clear All
+    // Characters" / "Delete Campaign" instead of deleting on a single click.
+    showConfirm('Delete Character', `This will permanently delete "${doc.name}".`, () => {
+      deleteDocument(id);
+      if (currentDocId === id) setCurrentDocId(null);
+      toast(`Deleted "${doc.name}"`, 'success');
+    });
   };
 
   const handleExportDocument = (doc: CharacterDocument<SystemDataModel>) => {
@@ -287,7 +321,7 @@ function AppContent() {
       reader.onload = (event) => {
         try {
           const jsonString = event.target?.result as string;
-          const imported = importDocuments(jsonString);
+          const { documents: imported, droppedCount } = importDocumentsWithReport(jsonString);
           if (imported.length > 0) {
             const normalized = imported.map((d) => ({
               ...d,
@@ -298,8 +332,17 @@ function AppContent() {
             addDocuments(normalized);
             setCurrentDocId(normalized[0].id);
             toast(
-              `Imported ${normalized.length} character${normalized.length !== 1 ? 's' : ''}`,
-              'success'
+              droppedCount > 0
+                ? `Imported ${normalized.length} of ${normalized.length + droppedCount} characters — ${droppedCount} invalid ${droppedCount === 1 ? 'entry' : 'entries'} skipped`
+                : `Imported ${normalized.length} character${normalized.length !== 1 ? 's' : ''}`,
+              droppedCount > 0 ? 'warning' : 'success'
+            );
+          } else {
+            toast(
+              droppedCount > 0
+                ? `Nothing imported — all ${droppedCount} ${droppedCount === 1 ? 'entry was' : 'entries were'} invalid.`
+                : 'Nothing imported — the file contains no characters.',
+              'error'
             );
           }
         } catch {
@@ -321,8 +364,10 @@ function AppContent() {
       description: 'Back to character list',
     },
     {
+      // Alt+N, not Ctrl+N: Chromium never delivers Ctrl/Cmd+N to the page
+      // (it opens a new window).
       key: 'n',
-      ctrl: true,
+      alt: true,
       callback: () => {
         if (selectedSystem && !currentDocId) handleCreateCharacter();
       },
@@ -356,8 +401,8 @@ function AppContent() {
   ]);
 
   const currentDoc = documents.find((d) => d.id === currentDocId);
-  const appError = error ?? sceneError;
-  const clearAppError = error ? clearError : clearSceneError;
+  const appError = error ?? campaignError ?? sceneError;
+  const clearAppError = error ? clearError : campaignError ? clearCampaignError : clearSceneError;
 
   return (
     <div className="min-h-screen bg-background">
@@ -422,7 +467,32 @@ function AppContent() {
           </div>
         ) : currentDoc ? (
           <div className="max-w-7xl mx-auto">
-            <SystemSheetRenderer document={currentDoc} onUpdate={updateDocument} />
+            {/* Scoped boundary: a lazy sheet chunk that fails to load (stale
+                deploy, flaky offline cache) must not take down the whole app.
+                Keyed by document id so switching characters retries cleanly. */}
+            <ErrorBoundary
+              key={currentDoc.id}
+              fallback={
+                <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-8 text-center space-y-4">
+                  <AlertCircle className="mx-auto h-8 w-8 text-destructive" />
+                  <div className="space-y-1">
+                    <h2 className="text-lg font-semibold">This character sheet failed to load</h2>
+                    <p className="text-sm text-muted-foreground">
+                      The sheet may have failed to download (for example after an update or while
+                      offline). Reloading usually fixes it — your character data is safe.
+                    </p>
+                  </div>
+                  <div className="flex justify-center gap-2">
+                    <Button onClick={() => window.location.reload()}>Reload sheet</Button>
+                    <Button variant="outline" onClick={handleReturnToList}>
+                      Back to list
+                    </Button>
+                  </div>
+                </div>
+              }
+            >
+              <SystemSheetRenderer document={currentDoc} onUpdate={updateDocument} />
+            </ErrorBoundary>
           </div>
         ) : (
           <div className="max-w-6xl mx-auto space-y-10">
@@ -585,15 +655,15 @@ function AppContent() {
   );
 }
 
-// Wrap entire app in ErrorBoundary + ToastProvider for crash protection and notifications
+// Root crash protection lives in main.tsx (a single ErrorBoundary around
+// AuthProvider + App); wrapping again here was redundant. This component only
+// provides the toast context.
 function App() {
   return (
-    <ErrorBoundary>
-      <ToastProvider>
-        <AppContent />
-        <ServiceWorkerUpdateBanner />
-      </ToastProvider>
-    </ErrorBoundary>
+    <ToastProvider>
+      <AppContent />
+      <ServiceWorkerUpdateBanner />
+    </ToastProvider>
   );
 }
 

@@ -67,6 +67,11 @@ export interface Dnd5e2024DataModel extends SystemDataModel {
   skillProficiencies: Record<string, SkillProficiency>;
 
   hitPoints: HitPoints;
+  /**
+   * Unhalved maximum HP, maintained by the engine (shared with 2014; the 2024
+   * rules never halve it, so here it simply mirrors `hitPoints.max`).
+   */
+  baseMaxHP?: number;
   hitDice: HitDice[];
   deathSaves: DeathSaves;
   conditions: Dnd5eCondition[];

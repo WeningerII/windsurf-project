@@ -60,9 +60,11 @@ npm run runtime:doctor  # Show host/runtime policy state and recovery commands
 **Code Quality:**
 ```bash
 npm run lint       # Run ESLint
+npm run typecheck:test  # Type-check unit tests, e2e specs, and tool configs
 npm run validate   # Validate all game data
 npm run check:doc-drift  # Validate live docs, historical banners, and audited support-copy claims
-npm test           # Run the Vitest suite
+npm test           # Run the Vitest suite once
+npm run test:watch # Run the Vitest suite in watch mode
 npm run test:ui    # Interactive test UI (Vitest)
 npm run test:coverage  # Generate coverage report (Node 20.19+ required)
 ```
@@ -108,7 +110,7 @@ npm run dev -- --port 3000
 npm test -- path/to/test.ts
 
 # Run tests in watch mode
-npm test -- --watch
+npm run test:watch
 
 # Clear test cache
 npm test -- --clearCache

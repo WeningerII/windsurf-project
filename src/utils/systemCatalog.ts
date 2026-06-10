@@ -141,7 +141,7 @@ export async function loadSystemCatalogSummary(
 
         appendCategories(
           categories,
-          productCategory('spells', 'Powers', powers.length),
+          productCategory('powers', 'Powers', powers.length),
           productCategory('archetypes', 'Archetypes', archetypes.length),
           productCategory('complications', 'Complications', complications.length),
           productCategory('advantages', 'Advantages', advantages.length),

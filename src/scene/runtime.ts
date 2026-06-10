@@ -99,9 +99,40 @@ export function resolveSceneAction(
     return { issues: foldIssues };
   }
 
+  const intentIssues = validateSceneIntent(state, intent, options);
+  if (intentIssues.length > 0) {
+    return { issues: intentIssues };
+  }
+
   const event = buildEventFromIntent(scene, state, intent, options);
   const issues = validateSceneEvent(state, event);
   return issues.some((issue) => issue.severity === 'error') ? { issues } : { event, issues };
+}
+
+/**
+ * Intent-level validation: rules that gate new ACTIONS but deliberately do NOT
+ * invalidate historical events (replay compatibility). Advancing the turn with
+ * no initiative order is rejected here, before an event is built; an old
+ * `turn.advanced` event with an undefined `nextTokenId` still folds cleanly
+ * (it clears the active token and leaves the round unchanged).
+ */
+function validateSceneIntent(
+  state: SceneState,
+  intent: SceneActionIntent,
+  options: SceneActionOptions
+): SceneIssue[] {
+  if (intent.type === 'advance-turn' && state.initiative.length === 0) {
+    return [
+      {
+        code: 'scene-initiative-empty',
+        message: 'Cannot advance the turn: no initiative order has been set.',
+        path: 'initiative',
+        severity: 'error',
+        eventId: options.eventId,
+      },
+    ];
+  }
+  return [];
 }
 
 export function appendSceneEvent(scene: SceneDocument, event: SceneEvent): SceneDocument {
@@ -258,7 +289,15 @@ function applySceneEvent(state: SceneState, event: SceneEvent): void {
       break;
     case 'turn.advanced':
       state.activeTokenId = event.payload.nextTokenId;
-      if (state.initiative[0]?.tokenId === event.payload.nextTokenId) {
+      // The round only advances when the cycle actually wraps to the top of a
+      // real initiative order. Without the null guard, an event recorded with
+      // empty initiative (nextTokenId undefined) would match
+      // `initiative[0]?.tokenId` (also undefined) and inflate the round —
+      // historical events of that shape now fold to "round unchanged".
+      if (
+        event.payload.nextTokenId != null &&
+        state.initiative[0]?.tokenId === event.payload.nextTokenId
+      ) {
         state.round += 1;
       }
       break;
@@ -569,6 +608,10 @@ function cloneMarker(marker: SceneMarker): SceneMarker {
   return {
     ...marker,
     position: { ...marker.position },
+    // Deep-copy terrain effects: a shared array reference would alias event
+    // payloads, initialState, and every folded state, letting a consumer
+    // mutation corrupt the event log retroactively.
+    ...(marker.effects ? { effects: marker.effects.map((effect) => ({ ...effect })) } : {}),
   };
 }
 

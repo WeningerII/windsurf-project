@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useDeferredValue } from 'react';
 import { Search, Filter } from 'lucide-react';
 
 export interface SpellBrowserSpell {
@@ -26,6 +26,7 @@ interface SpellBrowserProps {
 
 export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpell }) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const deferredSearchTerm = useDeferredValue(searchTerm);
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
   const [selectedSchool, setSelectedSchool] = useState<string | null>(null);
   const [selectedClass, setSelectedClass] = useState<string | null>(null);
@@ -45,8 +46,9 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpel
     [spells]
   );
 
-  const filteredSpells = useMemo(() => {
-    return spells.filter((spell) => {
+  const searchHaystacks = useMemo(() => {
+    const haystacks = new Map<string, string>();
+    for (const spell of spells) {
       const searchableText = [
         spell.name,
         spell.description,
@@ -62,9 +64,18 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpel
         .filter(Boolean)
         .join(' ')
         .toLowerCase();
+      haystacks.set(spell.id, searchableText);
+    }
+    return haystacks;
+  }, [spells]);
 
+  const filteredSpells = useMemo(() => {
+    const normalizedSearch = deferredSearchTerm.trim().toLowerCase();
+
+    return spells.filter((spell) => {
       const matchesSearch =
-        searchTerm.trim().length === 0 || searchableText.includes(searchTerm.toLowerCase());
+        normalizedSearch.length === 0 ||
+        (searchHaystacks.get(spell.id) ?? '').includes(normalizedSearch);
 
       const matchesLevel = selectedLevel === null || spell.level === selectedLevel;
 
@@ -77,7 +88,15 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpel
 
       return matchesSearch && matchesLevel && matchesSchool && matchesClass && matchesTradition;
     });
-  }, [spells, searchTerm, selectedLevel, selectedSchool, selectedClass, selectedTradition]);
+  }, [
+    spells,
+    searchHaystacks,
+    deferredSearchTerm,
+    selectedLevel,
+    selectedSchool,
+    selectedClass,
+    selectedTradition,
+  ]);
 
   const handleClearFilters = useCallback(() => {
     setSearchTerm('');
@@ -180,6 +199,7 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpel
         {/* Clear Filters */}
         <div className="flex items-end">
           <button
+            type="button"
             onClick={handleClearFilters}
             className="w-full px-4 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary hover:bg-muted transition-all"
           >
@@ -198,10 +218,11 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpel
         <div className="grid grid-cols-1 gap-4">
           {filteredSpells.length > 0 ? (
             filteredSpells.map((spell) => (
-              <div
+              <button
+                type="button"
                 key={spell.id}
                 onClick={() => onSelectSpell?.(spell)}
-                className="p-4 border border-input rounded-lg hover:border-primary/50 hover:shadow-md transition-all cursor-pointer"
+                className="w-full p-4 border border-input rounded-lg text-left hover:border-primary/50 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-all cursor-pointer"
               >
                 <div className="flex justify-between items-start mb-2">
                   <div>
@@ -274,7 +295,7 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpel
                 )}
 
                 <p className="text-sm text-muted-foreground line-clamp-2">{spell.description}</p>
-              </div>
+              </button>
             ))
           ) : (
             <div className="text-center py-8 text-muted-foreground">

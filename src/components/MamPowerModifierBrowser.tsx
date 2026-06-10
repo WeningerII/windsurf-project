@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useDeferredValue, useMemo, useState } from 'react';
 import { Search, Wand2 } from 'lucide-react';
 import type { PowerModifier } from '../data/mutants-and-masterminds/3e/modifiers/extras';
 
@@ -21,10 +21,24 @@ function formatModifierCost(modifier: PowerModifier): string {
 
 export const MamPowerModifierBrowser: React.FC<MamPowerModifierBrowserProps> = ({ modifiers }) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const deferredSearchTerm = useDeferredValue(searchTerm);
   const [typeFilter, setTypeFilter] = useState<'all' | PowerModifier['type']>('all');
 
+  const searchHaystacks = useMemo(() => {
+    const haystacks = new Map<string, string>();
+    for (const modifier of modifiers) {
+      haystacks.set(
+        modifier.id,
+        [modifier.name, modifier.type, modifier.description, modifier.effects.join(' ')]
+          .join(' ')
+          .toLowerCase()
+      );
+    }
+    return haystacks;
+  }, [modifiers]);
+
   const filteredModifiers = useMemo(() => {
-    const normalizedSearch = searchTerm.trim().toLowerCase();
+    const normalizedSearch = deferredSearchTerm.trim().toLowerCase();
 
     return modifiers.filter((modifier) => {
       if (typeFilter !== 'all' && modifier.type !== typeFilter) {
@@ -35,18 +49,9 @@ export const MamPowerModifierBrowser: React.FC<MamPowerModifierBrowserProps> = (
         return true;
       }
 
-      const haystack = [
-        modifier.name,
-        modifier.type,
-        modifier.description,
-        modifier.effects.join(' '),
-      ]
-        .join(' ')
-        .toLowerCase();
-
-      return haystack.includes(normalizedSearch);
+      return (searchHaystacks.get(modifier.id) ?? '').includes(normalizedSearch);
     });
-  }, [modifiers, searchTerm, typeFilter]);
+  }, [modifiers, searchHaystacks, deferredSearchTerm, typeFilter]);
 
   return (
     <section className="rounded-lg border bg-card p-4 space-y-4">

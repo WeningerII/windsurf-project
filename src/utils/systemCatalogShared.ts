@@ -29,6 +29,8 @@ const DEFAULT_SYSTEM_LABELS: Record<GameSystemId, { label: string; version?: str
 
 const CATEGORY_PRIORITY: Record<SystemContentCategoryId, number> = {
   spells: 0,
+  // M&M powers occupy the spells slot — no system reports both categories.
+  powers: 0,
   classes: 1,
   domains: 2,
   domainCards: 3,

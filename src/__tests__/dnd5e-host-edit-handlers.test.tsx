@@ -4,7 +4,7 @@ import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { registerAllSystems } from '../systems';
 import { Dnd5eSheet } from '../systems/dnd5e/components/Dnd5eSheet';
 import { createDefaultDnd5eData } from '../systems/dnd5e/data-model';
-import type { CharacterDocument } from '../types/core/document';
+import type { CharacterDocument, SystemDataModel } from '../types/core/document';
 import * as dataLoader from '../utils/dataLoader';
 
 type Dnd5eDocument = CharacterDocument<ReturnType<typeof createDefaultDnd5eData>>;
@@ -35,8 +35,10 @@ function stubShared5eLoaders() {
 
 function renderEditableDnd5eSheet(initialDoc: Dnd5eDocument) {
   let currentDoc = initialDoc;
-  const onUpdate = vi.fn((nextDoc: Dnd5eDocument) => {
-    currentDoc = nextDoc;
+  // Match the sheet's host-facing onUpdate signature (the broad document
+  // type); the narrowing to Dnd5eDocument happens via the cast below.
+  const onUpdate = vi.fn((nextDoc: CharacterDocument<SystemDataModel>) => {
+    currentDoc = nextDoc as Dnd5eDocument;
   });
   const view = render(<Dnd5eSheet document={currentDoc} onUpdate={onUpdate} />);
 

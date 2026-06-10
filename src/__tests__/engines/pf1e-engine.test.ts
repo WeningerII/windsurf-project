@@ -184,6 +184,9 @@ describe('Pf1eEngine', () => {
           },
         ],
         spellsPerDay: {
+          // Raw totals with no recorded manualBonus snap to the automated
+          // baseline (manual edits persist via manualBonus; see
+          // d20-legacy-vancian-prep.test.ts).
           1: { total: 99, used: 8 },
           2: { total: 99, used: 4 },
         },
@@ -191,6 +194,8 @@ describe('Pf1eEngine', () => {
       const result = engine.prepareData(doc);
       expect(result.system.spellsPerDay?.[1]).toEqual({ total: 2, used: 2 });
       expect(result.system.spellsPerDay?.[2]).toEqual({ total: 1, used: 1 });
+      // PF1e CRB Table 3-16: wizard 3 prepares 4 orisons (0th-level row).
+      expect(result.system.spellsPerDay?.[0]).toEqual({ total: 4, used: 0 });
     });
 
     it('advances both PF1e mystic theurge spellcasting tracks through selected prior classes', () => {

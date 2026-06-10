@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { fighter as fighter35 } from '../data/dnd/3.5e/classes/fighter';
 import { wizard as wizard35 } from '../data/dnd/3.5e/classes/wizard';
 import { elf as elf35 } from '../data/dnd/3.5e/races/elf';
+import { fighter as fighterPf1 } from '../data/pathfinder/1e/classes/fighter';
 import { wizard as wizardPf1 } from '../data/pathfinder/1e/classes/wizard';
 import { elf as elfPf1 } from '../data/pathfinder/1e/races/elf';
 import { createDefaultDnd35eData, Dnd35eDataModel } from '../systems/dnd35e/data-model';
@@ -76,9 +77,44 @@ describe('D20 legacy template pipeline', () => {
     expect(prepared.system.hitPoints.max).toBe(17);
     expect(prepared.system.armorClass.total).toBe(11);
     expect(prepared.system.saves.will.total).toBe(4);
-    expect(prepared.system.spellsPerDay?.[1]).toEqual({ total: 2, used: 0 });
-    expect(prepared.system.spellsPerDay?.[2]).toEqual({ total: 1, used: 0 });
+    // PF1e CRB (Ability Modifiers and Bonus Spells): Int 14 (+2) grants one
+    // bonus 1st- and one bonus 2nd-level spell on top of the wizard 3 table
+    // (2 × 1st, 1 × 2nd), and the wizard table's 0th column gives 4 orisons.
+    expect(prepared.system.spellsPerDay?.[0]).toEqual({ total: 4, used: 0 });
+    expect(prepared.system.spellsPerDay?.[1]).toEqual({ total: 3, used: 0 });
+    expect(prepared.system.spellsPerDay?.[2]).toEqual({ total: 2, used: 0 });
     expect(prepared.system.classSkills).toContain('spellcraft');
+  });
+
+  it('applies the PF1e favored-class HP bonus to only ONE class (Fighter 5/Wizard 5 → +5, not +10)', () => {
+    // PF1e CRB (Favored Class): "Each character begins play with a single
+    // favored class". Only the first class row defaults to the +1 HP/level
+    // bonus; the added class defaults to 'other' and contributes no bonus.
+    const engine = new Pf1eEngine();
+    const templated = applyD20LegacyClassTemplate(
+      applyD20LegacyClassTemplate(
+        makePf1Doc({
+          baseAttributes: { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+        }),
+        fighterPf1,
+        5
+      ),
+      wizardPf1,
+      5,
+      { mode: 'add' }
+    );
+
+    expect(templated.system.classLevels.map((classLevel) => classLevel.favoredClassBonus)).toEqual([
+      'hp',
+      'other',
+    ]);
+
+    const prepared = engine.prepareData(templated);
+    const hitDieTotal = templated.system.classLevels
+      .flatMap((classLevel) => classLevel.hitDieRolls)
+      .reduce((sum, roll) => sum + Math.max(1, roll), 0);
+    // Favored-class HP applies to the fighter rows only: +5, not +10.
+    expect(prepared.system.hitPoints.max).toBe(hitDieTotal + 5);
   });
 
   it('prepares a 3.5e fighter/wizard multiclass character with summed BAB and HP', () => {

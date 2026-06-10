@@ -32,9 +32,13 @@ const SLOT_ORDER: EquipmentSlot[] = [
 
 interface Props {
   equipment: EquippedItem[];
-  onEquip?: (item: EquippedItem) => void;
-  onUnequip?: (itemId: string) => void;
-  onToggleAttune?: (itemId: string) => void;
+  /**
+   * The slot identifies the exact entry, so duplicate item ids equipped in
+   * different slots (e.g. the same ring in ring1/ring2) are never affected
+   * together.
+   */
+  onUnequip?: (itemId: string, slot: EquipmentSlot) => void;
+  onToggleAttune?: (itemId: string, slot: EquipmentSlot) => void;
 }
 
 export const EquippedItemsSection: React.FC<Props> = ({ equipment, onUnequip, onToggleAttune }) => {
@@ -82,7 +86,8 @@ export const EquippedItemsSection: React.FC<Props> = ({ equipment, onUnequip, on
                     </span>
                     {onUnequip && (
                       <button
-                        onClick={() => onUnequip(item.itemId)}
+                        type="button"
+                        onClick={() => onUnequip(item.itemId, slot)}
                         className="text-muted-foreground hover:text-destructive shrink-0"
                         title="Unequip"
                       >
@@ -104,7 +109,8 @@ export const EquippedItemsSection: React.FC<Props> = ({ equipment, onUnequip, on
                     {item.armorType && <span className="capitalize">{item.armorType}</span>}
                     {onToggleAttune && (
                       <button
-                        onClick={() => onToggleAttune(item.itemId)}
+                        type="button"
+                        onClick={() => onToggleAttune(item.itemId, slot)}
                         className={`px-1 py-0.5 rounded transition-colors ${
                           item.attuned
                             ? 'bg-amber-500/20 text-amber-600 font-medium'

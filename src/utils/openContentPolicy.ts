@@ -33,7 +33,10 @@ export const strictOpenContentPolicy: Record<GameSystemId, SystemOpenContentPoli
     allowMissingSourceFor: [],
   },
   'dnd-3.5e': {
-    allowedSources: ['SRD 3.5', 'PHB 3.5', 'PHB', "Player's Handbook 3.5"],
+    // Only the open-licensed System Reference Document qualifies. Closed-book
+    // citations ('PHB', "Player's Handbook 3.5") are NOT open-content
+    // provenance and are rejected.
+    allowedSources: ['SRD 3.5'],
     allowMissingSourceFor: [],
   },
   pf1e: {
@@ -45,6 +48,11 @@ export const strictOpenContentPolicy: Record<GameSystemId, SystemOpenContentPoli
     allowMissingSourceFor: [],
   },
   mam3e: {
+    // TODO(open-content): "Hero's Handbook" is the commercial book title, not
+    // an open-content designation. Per the SRD/OGL-only policy intent these
+    // citations should be re-pointed at the M&M 3e OGC SRD designation and the
+    // data re-verified against it. Left in place for now — re-sourcing the
+    // whole M&M corpus is out of scope for the current compliance pass.
     allowedSources: ["Hero's Handbook", 'HH', "Mutants & Masterminds Hero's Handbook"],
     allowMissingSourceFor: [],
   },
@@ -117,6 +125,33 @@ export function extractSourceAttribution(item: unknown): string | null {
   return null;
 }
 
+function isSourceAllowed(systemId: GameSystemId, source: string): boolean {
+  return normalizedAllowedSourcesBySystem[systemId].has(normalizeSource(source));
+}
+
+/**
+ * Species can nest subraces that come from a different (possibly closed) book
+ * than the parent species. When a nested subrace declares its own source, that
+ * attribution must pass the same whitelist as the parent; otherwise the whole
+ * species is treated as non-compliant rather than silently shipping nested
+ * closed content under the parent's citation.
+ */
+function nestedSubracesCompliant(systemId: GameSystemId, item: unknown): boolean {
+  if (!item || typeof item !== 'object') {
+    return true;
+  }
+
+  const subraces = (item as { subraces?: unknown }).subraces;
+  if (!Array.isArray(subraces)) {
+    return true;
+  }
+
+  return subraces.every((subrace) => {
+    const subraceSource = extractSourceAttribution(subrace);
+    return subraceSource === null || isSourceAllowed(systemId, subraceSource);
+  });
+}
+
 export function isOpenContentCompliant(
   systemId: GameSystemId,
   category: OpenContentCategory,
@@ -124,10 +159,18 @@ export function isOpenContentCompliant(
 ): boolean {
   const source = extractSourceAttribution(item);
   if (!source) {
-    return allowMissingSourceBySystemAndCategory[systemId].has(category);
+    if (!allowMissingSourceBySystemAndCategory[systemId].has(category)) {
+      return false;
+    }
+  } else if (!isSourceAllowed(systemId, source)) {
+    return false;
   }
 
-  return normalizedAllowedSourcesBySystem[systemId].has(normalizeSource(source));
+  if (category === 'species' && !nestedSubracesCompliant(systemId, item)) {
+    return false;
+  }
+
+  return true;
 }
 
 export function filterOpenContentBySource<T>(

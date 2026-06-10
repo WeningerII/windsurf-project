@@ -30,11 +30,16 @@ const IS_TEST_ENV =
   typeof import.meta.env !== 'undefined' &&
   import.meta.env.MODE === 'test';
 
-const PROD_DEFAULTS = {
+/**
+ * Production retry defaults. Exported so tests can pin the shipped values —
+ * under Vitest the module always runs with TEST_DEFAULTS, so without an
+ * explicit assertion a typo here would ship silently.
+ */
+export const PROD_DEFAULTS = {
   maxAttempts: 4,
   initialDelayMs: 500,
   maxDelayMs: 8000,
-};
+} as const;
 
 const TEST_DEFAULTS = {
   maxAttempts: 1,
@@ -47,10 +52,16 @@ const BASE_DEFAULTS = IS_TEST_ENV ? TEST_DEFAULTS : PROD_DEFAULTS;
 /**
  * Message fragments for errors that are permanent and must not be retried.
  * Matched case-insensitively against the error message.
+ *
+ * Deliberately NOT listed (i.e. retryable):
+ *   - 'jwt expired' — supabase-js refreshes expired tokens automatically, so
+ *     a retry moments later succeeds; treating it as permanent flipped sync
+ *     into a persistent error state for a self-healing condition.
+ *   - 429 / 'too many requests' — transient by definition; backoff-and-retry
+ *     is exactly the right response to rate limiting.
  */
 const NON_RETRYABLE_FRAGMENTS = [
   'invalid api key',
-  'jwt expired',
   'jwt malformed',
   'no authenticated',
   'row-level security',

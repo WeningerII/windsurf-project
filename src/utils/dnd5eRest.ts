@@ -36,6 +36,16 @@ function recoverLongRestHitDice(hitDice: HitDice[]): HitDice[] {
   return recovered;
 }
 
+/** Warlock Pact Magic slots recover on a short rest (SRD 5.1/5.2). */
+function recoverPactMagicSlots(spellcasting?: SpellcastingInfo): SpellcastingInfo | undefined {
+  if (!spellcasting?.pactMagic) return spellcasting;
+
+  return {
+    ...spellcasting,
+    pactMagic: { ...spellcasting.pactMagic, used: 0 },
+  };
+}
+
 function recoverAllSpellSlots(spellcasting?: SpellcastingInfo): SpellcastingInfo | undefined {
   if (!spellcasting) return spellcasting;
 
@@ -45,16 +55,19 @@ function recoverAllSpellSlots(spellcasting?: SpellcastingInfo): SpellcastingInfo
     slots[key] = { ...slots[key], used: 0 };
   }
 
-  return {
+  return recoverPactMagicSlots({
     ...spellcasting,
     spellSlots: slots,
-  };
+  });
 }
 
-export function applyDnd5eShortRest<T extends { features: Feature[] }>(state: T): T {
+export function applyDnd5eShortRest<
+  T extends { features: Feature[]; spellcasting?: SpellcastingInfo },
+>(state: T): T {
   return {
     ...state,
     features: recoverFeatures(state.features, 'short'),
+    spellcasting: recoverPactMagicSlots(state.spellcasting),
   };
 }
 

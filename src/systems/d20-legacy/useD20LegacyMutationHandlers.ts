@@ -149,7 +149,10 @@ export function useD20LegacyMutationHandlers({
     update({
       spellsPerDay: {
         ...spellSlots,
-        [nextLevel]: { total: 1, used: 0 },
+        // Class tables contribute 0 at a level they don't list, so record the
+        // whole starting total as a manual bonus — otherwise the engine's next
+        // prepare would snap the new row back to 0/0.
+        [nextLevel]: { total: 1, used: 0, manualBonus: 1 },
       },
     } as Partial<D20LegacyData>);
   }, [sys.spellsPerDay, update]);

@@ -122,7 +122,8 @@ export const permanent: PowerModifier = {
   system: 'mam3e',
   source: "Hero's Handbook",
   type: 'flaw',
-  costPerRank: 0,
+  // Duration flaw: reduces cost by 1 point per rank (Hero's Handbook, Flaws).
+  costPerRank: -1,
   description: 'This effect is always "on" and cannot be turned off.',
   effects: ['Effect cannot be turned off or controlled. Also reduces cost by 1 per rank.'],
 };
@@ -256,7 +257,8 @@ export const continuous_flaw: PowerModifier = {
   system: 'mam3e',
   source: "Hero's Handbook",
   type: 'flaw',
-  costPerRank: 0,
+  // Duration flaw: reduces cost by 1 point per rank (Hero's Handbook, Flaws).
+  costPerRank: -1,
   description: 'The effect is always on and cannot be turned off easily.',
   effects: ['Effect is always active. Reduces cost by 1 per rank.'],
 };
@@ -322,7 +324,8 @@ export const instant: PowerModifier = {
   system: 'mam3e',
   source: "Hero's Handbook",
   type: 'flaw',
-  costPerRank: 0,
+  // Duration flaw: reduces cost by 1 point per rank (Hero's Handbook, Flaws).
+  costPerRank: -1,
   description: 'Sustained effect becomes instant duration.',
   effects: ['Sustained becomes Instant. Reduces cost by 1 per rank.'],
 };
@@ -405,18 +408,6 @@ export const proportional: PowerModifier = {
   effects: ['Effect rank equals another trait rank.'],
 };
 
-export const quirk_flaw: PowerModifier = {
-  id: 'quirk-flaw',
-  name: 'Quirk',
-  system: 'mam3e',
-  source: "Hero's Handbook",
-  type: 'flaw',
-  costPerRank: 0,
-  flatCost: -1,
-  description: 'Minor limitation or unusual aspect.',
-  effects: ['Very minor limitation that occasionally comes up.'],
-};
-
 export const random: PowerModifier = {
   id: 'random',
   name: 'Random',
@@ -448,17 +439,6 @@ export const uncontrollable: PowerModifier = {
   costPerRank: -1,
   description: 'You cannot control when or how the effect activates.',
   effects: ['Effect activates randomly or uncontrollably.'],
-};
-
-export const unreliable_flaw: PowerModifier = {
-  id: 'unreliable-flaw',
-  name: 'Unreliable',
-  system: 'mam3e',
-  source: "Hero's Handbook",
-  type: 'flaw',
-  costPerRank: -1,
-  description: 'Effect fails on a roll of 10 or less on d20.',
-  effects: ['Roll d20 each use: 10 or less = failure.'],
 };
 
 export const vulnerable: PowerModifier = {
@@ -552,11 +532,9 @@ export const flaws: PowerModifier[] = [
   nuisance,
   objects_only,
   proportional,
-  quirk_flaw,
   random,
   reaction_flaw,
   uncontrollable,
-  unreliable_flaw,
   vulnerable,
   wall,
   weak_point,

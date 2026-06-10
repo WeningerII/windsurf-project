@@ -355,6 +355,71 @@ describe('resolveEffects — operation semantics', () => {
     ];
     expect(resolveEffects(effects).byTarget.hp.total).toBe(1);
   });
+
+  it('REGRESSION (05-M9): set-die establishes the dice term (RFC 003 "damage → weapon die")', () => {
+    // Probe the same seeded stream: the established d8 rolls first, then the
+    // add-die d6 rider, in input order.
+    const probe = createSeededRng('set-die');
+    const expectedWeaponDie = probe.rollDie(8);
+    const expectedRiderDie = probe.rollDie(6);
+
+    const effects: EffectInstance[] = [
+      effect({
+        systemId: 'dnd-5e-2014',
+        target: 'damage',
+        operation: 'set-die',
+        value: 4, // replaced by the later set-die (last wins, mirroring `set`)
+        stackPolicy: 'sum',
+        label: 'dagger d4',
+      }),
+      effect({
+        systemId: 'dnd-5e-2014',
+        target: 'damage',
+        operation: 'set-die',
+        value: 8,
+        stackPolicy: 'sum',
+        label: 'longsword d8',
+      }),
+      effect({
+        systemId: 'dnd-5e-2014',
+        target: 'damage',
+        operation: 'add-die',
+        value: 6,
+        stackPolicy: 'sum',
+        label: 'rider d6',
+      }),
+      effect({
+        systemId: 'dnd-5e-2014',
+        target: 'damage',
+        operation: 'add',
+        value: 3,
+        stackPolicy: 'sum',
+        label: 'STR',
+      }),
+    ];
+    const result = resolveEffects(effects, { rng: createSeededRng('set-die') });
+    const damage = result.byTarget.damage;
+    // Exactly two dice rolled: the ESTABLISHED d8 (not the replaced d4), then
+    // the additive d6 — previously set-die matched no branch and silently
+    // contributed nothing while still appearing in the ledger.
+    expect(damage.diceTerms).toEqual([expectedWeaponDie, expectedRiderDie]);
+    expect(damage.total).toBe(expectedWeaponDie + expectedRiderDie + 3);
+  });
+
+  it('set-die without an rng contributes nothing (same contract as add-die)', () => {
+    const result = resolveEffects([
+      effect({
+        systemId: 'dnd-5e-2014',
+        target: 'damage',
+        operation: 'set-die',
+        value: 8,
+        stackPolicy: 'sum',
+        label: 'longsword d8',
+      }),
+    ]);
+    expect(result.byTarget.damage.total).toBe(0);
+    expect(result.byTarget.damage.diceTerms).toBeUndefined();
+  });
 });
 
 describe('effectApplies — condition gating', () => {

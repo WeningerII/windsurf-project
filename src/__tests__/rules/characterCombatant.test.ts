@@ -60,6 +60,42 @@ describe('buildCharacterCombatant — d20 family parity', () => {
     expect(result.combatant.token.kind).toBe('character');
   });
 
+  it('REGRESSION (05-M4): a DEX-based PC uses max(STR, DEX) for the attack bonus', () => {
+    // A classic 5e rogue: STR 8 (-1), DEX 18 (+4). STR-only gave prof - 1 = +1
+    // — a crippled attacker; finesse-agnostic baseline gives prof + 4 = +6.
+    const rogue = charDoc('dnd-5e-2014', {
+      level: 3,
+      baseAttributes: { str: 8, dex: 18, con: 12, int: 10, wis: 10, cha: 14 },
+      armorClass: 15,
+      hitPoints: { current: 24, max: 24, temp: 0 },
+      equipment: [],
+      feats: [],
+      features: [],
+    });
+    const result = buildCharacterCombatant(rogue, { position: { x: 0, y: 0 } });
+    expect(result.supported).toBe(true);
+    if (!result.supported) return;
+    // prof at level 3 = +2, max(STR -1, DEX +4) = +4 -> +6 attack.
+    expect(result.combatant.attackEffects[0].value).toBe(6);
+
+    // 3.5e/PF1e: BAB + max(STR, DEX) — Weapon-Finesse-shaped baseline.
+    const pf1Rogue = charDoc('pf1e', {
+      level: 4,
+      baseAttributes: { str: 10, dex: 16, con: 12, int: 10, wis: 10, cha: 10 },
+      baseAttackBonus: 3,
+      armorClass: { total: 17, touch: 13, flatFooted: 14 },
+      hitPoints: { current: 28, max: 28, temp: 0 },
+      equipment: [],
+      feats: [],
+      features: [],
+    });
+    const pf1Result = buildCharacterCombatant(pf1Rogue, { position: { x: 0, y: 0 } });
+    expect(pf1Result.supported).toBe(true);
+    if (!pf1Result.supported) return;
+    // BAB 3 + max(STR +0, DEX +3) = +6.
+    expect(pf1Result.combatant.attackEffects[0].value).toBe(6);
+  });
+
   it('3.5e: attack = BAB + STR; AC read from { total }', () => {
     const doc = charDoc('dnd-3.5e', {
       level: 6,
@@ -128,6 +164,34 @@ describe('buildCharacterCombatant — d20 family parity', () => {
       if (!result.supported) {
         expect(result.reason).toMatch(/non-d20|Toughness|threshold/i);
       }
+    }
+  });
+
+  it('REGRESSION (05-L6): an explicit options.faction is honored; default derives from token kind', () => {
+    const doc = charDoc('dnd-5e-2014', {
+      level: 1,
+      baseAttributes: { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+      armorClass: 10,
+      hitPoints: { current: 8, max: 8, temp: 0 },
+      equipment: [],
+      feats: [],
+      features: [],
+    });
+
+    const explicit = buildCharacterCombatant(doc, {
+      position: { x: 0, y: 0 },
+      faction: 'mercenaries',
+    });
+    expect(explicit.supported).toBe(true);
+    if (explicit.supported) {
+      expect(explicit.combatant.faction).toBe('mercenaries');
+    }
+
+    const derived = buildCharacterCombatant(doc, { position: { x: 0, y: 0 } });
+    expect(derived.supported).toBe(true);
+    if (derived.supported) {
+      // 'party' is what factionForToken derives for a 'character'-kind token.
+      expect(derived.combatant.faction).toBe('party');
     }
   });
 });

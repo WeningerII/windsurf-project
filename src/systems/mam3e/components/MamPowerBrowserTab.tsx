@@ -3,6 +3,7 @@ import type { Spell } from '../../../types/magic/spells';
 import type { Power } from '../../../types/mam/powers';
 import type { PowerModifier } from '../../../data/mutants-and-masterminds/3e/modifiers/extras';
 import { lazyWithPreload } from '../../../utils/lazyWithPreload';
+import { MamResourceLoadError } from './MamResourceLoadError';
 
 const SpellBrowser = lazyWithPreload(async () => {
   const module = await import('../../../components/SpellBrowser');
@@ -36,8 +37,11 @@ function formatMamPowerDuration(power: Power): string {
 
 interface Props {
   powersLoaded: boolean;
+  powersError?: boolean;
   powers: Spell[];
   powerModifiersLoaded: boolean;
+  powerModifiersError?: boolean;
+  onRetryPowerBrowser?: () => void;
   modifierCatalog: PowerModifier[];
 }
 
@@ -47,12 +51,17 @@ type MamPowerBrowserTabComponent = React.FC<Props> & {
 
 export const MamPowerBrowserTab = (({
   powersLoaded,
+  powersError,
   powers,
   powerModifiersLoaded,
+  powerModifiersError,
+  onRetryPowerBrowser,
   modifierCatalog,
 }) => (
   <div className="space-y-4">
-    {!powersLoaded ? (
+    {powersError && !powersLoaded ? (
+      <MamResourceLoadError resourceLabel="the M&M power catalog" onRetry={onRetryPowerBrowser} />
+    ) : !powersLoaded ? (
       <div className="text-center py-8 text-muted-foreground">Click to load powers...</div>
     ) : (
       <Suspense
@@ -94,6 +103,11 @@ export const MamPowerBrowserTab = (({
       >
         <MamPowerModifierBrowser modifiers={modifierCatalog} />
       </Suspense>
+    ) : powerModifiersError ? (
+      <MamResourceLoadError
+        resourceLabel="the M&M modifier catalog"
+        onRetry={onRetryPowerBrowser}
+      />
     ) : (
       <div className="text-center py-8 text-muted-foreground">Loading modifier catalog...</div>
     )}

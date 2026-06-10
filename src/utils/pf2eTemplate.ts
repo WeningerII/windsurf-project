@@ -180,13 +180,16 @@ type Pf2eClassProfile = {
 const PF2E_CLASS_PROFILES: Record<string, Pf2eClassProfile> = {
   alchemist: {
     perception: 'trained',
-    saves: { fortitude: 'expert', reflex: 'trained', will: 'trained' },
+    // CRB p.72 (Alchemist, Initial Proficiencies): expert in Fortitude AND
+    // Reflex, trained in Will.
+    saves: { fortitude: 'expert', reflex: 'expert', will: 'trained' },
     armor: { unarmored: 'trained', light: 'trained', medium: 'trained' },
     weapons: { simple: 'trained', 'alchemical-bombs': 'trained', unarmed: 'trained' },
     mandatorySkills: ['crafting'],
   },
   barbarian: {
-    perception: 'trained',
+    // CRB p.83 (Barbarian, Initial Proficiencies): expert in Perception.
+    perception: 'expert',
     saves: { fortitude: 'expert', reflex: 'trained', will: 'expert' },
     armor: { unarmored: 'trained', light: 'trained', medium: 'trained' },
     weapons: { simple: 'trained', martial: 'trained', unarmed: 'trained' },
@@ -247,7 +250,9 @@ const PF2E_CLASS_PROFILES: Record<string, Pf2eClassProfile> = {
     },
   },
   monk: {
-    perception: 'expert',
+    // CRB p.155 (Monk, Initial Proficiencies): trained in Perception at level 1
+    // (expert arrives later via class features).
+    perception: 'trained',
     saves: { fortitude: 'expert', reflex: 'expert', will: 'expert' },
     armor: { unarmored: 'expert' },
     weapons: { simple: 'trained', monk: 'trained', unarmed: 'trained' },
@@ -328,7 +333,12 @@ function removeProficiencySource(
   source: string
 ): void {
   const existing = proficiencies[id];
-  if (!existing) {
+  // Only act when the named source actually granted this entry. Proficiencies
+  // trained by hand (no `source`, or a 'manual' source recorded by the sheet's
+  // cycle buttons) must survive template removal — deleting every entry whose
+  // source list does not mention the template destroyed user data on class
+  // change (see regression test "preserves manually trained skills").
+  if (!existing || !existing.source?.includes(source)) {
     return;
   }
 
@@ -561,6 +571,9 @@ export function applyPf2eClassTemplate(
       will: createProficiency(profile.saves.will, [classData.name]),
     };
     sys.perceptionProficiency = createProficiency(profile.perception, [classData.name]);
+    // Every CRB class starts trained in its class DC (higher tiers arrive via
+    // class features and are cycled by hand on the sheet).
+    sys.classDcProficiency = createProficiency('trained', [classData.name]);
     sys.armorProficiencies = baseArmorProficiencies(classData, profile, classData.name);
     sys.weaponProficiencies = baseWeaponProficiencies(classData, profile, classData.name);
   }

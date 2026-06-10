@@ -1,4 +1,5 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import * as Sentry from '@sentry/browser';
 import {
   ErrorCategory,
   ErrorSeverity,
@@ -7,11 +8,26 @@ import {
   withErrorLogging,
 } from '../utils/errorLogger';
 
+// Default to "Sentry not configured" so the localStorage fallback paths run;
+// individual tests flip getClient to a truthy client to exercise capture.
+vi.mock('@sentry/browser', () => ({
+  getClient: vi.fn(() => undefined),
+  captureException: vi.fn(),
+}));
+
 describe('errorLogger', () => {
   beforeEach(() => {
     errorLogger.clearLogs();
     localStorage.removeItem('critical-errors');
     vi.restoreAllMocks();
+    // mockReset restores the factory implementations above (getClient →
+    // undefined) so a test that stubs a Sentry client cannot leak it.
+    vi.mocked(Sentry.getClient).mockReset();
+    vi.mocked(Sentry.captureException).mockReset();
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
   });
 
   it('routes low/medium/high severities to the expected console methods', () => {
@@ -26,6 +42,71 @@ describe('errorLogger', () => {
     expect(logSpy).toHaveBeenCalledWith('[user_action] low', undefined);
     expect(warnSpy).toHaveBeenCalledWith('[user_action] medium', undefined);
     expect(errorSpy).toHaveBeenCalledWith('[user_action] high', undefined, undefined);
+  });
+
+  it('logs only category + message outside DEV (no raw error/context objects)', () => {
+    vi.stubEnv('DEV', false);
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const context = { document: { name: 'Secret PC', notes: 'private' } };
+
+    errorLogger.log(ErrorCategory.STORAGE, ErrorSeverity.HIGH, 'high', new Error('x'), context);
+    errorLogger.log(ErrorCategory.STORAGE, ErrorSeverity.CRITICAL, 'crit', new Error('y'), context);
+    errorLogger.log(ErrorCategory.STORAGE, ErrorSeverity.MEDIUM, 'medium', undefined, context);
+    errorLogger.log(ErrorCategory.STORAGE, ErrorSeverity.LOW, 'low', undefined, context);
+
+    expect(errorSpy).toHaveBeenCalledWith('[storage] high');
+    expect(errorSpy).toHaveBeenCalledWith('[storage] crit');
+    expect(warnSpy).toHaveBeenCalledWith('[storage] medium');
+    // LOW stays suppressed entirely outside DEV.
+    expect(logSpy).not.toHaveBeenCalled();
+    // No console call anywhere received the context payload.
+    for (const spy of [errorSpy, warnSpy, logSpy]) {
+      for (const call of spy.mock.calls) {
+        expect(call).not.toContain(context);
+      }
+    }
+  });
+
+  it('sends HIGH and CRITICAL (but not MEDIUM/LOW) to Sentry when configured', () => {
+    vi.mocked(Sentry.getClient).mockReturnValue({} as ReturnType<typeof Sentry.getClient>);
+    vi.spyOn(console, 'log').mockImplementation(() => {});
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    errorLogger.log(ErrorCategory.DATA_LOAD, ErrorSeverity.HIGH, 'load failed', new Error('boom'), {
+      requestId: 'r1',
+    });
+    errorLogger.log(ErrorCategory.RENDER, ErrorSeverity.CRITICAL, 'render dead');
+    errorLogger.log(ErrorCategory.VALIDATION, ErrorSeverity.MEDIUM, 'meh');
+    errorLogger.log(ErrorCategory.USER_ACTION, ErrorSeverity.LOW, 'noise');
+
+    expect(Sentry.captureException).toHaveBeenCalledTimes(2);
+    expect(Sentry.captureException).toHaveBeenNthCalledWith(1, expect.any(Error), {
+      tags: { category: ErrorCategory.DATA_LOAD, severity: ErrorSeverity.HIGH },
+      extra: { requestId: 'r1' },
+    });
+    expect(Sentry.captureException).toHaveBeenNthCalledWith(2, expect.any(Error), {
+      tags: { category: ErrorCategory.RENDER, severity: ErrorSeverity.CRITICAL },
+      extra: undefined,
+    });
+    // With Sentry active the localStorage fallback must stay untouched.
+    expect(localStorage.getItem('critical-errors')).toBeNull();
+  });
+
+  it('keeps the localStorage fallback reserved for CRITICAL when Sentry is absent', () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    errorLogger.log(ErrorCategory.DATA_LOAD, ErrorSeverity.HIGH, 'high only');
+    expect(localStorage.getItem('critical-errors')).toBeNull();
+
+    errorLogger.log(ErrorCategory.RENDER, ErrorSeverity.CRITICAL, 'crit');
+    const stored = JSON.parse(localStorage.getItem('critical-errors') || '[]') as Array<{
+      message: string;
+    }>;
+    expect(stored).toHaveLength(1);
+    expect(stored[0]?.message).toBe('crit');
   });
 
   it('stores only the last 100 in-memory logs', () => {

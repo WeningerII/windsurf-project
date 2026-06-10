@@ -19,17 +19,6 @@ const DEGREE_ORDER: RollResult['degreeOfSuccess'][] = [
   'critical-success',
 ];
 
-function normalizedConditionValue(conditions: Pf2eDataModel['conditions'], name: string): number {
-  const lower = name.toLowerCase();
-  let highest = 0;
-  for (const condition of conditions) {
-    if (condition.name.toLowerCase() !== lower) continue;
-    const numeric = condition.value != null ? condition.value : 1;
-    if (numeric > highest) highest = numeric;
-  }
-  return highest;
-}
-
 // Condition status-penalty selection now lives in the shared condition IR
 // (src/rules/conditions/pf2eConditions.ts) so the rule is defined once and
 // also surfaces as ledger provenance. This thin wrapper preserves the engine's
@@ -146,6 +135,15 @@ export class Pf2eEngine implements SystemEngine<Pf2eDataModel> {
     // Perception
     data.perceptionProficiency.total = profTotal(data.level, data.perceptionProficiency.tier);
 
+    // Class DC proficiency (CRB p.29). Older documents may lack the entry;
+    // every class starts trained, so seed that and recompute the total.
+    const classDcTier = data.classDcProficiency?.tier ?? 'trained';
+    data.classDcProficiency = {
+      ...(data.classDcProficiency ?? { tier: classDcTier }),
+      tier: classDcTier,
+      total: profTotal(data.level, classDcTier),
+    };
+
     // Armor proficiencies
     for (const [key, prof] of Object.entries(data.armorProficiencies)) {
       data.armorProficiencies[key] = { ...prof, total: profTotal(data.level, prof.tier) };
@@ -165,30 +163,42 @@ export class Pf2eEngine implements SystemEngine<Pf2eDataModel> {
       data.armorProficiencies[armorCategory]?.total ??
       data.armorProficiencies.unarmored?.total ??
       0;
-    const clumsyPenalty = normalizedConditionValue(data.conditions, 'clumsy');
-    const effectiveDex = Math.max(1, (data.baseAttributes.dex ?? 10) - clumsyPenalty * 2);
     // Base AC, then layer magic-item (item bonus) and feat/feature AC bonuses
     // through the shared rules resolver (RFC 003). PF2e item bonuses take the
     // highest per bucket; buckets sum. Additive without bonus-bearing gear.
+    //
+    // Status penalties to AC (CRB Conditions Appendix): frightened and
+    // sickened penalize "all your checks and DCs" — AC included — and clumsy
+    // penalizes "Dexterity-based checks and DCs, including AC". They are all
+    // status penalties, so only the single worst one applies, and it applies
+    // AFTER the armor's Dex cap (a clumsy fighter in full plate still loses
+    // AC). getPf2eConditionStatusPenalty(conditions, 'dex') selects exactly
+    // that set: the 'all' conditions plus the Dex-scoped clumsy.
+    const acStatusPenalty = getPf2eStatusPenalty(data.conditions, 'dex');
     data.armorClass =
-      computePf2eAC(effectiveDex, armorProf, data.equipment) +
+      computePf2eAC(data.baseAttributes.dex ?? 10, armorProf, data.equipment) +
       resolveCharacterEffects('pf2e', {
         equipment: data.equipment.filter((item) => item.equipped),
         feats: data.feats,
         features: data.features,
-      }).bonus('ac');
+      }).bonus('ac') -
+      acStatusPenalty;
 
-    // --- HP = ancestryHP + level × (class HP die + CON mod) ---
+    // --- HP = ancestryHP + level × (class HP die + CON mod) + manual bonus ---
     // PF2e CRB p.26: Ancestry HP (flat) + level × (class HP + CON mod). Class HP
     // per level is the class hit-die size, read from the class definition (the
     // single source of truth) instead of a duplicated lookup table.
+    // `hitPoints.maxBonus` is the persisted manual adjustment (Toughness, item
+    // HP, …) recorded by the sheet's Max HP editor; it survives re-prepares
+    // where a raw `max` edit would be overwritten.
     const conMod = abilityMod(data.baseAttributes.con ?? 10);
     const classDef = data.classId
       ? pf2eClasses[data.classId as keyof typeof pf2eClasses]
       : undefined;
     const parsedHitDie = classDef?.hitDie ? hitDieFaces(classDef.hitDie) : NaN;
     const classHitDie = Number.isFinite(parsedHitDie) ? parsedHitDie : 8;
-    let maxHP = (data.ancestryHP ?? 0) + data.level * (classHitDie + conMod);
+    let maxHP =
+      (data.ancestryHP ?? 0) + data.level * (classHitDie + conMod) + (data.hitPoints.maxBonus ?? 0);
     maxHP = Math.max(maxHP, data.level);
     data.hitPoints.max = maxHP;
     data.hitPoints.current = Math.min(data.hitPoints.current, maxHP);
@@ -309,6 +319,14 @@ export class Pf2eEngine implements SystemEngine<Pf2eDataModel> {
       },
     };
     const hp = clonedDoc.system.hitPoints;
+    // Negative amounts are healing, matching the PF1e/3.5e/5e engines: restore
+    // current HP (capped at max) without touching temp HP. Without this guard a
+    // negative `remaining` would *increase* temp HP via Math.min below.
+    if (amount < 0) {
+      const healing = Math.abs(amount);
+      hp.current = Math.min(hp.max, hp.current + healing);
+      return clonedDoc;
+    }
     let remaining = amount;
     if (hp.temp > 0) {
       const absorbed = Math.min(hp.temp, remaining);

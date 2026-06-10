@@ -16,16 +16,13 @@ import {
 } from 'lucide-react';
 import { Skeleton } from './ui/Skeleton';
 import { GameSystemId } from '../types/game-systems';
-import type {
-  SystemCatalogSummary,
-  SystemContentCategoryId,
-  SystemSupportLevel,
-} from '../types/system-catalog';
+import type { SystemCatalogSummary, SystemContentCategoryId } from '../types/system-catalog';
 import { systemRegistry } from '../registry';
 import {
   KNOWN_SYSTEM_IDS,
   loadSystemCatalogSummaryFromMetadata,
 } from '../utils/systemCatalogMetadata';
+import { supportBadgeLabels, supportBadgeStyles } from './shared/supportBadges';
 
 interface SummaryState {
   status: 'loading' | 'ready' | 'error';
@@ -37,6 +34,7 @@ const categoryDisplay: Record<
   { icon: React.ReactNode; colorClass: string }
 > = {
   spells: { icon: <BookOpen className="w-4 h-4" />, colorClass: 'text-blue-500' },
+  powers: { icon: <Sparkles className="w-4 h-4" />, colorClass: 'text-blue-500' },
   classes: { icon: <Shield className="w-4 h-4" />, colorClass: 'text-purple-500' },
   domains: { icon: <Sparkles className="w-4 h-4" />, colorClass: 'text-emerald-500' },
   domainCards: { icon: <Scroll className="w-4 h-4" />, colorClass: 'text-rose-500' },
@@ -53,17 +51,15 @@ const categoryDisplay: Record<
   powerModifiers: { icon: <Wand2 className="w-4 h-4" />, colorClass: 'text-sky-500' },
 };
 
-const supportBadgeStyles: Record<SystemSupportLevel, string> = {
-  full: 'bg-emerald-500/10 text-emerald-700 border border-emerald-500/20',
-  partial: 'bg-amber-500/10 text-amber-700 border border-amber-500/20',
-  scaffold: 'bg-slate-500/10 text-slate-700 border border-slate-500/20',
-};
-
-const supportBadgeLabels: Record<SystemSupportLevel, string> = {
-  full: 'Full',
-  partial: 'Partial',
-  scaffold: 'Scaffold',
-};
+/**
+ * Build the initial loading state for every known system so the map can never
+ * fall out of sync with KNOWN_SYSTEM_IDS (a missing key would throw on render).
+ */
+function buildInitialSummaryStates(): Record<GameSystemId, SummaryState> {
+  return Object.fromEntries(
+    KNOWN_SYSTEM_IDS.map((systemId) => [systemId, { status: 'loading' }])
+  ) as Record<GameSystemId, SummaryState>;
+}
 
 const StatCell = ({
   icon,
@@ -92,15 +88,8 @@ const StatCell = ({
 );
 
 export const SystemStatusDashboard: React.FC = () => {
-  const [summaries, setSummaries] = useState<Record<GameSystemId, SummaryState>>({
-    'dnd-5e-2024': { status: 'loading' },
-    'dnd-5e-2014': { status: 'loading' },
-    pf2e: { status: 'loading' },
-    'dnd-3.5e': { status: 'loading' },
-    pf1e: { status: 'loading' },
-    mam3e: { status: 'loading' },
-    daggerheart: { status: 'loading' },
-  });
+  const [summaries, setSummaries] =
+    useState<Record<GameSystemId, SummaryState>>(buildInitialSummaryStates);
 
   useEffect(() => {
     let canceled = false;

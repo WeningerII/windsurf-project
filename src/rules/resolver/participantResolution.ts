@@ -24,7 +24,11 @@ import type { EffectInstance } from '../ir/types';
 
 /**
  * Derive an independent seeded RNG for one participant in an interaction. Keyed
- * so each (actor, target) pair has its own stream, order-independent.
+ * so each (actor, target [, nonce]) tuple has its own stream, order-independent.
+ *
+ * Each part is length-prefixed before joining so distinct tuples can never
+ * collide through separator injection (actor `'a->b'` + target `'c'` vs actor
+ * `'a'` + target `'b->c'` derive different streams).
  */
 export function participantRng(
   baseSeed: string,
@@ -32,9 +36,11 @@ export function participantRng(
   targetId: string,
   nonce?: string | number
 ): SeededRng {
-  return createSeededRng(
-    `${baseSeed}::${actorId}->${targetId}${nonce != null ? `::${nonce}` : ''}`
-  );
+  const parts = [baseSeed, actorId, targetId];
+  if (nonce != null) {
+    parts.push(String(nonce));
+  }
+  return createSeededRng(parts.map((part) => `${part.length}:${part}`).join('|'));
 }
 
 // ─── Multi-target attacks (independent attack roll per target) ────────────────
@@ -72,11 +78,24 @@ export interface MultiTargetAttackResult {
 /**
  * Resolve one attack action against multiple targets. Each target gets its own
  * attack roll and (on a hit) its own damage roll, from an independent seeded
- * sub-stream — so the result does not depend on target order.
+ * sub-stream — so the result does not depend on target order. Listing the same
+ * target twice (two strikes at one foe) rolls distinct streams: the nonce is
+ * the OCCURRENCE index of that targetId, which stays order-independent for
+ * distinct targets while separating repeated strikes.
  */
 export function resolveMultiTargetAttack(input: MultiTargetAttackInput): MultiTargetAttackResult {
+  const occurrences = new Map<string, number>();
   const perTarget = input.targets.map((target) => {
-    const rng = participantRng(input.seed, input.actorId, target.targetId);
+    const occurrence = occurrences.get(target.targetId) ?? 0;
+    occurrences.set(target.targetId, occurrence + 1);
+    // First occurrence omits the nonce so it shares the stream a plain
+    // (seed, actor, target) derivation would produce; repeats get 1, 2, …
+    const rng = participantRng(
+      input.seed,
+      input.actorId,
+      target.targetId,
+      occurrence === 0 ? undefined : occurrence
+    );
     const attackEffects = target.extraAttackEffects
       ? [...input.attackEffects, ...target.extraAttackEffects]
       : input.attackEffects;

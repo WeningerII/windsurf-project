@@ -160,6 +160,12 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: ['historical_banner_rule', 'path_ref_rule'],
   },
   {
+    path: 'docs/reviews/2026-06-09-full-repo-code-review.md',
+    kind: 'historical',
+    owner: 'historical-code-review',
+    rules: ['historical_banner_rule', 'path_ref_rule'],
+  },
+  {
     path: 'docs/DAGGERHEART_DATA_ORGANIZATION_PLAN.md',
     kind: 'historical',
     owner: 'historical-daggerheart-plan',

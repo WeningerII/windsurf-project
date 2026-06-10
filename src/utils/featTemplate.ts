@@ -881,7 +881,9 @@ function buildAutomatedFeat(
     name: feat.name,
     description: feat.description,
     source: feat.source,
-    modifiers: feat.modifiers,
+    // Clone (array + entries): the character document must never alias the
+    // shared catalog definition's modifiers.
+    modifiers: feat.modifiers?.map((modifier) => ({ ...modifier })),
     automation: {
       abilityScores,
       armor: dedupe(baseAutomation.armor || []),

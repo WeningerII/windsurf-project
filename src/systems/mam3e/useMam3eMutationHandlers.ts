@@ -4,6 +4,8 @@ import type { Power } from '../../types/mam/powers';
 import type { CharacterClass } from '../../types/character-options/classes';
 import type { Complication } from '../../data/mutants-and-masterminds/3e/complications';
 import { systemRegistry } from '../../registry';
+import { generateUUID } from '../../utils/browserCompat';
+import { applyMam3eToughnessFailure } from './engine';
 import { getPowerModifierRank } from './powerMath';
 import type { Mam3eConditionTrack, Mam3eDataModel } from './data-model';
 import { createEmptyMam3eConditionTrack, createEmptyMam3ePower } from './mam3eSheetShared';
@@ -159,8 +161,10 @@ export function useMam3eMutationHandlers({
   );
 
   const addPower = useCallback(() => {
+    // UUIDs avoid the duplicate ids a Date.now() id produces when two powers
+    // are added within the same millisecond.
     update({
-      powers: [...data.powers, createEmptyMam3ePower(`power-${Date.now()}`)],
+      powers: [...data.powers, createEmptyMam3ePower(`power-${generateUUID()}`)],
     });
   }, [data.powers, update]);
 
@@ -173,7 +177,11 @@ export function useMam3eMutationHandlers({
 
   const updateDefenseRank = useCallback(
     (key: keyof Mam3eDataModel['defenses'], rank: number) => {
-      update({ defenses: { ...defenses, [key]: { ...defenses[key], rank } } });
+      // Purchased defense ranks cannot be negative (negative ranks would
+      // refund power points and lower the defense total).
+      update({
+        defenses: { ...defenses, [key]: { ...defenses[key], rank: Math.max(0, rank) } },
+      });
     },
     [defenses, update]
   );
@@ -192,35 +200,13 @@ export function useMam3eMutationHandlers({
 
   const applyToughnessFailure = useCallback(
     (failureMargin: number) => {
-      const next = { ...conditionTrack };
-
-      if (failureMargin >= 15) {
-        next.incapacitated = true;
-        update({ conditionTrack: next });
+      if (failureMargin <= 0) {
         return;
       }
 
-      if (failureMargin >= 10) {
-        next.bruised += 1;
-        next.staggered = true;
-        update({ conditionTrack: next });
-        return;
-      }
-
-      if (failureMargin >= 5) {
-        next.bruised += 1;
-        if (next.dazed) {
-          next.staggered = true;
-        }
-        next.dazed = true;
-        update({ conditionTrack: next });
-        return;
-      }
-
-      if (failureMargin > 0) {
-        next.bruised += 1;
-        update({ conditionTrack: next });
-      }
+      // Single source of truth: the engine's Toughness-failure banding
+      // (including the second-Staggered → Incapacitated escalation).
+      update({ conditionTrack: applyMam3eToughnessFailure(conditionTrack, failureMargin) });
     },
     [conditionTrack, update]
   );

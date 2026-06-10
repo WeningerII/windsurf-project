@@ -301,12 +301,14 @@ export const warlock: CharacterClass = {
     // - All slots are the same level (increases with Warlock level)
     // - Recover on SHORT rest (not long rest)
     // - Don't combine with other casters for multiclass spell slots
+    // SRD 5.1 Warlock table: slot count 1 → 2 at level 2, 2 → 3 at level 11,
+    // 3 → 4 at level 17; slot level rises at 3/5/7/9 and caps at 5th.
     spellSlots: {
       1: [1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Level 1-2: 1st level slots
-      2: [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Level 3-4: 2nd level slots
-      3: [0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Level 5-6: 3rd level slots
-      4: [0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Level 7-8: 4th level slots
-      5: [0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4], // Level 9+: 5th level slots (increases quantity)
+      2: [0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Level 3-4: 2nd level slots
+      3: [0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Level 5-6: 3rd level slots
+      4: [0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Level 7-8: 4th level slots
+      5: [0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4], // Level 9+: 5th level slots (3 at L11, 4 at L17)
       6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Use Mystic Arcanum
       7: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Use Mystic Arcanum
       8: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Use Mystic Arcanum

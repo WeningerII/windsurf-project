@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { useState } from 'react';
 import { appendSceneEvent, createSceneDocument } from '../../scene/runtime';
+import { resolveSceneAttack } from '../../rules';
 import { SceneManager } from '../../components/SceneManager';
 import { registerAllSystems } from '../../systems';
 import { systemRegistry } from '../../registry';
@@ -48,11 +49,74 @@ const encounterMonsterFixtures = vi.hoisted(() => [
     languages: ['Common', 'Giant'],
     actions: [{ name: 'Greatclub', description: 'Melee Weapon Attack.' }],
   },
+  // Never lands damage: every total misses (nat 20 crits, but 2d4 - 98 < 0
+  // produces no intent either), so attacking appends NO event — the exact
+  // stuck-seed shape from 05-H1/02-H1.
+  {
+    id: 'peasant',
+    name: 'Peasant',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2.1',
+    size: 'medium',
+    type: 'humanoid',
+    alignment: 'neutral',
+    challengeRating: 0.25,
+    experiencePoints: 10,
+    armorClass: 10,
+    hitPoints: { count: 2, die: 'd6', modifier: 0, notation: '2d6' },
+    speed: { walk: 30 },
+    abilities: { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+    senses: [],
+    languages: ['Common'],
+    actions: [
+      {
+        name: 'Flail Wildly',
+        description:
+          'Melee Weapon Attack: -98 to hit, reach 5 ft., one target. Hit: 1 (1d4 - 98) bludgeoning damage.',
+      },
+    ],
+  },
+  // One-shots anything it hits (only a natural 1 misses): deterministic kills
+  // for the stale-target tests.
+  {
+    id: 'brute',
+    name: 'Vicious Brute',
+    system: 'dnd-5e-2024',
+    source: 'SRD 5.2.1',
+    size: 'medium',
+    type: 'humanoid',
+    alignment: 'chaotic evil',
+    challengeRating: 0.25,
+    experiencePoints: 50,
+    armorClass: 10,
+    hitPoints: { count: 2, die: 'd6', modifier: 0, notation: '2d6' },
+    speed: { walk: 30 },
+    abilities: { str: 18, dex: 10, con: 10, int: 6, wis: 8, cha: 6 },
+    senses: [],
+    languages: ['Common'],
+    actions: [
+      {
+        name: 'Overhead Smash',
+        description:
+          'Melee Weapon Attack: +98 to hit, reach 5 ft., one target. Hit: 99 (1d4 + 98) bludgeoning damage.',
+      },
+    ],
+  },
 ]);
 
 vi.mock('../../utils/dataLoader', () => ({
   loadMonstersForSystem: vi.fn(async () => encounterMonsterFixtures),
 }));
+
+// Pass-through spy: real resolution behavior, observable call arguments (the
+// per-click seed regression below asserts on the seeds the UI derives).
+vi.mock('../../rules', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../../rules')>();
+  return {
+    ...actual,
+    resolveSceneAttack: vi.fn(actual.resolveSceneAttack),
+  };
+});
 
 const now = new Date('2026-05-01T12:00:00.000Z');
 
@@ -242,5 +306,184 @@ describe('SceneManager', () => {
     expect(screen.getByRole('button', { name: /Token Goblin 1/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Token Goblin 2/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Token Ogre/i })).toBeInTheDocument();
+  });
+
+  it('REGRESSION (05-H1/02-H1): each Attack click derives a fresh seed even when no event lands', async () => {
+    const user = userEvent.setup();
+    render(<SceneHarness initialScenes={[makeScene()]} />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('combobox', { name: /encounter monster/i })).toHaveValue('goblin');
+    });
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: /encounter monster/i }),
+      'peasant'
+    );
+    await user.clear(screen.getByRole('textbox', { name: /encounter count/i }));
+    await user.type(screen.getByRole('textbox', { name: /encounter count/i }), '2');
+    await user.click(screen.getByRole('button', { name: /add encounter/i }));
+
+    // Pick attacker + target; the peasant's attack can never produce a damage
+    // event, so events.length stays frozen between clicks.
+    await user.click(screen.getByRole('button', { name: /Token Peasant 1/i }));
+    await user.selectOptions(screen.getByRole('combobox', { name: /attack target/i }), 'peasant-2');
+    await user.click(screen.getByRole('button', { name: /^attack$/i }));
+    await user.click(screen.getByRole('button', { name: /^attack$/i }));
+
+    const seeds = vi
+      .mocked(resolveSceneAttack)
+      .mock.calls.map(([params]) => (params as { seed: string }).seed);
+    expect(seeds).toHaveLength(2);
+    // Same scene seed and same (frozen) events.length, but the per-click nonce
+    // advances — before the fix both clicks were byte-identical streams.
+    expect(seeds[0]).toMatch(/^scene-1:attack:\d+:0$/);
+    expect(seeds[1]).toMatch(/^scene-1:attack:\d+:1$/);
+    expect(seeds[0].replace(/:\d+$/, '')).toBe(seeds[1].replace(/:\d+$/, ''));
+    expect(seeds[0]).not.toBe(seeds[1]);
+
+    // Two log lines were appended (the misses are visible, just not events).
+    const log = screen.getAllByText(/Peasant 1 .*Peasant 2/i);
+    expect(log.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it('REGRESSION (05-M6): Run Round advances the scene round machinery', async () => {
+    const user = userEvent.setup();
+    render(<SceneHarness initialScenes={[makeScene()]} />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('combobox', { name: /encounter monster/i })).toHaveValue('goblin');
+    });
+    await user.clear(screen.getByRole('textbox', { name: /encounter count/i }));
+    await user.type(screen.getByRole('textbox', { name: /encounter count/i }), '2');
+    await user.click(screen.getByRole('button', { name: /add encounter/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/Round 1, active Goblin/i)).toBeInTheDocument();
+    });
+
+    // The goblins share a faction (no damage events), but the completed engine
+    // round still walks the initiative cycle — the round was pinned at 1
+    // forever before the fix.
+    await user.click(screen.getByRole('button', { name: /run round/i }));
+    await waitFor(() => {
+      expect(screen.getByText(/Round 2, active Goblin/i)).toBeInTheDocument();
+    });
+  });
+
+  it('REGRESSION (02-M2): typing an initiative value survives appended events', async () => {
+    const user = userEvent.setup();
+    const doc = makeDoc('doc-1', 'Astra');
+    render(<SceneHarness initialScenes={[makeScene()]} documents={[doc]} />);
+
+    await user.selectOptions(screen.getByRole('combobox', { name: /linked character/i }), doc.id);
+    await user.click(screen.getByRole('button', { name: /place token/i }));
+    await user.click(screen.getByRole('gridcell', { name: /Cell 2, 2/i }));
+
+    await user.clear(screen.getByRole('textbox', { name: /Astra initiative/i }));
+    await user.type(screen.getByRole('textbox', { name: /Astra initiative/i }), '18');
+    await user.click(screen.getByRole('button', { name: /set order/i }));
+
+    // Start editing a NEW value, then append an event (move the token): the
+    // sync effect used to clobber the input back to the stored 18.
+    await user.clear(screen.getByRole('textbox', { name: /Astra initiative/i }));
+    await user.type(screen.getByRole('textbox', { name: /Astra initiative/i }), '25');
+    await user.click(screen.getByRole('button', { name: /Token Astra/i }));
+    await user.click(screen.getByRole('gridcell', { name: /Cell 4, 4/i }));
+
+    expect(screen.getByRole('gridcell', { name: /Cell 4, 4, Astra/i })).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: /Astra initiative/i })).toHaveValue('25');
+  });
+
+  it('REGRESSION (02-L3): clearing an initiative input keeps the token with its previous value', async () => {
+    const user = userEvent.setup();
+    const doc = makeDoc('doc-1', 'Astra');
+    render(<SceneHarness initialScenes={[makeScene()]} documents={[doc]} />);
+
+    await user.selectOptions(screen.getByRole('combobox', { name: /linked character/i }), doc.id);
+    await user.click(screen.getByRole('button', { name: /place token/i }));
+    await user.click(screen.getByRole('gridcell', { name: /Cell 2, 2/i }));
+
+    await user.clear(screen.getByRole('textbox', { name: /Astra initiative/i }));
+    await user.type(screen.getByRole('textbox', { name: /Astra initiative/i }), '18');
+    await user.click(screen.getByRole('button', { name: /set order/i }));
+    await waitFor(() => {
+      expect(screen.getByText('Round 1, active Astra')).toBeInTheDocument();
+    });
+
+    // Clear the input and Set Order again: the token must NOT drop out of the
+    // initiative order; the previous value (18) is kept and surfaced.
+    await user.clear(screen.getByRole('textbox', { name: /Astra initiative/i }));
+    await user.click(screen.getByRole('button', { name: /set order/i }));
+
+    expect(
+      screen.getByText(/Invalid initiative for Astra — kept the previous value\./i)
+    ).toBeInTheDocument();
+    expect(screen.getByText('Round 1, active Astra')).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: /Astra initiative/i })).toHaveValue('18');
+  });
+
+  it('REGRESSION (02-M3): killing the selected target clears it from the combat panel', async () => {
+    const user = userEvent.setup();
+    render(<SceneHarness initialScenes={[makeScene()]} />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('combobox', { name: /encounter monster/i })).toHaveValue('goblin');
+    });
+    await user.selectOptions(screen.getByRole('combobox', { name: /encounter monster/i }), 'brute');
+    await user.clear(screen.getByRole('textbox', { name: /encounter count/i }));
+    await user.type(screen.getByRole('textbox', { name: /encounter count/i }), '2');
+    await user.click(screen.getByRole('button', { name: /add encounter/i }));
+
+    await user.click(screen.getByRole('button', { name: /Token Vicious Brute 1/i }));
+    const targetSelect = screen.getByRole('combobox', { name: /attack target/i });
+    await user.selectOptions(targetSelect, 'brute-2');
+
+    // Pinned: under this scene's fixed seed chain the +98 attack hits (only a
+    // natural 1 could miss) and the 99 damage drops Brute 2 to 0 HP.
+    await user.click(screen.getByRole('button', { name: /^attack$/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/Vicious Brute 1 (hits|crits) Vicious Brute 2/i)).toBeInTheDocument();
+    });
+    // The dead target is deselected (no blank-but-armed Attack button)...
+    await waitFor(() => {
+      expect(targetSelect).toHaveValue('');
+    });
+    // ...and Attack is disabled until a new target is chosen.
+    expect(screen.getByRole('button', { name: /^attack$/i })).toBeDisabled();
+  });
+
+  it('REGRESSION (02-M3): switching scenes clears the combat target and log', async () => {
+    const user = userEvent.setup();
+    const otherScene = {
+      ...createSceneDocument({
+        id: 'scene-2',
+        name: 'Empty Hall',
+        systemId: 'dnd-5e-2024',
+        grid: { width: 4, height: 4 },
+        now,
+      }),
+    };
+    render(<SceneHarness initialScenes={[makeScene(), otherScene]} />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('combobox', { name: /encounter monster/i })).toHaveValue('goblin');
+    });
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: /encounter monster/i }),
+      'peasant'
+    );
+    await user.clear(screen.getByRole('textbox', { name: /encounter count/i }));
+    await user.type(screen.getByRole('textbox', { name: /encounter count/i }), '2');
+    await user.click(screen.getByRole('button', { name: /add encounter/i }));
+
+    await user.click(screen.getByRole('button', { name: /Token Peasant 1/i }));
+    await user.selectOptions(screen.getByRole('combobox', { name: /attack target/i }), 'peasant-2');
+    await user.click(screen.getByRole('button', { name: /^attack$/i }));
+    expect(screen.getByText(/Peasant 1 .*Peasant 2/i)).toBeInTheDocument();
+
+    // Switch scenes: the other scene must not show this scene's combat log.
+    await user.click(screen.getByRole('button', { name: /Empty Hall/i }));
+    expect(screen.queryByText(/Peasant 1 .*Peasant 2/i)).not.toBeInTheDocument();
   });
 });

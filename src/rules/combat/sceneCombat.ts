@@ -21,6 +21,7 @@ import type { SceneActionIntent, SceneState, SceneToken } from '../../types/core
 import type { EffectInstance } from '../ir/types';
 import { runCombatRound, type RoundCombatant, type RoundResult } from '../tactical/roundDriver';
 import { resolveAttack } from '../resolver/attackResolution';
+import { gridDistance } from '../resolver/areaTargeting';
 import { participantRng } from '../resolver/participantResolution';
 import { attackToDamageIntent } from '../resolver/sceneCombat';
 
@@ -98,8 +99,10 @@ export interface SceneAttackOutcome {
 
 /**
  * Resolve one attacker→target attack and produce a scene intent + log line.
- * Deterministic given the seed. Returns a miss log (no intent) when the attack
- * misses or both tokens cannot be resolved.
+ * Deterministic given the seed. Returns an honest no-intent outcome when the
+ * attack misses, either token cannot be resolved, either side is down (or has
+ * no HP to lose), or the target is beyond the attacker's reach — the same rules
+ * the autonomous round enforces.
  */
 export function resolveSceneAttack(params: {
   state: SceneState;
@@ -115,10 +118,35 @@ export function resolveSceneAttack(params: {
   if (!attacker || !target) {
     return { log: 'Attack failed: attacker or target is missing.', hit: false };
   }
+  // Liveness: a downed (or HP-less) attacker cannot act; a downed target cannot
+  // be beaten further, and an HP-less target would silently discard the damage
+  // in the fold — refuse honestly instead of logging a phantom hit.
+  if (!attacker.hp || attacker.hp.current <= 0) {
+    return { log: `${attacker.name} is down and cannot attack.`, hit: false };
+  }
+  if (!target.hp || target.hp.current <= 0) {
+    return {
+      log: target.hp
+        ? `${target.name} is already down.`
+        : `${target.name} has no hit points to damage.`,
+      hit: false,
+    };
+  }
   const attackerStats = resolveStats(attacker);
   const targetStats = resolveStats(target);
   if (!attackerStats || !targetStats) {
     return { log: `${attacker.name} cannot resolve combat stats for this attack.`, hit: false };
+  }
+
+  // Reach: the manual path enforces the same Chebyshev-distance rule the
+  // autonomous round does (scoreTargets.inReach). No RNG is consumed, so an
+  // out-of-reach click never advances any stream.
+  const distance = gridDistance(attacker.position, target.position);
+  if (distance > attackerStats.reach) {
+    return {
+      log: `${attacker.name} cannot reach ${target.name} (${distance} cells away, reach ${attackerStats.reach}).`,
+      hit: false,
+    };
   }
 
   const resolution = resolveAttack({
@@ -144,14 +172,23 @@ export function resolveSceneAttack(params: {
 
 export interface SceneRoundOutcome {
   result: RoundResult;
+  /**
+   * Ordered intents to apply: the round's apply-damage intents followed by the
+   * advance-turn intents that walk the initiative cycle back to its top, so the
+   * fold increments `state.round` exactly once per completed engine round.
+   */
   intents: SceneActionIntent[];
   log: string[];
 }
 
 /**
  * Run a full combat round over the scene's combatants and return the ordered
- * apply-damage intents plus a per-turn log. The caller applies the intents as
- * scene events (keeping persistence in the UI layer).
+ * intents plus a per-turn log. The caller applies the intents as scene events
+ * (keeping persistence in the UI layer). `runCombatRound` documents
+ * round-advancement as the caller's job — this bridge does it by appending
+ * advance-turn intents (one per remaining initiative slot) after the damage,
+ * so the scene's round/active-token machinery stays in sync with autonomous
+ * combat. Scenes with no initiative order have no turn machinery to advance.
  */
 export function runSceneRound(params: {
   state: SceneState;
@@ -176,5 +213,19 @@ export function runSceneRound(params: {
     return `${nameOf(turn.tokenId)} ${res.isCriticalHit ? 'crits' : 'hits'} ${target} for ${res.damage}.`;
   });
 
-  return { result, intents: result.intents, log };
+  const intents: SceneActionIntent[] = [...result.intents];
+  if (params.state.initiative.length > 0) {
+    const activeIndex = params.state.initiative.findIndex(
+      (entry) => entry.tokenId === params.state.activeTokenId
+    );
+    // Walk from the current active slot back to the top of the order; the fold
+    // bumps state.round when the cycle wraps. An active token missing from
+    // initiative wraps to the top in a single step (matching the fold's rule).
+    const steps = activeIndex < 0 ? 1 : params.state.initiative.length - activeIndex;
+    for (let step = 0; step < steps; step += 1) {
+      intents.push({ type: 'advance-turn' });
+    }
+  }
+
+  return { result, intents, log };
 }

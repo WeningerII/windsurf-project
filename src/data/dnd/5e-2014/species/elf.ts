@@ -50,11 +50,14 @@ export const elf: Species = {
     },
   ],
 
+  // SRD 5.1 ships exactly one elf subrace (High Elf). Wood Elf and Dark Elf
+  // (Drow) are PHB-only content and were removed.
   subraces: [
     {
       id: 'high-elf',
       name: 'High Elf',
       parentSpeciesId: 'elf',
+      source: 'SRD 5.1',
 
       abilityScoreIncrease: [
         {
@@ -88,88 +91,6 @@ export const elf: Species = {
 
       description:
         'As a high elf, you have a keen mind and a mastery of at least the basics of magic.',
-    },
-    {
-      id: 'wood-elf',
-      name: 'Wood Elf',
-      parentSpeciesId: 'elf',
-
-      abilityScoreIncrease: [
-        {
-          type: 'fixed',
-          attributes: { wis: 1 },
-        },
-      ],
-
-      traits: [
-        {
-          id: 'elf-weapon-training-wood',
-          name: 'Elf Weapon Training',
-          source: 'Wood Elf',
-          description:
-            'You have proficiency with the longsword, shortsword, shortbow, and longbow.',
-        },
-        {
-          id: 'fleet-of-foot',
-          name: 'Fleet of Foot',
-          source: 'Wood Elf',
-          description: 'Your base walking speed increases to 35 feet.',
-        },
-        {
-          id: 'mask-of-the-wild',
-          name: 'Mask of the Wild',
-          source: 'Wood Elf',
-          description:
-            'You can attempt to hide even when you are only lightly obscured by foliage, heavy rain, falling snow, mist, and other natural phenomena.',
-        },
-      ],
-
-      description:
-        'As a wood elf, you have keen senses and intuition, and your fleet feet carry you quickly and stealthily through your native forests.',
-    },
-    {
-      id: 'dark-elf-drow',
-      name: 'Dark Elf (Drow)',
-      parentSpeciesId: 'elf',
-
-      abilityScoreIncrease: [
-        {
-          type: 'fixed',
-          attributes: { cha: 1 },
-        },
-      ],
-
-      traits: [
-        {
-          id: 'superior-darkvision',
-          name: 'Superior Darkvision',
-          source: 'Drow',
-          description: 'Your darkvision has a radius of 120 feet.',
-        },
-        {
-          id: 'sunlight-sensitivity',
-          name: 'Sunlight Sensitivity',
-          source: 'Drow',
-          description:
-            'You have disadvantage on attack rolls and on Wisdom (Perception) checks that rely on sight when you, the target of your attack, or whatever you are trying to perceive is in direct sunlight.',
-        },
-        {
-          id: 'drow-magic',
-          name: 'Drow Magic',
-          source: 'Drow',
-          description:
-            'You know the dancing lights cantrip. When you reach 3rd level, you can cast the faerie fire spell once per day. When you reach 5th level, you can also cast the darkness spell once per day. Charisma is your spellcasting ability for these spells.',
-        },
-        {
-          id: 'drow-weapon-training',
-          name: 'Drow Weapon Training',
-          source: 'Drow',
-          description: 'You have proficiency with rapiers, shortswords, and hand crossbows.',
-        },
-      ],
-
-      description:
-        'Descended from an earlier subrace of dark-skinned elves, the drow were banished from the surface world for following the goddess Lolth down the path to evil and corruption.',
     },
   ],
 

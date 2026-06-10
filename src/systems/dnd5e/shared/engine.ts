@@ -4,7 +4,15 @@ import { Dnd5eDataModel } from '../data-model';
 import { abilityMod } from '../../../utils/math';
 import { hitDieSize } from '../../../constants/hit-dice';
 import { compute5eAC } from '../../../utils/armorClass';
-import { compute5eSpellSlots } from '../../../utils/spellSlots';
+import {
+  compute5eSpellSlots,
+  computePactMagicSlots,
+  type Dnd5eRulesEdition,
+} from '../../../utils/spellSlots';
+import {
+  dnd5eUnarmoredDefenseBarbarian,
+  dnd5eUnarmoredDefenseMonk,
+} from '../../../utils/derivedCombatMath';
 import { resolveCharacterEffects } from '../../../rules';
 import { conditionImposesDisadvantage } from '../../../rules/conditions/dnd5eConditions';
 import type { GameSystemId } from '../../../types/game-systems';
@@ -81,6 +89,11 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
       system: {
         ...document.system,
         hitPoints: { ...document.system.hitPoints },
+        // Clone deathSaves too: normalizeDeathSaves writes clamped values, and
+        // the input document's object must never be mutated.
+        deathSaves: document.system.deathSaves
+          ? { ...document.system.deathSaves }
+          : document.system.deathSaves,
         spellcasting: document.system.spellcasting
           ? {
               ...document.system.spellcasting,
@@ -107,29 +120,41 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
     this.applySubsystemRules(clonedDoc, dexMod);
 
     // --- Max HP ---
-    // Recompute from class hit dice when they're tracked; otherwise preserve the
-    // existing max (5e HP can't be derived without per-class hit dice).
-    let maxHP = data.hitPoints.max;
+    // Derive the UNHALVED base first. prepareData must be idempotent: the app
+    // persists prepared documents (useDocuments), so a derived value may never
+    // be written over its own input. `baseMaxHP` stores the unhalved base for
+    // class-less documents; `hitPoints.max` is always re-derived from it, so
+    // the 2014 exhaustion halving cannot compound across save/load cycles.
+    let baseMaxHP: number;
     if (data.classLevels.length > 0) {
-      maxHP = 0;
+      // Recompute from class hit dice when they're tracked.
+      baseMaxHP = 0;
       for (const cl of data.classLevels) {
         const die = hitDieSize(cl.classId);
         if (cl.hitDieRolls.length === 0) {
-          // First level of first class: max die + CON
-          maxHP += die + conMod;
+          // First level of first class: max die + CON (PHB: min 1 HP per level)
+          baseMaxHP += Math.max(1, die + conMod);
         } else {
           for (const roll of cl.hitDieRolls) {
-            maxHP += roll + conMod;
+            // PHB: each level adds a minimum of 1 hit point, so the clamp is
+            // per level (matching the 3.5e engine's per-die clamp) — not a
+            // single floor on the total.
+            baseMaxHP += Math.max(1, roll + conMod);
           }
         }
       }
-      maxHP = Math.max(maxHP, totalLevel); // minimum 1 HP per level
+      baseMaxHP = Math.max(baseMaxHP, totalLevel); // levels without tracked rolls still count
+    } else {
+      // 5e HP can't be derived without per-class hit dice: preserve the stored
+      // base. `baseMaxHP` (when present) is authoritative — the persisted
+      // `hitPoints.max` may be an exhaustion-halved derived value.
+      baseMaxHP = data.baseMaxHP ?? data.hitPoints.max;
     }
+    data.baseMaxHP = baseMaxHP;
 
-    // Exhaustion (2014 halves max HP at level 4) applies regardless of how max
-    // HP was derived, so it must run even when class levels aren't tracked.
-    maxHP = this.applyExhaustionMaxHP(data.exhaustionLevel, maxHP);
-    data.hitPoints.max = maxHP;
+    // Exhaustion (2014 halves max HP at level 4) applies regardless of how the
+    // base was derived; the halved value lives only in `hitPoints.max`.
+    data.hitPoints.max = this.applyExhaustionMaxHP(data.exhaustionLevel, baseMaxHP);
 
     data.hitPoints.current = Math.min(data.hitPoints.current, data.hitPoints.max);
     if (this.isExhaustionLethal(data.exhaustionLevel)) {
@@ -168,22 +193,39 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
           level: cl.level,
           subclassId: cl.subclassId,
         })),
-        data.spellcasting.spellSlots
+        data.spellcasting.spellSlots,
+        { edition: this.getRulesEdition() }
+      );
+
+      // Warlock Pact Magic is a separate short-rest pool (SRD), never part of
+      // the multiclass grid above.
+      const warlockLevel = data.classLevels
+        .filter((cl) => cl.classId === 'warlock')
+        .reduce((sum, cl) => sum + cl.level, 0);
+      data.spellcasting.pactMagic = computePactMagicSlots(
+        warlockLevel,
+        data.spellcasting.pactMagic
       );
     }
 
     return clonedDoc;
   }
 
+  /** Rules edition for slot rounding etc. — overridden by the 2024 engine. */
+  protected getRulesEdition(): Dnd5eRulesEdition {
+    return '2014';
+  }
+
   // Hook for 2014 vs 2024 specifics
   protected applySubsystemRules(doc: CharacterDocument<Dnd5eDataModel>, dexMod: number): void {
     const data = doc.system;
-    // Base AC from armor/shield + Defense fighting style, then layer magic-item
-    // and feat/feature AC bonuses through the shared rules resolver (RFC 003).
+    // Base AC from armor/shield (with Unarmored Defense when the class feature
+    // is present) + Defense fighting style, then layer magic-item and
+    // feat/feature AC bonuses through the shared rules resolver (RFC 003).
     // Additive: with no bonus-bearing gear or modifiers this contributes 0, so
     // existing AC outputs are unchanged.
     data.armorClass =
-      compute5eAC(data.baseAttributes.dex ?? 10, data.equipment) +
+      this.computeBaseArmorClass(data, dexMod) +
       getDnd5eDefenseStyleArmorClassBonus(data) +
       resolveCharacterEffects(doc.systemId as GameSystemId, {
         equipment: data.equipment,
@@ -191,6 +233,40 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
         features: data.features,
       }).bonus('ac');
     data.initiative = dexMod;
+  }
+
+  /**
+   * Armor/shield AC, taking the best applicable Unarmored Defense formula
+   * (SRD 5.1/5.2, identical in both editions) when the character has the
+   * class feature and wears no armor:
+   *   - Barbarian: 10 + Dex mod + Con mod (a shield still applies)
+   *   - Monk:      10 + Dex mod + Wis mod (no armor AND no shield)
+   */
+  protected computeBaseArmorClass(data: Dnd5eDataModel, dexMod: number): number {
+    let baseAC = compute5eAC(data.baseAttributes.dex ?? 10, data.equipment);
+
+    const armor = data.equipment.find((e) => e.slot === 'chest' && e.armorClass != null);
+    if (armor) {
+      return baseAC;
+    }
+
+    const shield = data.equipment.find((e) => e.slot === 'offHand' && e.shieldBonus != null);
+    const hasFeature = (featureId: string) =>
+      data.features.some((feature) => feature.id === featureId);
+
+    if (hasFeature('unarmored-defense-barbarian')) {
+      const conMod = abilityMod(data.baseAttributes.con ?? 10);
+      baseAC = Math.max(
+        baseAC,
+        dnd5eUnarmoredDefenseBarbarian(dexMod, conMod) + (shield?.shieldBonus ?? 0)
+      );
+    }
+    if (!shield && hasFeature('unarmored-defense-monk')) {
+      const wisMod = abilityMod(data.baseAttributes.wis ?? 10);
+      baseAC = Math.max(baseAC, dnd5eUnarmoredDefenseMonk(dexMod, wisMod));
+    }
+
+    return baseAC;
   }
 
   protected applyExhaustionMaxHP(_exhaustion: number, maxHP: number): number {

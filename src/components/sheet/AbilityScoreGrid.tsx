@@ -111,11 +111,26 @@ export const AbilityScoreGrid: React.FC<Props> = ({ attributes, names, onUpdate,
 
   const pointBuyRemaining = POINT_BUY_BUDGET - totalPointBuyCost(pointBuyDraft, abilityKeys);
   const standardArrayRemaining = remainingStandardArrayValues(standardArrayDraft, abilityKeys);
+  // Whether the stored scores are themselves a legal 27-point-buy set. When
+  // they are not (leveled characters, racial bonuses, rolled stats), the
+  // planner falls back to an all-8s draft — which must be labelled as a
+  // fresh baseline, not silently presented as the current scores.
+  const currentMatchesPointBuy = useMemo(
+    () =>
+      isValidPointBuyDraft(
+        Object.fromEntries(abilityKeys.map((key) => [key, attributes[key] ?? POINT_BUY_MIN])),
+        abilityKeys
+      ),
+    [abilityKeys, attributes]
+  );
 
   const handleManualUpdate = (key: string, value: string) => {
     onUpdate?.({ ...attributes, [key]: parseNum(value, 10) });
   };
 
+  // Point Buy is a planner: +/- only edits the local draft. Nothing is
+  // written to the character until "Apply Point Buy" (mirrors Standard
+  // Array), so opening the tab can never overwrite existing scores.
   const handlePointBuyUpdate = (key: string, nextScore: number) => {
     const draft = { ...pointBuyDraft, [key]: clampPointBuyScore(nextScore) };
     if (!isValidPointBuyDraft(draft, abilityKeys)) {
@@ -123,7 +138,10 @@ export const AbilityScoreGrid: React.FC<Props> = ({ attributes, names, onUpdate,
     }
 
     setPointBuyDraft(draft);
-    onUpdate?.({ ...attributes, ...draft });
+  };
+
+  const applyPointBuy = () => {
+    onUpdate?.({ ...attributes, ...pointBuyDraft });
   };
 
   const handleStandardArrayUpdate = (key: string, value: string) => {
@@ -193,16 +211,20 @@ export const AbilityScoreGrid: React.FC<Props> = ({ attributes, names, onUpdate,
             <p>27-point buy. Scores stay between 8 and 15.</p>
             <span className="font-medium tabular-nums">Remaining: {pointBuyRemaining}</span>
           </div>
-          <div className="mt-2">
+          {!currentMatchesPointBuy && (
+            <p className="mt-2 text-muted-foreground">
+              Planning from a fresh 8s baseline — current scores unchanged until you apply.
+            </p>
+          )}
+          <div className="mt-2 flex flex-wrap gap-2">
+            <Button type="button" size="sm" onClick={applyPointBuy}>
+              Apply Point Buy
+            </Button>
             <Button
               type="button"
               size="sm"
               variant="ghost"
-              onClick={() => {
-                const resetDraft = emptyPointBuyDraft(abilityKeys);
-                setPointBuyDraft(resetDraft);
-                onUpdate({ ...attributes, ...resetDraft });
-              }}
+              onClick={() => setPointBuyDraft(emptyPointBuyDraft(abilityKeys))}
             >
               Reset To 8
             </Button>

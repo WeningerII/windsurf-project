@@ -12,8 +12,9 @@ import { Dnd5eEngine } from '../systems/dnd5e/engine';
 import { abilityMod } from '../utils/math';
 import { profBonus, rollD20, normalizeDeathSaves } from '../systems/dnd5e/shared/engine';
 import { compute5eAC } from '../utils/armorClass';
-import { compute5eSpellSlots } from '../utils/spellSlots';
+import { compute5eSpellSlots, computePactMagicSlots } from '../utils/spellSlots';
 import { createDefaultDnd5eData, type Dnd5eDataModel } from '../systems/dnd5e/data-model';
+import type { EquippedItem } from '../types/core/character';
 import type { CharacterDocument } from '../types/core/document';
 
 const TEST_DATE = new Date('2026-05-01T00:00:00.000Z');
@@ -29,7 +30,11 @@ function doc(system: Dnd5eDataModel): CharacterDocument<Dnd5eDataModel> {
   };
 }
 
-function chest(armorClass: number, armorType: 'light' | 'medium' | 'heavy', dexBonusMax?: number) {
+function chest(
+  armorClass: number,
+  armorType: 'light' | 'medium' | 'heavy',
+  dexBonusMax?: number
+): EquippedItem {
   return { itemId: 'armor', slot: 'chest', attuned: false, armorClass, armorType, dexBonusMax };
 }
 const SHIELD = { itemId: 'shield', slot: 'offHand', attuned: false, shieldBonus: 2 };
@@ -156,6 +161,14 @@ describe('L7 max HP from class hit dice', () => {
     );
     expect(out.system.hitPoints.max).toBe(10 + 1 + (6 + 1) + (5 + 1)); // 24
   });
+  it('clamps the minimum 1 HP per level with mixed positive/negative levels', () => {
+    // PHB: each level adds a minimum of 1 HP. Con 7 (-2), rolls [10, 1, 1]:
+    // max(1, 8) + max(1, -1) + max(1, -1) = 10 (a global floor would give 6).
+    const out = engine.prepareData(
+      doc({ ...con(7), classLevels: [{ classId: 'fighter', level: 3, hitDieRolls: [10, 1, 1] }] })
+    );
+    expect(out.system.hitPoints.max).toBe(10);
+  });
 });
 
 // ── L8: 2014 exhaustion interacts with max HP ───────────────────────────────
@@ -268,21 +281,31 @@ describe('L2/L4 rollCheck modifiers', () => {
   });
   it('skill check adds proficiency when proficient (level 1 → +2)', async () => {
     const r = await engine.rollCheck(
-      doc(withScores({ skillProficiencies: { acrobatics: { level: 'proficient' } } })),
+      doc(
+        withScores({
+          skillProficiencies: { acrobatics: { level: 'proficient', source: ['manual'] } },
+        })
+      ),
       'acrobatics'
     );
     expect(r.total).toBe(1 + 2 + 2);
   });
   it('expertise doubles proficiency', async () => {
     const r = await engine.rollCheck(
-      doc(withScores({ skillProficiencies: { acrobatics: { level: 'expertise' } } })),
+      doc(
+        withScores({
+          skillProficiencies: { acrobatics: { level: 'expertise', source: ['manual'] } },
+        })
+      ),
       'acrobatics'
     );
     expect(r.total).toBe(1 + 2 + 4);
   });
   it('half proficiency (Jack of All Trades) rounds down', async () => {
     const r = await engine.rollCheck(
-      doc(withScores({ skillProficiencies: { acrobatics: { level: 'half' } } })),
+      doc(
+        withScores({ skillProficiencies: { acrobatics: { level: 'half', source: ['manual'] } } })
+      ),
       'acrobatics'
     );
     expect(r.total).toBe(1 + 2 + 1);
@@ -336,8 +359,8 @@ describe('L8 exhaustion disadvantage (2014)', () => {
   });
 });
 
-// ── L5: multiclass spell slots (SRD combined-caster-level table) ─────────────
-describe('L5 multiclass spell slots', () => {
+// ── L5: spell slots (single-class tables + SRD multiclass table) ─────────────
+describe('L5 spell slots (class tables + multiclass)', () => {
   it('full caster: Cleric 1 → caster level 1 → two 1st-level slots', () => {
     const slots = compute5eSpellSlots([{ classId: 'cleric', level: 1 }]);
     expect(slots[1].max).toBe(2);
@@ -349,11 +372,18 @@ describe('L5 multiclass spell slots', () => {
     expect(slots[2].max).toBe(3);
     expect(slots[3].max).toBe(2);
   });
-  it('half caster floors: Paladin 1 → 0 slots, Paladin 2 → caster level 1', () => {
+  it('single-class half caster uses the Paladin table: none at 1, then rounds up', () => {
+    // PHB Paladin table: level 1 → no Spellcasting; level 2 → 2; level 3 → 3;
+    // level 5 → 4/2. The SRD multiclass floor applies only with 2+ casting
+    // classes (the old floor() at odd levels under-counted by a caster level).
     expect(compute5eSpellSlots([{ classId: 'paladin', level: 1 }])[1].max).toBe(0);
     expect(compute5eSpellSlots([{ classId: 'paladin', level: 2 }])[1].max).toBe(2);
+    expect(compute5eSpellSlots([{ classId: 'paladin', level: 3 }])[1].max).toBe(3);
+    const paladin5 = compute5eSpellSlots([{ classId: 'paladin', level: 5 }]);
+    expect(paladin5[1].max).toBe(4);
+    expect(paladin5[2].max).toBe(2);
   });
-  it('multiclass sums caster levels: Cleric 5 + Paladin 4 → level 7', () => {
+  it('multiclass sums floored caster levels: Cleric 5 + Paladin 4 → level 7', () => {
     const slots = compute5eSpellSlots([
       { classId: 'cleric', level: 5 },
       { classId: 'paladin', level: 4 },
@@ -366,11 +396,21 @@ describe('L5 multiclass spell slots', () => {
     const slots = compute5eSpellSlots([{ classId: 'warlock', level: 5 }]);
     expect(slots[1].max).toBe(0);
   });
-  it('third caster: Eldritch Knight Fighter 3 → caster level 1', () => {
-    const slots = compute5eSpellSlots([
+  it('Warlock pact slots come from the dedicated pact pool', () => {
+    // SRD Pact Magic: warlock 5 → two slots of slot level 3.
+    expect(computePactMagicSlots(5)).toEqual({ level: 3, max: 2, used: 0 });
+  });
+  it('single-class third caster uses the EK table: EK 3 → 2 slots, EK 7 → 4/2', () => {
+    const ek3 = compute5eSpellSlots([
       { classId: 'fighter', level: 3, subclassId: 'eldritch-knight' },
     ]);
-    expect(slots[1].max).toBe(2);
+    expect(ek3[1].max).toBe(2);
+    // PHB EK table level 7: 4 first / 2 second (ceil(7/3) = 3, not floor = 2).
+    const ek7 = compute5eSpellSlots([
+      { classId: 'fighter', level: 7, subclassId: 'eldritch-knight' },
+    ]);
+    expect(ek7[1].max).toBe(4);
+    expect(ek7[2].max).toBe(2);
   });
   it('preserves used counts, clamped to the new max', () => {
     const existing = compute5eSpellSlots([{ classId: 'cleric', level: 1 }]);

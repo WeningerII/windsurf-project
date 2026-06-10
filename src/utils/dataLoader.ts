@@ -40,26 +40,12 @@ import type {
 } from '../types/daggerheart';
 import { errorLogger, ErrorCategory, ErrorSeverity } from './errorLogger';
 import { loadDnd5e2014FeatureOptions } from './dnd5eFeatureOptions';
+import { dedupeById } from './indexById';
 import { OpenContentCategory, filterOpenContentBySource } from './openContentPolicy';
 
 type LoadedEntity = {
   id: string;
 };
-
-function dedupeById<T extends LoadedEntity>(items: T[]): T[] {
-  const uniqueItems: T[] = [];
-  const seen = new Set<string>();
-
-  items.forEach((item) => {
-    if (seen.has(item.id)) {
-      return;
-    }
-    seen.add(item.id);
-    uniqueItems.push(item);
-  });
-
-  return uniqueItems;
-}
 
 function finalizeLoadedItems<T extends LoadedEntity>(
   systemId: GameSystemId,
@@ -69,7 +55,8 @@ function finalizeLoadedItems<T extends LoadedEntity>(
   const validItems = items.filter(
     (item) => typeof item.id === 'string' && item.id.trim().length > 0
   );
-  const uniqueItems = dedupeById(validItems);
+  // First entry wins; duplicates dev-warn via the shared helper.
+  const uniqueItems = dedupeById(validItems, `dataLoader:${systemId}:${category}`);
   return filterOpenContentBySource(systemId, category, uniqueItems);
 }
 

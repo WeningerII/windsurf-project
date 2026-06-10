@@ -1,58 +1,10 @@
 import { Monster } from '../../../../../types/creatures/monsters';
 
 // D&D 5e-2024 Aberrations - CR 6-10 (SRD 5.2)
-// Mind flayers and other powerful aberrations
-
-export const mindFlayer: Monster = {
-  id: 'mind-flayer-2024',
-  name: 'Mind Flayer',
-  system: 'dnd-5e-2024',
-  source: 'SRD 5.2',
-  size: 'medium',
-  type: 'aberration',
-  alignment: 'lawful evil',
-  armorClass: 15,
-  hitPoints: { count: 22, die: 'd8', modifier: 44, notation: '22d8+44' },
-  speed: { walk: 30 },
-  abilities: { str: 11, dex: 12, con: 16, int: 17, wis: 16, cha: 17 },
-  savingThrows: { int: 5, wis: 5, cha: 5 },
-  skills: { Arcana: 5, Insight: 5 },
-  damageResistances: ['psychic'],
-  senses: ['darkvision 120 ft.', 'passive Perception 13'],
-  languages: ['Deep Speech', 'telepathy 120 ft.'],
-  challengeRating: 7,
-  experiencePoints: 2900,
-  specialAbilities: [
-    {
-      name: 'Magic Resistance',
-      description:
-        'The mind flayer has advantage on saving throws against spells and magical effects.',
-    },
-    {
-      name: 'Innate Spellcasting',
-      description:
-        "The mind flayer's innate spellcasting ability is Intelligence (spell save DC 13). It can innately cast the following spells, requiring no material components: At will: mage hand, minor illusion; 1/day each: charm person, detect thoughts, feeblemind, levitate, plane shift.",
-    },
-  ],
-  actions: [
-    {
-      name: 'Bite',
-      description:
-        'Melee Weapon Attack: +5 to hit, reach 5 ft., one creature. Hit: 32 (4d12 + 2) piercing damage.',
-    },
-    {
-      name: 'Tentacles',
-      description:
-        'Melee Weapon Attack: +5 to hit, reach 5 ft., one target. Hit: 15 (2d10 + 2) psychic damage. If the target is Medium or smaller, it is grappled (escape DC 15) and unable to breathe unless it can breathe water. If the mind flayer loses its concentration, the grapple ends.',
-    },
-    {
-      name: 'Extract Brain',
-      description:
-        'Melee Weapon Attack: +5 to hit, reach 5 ft., one incapacitated humanoid grappled by the mind flayer. Hit: The target takes 55 (10d10) piercing damage. If this damage reduces the target to 0 hit points, the mind flayer kills the target by extracting and devouring its brain.',
-    },
-  ],
-  environment: ['underdark'],
-};
+// NOTE: The former 'mind-flayer-2024' entry was removed. Mind flayers /
+// illithids are WotC Product Identity and appear in no SRD (5.1 or 5.2), so
+// the statblock cannot ship under an SRD citation. See
+// docs/srd-manifest/dnd5e-2024.ts for the exclusion record.
 
 export const aboleth: Monster = {
   id: 'aboleth-2024',
@@ -130,4 +82,4 @@ export const aboleth: Monster = {
   environment: ['underdark', 'water'],
 };
 
-export const aberrationsCR6to10: Monster[] = [mindFlayer, aboleth];
+export const aberrationsCR6to10: Monster[] = [aboleth];

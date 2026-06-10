@@ -22,9 +22,10 @@ example here ever stops matching the codebase, fix the example.
 
 `npm run verify` is the single source of truth for "is this change OK", and CI
 runs it on every pull request. It chains, in order: Node-version check, ESLint
-(`--max-warnings 0`), Prettier check, coverage-gated Vitest, data validation,
-production build, bundle-size budget, Playwright e2e, repo-hygiene,
-generated-docs, doc-drift, and dead-code (`knip`). Run it before opening a PR.
+(`--max-warnings 0`), test/config type-check (`tsc -p tsconfig.test.json`),
+Prettier check, coverage-gated Vitest, data validation, production build,
+bundle-size budget, Playwright e2e, repo-hygiene, generated-docs, doc-drift,
+and dead-code (`knip`). Run it before opening a PR.
 
 - Current baseline: run `npm run verify` under Node `20.19+` and capture exact counts from the command output.
 - Latest recorded full pass: May 30, 2026 under Node `v20.19.0`. Treat the exact Vitest and Playwright totals as command output, not a hardcoded invariant in this file.
@@ -102,7 +103,7 @@ This project ships **only** SRD / open-license content. Before adding any:
 Before opening a PR:
 
 ```bash
-npm run verify   # the whole gate (lint, types via build, tests+coverage, e2e, doc-drift, dead-code, ...)
+npm run verify   # the whole gate (lint, type-checks, tests+coverage, e2e, doc-drift, dead-code, ...)
 ```
 
 A good PR is small and focused, SRD-compliant, fully covered by tests, and free

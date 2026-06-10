@@ -1,6 +1,17 @@
 import type { SpellSlotProgression } from '../../../types/character-options/classes';
 
-export const pf1eClassSpellSlotTables: Partial<Record<string, SpellSlotProgression>> = {
+/**
+ * PF1e CRB spells-per-day tables, including the 0th-level (orisons/cantrips)
+ * rows for the prepared casters whose published tables carry one: wizard
+ * (Table 3-16), cleric (Table 3-5), and druid (Table 3-8) all prepare 3 at
+ * level 1 and 4 from level 2 on. Bard and sorcerer cantrips are *known* (cast
+ * at will, no per-day column in their tables) and paladin/ranger have no
+ * 0th-level spells, so those classes deliberately have no level-0 row.
+ * `SpellSlotProgression` types levels 1-9, so the 0th rows ride alongside it.
+ */
+export const pf1eClassSpellSlotTables: Partial<
+  Record<string, SpellSlotProgression & { 0?: number[] }>
+> = {
   bard: {
     1: [1, 2, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
     2: [0, 0, 0, 1, 2, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5],
@@ -13,6 +24,7 @@ export const pf1eClassSpellSlotTables: Partial<Record<string, SpellSlotProgressi
     9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   },
   cleric: {
+    0: [3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
     1: [1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
     2: [0, 0, 1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
     3: [0, 0, 0, 0, 1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
@@ -24,6 +36,7 @@ export const pf1eClassSpellSlotTables: Partial<Record<string, SpellSlotProgressi
     9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4],
   },
   druid: {
+    0: [3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
     1: [1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
     2: [0, 0, 1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
     3: [0, 0, 0, 0, 1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
@@ -68,6 +81,7 @@ export const pf1eClassSpellSlotTables: Partial<Record<string, SpellSlotProgressi
     9: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 4, 6],
   },
   wizard: {
+    0: [3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
     1: [1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
     2: [0, 0, 1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
     3: [0, 0, 0, 0, 1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],

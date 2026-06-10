@@ -7,6 +7,7 @@ import type {
 import type {
   Currency,
   DeathSaves,
+  EquipmentSlot,
   PersonalityInfo,
   SpellSlots,
 } from '../../../types/core/character';
@@ -166,6 +167,10 @@ export function useDnd5eSheetActionHandlers<T extends Dnd5eLikeDataModel>({
           ...(patch.current != null ? { current: patch.current } : {}),
           ...(patch.max != null ? { max: patch.max } : {}),
         },
+        // Editing max HP also resets the engine-maintained unhalved base so
+        // the edit survives prepareData (which derives hitPoints.max from
+        // baseMaxHP for class-less documents).
+        ...(patch.max != null ? { baseMaxHP: patch.max } : {}),
       } as Partial<T>);
     },
     [system.hitPoints, update]
@@ -201,6 +206,24 @@ export function useDnd5eSheetActionHandlers<T extends Dnd5eLikeDataModel>({
             ...system.spellcasting.spellSlots,
             [level]: { ...slot, used: nextUsed },
           },
+        },
+      } as Partial<T>);
+    },
+    [system.spellcasting, update]
+  );
+
+  const handlePactMagicChange = useCallback(
+    (delta: number) => {
+      const pactMagic = system.spellcasting?.pactMagic;
+      if (!system.spellcasting || !pactMagic) {
+        return;
+      }
+
+      const nextUsed = Math.max(0, Math.min(pactMagic.max, pactMagic.used + delta));
+      update({
+        spellcasting: {
+          ...system.spellcasting,
+          pactMagic: { ...pactMagic, used: nextUsed },
         },
       } as Partial<T>);
     },
@@ -255,20 +278,28 @@ export function useDnd5eSheetActionHandlers<T extends Dnd5eLikeDataModel>({
     [update]
   );
 
+  // When a slot is provided (EquippedItemsSection always passes one), only the
+  // entry occupying that slot is affected, so duplicate item ids equipped in
+  // different slots (ring1/ring2) can no longer be unequipped/attuned together.
+  // The slot stays optional for callers that predate the slot-aware signature.
   const handleUnequip = useCallback(
-    (itemId: string) => {
+    (itemId: string, slot?: EquipmentSlot) => {
       update({
-        equipment: system.equipment.filter((entry) => entry.itemId !== itemId),
+        equipment: system.equipment.filter((entry) =>
+          slot == null ? entry.itemId !== itemId : !(entry.itemId === itemId && entry.slot === slot)
+        ),
       } as Partial<T>);
     },
     [system.equipment, update]
   );
 
   const handleToggleAttune = useCallback(
-    (itemId: string) => {
+    (itemId: string, slot?: EquipmentSlot) => {
       update({
         equipment: system.equipment.map((entry) =>
-          entry.itemId === itemId ? { ...entry, attuned: !entry.attuned } : entry
+          entry.itemId === itemId && (slot == null || entry.slot === slot)
+            ? { ...entry, attuned: !entry.attuned }
+            : entry
         ),
       } as Partial<T>);
     },
@@ -465,7 +496,13 @@ export function useDnd5eSheetActionHandlers<T extends Dnd5eLikeDataModel>({
     ) as SpellSlots;
 
     update({
-      spellcasting: { ...system.spellcasting, spellSlots: refreshedSlots },
+      spellcasting: {
+        ...system.spellcasting,
+        spellSlots: refreshedSlots,
+        ...(system.spellcasting.pactMagic
+          ? { pactMagic: { ...system.spellcasting.pactMagic, used: 0 } }
+          : {}),
+      },
     } as Partial<T>);
   }, [system.spellcasting, update]);
 
@@ -520,6 +557,7 @@ export function useDnd5eSheetActionHandlers<T extends Dnd5eLikeDataModel>({
     handleExhaustionChange,
     handleDeathSavesChange,
     handleSpellSlotChange,
+    handlePactMagicChange,
     handleDamageHeal,
     handleEquipmentSelect,
     handleCurrencyChange,

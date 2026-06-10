@@ -15,8 +15,14 @@ import {
   pushDocuments,
   queueDeletedDocumentIds,
   queueSyncSnapshot,
+  restoreRemoteDocument,
   subscribeToRemoteDocuments,
 } from '../../utils/syncEngine';
+import {
+  getSyncTombstonedIds,
+  recordSyncTombstones,
+  removeSyncTombstones,
+} from '../../utils/syncTombstones';
 
 vi.mock('../../utils/syncEngine', () => ({
   clearQueuedDeletedDocumentIds: vi.fn(),
@@ -29,7 +35,14 @@ vi.mock('../../utils/syncEngine', () => ({
   pushDocuments: vi.fn(),
   queueDeletedDocumentIds: vi.fn(),
   queueSyncSnapshot: vi.fn(),
+  restoreRemoteDocument: vi.fn(),
   subscribeToRemoteDocuments: vi.fn(),
+}));
+
+vi.mock('../../utils/syncTombstones', () => ({
+  recordSyncTombstones: vi.fn(),
+  getSyncTombstonedIds: vi.fn(),
+  removeSyncTombstones: vi.fn(),
 }));
 
 const mockedClearQueuedDeletedDocumentIds = vi.mocked(clearQueuedDeletedDocumentIds);
@@ -42,7 +55,11 @@ const mockedMergeDocuments = vi.mocked(mergeDocuments);
 const mockedPushDocuments = vi.mocked(pushDocuments);
 const mockedQueueDeletedDocumentIds = vi.mocked(queueDeletedDocumentIds);
 const mockedQueueSyncSnapshot = vi.mocked(queueSyncSnapshot);
+const mockedRestoreRemoteDocument = vi.mocked(restoreRemoteDocument);
 const mockedSubscribeToRemoteDocuments = vi.mocked(subscribeToRemoteDocuments);
+const mockedRecordSyncTombstones = vi.mocked(recordSyncTombstones);
+const mockedGetSyncTombstonedIds = vi.mocked(getSyncTombstonedIds);
+const mockedRemoveSyncTombstones = vi.mocked(removeSyncTombstones);
 
 function makeDoc(
   id: string,
@@ -58,6 +75,13 @@ function makeDoc(
     version: 1,
     ...overrides,
   };
+}
+
+function remoteResult(
+  entities: CharacterDocument<SystemDataModel>[] = [],
+  tombstones: { id: string; deletedAt: Date }[] = []
+) {
+  return { entities, tombstones };
 }
 
 function mergeUnique(
@@ -108,11 +132,13 @@ describe('useSync', () => {
     setNavigatorOnline(true);
     mockedGetQueuedDeletedDocumentIds.mockReturnValue([]);
     mockedGetQueuedSyncSnapshot.mockReturnValue([]);
-    mockedFetchRemoteDocuments.mockResolvedValue([]);
+    mockedFetchRemoteDocuments.mockResolvedValue(remoteResult());
     mockedPushDocuments.mockResolvedValue(undefined);
     mockedDeleteRemoteDocument.mockResolvedValue(undefined);
+    mockedRestoreRemoteDocument.mockResolvedValue(undefined);
     mockedMergeDocuments.mockImplementation(mergeUnique);
     mockedSubscribeToRemoteDocuments.mockReturnValue(vi.fn());
+    mockedGetSyncTombstonedIds.mockReturnValue([]);
   });
 
   it('performs an initial sync and re-syncs when realtime updates arrive', async () => {
@@ -122,7 +148,7 @@ describe('useSync', () => {
     const onMerge = vi.fn();
 
     mockedGetQueuedSyncSnapshot.mockReturnValue(queuedDocuments);
-    mockedFetchRemoteDocuments.mockResolvedValue(remoteDocuments);
+    mockedFetchRemoteDocuments.mockResolvedValue(remoteResult(remoteDocuments));
 
     const { result } = renderHook(() => useSync({ documents: localDocuments, onMerge }), {
       wrapper: createWrapper(),
@@ -157,6 +183,171 @@ describe('useSync', () => {
     });
   });
 
+  it('skips the push when the merged collection matches the remote one', async () => {
+    const sharedDoc = makeDoc('shared-doc');
+    const onMerge = vi.fn();
+
+    mockedFetchRemoteDocuments.mockResolvedValue(remoteResult([sharedDoc]));
+
+    const { result } = renderHook(() => useSync({ documents: [sharedDoc], onMerge }), {
+      wrapper: createWrapper(),
+    });
+
+    await waitFor(() => {
+      expect(onMerge).toHaveBeenCalledTimes(1);
+    });
+
+    await waitFor(() => {
+      expect(result.current.syncState).toBe('idle');
+    });
+
+    // Nothing differs from the server, so pushing would only re-trigger the
+    // realtime subscription with our own write (the C2 sync loop).
+    expect(mockedPushDocuments).not.toHaveBeenCalled();
+    expect(mockedClearQueuedSyncSnapshot).toHaveBeenCalled();
+    expect(result.current.lastSyncedAt).toBeInstanceOf(Date);
+  });
+
+  it('removes locally held documents that are tombstoned remotely without re-pushing them', async () => {
+    const aliveDoc = makeDoc('alive-doc');
+    const zombieDoc = makeDoc('zombie-doc');
+    const deletedAt = new Date('2026-01-05T00:00:00.000Z');
+    const onMerge = vi.fn();
+
+    mockedFetchRemoteDocuments.mockResolvedValue(
+      remoteResult([aliveDoc], [{ id: 'zombie-doc', deletedAt }])
+    );
+
+    const { result } = renderHook(() => useSync({ documents: [aliveDoc, zombieDoc], onMerge }), {
+      wrapper: createWrapper(),
+    });
+
+    await waitFor(() => {
+      expect(onMerge).toHaveBeenCalledTimes(1);
+    });
+
+    // The remote tombstone is authoritative: the local copy is dropped from
+    // the merge result and persisted locally so it survives reloads.
+    const mergedDocuments = onMerge.mock.calls[0][0] as CharacterDocument<SystemDataModel>[];
+    expect(mergedDocuments.map((doc) => doc.id)).toEqual(['alive-doc']);
+    expect(mockedRecordSyncTombstones).toHaveBeenCalledWith('documents', [
+      { id: 'zombie-doc', deletedAt },
+    ]);
+
+    await waitFor(() => {
+      expect(result.current.syncState).toBe('idle');
+    });
+
+    // The merge converged on the remote state, so no push happens — the
+    // deleted document is not resurrected.
+    expect(mockedPushDocuments).not.toHaveBeenCalled();
+  });
+
+  it('records a tombstone for locally deleted documents before the remote soft delete', async () => {
+    const existingDocument = makeDoc('doomed-doc');
+    const onMerge = vi.fn();
+
+    const { rerender } = renderHook(({ documents }) => useSync({ documents, onMerge }), {
+      initialProps: { documents: [existingDocument] as CharacterDocument<SystemDataModel>[] },
+      wrapper: createWrapper(),
+    });
+
+    await waitFor(() => {
+      expect(onMerge).toHaveBeenCalledTimes(1);
+    });
+
+    mockedRecordSyncTombstones.mockClear();
+
+    act(() => {
+      rerender({ documents: [] });
+    });
+
+    expect(mockedRecordSyncTombstones).toHaveBeenCalledWith('documents', [
+      { id: 'doomed-doc', deletedAt: expect.any(Date) },
+    ]);
+
+    await waitFor(() => {
+      expect(mockedDeleteRemoteDocument).toHaveBeenCalledWith('doomed-doc');
+    });
+  });
+
+  it('lifts the tombstone and restores the remote row when a deleted document reappears locally', async () => {
+    const documentToRestore = makeDoc('phoenix-doc');
+    const onMerge = vi.fn();
+
+    const { rerender } = renderHook(({ documents }) => useSync({ documents, onMerge }), {
+      initialProps: { documents: [documentToRestore] as CharacterDocument<SystemDataModel>[] },
+      wrapper: createWrapper(),
+    });
+
+    await waitFor(() => {
+      expect(onMerge).toHaveBeenCalledTimes(1);
+    });
+
+    act(() => {
+      rerender({ documents: [] });
+    });
+
+    await waitFor(() => {
+      expect(mockedDeleteRemoteDocument).toHaveBeenCalledWith('phoenix-doc');
+    });
+
+    // The id is tombstoned now; an undo brings the document back.
+    mockedGetSyncTombstonedIds.mockReturnValue(['phoenix-doc']);
+
+    act(() => {
+      rerender({ documents: [documentToRestore] });
+    });
+
+    await waitFor(() => {
+      expect(mockedRemoveSyncTombstones).toHaveBeenCalledWith('documents', ['phoenix-doc']);
+      expect(mockedRestoreRemoteDocument).toHaveBeenCalledWith('phoenix-doc');
+    });
+  });
+
+  it('re-runs sync once when a realtime event arrives during an in-flight sync', async () => {
+    const onMerge = vi.fn();
+    let resolveFirstFetch:
+      | ((value: {
+          entities: CharacterDocument<SystemDataModel>[];
+          tombstones: { id: string; deletedAt: Date }[];
+        }) => void)
+      | undefined;
+
+    mockedFetchRemoteDocuments.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          resolveFirstFetch = resolve;
+        })
+    );
+
+    renderHook(() => useSync({ documents: [makeDoc('doc-1')], onMerge }), {
+      wrapper: createWrapper(),
+    });
+
+    await waitFor(() => {
+      expect(mockedFetchRemoteDocuments).toHaveBeenCalledTimes(1);
+      expect(mockedSubscribeToRemoteDocuments).toHaveBeenCalled();
+    });
+
+    const realtimeHandler = mockedSubscribeToRemoteDocuments.mock.calls[0][1] as () => void;
+
+    // Event lands while the first sync is still awaiting its fetch: it must
+    // not start a parallel sync, but must not be dropped either.
+    act(() => {
+      realtimeHandler();
+    });
+    expect(mockedFetchRemoteDocuments).toHaveBeenCalledTimes(1);
+
+    await act(async () => {
+      resolveFirstFetch?.(remoteResult());
+    });
+
+    await waitFor(() => {
+      expect(mockedFetchRemoteDocuments).toHaveBeenCalledTimes(2);
+    });
+  });
+
   it('queues the current snapshot when the initial sync runs offline', async () => {
     const documents = [makeDoc('offline-doc')];
     const onMerge = vi.fn();
@@ -176,13 +367,13 @@ describe('useSync', () => {
     expect(result.current.syncState).toBe('offline');
   });
 
-  it('replays queued document deletes before pushing the merged snapshot', async () => {
+  it('replays queued document deletes and skips the push when nothing else changed', async () => {
     const remoteDeleted = makeDoc('deleted-doc');
     const remoteKept = makeDoc('kept-doc');
     const onMerge = vi.fn();
 
     mockedGetQueuedDeletedDocumentIds.mockReturnValue(['deleted-doc']);
-    mockedFetchRemoteDocuments.mockResolvedValue([remoteDeleted, remoteKept]);
+    mockedFetchRemoteDocuments.mockResolvedValue(remoteResult([remoteDeleted, remoteKept]));
 
     const { result } = renderHook(() => useSync({ documents: [], onMerge }), {
       wrapper: createWrapper(),
@@ -194,9 +385,15 @@ describe('useSync', () => {
 
     const mergedDocuments = onMerge.mock.calls[0][0] as CharacterDocument<SystemDataModel>[];
     expect(mergedDocuments.map((doc) => doc.id)).toEqual(['kept-doc']);
-    expect(mockedPushDocuments).toHaveBeenCalledWith(mergedDocuments);
     expect(mockedClearQueuedDeletedDocumentIds).toHaveBeenCalled();
-    expect(result.current.syncState).toBe('idle');
+
+    await waitFor(() => {
+      expect(result.current.syncState).toBe('idle');
+    });
+
+    // After the delete replay the merged collection equals the live remote
+    // rows, so there is nothing to push.
+    expect(mockedPushDocuments).not.toHaveBeenCalled();
   });
 
   it('queues the latest snapshot and marks the sync state as error when remote deletions fail', async () => {
@@ -227,6 +424,55 @@ describe('useSync', () => {
     await waitFor(() => {
       expect(mockedQueueSyncSnapshot).toHaveBeenCalledWith([]);
       expect(mockedQueueDeletedDocumentIds).toHaveBeenCalledWith(['existing-doc']);
+      expect(result.current.syncState).toBe('error');
+    });
+  });
+
+  it('sets the sync state to error when the remote fetch rejects', async () => {
+    const onMerge = vi.fn();
+
+    mockedFetchRemoteDocuments.mockRejectedValue(new Error('network down'));
+
+    const { result } = renderHook(() => useSync({ documents: [makeDoc('doc-1')], onMerge }), {
+      wrapper: createWrapper(),
+    });
+
+    await waitFor(() => {
+      expect(result.current.syncState).toBe('error');
+    });
+
+    expect(onMerge).not.toHaveBeenCalled();
+    expect(mockedPushDocuments).not.toHaveBeenCalled();
+  });
+
+  it('queues the latest snapshot and sets error when the debounced push fails', async () => {
+    const initialDocuments = [makeDoc('push-doc')];
+    const updatedDocuments = [
+      makeDoc('push-doc', {
+        name: 'Updated Name',
+        updatedAt: new Date('2026-01-04T00:00:00.000Z'),
+      }),
+    ];
+    const onMerge = vi.fn();
+
+    const { result, rerender } = renderHook(({ documents }) => useSync({ documents, onMerge }), {
+      initialProps: { documents: initialDocuments as CharacterDocument<SystemDataModel>[] },
+      wrapper: createWrapper(),
+    });
+
+    await waitFor(() => {
+      expect(onMerge).toHaveBeenCalledTimes(1);
+    });
+
+    mockedPushDocuments.mockRejectedValueOnce(new Error('push failed'));
+    mockedQueueSyncSnapshot.mockClear();
+
+    act(() => {
+      rerender({ documents: updatedDocuments });
+    });
+
+    await waitFor(() => {
+      expect(mockedQueueSyncSnapshot).toHaveBeenCalledWith(updatedDocuments);
       expect(result.current.syncState).toBe('error');
     });
   });

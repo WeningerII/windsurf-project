@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import type { CharacterDocument } from '../../types/core/document';
+import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
 import { Dnd35eEngine } from '../../systems/dnd35e/engine';
 import { Pf1eEngine } from '../../systems/pf1e/engine';
 import { createDefaultDnd35eData } from '../../systems/dnd35e/data-model';
@@ -13,7 +13,7 @@ import { createDefaultPf1eData } from '../../systems/pf1e/data-model';
  * d20 does not affect the check.
  */
 
-function doc(systemId: string, system: any): CharacterDocument {
+function doc<T extends SystemDataModel>(systemId: string, system: T): CharacterDocument<T> {
   return {
     id: `test-${systemId}`,
     systemId,

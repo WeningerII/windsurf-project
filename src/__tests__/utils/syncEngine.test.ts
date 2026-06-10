@@ -14,6 +14,7 @@ import {
   pushDocument,
   pushDocuments,
   queueSyncSnapshot,
+  restoreRemoteDocument,
   subscribeToRemoteDocuments,
 } from '../../utils/syncEngine';
 
@@ -49,6 +50,7 @@ function makeRemoteDoc(id: string, overrides: Partial<RemoteDocument> = {}): Rem
     created_at: '2026-01-01T00:00:00.000Z',
     updated_at: '2026-01-03T00:00:00.000Z',
     version: 2,
+    deleted_at: null,
     ...overrides,
   };
 }
@@ -59,7 +61,7 @@ function createSupabaseMock(
     userId?: string;
     fetchError?: { message: string } | null;
     upsertError?: { message: string } | null;
-    deleteError?: { message: string } | null;
+    updateError?: { message: string } | null;
   } = {}
 ) {
   const {
@@ -67,33 +69,35 @@ function createSupabaseMock(
     userId = 'user-1',
     fetchError = null,
     upsertError = null,
-    deleteError = null,
+    updateError = null,
   } = options;
 
   const order = vi.fn().mockResolvedValue({ data: rows, error: fetchError });
   const select = vi.fn(() => ({ order }));
   const upsert = vi.fn().mockResolvedValue({ error: upsertError });
-  const eq = vi.fn().mockResolvedValue({ error: deleteError });
-  const deleteFn = vi.fn(() => ({ eq }));
+  const updateEq = vi.fn().mockResolvedValue({ error: updateError });
+  const update = vi.fn(() => ({ eq: updateEq }));
   const from = vi.fn(() => ({
     select,
     upsert,
-    delete: deleteFn,
+    update,
   }));
   const subscribedChannel = { id: 'channel-1' };
   const subscribe = vi.fn(() => subscribedChannel);
-  const on = vi.fn(() => ({ subscribe }));
+  // Mirrors the realtime `.on(event, filter, callback)` signature so the
+  // test can read the registered callback back out of mock.calls.
+  const on = vi.fn((_event: string, _filter: unknown, _callback: () => void) => ({ subscribe }));
   const channel = vi.fn(() => ({ on }));
   const removeChannel = vi.fn().mockResolvedValue(undefined);
-  const authGetUser = vi.fn().mockResolvedValue({
-    data: { user: { id: userId } },
+  const authGetSession = vi.fn().mockResolvedValue({
+    data: { session: { user: { id: userId } } },
     error: null,
   });
 
   return {
     client: {
       from,
-      auth: { getUser: authGetUser },
+      auth: { getSession: authGetSession },
       channel,
       removeChannel,
     },
@@ -102,9 +106,9 @@ function createSupabaseMock(
       select,
       order,
       upsert,
-      deleteFn,
-      eq,
-      authGetUser,
+      update,
+      updateEq,
+      authGetSession,
       channel,
       on,
       subscribe,
@@ -121,28 +125,41 @@ describe('syncEngine', () => {
     mockedGetSupabaseClient.mockReturnValue(null);
   });
 
-  it('fetches remote documents and hydrates date fields', async () => {
+  it('fetches remote documents, hydrates date fields, and splits out tombstones', async () => {
     const remoteDoc = makeRemoteDoc('doc-1');
-    const { client, spies } = createSupabaseMock({ rows: [remoteDoc] });
+    const tombstoneRow = makeRemoteDoc('doc-gone', {
+      deleted_at: '2026-01-05T00:00:00.000Z',
+    });
+    const { client, spies } = createSupabaseMock({ rows: [remoteDoc, tombstoneRow] });
     mockedGetSupabaseClient.mockReturnValue(client as never);
 
-    const documents = await fetchRemoteDocuments();
+    const { entities, tombstones } = await fetchRemoteDocuments();
 
     expect(spies.from).toHaveBeenCalledWith('documents');
     expect(spies.select).toHaveBeenCalledWith('*');
     expect(spies.order).toHaveBeenCalledWith('updated_at', { ascending: false });
-    expect(documents).toHaveLength(1);
-    expect(documents[0]).toMatchObject({
+    expect(entities).toHaveLength(1);
+    expect(entities[0]).toMatchObject({
       id: 'doc-1',
       name: 'Remote doc-1',
       systemId: 'dnd-5e-2024',
       version: 2,
     });
-    expect(documents[0].createdAt).toBeInstanceOf(Date);
-    expect(documents[0].updatedAt).toBeInstanceOf(Date);
+    expect(entities[0].createdAt).toBeInstanceOf(Date);
+    expect(entities[0].updatedAt).toBeInstanceOf(Date);
+    expect(tombstones).toEqual([
+      { id: 'doc-gone', deletedAt: new Date('2026-01-05T00:00:00.000Z') },
+    ]);
   });
 
-  it('normalizes documents before upserting them', async () => {
+  it('propagates fetch errors (after retry)', async () => {
+    const { client } = createSupabaseMock({ fetchError: { message: 'boom' } });
+    mockedGetSupabaseClient.mockReturnValue(client as never);
+
+    await expect(fetchRemoteDocuments()).rejects.toThrow('boom');
+  });
+
+  it('normalizes documents before upserting them and never includes deleted_at', async () => {
     const { client, spies } = createSupabaseMock();
     mockedGetSupabaseClient.mockReturnValue(client as never);
 
@@ -156,7 +173,6 @@ describe('syncEngine', () => {
     await pushDocument(singleDoc);
     await pushDocuments([batchDoc]);
 
-    expect(spies.authGetUser).toHaveBeenCalledTimes(2);
     expect(spies.upsert).toHaveBeenNthCalledWith(
       1,
       expect.objectContaining({
@@ -181,6 +197,66 @@ describe('syncEngine', () => {
       ],
       { onConflict: 'id' }
     );
+
+    // Omitting deleted_at from the payload is what prevents a stale push from
+    // resurrecting a soft-deleted row (PostgREST leaves absent columns alone).
+    const singlePayload = spies.upsert.mock.calls[0][0] as Record<string, unknown>;
+    const batchPayload = spies.upsert.mock.calls[1][0] as Record<string, unknown>[];
+    expect('deleted_at' in singlePayload).toBe(false);
+    expect('deleted_at' in batchPayload[0]).toBe(false);
+  });
+
+  it('resolves the user id once per push, not once per entity', async () => {
+    const { client, spies } = createSupabaseMock();
+    mockedGetSupabaseClient.mockReturnValue(client as never);
+
+    await pushDocuments([makeDoc('doc-1'), makeDoc('doc-2'), makeDoc('doc-3')]);
+
+    expect(spies.authGetSession).toHaveBeenCalledTimes(1);
+    const payload = spies.upsert.mock.calls[0][0] as RemoteDocument[];
+    expect(payload).toHaveLength(3);
+    expect(payload.every((row) => row.user_id === 'user-1')).toBe(true);
+  });
+
+  it('propagates upsert errors (after retry)', async () => {
+    const { client } = createSupabaseMock({ upsertError: { message: 'quota exceeded' } });
+    mockedGetSupabaseClient.mockReturnValue(client as never);
+
+    await expect(pushDocuments([makeDoc('doc-1')])).rejects.toThrow('quota exceeded');
+  });
+
+  it('soft-deletes remote documents by stamping deleted_at', async () => {
+    const { client, spies } = createSupabaseMock();
+    mockedGetSupabaseClient.mockReturnValue(client as never);
+
+    await deleteRemoteDocument('doc-9');
+
+    expect(spies.from).toHaveBeenCalledWith('documents');
+    expect(spies.update).toHaveBeenCalledWith({
+      deleted_at: expect.any(String),
+      updated_at: expect.any(String),
+    });
+    expect(spies.updateEq).toHaveBeenCalledWith('id', 'doc-9');
+  });
+
+  it('propagates soft-delete errors (after retry)', async () => {
+    const { client } = createSupabaseMock({ updateError: { message: 'delete denied' } });
+    mockedGetSupabaseClient.mockReturnValue(client as never);
+
+    await expect(deleteRemoteDocument('doc-9')).rejects.toThrow('delete denied');
+  });
+
+  it('restores a soft-deleted remote document by clearing deleted_at', async () => {
+    const { client, spies } = createSupabaseMock();
+    mockedGetSupabaseClient.mockReturnValue(client as never);
+
+    await restoreRemoteDocument('doc-9');
+
+    expect(spies.update).toHaveBeenCalledWith({
+      deleted_at: null,
+      updated_at: expect.any(String),
+    });
+    expect(spies.updateEq).toHaveBeenCalledWith('id', 'doc-9');
   });
 
   it('prefers higher versions, then newer timestamps, and sorts newest first', () => {
@@ -240,6 +316,18 @@ describe('syncEngine', () => {
     expect(getQueuedSyncSnapshot()).toEqual([]);
   });
 
+  it('swallows storage failures when queueing snapshots', () => {
+    const setItemSpy = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new DOMException('quota', 'QuotaExceededError');
+    });
+
+    try {
+      expect(() => queueSyncSnapshot([makeDoc('too-big')])).not.toThrow();
+    } finally {
+      setItemSpy.mockRestore();
+    }
+  });
+
   it('deduplicates queued deleted document ids and clears them', () => {
     queueDeletedDocumentIds(['doc-a', 'doc-b']);
     queueDeletedDocumentIds(['doc-a', 'doc-c']);
@@ -253,7 +341,7 @@ describe('syncEngine', () => {
     expect(getQueuedDeletedDocumentIds()).toEqual([]);
   });
 
-  it('subscribes to realtime changes, deletes remote documents, and unsubscribes cleanly', async () => {
+  it('subscribes to realtime changes and unsubscribes cleanly', async () => {
     const { client, spies, subscribedChannel } = createSupabaseMock();
     mockedGetSupabaseClient.mockReturnValue(client as never);
     const onChange = vi.fn();
@@ -278,10 +366,6 @@ describe('syncEngine', () => {
     }
     realtimeHandler();
     expect(onChange).toHaveBeenCalledTimes(1);
-
-    await deleteRemoteDocument('doc-9');
-    expect(spies.deleteFn).toHaveBeenCalledTimes(1);
-    expect(spies.eq).toHaveBeenCalledWith('id', 'doc-9');
 
     expect(unsubscribe).toBeTypeOf('function');
     unsubscribe?.();

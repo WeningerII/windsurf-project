@@ -200,6 +200,32 @@ describe('Dnd35eEngine', () => {
       // Wizard level 3: 1st=2, 2nd=1; used values clamp to totals.
       expect(result.system.spellsPerDay?.[1]).toEqual({ total: 2, used: 2 });
       expect(result.system.spellsPerDay?.[2]).toEqual({ total: 1, used: 1 });
+      // Level-0 row from the shared table: 4 cantrips at wizard 3.
+      expect(result.system.spellsPerDay?.[0]).toEqual({ total: 4, used: 0 });
+    });
+
+    it('adds bonus spells for a high casting ability (3.5e PHB: Int for wizards)', () => {
+      const doc = makeDoc({
+        baseAttributes: { str: 10, dex: 10, con: 10, int: 16, wis: 10, cha: 10 },
+        classLevels: [
+          {
+            classId: 'wizard',
+            level: 3,
+            hitDieRolls: [4, 3, 4],
+            bab: 'half',
+            fortSave: 'poor',
+            refSave: 'poor',
+            willSave: 'good',
+            skillPointsPerLevel: 2,
+          },
+        ],
+      });
+      const result = engine.prepareData(doc);
+      // PHB (Ability Modifiers and Bonus Spells): Int 16 (+3) grants one bonus
+      // 1st- and 2nd-level spell; cantrips never get bonus slots.
+      expect(result.system.spellsPerDay?.[0]).toEqual({ total: 4, used: 0 });
+      expect(result.system.spellsPerDay?.[1]).toEqual({ total: 3, used: 0 });
+      expect(result.system.spellsPerDay?.[2]).toEqual({ total: 2, used: 0 });
     });
 
     it('auto-populates assassin prestige spell slots from the normalized 3.5e table', () => {

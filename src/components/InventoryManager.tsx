@@ -22,14 +22,17 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({
   onAddItem,
   onRemoveItem,
 }) => {
-  const parseInteger = (value: string, fallback: number) => {
+  // HTML min attributes only affect spinners/validation styling, so typed
+  // values are clamped here to keep quantity >= 1 and weight >= 0 (which in
+  // turn keeps the total weight non-negative).
+  const parseQuantity = (value: string) => {
     const parsed = Number.parseInt(value, 10);
-    return Number.isNaN(parsed) ? fallback : parsed;
+    return Number.isNaN(parsed) ? 1 : Math.max(1, parsed);
   };
 
-  const parseDecimal = (value: string, fallback: number) => {
+  const parseWeight = (value: string) => {
     const parsed = Number.parseFloat(value);
-    return Number.isNaN(parsed) ? fallback : parsed;
+    return Number.isNaN(parsed) ? 0 : Math.max(0, parsed);
   };
 
   const [showAddForm, setShowAddForm] = useState(false);
@@ -47,11 +50,11 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({
     if (formData.name && onAddItem) {
       const quantity =
         typeof formData.quantity === 'number' && Number.isFinite(formData.quantity)
-          ? formData.quantity
+          ? Math.max(1, formData.quantity)
           : 1;
       const weight =
         typeof formData.weight === 'number' && Number.isFinite(formData.weight)
-          ? formData.weight
+          ? Math.max(0, formData.weight)
           : 0;
       onAddItem({
         id: generateUUID(),
@@ -114,7 +117,7 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    quantity: parseInteger(e.target.value, 1),
+                    quantity: parseQuantity(e.target.value),
                   })
                 }
                 className="w-full px-3 py-2 border border-input rounded-lg"
@@ -130,7 +133,7 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    weight: parseDecimal(e.target.value, 0),
+                    weight: parseWeight(e.target.value),
                   })
                 }
                 className="w-full px-3 py-2 border border-input rounded-lg"

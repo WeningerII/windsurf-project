@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { AlertTriangle } from 'lucide-react';
 import { Button } from './Button';
 
@@ -24,16 +25,27 @@ export const ConfirmDialog: React.FC<Props> = ({
   onCancel,
 }) => {
   const cancelRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    if (open) {
-      previousFocusRef.current = document.activeElement as HTMLElement | null;
-      cancelRef.current?.focus();
-      return;
-    }
+    if (!open) return;
 
-    previousFocusRef.current?.focus();
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+    cancelRef.current?.focus();
+
+    // The dialog is portaled to document.body, so the app root can be made
+    // inert while the dialog is open: background content is unreachable for
+    // pointer, keyboard, and assistive technology alike.
+    const appRoot = document.getElementById('root');
+    appRoot?.setAttribute('inert', '');
+
+    // Cleanup runs both when the dialog closes and when it unmounts while
+    // open, so focus is restored in either case.
+    return () => {
+      appRoot?.removeAttribute('inert');
+      previousFocusRef.current?.focus();
+    };
   }, [open]);
 
   useEffect(() => {
@@ -41,22 +53,29 @@ export const ConfirmDialog: React.FC<Props> = ({
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onCancel();
       if (e.key === 'Tab') {
-        const focusableElements = document.querySelectorAll(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-        const focusable = Array.from(focusableElements).filter(
-          (el) => !el.closest('[aria-hidden="true"]') && el.closest('[role="alertdialog"]')
-        ) as HTMLElement[];
+        const focusable = Array.from(
+          dialogRef.current?.querySelectorAll<HTMLElement>(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          ) ?? []
+        ).filter((el) => !el.closest('[aria-hidden="true"]'));
 
         if (focusable.length === 0) return;
 
         const first = focusable[0];
         const last = focusable[focusable.length - 1];
+        const active = document.activeElement;
+        const focusIsInDialog =
+          active instanceof HTMLElement && dialogRef.current?.contains(active);
 
-        if (e.shiftKey && document.activeElement === first) {
+        if (!focusIsInDialog) {
+          // Focus escaped (e.g. backdrop click left focus on <body>); pull it
+          // back to the start of the dialog instead of tabbing the background.
+          e.preventDefault();
+          first.focus();
+        } else if (e.shiftKey && active === first) {
           e.preventDefault();
           last.focus();
-        } else if (!e.shiftKey && document.activeElement === last) {
+        } else if (!e.shiftKey && active === last) {
           e.preventDefault();
           first.focus();
         }
@@ -68,10 +87,11 @@ export const ConfirmDialog: React.FC<Props> = ({
 
   if (!open) return null;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="fixed inset-0 bg-black/50" onClick={onCancel} />
       <div
+        ref={dialogRef}
         role="alertdialog"
         aria-modal="true"
         aria-labelledby="dialog-title"
@@ -106,6 +126,7 @@ export const ConfirmDialog: React.FC<Props> = ({
           </Button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

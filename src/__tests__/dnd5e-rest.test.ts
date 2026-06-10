@@ -91,6 +91,56 @@ describe('dnd5e rest helpers', () => {
     expect(next.hitDice).toEqual([{ die: 'd8', total: 2, remaining: 2 }]);
   });
 
+  it('short rest recovers warlock pact magic slots (SRD: Pact Magic)', () => {
+    const state = createDefaultDnd5eData();
+    state.spellcasting = {
+      classes: [{ classId: 'warlock', ability: 'cha', spellcastingLevel: 5 }],
+      spellsKnown: [],
+      spellsPrepared: [],
+      spellSlots: {
+        1: { max: 0, used: 0 },
+        2: { max: 0, used: 0 },
+        3: { max: 0, used: 0 },
+        4: { max: 0, used: 0 },
+        5: { max: 0, used: 0 },
+        6: { max: 0, used: 0 },
+        7: { max: 0, used: 0 },
+        8: { max: 0, used: 0 },
+        9: { max: 0, used: 0 },
+      },
+      pactMagic: { level: 3, max: 2, used: 2 },
+    };
+
+    const next = applyDnd5eShortRest(state);
+    expect(next.spellcasting?.pactMagic).toEqual({ level: 3, max: 2, used: 0 });
+    // The original state is untouched (immutability).
+    expect(state.spellcasting?.pactMagic?.used).toBe(2);
+  });
+
+  it('long rest also recovers pact magic slots', () => {
+    const state = createDefaultDnd5eData();
+    state.spellcasting = {
+      classes: [{ classId: 'warlock', ability: 'cha', spellcastingLevel: 5 }],
+      spellsKnown: [],
+      spellsPrepared: [],
+      spellSlots: {
+        1: { max: 0, used: 0 },
+        2: { max: 0, used: 0 },
+        3: { max: 0, used: 0 },
+        4: { max: 0, used: 0 },
+        5: { max: 0, used: 0 },
+        6: { max: 0, used: 0 },
+        7: { max: 0, used: 0 },
+        8: { max: 0, used: 0 },
+        9: { max: 0, used: 0 },
+      },
+      pactMagic: { level: 3, max: 2, used: 1 },
+    };
+
+    const next = applyDnd5eLongRest(state);
+    expect(next.spellcasting?.pactMagic).toEqual({ level: 3, max: 2, used: 0 });
+  });
+
   it('handles empty hit dice, missing spellcasting, and passive features during long rests', () => {
     const state = createDefaultDnd5eData();
     state.features = [

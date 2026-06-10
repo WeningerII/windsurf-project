@@ -213,10 +213,13 @@ export function SceneManager({
   useEffect(() => {
     if (!state) return;
 
+    // The inputs are an edit buffer: seed defaults only for tokens we have no
+    // buffered value for, and drop removed tokens. Never overwrite a value the
+    // user may be editing (every appended event re-runs this effect).
     setInitiativeValues((current) => {
       const next = { ...current };
       state.initiative.forEach((entry) => {
-        next[entry.tokenId] = String(entry.value);
+        next[entry.tokenId] ??= String(entry.value);
       });
       Object.keys(state.tokens).forEach((tokenId) => {
         next[tokenId] ??= '10';
@@ -228,11 +231,32 @@ export function SceneManager({
       });
       return next;
     });
+  }, [state]);
 
-    if (selectedTokenId && !state.tokens[selectedTokenId]) {
+  // Deselect a token that no longer exists (kept separate from the initiative
+  // sync so selection changes cannot disturb the edit buffer).
+  useEffect(() => {
+    if (selectedTokenId && state && !state.tokens[selectedTokenId]) {
       setSelectedTokenId(undefined);
     }
   }, [selectedTokenId, state]);
+
+  // Combat selections are per-scene: switching scenes clears the chosen target
+  // and the rolling log (otherwise another scene's log lingers).
+  useEffect(() => {
+    setCombatTargetId('');
+    setCombatLog([]);
+  }, [selectedSceneId]);
+
+  // Clear a stale combat target: when the chosen token dies or is removed, the
+  // target select would otherwise render blank while Attack stays armed.
+  useEffect(() => {
+    if (!combatTargetId || !state) return;
+    const target = state.tokens[combatTargetId];
+    if (!target || (target.hp && target.hp.current <= 0)) {
+      setCombatTargetId('');
+    }
+  }, [combatTargetId, state]);
 
   const handleCreateScene = () => {
     const name = newSceneName.trim();
@@ -340,7 +364,10 @@ export function SceneManager({
       attackerId: selectedTokenId,
       targetId: combatTargetId,
       resolveStats: resolveCombatStats,
-      seed: `${selectedScene.initialState.seed}:attack:${selectedScene.events.length}`,
+      // The nonce makes every click a fresh stream even when nothing was
+      // appended (a miss adds no event, so events.length alone would replay
+      // the byte-identical roll forever).
+      seed: `${selectedScene.initialState.seed}:attack:${selectedScene.events.length}:${attackNonce.current++}`,
       cause: 'attack',
     });
     if (outcome.intent) {
@@ -473,19 +500,43 @@ export function SceneManager({
   const handleSetInitiative = () => {
     if (!selectedScene || !state) return;
 
+    // An empty/invalid input keeps the token's previous initiative (or the
+    // default 10) instead of silently dropping it from the order.
+    const existingByTokenId = new Map(
+      state.initiative.map((entry) => [entry.tokenId, entry.value])
+    );
+    const keptTokens: Array<{ name: string; tokenId: string; value: number }> = [];
     const entries = Object.values(state.tokens)
-      .map((token) => ({
-        tokenId: token.id,
-        value: Number.parseFloat(initiativeValues[token.id] ?? '10'),
-      }))
-      .filter((entry) => Number.isFinite(entry.value))
+      .map((token) => {
+        const parsed = Number.parseFloat(initiativeValues[token.id] ?? '10');
+        if (Number.isFinite(parsed)) {
+          return { tokenId: token.id, value: parsed };
+        }
+        const fallback = existingByTokenId.get(token.id) ?? 10;
+        keptTokens.push({ name: token.name, tokenId: token.id, value: fallback });
+        return { tokenId: token.id, value: fallback };
+      })
       .sort((a, b) => b.value - a.value);
 
-    emitSceneAction(selectedScene, {
+    const emitted = emitSceneAction(selectedScene, {
       type: 'set-initiative',
       entries,
       activeTokenId: entries[0]?.tokenId,
     });
+
+    if (emitted && keptTokens.length > 0) {
+      // Resync the cleared inputs to the value that was actually set, and say so.
+      setInitiativeValues((current) => {
+        const next = { ...current };
+        keptTokens.forEach((kept) => {
+          next[kept.tokenId] = String(kept.value);
+        });
+        return next;
+      });
+      setActionIssues([
+        `Invalid initiative for ${keptTokens.map((kept) => kept.name).join(', ')} — kept the previous value.`,
+      ]);
+    }
   };
 
   const handleAdvanceTurn = () => {
@@ -529,6 +580,9 @@ export function SceneManager({
       scene: selectedScene,
       monsters: encounterMonsters,
       selections: pendingEncounterSelections,
+      // Lets the builder roll seeded d20+DEX initiative for already-placed
+      // character tokens instead of defaulting the party to a flat 10.
+      documents,
       origin: {
         x: Math.max(0, positiveIntegerOrDefault(encounterOriginX, 0)),
         y: Math.max(0, positiveIntegerOrDefault(encounterOriginY, 0)),
@@ -575,10 +629,15 @@ export function SceneManager({
   };
 
   const handleExportScenes = (targetScenes: SceneDocument[], filename: string) => {
+    // Blob URLs avoid Chromium's ~2MB cap on data: anchors, which silently
+    // no-ops exactly when a large scene log most needs exporting.
+    const blob = new Blob([exportScenes(targetScenes)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.href = `data:application/json;charset=utf-8,${encodeURIComponent(exportScenes(targetScenes))}`;
+    link.href = url;
     link.download = filename;
     link.click();
+    URL.revokeObjectURL(url);
   };
 
   return (

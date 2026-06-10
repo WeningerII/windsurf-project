@@ -127,15 +127,65 @@ const dhDoc = (over: Partial<DaggerheartDataModel>): CharacterDocument<Daggerhea
 });
 
 // ── L8: damage / heal / armor application ───────────────────────────────────
+// Daggerheart damage is threshold-based (SRD: Damage & Hit Points): a hit marks
+// 1/2/3 HP by the Major/Severe thresholds and a marked Armor Slot reduces the
+// marked HP by one — not a d20 HP-pool with ablative DR.
 describe('L8 Daggerheart damage / heal / armor', () => {
-  it('armor absorbs physical damage before HP', () => {
+  it('marks HP by thresholds and spends one armor slot to reduce the marked HP', () => {
     const out = dhEngine.applyDamage(
-      dhDoc({ hitPoints: { current: 6, max: 6 }, armor: { current: 3, max: 3 } }),
+      dhDoc({
+        hitPoints: { current: 6, max: 6 },
+        armor: { current: 3, max: 3 },
+        majorThreshold: 7,
+        severeThreshold: 12,
+      }),
+      12,
+      'physical'
+    );
+    // 12 ≥ Severe → 3 HP marked; 1 armor slot marked → 2 HP marked.
+    expect(out.system.armor.current).toBe(2);
+    expect(out.system.hitPoints.current).toBe(4);
+  });
+  it('a hit above max HP-pool damage still only marks 3 HP (no one-shot from raw totals)', () => {
+    const out = dhEngine.applyDamage(
+      dhDoc({
+        hitPoints: { current: 6, max: 6 },
+        armor: { current: 0, max: 0 },
+        majorThreshold: 3,
+        severeThreshold: 6,
+      }),
+      7,
+      'physical'
+    );
+    // 7-damage hit vs a 6-HP level-1 PC marks 3 HP, it does not kill outright.
+    expect(out.system.hitPoints.current).toBe(3);
+  });
+  it('marks a single HP for damage below the Major threshold (after armor floor at 0)', () => {
+    const noArmor = dhEngine.applyDamage(
+      dhDoc({
+        hitPoints: { current: 6, max: 6 },
+        armor: { current: 0, max: 0 },
+        majorThreshold: 7,
+        severeThreshold: 12,
+      }),
       5,
       'physical'
     );
-    expect(out.system.armor.current).toBe(0);
-    expect(out.system.hitPoints.current).toBe(4); // 5 damage − 3 armor = 2 to HP
+    expect(noArmor.system.hitPoints.current).toBe(5);
+
+    const withArmor = dhEngine.applyDamage(
+      dhDoc({
+        hitPoints: { current: 6, max: 6 },
+        armor: { current: 2, max: 2 },
+        majorThreshold: 7,
+        severeThreshold: 12,
+      }),
+      5,
+      'physical'
+    );
+    // 1 HP marked − 1 armor slot = 0 HP marked.
+    expect(withArmor.system.armor.current).toBe(1);
+    expect(withArmor.system.hitPoints.current).toBe(6);
   });
   it('stress damage fills the stress track and bypasses armor', () => {
     const out = dhEngine.applyDamage(
@@ -160,6 +210,23 @@ describe('L7 Daggerheart track clamping', () => {
     );
     expect(out.system.hitPoints.current).toBe(6);
     expect(out.system.stress.current).toBe(6);
+  });
+  it('clamps typed negative HP/Stress/Armor back to 0 in prepareData', () => {
+    const out = dhEngine.prepareData(
+      dhDoc({
+        hitPoints: { current: -2, max: 6 },
+        stress: { current: -1, max: 6 },
+        armor: { current: -3, max: 3 },
+        armorId: 'daggerheart-armor-gambeson-armor-tier-1',
+      })
+    );
+    expect(out.system.hitPoints.current).toBe(0);
+    expect(out.system.stress.current).toBe(0);
+    expect(out.system.armor.current).toBe(0);
+  });
+  it('clamps Hope to the 0–6 SRD range in prepareData', () => {
+    expect(dhEngine.prepareData(dhDoc({ hope: 9 })).system.hope).toBe(6);
+    expect(dhEngine.prepareData(dhDoc({ hope: -4 })).system.hope).toBe(0);
   });
 });
 
@@ -289,10 +356,13 @@ describe('L10 Daggerheart gold and L6 ranges', () => {
 
 // ── L8: death moves (Risk It All, Avoid Death) ──────────────────────────────
 describe('L8 Daggerheart death moves', () => {
-  it('Risk It All: Hope clears = Hope Die, Fear = death, matching = stay but clear nothing', () => {
+  it('Risk It All: Hope clears = Hope Die, Fear = death, matching = stay and clear ALL', () => {
     expect(getDaggerheartRiskItAll(9, 4)).toEqual({ survives: true, clears: 9 });
     expect(getDaggerheartRiskItAll(3, 8)).toEqual({ survives: false, clears: 0 });
-    expect(getDaggerheartRiskItAll(6, 6)).toEqual({ survives: true, clears: 0 });
+    // Matching dice are a critical success — the best outcome: stay up and
+    // clear all marked HP and Stress (Daggerheart SRD: Death Moves — Risk It
+    // All), not a survive-with-nothing result strictly worse than any Hope.
+    expect(getDaggerheartRiskItAll(6, 6)).toEqual({ survives: true, clears: 'all' });
   });
   it('Avoid Death: a Hope Die at or below level leaves a scar', () => {
     expect(getDaggerheartAvoidDeathScar(3, 5)).toBe(true); // 3 ≤ 5
