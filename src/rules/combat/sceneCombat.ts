@@ -33,6 +33,8 @@ export interface SceneCombatStats {
   /** Reach in grid cells (melee = 1). */
   reach: number;
   critOn?: number;
+  /** Attacks per turn (SRD Multiattack). Default 1. */
+  attacksPerRound?: number;
 }
 
 /** Resolve a token's combat stats, or undefined when it cannot fight. */
@@ -84,6 +86,7 @@ export function buildSceneCombatants(
       damageEffects: stats.damageEffects,
       reach: stats.reach,
       critOn: stats.critOn,
+      attacksPerRound: stats.attacksPerRound,
     });
   }
   return combatants;

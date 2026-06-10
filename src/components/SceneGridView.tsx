@@ -1,3 +1,4 @@
+import { memo, useMemo } from 'react';
 import type { KeyboardEvent } from 'react';
 import { cn } from '@/lib/utils';
 import type { SceneCoordinate, SceneMarker, SceneState, SceneToken } from '../types/core/scene';
@@ -9,14 +10,34 @@ export interface SceneGridViewProps {
   onTokenActivate?: (token: SceneToken) => void;
 }
 
-export function SceneGridView({
+/**
+ * Memoized: SceneManager re-renders on every keystroke of its controlled
+ * inputs, and this view rebuilds width x height cells. With stable callbacks
+ * from the parent, prop equality skips the rebuild entirely; the
+ * cell-to-marker index turns the per-cell `markers.find` (O(cells x markers))
+ * into a map hit.
+ */
+export const SceneGridView = memo(function SceneGridView({
   state,
   selectedTokenId,
   onCellActivate,
   onTokenActivate,
 }: SceneGridViewProps) {
-  const tokensByCell = buildTokensByCell(state);
-  const markers = Object.values(state.markers);
+  const tokensByCell = useMemo(() => buildTokensByCell(state), [state]);
+  const markerByCell = useMemo(() => {
+    const index = new Map<string, SceneMarker>();
+    for (const marker of Object.values(state.markers)) {
+      for (let dy = 0; dy < marker.height; dy += 1) {
+        for (let dx = 0; dx < marker.width; dx += 1) {
+          const key = coordinateKey({ x: marker.position.x + dx, y: marker.position.y + dy });
+          if (!index.has(key)) {
+            index.set(key, marker);
+          }
+        }
+      }
+    }
+    return index;
+  }, [state.markers]);
 
   return (
     <section className="space-y-3" aria-label={`${state.name} scene`}>
@@ -47,7 +68,7 @@ export function SceneGridView({
             const position = { x, y };
             const cellKey = coordinateKey(position);
             const cellTokens = tokensByCell.get(cellKey) ?? [];
-            const marker = markers.find((entry) => markerContains(entry, position));
+            const marker = markerByCell.get(cellKey);
             return (
               <div
                 key={cellKey}
@@ -102,7 +123,7 @@ export function SceneGridView({
       </div>
     </section>
   );
-}
+});
 
 function buildTokensByCell(state: SceneState): Map<string, SceneToken[]> {
   const byCell = new Map<string, SceneToken[]>();
@@ -111,15 +132,6 @@ function buildTokensByCell(state: SceneState): Map<string, SceneToken[]> {
     byCell.set(key, [...(byCell.get(key) ?? []), token]);
   });
   return byCell;
-}
-
-function markerContains(marker: SceneMarker, position: SceneCoordinate): boolean {
-  return (
-    position.x >= marker.position.x &&
-    position.y >= marker.position.y &&
-    position.x < marker.position.x + marker.width &&
-    position.y < marker.position.y + marker.height
-  );
 }
 
 function buildCellLabel(

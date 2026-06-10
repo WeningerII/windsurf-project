@@ -35,6 +35,8 @@ export interface RoundCombatant {
   damageEffects: readonly EffectInstance[];
   reach?: number;
   critOn?: number;
+  /** Attacks per turn (SRD Multiattack). Default 1. */
+  attacksPerRound?: number;
 }
 
 export interface RoundTurnRecord {
@@ -73,6 +75,7 @@ function toActor(combatant: RoundCombatant): TacticalActor {
     damageEffects: combatant.damageEffects,
     reach: combatant.reach,
     critOn: combatant.critOn,
+    attacksPerRound: combatant.attacksPerRound,
   };
 }
 
@@ -114,6 +117,7 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
           actorId: combatant.tokenId,
           decision: 'no-target',
           scored: [],
+          attacks: [],
           rationale: 'Down at the start of its turn; skipped.',
         },
       });
@@ -131,14 +135,16 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
       seed: `${input.seed}::round${input.round}::turn${turnIndex}`,
     });
 
-    // Fold this turn's damage into working HP so later turns see it.
-    if (turn.intent && turn.intent.type === 'apply-damage') {
-      for (const damage of turn.intent.damages) {
+    // Fold this turn's damage into working HP so later turns see it. Under
+    // Multiattack a turn carries several attack intents, in order.
+    for (const attack of turn.attacks) {
+      if (attack.intent?.type !== 'apply-damage') continue;
+      for (const damage of attack.intent.damages) {
         if (hp[damage.tokenId] != null && byId.get(damage.tokenId)?.hp) {
           hp[damage.tokenId] = Math.max(0, hp[damage.tokenId] - damage.amount);
         }
       }
-      intents.push(turn.intent);
+      intents.push(attack.intent);
     }
 
     turns.push({ tokenId: combatant.tokenId, turn, intent: turn.intent, skipped: false });

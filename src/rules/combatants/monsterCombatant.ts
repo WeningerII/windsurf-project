@@ -140,6 +140,38 @@ export function primaryAttackAction(monster: Monster): Action | undefined {
   return monster.actions.find((action) => normalizeAttack(action) !== undefined);
 }
 
+const ATTACK_COUNT_WORDS: Record<string, number> = {
+  one: 1,
+  two: 2,
+  three: 3,
+  four: 4,
+  five: 5,
+  six: 6,
+};
+
+/**
+ * Attacks per turn from the monster's Multiattack action (SRD prose:
+ * "The orc makes two attacks…"). Returns 1 when there is no Multiattack
+ * action or its count can't be parsed; capped at 8 as a sanity bound. Note
+ * the combatant swings its PRIMARY attack N times — mixed routines ("two
+ * with its claws and one with its bite") are approximated, not itemized.
+ */
+export function monsterAttacksPerRound(monster: Monster): number {
+  const multiattack = monster.actions.find((action) => /^multiattack/i.test(action.name.trim()));
+  if (!multiattack?.description) {
+    return 1;
+  }
+
+  const match = multiattack.description.match(/makes\s+(one|two|three|four|five|six|\d+)\s+/i);
+  if (!match) {
+    return 1;
+  }
+
+  const raw = match[1].toLowerCase();
+  const count = ATTACK_COUNT_WORDS[raw] ?? Number.parseInt(raw, 10);
+  return Number.isFinite(count) && count >= 1 ? Math.min(count, 8) : 1;
+}
+
 /** Build attack-roll effects for a monster's primary attack. */
 export function monsterAttackEffects(monster: Monster, action: Action): EffectInstance[] {
   const normalized = normalizeAttack(action);
@@ -213,6 +245,8 @@ export interface MonsterCombatant {
   damageEffects: EffectInstance[];
   reach: number;
   armorClass: number;
+  /** Attacks per turn, parsed from the Multiattack action (default 1). */
+  attacksPerRound: number;
 }
 
 /**
@@ -242,5 +276,6 @@ export function buildMonsterCombatant(
     damageEffects: action ? monsterDamageEffects(monster, action) : [],
     reach: action ? (normalizeAttack(action)?.reachCells ?? 1) : 1,
     armorClass: monster.armorClass,
+    attacksPerRound: action ? monsterAttacksPerRound(monster) : 1,
   };
 }
