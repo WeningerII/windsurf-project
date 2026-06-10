@@ -12,8 +12,10 @@ import {
 
 /**
  * BREADTH (RFC 003): the two non-d20 systems get native combat resolvers, so all
- * seven systems can resolve combat. Daggerheart marks HP slots by threshold; M&M
- * resolves a Toughness save into a condition track. Both seeded/deterministic.
+ * seven systems can resolve combat. Daggerheart rolls the 2d12 duality dice
+ * (Hope + Fear; matching dice crit) and marks HP slots by threshold; M&M
+ * resolves a Toughness save into a condition track with nat-20 crits and nat-1
+ * auto-misses. Both seeded/deterministic.
  */
 
 function attack(systemId: EffectInstance['systemId'], bonus: number): EffectInstance {
@@ -75,8 +77,88 @@ describe('Daggerheart threshold → HP slots', () => {
       thresholds: { major: 7, severe: 14 },
       rng: createSeededRng('dh-miss'),
     });
+    // Pinned: seed 'dh-miss' rolls non-matching duality dice (matching dice
+    // would crit and auto-hit). A seed/RNG change that rolls a crit here must
+    // pick a new seed, not weaken the miss assertions.
+    expect(miss.isCritical).toBe(false);
     expect(miss.isHit).toBe(false);
     expect(miss.hpMarked).toBe(0);
+  });
+
+  it('REGRESSION (05-H3): rolls 2d12 duality dice — total = Hope + Fear + modifiers', () => {
+    // Probe the same seeded stream the resolver consumes: with no dice in the
+    // attack effects, the first two draws are the Hope and Fear dice.
+    const probe = createSeededRng('dh-duality');
+    const expectedHope = probe.rollDie(12);
+    const expectedFear = probe.rollDie(12);
+
+    const result = resolveDaggerheartAttack({
+      attackEffects: [attack('daggerheart', 3)],
+      damageEffects: damage('daggerheart', 5),
+      evasion: 1, // trivially beatable; this test is about the dice model
+      thresholds: { major: 7, severe: 14 },
+      rng: createSeededRng('dh-duality'),
+    });
+
+    expect(result.hopeDie).toBe(expectedHope);
+    expect(result.fearDie).toBe(expectedFear);
+    expect(result.hopeDie).toBeGreaterThanOrEqual(1);
+    expect(result.hopeDie).toBeLessThanOrEqual(12);
+    expect(result.fearDie).toBeGreaterThanOrEqual(1);
+    expect(result.fearDie).toBeLessThanOrEqual(12);
+    expect(result.attackTotal).toBe(expectedHope + expectedFear + 3);
+    expect(result.withHope).toBe(expectedHope >= expectedFear);
+    expect(result.isCritical).toBe(expectedHope === expectedFear);
+  });
+
+  it('matching duality dice are a critical success that hits any Evasion (SRD)', () => {
+    // Search seeds for matching dice; non-matching seeds must all miss the
+    // impossible Evasion (max total 24 + 0 < 99), so the crit is the ONLY hit.
+    let found = false;
+    for (let i = 0; i < 300 && !found; i += 1) {
+      const result = resolveDaggerheartAttack({
+        attackEffects: [attack('daggerheart', 0)],
+        damageEffects: damage('daggerheart', 10),
+        evasion: 99,
+        thresholds: { major: 7, severe: 14 },
+        rng: createSeededRng(`dh-crit-${i}`),
+      });
+      if (result.hopeDie !== result.fearDie) {
+        expect(result.isCritical).toBe(false);
+        expect(result.isHit).toBe(false);
+        continue;
+      }
+      found = true;
+      expect(result.isCritical).toBe(true);
+      expect(result.isHit).toBe(true); // automatic success
+      expect(result.withHope).toBe(true); // a crit counts as rolling with Hope
+      expect(result.hpMarked).toBeGreaterThan(0);
+    }
+    expect(found).toBe(true);
+  });
+
+  it('reports with-Hope vs with-Fear from the higher die', () => {
+    // Search for one of each to pin both branches.
+    let sawHope = false;
+    let sawFear = false;
+    for (let i = 0; i < 300 && !(sawHope && sawFear); i += 1) {
+      const result = resolveDaggerheartAttack({
+        attackEffects: [attack('daggerheart', 0)],
+        damageEffects: damage('daggerheart', 1),
+        evasion: 2,
+        thresholds: { major: 7, severe: 14 },
+        rng: createSeededRng(`dh-hopefear-${i}`),
+      });
+      if (result.hopeDie > result.fearDie) {
+        sawHope = true;
+        expect(result.withHope).toBe(true);
+      } else if (result.fearDie > result.hopeDie) {
+        sawFear = true;
+        expect(result.withHope).toBe(false);
+      }
+    }
+    expect(sawHope).toBe(true);
+    expect(sawFear).toBe(true);
   });
 
   it('spending an Armor slot reduces marked HP by 1 (min 1)', () => {
@@ -157,13 +239,19 @@ describe('M&M Toughness shortfall → condition track', () => {
 
   it('a hit forces a Toughness save vs DC 15 + rank; a miss does nothing', () => {
     const hit = resolveMam3eAttack({
-      attackEffects: [attack('mam3e', 50)], // always hits
+      attackEffects: [attack('mam3e', 50)], // hits unless natural 1
       targetDefense: 12,
       effectRank: 10, // DC 25
       toughness: 0, // will fail badly
       rng: createSeededRng('mm-hit'),
     });
+    // Pinned: seed 'mm-hit' rolls a plain hit (no nat 20/1), so the base DC
+    // applies. A seed/RNG change that rolls a natural here must pick a new
+    // seed, not weaken these assertions.
+    expect(hit.naturalRoll).toBeGreaterThan(1);
+    expect(hit.naturalRoll).toBeLessThan(20);
     expect(hit.isHit).toBe(true);
+    expect(hit.isCriticalHit).toBe(false);
     expect(hit.saveDC).toBe(25);
     expect(hit.shortfall).toBeGreaterThan(0);
     // A large shortfall produces at least a Bruised + some condition.
@@ -176,6 +264,8 @@ describe('M&M Toughness shortfall → condition track', () => {
       toughness: 0,
       rng: createSeededRng('mm-miss'),
     });
+    // Pinned: seed 'mm-miss' does not roll the natural 20 that would auto-hit.
+    expect(miss.naturalRoll).toBeLessThan(20);
     expect(miss.isHit).toBe(false);
     expect(miss.condition).toEqual({
       bruised: 0,
@@ -183,6 +273,53 @@ describe('M&M Toughness shortfall → condition track', () => {
       staggered: false,
       incapacitated: false,
     });
+  });
+
+  it('REGRESSION (05-M1): a natural 20 always hits and raises the Toughness DC by +5', () => {
+    let found = false;
+    for (let i = 0; i < 300 && !found; i += 1) {
+      const result = resolveMam3eAttack({
+        attackEffects: [attack('mam3e', 0)],
+        targetDefense: 99, // unhittable except by the natural 20
+        effectRank: 10, // base DC 25
+        toughness: 0,
+        rng: createSeededRng(`mm-crit-${i}`),
+      });
+      if (result.naturalRoll !== 20) {
+        expect(result.isHit).toBe(false); // max non-nat-20 total is 19 < 99
+        continue;
+      }
+      found = true;
+      expect(result.isCriticalHit).toBe(true);
+      expect(result.isHit).toBe(true);
+      // Crit: effect DC = 15 + rank + 5.
+      expect(result.saveDC).toBe(30);
+    }
+    expect(found).toBe(true);
+  });
+
+  it('REGRESSION (05-M1): a natural 1 always misses, even vs a trivial defense', () => {
+    let found = false;
+    for (let i = 0; i < 300 && !found; i += 1) {
+      const result = resolveMam3eAttack({
+        attackEffects: [attack('mam3e', 50)],
+        targetDefense: 1, // trivially beatable by any total
+        effectRank: 5,
+        toughness: 0,
+        rng: createSeededRng(`mm-fumble-${i}`),
+      });
+      if (result.naturalRoll !== 1) continue;
+      found = true;
+      expect(result.isHit).toBe(false);
+      expect(result.saveDC).toBe(0);
+      expect(result.condition).toEqual({
+        bruised: 0,
+        dazed: false,
+        staggered: false,
+        incapacitated: false,
+      });
+    }
+    expect(found).toBe(true);
   });
 
   it('a high Toughness can shrug off the hit (save meets DC -> no condition)', () => {

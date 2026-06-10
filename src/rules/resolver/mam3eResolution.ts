@@ -45,8 +45,12 @@ export interface Mam3eConditionDelta {
 export interface Mam3eAttackResult {
   attackTotal: number;
   attackBonus: number;
+  /** The natural d20 attack roll (20 always hits + crits; 1 always misses). */
+  naturalRoll: number;
   isHit: boolean;
-  /** Toughness DC the target rolled against (0 on a miss). */
+  /** Natural 20 — a critical hit, raising the effect DC by +5 (Hero's Handbook). */
+  isCriticalHit: boolean;
+  /** Toughness DC the target rolled against (0 on a miss; +5 on a crit). */
   saveDC: number;
   saveRoll: number;
   saveTotal: number;
@@ -83,21 +87,27 @@ export function applyToughnessDegrees(shortfall: number): Mam3eConditionDelta {
 /**
  * Resolve an M&M attack: d20 + attack bonus vs the target's active defense; on a
  * hit, a Toughness save vs DC 15 + effect rank, whose shortfall drives the
- * condition track. Deterministic; both rolls come only from the seeded RNG.
+ * condition track. M&M 3e RAW (Hero's Handbook): a natural 20 always hits and is
+ * a critical hit (+5 to the effect DC); a natural 1 always misses. Deterministic;
+ * both rolls come only from the seeded RNG.
  */
 export function resolveMam3eAttack(input: Mam3eAttackInput): Mam3eAttackResult {
   const attackResolved = resolveEffects(input.attackEffects, { rng: input.rng });
   const attackBonus = attackResolved.byTarget.attack?.total ?? 0;
   const attackRoll = input.rng.rollDie(20);
   const attackTotal = attackRoll + attackBonus;
-  const isHit = attackTotal >= input.targetDefense;
+  const isCriticalHit = attackRoll === 20;
+  const isCriticalMiss = attackRoll === 1;
+  const isHit = isCriticalHit || (!isCriticalMiss && attackTotal >= input.targetDefense);
   const ledger = [...attackResolved.ledger];
 
   if (!isHit) {
     return {
       attackTotal,
       attackBonus,
+      naturalRoll: attackRoll,
       isHit: false,
+      isCriticalHit: false,
       saveDC: 0,
       saveRoll: 0,
       saveTotal: 0,
@@ -107,7 +117,8 @@ export function resolveMam3eAttack(input: Mam3eAttackInput): Mam3eAttackResult {
     };
   }
 
-  const saveDC = 15 + input.effectRank;
+  // Critical hit: the effect DC rises by +5 (degree of effect, not extra dice).
+  const saveDC = 15 + input.effectRank + (isCriticalHit ? 5 : 0);
   const saveRoll = input.rng.rollDie(20);
   const saveTotal = saveRoll + input.toughness;
   const shortfall = Math.max(0, saveDC - saveTotal);
@@ -115,7 +126,9 @@ export function resolveMam3eAttack(input: Mam3eAttackInput): Mam3eAttackResult {
   return {
     attackTotal,
     attackBonus,
+    naturalRoll: attackRoll,
     isHit: true,
+    isCriticalHit,
     saveDC,
     saveRoll,
     saveTotal,

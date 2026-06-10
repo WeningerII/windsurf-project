@@ -127,7 +127,10 @@ function isBonusTypePolicy(policy: StackPolicy): policy is { bonusType: BonusTyp
  *        - PF2e buckets: the largest add per bucket, then buckets sum.
  *   3. `multiply` factors apply to the running total.
  *   4. `min`/`max` clamp.
- *   5. `add-die` rolls dice from the rng and adds them (recorded in diceTerms).
+ *   5. dice: `set-die` ESTABLISHES the target's base die (the LAST set-die wins,
+ *      mirroring `set` — e.g. a weapon swap replaces the weapon die), rolled
+ *      first; then every `add-die` rolls an extra die. All rolls come from the
+ *      rng and are recorded in diceTerms.
  *   6. advantage/disadvantage fold into a roll mode (advantage + disadvantage
  *      cancel to normal, per 5e).
  */
@@ -203,10 +206,21 @@ function foldTarget(target: string, group: EffectInstance[], ctx: ResolveContext
     }
   }
 
-  // Dice terms (deterministic via the seeded rng).
-  let diceTerms: number[] | undefined;
+  // Dice terms (deterministic via the seeded rng). `set-die` establishes the
+  // base die — the last one wins, like `set` — and rolls before any `add-die`.
+  let establishedDie: EffectInstance | undefined;
   for (const effect of group) {
-    if (effect.operation === 'add-die' && ctx.rng) {
+    if (effect.operation === 'set-die') {
+      establishedDie = effect;
+    }
+  }
+  const diceEffects = [
+    ...(establishedDie ? [establishedDie] : []),
+    ...group.filter((effect) => effect.operation === 'add-die'),
+  ];
+  let diceTerms: number[] | undefined;
+  for (const effect of diceEffects) {
+    if (ctx.rng) {
       const sides = num(effect.value);
       if (Number.isInteger(sides) && sides > 0) {
         const rolled = ctx.rng.rollDie(sides);

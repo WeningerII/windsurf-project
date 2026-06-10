@@ -179,4 +179,125 @@ describe('scene runtime', () => {
       second.rollDie(6),
     ]);
   });
+
+  it('REGRESSION (02-M1): advance-turn with empty initiative is rejected, not a round bump', () => {
+    let scene = createSceneDocument({
+      id: 'scene-empty-init',
+      name: 'No Order',
+      systemId: 'dnd-5e-2024',
+      now: NOW,
+    });
+    scene = appendResolved(
+      scene,
+      resolveSceneAction(
+        scene,
+        { type: 'place-token', token: makeToken('hero', 1, 1) },
+        { eventId: 'event-1', createdAt: NOW }
+      )
+    );
+
+    // A token exists but initiative was never set: the intent is rejected with
+    // an honest issue instead of building an event that inflates the round.
+    const rejected = resolveSceneAction(
+      scene,
+      { type: 'advance-turn' },
+      { eventId: 'event-2', createdAt: NOW }
+    );
+    expect(rejected.event).toBeUndefined();
+    expect(rejected.issues).toMatchObject([{ code: 'scene-initiative-empty', severity: 'error' }]);
+
+    const { state } = foldSceneEvents(scene);
+    expect(state.round).toBe(1);
+  });
+
+  it('REGRESSION (02-M1): a historical turn.advanced event with no nextTokenId folds to round unchanged', () => {
+    // Simulate an event log recorded BEFORE the intent-level guard existed:
+    // clicking Next Turn with empty initiative stored payload {} (undefined
+    // nextTokenId). It must still fold cleanly — no validation error, no round
+    // inflation (previously undefined === undefined bumped the round).
+    let scene = createSceneDocument({
+      id: 'scene-legacy',
+      name: 'Legacy Log',
+      systemId: 'dnd-5e-2024',
+      now: NOW,
+    });
+    scene = appendResolved(
+      scene,
+      resolveSceneAction(
+        scene,
+        { type: 'place-token', token: makeToken('hero', 1, 1) },
+        { eventId: 'event-1', createdAt: NOW }
+      )
+    );
+    const legacyScene: SceneDocument = {
+      ...scene,
+      events: [
+        ...scene.events,
+        {
+          id: 'legacy-advance',
+          sequence: scene.events.length + 1,
+          createdAt: NOW,
+          type: 'turn.advanced',
+          payload: {},
+        },
+      ],
+    };
+
+    const { state, issues } = foldSceneEvents(legacyScene);
+    expect(issues).toEqual([]); // the EVENT stays replayable
+    expect(state.round).toBe(1); // round unchanged (was 2 before the fix)
+    expect(state.activeTokenId).toBeUndefined();
+  });
+
+  it('REGRESSION (05-L5): folded marker effects are deep copies, not aliases of the event payload', () => {
+    let scene = createSceneDocument({
+      id: 'scene-terrain',
+      name: 'Terrain',
+      systemId: 'dnd-5e-2024',
+      grid: { width: 8, height: 8 },
+      now: NOW,
+    });
+    scene = appendResolved(
+      scene,
+      resolveSceneAction(
+        scene,
+        {
+          type: 'add-marker',
+          marker: {
+            id: 'water',
+            kind: 'terrain',
+            label: 'Deep Water',
+            position: { x: 1, y: 1 },
+            width: 2,
+            height: 2,
+            effects: [
+              { target: 'movement-cost', operation: 'multiply', value: 2, label: 'deep water' },
+            ],
+          },
+        },
+        { eventId: 'event-1', createdAt: NOW }
+      )
+    );
+
+    const first = foldSceneEvents(scene);
+    const firstEffects = first.state.markers.water.effects!;
+    expect(firstEffects).toHaveLength(1);
+
+    // Mutating a folded state's effects must NOT leak into the event log or
+    // any later fold (the array used to be shared by reference).
+    firstEffects[0].value = 999;
+    firstEffects.push({ target: 'attack', operation: 'add', value: 5, label: 'corruption' });
+
+    expect(scene.events[0].type).toBe('marker.added');
+    const payloadMarker =
+      scene.events[0].type === 'marker.added' ? scene.events[0].payload.marker : undefined;
+    expect(payloadMarker?.effects).toEqual([
+      { target: 'movement-cost', operation: 'multiply', value: 2, label: 'deep water' },
+    ]);
+
+    const second = foldSceneEvents(scene);
+    expect(second.state.markers.water.effects).toEqual([
+      { target: 'movement-cost', operation: 'multiply', value: 2, label: 'deep water' },
+    ]);
+  });
 });

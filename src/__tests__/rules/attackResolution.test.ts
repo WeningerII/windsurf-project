@@ -101,15 +101,22 @@ describe('resolveAttack — hit/miss math', () => {
   });
 
   it('misses when the total falls short (high target, no crit)', () => {
-    const result = resolveAttack({
-      attackEffects: [attackEffect('dnd-5e-2014', 0)],
-      targetValue: 100, // unbeatable except by a natural crit
-      rng: createSeededRng('miss'),
-    });
-    if (!result.isCriticalHit) {
+    // Found-flag pattern: search seeds for a non-crit roll so the miss
+    // assertions are guaranteed to execute (a bare `if` would silently skip
+    // if the seed happened to roll a natural 20 under a future RNG).
+    let found = false;
+    for (let i = 0; i < 200 && !found; i += 1) {
+      const result = resolveAttack({
+        attackEffects: [attackEffect('dnd-5e-2014', 0)],
+        targetValue: 100, // unbeatable except by a natural crit
+        rng: createSeededRng(`miss-${i}`),
+      });
+      if (result.isCriticalHit) continue;
+      found = true;
       expect(result.isHit).toBe(false);
       expect(result.damage).toBe(0);
     }
+    expect(found).toBe(true);
   });
 
   it('a natural 20 always hits even against an impossible target', () => {
@@ -152,21 +159,27 @@ describe('resolveAttack — hit/miss math', () => {
 
 describe('resolveAttack — damage', () => {
   it('rolls damage only on a hit; the die term is within range and bonus is flat', () => {
-    const result = resolveAttack({
-      attackEffects: [attackEffect('dnd-5e-2014', 50)], // guarantees a hit
-      damageEffects: weaponDamage('dnd-5e-2014', 8, 3),
-      targetValue: 10,
-      rng: createSeededRng('dmg'),
-    });
-    expect(result.isHit).toBe(true);
-    expect(result.damageDiceTerms).toHaveLength(1);
-    expect(result.damageDiceTerms[0]).toBeGreaterThanOrEqual(1);
-    expect(result.damageDiceTerms[0]).toBeLessThanOrEqual(8);
-    expect(result.damageBonus).toBe(3);
-    // On a non-crit hit: damage = die + 3.
-    if (!result.isCriticalHit) {
+    // Found-flag pattern: search seeds for a plain (non-crit, non-fumble) hit
+    // so the exact-damage equation is guaranteed to execute for some seed.
+    let found = false;
+    for (let i = 0; i < 200 && !found; i += 1) {
+      const result = resolveAttack({
+        attackEffects: [attackEffect('dnd-5e-2014', 50)], // hits unless natural 1
+        damageEffects: weaponDamage('dnd-5e-2014', 8, 3),
+        targetValue: 10,
+        rng: createSeededRng(`dmg-${i}`),
+      });
+      if (result.isCriticalHit || result.isCriticalMiss) continue;
+      found = true;
+      expect(result.isHit).toBe(true);
+      expect(result.damageDiceTerms).toHaveLength(1);
+      expect(result.damageDiceTerms[0]).toBeGreaterThanOrEqual(1);
+      expect(result.damageDiceTerms[0]).toBeLessThanOrEqual(8);
+      expect(result.damageBonus).toBe(3);
+      // On a non-crit hit: damage = die + 3.
       expect(result.damage).toBe(result.damageDiceTerms[0] + 3);
     }
+    expect(found).toBe(true);
   });
 
   it('a critical hit doubles the dice but not the flat bonus (5e/PF rule)', () => {
@@ -201,18 +214,27 @@ describe('resolveAttack — system-agnostic via the equipment compiler', () => {
         ...weaponDamage(systemId, 8, 3),
         ...compileEquipmentEffects(systemId, [weapon]).filter((e) => e.target === 'damage'),
       ];
-      const result = resolveAttack({
-        attackEffects,
-        damageEffects,
-        targetValue: 50, // force a hit to inspect damage
-        rng: createSeededRng('agnostic'),
-      });
-      // attack bonus = base 4 + item 1 = 5
-      expect(result.attackBonus).toBe(5);
-      if (result.isHit && !result.isCriticalHit) {
+      // Search seeds for a plain hit so the damage-parity assertion is
+      // guaranteed to execute. (The original test used targetValue 50, which a
+      // +5 total can only beat on a natural 20 — i.e. always a crit — so its
+      // non-crit damage branch was provably dead code.)
+      let found = false;
+      for (let i = 0; i < 200 && !found; i += 1) {
+        const result = resolveAttack({
+          attackEffects,
+          damageEffects,
+          targetValue: 5, // beatable by any non-fumble roll
+          rng: createSeededRng(`agnostic-${i}`),
+        });
+        // attack bonus = base 4 + item 1 = 5, on every seed
+        expect(result.attackBonus).toBe(5);
+        if (result.isCriticalHit || result.isCriticalMiss) continue;
+        found = true;
+        expect(result.isHit).toBe(true);
         // damage = die + flat 3 + item 1
         expect(result.damageBonus).toBe(4);
       }
+      expect(found).toBe(true);
     }
   });
 });

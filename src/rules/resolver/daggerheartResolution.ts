@@ -12,6 +12,13 @@
  * the marked HP by 1, minimum 1) — modeled here as an optional, caller-controlled
  * choice so it stays a deterministic input, not a hidden rule.
  *
+ * Attack rolls use the DUALITY DICE (SRD): 2d12 — a Hope die and a Fear die.
+ * The attack total is their sum plus modifiers; the higher die determines
+ * whether the roll is "with Hope" or "with Fear"; MATCHING dice are a critical
+ * success (an automatic success, rolled "with Hope"). The Hope/Fear economy
+ * itself (gaining Hope, the GM gaining Fear) is the caller's to apply — the
+ * result exposes the dice so that stays a deterministic, visible input.
+ *
  * Deterministic and seeded like the d20 attack resolver: the attack roll and any
  * damage dice come only from the injected RNG. This is the Daggerheart analogue
  * of resolveAttack — its own model, reusing the shared effect/RNG primitives.
@@ -40,6 +47,15 @@ export interface DaggerheartAttackInput {
 }
 
 export interface DaggerheartAttackResult {
+  /** The Hope die (first d12 of the duality pair). */
+  hopeDie: number;
+  /** The Fear die (second d12 of the duality pair). */
+  fearDie: number;
+  /** True when the Hope die is the higher (or the dice match — crits are with Hope). */
+  withHope: boolean;
+  /** Matching duality dice — a critical success (automatic hit), per SRD. */
+  isCritical: boolean;
+  /** Hope + Fear + modifiers. */
   attackTotal: number;
   attackBonus: number;
   isHit: boolean;
@@ -62,20 +78,31 @@ export function daggerheartHpMarked(damage: number, thresholds: DaggerheartThres
 }
 
 /**
- * Resolve a Daggerheart attack: roll attack vs Evasion; on a hit, roll damage,
- * compare to thresholds to mark 1-3 HP, optionally reduced by 1 if an Armor slot
- * is spent. Pure except for the seeded RNG.
+ * Resolve a Daggerheart attack: roll the 2d12 duality dice (Hope + Fear) vs
+ * Evasion — matching dice are a critical success and hit automatically; on a
+ * hit, roll damage, compare to thresholds to mark 1-3 HP, optionally reduced by
+ * 1 if an Armor slot is spent. Pure except for the seeded RNG.
  */
 export function resolveDaggerheartAttack(input: DaggerheartAttackInput): DaggerheartAttackResult {
   const attackResolved = resolveEffects(input.attackEffects, { rng: input.rng });
   const attackBonus = attackResolved.byTarget.attack?.total ?? 0;
-  const roll = input.rng.rollDie(20);
-  const attackTotal = roll + attackBonus;
-  const isHit = attackTotal >= input.evasion;
+  // Duality dice: Hope first, Fear second, from the same seeded stream.
+  const hopeDie = input.rng.rollDie(12);
+  const fearDie = input.rng.rollDie(12);
+  const attackTotal = hopeDie + fearDie + attackBonus;
+  const isCritical = hopeDie === fearDie;
+  // Matching dice count as rolling with Hope (SRD); otherwise the higher die rules.
+  const withHope = hopeDie >= fearDie;
+  // A critical success hits regardless of Evasion.
+  const isHit = isCritical || attackTotal >= input.evasion;
 
   const ledger: EffectInstance[] = [...attackResolved.ledger];
   if (!isHit) {
     return {
+      hopeDie,
+      fearDie,
+      withHope,
+      isCritical,
       attackTotal,
       attackBonus,
       isHit: false,
@@ -105,6 +132,10 @@ export function resolveDaggerheartAttack(input: DaggerheartAttackInput): Daggerh
   }
 
   return {
+    hopeDie,
+    fearDie,
+    withHope,
+    isCritical,
     attackTotal,
     attackBonus,
     isHit: true,

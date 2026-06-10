@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Monster } from '../types/creatures/monsters';
+import type { CharacterDocument, SystemDataModel } from '../types/core/document';
 import {
   buildEncounterSceneEvents,
   summarizeEncounterParty,
@@ -11,6 +12,7 @@ import {
   foldSceneEvents,
   resolveSceneAction,
 } from '../scene/runtime';
+import { createSeededRng } from '../scene/seededRng';
 
 const NOW = new Date('2026-05-01T12:00:00.000Z');
 
@@ -178,6 +180,184 @@ describe('encounterBuilder', () => {
       'encounter-monster-unknown',
       'encounter-monster-system-mismatch',
     ]);
+  });
+
+  it('REGRESSION (05-M7): a pre-existing character token rolls seeded d20+DEX, not a flat 10', () => {
+    let scene = createSceneDocument({
+      id: 'scene-1',
+      name: 'Road Ambush',
+      systemId: 'dnd-5e-2024',
+      grid: { width: 6, height: 6 },
+      seed: 'ambush-seed',
+      now: NOW,
+    });
+    const hero = resolveSceneAction(
+      scene,
+      {
+        type: 'place-token',
+        token: {
+          id: 'hero-token',
+          name: 'Astra',
+          kind: 'character',
+          position: { x: 0, y: 0 },
+          size: 1,
+          refId: 'hero-doc',
+        },
+      },
+      { eventId: 'hero-event', createdAt: NOW }
+    );
+    scene = appendSceneEvent(scene, hero.event!);
+
+    const heroDoc: CharacterDocument<SystemDataModel> = {
+      id: 'hero-doc',
+      name: 'Astra',
+      systemId: 'dnd-5e-2024',
+      system: { level: 3, baseAttributes: { str: 10, dex: 18 } } as SystemDataModel,
+      createdAt: NOW,
+      updatedAt: NOW,
+    };
+
+    const build = () =>
+      buildEncounterSceneEvents({
+        scene,
+        monsters: [goblin],
+        selections: [{ monsterId: 'goblin', count: 1 }],
+        documents: [heroDoc],
+        createdAt: NOW,
+        seed: 'encounter-seed',
+        eventIdFactory: makeEventIdFactory(),
+      });
+
+    const result = build();
+    expect(result.issues).toEqual([]);
+    const initiativeEvent = result.events.find((event) => event.type === 'initiative.set');
+    expect(initiativeEvent).toBeDefined();
+    const entries =
+      initiativeEvent!.type === 'initiative.set' ? initiativeEvent!.payload.entries : [];
+    const heroEntry = entries.find((entry) => entry.tokenId === 'hero-token')!;
+
+    // The character rolls from the same documented per-token sub-stream the
+    // monsters use: d20 from `${seed}:${tokenId}:initiative`, plus DEX 18 (+4).
+    const expected = createSeededRng('encounter-seed:hero-token:initiative').rollDie(20) + 4;
+    expect(heroEntry.value).toBe(expected);
+    expect(heroEntry.value).toBeGreaterThanOrEqual(5); // 1 + 4
+    expect(heroEntry.value).toBeLessThanOrEqual(24); // 20 + 4
+
+    // Deterministic: rebuilding with the same seed replays identical events.
+    expect(build().events).toEqual(result.events);
+  });
+
+  it('05-M7: keeps an existing initiative entry and falls back to 10 only when stats are unresolvable', () => {
+    let scene = createSceneDocument({
+      id: 'scene-1',
+      name: 'Road Ambush',
+      systemId: 'dnd-5e-2024',
+      grid: { width: 6, height: 6 },
+      now: NOW,
+    });
+    // Token with a refId that resolves to a document (would roll) but whose
+    // initiative was already set manually -> the existing value is kept.
+    const rolled = resolveSceneAction(
+      scene,
+      {
+        type: 'place-token',
+        token: {
+          id: 'set-token',
+          name: 'Set',
+          kind: 'character',
+          position: { x: 0, y: 0 },
+          size: 1,
+          refId: 'hero-doc',
+        },
+      },
+      { eventId: 'e1', createdAt: NOW }
+    );
+    scene = appendSceneEvent(scene, rolled.event!);
+    // Token with no refId/document -> last-resort flat 10.
+    const plain = resolveSceneAction(
+      scene,
+      {
+        type: 'place-token',
+        token: { id: 'plain-token', name: 'Plain', kind: 'npc', position: { x: 1, y: 0 }, size: 1 },
+      },
+      { eventId: 'e2', createdAt: NOW }
+    );
+    scene = appendSceneEvent(scene, plain.event!);
+    const manualOrder = resolveSceneAction(
+      scene,
+      {
+        type: 'set-initiative',
+        entries: [{ tokenId: 'set-token', value: 17 }],
+        activeTokenId: 'set-token',
+      },
+      { eventId: 'e3', createdAt: NOW }
+    );
+    scene = appendSceneEvent(scene, manualOrder.event!);
+
+    const heroDoc: CharacterDocument<SystemDataModel> = {
+      id: 'hero-doc',
+      name: 'Astra',
+      systemId: 'dnd-5e-2024',
+      system: { level: 3, baseAttributes: { str: 10, dex: 18 } } as SystemDataModel,
+      createdAt: NOW,
+      updatedAt: NOW,
+    };
+
+    const result = buildEncounterSceneEvents({
+      scene,
+      monsters: [goblin],
+      selections: [{ monsterId: 'goblin', count: 1 }],
+      documents: [heroDoc],
+      createdAt: NOW,
+      seed: 'encounter-seed',
+      eventIdFactory: makeEventIdFactory(),
+    });
+
+    const initiativeEvent = result.events.find((event) => event.type === 'initiative.set')!;
+    const entries =
+      initiativeEvent.type === 'initiative.set' ? initiativeEvent.payload.entries : [];
+    expect(entries.find((entry) => entry.tokenId === 'set-token')?.value).toBe(17);
+    expect(entries.find((entry) => entry.tokenId === 'plain-token')?.value).toBe(10);
+  });
+
+  it('REGRESSION (L-M6): initiative ties break by codepoint order, not locale order', () => {
+    let scene = createSceneDocument({
+      id: 'scene-1',
+      name: 'Tie Break',
+      systemId: 'dnd-5e-2024',
+      grid: { width: 6, height: 6 },
+      now: NOW,
+    });
+    // Two stat-less tokens both fall back to 10 — a guaranteed tie. The ids are
+    // chosen so codepoint order ('Zeta' < 'alpha': 'Z' 0x5A < 'a' 0x61) differs
+    // from typical locale collation (which would put 'alpha' first), so this
+    // fails loudly if production ever reverts to localeCompare.
+    for (const [index, id] of ['alpha-token', 'Zeta-token'].entries()) {
+      const placed = resolveSceneAction(
+        scene,
+        {
+          type: 'place-token',
+          token: { id, name: id, kind: 'npc', position: { x: index, y: 0 }, size: 1 },
+        },
+        { eventId: `place-${id}`, createdAt: NOW }
+      );
+      scene = appendSceneEvent(scene, placed.event!);
+    }
+
+    const result = buildEncounterSceneEvents({
+      scene,
+      monsters: [goblin],
+      selections: [{ monsterId: 'goblin', count: 1 }],
+      createdAt: NOW,
+      seed: 'tie-seed',
+      eventIdFactory: makeEventIdFactory(),
+    });
+
+    const initiativeEvent = result.events.find((event) => event.type === 'initiative.set')!;
+    const entries =
+      initiativeEvent.type === 'initiative.set' ? initiativeEvent.payload.entries : [];
+    const tiedAtTen = entries.filter((entry) => entry.value === 10).map((entry) => entry.tokenId);
+    expect(tiedAtTen).toEqual(['Zeta-token', 'alpha-token']);
   });
 
   it('avoids existing occupied cells when placing generated tokens', () => {

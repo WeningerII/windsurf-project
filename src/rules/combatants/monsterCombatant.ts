@@ -61,10 +61,18 @@ export function parseAttackFromDescription(description: string): NormalizedAttac
 
   const toHit = /([+-]\d+)\s+to hit/i.exec(description);
   // Damage clauses: "(1d6 + 2) slashing damage", "1 (1d4 - 1) slashing damage".
+  // Versatile alternatives — ", or 11 (1d10 + 4) slashing damage if used with
+  // two hands" — are one-of choices, not riders, so damage collection stops at
+  // the first ", or N (XdY" alternative. Genuine "plus N (XdY)" rider damage
+  // (e.g. "plus 11 (2d10) fire damage") appears before any alternative and is
+  // kept. Prose like ", or a creature that is grappled" has no leading number
+  // and is untouched.
+  const orAlternative = /,\s*or\s+\d+\s*\(\d+d\d+/i.exec(description);
+  const damageSource = orAlternative ? description.slice(0, orAlternative.index) : description;
   const damage: NormalizedAttack['damage'] = [];
   const damageRe = /\((\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\)\s*([a-z]+)?\s*damage/gi;
   let match: RegExpExecArray | null;
-  while ((match = damageRe.exec(description)) !== null) {
+  while ((match = damageRe.exec(damageSource)) !== null) {
     const [, count, faces, sign, mod, type] = match;
     const modifier = mod ? (sign === '-' ? -Number(mod) : Number(mod)) : 0;
     damage.push({
@@ -79,7 +87,9 @@ export function parseAttackFromDescription(description: string): NormalizedAttac
   if (!toHit && damage.length === 0) return undefined;
 
   const reachMatch = /reach (\d+)\s*ft/i.exec(description);
-  const rangeMatch = /range (\d+)\s*\/\s*\d+\s*ft/i.exec(description);
+  // Both "range 80/320 ft." (normal/long) and single-range "range 30 ft."
+  // (standard for spell attacks) resolve to the normal range.
+  const rangeMatch = /range (\d+)\s*(?:\/\s*\d+\s*)?ft/i.exec(description);
   const reachFeet = reachMatch
     ? Number(reachMatch[1])
     : rangeMatch
