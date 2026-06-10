@@ -82,8 +82,12 @@ describe('M&M 3e reference surface persistence', () => {
     expect(prepared.system.powers[0].extras).toEqual(['area', 'accurate']);
     expect(prepared.system.powers[0].flaws).toEqual(['limited', 'activation']);
     expect(prepared.system.powers[0].modifierRanks).toEqual(modifiedPower.modifierRanks);
-    expect(calculatePowerPointCost(prepared.system.powers[0])).toBe(15);
-    expect(prepared.system.powerPoints.spent.powers).toBe(15);
+    // Accurate is a flat extra (1 point per rank of Accurate — Hero's
+    // Handbook, Extras), so Blast 4 [base 2 + area 1 − limited 1 = 2/rank]
+    // + accurate 2 flat − activation 1 flat = 8 + 1 = 9 PP (not the +8
+    // per-rank overcharge previously pinned here).
+    expect(calculatePowerPointCost(prepared.system.powers[0])).toBe(9);
+    expect(prepared.system.powerPoints.spent.powers).toBe(9);
 
     const imported = importDocuments(exportDocuments([prepared]));
     const hydrated = engine.prepareData(imported[0] as CharacterDocument<Mam3eDataModel>);
@@ -107,7 +111,7 @@ describe('M&M 3e reference surface persistence', () => {
       flaws: ['limited', 'activation'],
       modifierRanks: modifiedPower.modifierRanks,
     });
-    expect(hydrated.system.powerPoints.spent.powers).toBe(15);
+    expect(hydrated.system.powerPoints.spent.powers).toBe(9);
   });
 
   it('keeps pinned archetypes reference-only through point totals and PL-cap warnings', () => {

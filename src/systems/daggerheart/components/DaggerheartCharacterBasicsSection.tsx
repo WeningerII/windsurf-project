@@ -3,6 +3,7 @@ import { DiceRollButton } from '../../../components/DiceRollButton';
 import { systemRegistry } from '../../../registry';
 import { parseNum } from '../../../utils/math';
 import { ATTRIBUTES } from '../daggerheartSheetConstants';
+import { useStableListKeys } from '../useStableListKeys';
 import type { DaggerheartSheetController } from '../useDaggerheartSheetController';
 
 interface Props {
@@ -11,6 +12,9 @@ interface Props {
 
 export function DaggerheartCharacterBasicsSection({ controller }: Props) {
   const { data, canUpdate } = controller;
+  const { keys: experienceKeys, removeKeyAt: removeExperienceKeyAt } = useStableListKeys(
+    data.experiences.length
+  );
 
   return (
     <>
@@ -52,7 +56,12 @@ export function DaggerheartCharacterBasicsSection({ controller }: Props) {
                 type="number"
                 value={data.attributes[attr.id]}
                 onChange={(event) =>
-                  controller.updateAttr(attr.id, parseNum(event.target.value, -3))
+                  // Keep the previous value when the field is blanked instead
+                  // of silently writing the -3 floor.
+                  controller.updateAttr(
+                    attr.id,
+                    parseNum(event.target.value, data.attributes[attr.id])
+                  )
                 }
                 className="mt-1 w-14 border-b border-input bg-transparent text-center text-xl font-bold tabular-nums focus:border-primary focus:outline-none"
                 disabled={!canUpdate}
@@ -83,7 +92,7 @@ export function DaggerheartCharacterBasicsSection({ controller }: Props) {
         <div className="flex flex-wrap gap-2">
           {data.experiences.map((experience, index) => (
             <div
-              key={index}
+              key={experienceKeys[index]}
               className="flex items-center gap-1 rounded-full bg-muted/40 py-1 pl-3 pr-1.5"
             >
               <input
@@ -98,11 +107,12 @@ export function DaggerheartCharacterBasicsSection({ controller }: Props) {
               />
               {canUpdate && (
                 <button
-                  onClick={() =>
+                  onClick={() => {
+                    removeExperienceKeyAt(index);
                     controller.update({
                       experiences: data.experiences.filter((_, entryIndex) => entryIndex !== index),
-                    })
-                  }
+                    });
+                  }}
                   className="rounded-full p-0.5 transition-colors hover:bg-destructive/10 hover:text-destructive"
                   title="Remove experience"
                 >

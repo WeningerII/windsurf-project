@@ -4,6 +4,7 @@ import { Badge } from '../../../components/ui/Badge';
 import type { CharacterClass } from '../../../types/character-options/classes';
 import { lazyWithPreload } from '../../../utils/lazyWithPreload';
 import { MAM3E_ARCHETYPE_COPY } from '../../../utils/documentationCopy';
+import { MamResourceLoadError } from './MamResourceLoadError';
 
 const MamArchetypeBrowser = lazyWithPreload(async () => {
   const module = await import('../../../components/MamArchetypeBrowser');
@@ -12,6 +13,8 @@ const MamArchetypeBrowser = lazyWithPreload(async () => {
 
 interface Props {
   archetypesLoaded: boolean;
+  archetypesError?: boolean;
+  onRetryArchetypes?: () => void;
   archetypes: CharacterClass[];
   pinnedArchetypeIds: string[];
   pinnedArchetypes: CharacterClass[];
@@ -24,12 +27,16 @@ type MamArchetypesTabComponent = React.FC<Props> & {
 
 export const MamArchetypesTab = (({
   archetypesLoaded,
+  archetypesError,
+  onRetryArchetypes,
   archetypes,
   pinnedArchetypeIds,
   pinnedArchetypes,
   onToggleArchetype,
 }) =>
-  !archetypesLoaded ? (
+  archetypesError && !archetypesLoaded ? (
+    <MamResourceLoadError resourceLabel="the M&M archetype catalog" onRetry={onRetryArchetypes} />
+  ) : !archetypesLoaded ? (
     <div className="text-center py-8 text-muted-foreground">Click to load archetypes...</div>
   ) : (
     <div className="space-y-4">

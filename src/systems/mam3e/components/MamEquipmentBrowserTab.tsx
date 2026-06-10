@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import type { Item } from '../../../types/equipment/items';
 import { lazyWithPreload } from '../../../utils/lazyWithPreload';
+import { MamResourceLoadError } from './MamResourceLoadError';
 
 const EquipmentBrowser = lazyWithPreload(async () => {
   const module = await import('../../../components/EquipmentBrowser');
@@ -28,6 +29,8 @@ function formatMamEquipmentCost(item: Item): string {
 
 interface Props {
   equipmentLoaded: boolean;
+  equipmentError?: boolean;
+  onRetryEquipment?: () => void;
   equipmentItems: Item[];
 }
 
@@ -35,8 +38,15 @@ type MamEquipmentBrowserTabComponent = React.FC<Props> & {
   preload: () => Promise<unknown>;
 };
 
-export const MamEquipmentBrowserTab = (({ equipmentLoaded, equipmentItems }) =>
-  !equipmentLoaded ? (
+export const MamEquipmentBrowserTab = (({
+  equipmentLoaded,
+  equipmentError,
+  onRetryEquipment,
+  equipmentItems,
+}) =>
+  equipmentError && !equipmentLoaded ? (
+    <MamResourceLoadError resourceLabel="the M&M equipment catalog" onRetry={onRetryEquipment} />
+  ) : !equipmentLoaded ? (
     <div className="text-center py-8 text-muted-foreground">Click to load equipment...</div>
   ) : (
     <Suspense

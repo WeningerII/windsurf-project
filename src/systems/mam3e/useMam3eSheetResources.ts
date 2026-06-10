@@ -30,6 +30,7 @@ function useLazyResource<T>(
 ) {
   const [data, setData] = useState<T[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const [error, setError] = useState(false);
   const loadRef = useRef<Promise<void> | null>(null);
   const activeSystemIdRef = useRef(systemId);
 
@@ -37,6 +38,7 @@ function useLazyResource<T>(
     activeSystemIdRef.current = systemId;
     setData([]);
     setLoaded(false);
+    setError(false);
     loadRef.current = null;
   }, [systemId]);
 
@@ -57,6 +59,15 @@ function useLazyResource<T>(
 
         setData(loadedData);
         setLoaded(true);
+        setError(false);
+      })
+      .catch(() => {
+        // Track the failure so the tab can render an error + retry message
+        // instead of hanging on its loading placeholder forever (mirrors the
+        // Daggerheart sheet's optionsState === 'error' handling).
+        if (activeSystemIdRef.current === requestSystemId) {
+          setError(true);
+        }
       })
       .finally(() => {
         if (activeSystemIdRef.current === requestSystemId) {
@@ -68,33 +79,38 @@ function useLazyResource<T>(
     return request;
   }, [loaded, loadResource, systemId]);
 
-  return { data, loaded, load };
+  return { data, loaded, error, load };
 }
 
 export function useMam3eSheetResources({ systemId }: UseMam3eSheetResourcesProps) {
   const {
     data: equipmentItems,
     loaded: equipmentLoaded,
+    error: equipmentError,
     load: loadEquipment,
   } = useLazyResource<Item>(systemId, loadEquipmentForSystem);
   const {
     data: powers,
     loaded: powersLoaded,
+    error: powersError,
     load: loadPowers,
   } = useLazyResource<Spell>(systemId, loadSpellsForSystem);
   const {
     data: advantages,
     loaded: advantagesLoaded,
+    error: advantagesError,
     load: loadAdvantages,
   } = useLazyResource<Advantage>(systemId, loadAdvantagesForSystem);
   const {
     data: archetypes,
     loaded: archetypesLoaded,
+    error: archetypesError,
     load: loadArchetypes,
   } = useLazyResource<CharacterClass>(systemId, loadMam3eArchetypesForSystem);
   const {
     data: complicationCatalog,
     loaded: complicationsLoaded,
+    error: complicationsError,
     load: loadComplications,
   } = useLazyResource<Complication>(systemId, loadComplicationsForSystem);
 
@@ -103,6 +119,7 @@ export function useMam3eSheetResources({ systemId }: UseMam3eSheetResourcesProps
     ...MAM3E_FLAW_MODIFIERS,
   ]);
   const [powerModifiersLoaded, setPowerModifiersLoaded] = useState(false);
+  const [powerModifiersError, setPowerModifiersError] = useState(false);
   const powerModifiersLoadRef = useRef<Promise<void> | null>(null);
   const activeSystemIdRef = useRef(systemId);
 
@@ -110,6 +127,7 @@ export function useMam3eSheetResources({ systemId }: UseMam3eSheetResourcesProps
     activeSystemIdRef.current = systemId;
     setModifierCatalog([...MAM3E_EXTRA_MODIFIERS, ...MAM3E_FLAW_MODIFIERS]);
     setPowerModifiersLoaded(false);
+    setPowerModifiersError(false);
     powerModifiersLoadRef.current = null;
   }, [systemId]);
 
@@ -132,6 +150,12 @@ export function useMam3eSheetResources({ systemId }: UseMam3eSheetResourcesProps
           setModifierCatalog(loaded);
         }
         setPowerModifiersLoaded(true);
+        setPowerModifiersError(false);
+      })
+      .catch(() => {
+        if (activeSystemIdRef.current === requestSystemId) {
+          setPowerModifiersError(true);
+        }
       })
       .finally(() => {
         if (activeSystemIdRef.current === requestSystemId) {
@@ -175,21 +199,27 @@ export function useMam3eSheetResources({ systemId }: UseMam3eSheetResourcesProps
   return {
     equipmentItems,
     equipmentLoaded,
+    equipmentError,
     loadEquipment,
     powers,
     powersLoaded,
+    powersError,
     loadPowers,
     advantages,
     advantagesLoaded,
+    advantagesError,
     loadAdvantages,
     archetypes,
     archetypesLoaded,
+    archetypesError,
     loadArchetypes,
     complicationCatalog,
     complicationsLoaded,
+    complicationsError,
     loadComplications,
     modifierCatalog,
     powerModifiersLoaded,
+    powerModifiersError,
     loadPowerModifiers,
     warmArchetypes,
     warmPowers,

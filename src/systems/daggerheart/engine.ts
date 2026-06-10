@@ -9,8 +9,12 @@ import { CharacterDocument } from '../../types/core/document';
 import { SystemEngine, RollResult } from '../../registry/types';
 import { createDefaultDaggerheartData, DaggerheartDataModel } from './data-model';
 import {
+  DAGGERHEART_MAX_HOPE,
   getDaggerheartDerivedStats,
+  getDaggerheartDualityOutcome,
   getDaggerheartEffectiveAttribute,
+  getDaggerheartHpMarked,
+  getDaggerheartHpMarkedAfterArmor,
 } from '../../utils/daggerheartDerived';
 import {
   clampDaggerheartInventoryQuantity,
@@ -64,9 +68,14 @@ export class DaggerheartEngine implements SystemEngine<DaggerheartDataModel> {
     d.system.severeThreshold = derived.severeThreshold;
     d.system.armor.max = derived.armorMax;
 
-    d.system.hitPoints.current = Math.min(d.system.hitPoints.current, d.system.hitPoints.max);
-    d.system.stress.current = Math.min(d.system.stress.current, d.system.stress.max);
-    d.system.armor.current = Math.min(d.system.armor.current, d.system.armor.max);
+    d.system.hitPoints.current = Math.max(
+      0,
+      Math.min(d.system.hitPoints.current, d.system.hitPoints.max)
+    );
+    d.system.stress.current = Math.max(0, Math.min(d.system.stress.current, d.system.stress.max));
+    d.system.armor.current = Math.max(0, Math.min(d.system.armor.current, d.system.armor.max));
+    // Hope is capped at 6 (Daggerheart SRD: Hope) and can never go negative.
+    d.system.hope = Math.max(0, Math.min(DAGGERHEART_MAX_HOPE, d.system.hope));
 
     return d;
   }
@@ -86,21 +95,22 @@ export class DaggerheartEngine implements SystemEngine<DaggerheartDataModel> {
     const fearDie = Math.floor(Math.random() * 12) + 1;
     const total = hopeDie + fearDie + mod;
 
-    const isHopeResult = hopeDie > fearDie;
-    const isCritSuccess = hopeDie === fearDie && hopeDie >= 10;
-    const isCritFail = hopeDie === fearDie && hopeDie <= 3;
+    // Any matched Duality Dice is a critical success regardless of the value
+    // rolled; Daggerheart has no fumble result (Daggerheart SRD: Duality Dice).
+    const outcome = getDaggerheartDualityOutcome(hopeDie, fearDie);
 
     return {
       total,
       formula: `2d12 + ${mod} (${checkId})`,
       terms: [hopeDie, fearDie],
-      isCritical: isCritSuccess,
-      isFumble: isCritFail,
-      flavor: isHopeResult
-        ? `Hope (${hopeDie}) vs Fear (${fearDie}) — with Hope!`
-        : hopeDie === fearDie
-          ? `Hope (${hopeDie}) = Fear (${fearDie}) — Critical!`
-          : `Hope (${hopeDie}) vs Fear (${fearDie}) — with Fear`,
+      isCritical: outcome === 'critical',
+      isFumble: false,
+      flavor:
+        outcome === 'hope'
+          ? `Hope (${hopeDie}) vs Fear (${fearDie}) — with Hope!`
+          : outcome === 'critical'
+            ? `Hope (${hopeDie}) = Fear (${fearDie}) — Critical!`
+            : `Hope (${hopeDie}) vs Fear (${fearDie}) — with Fear`,
     };
   }
 
@@ -114,22 +124,32 @@ export class DaggerheartEngine implements SystemEngine<DaggerheartDataModel> {
 
     if (type === 'heal') {
       hp.current = Math.min(hp.max, hp.current + amount);
+    } else if (type === 'stress') {
+      const stress = { ...d.system.stress };
+      stress.current = Math.min(stress.max, stress.current + amount);
+      d.system.stress = stress;
     } else {
-      // Armor absorbs damage first
-      let remaining = amount;
-      if (d.system.armor.current > 0 && type !== 'stress') {
-        const absorbed = Math.min(d.system.armor.current, remaining);
-        d.system.armor = { ...d.system.armor, current: d.system.armor.current - absorbed };
-        remaining -= absorbed;
-      }
+      // Daggerheart damage is not an HP pool: an incoming hit marks 1/2/3 HP
+      // by the Major/Severe thresholds, and marking an Armor Slot reduces the
+      // HP marked by one (Daggerheart SRD: Damage & Hit Points, Reducing
+      // Incoming Damage).
+      const armorScore = Math.max(0, d.system.armorScore || d.system.armor.max);
+      const baseHpMarked = getDaggerheartHpMarked(
+        amount,
+        d.system.majorThreshold,
+        d.system.severeThreshold
+      );
+      const armorSlotsMarked =
+        baseHpMarked > 0 && armorScore > 0 && d.system.armor.current > 0 ? 1 : 0;
+      const hpMarked = getDaggerheartHpMarkedAfterArmor(baseHpMarked, armorSlotsMarked, armorScore);
 
-      if (type === 'stress') {
-        const stress = { ...d.system.stress };
-        stress.current = Math.min(stress.max, stress.current + amount);
-        d.system.stress = stress;
-      } else {
-        hp.current = Math.max(0, hp.current - remaining);
+      if (armorSlotsMarked > 0) {
+        d.system.armor = {
+          ...d.system.armor,
+          current: d.system.armor.current - armorSlotsMarked,
+        };
       }
+      hp.current = Math.max(0, hp.current - hpMarked);
     }
 
     d.system.hitPoints = hp;

@@ -1,8 +1,10 @@
 import React, { Suspense } from 'react';
 import { AlertTriangle, Plus, X } from 'lucide-react';
+import { generateUUID } from '../../../utils/browserCompat';
 import { lazyWithPreload } from '../../../utils/lazyWithPreload';
 import type { Complication } from '../../../data/mutants-and-masterminds/3e/complications';
 import type { Mam3eDataModel } from '../data-model';
+import { MamResourceLoadError } from './MamResourceLoadError';
 
 const MamComplicationBrowser = lazyWithPreload(async () => {
   const module = await import('../../../components/MamComplicationBrowser');
@@ -13,6 +15,8 @@ interface Props {
   complications: Mam3eDataModel['complications'];
   complicationCatalog: Complication[];
   complicationsLoaded: boolean;
+  complicationsError?: boolean;
+  onRetryComplications?: () => void;
   insertedComplicationIds: string[];
   onComplicationsChange?: (complications: Mam3eDataModel['complications']) => void;
   onInsertComplication?: (complication: Complication) => void;
@@ -26,6 +30,8 @@ export const MamComplicationsTab = (({
   complications,
   complicationCatalog,
   complicationsLoaded,
+  complicationsError,
+  onRetryComplications,
   insertedComplicationIds,
   onComplicationsChange,
   onInsertComplication,
@@ -40,7 +46,9 @@ export const MamComplicationsTab = (({
       ) : (
         complications.map((complication, index) => (
           <div
-            key={index}
+            // Stable ids keep focus in the right row when entries above are
+            // removed; legacy rows without ids fall back to their position.
+            key={complication.id || `legacy-row-${index}`}
             className="flex items-start gap-2 p-2 bg-muted/30 rounded border transition-colors hover:bg-muted/50"
           >
             <div className="flex-1">
@@ -102,7 +110,12 @@ export const MamComplicationsTab = (({
       {onComplicationsChange && (
         <button
           type="button"
-          onClick={() => onComplicationsChange([...complications, { name: '', description: '' }])}
+          onClick={() =>
+            onComplicationsChange([
+              ...complications,
+              { id: `complication-${generateUUID()}`, name: '', description: '' },
+            ])
+          }
           className="w-full py-2 border border-dashed border-input rounded-lg text-sm text-muted-foreground hover:border-primary hover:text-primary transition-colors flex items-center justify-center gap-1"
         >
           <Plus className="w-4 h-4" /> Add Complication
@@ -124,6 +137,11 @@ export const MamComplicationsTab = (({
           onInsertComplication={onInsertComplication}
         />
       </Suspense>
+    ) : complicationsError ? (
+      <MamResourceLoadError
+        resourceLabel="the M&M complication catalog"
+        onRetry={onRetryComplications}
+      />
     ) : (
       <div className="rounded-lg border border-dashed border-input px-3 py-6 text-center text-sm text-muted-foreground">
         Loading complication catalog...

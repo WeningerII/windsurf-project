@@ -50,6 +50,27 @@ export function mam3eMeasurementByRank(rank0Value: number, rank: number): number
   return rank0Value * 2 ** rank;
 }
 
+/**
+ * Final power-point cost from effective cost per rank, rank, and flat
+ * modifiers, applying the M&M 3e minimum-cost rule (Hero's Handbook, Powers —
+ * Modifiers): when modifiers reduce an effect's cost below 1 point per rank,
+ * it instead costs 1 point per 2 ranks (then 1 per 3 ranks, and so on),
+ * rounded up — `ceil(rank / (2 - costPerRank))` — and no power with rank > 0
+ * ever costs less than 1 point, even after flat flaws.
+ */
+export function calculateMam3eFinalPowerCost(
+  rank: number,
+  costPerRank: number,
+  flatCost: number
+): number {
+  const perRankCost =
+    costPerRank < 1
+      ? Math.ceil(rank / (2 - costPerRank))
+      : Math.round(costPerRank * rank * 100) / 100;
+  const total = perRankCost + flatCost;
+  return rank > 0 ? Math.max(1, total) : Math.max(0, total);
+}
+
 export function calculatePowerPointCost(power: Power): number {
   const rank = getPowerRank(power);
   let costPerRank = Number.isFinite(power.baseCost) ? power.baseCost : 0;
@@ -64,6 +85,5 @@ export function calculatePowerPointCost(power: Power): number {
     flatCost += (modifier.flatCost ?? 0) * modifierRank;
   }
 
-  const total = costPerRank * rank + flatCost;
-  return Math.max(0, Math.round(total * 100) / 100);
+  return calculateMam3eFinalPowerCost(rank, costPerRank, flatCost);
 }

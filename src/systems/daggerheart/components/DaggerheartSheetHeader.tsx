@@ -1,5 +1,6 @@
 import { Heart, Shield, Star, Zap } from 'lucide-react';
 import { Badge } from '../../../components/ui/Badge';
+import { DAGGERHEART_MAX_HOPE } from '../../../utils/daggerheartDerived';
 import { parseNum } from '../../../utils/math';
 import type { DaggerheartSheetController } from '../useDaggerheartSheetController';
 
@@ -235,6 +236,7 @@ export function DaggerheartSheetHeader({ controller }: Props) {
             onChange={(event) => controller.update({ hope: parseNum(event.target.value, 0) })}
             className="mx-auto mt-1 block w-10 border-b border-amber-400 bg-transparent text-center text-xl font-bold tabular-nums focus:border-amber-500 focus:outline-none"
             min={0}
+            max={DAGGERHEART_MAX_HOPE}
             disabled={!canUpdate}
             title="Hope tokens"
           />

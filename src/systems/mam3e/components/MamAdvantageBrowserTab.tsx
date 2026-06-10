@@ -1,14 +1,24 @@
 import React from 'react';
 import { Badge } from '../../../components/ui/Badge';
 import type { Advantage } from '../../../types/mam/advantages';
+import { MamResourceLoadError } from './MamResourceLoadError';
 
 interface Props {
   advantagesLoaded: boolean;
+  advantagesError?: boolean;
+  onRetryAdvantages?: () => void;
   advantages: Advantage[];
 }
 
-export const MamAdvantageBrowserTab: React.FC<Props> = ({ advantagesLoaded, advantages }) =>
-  !advantagesLoaded ? (
+export const MamAdvantageBrowserTab: React.FC<Props> = ({
+  advantagesLoaded,
+  advantagesError,
+  onRetryAdvantages,
+  advantages,
+}) =>
+  advantagesError && !advantagesLoaded ? (
+    <MamResourceLoadError resourceLabel="the M&M advantage catalog" onRetry={onRetryAdvantages} />
+  ) : !advantagesLoaded ? (
     <div className="text-center py-8 text-muted-foreground">Click to load advantages...</div>
   ) : (
     <section className="bg-card p-4 rounded-lg border space-y-2">
