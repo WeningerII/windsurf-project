@@ -86,6 +86,7 @@ export type { MonsterCombatant } from './combatants/monsterCombatant';
 export {
   buildMonsterCombatant,
   monsterAttackEffects,
+  monsterAttacksPerRound,
   monsterAverageHitPoints,
   monsterDamageEffects,
   normalizeAttack,

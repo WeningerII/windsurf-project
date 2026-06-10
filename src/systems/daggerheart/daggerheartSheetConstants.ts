@@ -1,4 +1,5 @@
 import type { DaggerheartDomainCard, DaggerheartDomainId } from '../../types/daggerheart';
+import { daggerheartDomainsById } from '../../data/daggerheart/1.0/domains';
 import type { DaggerheartDataModel } from './data-model';
 
 export const ATTRIBUTES: Array<{
@@ -34,6 +35,16 @@ export const DAGGERHEART_CURRENCY_FIELDS = [
   { key: 'chests', label: 'Chests', color: 'text-yellow-200' },
 ] as const;
 
+/** Display name for a canonical domain id, from the domain record. */
+export function domainDisplayName(id: DaggerheartDomainId): string {
+  return daggerheartDomainsById[id]?.name ?? id;
+}
+
+/**
+ * Coerce a PERSISTED domain value to its canonical id. Class data is typed
+ * `DaggerheartDomainId` and needs no coercion; this exists for legacy
+ * documents whose domain-card entries stored capitalized display names.
+ */
 export function normalizeDomainId(value: string): DaggerheartDomainId {
   return value.toLowerCase().replace(/\s+/g, '') as DaggerheartDomainId;
 }

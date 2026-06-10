@@ -14,8 +14,13 @@ export const cleric: CharacterClass = {
   },
 
   hitDie: 'd8',
+  d20Profile: {
+    bab: 'three-quarter',
+    fortSave: 'good',
+    refSave: 'poor',
+    willSave: 'good',
+  },
   primaryAbility: ['wis'],
-  savingThrowProficiencies: ['wis', 'cha'],
 
   armorProficiencies: ['light', 'medium', 'heavy', 'shields'],
   weaponProficiencies: ['simple'],

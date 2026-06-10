@@ -35,6 +35,24 @@ interface ArmorEquipItem {
 
 // ─── 5e AC ───────────────────────────────────────────────────────────────────
 
+/**
+ * How much Dexterity an armor type lets through to AC (SRD): unarmored and
+ * light pass the full mod, medium caps it (default +2), heavy passes none.
+ * Single source for both the AC computation and the contribution ledger.
+ */
+export function dnd5eArmorDexContribution(
+  armor: Pick<ArmorEquipItem, 'armorType' | 'dexBonusMax'> | undefined,
+  dexMod: number
+): number {
+  if (!armor || armor.armorType === 'light') {
+    return dexMod;
+  }
+  if (armor.armorType === 'medium') {
+    return Math.min(dexMod, armor.dexBonusMax ?? 2);
+  }
+  return 0;
+}
+
 export function compute5eAC(
   dexScore: number,
   equipment: Array<{ slot?: string } & ArmorEquipItem>
@@ -45,19 +63,7 @@ export function compute5eAC(
   const armor = equipment.find((e) => e.slot === 'chest' && e.armorClass != null);
   const shield = equipment.find((e) => e.slot === 'offHand' && e.shieldBonus != null);
 
-  let ac: number;
-  if (!armor) {
-    // Unarmored
-    ac = 10 + dexMod;
-  } else if (armor.armorType === 'light') {
-    ac = armor.armorClass! + dexMod;
-  } else if (armor.armorType === 'medium') {
-    const cap = armor.dexBonusMax ?? 2;
-    ac = armor.armorClass! + Math.min(dexMod, cap);
-  } else {
-    // Heavy — no DEX bonus
-    ac = armor.armorClass!;
-  }
+  let ac = (armor ? armor.armorClass! : 10) + dnd5eArmorDexContribution(armor, dexMod);
 
   if (shield) {
     ac += shield.shieldBonus!;

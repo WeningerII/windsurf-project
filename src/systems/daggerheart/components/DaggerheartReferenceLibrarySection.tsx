@@ -1,4 +1,5 @@
 import { Badge } from '../../../components/ui/Badge';
+import { domainDisplayName } from '../daggerheartSheetConstants';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/Tabs';
 import { DaggerheartFeatureList } from '../daggerheartSheetShared';
 import type { DaggerheartSheetController } from '../useDaggerheartSheetController';
@@ -63,7 +64,7 @@ export function DaggerheartReferenceLibrarySection({ controller }: Props) {
                 <div className="flex flex-wrap gap-2">
                   {entry.domains.map((domain) => (
                     <Badge key={domain} variant="outline">
-                      {domain}
+                      {domainDisplayName(domain)}
                     </Badge>
                   ))}
                 </div>

@@ -33,6 +33,11 @@ export interface TacticalActor {
   /** Reach in grid cells (melee = 1). Undefined means unlimited (ranged). */
   reach?: number;
   critOn?: number;
+  /**
+   * Attacks per turn (SRD Multiattack). Default 1. Each attack re-targets if
+   * the current target drops mid-sequence.
+   */
+  attacksPerRound?: number;
 }
 
 /** A potential target on the grid. */

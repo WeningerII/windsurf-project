@@ -252,3 +252,76 @@ describe('resolveAttack — provenance', () => {
     expect(result.ledger.length).toBe(3);
   });
 });
+
+describe("resolveAttack — PF2e degrees of success (degreeModel: 'pf2e')", () => {
+  const SID = 'pf2e' as const;
+
+  // Find seeds whose first d20 is a known value so degree thresholds are
+  // exercised deterministically without mocking.
+  function seedWithFirstD20(target: number): string {
+    for (let i = 0; i < 5000; i += 1) {
+      const seed = `degree-${i}`;
+      if (createSeededRng(seed).rollDie(20) === target) return seed;
+    }
+    throw new Error(`no seed found for d20=${target}`);
+  }
+
+  it('beats the AC by 10+ for a critical success and doubles the WHOLE damage', () => {
+    const seed = seedWithFirstD20(15);
+    const resolution = resolveAttack({
+      attackEffects: [attackEffect(SID, 10)], // total 25 vs AC 15 = +10 over
+      damageEffects: weaponDamage(SID, 6, 4),
+      targetValue: 15,
+      degreeModel: 'pf2e',
+      rng: createSeededRng(seed),
+    });
+    expect(resolution.degreeOfSuccess).toBe('critical-success');
+    expect(resolution.isCriticalHit).toBe(true);
+    // CRB: double dice AND static damage — total = 2 x (die + 4).
+    const die = resolution.damageDiceTerms[0];
+    expect(resolution.damage).toBe(2 * (die + 4));
+  });
+
+  it('a natural 20 upgrades the degree one step (failure -> success)', () => {
+    const seed = seedWithFirstD20(20);
+    const resolution = resolveAttack({
+      attackEffects: [attackEffect(SID, 0)], // total 20 vs AC 25: failure...
+      damageEffects: weaponDamage(SID, 6, 0),
+      targetValue: 25,
+      degreeModel: 'pf2e',
+      rng: createSeededRng(seed),
+    });
+    // ...upgraded to success by the nat 20 — a plain hit, NOT a crit.
+    expect(resolution.degreeOfSuccess).toBe('success');
+    expect(resolution.isHit).toBe(true);
+    expect(resolution.isCriticalHit).toBe(false);
+  });
+
+  it('a natural 1 downgrades success to failure', () => {
+    const seed = seedWithFirstD20(1);
+    const resolution = resolveAttack({
+      attackEffects: [attackEffect(SID, 14)], // total 15 vs AC 15: success...
+      targetValue: 15,
+      degreeModel: 'pf2e',
+      rng: createSeededRng(seed),
+    });
+    // ...downgraded to failure by the nat 1.
+    expect(resolution.degreeOfSuccess).toBe('failure');
+    expect(resolution.isHit).toBe(false);
+  });
+
+  it('the default d20 model is unchanged (no degree, dice-only crit)', () => {
+    const seed = seedWithFirstD20(20);
+    const resolution = resolveAttack({
+      attackEffects: [attackEffect('dnd-5e-2014', 5)],
+      damageEffects: weaponDamage('dnd-5e-2014', 6, 4),
+      targetValue: 12,
+      rng: createSeededRng(seed),
+    });
+    expect(resolution.degreeOfSuccess).toBeUndefined();
+    expect(resolution.isCriticalHit).toBe(true);
+    // 5e crit: dice doubled, flat NOT doubled.
+    const die = resolution.damageDiceTerms[0];
+    expect(resolution.damage).toBe(2 * die + 4);
+  });
+});

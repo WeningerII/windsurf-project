@@ -14,8 +14,13 @@ export const ranger: CharacterClass = {
   },
 
   hitDie: 'd8',
+  d20Profile: {
+    bab: 'full',
+    fortSave: 'good',
+    refSave: 'good',
+    willSave: 'poor',
+  },
   primaryAbility: ['dex', 'wis'],
-  savingThrowProficiencies: ['str', 'dex'],
 
   armorProficiencies: ['light', 'medium', 'shields'],
   weaponProficiencies: ['simple', 'martial'],

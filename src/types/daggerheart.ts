@@ -82,7 +82,11 @@ export interface DaggerheartClass {
     url: string;
   };
   description: string;
-  domains: [string, string];
+  /**
+   * Canonical lowercase domain ids — display names come from the domain
+   * record (daggerheartDomainsById), not from this tuple.
+   */
+  domains: [DaggerheartDomainId, DaggerheartDomainId];
   startingEvasion: number;
   startingHitPoints: number;
   classItems: [string, string];

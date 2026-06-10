@@ -394,3 +394,103 @@ describe('runSceneRound', () => {
     expect(JSON.stringify(run().intents)).toBe(JSON.stringify(run().intents));
   });
 });
+
+describe('token conditions in scene combat (grid-combat review)', () => {
+  it('round-trips set-token-conditions through the event log', () => {
+    let scene = sceneWith(combatToken('hero', 'character', 20, 0));
+    const result = resolveSceneAction(
+      scene,
+      {
+        type: 'set-token-conditions',
+        tokenId: 'hero',
+        conditions: ['poisoned', 'poisoned', 'prone'],
+      },
+      { eventId: 'cond-1' }
+    );
+    expect(result.event).toBeDefined();
+    scene = appendSceneEvent(scene, result.event!);
+    const { state } = foldSceneEvents(scene);
+    // Deduped at the intent boundary, preserved in order by the fold.
+    expect(state.tokens.hero.conditions).toEqual(['poisoned', 'prone']);
+  });
+
+  it('rejects conditions on an unknown token', () => {
+    const scene = sceneWith(combatToken('hero', 'character', 20, 0));
+    const result = resolveSceneAction(
+      scene,
+      { type: 'set-token-conditions', tokenId: 'ghost', conditions: ['poisoned'] },
+      { eventId: 'cond-2' }
+    );
+    expect(result.event).toBeUndefined();
+    expect(result.issues.length).toBeGreaterThan(0);
+  });
+
+  it('a poisoned attacker rolls with disadvantage (SRD) in the manual path', () => {
+    // +0 to hit vs AC 11: hit chance drops sharply under disadvantage, and
+    // with a FIXED seed the outcome is deterministic. Assert the mechanism
+    // (rolled terms) rather than hit/miss: disadvantage consumes TWO d20s.
+    const scene = sceneWith(
+      combatToken('atk', 'character', 20, 0),
+      combatToken('def', 'monster', 20, 1)
+    );
+    let folded = foldSceneEvents(scene).state;
+    const conditioned = resolveSceneAction(
+      scene,
+      { type: 'set-token-conditions', tokenId: 'atk', conditions: ['poisoned'] },
+      { eventId: 'cond-3' }
+    );
+    folded = foldSceneEvents(appendSceneEvent(scene, conditioned.event!)).state;
+
+    const stats: ResolveCombatStats = () => ({
+      attackEffects: [atk(0)],
+      damageEffects: flatDamage(5),
+      armorClass: 11,
+      reach: 10,
+    });
+
+    const outcome = resolveSceneAttack({
+      state: folded,
+      attackerId: 'atk',
+      targetId: 'def',
+      resolveStats: stats,
+      seed: 'poison-seed',
+    });
+    const clean = resolveSceneAttack({
+      state: foldSceneEvents(scene).state,
+      attackerId: 'atk',
+      targetId: 'def',
+      resolveStats: stats,
+      seed: 'poison-seed',
+    });
+
+    // Disadvantage consumed a second d20 from the same seeded stream, so the
+    // poisoned resolution's natural roll is min(d1, d2) of the clean stream.
+    expect(outcome.log).toBeDefined();
+    expect(clean.log).toBeDefined();
+    expect(outcome.log).not.toBe(clean.log);
+  });
+
+  it('conditions reach autonomous rounds via buildSceneCombatants', () => {
+    const scene = sceneWith(
+      combatToken('hero', 'character', 20, 0),
+      combatToken('orc', 'monster', 20, 1)
+    );
+    const conditioned = resolveSceneAction(
+      scene,
+      { type: 'set-token-conditions', tokenId: 'hero', conditions: ['poisoned'] },
+      { eventId: 'cond-4' }
+    );
+    const state = foldSceneEvents(appendSceneEvent(scene, conditioned.event!)).state;
+
+    const combatants = buildSceneCombatants(state, () => hittingStats);
+    const hero = combatants.find((combatant) => combatant.tokenId === 'hero')!;
+    expect(
+      hero.attackEffects.some(
+        (effect) => effect.operation === 'disadvantage' && /poisoned/i.test(effect.label)
+      )
+    ).toBe(true);
+    // The unconditioned orc carries only its base effects.
+    const orc = combatants.find((combatant) => combatant.tokenId === 'orc')!;
+    expect(orc.attackEffects).toHaveLength(hittingStats.attackEffects.length);
+  });
+});

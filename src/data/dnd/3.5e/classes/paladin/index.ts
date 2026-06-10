@@ -14,8 +14,13 @@ export const paladin: CharacterClass = {
   },
 
   hitDie: 'd10',
+  d20Profile: {
+    bab: 'full',
+    fortSave: 'good',
+    refSave: 'poor',
+    willSave: 'poor',
+  },
   primaryAbility: ['str', 'cha'],
-  savingThrowProficiencies: ['wis', 'cha'],
 
   armorProficiencies: ['light', 'medium', 'heavy', 'shields'],
   weaponProficiencies: ['simple', 'martial'],

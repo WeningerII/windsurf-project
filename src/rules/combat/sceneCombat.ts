@@ -24,6 +24,12 @@ import { resolveAttack } from '../resolver/attackResolution';
 import { gridDistance } from '../resolver/areaTargeting';
 import { participantRng } from '../resolver/participantResolution';
 import { attackToDamageIntent } from '../resolver/sceneCombat';
+import { collectDnd5eConditionEffects } from '../conditions/dnd5eConditions';
+
+/** PF2e scenes resolve attacks by CRB degrees of success; others use d20 crits. */
+function degreeModelForScene(state: SceneState): 'd20' | 'pf2e' {
+  return state.systemId === 'pf2e' ? 'pf2e' : 'd20';
+}
 
 /** Combat stats for a token, resolved from its statblock or character sheet. */
 export interface SceneCombatStats {
@@ -33,6 +39,8 @@ export interface SceneCombatStats {
   /** Reach in grid cells (melee = 1). */
   reach: number;
   critOn?: number;
+  /** Attacks per turn (SRD Multiattack). Default 1. */
+  attacksPerRound?: number;
 }
 
 /** Resolve a token's combat stats, or undefined when it cannot fight. */
@@ -74,16 +82,21 @@ export function buildSceneCombatants(
     if (!token?.hp) continue;
     const stats = resolveStats(token);
     if (!stats) continue;
+    // The token's own conditions compile into its attack effects (poisoned ->
+    // disadvantage etc.), so autonomous rounds fight the same as the manual
+    // path. Unknown condition ids contribute nothing.
+    const conditionEffects = collectDnd5eConditionEffects(token.conditions ?? []);
     combatants.push({
       tokenId: token.id,
       faction: factionForToken(token),
       position: { ...token.position },
       armorClass: stats.armorClass,
       hp: { current: token.hp.current, max: token.hp.max },
-      attackEffects: stats.attackEffects,
+      attackEffects: [...stats.attackEffects, ...conditionEffects],
       damageEffects: stats.damageEffects,
       reach: stats.reach,
       critOn: stats.critOn,
+      attacksPerRound: stats.attacksPerRound,
     });
   }
   return combatants;
@@ -149,12 +162,27 @@ export function resolveSceneAttack(params: {
     };
   }
 
+  // Conditions: the attacker's own conditions compile to effects (e.g.
+  // poisoned -> disadvantage on attack), and both sides' condition sets ride
+  // the resolve context so condition-gated equipment/feat effects can fire.
+  // The compiler speaks the 5e vocabulary; unknown ids contribute nothing.
+  const attackerConditions = attacker.conditions ?? [];
+  const targetConditions = new Set(target.conditions ?? []);
   const resolution = resolveAttack({
-    attackEffects: attackerStats.attackEffects,
+    attackEffects: [
+      ...attackerStats.attackEffects,
+      ...collectDnd5eConditionEffects(attackerConditions),
+    ],
     damageEffects: attackerStats.damageEffects,
     targetValue: targetStats.armorClass,
     critOn: attackerStats.critOn,
+    degreeModel: degreeModelForScene(state),
     rng: participantRng(seed, attackerId, targetId),
+    context: {
+      conditions: new Set(attackerConditions),
+      attackerConditions: new Set(attackerConditions),
+      targetConditions,
+    },
   });
 
   const intent = attackToDamageIntent(attackerId, targetId, resolution, params.cause);
@@ -197,7 +225,12 @@ export function runSceneRound(params: {
   round: number;
 }): SceneRoundOutcome {
   const order = buildSceneCombatants(params.state, params.resolveStats);
-  const result = runCombatRound({ order, seed: params.seed, round: params.round });
+  const result = runCombatRound({
+    order,
+    seed: params.seed,
+    round: params.round,
+    degreeModel: degreeModelForScene(params.state),
+  });
 
   const nameOf = (tokenId: string): string => params.state.tokens[tokenId]?.name ?? tokenId;
   const log = result.turns.map((turn) => {

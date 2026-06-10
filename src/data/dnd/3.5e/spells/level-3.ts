@@ -1043,7 +1043,7 @@ export const level3Spells: Spell[] = [
       material: false,
     },
     duration: {
-      type: 'minutes',
+      type: 'minutes-per-level',
       minutes: 10,
     },
     concentration: false,
@@ -1076,7 +1076,7 @@ export const level3Spells: Spell[] = [
       divineFocus: true,
     },
     duration: {
-      type: 'minutes',
+      type: 'minutes-per-level',
       minutes: 10,
     },
     area: '10-ft.-radius emanation from touched creature',
@@ -1117,7 +1117,7 @@ export const level3Spells: Spell[] = [
       material: false,
     },
     duration: {
-      type: 'minutes',
+      type: 'minutes-per-level',
       minutes: 10,
     },
     concentration: false,
@@ -1149,7 +1149,7 @@ export const level3Spells: Spell[] = [
       material: false,
     },
     duration: {
-      type: 'minutes',
+      type: 'minutes-per-level',
       minutes: 10,
     },
     concentration: false,

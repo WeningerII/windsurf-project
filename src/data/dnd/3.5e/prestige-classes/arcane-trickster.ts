@@ -82,8 +82,13 @@ export const arcaneTrickster: CharacterClass = {
   description:
     'A stealthy spellcaster who advances arcane magic while layering rogue tricks and sneak attacks on top.',
   hitDie: 'd4',
+  d20Profile: {
+    bab: 'half',
+    fortSave: 'poor',
+    refSave: 'good',
+    willSave: 'good',
+  },
   primaryAbility: ['dex', 'int'],
-  savingThrowProficiencies: ['dex', 'wis'],
   armorProficiencies: [],
   weaponProficiencies: [],
   toolProficiencies: [],

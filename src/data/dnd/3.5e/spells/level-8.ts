@@ -316,8 +316,8 @@ export const level8Spells: Spell[] = [
       material: false,
     },
     duration: {
-      type: 'hours',
-      hours: 24,
+      type: 'days-per-level',
+      days: 1,
     },
     area: '20-ft.-radius emanation centered on a point in space',
     savingThrowText: 'None',

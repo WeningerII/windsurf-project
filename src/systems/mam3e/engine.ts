@@ -194,6 +194,13 @@ export class Mam3eEngine implements SystemEngine<Mam3eDataModel> {
     data.powerPoints.spent.skills = Math.ceil(totalSkillRanks / 2);
 
     // 6. PL Cap Validation (M&M 3e Hero's Handbook)
+    //
+    // PARTIAL validation, deliberately: attack bonuses count ability + combat
+    // skill only — Close Attack/Ranged Attack advantage ranks and
+    // Accurate/Inaccurate power modifiers are NOT folded in, and the skill
+    // caps (rank ≤ PL + 5, total bonus ≤ PL + 10) are not checked at all.
+    // Builds over-cap through those paths pass silently; treat a clean
+    // plViolations list as "no violation detected", not "build is legal".
     const plLimit = data.powerLevel * 2;
     const violations: Array<{ label: string; value: number; limit: number }> = [];
 
@@ -303,6 +310,11 @@ export class Mam3eEngine implements SystemEngine<Mam3eDataModel> {
       total: d20 + mod,
       formula: `1d20 + ${mod}`,
       terms: [d20, mod],
+      // Hero's Handbook: a natural 20 is a critical success on checks (and
+      // +5 degree on attacks); a natural 1 always fails. Flag them so the
+      // roll badge highlights real M&M crits instead of never firing.
+      isCritical: d20 === 20,
+      isFumble: d20 === 1,
       flavor,
     };
   }

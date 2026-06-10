@@ -17,6 +17,11 @@ interface TokenPanelProps {
   onTogglePlace: () => void;
   canDeleteToken: boolean;
   onDeleteSelectedToken: () => void;
+  /** Condition ids offered for the selected token (empty hides the section). */
+  conditionOptions?: readonly string[];
+  /** The selected token's active conditions. */
+  selectedTokenConditions?: readonly string[];
+  onToggleSelectedTokenCondition?: (conditionId: string) => void;
 }
 
 /** Token controls: link a character (or define a manual token) and place it. */
@@ -32,6 +37,9 @@ export function TokenPanel({
   onTogglePlace,
   canDeleteToken,
   onDeleteSelectedToken,
+  conditionOptions = [],
+  selectedTokenConditions = [],
+  onToggleSelectedTokenCondition,
 }: TokenPanelProps) {
   return (
     <div className="rounded-lg border bg-card p-3">
@@ -91,6 +99,34 @@ export function TokenPanel({
           <Plus className="mr-1.5 h-4 w-4" />
           Place Token
         </Button>
+        {conditionOptions.length > 0 && onToggleSelectedTokenCondition && (
+          <div>
+            <div className="mb-1 text-xs font-medium text-muted-foreground">
+              Conditions {!canDeleteToken && '(select a token)'}
+            </div>
+            <div className="flex flex-wrap gap-1">
+              {conditionOptions.map((conditionId) => {
+                const active = selectedTokenConditions.includes(conditionId);
+                return (
+                  <button
+                    key={conditionId}
+                    type="button"
+                    disabled={!canDeleteToken}
+                    onClick={() => onToggleSelectedTokenCondition(conditionId)}
+                    className={`rounded border px-1.5 py-0.5 text-[11px] capitalize transition-colors disabled:opacity-50 ${
+                      active
+                        ? 'border-amber-500 bg-amber-500/15 text-amber-600'
+                        : 'text-muted-foreground hover:border-primary hover:text-primary'
+                    }`}
+                    title={`${active ? 'Clear' : 'Apply'} ${conditionId} on the selected token — folds into its attack rolls in combat`}
+                  >
+                    {conditionId}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

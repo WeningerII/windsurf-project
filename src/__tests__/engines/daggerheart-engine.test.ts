@@ -996,6 +996,8 @@ describe('DaggerheartEngine', () => {
       expect(critSuccess.isCritical).toBe(true);
       expect(critSuccess.isFumble).toBe(false);
       expect(critSuccess.flavor).toContain('Critical');
+      // The badge speaks Daggerheart, not d20 ("NAT 20!").
+      expect(critSuccess.outcomeLabel).toBe('Critical!');
       highSpy.mockRestore();
 
       // Matched mid dice (7,7) — previously dropped because only 10+ crit.

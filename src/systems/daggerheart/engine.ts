@@ -105,6 +105,8 @@ export class DaggerheartEngine implements SystemEngine<DaggerheartDataModel> {
       terms: [hopeDie, fearDie],
       isCritical: outcome === 'critical',
       isFumble: false,
+      // Daggerheart vocabulary, not the d20 "NAT 20!" default.
+      outcomeLabel: outcome === 'critical' ? 'Critical!' : undefined,
       flavor:
         outcome === 'hope'
           ? `Hope (${hopeDie}) vs Fear (${fearDie}) — with Hope!`

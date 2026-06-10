@@ -255,7 +255,7 @@ export const level2Spells: Spell[] = [
       divineFocus: true,
     },
     duration: {
-      type: 'minutes',
+      type: 'minutes-per-level',
       minutes: 1,
     },
     target: 'Creature touched',
@@ -297,7 +297,7 @@ export const level2Spells: Spell[] = [
       divineFocus: true,
     },
     duration: {
-      type: 'minutes',
+      type: 'minutes-per-level',
       minutes: 1,
     },
     target: 'Creature touched',
@@ -339,7 +339,7 @@ export const level2Spells: Spell[] = [
       divineFocus: true,
     },
     duration: {
-      type: 'minutes',
+      type: 'minutes-per-level',
       minutes: 1,
     },
     target: 'Creature touched',
@@ -381,7 +381,7 @@ export const level2Spells: Spell[] = [
       divineFocus: true,
     },
     duration: {
-      type: 'minutes',
+      type: 'minutes-per-level',
       minutes: 1,
     },
     target: 'Creature touched',
@@ -465,7 +465,7 @@ export const level2Spells: Spell[] = [
       material: true,
     },
     duration: {
-      type: 'minutes',
+      type: 'minutes-per-level',
       minutes: 1,
     },
     target: 'Creature touched',
@@ -700,7 +700,7 @@ export const level2Spells: Spell[] = [
       divineFocus: true,
     },
     duration: {
-      type: 'hours',
+      type: 'hours-per-level',
       hours: 1,
     },
     target: 'Creature touched',
@@ -742,7 +742,7 @@ export const level2Spells: Spell[] = [
       divineFocus: true,
     },
     duration: {
-      type: 'hours',
+      type: 'hours-per-level',
       hours: 1,
     },
     target: 'Creature touched',
@@ -825,7 +825,7 @@ export const level2Spells: Spell[] = [
       divineFocus: true,
     },
     duration: {
-      type: 'minutes',
+      type: 'minutes-per-level',
       minutes: 1,
     },
     target: 'Creature touched',
@@ -1023,7 +1023,7 @@ export const level2Spells: Spell[] = [
       divineFocus: true,
     },
     duration: {
-      type: 'rounds',
+      type: 'rounds-per-level',
       rounds: 1,
     },
     effect: '5-ft.-diameter sphere',
@@ -1230,7 +1230,7 @@ export const level2Spells: Spell[] = [
       material: false,
     },
     duration: {
-      type: 'rounds',
+      type: 'rounds-per-level',
       rounds: 1,
     },
     target: 'One animal',
@@ -1266,7 +1266,7 @@ export const level2Spells: Spell[] = [
       divineFocus: true,
     },
     duration: {
-      type: 'rounds',
+      type: 'rounds-per-level',
       rounds: 1,
     },
     target: 'One humanoid creature',
@@ -1421,7 +1421,7 @@ export const level2Spells: Spell[] = [
       divineFocus: true,
     },
     duration: {
-      type: 'minutes',
+      type: 'minutes-per-level',
       minutes: 1,
     },
     target: 'Creature touched',
@@ -1463,7 +1463,7 @@ export const level2Spells: Spell[] = [
       divineFocus: true,
     },
     duration: {
-      type: 'minutes',
+      type: 'minutes-per-level',
       minutes: 1,
     },
     target: 'Creature touched',
@@ -2178,7 +2178,7 @@ export const level2Spells: Spell[] = [
       divineFocus: true,
     },
     duration: {
-      type: 'hours',
+      type: 'hours-per-level',
       hours: 1,
     },
     target: 'You',

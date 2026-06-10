@@ -664,3 +664,30 @@ describe('applyD20LegacyRaceTemplate', () => {
     expect(humanDoc.system.features.some((feature) => feature.source === 'Halfling')).toBe(false);
   });
 });
+
+describe('class data carries d20 progressions (review H-3)', () => {
+  it('3.5e wizard: half BAB, poor Fort/Ref, good Will (SRD)', () => {
+    expect(wizard35.d20Profile).toEqual({
+      bab: 'half',
+      fortSave: 'poor',
+      refSave: 'poor',
+      willSave: 'good',
+    });
+    // The bogus 5e-style two-ability save list is gone from d20 data.
+    expect(wizard35.savingThrowProficiencies).toBeUndefined();
+  });
+
+  it('PF1e alchemist resolves its own data profile instead of the old all-poor fallback', async () => {
+    const { pf1eClasses } = await import('../../data/pathfinder/1e/classes');
+    const alchemist = Object.values(pf1eClasses).find((entry) => entry.id === 'alchemist');
+    expect(alchemist).toBeDefined();
+    // Pathfinder SRD (Alchemist): 3/4 BAB, good Fort and Ref, poor Will —
+    // this class was absent from the deleted hardcoded table entirely.
+    expect(alchemist!.d20Profile).toEqual({
+      bab: 'three-quarter',
+      fortSave: 'good',
+      refSave: 'good',
+      willSave: 'poor',
+    });
+  });
+});

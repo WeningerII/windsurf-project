@@ -25,6 +25,12 @@ export interface RollResult {
   isCritical?: boolean;
   isFumble?: boolean;
   flavor?: string;
+  /**
+   * System-vocabulary badge for a critical/fumble (e.g. Daggerheart's
+   * "Critical!" on matched Duality Dice). Display falls back to the d20
+   * "NAT 20!"/"NAT 1!" strings when omitted.
+   */
+  outcomeLabel?: string;
   /** PF2e degree of success (only set when a DC is provided) */
   degreeOfSuccess?: 'critical-success' | 'success' | 'failure' | 'critical-failure';
 }

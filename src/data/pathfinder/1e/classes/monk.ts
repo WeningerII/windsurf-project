@@ -13,8 +13,13 @@ export const monk: CharacterClass = {
     url: 'https://www.d20pfsrd.com/classes/core-classes/monk/',
   },
   hitDie: 'd8',
+  d20Profile: {
+    bab: 'three-quarter',
+    fortSave: 'good',
+    refSave: 'good',
+    willSave: 'good',
+  },
   primaryAbility: ['wis', 'str', 'dex'],
-  savingThrowProficiencies: ['str', 'dex', 'wis'],
   armorProficiencies: [],
   weaponProficiencies: [
     'club',

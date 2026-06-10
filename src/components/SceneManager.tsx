@@ -29,6 +29,7 @@ import type {
   SceneDocument,
   SceneEvent,
   SceneMarkerKind,
+  SceneToken,
   SceneTokenKind,
 } from '../types/core/scene';
 import { systemRegistry } from '../registry';
@@ -59,6 +60,19 @@ interface Props {
 }
 
 const DEFAULT_SYSTEM_ID = 'dnd-5e-2024';
+
+// Conditions offered on tokens: exactly the ids the rules layer compiles into
+// combat effects (collectDnd5eConditionEffects); 5e vocabulary, so the section
+// only renders for 5e-family scenes.
+const DND5E_SCENE_CONDITIONS = [
+  'blinded',
+  'frightened',
+  'poisoned',
+  'prone',
+  'restrained',
+  'paralyzed',
+  'stunned',
+] as const;
 
 export function SceneManager({
   scenes,
@@ -118,6 +132,12 @@ export function SceneManager({
   const selectedScene = useMemo(
     () => scenes.find((scene) => scene.id === selectedSceneId),
     [scenes, selectedSceneId]
+  );
+  // Sidebar fold summaries: event logs grow without bound, and folding every
+  // scene inline made each keystroke O(total events across all scenes).
+  const foldedScenesById = useMemo(
+    () => new Map(scenes.map((scene) => [scene.id, foldSceneEvents(scene)])),
+    [scenes]
   );
   const foldedScene = useMemo(
     () => (selectedScene ? foldSceneEvents(selectedScene) : undefined),
@@ -184,11 +204,17 @@ export function SceneManager({
     [encounterMonsterId, encounterMonsters]
   );
   const encounterCountValue = positiveIntegerOrDefault(encounterCount, 1);
-  const currentEncounterSelection = selectedEncounterMonster
-    ? [{ monsterId: selectedEncounterMonster.id, count: encounterCountValue }]
-    : [];
-  const pendingEncounterSelections =
-    encounterSelections.length > 0 ? encounterSelections : currentEncounterSelection;
+  // Memoized: a fresh array identity here defeated the encounterPlan useMemo
+  // below on every render.
+  const pendingEncounterSelections = useMemo(
+    () =>
+      encounterSelections.length > 0
+        ? encounterSelections
+        : selectedEncounterMonster
+          ? [{ monsterId: selectedEncounterMonster.id, count: encounterCountValue }]
+          : [],
+    [encounterSelections, selectedEncounterMonster, encounterCountValue]
+  );
   const encounterPlan = useMemo(
     () =>
       summarizeEncounterPlan({
@@ -285,21 +311,24 @@ export function SceneManager({
     setActionIssues([]);
   };
 
-  const emitSceneAction = (scene: SceneDocument, intent: SceneActionIntent) => {
-    const result = resolveSceneAction(scene, intent, {
-      eventId: generateUUID(),
-      createdAt: new Date(),
-    });
+  const emitSceneAction = useCallback(
+    (scene: SceneDocument, intent: SceneActionIntent) => {
+      const result = resolveSceneAction(scene, intent, {
+        eventId: generateUUID(),
+        createdAt: new Date(),
+      });
 
-    if (!result.event) {
+      if (!result.event) {
+        setActionIssues(result.issues.map((issue) => issue.message));
+        return false;
+      }
+
+      onAppendSceneEvent(scene.id, result.event);
       setActionIssues(result.issues.map((issue) => issue.message));
-      return false;
-    }
-
-    onAppendSceneEvent(scene.id, result.event);
-    setActionIssues(result.issues.map((issue) => issue.message));
-    return true;
-  };
+      return true;
+    },
+    [onAppendSceneEvent]
+  );
 
   // Combat stats are resolved at action time from a token's refId (monster
   // statblock or character document), never stored on the token. Tokens whose
@@ -329,6 +358,7 @@ export function SceneManager({
           damageEffects: built.damageEffects,
           armorClass: built.armorClass,
           reach: built.reach,
+          attacksPerRound: built.attacksPerRound,
         };
       }
       if (token.kind === 'character' && token.refId) {
@@ -404,72 +434,112 @@ export function SceneManager({
     setActionIssues([]);
   };
 
-  const handleCellActivate = (position: { x: number; y: number }) => {
-    if (!selectedScene || !state) return;
+  const handleCellActivate = useCallback(
+    (position: { x: number; y: number }) => {
+      if (!selectedScene || !state) return;
 
-    if (placementMode === 'token') {
-      const linkedDoc = documents.find((doc) => doc.id === tokenDocumentId);
-      const name = tokenName.trim() || linkedDoc?.name.trim();
-      if (!name) return;
+      if (placementMode === 'token') {
+        const linkedDoc = documents.find((doc) => doc.id === tokenDocumentId);
+        const name = tokenName.trim() || linkedDoc?.name.trim();
+        if (!name) return;
 
-      // A linked character token carries combat HP so it is grid-combat-ready.
-      const built = linkedDoc
-        ? buildCharacterCombatant(linkedDoc, { tokenId: linkedDoc.id, position })
-        : undefined;
-      const hp = built && built.supported ? built.combatant.token.hp : undefined;
+        // A linked character token carries combat HP so it is grid-combat-ready.
+        const built = linkedDoc
+          ? buildCharacterCombatant(linkedDoc, { tokenId: linkedDoc.id, position })
+          : undefined;
+        const hp = built && built.supported ? built.combatant.token.hp : undefined;
 
-      const placed = emitSceneAction(selectedScene, {
-        type: 'place-token',
-        token: {
-          id: generateUUID(),
-          name,
-          kind: linkedDoc ? 'character' : tokenKind,
-          position,
-          size: 1,
-          refId: linkedDoc?.id,
-          ...(hp ? { hp } : {}),
-        },
-      });
+        const placed = emitSceneAction(selectedScene, {
+          type: 'place-token',
+          token: {
+            id: generateUUID(),
+            name,
+            kind: linkedDoc ? 'character' : tokenKind,
+            position,
+            size: 1,
+            refId: linkedDoc?.id,
+            ...(hp ? { hp } : {}),
+          },
+        });
 
-      if (placed) {
-        setPlacementMode('none');
-        setTokenName('');
-        setTokenDocumentId('');
+        if (placed) {
+          setPlacementMode('none');
+          setTokenName('');
+          setTokenDocumentId('');
+        }
+        return;
       }
-      return;
-    }
 
-    if (placementMode === 'marker') {
-      const label = markerLabel.trim();
-      if (!label) return;
+      if (placementMode === 'marker') {
+        const label = markerLabel.trim();
+        if (!label) return;
 
-      const placed = emitSceneAction(selectedScene, {
-        type: 'add-marker',
-        marker: {
-          id: generateUUID(),
-          kind: markerKind,
-          label,
-          position,
-          width: positiveIntegerOrDefault(markerWidth, 1),
-          height: positiveIntegerOrDefault(markerHeight, 1),
-        },
-      });
+        const placed = emitSceneAction(selectedScene, {
+          type: 'add-marker',
+          marker: {
+            id: generateUUID(),
+            kind: markerKind,
+            label,
+            position,
+            width: positiveIntegerOrDefault(markerWidth, 1),
+            height: positiveIntegerOrDefault(markerHeight, 1),
+          },
+        });
 
-      if (placed) {
-        setPlacementMode('none');
-        setMarkerLabel('');
+        if (placed) {
+          setPlacementMode('none');
+          setMarkerLabel('');
+        }
+        return;
       }
-      return;
-    }
 
-    if (selectedTokenId && state.tokens[selectedTokenId]) {
+      if (selectedTokenId && state.tokens[selectedTokenId]) {
+        emitSceneAction(selectedScene, {
+          type: 'move-token',
+          tokenId: selectedTokenId,
+          position,
+        });
+      }
+    },
+    [
+      selectedScene,
+      state,
+      placementMode,
+      documents,
+      tokenDocumentId,
+      tokenName,
+      tokenKind,
+      markerLabel,
+      markerKind,
+      markerWidth,
+      markerHeight,
+      selectedTokenId,
+      emitSceneAction,
+    ]
+  );
+
+  const handleToggleSelectedTokenCondition = useCallback(
+    (conditionId: string) => {
+      if (!selectedScene || !state || !selectedTokenId) return;
+      const token = state.tokens[selectedTokenId];
+      if (!token) return;
+      const current = token.conditions ?? [];
+      const next = current.includes(conditionId)
+        ? current.filter((entry) => entry !== conditionId)
+        : [...current, conditionId];
       emitSceneAction(selectedScene, {
-        type: 'move-token',
+        type: 'set-token-conditions',
         tokenId: selectedTokenId,
-        position,
+        conditions: next,
       });
-    }
-  };
+    },
+    [selectedScene, state, selectedTokenId, emitSceneAction]
+  );
+
+  const handleTokenActivate = useCallback((token: SceneToken) => {
+    setSelectedTokenId(token.id);
+    setPlacementMode('none');
+  }, []);
 
   const handleSelectLinkedDocument = (documentId: string) => {
     setTokenDocumentId(documentId);
@@ -760,7 +830,7 @@ export function SceneManager({
         <div className="grid gap-4 xl:grid-cols-[18rem_minmax(0,1fr)]">
           <div className="space-y-2">
             {scenes.map((scene) => {
-              const { state: sceneState, issues } = foldSceneEvents(scene);
+              const { state: sceneState, issues } = foldedScenesById.get(scene.id)!;
               const system = systemRegistry.get(scene.systemId);
               const campaign = scene.campaignId
                 ? campaigns.find((entry) => entry.id === scene.campaignId)
@@ -861,10 +931,7 @@ export function SceneManager({
                   state={state}
                   selectedTokenId={selectedTokenId}
                   onCellActivate={handleCellActivate}
-                  onTokenActivate={(token) => {
-                    setSelectedTokenId(token.id);
-                    setPlacementMode('none');
-                  }}
+                  onTokenActivate={handleTokenActivate}
                 />
 
                 <div className="space-y-3">
@@ -882,6 +949,15 @@ export function SceneManager({
                     }
                     canDeleteToken={Boolean(selectedTokenId)}
                     onDeleteSelectedToken={handleDeleteSelectedToken}
+                    conditionOptions={
+                      sceneSystemId === 'dnd-5e-2014' || sceneSystemId === 'dnd-5e-2024'
+                        ? DND5E_SCENE_CONDITIONS
+                        : []
+                    }
+                    selectedTokenConditions={
+                      (selectedTokenId && state.tokens[selectedTokenId]?.conditions) || []
+                    }
+                    onToggleSelectedTokenCondition={handleToggleSelectedTokenCondition}
                   />
 
                   <EncounterPanel

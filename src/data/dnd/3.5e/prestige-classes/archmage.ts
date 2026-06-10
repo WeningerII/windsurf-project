@@ -51,8 +51,13 @@ export const archmage: CharacterClass = {
   description:
     'A supreme arcane specialist who trades spell slots for High Arcana and keeps full access to their existing spell progression.',
   hitDie: 'd4',
+  d20Profile: {
+    bab: 'half',
+    fortSave: 'poor',
+    refSave: 'poor',
+    willSave: 'good',
+  },
   primaryAbility: ['int'],
-  savingThrowProficiencies: ['int', 'wis'],
   armorProficiencies: [],
   weaponProficiencies: [],
   toolProficiencies: [],

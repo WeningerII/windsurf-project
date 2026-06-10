@@ -157,8 +157,13 @@ export const dragonDisciple: CharacterClass = {
   description:
     'A draconic initiate who trades mortal limits for claws, breath, wings, and a gradual transformation into a dragon-blooded terror.',
   hitDie: 'd12',
+  d20Profile: {
+    bab: 'three-quarter',
+    fortSave: 'good',
+    refSave: 'poor',
+    willSave: 'good',
+  },
   primaryAbility: ['str', 'cha'],
-  savingThrowProficiencies: ['str', 'cha'],
   armorProficiencies: [],
   weaponProficiencies: [],
   toolProficiencies: [],

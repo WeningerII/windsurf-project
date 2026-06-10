@@ -172,6 +172,8 @@ export function useMam3eSheetController({ document, onUpdate }: UseMam3eSheetCon
       advantagesError,
       onRetryAdvantages: warmAdvantages,
       advantages,
+      characterAdvantageNames: new Set(data.advantages.map((advantage) => advantage.name)),
+      onAddAdvantage: onUpdate ? mutationHandlers.addAdvantageFromCatalog : undefined,
     },
     equipmentBrowserTabProps: {
       equipmentLoaded,

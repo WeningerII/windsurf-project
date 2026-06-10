@@ -21,6 +21,7 @@
 
 import type { SeededRng } from '../../scene/seededRng';
 import { resolveEffects, type ResolveContext, type RollMode } from './resolve';
+import { pf2eDegreeOfSuccess, type Pf2eDegreeOfSuccess } from '../../utils/pf2eDegree';
 import type { EffectInstance } from '../ir/types';
 
 export interface AttackResolutionInput {
@@ -40,6 +41,13 @@ export interface AttackResolutionInput {
    * supplied; this core reports the raw hit and the natural roll.
    */
   critOn?: number;
+  /**
+   * Hit/crit model. 'd20' (default): hit on total >= target, crit on the
+   * natural roll vs critOn. 'pf2e': CRB degrees of success — critical hit on
+   * beating the AC by 10+ (nat 20 upgrades a step, nat 1 downgrades), and a
+   * critical hit doubles the WHOLE damage, not just the dice.
+   */
+  degreeModel?: 'd20' | 'pf2e';
 }
 
 export interface AttackResolution {
@@ -55,6 +63,8 @@ export interface AttackResolution {
   isCriticalHit: boolean;
   isCriticalMiss: boolean;
   isHit: boolean;
+  /** PF2e degree (only set under degreeModel 'pf2e'). */
+  degreeOfSuccess?: Pf2eDegreeOfSuccess;
   /** Total damage (only rolled on a hit; 0 on a miss). */
   damage: number;
   /** Individual damage dice rolled (empty on a miss or with no dice). */
@@ -96,10 +106,21 @@ export function resolveAttack(input: AttackResolutionInput): AttackResolution {
   const { chosen, terms } = rollD20(input.rng, rollMode);
   const attackTotal = chosen + attackBonus;
 
-  const isCriticalHit = chosen >= critOn;
-  const isCriticalMiss = chosen === 1;
-  // Natural crit always hits; natural 1 always misses; otherwise compare totals.
-  const isHit = isCriticalHit || (!isCriticalMiss && attackTotal >= input.targetValue);
+  let isCriticalHit: boolean;
+  let isCriticalMiss: boolean;
+  let isHit: boolean;
+  let degreeOfSuccess: Pf2eDegreeOfSuccess | undefined;
+  if (input.degreeModel === 'pf2e') {
+    degreeOfSuccess = pf2eDegreeOfSuccess(attackTotal, input.targetValue, chosen);
+    isCriticalHit = degreeOfSuccess === 'critical-success';
+    isCriticalMiss = degreeOfSuccess === 'critical-failure';
+    isHit = degreeOfSuccess === 'success' || degreeOfSuccess === 'critical-success';
+  } else {
+    isCriticalHit = chosen >= critOn;
+    isCriticalMiss = chosen === 1;
+    // Natural crit always hits; natural 1 always misses; otherwise compare totals.
+    isHit = isCriticalHit || (!isCriticalMiss && attackTotal >= input.targetValue);
+  }
 
   const ledger: EffectInstance[] = [...attackResolved.ledger];
   let damage = 0;
@@ -120,11 +141,16 @@ export function resolveAttack(input: AttackResolutionInput): AttackResolution {
     const diceSum = damageDiceTerms.reduce((sum, term) => sum + term, 0);
     damageBonus = damage - diceSum;
 
-    // On a critical hit (d20 model), double the dice rolled (5e/PF crit rule:
-    // roll the damage dice twice; flat bonuses are not doubled).
     if (isCriticalHit) {
-      const critDice = damageDiceTerms.reduce((sum, term) => sum + term, 0);
-      damage += critDice;
+      if (input.degreeModel === 'pf2e') {
+        // PF2e CRB: a critical hit doubles the damage — dice AND static.
+        damage *= 2;
+      } else {
+        // d20 model: double the dice rolled (5e crit rule: roll the damage
+        // dice twice; flat bonuses are not doubled).
+        const critDice = damageDiceTerms.reduce((sum, term) => sum + term, 0);
+        damage += critDice;
+      }
     }
 
     ledger.push(...damageResolved.ledger);
@@ -140,6 +166,7 @@ export function resolveAttack(input: AttackResolutionInput): AttackResolution {
     isCriticalHit,
     isCriticalMiss,
     isHit,
+    degreeOfSuccess,
     damage,
     damageDiceTerms,
     damageBonus,

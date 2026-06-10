@@ -12,8 +12,16 @@ export const alchemist: CharacterClass = {
     url: 'https://www.d20pfsrd.com/classes/base-classes/alchemist/',
   },
   hitDie: 'd8',
+  // Pathfinder SRD (Alchemist): 3/4 BAB, good Fortitude and Reflex, poor Will
+  // — previously absent from the hardcoded profile table, so the engine fell
+  // back to half BAB / all-poor saves for this class.
+  d20Profile: {
+    bab: 'three-quarter',
+    fortSave: 'good',
+    refSave: 'good',
+    willSave: 'poor',
+  },
   primaryAbility: ['int'],
-  savingThrowProficiencies: ['con', 'dex'],
   armorProficiencies: ['light'],
   weaponProficiencies: ['simple', 'bomb'],
   toolProficiencies: [],

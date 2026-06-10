@@ -2,6 +2,7 @@ import { SystemEngine, RollResult } from '../../registry/types';
 import { CharacterDocument } from '../../types/core/document';
 import { Pf2eDataModel, profTotal } from './data-model';
 import { abilityMod } from '../../utils/math';
+import { pf2eDegreeOfSuccess } from '../../utils/pf2eDegree';
 import { SKILL_ABILITIES, SAVE_ABILITIES } from './constants';
 import { computePf2eAC } from '../../utils/armorClass';
 import { resolveCharacterEffects } from '../../rules';
@@ -11,13 +12,6 @@ import { getSpellSlotsAtClassLevel, mergeMaxUsedSpellSlots } from '../../utils/c
 import { hitDieFaces } from '../../utils/templateShared';
 
 type Pf2eSpellcastingData = NonNullable<Pf2eDataModel['spellcasting']>;
-
-const DEGREE_ORDER: RollResult['degreeOfSuccess'][] = [
-  'critical-failure',
-  'failure',
-  'success',
-  'critical-success',
-];
 
 // Condition status-penalty selection now lives in the shared condition IR
 // (src/rules/conditions/pf2eConditions.ts) so the rule is defined once and
@@ -48,29 +42,6 @@ function parseFixedPositiveInt(formula: string | undefined): number | null {
   const parsed = Number.parseInt(formula.trim(), 10);
   if (!Number.isFinite(parsed) || parsed < 0) return null;
   return parsed;
-}
-
-/** PF2e CRB p.445: determine degree of success, then adjust for nat 20/1 */
-function pf2eDegreeOfSuccess(
-  total: number,
-  dc: number,
-  d20: number
-): RollResult['degreeOfSuccess'] {
-  // Base degree from total vs DC
-  let idx: number;
-  if (total >= dc + 10)
-    idx = 3; // critical success
-  else if (total >= dc)
-    idx = 2; // success
-  else if (total <= dc - 10)
-    idx = 0; // critical failure
-  else idx = 1; // failure
-
-  // Natural 20 upgrades one step, natural 1 downgrades one step
-  if (d20 === 20) idx = Math.min(3, idx + 1);
-  else if (d20 === 1) idx = Math.max(0, idx - 1);
-
-  return DEGREE_ORDER[idx];
 }
 
 /**

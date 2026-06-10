@@ -24,7 +24,7 @@ import { DiceRoll, DamageType, Duration, Range, AreaOfEffect } from '../core/com
  *   level: 3,
  *   school: 'evocation',
  *   classes: ['wizard', 'sorcerer'],
- *   damage: { diceRoll: { count: 8, sides: 6, bonus: 0 }, damageType: 'fire' },
+ *   damage: { base: { count: 8, die: 'd6', notation: '8d6' }, type: 'fire' },
  *   // ... other required fields
  * };
  * ```

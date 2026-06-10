@@ -15,8 +15,13 @@ export const fighter: CharacterClass = {
   },
 
   hitDie: 'd10',
+  d20Profile: {
+    bab: 'full',
+    fortSave: 'good',
+    refSave: 'poor',
+    willSave: 'poor',
+  },
   primaryAbility: ['str'],
-  savingThrowProficiencies: ['str', 'con'],
 
   armorProficiencies: ['light', 'medium', 'heavy', 'shields', 'tower-shields'],
   weaponProficiencies: ['simple', 'martial'],

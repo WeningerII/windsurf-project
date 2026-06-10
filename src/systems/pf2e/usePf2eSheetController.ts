@@ -211,6 +211,9 @@ export function usePf2eSheetController({ document, onUpdate }: UsePf2eSheetContr
       spellcasting: data.spellcasting,
       spellsLoaded,
       spells,
+      // Spell attack/DC use the class key ability, same as the class DC.
+      spellAbilityScore: classDcScore,
+      onSpellProficiencyTierCycle: mutationHandlers.cycleSpellProficiencyTier,
       onSpellcastingChange: onUpdate
         ? (spellcasting: Pf2eDataModel['spellcasting']) => mutationHandlers.update({ spellcasting })
         : undefined,

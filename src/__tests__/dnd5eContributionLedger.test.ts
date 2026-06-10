@@ -149,3 +149,67 @@ describe('D&D 5e contribution ledger', () => {
     );
   });
 });
+
+describe('ledger/engine AC parity (review M6)', () => {
+  // The whole point of the ledger: its armorClass entries must SUM to the AC
+  // the engine displays — including resolver-applied magic items (Ring of
+  // Protection) and Unarmored Defense, which previously never got entries.
+  async function armorClassEntrySum(document: CharacterDocument<Dnd5eDataModel>) {
+    const ledger = await buildDnd5eContributionLedger(document, 'dnd-5e-2014');
+    // Resolver entries are normalized from the RFC target 'ac' to this
+    // ledger's 'armorClass', so one filter sees the whole breakdown.
+    const acEntries = ledger.entries.filter(
+      (entry) => entry.target === 'armorClass' && typeof entry.value === 'number'
+    );
+    return acEntries.reduce(
+      (sum, entry) =>
+        entry.operation === 'set' ? (entry.value as number) : sum + (entry.value as number),
+      0
+    );
+  }
+
+  it('sums to the engine AC with a Ring of Protection equipped', async () => {
+    const { Dnd5eEngine } = await import('../systems/dnd5e/engine');
+    const system: Dnd5eDataModel = {
+      ...createDefaultDnd5eData(),
+      baseAttributes: { str: 10, dex: 14, con: 10, int: 10, wis: 10, cha: 10 },
+      equipment: [
+        {
+          itemId: 'leather-armor',
+          slot: 'chest',
+          attuned: false,
+          armorClass: 11,
+          armorType: 'light',
+        },
+        { itemId: 'ring-of-protection', slot: 'ring1', attuned: true, acBonus: 1 },
+      ],
+    };
+    const document = createDocument(system);
+
+    const prepared = new Dnd5eEngine().prepareData(document);
+    expect(await armorClassEntrySum(document)).toBe(prepared.system.armorClass);
+  });
+
+  it('sums to the engine AC for a barbarian with Unarmored Defense and a shield', async () => {
+    const { Dnd5eEngine } = await import('../systems/dnd5e/engine');
+    const system: Dnd5eDataModel = {
+      ...createDefaultDnd5eData(),
+      baseAttributes: { str: 16, dex: 14, con: 16, int: 10, wis: 10, cha: 10 },
+      features: [
+        {
+          id: 'unarmored-defense-barbarian',
+          name: 'Unarmored Defense',
+          source: 'Barbarian 1',
+          description: 'AC = 10 + Dex mod + Con mod while not wearing armor.',
+        },
+      ],
+      equipment: [{ itemId: 'shield', slot: 'offHand', attuned: false, shieldBonus: 2 }],
+    };
+    const document = createDocument(system);
+
+    const prepared = new Dnd5eEngine().prepareData(document);
+    // SRD: 10 + Dex 2 + Con 3 + shield 2 = 17.
+    expect(prepared.system.armorClass).toBe(17);
+    expect(await armorClassEntrySum(document)).toBe(17);
+  });
+});

@@ -9,6 +9,7 @@ import {
 } from './indexedDBAdapter';
 import { emitToast } from './notifications';
 import { parseCharacterDocument } from './boundaryValidation';
+import { migrateDocument } from './documentMigrations';
 import { ErrorCategory, ErrorSeverity, errorLogger } from './errorLogger';
 
 const STORAGE_KEY = 'rpg-documents-v2';
@@ -87,11 +88,15 @@ function noteCompleteSaveFailure(localError: unknown, idbError: unknown): void {
 function hydrateDocuments(
   documents: CharacterDocument<SystemDataModel>[]
 ): CharacterDocument<SystemDataModel>[] {
-  return documents.map((doc) => ({
-    ...doc,
-    createdAt: new Date(doc.createdAt),
-    updatedAt: new Date(doc.updatedAt),
-  }));
+  // Every load path funnels through here (sync, async/IndexedDB, cross-tab
+  // snapshots), so this is THE place schema migrations run.
+  return documents.map((doc) =>
+    migrateDocument({
+      ...doc,
+      createdAt: new Date(doc.createdAt),
+      updatedAt: new Date(doc.updatedAt),
+    })
+  );
 }
 
 /**

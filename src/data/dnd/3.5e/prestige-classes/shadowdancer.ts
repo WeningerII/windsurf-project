@@ -124,8 +124,13 @@ export const shadowdancer: CharacterClass = {
   description:
     'A supernatural infiltrator who bends darkness into concealment, movement, and living shadow.',
   hitDie: 'd8',
+  d20Profile: {
+    bab: 'three-quarter',
+    fortSave: 'poor',
+    refSave: 'good',
+    willSave: 'poor',
+  },
   primaryAbility: ['dex', 'cha'],
-  savingThrowProficiencies: ['dex', 'wis'],
   armorProficiencies: ['light'],
   weaponProficiencies: [
     'club',

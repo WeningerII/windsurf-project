@@ -51,8 +51,13 @@ export const hierophant: CharacterClass = {
   description:
     'An exalted divine caster who trades spell progression for raw caster level scaling and special hierophant abilities.',
   hitDie: 'd8',
+  d20Profile: {
+    bab: 'half',
+    fortSave: 'good',
+    refSave: 'poor',
+    willSave: 'good',
+  },
   primaryAbility: ['wis'],
-  savingThrowProficiencies: ['con', 'wis'],
   armorProficiencies: [],
   weaponProficiencies: [],
   toolProficiencies: [],

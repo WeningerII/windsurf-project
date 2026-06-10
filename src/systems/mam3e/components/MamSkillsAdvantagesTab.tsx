@@ -105,16 +105,55 @@ export const MamSkillsAdvantagesTab: React.FC<Props> = ({
             data.advantages.map((advantage, index) => (
               <div
                 key={advantage.id}
-                className="flex items-center justify-between p-2 bg-muted/30 rounded border transition-colors hover:bg-muted/50"
+                className="flex items-center justify-between gap-2 p-2 bg-muted/30 rounded border transition-colors hover:bg-muted/50"
               >
-                <div className="flex items-center gap-2">
-                  <span className="font-medium">{advantage.name}</span>
-                  {advantage.rank != null && advantage.rank > 0 && (
-                    <Badge variant="secondary" className="text-[10px] px-1.5 py-0 tabular-nums">
-                      Rank {advantage.rank}
-                    </Badge>
-                  )}
-                </div>
+                {canUpdate ? (
+                  <>
+                    <input
+                      type="text"
+                      value={advantage.name}
+                      onChange={(event) =>
+                        onAdvantagesChange(
+                          data.advantages.map((entry, entryIndex) =>
+                            entryIndex === index ? { ...entry, name: event.target.value } : entry
+                          )
+                        )
+                      }
+                      className="flex-1 min-w-0 font-medium bg-transparent border-b border-transparent focus:border-input focus:outline-none"
+                      title="Advantage name"
+                    />
+                    <label className="flex items-center gap-1 text-xs text-muted-foreground">
+                      Rank
+                      <input
+                        type="number"
+                        min={0}
+                        value={advantage.rank ?? 0}
+                        onChange={(event) =>
+                          onAdvantagesChange(
+                            data.advantages.map((entry, entryIndex) =>
+                              entryIndex === index
+                                ? // Ranked advantages cost their rank in PP, so
+                                  // negative ranks would refund points.
+                                  { ...entry, rank: Math.max(0, Number(event.target.value) || 0) }
+                                : entry
+                            )
+                          )
+                        }
+                        className="w-12 text-center bg-transparent border-b border-input focus:outline-none focus:border-primary tabular-nums"
+                        title="Advantage rank (ranked advantages cost rank PP; 0 = unranked)"
+                      />
+                    </label>
+                  </>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium">{advantage.name}</span>
+                    {advantage.rank != null && advantage.rank > 0 && (
+                      <Badge variant="secondary" className="text-[10px] px-1.5 py-0 tabular-nums">
+                        Rank {advantage.rank}
+                      </Badge>
+                    )}
+                  </div>
+                )}
                 {canUpdate && (
                   <button
                     type="button"

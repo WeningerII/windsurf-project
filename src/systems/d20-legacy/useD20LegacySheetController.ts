@@ -103,14 +103,18 @@ export function useD20LegacySheetController({
     traitOptions,
   });
 
+  // Depend on the stable setState setter, not the handlers object —
+  // useD20LegacyMutationHandlers returns a fresh literal every render, which
+  // would re-fire this effect each time.
+  const { setSelectedTraitId } = mutationHandlers;
   useEffect(() => {
     if (!isPf1e) {
-      mutationHandlers.setSelectedTraitId('');
+      setSelectedTraitId('');
       return;
     }
 
     void loadTraitOptions();
-  }, [isPf1e, loadTraitOptions, mutationHandlers]);
+  }, [isPf1e, loadTraitOptions, setSelectedTraitId]);
 
   const selectedSpecies = useMemo(
     () => species.find((entry) => entry.id === sys.speciesId),

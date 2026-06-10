@@ -15,8 +15,13 @@ export const bard: CharacterClass = {
   },
 
   hitDie: 'd8',
+  d20Profile: {
+    bab: 'three-quarter',
+    fortSave: 'poor',
+    refSave: 'good',
+    willSave: 'good',
+  },
   primaryAbility: ['cha'],
-  savingThrowProficiencies: ['dex', 'wis'],
 
   armorProficiencies: ['light', 'shields'],
   weaponProficiencies: ['simple', 'longsword', 'rapier', 'sap', 'short-sword', 'shortbow', 'whip'],

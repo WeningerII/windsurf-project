@@ -1,6 +1,7 @@
 import React from 'react';
 import { Sparkles } from 'lucide-react';
 import { Badge } from '../../../components/ui/Badge';
+import { abilityMod, formatMod } from '../../../utils/math';
 import type { Spell } from '../../../types/magic/spells';
 import {
   buildSpellPreparationConcepts,
@@ -8,6 +9,7 @@ import {
 } from '../../../utils/spellPreparation';
 import { PF2E_SPELLS_COPY } from '../../../utils/documentationCopy';
 import type { Pf2eSpellcasting } from '../data-model';
+import { Pf2eProficiencyBadge } from './Pf2eProficiencyBadge';
 import { Pf2eSpellBrowserPanel } from './Pf2eSpellBrowserPanel';
 
 interface Props {
@@ -15,6 +17,9 @@ interface Props {
   spellcasting?: Pf2eSpellcasting;
   spellsLoaded: boolean;
   spells: Spell[];
+  /** Key-ability score for spell attack/DC, or null when no key ability is set. */
+  spellAbilityScore?: number | null;
+  onSpellProficiencyTierCycle?: () => void;
   onSpellcastingChange?: (spellcasting: Pf2eSpellcasting) => void;
 }
 
@@ -53,6 +58,8 @@ export const Pf2eSpellsTab = (({
   spellcasting,
   spellsLoaded,
   spells,
+  spellAbilityScore,
+  onSpellProficiencyTierCycle,
   onSpellcastingChange,
 }) => {
   const browseableSpells = React.useMemo(
@@ -170,6 +177,29 @@ export const Pf2eSpellsTab = (({
               {alwaysPreparedSpellEntries.length > 0 && (
                 <Badge variant="outline">{alwaysPreparedSpellEntries.length} always prepared</Badge>
               )}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4 flex-wrap">
+            <span className="text-xs font-medium text-muted-foreground">Spell Attack / DC</span>
+            <div className="flex items-center gap-2">
+              <Pf2eProficiencyBadge
+                proficiency={spellcasting.proficiency}
+                canUpdate={Boolean(onSpellcastingChange)}
+                onClick={onSpellProficiencyTierCycle}
+              />
+              {/* CRB: spell attack = key ability mod + proficiency; DC = 10 + that. */}
+              <span className="text-lg font-bold tabular-nums">
+                {spellAbilityScore != null
+                  ? formatMod(abilityMod(spellAbilityScore) + spellcasting.proficiency.total)
+                  : '—'}
+              </span>
+              <span className="text-xs text-muted-foreground">/</span>
+              <span className="text-lg font-bold tabular-nums">
+                {spellAbilityScore != null
+                  ? `DC ${10 + abilityMod(spellAbilityScore) + spellcasting.proficiency.total}`
+                  : 'DC —'}
+              </span>
             </div>
           </div>
 

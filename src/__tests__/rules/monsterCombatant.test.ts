@@ -11,6 +11,7 @@ import {
 import {
   buildMonsterCombatant,
   executeTacticalTurn,
+  monsterAttacksPerRound,
   monsterAverageHitPoints,
   parseAttackFromDescription,
   primaryAttackAction,
@@ -307,5 +308,58 @@ describe('description parsing — statblocks that carry attacks only in prose', 
     // No rng -> dice not rolled; flat -1 alone. With a forced max die it would be
     // 4-1=3. Assert the structure is present rather than a rolled value here.
     expect(resolved.byTarget['damage.slashing']).toBeDefined();
+  });
+});
+
+describe('monsterAttacksPerRound (SRD Multiattack)', () => {
+  const base = {
+    id: 'test-monster',
+    name: 'Test Monster',
+    system: 'dnd-5e-2014',
+    armorClass: 13,
+  };
+
+  it('parses word counts from Multiattack prose', () => {
+    const monster = {
+      ...base,
+      actions: [
+        { name: 'Multiattack', description: 'The orc makes two attacks with its greataxe.' },
+        {
+          name: 'Greataxe',
+          description:
+            'Melee Weapon Attack: +5 to hit, reach 5 ft. Hit: 9 (1d12 + 3) slashing damage.',
+        },
+      ],
+    } as never;
+    expect(monsterAttacksPerRound(monster)).toBe(2);
+  });
+
+  it('parses mixed routines by their leading total', () => {
+    const monster = {
+      ...base,
+      actions: [
+        {
+          name: 'Multiattack',
+          description:
+            'The creature makes three attacks: two with its claws and one with its bite.',
+        },
+      ],
+    } as never;
+    expect(monsterAttacksPerRound(monster)).toBe(3);
+  });
+
+  it('defaults to 1 without a Multiattack action or a parseable count', () => {
+    expect(
+      monsterAttacksPerRound({
+        ...base,
+        actions: [{ name: 'Bite', description: 'Hit: 4.' }],
+      } as never)
+    ).toBe(1);
+    expect(
+      monsterAttacksPerRound({
+        ...base,
+        actions: [{ name: 'Multiattack', description: 'It attacks wildly.' }],
+      } as never)
+    ).toBe(1);
   });
 });

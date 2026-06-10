@@ -25,29 +25,9 @@ export type WeaponProperty =
   | 'two-handed'
   | 'versatile';
 
-export interface ArmorClassCalculation {
-  base: number;
-  armorBonus: number;
-  shieldBonus: number;
-  dexModifier: number;
-  dexMaxBonus?: number; // Some armor limits dex bonus
-  naturalArmor: number;
-  miscModifiers: number;
-  total: number;
-}
-
 export interface Initiative {
   dexModifier: number;
   bonuses: number;
   advantage: boolean;
-  total: number;
-}
-
-export interface SavingThrow {
-  attribute: string;
-  attributeModifier: number;
-  proficiencyBonus: number;
-  proficient: boolean;
-  miscModifiers: number;
   total: number;
 }

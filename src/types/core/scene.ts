@@ -34,6 +34,12 @@ export interface SceneToken {
    * without hp behave exactly as before.
    */
   hp?: SceneTokenHitPoints;
+  /**
+   * Active condition ids (system vocabulary, e.g. 5e 'poisoned'). Additive —
+   * tokens without conditions fight exactly as before; the combat bridge folds
+   * these into attack resolution.
+   */
+  conditions?: string[];
 }
 
 export interface SceneMarker {
@@ -93,6 +99,7 @@ export type SceneEventType =
   | 'token.moved'
   | 'token.removed'
   | 'token.damaged'
+  | 'token.conditions-set'
   | 'marker.added'
   | 'marker.removed'
   | 'initiative.set'
@@ -123,6 +130,7 @@ export type SceneEvent =
   | SceneEventBase<'token.moved', { tokenId: string; position: SceneCoordinate }>
   | SceneEventBase<'token.removed', { tokenId: string }>
   | SceneEventBase<'token.damaged', { damages: SceneTokenDamage[]; cause?: string }>
+  | SceneEventBase<'token.conditions-set', { tokenId: string; conditions: string[] }>
   | SceneEventBase<'marker.added', { marker: SceneMarker }>
   | SceneEventBase<'marker.removed', { markerId: string }>
   | SceneEventBase<'initiative.set', { entries: SceneInitiativeEntry[]; activeTokenId?: string }>
@@ -145,6 +153,7 @@ export type SceneActionType =
   | 'move-token'
   | 'remove-token'
   | 'apply-damage'
+  | 'set-token-conditions'
   | 'add-marker'
   | 'remove-marker'
   | 'set-initiative'
@@ -155,6 +164,7 @@ export type SceneActionIntent =
   | { type: 'move-token'; actorId?: string; tokenId: string; position: SceneCoordinate }
   | { type: 'remove-token'; actorId?: string; tokenId: string }
   | { type: 'apply-damage'; actorId?: string; damages: SceneTokenDamage[]; cause?: string }
+  | { type: 'set-token-conditions'; actorId?: string; tokenId: string; conditions: string[] }
   | { type: 'add-marker'; actorId?: string; marker: SceneMarker }
   | { type: 'remove-marker'; actorId?: string; markerId: string }
   | {

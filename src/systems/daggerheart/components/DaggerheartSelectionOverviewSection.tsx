@@ -1,4 +1,5 @@
 import { Badge } from '../../../components/ui/Badge';
+import { domainDisplayName } from '../daggerheartSheetConstants';
 import { DaggerheartFeatureList, DaggerheartSubclassFeatureGroup } from '../daggerheartSheetShared';
 import type { DaggerheartSheetController } from '../useDaggerheartSheetController';
 
@@ -27,7 +28,7 @@ export function DaggerheartSelectionOverviewSection({ controller }: Props) {
           <div className="flex flex-wrap gap-2">
             {selectedClass.domains.map((domain) => (
               <Badge key={domain} variant="outline">
-                {domain}
+                {domainDisplayName(domain)}
               </Badge>
             ))}
           </div>

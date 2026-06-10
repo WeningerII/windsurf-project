@@ -27,8 +27,13 @@ export const mysticTheurge: CharacterClass = {
   description:
     'A dual-progression caster that advances one arcane class and one divine class every level.',
   hitDie: 'd4',
+  d20Profile: {
+    bab: 'half',
+    fortSave: 'poor',
+    refSave: 'poor',
+    willSave: 'good',
+  },
   primaryAbility: ['int', 'wis'],
-  savingThrowProficiencies: ['int', 'wis'],
   armorProficiencies: [],
   weaponProficiencies: [],
   toolProficiencies: [],

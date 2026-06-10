@@ -80,8 +80,13 @@ export const loremaster: CharacterClass = {
   description:
     'A keeper of hidden knowledge who preserves full existing spellcasting while trading class features for secrets and lore.',
   hitDie: 'd4',
+  d20Profile: {
+    bab: 'half',
+    fortSave: 'poor',
+    refSave: 'poor',
+    willSave: 'good',
+  },
   primaryAbility: ['int', 'wis'],
-  savingThrowProficiencies: ['int', 'wis'],
   armorProficiencies: [],
   weaponProficiencies: [],
   toolProficiencies: [],

@@ -14,8 +14,13 @@ export const wizard: CharacterClass = {
   },
 
   hitDie: 'd4',
+  d20Profile: {
+    bab: 'half',
+    fortSave: 'poor',
+    refSave: 'poor',
+    willSave: 'good',
+  },
   primaryAbility: ['int'],
-  savingThrowProficiencies: ['int', 'wis'],
 
   armorProficiencies: [],
   weaponProficiencies: ['club', 'dagger', 'heavy-crossbow', 'light-crossbow', 'quarterstaff'],

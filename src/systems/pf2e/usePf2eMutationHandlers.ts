@@ -219,6 +219,24 @@ export function usePf2eMutationHandlers({ document, onUpdate }: UsePf2eMutationH
     [document]
   );
 
+  const cycleSpellProficiencyTier = useCallback(() => {
+    if (!data.spellcasting) {
+      return;
+    }
+
+    // Persist only the tier — the engine recomputes `total` from level + tier
+    // on every prepare (same contract as the class DC badge).
+    update({
+      spellcasting: {
+        ...data.spellcasting,
+        proficiency: {
+          ...data.spellcasting.proficiency,
+          tier: nextPf2eTier(data.spellcasting.proficiency.tier),
+        },
+      },
+    });
+  }, [data.spellcasting, update]);
+
   const toggleShieldRaised = useCallback(() => {
     // CRB: the Raise a Shield action — flip the equipped shield's raised flag;
     // the engine re-derives AC (and clears the flag if the shield unequips).
@@ -254,5 +272,6 @@ export function usePf2eMutationHandlers({ document, onUpdate }: UsePf2eMutationH
     removeInventoryItem,
     rollCheck,
     toggleShieldRaised,
+    cycleSpellProficiencyTier,
   };
 }

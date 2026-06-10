@@ -5,9 +5,15 @@ import type {
   ContributionOperation,
   ContributionSourceKind,
 } from '../../../types/core/contributionLedger';
-import type { ClassLevel, EquippedItem } from '../../../types/core/character';
+import type { ClassLevel } from '../../../types/core/character';
 import type { CharacterDocument } from '../../../types/core/document';
+import { resolveCharacterEffects, toContributionLedger } from '../../../rules';
+import { dnd5eArmorDexContribution } from '../../../utils/armorClass';
 import { loadClassesForSystem } from '../../../utils/dataLoader';
+import {
+  dnd5eUnarmoredDefenseBarbarian,
+  dnd5eUnarmoredDefenseMonk,
+} from '../../../utils/derivedCombatMath';
 import { abilityMod } from '../../../utils/math';
 import type { Dnd5e2024DataModel } from '../../dnd5e-2024/data-model';
 import type { Dnd5eDataModel, Dnd5eTemplateState } from '../data-model';
@@ -36,8 +42,23 @@ export async function buildDnd5eContributionLedger<T extends Dnd5eContributionDa
   systemId: Dnd5eValidationSystemId
 ): Promise<ContributionLedgerResult> {
   const classes = await loadClassesForSystem(systemId);
+  // The resolver is fed the SAME inputs the engine uses for derived values
+  // (RFC 003), and its applied-effect ledger is projected straight into
+  // contribution entries — magic-item AC, attack, and damage terms get
+  // first-class provenance instead of being re-derived (and drifting) here.
+  const resolved = resolveCharacterEffects(systemId, {
+    equipment: document.system.equipment,
+    feats: document.system.feats,
+    features: document.system.features,
+  });
   const entries = [
     ...buildArmorClassEntries(systemId, document.system),
+    // The resolver speaks the RFC 003 target namespace ('ac'); this ledger
+    // speaks the 5e data model's ('armorClass'). Normalize so a viewer
+    // grouping by target shows ONE armor-class breakdown.
+    ...toContributionLedger(resolved.result.ledger).entries.map((entry) =>
+      entry.target === 'ac' ? { ...entry, target: 'armorClass' } : entry
+    ),
     ...buildTemplateProficiencyEntries(systemId, document.system.templateState),
     ...buildAlwaysPreparedSpellEntries(systemId, document.system.classLevels, classes),
   ];
@@ -88,7 +109,7 @@ function buildArmorClassEntries(
     );
   }
 
-  const dexContribution = getArmorClassDexContribution(armor, dexMod);
+  const dexContribution = dnd5eArmorDexContribution(armor, dexMod);
   if (dexContribution !== 0) {
     entries.push(
       createEntry({
@@ -127,6 +148,54 @@ function buildArmorClassEntries(
     );
   }
 
+  // Unarmored Defense (SRD): the engine takes the BEST of plain 10 + Dex and
+  // the feature formula. When the feature formula wins, the delta is the
+  // feature's contribution — emitted here so the entries still sum to the
+  // displayed AC for barbarians/monks.
+  if (!armor) {
+    const plainUnarmored = 10 + dexMod + (shield?.shieldBonus ?? 0);
+    const hasFeature = (featureId: string) =>
+      system.features.some((feature) => feature.id === featureId);
+    let unarmoredDefense: { featureId: string; label: string; total: number } | null = null;
+
+    if (hasFeature('unarmored-defense-barbarian')) {
+      const conMod = abilityMod(system.baseAttributes.con ?? 10);
+      unarmoredDefense = {
+        featureId: 'unarmored-defense-barbarian',
+        label: 'Unarmored Defense (Barbarian)',
+        total: dnd5eUnarmoredDefenseBarbarian(dexMod, conMod) + (shield?.shieldBonus ?? 0),
+      };
+    }
+    if (!shield && hasFeature('unarmored-defense-monk')) {
+      const wisMod = abilityMod(system.baseAttributes.wis ?? 10);
+      const monkTotal = dnd5eUnarmoredDefenseMonk(dexMod, wisMod);
+      if (monkTotal > (unarmoredDefense?.total ?? 0)) {
+        unarmoredDefense = {
+          featureId: 'unarmored-defense-monk',
+          label: 'Unarmored Defense (Monk)',
+          total: monkTotal,
+        };
+      }
+    }
+
+    if (unarmoredDefense && unarmoredDefense.total > plainUnarmored) {
+      entries.push(
+        createEntry({
+          systemId,
+          target: 'armorClass',
+          sourceKind: 'feature',
+          sourceId: unarmoredDefense.featureId,
+          sourceLabel: unarmoredDefense.label,
+          label: 'Unarmored Defense AC contribution',
+          operation: 'add',
+          value: unarmoredDefense.total - plainUnarmored,
+          category: 'defense',
+          sourcePath: 'system.features',
+        })
+      );
+    }
+  }
+
   const defenseStyleBonus = getDnd5eDefenseStyleArmorClassBonus(system);
   if (defenseStyleBonus !== 0) {
     entries.push(
@@ -146,22 +215,6 @@ function buildArmorClassEntries(
   }
 
   return entries;
-}
-
-function getArmorClassDexContribution(armor: EquippedItem | undefined, dexMod: number): number {
-  if (!armor) {
-    return dexMod;
-  }
-
-  if (armor.armorType === 'light') {
-    return dexMod;
-  }
-
-  if (armor.armorType === 'medium') {
-    return Math.min(dexMod, armor.dexBonusMax ?? 2);
-  }
-
-  return 0;
 }
 
 function buildTemplateProficiencyEntries(

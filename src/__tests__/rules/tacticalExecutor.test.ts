@@ -223,3 +223,78 @@ describe('executeTacticalTurn — decide + resolve', () => {
     );
   });
 });
+
+describe('Multiattack (SRD): attacksPerRound', () => {
+  it('resolves N attacks in one turn, each with distinct seeded rolls', () => {
+    const turn = executeTacticalTurn({
+      actor: actor({ attacksPerRound: 3, attackEffects: [atk(20)] }), // always hits AC 12
+      targets: [target('tank', { hp: { current: 999, max: 999 } })],
+      seed: 'multi-seed',
+    });
+
+    expect(turn.decision).toBe('attack');
+    expect(turn.attacks).toHaveLength(3);
+    expect(turn.attacks.every((attack) => attack.targetId === 'tank')).toBe(true);
+    // Sequential resolutions consume one shared per-pair stream — the d20s
+    // must not be byte-identical repeats of a reused stream head.
+    const d20s = turn.attacks.map((attack) => attack.resolution.naturalRoll);
+    expect(new Set(d20s).size).toBeGreaterThan(1);
+    // Back-compat: the legacy single-attack fields mirror the first attack.
+    expect(turn.resolution).toBe(turn.attacks[0].resolution);
+    expect(turn.intent).toBe(turn.attacks[0].intent);
+  });
+
+  it('re-targets remaining attacks after the current target drops', () => {
+    const turn = executeTacticalTurn({
+      // +20 to hit, flat 10 damage per swing (no die): two swings kill 'first'.
+      actor: actor({
+        attacksPerRound: 4,
+        attackEffects: [atk(20)],
+        damageEffects: [
+          {
+            id: 'flat',
+            systemId: SID,
+            target: 'damage',
+            operation: 'add',
+            value: 10,
+            stackPolicy: 'sum',
+            source: { kind: 'system', label: 'str' },
+            label: 'flat',
+          },
+        ],
+      }),
+      targets: [
+        target('first', { hp: { current: 20, max: 20 }, position: { x: 1, y: 0 } }),
+        target('second', { hp: { current: 20, max: 20 }, position: { x: 0, y: 1 } }),
+      ],
+      seed: 'cleave-seed',
+    });
+
+    expect(turn.attacks).toHaveLength(4);
+    // Deterministic property, robust to nat-1 auto-misses in the seeded
+    // stream: attacks stay on 'first' until exactly two hits land (20 HP /
+    // 10 damage), then every remaining attack re-targets 'second'.
+    let hitsOnFirst = 0;
+    for (const attack of turn.attacks) {
+      if (hitsOnFirst < 2) {
+        expect(attack.targetId).toBe('first');
+      } else {
+        expect(attack.targetId).toBe('second');
+      }
+      if (attack.targetId === 'first' && attack.resolution.isHit) {
+        hitsOnFirst += 1;
+      }
+    }
+    expect(hitsOnFirst).toBe(2);
+  });
+
+  it('replays byte-identically for the same seed', () => {
+    const run = () =>
+      executeTacticalTurn({
+        actor: actor({ attacksPerRound: 3 }),
+        targets: [target('foe')],
+        seed: 'replay-seed',
+      });
+    expect(JSON.stringify(run())).toBe(JSON.stringify(run()));
+  });
+});
