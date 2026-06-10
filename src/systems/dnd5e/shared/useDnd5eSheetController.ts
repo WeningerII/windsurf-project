@@ -19,9 +19,8 @@ import { useDnd5eSheetActionHandlers } from './useDnd5eSheetActionHandlers';
 import { useDnd5eTemplateHandlers } from './useDnd5eTemplateHandlers';
 
 const EMPTY_WEAPON_MASTERIES: string[] = [];
-const EMPTY_FEATURE_OPTION_SELECTIONS: NonNullable<
-  Dnd5eLikeDataModel['featureOptionSelections']
-> = [];
+const EMPTY_FEATURE_OPTION_SELECTIONS: NonNullable<Dnd5eLikeDataModel['featureOptionSelections']> =
+  [];
 
 interface UseDnd5eSheetControllerProps<T extends Dnd5eLikeDataModel> {
   document: CharacterDocument<T>;
