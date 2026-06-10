@@ -1,3 +1,4 @@
+import { StrictMode } from 'react';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { useDocuments } from '../../hooks/useDocuments';
@@ -301,5 +302,211 @@ describe('useDocuments', () => {
     });
 
     expect(readStoredDocs()).toMatchObject([{ name: 'Pagehide Flush Hero' }]);
+  });
+
+  // H2 regression: a no-op update arriving inside the debounce window (e.g. a
+  // sync merge that changes nothing) must not invalidate the pending save of
+  // a real edit made moments earlier.
+  it('does not drop a pending save when a no-op update lands within the debounce window', async () => {
+    const { result } = renderHook(() => useDocuments());
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    const doc = makeDoc('noop-doc', 'Original');
+    act(() => {
+      result.current.addDocument(doc);
+    });
+    act(() => {
+      result.current.flushPendingSaves();
+    });
+    expect(readStoredDocs()).toMatchObject([{ name: 'Original' }]);
+
+    // Real edit: schedules a debounced save.
+    act(() => {
+      result.current.updateDocument({ ...doc, name: 'Edited' });
+    });
+    // Within the debounce window, a merge arrives that changes nothing.
+    act(() => {
+      result.current.addDocuments(result.current.documents);
+    });
+    // Flush whatever save is still pending — the edit must be in it.
+    act(() => {
+      result.current.flushPendingSaves();
+    });
+
+    expect(readStoredDocs()).toMatchObject([{ name: 'Edited' }]);
+  });
+
+  // M2: a failed storage clear must surface instead of claiming success.
+  it('propagates a failed storage clear into the error state', async () => {
+    vi.spyOn(documentStorage, 'clearDocumentStorage').mockRejectedValue(
+      new Error('IndexedDB clear failed')
+    );
+
+    const { result } = renderHook(() => useDocuments());
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    act(() => {
+      result.current.addDocument(makeDoc('doomed-doc', 'Doomed'));
+    });
+    act(() => {
+      result.current.clearAllDocuments();
+    });
+
+    expect(result.current.documents).toHaveLength(0);
+    await waitFor(() => expect(result.current.error).toBe('IndexedDB clear failed'));
+  });
+
+  // M8: corrupted storage surfaces an error state instead of silently
+  // rendering an empty collection, and the payload is stashed first.
+  it('surfaces an error and stashes the payload when stored documents are corrupt', async () => {
+    vi.spyOn(console, 'error').mockImplementation(() => {});
+    localStorage.setItem('rpg-documents-v2', '{corrupt payload');
+
+    const { result } = renderHook(() => useDocuments());
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    expect(result.current.documents).toEqual([]);
+    expect(result.current.error).toMatch(/could not be read/);
+    expect(localStorage.getItem('rpg-documents-v2.corrupt')).toBe('{corrupt payload');
+  });
+
+  // M3: cross-tab reconciliation via storage events.
+  it("merges another tab's snapshot from a storage event without losing local-only docs", async () => {
+    const { result } = renderHook(() => useDocuments());
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    act(() => {
+      result.current.addDocument(makeDoc('local-only', 'Local Only'));
+    });
+
+    const otherTabDoc = {
+      ...makeDoc('other-tab-doc', 'From Other Tab'),
+      version: 2,
+      createdAt: '2026-02-24T00:00:00.000Z',
+      updatedAt: '2026-02-24T06:00:00.000Z',
+    };
+    act(() => {
+      window.dispatchEvent(
+        new StorageEvent('storage', {
+          key: 'rpg-documents-v2',
+          newValue: JSON.stringify({
+            version: '2.0',
+            documents: [otherTabDoc],
+            lastModified: new Date().toISOString(),
+          }),
+        })
+      );
+    });
+
+    const ids = result.current.documents.map((d) => d.id).sort();
+    expect(ids).toEqual(['local-only', 'other-tab-doc']);
+  });
+
+  it('ignores an identical cross-tab snapshot without state churn (loop safety)', async () => {
+    const { result } = renderHook(() => useDocuments());
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+    act(() => {
+      result.current.addDocument(makeDoc('stable-doc', 'Stable'));
+    });
+    act(() => {
+      result.current.flushPendingSaves();
+    });
+
+    const echoPayload = localStorage.getItem('rpg-documents-v2');
+    expect(echoPayload).toBeTruthy();
+    const before = result.current.documents;
+
+    // The other tab "echoes" exactly what we wrote: the merge must be a
+    // no-op, preserving state identity and scheduling no further write.
+    act(() => {
+      window.dispatchEvent(
+        new StorageEvent('storage', {
+          key: 'rpg-documents-v2',
+          newValue: echoPayload!,
+        })
+      );
+    });
+
+    expect(result.current.documents).toBe(before);
+  });
+
+  // L1: StrictMode double-invokes updaters; history must not double-push.
+  describe('StrictMode history integrity', () => {
+    it('a single add creates exactly one undo step', async () => {
+      const { result } = renderHook(() => useDocuments(), { wrapper: StrictMode });
+      await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+      act(() => {
+        result.current.addDocument(makeDoc('sm-add-doc', 'StrictMode Hero'));
+      });
+      expect(result.current.documents).toHaveLength(1);
+      expect(result.current.canUndo).toBe(true);
+
+      act(() => {
+        result.current.undo();
+      });
+      expect(result.current.documents).toHaveLength(0);
+      // With the double-push bug, a second (duplicate) past entry remains.
+      expect(result.current.canUndo).toBe(false);
+    });
+
+    it('one undo pushes exactly one future entry', async () => {
+      const { result } = renderHook(() => useDocuments(), { wrapper: StrictMode });
+      await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+      const doc = makeDoc('sm-undo-doc', 'Original');
+      act(() => {
+        result.current.addDocument(doc);
+      });
+      act(() => {
+        result.current.updateDocument({ ...doc, name: 'Edited' });
+      });
+
+      act(() => {
+        result.current.undo();
+      });
+      expect(result.current.documents[0].name).toBe('Original');
+      expect(result.current.canRedo).toBe(true);
+
+      act(() => {
+        result.current.redo();
+      });
+      expect(result.current.documents[0].name).toBe('Edited');
+      // With the double-push bug, a duplicate future entry would remain.
+      expect(result.current.canRedo).toBe(false);
+    });
+
+    it('redo pushes exactly one past entry', async () => {
+      const { result } = renderHook(() => useDocuments(), { wrapper: StrictMode });
+      await waitFor(() => expect(result.current.isLoading).toBe(false));
+
+      const doc = makeDoc('sm-redo-doc', 'Original');
+      act(() => {
+        result.current.addDocument(doc);
+      });
+      act(() => {
+        result.current.updateDocument({ ...doc, name: 'Edited' });
+      });
+      act(() => {
+        result.current.undo();
+      });
+      act(() => {
+        result.current.redo();
+      });
+      expect(result.current.documents[0].name).toBe('Edited');
+
+      // Past must be exactly [empty, [Original]]: undoing twice lands on the
+      // empty collection, with no duplicate intermediate states.
+      act(() => {
+        result.current.undo();
+      });
+      expect(result.current.documents[0].name).toBe('Original');
+      act(() => {
+        result.current.undo();
+      });
+      expect(result.current.documents).toHaveLength(0);
+      expect(result.current.canUndo).toBe(false);
+    });
   });
 });

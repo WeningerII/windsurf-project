@@ -1,6 +1,7 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useCampaigns } from '../../hooks/useCampaigns';
+import * as campaignStorage from '../../utils/campaignStorage';
 import type { Campaign } from '../../types/core/campaign';
 
 function makeCampaign(overrides: Partial<Campaign> = {}): Campaign {
@@ -149,5 +150,109 @@ describe('useCampaigns', () => {
     expect(stored).toBeTruthy();
     const parsed = JSON.parse(stored!);
     expect(parsed.campaigns).toMatchObject([{ name: 'Pagehide Campaign' }]);
+  });
+
+  // M5: a save failure inside the debounce timer must surface as an error
+  // state instead of becoming an uncaught exception.
+  it('surfaces persistence failures through the error state and recovers', async () => {
+    const saveSpy = vi.spyOn(campaignStorage, 'saveCampaigns').mockImplementation(() => {
+      throw new Error('Quota exceeded');
+    });
+
+    const { result } = renderHook(() => useCampaigns());
+    expect(result.current.error).toBeNull();
+
+    act(() => {
+      result.current.addCampaign(makeCampaign());
+    });
+    act(() => {
+      result.current.flushPendingSaves();
+    });
+
+    await waitFor(() => expect(result.current.error).toBe('Quota exceeded'));
+
+    // Once saving works again, the next successful persist clears the error.
+    saveSpy.mockRestore();
+    act(() => {
+      result.current.updateCampaign({ ...result.current.campaigns[0], name: 'Recovered' });
+    });
+    act(() => {
+      result.current.flushPendingSaves();
+    });
+    await waitFor(() => expect(result.current.error).toBeNull());
+  });
+
+  // H2 family: a no-op merged snapshot inside the debounce window must not
+  // drop the pending save of a real edit.
+  it('does not drop a pending save when a no-op merged snapshot lands within the debounce window', () => {
+    const { result } = renderHook(() => useCampaigns());
+    act(() => {
+      result.current.addCampaign(makeCampaign());
+    });
+    act(() => {
+      result.current.flushPendingSaves();
+    });
+
+    act(() => {
+      result.current.updateCampaign({ ...result.current.campaigns[0], name: 'Edited' });
+    });
+    // A signature-identical snapshot (e.g. a sync echo) arrives in the window.
+    act(() => {
+      result.current.applyMergedCampaigns(result.current.campaigns.map((c) => ({ ...c })));
+    });
+    act(() => {
+      result.current.flushPendingSaves();
+    });
+
+    const parsed = JSON.parse(localStorage.getItem('rpg-campaigns-v1')!);
+    expect(parsed.campaigns).toMatchObject([{ name: 'Edited' }]);
+  });
+
+  // M3: cross-tab reconciliation via storage events.
+  it("merges another tab's campaigns from a storage event", () => {
+    const { result } = renderHook(() => useCampaigns());
+    act(() => {
+      result.current.addCampaign(makeCampaign({ id: 'local-camp', name: 'Local' }));
+    });
+
+    act(() => {
+      window.dispatchEvent(
+        new StorageEvent('storage', {
+          key: 'rpg-campaigns-v1',
+          newValue: JSON.stringify({
+            version: '1.0',
+            campaigns: [makeCampaign({ id: 'other-camp', name: 'Other Tab' })],
+            lastModified: new Date().toISOString(),
+          }),
+        })
+      );
+    });
+
+    expect(result.current.campaigns.map((c) => c.id).sort()).toEqual(['local-camp', 'other-camp']);
+  });
+
+  it('ignores an identical cross-tab campaign snapshot without state churn (loop safety)', () => {
+    const { result } = renderHook(() => useCampaigns());
+    act(() => {
+      result.current.addCampaign(makeCampaign({ id: 'stable-camp', name: 'Stable' }));
+    });
+    act(() => {
+      result.current.flushPendingSaves();
+    });
+
+    const echoPayload = localStorage.getItem('rpg-campaigns-v1');
+    expect(echoPayload).toBeTruthy();
+    const before = result.current.campaigns;
+
+    act(() => {
+      window.dispatchEvent(
+        new StorageEvent('storage', {
+          key: 'rpg-campaigns-v1',
+          newValue: echoPayload!,
+        })
+      );
+    });
+
+    expect(result.current.campaigns).toBe(before);
   });
 });

@@ -1,7 +1,14 @@
 import { useCallback, useEffect, useState } from 'react';
 import { appendSceneEvent as appendRuntimeSceneEvent } from '../scene/runtime';
 import type { SceneDocument, SceneEvent } from '../types/core/scene';
-import { clearSceneStorage, loadScenes, saveScenes } from '../utils/sceneStorage';
+import {
+  clearSceneStorage,
+  loadScenes,
+  saveScenes,
+  parseScenesSnapshot,
+  SCENES_STORAGE_KEY,
+} from '../utils/sceneStorage';
+import { sameSceneSignatures } from '../utils/documentSignature';
 import { useDebouncedPersistence } from './useDebouncedPersistence';
 
 export const useScenes = () => {
@@ -30,6 +37,14 @@ export const useScenes = () => {
       const persistVersion = persistence.beginVersion();
       setScenes((current) => {
         const next = updater(current);
+        if (next === current) {
+          // No-op update (e.g. an idempotent cross-tab merge): roll the
+          // unused write generation back — leaving it consumed would
+          // invalidate a still-pending debounced save from a real edit
+          // moments earlier.
+          persistence.abandonVersion(persistVersion);
+          return current;
+        }
         persistence.persist(next, persistVersion);
         return next;
       });
@@ -55,11 +70,32 @@ export const useScenes = () => {
             byId.set(scene.id, scene);
           }
         });
-        return Array.from(byId.values());
+        const next = Array.from(byId.values());
+        // The `>=` rule above replaces entries even when nothing changed, so
+        // compare signatures to keep an idempotent merge a true no-op (this
+        // is what makes the cross-tab listener below loop-safe).
+        return sameSceneSignatures(current, next) ? current : next;
       });
     },
     [applySceneUpdate]
   );
+
+  // Cross-tab reconciliation: merge snapshots written by other tabs through
+  // the updatedAt-aware upsert above. Loop-safe via the signature
+  // short-circuit (a no-change merge schedules no write, so no event echo).
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key !== SCENES_STORAGE_KEY || !event.newValue) return;
+      const incoming = parseScenesSnapshot(event.newValue);
+      if (incoming === null || incoming.length === 0) return;
+      addScenes(incoming);
+    };
+
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, [addScenes]);
 
   const updateScene = useCallback(
     (scene: SceneDocument) => {
@@ -91,6 +127,8 @@ export const useScenes = () => {
   );
 
   const clearAllScenes = useCallback(() => {
+    // Begin-without-persist is deliberate: it invalidates any pending write
+    // of the old collection so it cannot land after the clear.
     persistence.beginVersion();
     persistence.cancel();
     setScenes([]);

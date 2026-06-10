@@ -5,6 +5,9 @@ import {
   loadDocuments,
   loadDocumentsAsync,
   clearDocumentStorage,
+  mergeDocumentCollections,
+  parseDocumentsSnapshot,
+  DOCUMENTS_STORAGE_KEY,
 } from '../utils/documentStorage';
 import { systemRegistry } from '../registry';
 import { sameDocumentSignatures } from '../utils/documentSignature';
@@ -32,39 +35,6 @@ function documentsChanged(
   return JSON.stringify(before) !== JSON.stringify(after);
 }
 
-function getDocumentVersion(doc: CharacterDocument<SystemDataModel>): number {
-  return doc.version ?? 1;
-}
-
-function mergeDocumentCollections(
-  current: CharacterDocument<SystemDataModel>[],
-  incoming: CharacterDocument<SystemDataModel>[]
-): CharacterDocument<SystemDataModel>[] {
-  const merged = new Map<string, CharacterDocument<SystemDataModel>>();
-
-  current.forEach((doc) => {
-    merged.set(doc.id, doc);
-  });
-
-  incoming.forEach((doc) => {
-    const existing = merged.get(doc.id);
-    const docVersion = getDocumentVersion(doc);
-    const existingVersion = existing ? getDocumentVersion(existing) : 0;
-
-    if (
-      !existing ||
-      docVersion > existingVersion ||
-      (docVersion === existingVersion && doc.updatedAt >= existing.updatedAt)
-    ) {
-      merged.set(doc.id, doc);
-    }
-  });
-
-  return Array.from(merged.values()).sort(
-    (left, right) => right.updatedAt.getTime() - left.updatedAt.getTime()
-  );
-}
-
 function cloneDocumentsSnapshot(
   docs: CharacterDocument<SystemDataModel>[]
 ): CharacterDocument<SystemDataModel>[] {
@@ -88,8 +58,10 @@ export const useDocuments = () => {
   const [historyFuture, setHistoryFuture] = useState<CharacterDocument<SystemDataModel>[][]>([]);
   const documentsRef = useRef<CharacterDocument<SystemDataModel>[]>([]);
   const historyPastRef = useRef<CharacterDocument<SystemDataModel>[][]>([]);
+  const historyFutureRef = useRef<CharacterDocument<SystemDataModel>[][]>([]);
   const hasLocalEditsRef = useRef(false);
   const historySnapshotQueuedRef = useRef(false);
+  const lastPushedSnapshotRef = useRef<CharacterDocument<SystemDataModel>[] | null>(null);
 
   useEffect(() => {
     documentsRef.current = documents;
@@ -98,6 +70,10 @@ export const useDocuments = () => {
   useEffect(() => {
     historyPastRef.current = historyPast;
   }, [historyPast]);
+
+  useEffect(() => {
+    historyFutureRef.current = historyFuture;
+  }, [historyFuture]);
 
   const persist = useCallback((docs: CharacterDocument<SystemDataModel>[]) => {
     try {
@@ -124,7 +100,9 @@ export const useDocuments = () => {
       setIsLoading(false);
     }
 
-    // Then attempt async IndexedDB load (may auto-migrate localStorage data)
+    // Then reconcile with IndexedDB. `loadDocumentsAsync` merges the two
+    // stores per-document (version/updatedAt-aware), so a stale IndexedDB
+    // mirror can no longer wholesale-revert newer localStorage edits.
     loadDocumentsAsync()
       .then((asyncDocs) => {
         if (
@@ -170,16 +148,51 @@ export const useDocuments = () => {
     [pushHistorySnapshot]
   );
 
+  // StrictMode double-invokes setState updaters, so the add/delete branch of
+  // `applyDocumentsUpdate` would push the same snapshot twice. Distinct
+  // mutations always receive distinct `prev` arrays, so deduping by reference
+  // is exact (unlike the time-window dedupe of `queueHistorySnapshot`, it does
+  // not coalesce two different adds landing in the same microtask). The ref is
+  // released on a microtask so a recycled reference is never skipped later.
+  const pushHistorySnapshotOnce = useCallback(
+    (snapshot: CharacterDocument<SystemDataModel>[]) => {
+      if (lastPushedSnapshotRef.current === snapshot) return;
+
+      lastPushedSnapshotRef.current = snapshot;
+      pushHistorySnapshot(snapshot);
+
+      const release = () => {
+        lastPushedSnapshotRef.current = null;
+      };
+
+      if (typeof queueMicrotask === 'function') {
+        queueMicrotask(release);
+        return;
+      }
+
+      setTimeout(release, 0);
+    },
+    [pushHistorySnapshot]
+  );
+
   const applyDocumentsUpdate = useCallback(
     (
       updater: (prev: CharacterDocument<SystemDataModel>[]) => CharacterDocument<SystemDataModel>[]
     ) => {
+      // Begin at call time (not inside the updater) so tokens rank mutations
+      // in the order the user issued them — e.g. a clear-all right after an
+      // add must out-rank the add's deferred updater.
       const persistVersion = persistence.beginVersion();
       setDocuments((prev) => {
         const next = updater(prev);
         // Hot path: runs on every mutation. Cheap signature compare is
         // sufficient because all mutations stamp a fresh `updatedAt`.
         if (sameDocumentSignatures(prev, next)) {
+          // No-op update: roll the unused generation back. Leaving it
+          // consumed would invalidate a still-pending debounced save from a
+          // real edit moments earlier (e.g. a no-change sync merge landing
+          // inside the debounce window), silently dropping that edit.
+          persistence.abandonVersion(persistVersion);
           return prev;
         }
 
@@ -187,13 +200,13 @@ export const useDocuments = () => {
         if (next.length === prev.length) {
           queueHistorySnapshot(prev);
         } else {
-          pushHistorySnapshot(prev);
+          pushHistorySnapshotOnce(prev);
         }
         persistence.persist(next, persistVersion);
         return next;
       });
     },
-    [persistence, pushHistorySnapshot, queueHistorySnapshot]
+    [persistence, pushHistorySnapshotOnce, queueHistorySnapshot]
   );
 
   const addDocument = useCallback(
@@ -249,6 +262,26 @@ export const useDocuments = () => {
     [applyDocumentsUpdate]
   );
 
+  // Cross-tab reconciliation: when another tab writes the documents key,
+  // merge its snapshot in (version/updatedAt-aware) instead of letting the
+  // two tabs' whole-collection writes silently clobber each other. Loop-safe:
+  // when the merge changes nothing, `applyDocumentsUpdate` short-circuits on
+  // the signature compare and schedules no write, so tabs converge instead of
+  // ping-ponging storage events forever.
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key !== DOCUMENTS_STORAGE_KEY || !event.newValue) return;
+      const incoming = parseDocumentsSnapshot(event.newValue);
+      if (incoming === null || incoming.length === 0) return;
+      addDocuments(incoming);
+    };
+
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, [addDocuments]);
+
   // Replace the collection with a sync-merged snapshot. Unlike `addDocuments`
   // (upsert-only, for imports), the merged collection is authoritative:
   // entries missing from it — e.g. tombstoned on another device — are removed
@@ -269,54 +302,69 @@ export const useDocuments = () => {
 
   const clearAllDocuments = useCallback(() => {
     hasLocalEditsRef.current = true;
+    // Begin-without-persist is deliberate here: it invalidates any pending
+    // debounced write of the old collection so it cannot land after the clear.
     persistence.beginVersion();
     pushHistorySnapshot(documentsRef.current);
     persistence.cancel();
     setDocuments([]);
-    try {
-      clearDocumentStorage();
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to clear document data');
-    }
+    clearDocumentStorage()
+      .then(() => {
+        setError(null);
+      })
+      .catch((err) => {
+        // The IndexedDB clear failed: without surfacing this, the next
+        // startup would resurrect the "permanently deleted" collection.
+        setError(err instanceof Error ? err.message : 'Failed to clear document data');
+      });
   }, [persistence, pushHistorySnapshot]);
 
+  // Undo/redo perform their side effects (history shuffles, persistence) at
+  // the event-handler level and pass plain values to setState. Doing this
+  // inside setState updaters — as an earlier version did — double-runs the
+  // side effects under StrictMode and corrupts history (one undo pushed two
+  // future entries). The refs are updated eagerly so back-to-back calls in
+  // the same tick observe each other's results before React re-renders.
   const undo = useCallback(() => {
-    const persistVersion = persistence.beginVersion();
-    setHistoryPast((past) => {
-      if (past.length === 0) return past;
+    const past = historyPastRef.current;
+    if (past.length === 0) return;
 
-      const previous = past[past.length - 1];
-      const current = documentsRef.current;
-      setHistoryFuture((future) => [
-        cloneDocumentsSnapshot(current),
-        ...future.slice(0, MAX_HISTORY - 1),
-      ]);
-      hasLocalEditsRef.current = true;
-      setDocuments(cloneDocumentsSnapshot(previous));
-      persistence.persist(previous, persistVersion);
+    const restored = cloneDocumentsSnapshot(past[past.length - 1]);
+    const nextPast = past.slice(0, -1);
+    const nextFuture = [
+      cloneDocumentsSnapshot(documentsRef.current),
+      ...historyFutureRef.current.slice(0, MAX_HISTORY - 1),
+    ];
 
-      return past.slice(0, -1);
-    });
+    hasLocalEditsRef.current = true;
+    historyPastRef.current = nextPast;
+    historyFutureRef.current = nextFuture;
+    documentsRef.current = restored;
+    setHistoryPast(nextPast);
+    setHistoryFuture(nextFuture);
+    setDocuments(restored);
+    persistence.persist(restored, persistence.beginVersion());
   }, [persistence]);
 
   const redo = useCallback(() => {
-    const persistVersion = persistence.beginVersion();
-    setHistoryFuture((future) => {
-      if (future.length === 0) return future;
+    const future = historyFutureRef.current;
+    if (future.length === 0) return;
 
-      const next = future[0];
-      const current = documentsRef.current;
-      setHistoryPast((past) => [
-        ...past.slice(-(MAX_HISTORY - 1)),
-        cloneDocumentsSnapshot(current),
-      ]);
-      hasLocalEditsRef.current = true;
-      setDocuments(cloneDocumentsSnapshot(next));
-      persistence.persist(next, persistVersion);
+    const restored = cloneDocumentsSnapshot(future[0]);
+    const nextFuture = future.slice(1);
+    const nextPast = [
+      ...historyPastRef.current.slice(-(MAX_HISTORY - 1)),
+      cloneDocumentsSnapshot(documentsRef.current),
+    ];
 
-      return future.slice(1);
-    });
+    hasLocalEditsRef.current = true;
+    historyPastRef.current = nextPast;
+    historyFutureRef.current = nextFuture;
+    documentsRef.current = restored;
+    setHistoryPast(nextPast);
+    setHistoryFuture(nextFuture);
+    setDocuments(restored);
+    persistence.persist(restored, persistence.beginVersion());
   }, [persistence]);
 
   const clearError = useCallback(() => {

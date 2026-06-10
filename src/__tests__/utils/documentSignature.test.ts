@@ -1,7 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
 import type { Campaign } from '../../types/core/campaign';
-import { sameCampaignSignatures, sameDocumentSignatures } from '../../utils/documentSignature';
+import { createSceneDocument } from '../../scene/runtime';
+import type { SceneEvent } from '../../types/core/scene';
+import {
+  sameCampaignSignatures,
+  sameDocumentSignatures,
+  sameSceneSignatures,
+} from '../../utils/documentSignature';
 
 function makeDoc(
   id: string,
@@ -82,6 +88,21 @@ describe('sameDocumentSignatures', () => {
   it('returns true for two empty arrays', () => {
     expect(sameDocumentSignatures([], [])).toBe(true);
   });
+
+  // L6: comparison must be multiplicity-aware — equal-length collections that
+  // only differ in how often a duplicated id occurs are NOT equal.
+  it('distinguishes collections that differ only in duplicate multiplicity', () => {
+    const a = [makeDoc('a'), makeDoc('a'), makeDoc('b')];
+    const b = [makeDoc('a'), makeDoc('b'), makeDoc('b')];
+    expect(sameDocumentSignatures(a, b)).toBe(false);
+    expect(sameDocumentSignatures(b, a)).toBe(false);
+  });
+
+  it('treats collections with identical duplicates as equal', () => {
+    const a = [makeDoc('a'), makeDoc('a'), makeDoc('b')];
+    const b = [makeDoc('b'), makeDoc('a'), makeDoc('a')];
+    expect(sameDocumentSignatures(a, b)).toBe(true);
+  });
 });
 
 function makeCampaign(id: string, overrides: Partial<Campaign> = {}): Campaign {
@@ -135,5 +156,66 @@ describe('sameCampaignSignatures', () => {
 
   it('returns true for two empty arrays', () => {
     expect(sameCampaignSignatures([], [])).toBe(true);
+  });
+
+  // L6: multiplicity-aware comparison for campaigns too.
+  it('distinguishes campaign collections that differ only in duplicate multiplicity', () => {
+    const a = [makeCampaign('a'), makeCampaign('a'), makeCampaign('b')];
+    const b = [makeCampaign('a'), makeCampaign('b'), makeCampaign('b')];
+    expect(sameCampaignSignatures(a, b)).toBe(false);
+  });
+});
+
+function makeScene(id: string, overrides: { updatedAt?: Date; events?: SceneEvent[] } = {}) {
+  const scene = createSceneDocument({
+    id,
+    name: `Scene ${id}`,
+    systemId: 'dnd-5e-2024',
+    now: new Date('2026-01-02T00:00:00.000Z'),
+  });
+  return {
+    ...scene,
+    ...(overrides.updatedAt ? { updatedAt: overrides.updatedAt } : {}),
+    ...(overrides.events ? { events: overrides.events } : {}),
+  };
+}
+
+function makeSceneEvent(id: string): SceneEvent {
+  return {
+    id,
+    type: 'token.removed',
+    sequence: 1,
+    createdAt: new Date('2026-01-02T00:00:00.000Z'),
+    payload: { tokenId: 'token-1' },
+  };
+}
+
+describe('sameSceneSignatures', () => {
+  it('returns true for identical scene collections', () => {
+    expect(sameSceneSignatures([makeScene('a')], [makeScene('a')])).toBe(true);
+  });
+
+  it('returns false when updatedAt changes', () => {
+    const a = [makeScene('a')];
+    const b = [makeScene('a', { updatedAt: new Date('2026-01-03T00:00:00.000Z') })];
+    expect(sameSceneSignatures(a, b)).toBe(false);
+  });
+
+  it('returns false when the event count changes even at the same updatedAt', () => {
+    // appendSceneEvent stamps updatedAt from the event's createdAt, so two
+    // appends sharing a timestamp are only visible through the event count.
+    const a = [makeScene('a')];
+    const b = [makeScene('a', { events: [makeSceneEvent('evt-1')] })];
+    expect(sameSceneSignatures(a, b)).toBe(false);
+  });
+
+  it('returns false when lengths differ', () => {
+    expect(sameSceneSignatures([makeScene('a')], [])).toBe(false);
+  });
+
+  it('is multiplicity-aware for duplicated scene ids', () => {
+    const a = [makeScene('a'), makeScene('a'), makeScene('b')];
+    const b = [makeScene('a'), makeScene('b'), makeScene('b')];
+    expect(sameSceneSignatures(a, b)).toBe(false);
   });
 });

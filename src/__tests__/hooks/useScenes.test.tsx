@@ -88,4 +88,58 @@ describe('useScenes', () => {
     });
     expect(localStorage.getItem('rpg-scenes-v1')).toBeNull();
   });
+
+  // M3: cross-tab reconciliation via storage events.
+  it("merges another tab's scenes from a storage event", () => {
+    const { result } = renderHook(() => useScenes());
+    act(() => {
+      result.current.addScene(makeScene());
+    });
+
+    const otherTabScene = createSceneDocument({
+      id: 'scene-2',
+      name: 'Other Tab Scene',
+      systemId: 'dnd-5e-2024',
+      now: NOW,
+    });
+    act(() => {
+      window.dispatchEvent(
+        new StorageEvent('storage', {
+          key: 'rpg-scenes-v1',
+          newValue: JSON.stringify({
+            version: '1.0',
+            scenes: [otherTabScene],
+            lastModified: NOW.toISOString(),
+          }),
+        })
+      );
+    });
+
+    expect(result.current.scenes.map((scene) => scene.id).sort()).toEqual(['scene-1', 'scene-2']);
+  });
+
+  it('ignores an identical cross-tab scene snapshot without state churn (loop safety)', () => {
+    const { result } = renderHook(() => useScenes());
+    act(() => {
+      result.current.addScene(makeScene());
+    });
+    act(() => {
+      result.current.flushPendingSaves();
+    });
+
+    const echoPayload = localStorage.getItem('rpg-scenes-v1');
+    expect(echoPayload).toBeTruthy();
+    const before = result.current.scenes;
+
+    act(() => {
+      window.dispatchEvent(
+        new StorageEvent('storage', {
+          key: 'rpg-scenes-v1',
+          newValue: echoPayload!,
+        })
+      );
+    });
+
+    expect(result.current.scenes).toBe(before);
+  });
 });
