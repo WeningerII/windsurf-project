@@ -77,4 +77,22 @@ describe('EquipmentBrowser', () => {
     expect(onSelectEquipment).toHaveBeenCalledTimes(1);
     expect(onSelectEquipment).toHaveBeenCalledWith(expect.objectContaining({ id: 'longsword' }));
   });
+
+  it('exposes item cards as buttons selectable via keyboard', async () => {
+    const user = userEvent.setup();
+    const onSelectEquipment = vi.fn();
+
+    render(<EquipmentBrowser equipment={equipment} onSelectEquipment={onSelectEquipment} />);
+
+    const card = screen.getByRole('button', { name: /Longsword/ });
+    card.focus();
+    expect(card).toHaveFocus();
+    await user.keyboard('{Enter}');
+
+    expect(onSelectEquipment).toHaveBeenCalledTimes(1);
+    expect(onSelectEquipment).toHaveBeenCalledWith(expect.objectContaining({ id: 'longsword' }));
+
+    await user.keyboard(' ');
+    expect(onSelectEquipment).toHaveBeenCalledTimes(2);
+  });
 });

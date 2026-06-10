@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useDeferredValue, useMemo, useState } from 'react';
 import { Check, Search, Shield } from 'lucide-react';
 import type { CharacterClass } from '../types/character-options/classes';
 
@@ -14,33 +14,43 @@ export const MamArchetypeBrowser: React.FC<MamArchetypeBrowserProps> = ({
   onToggleArchetype,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const deferredSearchTerm = useDeferredValue(searchTerm);
   const selectedIds = useMemo(() => new Set(selectedArchetypeIds), [selectedArchetypeIds]);
 
-  const filteredArchetypes = useMemo(() => {
-    const normalizedSearch = searchTerm.trim().toLowerCase();
-    if (!normalizedSearch) {
-      return archetypes;
-    }
-
-    return archetypes.filter((archetype) => {
+  const searchHaystacks = useMemo(() => {
+    const haystacks = new Map<string, string>();
+    for (const archetype of archetypes) {
       const featureText = archetype.features
         .flatMap((group) =>
           group.features.map((feature) => `${feature.name} ${feature.description}`)
         )
         .join(' ');
-      const haystack = [
-        archetype.name,
-        archetype.description,
-        archetype.primaryAbility.join(' '),
-        archetype.skillProficiencies.options.join(' '),
-        featureText,
-      ]
-        .join(' ')
-        .toLowerCase();
+      haystacks.set(
+        archetype.id,
+        [
+          archetype.name,
+          archetype.description,
+          archetype.primaryAbility.join(' '),
+          archetype.skillProficiencies.options.join(' '),
+          featureText,
+        ]
+          .join(' ')
+          .toLowerCase()
+      );
+    }
+    return haystacks;
+  }, [archetypes]);
 
-      return haystack.includes(normalizedSearch);
-    });
-  }, [archetypes, searchTerm]);
+  const filteredArchetypes = useMemo(() => {
+    const normalizedSearch = deferredSearchTerm.trim().toLowerCase();
+    if (!normalizedSearch) {
+      return archetypes;
+    }
+
+    return archetypes.filter((archetype) =>
+      (searchHaystacks.get(archetype.id) ?? '').includes(normalizedSearch)
+    );
+  }, [archetypes, searchHaystacks, deferredSearchTerm]);
 
   return (
     <section className="rounded-lg border bg-card p-4 space-y-4">

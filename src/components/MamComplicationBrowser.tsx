@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useDeferredValue, useMemo, useState } from 'react';
 import { AlertTriangle, Check, Search } from 'lucide-react';
 import type { Complication } from '../data/mutants-and-masterminds/3e/complications';
 
@@ -14,6 +14,7 @@ export const MamComplicationBrowser: React.FC<MamComplicationBrowserProps> = ({
   onInsertComplication,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const deferredSearchTerm = useDeferredValue(searchTerm);
   const [categoryFilter, setCategoryFilter] = useState<'all' | Complication['category']>('all');
   const insertedIds = useMemo(() => new Set(insertedComplicationIds), [insertedComplicationIds]);
 
@@ -22,8 +23,26 @@ export const MamComplicationBrowser: React.FC<MamComplicationBrowserProps> = ({
     [complications]
   );
 
+  const searchHaystacks = useMemo(() => {
+    const haystacks = new Map<string, string>();
+    for (const complication of complications) {
+      haystacks.set(
+        complication.id,
+        [
+          complication.name,
+          complication.category,
+          complication.description,
+          complication.examples.join(' '),
+        ]
+          .join(' ')
+          .toLowerCase()
+      );
+    }
+    return haystacks;
+  }, [complications]);
+
   const filteredComplications = useMemo(() => {
-    const normalizedSearch = searchTerm.trim().toLowerCase();
+    const normalizedSearch = deferredSearchTerm.trim().toLowerCase();
 
     return complications.filter((complication) => {
       if (categoryFilter !== 'all' && complication.category !== categoryFilter) {
@@ -34,18 +53,9 @@ export const MamComplicationBrowser: React.FC<MamComplicationBrowserProps> = ({
         return true;
       }
 
-      const haystack = [
-        complication.name,
-        complication.category,
-        complication.description,
-        complication.examples.join(' '),
-      ]
-        .join(' ')
-        .toLowerCase();
-
-      return haystack.includes(normalizedSearch);
+      return (searchHaystacks.get(complication.id) ?? '').includes(normalizedSearch);
     });
-  }, [categoryFilter, complications, searchTerm]);
+  }, [categoryFilter, complications, searchHaystacks, deferredSearchTerm]);
 
   return (
     <section className="rounded-lg border bg-card p-4 space-y-4">

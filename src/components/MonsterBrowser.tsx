@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useDeferredValue } from 'react';
 import { Search, Filter, Skull } from 'lucide-react';
 import { Monster } from '../types/creatures/monsters';
 
@@ -7,8 +7,55 @@ interface MonsterBrowserProps {
   onSelectMonster?: (monster: Monster) => void;
 }
 
+/** 5e CR → XP awards (DMG/SRD), used when a CR bucket carries no XP data. */
+const CR_XP_TABLE: Record<string, number> = {
+  '0': 10,
+  '0.125': 25,
+  '0.25': 50,
+  '0.5': 100,
+  '1': 200,
+  '2': 450,
+  '3': 700,
+  '4': 1100,
+  '5': 1800,
+  '6': 2300,
+  '7': 2900,
+  '8': 3900,
+  '9': 5000,
+  '10': 5900,
+  '11': 7200,
+  '12': 8400,
+  '13': 10000,
+  '14': 11500,
+  '15': 13000,
+  '16': 15000,
+  '17': 18000,
+  '18': 20000,
+  '19': 22000,
+  '20': 25000,
+  '21': 33000,
+  '22': 41000,
+  '23': 50000,
+  '24': 62000,
+  '25': 75000,
+  '26': 90000,
+  '27': 105000,
+  '28': 120000,
+  '29': 135000,
+  '30': 155000,
+};
+
+/** Render fractional CRs the way the books do (1/8, 1/4, 1/2). */
+function formatChallengeRating(cr: number): string {
+  if (cr === 0.125) return '1/8';
+  if (cr === 0.25) return '1/4';
+  if (cr === 0.5) return '1/2';
+  return `${cr}`;
+}
+
 export const MonsterBrowser: React.FC<MonsterBrowserProps> = ({ monsters, onSelectMonster }) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const deferredSearchTerm = useDeferredValue(searchTerm);
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [selectedCR, setSelectedCR] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
@@ -20,17 +67,36 @@ export const MonsterBrowser: React.FC<MonsterBrowserProps> = ({ monsters, onSele
     [monsters]
   );
 
+  const crExperiencePoints = useMemo(() => {
+    const xpByCR = new Map<number, number>();
+    for (const monster of monsters) {
+      if (!xpByCR.has(monster.challengeRating) && monster.experiencePoints >= 0) {
+        xpByCR.set(monster.challengeRating, monster.experiencePoints);
+      }
+    }
+    return xpByCR;
+  }, [monsters]);
+
   const sizes = useMemo(() => [...new Set(monsters.map((m) => m.size))].sort(), [monsters]);
 
+  const searchHaystacks = useMemo(() => {
+    const haystacks = new Map<string, string>();
+    for (const monster of monsters) {
+      const abilityText = (monster.specialAbilities ?? [])
+        .map((ability) => `${ability.name} ${ability.description}`)
+        .join(' ');
+      haystacks.set(monster.id, `${monster.name} ${abilityText}`.toLowerCase());
+    }
+    return haystacks;
+  }, [monsters]);
+
   const filteredMonsters = useMemo(() => {
+    const normalizedSearch = deferredSearchTerm.trim().toLowerCase();
+
     return monsters.filter((monster) => {
       const matchesSearch =
-        monster.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        monster.specialAbilities?.some(
-          (ability) =>
-            ability.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            ability.description.toLowerCase().includes(searchTerm.toLowerCase())
-        );
+        normalizedSearch.length === 0 ||
+        (searchHaystacks.get(monster.id) ?? '').includes(normalizedSearch);
 
       const matchesType = selectedType === null || monster.type === selectedType;
 
@@ -40,12 +106,20 @@ export const MonsterBrowser: React.FC<MonsterBrowserProps> = ({ monsters, onSele
 
       return matchesSearch && matchesType && matchesCR && matchesSize;
     });
-  }, [monsters, searchTerm, selectedType, selectedCR, selectedSize]);
+  }, [monsters, searchHaystacks, deferredSearchTerm, selectedType, selectedCR, selectedSize]);
 
-  const getCRLabel = useCallback((cr: number) => {
-    if (cr < 1) return `CR ${cr} (${cr * 100} XP)`;
-    return `CR ${cr}`;
-  }, []);
+  const getCRLabel = useCallback(
+    (cr: number) => {
+      const xp = crExperiencePoints.get(cr) ?? CR_XP_TABLE[`${cr}`];
+      if (cr < 1) {
+        return xp != null
+          ? `CR ${formatChallengeRating(cr)} (${xp} XP)`
+          : `CR ${formatChallengeRating(cr)}`;
+      }
+      return `CR ${cr}`;
+    },
+    [crExperiencePoints]
+  );
 
   const handleClearFilters = useCallback(() => {
     setSearchTerm('');
@@ -128,6 +202,7 @@ export const MonsterBrowser: React.FC<MonsterBrowserProps> = ({ monsters, onSele
         {/* Clear Filters */}
         <div className="flex items-end">
           <button
+            type="button"
             onClick={handleClearFilters}
             className="w-full px-4 py-2 border border-input rounded-lg hover:bg-muted transition-all"
           >
@@ -146,10 +221,11 @@ export const MonsterBrowser: React.FC<MonsterBrowserProps> = ({ monsters, onSele
         <div className="grid grid-cols-1 gap-4">
           {filteredMonsters.length > 0 ? (
             filteredMonsters.map((monster) => (
-              <div
+              <button
+                type="button"
                 key={monster.id}
                 onClick={() => onSelectMonster?.(monster)}
-                className="p-4 border border-input rounded-lg hover:border-primary/50 hover:shadow-md transition-all cursor-pointer"
+                className="w-full p-4 border border-input rounded-lg text-left hover:border-primary/50 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-all cursor-pointer"
               >
                 <div className="flex justify-between items-start mb-2">
                   <div className="flex items-center gap-3">
@@ -164,7 +240,7 @@ export const MonsterBrowser: React.FC<MonsterBrowserProps> = ({ monsters, onSele
                   </div>
                   <div className="text-right">
                     <div className="text-xs bg-destructive/10 text-destructive px-2 py-1 rounded font-medium">
-                      CR {monster.challengeRating}
+                      CR {formatChallengeRating(monster.challengeRating)}
                     </div>
                     <div className="text-xs text-muted-foreground mt-1">
                       {monster.experiencePoints} XP
@@ -203,7 +279,7 @@ export const MonsterBrowser: React.FC<MonsterBrowserProps> = ({ monsters, onSele
                     </span>
                   </div>
                 )}
-              </div>
+              </button>
             ))
           ) : (
             <div className="text-center py-8 text-muted-foreground">

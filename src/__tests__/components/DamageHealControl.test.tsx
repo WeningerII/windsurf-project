@@ -59,4 +59,16 @@ describe('DamageHealControl', () => {
 
     expect(onApply).toHaveBeenCalledWith(4, 'heal');
   });
+
+  it('labels the amount input for assistive technology', async () => {
+    const user = userEvent.setup();
+    const onApply = vi.fn();
+    render(<DamageHealControl onApply={onApply} />);
+
+    const input = screen.getByRole('spinbutton', { name: 'Damage or heal amount' });
+    await user.type(input, '3');
+    await user.click(screen.getByTitle('Apply damage'));
+
+    expect(onApply).toHaveBeenCalledWith(3, 'damage');
+  });
 });

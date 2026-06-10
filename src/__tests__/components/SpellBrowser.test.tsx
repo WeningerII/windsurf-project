@@ -132,6 +132,22 @@ describe('SpellBrowser', () => {
     );
   });
 
+  it('exposes spell cards as buttons selectable via keyboard', async () => {
+    const user = userEvent.setup();
+    const onSelectSpell = vi.fn();
+    render(<SpellBrowser spells={mockSpells} onSelectSpell={onSelectSpell} />);
+
+    const card = screen.getByRole('button', { name: /Fire Bolt/ });
+    card.focus();
+    expect(card).toHaveFocus();
+    await user.keyboard('{Enter}');
+
+    expect(onSelectSpell).toHaveBeenCalledTimes(1);
+    expect(onSelectSpell).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'fire-bolt', name: 'Fire Bolt' })
+    );
+  });
+
   it('derives level filters from the dataset and supports level 10', () => {
     render(
       <SpellBrowser

@@ -71,6 +71,9 @@ const TabsTrigger = React.forwardRef<HTMLButtonElement, TabsTriggerProps>(
     return (
       <button
         ref={ref}
+        // Default before {...props} so switching tabs inside a <form> does not
+        // submit it, while callers can still override the type via props.
+        type="button"
         role="tab"
         aria-selected={isActive}
         data-state={isActive ? 'active' : 'inactive'}

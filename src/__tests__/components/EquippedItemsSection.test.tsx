@@ -54,9 +54,38 @@ describe('EquippedItemsSection', () => {
     await user.click(screen.getByTitle('Attune'));
     await user.click(screen.getByTitle('Unattune'));
 
-    expect(onUnequip).toHaveBeenCalledWith('chain-mail');
-    expect(onToggleAttune).toHaveBeenCalledWith('chain-mail');
-    expect(onToggleAttune).toHaveBeenCalledWith('shield');
+    expect(onUnequip).toHaveBeenCalledWith('chain-mail', 'chest');
+    expect(onToggleAttune).toHaveBeenCalledWith('chain-mail', 'chest');
+    expect(onToggleAttune).toHaveBeenCalledWith('shield', 'offHand');
+  });
+
+  it('passes the slot so duplicate item ids in different slots stay independent', async () => {
+    const user = userEvent.setup();
+    const onUnequip = vi.fn();
+    const onToggleAttune = vi.fn();
+    const ringOfProtection = (slot: 'ring1' | 'ring2'): EquippedItem => ({
+      itemId: 'ring-of-protection',
+      slot,
+      attuned: false,
+      customName: 'Ring of Protection',
+    });
+
+    render(
+      <EquippedItemsSection
+        equipment={[ringOfProtection('ring1'), ringOfProtection('ring2')]}
+        onUnequip={onUnequip}
+        onToggleAttune={onToggleAttune}
+      />
+    );
+
+    // Slots render in SLOT_ORDER, so the second Unequip/Attune belongs to ring2.
+    await user.click(screen.getAllByTitle('Unequip')[1]);
+    await user.click(screen.getAllByTitle('Attune')[1]);
+
+    expect(onUnequip).toHaveBeenCalledTimes(1);
+    expect(onUnequip).toHaveBeenCalledWith('ring-of-protection', 'ring2');
+    expect(onToggleAttune).toHaveBeenCalledTimes(1);
+    expect(onToggleAttune).toHaveBeenCalledWith('ring-of-protection', 'ring2');
   });
 
   it('omits action buttons when callbacks are not provided', () => {

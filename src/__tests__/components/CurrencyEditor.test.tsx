@@ -1,5 +1,4 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { CurrencyEditor } from '../../components/CurrencyEditor';
 
@@ -24,6 +23,16 @@ describe('CurrencyEditor', () => {
 
     expect(onChange).toHaveBeenCalledTimes(1);
     expect(onChange.mock.calls[0][0].gold).toBe(250);
+  });
+
+  it('clamps typed negative values to zero', () => {
+    const onChange = vi.fn();
+    render(<CurrencyEditor currency={sampleCurrency} onChange={onChange} />);
+
+    fireEvent.change(screen.getByTitle('GP'), { target: { value: '-50' } });
+
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expect(onChange.mock.calls[0][0].gold).toBe(0);
   });
 
   it('disables inputs when onChange is not provided', () => {

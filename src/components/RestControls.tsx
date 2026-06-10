@@ -8,6 +8,15 @@ interface Props {
   showExhaustion?: boolean;
 }
 
+/**
+ * Exhaustion level 6 is death in both 5e rule sets; the engines clamp the
+ * stored value to 0..6, so the input mirrors that bound.
+ */
+const MAX_EXHAUSTION_LEVEL = 6;
+
+const clampExhaustion = (level: number) =>
+  Math.min(MAX_EXHAUSTION_LEVEL, Math.max(0, Math.floor(level)));
+
 export const RestControls: React.FC<Props> = ({
   exhaustionLevel,
   onExhaustionChange,
@@ -15,7 +24,7 @@ export const RestControls: React.FC<Props> = ({
   onLongRest,
   showExhaustion = true,
 }) => {
-  const normalizedExhaustion = Math.max(0, exhaustionLevel ?? 0);
+  const normalizedExhaustion = clampExhaustion(exhaustionLevel ?? 0);
   const canEditExhaustion = Boolean(onExhaustionChange);
 
   return (
@@ -47,8 +56,11 @@ export const RestControls: React.FC<Props> = ({
           <input
             type="number"
             min={0}
+            max={MAX_EXHAUSTION_LEVEL}
             value={normalizedExhaustion}
-            onChange={(event) => onExhaustionChange?.(Math.max(0, Number(event.target.value) || 0))}
+            onChange={(event) =>
+              onExhaustionChange?.(clampExhaustion(Number(event.target.value) || 0))
+            }
             className="w-16 text-center border border-input rounded bg-transparent px-2 py-1 text-sm tabular-nums"
             disabled={!canEditExhaustion}
             title="Exhaustion Level"
