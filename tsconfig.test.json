@@ -1,0 +1,21 @@
+{
+  // Type-checks everything the build-path tsconfig deliberately skips:
+  // unit tests, e2e specs, and the vitest/playwright tool configs.
+  // Wired into `verify` via the `typecheck:test` script (after lint).
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["vitest/globals", "@testing-library/jest-dom", "vite/client", "node"]
+  },
+  "include": [
+    "src/__tests__/**/*",
+    "src/vitest.d.ts",
+    "e2e/**/*",
+    "playwright.config.ts",
+    "vitest.config.ts"
+  ],
+  // The base config excludes src/__tests__/**; reset so the include above wins.
+  "exclude": [],
+  "references": []
+}

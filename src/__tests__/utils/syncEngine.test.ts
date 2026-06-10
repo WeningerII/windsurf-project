@@ -84,7 +84,9 @@ function createSupabaseMock(
   }));
   const subscribedChannel = { id: 'channel-1' };
   const subscribe = vi.fn(() => subscribedChannel);
-  const on = vi.fn(() => ({ subscribe }));
+  // Mirrors the realtime `.on(event, filter, callback)` signature so the
+  // test can read the registered callback back out of mock.calls.
+  const on = vi.fn((_event: string, _filter: unknown, _callback: () => void) => ({ subscribe }));
   const channel = vi.fn(() => ({ on }));
   const removeChannel = vi.fn().mockResolvedValue(undefined);
   const authGetSession = vi.fn().mockResolvedValue({

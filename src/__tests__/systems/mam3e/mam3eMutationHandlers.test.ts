@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import type { CharacterDocument } from '../../../types/core/document';
+import type { CharacterDocument, SystemDataModel } from '../../../types/core/document';
 import type { Mam3eDataModel } from '../../../systems/mam3e/data-model';
 import { createDefaultMam3eData } from '../../../systems/mam3e/data-model';
 import { createEmptyMam3eConditionTrack } from '../../../systems/mam3e/mam3eSheetShared';
@@ -17,9 +17,16 @@ function makeDoc(overrides: Partial<Mam3eDataModel> = {}): CharacterDocument<Mam
   };
 }
 
+// Typed to match the hook's onUpdate prop so the mock is assignable without
+// widening; bare vi.fn() infers Mock<Procedure | Constructable> in Vitest 4,
+// which no longer satisfies a concrete handler signature.
+function makeOnUpdate() {
+  return vi.fn<(document: CharacterDocument<SystemDataModel>) => void>();
+}
+
 function renderHandlers(
   document: CharacterDocument<Mam3eDataModel>,
-  onUpdate: ReturnType<typeof vi.fn>,
+  onUpdate: ReturnType<typeof makeOnUpdate>,
   conditionTrack = document.system.conditionTrack ?? createEmptyMam3eConditionTrack()
 ) {
   return renderHook(() =>
@@ -35,7 +42,7 @@ function renderHandlers(
 
 describe('useMam3eMutationHandlers', () => {
   it('generates distinct power ids for rapid double-adds (no Date.now collisions)', () => {
-    const onUpdate = vi.fn();
+    const onUpdate = makeOnUpdate();
     const { result } = renderHandlers(makeDoc(), onUpdate);
 
     act(() => {
@@ -55,7 +62,7 @@ describe('useMam3eMutationHandlers', () => {
   });
 
   it('clamps negative defense ranks to 0 in updateDefenseRank', () => {
-    const onUpdate = vi.fn();
+    const onUpdate = makeOnUpdate();
     const { result } = renderHandlers(makeDoc(), onUpdate);
 
     act(() => {
@@ -67,7 +74,7 @@ describe('useMam3eMutationHandlers', () => {
   });
 
   it('escalates a second Staggered to Incapacitated via the shared engine banding', () => {
-    const onUpdate = vi.fn();
+    const onUpdate = makeOnUpdate();
     const conditionTrack = {
       bruised: 1,
       dazed: false,
@@ -90,7 +97,7 @@ describe('useMam3eMutationHandlers', () => {
   });
 
   it('does not emit an update for non-positive failure margins', () => {
-    const onUpdate = vi.fn();
+    const onUpdate = makeOnUpdate();
     const { result } = renderHandlers(makeDoc(), onUpdate);
 
     act(() => {

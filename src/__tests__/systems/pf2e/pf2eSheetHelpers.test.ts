@@ -81,6 +81,7 @@ describe('PF2e sheet helpers', () => {
       },
       spellsKnown: ['magic-missile'],
       preparedSpellsByRank: { 1: ['magic-missile'] },
+      focusSpells: [],
       focusPoints: { current: 0, max: 2 },
     };
 

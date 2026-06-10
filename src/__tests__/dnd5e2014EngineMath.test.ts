@@ -14,6 +14,7 @@ import { profBonus, rollD20, normalizeDeathSaves } from '../systems/dnd5e/shared
 import { compute5eAC } from '../utils/armorClass';
 import { compute5eSpellSlots, computePactMagicSlots } from '../utils/spellSlots';
 import { createDefaultDnd5eData, type Dnd5eDataModel } from '../systems/dnd5e/data-model';
+import type { EquippedItem } from '../types/core/character';
 import type { CharacterDocument } from '../types/core/document';
 
 const TEST_DATE = new Date('2026-05-01T00:00:00.000Z');
@@ -29,7 +30,11 @@ function doc(system: Dnd5eDataModel): CharacterDocument<Dnd5eDataModel> {
   };
 }
 
-function chest(armorClass: number, armorType: 'light' | 'medium' | 'heavy', dexBonusMax?: number) {
+function chest(
+  armorClass: number,
+  armorType: 'light' | 'medium' | 'heavy',
+  dexBonusMax?: number
+): EquippedItem {
   return { itemId: 'armor', slot: 'chest', attuned: false, armorClass, armorType, dexBonusMax };
 }
 const SHIELD = { itemId: 'shield', slot: 'offHand', attuned: false, shieldBonus: 2 };
@@ -276,21 +281,31 @@ describe('L2/L4 rollCheck modifiers', () => {
   });
   it('skill check adds proficiency when proficient (level 1 → +2)', async () => {
     const r = await engine.rollCheck(
-      doc(withScores({ skillProficiencies: { acrobatics: { level: 'proficient' } } })),
+      doc(
+        withScores({
+          skillProficiencies: { acrobatics: { level: 'proficient', source: ['manual'] } },
+        })
+      ),
       'acrobatics'
     );
     expect(r.total).toBe(1 + 2 + 2);
   });
   it('expertise doubles proficiency', async () => {
     const r = await engine.rollCheck(
-      doc(withScores({ skillProficiencies: { acrobatics: { level: 'expertise' } } })),
+      doc(
+        withScores({
+          skillProficiencies: { acrobatics: { level: 'expertise', source: ['manual'] } },
+        })
+      ),
       'acrobatics'
     );
     expect(r.total).toBe(1 + 2 + 4);
   });
   it('half proficiency (Jack of All Trades) rounds down', async () => {
     const r = await engine.rollCheck(
-      doc(withScores({ skillProficiencies: { acrobatics: { level: 'half' } } })),
+      doc(
+        withScores({ skillProficiencies: { acrobatics: { level: 'half', source: ['manual'] } } })
+      ),
       'acrobatics'
     );
     expect(r.total).toBe(1 + 2 + 1);

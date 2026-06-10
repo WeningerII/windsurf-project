@@ -33,10 +33,10 @@ async function backToCharacterList(page: Page) {
 }
 
 async function clickTab(page: Page, name: string | RegExp) {
-  const tab = page.getByRole('tab', { name });
-  await expect(tab).toBeVisible();
-  await tab.scrollIntoViewIfNeeded();
-  await tab.evaluate((element: HTMLButtonElement) => element.click());
+  // A real locator click (not element.click() inside evaluate) so Playwright
+  // actionability checks apply — a tab hidden behind an overlay must fail
+  // here instead of silently "working".
+  await page.getByRole('tab', { name }).click();
 }
 
 async function expectRollResult(page: Page, buttonTitle: string | RegExp, formulaPattern: RegExp) {
@@ -104,7 +104,6 @@ for (const systemName of ['D&D 3.5e', 'Pathfinder 1e'] as const) {
     await expect(page.getByPlaceholder('Search feats by name or description...')).toBeVisible();
 
     await clickTab(page, /^Spells$/i);
-    await page.waitForTimeout(1000);
     await expect(page.getByLabel('Search spells')).toBeVisible({ timeout: 10000 });
 
     await clickTab(page, /^Equipment$/i);
@@ -169,7 +168,6 @@ test('smokes Mutants & Masterminds 3e reference browsers', async ({ page }) => {
   await createCharacterForSystem(page, /Mutants & Masters?minds 3e|M&M 3e/i, 'M&M Smoke Hero');
 
   await clickTab(page, /^Archetypes$/i);
-  await page.waitForTimeout(1000);
   await expect(page.getByLabel('Search archetypes')).toBeVisible({ timeout: 10000 });
 
   await clickTab(page, /^Powers DB$/i);

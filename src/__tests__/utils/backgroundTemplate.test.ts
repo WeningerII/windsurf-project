@@ -24,6 +24,8 @@ const outlaw: Background = {
     source: 'Outlaw Background',
     description: 'Test fixture feature.',
   },
+  suggestedCharacteristics: { traits: [], ideals: [], bonds: [], flaws: [] },
+  description: 'Test fixture background.',
 };
 
 const envoy: Background = {
@@ -42,6 +44,8 @@ const envoy: Background = {
     source: 'Envoy Background',
     description: 'Test fixture feature.',
   },
+  suggestedCharacteristics: { traits: [], ideals: [], bonds: [], flaws: [] },
+  description: 'Test fixture background.',
 };
 
 function makeDoc(overrides: Partial<Dnd5eDataModel> = {}): CharacterDocument<Dnd5eDataModel> {

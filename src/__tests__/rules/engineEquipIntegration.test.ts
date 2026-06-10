@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import type { CharacterDocument } from '../../types/core/document';
+import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
 import type { GameSystemId } from '../../types/game-systems';
 
 import { Dnd5eEngine } from '../../systems/dnd5e/engine';
@@ -30,7 +30,8 @@ import { createDefaultPf2eData } from '../../systems/pf2e/data-model';
  */
 
 // A runtime equipment object carrying every field any d20-family system reads,
-// so one literal works across all of them (tests are not type-checked by tsc).
+// so one literal works across all of them (typed loosely on purpose; the
+// per-system equipment shapes diverge).
 function acItem(): Record<string, unknown> {
   return {
     itemId: 'ring-of-protection-1',
@@ -63,12 +64,12 @@ interface EngineCase {
   ac: (system: any) => number;
 }
 
-function doc(systemId: GameSystemId, system: unknown): CharacterDocument {
+function doc<T extends SystemDataModel>(systemId: GameSystemId, system: T): CharacterDocument<T> {
   return {
     id: `test-${systemId}`,
     systemId,
     name: 'Test',
-    system: system as CharacterDocument['system'],
+    system,
     createdAt: new Date('2026-05-31T00:00:00.000Z'),
     updatedAt: new Date('2026-05-31T00:00:00.000Z'),
   };

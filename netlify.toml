@@ -7,16 +7,28 @@
 #   - local `netlify deploy` invocations
 #   - documentation of the canonical build flow
 #
-# Redirects, headers, and security policies below ARE applied to every
-# deploy regardless of whether the build ran here or in CI.
+# Redirects, headers, and security policies below are applied to CI deploys
+# via the `netlify-config-path: ./netlify.toml` input on the deploy steps in
+# .github/workflows/ci.yml (API deploys do not pick this file up implicitly),
+# and to UI/CLI deploys because the file ships with the site source.
 
 [build]
   command = "npm run build"
   publish = "dist"
 
-[functions]
-  directory = "netlify/functions"
-  node_bundler = "esbuild"
+# -----------------------------------------------------------------------------
+# Missing hashed assets must surface as real 404s, never the SPA shell.
+# Without this rule, a stale /assets/*.js chunk request after a deploy would
+# match the catch-all below and receive index.html with a 200 — which the
+# service worker could then cache under the chunk URL (cache poisoning) and
+# the module loader would fail with an opaque MIME error instead of a 404.
+# Existing files always win over redirects, so live assets are unaffected.
+# -----------------------------------------------------------------------------
+
+[[redirects]]
+  from = "/assets/*"
+  to = "/assets/:splat"
+  status = 404
 
 # -----------------------------------------------------------------------------
 # SPA fallback. The app is a state-based single-page app today (no router),

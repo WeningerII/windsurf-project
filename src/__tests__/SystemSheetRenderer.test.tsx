@@ -33,11 +33,11 @@ describe('SystemSheetRenderer', () => {
 
     vi.spyOn(systemRegistry, 'get').mockReturnValue({
       id: 'dnd-5e-2024',
-      name: 'Mock System',
+      label: 'Mock System',
       createDefaultData: () => ({ level: 1 }),
       engine: {
         prepareData: (doc: CharacterDocument<SystemDataModel>) => doc,
-        rollCheck: () => ({ total: 0, rolls: [0], formula: '1d20+0' }),
+        rollCheck: () => Promise.resolve({ total: 0, terms: [0], formula: '1d20+0' }),
         applyDamage: (doc: CharacterDocument<SystemDataModel>) => doc,
       },
       SheetComponent: sheetRenderSpy as unknown as ComponentType<{

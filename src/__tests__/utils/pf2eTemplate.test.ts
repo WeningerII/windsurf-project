@@ -83,6 +83,7 @@ describe('PF2e templates', () => {
           spellsKnown: ['magic-missile', 'shield'],
           alwaysPreparedSpellIds: ['mage-armor'],
           preparedSpellsByRank: { 1: ['magic-missile'], 2: ['shield'] },
+          focusSpells: [],
           focusPoints: { current: 1, max: 1 },
         },
       }),

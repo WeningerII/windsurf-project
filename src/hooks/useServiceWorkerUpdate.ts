@@ -13,6 +13,11 @@ import { useCallback, useEffect, useRef, useState } from 'react';
  *      which posts SKIP_WAITING to the waiting worker and reloads once it
  *      activates.
  *
+ * Long-lived tabs and installed PWAs do not navigate, so the browser's
+ * default update check (on navigation, capped at 24h by HTTP heuristics)
+ * may never run.  The hook therefore also calls `registration.update()`
+ * on an hourly interval and whenever the tab becomes visible again.
+ *
  * In dev mode (or environments without SW support) the hook is a safe no-op:
  * `updateAvailable` stays `false` forever and `applyUpdate` does nothing.
  */
@@ -24,6 +29,9 @@ export interface ServiceWorkerUpdateState {
 function isServiceWorkerSupported(): boolean {
   return typeof window !== 'undefined' && 'serviceWorker' in navigator;
 }
+
+// How often a long-lived tab proactively checks for a new service worker.
+const UPDATE_CHECK_INTERVAL_MS = 60 * 60 * 1000;
 
 export function useServiceWorkerUpdate(): ServiceWorkerUpdateState {
   const [waitingWorker, setWaitingWorker] = useState<ServiceWorker | null>(null);
@@ -48,6 +56,21 @@ export function useServiceWorkerUpdate(): ServiceWorkerUpdateState {
     }
 
     let cancelled = false;
+    let registration: ServiceWorkerRegistration | null = null;
+    let updateIntervalId: number | undefined;
+
+    // Proactive update checks for long-lived tabs / installed PWAs (M1):
+    // hourly, plus whenever the tab regains visibility.  Failures are
+    // ignored — the next check or navigation will retry.
+    const checkForUpdate = () => {
+      registration?.update().catch(() => {});
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        checkForUpdate();
+      }
+    };
 
     const trackInstallingWorker = (sw: ServiceWorker) => {
       const handleStateChange = () => {
@@ -64,6 +87,9 @@ export function useServiceWorkerUpdate(): ServiceWorkerUpdateState {
 
     const handleRegistered = (reg: ServiceWorkerRegistration) => {
       if (cancelled) return;
+      registration = reg;
+      updateIntervalId = window.setInterval(checkForUpdate, UPDATE_CHECK_INTERVAL_MS);
+      document.addEventListener('visibilitychange', handleVisibilityChange);
 
       // A worker may already be waiting from a prior page load.
       if (reg.waiting && navigator.serviceWorker.controller) {
@@ -114,6 +140,10 @@ export function useServiceWorkerUpdate(): ServiceWorkerUpdateState {
     return () => {
       cancelled = true;
       navigator.serviceWorker.removeEventListener('controllerchange', handleControllerChange);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (updateIntervalId !== undefined) {
+        window.clearInterval(updateIntervalId);
+      }
     };
   }, []);
 

@@ -70,10 +70,13 @@ describe('systemCatalog integration — real loaders', () => {
     const summary = await loadSystemCatalogSummary('mam3e');
 
     expect(summary.systemId).toBe('mam3e');
-    const powersCat = summary.categories.find((c) => c.id === 'spells');
+    // M&M powers live under the 'powers' category id, not 'spells'.
+    const powersCat = summary.categories.find((c) => c.id === 'powers');
     const advantagesCat = summary.categories.find((c) => c.id === 'advantages');
     const equipmentCat = summary.categories.find((c) => c.id === 'equipment');
 
+    expect(summary.categories.some((c) => c.id === 'spells')).toBe(false);
+    expect(powersCat?.label).toBe('Powers');
     expect(powersCat?.count).toBeGreaterThan(0);
     expect(advantagesCat?.count).toBeGreaterThan(0);
     expect(equipmentCat?.count).toBeGreaterThan(0);

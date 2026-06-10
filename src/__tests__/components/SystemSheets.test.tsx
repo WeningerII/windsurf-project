@@ -175,11 +175,10 @@ function makePf2eSpell(
   overrides: Partial<Spell> & Pick<Spell, 'id' | 'name' | 'level' | 'classes'>
 ): Spell {
   return {
-    id: overrides.id,
-    name: overrides.name,
+    // id, name, level, and classes come straight from the required part of
+    // `overrides` via the spread below.
     system: 'pf2e',
     source: 'Core Rulebook',
-    level: overrides.level,
     school: overrides.school ?? 'evocation',
     castingTime: overrides.castingTime ?? { type: 'action', amount: 2 },
     range: overrides.range ?? { type: 'ranged', feet: 30 },
@@ -188,7 +187,6 @@ function makePf2eSpell(
     concentration: overrides.concentration ?? false,
     ritual: overrides.ritual ?? false,
     description: overrides.description ?? `${overrides.name} description`,
-    classes: overrides.classes,
     ...overrides,
   };
 }
@@ -3381,7 +3379,7 @@ describe('System Sheets', () => {
         ],
       },
       'Vault Hero'
-    );
+    ) as CharacterDocument<ReturnType<typeof createDefaultDaggerheartData>>;
 
     const { rerender } = render(
       <DaggerheartSheet

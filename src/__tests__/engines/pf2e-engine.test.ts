@@ -255,6 +255,7 @@ describe('Pf2eEngine', () => {
             2: { max: 99, used: 6 },
           },
           spellsKnown: [],
+          focusSpells: [],
           focusPoints: { current: 3, max: 3 },
         },
       });

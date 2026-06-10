@@ -15,7 +15,6 @@ export default defineConfig({
     exclude: [...configDefaults.exclude, 'e2e/**', '.tmp/**'],
     testTimeout: isCoverageRun ? 15000 : 10000,
     fileParallelism: !isCoverageRun,
-    minWorkers: isCoverageRun ? 1 : undefined,
     maxWorkers: isCoverageRun ? 1 : undefined,
     coverage: {
       provider: 'v8',
@@ -26,6 +25,10 @@ export default defineConfig({
         'src/systems/**/*.{ts,tsx}',
         'src/hooks/**/*.{ts,tsx}',
         'src/registry/**/*.{ts,tsx}',
+        'src/rules/**/*.{ts,tsx}',
+        'src/scene/**/*.{ts,tsx}',
+        'src/contexts/**/*.{ts,tsx}',
+        'src/constants/**/*.{ts,tsx}',
       ],
       exclude: [
         'node_modules/',
@@ -38,6 +41,12 @@ export default defineConfig({
         'src/scripts/**',
         'src/types/**',
         'src/validation/**',
+        // App.tsx and main.tsx stay uninstrumented on purpose: they are
+        // top-level wiring (root render, provider/layout composition) that
+        // is exercised end-to-end by Playwright, not by unit tests, and
+        // including them would only add noise to the thresholds below.
+        'src/App.tsx',
+        'src/main.tsx',
       ],
       thresholds: {
         lines: 70,

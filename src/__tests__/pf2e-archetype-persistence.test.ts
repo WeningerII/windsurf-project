@@ -2,13 +2,13 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { allPf2eArchetypes } from '../data/pathfinder/2e/archetypes';
 import { createDefaultPf2eData, type Pf2eDataModel } from '../systems/pf2e/data-model';
 import type { Archetype } from '../types/character-options/archetypes';
-import type { CharacterDocument, SystemDataModel } from '../types/core/document';
+import type { CharacterDocument } from '../types/core/document';
 import { clearDocumentStorage, loadDocuments, saveDocuments } from '../utils/documentStorage';
 import { applyPf2eArchetypeTemplate, removePf2eArchetypeTemplate } from '../utils/pf2eTemplate';
 
 const archetypeIds = ['pf2e-wizard-archetype', 'pf2e-ranger-archetype'];
 
-function makeDocument(id: string, system: Pf2eDataModel): CharacterDocument<SystemDataModel> {
+function makeDocument(id: string, system: Pf2eDataModel): CharacterDocument<Pf2eDataModel> {
   return {
     id,
     name: id,
