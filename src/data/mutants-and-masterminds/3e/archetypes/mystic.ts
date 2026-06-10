@@ -8,9 +8,9 @@
  * License: OGL v1.0a
  */
 
-import { CharacterClass } from '../../../../types/character-options/classes';
+import { Mam3eArchetype } from '../../../../types/mam/archetypes';
 
-export const mysticArchetype: CharacterClass = {
+export const mysticArchetype: Mam3eArchetype = {
   id: 'mam3e-mystic',
   name: 'Mystic',
   system: 'mam3e',
@@ -22,19 +22,7 @@ export const mysticArchetype: CharacterClass = {
     page: 1,
     url: 'https://www.d20herosrd.com/character-creation/archetypes/mystic/',
   },
-  hitDie: 'd6',
-  primaryAbility: ['wis', 'int'],
-  savingThrowProficiencies: ['wis', 'int'],
-  armorProficiencies: [],
-  weaponProficiencies: [],
-  toolProficiencies: [],
-  skillProficiencies: {
-    count: 3,
-    options: ['arcana', 'insight', 'perception'],
-    label: 'Choose class skills',
-  },
-  equipmentChoices: [],
-  startingGold: { dice: '1d6', multiplier: 100 },
+  suggestedSkills: ['arcana', 'insight', 'perception'],
   features: [
     {
       level: 1,
@@ -54,8 +42,6 @@ export const mysticArchetype: CharacterClass = {
       ],
     },
   ],
-  subclassLevel: 1,
-  subclasses: [],
   description:
     'A wielder of magic and mystical forces, drawing power from arcane or divine sources.',
 };

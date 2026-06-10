@@ -8,9 +8,9 @@
  * License: OGL v1.0a
  */
 
-import { CharacterClass } from '../../../../types/character-options/classes';
+import { Mam3eArchetype } from '../../../../types/mam/archetypes';
 
-export const martialArtistArchetype: CharacterClass = {
+export const martialArtistArchetype: Mam3eArchetype = {
   id: 'mam3e-martial-artist',
   name: 'Martial Artist',
   system: 'mam3e',
@@ -22,19 +22,7 @@ export const martialArtistArchetype: CharacterClass = {
     page: 1,
     url: 'https://www.d20herosrd.com/character-creation/archetypes/martial-artist/',
   },
-  hitDie: 'd8',
-  primaryAbility: ['str', 'dex'],
-  savingThrowProficiencies: ['con', 'dex'],
-  armorProficiencies: [],
-  weaponProficiencies: [],
-  toolProficiencies: [],
-  skillProficiencies: {
-    count: 2,
-    options: ['athletics', 'acrobatics'],
-    label: 'Choose class skills',
-  },
-  equipmentChoices: [],
-  startingGold: { dice: '1d6', multiplier: 100 },
+  suggestedSkills: ['athletics', 'acrobatics'],
   features: [
     {
       level: 1,
@@ -54,7 +42,5 @@ export const martialArtistArchetype: CharacterClass = {
       ],
     },
   ],
-  subclassLevel: 1,
-  subclasses: [],
   description: 'A master of martial arts who channels inner energy for devastating combat.',
 };

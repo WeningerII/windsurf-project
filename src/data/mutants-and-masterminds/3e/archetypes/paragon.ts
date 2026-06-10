@@ -8,9 +8,9 @@
  * License: OGL v1.0a
  */
 
-import { CharacterClass } from '../../../../types/character-options/classes';
+import { Mam3eArchetype } from '../../../../types/mam/archetypes';
 
-export const paragonArchetype: CharacterClass = {
+export const paragonArchetype: Mam3eArchetype = {
   id: 'mam3e-paragon',
   name: 'Paragon',
   system: 'mam3e',
@@ -22,19 +22,7 @@ export const paragonArchetype: CharacterClass = {
     page: 1,
     url: 'https://www.d20herosrd.com/character-creation/archetypes/paragon/',
   },
-  hitDie: 'd10',
-  primaryAbility: ['str', 'con'],
-  savingThrowProficiencies: ['str', 'con'],
-  armorProficiencies: [],
-  weaponProficiencies: [],
-  toolProficiencies: [],
-  skillProficiencies: {
-    count: 3,
-    options: ['athletics', 'perception', 'persuasion'],
-    label: 'Choose class skills',
-  },
-  equipmentChoices: [],
-  startingGold: { dice: '1d6', multiplier: 100 },
+  suggestedSkills: ['athletics', 'perception', 'persuasion'],
   features: [
     {
       level: 1,
@@ -55,7 +43,5 @@ export const paragonArchetype: CharacterClass = {
       ],
     },
   ],
-  subclassLevel: 1,
-  subclasses: [],
   description: 'The classic flying brick with super-strength, invulnerability, and flight.',
 };

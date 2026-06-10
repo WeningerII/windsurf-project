@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { CharacterClass } from '../../../types/character-options/classes';
+import type { Mam3eArchetype } from '../../../types/mam/archetypes';
 import type { PowerModifier } from '../../../data/mutants-and-masterminds/3e/modifiers/extras';
 import { createDefaultMam3eData } from '../../../systems/mam3e/data-model';
 import { getMam3eSheetState } from '../../../systems/mam3e/getMam3eSheetState';
@@ -8,23 +8,14 @@ import {
   createEmptyMam3ePower,
 } from '../../../systems/mam3e/mam3eSheetShared';
 
-function makeArchetype(id: string, name: string): CharacterClass {
+function makeArchetype(id: string, name: string): Mam3eArchetype {
+  // Reference-only shape (review H-5): no fabricated hit dice/saves/wealth.
   return {
     id,
     name,
     system: 'mam3e',
     source: "Hero's Handbook",
-    hitDie: 'd8',
-    primaryAbility: ['str'],
-    savingThrowProficiencies: ['str'],
-    armorProficiencies: [],
-    weaponProficiencies: [],
-    toolProficiencies: [],
-    skillProficiencies: { count: 0, options: [], label: 'None' },
-    equipmentChoices: [],
     features: [],
-    subclassLevel: 0,
-    subclasses: [],
     description: `${name} archetype`,
   };
 }

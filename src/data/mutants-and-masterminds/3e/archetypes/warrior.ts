@@ -8,9 +8,9 @@
  * License: OGL v1.0a
  */
 
-import { CharacterClass } from '../../../../types/character-options/classes';
+import { Mam3eArchetype } from '../../../../types/mam/archetypes';
 
-export const warriorArchetype: CharacterClass = {
+export const warriorArchetype: Mam3eArchetype = {
   id: 'mam3e-warrior',
   name: 'Warrior',
   system: 'mam3e',
@@ -22,19 +22,7 @@ export const warriorArchetype: CharacterClass = {
     page: 1,
     url: 'https://www.d20herosrd.com/character-creation/archetypes/warrior/',
   },
-  hitDie: 'd10',
-  primaryAbility: ['str', 'dex'],
-  savingThrowProficiencies: ['str', 'dex'],
-  armorProficiencies: [],
-  weaponProficiencies: [],
-  toolProficiencies: [],
-  skillProficiencies: {
-    count: 3,
-    options: ['athletics', 'intimidation', 'perception'],
-    label: 'Choose class skills',
-  },
-  equipmentChoices: [],
-  startingGold: { dice: '1d6', multiplier: 100 },
+  suggestedSkills: ['athletics', 'intimidation', 'perception'],
   features: [
     {
       level: 1,
@@ -54,7 +42,5 @@ export const warriorArchetype: CharacterClass = {
       ],
     },
   ],
-  subclassLevel: 1,
-  subclasses: [],
   description: 'A skilled combatant trained in weapons, tactics, and warfare.',
 };

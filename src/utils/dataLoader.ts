@@ -14,6 +14,7 @@
 
 import { GameSystemId } from '../types/game-systems';
 import type { Advantage } from '../types/mam/advantages';
+import type { Mam3eArchetype } from '../types/mam/archetypes';
 import { Spell } from '../types/magic/spells';
 import { CharacterClass } from '../types/character-options/classes';
 import { Species } from '../types/character-options/species';
@@ -314,14 +315,74 @@ async function loadDnd35eSpecies(): Promise<Species[]> {
   return raceModule.dnd35eRaces || [];
 }
 
+/**
+ * Normalize 3.5e/PF1e legacy equipment entries into the canonical `Item`
+ * shape (review M-3: these loaders previously asserted `as Item[]` over
+ * string costs like '15 gp' and non-ItemType `type` values like 'melee',
+ * so `item.cost.amount` rendered undefined at runtime despite green types).
+ * System-specific extras (damage, properties, armorClass, …) are preserved
+ * by spreading the raw entry first; only the canonical fields are coerced.
+ */
+function normalizeLegacyEquipment(rawItems: unknown[], fallbackType: Item['type']): Item[] {
+  const CURRENCIES = new Set(['cp', 'sp', 'gp', 'pp']);
+  const ITEM_TYPES = new Set([
+    'weapon',
+    'armor',
+    'shield',
+    'consumable',
+    'tool',
+    'gear',
+    'magic-item',
+    'treasure',
+  ]);
+
+  return rawItems
+    .filter((item): item is Record<string, unknown> => {
+      const candidate = item as Record<string, unknown> | null;
+      return Boolean(candidate && candidate.id && candidate.name);
+    })
+    .map((raw) => {
+      let cost: Item['cost'] = { amount: 0, currency: 'gp' };
+      if (typeof raw.cost === 'string') {
+        const match = raw.cost.trim().match(/^([\d,.]+)\s*(cp|sp|gp|pp)$/i);
+        if (match) {
+          const amount = Number(match[1].replace(/,/g, ''));
+          if (Number.isFinite(amount)) {
+            cost = { amount, currency: match[2].toLowerCase() as Item['cost']['currency'] };
+          }
+        }
+      } else if (
+        raw.cost &&
+        typeof raw.cost === 'object' &&
+        typeof (raw.cost as { amount?: unknown }).amount === 'number' &&
+        CURRENCIES.has(String((raw.cost as { currency?: unknown }).currency))
+      ) {
+        cost = raw.cost as Item['cost'];
+      }
+
+      const type = ITEM_TYPES.has(String(raw.type)) ? (raw.type as Item['type']) : fallbackType;
+
+      return {
+        ...raw,
+        type,
+        cost,
+        rarity: (raw.rarity as Item['rarity']) ?? 'common',
+        weight: typeof raw.weight === 'number' && Number.isFinite(raw.weight) ? raw.weight : 0,
+        description: typeof raw.description === 'string' ? raw.description : '',
+        requiresAttunement: Boolean(raw.requiresAttunement),
+      } as Item;
+    });
+}
+
 async function loadDnd35eEquipment(): Promise<Item[]> {
   const equipModule = await import('../data/dnd/3.5e/equipment');
   const eq = equipModule.dnd35eEquipment;
-  const allItems: unknown[] = [...eq.weapons, ...eq.armor, ...eq.shields, ...eq.adventuringGear];
-  return allItems.filter((item: unknown) => {
-    const i = item as Record<string, unknown>;
-    return i && i.id && i.name;
-  }) as Item[];
+  return [
+    ...normalizeLegacyEquipment(eq.weapons as unknown[], 'weapon'),
+    ...normalizeLegacyEquipment(eq.armor as unknown[], 'armor'),
+    ...normalizeLegacyEquipment(eq.shields as unknown[], 'shield'),
+    ...normalizeLegacyEquipment(eq.adventuringGear as unknown[], 'gear'),
+  ];
 }
 
 async function loadDnd35eFeats(): Promise<FeatDefinition[]> {
@@ -370,16 +431,12 @@ async function loadPf1eSpecies(): Promise<Species[]> {
 
 async function loadPf1eEquipment(): Promise<Item[]> {
   const equipModule = await import('../data/pathfinder/1e/equipment');
-  const allItems: unknown[] = [
-    ...Object.values(equipModule.pf1eWeapons || {}),
-    ...Object.values(equipModule.pf1eArmor || {}),
-    ...Object.values(equipModule.pf1eGear || {}),
-    ...(equipModule.pf1eMagicItems || []),
+  return [
+    ...normalizeLegacyEquipment(Object.values(equipModule.pf1eWeapons || {}), 'weapon'),
+    ...normalizeLegacyEquipment(Object.values(equipModule.pf1eArmor || {}), 'armor'),
+    ...normalizeLegacyEquipment(Object.values(equipModule.pf1eGear || {}), 'gear'),
+    ...normalizeLegacyEquipment((equipModule.pf1eMagicItems || []) as unknown[], 'magic-item'),
   ];
-  return allItems.filter((item: unknown) => {
-    const i = item as Record<string, unknown>;
-    return i && i.id && i.name;
-  }) as Item[];
 }
 
 async function loadPf2eEquipment(): Promise<Item[]> {
@@ -445,7 +502,7 @@ async function loadMam3eEquipment(): Promise<Item[]> {
   }) as Item[];
 }
 
-async function loadMam3eArchetypes(): Promise<CharacterClass[]> {
+async function loadMam3eArchetypes(): Promise<Mam3eArchetype[]> {
   const archetypeModule = await import('../data/mutants-and-masterminds/3e/archetypes');
   return Object.values(archetypeModule.mm3eArchetypes || {});
 }
@@ -666,7 +723,7 @@ export async function loadArchetypesForSystem(systemId: GameSystemId): Promise<A
 
 export async function loadMam3eArchetypesForSystem(
   systemId: GameSystemId
-): Promise<CharacterClass[]> {
+): Promise<Mam3eArchetype[]> {
   if (systemId !== 'mam3e') {
     return [];
   }

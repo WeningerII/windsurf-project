@@ -37,42 +37,54 @@ export const goblin: Species = {
     },
   ],
 
+  // CRB heritages. PF2e heritages never grant ability boosts (those come from
+  // the ancestry itself) — each grants the feature in its description, so
+  // abilityScoreIncrease is truthfully empty on every entry.
   subraces: [
     {
-      id: 'razortooth',
-      name: 'Razortooth Heritage',
+      id: 'charhide',
+      name: 'Charhide Goblin',
       parentSpeciesId: 'goblin',
-      abilityScoreIncrease: [{ type: 'fixed', attributes: { str: 2 } }],
+      abilityScoreIncrease: [],
       traits: [],
       description:
-        'Your teeth are sharp and dangerous. You gain a bite attack that deals 1d6 damage.',
+        'You gain fire resistance equal to half your level (minimum 1), and the flat check to remove persistent fire damage on you is DC 10 (DC 5 with appropriate assistance).',
+    },
+    {
+      id: 'irongut',
+      name: 'Irongut Goblin',
+      parentSpeciesId: 'goblin',
+      abilityScoreIncrease: [],
+      traits: [],
+      description:
+        'You can eat and drink things others cannot: you gain a +2 circumstance bonus to saving throws against afflictions and effects from things you ingest, and you reduce your sickened value by 2 on a successful save to recover.',
+    },
+    {
+      id: 'razortooth',
+      name: 'Razortooth Goblin',
+      parentSpeciesId: 'goblin',
+      abilityScoreIncrease: [],
+      traits: [],
+      description:
+        'Your jaws are a 1d6 piercing unarmed attack with the finesse and unarmed traits.',
+    },
+    {
+      id: 'snow',
+      name: 'Snow Goblin',
+      parentSpeciesId: 'goblin',
+      abilityScoreIncrease: [],
+      traits: [],
+      description:
+        'You gain cold resistance equal to half your level (minimum 1), and you treat environmental cold effects as if they were one step less extreme.',
     },
     {
       id: 'unbreakable',
-      name: 'Unbreakable Heritage',
+      name: 'Unbreakable Goblin',
       parentSpeciesId: 'goblin',
-      abilityScoreIncrease: [{ type: 'fixed', attributes: { con: 2 } }],
+      abilityScoreIncrease: [],
       traits: [],
       description:
-        'You gain a +1 status bonus to Fortitude saves and can ignore difficult terrain.',
-    },
-    {
-      id: 'sneaky',
-      name: 'Sneaky Heritage',
-      parentSpeciesId: 'goblin',
-      abilityScoreIncrease: [{ type: 'fixed', attributes: { dex: 2 } }],
-      traits: [],
-      description:
-        'You gain a +1 status bonus to Stealth checks and can Hide even when only lightly obscured.',
-    },
-    {
-      id: 'pyrophobic',
-      name: 'Pyrophobic Heritage',
-      parentSpeciesId: 'goblin',
-      abilityScoreIncrease: [{ type: 'fixed', attributes: { wis: 2 } }],
-      traits: [],
-      description:
-        'You gain a +1 status bonus to saves against fire damage and can sense fire nearby.',
+        'Your maximum Hit Points increase by 4, and when you fall you take damage as if the fall were half as far.',
     },
   ],
 

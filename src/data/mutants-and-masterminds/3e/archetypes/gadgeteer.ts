@@ -8,9 +8,9 @@
  * License: OGL v1.0a
  */
 
-import { CharacterClass } from '../../../../types/character-options/classes';
+import { Mam3eArchetype } from '../../../../types/mam/archetypes';
 
-export const gadgeteerArchetype: CharacterClass = {
+export const gadgeteerArchetype: Mam3eArchetype = {
   id: 'mam3e-gadgeteer',
   name: 'Gadgeteer',
   system: 'mam3e',
@@ -22,19 +22,7 @@ export const gadgeteerArchetype: CharacterClass = {
     page: 1,
     url: 'https://www.d20herosrd.com/character-creation/archetypes/gadgeteer/',
   },
-  hitDie: 'd8',
-  primaryAbility: ['int', 'dex'],
-  savingThrowProficiencies: ['int', 'dex'],
-  armorProficiencies: [],
-  weaponProficiencies: [],
-  toolProficiencies: [],
-  skillProficiencies: {
-    count: 3,
-    options: ['crafting', 'investigation', 'technology'],
-    label: 'Choose class skills',
-  },
-  equipmentChoices: [],
-  startingGold: { dice: '2d6', multiplier: 100 },
+  suggestedSkills: ['crafting', 'investigation', 'technology'],
   features: [
     {
       level: 1,
@@ -54,7 +42,5 @@ export const gadgeteerArchetype: CharacterClass = {
       ],
     },
   ],
-  subclassLevel: 1,
-  subclasses: [],
   description: 'A brilliant inventor. Gadgeteers create powerful devices to fight crime.',
 };

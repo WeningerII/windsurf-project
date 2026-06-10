@@ -1,11 +1,11 @@
-import type { CharacterClass } from '../../types/character-options/classes';
+import type { Mam3eArchetype } from '../../types/mam/archetypes';
 import type { PowerModifier } from '../../data/mutants-and-masterminds/3e/modifiers/extras';
 import type { Mam3eDataModel } from './data-model';
 import { createEmptyMam3eConditionTrack } from './mam3eSheetShared';
 
 interface GetMam3eSheetStateProps {
   data: Mam3eDataModel;
-  archetypes: CharacterClass[];
+  archetypes: Mam3eArchetype[];
   modifierCatalog: PowerModifier[];
 }
 

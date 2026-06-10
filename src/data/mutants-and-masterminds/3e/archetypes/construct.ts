@@ -8,9 +8,9 @@
  * License: OGL v1.0a
  */
 
-import { CharacterClass } from '../../../../types/character-options/classes';
+import { Mam3eArchetype } from '../../../../types/mam/archetypes';
 
-export const constructArchetype: CharacterClass = {
+export const constructArchetype: Mam3eArchetype = {
   id: 'mam3e-construct',
   name: 'Construct',
   system: 'mam3e',
@@ -22,19 +22,7 @@ export const constructArchetype: CharacterClass = {
     page: 1,
     url: 'https://www.d20herosrd.com/character-creation/archetypes/construct/',
   },
-  hitDie: 'd10',
-  primaryAbility: ['str', 'con'],
-  savingThrowProficiencies: ['str', 'con'],
-  armorProficiencies: [],
-  weaponProficiencies: [],
-  toolProficiencies: [],
-  skillProficiencies: {
-    count: 2,
-    options: ['athletics', 'intimidation'],
-    label: 'Choose class skills',
-  },
-  equipmentChoices: [],
-  startingGold: { dice: '1d6', multiplier: 100 },
+  suggestedSkills: ['athletics', 'intimidation'],
   features: [
     {
       level: 1,
@@ -54,7 +42,5 @@ export const constructArchetype: CharacterClass = {
       ],
     },
   ],
-  subclassLevel: 1,
-  subclasses: [],
   description: 'An artificial being, robot, or golem with superhuman abilities.',
 };

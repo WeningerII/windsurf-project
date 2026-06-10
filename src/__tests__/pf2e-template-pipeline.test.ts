@@ -30,16 +30,17 @@ describe('PF2e template pipeline', () => {
   const engine = new Pf2eEngine();
 
   it('prepares a wizard plus elf acolyte with correct derived stats', () => {
-    const highElf = elf.subraces?.find((heritage) => heritage.id === 'high-elf');
+    // CRB heritage (no ability boosts — heritages never grant them).
+    const cavernElf = elf.subraces?.find((heritage) => heritage.id === 'cavern');
     const acolyte = pf2eBackgrounds.find((background) => background.id === 'pf2e-bg-acolyte');
 
-    if (!highElf || !acolyte) {
+    if (!cavernElf || !acolyte) {
       throw new Error('Expected test content to exist.');
     }
 
     const baseDoc = makeDoc();
     const templated = applyPf2eBackgroundTemplate(
-      applyPf2eAncestryTemplate(applyPf2eClassTemplate(baseDoc, wizard, 4), elf, highElf),
+      applyPf2eAncestryTemplate(applyPf2eClassTemplate(baseDoc, wizard, 4), elf, cavernElf),
       acolyte
     );
     const prepared = engine.prepareData(templated);

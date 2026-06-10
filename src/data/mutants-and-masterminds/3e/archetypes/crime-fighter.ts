@@ -8,9 +8,9 @@
  * License: OGL v1.0a
  */
 
-import { CharacterClass } from '../../../../types/character-options/classes';
+import { Mam3eArchetype } from '../../../../types/mam/archetypes';
 
-export const crimeFighterArchetype: CharacterClass = {
+export const crimeFighterArchetype: Mam3eArchetype = {
   id: 'mam3e-crime-fighter',
   name: 'Crime Fighter',
   system: 'mam3e',
@@ -22,19 +22,7 @@ export const crimeFighterArchetype: CharacterClass = {
     page: 1,
     url: 'https://www.d20herosrd.com/character-creation/archetypes/crime-fighter/',
   },
-  hitDie: 'd8',
-  primaryAbility: ['dex', 'int'],
-  savingThrowProficiencies: ['dex', 'int'],
-  armorProficiencies: [],
-  weaponProficiencies: [],
-  toolProficiencies: [],
-  skillProficiencies: {
-    count: 4,
-    options: ['investigation', 'stealth', 'athletics', 'intimidation'],
-    label: 'Choose class skills',
-  },
-  equipmentChoices: [],
-  startingGold: { dice: '1d6', multiplier: 100 },
+  suggestedSkills: ['investigation', 'stealth', 'athletics', 'intimidation'],
   features: [
     {
       level: 1,
@@ -54,7 +42,5 @@ export const crimeFighterArchetype: CharacterClass = {
       ],
     },
   ],
-  subclassLevel: 1,
-  subclasses: [],
   description: 'A non-powered vigilante who fights crime through skill, training, and gadgets.',
 };

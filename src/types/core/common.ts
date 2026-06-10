@@ -1,3 +1,26 @@
+/**
+ * Entity-id conventions (review L-5).
+ *
+ * Ids are bare strings with NO branding, and the same id may legitimately
+ * recur across systems ('club', 'cleric') — safe ONLY because every catalog
+ * and store is per-system. Code must never mix ids from different systems in
+ * one keyed collection without namespacing.
+ *
+ * Per-system suffix/prefix conventions in the data:
+ *   - 5e 2014: bare kebab ids ('fire-bolt'); 2024 entries suffix '-2024'
+ *     ('mind-flayer-2024').
+ *   - 3.5e: suffix '-35e', often with the class variant for legacy split
+ *     entries ('bane-cleric-35e'); the spell catalog merges those splits and
+ *     aliases old ids to canonical ones (see data/dnd/3.5e/spells/index.ts).
+ *   - PF1e / PF2e: bare kebab ids; PF2e archetypes prefix 'pf2e-'.
+ *   - M&M 3e: prefix 'mam3e-' for archetypes; powers/advantages bare kebab.
+ *   - Daggerheart: prefix 'daggerheart-' for generated entities
+ *     ('daggerheart-weapon-primary-…').
+ *
+ * New data MUST follow its system's existing convention; cross-system
+ * consumers key by (systemId, id), never by id alone.
+ */
+
 // Common types used across the application
 
 export type DiceType = 'd1' | 'd4' | 'd6' | 'd8' | 'd10' | 'd12' | 'd20' | 'd100';

@@ -8,9 +8,9 @@
  * License: OGL v1.0a
  */
 
-import { CharacterClass } from '../../../../types/character-options/classes';
+import { Mam3eArchetype } from '../../../../types/mam/archetypes';
 
-export const mimicArchetype: CharacterClass = {
+export const mimicArchetype: Mam3eArchetype = {
   id: 'mam3e-mimic',
   name: 'Mimic',
   system: 'mam3e',
@@ -22,19 +22,7 @@ export const mimicArchetype: CharacterClass = {
     page: 1,
     url: 'https://www.d20herosrd.com/character-creation/archetypes/mimic/',
   },
-  hitDie: 'd8',
-  primaryAbility: ['int', 'cha'],
-  savingThrowProficiencies: ['wis', 'dex'],
-  armorProficiencies: [],
-  weaponProficiencies: [],
-  toolProficiencies: [],
-  skillProficiencies: {
-    count: 3,
-    options: ['deception', 'performance', 'insight'],
-    label: 'Choose class skills',
-  },
-  equipmentChoices: [],
-  startingGold: { dice: '1d6', multiplier: 100 },
+  suggestedSkills: ['deception', 'performance', 'insight'],
   features: [
     {
       level: 1,
@@ -54,7 +42,5 @@ export const mimicArchetype: CharacterClass = {
       ],
     },
   ],
-  subclassLevel: 1,
-  subclasses: [],
   description: 'A shapeshifter who can mimic the powers and appearance of others.',
 };

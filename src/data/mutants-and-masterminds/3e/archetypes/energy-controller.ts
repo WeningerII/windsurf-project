@@ -8,9 +8,9 @@
  * License: OGL v1.0a
  */
 
-import { CharacterClass } from '../../../../types/character-options/classes';
+import { Mam3eArchetype } from '../../../../types/mam/archetypes';
 
-export const energyControllerArchetype: CharacterClass = {
+export const energyControllerArchetype: Mam3eArchetype = {
   id: 'mam3e-energy-controller',
   name: 'Energy Controller',
   system: 'mam3e',
@@ -22,19 +22,7 @@ export const energyControllerArchetype: CharacterClass = {
     page: 1,
     url: 'https://www.d20herosrd.com/character-creation/archetypes/energy-controller/',
   },
-  hitDie: 'd8',
-  primaryAbility: ['int', 'con'],
-  savingThrowProficiencies: ['dex', 'con'],
-  armorProficiencies: [],
-  weaponProficiencies: [],
-  toolProficiencies: [],
-  skillProficiencies: {
-    count: 2,
-    options: ['science', 'perception'],
-    label: 'Choose class skills',
-  },
-  equipmentChoices: [],
-  startingGold: { dice: '1d6', multiplier: 100 },
+  suggestedSkills: ['science', 'perception'],
   features: [
     {
       level: 1,
@@ -54,7 +42,5 @@ export const energyControllerArchetype: CharacterClass = {
       ],
     },
   ],
-  subclassLevel: 1,
-  subclasses: [],
   description: 'A hero who commands and manipulates various forms of energy.',
 };

@@ -36,40 +36,53 @@ export const gnome: Species = {
     },
   ],
 
+  // CRB heritages. PF2e heritages never grant ability boosts (those come from
+  // the ancestry itself) — each grants the feature in its description, so
+  // abilityScoreIncrease is truthfully empty on every entry.
   subraces: [
     {
-      id: 'forest-gnome',
-      name: 'Forest Gnome Heritage',
+      id: 'chameleon',
+      name: 'Chameleon Gnome',
       parentSpeciesId: 'gnome',
-      abilityScoreIncrease: [{ type: 'fixed', attributes: { dex: 2 } }],
+      abilityScoreIncrease: [],
       traits: [],
       description:
-        'You gain a +1 status bonus to Survival checks in forests and can speak with animals.',
-    },
-    {
-      id: 'rock-gnome',
-      name: 'Rock Gnome Heritage',
-      parentSpeciesId: 'gnome',
-      abilityScoreIncrease: [{ type: 'fixed', attributes: { con: 2 } }],
-      traits: [],
-      description:
-        'You gain a +1 status bonus to Crafting checks and can use Crafting to create mechanical devices.',
-    },
-    {
-      id: 'tinker-gnome',
-      name: 'Tinker Gnome Heritage',
-      parentSpeciesId: 'gnome',
-      abilityScoreIncrease: [{ type: 'fixed', attributes: { int: 2 } }],
-      traits: [],
-      description: 'You gain a +1 status bonus to Arcana checks and can identify magical items.',
+        'You can slowly shift the hue of your skin and hair; when they match your surroundings you gain a +2 circumstance bonus to Stealth checks.',
     },
     {
       id: 'fey-touched',
-      name: 'Fey-Touched Heritage',
+      name: 'Fey-Touched Gnome',
       parentSpeciesId: 'gnome',
-      abilityScoreIncrease: [{ type: 'fixed', attributes: { cha: 2 } }],
+      abilityScoreIncrease: [],
       traits: [],
-      description: 'You gain a +1 status bonus to Occultism checks and can cast one fey spell.',
+      description:
+        'You gain the fey trait, and you can cast one chosen primal cantrip as an innate spell at will, changeable with a day of meditation.',
+    },
+    {
+      id: 'sensate',
+      name: 'Sensate Gnome',
+      parentSpeciesId: 'gnome',
+      abilityScoreIncrease: [],
+      traits: [],
+      description:
+        'You gain a special sense: imprecise scent with a range of 30 feet, and a +2 circumstance bonus to Perception checks to locate an undetected creature you could smell.',
+    },
+    {
+      id: 'umbral',
+      name: 'Umbral Gnome',
+      parentSpeciesId: 'gnome',
+      abilityScoreIncrease: [],
+      traits: [],
+      description: 'You gain darkvision.',
+    },
+    {
+      id: 'wellspring',
+      name: 'Wellspring Gnome',
+      parentSpeciesId: 'gnome',
+      abilityScoreIncrease: [],
+      traits: [],
+      description:
+        'You can cast one chosen cantrip from the arcane, divine, or occult list as an innate spell of that tradition at will.',
     },
   ],
 

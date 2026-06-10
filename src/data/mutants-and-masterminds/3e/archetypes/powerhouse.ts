@@ -8,9 +8,9 @@
  * License: OGL v1.0a
  */
 
-import { CharacterClass } from '../../../../types/character-options/classes';
+import { Mam3eArchetype } from '../../../../types/mam/archetypes';
 
-export const powerhouseArchetype: CharacterClass = {
+export const powerhouseArchetype: Mam3eArchetype = {
   id: 'mam3e-powerhouse',
   name: 'Powerhouse',
   system: 'mam3e',
@@ -22,19 +22,7 @@ export const powerhouseArchetype: CharacterClass = {
     page: 1,
     url: 'https://www.d20herosrd.com/character-creation/archetypes/powerhouse/',
   },
-  hitDie: 'd12',
-  primaryAbility: ['str', 'con'],
-  savingThrowProficiencies: ['str', 'con'],
-  armorProficiencies: [],
-  weaponProficiencies: [],
-  toolProficiencies: [],
-  skillProficiencies: {
-    count: 2,
-    options: ['athletics', 'intimidation'],
-    label: 'Choose class skills',
-  },
-  equipmentChoices: [],
-  startingGold: { dice: '1d6', multiplier: 100 },
+  suggestedSkills: ['athletics', 'intimidation'],
   features: [
     {
       level: 1,
@@ -54,7 +42,5 @@ export const powerhouseArchetype: CharacterClass = {
       ],
     },
   ],
-  subclassLevel: 1,
-  subclasses: [],
   description: 'A hero with incredible strength and durability, the ultimate physical combatant.',
 };

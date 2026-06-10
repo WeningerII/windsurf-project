@@ -8,9 +8,9 @@
  * License: OGL v1.0a
  */
 
-import { CharacterClass } from '../../../../types/character-options/classes';
+import { Mam3eArchetype } from '../../../../types/mam/archetypes';
 
-export const shapeshifterArchetype: CharacterClass = {
+export const shapeshifterArchetype: Mam3eArchetype = {
   id: 'mam3e-shapeshifter',
   name: 'Shapeshifter',
   system: 'mam3e',
@@ -22,19 +22,7 @@ export const shapeshifterArchetype: CharacterClass = {
     page: 1,
     url: 'https://www.d20herosrd.com/character-creation/archetypes/shapeshifter/',
   },
-  hitDie: 'd8',
-  primaryAbility: ['dex', 'cha'],
-  savingThrowProficiencies: ['dex', 'con'],
-  armorProficiencies: [],
-  weaponProficiencies: [],
-  toolProficiencies: [],
-  skillProficiencies: {
-    count: 3,
-    options: ['acrobatics', 'deception', 'stealth'],
-    label: 'Choose class skills',
-  },
-  equipmentChoices: [],
-  startingGold: { dice: '1d6', multiplier: 100 },
+  suggestedSkills: ['acrobatics', 'deception', 'stealth'],
   features: [
     {
       level: 1,
@@ -54,7 +42,5 @@ export const shapeshifterArchetype: CharacterClass = {
       ],
     },
   ],
-  subclassLevel: 1,
-  subclasses: [],
   description: 'A master of transformation. Shapeshifters change form to suit any situation.',
 };
