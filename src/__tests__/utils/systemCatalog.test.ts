@@ -290,7 +290,9 @@ describe('systemCatalog', () => {
     expect(summary.supportLevel).toBe('full');
     expect(summary.totalReachableCount).toBe(16);
     expect(summary.categories).toEqual([
-      { id: 'spells', label: 'Powers', count: 3, reachability: 'product' },
+      // M&M powers report under their own category id, not 'spells' (the
+      // label was already 'Powers'; the id now matches the semantics).
+      { id: 'powers', label: 'Powers', count: 3, reachability: 'product' },
       { id: 'archetypes', label: 'Archetypes', count: 1, reachability: 'product' },
       { id: 'complications', label: 'Complications', count: 4, reachability: 'product' },
       { id: 'equipment', label: 'Equipment', count: 1, reachability: 'product' },

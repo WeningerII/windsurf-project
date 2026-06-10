@@ -53,6 +53,35 @@ function issue(source: string, code: string, message: string, path?: string): Va
 }
 
 /**
+ * Allowlist the `img` field of an untrusted document: only `https:` URLs and
+ * `data:image/*` payloads are kept. Everything else — `javascript:`,
+ * `vbscript:`, `http:`, `blob:`, `file:`, relative paths, unparseable
+ * strings — is dropped (the field, not the document): the value is rendered
+ * as an `<img src>`, so a hostile import/synced row must not be able to point
+ * it at an attacker-chosen scheme or trigger plaintext beacon requests.
+ * Uses the URL parser (mirroring browser behavior, e.g. tab/newline stripping
+ * inside schemes) rather than a substring check.
+ */
+function sanitizeImgUrl(value: unknown): string | undefined {
+  if (typeof value !== 'string' || value.trim().length === 0) {
+    return undefined;
+  }
+  let parsed: URL;
+  try {
+    parsed = new URL(value.trim());
+  } catch {
+    return undefined;
+  }
+  if (parsed.protocol === 'https:') {
+    return value;
+  }
+  if (parsed.protocol === 'data:' && parsed.pathname.toLowerCase().startsWith('image/')) {
+    return value;
+  }
+  return undefined;
+}
+
+/**
  * Validate the universal `CharacterDocument` envelope from untrusted input.
  * Timestamps are coerced leniently (missing/invalid -> `now`) because import
  * and sync paths re-stamp them; an unusable timestamp is not a reason to drop
@@ -94,6 +123,7 @@ export function parseCharacterDocument(
     return { ok: false, issues };
   }
 
+  const img = sanitizeImgUrl(value.img);
   const document: CharacterDocument<SystemDataModel> = {
     id: value.id as string,
     name: value.name as string,
@@ -101,7 +131,7 @@ export function parseCharacterDocument(
     system: value.system as SystemDataModel,
     createdAt: coerceDate(value.createdAt, now),
     updatedAt: coerceDate(value.updatedAt, now),
-    ...(typeof value.img === 'string' ? { img: value.img } : {}),
+    ...(img !== undefined ? { img } : {}),
     ...(typeof value.version === 'number' ? { version: value.version } : {}),
   };
 

@@ -212,12 +212,18 @@ export const mam3eComputeRegister: SystemComputeRegister = {
       layer: 'L9',
       quantity: 'Power cost formula',
       formula:
-        'costPerRank × rank + flatCost, where costPerRank = base + Σ(modifier.costPerRank × modRank)',
+        'costPerRank × rank + flatCost, where costPerRank = base + Σ(modifier.costPerRank × modRank); minimum-cost rule: when costPerRank < 1, per-rank cost = ceil(rank / (2 − costPerRank)) — 1 point per 2 ranks, then per 3, …',
       inputs: ['power baseCost', 'rank', 'extras', 'flaws', 'modifierRanks'],
-      edgeCases: ['per-rank vs flat', 'rank floors at 1', 'clamped ≥ 0'],
-      source: `${HH}: Powers — Power Cost`,
+      edgeCases: [
+        'per-rank vs flat',
+        'rank floors at 1',
+        'clamped ≥ 0',
+        'costPerRank < 1 → 1 point per (2 − costPerRank) ranks, rounded up',
+      ],
+      source: `${HH}: Powers — Power Cost; Modifiers (minimum cost)`,
       status: 'verified',
       testRef: `${T} :: L9 calculatePowerPointCost`,
+      note: 'Minimum-cost rule covered by "H2 minimum-cost rule for heavily flawed powers" in the same suite; no flawed power with rank > 0 costs 0 points.',
     },
     {
       id: 'mam3e.L9.pl-cap-dodge-toughness',

@@ -3,6 +3,8 @@ import { compute5eSpellSlots, computePactMagicSlots } from '../../utils/spellSlo
 // The class data tables are the source of truth the engine math must
 // reproduce (SRD class tables); consume them directly in the cross-checks.
 import { paladin as paladin2014 } from '../../data/dnd/5e-2014/classes/paladin';
+import { ranger as ranger2014 } from '../../data/dnd/5e-2014/classes/ranger';
+import { warlock as warlock2014 } from '../../data/dnd/5e-2014/classes/warlock';
 import { paladin as paladin2024 } from '../../data/dnd/5e-2024/classes/paladin';
 import { ranger as ranger2024 } from '../../data/dnd/5e-2024/classes/ranger';
 
@@ -68,6 +70,35 @@ describe('compute5eSpellSlots', () => {
         );
       }
     }
+  });
+
+  // PHB/SRD 5.1 Ranger table (shared half-caster progression with Paladin):
+  // 2nd-level slots begin at level 5, 3rd at 9, 4th at 13, 5th at 17.
+  it('matches the 2014 Ranger class table at every level', () => {
+    const table = ranger2014.spellcasting!.spellSlots;
+    for (let level = 1; level <= 20; level += 1) {
+      const slots = compute5eSpellSlots([{ classId: 'ranger', level }]);
+      for (let slotLevel = 1; slotLevel <= 5; slotLevel += 1) {
+        const key = slotLevel as 1 | 2 | 3 | 4 | 5;
+        expect(slots[key].max, `ranger ${level}, slot level ${slotLevel}`).toBe(
+          table[key][level - 1]
+        );
+      }
+    }
+  });
+
+  // PHB Ranger 5: 4 first-level and 2 second-level slots (the tier the bad
+  // data started at level 4) — pinned explicitly, not just via the table loop.
+  it('2014 Ranger 5 has 4 first-level and 2 second-level slots', () => {
+    const ranger5 = compute5eSpellSlots([{ classId: 'ranger', level: 5 }]);
+    expect(ranger5[1].max).toBe(4);
+    expect(ranger5[2].max).toBe(2);
+    expect(ranger5[3].max).toBe(0);
+
+    // No 2nd-level slots yet at level 4 (3 first-level only).
+    const ranger4 = compute5eSpellSlots([{ classId: 'ranger', level: 4 }]);
+    expect(ranger4[1].max).toBe(3);
+    expect(ranger4[2].max).toBe(0);
   });
 
   // SRD 5.2 multiclass rule rounds half-caster levels UP, and Paladin/Ranger
@@ -192,6 +223,22 @@ describe('computePactMagicSlots', () => {
 
   it('caps the slot level at 5 (levels 6-9 spells are Mystic Arcanum)', () => {
     expect(computePactMagicSlots(20)).toEqual({ level: 5, max: 4, used: 0 });
+  });
+
+  // The 2014 Warlock class-data table must agree with the pact-magic engine
+  // math at every level: the slot count sits at the row for the current pact
+  // slot level (2 → 3 slots at level 11, 3 → 4 at level 17 per the SRD), and
+  // every other slot-level row is 0 (Pact Magic has a single slot tier).
+  it('matches the 2014 Warlock class-data pact table at every level', () => {
+    const table = warlock2014.spellcasting!.spellSlots;
+    for (let level = 1; level <= 20; level += 1) {
+      const pact = computePactMagicSlots(level)!;
+      for (let slotLevel = 1; slotLevel <= 9; slotLevel += 1) {
+        const key = slotLevel as keyof typeof table;
+        const expected = slotLevel === pact.level ? pact.max : 0;
+        expect(table[key][level - 1], `warlock ${level}, slot level ${slotLevel}`).toBe(expected);
+      }
+    }
   });
 
   it('returns undefined without warlock levels', () => {

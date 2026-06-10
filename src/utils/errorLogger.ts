@@ -64,18 +64,31 @@ class ErrorLogger {
       this.logs.shift();
     }
 
-    // Console output based on severity (suppress LOW in production)
+    // Console output based on severity (suppress LOW in production).
+    // Outside DEV, log only the category and message: the raw `error` and
+    // `context` objects can carry user content (documents, names, notes)
+    // that must not be emitted to the production console.
+    const isDev = import.meta.env.DEV;
     if (severity === ErrorSeverity.CRITICAL || severity === ErrorSeverity.HIGH) {
-      console.error(`[${category}] ${message}`, error, context);
+      if (isDev) {
+        console.error(`[${category}] ${message}`, error, context);
+      } else {
+        console.error(`[${category}] ${message}`);
+      }
     } else if (severity === ErrorSeverity.MEDIUM) {
-      console.warn(`[${category}] ${message}`, context);
-    } else if (import.meta.env.DEV) {
+      if (isDev) {
+        console.warn(`[${category}] ${message}`, context);
+      } else {
+        console.warn(`[${category}] ${message}`);
+      }
+    } else if (isDev) {
       // eslint-disable-next-line no-console -- Intentional low-severity dev-only trace; gated on import.meta.env.DEV and tree-shaken from production builds.
       console.log(`[${category}] ${message}`, context);
     }
 
-    // In production, could send to analytics service
-    if (severity === ErrorSeverity.CRITICAL) {
+    // HIGH and CRITICAL both reach production monitoring: HIGH failures
+    // (data loads, sync) were previously invisible outside the console.
+    if (severity === ErrorSeverity.CRITICAL || severity === ErrorSeverity.HIGH) {
       this.sendToMonitoring(errorLog);
     }
   }
@@ -92,7 +105,13 @@ class ErrorLogger {
       return;
     }
 
-    // Fallback when Sentry is not configured (dev / CI)
+    // Fallback when Sentry is not configured (dev / CI) — reserved for
+    // CRITICAL so the diagnostic bucket keeps its meaning now that HIGH is
+    // also routed through monitoring.
+    if (errorLog.severity !== ErrorSeverity.CRITICAL) {
+      return;
+    }
+
     try {
       if (typeof window !== 'undefined' && 'localStorage' in window) {
         const criticalErrors = JSON.parse(localStorage.getItem('critical-errors') || '[]');

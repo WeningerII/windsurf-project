@@ -68,6 +68,47 @@ describe('parseCharacterDocument', () => {
       ])
     );
   });
+
+  // `img` is rendered as <img src>; only https: and data:image/* survive the
+  // boundary. A disallowed value drops the field, never the document.
+  describe('img allowlist', () => {
+    function parseImg(img: unknown) {
+      const result = parseCharacterDocument(validDocInput({ img }), NOW);
+      expect(result.ok).toBe(true);
+      return result.ok ? result.value : undefined;
+    }
+
+    it.each([
+      ['https URL', 'https://example.com/portrait.png'],
+      ['data:image/png payload', 'data:image/png;base64,iVBORw0KGgo='],
+      ['data:image/svg+xml payload', 'data:image/svg+xml,%3Csvg%3E%3C/svg%3E'],
+      ['uppercase scheme variant', 'HTTPS://example.com/p.png'],
+    ])('keeps %s', (_label, img) => {
+      expect(parseImg(img)?.img).toBe(img);
+    });
+
+    it.each([
+      ['javascript: URL', 'javascript:alert(1)'],
+      ['javascript: with embedded tab', 'java\tscript:alert(1)'],
+      ['vbscript: URL', 'vbscript:msgbox(1)'],
+      ['plaintext http: URL', 'http://attacker.example/beacon.png'],
+      ['non-image data: payload', 'data:text/html,<script>alert(1)</script>'],
+      ['file: URL', 'file:///etc/passwd'],
+      ['relative path', 'portraits/hero.png'],
+      ['unparseable garbage', '%%%not a url%%%'],
+    ])('drops the field for %s but keeps the document', (_label, img) => {
+      const doc = parseImg(img);
+      expect(doc).toBeDefined();
+      expect(doc?.id).toBe('doc-1');
+      expect(doc?.img).toBeUndefined();
+      expect(doc && 'img' in doc).toBe(false);
+    });
+
+    it('omits img when absent or not a string', () => {
+      expect(parseImg(undefined)?.img).toBeUndefined();
+      expect(parseImg(42)?.img).toBeUndefined();
+    });
+  });
 });
 
 describe('importDocuments boundary parsing', () => {

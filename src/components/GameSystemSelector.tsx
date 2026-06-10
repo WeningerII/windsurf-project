@@ -1,11 +1,8 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { GameSystemId } from '../types/game-systems';
-import type {
-  SystemCatalogSummary,
-  SystemContentCategoryId,
-  SystemSupportLevel,
-} from '../types/system-catalog';
+import type { SystemCatalogSummary, SystemContentCategoryId } from '../types/system-catalog';
 import { systemRegistry } from '../registry';
+import { supportBadgeLabels, supportBadgeStyles } from './shared/supportBadges';
 import {
   BookOpen,
   Shield,
@@ -67,6 +64,7 @@ const systemAccents: Record<GameSystemId, { icon: ReactNode; gradient: string; a
 
 const categoryIcons: Record<SystemContentCategoryId, ReactNode> = {
   spells: <BookOpen className="w-3.5 h-3.5 shrink-0" />,
+  powers: <Sparkles className="w-3.5 h-3.5 shrink-0" />,
   classes: <Shield className="w-3.5 h-3.5 shrink-0" />,
   domains: <Sparkles className="w-3.5 h-3.5 shrink-0" />,
   domainCards: <Scroll className="w-3.5 h-3.5 shrink-0" />,
@@ -81,18 +79,6 @@ const categoryIcons: Record<SystemContentCategoryId, ReactNode> = {
   feats: <Star className="w-3.5 h-3.5 shrink-0" />,
   advantages: <Sparkles className="w-3.5 h-3.5 shrink-0" />,
   powerModifiers: <Wand2 className="w-3.5 h-3.5 shrink-0" />,
-};
-
-const supportBadgeStyles: Record<SystemSupportLevel, string> = {
-  full: 'bg-emerald-500/10 text-emerald-700 border border-emerald-500/20',
-  partial: 'bg-amber-500/10 text-amber-700 border border-amber-500/20',
-  scaffold: 'bg-slate-500/10 text-slate-700 border border-slate-500/20',
-};
-
-const supportBadgeLabels: Record<SystemSupportLevel, string> = {
-  full: 'Full',
-  partial: 'Partial',
-  scaffold: 'Scaffold',
 };
 
 export function GameSystemSelector({ selectedSystem, onSelect }: GameSystemSelectorProps) {

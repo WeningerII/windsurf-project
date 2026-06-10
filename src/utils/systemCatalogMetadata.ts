@@ -210,7 +210,7 @@ async function loadSystemCatalogSummaryFromMetadataInternal(
 
       appendCategories(
         categories,
-        productCategory('spells', 'Powers', mm3eMetadata.stats.powers.count),
+        productCategory('powers', 'Powers', mm3eMetadata.stats.powers.count),
         productCategory('archetypes', 'Archetypes', mm3eMetadata.stats.archetypes.count),
         productCategory('complications', 'Complications', mm3eMetadata.stats.complications.count),
         productCategory('advantages', 'Advantages', mm3eMetadata.stats.advantages.count),

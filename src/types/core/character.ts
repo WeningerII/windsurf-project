@@ -1,8 +1,9 @@
 /**
  * Core character data types
  *
- * Defines the unified Character interface that works across all game systems.
- * Supports D&D editions, Pathfinder, and Mutants & Masterminds 3e.
+ * The `Character` interface below is a legacy model (see its deprecation
+ * note); the sub-types in this module (`Feature`, `Feat`, `SpellSlots`,
+ * `EquippedItem`, …) remain the shared, actively-used building blocks.
  *
  * @module types/core/character
  */
@@ -11,22 +12,12 @@ import type { GameSystemId } from '../game-systems';
 import { BonusType, Modifier } from './common';
 
 /**
- * Character - Single source of truth for all character data
- *
- * Unified character model supporting multiple game systems with flexible
- * structure for system-specific features. Uses classLevels array for multiclassing.
- *
- * @example
- * ```typescript
- * const character: Character = {
- *   id: generateUUID(),
- *   name: 'Gandalf',
- *   system: 'dnd-5e-2014',
- *   level: 20,
- *   classLevels: [{ classId: 'wizard', level: 20, hitDieRolls: [...] }],
- *   // ... other required fields
- * };
- * ```
+ * @deprecated Legacy model — real persistence flows through
+ * `CharacterDocument<SystemDataModel>` (`types/core/document.ts`) plus the
+ * per-system data models (`src/systems/<system>/data-model.ts`); do not
+ * extend. This interface is kept only because code throughout the app shares
+ * its sub-types (`Feature`, `Feat`, `SpellSlots`, `EquippedItem`, …); it is
+ * not the source of truth for any persisted character.
  */
 export interface Character {
   // Identity
