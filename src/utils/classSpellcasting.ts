@@ -5,6 +5,9 @@ export function getSpellSlotsAtClassLevel(
   classLevel: number
 ): Record<number, number> {
   if (!table) return {};
+  // Level 0 (or negative) grants no slots; without this guard the clamp below
+  // would hand a level-0 row the level-1 column.
+  if (classLevel < 1) return {};
 
   const index = Math.max(0, Math.min(19, classLevel - 1));
   const slots: Record<number, number> = {};

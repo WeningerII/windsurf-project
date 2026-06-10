@@ -3,6 +3,7 @@ import { renderHook, act, waitFor } from '@testing-library/react';
 import { useCampaigns } from '../../hooks/useCampaigns';
 import * as campaignStorage from '../../utils/campaignStorage';
 import type { Campaign } from '../../types/core/campaign';
+import { DEFAULT_PERSISTENCE_DEBOUNCE_MS } from '../../hooks/useDebouncedPersistence';
 
 function makeCampaign(overrides: Partial<Campaign> = {}): Campaign {
   return {
@@ -115,7 +116,7 @@ describe('useCampaigns', () => {
     });
     expect(result.current.campaigns).toHaveLength(0);
     await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 350));
+      await new Promise((resolve) => setTimeout(resolve, DEFAULT_PERSISTENCE_DEBOUNCE_MS + 50));
     });
     expect(localStorage.getItem('rpg-campaigns-v1')).toBeNull();
   });

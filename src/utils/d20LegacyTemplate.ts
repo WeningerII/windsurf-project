@@ -315,14 +315,22 @@ function defaultClassProfile(
 function create35eClassLevel(
   classData: CharacterClass,
   level: number,
-  existing?: Dnd35eClassLevel
+  existing?: Dnd35eClassLevel,
+  isFirstClassRow = true
 ): Dnd35eClassLevel {
   const profile = defaultClassProfile('dnd-3.5e', classData.id);
 
   return {
     classId: classData.id,
     level,
-    hitDieRolls: seedHitDieRolls(existing?.hitDieRolls || [], classData.hitDie, level),
+    // 3.5e PHB: max hit die only at character level 1 — not for classes
+    // (including prestige classes) entered later.
+    hitDieRolls: seedHitDieRolls(
+      existing?.hitDieRolls || [],
+      classData.hitDie,
+      level,
+      isFirstClassRow
+    ),
     spellcastingSelections: existing?.spellcastingSelections,
     bab: profile.bab,
     fortSave: profile.fortSave,
@@ -343,7 +351,13 @@ function createPf1eClassLevel(
   return {
     classId: classData.id,
     level,
-    hitDieRolls: seedHitDieRolls(existing?.hitDieRolls || [], classData.hitDie, level),
+    // PF1e CRB: max hit die only at character level 1, same as 3.5e.
+    hitDieRolls: seedHitDieRolls(
+      existing?.hitDieRolls || [],
+      classData.hitDie,
+      level,
+      isFirstClassRow
+    ),
     spellcastingSelections: existing?.spellcastingSelections,
     bab: profile.bab,
     fortSave: profile.fortSave,
@@ -374,7 +388,12 @@ function createD20ClassLevel(
     );
   }
 
-  return create35eClassLevel(classData, level, existing as Dnd35eClassLevel | undefined);
+  return create35eClassLevel(
+    classData,
+    level,
+    existing as Dnd35eClassLevel | undefined,
+    isFirstClassRow
+  );
 }
 
 function syncClassState<T extends D20LegacyDataModel>(

@@ -31,9 +31,16 @@ export function averageHitDieRoll(hitDie: string): number {
 
 /**
  * Seed hit-die rolls for `level` levels: preserve any existing positive roll,
- * otherwise take max at level 1 and the SRD average per level afterward.
+ * otherwise seed the SRD average — except index 0 of the character's FIRST
+ * class row, which takes the maximum (PHB/SRD grant max HP only at character
+ * level 1; a class added later starts on the average like any other level).
  */
-export function seedHitDieRolls(existingRolls: number[], hitDie: string, level: number): number[] {
+export function seedHitDieRolls(
+  existingRolls: number[],
+  hitDie: string,
+  level: number,
+  maxFirstLevel = true
+): number[] {
   const maxAtLevelOne = hitDieFaces(hitDie);
   const averagePerLevel = averageHitDieRoll(hitDie);
   const rolls: number[] = [];
@@ -45,7 +52,7 @@ export function seedHitDieRolls(existingRolls: number[], hitDie: string, level: 
       continue;
     }
 
-    rolls.push(index === 0 ? maxAtLevelOne : averagePerLevel);
+    rolls.push(index === 0 && maxFirstLevel ? maxAtLevelOne : averagePerLevel);
   }
 
   return rolls;

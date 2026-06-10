@@ -106,7 +106,8 @@ export default defineConfig({
       threshold: 10240,
     }),
     visualizer({
-      filename: './dist/stats.html',
+      // Outside dist/ so the module-structure report is never deployed.
+      filename: './stats.html',
       open: false,
       gzipSize: true,
       brotliSize: true,

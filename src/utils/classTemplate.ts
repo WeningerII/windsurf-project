@@ -498,13 +498,21 @@ function createClassLevel(
   classData: CharacterClass,
   level: number,
   existing?: Dnd5eLikeDataModel['classLevels'][number],
-  selections?: Pick<Dnd5eClassTemplateOptions, 'skillSelections' | 'toolSelections'>
+  selections?: Pick<Dnd5eClassTemplateOptions, 'skillSelections' | 'toolSelections'>,
+  isFirstClassRow = true
 ): Dnd5eLikeDataModel['classLevels'][number] {
   return {
     classId: classData.id,
     subclassId: existing?.subclassId,
     level,
-    hitDieRolls: seedHitDieRolls(existing?.hitDieRolls || [], classData.hitDie, level),
+    // PHB: only the character's first level (first class row, index 0) takes
+    // the maximum hit die; a multiclass dip's first level seeds the average.
+    hitDieRolls: seedHitDieRolls(
+      existing?.hitDieRolls || [],
+      classData.hitDie,
+      level,
+      isFirstClassRow
+    ),
     skillSelections: [...(selections?.skillSelections ?? existing?.skillSelections ?? [])],
     toolSelections: [...(selections?.toolSelections ?? existing?.toolSelections ?? [])],
   };
@@ -708,7 +716,9 @@ export function applyDnd5eClassTemplate<T extends Dnd5eLikeDataModel>(
     if (existingClassIndex >= 0) {
       throw new Error(`${classData.name} is already present in this multiclass build`);
     }
-    nextClassLevels.push(createClassLevel(classData, level, undefined, options));
+    nextClassLevels.push(
+      createClassLevel(classData, level, undefined, options, nextClassLevels.length === 0)
+    );
   } else if (mode === 'replace') {
     if (targetClassIndex < 0) {
       throw new Error(`Cannot replace missing class entry "${targetClassId}"`);
@@ -719,18 +729,27 @@ export function applyDnd5eClassTemplate<T extends Dnd5eLikeDataModel>(
 
     const existingRow =
       classData.id === targetClassId ? nextClassLevels[targetClassIndex] : undefined;
-    nextClassLevels[targetClassIndex] = createClassLevel(classData, level, existingRow, options);
+    nextClassLevels[targetClassIndex] = createClassLevel(
+      classData,
+      level,
+      existingRow,
+      options,
+      targetClassIndex === 0
+    );
   } else if (existingClassIndex >= 0) {
     nextClassLevels[existingClassIndex] = createClassLevel(
       classData,
       level,
       nextClassLevels[existingClassIndex],
-      options
+      options,
+      existingClassIndex === 0
     );
   } else if (nextClassLevels.length === 1) {
-    nextClassLevels[0] = createClassLevel(classData, level, undefined, options);
+    nextClassLevels[0] = createClassLevel(classData, level, undefined, options, true);
   } else {
-    nextClassLevels.push(createClassLevel(classData, level, undefined, options));
+    nextClassLevels.push(
+      createClassLevel(classData, level, undefined, options, nextClassLevels.length === 0)
+    );
   }
 
   const totalLevel = nextClassLevels.reduce((total, classLevel) => total + classLevel.level, 0);

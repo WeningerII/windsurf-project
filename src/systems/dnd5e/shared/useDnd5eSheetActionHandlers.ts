@@ -98,11 +98,26 @@ export function useDnd5eSheetActionHandlers<T extends Dnd5eLikeDataModel>({
       if (current === 'none') next = 'proficient';
       else if (current === 'proficient') next = 'expertise';
 
+      // Preserve template provenance: class/species/background sources must
+      // survive a manual cycle, or their template removal can no longer find
+      // and cleanly revert the grant. 'manual' is merged in, never substituted.
+      const existingSources = system.skillProficiencies[skillId]?.source ?? [];
+      const templateSources = existingSources.filter((source) => source !== 'manual');
+
       const nextProficiencies = { ...system.skillProficiencies };
       if (next === 'none') {
-        delete nextProficiencies[skillId];
+        if (templateSources.length > 0) {
+          // Other sources still grant this skill — drop only the manual claim
+          // and keep the record at proficient for the template owners.
+          nextProficiencies[skillId] = { level: 'proficient', source: templateSources };
+        } else {
+          delete nextProficiencies[skillId];
+        }
       } else {
-        nextProficiencies[skillId] = { level: next, source: ['manual'] };
+        nextProficiencies[skillId] = {
+          level: next,
+          source: [...templateSources, 'manual'],
+        };
       }
 
       update({ skillProficiencies: nextProficiencies } as Partial<T>);

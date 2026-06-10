@@ -138,7 +138,9 @@ describe('D20 legacy template pipeline', () => {
 
     expect(prepared.system.level).toBe(5);
     expect(prepared.system.baseAttackBonus).toBe(3);
-    expect(prepared.system.hitPoints.max).toBe(26);
+    // Fighter 2 (10+6) + Wizard 3 (3+3+3 — the dip's first level seeds the d4
+    // AVERAGE; 3.5e PHB maxes only character level 1) = 25.
+    expect(prepared.system.hitPoints.max).toBe(25);
     expect(prepared.system.saves.fortitude.base).toBe(4);
     expect(prepared.system.saves.will.base).toBe(3);
     expect(prepared.system.classSkills).toEqual(

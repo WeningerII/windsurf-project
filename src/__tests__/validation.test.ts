@@ -60,3 +60,16 @@ describe('validation utilities', () => {
     expect(sanitizeInput('NoTags')).toBe('NoTags');
   });
 });
+
+describe('validateHitPoints finiteness and bounds', () => {
+  it('rejects NaN values instead of letting them validate', () => {
+    expect(() => validateHitPoints(Number.NaN, 10, 0)).toThrow(/finite/i);
+    expect(() => validateHitPoints(5, Number.NaN, 0)).toThrow(/finite/i);
+    expect(() => validateHitPoints(5, 10, Number.NaN)).toThrow(/finite/i);
+  });
+
+  it('rejects current HP above max HP', () => {
+    expect(() => validateHitPoints(11, 10, 0)).toThrow(/exceed max/i);
+    expect(() => validateHitPoints(10, 10, 0)).not.toThrow();
+  });
+});

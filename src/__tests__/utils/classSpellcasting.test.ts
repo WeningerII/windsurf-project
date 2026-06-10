@@ -69,3 +69,12 @@ describe('classSpellcasting helpers', () => {
     });
   });
 });
+
+describe('getSpellSlotsAtClassLevel level bounds', () => {
+  it('grants no slots at class level 0 or below instead of the level-1 column', () => {
+    const table = { 1: [2, 3, 4], 2: [0, 0, 2] };
+    expect(getSpellSlotsAtClassLevel(table, 0)).toEqual({});
+    expect(getSpellSlotsAtClassLevel(table, -3)).toEqual({});
+    expect(getSpellSlotsAtClassLevel(table, 1)).toEqual({ 1: 2, 2: 0 });
+  });
+});
