@@ -13,6 +13,7 @@ import { SystemSheetRenderer } from './components/SystemSheetRenderer';
 import { CharacterDocument, SystemDataModel } from './types/core/document';
 import { useDocuments } from './hooks/useDocuments';
 import { exportDocuments, importDocumentsWithReport } from './utils/documentStorage';
+import { CURRENT_DOCUMENT_VERSION } from './utils/documentMigrations';
 import { useKeyboardNavigation } from './hooks/useKeyboardNavigation';
 import { Skeleton } from './components/ui/Skeleton';
 import { ConfirmDialog } from './components/ui/ConfirmDialog';
@@ -251,6 +252,7 @@ function AppContent() {
       system: sysDef.createDefaultData(),
       createdAt: new Date(),
       updatedAt: new Date(),
+      version: CURRENT_DOCUMENT_VERSION,
     };
     addDocument(doc);
     setCurrentDocId(doc.id);
@@ -302,6 +304,7 @@ function AppContent() {
         system: cloneSystemData(doc.system),
         createdAt: new Date(),
         updatedAt: new Date(),
+        version: CURRENT_DOCUMENT_VERSION,
       };
       addDocument(clone);
       setCurrentDocId(clone.id);
