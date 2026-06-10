@@ -130,6 +130,12 @@ export interface HitPoints {
  * Tracks total and remaining hit dice per die type.
  */
 export interface HitDice {
+  /**
+   * Owning class id. Optional for backward compatibility with persisted
+   * documents written before pools were keyed by class; the engine matches
+   * by classId when present and only falls back to position for legacy rows.
+   */
+  classId?: string;
   die: string; // e.g., "d8"
   total: number;
   remaining: number;

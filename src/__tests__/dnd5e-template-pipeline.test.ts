@@ -33,7 +33,9 @@ describe('D&D 5e template pipeline', () => {
 
     expect(prepared.system.level).toBe(3);
     expect(prepared.system.hitPoints.max).toBe(28);
-    expect(prepared.system.hitDice).toEqual([{ die: 'd10', total: 3, remaining: 3 }]);
+    expect(prepared.system.hitDice).toEqual([
+      { classId: 'fighter', die: 'd10', total: 3, remaining: 3 },
+    ]);
     expect(prepared.system.armorClass).toBe(11);
     expect(prepared.system.savingThrowProficiencies).toEqual(['str', 'con']);
     expect(prepared.system.skillProficiencies.perception?.source).toContain('Elf');
@@ -46,7 +48,9 @@ describe('D&D 5e template pipeline', () => {
     );
     const prepared = engine.prepareData(templated);
 
-    expect(prepared.system.hitDice).toEqual([{ die: 'd6', total: 3, remaining: 3 }]);
+    expect(prepared.system.hitDice).toEqual([
+      { classId: 'wizard', die: 'd6', total: 3, remaining: 3 },
+    ]);
     expect(prepared.system.spellcasting?.classes).toEqual([
       { classId: 'wizard', ability: 'int', spellcastingLevel: 3 },
     ]);
@@ -74,8 +78,8 @@ describe('D&D 5e template pipeline', () => {
 
     expect(prepared.system.level).toBe(5);
     expect(prepared.system.hitDice).toEqual([
-      { die: 'd6', total: 3, remaining: 3 },
-      { die: 'd8', total: 2, remaining: 2 },
+      { classId: 'wizard', die: 'd6', total: 3, remaining: 3 },
+      { classId: 'cleric', die: 'd8', total: 2, remaining: 2 },
     ]);
     expect(prepared.system.spellcasting?.classes).toEqual([
       { classId: 'wizard', ability: 'int', spellcastingLevel: 3 },

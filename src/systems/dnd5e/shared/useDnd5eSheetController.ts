@@ -1,6 +1,8 @@
+import { useMemo } from 'react';
 import { systemRegistry } from '../../../registry';
 import type { CharacterDocument, SystemDataModel } from '../../../types/core/document';
 import type { GameSystemId } from '../../../types/game-systems';
+import { profBonus as engineProfBonus } from './engine';
 import { Dnd5e2024DataModel } from '../../dnd5e-2024/data-model';
 import { applyDnd5eLongRest, applyDnd5eShortRest } from '../../../utils/dnd5eRest';
 import { getEligibleDnd5eFeatureOptions } from '../../../utils/dnd5eFeatureOptions';
@@ -17,6 +19,8 @@ import { useDnd5eSheetActionHandlers } from './useDnd5eSheetActionHandlers';
 import { useDnd5eTemplateHandlers } from './useDnd5eTemplateHandlers';
 
 const EMPTY_WEAPON_MASTERIES: string[] = [];
+const EMPTY_FEATURE_OPTION_SELECTIONS: NonNullable<Dnd5eLikeDataModel['featureOptionSelections']> =
+  [];
 
 interface UseDnd5eSheetControllerProps<T extends Dnd5eLikeDataModel> {
   document: CharacterDocument<T>;
@@ -31,7 +35,7 @@ export function useDnd5eSheetController<T extends Dnd5eLikeDataModel>({
 }: UseDnd5eSheetControllerProps<T>) {
   const d = document.system;
   const systemId = document.systemId as GameSystemId;
-  const profBonus = Math.ceil(d.level / 4) + 1;
+  const profBonus = engineProfBonus(d.level);
   const canUpdate = Boolean(onUpdate);
   const showFeatBrowser = true;
   const showFeatureOptionBrowser = systemId === 'dnd-5e-2014';
@@ -79,38 +83,70 @@ export function useDnd5eSheetController<T extends Dnd5eLikeDataModel>({
     selectedBackground,
   });
 
-  const equippedNames = new Map(equipmentItems.map((item) => [item.id, item.name]));
-  const spellNames = new Map(spells.map((spell) => [spell.id, spell.name]));
-  const derivedAlwaysPreparedSpellSources = getDnd5eAlwaysPreparedSpellSources(
-    d.classLevels,
-    classes
+  // Catalog-sized derived structures are memoized: once the spell/equipment/
+  // feat catalogs are loaded (hundreds of entries), rebuilding these on every
+  // keystroke-driven re-render is measurable main-thread work.
+  const equippedNames = useMemo(
+    () => new Map(equipmentItems.map((item) => [item.id, item.name])),
+    [equipmentItems]
   );
-  const derivedAlwaysPreparedSpellIds = getDnd5eAlwaysPreparedSpellIds(d.classLevels, classes);
-  const alwaysPreparedSpellIds = new Set([
-    ...(d.spellcasting?.alwaysPreparedSpellIds ?? []),
-    ...derivedAlwaysPreparedSpellIds,
-  ]);
-  const preparedSpellIds = new Set(
-    (d.spellcasting?.spellsPrepared || []).filter((spellId) => !alwaysPreparedSpellIds.has(spellId))
+  const spellNames = useMemo(
+    () => new Map(spells.map((spell) => [spell.id, spell.name])),
+    [spells]
   );
-  const preparedCasterSummaries = getDnd5ePreparedCasterSummaries(
-    d.classLevels,
-    classes,
-    d.baseAttributes
+  const derivedAlwaysPreparedSpellSources = useMemo(
+    () => getDnd5eAlwaysPreparedSpellSources(d.classLevels, classes),
+    [d.classLevels, classes]
+  );
+  const derivedAlwaysPreparedSpellIds = useMemo(
+    () => getDnd5eAlwaysPreparedSpellIds(d.classLevels, classes),
+    [d.classLevels, classes]
+  );
+  const alwaysPreparedSpellIds = useMemo(
+    () =>
+      new Set([
+        ...(d.spellcasting?.alwaysPreparedSpellIds ?? []),
+        ...derivedAlwaysPreparedSpellIds,
+      ]),
+    [d.spellcasting?.alwaysPreparedSpellIds, derivedAlwaysPreparedSpellIds]
+  );
+  const preparedSpellIds = useMemo(
+    () =>
+      new Set(
+        (d.spellcasting?.spellsPrepared || []).filter(
+          (spellId) => !alwaysPreparedSpellIds.has(spellId)
+        )
+      ),
+    [d.spellcasting?.spellsPrepared, alwaysPreparedSpellIds]
+  );
+  const preparedCasterSummaries = useMemo(
+    () => getDnd5ePreparedCasterSummaries(d.classLevels, classes, d.baseAttributes),
+    [d.classLevels, classes, d.baseAttributes]
   );
   const singlePreparedCaster =
     preparedCasterSummaries.length === 1 ? preparedCasterSummaries[0] : undefined;
   const singlePreparedCasterLimit = singlePreparedCaster?.preparedLimit;
-  const featDefinitionsById = new Map(featDefs.map((feat) => [feat.id, feat]));
-  const featureOptionSelections = d.featureOptionSelections || [];
-  const featureOptionsBySelectionKey = new Map(
-    featureOptions.map((option) => [featureOptionSelectionKey(option), option])
+  const featDefinitionsById = useMemo(
+    () => new Map(featDefs.map((feat) => [feat.id, feat])),
+    [featDefs]
   );
-  const selectedFeatureOptions = featureOptionSelections.flatMap((selection) => {
-    const option = featureOptionsBySelectionKey.get(featureOptionSelectionKey(selection));
-    return option ? [option] : [];
-  });
-  const eligibleFeatureOptions = getEligibleDnd5eFeatureOptions(featureOptions, d.classLevels);
+  const featureOptionSelections = d.featureOptionSelections ?? EMPTY_FEATURE_OPTION_SELECTIONS;
+  const featureOptionsBySelectionKey = useMemo(
+    () => new Map(featureOptions.map((option) => [featureOptionSelectionKey(option), option])),
+    [featureOptions]
+  );
+  const selectedFeatureOptions = useMemo(
+    () =>
+      featureOptionSelections.flatMap((selection) => {
+        const option = featureOptionsBySelectionKey.get(featureOptionSelectionKey(selection));
+        return option ? [option] : [];
+      }),
+    [featureOptionSelections, featureOptionsBySelectionKey]
+  );
+  const eligibleFeatureOptions = useMemo(
+    () => getEligibleDnd5eFeatureOptions(featureOptions, d.classLevels),
+    [featureOptions, d.classLevels]
+  );
   const systemDef = systemRegistry.get(document.systemId);
   const weaponMasteries = (d as Dnd5e2024DataModel).weaponMasteries ?? EMPTY_WEAPON_MASTERIES;
   const { replaceDocument, replaceSystem, update, onNameChange } = useDnd5eDocumentMutators({

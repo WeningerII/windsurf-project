@@ -174,6 +174,13 @@ export class Pf2eEngine implements SystemEngine<Pf2eDataModel> {
     // AFTER the armor's Dex cap (a clumsy fighter in full plate still loses
     // AC). getPf2eConditionStatusPenalty(conditions, 'dex') selects exactly
     // that set: the 'all' conditions plus the Dex-scoped clumsy.
+    // A shield that isn't equipped can't be raised — clear stale flags so a
+    // re-equipped shield starts lowered (Raise a Shield is a per-round action).
+    for (const item of data.equipment) {
+      if (item.shieldBonus != null && !item.equipped && item.raised) {
+        item.raised = false;
+      }
+    }
     const acStatusPenalty = getPf2eStatusPenalty(data.conditions, 'dex');
     data.armorClass =
       computePf2eAC(data.baseAttributes.dex ?? 10, armorProf, data.equipment) +

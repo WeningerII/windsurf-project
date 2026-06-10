@@ -161,6 +161,45 @@ describe('Dnd5eEngine', () => {
       expect(result.system.hitDice[0].remaining).toBe(1);
     });
 
+    it('matches hit-dice pools by classId so removing a class cannot hand its spent count to a same-die neighbor', () => {
+      const doc = makeDoc({
+        classLevels: [
+          { classId: 'fighter', level: 3, hitDieRolls: [10, 6, 6] },
+          { classId: 'paladin', level: 2, hitDieRolls: [6, 6] },
+        ],
+        baseAttributes: { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+      });
+      const prepared = engine.prepareData(doc);
+      // Spend 2 fighter dice, then drop the fighter class entirely.
+      prepared.system.hitDice[0].remaining = 1;
+      prepared.system.classLevels = prepared.system.classLevels.filter(
+        (cl) => cl.classId !== 'fighter'
+      );
+
+      const reprepared = engine.prepareData(prepared);
+      // The paladin (also d10) now sits at index 0; positional matching used
+      // to hand it the fighter's spent pool (remaining 1).
+      expect(reprepared.system.hitDice).toHaveLength(1);
+      expect(reprepared.system.hitDice[0]).toMatchObject({
+        classId: 'paladin',
+        die: 'd10',
+        total: 2,
+        remaining: 2,
+      });
+    });
+
+    it('counts every level of an untracked class row toward max HP', () => {
+      // A hand-made/imported row with level 5 but no recorded rolls used to
+      // contribute a single die. PHB seeding: max (10) at character level 1,
+      // the d10 average (6) for the rest; Con 10 adds nothing.
+      const doc = makeDoc({
+        classLevels: [{ classId: 'fighter', level: 5, hitDieRolls: [] }],
+        baseAttributes: { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+      });
+      const result = engine.prepareData(doc);
+      expect(result.system.hitPoints.max).toBe(10 + 6 * 4);
+    });
+
     it('applies exhaustion level 4 by halving max HP', () => {
       const doc = makeDoc({
         baseAttributes: { str: 10, dex: 10, con: 14, int: 10, wis: 10, cha: 10 },

@@ -99,11 +99,12 @@ describe('L2 d20-legacy AC (touch / flat-footed / size)', () => {
     ]);
     expect(ac).toEqual({ total: 18, touch: 13, flatFooted: 15 });
   });
-  it('armor max-Dex cap limits the Dex contribution', () => {
+  it('armor max-Dex cap limits the Dex contribution (touch included, per SRD)', () => {
     const ac = computeD20LegacyAC(16, 'medium', [
       { equipped: true, armorClass: 8, dexBonusMax: 1 },
     ]);
-    expect(ac).toEqual({ total: 19, touch: 13, flatFooted: 18 });
+    // Max Dex Bonus caps Dexterity-to-AC generally: touch = 10 + min(+3, +1).
+    expect(ac).toEqual({ total: 19, touch: 11, flatFooted: 18 });
   });
   it('small size adds +1 to all AC values', () => {
     expect(computeD20LegacyAC(12, 'small', [])).toEqual({ total: 12, touch: 12, flatFooted: 11 });

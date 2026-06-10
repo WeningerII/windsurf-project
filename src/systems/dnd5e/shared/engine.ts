@@ -129,11 +129,18 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
     if (data.classLevels.length > 0) {
       // Recompute from class hit dice when they're tracked.
       baseMaxHP = 0;
-      for (const cl of data.classLevels) {
+      data.classLevels.forEach((cl, classIndex) => {
         const die = hitDieSize(cl.classId);
         if (cl.hitDieRolls.length === 0) {
-          // First level of first class: max die + CON (PHB: min 1 HP per level)
-          baseMaxHP += Math.max(1, die + conMod);
+          // No tracked rolls (hand-made/imported row): count EVERY level —
+          // max die for the character's first level (first class row only),
+          // the SRD average for the rest. Previously a level-5 untracked row
+          // contributed a single die.
+          const average = Math.floor(die / 2) + 1;
+          for (let levelIndex = 0; levelIndex < cl.level; levelIndex += 1) {
+            const maxed = classIndex === 0 && levelIndex === 0;
+            baseMaxHP += Math.max(1, (maxed ? die : average) + conMod);
+          }
         } else {
           for (const roll of cl.hitDieRolls) {
             // PHB: each level adds a minimum of 1 hit point, so the clamp is
@@ -142,7 +149,7 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
             baseMaxHP += Math.max(1, roll + conMod);
           }
         }
-      }
+      });
       baseMaxHP = Math.max(baseMaxHP, totalLevel); // levels without tracked rolls still count
     } else {
       // 5e HP can't be derived without per-class hit dice: preserve the stored
@@ -163,15 +170,22 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
     }
 
     // --- Hit Dice tracking ---
+    // Pools are matched by classId, not array position: removing or
+    // reordering a class must not hand its spent-dice count to a different
+    // class that happens to share the die size. Legacy entries without a
+    // classId fall back to positional matching once.
     const previousHitDice = Array.isArray(data.hitDice) ? data.hitDice : [];
     data.hitDice = data.classLevels.map((cl, index) => {
       const die = `d${hitDieSize(cl.classId)}`;
       const total = cl.level;
-      const previous = previousHitDice[index];
+      const previous =
+        previousHitDice.find((entry) => entry.classId === cl.classId) ??
+        (previousHitDice[index]?.classId === undefined ? previousHitDice[index] : undefined);
 
       if (previous && previous.die === die) {
         const gainedAtLevelUp = Math.max(0, total - previous.total);
         return {
+          classId: cl.classId,
           die,
           total,
           remaining: Math.min(total, Math.max(0, previous.remaining + gainedAtLevelUp)),
@@ -179,6 +193,7 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
       }
 
       return {
+        classId: cl.classId,
         die,
         total,
         remaining: total,
@@ -299,7 +314,15 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
     let isSavingThrow = false;
     let saveAttribute = '';
 
-    if (checkId in d.baseAttributes) {
+    if (checkId === 'initiative') {
+      // Initiative is a Dexterity check (PHB), but it gets its own check id so
+      // initiative-only modifiers (e.g. the 2024 Alert proficiency bonus)
+      // never leak onto plain DEX ability checks.
+      modifier = abilityMod(d.baseAttributes.dex ?? 10);
+      modifier = this.applyInitiativeModifiers(document, modifier);
+      flavor = 'Initiative';
+      isAbilityCheck = true;
+    } else if (checkId in d.baseAttributes) {
       modifier = abilityMod(d.baseAttributes[checkId]);
       flavor = `${checkId.toUpperCase()} Check`;
       isAbilityCheck = true;
@@ -321,11 +344,6 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
       flavor = `${attr.toUpperCase()} Save`;
       isSavingThrow = true;
       saveAttribute = attr;
-    }
-
-    // Apply any base initiative modifiers if check is initiative
-    if (checkId === 'dex') {
-      modifier = this.applyInitiativeModifiers(document, modifier);
     }
 
     const autoFailDexStrSave =
@@ -364,7 +382,7 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
       (isSavingThrow && this.getExhaustionSavePenalty(d.exhaustionLevel)) ||
       conditionDisadvantage;
 
-    const isInitiative = checkId === 'dex';
+    const isInitiative = checkId === 'initiative';
     const hasAdvantage = isInitiative && this.hasInitiativeAdvantage(document);
 
     let rollMode: RollMode = 'normal';

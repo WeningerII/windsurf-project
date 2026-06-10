@@ -18,6 +18,7 @@ interface Props {
   onClassDcTierCycle: () => void;
   onPerceptionTierCycle: () => void;
   onPerceptionRoll: () => Promise<RollResult>;
+  onToggleShieldRaised?: () => void;
   onShortRest?: () => void;
   onLongRest?: () => void;
 }
@@ -30,11 +31,13 @@ export const Pf2eOverview: React.FC<Props> = ({
   onClassDcTierCycle,
   onPerceptionTierCycle,
   onPerceptionRoll,
+  onToggleShieldRaised,
   onShortRest,
   onLongRest,
 }) => {
   const data = document.system;
   const classDcProficiency = data.classDcProficiency ?? { tier: 'trained' as const, total: 0 };
+  const equippedShield = data.equipment.find((item) => item.equipped && item.shieldBonus != null);
 
   return (
     <>
@@ -42,6 +45,23 @@ export const Pf2eOverview: React.FC<Props> = ({
         <div className="bg-card border rounded-lg p-4 text-center transition-shadow hover:shadow-sm">
           <div className="text-xs font-medium text-muted-foreground">AC</div>
           <div className="text-3xl font-bold tabular-nums">{data.armorClass}</div>
+          {equippedShield && (
+            <button
+              type="button"
+              onClick={canUpdate ? onToggleShieldRaised : undefined}
+              disabled={!canUpdate || !onToggleShieldRaised}
+              className={`mt-1 text-[10px] px-2 py-0.5 rounded border transition-colors ${
+                equippedShield.raised
+                  ? 'bg-primary text-primary-foreground border-primary'
+                  : 'text-muted-foreground hover:bg-muted'
+              }`}
+              title="CRB: a shield adds its AC bonus only while raised (Raise a Shield action)"
+            >
+              {equippedShield.raised
+                ? `Shield raised (+${equippedShield.shieldBonus})`
+                : 'Raise Shield'}
+            </button>
+          )}
         </div>
         <div className="bg-card border rounded-lg p-4 text-center transition-shadow hover:shadow-sm">
           <div className="text-xs font-medium text-muted-foreground flex items-center justify-center gap-1">
