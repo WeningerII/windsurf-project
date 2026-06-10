@@ -76,13 +76,34 @@ describe('Dnd5e2024Engine', () => {
       expect(result.system.hitDice[0].remaining).toBe(1);
     });
 
-    it('uses INT for initiative when Alert feat outpaces DEX', () => {
+    it('adds proficiency bonus to initiative with the Alert feat', () => {
+      // SRD 5.2 Alert: "Initiative Proficiency: Add your Proficiency Bonus to
+      // Initiative rolls." It is NOT a Dex/Int swap (the old pinned behavior
+      // contradicted the app's own SRD 5.2 feat data). Level 1 -> PB +2.
       const doc = makeDoc({
         baseAttributes: { str: 10, dex: 12, con: 10, int: 18, wis: 10, cha: 10 },
         feats: [{ id: 'alert', name: 'Alert', description: '', source: 'test' }],
       });
       const result = engine.prepareData(doc);
-      expect(result.system.initiative).toBe(4);
+      expect(result.system.initiative).toBe(1 + 2); // Dex mod + PB, Int is irrelevant
+    });
+
+    it('scales the Alert initiative bonus with total level', () => {
+      const doc = makeDoc({
+        baseAttributes: { str: 10, dex: 14, con: 10, int: 10, wis: 10, cha: 10 },
+        classLevels: [{ classId: 'fighter', level: 5, hitDieRolls: [10, 6, 6, 6, 6] }],
+        feats: [{ id: 'alert', name: 'Alert', description: '', source: 'test' }],
+      });
+      const result = engine.prepareData(doc);
+      expect(result.system.initiative).toBe(2 + 3); // Dex +2, PB +3 at level 5
+    });
+
+    it('keeps initiative = Dex mod without the Alert feat', () => {
+      const doc = makeDoc({
+        baseAttributes: { str: 10, dex: 12, con: 10, int: 18, wis: 10, cha: 10 },
+      });
+      const result = engine.prepareData(doc);
+      expect(result.system.initiative).toBe(1);
     });
 
     it('does not halve max HP at exhaustion level 4 (2024 rules)', () => {
@@ -95,6 +116,51 @@ describe('Dnd5e2024Engine', () => {
       const result = engine.prepareData(doc);
       // 10 + 8 = 18 + (2 * 2 CON mod) = 22. In 2024 rules, exhaustion does not halve HP.
       expect(result.system.hitPoints.max).toBe(22);
+    });
+
+    it('grants a level 1 Paladin two 1st-level slots (2024 rules)', () => {
+      // SRD 5.2: Paladins (and Rangers) cast from level 1, and the 2024
+      // multiclass rule rounds half-caster levels UP — see the class data
+      // table (paladin spellSlots[1][0] === 2).
+      const doc = makeDoc({
+        classLevels: [{ classId: 'paladin', level: 1, hitDieRolls: [10] }],
+        spellcasting: {
+          classes: [{ classId: 'paladin', ability: 'cha', spellcastingLevel: 1 }],
+          spellsKnown: [],
+          spellsPrepared: [],
+          spellSlots: {
+            1: { max: 0, used: 0 },
+            2: { max: 0, used: 0 },
+            3: { max: 0, used: 0 },
+            4: { max: 0, used: 0 },
+            5: { max: 0, used: 0 },
+            6: { max: 0, used: 0 },
+            7: { max: 0, used: 0 },
+            8: { max: 0, used: 0 },
+            9: { max: 0, used: 0 },
+          },
+        },
+      });
+      const result = engine.prepareData(doc);
+      expect(result.system.spellcasting?.spellSlots[1]).toEqual({ max: 2, used: 0 });
+    });
+
+    it('applies Monk Unarmored Defense to AC', () => {
+      // SRD 5.2 Monk Unarmored Defense: 10 + Dex mod + Wis mod while wearing
+      // no armor and wielding no shield (same wiring as the 2014 engine).
+      const doc = makeDoc({
+        baseAttributes: { str: 10, dex: 16, con: 10, int: 10, wis: 14, cha: 10 },
+        features: [
+          {
+            id: 'unarmored-defense-monk',
+            name: 'Unarmored Defense',
+            source: 'Monk 1',
+            description: '',
+          },
+        ],
+      });
+      const result = engine.prepareData(doc);
+      expect(result.system.armorClass).toBe(15); // 10 + 3 + 2
     });
   });
 

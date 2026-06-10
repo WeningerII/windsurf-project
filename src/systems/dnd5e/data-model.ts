@@ -68,6 +68,12 @@ export interface Dnd5eDataModel extends SystemDataModel {
 
   // Combat
   hitPoints: HitPoints;
+  /**
+   * Unhalved maximum HP, maintained by the engine. `hitPoints.max` is derived
+   * from this (2014 exhaustion >= 4 halves it), so prepareData stays
+   * idempotent when prepared documents are persisted and re-prepared.
+   */
+  baseMaxHP?: number;
   hitDice: HitDice[];
   deathSaves: DeathSaves;
   conditions: Dnd5eCondition[];

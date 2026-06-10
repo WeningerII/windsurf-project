@@ -353,6 +353,10 @@ function buildSpeciesFeatures(speciesData: Species): Feature[] {
     name: trait.name,
     source: trait.source || speciesData.name,
     description: trait.description,
+    // Copy `uses` (cloned, like the d20-legacy template) so limited-use racial
+    // traits (Breath Weapon, Relentless Endurance) keep their counters and
+    // recover on rest via dnd5eRest's feature recovery.
+    uses: trait.uses ? { ...trait.uses } : undefined,
   }));
 }
 

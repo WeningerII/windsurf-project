@@ -91,6 +91,21 @@ describe('applyDnd5eSpeciesTemplate', () => {
     expect(updated.system.skillProficiencies.intimidation.source).toEqual(['class', 'Half-Orc']);
   });
 
+  it('copies limited-use trait counters (uses) onto species features', () => {
+    // Regression: buildSpeciesFeatures used to drop `uses`, so Relentless
+    // Endurance had no counter and never recovered on rest (dnd5eRest keys
+    // off feature.uses). The d20-legacy template already copied it.
+    const updated = applyDnd5eSpeciesTemplate(makeDoc(), halfOrc);
+
+    const relentless = updated.system.features.find(
+      (feature) => feature.id === 'relentless-endurance'
+    );
+    expect(relentless?.uses).toEqual({ current: 1, max: 1, recoveryType: 'long-rest' });
+    // Cloned, not aliased to the shared catalog object.
+    const catalogTrait = halfOrc.traits.find((trait) => trait.id === 'relentless-endurance');
+    expect(relentless?.uses).not.toBe(catalogTrait?.uses);
+  });
+
   it('applies fallback defaults for custom species traits, languages, and ability score bonuses', () => {
     const customSpecies: Species = {
       ...human,

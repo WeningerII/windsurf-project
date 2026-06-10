@@ -13,6 +13,7 @@ import {
   loadSpeciesForSystem,
   loadSpellsForSystem,
 } from '../../../utils/dataLoader';
+import { errorLogger, ErrorCategory, ErrorSeverity } from '../../../utils/errorLogger';
 import { Dnd5eEquipmentTab } from './components/Dnd5eEquipmentTab';
 import { Dnd5eFeatBrowserTab } from './components/Dnd5eFeatBrowserTab';
 import { Dnd5eFeaturesTab } from './components/Dnd5eFeaturesTab';
@@ -37,6 +38,30 @@ export function useDnd5eSheetResources({
   const [classes, setClasses] = useState<CharacterClass[]>([]);
   const [species, setSpecies] = useState<Species[]>([]);
   const [backgrounds, setBackgrounds] = useState<Background[]>([]);
+  // Real loader failures must surface (same pattern as classTemplateError);
+  // only teardown/system-switch cancellation is silently ignored.
+  const [resourceLoadError, setResourceLoadError] = useState<string | null>(null);
+
+  const reportResourceLoadError = useCallback(
+    (resource: string, requestSystemId: GameSystemId, error: unknown) => {
+      if (activeSystemIdRef.current !== requestSystemId) {
+        // The sheet switched systems mid-flight; this request's result is
+        // irrelevant, so its failure is too.
+        return;
+      }
+
+      const message = `Failed to load ${resource} for ${requestSystemId}.`;
+      errorLogger.log(
+        ErrorCategory.DATA_LOAD,
+        ErrorSeverity.HIGH,
+        message,
+        error instanceof Error ? error : undefined,
+        { systemId: requestSystemId, resource }
+      );
+      setResourceLoadError(message);
+    },
+    []
+  );
   const {
     data: spells,
     loaded: spellsLoaded,
@@ -96,6 +121,7 @@ export function useDnd5eSheetResources({
     setClasses([]);
     setSpecies([]);
     setBackgrounds([]);
+    setResourceLoadError(null);
     resetSpells();
     resetEquipment();
     resetFeatDefs();
@@ -116,63 +142,94 @@ export function useDnd5eSheetResources({
         setSpecies(loadedSpecies);
         setBackgrounds(loadedBackgrounds);
       })
-      .catch(() => {
-        // Ignore teardown-time loader cancellation in tests.
+      .catch((error: unknown) => {
+        if (cancelled) {
+          // Teardown-time loader cancellation (e.g. in tests): not a failure.
+          return;
+        }
+
+        reportResourceLoadError('classes/species/backgrounds', requestSystemId, error);
       });
 
     return () => {
       cancelled = true;
     };
-  }, [resetEquipment, resetFeatDefs, resetFeatureOptions, resetMonsters, resetSpells, systemId]);
+  }, [
+    reportResourceLoadError,
+    resetEquipment,
+    resetFeatDefs,
+    resetFeatureOptions,
+    resetMonsters,
+    resetSpells,
+    systemId,
+  ]);
 
   useEffect(() => {
     if (!showFeatBrowser || featsLoaded || featCount === 0) {
       return;
     }
 
-    void loadFeatDefs().catch(() => {
-      // Ignore teardown-time loader cancellation in tests.
+    const requestSystemId = systemId;
+    void loadFeatDefs().catch((error: unknown) => {
+      reportResourceLoadError('feats', requestSystemId, error);
     });
-  }, [featCount, featsLoaded, loadFeatDefs, showFeatBrowser]);
+  }, [featCount, featsLoaded, loadFeatDefs, reportResourceLoadError, showFeatBrowser, systemId]);
 
   useEffect(() => {
     if (!showFeatureOptionBrowser || featureOptionsLoaded) {
       return;
     }
 
-    void loadFeatureOptions().catch(() => {
-      // Ignore teardown-time loader cancellation in tests.
+    const requestSystemId = systemId;
+    void loadFeatureOptions().catch((error: unknown) => {
+      reportResourceLoadError('feature options', requestSystemId, error);
     });
-  }, [featureOptionsLoaded, loadFeatureOptions, showFeatureOptionBrowser]);
+  }, [
+    featureOptionsLoaded,
+    loadFeatureOptions,
+    reportResourceLoadError,
+    showFeatureOptionBrowser,
+    systemId,
+  ]);
 
   const warmFeaturesTab = useCallback(() => {
-    void loadFeatureOptions();
+    void loadFeatureOptions().catch((error: unknown) => {
+      reportResourceLoadError('feature options', systemId, error);
+    });
     if (showFeatureOptionBrowser) {
       void Dnd5eFeaturesTab.preload();
     }
-  }, [loadFeatureOptions, showFeatureOptionBrowser]);
+  }, [loadFeatureOptions, reportResourceLoadError, showFeatureOptionBrowser, systemId]);
 
   const warmSpellsTab = useCallback(() => {
-    void loadSpells();
+    void loadSpells().catch((error: unknown) => {
+      reportResourceLoadError('spells', systemId, error);
+    });
     void Dnd5eSpellsTab.preload();
-  }, [loadSpells]);
+  }, [loadSpells, reportResourceLoadError, systemId]);
 
   const warmFeatBrowser = useCallback(() => {
     if (showFeatBrowser) {
-      void loadFeatDefs();
+      void loadFeatDefs().catch((error: unknown) => {
+        reportResourceLoadError('feats', systemId, error);
+      });
       void Dnd5eFeatBrowserTab.preload();
     }
-  }, [loadFeatDefs, showFeatBrowser]);
+  }, [loadFeatDefs, reportResourceLoadError, showFeatBrowser, systemId]);
 
   const warmEquipmentTab = useCallback(() => {
-    void loadEquipment();
+    void loadEquipment().catch((error: unknown) => {
+      reportResourceLoadError('equipment', systemId, error);
+    });
     void Dnd5eEquipmentTab.preload();
-  }, [loadEquipment]);
+  }, [loadEquipment, reportResourceLoadError, systemId]);
 
   const warmMonsterBrowser = useCallback(() => {
-    void loadMonsters();
+    void loadMonsters().catch((error: unknown) => {
+      reportResourceLoadError('monsters', systemId, error);
+    });
     void Dnd5eMonsterBrowserTab.preload();
-  }, [loadMonsters]);
+  }, [loadMonsters, reportResourceLoadError, systemId]);
 
   return {
     backgrounds,
@@ -185,6 +242,7 @@ export function useDnd5eSheetResources({
     featureOptionsLoaded,
     monsters,
     monstersLoaded,
+    resourceLoadError,
     species,
     spells,
     spellsLoaded,

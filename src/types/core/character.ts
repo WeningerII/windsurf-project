@@ -189,6 +189,23 @@ export interface SpellcastingInfo {
   spellsPrepared: string[]; // For prepared casters
   alwaysPreparedSpellIds?: string[];
   spellSlots: SpellSlots;
+  /**
+   * Warlock Pact Magic (SRD 5.1/5.2): a separate slot pool from the standard
+   * 1–9 grid. Every pact slot shares one slot level and recovers on a short
+   * rest. Absent for characters without warlock levels.
+   */
+  pactMagic?: PactMagicSlots;
+}
+
+/**
+ * Warlock Pact Magic slot pool (SRD): 1 slot at level 1, 2 at level 2,
+ * 3 at level 11, 4 at level 17; slot level = ceil(min(level, 9) / 2), max 5.
+ */
+export interface PactMagicSlots {
+  /** Spell level all pact slots are cast at (1–5). */
+  level: number;
+  max: number;
+  used: number;
 }
 
 export interface SpellcastingClass {

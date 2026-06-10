@@ -55,6 +55,12 @@ export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
 
   return (
     <div className="max-w-6xl mx-auto space-y-6 p-6">
+      {controller.resourceLoadError && (
+        <p className="text-sm text-destructive" role="alert">
+          {controller.resourceLoadError}
+        </p>
+      )}
+
       <Dnd5eHeaderSection
         name={document.name}
         profBonus={controller.profBonus}
@@ -113,6 +119,8 @@ export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
         onRecoverHitDie={(index) => controller.handleHitDiceChange(index, 1)}
         onUseSpellSlot={(level) => controller.handleSpellSlotChange(level, 1)}
         onRecoverSpellSlot={(level) => controller.handleSpellSlotChange(level, -1)}
+        onUsePactSlot={() => controller.handlePactMagicChange(1)}
+        onRecoverPactSlot={() => controller.handlePactMagicChange(-1)}
         onRecoverAllSpellSlots={controller.recoverAllSpellSlots}
       />
 

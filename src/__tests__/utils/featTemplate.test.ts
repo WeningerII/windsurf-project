@@ -157,6 +157,28 @@ function makeDoc(
 }
 
 describe('featTemplate', () => {
+  it('clones catalog modifiers instead of aliasing them onto the character', () => {
+    // Regression: buildAutomatedFeat used to assign `modifiers: feat.modifiers`
+    // directly, so an in-place mutation on the character document would have
+    // corrupted the shared catalog definition for every later character.
+    const modifierFeat: FeatDefinition = {
+      id: 'modifier-fixture',
+      name: 'Modifier Fixture',
+      system: 'dnd-5e-2024',
+      source: 'Test Fixture',
+      description: 'Test fixture: carries a flat modifier.',
+      benefits: fixtureBenefits,
+      modifiers: [{ value: 1, type: 'untyped', source: 'modifier-fixture' }],
+    };
+
+    const updated = applyDnd5eFeatTemplate(makeDoc(), modifierFeat);
+    const applied = updated.system.feats[0];
+
+    expect(applied.modifiers).toEqual(modifierFeat.modifiers);
+    expect(applied.modifiers).not.toBe(modifierFeat.modifiers);
+    expect(applied.modifiers?.[0]).not.toBe(modifierFeat.modifiers?.[0]);
+  });
+
   it('applies resilient ability choices and derives the matching saving throw proficiency', () => {
     const updated = applyDnd5eFeatTemplate(makeDoc(), resilient, {
       'ability-scores': ['wis'],

@@ -65,6 +65,21 @@ describe('Dnd5eEngine', () => {
       expect(result.system.hitPoints.max).toBe(1);
     });
 
+    it('clamps the minimum 1 HP per LEVEL, not as a single floor on the total', () => {
+      // PHB: "you gain ... a minimum of 1 hit point" at EACH level — same
+      // per-die clamp the 3.5e engine applies. Con 7 (-2), rolls [10, 1, 1]:
+      // RAW max(1, 8) + max(1, -1) + max(1, -1) = 10. A global floor at the
+      // total level would yield 6.
+      const doc = makeDoc({
+        level: 3,
+        baseAttributes: { str: 10, dex: 10, con: 7, int: 10, wis: 10, cha: 10 },
+        classLevels: [{ classId: 'fighter', level: 3, hitDieRolls: [10, 1, 1] }],
+        hitPoints: { current: 10, max: 10, temp: 0 },
+      });
+      const result = engine.prepareData(doc);
+      expect(result.system.hitPoints.max).toBe(10);
+    });
+
     it('preserves default max HP when no class levels are present', () => {
       const result = engine.prepareData(makeDoc());
       expect(result.system.hitPoints.max).toBe(10);
@@ -77,10 +92,47 @@ describe('Dnd5eEngine', () => {
         hitPoints: { current: 50, max: 50, temp: 0 },
       });
       const result = engine.prepareData(doc);
-      // No class levels: the existing max (50) is preserved, then 2014
-      // exhaustion level 4 halves it to 25.
+      // No class levels: the existing max (50) is preserved as the unhalved
+      // base, then 2014 exhaustion level 4 halves it to 25.
       expect(result.system.hitPoints.max).toBe(25);
       expect(result.system.hitPoints.current).toBe(25);
+      expect(result.system.baseMaxHP).toBe(50);
+    });
+
+    it('is idempotent: exhaustion >= 4 never re-halves a persisted prepared document', () => {
+      // Regression (06-H1): useDocuments persists prepared documents and
+      // re-prepares them on every load/update. The halved max previously fed
+      // back into its own input (50 -> 25 -> 12 -> 6); the unhalved base now
+      // lives in baseMaxHP, so repeated prepareData is stable.
+      const doc = makeDoc({
+        exhaustionLevel: 4,
+        hitPoints: { current: 50, max: 50, temp: 0 },
+      });
+
+      const first = engine.prepareData(doc);
+      const second = engine.prepareData(first);
+      const third = engine.prepareData(second);
+
+      expect(first.system.hitPoints.max).toBe(25);
+      expect(second.system.hitPoints.max).toBe(25);
+      expect(third.system.hitPoints.max).toBe(25);
+      expect(third.system.baseMaxHP).toBe(50);
+    });
+
+    it('restores the unhalved max HP once exhaustion drops below 4', () => {
+      const doc = makeDoc({
+        exhaustionLevel: 4,
+        hitPoints: { current: 50, max: 50, temp: 0 },
+      });
+
+      const exhausted = engine.prepareData(doc);
+      expect(exhausted.system.hitPoints.max).toBe(25);
+
+      const recovered = engine.prepareData({
+        ...exhausted,
+        system: { ...exhausted.system, exhaustionLevel: 3 },
+      });
+      expect(recovered.system.hitPoints.max).toBe(50);
     });
 
     it('calculates AC = 10 + DEX mod', () => {
@@ -120,6 +172,150 @@ describe('Dnd5eEngine', () => {
       // Base max HP = (10+2) + (8+2) = 22, exhaustion 4 halves to 11.
       expect(result.system.hitPoints.max).toBe(11);
       expect(result.system.hitPoints.current).toBe(11);
+    });
+
+    it('does not mutate the input document deathSaves when normalizing', () => {
+      const doc = makeDoc({
+        deathSaves: { successes: 9, failures: -2 },
+      });
+      const inputDeathSaves = doc.system.deathSaves;
+
+      const result = engine.prepareData(doc);
+
+      expect(result.system.deathSaves).toEqual({ successes: 3, failures: 0 });
+      expect(result.system.deathSaves).not.toBe(inputDeathSaves);
+      expect(inputDeathSaves).toEqual({ successes: 9, failures: -2 });
+    });
+  });
+
+  describe('unarmored defense (engine-wired)', () => {
+    // SRD 5.1: Barbarian Unarmored Defense = 10 + Dex + Con (shield allowed);
+    // Monk Unarmored Defense = 10 + Dex + Wis (no armor, no shield).
+    const barbarianFeature = {
+      id: 'unarmored-defense-barbarian',
+      name: 'Unarmored Defense',
+      source: 'Barbarian 1',
+      description: '',
+    };
+    const monkFeature = {
+      id: 'unarmored-defense-monk',
+      name: 'Unarmored Defense',
+      source: 'Monk 1',
+      description: '',
+    };
+    const shield = { itemId: 'shield', slot: 'offHand' as const, attuned: false, shieldBonus: 2 };
+    const scaleMail = {
+      itemId: 'scale-mail',
+      slot: 'chest' as const,
+      attuned: false,
+      armorClass: 14,
+      armorType: 'medium' as const,
+    };
+
+    it('applies Barbarian Unarmored Defense (10 + Dex + Con) while unarmored', () => {
+      const doc = makeDoc({
+        baseAttributes: { str: 10, dex: 14, con: 16, int: 10, wis: 10, cha: 10 },
+        classLevels: [{ classId: 'barbarian', level: 1, hitDieRolls: [12] }],
+        features: [barbarianFeature],
+      });
+      const result = engine.prepareData(doc);
+      expect(result.system.armorClass).toBe(15); // 10 + 2 + 3, not 12
+    });
+
+    it('keeps the shield bonus with Barbarian Unarmored Defense', () => {
+      const doc = makeDoc({
+        baseAttributes: { str: 10, dex: 14, con: 16, int: 10, wis: 10, cha: 10 },
+        features: [barbarianFeature],
+        equipment: [shield],
+      });
+      const result = engine.prepareData(doc);
+      expect(result.system.armorClass).toBe(17); // 10 + 2 + 3 + 2
+    });
+
+    it('uses normal armor AC when armor is worn (no Unarmored Defense)', () => {
+      const doc = makeDoc({
+        baseAttributes: { str: 10, dex: 14, con: 16, int: 10, wis: 10, cha: 10 },
+        features: [barbarianFeature],
+        equipment: [scaleMail],
+      });
+      const result = engine.prepareData(doc);
+      expect(result.system.armorClass).toBe(16); // 14 + min(2, 2)
+    });
+
+    it('applies Monk Unarmored Defense (10 + Dex + Wis) with no armor or shield', () => {
+      const doc = makeDoc({
+        baseAttributes: { str: 10, dex: 14, con: 10, int: 10, wis: 16, cha: 10 },
+        features: [monkFeature],
+      });
+      const result = engine.prepareData(doc);
+      expect(result.system.armorClass).toBe(15); // 10 + 2 + 3
+    });
+
+    it('denies Monk Unarmored Defense while wielding a shield', () => {
+      const doc = makeDoc({
+        baseAttributes: { str: 10, dex: 14, con: 10, int: 10, wis: 16, cha: 10 },
+        features: [monkFeature],
+        equipment: [shield],
+      });
+      const result = engine.prepareData(doc);
+      expect(result.system.armorClass).toBe(14); // 10 + 2 + 2 (shield), no Wis
+    });
+
+    it('never lowers AC below the default formula', () => {
+      const doc = makeDoc({
+        baseAttributes: { str: 10, dex: 14, con: 6, int: 10, wis: 10, cha: 10 },
+        features: [barbarianFeature],
+      });
+      const result = engine.prepareData(doc);
+      expect(result.system.armorClass).toBe(12); // max(10+2, 10+2-2) = 12
+    });
+  });
+
+  describe('warlock pact magic', () => {
+    const emptySpellcasting = () => ({
+      classes: [{ classId: 'warlock', ability: 'cha', spellcastingLevel: 5 }],
+      spellsKnown: [],
+      spellsPrepared: [],
+      spellSlots: {
+        1: { max: 0, used: 0 },
+        2: { max: 0, used: 0 },
+        3: { max: 0, used: 0 },
+        4: { max: 0, used: 0 },
+        5: { max: 0, used: 0 },
+        6: { max: 0, used: 0 },
+        7: { max: 0, used: 0 },
+        8: { max: 0, used: 0 },
+        9: { max: 0, used: 0 },
+      },
+    });
+
+    it('derives pact slots for a warlock (SRD: 2 slots at level 3 of slot level 2)', () => {
+      const doc = makeDoc({
+        classLevels: [{ classId: 'warlock', level: 5, hitDieRolls: [8, 5, 5, 5, 5] }],
+        spellcasting: emptySpellcasting(),
+      });
+      const result = engine.prepareData(doc);
+      expect(result.system.spellcasting?.pactMagic).toEqual({ level: 3, max: 2, used: 0 });
+      // Standard grid stays empty: Pact Magic never feeds the multiclass table.
+      expect(result.system.spellcasting?.spellSlots[1].max).toBe(0);
+    });
+
+    it('preserves spent pact slots across prepareData', () => {
+      const doc = makeDoc({
+        classLevels: [{ classId: 'warlock', level: 5, hitDieRolls: [8, 5, 5, 5, 5] }],
+        spellcasting: { ...emptySpellcasting(), pactMagic: { level: 3, max: 2, used: 1 } },
+      });
+      const result = engine.prepareData(doc);
+      expect(result.system.spellcasting?.pactMagic).toEqual({ level: 3, max: 2, used: 1 });
+    });
+
+    it('clears pact slots when the warlock class is removed', () => {
+      const doc = makeDoc({
+        classLevels: [{ classId: 'fighter', level: 5, hitDieRolls: [10, 6, 6, 6, 6] }],
+        spellcasting: { ...emptySpellcasting(), pactMagic: { level: 3, max: 2, used: 1 } },
+      });
+      const result = engine.prepareData(doc);
+      expect(result.system.spellcasting?.pactMagic).toBeUndefined();
     });
   });
 

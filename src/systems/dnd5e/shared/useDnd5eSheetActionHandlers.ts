@@ -166,6 +166,10 @@ export function useDnd5eSheetActionHandlers<T extends Dnd5eLikeDataModel>({
           ...(patch.current != null ? { current: patch.current } : {}),
           ...(patch.max != null ? { max: patch.max } : {}),
         },
+        // Editing max HP also resets the engine-maintained unhalved base so
+        // the edit survives prepareData (which derives hitPoints.max from
+        // baseMaxHP for class-less documents).
+        ...(patch.max != null ? { baseMaxHP: patch.max } : {}),
       } as Partial<T>);
     },
     [system.hitPoints, update]
@@ -201,6 +205,24 @@ export function useDnd5eSheetActionHandlers<T extends Dnd5eLikeDataModel>({
             ...system.spellcasting.spellSlots,
             [level]: { ...slot, used: nextUsed },
           },
+        },
+      } as Partial<T>);
+    },
+    [system.spellcasting, update]
+  );
+
+  const handlePactMagicChange = useCallback(
+    (delta: number) => {
+      const pactMagic = system.spellcasting?.pactMagic;
+      if (!system.spellcasting || !pactMagic) {
+        return;
+      }
+
+      const nextUsed = Math.max(0, Math.min(pactMagic.max, pactMagic.used + delta));
+      update({
+        spellcasting: {
+          ...system.spellcasting,
+          pactMagic: { ...pactMagic, used: nextUsed },
         },
       } as Partial<T>);
     },
@@ -465,7 +487,13 @@ export function useDnd5eSheetActionHandlers<T extends Dnd5eLikeDataModel>({
     ) as SpellSlots;
 
     update({
-      spellcasting: { ...system.spellcasting, spellSlots: refreshedSlots },
+      spellcasting: {
+        ...system.spellcasting,
+        spellSlots: refreshedSlots,
+        ...(system.spellcasting.pactMagic
+          ? { pactMagic: { ...system.spellcasting.pactMagic, used: 0 } }
+          : {}),
+      },
     } as Partial<T>);
   }, [system.spellcasting, update]);
 
@@ -520,6 +548,7 @@ export function useDnd5eSheetActionHandlers<T extends Dnd5eLikeDataModel>({
     handleExhaustionChange,
     handleDeathSavesChange,
     handleSpellSlotChange,
+    handlePactMagicChange,
     handleDamageHeal,
     handleEquipmentSelect,
     handleCurrencyChange,
