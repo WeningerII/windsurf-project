@@ -22,3 +22,4 @@ export const pf1ePrestigeClasses: CharacterClass[] = [
 ];
 
 export { arcaneArcher, assassin, dragonDisciple, duelist, loreMaster, mysticTheurge, shadowdancer };
+export { isPf1eProductPrestigeClassId, pf1eProductPrestigeClassIds } from './productCatalog';

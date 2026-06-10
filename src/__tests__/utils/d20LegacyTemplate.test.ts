@@ -375,13 +375,16 @@ describe('applyD20LegacyClassTemplate', () => {
       targetClassId: 'fighter',
     });
 
+    // PF1e CRB (Favored Class): a character has exactly ONE favored class, so
+    // only the first class row defaults to the +1 HP/level bonus; rows added
+    // later default to 'other' (no automatic bonus).
     expect(multiclassDoc.system.classLevels).toMatchObject([
       { classId: 'wizard', level: 2, favoredClassBonus: 'hp' },
-      { classId: 'fighter', level: 1, favoredClassBonus: 'hp' },
+      { classId: 'fighter', level: 1, favoredClassBonus: 'other' },
     ]);
     expect(updatedFighterDoc.system.classLevels).toMatchObject([
       { classId: 'wizard', level: 2, favoredClassBonus: 'hp' },
-      { classId: 'fighter', level: 3, hitDieRolls: [10, 6, 6], favoredClassBonus: 'hp' },
+      { classId: 'fighter', level: 3, hitDieRolls: [10, 6, 6], favoredClassBonus: 'other' },
     ]);
     expect(updatedFighterDoc.system.level).toBe(5);
     expect(updatedFighterDoc.system.classSkills).toEqual(

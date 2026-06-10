@@ -3,6 +3,7 @@ import { Plus, X } from 'lucide-react';
 import { Badge } from '../../../components/ui/Badge';
 import { Button } from '../../../components/ui/Button';
 import { isDnd35eProductPrestigeClassId } from '../../../data/dnd/3.5e/prestige-classes/productCatalog';
+import { isPf1eProductPrestigeClassId } from '../../../data/pathfinder/1e/prestige-classes/productCatalog';
 import type { CharacterClass } from '../../../types/character-options/classes';
 import type { GameSystemId } from '../../../types/game-systems';
 import {
@@ -39,20 +40,6 @@ interface Props {
   onRemoveClass: (classId: string) => void;
 }
 
-const PF1E_PRESTIGE_CLASS_IDS = new Set([
-  'arcane-archer',
-  'assassin',
-  'dragon-disciple',
-  'duelist',
-  'lore-master',
-  'mystic-theurge',
-  'shadowdancer',
-]);
-
-function isPf1ePrestigeClassId(classId: string): boolean {
-  return PF1E_PRESTIGE_CLASS_IDS.has(classId);
-}
-
 function renderClassOptions(classOptions: CharacterClass[], systemId: GameSystemId) {
   if (systemId !== 'pf1e' && systemId !== 'dnd-3.5e') {
     return classOptions.map((entry) => (
@@ -63,7 +50,7 @@ function renderClassOptions(classOptions: CharacterClass[], systemId: GameSystem
   }
 
   const isPrestigeClass =
-    systemId === 'pf1e' ? isPf1ePrestigeClassId : isDnd35eProductPrestigeClassId;
+    systemId === 'pf1e' ? isPf1eProductPrestigeClassId : isDnd35eProductPrestigeClassId;
   const baseClasses = classOptions.filter((entry) => !isPrestigeClass(entry.id));
   const prestigeClasses = classOptions.filter((entry) => isPrestigeClass(entry.id));
 

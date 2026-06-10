@@ -82,11 +82,18 @@ export interface Pf2eDataModel extends SystemDataModel {
     will: Pf2eProficiency;
   };
   perceptionProficiency: Pf2eProficiency;
+  /** Class DC proficiency (CRB p.29: 10 + key ability mod + proficiency). */
+  classDcProficiency?: Pf2eProficiency;
   armorProficiencies: Record<string, Pf2eProficiency>; // unarmored, light, medium, heavy
   weaponProficiencies: Record<string, Pf2eProficiency>; // simple, martial, advanced, unarmed
 
   // Combat
-  hitPoints: { current: number; max: number; temp: number };
+  /**
+   * `maxBonus` is a persisted manual adjustment (Toughness, item HP, …) the
+   * engine adds on top of the computed ancestry + class maximum; `max` itself
+   * is derived on every prepare.
+   */
+  hitPoints: { current: number; max: number; temp: number; maxBonus?: number };
   armorClass: number;
   speed: number;
 
@@ -164,6 +171,7 @@ export const createDefaultPf2eData = (): Pf2eDataModel => ({
     will: { tier: 'trained', total: 0 },
   },
   perceptionProficiency: { tier: 'trained', total: 0 },
+  classDcProficiency: { tier: 'trained', total: 0 },
   armorProficiencies: {
     unarmored: { tier: 'trained', total: 0 },
     light: { tier: 'untrained', total: 0 },

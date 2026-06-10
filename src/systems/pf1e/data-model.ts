@@ -93,7 +93,12 @@ export interface Pf1eDataModel extends SystemDataModel {
   feats: Pf1eFeat[];
   traits: Pf1eTrait[];
 
-  spellsPerDay?: Record<number, { total: number; used: number }>;
+  /**
+   * Vancian slots per spell level. `total` is derived (class table + ability
+   * bonus spells + `manualBonus`); `manualBonus` is the persisted manual delta
+   * recorded by the sheet's slot editor so edits survive re-prepares.
+   */
+  spellsPerDay?: Record<number, { total: number; used: number; manualBonus?: number }>;
   spellsKnown?: string[];
   preparedSpellsByLevel?: Record<number, string[]>;
   alwaysPreparedSpellIds?: string[];

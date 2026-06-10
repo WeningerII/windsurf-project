@@ -441,6 +441,69 @@ describe('L5 d20 Vancian spell-slot totals', () => {
       buildD20LegacySpellSlotTotals('dnd-3.5e', [{ classId: 'noncaster-xyz', level: 5 }], map)
     ).toEqual({});
   });
+
+  it('adds casting-ability bonus spells per class when baseAttributes are provided', () => {
+    // SRD / PF1e CRB (Ability Modifiers and Bonus Spells): Int 16 (+3) grants
+    // one bonus 1st-, 2nd-, and 3rd-level spell — but only at spell levels the
+    // class can already cast (base table value > 0), and never at level 0.
+    const wiz = {
+      id: 'wiz',
+      name: 'wiz',
+      spellcasting: { ability: 'int', spellSlots: { 0: [3, 4], 1: [1, 2], 2: [0, 1] } },
+    } as unknown as CharacterClass;
+    const map = new Map([['wiz', wiz]]);
+    const attributes = { str: 10, dex: 10, con: 10, int: 16, wis: 10, cha: 10 };
+
+    expect(
+      buildD20LegacySpellSlotTotals('pf1e', [{ classId: 'wiz', level: 1 }], map, attributes)
+    ).toEqual({ 0: 3, 1: 2, 2: 0 }); // 1st: 1+1; 2nd not castable yet; no bonus cantrips
+    expect(
+      buildD20LegacySpellSlotTotals('pf1e', [{ classId: 'wiz', level: 2 }], map, attributes)
+    ).toEqual({ 0: 4, 1: 3, 2: 2 }); // 1st: 2+1; 2nd: 1+1
+  });
+
+  it('keys bonus spells on each class own casting ability across a multiclass build', () => {
+    const wiz = {
+      id: 'wiz',
+      name: 'wiz',
+      spellcasting: { ability: 'int', spellSlots: { 1: [2] } },
+    } as unknown as CharacterClass;
+    const cle = {
+      id: 'cle',
+      name: 'cle',
+      spellcasting: { ability: 'wis', spellSlots: { 1: [1] } },
+    } as unknown as CharacterClass;
+    const map = new Map([
+      ['wiz', wiz],
+      ['cle', cle],
+    ]);
+    // Int 14 (+2) feeds only the wizard; Wis 10 (+0) gives the cleric nothing.
+    const attributes = { str: 10, dex: 10, con: 10, int: 14, wis: 10, cha: 10 };
+
+    expect(
+      buildD20LegacySpellSlotTotals(
+        'pf1e',
+        [
+          { classId: 'wiz', level: 1 },
+          { classId: 'cle', level: 1 },
+        ],
+        map,
+        attributes
+      )
+    ).toEqual({ 1: 4 }); // wizard 2+1 bonus, cleric 1+0
+  });
+
+  it('omits bonus spells entirely when baseAttributes are not provided (back-compat)', () => {
+    const wiz = {
+      id: 'wiz',
+      name: 'wiz',
+      spellcasting: { ability: 'int', spellSlots: { 1: [2] } },
+    } as unknown as CharacterClass;
+    const map = new Map([['wiz', wiz]]);
+    expect(buildD20LegacySpellSlotTotals('pf1e', [{ classId: 'wiz', level: 1 }], map)).toEqual({
+      1: 2,
+    });
+  });
 });
 
 // ── L6: carrying capacity & encumbrance (shared SRD 3.5 / PF1e CRB) ──────────

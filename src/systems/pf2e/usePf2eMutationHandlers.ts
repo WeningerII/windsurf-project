@@ -67,7 +67,14 @@ export function usePf2eMutationHandlers({ document, onUpdate }: UsePf2eMutationH
       update({
         skillProficiencies: {
           ...data.skillProficiencies,
-          [skillId]: { ...current, tier: nextPf2eTier(current.tier) },
+          // Record a 'manual' source so template removal (class/background
+          // change) can tell hand-trained proficiencies from granted ones and
+          // leave them alone.
+          [skillId]: {
+            ...current,
+            tier: nextPf2eTier(current.tier),
+            source: [...new Set([...(current.source ?? []), 'manual'])],
+          },
         },
       });
     },
@@ -84,7 +91,11 @@ export function usePf2eMutationHandlers({ document, onUpdate }: UsePf2eMutationH
       update({
         loreProficiencies: {
           ...data.loreProficiencies,
-          [loreId]: { ...current, tier: nextPf2eTier(current.tier) },
+          [loreId]: {
+            ...current,
+            tier: nextPf2eTier(current.tier),
+            source: [...new Set([...(current.source ?? []), 'manual'])],
+          },
         },
       });
     },
@@ -114,13 +125,29 @@ export function usePf2eMutationHandlers({ document, onUpdate }: UsePf2eMutationH
     });
   }, [data.perceptionProficiency, update]);
 
+  const cycleClassDcTier = useCallback(() => {
+    const current = data.classDcProficiency ?? {
+      tier: 'trained' as Pf2eProficiencyTier,
+      total: 0,
+    };
+
+    update({
+      classDcProficiency: { ...current, tier: nextPf2eTier(current.tier) },
+    });
+  }, [data.classDcProficiency, update]);
+
   const updateHitPoints = useCallback(
     (current: number, max: number) => {
+      // The engine derives `max` on every prepare, so a raw max edit would be
+      // reverted. Persist the edit as `maxBonus` (delta from the computed
+      // baseline) instead; the engine adds it back on top.
+      const computedBaseline = data.hitPoints.max - (data.hitPoints.maxBonus ?? 0);
       update({
         hitPoints: {
           ...data.hitPoints,
           current,
           max,
+          maxBonus: max - computedBaseline,
         },
       });
     },
@@ -201,6 +228,7 @@ export function usePf2eMutationHandlers({ document, onUpdate }: UsePf2eMutationH
     cycleLoreTier,
     cycleSaveTier,
     cyclePerceptionTier,
+    cycleClassDcTier,
     updateHitPoints,
     onShortRest,
     onLongRest,

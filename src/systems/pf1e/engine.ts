@@ -117,13 +117,17 @@ export class Pf1eEngine implements SystemEngine<Pf1eDataModel> {
     data.hitPoints.max = maxHP;
     data.hitPoints.current = Math.min(data.hitPoints.current, maxHP);
 
-    // --- Spell Slots (class spell tables) ---
+    // --- Spell Slots (class spell tables + casting-ability bonus spells) ---
+    // PF1e CRB (Ability Modifiers and Bonus Spells): a high casting ability
+    // grants bonus spells per day, applied per class inside the builder.
+    // mergeVancianSpellSlots keeps each level's persisted manualBonus on top.
     const slotTotals = buildD20LegacySpellSlotTotals(
       'pf1e',
       data.classLevels,
       new Map(
         [...Object.values(pf1eClasses), ...pf1ePrestigeClasses].map((klass) => [klass.id, klass])
-      )
+      ),
+      data.baseAttributes
     );
     data.spellsPerDay = mergeVancianSpellSlots(data.spellsPerDay, slotTotals);
 

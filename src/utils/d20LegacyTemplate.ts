@@ -335,7 +335,8 @@ function create35eClassLevel(
 function createPf1eClassLevel(
   classData: CharacterClass,
   level: number,
-  existing?: Pf1eClassLevel
+  existing?: Pf1eClassLevel,
+  isFirstClassRow: boolean = true
 ): Pf1eClassLevel {
   const profile = defaultClassProfile('pf1e', classData.id);
 
@@ -349,7 +350,11 @@ function createPf1eClassLevel(
     refSave: profile.refSave,
     willSave: profile.willSave,
     skillPointsPerLevel: classData.skillProficiencies.count,
-    favoredClassBonus: existing?.favoredClassBonus || 'hp',
+    // PF1e CRB (Favored Class): a character has ONE favored class, chosen at
+    // 1st level. Default only the first class row to the HP bonus; rows added
+    // later default to 'other' (no automatic bonus) so a Fighter 5/Wizard 5
+    // gains +5 HP, not +10. The engine only treats 'hp' rows as HP.
+    favoredClassBonus: existing?.favoredClassBonus || (isFirstClassRow ? 'hp' : 'other'),
   };
 }
 
@@ -357,13 +362,15 @@ function createD20ClassLevel(
   document: CharacterDocument<D20LegacyDataModel>,
   classData: CharacterClass,
   level: number,
-  existing?: Dnd35eClassLevel | Pf1eClassLevel
+  existing?: Dnd35eClassLevel | Pf1eClassLevel,
+  isFirstClassRow: boolean = true
 ): Dnd35eClassLevel | Pf1eClassLevel {
   if (isPf1eDocument(document)) {
     return createPf1eClassLevel(
       classData,
       level,
-      isPf1eClassLevel(existing) ? existing : undefined
+      isPf1eClassLevel(existing) ? existing : undefined,
+      isFirstClassRow
     );
   }
 
@@ -458,7 +465,9 @@ export function applyD20LegacyClassTemplate<T extends D20LegacyDataModel>(
       throw new Error(`${classData.name} is already present in this multiclass build`);
     }
 
-    nextClassLevels.push(createD20ClassLevel(nextDocument, classData, level));
+    nextClassLevels.push(
+      createD20ClassLevel(nextDocument, classData, level, undefined, nextClassLevels.length === 0)
+    );
   } else if (mode === 'replace') {
     if (targetClassIndex < 0) {
       throw new Error(`Cannot replace missing class entry "${targetClassId}"`);
@@ -474,19 +483,23 @@ export function applyD20LegacyClassTemplate<T extends D20LegacyDataModel>(
       nextDocument,
       classData,
       level,
-      existingRow
+      existingRow,
+      targetClassIndex === 0
     );
   } else if (existingClassIndex >= 0) {
     nextClassLevels[existingClassIndex] = createD20ClassLevel(
       nextDocument,
       classData,
       level,
-      nextClassLevels[existingClassIndex]
+      nextClassLevels[existingClassIndex],
+      existingClassIndex === 0
     );
   } else if (nextClassLevels.length === 1) {
-    nextClassLevels[0] = createD20ClassLevel(nextDocument, classData, level);
+    nextClassLevels[0] = createD20ClassLevel(nextDocument, classData, level, undefined, true);
   } else {
-    nextClassLevels.push(createD20ClassLevel(nextDocument, classData, level));
+    nextClassLevels.push(
+      createD20ClassLevel(nextDocument, classData, level, undefined, nextClassLevels.length === 0)
+    );
   }
 
   const uniqueClassIds = new Set(nextClassLevels.map((classLevel) => classLevel.classId));

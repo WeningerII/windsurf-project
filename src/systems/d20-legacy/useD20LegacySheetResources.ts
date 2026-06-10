@@ -124,6 +124,14 @@ export function useD20LegacySheetResources({ systemId, isPf1e }: UseD20LegacyShe
     return request;
   }, [classes.length, species.length, systemId]);
 
+  // Eagerly load class/species options on mount (mirroring usePf2eSheetResources):
+  // handlers like handleClassLevelChange resolve the class from `classes` and
+  // silently no-op while the list is empty, so a freshly opened sheet's Level
+  // input would otherwise be dead until a class dropdown happened to be focused.
+  useEffect(() => {
+    void loadOptions();
+  }, [loadOptions]);
+
   const [traitOptions, setTraitOptions] = useState<Pf1eTrait[]>([]);
   const [traitsLoaded, setTraitsLoaded] = useState(false);
   const traitOptionsLoadRef = useRef<Promise<void> | null>(null);

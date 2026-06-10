@@ -139,6 +139,7 @@ export function usePf2eSheetController({ document, onUpdate }: UsePf2eSheetContr
       classDcScore,
       onHitPointsChange: (current: number, max: number) =>
         mutationHandlers.updateHitPoints(parseNum(String(current), 0), parseNum(String(max), 1)),
+      onClassDcTierCycle: mutationHandlers.cycleClassDcTier,
       onPerceptionTierCycle: mutationHandlers.cyclePerceptionTier,
       onPerceptionRoll: () => mutationHandlers.rollCheck('perception'),
       onShortRest: mutationHandlers.onShortRest,

@@ -90,9 +90,15 @@ describe('L2 PF2e AC', () => {
     );
     expect(out.system.armorClass).toBe(16); // 10 + 3 + 3
   });
-  it('clumsy reduces effective Dex (−2 score per value) before AC', () => {
+  it('clumsy is a status penalty to AC (CRB Conditions: "Dex-based checks and DCs, including AC")', () => {
     const out = engine.prepareData(doc({ conditions: [{ id: 'c', name: 'clumsy', value: 1 }] }));
-    expect(out.system.armorClass).toBe(12); // Dex 10→8 (mod −1): 10 − 1 + 3
+    expect(out.system.armorClass).toBe(12); // 10 + Dex 0 + prof 3 = 13, − clumsy 1
+  });
+  it('frightened is a status penalty to AC (CRB Conditions: "all your checks and DCs")', () => {
+    const out = engine.prepareData(
+      doc({ conditions: [{ id: 'f', name: 'frightened', value: 2 }] })
+    );
+    expect(out.system.armorClass).toBe(11); // 10 + Dex 0 + prof 3 = 13, − frightened 2
   });
 });
 
