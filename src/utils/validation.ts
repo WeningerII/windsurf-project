@@ -48,6 +48,11 @@ export const validateAttributeScore = (score: number, attributeName: string): vo
 };
 
 export const validateHitPoints = (current: number, max: number, temp: number): void => {
+  // NaN compares false against every bound, so finiteness must be checked
+  // explicitly or NaN HP sails through.
+  if (!Number.isFinite(current) || !Number.isFinite(max) || !Number.isFinite(temp)) {
+    throw new ValidationError('Hit points must be finite numbers', 'hitPoints');
+  }
   if (current < GAME_RULES.MIN_CURRENT_HP) {
     throw new ValidationError('Current HP cannot be negative', 'hitPoints.current');
   }
@@ -56,6 +61,9 @@ export const validateHitPoints = (current: number, max: number, temp: number): v
       `Max HP must be at least ${GAME_RULES.MIN_HIT_POINTS}`,
       'hitPoints.max'
     );
+  }
+  if (current > max) {
+    throw new ValidationError('Current HP cannot exceed max HP', 'hitPoints.current');
   }
   if (temp < GAME_RULES.MIN_TEMP_HP) {
     throw new ValidationError('Temporary HP cannot be negative', 'hitPoints.temp');

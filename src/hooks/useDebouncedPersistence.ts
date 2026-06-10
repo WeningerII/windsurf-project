@@ -46,9 +46,16 @@ export interface DebouncedPersistence<T> {
   cancel: () => void;
 }
 
+/**
+ * Default write debounce. Exported so tests asserting "nothing was written
+ * after the window" can derive their wait from the real value instead of a
+ * hardcoded sleep that rots if this changes.
+ */
+export const DEFAULT_PERSISTENCE_DEBOUNCE_MS = 300;
+
 export function useDebouncedPersistence<T>(
   write: (value: T) => void,
-  delay = 300
+  delay = DEFAULT_PERSISTENCE_DEBOUNCE_MS
 ): DebouncedPersistence<T> {
   const versionRef = useRef(0);
 

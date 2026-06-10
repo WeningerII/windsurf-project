@@ -1,4 +1,8 @@
-/** Hit die size by class ID (D&D 5e / 3.5e / PF1e) */
+/**
+ * Hit die size by class ID — D&D 5e (2014/2024) values ONLY.
+ * 3.5e/PF1e differ (wizard d4, rogue d6, ranger d8, ...); those systems read
+ * per-class `hitDie` from their own data files, never this table.
+ */
 export const HIT_DICE: Record<string, number> = {
   barbarian: 12,
   fighter: 10,

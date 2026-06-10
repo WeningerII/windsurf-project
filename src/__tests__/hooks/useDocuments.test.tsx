@@ -8,6 +8,7 @@ import { createDefaultDnd5e2024Data } from '../../systems/dnd5e-2024/data-model'
 import { createDefaultDaggerheartData } from '../../systems/daggerheart/data-model';
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
 import * as documentStorage from '../../utils/documentStorage';
+import { DEFAULT_PERSISTENCE_DEBOUNCE_MS } from '../../hooks/useDebouncedPersistence';
 
 function makeDoc(id = 'doc-1', name = 'Hook Hero'): CharacterDocument<SystemDataModel> {
   return {
@@ -147,7 +148,7 @@ describe('useDocuments', () => {
 
     expect(result.current.documents).toHaveLength(0);
     await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 350));
+      await new Promise((resolve) => setTimeout(resolve, DEFAULT_PERSISTENCE_DEBOUNCE_MS + 50));
     });
     expect(localStorage.getItem('rpg-documents-v2')).toBeNull();
   });

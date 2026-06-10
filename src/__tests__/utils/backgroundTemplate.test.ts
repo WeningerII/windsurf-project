@@ -248,7 +248,7 @@ describe('applyDnd5eBackgroundTemplate', () => {
     expect(updated.system.features).toEqual([scholar.feature]);
   });
 
-  it('upgrades weaker skill proficiencies and removes old features matched by source as well as id', () => {
+  it('upgrades weaker skill proficiencies and only removes the exact previous feature (id AND source)', () => {
     const scholar: Background = {
       ...outlaw,
       id: 'scholar-2',
@@ -282,6 +282,42 @@ describe('applyDnd5eBackgroundTemplate', () => {
       level: 'proficient',
       source: ['Scholar'],
     });
-    expect(updated.system.features).toEqual([scholar.feature]);
+    // 'legacy-note' shares only the SOURCE string with the previous background
+    // feature; removal requires id AND source to match, so it survives —
+    // source-only matching deleted unrelated user content.
+    expect(updated.system.features).toEqual([document.system.features?.[0], scholar.feature]);
+  });
+});
+
+describe('background switch feature removal (id AND source match)', () => {
+  it('keeps unrelated features that share only an id or only a source with the previous background feature', () => {
+    const withOutlaw = applyDnd5eBackgroundTemplate(makeDoc(), outlaw);
+    const sys = withOutlaw.system;
+    // An unrelated feature sharing ONLY the source string, and another sharing
+    // ONLY the id, with the outlaw background feature. The old OR-match
+    // deleted both on background switch.
+    sys.features = [
+      ...(sys.features ?? []),
+      {
+        id: 'unrelated-same-source',
+        name: 'Unrelated (same source)',
+        source: 'Outlaw Background',
+        description: 'Must survive a background switch.',
+      },
+      {
+        id: 'outlaw-contact',
+        name: 'Unrelated (same id, different source)',
+        source: 'Homebrew',
+        description: 'Must survive a background switch.',
+      },
+    ];
+
+    const switched = applyDnd5eBackgroundTemplate(withOutlaw, envoy, outlaw);
+    const ids = (switched.system.features ?? []).map((f) => `${f.id}|${f.source}`);
+
+    expect(ids).toContain('unrelated-same-source|Outlaw Background');
+    expect(ids).toContain('outlaw-contact|Homebrew');
+    // The actual previous background feature (id AND source) is removed.
+    expect(ids).not.toContain('outlaw-contact|Outlaw Background');
   });
 });

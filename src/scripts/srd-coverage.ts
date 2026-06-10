@@ -116,8 +116,8 @@ async function fetchCsvNames(url: string, sourceFilter?: string): Promise<string
   return names;
 }
 
-/** Extract a top-level `const NAME = [ ... ]` array literal from a JS data file (string-aware bracket match) and eval it. */
-function extractJsArray(text: string, name: string): Array<{ name?: unknown }> {
+/** Extract a top-level `const NAME = [ ... ]` array literal from a JS data file as raw TEXT (string-aware bracket match) — never evaluated. */
+function extractJsArray(text: string, name: string): string {
   const start = text.indexOf(`const ${name}`);
   if (start < 0) throw new Error(`const ${name} not found`);
   const lb = text.indexOf('[', start);
@@ -140,12 +140,27 @@ function extractJsArray(text: string, name: string): Array<{ name?: unknown }> {
       break;
     }
   }
-  return new Function(`return (${text.slice(lb, i)})`)() as Array<{ name?: unknown }>;
+  return text.slice(lb, i);
+}
+
+/**
+ * Pull `name: '...'` string values out of an array-literal slice TEXTUALLY.
+ * The remote file is third-party JavaScript; evaluating it (eval/new Function)
+ * would execute whatever its host serves on a maintainer machine. A textual
+ * scan can over-collect nested name fields, which is acceptable for a
+ * coverage report and strictly safer than execution.
+ */
+function extractNameValues(arrayLiteral: string): string[] {
+  const names: string[] = [];
+  for (const m of arrayLiteral.matchAll(/\bname\s*:\s*(["'`])((?:\\.|(?!\1)[^\\])*)\1/g)) {
+    const raw = m[2].replace(/\\(["'`\\])/g, '$1');
+    if (raw.trim().length > 0) names.push(raw);
+  }
+  return names;
 }
 
 async function fetchJsArrayNames(url: string, constName: string): Promise<string[]> {
-  const arr = extractJsArray(await fetchText(url), constName);
-  return arr.filter((e) => typeof e.name === 'string').map((e) => e.name as string);
+  return extractNameValues(extractJsArray(await fetchText(url), constName));
 }
 
 /** Markdown link display texts (`[Name](href)`), optionally filtered to hrefs containing `hrefIncludes`. */
@@ -384,6 +399,7 @@ type Row = {
 
 async function main(): Promise<void> {
   const rows: Row[] = [];
+  const failedTargets: string[] = [];
   for (const t of TARGETS) {
     try {
       const [srdNames, loaderRaw] = await Promise.all([t.srd(), t.loader()]);
@@ -412,8 +428,18 @@ async function main(): Promise<void> {
         `${t.systemLabel} ${t.category}: ${covered}/${srdUnique.length} (${rows[rows.length - 1].pct}%) — loader ${loaderUnique.length}, ${extra.length} not in SRD`
       );
     } catch (e) {
-      console.error(`SKIP ${t.systemLabel} ${t.category}: ${(e as Error).message}`);
+      failedTargets.push(`${t.systemLabel} ${t.category}`);
+      console.error(`FAILED ${t.systemLabel} ${t.category}: ${(e as Error).message}`);
     }
+  }
+
+  if (failedTargets.length > 0) {
+    // A degraded run (network hiccup, upstream moved) must not silently gut
+    // the committed report — bail before writing anything.
+    console.error(
+      `srd-coverage aborted: ${failedTargets.length} target(s) failed (${failedTargets.join('; ')}); report left untouched.`
+    );
+    process.exit(1);
   }
 
   const lines: string[] = [];

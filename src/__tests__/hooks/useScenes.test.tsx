@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { createSceneDocument, resolveSceneAction } from '../../scene/runtime';
 import { useScenes } from '../../hooks/useScenes';
 import type { SceneDocument } from '../../types/core/scene';
+import { DEFAULT_PERSISTENCE_DEBOUNCE_MS } from '../../hooks/useDebouncedPersistence';
 
 const NOW = new Date('2026-05-01T12:00:00.000Z');
 
@@ -84,7 +85,7 @@ describe('useScenes', () => {
 
     expect(result.current.scenes).toEqual([]);
     await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 350));
+      await new Promise((resolve) => setTimeout(resolve, DEFAULT_PERSISTENCE_DEBOUNCE_MS + 50));
     });
     expect(localStorage.getItem('rpg-scenes-v1')).toBeNull();
   });

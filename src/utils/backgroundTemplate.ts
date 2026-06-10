@@ -353,10 +353,16 @@ export function applyDnd5eBackgroundTemplate<T extends Dnd5eLikeDataModel>(
       removeSkillSource(sys, skillId, previousBackground.name);
     });
 
+    // Remove only the exact previous background feature (id AND source must
+    // match, mirroring the duplicate guard on the add side). Matching on
+    // either field alone deletes unrelated features that merely share an id
+    // or a source string.
     sys.features = (sys.features || []).filter(
       (feature) =>
-        feature.id !== previousBackground.feature.id &&
-        feature.source !== previousBackground.feature.source
+        !(
+          feature.id === previousBackground.feature.id &&
+          feature.source === previousBackground.feature.source
+        )
     );
   }
 
