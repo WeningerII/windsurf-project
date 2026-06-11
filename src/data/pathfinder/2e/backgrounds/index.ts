@@ -1,25 +1,11 @@
-export interface Pf2eBackgroundChoice {
-  options: string[];
-  label: string;
-}
-
-export interface Pf2eBackgroundFeatGrant {
-  id: string;
-  name: string;
-  type: 'skill' | 'general';
-  description: string;
-}
-
-export interface Pf2eBackgroundDefinition {
-  id: string;
-  name: string;
-  source: string;
-  description: string;
-  abilityBoosts: Pf2eBackgroundChoice;
-  skillTraining: string | Pf2eBackgroundChoice;
-  loreTraining: string | Pf2eBackgroundChoice;
-  feat: Pf2eBackgroundFeatGrant;
-}
+// These interfaces live in types/character-options/pf2eBackgrounds.ts
+// (review M-2); re-exported here so existing imports keep working.
+export type {
+  Pf2eBackgroundChoice,
+  Pf2eBackgroundDefinition,
+  Pf2eBackgroundFeatGrant,
+} from '../../../../types/character-options/pf2eBackgrounds';
+import type { Pf2eBackgroundDefinition } from '../../../../types/character-options/pf2eBackgrounds';
 
 const coreSource = 'Core Rulebook';
 
