@@ -1,35 +1,9 @@
 // M&M 3e Complications - Hero's Handbook
 
-export interface Complication {
-  id: string;
-  name: string;
-  system: string;
-  source: string;
-  category:
-    | 'motivation'
-    | 'accident'
-    | 'addiction'
-    | 'disability'
-    | 'enemy'
-    | 'fame'
-    | 'hatred'
-    | 'honor'
-    | 'identity'
-    | 'obsession'
-    | 'phobia'
-    | 'power-loss'
-    | 'prejudice'
-    | 'relationship'
-    | 'reputation'
-    | 'responsibility'
-    | 'rivalry'
-    | 'secret'
-    | 'temper'
-    | 'weakness'
-    | 'other';
-  description: string;
-  examples: string[];
-}
+// The Complication interface lives in types/mam/complications.ts
+// (review M-2); re-exported here so existing imports keep working.
+export type { Complication } from '../../../../types/mam/complications';
+import type { Complication } from '../../../../types/mam/complications';
 
 export const acceptanceMotivation: Complication = {
   id: 'motivation-acceptance',

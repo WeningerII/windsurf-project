@@ -37,3 +37,23 @@ describe('legacy equipment normalization (review M-3)', () => {
     expect(dagger?.type).toBe('weapon');
   });
 });
+
+describe('5e-2014 equipment consolidation (review M-2)', () => {
+  it('serves a single object per id — no dual-identity entries', async () => {
+    const items = await loadEquipmentForSystem('dnd-5e-2014');
+    const ids = items.map((item) => item.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('formerly-dead category magic items are product-reachable', async () => {
+    const items = await loadEquipmentForSystem('dnd-5e-2014');
+    const byId = new Map(items.map((item) => [item.id, item]));
+    // These lived only in the ad-hoc category files (never loaded) before
+    // the consolidation folded them into the canonical equipment union.
+    expect(byId.get('weapon-plus-1')?.type).toBe('magic-item');
+    expect(byId.get('headband-of-intellect')?.type).toBe('magic-item');
+    expect(byId.get('potion-of-heroism')?.type).toBe('consumable');
+    // A duplicated id resolves to the canonical (family A) copy.
+    expect(byId.get('bag-of-holding')?.cost).toEqual({ amount: 0, currency: 'gp' });
+  });
+});

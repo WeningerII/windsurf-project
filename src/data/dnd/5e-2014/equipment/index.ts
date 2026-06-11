@@ -4,14 +4,24 @@ import { dnd5eWeapons } from './weapons';
 import { dnd5eArmor, dnd5eShields } from './armor';
 import { dnd5eAdventuringGear } from './adventuring-gear';
 import { dnd5eMagicItems } from './magic-items';
+import { magicArmors } from './magic-armor';
+import { magicWeapons } from './magic-weapons';
+import { potions } from './potions';
+import { wondrousItems } from './wondrous-items';
 
-// All equipment combined
+// All equipment combined. The category magic-item files (review M-2) carry
+// only ids the canonical files lack, so this union is collision-free — and
+// their content is finally product-reachable instead of dead parallel data.
 export const dnd5eEquipment: (Weapon | Armor | Shield | Item)[] = [
   ...dnd5eWeapons,
   ...dnd5eArmor,
   ...dnd5eShields,
   ...dnd5eAdventuringGear,
   ...dnd5eMagicItems,
+  ...magicWeapons,
+  ...magicArmors,
+  ...potions,
+  ...wondrousItems,
 ];
 
 // By category
@@ -21,6 +31,7 @@ export const dnd5eEquipmentByType = {
   shields: dnd5eShields,
   adventuringGear: dnd5eAdventuringGear,
   magicItems: dnd5eMagicItems,
+  categoryMagicItems: [...magicWeapons, ...magicArmors, ...potions, ...wondrousItems],
 };
 
 // Index by ID (dev-warns on duplicate ids)

@@ -1,16 +1,9 @@
 // M&M 3e Power Extras - Hero's Handbook
 
-export interface PowerModifier {
-  id: string;
-  name: string;
-  system: string;
-  source: string;
-  type: 'extra' | 'flaw';
-  costPerRank: number; // Flat cost modifier per rank (can be fractional like +0.5)
-  flatCost?: number; // One-time flat cost
-  description: string;
-  effects: string[];
-}
+// The PowerModifier interface lives in types/mam/powerModifiers.ts
+// (review M-2); re-exported here so sibling data modules keep working.
+export type { PowerModifier } from '../../../../types/mam/powerModifiers';
+import type { PowerModifier } from '../../../../types/mam/powerModifiers';
 
 export const accurate: PowerModifier = {
   id: 'accurate',
