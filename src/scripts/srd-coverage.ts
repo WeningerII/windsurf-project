@@ -215,6 +215,28 @@ async function fetchSrd52SpellNames(url: string): Promise<string[]> {
   return names;
 }
 
+/**
+ * Monster names from the SRD 5.2 markdown bestiary. The 5e-database 2024
+ * monsters JSON holds only 3 entries (partial; flagged in docs/srd-sources.md),
+ * so the downfallx markdown is the honest denominator: every `### Name` in
+ * monsters-A-Z.md is one stat block (the `##` level groups variants), and every
+ * `## Name` in animals.md is one animal (its `###`s are stat-block sections).
+ * 235 + 95 = 330 stat blocks, consistent with the documented "~325".
+ */
+async function fetchSrd52MonsterNames(monstersUrl: string, animalsUrl: string): Promise<string[]> {
+  const [monsters, animals] = await Promise.all([fetchText(monstersUrl), fetchText(animalsUrl)]);
+  const names: string[] = [];
+  for (const line of monsters.split('\n')) {
+    const m = line.match(/^###\s+(.+?)\s*$/);
+    if (m) names.push(m[1]);
+  }
+  for (const line of animals.split('\n')) {
+    const m = line.match(/^##\s+(.+?)\s*$/);
+    if (m) names.push(m[1]);
+  }
+  return names;
+}
+
 async function loaderNames(load: (s: GameSystemId) => Promise<unknown[]>, system: GameSystemId) {
   const items = (await load(system)) as Array<{ name?: unknown }>;
   return items.filter((i) => typeof i.name === 'string').map((i) => i.name as string);
@@ -285,8 +307,8 @@ for (const [category, srd, loader] of cats5e2014) {
 // genuinely differs from 5.1 (339 vs 319 spells), so spells use the authoritative
 // SRD 5.2.1 markdown; other categories use 5e-database's 2024 set. ---
 const en2024 = `${RAW5E}/2024/en`;
-const SRD52_SPELLS_MD =
-  'https://raw.githubusercontent.com/downfallx/dnd-5e-srd-markdown/master/spells.md';
+const SRD52_MD = 'https://raw.githubusercontent.com/downfallx/dnd-5e-srd-markdown/master';
+const SRD52_SPELLS_MD = `${SRD52_MD}/spells.md`;
 const cats5e2024: Array<[string, () => Promise<string[]>, () => Promise<string[]>]> = [
   [
     'spells',
@@ -315,7 +337,8 @@ const cats5e2024: Array<[string, () => Promise<string[]>, () => Promise<string[]
   ],
   [
     'monsters',
-    () => fetchNames(`${en2024}/5e-SRD-Monsters.json`),
+    // NOT the 5e-database 2024 JSON: that file holds only 3 monsters.
+    () => fetchSrd52MonsterNames(`${SRD52_MD}/monsters-A-Z.md`, `${SRD52_MD}/animals.md`),
     () => loaderNames(loadMonstersForSystem, 'dnd-5e-2024'),
   ],
   [
@@ -329,7 +352,7 @@ for (const [category, srd, loader] of cats5e2024) {
     systemId: 'dnd-5e-2024',
     systemLabel: 'D&D 5e (2024)',
     category,
-    srdSource: 'SRD 5.2 (5e-bits/5e-database; spells per downfallx SRD 5.2.1 markdown)',
+    srdSource: 'SRD 5.2 (5e-bits/5e-database; spells + monsters per downfallx SRD 5.2.1 markdown)',
     srd,
     loader,
   });
