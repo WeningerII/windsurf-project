@@ -7,6 +7,7 @@ import {
   summarizeEncounterPlan,
   type EncounterMonsterSelection,
 } from '../scene/encounterBuilder';
+import { draftEncounter, type EncounterDifficulty } from '../scene/encounterDraft';
 import {
   appendSceneEvent,
   createSceneDocument,
@@ -704,6 +705,23 @@ export function SceneManager({
     setActionIssues([]);
   };
 
+  const handleDraftEncounter = (difficulty: EncounterDifficulty) => {
+    if (!selectedScene) return;
+    const result = draftEncounter({
+      monsters: encounterMonsters,
+      partyLevels: encounterParty.members.map((member) => member.level),
+      difficulty,
+      seed: `${selectedScene.initialState.seed}:draft:${selectedScene.events.length}:${difficulty}`,
+      systemId: sceneSystemId,
+    });
+    if (result.reason) {
+      setActionIssues([`Encounter draft: ${result.reason}`]);
+      return;
+    }
+    setEncounterSelections(result.selections);
+    setActionIssues([]);
+  };
+
   const handleRemoveEncounterSelection = (monsterId: string) => {
     setEncounterSelections((current) =>
       current.filter((selection) => selection.monsterId !== monsterId)
@@ -1049,6 +1067,13 @@ export function SceneManager({
                     onQueueMonster={handleQueueEncounterMonster}
                     onAddEncounter={handleAddEncounter}
                     onRemoveSelection={handleRemoveEncounterSelection}
+                    // The SRD 5.2.1 XP-budget table is 5e math; drafting is
+                    // offered only where that citation honestly applies.
+                    onDraftEncounter={
+                      sceneSystemId === 'dnd-5e-2014' || sceneSystemId === 'dnd-5e-2024'
+                        ? handleDraftEncounter
+                        : undefined
+                    }
                   />
 
                   <MarkerPanel

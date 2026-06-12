@@ -1,5 +1,7 @@
-import { Plus, Skull, Trash2 } from 'lucide-react';
+import { Plus, Skull, Trash2, Wand2 } from 'lucide-react';
+import { useState } from 'react';
 import type { EncounterPartySummary, EncounterPlanSummary } from '../../scene/encounterBuilder';
+import type { EncounterDifficulty } from '../../scene/encounterDraft';
 import type { Monster } from '../../types/creatures/monsters';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
@@ -27,6 +29,8 @@ interface EncounterPanelProps {
   onQueueMonster: () => void;
   onAddEncounter: () => void;
   onRemoveSelection: (monsterId: string) => void;
+  /** Deterministic, budget-validated draft (SRD 5.2.1 XP budgets). */
+  onDraftEncounter?: (difficulty: EncounterDifficulty) => void;
 }
 
 function formatAverageLevel(level: number): string {
@@ -56,7 +60,9 @@ export function EncounterPanel({
   onQueueMonster,
   onAddEncounter,
   onRemoveSelection,
+  onDraftEncounter,
 }: EncounterPanelProps) {
+  const [draftDifficulty, setDraftDifficulty] = useState<EncounterDifficulty>('moderate');
   return (
     <div className="rounded-lg border bg-card p-3">
       <div className="mb-2 flex items-center justify-between gap-2">
@@ -125,6 +131,30 @@ export function EncounterPanel({
             Add Encounter
           </Button>
         </div>
+        {onDraftEncounter && (
+          <div className="grid grid-cols-2 gap-2">
+            <Select
+              aria-label="Draft difficulty"
+              value={draftDifficulty}
+              onChange={(event) => setDraftDifficulty(event.target.value as EncounterDifficulty)}
+              disabled={loading || party.members.length === 0}
+            >
+              <option value="low">Low</option>
+              <option value="moderate">Moderate</option>
+              <option value="high">High</option>
+            </Select>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={loading || monsters.length === 0 || party.members.length === 0}
+              onClick={() => onDraftEncounter(draftDifficulty)}
+              title="Draft monsters to the party's SRD XP budget"
+            >
+              <Wand2 className="mr-1.5 h-4 w-4" />
+              Draft
+            </Button>
+          </div>
+        )}
         {hasSelections && (
           <div className="space-y-1 rounded border bg-muted/30 p-2">
             {plan.entries.map((entry) => (
