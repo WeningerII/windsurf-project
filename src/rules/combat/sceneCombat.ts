@@ -24,7 +24,7 @@ import { resolveAttack } from '../resolver/attackResolution';
 import { gridDistance } from '../resolver/areaTargeting';
 import { participantRng } from '../resolver/participantResolution';
 import { attackToDamageIntent } from '../resolver/sceneCombat';
-import { collectDnd5eConditionEffects } from '../conditions/dnd5eConditions';
+import { collectSceneConditionEffects, mam3eBruisePenalty } from '../conditions/sceneConditions';
 import { daggerheartHpMarked, resolveDaggerheartAttack } from '../resolver/daggerheartResolution';
 import { resolveMam3eAttack } from '../resolver/mam3eResolution';
 import { resolveAreaEffect } from '../resolver/participantResolution';
@@ -102,10 +102,11 @@ export function buildSceneCombatants(
     if (!token?.hp) continue;
     const stats = resolveStats(token);
     if (!stats) continue;
-    // The token's own conditions compile into its attack effects (poisoned ->
-    // disadvantage etc.), so autonomous rounds fight the same as the manual
+    // The token's own conditions compile into its attack effects under the
+    // SCENE'S system rules (poisoned -> disadvantage in 5e, shaken -> -2 in
+    // PF1e/3.5e, ...), so autonomous rounds fight the same as the manual
     // path. Unknown condition ids contribute nothing.
-    const conditionEffects = collectDnd5eConditionEffects(token.conditions ?? []);
+    const conditionEffects = collectSceneConditionEffects(state.systemId, token.conditions ?? []);
     combatants.push({
       tokenId: token.id,
       faction: factionForToken(token),
@@ -192,7 +193,9 @@ export function resolveSceneAttack(params: {
       attackEffects: attackerStats.attackEffects,
       targetDefense: attackerStats.mam3e.ranged ? targetStats.armorClass : targetStats.mam3e.parry,
       effectRank: attackerStats.mam3e.effectRank,
-      toughness: targetStats.mam3e.toughness,
+      // The bruise track imposes a cumulative -1 per Bruised on later
+      // Toughness saves (M&M 3e Handbook: Damage).
+      toughness: targetStats.mam3e.toughness - mam3eBruisePenalty(target.conditions ?? []),
       rng: participantRng(seed, attackerId, targetId),
     });
     const roll = `rolled ${result.naturalRoll}+${result.attackBonus} vs ${
@@ -262,16 +265,17 @@ export function resolveSceneAttack(params: {
     };
   }
 
-  // Conditions: the attacker's own conditions compile to effects (e.g.
-  // poisoned -> disadvantage on attack), and both sides' condition sets ride
-  // the resolve context so condition-gated equipment/feat effects can fire.
-  // The compiler speaks the 5e vocabulary; unknown ids contribute nothing.
+  // Conditions: the attacker's own conditions compile to effects under the
+  // scene's system rules (poisoned -> disadvantage in 5e, shaken -> -2 in
+  // PF1e/3.5e, worst status penalty in PF2e), and both sides' condition sets
+  // ride the resolve context so condition-gated equipment/feat effects can
+  // fire. Unknown ids contribute nothing.
   const attackerConditions = attacker.conditions ?? [];
   const targetConditions = new Set(target.conditions ?? []);
   const resolution = resolveAttack({
     attackEffects: [
       ...attackerStats.attackEffects,
-      ...collectDnd5eConditionEffects(attackerConditions),
+      ...collectSceneConditionEffects(state.systemId, attackerConditions),
     ],
     damageEffects: attackerStats.damageEffects,
     targetValue: targetStats.armorClass,

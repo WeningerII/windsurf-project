@@ -147,3 +147,11 @@ export {
   collectPf2eConditionEffects,
   getPf2eConditionStatusPenalty,
 } from './conditions/pf2eConditions';
+
+export type { D20LegacySystemId } from './conditions/d20LegacyConditions';
+export {
+  collectD20LegacyConditionEffects,
+  hasD20LegacyConditionEffects,
+} from './conditions/d20LegacyConditions';
+
+export { collectSceneConditionEffects, mam3eBruisePenalty } from './conditions/sceneConditions';
