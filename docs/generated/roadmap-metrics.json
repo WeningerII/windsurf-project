@@ -1,28 +1,47 @@
 {
-  "generatedAt": "2026-06-12T15:19:18.846Z",
+  "generatedAt": "2026-06-12T15:22:01.550Z",
   "policy": {
     "dnd-5e-2014": {
-      "allowedSources": ["SRD 5.1", "SRD", "System Reference Document 5.1"],
+      "allowedSources": [
+        "SRD 5.1",
+        "SRD",
+        "System Reference Document 5.1"
+      ],
       "allowMissingSourceFor": []
     },
     "dnd-5e-2024": {
-      "allowedSources": ["SRD 5.2", "System Reference Document 5.2"],
+      "allowedSources": [
+        "SRD 5.2",
+        "System Reference Document 5.2"
+      ],
       "allowMissingSourceFor": []
     },
     "dnd-3.5e": {
-      "allowedSources": ["SRD 3.5"],
+      "allowedSources": [
+        "SRD 3.5"
+      ],
       "allowMissingSourceFor": []
     },
     "pf1e": {
-      "allowedSources": ["Core Rulebook", "CRB"],
+      "allowedSources": [
+        "Core Rulebook",
+        "CRB"
+      ],
       "allowMissingSourceFor": []
     },
     "pf2e": {
-      "allowedSources": ["Core Rulebook", "CRB"],
+      "allowedSources": [
+        "Core Rulebook",
+        "CRB"
+      ],
       "allowMissingSourceFor": []
     },
     "mam3e": {
-      "allowedSources": ["Hero's Handbook", "HH", "Mutants & Masterminds Hero's Handbook"],
+      "allowedSources": [
+        "Hero's Handbook",
+        "HH",
+        "Mutants & Masterminds Hero's Handbook"
+      ],
       "allowMissingSourceFor": []
     },
     "daggerheart": {
