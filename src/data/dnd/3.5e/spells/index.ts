@@ -10,18 +10,32 @@ import { level6Spells } from './level-6';
 import { level7Spells } from './level-7';
 import { level8Spells } from './level-8';
 import { level9Spells } from './level-9';
+import { srd35eCantrips } from './srd-cantrips';
+import { srd35eLevel1Spells } from './srd-level-1';
+import { srd35eLevel2Spells } from './srd-level-2';
+import { srd35eLevel3Spells } from './srd-level-3';
+import { srd35eLevel4Spells } from './srd-level-4';
+import { srd35eLevel5Spells } from './srd-level-5';
+import { srd35eLevel6Spells } from './srd-level-6';
+import { srd35eLevel7Spells } from './srd-level-7';
+import { srd35eLevel8Spells } from './srd-level-8';
+import { srd35eLevel9Spells } from './srd-level-9';
 
+// Hand-written files first (the merge machinery and catalog dedupe are
+// first-entry-wins), then the generated SRD 3.5 encodings
+// (scripts/encode-35e-spells.mjs), which exclude existing names/ids at
+// generation time.
 const rawSpellsByLevel: Record<number, Spell[]> = {
-  0: cantrips,
-  1: level1Spells,
-  2: level2Spells,
-  3: level3Spells,
-  4: level4Spells,
-  5: level5Spells,
-  6: level6Spells,
-  7: level7Spells,
-  8: level8Spells,
-  9: level9Spells,
+  0: [...cantrips, ...srd35eCantrips],
+  1: [...level1Spells, ...srd35eLevel1Spells],
+  2: [...level2Spells, ...srd35eLevel2Spells],
+  3: [...level3Spells, ...srd35eLevel3Spells],
+  4: [...level4Spells, ...srd35eLevel4Spells],
+  5: [...level5Spells, ...srd35eLevel5Spells],
+  6: [...level6Spells, ...srd35eLevel6Spells],
+  7: [...level7Spells, ...srd35eLevel7Spells],
+  8: [...level8Spells, ...srd35eLevel8Spells],
+  9: [...level9Spells, ...srd35eLevel9Spells],
 };
 
 const CLASS_SPECIFIC_ID_PATTERN = /-(bard|cleric|druid|paladin|ranger|sorcerer|wizard)-35e$/;

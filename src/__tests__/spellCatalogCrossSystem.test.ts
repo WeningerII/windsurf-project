@@ -78,6 +78,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Magic Missile',
     systems: {
+      'dnd-3.5e': { level: 1, school: 'evocation' },
       'dnd-5e-2014': e(1, 'evocation'),
       'dnd-5e-2024': e(1, 'evocation'),
       pf1e: e(1, 'evocation'),
@@ -105,6 +106,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Shield',
     systems: {
+      'dnd-3.5e': { level: 1, school: 'abjuration' },
       'dnd-5e-2014': e(1, 'abjuration'),
       'dnd-5e-2024': e(1, 'abjuration'),
       pf1e: e(1, 'abjuration'),
@@ -114,6 +116,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Mage Armor',
     systems: {
+      'dnd-3.5e': { level: 1, school: 'conjuration' },
       pf2e: { level: 1, school: 'abjuration' },
       'dnd-5e-2014': e(1, 'abjuration'),
       'dnd-5e-2024': e(1, 'abjuration'),
@@ -123,6 +126,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Alarm',
     systems: {
+      'dnd-3.5e': { level: 1, school: 'abjuration' },
       pf2e: { level: 1, school: 'abjuration' },
       'dnd-5e-2014': e(1, 'abjuration'),
       'dnd-5e-2024': e(1, 'abjuration'),
@@ -132,6 +136,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Charm Person',
     systems: {
+      'dnd-3.5e': { level: 1, school: 'enchantment' },
       'dnd-5e-2014': e(1, 'enchantment'),
       'dnd-5e-2024': e(1, 'enchantment'),
       pf1e: e(1, 'enchantment'),
@@ -140,6 +145,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Burning Hands',
     systems: {
+      'dnd-3.5e': { level: 1, school: 'evocation' },
       'dnd-5e-2014': e(1, 'evocation'),
       'dnd-5e-2024': e(1, 'evocation'),
       pf1e: e(1, 'evocation'),
@@ -169,6 +175,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Invisibility',
     systems: {
+      'dnd-3.5e': { level: 2, school: 'illusion' },
       'dnd-5e-2014': e(2, 'illusion'),
       'dnd-5e-2024': e(2, 'illusion'),
       pf1e: e(2, 'illusion'),
@@ -178,6 +185,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Fly',
     systems: {
+      'dnd-3.5e': { level: 3, school: 'transmutation' },
       'dnd-5e-2014': e(3, 'transmutation'),
       'dnd-5e-2024': e(3, 'transmutation'),
       pf1e: e(3, 'transmutation'),
@@ -254,6 +262,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Sleep',
     systems: {
+      'dnd-3.5e': { level: 1, school: 'enchantment' },
       pf2e: { level: 1, school: 'enchantment' },
       'dnd-5e-2014': e(1, 'enchantment'),
       'dnd-5e-2024': e(1, 'enchantment'),
@@ -263,6 +272,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Web',
     systems: {
+      'dnd-3.5e': { level: 2, school: 'conjuration' },
       'dnd-5e-2014': e(2, 'conjuration'),
       'dnd-5e-2024': e(2, 'conjuration'),
       pf1e: e(2, 'conjuration'),
@@ -272,6 +282,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Scorching Ray',
     systems: {
+      'dnd-3.5e': { level: 2, school: 'evocation' },
       'dnd-5e-2014': { level: 2, school: 'evocation' },
       'dnd-5e-2024': e(2, 'evocation'),
       pf1e: e(2, 'evocation'),
@@ -280,6 +291,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Cone of Cold',
     systems: {
+      'dnd-3.5e': { level: 5, school: 'evocation' },
       'dnd-5e-2014': { level: 5, school: 'evocation' },
       'dnd-5e-2024': e(5, 'evocation'),
       pf1e: e(5, 'evocation'),
@@ -289,6 +301,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Teleport',
     systems: {
+      'dnd-3.5e': { level: 5, school: 'conjuration' },
       'dnd-5e-2014': e(7, 'conjuration'),
       'dnd-5e-2024': e(7, 'conjuration'),
       pf1e: e(5, 'conjuration'),
@@ -298,6 +311,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Identify',
     systems: {
+      'dnd-3.5e': { level: 1, school: 'divination' },
       'dnd-5e-2014': e(1, 'divination'),
       'dnd-5e-2024': e(1, 'divination'),
       pf1e: e(1, 'divination'),
@@ -306,6 +320,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Mage Hand',
     systems: {
+      'dnd-3.5e': { level: 0, school: 'transmutation' },
       'dnd-5e-2014': e(0, 'conjuration'),
       'dnd-5e-2024': e(0, 'conjuration'),
       pf1e: e(0, 'transmutation'),

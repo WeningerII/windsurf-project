@@ -154,6 +154,9 @@ export default defineConfig({
           if (id.includes('src/data/dnd/5e-2024')) {
             return 'dnd-5e-2024-data';
           }
+          if (id.includes('src/data/dnd/3.5e/spells')) {
+            return 'dnd-35e-spells-data';
+          }
           if (id.includes('src/data/dnd/3.5e')) {
             return 'dnd-35e-data';
           }
