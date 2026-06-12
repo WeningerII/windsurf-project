@@ -363,3 +363,65 @@ describe('5e Extra Attack in scene combat (phase 4)', () => {
     }
   });
 });
+
+describe('5e rider toggles in scene combat (phase 4)', () => {
+  it('a raging barbarian with GWM folds both riders into the damage chain', async () => {
+    const { buildCharacterCombatant } = await import('../../rules');
+    const { createDefaultDnd5eData } = await import('../../systems/dnd5e/data-model');
+    const system = {
+      ...createDefaultDnd5eData(),
+      activeToggles: ['rage', 'great-weapon-master'],
+      classLevels: [{ classId: 'barbarian', level: 9, hitDieRolls: [] }],
+      features: [{ id: 'rage', name: 'Rage', source: 'Barbarian 1', description: 'RAGE.' }],
+      feats: [
+        {
+          id: 'great-weapon-master',
+          name: 'Great Weapon Master',
+          source: 'Feat',
+          description: '-5/+10.',
+        },
+      ],
+    };
+    const built = buildCharacterCombatant(
+      {
+        id: 'barb',
+        name: 'Barb',
+        systemId: 'dnd-5e-2014',
+        system,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      { tokenId: 'b', position: { x: 0, y: 0 } }
+    );
+    expect(built.supported).toBe(true);
+    if (!built.supported) return;
+    // Rage at barbarian 9 = +3 damage; GWM = -5 attack / +10 damage.
+    const damageAdds = built.combatant.damageEffects
+      .filter((effect) => effect.operation === 'add')
+      .map((effect) => effect.value);
+    expect(damageAdds).toContain(3);
+    expect(damageAdds).toContain(10);
+    expect(built.combatant.attackEffects.some((effect) => effect.value === -5)).toBe(true);
+  });
+
+  it('toggles without the gating feature contribute nothing', async () => {
+    const { buildCharacterCombatant } = await import('../../rules');
+    const { createDefaultDnd5eData } = await import('../../systems/dnd5e/data-model');
+    const built = buildCharacterCombatant(
+      {
+        id: 'pretender',
+        name: 'Pretender',
+        systemId: 'dnd-5e-2014',
+        system: { ...createDefaultDnd5eData(), activeToggles: ['rage', 'sneak-attack'] },
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      { tokenId: 'p', position: { x: 0, y: 0 } }
+    );
+    expect(built.supported).toBe(true);
+    if (!built.supported) return;
+    expect(built.combatant.damageEffects.some((effect) => /rage|sneak/i.test(effect.label))).toBe(
+      false
+    );
+  });
+});

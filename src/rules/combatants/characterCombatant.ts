@@ -35,6 +35,7 @@ import type { EquippedItem, Feat, Feature } from '../../types/core/character';
 import type { SceneCoordinate, SceneToken } from '../../types/core/scene';
 import { abilityMod } from '../../utils/math';
 import { profBonus } from '../../systems/dnd5e/shared/engine';
+import { collectDnd5eRiderEffects } from '../conditions/dnd5eRiders';
 import {
   compileEquipmentEffects,
   compileModifierEffects,
@@ -258,6 +259,25 @@ export function buildCharacterCombatant(
     },
   ];
 
+  // Phase 4 riders: active, feature-gated toggles (Rage/GWM/Sneak Attack)
+  // assemble into the same attack/damage chain the sheet uses.
+  const systemRaw = document.system as {
+    activeToggles?: string[];
+    classLevels?: Array<{ classId?: string; level?: number }>;
+  };
+  const classLevel = (classId: string) =>
+    (systemRaw.classLevels ?? []).find((entry) => entry.classId === classId)?.level ?? 0;
+  const riderEffects =
+    document.systemId === 'dnd-5e-2014' || document.systemId === 'dnd-5e-2024'
+      ? collectDnd5eRiderEffects({
+          activeToggles: systemRaw.activeToggles ?? [],
+          featureIds: new Set(sheet.features.map((feature) => feature.id)),
+          featIds: new Set(sheet.feats.map((feat) => feat.id)),
+          barbarianLevel: classLevel('barbarian'),
+          rogueLevel: classLevel('rogue'),
+        })
+      : [];
+
   const weaponDie = options.weaponDie ?? 6;
   const damageEffects: EffectInstance[] = [
     {
@@ -299,8 +319,8 @@ export function buildCharacterCombatant(
       // Explicit faction wins; 'party' is what factionForToken derives for a
       // 'character'-kind token.
       faction: options.faction ?? 'party',
-      attackEffects,
-      damageEffects,
+      attackEffects: [...attackEffects, ...riderEffects.filter((e) => e.target === 'attack')],
+      damageEffects: [...damageEffects, ...riderEffects.filter((e) => e.target === 'damage')],
       reach: options.reach ?? 1,
       armorClass: sheet.armorClass,
       // 5e Extra Attack (compute-register damage-assembly residual): each
