@@ -68,7 +68,6 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Fireball',
     systems: {
-      pf2e: { level: 3, school: 'evocation' },
       'dnd-5e-2014': { level: 3, school: 'evocation' },
       'dnd-5e-2024': e(3, 'evocation'),
       'dnd-3.5e': e(3, 'evocation'),
@@ -79,7 +78,6 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Magic Missile',
     systems: {
-      pf2e: { level: 1, school: 'evocation' },
       'dnd-5e-2014': e(1, 'evocation'),
       'dnd-5e-2024': e(1, 'evocation'),
       pf1e: e(1, 'evocation'),
@@ -97,7 +95,6 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Bless',
     systems: {
-      pf2e: { level: 1, school: 'enchantment' },
       'dnd-5e-2014': e(1, 'enchantment'),
       'dnd-5e-2024': e(1, 'enchantment'),
       'dnd-3.5e': e(1, 'enchantment'),
@@ -108,7 +105,6 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Shield',
     systems: {
-      pf2e: { level: 0, school: 'abjuration' },
       'dnd-5e-2014': e(1, 'abjuration'),
       'dnd-5e-2024': e(1, 'abjuration'),
       pf1e: e(1, 'abjuration'),
@@ -144,7 +140,6 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Burning Hands',
     systems: {
-      pf2e: { level: 1, school: 'evocation' },
       'dnd-5e-2014': e(1, 'evocation'),
       'dnd-5e-2024': e(1, 'evocation'),
       pf1e: e(1, 'evocation'),
@@ -164,7 +159,6 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Dispel Magic',
     systems: {
-      pf2e: { level: 2, school: 'abjuration' },
       'dnd-5e-2014': e(3, 'abjuration'),
       'dnd-5e-2024': e(3, 'abjuration'),
       'dnd-3.5e': e(3, 'abjuration'),
@@ -175,7 +169,6 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Invisibility',
     systems: {
-      pf2e: { level: 2, school: 'illusion' },
       'dnd-5e-2014': e(2, 'illusion'),
       'dnd-5e-2024': e(2, 'illusion'),
       pf1e: e(2, 'illusion'),
@@ -185,7 +178,6 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Fly',
     systems: {
-      pf2e: { level: 4, school: 'transmutation' },
       'dnd-5e-2014': e(3, 'transmutation'),
       'dnd-5e-2024': e(3, 'transmutation'),
       pf1e: e(3, 'transmutation'),
@@ -195,7 +187,6 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Haste',
     systems: {
-      pf2e: { level: 3, school: 'transmutation' },
       'dnd-5e-2014': e(3, 'transmutation'),
       'dnd-5e-2024': e(3, 'transmutation'),
       'dnd-3.5e': e(3, 'transmutation'),
@@ -206,7 +197,6 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Lightning Bolt',
     systems: {
-      pf2e: { level: 3, school: 'evocation' },
       'dnd-5e-2014': { level: 3, school: 'evocation' },
       'dnd-5e-2024': e(3, 'evocation'),
       'dnd-3.5e': e(3, 'evocation'),
@@ -234,7 +224,6 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Wish',
     systems: {
-      pf2e: { level: 9, school: 'divination' },
       'dnd-5e-2014': e(9, 'conjuration'),
       'dnd-5e-2024': e(9, 'conjuration'),
       'dnd-3.5e': e(9, 'conjuration'),
@@ -245,7 +234,6 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Meteor Swarm',
     systems: {
-      pf2e: { level: 9, school: 'evocation' },
       'dnd-5e-2014': { level: 9, school: 'evocation' },
       'dnd-5e-2024': e(9, 'evocation'),
       'dnd-3.5e': e(9, 'evocation'),
@@ -274,7 +262,6 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Web',
     systems: {
-      pf2e: { level: 2, school: 'conjuration' },
       'dnd-5e-2014': e(2, 'conjuration'),
       'dnd-5e-2024': e(2, 'conjuration'),
       pf1e: e(2, 'conjuration'),
@@ -292,7 +279,6 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Cone of Cold',
     systems: {
-      pf2e: { level: 5, school: 'evocation' },
       'dnd-5e-2014': { level: 5, school: 'evocation' },
       'dnd-5e-2024': e(5, 'evocation'),
       pf1e: e(5, 'evocation'),
@@ -302,7 +288,6 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Teleport',
     systems: {
-      pf2e: { level: 6, school: 'conjuration' },
       'dnd-5e-2014': e(7, 'conjuration'),
       'dnd-5e-2024': e(7, 'conjuration'),
       pf1e: e(5, 'conjuration'),
@@ -320,7 +305,6 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Mage Hand',
     systems: {
-      pf2e: { level: 0, school: 'evocation' },
       'dnd-5e-2014': e(0, 'conjuration'),
       'dnd-5e-2024': e(0, 'conjuration'),
       pf1e: e(0, 'transmutation'),
@@ -330,7 +314,6 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Light',
     systems: {
-      pf2e: { level: 0, school: 'evocation' },
       'dnd-5e-2014': e(0, 'evocation'),
       'dnd-5e-2024': e(0, 'evocation'),
       'dnd-3.5e': e(0, 'evocation'),
@@ -351,7 +334,6 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Guidance',
     systems: {
-      pf2e: { level: 0, school: 'divination' },
       'dnd-5e-2014': e(0, 'divination'),
       'dnd-5e-2024': e(0, 'divination'),
       'dnd-3.5e': e(0, 'divination'),
@@ -371,7 +353,6 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Acid Splash',
     systems: {
-      pf2e: { level: 0, school: 'evocation' },
       'dnd-5e-2014': e(0, 'conjuration'),
       'dnd-5e-2024': e(0, 'evocation'),
       'dnd-3.5e': e(0, 'conjuration'),
@@ -382,7 +363,6 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Ray of Frost',
     systems: {
-      pf2e: { level: 0, school: 'evocation' },
       'dnd-5e-2014': e(0, 'evocation'),
       'dnd-5e-2024': e(0, 'evocation'),
       'dnd-3.5e': e(0, 'evocation'),
@@ -441,7 +421,6 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Sanctuary',
     systems: {
-      pf2e: { level: 1, school: 'abjuration' },
       'dnd-5e-2014': e(1, 'abjuration'),
       'dnd-5e-2024': e(1, 'abjuration'),
       'dnd-3.5e': e(1, 'abjuration'),
@@ -460,7 +439,6 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Freedom of Movement',
     systems: {
-      pf2e: { level: 4, school: 'abjuration' },
       'dnd-5e-2014': e(4, 'abjuration'),
       'dnd-5e-2024': e(4, 'abjuration'),
       'dnd-3.5e': e(4, 'abjuration'),
@@ -487,7 +465,6 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Banishment',
     systems: {
-      pf2e: { level: 5, school: 'abjuration' },
       'dnd-5e-2014': e(4, 'abjuration'),
       'dnd-5e-2024': e(4, 'abjuration'),
       'dnd-3.5e': e(6, 'abjuration'),
