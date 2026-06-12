@@ -25,6 +25,7 @@ import { gridDistance } from '../resolver/areaTargeting';
 import { participantRng } from '../resolver/participantResolution';
 import { attackToDamageIntent } from '../resolver/sceneCombat';
 import { collectDnd5eConditionEffects } from '../conditions/dnd5eConditions';
+import { daggerheartHpMarked, resolveDaggerheartAttack } from '../resolver/daggerheartResolution';
 
 /** PF2e scenes resolve attacks by CRB degrees of success; others use d20 crits. */
 function degreeModelForScene(state: SceneState): 'd20' | 'pf2e' {
@@ -43,6 +44,11 @@ export interface SceneCombatStats {
   attacksPerRound?: number;
   /** Movement per turn in grid cells (speed feet / 5). Default 6 (30 ft.). */
   speedCells?: number;
+  /**
+   * Daggerheart combat variant: present when this token fights by the duality
+   * model (2d12 vs Evasion, threshold-marked HP). armorClass carries Evasion.
+   */
+  daggerheart?: { thresholds: { major: number; severe: number } };
 }
 
 /** Resolve a token's combat stats, or undefined when it cannot fight. */
@@ -162,6 +168,38 @@ export function resolveSceneAttack(params: {
     return {
       log: `${attacker.name} cannot reach ${target.name} (${distance} cells away, reach ${attackerStats.reach}).`,
       hit: false,
+    };
+  }
+
+  // Daggerheart scenes resolve by the system's own model: 2d12 duality vs
+  // Evasion, damage compared to thresholds, MARKED HP as the damage amount.
+  if (state.systemId === 'daggerheart' && targetStats.daggerheart) {
+    const result = resolveDaggerheartAttack({
+      attackEffects: attackerStats.attackEffects,
+      damageEffects: attackerStats.damageEffects,
+      evasion: targetStats.armorClass,
+      thresholds: targetStats.daggerheart.thresholds,
+      rng: participantRng(seed, attackerId, targetId),
+    });
+    const marked = result.isHit
+      ? (result.hpMarked ??
+        daggerheartHpMarked(result.damage ?? 0, targetStats.daggerheart.thresholds))
+      : 0;
+    const intent =
+      marked > 0
+        ? ({
+            type: 'apply-damage',
+            damages: [{ tokenId: targetId, amount: marked }],
+            cause: params.cause,
+          } as SceneActionIntent)
+        : undefined;
+    const dice = `Hope ${result.hopeDie} / Fear ${result.fearDie}`;
+    return {
+      intent,
+      hit: result.isHit,
+      log: result.isHit
+        ? `${attacker.name} ${result.isCritical ? 'critically hits' : 'hits'} ${target.name} (${dice} vs Evasion ${targetStats.armorClass}) — marks ${marked} HP.`
+        : `${attacker.name} misses ${target.name} (${dice} vs Evasion ${targetStats.armorClass}).`,
     };
   }
 

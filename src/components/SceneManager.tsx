@@ -15,6 +15,7 @@ import {
 } from '../scene/runtime';
 import {
   buildCharacterCombatant,
+  buildDaggerheartCombatant,
   buildMonsterCombatant,
   resolveSceneAttack,
   runSceneRound,
@@ -145,6 +146,28 @@ export function SceneManager({
   );
   const state = foldedScene?.state;
   const sceneSystemId = state?.systemId;
+
+  // Daggerheart scenes need the weapon catalog so character tokens can fight
+  // (weapons are catalog refs on the document); mirrors the monster preload.
+  const [daggerheartWeaponsById, setDaggerheartWeaponsById] = useState<
+    ReadonlyMap<string, import('../types/daggerheart').DaggerheartWeapon>
+  >(new Map());
+  useEffect(() => {
+    if (sceneSystemId !== 'daggerheart') {
+      setDaggerheartWeaponsById(new Map());
+      return;
+    }
+    let cancelled = false;
+    import('../data/daggerheart/1.0/equipment').then((mod) => {
+      if (cancelled) return;
+      setDaggerheartWeaponsById(
+        new Map((mod.daggerheartWeapons ?? []).map((weapon) => [weapon.id, weapon]))
+      );
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [sceneSystemId]);
 
   useEffect(() => {
     if (!sceneSystemId || !isMonsterSystemId(sceneSystemId)) {
@@ -365,6 +388,22 @@ export function SceneManager({
       if (token.kind === 'character' && token.refId) {
         const doc = documentsById.get(token.refId);
         if (!doc) return undefined;
+        if (doc.systemId === 'daggerheart') {
+          const built = buildDaggerheartCombatant(doc, daggerheartWeaponsById, {
+            tokenId: token.id,
+            position: token.position,
+          });
+          if (!built.supported) return undefined;
+          return {
+            attackEffects: built.combatant.attackEffects,
+            damageEffects: built.combatant.damageEffects,
+            // Evasion rides the targetValue channel.
+            armorClass: built.combatant.evasion,
+            reach: built.combatant.reach,
+            speedCells: built.combatant.speedCells,
+            daggerheart: { thresholds: built.combatant.thresholds },
+          };
+        }
         const built = buildCharacterCombatant(doc, { tokenId: token.id, position: token.position });
         if (!built.supported) return undefined;
         return {
@@ -376,7 +415,7 @@ export function SceneManager({
       }
       return undefined;
     },
-    [monstersById, documentsById]
+    [monstersById, documentsById, daggerheartWeaponsById]
   );
 
   const combatReadyIds = useMemo(() => {

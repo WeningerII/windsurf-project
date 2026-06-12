@@ -494,3 +494,69 @@ describe('token conditions in scene combat (grid-combat review)', () => {
     expect(orc.attackEffects).toHaveLength(hittingStats.attackEffects.length);
   });
 });
+
+describe('Daggerheart scene combat (phase 3 adapter)', () => {
+  const dhStats = (evasion: number, thresholds: { major: number; severe: number }) => ({
+    attackEffects: [
+      {
+        id: 'dh-atk',
+        systemId: 'daggerheart' as const,
+        target: 'attack',
+        operation: 'add' as const,
+        value: 100, // always meets Evasion: deterministic hit
+        stackPolicy: 'sum' as const,
+        source: { kind: 'system' as const, label: 'trait' },
+        label: 'trait',
+      },
+    ],
+    damageEffects: [
+      {
+        id: 'dh-dmg',
+        systemId: 'daggerheart' as const,
+        target: 'damage',
+        operation: 'add' as const,
+        value: 20, // flat 20 >= severe: marks 3 HP, deterministically
+        stackPolicy: 'sum' as const,
+        source: { kind: 'item' as const, label: 'sword' },
+        label: 'sword',
+      },
+    ],
+    armorClass: evasion,
+    reach: 1,
+    daggerheart: { thresholds },
+  });
+
+  it('resolves 2d12 vs Evasion and applies threshold-MARKED HP, not raw damage', () => {
+    let scene = createSceneDocument({ id: 'dh', name: 'DH', systemId: 'daggerheart', seed: 'dh' });
+    for (const token of [
+      combatToken('hero', 'character', 6, 0),
+      combatToken('foe', 'character', 6, 1),
+    ]) {
+      const r = resolveSceneAction(
+        scene,
+        { type: 'place-token', token },
+        { eventId: `p-${token.id}` }
+      );
+      scene = appendSceneEvent(scene, r.event!);
+    }
+    const state = foldSceneEvents(scene).state;
+
+    const outcome = resolveSceneAttack({
+      state,
+      attackerId: 'hero',
+      targetId: 'foe',
+      resolveStats: () => dhStats(10, { major: 7, severe: 12 }),
+      seed: 'dh-attack',
+    });
+
+    expect(outcome.hit).toBe(true);
+    expect(outcome.log).toContain('Hope');
+    expect(outcome.log).toContain('Evasion 10');
+    // Raw damage 20 >= severe 12 marks exactly 3 HP — the intent carries the
+    // MARKED amount (slot model), never the raw total.
+    expect(outcome.intent).toMatchObject({
+      type: 'apply-damage',
+      damages: [{ tokenId: 'foe', amount: 3 }],
+    });
+  });
+});

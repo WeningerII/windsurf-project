@@ -82,6 +82,12 @@ export type {
 } from './tactical/roundDriver';
 export { isRoundConclusive, runCombatRound } from './tactical/roundDriver';
 
+export type {
+  BuildDaggerheartCombatantResult,
+  DaggerheartCombatant,
+} from './combatants/daggerheartCombatant';
+export { buildDaggerheartCombatant } from './combatants/daggerheartCombatant';
+
 export type { MonsterCombatant } from './combatants/monsterCombatant';
 export {
   buildMonsterCombatant,
