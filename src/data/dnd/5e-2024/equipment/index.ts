@@ -4,11 +4,17 @@ import { dnd5e2024Armor } from './armor';
 import { dnd5e2024Gear } from './adventuring-gear';
 import { dnd5e2024MagicItems } from './magic-items';
 
+import { srdEquipment } from './srd-equipment';
+import { srdMagicItems } from './srd-magic-items';
+
 export const dnd5e2024Equipment: Item[] = [
   ...dnd5e2024Weapons,
   ...dnd5e2024Armor,
   ...dnd5e2024Gear,
   ...dnd5e2024MagicItems,
+  // Generated SRD 5.2 encodings (scripts/encode-5e-equipment.mjs --year 2024).
+  ...srdEquipment,
+  ...srdMagicItems,
 ];
 
 export const getEquipment = (id: string): Item | undefined => {

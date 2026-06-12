@@ -145,6 +145,12 @@ export default defineConfig({
           if (id.includes('src/data/dnd/5e-2014')) {
             return 'dnd-5e-2014-data';
           }
+          if (id.includes('src/data/dnd/5e-2024/equipment')) {
+            return 'dnd-5e-2024-equipment-data';
+          }
+          if (id.includes('src/data/dnd/5e-2024/spells')) {
+            return 'dnd-5e-2024-spells-data';
+          }
           if (id.includes('src/data/dnd/5e-2024')) {
             return 'dnd-5e-2024-data';
           }

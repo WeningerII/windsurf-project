@@ -150,7 +150,7 @@ describe('Data Loader Integration Tests', () => {
 
     it('should load equipment for dnd-5e-2024 without duplicates', async () => {
       const equipment = await loadEquipmentForSystem('dnd-5e-2024');
-      expect(equipment.length).toBe(204);
+      expect(equipment.length).toBe(502);
       expect(new Set(equipment.map((e) => e.id)).size).toBe(equipment.length);
     });
   });
