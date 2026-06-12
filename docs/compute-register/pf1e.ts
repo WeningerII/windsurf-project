@@ -124,6 +124,7 @@ export const pf1eComputeRegister: SystemComputeRegister = {
       source: `${CRB}: Combat — Full Attack`,
       status: 'verified',
       testRef: 'src/__tests__/derivedCombatMath.test.ts :: d20 iterative attacks',
+      note: 'Scene-wired: buildCharacterCombatant derives attacksPerRound/iterativePenaltyStep from BAB and the tactical executor applies the cumulative -5 (src/__tests__/rules/characterCombatant.test.ts :: legacy-d20 iterative attacks).',
     },
     {
       id: 'pf1e.L3.maneuver-types',
