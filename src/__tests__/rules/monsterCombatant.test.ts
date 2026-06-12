@@ -408,3 +408,26 @@ describe('encoded PF1e Bestiary fights through the scene adapter', () => {
     expect(built.token.hp!.max).toBeGreaterThan(0);
   });
 });
+
+describe('encoded PF2e Bestiary 1 fights through the scene adapter', () => {
+  it('the Goblin Warrior builds a combatant with its printed numbers', async () => {
+    const { pf2eMonsters } = await import('../../data/pathfinder/2e/monsters');
+    const { buildMonsterCombatant, monsterAverageHitPoints } = await import('../../rules');
+    expect(pf2eMonsters.length).toBe(413);
+    const goblin = pf2eMonsters.find((monster) => monster.id === 'goblin-warrior');
+    expect(goblin).toBeDefined();
+    // Pf2eTools B1 Goblin Warrior: dogslicer +8 (1d6 slashing), AC 16, HP 6.
+    expect(goblin!.actions[0]?.attackBonus).toBe(8);
+    expect(goblin!.armorClass).toBe(16);
+    expect(monsterAverageHitPoints(goblin!)).toBe(6);
+    // PF2e XP is party-relative by design: no fixed experiencePoints.
+    expect(goblin!.experiencePoints).toBe(0);
+    const built = buildMonsterCombatant(goblin!, { tokenId: 'g', position: { x: 0, y: 0 } });
+    const attackTotal = built.attackEffects.reduce(
+      (sum, effect) => sum + (typeof effect.value === 'number' ? effect.value : 0),
+      0
+    );
+    expect(attackTotal).toBe(8);
+    expect(built.damageEffects.length).toBeGreaterThan(0);
+  });
+});

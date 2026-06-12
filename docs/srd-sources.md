@@ -34,7 +34,7 @@ fetchers behind WAFs, so they are confirmed via search indexing.
 
 - **Human-readable (official SRD):** `https://2e.aonprd.com/`; ORC license `https://paizo.com/orclicense`.
 - **Machine-readable (verified):** `Pf2eToolsOrg/Pf2eTools` — book-segmented JSON, Core via `https://raw.githubusercontent.com/Pf2eToolsOrg/Pf2eTools/master/data/spells/spells-crb.json` (`source:"CRB"`) + matching `bestiary/`, `class/`, `ancestries/`, `feats/`, `items/` CRB files (index `data/spells/index.json`). Also `foundryvtt/pf2e` `packs/` (per-item JSON, embedded `publication.license`/`remaster` tags — full corpus) and successor `Pf2ools/pf2ools-data`.
-- **Counts:** Paizo gives no exact spell integer; derive by counting `spells-crb.json`. Bestiary 1 > 400 monsters. **Repo policy scopes PF2e to Core Rulebook.**
+- **Counts:** Paizo gives no exact spell integer; derive by counting `spells-crb.json`. Bestiary 1 = **413** creatures (`creatures-b1.json`, tag `B1`) — encoded in full by `scripts/encode-pf2e-monsters.mjs` (PF2e level → challengeRating; XP deliberately 0 because PF2e awards XP relative to party level). **Repo policy scopes PF2e to Core Rulebook + Bestiary 1** (OGL-era content).
 
 ## Mutants & Masterminds 3e — Hero's Handbook SRD (OGL 1.0a)
 

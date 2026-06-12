@@ -46,7 +46,9 @@ export const strictOpenContentPolicy: Record<GameSystemId, SystemOpenContentPoli
     allowMissingSourceFor: [],
   },
   pf2e: {
-    allowedSources: ['Core Rulebook', 'CRB'],
+    // 'B1' is Pf2eTools' tag for Bestiary 1 (OGL-era PF2e content) — see
+    // docs/srd-sources.md.
+    allowedSources: ['Core Rulebook', 'CRB', 'B1'],
     allowMissingSourceFor: [],
   },
   mam3e: {

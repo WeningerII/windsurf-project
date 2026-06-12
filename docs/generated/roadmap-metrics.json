@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-12T20:35:15.068Z",
+  "generatedAt": "2026-06-12T20:44:50.404Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -33,7 +33,8 @@
     "pf2e": {
       "allowedSources": [
         "Core Rulebook",
-        "CRB"
+        "CRB",
+        "B1"
       ],
       "allowMissingSourceFor": []
     },
@@ -125,7 +126,7 @@
       "featureOptions": 0,
       "archetypes": 5,
       "complications": 0,
-      "monsters": 0,
+      "monsters": 413,
       "equipment": 188,
       "feats": 93,
       "advantages": 0,
@@ -232,7 +233,7 @@
       "featureOptions": 0,
       "archetypes": 5,
       "complications": 0,
-      "monsters": 0,
+      "monsters": 413,
       "equipment": 188,
       "feats": 93,
       "advantages": 0,
@@ -1423,6 +1424,22 @@
         "nonCompliantCount": 0,
         "sourceCounts": {
           "Core Rulebook": 5
+        }
+      }
+    },
+    {
+      "systemId": "pf2e",
+      "systemLabel": "Pathfinder 2e",
+      "category": "monsters",
+      "categoryLabel": "Monsters",
+      "metrics": {
+        "rawCount": 413,
+        "uniqueCount": 413,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "B1": 413
         }
       }
     },

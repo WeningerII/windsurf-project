@@ -404,6 +404,20 @@ TARGETS.push({
   loader: () => loaderNames(loadMonstersForSystem, 'pf1e'),
 });
 
+// PF2e Bestiary 1: same Pf2eTools source family as the spell denominator.
+TARGETS.push({
+  systemId: 'pf2e',
+  systemLabel: 'Pathfinder 2e',
+  category: 'monsters',
+  srdSource: 'Bestiary 1 (Pf2eToolsOrg/Pf2eTools creatures-b1.json)',
+  srd: () =>
+    fetchJsonPropNames(
+      'https://raw.githubusercontent.com/Pf2eToolsOrg/Pf2eTools/master/data/bestiary/creatures-b1.json',
+      'creature'
+    ),
+  loader: () => loaderNames(loadMonstersForSystem, 'pf2e'),
+});
+
 // --- D&D 3.5e (SRD 3.5 core — olimot/srd-v3.5-md, clean core-only Markdown) ---
 // Spell names are the `## Name` headers across the nine alphabetical spell
 // files. This is the genuinely core-only denominator docs/srd-sources.md

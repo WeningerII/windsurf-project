@@ -859,6 +859,11 @@ export async function loadMonstersForSystem(systemId: GameSystemId): Promise<Mon
       monsters = monsterModule.pf1eMonsters || [];
       break;
     }
+    case 'pf2e': {
+      const monsterModule = await import('../data/pathfinder/2e/monsters');
+      monsters = monsterModule.pf2eMonsters || [];
+      break;
+    }
     default:
       return [];
   }
