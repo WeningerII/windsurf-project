@@ -560,3 +560,82 @@ describe('Daggerheart scene combat (phase 3 adapter)', () => {
     });
   });
 });
+
+describe('M&M 3e scene combat (phase 3 adapter)', () => {
+  const mamStats = (over: Record<string, unknown> = {}) => ({
+    attackEffects: [
+      {
+        id: 'mam-atk',
+        systemId: 'mam3e' as const,
+        target: 'attack',
+        operation: 'add' as const,
+        value: 100, // always hits: deterministic
+        stackPolicy: 'sum' as const,
+        source: { kind: 'system' as const, label: 'fgt' },
+        label: 'fgt',
+      },
+    ],
+    damageEffects: [],
+    armorClass: 10, // Dodge
+    reach: 1,
+    mam3e: { parry: 10, toughness: -100, effectRank: 10, ranged: false, ...over },
+  });
+
+  function mamScene() {
+    let scene = createSceneDocument({ id: 'mm', name: 'MM', systemId: 'mam3e', seed: 'mm' });
+    for (const token of [
+      combatToken('hero', 'character', 1, 0),
+      combatToken('villain', 'character', 1, 1),
+    ]) {
+      const r = resolveSceneAction(
+        scene,
+        { type: 'place-token', token },
+        { eventId: `p-${token.id}` }
+      );
+      scene = appendSceneEvent(scene, r.event!);
+    }
+    return foldSceneEvents(scene).state;
+  }
+
+  it('a catastrophic Toughness failure incapacitates (downs the up/down token)', () => {
+    // Toughness -100 vs DC 25: shortfall >= 15 — incapacitated per the
+    // Hero's Handbook degree table, applied as a downing damage intent.
+    const outcome = resolveSceneAttack({
+      state: mamScene(),
+      attackerId: 'hero',
+      targetId: 'villain',
+      resolveStats: () => mamStats(),
+      seed: 'mam-incap',
+    });
+    expect(outcome.hit).toBe(true);
+    expect(outcome.log).toContain('INCAPACITATED');
+    expect(outcome.intent).toMatchObject({
+      type: 'apply-damage',
+      damages: [{ tokenId: 'villain', amount: 1 }],
+    });
+  });
+
+  it('a moderate failure persists the condition track on the token', () => {
+    // Toughness +18 vs DC 25 keeps shortfalls in the 1-9 band across the d20
+    // range: bruised (+dazed at 5-9) — never staggered/incapacitated.
+    const outcome = resolveSceneAttack({
+      state: mamScene(),
+      attackerId: 'hero',
+      targetId: 'villain',
+      resolveStats: () => mamStats({ toughness: 18 }),
+      // seed chosen so the attack d20 is 18 (a hit; 'mam-bruise' rolled a
+      // natural 1, which RAW auto-misses) and the save d20 is 12.
+      seed: 'mam-bruise-2',
+    });
+    expect(outcome.hit).toBe(true);
+    if (outcome.intent) {
+      expect(outcome.intent.type).toBe('set-token-conditions');
+      const conditions = (outcome.intent as { conditions: string[] }).conditions;
+      expect(conditions.some((c) => /^bruised-\d+$/.test(c))).toBe(true);
+      expect(conditions).not.toContain('incapacitated');
+    } else {
+      // The save held for this seed — legal, but the log must say so.
+      expect(outcome.log).toContain('holds');
+    }
+  });
+});

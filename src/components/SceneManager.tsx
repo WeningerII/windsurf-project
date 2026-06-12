@@ -16,6 +16,7 @@ import {
 import {
   buildCharacterCombatant,
   buildDaggerheartCombatant,
+  buildMam3eCombatant,
   buildMonsterCombatant,
   resolveSceneAttack,
   runSceneRound,
@@ -402,6 +403,24 @@ export function SceneManager({
             reach: built.combatant.reach,
             speedCells: built.combatant.speedCells,
             daggerheart: { thresholds: built.combatant.thresholds },
+          };
+        }
+        if (doc.systemId === 'mam3e') {
+          const built = buildMam3eCombatant(doc, { tokenId: token.id, position: token.position });
+          if (!built.supported) return undefined;
+          return {
+            attackEffects: built.combatant.attackEffects,
+            damageEffects: [],
+            // Dodge rides the targetValue channel; Parry/Toughness in the variant.
+            armorClass: built.combatant.dodge,
+            reach: built.combatant.reach,
+            speedCells: built.combatant.speedCells,
+            mam3e: {
+              parry: built.combatant.parry,
+              toughness: built.combatant.toughness,
+              effectRank: built.combatant.effectRank,
+              ranged: built.combatant.ranged,
+            },
           };
         }
         const built = buildCharacterCombatant(doc, { tokenId: token.id, position: token.position });

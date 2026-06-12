@@ -26,6 +26,8 @@ import { participantRng } from '../resolver/participantResolution';
 import { attackToDamageIntent } from '../resolver/sceneCombat';
 import { collectDnd5eConditionEffects } from '../conditions/dnd5eConditions';
 import { daggerheartHpMarked, resolveDaggerheartAttack } from '../resolver/daggerheartResolution';
+import { resolveMam3eAttack } from '../resolver/mam3eResolution';
+import { nextMam3eTokenConditions } from '../combatants/mam3eCombatant';
 
 /** PF2e scenes resolve attacks by CRB degrees of success; others use d20 crits. */
 function degreeModelForScene(state: SceneState): 'd20' | 'pf2e' {
@@ -49,6 +51,11 @@ export interface SceneCombatStats {
    * model (2d12 vs Evasion, threshold-marked HP). armorClass carries Evasion.
    */
   daggerheart?: { thresholds: { major: number; severe: number } };
+  /**
+   * M&M 3e combat variant: d20 vs Dodge/Parry, Toughness save vs DC 15 +
+   * effect rank, condition-track outcomes. armorClass carries Dodge.
+   */
+  mam3e?: { parry: number; toughness: number; effectRank: number; ranged: boolean };
 }
 
 /** Resolve a token's combat stats, or undefined when it cannot fight. */
@@ -168,6 +175,53 @@ export function resolveSceneAttack(params: {
     return {
       log: `${attacker.name} cannot reach ${target.name} (${distance} cells away, reach ${attackerStats.reach}).`,
       hit: false,
+    };
+  }
+
+  // M&M scenes resolve by the system's own model: d20 vs Dodge/Parry, then a
+  // Toughness save whose shortfall drives the CONDITION track. Incapacitation
+  // downs the token (hp is a pure up/down flag for M&M tokens); other
+  // outcomes persist as token conditions.
+  if (state.systemId === 'mam3e' && attackerStats.mam3e && targetStats.mam3e) {
+    const result = resolveMam3eAttack({
+      attackEffects: attackerStats.attackEffects,
+      targetDefense: attackerStats.mam3e.ranged ? targetStats.armorClass : targetStats.mam3e.parry,
+      effectRank: attackerStats.mam3e.effectRank,
+      toughness: targetStats.mam3e.toughness,
+      rng: participantRng(seed, attackerId, targetId),
+    });
+    const roll = `rolled ${result.naturalRoll}+${result.attackBonus} vs ${
+      attackerStats.mam3e.ranged ? 'Dodge' : 'Parry'
+    }`;
+    if (!result.isHit) {
+      return { hit: false, log: `${attacker.name} misses ${target.name} (${roll}).` };
+    }
+    const save = `Toughness ${result.saveTotal} vs DC ${result.saveDC}`;
+    if (result.condition.incapacitated) {
+      return {
+        hit: true,
+        intent: {
+          type: 'apply-damage',
+          damages: [{ tokenId: targetId, amount: target.hp.current }],
+          cause: params.cause,
+        },
+        log: `${attacker.name} hits ${target.name} (${roll}); ${save} fails by ${result.shortfall} — INCAPACITATED.`,
+      };
+    }
+    if (result.shortfall <= 0) {
+      return {
+        hit: true,
+        log: `${attacker.name} hits ${target.name} (${roll}); ${save} holds — no effect.`,
+      };
+    }
+    return {
+      hit: true,
+      intent: {
+        type: 'set-token-conditions',
+        tokenId: targetId,
+        conditions: nextMam3eTokenConditions(target.conditions ?? [], result.condition),
+      },
+      log: `${attacker.name} hits ${target.name} (${roll}); ${save} fails by ${result.shortfall}.`,
     };
   }
 
