@@ -384,6 +384,7 @@ export function SceneManager({
           reach: built.reach,
           attacksPerRound: built.attacksPerRound,
           speedCells: built.speedCells,
+          areaSaveBonus: built.areaSaveBonus,
         };
       }
       if (token.kind === 'character' && token.refId) {

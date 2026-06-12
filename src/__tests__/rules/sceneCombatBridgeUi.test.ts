@@ -639,3 +639,85 @@ describe('M&M 3e scene combat (phase 3 adapter)', () => {
     }
   });
 });
+
+describe('scene area effects (phase 3 tail — AoE product-reachable)', () => {
+  it('rolls shared damage once, saves independently, and lands one intent', async () => {
+    const { resolveSceneAreaEffect } = await import('../../rules');
+    let scene = createSceneDocument({ id: 'aoe', name: 'AoE', systemId: SID, seed: 'aoe' });
+    for (const token of [
+      combatToken('caster', 'character', 20, 0),
+      combatToken('orc-1', 'monster', 20, 2),
+      combatToken('orc-2', 'monster', 20, 3),
+      combatToken('far-away', 'monster', 20, 9),
+    ]) {
+      const r = resolveSceneAction(
+        scene,
+        { type: 'place-token', token },
+        { eventId: `p-${token.id}` }
+      );
+      scene = appendSceneEvent(scene, r.event!);
+    }
+    const state = foldSceneEvents(scene).state;
+
+    const outcome = resolveSceneAreaEffect({
+      state,
+      sourceId: 'caster',
+      shape: { kind: 'burst', origin: { x: 2, y: 0 }, radius: 2 },
+      damageEffects: flatDamage(10), // flat: deterministic shared damage
+      saveDC: 30, // everyone fails: full damage
+      resolveStats: () => ({ ...hittingStats, areaSaveBonus: 0 }),
+      seed: 'fireball-1',
+    });
+
+    // Both orcs are in the burst; the caster (source) and the distant orc are not.
+    expect(outcome.affected).toBe(2);
+    expect(outcome.intent).toMatchObject({
+      type: 'apply-damage',
+      damages: [
+        { tokenId: 'orc-1', amount: 10 },
+        { tokenId: 'orc-2', amount: 10 },
+      ],
+    });
+    // Replays byte-identically.
+    const again = resolveSceneAreaEffect({
+      state,
+      sourceId: 'caster',
+      shape: { kind: 'burst', origin: { x: 2, y: 0 }, radius: 2 },
+      damageEffects: flatDamage(10),
+      saveDC: 30,
+      resolveStats: () => ({ ...hittingStats, areaSaveBonus: 0 }),
+      seed: 'fireball-1',
+    });
+    expect(JSON.stringify(again)).toBe(JSON.stringify(outcome));
+  });
+
+  it('successful saves halve (5e default) and saved-to-zero targets are omitted', async () => {
+    const { resolveSceneAreaEffect } = await import('../../rules');
+    let scene = createSceneDocument({ id: 'aoe2', name: 'AoE2', systemId: SID, seed: 'aoe2' });
+    for (const token of [
+      combatToken('caster', 'character', 20, 0),
+      combatToken('victim', 'monster', 20, 1),
+    ]) {
+      const r = resolveSceneAction(
+        scene,
+        { type: 'place-token', token },
+        { eventId: `p-${token.id}` }
+      );
+      scene = appendSceneEvent(scene, r.event!);
+    }
+    const state = foldSceneEvents(scene).state;
+    const outcome = resolveSceneAreaEffect({
+      state,
+      sourceId: 'caster',
+      shape: { kind: 'burst', origin: { x: 1, y: 0 }, radius: 1 },
+      damageEffects: flatDamage(11),
+      saveDC: -10, // always saves
+      resolveStats: () => ({ ...hittingStats, areaSaveBonus: 0 }),
+      seed: 'half-save',
+    });
+    expect(outcome.intent).toMatchObject({
+      type: 'apply-damage',
+      damages: [{ tokenId: 'victim', amount: 5 }], // floor(11/2)
+    });
+  });
+});

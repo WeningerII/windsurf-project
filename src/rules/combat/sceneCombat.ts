@@ -27,6 +27,9 @@ import { attackToDamageIntent } from '../resolver/sceneCombat';
 import { collectDnd5eConditionEffects } from '../conditions/dnd5eConditions';
 import { daggerheartHpMarked, resolveDaggerheartAttack } from '../resolver/daggerheartResolution';
 import { resolveMam3eAttack } from '../resolver/mam3eResolution';
+import { resolveAreaEffect } from '../resolver/participantResolution';
+import { tokensInArea, type AreaShape } from '../resolver/areaTargeting';
+import type { EffectInstance as AreaDamageEffect } from '../ir/types';
 import { nextMam3eTokenConditions } from '../combatants/mam3eCombatant';
 
 /** PF2e scenes resolve attacks by CRB degrees of success; others use d20 crits. */
@@ -56,6 +59,8 @@ export interface SceneCombatStats {
    * effect rank, condition-track outcomes. armorClass carries Dodge.
    */
   mam3e?: { parry: number; toughness: number; effectRank: number; ranged: boolean };
+  /** Save bonus rolled against area effects (5e family: Dex save). Default 0. */
+  areaSaveBonus?: number;
 }
 
 /** Resolve a token's combat stats, or undefined when it cannot fight. */
@@ -356,4 +361,75 @@ export function runSceneRound(params: {
   }
 
   return { result, intents, log };
+}
+
+export interface SceneAreaEffectOutcome {
+  /** Damage intent covering every affected token, or undefined when none. */
+  intent?: SceneActionIntent;
+  log: string;
+  affected: number;
+}
+
+/**
+ * Resolve an area effect on the scene (the manual GM path — e.g. a Fireball
+ * burst at a point): damage is rolled ONCE from the source stream, every
+ * living token in the shape (except the source) rolls an independent save
+ * from its own sub-stream, and all results land as one apply-damage intent.
+ * Deterministic given the seed; participant order cannot change outcomes.
+ */
+export function resolveSceneAreaEffect(params: {
+  state: SceneState;
+  sourceId: string;
+  shape: AreaShape;
+  damageEffects: readonly AreaDamageEffect[];
+  saveDC: number;
+  halfOnSave?: boolean;
+  resolveStats: ResolveCombatStats;
+  seed: string;
+  cause?: string;
+}): SceneAreaEffectOutcome {
+  const { state, sourceId, shape, resolveStats } = params;
+  const targets = tokensInArea(state, shape).filter(
+    (token) => token.id !== sourceId && token.hp && token.hp.current > 0
+  );
+  if (!targets.length) {
+    return { log: 'No living targets in the area.', affected: 0 };
+  }
+
+  const result = resolveAreaEffect({
+    sourceId,
+    seed: params.seed,
+    damageEffects: params.damageEffects,
+    saveDC: params.saveDC,
+    halfOnSave: params.halfOnSave,
+    participants: targets.map((token) => ({
+      targetId: token.id,
+      saveBonus: resolveStats(token)?.areaSaveBonus ?? 0,
+    })),
+  });
+
+  const damages = result.perTarget
+    .filter((outcome) => outcome.damageTaken > 0)
+    .map((outcome) => ({ tokenId: outcome.targetId, amount: outcome.damageTaken }));
+  const nameOf = (tokenId: string) => state.tokens[tokenId]?.name ?? tokenId;
+  const detail = result.perTarget
+    .map(
+      (outcome) =>
+        `${nameOf(outcome.targetId)} ${outcome.saved ? 'saves' : 'fails'} (${outcome.saveTotal} vs DC ${params.saveDC}) — ${outcome.damageTaken}`
+    )
+    .join('; ');
+
+  return {
+    ...(damages.length
+      ? {
+          intent: {
+            type: 'apply-damage',
+            damages,
+            cause: params.cause,
+          } as SceneActionIntent,
+        }
+      : {}),
+    log: `Area effect (${result.sharedDamage} rolled): ${detail}.`,
+    affected: targets.length,
+  };
 }

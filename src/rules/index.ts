@@ -119,6 +119,7 @@ export {
   buildSceneCombatants,
   factionForToken,
   resolveSceneAttack,
+  resolveSceneAreaEffect,
   runSceneRound,
 } from './combat/sceneCombat';
 
