@@ -160,6 +160,9 @@ export default defineConfig({
           if (id.includes('src/data/pathfinder/1e')) {
             return 'pf1e-data';
           }
+          if (id.includes('src/data/pathfinder/2e/spells')) {
+            return 'pf2e-spells-data';
+          }
           if (id.includes('src/data/pathfinder/2e')) {
             return 'pf2e-data';
           }

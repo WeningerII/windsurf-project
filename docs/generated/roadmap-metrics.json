@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-12T15:44:09.964Z",
+  "generatedAt": "2026-06-12T15:57:38.052Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -116,7 +116,7 @@
       "powerModifiers": 0
     },
     "pf2e": {
-      "spells": 143,
+      "spells": 551,
       "classes": 12,
       "species": 6,
       "backgrounds": 16,
@@ -223,7 +223,7 @@
       "powerModifiers": 0
     },
     "pf2e": {
-      "spells": 143,
+      "spells": 551,
       "classes": 12,
       "species": 6,
       "backgrounds": 16,
@@ -1315,13 +1315,13 @@
       "category": "spells",
       "categoryLabel": "Spells/Powers",
       "metrics": {
-        "rawCount": 143,
-        "uniqueCount": 143,
+        "rawCount": 551,
+        "uniqueCount": 551,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "Core Rulebook": 143
+          "Core Rulebook": 551
         }
       }
     },

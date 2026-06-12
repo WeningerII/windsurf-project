@@ -158,7 +158,10 @@ describe('Data Loader Integration Tests', () => {
   describe('Pathfinder 2e Loaders', () => {
     it('should load spells for pf2e', async () => {
       const spells = await loadSpellsForSystem('pf2e');
-      expect(spells.length).toBe(143);
+      // Full CRB coverage: the catalog's 537 spells (129 hand-written + 408
+      // encoder-generated, scripts/encode-pf2e-spells.mjs) plus the loader's
+      // appended focus-spell entries. srd:coverage verifies independently.
+      expect(spells.length).toBe(551);
       expect(spells.every((spell) => spell.traditions && spell.traditions.length > 0)).toBe(true);
       expect(
         spells
