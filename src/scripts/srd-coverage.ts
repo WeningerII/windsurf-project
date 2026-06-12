@@ -359,6 +359,41 @@ TARGETS.push({
   loader: () => loaderNames(loadSpellsForSystem, 'pf1e'),
 });
 
+// --- D&D 3.5e (SRD 3.5 core — olimot/srd-v3.5-md, clean core-only Markdown) ---
+// Spell names are the `## Name` headers across the nine alphabetical spell
+// files. This is the genuinely core-only denominator docs/srd-sources.md
+// recommended over the psionics/epic-mixed D35E packs.
+const SRD35_MD = 'https://raw.githubusercontent.com/olimot/srd-v3.5-md/main/spells';
+const SRD35_SPELL_FILES = [
+  'spells-a-b.md',
+  'spells-c.md',
+  'spells-d-e.md',
+  'spells-f-g.md',
+  'spells-h-l.md',
+  'spells-m-o.md',
+  'spells-p-r.md',
+  'spells-s.md',
+  'spells-t-z.md',
+];
+async function fetchSrd35SpellNames(): Promise<string[]> {
+  const names: string[] = [];
+  for (const file of SRD35_SPELL_FILES) {
+    const text = await fetchText(`${SRD35_MD}/${file}`);
+    for (const match of text.matchAll(/^## (.+)$/gm)) {
+      names.push(match[1].trim());
+    }
+  }
+  return names;
+}
+TARGETS.push({
+  systemId: 'dnd-3.5e',
+  systemLabel: 'D&D 3.5e',
+  category: 'spells',
+  srdSource: 'SRD 3.5 (olimot/srd-v3.5-md spell chapters)',
+  srd: () => fetchSrd35SpellNames(),
+  loader: () => loaderNames(loadSpellsForSystem, 'dnd-3.5e'),
+});
+
 // --- Mutants & Masterminds 3e (Hero's Handbook — whole DHH open content in scope) ---
 const MM_DATA_JS =
   'https://raw.githubusercontent.com/frnprt/mm3e-character-creator/master/js/data.js';
@@ -500,7 +535,7 @@ async function main(): Promise<void> {
   lines.push('');
   lines.push('## Pending (independent source not yet wired or not cleanly scopable)');
   lines.push(
-    '- **D&D 3.5e** — `Rughalt/D35E` packs mix SRD-3.5 core with Psionics and Epic; a clean core-only filter is not yet implemented, so 3.5e is omitted here rather than reported against a wrong (inflated) denominator. See `docs/srd-sources.md`.'
+    '- **D&D 3.5e spells** are measured against the clean core-only `olimot/srd-v3.5-md` chapters; non-spell 3.5e categories remain unwired pending core-only sources. See `docs/srd-sources.md`.'
   );
   lines.push(
     '- **Remaining categories** — PF2e/PF1e non-spell categories, M&M skills/conditions/equipment, Daggerheart classes/ancestries/communities/weapons/armor, and all monsters are documented in `docs/srd-sources.md` and pending wiring.'
