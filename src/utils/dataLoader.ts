@@ -35,6 +35,7 @@ import type {
   DaggerheartConsumable,
   DaggerheartCommunity,
   DaggerheartDomain,
+  DaggerheartAdversary,
   DaggerheartDomainCard,
   DaggerheartLoot,
   DaggerheartWeapon,
@@ -774,6 +775,17 @@ export async function loadDaggerheartDomainsForSystem(
 
   const domains = await loadDaggerheartDomains();
   return finalizeLoadedItems(systemId, 'domains', domains);
+}
+
+export async function loadDaggerheartAdversariesForSystem(
+  systemId: GameSystemId
+): Promise<DaggerheartAdversary[]> {
+  if (systemId !== 'daggerheart') {
+    return [];
+  }
+
+  const adversaryModule = await import('../data/daggerheart/1.0/adversaries');
+  return finalizeLoadedItems(systemId, 'monsters', adversaryModule.daggerheartAdversaries || []);
 }
 
 export async function loadDaggerheartDomainCardsForSystem(
