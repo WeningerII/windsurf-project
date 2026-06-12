@@ -394,6 +394,42 @@ TARGETS.push({
   loader: () => loaderNames(loadSpellsForSystem, 'dnd-3.5e'),
 });
 
+const SRD35_MONSTER_FILES = [
+  'monsters-intro-a.md',
+  'monsters-b-c.md',
+  'monsters-d-de.md',
+  'monsters-di-do.md',
+  'monsters-dr-dw.md',
+  'monsters-e-f.md',
+  'monsters-g.md',
+  'monsters-h-i.md',
+  'monsters-k-l.md',
+  'monsters-m-n.md',
+  'monsters-o-r.md',
+  'monsters-s.md',
+  'monsters-t-z.md',
+  'monsters-animals.md',
+  'monsters-vermin.md',
+];
+async function fetchSrd35MonsterNames(): Promise<string[]> {
+  const names: string[] = [];
+  for (const file of SRD35_MONSTER_FILES) {
+    const text = await fetchText(
+      `https://raw.githubusercontent.com/olimot/srd-v3.5-md/main/monsters/${file}`
+    );
+    for (const match of text.matchAll(/^## (.+)$/gm)) names.push(match[1].trim());
+  }
+  return names;
+}
+TARGETS.push({
+  systemId: 'dnd-3.5e',
+  systemLabel: 'D&D 3.5e',
+  category: 'monsters',
+  srdSource: 'SRD 3.5 (olimot/srd-v3.5-md monster chapters)',
+  srd: () => fetchSrd35MonsterNames(),
+  loader: () => loaderNames(loadMonstersForSystem, 'dnd-3.5e'),
+});
+
 // --- Mutants & Masterminds 3e (Hero's Handbook — whole DHH open content in scope) ---
 const MM_DATA_JS =
   'https://raw.githubusercontent.com/frnprt/mm3e-character-creator/master/js/data.js';

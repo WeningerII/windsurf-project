@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-12T17:01:56.724Z",
+  "generatedAt": "2026-06-12T17:15:23.535Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -94,7 +94,7 @@
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 0,
+      "monsters": 177,
       "equipment": 207,
       "feats": 80,
       "advantages": 0,
@@ -201,7 +201,7 @@
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 0,
+      "monsters": 177,
       "equipment": 207,
       "feats": 80,
       "advantages": 0,
@@ -1178,6 +1178,22 @@
         "nonCompliantCount": 0,
         "sourceCounts": {
           "SRD 3.5": 7
+        }
+      }
+    },
+    {
+      "systemId": "dnd-3.5e",
+      "systemLabel": "D&D 3.5e",
+      "category": "monsters",
+      "categoryLabel": "Monsters",
+      "metrics": {
+        "rawCount": 177,
+        "uniqueCount": 177,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "SRD 3.5": 177
         }
       }
     },

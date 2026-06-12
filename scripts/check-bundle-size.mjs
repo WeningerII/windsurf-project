@@ -11,9 +11,9 @@ const budgets = {
   // loads lazily behind its system's browser — first-paint cost is guarded
   // by the separate app/vendor budgets below. Raised from 800 KiB for the
   // coverage-completion program (now spanning 5e-2014/2024, PF2e, and PF1e
-  // corpora at or near 100%): genuine content,
+  // corpora at or near 100%, plus the d20-legacy bestiary): genuine content,
   // not bloat. Lazy granularity is enforced by the per-data-chunk budget.
-  totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 1280 * 1024,
+  totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 1536 * 1024,
   appChunkGzipBytes: parseInt(process.env.BUNDLE_BUDGET_APP_GZIP_BYTES || '', 10) || 80 * 1024,
   vendorChunkGzipBytes:
     parseInt(process.env.BUNDLE_BUDGET_VENDOR_GZIP_BYTES || '', 10) || 200 * 1024,

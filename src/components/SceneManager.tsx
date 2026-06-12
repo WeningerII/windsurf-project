@@ -1037,5 +1037,5 @@ function positiveIntegerOrDefault(value: string, fallback: number): number {
 }
 
 function isMonsterSystemId(systemId: string): systemId is GameSystemId {
-  return systemId === 'dnd-5e-2014' || systemId === 'dnd-5e-2024';
+  return systemId === 'dnd-5e-2014' || systemId === 'dnd-5e-2024' || systemId === 'dnd-3.5e';
 }
