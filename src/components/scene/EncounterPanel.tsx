@@ -31,6 +31,10 @@ interface EncounterPanelProps {
   onRemoveSelection: (monsterId: string) => void;
   /** Deterministic, budget-validated draft (SRD 5.2.1 XP budgets). */
   onDraftEncounter?: (difficulty: EncounterDifficulty) => void;
+  /** Scene markers offered as spawn zones (placement stays inside the rect). */
+  zoneOptions: Array<{ id: string; label: string }>;
+  zoneId: string;
+  onZoneChange: (zoneId: string) => void;
 }
 
 function formatAverageLevel(level: number): string {
@@ -61,6 +65,9 @@ export function EncounterPanel({
   onAddEncounter,
   onRemoveSelection,
   onDraftEncounter,
+  zoneOptions,
+  zoneId,
+  onZoneChange,
 }: EncounterPanelProps) {
   const [draftDifficulty, setDraftDifficulty] = useState<EncounterDifficulty>('moderate');
   return (
@@ -106,6 +113,20 @@ export function EncounterPanel({
             onChange={(event) => onOriginYChange(event.target.value)}
           />
         </div>
+        {zoneOptions.length > 0 && (
+          <Select
+            aria-label="Spawn zone"
+            value={zoneId}
+            onChange={(event) => onZoneChange(event.target.value)}
+          >
+            <option value="">Spawn: whole map</option>
+            {zoneOptions.map((option) => (
+              <option key={option.id} value={option.id}>
+                Spawn in: {option.label}
+              </option>
+            ))}
+          </Select>
+        )}
         <div className="text-xs text-muted-foreground">
           {selectedMonster
             ? `${selectedMonsterTotalXp} XP / ${selectedMonster.source}`

@@ -21,6 +21,13 @@ export interface BuildEncounterEventsParams {
    */
   documents?: CharacterDocument<SystemDataModel>[];
   origin?: SceneCoordinate;
+  /**
+   * Optional spawn zone (map-aware placement): monsters are placed only
+   * inside this rectangle (intersected with the grid). When the zone cannot
+   * fit the encounter, the builder reports `encounter-zone-full` instead of
+   * spilling outside it.
+   */
+  zone?: { position: SceneCoordinate; width: number; height: number };
   createdAt?: Date;
   seed?: string;
   eventIdFactory?: () => string;
@@ -117,7 +124,8 @@ export function buildEncounterSceneEvents({
   monsters,
   selections,
   documents,
-  origin = { x: 0, y: 0 },
+  origin,
+  zone,
   createdAt = new Date(),
   seed,
   eventIdFactory,
@@ -144,6 +152,24 @@ export function buildEncounterSceneEvents({
   }
 
   const occupied = buildOccupiedCells(folded.state);
+  // Spawn bounds: the zone intersected with the grid, or the whole grid.
+  const grid = folded.state.grid;
+  const bounds = zone
+    ? intersectBounds(zone, grid.width, grid.height)
+    : { x: 0, y: 0, width: grid.width, height: grid.height };
+  if (bounds.width <= 0 || bounds.height <= 0) {
+    return {
+      events: [],
+      issues: [
+        {
+          code: 'encounter-zone-outside-grid',
+          message: 'The spawn zone lies outside the scene grid.',
+        },
+      ],
+      totalXp: 0,
+    };
+  }
+  const spawnOrigin = origin ?? { x: bounds.x, y: bounds.y };
   const tokenIds = new Set(Object.keys(folded.state.tokens));
   const monsterTotals = planned.reduce((totals, entry) => {
     totals.set(entry.monster.id, (totals.get(entry.monster.id) ?? 0) + 1);
@@ -152,15 +178,17 @@ export function buildEncounterSceneEvents({
   const monsterOrdinals = new Map<string, number>();
   const generatedTokens = planned.map(({ monster }) => {
     const size = getSceneTokenSize(monster.size);
-    const position = findOpenPosition(folded.state.grid.width, folded.state.grid.height, size, {
-      origin,
+    const position = findOpenPosition(bounds, size, {
+      origin: spawnOrigin,
       occupied,
     });
 
     if (!position) {
       issues.push({
-        code: 'encounter-grid-full',
-        message: `No open ${size}x${size} space remains for ${monster.name}.`,
+        code: zone ? 'encounter-zone-full' : 'encounter-grid-full',
+        message: zone
+          ? `No open ${size}x${size} space remains for ${monster.name} in the spawn zone.`
+          : `No open ${size}x${size} space remains for ${monster.name}.`,
       });
       return undefined;
     }
@@ -414,22 +442,46 @@ function buildOccupiedCells(state: ReturnType<typeof foldSceneEvents>['state']):
   return occupied;
 }
 
-function findOpenPosition(
+interface SpawnBounds {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+/** A zone rectangle clipped to the grid (may come back empty). */
+function intersectBounds(
+  zone: { position: SceneCoordinate; width: number; height: number },
   gridWidth: number,
-  gridHeight: number,
+  gridHeight: number
+): SpawnBounds {
+  const x = Math.max(0, Math.trunc(zone.position.x));
+  const y = Math.max(0, Math.trunc(zone.position.y));
+  return {
+    x,
+    y,
+    width: Math.min(gridWidth, Math.trunc(zone.position.x) + Math.trunc(zone.width)) - x,
+    height: Math.min(gridHeight, Math.trunc(zone.position.y) + Math.trunc(zone.height)) - y,
+  };
+}
+
+function findOpenPosition(
+  bounds: SpawnBounds,
   size: number,
   options: { origin: SceneCoordinate; occupied: Set<string> }
 ): SceneCoordinate | undefined {
-  const startY = clampInteger(options.origin.y, 0, Math.max(0, gridHeight - size));
-  const startX = clampInteger(options.origin.x, 0, Math.max(0, gridWidth - size));
+  const maxY = bounds.y + Math.max(0, bounds.height - size);
+  const maxX = bounds.x + Math.max(0, bounds.width - size);
+  const startY = clampInteger(options.origin.y, bounds.y, maxY);
+  const startX = clampInteger(options.origin.x, bounds.x, maxX);
 
-  for (let yOffset = 0; yOffset < gridHeight; yOffset += 1) {
-    const y = (startY + yOffset) % gridHeight;
-    if (y + size > gridHeight) continue;
+  for (let yOffset = 0; yOffset < bounds.height; yOffset += 1) {
+    const y = bounds.y + ((startY - bounds.y + yOffset) % bounds.height);
+    if (y + size > bounds.y + bounds.height) continue;
 
-    for (let xOffset = 0; xOffset < gridWidth; xOffset += 1) {
-      const x = (startX + xOffset) % gridWidth;
-      if (x + size > gridWidth) continue;
+    for (let xOffset = 0; xOffset < bounds.width; xOffset += 1) {
+      const x = bounds.x + ((startX - bounds.x + xOffset) % bounds.width);
+      if (x + size > bounds.x + bounds.width) continue;
 
       const position = { x, y };
       if (isFootprintOpen(options.occupied, position, size)) {

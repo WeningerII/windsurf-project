@@ -110,6 +110,7 @@ export function SceneManager({
   const [encounterOriginX, setEncounterOriginX] = useState('0');
   const [encounterOriginY, setEncounterOriginY] = useState('0');
   const [encounterSelections, setEncounterSelections] = useState<EncounterMonsterSelection[]>([]);
+  const [encounterZoneId, setEncounterZoneId] = useState('');
   const draftNonceRef = useRef(0);
   const [monstersLoading, setMonstersLoading] = useState(false);
   const [monsterLoadError, setMonsterLoadError] = useState<string | null>(null);
@@ -293,11 +294,13 @@ export function SceneManager({
     }
   }, [selectedTokenId, state]);
 
-  // Combat selections are per-scene: switching scenes clears the chosen target
-  // and the rolling log (otherwise another scene's log lingers).
+  // Combat selections are per-scene: switching scenes clears the chosen target,
+  // the rolling log (otherwise another scene's log lingers), and the spawn
+  // zone (marker ids belong to the previous scene).
   useEffect(() => {
     setCombatTargetId('');
     setCombatLog([]);
+    setEncounterZoneId('');
   }, [selectedSceneId]);
 
   // Clear a stale combat target: when the chosen token dies or is removed, the
@@ -747,6 +750,13 @@ export function SceneManager({
         x: Math.max(0, positiveIntegerOrDefault(encounterOriginX, 0)),
         y: Math.max(0, positiveIntegerOrDefault(encounterOriginY, 0)),
       },
+      // Map-aware spawn zone: a chosen terrain marker constrains placement.
+      zone: (() => {
+        const marker = encounterZoneId ? state?.markers[encounterZoneId] : undefined;
+        return marker
+          ? { position: marker.position, width: marker.width, height: marker.height }
+          : undefined;
+      })(),
       seed: `${selectedScene.initialState.seed}:encounter:${selectedScene.events.length}`,
       createdAt: new Date(),
       eventIdFactory: generateUUID,
@@ -1072,6 +1082,12 @@ export function SceneManager({
                     onQueueMonster={handleQueueEncounterMonster}
                     onAddEncounter={handleAddEncounter}
                     onRemoveSelection={handleRemoveEncounterSelection}
+                    zoneOptions={Object.values(state.markers).map((marker) => ({
+                      id: marker.id,
+                      label: marker.label,
+                    }))}
+                    zoneId={encounterZoneId}
+                    onZoneChange={setEncounterZoneId}
                     // The SRD 5.2.1 XP-budget table is 5e math; drafting is
                     // offered only where that citation honestly applies.
                     onDraftEncounter={

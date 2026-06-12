@@ -410,3 +410,89 @@ function makeEventIdFactory(): () => string {
     return `event-${index}`;
   };
 }
+
+describe('spawn zones (map-aware placement)', () => {
+  it('places every monster inside the zone rectangle', () => {
+    const scene = createSceneDocument({
+      id: 'zone-scene',
+      name: 'Zoned',
+      systemId: 'dnd-5e-2024',
+      grid: { width: 10, height: 10 },
+      seed: 'zone-seed',
+    });
+    const zone = { position: { x: 6, y: 6 }, width: 3, height: 3 };
+    const result = buildEncounterSceneEvents({
+      scene,
+      monsters: [goblin],
+      selections: [{ monsterId: 'goblin', count: 4 }],
+      zone,
+      createdAt: NOW,
+      eventIdFactory: makeEventIdFactory(),
+    });
+    expect(result.issues).toHaveLength(0);
+    const placements = result.events
+      .filter((event) => event.type === 'token.added')
+      .map(
+        (event) =>
+          (event.payload as { token: { position: { x: number; y: number } } }).token.position
+      );
+    expect(placements).toHaveLength(4);
+    for (const position of placements) {
+      expect(position.x).toBeGreaterThanOrEqual(6);
+      expect(position.x).toBeLessThan(9);
+      expect(position.y).toBeGreaterThanOrEqual(6);
+      expect(position.y).toBeLessThan(9);
+    }
+  });
+
+  it('reports encounter-zone-full instead of spilling outside the zone', () => {
+    const scene = createSceneDocument({
+      id: 'zone-full',
+      name: 'Tight',
+      systemId: 'dnd-5e-2024',
+      grid: { width: 10, height: 10 },
+      seed: 'zone-seed',
+    });
+    const result = buildEncounterSceneEvents({
+      scene,
+      monsters: [goblin],
+      selections: [{ monsterId: 'goblin', count: 5 }],
+      zone: { position: { x: 0, y: 0 }, width: 2, height: 2 },
+      createdAt: NOW,
+      eventIdFactory: makeEventIdFactory(),
+    });
+    expect(result.events).toHaveLength(0);
+    expect(result.issues.some((issue) => issue.code === 'encounter-zone-full')).toBe(true);
+  });
+
+  it('a zone fully off-grid is an explicit issue, and a large monster respects zone bounds', () => {
+    const scene = createSceneDocument({
+      id: 'zone-edge',
+      name: 'Edge',
+      systemId: 'dnd-5e-2024',
+      grid: { width: 10, height: 10 },
+      seed: 'zone-seed',
+    });
+    const offGrid = buildEncounterSceneEvents({
+      scene,
+      monsters: [goblin],
+      selections: [{ monsterId: 'goblin', count: 1 }],
+      zone: { position: { x: 20, y: 20 }, width: 3, height: 3 },
+      createdAt: NOW,
+      eventIdFactory: makeEventIdFactory(),
+    });
+    expect(offGrid.issues.some((issue) => issue.code === 'encounter-zone-outside-grid')).toBe(true);
+
+    // A 2x2 ogre cannot fit a 3x3 zone twice without overlap.
+    const ogres = buildEncounterSceneEvents({
+      scene,
+      monsters: [ogre],
+      selections: [{ monsterId: 'ogre', count: 2 }],
+      zone: { position: { x: 0, y: 0 }, width: 3, height: 3 },
+      createdAt: NOW,
+      eventIdFactory: makeEventIdFactory(),
+    });
+    expect(ogres.events).toHaveLength(0);
+    expect(ogres.issues.some((issue) => issue.code === 'encounter-zone-full')).toBe(true);
+  });
+});
