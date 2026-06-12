@@ -350,7 +350,7 @@ describe('movement execution (grid-combat phase 3)', () => {
       speedCells: 6,
     });
 
-    let order = [combatant('a', 'party', 0), combatant('b', 'monsters', 12)];
+    const order = [combatant('a', 'party', 0), combatant('b', 'monsters', 12)];
     const round1 = runCombatRound({ order, seed: 'converge', round: 1 });
     // Both moved toward each other; at least one move intent emitted.
     expect(round1.intents.some((intent) => intent.type === 'move-token')).toBe(true);
