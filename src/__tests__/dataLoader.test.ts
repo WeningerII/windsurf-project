@@ -52,9 +52,10 @@ describe('Data Loader Integration Tests', () => {
   describe('D&D 5e-2014 Loaders', () => {
     it('should load spells for dnd-5e-2014', async () => {
       const spells = await loadSpellsForSystem('dnd-5e-2014');
-      // 22 non-SRD-5.1 spells (PHB + homebrew) were removed; 8 Product-Identity
-      // names (Tasha's/Tenser's/etc.) were renamed to their SRD names.
-      expect(spells.length).toBe(222);
+      // Full SRD 5.1 coverage: 222 hand-written + 97 encoder-generated
+      // (scripts/encode-5e-spells.mjs) = the SRD's complete 319 spell list,
+      // verified independently by npm run srd:coverage.
+      expect(spells.length).toBe(319);
       expect(spells.every((s) => s.id && s.name && s.system === 'dnd-5e-2014')).toBe(true);
     });
 

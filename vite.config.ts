@@ -139,7 +139,15 @@ export default defineConfig({
             return 'vendor';
           }
 
-          // Split large SRD datasets into per-system chunks.
+          // Split large SRD datasets into per-system chunks. The biggest
+          // categories of the now-coverage-complete 5e-2014 set get their own
+          // lazy chunks so no single data chunk outgrows the budget.
+          if (id.includes('src/data/dnd/5e-2014/monsters')) {
+            return 'dnd-5e-2014-monsters-data';
+          }
+          if (id.includes('src/data/dnd/5e-2014/spells')) {
+            return 'dnd-5e-2014-spells-data';
+          }
           if (id.includes('src/data/dnd/5e-2014')) {
             return 'dnd-5e-2014-data';
           }
