@@ -1,10 +1,10 @@
-_Generated: 2026-06-12T15:29:41.207Z_
+_Generated: 2026-06-12T15:44:09.964Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
 | System | Spells/Powers | Classes | Species/Races | Backgrounds | Traits | Feature Options | Monsters | Equipment | Feats | Advantages |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| D&D 5e (2014) | 319 | 12 | 9 | 1 | 0 | 106 | 335 | 298 | 1 | 0 |
+| D&D 5e (2014) | 319 | 12 | 9 | 1 | 0 | 106 | 335 | 656 | 1 | 0 |
 | D&D 5e (2024) | 294 | 12 | 7 | 4 | 0 | 0 | 95 | 204 | 19 | 0 |
 | D&D 3.5e | 428 | 26 | 7 | 0 | 0 | 0 | 0 | 207 | 80 | 0 |
 | Pathfinder 1e | 134 | 18 | 7 | 0 | 12 | 0 | 0 | 70 | 86 | 0 |
@@ -32,7 +32,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | D&D 5e (2014) | Backgrounds | 1 | 0 | 0 | 0 |
 | D&D 5e (2014) | Feature Options | 106 | 0 | 0 | 0 |
 | D&D 5e (2014) | Monsters | 335 | 0 | 0 | 0 |
-| D&D 5e (2014) | Equipment | 298 | 0 | 0 | 0 |
+| D&D 5e (2014) | Equipment | 656 | 0 | 0 | 0 |
 | D&D 5e (2014) | Feats | 1 | 0 | 0 | 0 |
 | D&D 5e (2024) | Spells/Powers | 294 | 0 | 0 | 0 |
 | D&D 5e (2024) | Classes | 12 | 0 | 0 | 0 |
@@ -154,7 +154,7 @@ _Denominators: cited open-content manifests in docs/srd-manifest/ and docs/compu
 _Share of each system's loader-backed entries that are source-tagged AND open-content-policy-clean — i.e. the content DONE conditions 'encoded, loader-backed, source-tagged, policy-clean'. This certifies CATALOG INTEGRITY (every shipped open-content entry is cited and compliant). It is NOT coverage vs the full published SRD: measuring which SRD entries are MISSING requires an external authoritative SRD index that is unavailable in this environment, so that coverage dimension is flagged unresolved rather than asserted._
 | System | Loader Entries | Cited + Policy-Clean | Integrity |
 | --- | ---: | ---: | ---: |
-| D&D 5e (2014) | 1081 | 1081 | 100% |
+| D&D 5e (2014) | 1439 | 1439 | 100% |
 | D&D 5e (2024) | 635 | 635 | 100% |
 | D&D 3.5e | 748 | 748 | 100% |
 | Pathfinder 1e | 327 | 327 | 100% |

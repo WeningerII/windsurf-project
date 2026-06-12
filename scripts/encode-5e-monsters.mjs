@@ -187,10 +187,25 @@ function bucketFor(cr) {
 const ts = (value) => JSON.stringify(value, null, 2).replace(/"([a-zA-Z_][a-zA-Z0-9_]*)":/g, '$1:');
 
 async function main() {
-  const existingNames = new Set();
-  // The hand-written files are the canon for the 38 already-encoded monsters.
+  // Baseline = the union MINUS this encoder's own previous output, so
+  // regeneration is idempotent instead of self-excluding into empty files.
   const existing = await import('../src/data/dnd/5e-2014/monsters/index.ts');
-  for (const monster of existing.dnd5eMonsters) existingNames.add(normalizeName(monster.name));
+  const generatedNames = new Set();
+  for (const stem of ['srd-cr-0-1', 'srd-cr-2-5', 'srd-cr-6-10', 'srd-cr-11-plus']) {
+    try {
+      const mod = await import(`../src/data/dnd/5e-2014/monsters/${stem}.ts`);
+      for (const monster of Object.values(mod)[0] ?? []) {
+        generatedNames.add(normalizeName(monster.name));
+      }
+    } catch {
+      // first run: no generated file yet
+    }
+  }
+  const existingNames = new Set(
+    existing.dnd5eMonsters
+      .map((monster) => normalizeName(monster.name))
+      .filter((name) => !generatedNames.has(name))
+  );
 
   const raw = await (await fetch(SOURCE_URL)).json();
   const report = {

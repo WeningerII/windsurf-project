@@ -110,8 +110,25 @@ function mapDuration(raw, concentration) {
 const ts = (value) => JSON.stringify(value, null, 2).replace(/"([a-zA-Z_][a-zA-Z0-9_]*)":/g, '$1:');
 
 async function main() {
+  // Baseline = the union MINUS this encoder's own previous output, so
+  // regeneration is idempotent instead of self-excluding into empty files.
   const existing = await import('../src/data/dnd/5e-2014/spells/index.ts');
-  const existingNames = new Set(existing.dnd5eSpells.map((spell) => normalizeName(spell.name)));
+  const generatedNames = new Set();
+  const stems = ['srd-cantrips', ...[1, 2, 3, 4, 5, 6, 7, 8, 9].map((l) => `srd-level-${l}`)];
+  for (const stem of stems) {
+    try {
+      const mod = await import(`../src/data/dnd/5e-2014/spells/${stem}.ts`);
+      for (const spell of Object.values(mod)[0] ?? [])
+        generatedNames.add(normalizeName(spell.name));
+    } catch {
+      // first run: no generated file yet
+    }
+  }
+  const existingNames = new Set(
+    existing.dnd5eSpells
+      .map((spell) => normalizeName(spell.name))
+      .filter((name) => !generatedNames.has(name))
+  );
 
   const raw = await (await fetch(SOURCE_URL)).json();
   const report = { encoded: 0, skippedExisting: 0, oddCastingTimes: [], proseOnlyDamage: 0 };

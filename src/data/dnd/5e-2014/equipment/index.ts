@@ -8,6 +8,8 @@ import { magicArmors } from './magic-armor';
 import { magicWeapons } from './magic-weapons';
 import { potions } from './potions';
 import { wondrousItems } from './wondrous-items';
+import { srdEquipment } from './srd-equipment';
+import { srdMagicItems } from './srd-magic-items';
 
 // All equipment combined. The category magic-item files (review M-2) carry
 // only ids the canonical files lack, so this union is collision-free — and
@@ -22,6 +24,10 @@ export const dnd5eEquipment: (Weapon | Armor | Shield | Item)[] = [
   ...magicArmors,
   ...potions,
   ...wondrousItems,
+  // Generated SRD encodings (scripts/encode-5e-equipment.mjs) — exclude
+  // hand-written names at generation time, completing SRD 5.1 coverage.
+  ...srdEquipment,
+  ...srdMagicItems,
 ];
 
 // By category
@@ -32,6 +38,7 @@ export const dnd5eEquipmentByType = {
   adventuringGear: dnd5eAdventuringGear,
   magicItems: dnd5eMagicItems,
   categoryMagicItems: [...magicWeapons, ...magicArmors, ...potions, ...wondrousItems],
+  srdEncoded: [...srdEquipment, ...srdMagicItems],
 };
 
 // Index by ID (dev-warns on duplicate ids)
