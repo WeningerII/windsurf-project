@@ -321,3 +321,45 @@ describe('PC vs monster — a real character fights a real goblin end to end', (
     throw new Error('expected the PC to land at least one hit across 30 seeds');
   });
 });
+
+describe('5e Extra Attack in scene combat (phase 4)', () => {
+  it('counts extra-attack features into attacksPerRound and derives speed cells', async () => {
+    const { buildCharacterCombatant } = await import('../../rules');
+    const { createDefaultDnd5eData } = await import('../../systems/dnd5e/data-model');
+    const system = {
+      ...createDefaultDnd5eData(),
+      speed: 30,
+      features: [
+        {
+          id: 'extra-attack',
+          name: 'Extra Attack',
+          source: 'Fighter 5',
+          description: 'You can attack twice whenever you take the Attack action.',
+        },
+        {
+          id: 'extra-attack-2',
+          name: 'Extra Attack (2)',
+          source: 'Fighter 11',
+          description: 'You can attack three times.',
+        },
+      ],
+    };
+    const built = buildCharacterCombatant(
+      {
+        id: 'fighter-11',
+        name: 'Fighter',
+        systemId: 'dnd-5e-2014',
+        system,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      { tokenId: 'f', position: { x: 0, y: 0 } }
+    );
+    expect(built.supported).toBe(true);
+    if (built.supported) {
+      // Fighter 11: base attack + two Extra Attack grants = 3 per Attack action.
+      expect(built.combatant.attacksPerRound).toBe(3);
+      expect(built.combatant.speedCells).toBe(6);
+    }
+  });
+});

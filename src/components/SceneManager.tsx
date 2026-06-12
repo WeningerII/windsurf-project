@@ -431,6 +431,13 @@ export function SceneManager({
           damageEffects: built.combatant.damageEffects,
           armorClass: built.combatant.armorClass,
           reach: built.combatant.reach,
+          attacksPerRound: built.combatant.attacksPerRound,
+          speedCells: built.combatant.speedCells,
+          areaSaveBonus: Math.floor(
+            (((doc.system as { baseAttributes?: { dex?: number } }).baseAttributes?.dex ?? 10) -
+              10) /
+              2
+          ),
         };
       }
       return undefined;

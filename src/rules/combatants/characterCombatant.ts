@@ -56,6 +56,13 @@ const SUPPORTED: ReadonlySet<GameSystemId> = new Set<GameSystemId>([
 export interface CharacterCombatant {
   token: SceneToken;
   /**
+   * Attacks per Attack action (5e Extra Attack: fighter 5/11/20 reach 2/3/4;
+   * other martials 2 at level 5). Derived from 'extra-attack*' features.
+   */
+  attacksPerRound: number;
+  /** Movement per turn in grid cells (sheet speed / 5; default 6). */
+  speedCells: number;
+  /**
    * Combat faction. An explicit `options.faction` wins; otherwise derived from
    * the token kind ('character' → 'party', matching `factionForToken`).
    */
@@ -296,6 +303,15 @@ export function buildCharacterCombatant(
       damageEffects,
       reach: options.reach ?? 1,
       armorClass: sheet.armorClass,
+      // 5e Extra Attack (compute-register damage-assembly residual): each
+      // granted 'extra-attack*' class feature adds one attack to the Attack
+      // action; the scene Multiattack machinery executes them.
+      attacksPerRound:
+        1 + sheet.features.filter((feature) => /^extra-attack(-\d+)?$/.test(feature.id)).length,
+      speedCells: Math.max(
+        1,
+        Math.floor(num((document.system as { speed?: unknown }).speed, 30) / 5)
+      ),
     },
   };
 }
