@@ -124,6 +124,48 @@ export function pf1eEncounterXpBudget(
   return PF1E_XP_BY_CR[targetCr <= 0 ? 0.5 : targetCr] ?? 0;
 }
 
+/**
+ * PF2e CRB, "Table 10-1: Encounter Budget" (verified against Pf2eTools
+ * tables.json): XP budget for a four-character party by threat, plus the
+ * per-character adjustment for each character beyond (or short of) four.
+ * This module's low/moderate/high map onto Low/Moderate/Severe threat.
+ */
+const PF2E_ENCOUNTER_BUDGET: Record<EncounterDifficulty, { base: number; perCharacter: number }> = {
+  low: { base: 60, perCharacter: 15 },
+  moderate: { base: 80, perCharacter: 20 },
+  high: { base: 120, perCharacter: 30 },
+};
+
+export function pf2eEncounterBudget(
+  partyLevels: readonly number[],
+  difficulty: EncounterDifficulty
+): number {
+  if (!partyLevels.length) return 0;
+  const { base, perCharacter } = PF2E_ENCOUNTER_BUDGET[difficulty];
+  return Math.max(0, base + (partyLevels.length - 4) * perCharacter);
+}
+
+/**
+ * PF2e CRB, "Table 10-2: Creature XP and Role": a creature costs XP by its
+ * level relative to the party's. Creatures outside the -4..+4 band are not
+ * appropriate encounter members (cost 0 → excluded from the draft pool).
+ */
+const PF2E_CREATURE_XP: Record<number, number> = {
+  [-4]: 10,
+  [-3]: 15,
+  [-2]: 20,
+  [-1]: 30,
+  0: 40,
+  1: 60,
+  2: 80,
+  3: 120,
+  4: 160,
+};
+
+export function pf2eCreatureXp(creatureLevel: number, partyLevel: number): number {
+  return PF2E_CREATURE_XP[creatureLevel - partyLevel] ?? 0;
+}
+
 export interface DraftEncounterParams {
   /** The scene's monster catalog (already loaded; system-filtered by caller or via systemId). */
   monsters: Monster[];
@@ -141,6 +183,11 @@ export interface DraftEncounterParams {
    * the SRD 5.2 per-character table — the spend/validate machinery is shared.
    */
   budget?: number;
+  /**
+   * Per-monster cost (e.g. PF2e's party-relative creature XP). Defaults to
+   * the monster's fixed experiencePoints.
+   */
+  costFor?: (monster: Monster) => number;
 }
 
 export interface DraftEncounterResult {
@@ -167,13 +214,14 @@ export function draftEncounter(params: DraftEncounterParams): DraftEncounterResu
     return { selections: [], budget, totalXp: 0, reason: 'Party has no XP budget.' };
   }
 
+  const costFor = params.costFor ?? ((monster: Monster) => monster.experiencePoints);
   // Stable candidate pool: affordable, XP-bearing, system-matched monsters,
   // sorted by id so the draft never depends on catalog load order.
   const pool = monsters
     .filter(
       (monster) =>
-        monster.experiencePoints > 0 &&
-        monster.experiencePoints <= budget &&
+        costFor(monster) > 0 &&
+        costFor(monster) <= budget &&
         (!params.systemId || monster.system === params.systemId)
     )
     .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
@@ -193,19 +241,16 @@ export function draftEncounter(params: DraftEncounterParams): DraftEncounterResu
 
   for (let slot = 0; slot < maxDistinct && remaining > 0; slot += 1) {
     const affordable = pool.filter(
-      (monster) => !used.has(monster.id) && monster.experiencePoints <= remaining
+      (monster) => !used.has(monster.id) && costFor(monster) <= remaining
     );
     if (!affordable.length) break;
     const pick = affordable[rng.rollDie(affordable.length) - 1];
     used.add(pick.id);
-    const maxCount = Math.min(
-      MAX_MONSTERS_PER_SELECTION,
-      Math.floor(remaining / pick.experiencePoints)
-    );
+    const maxCount = Math.min(MAX_MONSTERS_PER_SELECTION, Math.floor(remaining / costFor(pick)));
     // Group size: 1..maxCount, seeded — variety without busting the budget.
     const count = maxCount <= 1 ? 1 : rng.rollDie(maxCount);
     selections.push({ monsterId: pick.id, count });
-    remaining -= pick.experiencePoints * count;
+    remaining -= costFor(pick) * count;
   }
 
   return { selections, budget, totalXp: budget - remaining };

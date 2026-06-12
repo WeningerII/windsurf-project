@@ -148,3 +148,54 @@ describe('PF1e CRB encounter budgets', () => {
     expect(summary.totalXp).toBe(draft.totalXp);
   });
 });
+
+describe('PF2e CRB encounter budgets (party-relative XP)', () => {
+  it('budgets follow Table 10-1 with per-character adjustments', async () => {
+    const { pf2eEncounterBudget } = await import('../../scene/encounterDraft');
+    const four = [3, 3, 3, 3];
+    expect(pf2eEncounterBudget(four, 'low')).toBe(60);
+    expect(pf2eEncounterBudget(four, 'moderate')).toBe(80);
+    expect(pf2eEncounterBudget(four, 'high')).toBe(120); // Severe threat
+    expect(pf2eEncounterBudget([3, 3, 3, 3, 3], 'moderate')).toBe(100);
+    expect(pf2eEncounterBudget([3, 3, 3], 'moderate')).toBe(60);
+  });
+
+  it('creature cost follows Table 10-2 and excludes out-of-band levels', async () => {
+    const { pf2eCreatureXp } = await import('../../scene/encounterDraft');
+    expect(pf2eCreatureXp(3, 3)).toBe(40);
+    expect(pf2eCreatureXp(2, 3)).toBe(30);
+    expect(pf2eCreatureXp(-1, 3)).toBe(10);
+    expect(pf2eCreatureXp(7, 3)).toBe(160);
+    expect(pf2eCreatureXp(8, 3)).toBe(0); // party level +5: not appropriate
+    expect(pf2eCreatureXp(-2, 3)).toBe(0); // party level -5
+  });
+
+  it('drafts encoded Bestiary 1 creatures within the relative budget', async () => {
+    const { draftEncounter, pf2eEncounterBudget, pf2eCreatureXp } =
+      await import('../../scene/encounterDraft');
+    const { pf2eMonsters } = await import('../../data/pathfinder/2e/monsters');
+    const partyLevels = [3, 3, 3, 3];
+    const partyLevel = 3;
+    const costFor = (monster: { challengeRating: number }) =>
+      pf2eCreatureXp(monster.challengeRating, partyLevel);
+    const params = {
+      monsters: pf2eMonsters,
+      partyLevels,
+      difficulty: 'moderate' as const,
+      seed: 'pf2e-draft-1',
+      systemId: 'pf2e',
+      budget: pf2eEncounterBudget(partyLevels, 'moderate'),
+      costFor,
+    };
+    const draft = draftEncounter(params);
+    expect(draft.budget).toBe(80);
+    expect(draft.selections.length).toBeGreaterThan(0);
+    expect(draft.totalXp).toBeLessThanOrEqual(80);
+    // Every drafted creature is within the -4..+4 appropriateness band.
+    const byId = new Map(pf2eMonsters.map((monster) => [monster.id, monster]));
+    for (const selection of draft.selections) {
+      expect(costFor(byId.get(selection.monsterId)!)).toBeGreaterThan(0);
+    }
+    expect(draftEncounter(params).selections).toEqual(draft.selections);
+  });
+});

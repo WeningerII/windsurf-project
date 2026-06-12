@@ -10,6 +10,8 @@ import {
 import {
   draftEncounter,
   pf1eEncounterXpBudget,
+  pf2eCreatureXp,
+  pf2eEncounterBudget,
   type EncounterDifficulty,
 } from '../scene/encounterDraft';
 import {
@@ -727,9 +729,22 @@ export function SceneManager({
       seed: `${selectedScene.initialState.seed}:draft:${selectedScene.events.length}:${difficulty}:${draftNonceRef.current}`,
       systemId: sceneSystemId,
       // PF1e budgets come from the CRB encounter-design tables (target-CR XP
-      // award); 5e-family uses the SRD 5.2.1 per-character table default.
+      // award); PF2e uses its party-relative budget + creature-cost tables;
+      // 5e-family uses the SRD 5.2.1 per-character table default.
       ...(sceneSystemId === 'pf1e'
         ? { budget: pf1eEncounterXpBudget(partyLevels, difficulty) }
+        : {}),
+      ...(sceneSystemId === 'pf2e'
+        ? (() => {
+            const partyLevel = Math.round(
+              partyLevels.reduce((total, level) => total + level, 0) /
+                Math.max(1, partyLevels.length)
+            );
+            return {
+              budget: pf2eEncounterBudget(partyLevels, difficulty),
+              costFor: (monster: Monster) => pf2eCreatureXp(monster.challengeRating, partyLevel),
+            };
+          })()
         : {}),
     });
     if (result.reason) {
@@ -1118,7 +1133,8 @@ export function SceneManager({
                     onDraftEncounter={
                       sceneSystemId === 'dnd-5e-2014' ||
                       sceneSystemId === 'dnd-5e-2024' ||
-                      sceneSystemId === 'pf1e'
+                      sceneSystemId === 'pf1e' ||
+                      sceneSystemId === 'pf2e'
                         ? handleDraftEncounter
                         : undefined
                     }
