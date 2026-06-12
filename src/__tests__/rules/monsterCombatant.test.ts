@@ -386,3 +386,25 @@ describe('encoded SRD 5.2 bestiary fights through the scene adapter', () => {
     }
   });
 });
+
+describe('encoded PF1e Bestiary fights through the scene adapter', () => {
+  it('an encoded Bestiary 1 monster builds a combatant with parsed attack numbers', async () => {
+    const { pf1eMonsters } = await import('../../data/pathfinder/1e/monsters');
+    const { buildMonsterCombatant } = await import('../../rules');
+    expect(pf1eMonsters.length).toBeGreaterThanOrEqual(331);
+    const aboleth = pf1eMonsters.find((monster) => monster.id === 'aboleth');
+    expect(aboleth).toBeDefined();
+    // PSRD Aboleth: "4 tentacles +10 (1d6+5 plus slime)", BAB +8, Fort +8.
+    expect(aboleth!.actions[0]?.attackBonus).toBe(10);
+    expect(aboleth!.baseAttackBonus).toBe(6);
+    expect(aboleth!.d20Saves?.fort).toBe(8);
+    const built = buildMonsterCombatant(aboleth!, { tokenId: 'a', position: { x: 0, y: 0 } });
+    const attackTotal = built.attackEffects.reduce(
+      (sum, effect) => sum + (typeof effect.value === 'number' ? effect.value : 0),
+      0
+    );
+    expect(attackTotal).toBe(10);
+    expect(built.damageEffects.length).toBeGreaterThan(0);
+    expect(built.token.hp!.max).toBeGreaterThan(0);
+  });
+});

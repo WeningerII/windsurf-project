@@ -166,6 +166,9 @@ export default defineConfig({
           if (/src\/data\/pathfinder\/1e\/spells\/(?:srd-)?(?:cantrips|level-[0-4]\b)/.test(id)) {
             return 'pf1e-spells-low-data';
           }
+          if (id.includes('src/data/pathfinder/1e/monsters')) {
+            return 'pf1e-monsters-data';
+          }
           if (id.includes('src/data/pathfinder/1e/spells')) {
             return 'pf1e-spells-data';
           }

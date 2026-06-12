@@ -1,0 +1,1390 @@
+{
+  "source": "devonjones/PSRD-Data bestiary/creature (Bestiary 1, PRD OGC)",
+  "generatedBy": "scripts/encode-pf1e-monsters.mjs",
+  "entries": [
+    {
+      "file": "aasimar.json",
+      "name": "Aasimar"
+    },
+    {
+      "file": "aboleth.json",
+      "name": "Aboleth"
+    },
+    {
+      "file": "angel_astral_deva.json",
+      "name": "Angel, Astral Deva"
+    },
+    {
+      "file": "angel_planetar.json",
+      "name": "Angel, Planetar"
+    },
+    {
+      "file": "angel_solar.json",
+      "name": "Angel, Solar"
+    },
+    {
+      "file": "animated_object.json",
+      "name": "Animated Object"
+    },
+    {
+      "file": "ankheg.json",
+      "name": "Ankheg"
+    },
+    {
+      "file": "ant_giant.json",
+      "name": "Ant, Giant"
+    },
+    {
+      "file": "ape_dire.json",
+      "name": "Ape, Dire"
+    },
+    {
+      "file": "ape_gorilla.json",
+      "name": "Ape, Gorilla"
+    },
+    {
+      "file": "archon_hound.json",
+      "name": "Archon, Hound"
+    },
+    {
+      "file": "archon_lantern.json",
+      "name": "Archon, Lantern"
+    },
+    {
+      "file": "archon_trumpet.json",
+      "name": "Archon, Trumpet"
+    },
+    {
+      "file": "assassin_vine.json",
+      "name": "Assassin Vine"
+    },
+    {
+      "file": "azata_bralani.json",
+      "name": "Azata, Bralani"
+    },
+    {
+      "file": "azata_ghaele.json",
+      "name": "Azata, Ghaele"
+    },
+    {
+      "file": "azata_lillend.json",
+      "name": "Azata, Lillend"
+    },
+    {
+      "file": "barghest.json",
+      "name": "Barghest"
+    },
+    {
+      "file": "barghest_greater.json",
+      "name": "Barghest, Greater"
+    },
+    {
+      "file": "basidirond.json",
+      "name": "Basidirond"
+    },
+    {
+      "file": "basilisk.json",
+      "name": "Basilisk"
+    },
+    {
+      "file": "bat_dire.json",
+      "name": "Bat, Dire"
+    },
+    {
+      "file": "bear_dire.json",
+      "name": "Bear, Dire"
+    },
+    {
+      "file": "bear_grizzly.json",
+      "name": "Bear, Grizzly"
+    },
+    {
+      "file": "bebilith.json",
+      "name": "Bebilith"
+    },
+    {
+      "file": "beetle_fire.json",
+      "name": "Beetle, Fire"
+    },
+    {
+      "file": "beetle_giant_stag.json",
+      "name": "Beetle, Giant Stag"
+    },
+    {
+      "file": "behir.json",
+      "name": "Behir"
+    },
+    {
+      "file": "black_pudding.json",
+      "name": "Black Pudding"
+    },
+    {
+      "file": "boar.json",
+      "name": "Boar"
+    },
+    {
+      "file": "boar_dire.json",
+      "name": "Boar, Dire"
+    },
+    {
+      "file": "boggard.json",
+      "name": "Boggard"
+    },
+    {
+      "file": "bugbear.json",
+      "name": "Bugbear"
+    },
+    {
+      "file": "bulette.json",
+      "name": "Bulette"
+    },
+    {
+      "file": "cat_cheetah.json",
+      "name": "Cat, Cheetah"
+    },
+    {
+      "file": "cat_leopard.json",
+      "name": "Cat, Leopard"
+    },
+    {
+      "file": "cave_fisher.json",
+      "name": "Cave Fisher"
+    },
+    {
+      "file": "centaur.json",
+      "name": "Centaur"
+    },
+    {
+      "file": "centipede_giant.json",
+      "name": "Centipede, Giant"
+    },
+    {
+      "file": "chimera.json",
+      "name": "Chimera"
+    },
+    {
+      "file": "choker.json",
+      "name": "Choker"
+    },
+    {
+      "file": "chuul.json",
+      "name": "Chuul"
+    },
+    {
+      "file": "cloaker.json",
+      "name": "Cloaker"
+    },
+    {
+      "file": "cockatrice.json",
+      "name": "Cockatrice"
+    },
+    {
+      "file": "couatl.json",
+      "name": "Couatl"
+    },
+    {
+      "file": "crab_giant.json",
+      "name": "Crab, Giant"
+    },
+    {
+      "file": "crocodile.json",
+      "name": "Crocodile"
+    },
+    {
+      "file": "crocodile_dire.json",
+      "name": "Crocodile, Dire"
+    },
+    {
+      "file": "cyclops.json",
+      "name": "Cyclops"
+    },
+    {
+      "file": "dark_creeper.json",
+      "name": "Dark Creeper"
+    },
+    {
+      "file": "dark_stalker.json",
+      "name": "Dark Stalker"
+    },
+    {
+      "file": "darkmantle.json",
+      "name": "Darkmantle"
+    },
+    {
+      "file": "demon_babau.json",
+      "name": "Demon, Babau"
+    },
+    {
+      "file": "demon_balor.json",
+      "name": "Demon, Balor"
+    },
+    {
+      "file": "demon_dretch.json",
+      "name": "Demon, Dretch"
+    },
+    {
+      "file": "demon_glabrezu.json",
+      "name": "Demon, Glabrezu"
+    },
+    {
+      "file": "demon_hezrou.json",
+      "name": "Demon, Hezrou"
+    },
+    {
+      "file": "demon_marilith.json",
+      "name": "Demon, Marilith"
+    },
+    {
+      "file": "demon_nabasu.json",
+      "name": "Demon, Nabasu"
+    },
+    {
+      "file": "demon_nalfeshnee.json",
+      "name": "Demon, Nalfeshnee"
+    },
+    {
+      "file": "demon_quasit.json",
+      "name": "Demon, Quasit"
+    },
+    {
+      "file": "demon_shadow.json",
+      "name": "Demon, Shadow"
+    },
+    {
+      "file": "demon_succubus.json",
+      "name": "Demon, Succubus"
+    },
+    {
+      "file": "demon_vrock.json",
+      "name": "Demon, Vrock"
+    },
+    {
+      "file": "derro.json",
+      "name": "Derro"
+    },
+    {
+      "file": "devil_barbed.json",
+      "name": "Devil, Barbed"
+    },
+    {
+      "file": "devil_bearded.json",
+      "name": "Devil, Bearded"
+    },
+    {
+      "file": "devil_bone.json",
+      "name": "Devil, Bone"
+    },
+    {
+      "file": "devil_erinyes.json",
+      "name": "Devil, Erinyes"
+    },
+    {
+      "file": "devil_horned.json",
+      "name": "Devil, Horned"
+    },
+    {
+      "file": "devil_ice.json",
+      "name": "Devil, Ice"
+    },
+    {
+      "file": "devil_imp.json",
+      "name": "Devil, Imp"
+    },
+    {
+      "file": "devil_lemure.json",
+      "name": "Devil, Lemure"
+    },
+    {
+      "file": "devourer.json",
+      "name": "Devourer"
+    },
+    {
+      "file": "dinosaur_ankylosaurus.json",
+      "name": "Dinosaur, Ankylosaurus"
+    },
+    {
+      "file": "dinosaur_brachiosaurus.json",
+      "name": "Dinosaur, Brachiosaurus"
+    },
+    {
+      "file": "dinosaur_deinonychus.json",
+      "name": "Dinosaur, Deinonychus"
+    },
+    {
+      "file": "dinosaur_elasmosaurus.json",
+      "name": "Dinosaur, Elasmosaurus"
+    },
+    {
+      "file": "dinosaur_pteranodon.json",
+      "name": "Dinosaur, Pteranodon"
+    },
+    {
+      "file": "dinosaur_stegosaurus.json",
+      "name": "Dinosaur, Stegosaurus"
+    },
+    {
+      "file": "dinosaur_triceratops.json",
+      "name": "Dinosaur, Triceratops"
+    },
+    {
+      "file": "dinosaur_tyrannosaurus.json",
+      "name": "Dinosaur, Tyrannosaurus"
+    },
+    {
+      "file": "dog.json",
+      "name": "Dog"
+    },
+    {
+      "file": "dog_riding.json",
+      "name": "Dog, Riding"
+    },
+    {
+      "file": "dolphin.json",
+      "name": "Dolphin"
+    },
+    {
+      "file": "dolphin_orca.json",
+      "name": "Dolphin, Orca"
+    },
+    {
+      "file": "doppelganger.json",
+      "name": "Doppelganger"
+    },
+    {
+      "file": "dracolisk.json",
+      "name": "Dracolisk"
+    },
+    {
+      "file": "dragon_chromatic_black.json",
+      "name": "Dragon, Chromatic, Black"
+    },
+    {
+      "file": "dragon_chromatic_black_adult.json",
+      "name": "Dragon, Chromatic, Black, Adult"
+    },
+    {
+      "file": "dragon_chromatic_black_ancient.json",
+      "name": "Dragon, Chromatic, Black, Ancient"
+    },
+    {
+      "file": "dragon_chromatic_black_young.json",
+      "name": "Dragon, Chromatic, Black, Young"
+    },
+    {
+      "file": "dragon_chromatic_blue.json",
+      "name": "Dragon, Chromatic, Blue"
+    },
+    {
+      "file": "dragon_chromatic_blue_adult.json",
+      "name": "Dragon, Chromatic, Blue, Adult"
+    },
+    {
+      "file": "dragon_chromatic_blue_ancient.json",
+      "name": "Dragon, Chromatic, Blue, Ancient"
+    },
+    {
+      "file": "dragon_chromatic_blue_young.json",
+      "name": "Dragon, Chromatic, Blue, Young"
+    },
+    {
+      "file": "dragon_chromatic_green.json",
+      "name": "Dragon, Chromatic, Green"
+    },
+    {
+      "file": "dragon_chromatic_green_adult.json",
+      "name": "Dragon, Chromatic, Green, Adult"
+    },
+    {
+      "file": "dragon_chromatic_green_ancient.json",
+      "name": "Dragon, Chromatic, Green, Ancient"
+    },
+    {
+      "file": "dragon_chromatic_green_young.json",
+      "name": "Dragon, Chromatic, Green, Young"
+    },
+    {
+      "file": "dragon_chromatic_red.json",
+      "name": "Dragon, Chromatic, Red"
+    },
+    {
+      "file": "dragon_chromatic_red_adult.json",
+      "name": "Dragon, Chromatic, Red, Adult"
+    },
+    {
+      "file": "dragon_chromatic_red_ancient.json",
+      "name": "Dragon, Chromatic, Red, Ancient"
+    },
+    {
+      "file": "dragon_chromatic_red_young.json",
+      "name": "Dragon, Chromatic, Red, Young"
+    },
+    {
+      "file": "dragon_chromatic_white.json",
+      "name": "Dragon, Chromatic, White"
+    },
+    {
+      "file": "dragon_chromatic_white_adult.json",
+      "name": "Dragon, Chromatic, White, Adult"
+    },
+    {
+      "file": "dragon_chromatic_white_ancient.json",
+      "name": "Dragon, Chromatic, White, Ancient"
+    },
+    {
+      "file": "dragon_chromatic_white_young.json",
+      "name": "Dragon, Chromatic, White, Young"
+    },
+    {
+      "file": "dragon_metallic_brass.json",
+      "name": "Dragon, Metallic, Brass"
+    },
+    {
+      "file": "dragon_metallic_brass_adult.json",
+      "name": "Dragon, Metallic, Brass, Adult"
+    },
+    {
+      "file": "dragon_metallic_brass_ancient.json",
+      "name": "Dragon, Metallic, Brass, Ancient"
+    },
+    {
+      "file": "dragon_metallic_brass_young.json",
+      "name": "Dragon, Metallic, Brass, Young"
+    },
+    {
+      "file": "dragon_metallic_bronze.json",
+      "name": "Dragon, Metallic, Bronze"
+    },
+    {
+      "file": "dragon_metallic_bronze_adult.json",
+      "name": "Dragon, Metallic, Bronze, Adult"
+    },
+    {
+      "file": "dragon_metallic_bronze_ancient.json",
+      "name": "Dragon, Metallic, Bronze, Ancient"
+    },
+    {
+      "file": "dragon_metallic_bronze_young.json",
+      "name": "Dragon, Metallic, Bronze, Young"
+    },
+    {
+      "file": "dragon_metallic_copper.json",
+      "name": "Dragon, Metallic, Copper"
+    },
+    {
+      "file": "dragon_metallic_copper_adult.json",
+      "name": "Dragon, Metallic, Copper, Adult"
+    },
+    {
+      "file": "dragon_metallic_copper_ancient.json",
+      "name": "Dragon, Metallic, Copper, Ancient"
+    },
+    {
+      "file": "dragon_metallic_copper_young.json",
+      "name": "Dragon, Metallic, Copper, Young"
+    },
+    {
+      "file": "dragon_metallic_gold.json",
+      "name": "Dragon, Metallic, Gold"
+    },
+    {
+      "file": "dragon_metallic_gold_adult.json",
+      "name": "Dragon, Metallic, Gold, Adult"
+    },
+    {
+      "file": "dragon_metallic_gold_ancient.json",
+      "name": "Dragon, Metallic, Gold, Ancient"
+    },
+    {
+      "file": "dragon_metallic_gold_young.json",
+      "name": "Dragon, Metallic, Gold, Young"
+    },
+    {
+      "file": "dragon_metallic_silver.json",
+      "name": "Dragon, Metallic, Silver"
+    },
+    {
+      "file": "dragon_metallic_silver_adult.json",
+      "name": "Dragon, Metallic, Silver, Adult"
+    },
+    {
+      "file": "dragon_metallic_silver_ancient.json",
+      "name": "Dragon, Metallic, Silver, Ancient"
+    },
+    {
+      "file": "dragon_metallic_silver_young.json",
+      "name": "Dragon, Metallic, Silver, Young"
+    },
+    {
+      "file": "dragon_turtle.json",
+      "name": "Dragon Turtle"
+    },
+    {
+      "file": "drider.json",
+      "name": "Drider"
+    },
+    {
+      "file": "drow.json",
+      "name": "Drow"
+    },
+    {
+      "file": "drow_noble.json",
+      "name": "Drow Noble"
+    },
+    {
+      "file": "dryad.json",
+      "name": "Dryad"
+    },
+    {
+      "file": "duergar.json",
+      "name": "Duergar"
+    },
+    {
+      "file": "eagle.json",
+      "name": "Eagle"
+    },
+    {
+      "file": "eagle_giant.json",
+      "name": "Eagle, Giant"
+    },
+    {
+      "file": "eel_electric.json",
+      "name": "Eel, Electric"
+    },
+    {
+      "file": "eel_giant_moray.json",
+      "name": "Eel, Giant Moray"
+    },
+    {
+      "file": "elemental_air.json",
+      "name": "Elemental, Air"
+    },
+    {
+      "file": "elemental_air_elder.json",
+      "name": "Elemental, Air, Elder"
+    },
+    {
+      "file": "elemental_air_greater.json",
+      "name": "Elemental, Air, Greater"
+    },
+    {
+      "file": "elemental_air_huge.json",
+      "name": "Elemental, Air, Huge"
+    },
+    {
+      "file": "elemental_air_large.json",
+      "name": "Elemental, Air, Large"
+    },
+    {
+      "file": "elemental_air_medium.json",
+      "name": "Elemental, Air, Medium"
+    },
+    {
+      "file": "elemental_air_small.json",
+      "name": "Elemental, Air, Small"
+    },
+    {
+      "file": "elemental_earth.json",
+      "name": "Elemental, Earth"
+    },
+    {
+      "file": "elemental_earth_elder.json",
+      "name": "Elemental, Earth, Elder"
+    },
+    {
+      "file": "elemental_earth_greater.json",
+      "name": "Elemental, Earth, Greater"
+    },
+    {
+      "file": "elemental_earth_huge.json",
+      "name": "Elemental, Earth, Huge"
+    },
+    {
+      "file": "elemental_earth_large.json",
+      "name": "Elemental, Earth, Large"
+    },
+    {
+      "file": "elemental_earth_medium.json",
+      "name": "Elemental, Earth, Medium"
+    },
+    {
+      "file": "elemental_earth_small.json",
+      "name": "Elemental, Earth, Small"
+    },
+    {
+      "file": "elemental_fire.json",
+      "name": "Elemental, Fire"
+    },
+    {
+      "file": "elemental_fire_elder.json",
+      "name": "Elemental, Fire, Elder"
+    },
+    {
+      "file": "elemental_fire_greater.json",
+      "name": "Elemental, Fire, Greater"
+    },
+    {
+      "file": "elemental_fire_huge.json",
+      "name": "Elemental, Fire, Huge"
+    },
+    {
+      "file": "elemental_fire_large.json",
+      "name": "Elemental, Fire, Large"
+    },
+    {
+      "file": "elemental_fire_medium.json",
+      "name": "Elemental, Fire, Medium"
+    },
+    {
+      "file": "elemental_fire_small.json",
+      "name": "Elemental, Fire, Small"
+    },
+    {
+      "file": "elemental_water.json",
+      "name": "Elemental, Water"
+    },
+    {
+      "file": "elemental_water_elder.json",
+      "name": "Elemental, Water, Elder"
+    },
+    {
+      "file": "elemental_water_greater.json",
+      "name": "Elemental, Water, Greater"
+    },
+    {
+      "file": "elemental_water_huge.json",
+      "name": "Elemental, Water, Huge"
+    },
+    {
+      "file": "elemental_water_large.json",
+      "name": "Elemental, Water, Large"
+    },
+    {
+      "file": "elemental_water_medium.json",
+      "name": "Elemental, Water, Medium"
+    },
+    {
+      "file": "elemental_water_small.json",
+      "name": "Elemental, Water, Small"
+    },
+    {
+      "file": "elephant.json",
+      "name": "Elephant"
+    },
+    {
+      "file": "elephant_mastodon.json",
+      "name": "Elephant, Mastodon"
+    },
+    {
+      "file": "ettercap.json",
+      "name": "Ettercap"
+    },
+    {
+      "file": "ettin.json",
+      "name": "Ettin"
+    },
+    {
+      "file": "flytrap_giant.json",
+      "name": "Flytrap, Giant"
+    },
+    {
+      "file": "frog_giant.json",
+      "name": "Frog, Giant"
+    },
+    {
+      "file": "frog_poison.json",
+      "name": "Frog, Poison"
+    },
+    {
+      "file": "froghemoth.json",
+      "name": "Froghemoth"
+    },
+    {
+      "file": "gargoyle.json",
+      "name": "Gargoyle"
+    },
+    {
+      "file": "gelatinous_cube.json",
+      "name": "Gelatinous Cube"
+    },
+    {
+      "file": "genie_djinni.json",
+      "name": "Genie, Djinni"
+    },
+    {
+      "file": "genie_efreeti.json",
+      "name": "Genie, Efreeti"
+    },
+    {
+      "file": "genie_janni.json",
+      "name": "Genie, Janni"
+    },
+    {
+      "file": "genie_marid.json",
+      "name": "Genie, Marid"
+    },
+    {
+      "file": "genie_shaitan.json",
+      "name": "Genie, Shaitan"
+    },
+    {
+      "file": "ghost.json",
+      "name": "Ghost"
+    },
+    {
+      "file": "ghoul.json",
+      "name": "Ghoul"
+    },
+    {
+      "file": "giant_cloud.json",
+      "name": "Giant, Cloud"
+    },
+    {
+      "file": "giant_fire.json",
+      "name": "Giant, Fire"
+    },
+    {
+      "file": "giant_frost.json",
+      "name": "Giant, Frost"
+    },
+    {
+      "file": "giant_hill.json",
+      "name": "Giant, Hill"
+    },
+    {
+      "file": "giant_stone.json",
+      "name": "Giant, Stone"
+    },
+    {
+      "file": "giant_storm.json",
+      "name": "Giant, Storm"
+    },
+    {
+      "file": "gibbering_mouther.json",
+      "name": "Gibbering Mouther"
+    },
+    {
+      "file": "girallon.json",
+      "name": "Girallon"
+    },
+    {
+      "file": "gnoll.json",
+      "name": "Gnoll"
+    },
+    {
+      "file": "goblin.json",
+      "name": "Goblin"
+    },
+    {
+      "file": "goblin_dog.json",
+      "name": "Goblin Dog"
+    },
+    {
+      "file": "golem_clay.json",
+      "name": "Golem, Clay"
+    },
+    {
+      "file": "golem_flesh.json",
+      "name": "Golem, Flesh"
+    },
+    {
+      "file": "golem_ice.json",
+      "name": "Golem, Ice"
+    },
+    {
+      "file": "golem_iron.json",
+      "name": "Golem, Iron"
+    },
+    {
+      "file": "golem_stone.json",
+      "name": "Golem, Stone"
+    },
+    {
+      "file": "golem_wood.json",
+      "name": "Golem, Wood"
+    },
+    {
+      "file": "gorgon.json",
+      "name": "Gorgon"
+    },
+    {
+      "file": "gray_ooze.json",
+      "name": "Gray Ooze"
+    },
+    {
+      "file": "green_hag.json",
+      "name": "Green Hag"
+    },
+    {
+      "file": "griffon.json",
+      "name": "Griffon"
+    },
+    {
+      "file": "half-celestial.json",
+      "name": "Half-Celestial"
+    },
+    {
+      "file": "half-fiend.json",
+      "name": "Half-Fiend"
+    },
+    {
+      "file": "harpy.json",
+      "name": "Harpy"
+    },
+    {
+      "file": "hell_hound.json",
+      "name": "Hell Hound"
+    },
+    {
+      "file": "hell_hound_nessian.json",
+      "name": "Hell Hound, Nessian"
+    },
+    {
+      "file": "herd_animal_aurochs.json",
+      "name": "Herd Animal, Aurochs"
+    },
+    {
+      "file": "herd_animal_bison.json",
+      "name": "Herd Animal, Bison"
+    },
+    {
+      "file": "hobgoblin.json",
+      "name": "Hobgoblin"
+    },
+    {
+      "file": "homunculus.json",
+      "name": "Homunculus"
+    },
+    {
+      "file": "horse.json",
+      "name": "Horse"
+    },
+    {
+      "file": "horse_pony.json",
+      "name": "Horse, Pony"
+    },
+    {
+      "file": "human_skeleton.json",
+      "name": "Human Skeleton"
+    },
+    {
+      "file": "human_zombie.json",
+      "name": "Human Zombie"
+    },
+    {
+      "file": "hydra.json",
+      "name": "Hydra"
+    },
+    {
+      "file": "hyena.json",
+      "name": "Hyena"
+    },
+    {
+      "file": "hyena_dire.json",
+      "name": "Hyena, Dire"
+    },
+    {
+      "file": "intellect_devourer.json",
+      "name": "Intellect Devourer"
+    },
+    {
+      "file": "invisible_stalker.json",
+      "name": "Invisible Stalker"
+    },
+    {
+      "file": "iron_cobra.json",
+      "name": "Iron Cobra"
+    },
+    {
+      "file": "kobold.json",
+      "name": "Kobold"
+    },
+    {
+      "file": "kraken.json",
+      "name": "Kraken"
+    },
+    {
+      "file": "kyton.json",
+      "name": "Kyton"
+    },
+    {
+      "file": "lamia.json",
+      "name": "Lamia"
+    },
+    {
+      "file": "leech_giant.json",
+      "name": "Leech, Giant"
+    },
+    {
+      "file": "lich.json",
+      "name": "Lich"
+    },
+    {
+      "file": "linnorm_crag.json",
+      "name": "Linnorm, Crag"
+    },
+    {
+      "file": "linnorm_ice.json",
+      "name": "Linnorm, Ice"
+    },
+    {
+      "file": "linnorm_tarn.json",
+      "name": "Linnorm, Tarn"
+    },
+    {
+      "file": "lion.json",
+      "name": "Lion"
+    },
+    {
+      "file": "lion_dire.json",
+      "name": "Lion, Dire"
+    },
+    {
+      "file": "lizard_giant_frilled.json",
+      "name": "Lizard, Giant Frilled"
+    },
+    {
+      "file": "lizard_monitor.json",
+      "name": "Lizard, Monitor"
+    },
+    {
+      "file": "lizardfolk.json",
+      "name": "Lizardfolk"
+    },
+    {
+      "file": "manticore.json",
+      "name": "Manticore"
+    },
+    {
+      "file": "mantis_giant.json",
+      "name": "Mantis, Giant"
+    },
+    {
+      "file": "medusa.json",
+      "name": "Medusa"
+    },
+    {
+      "file": "mephit.json",
+      "name": "Mephit"
+    },
+    {
+      "file": "merfolk.json",
+      "name": "Merfolk"
+    },
+    {
+      "file": "mimic.json",
+      "name": "Mimic"
+    },
+    {
+      "file": "minotaur.json",
+      "name": "Minotaur"
+    },
+    {
+      "file": "mite.json",
+      "name": "Mite"
+    },
+    {
+      "file": "mohrg.json",
+      "name": "Mohrg"
+    },
+    {
+      "file": "morlock.json",
+      "name": "Morlock"
+    },
+    {
+      "file": "mummy.json",
+      "name": "Mummy"
+    },
+    {
+      "file": "naga_dark.json",
+      "name": "Naga, Dark"
+    },
+    {
+      "file": "naga_guardian.json",
+      "name": "Naga, Guardian"
+    },
+    {
+      "file": "naga_spirit.json",
+      "name": "Naga, Spirit"
+    },
+    {
+      "file": "neothelid.json",
+      "name": "Neothelid"
+    },
+    {
+      "file": "night_hag.json",
+      "name": "Night Hag"
+    },
+    {
+      "file": "nightmare.json",
+      "name": "Nightmare"
+    },
+    {
+      "file": "nightmare_cauchemar.json",
+      "name": "Nightmare, Cauchemar"
+    },
+    {
+      "file": "nymph.json",
+      "name": "Nymph"
+    },
+    {
+      "file": "ochre_jelly.json",
+      "name": "Ochre Jelly"
+    },
+    {
+      "file": "octopus.json",
+      "name": "Octopus"
+    },
+    {
+      "file": "octopus_giant.json",
+      "name": "Octopus, Giant"
+    },
+    {
+      "file": "ogre.json",
+      "name": "Ogre"
+    },
+    {
+      "file": "oni_ogre_mage.json",
+      "name": "Oni, Ogre Mage"
+    },
+    {
+      "file": "orc.json",
+      "name": "Orc"
+    },
+    {
+      "file": "otyugh.json",
+      "name": "Otyugh"
+    },
+    {
+      "file": "owlbear.json",
+      "name": "Owlbear"
+    },
+    {
+      "file": "pegasus.json",
+      "name": "Pegasus"
+    },
+    {
+      "file": "phase_spider.json",
+      "name": "Phase Spider"
+    },
+    {
+      "file": "phoenix.json",
+      "name": "Phoenix"
+    },
+    {
+      "file": "pit_fiend.json",
+      "name": "Pit Fiend"
+    },
+    {
+      "file": "pixie.json",
+      "name": "Pixie"
+    },
+    {
+      "file": "pseudodragon.json",
+      "name": "Pseudodragon"
+    },
+    {
+      "file": "purple_worm.json",
+      "name": "Purple Worm"
+    },
+    {
+      "file": "rakshasa.json",
+      "name": "Rakshasa"
+    },
+    {
+      "file": "rat_dire.json",
+      "name": "Rat, Dire"
+    },
+    {
+      "file": "remorhaz.json",
+      "name": "Remorhaz"
+    },
+    {
+      "file": "retriever.json",
+      "name": "Retriever"
+    },
+    {
+      "file": "rhinoceros.json",
+      "name": "Rhinoceros"
+    },
+    {
+      "file": "rhinoceros_woolly.json",
+      "name": "Rhinoceros, Woolly"
+    },
+    {
+      "file": "roc.json",
+      "name": "Roc"
+    },
+    {
+      "file": "roper.json",
+      "name": "Roper"
+    },
+    {
+      "file": "rust_monster.json",
+      "name": "Rust Monster"
+    },
+    {
+      "file": "sahuagin.json",
+      "name": "Sahuagin"
+    },
+    {
+      "file": "salamander.json",
+      "name": "Salamander"
+    },
+    {
+      "file": "satyr.json",
+      "name": "Satyr"
+    },
+    {
+      "file": "scorpion_giant.json",
+      "name": "Scorpion, Giant"
+    },
+    {
+      "file": "sea_hag.json",
+      "name": "Sea Hag"
+    },
+    {
+      "file": "sea_serpent.json",
+      "name": "Sea Serpent"
+    },
+    {
+      "file": "shadow.json",
+      "name": "Shadow"
+    },
+    {
+      "file": "shadow_greater.json",
+      "name": "Shadow, Greater"
+    },
+    {
+      "file": "shambling_mound.json",
+      "name": "Shambling Mound"
+    },
+    {
+      "file": "shark.json",
+      "name": "Shark"
+    },
+    {
+      "file": "shark_dire.json",
+      "name": "Shark, Dire"
+    },
+    {
+      "file": "shocker_lizard.json",
+      "name": "Shocker Lizard"
+    },
+    {
+      "file": "shoggoth.json",
+      "name": "Shoggoth"
+    },
+    {
+      "file": "skeletal_champion.json",
+      "name": "Skeletal Champion"
+    },
+    {
+      "file": "skum.json",
+      "name": "Skum"
+    },
+    {
+      "file": "slug_giant.json",
+      "name": "Slug, Giant"
+    },
+    {
+      "file": "snake_constrictor.json",
+      "name": "Snake, Constrictor"
+    },
+    {
+      "file": "snake_venomous.json",
+      "name": "Snake, Venomous"
+    },
+    {
+      "file": "spectre.json",
+      "name": "Spectre"
+    },
+    {
+      "file": "sphinx.json",
+      "name": "Sphinx"
+    },
+    {
+      "file": "spider_giant.json",
+      "name": "Spider, Giant"
+    },
+    {
+      "file": "squid.json",
+      "name": "Squid"
+    },
+    {
+      "file": "squid_giant.json",
+      "name": "Squid, Giant"
+    },
+    {
+      "file": "stirge.json",
+      "name": "Stirge"
+    },
+    {
+      "file": "svirfneblin.json",
+      "name": "Svirfneblin"
+    },
+    {
+      "file": "swarm_army_ant.json",
+      "name": "Swarm, Army Ant"
+    },
+    {
+      "file": "swarm_bat.json",
+      "name": "Swarm, Bat"
+    },
+    {
+      "file": "swarm_centipede.json",
+      "name": "Swarm, Centipede"
+    },
+    {
+      "file": "swarm_crab.json",
+      "name": "Swarm, Crab"
+    },
+    {
+      "file": "swarm_leech.json",
+      "name": "Swarm, Leech"
+    },
+    {
+      "file": "swarm_rat.json",
+      "name": "Swarm, Rat"
+    },
+    {
+      "file": "swarm_spider.json",
+      "name": "Swarm, Spider"
+    },
+    {
+      "file": "swarm_wasp.json",
+      "name": "Swarm, Wasp"
+    },
+    {
+      "file": "tarrasque.json",
+      "name": "Tarrasque"
+    },
+    {
+      "file": "tengu.json",
+      "name": "Tengu"
+    },
+    {
+      "file": "tiefling.json",
+      "name": "Tiefling"
+    },
+    {
+      "file": "tiger.json",
+      "name": "Tiger"
+    },
+    {
+      "file": "tiger_dire.json",
+      "name": "Tiger, Dire"
+    },
+    {
+      "file": "treant.json",
+      "name": "Treant"
+    },
+    {
+      "file": "troglodyte.json",
+      "name": "Troglodyte"
+    },
+    {
+      "file": "troll.json",
+      "name": "Troll"
+    },
+    {
+      "file": "unicorn.json",
+      "name": "Unicorn"
+    },
+    {
+      "file": "vampire.json",
+      "name": "Vampire"
+    },
+    {
+      "file": "vargouille.json",
+      "name": "Vargouille"
+    },
+    {
+      "file": "vegepygmy.json",
+      "name": "Vegepygmy"
+    },
+    {
+      "file": "violet_fungus.json",
+      "name": "Violet Fungus"
+    },
+    {
+      "file": "wasp_giant.json",
+      "name": "Wasp, Giant"
+    },
+    {
+      "file": "wererat_human_form.json",
+      "name": "Wererat (Human Form)"
+    },
+    {
+      "file": "wererat_hybrid_form.json",
+      "name": "Wererat (Hybrid Form)"
+    },
+    {
+      "file": "werewolf.json",
+      "name": "Werewolf"
+    },
+    {
+      "file": "werewolf_hybrid_form.json",
+      "name": "Werewolf (Hybrid Form)"
+    },
+    {
+      "file": "wight.json",
+      "name": "Wight"
+    },
+    {
+      "file": "will-o-wisp.json",
+      "name": "Will-o'-Wisp"
+    },
+    {
+      "file": "wolf.json",
+      "name": "Wolf"
+    },
+    {
+      "file": "wolf_dire.json",
+      "name": "Wolf, Dire"
+    },
+    {
+      "file": "wolverine.json",
+      "name": "Wolverine"
+    },
+    {
+      "file": "wolverine_dire.json",
+      "name": "Wolverine, Dire"
+    },
+    {
+      "file": "worg.json",
+      "name": "Worg"
+    },
+    {
+      "file": "worg_winter_wolf.json",
+      "name": "Worg, Winter Wolf"
+    },
+    {
+      "file": "wraith.json",
+      "name": "Wraith"
+    },
+    {
+      "file": "wyvern.json",
+      "name": "Wyvern"
+    },
+    {
+      "file": "xill.json",
+      "name": "Xill"
+    },
+    {
+      "file": "xorn.json",
+      "name": "Xorn"
+    },
+    {
+      "file": "yellow_musk_creeper.json",
+      "name": "Yellow Musk Creeper"
+    },
+    {
+      "file": "yeth_hound.json",
+      "name": "Yeth Hound"
+    },
+    {
+      "file": "yeti.json",
+      "name": "Yeti"
+    }
+  ]
+}

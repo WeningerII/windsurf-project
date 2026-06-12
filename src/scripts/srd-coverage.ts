@@ -382,6 +382,28 @@ TARGETS.push({
   loader: () => loaderNames(loadSpellsForSystem, 'pf1e'),
 });
 
+// PF1e Bestiary 1: the denominator is the pinned upstream manifest written by
+// encode-pf1e-monsters.mjs (devonjones/PSRD-Data bestiary/creature — GitHub's
+// tree HTML truncates and its API is rate-limited, so the verbatim file list
+// is committed alongside the encoder; regenerating the data refreshes it).
+TARGETS.push({
+  systemId: 'pf1e',
+  systemLabel: 'Pathfinder 1e',
+  category: 'monsters',
+  srdSource: 'Bestiary 1 (devonjones/PSRD-Data, pinned manifest)',
+  srd: async () => {
+    const manifestPath = path.resolve(
+      path.dirname(fileURLToPath(import.meta.url)),
+      '../../scripts/data/pf1e-bestiary-manifest.json'
+    );
+    const manifest = JSON.parse(await fs.readFile(manifestPath, 'utf8')) as {
+      entries: Array<{ name: string }>;
+    };
+    return manifest.entries.map((entry) => entry.name);
+  },
+  loader: () => loaderNames(loadMonstersForSystem, 'pf1e'),
+});
+
 // --- D&D 3.5e (SRD 3.5 core — olimot/srd-v3.5-md, clean core-only Markdown) ---
 // Spell names are the `## Name` headers across the nine alphabetical spell
 // files. This is the genuinely core-only denominator docs/srd-sources.md

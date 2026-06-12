@@ -40,7 +40,9 @@ export const strictOpenContentPolicy: Record<GameSystemId, SystemOpenContentPoli
     allowMissingSourceFor: [],
   },
   pf1e: {
-    allowedSources: ['Core Rulebook', 'CRB'],
+    // 'Bestiary' is PSRD-Data's source string for Bestiary 1 entries (PRD
+    // open content) — see docs/srd-sources.md.
+    allowedSources: ['Core Rulebook', 'CRB', 'Bestiary'],
     allowMissingSourceFor: [],
   },
   pf2e: {

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-12T20:09:03.864Z",
+  "generatedAt": "2026-06-12T20:24:15.719Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -25,7 +25,8 @@
     "pf1e": {
       "allowedSources": [
         "Core Rulebook",
-        "CRB"
+        "CRB",
+        "Bestiary"
       ],
       "allowMissingSourceFor": []
     },
@@ -109,7 +110,7 @@
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 0,
+      "monsters": 331,
       "equipment": 70,
       "feats": 86,
       "advantages": 0,
@@ -216,7 +217,7 @@
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 0,
+      "monsters": 331,
       "equipment": 70,
       "feats": 86,
       "advantages": 0,
@@ -1294,6 +1295,22 @@
         "nonCompliantCount": 0,
         "sourceCounts": {
           "Core Rulebook": 12
+        }
+      }
+    },
+    {
+      "systemId": "pf1e",
+      "systemLabel": "Pathfinder 1e",
+      "category": "monsters",
+      "categoryLabel": "Monsters",
+      "metrics": {
+        "rawCount": 331,
+        "uniqueCount": 331,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Bestiary": 331
         }
       }
     },
