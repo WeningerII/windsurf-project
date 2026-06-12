@@ -1,11 +1,11 @@
-_Generated: 2026-06-12T19:26:13.617Z_
+_Generated: 2026-06-12T19:42:57.766Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
 | System | Spells/Powers | Classes | Species/Races | Backgrounds | Traits | Feature Options | Monsters | Equipment | Feats | Advantages |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | D&D 5e (2014) | 319 | 12 | 9 | 1 | 0 | 106 | 335 | 656 | 1 | 0 |
-| D&D 5e (2024) | 339 | 12 | 9 | 4 | 0 | 0 | 95 | 502 | 19 | 0 |
+| D&D 5e (2024) | 339 | 12 | 9 | 4 | 0 | 0 | 339 | 502 | 19 | 0 |
 | D&D 3.5e | 610 | 26 | 7 | 0 | 0 | 0 | 177 | 207 | 80 | 0 |
 | Pathfinder 1e | 625 | 18 | 7 | 0 | 12 | 0 | 0 | 70 | 86 | 0 |
 | Pathfinder 2e | 551 | 12 | 6 | 16 | 0 | 0 | 0 | 188 | 93 | 0 |
@@ -38,7 +38,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | D&D 5e (2024) | Classes | 12 | 0 | 0 | 0 |
 | D&D 5e (2024) | Species/Races | 9 | 0 | 0 | 0 |
 | D&D 5e (2024) | Backgrounds | 4 | 0 | 0 | 0 |
-| D&D 5e (2024) | Monsters | 95 | 0 | 0 | 0 |
+| D&D 5e (2024) | Monsters | 339 | 0 | 0 | 0 |
 | D&D 5e (2024) | Equipment | 502 | 0 | 0 | 0 |
 | D&D 5e (2024) | Feats | 19 | 0 | 0 | 0 |
 | D&D 3.5e | Spells/Powers | 610 | 0 | 0 | 0 |
@@ -156,7 +156,7 @@ _Share of each system's loader-backed entries that are source-tagged AND open-co
 | System | Loader Entries | Cited + Policy-Clean | Integrity |
 | --- | ---: | ---: | ---: |
 | D&D 5e (2014) | 1439 | 1439 | 100% |
-| D&D 5e (2024) | 980 | 980 | 100% |
+| D&D 5e (2024) | 1224 | 1224 | 100% |
 | D&D 3.5e | 1107 | 1107 | 100% |
 | Pathfinder 1e | 818 | 818 | 100% |
 | Pathfinder 2e | 871 | 871 | 100% |

@@ -148,6 +148,9 @@ export default defineConfig({
           if (id.includes('src/data/dnd/5e-2024/equipment')) {
             return 'dnd-5e-2024-equipment-data';
           }
+          if (id.includes('src/data/dnd/5e-2024/monsters')) {
+            return 'dnd-5e-2024-monsters-data';
+          }
           if (id.includes('src/data/dnd/5e-2024/spells')) {
             return 'dnd-5e-2024-spells-data';
           }
