@@ -363,3 +363,26 @@ describe('monsterAttacksPerRound (SRD Multiattack)', () => {
     ).toBe(1);
   });
 });
+
+describe('encoded SRD 5.2 bestiary fights through the scene adapter', () => {
+  it('an encoded 2024 monster builds a combatant with real attack and damage numbers', async () => {
+    const { srdCr610Monsters2024 } = await import('../../data/dnd/5e-2024/monsters/srd-cr-6-10');
+    const { buildMonsterCombatant } = await import('../../rules');
+    // Any encoded monster with a structured attack must build a fighting
+    // combatant (the encoder writes attackBonus/damage from the 2024 prose).
+    const armed = srdCr610Monsters2024.filter((monster) =>
+      monster.actions.some((action) => (action.attackBonus ?? 0) > 0 && action.damage?.length)
+    );
+    expect(armed.length).toBeGreaterThan(20);
+    for (const monster of armed.slice(0, 5)) {
+      const built = buildMonsterCombatant(monster, { tokenId: 'a', position: { x: 0, y: 0 } });
+      const attackTotal = built.attackEffects.reduce(
+        (sum, effect) => sum + (typeof effect.value === 'number' ? effect.value : 0),
+        0
+      );
+      expect(attackTotal).toBeGreaterThan(0);
+      expect(built.damageEffects.length).toBeGreaterThan(0);
+      expect(built.token.hp!.max).toBeGreaterThan(0);
+    }
+  });
+});
