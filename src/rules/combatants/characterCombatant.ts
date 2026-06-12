@@ -36,6 +36,7 @@ import type { SceneCoordinate, SceneToken } from '../../types/core/scene';
 import { abilityMod } from '../../utils/math';
 import { profBonus } from '../../systems/dnd5e/shared/engine';
 import { collectDnd5eRiderEffects } from '../conditions/dnd5eRiders';
+import { collectD20LegacyConditionEffects } from '../conditions/d20LegacyConditions';
 import {
   compileEquipmentEffects,
   compileModifierEffects,
@@ -283,6 +284,20 @@ export function buildCharacterCombatant(
           rogueLevel: classLevel('rogue'),
         })
       : [];
+
+  // Legacy-d20 sheet conditions (shaken/sickened/...) fight along: the same
+  // catalog the engines and scene tokens use compiles the document's
+  // persisted conditions into attack/damage effects.
+  const legacyConditionEffects =
+    systemId === 'pf1e' || systemId === 'dnd-3.5e'
+      ? collectD20LegacyConditionEffects(
+          systemId,
+          ((document.system as { conditions?: Array<{ id: string }> }).conditions ?? []).map(
+            (condition) => condition.id
+          )
+        )
+      : [];
+  riderEffects.push(...legacyConditionEffects);
 
   const weaponDie = options.weaponDie ?? 6;
   const damageEffects: EffectInstance[] = [

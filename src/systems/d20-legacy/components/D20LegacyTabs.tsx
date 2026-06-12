@@ -57,6 +57,8 @@ interface Props {
   skills: Skill[];
   skillRanks: Record<string, number>;
   classSkills?: string[];
+  conditions: Array<{ id: string; name: string }>;
+  onConditionChange?: (conditions: Array<{ id: string; name: string }>) => void;
   features: Feature[];
   feats: Array<{ id: string; name: string; description: string; source: string }>;
   traits: Pf1eTrait[];
@@ -131,6 +133,8 @@ export const D20LegacyTabs: React.FC<Props> = ({
   skills,
   skillRanks,
   classSkills,
+  conditions,
+  onConditionChange,
   features,
   feats,
   traits,
@@ -296,6 +300,8 @@ export const D20LegacyTabs: React.FC<Props> = ({
 
       <TabsContent value="feats">
         <D20FeatsTab
+          conditions={conditions}
+          onConditionChange={onConditionChange}
           features={features}
           feats={feats}
           isPf1e={isPf1e}

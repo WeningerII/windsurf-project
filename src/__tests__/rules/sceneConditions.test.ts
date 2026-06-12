@@ -161,3 +161,82 @@ describe('M&M bruise track penalizes Toughness saves in scenes', () => {
     expect(saveTotal(withBruises.log)).toBe(saveTotal(withoutBruises.log) - 2);
   });
 });
+
+describe('legacy-d20 sheet conditions', () => {
+  it('the fear track never stacks with itself, sickened stacks with fear', async () => {
+    const { d20LegacyCheckPenalty, collectD20LegacyConditionEffects } =
+      await import('../../rules/conditions/d20LegacyConditions');
+    expect(d20LegacyCheckPenalty(['shaken'])).toBe(2);
+    expect(d20LegacyCheckPenalty(['shaken', 'frightened'])).toBe(2);
+    expect(d20LegacyCheckPenalty(['shaken', 'sickened'])).toBe(4);
+    // The attack-effect collector applies the same worst-of-fear rule.
+    const effects = collectD20LegacyConditionEffects('pf1e', ['shaken', 'frightened']);
+    const attackPenalty = effects
+      .filter((e) => e.target === 'attack' && e.operation === 'subtract')
+      .reduce((total, e) => total + (typeof e.value === 'number' ? e.value : 0), 0);
+    expect(attackPenalty).toBe(2);
+  });
+
+  it('a shaken PF1e character fights shaken in scenes', async () => {
+    const { buildCharacterCombatant } = await import('../../rules');
+    const build = (conditions: Array<{ id: string; name: string }>) =>
+      buildCharacterCombatant(
+        {
+          id: 'pf1e-shaken',
+          name: 'Scared',
+          systemId: 'pf1e',
+          system: {
+            level: 3,
+            baseAttackBonus: 3,
+            baseAttributes: { str: 14, dex: 10 },
+            hitPoints: { current: 20, max: 20 },
+            armorClass: { total: 15 },
+            conditions,
+          },
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        { tokenId: 't', position: { x: 0, y: 0 } }
+      );
+    const shaken = build([{ id: 'shaken', name: 'Shaken' }]);
+    const calm = build([]);
+    expect(shaken.supported && calm.supported).toBe(true);
+    if (!shaken.supported || !calm.supported) return;
+    const subtractTotal = (
+      effects: ReadonlyArray<{ target: string; operation: string; value: unknown }>
+    ) =>
+      effects
+        .filter((e) => e.target === 'attack' && e.operation === 'subtract')
+        .reduce((total, e) => total + (typeof e.value === 'number' ? e.value : 0), 0);
+    expect(subtractTotal(shaken.combatant.attackEffects)).toBe(2);
+    expect(subtractTotal(calm.combatant.attackEffects)).toBe(0);
+  });
+
+  it('engine checks roll at -2 while sickened (PF1e and 3.5e)', async () => {
+    const { Pf1eEngine } = await import('../../systems/pf1e/engine');
+    const { Dnd35eEngine } = await import('../../systems/dnd35e/engine');
+    const { createDefaultPf1eData } = await import('../../systems/pf1e/data-model');
+    const { createDefaultDnd35eData } = await import('../../systems/dnd35e/data-model');
+    const cases = [
+      { engine: new Pf1eEngine(), systemId: 'pf1e', data: createDefaultPf1eData() },
+      { engine: new Dnd35eEngine(), systemId: 'dnd-3.5e', data: createDefaultDnd35eData() },
+    ] as const;
+    for (const { engine, systemId, data } of cases) {
+      const doc = (conditions: Array<{ id: string; name: string }>) => ({
+        id: 'c',
+        name: 'C',
+        systemId,
+        system: { ...data, conditions },
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+      const modifierOf = (formula: string) => Number(/1d20 \+ (-?\d+)/.exec(formula)?.[1]);
+      const sick = await engine.rollCheck(
+        doc([{ id: 'sickened', name: 'Sickened' }]) as never,
+        'save-fort'
+      );
+      const well = await engine.rollCheck(doc([]) as never, 'save-fort');
+      expect(modifierOf(sick.formula)).toBe(modifierOf(well.formula) - 2);
+    }
+  });
+});

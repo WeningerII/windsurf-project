@@ -5,6 +5,7 @@ import { abilityMod } from '../../utils/math';
 import { GRAPPLE_SIZE_MODS, baseSave, classBAB } from '../shared/d20-helpers';
 import { computeD20LegacyAC, D20_SIZE_MOD } from '../../utils/armorClass';
 import { resolveCharacterEffects } from '../../rules';
+import { d20LegacyCheckPenalty } from '../../rules/conditions/d20LegacyConditions';
 import { dnd35eClasses } from '../../data/dnd/3.5e/classes';
 import { dnd35eNormalizedPrestigeClasses } from '../../data/dnd/3.5e/prestige-classes';
 import { mergeVancianSpellSlots } from '../../utils/classSpellcasting';
@@ -198,6 +199,10 @@ export class Dnd35eEngine implements SystemEngine<Dnd35eDataModel> {
       modifier = d.grapple;
       flavor = 'Grapple Check';
     }
+
+    // Active fear/sickened conditions impose their flat SRD penalty on every
+    // check and save (worst fear state only; sickened stacks with fear).
+    modifier -= d20LegacyCheckPenalty((d.conditions ?? []).map((condition) => condition.id));
 
     const d20 = Math.floor(Math.random() * 20) + 1;
     return {

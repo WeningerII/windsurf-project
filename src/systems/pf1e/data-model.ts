@@ -89,6 +89,13 @@ export interface Pf1eDataModel extends SystemDataModel {
 
   saves: Pf1eSaves;
 
+  /**
+   * Active OGL conditions (shaken, sickened, ...) persisted by the sheet's
+   * condition picker; compiled into check penalties and scene attack effects
+   * by the d20-legacy condition catalog.
+   */
+  conditions?: Array<{ id: string; name: string }>;
+
   features: Feature[];
   feats: Pf1eFeat[];
   traits: Pf1eTrait[];

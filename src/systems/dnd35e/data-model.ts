@@ -81,6 +81,13 @@ export interface Dnd35eDataModel extends SystemDataModel {
   // Saves
   saves: Dnd35eSaves;
 
+  /**
+   * Active OGL conditions (shaken, sickened, ...) persisted by the sheet's
+   * condition picker; compiled into check penalties and scene attack effects
+   * by the d20-legacy condition catalog.
+   */
+  conditions?: Array<{ id: string; name: string }>;
+
   // Feats
   features: Feature[];
   feats: Dnd35eFeat[];

@@ -210,6 +210,9 @@ export function useD20LegacySheetController({
       skills,
       skillRanks,
       classSkills: sys.classSkills,
+      conditions: sys.conditions ?? [],
+      onConditionChange: (nextConditions: Array<{ id: string; name: string }>) =>
+        mutationHandlers.update({ conditions: nextConditions } as Partial<D20LegacyData>),
       features,
       feats,
       traits: (pf1Data?.traits ?? []) as Pf1eTrait[],
