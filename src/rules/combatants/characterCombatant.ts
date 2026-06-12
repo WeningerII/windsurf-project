@@ -38,6 +38,7 @@ import { profBonus } from '../../systems/dnd5e/shared/engine';
 import { collectDnd5eRiderEffects } from '../conditions/dnd5eRiders';
 import { collectPf2eRiderEffects } from '../conditions/pf2eRiders';
 import { collectD20LegacyConditionEffects } from '../conditions/d20LegacyConditions';
+import { collectD20LegacyRiderEffects } from '../conditions/d20LegacyRiders';
 import {
   compileEquipmentEffects,
   compileModifierEffects,
@@ -294,6 +295,19 @@ export function buildCharacterCombatant(
         activeToggles: systemRaw.activeToggles ?? [],
         featureIds: new Set(sheet.features.map((feature) => feature.id)),
         level: sheet.level,
+      })
+    );
+  }
+
+  // Legacy-d20 riders: PF1e Power Attack's formula-fixed trade compiles
+  // (-[1+BAB/4] attack / +2x damage); 3.5e's choose-N trade stays manual.
+  if (systemId === 'pf1e' || systemId === 'dnd-3.5e') {
+    riderEffects.push(
+      ...collectD20LegacyRiderEffects({
+        systemId,
+        activeToggles: systemRaw.activeToggles ?? [],
+        featIds: new Set(sheet.feats.map((feat) => feat.id)),
+        baseAttackBonus: sheet.baseAttackBonus,
       })
     );
   }

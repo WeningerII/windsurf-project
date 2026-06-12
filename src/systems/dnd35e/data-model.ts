@@ -88,6 +88,12 @@ export interface Dnd35eDataModel extends SystemDataModel {
    */
   conditions?: Array<{ id: string; name: string }>;
 
+  /**
+   * Active rider toggles (damage assembly), e.g. ['power-attack'] (PF1e).
+   * Compiled into resolver effects by collectD20LegacyRiderEffects.
+   */
+  activeToggles?: string[];
+
   // Feats
   features: Feature[];
   feats: Dnd35eFeat[];

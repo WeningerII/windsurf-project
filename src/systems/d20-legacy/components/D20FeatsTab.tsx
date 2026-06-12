@@ -2,6 +2,8 @@ import React from 'react';
 import { Plus, X } from 'lucide-react';
 import { Badge } from '../../../components/ui/Badge';
 import { ConditionPicker } from '../../../components/ConditionPicker';
+import { CombatTogglesSection } from '../../../components/CombatTogglesSection';
+import { D20_LEGACY_TOGGLE_LABELS } from '../../../rules/conditions/d20LegacyRiders';
 import { FeaturesSection } from '../../../components/FeaturesSection';
 import { D20_LEGACY_CONDITION_NAMES } from '../../../rules/conditions/d20LegacyConditions';
 import type { Pf1eTrait } from '../../pf1e/data-model';
@@ -25,6 +27,9 @@ interface Props {
   canUpdate: boolean;
   conditions: Array<{ id: string; name: string }>;
   onConditionChange?: (conditions: Array<{ id: string; name: string }>) => void;
+  availableToggles: string[];
+  activeToggles: string[];
+  onActiveTogglesChange?: (activeToggles: string[]) => void;
   onRemoveFeat: (featId: string) => void;
   onAddFeat: () => void;
   onSelectedTraitIdChange: (traitId: string) => void;
@@ -44,6 +49,9 @@ export const D20FeatsTab: React.FC<Props> = ({
   canUpdate,
   conditions,
   onConditionChange,
+  availableToggles,
+  activeToggles,
+  onActiveTogglesChange,
   onRemoveFeat,
   onAddFeat,
   onSelectedTraitIdChange,
@@ -53,6 +61,12 @@ export const D20FeatsTab: React.FC<Props> = ({
 }) => (
   <div className="space-y-4">
     <FeaturesSection features={features} />
+    <CombatTogglesSection
+      availableToggles={availableToggles}
+      activeToggles={activeToggles}
+      labels={D20_LEGACY_TOGGLE_LABELS}
+      onChange={canUpdate ? onActiveTogglesChange : undefined}
+    />
     <ConditionPicker
       conditions={conditions}
       availableConditions={D20_LEGACY_CONDITION_NAMES}

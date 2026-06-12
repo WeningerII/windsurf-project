@@ -570,3 +570,68 @@ describe('PF2e rider toggles in scene combat', () => {
     ).toHaveLength(0);
   });
 });
+
+describe('PF1e Power Attack rider', () => {
+  it('compiles the formula-fixed trade and scales with BAB', async () => {
+    const { pf1ePowerAttackTrade, collectD20LegacyRiderEffects, availableD20LegacyToggles } =
+      await import('../../rules/conditions/d20LegacyRiders');
+    expect(pf1ePowerAttackTrade(0)).toEqual({ penalty: 1, bonus: 2 });
+    expect(pf1ePowerAttackTrade(4)).toEqual({ penalty: 2, bonus: 4 });
+    expect(pf1ePowerAttackTrade(20)).toEqual({ penalty: 6, bonus: 12 });
+    const effects = collectD20LegacyRiderEffects({
+      systemId: 'pf1e',
+      activeToggles: ['power-attack'],
+      featIds: new Set(['power-attack']),
+      baseAttackBonus: 8,
+    });
+    expect(effects.find((e) => e.target === 'attack')?.value).toBe(3);
+    expect(effects.find((e) => e.target === 'damage')?.value).toBe(6);
+    // 3.5e's choose-N trade is a per-roll player choice: never compiled.
+    expect(
+      collectD20LegacyRiderEffects({
+        systemId: 'dnd-3.5e',
+        activeToggles: ['power-attack'],
+        featIds: new Set(['power-attack']),
+        baseAttackBonus: 8,
+      })
+    ).toHaveLength(0);
+    expect(
+      availableD20LegacyToggles({ systemId: 'dnd-3.5e', featIds: new Set(['power-attack']) })
+    ).toHaveLength(0);
+  });
+
+  it('folds into the PF1e combatant when toggled and feat-gated', async () => {
+    const { buildCharacterCombatant } = await import('../../rules');
+    const built = buildCharacterCombatant(
+      {
+        id: 'pf1e-pa',
+        name: 'Smasher',
+        systemId: 'pf1e',
+        system: {
+          level: 8,
+          baseAttackBonus: 8,
+          baseAttributes: { str: 18, dex: 10 },
+          hitPoints: { current: 60, max: 60 },
+          armorClass: { total: 19 },
+          activeToggles: ['power-attack'],
+          feats: [{ id: 'power-attack', name: 'Power Attack', description: '' }],
+        },
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      { tokenId: 'p', position: { x: 0, y: 0 } }
+    );
+    expect(built.supported).toBe(true);
+    if (!built.supported) return;
+    expect(
+      built.combatant.attackEffects.some(
+        (effect) => effect.operation === 'subtract' && effect.value === 3
+      )
+    ).toBe(true);
+    expect(
+      built.combatant.damageEffects.some(
+        (effect) => effect.value === 6 && /power attack/i.test(effect.label)
+      )
+    ).toBe(true);
+  });
+});

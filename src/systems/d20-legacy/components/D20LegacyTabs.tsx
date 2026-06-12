@@ -59,6 +59,9 @@ interface Props {
   classSkills?: string[];
   conditions: Array<{ id: string; name: string }>;
   onConditionChange?: (conditions: Array<{ id: string; name: string }>) => void;
+  availableToggles: string[];
+  activeToggles: string[];
+  onActiveTogglesChange?: (activeToggles: string[]) => void;
   features: Feature[];
   feats: Array<{ id: string; name: string; description: string; source: string }>;
   traits: Pf1eTrait[];
@@ -135,6 +138,9 @@ export const D20LegacyTabs: React.FC<Props> = ({
   classSkills,
   conditions,
   onConditionChange,
+  availableToggles,
+  activeToggles,
+  onActiveTogglesChange,
   features,
   feats,
   traits,
@@ -302,6 +308,9 @@ export const D20LegacyTabs: React.FC<Props> = ({
         <D20FeatsTab
           conditions={conditions}
           onConditionChange={onConditionChange}
+          availableToggles={availableToggles}
+          activeToggles={activeToggles}
+          onActiveTogglesChange={onActiveTogglesChange}
           features={features}
           feats={feats}
           isPf1e={isPf1e}
