@@ -247,6 +247,8 @@ export interface MonsterCombatant {
   armorClass: number;
   /** Attacks per turn, parsed from the Multiattack action (default 1). */
   attacksPerRound: number;
+  /** Movement per turn in grid cells. */
+  speedCells: number;
 }
 
 /**
@@ -277,5 +279,7 @@ export function buildMonsterCombatant(
     reach: action ? (normalizeAttack(action)?.reachCells ?? 1) : 1,
     armorClass: monster.armorClass,
     attacksPerRound: action ? monsterAttacksPerRound(monster) : 1,
+    // Movement in grid cells (5 ft. each); walk speed is the tactical default.
+    speedCells: Math.max(1, Math.floor((monster.speed?.walk ?? 30) / 5)),
   };
 }

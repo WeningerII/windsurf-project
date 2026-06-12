@@ -359,6 +359,7 @@ export function SceneManager({
           armorClass: built.armorClass,
           reach: built.reach,
           attacksPerRound: built.attacksPerRound,
+          speedCells: built.speedCells,
         };
       }
       if (token.kind === 'character' && token.refId) {

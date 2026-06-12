@@ -38,6 +38,8 @@ export interface TacticalActor {
    * the current target drops mid-sequence.
    */
   attacksPerRound?: number;
+  /** Movement per turn in grid cells (speed feet / 5). Default 6. */
+  speedCells?: number;
 }
 
 /** A potential target on the grid. */
