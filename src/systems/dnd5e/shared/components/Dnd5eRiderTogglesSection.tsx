@@ -6,7 +6,9 @@ import { Zap } from 'lucide-react';
 const TOGGLE_LABELS: Record<string, string> = {
   rage: 'Rage',
   'great-weapon-master': 'Great Weapon Master (-5/+10)',
+  sharpshooter: 'Sharpshooter (-5/+10)',
   'sneak-attack': 'Sneak Attack',
+  'divine-smite': 'Divine Smite (2d8)',
 };
 
 interface Props {

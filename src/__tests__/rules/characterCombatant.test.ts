@@ -425,3 +425,43 @@ describe('5e rider toggles in scene combat (phase 4)', () => {
     );
   });
 });
+
+describe('collectDnd5eRiderEffects: Sharpshooter and Divine Smite', () => {
+  it('compiles Sharpshooter -5/+10 and Divine Smite 2d8 when gated and active', async () => {
+    const { collectDnd5eRiderEffects, availableDnd5eToggles } =
+      await import('../../rules/conditions/dnd5eRiders');
+    const inputs = {
+      activeToggles: ['sharpshooter', 'divine-smite'],
+      featureIds: new Set(['divine-smite']),
+      featIds: new Set(['sharpshooter']),
+      barbarianLevel: 0,
+      rogueLevel: 0,
+    };
+    expect(availableDnd5eToggles(inputs)).toEqual(['sharpshooter', 'divine-smite']);
+    const effects = collectDnd5eRiderEffects(inputs);
+    const attack = effects.filter((effect) => effect.target === 'attack');
+    expect(attack).toHaveLength(1);
+    expect(attack[0].value).toBe(-5);
+    const flatDamage = effects.filter(
+      (effect) => effect.target === 'damage' && effect.operation === 'add'
+    );
+    expect(flatDamage.map((effect) => effect.value)).toEqual([10]);
+    const smiteDice = effects.filter(
+      (effect) => effect.operation === 'add-die' && /smite/i.test(effect.label)
+    );
+    expect(smiteDice).toHaveLength(2);
+    expect(smiteDice.every((effect) => effect.value === 8)).toBe(true);
+  });
+
+  it('Divine Smite without the feature compiles nothing', async () => {
+    const { collectDnd5eRiderEffects } = await import('../../rules/conditions/dnd5eRiders');
+    const effects = collectDnd5eRiderEffects({
+      activeToggles: ['divine-smite', 'sharpshooter'],
+      featureIds: new Set<string>(),
+      featIds: new Set<string>(),
+      barbarianLevel: 0,
+      rogueLevel: 0,
+    });
+    expect(effects).toHaveLength(0);
+  });
+});

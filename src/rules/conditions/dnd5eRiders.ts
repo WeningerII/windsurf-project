@@ -42,7 +42,13 @@ export function sneakAttackDice(rogueLevel: number): number {
   return Math.max(1, Math.ceil(rogueLevel / 2));
 }
 
-export const DND5E_TOGGLE_IDS = ['rage', 'great-weapon-master', 'sneak-attack'] as const;
+export const DND5E_TOGGLE_IDS = [
+  'rage',
+  'great-weapon-master',
+  'sharpshooter',
+  'sneak-attack',
+  'divine-smite',
+] as const;
 
 /**
  * Which toggles this character can use at all (feature/feat-gated). The sheet
@@ -56,7 +62,11 @@ export function availableDnd5eToggles(
   if (inputs.featIds.has('great-weapon-master') || inputs.featureIds.has('great-weapon-master')) {
     available.push('great-weapon-master');
   }
+  if (inputs.featIds.has('sharpshooter') || inputs.featureIds.has('sharpshooter')) {
+    available.push('sharpshooter');
+  }
   if (inputs.featureIds.has('sneak-attack')) available.push('sneak-attack');
+  if (inputs.featureIds.has('divine-smite')) available.push('divine-smite');
   return available;
 }
 
@@ -114,6 +124,38 @@ export function collectDnd5eRiderEffects(inputs: Dnd5eRiderInputs): EffectInstan
     );
   }
 
+  if (
+    active.has('sharpshooter') &&
+    (inputs.featIds.has('sharpshooter') || inputs.featureIds.has('sharpshooter'))
+  ) {
+    effects.push(
+      {
+        id: makeEffectId(SYSTEM_ID, 'rider', 'sharpshooter', 'attack'),
+        systemId: SYSTEM_ID,
+        target: 'attack',
+        operation: 'add',
+        value: -5,
+        stackPolicy: 'sum',
+        source: { kind: 'feat', id: 'sharpshooter', label: 'Sharpshooter' },
+        label: 'Sharpshooter (-5 attack)',
+      },
+      {
+        id: makeEffectId(SYSTEM_ID, 'rider', 'sharpshooter', 'damage'),
+        systemId: SYSTEM_ID,
+        target: 'damage',
+        operation: 'add',
+        value: 10,
+        stackPolicy: 'sum',
+        source: { kind: 'feat', id: 'sharpshooter', label: 'Sharpshooter' },
+        label: 'Sharpshooter (+10 damage)',
+        manualBoundary: {
+          kind: 'partial',
+          note: 'SRD: ranged weapons the wielder is proficient with only.',
+        },
+      }
+    );
+  }
+
   if (active.has('sneak-attack') && inputs.featureIds.has('sneak-attack')) {
     const dice = sneakAttackDice(inputs.rogueLevel);
     for (let index = 0; index < dice; index += 1) {
@@ -129,6 +171,27 @@ export function collectDnd5eRiderEffects(inputs: Dnd5eRiderInputs): EffectInstan
         manualBoundary: {
           kind: 'partial',
           note: 'SRD: once per turn, and only with advantage or an adjacent ally; the toggle asserts eligibility.',
+        },
+      });
+    }
+  }
+
+  if (active.has('divine-smite') && inputs.featureIds.has('divine-smite')) {
+    // Base smite: 2d8 (1st-level slot). Slot level/undead scaling is a manual
+    // call — the toggle asserts the player is spending the base slot.
+    for (let index = 0; index < 2; index += 1) {
+      effects.push({
+        id: makeEffectId(SYSTEM_ID, 'rider', 'divine-smite', 'die', index),
+        systemId: SYSTEM_ID,
+        target: 'damage',
+        operation: 'add-die',
+        value: 8,
+        stackPolicy: 'sum',
+        source: { kind: 'feature', id: 'divine-smite', label: 'Divine Smite' },
+        label: `Divine Smite d8 (${index + 1}/2)`,
+        manualBoundary: {
+          kind: 'partial',
+          note: 'SRD: expends a 1st-level spell slot (+1d8 per higher slot level, +1d8 vs undead/fiends) — slot spend and scaling are manual.',
         },
       });
     }
