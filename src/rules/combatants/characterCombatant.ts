@@ -61,6 +61,12 @@ export interface CharacterCombatant {
    * other martials 2 at level 5). Derived from 'extra-attack*' features.
    */
   attacksPerRound: number;
+  /**
+   * Legacy-d20 iteratives (3.5e/PF1e full attack): each attack after the
+   * first rolls at a cumulative -5. Unset for 5e-family (Multiattack rolls
+   * every attack at full bonus).
+   */
+  iterativePenaltyStep?: number;
   /** Movement per turn in grid cells (sheet speed / 5; default 6). */
   speedCells: number;
   /**
@@ -323,11 +329,21 @@ export function buildCharacterCombatant(
       damageEffects: [...damageEffects, ...riderEffects.filter((e) => e.target === 'damage')],
       reach: options.reach ?? 1,
       armorClass: sheet.armorClass,
-      // 5e Extra Attack (compute-register damage-assembly residual): each
-      // granted 'extra-attack*' class feature adds one attack to the Attack
-      // action; the scene Multiattack machinery executes them.
-      attacksPerRound:
-        1 + sheet.features.filter((feature) => /^extra-attack(-\d+)?$/.test(feature.id)).length,
+      // 5e Extra Attack: each granted 'extra-attack*' class feature adds one
+      // attack to the Attack action. 3.5e/PF1e instead grant iteratives from
+      // BAB (extra attack at +6/+11/+16, each at a cumulative -5 on a full
+      // attack — SRD: Base Attack Bonus / Full Attack).
+      ...(systemId === 'pf1e' || systemId === 'dnd-3.5e'
+        ? {
+            attacksPerRound:
+              1 + Math.min(3, Math.floor(Math.max(0, sheet.baseAttackBonus - 1) / 5)),
+            iterativePenaltyStep: 5,
+          }
+        : {
+            attacksPerRound:
+              1 +
+              sheet.features.filter((feature) => /^extra-attack(-\d+)?$/.test(feature.id)).length,
+          }),
       speedCells: Math.max(
         1,
         Math.floor(num((document.system as { speed?: unknown }).speed, 30) / 5)

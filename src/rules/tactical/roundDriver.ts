@@ -37,6 +37,8 @@ export interface RoundCombatant {
   critOn?: number;
   /** Attacks per turn (SRD Multiattack). Default 1. */
   attacksPerRound?: number;
+  /** Cumulative per-attack penalty for legacy-d20 iteratives (-5 per step). */
+  iterativePenaltyStep?: number;
   /** Movement per turn in grid cells. Default 6. */
   speedCells?: number;
 }
@@ -80,6 +82,7 @@ function toActor(combatant: RoundCombatant): TacticalActor {
     reach: combatant.reach,
     critOn: combatant.critOn,
     attacksPerRound: combatant.attacksPerRound,
+    iterativePenaltyStep: combatant.iterativePenaltyStep,
     speedCells: combatant.speedCells,
   };
 }

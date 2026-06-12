@@ -465,3 +465,61 @@ describe('collectDnd5eRiderEffects: Sharpshooter and Divine Smite', () => {
     expect(effects).toHaveLength(0);
   });
 });
+
+describe('legacy-d20 iterative attacks (3.5e/PF1e)', () => {
+  it('BAB drives attacks per full attack with a -5 iterative step', async () => {
+    const { buildCharacterCombatant } = await import('../../rules');
+    const build = (baseAttackBonus: number) =>
+      buildCharacterCombatant(
+        {
+          id: `pf1e-${baseAttackBonus}`,
+          name: 'Fighter',
+          systemId: 'pf1e',
+          system: {
+            level: Math.max(1, baseAttackBonus),
+            baseAttackBonus,
+            baseAttributes: { str: 16, dex: 12 },
+            hitPoints: { current: 30, max: 30 },
+            armorClass: { total: 18 },
+          },
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        { tokenId: 't', position: { x: 0, y: 0 } }
+      );
+    const cases: Array<[number, number]> = [
+      [1, 1],
+      [5, 1],
+      [6, 2],
+      [11, 3],
+      [16, 4],
+      [20, 4],
+    ];
+    for (const [bab, expected] of cases) {
+      const built = build(bab);
+      expect(built.supported).toBe(true);
+      if (!built.supported) continue;
+      expect(built.combatant.attacksPerRound).toBe(expected);
+      expect(built.combatant.iterativePenaltyStep).toBe(5);
+    }
+  });
+
+  it('5e characters keep the full-bonus Multiattack model (no iterative step)', async () => {
+    const { buildCharacterCombatant } = await import('../../rules');
+    const { createDefaultDnd5eData } = await import('../../systems/dnd5e/data-model');
+    const built = buildCharacterCombatant(
+      {
+        id: 'fiver',
+        name: 'Fiver',
+        systemId: 'dnd-5e-2014',
+        system: createDefaultDnd5eData(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      { tokenId: 'f', position: { x: 0, y: 0 } }
+    );
+    expect(built.supported).toBe(true);
+    if (!built.supported) return;
+    expect(built.combatant.iterativePenaltyStep).toBeUndefined();
+  });
+});

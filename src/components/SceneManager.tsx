@@ -433,6 +433,7 @@ export function SceneManager({
           armorClass: built.combatant.armorClass,
           reach: built.combatant.reach,
           attacksPerRound: built.combatant.attacksPerRound,
+          iterativePenaltyStep: built.combatant.iterativePenaltyStep,
           speedCells: built.combatant.speedCells,
           areaSaveBonus: Math.floor(
             (((doc.system as { baseAttributes?: { dex?: number } }).baseAttributes?.dex ?? 10) -

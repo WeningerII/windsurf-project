@@ -47,6 +47,8 @@ export interface SceneCombatStats {
   critOn?: number;
   /** Attacks per turn (SRD Multiattack). Default 1. */
   attacksPerRound?: number;
+  /** Cumulative per-attack penalty for legacy-d20 iteratives (-5 per step). */
+  iterativePenaltyStep?: number;
   /** Movement per turn in grid cells (speed feet / 5). Default 6 (30 ft.). */
   speedCells?: number;
   /**
@@ -118,6 +120,7 @@ export function buildSceneCombatants(
       reach: stats.reach,
       critOn: stats.critOn,
       attacksPerRound: stats.attacksPerRound,
+      iterativePenaltyStep: stats.iterativePenaltyStep,
       speedCells: stats.speedCells,
     });
   }
