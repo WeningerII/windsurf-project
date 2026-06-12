@@ -44,7 +44,7 @@ fetchers behind WAFs, so they are confirmed via search indexing.
 ## Daggerheart — SRD 1.0 (Darrington Press Community Gaming License)
 
 - **Official:** SRD page `https://www.daggerheart.com/srd/`; SRD 1.0 PDF `https://www.daggerheart.com/wp-content/uploads/2025/05/DH-SRD-May202025.pdf`; license `https://darringtonpress.com/license/`.
-- **Machine-readable (verified by clone):** `Batres3/daggerheart-srd` (DPCGL; MD + CSV + JSON) — domains **9**, domain cards **189**, classes **9**, subclasses **18**, ancestries **18**, communities **9**, adversaries **129** (T1 52 / T2 36 / T3 23 / T4 18), environments **19**, weapons 192, armor 34, consumables 60, items 60.
+- **Machine-readable (verified by clone):** `Batres3/daggerheart-srd` (DPCGL; MD + CSV + JSON) — domains **9**, domain cards **189**, classes **9**, subclasses **18**, ancestries **18**, communities **9**, adversaries **129** (T1 52 / T2 36 / T3 23 / T4 18; encoded in full by `scripts/encode-daggerheart-adversaries.mjs` — minion/ooze threshold absences and the one dice attack modifier preserved, never invented), environments **19**, weapons 192, armor 34, consumables 60, items 60.
 
 ---
 

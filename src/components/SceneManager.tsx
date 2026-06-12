@@ -22,6 +22,7 @@ import {
 } from '../scene/runtime';
 import {
   buildCharacterCombatant,
+  buildDaggerheartAdversaryCombatant,
   buildDaggerheartCombatant,
   buildMam3eCombatant,
   buildMonsterCombatant,
@@ -42,7 +43,7 @@ import type {
   SceneTokenKind,
 } from '../types/core/scene';
 import { systemRegistry } from '../registry';
-import { loadMonstersForSystem } from '../utils/dataLoader';
+import { loadDaggerheartAdversariesForSystem, loadMonstersForSystem } from '../utils/dataLoader';
 import { exportScenes, importScenes } from '../utils/sceneStorage';
 import { generateUUID } from '../utils/browserCompat';
 import { Button } from './ui/Button';
@@ -56,7 +57,7 @@ import { MarkerPanel } from './scene/MarkerPanel';
 import { TokenPanel } from './scene/TokenPanel';
 import { CombatPanel } from './scene/CombatPanel';
 
-type PlacementMode = 'none' | 'token' | 'marker';
+type PlacementMode = 'none' | 'token' | 'marker' | 'adversary';
 
 interface Props {
   scenes: SceneDocument[];
@@ -173,6 +174,30 @@ export function SceneManager({
       setDaggerheartWeaponsById(
         new Map((mod.daggerheartWeapons ?? []).map((weapon) => [weapon.id, weapon]))
       );
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [sceneSystemId]);
+
+  // Daggerheart scenes field SRD adversaries as monster-kind tokens.
+  const [daggerheartAdversariesById, setDaggerheartAdversariesById] = useState<
+    ReadonlyMap<string, import('../types/daggerheart').DaggerheartAdversary>
+  >(new Map());
+  const [adversaryId, setAdversaryId] = useState('');
+  useEffect(() => {
+    if (sceneSystemId !== 'daggerheart') {
+      setDaggerheartAdversariesById(new Map());
+      setAdversaryId('');
+      return;
+    }
+    let cancelled = false;
+    loadDaggerheartAdversariesForSystem('daggerheart').then((adversaries) => {
+      if (cancelled) return;
+      setDaggerheartAdversariesById(
+        new Map(adversaries.map((adversary) => [adversary.id, adversary]))
+      );
+      setAdversaryId((current) => current || (adversaries[0]?.id ?? ''));
     });
     return () => {
       cancelled = true;
@@ -382,6 +407,25 @@ export function SceneManager({
   const resolveCombatStats = useCallback<ResolveCombatStats>(
     (token) => {
       if (token.kind === 'monster' && token.refId) {
+        // Daggerheart adversaries resolve by their own model: duality dice
+        // vs Difficulty, threshold-marked HP slots.
+        const adversary = daggerheartAdversariesById.get(token.refId);
+        if (adversary) {
+          const built = buildDaggerheartAdversaryCombatant(adversary, {
+            tokenId: token.id,
+            position: token.position,
+          });
+          if (!built.supported) return undefined;
+          return {
+            attackEffects: built.combatant.attackEffects,
+            damageEffects: built.combatant.damageEffects,
+            // Difficulty rides the targetValue channel, like Evasion.
+            armorClass: built.combatant.difficulty,
+            reach: built.combatant.reach,
+            speedCells: built.combatant.speedCells,
+            daggerheart: { thresholds: built.combatant.thresholds },
+          };
+        }
         const monster = monstersById.get(token.refId);
         if (!monster) return undefined;
         const built = buildMonsterCombatant(monster, {
@@ -454,7 +498,7 @@ export function SceneManager({
       }
       return undefined;
     },
-    [monstersById, documentsById, daggerheartWeaponsById]
+    [monstersById, documentsById, daggerheartWeaponsById, daggerheartAdversariesById]
   );
 
   const combatReadyIds = useMemo(() => {
@@ -549,6 +593,22 @@ export function SceneManager({
         return;
       }
 
+      if (placementMode === 'adversary') {
+        const adversary = daggerheartAdversariesById.get(adversaryId);
+        if (!adversary) return;
+        const built = buildDaggerheartAdversaryCombatant(adversary, {
+          tokenId: generateUUID(),
+          position,
+        });
+        if (!built.supported) return;
+        const placed = emitSceneAction(selectedScene, {
+          type: 'place-token',
+          token: built.combatant.token,
+        });
+        if (placed) setPlacementMode('none');
+        return;
+      }
+
       if (placementMode === 'marker') {
         const label = markerLabel.trim();
         if (!label) return;
@@ -584,6 +644,8 @@ export function SceneManager({
       selectedScene,
       state,
       placementMode,
+      adversaryId,
+      daggerheartAdversariesById,
       documents,
       tokenDocumentId,
       tokenName,
@@ -1097,6 +1159,37 @@ export function SceneManager({
                     }
                     onToggleSelectedTokenCondition={handleToggleSelectedTokenCondition}
                   />
+
+                  {sceneSystemId === 'daggerheart' && daggerheartAdversariesById.size > 0 && (
+                    <div className="rounded-lg border bg-card p-3 space-y-2">
+                      <h5 className="text-sm font-semibold">Adversaries</h5>
+                      <Select
+                        aria-label="Adversary"
+                        value={adversaryId}
+                        onChange={(event) => setAdversaryId(event.target.value)}
+                      >
+                        {[...daggerheartAdversariesById.values()].map((adversary) => (
+                          <option key={adversary.id} value={adversary.id}>
+                            {adversary.name} (T{adversary.tier} {adversary.role})
+                          </option>
+                        ))}
+                      </Select>
+                      <Button
+                        variant={placementMode === 'adversary' ? 'default' : 'outline'}
+                        size="sm"
+                        disabled={!adversaryId}
+                        onClick={() =>
+                          setPlacementMode((current) =>
+                            current === 'adversary' ? 'none' : 'adversary'
+                          )
+                        }
+                      >
+                        {placementMode === 'adversary'
+                          ? 'Click the grid to place...'
+                          : 'Place Adversary'}
+                      </Button>
+                    </div>
+                  )}
 
                   <EncounterPanel
                     monsters={encounterMonsters}

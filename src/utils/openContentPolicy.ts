@@ -65,6 +65,7 @@ export const strictOpenContentPolicy: Record<GameSystemId, SystemOpenContentPoli
       'Daggerheart Core Rulebook',
       'Daggerheart',
       'Daggerheart SRD 1.0',
+      'SRD 1.0',
       'System Reference Document 1.0',
     ],
     allowMissingSourceFor: [],

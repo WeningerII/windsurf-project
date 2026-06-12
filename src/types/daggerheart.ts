@@ -234,3 +234,58 @@ export interface DaggerheartConsumable extends DaggerheartInventoryDefinitionBas
 }
 
 export type DaggerheartInventoryDefinition = DaggerheartLoot | DaggerheartConsumable;
+
+/** Adversary role printed on the stat block (Solo, Bruiser, Minion, ...). */
+export type DaggerheartAdversaryRole =
+  | 'Bruiser'
+  | 'Horde'
+  | 'Leader'
+  | 'Minion'
+  | 'Ranged'
+  | 'Skulk'
+  | 'Social'
+  | 'Solo'
+  | 'Standard'
+  | 'Support';
+
+/**
+ * A Daggerheart SRD adversary stat block. Deliberately NOT a d20 `Monster`:
+ * adversaries have no ability scores, AC, or XP — they attack with a flat
+ * modifier against PC Evasion, are attacked against their Difficulty, and
+ * take threshold-marked HP exactly like player characters.
+ */
+export interface DaggerheartAdversary {
+  id: string;
+  name: string;
+  system: 'daggerheart';
+  source: string;
+  tier: DaggerheartTier;
+  role: DaggerheartAdversaryRole;
+  /** Role qualifier printed with it, e.g. Horde's '(3/HP)' damage scaling. */
+  roleDetail?: string;
+  description: string;
+  motivesAndTactics: string;
+  /** Attack rolls against this adversary must meet or beat this. */
+  difficulty: number;
+  /**
+   * Absent on Minions ('None' in the SRD): any damage marks exactly 1 HP.
+   * A missing `severe` ('8/None' — the tiny oozes) means Severe is never
+   * reached: damage at or past major marks 2 HP, never 3.
+   */
+  thresholds?: { major: number; severe?: number };
+  /** HP slots (threshold-marked, same model as characters). */
+  hitPoints: number;
+  stress: number;
+  /** Flat modifier on the adversary's own attack rolls. */
+  attackModifier: number;
+  /** Rare dice attack modifier ('+2d4' — Outer Realms Abomination). */
+  attackBonusDice?: { count: number; die: number };
+  attack: {
+    name: string;
+    range: DaggerheartRange;
+    /** Raw damage notation, e.g. '1d12+2 phy' (dice parsed by the adapter). */
+    damage: string;
+  };
+  experience?: string;
+  features: Array<{ name: string; description: string }>;
+}

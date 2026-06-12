@@ -88,6 +88,12 @@ export type {
 } from './combatants/daggerheartCombatant';
 export { buildDaggerheartCombatant } from './combatants/daggerheartCombatant';
 
+export type {
+  DaggerheartAdversaryCombatant,
+  BuildDaggerheartAdversaryResult,
+} from './combatants/daggerheartAdversary';
+export { buildDaggerheartAdversaryCombatant } from './combatants/daggerheartAdversary';
+
 export type { BuildMam3eCombatantResult, Mam3eCombatant } from './combatants/mam3eCombatant';
 export { buildMam3eCombatant, nextMam3eTokenConditions } from './combatants/mam3eCombatant';
 

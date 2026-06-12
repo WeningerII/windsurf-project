@@ -452,3 +452,61 @@ describe('Daggerheart weapon features and derived defenses reach the adapter', (
     });
   });
 });
+
+describe('Daggerheart adversaries fight in scenes by their own model', () => {
+  it('encodes all 129 SRD adversaries and builds the Acid Burrower faithfully', async () => {
+    const { daggerheartAdversaries } = await import('../../data/daggerheart/1.0/adversaries');
+    const { buildDaggerheartAdversaryCombatant } = await import('../../rules');
+    expect(daggerheartAdversaries).toHaveLength(129);
+    const burrower = daggerheartAdversaries.find((adversary) => adversary.id === 'acid-burrower');
+    expect(burrower).toBeDefined();
+    const built = buildDaggerheartAdversaryCombatant(burrower!, {
+      tokenId: 'b',
+      position: { x: 0, y: 0 },
+    });
+    expect(built.supported).toBe(true);
+    if (!built.supported) return;
+    // SRD: Difficulty 14, thresholds 8/15, HP 8, Claws +3, Very Close, 1d12+2.
+    expect(built.combatant.difficulty).toBe(14);
+    expect(built.combatant.thresholds).toEqual({ major: 8, severe: 15 });
+    expect(built.combatant.token.hp).toEqual({ current: 8, max: 8, temp: 0 });
+    expect(built.combatant.attackEffects[0].value).toBe(3);
+    expect(built.combatant.reach).toBe(3);
+    const dice = built.combatant.damageEffects.filter((e) => e.operation === 'add-die');
+    expect(dice).toHaveLength(1);
+    expect(dice[0].value).toBe(12);
+    expect(built.combatant.damageEffects.some((e) => e.operation === 'add' && e.value === 2)).toBe(
+      true
+    );
+  });
+
+  it('minion thresholds mark exactly 1 HP on any damage', async () => {
+    const { daggerheartAdversaries } = await import('../../data/daggerheart/1.0/adversaries');
+    const { buildDaggerheartAdversaryCombatant, daggerheartHpMarked } = await import('../../rules');
+    const lackey = daggerheartAdversaries.find(
+      (adversary) => adversary.id === 'jagged-knife-lackey'
+    );
+    expect(lackey).toBeDefined();
+    expect(lackey!.thresholds).toBeUndefined();
+    const built = buildDaggerheartAdversaryCombatant(lackey!, {
+      tokenId: 'l',
+      position: { x: 0, y: 0 },
+    });
+    expect(built.supported).toBe(true);
+    if (!built.supported) return;
+    expect(daggerheartHpMarked(1, built.combatant.thresholds)).toBe(1);
+    expect(daggerheartHpMarked(999, built.combatant.thresholds)).toBe(1);
+  });
+
+  it('every encoded adversary builds a supported combatant', async () => {
+    const { daggerheartAdversaries } = await import('../../data/daggerheart/1.0/adversaries');
+    const { buildDaggerheartAdversaryCombatant } = await import('../../rules');
+    for (const adversary of daggerheartAdversaries) {
+      const built = buildDaggerheartAdversaryCombatant(adversary, {
+        tokenId: adversary.id,
+        position: { x: 0, y: 0 },
+      });
+      expect(built.supported, `${adversary.id}: ${built.supported ? '' : built.reason}`).toBe(true);
+    }
+  });
+});
