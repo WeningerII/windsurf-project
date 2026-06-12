@@ -110,6 +110,7 @@ export function SceneManager({
   const [encounterOriginX, setEncounterOriginX] = useState('0');
   const [encounterOriginY, setEncounterOriginY] = useState('0');
   const [encounterSelections, setEncounterSelections] = useState<EncounterMonsterSelection[]>([]);
+  const draftNonceRef = useRef(0);
   const [monstersLoading, setMonstersLoading] = useState(false);
   const [monsterLoadError, setMonsterLoadError] = useState<string | null>(null);
   const [initiativeValues, setInitiativeValues] = useState<Record<string, string>>({});
@@ -708,11 +709,14 @@ export function SceneManager({
 
   const handleDraftEncounter = (difficulty: EncounterDifficulty) => {
     if (!selectedScene) return;
+    // Per-click nonce: re-drafting walks to the next deterministic variation
+    // instead of returning the identical composition (rebalance ergonomics).
+    draftNonceRef.current += 1;
     const result = draftEncounter({
       monsters: encounterMonsters,
       partyLevels: encounterParty.members.map((member) => member.level),
       difficulty,
-      seed: `${selectedScene.initialState.seed}:draft:${selectedScene.events.length}:${difficulty}`,
+      seed: `${selectedScene.initialState.seed}:draft:${selectedScene.events.length}:${difficulty}:${draftNonceRef.current}`,
       systemId: sceneSystemId,
     });
     if (result.reason) {
