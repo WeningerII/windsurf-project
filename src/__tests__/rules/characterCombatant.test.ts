@@ -523,3 +523,50 @@ describe('legacy-d20 iterative attacks (3.5e/PF1e)', () => {
     expect(built.combatant.iterativePenaltyStep).toBeUndefined();
   });
 });
+
+describe('PF2e rider toggles in scene combat', () => {
+  it('a raging level-11 rogue/barbarian folds CRB riders into the damage chain', async () => {
+    const { buildCharacterCombatant } = await import('../../rules');
+    const { createDefaultPf2eData } = await import('../../systems/pf2e/data-model');
+    const built = buildCharacterCombatant(
+      {
+        id: 'pf2e-rager',
+        name: 'Rager',
+        systemId: 'pf2e',
+        system: {
+          ...createDefaultPf2eData(),
+          level: 11,
+          activeToggles: ['rage', 'sneak-attack'],
+          features: [
+            { id: 'rage', name: 'Rage', source: 'Barbarian 1', description: 'RAGE.' },
+            { id: 'sneak-attack', name: 'Sneak Attack', source: 'Rogue 1', description: 'SA.' },
+          ],
+        },
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      { tokenId: 'r', position: { x: 0, y: 0 } }
+    );
+    expect(built.supported).toBe(true);
+    if (!built.supported) return;
+    const riders = built.combatant.damageEffects.filter((effect) =>
+      /rage|sneak/i.test(effect.label)
+    );
+    // Rage +2 flat, Sneak Attack 3d6 at level 11.
+    expect(riders.filter((effect) => effect.operation === 'add').map((e) => e.value)).toEqual([2]);
+    expect(riders.filter((effect) => effect.operation === 'add-die')).toHaveLength(3);
+  });
+
+  it('PF2e sneak attack dice scale at 5/11/17 and gate on the feature', async () => {
+    const { pf2eSneakAttackDice, collectPf2eRiderEffects } =
+      await import('../../rules/conditions/pf2eRiders');
+    expect([1, 4, 5, 11, 17, 20].map(pf2eSneakAttackDice)).toEqual([1, 1, 2, 3, 4, 4]);
+    expect(
+      collectPf2eRiderEffects({
+        activeToggles: ['rage', 'sneak-attack'],
+        featureIds: new Set<string>(),
+        level: 20,
+      })
+    ).toHaveLength(0);
+  });
+});

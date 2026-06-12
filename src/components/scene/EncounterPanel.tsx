@@ -1,4 +1,4 @@
-import { Plus, Skull, Trash2, Wand2 } from 'lucide-react';
+import { Minus, Plus, Skull, Trash2, Wand2 } from 'lucide-react';
 import { useState } from 'react';
 import type { EncounterPartySummary, EncounterPlanSummary } from '../../scene/encounterBuilder';
 import type { EncounterDifficulty } from '../../scene/encounterDraft';
@@ -29,6 +29,8 @@ interface EncounterPanelProps {
   onQueueMonster: () => void;
   onAddEncounter: () => void;
   onRemoveSelection: (monsterId: string) => void;
+  /** Manual correction: bump a queued monster's count by +/-1 (min 1). */
+  onAdjustSelection?: (monsterId: string, delta: number) => void;
   /** Deterministic, budget-validated draft (SRD 5.2.1 XP budgets). */
   onDraftEncounter?: (difficulty: EncounterDifficulty) => void;
   /** Scene markers offered as spawn zones (placement stays inside the rect). */
@@ -64,6 +66,7 @@ export function EncounterPanel({
   onQueueMonster,
   onAddEncounter,
   onRemoveSelection,
+  onAdjustSelection,
   onDraftEncounter,
   zoneOptions,
   zoneId,
@@ -186,6 +189,31 @@ export function EncounterPanel({
                 <span className="min-w-0 truncate">
                   {entry.count} x {entry.name} ({entry.totalXp} XP)
                 </span>
+                {onAdjustSelection && (
+                  <span className="flex shrink-0 items-center gap-0.5">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6"
+                      onClick={() => onAdjustSelection(entry.monsterId, -1)}
+                      disabled={entry.count <= 1}
+                      title={`One fewer ${entry.name}`}
+                      aria-label={`One fewer ${entry.name}`}
+                    >
+                      <Minus className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6"
+                      onClick={() => onAdjustSelection(entry.monsterId, 1)}
+                      title={`One more ${entry.name}`}
+                      aria-label={`One more ${entry.name}`}
+                    >
+                      <Plus className="h-3.5 w-3.5" />
+                    </Button>
+                  </span>
+                )}
                 <Button
                   variant="ghost"
                   size="icon"

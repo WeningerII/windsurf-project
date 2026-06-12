@@ -736,6 +736,19 @@ export function SceneManager({
     );
   };
 
+  const handleAdjustEncounterSelection = (monsterId: string, delta: number) => {
+    setEncounterSelections((current) =>
+      current.map((selection) =>
+        selection.monsterId === monsterId
+          ? {
+              ...selection,
+              count: Math.min(MAX_MONSTERS_PER_SELECTION, Math.max(1, selection.count + delta)),
+            }
+          : selection
+      )
+    );
+  };
+
   const handleAddEncounter = () => {
     if (!selectedScene || pendingEncounterSelections.length === 0) return;
 
@@ -1082,6 +1095,7 @@ export function SceneManager({
                     onQueueMonster={handleQueueEncounterMonster}
                     onAddEncounter={handleAddEncounter}
                     onRemoveSelection={handleRemoveEncounterSelection}
+                    onAdjustSelection={handleAdjustEncounterSelection}
                     zoneOptions={Object.values(state.markers).map((marker) => ({
                       id: marker.id,
                       label: marker.label,

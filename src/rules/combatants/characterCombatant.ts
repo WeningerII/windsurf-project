@@ -36,6 +36,7 @@ import type { SceneCoordinate, SceneToken } from '../../types/core/scene';
 import { abilityMod } from '../../utils/math';
 import { profBonus } from '../../systems/dnd5e/shared/engine';
 import { collectDnd5eRiderEffects } from '../conditions/dnd5eRiders';
+import { collectPf2eRiderEffects } from '../conditions/pf2eRiders';
 import { collectD20LegacyConditionEffects } from '../conditions/d20LegacyConditions';
 import {
   compileEquipmentEffects,
@@ -284,6 +285,18 @@ export function buildCharacterCombatant(
           rogueLevel: classLevel('rogue'),
         })
       : [];
+
+  // PF2e riders mirror the 5e set with CRB numbers (Rage +2, Sneak Attack
+  // 1d6/2d6@5/3d6@11/4d6@17), gated the same way.
+  if (systemId === 'pf2e') {
+    riderEffects.push(
+      ...collectPf2eRiderEffects({
+        activeToggles: systemRaw.activeToggles ?? [],
+        featureIds: new Set(sheet.features.map((feature) => feature.id)),
+        level: sheet.level,
+      })
+    );
+  }
 
   // Legacy-d20 sheet conditions (shaken/sickened/...) fight along: the same
   // catalog the engines and scene tokens use compiles the document's
