@@ -1,14 +1,14 @@
-_Generated: 2026-06-11T01:55:15.184Z_
+_Generated: 2026-06-12T18:33:20.499Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
 | System | Spells/Powers | Classes | Species/Races | Backgrounds | Traits | Feature Options | Monsters | Equipment | Feats | Advantages |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| D&D 5e (2014) | 222 | 12 | 9 | 1 | 0 | 106 | 39 | 298 | 1 | 0 |
-| D&D 5e (2024) | 294 | 12 | 7 | 4 | 0 | 0 | 95 | 204 | 19 | 0 |
-| D&D 3.5e | 428 | 26 | 7 | 0 | 0 | 0 | 0 | 207 | 80 | 0 |
-| Pathfinder 1e | 134 | 18 | 7 | 0 | 12 | 0 | 0 | 70 | 86 | 0 |
-| Pathfinder 2e | 143 | 12 | 6 | 16 | 0 | 0 | 0 | 188 | 93 | 0 |
+| D&D 5e (2014) | 319 | 12 | 9 | 1 | 0 | 106 | 335 | 656 | 1 | 0 |
+| D&D 5e (2024) | 339 | 12 | 9 | 4 | 0 | 0 | 95 | 502 | 19 | 0 |
+| D&D 3.5e | 610 | 26 | 7 | 0 | 0 | 0 | 177 | 207 | 80 | 0 |
+| Pathfinder 1e | 625 | 18 | 7 | 0 | 12 | 0 | 0 | 70 | 86 | 0 |
+| Pathfinder 2e | 551 | 12 | 6 | 16 | 0 | 0 | 0 | 188 | 93 | 0 |
 | Mutants & Masterminds 3e | 61 | 0 | 0 | 0 | 0 | 0 | 0 | 150 | 0 | 74 |
 | Daggerheart | 0 | 9 | 19 | 9 | 0 | 0 | 0 | 353 | 0 | 0 |
 
@@ -26,33 +26,34 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 ### Loader Compliance Audit
 | System | Category | Unique Items | Duplicates Removed | Missing Source | Non-Compliant |
 | --- | --- | ---: | ---: | ---: | ---: |
-| D&D 5e (2014) | Spells/Powers | 222 | 0 | 0 | 0 |
+| D&D 5e (2014) | Spells/Powers | 319 | 0 | 0 | 0 |
 | D&D 5e (2014) | Classes | 12 | 0 | 0 | 0 |
 | D&D 5e (2014) | Species/Races | 9 | 0 | 0 | 0 |
 | D&D 5e (2014) | Backgrounds | 1 | 0 | 0 | 0 |
 | D&D 5e (2014) | Feature Options | 106 | 0 | 0 | 0 |
-| D&D 5e (2014) | Monsters | 39 | 0 | 0 | 0 |
-| D&D 5e (2014) | Equipment | 298 | 0 | 0 | 0 |
+| D&D 5e (2014) | Monsters | 335 | 0 | 0 | 0 |
+| D&D 5e (2014) | Equipment | 656 | 0 | 0 | 0 |
 | D&D 5e (2014) | Feats | 1 | 0 | 0 | 0 |
-| D&D 5e (2024) | Spells/Powers | 294 | 0 | 0 | 0 |
+| D&D 5e (2024) | Spells/Powers | 339 | 0 | 0 | 0 |
 | D&D 5e (2024) | Classes | 12 | 0 | 0 | 0 |
-| D&D 5e (2024) | Species/Races | 7 | 0 | 0 | 0 |
+| D&D 5e (2024) | Species/Races | 9 | 0 | 0 | 0 |
 | D&D 5e (2024) | Backgrounds | 4 | 0 | 0 | 0 |
 | D&D 5e (2024) | Monsters | 95 | 0 | 0 | 0 |
-| D&D 5e (2024) | Equipment | 204 | 0 | 0 | 0 |
+| D&D 5e (2024) | Equipment | 502 | 0 | 0 | 0 |
 | D&D 5e (2024) | Feats | 19 | 0 | 0 | 0 |
-| D&D 3.5e | Spells/Powers | 428 | 0 | 0 | 0 |
+| D&D 3.5e | Spells/Powers | 610 | 0 | 0 | 0 |
 | D&D 3.5e | Classes | 26 | 0 | 0 | 0 |
 | D&D 3.5e | Species/Races | 7 | 0 | 0 | 0 |
+| D&D 3.5e | Monsters | 177 | 0 | 0 | 0 |
 | D&D 3.5e | Equipment | 207 | 0 | 0 | 0 |
 | D&D 3.5e | Feats | 80 | 0 | 0 | 0 |
-| Pathfinder 1e | Spells/Powers | 134 | 0 | 0 | 0 |
+| Pathfinder 1e | Spells/Powers | 625 | 0 | 0 | 0 |
 | Pathfinder 1e | Classes | 18 | 0 | 0 | 0 |
 | Pathfinder 1e | Species/Races | 7 | 0 | 0 | 0 |
 | Pathfinder 1e | Traits | 12 | 0 | 0 | 0 |
 | Pathfinder 1e | Equipment | 70 | 0 | 0 | 0 |
 | Pathfinder 1e | Feats | 86 | 0 | 0 | 0 |
-| Pathfinder 2e | Spells/Powers | 143 | 0 | 0 | 0 |
+| Pathfinder 2e | Spells/Powers | 551 | 0 | 0 | 0 |
 | Pathfinder 2e | Classes | 12 | 0 | 0 | 0 |
 | Pathfinder 2e | Species/Races | 6 | 0 | 0 | 0 |
 | Pathfinder 2e | Backgrounds | 16 | 0 | 0 | 0 |
@@ -140,7 +141,7 @@ _The manifests in docs/srd-manifest/ are generated from the loaders, so this mea
 ### Engine-Math Completion (vs Compute Register — Denominator B)
 | System | Verified | In-Scope | Complete |
 | --- | ---: | ---: | ---: |
-| D&D 5e (2014) | 24 | 29 | 82.8% |
+| D&D 5e (2014) | 30 | 35 | 85.7% |
 | D&D 5e (2024) | 19 | 27 | 70.4% |
 | D&D 3.5e | 27 | 27 | 100% |
 | Pathfinder 1e | 26 | 26 | 100% |
@@ -154,10 +155,10 @@ _Denominators: cited open-content manifests in docs/srd-manifest/ and docs/compu
 _Share of each system's loader-backed entries that are source-tagged AND open-content-policy-clean — i.e. the content DONE conditions 'encoded, loader-backed, source-tagged, policy-clean'. This certifies CATALOG INTEGRITY (every shipped open-content entry is cited and compliant). It is NOT coverage vs the full published SRD: measuring which SRD entries are MISSING requires an external authoritative SRD index that is unavailable in this environment, so that coverage dimension is flagged unresolved rather than asserted._
 | System | Loader Entries | Cited + Policy-Clean | Integrity |
 | --- | ---: | ---: | ---: |
-| D&D 5e (2014) | 688 | 688 | 100% |
-| D&D 5e (2024) | 635 | 635 | 100% |
-| D&D 3.5e | 748 | 748 | 100% |
-| Pathfinder 1e | 327 | 327 | 100% |
-| Pathfinder 2e | 463 | 463 | 100% |
+| D&D 5e (2014) | 1439 | 1439 | 100% |
+| D&D 5e (2024) | 980 | 980 | 100% |
+| D&D 3.5e | 1107 | 1107 | 100% |
+| Pathfinder 1e | 818 | 818 | 100% |
+| Pathfinder 2e | 871 | 871 | 100% |
 | Mutants & Masterminds 3e | 427 | 427 | 100% |
 | Daggerheart | 390 | 390 | 100% |

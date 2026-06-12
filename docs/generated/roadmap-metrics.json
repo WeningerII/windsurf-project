@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-11T01:55:15.184Z",
+  "generatedAt": "2026-06-12T18:33:20.499Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -56,7 +56,7 @@
   },
   "productReachableSummary": {
     "dnd-5e-2014": {
-      "spells": 222,
+      "spells": 319,
       "classes": 12,
       "species": 9,
       "backgrounds": 1,
@@ -64,29 +64,29 @@
       "featureOptions": 106,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 39,
-      "equipment": 298,
+      "monsters": 335,
+      "equipment": 656,
       "feats": 1,
       "advantages": 0,
       "powerModifiers": 0
     },
     "dnd-5e-2024": {
-      "spells": 294,
+      "spells": 339,
       "classes": 12,
-      "species": 7,
+      "species": 9,
       "backgrounds": 4,
       "traits": 0,
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
       "monsters": 95,
-      "equipment": 204,
+      "equipment": 502,
       "feats": 19,
       "advantages": 0,
       "powerModifiers": 0
     },
     "dnd-3.5e": {
-      "spells": 428,
+      "spells": 610,
       "classes": 26,
       "species": 7,
       "backgrounds": 0,
@@ -94,14 +94,14 @@
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 0,
+      "monsters": 177,
       "equipment": 207,
       "feats": 80,
       "advantages": 0,
       "powerModifiers": 0
     },
     "pf1e": {
-      "spells": 134,
+      "spells": 625,
       "classes": 18,
       "species": 7,
       "backgrounds": 0,
@@ -116,7 +116,7 @@
       "powerModifiers": 0
     },
     "pf2e": {
-      "spells": 143,
+      "spells": 551,
       "classes": 12,
       "species": 6,
       "backgrounds": 16,
@@ -163,7 +163,7 @@
   },
   "repoResidentSummary": {
     "dnd-5e-2014": {
-      "spells": 222,
+      "spells": 319,
       "classes": 12,
       "species": 9,
       "backgrounds": 1,
@@ -171,29 +171,29 @@
       "featureOptions": 106,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 39,
-      "equipment": 298,
+      "monsters": 335,
+      "equipment": 656,
       "feats": 1,
       "advantages": 0,
       "powerModifiers": 0
     },
     "dnd-5e-2024": {
-      "spells": 294,
+      "spells": 339,
       "classes": 12,
-      "species": 7,
+      "species": 9,
       "backgrounds": 4,
       "traits": 0,
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
       "monsters": 95,
-      "equipment": 204,
+      "equipment": 502,
       "feats": 19,
       "advantages": 0,
       "powerModifiers": 0
     },
     "dnd-3.5e": {
-      "spells": 428,
+      "spells": 610,
       "classes": 26,
       "species": 7,
       "backgrounds": 0,
@@ -201,14 +201,14 @@
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 0,
+      "monsters": 177,
       "equipment": 207,
       "feats": 80,
       "advantages": 0,
       "powerModifiers": 0
     },
     "pf1e": {
-      "spells": 134,
+      "spells": 625,
       "classes": 18,
       "species": 7,
       "backgrounds": 0,
@@ -223,7 +223,7 @@
       "powerModifiers": 0
     },
     "pf2e": {
-      "spells": 143,
+      "spells": 551,
       "classes": 12,
       "species": 6,
       "backgrounds": 16,
@@ -618,9 +618,9 @@
     {
       "systemId": "dnd-5e-2014",
       "systemLabel": "D&D 5e (2014)",
-      "verified": 24,
-      "inScope": 29,
-      "percent": 82.8,
+      "verified": 30,
+      "inScope": 35,
+      "percent": 85.7,
       "byLayer": {
         "L1": {
           "verified": 2,
@@ -629,6 +629,10 @@
         "L2": {
           "verified": 8,
           "inScope": 10
+        },
+        "L3": {
+          "verified": 6,
+          "inScope": 6
         },
         "L4": {
           "verified": 3,
@@ -898,13 +902,13 @@
       "category": "spells",
       "categoryLabel": "Spells/Powers",
       "metrics": {
-        "rawCount": 222,
-        "uniqueCount": 222,
+        "rawCount": 319,
+        "uniqueCount": 319,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 5.1": 222
+          "SRD 5.1": 319
         }
       }
     },
@@ -978,12 +982,13 @@
       "category": "monsters",
       "categoryLabel": "Monsters",
       "metrics": {
-        "rawCount": 39,
-        "uniqueCount": 39,
+        "rawCount": 335,
+        "uniqueCount": 335,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
+          "SRD 5.1": 296,
           "SRD": 39
         }
       }
@@ -994,13 +999,13 @@
       "category": "equipment",
       "categoryLabel": "Equipment",
       "metrics": {
-        "rawCount": 298,
-        "uniqueCount": 298,
+        "rawCount": 656,
+        "uniqueCount": 656,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 5.1": 298
+          "SRD 5.1": 656
         }
       }
     },
@@ -1026,13 +1031,13 @@
       "category": "spells",
       "categoryLabel": "Spells/Powers",
       "metrics": {
-        "rawCount": 294,
-        "uniqueCount": 294,
+        "rawCount": 339,
+        "uniqueCount": 339,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 5.2": 294
+          "SRD 5.2": 339
         }
       }
     },
@@ -1058,13 +1063,13 @@
       "category": "species",
       "categoryLabel": "Species/Races",
       "metrics": {
-        "rawCount": 7,
-        "uniqueCount": 7,
+        "rawCount": 9,
+        "uniqueCount": 9,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 5.2": 7
+          "SRD 5.2": 9
         }
       }
     },
@@ -1106,13 +1111,13 @@
       "category": "equipment",
       "categoryLabel": "Equipment",
       "metrics": {
-        "rawCount": 204,
-        "uniqueCount": 204,
+        "rawCount": 502,
+        "uniqueCount": 502,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 5.2": 204
+          "SRD 5.2": 502
         }
       }
     },
@@ -1138,13 +1143,13 @@
       "category": "spells",
       "categoryLabel": "Spells/Powers",
       "metrics": {
-        "rawCount": 428,
-        "uniqueCount": 428,
+        "rawCount": 610,
+        "uniqueCount": 610,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 3.5": 428
+          "SRD 3.5": 610
         }
       }
     },
@@ -1177,6 +1182,22 @@
         "nonCompliantCount": 0,
         "sourceCounts": {
           "SRD 3.5": 7
+        }
+      }
+    },
+    {
+      "systemId": "dnd-3.5e",
+      "systemLabel": "D&D 3.5e",
+      "category": "monsters",
+      "categoryLabel": "Monsters",
+      "metrics": {
+        "rawCount": 177,
+        "uniqueCount": 177,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "SRD 3.5": 177
         }
       }
     },
@@ -1218,13 +1239,13 @@
       "category": "spells",
       "categoryLabel": "Spells/Powers",
       "metrics": {
-        "rawCount": 134,
-        "uniqueCount": 134,
+        "rawCount": 625,
+        "uniqueCount": 625,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "Core Rulebook": 134
+          "Core Rulebook": 625
         }
       }
     },
@@ -1314,13 +1335,13 @@
       "category": "spells",
       "categoryLabel": "Spells/Powers",
       "metrics": {
-        "rawCount": 143,
-        "uniqueCount": 143,
+        "rawCount": 551,
+        "uniqueCount": 551,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "Core Rulebook": 143
+          "Core Rulebook": 551
         }
       }
     },

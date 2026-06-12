@@ -15,6 +15,8 @@ import {
 } from '../scene/runtime';
 import {
   buildCharacterCombatant,
+  buildDaggerheartCombatant,
+  buildMam3eCombatant,
   buildMonsterCombatant,
   resolveSceneAttack,
   runSceneRound,
@@ -145,6 +147,28 @@ export function SceneManager({
   );
   const state = foldedScene?.state;
   const sceneSystemId = state?.systemId;
+
+  // Daggerheart scenes need the weapon catalog so character tokens can fight
+  // (weapons are catalog refs on the document); mirrors the monster preload.
+  const [daggerheartWeaponsById, setDaggerheartWeaponsById] = useState<
+    ReadonlyMap<string, import('../types/daggerheart').DaggerheartWeapon>
+  >(new Map());
+  useEffect(() => {
+    if (sceneSystemId !== 'daggerheart') {
+      setDaggerheartWeaponsById(new Map());
+      return;
+    }
+    let cancelled = false;
+    import('../data/daggerheart/1.0/equipment').then((mod) => {
+      if (cancelled) return;
+      setDaggerheartWeaponsById(
+        new Map((mod.daggerheartWeapons ?? []).map((weapon) => [weapon.id, weapon]))
+      );
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [sceneSystemId]);
 
   useEffect(() => {
     if (!sceneSystemId || !isMonsterSystemId(sceneSystemId)) {
@@ -359,11 +383,47 @@ export function SceneManager({
           armorClass: built.armorClass,
           reach: built.reach,
           attacksPerRound: built.attacksPerRound,
+          speedCells: built.speedCells,
+          areaSaveBonus: built.areaSaveBonus,
         };
       }
       if (token.kind === 'character' && token.refId) {
         const doc = documentsById.get(token.refId);
         if (!doc) return undefined;
+        if (doc.systemId === 'daggerheart') {
+          const built = buildDaggerheartCombatant(doc, daggerheartWeaponsById, {
+            tokenId: token.id,
+            position: token.position,
+          });
+          if (!built.supported) return undefined;
+          return {
+            attackEffects: built.combatant.attackEffects,
+            damageEffects: built.combatant.damageEffects,
+            // Evasion rides the targetValue channel.
+            armorClass: built.combatant.evasion,
+            reach: built.combatant.reach,
+            speedCells: built.combatant.speedCells,
+            daggerheart: { thresholds: built.combatant.thresholds },
+          };
+        }
+        if (doc.systemId === 'mam3e') {
+          const built = buildMam3eCombatant(doc, { tokenId: token.id, position: token.position });
+          if (!built.supported) return undefined;
+          return {
+            attackEffects: built.combatant.attackEffects,
+            damageEffects: [],
+            // Dodge rides the targetValue channel; Parry/Toughness in the variant.
+            armorClass: built.combatant.dodge,
+            reach: built.combatant.reach,
+            speedCells: built.combatant.speedCells,
+            mam3e: {
+              parry: built.combatant.parry,
+              toughness: built.combatant.toughness,
+              effectRank: built.combatant.effectRank,
+              ranged: built.combatant.ranged,
+            },
+          };
+        }
         const built = buildCharacterCombatant(doc, { tokenId: token.id, position: token.position });
         if (!built.supported) return undefined;
         return {
@@ -371,11 +431,18 @@ export function SceneManager({
           damageEffects: built.combatant.damageEffects,
           armorClass: built.combatant.armorClass,
           reach: built.combatant.reach,
+          attacksPerRound: built.combatant.attacksPerRound,
+          speedCells: built.combatant.speedCells,
+          areaSaveBonus: Math.floor(
+            (((doc.system as { baseAttributes?: { dex?: number } }).baseAttributes?.dex ?? 10) -
+              10) /
+              2
+          ),
         };
       }
       return undefined;
     },
-    [monstersById, documentsById]
+    [monstersById, documentsById, daggerheartWeaponsById]
   );
 
   const combatReadyIds = useMemo(() => {
@@ -1037,5 +1104,5 @@ function positiveIntegerOrDefault(value: string, fallback: number): number {
 }
 
 function isMonsterSystemId(systemId: string): systemId is GameSystemId {
-  return systemId === 'dnd-5e-2014' || systemId === 'dnd-5e-2024';
+  return systemId === 'dnd-5e-2014' || systemId === 'dnd-5e-2024' || systemId === 'dnd-3.5e';
 }

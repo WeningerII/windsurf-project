@@ -37,6 +37,8 @@ export interface RoundCombatant {
   critOn?: number;
   /** Attacks per turn (SRD Multiattack). Default 1. */
   attacksPerRound?: number;
+  /** Movement per turn in grid cells. Default 6. */
+  speedCells?: number;
 }
 
 export interface RoundTurnRecord {
@@ -78,6 +80,7 @@ function toActor(combatant: RoundCombatant): TacticalActor {
     reach: combatant.reach,
     critOn: combatant.critOn,
     attacksPerRound: combatant.attacksPerRound,
+    speedCells: combatant.speedCells,
   };
 }
 
@@ -99,10 +102,13 @@ function toTarget(combatant: RoundCombatant, currentHp: number): TacticalTarget 
  * damage intents for the caller to apply as scene events.
  */
 export function runCombatRound(input: RunRoundInput): RoundResult {
-  // Working HP starts from each combatant's current HP.
+  // Working HP and positions start from each combatant's current values
+  // (local copies — inputs are never mutated, per this driver's contract).
   const hp: Record<string, number> = {};
+  const positions: Record<string, SceneCoordinate> = {};
   for (const combatant of input.order) {
     hp[combatant.tokenId] = combatant.hp.current;
+    positions[combatant.tokenId] = { ...combatant.position };
   }
 
   const byId = new Map(input.order.map((combatant) => [combatant.tokenId, combatant]));
@@ -129,14 +135,25 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
     // The participant set: every OTHER living combatant, with up-to-date HP.
     const targets: TacticalTarget[] = input.order
       .filter((other) => other.tokenId !== combatant.tokenId && hp[other.tokenId] > 0)
-      .map((other) => toTarget(other, hp[other.tokenId]));
+      .map((other) => ({
+        ...toTarget(other, hp[other.tokenId]),
+        position: { ...positions[other.tokenId] },
+      }));
 
     const turn = executeTacticalTurn({
-      actor: toActor(combatant),
+      actor: { ...toActor(combatant), position: { ...positions[combatant.tokenId] } },
       targets,
       seed: `${input.seed}::round${input.round}::turn${turnIndex}`,
       degreeModel: input.degreeModel,
     });
+
+    // Movement executed this turn: update the working position so later
+    // turns score against where the combatant actually is, and surface the
+    // move intent for scene application (before the damage it enabled).
+    if (turn.move) {
+      positions[combatant.tokenId] = { ...turn.move.to };
+      intents.push(turn.move.intent);
+    }
 
     // Fold this turn's damage into working HP so later turns see it. Under
     // Multiattack a turn carries several attack intents, in order.

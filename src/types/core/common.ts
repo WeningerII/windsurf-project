@@ -23,7 +23,8 @@
 
 // Common types used across the application
 
-export type DiceType = 'd1' | 'd4' | 'd6' | 'd8' | 'd10' | 'd12' | 'd20' | 'd100';
+// d2/d3 appear in the SRD 3.5 size-step damage table (Tiny weapon dice).
+export type DiceType = 'd1' | 'd2' | 'd3' | 'd4' | 'd6' | 'd8' | 'd10' | 'd12' | 'd20' | 'd100';
 
 // Ability Scores - Type-safe enumeration
 export type AbilityScore = 'str' | 'dex' | 'con' | 'int' | 'wis' | 'cha';

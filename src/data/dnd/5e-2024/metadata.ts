@@ -11,6 +11,7 @@ import {
   dnd5e2024Armor,
   dnd5e2024Gear,
   dnd5e2024MagicItems,
+  dnd5e2024Equipment,
 } from './equipment/index';
 import { dnd5e2024Feats } from './feats/index';
 
@@ -68,7 +69,16 @@ export const dnd5e2024Metadata = {
     equipment: {
       weapons: dnd5e2024Weapons.length,
       armor: dnd5e2024Armor.length,
-      gear: dnd5e2024Gear.length,
+      // The full union includes the generated SRD 5.2 encodings
+      // (scripts/encode-5e-equipment.mjs --year 2024); counting the union
+      // remainder here keeps metadata aligned with what the loader serves.
+      gear:
+        dnd5e2024Gear.length +
+        (dnd5e2024Equipment.length -
+          dnd5e2024Weapons.length -
+          dnd5e2024Armor.length -
+          dnd5e2024Gear.length -
+          dnd5e2024MagicItems.length),
       magicItems: dnd5e2024MagicItems.length,
     },
 

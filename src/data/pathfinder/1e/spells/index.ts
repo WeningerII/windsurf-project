@@ -10,18 +10,31 @@ import { level6Spells } from './level-6';
 import { level7Spells } from './level-7';
 import { level8Spells } from './level-8';
 import { level9Spells } from './level-9';
+import { srdPf1eLevel0Spells } from './srd-level-0';
+import { srdPf1eLevel1Spells } from './srd-level-1';
+import { srdPf1eLevel2Spells } from './srd-level-2';
+import { srdPf1eLevel3Spells } from './srd-level-3';
+import { srdPf1eLevel4Spells } from './srd-level-4';
+import { srdPf1eLevel5Spells } from './srd-level-5';
+import { srdPf1eLevel6Spells } from './srd-level-6';
+import { srdPf1eLevel7Spells } from './srd-level-7';
+import { srdPf1eLevel8Spells } from './srd-level-8';
+import { srdPf1eLevel9Spells } from './srd-level-9';
 
+// Hand-written files first (catalog dedupe is first-entry-wins), then the
+// generated Core Rulebook encodings (scripts/encode-pf1e-spells.mjs), which
+// exclude hand-written names at generation time.
 const rawSpellsByLevel: Record<number, Spell[]> = {
-  0: cantrips,
-  1: level1Spells,
-  2: level2Spells,
-  3: level3Spells,
-  4: level4Spells,
-  5: level5Spells,
-  6: level6Spells,
-  7: level7Spells,
-  8: level8Spells,
-  9: level9Spells,
+  0: [...cantrips, ...srdPf1eLevel0Spells],
+  1: [...level1Spells, ...srdPf1eLevel1Spells],
+  2: [...level2Spells, ...srdPf1eLevel2Spells],
+  3: [...level3Spells, ...srdPf1eLevel3Spells],
+  4: [...level4Spells, ...srdPf1eLevel4Spells],
+  5: [...level5Spells, ...srdPf1eLevel5Spells],
+  6: [...level6Spells, ...srdPf1eLevel6Spells],
+  7: [...level7Spells, ...srdPf1eLevel7Spells],
+  8: [...level8Spells, ...srdPf1eLevel8Spells],
+  9: [...level9Spells, ...srdPf1eLevel9Spells],
 };
 
 const catalog = buildSpellCatalog(rawSpellsByLevel);

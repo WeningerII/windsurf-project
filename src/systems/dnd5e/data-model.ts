@@ -77,6 +77,12 @@ export interface Dnd5eDataModel extends SystemDataModel {
   hitDice: HitDice[];
   deathSaves: DeathSaves;
   conditions: Dnd5eCondition[];
+  /**
+   * Active rider toggles (phase 4 damage assembly): feature-gated, player-
+   * controlled states like 'rage', 'great-weapon-master', 'sneak-attack'.
+   * Compiled into resolver effects by collectDnd5eRiderEffects.
+   */
+  activeToggles?: string[];
   exhaustionLevel: number;
   armorClass: number;
   initiative: number;

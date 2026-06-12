@@ -10,17 +10,29 @@ import { level6Spells } from './level-6';
 import { level7Spells } from './level-7';
 import { level8Spells } from './level-8';
 import { level9Spells } from './level-9';
+import { srd2024Cantrips } from './srd-cantrips';
+import { srd2024Level1Spells } from './srd-level-1';
+import { srd2024Level2Spells } from './srd-level-2';
+import { srd2024Level3Spells } from './srd-level-3';
+import { srd2024Level4Spells } from './srd-level-4';
+import { srd2024Level5Spells } from './srd-level-5';
+import { srd2024Level6Spells } from './srd-level-6';
+import { srd2024Level7Spells } from './srd-level-7';
+import { srd2024Level8Spells } from './srd-level-8';
 
+// Hand-written files first (catalog dedupe is first-entry-wins), then the
+// generated SRD 5.2 encodings (scripts/encode-2024-spells.mjs), which
+// exclude hand-written names at generation time.
 const rawSpellsByLevel: Record<number, Spell[]> = {
-  0: cantrips,
-  1: level1Spells,
-  2: level2Spells,
-  3: level3Spells,
-  4: level4Spells,
-  5: level5Spells,
-  6: level6Spells,
-  7: level7Spells,
-  8: level8Spells,
+  0: [...cantrips, ...srd2024Cantrips],
+  1: [...level1Spells, ...srd2024Level1Spells],
+  2: [...level2Spells, ...srd2024Level2Spells],
+  3: [...level3Spells, ...srd2024Level3Spells],
+  4: [...level4Spells, ...srd2024Level4Spells],
+  5: [...level5Spells, ...srd2024Level5Spells],
+  6: [...level6Spells, ...srd2024Level6Spells],
+  7: [...level7Spells, ...srd2024Level7Spells],
+  8: [...level8Spells, ...srd2024Level8Spells],
   9: level9Spells,
 };
 

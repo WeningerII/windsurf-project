@@ -298,3 +298,67 @@ describe('Multiattack (SRD): attacksPerRound', () => {
     expect(JSON.stringify(run())).toBe(JSON.stringify(run()));
   });
 });
+
+describe('movement execution (grid-combat phase 3)', () => {
+  it('moves toward an out-of-reach target and attacks after closing (RAW move + single attack)', () => {
+    const turn = executeTacticalTurn({
+      actor: actor({
+        position: { x: 0, y: 0 },
+        reach: 1,
+        speedCells: 6,
+        attacksPerRound: 3, // full attack NOT allowed after moving
+        attackEffects: [atk(20)],
+      }),
+      targets: [target('far', { position: { x: 5, y: 0 }, hp: { current: 50, max: 50 } })],
+      seed: 'move-attack-seed',
+    });
+
+    expect(turn.decision).toBe('attack');
+    expect(turn.move?.to).toEqual({ x: 4, y: 0 }); // stops at reach 1
+    expect(turn.move?.intent).toEqual({
+      type: 'move-token',
+      tokenId: 'hero',
+      position: { x: 4, y: 0 },
+    });
+    // Moving permits one attack, not the Multiattack routine.
+    expect(turn.attacks).toHaveLength(1);
+  });
+
+  it('moves its full speed and reports move-to-engage when the target stays out of reach', () => {
+    const turn = executeTacticalTurn({
+      actor: actor({ position: { x: 0, y: 0 }, reach: 1, speedCells: 3 }),
+      targets: [target('distant', { position: { x: 10, y: 0 } })],
+      seed: 'closing-seed',
+    });
+
+    expect(turn.decision).toBe('move-to-engage');
+    expect(turn.move?.to).toEqual({ x: 3, y: 0 });
+    expect(turn.attacks).toHaveLength(0);
+  });
+
+  it('rounds converge: distant melee combatants close and fight over successive rounds', async () => {
+    const { runCombatRound } = await import('../../rules');
+    const combatant = (tokenId: string, faction: string, x: number) => ({
+      tokenId,
+      faction,
+      position: { x, y: 0 },
+      armorClass: 10,
+      hp: { current: 20, max: 20 },
+      attackEffects: [atk(20)],
+      damageEffects: dmg(6, 2),
+      reach: 1,
+      speedCells: 6,
+    });
+
+    const order = [combatant('a', 'party', 0), combatant('b', 'monsters', 12)];
+    const round1 = runCombatRound({ order, seed: 'converge', round: 1 });
+    // Both moved toward each other; at least one move intent emitted.
+    expect(round1.intents.some((intent) => intent.type === 'move-token')).toBe(true);
+    // After closing 6 cells each from 12 apart, they are adjacent: damage flows
+    // in round 1 or, at worst, round 2.
+    const totalDamageIntents = round1.intents.filter(
+      (intent) => intent.type === 'apply-damage'
+    ).length;
+    expect(totalDamageIntents).toBeGreaterThan(0);
+  });
+});

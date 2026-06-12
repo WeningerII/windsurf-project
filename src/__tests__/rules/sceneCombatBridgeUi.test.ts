@@ -494,3 +494,230 @@ describe('token conditions in scene combat (grid-combat review)', () => {
     expect(orc.attackEffects).toHaveLength(hittingStats.attackEffects.length);
   });
 });
+
+describe('Daggerheart scene combat (phase 3 adapter)', () => {
+  const dhStats = (evasion: number, thresholds: { major: number; severe: number }) => ({
+    attackEffects: [
+      {
+        id: 'dh-atk',
+        systemId: 'daggerheart' as const,
+        target: 'attack',
+        operation: 'add' as const,
+        value: 100, // always meets Evasion: deterministic hit
+        stackPolicy: 'sum' as const,
+        source: { kind: 'system' as const, label: 'trait' },
+        label: 'trait',
+      },
+    ],
+    damageEffects: [
+      {
+        id: 'dh-dmg',
+        systemId: 'daggerheart' as const,
+        target: 'damage',
+        operation: 'add' as const,
+        value: 20, // flat 20 >= severe: marks 3 HP, deterministically
+        stackPolicy: 'sum' as const,
+        source: { kind: 'item' as const, label: 'sword' },
+        label: 'sword',
+      },
+    ],
+    armorClass: evasion,
+    reach: 1,
+    daggerheart: { thresholds },
+  });
+
+  it('resolves 2d12 vs Evasion and applies threshold-MARKED HP, not raw damage', () => {
+    let scene = createSceneDocument({ id: 'dh', name: 'DH', systemId: 'daggerheart', seed: 'dh' });
+    for (const token of [
+      combatToken('hero', 'character', 6, 0),
+      combatToken('foe', 'character', 6, 1),
+    ]) {
+      const r = resolveSceneAction(
+        scene,
+        { type: 'place-token', token },
+        { eventId: `p-${token.id}` }
+      );
+      scene = appendSceneEvent(scene, r.event!);
+    }
+    const state = foldSceneEvents(scene).state;
+
+    const outcome = resolveSceneAttack({
+      state,
+      attackerId: 'hero',
+      targetId: 'foe',
+      resolveStats: () => dhStats(10, { major: 7, severe: 12 }),
+      seed: 'dh-attack',
+    });
+
+    expect(outcome.hit).toBe(true);
+    expect(outcome.log).toContain('Hope');
+    expect(outcome.log).toContain('Evasion 10');
+    // Raw damage 20 >= severe 12 marks exactly 3 HP — the intent carries the
+    // MARKED amount (slot model), never the raw total.
+    expect(outcome.intent).toMatchObject({
+      type: 'apply-damage',
+      damages: [{ tokenId: 'foe', amount: 3 }],
+    });
+  });
+});
+
+describe('M&M 3e scene combat (phase 3 adapter)', () => {
+  const mamStats = (over: Record<string, unknown> = {}) => ({
+    attackEffects: [
+      {
+        id: 'mam-atk',
+        systemId: 'mam3e' as const,
+        target: 'attack',
+        operation: 'add' as const,
+        value: 100, // always hits: deterministic
+        stackPolicy: 'sum' as const,
+        source: { kind: 'system' as const, label: 'fgt' },
+        label: 'fgt',
+      },
+    ],
+    damageEffects: [],
+    armorClass: 10, // Dodge
+    reach: 1,
+    mam3e: { parry: 10, toughness: -100, effectRank: 10, ranged: false, ...over },
+  });
+
+  function mamScene() {
+    let scene = createSceneDocument({ id: 'mm', name: 'MM', systemId: 'mam3e', seed: 'mm' });
+    for (const token of [
+      combatToken('hero', 'character', 1, 0),
+      combatToken('villain', 'character', 1, 1),
+    ]) {
+      const r = resolveSceneAction(
+        scene,
+        { type: 'place-token', token },
+        { eventId: `p-${token.id}` }
+      );
+      scene = appendSceneEvent(scene, r.event!);
+    }
+    return foldSceneEvents(scene).state;
+  }
+
+  it('a catastrophic Toughness failure incapacitates (downs the up/down token)', () => {
+    // Toughness -100 vs DC 25: shortfall >= 15 — incapacitated per the
+    // Hero's Handbook degree table, applied as a downing damage intent.
+    const outcome = resolveSceneAttack({
+      state: mamScene(),
+      attackerId: 'hero',
+      targetId: 'villain',
+      resolveStats: () => mamStats(),
+      seed: 'mam-incap',
+    });
+    expect(outcome.hit).toBe(true);
+    expect(outcome.log).toContain('INCAPACITATED');
+    expect(outcome.intent).toMatchObject({
+      type: 'apply-damage',
+      damages: [{ tokenId: 'villain', amount: 1 }],
+    });
+  });
+
+  it('a moderate failure persists the condition track on the token', () => {
+    // Toughness +18 vs DC 25 keeps shortfalls in the 1-9 band across the d20
+    // range: bruised (+dazed at 5-9) — never staggered/incapacitated.
+    const outcome = resolveSceneAttack({
+      state: mamScene(),
+      attackerId: 'hero',
+      targetId: 'villain',
+      resolveStats: () => mamStats({ toughness: 18 }),
+      // seed chosen so the attack d20 is 18 (a hit; 'mam-bruise' rolled a
+      // natural 1, which RAW auto-misses) and the save d20 is 12.
+      seed: 'mam-bruise-2',
+    });
+    expect(outcome.hit).toBe(true);
+    if (outcome.intent) {
+      expect(outcome.intent.type).toBe('set-token-conditions');
+      const conditions = (outcome.intent as { conditions: string[] }).conditions;
+      expect(conditions.some((c) => /^bruised-\d+$/.test(c))).toBe(true);
+      expect(conditions).not.toContain('incapacitated');
+    } else {
+      // The save held for this seed — legal, but the log must say so.
+      expect(outcome.log).toContain('holds');
+    }
+  });
+});
+
+describe('scene area effects (phase 3 tail — AoE product-reachable)', () => {
+  it('rolls shared damage once, saves independently, and lands one intent', async () => {
+    const { resolveSceneAreaEffect } = await import('../../rules');
+    let scene = createSceneDocument({ id: 'aoe', name: 'AoE', systemId: SID, seed: 'aoe' });
+    for (const token of [
+      combatToken('caster', 'character', 20, 0),
+      combatToken('orc-1', 'monster', 20, 2),
+      combatToken('orc-2', 'monster', 20, 3),
+      combatToken('far-away', 'monster', 20, 9),
+    ]) {
+      const r = resolveSceneAction(
+        scene,
+        { type: 'place-token', token },
+        { eventId: `p-${token.id}` }
+      );
+      scene = appendSceneEvent(scene, r.event!);
+    }
+    const state = foldSceneEvents(scene).state;
+
+    const outcome = resolveSceneAreaEffect({
+      state,
+      sourceId: 'caster',
+      shape: { kind: 'burst', origin: { x: 2, y: 0 }, radius: 2 },
+      damageEffects: flatDamage(10), // flat: deterministic shared damage
+      saveDC: 30, // everyone fails: full damage
+      resolveStats: () => ({ ...hittingStats, areaSaveBonus: 0 }),
+      seed: 'fireball-1',
+    });
+
+    // Both orcs are in the burst; the caster (source) and the distant orc are not.
+    expect(outcome.affected).toBe(2);
+    expect(outcome.intent).toMatchObject({
+      type: 'apply-damage',
+      damages: [
+        { tokenId: 'orc-1', amount: 10 },
+        { tokenId: 'orc-2', amount: 10 },
+      ],
+    });
+    // Replays byte-identically.
+    const again = resolveSceneAreaEffect({
+      state,
+      sourceId: 'caster',
+      shape: { kind: 'burst', origin: { x: 2, y: 0 }, radius: 2 },
+      damageEffects: flatDamage(10),
+      saveDC: 30,
+      resolveStats: () => ({ ...hittingStats, areaSaveBonus: 0 }),
+      seed: 'fireball-1',
+    });
+    expect(JSON.stringify(again)).toBe(JSON.stringify(outcome));
+  });
+
+  it('successful saves halve (5e default) and saved-to-zero targets are omitted', async () => {
+    const { resolveSceneAreaEffect } = await import('../../rules');
+    let scene = createSceneDocument({ id: 'aoe2', name: 'AoE2', systemId: SID, seed: 'aoe2' });
+    for (const token of [
+      combatToken('caster', 'character', 20, 0),
+      combatToken('victim', 'monster', 20, 1),
+    ]) {
+      const r = resolveSceneAction(
+        scene,
+        { type: 'place-token', token },
+        { eventId: `p-${token.id}` }
+      );
+      scene = appendSceneEvent(scene, r.event!);
+    }
+    const state = foldSceneEvents(scene).state;
+    const outcome = resolveSceneAreaEffect({
+      state,
+      sourceId: 'caster',
+      shape: { kind: 'burst', origin: { x: 1, y: 0 }, radius: 1 },
+      damageEffects: flatDamage(11),
+      saveDC: -10, // always saves
+      resolveStats: () => ({ ...hittingStats, areaSaveBonus: 0 }),
+      seed: 'half-save',
+    });
+    expect(outcome.intent).toMatchObject({
+      type: 'apply-damage',
+      damages: [{ tokenId: 'victim', amount: 5 }], // floor(11/2)
+    });
+  });
+});

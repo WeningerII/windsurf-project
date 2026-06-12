@@ -46,6 +46,13 @@ export interface TacticalTurnInput {
 
 export type TacticalDecisionKind = 'attack' | 'move-to-engage' | 'no-target';
 
+/** Movement taken this turn (autonomous rounds execute it as a scene intent). */
+export interface TacticalMoveRecord {
+  to: { x: number; y: number };
+  /** The move-token intent for scene application. */
+  intent: SceneActionIntent;
+}
+
 /** One resolved attack within a turn (Multiattack yields several). */
 export interface TacticalAttackRecord {
   targetId: string;
@@ -65,6 +72,8 @@ export interface TacticalTurnResult {
   resolution?: AttackResolution;
   /** The first attack's scene action, when it dealt damage (see `attacks`). */
   intent?: SceneActionIntent;
+  /** Movement executed this turn (move-and-attack or move-to-engage). */
+  move?: TacticalMoveRecord;
   /** Every attack this turn, in order (length > 1 under Multiattack). */
   attacks: TacticalAttackRecord[];
   /** Why this decision was reached. */
@@ -93,17 +102,59 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
     };
   }
 
-  const firstReachable = scored.find((target) => target.inReach);
+  let firstReachable = scored.find((target) => target.inReach);
+  let move;
+  let actor = input.actor;
   if (!firstReachable) {
+    // Execute movement (RAW: move + attack in one turn): step up to speed
+    // cells toward the best target along the Chebyshev line, stopping at
+    // reach. Deterministic — no RNG is consumed by movement.
     const nearest = scored[0];
-    return {
-      actorId: input.actor.tokenId,
-      decision: 'move-to-engage',
-      scored,
-      chosenTargetId: nearest.tokenId,
-      attacks: [],
-      rationale: `Best target ${nearest.tokenId} is ${nearest.distance} cells away, beyond reach; close to engage.`,
-    };
+    const nearestTarget = input.targets.find((t) => t.tokenId === nearest.tokenId)!;
+    const speed = Math.max(1, Math.floor(actor.speedCells ?? 6));
+    const reach = actor.reach ?? 1;
+    const from = actor.position;
+    const goal = nearestTarget.position;
+    let { x, y } = from;
+    let stepsLeft = speed;
+    while (stepsLeft > 0 && Math.max(Math.abs(goal.x - x), Math.abs(goal.y - y)) > reach) {
+      x += Math.sign(goal.x - x);
+      y += Math.sign(goal.y - y);
+      stepsLeft -= 1;
+    }
+    if (x !== from.x || y !== from.y) {
+      move = {
+        to: { x, y },
+        intent: { type: 'move-token' as const, tokenId: actor.tokenId, position: { x, y } },
+      };
+      actor = { ...actor, position: { x, y } };
+      // Re-score from the new position; attack if anything is now in reach.
+      const rescored = scoreTargets(actor, input.targets);
+      firstReachable = rescored.find((target) => target.inReach);
+      if (!firstReachable) {
+        return {
+          actorId: actor.tokenId,
+          decision: 'move-to-engage',
+          scored: rescored,
+          chosenTargetId: nearest.tokenId,
+          move,
+          attacks: [],
+          rationale: `Moved ${speed} cells toward ${nearest.tokenId} (still ${Math.max(
+            Math.abs(goal.x - x),
+            Math.abs(goal.y - y)
+          )} cells away).`,
+        };
+      }
+    } else {
+      return {
+        actorId: actor.tokenId,
+        decision: 'move-to-engage',
+        scored,
+        chosenTargetId: nearest.tokenId,
+        attacks: [],
+        rationale: `Best target ${nearest.tokenId} is ${nearest.distance} cells away, beyond reach; close to engage.`,
+      };
+    }
   }
 
   const targetsById = new Map(input.targets.map((candidate) => [candidate.tokenId, candidate]));
@@ -121,13 +172,15 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
   const rngFor = (targetId: string) => {
     let rng = rngByTarget.get(targetId);
     if (!rng) {
-      rng = participantRng(input.seed, input.actor.tokenId, targetId);
+      rng = participantRng(input.seed, actor.tokenId, targetId);
       rngByTarget.set(targetId, rng);
     }
     return rng;
   };
 
-  const attackCount = Math.max(1, Math.floor(input.actor.attacksPerRound ?? 1));
+  // RAW (3.5/5e family): moving permits a single attack, not a full attack /
+  // Multiattack routine.
+  const attackCount = move ? 1 : Math.max(1, Math.floor(input.actor.attacksPerRound ?? 1));
   const attacks: TacticalAttackRecord[] = [];
   let currentTargetId: string | undefined = firstReachable.tokenId;
 
@@ -141,20 +194,15 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
 
     const target = targetsById.get(currentTargetId)!;
     const resolution = resolveAttack({
-      attackEffects: input.actor.attackEffects,
-      damageEffects: input.actor.damageEffects,
+      attackEffects: actor.attackEffects,
+      damageEffects: actor.damageEffects,
       targetValue: target.armorClass,
-      critOn: input.actor.critOn,
+      critOn: actor.critOn,
       degreeModel: input.degreeModel,
       rng: rngFor(currentTargetId),
     });
 
-    const intent = attackToDamageIntent(
-      input.actor.tokenId,
-      currentTargetId,
-      resolution,
-      input.cause
-    );
+    const intent = attackToDamageIntent(actor.tokenId, currentTargetId, resolution, input.cause);
     attacks.push({ targetId: currentTargetId, resolution, intent });
 
     if (resolution.isHit && workingHp.has(currentTargetId)) {
@@ -176,13 +224,14 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
       : `Made ${attacks.length} attacks (${hits.length} hit, ${totalDamage} total damage).`;
 
   return {
-    actorId: input.actor.tokenId,
+    actorId: actor.tokenId,
     decision: 'attack',
     scored,
     chosenTargetId: first?.targetId,
     resolution: first?.resolution,
     intent: first?.intent,
+    ...(move ? { move } : {}),
     attacks,
-    rationale: summary,
+    rationale: move ? `Moved and attacked: ${summary}` : summary,
   };
 }

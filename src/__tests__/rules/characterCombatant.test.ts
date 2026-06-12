@@ -321,3 +321,147 @@ describe('PC vs monster — a real character fights a real goblin end to end', (
     throw new Error('expected the PC to land at least one hit across 30 seeds');
   });
 });
+
+describe('5e Extra Attack in scene combat (phase 4)', () => {
+  it('counts extra-attack features into attacksPerRound and derives speed cells', async () => {
+    const { buildCharacterCombatant } = await import('../../rules');
+    const { createDefaultDnd5eData } = await import('../../systems/dnd5e/data-model');
+    const system = {
+      ...createDefaultDnd5eData(),
+      speed: 30,
+      features: [
+        {
+          id: 'extra-attack',
+          name: 'Extra Attack',
+          source: 'Fighter 5',
+          description: 'You can attack twice whenever you take the Attack action.',
+        },
+        {
+          id: 'extra-attack-2',
+          name: 'Extra Attack (2)',
+          source: 'Fighter 11',
+          description: 'You can attack three times.',
+        },
+      ],
+    };
+    const built = buildCharacterCombatant(
+      {
+        id: 'fighter-11',
+        name: 'Fighter',
+        systemId: 'dnd-5e-2014',
+        system,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      { tokenId: 'f', position: { x: 0, y: 0 } }
+    );
+    expect(built.supported).toBe(true);
+    if (built.supported) {
+      // Fighter 11: base attack + two Extra Attack grants = 3 per Attack action.
+      expect(built.combatant.attacksPerRound).toBe(3);
+      expect(built.combatant.speedCells).toBe(6);
+    }
+  });
+});
+
+describe('5e rider toggles in scene combat (phase 4)', () => {
+  it('a raging barbarian with GWM folds both riders into the damage chain', async () => {
+    const { buildCharacterCombatant } = await import('../../rules');
+    const { createDefaultDnd5eData } = await import('../../systems/dnd5e/data-model');
+    const system = {
+      ...createDefaultDnd5eData(),
+      activeToggles: ['rage', 'great-weapon-master'],
+      classLevels: [{ classId: 'barbarian', level: 9, hitDieRolls: [] }],
+      features: [{ id: 'rage', name: 'Rage', source: 'Barbarian 1', description: 'RAGE.' }],
+      feats: [
+        {
+          id: 'great-weapon-master',
+          name: 'Great Weapon Master',
+          source: 'Feat',
+          description: '-5/+10.',
+        },
+      ],
+    };
+    const built = buildCharacterCombatant(
+      {
+        id: 'barb',
+        name: 'Barb',
+        systemId: 'dnd-5e-2014',
+        system,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      { tokenId: 'b', position: { x: 0, y: 0 } }
+    );
+    expect(built.supported).toBe(true);
+    if (!built.supported) return;
+    // Rage at barbarian 9 = +3 damage; GWM = -5 attack / +10 damage.
+    const damageAdds = built.combatant.damageEffects
+      .filter((effect) => effect.operation === 'add')
+      .map((effect) => effect.value);
+    expect(damageAdds).toContain(3);
+    expect(damageAdds).toContain(10);
+    expect(built.combatant.attackEffects.some((effect) => effect.value === -5)).toBe(true);
+  });
+
+  it('toggles without the gating feature contribute nothing', async () => {
+    const { buildCharacterCombatant } = await import('../../rules');
+    const { createDefaultDnd5eData } = await import('../../systems/dnd5e/data-model');
+    const built = buildCharacterCombatant(
+      {
+        id: 'pretender',
+        name: 'Pretender',
+        systemId: 'dnd-5e-2014',
+        system: { ...createDefaultDnd5eData(), activeToggles: ['rage', 'sneak-attack'] },
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      { tokenId: 'p', position: { x: 0, y: 0 } }
+    );
+    expect(built.supported).toBe(true);
+    if (!built.supported) return;
+    expect(built.combatant.damageEffects.some((effect) => /rage|sneak/i.test(effect.label))).toBe(
+      false
+    );
+  });
+});
+
+describe('collectDnd5eRiderEffects: Sharpshooter and Divine Smite', () => {
+  it('compiles Sharpshooter -5/+10 and Divine Smite 2d8 when gated and active', async () => {
+    const { collectDnd5eRiderEffects, availableDnd5eToggles } =
+      await import('../../rules/conditions/dnd5eRiders');
+    const inputs = {
+      activeToggles: ['sharpshooter', 'divine-smite'],
+      featureIds: new Set(['divine-smite']),
+      featIds: new Set(['sharpshooter']),
+      barbarianLevel: 0,
+      rogueLevel: 0,
+    };
+    expect(availableDnd5eToggles(inputs)).toEqual(['sharpshooter', 'divine-smite']);
+    const effects = collectDnd5eRiderEffects(inputs);
+    const attack = effects.filter((effect) => effect.target === 'attack');
+    expect(attack).toHaveLength(1);
+    expect(attack[0].value).toBe(-5);
+    const flatDamage = effects.filter(
+      (effect) => effect.target === 'damage' && effect.operation === 'add'
+    );
+    expect(flatDamage.map((effect) => effect.value)).toEqual([10]);
+    const smiteDice = effects.filter(
+      (effect) => effect.operation === 'add-die' && /smite/i.test(effect.label)
+    );
+    expect(smiteDice).toHaveLength(2);
+    expect(smiteDice.every((effect) => effect.value === 8)).toBe(true);
+  });
+
+  it('Divine Smite without the feature compiles nothing', async () => {
+    const { collectDnd5eRiderEffects } = await import('../../rules/conditions/dnd5eRiders');
+    const effects = collectDnd5eRiderEffects({
+      activeToggles: ['divine-smite', 'sharpshooter'],
+      featureIds: new Set<string>(),
+      featIds: new Set<string>(),
+      barbarianLevel: 0,
+      rogueLevel: 0,
+    });
+    expect(effects).toHaveLength(0);
+  });
+});

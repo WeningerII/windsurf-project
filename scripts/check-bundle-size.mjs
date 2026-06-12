@@ -7,10 +7,18 @@ import { gzipSync } from 'node:zlib';
 const assetsDir = path.resolve(process.cwd(), 'dist/assets');
 
 const budgets = {
-  totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 800 * 1024,
+  // Total JS counts EVERY chunk, including per-system SRD data that only
+  // loads lazily behind its system's browser — first-paint cost is guarded
+  // by the separate app/vendor budgets below. Raised from 800 KiB for the
+  // coverage-completion program (now spanning 5e-2014/2024, PF2e, and PF1e
+  // corpora at or near 100%, plus the d20-legacy bestiary): genuine content,
+  // not bloat. Lazy granularity is enforced by the per-data-chunk budget.
+  totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 1536 * 1024,
   appChunkGzipBytes: parseInt(process.env.BUNDLE_BUDGET_APP_GZIP_BYTES || '', 10) || 80 * 1024,
-  vendorChunkGzipBytes: parseInt(process.env.BUNDLE_BUDGET_VENDOR_GZIP_BYTES || '', 10) || 200 * 1024,
-  largestDataChunkGzipBytes: parseInt(process.env.BUNDLE_BUDGET_DATA_GZIP_BYTES || '', 10) || 140 * 1024,
+  vendorChunkGzipBytes:
+    parseInt(process.env.BUNDLE_BUDGET_VENDOR_GZIP_BYTES || '', 10) || 200 * 1024,
+  largestDataChunkGzipBytes:
+    parseInt(process.env.BUNDLE_BUDGET_DATA_GZIP_BYTES || '', 10) || 140 * 1024,
 };
 
 function formatBytes(bytes) {
@@ -51,8 +59,9 @@ const appChunk = appChunks.reduce(
   (largest, chunk) => (!largest || chunk.gzipBytes > largest.gzipBytes ? chunk : largest),
   null
 );
-const vendorChunk = chunks.find((chunk) => /^react-vendor-.*\.js$/.test(chunk.file))
-  || chunks.find((chunk) => /^vendor-.*\.js$/.test(chunk.file));
+const vendorChunk =
+  chunks.find((chunk) => /^react-vendor-.*\.js$/.test(chunk.file)) ||
+  chunks.find((chunk) => /^vendor-.*\.js$/.test(chunk.file));
 const dataChunks = chunks.filter((chunk) => chunk.file.includes('-data-'));
 const largestDataChunk = dataChunks.reduce(
   (largest, chunk) => (!largest || chunk.gzipBytes > largest.gzipBytes ? chunk : largest),

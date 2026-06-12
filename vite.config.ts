@@ -1,15 +1,15 @@
-import { defineConfig, type Plugin, type Rollup } from 'vite'
-import react from '@vitejs/plugin-react'
-import { createHash } from 'node:crypto'
-import fs from 'node:fs'
-import path from 'path'
-import { visualizer } from 'rollup-plugin-visualizer'
-import viteCompression from 'vite-plugin-compression'
+import { defineConfig, type Plugin, type Rollup } from 'vite';
+import react from '@vitejs/plugin-react';
+import { createHash } from 'node:crypto';
+import fs from 'node:fs';
+import path from 'path';
+import { visualizer } from 'rollup-plugin-visualizer';
+import viteCompression from 'vite-plugin-compression';
 
 // Upper bound for the injected precache list. The entry's static import
 // closure is currently well under this; the cap is a guardrail so a future
 // import-graph explosion cannot turn first-install into a megabyte download.
-const MAX_PRECACHE_URLS = 40
+const MAX_PRECACHE_URLS = 40;
 
 /**
  * Build-time service-worker stamping.
@@ -32,7 +32,7 @@ function serviceWorkerPrecachePlugin(): Plugin {
     name: 'service-worker-precache',
     apply: 'build',
     writeBundle(options, bundle) {
-      const outDir = options.dir ?? 'dist'
+      const outDir = options.dir ?? 'dist';
 
       // Entry JS chunks plus their static import closure. Everything the
       // shell statically imports (vendor/icons and, today, several data
@@ -41,54 +41,51 @@ function serviceWorkerPrecachePlugin(): Plugin {
       // manifest — the SW caches them on demand.
       const chunks = Object.values(bundle).filter(
         (output): output is Rollup.OutputChunk => output.type === 'chunk'
-      )
-      const chunkByFileName = new Map(chunks.map((chunk) => [chunk.fileName, chunk]))
-      const precacheJs = new Set<string>()
-      const queue = chunks.filter((chunk) => chunk.isEntry).map((chunk) => chunk.fileName)
+      );
+      const chunkByFileName = new Map(chunks.map((chunk) => [chunk.fileName, chunk]));
+      const precacheJs = new Set<string>();
+      const queue = chunks.filter((chunk) => chunk.isEntry).map((chunk) => chunk.fileName);
       while (queue.length > 0) {
-        const fileName = queue.shift()
-        if (!fileName || precacheJs.has(fileName)) continue
-        const chunk = chunkByFileName.get(fileName)
-        if (!chunk) continue
-        precacheJs.add(fileName)
-        queue.push(...chunk.imports)
+        const fileName = queue.shift();
+        if (!fileName || precacheJs.has(fileName)) continue;
+        const chunk = chunkByFileName.get(fileName);
+        if (!chunk) continue;
+        precacheJs.add(fileName);
+        queue.push(...chunk.imports);
       }
 
       const cssFiles = Object.values(bundle)
         .filter((output) => output.type === 'asset' && output.fileName.endsWith('.css'))
-        .map((output) => output.fileName)
+        .map((output) => output.fileName);
 
       const precacheUrls = [
         '/',
         '/index.html',
         '/manifest.webmanifest',
         ...[...precacheJs, ...cssFiles].map((fileName) => `/${fileName}`),
-      ].slice(0, MAX_PRECACHE_URLS)
+      ].slice(0, MAX_PRECACHE_URLS);
 
       // Hash every emitted file name (all content-hashed), so any asset
       // change — including lazily loaded data chunks — yields a new SW.
       const buildHash = createHash('sha256')
         .update(Object.keys(bundle).sort().join('\n'))
         .digest('hex')
-        .slice(0, 12)
+        .slice(0, 12);
 
-      const swSource = fs.readFileSync(
-        path.resolve(__dirname, 'public/service-worker.js'),
-        'utf8'
-      )
+      const swSource = fs.readFileSync(path.resolve(__dirname, 'public/service-worker.js'), 'utf8');
       const stamped = swSource
         .replace(/__BUILD_HASH__/g, buildHash)
-        .replace(/self\.__PRECACHE_MANIFEST/g, JSON.stringify(precacheUrls))
+        .replace(/self\.__PRECACHE_MANIFEST/g, JSON.stringify(precacheUrls));
 
       if (stamped === swSource) {
         throw new Error(
           'service-worker-precache: no placeholders found in public/service-worker.js'
-        )
+        );
       }
 
-      fs.writeFileSync(path.join(outDir, 'service-worker.js'), stamped)
+      fs.writeFileSync(path.join(outDir, 'service-worker.js'), stamped);
     },
-  }
+  };
 }
 
 export default defineConfig({
@@ -130,27 +127,50 @@ export default defineConfig({
             if (id.includes('/node_modules/lucide-react/')) {
               return 'icons';
             }
-            if (
-              id.includes('/node_modules/react/') ||
-              id.includes('/node_modules/react-dom/')
-            ) {
+            if (id.includes('/node_modules/react/') || id.includes('/node_modules/react-dom/')) {
               return 'react-vendor';
             }
             return 'vendor';
           }
 
-          // Split large SRD datasets into per-system chunks.
+          // Split large SRD datasets into per-system chunks. The biggest
+          // categories of the now-coverage-complete 5e-2014 set get their own
+          // lazy chunks so no single data chunk outgrows the budget.
+          if (id.includes('src/data/dnd/5e-2014/monsters')) {
+            return 'dnd-5e-2014-monsters-data';
+          }
+          if (id.includes('src/data/dnd/5e-2014/spells')) {
+            return 'dnd-5e-2014-spells-data';
+          }
           if (id.includes('src/data/dnd/5e-2014')) {
             return 'dnd-5e-2014-data';
+          }
+          if (id.includes('src/data/dnd/5e-2024/equipment')) {
+            return 'dnd-5e-2024-equipment-data';
+          }
+          if (id.includes('src/data/dnd/5e-2024/spells')) {
+            return 'dnd-5e-2024-spells-data';
           }
           if (id.includes('src/data/dnd/5e-2024')) {
             return 'dnd-5e-2024-data';
           }
+          if (id.includes('src/data/dnd/3.5e/spells')) {
+            return 'dnd-35e-spells-data';
+          }
           if (id.includes('src/data/dnd/3.5e')) {
             return 'dnd-35e-data';
           }
+          if (/src\/data\/pathfinder\/1e\/spells\/(?:srd-)?(?:cantrips|level-[0-4]\b)/.test(id)) {
+            return 'pf1e-spells-low-data';
+          }
+          if (id.includes('src/data/pathfinder/1e/spells')) {
+            return 'pf1e-spells-data';
+          }
           if (id.includes('src/data/pathfinder/1e')) {
             return 'pf1e-data';
+          }
+          if (id.includes('src/data/pathfinder/2e/spells')) {
+            return 'pf2e-spells-data';
           }
           if (id.includes('src/data/pathfinder/2e')) {
             return 'pf2e-data';
@@ -174,4 +194,4 @@ export default defineConfig({
     chunkSizeWarningLimit: 1000,
     sourcemap: false,
   },
-})
+});

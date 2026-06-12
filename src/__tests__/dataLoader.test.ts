@@ -52,9 +52,10 @@ describe('Data Loader Integration Tests', () => {
   describe('D&D 5e-2014 Loaders', () => {
     it('should load spells for dnd-5e-2014', async () => {
       const spells = await loadSpellsForSystem('dnd-5e-2014');
-      // 22 non-SRD-5.1 spells (PHB + homebrew) were removed; 8 Product-Identity
-      // names (Tasha's/Tenser's/etc.) were renamed to their SRD names.
-      expect(spells.length).toBe(222);
+      // Full SRD 5.1 coverage: 222 hand-written + 97 encoder-generated
+      // (scripts/encode-5e-spells.mjs) = the SRD's complete 319 spell list,
+      // verified independently by npm run srd:coverage.
+      expect(spells.length).toBe(319);
       expect(spells.every((s) => s.id && s.name && s.system === 'dnd-5e-2014')).toBe(true);
     });
 
@@ -117,7 +118,7 @@ describe('Data Loader Integration Tests', () => {
       const spells = await loadSpellsForSystem('dnd-5e-2024');
       // 26 non-SRD-5.2 spells (PHB + homebrew) removed; 7 Product-Identity names
       // renamed to their SRD names.
-      expect(spells.length).toBe(294);
+      expect(spells.length).toBe(339);
       expect(spells.every((s) => s.id && s.name && s.system === 'dnd-5e-2024')).toBe(true);
     });
 
@@ -129,7 +130,7 @@ describe('Data Loader Integration Tests', () => {
     it('should load species for dnd-5e-2024', async () => {
       const species = await loadSpeciesForSystem('dnd-5e-2024');
       // SRD 5.2 dropped Half-Elf and Half-Orc as standalone species.
-      expect(species.length).toBe(7);
+      expect(species.length).toBe(9);
       expect(species.every((s) => s.id && s.name && s.system === 'dnd-5e-2024')).toBe(true);
     });
 
@@ -149,7 +150,7 @@ describe('Data Loader Integration Tests', () => {
 
     it('should load equipment for dnd-5e-2024 without duplicates', async () => {
       const equipment = await loadEquipmentForSystem('dnd-5e-2024');
-      expect(equipment.length).toBe(204);
+      expect(equipment.length).toBe(502);
       expect(new Set(equipment.map((e) => e.id)).size).toBe(equipment.length);
     });
   });
@@ -157,7 +158,10 @@ describe('Data Loader Integration Tests', () => {
   describe('Pathfinder 2e Loaders', () => {
     it('should load spells for pf2e', async () => {
       const spells = await loadSpellsForSystem('pf2e');
-      expect(spells.length).toBe(143);
+      // Full CRB coverage: the catalog's 537 spells (129 hand-written + 408
+      // encoder-generated, scripts/encode-pf2e-spells.mjs) plus the loader's
+      // appended focus-spell entries. srd:coverage verifies independently.
+      expect(spells.length).toBe(551);
       expect(spells.every((spell) => spell.traditions && spell.traditions.length > 0)).toBe(true);
       expect(
         spells
@@ -201,7 +205,7 @@ describe('Data Loader Integration Tests', () => {
   describe('D&D 3.5e Loaders', () => {
     it('should load the canonicalized 3.5e spell catalog without exact class-split duplicates', async () => {
       const spells = await loadSpellsForSystem('dnd-3.5e');
-      expect(spells.length).toBe(428);
+      expect(spells.length).toBe(610);
       const fingerprints = spells.map((spell) => {
         const {
           id: _id,
@@ -255,7 +259,10 @@ describe('Data Loader Integration Tests', () => {
   describe('Pathfinder 1e Loaders', () => {
     it('should load spells with stored class-level mappings for pf1e', async () => {
       const spells = await loadSpellsForSystem('pf1e');
-      expect(spells.length).toBe(134);
+      // Full Core Rulebook coverage: 132 hand-written + 491 encoder-generated
+      // (scripts/encode-pf1e-spells.mjs) + catalog merges; srd:coverage
+      // verifies independently against the PFRPG Core CSV rows.
+      expect(spells.length).toBe(625);
       expect(
         spells.every(
           (spell) =>

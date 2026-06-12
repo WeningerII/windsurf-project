@@ -64,7 +64,13 @@ export const dnd5eMetadata = {
       weapons: dnd5eWeapons.length,
       armor: dnd5eArmor.length + dnd5eShields.length,
       adventuringGear: dnd5eAdventuringGear.length,
-      magicItems: dnd5eMagicItems.length + dnd5eEquipmentByType.categoryMagicItems.length,
+      // categoryMagicItems + srdEncoded are the consolidated/generated unions
+      // folded into dnd5eEquipment; counting them here keeps the metadata
+      // summary aligned with what the loader actually serves.
+      magicItems:
+        dnd5eMagicItems.length +
+        dnd5eEquipmentByType.categoryMagicItems.length +
+        dnd5eEquipmentByType.srdEncoded.length,
     },
 
     specialAbilities: {

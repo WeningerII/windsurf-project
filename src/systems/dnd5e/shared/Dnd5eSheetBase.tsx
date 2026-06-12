@@ -32,6 +32,7 @@ import {
 } from './dnd5eSheetConstants';
 import type { Dnd5eLikeDataModel } from './dnd5eSheetShared';
 import { useDnd5eSheetController } from './useDnd5eSheetController';
+import { availableDnd5eToggles } from '../../../rules/conditions/dnd5eRiders';
 
 interface Props<T extends Dnd5eLikeDataModel> {
   document: CharacterDocument<T>;
@@ -220,6 +221,14 @@ export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
           onFeatureOptionRemove={onUpdate ? controller.handleFeatureOptionRemove : undefined}
           onFeatureOptionSelect={onUpdate ? controller.handleFeatureOptionSelect : undefined}
           onConditionChange={onUpdate ? (conditions) => updatePatch({ conditions }) : undefined}
+          availableToggles={availableDnd5eToggles({
+            featureIds: new Set(d.features.map((feature) => feature.id)),
+            featIds: new Set(d.feats.map((feat) => feat.id)),
+          })}
+          activeToggles={d.activeToggles ?? []}
+          onActiveTogglesChange={
+            onUpdate ? (activeToggles) => updatePatch({ activeToggles }) : undefined
+          }
         />
 
         <Dnd5eSpellsTab

@@ -849,6 +849,11 @@ export async function loadMonstersForSystem(systemId: GameSystemId): Promise<Mon
     case 'dnd-5e-2014':
       monsters = await loadDnd5e2014Monsters();
       break;
+    case 'dnd-3.5e': {
+      const monsterModule = await import('../data/dnd/3.5e/monsters');
+      monsters = monsterModule.dnd35eMonsters || [];
+      break;
+    }
     default:
       return [];
   }

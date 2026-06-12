@@ -23,6 +23,10 @@ export interface Monster {
 
   // Proficiencies
   savingThrows?: Partial<Record<AbilityScore, number>>;
+  /** 3.5e/PF1e Fort/Ref/Will saves (these are not ability-keyed like 5e's). */
+  d20Saves?: { fort: number; ref: number; will: number };
+  /** 3.5e/PF1e base attack bonus. */
+  baseAttackBonus?: number;
   skills?: Record<string, number>;
 
   // Resistances & Immunities
@@ -62,7 +66,15 @@ export type CreatureType =
   | 'monstrosity'
   | 'ooze'
   | 'plant'
-  | 'undead';
+  | 'undead'
+  // Swarms ("swarm of Tiny beasts") are a first-class SRD creature type.
+  | 'swarm'
+  // 3.5e SRD creature types absent from the 5e taxonomy.
+  | 'animal'
+  | 'magical-beast'
+  | 'monstrous-humanoid'
+  | 'outsider'
+  | 'vermin';
 
 export type Alignment =
   | 'lawful good'
@@ -74,7 +86,9 @@ export type Alignment =
   | 'lawful evil'
   | 'neutral evil'
   | 'chaotic evil'
-  | 'unaligned';
+  | 'unaligned'
+  // SRD statblocks like the Doppelganger print "any alignment".
+  | 'any';
 
 export interface AbilityScores {
   str: number;

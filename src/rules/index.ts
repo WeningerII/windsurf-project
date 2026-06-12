@@ -82,6 +82,15 @@ export type {
 } from './tactical/roundDriver';
 export { isRoundConclusive, runCombatRound } from './tactical/roundDriver';
 
+export type {
+  BuildDaggerheartCombatantResult,
+  DaggerheartCombatant,
+} from './combatants/daggerheartCombatant';
+export { buildDaggerheartCombatant } from './combatants/daggerheartCombatant';
+
+export type { BuildMam3eCombatantResult, Mam3eCombatant } from './combatants/mam3eCombatant';
+export { buildMam3eCombatant, nextMam3eTokenConditions } from './combatants/mam3eCombatant';
+
 export type { MonsterCombatant } from './combatants/monsterCombatant';
 export {
   buildMonsterCombatant,
@@ -110,6 +119,7 @@ export {
   buildSceneCombatants,
   factionForToken,
   resolveSceneAttack,
+  resolveSceneAreaEffect,
   runSceneRound,
 } from './combat/sceneCombat';
 
@@ -137,3 +147,11 @@ export {
   collectPf2eConditionEffects,
   getPf2eConditionStatusPenalty,
 } from './conditions/pf2eConditions';
+
+export type { D20LegacySystemId } from './conditions/d20LegacyConditions';
+export {
+  collectD20LegacyConditionEffects,
+  hasD20LegacyConditionEffects,
+} from './conditions/d20LegacyConditions';
+
+export { collectSceneConditionEffects, mam3eBruisePenalty } from './conditions/sceneConditions';

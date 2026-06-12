@@ -17,6 +17,7 @@ import type {
 } from '../../../../utils/featTemplate';
 import { DND5E_CONDITION_NAMES, Dnd5eCondition } from '../../../dnd5e/conditions';
 import { Dnd5eFeatureOptionsSection } from './Dnd5eFeatureOptionsSection';
+import { Dnd5eRiderTogglesSection } from './Dnd5eRiderTogglesSection';
 import { Dnd5eBackgroundSection } from './Dnd5eBackgroundSection';
 import { Dnd5eSelectedFeatsSection } from './Dnd5eSelectedFeatsSection';
 import { Dnd5eSpeciesSection } from './Dnd5eSpeciesSection';
@@ -90,6 +91,10 @@ interface Props {
   }) => void;
   onFeatureOptionSelect?: (option: Dnd5eFeatureOptionDefinition) => void;
   onConditionChange?: (conditions: Dnd5eCondition[]) => void;
+  /** Rider toggle ids this character is eligible for (feature/feat-gated). */
+  availableToggles: string[];
+  activeToggles: string[];
+  onActiveTogglesChange?: (activeToggles: string[]) => void;
 }
 
 type Dnd5eFeaturesTabComponent = React.FC<Props> & {
@@ -140,6 +145,9 @@ export const Dnd5eFeaturesTab = (({
   onFeatureOptionRemove,
   onFeatureOptionSelect,
   onConditionChange,
+  availableToggles,
+  activeToggles,
+  onActiveTogglesChange,
 }: Props) => {
   return (
     <TabsContent value="features" className="space-y-4">
@@ -210,6 +218,12 @@ export const Dnd5eFeaturesTab = (({
           onFeatureOptionSelect={onFeatureOptionSelect}
         />
       )}
+
+      <Dnd5eRiderTogglesSection
+        availableToggles={availableToggles}
+        activeToggles={activeToggles}
+        onChange={onActiveTogglesChange}
+      />
 
       <ConditionPicker
         conditions={conditions}
