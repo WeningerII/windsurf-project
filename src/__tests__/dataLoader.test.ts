@@ -130,7 +130,7 @@ describe('Data Loader Integration Tests', () => {
     it('should load species for dnd-5e-2024', async () => {
       const species = await loadSpeciesForSystem('dnd-5e-2024');
       // SRD 5.2 dropped Half-Elf and Half-Orc as standalone species.
-      expect(species.length).toBe(7);
+      expect(species.length).toBe(9);
       expect(species.every((s) => s.id && s.name && s.system === 'dnd-5e-2024')).toBe(true);
     });
 

@@ -36,6 +36,20 @@ import {
 import { GameSystemId } from '../types/game-systems';
 
 const norm = (s: string): string => s.toLowerCase().replace(/[^a-z0-9]+/g, '');
+/**
+ * Loader entries may encode an SRD entry under a qualified name — e.g. the
+ * SRD 5.2 feat "Archery" ships as "Fighting Style: Archery", and "Magic
+ * Initiate" ships pre-split as "Magic Initiate (Cleric)". Matching also
+ * against the prefix-/parenthetical-stripped form keeps coverage honest
+ * without forcing id-breaking renames of shipped data.
+ */
+const loaderNormVariants = (s: string): string[] => {
+  const variants = new Set([norm(s)]);
+  variants.add(norm(s.replace(/^[\w\s]+:\s*/, '')));
+  variants.add(norm(s.replace(/\s*\([^)]*\)\s*$/, '')));
+  variants.delete('');
+  return [...variants];
+};
 
 const RAW5E = 'https://raw.githubusercontent.com/5e-bits/5e-database/main/src';
 
@@ -403,7 +417,7 @@ async function main(): Promise<void> {
   for (const t of TARGETS) {
     try {
       const [srdNames, loaderRaw] = await Promise.all([t.srd(), t.loader()]);
-      const loaderSet = new Set(loaderRaw.map(norm));
+      const loaderSet = new Set(loaderRaw.flatMap(loaderNormVariants));
       const srdSet = new Set(srdNames.map(norm));
       const srdUnique = [...new Map(srdNames.map((n) => [norm(n), n])).values()];
       const loaderUnique = [...new Map(loaderRaw.map((n) => [norm(n), n])).values()];
