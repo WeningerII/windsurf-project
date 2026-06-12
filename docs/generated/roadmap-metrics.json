@@ -1,47 +1,28 @@
 {
-  "generatedAt": "2026-06-11T01:55:15.184Z",
+  "generatedAt": "2026-06-12T15:19:18.846Z",
   "policy": {
     "dnd-5e-2014": {
-      "allowedSources": [
-        "SRD 5.1",
-        "SRD",
-        "System Reference Document 5.1"
-      ],
+      "allowedSources": ["SRD 5.1", "SRD", "System Reference Document 5.1"],
       "allowMissingSourceFor": []
     },
     "dnd-5e-2024": {
-      "allowedSources": [
-        "SRD 5.2",
-        "System Reference Document 5.2"
-      ],
+      "allowedSources": ["SRD 5.2", "System Reference Document 5.2"],
       "allowMissingSourceFor": []
     },
     "dnd-3.5e": {
-      "allowedSources": [
-        "SRD 3.5"
-      ],
+      "allowedSources": ["SRD 3.5"],
       "allowMissingSourceFor": []
     },
     "pf1e": {
-      "allowedSources": [
-        "Core Rulebook",
-        "CRB"
-      ],
+      "allowedSources": ["Core Rulebook", "CRB"],
       "allowMissingSourceFor": []
     },
     "pf2e": {
-      "allowedSources": [
-        "Core Rulebook",
-        "CRB"
-      ],
+      "allowedSources": ["Core Rulebook", "CRB"],
       "allowMissingSourceFor": []
     },
     "mam3e": {
-      "allowedSources": [
-        "Hero's Handbook",
-        "HH",
-        "Mutants & Masterminds Hero's Handbook"
-      ],
+      "allowedSources": ["Hero's Handbook", "HH", "Mutants & Masterminds Hero's Handbook"],
       "allowMissingSourceFor": []
     },
     "daggerheart": {
@@ -64,7 +45,7 @@
       "featureOptions": 106,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 39,
+      "monsters": 335,
       "equipment": 298,
       "feats": 1,
       "advantages": 0,
@@ -171,7 +152,7 @@
       "featureOptions": 106,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 39,
+      "monsters": 335,
       "equipment": 298,
       "feats": 1,
       "advantages": 0,
@@ -978,12 +959,13 @@
       "category": "monsters",
       "categoryLabel": "Monsters",
       "metrics": {
-        "rawCount": 39,
-        "uniqueCount": 39,
+        "rawCount": 335,
+        "uniqueCount": 335,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
+          "SRD 5.1": 296,
           "SRD": 39
         }
       }

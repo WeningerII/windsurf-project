@@ -62,7 +62,9 @@ export type CreatureType =
   | 'monstrosity'
   | 'ooze'
   | 'plant'
-  | 'undead';
+  | 'undead'
+  // Swarms ("swarm of Tiny beasts") are a first-class SRD creature type.
+  | 'swarm';
 
 export type Alignment =
   | 'lawful good'
@@ -74,7 +76,9 @@ export type Alignment =
   | 'lawful evil'
   | 'neutral evil'
   | 'chaotic evil'
-  | 'unaligned';
+  | 'unaligned'
+  // SRD statblocks like the Doppelganger print "any alignment".
+  | 'any';
 
 export interface AbilityScores {
   str: number;

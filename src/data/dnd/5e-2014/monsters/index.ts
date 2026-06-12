@@ -4,21 +4,31 @@ import { dnd5eCR0to1Monsters } from './cr-0-1';
 import { dnd5eCR2to5Monsters } from './cr-2-5';
 import { dnd5eCR6to10Monsters } from './cr-6-10';
 import { dnd5eCR11PlusMonsters } from './cr-11-plus';
+import { srdCr01Monsters } from './srd-cr-0-1';
+import { srdCr25Monsters } from './srd-cr-2-5';
+import { srdCr610Monsters } from './srd-cr-6-10';
+import { srdCr11PlusMonsters } from './srd-cr-11-plus';
 
-// All monsters
+// All monsters. Hand-written files first (they win indexById's first-entry
+// dedupe), then the generated SRD encodings (scripts/encode-5e-monsters.mjs),
+// which exclude hand-written names at generation time.
 export const dnd5eMonsters: Monster[] = [
   ...dnd5eCR0to1Monsters,
   ...dnd5eCR2to5Monsters,
   ...dnd5eCR6to10Monsters,
   ...dnd5eCR11PlusMonsters,
+  ...srdCr01Monsters,
+  ...srdCr25Monsters,
+  ...srdCr610Monsters,
+  ...srdCr11PlusMonsters,
 ];
 
 // By Challenge Rating ranges
 export const dnd5eMonstersByCR = {
-  cr0to1: dnd5eCR0to1Monsters,
-  cr2to5: dnd5eCR2to5Monsters,
-  cr6to10: dnd5eCR6to10Monsters,
-  cr11Plus: dnd5eCR11PlusMonsters,
+  cr0to1: [...dnd5eCR0to1Monsters, ...srdCr01Monsters],
+  cr2to5: [...dnd5eCR2to5Monsters, ...srdCr25Monsters],
+  cr6to10: [...dnd5eCR6to10Monsters, ...srdCr610Monsters],
+  cr11Plus: [...dnd5eCR11PlusMonsters, ...srdCr11PlusMonsters],
 };
 
 // Index by ID (dev-warns on duplicate ids)
