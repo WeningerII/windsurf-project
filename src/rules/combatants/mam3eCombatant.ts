@@ -67,6 +67,12 @@ export function buildMam3eCombatant(
   const skillBonus = ranged
     ? (system.skills?.['ranged-combat']?.rank ?? 0)
     : (system.skills?.['close-combat']?.rank ?? 0);
+  // Hero's Handbook: Close Attack / Ranged Attack grant +1 per rank to that
+  // kind of attack check (rankless entries count as rank 1).
+  const attackAdvantage = (system.advantages ?? []).find(
+    (advantage) => advantage.id === (ranged ? 'ranged-attack' : 'close-attack')
+  );
+  const advantageBonus = attackAdvantage ? Math.max(1, attackAdvantage.rank ?? 1) : 0;
 
   const attackEffects: EffectInstance[] = [
     {
@@ -80,6 +86,18 @@ export function buildMam3eCombatant(
       label: `${power.name} attack (${ranged ? 'DEX + Ranged Combat' : 'FGT + Close Combat'})`,
     },
   ];
+  if (attackAdvantage && advantageBonus > 0) {
+    attackEffects.push({
+      id: makeEffectId('mam3e', 'attack', doc.id, attackAdvantage.id),
+      systemId: 'mam3e',
+      target: 'attack',
+      operation: 'add',
+      value: advantageBonus,
+      stackPolicy: 'sum',
+      source: { kind: 'feat', id: attackAdvantage.id, label: attackAdvantage.name },
+      label: `${attackAdvantage.name} (+${advantageBonus})`,
+    });
+  }
 
   return {
     supported: true,

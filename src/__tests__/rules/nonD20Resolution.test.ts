@@ -352,3 +352,48 @@ describe('M&M Toughness shortfall → condition track', () => {
     expect(a).toEqual(b);
   });
 });
+
+describe('M&M attack advantages reach the scene adapter', () => {
+  it('Close/Ranged Attack ranks add to the matching attack check', async () => {
+    const { buildMam3eCombatant } = await import('../../rules');
+    const { createDefaultMam3eData } = await import('../../systems/mam3e/data-model');
+    const build = (
+      range: 'close' | 'ranged',
+      advantages: Array<{ id: string; name: string; rank?: number }>
+    ) =>
+      buildMam3eCombatant(
+        {
+          id: 'hero',
+          name: 'Hero',
+          systemId: 'mam3e',
+          system: {
+            ...createDefaultMam3eData(),
+            powers: [{ id: 'punch', name: 'Punch', type: 'attack', rank: 8, range }],
+            advantages,
+          },
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        } as never,
+        { tokenId: 'h', position: { x: 0, y: 0 } }
+      );
+    const attackTotal = (result: ReturnType<typeof build>) =>
+      result.supported
+        ? result.combatant.attackEffects.reduce(
+            (sum, effect) => sum + (typeof effect.value === 'number' ? effect.value : 0),
+            0
+          )
+        : NaN;
+
+    const base = build('close', []);
+    const closeRanked = build('close', [{ id: 'close-attack', name: 'Close Attack', rank: 3 }]);
+    // The matching advantage adds its rank...
+    expect(attackTotal(closeRanked)).toBe(attackTotal(base) + 3);
+    // ...the non-matching one adds nothing...
+    const mismatched = build('close', [{ id: 'ranged-attack', name: 'Ranged Attack', rank: 3 }]);
+    expect(attackTotal(mismatched)).toBe(attackTotal(base));
+    // ...and a rankless advantage counts as rank 1.
+    const rankless = build('ranged', [{ id: 'ranged-attack', name: 'Ranged Attack' }]);
+    const rangedBase = build('ranged', []);
+    expect(attackTotal(rankless)).toBe(attackTotal(rangedBase) + 1);
+  });
+});
