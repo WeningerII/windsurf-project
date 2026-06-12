@@ -110,6 +110,7 @@ export const dnd35eComputeRegister: SystemComputeRegister = {
       formula: 'extra attacks at BAB +6/+11/+16, each at -5 cumulative',
       inputs: ['BAB'],
       edgeCases: ['full attack action only'],
+      note: 'Scene-wired: buildCharacterCombatant derives attacksPerRound/iterativePenaltyStep from BAB and the tactical executor applies the cumulative -5 (src/__tests__/rules/characterCombatant.test.ts :: legacy-d20 iterative attacks).',
       source: `${SRD}: Combat — Attacks of Opportunity / Full Attack`,
       status: 'verified',
       testRef: 'src/__tests__/derivedCombatMath.test.ts :: d20 iterative attacks',

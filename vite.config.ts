@@ -148,6 +148,9 @@ export default defineConfig({
           if (id.includes('src/data/dnd/5e-2024/equipment')) {
             return 'dnd-5e-2024-equipment-data';
           }
+          if (id.includes('src/data/dnd/5e-2024/monsters')) {
+            return 'dnd-5e-2024-monsters-data';
+          }
           if (id.includes('src/data/dnd/5e-2024/spells')) {
             return 'dnd-5e-2024-spells-data';
           }
@@ -163,11 +166,17 @@ export default defineConfig({
           if (/src\/data\/pathfinder\/1e\/spells\/(?:srd-)?(?:cantrips|level-[0-4]\b)/.test(id)) {
             return 'pf1e-spells-low-data';
           }
+          if (id.includes('src/data/pathfinder/1e/monsters')) {
+            return 'pf1e-monsters-data';
+          }
           if (id.includes('src/data/pathfinder/1e/spells')) {
             return 'pf1e-spells-data';
           }
           if (id.includes('src/data/pathfinder/1e')) {
             return 'pf1e-data';
+          }
+          if (id.includes('src/data/pathfinder/2e/monsters')) {
+            return 'pf2e-monsters-data';
           }
           if (id.includes('src/data/pathfinder/2e/spells')) {
             return 'pf2e-spells-data';

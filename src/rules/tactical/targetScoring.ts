@@ -38,6 +38,12 @@ export interface TacticalActor {
    * the current target drops mid-sequence.
    */
   attacksPerRound?: number;
+  /**
+   * Legacy-d20 iterative attacks: each attack after the first takes a
+   * cumulative penalty of this size (3.5e/PF1e full attack: -5 per iterative).
+   * Undefined/0 means all attacks roll at full bonus (5e Multiattack).
+   */
+  iterativePenaltyStep?: number;
   /** Movement per turn in grid cells (speed feet / 5). Default 6. */
   speedCells?: number;
 }

@@ -36,6 +36,9 @@ import type { SceneCoordinate, SceneToken } from '../../types/core/scene';
 import { abilityMod } from '../../utils/math';
 import { profBonus } from '../../systems/dnd5e/shared/engine';
 import { collectDnd5eRiderEffects } from '../conditions/dnd5eRiders';
+import { collectPf2eRiderEffects } from '../conditions/pf2eRiders';
+import { collectD20LegacyConditionEffects } from '../conditions/d20LegacyConditions';
+import { collectD20LegacyRiderEffects } from '../conditions/d20LegacyRiders';
 import {
   compileEquipmentEffects,
   compileModifierEffects,
@@ -61,6 +64,12 @@ export interface CharacterCombatant {
    * other martials 2 at level 5). Derived from 'extra-attack*' features.
    */
   attacksPerRound: number;
+  /**
+   * Legacy-d20 iteratives (3.5e/PF1e full attack): each attack after the
+   * first rolls at a cumulative -5. Unset for 5e-family (Multiattack rolls
+   * every attack at full bonus).
+   */
+  iterativePenaltyStep?: number;
   /** Movement per turn in grid cells (sheet speed / 5; default 6). */
   speedCells: number;
   /**
@@ -278,6 +287,45 @@ export function buildCharacterCombatant(
         })
       : [];
 
+  // PF2e riders mirror the 5e set with CRB numbers (Rage +2, Sneak Attack
+  // 1d6/2d6@5/3d6@11/4d6@17), gated the same way.
+  if (systemId === 'pf2e') {
+    riderEffects.push(
+      ...collectPf2eRiderEffects({
+        activeToggles: systemRaw.activeToggles ?? [],
+        featureIds: new Set(sheet.features.map((feature) => feature.id)),
+        level: sheet.level,
+      })
+    );
+  }
+
+  // Legacy-d20 riders: PF1e Power Attack's formula-fixed trade compiles
+  // (-[1+BAB/4] attack / +2x damage); 3.5e's choose-N trade stays manual.
+  if (systemId === 'pf1e' || systemId === 'dnd-3.5e') {
+    riderEffects.push(
+      ...collectD20LegacyRiderEffects({
+        systemId,
+        activeToggles: systemRaw.activeToggles ?? [],
+        featIds: new Set(sheet.feats.map((feat) => feat.id)),
+        baseAttackBonus: sheet.baseAttackBonus,
+      })
+    );
+  }
+
+  // Legacy-d20 sheet conditions (shaken/sickened/...) fight along: the same
+  // catalog the engines and scene tokens use compiles the document's
+  // persisted conditions into attack/damage effects.
+  const legacyConditionEffects =
+    systemId === 'pf1e' || systemId === 'dnd-3.5e'
+      ? collectD20LegacyConditionEffects(
+          systemId,
+          ((document.system as { conditions?: Array<{ id: string }> }).conditions ?? []).map(
+            (condition) => condition.id
+          )
+        )
+      : [];
+  riderEffects.push(...legacyConditionEffects);
+
   const weaponDie = options.weaponDie ?? 6;
   const damageEffects: EffectInstance[] = [
     {
@@ -323,11 +371,21 @@ export function buildCharacterCombatant(
       damageEffects: [...damageEffects, ...riderEffects.filter((e) => e.target === 'damage')],
       reach: options.reach ?? 1,
       armorClass: sheet.armorClass,
-      // 5e Extra Attack (compute-register damage-assembly residual): each
-      // granted 'extra-attack*' class feature adds one attack to the Attack
-      // action; the scene Multiattack machinery executes them.
-      attacksPerRound:
-        1 + sheet.features.filter((feature) => /^extra-attack(-\d+)?$/.test(feature.id)).length,
+      // 5e Extra Attack: each granted 'extra-attack*' class feature adds one
+      // attack to the Attack action. 3.5e/PF1e instead grant iteratives from
+      // BAB (extra attack at +6/+11/+16, each at a cumulative -5 on a full
+      // attack — SRD: Base Attack Bonus / Full Attack).
+      ...(systemId === 'pf1e' || systemId === 'dnd-3.5e'
+        ? {
+            attacksPerRound:
+              1 + Math.min(3, Math.floor(Math.max(0, sheet.baseAttackBonus - 1) / 5)),
+            iterativePenaltyStep: 5,
+          }
+        : {
+            attacksPerRound:
+              1 +
+              sheet.features.filter((feature) => /^extra-attack(-\d+)?$/.test(feature.id)).length,
+          }),
       speedCells: Math.max(
         1,
         Math.floor(num((document.system as { speed?: unknown }).speed, 30) / 5)

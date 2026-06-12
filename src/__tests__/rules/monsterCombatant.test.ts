@@ -363,3 +363,71 @@ describe('monsterAttacksPerRound (SRD Multiattack)', () => {
     ).toBe(1);
   });
 });
+
+describe('encoded SRD 5.2 bestiary fights through the scene adapter', () => {
+  it('an encoded 2024 monster builds a combatant with real attack and damage numbers', async () => {
+    const { srdCr610Monsters2024 } = await import('../../data/dnd/5e-2024/monsters/srd-cr-6-10');
+    const { buildMonsterCombatant } = await import('../../rules');
+    // Any encoded monster with a structured attack must build a fighting
+    // combatant (the encoder writes attackBonus/damage from the 2024 prose).
+    const armed = srdCr610Monsters2024.filter((monster) =>
+      monster.actions.some((action) => (action.attackBonus ?? 0) > 0 && action.damage?.length)
+    );
+    expect(armed.length).toBeGreaterThan(20);
+    for (const monster of armed.slice(0, 5)) {
+      const built = buildMonsterCombatant(monster, { tokenId: 'a', position: { x: 0, y: 0 } });
+      const attackTotal = built.attackEffects.reduce(
+        (sum, effect) => sum + (typeof effect.value === 'number' ? effect.value : 0),
+        0
+      );
+      expect(attackTotal).toBeGreaterThan(0);
+      expect(built.damageEffects.length).toBeGreaterThan(0);
+      expect(built.token.hp!.max).toBeGreaterThan(0);
+    }
+  });
+});
+
+describe('encoded PF1e Bestiary fights through the scene adapter', () => {
+  it('an encoded Bestiary 1 monster builds a combatant with parsed attack numbers', async () => {
+    const { pf1eMonsters } = await import('../../data/pathfinder/1e/monsters');
+    const { buildMonsterCombatant } = await import('../../rules');
+    expect(pf1eMonsters.length).toBeGreaterThanOrEqual(331);
+    const aboleth = pf1eMonsters.find((monster) => monster.id === 'aboleth');
+    expect(aboleth).toBeDefined();
+    // PSRD Aboleth: "4 tentacles +10 (1d6+5 plus slime)", BAB +8, Fort +8.
+    expect(aboleth!.actions[0]?.attackBonus).toBe(10);
+    expect(aboleth!.baseAttackBonus).toBe(6);
+    expect(aboleth!.d20Saves?.fort).toBe(8);
+    const built = buildMonsterCombatant(aboleth!, { tokenId: 'a', position: { x: 0, y: 0 } });
+    const attackTotal = built.attackEffects.reduce(
+      (sum, effect) => sum + (typeof effect.value === 'number' ? effect.value : 0),
+      0
+    );
+    expect(attackTotal).toBe(10);
+    expect(built.damageEffects.length).toBeGreaterThan(0);
+    expect(built.token.hp!.max).toBeGreaterThan(0);
+  });
+});
+
+describe('encoded PF2e Bestiary 1 fights through the scene adapter', () => {
+  it('the Goblin Warrior builds a combatant with its printed numbers', async () => {
+    const { pf2eMonsters } = await import('../../data/pathfinder/2e/monsters');
+    const { buildMonsterCombatant, monsterAverageHitPoints } = await import('../../rules');
+    expect(pf2eMonsters.length).toBe(413);
+    const goblin = pf2eMonsters.find((monster) => monster.id === 'goblin-warrior');
+    expect(goblin).toBeDefined();
+    // Pf2eTools B1 Goblin Warrior: dogslicer +8 (1d6 slashing), AC 16, HP 6.
+    expect(goblin!.actions[0]?.attackBonus).toBe(8);
+    expect(goblin!.armorClass).toBe(16);
+    expect(monsterAverageHitPoints(goblin!)).toBe(6);
+    // PF2e XP is party-relative by design: no fixed experiencePoints.
+    expect(goblin!.experiencePoints).toBe(0);
+    const built = buildMonsterCombatant(goblin!, { tokenId: 'g', position: { x: 0, y: 0 } });
+    const attackTotal = built.attackEffects.reduce(
+      (sum, effect) => sum + (typeof effect.value === 'number' ? effect.value : 0),
+      0
+    );
+    expect(attackTotal).toBe(8);
+    expect(built.damageEffects.length).toBeGreaterThan(0);
+  });
+});

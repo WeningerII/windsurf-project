@@ -74,7 +74,12 @@ export type CreatureType =
   | 'magical-beast'
   | 'monstrous-humanoid'
   | 'outsider'
-  | 'vermin';
+  | 'vermin'
+  // PF2e creature types absent from both (aeons/proteans/psychopomps are
+  // 'monitor'; PF2e splits fungi from plants).
+  | 'monitor'
+  | 'fungus'
+  | 'astral';
 
 export type Alignment =
   | 'lawful good'

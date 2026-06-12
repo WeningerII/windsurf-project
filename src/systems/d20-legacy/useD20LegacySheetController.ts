@@ -8,6 +8,7 @@ import type { Pf1eDataModel } from '../pf1e/data-model';
 import { getD20LegacySpellSlotTable } from '../../utils/d20LegacySpellcasting';
 import { getIterativeAttackBonuses, type D20LegacyData } from './d20LegacySheetShared';
 import { useD20LegacyMutationHandlers } from './useD20LegacyMutationHandlers';
+import { availableD20LegacyToggles } from '../../rules/conditions/d20LegacyRiders';
 import { useD20LegacySheetResources } from './useD20LegacySheetResources';
 import { useD20LegacyTemplateHandlers } from './useD20LegacyTemplateHandlers';
 
@@ -210,6 +211,16 @@ export function useD20LegacySheetController({
       skills,
       skillRanks,
       classSkills: sys.classSkills,
+      conditions: sys.conditions ?? [],
+      onConditionChange: (nextConditions: Array<{ id: string; name: string }>) =>
+        mutationHandlers.update({ conditions: nextConditions } as Partial<D20LegacyData>),
+      availableToggles: availableD20LegacyToggles({
+        systemId: isPf1e ? 'pf1e' : 'dnd-3.5e',
+        featIds: new Set((sys.feats ?? []).map((feat: { id: string }) => feat.id)),
+      }),
+      activeToggles: sys.activeToggles ?? [],
+      onActiveTogglesChange: (activeToggles: string[]) =>
+        mutationHandlers.update({ activeToggles } as Partial<D20LegacyData>),
       features,
       feats,
       traits: (pf1Data?.traits ?? []) as Pf1eTrait[],

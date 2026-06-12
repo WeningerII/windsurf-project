@@ -135,6 +135,13 @@ export interface Pf2eDataModel extends SystemDataModel {
   // Conditions (PF2e has a rich condition system)
   conditions: Array<{ id: string; name: string; value?: number }>;
 
+  /**
+   * Active rider toggles (damage assembly): feature-gated, player-controlled
+   * states like 'rage', 'sneak-attack'. Compiled into resolver effects by
+   * collectPf2eRiderEffects.
+   */
+  activeToggles?: string[];
+
   personality?: { description?: string; backstory?: string };
   notes?: string;
 }

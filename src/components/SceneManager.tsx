@@ -8,6 +8,13 @@ import {
   type EncounterMonsterSelection,
 } from '../scene/encounterBuilder';
 import {
+  draftEncounter,
+  pf1eEncounterXpBudget,
+  pf2eCreatureXp,
+  pf2eEncounterBudget,
+  type EncounterDifficulty,
+} from '../scene/encounterDraft';
+import {
   appendSceneEvent,
   createSceneDocument,
   foldSceneEvents,
@@ -109,6 +116,8 @@ export function SceneManager({
   const [encounterOriginX, setEncounterOriginX] = useState('0');
   const [encounterOriginY, setEncounterOriginY] = useState('0');
   const [encounterSelections, setEncounterSelections] = useState<EncounterMonsterSelection[]>([]);
+  const [encounterZoneId, setEncounterZoneId] = useState('');
+  const draftNonceRef = useRef(0);
   const [monstersLoading, setMonstersLoading] = useState(false);
   const [monsterLoadError, setMonsterLoadError] = useState<string | null>(null);
   const [initiativeValues, setInitiativeValues] = useState<Record<string, string>>({});
@@ -291,11 +300,13 @@ export function SceneManager({
     }
   }, [selectedTokenId, state]);
 
-  // Combat selections are per-scene: switching scenes clears the chosen target
-  // and the rolling log (otherwise another scene's log lingers).
+  // Combat selections are per-scene: switching scenes clears the chosen target,
+  // the rolling log (otherwise another scene's log lingers), and the spawn
+  // zone (marker ids belong to the previous scene).
   useEffect(() => {
     setCombatTargetId('');
     setCombatLog([]);
+    setEncounterZoneId('');
   }, [selectedSceneId]);
 
   // Clear a stale combat target: when the chosen token dies or is removed, the
@@ -432,6 +443,7 @@ export function SceneManager({
           armorClass: built.combatant.armorClass,
           reach: built.combatant.reach,
           attacksPerRound: built.combatant.attacksPerRound,
+          iterativePenaltyStep: built.combatant.iterativePenaltyStep,
           speedCells: built.combatant.speedCells,
           areaSaveBonus: Math.floor(
             (((doc.system as { baseAttributes?: { dex?: number } }).baseAttributes?.dex ?? 10) -
@@ -704,9 +716,61 @@ export function SceneManager({
     setActionIssues([]);
   };
 
+  const handleDraftEncounter = (difficulty: EncounterDifficulty) => {
+    if (!selectedScene) return;
+    // Per-click nonce: re-drafting walks to the next deterministic variation
+    // instead of returning the identical composition (rebalance ergonomics).
+    draftNonceRef.current += 1;
+    const partyLevels = encounterParty.members.map((member) => member.level);
+    const result = draftEncounter({
+      monsters: encounterMonsters,
+      partyLevels,
+      difficulty,
+      seed: `${selectedScene.initialState.seed}:draft:${selectedScene.events.length}:${difficulty}:${draftNonceRef.current}`,
+      systemId: sceneSystemId,
+      // PF1e budgets come from the CRB encounter-design tables (target-CR XP
+      // award); PF2e uses its party-relative budget + creature-cost tables;
+      // 5e-family uses the SRD 5.2.1 per-character table default.
+      ...(sceneSystemId === 'pf1e'
+        ? { budget: pf1eEncounterXpBudget(partyLevels, difficulty) }
+        : {}),
+      ...(sceneSystemId === 'pf2e'
+        ? (() => {
+            const partyLevel = Math.round(
+              partyLevels.reduce((total, level) => total + level, 0) /
+                Math.max(1, partyLevels.length)
+            );
+            return {
+              budget: pf2eEncounterBudget(partyLevels, difficulty),
+              costFor: (monster: Monster) => pf2eCreatureXp(monster.challengeRating, partyLevel),
+            };
+          })()
+        : {}),
+    });
+    if (result.reason) {
+      setActionIssues([`Encounter draft: ${result.reason}`]);
+      return;
+    }
+    setEncounterSelections(result.selections);
+    setActionIssues([]);
+  };
+
   const handleRemoveEncounterSelection = (monsterId: string) => {
     setEncounterSelections((current) =>
       current.filter((selection) => selection.monsterId !== monsterId)
+    );
+  };
+
+  const handleAdjustEncounterSelection = (monsterId: string, delta: number) => {
+    setEncounterSelections((current) =>
+      current.map((selection) =>
+        selection.monsterId === monsterId
+          ? {
+              ...selection,
+              count: Math.min(MAX_MONSTERS_PER_SELECTION, Math.max(1, selection.count + delta)),
+            }
+          : selection
+      )
     );
   };
 
@@ -724,6 +788,13 @@ export function SceneManager({
         x: Math.max(0, positiveIntegerOrDefault(encounterOriginX, 0)),
         y: Math.max(0, positiveIntegerOrDefault(encounterOriginY, 0)),
       },
+      // Map-aware spawn zone: a chosen terrain marker constrains placement.
+      zone: (() => {
+        const marker = encounterZoneId ? state?.markers[encounterZoneId] : undefined;
+        return marker
+          ? { position: marker.position, width: marker.width, height: marker.height }
+          : undefined;
+      })(),
       seed: `${selectedScene.initialState.seed}:encounter:${selectedScene.events.length}`,
       createdAt: new Date(),
       eventIdFactory: generateUUID,
@@ -1049,6 +1120,24 @@ export function SceneManager({
                     onQueueMonster={handleQueueEncounterMonster}
                     onAddEncounter={handleAddEncounter}
                     onRemoveSelection={handleRemoveEncounterSelection}
+                    onAdjustSelection={handleAdjustEncounterSelection}
+                    zoneOptions={Object.values(state.markers).map((marker) => ({
+                      id: marker.id,
+                      label: marker.label,
+                    }))}
+                    zoneId={encounterZoneId}
+                    onZoneChange={setEncounterZoneId}
+                    // Drafting is offered only where a cited budget table
+                    // applies: the SRD 5.2.1 per-character table (5e family)
+                    // or the PF1e CRB encounter-design tables.
+                    onDraftEncounter={
+                      sceneSystemId === 'dnd-5e-2014' ||
+                      sceneSystemId === 'dnd-5e-2024' ||
+                      sceneSystemId === 'pf1e' ||
+                      sceneSystemId === 'pf2e'
+                        ? handleDraftEncounter
+                        : undefined
+                    }
                   />
 
                   <MarkerPanel
@@ -1104,5 +1193,11 @@ function positiveIntegerOrDefault(value: string, fallback: number): number {
 }
 
 function isMonsterSystemId(systemId: string): systemId is GameSystemId {
-  return systemId === 'dnd-5e-2014' || systemId === 'dnd-5e-2024' || systemId === 'dnd-3.5e';
+  return (
+    systemId === 'dnd-5e-2014' ||
+    systemId === 'dnd-5e-2024' ||
+    systemId === 'dnd-3.5e' ||
+    systemId === 'pf1e' ||
+    systemId === 'pf2e'
+  );
 }

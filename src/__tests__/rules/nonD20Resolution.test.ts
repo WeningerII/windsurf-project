@@ -352,3 +352,103 @@ describe('M&M Toughness shortfall → condition track', () => {
     expect(a).toEqual(b);
   });
 });
+
+describe('M&M attack advantages reach the scene adapter', () => {
+  it('Close/Ranged Attack ranks add to the matching attack check', async () => {
+    const { buildMam3eCombatant } = await import('../../rules');
+    const { createDefaultMam3eData } = await import('../../systems/mam3e/data-model');
+    const build = (
+      range: 'close' | 'ranged',
+      advantages: Array<{ id: string; name: string; rank?: number }>
+    ) =>
+      buildMam3eCombatant(
+        {
+          id: 'hero',
+          name: 'Hero',
+          systemId: 'mam3e',
+          system: {
+            ...createDefaultMam3eData(),
+            powers: [{ id: 'punch', name: 'Punch', type: 'attack', rank: 8, range }],
+            advantages,
+          },
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        } as never,
+        { tokenId: 'h', position: { x: 0, y: 0 } }
+      );
+    const attackTotal = (result: ReturnType<typeof build>) =>
+      result.supported
+        ? result.combatant.attackEffects.reduce(
+            (sum, effect) => sum + (typeof effect.value === 'number' ? effect.value : 0),
+            0
+          )
+        : NaN;
+
+    const base = build('close', []);
+    const closeRanked = build('close', [{ id: 'close-attack', name: 'Close Attack', rank: 3 }]);
+    // The matching advantage adds its rank...
+    expect(attackTotal(closeRanked)).toBe(attackTotal(base) + 3);
+    // ...the non-matching one adds nothing...
+    const mismatched = build('close', [{ id: 'ranged-attack', name: 'Ranged Attack', rank: 3 }]);
+    expect(attackTotal(mismatched)).toBe(attackTotal(base));
+    // ...and a rankless advantage counts as rank 1.
+    const rankless = build('ranged', [{ id: 'ranged-attack', name: 'Ranged Attack' }]);
+    const rangedBase = build('ranged', []);
+    expect(attackTotal(rankless)).toBe(attackTotal(rangedBase) + 1);
+  });
+});
+
+describe('Daggerheart weapon features and derived defenses reach the adapter', () => {
+  it('Reliable (+1 to attack rolls) compiles; evasion/thresholds use derived math', async () => {
+    const { buildDaggerheartCombatant } = await import('../../rules');
+    const { createDefaultDaggerheartData } = await import('../../systems/daggerheart/data-model');
+    const { getDaggerheartDerivedStats } = await import('../../utils/daggerheartDerived');
+    const weapon = {
+      id: 'w-reliable',
+      name: 'Broadsword',
+      system: 'daggerheart',
+      source: 'SRD',
+      version: '1.0',
+      lastUpdated: '',
+      sourceBook: { name: 'SRD', url: '' },
+      category: 'primary',
+      tier: 1,
+      trait: 'agility',
+      range: 'Melee',
+      damage: 'd8',
+      damageType: 'physical',
+      burden: 1,
+      feature: 'Reliable: +1 to attack rolls',
+    } as never;
+    const system = {
+      ...createDefaultDaggerheartData(),
+      level: 1,
+      weapons: { primaryId: 'w-reliable', secondaryId: '', inventoryIds: [] },
+    };
+    const built = buildDaggerheartCombatant(
+      {
+        id: 'dh',
+        name: 'DH',
+        systemId: 'daggerheart',
+        system,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      new Map([['w-reliable', weapon]]),
+      { tokenId: 'd', position: { x: 0, y: 0 } }
+    );
+    expect(built.supported).toBe(true);
+    if (!built.supported) return;
+    expect(
+      built.combatant.attackEffects.some(
+        (effect) => effect.value === 1 && /reliable/i.test(effect.label)
+      )
+    ).toBe(true);
+    const derived = getDaggerheartDerivedStats(system);
+    expect(built.combatant.evasion).toBe(derived.evasion);
+    expect(built.combatant.thresholds).toEqual({
+      major: derived.majorThreshold,
+      severe: derived.severeThreshold,
+    });
+  });
+});

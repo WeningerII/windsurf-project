@@ -215,6 +215,28 @@ async function fetchSrd52SpellNames(url: string): Promise<string[]> {
   return names;
 }
 
+/**
+ * Monster names from the SRD 5.2 markdown bestiary. The 5e-database 2024
+ * monsters JSON holds only 3 entries (partial; flagged in docs/srd-sources.md),
+ * so the downfallx markdown is the honest denominator: every `### Name` in
+ * monsters-A-Z.md is one stat block (the `##` level groups variants), and every
+ * `## Name` in animals.md is one animal (its `###`s are stat-block sections).
+ * 235 + 95 = 330 stat blocks, consistent with the documented "~325".
+ */
+async function fetchSrd52MonsterNames(monstersUrl: string, animalsUrl: string): Promise<string[]> {
+  const [monsters, animals] = await Promise.all([fetchText(monstersUrl), fetchText(animalsUrl)]);
+  const names: string[] = [];
+  for (const line of monsters.split('\n')) {
+    const m = line.match(/^###\s+(.+?)\s*$/);
+    if (m) names.push(m[1]);
+  }
+  for (const line of animals.split('\n')) {
+    const m = line.match(/^##\s+(.+?)\s*$/);
+    if (m) names.push(m[1]);
+  }
+  return names;
+}
+
 async function loaderNames(load: (s: GameSystemId) => Promise<unknown[]>, system: GameSystemId) {
   const items = (await load(system)) as Array<{ name?: unknown }>;
   return items.filter((i) => typeof i.name === 'string').map((i) => i.name as string);
@@ -285,8 +307,8 @@ for (const [category, srd, loader] of cats5e2014) {
 // genuinely differs from 5.1 (339 vs 319 spells), so spells use the authoritative
 // SRD 5.2.1 markdown; other categories use 5e-database's 2024 set. ---
 const en2024 = `${RAW5E}/2024/en`;
-const SRD52_SPELLS_MD =
-  'https://raw.githubusercontent.com/downfallx/dnd-5e-srd-markdown/master/spells.md';
+const SRD52_MD = 'https://raw.githubusercontent.com/downfallx/dnd-5e-srd-markdown/master';
+const SRD52_SPELLS_MD = `${SRD52_MD}/spells.md`;
 const cats5e2024: Array<[string, () => Promise<string[]>, () => Promise<string[]>]> = [
   [
     'spells',
@@ -315,7 +337,8 @@ const cats5e2024: Array<[string, () => Promise<string[]>, () => Promise<string[]
   ],
   [
     'monsters',
-    () => fetchNames(`${en2024}/5e-SRD-Monsters.json`),
+    // NOT the 5e-database 2024 JSON: that file holds only 3 monsters.
+    () => fetchSrd52MonsterNames(`${SRD52_MD}/monsters-A-Z.md`, `${SRD52_MD}/animals.md`),
     () => loaderNames(loadMonstersForSystem, 'dnd-5e-2024'),
   ],
   [
@@ -329,7 +352,7 @@ for (const [category, srd, loader] of cats5e2024) {
     systemId: 'dnd-5e-2024',
     systemLabel: 'D&D 5e (2024)',
     category,
-    srdSource: 'SRD 5.2 (5e-bits/5e-database; spells per downfallx SRD 5.2.1 markdown)',
+    srdSource: 'SRD 5.2 (5e-bits/5e-database; spells + monsters per downfallx SRD 5.2.1 markdown)',
     srd,
     loader,
   });
@@ -357,6 +380,42 @@ TARGETS.push({
   srdSource: 'Core Rulebook (wolfgangcodes/pathfinder-spellbook spells.csv, source="PFRPG Core")',
   srd: () => fetchCsvNames(PF1E_SPELLS_CSV, 'PFRPG Core'),
   loader: () => loaderNames(loadSpellsForSystem, 'pf1e'),
+});
+
+// PF1e Bestiary 1: the denominator is the pinned upstream manifest written by
+// encode-pf1e-monsters.mjs (devonjones/PSRD-Data bestiary/creature — GitHub's
+// tree HTML truncates and its API is rate-limited, so the verbatim file list
+// is committed alongside the encoder; regenerating the data refreshes it).
+TARGETS.push({
+  systemId: 'pf1e',
+  systemLabel: 'Pathfinder 1e',
+  category: 'monsters',
+  srdSource: 'Bestiary 1 (devonjones/PSRD-Data, pinned manifest)',
+  srd: async () => {
+    const manifestPath = path.resolve(
+      path.dirname(fileURLToPath(import.meta.url)),
+      '../../scripts/data/pf1e-bestiary-manifest.json'
+    );
+    const manifest = JSON.parse(await fs.readFile(manifestPath, 'utf8')) as {
+      entries: Array<{ name: string }>;
+    };
+    return manifest.entries.map((entry) => entry.name);
+  },
+  loader: () => loaderNames(loadMonstersForSystem, 'pf1e'),
+});
+
+// PF2e Bestiary 1: same Pf2eTools source family as the spell denominator.
+TARGETS.push({
+  systemId: 'pf2e',
+  systemLabel: 'Pathfinder 2e',
+  category: 'monsters',
+  srdSource: 'Bestiary 1 (Pf2eToolsOrg/Pf2eTools creatures-b1.json)',
+  srd: () =>
+    fetchJsonPropNames(
+      'https://raw.githubusercontent.com/Pf2eToolsOrg/Pf2eTools/master/data/bestiary/creatures-b1.json',
+      'creature'
+    ),
+  loader: () => loaderNames(loadMonstersForSystem, 'pf2e'),
 });
 
 // --- D&D 3.5e (SRD 3.5 core — olimot/srd-v3.5-md, clean core-only Markdown) ---

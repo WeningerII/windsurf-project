@@ -21,6 +21,7 @@ import type { SceneCoordinate, SceneToken } from '../../types/core/scene';
 import type { DaggerheartWeapon } from '../../types/daggerheart';
 import type { DaggerheartDataModel } from '../../systems/daggerheart/data-model';
 import {
+  getDaggerheartDerivedStats,
   getDaggerheartEffectiveAttribute,
   getDaggerheartProficiency,
 } from '../../utils/daggerheartDerived';
@@ -73,6 +74,7 @@ export function buildDaggerheartCombatant(
   }
   const die = Number(damageMatch[1]);
   const flat = damageMatch[2] ? Number(damageMatch[2]) : 0;
+  const derived = getDaggerheartDerivedStats(system);
   const proficiency = getDaggerheartProficiency(system.level ?? 1);
   const traitValue = getDaggerheartEffectiveAttribute(
     system,
@@ -91,6 +93,21 @@ export function buildDaggerheartCombatant(
       label: `${weapon.name} attack (${weapon.trait})`,
     },
   ];
+  // Numeric weapon features compile (SRD: Reliable "+1 to attack rolls");
+  // prose-only features stay prose - never guessed into numbers.
+  const attackFeature = /([+-]\d+)\s*to attack rolls/i.exec(weapon.feature ?? '');
+  if (attackFeature) {
+    attackEffects.push({
+      id: makeEffectId('daggerheart', 'attack', doc.id, weapon.id, 'feature'),
+      systemId: 'daggerheart',
+      target: 'attack',
+      operation: 'add',
+      value: Number(attackFeature[1]),
+      stackPolicy: 'sum',
+      source: { kind: 'item', id: weapon.id, label: weapon.name },
+      label: weapon.feature ?? 'weapon feature',
+    });
+  }
   const damageEffects: EffectInstance[] = [];
   for (let index = 0; index < proficiency; index += 1) {
     damageEffects.push({
@@ -136,10 +153,12 @@ export function buildDaggerheartCombatant(
       },
       attackEffects,
       damageEffects,
-      evasion: system.evasion ?? 10,
+      // EFFECTIVE defenses: armor bases, passive item/domain bonuses, and
+      // unarmored overrides included (same math the sheet displays).
+      evasion: derived.evasion,
       thresholds: {
-        major: system.majorThreshold ?? 7,
-        severe: system.severeThreshold ?? 12,
+        major: derived.majorThreshold,
+        severe: derived.severeThreshold,
       },
       reach: RANGE_CELLS[weapon.range] ?? 1,
       speedCells: 6,

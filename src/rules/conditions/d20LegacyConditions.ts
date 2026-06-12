@@ -121,13 +121,40 @@ export function hasD20LegacyConditionEffects(conditionId: string): boolean {
   return conditionId in D20_LEGACY_CONDITION_EFFECTS;
 }
 
+/** Display names for the sheet condition picker (catalog-backed only). */
+export const D20_LEGACY_CONDITION_NAMES = Object.keys(D20_LEGACY_CONDITION_EFFECTS).map(
+  (id) => id.charAt(0).toUpperCase() + id.slice(1)
+);
+
+/**
+ * Total flat penalty active conditions impose on saves, skill and ability
+ * checks. Shaken/frightened/panicked are escalating states of the SAME fear
+ * track (frightened subsumes shaken), so only one -2 applies from the fear
+ * family; sickened is a separate effect and stacks with fear.
+ */
+export function d20LegacyCheckPenalty(conditionIds: readonly string[]): number {
+  const ids = new Set(conditionIds);
+  const fear = ids.has('shaken') || ids.has('frightened') || ids.has('panicked') ? 2 : 0;
+  const sickened = ids.has('sickened') ? 2 : 0;
+  return fear + sickened;
+}
+
 /** Compile active legacy-d20 conditions into effect instances. */
 export function collectD20LegacyConditionEffects(
   systemId: D20LegacySystemId,
   conditionIds: readonly string[]
 ): EffectInstance[] {
   const effects: EffectInstance[] = [];
-  for (const conditionId of conditionIds) {
+  // Fear is one escalating track: panicked subsumes frightened subsumes
+  // shaken. Only the worst state contributes, never a stacked -4/-6.
+  const ids = new Set(conditionIds);
+  if (ids.has('panicked')) {
+    ids.delete('frightened');
+    ids.delete('shaken');
+  } else if (ids.has('frightened')) {
+    ids.delete('shaken');
+  }
+  for (const conditionId of ids) {
     const templates = D20_LEGACY_CONDITION_EFFECTS[conditionId];
     if (!templates) continue;
     for (const [index, template] of templates.entries()) {

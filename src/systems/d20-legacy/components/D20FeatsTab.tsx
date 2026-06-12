@@ -1,7 +1,11 @@
 import React from 'react';
 import { Plus, X } from 'lucide-react';
 import { Badge } from '../../../components/ui/Badge';
+import { ConditionPicker } from '../../../components/ConditionPicker';
+import { CombatTogglesSection } from '../../../components/CombatTogglesSection';
+import { D20_LEGACY_TOGGLE_LABELS } from '../../../rules/conditions/d20LegacyRiders';
 import { FeaturesSection } from '../../../components/FeaturesSection';
+import { D20_LEGACY_CONDITION_NAMES } from '../../../rules/conditions/d20LegacyConditions';
 import type { Pf1eTrait } from '../../pf1e/data-model';
 import type { Feature } from '../../../types/core/character';
 
@@ -21,6 +25,11 @@ interface Props {
   traitsLoaded: boolean;
   selectedTraitId: string;
   canUpdate: boolean;
+  conditions: Array<{ id: string; name: string }>;
+  onConditionChange?: (conditions: Array<{ id: string; name: string }>) => void;
+  availableToggles: string[];
+  activeToggles: string[];
+  onActiveTogglesChange?: (activeToggles: string[]) => void;
   onRemoveFeat: (featId: string) => void;
   onAddFeat: () => void;
   onSelectedTraitIdChange: (traitId: string) => void;
@@ -38,6 +47,11 @@ export const D20FeatsTab: React.FC<Props> = ({
   traitsLoaded,
   selectedTraitId,
   canUpdate,
+  conditions,
+  onConditionChange,
+  availableToggles,
+  activeToggles,
+  onActiveTogglesChange,
   onRemoveFeat,
   onAddFeat,
   onSelectedTraitIdChange,
@@ -47,6 +61,17 @@ export const D20FeatsTab: React.FC<Props> = ({
 }) => (
   <div className="space-y-4">
     <FeaturesSection features={features} />
+    <CombatTogglesSection
+      availableToggles={availableToggles}
+      activeToggles={activeToggles}
+      labels={D20_LEGACY_TOGGLE_LABELS}
+      onChange={canUpdate ? onActiveTogglesChange : undefined}
+    />
+    <ConditionPicker
+      conditions={conditions}
+      availableConditions={D20_LEGACY_CONDITION_NAMES}
+      onChange={canUpdate ? onConditionChange : undefined}
+    />
     <section className="bg-card p-4 rounded-lg border">
       <h3 className="text-lg font-semibold mb-3">Feats</h3>
       <div className="space-y-2">

@@ -13,6 +13,12 @@ import { allGiants } from './giants';
 import { allMonstrosities } from './monstrosities';
 import { allOozes } from './oozes';
 import { allPlants } from './plants';
+// GENERATED SRD 5.2.1 coverage files (encode-2024-monsters.mjs); hand-written
+// entries above always win on name match via the encoder's baseline.
+import { srdCr01Monsters2024 } from './srd-cr-0-1';
+import { srdCr25Monsters2024 } from './srd-cr-2-5';
+import { srdCr610Monsters2024 } from './srd-cr-6-10';
+import { srdCr11PlusMonsters2024 } from './srd-cr-11-plus';
 
 // All D&D 5e-2024 monsters
 export const dnd5e2024Monsters: Monster[] = [
@@ -30,6 +36,10 @@ export const dnd5e2024Monsters: Monster[] = [
   ...allMonstrosities,
   ...allOozes,
   ...allPlants,
+  ...srdCr01Monsters2024,
+  ...srdCr25Monsters2024,
+  ...srdCr610Monsters2024,
+  ...srdCr11PlusMonsters2024,
 ];
 
 // By type

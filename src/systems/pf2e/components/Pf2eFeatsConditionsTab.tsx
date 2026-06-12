@@ -2,6 +2,8 @@ import React from 'react';
 import { X } from 'lucide-react';
 import { Badge } from '../../../components/ui/Badge';
 import { ConditionPicker } from '../../../components/ConditionPicker';
+import { CombatTogglesSection } from '../../../components/CombatTogglesSection';
+import { availablePf2eToggles, PF2E_TOGGLE_LABELS } from '../../../rules/conditions/pf2eRiders';
 import type { CharacterDocument } from '../../../types/core/document';
 import type { Pf2eDataModel } from '../data-model';
 
@@ -63,6 +65,7 @@ interface Props {
   canUpdate: boolean;
   onConditionsChange?: (conditions: Pf2eDataModel['conditions']) => void;
   onRemoveFeat?: (featId: string) => void;
+  onActiveTogglesChange?: (activeToggles: string[]) => void;
 }
 
 export const Pf2eFeatsConditionsTab: React.FC<Props> = ({
@@ -70,11 +73,21 @@ export const Pf2eFeatsConditionsTab: React.FC<Props> = ({
   canUpdate,
   onConditionsChange,
   onRemoveFeat,
+  onActiveTogglesChange,
 }) => {
   const data = document.system;
 
   return (
     <>
+      <CombatTogglesSection
+        availableToggles={availablePf2eToggles({
+          featureIds: new Set(data.features.map((feature) => feature.id)),
+        })}
+        activeToggles={data.activeToggles ?? []}
+        labels={PF2E_TOGGLE_LABELS}
+        onChange={canUpdate ? onActiveTogglesChange : undefined}
+      />
+
       <ConditionPicker
         conditions={data.conditions}
         availableConditions={PF2E_CONDITIONS}

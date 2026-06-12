@@ -465,3 +465,173 @@ describe('collectDnd5eRiderEffects: Sharpshooter and Divine Smite', () => {
     expect(effects).toHaveLength(0);
   });
 });
+
+describe('legacy-d20 iterative attacks (3.5e/PF1e)', () => {
+  it('BAB drives attacks per full attack with a -5 iterative step', async () => {
+    const { buildCharacterCombatant } = await import('../../rules');
+    const build = (baseAttackBonus: number) =>
+      buildCharacterCombatant(
+        {
+          id: `pf1e-${baseAttackBonus}`,
+          name: 'Fighter',
+          systemId: 'pf1e',
+          system: {
+            level: Math.max(1, baseAttackBonus),
+            baseAttackBonus,
+            baseAttributes: { str: 16, dex: 12 },
+            hitPoints: { current: 30, max: 30 },
+            armorClass: { total: 18 },
+          },
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        { tokenId: 't', position: { x: 0, y: 0 } }
+      );
+    const cases: Array<[number, number]> = [
+      [1, 1],
+      [5, 1],
+      [6, 2],
+      [11, 3],
+      [16, 4],
+      [20, 4],
+    ];
+    for (const [bab, expected] of cases) {
+      const built = build(bab);
+      expect(built.supported).toBe(true);
+      if (!built.supported) continue;
+      expect(built.combatant.attacksPerRound).toBe(expected);
+      expect(built.combatant.iterativePenaltyStep).toBe(5);
+    }
+  });
+
+  it('5e characters keep the full-bonus Multiattack model (no iterative step)', async () => {
+    const { buildCharacterCombatant } = await import('../../rules');
+    const { createDefaultDnd5eData } = await import('../../systems/dnd5e/data-model');
+    const built = buildCharacterCombatant(
+      {
+        id: 'fiver',
+        name: 'Fiver',
+        systemId: 'dnd-5e-2014',
+        system: createDefaultDnd5eData(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      { tokenId: 'f', position: { x: 0, y: 0 } }
+    );
+    expect(built.supported).toBe(true);
+    if (!built.supported) return;
+    expect(built.combatant.iterativePenaltyStep).toBeUndefined();
+  });
+});
+
+describe('PF2e rider toggles in scene combat', () => {
+  it('a raging level-11 rogue/barbarian folds CRB riders into the damage chain', async () => {
+    const { buildCharacterCombatant } = await import('../../rules');
+    const { createDefaultPf2eData } = await import('../../systems/pf2e/data-model');
+    const built = buildCharacterCombatant(
+      {
+        id: 'pf2e-rager',
+        name: 'Rager',
+        systemId: 'pf2e',
+        system: {
+          ...createDefaultPf2eData(),
+          level: 11,
+          activeToggles: ['rage', 'sneak-attack'],
+          features: [
+            { id: 'rage', name: 'Rage', source: 'Barbarian 1', description: 'RAGE.' },
+            { id: 'sneak-attack', name: 'Sneak Attack', source: 'Rogue 1', description: 'SA.' },
+          ],
+        },
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      { tokenId: 'r', position: { x: 0, y: 0 } }
+    );
+    expect(built.supported).toBe(true);
+    if (!built.supported) return;
+    const riders = built.combatant.damageEffects.filter((effect) =>
+      /rage|sneak/i.test(effect.label)
+    );
+    // Rage +2 flat, Sneak Attack 3d6 at level 11.
+    expect(riders.filter((effect) => effect.operation === 'add').map((e) => e.value)).toEqual([2]);
+    expect(riders.filter((effect) => effect.operation === 'add-die')).toHaveLength(3);
+  });
+
+  it('PF2e sneak attack dice scale at 5/11/17 and gate on the feature', async () => {
+    const { pf2eSneakAttackDice, collectPf2eRiderEffects } =
+      await import('../../rules/conditions/pf2eRiders');
+    expect([1, 4, 5, 11, 17, 20].map(pf2eSneakAttackDice)).toEqual([1, 1, 2, 3, 4, 4]);
+    expect(
+      collectPf2eRiderEffects({
+        activeToggles: ['rage', 'sneak-attack'],
+        featureIds: new Set<string>(),
+        level: 20,
+      })
+    ).toHaveLength(0);
+  });
+});
+
+describe('PF1e Power Attack rider', () => {
+  it('compiles the formula-fixed trade and scales with BAB', async () => {
+    const { pf1ePowerAttackTrade, collectD20LegacyRiderEffects, availableD20LegacyToggles } =
+      await import('../../rules/conditions/d20LegacyRiders');
+    expect(pf1ePowerAttackTrade(0)).toEqual({ penalty: 1, bonus: 2 });
+    expect(pf1ePowerAttackTrade(4)).toEqual({ penalty: 2, bonus: 4 });
+    expect(pf1ePowerAttackTrade(20)).toEqual({ penalty: 6, bonus: 12 });
+    const effects = collectD20LegacyRiderEffects({
+      systemId: 'pf1e',
+      activeToggles: ['power-attack'],
+      featIds: new Set(['power-attack']),
+      baseAttackBonus: 8,
+    });
+    expect(effects.find((e) => e.target === 'attack')?.value).toBe(3);
+    expect(effects.find((e) => e.target === 'damage')?.value).toBe(6);
+    // 3.5e's choose-N trade is a per-roll player choice: never compiled.
+    expect(
+      collectD20LegacyRiderEffects({
+        systemId: 'dnd-3.5e',
+        activeToggles: ['power-attack'],
+        featIds: new Set(['power-attack']),
+        baseAttackBonus: 8,
+      })
+    ).toHaveLength(0);
+    expect(
+      availableD20LegacyToggles({ systemId: 'dnd-3.5e', featIds: new Set(['power-attack']) })
+    ).toHaveLength(0);
+  });
+
+  it('folds into the PF1e combatant when toggled and feat-gated', async () => {
+    const { buildCharacterCombatant } = await import('../../rules');
+    const built = buildCharacterCombatant(
+      {
+        id: 'pf1e-pa',
+        name: 'Smasher',
+        systemId: 'pf1e',
+        system: {
+          level: 8,
+          baseAttackBonus: 8,
+          baseAttributes: { str: 18, dex: 10 },
+          hitPoints: { current: 60, max: 60 },
+          armorClass: { total: 19 },
+          activeToggles: ['power-attack'],
+          feats: [{ id: 'power-attack', name: 'Power Attack', description: '' }],
+        },
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      { tokenId: 'p', position: { x: 0, y: 0 } }
+    );
+    expect(built.supported).toBe(true);
+    if (!built.supported) return;
+    expect(
+      built.combatant.attackEffects.some(
+        (effect) => effect.operation === 'subtract' && effect.value === 3
+      )
+    ).toBe(true);
+    expect(
+      built.combatant.damageEffects.some(
+        (effect) => effect.value === 6 && /power attack/i.test(effect.label)
+      )
+    ).toBe(true);
+  });
+});

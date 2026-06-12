@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-12T18:33:20.499Z",
+  "generatedAt": "2026-06-12T20:51:16.693Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -25,14 +25,16 @@
     "pf1e": {
       "allowedSources": [
         "Core Rulebook",
-        "CRB"
+        "CRB",
+        "Bestiary"
       ],
       "allowMissingSourceFor": []
     },
     "pf2e": {
       "allowedSources": [
         "Core Rulebook",
-        "CRB"
+        "CRB",
+        "B1"
       ],
       "allowMissingSourceFor": []
     },
@@ -79,7 +81,7 @@
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 95,
+      "monsters": 339,
       "equipment": 502,
       "feats": 19,
       "advantages": 0,
@@ -109,7 +111,7 @@
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 0,
+      "monsters": 331,
       "equipment": 70,
       "feats": 86,
       "advantages": 0,
@@ -124,7 +126,7 @@
       "featureOptions": 0,
       "archetypes": 5,
       "complications": 0,
-      "monsters": 0,
+      "monsters": 413,
       "equipment": 188,
       "feats": 93,
       "advantages": 0,
@@ -186,7 +188,7 @@
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 95,
+      "monsters": 339,
       "equipment": 502,
       "feats": 19,
       "advantages": 0,
@@ -216,7 +218,7 @@
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 0,
+      "monsters": 331,
       "equipment": 70,
       "feats": 86,
       "advantages": 0,
@@ -231,7 +233,7 @@
       "featureOptions": 0,
       "archetypes": 5,
       "complications": 0,
-      "monsters": 0,
+      "monsters": 413,
       "equipment": 188,
       "feats": 93,
       "advantages": 0,
@@ -1095,13 +1097,13 @@
       "category": "monsters",
       "categoryLabel": "Monsters",
       "metrics": {
-        "rawCount": 95,
-        "uniqueCount": 95,
+        "rawCount": 339,
+        "uniqueCount": 339,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 5.2": 95
+          "SRD 5.2": 339
         }
       }
     },
@@ -1300,6 +1302,22 @@
     {
       "systemId": "pf1e",
       "systemLabel": "Pathfinder 1e",
+      "category": "monsters",
+      "categoryLabel": "Monsters",
+      "metrics": {
+        "rawCount": 331,
+        "uniqueCount": 331,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "Bestiary": 331
+        }
+      }
+    },
+    {
+      "systemId": "pf1e",
+      "systemLabel": "Pathfinder 1e",
       "category": "equipment",
       "categoryLabel": "Equipment",
       "metrics": {
@@ -1406,6 +1424,22 @@
         "nonCompliantCount": 0,
         "sourceCounts": {
           "Core Rulebook": 5
+        }
+      }
+    },
+    {
+      "systemId": "pf2e",
+      "systemLabel": "Pathfinder 2e",
+      "category": "monsters",
+      "categoryLabel": "Monsters",
+      "metrics": {
+        "rawCount": 413,
+        "uniqueCount": 413,
+        "duplicateCount": 0,
+        "missingSourceCount": 0,
+        "nonCompliantCount": 0,
+        "sourceCounts": {
+          "B1": 413
         }
       }
     },

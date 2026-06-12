@@ -192,6 +192,9 @@ export function usePf2eSheetController({ document, onUpdate }: UsePf2eSheetContr
         ? (conditions: Pf2eDataModel['conditions']) => mutationHandlers.update({ conditions })
         : undefined,
       onRemoveFeat: mutationHandlers.canUpdate ? mutationHandlers.removeFeat : undefined,
+      onActiveTogglesChange: mutationHandlers.canUpdate
+        ? (activeToggles: string[]) => mutationHandlers.update({ activeToggles })
+        : undefined,
     },
     featBrowserProps: {
       systemId: document.systemId as GameSystemId,

@@ -25,6 +25,7 @@
 
 import type { SceneActionIntent } from '../../types/core/scene';
 import { resolveAttack, type AttackResolution } from '../resolver/attackResolution';
+import { makeEffectId, type EffectInstance } from '../ir/types';
 import { participantRng } from '../resolver/participantResolution';
 import { attackToDamageIntent } from '../resolver/sceneCombat';
 import {
@@ -193,8 +194,27 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
     }
 
     const target = targetsById.get(currentTargetId)!;
+    // Legacy-d20 iteratives: the 2nd/3rd/4th attack of a full attack rolls at
+    // a cumulative -step (3.5e/PF1e: -5/-10/-15). Zero/undefined keeps the 5e
+    // Multiattack model (full bonus on every attack).
+    const iterativePenalty = (actor.iterativePenaltyStep ?? 0) * attackIndex;
+    const attackEffects: readonly EffectInstance[] = iterativePenalty
+      ? [
+          ...actor.attackEffects,
+          {
+            id: makeEffectId('tactical', 'iterative', actor.tokenId, attackIndex),
+            systemId: actor.attackEffects[0]?.systemId ?? 'pf1e',
+            target: 'attack',
+            operation: 'subtract',
+            value: iterativePenalty,
+            stackPolicy: 'sum',
+            source: { kind: 'system', label: 'iterative attack' },
+            label: `Iterative attack ${attackIndex + 1} (-${iterativePenalty})`,
+          },
+        ]
+      : actor.attackEffects;
     const resolution = resolveAttack({
-      attackEffects: actor.attackEffects,
+      attackEffects,
       damageEffects: actor.damageEffects,
       targetValue: target.armorClass,
       critOn: actor.critOn,

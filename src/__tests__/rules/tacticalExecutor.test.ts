@@ -362,3 +362,54 @@ describe('movement execution (grid-combat phase 3)', () => {
     expect(totalDamageIntents).toBeGreaterThan(0);
   });
 });
+
+describe('iterative attack penalties in the turn executor', () => {
+  it('the second attack of a full attack rolls at -5', async () => {
+    const { executeTacticalTurn } = await import('../../rules/tactical/tacticalExecutor');
+    const { makeEffectId } = await import('../../rules');
+    const atk = (value: number) => ({
+      id: makeEffectId('pf1e', 'attack', 'test', value),
+      systemId: 'pf1e' as const,
+      target: 'attack',
+      operation: 'add' as const,
+      value,
+      stackPolicy: 'sum' as const,
+      source: { kind: 'system' as const, label: 'test' },
+      label: 'test',
+    });
+    const run = (iterativePenaltyStep?: number) =>
+      executeTacticalTurn({
+        actor: {
+          tokenId: 'a',
+          faction: 'red',
+          position: { x: 0, y: 0 },
+          attackEffects: [atk(10)],
+          damageEffects: [],
+          reach: 1,
+          attacksPerRound: 2,
+          ...(iterativePenaltyStep ? { iterativePenaltyStep } : {}),
+        },
+        targets: [
+          {
+            tokenId: 'b',
+            faction: 'blue',
+            position: { x: 1, y: 0 },
+            armorClass: 10,
+            hp: { current: 100, max: 100 },
+          },
+        ],
+        seed: 'iterative-seed',
+      });
+    const withStep = run(5);
+    const withoutStep = run();
+    expect(withStep.attacks).toHaveLength(2);
+    // Same seed/stream: identical natural rolls; the second attack's total
+    // bonus differs by exactly the -5 iterative penalty.
+    expect(withStep.attacks[0].resolution.attackBonus).toBe(
+      withoutStep.attacks[0].resolution.attackBonus
+    );
+    expect(withStep.attacks[1].resolution.attackBonus).toBe(
+      withoutStep.attacks[1].resolution.attackBonus - 5
+    );
+  });
+});

@@ -5,6 +5,7 @@ import { abilityMod } from '../../utils/math';
 import { CMB_SIZE_MODS, baseSave, classBAB } from '../shared/d20-helpers';
 import { computeD20LegacyAC, D20_SIZE_MOD } from '../../utils/armorClass';
 import { resolveCharacterEffects } from '../../rules';
+import { d20LegacyCheckPenalty } from '../../rules/conditions/d20LegacyConditions';
 import { mergeVancianSpellSlots } from '../../utils/classSpellcasting';
 import { pf1eClasses } from '../../data/pathfinder/1e/classes';
 import { pf1ePrestigeClasses } from '../../data/pathfinder/1e/prestige-classes';
@@ -210,6 +211,10 @@ export class Pf1eEngine implements SystemEngine<Pf1eDataModel> {
         }).bonus('attack');
       flavor = 'Attack Roll';
     }
+
+    // Active fear/sickened conditions impose their flat SRD penalty on every
+    // check and save (worst fear state only; sickened stacks with fear).
+    modifier -= d20LegacyCheckPenalty((d.conditions ?? []).map((condition) => condition.id));
 
     const d20 = Math.floor(Math.random() * 20) + 1;
     return {

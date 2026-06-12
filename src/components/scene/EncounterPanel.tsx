@@ -1,5 +1,7 @@
-import { Plus, Skull, Trash2 } from 'lucide-react';
+import { Minus, Plus, Skull, Trash2, Wand2 } from 'lucide-react';
+import { useState } from 'react';
 import type { EncounterPartySummary, EncounterPlanSummary } from '../../scene/encounterBuilder';
+import type { EncounterDifficulty } from '../../scene/encounterDraft';
 import type { Monster } from '../../types/creatures/monsters';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
@@ -27,6 +29,14 @@ interface EncounterPanelProps {
   onQueueMonster: () => void;
   onAddEncounter: () => void;
   onRemoveSelection: (monsterId: string) => void;
+  /** Manual correction: bump a queued monster's count by +/-1 (min 1). */
+  onAdjustSelection?: (monsterId: string, delta: number) => void;
+  /** Deterministic, budget-validated draft (SRD 5.2.1 XP budgets). */
+  onDraftEncounter?: (difficulty: EncounterDifficulty) => void;
+  /** Scene markers offered as spawn zones (placement stays inside the rect). */
+  zoneOptions: Array<{ id: string; label: string }>;
+  zoneId: string;
+  onZoneChange: (zoneId: string) => void;
 }
 
 function formatAverageLevel(level: number): string {
@@ -56,7 +66,13 @@ export function EncounterPanel({
   onQueueMonster,
   onAddEncounter,
   onRemoveSelection,
+  onAdjustSelection,
+  onDraftEncounter,
+  zoneOptions,
+  zoneId,
+  onZoneChange,
 }: EncounterPanelProps) {
+  const [draftDifficulty, setDraftDifficulty] = useState<EncounterDifficulty>('moderate');
   return (
     <div className="rounded-lg border bg-card p-3">
       <div className="mb-2 flex items-center justify-between gap-2">
@@ -100,6 +116,20 @@ export function EncounterPanel({
             onChange={(event) => onOriginYChange(event.target.value)}
           />
         </div>
+        {zoneOptions.length > 0 && (
+          <Select
+            aria-label="Spawn zone"
+            value={zoneId}
+            onChange={(event) => onZoneChange(event.target.value)}
+          >
+            <option value="">Spawn: whole map</option>
+            {zoneOptions.map((option) => (
+              <option key={option.id} value={option.id}>
+                Spawn in: {option.label}
+              </option>
+            ))}
+          </Select>
+        )}
         <div className="text-xs text-muted-foreground">
           {selectedMonster
             ? `${selectedMonsterTotalXp} XP / ${selectedMonster.source}`
@@ -125,6 +155,30 @@ export function EncounterPanel({
             Add Encounter
           </Button>
         </div>
+        {onDraftEncounter && (
+          <div className="grid grid-cols-2 gap-2">
+            <Select
+              aria-label="Draft difficulty"
+              value={draftDifficulty}
+              onChange={(event) => setDraftDifficulty(event.target.value as EncounterDifficulty)}
+              disabled={loading || party.members.length === 0}
+            >
+              <option value="low">Low</option>
+              <option value="moderate">Moderate</option>
+              <option value="high">High</option>
+            </Select>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={loading || monsters.length === 0 || party.members.length === 0}
+              onClick={() => onDraftEncounter(draftDifficulty)}
+              title="Draft monsters to the party's SRD XP budget"
+            >
+              <Wand2 className="mr-1.5 h-4 w-4" />
+              Draft
+            </Button>
+          </div>
+        )}
         {hasSelections && (
           <div className="space-y-1 rounded border bg-muted/30 p-2">
             {plan.entries.map((entry) => (
@@ -135,6 +189,31 @@ export function EncounterPanel({
                 <span className="min-w-0 truncate">
                   {entry.count} x {entry.name} ({entry.totalXp} XP)
                 </span>
+                {onAdjustSelection && (
+                  <span className="flex shrink-0 items-center gap-0.5">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6"
+                      onClick={() => onAdjustSelection(entry.monsterId, -1)}
+                      disabled={entry.count <= 1}
+                      title={`One fewer ${entry.name}`}
+                      aria-label={`One fewer ${entry.name}`}
+                    >
+                      <Minus className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6"
+                      onClick={() => onAdjustSelection(entry.monsterId, 1)}
+                      title={`One more ${entry.name}`}
+                      aria-label={`One more ${entry.name}`}
+                    >
+                      <Plus className="h-3.5 w-3.5" />
+                    </Button>
+                  </span>
+                )}
                 <Button
                   variant="ghost"
                   size="icon"
