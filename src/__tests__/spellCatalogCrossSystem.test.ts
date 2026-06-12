@@ -215,6 +215,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Raise Dead',
     systems: {
+      pf1e: { level: 5, school: 'conjuration' },
       pf2e: { level: 6, school: 'necromancy' },
       'dnd-5e-2014': e(5, 'necromancy'),
       'dnd-5e-2024': e(5, 'necromancy'),
@@ -391,6 +392,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Spiritual Weapon',
     systems: {
+      pf1e: { level: 2, school: 'evocation' },
       pf2e: { level: 2, school: 'evocation' },
       'dnd-5e-2014': e(2, 'evocation'),
       'dnd-5e-2024': e(2, 'evocation'),
@@ -404,6 +406,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Death Ward',
     systems: {
+      pf1e: { level: 4, school: 'necromancy' },
       pf2e: { level: 5, school: 'abjuration' },
       'dnd-5e-2014': e(4, 'abjuration'),
       'dnd-5e-2024': e(4, 'abjuration'),
@@ -421,6 +424,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Sanctuary',
     systems: {
+      pf1e: { level: 1, school: 'abjuration' },
       'dnd-5e-2014': e(1, 'abjuration'),
       'dnd-5e-2024': e(1, 'abjuration'),
       'dnd-3.5e': e(1, 'abjuration'),
@@ -430,6 +434,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Zone of Truth',
     systems: {
+      pf1e: { level: 2, school: 'enchantment' },
       pf2e: { level: 3, school: 'enchantment' },
       'dnd-5e-2014': e(2, 'enchantment'),
       'dnd-5e-2024': e(2, 'enchantment'),
@@ -439,6 +444,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Freedom of Movement',
     systems: {
+      pf1e: { level: 4, school: 'abjuration' },
       'dnd-5e-2014': e(4, 'abjuration'),
       'dnd-5e-2024': e(4, 'abjuration'),
       'dnd-3.5e': e(4, 'abjuration'),
@@ -448,6 +454,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Commune',
     systems: {
+      pf1e: { level: 5, school: 'divination' },
       'dnd-5e-2014': e(5, 'divination'),
       'dnd-5e-2024': e(5, 'divination'),
       'dnd-3.5e': e(5, 'divination'),
@@ -456,6 +463,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Flame Strike',
     systems: {
+      pf1e: { level: 4, school: 'evocation' },
       pf2e: { level: 5, school: 'evocation' },
       'dnd-5e-2014': e(5, 'evocation'),
       'dnd-5e-2024': e(5, 'evocation'),
@@ -465,6 +473,7 @@ const iconicSpellExpectations: Array<{
   {
     name: 'Banishment',
     systems: {
+      pf1e: { level: 6, school: 'abjuration' },
       'dnd-5e-2014': e(4, 'abjuration'),
       'dnd-5e-2024': e(4, 'abjuration'),
       'dnd-3.5e': e(6, 'abjuration'),

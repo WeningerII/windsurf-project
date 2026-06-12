@@ -259,7 +259,10 @@ describe('Data Loader Integration Tests', () => {
   describe('Pathfinder 1e Loaders', () => {
     it('should load spells with stored class-level mappings for pf1e', async () => {
       const spells = await loadSpellsForSystem('pf1e');
-      expect(spells.length).toBe(134);
+      // Full Core Rulebook coverage: 132 hand-written + 491 encoder-generated
+      // (scripts/encode-pf1e-spells.mjs) + catalog merges; srd:coverage
+      // verifies independently against the PFRPG Core CSV rows.
+      expect(spells.length).toBe(625);
       expect(
         spells.every(
           (spell) =>

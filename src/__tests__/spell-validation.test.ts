@@ -71,6 +71,8 @@ const VALID_SCHOOLS = [
   'illusion',
   'necromancy',
   'transmutation',
+  // 3.5e/PF1e universal school (Wish, Limited Wish, Permanency)
+  'universal',
   'arcane',
   'divine',
   'occult',

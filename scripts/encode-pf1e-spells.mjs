@@ -33,6 +33,7 @@ const SCHOOLS = new Set([
   'illusion',
   'necromancy',
   'transmutation',
+  'universal',
 ]);
 
 // CSV column → repo class id (core registry classes only; APG-era columns
@@ -180,7 +181,8 @@ async function main() {
   for (let level = 0; level <= 9; level += 1) {
     try {
       const mod = await import(`../src/data/pathfinder/1e/spells/srd-level-${level}.ts`);
-      for (const spell of Object.values(mod)[0] ?? []) generatedNames.add(normalizeName(spell.name));
+      for (const spell of Object.values(mod)[0] ?? [])
+        generatedNames.add(normalizeName(spell.name));
     } catch {
       /* first run */
     }
@@ -189,6 +191,28 @@ async function main() {
     (existing.allSpells ?? existing.pf1eSpells)
       .map((spell) => normalizeName(spell.name))
       .filter((name) => !generatedNames.has(name))
+  );
+  // Hand-written entries also win on ID: comma-inverted names like the CSV's
+  // "Teleport, Greater" vs the hand-written "Greater Teleport" share a slug.
+  const generatedIdCounts = new Map();
+  for (let level = 0; level <= 9; level += 1) {
+    try {
+      const mod = await import(`../src/data/pathfinder/1e/spells/srd-level-${level}.ts`);
+      for (const spell of Object.values(mod)[0] ?? []) {
+        generatedIdCounts.set(spell.id, (generatedIdCounts.get(spell.id) ?? 0) + 1);
+      }
+    } catch {
+      /* first run */
+    }
+  }
+  const unionIdCounts = new Map();
+  for (const spell of existing.allSpells ?? existing.pf1eSpells) {
+    unionIdCounts.set(spell.id, (unionIdCounts.get(spell.id) ?? 0) + 1);
+  }
+  const existingIds = new Set(
+    [...unionIdCounts.entries()]
+      .filter(([id, count]) => count > (generatedIdCounts.get(id) ?? 0))
+      .map(([id]) => id)
   );
 
   const text = await (await fetch(SOURCE_URL)).text();
@@ -201,7 +225,7 @@ async function main() {
   for (const row of rows) {
     if (!row[col.name] || row[col.source] !== 'PFRPG Core') continue;
     const name = row[col.name].trim();
-    if (existingNames.has(normalizeName(name))) {
+    if (existingNames.has(normalizeName(name)) || existingIds.has(`pf1e-${slug(name)}`)) {
       report.skippedExisting += 1;
       continue;
     }
@@ -256,9 +280,14 @@ async function main() {
       ...(row[col.targets]?.trim() ? { target: row[col.targets].trim() } : {}),
       ...(row[col.effect]?.trim() ? { effect: row[col.effect].trim() } : {}),
       ...(savingThrowText ? { savingThrowText } : {}),
-      ...(spellResistance
-        ? { spellResistance: /^yes/i.test(spellResistance) }
+      // Repo invariant (dataLoader.test.ts): spells whose SRD text calls for
+      // a touch attack carry the attackRoll marker.
+      ...(/(ranged|melee)\s+touch attack|touch attack to hit|make a (ranged|melee) touch attack/i.test(
+        (row[col.description] ?? '') + (row[col.short_description] ?? '')
+      )
+        ? { attackRoll: true }
         : {}),
+      ...(spellResistance ? { spellResistance: /^yes/i.test(spellResistance) } : {}),
       concentration: /^concentration/i.test((row[col.duration] ?? '').trim()),
       ritual: false,
       description: (row[col.description] ?? '').trim() || (row[col.short_description] ?? '').trim(),

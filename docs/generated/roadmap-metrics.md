@@ -1,4 +1,4 @@
-_Generated: 2026-06-12T15:57:38.052Z_
+_Generated: 2026-06-12T16:15:08.167Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -7,7 +7,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | D&D 5e (2014) | 319 | 12 | 9 | 1 | 0 | 106 | 335 | 656 | 1 | 0 |
 | D&D 5e (2024) | 294 | 12 | 7 | 4 | 0 | 0 | 95 | 204 | 19 | 0 |
 | D&D 3.5e | 428 | 26 | 7 | 0 | 0 | 0 | 0 | 207 | 80 | 0 |
-| Pathfinder 1e | 134 | 18 | 7 | 0 | 12 | 0 | 0 | 70 | 86 | 0 |
+| Pathfinder 1e | 625 | 18 | 7 | 0 | 12 | 0 | 0 | 70 | 86 | 0 |
 | Pathfinder 2e | 551 | 12 | 6 | 16 | 0 | 0 | 0 | 188 | 93 | 0 |
 | Mutants & Masterminds 3e | 61 | 0 | 0 | 0 | 0 | 0 | 0 | 150 | 0 | 74 |
 | Daggerheart | 0 | 9 | 19 | 9 | 0 | 0 | 0 | 353 | 0 | 0 |
@@ -46,7 +46,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | D&D 3.5e | Species/Races | 7 | 0 | 0 | 0 |
 | D&D 3.5e | Equipment | 207 | 0 | 0 | 0 |
 | D&D 3.5e | Feats | 80 | 0 | 0 | 0 |
-| Pathfinder 1e | Spells/Powers | 134 | 0 | 0 | 0 |
+| Pathfinder 1e | Spells/Powers | 625 | 0 | 0 | 0 |
 | Pathfinder 1e | Classes | 18 | 0 | 0 | 0 |
 | Pathfinder 1e | Species/Races | 7 | 0 | 0 | 0 |
 | Pathfinder 1e | Traits | 12 | 0 | 0 | 0 |
@@ -157,7 +157,7 @@ _Share of each system's loader-backed entries that are source-tagged AND open-co
 | D&D 5e (2014) | 1439 | 1439 | 100% |
 | D&D 5e (2024) | 635 | 635 | 100% |
 | D&D 3.5e | 748 | 748 | 100% |
-| Pathfinder 1e | 327 | 327 | 100% |
+| Pathfinder 1e | 818 | 818 | 100% |
 | Pathfinder 2e | 871 | 871 | 100% |
 | Mutants & Masterminds 3e | 427 | 427 | 100% |
 | Daggerheart | 390 | 390 | 100% |
