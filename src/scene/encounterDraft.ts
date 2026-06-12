@@ -66,6 +66,64 @@ export function partyXpBudget(
   return partyLevels.reduce((total, level) => total + xpBudgetPerCharacter(level, difficulty), 0);
 }
 
+/**
+ * PF1e CRB (PRD OGC), Gamemastering — "Table: Experience Point Awards", Total
+ * XP column, CR 1/2 through 25 (verified against devonjones/PSRD-Data
+ * core_rulebook/rules/gamemastering/designing_encounters).
+ */
+const PF1E_XP_BY_CR: Record<number, number> = {
+  0.5: 200,
+  1: 400,
+  2: 600,
+  3: 800,
+  4: 1200,
+  5: 1600,
+  6: 2400,
+  7: 3200,
+  8: 4800,
+  9: 6400,
+  10: 9600,
+  11: 12800,
+  12: 19200,
+  13: 25600,
+  14: 38400,
+  15: 51200,
+  16: 76800,
+  17: 102400,
+  18: 153600,
+  19: 204800,
+  20: 307200,
+  21: 409600,
+  22: 614400,
+  23: 819200,
+  24: 1228800,
+  25: 1638400,
+};
+
+/**
+ * PF1e CRB, "Table: Encounter Design": the target CR is APL-1 (easy), APL
+ * (average), or APL+1 (challenging) — mapped onto this module's low/moderate/
+ * high difficulty vocabulary. APL is the party's average level rounded to the
+ * NEAREST whole number (an explicit exception to round-down), +1 for parties
+ * of six or more, -1 for three or fewer. An easy encounter for APL 1 is CR
+ * 1/2 (the CRB's stated floor). The encounter's XP budget is the Total XP
+ * award for the target CR.
+ */
+export function pf1eEncounterXpBudget(
+  partyLevels: readonly number[],
+  difficulty: EncounterDifficulty
+): number {
+  if (!partyLevels.length) return 0;
+  const average = partyLevels.reduce((total, level) => total + level, 0) / partyLevels.length;
+  let apl = Math.round(average);
+  if (partyLevels.length >= 6) apl += 1;
+  if (partyLevels.length <= 3) apl -= 1;
+  apl = Math.max(1, apl);
+  const offset = { low: -1, moderate: 0, high: 1 }[difficulty];
+  const targetCr = Math.min(25, apl + offset);
+  return PF1E_XP_BY_CR[targetCr <= 0 ? 0.5 : targetCr] ?? 0;
+}
+
 export interface DraftEncounterParams {
   /** The scene's monster catalog (already loaded; system-filtered by caller or via systemId). */
   monsters: Monster[];
@@ -78,6 +136,11 @@ export interface DraftEncounterParams {
   systemId?: string;
   /** Most distinct monster types in one draft (default 3). */
   maxDistinct?: number;
+  /**
+   * Explicit XP budget (e.g. pf1eEncounterXpBudget). When set, it replaces
+   * the SRD 5.2 per-character table — the spend/validate machinery is shared.
+   */
+  budget?: number;
 }
 
 export interface DraftEncounterResult {
@@ -99,7 +162,7 @@ export interface DraftEncounterResult {
 export function draftEncounter(params: DraftEncounterParams): DraftEncounterResult {
   const { monsters, partyLevels, difficulty, seed } = params;
   const maxDistinct = Math.max(1, params.maxDistinct ?? 3);
-  const budget = partyXpBudget(partyLevels, difficulty);
+  const budget = params.budget ?? partyXpBudget(partyLevels, difficulty);
   if (budget <= 0) {
     return { selections: [], budget, totalXp: 0, reason: 'Party has no XP budget.' };
   }

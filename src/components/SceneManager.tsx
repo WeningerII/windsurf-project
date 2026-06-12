@@ -7,7 +7,11 @@ import {
   summarizeEncounterPlan,
   type EncounterMonsterSelection,
 } from '../scene/encounterBuilder';
-import { draftEncounter, type EncounterDifficulty } from '../scene/encounterDraft';
+import {
+  draftEncounter,
+  pf1eEncounterXpBudget,
+  type EncounterDifficulty,
+} from '../scene/encounterDraft';
 import {
   appendSceneEvent,
   createSceneDocument,
@@ -715,12 +719,18 @@ export function SceneManager({
     // Per-click nonce: re-drafting walks to the next deterministic variation
     // instead of returning the identical composition (rebalance ergonomics).
     draftNonceRef.current += 1;
+    const partyLevels = encounterParty.members.map((member) => member.level);
     const result = draftEncounter({
       monsters: encounterMonsters,
-      partyLevels: encounterParty.members.map((member) => member.level),
+      partyLevels,
       difficulty,
       seed: `${selectedScene.initialState.seed}:draft:${selectedScene.events.length}:${difficulty}:${draftNonceRef.current}`,
       systemId: sceneSystemId,
+      // PF1e budgets come from the CRB encounter-design tables (target-CR XP
+      // award); 5e-family uses the SRD 5.2.1 per-character table default.
+      ...(sceneSystemId === 'pf1e'
+        ? { budget: pf1eEncounterXpBudget(partyLevels, difficulty) }
+        : {}),
     });
     if (result.reason) {
       setActionIssues([`Encounter draft: ${result.reason}`]);
@@ -1102,10 +1112,13 @@ export function SceneManager({
                     }))}
                     zoneId={encounterZoneId}
                     onZoneChange={setEncounterZoneId}
-                    // The SRD 5.2.1 XP-budget table is 5e math; drafting is
-                    // offered only where that citation honestly applies.
+                    // Drafting is offered only where a cited budget table
+                    // applies: the SRD 5.2.1 per-character table (5e family)
+                    // or the PF1e CRB encounter-design tables.
                     onDraftEncounter={
-                      sceneSystemId === 'dnd-5e-2014' || sceneSystemId === 'dnd-5e-2024'
+                      sceneSystemId === 'dnd-5e-2014' ||
+                      sceneSystemId === 'dnd-5e-2024' ||
+                      sceneSystemId === 'pf1e'
                         ? handleDraftEncounter
                         : undefined
                     }

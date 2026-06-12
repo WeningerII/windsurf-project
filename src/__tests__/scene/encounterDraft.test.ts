@@ -103,3 +103,48 @@ describe('draftEncounter', () => {
     expect(noParty.reason).toMatch(/no XP budget/);
   });
 });
+
+describe('PF1e CRB encounter budgets', () => {
+  it('target CR = APL + difficulty offset, XP from the awards table', async () => {
+    const { pf1eEncounterXpBudget } = await import('../../scene/encounterDraft');
+    const party4 = [4, 4, 4, 4];
+    // APL 4: easy -> CR 3 (800), average -> CR 4 (1,200), challenging -> CR 5 (1,600).
+    expect(pf1eEncounterXpBudget(party4, 'low')).toBe(800);
+    expect(pf1eEncounterXpBudget(party4, 'moderate')).toBe(1200);
+    expect(pf1eEncounterXpBudget(party4, 'high')).toBe(1600);
+    // Six players: APL +1.
+    expect(pf1eEncounterXpBudget([4, 4, 4, 4, 4, 4], 'moderate')).toBe(1600);
+    // Three players: APL -1.
+    expect(pf1eEncounterXpBudget([4, 4, 4], 'moderate')).toBe(800);
+    // CRB floor: an easy encounter for APL 1 is CR 1/2.
+    expect(pf1eEncounterXpBudget([1, 1, 1, 1], 'low')).toBe(200);
+    // APL rounds to NEAREST (avg 4.5 -> 5).
+    expect(pf1eEncounterXpBudget([4, 4, 5, 5], 'moderate')).toBe(1600);
+  });
+
+  it('drafts encoded Bestiary 1 monsters within the CRB budget', async () => {
+    const { draftEncounter, pf1eEncounterXpBudget } = await import('../../scene/encounterDraft');
+    const { summarizeEncounterPlan } = await import('../../scene/encounterBuilder');
+    const { pf1eMonsters } = await import('../../data/pathfinder/1e/monsters');
+    const partyLevels = [5, 5, 5, 5];
+    const budget = pf1eEncounterXpBudget(partyLevels, 'moderate');
+    const draft = draftEncounter({
+      monsters: pf1eMonsters,
+      partyLevels,
+      difficulty: 'moderate',
+      seed: 'pf1e-draft-1',
+      systemId: 'pf1e',
+      budget,
+    });
+    expect(draft.budget).toBe(1600);
+    expect(draft.selections.length).toBeGreaterThan(0);
+    expect(draft.totalXp).toBeLessThanOrEqual(budget);
+    const summary = summarizeEncounterPlan({
+      monsters: pf1eMonsters,
+      selections: draft.selections,
+      systemId: 'pf1e',
+    });
+    expect(summary.issues).toHaveLength(0);
+    expect(summary.totalXp).toBe(draft.totalXp);
+  });
+});
