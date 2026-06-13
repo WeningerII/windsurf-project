@@ -1,5 +1,6 @@
 import type { Campaign } from '../types/core/campaign';
 import { parseCampaign } from './boundaryValidation';
+import { safeGetItem, safeSetItem, safeRemoveItem } from './safeStorage';
 
 const STORAGE_KEY = 'rpg-campaigns-v1';
 /** Exported for cross-tab `storage` event filtering in useCampaigns. */
@@ -40,7 +41,7 @@ export function parseCampaignsSnapshot(raw: string): Campaign[] | null {
 }
 
 export function loadCampaigns(): Campaign[] {
-  const stored = localStorage.getItem(STORAGE_KEY);
+  const stored = safeGetItem(STORAGE_KEY);
   if (!stored) return [];
 
   return parseCampaignsSnapshot(stored) ?? [];
@@ -52,9 +53,9 @@ export function saveCampaigns(campaigns: Campaign[]): void {
     campaigns,
     lastModified: new Date().toISOString(),
   };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  safeSetItem(STORAGE_KEY, JSON.stringify(data));
 }
 
 export function clearCampaignStorage(): void {
-  localStorage.removeItem(STORAGE_KEY);
+  safeRemoveItem(STORAGE_KEY);
 }

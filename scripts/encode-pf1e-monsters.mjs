@@ -28,6 +28,7 @@
 
 import { readdirSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { resolve, join } from 'node:path';
+import { weaponDamageTypeByName } from './lib/weaponDamageType.mjs';
 
 const psrdRoot = process.argv[2];
 if (!psrdRoot) {
@@ -184,6 +185,16 @@ function parseAttackClause(raw, report, id, label) {
     // PF1e electricity/sonic map onto the shared lightning/thunder vocabulary.
     const TYPE_MAP = { electricity: 'lightning', sonic: 'thunder' };
     const mapped = typeWord ? (TYPE_MAP[typeWord.toLowerCase()] ?? typeWord.toLowerCase()) : null;
+    const PHYSICAL = new Set(['bludgeoning', 'piercing', 'slashing']);
+    // A written PHYSICAL type is the weapon's real type. Otherwise the attack
+    // NAME determines the (natural/manufactured) weapon's type — a written
+    // energy word here is a RIDER on the primary physical hit (bite 1d8 plus
+    // 1d4 acid), not the primary type. A bare energy attack with no weapon
+    // name keeps the energy type. Unresolved stays UNASSERTED — never guessed.
+    const resolvedType =
+      mapped && PHYSICAL.has(mapped)
+        ? mapped
+        : (weaponDamageTypeByName(name) ?? (mapped && DAMAGE_TYPES.has(mapped) ? mapped : null));
     damage.push({
       dice: {
         count: Number(dmg[1]),
@@ -191,7 +202,7 @@ function parseAttackClause(raw, report, id, label) {
         ...(modifier !== undefined ? { modifier } : {}),
         notation: `${dmg[1]}d${dmg[2]}${modifier ? (modifier > 0 ? `+${modifier}` : `${modifier}`) : ''}`,
       },
-      type: mapped && DAMAGE_TYPES.has(mapped) ? mapped : 'bludgeoning',
+      ...(resolvedType ? { type: resolvedType } : {}),
     });
   }
   return {

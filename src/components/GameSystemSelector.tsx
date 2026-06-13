@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { GameSystemId } from '../types/game-systems';
 import type { SystemCatalogSummary, SystemContentCategoryId } from '../types/system-catalog';
 import { systemRegistry } from '../registry';
+import { errorLogger, ErrorCategory, ErrorSeverity } from '../utils/errorLogger';
 import { supportBadgeLabels, supportBadgeStyles } from './shared/supportBadges';
 import {
   BookOpen,
@@ -90,11 +91,22 @@ export function GameSystemSelector({ selectedSystem, onSelect }: GameSystemSelec
     let canceled = false;
     const systemIds = systemRegistry.getAll().map((system) => system.id as GameSystemId);
 
-    void loadAllSystemCatalogSummariesFromMetadata(systemIds).then((loadedSummaries) => {
-      if (!canceled) {
-        setSummaries(loadedSummaries);
-      }
-    });
+    loadAllSystemCatalogSummariesFromMetadata(systemIds)
+      .then((loadedSummaries) => {
+        if (!canceled) {
+          setSummaries(loadedSummaries);
+        }
+      })
+      .catch((error: unknown) => {
+        if (!canceled) {
+          errorLogger.log(
+            ErrorCategory.DATA_LOAD,
+            ErrorSeverity.LOW,
+            'Failed to load system catalog summaries',
+            error instanceof Error ? error : undefined
+          );
+        }
+      });
 
     return () => {
       canceled = true;

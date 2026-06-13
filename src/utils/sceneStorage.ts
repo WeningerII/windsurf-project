@@ -1,5 +1,6 @@
 import type { SceneDocument, SceneEvent } from '../types/core/scene';
 import { parseSceneDocument } from './boundaryValidation';
+import { canUseLocalStorage } from './safeStorage';
 
 const STORAGE_KEY = 'rpg-scenes-v1';
 /** Exported for cross-tab `storage` event filtering in useScenes. */
@@ -152,8 +153,4 @@ function hydrateSceneEvent(event: SceneEvent): SceneEvent {
     ...event,
     createdAt: new Date(event.createdAt),
   } as SceneEvent;
-}
-
-function canUseLocalStorage(): boolean {
-  return typeof localStorage !== 'undefined';
 }

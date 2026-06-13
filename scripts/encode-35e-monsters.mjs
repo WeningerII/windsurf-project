@@ -19,6 +19,7 @@
 
 import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { weaponDamageTypeByName } from './lib/weaponDamageType.mjs';
 
 const OLIMOT = 'https://raw.githubusercontent.com/olimot/srd-v3.5-md/main/monsters';
 const OLIMOT_FILES = [
@@ -279,15 +280,18 @@ async function main() {
         }
         if (dice) {
           const typeToken = String(part[1] ?? '').toUpperCase();
+          // Source B/P/S token if present; else the weapon's canonical type by
+          // name (a claw is slashing); else leave it UNASSERTED — never guess.
           const damageType =
-            { B: 'bludgeoning', P: 'piercing', S: 'slashing' }[typeToken] ?? 'bludgeoning';
+            { B: 'bludgeoning', P: 'piercing', S: 'slashing' }[typeToken] ??
+            weaponDamageTypeByName(item.name);
           damage.push({
             dice: {
               ...dice,
               ...(mod(abilities.str) ? { modifier: mod(abilities.str) } : {}),
               notation: `${dice.notation}${mod(abilities.str) > 0 ? `+${mod(abilities.str)}` : mod(abilities.str) < 0 ? `${mod(abilities.str)}` : ''}`,
             },
-            type: damageType,
+            ...(damageType ? { type: damageType } : {}),
           });
         }
       }
@@ -310,7 +314,11 @@ async function main() {
       type,
       alignment: mapAlignment(d.details?.alignment),
       challengeRating: Number.isFinite(cr) ? cr : 0,
-      experiencePoints: Number(d.details?.xp?.value ?? 0) || Math.max(1, Math.round(cr * 300)),
+      // 3.5e awards XP relative to PARTY level (DMG: encounter XP tables), so a
+      // monster carries no intrinsic XP value — encoded as 0, matching the PF2e
+      // convention. (The D35E source's details.xp.value is a flat 10 placeholder
+      // on every entry, so trusting it stamped every creature with 10 XP.)
+      experiencePoints: 0,
       armorClass: Number(d.attributes?.ac?.normal?.total ?? 10),
       hitPoints: {
         count: levels,

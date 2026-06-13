@@ -45,7 +45,7 @@ export function monsterAverageHitPoints(monster: Monster): number {
 interface NormalizedAttack {
   attackBonus: number;
   reachCells: number;
-  damage: Array<{ count: number; faces: number; modifier: number; type: string }>;
+  damage: Array<{ count: number; faces: number; modifier: number; type?: string }>;
 }
 
 /**
@@ -204,7 +204,10 @@ export function monsterDamageEffects(monster: Monster, action: Action): EffectIn
   if (!normalized) return effects;
 
   for (const [damageIndex, damage] of normalized.damage.entries()) {
-    const target = `damage.${damage.type}`;
+    // Typed damage folds onto its subtype channel ('damage.slashing'); untyped
+    // damage onto the generic 'damage' target. The resolver sums both, so an
+    // unasserted type costs nothing — and we never invent one to fill it.
+    const target = damage.type ? `damage.${damage.type}` : 'damage';
     const count = Number.isFinite(damage.faces) ? damage.count : 0;
 
     for (let dieIndex = 0; dieIndex < count; dieIndex += 1) {
