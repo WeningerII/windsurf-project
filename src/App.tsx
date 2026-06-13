@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, lazy, Suspense } from 'react';
 import { GameSystemSelector } from './components/GameSystemSelector';
 import { SystemStatusDashboard } from './components/SystemStatusDashboard';
 import { GameSystemId } from './types/game-systems';
@@ -21,8 +21,14 @@ import { ToastProvider, useToast } from './components/ui/Toast';
 import { ServiceWorkerUpdateBanner } from './components/ServiceWorkerUpdateBanner';
 import { useCampaigns } from './hooks/useCampaigns';
 import { CampaignManager } from './components/CampaignManager';
+// Lazy-loaded: the scene/VTT view is the app's heaviest feature component and
+// is only used in the dashboard branch, so it stays out of the eager app shell
+// (keeps the index chunk well under its first-paint budget). Matches the
+// Suspense pattern used by SystemSheetRenderer.
+const SceneManager = lazy(() =>
+  import('./components/SceneManager').then((m) => ({ default: m.SceneManager }))
+);
 import { useScenes } from './hooks/useScenes';
-import { SceneManager } from './components/SceneManager';
 import { prefetchSystemAssetsForIds } from './utils/systemAssetPrefetch';
 import { usePwaInstallPrompt } from './hooks/usePwaInstallPrompt';
 import { combineSyncStates, getMostRecentSyncDate, getPendingSyncCount } from './utils/syncStatus';
@@ -608,24 +614,26 @@ function AppContent() {
             />
 
             {/* Scenes */}
-            <SceneManager
-              scenes={scenes}
-              documents={documents}
-              campaigns={campaigns}
-              onAddScene={addScene}
-              onAddScenes={addScenes}
-              onAppendSceneEvent={appendSceneEvent}
-              onDeleteScene={(id) =>
-                showConfirm(
-                  'Delete Scene',
-                  'This will delete the scene and its event log. Characters and campaigns will not be affected.',
-                  () => {
-                    deleteScene(id);
-                    toast('Scene deleted', 'success');
-                  }
-                )
-              }
-            />
+            <Suspense fallback={<Skeleton className="h-64 w-full" />}>
+              <SceneManager
+                scenes={scenes}
+                documents={documents}
+                campaigns={campaigns}
+                onAddScene={addScene}
+                onAddScenes={addScenes}
+                onAppendSceneEvent={appendSceneEvent}
+                onDeleteScene={(id) =>
+                  showConfirm(
+                    'Delete Scene',
+                    'This will delete the scene and its event log. Characters and campaigns will not be affected.',
+                    () => {
+                      deleteScene(id);
+                      toast('Scene deleted', 'success');
+                    }
+                  )
+                }
+              />
+            </Suspense>
 
             {/* System Dashboard */}
             <SystemStatusDashboard />
