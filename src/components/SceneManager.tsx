@@ -44,7 +44,7 @@ import type {
 } from '../types/core/scene';
 import { systemRegistry } from '../registry';
 import { loadDaggerheartAdversariesForSystem, loadMonstersForSystem } from '../utils/dataLoader';
-import { errorLogger, ErrorCategory, ErrorSeverity } from '../utils/errorLogger';
+import { errorLogger, guardSync, ErrorCategory, ErrorSeverity } from '../utils/errorLogger';
 import { exportScenes, importScenes } from '../utils/sceneStorage';
 import { generateUUID } from '../utils/browserCompat';
 import { Button } from './ui/Button';
@@ -394,10 +394,28 @@ export function SceneManager({
 
   const emitSceneAction = useCallback(
     (scene: SceneDocument, intent: SceneActionIntent) => {
-      const result = resolveSceneAction(scene, intent, {
-        eventId: generateUUID(),
-        createdAt: new Date(),
-      });
+      // resolveSceneAction returns `issues` for EXPECTED invalid input; the
+      // guard only catches an UNEXPECTED throw in the fold, so a bug there is a
+      // monitored signal that degrades to "action rejected" instead of an
+      // unhandled error in whichever handler emitted it.
+      const result = guardSync(
+        () =>
+          resolveSceneAction(scene, intent, {
+            eventId: generateUUID(),
+            createdAt: new Date(),
+          }),
+        {
+          fallback: undefined,
+          category: ErrorCategory.USER_ACTION,
+          message: 'Scene action resolution failed',
+          context: { intentType: intent.type },
+        }
+      );
+
+      if (!result) {
+        setActionIssues(['This action could not be applied. The error was logged.']);
+        return false;
+      }
 
       if (!result.event) {
         setActionIssues(result.issues.map((issue) => issue.message));
@@ -533,17 +551,37 @@ export function SceneManager({
 
   const handleCombatAttack = () => {
     if (!selectedScene || !state || !selectedTokenId || !combatTargetId) return;
-    const outcome = resolveSceneAttack({
-      state,
-      attackerId: selectedTokenId,
-      targetId: combatTargetId,
-      resolveStats: resolveCombatStats,
-      // The nonce makes every click a fresh stream even when nothing was
-      // appended (a miss adds no event, so events.length alone would replay
-      // the byte-identical roll forever).
-      seed: `${selectedScene.initialState.seed}:attack:${selectedScene.events.length}:${attackNonce.current++}`,
-      cause: 'attack',
-    });
+    // The combat engine is pure but field inputs are not: a malformed token or
+    // effect must surface as a logged, monitored signal — never an unhandled
+    // error in this click handler that silently loses the action.
+    const outcome = guardSync(
+      () =>
+        resolveSceneAttack({
+          state,
+          attackerId: selectedTokenId,
+          targetId: combatTargetId,
+          resolveStats: resolveCombatStats,
+          // The nonce makes every click a fresh stream even when nothing was
+          // appended (a miss adds no event, so events.length alone would replay
+          // the byte-identical roll forever).
+          seed: `${selectedScene.initialState.seed}:attack:${selectedScene.events.length}:${attackNonce.current++}`,
+          cause: 'attack',
+        }),
+      {
+        fallback: undefined,
+        category: ErrorCategory.USER_ACTION,
+        message: 'Combat attack resolution failed',
+        context: {
+          systemId: sceneSystemId,
+          attackerId: selectedTokenId,
+          targetId: combatTargetId,
+        },
+      }
+    );
+    if (!outcome) {
+      setActionIssues(['The attack could not be resolved. The error was logged.']);
+      return;
+    }
     if (outcome.intent) {
       emitSceneAction(selectedScene, outcome.intent);
     }
@@ -552,12 +590,26 @@ export function SceneManager({
 
   const handleRunRound = () => {
     if (!selectedScene || !state) return;
-    const outcome = runSceneRound({
-      state,
-      resolveStats: resolveCombatStats,
-      seed: `${selectedScene.initialState.seed}:round:${state.round}:${selectedScene.events.length}:${attackNonce.current++}`,
-      round: state.round,
-    });
+    const roundState = state;
+    const outcome = guardSync(
+      () =>
+        runSceneRound({
+          state: roundState,
+          resolveStats: resolveCombatStats,
+          seed: `${selectedScene.initialState.seed}:round:${roundState.round}:${selectedScene.events.length}:${attackNonce.current++}`,
+          round: roundState.round,
+        }),
+      {
+        fallback: undefined,
+        category: ErrorCategory.USER_ACTION,
+        message: 'Combat round resolution failed',
+        context: { systemId: sceneSystemId, round: roundState.round },
+      }
+    );
+    if (!outcome) {
+      setActionIssues(['The combat round could not be resolved. The error was logged.']);
+      return;
+    }
 
     // Thread a local copy so each emitted event gets a correct sequence, then
     // dispatch them all through the event-sourced persistence path.

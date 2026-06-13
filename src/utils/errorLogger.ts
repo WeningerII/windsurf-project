@@ -190,3 +190,36 @@ export function safeExecute<T>(
     return fallback;
   }
 }
+
+/**
+ * Run a load-bearing synchronous operation that must never crash the caller.
+ * Unlike {@link safeExecute}, a throw is recorded at HIGH severity (so it
+ * reaches production monitoring) with a descriptive message and structured
+ * context, then `fallback` is returned. Use this at the boundary between the
+ * pure engine and the live app (e.g. combat resolution invoked from an event
+ * handler), so a field exception becomes a monitored signal instead of an
+ * unhandled error that silently loses the user's action.
+ */
+export function guardSync<T>(
+  fn: () => T,
+  options: {
+    fallback: T;
+    category: ErrorCategory;
+    message: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Error context requires flexible type
+    context?: Record<string, any>;
+  }
+): T {
+  try {
+    return fn();
+  } catch (error) {
+    errorLogger.log(
+      options.category,
+      ErrorSeverity.HIGH,
+      options.message,
+      error as Error,
+      options.context
+    );
+    return options.fallback;
+  }
+}
