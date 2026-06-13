@@ -44,6 +44,7 @@ import type {
 } from '../types/core/scene';
 import { systemRegistry } from '../registry';
 import { loadDaggerheartAdversariesForSystem, loadMonstersForSystem } from '../utils/dataLoader';
+import { errorLogger, ErrorCategory, ErrorSeverity } from '../utils/errorLogger';
 import { exportScenes, importScenes } from '../utils/sceneStorage';
 import { generateUUID } from '../utils/browserCompat';
 import { Button } from './ui/Button';
@@ -169,12 +170,22 @@ export function SceneManager({
       return;
     }
     let cancelled = false;
-    import('../data/daggerheart/1.0/equipment').then((mod) => {
-      if (cancelled) return;
-      setDaggerheartWeaponsById(
-        new Map((mod.daggerheartWeapons ?? []).map((weapon) => [weapon.id, weapon]))
-      );
-    });
+    import('../data/daggerheart/1.0/equipment')
+      .then((mod) => {
+        if (cancelled) return;
+        setDaggerheartWeaponsById(
+          new Map((mod.daggerheartWeapons ?? []).map((weapon) => [weapon.id, weapon]))
+        );
+      })
+      .catch((error: unknown) => {
+        if (cancelled) return;
+        errorLogger.log(
+          ErrorCategory.DATA_LOAD,
+          ErrorSeverity.LOW,
+          'Failed to preload Daggerheart weapon catalog',
+          error instanceof Error ? error : undefined
+        );
+      });
     return () => {
       cancelled = true;
     };
@@ -192,13 +203,23 @@ export function SceneManager({
       return;
     }
     let cancelled = false;
-    loadDaggerheartAdversariesForSystem('daggerheart').then((adversaries) => {
-      if (cancelled) return;
-      setDaggerheartAdversariesById(
-        new Map(adversaries.map((adversary) => [adversary.id, adversary]))
-      );
-      setAdversaryId((current) => current || (adversaries[0]?.id ?? ''));
-    });
+    loadDaggerheartAdversariesForSystem('daggerheart')
+      .then((adversaries) => {
+        if (cancelled) return;
+        setDaggerheartAdversariesById(
+          new Map(adversaries.map((adversary) => [adversary.id, adversary]))
+        );
+        setAdversaryId((current) => current || (adversaries[0]?.id ?? ''));
+      })
+      .catch((error: unknown) => {
+        if (cancelled) return;
+        errorLogger.log(
+          ErrorCategory.DATA_LOAD,
+          ErrorSeverity.LOW,
+          'Failed to load Daggerheart adversaries',
+          error instanceof Error ? error : undefined
+        );
+      });
     return () => {
       cancelled = true;
     };

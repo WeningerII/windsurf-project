@@ -4,7 +4,8 @@
  * Role: Tabs container + top-level section orchestration only. Sheet-local
  * state lives in `useDnd5eSheetController`; tab bodies live in `./components/`.
  *
- * Budget: enforced at <=400 LOC by `src/__tests__/hostSizeBudget.test.ts`.
+ * Budget: enforced at <=400 LOC by `src/__tests__/hostSizeBudget.test.ts`
+ * (which governs every sheet host, not just this one).
  * Do not add: inline state management, feature-specific logic, or per-tab data
  * loaders here. New tabs go in `./components/Dnd5e*.tsx` and register below.
  */
