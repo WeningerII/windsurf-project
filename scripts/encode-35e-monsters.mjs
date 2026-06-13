@@ -19,6 +19,7 @@
 
 import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { weaponDamageTypeByName } from './lib/weaponDamageType.mjs';
 
 const OLIMOT = 'https://raw.githubusercontent.com/olimot/srd-v3.5-md/main/monsters';
 const OLIMOT_FILES = [
@@ -279,15 +280,18 @@ async function main() {
         }
         if (dice) {
           const typeToken = String(part[1] ?? '').toUpperCase();
+          // Source B/P/S token if present; else the weapon's canonical type by
+          // name (a claw is slashing); else leave it UNASSERTED — never guess.
           const damageType =
-            { B: 'bludgeoning', P: 'piercing', S: 'slashing' }[typeToken] ?? 'bludgeoning';
+            { B: 'bludgeoning', P: 'piercing', S: 'slashing' }[typeToken] ??
+            weaponDamageTypeByName(item.name);
           damage.push({
             dice: {
               ...dice,
               ...(mod(abilities.str) ? { modifier: mod(abilities.str) } : {}),
               notation: `${dice.notation}${mod(abilities.str) > 0 ? `+${mod(abilities.str)}` : mod(abilities.str) < 0 ? `${mod(abilities.str)}` : ''}`,
             },
-            type: damageType,
+            ...(damageType ? { type: damageType } : {}),
           });
         }
       }

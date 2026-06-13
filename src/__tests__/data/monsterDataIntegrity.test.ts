@@ -81,6 +81,41 @@ describe('generated monster-data integrity (no fabrication, no NaN)', () => {
     expect(typeOf('chuul', 'Claws')).toBe('bludgeoning');
   });
 
+  it('pf1e/3.5e natural weapons are never mislabeled with an energy rider type', async () => {
+    const [{ pf1eMonsters }, { dnd35eMonsters }] = await Promise.all([
+      import('../../data/pathfinder/1e/monsters'),
+      import('../../data/dnd/3.5e/monsters'),
+    ]);
+    const natural = /\b(bite|claw|slam|talon|gore|sting|tail|tentacle|hoof|wing)/i;
+    const energy = new Set(['fire', 'cold', 'acid', 'lightning', 'thunder', 'poison', 'force']);
+    const stolen: string[] = [];
+    for (const monsters of [pf1eMonsters, dnd35eMonsters]) {
+      for (const m of monsters) {
+        for (const a of m.actions ?? []) {
+          for (const d of a.damage ?? []) {
+            if (natural.test(a.name) && d.type && energy.has(d.type)) {
+              stolen.push(`${m.id}:${a.name}=${d.type}`);
+            }
+          }
+        }
+      }
+    }
+    // A bite's primary damage is piercing; the energy is a rider on a separate
+    // clause and must never become the bite's type.
+    expect(stolen, stolen.slice(0, 10).join(', ')).toHaveLength(0);
+  });
+
+  it('pf1e derives canonical weapon types by name when the source omits one', async () => {
+    const { pf1eMonsters } = await import('../../data/pathfinder/1e/monsters');
+    const typeOf = (name: string, attack: string) =>
+      pf1eMonsters
+        .find((m) => m.name === name)
+        ?.actions.find((a) => a.name.toLowerCase().includes(attack))?.damage?.[0]?.type;
+    expect(typeOf('Drow', 'rapier')).toBe('piercing'); // source physical preserved
+    expect(typeOf('Hell Hound', 'bite')).toBe('piercing'); // was rider-stolen 'fire'
+    expect(typeOf('Yeti', 'claw')).toBe('slashing'); // was rider-stolen 'cold'
+  });
+
   it('3.5e monsters carry no fabricated intrinsic XP (party-relative, encoded 0)', async () => {
     const { dnd35eMonsters } = await import('../../data/dnd/3.5e/monsters');
     expect(dnd35eMonsters.length).toBeGreaterThan(0);

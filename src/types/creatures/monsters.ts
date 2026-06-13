@@ -135,7 +135,12 @@ export interface Action {
 
 export interface ActionDamage {
   dice: DiceRoll;
-  type: DamageType;
+  /**
+   * Damage type, when the source asserts one. Optional because encoders must
+   * never fabricate a type: when the source omits it and the weapon name does
+   * not determine it, the dice are kept and the type is left unasserted.
+   */
+  type?: DamageType;
   condition?: string; // e.g., "on a hit" or "on failed save"
 }
 
