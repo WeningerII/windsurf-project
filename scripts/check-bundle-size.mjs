@@ -14,7 +14,12 @@ const budgets = {
   // corpora at or near 100%, plus the d20-legacy bestiary): genuine content,
   // not bloat. Lazy granularity is enforced by the per-data-chunk budget.
   totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 1536 * 1024,
-  appChunkGzipBytes: parseInt(process.env.BUNDLE_BUDGET_APP_GZIP_BYTES || '', 10) || 80 * 1024,
+  // 80 -> 81 KiB to admit the engine-failure observability guard (guardSync +
+  // three guarded scene/combat entry points), a cross-cutting reliability
+  // feature that makes production failures monitorable. The durable fix is to
+  // lazy-load the eager SceneManager view (the 1296-LOC god-object the audit
+  // flagged), which would drop this chunk well under 80 KiB; tracked separately.
+  appChunkGzipBytes: parseInt(process.env.BUNDLE_BUDGET_APP_GZIP_BYTES || '', 10) || 81 * 1024,
   vendorChunkGzipBytes:
     parseInt(process.env.BUNDLE_BUDGET_VENDOR_GZIP_BYTES || '', 10) || 200 * 1024,
   largestDataChunkGzipBytes:
