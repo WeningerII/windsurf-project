@@ -14,8 +14,11 @@
  *  - abilityMods are MODIFIERS; scores encode as 10 + 2*mod.
  *  - Stat blocks print flat HP (no dice): hitPoints encodes as a flat
  *    modifier (count 0) so monsterAverageHitPoints returns the printed value.
- *  - Attacks carry structured attack bonuses; damage parses from the
- *    `{@damage XdY+Z}` tag. Unparseable damage stays prose — never guessed.
+ *  - Attacks carry structured attack bonuses; damage dice parse from the
+ *    `{@damage XdY+Z}` tag and the PRIMARY damage type from the word after that
+ *    tag (types[] is alphabetized, so its [0] is often a rider, not the
+ *    physical type). When no known type can be determined the damage stays
+ *    prose-only — a type is never guessed.
  *
  * Usage: npx tsx scripts/encode-pf2e-monsters.mjs   (writes
  * src/data/pathfinder/2e/monsters/srd-level-*.ts and prints a report).
@@ -115,6 +118,29 @@ function parseDamage(raw, report, id, attackName) {
   };
 }
 
+/**
+ * The PRIMARY (weapon) damage type. PF2e prints it as the word after the first
+ * {@damage}/{@dice} clause ('{@damage 1d6+1} piercing plus {@damage 1d4} lawful'),
+ * so the string is authoritative. `types[]` is alphabetized — its [0] is often a
+ * rider type (lawful/evil/bleed), NOT the physical type — so it is only a
+ * fallback, scanned for the first KNOWN damage type. Returns null when no known
+ * type can be determined; the caller then leaves the damage prose-only rather
+ * than guessing (the encoder's "never guessed" contract).
+ */
+function primaryDamageType(rawDamage, typesArr) {
+  const firstClause = String(rawDamage ?? '').split(/\bplus\b/i)[0];
+  const fromStringMatch = /\{@(?:damage|dice)[^}]*\}\s*([a-zA-Z]+)/.exec(firstClause);
+  const fromString = fromStringMatch
+    ? (TYPE_MAP[fromStringMatch[1].toLowerCase()] ?? fromStringMatch[1].toLowerCase())
+    : '';
+  if (DAMAGE_TYPES.has(fromString)) return fromString;
+  for (const raw of typesArr ?? []) {
+    const mapped = TYPE_MAP[String(raw).toLowerCase()] ?? String(raw).toLowerCase();
+    if (DAMAGE_TYPES.has(mapped)) return mapped;
+  }
+  return null;
+}
+
 function mapAttack(attack, report, id) {
   const name = String(attack.name ?? 'Strike').replace(/\b\w/g, (c) => c.toUpperCase());
   const action = {
@@ -124,9 +150,14 @@ function mapAttack(attack, report, id) {
   };
   const dice = parseDamage(attack.damage, report, id, name);
   if (dice) {
-    const rawType = String(attack.types?.[0] ?? '').toLowerCase();
-    const type = TYPE_MAP[rawType] ?? rawType;
-    action.damage = [{ dice, type: DAMAGE_TYPES.has(type) ? type : 'bludgeoning' }];
+    const type = primaryDamageType(attack.damage, attack.types);
+    if (type) {
+      action.damage = [{ dice, type }];
+    } else {
+      // No known damage type — keep the dice in the description prose, emit no
+      // structured (and therefore no fabricated) type.
+      report.untypedDamage.push(`${id}/${name}: ${untag(attack.damage ?? '')}`);
+    }
   }
   return action;
 }
@@ -174,6 +205,7 @@ async function main() {
     skippedUnmappable: [],
     noAttacks: [],
     unparsedDamage: [],
+    untypedDamage: [],
   };
   const buckets = new Map();
 
@@ -290,6 +322,7 @@ ${body},
   for (const line of report.skippedUnmappable) console.log(`  - ${line}`);
   console.log(`creatures without attack entries: ${report.noAttacks.length}`);
   console.log(`unparsed damage (prose-only): ${report.unparsedDamage.length}`);
+  console.log(`untyped damage (prose-only, no type guessed): ${report.untypedDamage.length}`);
 }
 
 main().catch((error) => {

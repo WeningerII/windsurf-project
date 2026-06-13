@@ -15,7 +15,7 @@ export const srdCr11PlusMonsters35e: Monster[] = [
     type: 'undead',
     alignment: 'neutral evil',
     challengeRating: 11,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 24,
     hitPoints: {
       count: 12,
@@ -70,7 +70,7 @@ export const srdCr11PlusMonsters35e: Monster[] = [
     type: 'magical-beast',
     alignment: 'true neutral',
     challengeRating: 12,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 18,
     hitPoints: {
       count: 14,
@@ -126,7 +126,7 @@ export const srdCr11PlusMonsters35e: Monster[] = [
     type: 'magical-beast',
     alignment: 'neutral evil',
     challengeRating: 12,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 20,
     hitPoints: {
       count: 20,
@@ -215,7 +215,7 @@ export const srdCr11PlusMonsters35e: Monster[] = [
     type: 'outsider',
     alignment: 'neutral good',
     challengeRating: 12,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 27,
     hitPoints: {
       count: 12,
@@ -305,7 +305,7 @@ export const srdCr11PlusMonsters35e: Monster[] = [
     type: 'magical-beast',
     alignment: 'true neutral',
     challengeRating: 12,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 19,
     hitPoints: {
       count: 16,
@@ -379,7 +379,7 @@ export const srdCr11PlusMonsters35e: Monster[] = [
     type: 'magical-beast',
     alignment: 'chaotic evil',
     challengeRating: 12,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 24,
     hitPoints: {
       count: 10,
@@ -435,7 +435,7 @@ export const srdCr11PlusMonsters35e: Monster[] = [
     type: 'outsider',
     alignment: 'chaotic good',
     challengeRating: 13,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 25,
     hitPoints: {
       count: 10,
@@ -474,7 +474,7 @@ export const srdCr11PlusMonsters35e: Monster[] = [
     type: 'magical-beast',
     alignment: 'true neutral',
     challengeRating: 20,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 35,
     hitPoints: {
       count: 48,
@@ -569,7 +569,7 @@ export const srdCr11PlusMonsters35e: Monster[] = [
     type: 'outsider',
     alignment: 'any',
     challengeRating: 21,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 28,
     hitPoints: {
       count: 20,

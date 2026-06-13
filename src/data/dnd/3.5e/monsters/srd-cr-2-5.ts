@@ -15,7 +15,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'animal',
     alignment: 'unaligned',
     challengeRating: 2,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 14,
     hitPoints: {
       count: 4,
@@ -89,7 +89,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'outsider',
     alignment: 'lawful neutral',
     challengeRating: 2,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 17,
     hitPoints: {
       count: 2,
@@ -161,7 +161,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'animal',
     alignment: 'unaligned',
     challengeRating: 2,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 13,
     hitPoints: {
       count: 3,
@@ -234,7 +234,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'animal',
     alignment: 'unaligned',
     challengeRating: 2,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 13,
     hitPoints: {
       count: 5,
@@ -290,7 +290,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'magical-beast',
     alignment: 'lawful good',
     challengeRating: 2,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 16,
     hitPoints: {
       count: 4,
@@ -344,7 +344,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'animal',
     alignment: 'unaligned',
     challengeRating: 2,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 16,
     hitPoints: {
       count: 3,
@@ -400,7 +400,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'humanoid',
     alignment: 'chaotic evil',
     challengeRating: 2,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 17,
     hitPoints: {
       count: 3,
@@ -472,7 +472,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'animal',
     alignment: 'unaligned',
     challengeRating: 2,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 15,
     hitPoints: {
       count: 3,
@@ -545,7 +545,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'aberration',
     alignment: 'chaotic evil',
     challengeRating: 2,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 17,
     hitPoints: {
       count: 3,
@@ -618,7 +618,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'animal',
     alignment: 'unaligned',
     challengeRating: 2,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 15,
     hitPoints: {
       count: 3,
@@ -691,7 +691,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'vermin',
     alignment: 'unaligned',
     challengeRating: 2,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 16,
     hitPoints: {
       count: 2,
@@ -747,7 +747,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'magical-beast',
     alignment: 'true neutral',
     challengeRating: 2,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 15,
     hitPoints: {
       count: 3,
@@ -821,7 +821,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'animal',
     alignment: 'unaligned',
     challengeRating: 2,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 15,
     hitPoints: {
       count: 3,
@@ -912,7 +912,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'animal',
     alignment: 'unaligned',
     challengeRating: 2,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 15,
     hitPoints: {
       count: 3,
@@ -969,7 +969,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'monstrous-humanoid',
     alignment: 'lawful evil',
     challengeRating: 2,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 16,
     hitPoints: {
       count: 2,
@@ -1094,7 +1094,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'fey',
     alignment: 'chaotic neutral',
     challengeRating: 2,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 15,
     hitPoints: {
       count: 5,
@@ -1155,7 +1155,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'magical-beast',
     alignment: 'true neutral',
     challengeRating: 2,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 16,
     hitPoints: {
       count: 2,
@@ -1212,7 +1212,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'aberration',
     alignment: 'lawful evil',
     challengeRating: 2,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 13,
     hitPoints: {
       count: 2,
@@ -1303,7 +1303,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'elemental',
     alignment: 'true neutral',
     challengeRating: 2,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 18,
     hitPoints: {
       count: 3,
@@ -1368,7 +1368,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'outsider',
     alignment: 'neutral good',
     challengeRating: 2,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 16,
     hitPoints: {
       count: 3,
@@ -1442,7 +1442,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'outsider',
     alignment: 'neutral evil',
     challengeRating: 2,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 12,
     hitPoints: {
       count: 1,
@@ -1496,7 +1496,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'animal',
     alignment: 'unaligned',
     challengeRating: 2,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 14,
     hitPoints: {
       count: 3,
@@ -1570,7 +1570,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'magical-beast',
     alignment: 'neutral evil',
     challengeRating: 2,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 14,
     hitPoints: {
       count: 4,
@@ -1626,7 +1626,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'undead',
     alignment: 'neutral evil',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 15,
     hitPoints: {
       count: 4,
@@ -1670,7 +1670,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'magical-beast',
     alignment: 'true neutral',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 18,
     hitPoints: {
       count: 3,
@@ -1726,7 +1726,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'plant',
     alignment: 'true neutral',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 15,
     hitPoints: {
       count: 4,
@@ -1799,7 +1799,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'monstrous-humanoid',
     alignment: 'neutral good',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 14,
     hitPoints: {
       count: 4,
@@ -1888,7 +1888,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'magical-beast',
     alignment: 'true neutral',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 14,
     hitPoints: {
       count: 5,
@@ -1945,7 +1945,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'monstrous-humanoid',
     alignment: 'chaotic evil',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 19,
     hitPoints: {
       count: 3,
@@ -2015,7 +2015,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'monstrous-humanoid',
     alignment: 'true neutral',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 15,
     hitPoints: {
       count: 4,
@@ -2071,7 +2071,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'fey',
     alignment: 'chaotic good',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 17,
     hitPoints: {
       count: 4,
@@ -2131,7 +2131,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'magical-beast',
     alignment: 'neutral good',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 15,
     hitPoints: {
       count: 4,
@@ -2205,7 +2205,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'aberration',
     alignment: 'true neutral',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 17,
     hitPoints: {
       count: 5,
@@ -2260,7 +2260,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'magical-beast',
     alignment: 'true neutral',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 14,
     hitPoints: {
       count: 2,
@@ -2315,7 +2315,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'aberration',
     alignment: 'neutral evil',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 14,
     hitPoints: {
       count: 5,
@@ -2389,7 +2389,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'vermin',
     alignment: 'unaligned',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 14,
     hitPoints: {
       count: 4,
@@ -2463,7 +2463,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'vermin',
     alignment: 'unaligned',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 14,
     hitPoints: {
       count: 5,
@@ -2520,7 +2520,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'aberration',
     alignment: 'true neutral',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 16,
     hitPoints: {
       count: 2,
@@ -2592,7 +2592,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'outsider',
     alignment: 'chaotic evil',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 17,
     hitPoints: {
       count: 6,
@@ -2648,7 +2648,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'animal',
     alignment: 'unaligned',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 15,
     hitPoints: {
       count: 5,
@@ -2738,7 +2738,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'elemental',
     alignment: 'chaotic neutral',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 17,
     hitPoints: {
       count: 2,
@@ -2794,7 +2794,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'giant',
     alignment: 'chaotic evil',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 16,
     hitPoints: {
       count: 4,
@@ -2867,7 +2867,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'magical-beast',
     alignment: 'neutral good',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 15,
     hitPoints: {
       count: 4,
@@ -2941,7 +2941,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'magical-beast',
     alignment: 'chaotic good',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 14,
     hitPoints: {
       count: 4,
@@ -3014,7 +3014,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'plant',
     alignment: 'true neutral',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 14,
     hitPoints: {
       count: 2,
@@ -3070,7 +3070,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'aberration',
     alignment: 'true neutral',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 18,
     hitPoints: {
       count: 5,
@@ -3125,7 +3125,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'undead',
     alignment: 'chaotic evil',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 13,
     hitPoints: {
       count: 3,
@@ -3180,7 +3180,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'magical-beast',
     alignment: 'chaotic good',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 18,
     hitPoints: {
       count: 4,
@@ -3235,7 +3235,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'undead',
     alignment: 'lawful evil',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 15,
     hitPoints: {
       count: 4,
@@ -3290,7 +3290,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'outsider',
     alignment: 'neutral evil',
     challengeRating: 3,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 20,
     hitPoints: {
       count: 3,
@@ -3347,7 +3347,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'magical-beast',
     alignment: 'true neutral',
     challengeRating: 4,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 13,
     hitPoints: {
       count: 3,
@@ -3403,7 +3403,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'outsider',
     alignment: 'lawful evil',
     challengeRating: 4,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 18,
     hitPoints: {
       count: 6,
@@ -3476,7 +3476,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'animal',
     alignment: 'unaligned',
     challengeRating: 4,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 15,
     hitPoints: {
       count: 6,
@@ -3549,7 +3549,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'animal',
     alignment: 'unaligned',
     challengeRating: 4,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 15,
     hitPoints: {
       count: 8,
@@ -3623,7 +3623,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'animal',
     alignment: 'unaligned',
     challengeRating: 4,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 16,
     hitPoints: {
       count: 7,
@@ -3696,7 +3696,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'monstrous-humanoid',
     alignment: 'chaotic evil',
     challengeRating: 4,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 16,
     hitPoints: {
       count: 4,
@@ -3787,7 +3787,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'vermin',
     alignment: 'true neutral',
     challengeRating: 4,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 19,
     hitPoints: {
       count: 7,
@@ -3860,7 +3860,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'magical-beast',
     alignment: 'true neutral',
     challengeRating: 4,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 17,
     hitPoints: {
       count: 7,
@@ -3940,7 +3940,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'monstrous-humanoid',
     alignment: 'chaotic evil',
     challengeRating: 4,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 13,
     hitPoints: {
       count: 7,
@@ -4011,7 +4011,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'aberration',
     alignment: 'true neutral',
     challengeRating: 4,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 15,
     hitPoints: {
       count: 7,
@@ -4067,7 +4067,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'monstrous-humanoid',
     alignment: 'chaotic evil',
     challengeRating: 4,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 14,
     hitPoints: {
       count: 6,
@@ -4129,7 +4129,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'aberration',
     alignment: 'true neutral',
     challengeRating: 4,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 17,
     hitPoints: {
       count: 6,
@@ -4215,7 +4215,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'magical-beast',
     alignment: 'true neutral',
     challengeRating: 4,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 15,
     hitPoints: {
       count: 5,
@@ -4288,7 +4288,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'animal',
     alignment: 'unaligned',
     challengeRating: 4,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 16,
     hitPoints: {
       count: 8,
@@ -4344,7 +4344,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'magical-beast',
     alignment: 'true neutral',
     challengeRating: 4,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 18,
     hitPoints: {
       count: 6,
@@ -4435,7 +4435,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'animal',
     alignment: 'unaligned',
     challengeRating: 4,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 14,
     hitPoints: {
       count: 6,
@@ -4525,7 +4525,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'undead',
     alignment: 'any',
     challengeRating: 4,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 15,
     hitPoints: {
       count: 4,
@@ -4581,7 +4581,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'outsider',
     alignment: 'lawful evil',
     challengeRating: 5,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 20,
     hitPoints: {
       count: 6,
@@ -4654,7 +4654,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'magical-beast',
     alignment: 'true neutral',
     challengeRating: 5,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 16,
     hitPoints: {
       count: 6,
@@ -4710,7 +4710,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'aberration',
     alignment: 'chaotic neutral',
     challengeRating: 5,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 19,
     hitPoints: {
       count: 6,
@@ -4783,7 +4783,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'aberration',
     alignment: 'true neutral',
     challengeRating: 5,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 19,
     hitPoints: {
       count: 4,
@@ -4845,7 +4845,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'magical-beast',
     alignment: 'lawful evil',
     challengeRating: 5,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 17,
     hitPoints: {
       count: 6,
@@ -4919,7 +4919,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'undead',
     alignment: 'lawful evil',
     challengeRating: 5,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 20,
     hitPoints: {
       count: 8,
@@ -4975,7 +4975,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'outsider',
     alignment: 'neutral evil',
     challengeRating: 5,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 24,
     hitPoints: {
       count: 6,
@@ -5048,7 +5048,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'magical-beast',
     alignment: 'true neutral',
     challengeRating: 5,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 15,
     hitPoints: {
       count: 5,
@@ -5105,7 +5105,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'outsider',
     alignment: 'true neutral',
     challengeRating: 5,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 15,
     hitPoints: {
       count: 4,
@@ -5179,7 +5179,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'outsider',
     alignment: 'true neutral',
     challengeRating: 5,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 10,
     hitPoints: {
       count: 1,
@@ -5273,7 +5273,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'outsider',
     alignment: 'neutral evil',
     challengeRating: 5,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 14,
     hitPoints: {
       count: 4,
@@ -5329,7 +5329,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'magical-beast',
     alignment: 'true neutral',
     challengeRating: 5,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 14,
     hitPoints: {
       count: 4,
@@ -5403,7 +5403,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'giant',
     alignment: 'chaotic evil',
     challengeRating: 5,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 16,
     hitPoints: {
       count: 6,
@@ -5493,7 +5493,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'magical-beast',
     alignment: 'neutral evil',
     challengeRating: 5,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 15,
     hitPoints: {
       count: 6,
@@ -5549,7 +5549,7 @@ export const srdCr25Monsters35e: Monster[] = [
     type: 'undead',
     alignment: 'lawful evil',
     challengeRating: 5,
-    experiencePoints: 10,
+    experiencePoints: 0,
     armorClass: 15,
     hitPoints: {
       count: 5,

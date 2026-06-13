@@ -310,7 +310,11 @@ async function main() {
       type,
       alignment: mapAlignment(d.details?.alignment),
       challengeRating: Number.isFinite(cr) ? cr : 0,
-      experiencePoints: Number(d.details?.xp?.value ?? 0) || Math.max(1, Math.round(cr * 300)),
+      // 3.5e awards XP relative to PARTY level (DMG: encounter XP tables), so a
+      // monster carries no intrinsic XP value — encoded as 0, matching the PF2e
+      // convention. (The D35E source's details.xp.value is a flat 10 placeholder
+      // on every entry, so trusting it stamped every creature with 10 XP.)
+      experiencePoints: 0,
       armorClass: Number(d.attributes?.ac?.normal?.total ?? 10),
       hitPoints: {
         count: levels,
