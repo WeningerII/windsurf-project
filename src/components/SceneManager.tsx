@@ -60,6 +60,9 @@ import { CombatPanel } from './scene/CombatPanel';
 
 type PlacementMode = 'none' | 'token' | 'marker' | 'adversary';
 
+/** Shown when a guarded engine call throws (the failure is logged to Sentry). */
+const ENGINE_FAILURE_ISSUE = 'This action could not be applied. The error was logged.';
+
 interface Props {
   scenes: SceneDocument[];
   documents: CharacterDocument<SystemDataModel>[];
@@ -407,13 +410,13 @@ export function SceneManager({
         {
           fallback: undefined,
           category: ErrorCategory.USER_ACTION,
-          message: 'Scene action resolution failed',
+          message: 'Scene action failed',
           context: { intentType: intent.type },
         }
       );
 
       if (!result) {
-        setActionIssues(['This action could not be applied. The error was logged.']);
+        setActionIssues([ENGINE_FAILURE_ISSUE]);
         return false;
       }
 
@@ -570,7 +573,7 @@ export function SceneManager({
       {
         fallback: undefined,
         category: ErrorCategory.USER_ACTION,
-        message: 'Combat attack resolution failed',
+        message: 'Combat attack failed',
         context: {
           systemId: sceneSystemId,
           attackerId: selectedTokenId,
@@ -579,7 +582,7 @@ export function SceneManager({
       }
     );
     if (!outcome) {
-      setActionIssues(['The attack could not be resolved. The error was logged.']);
+      setActionIssues([ENGINE_FAILURE_ISSUE]);
       return;
     }
     if (outcome.intent) {
@@ -602,12 +605,12 @@ export function SceneManager({
       {
         fallback: undefined,
         category: ErrorCategory.USER_ACTION,
-        message: 'Combat round resolution failed',
+        message: 'Combat round failed',
         context: { systemId: sceneSystemId, round: roundState.round },
       }
     );
     if (!outcome) {
-      setActionIssues(['The combat round could not be resolved. The error was logged.']);
+      setActionIssues([ENGINE_FAILURE_ISSUE]);
       return;
     }
 
