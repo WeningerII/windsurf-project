@@ -1,0 +1,37 @@
+name: Deploy Notion site to Pages
+
+# Publishes notion-site/ to GitHub Pages. The repo's Pages source is set to
+# "GitHub Actions", so this workflow IS the deploy. Runs on main after merge
+# (and on demand). The page is a single self-contained HTML file, so it works
+# at the project-pages sub-path with no base-path config.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'notion-site/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: notion-site
+      - id: deployment
+        uses: actions/deploy-pages@v4
