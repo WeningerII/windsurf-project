@@ -190,6 +190,15 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: ['command_rule'],
   },
   {
+    // Static GitHub Pages deploy for notion-site/. No doc-coupled content to
+    // track (the command/verification rules are scoped to ci.yml), so it is
+    // registered for coverage with no per-file rules.
+    path: '.github/workflows/pages.yml',
+    kind: 'workflow',
+    owner: 'pages-deploy-workflow',
+    rules: [],
+  },
+  {
     path: 'scripts/runtime/runtime-policy.mjs',
     kind: 'runtime-copy',
     owner: 'runtime-policy-guidance',
