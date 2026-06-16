@@ -299,6 +299,7 @@ export const D20LegacyTabs: React.FC<Props> = ({
           skillRanks={skillRanks}
           classSkills={classSkills}
           isPf1e={isPf1e}
+          characterLevel={(document.system.level as number) ?? 1}
           canUpdate={canUpdate}
           onSkillRanksChange={onSkillRanksChange}
         />

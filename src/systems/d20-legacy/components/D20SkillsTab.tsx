@@ -1,6 +1,10 @@
 import React from 'react';
 import { abilityMod, parseNum } from '../../../utils/math';
-import { dnd35eSkillSynergyTotal } from '../../../utils/derivedCombatMath';
+import {
+  dnd35eSkillSynergyTotal,
+  dnd35eMaxSkillRanks,
+  pf1eMaxSkillRanks,
+} from '../../../utils/derivedCombatMath';
 import type { Skill } from '../../../types/game-systems';
 
 interface Props {
@@ -9,6 +13,7 @@ interface Props {
   skillRanks: Record<string, number>;
   classSkills?: string[];
   isPf1e: boolean;
+  characterLevel: number;
   canUpdate: boolean;
   onSkillRanksChange: (skillRanks: Record<string, number>) => void;
 }
@@ -19,6 +24,7 @@ export const D20SkillsTab: React.FC<Props> = ({
   skillRanks,
   classSkills,
   isPf1e,
+  characterLevel,
   canUpdate,
   onSkillRanksChange,
 }) => {
@@ -37,6 +43,13 @@ export const D20SkillsTab: React.FC<Props> = ({
           // list differs and is not yet wired, so leave PF1e totals unchanged.
           const synergyBonus = isPf1e ? 0 : dnd35eSkillSynergyTotal(skill.id, skillRanks);
           const total = ranks + abilMod + classBonus + synergyBonus;
+          // RAW max ranks: 3.5e class = level+3 / cross-class = (level+3)/2;
+          // PF1e = level. Soft-validate (flag, don't clamp) so mid-edit values
+          // and effect-granted ranks are never silently destroyed.
+          const maxRanks = isPf1e
+            ? pf1eMaxSkillRanks(characterLevel)
+            : dnd35eMaxSkillRanks(characterLevel, Boolean(isClassSkill));
+          const overCap = ranks > maxRanks;
           return (
             <div
               key={skill.id}
@@ -71,10 +84,19 @@ export const D20SkillsTab: React.FC<Props> = ({
                       [skill.id]: parseNum(event.target.value, 0),
                     })
                   }
-                  className="w-10 text-center bg-transparent border-b border-input focus:outline-none focus:border-primary tabular-nums text-xs"
+                  className={`w-10 text-center bg-transparent border-b focus:outline-none tabular-nums text-xs ${
+                    overCap
+                      ? 'border-destructive text-destructive'
+                      : 'border-input focus:border-primary'
+                  }`}
                   min={0}
+                  max={maxRanks}
                   disabled={!canUpdate}
-                  title={`${skill.name} ranks`}
+                  title={
+                    overCap
+                      ? `${skill.name}: ${ranks} ranks exceeds the level-${characterLevel} max of ${maxRanks}`
+                      : `${skill.name} ranks (max ${maxRanks})`
+                  }
                 />
               </div>
             </div>
