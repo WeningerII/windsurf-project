@@ -16,6 +16,7 @@ import {
   d20EncumbrancePenalties,
   d20LiftDragLimits,
   d20BonusSpells,
+  dnd35eEncumbranceSkillPenalty,
 } from '../systems/shared/d20-helpers';
 import {
   dnd35eXpForLevel,
@@ -556,6 +557,15 @@ describe('L6 d20-legacy carrying capacity', () => {
   it('derives lift/drag limits as x1 / x2 / x5 of the maximum load', () => {
     // Str 15 → max 200
     expect(d20LiftDragLimits(15)).toEqual({ overHead: 200, offGround: 400, pushDrag: 1000 });
+  });
+  it('applies the load check penalty only to affected physical skills', () => {
+    // Str 10 capacity: light ≤33, medium ≤66, heavy ≤100.
+    expect(dnd35eEncumbranceSkillPenalty(10, 50, 'climb')).toBe(-3); // medium load
+    expect(dnd35eEncumbranceSkillPenalty(10, 50, 'swim')).toBe(-3);
+    expect(dnd35eEncumbranceSkillPenalty(10, 90, 'tumble')).toBe(-6); // heavy load
+    expect(dnd35eEncumbranceSkillPenalty(10, 20, 'climb')).toBe(0); // light load
+    // Unaffected (non-physical) skills never take the penalty.
+    expect(dnd35eEncumbranceSkillPenalty(10, 90, 'diplomacy')).toBe(0);
   });
 });
 

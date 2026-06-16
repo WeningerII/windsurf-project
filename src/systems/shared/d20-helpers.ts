@@ -134,6 +134,39 @@ export function d20EncumbrancePenalties(category: D20LoadCategory): D20Encumbran
   }
 }
 
+/**
+ * 3.5e skills that take an armor/encumbrance check penalty (the SRD's
+ * Strength- and Dexterity-based physical skills). Swim is included; the SRD's
+ * doubled penalty for Swim is an ARMOR-specific rule, so the encumbrance
+ * (load) penalty below applies to it once.
+ */
+export const DND35E_CHECK_PENALTY_SKILLS: ReadonlySet<string> = new Set([
+  'balance',
+  'climb',
+  'escape-artist',
+  'hide',
+  'jump',
+  'move-silently',
+  'sleight-of-hand',
+  'swim',
+  'tumble',
+]);
+
+/**
+ * The encumbrance (load) check penalty applied to a single 3.5e check-penalty
+ * skill, derived from carried weight against the character's Strength-based
+ * carrying capacity. Returns 0 for an unaffected skill or a light load. The
+ * gear-based armor check penalty is separate and not included here.
+ */
+export function dnd35eEncumbranceSkillPenalty(
+  strength: number,
+  carriedWeight: number,
+  skillId: string
+): number {
+  if (!DND35E_CHECK_PENALTY_SKILLS.has(skillId)) return 0;
+  return d20EncumbrancePenalties(d20LoadCategory(strength, carriedWeight)).checkPenalty;
+}
+
 export interface D20LiftDragLimits {
   /** Lift over head: up to the maximum (heavy) load. */
   overHead: number;

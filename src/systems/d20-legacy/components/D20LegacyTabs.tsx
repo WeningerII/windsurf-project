@@ -300,6 +300,10 @@ export const D20LegacyTabs: React.FC<Props> = ({
           classSkills={classSkills}
           isPf1e={isPf1e}
           characterLevel={(document.system.level as number) ?? 1}
+          carriedWeight={(document.system.inventory ?? []).reduce(
+            (weight, item) => weight + item.weight * item.quantity,
+            0
+          )}
           canUpdate={canUpdate}
           onSkillRanksChange={onSkillRanksChange}
         />

@@ -5,6 +5,7 @@ import {
   dnd35eMaxSkillRanks,
   pf1eMaxSkillRanks,
 } from '../../../utils/derivedCombatMath';
+import { dnd35eEncumbranceSkillPenalty } from '../../shared/d20-helpers';
 import type { Skill } from '../../../types/game-systems';
 
 interface Props {
@@ -14,6 +15,7 @@ interface Props {
   classSkills?: string[];
   isPf1e: boolean;
   characterLevel: number;
+  carriedWeight: number;
   canUpdate: boolean;
   onSkillRanksChange: (skillRanks: Record<string, number>) => void;
 }
@@ -25,6 +27,7 @@ export const D20SkillsTab: React.FC<Props> = ({
   classSkills,
   isPf1e,
   characterLevel,
+  carriedWeight,
   canUpdate,
   onSkillRanksChange,
 }) => {
@@ -42,7 +45,16 @@ export const D20SkillsTab: React.FC<Props> = ({
           // 3.5e auto-applies its unconditional skill synergies; PF1e's synergy
           // list differs and is not yet wired, so leave PF1e totals unchanged.
           const synergyBonus = isPf1e ? 0 : dnd35eSkillSynergyTotal(skill.id, skillRanks);
-          const total = ranks + abilMod + classBonus + synergyBonus;
+          // Encumbrance (load) check penalty on physical skills — 3.5e only for
+          // now (PF1e's affected-skill list differs and is not yet wired).
+          const loadPenalty = isPf1e
+            ? 0
+            : dnd35eEncumbranceSkillPenalty(baseAttributes.str ?? 10, carriedWeight, skill.id);
+          const total = ranks + abilMod + classBonus + synergyBonus + loadPenalty;
+          const totalNotes = [
+            synergyBonus > 0 ? `+${synergyBonus} synergy` : null,
+            loadPenalty < 0 ? `${loadPenalty} load` : null,
+          ].filter(Boolean);
           // RAW max ranks: 3.5e class = level+3 / cross-class = (level+3)/2;
           // PF1e = level. Soft-validate (flag, don't clamp) so mid-edit values
           // and effect-granted ranks are never silently destroyed.
@@ -70,7 +82,7 @@ export const D20SkillsTab: React.FC<Props> = ({
               <div className="flex items-center gap-1.5 shrink-0">
                 <span
                   className="text-xs font-bold tabular-nums w-6 text-right"
-                  title={synergyBonus > 0 ? `Total (includes +${synergyBonus} synergy)` : 'Total'}
+                  title={totalNotes.length > 0 ? `Total (${totalNotes.join(', ')})` : 'Total'}
                 >
                   {total >= 0 ? '+' : ''}
                   {total}
