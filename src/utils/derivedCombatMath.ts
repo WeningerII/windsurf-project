@@ -20,6 +20,36 @@ export function dnd35eSynergyBonus(relatedSkillRanks: number): number {
   return relatedSkillRanks >= 5 ? 2 : 0;
 }
 
+/**
+ * 3.5e skill-synergy targets: each listed source skill grants +2 to the keyed
+ * skill at 5+ ranks, and multiple sources stack. Only the SRD's UNCONDITIONAL
+ * core synergies are listed — conditional "to do X" synergies (Use Rope → Climb
+ * *with a rope*, Spellcraft → Use Magic Device *for scrolls*, Search → Survival
+ * *to track*, Bluff → Disguise *to act in character*) stay manual rather than be
+ * applied as a flat bonus, per the repo's no-fake-automation rule. Knowledge
+ * synergies are omitted because the 3.5e model collapses Knowledge into a single
+ * skill, so the granting subtype is unknown.
+ */
+const DND35E_SYNERGY_SOURCES: Record<string, readonly string[]> = {
+  balance: ['tumble'],
+  jump: ['tumble'],
+  tumble: ['jump'],
+  diplomacy: ['bluff', 'sense-motive'],
+  intimidate: ['bluff'],
+  'sleight-of-hand': ['bluff'],
+  ride: ['handle-animal'],
+};
+
+/** Total 3.5e synergy bonus to `skillId` from 5+ ranks in its unconditional sources. */
+export function dnd35eSkillSynergyTotal(
+  skillId: string,
+  skillRanks: Record<string, number>
+): number {
+  const sources = DND35E_SYNERGY_SOURCES[skillId];
+  if (!sources) return 0;
+  return sources.reduce((sum, sourceId) => sum + dnd35eSynergyBonus(skillRanks[sourceId] ?? 0), 0);
+}
+
 /** Max skill ranks: class skill = level + 3; cross-class = floor((level + 3) / 2). */
 export function dnd35eMaxSkillRanks(level: number, isClassSkill: boolean): number {
   return isClassSkill ? level + 3 : Math.floor((level + 3) / 2);
