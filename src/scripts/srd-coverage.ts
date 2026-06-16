@@ -15,7 +15,8 @@
  *   - Pathfinder 1e (Core): wolfgangcodes/pathfinder-spellbook spells.csv (source="PFRPG Core")
  *   - Mutants & Masterminds 3e (Hero's Handbook): frnprt/mm3e-character-creator data.js
  *   - Daggerheart (SRD 1.0): Batres3/daggerheart-srd Domain Card Reference
- * D&D 3.5e is pending a clean core-only filter (its source mixes Psionics/Epic).
+ *   - D&D 3.5e (SRD 3.5 core): olimot/srd-v3.5-md clean Markdown chapters (the
+ *     psionics/epic-mixed Rughalt/D35E packs are intentionally avoided)
  * Remaining categories are documented in docs/srd-sources.md and added incrementally.
  */
 import { promises as fs } from 'node:fs';
@@ -439,7 +440,13 @@ async function fetchSrd35SpellNames(): Promise<string[]> {
   for (const file of SRD35_SPELL_FILES) {
     const text = await fetchText(`${SRD35_MD}/${file}`);
     for (const match of text.matchAll(/^## (.+)$/gm)) {
-      names.push(match[1].trim());
+      const name = match[1].trim();
+      // The SRD spell chapters carry naming-convention cross-reference stubs —
+      // "Greater (Spell Name)", "Lesser (Spell Name)", "Mass (Spell Name)" —
+      // that document how variant spells are alphabetized. They are not spells
+      // themselves, so they must not inflate the denominator.
+      if (/\(spell name\)/i.test(name)) continue;
+      names.push(name);
     }
   }
   return names;
@@ -630,7 +637,7 @@ async function main(): Promise<void> {
   lines.push('');
   lines.push('## Pending (independent source not yet wired or not cleanly scopable)');
   lines.push(
-    '- **D&D 3.5e spells** are measured against the clean core-only `olimot/srd-v3.5-md` chapters; non-spell 3.5e categories remain unwired pending core-only sources. See `docs/srd-sources.md`.'
+    '- **D&D 3.5e** spells and monsters are measured against the clean core-only `olimot/srd-v3.5-md` chapters. The monster denominator counts every `## ` heading, which includes the SRD\'s category headers (e.g. "Angel", "Dragon", "Elemental") that nest individual stat blocks, so the monster percentage understates per-stat-block coverage. Remaining 3.5e categories (classes/feats/equipment) are unwired pending core-only sources. See `docs/srd-sources.md`.'
   );
   lines.push(
     '- **Remaining categories** — PF2e/PF1e non-spell categories, M&M skills/conditions/equipment, Daggerheart classes/ancestries/communities/weapons/armor, and all monsters are documented in `docs/srd-sources.md` and pending wiring.'
