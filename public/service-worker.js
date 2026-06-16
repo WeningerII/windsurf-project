@@ -116,9 +116,14 @@ self.addEventListener('fetch', (event) => {
         .catch(async () => {
           const cachedPage = await caches.match(request);
           if (cachedPage) return cachedPage;
-          const cachedShell = await caches.match('/');
+          // Fall back to the precached app shell. Derive the deploy base from
+          // the worker's own scope so this resolves to "/" for root deploys
+          // and "/windsurf-project/" on project pages — matching the
+          // base-prefixed keys the precache plugin writes.
+          const basePath = new URL(self.registration.scope).pathname;
+          const cachedShell = await caches.match(basePath);
           if (cachedShell) return cachedShell;
-          return caches.match('/index.html');
+          return caches.match(`${basePath}index.html`);
         })
     );
     return;

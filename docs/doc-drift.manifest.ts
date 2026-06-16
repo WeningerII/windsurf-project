@@ -190,7 +190,7 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: ['command_rule'],
   },
   {
-    // Static GitHub Pages deploy for notion-site/. No doc-coupled content to
+    // Builds and deploys the app to GitHub Pages. No doc-coupled content to
     // track (the command/verification rules are scoped to ci.yml), so it is
     // registered for coverage with no per-file rules.
     path: '.github/workflows/pages.yml',

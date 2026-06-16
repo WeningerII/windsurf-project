@@ -28,9 +28,17 @@ const MAX_PRECACHE_URLS = 40;
  * transformed worker here overwrites the raw copy.
  */
 function serviceWorkerPrecachePlugin(): Plugin {
+  // Captured from the resolved Vite config so precache URLs carry the deploy
+  // base (e.g. "/windsurf-project/" on GitHub project pages). Vite normalizes
+  // base to start and end with "/", so the concatenation below collapses to
+  // today's root-relative URLs when base is "/".
+  let base = '/';
   return {
     name: 'service-worker-precache',
     apply: 'build',
+    configResolved(config) {
+      base = config.base;
+    },
     writeBundle(options, bundle) {
       const outDir = options.dir ?? 'dist';
 
@@ -59,10 +67,10 @@ function serviceWorkerPrecachePlugin(): Plugin {
         .map((output) => output.fileName);
 
       const precacheUrls = [
-        '/',
-        '/index.html',
-        '/manifest.webmanifest',
-        ...[...precacheJs, ...cssFiles].map((fileName) => `/${fileName}`),
+        base,
+        `${base}index.html`,
+        `${base}manifest.webmanifest`,
+        ...[...precacheJs, ...cssFiles].map((fileName) => `${base}${fileName}`),
       ].slice(0, MAX_PRECACHE_URLS);
 
       // Hash every emitted file name (all content-hashed), so any asset
@@ -89,6 +97,11 @@ function serviceWorkerPrecachePlugin(): Plugin {
 }
 
 export default defineConfig({
+  // Deploy base path. Defaults to "/" for local dev, the Netlify root deploy,
+  // and the e2e/preview server; the GitHub Pages workflow sets BASE_PATH to
+  // "/windsurf-project/" so Vite emits asset URLs under the project-pages
+  // sub-path.
+  base: process.env.BASE_PATH || '/',
   plugins: [
     react(),
     serviceWorkerPrecachePlugin(),

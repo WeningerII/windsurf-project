@@ -120,8 +120,12 @@ export function useServiceWorkerUpdate(): ServiceWorkerUpdateState {
     };
 
     const register = () => {
+      // Register under the deploy base — import.meta.env.BASE_URL is "/" for
+      // root deploys and "/windsurf-project/" on GitHub project pages — so the
+      // worker's scope matches where the app is actually served.
+      const base = import.meta.env.BASE_URL;
       navigator.serviceWorker
-        .register('/service-worker.js')
+        .register(`${base}service-worker.js`, { scope: base })
         .then(handleRegistered)
         .catch(() => {
           // Registration failure is non-fatal; offline support is degraded
