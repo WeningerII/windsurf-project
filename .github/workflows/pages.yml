@@ -1,15 +1,13 @@
-name: Deploy Notion site to Pages
+name: Deploy app to GitHub Pages
 
-# Publishes notion-site/ to GitHub Pages. The repo's Pages source is set to
-# "GitHub Actions", so this workflow IS the deploy. Runs on main after merge
-# (and on demand). The page is a single self-contained HTML file, so it works
-# at the project-pages sub-path with no base-path config.
+# Builds the RPG character-sheet app (Vite) and publishes dist/ to GitHub
+# Pages. The repo's Pages source is set to "GitHub Actions", so this workflow
+# IS the deploy. BASE_PATH makes Vite emit every asset URL under the project-
+# pages sub-path (https://weningerii.github.io/windsurf-project/). The app
+# needs no backend env — it runs local-only when Supabase is unconfigured.
 on:
   push:
     branches: [main]
-    paths:
-      - 'notion-site/**'
-      - '.github/workflows/pages.yml'
   workflow_dispatch:
 
 permissions:
@@ -17,21 +15,33 @@ permissions:
   pages: write
   id-token: write
 
+# Serialize Pages deploys; a newer push supersedes an in-flight one.
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Build for the project-pages sub-path
+        run: npm run build
+        env:
+          BASE_PATH: /windsurf-project/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: notion-site
+          path: dist
       - id: deployment
         uses: actions/deploy-pages@v4
