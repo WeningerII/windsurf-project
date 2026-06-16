@@ -6,6 +6,7 @@
 import {
   iterativeAttackBonuses,
   dnd35eSynergyBonus,
+  dnd35eSkillSynergyTotal,
   dnd35eMaxSkillRanks,
   pf1eMaxSkillRanks,
   pf1eManeuverSucceeds,
@@ -41,6 +42,19 @@ describe('3.5e skill synergy and max ranks', () => {
   it('synergy gives +2 at 5+ ranks', () => {
     expect(dnd35eSynergyBonus(4)).toBe(0);
     expect(dnd35eSynergyBonus(5)).toBe(2);
+  });
+  it('maps unconditional synergy sources to their targets (stacking)', () => {
+    // 5 ranks in Tumble grant +2 to both Balance and Jump.
+    expect(dnd35eSkillSynergyTotal('balance', { tumble: 5 })).toBe(2);
+    expect(dnd35eSkillSynergyTotal('jump', { tumble: 5 })).toBe(2);
+    // Below the 5-rank threshold grants nothing.
+    expect(dnd35eSkillSynergyTotal('balance', { tumble: 4 })).toBe(0);
+    // Diplomacy draws from both Bluff and Sense Motive, which stack.
+    expect(dnd35eSkillSynergyTotal('diplomacy', { bluff: 5, 'sense-motive': 5 })).toBe(4);
+    expect(dnd35eSkillSynergyTotal('diplomacy', { bluff: 5 })).toBe(2);
+    // A skill with no unconditional synergy source (the Spellcraft→UMD synergy is
+    // conditional and intentionally excluded) gets nothing.
+    expect(dnd35eSkillSynergyTotal('spellcraft', { 'use-magic': 5 })).toBe(0);
   });
   it('max ranks: class = level+3, cross-class = floor((level+3)/2)', () => {
     expect(dnd35eMaxSkillRanks(1, true)).toBe(4);

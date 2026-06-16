@@ -2,6 +2,7 @@ import { SystemEngine, RollResult } from '../../registry/types';
 import { CharacterDocument } from '../../types/core/document';
 import { Dnd35eDataModel } from './data-model';
 import { abilityMod } from '../../utils/math';
+import { dnd35eSkillSynergyTotal } from '../../utils/derivedCombatMath';
 import { GRAPPLE_SIZE_MODS, baseSave, classBAB } from '../shared/d20-helpers';
 import { computeD20LegacyAC, D20_SIZE_MOD } from '../../utils/armorClass';
 import { resolveCharacterEffects } from '../../rules';
@@ -169,7 +170,12 @@ export class Dnd35eEngine implements SystemEngine<Dnd35eDataModel> {
       flavor = `${checkId.toUpperCase()} Check`;
     } else if (checkId in SKILL_ABILITIES) {
       const attr = SKILL_ABILITIES[checkId];
-      modifier = abilityMod(d.baseAttributes[attr] ?? 10) + (d.skillRanks[checkId] ?? 0);
+      // Ranks + ability mod + unconditional SRD skill synergies (e.g. 5 ranks in
+      // Tumble grant +2 to Balance/Jump). Conditional synergies stay manual.
+      modifier =
+        abilityMod(d.baseAttributes[attr] ?? 10) +
+        (d.skillRanks[checkId] ?? 0) +
+        dnd35eSkillSynergyTotal(checkId, d.skillRanks);
       flavor = `${checkId} Check`;
     } else if (checkId === 'save-fort') {
       modifier = d.saves.fortitude.total;

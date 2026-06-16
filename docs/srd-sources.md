@@ -22,7 +22,7 @@ fetchers behind WAFs, so they are confirmed via search indexing.
 
 - **Official upstream:** Internet Archive `https://archive.org/details/dnd35srd` (original WotC RTF/PDF). OGL text `https://www.d20srd.org/ogl.htm`.
 - **Human-readable:** `https://www.d20srd.org/` (Hypertext d20 SRD), `http://dndsrd.net/`, `https://srd.dndtools.org/`. **NOTE:** Archives of Nethys does **not** host a 3.5 SRD.
-- **Machine-readable (verified):** `Rughalt/D35E` (Foundry, OGL), NeDB JSON-lines under `packs/` — `https://raw.githubusercontent.com/Rughalt/D35E/master/packs/spells.db` (**673**, incl. psionics+epic), `feats.db` (388), `bestiary.db` (645), `classes.db` (33), + magic-items/weapons/armor. Also `olimot/srd-v3.5-md` (clean Markdown, OGL). **Scope caveat:** D35E is SRD 3.5 **plus** Psionics + Epic — filter to core SRD for a clean denominator.
+- **Machine-readable (verified):** `Rughalt/D35E` (Foundry, OGL), NeDB JSON-lines under `packs/` — `https://raw.githubusercontent.com/Rughalt/D35E/master/packs/spells.db` (**673**, incl. psionics+epic), `feats.db` (388), `bestiary.db` (645), `classes.db` (33), + magic-items/weapons/armor. Also `olimot/srd-v3.5-md` (clean Markdown, OGL) — **wired as the core-only spell + monster denominator in `npm run srd:coverage`** (the `## ` chapter headers). **Scope caveat:** D35E is SRD 3.5 **plus** Psionics + Epic, so it is intentionally avoided in favor of the core-only olimot chapters.
 
 ## Pathfinder 1e — Core Rulebook / PRD (OGL 1.0a)
 
@@ -50,8 +50,9 @@ fetchers behind WAFs, so they are confirmed via search indexing.
 
 **Usage:** `npm run srd:coverage` fetches the independent lists above (where wired)
 and diffs them against the product loaders by normalized name, writing
-`docs/generated/srd-coverage.md` — the genuine coverage/gap report. 5e (2014/2024)
-is wired today; the other systems' sources are documented here and pending wiring
-(scope each to the policy's `allowedSources`: 5e → full SRD; PF1e/PF2e → Core
-Rulebook; 3.5e → core SRD excluding psionics/epic; M&M → Hero's Handbook;
-Daggerheart → SRD 1.0).
+`docs/generated/srd-coverage.md` — the genuine coverage/gap report. All 7 systems'
+spell catalogs are wired today (plus 5e/PF/3.5e monsters, M&M powers/advantages, and
+Daggerheart domains/cards); each is scoped to the policy's `allowedSources` (5e →
+full SRD; PF1e/PF2e → Core Rulebook; 3.5e → core SRD excluding psionics/epic; M&M →
+Hero's Handbook; Daggerheart → SRD 1.0). Remaining non-spell categories are documented
+above and pending wiring.

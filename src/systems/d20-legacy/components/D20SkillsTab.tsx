@@ -1,5 +1,6 @@
 import React from 'react';
 import { abilityMod, parseNum } from '../../../utils/math';
+import { dnd35eSkillSynergyTotal } from '../../../utils/derivedCombatMath';
 import type { Skill } from '../../../types/game-systems';
 
 interface Props {
@@ -32,7 +33,10 @@ export const D20SkillsTab: React.FC<Props> = ({
           const isClassSkill = classSkills?.includes(skill.id);
           const abilMod = abilityMod(baseAttributes[skill.attribute] ?? 10);
           const classBonus = isPf1e && isClassSkill && ranks > 0 ? 3 : 0;
-          const total = ranks + abilMod + classBonus;
+          // 3.5e auto-applies its unconditional skill synergies; PF1e's synergy
+          // list differs and is not yet wired, so leave PF1e totals unchanged.
+          const synergyBonus = isPf1e ? 0 : dnd35eSkillSynergyTotal(skill.id, skillRanks);
+          const total = ranks + abilMod + classBonus + synergyBonus;
           return (
             <div
               key={skill.id}
@@ -51,7 +55,10 @@ export const D20SkillsTab: React.FC<Props> = ({
                 </span>
               </div>
               <div className="flex items-center gap-1.5 shrink-0">
-                <span className="text-xs font-bold tabular-nums w-6 text-right" title="Total">
+                <span
+                  className="text-xs font-bold tabular-nums w-6 text-right"
+                  title={synergyBonus > 0 ? `Total (includes +${synergyBonus} synergy)` : 'Total'}
+                >
                   {total >= 0 ? '+' : ''}
                   {total}
                 </span>

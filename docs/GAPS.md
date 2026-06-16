@@ -11,12 +11,14 @@ across L1–L10 (was 13–28). Content (Denominator A) is provenance-clean (ever
 shipped entry is encoded, loader-backed, source-tagged, policy-clean, and — for
 the categories with an authoritative SRD list — verified by reverse-diff to
 contain **no** non-SRD entries). Independent published-SRD *coverage* is now
-measured for 6 of 7 systems (`docs/generated/srd-coverage.md`); D&D 3.5e is the
-one unwired denominator.
+measured for all 7 systems (`docs/generated/srd-coverage.md`): D&D 3.5e is wired
+against the clean core-only `olimot/srd-v3.5-md` chapters (spells 604/605 = 99.8%;
+the monster % understates real coverage because the denominator counts the SRD's
+category headings, e.g. "Angel", "Dragon").
 
 ---
 
-## 1. Content (Denominator A) — independent SRD coverage [UNBLOCKED; 6 of 7 systems measured; 3.5e pending clean scope]
+## 1. Content (Denominator A) — independent SRD coverage [UNBLOCKED; all 7 systems measured]
 
 **Update:** the blocker is resolved. The container's Node runtime fetches the
 open-content SRD datasets from GitHub raw in full (the `WebFetch` *tool* truncates;
@@ -62,10 +64,11 @@ unlike the loader-derived `docs/srd-manifest/`.
   source before trusting the 2024 monster row.
 
 **Still to do (sources in `docs/srd-sources.md`):**
-- **D&D 3.5e** is the one unwired system: its `Rughalt/D35E` packs mix SRD-3.5 core
-  with Psionics and Epic, and no clean core-only tag is exposed, so it is omitted
-  from the report rather than measured against an inflated denominator. Needs either
-  a core-only filter or a clean source (e.g. `olimot/srd-v3.5-md`).
+- **D&D 3.5e** is now wired [DONE]: the psionics/epic-mixed `Rughalt/D35E` packs were
+  rejected in favor of the clean core-only `olimot/srd-v3.5-md` Markdown chapters,
+  giving spells 604/605 (99.8%) and a wired monster row (its % understates real
+  coverage — the denominator counts the SRD's category headings). Remaining 3.5e
+  categories (classes/feats/equipment) are still unwired pending core-only sources.
 - Wire the remaining categories (PF2e/PF1e non-spell, M&M skills/conditions/
   equipment, Daggerheart classes/ancestries/communities/weapons/armor, all monsters).
 - Remediate under-covered categories (encode missing SRD entries — e.g. PF2e/PF1e/5e
@@ -111,9 +114,11 @@ several items below; the remainder is the honest residual.
 - **Several "verified" quantities are tested helpers, not engine-wired.** Spell
   save DC, spell attack, passive Perception, concentration DC, cantrip scaling,
   Monk/Barbarian Unarmored Defense, iterative attacks, PF2e MAP/striking/bulk/
-  heighten, 3.5e synergy/max-rank, M&M measurements: the RAW formula is proven by
+  heighten, 3.5e max-rank, M&M measurements: the RAW formula is proven by
   test, but `prepareData` / the character sheet does not actually compute or
-  display it. Wiring these into the engines is outstanding.
+  display it. Wiring these into the engines is outstanding. **(3.5e skill synergy
+  is now wired** — the unconditional SRD synergies apply in both the skills tab
+  and `rollCheck`; conditional and Knowledge-subtype synergies stay manual.)
 - **Stricter spec criteria not met:** comprehensive typed-bonus *stacking* tests
   (e.g., 3.5e dodge-stacks-but-others-don't); the content×compute cross-product
   fixtures (Monk+shield AC, PF2e striking+enfeebled as combined cases);
@@ -129,8 +134,12 @@ the same external open-content data as §1.
 
 ## 4. GLOBAL DONE criteria still outstanding
 
-- `supportLevel` not flipped to `'full'` for D&D 3.5e, PF1e, Daggerheart (correct —
-  coverage isn't proven).
+- `supportLevel` correctly remains `'partial'` for D&D 3.5e, PF1e, Daggerheart — but
+  the gate is **automation, not coverage**: per `docs/MASTER_PLAN.md`, `Full` means
+  deterministic RAW auto-resolution, and these systems' manual extras (3.5e/PF1e
+  domain/specialist/spontaneous/Dragon Disciple slots; Daggerheart triggered/timing/
+  choice card effects) are not yet auto-resolved. Independent content coverage is now
+  proven (3.5e spells 99.8%, PF1e 99.8%, PF2e/5e ~100%).
 - README.md and MASTER_PLAN.md not updated to declare completion / cite both
   denominators (only STATUS.md was, and it explicitly does not claim
   RAW-coverage-complete).
