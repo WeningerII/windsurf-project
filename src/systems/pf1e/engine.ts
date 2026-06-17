@@ -121,6 +121,8 @@ export class Pf1eEngine implements SystemEngine<Pf1eDataModel> {
     // --- Spell Slots (class spell tables + casting-ability bonus spells) ---
     // PF1e CRB (Ability Modifiers and Bonus Spells): a high casting ability
     // grants bonus spells per day, applied per class inside the builder.
+    // Cleric domain slots, wizard specialist-school slots, and prestige
+    // caster-level advancement (e.g. Dragon Disciple) are folded in there too;
     // mergeVancianSpellSlots keeps each level's persisted manualBonus on top.
     const slotTotals = buildD20LegacySpellSlotTotals(
       'pf1e',
@@ -128,7 +130,8 @@ export class Pf1eEngine implements SystemEngine<Pf1eDataModel> {
       new Map(
         [...Object.values(pf1eClasses), ...pf1ePrestigeClasses].map((klass) => [klass.id, klass])
       ),
-      data.baseAttributes
+      data.baseAttributes,
+      { arcaneSpecialtySchool: data.arcaneSpecialtySchool }
     );
     data.spellsPerDay = mergeVancianSpellSlots(data.spellsPerDay, slotTotals);
 

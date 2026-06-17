@@ -1,15 +1,15 @@
 export const SYSTEM_SUPPORT_NOTES = {
-  'dnd-3.5e': 'Base classes plus the full core SRD prestige catalog are selectable',
-  pf1e: 'Base classes and vetted CRB prestige classes are selectable; prestige spellcasting advancement is automated for the shipped prestige casters',
+  'dnd-3.5e':
+    'Deterministic RAW auto-resolution: base and full core SRD prestige classes, spells per day including casting-ability, cleric domain, wizard specialist, and prestige (Dragon Disciple) bonus slots, synergy/encumbrance skills, and equipped-armor AC',
+  pf1e: 'Deterministic RAW auto-resolution: base and vetted CRB prestige classes, spells per day including casting-ability, cleric domain, wizard specialist, and prestige (Dragon Disciple) bonus slots, class-skill and encumbrance skills, and equipped-armor AC',
   daggerheart:
     'SRD-backed selectors, starter templates, browse tabs, equipment loadouts, gold tracking, and loot libraries are shipped; deterministic passive card bonuses are auto-applied where represented, while triggered, timing-based, and choice-based card effects remain tracked-but-manual or reference-only',
 } as const;
 
 export const D20_LEGACY_MANUAL_NOTES = [
-  'Cleric and druid domain slots are applied manually.',
-  'Wizard specialist-school bonus slots are applied manually.',
-  'Spontaneous cure/inflict conversion is applied manually.',
-  'Dragon Disciple bonus arcane slots are applied manually.',
+  'Cleric domain, wizard specialist, and Dragon Disciple bonus slots are counted automatically in the spell-slot totals.',
+  'Which domain or specialty-school spell fills a prepared slot is your choice (Vancian preparation).',
+  'Spontaneous cure/inflict conversion happens at cast time; the reference list above shows the eligible spells.',
 ] as const;
 
 export const DND5E_SPELLS_COPY = {

@@ -122,13 +122,16 @@ export class Dnd35eEngine implements SystemEngine<Dnd35eDataModel> {
     // NOTE: 3.5e class files currently lack full `spellcasting.spellSlots` tables.
     // We use native 3.5e spell tables when present and fall back to PF1e core tables
     // for matching class IDs to automate baseline slot totals. SRD bonus spells
-    // from the casting ability are added per class inside the builder, and
-    // mergeVancianSpellSlots keeps each level's persisted manualBonus on top.
+    // from the casting ability, cleric domain slots, wizard specialist-school
+    // slots, and prestige caster-level advancement (e.g. Dragon Disciple) are all
+    // folded in per class inside the builder, and mergeVancianSpellSlots keeps
+    // each level's persisted manualBonus on top.
     const slotTotals = buildD20LegacySpellSlotTotals(
       'dnd-3.5e',
       data.classLevels,
       new Map(DND35E_CLASS_CATALOG.map((klass) => [klass.id, klass])),
-      data.baseAttributes
+      data.baseAttributes,
+      { arcaneSpecialtySchool: data.arcaneSpecialtySchool }
     );
     data.spellsPerDay = mergeVancianSpellSlots(data.spellsPerDay, slotTotals);
 

@@ -1,12 +1,10 @@
 import { useCallback, useState } from 'react';
-import { clampCount } from '../../utils/resourcePool';
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
 import type { Spell } from '../../types/magic/spells';
 import type { Pf1eTrait } from '../pf1e/data-model';
 import type { Pf1eDataModel } from '../pf1e/data-model';
 import {
   recoverD20LegacySpellSlot,
-  resetD20LegacyManualSpellcastingExtras,
   resetD20LegacySpellSlots,
   setD20LegacyPreparedSpell,
   setD20LegacySpellSlotTotal,
@@ -85,10 +83,9 @@ export function useD20LegacyMutationHandlers({
     ? () => {
         update({
           hitPoints: { ...sys.hitPoints, current: sys.hitPoints.max, temp: 0 },
+          // Domain, specialist, and Dragon Disciple bonus slots are folded into
+          // spellsPerDay, so resetting it clears their daily usage too.
           spellsPerDay: resetD20LegacySpellSlots(sys.spellsPerDay),
-          manualSpellcastingExtras: resetD20LegacyManualSpellcastingExtras(
-            sys.manualSpellcastingExtras
-          ),
         } as Partial<D20LegacyData>);
       }
     : undefined;
@@ -244,31 +241,6 @@ export function useD20LegacyMutationHandlers({
     [sys.spellsPerDay, update]
   );
 
-  const setManualExtraConsumed = useCallback(
-    (kind: 'domain' | 'specialist', level: number, consumed: boolean) => {
-      const current = sys.manualSpellcastingExtras ?? {};
-      update({
-        manualSpellcastingExtras: {
-          ...current,
-          ...(kind === 'domain'
-            ? {
-                domainSlotConsumedByLevel: {
-                  ...(current.domainSlotConsumedByLevel ?? {}),
-                  [level]: consumed,
-                },
-              }
-            : {
-                specialistSlotConsumedByLevel: {
-                  ...(current.specialistSlotConsumedByLevel ?? {}),
-                  [level]: consumed,
-                },
-              }),
-        },
-      } as Partial<D20LegacyData>);
-    },
-    [sys.manualSpellcastingExtras, update]
-  );
-
   const setSpontaneousConversionReference = useCallback(
     (reference: 'cure' | 'inflict' | 'both') => {
       update({
@@ -281,23 +253,13 @@ export function useD20LegacyMutationHandlers({
     [sys.manualSpellcastingExtras, update]
   );
 
-  const setDragonDiscipleBonusSlots = useCallback(
-    (patch: Partial<{ total: number; used: number }>) => {
-      const current = sys.manualSpellcastingExtras?.dragonDiscipleBonusSlots ?? {
-        total: 0,
-        used: 0,
-      };
-      const total = Math.max(0, patch.total ?? current.total);
-      const used = clampCount(patch.used ?? current.used, total);
-
-      update({
-        manualSpellcastingExtras: {
-          ...(sys.manualSpellcastingExtras ?? {}),
-          dragonDiscipleBonusSlots: { total, used },
-        },
-      } as Partial<D20LegacyData>);
+  const setArcaneSpecialtySchool = useCallback(
+    (school: string) => {
+      // A real school grants the specialist's +1 slot per castable level (the
+      // engine reads this); an empty value means generalist/universalist.
+      update({ arcaneSpecialtySchool: school || undefined } as Partial<D20LegacyData>);
     },
-    [sys.manualSpellcastingExtras, update]
+    [update]
   );
 
   const addFeat = useCallback(() => {
@@ -420,9 +382,8 @@ export function useD20LegacyMutationHandlers({
     useSpellSlot,
     recoverSpellSlot,
     setSpellSlotTotal,
-    setManualExtraConsumed,
     setSpontaneousConversionReference,
-    setDragonDiscipleBonusSlots,
+    setArcaneSpecialtySchool,
     addFeat,
     addItem,
     equipArmor,

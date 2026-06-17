@@ -1701,16 +1701,19 @@ describe('System Sheets', () => {
     });
 
     expect(
-      screen.getByText('Cleric and druid domain slots are applied manually.')
+      screen.getByText(
+        'Cleric domain, wizard specialist, and Dragon Disciple bonus slots are counted automatically in the spell-slot totals.'
+      )
     ).toBeInTheDocument();
     expect(
-      screen.getByText('Wizard specialist-school bonus slots are applied manually.')
+      screen.getByText(
+        'Which domain or specialty-school spell fills a prepared slot is your choice (Vancian preparation).'
+      )
     ).toBeInTheDocument();
     expect(
-      screen.getByText('Spontaneous cure/inflict conversion is applied manually.')
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText('Dragon Disciple bonus arcane slots are applied manually.')
+      screen.getByText(
+        'Spontaneous cure/inflict conversion happens at cast time; the reference list above shows the eligible spells.'
+      )
     ).toBeInTheDocument();
 
     await user.click(await screen.findByRole('button', { name: 'Learn Magic Missile' }));

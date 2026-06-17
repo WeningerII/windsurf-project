@@ -65,6 +65,42 @@ const D20_FALLBACK_CASTING_ABILITIES: Partial<Record<GameSystemId, Record<string
   },
 };
 
+/**
+ * Classes that grant one bonus domain spell slot per spell level they can cast
+ * (SRD 3.5 / PF1e CRB cleric). The domain slot count is deterministic from the
+ * class's effective caster level; only which domain spell fills it is manual.
+ */
+const D20_DOMAIN_CLASS_IDS: Partial<Record<GameSystemId, ReadonlySet<string>>> = {
+  'dnd-3.5e': new Set(['cleric']),
+  pf1e: new Set(['cleric']),
+};
+
+/**
+ * Classes that gain a specialist-school bonus slot per castable spell level when
+ * the character has chosen a specialty school (SRD 3.5 / PF1e CRB wizard). A
+ * universalist/generalist (no school) gets no bonus slot.
+ */
+const D20_SPECIALIST_CLASS_IDS: Partial<Record<GameSystemId, ReadonlySet<string>>> = {
+  'dnd-3.5e': new Set(['wizard']),
+  pf1e: new Set(['wizard']),
+};
+
+/** Arcane schools a wizard may specialize in (SRD 3.5 / PF1e CRB). */
+export const D20_ARCANE_SCHOOLS = [
+  'abjuration',
+  'conjuration',
+  'divination',
+  'enchantment',
+  'evocation',
+  'illusion',
+  'necromancy',
+  'transmutation',
+] as const;
+
+function isArcaneSpecialtySchool(school?: string): boolean {
+  return school != null && (D20_ARCANE_SCHOOLS as readonly string[]).includes(school);
+}
+
 function getD20LegacyCastingAbility(
   systemId: GameSystemId,
   classData?: CharacterClass
@@ -270,12 +306,19 @@ export function syncD20LegacySpellcastingSelections(
  * cantrips/orisons). Limitation: the slot tables store the published "—" and
  * "0" entries both as 0, so a half-caster's bonus-spells-only level (e.g. a
  * PF1e paladin 4 with high Cha) is conservatively treated as no slots.
+ *
+ * Cleric domain slots (one per castable level, 1st+) and wizard specialist-school
+ * slots (one per castable level, when `options.arcaneSpecialtySchool` is set) are
+ * folded in here too: their counts are deterministic from the class's effective
+ * caster level, so they belong in the automated totals. Which domain/school spell
+ * fills the slot stays a manual Vancian assignment.
  */
 export function buildD20LegacySpellSlotTotals(
   systemId: GameSystemId,
   classLevels: D20LegacyClassLevel[],
   classCatalog: Map<string, CharacterClass>,
-  baseAttributes?: Record<string, number>
+  baseAttributes?: Record<string, number>,
+  options?: { arcaneSpecialtySchool?: string }
 ): Record<number, number> {
   const slotTotals: Record<number, number> = {};
   const baseSpellcastingLevels = new Map<string, number>();
@@ -327,12 +370,22 @@ export function buildD20LegacySpellSlotTotals(
       baseAttributes && castingAbility ? baseAttributes[castingAbility] : undefined;
     const castingAbilityMod = castingAbilityScore != null ? abilityMod(castingAbilityScore) : 0;
 
+    const grantsDomainSlot = D20_DOMAIN_CLASS_IDS[systemId]?.has(classId) ?? false;
+    const grantsSpecialistSlot =
+      (D20_SPECIALIST_CLASS_IDS[systemId]?.has(classId) ?? false) &&
+      isArcaneSpecialtySchool(options?.arcaneSpecialtySchool);
+
     const effectiveLevel = baseLevel + (advancedLevels.get(classId) ?? 0);
     const classSlots = getSpellSlotsAtClassLevel(spellSlotTable, effectiveLevel);
     Object.entries(classSlots).forEach(([spellLevel, total]) => {
       const numericLevel = Number(spellLevel);
       const bonusSpells = total > 0 ? d20BonusSpells(castingAbilityMod, numericLevel) : 0;
-      slotTotals[numericLevel] = (slotTotals[numericLevel] ?? 0) + total + bonusSpells;
+      // Domain spells start at 1st level (no 0-level domain spell); the
+      // specialist bonus applies at every castable level, including cantrips.
+      const domainSlot = grantsDomainSlot && total > 0 && numericLevel >= 1 ? 1 : 0;
+      const specialistSlot = grantsSpecialistSlot && total > 0 ? 1 : 0;
+      slotTotals[numericLevel] =
+        (slotTotals[numericLevel] ?? 0) + total + bonusSpells + domainSlot + specialistSlot;
     });
   });
 

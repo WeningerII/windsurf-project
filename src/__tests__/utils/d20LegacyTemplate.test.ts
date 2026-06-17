@@ -437,12 +437,10 @@ describe('applyD20LegacyClassTemplate', () => {
     const dnd35eEngine = new Dnd35eEngine();
     const pf1eEngine = new Pf1eEngine();
     const dnd35eManualExtras: NonNullable<Dnd35eDataModel['manualSpellcastingExtras']> = {
-      domainSlotConsumedByLevel: { 1: true },
       spontaneousConversionReference: 'cure',
     };
     const pf1eManualExtras: NonNullable<Pf1eDataModel['manualSpellcastingExtras']> = {
-      specialistSlotConsumedByLevel: { 1: true },
-      dragonDiscipleBonusSlots: { total: 1, used: 1 },
+      spontaneousConversionReference: 'both',
     };
 
     const eldritchKnightDoc = applyD20LegacyClassTemplate(
