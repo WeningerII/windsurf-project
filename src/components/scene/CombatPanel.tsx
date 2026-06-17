@@ -15,6 +15,11 @@ interface CombatPanelProps {
   onTargetChange: (targetId: string) => void;
   onAttack: () => void;
   onRunRound: () => void;
+  /**
+   * True when fewer than two factions still have a living combatant — the
+   * autonomous round has nothing left to resolve, so Run Round is disabled.
+   */
+  combatConcluded?: boolean;
   log: string[];
 }
 
@@ -32,6 +37,7 @@ export function CombatPanel({
   onTargetChange,
   onAttack,
   onRunRound,
+  combatConcluded = false,
   log,
 }: CombatPanelProps) {
   const attacker = attackerId ? state.tokens[attackerId] : undefined;
@@ -42,6 +48,7 @@ export function CombatPanel({
   );
   const canAttack = attackerReady && Boolean(targetId) && combatReadyIds.has(targetId);
   const hasCombatants = combatReadyIds.size >= 2;
+  const canRunRound = hasCombatants && !combatConcluded;
 
   return (
     <div className="rounded-lg border bg-card p-3">
@@ -49,10 +56,25 @@ export function CombatPanel({
         <h5 className="flex items-center gap-1.5 text-sm font-semibold">
           <Swords className="h-4 w-4" /> Combat
         </h5>
-        <Button variant="outline" size="sm" disabled={!hasCombatants} onClick={onRunRound}>
-          <Zap className="mr-1.5 h-4 w-4" />
-          Run Round
-        </Button>
+        <div className="flex items-center gap-2">
+          {hasCombatants && combatConcluded && <Badge variant="secondary">Combat over</Badge>}
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={!canRunRound}
+            onClick={onRunRound}
+            title={
+              !hasCombatants
+                ? 'Need at least two combat-ready tokens.'
+                : combatConcluded
+                  ? 'Only one faction has living combatants.'
+                  : undefined
+            }
+          >
+            <Zap className="mr-1.5 h-4 w-4" />
+            Run Round
+          </Button>
+        </div>
       </div>
 
       <div className="space-y-2 text-sm">

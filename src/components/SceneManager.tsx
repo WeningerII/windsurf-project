@@ -26,6 +26,8 @@ import {
   buildDaggerheartCombatant,
   buildMam3eCombatant,
   buildMonsterCombatant,
+  buildSceneCombatants,
+  isRoundConclusive,
   resolveSceneAttack,
   runSceneRound,
   type ResolveCombatStats,
@@ -550,6 +552,18 @@ export function SceneManager({
       if (resolveCombatStats(token)) ids.add(token.id);
     });
     return ids;
+  }, [state, resolveCombatStats]);
+
+  // A fight is "over" once it had opposing sides and one of them is wiped.
+  // Requiring two factions to have been present distinguishes a finished battle
+  // (disable Run Round, surface "Combat over") from a single-faction scene where
+  // Run Round still legitimately walks the initiative/round cycle.
+  const combatConcluded = useMemo(() => {
+    if (!state) return false;
+    const combatants = buildSceneCombatants(state, resolveCombatStats);
+    if (combatants.length < 2) return false;
+    const factionsPresent = new Set(combatants.map((combatant) => combatant.faction));
+    return factionsPresent.size >= 2 && isRoundConclusive(combatants, {});
   }, [state, resolveCombatStats]);
 
   const handleCombatAttack = () => {
@@ -1344,6 +1358,7 @@ export function SceneManager({
                     onTargetChange={setCombatTargetId}
                     onAttack={handleCombatAttack}
                     onRunRound={handleRunRound}
+                    combatConcluded={combatConcluded}
                     log={combatLog}
                   />
                 </div>
