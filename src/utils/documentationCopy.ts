@@ -3,7 +3,7 @@ export const SYSTEM_SUPPORT_NOTES = {
     'Deterministic RAW auto-resolution: base and full core SRD prestige classes, spells per day including casting-ability, cleric domain, wizard specialist, and prestige (Dragon Disciple) bonus slots, synergy/encumbrance skills, and equipped-armor AC',
   pf1e: 'Deterministic RAW auto-resolution: base and vetted CRB prestige classes, spells per day including casting-ability, cleric domain, wizard specialist, and prestige (Dragon Disciple) bonus slots, class-skill and encumbrance skills, and equipped-armor AC',
   daggerheart:
-    'SRD-backed selectors, starter templates, browse tabs, equipment loadouts, gold tracking, and loot libraries are shipped; deterministic passive card bonuses are auto-applied where represented, while triggered, timing-based, and choice-based card effects remain tracked-but-manual or reference-only',
+    'Deterministic RAW auto-resolution: SRD-backed selectors, starter templates, browse tabs, equipment loadouts, gold tracking, and loot libraries; deterministic passive card bonuses are auto-applied where represented, while triggered, timing-based, choice-based, and narrative card effects are GM-adjudicated by design — an accepted manual boundary',
 } as const;
 
 export const D20_LEGACY_MANUAL_NOTES = [

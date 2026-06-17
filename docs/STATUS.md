@@ -22,7 +22,7 @@ This file is a current-state summary only. `docs/MASTER_PLAN.md` is the sole pla
 | D&D 3.5e | Full | Shared legacy host, full core prestige catalog is selectable, canonical 610-spell loader-backed catalog with alias-safe class-stub duplicate collapse, deterministic spells-per-day (casting-ability, cleric domain, wizard specialist, and prestige/Dragon-Disciple bonus slots), synergy/encumbrance/gear skills, and equipped-armor AC; Vancian prepared-slot assignment and spontaneous conversion remain accepted manual boundaries |
 | Pathfinder 1e | Full | Shared legacy host, vetted prestige support is product-reachable, raw `levelsByClass` and legacy spell metadata live in spell files, deterministic spells-per-day (casting-ability, cleric domain, wizard specialist, and prestige/Dragon-Disciple bonus slots), class-skill/encumbrance/gear skills, and equipped-armor AC; Vancian prepared-slot assignment and spontaneous conversion remain accepted manual boundaries |
 | M&M 3e | Full | Native point-buy sheet with pinned archetypes, complication insertion, and modifier math/PL-cap enforcement |
-| Daggerheart | Partial | Native sheet with selectors, domains, domain cards, equipment, loadouts, and deterministic passive automation with explicit manual/reference boundaries bounded by the existing metadata model |
+| Daggerheart | Full | Native sheet with selectors, domains, domain cards, equipment, loadouts, and deterministic passive automation with explicit manual/reference boundaries: passive bonuses (evasion, armor, thresholds, spellcast, traits) auto-apply, while triggered/narrative card resolution is GM-adjudicated by design (an enumerated accepted boundary) |
 
 ## Maintenance Tracks
 

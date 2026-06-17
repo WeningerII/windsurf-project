@@ -140,16 +140,16 @@ the same external open-content data as §1.
 
 ## 4. GLOBAL DONE criteria still outstanding
 
-- `supportLevel` is now `'full'` for **D&D 3.5e and PF1e**: their cleric domain,
-  wizard specialist, and Dragon Disciple bonus spell slots are auto-resolved into
-  the spells-per-day totals (counts are deterministic from the build), and the only
-  residual manual items — which spell fills a prepared slot, and spontaneous
-  cure/inflict conversion — are enumerated accepted boundaries in
-  `docs/srd-manifest/_exclusions.ts`. **Daggerheart** remains `'partial'`: its
-  triggered/timing/choice/narrative card effects are GM-adjudicated by design (an
-  accepted boundary), with only passive automation deterministic. Independent
-  content coverage is proven across the board (3.5e spells 99.8%, PF1e 99.8%,
-  PF2e/5e ~100%).
+- `supportLevel` is now `'full'` for **all seven systems**. D&D 3.5e and PF1e
+  auto-resolve their cleric domain, wizard specialist, and Dragon Disciple bonus
+  spell slots into the spells-per-day totals (counts are deterministic from the
+  build). Daggerheart auto-resolves its deterministic passive automation
+  (evasion, armor, thresholds, spellcast, traits). Each system's residual manual
+  surface is an enumerated accepted boundary in `docs/srd-manifest/_exclusions.ts`
+  — d20 Vancian prepared-slot assignment + spontaneous conversion, Daggerheart
+  triggered/narrative card resolution, M&M freeform descriptors — never
+  unfinished automation. Independent content coverage is proven across the board
+  (3.5e spells 99.8%, PF1e 99.8%, PF2e/5e ~100%).
 - README.md and MASTER_PLAN.md not updated to declare completion / cite both
   denominators (only STATUS.md was, and it explicitly does not claim
   RAW-coverage-complete).

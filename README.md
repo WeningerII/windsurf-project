@@ -13,10 +13,10 @@ Today this is a deterministic, multi-system character-sheet and scene toolkit �
 - ✅ **Verification**: `npm run verify` passed on May 30, 2026 under Node `20.19.0`
 - ✅ **D&D 5e 2014 + 2024**: full SRD-backed character management with shared 5e sheet flows and structured always-prepared support
 - ✅ **Pathfinder 2e**: native sheet with loader-backed archetypes, backgrounds, feats, spells, and equipment
-- ✅ **D&D 3.5e + Pathfinder 1e**: shared legacy sheet with base/prestige-class product reachability and Vancian tracked/prepared spell workflows
+- ✅ **D&D 3.5e + Pathfinder 1e**: shared legacy sheet with deterministic RAW auto-resolution — base/prestige classes, spells-per-day (casting-ability, cleric domain, wizard specialist, and Dragon Disciple bonus slots), synergy/encumbrance/gear skills, and equipped-armor AC, with Vancian tracked/prepared spell workflows (prepared-slot assignment stays manual)
 - ✅ **Spell catalog parity baseline**: shared spell indexes and alias-safe lookups across all five spell systems, including PF2e rank-10 browser support
 - ✅ **Mutants & Masterminds 3e**: native point-buy sheet with browseable SRD reference surfaces
-- ✅ **Daggerheart**: partial SRD-backed support with selectors, templates, equipment, domains, domain-card loadouts, and bounded deterministic passive automation
+- ✅ **Daggerheart**: SRD-backed support with selectors, templates, equipment, domains, domain-card loadouts, and deterministic passive automation; triggered/narrative card resolution is GM-adjudicated by design
 - ✅ **Manual scenes**: local scene/grid manager with event-backed tokens, queued loader-backed D&D 5e encounter seeding, party-level XP preview, terrain or hazard markers, initiative controls, and scene import/export
 - ✅ **Open-content policy**: strict source-filtered SRD/core-only shipping
 
@@ -265,7 +265,7 @@ Counts below summarize the current generated metrics in [docs/generated/roadmap-
 
 **Status**: Core power/advantage/equipment support is shipped alongside loader-backed archetype pinning, complication insertion, and modifier catalog reporting. Archetypes remain reference-only and do not auto-build characters.
 
-### Daggerheart - Partial Product Support ✅
+### Daggerheart - Full Product Support ✅
 **Implemented**:
 - Classes: 9 SRD-backed classes with subclass reference data
 - Ancestries: 19 SRD-backed ancestry options
