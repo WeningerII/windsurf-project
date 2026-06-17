@@ -80,18 +80,32 @@ export const MANUAL_EXCLUSIONS: ManualExclusion[] = [
     systemId: 'dnd-3.5e',
     subject: 'Vancian prepared-slot assignment',
     reason:
-      'Assigning specific prepared spells to slots (incl. domain slots) is a manual Vancian workflow; slot totals are computed, assignment is manual.',
-    masterPlanRef:
-      'MASTER_PLAN.md: D&D 3.5e support — Vancian tracked/prepared workflow, manual extras',
+      'All slot counts — base, casting-ability bonus, cleric domain, wizard specialist, and prestige (Dragon Disciple) bonus slots — are auto-resolved. Which specific spell a caster prepares into each slot each day is the Vancian play choice and stays manual.',
+    masterPlanRef: 'MASTER_PLAN.md: D&D 3.5e support — Vancian tracked/prepared workflow',
+  },
+  {
+    id: 'dnd-3.5e.spellcasting.spontaneous-conversion',
+    systemId: 'dnd-3.5e',
+    subject: 'Spontaneous cure/inflict conversion',
+    reason:
+      'A cleric trades a prepared spell for a cure/inflict spell at the moment of casting; this is a cast-time play choice, surfaced as a reference list rather than auto-applied.',
+    masterPlanRef: 'MASTER_PLAN.md: D&D 3.5e support — spontaneous conversion reference',
   },
   {
     id: 'pf1e.spellcasting.manual-prepared-slots',
     systemId: 'pf1e',
     subject: 'Vancian prepared-slot assignment',
     reason:
-      'Assigning specific prepared spells to slots (incl. domain slots) is a manual Vancian workflow; slot totals are computed, assignment is manual.',
-    masterPlanRef:
-      'MASTER_PLAN.md: Pathfinder 1e support — Vancian tracked/prepared workflow, manual extras',
+      'All slot counts — base, casting-ability bonus, cleric domain, wizard specialist, and prestige (Dragon Disciple) bonus slots — are auto-resolved. Which specific spell a caster prepares into each slot each day is the Vancian play choice and stays manual.',
+    masterPlanRef: 'MASTER_PLAN.md: Pathfinder 1e support — Vancian tracked/prepared workflow',
+  },
+  {
+    id: 'pf1e.spellcasting.spontaneous-conversion',
+    systemId: 'pf1e',
+    subject: 'Spontaneous cure/inflict conversion',
+    reason:
+      'A cleric trades a prepared spell for a cure/inflict spell at the moment of casting; this is a cast-time play choice, surfaced as a reference list rather than auto-applied.',
+    masterPlanRef: 'MASTER_PLAN.md: Pathfinder 1e support — spontaneous conversion reference',
   },
 ];
 

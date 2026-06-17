@@ -102,7 +102,8 @@ describe('GameSystemSelector', () => {
     expect(screen.getAllByText(/archetypes/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/ancestries/i).length).toBeGreaterThan(0);
     expect(screen.getAllByText(/domain cards/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByText('Partial')).toHaveLength(3);
+    // Only Daggerheart remains Partial; 3.5e and PF1e are now Full.
+    expect(screen.getAllByText('Partial')).toHaveLength(1);
     expect(
       screen.getByText(
         'SRD-backed selectors, starter templates, browse tabs, equipment loadouts, gold tracking, and loot libraries are shipped; deterministic passive card bonuses are auto-applied where represented, while triggered, timing-based, and choice-based card effects remain tracked-but-manual or reference-only'

@@ -240,9 +240,12 @@ describe('Pf1eEngine', () => {
 
       const result = engine.prepareData(doc);
 
-      expect(result.system.spellsPerDay?.[1]).toEqual({ total: 6, used: 0 });
-      expect(result.system.spellsPerDay?.[2]).toEqual({ total: 4, used: 0 });
-      expect(result.system.spellsPerDay?.[3]).toEqual({ total: 2, used: 0 });
+      // Wizard 3 + Cleric 3, each advanced +2 by Mystic Theurge → effective
+      // level 5 for both. Base wizard+cleric = 3+3, 2+2, 1+1; the cleric also
+      // contributes one domain slot per castable level (+1 at L1-L3).
+      expect(result.system.spellsPerDay?.[1]).toEqual({ total: 7, used: 0 });
+      expect(result.system.spellsPerDay?.[2]).toEqual({ total: 5, used: 0 });
+      expect(result.system.spellsPerDay?.[3]).toEqual({ total: 3, used: 0 });
     });
 
     it('advances PF1e lore-master spell slots through its selected prior spellcasting class', () => {
@@ -317,6 +320,63 @@ describe('Pf1eEngine', () => {
       expect(result.system.spellsPerDay?.[2]).toEqual({ total: 6, used: 0 });
       expect(result.system.spellsPerDay?.[3]).toEqual({ total: 4, used: 0 });
       expect(result.system.spellsPerDay?.[4]).toEqual({ total: 0, used: 0 });
+    });
+
+    it('counts cleric domain slots at each castable level (PF1e CRB)', () => {
+      const doc = makeDoc({
+        classLevels: [
+          {
+            classId: 'cleric',
+            level: 5,
+            hitDieRolls: [8, 5, 5, 5, 5],
+            bab: 'three-quarter',
+            fortSave: 'good',
+            refSave: 'poor',
+            willSave: 'good',
+            skillPointsPerLevel: 2,
+            favoredClassBonus: 'hp',
+          },
+        ],
+      });
+
+      const result = engine.prepareData(doc);
+
+      // Cleric 5 base: L0 4, L1 3, L2 2, L3 1. Each castable spell level 1-3
+      // gains one domain slot; cantrips (L0) get none.
+      expect(result.system.spellsPerDay?.[0]).toEqual({ total: 4, used: 0 });
+      expect(result.system.spellsPerDay?.[1]).toEqual({ total: 4, used: 0 });
+      expect(result.system.spellsPerDay?.[2]).toEqual({ total: 3, used: 0 });
+      expect(result.system.spellsPerDay?.[3]).toEqual({ total: 2, used: 0 });
+    });
+
+    it('counts a wizard specialist-school slot per castable level only when a school is chosen', () => {
+      const wizardLevels = [
+        {
+          classId: 'wizard',
+          level: 5,
+          hitDieRolls: [6, 4, 4, 4, 4],
+          bab: 'half' as const,
+          fortSave: 'poor' as const,
+          refSave: 'poor' as const,
+          willSave: 'good' as const,
+          skillPointsPerLevel: 2,
+          favoredClassBonus: 'hp' as const,
+        },
+      ];
+
+      const universalist = engine.prepareData(makeDoc({ classLevels: wizardLevels }));
+      const specialist = engine.prepareData(
+        makeDoc({ classLevels: wizardLevels, arcaneSpecialtySchool: 'evocation' })
+      );
+
+      // Wizard 5 base: L0 4, L1 3, L2 2, L3 1 (universalist gets no bonus slot).
+      expect(universalist.system.spellsPerDay?.[0]).toEqual({ total: 4, used: 0 });
+      expect(universalist.system.spellsPerDay?.[1]).toEqual({ total: 3, used: 0 });
+      // The specialist adds one slot per castable level, including cantrips.
+      expect(specialist.system.spellsPerDay?.[0]).toEqual({ total: 5, used: 0 });
+      expect(specialist.system.spellsPerDay?.[1]).toEqual({ total: 4, used: 0 });
+      expect(specialist.system.spellsPerDay?.[2]).toEqual({ total: 3, used: 0 });
+      expect(specialist.system.spellsPerDay?.[3]).toEqual({ total: 2, used: 0 });
     });
   });
 

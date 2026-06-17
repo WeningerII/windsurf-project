@@ -151,8 +151,8 @@ describe('systemCatalog integration — real loaders', () => {
       );
     }
 
-    expect(loaderSummaries['dnd-3.5e'].supportLevel).toBe('partial');
-    expect(loaderSummaries.pf1e.supportLevel).toBe('partial');
+    expect(loaderSummaries['dnd-3.5e'].supportLevel).toBe('full');
+    expect(loaderSummaries.pf1e.supportLevel).toBe('full');
     expect(loaderSummaries.daggerheart.supportLevel).toBe('partial');
     expect(loaderSummaries['dnd-3.5e'].categories.map((category) => category.id)).not.toContain(
       'monsters'

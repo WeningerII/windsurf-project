@@ -124,7 +124,7 @@ function runVancianCycle<T extends D20LegacyData>(params: {
     expect(rested.system.preparedSpellsByLevel?.[1]).not.toContain(spellId);
   });
   expect(D20_LEGACY_MANUAL_NOTES).toContain(
-    'Spontaneous cure/inflict conversion is applied manually.'
+    'Spontaneous cure/inflict conversion happens at cast time; the reference list above shows the eligible spells.'
   );
 
   const [hydrated] = importDocuments(exportDocuments([rested]));
@@ -162,11 +162,12 @@ describe('d20 legacy manual spell-slot totals (regression: prepareData reverted 
   it('keeps a manually raised total across repeated prepares', () => {
     const engine = new Pf1eEngine();
     const prepared = engine.prepareData(makePf1eClericDoc());
-    // Cleric 3 table baseline at 1st level is 2 (Wis 10 → no bonus spells).
-    expect(prepared.system.spellsPerDay?.[1]).toMatchObject({ total: 2 });
+    // Cleric 3 spells/day at 1st level is 3: 2 base + 1 domain slot (Wis 10 → no
+    // bonus spells).
+    expect(prepared.system.spellsPerDay?.[1]).toMatchObject({ total: 3 });
 
     // The sheet's slot editor raises the 1st-level total to 5 (e.g. a house
-    // bonus); the edit is recorded as a +3 delta over the automated baseline.
+    // bonus); the edit is recorded as a +2 delta over the automated baseline.
     const edited = {
       ...prepared,
       system: {
@@ -174,10 +175,10 @@ describe('d20 legacy manual spell-slot totals (regression: prepareData reverted 
         spellsPerDay: setD20LegacySpellSlotTotal(prepared.system.spellsPerDay, 1, 5),
       },
     };
-    expect(edited.system.spellsPerDay?.[1]).toEqual({ total: 5, used: 0, manualBonus: 3 });
+    expect(edited.system.spellsPerDay?.[1]).toEqual({ total: 5, used: 0, manualBonus: 2 });
 
     const reprepared = engine.prepareData(engine.prepareData(edited));
-    expect(reprepared.system.spellsPerDay?.[1]).toEqual({ total: 5, used: 0, manualBonus: 3 });
+    expect(reprepared.system.spellsPerDay?.[1]).toEqual({ total: 5, used: 0, manualBonus: 2 });
   });
 
   it('survives level-down sanely: baseline shrinks, the manual delta is kept, totals floor at 0', () => {
@@ -188,11 +189,12 @@ describe('d20 legacy manual spell-slot totals (regression: prepareData reverted 
       ...prepared,
       system: {
         ...prepared.system,
-        spellsPerDay: setD20LegacySpellSlotTotal(prepared.system.spellsPerDay, 1, 3), // +1 over baseline 2
+        spellsPerDay: setD20LegacySpellSlotTotal(prepared.system.spellsPerDay, 1, 4), // +1 over baseline 3
       },
     };
 
-    // Level the cleric down to 1: table baseline drops to 1, manual +1 stays.
+    // Level the cleric down to 1: the base+domain baseline drops to 2 (1 base +
+    // 1 domain), and the manual +1 stays.
     const leveledDown = engine.prepareData({
       ...edited,
       system: {
@@ -204,7 +206,7 @@ describe('d20 legacy manual spell-slot totals (regression: prepareData reverted 
         })),
       },
     });
-    expect(leveledDown.system.spellsPerDay?.[1]).toEqual({ total: 2, used: 0, manualBonus: 1 });
+    expect(leveledDown.system.spellsPerDay?.[1]).toEqual({ total: 3, used: 0, manualBonus: 1 });
 
     // A manual reduction below the automated baseline floors at 0 after a
     // level-down rather than going negative.
@@ -212,7 +214,7 @@ describe('d20 legacy manual spell-slot totals (regression: prepareData reverted 
       ...prepared,
       system: {
         ...prepared.system,
-        spellsPerDay: setD20LegacySpellSlotTotal(prepared.system.spellsPerDay, 1, 0), // −2 under baseline
+        spellsPerDay: setD20LegacySpellSlotTotal(prepared.system.spellsPerDay, 1, 0), // −3 under baseline 3
       },
     };
     const reducedDown = engine.prepareData({
@@ -226,7 +228,7 @@ describe('d20 legacy manual spell-slot totals (regression: prepareData reverted 
         })),
       },
     });
-    expect(reducedDown.system.spellsPerDay?.[1]).toEqual({ total: 0, used: 0, manualBonus: -2 });
+    expect(reducedDown.system.spellsPerDay?.[1]).toEqual({ total: 0, used: 0, manualBonus: -3 });
   });
 
   it('keeps rows added via "Add Level" (whole total recorded as manualBonus) across prepares', () => {

@@ -7,9 +7,6 @@ export type D20LegacySpellSlots = Record<
   number,
   { total: number; used: number; manualBonus?: number }
 >;
-export type D20LegacyManualSpellcastingExtras = NonNullable<
-  D20LegacyData['manualSpellcastingExtras']
->;
 
 /**
  * View one spell-slot level as a generic resource pool: a d20 slot stores its
@@ -34,27 +31,6 @@ export function resetD20LegacySpellSlots(spellsPerDay?: D20LegacySpellSlots) {
   }
 
   return next;
-}
-
-export function resetD20LegacyManualSpellcastingExtras(
-  extras?: D20LegacyData['manualSpellcastingExtras']
-): D20LegacyData['manualSpellcastingExtras'] {
-  if (!extras) {
-    return extras;
-  }
-
-  return {
-    ...extras,
-    domainSlotConsumedByLevel: Object.fromEntries(
-      Object.keys(extras.domainSlotConsumedByLevel ?? {}).map((level) => [Number(level), false])
-    ),
-    specialistSlotConsumedByLevel: Object.fromEntries(
-      Object.keys(extras.specialistSlotConsumedByLevel ?? {}).map((level) => [Number(level), false])
-    ),
-    dragonDiscipleBonusSlots: extras.dragonDiscipleBonusSlots
-      ? { ...extras.dragonDiscipleBonusSlots, used: 0 }
-      : undefined,
-  };
 }
 
 export function setD20LegacyPreparedSpell(

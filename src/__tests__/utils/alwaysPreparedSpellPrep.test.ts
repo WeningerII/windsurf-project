@@ -201,8 +201,8 @@ describe('always-prepared spell-prep contract — cross-system regression', () =
       const trackedSpellIds = ['fireball-3-35e', 'bless-cleric-35e'];
       const alwaysPreparedSpellIds = ['cure-light-wounds-druid-35e'];
       const manualNotes = [
-        'Cleric and druid domain slots are applied manually.',
-        'Spontaneous cure/inflict conversion is applied manually.',
+        'Which domain or specialty-school spell fills a prepared slot is your choice (Vancian preparation).',
+        'Spontaneous cure/inflict conversion happens at cast time; the reference list above shows the eligible spells.',
       ];
 
       const concepts = buildSpellPreparationConcepts({

@@ -14,7 +14,7 @@ const dragonDiscipleFeatures: Feature[] = [
     id: 'dragon-disciple-bonus-spell-1-35e',
     name: 'Bonus Spell',
     description:
-      'The dragon disciple gains a bonus arcane spell slot. Track the extra slot manually until bonus-spell automation exists.',
+      'The dragon disciple gains spells per day as though gaining a level in a previously held arcane spellcasting class.',
     source: 'Dragon Disciple 1',
   },
   {
@@ -34,7 +34,7 @@ const dragonDiscipleFeatures: Feature[] = [
     id: 'dragon-disciple-bonus-spell-2-35e',
     name: 'Bonus Spell',
     description:
-      'The dragon disciple gains another bonus arcane spell slot. Track the extra slot manually until bonus-spell automation exists.',
+      'The dragon disciple gains spells per day as though gaining a level in a previously held arcane spellcasting class.',
     source: 'Dragon Disciple 2',
   },
   {
@@ -60,7 +60,7 @@ const dragonDiscipleFeatures: Feature[] = [
     id: 'dragon-disciple-bonus-spell-3-35e',
     name: 'Bonus Spell',
     description:
-      'The dragon disciple gains another bonus arcane spell slot. Track the extra slot manually until bonus-spell automation exists.',
+      'The dragon disciple gains spells per day as though gaining a level in a previously held arcane spellcasting class.',
     source: 'Dragon Disciple 4',
   },
   {
@@ -73,7 +73,7 @@ const dragonDiscipleFeatures: Feature[] = [
     id: 'dragon-disciple-bonus-spell-4-35e',
     name: 'Bonus Spell',
     description:
-      'The dragon disciple gains another bonus arcane spell slot. Track the extra slot manually until bonus-spell automation exists.',
+      'The dragon disciple gains spells per day as though gaining a level in a previously held arcane spellcasting class.',
     source: 'Dragon Disciple 5',
   },
   {
@@ -86,7 +86,7 @@ const dragonDiscipleFeatures: Feature[] = [
     id: 'dragon-disciple-bonus-spell-5-35e',
     name: 'Bonus Spell',
     description:
-      'The dragon disciple gains another bonus arcane spell slot. Track the extra slot manually until bonus-spell automation exists.',
+      'The dragon disciple gains spells per day as though gaining a level in a previously held arcane spellcasting class.',
     source: 'Dragon Disciple 6',
   },
   {
@@ -111,7 +111,7 @@ const dragonDiscipleFeatures: Feature[] = [
     id: 'dragon-disciple-bonus-spell-6-35e',
     name: 'Bonus Spell',
     description:
-      'The dragon disciple gains another bonus arcane spell slot. Track the extra slot manually until bonus-spell automation exists.',
+      'The dragon disciple gains spells per day as though gaining a level in a previously held arcane spellcasting class.',
     source: 'Dragon Disciple 8',
   },
   {
@@ -125,7 +125,7 @@ const dragonDiscipleFeatures: Feature[] = [
     id: 'dragon-disciple-bonus-spell-7-35e',
     name: 'Bonus Spell',
     description:
-      'The dragon disciple gains another bonus arcane spell slot. Track the extra slot manually until bonus-spell automation exists.',
+      'The dragon disciple gains spells per day as though gaining a level in a previously held arcane spellcasting class.',
     source: 'Dragon Disciple 9',
   },
   {
@@ -191,6 +191,21 @@ export const dragonDisciple: CharacterClass = {
     { level: 9, features: [dragonDiscipleFeatures[17], dragonDiscipleFeatures[18]] },
     { level: 10, features: [dragonDiscipleFeatures[19], dragonDiscipleFeatures[20]] },
   ],
+  d20SpellcastingAdvancement: {
+    tracks: [
+      {
+        id: 'arcane-class',
+        label: 'Arcane Spellcasting Class',
+        kind: 'arcane',
+        // SRD 3.5 Dragon Disciple: +1 level of an existing arcane spellcasting
+        // class at levels 1, 2, 4, 5, 6, 8, and 9 (levels 3, 7, 10 grant other
+        // abilities instead). Entry requires casting arcane spells without
+        // preparation, so the eligible prior classes are sorcerer and bard.
+        advancementLevels: [1, 2, 4, 5, 6, 8, 9],
+        eligibleClassIds: ['sorcerer', 'bard'],
+      },
+    ],
+  },
   subclassLevel: 20,
   subclasses: [],
 };

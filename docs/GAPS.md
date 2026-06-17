@@ -117,13 +117,14 @@ several items below; the remainder is the honest residual.
   heighten, M&M measurements: the RAW formula is proven by
   test, but `prepareData` / the character sheet does not actually compute or
   display it. Wiring these into the engines is outstanding. **(3.5e skill synergy,
-  max-rank enforcement, and the encumbrance check penalty are now wired** —
+  max-rank enforcement, and the full check penalty are now wired** —
   synergy applies in both the skills tab and `rollCheck`; the skills tab shows
-  each skill's RAW rank cap and flags over-cap values; the load-based check
-  penalty applies to physical skills from carried weight. Conditional and
-  Knowledge-subtype synergies stay manual. The gear-based armor check penalty
-  remains unwired — the d20-legacy sheet has no flow that equips armor with its
-  stats onto the character, so there is no per-item ACP to source.)
+  each skill's RAW rank cap and flags over-cap values; the check penalty applies
+  to physical skills from both carried weight (encumbrance) and the equipped
+  armor/shield armor-check penalty, sourced from the catalog-backed equip flow.
+  Conditional and Knowledge-subtype synergies stay manual. Cleric domain, wizard
+  specialist, and Dragon Disciple bonus spell slots are also now auto-resolved
+  into the spells-per-day totals.)
 - **Stricter spec criteria not met:** comprehensive typed-bonus *stacking* tests
   (e.g., 3.5e dodge-stacks-but-others-don't); the content×compute cross-product
   fixtures (Monk+shield AC, PF2e striking+enfeebled as combined cases);
@@ -139,12 +140,16 @@ the same external open-content data as §1.
 
 ## 4. GLOBAL DONE criteria still outstanding
 
-- `supportLevel` correctly remains `'partial'` for D&D 3.5e, PF1e, Daggerheart — but
-  the gate is **automation, not coverage**: per `docs/MASTER_PLAN.md`, `Full` means
-  deterministic RAW auto-resolution, and these systems' manual extras (3.5e/PF1e
-  domain/specialist/spontaneous/Dragon Disciple slots; Daggerheart triggered/timing/
-  choice card effects) are not yet auto-resolved. Independent content coverage is now
-  proven (3.5e spells 99.8%, PF1e 99.8%, PF2e/5e ~100%).
+- `supportLevel` is now `'full'` for **D&D 3.5e and PF1e**: their cleric domain,
+  wizard specialist, and Dragon Disciple bonus spell slots are auto-resolved into
+  the spells-per-day totals (counts are deterministic from the build), and the only
+  residual manual items — which spell fills a prepared slot, and spontaneous
+  cure/inflict conversion — are enumerated accepted boundaries in
+  `docs/srd-manifest/_exclusions.ts`. **Daggerheart** remains `'partial'`: its
+  triggered/timing/choice/narrative card effects are GM-adjudicated by design (an
+  accepted boundary), with only passive automation deterministic. Independent
+  content coverage is proven across the board (3.5e spells 99.8%, PF1e 99.8%,
+  PF2e/5e ~100%).
 - README.md and MASTER_PLAN.md not updated to declare completion / cite both
   denominators (only STATUS.md was, and it explicitly does not claim
   RAW-coverage-complete).

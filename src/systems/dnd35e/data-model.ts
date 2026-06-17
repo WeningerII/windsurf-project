@@ -40,10 +40,13 @@ export interface Dnd35eFeat {
 }
 
 export interface Dnd35eManualSpellcastingExtras {
-  domainSlotConsumedByLevel?: Record<number, boolean>;
-  specialistSlotConsumedByLevel?: Record<number, boolean>;
+  /**
+   * Reference helper for spontaneous cure/inflict conversion. The conversion is
+   * a cast-time choice (an accepted manual boundary); this only selects which
+   * spell list to surface as a reference. Domain, specialist, and Dragon
+   * Disciple bonus slots are now auto-resolved into `spellsPerDay`.
+   */
   spontaneousConversionReference?: 'cure' | 'inflict' | 'both';
-  dragonDiscipleBonusSlots?: { total: number; used: number };
 }
 
 export interface Dnd35eDataModel extends SystemDataModel {
@@ -107,6 +110,12 @@ export interface Dnd35eDataModel extends SystemDataModel {
   preparedSpellsByLevel?: Record<number, string[]>;
   alwaysPreparedSpellIds?: string[];
   manualSpellcastingExtras?: Dnd35eManualSpellcastingExtras;
+  /**
+   * Wizard arcane specialization (SRD 3.5). Set to one of the eight schools to
+   * grant the specialist's +1 spell slot per castable level; absent means a
+   * generalist wizard (no bonus slot).
+   */
+  arcaneSpecialtySchool?: string;
 
   // Equipment
   equipment: Array<{

@@ -1,4 +1,4 @@
-_Generated: 2026-06-12T22:49:51.831Z_
+_Generated: 2026-06-17T15:54:35.844Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -151,7 +151,7 @@ _The manifests in docs/srd-manifest/ are generated from the loaders, so this mea
 | Pathfinder 2e | 26 | 26 | 100% |
 | Daggerheart | 26 | 26 | 100% |
 
-_Denominators: cited open-content manifests in docs/srd-manifest/ and docs/compute-register/. Enumerated manual boundaries excluded from both: 8._
+_Denominators: cited open-content manifests in docs/srd-manifest/ and docs/compute-register/. Enumerated manual boundaries excluded from both: 10._
 
 ### Content Integrity (Denominator A — provenance + policy)
 _Share of each system's loader-backed entries that are source-tagged AND open-content-policy-clean — i.e. the content DONE conditions 'encoded, loader-backed, source-tagged, policy-clean'. This certifies CATALOG INTEGRITY (every shipped open-content entry is cited and compliant). It is NOT coverage vs the full published SRD: measuring which SRD entries are MISSING requires an external authoritative SRD index that is unavailable in this environment, so that coverage dimension is flagged unresolved rather than asserted._

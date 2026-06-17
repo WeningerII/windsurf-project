@@ -81,6 +81,7 @@ interface Props {
   spellSlots: Record<number, { total: number; used: number }>;
   spellSlotLevels: number[];
   manualSpellcastingExtras?: D20LegacyData['manualSpellcastingExtras'];
+  arcaneSpecialtySchool?: string;
   onLoadSpells: () => void | Promise<void>;
   equipmentLoaded: boolean;
   equipmentItems: Item[];
@@ -124,13 +125,8 @@ interface Props {
   onUseSpellSlot: (level: number) => void;
   onRecoverSpellSlot: (level: number) => void;
   onSetSpellSlotTotal: (level: number, total: number) => void;
-  onSetManualExtraConsumed: (
-    kind: 'domain' | 'specialist',
-    level: number,
-    consumed: boolean
-  ) => void;
   onSetSpontaneousConversionReference: (reference: 'cure' | 'inflict' | 'both') => void;
-  onSetDragonDiscipleBonusSlots: (patch: Partial<{ total: number; used: number }>) => void;
+  onSetArcaneSpecialtySchool: (school: string) => void;
   onCurrencyChange: (currency: D20InventoryCurrency) => void;
   onAddItem: (item: { id: string; name: string; quantity: number; weight: number }) => void;
   onRemoveItem: (itemId: string) => void;
@@ -176,6 +172,7 @@ export const D20LegacyTabs: React.FC<Props> = ({
   spellSlots,
   spellSlotLevels,
   manualSpellcastingExtras,
+  arcaneSpecialtySchool,
   onLoadSpells,
   equipmentLoaded,
   equipmentItems,
@@ -204,9 +201,8 @@ export const D20LegacyTabs: React.FC<Props> = ({
   onUseSpellSlot,
   onRecoverSpellSlot,
   onSetSpellSlotTotal,
-  onSetManualExtraConsumed,
   onSetSpontaneousConversionReference,
-  onSetDragonDiscipleBonusSlots,
+  onSetArcaneSpecialtySchool,
   onCurrencyChange,
   onAddItem,
   onRemoveItem,
@@ -370,6 +366,7 @@ export const D20LegacyTabs: React.FC<Props> = ({
           spellSlots={spellSlots}
           spellSlotLevels={spellSlotLevels}
           manualSpellcastingExtras={manualSpellcastingExtras}
+          arcaneSpecialtySchool={arcaneSpecialtySchool}
           canUpdate={canUpdate}
           onAddSpellLevel={onAddSpellLevel}
           onAddKnownSpell={onAddKnownSpell}
@@ -378,9 +375,8 @@ export const D20LegacyTabs: React.FC<Props> = ({
           onUseSpellSlot={onUseSpellSlot}
           onRecoverSpellSlot={onRecoverSpellSlot}
           onSetSpellSlotTotal={onSetSpellSlotTotal}
-          onSetManualExtraConsumed={onSetManualExtraConsumed}
           onSetSpontaneousConversionReference={onSetSpontaneousConversionReference}
-          onSetDragonDiscipleBonusSlots={onSetDragonDiscipleBonusSlots}
+          onSetArcaneSpecialtySchool={onSetArcaneSpecialtySchool}
         />
       </TabsContent>
 

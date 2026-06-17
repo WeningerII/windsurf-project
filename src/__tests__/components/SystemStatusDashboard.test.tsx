@@ -33,9 +33,7 @@ describe('SystemStatusDashboard', () => {
     expect(screen.getAllByText('Communities').length).toBeGreaterThan(0);
     expect(screen.getAllByText('Power Modifiers').length).toBeGreaterThan(0);
     expect(screen.queryByText(/SRD 5\.1 excludes feat data/i)).not.toBeInTheDocument();
-    expect(
-      screen.getByText('Base classes plus the full core SRD prestige catalog are selectable')
-    ).toBeInTheDocument();
+    expect(screen.getByText(/full core SRD prestige classes/i)).toBeInTheDocument();
     expect(
       screen.getByText(/deterministic passive card bonuses are auto-applied/i)
     ).toBeInTheDocument();

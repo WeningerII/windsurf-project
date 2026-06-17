@@ -8,7 +8,7 @@ export const Pf1eSystemDef: SystemDefinition<Pf1eDataModel> = {
   id: 'pf1e',
   label: 'Pathfinder 1e',
   version: 'PF1e SRD',
-  supportLevel: 'partial',
+  supportLevel: 'full',
   supportNotes: SYSTEM_SUPPORT_NOTES.pf1e,
   attributes: [
     { id: 'str', name: 'Strength', abbreviation: 'STR', description: 'Physical power' },

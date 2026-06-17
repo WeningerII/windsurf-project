@@ -8,7 +8,7 @@ export const Dnd35eSystemDef: SystemDefinition<Dnd35eDataModel> = {
   id: 'dnd-3.5e',
   label: 'D&D 3.5e',
   version: 'SRD 3.5',
-  supportLevel: 'partial',
+  supportLevel: 'full',
   supportNotes: SYSTEM_SUPPORT_NOTES['dnd-3.5e'],
   attributes: [
     { id: 'str', name: 'Strength', abbreviation: 'STR', description: 'Physical power' },
