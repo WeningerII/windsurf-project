@@ -8,7 +8,7 @@ export const DaggerheartSystemDef: SystemDefinition<DaggerheartDataModel> = {
   id: 'daggerheart',
   label: 'Daggerheart',
   version: '1.0',
-  supportLevel: 'partial',
+  supportLevel: 'full',
   supportNotes: SYSTEM_SUPPORT_NOTES.daggerheart,
   attributes: [
     {
