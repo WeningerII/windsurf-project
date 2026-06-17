@@ -363,7 +363,7 @@ function normalizeLegacyEquipment(rawItems: unknown[], fallbackType: Item['type'
 
       const type = ITEM_TYPES.has(String(raw.type)) ? (raw.type as Item['type']) : fallbackType;
 
-      return {
+      const base = {
         ...raw,
         type,
         cost,
@@ -371,7 +371,34 @@ function normalizeLegacyEquipment(rawItems: unknown[], fallbackType: Item['type'
         weight: typeof raw.weight === 'number' && Number.isFinite(raw.weight) ? raw.weight : 0,
         description: typeof raw.description === 'string' ? raw.description : '',
         requiresAttunement: Boolean(raw.requiresAttunement),
-      } as Item;
+      };
+
+      // Legacy d20 armor/shields (DnD35eArmor/Shield) are authored with the
+      // weight class in `type`, the dex cap in `maxDexBonus`, and the shield
+      // bonus in `armorClassBonus`. Map those onto the canonical names the AC
+      // math and the equip flow read (`armorType`/`dexBonusMax`/`shieldBonus`),
+      // preserving the armor check penalty.
+      if (type === 'armor') {
+        return {
+          ...base,
+          armorType: ['light', 'medium', 'heavy'].includes(String(raw.type))
+            ? (raw.type as 'light' | 'medium' | 'heavy')
+            : undefined,
+          dexBonusMax: typeof raw.maxDexBonus === 'number' ? raw.maxDexBonus : undefined,
+          armorCheckPenalty:
+            typeof raw.armorCheckPenalty === 'number' ? raw.armorCheckPenalty : undefined,
+        } as unknown as Item;
+      }
+      if (type === 'shield') {
+        return {
+          ...base,
+          shieldBonus: typeof raw.armorClassBonus === 'number' ? raw.armorClassBonus : undefined,
+          armorCheckPenalty:
+            typeof raw.armorCheckPenalty === 'number' ? raw.armorCheckPenalty : undefined,
+        } as unknown as Item;
+      }
+
+      return base as Item;
     });
 }
 
