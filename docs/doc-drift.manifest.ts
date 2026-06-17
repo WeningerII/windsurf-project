@@ -142,6 +142,12 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: ['path_ref_rule'],
   },
   {
+    path: 'docs/rfc/005-resource-pools.md',
+    kind: 'rfc',
+    owner: 'resource-pools-rfc',
+    rules: ['path_ref_rule'],
+  },
+  {
     path: 'docs/PRODUCTION_PLAN.md',
     kind: 'historical',
     owner: 'historical-planning',

@@ -1,4 +1,5 @@
 import type { Pf2eDataModel, Pf2eProficiencyTier, Pf2eSpellcasting } from './data-model';
+import { clampCount } from '../../utils/resourcePool';
 
 const PF2E_TIER_ORDER: Pf2eProficiencyTier[] = [
   'untrained',
@@ -57,7 +58,7 @@ export function shortRestPf2eSpellcasting(
     ...spellcasting,
     focusPoints: {
       ...spellcasting.focusPoints,
-      current: Math.min(spellcasting.focusPoints.max, spellcasting.focusPoints.current + 1),
+      current: clampCount(spellcasting.focusPoints.current + 1, spellcasting.focusPoints.max),
     },
   };
 }

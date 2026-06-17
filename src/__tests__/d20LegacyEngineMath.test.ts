@@ -16,6 +16,7 @@ import {
   d20EncumbrancePenalties,
   d20LiftDragLimits,
   d20BonusSpells,
+  d20SkillCheckPenalty,
 } from '../systems/shared/d20-helpers';
 import {
   dnd35eXpForLevel,
@@ -556,6 +557,35 @@ describe('L6 d20-legacy carrying capacity', () => {
   it('derives lift/drag limits as x1 / x2 / x5 of the maximum load', () => {
     // Str 15 → max 200
     expect(d20LiftDragLimits(15)).toEqual({ overHead: 200, offGround: 400, pushDrag: 1000 });
+  });
+  it('applies the check penalty (load) per the system affected-skill list', () => {
+    const noGear: { equipped: boolean; armorCheckPenalty?: number }[] = [];
+    // Str 10 capacity: light <=33, medium <=66, heavy <=100.
+    // 3.5e list (Balance/Hide/Tumble/...):
+    expect(d20SkillCheckPenalty('dnd-3.5e', 10, 50, noGear, 'climb')).toBe(-3); // medium
+    expect(d20SkillCheckPenalty('dnd-3.5e', 10, 90, noGear, 'tumble')).toBe(-6); // heavy
+    expect(d20SkillCheckPenalty('dnd-3.5e', 10, 20, noGear, 'climb')).toBe(0); // light
+    expect(d20SkillCheckPenalty('dnd-3.5e', 10, 90, noGear, 'diplomacy')).toBe(0); // unaffected
+    // PF1e consolidated the list into different members:
+    expect(d20SkillCheckPenalty('pf1e', 10, 50, noGear, 'acrobatics')).toBe(-3);
+    expect(d20SkillCheckPenalty('pf1e', 10, 90, noGear, 'stealth')).toBe(-6);
+    expect(d20SkillCheckPenalty('pf1e', 10, 50, noGear, 'fly')).toBe(-3);
+    // 'tumble' is 3.5e-only (folded into PF1e Acrobatics); 'acrobatics' is PF1e-only.
+    expect(d20SkillCheckPenalty('pf1e', 10, 90, noGear, 'tumble')).toBe(0);
+    expect(d20SkillCheckPenalty('dnd-3.5e', 10, 90, noGear, 'acrobatics')).toBe(0);
+    expect(d20SkillCheckPenalty('pf1e', 10, 90, noGear, 'perception')).toBe(0); // unaffected
+  });
+
+  it('adds the equipped armor/shield check penalty to the load penalty', () => {
+    const fullPlate = [{ equipped: true, armorCheckPenalty: -6 }];
+    // Light load (no load penalty) + full plate ACP -6 = -6.
+    expect(d20SkillCheckPenalty('dnd-3.5e', 10, 20, fullPlate, 'climb')).toBe(-6);
+    // Medium load (-3) + full plate (-6) = -9.
+    expect(d20SkillCheckPenalty('dnd-3.5e', 10, 50, fullPlate, 'climb')).toBe(-9);
+    // Unequipped gear and unaffected skills contribute nothing.
+    const stowed = [{ equipped: false, armorCheckPenalty: -6 }];
+    expect(d20SkillCheckPenalty('dnd-3.5e', 10, 20, stowed, 'climb')).toBe(0);
+    expect(d20SkillCheckPenalty('dnd-3.5e', 10, 20, fullPlate, 'diplomacy')).toBe(0);
   });
 });
 

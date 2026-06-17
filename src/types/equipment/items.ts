@@ -59,11 +59,17 @@ export interface Armor extends Item {
   dexBonusMax?: number;
   strengthRequirement?: number;
   stealthDisadvantage: boolean;
+  /** d20 (3.5e/PF1e) armor check penalty (<= 0). */
+  armorCheckPenalty?: number;
 }
 
 export interface Shield extends Item {
   type: 'shield';
   armorClassBonus: number;
+  /** AC bonus the equip flow reads (mirrors armorClassBonus for d20 shields). */
+  shieldBonus?: number;
+  /** d20 (3.5e/PF1e) armor check penalty (<= 0). */
+  armorCheckPenalty?: number;
 }
 
 export interface MagicItem extends Item {

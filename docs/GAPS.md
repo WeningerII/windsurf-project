@@ -114,11 +114,16 @@ several items below; the remainder is the honest residual.
 - **Several "verified" quantities are tested helpers, not engine-wired.** Spell
   save DC, spell attack, passive Perception, concentration DC, cantrip scaling,
   Monk/Barbarian Unarmored Defense, iterative attacks, PF2e MAP/striking/bulk/
-  heighten, 3.5e max-rank, M&M measurements: the RAW formula is proven by
+  heighten, M&M measurements: the RAW formula is proven by
   test, but `prepareData` / the character sheet does not actually compute or
-  display it. Wiring these into the engines is outstanding. **(3.5e skill synergy
-  is now wired** — the unconditional SRD synergies apply in both the skills tab
-  and `rollCheck`; conditional and Knowledge-subtype synergies stay manual.)
+  display it. Wiring these into the engines is outstanding. **(3.5e skill synergy,
+  max-rank enforcement, and the encumbrance check penalty are now wired** —
+  synergy applies in both the skills tab and `rollCheck`; the skills tab shows
+  each skill's RAW rank cap and flags over-cap values; the load-based check
+  penalty applies to physical skills from carried weight. Conditional and
+  Knowledge-subtype synergies stay manual. The gear-based armor check penalty
+  remains unwired — the d20-legacy sheet has no flow that equips armor with its
+  stats onto the character, so there is no per-item ACP to source.)
 - **Stricter spec criteria not met:** comprehensive typed-bonus *stacking* tests
   (e.g., 3.5e dodge-stacks-but-others-don't); the content×compute cross-product
   fixtures (Monk+shield AC, PF2e striking+enfeebled as combined cases);

@@ -3,7 +3,7 @@ import { CharacterDocument } from '../../types/core/document';
 import { Dnd35eDataModel } from './data-model';
 import { abilityMod } from '../../utils/math';
 import { dnd35eSkillSynergyTotal } from '../../utils/derivedCombatMath';
-import { GRAPPLE_SIZE_MODS, baseSave, classBAB } from '../shared/d20-helpers';
+import { GRAPPLE_SIZE_MODS, baseSave, classBAB, d20SkillCheckPenalty } from '../shared/d20-helpers';
 import { computeD20LegacyAC, D20_SIZE_MOD } from '../../utils/armorClass';
 import { resolveCharacterEffects } from '../../rules';
 import { d20LegacyCheckPenalty } from '../../rules/conditions/d20LegacyConditions';
@@ -171,11 +171,23 @@ export class Dnd35eEngine implements SystemEngine<Dnd35eDataModel> {
     } else if (checkId in SKILL_ABILITIES) {
       const attr = SKILL_ABILITIES[checkId];
       // Ranks + ability mod + unconditional SRD skill synergies (e.g. 5 ranks in
-      // Tumble grant +2 to Balance/Jump). Conditional synergies stay manual.
+      // Tumble grant +2 to Balance/Jump) + the total check penalty (load +
+      // equipped armor/shield) on physical skills. Conditional synergies stay out.
+      const carriedWeight = (d.inventory ?? []).reduce(
+        (weight, item) => weight + item.weight * item.quantity,
+        0
+      );
       modifier =
         abilityMod(d.baseAttributes[attr] ?? 10) +
         (d.skillRanks[checkId] ?? 0) +
-        dnd35eSkillSynergyTotal(checkId, d.skillRanks);
+        dnd35eSkillSynergyTotal(checkId, d.skillRanks) +
+        d20SkillCheckPenalty(
+          'dnd-3.5e',
+          d.baseAttributes.str ?? 10,
+          carriedWeight,
+          d.equipment,
+          checkId
+        );
       flavor = `${checkId} Check`;
     } else if (checkId === 'save-fort') {
       modifier = d.saves.fortitude.total;

@@ -22,6 +22,7 @@ import type { Pf1eTrait } from '../../pf1e/data-model';
 import { Pf1eDataModel } from '../../pf1e/data-model';
 import { D20AbilitiesTab } from './D20AbilitiesTab';
 import { D20EquipmentBrowserTab } from './D20EquipmentBrowserTab';
+import { EquippedArmorSection } from '../../../components/EquippedArmorSection';
 import { D20FeatBrowserTab } from './D20FeatBrowserTab';
 import { D20FeatsTab } from './D20FeatsTab';
 import { D20InventoryTab } from './D20InventoryTab';
@@ -84,6 +85,22 @@ interface Props {
   equipmentLoaded: boolean;
   equipmentItems: Item[];
   onLoadEquipment: () => void | Promise<void>;
+  onEquipArmor: (item: {
+    id: string;
+    name: string;
+    armorClass?: number;
+    armorType?: 'light' | 'medium' | 'heavy';
+    dexBonusMax?: number;
+    armorCheckPenalty?: number;
+  }) => void;
+  onEquipShield: (item: {
+    id: string;
+    name: string;
+    shieldBonus?: number;
+    armorCheckPenalty?: number;
+  }) => void;
+  onUnequipArmor: () => void;
+  onUnequipShield: () => void;
   currency: D20InventoryCurrency;
   inventory: D20InventoryItem[];
   personality?: {
@@ -163,6 +180,10 @@ export const D20LegacyTabs: React.FC<Props> = ({
   equipmentLoaded,
   equipmentItems,
   onLoadEquipment,
+  onEquipArmor,
+  onEquipShield,
+  onUnequipArmor,
+  onUnequipShield,
   currency,
   inventory,
   personality,
@@ -299,6 +320,12 @@ export const D20LegacyTabs: React.FC<Props> = ({
           skillRanks={skillRanks}
           classSkills={classSkills}
           isPf1e={isPf1e}
+          characterLevel={(document.system.level as number) ?? 1}
+          carriedWeight={(document.system.inventory ?? []).reduce(
+            (weight, item) => weight + item.weight * item.quantity,
+            0
+          )}
+          equipment={document.system.equipment}
           canUpdate={canUpdate}
           onSkillRanksChange={onSkillRanksChange}
         />
@@ -358,6 +385,15 @@ export const D20LegacyTabs: React.FC<Props> = ({
       </TabsContent>
 
       <TabsContent value="equipment-browser">
+        <EquippedArmorSection
+          equipmentItems={equipmentItems}
+          equipment={document.system.equipment}
+          canUpdate={canUpdate}
+          onEquipArmor={onEquipArmor}
+          onEquipShield={onEquipShield}
+          onUnequipArmor={onUnequipArmor}
+          onUnequipShield={onUnequipShield}
+        />
         <D20EquipmentBrowserTab equipmentLoaded={equipmentLoaded} equipmentItems={equipmentItems} />
       </TabsContent>
 

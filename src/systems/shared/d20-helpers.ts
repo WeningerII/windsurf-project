@@ -134,6 +134,71 @@ export function d20EncumbrancePenalties(category: D20LoadCategory): D20Encumbran
   }
 }
 
+/**
+ * 3.5e skills that take an armor/encumbrance check penalty (the SRD's
+ * Strength- and Dexterity-based physical skills). Swim is included; the SRD's
+ * doubled penalty for Swim is an ARMOR-specific rule, so the encumbrance
+ * (load) penalty below applies to it once.
+ */
+export const DND35E_CHECK_PENALTY_SKILLS: ReadonlySet<string> = new Set([
+  'balance',
+  'climb',
+  'escape-artist',
+  'hide',
+  'jump',
+  'move-silently',
+  'sleight-of-hand',
+  'swim',
+  'tumble',
+]);
+
+/**
+ * PF1e skills that take an armor/encumbrance check penalty (PF1e CRB): the
+ * Strength- and Dexterity-based physical skills. PF1e consolidated the 3.5e
+ * list (Acrobatics absorbs Balance/Jump/Tumble; Stealth absorbs Hide/Move
+ * Silently) and added Fly; fine-manipulation Dex skills (Disable Device) are
+ * not affected.
+ */
+export const PF1E_CHECK_PENALTY_SKILLS: ReadonlySet<string> = new Set([
+  'acrobatics',
+  'climb',
+  'escape-artist',
+  'fly',
+  'ride',
+  'sleight-of-hand',
+  'stealth',
+  'swim',
+]);
+
+const CHECK_PENALTY_SKILLS_BY_SYSTEM: Record<'dnd-3.5e' | 'pf1e', ReadonlySet<string>> = {
+  'dnd-3.5e': DND35E_CHECK_PENALTY_SKILLS,
+  pf1e: PF1E_CHECK_PENALTY_SKILLS,
+};
+
+/**
+ * The total check penalty applied to a single d20-legacy check-penalty skill:
+ * the encumbrance (load) penalty (carried weight vs. the Strength-based
+ * carrying capacity) PLUS the equipped armor/shield check penalty. Returns 0
+ * for an unaffected skill; each system uses its own affected-skill list. (The
+ * SRD's doubled armor check penalty for Swim is a known simplification — it is
+ * applied once here.)
+ */
+export function d20SkillCheckPenalty(
+  systemId: 'dnd-3.5e' | 'pf1e',
+  strength: number,
+  carriedWeight: number,
+  equipment: ReadonlyArray<{ equipped: boolean; armorCheckPenalty?: number }>,
+  skillId: string
+): number {
+  if (!CHECK_PENALTY_SKILLS_BY_SYSTEM[systemId].has(skillId)) return 0;
+  const load = d20EncumbrancePenalties(d20LoadCategory(strength, carriedWeight)).checkPenalty;
+  const gear = equipment.reduce(
+    (sum, entry) => sum + (entry.equipped ? (entry.armorCheckPenalty ?? 0) : 0),
+    0
+  );
+  return load + gear;
+}
+
 export interface D20LiftDragLimits {
   /** Lift over head: up to the maximum (heavy) load. */
   overHead: number;

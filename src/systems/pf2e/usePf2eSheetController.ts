@@ -225,6 +225,15 @@ export function usePf2eSheetController({ document, onUpdate }: UsePf2eSheetContr
       equipmentLoaded,
       equipmentItems,
     },
+    equippedArmorSectionProps: {
+      equipmentItems,
+      equipment: data.equipment,
+      canUpdate: mutationHandlers.canUpdate,
+      onEquipArmor: mutationHandlers.equipArmor,
+      onEquipShield: mutationHandlers.equipShield,
+      onUnequipArmor: mutationHandlers.unequipArmor,
+      onUnequipShield: mutationHandlers.unequipShield,
+    },
     inventoryTabProps: {
       document,
       canUpdate: mutationHandlers.canUpdate,
