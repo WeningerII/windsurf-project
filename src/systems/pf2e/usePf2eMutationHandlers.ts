@@ -254,6 +254,71 @@ export function usePf2eMutationHandlers({ document, onUpdate }: UsePf2eMutationH
     });
   }, [data.equipment, update]);
 
+  const isEquippedPf2eArmor = (item: {
+    equipped: boolean;
+    armorClass?: number;
+    shieldBonus?: number;
+  }) => item.equipped && item.armorClass != null && item.shieldBonus == null;
+  const isEquippedPf2eShield = (item: { equipped: boolean; shieldBonus?: number }) =>
+    item.equipped && item.shieldBonus != null;
+
+  // Equip at most one armor and one shield; each replaces its kind and copies
+  // the catalog stats (AC bonus, dex cap) that computePf2eAC reads. Shields
+  // equip un-raised (the Raise a Shield action is the separate toggle above).
+  const equipArmor = useCallback(
+    (item: {
+      id: string;
+      name: string;
+      bulk: number;
+      armorClass?: number;
+      armorType?: 'light' | 'medium' | 'heavy';
+      dexBonusMax?: number;
+    }) => {
+      update({
+        equipment: [
+          ...data.equipment.filter((entry) => !isEquippedPf2eArmor(entry)),
+          {
+            itemId: item.id,
+            name: item.name,
+            bulk: item.bulk,
+            equipped: true,
+            armorClass: item.armorClass,
+            armorType: item.armorType,
+            dexBonusMax: item.dexBonusMax,
+          },
+        ],
+      });
+    },
+    [data.equipment, update]
+  );
+
+  const equipShield = useCallback(
+    (item: { id: string; name: string; bulk: number; shieldBonus?: number }) => {
+      update({
+        equipment: [
+          ...data.equipment.filter((entry) => !isEquippedPf2eShield(entry)),
+          {
+            itemId: item.id,
+            name: item.name,
+            bulk: item.bulk,
+            equipped: true,
+            shieldBonus: item.shieldBonus,
+            raised: false,
+          },
+        ],
+      });
+    },
+    [data.equipment, update]
+  );
+
+  const unequipArmor = useCallback(() => {
+    update({ equipment: data.equipment.filter((entry) => !isEquippedPf2eArmor(entry)) });
+  }, [data.equipment, update]);
+
+  const unequipShield = useCallback(() => {
+    update({ equipment: data.equipment.filter((entry) => !isEquippedPf2eShield(entry)) });
+  }, [data.equipment, update]);
+
   return {
     canUpdate,
     replaceDocument,
@@ -270,6 +335,10 @@ export function usePf2eMutationHandlers({ document, onUpdate }: UsePf2eMutationH
     removeFeat,
     addInventoryItem,
     removeInventoryItem,
+    equipArmor,
+    equipShield,
+    unequipArmor,
+    unequipShield,
     rollCheck,
     toggleShieldRaised,
     cycleSpellProficiencyTier,
