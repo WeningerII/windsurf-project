@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { clampCount } from '../../../utils/resourcePool';
 import type { FeatDefinition } from '../../../types/character-options/feats';
 import type {
   Dnd5eFeatureOptionDefinition,
@@ -149,7 +150,7 @@ export function useDnd5eSheetActionHandlers<T extends Dnd5eLikeDataModel>({
             ...feature,
             uses: {
               ...feature.uses,
-              current: Math.max(0, Math.min(feature.uses.max, feature.uses.current + delta)),
+              current: clampCount(feature.uses.current + delta, feature.uses.max),
             },
           };
         }),
@@ -165,7 +166,7 @@ export function useDnd5eSheetActionHandlers<T extends Dnd5eLikeDataModel>({
           poolIndex === index
             ? {
                 ...pool,
-                remaining: Math.max(0, Math.min(pool.total, pool.remaining + delta)),
+                remaining: clampCount(pool.remaining + delta, pool.total),
               }
             : pool
         ),
@@ -212,7 +213,7 @@ export function useDnd5eSheetActionHandlers<T extends Dnd5eLikeDataModel>({
       }
 
       const slot = system.spellcasting.spellSlots[level as keyof SpellSlots];
-      const nextUsed = Math.max(0, Math.min(slot.max, slot.used + delta));
+      const nextUsed = clampCount(slot.used + delta, slot.max);
 
       update({
         spellcasting: {
@@ -234,7 +235,7 @@ export function useDnd5eSheetActionHandlers<T extends Dnd5eLikeDataModel>({
         return;
       }
 
-      const nextUsed = Math.max(0, Math.min(pactMagic.max, pactMagic.used + delta));
+      const nextUsed = clampCount(pactMagic.used + delta, pactMagic.max);
       update({
         spellcasting: {
           ...system.spellcasting,

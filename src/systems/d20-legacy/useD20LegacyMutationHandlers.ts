@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react';
+import { clampCount } from '../../utils/resourcePool';
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
 import type { Spell } from '../../types/magic/spells';
 import type { Pf1eTrait } from '../pf1e/data-model';
@@ -287,7 +288,7 @@ export function useD20LegacyMutationHandlers({
         used: 0,
       };
       const total = Math.max(0, patch.total ?? current.total);
-      const used = Math.min(total, Math.max(0, patch.used ?? current.used));
+      const used = clampCount(patch.used ?? current.used, total);
 
       update({
         manualSpellcastingExtras: {

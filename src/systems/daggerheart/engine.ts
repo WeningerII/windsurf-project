@@ -7,6 +7,7 @@
 
 import { CharacterDocument } from '../../types/core/document';
 import { SystemEngine, RollResult } from '../../registry/types';
+import { clampCount } from '../../utils/resourcePool';
 import { createDefaultDaggerheartData, DaggerheartDataModel } from './data-model';
 import {
   DAGGERHEART_MAX_HOPE,
@@ -72,10 +73,10 @@ export class DaggerheartEngine implements SystemEngine<DaggerheartDataModel> {
       0,
       Math.min(d.system.hitPoints.current, d.system.hitPoints.max)
     );
-    d.system.stress.current = Math.max(0, Math.min(d.system.stress.current, d.system.stress.max));
-    d.system.armor.current = Math.max(0, Math.min(d.system.armor.current, d.system.armor.max));
+    d.system.stress.current = clampCount(d.system.stress.current, d.system.stress.max);
+    d.system.armor.current = clampCount(d.system.armor.current, d.system.armor.max);
     // Hope is capped at 6 (Daggerheart SRD: Hope) and can never go negative.
-    d.system.hope = Math.max(0, Math.min(DAGGERHEART_MAX_HOPE, d.system.hope));
+    d.system.hope = clampCount(d.system.hope, DAGGERHEART_MAX_HOPE);
 
     return d;
   }

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  clampCount,
   createPool,
   remainingOf,
   isExhausted,
@@ -13,6 +14,14 @@ import {
 } from '../../utils/resourcePool';
 
 describe('resourcePool', () => {
+  it('clampCount clamps a raw counter edit into [min, max] and truncates', () => {
+    expect(clampCount(5, 3)).toBe(3);
+    expect(clampCount(-2, 3)).toBe(0);
+    expect(clampCount(2, 3)).toBe(2);
+    expect(clampCount(2.9, 3)).toBe(2);
+    expect(clampCount(1, 3, 1)).toBe(1);
+  });
+
   it('createPool clamps spent into [0, max] and floors fractional input', () => {
     expect(createPool(3)).toEqual({ max: 3, spent: 0 });
     expect(createPool(3, 5)).toEqual({ max: 3, spent: 3 });

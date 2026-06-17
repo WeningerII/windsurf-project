@@ -4,6 +4,7 @@ import { Dnd5eDataModel } from '../data-model';
 import { abilityMod } from '../../../utils/math';
 import { hitDieSize } from '../../../constants/hit-dice';
 import { compute5eAC } from '../../../utils/armorClass';
+import { clampCount } from '../../../utils/resourcePool';
 import {
   compute5eSpellSlots,
   computePactMagicSlots,
@@ -188,7 +189,7 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
           classId: cl.classId,
           die,
           total,
-          remaining: Math.min(total, Math.max(0, previous.remaining + gainedAtLevelUp)),
+          remaining: clampCount(previous.remaining + gainedAtLevelUp, total),
         };
       }
 
