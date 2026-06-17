@@ -1,5 +1,6 @@
 import type { Dnd35eDataModel } from '../dnd35e/data-model';
 import type { Pf1eDataModel } from '../pf1e/data-model';
+import { reset, restore, spend, type ResourcePool } from '../../utils/resourcePool';
 
 export type D20LegacyData = Dnd35eDataModel | Pf1eDataModel;
 export type D20LegacySpellSlots = Record<
@@ -10,6 +11,17 @@ export type D20LegacyManualSpellcastingExtras = NonNullable<
   D20LegacyData['manualSpellcastingExtras']
 >;
 
+/**
+ * View one spell-slot level as a generic resource pool: a d20 slot stores its
+ * cap in `total` and its consumed count in `used`, mapping directly onto a
+ * pool's `max`/`spent`. The per-level `manualBonus` persistence stays on the
+ * slot and is untouched by spend/restore/reset.
+ */
+const slotPool = (slot: { total: number; used: number }): ResourcePool => ({
+  max: slot.total,
+  spent: slot.used,
+});
+
 export function resetD20LegacySpellSlots(spellsPerDay?: D20LegacySpellSlots) {
   if (!spellsPerDay) {
     return spellsPerDay;
@@ -18,7 +30,7 @@ export function resetD20LegacySpellSlots(spellsPerDay?: D20LegacySpellSlots) {
   const next: D20LegacySpellSlots = {};
   for (const [level, slots] of Object.entries(spellsPerDay)) {
     const numericLevel = Number(level);
-    next[numericLevel] = { ...slots, used: 0 };
+    next[numericLevel] = { ...slots, used: reset(slotPool(slots)).spent };
   }
 
   return next;
@@ -79,7 +91,7 @@ export function spendD20LegacySpellSlot(
 
   return {
     ...spellsPerDay,
-    [level]: { ...slot, used: Math.min(slot.total, slot.used + 1) },
+    [level]: { ...slot, used: spend(slotPool(slot)).spent },
   };
 }
 
@@ -94,7 +106,7 @@ export function recoverD20LegacySpellSlot(
 
   return {
     ...spellsPerDay,
-    [level]: { ...slot, used: Math.max(0, slot.used - 1) },
+    [level]: { ...slot, used: restore(slotPool(slot)).spent },
   };
 }
 
