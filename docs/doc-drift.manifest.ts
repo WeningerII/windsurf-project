@@ -148,6 +148,12 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: ['path_ref_rule'],
   },
   {
+    path: 'docs/rfc/006-scene-runtime.md',
+    kind: 'rfc',
+    owner: 'scene-runtime-rfc',
+    rules: ['path_ref_rule'],
+  },
+  {
     path: 'docs/PRODUCTION_PLAN.md',
     kind: 'historical',
     owner: 'historical-planning',
