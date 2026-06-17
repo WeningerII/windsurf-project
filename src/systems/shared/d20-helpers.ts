@@ -153,17 +153,42 @@ export const DND35E_CHECK_PENALTY_SKILLS: ReadonlySet<string> = new Set([
 ]);
 
 /**
- * The encumbrance (load) check penalty applied to a single 3.5e check-penalty
- * skill, derived from carried weight against the character's Strength-based
- * carrying capacity. Returns 0 for an unaffected skill or a light load. The
- * gear-based armor check penalty is separate and not included here.
+ * PF1e skills that take an armor/encumbrance check penalty (PF1e CRB): the
+ * Strength- and Dexterity-based physical skills. PF1e consolidated the 3.5e
+ * list (Acrobatics absorbs Balance/Jump/Tumble; Stealth absorbs Hide/Move
+ * Silently) and added Fly; fine-manipulation Dex skills (Disable Device) are
+ * not affected.
  */
-export function dnd35eEncumbranceSkillPenalty(
+export const PF1E_CHECK_PENALTY_SKILLS: ReadonlySet<string> = new Set([
+  'acrobatics',
+  'climb',
+  'escape-artist',
+  'fly',
+  'ride',
+  'sleight-of-hand',
+  'stealth',
+  'swim',
+]);
+
+const CHECK_PENALTY_SKILLS_BY_SYSTEM: Record<'dnd-3.5e' | 'pf1e', ReadonlySet<string>> = {
+  'dnd-3.5e': DND35E_CHECK_PENALTY_SKILLS,
+  pf1e: PF1E_CHECK_PENALTY_SKILLS,
+};
+
+/**
+ * The encumbrance (load) check penalty applied to a single d20-legacy
+ * check-penalty skill, derived from carried weight against the character's
+ * Strength-based carrying capacity. Returns 0 for an unaffected skill or a
+ * light load; each system uses its own affected-skill list. The gear-based
+ * armor check penalty is separate and not included here.
+ */
+export function d20EncumbranceSkillPenalty(
+  systemId: 'dnd-3.5e' | 'pf1e',
   strength: number,
   carriedWeight: number,
   skillId: string
 ): number {
-  if (!DND35E_CHECK_PENALTY_SKILLS.has(skillId)) return 0;
+  if (!CHECK_PENALTY_SKILLS_BY_SYSTEM[systemId].has(skillId)) return 0;
   return d20EncumbrancePenalties(d20LoadCategory(strength, carriedWeight)).checkPenalty;
 }
 

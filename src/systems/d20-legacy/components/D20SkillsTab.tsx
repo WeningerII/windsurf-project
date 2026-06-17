@@ -5,7 +5,7 @@ import {
   dnd35eMaxSkillRanks,
   pf1eMaxSkillRanks,
 } from '../../../utils/derivedCombatMath';
-import { dnd35eEncumbranceSkillPenalty } from '../../shared/d20-helpers';
+import { d20EncumbranceSkillPenalty } from '../../shared/d20-helpers';
 import type { Skill } from '../../../types/game-systems';
 
 interface Props {
@@ -44,12 +44,15 @@ export const D20SkillsTab: React.FC<Props> = ({
           const classBonus = isPf1e && isClassSkill && ranks > 0 ? 3 : 0;
           // 3.5e auto-applies its unconditional skill synergies; PF1e's synergy
           // list differs and is not yet wired, so leave PF1e totals unchanged.
+          // Skill synergies are a 3.5e mechanic; PF1e removed them, so none apply.
           const synergyBonus = isPf1e ? 0 : dnd35eSkillSynergyTotal(skill.id, skillRanks);
-          // Encumbrance (load) check penalty on physical skills — 3.5e only for
-          // now (PF1e's affected-skill list differs and is not yet wired).
-          const loadPenalty = isPf1e
-            ? 0
-            : dnd35eEncumbranceSkillPenalty(baseAttributes.str ?? 10, carriedWeight, skill.id);
+          // Encumbrance (load) check penalty on physical skills, per system.
+          const loadPenalty = d20EncumbranceSkillPenalty(
+            isPf1e ? 'pf1e' : 'dnd-3.5e',
+            baseAttributes.str ?? 10,
+            carriedWeight,
+            skill.id
+          );
           const total = ranks + abilMod + classBonus + synergyBonus + loadPenalty;
           const totalNotes = [
             synergyBonus > 0 ? `+${synergyBonus} synergy` : null,

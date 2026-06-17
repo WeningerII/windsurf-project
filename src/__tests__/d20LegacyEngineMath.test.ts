@@ -16,7 +16,7 @@ import {
   d20EncumbrancePenalties,
   d20LiftDragLimits,
   d20BonusSpells,
-  dnd35eEncumbranceSkillPenalty,
+  d20EncumbranceSkillPenalty,
 } from '../systems/shared/d20-helpers';
 import {
   dnd35eXpForLevel,
@@ -558,14 +558,21 @@ describe('L6 d20-legacy carrying capacity', () => {
     // Str 15 → max 200
     expect(d20LiftDragLimits(15)).toEqual({ overHead: 200, offGround: 400, pushDrag: 1000 });
   });
-  it('applies the load check penalty only to affected physical skills', () => {
-    // Str 10 capacity: light ≤33, medium ≤66, heavy ≤100.
-    expect(dnd35eEncumbranceSkillPenalty(10, 50, 'climb')).toBe(-3); // medium load
-    expect(dnd35eEncumbranceSkillPenalty(10, 50, 'swim')).toBe(-3);
-    expect(dnd35eEncumbranceSkillPenalty(10, 90, 'tumble')).toBe(-6); // heavy load
-    expect(dnd35eEncumbranceSkillPenalty(10, 20, 'climb')).toBe(0); // light load
-    // Unaffected (non-physical) skills never take the penalty.
-    expect(dnd35eEncumbranceSkillPenalty(10, 90, 'diplomacy')).toBe(0);
+  it('applies the load check penalty per the system affected-skill list', () => {
+    // Str 10 capacity: light <=33, medium <=66, heavy <=100.
+    // 3.5e list (Balance/Hide/Tumble/...):
+    expect(d20EncumbranceSkillPenalty('dnd-3.5e', 10, 50, 'climb')).toBe(-3); // medium
+    expect(d20EncumbranceSkillPenalty('dnd-3.5e', 10, 90, 'tumble')).toBe(-6); // heavy
+    expect(d20EncumbranceSkillPenalty('dnd-3.5e', 10, 20, 'climb')).toBe(0); // light
+    expect(d20EncumbranceSkillPenalty('dnd-3.5e', 10, 90, 'diplomacy')).toBe(0); // unaffected
+    // PF1e consolidated the list into different members:
+    expect(d20EncumbranceSkillPenalty('pf1e', 10, 50, 'acrobatics')).toBe(-3);
+    expect(d20EncumbranceSkillPenalty('pf1e', 10, 90, 'stealth')).toBe(-6);
+    expect(d20EncumbranceSkillPenalty('pf1e', 10, 50, 'fly')).toBe(-3);
+    // 'tumble' is 3.5e-only (folded into PF1e Acrobatics); 'acrobatics' is PF1e-only.
+    expect(d20EncumbranceSkillPenalty('pf1e', 10, 90, 'tumble')).toBe(0);
+    expect(d20EncumbranceSkillPenalty('dnd-3.5e', 10, 90, 'acrobatics')).toBe(0);
+    expect(d20EncumbranceSkillPenalty('pf1e', 10, 90, 'perception')).toBe(0); // unaffected
   });
 });
 

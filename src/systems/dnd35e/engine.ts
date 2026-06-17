@@ -7,7 +7,7 @@ import {
   GRAPPLE_SIZE_MODS,
   baseSave,
   classBAB,
-  dnd35eEncumbranceSkillPenalty,
+  d20EncumbranceSkillPenalty,
 } from '../shared/d20-helpers';
 import { computeD20LegacyAC, D20_SIZE_MOD } from '../../utils/armorClass';
 import { resolveCharacterEffects } from '../../rules';
@@ -187,7 +187,7 @@ export class Dnd35eEngine implements SystemEngine<Dnd35eDataModel> {
         abilityMod(d.baseAttributes[attr] ?? 10) +
         (d.skillRanks[checkId] ?? 0) +
         dnd35eSkillSynergyTotal(checkId, d.skillRanks) +
-        dnd35eEncumbranceSkillPenalty(d.baseAttributes.str ?? 10, carriedWeight, checkId);
+        d20EncumbranceSkillPenalty('dnd-3.5e', d.baseAttributes.str ?? 10, carriedWeight, checkId);
       flavor = `${checkId} Check`;
     } else if (checkId === 'save-fort') {
       modifier = d.saves.fortitude.total;
