@@ -314,6 +314,77 @@ export function useD20LegacyMutationHandlers({
     } as Partial<D20LegacyData>);
   }, [sys.feats, update]);
 
+  // Equip flow: at most one armor and one shield are equipped at a time. Each
+  // handler replaces the previously-equipped piece of its kind and copies the
+  // catalog stats (AC bonus, dex cap, check penalty) onto the character entry,
+  // which computeD20LegacyAC and the skill check-penalty reader then consume.
+  const isEquippedArmor = (entry: {
+    equipped: boolean;
+    armorClass?: number;
+    shieldBonus?: number;
+  }) => entry.equipped && entry.armorClass != null && entry.shieldBonus == null;
+  const isEquippedShield = (entry: { equipped: boolean; shieldBonus?: number }) =>
+    entry.equipped && entry.shieldBonus != null;
+
+  const equipArmor = useCallback(
+    (item: {
+      id: string;
+      name: string;
+      armorClass?: number;
+      armorType?: 'light' | 'medium' | 'heavy';
+      dexBonusMax?: number;
+      armorCheckPenalty?: number;
+    }) => {
+      update({
+        equipment: [
+          ...sys.equipment.filter((entry) => !isEquippedArmor(entry)),
+          {
+            itemId: item.id,
+            name: item.name,
+            equipped: true,
+            slot: 'armor',
+            armorClass: item.armorClass,
+            armorType: item.armorType,
+            dexBonusMax: item.dexBonusMax,
+            armorCheckPenalty: item.armorCheckPenalty,
+          },
+        ],
+      } as Partial<D20LegacyData>);
+    },
+    [sys.equipment, update]
+  );
+
+  const equipShield = useCallback(
+    (item: { id: string; name: string; shieldBonus?: number; armorCheckPenalty?: number }) => {
+      update({
+        equipment: [
+          ...sys.equipment.filter((entry) => !isEquippedShield(entry)),
+          {
+            itemId: item.id,
+            name: item.name,
+            equipped: true,
+            slot: 'shield',
+            shieldBonus: item.shieldBonus,
+            armorCheckPenalty: item.armorCheckPenalty,
+          },
+        ],
+      } as Partial<D20LegacyData>);
+    },
+    [sys.equipment, update]
+  );
+
+  const unequipArmor = useCallback(() => {
+    update({
+      equipment: sys.equipment.filter((entry) => !isEquippedArmor(entry)),
+    } as Partial<D20LegacyData>);
+  }, [sys.equipment, update]);
+
+  const unequipShield = useCallback(() => {
+    update({
+      equipment: sys.equipment.filter((entry) => !isEquippedShield(entry)),
+    } as Partial<D20LegacyData>);
+  }, [sys.equipment, update]);
+
   const addItem = useCallback(
     (item: { id: string; name: string; quantity: number; weight: number }) => {
       update({
@@ -354,5 +425,9 @@ export function useD20LegacyMutationHandlers({
     setDragonDiscipleBonusSlots,
     addFeat,
     addItem,
+    equipArmor,
+    equipShield,
+    unequipArmor,
+    unequipShield,
   };
 }

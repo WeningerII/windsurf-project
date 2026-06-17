@@ -118,6 +118,8 @@ export interface Dnd35eDataModel extends SystemDataModel {
     armorType?: 'light' | 'medium' | 'heavy';
     dexBonusMax?: number;
     shieldBonus?: number;
+    /** d20 armor check penalty (<= 0), copied from the catalog at equip time. */
+    armorCheckPenalty?: number;
     // Magic/effect bonuses consumed by the system-agnostic rules IR (RFC 003).
     // Optional and additive; base AC math is unaffected.
     attackBonus?: number;
