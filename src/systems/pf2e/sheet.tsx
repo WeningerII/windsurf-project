@@ -5,7 +5,7 @@ import { Shield, Zap, User, BookOpen, Backpack, StickyNote, Sparkles, Sword } fr
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { Badge } from '../../components/ui/Badge';
 import { Pf2eEquipmentBrowserTab } from './components/Pf2eEquipmentBrowserTab';
-import { Pf2eEquippedArmorSection } from './components/Pf2eEquippedArmorSection';
+import { EquippedArmorSection } from '../../components/EquippedArmorSection';
 import { Pf2eFeatBrowserTab } from './components/Pf2eFeatBrowserTab';
 import { Pf2eArchetypesTab } from './components/Pf2eArchetypesTab';
 import { Pf2eSpellsTab } from './components/Pf2eSpellsTab';
@@ -138,7 +138,7 @@ export const Pf2eCharacterSheet: React.FC<Props> = ({ document, onUpdate }) => {
         </TabsContent>
 
         <TabsContent value="equipment-browser">
-          <Pf2eEquippedArmorSection {...controller.equippedArmorSectionProps} />
+          <EquippedArmorSection {...controller.equippedArmorSectionProps} shieldRequiresRaise />
           <Pf2eEquipmentBrowserTab {...controller.equipmentBrowserTabProps} />
         </TabsContent>
 

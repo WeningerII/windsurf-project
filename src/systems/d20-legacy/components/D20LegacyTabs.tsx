@@ -22,7 +22,7 @@ import type { Pf1eTrait } from '../../pf1e/data-model';
 import { Pf1eDataModel } from '../../pf1e/data-model';
 import { D20AbilitiesTab } from './D20AbilitiesTab';
 import { D20EquipmentBrowserTab } from './D20EquipmentBrowserTab';
-import { D20EquippedArmorSection } from './D20EquippedArmorSection';
+import { EquippedArmorSection } from '../../../components/EquippedArmorSection';
 import { D20FeatBrowserTab } from './D20FeatBrowserTab';
 import { D20FeatsTab } from './D20FeatsTab';
 import { D20InventoryTab } from './D20InventoryTab';
@@ -385,7 +385,7 @@ export const D20LegacyTabs: React.FC<Props> = ({
       </TabsContent>
 
       <TabsContent value="equipment-browser">
-        <D20EquippedArmorSection
+        <EquippedArmorSection
           equipmentItems={equipmentItems}
           equipment={document.system.equipment}
           canUpdate={canUpdate}

@@ -1,8 +1,28 @@
 import React from 'react';
-import type { Armor, Item, Shield } from '../../../types/equipment/items';
+import type { Armor, Item, Shield } from '../types/equipment/items';
 
-/** Subset of a PF2e character's equipped armor/shield entry. */
-interface Pf2eEquipEntry {
+/** Payload the section hands to an equip-armor handler; each system uses the
+ * fields it needs (d20 ignores `bulk`; PF2e ignores `armorCheckPenalty`). */
+export interface EquipArmorInput {
+  id: string;
+  name: string;
+  bulk?: number;
+  armorClass?: number;
+  armorType?: 'light' | 'medium' | 'heavy';
+  dexBonusMax?: number;
+  armorCheckPenalty?: number;
+}
+
+export interface EquipShieldInput {
+  id: string;
+  name: string;
+  bulk?: number;
+  shieldBonus?: number;
+  armorCheckPenalty?: number;
+}
+
+/** Subset of a character's equipped armor/shield entry the section reads. */
+interface EquipEntry {
   itemId: string;
   name: string;
   equipped: boolean;
@@ -10,33 +30,30 @@ interface Pf2eEquipEntry {
   armorType?: 'light' | 'medium' | 'heavy';
   dexBonusMax?: number;
   shieldBonus?: number;
-  raised?: boolean;
+  armorCheckPenalty?: number;
 }
 
 interface Props {
   equipmentItems: Item[];
-  equipment: Pf2eEquipEntry[];
+  equipment: EquipEntry[];
   canUpdate: boolean;
-  onEquipArmor: (item: {
-    id: string;
-    name: string;
-    bulk: number;
-    armorClass?: number;
-    armorType?: 'light' | 'medium' | 'heavy';
-    dexBonusMax?: number;
-  }) => void;
-  onEquipShield: (item: { id: string; name: string; bulk: number; shieldBonus?: number }) => void;
+  onEquipArmor: (item: EquipArmorInput) => void;
+  onEquipShield: (item: EquipShieldInput) => void;
   onUnequipArmor: () => void;
   onUnequipShield: () => void;
+  /** PF2e: a shield grants AC only while raised (Raise a Shield), so the note
+   * reads "when raised". d20 shields always apply. */
+  shieldRequiresRaise?: boolean;
 }
 
 /**
- * Equip a single armor and shield from the loaded catalog. Equipping copies the
- * item bonus + Dex cap onto the character entry, which `computePf2eAC` consumes.
- * A shield equips un-raised (the Raise a Shield action is a separate toggle), so
- * it contributes AC only once raised — per the CRB. Selecting "None" unequips.
+ * System-agnostic equip picker for a single armor and shield from the loaded
+ * catalog. Equipping copies the AC bonus, Dex cap, Bulk, and check penalty onto
+ * the character entry; the per-system AC math (computeD20LegacyAC / computePf2eAC)
+ * and skill check penalty consume them. "None" unequips. Used by both the
+ * d20-legacy and PF2e sheets.
  */
-export const Pf2eEquippedArmorSection: React.FC<Props> = ({
+export const EquippedArmorSection: React.FC<Props> = ({
   equipmentItems,
   equipment,
   canUpdate,
@@ -44,6 +61,7 @@ export const Pf2eEquippedArmorSection: React.FC<Props> = ({
   onEquipShield,
   onUnequipArmor,
   onUnequipShield,
+  shieldRequiresRaise = false,
 }) => {
   const equippedArmor = equipment.find(
     (entry) => entry.equipped && entry.armorClass != null && entry.shieldBonus == null
@@ -60,11 +78,11 @@ export const Pf2eEquippedArmorSection: React.FC<Props> = ({
       <h3 className="text-sm font-semibold mb-2">Equipped Armor &amp; Shield</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label className="text-xs text-muted-foreground" htmlFor="pf2e-equip-armor">
+          <label className="text-xs text-muted-foreground" htmlFor="equip-armor">
             Armor
           </label>
           <select
-            id="pf2e-equip-armor"
+            id="equip-armor"
             className={selectClass}
             disabled={!canUpdate || armorOptions.length === 0}
             value={equippedArmor?.itemId ?? ''}
@@ -83,6 +101,7 @@ export const Pf2eEquippedArmorSection: React.FC<Props> = ({
                   armorClass: item.armorClass,
                   armorType: item.armorType,
                   dexBonusMax: item.dexBonusMax,
+                  armorCheckPenalty: item.armorCheckPenalty,
                 });
               }
             }}
@@ -97,17 +116,18 @@ export const Pf2eEquippedArmorSection: React.FC<Props> = ({
           {equippedArmor && (
             <p className="text-[11px] text-muted-foreground mt-1 tabular-nums">
               +{equippedArmor.armorClass} AC
-              {equippedArmor.dexBonusMax != null ? `, Dex cap +${equippedArmor.dexBonusMax}` : ''}
+              {equippedArmor.dexBonusMax != null ? `, max Dex +${equippedArmor.dexBonusMax}` : ''}
+              {equippedArmor.armorCheckPenalty ? `, ACP ${equippedArmor.armorCheckPenalty}` : ''}
             </p>
           )}
         </div>
 
         <div>
-          <label className="text-xs text-muted-foreground" htmlFor="pf2e-equip-shield">
+          <label className="text-xs text-muted-foreground" htmlFor="equip-shield">
             Shield
           </label>
           <select
-            id="pf2e-equip-shield"
+            id="equip-shield"
             className={selectClass}
             disabled={!canUpdate || shieldOptions.length === 0}
             value={equippedShield?.itemId ?? ''}
@@ -124,6 +144,7 @@ export const Pf2eEquippedArmorSection: React.FC<Props> = ({
                   name: item.name,
                   bulk: item.weight,
                   shieldBonus: item.shieldBonus,
+                  armorCheckPenalty: item.armorCheckPenalty,
                 });
               }
             }}
@@ -137,7 +158,8 @@ export const Pf2eEquippedArmorSection: React.FC<Props> = ({
           </select>
           {equippedShield && (
             <p className="text-[11px] text-muted-foreground mt-1 tabular-nums">
-              +{equippedShield.shieldBonus} AC when raised
+              +{equippedShield.shieldBonus} AC{shieldRequiresRaise ? ' when raised' : ''}
+              {equippedShield.armorCheckPenalty ? `, ACP ${equippedShield.armorCheckPenalty}` : ''}
             </p>
           )}
         </div>

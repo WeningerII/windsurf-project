@@ -269,7 +269,7 @@ export function usePf2eMutationHandlers({ document, onUpdate }: UsePf2eMutationH
     (item: {
       id: string;
       name: string;
-      bulk: number;
+      bulk?: number;
       armorClass?: number;
       armorType?: 'light' | 'medium' | 'heavy';
       dexBonusMax?: number;
@@ -280,7 +280,7 @@ export function usePf2eMutationHandlers({ document, onUpdate }: UsePf2eMutationH
           {
             itemId: item.id,
             name: item.name,
-            bulk: item.bulk,
+            bulk: item.bulk ?? 0,
             equipped: true,
             armorClass: item.armorClass,
             armorType: item.armorType,
@@ -293,14 +293,14 @@ export function usePf2eMutationHandlers({ document, onUpdate }: UsePf2eMutationH
   );
 
   const equipShield = useCallback(
-    (item: { id: string; name: string; bulk: number; shieldBonus?: number }) => {
+    (item: { id: string; name: string; bulk?: number; shieldBonus?: number }) => {
       update({
         equipment: [
           ...data.equipment.filter((entry) => !isEquippedPf2eShield(entry)),
           {
             itemId: item.id,
             name: item.name,
-            bulk: item.bulk,
+            bulk: item.bulk ?? 0,
             equipped: true,
             shieldBonus: item.shieldBonus,
             raised: false,
