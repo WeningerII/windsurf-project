@@ -325,6 +325,7 @@ export const D20LegacyTabs: React.FC<Props> = ({
             (weight, item) => weight + item.weight * item.quantity,
             0
           )}
+          equipment={document.system.equipment}
           canUpdate={canUpdate}
           onSkillRanksChange={onSkillRanksChange}
         />

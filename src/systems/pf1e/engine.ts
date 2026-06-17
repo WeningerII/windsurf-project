@@ -2,12 +2,7 @@ import { SystemEngine, RollResult } from '../../registry/types';
 import { CharacterDocument } from '../../types/core/document';
 import { Pf1eDataModel } from './data-model';
 import { abilityMod } from '../../utils/math';
-import {
-  CMB_SIZE_MODS,
-  baseSave,
-  classBAB,
-  d20EncumbranceSkillPenalty,
-} from '../shared/d20-helpers';
+import { CMB_SIZE_MODS, baseSave, classBAB, d20SkillCheckPenalty } from '../shared/d20-helpers';
 import { computeD20LegacyAC, D20_SIZE_MOD } from '../../utils/armorClass';
 import { resolveCharacterEffects } from '../../rules';
 import { d20LegacyCheckPenalty } from '../../rules/conditions/d20LegacyConditions';
@@ -185,12 +180,18 @@ export class Pf1eEngine implements SystemEngine<Pf1eDataModel> {
         (weight, item) => weight + item.weight * item.quantity,
         0
       );
-      // Ranks + ability mod + the encumbrance (load) check penalty on physical
-      // skills. PF1e removed the 3.5e synergy system, so no synergy is applied.
+      // Ranks + ability mod + the total check penalty (load + equipped armor/
+      // shield) on physical skills. PF1e has no 3.5e-style synergy system.
       modifier =
         abilityMod(d.baseAttributes[attr] ?? 10) +
         (d.skillRanks[checkId] ?? 0) +
-        d20EncumbranceSkillPenalty('pf1e', d.baseAttributes.str ?? 10, carriedWeight, checkId);
+        d20SkillCheckPenalty(
+          'pf1e',
+          d.baseAttributes.str ?? 10,
+          carriedWeight,
+          d.equipment,
+          checkId
+        );
       // +3 class skill bonus if trained
       if ((d.skillRanks[checkId] ?? 0) > 0 && d.classSkills.includes(checkId)) {
         modifier += 3;

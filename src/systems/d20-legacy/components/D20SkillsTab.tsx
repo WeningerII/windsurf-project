@@ -5,7 +5,7 @@ import {
   dnd35eMaxSkillRanks,
   pf1eMaxSkillRanks,
 } from '../../../utils/derivedCombatMath';
-import { d20EncumbranceSkillPenalty } from '../../shared/d20-helpers';
+import { d20SkillCheckPenalty } from '../../shared/d20-helpers';
 import type { Skill } from '../../../types/game-systems';
 
 interface Props {
@@ -16,6 +16,7 @@ interface Props {
   isPf1e: boolean;
   characterLevel: number;
   carriedWeight: number;
+  equipment: ReadonlyArray<{ equipped: boolean; armorCheckPenalty?: number }>;
   canUpdate: boolean;
   onSkillRanksChange: (skillRanks: Record<string, number>) => void;
 }
@@ -28,6 +29,7 @@ export const D20SkillsTab: React.FC<Props> = ({
   isPf1e,
   characterLevel,
   carriedWeight,
+  equipment,
   canUpdate,
   onSkillRanksChange,
 }) => {
@@ -46,17 +48,18 @@ export const D20SkillsTab: React.FC<Props> = ({
           // list differs and is not yet wired, so leave PF1e totals unchanged.
           // Skill synergies are a 3.5e mechanic; PF1e removed them, so none apply.
           const synergyBonus = isPf1e ? 0 : dnd35eSkillSynergyTotal(skill.id, skillRanks);
-          // Encumbrance (load) check penalty on physical skills, per system.
-          const loadPenalty = d20EncumbranceSkillPenalty(
+          // Total check penalty on physical skills: load + equipped armor/shield.
+          const checkPenalty = d20SkillCheckPenalty(
             isPf1e ? 'pf1e' : 'dnd-3.5e',
             baseAttributes.str ?? 10,
             carriedWeight,
+            equipment,
             skill.id
           );
-          const total = ranks + abilMod + classBonus + synergyBonus + loadPenalty;
+          const total = ranks + abilMod + classBonus + synergyBonus + checkPenalty;
           const totalNotes = [
             synergyBonus > 0 ? `+${synergyBonus} synergy` : null,
-            loadPenalty < 0 ? `${loadPenalty} load` : null,
+            checkPenalty < 0 ? `${checkPenalty} check pen.` : null,
           ].filter(Boolean);
           // RAW max ranks: 3.5e class = level+3 / cross-class = (level+3)/2;
           // PF1e = level. Soft-validate (flag, don't clamp) so mid-edit values

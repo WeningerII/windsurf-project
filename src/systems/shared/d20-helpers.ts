@@ -176,20 +176,27 @@ const CHECK_PENALTY_SKILLS_BY_SYSTEM: Record<'dnd-3.5e' | 'pf1e', ReadonlySet<st
 };
 
 /**
- * The encumbrance (load) check penalty applied to a single d20-legacy
- * check-penalty skill, derived from carried weight against the character's
- * Strength-based carrying capacity. Returns 0 for an unaffected skill or a
- * light load; each system uses its own affected-skill list. The gear-based
- * armor check penalty is separate and not included here.
+ * The total check penalty applied to a single d20-legacy check-penalty skill:
+ * the encumbrance (load) penalty (carried weight vs. the Strength-based
+ * carrying capacity) PLUS the equipped armor/shield check penalty. Returns 0
+ * for an unaffected skill; each system uses its own affected-skill list. (The
+ * SRD's doubled armor check penalty for Swim is a known simplification — it is
+ * applied once here.)
  */
-export function d20EncumbranceSkillPenalty(
+export function d20SkillCheckPenalty(
   systemId: 'dnd-3.5e' | 'pf1e',
   strength: number,
   carriedWeight: number,
+  equipment: ReadonlyArray<{ equipped: boolean; armorCheckPenalty?: number }>,
   skillId: string
 ): number {
   if (!CHECK_PENALTY_SKILLS_BY_SYSTEM[systemId].has(skillId)) return 0;
-  return d20EncumbrancePenalties(d20LoadCategory(strength, carriedWeight)).checkPenalty;
+  const load = d20EncumbrancePenalties(d20LoadCategory(strength, carriedWeight)).checkPenalty;
+  const gear = equipment.reduce(
+    (sum, entry) => sum + (entry.equipped ? (entry.armorCheckPenalty ?? 0) : 0),
+    0
+  );
+  return load + gear;
 }
 
 export interface D20LiftDragLimits {
