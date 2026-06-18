@@ -48,6 +48,18 @@ interface NormalizedAttack {
   damage: Array<{ count: number; faces: number; modifier: number; type?: string }>;
 }
 
+/** True for the ASCII hyphen-minus or the Unicode minus sign (U+2212), both of
+ * which appear in real SRD / imported statblock prose. */
+function isMinusSign(sign: string | undefined): boolean {
+  return sign === '-' || sign === '−';
+}
+
+/** Parse a signed integer token ("+4", "-1", or "−1" with a Unicode minus). */
+function parseSignedInt(raw: string): number {
+  const magnitude = Number(raw.replace(/[^\d]/g, ''));
+  return isMinusSign(raw[0]) ? -magnitude : magnitude;
+}
+
 /**
  * Parse an SRD-style action description into attack/damage numbers, e.g.
  * "Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2)
@@ -59,7 +71,10 @@ interface NormalizedAttack {
 export function parseAttackFromDescription(description: string): NormalizedAttack | undefined {
   if (!description) return undefined;
 
-  const toHit = /([+-]\d+)\s+to hit/i.exec(description);
+  // Attack bonus from 2014 prose ("+4 to hit") or 2024 prose ("Melee Attack
+  // Roll: +4"); both ASCII hyphen-minus and the Unicode minus sign are accepted.
+  const toHit =
+    /([+\-−]\d+)\s+to hit/i.exec(description) ?? /Attack Roll:\s*([+\-−]\d+)/i.exec(description);
   // Damage clauses: "(1d6 + 2) slashing damage", "1 (1d4 - 1) slashing damage".
   // Versatile alternatives — ", or 11 (1d10 + 4) slashing damage if used with
   // two hands" — are one-of choices, not riders, so damage collection stops at
@@ -70,17 +85,27 @@ export function parseAttackFromDescription(description: string): NormalizedAttac
   const orAlternative = /,\s*or\s+\d+\s*\(\d+d\d+/i.exec(description);
   const damageSource = orAlternative ? description.slice(0, orAlternative.index) : description;
   const damage: NormalizedAttack['damage'] = [];
-  const damageRe = /\((\d+)d(\d+)(?:\s*([+-])\s*(\d+))?\)\s*([a-z]+)?\s*damage/gi;
+  const damageRe = /\((\d+)d(\d+)(?:\s*([+\-−])\s*(\d+))?\)\s*([a-z]+)?\s*damage/gi;
   let match: RegExpExecArray | null;
   while ((match = damageRe.exec(damageSource)) !== null) {
     const [, count, faces, sign, mod, type] = match;
-    const modifier = mod ? (sign === '-' ? -Number(mod) : Number(mod)) : 0;
+    const modifier = mod ? (isMinusSign(sign) ? -Number(mod) : Number(mod)) : 0;
     damage.push({
       count: Number(count),
       faces: Number(faces),
       modifier,
       type: (type ?? 'untyped').toLowerCase(),
     });
+  }
+
+  // Flat damage with no dice — "Hit: 1 piercing damage" (e.g. Bat, Rat). Only
+  // when no parenthesized dice clause matched, so the average that precedes
+  // "(XdY …)" is never mistaken for flat damage.
+  if (damage.length === 0) {
+    const flat = /Hit:\s*(\d+)\s+([a-z]+)\s+damage/i.exec(damageSource);
+    if (flat) {
+      damage.push({ count: 0, faces: 0, modifier: Number(flat[1]), type: flat[2].toLowerCase() });
+    }
   }
 
   // Require at least an attack bonus or a damage clause to count as an attack.
@@ -97,7 +122,7 @@ export function parseAttackFromDescription(description: string): NormalizedAttac
       : FEET_PER_CELL;
 
   return {
-    attackBonus: toHit ? Number(toHit[1]) : 0,
+    attackBonus: toHit ? parseSignedInt(toHit[1]) : 0,
     reachCells: Math.max(1, Math.floor(reachFeet / FEET_PER_CELL)),
     damage,
   };

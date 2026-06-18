@@ -213,6 +213,40 @@ describe('description parsing — statblocks that carry attacks only in prose', 
     expect(parseAttackFromDescription('The creature can breathe air and water.')).toBeUndefined();
   });
 
+  it('parses the 2024 "Attack Roll: +N" format (no "to hit")', () => {
+    const parsed = parseAttackFromDescription(
+      'Melee Attack Roll: +6, reach 5 ft. Hit: 7 (1d8 + 3) slashing damage.'
+    );
+    expect(parsed).toBeDefined();
+    expect(parsed!.attackBonus).toBe(6);
+    expect(parsed!.reachCells).toBe(1);
+    expect(parsed!.damage).toEqual([{ count: 1, faces: 8, modifier: 3, type: 'slashing' }]);
+  });
+
+  it('accepts the Unicode minus sign in the bonus and damage modifier', () => {
+    const parsed = parseAttackFromDescription(
+      'Melee Weapon Attack: −1 to hit, reach 5 ft., one target. Hit: 1 (1d4 − 1) bludgeoning damage.'
+    );
+    expect(parsed!.attackBonus).toBe(-1);
+    expect(parsed!.damage[0]).toEqual({ count: 1, faces: 4, modifier: -1, type: 'bludgeoning' });
+  });
+
+  it('parses flat damage with no dice ("Hit: 1 piercing damage")', () => {
+    const parsed = parseAttackFromDescription(
+      'Melee Weapon Attack: +0 to hit, reach 5 ft., one target. Hit: 1 piercing damage.'
+    );
+    expect(parsed).toBeDefined();
+    expect(parsed!.attackBonus).toBe(0);
+    expect(parsed!.damage).toEqual([{ count: 0, faces: 0, modifier: 1, type: 'piercing' }]);
+  });
+
+  it('does not mistake the average before "(XdY …)" for flat damage', () => {
+    const parsed = parseAttackFromDescription(
+      'Melee Weapon Attack: +4 to hit, reach 5 ft., one target. Hit: 5 (1d6 + 2) slashing damage.'
+    );
+    expect(parsed!.damage).toEqual([{ count: 1, faces: 6, modifier: 2, type: 'slashing' }]);
+  });
+
   it('REGRESSION (05-H2): versatile ", or N (XdY)" alternatives are not summed (Warlord longsword prose)', () => {
     // The 2024 Warlord longsword prose, verbatim as it shipped at review time
     // (src/data/dnd/5e-2024/monsters/humanoids/cr-6-10.ts; the entry has since
