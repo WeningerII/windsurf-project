@@ -135,6 +135,14 @@ event stores the resolved answer, and the fold appends to `SceneState.oracleLog`
 `OraclePanel` asks a yes/no question at a chosen likelihood — a transparent
 randomizer the player interprets, explicitly **not** an AI GM.
 
+A scratch dice roller (`src/scene/dice.ts` → `DicePanel`) evaluates arbitrary
+expressions (`2d6+3`, `4d6kh3`, `d20-1`) with the same seeded RNG, but is
+deliberately **ephemeral**: transient damage/loot rolls live in an in-memory
+history rather than the replayable event log, which records only the adjudicated
+check/oracle outcomes that matter to the fiction. The parser is pure and
+bounds-checked (dice count and sides are capped) so a malformed or abusive
+expression surfaces an error instead of rolling.
+
 ## Encounter-spec validation (landed)
 
 `validateEncounterSpec` (`src/scene/encounterSpec.ts`) is the deterministic gate
