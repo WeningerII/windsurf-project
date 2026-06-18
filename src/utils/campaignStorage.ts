@@ -59,3 +59,27 @@ export function saveCampaigns(campaigns: Campaign[]): void {
 export function clearCampaignStorage(): void {
   safeRemoveItem(STORAGE_KEY);
 }
+
+/** Serialize campaigns to a pretty-printed JSON snapshot for backup/transfer. */
+export function exportCampaigns(campaigns: Campaign[]): string {
+  const data: CampaignStorageData = {
+    version: '1.0',
+    campaigns,
+    lastModified: new Date().toISOString(),
+  };
+  return JSON.stringify(data, null, 2);
+}
+
+/**
+ * Parse an exported campaigns snapshot back into validated campaigns. Reuses
+ * the same parse-don't-cast boundary as storage load (malformed entries are
+ * dropped), and throws on a structurally invalid payload so the caller can
+ * surface an error instead of silently importing nothing.
+ */
+export function importCampaigns(jsonString: string): Campaign[] {
+  const campaigns = parseCampaignsSnapshot(jsonString);
+  if (campaigns === null) {
+    throw new Error('Failed to import campaigns. Invalid JSON format.');
+  }
+  return campaigns;
+}

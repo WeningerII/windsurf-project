@@ -98,6 +98,7 @@ function AppContent() {
     error: campaignError,
     clearError: clearCampaignError,
     addCampaign,
+    addCampaigns,
     applyMergedCampaigns,
     updateCampaign,
     deleteCampaign,
@@ -626,6 +627,7 @@ function AppContent() {
                 if (doc) toast(`Removed ${doc.name} from campaign`, 'success');
               }}
               onOpenCharacter={(charId) => setCurrentDocId(charId)}
+              onImportCampaigns={addCampaigns}
             />
 
             {/* Scenes */}

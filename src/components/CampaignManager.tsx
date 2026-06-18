@@ -9,6 +9,8 @@ import {
   Trash2,
   UserPlus,
   UserMinus,
+  Download,
+  Upload,
 } from 'lucide-react';
 import { Button } from './ui/Button';
 import { Badge } from './ui/Badge';
@@ -19,6 +21,7 @@ import type { Campaign } from '../types/core/campaign';
 import type { CharacterDocument, SystemDataModel } from '../types/core/document';
 import { systemRegistry } from '../registry';
 import { generateUUID } from '../utils/browserCompat';
+import { exportCampaigns, importCampaigns } from '../utils/campaignStorage';
 
 interface Props {
   campaigns: Campaign[];
@@ -29,6 +32,8 @@ interface Props {
   onAddCharacter: (campaignId: string, characterId: string) => void;
   onRemoveCharacter: (campaignId: string, characterId: string) => void;
   onOpenCharacter: (characterId: string) => void;
+  /** Merge imported campaigns into the collection (upsert by id). */
+  onImportCampaigns?: (campaigns: Campaign[]) => void;
 }
 
 export const CampaignManager: React.FC<Props> = ({
@@ -40,12 +45,55 @@ export const CampaignManager: React.FC<Props> = ({
   onAddCharacter,
   onRemoveCharacter,
   onOpenCharacter,
+  onImportCampaigns,
 }) => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [creatingNew, setCreatingNew] = useState(false);
   const [newName, setNewName] = useState('');
   const [newSystemId, setNewSystemId] = useState('all');
   const [addingCharTo, setAddingCharTo] = useState<string | null>(null);
+  const [transferMessage, setTransferMessage] = useState<string | null>(null);
+
+  const handleExport = () => {
+    const blob = new Blob([exportCampaigns(campaigns)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `campaigns-${new Date().toISOString().slice(0, 10)}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImport = () => {
+    if (!onImportCampaigns) return;
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json';
+    input.onchange = (event: Event) => {
+      const file = (event.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (loadEvent) => {
+        try {
+          const imported = importCampaigns(String(loadEvent.target?.result ?? ''));
+          // Valid JSON can still hold no usable campaigns; say so rather than
+          // silently no-op'ing (which reads as a successful import).
+          if (imported.length === 0) {
+            setTransferMessage('No valid campaigns were found in that file.');
+            return;
+          }
+          onImportCampaigns(imported);
+          setTransferMessage(
+            `Imported ${imported.length} campaign${imported.length !== 1 ? 's' : ''}.`
+          );
+        } catch (err) {
+          setTransferMessage(err instanceof Error ? err.message : 'Failed to import campaigns.');
+        }
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  };
 
   const documentMap = useMemo(() => new Map(documents.map((d) => [d.id, d])), [documents]);
   const systemOptions = useMemo(() => systemRegistry.getAll(), []);
@@ -90,11 +138,39 @@ export const CampaignManager: React.FC<Props> = ({
           </p>
         </div>
         {!creatingNew && (
-          <Button variant="outline" size="sm" onClick={() => setCreatingNew(true)}>
-            <Plus className="w-4 h-4 mr-1.5" /> New Campaign
-          </Button>
+          <div className="flex items-center gap-2">
+            {campaigns.length > 0 && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleExport}
+                title="Export all campaigns to a JSON backup"
+              >
+                <Download className="w-4 h-4 mr-1.5" /> Export
+              </Button>
+            )}
+            {onImportCampaigns && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleImport}
+                title="Import campaigns from a JSON backup"
+              >
+                <Upload className="w-4 h-4 mr-1.5" /> Import
+              </Button>
+            )}
+            <Button variant="outline" size="sm" onClick={() => setCreatingNew(true)}>
+              <Plus className="w-4 h-4 mr-1.5" /> New Campaign
+            </Button>
+          </div>
         )}
       </div>
+
+      {transferMessage && (
+        <p className="text-sm text-muted-foreground" role="status">
+          {transferMessage}
+        </p>
+      )}
 
       {/* New campaign form */}
       {creatingNew && (
