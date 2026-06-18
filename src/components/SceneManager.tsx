@@ -110,6 +110,9 @@ export function SceneManager({
   const [newSceneCampaignId, setNewSceneCampaignId] = useState('');
   const [newSceneWidth, setNewSceneWidth] = useState('12');
   const [newSceneHeight, setNewSceneHeight] = useState('10');
+  // Scene-list filter: '' = all, a campaign id = that campaign's encounters,
+  // 'none' = scenes not assigned to any campaign.
+  const [sceneCampaignFilter, setSceneCampaignFilter] = useState('');
   const [placementMode, setPlacementMode] = useState<PlacementMode>('none');
   const [selectedTokenId, setSelectedTokenId] = useState<string | undefined>();
   const [tokenDocumentId, setTokenDocumentId] = useState('');
@@ -1156,49 +1159,72 @@ export function SceneManager({
       {scenes.length > 0 && (
         <div className="grid gap-4 xl:grid-cols-[18rem_minmax(0,1fr)]">
           <div className="space-y-2">
-            {scenes.map((scene) => {
-              const { state: sceneState, issues } = foldedScenesById.get(scene.id)!;
-              const system = systemRegistry.get(scene.systemId);
-              const campaign = scene.campaignId
-                ? campaigns.find((entry) => entry.id === scene.campaignId)
-                : undefined;
-              const isSelected = scene.id === selectedScene?.id;
+            {campaigns.length > 0 && (
+              <Select
+                aria-label="Filter scenes by campaign"
+                value={sceneCampaignFilter}
+                onChange={(event) => setSceneCampaignFilter(event.target.value)}
+              >
+                <option value="">All campaigns</option>
+                {campaigns.map((campaign) => (
+                  <option key={campaign.id} value={campaign.id}>
+                    {campaign.name}
+                  </option>
+                ))}
+                <option value="none">No campaign</option>
+              </Select>
+            )}
+            {scenes
+              .filter((scene) =>
+                sceneCampaignFilter === ''
+                  ? true
+                  : sceneCampaignFilter === 'none'
+                    ? !scene.campaignId
+                    : scene.campaignId === sceneCampaignFilter
+              )
+              .map((scene) => {
+                const { state: sceneState, issues } = foldedScenesById.get(scene.id)!;
+                const system = systemRegistry.get(scene.systemId);
+                const campaign = scene.campaignId
+                  ? campaigns.find((entry) => entry.id === scene.campaignId)
+                  : undefined;
+                const isSelected = scene.id === selectedScene?.id;
 
-              return (
-                <button
-                  key={scene.id}
-                  type="button"
-                  className={`w-full rounded-lg border p-3 text-left transition-colors ${
-                    isSelected ? 'border-primary bg-primary/5' : 'bg-card hover:bg-muted/50'
-                  }`}
-                  onClick={() => {
-                    setSelectedSceneId(scene.id);
-                    setSelectedTokenId(undefined);
-                    setPlacementMode('none');
-                  }}
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      <div className="truncate font-medium">{scene.name}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {system?.label ?? scene.systemId}
-                        {campaign ? ` / ${campaign.name}` : ''}
+                return (
+                  <button
+                    key={scene.id}
+                    type="button"
+                    className={`w-full rounded-lg border p-3 text-left transition-colors ${
+                      isSelected ? 'border-primary bg-primary/5' : 'bg-card hover:bg-muted/50'
+                    }`}
+                    onClick={() => {
+                      setSelectedSceneId(scene.id);
+                      setSelectedTokenId(undefined);
+                      setPlacementMode('none');
+                    }}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <div className="truncate font-medium">{scene.name}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {system?.label ?? scene.systemId}
+                          {campaign ? ` / ${campaign.name}` : ''}
+                        </div>
                       </div>
+                      {issues.length > 0 && (
+                        <Badge variant="destructive" className="shrink-0">
+                          {issues.length}
+                        </Badge>
+                      )}
                     </div>
-                    {issues.length > 0 && (
-                      <Badge variant="destructive" className="shrink-0">
-                        {issues.length}
-                      </Badge>
-                    )}
-                  </div>
-                  <div className="mt-2 flex flex-wrap gap-1 text-xs text-muted-foreground">
-                    <span>{Object.keys(sceneState.tokens).length} tokens</span>
-                    <span>{Object.keys(sceneState.markers).length} markers</span>
-                    <span>{scene.events.length} events</span>
-                  </div>
-                </button>
-              );
-            })}
+                    <div className="mt-2 flex flex-wrap gap-1 text-xs text-muted-foreground">
+                      <span>{Object.keys(sceneState.tokens).length} tokens</span>
+                      <span>{Object.keys(sceneState.markers).length} markers</span>
+                      <span>{scene.events.length} events</span>
+                    </div>
+                  </button>
+                );
+              })}
           </div>
 
           {selectedScene && state && (
