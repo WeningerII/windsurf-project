@@ -991,6 +991,13 @@ export function SceneManager({
       reader.onload = (loadEvent) => {
         try {
           const imported = importScenes(String(loadEvent.target?.result ?? ''));
+          // Valid JSON can still contain no usable scenes (every candidate
+          // structurally invalid). Say so instead of silently no-op'ing while
+          // clearing the message — which reads as a successful import.
+          if (imported.length === 0) {
+            setActionIssues(['No valid scenes were found in that file.']);
+            return;
+          }
           onAddScenes(imported);
           setSelectedSceneId(imported[0]?.id ?? selectedSceneId);
           setActionIssues([]);

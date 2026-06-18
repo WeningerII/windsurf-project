@@ -101,6 +101,47 @@ describe('encounterBuilder', () => {
     });
   });
 
+  it('continues display-name numbering across separate batches (no duplicate names)', () => {
+    const scene = createSceneDocument({
+      id: 'scene-waves',
+      name: 'Two Waves',
+      systemId: 'dnd-5e-2024',
+      grid: { width: 8, height: 8 },
+      seed: 'waves-seed',
+      now: NOW,
+    });
+
+    const first = buildEncounterSceneEvents({
+      scene,
+      monsters: [goblin],
+      selections: [{ monsterId: 'goblin', count: 2 }],
+      createdAt: NOW,
+      seed: 'wave-1',
+      eventIdFactory: makeEventIdFactory(),
+    });
+    expect(first.issues).toEqual([]);
+    const afterFirst = first.events.reduce(appendSceneEvent, scene);
+
+    const second = buildEncounterSceneEvents({
+      scene: afterFirst,
+      monsters: [goblin],
+      selections: [{ monsterId: 'goblin', count: 2 }],
+      createdAt: NOW,
+      seed: 'wave-2',
+      eventIdFactory: makeEventIdFactory(),
+    });
+    expect(second.issues).toEqual([]);
+
+    const finalScene = second.events.reduce(appendSceneEvent, afterFirst);
+    const { state } = foldSceneEvents(finalScene);
+    const goblinNames = Object.values(state.tokens)
+      .filter((token) => token.refId === 'goblin')
+      .map((token) => token.name)
+      .sort();
+    expect(goblinNames).toEqual(['Goblin 1', 'Goblin 2', 'Goblin 3', 'Goblin 4']);
+    expect(new Set(goblinNames).size).toBe(4);
+  });
+
   it('creates event-backed monster tokens with deterministic initiative', () => {
     const scene = createSceneDocument({
       id: 'scene-1',
