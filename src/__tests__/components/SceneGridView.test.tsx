@@ -49,6 +49,7 @@ function makeState(): SceneState {
     activeTokenId: 'hero',
     seed: 'scene-seed',
     checkLog: [],
+    oracleLog: [],
   };
 }
 

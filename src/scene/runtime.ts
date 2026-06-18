@@ -11,6 +11,7 @@ import type {
 import { cellKey, footprintCells, footprintWithinGrid } from './grid';
 import { createSeededRng } from './seededRng';
 import { resolveCheck } from './check';
+import { isOracleOdds, resolveOracle } from './oracle';
 
 export interface CreateSceneDocumentParams {
   id: string;
@@ -66,6 +67,7 @@ export function createSceneDocument(params: CreateSceneDocumentParams): SceneDoc
       round: 1,
       seed: params.seed ?? params.id,
       checkLog: [],
+      oracleLog: [],
     },
     events: [],
     createdAt: now,
@@ -155,6 +157,17 @@ function validateSceneIntent(
   }
   if (intent.type === 'roll-check') {
     return checkIntentIssues(state, intent, options);
+  }
+  if (intent.type === 'consult-oracle' && !isOracleOdds(intent.odds)) {
+    return [
+      {
+        code: 'scene-oracle-odds-invalid',
+        message: 'An oracle consultation needs a recognized odds level.',
+        path: 'odds',
+        severity: 'error',
+        eventId: options.eventId,
+      },
+    ];
   }
   return [];
 }
@@ -308,6 +321,15 @@ export function validateSceneEvent(state: SceneState, event: SceneEvent): SceneI
     case 'check.rolled':
       validateCheckEvent(state, event, issues);
       break;
+    case 'oracle.consulted':
+      if (!Number.isFinite(event.payload.roll) || !Number.isFinite(event.payload.target)) {
+        pushIssue(issues, event, {
+          code: 'scene-oracle-values-invalid',
+          message: 'A consulted oracle must record finite roll and target values.',
+          path: 'payload',
+        });
+      }
+      break;
     default:
       assertNever(event);
   }
@@ -410,6 +432,17 @@ function buildEventFromIntent(
         payload: { label: intent.label.trim(), actorTokenId: intent.actorTokenId, ...result },
       };
     }
+    case 'consult-oracle': {
+      // Same event-id-seeded roll as a check, on a d100.
+      const roll = createSeededRng(base.id).rollDie(100);
+      const result = resolveOracle(intent.odds, roll);
+      const question = intent.question?.trim();
+      return {
+        ...base,
+        type: 'oracle.consulted',
+        payload: { ...result, ...(question ? { question } : {}) },
+      };
+    }
     default:
       assertNever(intent);
   }
@@ -490,6 +523,22 @@ function applySceneEvent(state: SceneState, event: SceneEvent): void {
           ...(dc !== undefined ? { dc } : {}),
           total,
           outcome,
+          createdAt: event.createdAt,
+        },
+      ];
+      break;
+    }
+    case 'oracle.consulted': {
+      const { question, odds, roll, target, answer } = event.payload;
+      state.oracleLog = [
+        ...state.oracleLog,
+        {
+          id: event.id,
+          ...(question !== undefined ? { question } : {}),
+          odds,
+          roll,
+          target,
+          answer,
           createdAt: event.createdAt,
         },
       ];
@@ -744,9 +793,10 @@ function cloneSceneState(state: SceneState): SceneState {
       Object.entries(state.markers).map(([id, marker]) => [id, cloneMarker(marker)])
     ),
     initiative: state.initiative.map((entry) => ({ ...entry })),
-    // Default for scenes persisted before the check log existed; entries are
-    // flat value objects, so a shallow copy per entry is a full clone.
+    // Default for scenes persisted before these logs existed; entries are flat
+    // value objects, so a shallow copy per entry is a full clone.
     checkLog: (state.checkLog ?? []).map((entry) => ({ ...entry })),
+    oracleLog: (state.oracleLog ?? []).map((entry) => ({ ...entry })),
   };
 }
 

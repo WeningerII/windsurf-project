@@ -115,6 +115,36 @@ export interface SceneCheckLogEntry extends SceneCheckResult {
   createdAt: Date;
 }
 
+/**
+ * How likely a "yes" is for an oracle question. Solo players consult an oracle
+ * to adjudicate uncertain fiction without a GM; the odds set the d100 target.
+ */
+export type SceneOracleOdds = 'very-likely' | 'likely' | 'even' | 'unlikely' | 'very-unlikely';
+
+/** Oracle answer, with exceptional bands signalling a strong/twist result. */
+export type SceneOracleAnswer = 'exceptional-yes' | 'yes' | 'no' | 'exceptional-no';
+
+/**
+ * A resolved oracle consultation: a d100 `roll` against the odds-derived
+ * `target` (yes when `roll <= target`), with the extreme bands promoted to
+ * exceptional. Like a check, the die is rolled before the event is created and
+ * the resolved values are stored so the fold stays pure.
+ */
+export interface SceneOracleResult {
+  odds: SceneOracleOdds;
+  roll: number;
+  target: number;
+  answer: SceneOracleAnswer;
+}
+
+/** An oracle result as it lives in the scene's oracle log. */
+export interface SceneOracleLogEntry extends SceneOracleResult {
+  id: string;
+  /** The question that was asked, when the player recorded one. */
+  question?: string;
+  createdAt: Date;
+}
+
 export interface SceneState {
   sceneId: string;
   name: string;
@@ -129,6 +159,8 @@ export interface SceneState {
   seed: string;
   /** Resolved ability/skill checks, oldest first. */
   checkLog: SceneCheckLogEntry[];
+  /** Resolved oracle consultations, oldest first. */
+  oracleLog: SceneOracleLogEntry[];
 }
 
 export type SceneEventType =
@@ -141,7 +173,8 @@ export type SceneEventType =
   | 'marker.removed'
   | 'initiative.set'
   | 'turn.advanced'
-  | 'check.rolled';
+  | 'check.rolled'
+  | 'oracle.consulted';
 
 /**
  * Applied hit-point delta for one token, recorded on a `token.damaged` event.
@@ -173,7 +206,8 @@ export type SceneEvent =
   | SceneEventBase<'marker.removed', { markerId: string }>
   | SceneEventBase<'initiative.set', { entries: SceneInitiativeEntry[]; activeTokenId?: string }>
   | SceneEventBase<'turn.advanced', { nextTokenId?: string }>
-  | SceneEventBase<'check.rolled', SceneCheckResult & { label: string; actorTokenId?: string }>;
+  | SceneEventBase<'check.rolled', SceneCheckResult & { label: string; actorTokenId?: string }>
+  | SceneEventBase<'oracle.consulted', SceneOracleResult & { question?: string }>;
 
 export interface SceneDocument {
   id: string;
@@ -197,7 +231,8 @@ export type SceneActionType =
   | 'remove-marker'
   | 'set-initiative'
   | 'advance-turn'
-  | 'roll-check';
+  | 'roll-check'
+  | 'consult-oracle';
 
 export type SceneActionIntent =
   | { type: 'place-token'; actorId?: string; token: SceneToken }
@@ -222,7 +257,8 @@ export type SceneActionIntent =
       label: string;
       modifier: number;
       dc?: number;
-    };
+    }
+  | { type: 'consult-oracle'; actorId?: string; question?: string; odds: SceneOracleOdds };
 
 export interface SceneIssue {
   code: string;

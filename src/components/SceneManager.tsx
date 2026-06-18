@@ -43,6 +43,7 @@ import type {
   SceneDocument,
   SceneEvent,
   SceneMarkerKind,
+  SceneOracleOdds,
   SceneToken,
   SceneTokenKind,
 } from '../types/core/scene';
@@ -62,6 +63,7 @@ import { MarkerPanel } from './scene/MarkerPanel';
 import { TokenPanel } from './scene/TokenPanel';
 import { CombatPanel } from './scene/CombatPanel';
 import { CheckPanel } from './scene/CheckPanel';
+import { OraclePanel } from './scene/OraclePanel';
 
 type PlacementMode = 'none' | 'token' | 'marker' | 'adversary';
 
@@ -899,6 +901,11 @@ export function SceneManager({
     emitSceneAction(selectedScene, { type: 'roll-check', ...params });
   };
 
+  const handleConsultOracle = (params: { question?: string; odds: SceneOracleOdds }) => {
+    if (!selectedScene) return;
+    emitSceneAction(selectedScene, { type: 'consult-oracle', ...params });
+  };
+
   const handleQueueEncounterMonster = () => {
     if (!encounterMonsterId) return;
 
@@ -1436,6 +1443,8 @@ export function SceneManager({
                   />
 
                   <CheckPanel state={state} actorId={selectedTokenId} onRoll={handleRollCheck} />
+
+                  <OraclePanel state={state} onConsult={handleConsultOracle} />
                 </div>
               </div>
             </div>

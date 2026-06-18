@@ -21,6 +21,7 @@ function makeState(checkLog: SceneCheckLogEntry[] = []): SceneState {
     round: 1,
     seed: 'seed',
     checkLog,
+    oracleLog: [],
   };
 }
 

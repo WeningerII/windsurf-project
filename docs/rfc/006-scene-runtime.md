@@ -125,6 +125,14 @@ The scene UI's `CheckPanel` gathers a label, modifier, optional DC, and an
 optional roller token, dispatches through `resolveSceneAction`, and renders the
 log newest-first — a solo player runs their own skill checks without a GM.
 
+A `consult-oracle` intent applies the same pattern to GM emulation:
+`resolveOracle` (`src/scene/oracle.ts`) maps an odds level to a d100 yes-target
+(yes when `roll <= target`), with the extreme one-fifth of each side promoted to
+an exceptional yes/no. The d100 is rolled from the event id, the `oracle.consulted`
+event stores the resolved answer, and the fold appends to `SceneState.oracleLog`.
+`OraclePanel` asks a yes/no question at a chosen likelihood — a transparent
+randomizer the player interprets, explicitly **not** an AI GM.
+
 ## Encounter-spec validation (landed)
 
 `validateEncounterSpec` (`src/scene/encounterSpec.ts`) is the deterministic gate

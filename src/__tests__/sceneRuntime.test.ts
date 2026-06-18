@@ -404,6 +404,66 @@ describe('scene runtime — checks', () => {
   });
 });
 
+describe('scene runtime — oracle', () => {
+  function freshScene(): SceneDocument {
+    return createSceneDocument({
+      id: 'oracle-scene',
+      name: 'Mystery',
+      systemId: 'dnd-5e-2024',
+      now: NOW,
+    });
+  }
+
+  it('consults the oracle into the log with a deterministic, event-id-seeded d100', () => {
+    let scene = freshScene();
+    const expectedRoll = createSeededRng('ask-1').rollDie(100);
+    scene = appendResolved(
+      scene,
+      resolveSceneAction(
+        scene,
+        { type: 'consult-oracle', question: 'Is the door trapped?', odds: 'likely' },
+        { eventId: 'ask-1', createdAt: NOW }
+      )
+    );
+
+    const { state, issues } = foldSceneEvents(scene);
+    expect(issues).toEqual([]);
+    expect(state.oracleLog).toHaveLength(1);
+    expect(state.oracleLog[0]).toMatchObject({
+      id: 'ask-1',
+      question: 'Is the door trapped?',
+      odds: 'likely',
+      roll: expectedRoll,
+      target: 70,
+    });
+
+    // Replay is identical.
+    expect(foldSceneEvents(scene).state).toEqual(state);
+  });
+
+  it('omits a blank question and rejects an unknown odds level', () => {
+    let scene = freshScene();
+    scene = appendResolved(
+      scene,
+      resolveSceneAction(
+        scene,
+        { type: 'consult-oracle', question: '   ', odds: 'even' },
+        { eventId: 'ask-2', createdAt: NOW }
+      )
+    );
+    expect(foldSceneEvents(scene).state.oracleLog[0].question).toBeUndefined();
+
+    const bad = resolveSceneAction(
+      scene,
+      // A persisted/forged intent with an unrecognized odds level.
+      { type: 'consult-oracle', odds: 'coin-flip' as never },
+      { eventId: 'ask-3', createdAt: NOW }
+    );
+    expect(bad.event).toBeUndefined();
+    expect(bad.issues[0]).toMatchObject({ code: 'scene-oracle-odds-invalid' });
+  });
+});
+
 describe('scene runtime — token footprints', () => {
   function makeSizedToken(id: string, x: number, y: number, size: number): SceneToken {
     return { id, name: id, kind: 'monster', position: { x, y }, size };

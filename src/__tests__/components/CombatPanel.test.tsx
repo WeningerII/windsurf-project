@@ -25,6 +25,7 @@ const baseState: SceneState = {
   round: 1,
   seed: 'seed',
   checkLog: [],
+  oracleLog: [],
 };
 
 function renderPanel(overrides: Partial<React.ComponentProps<typeof CombatPanel>> = {}) {
