@@ -9,6 +9,8 @@ import type {
   SceneToken,
 } from '../types/core/scene';
 import { cellKey, footprintCells, footprintWithinGrid } from './grid';
+import { createSeededRng } from './seededRng';
+import { resolveCheck } from './check';
 
 export interface CreateSceneDocumentParams {
   id: string;
@@ -63,6 +65,7 @@ export function createSceneDocument(params: CreateSceneDocumentParams): SceneDoc
       initiative: [],
       round: 1,
       seed: params.seed ?? params.id,
+      checkLog: [],
     },
     events: [],
     createdAt: now,
@@ -150,7 +153,43 @@ function validateSceneIntent(
       return footprintPlacementIssues(state, intent.position, moving.size, intent.tokenId, options);
     }
   }
+  if (intent.type === 'roll-check') {
+    return checkIntentIssues(state, intent, options);
+  }
   return [];
+}
+
+/**
+ * Forward-looking gate for a check roll: it needs a label, a finite modifier,
+ * a finite DC when one is given, and — if attributed to a token — a real one.
+ * Intent-level so it never invalidates a historical `check.rolled` event.
+ */
+function checkIntentIssues(
+  state: SceneState,
+  intent: Extract<SceneActionIntent, { type: 'roll-check' }>,
+  options: SceneActionOptions
+): SceneIssue[] {
+  const issues: SceneIssue[] = [];
+  const issue = (code: string, message: string, path: string) =>
+    issues.push({ code, message, path, severity: 'error', eventId: options.eventId });
+
+  if (!intent.label.trim()) {
+    issue('scene-check-label-required', 'A check needs a label (what is being rolled).', 'label');
+  }
+  if (!Number.isFinite(intent.modifier)) {
+    issue('scene-check-modifier-invalid', 'A check modifier must be a finite number.', 'modifier');
+  }
+  if (intent.dc !== undefined && !Number.isFinite(intent.dc)) {
+    issue('scene-check-dc-invalid', 'A check DC must be a finite number when set.', 'dc');
+  }
+  if (intent.actorTokenId !== undefined && !state.tokens[intent.actorTokenId]) {
+    issue(
+      'scene-check-actor-unknown',
+      `Token '${intent.actorTokenId}' does not exist in this scene.`,
+      'actorTokenId'
+    );
+  }
+  return issues;
 }
 
 /**
@@ -266,11 +305,38 @@ export function validateSceneEvent(state: SceneState, event: SceneEvent): SceneI
         validateKnownToken(state, event.payload.nextTokenId, issues, event, 'payload.nextTokenId');
       }
       break;
+    case 'check.rolled':
+      validateCheckEvent(state, event, issues);
+      break;
     default:
       assertNever(event);
   }
 
   return issues;
+}
+
+/**
+ * Event-level (historical, lenient) validation of a rolled check. The die and
+ * total must be finite numbers so the fold and any UI math can't break; an
+ * attributed token, if named, must exist. The DC/outcome are not re-derived —
+ * a replayed event keeps whatever it recorded.
+ */
+function validateCheckEvent(
+  state: SceneState,
+  event: Extract<SceneEvent, { type: 'check.rolled' }>,
+  issues: SceneIssue[]
+): void {
+  const { die, total, modifier, actorTokenId } = event.payload;
+  if (!Number.isFinite(die) || !Number.isFinite(total) || !Number.isFinite(modifier)) {
+    pushIssue(issues, event, {
+      code: 'scene-check-values-invalid',
+      message: 'A rolled check must record finite die, modifier, and total values.',
+      path: 'payload',
+    });
+  }
+  if (actorTokenId) {
+    validateKnownToken(state, actorTokenId, issues, event, 'payload.actorTokenId');
+  }
 }
 
 function buildEventFromIntent(
@@ -332,6 +398,18 @@ function buildEventFromIntent(
         type: 'turn.advanced',
         payload: { nextTokenId: getNextInitiativeTokenId(state) },
       };
+    case 'roll-check': {
+      // Seed the d20 from the (caller-supplied, unique) event id: resolveSceneAction
+      // stays a pure function of its inputs, each roll differs, and the resolved
+      // result is stored on the event so the fold never re-rolls.
+      const die = createSeededRng(base.id).rollDie(20);
+      const result = resolveCheck(die, intent.modifier, intent.dc);
+      return {
+        ...base,
+        type: 'check.rolled',
+        payload: { label: intent.label.trim(), actorTokenId: intent.actorTokenId, ...result },
+      };
+    }
     default:
       assertNever(intent);
   }
@@ -399,6 +477,24 @@ function applySceneEvent(state: SceneState, event: SceneEvent): void {
         state.round += 1;
       }
       break;
+    case 'check.rolled': {
+      const { label, actorTokenId, die, modifier, dc, total, outcome } = event.payload;
+      state.checkLog = [
+        ...state.checkLog,
+        {
+          id: event.id,
+          label,
+          ...(actorTokenId !== undefined ? { actorTokenId } : {}),
+          die,
+          modifier,
+          ...(dc !== undefined ? { dc } : {}),
+          total,
+          outcome,
+          createdAt: event.createdAt,
+        },
+      ];
+      break;
+    }
     default:
       assertNever(event);
   }
@@ -648,6 +744,9 @@ function cloneSceneState(state: SceneState): SceneState {
       Object.entries(state.markers).map(([id, marker]) => [id, cloneMarker(marker)])
     ),
     initiative: state.initiative.map((entry) => ({ ...entry })),
+    // Default for scenes persisted before the check log existed; entries are
+    // flat value objects, so a shallow copy per entry is a full clone.
+    checkLog: (state.checkLog ?? []).map((entry) => ({ ...entry })),
   };
 }
 

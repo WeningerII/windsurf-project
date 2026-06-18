@@ -302,6 +302,108 @@ describe('scene runtime', () => {
   });
 });
 
+describe('scene runtime — checks', () => {
+  function freshScene(): SceneDocument {
+    return createSceneDocument({
+      id: 'check-scene',
+      name: 'Exploration',
+      systemId: 'dnd-5e-2024',
+      grid: { width: 6, height: 6 },
+      now: NOW,
+    });
+  }
+
+  it('rolls a check into the log with a deterministic, event-id-seeded die', () => {
+    let scene = freshScene();
+    const expectedDie = createSeededRng('roll-1').rollDie(20);
+    scene = appendResolved(
+      scene,
+      resolveSceneAction(
+        scene,
+        { type: 'roll-check', label: 'Perception', modifier: 3, dc: expectedDie + 3 },
+        { eventId: 'roll-1', createdAt: NOW }
+      )
+    );
+
+    const { state, issues } = foldSceneEvents(scene);
+    expect(issues).toEqual([]);
+    expect(state.checkLog).toHaveLength(1);
+    expect(state.checkLog[0]).toMatchObject({
+      id: 'roll-1',
+      label: 'Perception',
+      die: expectedDie,
+      modifier: 3,
+      total: expectedDie + 3,
+      outcome: 'success', // dc was total exactly -> success (>=)
+    });
+
+    // Replay is identical.
+    expect(foldSceneEvents(scene).state).toEqual(state);
+  });
+
+  it('records a DC-less check as unresolved', () => {
+    let scene = freshScene();
+    scene = appendResolved(
+      scene,
+      resolveSceneAction(
+        scene,
+        { type: 'roll-check', label: 'Insight', modifier: 0 },
+        { eventId: 'roll-2', createdAt: NOW }
+      )
+    );
+    const { state } = foldSceneEvents(scene);
+    expect(state.checkLog[0].outcome).toBe('unresolved');
+    expect(state.checkLog[0].dc).toBeUndefined();
+  });
+
+  it('rejects a check intent with a blank label, bad modifier, or unknown actor', () => {
+    const scene = freshScene();
+    const blank = resolveSceneAction(
+      scene,
+      { type: 'roll-check', label: '   ', modifier: 1 },
+      { eventId: 'r', createdAt: NOW }
+    );
+    expect(blank.event).toBeUndefined();
+    expect(blank.issues[0]).toMatchObject({ code: 'scene-check-label-required' });
+
+    const badMod = resolveSceneAction(
+      scene,
+      { type: 'roll-check', label: 'Athletics', modifier: Number.NaN },
+      { eventId: 'r', createdAt: NOW }
+    );
+    expect(badMod.issues[0]).toMatchObject({ code: 'scene-check-modifier-invalid' });
+
+    const ghost = resolveSceneAction(
+      scene,
+      { type: 'roll-check', label: 'Stealth', modifier: 2, actorTokenId: 'nobody' },
+      { eventId: 'r', createdAt: NOW }
+    );
+    expect(ghost.issues[0]).toMatchObject({ code: 'scene-check-actor-unknown' });
+  });
+
+  it('links a check to an existing actor token', () => {
+    let scene = freshScene();
+    scene = appendResolved(
+      scene,
+      resolveSceneAction(
+        scene,
+        { type: 'place-token', token: makeToken('rogue', 1, 1) },
+        { eventId: 'place-1', createdAt: NOW }
+      )
+    );
+    scene = appendResolved(
+      scene,
+      resolveSceneAction(
+        scene,
+        { type: 'roll-check', label: 'Stealth', modifier: 7, dc: 10, actorTokenId: 'rogue' },
+        { eventId: 'roll-3', createdAt: NOW }
+      )
+    );
+    const { state } = foldSceneEvents(scene);
+    expect(state.checkLog[0].actorTokenId).toBe('rogue');
+  });
+});
+
 describe('scene runtime — token footprints', () => {
   function makeSizedToken(id: string, x: number, y: number, size: number): SceneToken {
     return { id, name: id, kind: 'monster', position: { x, y }, size };

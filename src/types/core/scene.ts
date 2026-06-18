@@ -86,6 +86,35 @@ export interface SceneInitiativeEntry {
   value: number;
 }
 
+export type SceneCheckOutcome = 'success' | 'failure' | 'unresolved';
+
+/**
+ * A resolved d20 ability/skill check: `total` is `die + modifier`, and
+ * `outcome` compares it to `dc` (or `unresolved` when no DC was given — a
+ * bare roll the player adjudicates). Like {@link SceneTokenDamage}, the dice
+ * are rolled before the event is created and the resolved values are stored,
+ * so the fold stays pure and replay-deterministic.
+ */
+export interface SceneCheckResult {
+  /** Raw d20 face (1–20). */
+  die: number;
+  modifier: number;
+  dc?: number;
+  total: number;
+  outcome: SceneCheckOutcome;
+}
+
+/** A check result as it lives in the scene's check log. */
+export interface SceneCheckLogEntry extends SceneCheckResult {
+  /** The originating event id. */
+  id: string;
+  /** What was rolled, e.g. "Perception" or "Stealth". */
+  label: string;
+  /** The token that made the check, when tied to a combatant. */
+  actorTokenId?: string;
+  createdAt: Date;
+}
+
 export interface SceneState {
   sceneId: string;
   name: string;
@@ -98,6 +127,8 @@ export interface SceneState {
   round: number;
   activeTokenId?: string;
   seed: string;
+  /** Resolved ability/skill checks, oldest first. */
+  checkLog: SceneCheckLogEntry[];
 }
 
 export type SceneEventType =
@@ -109,7 +140,8 @@ export type SceneEventType =
   | 'marker.added'
   | 'marker.removed'
   | 'initiative.set'
-  | 'turn.advanced';
+  | 'turn.advanced'
+  | 'check.rolled';
 
 /**
  * Applied hit-point delta for one token, recorded on a `token.damaged` event.
@@ -140,7 +172,8 @@ export type SceneEvent =
   | SceneEventBase<'marker.added', { marker: SceneMarker }>
   | SceneEventBase<'marker.removed', { markerId: string }>
   | SceneEventBase<'initiative.set', { entries: SceneInitiativeEntry[]; activeTokenId?: string }>
-  | SceneEventBase<'turn.advanced', { nextTokenId?: string }>;
+  | SceneEventBase<'turn.advanced', { nextTokenId?: string }>
+  | SceneEventBase<'check.rolled', SceneCheckResult & { label: string; actorTokenId?: string }>;
 
 export interface SceneDocument {
   id: string;
@@ -163,7 +196,8 @@ export type SceneActionType =
   | 'add-marker'
   | 'remove-marker'
   | 'set-initiative'
-  | 'advance-turn';
+  | 'advance-turn'
+  | 'roll-check';
 
 export type SceneActionIntent =
   | { type: 'place-token'; actorId?: string; token: SceneToken }
@@ -179,7 +213,16 @@ export type SceneActionIntent =
       entries: SceneInitiativeEntry[];
       activeTokenId?: string;
     }
-  | { type: 'advance-turn'; actorId?: string };
+  | { type: 'advance-turn'; actorId?: string }
+  | {
+      type: 'roll-check';
+      actorId?: string;
+      /** The token making the check, when tied to a combatant. */
+      actorTokenId?: string;
+      label: string;
+      modifier: number;
+      dc?: number;
+    };
 
 export interface SceneIssue {
   code: string;

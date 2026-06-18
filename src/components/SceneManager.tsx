@@ -61,6 +61,7 @@ import { InitiativeTracker } from './scene/InitiativeTracker';
 import { MarkerPanel } from './scene/MarkerPanel';
 import { TokenPanel } from './scene/TokenPanel';
 import { CombatPanel } from './scene/CombatPanel';
+import { CheckPanel } from './scene/CheckPanel';
 
 type PlacementMode = 'none' | 'token' | 'marker' | 'adversary';
 
@@ -888,6 +889,16 @@ export function SceneManager({
     emitSceneAction(selectedScene, { type: 'advance-turn' });
   };
 
+  const handleRollCheck = (params: {
+    label: string;
+    modifier: number;
+    dc?: number;
+    actorTokenId?: string;
+  }) => {
+    if (!selectedScene) return;
+    emitSceneAction(selectedScene, { type: 'roll-check', ...params });
+  };
+
   const handleQueueEncounterMonster = () => {
     if (!encounterMonsterId) return;
 
@@ -1423,6 +1434,8 @@ export function SceneManager({
                     combatConcluded={combatConcluded}
                     log={combatLog}
                   />
+
+                  <CheckPanel state={state} actorId={selectedTokenId} onRoll={handleRollCheck} />
                 </div>
               </div>
             </div>

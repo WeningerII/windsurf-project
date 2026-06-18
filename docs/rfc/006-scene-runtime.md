@@ -109,6 +109,22 @@ present" so a finished battle (one side wiped) disables Run Round and shows a
 initiative/round cycle. This closes the prior gap where Run Round stayed enabled
 forever with no "combat over" surface.
 
+## Non-combat checks (landed)
+
+Exploration needs more than combat, so a `roll-check` intent resolves a d20
+ability/skill check through the same event-sourced path. `resolveCheck`
+(`src/scene/check.ts`) is pure (`total = die + modifier`; `outcome` compares to
+an optional DC, otherwise `unresolved` for a roll the player adjudicates). The
+d20 is rolled in `buildEventFromIntent` seeded from the event's own (unique)
+id, so `resolveSceneAction` stays a pure function of its inputs, each roll
+differs, and the resulting `check.rolled` event stores the resolved values —
+the fold never re-rolls (the same contract as `token.damaged`). Folding appends
+a `SceneCheckLogEntry` to `SceneState.checkLog`, which is defaulted to `[]` for
+scenes persisted before the log existed, honoring the migration contract above.
+The scene UI's `CheckPanel` gathers a label, modifier, optional DC, and an
+optional roller token, dispatches through `resolveSceneAction`, and renders the
+log newest-first — a solo player runs their own skill checks without a GM.
+
 ## Encounter-spec validation (landed)
 
 `validateEncounterSpec` (`src/scene/encounterSpec.ts`) is the deterministic gate

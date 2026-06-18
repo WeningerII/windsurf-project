@@ -48,6 +48,7 @@ function makeState(): SceneState {
     round: 2,
     activeTokenId: 'hero',
     seed: 'scene-seed',
+    checkLog: [],
   };
 }
 
