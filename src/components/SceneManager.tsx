@@ -697,17 +697,21 @@ export function SceneManager({
           ? buildCharacterCombatant(linkedDoc, { tokenId: linkedDoc.id, position })
           : undefined;
         const hp = built && built.supported ? built.combatant.token.hp : undefined;
+        const kind = linkedDoc ? 'character' : tokenKind;
 
         const placed = emitSceneAction(selectedScene, {
           type: 'place-token',
           token: {
             id: generateUUID(),
             name,
-            kind: linkedDoc ? 'character' : tokenKind,
+            kind,
             position,
             size: 1,
             refId: linkedDoc?.id,
             ...(hp ? { hp } : {}),
+            // The player drives their own characters; Run Round skips them so a
+            // solo player keeps manual control of their party.
+            ...(kind === 'character' ? { playerControlled: true } : {}),
           },
         });
 

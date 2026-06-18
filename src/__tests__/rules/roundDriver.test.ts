@@ -183,6 +183,26 @@ describe('runCombatRound — the N-participant loop', () => {
     expect(result.intents.length).toBeGreaterThanOrEqual(1);
     expect(result.intents.every((i) => i.type === 'apply-damage')).toBe(true);
   });
+
+  it('skips a player-controlled combatant but keeps it a valid target', () => {
+    const result = runCombatRound({
+      seed: 's',
+      round: 1,
+      order: [
+        combatant({ tokenId: 'hero', faction: 'party', playerControlled: true }),
+        combatant({ tokenId: 'orc', faction: 'monsters' }),
+      ],
+    });
+    const heroTurn = result.turns.find((t) => t.tokenId === 'hero')!;
+    expect(heroTurn.skipped).toBe(true);
+    expect(heroTurn.turn.attacks).toHaveLength(0);
+    expect(heroTurn.turn.rationale).toMatch(/player-controlled/i);
+
+    // The orc still acts and still treats the player-controlled hero as a target.
+    const orcTurn = result.turns.find((t) => t.tokenId === 'orc')!;
+    expect(orcTurn.skipped).toBe(false);
+    expect(orcTurn.turn.scored.map((s) => s.tokenId)).toContain('hero');
+  });
 });
 
 describe('isRoundConclusive — combat end detection', () => {

@@ -41,6 +41,12 @@ export interface RoundCombatant {
   iterativePenaltyStep?: number;
   /** Movement per turn in grid cells. Default 6. */
   speedCells?: number;
+  /**
+   * When true, the autonomous round does NOT act for this combatant — the human
+   * player takes its turn manually. It still occupies initiative and remains a
+   * valid target for everyone else.
+   */
+  playerControlled?: boolean;
 }
 
 export interface RoundTurnRecord {
@@ -130,6 +136,24 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
           scored: [],
           attacks: [],
           rationale: 'Down at the start of its turn; skipped.',
+        },
+      });
+      return;
+    }
+
+    // A player-controlled combatant takes its own turn manually (via the Attack
+    // button); the autonomous round leaves it alone but still lets every other
+    // combatant target it.
+    if (combatant.playerControlled) {
+      turns.push({
+        tokenId: combatant.tokenId,
+        skipped: true,
+        turn: {
+          actorId: combatant.tokenId,
+          decision: 'no-target',
+          scored: [],
+          attacks: [],
+          rationale: 'Player-controlled; left for the player to act.',
         },
       });
       return;

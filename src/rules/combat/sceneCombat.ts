@@ -122,6 +122,9 @@ export function buildSceneCombatants(
       attacksPerRound: stats.attacksPerRound,
       iterativePenaltyStep: stats.iterativePenaltyStep,
       speedCells: stats.speedCells,
+      // A player-controlled token sits in the round (a target, in initiative)
+      // but the autonomous executor never acts for it.
+      playerControlled: token.playerControlled,
     });
   }
   return combatants;

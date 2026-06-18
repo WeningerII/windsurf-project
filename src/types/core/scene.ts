@@ -40,6 +40,12 @@ export interface SceneToken {
    * these into attack resolution.
    */
   conditions?: string[];
+  /**
+   * When true, the autonomous round (Run Round) does not act for this token —
+   * the human plays its turn. Defaults to false (engine-driven). Character
+   * tokens are placed player-controlled so a solo player keeps their own party.
+   */
+  playerControlled?: boolean;
 }
 
 export interface SceneMarker {
