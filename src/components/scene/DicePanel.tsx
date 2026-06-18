@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Dice6 } from 'lucide-react';
 import { rollDiceExpression, type DiceRollResult } from '../../scene/dice';
 import { createSeededRng } from '../../scene/seededRng';
@@ -12,6 +12,12 @@ interface DicePanelProps {
 const QUICK_ROLLS = ['d20', 'd100', '2d6', '4d6kh3'];
 const MAX_HISTORY = 10;
 
+// App-wide monotonic roll counter: mixed into each seed so every roll is
+// distinct even across panel remounts (a per-component ref would reset to 0 on
+// scene switch and reproduce the previous scene's first rolls). Deterministic
+// (no Math.random), just never repeating.
+let globalRollNonce = 0;
+
 /**
  * A scratch dice roller for arbitrary expressions (damage, loot, custom tables)
  * — distinct from checks/oracle, which record adjudicated outcomes. Rolls are
@@ -22,14 +28,16 @@ export function DicePanel({ seed }: DicePanelProps) {
   const [expression, setExpression] = useState('');
   const [history, setHistory] = useState<DiceRollResult[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const nonce = useRef(0);
 
   const roll = (expr: string) => {
     const trimmed = expr.trim();
     if (!trimmed) return;
     try {
-      nonce.current += 1;
-      const result = rollDiceExpression(trimmed, createSeededRng(`${seed}:dice:${nonce.current}`));
+      globalRollNonce += 1;
+      const result = rollDiceExpression(
+        trimmed,
+        createSeededRng(`${seed}:dice:${globalRollNonce}`)
+      );
       setHistory((prev) => [result, ...prev].slice(0, MAX_HISTORY));
       setError(null);
     } catch (err) {

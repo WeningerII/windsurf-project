@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { SceneDocument, SceneState, SceneToken } from '../types/core/scene';
+import type { SceneDocument, SceneEvent, SceneState, SceneToken } from '../types/core/scene';
 import {
   appendSceneEvent,
   createSceneDocument,
@@ -363,6 +363,37 @@ describe('scene runtime — hardening (corrupt persisted data)', () => {
     expect(issues.some((issue) => issue.code === 'scene-event-malformed')).toBe(true);
     // The valid earlier event still folded.
     expect(state.tokens.hero).toBeDefined();
+  });
+
+  it('never throws folding a corrupt (empty-payload) event of any type', () => {
+    // Locks the replay-safety guarantee for every current event type — and, by
+    // construction, any future type that forgets to harden its own validator.
+    const types: SceneEvent['type'][] = [
+      'token.added',
+      'token.moved',
+      'token.removed',
+      'token.damaged',
+      'token.conditions-set',
+      'marker.added',
+      'marker.removed',
+      'initiative.set',
+      'turn.advanced',
+      'check.rolled',
+      'oracle.consulted',
+    ];
+    for (const type of types) {
+      const scene = createSceneDocument({
+        id: `ht-${type}`,
+        name: 'x',
+        systemId: 'dnd-5e-2024',
+        now: NOW,
+      });
+      const corrupt: SceneDocument = {
+        ...scene,
+        events: [{ id: 'bad', sequence: 1, createdAt: NOW, type, payload: {} as never }],
+      };
+      expect(() => foldSceneEvents(corrupt), `folding corrupt ${type}`).not.toThrow();
+    }
   });
 
   it('does not throw when an event entry is not an object at all', () => {
