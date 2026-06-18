@@ -19,6 +19,7 @@ import {
   appendSceneEvent,
   createSceneDocument,
   foldSceneEvents,
+  positiveIntegerOrDefault,
   resolveSceneAction,
 } from '../scene/runtime';
 import {
@@ -1400,11 +1401,6 @@ export function SceneManager({
       )}
     </section>
   );
-}
-
-function positiveIntegerOrDefault(value: string, fallback: number): number {
-  const parsed = Number.parseInt(value, 10);
-  return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
 }
 
 function isMonsterSystemId(systemId: string): systemId is GameSystemId {

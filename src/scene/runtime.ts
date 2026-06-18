@@ -345,8 +345,14 @@ function normalizeGrid(grid?: Partial<SceneGrid>): SceneGrid {
   };
 }
 
-function positiveIntegerOrDefault(value: unknown, fallback: number): number {
-  return Number.isInteger(value) && Number(value) > 0 ? Number(value) : fallback;
+/**
+ * A positive integer, or the fallback. Accepts a number (validated as-is) or a
+ * string (parsed base-10), so the grid-dimension defaults here and the
+ * form-input parsing in the scene UI share one implementation.
+ */
+export function positiveIntegerOrDefault(value: unknown, fallback: number): number {
+  const parsed = typeof value === 'string' ? Number.parseInt(value, 10) : value;
+  return Number.isInteger(parsed) && Number(parsed) > 0 ? Number(parsed) : fallback;
 }
 
 function validateTokenForAdd(
