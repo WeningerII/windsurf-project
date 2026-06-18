@@ -64,6 +64,7 @@ import { TokenPanel } from './scene/TokenPanel';
 import { CombatPanel } from './scene/CombatPanel';
 import { CheckPanel } from './scene/CheckPanel';
 import { OraclePanel } from './scene/OraclePanel';
+import { RecapPanel } from './scene/RecapPanel';
 
 type PlacementMode = 'none' | 'token' | 'marker' | 'adversary';
 
@@ -78,6 +79,8 @@ interface Props {
   onAddScenes: (scenes: SceneDocument[]) => void;
   onAppendSceneEvent: (sceneId: string, event: SceneEvent) => void;
   onDeleteScene: (id: string) => void;
+  /** Append a factual recap of a scene to its linked campaign's session log. */
+  onLogToCampaign?: (campaignId: string, title: string, body: string) => void;
 }
 
 const DEFAULT_SYSTEM_ID = 'dnd-5e-2024';
@@ -103,6 +106,7 @@ export function SceneManager({
   onAddScenes,
   onAppendSceneEvent,
   onDeleteScene,
+  onLogToCampaign,
 }: Props) {
   const systemOptions = useMemo(() => systemRegistry.getAll(), []);
   const fallbackSystemId = systemOptions[0]?.id ?? DEFAULT_SYSTEM_ID;
@@ -172,6 +176,12 @@ export function SceneManager({
   );
   const state = foldedScene?.state;
   const sceneSystemId = state?.systemId;
+  // The campaign this scene is linked to, when it resolves to a known one —
+  // gates the "log recap to campaign" bridge.
+  const linkedCampaign = useMemo(
+    () => (state?.campaignId ? campaigns.find((c) => c.id === state.campaignId) : undefined),
+    [campaigns, state?.campaignId]
+  );
 
   // Daggerheart scenes need the weapon catalog so character tokens can fight
   // (weapons are catalog refs on the document); mirrors the monster preload.
@@ -1445,6 +1455,14 @@ export function SceneManager({
                   <CheckPanel state={state} actorId={selectedTokenId} onRoll={handleRollCheck} />
 
                   <OraclePanel state={state} onConsult={handleConsultOracle} />
+
+                  {onLogToCampaign && linkedCampaign && (
+                    <RecapPanel
+                      state={state}
+                      campaignName={linkedCampaign.name}
+                      onLog={(title, body) => onLogToCampaign(linkedCampaign.id, title, body)}
+                    />
+                  )}
                 </div>
               </div>
             </div>

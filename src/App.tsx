@@ -20,6 +20,7 @@ import { ConfirmDialog } from './components/ui/ConfirmDialog';
 import { ToastProvider, useToast } from './components/ui/Toast';
 import { ServiceWorkerUpdateBanner } from './components/ServiceWorkerUpdateBanner';
 import { useCampaigns } from './hooks/useCampaigns';
+import { addSessionEntry, createSessionEntry } from './utils/campaignStory';
 import { CampaignManager } from './components/CampaignManager';
 // Lazy-loaded: the scene/VTT view is the app's heaviest feature component and
 // is only used in the dashboard branch, so it stays out of the eager app shell
@@ -115,6 +116,20 @@ function AppContent() {
     deleteScene,
     flushPendingSaves: flushPendingSceneSaves,
   } = useScenes();
+
+  // Bridge a scene back to its linked campaign: append a factual recap as a
+  // session-log entry. Campaign mutation stays here (the owner of useCampaigns)
+  // rather than inside SceneManager.
+  const handleLogSceneToCampaign = useCallback(
+    (campaignId: string, title: string, body: string) => {
+      const campaign = campaigns.find((c) => c.id === campaignId);
+      if (!campaign) return;
+      const entry = createSessionEntry(generateUUID(), title, body, new Date());
+      updateCampaign(addSessionEntry(campaign, entry));
+      toast(`Recap added to ${campaign.name}`, 'success');
+    },
+    [campaigns, updateCampaign, toast]
+  );
   const {
     syncState: campaignSyncState,
     lastSyncedAt: lastCampaignSyncedAt,
@@ -622,6 +637,7 @@ function AppContent() {
                 onAddScene={addScene}
                 onAddScenes={addScenes}
                 onAppendSceneEvent={appendSceneEvent}
+                onLogToCampaign={handleLogSceneToCampaign}
                 onDeleteScene={(id) =>
                   showConfirm(
                     'Delete Scene',
