@@ -421,15 +421,33 @@ function buildEventFromIntent(
         payload: { nextTokenId: getNextInitiativeTokenId(state) },
       };
     case 'roll-check': {
-      // Seed the d20 from the (caller-supplied, unique) event id: resolveSceneAction
+      // Seed the d20(s) from the (caller-supplied, unique) event id: resolveSceneAction
       // stays a pure function of its inputs, each roll differs, and the resolved
-      // result is stored on the event so the fold never re-rolls.
-      const die = createSeededRng(base.id).rollDie(20);
+      // result is stored on the event so the fold never re-rolls. Advantage/
+      // disadvantage draws two from the same stream and keeps one.
+      const rng = createSeededRng(base.id);
+      const first = rng.rollDie(20);
+      let die = first;
+      let extra: { mode: 'advantage' | 'disadvantage'; discardedDie: number } | undefined;
+      if (intent.mode === 'advantage' || intent.mode === 'disadvantage') {
+        const second = rng.rollDie(20);
+        const keepHigh = intent.mode === 'advantage';
+        die = keepHigh ? Math.max(first, second) : Math.min(first, second);
+        extra = {
+          mode: intent.mode,
+          discardedDie: keepHigh ? Math.min(first, second) : Math.max(first, second),
+        };
+      }
       const result = resolveCheck(die, intent.modifier, intent.dc);
       return {
         ...base,
         type: 'check.rolled',
-        payload: { label: intent.label.trim(), actorTokenId: intent.actorTokenId, ...result },
+        payload: {
+          label: intent.label.trim(),
+          actorTokenId: intent.actorTokenId,
+          ...result,
+          ...extra,
+        },
       };
     }
     case 'consult-oracle': {
@@ -511,7 +529,8 @@ function applySceneEvent(state: SceneState, event: SceneEvent): void {
       }
       break;
     case 'check.rolled': {
-      const { label, actorTokenId, die, modifier, dc, total, outcome } = event.payload;
+      const { label, actorTokenId, die, modifier, dc, total, outcome, mode, discardedDie } =
+        event.payload;
       state.checkLog = [
         ...state.checkLog,
         {
@@ -523,6 +542,8 @@ function applySceneEvent(state: SceneState, event: SceneEvent): void {
           ...(dc !== undefined ? { dc } : {}),
           total,
           outcome,
+          ...(mode !== undefined ? { mode } : {}),
+          ...(discardedDie !== undefined ? { discardedDie } : {}),
           createdAt: event.createdAt,
         },
       ];

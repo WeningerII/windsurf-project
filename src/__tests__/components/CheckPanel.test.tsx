@@ -76,6 +76,41 @@ describe('CheckPanel', () => {
     });
   });
 
+  it('passes advantage mode when selected', async () => {
+    const user = userEvent.setup();
+    const onRoll = vi.fn();
+    render(<CheckPanel state={makeState()} onRoll={onRoll} />);
+
+    await user.type(screen.getByLabelText('Check label'), 'Athletics');
+    await user.selectOptions(screen.getByLabelText('Roll mode'), 'advantage');
+    await user.click(screen.getByRole('button', { name: /^Roll$/i }));
+
+    expect(onRoll).toHaveBeenCalledWith({ label: 'Athletics', modifier: 0, mode: 'advantage' });
+  });
+
+  it('shows the discarded die and mode tag for an advantage roll', () => {
+    render(
+      <CheckPanel
+        state={makeState([
+          {
+            id: 'c1',
+            label: 'Athletics',
+            die: 18,
+            discardedDie: 4,
+            mode: 'advantage',
+            modifier: 3,
+            total: 21,
+            outcome: 'success',
+            createdAt: new Date(),
+          },
+        ])}
+        onRoll={vi.fn()}
+      />
+    );
+    const item = screen.getByRole('listitem');
+    expect(item).toHaveTextContent('d20 18 4 (adv) + 3 = 21');
+  });
+
   it('renders the check log newest-first with outcome and actor name', () => {
     render(
       <CheckPanel

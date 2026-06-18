@@ -88,6 +88,9 @@ export interface SceneInitiativeEntry {
 
 export type SceneCheckOutcome = 'success' | 'failure' | 'unresolved';
 
+/** Roll two d20s and keep the higher (advantage) or lower (disadvantage). */
+export type SceneCheckMode = 'advantage' | 'disadvantage';
+
 /**
  * A resolved d20 ability/skill check: `total` is `die + modifier`, and
  * `outcome` compares it to `dc` (or `unresolved` when no DC was given — a
@@ -96,12 +99,16 @@ export type SceneCheckOutcome = 'success' | 'failure' | 'unresolved';
  * so the fold stays pure and replay-deterministic.
  */
 export interface SceneCheckResult {
-  /** Raw d20 face (1–20). */
+  /** The d20 face used for the total (the kept die under advantage/disadvantage). */
   die: number;
   modifier: number;
   dc?: number;
   total: number;
   outcome: SceneCheckOutcome;
+  /** Present when rolled with advantage/disadvantage. */
+  mode?: SceneCheckMode;
+  /** The unused d20 under advantage/disadvantage, kept for transparency. */
+  discardedDie?: number;
 }
 
 /** A check result as it lives in the scene's check log. */
@@ -257,6 +264,8 @@ export type SceneActionIntent =
       label: string;
       modifier: number;
       dc?: number;
+      /** Roll with advantage/disadvantage; omit for a single d20. */
+      mode?: SceneCheckMode;
     }
   | { type: 'consult-oracle'; actorId?: string; question?: string; odds: SceneOracleOdds };
 

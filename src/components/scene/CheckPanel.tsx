@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Dices } from 'lucide-react';
-import type { SceneCheckLogEntry, SceneState } from '../../types/core/scene';
+import type { SceneCheckLogEntry, SceneCheckMode, SceneState } from '../../types/core/scene';
 import { Button } from '../ui/Button';
 import { Select } from '../ui/Select';
 import { Badge } from '../ui/Badge';
@@ -9,7 +9,13 @@ interface CheckPanelProps {
   state: SceneState;
   /** Selected token, offered as the default roller. */
   actorId?: string;
-  onRoll: (params: { label: string; modifier: number; dc?: number; actorTokenId?: string }) => void;
+  onRoll: (params: {
+    label: string;
+    modifier: number;
+    dc?: number;
+    actorTokenId?: string;
+    mode?: SceneCheckMode;
+  }) => void;
 }
 
 /** Common d20 skill labels across systems; the input stays free-text. */
@@ -52,6 +58,7 @@ export function CheckPanel({ state, actorId, onRoll }: CheckPanelProps) {
   const [modifier, setModifier] = useState('');
   const [dc, setDc] = useState('');
   const [actorTokenId, setActorTokenId] = useState('');
+  const [mode, setMode] = useState<'normal' | SceneCheckMode>('normal');
 
   const tokens = Object.values(state.tokens);
   // Default the roller to the selected token until the user picks one.
@@ -72,6 +79,7 @@ export function CheckPanel({ state, actorId, onRoll }: CheckPanelProps) {
       modifier: parsedModifier,
       ...(parsedDc !== undefined ? { dc: parsedDc } : {}),
       ...(effectiveActor ? { actorTokenId: effectiveActor } : {}),
+      ...(mode !== 'normal' ? { mode } : {}),
     });
     setLabel('');
     setModifier('');
@@ -130,7 +138,7 @@ export function CheckPanel({ state, actorId, onRoll }: CheckPanelProps) {
           ))}
         </datalist>
 
-        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
+        <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] items-center gap-2">
           <Select
             aria-label="Check roller"
             value={effectiveActor}
@@ -142,6 +150,15 @@ export function CheckPanel({ state, actorId, onRoll }: CheckPanelProps) {
                 {token.name}
               </option>
             ))}
+          </Select>
+          <Select
+            aria-label="Roll mode"
+            value={mode}
+            onChange={(e) => setMode(e.target.value as 'normal' | SceneCheckMode)}
+          >
+            <option value="normal">Normal</option>
+            <option value="advantage">Advantage</option>
+            <option value="disadvantage">Disadvantage</option>
           </Select>
           <Button size="sm" disabled={!canRoll} onClick={handleRoll}>
             <Dices className="mr-1.5 h-4 w-4" />
@@ -160,6 +177,10 @@ export function CheckPanel({ state, actorId, onRoll }: CheckPanelProps) {
                     : ''}
                   {': '}
                   d20 {entry.die}
+                  {entry.discardedDie !== undefined && (
+                    <span className="line-through"> {entry.discardedDie}</span>
+                  )}
+                  {entry.mode ? ` (${entry.mode === 'advantage' ? 'adv' : 'dis'})` : ''}
                   {entry.die === 20 ? ' nat20!' : entry.die === 1 ? ' nat1' : ''}
                   {entry.modifier >= 0 ? ` + ${entry.modifier}` : ` − ${Math.abs(entry.modifier)}`}
                   {' = '}

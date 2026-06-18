@@ -121,9 +121,11 @@ differs, and the resulting `check.rolled` event stores the resolved values —
 the fold never re-rolls (the same contract as `token.damaged`). Folding appends
 a `SceneCheckLogEntry` to `SceneState.checkLog`, which is defaulted to `[]` for
 scenes persisted before the log existed, honoring the migration contract above.
-The scene UI's `CheckPanel` gathers a label, modifier, optional DC, and an
-optional roller token, dispatches through `resolveSceneAction`, and renders the
-log newest-first — a solo player runs their own skill checks without a GM.
+The scene UI's `CheckPanel` gathers a label, modifier, optional DC, an optional
+roller token, and an advantage/disadvantage mode (two d20s drawn from the same
+event-id stream, keeping the higher/lower and recording the discarded die),
+dispatches through `resolveSceneAction`, and renders the log newest-first — a
+solo player runs their own skill checks without a GM.
 
 A `consult-oracle` intent applies the same pattern to GM emulation:
 `resolveOracle` (`src/scene/oracle.ts`) maps an odds level to a d100 yes-target

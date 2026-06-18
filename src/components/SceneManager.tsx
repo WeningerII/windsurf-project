@@ -40,6 +40,7 @@ import type { Monster } from '../types/creatures/monsters';
 import type { GameSystemId } from '../types/game-systems';
 import type {
   SceneActionIntent,
+  SceneCheckMode,
   SceneDocument,
   SceneEvent,
   SceneMarkerKind,
@@ -906,6 +907,7 @@ export function SceneManager({
     modifier: number;
     dc?: number;
     actorTokenId?: string;
+    mode?: SceneCheckMode;
   }) => {
     if (!selectedScene) return;
     emitSceneAction(selectedScene, { type: 'roll-check', ...params });

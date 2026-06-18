@@ -402,6 +402,45 @@ describe('scene runtime — checks', () => {
     const { state } = foldSceneEvents(scene);
     expect(state.checkLog[0].actorTokenId).toBe('rogue');
   });
+
+  it('keeps the higher of two dice with advantage and records the discard', () => {
+    let scene = freshScene();
+    const rng = createSeededRng('adv-1');
+    const a = rng.rollDie(20);
+    const b = rng.rollDie(20);
+    scene = appendResolved(
+      scene,
+      resolveSceneAction(
+        scene,
+        { type: 'roll-check', label: 'Athletics', modifier: 0, mode: 'advantage' },
+        { eventId: 'adv-1', createdAt: NOW }
+      )
+    );
+    const entry = foldSceneEvents(scene).state.checkLog[0];
+    expect(entry.die).toBe(Math.max(a, b));
+    expect(entry.discardedDie).toBe(Math.min(a, b));
+    expect(entry.mode).toBe('advantage');
+    expect(entry.total).toBe(Math.max(a, b)); // modifier 0
+  });
+
+  it('keeps the lower of two dice with disadvantage', () => {
+    let scene = freshScene();
+    const rng = createSeededRng('dis-1');
+    const a = rng.rollDie(20);
+    const b = rng.rollDie(20);
+    scene = appendResolved(
+      scene,
+      resolveSceneAction(
+        scene,
+        { type: 'roll-check', label: 'Stealth', modifier: 2, mode: 'disadvantage' },
+        { eventId: 'dis-1', createdAt: NOW }
+      )
+    );
+    const entry = foldSceneEvents(scene).state.checkLog[0];
+    expect(entry.die).toBe(Math.min(a, b));
+    expect(entry.discardedDie).toBe(Math.max(a, b));
+    expect(entry.mode).toBe('disadvantage');
+  });
 });
 
 describe('scene runtime — oracle', () => {
