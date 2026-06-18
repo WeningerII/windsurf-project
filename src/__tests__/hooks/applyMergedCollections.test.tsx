@@ -26,6 +26,8 @@ function makeCampaign(id: string, overrides: Partial<Campaign> = {}): Campaign {
     name: `Campaign ${id}`,
     characterIds: [],
     notes: '',
+    quests: [],
+    sessionLog: [],
     createdAt: new Date('2026-02-24T00:00:00.000Z'),
     updatedAt: new Date('2026-02-24T00:00:00.000Z'),
     ...overrides,

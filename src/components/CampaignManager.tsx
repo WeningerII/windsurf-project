@@ -13,6 +13,8 @@ import {
 import { Button } from './ui/Button';
 import { Badge } from './ui/Badge';
 import { Select } from './ui/Select';
+import { QuestList } from './campaign/QuestList';
+import { SessionLog } from './campaign/SessionLog';
 import type { Campaign } from '../types/core/campaign';
 import type { CharacterDocument, SystemDataModel } from '../types/core/document';
 import { systemRegistry } from '../registry';
@@ -56,6 +58,8 @@ export const CampaignManager: React.FC<Props> = ({
       systemId: newSystemId === 'all' ? undefined : newSystemId,
       characterIds: [],
       notes: '',
+      quests: [],
+      sessionLog: [],
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -341,6 +345,12 @@ export const CampaignManager: React.FC<Props> = ({
                     </Button>
                   )}
 
+                  {/* Quests */}
+                  <QuestList campaign={campaign} onUpdate={onUpdateCampaign} />
+
+                  {/* Session log */}
+                  <SessionLog campaign={campaign} onUpdate={onUpdateCampaign} />
+
                   {/* Notes */}
                   <div className="space-y-1.5">
                     <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1">
@@ -349,7 +359,7 @@ export const CampaignManager: React.FC<Props> = ({
                     <textarea
                       value={campaign.notes}
                       onChange={(e) => onUpdateCampaign({ ...campaign, notes: e.target.value })}
-                      placeholder="Session notes, house rules, quest tracker..."
+                      placeholder="House rules, NPC names, loot..."
                       className="w-full min-h-[80px] rounded-lg border border-input bg-transparent px-3 py-2 text-sm focus:outline-none focus:border-primary resize-y"
                     />
                   </div>

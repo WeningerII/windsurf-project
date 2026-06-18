@@ -30,6 +30,8 @@ function makeCampaign(overrides: Partial<Campaign> = {}): Campaign {
     name: 'Alpha Squad',
     characterIds: [],
     notes: '',
+    quests: [],
+    sessionLog: [],
     createdAt: now,
     updatedAt: now,
     ...overrides,
@@ -104,7 +106,7 @@ describe('CampaignManager', () => {
     await user.click(screen.getByRole('button', { name: /Alpha Squad/i }));
     await user.click(screen.getByText('Astra').closest('button') as HTMLButtonElement);
     await user.click(screen.getByTitle('Remove Astra from campaign'));
-    fireEvent.change(screen.getByPlaceholderText(/Session notes/i), {
+    fireEvent.change(screen.getByPlaceholderText(/House rules/i), {
       target: { value: 'Track the goblin cave' },
     });
     await user.click(screen.getByRole('button', { name: /delete campaign/i }));

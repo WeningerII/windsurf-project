@@ -143,6 +143,8 @@ function makeCampaign(overrides: Partial<Campaign> = {}): Campaign {
     systemId: 'dnd-5e-2024',
     characterIds: [],
     notes: '',
+    quests: [],
+    sessionLog: [],
     createdAt: now,
     updatedAt: now,
     ...overrides,

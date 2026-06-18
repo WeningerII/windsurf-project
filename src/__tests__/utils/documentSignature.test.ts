@@ -112,6 +112,8 @@ function makeCampaign(id: string, overrides: Partial<Campaign> = {}): Campaign {
     systemId: 'dnd-5e-2024',
     notes: '',
     characterIds: [],
+    quests: [],
+    sessionLog: [],
     createdAt: new Date('2026-01-01T00:00:00.000Z'),
     updatedAt: new Date('2026-01-02T00:00:00.000Z'),
     ...overrides,
@@ -162,6 +164,56 @@ describe('sameCampaignSignatures', () => {
   it('distinguishes campaign collections that differ only in duplicate multiplicity', () => {
     const a = [makeCampaign('a'), makeCampaign('a'), makeCampaign('b')];
     const b = [makeCampaign('a'), makeCampaign('b'), makeCampaign('b')];
+    expect(sameCampaignSignatures(a, b)).toBe(false);
+  });
+
+  // Cheap insurance: a story edit that happens to collide on updatedAt must
+  // still register so a no-op merge can't swallow it.
+  it('detects a quest status flip even when updatedAt is unchanged', () => {
+    const base = {
+      id: 'q1',
+      title: 'Q',
+      summary: '',
+      objectives: [],
+      createdAt: new Date('2026-01-01T00:00:00.000Z'),
+      updatedAt: new Date('2026-01-01T00:00:00.000Z'),
+    };
+    const a = [makeCampaign('a', { quests: [{ ...base, status: 'active' }] })];
+    const b = [makeCampaign('a', { quests: [{ ...base, status: 'completed' }] })];
+    expect(sameCampaignSignatures(a, b)).toBe(false);
+  });
+
+  it('detects a checked objective even when updatedAt is unchanged', () => {
+    const quest = {
+      id: 'q1',
+      title: 'Q',
+      summary: '',
+      status: 'active' as const,
+      createdAt: new Date('2026-01-01T00:00:00.000Z'),
+      updatedAt: new Date('2026-01-01T00:00:00.000Z'),
+    };
+    const a = [
+      makeCampaign('a', {
+        quests: [{ ...quest, objectives: [{ id: 'o', text: 'x', done: false }] }],
+      }),
+    ];
+    const b = [
+      makeCampaign('a', {
+        quests: [{ ...quest, objectives: [{ id: 'o', text: 'x', done: true }] }],
+      }),
+    ];
+    expect(sameCampaignSignatures(a, b)).toBe(false);
+  });
+
+  it('detects a new session-log entry even when updatedAt is unchanged', () => {
+    const a = [makeCampaign('a')];
+    const b = [
+      makeCampaign('a', {
+        sessionLog: [
+          { id: 's1', title: 'One', body: 'x', createdAt: new Date('2026-01-01T00:00:00.000Z') },
+        ],
+      }),
+    ];
     expect(sameCampaignSignatures(a, b)).toBe(false);
   });
 });
