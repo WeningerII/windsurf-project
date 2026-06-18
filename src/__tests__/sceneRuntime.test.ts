@@ -301,3 +301,73 @@ describe('scene runtime', () => {
     ]);
   });
 });
+
+describe('scene runtime — token footprints', () => {
+  function makeSizedToken(id: string, x: number, y: number, size: number): SceneToken {
+    return { id, name: id, kind: 'monster', position: { x, y }, size };
+  }
+  function place(scene: SceneDocument, token: SceneToken, eventId: string) {
+    return resolveSceneAction(scene, { type: 'place-token', token }, { eventId, createdAt: NOW });
+  }
+
+  it('rejects a multi-cell token whose footprint runs off the grid', () => {
+    const scene = createSceneDocument({
+      id: 'fp-1',
+      name: 'Edge',
+      systemId: 'dnd-5e-2024',
+      grid: { width: 3, height: 3 },
+      now: NOW,
+    });
+    // The 2x2 ogre's anchor (2,2) is in bounds but its footprint reaches (3,3).
+    const result = place(scene, makeSizedToken('ogre', 2, 2, 2), 'e1');
+    expect(result.event).toBeUndefined();
+    expect(result.issues[0]).toMatchObject({ code: 'scene-footprint-out-of-bounds' });
+  });
+
+  it("rejects placing a token inside a large creature's footprint", () => {
+    let scene = createSceneDocument({
+      id: 'fp-2',
+      name: 'Overlap',
+      systemId: 'dnd-5e-2024',
+      grid: { width: 6, height: 6 },
+      now: NOW,
+    });
+    scene = appendResolved(scene, place(scene, makeSizedToken('ogre', 0, 0, 2), 'e1'));
+    const intruder = place(scene, makeSizedToken('goblin', 1, 1, 1), 'e2');
+    expect(intruder.event).toBeUndefined();
+    expect(intruder.issues[0]).toMatchObject({ code: 'scene-footprint-occupied' });
+  });
+
+  it('still allows two size-1 tokens to share a cell (stacking)', () => {
+    let scene = createSceneDocument({
+      id: 'fp-3',
+      name: 'Stack',
+      systemId: 'dnd-5e-2024',
+      grid: { width: 6, height: 6 },
+      now: NOW,
+    });
+    scene = appendResolved(scene, place(scene, makeSizedToken('a', 2, 2, 1), 'e1'));
+    const stacked = place(scene, makeSizedToken('b', 2, 2, 1), 'e2');
+    expect(stacked.issues).toEqual([]);
+    expect(stacked.event).toBeDefined();
+  });
+
+  it("rejects moving a token onto a large creature's footprint", () => {
+    let scene = createSceneDocument({
+      id: 'fp-4',
+      name: 'MoveOverlap',
+      systemId: 'dnd-5e-2024',
+      grid: { width: 6, height: 6 },
+      now: NOW,
+    });
+    scene = appendResolved(scene, place(scene, makeSizedToken('ogre', 0, 0, 2), 'e1'));
+    scene = appendResolved(scene, place(scene, makeSizedToken('goblin', 4, 4, 1), 'e2'));
+    const move = resolveSceneAction(
+      scene,
+      { type: 'move-token', tokenId: 'goblin', position: { x: 1, y: 0 } },
+      { eventId: 'e3', createdAt: NOW }
+    );
+    expect(move.event).toBeUndefined();
+    expect(move.issues[0]).toMatchObject({ code: 'scene-footprint-occupied' });
+  });
+});

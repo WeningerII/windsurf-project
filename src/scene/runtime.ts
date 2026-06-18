@@ -8,6 +8,7 @@ import type {
   SceneState,
   SceneToken,
 } from '../types/core/scene';
+import { cellKey, footprintCells, footprintWithinGrid } from './grid';
 
 export interface CreateSceneDocumentParams {
   id: string;
@@ -127,6 +128,83 @@ function validateSceneIntent(
         code: 'scene-initiative-empty',
         message: 'Cannot advance the turn: no initiative order has been set.',
         path: 'initiative',
+        severity: 'error',
+        eventId: options.eventId,
+      },
+    ];
+  }
+  if (intent.type === 'place-token') {
+    return footprintPlacementIssues(
+      state,
+      intent.token.position,
+      intent.token.size,
+      undefined,
+      options
+    );
+  }
+  if (intent.type === 'move-token') {
+    const moving = state.tokens[intent.tokenId];
+    // An unknown token id is reported by the event-level validator; the size
+    // comes from the existing token.
+    if (moving) {
+      return footprintPlacementIssues(state, intent.position, moving.size, intent.tokenId, options);
+    }
+  }
+  return [];
+}
+
+/**
+ * Forward-looking placement gate: a token's footprint (size x size cells) must
+ * fit on the grid and must not overlap another token when a multi-cell creature
+ * is involved. Size-1 tokens may still share a cell (the grid renders stacks);
+ * the rule exists so nothing is placed "inside" a large creature's reserved
+ * footprint that its single anchor cell doesn't visibly show. Intent-level, so
+ * it never invalidates historical events.
+ */
+function footprintPlacementIssues(
+  state: SceneState,
+  position: { x: number; y: number },
+  size: number,
+  ignoreTokenId: string | undefined,
+  options: SceneActionOptions
+): SceneIssue[] {
+  const span = Math.max(1, Math.trunc(size));
+  // A multi-cell footprint can run off-grid even when its anchor cell is in
+  // bounds (the event-level coordinate check only sees the anchor). Size-1
+  // bounds are left to that existing check so its error code is unchanged.
+  if (span > 1 && !footprintWithinGrid(position, size, state.grid.width, state.grid.height)) {
+    return [
+      {
+        code: 'scene-footprint-out-of-bounds',
+        message: `A ${span}x${span} token at (${position.x}, ${position.y}) does not fit on the grid.`,
+        path: 'position',
+        severity: 'error',
+        eventId: options.eventId,
+      },
+    ];
+  }
+
+  // Cells occupied by OTHER tokens, keyed to the occupying token's size so we
+  // permit size-1-on-size-1 stacking but reject overlap with any large one.
+  const occupiedSizeByCell = new Map<string, number>();
+  for (const token of Object.values(state.tokens)) {
+    if (token.id === ignoreTokenId) continue;
+    const tokenSpan = Math.max(1, Math.trunc(token.size));
+    for (const cell of footprintCells(token.position, token.size)) {
+      const key = cellKey(cell);
+      occupiedSizeByCell.set(key, Math.max(occupiedSizeByCell.get(key) ?? 0, tokenSpan));
+    }
+  }
+  const overlaps = footprintCells(position, size).some((cell) => {
+    const occupiedSpan = occupiedSizeByCell.get(cellKey(cell));
+    return occupiedSpan !== undefined && (span > 1 || occupiedSpan > 1);
+  });
+  if (overlaps) {
+    return [
+      {
+        code: 'scene-footprint-occupied',
+        message: `A ${span}x${span} token at (${position.x}, ${position.y}) overlaps another token's space.`,
+        path: 'position',
         severity: 'error',
         eventId: options.eventId,
       },

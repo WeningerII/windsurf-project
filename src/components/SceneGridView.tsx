@@ -2,7 +2,7 @@ import { memo, useMemo } from 'react';
 import type { KeyboardEvent } from 'react';
 import { cn } from '@/lib/utils';
 import type { SceneCoordinate, SceneMarker, SceneState, SceneToken } from '../types/core/scene';
-import { cellKey } from '../scene/grid';
+import { cellKey, footprintCells } from '../scene/grid';
 
 export interface SceneGridViewProps {
   state: SceneState;
@@ -25,6 +25,20 @@ export const SceneGridView = memo(function SceneGridView({
   onTokenActivate,
 }: SceneGridViewProps) {
   const tokensByCell = useMemo(() => buildTokensByCell(state), [state]);
+  // Cells covered by a multi-cell token's footprint (the chip renders in the
+  // anchor cell; this lets the other cells it occupies be shaded so a large
+  // creature visibly takes up its whole space).
+  const largeTokenFootprintByCell = useMemo(() => {
+    const index = new Map<string, SceneToken>();
+    for (const token of Object.values(state.tokens)) {
+      if (token.size <= 1) continue;
+      for (const cell of footprintCells(token.position, token.size)) {
+        const key = cellKey(cell);
+        if (!index.has(key)) index.set(key, token);
+      }
+    }
+    return index;
+  }, [state.tokens]);
   const markerByCell = useMemo(() => {
     const index = new Map<string, SceneMarker>();
     for (const marker of Object.values(state.markers)) {
@@ -70,6 +84,7 @@ export const SceneGridView = memo(function SceneGridView({
             const key = cellKey(position);
             const cellTokens = tokensByCell.get(key) ?? [];
             const marker = markerByCell.get(key);
+            const footprintToken = largeTokenFootprintByCell.get(key);
             return (
               <div
                 key={key}
@@ -80,6 +95,12 @@ export const SceneGridView = memo(function SceneGridView({
                   'relative aspect-square min-h-8 border-b border-r border-border/70 bg-background p-0.5 outline-none transition-colors',
                   marker?.kind === 'terrain' && 'bg-emerald-500/10',
                   marker?.kind === 'hazard' && 'bg-amber-500/15',
+                  // A multi-cell creature's reserved footprint, shaded so the
+                  // space it occupies beyond its anchor chip is visible.
+                  footprintToken &&
+                    (footprintToken.kind === 'character'
+                      ? 'bg-primary/10'
+                      : 'bg-muted-foreground/15'),
                   onCellActivate &&
                     'cursor-pointer hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring'
                 )}
