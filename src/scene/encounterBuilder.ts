@@ -2,6 +2,7 @@ import type { Monster } from '../types/creatures/monsters';
 import type { CharacterDocument, SystemDataModel } from '../types/core/document';
 import type { SceneCoordinate, SceneDocument, SceneEvent } from '../types/core/scene';
 import { appendSceneEvent, foldSceneEvents, resolveSceneAction } from './runtime';
+import { cellKey } from './grid';
 import { createSeededRng } from './seededRng';
 import { monsterAverageHitPoints } from '../rules/combatants/monsterCombatant';
 
@@ -525,10 +526,6 @@ function occupyCells(occupied: Set<string>, position: SceneCoordinate, size: num
       occupied.add(cellKey({ x, y }));
     }
   }
-}
-
-function cellKey(position: SceneCoordinate): string {
-  return `${position.x}:${position.y}`;
 }
 
 function getSceneTokenSize(size: Monster['size']): number {

@@ -2,6 +2,7 @@ import { memo, useMemo } from 'react';
 import type { KeyboardEvent } from 'react';
 import { cn } from '@/lib/utils';
 import type { SceneCoordinate, SceneMarker, SceneState, SceneToken } from '../types/core/scene';
+import { cellKey } from '../scene/grid';
 
 export interface SceneGridViewProps {
   state: SceneState;
@@ -29,7 +30,7 @@ export const SceneGridView = memo(function SceneGridView({
     for (const marker of Object.values(state.markers)) {
       for (let dy = 0; dy < marker.height; dy += 1) {
         for (let dx = 0; dx < marker.width; dx += 1) {
-          const key = coordinateKey({ x: marker.position.x + dx, y: marker.position.y + dy });
+          const key = cellKey({ x: marker.position.x + dx, y: marker.position.y + dy });
           if (!index.has(key)) {
             index.set(key, marker);
           }
@@ -66,12 +67,12 @@ export const SceneGridView = memo(function SceneGridView({
         {Array.from({ length: state.grid.height }).flatMap((_, y) =>
           Array.from({ length: state.grid.width }).map((__, x) => {
             const position = { x, y };
-            const cellKey = coordinateKey(position);
-            const cellTokens = tokensByCell.get(cellKey) ?? [];
-            const marker = markerByCell.get(cellKey);
+            const key = cellKey(position);
+            const cellTokens = tokensByCell.get(key) ?? [];
+            const marker = markerByCell.get(key);
             return (
               <div
-                key={cellKey}
+                key={key}
                 role="gridcell"
                 aria-label={buildCellLabel(position, marker, cellTokens)}
                 tabIndex={0}
@@ -128,7 +129,7 @@ export const SceneGridView = memo(function SceneGridView({
 function buildTokensByCell(state: SceneState): Map<string, SceneToken[]> {
   const byCell = new Map<string, SceneToken[]>();
   Object.values(state.tokens).forEach((token) => {
-    const key = coordinateKey(token.position);
+    const key = cellKey(token.position);
     byCell.set(key, [...(byCell.get(key) ?? []), token]);
   });
   return byCell;
@@ -155,10 +156,6 @@ function handleCellKeyDown(event: KeyboardEvent<HTMLDivElement>, callback: () =>
   }
   event.preventDefault();
   callback();
-}
-
-function coordinateKey(position: SceneCoordinate): string {
-  return `${position.x}:${position.y}`;
 }
 
 function getTokenInitials(token: SceneToken): string {
