@@ -67,6 +67,15 @@ append-only and additive.** New event kinds may be added; existing kinds must
 keep folding. Malformed persisted documents are dropped by `parseSceneDocument`
 (`src/utils/boundaryValidation.ts`), never thrown into the UI.
 
+`parseSceneDocument` validates the envelope and the `initialState` substructure
+(grid/tokens/markers/initiative) but does not deep-validate every event payload
+or the derived `checkLog`/`oracleLog`. The fold is the second line of defense:
+it coerces a non-array log to `[]`, and wraps each event in a replay safety net
+so a corrupt event (missing/wrong-shaped payload) becomes a recorded
+`scene-event-malformed` issue and is skipped — a single bad event can never
+crash the fold or the sidebar that folds every scene. App-built events never hit
+that net, so it contains malformed data without masking real logic.
+
 ## Seeded replay
 
 All randomness flows through `createSeededRng` (`src/scene/seededRng.ts`,

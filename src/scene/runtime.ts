@@ -84,12 +84,27 @@ export function foldSceneEvents(scene: SceneDocument): SceneFoldResult {
     .slice()
     .sort((a, b) => a.sequence - b.sequence)
     .forEach((event) => {
-      const eventIssues = validateSceneEvent(state, event);
-      issues.push(...eventIssues);
-      if (eventIssues.some((issue) => issue.severity === 'error')) {
-        return;
+      // Replay safety net: a corrupt persisted/imported event (missing or
+      // wrong-shaped payload) must degrade to a recorded issue and a skipped
+      // event, never crash hydration — the same parse-don't-cast guarantee the
+      // storage boundary makes. The happy path (app-built events) never throws
+      // here, so this masks no real logic; it only contains malformed data.
+      try {
+        const eventIssues = validateSceneEvent(state, event);
+        issues.push(...eventIssues);
+        if (eventIssues.some((issue) => issue.severity === 'error')) {
+          return;
+        }
+        applySceneEvent(state, event);
+      } catch {
+        issues.push({
+          code: 'scene-event-malformed',
+          message: `Scene event '${event?.id ?? '?'}' could not be processed and was skipped.`,
+          severity: 'error',
+          eventId: event?.id,
+          sequence: event?.sequence,
+        });
       }
-      applySceneEvent(state, event);
     });
 
   return { state, issues };
@@ -814,10 +829,14 @@ function cloneSceneState(state: SceneState): SceneState {
       Object.entries(state.markers).map(([id, marker]) => [id, cloneMarker(marker)])
     ),
     initiative: state.initiative.map((entry) => ({ ...entry })),
-    // Default for scenes persisted before these logs existed; entries are flat
-    // value objects, so a shallow copy per entry is a full clone.
-    checkLog: (state.checkLog ?? []).map((entry) => ({ ...entry })),
-    oracleLog: (state.oracleLog ?? []).map((entry) => ({ ...entry })),
+    // Default for scenes persisted before these logs existed; the Array.isArray
+    // guard also hardens against a corrupt import whose initialState carries a
+    // non-array here (`parseSceneDocument` does not deep-validate these derived
+    // fields). Entries are flat value objects, so a shallow copy is a full clone.
+    checkLog: (Array.isArray(state.checkLog) ? state.checkLog : []).map((entry) => ({ ...entry })),
+    oracleLog: (Array.isArray(state.oracleLog) ? state.oracleLog : []).map((entry) => ({
+      ...entry,
+    })),
   };
 }
 

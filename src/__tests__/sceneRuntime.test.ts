@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { SceneDocument, SceneToken } from '../types/core/scene';
+import type { SceneDocument, SceneState, SceneToken } from '../types/core/scene';
 import {
   appendSceneEvent,
   createSceneDocument,
@@ -299,6 +299,85 @@ describe('scene runtime', () => {
     expect(second.state.markers.water.effects).toEqual([
       { target: 'movement-cost', operation: 'multiply', value: 2, label: 'deep water' },
     ]);
+  });
+});
+
+describe('scene runtime — hardening (corrupt persisted data)', () => {
+  it('folds a non-array checkLog/oracleLog in initialState to [] without throwing', () => {
+    const scene = createSceneDocument({
+      id: 'h-logs',
+      name: 'Corrupt',
+      systemId: 'dnd-5e-2024',
+      now: NOW,
+    });
+    // A hand-edited / corrupt import could carry a non-array here; the folder
+    // must coerce rather than call `.map` on a string and crash.
+    const corrupt: SceneDocument = {
+      ...scene,
+      initialState: {
+        ...scene.initialState,
+        checkLog: 'boom' as unknown as SceneState['checkLog'],
+        oracleLog: 42 as unknown as SceneState['oracleLog'],
+      },
+    };
+
+    const { state, issues } = foldSceneEvents(corrupt);
+    expect(state.checkLog).toEqual([]);
+    expect(state.oracleLog).toEqual([]);
+    expect(issues).toEqual([]);
+  });
+
+  it('skips a corrupt event with a recorded issue instead of crashing the fold', () => {
+    let scene = createSceneDocument({
+      id: 'h-event',
+      name: 'Corrupt',
+      systemId: 'dnd-5e-2024',
+      grid: { width: 6, height: 6 },
+      now: NOW,
+    });
+    scene = appendResolved(
+      scene,
+      resolveSceneAction(
+        scene,
+        { type: 'place-token', token: makeToken('hero', 1, 1) },
+        { eventId: 'e1', createdAt: NOW }
+      )
+    );
+    // A token.added event whose payload is missing `token` would throw inside
+    // the validator/applier; injected directly to simulate a corrupt log.
+    const corrupt: SceneDocument = {
+      ...scene,
+      events: [
+        ...scene.events,
+        {
+          id: 'bad',
+          sequence: scene.events.length + 1,
+          createdAt: NOW,
+          type: 'token.added',
+          payload: {} as never,
+        },
+      ],
+    };
+
+    const { state, issues } = foldSceneEvents(corrupt);
+    expect(issues.some((issue) => issue.code === 'scene-event-malformed')).toBe(true);
+    // The valid earlier event still folded.
+    expect(state.tokens.hero).toBeDefined();
+  });
+
+  it('does not throw when an event entry is not an object at all', () => {
+    const scene = createSceneDocument({
+      id: 'h-nonobj',
+      name: 'Corrupt',
+      systemId: 'dnd-5e-2024',
+      now: NOW,
+    });
+    const corrupt: SceneDocument = {
+      ...scene,
+      events: ['not an event' as unknown as SceneDocument['events'][number]],
+    };
+    expect(() => foldSceneEvents(corrupt)).not.toThrow();
+    expect(foldSceneEvents(corrupt).issues.length).toBeGreaterThan(0);
   });
 });
 

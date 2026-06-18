@@ -41,6 +41,8 @@ export interface DiceRollResult {
 
 const MAX_DICE = 100;
 const MAX_SIDES = 1000;
+/** A real dice expression is short; cap input so pathological strings can't drive a long parse. */
+const MAX_EXPRESSION_LENGTH = 100;
 
 const TERM_RE = /([+-])(?:(\d*)d(\d+)(?:(kh|kl)(\d+))?|(\d+))/g;
 
@@ -49,6 +51,9 @@ const TERM_RE = /([+-])(?:(\d*)d(\d+)(?:(kh|kl)(\d+))?|(\d+))/g;
  * syntactic or bounds problem so the UI can surface it.
  */
 export function parseDiceExpression(input: string): DiceTerm[] {
+  if (input.length > MAX_EXPRESSION_LENGTH) {
+    throw new Error(`Dice expression is too long (max ${MAX_EXPRESSION_LENGTH} characters).`);
+  }
   const normalized = input.replace(/\s+/g, '').toLowerCase();
   if (!normalized) {
     throw new Error('Enter a dice expression, e.g. 2d6+3.');

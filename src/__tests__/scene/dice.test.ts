@@ -37,6 +37,7 @@ describe('parseDiceExpression', () => {
     expect(() => parseDiceExpression('200d6')).toThrow(/count must be/i);
     expect(() => parseDiceExpression('1d5000')).toThrow(/sides must be/i);
     expect(() => parseDiceExpression('4d6kh5')).toThrow(/keep count/i);
+    expect(() => parseDiceExpression(`1d6${'+1'.repeat(60)}`)).toThrow(/too long/i);
   });
 });
 
