@@ -75,6 +75,43 @@ describe('useScenes', () => {
     expect(result.current.scenes[0].updatedAt).toEqual(NOW);
   });
 
+  it('HARDENING: appending to a corrupt scene is a safe no-op, not a thrown render error', () => {
+    const { result } = renderHook(() => useScenes());
+    // A scene whose existing event log is corrupt (the runtime appendSceneEvent
+    // throws on it). Appending must not propagate through the state updater into
+    // the ErrorBoundary.
+    const corrupt = makeScene({
+      id: 'corrupt-scene',
+      events: [
+        {
+          id: 'bad',
+          sequence: 1,
+          createdAt: NOW,
+          type: 'token.added',
+          payload: {} as never,
+        },
+      ],
+    });
+    act(() => {
+      result.current.addScene(corrupt);
+    });
+
+    const validEvent = {
+      id: 'evt',
+      sequence: 2,
+      createdAt: NOW,
+      type: 'turn.advanced' as const,
+      payload: {},
+    };
+    expect(() =>
+      act(() => {
+        result.current.appendSceneEvent('corrupt-scene', validEvent);
+      })
+    ).not.toThrow();
+    // The corrupt scene is left unchanged (no event appended).
+    expect(result.current.scenes[0].events).toHaveLength(1);
+  });
+
   it('clears scenes without re-saving pending debounced state', async () => {
     const { result } = renderHook(() => useScenes());
 
