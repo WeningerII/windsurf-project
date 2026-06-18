@@ -109,14 +109,37 @@ present" so a finished battle (one side wiped) disables Run Round and shows a
 initiative/round cycle. This closes the prior gap where Run Round stayed enabled
 forever with no "combat over" surface.
 
+## Encounter-spec validation (landed)
+
+`validateEncounterSpec` (`src/scene/encounterSpec.ts`) is the deterministic gate
+a future AI drafting loop (Phase 8) consumes before a proposed encounter ever
+touches the event-backed scene path. Given a fully-specified encounter (system,
+difficulty, party levels, selections) it returns coded
+`EncounterSpecIssue`s — `unsupported-system`, `no-party`, `empty-spec`,
+`unknown-monster`, `system-mismatch`, `policy-excluded`, `invalid-count`,
+`no-xp-cost`, `duplicate-monster` (warning), `over-budget` — plus the budget,
+spent XP, and remaining headroom.
+
+Crucially, the per-system **budget and per-monster cost dispatch is a single
+source of truth** (`encounterPartyBudget` / `monsterEncounterCost` /
+`supportsEncounterBudget` in `encounterDraft.ts`) shared by the drafter and the
+validator, so a spec the drafter produces always validates (proven by a
+consistency test). The four budgeted systems are 5e (2014/2024), PF1e, and PF2e;
+D&D 3.5e uses an Encounter-Level model that is **not yet implemented**, so it is
+honestly reported `unsupported-system` rather than borrowing the 5e table. The
+scene UI consumes the validator live (the encounter panel shows on/over-budget
+for the chosen difficulty).
+
 ## Next increments (named, not yet built)
 
-- **Structured encounter-spec validation** — a deterministic validator that
-  checks a proposed encounter spec (monster ids, counts, difficulty) against
-  loader ids, the open-content policy, and the system budget, returning
-  machine-readable errors. This is the gate a future AI drafting loop (Phase 8)
-  consumes before it ever touches the event-backed scene path.
-- **Map-aware spawn zones** — placement that respects terrain/hazard markers.
-- **Manual correction/rebalance ergonomics** — editing a drafted encounter.
+- **D&D 3.5e Encounter-Level budgets** — model the EL/XP-by-CR system so 3.5e
+  encounters can be budgeted and validated like the other four systems.
+- **AI encounter-spec drafting** (Phase 8) — prompt → structured spec →
+  `validateEncounterSpec` → repair loop → the same builder path manual selection
+  uses. The gate above is its entry contract.
 - **Backend sync** (RFC 001) — the event log is sync-friendly (compare last
   sequence); conflict policy is out of scope here.
+
+Map-aware spawn zones (`buildEncounterSceneEvents`' `zone` parameter) and manual
+rebalance ergonomics (the encounter panel's per-monster +/- controls) already
+ship.

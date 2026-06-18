@@ -9,11 +9,12 @@ import {
 } from '../scene/encounterBuilder';
 import {
   draftEncounter,
-  pf1eEncounterXpBudget,
-  pf2eCreatureXp,
-  pf2eEncounterBudget,
+  encounterPartyBudget,
+  monsterEncounterCost,
+  supportsEncounterBudget,
   type EncounterDifficulty,
 } from '../scene/encounterDraft';
+import { validateEncounterSpec } from '../scene/encounterSpec';
 import {
   appendSceneEvent,
   createSceneDocument,
@@ -120,6 +121,7 @@ export function SceneManager({
   const [encounterMonsters, setEncounterMonsters] = useState<Monster[]>([]);
   const [encounterMonsterId, setEncounterMonsterId] = useState('');
   const [encounterCount, setEncounterCount] = useState('1');
+  const [encounterDifficulty, setEncounterDifficulty] = useState<EncounterDifficulty>('moderate');
   const [encounterOriginX, setEncounterOriginX] = useState('0');
   const [encounterOriginY, setEncounterOriginY] = useState('0');
   const [encounterSelections, setEncounterSelections] = useState<EncounterMonsterSelection[]>([]);
@@ -316,6 +318,29 @@ export function SceneManager({
     encounterParty.totalLevel > 0
       ? Math.round(encounterPlan.totalXp / encounterParty.totalLevel)
       : 0;
+  // The deterministic encounter-spec gate (RFC 006): validates the pending
+  // selections against the party's budget for the chosen difficulty plus the
+  // open-content policy, so the panel can show on/over-budget live. This is the
+  // same validator a future AI drafting loop consumes.
+  const encounterValidation = useMemo(
+    () =>
+      validateEncounterSpec(
+        {
+          systemId: sceneSystemId ?? '',
+          difficulty: encounterDifficulty,
+          partyLevels: encounterParty.members.map((member) => member.level),
+          selections: pendingEncounterSelections,
+        },
+        { monsters: encounterMonsters }
+      ),
+    [
+      sceneSystemId,
+      encounterDifficulty,
+      encounterParty,
+      pendingEncounterSelections,
+      encounterMonsters,
+    ]
+  );
   const selectedEncounterTotalXp = selectedEncounterMonster
     ? selectedEncounterMonster.experiencePoints * encounterCountValue
     : 0;
@@ -880,24 +905,14 @@ export function SceneManager({
       difficulty,
       seed: `${selectedScene.initialState.seed}:draft:${selectedScene.events.length}:${difficulty}:${draftNonceRef.current}`,
       systemId: sceneSystemId,
-      // PF1e budgets come from the CRB encounter-design tables (target-CR XP
-      // award); PF2e uses its party-relative budget + creature-cost tables;
-      // 5e-family uses the SRD 5.2.1 per-character table default.
-      ...(sceneSystemId === 'pf1e'
-        ? { budget: pf1eEncounterXpBudget(partyLevels, difficulty) }
-        : {}),
-      ...(sceneSystemId === 'pf2e'
-        ? (() => {
-            const partyLevel = Math.round(
-              partyLevels.reduce((total, level) => total + level, 0) /
-                Math.max(1, partyLevels.length)
-            );
-            return {
-              budget: pf2eEncounterBudget(partyLevels, difficulty),
-              costFor: (monster: Monster) => pf2eCreatureXp(monster.challengeRating, partyLevel),
-            };
-          })()
-        : {}),
+      // Budget and per-monster cost dispatch to each system's cited table
+      // through the shared helpers the encounter-spec validator also uses, so
+      // the draft and the gate can never disagree. Systems without a budget
+      // model (e.g. 3.5e's Encounter-Level system) get a 0 budget and draft
+      // nothing, rather than borrowing the 5e table.
+      budget: encounterPartyBudget(sceneSystemId ?? '', partyLevels, difficulty),
+      costFor: (monster: Monster) =>
+        monsterEncounterCost(sceneSystemId ?? '', monster, partyLevels),
     });
     if (result.reason) {
       setActionIssues([`Encounter draft: ${result.reason}`]);
@@ -1311,16 +1326,15 @@ export function SceneManager({
                     zoneId={encounterZoneId}
                     onZoneChange={setEncounterZoneId}
                     // Drafting is offered only where a cited budget table
-                    // applies: the SRD 5.2.1 per-character table (5e family)
-                    // or the PF1e CRB encounter-design tables.
+                    // applies (see supportsEncounterBudget).
                     onDraftEncounter={
-                      sceneSystemId === 'dnd-5e-2014' ||
-                      sceneSystemId === 'dnd-5e-2024' ||
-                      sceneSystemId === 'pf1e' ||
-                      sceneSystemId === 'pf2e'
+                      supportsEncounterBudget(sceneSystemId ?? '')
                         ? handleDraftEncounter
                         : undefined
                     }
+                    difficulty={encounterDifficulty}
+                    onDifficultyChange={setEncounterDifficulty}
+                    validation={encounterValidation}
                   />
 
                   <MarkerPanel
