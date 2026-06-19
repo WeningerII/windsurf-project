@@ -70,6 +70,7 @@ import { TokenPanel } from './scene/TokenPanel';
 import { CombatPanel } from './scene/CombatPanel';
 import { CheckPanel } from './scene/CheckPanel';
 import { OraclePanel } from './scene/OraclePanel';
+import { ReactionPanel } from './scene/ReactionPanel';
 import { DicePanel } from './scene/DicePanel';
 import { RecapPanel } from './scene/RecapPanel';
 
@@ -1497,6 +1498,8 @@ export function SceneManager({
                   <CheckPanel state={state} actorId={selectedTokenId} onRoll={handleRollCheck} />
 
                   <OraclePanel state={state} onConsult={handleConsultOracle} />
+
+                  <ReactionPanel seed={state.seed} />
 
                   <DicePanel seed={state.seed} />
 
