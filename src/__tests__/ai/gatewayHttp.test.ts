@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { processGatewayHttp } from '../../ai/gatewayHttp';
+import { MAX_GATEWAY_REQUEST_BYTES, processGatewayHttp } from '../../ai/gatewayHttp';
 import { AI_GATEWAY_SCHEMA_VERSION } from '../../ai/contracts';
 
 const body = JSON.stringify({
@@ -28,6 +28,13 @@ describe('processGatewayHttp', () => {
   it('rejects invalid JSON with 400', async () => {
     const res = await processGatewayHttp('POST', '{not json', {});
     expect(res.status).toBe(400);
+  });
+
+  it('rejects an oversized body with 413 before parsing', async () => {
+    const huge = 'x'.repeat(MAX_GATEWAY_REQUEST_BYTES + 1);
+    const res = await processGatewayHttp('POST', huge, {});
+    expect(res.status).toBe(413);
+    expect(res.body).toMatchObject({ ok: false, code: 'invalid-request' });
   });
 
   it('returns 200 + data on a fixture-backed request', async () => {

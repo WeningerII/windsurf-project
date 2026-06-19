@@ -301,8 +301,12 @@ function parseSceneNarrationData(raw: unknown): AiParse<SceneNarrationData> {
 
 // --- Shared: image input (multimodal tasks) --------------------------------
 
-/** Largest base64 data URL we accept, ~5 MB of image bytes (Netlify body cap). */
-export const MAX_AI_IMAGE_DATA_URL_LENGTH = 7_000_000;
+/**
+ * Largest base64 data URL we accept. Sized so an image plus its request
+ * envelope stays under the gateway's body cap (see MAX_GATEWAY_REQUEST_BYTES),
+ * which itself sits below the host's ~6 MiB synchronous-function payload limit.
+ */
+export const MAX_AI_IMAGE_DATA_URL_LENGTH = 5_500_000;
 
 /** A user-supplied image, carried as a base64 `data:` URL (no provider SDK type). */
 export interface AiImageInput {

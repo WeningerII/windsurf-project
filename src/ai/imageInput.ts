@@ -6,15 +6,19 @@
  */
 import type { AiImageInput } from './contracts';
 
-/** Client-side ceiling, comfortably under the gateway's data-URL cap. */
-export const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+/**
+ * Client-side ceiling on raw image bytes. Kept low enough that the base64
+ * inflation (~4/3x) plus the request envelope stays under the gateway's
+ * MAX_AI_IMAGE_DATA_URL_LENGTH and the host's payload limit.
+ */
+export const MAX_IMAGE_BYTES = 4_000_000;
 
 export async function fileToAiImageInput(file: File): Promise<AiImageInput> {
   if (!file.type || !file.type.startsWith('image/')) {
     throw new Error('Please choose an image file.');
   }
   if (file.size > MAX_IMAGE_BYTES) {
-    throw new Error('That image is too large; choose one under 5 MB.');
+    throw new Error('That image is too large; choose one under 4 MB.');
   }
   const dataUrl = await readAsDataUrl(file);
   return { dataUrl, mediaType: file.type };

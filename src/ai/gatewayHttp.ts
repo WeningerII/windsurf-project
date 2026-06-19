@@ -12,6 +12,13 @@ export interface GatewayHttpResult {
   body: AiResponse;
 }
 
+/**
+ * Hard ceiling on the request body, kept below the host's synchronous-function
+ * payload limit (Netlify allows ~6 MiB). The image-input cap in `contracts.ts`
+ * is sized so a base64 image plus its envelope stays under this.
+ */
+export const MAX_GATEWAY_REQUEST_BYTES = 6_000_000;
+
 export async function processGatewayHttp(
   method: string,
   rawBody: string,
@@ -19,6 +26,13 @@ export async function processGatewayHttp(
 ): Promise<GatewayHttpResult> {
   if (method.toUpperCase() !== 'POST') {
     return { status: 405, body: aiFailure('invalid-request', 'The AI gateway only accepts POST.') };
+  }
+
+  if (rawBody.length > MAX_GATEWAY_REQUEST_BYTES) {
+    return {
+      status: 413,
+      body: aiFailure('invalid-request', 'Request is too large; use a smaller image or prompt.'),
+    };
   }
 
   let parsed: unknown;
