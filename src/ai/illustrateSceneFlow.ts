@@ -7,7 +7,7 @@
  * scene state, so it cannot corrupt anything deterministic.
  */
 import { callAiGateway } from './gatewayClient';
-import type { AiResponse, GeneratedImageData } from './contracts';
+import type { GeneratedImageData, TaskGatewayCall } from './contracts';
 
 export interface IllustrateSceneParams {
   prompt: string;
@@ -19,10 +19,7 @@ export type IllustrateSceneResult =
   | { ok: false; error: string };
 
 /** Injectable gateway call so the flow is unit-testable without a network. */
-export type IllustrateGatewayCall = <TData>(
-  task: 'illustrate-scene',
-  payload: unknown
-) => Promise<AiResponse<TData>>;
+export type IllustrateGatewayCall = TaskGatewayCall<'illustrate-scene'>;
 
 export async function illustrateSceneWithAi(
   params: IllustrateSceneParams,

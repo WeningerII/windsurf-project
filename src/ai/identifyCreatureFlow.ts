@@ -9,9 +9,9 @@
 import { callAiGateway } from './gatewayClient';
 import type {
   AiImageInput,
-  AiResponse,
   EncounterDraftCandidate,
   IdentifyCreatureData,
+  TaskGatewayCall,
 } from './contracts';
 
 export interface IdentifyCreatureParams {
@@ -26,10 +26,7 @@ export type IdentifyCreatureResult =
   | { ok: false; error: string };
 
 /** Injectable gateway call so the flow is unit-testable without a network. */
-export type IdentifyGatewayCall = <TData>(
-  task: 'identify-creature',
-  payload: unknown
-) => Promise<AiResponse<TData>>;
+export type IdentifyGatewayCall = TaskGatewayCall<'identify-creature'>;
 
 export async function identifyCreatureWithAi(
   params: IdentifyCreatureParams,

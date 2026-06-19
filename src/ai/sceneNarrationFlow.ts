@@ -7,7 +7,7 @@
  * this flow assembles the request and normalizes the outcome for the UI.
  */
 import { callAiGateway } from './gatewayClient';
-import type { AiResponse, SceneNarrationData } from './contracts';
+import type { SceneNarrationData, TaskGatewayCall } from './contracts';
 
 export interface NarrateSceneParams {
   /** The deterministic recap to restyle (the prose's only source material). */
@@ -19,10 +19,7 @@ export interface NarrateSceneParams {
 export type NarrateSceneResult = { ok: true; narrative: string } | { ok: false; error: string };
 
 /** Injectable gateway call so the flow is unit-testable without a network. */
-export type NarrationGatewayCall = <TData>(
-  task: 'scene-narration',
-  payload: unknown
-) => Promise<AiResponse<TData>>;
+export type NarrationGatewayCall = TaskGatewayCall<'scene-narration'>;
 
 export async function narrateSceneWithAi(
   params: NarrateSceneParams,

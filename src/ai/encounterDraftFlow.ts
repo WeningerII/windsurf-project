@@ -10,10 +10,10 @@
  */
 import { callAiGateway } from './gatewayClient';
 import type {
-  AiResponse,
   EncounterDraftCandidate,
   EncounterDraftData,
   EncounterDraftSelection,
+  TaskGatewayCall,
 } from './contracts';
 
 export interface DraftEncounterParams {
@@ -32,10 +32,7 @@ export type DraftEncounterResult =
 export type SelectionValidator = (selections: EncounterDraftSelection[]) => string[];
 
 /** Injectable gateway call so the flow is unit-testable without a network. */
-export type GatewayCall = <TData>(
-  task: 'encounter-draft',
-  payload: unknown
-) => Promise<AiResponse<TData>>;
+export type GatewayCall = TaskGatewayCall<'encounter-draft'>;
 
 export async function draftEncounterWithAi(
   params: DraftEncounterParams,

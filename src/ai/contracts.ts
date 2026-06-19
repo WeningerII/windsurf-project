@@ -67,6 +67,16 @@ export interface AiFailure {
 
 export type AiResponse<TData = unknown> = AiSuccess<TData> | AiFailure;
 
+/**
+ * A gateway call narrowed to a single task — the injectable seam every client
+ * flow accepts so it can be unit-tested without a network. The browser's
+ * `callAiGateway` satisfies it for any task.
+ */
+export type TaskGatewayCall<TTask extends AiTask> = <TData>(
+  task: TTask,
+  payload: unknown
+) => Promise<AiResponse<TData>>;
+
 export function aiFailure(code: AiFailureCode, message: string, task?: AiTask): AiFailure {
   return { ok: false, code, message, ...(task ? { task } : {}) };
 }
