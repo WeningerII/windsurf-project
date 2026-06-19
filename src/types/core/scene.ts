@@ -2,6 +2,14 @@ export type SceneGridType = 'square';
 export type SceneTokenKind = 'character' | 'monster' | 'npc' | 'object';
 export type SceneMarkerKind = 'terrain' | 'hazard';
 
+/**
+ * A token's combat side. `party` and `hostile` are opposing; `neutral` is a
+ * non-combatant (hostile to no one, targeted by no one in the autonomous round).
+ * Derived from a token's kind by default; an explicit value overrides it (an
+ * allied NPC, a charmed PC, a hostile shopkeeper).
+ */
+export type SceneAllegiance = 'party' | 'hostile' | 'neutral';
+
 export interface SceneGrid {
   type: SceneGridType;
   width: number;
@@ -46,6 +54,12 @@ export interface SceneToken {
    * tokens are placed player-controlled so a solo player keeps their own party.
    */
   playerControlled?: boolean;
+  /**
+   * Combat side override. Absent means the side is derived from `kind`
+   * (character → party, monster → hostile, npc/object → neutral). Set it to make
+   * an NPC fight as an ally or enemy, or to re-side any token.
+   */
+  allegiance?: SceneAllegiance;
 }
 
 export interface SceneMarker {

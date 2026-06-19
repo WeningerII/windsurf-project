@@ -17,9 +17,15 @@
  * the resolvers, so a given (scene, seed) replays identically.
  */
 
-import type { SceneActionIntent, SceneState, SceneToken } from '../../types/core/scene';
+import type {
+  SceneActionIntent,
+  SceneAllegiance,
+  SceneState,
+  SceneToken,
+} from '../../types/core/scene';
 import type { EffectInstance } from '../ir/types';
 import { runCombatRound, type RoundCombatant, type RoundResult } from '../tactical/roundDriver';
+import { NEUTRAL_FACTION } from '../tactical/targetScoring';
 import { resolveAttack } from '../resolver/attackResolution';
 import { gridDistance } from '../resolver/areaTargeting';
 import { participantRng } from '../resolver/participantResolution';
@@ -68,18 +74,27 @@ export interface SceneCombatStats {
 /** Resolve a token's combat stats, or undefined when it cannot fight. */
 export type ResolveCombatStats = (token: SceneToken) => SceneCombatStats | undefined;
 
-/** Map a token kind to a combat faction (allies vs enemies for targeting). */
-export function factionForToken(token: SceneToken): string {
-  switch (token.kind) {
+/** Default combat side for a token kind, before any per-token override. */
+function defaultAllegiance(kind: SceneToken['kind']): SceneAllegiance {
+  switch (kind) {
     case 'character':
       return 'party';
     case 'monster':
-      return 'monsters';
-    case 'npc':
-      return 'npc';
+      return 'hostile';
     default:
-      return 'object';
+      // npc and object are non-combatants unless explicitly sided.
+      return NEUTRAL_FACTION;
   }
+}
+
+/**
+ * A token's combat faction for targeting. An explicit `allegiance` overrides the
+ * kind default, so an NPC can fight as an ally (`party`) or enemy (`hostile`),
+ * a monster can be turned (`party`), or a PC charmed (`hostile`). `neutral`
+ * tokens fight no one.
+ */
+export function factionForToken(token: SceneToken): string {
+  return token.allegiance ?? defaultAllegiance(token.kind);
 }
 
 /**

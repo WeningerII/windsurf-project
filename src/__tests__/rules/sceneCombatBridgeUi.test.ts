@@ -9,6 +9,7 @@ import {
 import {
   buildSceneCombatants,
   factionForToken,
+  isHostile,
   makeEffectId,
   resolveSceneAttack,
   runSceneRound,
@@ -88,11 +89,36 @@ const missingStats: SceneCombatStats = {
 };
 
 describe('factionForToken', () => {
-  it('maps token kinds to factions', () => {
+  it('maps token kinds to default combat sides', () => {
     expect(factionForToken({ kind: 'character' } as SceneToken)).toBe('party');
-    expect(factionForToken({ kind: 'monster' } as SceneToken)).toBe('monsters');
-    expect(factionForToken({ kind: 'npc' } as SceneToken)).toBe('npc');
-    expect(factionForToken({ kind: 'object' } as SceneToken)).toBe('object');
+    expect(factionForToken({ kind: 'monster' } as SceneToken)).toBe('hostile');
+    // npc and object are non-combatants unless explicitly sided.
+    expect(factionForToken({ kind: 'npc' } as SceneToken)).toBe('neutral');
+    expect(factionForToken({ kind: 'object' } as SceneToken)).toBe('neutral');
+  });
+
+  it('lets an explicit allegiance override the kind default', () => {
+    expect(factionForToken({ kind: 'npc', allegiance: 'party' } as SceneToken)).toBe('party');
+    expect(factionForToken({ kind: 'npc', allegiance: 'hostile' } as SceneToken)).toBe('hostile');
+    // A charmed PC, or a turned monster ally.
+    expect(factionForToken({ kind: 'character', allegiance: 'hostile' } as SceneToken)).toBe(
+      'hostile'
+    );
+    expect(factionForToken({ kind: 'monster', allegiance: 'party' } as SceneToken)).toBe('party');
+  });
+});
+
+describe('isHostile — allegiance', () => {
+  it('opposes party and hostile but not same sides', () => {
+    expect(isHostile('party', 'hostile')).toBe(true);
+    expect(isHostile('party', 'party')).toBe(false);
+    expect(isHostile('hostile', 'hostile')).toBe(false);
+  });
+
+  it('treats neutral as hostile to no one (and a target of no one)', () => {
+    expect(isHostile('neutral', 'party')).toBe(false);
+    expect(isHostile('hostile', 'neutral')).toBe(false);
+    expect(isHostile('neutral', 'neutral')).toBe(false);
   });
 });
 
@@ -109,7 +135,22 @@ describe('buildSceneCombatants', () => {
     const combatants = buildSceneCombatants(state, resolve);
     expect(combatants.map((c) => c.tokenId).sort()).toEqual(['goblin', 'hero']);
     expect(combatants.find((c) => c.tokenId === 'hero')!.faction).toBe('party');
-    expect(combatants.find((c) => c.tokenId === 'goblin')!.faction).toBe('monsters');
+    expect(combatants.find((c) => c.tokenId === 'goblin')!.faction).toBe('hostile');
+  });
+
+  it('carries an NPC token allegiance through to its combatant side', () => {
+    const ally: SceneToken = {
+      id: 'guard',
+      name: 'Hired Guard',
+      kind: 'npc',
+      position: { x: 0, y: 0 },
+      size: 1,
+      hp: { current: 12, max: 12 },
+      allegiance: 'party',
+    };
+    const state = foldSceneEvents(sceneWith(ally)).state;
+    const combatants = buildSceneCombatants(state, () => hittingStats);
+    expect(combatants.find((c) => c.tokenId === 'guard')!.faction).toBe('party');
   });
 
   it('orders by initiative when present', () => {

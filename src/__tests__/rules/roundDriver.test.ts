@@ -224,4 +224,16 @@ describe('isRoundConclusive — combat end detection', () => {
     ];
     expect(isRoundConclusive(order, { hero: 0, foe: 0 })).toBe(true);
   });
+
+  it('ignores neutral combatants as a side', () => {
+    // A living neutral (shopkeeper/object) must not keep a finished battle alive.
+    const order = [
+      combatant({ tokenId: 'hero', faction: 'party' }),
+      combatant({ tokenId: 'foe', faction: 'hostile' }),
+      combatant({ tokenId: 'shopkeeper', faction: 'neutral' }),
+    ];
+    expect(isRoundConclusive(order, { hero: 20, foe: 0, shopkeeper: 20 })).toBe(true);
+    // Two real sides alive → not conclusive even with the neutral present.
+    expect(isRoundConclusive(order, { hero: 20, foe: 5, shopkeeper: 20 })).toBe(false);
+  });
 });

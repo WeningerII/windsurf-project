@@ -22,7 +22,7 @@
 import type { EffectInstance } from '../ir/types';
 import type { SceneCoordinate, SceneActionIntent } from '../../types/core/scene';
 import { executeTacticalTurn, type TacticalTurnResult } from './tacticalExecutor';
-import type { TacticalActor, TacticalTarget } from './targetScoring';
+import { NEUTRAL_FACTION, type TacticalActor, type TacticalTarget } from './targetScoring';
 
 /** A combatant in the round: identity, faction, position, stats, and live HP. */
 export interface RoundCombatant {
@@ -205,15 +205,20 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
   return { round: input.round, turns, finalHp: hp, intents };
 }
 
-/** True when every living combatant belongs to a single faction (combat over). */
+/**
+ * True when at most one combat side still has a living member (combat over).
+ * Neutral combatants are non-combatants — they never keep a battle alive and
+ * are not counted as a side.
+ */
 export function isRoundConclusive(
   order: readonly RoundCombatant[],
   hp: Record<string, number>
 ): boolean {
-  const livingFactions = new Set(
+  const livingSides = new Set(
     order
       .filter((combatant) => (hp[combatant.tokenId] ?? combatant.hp.current) > 0)
       .map((c) => c.faction)
+      .filter((faction) => faction !== NEUTRAL_FACTION)
   );
-  return livingFactions.size <= 1;
+  return livingSides.size <= 1;
 }

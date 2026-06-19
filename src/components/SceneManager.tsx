@@ -30,6 +30,7 @@ import {
   buildMonsterCombatant,
   buildSceneCombatants,
   isRoundConclusive,
+  NEUTRAL_FACTION,
   resolveSceneAttack,
   runSceneRound,
   type ResolveCombatStats,
@@ -606,8 +607,15 @@ export function SceneManager({
     if (!state) return false;
     const combatants = buildSceneCombatants(state, resolveCombatStats);
     if (combatants.length < 2) return false;
-    const factionsPresent = new Set(combatants.map((combatant) => combatant.faction));
-    return factionsPresent.size >= 2 && isRoundConclusive(combatants, {});
+    // Count only real combat sides — a neutral NPC/object never constitutes a
+    // "side", so its presence alone must not read as a finished two-faction
+    // battle (nor keep one alive).
+    const sidesPresent = new Set(
+      combatants
+        .map((combatant) => combatant.faction)
+        .filter((faction) => faction !== NEUTRAL_FACTION)
+    );
+    return sidesPresent.size >= 2 && isRoundConclusive(combatants, {});
   }, [state, resolveCombatStats]);
 
   const handleCombatAttack = () => {
