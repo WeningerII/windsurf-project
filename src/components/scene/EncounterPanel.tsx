@@ -1,4 +1,4 @@
-import { Minus, Plus, Skull, Trash2, Wand2 } from 'lucide-react';
+import { Minus, Plus, Skull, Sparkles, Trash2, Wand2 } from 'lucide-react';
 import type { EncounterPartySummary, EncounterPlanSummary } from '../../scene/encounterBuilder';
 import type { EncounterDifficulty } from '../../scene/encounterDraft';
 import type { EncounterSpecValidation } from '../../scene/encounterSpec';
@@ -33,6 +33,17 @@ interface EncounterPanelProps {
   onAdjustSelection?: (monsterId: string, delta: number) => void;
   /** Deterministic, budget-validated draft (SRD 5.2.1 XP budgets). */
   onDraftEncounter?: (difficulty: EncounterDifficulty) => void;
+  /**
+   * AI-assisted draft (model proposes from the catalog; the same deterministic
+   * gate decides). Omit to hide the AI affordance entirely — the panel is
+   * unchanged when AI is off.
+   */
+  onAiDraft?: () => void;
+  /** Free-text description of the desired fight, fed to the model. */
+  aiPrompt?: string;
+  onAiPromptChange?: (value: string) => void;
+  /** True while a draft request is in flight (disables the controls). */
+  aiDrafting?: boolean;
   /** Difficulty driving both the draft and the live budget readout. */
   difficulty: EncounterDifficulty;
   onDifficultyChange: (difficulty: EncounterDifficulty) => void;
@@ -73,6 +84,10 @@ export function EncounterPanel({
   onRemoveSelection,
   onAdjustSelection,
   onDraftEncounter,
+  onAiDraft,
+  aiPrompt,
+  onAiPromptChange,
+  aiDrafting,
   difficulty,
   onDifficultyChange,
   validation,
@@ -195,6 +210,48 @@ export function EncounterPanel({
               {validation.remaining < 0 ? ` — over by ${-validation.remaining}` : ''}
             </div>
           </>
+        )}
+        {onAiDraft && (
+          <div className="space-y-2 rounded border border-dashed border-primary/40 p-2">
+            <label
+              htmlFor="ai-encounter-prompt"
+              className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground"
+            >
+              <Sparkles className="h-3.5 w-3.5" />
+              Describe the fight; AI drafts from the loaded catalog
+            </label>
+            <textarea
+              id="ai-encounter-prompt"
+              aria-label="AI encounter prompt"
+              value={aiPrompt ?? ''}
+              onChange={(event) => onAiPromptChange?.(event.target.value)}
+              placeholder="e.g. a goblin ambush led by a tougher boss…"
+              rows={2}
+              disabled={aiDrafting}
+              className="w-full resize-none rounded-md border border-input bg-transparent px-2.5 py-1.5 text-sm focus:border-primary focus:outline-none disabled:opacity-50"
+            />
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full"
+              disabled={
+                aiDrafting ||
+                loading ||
+                monsters.length === 0 ||
+                party.members.length === 0 ||
+                !(aiPrompt ?? '').trim()
+              }
+              onClick={onAiDraft}
+              title="Ask AI to draft an on-budget encounter for your review"
+            >
+              <Sparkles className="mr-1.5 h-4 w-4" />
+              {aiDrafting ? 'Drafting…' : 'Draft with AI'}
+            </Button>
+            <p className="text-[11px] text-muted-foreground">
+              The AI proposes; the same budget gate decides. Review and press Add Encounter to
+              apply.
+            </p>
+          </div>
         )}
         {hasSelections && (
           <div className="space-y-1 rounded border bg-muted/30 p-2">

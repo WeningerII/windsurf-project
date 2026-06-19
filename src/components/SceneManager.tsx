@@ -17,6 +17,8 @@ import {
   type EncounterDifficulty,
 } from '../scene/encounterDraft';
 import { validateEncounterSpec } from '../scene/encounterSpec';
+import { draftEncounterWithAi } from '../ai/encounterDraftFlow';
+import { isAiEnabled } from '../ai/gatewayClient';
 import {
   appendSceneEvent,
   createSceneDocument,
@@ -150,7 +152,12 @@ export function SceneManager({
   const [encounterOriginY, setEncounterOriginY] = useState('0');
   const [encounterSelections, setEncounterSelections] = useState<EncounterMonsterSelection[]>([]);
   const [encounterZoneId, setEncounterZoneId] = useState('');
+  const [aiEncounterPrompt, setAiEncounterPrompt] = useState('');
+  const [aiDrafting, setAiDrafting] = useState(false);
   const draftNonceRef = useRef(0);
+  // AI affordances are build-time gated (default OFF) and only offered where a
+  // cited budget table exists, so the deterministic gate can judge the result.
+  const aiEncounterEnabled = isAiEnabled();
   const [monstersLoading, setMonstersLoading] = useState(false);
   const [monsterLoadError, setMonsterLoadError] = useState<string | null>(null);
   const [initiativeValues, setInitiativeValues] = useState<Record<string, string>>({});
@@ -986,6 +993,57 @@ export function SceneManager({
     setActionIssues([]);
   };
 
+  // AI-assisted draft: the model proposes selections from the loaded catalog;
+  // the SAME deterministic encounter-spec gate then accepts or rejects them
+  // (bounded repair on rejection). A success only populates the review list —
+  // the GM still presses "Add Encounter" to apply it, exactly as for a manual
+  // or deterministic draft. Failures degrade to the existing manual tools.
+  const handleAiDraftEncounter = async () => {
+    if (!selectedScene || !sceneSystemId) return;
+    const prompt = aiEncounterPrompt.trim();
+    if (!prompt || encounterMonsters.length === 0) return;
+    const partyLevels = encounterParty.members.map((member) => member.level);
+    const candidates = encounterMonsters.map((monster) => ({
+      id: monster.id,
+      name: monster.name,
+      challengeRating: monster.challengeRating,
+    }));
+
+    setAiDrafting(true);
+    setActionIssues([]);
+    try {
+      const result = await draftEncounterWithAi(
+        {
+          systemId: sceneSystemId,
+          partyLevels,
+          difficulty: encounterDifficulty,
+          prompt,
+          candidates,
+        },
+        (selections) =>
+          validateEncounterSpec(
+            { systemId: sceneSystemId, difficulty: encounterDifficulty, partyLevels, selections },
+            { monsters: encounterMonsters }
+          )
+            .issues.filter((issue) => issue.severity === 'error')
+            .map((issue) => issue.message)
+      );
+      if (!result.ok) {
+        setActionIssues([`AI draft: ${result.error}`]);
+        return;
+      }
+      setEncounterSelections(
+        result.selections.map((selection) => ({
+          monsterId: selection.monsterId,
+          count: Math.min(MAX_MONSTERS_PER_SELECTION, selection.count),
+        }))
+      );
+      setActionIssues([]);
+    } finally {
+      setAiDrafting(false);
+    }
+  };
+
   const handleRemoveEncounterSelection = (monsterId: string) => {
     setEncounterSelections((current) =>
       current.filter((selection) => selection.monsterId !== monsterId)
@@ -1454,6 +1512,17 @@ export function SceneManager({
                     difficulty={encounterDifficulty}
                     onDifficultyChange={setEncounterDifficulty}
                     validation={encounterValidation}
+                    // AI drafting rides the same difficulty + deterministic gate
+                    // as the manual draft, offered only when AI is enabled and
+                    // the system has a cited budget table.
+                    onAiDraft={
+                      aiEncounterEnabled && supportsEncounterBudget(sceneSystemId ?? '')
+                        ? handleAiDraftEncounter
+                        : undefined
+                    }
+                    aiPrompt={aiEncounterPrompt}
+                    onAiPromptChange={setAiEncounterPrompt}
+                    aiDrafting={aiDrafting}
                   />
 
                   <MarkerPanel
