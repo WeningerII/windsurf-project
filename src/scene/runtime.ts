@@ -829,6 +829,12 @@ function cloneSceneState(state: SceneState): SceneState {
       Object.entries(state.markers).map(([id, marker]) => [id, cloneMarker(marker)])
     ),
     initiative: state.initiative.map((entry) => ({ ...entry })),
+    // `parseSceneDocument` validates the grid/tokens/markers/initiative
+    // substructure but not these initialState primitives; coerce so a corrupt
+    // import can't make the round NaN (`undefined + 1` on turn.advanced) or
+    // leave the seed a non-string the type claims is impossible.
+    round: positiveIntegerOrDefault(state.round, 1),
+    seed: typeof state.seed === 'string' ? state.seed : String(state.seed ?? state.sceneId ?? ''),
     // Default for scenes persisted before these logs existed; the Array.isArray
     // guard also hardens against a corrupt import whose initialState carries a
     // non-array here (`parseSceneDocument` does not deep-validate these derived

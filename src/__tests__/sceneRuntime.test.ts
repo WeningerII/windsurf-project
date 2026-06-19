@@ -396,6 +396,68 @@ describe('scene runtime — hardening (corrupt persisted data)', () => {
     }
   });
 
+  it('coerces a corrupt round to a valid integer so turn.advanced never yields NaN', () => {
+    let scene = createSceneDocument({
+      id: 'h-round',
+      name: 'Corrupt',
+      systemId: 'dnd-5e-2024',
+      now: NOW,
+    });
+    // An import missing/garbling `round` would otherwise compute undefined + 1.
+    scene = {
+      ...scene,
+      initialState: {
+        ...scene.initialState,
+        round: undefined as unknown as SceneState['round'],
+      },
+    };
+    // Two combatants + initiative so a full cycle wraps and bumps the round.
+    scene = appendResolved(
+      scene,
+      resolveSceneAction(
+        scene,
+        { type: 'place-token', token: makeToken('a', 1, 1) },
+        { eventId: 'e1', createdAt: NOW }
+      )
+    );
+    scene = appendResolved(
+      scene,
+      resolveSceneAction(
+        scene,
+        { type: 'place-token', token: makeToken('b', 2, 1) },
+        { eventId: 'e2', createdAt: NOW }
+      )
+    );
+    scene = appendResolved(
+      scene,
+      resolveSceneAction(
+        scene,
+        {
+          type: 'set-initiative',
+          entries: [
+            { tokenId: 'a', value: 12 },
+            { tokenId: 'b', value: 8 },
+          ],
+          activeTokenId: 'a',
+        },
+        { eventId: 'e3', createdAt: NOW }
+      )
+    );
+    expect(foldSceneEvents(scene).state.round).toBe(1);
+
+    scene = appendResolved(
+      scene,
+      resolveSceneAction(scene, { type: 'advance-turn' }, { eventId: 'e4', createdAt: NOW })
+    );
+    scene = appendResolved(
+      scene,
+      resolveSceneAction(scene, { type: 'advance-turn' }, { eventId: 'e5', createdAt: NOW })
+    );
+    const { state } = foldSceneEvents(scene);
+    expect(state.round).toBe(2);
+    expect(Number.isNaN(state.round)).toBe(false);
+  });
+
   it('does not throw when an event entry is not an object at all', () => {
     const scene = createSceneDocument({
       id: 'h-nonobj',
