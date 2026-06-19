@@ -51,7 +51,7 @@ import type {
 import { systemRegistry } from '../registry';
 import { loadDaggerheartAdversariesForSystem, loadMonstersForSystem } from '../utils/dataLoader';
 import { errorLogger, guardSync, ErrorCategory, ErrorSeverity } from '../utils/errorLogger';
-import { exportScenes, importScenes } from '../utils/sceneStorage';
+import { exportScenes, importScenesWithReport } from '../utils/sceneStorage';
 import { generateUUID } from '../utils/browserCompat';
 import { Button } from './ui/Button';
 import { Badge } from './ui/Badge';
@@ -1039,17 +1039,34 @@ export function SceneManager({
       const reader = new FileReader();
       reader.onload = (loadEvent) => {
         try {
-          const imported = importScenes(String(loadEvent.target?.result ?? ''));
+          const { scenes: imported, droppedCount } = importScenesWithReport(
+            String(loadEvent.target?.result ?? '')
+          );
+          const skipped =
+            droppedCount > 0
+              ? ` — ${droppedCount} invalid ${droppedCount === 1 ? 'entry' : 'entries'} skipped`
+              : '';
           // Valid JSON can still contain no usable scenes (every candidate
           // structurally invalid). Say so instead of silently no-op'ing while
           // clearing the message — which reads as a successful import.
           if (imported.length === 0) {
-            setActionIssues(['No valid scenes were found in that file.']);
+            setActionIssues([
+              droppedCount > 0
+                ? `No valid scenes were found in that file${skipped}.`
+                : 'No valid scenes were found in that file.',
+            ]);
             return;
           }
           onAddScenes(imported);
           setSelectedSceneId(imported[0]?.id ?? selectedSceneId);
-          setActionIssues([]);
+          // A partial import (some entries dropped) is surfaced, not silent.
+          setActionIssues(
+            droppedCount > 0
+              ? [
+                  `Imported ${imported.length} of ${imported.length + droppedCount} scenes${skipped}.`,
+                ]
+              : []
+          );
         } catch (err) {
           setActionIssues([err instanceof Error ? err.message : 'Failed to import scenes.']);
         }

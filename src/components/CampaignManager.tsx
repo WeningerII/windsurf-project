@@ -21,7 +21,7 @@ import type { Campaign } from '../types/core/campaign';
 import type { CharacterDocument, SystemDataModel } from '../types/core/document';
 import { systemRegistry } from '../registry';
 import { generateUUID } from '../utils/browserCompat';
-import { exportCampaigns, importCampaigns } from '../utils/campaignStorage';
+import { exportCampaigns, importCampaignsWithReport } from '../utils/campaignStorage';
 
 interface Props {
   campaigns: Campaign[];
@@ -75,16 +75,24 @@ export const CampaignManager: React.FC<Props> = ({
       const reader = new FileReader();
       reader.onload = (loadEvent) => {
         try {
-          const imported = importCampaigns(String(loadEvent.target?.result ?? ''));
+          const { campaigns: imported, droppedCount } = importCampaignsWithReport(
+            String(loadEvent.target?.result ?? '')
+          );
+          const skipped =
+            droppedCount > 0
+              ? ` — ${droppedCount} invalid ${droppedCount === 1 ? 'entry' : 'entries'} skipped`
+              : '';
           // Valid JSON can still hold no usable campaigns; say so rather than
           // silently no-op'ing (which reads as a successful import).
           if (imported.length === 0) {
-            setTransferMessage('No valid campaigns were found in that file.');
+            setTransferMessage(`No valid campaigns were found in that file${skipped}.`);
             return;
           }
           onImportCampaigns(imported);
           setTransferMessage(
-            `Imported ${imported.length} campaign${imported.length !== 1 ? 's' : ''}.`
+            droppedCount > 0
+              ? `Imported ${imported.length} of ${imported.length + droppedCount} campaigns${skipped}.`
+              : `Imported ${imported.length} campaign${imported.length !== 1 ? 's' : ''}.`
           );
         } catch (err) {
           setTransferMessage(err instanceof Error ? err.message : 'Failed to import campaigns.');

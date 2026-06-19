@@ -118,7 +118,18 @@ export function exportScenes(scenes: SceneDocument[]): string {
   return JSON.stringify(payload, null, 2);
 }
 
-export function importScenes(jsonString: string): SceneDocument[] {
+export interface ImportScenesResult {
+  scenes: SceneDocument[];
+  /** How many array entries were dropped by validation (partial import). */
+  droppedCount: number;
+}
+
+/**
+ * Import scenes from an export payload, reporting how many records were dropped
+ * by validation so callers can tell a partial (or empty) import apart from a
+ * clean one. Throws on a structurally invalid payload.
+ */
+export function importScenesWithReport(jsonString: string): ImportScenesResult {
   let scenesField: unknown[] | null;
   try {
     scenesField = readScenesField(jsonString);
@@ -128,7 +139,13 @@ export function importScenes(jsonString: string): SceneDocument[] {
   if (scenesField === null) {
     throw new Error('Failed to import scenes. Invalid JSON format.');
   }
-  return collectValidScenes(scenesField);
+  const scenes = collectValidScenes(scenesField);
+  return { scenes, droppedCount: scenesField.length - scenes.length };
+}
+
+/** Backward-compatible wrapper around {@link importScenesWithReport}. */
+export function importScenes(jsonString: string): SceneDocument[] {
+  return importScenesWithReport(jsonString).scenes;
 }
 
 function hydrateScene(scene: SceneDocument): SceneDocument {

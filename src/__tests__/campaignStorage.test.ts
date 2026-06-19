@@ -5,6 +5,7 @@ import {
   clearCampaignStorage,
   exportCampaigns,
   importCampaigns,
+  importCampaignsWithReport,
 } from '../utils/campaignStorage';
 import type { Campaign } from '../types/core/campaign';
 
@@ -124,5 +125,15 @@ describe('campaign export/import', () => {
     const imported = importCampaigns(json);
     expect(imported).toHaveLength(1);
     expect(imported[0].id).toBe('camp-1');
+  });
+
+  it('importCampaignsWithReport counts dropped invalid entries', () => {
+    const json = JSON.stringify({
+      version: '1.0',
+      campaigns: [makeCampaign(), { name: 'no id' }, 'not an object'],
+    });
+    const { campaigns, droppedCount } = importCampaignsWithReport(json);
+    expect(campaigns).toHaveLength(1);
+    expect(droppedCount).toBe(2);
   });
 });
