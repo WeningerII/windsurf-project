@@ -14,7 +14,7 @@ export const AI_GATEWAY_SCHEMA_VERSION = 'ai-gateway-v1' as const;
 export const AI_GATEWAY_ENDPOINT = '/.netlify/functions/ai-gateway' as const;
 
 /** Task allowlist. Grows one entry at a time as each task surface lands. */
-export const AI_GATEWAY_TASKS = ['encounter-draft'] as const;
+export const AI_GATEWAY_TASKS = ['encounter-draft', 'scene-narration'] as const;
 export type AiTask = (typeof AI_GATEWAY_TASKS)[number];
 
 export function isAiTask(value: unknown): value is AiTask {
@@ -148,6 +148,8 @@ function parseTaskPayload(task: AiTask, payload: unknown): AiParse<unknown> {
   switch (task) {
     case 'encounter-draft':
       return parseEncounterDraftPayload(payload);
+    case 'scene-narration':
+      return parseSceneNarrationPayload(payload);
     default:
       return { ok: false, message: `No validator for task '${task}'.` };
   }
@@ -207,6 +209,8 @@ export function parseTaskData(task: AiTask, raw: unknown): AiParse<unknown> {
   switch (task) {
     case 'encounter-draft':
       return parseEncounterDraftData(raw);
+    case 'scene-narration':
+      return parseSceneNarrationData(raw);
     default:
       return { ok: false, message: `No output validator for task '${task}'.` };
   }
@@ -239,4 +243,45 @@ function parseEncounterDraftData(raw: unknown): AiParse<EncounterDraftData> {
       ...(typeof raw.rationale === 'string' ? { rationale: raw.rationale } : {}),
     },
   };
+}
+
+// --- Task: scene-narration -------------------------------------------------
+
+export interface SceneNarrationPayload {
+  /**
+   * The deterministic scene recap — the ONLY source material for the prose.
+   * The model restyles these facts; it must not introduce events of its own.
+   */
+  facts: string;
+  /** Optional style hint (e.g. 'cinematic', 'gritty', 'lighthearted'). */
+  tone?: string;
+}
+
+export interface SceneNarrationData {
+  /** A prose retelling of the facts, for the GM to review and edit before use. */
+  narrative: string;
+}
+
+export type SceneNarrationRequest = AiRequest<'scene-narration', SceneNarrationPayload>;
+
+function parseSceneNarrationPayload(raw: unknown): AiParse<SceneNarrationPayload> {
+  if (!isRecord(raw)) return { ok: false, message: 'Scene-narration payload must be an object.' };
+  if (typeof raw.facts !== 'string' || !raw.facts.trim()) {
+    return { ok: false, message: 'Scene-narration payload needs non-empty facts.' };
+  }
+  return {
+    ok: true,
+    value: {
+      facts: raw.facts,
+      ...(typeof raw.tone === 'string' && raw.tone ? { tone: raw.tone } : {}),
+    },
+  };
+}
+
+function parseSceneNarrationData(raw: unknown): AiParse<SceneNarrationData> {
+  if (!isRecord(raw)) return { ok: false, message: 'Output must be an object.' };
+  if (typeof raw.narrative !== 'string' || !raw.narrative.trim()) {
+    return { ok: false, message: 'Narration output needs a non-empty narrative string.' };
+  }
+  return { ok: true, value: { narrative: raw.narrative } };
 }

@@ -74,9 +74,41 @@ describe('parseTaskData (encounter-draft output)', () => {
   });
 });
 
+describe('scene-narration request/output', () => {
+  it('accepts a well-formed narration request with optional tone', () => {
+    const result = parseAiRequest({
+      schemaVersion: AI_GATEWAY_SCHEMA_VERSION,
+      task: 'scene-narration',
+      payload: { facts: 'Combat: defeated the ogre.', tone: 'gritty' },
+    });
+    expect(result.ok).toBe(true);
+    if (result.ok)
+      expect(result.value.payload).toEqual({
+        facts: 'Combat: defeated the ogre.',
+        tone: 'gritty',
+      });
+  });
+
+  it('rejects empty/whitespace facts', () => {
+    const result = parseAiRequest({
+      schemaVersion: AI_GATEWAY_SCHEMA_VERSION,
+      task: 'scene-narration',
+      payload: { facts: '   ' },
+    });
+    expect(result).toMatchObject({ ok: false });
+  });
+
+  it('accepts a non-empty narrative and rejects an empty one', () => {
+    expect(parseTaskData('scene-narration', { narrative: 'The ogre fell.' }).ok).toBe(true);
+    expect(parseTaskData('scene-narration', { narrative: '   ' }).ok).toBe(false);
+    expect(parseTaskData('scene-narration', {}).ok).toBe(false);
+  });
+});
+
 describe('isAiTask / isAiResponse', () => {
   it('recognizes the task allowlist', () => {
     expect(isAiTask('encounter-draft')).toBe(true);
+    expect(isAiTask('scene-narration')).toBe(true);
     expect(isAiTask('something-else')).toBe(false);
   });
 

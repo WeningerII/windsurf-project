@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { buildEncounterDraftPrompt, buildPromptForTask } from '../../ai/prompts';
+import {
+  buildEncounterDraftPrompt,
+  buildPromptForTask,
+  buildSceneNarrationPrompt,
+} from '../../ai/prompts';
 import type { EncounterDraftPayload } from '../../ai/contracts';
 
 const payload: EncounterDraftPayload = {
@@ -35,8 +39,28 @@ describe('buildEncounterDraftPrompt', () => {
   });
 });
 
+describe('buildSceneNarrationPrompt', () => {
+  it('embeds the facts and forbids invention', () => {
+    const prompt = buildSceneNarrationPrompt({ facts: 'Combat: defeated the ogre.' });
+    expect(prompt).toContain('Combat: defeated the ogre.');
+    expect(prompt).toMatch(/use ONLY the facts/i);
+    expect(prompt).toMatch(/do not invent/i);
+  });
+
+  it('includes the tone only when supplied', () => {
+    expect(buildSceneNarrationPrompt({ facts: 'x' })).not.toMatch(/tone/i);
+    expect(buildSceneNarrationPrompt({ facts: 'x', tone: 'gritty' })).toMatch(/gritty tone/i);
+  });
+});
+
 describe('buildPromptForTask', () => {
   it('dispatches encounter-draft', () => {
     expect(buildPromptForTask('encounter-draft', payload)).toContain('combat encounter');
+  });
+
+  it('dispatches scene-narration', () => {
+    expect(buildPromptForTask('scene-narration', { facts: 'The ogre fell.' })).toContain(
+      'The ogre fell.'
+    );
   });
 });

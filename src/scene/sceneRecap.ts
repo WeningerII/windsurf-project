@@ -1,6 +1,9 @@
 import type { SceneState } from '../types/core/scene';
 import { ORACLE_ANSWER_LABEL } from './oracle';
 
+/** Returned verbatim when a scene has no recordable events yet. */
+export const EMPTY_SCENE_RECAP = 'No recorded events in this scene yet.';
+
 /**
  * Build a factual recap of what happened in a scene, suitable as a draft
  * campaign session-log entry. This is a deterministic summary of the folded
@@ -41,7 +44,7 @@ export function summarizeSceneForLog(state: SceneState): string {
     lines.push(`Oracle: ${items.join('; ')}.`);
   }
 
-  return lines.length > 0 ? lines.join('\n') : 'No recorded events in this scene yet.';
+  return lines.length > 0 ? lines.join('\n') : EMPTY_SCENE_RECAP;
 }
 
 /** "a", "a and b", or "a, b, and c". */

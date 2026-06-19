@@ -5,12 +5,14 @@
  * user's request — never large raw rules text, and instructs the model to pick
  * from the supplied ids rather than invent names.
  */
-import type { AiTask, EncounterDraftPayload } from './contracts';
+import type { AiTask, EncounterDraftPayload, SceneNarrationPayload } from './contracts';
 
 export function buildPromptForTask(task: AiTask, payload: unknown): string {
   switch (task) {
     case 'encounter-draft':
       return buildEncounterDraftPrompt(payload as EncounterDraftPayload);
+    case 'scene-narration':
+      return buildSceneNarrationPrompt(payload as SceneNarrationPayload);
     default:
       throw new Error(`No prompt builder for task '${task}'.`);
   }
@@ -42,5 +44,20 @@ export function buildEncounterDraftPrompt(payload: EncounterDraftPayload): strin
     roster,
     ``,
     `Return the chosen creatures and how many of each. Every monsterId MUST be one of the ids above; do not invent creatures.${repair}`,
+  ].join('\n');
+}
+
+export function buildSceneNarrationPrompt(payload: SceneNarrationPayload): string {
+  const tone = payload.tone ? ` in a ${payload.tone} tone` : '';
+  return [
+    `Retell the following tabletop session facts as a short, vivid prose recap${tone}.`,
+    `Write one or two paragraphs in the past tense for the group's session log.`,
+    ``,
+    `Rules: use ONLY the facts below. Do not invent characters, monsters, places,`,
+    `outcomes, or events that are not stated. Do not add dialogue or motivations`,
+    `not implied by the facts. If the facts are sparse, keep the recap brief.`,
+    ``,
+    `Facts:`,
+    payload.facts,
   ].join('\n');
 }

@@ -23,6 +23,9 @@ const TASK_SCHEMAS: Record<AiTask, z.ZodTypeAny> = {
       .min(1),
     rationale: z.string().optional(),
   }),
+  'scene-narration': z.object({
+    narrative: z.string().min(1),
+  }),
 };
 
 const DEFAULT_MODEL = 'gemini-2.0-flash';

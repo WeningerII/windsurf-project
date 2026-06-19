@@ -18,6 +18,7 @@ import {
 } from '../scene/encounterDraft';
 import { validateEncounterSpec } from '../scene/encounterSpec';
 import { draftEncounterWithAi } from '../ai/encounterDraftFlow';
+import { narrateSceneWithAi } from '../ai/sceneNarrationFlow';
 import { isAiEnabled } from '../ai/gatewayClient';
 import {
   appendSceneEvent,
@@ -155,9 +156,9 @@ export function SceneManager({
   const [aiEncounterPrompt, setAiEncounterPrompt] = useState('');
   const [aiDrafting, setAiDrafting] = useState(false);
   const draftNonceRef = useRef(0);
-  // AI affordances are build-time gated (default OFF) and only offered where a
-  // cited budget table exists, so the deterministic gate can judge the result.
-  const aiEncounterEnabled = isAiEnabled();
+  // AI affordances are build-time gated (default OFF); each surface adds its own
+  // further preconditions (e.g. a cited budget table for drafting).
+  const aiEnabled = isAiEnabled();
   const [monstersLoading, setMonstersLoading] = useState(false);
   const [monsterLoadError, setMonsterLoadError] = useState<string | null>(null);
   const [initiativeValues, setInitiativeValues] = useState<Record<string, string>>({});
@@ -1516,7 +1517,7 @@ export function SceneManager({
                     // as the manual draft, offered only when AI is enabled and
                     // the system has a cited budget table.
                     onAiDraft={
-                      aiEncounterEnabled && supportsEncounterBudget(sceneSystemId ?? '')
+                      aiEnabled && supportsEncounterBudget(sceneSystemId ?? '')
                         ? handleAiDraftEncounter
                         : undefined
                     }
@@ -1577,6 +1578,9 @@ export function SceneManager({
                       state={state}
                       campaignName={linkedCampaign.name}
                       onLog={(title, body) => onLogToCampaign(linkedCampaign.id, title, body)}
+                      // The model restyles the deterministic recap into prose the
+                      // GM edits before logging; hidden entirely when AI is off.
+                      narrate={aiEnabled ? (params) => narrateSceneWithAi(params) : undefined}
                     />
                   )}
                 </div>

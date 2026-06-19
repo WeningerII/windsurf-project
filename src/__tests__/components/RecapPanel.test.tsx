@@ -78,4 +78,54 @@ describe('RecapPanel', () => {
     expect(screen.getByRole('button', { name: /Log to Saltmarsh/i })).toBeInTheDocument();
     expect(screen.queryByText(/Added to Saltmarsh/i)).not.toBeInTheDocument();
   });
+
+  it('hides AI narration unless a narrate handler is provided', () => {
+    render(<RecapPanel state={makeState()} campaignName="Saltmarsh" onLog={vi.fn()} />);
+    expect(screen.queryByRole('button', { name: /narrate with ai/i })).not.toBeInTheDocument();
+  });
+
+  it('narrates the factual recap into editable prose, then logs the prose', async () => {
+    const user = userEvent.setup();
+    const onLog = vi.fn();
+    const narrate = vi.fn(async () => ({ ok: true as const, narrative: 'The crypt fell silent.' }));
+    render(
+      <RecapPanel state={makeState()} campaignName="Saltmarsh" onLog={onLog} narrate={narrate} />
+    );
+
+    await user.click(screen.getByRole('button', { name: /narrate with ai/i }));
+
+    const draft = await screen.findByRole('textbox', { name: /ai narration draft/i });
+    expect(draft).toHaveValue('The crypt fell silent.');
+    // The deterministic recap is the model's only source material; tone defaults.
+    expect(narrate).toHaveBeenCalledWith({
+      facts: 'Checks: Perception 17 vs DC 15 (success).',
+      tone: 'cinematic',
+    });
+
+    // Logging now saves the (editable) prose, not the factual recap.
+    await user.click(screen.getByRole('button', { name: /Log to Saltmarsh/i }));
+    expect(onLog).toHaveBeenCalledWith('The Crypt', 'The crypt fell silent.');
+  });
+
+  it('surfaces a narration error and still logs the factual recap', async () => {
+    const user = userEvent.setup();
+    const onLog = vi.fn();
+    const narrate = vi.fn(async () => ({ ok: false as const, error: 'AI is off.' }));
+    render(
+      <RecapPanel state={makeState()} campaignName="Saltmarsh" onLog={onLog} narrate={narrate} />
+    );
+
+    await user.click(screen.getByRole('button', { name: /narrate with ai/i }));
+    expect(await screen.findByText(/AI is off\./)).toBeInTheDocument();
+    expect(screen.queryByRole('textbox', { name: /ai narration draft/i })).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: /Log to Saltmarsh/i }));
+    expect(onLog).toHaveBeenCalledWith('The Crypt', 'Checks: Perception 17 vs DC 15 (success).');
+  });
+
+  it('disables narration when the scene has no facts yet', () => {
+    const empty: SceneState = { ...makeState(), checkLog: [], oracleLog: [] };
+    render(<RecapPanel state={empty} campaignName="Saltmarsh" onLog={vi.fn()} narrate={vi.fn()} />);
+    expect(screen.getByRole('button', { name: /narrate with ai/i })).toBeDisabled();
+  });
 });
