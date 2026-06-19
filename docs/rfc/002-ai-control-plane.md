@@ -1,6 +1,6 @@
 # RFC 002: AI Control Plane For Frictionless Creation And Play
 
-**Status:** Withdrawn (2026-05-30) — the provider-free AI control-plane scaffolding and the guided-creation draft substrate this RFC describes were removed as orphaned, non-functional code. Retained as historical design intent should an AI layer be built later; it does not describe shipped code.
+**Status:** Active — implementation in progress (2026-06-19). The original provider-free scaffolding and guided-creation substrate this RFC described were removed on 2026-05-30 as orphaned, non-functional code; the design was retained as intent. Implementation has now restarted on that design: the provider-agnostic gateway foundation (typed task contracts, a pure injectable gateway core with fixture replay and key-less degradation, and a browser client gated behind `VITE_AI_ENABLED`) has landed under `src/ai/`. The server function and provider adapter (Vercel AI SDK, Gemini first) and the first task surface (encounter drafting) follow. Sections below describe the target design, not all of it shipped yet.
 **Author:** product/engineering planning
 **Consolidated:** May 1, 2026
 
