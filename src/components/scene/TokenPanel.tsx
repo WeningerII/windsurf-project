@@ -25,6 +25,9 @@ interface TokenPanelProps {
   /** The selected token's active conditions. */
   selectedTokenConditions?: readonly string[];
   onToggleSelectedTokenCondition?: (conditionId: string) => void;
+  /** The selected token's current side (undefined hides the re-side control). */
+  selectedTokenSide?: SceneAllegiance;
+  onSetSelectedTokenSide?: (value: SceneAllegiance) => void;
 }
 
 /** Token controls: link a character (or define a manual token) and place it. */
@@ -45,6 +48,8 @@ export function TokenPanel({
   conditionOptions = [],
   selectedTokenConditions = [],
   onToggleSelectedTokenCondition,
+  selectedTokenSide,
+  onSetSelectedTokenSide,
 }: TokenPanelProps) {
   return (
     <div className="rounded-lg border bg-card p-3">
@@ -116,6 +121,22 @@ export function TokenPanel({
           <Plus className="mr-1.5 h-4 w-4" />
           Place Token
         </Button>
+        {selectedTokenSide && onSetSelectedTokenSide && (
+          <div>
+            <div className="mb-1 text-xs font-medium text-muted-foreground">
+              Selected token side
+            </div>
+            <Select
+              aria-label="Selected token side"
+              value={selectedTokenSide}
+              onChange={(event) => onSetSelectedTokenSide(event.target.value as SceneAllegiance)}
+            >
+              <option value="party">Ally (with the party)</option>
+              <option value="hostile">Enemy (against the party)</option>
+              <option value="neutral">Neutral (bystander)</option>
+            </Select>
+          </div>
+        )}
         {conditionOptions.length > 0 && onToggleSelectedTokenCondition && (
           <div>
             <div className="mb-1 text-xs font-medium text-muted-foreground">

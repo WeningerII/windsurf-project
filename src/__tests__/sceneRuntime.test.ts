@@ -703,6 +703,60 @@ describe('scene runtime — checks', () => {
   });
 });
 
+describe('scene runtime — token allegiance', () => {
+  function sceneWithToken(): SceneDocument {
+    let scene = createSceneDocument({
+      id: 'alleg',
+      name: 'Sides',
+      systemId: 'dnd-5e-2024',
+      grid: { width: 6, height: 6 },
+      now: NOW,
+    });
+    scene = appendResolved(
+      scene,
+      resolveSceneAction(
+        scene,
+        { type: 'place-token', token: { ...makeToken('orc', 1, 1), kind: 'monster' } },
+        { eventId: 'place', createdAt: NOW }
+      )
+    );
+    return scene;
+  }
+
+  it('re-sides a placed token (ally a monster) through a folded event', () => {
+    const base = sceneWithToken();
+    const scene = appendResolved(
+      base,
+      resolveSceneAction(
+        base,
+        { type: 'set-token-allegiance', tokenId: 'orc', allegiance: 'party' },
+        { eventId: 'side', createdAt: NOW }
+      )
+    );
+    expect(foldSceneEvents(scene).state.tokens.orc.allegiance).toBe('party');
+  });
+
+  it('rejects re-siding an unknown token', () => {
+    const result = resolveSceneAction(
+      sceneWithToken(),
+      { type: 'set-token-allegiance', tokenId: 'ghost', allegiance: 'hostile' },
+      { eventId: 'x', createdAt: NOW }
+    );
+    expect(result.event).toBeUndefined();
+    expect(result.issues[0]).toMatchObject({ code: 'scene-token-unknown' });
+  });
+
+  it('rejects an unrecognized allegiance value', () => {
+    const result = resolveSceneAction(
+      sceneWithToken(),
+      { type: 'set-token-allegiance', tokenId: 'orc', allegiance: 'frenemy' as never },
+      { eventId: 'x', createdAt: NOW }
+    );
+    expect(result.event).toBeUndefined();
+    expect(result.issues[0]).toMatchObject({ code: 'scene-allegiance-invalid' });
+  });
+});
+
 describe('scene runtime — oracle', () => {
   function freshScene(): SceneDocument {
     return createSceneDocument({

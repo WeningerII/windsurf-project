@@ -93,7 +93,7 @@ function defaultAllegiance(kind: SceneToken['kind']): SceneAllegiance {
  * a monster can be turned (`party`), or a PC charmed (`hostile`). `neutral`
  * tokens fight no one.
  */
-export function factionForToken(token: SceneToken): string {
+export function factionForToken(token: SceneToken): SceneAllegiance {
   return token.allegiance ?? defaultAllegiance(token.kind);
 }
 

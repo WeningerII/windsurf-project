@@ -42,6 +42,22 @@ describe('TokenPanel', () => {
     expect(onTokenAllegianceChange).toHaveBeenCalledWith('party');
   });
 
+  it('shows the selected-token side control only when a side is provided', async () => {
+    const user = userEvent.setup();
+    const onSetSelectedTokenSide = vi.fn();
+    const { rerender, props } = renderPanel({
+      selectedTokenSide: undefined,
+      onSetSelectedTokenSide,
+    });
+    expect(screen.queryByLabelText('Selected token side')).not.toBeInTheDocument();
+
+    rerender(<TokenPanel {...props} selectedTokenSide="hostile" />);
+    const control = screen.getByLabelText('Selected token side');
+    expect((control as HTMLSelectElement).value).toBe('hostile');
+    await user.selectOptions(control, 'party');
+    expect(onSetSelectedTokenSide).toHaveBeenCalledWith('party');
+  });
+
   it('offers monster/object only for manual (unlinked) tokens', () => {
     const { rerender, props } = renderPanel({ tokenDocumentId: '' });
     expect(screen.getByRole('option', { name: 'Monster' })).toBeInTheDocument();

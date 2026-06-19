@@ -26,6 +26,7 @@ import {
   buildCharacterCombatant,
   buildDaggerheartAdversaryCombatant,
   buildSceneCombatants,
+  factionForToken,
   isRoundConclusive,
   NEUTRAL_FACTION,
   resolveSceneAttack,
@@ -758,6 +759,26 @@ export function SceneManager({
     [selectedScene, state, selectedTokenId, emitSceneAction]
   );
 
+  const handleSetSelectedTokenSide = useCallback(
+    (allegiance: SceneAllegiance) => {
+      if (!selectedScene || !selectedTokenId) return;
+      emitSceneAction(selectedScene, {
+        type: 'set-token-allegiance',
+        tokenId: selectedTokenId,
+        allegiance,
+      });
+    },
+    [selectedScene, selectedTokenId, emitSceneAction]
+  );
+
+  // The selected token's current side, for the re-side control (objects are
+  // permanent non-combatants, so no control is offered for them).
+  const selectedTokenSide = useMemo<SceneAllegiance | undefined>(() => {
+    const token = selectedTokenId ? state?.tokens[selectedTokenId] : undefined;
+    if (!token || token.kind === 'object') return undefined;
+    return factionForToken(token);
+  }, [selectedTokenId, state]);
+
   const handleTokenActivate = useCallback((token: SceneToken) => {
     setSelectedTokenId(token.id);
     setPlacementMode('none');
@@ -1294,6 +1315,8 @@ export function SceneManager({
                       (selectedTokenId && state.tokens[selectedTokenId]?.conditions) || []
                     }
                     onToggleSelectedTokenCondition={handleToggleSelectedTokenCondition}
+                    selectedTokenSide={selectedTokenSide}
+                    onSetSelectedTokenSide={handleSetSelectedTokenSide}
                   />
 
                   {sceneSystemId === 'daggerheart' && daggerheartAdversariesById.size > 0 && (

@@ -190,6 +190,7 @@ export type SceneEventType =
   | 'token.removed'
   | 'token.damaged'
   | 'token.conditions-set'
+  | 'token.allegiance-set'
   | 'marker.added'
   | 'marker.removed'
   | 'initiative.set'
@@ -223,6 +224,7 @@ export type SceneEvent =
   | SceneEventBase<'token.removed', { tokenId: string }>
   | SceneEventBase<'token.damaged', { damages: SceneTokenDamage[]; cause?: string }>
   | SceneEventBase<'token.conditions-set', { tokenId: string; conditions: string[] }>
+  | SceneEventBase<'token.allegiance-set', { tokenId: string; allegiance: SceneAllegiance }>
   | SceneEventBase<'marker.added', { marker: SceneMarker }>
   | SceneEventBase<'marker.removed', { markerId: string }>
   | SceneEventBase<'initiative.set', { entries: SceneInitiativeEntry[]; activeTokenId?: string }>
@@ -248,6 +250,7 @@ export type SceneActionType =
   | 'remove-token'
   | 'apply-damage'
   | 'set-token-conditions'
+  | 'set-token-allegiance'
   | 'add-marker'
   | 'remove-marker'
   | 'set-initiative'
@@ -261,6 +264,7 @@ export type SceneActionIntent =
   | { type: 'remove-token'; actorId?: string; tokenId: string }
   | { type: 'apply-damage'; actorId?: string; damages: SceneTokenDamage[]; cause?: string }
   | { type: 'set-token-conditions'; actorId?: string; tokenId: string; conditions: string[] }
+  | { type: 'set-token-allegiance'; actorId?: string; tokenId: string; allegiance: SceneAllegiance }
   | { type: 'add-marker'; actorId?: string; marker: SceneMarker }
   | { type: 'remove-marker'; actorId?: string; markerId: string }
   | {

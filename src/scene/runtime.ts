@@ -1,5 +1,6 @@
 import type {
   SceneActionIntent,
+  SceneAllegiance,
   SceneDocument,
   SceneEvent,
   SceneGrid,
@@ -300,6 +301,11 @@ export function appendSceneEvent(scene: SceneDocument, event: SceneEvent): Scene
   };
 }
 
+/** Whether a value is a recognized combat allegiance (validates persisted events). */
+function isSceneAllegiance(value: unknown): value is SceneAllegiance {
+  return value === 'party' || value === 'hostile' || value === 'neutral';
+}
+
 export function validateSceneEvent(state: SceneState, event: SceneEvent): SceneIssue[] {
   const issues: SceneIssue[] = [];
   pushSequenceIssue(issues, event);
@@ -317,6 +323,16 @@ export function validateSceneEvent(state: SceneState, event: SceneEvent): SceneI
       break;
     case 'token.conditions-set':
       validateKnownToken(state, event.payload.tokenId, issues, event, 'payload.tokenId');
+      break;
+    case 'token.allegiance-set':
+      validateKnownToken(state, event.payload.tokenId, issues, event, 'payload.tokenId');
+      if (!isSceneAllegiance(event.payload.allegiance)) {
+        pushIssue(issues, event, {
+          code: 'scene-allegiance-invalid',
+          message: 'Token allegiance must be party, hostile, or neutral.',
+          path: 'payload.allegiance',
+        });
+      }
       break;
     case 'token.damaged':
       validateDamages(state, event.payload.damages, issues, event);
@@ -434,6 +450,12 @@ function buildEventFromIntent(
         // Dedupe while preserving order so replays are byte-stable.
         payload: { tokenId: intent.tokenId, conditions: [...new Set(intent.conditions)] },
       };
+    case 'set-token-allegiance':
+      return {
+        ...base,
+        type: 'token.allegiance-set',
+        payload: { tokenId: intent.tokenId, allegiance: intent.allegiance },
+      };
     case 'add-marker':
       return { ...base, type: 'marker.added', payload: { marker: cloneMarker(intent.marker) } };
     case 'remove-marker':
@@ -534,6 +556,13 @@ function applySceneEvent(state: SceneState, event: SceneEvent): void {
           ...token,
           conditions: [...event.payload.conditions],
         };
+      }
+      break;
+    }
+    case 'token.allegiance-set': {
+      const token = state.tokens[event.payload.tokenId];
+      if (token) {
+        state.tokens[event.payload.tokenId] = { ...token, allegiance: event.payload.allegiance };
       }
       break;
     }
