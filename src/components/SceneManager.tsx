@@ -25,7 +25,6 @@ import { fileToAiImageInput } from '../ai/imageInput';
 import { isAiEnabled } from '../ai/gatewayClient';
 import {
   appendSceneEvent,
-  createSceneDocument,
   foldSceneEvents,
   positiveIntegerOrDefault,
   resolveSceneAction,
@@ -66,7 +65,6 @@ import { exportScenes, importScenesWithReport } from '../utils/sceneStorage';
 import { generateUUID } from '../utils/browserCompat';
 import { Button } from './ui/Button';
 import { Badge } from './ui/Badge';
-import { Input } from './ui/Input';
 import { Select } from './ui/Select';
 import { SceneGridView } from './SceneGridView';
 import { EncounterPanel } from './scene/EncounterPanel';
@@ -80,6 +78,7 @@ import { ReactionPanel } from './scene/ReactionPanel';
 import { DicePanel } from './scene/DicePanel';
 import { RecapPanel } from './scene/RecapPanel';
 import { IllustrationPanel } from './scene/IllustrationPanel';
+import { SceneCreateForm } from './scene/SceneCreateForm';
 
 type PlacementMode = 'none' | 'token' | 'marker' | 'adversary';
 
@@ -127,11 +126,6 @@ export function SceneManager({
   const fallbackSystemId = systemOptions[0]?.id ?? DEFAULT_SYSTEM_ID;
   const [selectedSceneId, setSelectedSceneId] = useState<string | null>(scenes[0]?.id ?? null);
   const [creatingNew, setCreatingNew] = useState(false);
-  const [newSceneName, setNewSceneName] = useState('');
-  const [newSceneSystemId, setNewSceneSystemId] = useState<string>(DEFAULT_SYSTEM_ID);
-  const [newSceneCampaignId, setNewSceneCampaignId] = useState('');
-  const [newSceneWidth, setNewSceneWidth] = useState('12');
-  const [newSceneHeight, setNewSceneHeight] = useState('10');
   // Scene-list filter: '' = all, a campaign id = that campaign's encounters,
   // 'none' = scenes not assigned to any campaign.
   const [sceneCampaignFilter, setSceneCampaignFilter] = useState('');
@@ -183,11 +177,6 @@ export function SceneManager({
     setSelectedTokenId(undefined);
     setPlacementMode('none');
   }, [scenes, selectedSceneId]);
-
-  useEffect(() => {
-    if (systemOptions.some((system) => system.id === newSceneSystemId)) return;
-    setNewSceneSystemId(fallbackSystemId);
-  }, [fallbackSystemId, newSceneSystemId, systemOptions]);
 
   const selectedScene = useMemo(
     () => scenes.find((scene) => scene.id === selectedSceneId),
@@ -445,33 +434,6 @@ export function SceneManager({
       setCombatTargetId('');
     }
   }, [combatTargetId, state]);
-
-  const handleCreateScene = () => {
-    const name = newSceneName.trim();
-    if (!name) return;
-
-    const id = generateUUID();
-    const campaignId = newSceneCampaignId || undefined;
-    const campaign = campaignId ? campaigns.find((entry) => entry.id === campaignId) : undefined;
-    const systemId = campaign?.systemId ?? newSceneSystemId;
-    const scene = createSceneDocument({
-      id,
-      name,
-      systemId,
-      campaignId,
-      seed: id,
-      grid: {
-        width: positiveIntegerOrDefault(newSceneWidth, 12),
-        height: positiveIntegerOrDefault(newSceneHeight, 10),
-      },
-    });
-
-    onAddScene(scene);
-    setSelectedSceneId(scene.id);
-    setNewSceneName('');
-    setCreatingNew(false);
-    setActionIssues([]);
-  };
 
   const emitSceneAction = useCallback(
     (scene: SceneDocument, intent: SceneActionIntent) => {
@@ -1244,75 +1206,19 @@ export function SceneManager({
         </div>
       </div>
 
-      {creatingNew && (
-        <div className="grid gap-2 rounded-lg border bg-card p-3 md:grid-cols-[minmax(0,1fr)_minmax(10rem,14rem)_minmax(10rem,14rem)_5rem_5rem_auto_auto] md:items-center">
-          <Input
-            autoFocus
-            value={newSceneName}
-            onChange={(event) => setNewSceneName(event.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') handleCreateScene();
-              if (event.key === 'Escape') setCreatingNew(false);
-            }}
-            placeholder="Scene name"
-          />
-          <Select
-            aria-label="Scene campaign"
-            value={newSceneCampaignId}
-            onChange={(event) => {
-              const campaignId = event.target.value;
-              setNewSceneCampaignId(campaignId);
-              const campaign = campaigns.find((entry) => entry.id === campaignId);
-              if (campaign?.systemId) {
-                setNewSceneSystemId(campaign.systemId);
-              }
-            }}
-          >
-            <option value="">No campaign</option>
-            {campaigns.map((campaign) => (
-              <option key={campaign.id} value={campaign.id}>
-                {campaign.name}
-              </option>
-            ))}
-          </Select>
-          <Select
-            aria-label="Scene system"
-            value={newSceneSystemId}
-            onChange={(event) => setNewSceneSystemId(event.target.value)}
-          >
-            {systemOptions.map((system) => (
-              <option key={system.id} value={system.id}>
-                {system.label}
-              </option>
-            ))}
-          </Select>
-          <Input
-            aria-label="Scene width"
-            inputMode="numeric"
-            value={newSceneWidth}
-            onChange={(event) => setNewSceneWidth(event.target.value)}
-          />
-          <Input
-            aria-label="Scene height"
-            inputMode="numeric"
-            value={newSceneHeight}
-            onChange={(event) => setNewSceneHeight(event.target.value)}
-          />
-          <Button size="sm" onClick={handleCreateScene} disabled={!newSceneName.trim()}>
-            Create
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              setCreatingNew(false);
-              setNewSceneName('');
-            }}
-          >
-            Cancel
-          </Button>
-        </div>
-      )}
+      <SceneCreateForm
+        open={creatingNew}
+        systemOptions={systemOptions}
+        campaigns={campaigns}
+        defaultSystemId={fallbackSystemId}
+        onCancel={() => setCreatingNew(false)}
+        onCreate={(scene) => {
+          onAddScene(scene);
+          setSelectedSceneId(scene.id);
+          setCreatingNew(false);
+          setActionIssues([]);
+        }}
+      />
 
       {actionIssues.length > 0 && (
         <div className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
