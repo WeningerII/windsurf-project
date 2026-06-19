@@ -22,6 +22,7 @@ import type { CharacterDocument, SystemDataModel } from '../types/core/document'
 import { systemRegistry } from '../registry';
 import { generateUUID } from '../utils/browserCompat';
 import { exportCampaigns, importCampaignsWithReport } from '../utils/campaignStorage';
+import { downloadTextFile, pickTextFile } from '../utils/fileTransfer';
 
 interface Props {
   campaigns: Campaign[];
@@ -55,52 +56,37 @@ export const CampaignManager: React.FC<Props> = ({
   const [transferMessage, setTransferMessage] = useState<string | null>(null);
 
   const handleExport = () => {
-    const blob = new Blob([exportCampaigns(campaigns)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `campaigns-${new Date().toISOString().slice(0, 10)}.json`;
-    link.click();
-    URL.revokeObjectURL(url);
+    downloadTextFile(
+      exportCampaigns(campaigns),
+      `campaigns-${new Date().toISOString().slice(0, 10)}.json`
+    );
   };
 
   const handleImport = () => {
     if (!onImportCampaigns) return;
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'application/json';
-    input.onchange = (event: Event) => {
-      const file = (event.target as HTMLInputElement).files?.[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (loadEvent) => {
-        try {
-          const { campaigns: imported, droppedCount } = importCampaignsWithReport(
-            String(loadEvent.target?.result ?? '')
-          );
-          const skipped =
-            droppedCount > 0
-              ? ` — ${droppedCount} invalid ${droppedCount === 1 ? 'entry' : 'entries'} skipped`
-              : '';
-          // Valid JSON can still hold no usable campaigns; say so rather than
-          // silently no-op'ing (which reads as a successful import).
-          if (imported.length === 0) {
-            setTransferMessage(`No valid campaigns were found in that file${skipped}.`);
-            return;
-          }
-          onImportCampaigns(imported);
-          setTransferMessage(
-            droppedCount > 0
-              ? `Imported ${imported.length} of ${imported.length + droppedCount} campaigns${skipped}.`
-              : `Imported ${imported.length} campaign${imported.length !== 1 ? 's' : ''}.`
-          );
-        } catch (err) {
-          setTransferMessage(err instanceof Error ? err.message : 'Failed to import campaigns.');
+    pickTextFile((text) => {
+      try {
+        const { campaigns: imported, droppedCount } = importCampaignsWithReport(text);
+        const skipped =
+          droppedCount > 0
+            ? ` — ${droppedCount} invalid ${droppedCount === 1 ? 'entry' : 'entries'} skipped`
+            : '';
+        // Valid JSON can still hold no usable campaigns; say so rather than
+        // silently no-op'ing (which reads as a successful import).
+        if (imported.length === 0) {
+          setTransferMessage(`No valid campaigns were found in that file${skipped}.`);
+          return;
         }
-      };
-      reader.readAsText(file);
-    };
-    input.click();
+        onImportCampaigns(imported);
+        setTransferMessage(
+          droppedCount > 0
+            ? `Imported ${imported.length} of ${imported.length + droppedCount} campaigns${skipped}.`
+            : `Imported ${imported.length} campaign${imported.length !== 1 ? 's' : ''}.`
+        );
+      } catch (err) {
+        setTransferMessage(err instanceof Error ? err.message : 'Failed to import campaigns.');
+      }
+    });
   };
 
   const documentMap = useMemo(() => new Map(documents.map((d) => [d.id, d])), [documents]);

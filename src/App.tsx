@@ -13,6 +13,7 @@ import { SystemSheetRenderer } from './components/SystemSheetRenderer';
 import { CharacterDocument, SystemDataModel } from './types/core/document';
 import { useDocuments } from './hooks/useDocuments';
 import { exportDocuments, importDocumentsWithReport } from './utils/documentStorage';
+import { downloadTextFile, pickTextFile } from './utils/fileTransfer';
 import { CURRENT_DOCUMENT_VERSION } from './utils/documentMigrations';
 import { useKeyboardNavigation } from './hooks/useKeyboardNavigation';
 import { Skeleton } from './components/ui/Skeleton';
@@ -236,18 +237,6 @@ function AppContent() {
   const isNearStorageLimit = storageUsageBytes >= STORAGE_WARNING_THRESHOLD;
   const storageUsageMb = (storageUsageBytes / (1024 * 1024)).toFixed(2);
 
-  const triggerJsonDownload = useCallback((jsonPayload: string, filename: string) => {
-    // Blob URLs avoid Chromium's ~2 MB cap on data: anchors — "Export All"
-    // must keep working exactly when storage is near the ~5 MB limit.
-    const blob = new Blob([jsonPayload], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', filename);
-    link.click();
-    URL.revokeObjectURL(url);
-  }, []);
-
   // Initialize browser compatibility checks on mount
   useEffect(() => {
     initBrowserCompat();
@@ -296,7 +285,7 @@ function AppContent() {
     try {
       const dataStr = exportDocuments([doc]);
       const filename = `${doc.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_character.json`;
-      triggerJsonDownload(dataStr, filename);
+      downloadTextFile(dataStr, filename);
       toast(`Exported "${doc.name}"`, 'success');
     } catch {
       toast('Failed to export character.', 'error');
@@ -307,7 +296,7 @@ function AppContent() {
     try {
       const payload = exportDocuments(documents);
       const filename = `all_characters_${new Date().toISOString().slice(0, 10)}.json`;
-      triggerJsonDownload(payload, filename);
+      downloadTextFile(payload, filename);
       toast(
         `Exported ${documents.length} character${documents.length !== 1 ? 's' : ''}`,
         'success'
@@ -336,47 +325,36 @@ function AppContent() {
   );
 
   const handleImportDocument = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'application/json';
-    input.onchange = (e: Event) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        try {
-          const jsonString = event.target?.result as string;
-          const { documents: imported, droppedCount } = importDocumentsWithReport(jsonString);
-          if (imported.length > 0) {
-            const normalized = imported.map((d) => ({
-              ...d,
-              id: generateUUID(),
-              createdAt: new Date(),
-              updatedAt: new Date(),
-            }));
-            addDocuments(normalized);
-            setCurrentDocId(normalized[0].id);
-            toast(
-              droppedCount > 0
-                ? `Imported ${normalized.length} of ${normalized.length + droppedCount} characters — ${droppedCount} invalid ${droppedCount === 1 ? 'entry' : 'entries'} skipped`
-                : `Imported ${normalized.length} character${normalized.length !== 1 ? 's' : ''}`,
-              droppedCount > 0 ? 'warning' : 'success'
-            );
-          } else {
-            toast(
-              droppedCount > 0
-                ? `Nothing imported — all ${droppedCount} ${droppedCount === 1 ? 'entry was' : 'entries were'} invalid.`
-                : 'Nothing imported — the file contains no characters.',
-              'error'
-            );
-          }
-        } catch {
-          toast('Failed to import character. Please ensure the file is a valid export.', 'error');
+    pickTextFile((jsonString) => {
+      try {
+        const { documents: imported, droppedCount } = importDocumentsWithReport(jsonString);
+        if (imported.length > 0) {
+          const normalized = imported.map((d) => ({
+            ...d,
+            id: generateUUID(),
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          }));
+          addDocuments(normalized);
+          setCurrentDocId(normalized[0].id);
+          toast(
+            droppedCount > 0
+              ? `Imported ${normalized.length} of ${normalized.length + droppedCount} characters — ${droppedCount} invalid ${droppedCount === 1 ? 'entry' : 'entries'} skipped`
+              : `Imported ${normalized.length} character${normalized.length !== 1 ? 's' : ''}`,
+            droppedCount > 0 ? 'warning' : 'success'
+          );
+        } else {
+          toast(
+            droppedCount > 0
+              ? `Nothing imported — all ${droppedCount} ${droppedCount === 1 ? 'entry was' : 'entries were'} invalid.`
+              : 'Nothing imported — the file contains no characters.',
+            'error'
+          );
         }
-      };
-      reader.readAsText(file);
-    };
-    input.click();
+      } catch {
+        toast('Failed to import character. Please ensure the file is a valid export.', 'error');
+      }
+    });
   };
 
   // Keyboard shortcuts

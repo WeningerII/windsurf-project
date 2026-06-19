@@ -62,6 +62,7 @@ import { systemRegistry } from '../registry';
 import { loadDaggerheartAdversariesForSystem, loadMonstersForSystem } from '../utils/dataLoader';
 import { errorLogger, guardSync, ErrorCategory, ErrorSeverity } from '../utils/errorLogger';
 import { exportScenes, importScenesWithReport } from '../utils/sceneStorage';
+import { downloadTextFile, pickTextFile } from '../utils/fileTransfer';
 import { generateUUID } from '../utils/browserCompat';
 import { Button } from './ui/Button';
 import { Badge } from './ui/Badge';
@@ -1107,63 +1108,40 @@ export function SceneManager({
   };
 
   const handleImportScenes = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'application/json';
-    input.onchange = (event: Event) => {
-      const file = (event.target as HTMLInputElement).files?.[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = (loadEvent) => {
-        try {
-          const { scenes: imported, droppedCount } = importScenesWithReport(
-            String(loadEvent.target?.result ?? '')
-          );
-          const skipped =
+    pickTextFile((text) => {
+      try {
+        const { scenes: imported, droppedCount } = importScenesWithReport(text);
+        const skipped =
+          droppedCount > 0
+            ? ` — ${droppedCount} invalid ${droppedCount === 1 ? 'entry' : 'entries'} skipped`
+            : '';
+        // Valid JSON can still contain no usable scenes (every candidate
+        // structurally invalid). Say so instead of silently no-op'ing while
+        // clearing the message — which reads as a successful import.
+        if (imported.length === 0) {
+          setActionIssues([
             droppedCount > 0
-              ? ` — ${droppedCount} invalid ${droppedCount === 1 ? 'entry' : 'entries'} skipped`
-              : '';
-          // Valid JSON can still contain no usable scenes (every candidate
-          // structurally invalid). Say so instead of silently no-op'ing while
-          // clearing the message — which reads as a successful import.
-          if (imported.length === 0) {
-            setActionIssues([
-              droppedCount > 0
-                ? `No valid scenes were found in that file${skipped}.`
-                : 'No valid scenes were found in that file.',
-            ]);
-            return;
-          }
-          onAddScenes(imported);
-          setSelectedSceneId(imported[0]?.id ?? selectedSceneId);
-          // A partial import (some entries dropped) is surfaced, not silent.
-          setActionIssues(
-            droppedCount > 0
-              ? [
-                  `Imported ${imported.length} of ${imported.length + droppedCount} scenes${skipped}.`,
-                ]
-              : []
-          );
-        } catch (err) {
-          setActionIssues([err instanceof Error ? err.message : 'Failed to import scenes.']);
+              ? `No valid scenes were found in that file${skipped}.`
+              : 'No valid scenes were found in that file.',
+          ]);
+          return;
         }
-      };
-      reader.readAsText(file);
-    };
-    input.click();
+        onAddScenes(imported);
+        setSelectedSceneId(imported[0]?.id ?? selectedSceneId);
+        // A partial import (some entries dropped) is surfaced, not silent.
+        setActionIssues(
+          droppedCount > 0
+            ? [`Imported ${imported.length} of ${imported.length + droppedCount} scenes${skipped}.`]
+            : []
+        );
+      } catch (err) {
+        setActionIssues([err instanceof Error ? err.message : 'Failed to import scenes.']);
+      }
+    });
   };
 
   const handleExportScenes = (targetScenes: SceneDocument[], filename: string) => {
-    // Blob URLs avoid Chromium's ~2MB cap on data: anchors, which silently
-    // no-ops exactly when a large scene log most needs exporting.
-    const blob = new Blob([exportScenes(targetScenes)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    link.click();
-    URL.revokeObjectURL(url);
+    downloadTextFile(exportScenes(targetScenes), filename);
   };
 
   return (
