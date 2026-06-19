@@ -1,4 +1,4 @@
-import { Plus, Trash2 } from 'lucide-react';
+import { Dices, Plus, Trash2 } from 'lucide-react';
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
 import type { SceneAllegiance, SceneTokenKind } from '../../types/core/scene';
 import { Button } from '../ui/Button';
@@ -16,6 +16,12 @@ interface TokenPanelProps {
   /** Side a placed NPC fights on (only shown for the npc kind). */
   tokenAllegiance: SceneAllegiance;
   onTokenAllegianceChange: (value: SceneAllegiance) => void;
+  /** Creature statblocks an NPC can be backed by (the scene's loaded catalog). */
+  eligibleStatblocks: { id: string; name: string }[];
+  tokenStatblockId: string;
+  onSelectStatblock: (statblockId: string) => void;
+  /** Roll up a random NPC (name + a catalog statblock) and enter placement. */
+  onGenerateNpc: () => void;
   isPlacing: boolean;
   onTogglePlace: () => void;
   canDeleteToken: boolean;
@@ -41,6 +47,10 @@ export function TokenPanel({
   onTokenKindChange,
   tokenAllegiance,
   onTokenAllegianceChange,
+  eligibleStatblocks,
+  tokenStatblockId,
+  onSelectStatblock,
+  onGenerateNpc,
   isPlacing,
   onTogglePlace,
   canDeleteToken,
@@ -101,22 +111,51 @@ export function TokenPanel({
           </Select>
         </div>
         {tokenKind === 'npc' && (
-          <Select
-            aria-label="NPC side"
-            value={tokenAllegiance}
-            onChange={(event) => onTokenAllegianceChange(event.target.value as SceneAllegiance)}
-          >
-            <option value="hostile">Enemy (fights the party)</option>
-            <option value="party">Ally (fights with the party)</option>
-            <option value="neutral">Neutral (bystander)</option>
-          </Select>
+          <>
+            <Select
+              aria-label="NPC side"
+              value={tokenAllegiance}
+              onChange={(event) => onTokenAllegianceChange(event.target.value as SceneAllegiance)}
+            >
+              <option value="hostile">Enemy (fights the party)</option>
+              <option value="party">Ally (fights with the party)</option>
+              <option value="neutral">Neutral (bystander)</option>
+            </Select>
+            {/* Back the NPC with a creature statblock (mechanically real), or
+                roll one up. A linked sheet takes precedence over this. */}
+            {!tokenDocumentId && eligibleStatblocks.length > 0 && (
+              <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
+                <Select
+                  aria-label="NPC statblock"
+                  value={tokenStatblockId}
+                  onChange={(event) => onSelectStatblock(event.target.value)}
+                >
+                  <option value="">No statblock (manual)</option>
+                  {eligibleStatblocks.map((statblock) => (
+                    <option key={statblock.id} value={statblock.id}>
+                      {statblock.name}
+                    </option>
+                  ))}
+                </Select>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={onGenerateNpc}
+                  title="Roll up a random NPC (name + statblock)"
+                >
+                  <Dices className="mr-1.5 h-4 w-4" />
+                  Generate
+                </Button>
+              </div>
+            )}
+          </>
         )}
         <Button
           variant={isPlacing ? 'default' : 'outline'}
           size="sm"
           className="w-full"
           onClick={onTogglePlace}
-          disabled={!tokenName.trim() && !tokenDocumentId}
+          disabled={!tokenName.trim() && !tokenDocumentId && !tokenStatblockId}
         >
           <Plus className="mr-1.5 h-4 w-4" />
           Place Token

@@ -16,6 +16,10 @@ function renderPanel(overrides: Partial<React.ComponentProps<typeof TokenPanel>>
     onTokenKindChange: vi.fn(),
     tokenAllegiance: 'hostile',
     onTokenAllegianceChange: vi.fn(),
+    eligibleStatblocks: [],
+    tokenStatblockId: '',
+    onSelectStatblock: vi.fn(),
+    onGenerateNpc: vi.fn(),
     isPlacing: false,
     onTogglePlace: vi.fn(),
     canDeleteToken: false,
@@ -56,6 +60,36 @@ describe('TokenPanel', () => {
     expect((control as HTMLSelectElement).value).toBe('hostile');
     await user.selectOptions(control, 'party');
     expect(onSetSelectedTokenSide).toHaveBeenCalledWith('party');
+  });
+
+  it('offers an NPC statblock picker + Generate for the npc kind', async () => {
+    const user = userEvent.setup();
+    const onSelectStatblock = vi.fn();
+    const onGenerateNpc = vi.fn();
+    renderPanel({
+      tokenKind: 'npc',
+      eligibleStatblocks: [
+        { id: 'goblin', name: 'Goblin' },
+        { id: 'orc', name: 'Orc' },
+      ],
+      onSelectStatblock,
+      onGenerateNpc,
+    });
+
+    await user.selectOptions(screen.getByLabelText('NPC statblock'), 'goblin');
+    expect(onSelectStatblock).toHaveBeenCalledWith('goblin');
+
+    await user.click(screen.getByRole('button', { name: /Generate/i }));
+    expect(onGenerateNpc).toHaveBeenCalled();
+  });
+
+  it('hides the statblock picker when a sheet is linked', () => {
+    renderPanel({
+      tokenKind: 'npc',
+      tokenDocumentId: 'doc-1',
+      eligibleStatblocks: [{ id: 'goblin', name: 'Goblin' }],
+    });
+    expect(screen.queryByLabelText('NPC statblock')).not.toBeInTheDocument();
   });
 
   it('offers monster/object only for manual (unlinked) tokens', () => {

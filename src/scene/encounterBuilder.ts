@@ -528,7 +528,7 @@ function occupyCells(occupied: Set<string>, position: SceneCoordinate, size: num
   }
 }
 
-function getSceneTokenSize(size: Monster['size']): number {
+export function getSceneTokenSize(size: Monster['size']): number {
   switch (size) {
     case 'large':
       return 2;

@@ -3,10 +3,12 @@ import { Download, Map as MapIcon, MousePointer2, Plus, Trash2, Upload } from 'l
 import {
   MAX_MONSTERS_PER_SELECTION,
   buildEncounterSceneEvents,
+  getSceneTokenSize,
   summarizeEncounterParty,
   summarizeEncounterPlan,
   type EncounterMonsterSelection,
 } from '../scene/encounterBuilder';
+import { generateNpc } from '../scene/npcGenerator';
 import {
   draftEncounter,
   encounterPartyBudget,
@@ -28,12 +30,14 @@ import {
   buildSceneCombatants,
   factionForToken,
   isRoundConclusive,
+  monsterAverageHitPoints,
   NEUTRAL_FACTION,
   resolveSceneAttack,
   runSceneRound,
   type ResolveCombatStats,
 } from '../rules';
 import { resolveSceneCombatStats } from '../scene/combatStats';
+import { createSeededRng } from '../scene/seededRng';
 import type { Campaign } from '../types/core/campaign';
 import type { CharacterDocument, SystemDataModel } from '../types/core/document';
 import type { Monster } from '../types/creatures/monsters';
@@ -131,6 +135,8 @@ export function SceneManager({
   // The side a placed NPC fights on (only used when kind === 'npc'); enemies are
   // the common case for an encounter, allies/bystanders are opt-in.
   const [tokenAllegiance, setTokenAllegiance] = useState<SceneAllegiance>('hostile');
+  // A creature statblock backing an NPC (picked or generated); '' = none.
+  const [tokenStatblockId, setTokenStatblockId] = useState('');
   const [markerLabel, setMarkerLabel] = useState('');
   const [markerKind, setMarkerKind] = useState<SceneMarkerKind>('hazard');
   const [markerWidth, setMarkerWidth] = useState('1');
@@ -153,6 +159,8 @@ export function SceneManager({
   // Per-click nonce so a missed attack (which appends no event) still advances
   // the RNG stream — otherwise re-clicking Attack would reproduce the same miss.
   const attackNonce = useRef(0);
+  // Monotonic nonce so each "Generate NPC" yields a fresh (still seeded) result.
+  const npcGenNonce = useRef(0);
 
   useEffect(() => {
     if (selectedSceneId && scenes.some((scene) => scene.id === selectedSceneId)) return;
@@ -308,6 +316,11 @@ export function SceneManager({
       return sceneCampaign.characterIds.includes(doc.id);
     });
   }, [campaigns, documents, state]);
+  // Creature catalog as lightweight {id,name} options for the NPC statblock picker.
+  const eligibleStatblocks = useMemo(
+    () => encounterMonsters.map((monster) => ({ id: monster.id, name: monster.name })),
+    [encounterMonsters]
+  );
   const selectedEncounterMonster = useMemo(
     () => encounterMonsters.find((monster) => monster.id === encounterMonsterId),
     [encounterMonsterId, encounterMonsters]
@@ -632,7 +645,13 @@ export function SceneManager({
 
       if (placementMode === 'token') {
         const linkedDoc = documents.find((doc) => doc.id === tokenDocumentId);
-        const name = tokenName.trim() || linkedDoc?.name.trim();
+        // An NPC may instead be backed by a creature statblock (picked or
+        // generated) — mechanically real via the same statblocks monsters use.
+        const statblock =
+          !linkedDoc && tokenKind === 'npc' && tokenStatblockId
+            ? monstersById.get(tokenStatblockId)
+            : undefined;
+        const name = tokenName.trim() || linkedDoc?.name.trim() || statblock?.name.trim();
         if (!name) return;
 
         // A linked sheet can be placed as your character or as a (sheet-backed)
@@ -643,10 +662,20 @@ export function SceneManager({
             ? 'npc'
             : 'character'
           : tokenKind;
-        const built = linkedDoc
-          ? buildCharacterCombatant(linkedDoc, { tokenId: linkedDoc.id, position })
-          : undefined;
-        const hp = built && built.supported ? built.combatant.token.hp : undefined;
+
+        let hp: SceneToken['hp'];
+        let size = 1;
+        let refId: string | undefined;
+        if (linkedDoc) {
+          const built = buildCharacterCombatant(linkedDoc, { tokenId: linkedDoc.id, position });
+          hp = built.supported ? built.combatant.token.hp : undefined;
+          refId = linkedDoc.id;
+        } else if (statblock) {
+          const max = monsterAverageHitPoints(statblock);
+          hp = { current: max, max, temp: 0 };
+          size = getSceneTokenSize(statblock.size);
+          refId = statblock.id;
+        }
 
         const placed = emitSceneAction(selectedScene, {
           type: 'place-token',
@@ -655,8 +684,8 @@ export function SceneManager({
             name,
             kind,
             position,
-            size: 1,
-            refId: linkedDoc?.id,
+            size,
+            ...(refId ? { refId } : {}),
             ...(hp ? { hp } : {}),
             // The player drives their own characters; Run Round skips them so a
             // solo player keeps manual control of their party. NPCs are
@@ -670,6 +699,7 @@ export function SceneManager({
           setPlacementMode('none');
           setTokenName('');
           setTokenDocumentId('');
+          setTokenStatblockId('');
         }
         return;
       }
@@ -732,6 +762,8 @@ export function SceneManager({
       tokenName,
       tokenKind,
       tokenAllegiance,
+      tokenStatblockId,
+      monstersById,
       markerLabel,
       markerKind,
       markerWidth,
@@ -740,6 +772,24 @@ export function SceneManager({
       emitSceneAction,
     ]
   );
+
+  const handleGenerateNpc = useCallback(() => {
+    npcGenNonce.current += 1;
+    const seed = state?.seed ?? selectedScene?.id ?? 'npc';
+    const generated = generateNpc(
+      encounterMonsters,
+      createSeededRng(`${seed}:npc:${npcGenNonce.current}`)
+    );
+    if (!generated) {
+      setActionIssues(['No creatures are loaded for this system to generate an NPC from.']);
+      return;
+    }
+    setTokenDocumentId('');
+    setTokenKind('npc');
+    setTokenStatblockId(generated.monster.id);
+    setTokenName(generated.name);
+    setPlacementMode('token');
+  }, [encounterMonsters, selectedScene?.id, state?.seed]);
 
   const handleToggleSelectedTokenCondition = useCallback(
     (conditionId: string) => {
@@ -788,9 +838,19 @@ export function SceneManager({
     setTokenDocumentId(documentId);
     const doc = documents.find((entry) => entry.id === documentId);
     if (doc) {
+      setTokenStatblockId(''); // a sheet and a statblock are mutually exclusive backings
       setTokenName(doc.name);
       setTokenKind('character');
     }
+  };
+
+  const handleSelectStatblock = (statblockId: string) => {
+    setTokenStatblockId(statblockId);
+    if (!statblockId) return;
+    setTokenDocumentId(''); // mutually exclusive with a linked sheet
+    setTokenKind('npc');
+    const statblock = monstersById.get(statblockId);
+    if (statblock) setTokenName(statblock.name);
   };
 
   const handleDeleteSelectedToken = () => {
@@ -1300,6 +1360,10 @@ export function SceneManager({
                     onTokenKindChange={setTokenKind}
                     tokenAllegiance={tokenAllegiance}
                     onTokenAllegianceChange={setTokenAllegiance}
+                    eligibleStatblocks={eligibleStatblocks}
+                    tokenStatblockId={tokenStatblockId}
+                    onSelectStatblock={handleSelectStatblock}
+                    onGenerateNpc={handleGenerateNpc}
                     isPlacing={placementMode === 'token'}
                     onTogglePlace={() =>
                       setPlacementMode((current) => (current === 'token' ? 'none' : 'token'))

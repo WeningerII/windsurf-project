@@ -247,6 +247,26 @@ describe('SceneManager', () => {
     expect(screen.getByText('Round 2, active Astra')).toBeInTheDocument();
   });
 
+  it('places a mechanically-real NPC backed by a creature statblock', async () => {
+    const user = userEvent.setup();
+    render(<SceneHarness initialScenes={[makeScene()]} />);
+
+    // Wait for the creature catalog to load (drives the NPC statblock picker).
+    await waitFor(() => {
+      expect(screen.getByRole('combobox', { name: /encounter monster/i })).toHaveValue('goblin');
+    });
+
+    await user.selectOptions(screen.getByRole('combobox', { name: /token kind/i }), 'npc');
+    await user.selectOptions(screen.getByRole('combobox', { name: /npc statblock/i }), 'goblin');
+    await user.click(screen.getByRole('button', { name: /place token/i }));
+    await user.click(screen.getByRole('gridcell', { name: /Cell 2, 2/i }));
+
+    // Hostile by default and carrying statblock HP — a real combatant, not set dressing.
+    expect(
+      screen.getByRole('button', { name: /Token Goblin, enemy, \d+ of \d+ HP/i })
+    ).toBeInTheDocument();
+  });
+
   it('places and removes terrain or hazard markers as scene events', async () => {
     const user = userEvent.setup();
     render(<SceneHarness initialScenes={[makeScene()]} />);
