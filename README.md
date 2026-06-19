@@ -6,7 +6,7 @@ Multi-system RPG character sheet using **only open-license SRD content** across 
 
 Today this is a deterministic, multi-system character-sheet and scene toolkit — everything under **Project Status** below actually ships. The longer arc is to make tabletop creation and play feel frictionless by layering AI-assisted drafting and orchestration **on top of** that deterministic core: describe a character, encounter, or scene in plain language and get a validated, rules-legal draft you apply through the same paths a manual user would.
 
-**None of the AI layer ships yet.** The deterministic engine is the authority; AI is planned strictly as a draft/orchestration surface that never decides rules legality, and the product must always work with no provider keys configured. The thesis behind this direction is in [docs/VISION.md](docs/VISION.md); the phased roadmap is in [docs/MASTER_PLAN.md](docs/MASTER_PLAN.md).
+**The AI layer has begun shipping, default-off.** A provider-agnostic AI control plane (RFC 002) is live with four task surfaces — encounter drafting, session-recap narration, image-based creature identification, and scene illustration. It is build-time gated behind `VITE_AI_ENABLED` (off by default), the provider key lives only in a server-side Netlify function (never the browser bundle), and the deterministic engine remains the authority: the model proposes and deterministic validators decide, with the app fully usable when no key is configured. The thesis is in [docs/VISION.md](docs/VISION.md); the phased roadmap is in [docs/MASTER_PLAN.md](docs/MASTER_PLAN.md).
 
 ## 🎯 Project Status
 
@@ -18,6 +18,7 @@ Today this is a deterministic, multi-system character-sheet and scene toolkit �
 - ✅ **Mutants & Masterminds 3e**: native point-buy sheet with browseable SRD reference surfaces
 - ✅ **Daggerheart**: SRD-backed support with selectors, templates, equipment, domains, domain-card loadouts, and deterministic passive automation; triggered/narrative card resolution is GM-adjudicated by design
 - ✅ **Manual scenes**: local scene/grid manager with event-backed tokens, queued loader-backed D&D 5e encounter seeding, party-level XP preview, terrain or hazard markers, initiative controls, and scene import/export
+- ✅ **AI control plane (default-off, RFC 002)**: provider-agnostic gateway with four task surfaces — encounter drafting, recap narration, image-based creature identification, and scene illustration — gated behind `VITE_AI_ENABLED`, with the provider key held server-side only and deterministic validators deciding what applies
 - ✅ **Open-content policy**: strict source-filtered SRD/core-only shipping
 
 ## 🚀 Quick Start
@@ -315,7 +316,7 @@ Validates:
 - **docs/VISION.md** - Project thesis and long-horizon direction (the *why*)
 - **docs/MASTER_PLAN.md** - Canonical roadmap and planning authority
 - **docs/STATUS.md** - Current-state summary and verified test baseline
-- **docs/rfc/** - Design RFCs: 001 backend sync (accepted), 002 AI control plane (withdrawn), 003 rules IR & effects (accepted)
+- **docs/rfc/** - Design RFCs: 001 backend sync (accepted), 002 AI control plane (active — foundation + four task surfaces shipped), 003 rules IR & effects (accepted)
 - **docs/generated/roadmap-metrics.md** - Generated product-reachable counts plus raw-export audit
 - **docs/EVIDENCE_LINKED_PARITY_AUDIT.md** - Historical March 2026 audit snapshot
 - **docs/EVIDENCE_LINKED_PARITY_REMEDIATION_PLAN.md** - Historical remediation sequencing record
