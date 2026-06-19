@@ -128,6 +128,35 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
+/**
+ * Validate a loader-derived candidate list (shared by the encounter-draft and
+ * identify-creature payloads). The model picks ids from this pool, so each entry
+ * needs at least an id and name; challengeRating is carried through when present.
+ */
+function parseCandidateList(raw: unknown): AiParse<EncounterDraftCandidate[]> {
+  if (!Array.isArray(raw) || raw.length === 0) {
+    return { ok: false, message: 'A non-empty candidate list is required.' };
+  }
+  const candidates: EncounterDraftCandidate[] = [];
+  for (const candidate of raw) {
+    if (
+      !isRecord(candidate) ||
+      typeof candidate.id !== 'string' ||
+      typeof candidate.name !== 'string'
+    ) {
+      return { ok: false, message: 'Each candidate needs a string id and name.' };
+    }
+    candidates.push({
+      id: candidate.id,
+      name: candidate.name,
+      ...(typeof candidate.challengeRating === 'number'
+        ? { challengeRating: candidate.challengeRating }
+        : {}),
+    });
+  }
+  return { ok: true, value: candidates };
+}
+
 /** Validate a raw gateway request envelope and its per-task payload. */
 export function parseAiRequest(raw: unknown): AiParse<AiRequest> {
   if (!isRecord(raw)) return { ok: false, message: 'Request must be an object.' };
@@ -178,26 +207,8 @@ function parseEncounterDraftPayload(raw: unknown): AiParse<EncounterDraftPayload
   if (!Array.isArray(raw.partyLevels) || !raw.partyLevels.every((n) => Number.isFinite(n))) {
     return { ok: false, message: 'Encounter-draft payload needs numeric partyLevels.' };
   }
-  if (!Array.isArray(raw.candidates) || raw.candidates.length === 0) {
-    return { ok: false, message: 'Encounter-draft payload needs a non-empty candidate list.' };
-  }
-  const candidates: EncounterDraftCandidate[] = [];
-  for (const candidate of raw.candidates) {
-    if (
-      !isRecord(candidate) ||
-      typeof candidate.id !== 'string' ||
-      typeof candidate.name !== 'string'
-    ) {
-      return { ok: false, message: 'Each candidate needs a string id and name.' };
-    }
-    candidates.push({
-      id: candidate.id,
-      name: candidate.name,
-      ...(typeof candidate.challengeRating === 'number'
-        ? { challengeRating: candidate.challengeRating }
-        : {}),
-    });
-  }
+  const candidates = parseCandidateList(raw.candidates);
+  if (!candidates.ok) return candidates;
   return {
     ok: true,
     value: {
@@ -205,7 +216,7 @@ function parseEncounterDraftPayload(raw: unknown): AiParse<EncounterDraftPayload
       prompt: raw.prompt,
       difficulty: raw.difficulty,
       partyLevels: raw.partyLevels as number[],
-      candidates,
+      candidates: candidates.value,
       ...(Array.isArray(raw.repairIssues)
         ? { repairIssues: raw.repairIssues.filter((s): s is string => typeof s === 'string') }
         : {}),
@@ -358,33 +369,15 @@ function parseIdentifyCreaturePayload(raw: unknown): AiParse<IdentifyCreaturePay
   if (typeof raw.systemId !== 'string' || !raw.systemId) {
     return { ok: false, message: 'Identify-creature payload needs a systemId.' };
   }
-  if (!Array.isArray(raw.candidates) || raw.candidates.length === 0) {
-    return { ok: false, message: 'Identify-creature payload needs a non-empty candidate list.' };
-  }
-  const candidates: EncounterDraftCandidate[] = [];
-  for (const candidate of raw.candidates) {
-    if (
-      !isRecord(candidate) ||
-      typeof candidate.id !== 'string' ||
-      typeof candidate.name !== 'string'
-    ) {
-      return { ok: false, message: 'Each candidate needs a string id and name.' };
-    }
-    candidates.push({
-      id: candidate.id,
-      name: candidate.name,
-      ...(typeof candidate.challengeRating === 'number'
-        ? { challengeRating: candidate.challengeRating }
-        : {}),
-    });
-  }
+  const candidates = parseCandidateList(raw.candidates);
+  if (!candidates.ok) return candidates;
   const image = parseAiImageInput(raw.image);
   if (!image.ok) return image;
   return {
     ok: true,
     value: {
       systemId: raw.systemId,
-      candidates,
+      candidates: candidates.value,
       image: image.value,
       ...(typeof raw.hint === 'string' && raw.hint ? { hint: raw.hint } : {}),
     },

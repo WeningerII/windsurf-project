@@ -7,11 +7,22 @@
  */
 import type {
   AiTask,
+  EncounterDraftCandidate,
   EncounterDraftPayload,
   IdentifyCreaturePayload,
   IllustrateScenePayload,
   SceneNarrationPayload,
 } from './contracts';
+
+/** Compact one-per-line roster of candidate ids the model must choose among. */
+function formatCandidateRoster(candidates: EncounterDraftCandidate[]): string {
+  return candidates
+    .map((candidate) => {
+      const cr = candidate.challengeRating !== undefined ? `, CR ${candidate.challengeRating}` : '';
+      return `- ${candidate.id} (${candidate.name}${cr})`;
+    })
+    .join('\n');
+}
 
 export function buildPromptForTask(task: AiTask, payload: unknown): string {
   switch (task) {
@@ -29,12 +40,7 @@ export function buildPromptForTask(task: AiTask, payload: unknown): string {
 }
 
 export function buildEncounterDraftPrompt(payload: EncounterDraftPayload): string {
-  const roster = payload.candidates
-    .map((candidate) => {
-      const cr = candidate.challengeRating !== undefined ? `, CR ${candidate.challengeRating}` : '';
-      return `- ${candidate.id} (${candidate.name}${cr})`;
-    })
-    .join('\n');
+  const roster = formatCandidateRoster(payload.candidates);
   const party = payload.partyLevels.length
     ? `a party of ${payload.partyLevels.length} at level(s) ${payload.partyLevels.join(', ')}`
     : 'an unspecified party';
@@ -58,12 +64,7 @@ export function buildEncounterDraftPrompt(payload: EncounterDraftPayload): strin
 }
 
 export function buildIdentifyCreaturePrompt(payload: IdentifyCreaturePayload): string {
-  const roster = payload.candidates
-    .map((candidate) => {
-      const cr = candidate.challengeRating !== undefined ? `, CR ${candidate.challengeRating}` : '';
-      return `- ${candidate.id} (${candidate.name}${cr})`;
-    })
-    .join('\n');
+  const roster = formatCandidateRoster(payload.candidates);
   const hint = payload.hint ? `\n\nHint from the user: ${payload.hint}` : '';
   return [
     `Look at the attached image and decide which of the following creatures it best depicts.`,
