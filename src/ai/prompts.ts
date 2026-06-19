@@ -9,6 +9,7 @@ import type {
   AiTask,
   EncounterDraftPayload,
   IdentifyCreaturePayload,
+  IllustrateScenePayload,
   SceneNarrationPayload,
 } from './contracts';
 
@@ -20,6 +21,8 @@ export function buildPromptForTask(task: AiTask, payload: unknown): string {
       return buildSceneNarrationPrompt(payload as SceneNarrationPayload);
     case 'identify-creature':
       return buildIdentifyCreaturePrompt(payload as IdentifyCreaturePayload);
+    case 'illustrate-scene':
+      return buildIllustrateScenePrompt(payload as IllustrateScenePayload);
     default:
       throw new Error(`No prompt builder for task '${task}'.`);
   }
@@ -72,6 +75,13 @@ export function buildIdentifyCreaturePrompt(payload: IdentifyCreaturePayload): s
     ``,
     `Return the chosen monsterId (one of the ids above), a confidence from 0 to 1, and a brief reason.${hint}`,
   ].join('\n');
+}
+
+export function buildIllustrateScenePrompt(payload: IllustrateScenePayload): string {
+  const style = payload.style ? `, ${payload.style} style` : '';
+  // Image models take a single descriptive line; keep it focused and add a
+  // genre anchor so results read as tabletop RPG art.
+  return `${payload.prompt.trim()}${style}. Fantasy tabletop RPG illustration, high detail, no text or watermarks.`;
 }
 
 export function buildSceneNarrationPrompt(payload: SceneNarrationPayload): string {

@@ -20,6 +20,7 @@ import { validateEncounterSpec } from '../scene/encounterSpec';
 import { draftEncounterWithAi } from '../ai/encounterDraftFlow';
 import { narrateSceneWithAi } from '../ai/sceneNarrationFlow';
 import { identifyCreatureWithAi } from '../ai/identifyCreatureFlow';
+import { illustrateSceneWithAi } from '../ai/illustrateSceneFlow';
 import { fileToAiImageInput } from '../ai/imageInput';
 import { isAiEnabled } from '../ai/gatewayClient';
 import {
@@ -78,6 +79,7 @@ import { OraclePanel } from './scene/OraclePanel';
 import { ReactionPanel } from './scene/ReactionPanel';
 import { DicePanel } from './scene/DicePanel';
 import { RecapPanel } from './scene/RecapPanel';
+import { IllustrationPanel } from './scene/IllustrationPanel';
 
 type PlacementMode = 'none' | 'token' | 'marker' | 'adversary';
 
@@ -1617,6 +1619,11 @@ export function SceneManager({
                   <ReactionPanel seed={state.seed} />
 
                   <DicePanel seed={state.seed} />
+
+                  {/* Image-output surface: a creative aid, not scene state. */}
+                  {aiEnabled && (
+                    <IllustrationPanel illustrate={(params) => illustrateSceneWithAi(params)} />
+                  )}
 
                   {onLogToCampaign && linkedCampaign && (
                     <RecapPanel

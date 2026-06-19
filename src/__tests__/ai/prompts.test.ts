@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildEncounterDraftPrompt,
   buildIdentifyCreaturePrompt,
+  buildIllustrateScenePrompt,
   buildPromptForTask,
   buildSceneNarrationPrompt,
 } from '../../ai/prompts';
@@ -80,9 +81,23 @@ describe('buildIdentifyCreaturePrompt', () => {
   });
 });
 
+describe('buildIllustrateScenePrompt', () => {
+  it('includes the prompt and a genre anchor; folds in the style when given', () => {
+    const plain = buildIllustrateScenePrompt({ prompt: 'a torchlit crypt' });
+    expect(plain).toContain('a torchlit crypt');
+    expect(plain).toMatch(/tabletop RPG illustration/i);
+    expect(plain).not.toMatch(/style/i);
+    expect(buildIllustrateScenePrompt({ prompt: 'a crypt', style: 'ink' })).toMatch(/ink style/i);
+  });
+});
+
 describe('buildPromptForTask', () => {
   it('dispatches encounter-draft', () => {
     expect(buildPromptForTask('encounter-draft', payload)).toContain('combat encounter');
+  });
+
+  it('dispatches illustrate-scene', () => {
+    expect(buildPromptForTask('illustrate-scene', { prompt: 'a dragon' })).toContain('a dragon');
   });
 
   it('dispatches scene-narration', () => {

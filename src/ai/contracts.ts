@@ -18,6 +18,7 @@ export const AI_GATEWAY_TASKS = [
   'encounter-draft',
   'scene-narration',
   'identify-creature',
+  'illustrate-scene',
 ] as const;
 export type AiTask = (typeof AI_GATEWAY_TASKS)[number];
 
@@ -156,6 +157,8 @@ function parseTaskPayload(task: AiTask, payload: unknown): AiParse<unknown> {
       return parseSceneNarrationPayload(payload);
     case 'identify-creature':
       return parseIdentifyCreaturePayload(payload);
+    case 'illustrate-scene':
+      return parseIllustrateScenePayload(payload);
     default:
       return { ok: false, message: `No validator for task '${task}'.` };
   }
@@ -219,6 +222,8 @@ export function parseTaskData(task: AiTask, raw: unknown): AiParse<unknown> {
       return parseSceneNarrationData(raw);
     case 'identify-creature':
       return parseIdentifyCreatureData(raw);
+    case 'illustrate-scene':
+      return parseGeneratedImageData(raw);
     default:
       return { ok: false, message: `No output validator for task '${task}'.` };
   }
@@ -397,4 +402,48 @@ function parseIdentifyCreatureData(raw: unknown): AiParse<IdentifyCreatureData> 
       ...(typeof raw.reason === 'string' && raw.reason ? { reason: raw.reason } : {}),
     },
   };
+}
+
+// --- Task: illustrate-scene (image generation) -----------------------------
+
+/** Largest free-text prompt accepted for an image (keeps requests bounded). */
+export const MAX_ILLUSTRATION_PROMPT_LENGTH = 1_000;
+
+export interface IllustrateScenePayload {
+  /** Free-text description of the desired illustration. */
+  prompt: string;
+  /** Optional art-style hint (e.g. 'painterly', 'ink', 'photoreal'). */
+  style?: string;
+}
+
+/**
+ * A generated image, carried as a base64 data URL. Structurally identical to an
+ * {@link AiImageInput} (same envelope, opposite direction) and validated by the
+ * same checks — unlike the text tasks, the deterministic layer here can only
+ * vouch for the envelope (a real, bounded image); a human judges the content.
+ */
+export type GeneratedImageData = AiImageInput;
+
+export type IllustrateSceneRequest = AiRequest<'illustrate-scene', IllustrateScenePayload>;
+
+function parseIllustrateScenePayload(raw: unknown): AiParse<IllustrateScenePayload> {
+  if (!isRecord(raw)) return { ok: false, message: 'Illustrate-scene payload must be an object.' };
+  if (typeof raw.prompt !== 'string' || !raw.prompt.trim()) {
+    return { ok: false, message: 'Illustrate-scene payload needs a non-empty prompt.' };
+  }
+  if (raw.prompt.length > MAX_ILLUSTRATION_PROMPT_LENGTH) {
+    return { ok: false, message: 'Illustration prompt is too long.' };
+  }
+  return {
+    ok: true,
+    value: {
+      prompt: raw.prompt,
+      ...(typeof raw.style === 'string' && raw.style ? { style: raw.style } : {}),
+    },
+  };
+}
+
+/** The model's image output uses the same envelope (and validation) as input. */
+function parseGeneratedImageData(raw: unknown): AiParse<GeneratedImageData> {
+  return parseAiImageInput(raw);
 }

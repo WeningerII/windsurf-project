@@ -142,11 +142,42 @@ describe('identify-creature request/output', () => {
   });
 });
 
+describe('illustrate-scene request/output', () => {
+  it('accepts a prompt (with optional style) and rejects an empty one', () => {
+    const ok = parseAiRequest({
+      schemaVersion: AI_GATEWAY_SCHEMA_VERSION,
+      task: 'illustrate-scene',
+      payload: { prompt: 'a torchlit crypt', style: 'painterly' },
+    });
+    expect(ok.ok).toBe(true);
+
+    const empty = parseAiRequest({
+      schemaVersion: AI_GATEWAY_SCHEMA_VERSION,
+      task: 'illustrate-scene',
+      payload: { prompt: '   ' },
+    });
+    expect(empty).toMatchObject({ ok: false });
+  });
+
+  it('validates the generated-image envelope', () => {
+    expect(
+      parseTaskData('illustrate-scene', {
+        dataUrl: 'data:image/png;base64,AAAA',
+        mediaType: 'image/png',
+      }).ok
+    ).toBe(true);
+    expect(
+      parseTaskData('illustrate-scene', { dataUrl: 'not-an-image', mediaType: 'image/png' }).ok
+    ).toBe(false);
+  });
+});
+
 describe('isAiTask / isAiResponse', () => {
   it('recognizes the task allowlist', () => {
     expect(isAiTask('encounter-draft')).toBe(true);
     expect(isAiTask('scene-narration')).toBe(true);
     expect(isAiTask('identify-creature')).toBe(true);
+    expect(isAiTask('illustrate-scene')).toBe(true);
     expect(isAiTask('something-else')).toBe(false);
   });
 

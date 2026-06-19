@@ -9,14 +9,15 @@
  * Swapping providers later means adding a sibling adapter, not touching the
  * gateway, contracts, or client.
  */
-import { generateObject } from 'ai';
+import { experimental_generateImage as generateImage, generateObject } from 'ai';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { z } from 'zod';
 import type { AiTask } from '../../src/ai/contracts';
 import type { AiProviderAdapter } from '../../src/ai/gatewayCore';
 import { buildPromptForTask } from '../../src/ai/prompts';
 
-const TASK_SCHEMAS: Record<AiTask, z.ZodTypeAny> = {
+/** Structured-text tasks: the model output is constrained to a per-task schema. */
+const TASK_SCHEMAS: Partial<Record<AiTask, z.ZodTypeAny>> = {
   'encounter-draft': z.object({
     selections: z
       .array(z.object({ monsterId: z.string(), count: z.number().int().positive() }))
@@ -33,7 +34,11 @@ const TASK_SCHEMAS: Record<AiTask, z.ZodTypeAny> = {
   }),
 };
 
+/** Image-output tasks route to the image model instead of `generateObject`. */
+const IMAGE_TASKS = new Set<AiTask>(['illustrate-scene']);
+
 const DEFAULT_MODEL = 'gemini-2.0-flash';
+const DEFAULT_IMAGE_MODEL = 'imagen-4.0-fast-generate-001';
 
 /**
  * Pull a base64 image data URL out of a task payload, if it carries one. Vision
@@ -54,16 +59,27 @@ function imageDataUrlFromPayload(payload: unknown): string | undefined {
 /** Build a Gemini-backed adapter from an explicit key (no ambient env read). */
 export function createGeminiAdapter(
   apiKey: string,
-  modelId: string = DEFAULT_MODEL
+  modelId: string = DEFAULT_MODEL,
+  imageModelId: string = DEFAULT_IMAGE_MODEL
 ): AiProviderAdapter {
   const google = createGoogleGenerativeAI({ apiKey });
   return {
     id: 'google',
     model: modelId,
     async generate(task: AiTask, payload: unknown): Promise<unknown> {
+      const prompt = buildPromptForTask(task, payload);
+
+      // Image-output tasks go to the image model and return a data URL.
+      if (IMAGE_TASKS.has(task)) {
+        const { image } = await generateImage({ model: google.image(imageModelId), prompt });
+        return {
+          dataUrl: `data:${image.mediaType};base64,${image.base64}`,
+          mediaType: image.mediaType,
+        };
+      }
+
       const schema = TASK_SCHEMAS[task];
       if (!schema) throw new Error(`No provider schema for task '${task}'.`);
-      const prompt = buildPromptForTask(task, payload);
       const imageDataUrl = imageDataUrlFromPayload(payload);
       // Vision tasks send the prompt plus the image as a multimodal user
       // message; text-only tasks send the prompt string directly.

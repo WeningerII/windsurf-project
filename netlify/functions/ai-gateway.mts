@@ -11,7 +11,10 @@ import { createGeminiAdapter } from './geminiAdapter.mts';
 export default async (req: Request): Promise<Response> => {
   const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY ?? process.env.GEMINI_API_KEY;
   const model = process.env.AI_GATEWAY_MODEL;
-  const adapter = apiKey ? createGeminiAdapter(apiKey, model || undefined) : undefined;
+  const imageModel = process.env.AI_IMAGE_MODEL;
+  const adapter = apiKey
+    ? createGeminiAdapter(apiKey, model || undefined, imageModel || undefined)
+    : undefined;
 
   const rawBody = req.method.toUpperCase() === 'POST' ? await req.text() : '';
   const { status, body } = await processGatewayHttp(req.method, rawBody, { adapter });
