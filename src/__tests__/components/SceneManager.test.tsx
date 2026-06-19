@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { useState } from 'react';
@@ -419,6 +419,74 @@ describe('SceneManager', () => {
     });
     // Nothing was placed; the manual tools remain fully usable.
     expect(screen.queryByRole('button', { name: /Token Goblin 1/i })).not.toBeInTheDocument();
+  });
+
+  it('hides the identify-from-image affordance when AI is disabled', async () => {
+    render(<SceneHarness initialScenes={[makeScene()]} />);
+    await waitFor(() => {
+      expect(screen.getByRole('combobox', { name: /encounter monster/i })).toHaveValue('goblin');
+    });
+    expect(screen.queryByRole('button', { name: /identify from image/i })).not.toBeInTheDocument();
+  });
+
+  it('identifies a creature from an uploaded image and selects its statblock', async () => {
+    vi.stubEnv('VITE_AI_ENABLED', 'true');
+    // The vision model "recognizes" the ogre; the flow then confirms the id is
+    // in the loaded catalog before the panel selects it.
+    const fetchSpy = vi.fn(async () => ({
+      json: async () => ({
+        ok: true,
+        task: 'identify-creature',
+        data: { monsterId: 'ogre', confidence: 0.82, reason: 'a hulking brute' },
+        usage: { source: 'fixture' },
+      }),
+    }));
+    vi.stubGlobal('fetch', fetchSpy as unknown as typeof fetch);
+
+    const user = userEvent.setup();
+    render(<SceneHarness initialScenes={[makeScene()]} />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('combobox', { name: /encounter monster/i })).toHaveValue('goblin');
+    });
+
+    const file = new File([new Uint8Array([1, 2, 3, 4])], 'ogre.png', { type: 'image/png' });
+    await user.upload(screen.getByLabelText(/creature image to identify/i), file);
+
+    // The identified creature is selected for review (not placed automatically).
+    await waitFor(() => {
+      expect(screen.getByRole('combobox', { name: /encounter monster/i })).toHaveValue('ogre');
+    });
+    expect(screen.getByText(/Identified Ogre \(82% sure\)/i)).toBeInTheDocument();
+    expect(fetchSpy).toHaveBeenCalledWith(
+      '/.netlify/functions/ai-gateway',
+      expect.objectContaining({ method: 'POST' })
+    );
+  });
+
+  it('reports an unreadable / non-image upload without selecting anything', async () => {
+    vi.stubEnv('VITE_AI_ENABLED', 'true');
+    const fetchSpy = vi.fn();
+    vi.stubGlobal('fetch', fetchSpy as unknown as typeof fetch);
+
+    render(<SceneHarness initialScenes={[makeScene()]} />);
+    await waitFor(() => {
+      expect(screen.getByRole('combobox', { name: /encounter monster/i })).toHaveValue('goblin');
+    });
+
+    const notImage = new File(['plain text'], 'notes.txt', { type: 'text/plain' });
+    // fireEvent bypasses the input's accept filter so the handler's own guard
+    // (not the browser's) is what we exercise here.
+    fireEvent.change(screen.getByLabelText(/creature image to identify/i), {
+      target: { files: [notImage] },
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText(/choose an image file/i)).toBeInTheDocument();
+    });
+    // Rejected before any network call; selection unchanged.
+    expect(fetchSpy).not.toHaveBeenCalled();
+    expect(screen.getByRole('combobox', { name: /encounter monster/i })).toHaveValue('goblin');
   });
 
   it('REGRESSION (05-H1/02-H1): each Attack click derives a fresh seed even when no event lands', async () => {

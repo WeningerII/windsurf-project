@@ -105,10 +105,48 @@ describe('scene-narration request/output', () => {
   });
 });
 
+describe('identify-creature request/output', () => {
+  const image = { dataUrl: 'data:image/png;base64,AAAA', mediaType: 'image/png' };
+
+  it('accepts a well-formed identify request', () => {
+    const result = parseAiRequest({
+      schemaVersion: AI_GATEWAY_SCHEMA_VERSION,
+      task: 'identify-creature',
+      payload: { systemId: 'dnd-5e-2024', candidates: [{ id: 'goblin', name: 'Goblin' }], image },
+    });
+    expect(result.ok).toBe(true);
+  });
+
+  it('rejects a non-image data URL', () => {
+    const result = parseAiRequest({
+      schemaVersion: AI_GATEWAY_SCHEMA_VERSION,
+      task: 'identify-creature',
+      payload: {
+        systemId: 'dnd-5e-2024',
+        candidates: [{ id: 'goblin', name: 'Goblin' }],
+        image: { dataUrl: 'data:text/plain;base64,AAAA', mediaType: 'text/plain' },
+      },
+    });
+    expect(result).toMatchObject({ ok: false });
+  });
+
+  it('clamps confidence into 0..1 and requires a monsterId', () => {
+    const high = parseTaskData('identify-creature', { monsterId: 'goblin', confidence: 5 });
+    expect(high.ok).toBe(true);
+    if (high.ok) expect((high.value as { confidence: number }).confidence).toBe(1);
+
+    const low = parseTaskData('identify-creature', { monsterId: 'goblin', confidence: -2 });
+    if (low.ok) expect((low.value as { confidence: number }).confidence).toBe(0);
+
+    expect(parseTaskData('identify-creature', { confidence: 0.5 }).ok).toBe(false);
+  });
+});
+
 describe('isAiTask / isAiResponse', () => {
   it('recognizes the task allowlist', () => {
     expect(isAiTask('encounter-draft')).toBe(true);
     expect(isAiTask('scene-narration')).toBe(true);
+    expect(isAiTask('identify-creature')).toBe(true);
     expect(isAiTask('something-else')).toBe(false);
   });
 

@@ -5,7 +5,12 @@
  * user's request — never large raw rules text, and instructs the model to pick
  * from the supplied ids rather than invent names.
  */
-import type { AiTask, EncounterDraftPayload, SceneNarrationPayload } from './contracts';
+import type {
+  AiTask,
+  EncounterDraftPayload,
+  IdentifyCreaturePayload,
+  SceneNarrationPayload,
+} from './contracts';
 
 export function buildPromptForTask(task: AiTask, payload: unknown): string {
   switch (task) {
@@ -13,6 +18,8 @@ export function buildPromptForTask(task: AiTask, payload: unknown): string {
       return buildEncounterDraftPrompt(payload as EncounterDraftPayload);
     case 'scene-narration':
       return buildSceneNarrationPrompt(payload as SceneNarrationPayload);
+    case 'identify-creature':
+      return buildIdentifyCreaturePrompt(payload as IdentifyCreaturePayload);
     default:
       throw new Error(`No prompt builder for task '${task}'.`);
   }
@@ -44,6 +51,26 @@ export function buildEncounterDraftPrompt(payload: EncounterDraftPayload): strin
     roster,
     ``,
     `Return the chosen creatures and how many of each. Every monsterId MUST be one of the ids above; do not invent creatures.${repair}`,
+  ].join('\n');
+}
+
+export function buildIdentifyCreaturePrompt(payload: IdentifyCreaturePayload): string {
+  const roster = payload.candidates
+    .map((candidate) => {
+      const cr = candidate.challengeRating !== undefined ? `, CR ${candidate.challengeRating}` : '';
+      return `- ${candidate.id} (${candidate.name}${cr})`;
+    })
+    .join('\n');
+  const hint = payload.hint ? `\n\nHint from the user: ${payload.hint}` : '';
+  return [
+    `Look at the attached image and decide which of the following creatures it best depicts.`,
+    `Choose exactly one, using the exact id shown. If none is a good match, pick the closest`,
+    `and report low confidence (0 to 1).`,
+    ``,
+    `Creatures:`,
+    roster,
+    ``,
+    `Return the chosen monsterId (one of the ids above), a confidence from 0 to 1, and a brief reason.${hint}`,
   ].join('\n');
 }
 

@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
   buildEncounterDraftPrompt,
+  buildIdentifyCreaturePrompt,
   buildPromptForTask,
   buildSceneNarrationPrompt,
 } from '../../ai/prompts';
-import type { EncounterDraftPayload } from '../../ai/contracts';
+import type { EncounterDraftPayload, IdentifyCreaturePayload } from '../../ai/contracts';
 
 const payload: EncounterDraftPayload = {
   systemId: 'dnd-5e-2024',
@@ -53,6 +54,32 @@ describe('buildSceneNarrationPrompt', () => {
   });
 });
 
+describe('buildIdentifyCreaturePrompt', () => {
+  const visionPayload: IdentifyCreaturePayload = {
+    systemId: 'dnd-5e-2024',
+    candidates: [
+      { id: 'goblin', name: 'Goblin', challengeRating: 0.25 },
+      { id: 'ogre', name: 'Ogre' },
+    ],
+    image: { dataUrl: 'data:image/png;base64,AAAA', mediaType: 'image/png' },
+  };
+
+  it('references the attached image, the candidate ids, and confidence', () => {
+    const prompt = buildIdentifyCreaturePrompt(visionPayload);
+    expect(prompt).toMatch(/attached image/i);
+    expect(prompt).toContain('goblin (Goblin, CR 0.25)');
+    expect(prompt).toContain('ogre (Ogre)');
+    expect(prompt).toMatch(/confidence/i);
+  });
+
+  it('includes the hint only when supplied', () => {
+    expect(buildIdentifyCreaturePrompt(visionPayload)).not.toMatch(/hint from the user/i);
+    expect(buildIdentifyCreaturePrompt({ ...visionPayload, hint: 'the green one' })).toMatch(
+      /the green one/
+    );
+  });
+});
+
 describe('buildPromptForTask', () => {
   it('dispatches encounter-draft', () => {
     expect(buildPromptForTask('encounter-draft', payload)).toContain('combat encounter');
@@ -62,5 +89,15 @@ describe('buildPromptForTask', () => {
     expect(buildPromptForTask('scene-narration', { facts: 'The ogre fell.' })).toContain(
       'The ogre fell.'
     );
+  });
+
+  it('dispatches identify-creature', () => {
+    expect(
+      buildPromptForTask('identify-creature', {
+        systemId: 'dnd-5e-2024',
+        candidates: [{ id: 'goblin', name: 'Goblin' }],
+        image: { dataUrl: 'data:image/png;base64,AAAA', mediaType: 'image/png' },
+      })
+    ).toMatch(/attached image/i);
   });
 });

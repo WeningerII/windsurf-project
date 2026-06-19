@@ -1,4 +1,5 @@
-import { Minus, Plus, Skull, Sparkles, Trash2, Wand2 } from 'lucide-react';
+import { useRef } from 'react';
+import { Image as ImageIcon, Minus, Plus, Skull, Sparkles, Trash2, Wand2 } from 'lucide-react';
 import type { EncounterPartySummary, EncounterPlanSummary } from '../../scene/encounterBuilder';
 import type { EncounterDifficulty } from '../../scene/encounterDraft';
 import type { EncounterSpecValidation } from '../../scene/encounterSpec';
@@ -44,6 +45,15 @@ interface EncounterPanelProps {
   onAiPromptChange?: (value: string) => void;
   /** True while a draft request is in flight (disables the controls). */
   aiDrafting?: boolean;
+  /**
+   * AI creature identification from an image (vision). Omit to hide. On success
+   * the parent selects the identified monster below for review.
+   */
+  onIdentifyImage?: (file: File) => void;
+  /** True while an identify request is in flight. */
+  identifying?: boolean;
+  /** A friendly one-line result of the last identification (or null). */
+  identifyNotice?: string | null;
   /** Difficulty driving both the draft and the live budget readout. */
   difficulty: EncounterDifficulty;
   onDifficultyChange: (difficulty: EncounterDifficulty) => void;
@@ -88,6 +98,9 @@ export function EncounterPanel({
   aiPrompt,
   onAiPromptChange,
   aiDrafting,
+  onIdentifyImage,
+  identifying,
+  identifyNotice,
   difficulty,
   onDifficultyChange,
   validation,
@@ -95,6 +108,8 @@ export function EncounterPanel({
   zoneId,
   onZoneChange,
 }: EncounterPanelProps) {
+  // Hidden file input the "Identify from image" button proxies to.
+  const fileInputRef = useRef<HTMLInputElement>(null);
   return (
     <div className="rounded-lg border bg-card p-3">
       <div className="mb-2 flex items-center justify-between gap-2">
@@ -251,6 +266,37 @@ export function EncounterPanel({
               The AI proposes; the same budget gate decides. Review and press Add Encounter to
               apply.
             </p>
+          </div>
+        )}
+        {onIdentifyImage && (
+          <div className="space-y-2 rounded border border-dashed border-primary/40 p-2">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              aria-label="Creature image to identify"
+              className="hidden"
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                if (file) onIdentifyImage(file);
+                // Allow re-picking the same file (onChange won't fire otherwise).
+                event.target.value = '';
+              }}
+            />
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full"
+              disabled={identifying || loading || monsters.length === 0}
+              onClick={() => fileInputRef.current?.click()}
+              title="Identify a creature from an image and select its statblock"
+            >
+              <ImageIcon className="mr-1.5 h-4 w-4" />
+              {identifying ? 'Identifying…' : 'Identify from image'}
+            </Button>
+            {identifyNotice && (
+              <p className="text-[11px] text-muted-foreground">{identifyNotice}</p>
+            )}
           </div>
         )}
         {hasSelections && (

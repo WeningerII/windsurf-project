@@ -19,6 +19,8 @@ import {
 import { validateEncounterSpec } from '../scene/encounterSpec';
 import { draftEncounterWithAi } from '../ai/encounterDraftFlow';
 import { narrateSceneWithAi } from '../ai/sceneNarrationFlow';
+import { identifyCreatureWithAi } from '../ai/identifyCreatureFlow';
+import { fileToAiImageInput } from '../ai/imageInput';
 import { isAiEnabled } from '../ai/gatewayClient';
 import {
   appendSceneEvent,
@@ -155,6 +157,8 @@ export function SceneManager({
   const [encounterZoneId, setEncounterZoneId] = useState('');
   const [aiEncounterPrompt, setAiEncounterPrompt] = useState('');
   const [aiDrafting, setAiDrafting] = useState(false);
+  const [aiIdentifying, setAiIdentifying] = useState(false);
+  const [identifyNotice, setIdentifyNotice] = useState<string | null>(null);
   const draftNonceRef = useRef(0);
   // AI affordances are build-time gated (default OFF); each surface adds its own
   // further preconditions (e.g. a cited budget table for drafting).
@@ -1045,6 +1049,42 @@ export function SceneManager({
     }
   };
 
+  // AI vision: identify a creature from an uploaded image and select its
+  // statblock for review. The model returns one catalog id; identifyCreatureWithAi
+  // rejects any id outside the loaded pool before we touch the selection. The GM
+  // still queues/places it manually, so nothing is applied automatically.
+  const handleIdentifyCreature = async (file: File) => {
+    if (!sceneSystemId || encounterMonsters.length === 0) return;
+    setAiIdentifying(true);
+    setIdentifyNotice(null);
+    setActionIssues([]);
+    try {
+      let image;
+      try {
+        image = await fileToAiImageInput(file);
+      } catch (error) {
+        setActionIssues([error instanceof Error ? error.message : 'Could not read the image.']);
+        return;
+      }
+      const candidates = encounterMonsters.map((monster) => ({
+        id: monster.id,
+        name: monster.name,
+        challengeRating: monster.challengeRating,
+      }));
+      const result = await identifyCreatureWithAi({ systemId: sceneSystemId, candidates, image });
+      if (!result.ok) {
+        setActionIssues([`Identify: ${result.error}`]);
+        return;
+      }
+      setEncounterMonsterId(result.monsterId);
+      setIdentifyNotice(
+        `Identified ${result.name} (${Math.round(result.confidence * 100)}% sure). Selected it below.`
+      );
+    } finally {
+      setAiIdentifying(false);
+    }
+  };
+
   const handleRemoveEncounterSelection = (monsterId: string) => {
     setEncounterSelections((current) =>
       current.filter((selection) => selection.monsterId !== monsterId)
@@ -1524,6 +1564,11 @@ export function SceneManager({
                     aiPrompt={aiEncounterPrompt}
                     onAiPromptChange={setAiEncounterPrompt}
                     aiDrafting={aiDrafting}
+                    // Vision: identify a creature from an image (needs only the
+                    // loaded catalog, so it is offered wherever AI is enabled).
+                    onIdentifyImage={aiEnabled ? handleIdentifyCreature : undefined}
+                    identifying={aiIdentifying}
+                    identifyNotice={identifyNotice}
                   />
 
                   <MarkerPanel

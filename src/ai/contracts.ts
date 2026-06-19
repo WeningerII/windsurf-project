@@ -14,7 +14,11 @@ export const AI_GATEWAY_SCHEMA_VERSION = 'ai-gateway-v1' as const;
 export const AI_GATEWAY_ENDPOINT = '/.netlify/functions/ai-gateway' as const;
 
 /** Task allowlist. Grows one entry at a time as each task surface lands. */
-export const AI_GATEWAY_TASKS = ['encounter-draft', 'scene-narration'] as const;
+export const AI_GATEWAY_TASKS = [
+  'encounter-draft',
+  'scene-narration',
+  'identify-creature',
+] as const;
 export type AiTask = (typeof AI_GATEWAY_TASKS)[number];
 
 export function isAiTask(value: unknown): value is AiTask {
@@ -150,6 +154,8 @@ function parseTaskPayload(task: AiTask, payload: unknown): AiParse<unknown> {
       return parseEncounterDraftPayload(payload);
     case 'scene-narration':
       return parseSceneNarrationPayload(payload);
+    case 'identify-creature':
+      return parseIdentifyCreaturePayload(payload);
     default:
       return { ok: false, message: `No validator for task '${task}'.` };
   }
@@ -211,6 +217,8 @@ export function parseTaskData(task: AiTask, raw: unknown): AiParse<unknown> {
       return parseEncounterDraftData(raw);
     case 'scene-narration':
       return parseSceneNarrationData(raw);
+    case 'identify-creature':
+      return parseIdentifyCreatureData(raw);
     default:
       return { ok: false, message: `No output validator for task '${task}'.` };
   }
@@ -284,4 +292,109 @@ function parseSceneNarrationData(raw: unknown): AiParse<SceneNarrationData> {
     return { ok: false, message: 'Narration output needs a non-empty narrative string.' };
   }
   return { ok: true, value: { narrative: raw.narrative } };
+}
+
+// --- Shared: image input (multimodal tasks) --------------------------------
+
+/** Largest base64 data URL we accept, ~5 MB of image bytes (Netlify body cap). */
+export const MAX_AI_IMAGE_DATA_URL_LENGTH = 7_000_000;
+
+/** A user-supplied image, carried as a base64 `data:` URL (no provider SDK type). */
+export interface AiImageInput {
+  /** A `data:image/...;base64,...` URL. */
+  dataUrl: string;
+  /** IANA media type, e.g. `image/png` (must be an image type). */
+  mediaType: string;
+}
+
+function parseAiImageInput(raw: unknown): AiParse<AiImageInput> {
+  if (!isRecord(raw)) return { ok: false, message: 'Image must be an object.' };
+  if (typeof raw.dataUrl !== 'string' || !/^data:image\/[\w.+-]+;base64,/i.test(raw.dataUrl)) {
+    return { ok: false, message: 'Image must be a base64 data: URL with an image media type.' };
+  }
+  if (raw.dataUrl.length > MAX_AI_IMAGE_DATA_URL_LENGTH) {
+    return { ok: false, message: 'Image is too large; use a smaller picture.' };
+  }
+  if (typeof raw.mediaType !== 'string' || !/^image\//i.test(raw.mediaType)) {
+    return { ok: false, message: 'Image needs an image/* media type.' };
+  }
+  return { ok: true, value: { dataUrl: raw.dataUrl, mediaType: raw.mediaType } };
+}
+
+// --- Task: identify-creature (vision) --------------------------------------
+
+export interface IdentifyCreaturePayload {
+  systemId: string;
+  /** The catalog the model must choose from (it returns an id, never invents). */
+  candidates: EncounterDraftCandidate[];
+  /** The image to identify. */
+  image: AiImageInput;
+  /** Optional free-text disambiguation hint (e.g. "the larger one"). */
+  hint?: string;
+}
+
+export interface IdentifyCreatureData {
+  /** The chosen catalog id (validated against the candidate pool by the flow). */
+  monsterId: string;
+  /** Model self-reported confidence, clamped to 0..1. */
+  confidence: number;
+  /** One-line justification, optional. */
+  reason?: string;
+}
+
+export type IdentifyCreatureRequest = AiRequest<'identify-creature', IdentifyCreaturePayload>;
+
+function parseIdentifyCreaturePayload(raw: unknown): AiParse<IdentifyCreaturePayload> {
+  if (!isRecord(raw)) return { ok: false, message: 'Identify-creature payload must be an object.' };
+  if (typeof raw.systemId !== 'string' || !raw.systemId) {
+    return { ok: false, message: 'Identify-creature payload needs a systemId.' };
+  }
+  if (!Array.isArray(raw.candidates) || raw.candidates.length === 0) {
+    return { ok: false, message: 'Identify-creature payload needs a non-empty candidate list.' };
+  }
+  const candidates: EncounterDraftCandidate[] = [];
+  for (const candidate of raw.candidates) {
+    if (
+      !isRecord(candidate) ||
+      typeof candidate.id !== 'string' ||
+      typeof candidate.name !== 'string'
+    ) {
+      return { ok: false, message: 'Each candidate needs a string id and name.' };
+    }
+    candidates.push({
+      id: candidate.id,
+      name: candidate.name,
+      ...(typeof candidate.challengeRating === 'number'
+        ? { challengeRating: candidate.challengeRating }
+        : {}),
+    });
+  }
+  const image = parseAiImageInput(raw.image);
+  if (!image.ok) return image;
+  return {
+    ok: true,
+    value: {
+      systemId: raw.systemId,
+      candidates,
+      image: image.value,
+      ...(typeof raw.hint === 'string' && raw.hint ? { hint: raw.hint } : {}),
+    },
+  };
+}
+
+function parseIdentifyCreatureData(raw: unknown): AiParse<IdentifyCreatureData> {
+  if (!isRecord(raw)) return { ok: false, message: 'Output must be an object.' };
+  if (typeof raw.monsterId !== 'string' || !raw.monsterId) {
+    return { ok: false, message: 'Identify output needs a monsterId.' };
+  }
+  const confidenceRaw = typeof raw.confidence === 'number' ? raw.confidence : 0;
+  const confidence = Number.isFinite(confidenceRaw) ? Math.min(1, Math.max(0, confidenceRaw)) : 0;
+  return {
+    ok: true,
+    value: {
+      monsterId: raw.monsterId,
+      confidence,
+      ...(typeof raw.reason === 'string' && raw.reason ? { reason: raw.reason } : {}),
+    },
+  };
 }
