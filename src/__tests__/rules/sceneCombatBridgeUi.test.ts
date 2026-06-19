@@ -277,6 +277,37 @@ describe('resolveSceneAttack', () => {
 });
 
 describe('runSceneRound', () => {
+  it('logs a skipped player-controlled combatant as manual, not "is down"', () => {
+    let scene = sceneWith(
+      { ...combatToken('hero', 'character', 20, 0), playerControlled: true },
+      combatToken('goblin', 'monster', 7, 1)
+    );
+    const init = resolveSceneAction(
+      scene,
+      {
+        type: 'set-initiative',
+        entries: [
+          { tokenId: 'hero', value: 20 },
+          { tokenId: 'goblin', value: 5 },
+        ],
+        activeTokenId: 'hero',
+      },
+      { eventId: 'i' }
+    );
+    scene = appendSceneEvent(scene, init.event!);
+
+    const outcome = runSceneRound({
+      state: foldSceneEvents(scene).state,
+      resolveStats: () => hittingStats,
+      seed: 'pc-seed',
+      round: 1,
+    });
+
+    // The full-HP hero is player-controlled, not downed: the log must say so.
+    expect(outcome.log.some((line) => /hero is player-controlled/i.test(line))).toBe(true);
+    expect(outcome.log.some((line) => /hero is down/i.test(line))).toBe(false);
+  });
+
   it('runs a full round and applies damage across factions through scene events', () => {
     let scene = sceneWith(
       combatToken('hero', 'character', 20, 0),

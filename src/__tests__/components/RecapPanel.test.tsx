@@ -50,4 +50,32 @@ describe('RecapPanel', () => {
     expect(screen.getByRole('button', { name: /Logged/i })).toBeInTheDocument();
     expect(screen.getByText(/Added to Saltmarsh/i)).toBeInTheDocument();
   });
+
+  it('clears the Logged confirmation once the recap changes (more play happened)', async () => {
+    const user = userEvent.setup();
+    const { rerender } = render(
+      <RecapPanel state={makeState()} campaignName="Saltmarsh" onLog={vi.fn()} />
+    );
+    await user.click(screen.getByRole('button', { name: /Log to Saltmarsh/i }));
+    expect(screen.getByRole('button', { name: /Logged/i })).toBeInTheDocument();
+
+    // A new oracle result lands → the recap grows → the stale "Logged" latch
+    // must clear so it doesn't imply the newer recap was saved.
+    const grown = makeState();
+    grown.oracleLog = [
+      {
+        id: 'o1',
+        question: 'Trapped?',
+        odds: 'even',
+        roll: 80,
+        target: 50,
+        answer: 'no',
+        createdAt: new Date(),
+      },
+    ];
+    rerender(<RecapPanel state={grown} campaignName="Saltmarsh" onLog={vi.fn()} />);
+
+    expect(screen.getByRole('button', { name: /Log to Saltmarsh/i })).toBeInTheDocument();
+    expect(screen.queryByText(/Added to Saltmarsh/i)).not.toBeInTheDocument();
+  });
 });

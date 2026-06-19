@@ -11,7 +11,7 @@ import type {
 import { cellKey, footprintCells, footprintWithinGrid } from './grid';
 import { createSeededRng } from './seededRng';
 import { resolveCheck } from './check';
-import { isOracleOdds, resolveOracle } from './oracle';
+import { isOracleAnswer, isOracleOdds, resolveOracle } from './oracle';
 
 export interface CreateSceneDocumentParams {
   id: string;
@@ -201,7 +201,9 @@ function checkIntentIssues(
   const issue = (code: string, message: string, path: string) =>
     issues.push({ code, message, path, severity: 'error', eventId: options.eventId });
 
-  if (!intent.label.trim()) {
+  // Guard the type contract: a malformed (non-string) label returns the issue
+  // rather than throwing `label.trim` out of resolveSceneAction.
+  if (typeof intent.label !== 'string' || !intent.label.trim()) {
     issue('scene-check-label-required', 'A check needs a label (what is being rolled).', 'label');
   }
   if (!Number.isFinite(intent.modifier)) {
@@ -337,10 +339,18 @@ export function validateSceneEvent(state: SceneState, event: SceneEvent): SceneI
       validateCheckEvent(state, event, issues);
       break;
     case 'oracle.consulted':
-      if (!Number.isFinite(event.payload.roll) || !Number.isFinite(event.payload.target)) {
+      // Reject non-enum odds/answer too, so a corrupt import can't fold into the
+      // log and render an `undefined` label in the panel/recap.
+      if (
+        !Number.isFinite(event.payload.roll) ||
+        !Number.isFinite(event.payload.target) ||
+        !isOracleOdds(event.payload.odds) ||
+        !isOracleAnswer(event.payload.answer)
+      ) {
         pushIssue(issues, event, {
           code: 'scene-oracle-values-invalid',
-          message: 'A consulted oracle must record finite roll and target values.',
+          message:
+            'A consulted oracle must record finite roll/target and a recognized odds/answer.',
           path: 'payload',
         });
       }
@@ -354,20 +364,28 @@ export function validateSceneEvent(state: SceneState, event: SceneEvent): SceneI
 
 /**
  * Event-level (historical, lenient) validation of a rolled check. The die and
- * total must be finite numbers so the fold and any UI math can't break; an
- * attributed token, if named, must exist. The DC/outcome are not re-derived —
- * a replayed event keeps whatever it recorded.
+ * total must be finite numbers so the fold and any UI math can't break, and the
+ * outcome must be a recognized value so the panel/recap can't render an
+ * `undefined` label; an attributed token, if named, must exist. The DC and the
+ * specific success/failure are not re-derived — a replayed event keeps whatever
+ * it recorded.
  */
 function validateCheckEvent(
   state: SceneState,
   event: Extract<SceneEvent, { type: 'check.rolled' }>,
   issues: SceneIssue[]
 ): void {
-  const { die, total, modifier, actorTokenId } = event.payload;
-  if (!Number.isFinite(die) || !Number.isFinite(total) || !Number.isFinite(modifier)) {
+  const { die, total, modifier, outcome, actorTokenId } = event.payload;
+  const outcomeValid = outcome === 'success' || outcome === 'failure' || outcome === 'unresolved';
+  if (
+    !Number.isFinite(die) ||
+    !Number.isFinite(total) ||
+    !Number.isFinite(modifier) ||
+    !outcomeValid
+  ) {
     pushIssue(issues, event, {
       code: 'scene-check-values-invalid',
-      message: 'A rolled check must record finite die, modifier, and total values.',
+      message: 'A rolled check must record finite die/modifier/total and a recognized outcome.',
       path: 'payload',
     });
   }

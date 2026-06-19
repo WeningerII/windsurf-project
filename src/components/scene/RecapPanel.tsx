@@ -19,11 +19,15 @@ interface RecapPanelProps {
  */
 export function RecapPanel({ state, campaignName, onLog }: RecapPanelProps) {
   const recap = useMemo(() => summarizeSceneForLog(state), [state]);
-  const [logged, setLogged] = useState(false);
+  // Track the exact text that was logged rather than a one-way boolean, so the
+  // "Logged" confirmation clears once play continues and the recap grows —
+  // otherwise it would falsely imply the newer recap is already in the log.
+  const [loggedRecap, setLoggedRecap] = useState<string | null>(null);
+  const logged = loggedRecap === recap;
 
   const handleLog = () => {
     onLog(state.name, recap);
-    setLogged(true);
+    setLoggedRecap(recap);
   };
 
   return (

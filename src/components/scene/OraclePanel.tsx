@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Sparkles } from 'lucide-react';
 import type { SceneOracleAnswer, SceneOracleOdds, SceneState } from '../../types/core/scene';
 import { ORACLE_ANSWER_LABEL, ORACLE_ODDS, ORACLE_ODDS_LABEL } from '../../scene/oracle';
@@ -34,7 +34,8 @@ export function OraclePanel({ state, onConsult }: OraclePanelProps) {
     setQuestion('');
   };
 
-  const recent = [...state.oracleLog].reverse();
+  // Reverse only when the log changes (the panel re-renders on every keystroke).
+  const recent = useMemo(() => [...state.oracleLog].reverse(), [state.oracleLog]);
 
   return (
     <div className="rounded-lg border bg-card p-3">

@@ -54,8 +54,11 @@ export interface RoundTurnRecord {
   turn: TacticalTurnResult;
   /** The damage intent this turn produced, if any (for scene application). */
   intent?: SceneActionIntent;
-  /** Whether the turn was skipped because the actor was already down. */
+  /** Whether the turn was skipped (actor already down, or player-controlled). */
   skipped: boolean;
+  /** Why a skipped turn was skipped — distinguishes a downed actor from a
+   * player-controlled one the human plays manually. Absent for acted turns. */
+  skipReason?: 'down' | 'player-controlled';
 }
 
 export interface RoundResult {
@@ -130,6 +133,7 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
       turns.push({
         tokenId: combatant.tokenId,
         skipped: true,
+        skipReason: 'down',
         turn: {
           actorId: combatant.tokenId,
           decision: 'no-target',
@@ -148,6 +152,7 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
       turns.push({
         tokenId: combatant.tokenId,
         skipped: true,
+        skipReason: 'player-controlled',
         turn: {
           actorId: combatant.tokenId,
           decision: 'no-target',

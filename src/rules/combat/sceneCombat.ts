@@ -344,7 +344,11 @@ export function runSceneRound(params: {
 
   const nameOf = (tokenId: string): string => params.state.tokens[tokenId]?.name ?? tokenId;
   const log = result.turns.map((turn) => {
-    if (turn.skipped) return `${nameOf(turn.tokenId)} is down and skips its turn.`;
+    if (turn.skipped) {
+      return turn.skipReason === 'player-controlled'
+        ? `${nameOf(turn.tokenId)} is player-controlled — take its turn manually.`
+        : `${nameOf(turn.tokenId)} is down and skips its turn.`;
+    }
     if (turn.turn.decision === 'no-target') return `${nameOf(turn.tokenId)} has no target.`;
     if (turn.turn.decision === 'move-to-engage') {
       return `${nameOf(turn.tokenId)} moves to engage ${nameOf(turn.turn.chosenTargetId ?? '')}.`;

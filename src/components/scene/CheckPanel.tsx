@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Dices } from 'lucide-react';
 import type { SceneCheckLogEntry, SceneCheckMode, SceneState } from '../../types/core/scene';
 import { Button } from '../ui/Button';
@@ -57,12 +57,17 @@ export function CheckPanel({ state, actorId, onRoll }: CheckPanelProps) {
   const [label, setLabel] = useState('');
   const [modifier, setModifier] = useState('');
   const [dc, setDc] = useState('');
-  const [actorTokenId, setActorTokenId] = useState('');
+  // null = follow the selected grid token; '' = explicitly Unattributed (GM);
+  // a token id = that roller. Distinguishing null from '' lets the GM pick the
+  // unattributed option even when a grid token is selected (otherwise selecting
+  // '' equals the initial state, the change is a no-op, and the value snaps back
+  // to the actorId default).
+  const [actorChoice, setActorChoice] = useState<string | null>(null);
   const [mode, setMode] = useState<'normal' | SceneCheckMode>('normal');
 
   const tokens = Object.values(state.tokens);
-  // Default the roller to the selected token until the user picks one.
-  const effectiveActor = actorTokenId || (actorId && state.tokens[actorId] ? actorId : '');
+  const effectiveActor =
+    actorChoice !== null ? actorChoice : actorId && state.tokens[actorId] ? actorId : '';
 
   const trimmedLabel = label.trim();
   const parsedModifier = modifier.trim() === '' ? 0 : Number(modifier);
@@ -86,7 +91,9 @@ export function CheckPanel({ state, actorId, onRoll }: CheckPanelProps) {
     setDc('');
   };
 
-  const recent = [...state.checkLog].reverse();
+  // Reverse only when the log changes — the panel re-renders on every keystroke
+  // of its inputs, and the log only grows when a roll is committed.
+  const recent = useMemo(() => [...state.checkLog].reverse(), [state.checkLog]);
 
   return (
     <div className="rounded-lg border bg-card p-3">
@@ -142,7 +149,7 @@ export function CheckPanel({ state, actorId, onRoll }: CheckPanelProps) {
           <Select
             aria-label="Check roller"
             value={effectiveActor}
-            onChange={(e) => setActorTokenId(e.target.value)}
+            onChange={(e) => setActorChoice(e.target.value)}
           >
             <option value="">Unattributed (GM)</option>
             {tokens.map((token) => (

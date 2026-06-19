@@ -492,6 +492,74 @@ describe('scene runtime — hardening (corrupt persisted data)', () => {
     expect(() => foldSceneEvents(corrupt)).not.toThrow();
     expect(foldSceneEvents(corrupt).issues.length).toBeGreaterThan(0);
   });
+
+  it('rejects a corrupt oracle event whose answer/odds is not a known enum value', () => {
+    const scene = createSceneDocument({
+      id: 'h-oracle-enum',
+      name: 'Corrupt',
+      systemId: 'dnd-5e-2024',
+      now: NOW,
+    });
+    const corrupt: SceneDocument = {
+      ...scene,
+      events: [
+        {
+          id: 'bad-oracle',
+          sequence: 1,
+          createdAt: NOW,
+          type: 'oracle.consulted',
+          // finite roll/target but a bogus answer that would render "undefined".
+          payload: { odds: 'even', roll: 50, target: 50, answer: 'maybe' as never },
+        },
+      ],
+    };
+    const { state, issues } = foldSceneEvents(corrupt);
+    expect(issues.some((issue) => issue.code === 'scene-oracle-values-invalid')).toBe(true);
+    expect(state.oracleLog).toEqual([]); // not folded into the log
+  });
+
+  it('rejects a corrupt check event whose outcome is not a known enum value', () => {
+    const scene = createSceneDocument({
+      id: 'h-check-enum',
+      name: 'Corrupt',
+      systemId: 'dnd-5e-2024',
+      now: NOW,
+    });
+    const corrupt: SceneDocument = {
+      ...scene,
+      events: [
+        {
+          id: 'bad-check',
+          sequence: 1,
+          createdAt: NOW,
+          type: 'check.rolled',
+          payload: { label: 'X', die: 10, modifier: 0, total: 10, outcome: 'banana' as never },
+        },
+      ],
+    };
+    const { state, issues } = foldSceneEvents(corrupt);
+    expect(issues.some((issue) => issue.code === 'scene-check-values-invalid')).toBe(true);
+    expect(state.checkLog).toEqual([]);
+  });
+
+  it('returns a label-required issue (not a throw) for a roll-check intent with a null label', () => {
+    const scene = createSceneDocument({
+      id: 'h-null-label',
+      name: 'Corrupt',
+      systemId: 'dnd-5e-2024',
+      now: NOW,
+    });
+    let result: ReturnType<typeof resolveSceneAction> | undefined;
+    expect(() => {
+      result = resolveSceneAction(
+        scene,
+        { type: 'roll-check', label: undefined as never, modifier: 0 },
+        { eventId: 'x', createdAt: NOW }
+      );
+    }).not.toThrow();
+    expect(result?.event).toBeUndefined();
+    expect(result?.issues[0]).toMatchObject({ code: 'scene-check-label-required' });
+  });
 });
 
 describe('scene runtime — checks', () => {

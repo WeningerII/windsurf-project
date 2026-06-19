@@ -63,3 +63,8 @@ export function resolveOracle(odds: SceneOracleOdds, roll: number): SceneOracleR
 export function isOracleOdds(value: unknown): value is SceneOracleOdds {
   return typeof value === 'string' && value in ODDS_TARGET;
 }
+
+/** Whether a value is a recognized oracle answer (for validating persisted events). */
+export function isOracleAnswer(value: unknown): value is SceneOracleAnswer {
+  return typeof value === 'string' && value in ORACLE_ANSWER_LABEL;
+}

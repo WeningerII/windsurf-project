@@ -76,6 +76,22 @@ describe('CheckPanel', () => {
     });
   });
 
+  it('lets the GM pick Unattributed even while a grid token is selected', async () => {
+    const user = userEvent.setup();
+    const onRoll = vi.fn();
+    render(<CheckPanel state={makeState()} actorId="rogue" onRoll={onRoll} />);
+
+    const roller = screen.getByLabelText('Check roller') as HTMLSelectElement;
+    expect(roller.value).toBe('rogue'); // defaults to the selected token
+    await user.selectOptions(roller, '');
+    // Must stick on the GM option, not snap back to the actorId default.
+    expect((screen.getByLabelText('Check roller') as HTMLSelectElement).value).toBe('');
+
+    await user.type(screen.getByLabelText('Check label'), 'Perception');
+    await user.click(screen.getByRole('button', { name: /^Roll$/i }));
+    expect(onRoll).toHaveBeenCalledWith({ label: 'Perception', modifier: 0 });
+  });
+
   it('passes advantage mode when selected', async () => {
     const user = userEvent.setup();
     const onRoll = vi.fn();
