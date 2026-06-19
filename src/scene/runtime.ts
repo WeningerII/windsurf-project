@@ -821,7 +821,11 @@ function pushIssue(
 function cloneSceneState(state: SceneState): SceneState {
   return {
     ...state,
-    grid: { ...state.grid },
+    // normalizeGrid both copies and coerces: a corrupt import with a
+    // non-positive width/height (parseSceneDocument only checks the grid is an
+    // object) would otherwise fold to an unusable empty scene. Valid grids pass
+    // through unchanged.
+    grid: normalizeGrid(state.grid),
     tokens: Object.fromEntries(
       Object.entries(state.tokens).map(([id, token]) => [id, cloneToken(token)])
     ),

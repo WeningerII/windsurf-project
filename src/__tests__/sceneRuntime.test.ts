@@ -458,6 +458,26 @@ describe('scene runtime — hardening (corrupt persisted data)', () => {
     expect(Number.isNaN(state.round)).toBe(false);
   });
 
+  it('coerces a corrupt grid (non-positive dimensions) to a usable one on fold', () => {
+    const scene = createSceneDocument({
+      id: 'h-grid',
+      name: 'Corrupt',
+      systemId: 'dnd-5e-2024',
+      now: NOW,
+    });
+    const corrupt: SceneDocument = {
+      ...scene,
+      initialState: {
+        ...scene.initialState,
+        grid: { type: 'square', width: 0, height: -4, cellSize: 0 },
+      },
+    };
+    const { state } = foldSceneEvents(corrupt);
+    expect(state.grid.width).toBeGreaterThan(0);
+    expect(state.grid.height).toBeGreaterThan(0);
+    expect(state.grid.cellSize).toBeGreaterThan(0);
+  });
+
   it('does not throw when an event entry is not an object at all', () => {
     const scene = createSceneDocument({
       id: 'h-nonobj',
