@@ -1,6 +1,6 @@
 import { Plus, Trash2 } from 'lucide-react';
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
-import type { SceneTokenKind } from '../../types/core/scene';
+import type { SceneAllegiance, SceneTokenKind } from '../../types/core/scene';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { Select } from '../ui/Select';
@@ -13,6 +13,9 @@ interface TokenPanelProps {
   onTokenNameChange: (value: string) => void;
   tokenKind: SceneTokenKind;
   onTokenKindChange: (value: SceneTokenKind) => void;
+  /** Side a placed NPC fights on (only shown for the npc kind). */
+  tokenAllegiance: SceneAllegiance;
+  onTokenAllegianceChange: (value: SceneAllegiance) => void;
   isPlacing: boolean;
   onTogglePlace: () => void;
   canDeleteToken: boolean;
@@ -33,6 +36,8 @@ export function TokenPanel({
   onTokenNameChange,
   tokenKind,
   onTokenKindChange,
+  tokenAllegiance,
+  onTokenAllegianceChange,
   isPlacing,
   onTogglePlace,
   canDeleteToken,
@@ -81,14 +86,26 @@ export function TokenPanel({
             aria-label="Token kind"
             value={tokenKind}
             onChange={(event) => onTokenKindChange(event.target.value as SceneTokenKind)}
-            disabled={Boolean(tokenDocumentId)}
           >
             <option value="character">Character</option>
-            <option value="monster">Monster</option>
+            {/* A linked sheet backs a character or an NPC; monster/object are
+                only for manual (unlinked) tokens. */}
+            {!tokenDocumentId && <option value="monster">Monster</option>}
             <option value="npc">NPC</option>
-            <option value="object">Object</option>
+            {!tokenDocumentId && <option value="object">Object</option>}
           </Select>
         </div>
+        {tokenKind === 'npc' && (
+          <Select
+            aria-label="NPC side"
+            value={tokenAllegiance}
+            onChange={(event) => onTokenAllegianceChange(event.target.value as SceneAllegiance)}
+          >
+            <option value="hostile">Enemy (fights the party)</option>
+            <option value="party">Ally (fights with the party)</option>
+            <option value="neutral">Neutral (bystander)</option>
+          </Select>
+        )}
         <Button
           variant={isPlacing ? 'default' : 'outline'}
           size="sm"

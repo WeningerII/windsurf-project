@@ -25,9 +25,6 @@ import {
 import {
   buildCharacterCombatant,
   buildDaggerheartAdversaryCombatant,
-  buildDaggerheartCombatant,
-  buildMam3eCombatant,
-  buildMonsterCombatant,
   buildSceneCombatants,
   isRoundConclusive,
   NEUTRAL_FACTION,
@@ -35,12 +32,14 @@ import {
   runSceneRound,
   type ResolveCombatStats,
 } from '../rules';
+import { resolveSceneCombatStats } from '../scene/combatStats';
 import type { Campaign } from '../types/core/campaign';
 import type { CharacterDocument, SystemDataModel } from '../types/core/document';
 import type { Monster } from '../types/creatures/monsters';
 import type { GameSystemId } from '../types/game-systems';
 import type {
   SceneActionIntent,
+  SceneAllegiance,
   SceneCheckMode,
   SceneDocument,
   SceneEvent,
@@ -128,6 +127,9 @@ export function SceneManager({
   const [tokenDocumentId, setTokenDocumentId] = useState('');
   const [tokenName, setTokenName] = useState('');
   const [tokenKind, setTokenKind] = useState<SceneTokenKind>('character');
+  // The side a placed NPC fights on (only used when kind === 'npc'); enemies are
+  // the common case for an encounter, allies/bystanders are opt-in.
+  const [tokenAllegiance, setTokenAllegiance] = useState<SceneAllegiance>('hostile');
   const [markerLabel, setMarkerLabel] = useState('');
   const [markerKind, setMarkerKind] = useState<SceneMarkerKind>('hazard');
   const [markerWidth, setMarkerWidth] = useState('1');
@@ -494,99 +496,13 @@ export function SceneManager({
   }, [documents]);
 
   const resolveCombatStats = useCallback<ResolveCombatStats>(
-    (token) => {
-      if (token.kind === 'monster' && token.refId) {
-        // Daggerheart adversaries resolve by their own model: duality dice
-        // vs Difficulty, threshold-marked HP slots.
-        const adversary = daggerheartAdversariesById.get(token.refId);
-        if (adversary) {
-          const built = buildDaggerheartAdversaryCombatant(adversary, {
-            tokenId: token.id,
-            position: token.position,
-          });
-          if (!built.supported) return undefined;
-          return {
-            attackEffects: built.combatant.attackEffects,
-            damageEffects: built.combatant.damageEffects,
-            // Difficulty rides the targetValue channel, like Evasion.
-            armorClass: built.combatant.difficulty,
-            reach: built.combatant.reach,
-            speedCells: built.combatant.speedCells,
-            daggerheart: { thresholds: built.combatant.thresholds },
-          };
-        }
-        const monster = monstersById.get(token.refId);
-        if (!monster) return undefined;
-        const built = buildMonsterCombatant(monster, {
-          tokenId: token.id,
-          position: token.position,
-        });
-        return {
-          attackEffects: built.attackEffects,
-          damageEffects: built.damageEffects,
-          armorClass: built.armorClass,
-          reach: built.reach,
-          attacksPerRound: built.attacksPerRound,
-          speedCells: built.speedCells,
-          areaSaveBonus: built.areaSaveBonus,
-        };
-      }
-      if (token.kind === 'character' && token.refId) {
-        const doc = documentsById.get(token.refId);
-        if (!doc) return undefined;
-        if (doc.systemId === 'daggerheart') {
-          const built = buildDaggerheartCombatant(doc, daggerheartWeaponsById, {
-            tokenId: token.id,
-            position: token.position,
-          });
-          if (!built.supported) return undefined;
-          return {
-            attackEffects: built.combatant.attackEffects,
-            damageEffects: built.combatant.damageEffects,
-            // Evasion rides the targetValue channel.
-            armorClass: built.combatant.evasion,
-            reach: built.combatant.reach,
-            speedCells: built.combatant.speedCells,
-            daggerheart: { thresholds: built.combatant.thresholds },
-          };
-        }
-        if (doc.systemId === 'mam3e') {
-          const built = buildMam3eCombatant(doc, { tokenId: token.id, position: token.position });
-          if (!built.supported) return undefined;
-          return {
-            attackEffects: built.combatant.attackEffects,
-            damageEffects: [],
-            // Dodge rides the targetValue channel; Parry/Toughness in the variant.
-            armorClass: built.combatant.dodge,
-            reach: built.combatant.reach,
-            speedCells: built.combatant.speedCells,
-            mam3e: {
-              parry: built.combatant.parry,
-              toughness: built.combatant.toughness,
-              effectRank: built.combatant.effectRank,
-              ranged: built.combatant.ranged,
-            },
-          };
-        }
-        const built = buildCharacterCombatant(doc, { tokenId: token.id, position: token.position });
-        if (!built.supported) return undefined;
-        return {
-          attackEffects: built.combatant.attackEffects,
-          damageEffects: built.combatant.damageEffects,
-          armorClass: built.combatant.armorClass,
-          reach: built.combatant.reach,
-          attacksPerRound: built.combatant.attacksPerRound,
-          iterativePenaltyStep: built.combatant.iterativePenaltyStep,
-          speedCells: built.combatant.speedCells,
-          areaSaveBonus: Math.floor(
-            (((doc.system as { baseAttributes?: { dex?: number } }).baseAttributes?.dex ?? 10) -
-              10) /
-              2
-          ),
-        };
-      }
-      return undefined;
-    },
+    (token) =>
+      resolveSceneCombatStats(token, {
+        monstersById,
+        documentsById,
+        daggerheartWeaponsById,
+        daggerheartAdversariesById,
+      }),
     [monstersById, documentsById, daggerheartWeaponsById, daggerheartAdversariesById]
   );
 
@@ -718,12 +634,18 @@ export function SceneManager({
         const name = tokenName.trim() || linkedDoc?.name.trim();
         if (!name) return;
 
-        // A linked character token carries combat HP so it is grid-combat-ready.
+        // A linked sheet can be placed as your character or as a (sheet-backed)
+        // NPC; both carry combat HP so they are grid-combat-ready. Manual tokens
+        // use the chosen kind as-is.
+        const kind: SceneTokenKind = linkedDoc
+          ? tokenKind === 'npc'
+            ? 'npc'
+            : 'character'
+          : tokenKind;
         const built = linkedDoc
           ? buildCharacterCombatant(linkedDoc, { tokenId: linkedDoc.id, position })
           : undefined;
         const hp = built && built.supported ? built.combatant.token.hp : undefined;
-        const kind = linkedDoc ? 'character' : tokenKind;
 
         const placed = emitSceneAction(selectedScene, {
           type: 'place-token',
@@ -736,8 +658,10 @@ export function SceneManager({
             refId: linkedDoc?.id,
             ...(hp ? { hp } : {}),
             // The player drives their own characters; Run Round skips them so a
-            // solo player keeps manual control of their party.
+            // solo player keeps manual control of their party. NPCs are
+            // engine-driven and carry an explicit side.
             ...(kind === 'character' ? { playerControlled: true } : {}),
+            ...(kind === 'npc' ? { allegiance: tokenAllegiance } : {}),
           },
         });
 
@@ -806,6 +730,7 @@ export function SceneManager({
       tokenDocumentId,
       tokenName,
       tokenKind,
+      tokenAllegiance,
       markerLabel,
       markerKind,
       markerWidth,
@@ -1352,6 +1277,8 @@ export function SceneManager({
                     onTokenNameChange={setTokenName}
                     tokenKind={tokenKind}
                     onTokenKindChange={setTokenKind}
+                    tokenAllegiance={tokenAllegiance}
+                    onTokenAllegianceChange={setTokenAllegiance}
                     isPlacing={placementMode === 'token'}
                     onTogglePlace={() =>
                       setPlacementMode((current) => (current === 'token' ? 'none' : 'token'))
