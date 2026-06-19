@@ -16,6 +16,15 @@
   command = "npm run build"
   publish = "dist"
 
+# Server-side AI gateway (RFC 002). The provider key lives only in this
+# function's environment (GOOGLE_GENERATIVE_AI_API_KEY), never in the browser
+# bundle. With no key the function returns provider-not-configured and the app
+# falls back to its deterministic/manual tools. The browser calls it same-origin
+# at /.netlify/functions/ai-gateway, already covered by the connect-src 'self' CSP.
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
 # -----------------------------------------------------------------------------
 # Missing hashed assets must surface as real 404s, never the SPA shell.
 # Without this rule, a stale /assets/*.js chunk request after a deploy would

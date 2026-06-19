@@ -21,6 +21,7 @@
     "check:dead-code": "npm run node:check && knip",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "typecheck:test": "tsc -p tsconfig.test.json --noEmit",
+    "typecheck:netlify": "tsc -p tsconfig.netlify.json",
     "preview": "vite preview",
     "record:verify-baseline": "npm run node:check && tsx scripts/record-verification-baseline.mjs",
     "test": "vitest run",
@@ -38,17 +39,20 @@
     "enhance": "tsx src/scripts/enhance-classes.ts",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx}\"",
-    "verify": "npm run node:check && npm run lint && npm run typecheck:test && npm run format:check && npm run test:coverage -- --run --maxWorkers=1 && npm run validate && npm run build && npm run check:bundle-size && npm run test:e2e && npm run check:repo-hygiene && npm run check:generated-docs && npm run check:doc-drift && npm run check:dead-code"
+    "verify": "npm run node:check && npm run lint && npm run typecheck:test && npm run typecheck:netlify && npm run format:check && npm run test:coverage -- --run --maxWorkers=1 && npm run validate && npm run build && npm run check:bundle-size && npm run test:e2e && npm run check:repo-hygiene && npm run check:generated-docs && npm run check:doc-drift && npm run check:dead-code"
   },
   "dependencies": {
+    "@ai-sdk/google": "^3.0.83",
     "@sentry/browser": "^10.44.0",
     "@supabase/supabase-js": "^2.99.2",
+    "ai": "^6.0.208",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "lucide-react": "^0.294.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tailwind-merge": "^2.1.0"
+    "tailwind-merge": "^2.1.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
