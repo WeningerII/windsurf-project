@@ -301,6 +301,42 @@ export function appendSceneEvent(scene: SceneDocument, event: SceneEvent): Scene
   };
 }
 
+export interface ApplySceneIntentsResult {
+  /** Events that re-validated and applied, in order. */
+  events: SceneEvent[];
+  /** Messages for intents the runtime rejected on re-validation. */
+  rejected: string[];
+}
+
+/**
+ * Resolve a batch of action intents against a scene, threading a working copy so
+ * each event sees the prior ones (correct sequencing) and re-validates before it
+ * is kept. Simulated intents (e.g. from a round driver) that the runtime rejects
+ * are reported rather than silently dropped. Pure given the id factory and clock.
+ */
+export function applySceneIntents(
+  scene: SceneDocument,
+  intents: readonly SceneActionIntent[],
+  options: { eventIdFactory: () => string; now?: () => Date }
+): ApplySceneIntentsResult {
+  let working = scene;
+  const events: SceneEvent[] = [];
+  const rejected: string[] = [];
+  for (const intent of intents) {
+    const result = resolveSceneAction(working, intent, {
+      eventId: options.eventIdFactory(),
+      createdAt: options.now ? options.now() : new Date(),
+    });
+    if (result.event) {
+      events.push(result.event);
+      working = appendSceneEvent(working, result.event);
+    } else {
+      rejected.push(...result.issues.map((issue) => issue.message));
+    }
+  }
+  return { events, rejected };
+}
+
 /** Whether a value is a recognized combat allegiance (validates persisted events). */
 function isSceneAllegiance(value: unknown): value is SceneAllegiance {
   return value === 'party' || value === 'hostile' || value === 'neutral';

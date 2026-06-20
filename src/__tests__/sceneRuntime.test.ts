@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import type { SceneDocument, SceneEvent, SceneState, SceneToken } from '../types/core/scene';
 import {
   appendSceneEvent,
+  applySceneIntents,
   createSceneDocument,
   foldSceneEvents,
   resolveSceneAction,
@@ -884,5 +885,53 @@ describe('scene runtime — token footprints', () => {
     );
     expect(move.event).toBeUndefined();
     expect(move.issues[0]).toMatchObject({ code: 'scene-footprint-occupied' });
+  });
+});
+
+describe('applySceneIntents', () => {
+  it('threads a working copy so later intents see earlier events, in order', () => {
+    const scene = createSceneDocument({
+      id: 'scene-batch',
+      name: 'Batch',
+      systemId: 'dnd-5e-2024',
+      grid: { width: 8, height: 8 },
+      seed: 'batch-seed',
+      now: NOW,
+    });
+    let n = 0;
+    const { events, rejected } = applySceneIntents(
+      scene,
+      [
+        { type: 'place-token', token: makeToken('hero', 1, 1) },
+        // Only resolves because the place-token above was threaded into the copy.
+        { type: 'move-token', tokenId: 'hero', position: { x: 2, y: 3 } },
+      ],
+      { eventIdFactory: () => `e${++n}`, now: () => NOW }
+    );
+    expect(rejected).toEqual([]);
+    expect(events.map((event) => event.id)).toEqual(['e1', 'e2']);
+  });
+
+  it('reports rejected intents instead of dropping them, keeping the valid ones', () => {
+    const scene = createSceneDocument({
+      id: 'scene-batch-2',
+      name: 'Batch',
+      systemId: 'dnd-5e-2024',
+      grid: { width: 4, height: 4 },
+      seed: 'batch-seed',
+      now: NOW,
+    });
+    let n = 0;
+    const { events, rejected } = applySceneIntents(
+      scene,
+      [
+        { type: 'place-token', token: makeToken('hero', 1, 1) },
+        // Off-grid move — the runtime rejects it on re-validation.
+        { type: 'move-token', tokenId: 'hero', position: { x: 99, y: 99 } },
+      ],
+      { eventIdFactory: () => `e${++n}`, now: () => NOW }
+    );
+    expect(events).toHaveLength(1);
+    expect(rejected.length).toBeGreaterThan(0);
   });
 });

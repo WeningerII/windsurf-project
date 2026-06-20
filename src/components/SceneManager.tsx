@@ -24,7 +24,7 @@ import { illustrateSceneWithAi } from '../ai/illustrateSceneFlow';
 import { fileToAiImageInput } from '../ai/imageInput';
 import { isAiEnabled } from '../ai/gatewayClient';
 import {
-  appendSceneEvent,
+  applySceneIntents,
   foldSceneEvents,
   positiveIntegerOrDefault,
   resolveSceneAction,
@@ -591,25 +591,12 @@ export function SceneManager({
       return;
     }
 
-    // Thread a local copy so each emitted event gets a correct sequence, then
-    // dispatch them all through the event-sourced persistence path.
-    let working = selectedScene;
-    const events: SceneEvent[] = [];
-    const rejected: string[] = [];
-    for (const intent of outcome.intents) {
-      const result = resolveSceneAction(working, intent, {
-        eventId: generateUUID(),
-        createdAt: new Date(),
-      });
-      if (result.event) {
-        events.push(result.event);
-        working = appendSceneEvent(working, result.event);
-      } else {
-        // A simulated intent the runtime rejected on re-validation: surface it
-        // rather than dropping the effect silently while the log claims it landed.
-        rejected.push(...result.issues.map((issue) => issue.message));
-      }
-    }
+    // Re-validate and sequence the round's intents against a working copy, then
+    // dispatch the accepted events through the event-sourced persistence path.
+    // Rejected (simulated-but-illegal) intents are surfaced, not dropped.
+    const { events, rejected } = applySceneIntents(selectedScene, outcome.intents, {
+      eventIdFactory: generateUUID,
+    });
     events.forEach((event) => onAppendSceneEvent(selectedScene.id, event));
     setCombatLog((current) => [...outcome.log.slice().reverse(), ...current].slice(0, 30));
     setActionIssues(rejected);
