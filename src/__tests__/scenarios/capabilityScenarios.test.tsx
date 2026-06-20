@@ -18,15 +18,28 @@ import { createSeededRng } from '../../scene/seededRng';
 import { generateNpc } from '../../scene/npcGenerator';
 import { buildPlacedToken } from '../../scene/tokenPlacement';
 import { validateEncounterSpec } from '../../scene/encounterSpec';
-import { partyXpBudget, xpBudgetPerCharacter } from '../../scene/encounterDraft';
+import { draftEncounter, partyXpBudget, xpBudgetPerCharacter } from '../../scene/encounterDraft';
 import { resolveSceneCombatStats } from '../../scene/combatStats';
-import { resolveSceneAttack, type ResolveCombatStats } from '../../rules';
+import {
+  resolveSceneAttack,
+  buildDaggerheartAdversaryCombatant,
+  type ResolveCombatStats,
+} from '../../rules';
 import { isOpenContentCompliant } from '../../utils/openContentPolicy';
 import { exportDocuments, importDocumentsWithReport } from '../../utils/documentStorage';
 import { exportScenes, importScenesWithReport } from '../../utils/sceneStorage';
-import { addSessionEntry, createSessionEntry } from '../../utils/campaignStory';
+import { mergeDocuments } from '../../utils/syncEngine';
+import { compute5eSpellSlots } from '../../utils/spellSlots';
+import {
+  addQuest,
+  addSessionEntry,
+  createQuest,
+  createSessionEntry,
+  setQuestStatus,
+} from '../../utils/campaignStory';
 import { handleAiRequest } from '../../ai/gatewayCore';
 import { AI_GATEWAY_SCHEMA_VERSION, AI_GATEWAY_TASKS, type AiTask } from '../../ai/contracts';
+import { loadDaggerheartAdversariesForSystem } from '../../utils/dataLoader';
 import { registerAllSystems } from '../../systems';
 import { systemRegistry } from '../../registry';
 import type { Campaign } from '../../types/core/campaign';
@@ -99,6 +112,18 @@ function makeCampaign(): Campaign {
 function counter(prefix: string): () => string {
   let n = 0;
   return () => `${prefix}-${++n}`;
+}
+
+/** A minimal but schema-valid 5e document (valid default system data). */
+function makeDoc(id: string, name: string, updatedAt: Date): CharacterDocument<SystemDataModel> {
+  return {
+    id,
+    name,
+    systemId: 'dnd-5e-2024',
+    system: systemRegistry.get('dnd-5e-2024')!.createDefaultData(),
+    createdAt: NOW,
+    updatedAt,
+  };
 }
 
 describe('Capability scenarios', () => {
@@ -396,5 +421,126 @@ describe('Capability scenarios', () => {
       {}
     );
     expect(unsupported).toMatchObject({ ok: false, code: 'unsupported-task' });
+  });
+
+  it('S9: cloud-sync merge unions distinct docs and resolves conflicts last-writer-wins', () => {
+    const early = new Date('2026-06-01T00:00:00.000Z');
+    const late = new Date('2026-06-10T00:00:00.000Z');
+    const merged = mergeDocuments(
+      [makeDoc('A', 'Astra (local, newer)', late), makeDoc('B', 'Borin', early)],
+      [makeDoc('A', 'Astra (remote, older)', early), makeDoc('C', 'Cyra', early)]
+    );
+    expect(merged.map((doc) => doc.id).sort()).toEqual(['A', 'B', 'C']);
+    expect(merged.find((doc) => doc.id === 'A')!.name).toBe('Astra (local, newer)');
+  });
+
+  it('S10: the deterministic drafter produces an on-budget, seed-stable composition', () => {
+    const monsters = [
+      monster(),
+      monster({ id: 'ogre', name: 'Ogre', challengeRating: 2, experiencePoints: 450 }),
+    ];
+    const params = {
+      monsters,
+      partyLevels: [3, 3, 3, 3],
+      difficulty: 'moderate' as const,
+      seed: 'draft-seed',
+      systemId: 'dnd-5e-2024',
+    };
+    const first = draftEncounter(params);
+    expect(first.reason).toBeUndefined();
+    expect(first.selections.length).toBeGreaterThan(0);
+    expect(first.totalXp).toBeLessThanOrEqual(first.budget);
+    // Same seed → byte-identical composition.
+    expect(draftEncounter(params).selections).toEqual(first.selections);
+  });
+
+  it('S11: Daggerheart creatures resolve to the duality combat model and place into a scene', async () => {
+    const adversaries = await loadDaggerheartAdversariesForSystem('daggerheart');
+    expect(adversaries.length).toBeGreaterThan(0);
+
+    const built = buildDaggerheartAdversaryCombatant(adversaries[0], {
+      tokenId: 'dh-1',
+      position: { x: 1, y: 1 },
+    });
+    if (!built.supported) throw new Error(`Daggerheart adversary not supported: ${built.reason}`);
+    expect(built.combatant.token.hp).toBeDefined();
+
+    const stats = resolveSceneCombatStats(built.combatant.token, {
+      monstersById: new Map(),
+      documentsById: new Map(),
+      daggerheartWeaponsById: new Map(),
+      daggerheartAdversariesById: new Map(adversaries.map((adv) => [adv.id, adv])),
+    });
+    // The Daggerheart variant is wired (2d12 vs Evasion, threshold-marked HP).
+    expect(stats?.daggerheart).toBeDefined();
+
+    let scene = createSceneDocument({
+      id: 'scene-dh',
+      name: 'Duality',
+      systemId: 'daggerheart',
+      grid: { width: 6, height: 6 },
+      seed: 'dh-seed',
+      now: NOW,
+    });
+    const placed = applySceneIntents(
+      scene,
+      [{ type: 'place-token', token: built.combatant.token }],
+      { eventIdFactory: counter('s11'), now: () => NOW }
+    );
+    expect(placed.rejected).toEqual([]);
+    placed.events.forEach((event) => {
+      scene = appendSceneEvent(scene, event);
+    });
+    expect(foldSceneEvents(scene).state.tokens['dh-1']).toBeDefined();
+  });
+
+  it('S12: 5e caster spell slots match the SRD full-caster table', () => {
+    const slots = compute5eSpellSlots([{ classId: 'wizard', level: 5 }]);
+    expect(slots[1].max).toBe(4);
+    expect(slots[2].max).toBe(3);
+    expect(slots[3].max).toBe(2);
+    expect(slots[4].max).toBe(0);
+  });
+
+  it('S13: campaign quests transition active → completed', () => {
+    let campaign = makeCampaign();
+    campaign = addQuest(campaign, createQuest('q1', 'Recover the relic', 'It is lost.', NOW));
+    expect(campaign.quests).toHaveLength(1);
+    expect(campaign.quests[0].status).toBe('active');
+
+    campaign = setQuestStatus(campaign, 'q1', 'completed', NOW);
+    expect(campaign.quests[0].status).toBe('completed');
+  });
+
+  it('S14: an NPC can be re-sided after placement via an event-sourced allegiance change', () => {
+    let scene = createSceneDocument({
+      id: 'scene-s14',
+      name: 'Turn',
+      systemId: 'dnd-5e-2024',
+      grid: { width: 6, height: 6 },
+      seed: 's14-seed',
+      now: NOW,
+    });
+    const npc = buildPlacedToken({
+      position: { x: 1, y: 1 },
+      statblock: monster(),
+      nameInput: '',
+      tokenKind: 'npc',
+      tokenAllegiance: 'hostile',
+      idFactory: () => 'npc-1',
+    });
+    const placed = applySceneIntents(
+      scene,
+      [
+        { type: 'place-token', token: npc! },
+        { type: 'set-token-allegiance', tokenId: 'npc-1', allegiance: 'party' },
+      ],
+      { eventIdFactory: counter('s14'), now: () => NOW }
+    );
+    expect(placed.rejected).toEqual([]);
+    placed.events.forEach((event) => {
+      scene = appendSceneEvent(scene, event);
+    });
+    expect(foldSceneEvents(scene).state.tokens['npc-1'].allegiance).toBe('party');
   });
 });
