@@ -3,11 +3,11 @@ import { Download, Map as MapIcon, MousePointer2, Plus, Trash2, Upload } from 'l
 import {
   MAX_MONSTERS_PER_SELECTION,
   buildEncounterSceneEvents,
-  getSceneTokenSize,
   summarizeEncounterParty,
   summarizeEncounterPlan,
   type EncounterMonsterSelection,
 } from '../scene/encounterBuilder';
+import { buildPlacedToken } from '../scene/tokenPlacement';
 import { generateNpc } from '../scene/npcGenerator';
 import {
   draftEncounter,
@@ -30,12 +30,10 @@ import {
   resolveSceneAction,
 } from '../scene/runtime';
 import {
-  buildCharacterCombatant,
   buildDaggerheartAdversaryCombatant,
   buildSceneCombatants,
   factionForToken,
   isRoundConclusive,
-  monsterAverageHitPoints,
   NEUTRAL_FACTION,
   resolveSceneAttack,
   runSceneRound,
@@ -629,49 +627,18 @@ export function SceneManager({
           !linkedDoc && tokenKind === 'npc' && tokenStatblockId
             ? monstersById.get(tokenStatblockId)
             : undefined;
-        const name = tokenName.trim() || linkedDoc?.name.trim() || statblock?.name.trim();
-        if (!name) return;
-
-        // A linked sheet can be placed as your character or as a (sheet-backed)
-        // NPC; both carry combat HP so they are grid-combat-ready. Manual tokens
-        // use the chosen kind as-is.
-        const kind: SceneTokenKind = linkedDoc
-          ? tokenKind === 'npc'
-            ? 'npc'
-            : 'character'
-          : tokenKind;
-
-        let hp: SceneToken['hp'];
-        let size = 1;
-        let refId: string | undefined;
-        if (linkedDoc) {
-          const built = buildCharacterCombatant(linkedDoc, { tokenId: linkedDoc.id, position });
-          hp = built.supported ? built.combatant.token.hp : undefined;
-          refId = linkedDoc.id;
-        } else if (statblock) {
-          const max = monsterAverageHitPoints(statblock);
-          hp = { current: max, max, temp: 0 };
-          size = getSceneTokenSize(statblock.size);
-          refId = statblock.id;
-        }
-
-        const placed = emitSceneAction(selectedScene, {
-          type: 'place-token',
-          token: {
-            id: generateUUID(),
-            name,
-            kind,
-            position,
-            size,
-            ...(refId ? { refId } : {}),
-            ...(hp ? { hp } : {}),
-            // The player drives their own characters; Run Round skips them so a
-            // solo player keeps manual control of their party. NPCs are
-            // engine-driven and carry an explicit side.
-            ...(kind === 'character' ? { playerControlled: true } : {}),
-            ...(kind === 'npc' ? { allegiance: tokenAllegiance } : {}),
-          },
+        const token = buildPlacedToken({
+          position,
+          linkedDoc,
+          statblock,
+          nameInput: tokenName,
+          tokenKind,
+          tokenAllegiance,
+          idFactory: generateUUID,
         });
+        if (!token) return;
+
+        const placed = emitSceneAction(selectedScene, { type: 'place-token', token });
 
         if (placed) {
           setPlacementMode('none');
