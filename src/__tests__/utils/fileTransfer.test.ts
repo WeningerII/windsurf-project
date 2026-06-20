@@ -13,12 +13,14 @@ describe('downloadTextFile', () => {
     vi.spyOn(URL, 'revokeObjectURL').mockImplementation(revokeObjectURL);
 
     const realCreate = document.createElement.bind(document);
-    let anchor: HTMLAnchorElement | null = null;
+    // Hold the captured anchor on an object so its property type survives at the
+    // assertion site (a closure-assigned `let` narrows to its null initializer).
+    const captured: { anchor: HTMLAnchorElement | null } = { anchor: null };
     vi.spyOn(document, 'createElement').mockImplementation(((tag: string) => {
       const el = realCreate(tag);
       if (tag === 'a') {
-        anchor = el as HTMLAnchorElement;
-        vi.spyOn(anchor, 'click').mockImplementation(() => {});
+        captured.anchor = el as HTMLAnchorElement;
+        vi.spyOn(captured.anchor, 'click').mockImplementation(() => {});
       }
       return el;
     }) as typeof document.createElement);
@@ -26,8 +28,8 @@ describe('downloadTextFile', () => {
     downloadTextFile('{"a":1}', 'data.json');
 
     expect(createObjectURL).toHaveBeenCalledWith(expect.any(Blob));
-    expect(anchor?.download).toBe('data.json');
-    expect(anchor?.click).toHaveBeenCalledTimes(1);
+    expect(captured.anchor?.download).toBe('data.json');
+    expect(captured.anchor?.click).toHaveBeenCalledTimes(1);
     expect(revokeObjectURL).toHaveBeenCalledWith('blob:fake');
   });
 });
