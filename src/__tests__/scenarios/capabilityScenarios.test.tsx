@@ -46,6 +46,7 @@ import type { Campaign } from '../../types/core/campaign';
 import type { Monster } from '../../types/creatures/monsters';
 import type { GameSystemId } from '../../types/game-systems';
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
+import type { SceneEvent } from '../../types/core/scene';
 
 const NOW = new Date('2026-06-20T12:00:00.000Z');
 
@@ -542,5 +543,164 @@ describe('Capability scenarios', () => {
       scene = appendSceneEvent(scene, event);
     });
     expect(foldSceneEvents(scene).state.tokens['npc-1'].allegiance).toBe('party');
+  });
+
+  it('S15: a partial scene import keeps valid records and reports the dropped count', () => {
+    const valid = createSceneDocument({
+      id: 'ok-scene',
+      name: 'Valid',
+      systemId: 'dnd-5e-2024',
+      now: NOW,
+    });
+    const payload = JSON.parse(exportScenes([valid])) as { scenes: unknown[] };
+    payload.scenes.push({ id: 'junk', not: 'a scene' });
+
+    const result = importScenesWithReport(JSON.stringify(payload));
+    expect(result.droppedCount).toBe(1);
+    expect(result.scenes).toHaveLength(1);
+    expect(result.scenes[0].id).toBe('ok-scene');
+  });
+
+  it('S16: a partial document import keeps valid records and reports the dropped count', () => {
+    const payload = JSON.parse(exportDocuments([makeDoc('ok-doc', 'Astra', NOW)])) as {
+      documents: unknown[];
+    };
+    payload.documents.push({ garbage: true });
+
+    const result = importDocumentsWithReport(JSON.stringify(payload));
+    expect(result.droppedCount).toBe(1);
+    expect(result.documents).toHaveLength(1);
+    expect(result.documents[0].id).toBe('ok-doc');
+  });
+
+  it('S17: the scene runtime rejects illegal actions with issues instead of mutating', () => {
+    const scene = createSceneDocument({
+      id: 'scene-s17',
+      name: 'Guarded',
+      systemId: 'dnd-5e-2024',
+      grid: { width: 4, height: 4 },
+      now: NOW,
+    });
+
+    const ghostMove = resolveSceneAction(
+      scene,
+      { type: 'move-token', tokenId: 'ghost', position: { x: 1, y: 1 } },
+      { eventId: 'e1', createdAt: NOW }
+    );
+    expect(ghostMove.event).toBeUndefined();
+    expect(ghostMove.issues.some((issue) => issue.severity === 'error')).toBe(true);
+
+    const offGrid = buildPlacedToken({
+      position: { x: 99, y: 99 },
+      statblock: monster(),
+      nameInput: '',
+      tokenKind: 'npc',
+      tokenAllegiance: 'hostile',
+      idFactory: () => 'oob',
+    });
+    const placeOffGrid = resolveSceneAction(
+      scene,
+      { type: 'place-token', token: offGrid! },
+      { eventId: 'e2', createdAt: NOW }
+    );
+    expect(placeOffGrid.event).toBeUndefined();
+    expect(placeOffGrid.issues.some((issue) => issue.severity === 'error')).toBe(true);
+  });
+
+  it('S18: the AI gateway rejects adversarial input (bad payload, non-image, invalid output)', async () => {
+    const malformedPayload = await handleAiRequest(
+      {
+        schemaVersion: AI_GATEWAY_SCHEMA_VERSION,
+        task: 'encounter-draft',
+        // missing required `candidates`
+        payload: { systemId: 'dnd-5e-2024', partyLevels: [3], difficulty: 'moderate', prompt: 'x' },
+      },
+      {}
+    );
+    expect(malformedPayload).toMatchObject({ ok: false, code: 'invalid-request' });
+
+    const nonImage = await handleAiRequest(
+      {
+        schemaVersion: AI_GATEWAY_SCHEMA_VERSION,
+        task: 'identify-creature',
+        payload: {
+          systemId: 'dnd-5e-2024',
+          candidates: [{ id: 'goblin', name: 'Goblin' }],
+          image: { dataUrl: 'data:text/plain;base64,AAAA', mediaType: 'text/plain' },
+        },
+      },
+      {}
+    );
+    expect(nonImage).toMatchObject({ ok: false, code: 'invalid-request' });
+
+    const invalidFixture = await handleAiRequest(
+      {
+        schemaVersion: AI_GATEWAY_SCHEMA_VERSION,
+        task: 'encounter-draft',
+        payload: {
+          systemId: 'dnd-5e-2024',
+          partyLevels: [3],
+          difficulty: 'moderate',
+          prompt: 'goblins',
+          candidates: [{ id: 'goblin', name: 'Goblin' }],
+        },
+      },
+      // count 0 is not a positive integer → output validation rejects it.
+      { fixtures: { 'encounter-draft': { selections: [{ monsterId: 'goblin', count: 0 }] } } }
+    );
+    expect(invalidFixture).toMatchObject({ ok: false, code: 'invalid-provider-output' });
+  });
+
+  it('S19: the encounter-spec gate reports coded issues for each illegal spec', () => {
+    const monsters = [monster()];
+    const base = { systemId: 'dnd-5e-2024', difficulty: 'moderate' as const };
+
+    expect(
+      validateEncounterSpec(
+        { ...base, partyLevels: [3], selections: [{ monsterId: 'nope', count: 1 }] },
+        { monsters }
+      ).issues.some((issue) => issue.code === 'unknown-monster')
+    ).toBe(true);
+
+    expect(
+      validateEncounterSpec(
+        { ...base, partyLevels: [3], selections: [] },
+        { monsters }
+      ).issues.some((issue) => issue.code === 'empty-spec')
+    ).toBe(true);
+
+    expect(
+      validateEncounterSpec(
+        { ...base, partyLevels: [], selections: [{ monsterId: 'goblin', count: 1 }] },
+        { monsters }
+      ).issues.some((issue) => issue.code === 'no-party')
+    ).toBe(true);
+
+    expect(
+      validateEncounterSpec(
+        { ...base, partyLevels: [3], selections: [{ monsterId: 'pf', count: 1 }] },
+        { monsters: [monster({ id: 'pf', system: 'pf2e' })] }
+      ).issues.some((issue) => issue.code === 'system-mismatch')
+    ).toBe(true);
+  });
+
+  it('S20: folding a corrupt persisted event surfaces issues without throwing (replay safety)', () => {
+    const scene = createSceneDocument({
+      id: 'scene-s20',
+      name: 'Corrupt',
+      systemId: 'dnd-5e-2024',
+      now: NOW,
+    });
+    const corrupt = {
+      id: 'bad',
+      type: 'nonsense.event',
+      sequence: 1,
+      createdAt: NOW,
+      payload: {},
+    } as unknown as SceneEvent;
+    const corruptScene = { ...scene, events: [...scene.events, corrupt] };
+
+    expect(() => foldSceneEvents(corruptScene)).not.toThrow();
+    expect(foldSceneEvents(corruptScene).issues.length).toBeGreaterThan(0);
   });
 });
