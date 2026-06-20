@@ -17,9 +17,15 @@
  * the resolvers, so a given (scene, seed) replays identically.
  */
 
-import type { SceneActionIntent, SceneState, SceneToken } from '../../types/core/scene';
+import type {
+  SceneActionIntent,
+  SceneAllegiance,
+  SceneState,
+  SceneToken,
+} from '../../types/core/scene';
 import type { EffectInstance } from '../ir/types';
 import { runCombatRound, type RoundCombatant, type RoundResult } from '../tactical/roundDriver';
+import { tokenAllegiance } from '../../scene/allegiance';
 import { resolveAttack } from '../resolver/attackResolution';
 import { gridDistance } from '../resolver/areaTargeting';
 import { participantRng } from '../resolver/participantResolution';
@@ -68,18 +74,15 @@ export interface SceneCombatStats {
 /** Resolve a token's combat stats, or undefined when it cannot fight. */
 export type ResolveCombatStats = (token: SceneToken) => SceneCombatStats | undefined;
 
-/** Map a token kind to a combat faction (allies vs enemies for targeting). */
-export function factionForToken(token: SceneToken): string {
-  switch (token.kind) {
-    case 'character':
-      return 'party';
-    case 'monster':
-      return 'monsters';
-    case 'npc':
-      return 'npc';
-    default:
-      return 'object';
-  }
+/**
+ * A token's combat faction for targeting. An explicit `allegiance` overrides the
+ * kind default, so an NPC can fight as an ally (`party`) or enemy (`hostile`),
+ * a monster can be turned (`party`), or a PC charmed (`hostile`). `neutral`
+ * tokens fight no one. Shares {@link tokenAllegiance} with the grid view so the
+ * side used for targeting is exactly the side rendered.
+ */
+export function factionForToken(token: SceneToken): SceneAllegiance {
+  return tokenAllegiance(token);
 }
 
 /**
@@ -122,6 +125,9 @@ export function buildSceneCombatants(
       attacksPerRound: stats.attacksPerRound,
       iterativePenaltyStep: stats.iterativePenaltyStep,
       speedCells: stats.speedCells,
+      // A player-controlled token sits in the round (a target, in initiative)
+      // but the autonomous executor never acts for it.
+      playerControlled: token.playerControlled,
     });
   }
   return combatants;
@@ -341,7 +347,11 @@ export function runSceneRound(params: {
 
   const nameOf = (tokenId: string): string => params.state.tokens[tokenId]?.name ?? tokenId;
   const log = result.turns.map((turn) => {
-    if (turn.skipped) return `${nameOf(turn.tokenId)} is down and skips its turn.`;
+    if (turn.skipped) {
+      return turn.skipReason === 'player-controlled'
+        ? `${nameOf(turn.tokenId)} is player-controlled — take its turn manually.`
+        : `${nameOf(turn.tokenId)} is down and skips its turn.`;
+    }
     if (turn.turn.decision === 'no-target') return `${nameOf(turn.tokenId)} has no target.`;
     if (turn.turn.decision === 'move-to-engage') {
       return `${nameOf(turn.tokenId)} moves to engage ${nameOf(turn.turn.chosenTargetId ?? '')}.`;

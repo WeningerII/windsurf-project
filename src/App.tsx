@@ -13,6 +13,7 @@ import { SystemSheetRenderer } from './components/SystemSheetRenderer';
 import { CharacterDocument, SystemDataModel } from './types/core/document';
 import { useDocuments } from './hooks/useDocuments';
 import { exportDocuments, importDocumentsWithReport } from './utils/documentStorage';
+import { downloadTextFile, pickTextFile } from './utils/fileTransfer';
 import { CURRENT_DOCUMENT_VERSION } from './utils/documentMigrations';
 import { useKeyboardNavigation } from './hooks/useKeyboardNavigation';
 import { Skeleton } from './components/ui/Skeleton';
@@ -20,6 +21,7 @@ import { ConfirmDialog } from './components/ui/ConfirmDialog';
 import { ToastProvider, useToast } from './components/ui/Toast';
 import { ServiceWorkerUpdateBanner } from './components/ServiceWorkerUpdateBanner';
 import { useCampaigns } from './hooks/useCampaigns';
+import { addSessionEntry, createSessionEntry } from './utils/campaignStory';
 import { CampaignManager } from './components/CampaignManager';
 // Lazy-loaded: the scene/VTT view is the app's heaviest feature component and
 // is only used in the dashboard branch, so it stays out of the eager app shell
@@ -97,6 +99,7 @@ function AppContent() {
     error: campaignError,
     clearError: clearCampaignError,
     addCampaign,
+    addCampaigns,
     applyMergedCampaigns,
     updateCampaign,
     deleteCampaign,
@@ -115,6 +118,20 @@ function AppContent() {
     deleteScene,
     flushPendingSaves: flushPendingSceneSaves,
   } = useScenes();
+
+  // Bridge a scene back to its linked campaign: append a factual recap as a
+  // session-log entry. Campaign mutation stays here (the owner of useCampaigns)
+  // rather than inside SceneManager.
+  const handleLogSceneToCampaign = useCallback(
+    (campaignId: string, title: string, body: string) => {
+      const campaign = campaigns.find((c) => c.id === campaignId);
+      if (!campaign) return;
+      const entry = createSessionEntry(generateUUID(), title, body, new Date());
+      updateCampaign(addSessionEntry(campaign, entry));
+      toast(`Recap added to ${campaign.name}`, 'success');
+    },
+    [campaigns, updateCampaign, toast]
+  );
   const {
     syncState: campaignSyncState,
     lastSyncedAt: lastCampaignSyncedAt,
@@ -220,18 +237,6 @@ function AppContent() {
   const isNearStorageLimit = storageUsageBytes >= STORAGE_WARNING_THRESHOLD;
   const storageUsageMb = (storageUsageBytes / (1024 * 1024)).toFixed(2);
 
-  const triggerJsonDownload = useCallback((jsonPayload: string, filename: string) => {
-    // Blob URLs avoid Chromium's ~2 MB cap on data: anchors — "Export All"
-    // must keep working exactly when storage is near the ~5 MB limit.
-    const blob = new Blob([jsonPayload], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.setAttribute('href', url);
-    link.setAttribute('download', filename);
-    link.click();
-    URL.revokeObjectURL(url);
-  }, []);
-
   // Initialize browser compatibility checks on mount
   useEffect(() => {
     initBrowserCompat();
@@ -280,7 +285,7 @@ function AppContent() {
     try {
       const dataStr = exportDocuments([doc]);
       const filename = `${doc.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_character.json`;
-      triggerJsonDownload(dataStr, filename);
+      downloadTextFile(dataStr, filename);
       toast(`Exported "${doc.name}"`, 'success');
     } catch {
       toast('Failed to export character.', 'error');
@@ -291,7 +296,7 @@ function AppContent() {
     try {
       const payload = exportDocuments(documents);
       const filename = `all_characters_${new Date().toISOString().slice(0, 10)}.json`;
-      triggerJsonDownload(payload, filename);
+      downloadTextFile(payload, filename);
       toast(
         `Exported ${documents.length} character${documents.length !== 1 ? 's' : ''}`,
         'success'
@@ -320,47 +325,36 @@ function AppContent() {
   );
 
   const handleImportDocument = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'application/json';
-    input.onchange = (e: Event) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        try {
-          const jsonString = event.target?.result as string;
-          const { documents: imported, droppedCount } = importDocumentsWithReport(jsonString);
-          if (imported.length > 0) {
-            const normalized = imported.map((d) => ({
-              ...d,
-              id: generateUUID(),
-              createdAt: new Date(),
-              updatedAt: new Date(),
-            }));
-            addDocuments(normalized);
-            setCurrentDocId(normalized[0].id);
-            toast(
-              droppedCount > 0
-                ? `Imported ${normalized.length} of ${normalized.length + droppedCount} characters — ${droppedCount} invalid ${droppedCount === 1 ? 'entry' : 'entries'} skipped`
-                : `Imported ${normalized.length} character${normalized.length !== 1 ? 's' : ''}`,
-              droppedCount > 0 ? 'warning' : 'success'
-            );
-          } else {
-            toast(
-              droppedCount > 0
-                ? `Nothing imported — all ${droppedCount} ${droppedCount === 1 ? 'entry was' : 'entries were'} invalid.`
-                : 'Nothing imported — the file contains no characters.',
-              'error'
-            );
-          }
-        } catch {
-          toast('Failed to import character. Please ensure the file is a valid export.', 'error');
+    pickTextFile((jsonString) => {
+      try {
+        const { documents: imported, droppedCount } = importDocumentsWithReport(jsonString);
+        if (imported.length > 0) {
+          const normalized = imported.map((d) => ({
+            ...d,
+            id: generateUUID(),
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          }));
+          addDocuments(normalized);
+          setCurrentDocId(normalized[0].id);
+          toast(
+            droppedCount > 0
+              ? `Imported ${normalized.length} of ${normalized.length + droppedCount} characters — ${droppedCount} invalid ${droppedCount === 1 ? 'entry' : 'entries'} skipped`
+              : `Imported ${normalized.length} character${normalized.length !== 1 ? 's' : ''}`,
+            droppedCount > 0 ? 'warning' : 'success'
+          );
+        } else {
+          toast(
+            droppedCount > 0
+              ? `Nothing imported — all ${droppedCount} ${droppedCount === 1 ? 'entry was' : 'entries were'} invalid.`
+              : 'Nothing imported — the file contains no characters.',
+            'error'
+          );
         }
-      };
-      reader.readAsText(file);
-    };
-    input.click();
+      } catch {
+        toast('Failed to import character. Please ensure the file is a valid export.', 'error');
+      }
+    });
   };
 
   // Keyboard shortcuts
@@ -611,6 +605,7 @@ function AppContent() {
                 if (doc) toast(`Removed ${doc.name} from campaign`, 'success');
               }}
               onOpenCharacter={(charId) => setCurrentDocId(charId)}
+              onImportCampaigns={addCampaigns}
             />
 
             {/* Scenes */}
@@ -622,6 +617,7 @@ function AppContent() {
                 onAddScene={addScene}
                 onAddScenes={addScenes}
                 onAppendSceneEvent={appendSceneEvent}
+                onLogToCampaign={handleLogSceneToCampaign}
                 onDeleteScene={(id) =>
                   showConfirm(
                     'Delete Scene',

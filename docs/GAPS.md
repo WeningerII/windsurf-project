@@ -108,9 +108,13 @@ several items below; the remainder is the honest residual.
   - L9: point-buy ability arrays; feat/prereq gating; multiclass slot/save/BAB/prof
     stacking as *validators* (M&M PL caps + point-buy costs exist; M&M degrees of
     success now covered).
-  - L10: 3.5e/PF1e CR↔XP & Encounter Level and wealth-by-level still open.
-    **Done:** PF2e creature XP by level difference and encounter budget; M&M
-    equipment points and measurements doubling.
+  - L10: D&D 3.5e Encounter-Level budgeting and wealth-by-level still open (3.5e
+    monsters carry no XP, so the encounter-spec validator honestly reports it
+    `unsupported-system`). **Done:** 5e (SRD 5.2.1), PF1e (CRB target-CR), and
+    PF2e (party-relative) encounter budgets, all behind one shared budget/cost
+    dispatch and gated by `validateEncounterSpec` (`src/scene/encounterSpec.ts`);
+    PF2e creature XP by level difference; M&M equipment points and measurements
+    doubling.
 - **Several "verified" quantities are tested helpers, not engine-wired.** Spell
   save DC, spell attack, passive Perception, concentration DC, cantrip scaling,
   Monk/Barbarian Unarmored Defense, iterative attacks, PF2e MAP/striking/bulk/

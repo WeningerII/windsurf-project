@@ -2,6 +2,7 @@ import type { Monster } from '../types/creatures/monsters';
 import type { CharacterDocument, SystemDataModel } from '../types/core/document';
 import type { SceneCoordinate, SceneDocument, SceneEvent } from '../types/core/scene';
 import { appendSceneEvent, foldSceneEvents, resolveSceneAction } from './runtime';
+import { cellKey } from './grid';
 import { createSeededRng } from './seededRng';
 import { monsterAverageHitPoints } from '../rules/combatants/monsterCombatant';
 
@@ -171,11 +172,21 @@ export function buildEncounterSceneEvents({
   }
   const spawnOrigin = origin ?? { x: bounds.x, y: bounds.y };
   const tokenIds = new Set(Object.keys(folded.state.tokens));
+  // Tokens already on the scene from a prior batch, counted by source monster
+  // (refId). Naming seeds from these so adding "2 Goblins" twice yields
+  // "Goblin 3"/"Goblin 4", not a second "Goblin 1"/"Goblin 2" (the combat log
+  // keys off names, so collisions make it ambiguous).
+  const existingByRefId = new Map<string, number>();
+  for (const token of Object.values(folded.state.tokens)) {
+    if (token.refId) {
+      existingByRefId.set(token.refId, (existingByRefId.get(token.refId) ?? 0) + 1);
+    }
+  }
   const monsterTotals = planned.reduce((totals, entry) => {
     totals.set(entry.monster.id, (totals.get(entry.monster.id) ?? 0) + 1);
     return totals;
   }, new Map<string, number>());
-  const monsterOrdinals = new Map<string, number>();
+  const monsterOrdinals = new Map<string, number>(existingByRefId);
   const generatedTokens = planned.map(({ monster }) => {
     const size = getSceneTokenSize(monster.size);
     const position = findOpenPosition(bounds, size, {
@@ -199,9 +210,14 @@ export function buildEncounterSceneEvents({
     const ordinal = (monsterOrdinals.get(monster.id) ?? 0) + 1;
     monsterOrdinals.set(monster.id, ordinal);
 
+    // Suffix with the ordinal whenever this monster appears more than once
+    // across the scene (existing tokens + this batch), so a lone addition that
+    // joins an existing same-source token still gets a distinguishing number.
+    const totalOfThisMonster =
+      (existingByRefId.get(monster.id) ?? 0) + (monsterTotals.get(monster.id) ?? 0);
     return {
       id: tokenId,
-      name: (monsterTotals.get(monster.id) ?? 0) > 1 ? `${monster.name} ${ordinal}` : monster.name,
+      name: totalOfThisMonster > 1 ? `${monster.name} ${ordinal}` : monster.name,
       kind: 'monster' as const,
       position,
       size,
@@ -512,11 +528,7 @@ function occupyCells(occupied: Set<string>, position: SceneCoordinate, size: num
   }
 }
 
-function cellKey(position: SceneCoordinate): string {
-  return `${position.x}:${position.y}`;
-}
-
-function getSceneTokenSize(size: Monster['size']): number {
+export function getSceneTokenSize(size: Monster['size']): number {
   switch (size) {
     case 'large':
       return 2;

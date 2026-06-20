@@ -9,14 +9,20 @@ import {
   Trash2,
   UserPlus,
   UserMinus,
+  Download,
+  Upload,
 } from 'lucide-react';
 import { Button } from './ui/Button';
 import { Badge } from './ui/Badge';
 import { Select } from './ui/Select';
+import { QuestList } from './campaign/QuestList';
+import { SessionLog } from './campaign/SessionLog';
 import type { Campaign } from '../types/core/campaign';
 import type { CharacterDocument, SystemDataModel } from '../types/core/document';
 import { systemRegistry } from '../registry';
 import { generateUUID } from '../utils/browserCompat';
+import { exportCampaigns, importCampaignsWithReport } from '../utils/campaignStorage';
+import { downloadTextFile, pickTextFile } from '../utils/fileTransfer';
 
 interface Props {
   campaigns: Campaign[];
@@ -27,6 +33,8 @@ interface Props {
   onAddCharacter: (campaignId: string, characterId: string) => void;
   onRemoveCharacter: (campaignId: string, characterId: string) => void;
   onOpenCharacter: (characterId: string) => void;
+  /** Merge imported campaigns into the collection (upsert by id). */
+  onImportCampaigns?: (campaigns: Campaign[]) => void;
 }
 
 export const CampaignManager: React.FC<Props> = ({
@@ -38,12 +46,48 @@ export const CampaignManager: React.FC<Props> = ({
   onAddCharacter,
   onRemoveCharacter,
   onOpenCharacter,
+  onImportCampaigns,
 }) => {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [creatingNew, setCreatingNew] = useState(false);
   const [newName, setNewName] = useState('');
   const [newSystemId, setNewSystemId] = useState('all');
   const [addingCharTo, setAddingCharTo] = useState<string | null>(null);
+  const [transferMessage, setTransferMessage] = useState<string | null>(null);
+
+  const handleExport = () => {
+    downloadTextFile(
+      exportCampaigns(campaigns),
+      `campaigns-${new Date().toISOString().slice(0, 10)}.json`
+    );
+  };
+
+  const handleImport = () => {
+    if (!onImportCampaigns) return;
+    pickTextFile((text) => {
+      try {
+        const { campaigns: imported, droppedCount } = importCampaignsWithReport(text);
+        const skipped =
+          droppedCount > 0
+            ? ` — ${droppedCount} invalid ${droppedCount === 1 ? 'entry' : 'entries'} skipped`
+            : '';
+        // Valid JSON can still hold no usable campaigns; say so rather than
+        // silently no-op'ing (which reads as a successful import).
+        if (imported.length === 0) {
+          setTransferMessage(`No valid campaigns were found in that file${skipped}.`);
+          return;
+        }
+        onImportCampaigns(imported);
+        setTransferMessage(
+          droppedCount > 0
+            ? `Imported ${imported.length} of ${imported.length + droppedCount} campaigns${skipped}.`
+            : `Imported ${imported.length} campaign${imported.length !== 1 ? 's' : ''}.`
+        );
+      } catch (err) {
+        setTransferMessage(err instanceof Error ? err.message : 'Failed to import campaigns.');
+      }
+    });
+  };
 
   const documentMap = useMemo(() => new Map(documents.map((d) => [d.id, d])), [documents]);
   const systemOptions = useMemo(() => systemRegistry.getAll(), []);
@@ -56,6 +100,8 @@ export const CampaignManager: React.FC<Props> = ({
       systemId: newSystemId === 'all' ? undefined : newSystemId,
       characterIds: [],
       notes: '',
+      quests: [],
+      sessionLog: [],
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -86,11 +132,39 @@ export const CampaignManager: React.FC<Props> = ({
           </p>
         </div>
         {!creatingNew && (
-          <Button variant="outline" size="sm" onClick={() => setCreatingNew(true)}>
-            <Plus className="w-4 h-4 mr-1.5" /> New Campaign
-          </Button>
+          <div className="flex items-center gap-2">
+            {campaigns.length > 0 && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleExport}
+                title="Export all campaigns to a JSON backup"
+              >
+                <Download className="w-4 h-4 mr-1.5" /> Export
+              </Button>
+            )}
+            {onImportCampaigns && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleImport}
+                title="Import campaigns from a JSON backup"
+              >
+                <Upload className="w-4 h-4 mr-1.5" /> Import
+              </Button>
+            )}
+            <Button variant="outline" size="sm" onClick={() => setCreatingNew(true)}>
+              <Plus className="w-4 h-4 mr-1.5" /> New Campaign
+            </Button>
+          </div>
         )}
       </div>
+
+      {transferMessage && (
+        <p className="text-sm text-muted-foreground" role="status">
+          {transferMessage}
+        </p>
+      )}
 
       {/* New campaign form */}
       {creatingNew && (
@@ -341,6 +415,12 @@ export const CampaignManager: React.FC<Props> = ({
                     </Button>
                   )}
 
+                  {/* Quests */}
+                  <QuestList campaign={campaign} onUpdate={onUpdateCampaign} />
+
+                  {/* Session log */}
+                  <SessionLog campaign={campaign} onUpdate={onUpdateCampaign} />
+
                   {/* Notes */}
                   <div className="space-y-1.5">
                     <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1">
@@ -349,7 +429,7 @@ export const CampaignManager: React.FC<Props> = ({
                     <textarea
                       value={campaign.notes}
                       onChange={(e) => onUpdateCampaign({ ...campaign, notes: e.target.value })}
-                      placeholder="Session notes, house rules, quest tracker..."
+                      placeholder="House rules, NPC names, loot..."
                       className="w-full min-h-[80px] rounded-lg border border-input bg-transparent px-3 py-2 text-sm focus:outline-none focus:border-primary resize-y"
                     />
                   </div>

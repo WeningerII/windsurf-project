@@ -67,6 +67,15 @@ append-only and additive.** New event kinds may be added; existing kinds must
 keep folding. Malformed persisted documents are dropped by `parseSceneDocument`
 (`src/utils/boundaryValidation.ts`), never thrown into the UI.
 
+`parseSceneDocument` validates the envelope and the `initialState` substructure
+(grid/tokens/markers/initiative) but does not deep-validate every event payload
+or the derived `checkLog`/`oracleLog`. The fold is the second line of defense:
+it coerces a non-array log to `[]`, and wraps each event in a replay safety net
+so a corrupt event (missing/wrong-shaped payload) becomes a recorded
+`scene-event-malformed` issue and is skipped — a single bad event can never
+crash the fold or the sidebar that folds every scene. App-built events never hit
+that net, so it contains malformed data without masking real logic.
+
 ## Seeded replay
 
 All randomness flows through `createSeededRng` (`src/scene/seededRng.ts`,
@@ -109,14 +118,71 @@ present" so a finished battle (one side wiped) disables Run Round and shows a
 initiative/round cycle. This closes the prior gap where Run Round stayed enabled
 forever with no "combat over" surface.
 
+## Non-combat checks (landed)
+
+Exploration needs more than combat, so a `roll-check` intent resolves a d20
+ability/skill check through the same event-sourced path. `resolveCheck`
+(`src/scene/check.ts`) is pure (`total = die + modifier`; `outcome` compares to
+an optional DC, otherwise `unresolved` for a roll the player adjudicates). The
+d20 is rolled in `buildEventFromIntent` seeded from the event's own (unique)
+id, so `resolveSceneAction` stays a pure function of its inputs, each roll
+differs, and the resulting `check.rolled` event stores the resolved values —
+the fold never re-rolls (the same contract as `token.damaged`). Folding appends
+a `SceneCheckLogEntry` to `SceneState.checkLog`, which is defaulted to `[]` for
+scenes persisted before the log existed, honoring the migration contract above.
+The scene UI's `CheckPanel` gathers a label, modifier, optional DC, an optional
+roller token, and an advantage/disadvantage mode (two d20s drawn from the same
+event-id stream, keeping the higher/lower and recording the discarded die),
+dispatches through `resolveSceneAction`, and renders the log newest-first — a
+solo player runs their own skill checks without a GM.
+
+A `consult-oracle` intent applies the same pattern to GM emulation:
+`resolveOracle` (`src/scene/oracle.ts`) maps an odds level to a d100 yes-target
+(yes when `roll <= target`), with the extreme one-fifth of each side promoted to
+an exceptional yes/no. The d100 is rolled from the event id, the `oracle.consulted`
+event stores the resolved answer, and the fold appends to `SceneState.oracleLog`.
+`OraclePanel` asks a yes/no question at a chosen likelihood — a transparent
+randomizer the player interprets, explicitly **not** an AI GM.
+
+A scratch dice roller (`src/scene/dice.ts` → `DicePanel`) evaluates arbitrary
+expressions (`2d6+3`, `4d6kh3`, `d20-1`) with the same seeded RNG, but is
+deliberately **ephemeral**: transient damage/loot rolls live in an in-memory
+history rather than the replayable event log, which records only the adjudicated
+check/oracle outcomes that matter to the fiction. The parser is pure and
+bounds-checked (dice count and sides are capped) so a malformed or abusive
+expression surfaces an error instead of rolling.
+
+## Encounter-spec validation (landed)
+
+`validateEncounterSpec` (`src/scene/encounterSpec.ts`) is the deterministic gate
+a future AI drafting loop (Phase 8) consumes before a proposed encounter ever
+touches the event-backed scene path. Given a fully-specified encounter (system,
+difficulty, party levels, selections) it returns coded
+`EncounterSpecIssue`s — `unsupported-system`, `no-party`, `empty-spec`,
+`unknown-monster`, `system-mismatch`, `policy-excluded`, `invalid-count`,
+`no-xp-cost`, `duplicate-monster` (warning), `over-budget` — plus the budget,
+spent XP, and remaining headroom.
+
+Crucially, the per-system **budget and per-monster cost dispatch is a single
+source of truth** (`encounterPartyBudget` / `monsterEncounterCost` /
+`supportsEncounterBudget` in `encounterDraft.ts`) shared by the drafter and the
+validator, so a spec the drafter produces always validates (proven by a
+consistency test). The four budgeted systems are 5e (2014/2024), PF1e, and PF2e;
+D&D 3.5e uses an Encounter-Level model that is **not yet implemented**, so it is
+honestly reported `unsupported-system` rather than borrowing the 5e table. The
+scene UI consumes the validator live (the encounter panel shows on/over-budget
+for the chosen difficulty).
+
 ## Next increments (named, not yet built)
 
-- **Structured encounter-spec validation** — a deterministic validator that
-  checks a proposed encounter spec (monster ids, counts, difficulty) against
-  loader ids, the open-content policy, and the system budget, returning
-  machine-readable errors. This is the gate a future AI drafting loop (Phase 8)
-  consumes before it ever touches the event-backed scene path.
-- **Map-aware spawn zones** — placement that respects terrain/hazard markers.
-- **Manual correction/rebalance ergonomics** — editing a drafted encounter.
+- **D&D 3.5e Encounter-Level budgets** — model the EL/XP-by-CR system so 3.5e
+  encounters can be budgeted and validated like the other four systems.
+- **AI encounter-spec drafting** (Phase 8) — prompt → structured spec →
+  `validateEncounterSpec` → repair loop → the same builder path manual selection
+  uses. The gate above is its entry contract.
 - **Backend sync** (RFC 001) — the event log is sync-friendly (compare last
   sequence); conflict policy is out of scope here.
+
+Map-aware spawn zones (`buildEncounterSceneEvents`' `zone` parameter) and manual
+rebalance ergonomics (the encounter panel's per-monster +/- controls) already
+ship.

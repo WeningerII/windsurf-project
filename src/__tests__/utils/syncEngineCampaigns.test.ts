@@ -31,6 +31,8 @@ function makeCampaign(id: string, overrides: Partial<Campaign> = {}): Campaign {
     systemId: 'dnd-5e-2024',
     notes: '',
     characterIds: [],
+    quests: [],
+    sessionLog: [],
     createdAt: new Date('2026-01-01T00:00:00.000Z'),
     updatedAt: new Date('2026-01-02T00:00:00.000Z'),
     ...overrides,
@@ -45,6 +47,8 @@ function makeRemoteCampaign(id: string, overrides: Partial<RemoteCampaign> = {})
     system_id: 'dnd-5e-2024',
     notes: 'server notes',
     character_ids: [],
+    quests: [],
+    session_log: [],
     created_at: '2026-01-01T00:00:00.000Z',
     updated_at: '2026-01-03T00:00:00.000Z',
     deleted_at: null,
@@ -174,6 +178,89 @@ describe('syncEngine — campaigns', () => {
     // soft-deleted row.
     const payload = mock.spies.upsert.mock.calls[0][0] as Record<string, unknown>;
     expect('deleted_at' in payload).toBe(false);
+  });
+
+  it('pushCampaign serializes quests and the session log into JSONB columns with ISO dates', async () => {
+    const mock = createSupabaseMock();
+    mockedGetSupabaseClient.mockReturnValue(mock.client);
+
+    await pushCampaign(
+      makeCampaign('c1', {
+        quests: [
+          {
+            id: 'q1',
+            title: 'Find the relic',
+            summary: 'in the crypt',
+            status: 'active',
+            objectives: [{ id: 'o1', text: 'descend', done: true }],
+            createdAt: new Date('2026-01-01T00:00:00.000Z'),
+            updatedAt: new Date('2026-01-02T00:00:00.000Z'),
+          },
+        ],
+        sessionLog: [
+          {
+            id: 's1',
+            title: 'Session 1',
+            body: 'we fought goblins',
+            createdAt: new Date('2026-01-03T00:00:00.000Z'),
+          },
+        ],
+      })
+    );
+
+    const payload = mock.spies.upsert.mock.calls[0][0] as Record<string, unknown>;
+    expect(payload.quests).toEqual([
+      {
+        id: 'q1',
+        title: 'Find the relic',
+        summary: 'in the crypt',
+        status: 'active',
+        objectives: [{ id: 'o1', text: 'descend', done: true }],
+        createdAt: '2026-01-01T00:00:00.000Z',
+        updatedAt: '2026-01-02T00:00:00.000Z',
+      },
+    ]);
+    expect(payload.session_log).toEqual([
+      {
+        id: 's1',
+        title: 'Session 1',
+        body: 'we fought goblins',
+        createdAt: '2026-01-03T00:00:00.000Z',
+      },
+    ]);
+  });
+
+  it('fetchRemoteCampaigns hydrates quests/session log from JSONB, coercing malformed entries', async () => {
+    const remote = makeRemoteCampaign('c1', {
+      quests: [
+        {
+          id: 'q1',
+          title: 'Arc',
+          summary: '',
+          status: 'completed',
+          objectives: [{ id: 'o1', text: 'x', done: true }],
+          createdAt: '2026-01-01T00:00:00.000Z',
+          updatedAt: '2026-01-02T00:00:00.000Z',
+        },
+        { title: 'no id — dropped' },
+      ],
+      session_log: [
+        { id: 's1', title: 'One', body: 'recap', createdAt: '2026-01-03T00:00:00.000Z' },
+      ],
+    });
+    const mock = createSupabaseMock({ rows: [remote] });
+    mockedGetSupabaseClient.mockReturnValue(mock.client);
+
+    const { entities } = await fetchRemoteCampaigns();
+    expect(entities).toHaveLength(1);
+    const campaign = entities[0];
+    expect(campaign.quests).toHaveLength(1);
+    expect(campaign.quests[0]).toMatchObject({ id: 'q1', status: 'completed' });
+    expect(campaign.quests[0].createdAt).toBeInstanceOf(Date);
+    expect(campaign.quests[0].objectives).toEqual([{ id: 'o1', text: 'x', done: true }]);
+    expect(campaign.sessionLog).toHaveLength(1);
+    expect(campaign.sessionLog[0]).toMatchObject({ id: 's1', title: 'One', body: 'recap' });
+    expect(campaign.sessionLog[0].createdAt).toBeInstanceOf(Date);
   });
 
   it('pushCampaigns batches an array, resolves the user id once, and short-circuits on empty input', async () => {

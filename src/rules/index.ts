@@ -65,7 +65,13 @@ export {
 } from './resolver/sceneCombat';
 
 export type { ScoredTarget, TacticalActor, TacticalTarget } from './tactical/targetScoring';
-export { isHostile, maxPossibleDamage, scoreTarget, scoreTargets } from './tactical/targetScoring';
+export {
+  NEUTRAL_FACTION,
+  isHostile,
+  maxPossibleDamage,
+  scoreTarget,
+  scoreTargets,
+} from './tactical/targetScoring';
 
 export type {
   TacticalDecisionKind,

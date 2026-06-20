@@ -1,6 +1,6 @@
-import { Plus, Trash2 } from 'lucide-react';
+import { Dices, Plus, Trash2 } from 'lucide-react';
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
-import type { SceneTokenKind } from '../../types/core/scene';
+import type { SceneAllegiance, SceneTokenKind } from '../../types/core/scene';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { Select } from '../ui/Select';
@@ -13,6 +13,15 @@ interface TokenPanelProps {
   onTokenNameChange: (value: string) => void;
   tokenKind: SceneTokenKind;
   onTokenKindChange: (value: SceneTokenKind) => void;
+  /** Side a placed NPC fights on (only shown for the npc kind). */
+  tokenAllegiance: SceneAllegiance;
+  onTokenAllegianceChange: (value: SceneAllegiance) => void;
+  /** Creature statblocks an NPC can be backed by (the scene's loaded catalog). */
+  eligibleStatblocks: { id: string; name: string }[];
+  tokenStatblockId: string;
+  onSelectStatblock: (statblockId: string) => void;
+  /** Roll up a random NPC (name + a catalog statblock) and enter placement. */
+  onGenerateNpc: () => void;
   isPlacing: boolean;
   onTogglePlace: () => void;
   canDeleteToken: boolean;
@@ -22,6 +31,9 @@ interface TokenPanelProps {
   /** The selected token's active conditions. */
   selectedTokenConditions?: readonly string[];
   onToggleSelectedTokenCondition?: (conditionId: string) => void;
+  /** The selected token's current side (undefined hides the re-side control). */
+  selectedTokenSide?: SceneAllegiance;
+  onSetSelectedTokenSide?: (value: SceneAllegiance) => void;
 }
 
 /** Token controls: link a character (or define a manual token) and place it. */
@@ -33,6 +45,12 @@ export function TokenPanel({
   onTokenNameChange,
   tokenKind,
   onTokenKindChange,
+  tokenAllegiance,
+  onTokenAllegianceChange,
+  eligibleStatblocks,
+  tokenStatblockId,
+  onSelectStatblock,
+  onGenerateNpc,
   isPlacing,
   onTogglePlace,
   canDeleteToken,
@@ -40,6 +58,8 @@ export function TokenPanel({
   conditionOptions = [],
   selectedTokenConditions = [],
   onToggleSelectedTokenCondition,
+  selectedTokenSide,
+  onSetSelectedTokenSide,
 }: TokenPanelProps) {
   return (
     <div className="rounded-lg border bg-card p-3">
@@ -81,24 +101,81 @@ export function TokenPanel({
             aria-label="Token kind"
             value={tokenKind}
             onChange={(event) => onTokenKindChange(event.target.value as SceneTokenKind)}
-            disabled={Boolean(tokenDocumentId)}
           >
             <option value="character">Character</option>
-            <option value="monster">Monster</option>
+            {/* A linked sheet backs a character or an NPC; monster/object are
+                only for manual (unlinked) tokens. */}
+            {!tokenDocumentId && <option value="monster">Monster</option>}
             <option value="npc">NPC</option>
-            <option value="object">Object</option>
+            {!tokenDocumentId && <option value="object">Object</option>}
           </Select>
         </div>
+        {tokenKind === 'npc' && (
+          <>
+            <Select
+              aria-label="NPC side"
+              value={tokenAllegiance}
+              onChange={(event) => onTokenAllegianceChange(event.target.value as SceneAllegiance)}
+            >
+              <option value="hostile">Enemy (fights the party)</option>
+              <option value="party">Ally (fights with the party)</option>
+              <option value="neutral">Neutral (bystander)</option>
+            </Select>
+            {/* Back the NPC with a creature statblock (mechanically real), or
+                roll one up. A linked sheet takes precedence over this. */}
+            {!tokenDocumentId && eligibleStatblocks.length > 0 && (
+              <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-2">
+                <Select
+                  aria-label="NPC statblock"
+                  value={tokenStatblockId}
+                  onChange={(event) => onSelectStatblock(event.target.value)}
+                >
+                  <option value="">No statblock (manual)</option>
+                  {eligibleStatblocks.map((statblock) => (
+                    <option key={statblock.id} value={statblock.id}>
+                      {statblock.name}
+                    </option>
+                  ))}
+                </Select>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={onGenerateNpc}
+                  title="Roll up a random NPC (name + statblock)"
+                >
+                  <Dices className="mr-1.5 h-4 w-4" />
+                  Generate
+                </Button>
+              </div>
+            )}
+          </>
+        )}
         <Button
           variant={isPlacing ? 'default' : 'outline'}
           size="sm"
           className="w-full"
           onClick={onTogglePlace}
-          disabled={!tokenName.trim() && !tokenDocumentId}
+          disabled={!tokenName.trim() && !tokenDocumentId && !tokenStatblockId}
         >
           <Plus className="mr-1.5 h-4 w-4" />
           Place Token
         </Button>
+        {selectedTokenSide && onSetSelectedTokenSide && (
+          <div>
+            <div className="mb-1 text-xs font-medium text-muted-foreground">
+              Selected token side
+            </div>
+            <Select
+              aria-label="Selected token side"
+              value={selectedTokenSide}
+              onChange={(event) => onSetSelectedTokenSide(event.target.value as SceneAllegiance)}
+            >
+              <option value="party">Ally (with the party)</option>
+              <option value="hostile">Enemy (against the party)</option>
+              <option value="neutral">Neutral (bystander)</option>
+            </Select>
+          </div>
+        )}
         {conditionOptions.length > 0 && onToggleSelectedTokenCondition && (
           <div>
             <div className="mb-1 text-xs font-medium text-muted-foreground">

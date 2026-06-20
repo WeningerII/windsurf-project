@@ -5,6 +5,7 @@ import {
   deleteScene,
   exportScenes,
   importScenes,
+  importScenesWithReport,
   loadScene,
   loadScenes,
   saveScenes,
@@ -75,6 +76,31 @@ describe('sceneStorage', () => {
       systemId: 'dnd-5e-2024',
     });
     expect(imported[0].createdAt).toBeInstanceOf(Date);
+  });
+
+  it('importScenesWithReport counts dropped invalid entries', () => {
+    const valid = createSceneDocument({
+      id: 'scene-ok',
+      name: 'OK',
+      systemId: 'dnd-5e-2024',
+      now: NOW,
+    });
+    const payload = JSON.stringify({
+      version: '1.0',
+      scenes: [valid, { id: 'no-systemId', name: 'broken' }, 'not an object'],
+    });
+
+    const { scenes, droppedCount } = importScenesWithReport(payload);
+    expect(scenes).toHaveLength(1);
+    expect(scenes[0].id).toBe('scene-ok');
+    expect(droppedCount).toBe(2);
+  });
+
+  it('importScenesWithReport throws on structurally invalid JSON', () => {
+    expect(() => importScenesWithReport('{bad json')).toThrow(/invalid json/i);
+    expect(() => importScenesWithReport(JSON.stringify({ version: '1.0' }))).toThrow(
+      /invalid json/i
+    );
   });
 
   it('clears scene storage', () => {

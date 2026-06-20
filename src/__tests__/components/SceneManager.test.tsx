@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { useState } from 'react';
 import { appendSceneEvent, createSceneDocument } from '../../scene/runtime';
 import { resolveSceneAttack } from '../../rules';
@@ -17,7 +17,7 @@ const encounterMonsterFixtures = vi.hoisted(() => [
     id: 'goblin',
     name: 'Goblin',
     system: 'dnd-5e-2024',
-    source: 'SRD 5.2.1',
+    source: 'SRD 5.2',
     size: 'small',
     type: 'humanoid',
     alignment: 'neutral evil',
@@ -35,7 +35,7 @@ const encounterMonsterFixtures = vi.hoisted(() => [
     id: 'ogre',
     name: 'Ogre',
     system: 'dnd-5e-2024',
-    source: 'SRD 5.2.1',
+    source: 'SRD 5.2',
     size: 'large',
     type: 'giant',
     alignment: 'chaotic evil',
@@ -56,7 +56,7 @@ const encounterMonsterFixtures = vi.hoisted(() => [
     id: 'peasant',
     name: 'Peasant',
     system: 'dnd-5e-2024',
-    source: 'SRD 5.2.1',
+    source: 'SRD 5.2',
     size: 'medium',
     type: 'humanoid',
     alignment: 'neutral',
@@ -82,7 +82,7 @@ const encounterMonsterFixtures = vi.hoisted(() => [
     id: 'brute',
     name: 'Vicious Brute',
     system: 'dnd-5e-2024',
-    source: 'SRD 5.2.1',
+    source: 'SRD 5.2',
     size: 'medium',
     type: 'humanoid',
     alignment: 'chaotic evil',
@@ -143,6 +143,8 @@ function makeCampaign(overrides: Partial<Campaign> = {}): Campaign {
     systemId: 'dnd-5e-2024',
     characterIds: [],
     notes: '',
+    quests: [],
+    sessionLog: [],
     createdAt: now,
     updatedAt: now,
     ...overrides,
@@ -196,6 +198,13 @@ beforeAll(() => {
   }
 });
 
+afterEach(() => {
+  // The AI tests below stub VITE_AI_ENABLED and global fetch; keep that from
+  // leaking into the (AI-off-by-default) tests above and elsewhere.
+  vi.unstubAllEnvs();
+  vi.unstubAllGlobals();
+});
+
 describe('SceneManager', () => {
   it('creates a scene and opens the manual grid', async () => {
     const user = userEvent.setup();
@@ -245,6 +254,26 @@ describe('SceneManager', () => {
     expect(screen.getByText('Round 2, active Astra')).toBeInTheDocument();
   });
 
+  it('places a mechanically-real NPC backed by a creature statblock', async () => {
+    const user = userEvent.setup();
+    render(<SceneHarness initialScenes={[makeScene()]} />);
+
+    // Wait for the creature catalog to load (drives the NPC statblock picker).
+    await waitFor(() => {
+      expect(screen.getByRole('combobox', { name: /encounter monster/i })).toHaveValue('goblin');
+    });
+
+    await user.selectOptions(screen.getByRole('combobox', { name: /token kind/i }), 'npc');
+    await user.selectOptions(screen.getByRole('combobox', { name: /npc statblock/i }), 'goblin');
+    await user.click(screen.getByRole('button', { name: /place token/i }));
+    await user.click(screen.getByRole('gridcell', { name: /Cell 2, 2/i }));
+
+    // Hostile by default and carrying statblock HP — a real combatant, not set dressing.
+    expect(
+      screen.getByRole('button', { name: /Token Goblin, enemy, \d+ of \d+ HP/i })
+    ).toBeInTheDocument();
+  });
+
   it('places and removes terrain or hazard markers as scene events', async () => {
     const user = userEvent.setup();
     render(<SceneHarness initialScenes={[makeScene()]} />);
@@ -273,7 +302,7 @@ describe('SceneManager', () => {
 
     expect(screen.getByRole('button', { name: /Token Goblin 1/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Token Goblin 2/i })).toBeInTheDocument();
-    expect(screen.getByText(/100 XP \/ SRD 5.2.1/i)).toBeInTheDocument();
+    expect(screen.getByText(/100 XP \/ SRD 5.2/i)).toBeInTheDocument();
 
     await waitFor(() => {
       expect(screen.getByText(/Round 1, active Goblin/i)).toBeInTheDocument();
@@ -306,6 +335,158 @@ describe('SceneManager', () => {
     expect(screen.getByRole('button', { name: /Token Goblin 1/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Token Goblin 2/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Token Ogre/i })).toBeInTheDocument();
+  });
+
+  it('hides the AI draft affordance when AI is disabled (default)', async () => {
+    render(<SceneHarness initialScenes={[makeScene()]} />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('combobox', { name: /encounter monster/i })).toHaveValue('goblin');
+    });
+
+    // Default-OFF: the panel is byte-for-byte the pre-AI experience.
+    expect(screen.queryByRole('button', { name: /draft with ai/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('textbox', { name: /ai encounter prompt/i })).not.toBeInTheDocument();
+  });
+
+  it('drafts an encounter via the AI gateway, then applies it through the same builder', async () => {
+    vi.stubEnv('VITE_AI_ENABLED', 'true');
+    // Stub the same-origin gateway: the model "proposes" two goblins; the
+    // deterministic encounter-spec gate then accepts them (100 XP, on budget).
+    const fetchSpy = vi.fn(async () => ({
+      json: async () => ({
+        ok: true,
+        task: 'encounter-draft',
+        data: { selections: [{ monsterId: 'goblin', count: 2 }], rationale: 'A scouting pack.' },
+        usage: { source: 'fixture' },
+      }),
+    }));
+    vi.stubGlobal('fetch', fetchSpy as unknown as typeof fetch);
+
+    const user = userEvent.setup();
+    const astra = makeDoc('doc-1', 'Astra', 'dnd-5e-2024', { level: 3 });
+    const borin = makeDoc('doc-2', 'Borin', 'dnd-5e-2024', { level: 3 });
+    render(<SceneHarness initialScenes={[makeScene()]} documents={[astra, borin]} />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('combobox', { name: /encounter monster/i })).toHaveValue('goblin');
+    });
+
+    await user.type(
+      screen.getByRole('textbox', { name: /ai encounter prompt/i }),
+      'a goblin scouting pack'
+    );
+    await user.click(screen.getByRole('button', { name: /draft with ai/i }));
+
+    // The accepted draft populates the review list — it is NOT auto-applied.
+    await waitFor(() => {
+      expect(screen.getByText(/2 x Goblin/i)).toBeInTheDocument();
+    });
+    expect(fetchSpy).toHaveBeenCalledWith(
+      '/.netlify/functions/ai-gateway',
+      expect.objectContaining({ method: 'POST' })
+    );
+    expect(screen.queryByRole('button', { name: /Token Goblin 1/i })).not.toBeInTheDocument();
+
+    // The GM applies it through the SAME deterministic builder a manual draft uses.
+    await user.click(screen.getByRole('button', { name: /add encounter/i }));
+    expect(screen.getByRole('button', { name: /Token Goblin 1/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Token Goblin 2/i })).toBeInTheDocument();
+  });
+
+  it('surfaces a gateway failure without applying anything (degrades to manual)', async () => {
+    vi.stubEnv('VITE_AI_ENABLED', 'true');
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => {
+        throw new Error('offline');
+      }) as unknown as typeof fetch
+    );
+
+    const user = userEvent.setup();
+    const astra = makeDoc('doc-1', 'Astra', 'dnd-5e-2024', { level: 3 });
+    render(<SceneHarness initialScenes={[makeScene()]} documents={[astra]} />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('combobox', { name: /encounter monster/i })).toHaveValue('goblin');
+    });
+
+    await user.type(screen.getByRole('textbox', { name: /ai encounter prompt/i }), 'anything');
+    await user.click(screen.getByRole('button', { name: /draft with ai/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/AI draft:/i)).toBeInTheDocument();
+    });
+    // Nothing was placed; the manual tools remain fully usable.
+    expect(screen.queryByRole('button', { name: /Token Goblin 1/i })).not.toBeInTheDocument();
+  });
+
+  it('hides the identify-from-image affordance when AI is disabled', async () => {
+    render(<SceneHarness initialScenes={[makeScene()]} />);
+    await waitFor(() => {
+      expect(screen.getByRole('combobox', { name: /encounter monster/i })).toHaveValue('goblin');
+    });
+    expect(screen.queryByRole('button', { name: /identify from image/i })).not.toBeInTheDocument();
+  });
+
+  it('identifies a creature from an uploaded image and selects its statblock', async () => {
+    vi.stubEnv('VITE_AI_ENABLED', 'true');
+    // The vision model "recognizes" the ogre; the flow then confirms the id is
+    // in the loaded catalog before the panel selects it.
+    const fetchSpy = vi.fn(async () => ({
+      json: async () => ({
+        ok: true,
+        task: 'identify-creature',
+        data: { monsterId: 'ogre', confidence: 0.82, reason: 'a hulking brute' },
+        usage: { source: 'fixture' },
+      }),
+    }));
+    vi.stubGlobal('fetch', fetchSpy as unknown as typeof fetch);
+
+    const user = userEvent.setup();
+    render(<SceneHarness initialScenes={[makeScene()]} />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('combobox', { name: /encounter monster/i })).toHaveValue('goblin');
+    });
+
+    const file = new File([new Uint8Array([1, 2, 3, 4])], 'ogre.png', { type: 'image/png' });
+    await user.upload(screen.getByLabelText(/creature image to identify/i), file);
+
+    // The identified creature is selected for review (not placed automatically).
+    await waitFor(() => {
+      expect(screen.getByRole('combobox', { name: /encounter monster/i })).toHaveValue('ogre');
+    });
+    expect(screen.getByText(/Identified Ogre \(82% sure\)/i)).toBeInTheDocument();
+    expect(fetchSpy).toHaveBeenCalledWith(
+      '/.netlify/functions/ai-gateway',
+      expect.objectContaining({ method: 'POST' })
+    );
+  });
+
+  it('reports an unreadable / non-image upload without selecting anything', async () => {
+    vi.stubEnv('VITE_AI_ENABLED', 'true');
+    const fetchSpy = vi.fn();
+    vi.stubGlobal('fetch', fetchSpy as unknown as typeof fetch);
+
+    render(<SceneHarness initialScenes={[makeScene()]} />);
+    await waitFor(() => {
+      expect(screen.getByRole('combobox', { name: /encounter monster/i })).toHaveValue('goblin');
+    });
+
+    const notImage = new File(['plain text'], 'notes.txt', { type: 'text/plain' });
+    // fireEvent bypasses the input's accept filter so the handler's own guard
+    // (not the browser's) is what we exercise here.
+    fireEvent.change(screen.getByLabelText(/creature image to identify/i), {
+      target: { files: [notImage] },
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText(/choose an image file/i)).toBeInTheDocument();
+    });
+    // Rejected before any network call; selection unchanged.
+    expect(fetchSpy).not.toHaveBeenCalled();
+    expect(screen.getByRole('combobox', { name: /encounter monster/i })).toHaveValue('goblin');
   });
 
   it('REGRESSION (05-H1/02-H1): each Attack click derives a fresh seed even when no event lands', async () => {

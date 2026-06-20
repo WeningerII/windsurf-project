@@ -1,5 +1,6 @@
 import type {
   SceneActionIntent,
+  SceneAllegiance,
   SceneDocument,
   SceneEvent,
   SceneGrid,
@@ -8,6 +9,10 @@ import type {
   SceneState,
   SceneToken,
 } from '../types/core/scene';
+import { cellKey, footprintCells, footprintWithinGrid } from './grid';
+import { createSeededRng } from './seededRng';
+import { resolveCheck } from './check';
+import { isOracleAnswer, isOracleOdds, resolveOracle } from './oracle';
 
 export interface CreateSceneDocumentParams {
   id: string;
@@ -62,6 +67,8 @@ export function createSceneDocument(params: CreateSceneDocumentParams): SceneDoc
       initiative: [],
       round: 1,
       seed: params.seed ?? params.id,
+      checkLog: [],
+      oracleLog: [],
     },
     events: [],
     createdAt: now,
@@ -78,12 +85,27 @@ export function foldSceneEvents(scene: SceneDocument): SceneFoldResult {
     .slice()
     .sort((a, b) => a.sequence - b.sequence)
     .forEach((event) => {
-      const eventIssues = validateSceneEvent(state, event);
-      issues.push(...eventIssues);
-      if (eventIssues.some((issue) => issue.severity === 'error')) {
-        return;
+      // Replay safety net: a corrupt persisted/imported event (missing or
+      // wrong-shaped payload) must degrade to a recorded issue and a skipped
+      // event, never crash hydration — the same parse-don't-cast guarantee the
+      // storage boundary makes. The happy path (app-built events) never throws
+      // here, so this masks no real logic; it only contains malformed data.
+      try {
+        const eventIssues = validateSceneEvent(state, event);
+        issues.push(...eventIssues);
+        if (eventIssues.some((issue) => issue.severity === 'error')) {
+          return;
+        }
+        applySceneEvent(state, event);
+      } catch {
+        issues.push({
+          code: 'scene-event-malformed',
+          message: `Scene event '${event?.id ?? '?'}' could not be processed and was skipped.`,
+          severity: 'error',
+          eventId: event?.id,
+          sequence: event?.sequence,
+        });
       }
-      applySceneEvent(state, event);
     });
 
   return { state, issues };
@@ -132,6 +154,132 @@ function validateSceneIntent(
       },
     ];
   }
+  if (intent.type === 'place-token') {
+    return footprintPlacementIssues(
+      state,
+      intent.token.position,
+      intent.token.size,
+      undefined,
+      options
+    );
+  }
+  if (intent.type === 'move-token') {
+    const moving = state.tokens[intent.tokenId];
+    // An unknown token id is reported by the event-level validator; the size
+    // comes from the existing token.
+    if (moving) {
+      return footprintPlacementIssues(state, intent.position, moving.size, intent.tokenId, options);
+    }
+  }
+  if (intent.type === 'roll-check') {
+    return checkIntentIssues(state, intent, options);
+  }
+  if (intent.type === 'consult-oracle' && !isOracleOdds(intent.odds)) {
+    return [
+      {
+        code: 'scene-oracle-odds-invalid',
+        message: 'An oracle consultation needs a recognized odds level.',
+        path: 'odds',
+        severity: 'error',
+        eventId: options.eventId,
+      },
+    ];
+  }
+  return [];
+}
+
+/**
+ * Forward-looking gate for a check roll: it needs a label, a finite modifier,
+ * a finite DC when one is given, and — if attributed to a token — a real one.
+ * Intent-level so it never invalidates a historical `check.rolled` event.
+ */
+function checkIntentIssues(
+  state: SceneState,
+  intent: Extract<SceneActionIntent, { type: 'roll-check' }>,
+  options: SceneActionOptions
+): SceneIssue[] {
+  const issues: SceneIssue[] = [];
+  const issue = (code: string, message: string, path: string) =>
+    issues.push({ code, message, path, severity: 'error', eventId: options.eventId });
+
+  // Guard the type contract: a malformed (non-string) label returns the issue
+  // rather than throwing `label.trim` out of resolveSceneAction.
+  if (typeof intent.label !== 'string' || !intent.label.trim()) {
+    issue('scene-check-label-required', 'A check needs a label (what is being rolled).', 'label');
+  }
+  if (!Number.isFinite(intent.modifier)) {
+    issue('scene-check-modifier-invalid', 'A check modifier must be a finite number.', 'modifier');
+  }
+  if (intent.dc !== undefined && !Number.isFinite(intent.dc)) {
+    issue('scene-check-dc-invalid', 'A check DC must be a finite number when set.', 'dc');
+  }
+  if (intent.actorTokenId !== undefined && !state.tokens[intent.actorTokenId]) {
+    issue(
+      'scene-check-actor-unknown',
+      `Token '${intent.actorTokenId}' does not exist in this scene.`,
+      'actorTokenId'
+    );
+  }
+  return issues;
+}
+
+/**
+ * Forward-looking placement gate: a token's footprint (size x size cells) must
+ * fit on the grid and must not overlap another token when a multi-cell creature
+ * is involved. Size-1 tokens may still share a cell (the grid renders stacks);
+ * the rule exists so nothing is placed "inside" a large creature's reserved
+ * footprint that its single anchor cell doesn't visibly show. Intent-level, so
+ * it never invalidates historical events.
+ */
+function footprintPlacementIssues(
+  state: SceneState,
+  position: { x: number; y: number },
+  size: number,
+  ignoreTokenId: string | undefined,
+  options: SceneActionOptions
+): SceneIssue[] {
+  const span = Math.max(1, Math.trunc(size));
+  // A multi-cell footprint can run off-grid even when its anchor cell is in
+  // bounds (the event-level coordinate check only sees the anchor). Size-1
+  // bounds are left to that existing check so its error code is unchanged.
+  if (span > 1 && !footprintWithinGrid(position, size, state.grid.width, state.grid.height)) {
+    return [
+      {
+        code: 'scene-footprint-out-of-bounds',
+        message: `A ${span}x${span} token at (${position.x}, ${position.y}) does not fit on the grid.`,
+        path: 'position',
+        severity: 'error',
+        eventId: options.eventId,
+      },
+    ];
+  }
+
+  // Cells occupied by OTHER tokens, keyed to the occupying token's size so we
+  // permit size-1-on-size-1 stacking but reject overlap with any large one.
+  const occupiedSizeByCell = new Map<string, number>();
+  for (const token of Object.values(state.tokens)) {
+    if (token.id === ignoreTokenId) continue;
+    const tokenSpan = Math.max(1, Math.trunc(token.size));
+    for (const cell of footprintCells(token.position, token.size)) {
+      const key = cellKey(cell);
+      occupiedSizeByCell.set(key, Math.max(occupiedSizeByCell.get(key) ?? 0, tokenSpan));
+    }
+  }
+  const overlaps = footprintCells(position, size).some((cell) => {
+    const occupiedSpan = occupiedSizeByCell.get(cellKey(cell));
+    return occupiedSpan !== undefined && (span > 1 || occupiedSpan > 1);
+  });
+  if (overlaps) {
+    return [
+      {
+        code: 'scene-footprint-occupied',
+        message: `A ${span}x${span} token at (${position.x}, ${position.y}) overlaps another token's space.`,
+        path: 'position',
+        severity: 'error',
+        eventId: options.eventId,
+      },
+    ];
+  }
   return [];
 }
 
@@ -153,6 +301,47 @@ export function appendSceneEvent(scene: SceneDocument, event: SceneEvent): Scene
   };
 }
 
+export interface ApplySceneIntentsResult {
+  /** Events that re-validated and applied, in order. */
+  events: SceneEvent[];
+  /** Messages for intents the runtime rejected on re-validation. */
+  rejected: string[];
+}
+
+/**
+ * Resolve a batch of action intents against a scene, threading a working copy so
+ * each event sees the prior ones (correct sequencing) and re-validates before it
+ * is kept. Simulated intents (e.g. from a round driver) that the runtime rejects
+ * are reported rather than silently dropped. Pure given the id factory and clock.
+ */
+export function applySceneIntents(
+  scene: SceneDocument,
+  intents: readonly SceneActionIntent[],
+  options: { eventIdFactory: () => string; now?: () => Date }
+): ApplySceneIntentsResult {
+  let working = scene;
+  const events: SceneEvent[] = [];
+  const rejected: string[] = [];
+  for (const intent of intents) {
+    const result = resolveSceneAction(working, intent, {
+      eventId: options.eventIdFactory(),
+      createdAt: options.now ? options.now() : new Date(),
+    });
+    if (result.event) {
+      events.push(result.event);
+      working = appendSceneEvent(working, result.event);
+    } else {
+      rejected.push(...result.issues.map((issue) => issue.message));
+    }
+  }
+  return { events, rejected };
+}
+
+/** Whether a value is a recognized combat allegiance (validates persisted events). */
+function isSceneAllegiance(value: unknown): value is SceneAllegiance {
+  return value === 'party' || value === 'hostile' || value === 'neutral';
+}
+
 export function validateSceneEvent(state: SceneState, event: SceneEvent): SceneIssue[] {
   const issues: SceneIssue[] = [];
   pushSequenceIssue(issues, event);
@@ -171,6 +360,16 @@ export function validateSceneEvent(state: SceneState, event: SceneEvent): SceneI
     case 'token.conditions-set':
       validateKnownToken(state, event.payload.tokenId, issues, event, 'payload.tokenId');
       break;
+    case 'token.allegiance-set':
+      validateKnownToken(state, event.payload.tokenId, issues, event, 'payload.tokenId');
+      if (!isSceneAllegiance(event.payload.allegiance)) {
+        pushIssue(issues, event, {
+          code: 'scene-allegiance-invalid',
+          message: 'Token allegiance must be party, hostile, or neutral.',
+          path: 'payload.allegiance',
+        });
+      }
+      break;
     case 'token.damaged':
       validateDamages(state, event.payload.damages, issues, event);
       break;
@@ -188,11 +387,63 @@ export function validateSceneEvent(state: SceneState, event: SceneEvent): SceneI
         validateKnownToken(state, event.payload.nextTokenId, issues, event, 'payload.nextTokenId');
       }
       break;
+    case 'check.rolled':
+      validateCheckEvent(state, event, issues);
+      break;
+    case 'oracle.consulted':
+      // Reject non-enum odds/answer too, so a corrupt import can't fold into the
+      // log and render an `undefined` label in the panel/recap.
+      if (
+        !Number.isFinite(event.payload.roll) ||
+        !Number.isFinite(event.payload.target) ||
+        !isOracleOdds(event.payload.odds) ||
+        !isOracleAnswer(event.payload.answer)
+      ) {
+        pushIssue(issues, event, {
+          code: 'scene-oracle-values-invalid',
+          message:
+            'A consulted oracle must record finite roll/target and a recognized odds/answer.',
+          path: 'payload',
+        });
+      }
+      break;
     default:
       assertNever(event);
   }
 
   return issues;
+}
+
+/**
+ * Event-level (historical, lenient) validation of a rolled check. The die and
+ * total must be finite numbers so the fold and any UI math can't break, and the
+ * outcome must be a recognized value so the panel/recap can't render an
+ * `undefined` label; an attributed token, if named, must exist. The DC and the
+ * specific success/failure are not re-derived — a replayed event keeps whatever
+ * it recorded.
+ */
+function validateCheckEvent(
+  state: SceneState,
+  event: Extract<SceneEvent, { type: 'check.rolled' }>,
+  issues: SceneIssue[]
+): void {
+  const { die, total, modifier, outcome, actorTokenId } = event.payload;
+  const outcomeValid = outcome === 'success' || outcome === 'failure' || outcome === 'unresolved';
+  if (
+    !Number.isFinite(die) ||
+    !Number.isFinite(total) ||
+    !Number.isFinite(modifier) ||
+    !outcomeValid
+  ) {
+    pushIssue(issues, event, {
+      code: 'scene-check-values-invalid',
+      message: 'A rolled check must record finite die/modifier/total and a recognized outcome.',
+      path: 'payload',
+    });
+  }
+  if (actorTokenId) {
+    validateKnownToken(state, actorTokenId, issues, event, 'payload.actorTokenId');
+  }
 }
 
 function buildEventFromIntent(
@@ -235,6 +486,12 @@ function buildEventFromIntent(
         // Dedupe while preserving order so replays are byte-stable.
         payload: { tokenId: intent.tokenId, conditions: [...new Set(intent.conditions)] },
       };
+    case 'set-token-allegiance':
+      return {
+        ...base,
+        type: 'token.allegiance-set',
+        payload: { tokenId: intent.tokenId, allegiance: intent.allegiance },
+      };
     case 'add-marker':
       return { ...base, type: 'marker.added', payload: { marker: cloneMarker(intent.marker) } };
     case 'remove-marker':
@@ -254,6 +511,47 @@ function buildEventFromIntent(
         type: 'turn.advanced',
         payload: { nextTokenId: getNextInitiativeTokenId(state) },
       };
+    case 'roll-check': {
+      // Seed the d20(s) from the (caller-supplied, unique) event id: resolveSceneAction
+      // stays a pure function of its inputs, each roll differs, and the resolved
+      // result is stored on the event so the fold never re-rolls. Advantage/
+      // disadvantage draws two from the same stream and keeps one.
+      const rng = createSeededRng(base.id);
+      const first = rng.rollDie(20);
+      let die = first;
+      let extra: { mode: 'advantage' | 'disadvantage'; discardedDie: number } | undefined;
+      if (intent.mode === 'advantage' || intent.mode === 'disadvantage') {
+        const second = rng.rollDie(20);
+        const keepHigh = intent.mode === 'advantage';
+        die = keepHigh ? Math.max(first, second) : Math.min(first, second);
+        extra = {
+          mode: intent.mode,
+          discardedDie: keepHigh ? Math.min(first, second) : Math.max(first, second),
+        };
+      }
+      const result = resolveCheck(die, intent.modifier, intent.dc);
+      return {
+        ...base,
+        type: 'check.rolled',
+        payload: {
+          label: intent.label.trim(),
+          actorTokenId: intent.actorTokenId,
+          ...result,
+          ...extra,
+        },
+      };
+    }
+    case 'consult-oracle': {
+      // Same event-id-seeded roll as a check, on a d100.
+      const roll = createSeededRng(base.id).rollDie(100);
+      const result = resolveOracle(intent.odds, roll);
+      const question = intent.question?.trim();
+      return {
+        ...base,
+        type: 'oracle.consulted',
+        payload: { ...result, ...(question ? { question } : {}) },
+      };
+    }
     default:
       assertNever(intent);
   }
@@ -297,6 +595,13 @@ function applySceneEvent(state: SceneState, event: SceneEvent): void {
       }
       break;
     }
+    case 'token.allegiance-set': {
+      const token = state.tokens[event.payload.tokenId];
+      if (token) {
+        state.tokens[event.payload.tokenId] = { ...token, allegiance: event.payload.allegiance };
+      }
+      break;
+    }
     case 'marker.added':
       state.markers[event.payload.marker.id] = cloneMarker(event.payload.marker);
       break;
@@ -321,6 +626,43 @@ function applySceneEvent(state: SceneState, event: SceneEvent): void {
         state.round += 1;
       }
       break;
+    case 'check.rolled': {
+      const { label, actorTokenId, die, modifier, dc, total, outcome, mode, discardedDie } =
+        event.payload;
+      state.checkLog = [
+        ...state.checkLog,
+        {
+          id: event.id,
+          label,
+          ...(actorTokenId !== undefined ? { actorTokenId } : {}),
+          die,
+          modifier,
+          ...(dc !== undefined ? { dc } : {}),
+          total,
+          outcome,
+          ...(mode !== undefined ? { mode } : {}),
+          ...(discardedDie !== undefined ? { discardedDie } : {}),
+          createdAt: event.createdAt,
+        },
+      ];
+      break;
+    }
+    case 'oracle.consulted': {
+      const { question, odds, roll, target, answer } = event.payload;
+      state.oracleLog = [
+        ...state.oracleLog,
+        {
+          id: event.id,
+          ...(question !== undefined ? { question } : {}),
+          odds,
+          roll,
+          target,
+          answer,
+          createdAt: event.createdAt,
+        },
+      ];
+      break;
+    }
     default:
       assertNever(event);
   }
@@ -345,8 +687,14 @@ function normalizeGrid(grid?: Partial<SceneGrid>): SceneGrid {
   };
 }
 
-function positiveIntegerOrDefault(value: unknown, fallback: number): number {
-  return Number.isInteger(value) && Number(value) > 0 ? Number(value) : fallback;
+/**
+ * A positive integer, or the fallback. Accepts a number (validated as-is) or a
+ * string (parsed base-10), so the grid-dimension defaults here and the
+ * form-input parsing in the scene UI share one implementation.
+ */
+export function positiveIntegerOrDefault(value: unknown, fallback: number): number {
+  const parsed = typeof value === 'string' ? Number.parseInt(value, 10) : value;
+  return Number.isInteger(parsed) && Number(parsed) > 0 ? Number(parsed) : fallback;
 }
 
 function validateTokenForAdd(
@@ -556,7 +904,11 @@ function pushIssue(
 function cloneSceneState(state: SceneState): SceneState {
   return {
     ...state,
-    grid: { ...state.grid },
+    // normalizeGrid both copies and coerces: a corrupt import with a
+    // non-positive width/height (parseSceneDocument only checks the grid is an
+    // object) would otherwise fold to an unusable empty scene. Valid grids pass
+    // through unchanged.
+    grid: normalizeGrid(state.grid),
     tokens: Object.fromEntries(
       Object.entries(state.tokens).map(([id, token]) => [id, cloneToken(token)])
     ),
@@ -564,6 +916,20 @@ function cloneSceneState(state: SceneState): SceneState {
       Object.entries(state.markers).map(([id, marker]) => [id, cloneMarker(marker)])
     ),
     initiative: state.initiative.map((entry) => ({ ...entry })),
+    // `parseSceneDocument` validates the grid/tokens/markers/initiative
+    // substructure but not these initialState primitives; coerce so a corrupt
+    // import can't make the round NaN (`undefined + 1` on turn.advanced) or
+    // leave the seed a non-string the type claims is impossible.
+    round: positiveIntegerOrDefault(state.round, 1),
+    seed: typeof state.seed === 'string' ? state.seed : String(state.seed ?? state.sceneId ?? ''),
+    // Default for scenes persisted before these logs existed; the Array.isArray
+    // guard also hardens against a corrupt import whose initialState carries a
+    // non-array here (`parseSceneDocument` does not deep-validate these derived
+    // fields). Entries are flat value objects, so a shallow copy is a full clone.
+    checkLog: (Array.isArray(state.checkLog) ? state.checkLog : []).map((entry) => ({ ...entry })),
+    oracleLog: (Array.isArray(state.oracleLog) ? state.oracleLog : []).map((entry) => ({
+      ...entry,
+    })),
   };
 }
 

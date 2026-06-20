@@ -166,6 +166,70 @@ export function pf2eCreatureXp(creatureLevel: number, partyLevel: number): numbe
   return PF2E_CREATURE_XP[creatureLevel - partyLevel] ?? 0;
 }
 
+/**
+ * The systems with a cited encounter-budget model in this repo. D&D 3.5e is a
+ * monster system but uses an Encounter-Level model (not a summed-XP budget) that
+ * is not yet implemented, so it is deliberately absent — encounter budgeting is
+ * reported as unsupported for it rather than borrowing the 5e table.
+ */
+export const ENCOUNTER_BUDGET_SYSTEMS = ['dnd-5e-2014', 'dnd-5e-2024', 'pf1e', 'pf2e'] as const;
+
+export type EncounterBudgetSystem = (typeof ENCOUNTER_BUDGET_SYSTEMS)[number];
+
+export function supportsEncounterBudget(systemId: string): systemId is EncounterBudgetSystem {
+  return (ENCOUNTER_BUDGET_SYSTEMS as readonly string[]).includes(systemId);
+}
+
+/**
+ * PF2e sizes encounters around the party's level (CRB Table 10-2 is indexed by
+ * creature level relative to party level). The party level is the average level
+ * rounded to the nearest whole number.
+ */
+export function pf2ePartyLevel(partyLevels: readonly number[]): number {
+  if (!partyLevels.length) return 0;
+  return Math.round(partyLevels.reduce((total, level) => total + level, 0) / partyLevels.length);
+}
+
+/**
+ * The party's pooled encounter budget for a system, dispatched to that system's
+ * cited table. The single source of truth shared by the drafter and the
+ * encounter-spec validator so the two can never disagree. Returns 0 for systems
+ * without a budget model (see {@link ENCOUNTER_BUDGET_SYSTEMS}).
+ */
+export function encounterPartyBudget(
+  systemId: string,
+  partyLevels: readonly number[],
+  difficulty: EncounterDifficulty
+): number {
+  switch (systemId) {
+    case 'pf1e':
+      return pf1eEncounterXpBudget(partyLevels, difficulty);
+    case 'pf2e':
+      return pf2eEncounterBudget(partyLevels, difficulty);
+    case 'dnd-5e-2014':
+    case 'dnd-5e-2024':
+      return partyXpBudget(partyLevels, difficulty);
+    default:
+      return 0;
+  }
+}
+
+/**
+ * One monster's encounter cost under a system's budget model: PF2e uses the
+ * party-relative creature-XP table; the others use the monster's own XP award.
+ * Shared by the drafter and the validator so the spend math is identical.
+ */
+export function monsterEncounterCost(
+  systemId: string,
+  monster: Monster,
+  partyLevels: readonly number[]
+): number {
+  if (systemId === 'pf2e') {
+    return pf2eCreatureXp(monster.challengeRating, pf2ePartyLevel(partyLevels));
+  }
+  return monster.experiencePoints;
+}
+
 export interface DraftEncounterParams {
   /** The scene's monster catalog (already loaded; system-filtered by caller or via systemId). */
   monsters: Monster[];

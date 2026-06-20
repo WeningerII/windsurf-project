@@ -110,11 +110,26 @@ export const useScenes = () => {
 
   const appendSceneEvent = useCallback(
     (sceneId: string, event: SceneEvent) => {
-      applySceneUpdate((current) =>
-        current.map((scene) =>
-          scene.id === sceneId ? appendRuntimeSceneEvent(scene, event) : scene
-        )
-      );
+      applySceneUpdate((current) => {
+        let changed = false;
+        const next = current.map((scene) => {
+          if (scene.id !== sceneId) return scene;
+          try {
+            const updated = appendRuntimeSceneEvent(scene, event);
+            changed = true;
+            return updated;
+          } catch {
+            // A corrupt existing scene (an event the fold flags as malformed)
+            // rejects new events. Leave it unchanged rather than letting the
+            // throw propagate through React's render into the ErrorBoundary —
+            // the corruption is already surfaced wherever the scene is folded.
+            return scene;
+          }
+        });
+        // Same reference when nothing changed → applySceneUpdate treats it as a
+        // clean no-op (no spurious persist).
+        return changed ? next : current;
+      });
     },
     [applySceneUpdate]
   );

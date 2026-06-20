@@ -200,9 +200,7 @@ describe('App', () => {
       });
       fireEvent.keyDown(screen.getByPlaceholderText('Campaign name...'), { key: 'Enter' });
 
-      const notes = await screen.findByPlaceholderText(
-        'Session notes, house rules, quest tracker...'
-      );
+      const notes = await screen.findByPlaceholderText('House rules, NPC names, loot...');
 
       const callsBefore = pendingSpy.mock.calls.length;
       for (let i = 1; i <= 10; i += 1) {

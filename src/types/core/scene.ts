@@ -2,6 +2,14 @@ export type SceneGridType = 'square';
 export type SceneTokenKind = 'character' | 'monster' | 'npc' | 'object';
 export type SceneMarkerKind = 'terrain' | 'hazard';
 
+/**
+ * A token's combat side. `party` and `hostile` are opposing; `neutral` is a
+ * non-combatant (hostile to no one, targeted by no one in the autonomous round).
+ * Derived from a token's kind by default; an explicit value overrides it (an
+ * allied NPC, a charmed PC, a hostile shopkeeper).
+ */
+export type SceneAllegiance = 'party' | 'hostile' | 'neutral';
+
 export interface SceneGrid {
   type: SceneGridType;
   width: number;
@@ -40,6 +48,18 @@ export interface SceneToken {
    * these into attack resolution.
    */
   conditions?: string[];
+  /**
+   * When true, the autonomous round (Run Round) does not act for this token —
+   * the human plays its turn. Defaults to false (engine-driven). Character
+   * tokens are placed player-controlled so a solo player keeps their own party.
+   */
+  playerControlled?: boolean;
+  /**
+   * Combat side override. Absent means the side is derived from `kind`
+   * (character → party, monster → hostile, npc/object → neutral). Set it to make
+   * an NPC fight as an ally or enemy, or to re-side any token.
+   */
+  allegiance?: SceneAllegiance;
 }
 
 export interface SceneMarker {
@@ -80,6 +100,72 @@ export interface SceneInitiativeEntry {
   value: number;
 }
 
+export type SceneCheckOutcome = 'success' | 'failure' | 'unresolved';
+
+/** Roll two d20s and keep the higher (advantage) or lower (disadvantage). */
+export type SceneCheckMode = 'advantage' | 'disadvantage';
+
+/**
+ * A resolved d20 ability/skill check: `total` is `die + modifier`, and
+ * `outcome` compares it to `dc` (or `unresolved` when no DC was given — a
+ * bare roll the player adjudicates). Like {@link SceneTokenDamage}, the dice
+ * are rolled before the event is created and the resolved values are stored,
+ * so the fold stays pure and replay-deterministic.
+ */
+export interface SceneCheckResult {
+  /** The d20 face used for the total (the kept die under advantage/disadvantage). */
+  die: number;
+  modifier: number;
+  dc?: number;
+  total: number;
+  outcome: SceneCheckOutcome;
+  /** Present when rolled with advantage/disadvantage. */
+  mode?: SceneCheckMode;
+  /** The unused d20 under advantage/disadvantage, kept for transparency. */
+  discardedDie?: number;
+}
+
+/** A check result as it lives in the scene's check log. */
+export interface SceneCheckLogEntry extends SceneCheckResult {
+  /** The originating event id. */
+  id: string;
+  /** What was rolled, e.g. "Perception" or "Stealth". */
+  label: string;
+  /** The token that made the check, when tied to a combatant. */
+  actorTokenId?: string;
+  createdAt: Date;
+}
+
+/**
+ * How likely a "yes" is for an oracle question. Solo players consult an oracle
+ * to adjudicate uncertain fiction without a GM; the odds set the d100 target.
+ */
+export type SceneOracleOdds = 'very-likely' | 'likely' | 'even' | 'unlikely' | 'very-unlikely';
+
+/** Oracle answer, with exceptional bands signalling a strong/twist result. */
+export type SceneOracleAnswer = 'exceptional-yes' | 'yes' | 'no' | 'exceptional-no';
+
+/**
+ * A resolved oracle consultation: a d100 `roll` against the odds-derived
+ * `target` (yes when `roll <= target`), with the extreme bands promoted to
+ * exceptional. Like a check, the die is rolled before the event is created and
+ * the resolved values are stored so the fold stays pure.
+ */
+export interface SceneOracleResult {
+  odds: SceneOracleOdds;
+  roll: number;
+  target: number;
+  answer: SceneOracleAnswer;
+}
+
+/** An oracle result as it lives in the scene's oracle log. */
+export interface SceneOracleLogEntry extends SceneOracleResult {
+  id: string;
+  /** The question that was asked, when the player recorded one. */
+  question?: string;
+  createdAt: Date;
+}
+
 export interface SceneState {
   sceneId: string;
   name: string;
@@ -92,6 +178,10 @@ export interface SceneState {
   round: number;
   activeTokenId?: string;
   seed: string;
+  /** Resolved ability/skill checks, oldest first. */
+  checkLog: SceneCheckLogEntry[];
+  /** Resolved oracle consultations, oldest first. */
+  oracleLog: SceneOracleLogEntry[];
 }
 
 export type SceneEventType =
@@ -100,10 +190,13 @@ export type SceneEventType =
   | 'token.removed'
   | 'token.damaged'
   | 'token.conditions-set'
+  | 'token.allegiance-set'
   | 'marker.added'
   | 'marker.removed'
   | 'initiative.set'
-  | 'turn.advanced';
+  | 'turn.advanced'
+  | 'check.rolled'
+  | 'oracle.consulted';
 
 /**
  * Applied hit-point delta for one token, recorded on a `token.damaged` event.
@@ -131,10 +224,13 @@ export type SceneEvent =
   | SceneEventBase<'token.removed', { tokenId: string }>
   | SceneEventBase<'token.damaged', { damages: SceneTokenDamage[]; cause?: string }>
   | SceneEventBase<'token.conditions-set', { tokenId: string; conditions: string[] }>
+  | SceneEventBase<'token.allegiance-set', { tokenId: string; allegiance: SceneAllegiance }>
   | SceneEventBase<'marker.added', { marker: SceneMarker }>
   | SceneEventBase<'marker.removed', { markerId: string }>
   | SceneEventBase<'initiative.set', { entries: SceneInitiativeEntry[]; activeTokenId?: string }>
-  | SceneEventBase<'turn.advanced', { nextTokenId?: string }>;
+  | SceneEventBase<'turn.advanced', { nextTokenId?: string }>
+  | SceneEventBase<'check.rolled', SceneCheckResult & { label: string; actorTokenId?: string }>
+  | SceneEventBase<'oracle.consulted', SceneOracleResult & { question?: string }>;
 
 export interface SceneDocument {
   id: string;
@@ -154,10 +250,13 @@ export type SceneActionType =
   | 'remove-token'
   | 'apply-damage'
   | 'set-token-conditions'
+  | 'set-token-allegiance'
   | 'add-marker'
   | 'remove-marker'
   | 'set-initiative'
-  | 'advance-turn';
+  | 'advance-turn'
+  | 'roll-check'
+  | 'consult-oracle';
 
 export type SceneActionIntent =
   | { type: 'place-token'; actorId?: string; token: SceneToken }
@@ -165,6 +264,7 @@ export type SceneActionIntent =
   | { type: 'remove-token'; actorId?: string; tokenId: string }
   | { type: 'apply-damage'; actorId?: string; damages: SceneTokenDamage[]; cause?: string }
   | { type: 'set-token-conditions'; actorId?: string; tokenId: string; conditions: string[] }
+  | { type: 'set-token-allegiance'; actorId?: string; tokenId: string; allegiance: SceneAllegiance }
   | { type: 'add-marker'; actorId?: string; marker: SceneMarker }
   | { type: 'remove-marker'; actorId?: string; markerId: string }
   | {
@@ -173,7 +273,19 @@ export type SceneActionIntent =
       entries: SceneInitiativeEntry[];
       activeTokenId?: string;
     }
-  | { type: 'advance-turn'; actorId?: string };
+  | { type: 'advance-turn'; actorId?: string }
+  | {
+      type: 'roll-check';
+      actorId?: string;
+      /** The token making the check, when tied to a combatant. */
+      actorTokenId?: string;
+      label: string;
+      modifier: number;
+      dc?: number;
+      /** Roll with advantage/disadvantage; omit for a single d20. */
+      mode?: SceneCheckMode;
+    }
+  | { type: 'consult-oracle'; actorId?: string; question?: string; odds: SceneOracleOdds };
 
 export interface SceneIssue {
   code: string;

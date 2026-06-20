@@ -149,7 +149,76 @@ describe('parseCampaign', () => {
     expect(result.value.characterIds).toEqual([]);
     expect(result.value.notes).toBe('');
     expect(result.value.systemId).toBeUndefined();
+    expect(result.value.quests).toEqual([]);
+    expect(result.value.sessionLog).toEqual([]);
     expect(result.value.updatedAt).toEqual(NOW);
+  });
+
+  it('coerces quests: keeps valid ones, drops idless entries, defaults bad status', () => {
+    const result = parseCampaign(
+      {
+        id: 'c-1',
+        name: 'C',
+        quests: [
+          {
+            id: 'q1',
+            title: 'Find the relic',
+            summary: 'in the crypt',
+            status: 'completed',
+            objectives: [
+              { id: 'o1', text: 'descend', done: true },
+              { id: 'o2', text: 'fight', done: 'nope' }, // done coerced to false
+              { text: 'idless objective' }, // dropped
+            ],
+            createdAt: '2026-01-01T00:00:00.000Z',
+            updatedAt: '2026-01-02T00:00:00.000Z',
+          },
+          { id: 'q2', status: 'bananas' }, // bad status -> active; missing title -> ''
+          { title: 'no id' }, // dropped
+          'not an object', // dropped
+        ],
+      },
+      NOW
+    );
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.value.quests).toHaveLength(2);
+    const [q1, q2] = result.value.quests;
+    expect(q1).toMatchObject({ id: 'q1', title: 'Find the relic', status: 'completed' });
+    expect(q1.createdAt).toEqual(new Date('2026-01-01T00:00:00.000Z'));
+    expect(q1.objectives).toEqual([
+      { id: 'o1', text: 'descend', done: true },
+      { id: 'o2', text: 'fight', done: false },
+    ]);
+    expect(q2).toMatchObject({ id: 'q2', title: '', status: 'active', objectives: [] });
+  });
+
+  it('coerces the session log, dropping entries without an id', () => {
+    const result = parseCampaign(
+      {
+        id: 'c-1',
+        name: 'C',
+        sessionLog: [
+          { id: 's1', title: 'One', body: 'recap', createdAt: '2026-01-01T00:00:00.000Z' },
+          { title: 'idless' }, // dropped
+          { id: 's2' }, // title/body default to ''
+        ],
+      },
+      NOW
+    );
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.value.sessionLog).toHaveLength(2);
+    expect(result.value.sessionLog[0]).toMatchObject({ id: 's1', title: 'One', body: 'recap' });
+    expect(result.value.sessionLog[1]).toMatchObject({ id: 's2', title: '', body: '' });
+  });
+
+  it('defaults quests/sessionLog to [] when present but not arrays', () => {
+    const result = parseCampaign({ id: 'c-1', name: 'C', quests: 'x', sessionLog: 5 }, NOW);
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.value.quests).toEqual([]);
+    expect(result.value.sessionLog).toEqual([]);
   });
 
   it('keeps a present systemId and filters non-string characterIds', () => {

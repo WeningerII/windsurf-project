@@ -93,8 +93,21 @@ export function maxPossibleDamage(damageEffects: readonly EffectInstance[]): num
   return Math.max(0, total);
 }
 
-/** True when two combatants are on opposing sides. */
+/**
+ * The reserved faction for non-combatants (objects, unaligned NPCs). A neutral
+ * combatant is hostile to no one and is not counted as a combat side.
+ */
+export const NEUTRAL_FACTION = 'neutral';
+
+/**
+ * True when two combatants are on opposing sides. Distinct factions are hostile
+ * (the engine treats faction strings as opposing teams), except `neutral`,
+ * which is hostile to no one.
+ */
 export function isHostile(actorFaction: string, targetFaction: string): boolean {
+  if (actorFaction === NEUTRAL_FACTION || targetFaction === NEUTRAL_FACTION) {
+    return false;
+  }
   return actorFaction !== targetFaction;
 }
 

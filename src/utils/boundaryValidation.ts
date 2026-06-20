@@ -1,5 +1,11 @@
 import type { CharacterDocument, SystemDataModel } from '../types/core/document';
-import type { Campaign } from '../types/core/campaign';
+import type {
+  Campaign,
+  CampaignObjective,
+  CampaignQuest,
+  CampaignQuestStatus,
+  CampaignSessionEntry,
+} from '../types/core/campaign';
 import type { SceneDocument } from '../types/core/scene';
 import type { ValidationIssue } from '../registry/types';
 
@@ -177,11 +183,72 @@ export function parseCampaign(value: unknown, now: Date = new Date()): ParseResu
     ...(isNonEmptyString(value.systemId) ? { systemId: value.systemId } : {}),
     characterIds: coerceStringArray(value.characterIds),
     notes: typeof value.notes === 'string' ? value.notes : '',
+    quests: coerceQuests(value.quests, now),
+    sessionLog: coerceSessionLog(value.sessionLog, now),
     createdAt: coerceDate(value.createdAt, now),
     updatedAt: coerceDate(value.updatedAt, now),
   };
 
   return { ok: true, value: campaign };
+}
+
+const QUEST_STATUSES: ReadonlySet<CampaignQuestStatus> = new Set(['active', 'completed', 'failed']);
+
+/**
+ * Coerce a campaign's quest list from untrusted input. A structurally broken
+ * quest (not an object, no id) is dropped rather than rejecting the whole
+ * campaign — one bad arc must not cost a player the rest of their party. Soft
+ * fields (title, summary, status, objectives, dates) fall back to safe
+ * defaults, mirroring the lenient handling of `notes`/`characterIds`.
+ */
+function coerceQuests(value: unknown, now: Date): CampaignQuest[] {
+  if (!Array.isArray(value)) return [];
+  const quests: CampaignQuest[] = [];
+  for (const candidate of value) {
+    if (!isRecord(candidate) || !isNonEmptyString(candidate.id)) continue;
+    quests.push({
+      id: candidate.id,
+      title: typeof candidate.title === 'string' ? candidate.title : '',
+      summary: typeof candidate.summary === 'string' ? candidate.summary : '',
+      status: QUEST_STATUSES.has(candidate.status as CampaignQuestStatus)
+        ? (candidate.status as CampaignQuestStatus)
+        : 'active',
+      objectives: coerceObjectives(candidate.objectives),
+      createdAt: coerceDate(candidate.createdAt, now),
+      updatedAt: coerceDate(candidate.updatedAt, now),
+    });
+  }
+  return quests;
+}
+
+function coerceObjectives(value: unknown): CampaignObjective[] {
+  if (!Array.isArray(value)) return [];
+  const objectives: CampaignObjective[] = [];
+  for (const candidate of value) {
+    if (!isRecord(candidate) || !isNonEmptyString(candidate.id)) continue;
+    objectives.push({
+      id: candidate.id,
+      text: typeof candidate.text === 'string' ? candidate.text : '',
+      done: candidate.done === true,
+    });
+  }
+  return objectives;
+}
+
+/** Coerce a campaign's session log; entries without an id are dropped. */
+function coerceSessionLog(value: unknown, now: Date): CampaignSessionEntry[] {
+  if (!Array.isArray(value)) return [];
+  const entries: CampaignSessionEntry[] = [];
+  for (const candidate of value) {
+    if (!isRecord(candidate) || !isNonEmptyString(candidate.id)) continue;
+    entries.push({
+      id: candidate.id,
+      title: typeof candidate.title === 'string' ? candidate.title : '',
+      body: typeof candidate.body === 'string' ? candidate.body : '',
+      createdAt: coerceDate(candidate.createdAt, now),
+    });
+  }
+  return entries;
 }
 
 /**

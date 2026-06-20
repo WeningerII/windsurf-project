@@ -183,6 +183,26 @@ describe('runCombatRound — the N-participant loop', () => {
     expect(result.intents.length).toBeGreaterThanOrEqual(1);
     expect(result.intents.every((i) => i.type === 'apply-damage')).toBe(true);
   });
+
+  it('skips a player-controlled combatant but keeps it a valid target', () => {
+    const result = runCombatRound({
+      seed: 's',
+      round: 1,
+      order: [
+        combatant({ tokenId: 'hero', faction: 'party', playerControlled: true }),
+        combatant({ tokenId: 'orc', faction: 'monsters' }),
+      ],
+    });
+    const heroTurn = result.turns.find((t) => t.tokenId === 'hero')!;
+    expect(heroTurn.skipped).toBe(true);
+    expect(heroTurn.turn.attacks).toHaveLength(0);
+    expect(heroTurn.turn.rationale).toMatch(/player-controlled/i);
+
+    // The orc still acts and still treats the player-controlled hero as a target.
+    const orcTurn = result.turns.find((t) => t.tokenId === 'orc')!;
+    expect(orcTurn.skipped).toBe(false);
+    expect(orcTurn.turn.scored.map((s) => s.tokenId)).toContain('hero');
+  });
 });
 
 describe('isRoundConclusive — combat end detection', () => {
@@ -203,5 +223,17 @@ describe('isRoundConclusive — combat end detection', () => {
       combatant({ tokenId: 'foe', faction: 'monsters' }),
     ];
     expect(isRoundConclusive(order, { hero: 0, foe: 0 })).toBe(true);
+  });
+
+  it('ignores neutral combatants as a side', () => {
+    // A living neutral (shopkeeper/object) must not keep a finished battle alive.
+    const order = [
+      combatant({ tokenId: 'hero', faction: 'party' }),
+      combatant({ tokenId: 'foe', faction: 'hostile' }),
+      combatant({ tokenId: 'shopkeeper', faction: 'neutral' }),
+    ];
+    expect(isRoundConclusive(order, { hero: 20, foe: 0, shopkeeper: 20 })).toBe(true);
+    // Two real sides alive → not conclusive even with the neutral present.
+    expect(isRoundConclusive(order, { hero: 20, foe: 5, shopkeeper: 20 })).toBe(false);
   });
 });

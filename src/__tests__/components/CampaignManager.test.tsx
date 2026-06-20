@@ -30,6 +30,8 @@ function makeCampaign(overrides: Partial<Campaign> = {}): Campaign {
     name: 'Alpha Squad',
     characterIds: [],
     notes: '',
+    quests: [],
+    sessionLog: [],
     createdAt: now,
     updatedAt: now,
     ...overrides,
@@ -104,7 +106,7 @@ describe('CampaignManager', () => {
     await user.click(screen.getByRole('button', { name: /Alpha Squad/i }));
     await user.click(screen.getByText('Astra').closest('button') as HTMLButtonElement);
     await user.click(screen.getByTitle('Remove Astra from campaign'));
-    fireEvent.change(screen.getByPlaceholderText(/Session notes/i), {
+    fireEvent.change(screen.getByPlaceholderText(/House rules/i), {
       target: { value: 'Track the goblin cave' },
     });
     await user.click(screen.getByRole('button', { name: /delete campaign/i }));
@@ -221,5 +223,28 @@ describe('CampaignManager', () => {
     );
 
     expect(onUpdateCampaign).toHaveBeenCalledWith(expect.objectContaining({ systemId: 'pf2e' }));
+  });
+
+  it('shows Export only with campaigns and Import only when the callback is provided', () => {
+    const baseProps = {
+      documents: [],
+      onAddCampaign: vi.fn(),
+      onUpdateCampaign: vi.fn(),
+      onDeleteCampaign: vi.fn(),
+      onAddCharacter: vi.fn(),
+      onRemoveCharacter: vi.fn(),
+      onOpenCharacter: vi.fn(),
+    };
+
+    const { rerender } = render(<CampaignManager {...baseProps} campaigns={[]} />);
+    // No campaigns and no import callback: neither transfer button is offered.
+    expect(screen.queryByRole('button', { name: /^Export$/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /^Import$/i })).not.toBeInTheDocument();
+
+    rerender(
+      <CampaignManager {...baseProps} campaigns={[makeCampaign()]} onImportCampaigns={vi.fn()} />
+    );
+    expect(screen.getByRole('button', { name: /^Export$/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /^Import$/i })).toBeInTheDocument();
   });
 });

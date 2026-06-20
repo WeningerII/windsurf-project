@@ -1,57 +1,52 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Download, Map as MapIcon, MousePointer2, Plus, Trash2, Upload } from 'lucide-react';
+import { buildPlacedToken } from '../scene/tokenPlacement';
+import { useSceneEncounter } from './scene/useSceneEncounter';
+import { generateNpc } from '../scene/npcGenerator';
+import { supportsEncounterBudget } from '../scene/encounterDraft';
+import { narrateSceneWithAi } from '../ai/sceneNarrationFlow';
+import { illustrateSceneWithAi } from '../ai/illustrateSceneFlow';
+import { isAiEnabled } from '../ai/gatewayClient';
 import {
-  MAX_MONSTERS_PER_SELECTION,
-  buildEncounterSceneEvents,
-  summarizeEncounterParty,
-  summarizeEncounterPlan,
-  type EncounterMonsterSelection,
-} from '../scene/encounterBuilder';
-import {
-  draftEncounter,
-  pf1eEncounterXpBudget,
-  pf2eCreatureXp,
-  pf2eEncounterBudget,
-  type EncounterDifficulty,
-} from '../scene/encounterDraft';
-import {
-  appendSceneEvent,
-  createSceneDocument,
+  applySceneIntents,
   foldSceneEvents,
+  positiveIntegerOrDefault,
   resolveSceneAction,
 } from '../scene/runtime';
 import {
-  buildCharacterCombatant,
   buildDaggerheartAdversaryCombatant,
-  buildDaggerheartCombatant,
-  buildMam3eCombatant,
-  buildMonsterCombatant,
   buildSceneCombatants,
+  factionForToken,
   isRoundConclusive,
+  NEUTRAL_FACTION,
   resolveSceneAttack,
   runSceneRound,
   type ResolveCombatStats,
 } from '../rules';
+import { resolveSceneCombatStats } from '../scene/combatStats';
+import { createSeededRng } from '../scene/seededRng';
 import type { Campaign } from '../types/core/campaign';
 import type { CharacterDocument, SystemDataModel } from '../types/core/document';
 import type { Monster } from '../types/creatures/monsters';
-import type { GameSystemId } from '../types/game-systems';
 import type {
   SceneActionIntent,
+  SceneAllegiance,
+  SceneCheckMode,
   SceneDocument,
   SceneEvent,
   SceneMarkerKind,
+  SceneOracleOdds,
   SceneToken,
   SceneTokenKind,
 } from '../types/core/scene';
 import { systemRegistry } from '../registry';
-import { loadDaggerheartAdversariesForSystem, loadMonstersForSystem } from '../utils/dataLoader';
+import { loadDaggerheartAdversariesForSystem } from '../utils/dataLoader';
 import { errorLogger, guardSync, ErrorCategory, ErrorSeverity } from '../utils/errorLogger';
-import { exportScenes, importScenes } from '../utils/sceneStorage';
+import { exportScenes, importScenesWithReport } from '../utils/sceneStorage';
+import { downloadTextFile, pickTextFile } from '../utils/fileTransfer';
 import { generateUUID } from '../utils/browserCompat';
 import { Button } from './ui/Button';
 import { Badge } from './ui/Badge';
-import { Input } from './ui/Input';
 import { Select } from './ui/Select';
 import { SceneGridView } from './SceneGridView';
 import { EncounterPanel } from './scene/EncounterPanel';
@@ -59,6 +54,13 @@ import { InitiativeTracker } from './scene/InitiativeTracker';
 import { MarkerPanel } from './scene/MarkerPanel';
 import { TokenPanel } from './scene/TokenPanel';
 import { CombatPanel } from './scene/CombatPanel';
+import { CheckPanel } from './scene/CheckPanel';
+import { OraclePanel } from './scene/OraclePanel';
+import { ReactionPanel } from './scene/ReactionPanel';
+import { DicePanel } from './scene/DicePanel';
+import { RecapPanel } from './scene/RecapPanel';
+import { IllustrationPanel } from './scene/IllustrationPanel';
+import { SceneCreateForm } from './scene/SceneCreateForm';
 
 type PlacementMode = 'none' | 'token' | 'marker' | 'adversary';
 
@@ -73,6 +75,8 @@ interface Props {
   onAddScenes: (scenes: SceneDocument[]) => void;
   onAppendSceneEvent: (sceneId: string, event: SceneEvent) => void;
   onDeleteScene: (id: string) => void;
+  /** Append a factual recap of a scene to its linked campaign's session log. */
+  onLogToCampaign?: (campaignId: string, title: string, body: string) => void;
 }
 
 const DEFAULT_SYSTEM_ID = 'dnd-5e-2024';
@@ -98,35 +102,32 @@ export function SceneManager({
   onAddScenes,
   onAppendSceneEvent,
   onDeleteScene,
+  onLogToCampaign,
 }: Props) {
   const systemOptions = useMemo(() => systemRegistry.getAll(), []);
   const fallbackSystemId = systemOptions[0]?.id ?? DEFAULT_SYSTEM_ID;
   const [selectedSceneId, setSelectedSceneId] = useState<string | null>(scenes[0]?.id ?? null);
   const [creatingNew, setCreatingNew] = useState(false);
-  const [newSceneName, setNewSceneName] = useState('');
-  const [newSceneSystemId, setNewSceneSystemId] = useState<string>(DEFAULT_SYSTEM_ID);
-  const [newSceneCampaignId, setNewSceneCampaignId] = useState('');
-  const [newSceneWidth, setNewSceneWidth] = useState('12');
-  const [newSceneHeight, setNewSceneHeight] = useState('10');
+  // Scene-list filter: '' = all, a campaign id = that campaign's encounters,
+  // 'none' = scenes not assigned to any campaign.
+  const [sceneCampaignFilter, setSceneCampaignFilter] = useState('');
   const [placementMode, setPlacementMode] = useState<PlacementMode>('none');
   const [selectedTokenId, setSelectedTokenId] = useState<string | undefined>();
   const [tokenDocumentId, setTokenDocumentId] = useState('');
   const [tokenName, setTokenName] = useState('');
   const [tokenKind, setTokenKind] = useState<SceneTokenKind>('character');
+  // The side a placed NPC fights on (only used when kind === 'npc'); enemies are
+  // the common case for an encounter, allies/bystanders are opt-in.
+  const [tokenAllegiance, setTokenAllegiance] = useState<SceneAllegiance>('hostile');
+  // A creature statblock backing an NPC (picked or generated); '' = none.
+  const [tokenStatblockId, setTokenStatblockId] = useState('');
   const [markerLabel, setMarkerLabel] = useState('');
   const [markerKind, setMarkerKind] = useState<SceneMarkerKind>('hazard');
   const [markerWidth, setMarkerWidth] = useState('1');
   const [markerHeight, setMarkerHeight] = useState('1');
-  const [encounterMonsters, setEncounterMonsters] = useState<Monster[]>([]);
-  const [encounterMonsterId, setEncounterMonsterId] = useState('');
-  const [encounterCount, setEncounterCount] = useState('1');
-  const [encounterOriginX, setEncounterOriginX] = useState('0');
-  const [encounterOriginY, setEncounterOriginY] = useState('0');
-  const [encounterSelections, setEncounterSelections] = useState<EncounterMonsterSelection[]>([]);
-  const [encounterZoneId, setEncounterZoneId] = useState('');
-  const draftNonceRef = useRef(0);
-  const [monstersLoading, setMonstersLoading] = useState(false);
-  const [monsterLoadError, setMonsterLoadError] = useState<string | null>(null);
+  // AI affordances are build-time gated (default OFF); each surface adds its own
+  // further preconditions (e.g. a cited budget table for drafting).
+  const aiEnabled = isAiEnabled();
   const [initiativeValues, setInitiativeValues] = useState<Record<string, string>>({});
   const [actionIssues, setActionIssues] = useState<string[]>([]);
   const [combatTargetId, setCombatTargetId] = useState('');
@@ -134,6 +135,8 @@ export function SceneManager({
   // Per-click nonce so a missed attack (which appends no event) still advances
   // the RNG stream — otherwise re-clicking Attack would reproduce the same miss.
   const attackNonce = useRef(0);
+  // Monotonic nonce so each "Generate NPC" yields a fresh (still seeded) result.
+  const npcGenNonce = useRef(0);
 
   useEffect(() => {
     if (selectedSceneId && scenes.some((scene) => scene.id === selectedSceneId)) return;
@@ -141,11 +144,6 @@ export function SceneManager({
     setSelectedTokenId(undefined);
     setPlacementMode('none');
   }, [scenes, selectedSceneId]);
-
-  useEffect(() => {
-    if (systemOptions.some((system) => system.id === newSceneSystemId)) return;
-    setNewSceneSystemId(fallbackSystemId);
-  }, [fallbackSystemId, newSceneSystemId, systemOptions]);
 
   const selectedScene = useMemo(
     () => scenes.find((scene) => scene.id === selectedSceneId),
@@ -163,6 +161,12 @@ export function SceneManager({
   );
   const state = foldedScene?.state;
   const sceneSystemId = state?.systemId;
+  // The campaign this scene is linked to, when it resolves to a known one —
+  // gates the "log recap to campaign" bridge.
+  const linkedCampaign = useMemo(
+    () => (state?.campaignId ? campaigns.find((c) => c.id === state.campaignId) : undefined),
+    [campaigns, state?.campaignId]
+  );
 
   // Daggerheart scenes need the weapon catalog so character tokens can fight
   // (weapons are catalog refs on the document); mirrors the monster preload.
@@ -230,47 +234,6 @@ export function SceneManager({
     };
   }, [sceneSystemId]);
 
-  useEffect(() => {
-    if (!sceneSystemId || !isMonsterSystemId(sceneSystemId)) {
-      setEncounterMonsters([]);
-      setEncounterMonsterId('');
-      setEncounterSelections([]);
-      setMonstersLoading(false);
-      setMonsterLoadError(null);
-      return undefined;
-    }
-
-    let cancelled = false;
-    setMonstersLoading(true);
-    setMonsterLoadError(null);
-
-    loadMonstersForSystem(sceneSystemId)
-      .then((monsters) => {
-        if (cancelled) return;
-        const sorted = [...monsters].sort(
-          (a, b) => a.challengeRating - b.challengeRating || a.name.localeCompare(b.name)
-        );
-        setEncounterMonsters(sorted);
-        setEncounterSelections([]);
-        setEncounterMonsterId((current) =>
-          sorted.some((monster) => monster.id === current) ? current : (sorted[0]?.id ?? '')
-        );
-      })
-      .catch((err) => {
-        if (cancelled) return;
-        setEncounterMonsters([]);
-        setEncounterMonsterId('');
-        setMonsterLoadError(err instanceof Error ? err.message : 'Failed to load monsters.');
-      })
-      .finally(() => {
-        if (!cancelled) setMonstersLoading(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [sceneSystemId]);
-
   const eligibleDocuments = useMemo(() => {
     if (!state) return [];
     const sceneCampaign = state.campaignId
@@ -283,42 +246,59 @@ export function SceneManager({
       return sceneCampaign.characterIds.includes(doc.id);
     });
   }, [campaigns, documents, state]);
-  const selectedEncounterMonster = useMemo(
-    () => encounterMonsters.find((monster) => monster.id === encounterMonsterId),
-    [encounterMonsterId, encounterMonsters]
-  );
-  const encounterCountValue = positiveIntegerOrDefault(encounterCount, 1);
-  // Memoized: a fresh array identity here defeated the encounterPlan useMemo
-  // below on every render.
-  const pendingEncounterSelections = useMemo(
-    () =>
-      encounterSelections.length > 0
-        ? encounterSelections
-        : selectedEncounterMonster
-          ? [{ monsterId: selectedEncounterMonster.id, count: encounterCountValue }]
-          : [],
-    [encounterSelections, selectedEncounterMonster, encounterCountValue]
-  );
-  const encounterPlan = useMemo(
-    () =>
-      summarizeEncounterPlan({
-        monsters: encounterMonsters,
-        selections: pendingEncounterSelections,
-        systemId: sceneSystemId,
-      }),
-    [encounterMonsters, pendingEncounterSelections, sceneSystemId]
-  );
-  const encounterParty = useMemo(
-    () => summarizeEncounterParty(eligibleDocuments),
-    [eligibleDocuments]
-  );
-  const encounterXpPerPartyLevel =
-    encounterParty.totalLevel > 0
-      ? Math.round(encounterPlan.totalXp / encounterParty.totalLevel)
-      : 0;
-  const selectedEncounterTotalXp = selectedEncounterMonster
-    ? selectedEncounterMonster.experiencePoints * encounterCountValue
-    : 0;
+  // Encounter building (catalog load, draft/AI/identify, plan/budget readouts)
+  // lives in its own controller; destructured into the names the JSX/handlers
+  // below already use. The model proposes; the deterministic gate + catalog decide.
+  const {
+    encounterMonsters,
+    encounterMonsterId,
+    setEncounterMonsterId,
+    encounterCount,
+    setEncounterCount,
+    encounterDifficulty,
+    setEncounterDifficulty,
+    encounterOriginX,
+    setEncounterOriginX,
+    encounterOriginY,
+    setEncounterOriginY,
+    encounterSelections,
+    encounterZoneId,
+    setEncounterZoneId,
+    aiEncounterPrompt,
+    setAiEncounterPrompt,
+    aiDrafting,
+    aiIdentifying,
+    identifyNotice,
+    monstersLoading,
+    monsterLoadError,
+    eligibleStatblocks,
+    selectedEncounterMonster,
+    pendingEncounterSelections,
+    encounterPlan,
+    encounterParty,
+    encounterXpPerPartyLevel,
+    encounterValidation,
+    selectedEncounterTotalXp,
+    handleQueueEncounterMonster,
+    handleDraftEncounter,
+    handleAiDraftEncounter,
+    handleIdentifyCreature,
+    handleRemoveEncounterSelection,
+    handleAdjustEncounterSelection,
+    handleAddEncounter,
+  } = useSceneEncounter({
+    sceneSystemId,
+    selectedScene,
+    state,
+    documents,
+    eligibleDocuments,
+    onAppendSceneEvent,
+    onIssues: setActionIssues,
+    onEncounterApplied: () => {
+      setSelectedTokenId(undefined);
+      setPlacementMode('none');
+    },
+  });
 
   useEffect(() => {
     if (!state) return;
@@ -358,7 +338,10 @@ export function SceneManager({
     setCombatTargetId('');
     setCombatLog([]);
     setEncounterZoneId('');
-  }, [selectedSceneId]);
+    // setEncounterZoneId comes from useSceneEncounter (a stable useState setter,
+    // so it never re-fires this); listed to satisfy exhaustive-deps now that it
+    // is not a directly-recognized local setter.
+  }, [selectedSceneId, setEncounterZoneId]);
 
   // Clear a stale combat target: when the chosen token dies or is removed, the
   // target select would otherwise render blank while Attack stays armed.
@@ -369,33 +352,6 @@ export function SceneManager({
       setCombatTargetId('');
     }
   }, [combatTargetId, state]);
-
-  const handleCreateScene = () => {
-    const name = newSceneName.trim();
-    if (!name) return;
-
-    const id = generateUUID();
-    const campaignId = newSceneCampaignId || undefined;
-    const campaign = campaignId ? campaigns.find((entry) => entry.id === campaignId) : undefined;
-    const systemId = campaign?.systemId ?? newSceneSystemId;
-    const scene = createSceneDocument({
-      id,
-      name,
-      systemId,
-      campaignId,
-      seed: id,
-      grid: {
-        width: positiveIntegerOrDefault(newSceneWidth, 12),
-        height: positiveIntegerOrDefault(newSceneHeight, 10),
-      },
-    });
-
-    onAddScene(scene);
-    setSelectedSceneId(scene.id);
-    setNewSceneName('');
-    setCreatingNew(false);
-    setActionIssues([]);
-  };
 
   const emitSceneAction = useCallback(
     (scene: SceneDocument, intent: SceneActionIntent) => {
@@ -449,99 +405,13 @@ export function SceneManager({
   }, [documents]);
 
   const resolveCombatStats = useCallback<ResolveCombatStats>(
-    (token) => {
-      if (token.kind === 'monster' && token.refId) {
-        // Daggerheart adversaries resolve by their own model: duality dice
-        // vs Difficulty, threshold-marked HP slots.
-        const adversary = daggerheartAdversariesById.get(token.refId);
-        if (adversary) {
-          const built = buildDaggerheartAdversaryCombatant(adversary, {
-            tokenId: token.id,
-            position: token.position,
-          });
-          if (!built.supported) return undefined;
-          return {
-            attackEffects: built.combatant.attackEffects,
-            damageEffects: built.combatant.damageEffects,
-            // Difficulty rides the targetValue channel, like Evasion.
-            armorClass: built.combatant.difficulty,
-            reach: built.combatant.reach,
-            speedCells: built.combatant.speedCells,
-            daggerheart: { thresholds: built.combatant.thresholds },
-          };
-        }
-        const monster = monstersById.get(token.refId);
-        if (!monster) return undefined;
-        const built = buildMonsterCombatant(monster, {
-          tokenId: token.id,
-          position: token.position,
-        });
-        return {
-          attackEffects: built.attackEffects,
-          damageEffects: built.damageEffects,
-          armorClass: built.armorClass,
-          reach: built.reach,
-          attacksPerRound: built.attacksPerRound,
-          speedCells: built.speedCells,
-          areaSaveBonus: built.areaSaveBonus,
-        };
-      }
-      if (token.kind === 'character' && token.refId) {
-        const doc = documentsById.get(token.refId);
-        if (!doc) return undefined;
-        if (doc.systemId === 'daggerheart') {
-          const built = buildDaggerheartCombatant(doc, daggerheartWeaponsById, {
-            tokenId: token.id,
-            position: token.position,
-          });
-          if (!built.supported) return undefined;
-          return {
-            attackEffects: built.combatant.attackEffects,
-            damageEffects: built.combatant.damageEffects,
-            // Evasion rides the targetValue channel.
-            armorClass: built.combatant.evasion,
-            reach: built.combatant.reach,
-            speedCells: built.combatant.speedCells,
-            daggerheart: { thresholds: built.combatant.thresholds },
-          };
-        }
-        if (doc.systemId === 'mam3e') {
-          const built = buildMam3eCombatant(doc, { tokenId: token.id, position: token.position });
-          if (!built.supported) return undefined;
-          return {
-            attackEffects: built.combatant.attackEffects,
-            damageEffects: [],
-            // Dodge rides the targetValue channel; Parry/Toughness in the variant.
-            armorClass: built.combatant.dodge,
-            reach: built.combatant.reach,
-            speedCells: built.combatant.speedCells,
-            mam3e: {
-              parry: built.combatant.parry,
-              toughness: built.combatant.toughness,
-              effectRank: built.combatant.effectRank,
-              ranged: built.combatant.ranged,
-            },
-          };
-        }
-        const built = buildCharacterCombatant(doc, { tokenId: token.id, position: token.position });
-        if (!built.supported) return undefined;
-        return {
-          attackEffects: built.combatant.attackEffects,
-          damageEffects: built.combatant.damageEffects,
-          armorClass: built.combatant.armorClass,
-          reach: built.combatant.reach,
-          attacksPerRound: built.combatant.attacksPerRound,
-          iterativePenaltyStep: built.combatant.iterativePenaltyStep,
-          speedCells: built.combatant.speedCells,
-          areaSaveBonus: Math.floor(
-            (((doc.system as { baseAttributes?: { dex?: number } }).baseAttributes?.dex ?? 10) -
-              10) /
-              2
-          ),
-        };
-      }
-      return undefined;
-    },
+    (token) =>
+      resolveSceneCombatStats(token, {
+        monstersById,
+        documentsById,
+        daggerheartWeaponsById,
+        daggerheartAdversariesById,
+      }),
     [monstersById, documentsById, daggerheartWeaponsById, daggerheartAdversariesById]
   );
 
@@ -562,8 +432,15 @@ export function SceneManager({
     if (!state) return false;
     const combatants = buildSceneCombatants(state, resolveCombatStats);
     if (combatants.length < 2) return false;
-    const factionsPresent = new Set(combatants.map((combatant) => combatant.faction));
-    return factionsPresent.size >= 2 && isRoundConclusive(combatants, {});
+    // Count only real combat sides — a neutral NPC/object never constitutes a
+    // "side", so its presence alone must not read as a finished two-faction
+    // battle (nor keep one alive).
+    const sidesPresent = new Set(
+      combatants
+        .map((combatant) => combatant.faction)
+        .filter((faction) => faction !== NEUTRAL_FACTION)
+    );
+    return sidesPresent.size >= 2 && isRoundConclusive(combatants, {});
   }, [state, resolveCombatStats]);
 
   const handleCombatAttack = () => {
@@ -600,7 +477,12 @@ export function SceneManager({
       return;
     }
     if (outcome.intent) {
-      emitSceneAction(selectedScene, outcome.intent);
+      // Only log the hit if its damage event actually applied; emitSceneAction
+      // surfaces the issue when the runtime rejects it, so don't also claim it landed.
+      const applied = emitSceneAction(selectedScene, outcome.intent);
+      if (!applied) {
+        return;
+      }
     }
     setCombatLog((current) => [outcome.log, ...current].slice(0, 30));
   };
@@ -628,23 +510,15 @@ export function SceneManager({
       return;
     }
 
-    // Thread a local copy so each emitted event gets a correct sequence, then
-    // dispatch them all through the event-sourced persistence path.
-    let working = selectedScene;
-    const events: SceneEvent[] = [];
-    for (const intent of outcome.intents) {
-      const result = resolveSceneAction(working, intent, {
-        eventId: generateUUID(),
-        createdAt: new Date(),
-      });
-      if (result.event) {
-        events.push(result.event);
-        working = appendSceneEvent(working, result.event);
-      }
-    }
+    // Re-validate and sequence the round's intents against a working copy, then
+    // dispatch the accepted events through the event-sourced persistence path.
+    // Rejected (simulated-but-illegal) intents are surfaced, not dropped.
+    const { events, rejected } = applySceneIntents(selectedScene, outcome.intents, {
+      eventIdFactory: generateUUID,
+    });
     events.forEach((event) => onAppendSceneEvent(selectedScene.id, event));
     setCombatLog((current) => [...outcome.log.slice().reverse(), ...current].slice(0, 30));
-    setActionIssues([]);
+    setActionIssues(rejected);
   };
 
   const handleCellActivate = useCallback(
@@ -653,32 +527,30 @@ export function SceneManager({
 
       if (placementMode === 'token') {
         const linkedDoc = documents.find((doc) => doc.id === tokenDocumentId);
-        const name = tokenName.trim() || linkedDoc?.name.trim();
-        if (!name) return;
-
-        // A linked character token carries combat HP so it is grid-combat-ready.
-        const built = linkedDoc
-          ? buildCharacterCombatant(linkedDoc, { tokenId: linkedDoc.id, position })
-          : undefined;
-        const hp = built && built.supported ? built.combatant.token.hp : undefined;
-
-        const placed = emitSceneAction(selectedScene, {
-          type: 'place-token',
-          token: {
-            id: generateUUID(),
-            name,
-            kind: linkedDoc ? 'character' : tokenKind,
-            position,
-            size: 1,
-            refId: linkedDoc?.id,
-            ...(hp ? { hp } : {}),
-          },
+        // An NPC may instead be backed by a creature statblock (picked or
+        // generated) — mechanically real via the same statblocks monsters use.
+        const statblock =
+          !linkedDoc && tokenKind === 'npc' && tokenStatblockId
+            ? monstersById.get(tokenStatblockId)
+            : undefined;
+        const token = buildPlacedToken({
+          position,
+          linkedDoc,
+          statblock,
+          nameInput: tokenName,
+          tokenKind,
+          tokenAllegiance,
+          idFactory: generateUUID,
         });
+        if (!token) return;
+
+        const placed = emitSceneAction(selectedScene, { type: 'place-token', token });
 
         if (placed) {
           setPlacementMode('none');
           setTokenName('');
           setTokenDocumentId('');
+          setTokenStatblockId('');
         }
         return;
       }
@@ -740,6 +612,9 @@ export function SceneManager({
       tokenDocumentId,
       tokenName,
       tokenKind,
+      tokenAllegiance,
+      tokenStatblockId,
+      monstersById,
       markerLabel,
       markerKind,
       markerWidth,
@@ -748,6 +623,24 @@ export function SceneManager({
       emitSceneAction,
     ]
   );
+
+  const handleGenerateNpc = useCallback(() => {
+    npcGenNonce.current += 1;
+    const seed = state?.seed ?? selectedScene?.id ?? 'npc';
+    const generated = generateNpc(
+      encounterMonsters,
+      createSeededRng(`${seed}:npc:${npcGenNonce.current}`)
+    );
+    if (!generated) {
+      setActionIssues(['No creatures are loaded for this system to generate an NPC from.']);
+      return;
+    }
+    setTokenDocumentId('');
+    setTokenKind('npc');
+    setTokenStatblockId(generated.monster.id);
+    setTokenName(generated.name);
+    setPlacementMode('token');
+  }, [encounterMonsters, selectedScene?.id, state?.seed]);
 
   const handleToggleSelectedTokenCondition = useCallback(
     (conditionId: string) => {
@@ -767,6 +660,26 @@ export function SceneManager({
     [selectedScene, state, selectedTokenId, emitSceneAction]
   );
 
+  const handleSetSelectedTokenSide = useCallback(
+    (allegiance: SceneAllegiance) => {
+      if (!selectedScene || !selectedTokenId) return;
+      emitSceneAction(selectedScene, {
+        type: 'set-token-allegiance',
+        tokenId: selectedTokenId,
+        allegiance,
+      });
+    },
+    [selectedScene, selectedTokenId, emitSceneAction]
+  );
+
+  // The selected token's current side, for the re-side control (objects are
+  // permanent non-combatants, so no control is offered for them).
+  const selectedTokenSide = useMemo<SceneAllegiance | undefined>(() => {
+    const token = selectedTokenId ? state?.tokens[selectedTokenId] : undefined;
+    if (!token || token.kind === 'object') return undefined;
+    return factionForToken(token);
+  }, [selectedTokenId, state]);
+
   const handleTokenActivate = useCallback((token: SceneToken) => {
     setSelectedTokenId(token.id);
     setPlacementMode('none');
@@ -776,9 +689,19 @@ export function SceneManager({
     setTokenDocumentId(documentId);
     const doc = documents.find((entry) => entry.id === documentId);
     if (doc) {
+      setTokenStatblockId(''); // a sheet and a statblock are mutually exclusive backings
       setTokenName(doc.name);
       setTokenKind('character');
     }
+  };
+
+  const handleSelectStatblock = (statblockId: string) => {
+    setTokenStatblockId(statblockId);
+    if (!statblockId) return;
+    setTokenDocumentId(''); // mutually exclusive with a linked sheet
+    setTokenKind('npc');
+    const statblock = monstersById.get(statblockId);
+    if (statblock) setTokenName(statblock.name);
   };
 
   const handleDeleteSelectedToken = () => {
@@ -845,159 +768,57 @@ export function SceneManager({
     emitSceneAction(selectedScene, { type: 'advance-turn' });
   };
 
-  const handleQueueEncounterMonster = () => {
-    if (!encounterMonsterId) return;
-
-    const count = Math.min(encounterCountValue, MAX_MONSTERS_PER_SELECTION);
-    setEncounterSelections((current) => {
-      const existing = current.find((selection) => selection.monsterId === encounterMonsterId);
-      if (!existing) {
-        return [...current, { monsterId: encounterMonsterId, count }];
-      }
-
-      return current.map((selection) =>
-        selection.monsterId === encounterMonsterId
-          ? {
-              ...selection,
-              count: Math.min(MAX_MONSTERS_PER_SELECTION, selection.count + count),
-            }
-          : selection
-      );
-    });
-    setEncounterCount('1');
-    setActionIssues([]);
-  };
-
-  const handleDraftEncounter = (difficulty: EncounterDifficulty) => {
+  const handleRollCheck = (params: {
+    label: string;
+    modifier: number;
+    dc?: number;
+    actorTokenId?: string;
+    mode?: SceneCheckMode;
+  }) => {
     if (!selectedScene) return;
-    // Per-click nonce: re-drafting walks to the next deterministic variation
-    // instead of returning the identical composition (rebalance ergonomics).
-    draftNonceRef.current += 1;
-    const partyLevels = encounterParty.members.map((member) => member.level);
-    const result = draftEncounter({
-      monsters: encounterMonsters,
-      partyLevels,
-      difficulty,
-      seed: `${selectedScene.initialState.seed}:draft:${selectedScene.events.length}:${difficulty}:${draftNonceRef.current}`,
-      systemId: sceneSystemId,
-      // PF1e budgets come from the CRB encounter-design tables (target-CR XP
-      // award); PF2e uses its party-relative budget + creature-cost tables;
-      // 5e-family uses the SRD 5.2.1 per-character table default.
-      ...(sceneSystemId === 'pf1e'
-        ? { budget: pf1eEncounterXpBudget(partyLevels, difficulty) }
-        : {}),
-      ...(sceneSystemId === 'pf2e'
-        ? (() => {
-            const partyLevel = Math.round(
-              partyLevels.reduce((total, level) => total + level, 0) /
-                Math.max(1, partyLevels.length)
-            );
-            return {
-              budget: pf2eEncounterBudget(partyLevels, difficulty),
-              costFor: (monster: Monster) => pf2eCreatureXp(monster.challengeRating, partyLevel),
-            };
-          })()
-        : {}),
-    });
-    if (result.reason) {
-      setActionIssues([`Encounter draft: ${result.reason}`]);
-      return;
-    }
-    setEncounterSelections(result.selections);
-    setActionIssues([]);
+    emitSceneAction(selectedScene, { type: 'roll-check', ...params });
   };
 
-  const handleRemoveEncounterSelection = (monsterId: string) => {
-    setEncounterSelections((current) =>
-      current.filter((selection) => selection.monsterId !== monsterId)
-    );
-  };
-
-  const handleAdjustEncounterSelection = (monsterId: string, delta: number) => {
-    setEncounterSelections((current) =>
-      current.map((selection) =>
-        selection.monsterId === monsterId
-          ? {
-              ...selection,
-              count: Math.min(MAX_MONSTERS_PER_SELECTION, Math.max(1, selection.count + delta)),
-            }
-          : selection
-      )
-    );
-  };
-
-  const handleAddEncounter = () => {
-    if (!selectedScene || pendingEncounterSelections.length === 0) return;
-
-    const result = buildEncounterSceneEvents({
-      scene: selectedScene,
-      monsters: encounterMonsters,
-      selections: pendingEncounterSelections,
-      // Lets the builder roll seeded d20+DEX initiative for already-placed
-      // character tokens instead of defaulting the party to a flat 10.
-      documents,
-      origin: {
-        x: Math.max(0, positiveIntegerOrDefault(encounterOriginX, 0)),
-        y: Math.max(0, positiveIntegerOrDefault(encounterOriginY, 0)),
-      },
-      // Map-aware spawn zone: a chosen terrain marker constrains placement.
-      zone: (() => {
-        const marker = encounterZoneId ? state?.markers[encounterZoneId] : undefined;
-        return marker
-          ? { position: marker.position, width: marker.width, height: marker.height }
-          : undefined;
-      })(),
-      seed: `${selectedScene.initialState.seed}:encounter:${selectedScene.events.length}`,
-      createdAt: new Date(),
-      eventIdFactory: generateUUID,
-    });
-
-    if (result.issues.length > 0) {
-      setActionIssues(result.issues.map((issue) => issue.message));
-      return;
-    }
-
-    result.events.forEach((event) => onAppendSceneEvent(selectedScene.id, event));
-    setEncounterSelections([]);
-    setSelectedTokenId(undefined);
-    setPlacementMode('none');
-    setActionIssues([]);
+  const handleConsultOracle = (params: { question?: string; odds: SceneOracleOdds }) => {
+    if (!selectedScene) return;
+    emitSceneAction(selectedScene, { type: 'consult-oracle', ...params });
   };
 
   const handleImportScenes = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'application/json';
-    input.onchange = (event: Event) => {
-      const file = (event.target as HTMLInputElement).files?.[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = (loadEvent) => {
-        try {
-          const imported = importScenes(String(loadEvent.target?.result ?? ''));
-          onAddScenes(imported);
-          setSelectedSceneId(imported[0]?.id ?? selectedSceneId);
-          setActionIssues([]);
-        } catch (err) {
-          setActionIssues([err instanceof Error ? err.message : 'Failed to import scenes.']);
+    pickTextFile((text) => {
+      try {
+        const { scenes: imported, droppedCount } = importScenesWithReport(text);
+        const skipped =
+          droppedCount > 0
+            ? ` — ${droppedCount} invalid ${droppedCount === 1 ? 'entry' : 'entries'} skipped`
+            : '';
+        // Valid JSON can still contain no usable scenes (every candidate
+        // structurally invalid). Say so instead of silently no-op'ing while
+        // clearing the message — which reads as a successful import.
+        if (imported.length === 0) {
+          setActionIssues([
+            droppedCount > 0
+              ? `No valid scenes were found in that file${skipped}.`
+              : 'No valid scenes were found in that file.',
+          ]);
+          return;
         }
-      };
-      reader.readAsText(file);
-    };
-    input.click();
+        onAddScenes(imported);
+        setSelectedSceneId(imported[0]?.id ?? selectedSceneId);
+        // A partial import (some entries dropped) is surfaced, not silent.
+        setActionIssues(
+          droppedCount > 0
+            ? [`Imported ${imported.length} of ${imported.length + droppedCount} scenes${skipped}.`]
+            : []
+        );
+      } catch (err) {
+        setActionIssues([err instanceof Error ? err.message : 'Failed to import scenes.']);
+      }
+    });
   };
 
   const handleExportScenes = (targetScenes: SceneDocument[], filename: string) => {
-    // Blob URLs avoid Chromium's ~2MB cap on data: anchors, which silently
-    // no-ops exactly when a large scene log most needs exporting.
-    const blob = new Blob([exportScenes(targetScenes)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    link.click();
-    URL.revokeObjectURL(url);
+    downloadTextFile(exportScenes(targetScenes), filename);
   };
 
   return (
@@ -1040,75 +861,19 @@ export function SceneManager({
         </div>
       </div>
 
-      {creatingNew && (
-        <div className="grid gap-2 rounded-lg border bg-card p-3 md:grid-cols-[minmax(0,1fr)_minmax(10rem,14rem)_minmax(10rem,14rem)_5rem_5rem_auto_auto] md:items-center">
-          <Input
-            autoFocus
-            value={newSceneName}
-            onChange={(event) => setNewSceneName(event.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') handleCreateScene();
-              if (event.key === 'Escape') setCreatingNew(false);
-            }}
-            placeholder="Scene name"
-          />
-          <Select
-            aria-label="Scene campaign"
-            value={newSceneCampaignId}
-            onChange={(event) => {
-              const campaignId = event.target.value;
-              setNewSceneCampaignId(campaignId);
-              const campaign = campaigns.find((entry) => entry.id === campaignId);
-              if (campaign?.systemId) {
-                setNewSceneSystemId(campaign.systemId);
-              }
-            }}
-          >
-            <option value="">No campaign</option>
-            {campaigns.map((campaign) => (
-              <option key={campaign.id} value={campaign.id}>
-                {campaign.name}
-              </option>
-            ))}
-          </Select>
-          <Select
-            aria-label="Scene system"
-            value={newSceneSystemId}
-            onChange={(event) => setNewSceneSystemId(event.target.value)}
-          >
-            {systemOptions.map((system) => (
-              <option key={system.id} value={system.id}>
-                {system.label}
-              </option>
-            ))}
-          </Select>
-          <Input
-            aria-label="Scene width"
-            inputMode="numeric"
-            value={newSceneWidth}
-            onChange={(event) => setNewSceneWidth(event.target.value)}
-          />
-          <Input
-            aria-label="Scene height"
-            inputMode="numeric"
-            value={newSceneHeight}
-            onChange={(event) => setNewSceneHeight(event.target.value)}
-          />
-          <Button size="sm" onClick={handleCreateScene} disabled={!newSceneName.trim()}>
-            Create
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              setCreatingNew(false);
-              setNewSceneName('');
-            }}
-          >
-            Cancel
-          </Button>
-        </div>
-      )}
+      <SceneCreateForm
+        open={creatingNew}
+        systemOptions={systemOptions}
+        campaigns={campaigns}
+        defaultSystemId={fallbackSystemId}
+        onCancel={() => setCreatingNew(false)}
+        onCreate={(scene) => {
+          onAddScene(scene);
+          setSelectedSceneId(scene.id);
+          setCreatingNew(false);
+          setActionIssues([]);
+        }}
+      />
 
       {actionIssues.length > 0 && (
         <div className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
@@ -1119,49 +884,72 @@ export function SceneManager({
       {scenes.length > 0 && (
         <div className="grid gap-4 xl:grid-cols-[18rem_minmax(0,1fr)]">
           <div className="space-y-2">
-            {scenes.map((scene) => {
-              const { state: sceneState, issues } = foldedScenesById.get(scene.id)!;
-              const system = systemRegistry.get(scene.systemId);
-              const campaign = scene.campaignId
-                ? campaigns.find((entry) => entry.id === scene.campaignId)
-                : undefined;
-              const isSelected = scene.id === selectedScene?.id;
+            {campaigns.length > 0 && (
+              <Select
+                aria-label="Filter scenes by campaign"
+                value={sceneCampaignFilter}
+                onChange={(event) => setSceneCampaignFilter(event.target.value)}
+              >
+                <option value="">All campaigns</option>
+                {campaigns.map((campaign) => (
+                  <option key={campaign.id} value={campaign.id}>
+                    {campaign.name}
+                  </option>
+                ))}
+                <option value="none">No campaign</option>
+              </Select>
+            )}
+            {scenes
+              .filter((scene) =>
+                sceneCampaignFilter === ''
+                  ? true
+                  : sceneCampaignFilter === 'none'
+                    ? !scene.campaignId
+                    : scene.campaignId === sceneCampaignFilter
+              )
+              .map((scene) => {
+                const { state: sceneState, issues } = foldedScenesById.get(scene.id)!;
+                const system = systemRegistry.get(scene.systemId);
+                const campaign = scene.campaignId
+                  ? campaigns.find((entry) => entry.id === scene.campaignId)
+                  : undefined;
+                const isSelected = scene.id === selectedScene?.id;
 
-              return (
-                <button
-                  key={scene.id}
-                  type="button"
-                  className={`w-full rounded-lg border p-3 text-left transition-colors ${
-                    isSelected ? 'border-primary bg-primary/5' : 'bg-card hover:bg-muted/50'
-                  }`}
-                  onClick={() => {
-                    setSelectedSceneId(scene.id);
-                    setSelectedTokenId(undefined);
-                    setPlacementMode('none');
-                  }}
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      <div className="truncate font-medium">{scene.name}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {system?.label ?? scene.systemId}
-                        {campaign ? ` / ${campaign.name}` : ''}
+                return (
+                  <button
+                    key={scene.id}
+                    type="button"
+                    className={`w-full rounded-lg border p-3 text-left transition-colors ${
+                      isSelected ? 'border-primary bg-primary/5' : 'bg-card hover:bg-muted/50'
+                    }`}
+                    onClick={() => {
+                      setSelectedSceneId(scene.id);
+                      setSelectedTokenId(undefined);
+                      setPlacementMode('none');
+                    }}
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <div className="truncate font-medium">{scene.name}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {system?.label ?? scene.systemId}
+                          {campaign ? ` / ${campaign.name}` : ''}
+                        </div>
                       </div>
+                      {issues.length > 0 && (
+                        <Badge variant="destructive" className="shrink-0">
+                          {issues.length}
+                        </Badge>
+                      )}
                     </div>
-                    {issues.length > 0 && (
-                      <Badge variant="destructive" className="shrink-0">
-                        {issues.length}
-                      </Badge>
-                    )}
-                  </div>
-                  <div className="mt-2 flex flex-wrap gap-1 text-xs text-muted-foreground">
-                    <span>{Object.keys(sceneState.tokens).length} tokens</span>
-                    <span>{Object.keys(sceneState.markers).length} markers</span>
-                    <span>{scene.events.length} events</span>
-                  </div>
-                </button>
-              );
-            })}
+                    <div className="mt-2 flex flex-wrap gap-1 text-xs text-muted-foreground">
+                      <span>{Object.keys(sceneState.tokens).length} tokens</span>
+                      <span>{Object.keys(sceneState.markers).length} markers</span>
+                      <span>{scene.events.length} events</span>
+                    </div>
+                  </button>
+                );
+              })}
           </div>
 
           {selectedScene && state && (
@@ -1233,6 +1021,12 @@ export function SceneManager({
                     onTokenNameChange={setTokenName}
                     tokenKind={tokenKind}
                     onTokenKindChange={setTokenKind}
+                    tokenAllegiance={tokenAllegiance}
+                    onTokenAllegianceChange={setTokenAllegiance}
+                    eligibleStatblocks={eligibleStatblocks}
+                    tokenStatblockId={tokenStatblockId}
+                    onSelectStatblock={handleSelectStatblock}
+                    onGenerateNpc={handleGenerateNpc}
                     isPlacing={placementMode === 'token'}
                     onTogglePlace={() =>
                       setPlacementMode((current) => (current === 'token' ? 'none' : 'token'))
@@ -1248,6 +1042,8 @@ export function SceneManager({
                       (selectedTokenId && state.tokens[selectedTokenId]?.conditions) || []
                     }
                     onToggleSelectedTokenCondition={handleToggleSelectedTokenCondition}
+                    selectedTokenSide={selectedTokenSide}
+                    onSetSelectedTokenSide={handleSetSelectedTokenSide}
                   />
 
                   {sceneSystemId === 'daggerheart' && daggerheartAdversariesById.size > 0 && (
@@ -1311,16 +1107,31 @@ export function SceneManager({
                     zoneId={encounterZoneId}
                     onZoneChange={setEncounterZoneId}
                     // Drafting is offered only where a cited budget table
-                    // applies: the SRD 5.2.1 per-character table (5e family)
-                    // or the PF1e CRB encounter-design tables.
+                    // applies (see supportsEncounterBudget).
                     onDraftEncounter={
-                      sceneSystemId === 'dnd-5e-2014' ||
-                      sceneSystemId === 'dnd-5e-2024' ||
-                      sceneSystemId === 'pf1e' ||
-                      sceneSystemId === 'pf2e'
+                      supportsEncounterBudget(sceneSystemId ?? '')
                         ? handleDraftEncounter
                         : undefined
                     }
+                    difficulty={encounterDifficulty}
+                    onDifficultyChange={setEncounterDifficulty}
+                    validation={encounterValidation}
+                    // AI drafting rides the same difficulty + deterministic gate
+                    // as the manual draft, offered only when AI is enabled and
+                    // the system has a cited budget table.
+                    onAiDraft={
+                      aiEnabled && supportsEncounterBudget(sceneSystemId ?? '')
+                        ? handleAiDraftEncounter
+                        : undefined
+                    }
+                    aiPrompt={aiEncounterPrompt}
+                    onAiPromptChange={setAiEncounterPrompt}
+                    aiDrafting={aiDrafting}
+                    // Vision: identify a creature from an image (needs only the
+                    // loaded catalog, so it is offered wherever AI is enabled).
+                    onIdentifyImage={aiEnabled ? handleIdentifyCreature : undefined}
+                    identifying={aiIdentifying}
+                    identifyNotice={identifyNotice}
                   />
 
                   <MarkerPanel
@@ -1361,6 +1172,30 @@ export function SceneManager({
                     combatConcluded={combatConcluded}
                     log={combatLog}
                   />
+
+                  <CheckPanel state={state} actorId={selectedTokenId} onRoll={handleRollCheck} />
+
+                  <OraclePanel state={state} onConsult={handleConsultOracle} />
+
+                  <ReactionPanel seed={state.seed} />
+
+                  <DicePanel seed={state.seed} />
+
+                  {/* Image-output surface: a creative aid, not scene state. */}
+                  {aiEnabled && (
+                    <IllustrationPanel illustrate={(params) => illustrateSceneWithAi(params)} />
+                  )}
+
+                  {onLogToCampaign && linkedCampaign && (
+                    <RecapPanel
+                      state={state}
+                      campaignName={linkedCampaign.name}
+                      onLog={(title, body) => onLogToCampaign(linkedCampaign.id, title, body)}
+                      // The model restyles the deterministic recap into prose the
+                      // GM edits before logging; hidden entirely when AI is off.
+                      narrate={aiEnabled ? (params) => narrateSceneWithAi(params) : undefined}
+                    />
+                  )}
                 </div>
               </div>
             </div>
@@ -1368,20 +1203,5 @@ export function SceneManager({
         </div>
       )}
     </section>
-  );
-}
-
-function positiveIntegerOrDefault(value: string, fallback: number): number {
-  const parsed = Number.parseInt(value, 10);
-  return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
-}
-
-function isMonsterSystemId(systemId: string): systemId is GameSystemId {
-  return (
-    systemId === 'dnd-5e-2014' ||
-    systemId === 'dnd-5e-2024' ||
-    systemId === 'dnd-3.5e' ||
-    systemId === 'pf1e' ||
-    systemId === 'pf2e'
   );
 }

@@ -1,5 +1,5 @@
 import type { CharacterDocument, SystemDataModel } from '../types/core/document';
-import type { Campaign } from '../types/core/campaign';
+import type { Campaign, CampaignQuest, CampaignSessionEntry } from '../types/core/campaign';
 import { getSupabaseClient } from './supabaseClient';
 import { retryWithBackoff } from './retry';
 import { parseCharacterDocument, parseCampaign } from './boundaryValidation';
@@ -395,10 +395,37 @@ export interface RemoteCampaign {
   system_id: string | null;
   notes: string;
   character_ids: string[];
+  /** Story scaffolding — JSONB columns (004 migration). Dates ride as ISO
+   * strings; `fromRemoteCampaign` re-parses them through `parseCampaign`. */
+  quests: unknown;
+  session_log: unknown;
   created_at: string;
   updated_at: string;
   /** Soft-delete tombstone (003 migration); null/absent for live rows. */
   deleted_at?: string | null;
+}
+
+/** JSON-safe quest (Date -> ISO) for the `quests` JSONB column. */
+function serializeQuest(quest: CampaignQuest): Record<string, unknown> {
+  return {
+    id: quest.id,
+    title: quest.title,
+    summary: quest.summary,
+    status: quest.status,
+    objectives: quest.objectives,
+    createdAt: quest.createdAt.toISOString(),
+    updatedAt: quest.updatedAt.toISOString(),
+  };
+}
+
+/** JSON-safe session entry (Date -> ISO) for the `session_log` JSONB column. */
+function serializeSessionEntry(entry: CampaignSessionEntry): Record<string, unknown> {
+  return {
+    id: entry.id,
+    title: entry.title,
+    body: entry.body,
+    createdAt: entry.createdAt.toISOString(),
+  };
 }
 
 // `deleted_at` omitted for the same reason as `toRemote` — upserts must not
@@ -411,6 +438,8 @@ function toRemoteCampaign(campaign: Campaign, userId: string): RemoteCampaign {
     system_id: campaign.systemId ?? null,
     notes: campaign.notes,
     character_ids: campaign.characterIds,
+    quests: campaign.quests.map(serializeQuest),
+    session_log: campaign.sessionLog.map(serializeSessionEntry),
     created_at: campaign.createdAt.toISOString(),
     updated_at: campaign.updatedAt.toISOString(),
   };
@@ -427,6 +456,10 @@ function fromRemoteCampaign(row: unknown): Campaign | null {
     systemId: remote.system_id ?? undefined,
     notes: remote.notes,
     characterIds: remote.character_ids,
+    // JSONB blobs are untrusted like any other row field — parseCampaign
+    // coerces them (dropping malformed quests/entries) and re-parses dates.
+    quests: remote.quests,
+    sessionLog: remote.session_log,
     createdAt: remote.created_at,
     updatedAt: remote.updated_at,
   });

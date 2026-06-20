@@ -67,14 +67,24 @@ export function sameDocumentSignatures(
 /**
  * Campaign-set change detector.  Campaigns have no `version` column on the
  * server, so the signature triple collapses to (id, updatedAt).  Sorted
- * character-id list is folded into the signature so reordering or
- * add/remove of member characters counts as a change even if updatedAt
+ * character-id list, quest state, and session-log size are folded into the
+ * signature so any of those changing counts as a change even if updatedAt
  * happens to collide (it shouldn't in practice — every mutation stamps a
- * fresh Date — but it is cheap insurance).
+ * fresh Date — but it is cheap insurance against a no-op merge swallowing a
+ * real story edit).
  */
 function campaignSignatureFor(c: Campaign): string {
   const members = c.characterIds.slice().sort().join(',');
-  return `${c.id}|${toTime(c.updatedAt)}|${members}`;
+  // Per quest: id, status, and completed/total objectives — enough to notice a
+  // status flip, a checked objective, or an added/removed one.
+  const quests = c.quests
+    .map((q) => {
+      const done = q.objectives.reduce((n, o) => n + (o.done ? 1 : 0), 0);
+      return `${q.id}:${q.status}:${done}/${q.objectives.length}`;
+    })
+    .join(';');
+  const sessions = c.sessionLog.map((e) => e.id).join(',');
+  return `${c.id}|${toTime(c.updatedAt)}|${members}|${quests}|${sessions}`;
 }
 
 export function sameCampaignSignatures(a: readonly Campaign[], b: readonly Campaign[]): boolean {

@@ -1,7 +1,29 @@
 import { memo, useMemo } from 'react';
 import type { KeyboardEvent } from 'react';
 import { cn } from '@/lib/utils';
-import type { SceneCoordinate, SceneMarker, SceneState, SceneToken } from '../types/core/scene';
+import type {
+  SceneAllegiance,
+  SceneCoordinate,
+  SceneMarker,
+  SceneState,
+  SceneToken,
+} from '../types/core/scene';
+import { cellKey, footprintCells } from '../scene/grid';
+import { tokenAllegiance } from '../scene/allegiance';
+
+/** Token chip colors by combat side: party blue, hostile red, neutral muted. */
+const ALLEGIANCE_TOKEN_CLASS: Record<SceneAllegiance, string> = {
+  party: 'border-primary/40 bg-primary/15 text-primary',
+  hostile: 'border-destructive/40 bg-destructive/15 text-destructive',
+  neutral: 'border-muted-foreground/30 bg-muted text-foreground',
+};
+
+/** Human-readable side word for token labels/tooltips. */
+const ALLEGIANCE_LABEL: Record<SceneAllegiance, string> = {
+  party: 'ally',
+  hostile: 'enemy',
+  neutral: 'neutral',
+};
 
 export interface SceneGridViewProps {
   state: SceneState;
@@ -24,12 +46,26 @@ export const SceneGridView = memo(function SceneGridView({
   onTokenActivate,
 }: SceneGridViewProps) {
   const tokensByCell = useMemo(() => buildTokensByCell(state), [state]);
+  // Cells covered by a multi-cell token's footprint (the chip renders in the
+  // anchor cell; this lets the other cells it occupies be shaded so a large
+  // creature visibly takes up its whole space).
+  const largeTokenFootprintByCell = useMemo(() => {
+    const index = new Map<string, SceneToken>();
+    for (const token of Object.values(state.tokens)) {
+      if (token.size <= 1) continue;
+      for (const cell of footprintCells(token.position, token.size)) {
+        const key = cellKey(cell);
+        if (!index.has(key)) index.set(key, token);
+      }
+    }
+    return index;
+  }, [state.tokens]);
   const markerByCell = useMemo(() => {
     const index = new Map<string, SceneMarker>();
     for (const marker of Object.values(state.markers)) {
       for (let dy = 0; dy < marker.height; dy += 1) {
         for (let dx = 0; dx < marker.width; dx += 1) {
-          const key = coordinateKey({ x: marker.position.x + dx, y: marker.position.y + dy });
+          const key = cellKey({ x: marker.position.x + dx, y: marker.position.y + dy });
           if (!index.has(key)) {
             index.set(key, marker);
           }
@@ -66,12 +102,13 @@ export const SceneGridView = memo(function SceneGridView({
         {Array.from({ length: state.grid.height }).flatMap((_, y) =>
           Array.from({ length: state.grid.width }).map((__, x) => {
             const position = { x, y };
-            const cellKey = coordinateKey(position);
-            const cellTokens = tokensByCell.get(cellKey) ?? [];
-            const marker = markerByCell.get(cellKey);
+            const key = cellKey(position);
+            const cellTokens = tokensByCell.get(key) ?? [];
+            const marker = markerByCell.get(key);
+            const footprintToken = largeTokenFootprintByCell.get(key);
             return (
               <div
-                key={cellKey}
+                key={key}
                 role="gridcell"
                 aria-label={buildCellLabel(position, marker, cellTokens)}
                 tabIndex={0}
@@ -79,6 +116,12 @@ export const SceneGridView = memo(function SceneGridView({
                   'relative aspect-square min-h-8 border-b border-r border-border/70 bg-background p-0.5 outline-none transition-colors',
                   marker?.kind === 'terrain' && 'bg-emerald-500/10',
                   marker?.kind === 'hazard' && 'bg-amber-500/15',
+                  // A multi-cell creature's reserved footprint, shaded so the
+                  // space it occupies beyond its anchor chip is visible.
+                  footprintToken &&
+                    (footprintToken.kind === 'character'
+                      ? 'bg-primary/10'
+                      : 'bg-muted-foreground/15'),
                   onCellActivate &&
                     'cursor-pointer hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring'
                 )}
@@ -97,9 +140,9 @@ export const SceneGridView = memo(function SceneGridView({
                       type="button"
                       className={cn(
                         'relative flex h-7 w-7 items-center justify-center rounded-full border text-[11px] font-semibold shadow-sm transition-colors',
-                        token.kind === 'character'
-                          ? 'border-primary/40 bg-primary/15 text-primary'
-                          : 'border-muted-foreground/30 bg-muted text-foreground',
+                        // Color by combat side, not kind: an allied monster reads
+                        // as an ally, a hostile NPC as an enemy.
+                        ALLEGIANCE_TOKEN_CLASS[tokenAllegiance(token)],
                         selectedTokenId === token.id && 'ring-2 ring-ring ring-offset-1',
                         token.hp && token.hp.current <= 0 && 'opacity-40 grayscale'
                       )}
@@ -128,7 +171,7 @@ export const SceneGridView = memo(function SceneGridView({
 function buildTokensByCell(state: SceneState): Map<string, SceneToken[]> {
   const byCell = new Map<string, SceneToken[]>();
   Object.values(state.tokens).forEach((token) => {
-    const key = coordinateKey(token.position);
+    const key = cellKey(token.position);
     byCell.set(key, [...(byCell.get(key) ?? []), token]);
   });
   return byCell;
@@ -157,10 +200,6 @@ function handleCellKeyDown(event: KeyboardEvent<HTMLDivElement>, callback: () =>
   callback();
 }
 
-function coordinateKey(position: SceneCoordinate): string {
-  return `${position.x}:${position.y}`;
-}
-
 function getTokenInitials(token: SceneToken): string {
   const initials = token.name
     .split(/\s+/)
@@ -171,12 +210,13 @@ function getTokenInitials(token: SceneToken): string {
   return initials || token.id.slice(0, 2).toUpperCase();
 }
 
-/** Token aria-label, including current/max HP when the token is a combatant. */
+/** Token aria-label, including its combat side and current/max HP. */
 function buildTokenLabel(token: SceneToken): string {
+  const side = ALLEGIANCE_LABEL[tokenAllegiance(token)];
   if (token.hp) {
-    return `Token ${token.name}, ${Math.max(0, token.hp.current)} of ${token.hp.max} HP`;
+    return `Token ${token.name}, ${side}, ${Math.max(0, token.hp.current)} of ${token.hp.max} HP`;
   }
-  return `Token ${token.name}`;
+  return `Token ${token.name}, ${side}`;
 }
 
 /** A thin HP bar under a combatant token, green→amber→red by fraction. */

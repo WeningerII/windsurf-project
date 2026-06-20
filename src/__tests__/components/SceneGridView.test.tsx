@@ -48,10 +48,38 @@ function makeState(): SceneState {
     round: 2,
     activeTokenId: 'hero',
     seed: 'scene-seed',
+    checkLog: [],
+    oracleLog: [],
   };
 }
 
 describe('SceneGridView', () => {
+  it('colors and labels tokens by combat side, not kind', () => {
+    const state = makeState();
+    // A monster (default hostile) and a monster re-sided as an ally.
+    state.tokens = {
+      ...state.tokens,
+      orc: { id: 'orc', name: 'Orc', kind: 'monster', position: { x: 0, y: 2 }, size: 1 },
+      ally: {
+        id: 'ally',
+        name: 'Sworn Guard',
+        kind: 'monster',
+        position: { x: 1, y: 2 },
+        size: 1,
+        allegiance: 'party',
+      },
+    };
+    render(<SceneGridView state={state} />);
+
+    // Labels carry the side word.
+    expect(screen.getByRole('button', { name: /Token Orc, enemy/i })).toBeInTheDocument();
+    const ally = screen.getByRole('button', { name: /Token Sworn Guard, ally/i });
+    const orc = screen.getByRole('button', { name: /Token Orc, enemy/i });
+    // The allied monster is colored as party; the hostile one as destructive.
+    expect(ally).toHaveClass('bg-primary/15');
+    expect(orc).toHaveClass('bg-destructive/15');
+  });
+
   it('renders scene state as a manual grid surface', () => {
     render(<SceneGridView state={makeState()} selectedTokenId="hero" />);
 

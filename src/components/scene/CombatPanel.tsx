@@ -68,7 +68,7 @@ export function CombatPanel({
                 ? 'Need at least two combat-ready tokens.'
                 : combatConcluded
                   ? 'Only one faction has living combatants.'
-                  : undefined
+                  : 'Resolve a round for the engine-run combatants — your player-controlled tokens act manually.'
             }
           >
             <Zap className="mr-1.5 h-4 w-4" />
@@ -86,6 +86,11 @@ export function CombatPanel({
               {!attackerReady && (
                 <Badge variant="destructive" className="ml-2">
                   no combat stats
+                </Badge>
+              )}
+              {attacker.playerControlled && (
+                <Badge variant="secondary" className="ml-2">
+                  Player
                 </Badge>
               )}
             </>
