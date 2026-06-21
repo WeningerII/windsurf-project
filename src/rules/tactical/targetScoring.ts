@@ -12,9 +12,9 @@
  * the immediate hit. No RNG here; scoring is pure arithmetic. Resolution (the
  * dice) happens after selection, seeded.
  *
- * Movement/pathfinding is intentionally out of scope for this slice: we score
- * reach from current positions and flag whether a target is in reach. A later
- * phase adds movement toward the best out-of-reach target.
+ * Scoring is position-static: it reads reach from current positions and flags
+ * whether a target is in reach. Movement and obstacle-aware pathfinding toward an
+ * out-of-reach target live in `pathfinding.ts` and the executor, not here.
  */
 
 import type { SceneCoordinate } from '../../types/core/scene';
