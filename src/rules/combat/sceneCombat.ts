@@ -25,6 +25,7 @@ import type {
 } from '../../types/core/scene';
 import type { EffectInstance } from '../ir/types';
 import { runCombatRound, type RoundCombatant, type RoundResult } from '../tactical/roundDriver';
+import { cellKey, footprintCells } from '../../scene/grid';
 import { tokenAllegiance } from '../../scene/allegiance';
 import { resolveAttack } from '../resolver/attackResolution';
 import { gridDistance } from '../resolver/areaTargeting';
@@ -125,6 +126,9 @@ export function buildSceneCombatants(
       attacksPerRound: stats.attacksPerRound,
       iterativePenaltyStep: stats.iterativePenaltyStep,
       speedCells: stats.speedCells,
+      // Footprint, so obstacle-aware movement keeps a large creature on legal
+      // cells and never proposes a move the scene runtime would reject.
+      size: token.size,
       // A player-controlled token sits in the round (a target, in initiative)
       // but the autonomous executor never acts for it.
       playerControlled: token.playerControlled,
@@ -338,11 +342,27 @@ export function runSceneRound(params: {
   round: number;
 }): SceneRoundOutcome {
   const order = buildSceneCombatants(params.state, params.resolveStats);
+
+  // Static blockers for movement: every token NOT in the combat order (objects,
+  // walls, and anything without resolvable stats) still occupies its cells, so
+  // autonomous movement must route around them too. Combatant footprints are
+  // added per turn from live positions inside the round driver.
+  const combatantIds = new Set(order.map((combatant) => combatant.tokenId));
+  const staticObstacles = new Set<string>();
+  for (const token of Object.values(params.state.tokens)) {
+    if (combatantIds.has(token.id)) continue;
+    for (const cell of footprintCells(token.position, token.size)) {
+      staticObstacles.add(cellKey(cell));
+    }
+  }
+
   const result = runCombatRound({
     order,
     seed: params.seed,
     round: params.round,
     degreeModel: degreeModelForScene(params.state),
+    grid: { width: params.state.grid.width, height: params.state.grid.height },
+    staticObstacles,
   });
 
   const nameOf = (tokenId: string): string => params.state.tokens[tokenId]?.name ?? tokenId;

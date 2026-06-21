@@ -27,7 +27,9 @@ import type { SceneActionIntent } from '../../types/core/scene';
 import { resolveAttack, type AttackResolution } from '../resolver/attackResolution';
 import { makeEffectId, type EffectInstance } from '../ir/types';
 import { participantRng } from '../resolver/participantResolution';
+import { gridDistance } from '../resolver/areaTargeting';
 import { attackToDamageIntent } from '../resolver/sceneCombat';
+import { OPEN_MOVEMENT, planApproach, type MovementContext } from './pathfinding';
 import {
   scoreTargets,
   type ScoredTarget,
@@ -43,6 +45,15 @@ export interface TacticalTurnInput {
   cause?: string;
   /** Hit/crit model for every attack this turn (default 'd20'). */
   degreeModel?: 'd20' | 'pf2e';
+  /**
+   * Grid bounds and occupied cells for obstacle-aware movement. When omitted the
+   * actor moves on an open field (no blockers) — reproducing the prior
+   * straight-line approach. When supplied (every other token's footprint), the
+   * actor routes around creatures and the grid edge, and only ever steps onto a
+   * cell the scene runtime will accept, so the move it proposes never fails
+   * re-validation (no phantom damage, no token stacking).
+   */
+  movement?: MovementContext;
 }
 
 export type TacticalDecisionKind = 'attack' | 'move-to-engage' | 'no-target';
@@ -107,28 +118,30 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
   let move;
   let actor = input.actor;
   if (!firstReachable) {
-    // Execute movement (RAW: move + attack in one turn): step up to speed
-    // cells toward the best target along the Chebyshev line, stopping at
-    // reach. Deterministic — no RNG is consumed by movement.
+    // Move + attack in one turn (RAW): plan an obstacle-aware path toward the
+    // best target and stop at the nearest legal cell from which it is in reach.
+    // With a movement context the route avoids creatures and the grid edge and
+    // the destination is always a cell the scene runtime accepts; without one
+    // (open field) it reduces to the straight-line approach. Deterministic — no
+    // RNG is consumed by movement.
     const nearest = scored[0];
     const nearestTarget = input.targets.find((t) => t.tokenId === nearest.tokenId)!;
     const speed = Math.max(1, Math.floor(actor.speedCells ?? 6));
     const reach = actor.reach ?? 1;
-    const from = actor.position;
-    const goal = nearestTarget.position;
-    let { x, y } = from;
-    let stepsLeft = speed;
-    while (stepsLeft > 0 && Math.max(Math.abs(goal.x - x), Math.abs(goal.y - y)) > reach) {
-      x += Math.sign(goal.x - x);
-      y += Math.sign(goal.y - y);
-      stepsLeft -= 1;
-    }
-    if (x !== from.x || y !== from.y) {
+    const plan = planApproach({
+      from: actor.position,
+      size: actor.size ?? 1,
+      speed,
+      reach,
+      goal: nearestTarget.position,
+      context: input.movement ?? OPEN_MOVEMENT,
+    });
+    if (plan.moved) {
       move = {
-        to: { x, y },
-        intent: { type: 'move-token' as const, tokenId: actor.tokenId, position: { x, y } },
+        to: plan.to,
+        intent: { type: 'move-token' as const, tokenId: actor.tokenId, position: plan.to },
       };
-      actor = { ...actor, position: { x, y } };
+      actor = { ...actor, position: plan.to };
       // Re-score from the new position; attack if anything is now in reach.
       const rescored = scoreTargets(actor, input.targets);
       firstReachable = rescored.find((target) => target.inReach);
@@ -140,9 +153,9 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
           chosenTargetId: nearest.tokenId,
           move,
           attacks: [],
-          rationale: `Moved ${speed} cells toward ${nearest.tokenId} (still ${Math.max(
-            Math.abs(goal.x - x),
-            Math.abs(goal.y - y)
+          rationale: `Moved ${plan.steps} cells toward ${nearest.tokenId} (still ${gridDistance(
+            plan.to,
+            nearestTarget.position
           )} cells away).`,
         };
       }
@@ -153,7 +166,7 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
         scored,
         chosenTargetId: nearest.tokenId,
         attacks: [],
-        rationale: `Best target ${nearest.tokenId} is ${nearest.distance} cells away, beyond reach; close to engage.`,
+        rationale: `Best target ${nearest.tokenId} is ${nearest.distance} cells away, beyond reach; no legal path to close.`,
       };
     }
   }

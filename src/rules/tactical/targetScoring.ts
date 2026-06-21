@@ -46,6 +46,12 @@ export interface TacticalActor {
   iterativePenaltyStep?: number;
   /** Movement per turn in grid cells (speed feet / 5). Default 6. */
   speedCells?: number;
+  /**
+   * The actor's footprint in cells (1 = Medium/Small). Used only by movement
+   * pathfinding to keep a large creature's whole footprint on legal cells;
+   * scoring is anchor-based and ignores it. Default 1.
+   */
+  size?: number;
 }
 
 /** A potential target on the grid. */

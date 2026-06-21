@@ -324,6 +324,34 @@ describe('movement execution (grid-combat phase 3)', () => {
     expect(turn.attacks).toHaveLength(1);
   });
 
+  it('detours around a blocker and never lands on an occupied cell (movement context)', async () => {
+    const { cellKey } = await import('../../scene/grid');
+    // Straight line (0,0)->(4,0) is walled at x=2 and x=3 (y=0); the target
+    // occupies (4,0). The open-field approach would stop on (3,0) — which is
+    // blocked here — so only an obstacle-aware route can find a legal in-reach
+    // cell. The destination must therefore avoid every blocked cell.
+    const blocked = new Set(
+      [
+        [2, 0],
+        [3, 0],
+        [4, 0],
+      ].map(([x, y]) => cellKey({ x, y }))
+    );
+    const turn = executeTacticalTurn({
+      actor: actor({ position: { x: 0, y: 0 }, reach: 1, speedCells: 8, attackEffects: [atk(50)] }),
+      targets: [target('far', { position: { x: 4, y: 0 }, hp: { current: 50, max: 50 } })],
+      seed: 'detour-seed',
+      movement: { bounds: { width: 12, height: 12 }, blocked },
+    });
+    expect(turn.decision).toBe('attack');
+    expect(turn.move).toBeDefined();
+    // The destination is a real, free cell within reach of the target.
+    expect(blocked.has(`${turn.move!.to.x}:${turn.move!.to.y}`)).toBe(false);
+    expect(
+      Math.max(Math.abs(turn.move!.to.x - 4), Math.abs(turn.move!.to.y - 0))
+    ).toBeLessThanOrEqual(1);
+  });
+
   it('moves its full speed and reports move-to-engage when the target stays out of reach', () => {
     const turn = executeTacticalTurn({
       actor: actor({ position: { x: 0, y: 0 }, reach: 1, speedCells: 3 }),

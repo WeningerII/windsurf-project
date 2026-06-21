@@ -21,7 +21,9 @@
 
 import type { EffectInstance } from '../ir/types';
 import type { SceneCoordinate, SceneActionIntent } from '../../types/core/scene';
+import { cellKey, footprintCells } from '../../scene/grid';
 import { executeTacticalTurn, type TacticalTurnResult } from './tacticalExecutor';
+import type { GridBounds } from './pathfinding';
 import { NEUTRAL_FACTION, type TacticalActor, type TacticalTarget } from './targetScoring';
 
 /** A combatant in the round: identity, faction, position, stats, and live HP. */
@@ -41,6 +43,8 @@ export interface RoundCombatant {
   iterativePenaltyStep?: number;
   /** Movement per turn in grid cells. Default 6. */
   speedCells?: number;
+  /** Footprint in cells (1 = Medium/Small). Used for obstacle-aware movement. */
+  size?: number;
   /**
    * When true, the autonomous round does NOT act for this combatant — the human
    * player takes its turn manually. It still occupies initiative and remains a
@@ -79,6 +83,17 @@ export interface RunRoundInput {
   round: number;
   /** Hit/crit model for the whole round (default 'd20'). */
   degreeModel?: 'd20' | 'pf2e';
+  /**
+   * Grid bounds for obstacle-aware movement. Omit for an open field (movement
+   * still avoids other combatants, just not a grid edge).
+   */
+  grid?: GridBounds;
+  /**
+   * Cells occupied by non-combatant tokens (objects/walls and any token not in
+   * `order`), keyed by {@link cellKey}. Combatant footprints are added per turn
+   * from their live positions; these are the static blockers on top of them.
+   */
+  staticObstacles?: ReadonlySet<string>;
 }
 
 function toActor(combatant: RoundCombatant): TacticalActor {
@@ -93,6 +108,7 @@ function toActor(combatant: RoundCombatant): TacticalActor {
     attacksPerRound: combatant.attacksPerRound,
     iterativePenaltyStep: combatant.iterativePenaltyStep,
     speedCells: combatant.speedCells,
+    size: combatant.size,
   };
 }
 
@@ -172,11 +188,23 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
         position: { ...positions[other.tokenId] },
       }));
 
+    // Obstacle map for this actor's move: every OTHER token's footprint at its
+    // live position (combatants here, plus the caller's static objects/walls).
+    // The actor never blocks itself, so the path can start from its own cell.
+    const blocked = new Set<string>(input.staticObstacles ?? []);
+    for (const other of input.order) {
+      if (other.tokenId === combatant.tokenId) continue;
+      for (const cell of footprintCells(positions[other.tokenId], other.size ?? 1)) {
+        blocked.add(cellKey(cell));
+      }
+    }
+
     const turn = executeTacticalTurn({
       actor: { ...toActor(combatant), position: { ...positions[combatant.tokenId] } },
       targets,
       seed: `${input.seed}::round${input.round}::turn${turnIndex}`,
       degreeModel: input.degreeModel,
+      movement: { ...(input.grid ? { bounds: input.grid } : {}), blocked },
     });
 
     // Movement executed this turn: update the working position so later
