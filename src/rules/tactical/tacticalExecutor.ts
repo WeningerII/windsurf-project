@@ -128,6 +128,12 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
     const nearestTarget = input.targets.find((t) => t.tokenId === nearest.tokenId)!;
     const speed = Math.max(1, Math.floor(actor.speedCells ?? 6));
     const reach = actor.reach ?? 1;
+    // Other living hostiles to weigh when choosing among equally-fast attack
+    // cells (engagement/influence): stand where the most enemies are threatened.
+    const engageableIds = new Set(scored.map((candidate) => candidate.tokenId));
+    const engagementTargets = input.targets
+      .filter((candidate) => engageableIds.has(candidate.tokenId))
+      .map((candidate) => candidate.position);
     const plan = planApproach({
       from: actor.position,
       size: actor.size ?? 1,
@@ -135,6 +141,7 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
       reach,
       goal: nearestTarget.position,
       context: input.movement ?? OPEN_MOVEMENT,
+      engagementTargets,
     });
     if (plan.moved) {
       move = {

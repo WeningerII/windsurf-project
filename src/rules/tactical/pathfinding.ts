@@ -58,6 +58,22 @@ export interface ApproachPlan {
   inReachOfGoal: boolean;
   /** True when the mover actually relocates (`to` differs from the start). */
   moved: boolean;
+  /** Living hostiles within reach of `to` — the engagement value of the cell. */
+  threatens: number;
+}
+
+/** How many of `points` lie within `reach` king-moves of `cell`. A local,
+ * uniform-weight influence reading used to value an engagement position. */
+export function countWithinReach(
+  cell: SceneCoordinate,
+  points: readonly SceneCoordinate[],
+  reach: number
+): number {
+  let count = 0;
+  for (const point of points) {
+    if (gridDistance(cell, point) <= reach) count += 1;
+  }
+  return count;
 }
 
 const EMPTY_BLOCKED: ReadonlySet<string> = new Set<string>();
@@ -136,8 +152,10 @@ export function computeMovementField(params: {
  * `reach` cells of attack range.
  *
  * - If any reachable cell puts the goal in reach, move to the one needing the
- *   FEWEST steps (then geometrically closest to the goal, then a stable id
- *   tie-break) — engage as fast as possible.
+ *   FEWEST steps, then — the influence reading — the one threatening the MOST
+ *   living hostiles (`engagementTargets`), then geometrically closest to the
+ *   goal, then a stable id tie-break. So among equally-fast attack cells the
+ *   actor stands where it menaces the most enemies.
  * - Otherwise close the distance: move to the reachable cell nearest the goal in
  *   king-moves (then closest, then fewest steps, then id) — make real progress.
  * - If nothing better than the start is reachable (boxed in), stay put.
@@ -153,8 +171,15 @@ export function planApproach(params: {
   reach: number;
   goal: SceneCoordinate;
   context: MovementContext;
+  /**
+   * Positions of the other living hostiles the actor would like to threaten. When
+   * given, equally-fast attack cells are broken toward the one in reach of more
+   * of them (engagement value). Omit to position purely toward the goal.
+   */
+  engagementTargets?: readonly SceneCoordinate[];
 }): ApproachPlan {
   const { from, size, speed, reach, goal, context } = params;
+  const engagementTargets = params.engagementTargets ?? [];
   const reachable = [...computeMovementField({ from, size, maxSteps: speed, context }).values()];
 
   const euclidSq = (cell: SceneCoordinate): number => {
@@ -168,14 +193,19 @@ export function planApproach(params: {
     return ka < kb ? -1 : ka > kb ? 1 : 0;
   };
   const inReachOf = (cell: SceneCoordinate): boolean => gridDistance(cell, goal) <= reach;
+  const engagement = (cell: SceneCoordinate): number =>
+    countWithinReach(cell, engagementTargets, reach);
 
   const attackPositions = reachable.filter((rc) => inReachOf(rc.cell));
   let chosen: ReachableCell;
   if (attackPositions.length > 0) {
-    // Engage fast: fewest steps, then closest, then stable id.
+    // Engage fast, then threaten the most enemies, then closest, then stable id.
     chosen = attackPositions.sort(
       (a, b) =>
-        a.steps - b.steps || euclidSq(a.cell) - euclidSq(b.cell) || compareKeys(a.cell, b.cell)
+        a.steps - b.steps ||
+        engagement(b.cell) - engagement(a.cell) ||
+        euclidSq(a.cell) - euclidSq(b.cell) ||
+        compareKeys(a.cell, b.cell)
     )[0];
   } else {
     // Close the gap: nearest in king-moves, then closest, then fewest steps, then id.
@@ -193,5 +223,6 @@ export function planApproach(params: {
     steps: chosen.steps,
     inReachOfGoal: inReachOf(chosen.cell),
     moved: chosen.cell.x !== from.x || chosen.cell.y !== from.y,
+    threatens: engagement(chosen.cell),
   };
 }

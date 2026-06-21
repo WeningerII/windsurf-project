@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { cellKey } from '../../scene/grid';
 import {
   computeMovementField,
+  countWithinReach,
   planApproach,
   OPEN_MOVEMENT,
   type MovementContext,
@@ -174,6 +175,53 @@ describe('planApproach — engage / close / hold', () => {
     });
     expect(plan.moved).toBe(false);
     expect(plan.to).toEqual({ x: 5, y: 5 });
+  });
+
+  it('among equally-fast attack cells, stands where it threatens the most enemies', () => {
+    // From (5,0) the nearest attack cells around the goal (5,5) are (4,4),(5,4),
+    // (6,4) — all 4 steps. A second hostile sits at (7,4): only (6,4) is in reach
+    // of BOTH, so the influence tie-break must pick it over the goal-closest (5,4).
+    const plan = planApproach({
+      from: { x: 5, y: 0 },
+      size: 1,
+      speed: 6,
+      reach: 1,
+      goal: { x: 5, y: 5 },
+      context: OPEN_MOVEMENT,
+      engagementTargets: [
+        { x: 5, y: 5 },
+        { x: 7, y: 4 },
+      ],
+    });
+    expect(plan.to).toEqual({ x: 6, y: 4 });
+    expect(plan.threatens).toBe(2);
+  });
+
+  it('without engagement targets, picks the attack cell closest to the goal', () => {
+    const plan = planApproach({
+      from: { x: 5, y: 0 },
+      size: 1,
+      speed: 6,
+      reach: 1,
+      goal: { x: 5, y: 5 },
+      context: OPEN_MOVEMENT,
+    });
+    expect(plan.to).toEqual({ x: 5, y: 4 });
+  });
+
+  it('countWithinReach counts only points inside the reach radius', () => {
+    const cell = { x: 0, y: 0 };
+    expect(
+      countWithinReach(
+        cell,
+        [
+          { x: 1, y: 1 },
+          { x: 0, y: 1 },
+          { x: 3, y: 0 },
+        ],
+        1
+      )
+    ).toBe(2);
   });
 
   it('never proposes a destination that overlaps another token', () => {
