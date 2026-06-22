@@ -4,7 +4,7 @@ import { SystemStatusDashboard } from './components/SystemStatusDashboard';
 import { GameSystemId } from './types/game-systems';
 import { systemRegistry } from './registry';
 import { Button } from './components/ui/Button';
-import { Plus, Download, Upload, AlertCircle, X } from 'lucide-react';
+import { Plus, Download, Upload, AlertCircle, X, Wand2 } from 'lucide-react';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { useSync } from './hooks/useSync';
 import { useCampaignSync } from './hooks/useCampaignSync';
@@ -30,6 +30,13 @@ import { CampaignManager } from './components/CampaignManager';
 const SceneManager = lazy(() =>
   import('./components/SceneManager').then((m) => ({ default: m.SceneManager }))
 );
+// Lazy-loaded for the same reason: the guided-creation wizard pulls in the 5e
+// template applicators, which must stay out of the eager first-paint shell.
+const CharacterCreationWizard = lazy(() =>
+  import('./components/CharacterCreationWizard').then((m) => ({
+    default: m.CharacterCreationWizard,
+  }))
+);
 import { useScenes } from './hooks/useScenes';
 import { prefetchSystemAssetsForIds } from './utils/systemAssetPrefetch';
 import { usePwaInstallPrompt } from './hooks/usePwaInstallPrompt';
@@ -44,6 +51,14 @@ const STORAGE_WARNING_THRESHOLD = Math.floor(STORAGE_LIMIT_BYTES * 0.8);
 // queues re-parses full collection snapshots from localStorage, which must
 // not happen on every keystroke of a controlled sheet/notes field.
 const PENDING_SYNC_COUNT_DEBOUNCE_MS = 2000;
+
+// Systems with a deterministic guided-creation orchestrator (src/creation/). 5e
+// is edition-agnostic (2024 + 2014 reuse the same flow); other systems keep the
+// quick blank-create path until they grow their own orchestrator.
+const GUIDED_CREATION_SYSTEMS: ReadonlySet<GameSystemId> = new Set<GameSystemId>([
+  'dnd-5e-2024',
+  'dnd-5e-2014',
+]);
 
 function cloneSystemData(system: SystemDataModel): SystemDataModel {
   if (typeof structuredClone === 'function') {
@@ -84,6 +99,8 @@ function AppContent() {
   });
   const [currentDocId, setCurrentDocId] = useState<string | null>(null);
   const [selectedSystem, setSelectedSystem] = useState<GameSystemId | null>(null);
+  // Non-null while the guided-creation wizard is open (for that system).
+  const [creatingSystem, setCreatingSystem] = useState<GameSystemId | null>(null);
 
   const [systemFilter, setSystemFilter] = useState<GameSystemId | 'all'>('all');
   const [sortOption, setSortOption] = useState<CharacterSortOption>('updated-desc');
@@ -270,6 +287,24 @@ function AppContent() {
     setCurrentDocId(doc.id);
   };
 
+  // Guided creation: open the wizard for the selected system, and on finish drop
+  // its finalised CharacterDocument into the same add+open path as quick-create.
+  const handleStartGuidedCreation = () => {
+    if (selectedSystem && GUIDED_CREATION_SYSTEMS.has(selectedSystem)) {
+      setCreatingSystem(selectedSystem);
+    }
+  };
+
+  const handleWizardComplete = useCallback(
+    (doc: CharacterDocument<SystemDataModel>) => {
+      addDocument(doc);
+      setCreatingSystem(null);
+      setCurrentDocId(doc.id);
+      toast(`Created "${doc.name}"`, 'success');
+    },
+    [addDocument, toast]
+  );
+
   const handleDeleteDocument = (id: string) => {
     const doc = documents.find((d) => d.id === id);
     if (!doc) return;
@@ -373,7 +408,7 @@ function AppContent() {
       key: 'n',
       alt: true,
       callback: () => {
-        if (selectedSystem && !currentDocId) handleCreateCharacter();
+        if (selectedSystem && !currentDocId && !creatingSystem) handleCreateCharacter();
       },
       description: 'Create new character',
     },
@@ -498,6 +533,49 @@ function AppContent() {
               <SystemSheetRenderer document={currentDoc} onUpdate={updateDocument} />
             </ErrorBoundary>
           </div>
+        ) : creatingSystem ? (
+          <div className="max-w-4xl mx-auto">
+            {/* Scoped boundary + Suspense: the wizard is a lazy chunk, like the
+                sheet. A load failure must not take down the app, and the user can
+                always fall back to a blank quick-create. */}
+            <ErrorBoundary
+              key={creatingSystem}
+              fallback={
+                <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-8 text-center space-y-4">
+                  <AlertCircle className="mx-auto h-8 w-8 text-destructive" />
+                  <div className="space-y-1">
+                    <h2 className="text-lg font-semibold">The creation wizard failed to load</h2>
+                    <p className="text-sm text-muted-foreground">
+                      Reloading usually fixes it. You can also create a blank character and edit it
+                      on the sheet.
+                    </p>
+                  </div>
+                  <Button variant="outline" onClick={() => setCreatingSystem(null)}>
+                    Back to list
+                  </Button>
+                </div>
+              }
+            >
+              <Suspense
+                fallback={
+                  <div className="space-y-4">
+                    <Skeleton className="h-10 w-64" />
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+                      {[1, 2, 3, 4, 5, 6].map((i) => (
+                        <Skeleton key={i} className="h-24 rounded-lg" />
+                      ))}
+                    </div>
+                  </div>
+                }
+              >
+                <CharacterCreationWizard
+                  systemId={creatingSystem}
+                  onComplete={handleWizardComplete}
+                  onCancel={() => setCreatingSystem(null)}
+                />
+              </Suspense>
+            </ErrorBoundary>
+          </div>
         ) : (
           <div className="max-w-6xl mx-auto space-y-10">
             {/* Hero Section */}
@@ -540,15 +618,25 @@ function AppContent() {
 
             {/* Action Bar */}
             {selectedSystem && (
-              <div className="flex justify-center gap-3 animate-in fade-in-0">
+              <div className="flex flex-wrap justify-center gap-3 animate-in fade-in-0">
                 <Button variant="outline" size="lg" onClick={handleImportDocument}>
                   <Upload className="w-4 h-4 mr-2" />
                   Import Character
                 </Button>
-                <Button onClick={handleCreateCharacter} size="lg">
+                <Button
+                  variant={GUIDED_CREATION_SYSTEMS.has(selectedSystem) ? 'outline' : 'default'}
+                  size="lg"
+                  onClick={handleCreateCharacter}
+                >
                   <Plus className="w-4 h-4 mr-2" />
                   Create New Character
                 </Button>
+                {GUIDED_CREATION_SYSTEMS.has(selectedSystem) && (
+                  <Button size="lg" onClick={handleStartGuidedCreation}>
+                    <Wand2 className="w-4 h-4 mr-2" />
+                    Guided Creation
+                  </Button>
+                )}
               </div>
             )}
 
