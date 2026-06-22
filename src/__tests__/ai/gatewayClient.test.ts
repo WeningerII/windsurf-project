@@ -1,10 +1,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { callAiGateway, isAiEnabled } from '../../ai/gatewayClient';
 import { AI_GATEWAY_ENDPOINT } from '../../ai/contracts';
+import { getRecentAiTraces, getSessionUsage, resetAiSession } from '../../ai/aiObservability';
 
 afterEach(() => {
   vi.unstubAllEnvs();
   vi.unstubAllGlobals();
+  resetAiSession();
 });
 
 const payload = {
@@ -82,5 +84,48 @@ describe('callAiGateway', () => {
       ok: false,
       code: 'provider-error',
     });
+  });
+});
+
+describe('callAiGateway — cost caps + tracing (Phase 14)', () => {
+  const success = {
+    ok: true,
+    task: 'encounter-draft',
+    data: { selections: [{ monsterId: 'goblin', count: 1 }] },
+    usage: { source: 'fixture' },
+  };
+
+  it('trips the call cap deterministically WITHOUT a network call', async () => {
+    vi.stubEnv('VITE_AI_ENABLED', 'true');
+    vi.stubEnv('VITE_AI_MAX_CALLS', '2');
+    const fetchSpy = vi.fn(async () => jsonResponse(success));
+    vi.stubGlobal('fetch', fetchSpy);
+
+    // Two calls run; the third is rejected before any fetch.
+    expect((await callAiGateway('encounter-draft', payload)).ok).toBe(true);
+    expect((await callAiGateway('encounter-draft', payload)).ok).toBe(true);
+    const third = await callAiGateway('encounter-draft', payload);
+
+    expect(third).toMatchObject({ ok: false, code: 'over-budget' });
+    expect(fetchSpy).toHaveBeenCalledTimes(2); // the rejected call never hit the network
+    // The rejected attempt is traced but not charged (tally stays at 2 real calls).
+    expect(getSessionUsage().calls).toBe(2);
+  });
+
+  it('records a trace per call linking id, task, prompt version, and provenance', async () => {
+    vi.stubEnv('VITE_AI_ENABLED', 'true');
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => jsonResponse(success))
+    );
+
+    await callAiGateway('encounter-draft', payload);
+
+    const traces = getRecentAiTraces();
+    expect(traces).toHaveLength(1);
+    expect(traces[0]).toMatchObject({ task: 'encounter-draft', ok: true, source: 'fixture' });
+    expect(typeof traces[0].traceId).toBe('string');
+    expect(traces[0].promptVersion).toBeTruthy();
+    expect(traces[0].estimatedUnits).toBeGreaterThan(0);
   });
 });

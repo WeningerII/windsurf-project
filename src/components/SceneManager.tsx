@@ -8,6 +8,7 @@ import { narrateSceneWithAi } from '../ai/sceneNarrationFlow';
 import { illustrateSceneWithAi } from '../ai/illustrateSceneFlow';
 import { buildStrategySnapshot, requestStrategyHints } from '../ai/strategistFlow';
 import { isAiEnabled } from '../ai/gatewayClient';
+import { getRecentAiTraces, getSessionUsage, readBudgetCaps } from '../ai/aiObservability';
 import {
   applySceneIntents,
   foldSceneEvents,
@@ -62,6 +63,7 @@ import { ReactionPanel } from './scene/ReactionPanel';
 import { DicePanel } from './scene/DicePanel';
 import { RecapPanel } from './scene/RecapPanel';
 import { IllustrationPanel } from './scene/IllustrationPanel';
+import { AiUsagePanel } from './scene/AiUsagePanel';
 import { SceneCreateForm } from './scene/SceneCreateForm';
 
 type PlacementMode = 'none' | 'token' | 'marker' | 'adversary';
@@ -1230,6 +1232,15 @@ export function SceneManager({
                       // The model restyles the deterministic recap into prose the
                       // GM edits before logging; hidden entirely when AI is off.
                       narrate={aiEnabled ? (params) => narrateSceneWithAi(params) : undefined}
+                    />
+                  )}
+
+                  {/* Session AI usage + the latest gateway trace (Phase 14). */}
+                  {aiEnabled && (
+                    <AiUsagePanel
+                      usage={getSessionUsage()}
+                      caps={readBudgetCaps()}
+                      lastTrace={getRecentAiTraces().at(-1)}
                     />
                   )}
                 </div>

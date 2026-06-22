@@ -14,6 +14,15 @@ import {
   type AiResponse,
   type AiTask,
 } from './contracts';
+import {
+  buildTrace,
+  chargeUsage,
+  estimateUnits,
+  getSessionUsage,
+  noteTrace,
+  readBudgetCaps,
+  wouldExceedBudget,
+} from './aiObservability';
 
 /**
  * Whether AI affordances should render at all. Build-time, default OFF, so the
@@ -32,7 +41,41 @@ export async function callAiGateway<TData>(
   if (!isAiEnabled()) {
     return aiFailure('provider-not-configured', 'AI features are turned off.', task);
   }
+
+  // Cost/session cap (Phase 14): reject deterministically BEFORE any network when
+  // this call would breach the configured ceiling. The attempt is traced but not
+  // charged, so the session tally counts only calls that actually ran.
+  const traceId = newTraceId();
+  const units = estimateUnits(payload);
+  const caps = readBudgetCaps();
+  if (wouldExceedBudget(getSessionUsage(), caps, units)) {
+    const overBudget = aiFailure(
+      'over-budget',
+      'This session has reached its AI usage limit. Use the manual tools or start a new session.',
+      task
+    );
+    noteTrace(
+      buildTrace({ traceId, task, estimatedUnits: units, latencyMs: 0, response: overBudget })
+    );
+    return overBudget;
+  }
+
   const request: AiRequest = { schemaVersion: AI_GATEWAY_SCHEMA_VERSION, task, payload };
+  const startedAt = Date.now();
+  const finish = (response: AiResponse<TData>): AiResponse<TData> => {
+    chargeUsage(units);
+    noteTrace(
+      buildTrace({
+        traceId,
+        task,
+        estimatedUnits: units,
+        latencyMs: Date.now() - startedAt,
+        response,
+      })
+    );
+    return response;
+  };
+
   let response: Response;
   try {
     response = await fetch(AI_GATEWAY_ENDPOINT, {
@@ -42,18 +85,30 @@ export async function callAiGateway<TData>(
       signal,
     });
   } catch {
-    return aiFailure('provider-error', 'Could not reach the AI gateway.', task);
+    return finish(aiFailure('provider-error', 'Could not reach the AI gateway.', task));
   }
 
   let json: unknown;
   try {
     json = await response.json();
   } catch {
-    return aiFailure('provider-error', 'The AI gateway returned an unreadable response.', task);
+    return finish(
+      aiFailure('provider-error', 'The AI gateway returned an unreadable response.', task)
+    );
   }
 
   if (!isAiResponse(json)) {
-    return aiFailure('provider-error', 'The AI gateway returned an unexpected response.', task);
+    return finish(
+      aiFailure('provider-error', 'The AI gateway returned an unexpected response.', task)
+    );
   }
-  return json as AiResponse<TData>;
+  return finish(json as AiResponse<TData>);
+}
+
+/** A per-call trace id. Uses crypto.randomUUID when present, else a timestamped
+ * fallback, so the client works in any browser/test environment. */
+function newTraceId(): string {
+  const cryptoApi = (globalThis as { crypto?: { randomUUID?: () => string } }).crypto;
+  if (cryptoApi?.randomUUID) return cryptoApi.randomUUID();
+  return `trace-${Date.now()}-${Math.floor(Math.random() * 1e9).toString(36)}`;
 }

@@ -12,6 +12,7 @@ The provider-agnostic control plane and its first five task surfaces are live. W
 - **Server gateway** (`netlify/functions/`): a Netlify Function holding the provider key in the server environment only (never the browser bundle), delegating to the pure core; a single Gemini adapter (Vercel AI SDK) is the only provider-bound code, behind the `AiProviderAdapter` seam. Task allowlist, request validation, and key-less degradation are enforced; per-task structured output schemas (or image routing) live in the adapter.
 - **Candidate pools + deterministic handshake**: encounter drafting and creature identification build loader-backed candidate pools and the model must return ids from them; an invented id is rejected deterministically. Encounter drafting reuses the shipped `validateEncounterSpec` budget gate with one bounded repair.
 - **Review-and-apply UI + local-first**: every surface is human-in-the-loop (selections reviewed before the deterministic builder applies them; narration edited before logging; identified statblock selected, not placed; imagery viewed/downloaded, never written to scene state). Default OFF; CI exercises the full path via fixtures without a key.
+- **Observability + cost controls** (`src/ai/aiObservability.ts`): a repo-native, deterministic per-session budget (call + estimated-unit tallies; env-configurable `VITE_AI_MAX_CALLS`/`VITE_AI_MAX_UNITS` ceilings; finite generous defaults) that short-circuits a breaching call to a typed `over-budget` failure before any network, plus per-call trace records (trace id, task, prompt-template version, estimated units, provider/model, latency, result) kept in a bounded ring and shown read-only by an in-app AI usage meter. No new dependency (no Langfuse); CI runs without provider calls.
 
 Five task surfaces:
 
@@ -21,7 +22,7 @@ Five task surfaces:
 4. **illustrate-scene** — prompt → an image via Imagen, a human-judged creative aid kept out of deterministic state (image output).
 5. **strategy-hints** — a compact combat snapshot → clamped, per-actor target-priority hints for the Phase 12 strategist blackboard. Validated to real on-side actors and real targets; consulted between rounds by the deterministic tactical executor, never in the per-move loop, and unable to make an illegal target actable (structured output, advisory).
 
-Still target design, not yet built: AI character-concept draft and draft repair (await deterministic guided creation), rule/provenance explanation, and the observability/cost-control layer (trace ids, latency, cost buckets, per-session ceilings) — only a per-request timeout and key-less/error degradation are implemented so far. The task allowlist grows one entry at a time as each remaining surface lands with its tests.
+Still target design, not yet built: AI character-concept draft and draft repair (await deterministic guided creation), rule/provenance explanation, and — within the now-shipped observability layer — stamping trace ids onto persisted scene events (prompt → response → result → the user-visible meter already correlate by id today). The task allowlist grows one entry at a time as each remaining surface lands with its tests.
 
 ## Summary
 

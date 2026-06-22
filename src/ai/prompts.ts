@@ -15,6 +15,13 @@ import type {
   StrategyHintsPayload,
 } from './contracts';
 
+/**
+ * Version stamp for the prompt templates in this file. Bump it whenever a builder
+ * changes so a recorded fixture or trace can be tied to the exact prompt that
+ * produced it (Phase 14 observability). It is metadata, not a contract.
+ */
+export const PROMPT_TEMPLATE_VERSION = 'ai-prompts-v2' as const;
+
 /** Compact one-per-line roster of candidate ids the model must choose among. */
 function formatCandidateRoster(candidates: EncounterDraftCandidate[]): string {
   return candidates
