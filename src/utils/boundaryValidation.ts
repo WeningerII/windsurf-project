@@ -6,7 +6,7 @@ import type {
   CampaignQuestStatus,
   CampaignSessionEntry,
 } from '../types/core/campaign';
-import type { SceneDocument } from '../types/core/scene';
+import type { SceneDocument, SceneMapAsset } from '../types/core/scene';
 import type { ValidationIssue } from '../registry/types';
 
 /**
@@ -252,6 +252,28 @@ function coerceSessionLog(value: unknown, now: Date): CampaignSessionEntry[] {
 }
 
 /**
+ * Coerce a scene's content-addressed map assets from untrusted input. Each
+ * asset's `dataUrl` is rendered as an `<img src>`, so it passes the same scheme
+ * allowlist as a character `img` ({@link sanitizeImgUrl}: only `https:` and
+ * `data:image/*`). An entry missing a hash, image media type, or a safe URL is
+ * dropped (the asset, not the scene); entries are re-keyed by their own hash so
+ * `map.set` lookups resolve. A hostile import therefore cannot smuggle a
+ * `javascript:`/`http:` beacon URL into a map.
+ */
+function coerceSceneAssets(value: unknown): Record<string, SceneMapAsset> {
+  if (!isRecord(value)) return {};
+  const assets: Record<string, SceneMapAsset> = {};
+  for (const entry of Object.values(value)) {
+    if (!isRecord(entry) || !isNonEmptyString(entry.hash)) continue;
+    if (typeof entry.mediaType !== 'string' || !/^image\//i.test(entry.mediaType)) continue;
+    const dataUrl = sanitizeImgUrl(entry.dataUrl);
+    if (dataUrl === undefined) continue;
+    assets[entry.hash] = { hash: entry.hash, mediaType: entry.mediaType, dataUrl };
+  }
+  return assets;
+}
+
+/**
  * Validate a `SceneDocument` envelope from untrusted input. The grid/token/
  * marker/initiative substructure and the event log are required to be the right
  * shape so downstream hydration and the event fold cannot crash on a malformed
@@ -309,6 +331,7 @@ export function parseSceneDocument(
     return { ok: false, issues };
   }
 
+  const assets = coerceSceneAssets(value.assets);
   const scene: SceneDocument = {
     id: value.id as string,
     name: value.name as string,
@@ -316,6 +339,7 @@ export function parseSceneDocument(
     ...(isNonEmptyString(value.campaignId) ? { campaignId: value.campaignId } : {}),
     initialState: value.initialState as SceneDocument['initialState'],
     events: value.events as SceneDocument['events'],
+    ...(Object.keys(assets).length > 0 ? { assets } : {}),
     createdAt: coerceDate(value.createdAt, now),
     updatedAt: coerceDate(value.updatedAt, now),
     version: 1,

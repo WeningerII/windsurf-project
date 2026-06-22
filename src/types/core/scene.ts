@@ -100,6 +100,38 @@ export interface SceneInitiativeEntry {
   value: number;
 }
 
+/**
+ * A background map image, content-addressed by `hash`. The bytes live on the
+ * {@link SceneDocument} (in `assets`), not in the event log; events reference the
+ * map only by its hash, so the log stays small and a replay always points at the
+ * same asset. Stored as a `data:image/...` URL (or an `https:` URL) — the import
+ * boundary allowlists exactly those, since it renders as an `<img src>`.
+ */
+export interface SceneMapAsset {
+  /** Content hash of `dataUrl` — the stable id events reference. */
+  hash: string;
+  /** IANA media type, e.g. `image/png`. */
+  mediaType: string;
+  /** The image as a `data:image/...;base64,...` (or `https:`) URL. */
+  dataUrl: string;
+}
+
+/**
+ * Manual registration of a {@link SceneMapAsset} onto the grid: which image
+ * pixel sits under the grid origin (`offsetX/Y`) and how many image pixels make
+ * one grid cell (`pixelsPerCell`). The GM sets and corrects these so the grid
+ * lines up with the map art; all fields are plain data, so the registration
+ * folds and replays deterministically.
+ */
+export interface SceneMapRegistration {
+  assetHash: string;
+  /** Image pixels per grid cell (positive). */
+  pixelsPerCell: number;
+  /** Image pixel offset of the grid origin. */
+  offsetX: number;
+  offsetY: number;
+}
+
 export type SceneCheckOutcome = 'success' | 'failure' | 'unresolved';
 
 /** Roll two d20s and keep the higher (advantage) or lower (disadvantage). */
@@ -182,6 +214,8 @@ export interface SceneState {
   checkLog: SceneCheckLogEntry[];
   /** Resolved oracle consultations, oldest first. */
   oracleLog: SceneOracleLogEntry[];
+  /** Background map registration (asset hash + manual grid alignment), if set. */
+  map?: SceneMapRegistration;
 }
 
 export type SceneEventType =
@@ -196,7 +230,9 @@ export type SceneEventType =
   | 'initiative.set'
   | 'turn.advanced'
   | 'check.rolled'
-  | 'oracle.consulted';
+  | 'oracle.consulted'
+  | 'map.set'
+  | 'map.cleared';
 
 /**
  * Applied hit-point delta for one token, recorded on a `token.damaged` event.
@@ -230,7 +266,9 @@ export type SceneEvent =
   | SceneEventBase<'initiative.set', { entries: SceneInitiativeEntry[]; activeTokenId?: string }>
   | SceneEventBase<'turn.advanced', { nextTokenId?: string }>
   | SceneEventBase<'check.rolled', SceneCheckResult & { label: string; actorTokenId?: string }>
-  | SceneEventBase<'oracle.consulted', SceneOracleResult & { question?: string }>;
+  | SceneEventBase<'oracle.consulted', SceneOracleResult & { question?: string }>
+  | SceneEventBase<'map.set', { registration: SceneMapRegistration }>
+  | SceneEventBase<'map.cleared', Record<string, never>>;
 
 export interface SceneDocument {
   id: string;
@@ -239,6 +277,12 @@ export interface SceneDocument {
   campaignId?: string;
   initialState: SceneState;
   events: SceneEvent[];
+  /**
+   * Content-addressed map assets referenced by `map.set` events, keyed by hash.
+   * Document-level (not folded state, not in the event log) so the bytes are
+   * stored once and travel with export/import; events reference them by hash.
+   */
+  assets?: Record<string, SceneMapAsset>;
   createdAt: Date;
   updatedAt: Date;
   version: 1;
@@ -256,7 +300,9 @@ export type SceneActionType =
   | 'set-initiative'
   | 'advance-turn'
   | 'roll-check'
-  | 'consult-oracle';
+  | 'consult-oracle'
+  | 'set-map'
+  | 'clear-map';
 
 export type SceneActionIntent =
   | { type: 'place-token'; actorId?: string; token: SceneToken }
@@ -285,7 +331,9 @@ export type SceneActionIntent =
       /** Roll with advantage/disadvantage; omit for a single d20. */
       mode?: SceneCheckMode;
     }
-  | { type: 'consult-oracle'; actorId?: string; question?: string; odds: SceneOracleOdds };
+  | { type: 'consult-oracle'; actorId?: string; question?: string; odds: SceneOracleOdds }
+  | { type: 'set-map'; actorId?: string; registration: SceneMapRegistration }
+  | { type: 'clear-map'; actorId?: string };
 
 export interface SceneIssue {
   code: string;

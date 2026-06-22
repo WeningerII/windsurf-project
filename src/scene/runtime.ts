@@ -5,6 +5,7 @@ import type {
   SceneEvent,
   SceneGrid,
   SceneIssue,
+  SceneMapRegistration,
   SceneMarker,
   SceneState,
   SceneToken,
@@ -184,6 +185,13 @@ function validateSceneIntent(
         eventId: options.eventId,
       },
     ];
+  }
+  if (intent.type === 'set-map') {
+    return mapRegistrationProblems(intent.registration).map((problem) => ({
+      ...problem,
+      severity: 'error' as const,
+      eventId: options.eventId,
+    }));
   }
   return [];
 }
@@ -407,6 +415,11 @@ export function validateSceneEvent(state: SceneState, event: SceneEvent): SceneI
         });
       }
       break;
+    case 'map.set':
+      validateMapRegistration(event.payload.registration, issues, event);
+      break;
+    case 'map.cleared':
+      break;
     default:
       assertNever(event);
   }
@@ -443,6 +456,50 @@ function validateCheckEvent(
   }
   if (actorTokenId) {
     validateKnownToken(state, actorTokenId, issues, event, 'payload.actorTokenId');
+  }
+}
+
+/**
+ * Structural problems with a map registration, shared by the intent gate and the
+ * (lenient, historical) event validator: a real asset hash, a positive
+ * pixels-per-cell scale, and finite integer offsets. Returns plain descriptors
+ * so each caller can stamp its own severity/event metadata.
+ */
+function mapRegistrationProblems(
+  registration: SceneMapRegistration
+): Array<{ code: string; message: string; path: string }> {
+  const problems: Array<{ code: string; message: string; path: string }> = [];
+  if (typeof registration.assetHash !== 'string' || !registration.assetHash.trim()) {
+    problems.push({
+      code: 'scene-map-asset-required',
+      message: 'A map registration needs the hash of a stored map asset.',
+      path: 'registration.assetHash',
+    });
+  }
+  if (!Number.isFinite(registration.pixelsPerCell) || registration.pixelsPerCell <= 0) {
+    problems.push({
+      code: 'scene-map-scale-invalid',
+      message: 'Map pixels-per-cell must be a positive number.',
+      path: 'registration.pixelsPerCell',
+    });
+  }
+  if (!Number.isFinite(registration.offsetX) || !Number.isFinite(registration.offsetY)) {
+    problems.push({
+      code: 'scene-map-offset-invalid',
+      message: 'Map offsets must be finite numbers.',
+      path: 'registration.offset',
+    });
+  }
+  return problems;
+}
+
+function validateMapRegistration(
+  registration: SceneMapRegistration,
+  issues: SceneIssue[],
+  event: SceneEvent
+): void {
+  for (const problem of mapRegistrationProblems(registration)) {
+    pushIssue(issues, event, problem);
   }
 }
 
@@ -552,6 +609,10 @@ function buildEventFromIntent(
         payload: { ...result, ...(question ? { question } : {}) },
       };
     }
+    case 'set-map':
+      return { ...base, type: 'map.set', payload: { registration: { ...intent.registration } } };
+    case 'clear-map':
+      return { ...base, type: 'map.cleared', payload: {} };
     default:
       assertNever(intent);
   }
@@ -663,6 +724,12 @@ function applySceneEvent(state: SceneState, event: SceneEvent): void {
       ];
       break;
     }
+    case 'map.set':
+      state.map = { ...event.payload.registration };
+      break;
+    case 'map.cleared':
+      state.map = undefined;
+      break;
     default:
       assertNever(event);
   }
@@ -930,6 +997,8 @@ function cloneSceneState(state: SceneState): SceneState {
     oracleLog: (Array.isArray(state.oracleLog) ? state.oracleLog : []).map((entry) => ({
       ...entry,
     })),
+    // Deep-copy the map registration so a folded state can't alias initialState.
+    map: state.map ? { ...state.map } : undefined,
   };
 }
 

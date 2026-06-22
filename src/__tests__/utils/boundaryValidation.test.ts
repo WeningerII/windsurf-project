@@ -265,6 +265,40 @@ describe('parseSceneDocument', () => {
     if (result.ok) return;
     expect(result.issues.map((i) => i.code)).toContain('scene-invalid-events');
   });
+
+  it('carries safe map assets and drops unsafe or malformed ones', () => {
+    const result = parseSceneDocument(
+      validSceneInput({
+        assets: {
+          good: { hash: 'good', mediaType: 'image/png', dataUrl: 'data:image/png;base64,AAAA' },
+          beacon: { hash: 'beacon', mediaType: 'image/png', dataUrl: 'http://evil/x.png' },
+          script: { hash: 'script', mediaType: 'image/svg+xml', dataUrl: 'javascript:alert(1)' },
+          notImage: {
+            hash: 'notImage',
+            mediaType: 'text/plain',
+            dataUrl: 'data:text/plain;base64,AA',
+          },
+          noHash: { mediaType: 'image/png', dataUrl: 'data:image/png;base64,AAAA' },
+        },
+      }),
+      NOW
+    );
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    // Only the data:image asset survives; the http: beacon, javascript: URL, the
+    // non-image media type, and the hash-less entry are all dropped.
+    expect(Object.keys(result.value.assets ?? {})).toEqual(['good']);
+  });
+
+  it('omits the assets field entirely when none are valid', () => {
+    const result = parseSceneDocument(
+      validSceneInput({ assets: { x: { hash: 'x', mediaType: 'text/plain', dataUrl: 'nope' } } }),
+      NOW
+    );
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.value.assets).toBeUndefined();
+  });
 });
 
 describe('importScenes boundary parsing', () => {
