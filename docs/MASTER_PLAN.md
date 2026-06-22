@@ -145,30 +145,52 @@ The following older backlog claims are no longer true and must not re-enter the 
 > wizard" as the first user-visible creator). That sequencing is **superseded**.
 > Under the locked-in direction, all seven systems are equal and the foundation
 > is the shared rules IR + effect resolver in `docs/rfc/003-rules-ir-and-effects.md`
-> (Accepted). The corrected critical path is:
+> (Accepted). The corrected critical path — **complete as of 2026-06-22** — is:
 >
-> 1. **Phase 0 — IR + resolver (additive, isolated).** Define the system-agnostic
->    `EffectInstance` shape plus stacking/operation grammar; implement the pure
->    deterministic resolver fold and the contribution-ledger view; prove the
->    cross-system worked encodings (5e magic weapon, PF2e three-bucket stack,
->    3.5e enhancement, PF1e size+enhancement, M&M cost, Daggerheart threshold).
->    New files only; no engine changes.
-> 2. **Phase 1 — the cross-system proof point.** Each of the seven systems gets an
->    `effectCompiler`; equipment shapes gain optional bonus fields (additive, not
->    a content-pack rewrite); every engine routes AC and new attack/damage through
->    the shared resolver. Acceptance: equipping an item resolves attack, AC,
->    magical bonuses, and feats deterministically through one resolver,
->    **identically in all seven systems**, with the ledger naming the source, and
->    non-magic outputs unchanged.
-> 3. **Phase 2 — conditions as IR** across all systems with condition rules.
-> 4. **Phase 3 — ledger unification** (re-back existing ledger builders onto the
->    resolver; existing ledger tests pass unchanged).
-> 5. **Phase 4 — functional terrain + seeded scene resolution.**
-> 6. **Phase 5 — grounded AI seam** (candidate pools from loaders + resolver
->    legal actions; validators for all seven systems; server-side draft gateway
->    with fixtures and a no-keys fallback).
+> 1. **Phase 0 — IR + resolver (additive, isolated).** **DONE** — the
+>    system-agnostic `EffectInstance` shape + stacking/operation grammar
+>    (`src/rules/ir/types.ts`), the pure deterministic resolver fold
+>    (`resolver/resolve.ts`), the contribution-ledger view (`ir/ledgerView.ts`),
+>    and the cross-system worked encodings (5e magic weapon, PF2e three-bucket,
+>    3.5e/PF1e named-bonus, M&M cost, Daggerheart threshold) proven in
+>    `src/__tests__/rules/resolver.test.ts`.
+> 2. **Phase 1 — the cross-system proof point.** **DONE** — `compile/equipEffects.ts`
+>    compiles all seven systems; the d20 family (5e 2014/2024, 3.5e, PF1e, PF2e)
+>    routes AC and attack/damage through `resolveCharacterEffects`; equipping a +1
+>    weapon/armor and a feat resolves identically across all seven in
+>    `equipParity.test.ts`, the ledger naming the source. (M&M resolves defense
+>    from Powers and Daggerheart from loadout passives — neither has an
+>    equip-magic-AC model — so they are proven at the IR/compile layer, not forced
+>    into a false AC.)
+> 3. **Phase 2 — conditions as IR.** **DONE where applicable** — `conditions/*`
+>    compile 5e/PF2e/d20-legacy conditions to effects consumed by each engine's
+>    check resolution and the scene combat bridge; M&M/Daggerheart have no
+>    bearer-affecting condition-to-roll rules (their conditions are engine-outcome
+>    or incoming-only, recorded as labelled `note`s).
+> 4. **Phase 3 — ledger unification.** **DONE for the resolver-fed ledger** — 5e
+>    re-backs its magic-item/feat AC/attack/damage entries onto the resolver
+>    (`systems/dnd5e/shared/contributionLedger.ts`), sharing the engine's input.
+>    The M&M and Daggerheart ledgers are deliberately **not** re-backed and this is
+>    a terminal decision: their core math is not a pure fold (M&M's minimum-cost
+>    rule; Daggerheart's tier/derived computations), their engines compute the
+>    values bespoke (so the resolver is not their source of truth), and both
+>    already single-source via shared per-system helpers — routing only the ledger
+>    through the resolver would add a second path, not remove one (a net-negative
+>    per the anti-overengineering rule).
+> 5. **Phase 4 — functional terrain + seeded scene resolution.** **DONE** —
+>    `terrain/sceneTerrain.ts` turns scene markers into `EffectInstance`s folded
+>    into resolution; replay is seeded and deterministic.
+> 6. **Phase 5 — grounded AI seam.** **DONE** — the AI control plane
+>    (`docs/rfc/002-ai-control-plane.md`): six task surfaces, per-system
+>    validators owning legality, a server-side gateway with recorded fixtures, and
+>    a no-keys deterministic fallback.
 >
-> Any creation UI is system-agnostic by construction: it renders the choices a
+> **Status (2026-06-22): the RFC-003 critical path is complete.** The shared IR,
+> resolver, ledger, cross-system equip, conditions, functional terrain, and the
+> grounded AI seam are all live. The remaining work in THIS track is the
+> user-visible payoff the foundation was built for — deterministic **guided
+> creation** (the Wizard rows in the legacy table below) on top of the shipped
+> validators and template applicators — not further resolver work.
 > system's loaders and validators expose, so it serves all seven equally. The
 > 5e-named rows in the legacy table below are retained as historical context and
 > should be read as "first test fixture," not "privileged path." The

@@ -1,7 +1,12 @@
 # RFC 003: Rules Intermediate Representation And Effect Resolution
 
-**Status:** Accepted — foundational connective layer. Phase 0 (types + resolver)
-implemented; cross-system adoption in progress.
+**Status:** Accepted — foundational connective layer, critical path complete
+(2026-06-22). The IR + deterministic resolver, the contribution-ledger view,
+cross-system equip resolution (all seven systems), conditions-as-IR (5e/PF2e/
+d20-legacy), functional terrain, and the grounded AI seam are all live. The 5e
+contribution ledger re-backs onto the resolver; the M&M and Daggerheart ledgers
+are deliberately left bespoke (their core math is not a pure fold and they
+already single-source via per-system helpers — see `docs/MASTER_PLAN.md`).
 **Author:** engineering planning
 **Created:** May 31, 2026
 **Last revised:** May 31, 2026 — re-centered on system-agnostic-from-day-one
