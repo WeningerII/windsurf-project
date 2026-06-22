@@ -39,6 +39,10 @@ export function RecapPanel({ state, campaignName, onLog, narrate }: RecapPanelPr
   const [narrative, setNarrative] = useState<string | null>(null);
   const [narrating, setNarrating] = useState(false);
   const [narrationError, setNarrationError] = useState<string | null>(null);
+  // Surfaced when the faithfulness critic rejected the AI prose and the
+  // deterministic recap was used instead — the GM should know the "narration"
+  // is the factual recap, not model prose.
+  const [narrationNote, setNarrationNote] = useState<string | null>(null);
 
   // Log the prose draft when present, else the factual recap.
   const textToLog = narrative ?? recap;
@@ -57,10 +61,16 @@ export function RecapPanel({ state, campaignName, onLog, narrate }: RecapPanelPr
     if (!narrate || !hasFacts) return;
     setNarrating(true);
     setNarrationError(null);
+    setNarrationNote(null);
     try {
       const result = await narrate({ facts: recap, tone });
       if (result.ok) {
         setNarrative(result.narrative);
+        setNarrationNote(
+          result.fallback
+            ? 'The AI draft introduced details not in the recap, so the factual recap is shown instead.'
+            : null
+        );
       } else {
         setNarrationError(result.error);
       }
@@ -145,6 +155,9 @@ export function RecapPanel({ state, campaignName, onLog, narrate }: RecapPanelPr
             </>
           )}
 
+          {narrationNote && (
+            <p className="text-[11px] text-amber-600 dark:text-amber-400">{narrationNote}</p>
+          )}
           {narrationError && <p className="text-xs text-destructive">{narrationError}</p>}
         </div>
       )}

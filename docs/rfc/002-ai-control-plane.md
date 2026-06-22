@@ -16,12 +16,12 @@ The provider-agnostic control plane and its first five task surfaces are live. W
 Five task surfaces:
 
 1. **encounter-draft** — prompt → structured selections, gated by the encounter-spec validator (structured output).
-2. **scene-narration** — deterministic recap → prose, grounded in those facts only (free text).
+2. **scene-narration** — deterministic recap → prose, grounded in those facts only, gated by a deterministic faithfulness critic (one bounded rewrite, then fallback to the recap) (free text).
 3. **identify-creature** — image → a catalog id, validated against the candidate pool (vision / image input).
 4. **illustrate-scene** — prompt → an image via Imagen, a human-judged creative aid kept out of deterministic state (image output).
 5. **strategy-hints** — a compact combat snapshot → clamped, per-actor target-priority hints for the Phase 12 strategist blackboard. Validated to real on-side actors and real targets; consulted between rounds by the deterministic tactical executor, never in the per-move loop, and unable to make an illegal target actable (structured output, advisory).
 
-Still target design, not yet built: AI character-concept draft and draft repair (await deterministic guided creation), rule/provenance explanation, narration faithfulness critic, and the observability/cost-control layer (trace ids, latency, cost buckets, per-session ceilings) — only a per-request timeout and key-less/error degradation are implemented so far. The task allowlist grows one entry at a time as each remaining surface lands with its tests.
+Still target design, not yet built: AI character-concept draft and draft repair (await deterministic guided creation), rule/provenance explanation, and the observability/cost-control layer (trace ids, latency, cost buckets, per-session ceilings) — only a per-request timeout and key-less/error degradation are implemented so far. The task allowlist grows one entry at a time as each remaining surface lands with its tests.
 
 ## Summary
 

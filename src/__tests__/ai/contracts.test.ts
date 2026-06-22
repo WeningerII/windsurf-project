@@ -103,6 +103,20 @@ describe('scene-narration request/output', () => {
     expect(parseTaskData('scene-narration', { narrative: '   ' }).ok).toBe(false);
     expect(parseTaskData('scene-narration', {}).ok).toBe(false);
   });
+
+  it('carries the optional critique (rewrite guidance) through, dropping non-strings', () => {
+    const result = parseAiRequest({
+      schemaVersion: AI_GATEWAY_SCHEMA_VERSION,
+      task: 'scene-narration',
+      payload: { facts: 'Combat: defeated Goblin.', critique: ['ungrounded "42"', 7] },
+    });
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      expect((result.value.payload as { critique: string[] }).critique).toEqual([
+        'ungrounded "42"',
+      ]);
+    }
+  });
 });
 
 describe('identify-creature request/output', () => {

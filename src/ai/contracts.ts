@@ -294,6 +294,12 @@ export interface SceneNarrationPayload {
   facts: string;
   /** Optional style hint (e.g. 'cinematic', 'gritty', 'lighthearted'). */
   tone?: string;
+  /**
+   * Faithfulness issues from a prior draft (the critic's findings), for ONE
+   * bounded rewrite. When present the prompt asks the model to drop these
+   * ungrounded details and use only the facts.
+   */
+  critique?: string[];
 }
 
 export interface SceneNarrationData {
@@ -313,6 +319,9 @@ function parseSceneNarrationPayload(raw: unknown): AiParse<SceneNarrationPayload
     value: {
       facts: raw.facts,
       ...(typeof raw.tone === 'string' && raw.tone ? { tone: raw.tone } : {}),
+      ...(Array.isArray(raw.critique)
+        ? { critique: raw.critique.filter((s): s is string => typeof s === 'string') }
+        : {}),
     },
   };
 }

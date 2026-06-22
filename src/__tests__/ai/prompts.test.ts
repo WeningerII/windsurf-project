@@ -54,6 +54,16 @@ describe('buildSceneNarrationPrompt', () => {
     expect(buildSceneNarrationPrompt({ facts: 'x' })).not.toMatch(/tone/i);
     expect(buildSceneNarrationPrompt({ facts: 'x', tone: 'gritty' })).toMatch(/gritty tone/i);
   });
+
+  it('appends critique rewrite guidance only when supplied', () => {
+    expect(buildSceneNarrationPrompt({ facts: 'x' })).not.toMatch(/previous draft/i);
+    const repaired = buildSceneNarrationPrompt({
+      facts: 'Combat: defeated Goblin.',
+      critique: ['The narration states "42", which is not in the recap.'],
+    });
+    expect(repaired).toMatch(/previous draft introduced details/i);
+    expect(repaired).toContain('"42"');
+  });
 });
 
 describe('buildIdentifyCreaturePrompt', () => {

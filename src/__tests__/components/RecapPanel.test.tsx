@@ -123,6 +123,26 @@ describe('RecapPanel', () => {
     expect(onLog).toHaveBeenCalledWith('The Crypt', 'Checks: Perception 17 vs DC 15 (success).');
   });
 
+  it('notes when the critic forced a fallback to the factual recap', async () => {
+    const user = userEvent.setup();
+    const facts = 'Checks: Perception 17 vs DC 15 (success).';
+    // The critic rejected the AI prose; the flow returned the recap as a fallback.
+    const narrate = vi.fn(async () => ({
+      ok: true as const,
+      narrative: facts,
+      fallback: true,
+      corrections: ['The narration states "42", which is not in the recap.'],
+    }));
+    render(
+      <RecapPanel state={makeState()} campaignName="Saltmarsh" onLog={vi.fn()} narrate={narrate} />
+    );
+
+    await user.click(screen.getByRole('button', { name: /narrate with ai/i }));
+    expect(await screen.findByText(/introduced details not in the recap/i)).toBeInTheDocument();
+    // The draft shown is the faithful factual recap.
+    expect(await screen.findByRole('textbox', { name: /ai narration draft/i })).toHaveValue(facts);
+  });
+
   it('disables narration when the scene has no facts yet', () => {
     const empty: SceneState = { ...makeState(), checkLog: [], oracleLog: [] };
     render(<RecapPanel state={empty} campaignName="Saltmarsh" onLog={vi.fn()} narrate={vi.fn()} />);

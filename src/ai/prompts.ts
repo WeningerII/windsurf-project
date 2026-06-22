@@ -117,6 +117,15 @@ export function buildStrategyHintsPrompt(payload: StrategyHintsPayload): string 
 
 export function buildSceneNarrationPrompt(payload: SceneNarrationPayload): string {
   const tone = payload.tone ? ` in a ${payload.tone} tone` : '';
+  const critique =
+    payload.critique && payload.critique.length > 0
+      ? [
+          ``,
+          `Your previous draft introduced details that are NOT in the facts:`,
+          ...payload.critique.map((issue) => `- ${issue}`),
+          `Rewrite it without those ungrounded numbers or names, using only the facts.`,
+        ].join('\n')
+      : '';
   return [
     `Retell the following tabletop session facts as a short, vivid prose recap${tone}.`,
     `Write one or two paragraphs in the past tense for the group's session log.`,
@@ -127,5 +136,6 @@ export function buildSceneNarrationPrompt(payload: SceneNarrationPayload): strin
     ``,
     `Facts:`,
     payload.facts,
+    critique,
   ].join('\n');
 }
