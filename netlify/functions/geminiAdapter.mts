@@ -32,6 +32,16 @@ const TASK_SCHEMAS: Partial<Record<AiTask, z.ZodTypeAny>> = {
     confidence: z.number(),
     reason: z.string().optional(),
   }),
+  'strategy-hints': z.object({
+    hints: z.array(
+      z.object({
+        actorId: z.string(),
+        targetId: z.string(),
+        bias: z.number(),
+        reason: z.string().optional(),
+      })
+    ),
+  }),
 };
 
 /** Image-output tasks route to the image model instead of `generateObject`. */

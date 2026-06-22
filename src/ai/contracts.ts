@@ -19,6 +19,7 @@ export const AI_GATEWAY_TASKS = [
   'scene-narration',
   'identify-creature',
   'illustrate-scene',
+  'strategy-hints',
 ] as const;
 export type AiTask = (typeof AI_GATEWAY_TASKS)[number];
 
@@ -198,6 +199,8 @@ function parseTaskPayload(task: AiTask, payload: unknown): AiParse<unknown> {
       return parseIdentifyCreaturePayload(payload);
     case 'illustrate-scene':
       return parseIllustrateScenePayload(payload);
+    case 'strategy-hints':
+      return parseStrategyHintsPayload(payload);
     default:
       return { ok: false, message: `No validator for task '${task}'.` };
   }
@@ -245,6 +248,8 @@ export function parseTaskData(task: AiTask, raw: unknown): AiParse<unknown> {
       return parseIdentifyCreatureData(raw);
     case 'illustrate-scene':
       return parseGeneratedImageData(raw);
+    case 'strategy-hints':
+      return parseStrategyHintsData(raw);
     default:
       return { ok: false, message: `No output validator for task '${task}'.` };
   }
@@ -453,4 +458,131 @@ function parseIllustrateScenePayload(raw: unknown): AiParse<IllustrateScenePaylo
 /** The model's image output uses the same envelope (and validation) as input. */
 function parseGeneratedImageData(raw: unknown): AiParse<GeneratedImageData> {
   return parseAiImageInput(raw);
+}
+
+// --- Task: strategy-hints (Phase 12 strategist blackboard) -----------------
+
+/**
+ * A compact, per-combatant snapshot the strategist reasons over. Intentionally
+ * minimal (no positions, no rules): the strategist sets TARGET PRIORITY only;
+ * the deterministic executor owns movement, legality, and resolution. The model
+ * sees who is on which side and how hurt they are, and advises whom to focus.
+ */
+export interface StrategyCombatantView {
+  tokenId: string;
+  name: string;
+  /** Combat side (e.g. 'party' | 'hostile' | 'neutral'). */
+  faction: string;
+  /** Current HP fraction, 0..1. */
+  hpFraction: number;
+}
+
+export interface StrategyHintsPayload {
+  /** The round the advice is for (stamps the resulting blackboard's freshness). */
+  round: number;
+  /** The side being advised — only its combatants may receive hints. */
+  side: string;
+  /** Every combatant in the fight (both sides), for the model to weigh. */
+  combatants: StrategyCombatantView[];
+  /** Optional DM directive (e.g. "the cultists protect their leader"). */
+  prompt?: string;
+  /** Structured issues from a prior attempt, for a bounded repair. */
+  repairIssues?: string[];
+}
+
+/** One advisory bias the model proposes: actor → target, with a magnitude. */
+export interface StrategyHintItem {
+  actorId: string;
+  targetId: string;
+  /** Advisory bias; the executor clamps it to ±STRATEGY_BIAS_CAP on apply. */
+  bias: number;
+  reason?: string;
+}
+
+export interface StrategyHintsData {
+  /** May be empty: "no special advice this round" is a valid answer. */
+  hints: StrategyHintItem[];
+}
+
+export type StrategyHintsRequest = AiRequest<'strategy-hints', StrategyHintsPayload>;
+
+function parseStrategyCombatantView(raw: unknown): AiParse<StrategyCombatantView> {
+  if (!isRecord(raw)) return { ok: false, message: 'Each combatant must be an object.' };
+  if (typeof raw.tokenId !== 'string' || !raw.tokenId) {
+    return { ok: false, message: 'Each combatant needs a tokenId.' };
+  }
+  if (typeof raw.name !== 'string') {
+    return { ok: false, message: 'Each combatant needs a name.' };
+  }
+  if (typeof raw.faction !== 'string' || !raw.faction) {
+    return { ok: false, message: 'Each combatant needs a faction.' };
+  }
+  const fractionRaw = typeof raw.hpFraction === 'number' ? raw.hpFraction : 1;
+  const hpFraction = Number.isFinite(fractionRaw) ? Math.min(1, Math.max(0, fractionRaw)) : 1;
+  return {
+    ok: true,
+    value: { tokenId: raw.tokenId, name: raw.name, faction: raw.faction, hpFraction },
+  };
+}
+
+function parseStrategyHintsPayload(raw: unknown): AiParse<StrategyHintsPayload> {
+  if (!isRecord(raw)) return { ok: false, message: 'Strategy-hints payload must be an object.' };
+  if (!Number.isFinite(raw.round)) {
+    return { ok: false, message: 'Strategy-hints payload needs a numeric round.' };
+  }
+  if (typeof raw.side !== 'string' || !raw.side) {
+    return { ok: false, message: 'Strategy-hints payload needs a side.' };
+  }
+  if (!Array.isArray(raw.combatants) || raw.combatants.length === 0) {
+    return { ok: false, message: 'Strategy-hints payload needs a non-empty combatants list.' };
+  }
+  const combatants: StrategyCombatantView[] = [];
+  for (const entry of raw.combatants) {
+    const parsed = parseStrategyCombatantView(entry);
+    if (!parsed.ok) return parsed;
+    combatants.push(parsed.value);
+  }
+  return {
+    ok: true,
+    value: {
+      round: raw.round as number,
+      side: raw.side,
+      combatants,
+      ...(typeof raw.prompt === 'string' && raw.prompt ? { prompt: raw.prompt } : {}),
+      ...(Array.isArray(raw.repairIssues)
+        ? { repairIssues: raw.repairIssues.filter((s): s is string => typeof s === 'string') }
+        : {}),
+    },
+  };
+}
+
+function parseStrategyHintsData(raw: unknown): AiParse<StrategyHintsData> {
+  if (!isRecord(raw)) return { ok: false, message: 'Output must be an object.' };
+  if (!Array.isArray(raw.hints)) {
+    return { ok: false, message: 'Strategy output needs a hints array (may be empty).' };
+  }
+  const hints: StrategyHintItem[] = [];
+  for (const hint of raw.hints) {
+    if (
+      !isRecord(hint) ||
+      typeof hint.actorId !== 'string' ||
+      !hint.actorId ||
+      typeof hint.targetId !== 'string' ||
+      !hint.targetId ||
+      typeof hint.bias !== 'number' ||
+      !Number.isFinite(hint.bias)
+    ) {
+      return {
+        ok: false,
+        message: 'Each hint needs string actorId/targetId and a finite numeric bias.',
+      };
+    }
+    hints.push({
+      actorId: hint.actorId,
+      targetId: hint.targetId,
+      bias: hint.bias,
+      ...(typeof hint.reason === 'string' && hint.reason ? { reason: hint.reason } : {}),
+    });
+  }
+  return { ok: true, value: { hints } };
 }

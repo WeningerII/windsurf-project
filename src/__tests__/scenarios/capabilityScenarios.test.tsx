@@ -390,12 +390,21 @@ describe('Capability scenarios', () => {
         image: { dataUrl: 'data:image/png;base64,AAAA', mediaType: 'image/png' },
       },
       'illustrate-scene': { prompt: 'a torchlit crypt' },
+      'strategy-hints': {
+        round: 1,
+        side: 'hostile',
+        combatants: [
+          { tokenId: 'orc', name: 'Orc', faction: 'hostile', hpFraction: 1 },
+          { tokenId: 'wizard', name: 'Wizard', faction: 'party', hpFraction: 0.4 },
+        ],
+      },
     };
     const fixtures: Record<AiTask, unknown> = {
       'encounter-draft': { selections: [{ monsterId: 'goblin', count: 2 }] },
       'scene-narration': { narrative: 'The crypt fell silent.' },
       'identify-creature': { monsterId: 'goblin', confidence: 0.8 },
       'illustrate-scene': { dataUrl: 'data:image/png;base64,AAAA', mediaType: 'image/png' },
+      'strategy-hints': { hints: [{ actorId: 'orc', targetId: 'wizard', bias: 60 }] },
     };
 
     for (const task of AI_GATEWAY_TASKS) {

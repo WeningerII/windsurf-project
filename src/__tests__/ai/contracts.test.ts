@@ -178,6 +178,7 @@ describe('isAiTask / isAiResponse', () => {
     expect(isAiTask('scene-narration')).toBe(true);
     expect(isAiTask('identify-creature')).toBe(true);
     expect(isAiTask('illustrate-scene')).toBe(true);
+    expect(isAiTask('strategy-hints')).toBe(true);
     expect(isAiTask('something-else')).toBe(false);
   });
 
@@ -188,5 +189,61 @@ describe('isAiTask / isAiResponse', () => {
     expect(isAiResponse({ ok: false, code: 'timeout', message: 'slow' })).toBe(true);
     expect(isAiResponse({ ok: true, task: 'bogus', data: {}, usage: {} })).toBe(false);
     expect(isAiResponse(42)).toBe(false);
+  });
+});
+
+describe('strategy-hints contract', () => {
+  const payload = {
+    round: 1,
+    side: 'hostile',
+    combatants: [
+      { tokenId: 'orc', name: 'Orc', faction: 'hostile', hpFraction: 1 },
+      { tokenId: 'wizard', name: 'Wizard', faction: 'party', hpFraction: 0.4 },
+    ],
+  };
+
+  it('accepts a well-formed request and clamps hpFraction', () => {
+    const result = parseAiRequest({
+      schemaVersion: AI_GATEWAY_SCHEMA_VERSION,
+      task: 'strategy-hints',
+      payload: {
+        ...payload,
+        combatants: [{ tokenId: 'orc', name: 'Orc', faction: 'hostile', hpFraction: 5 }],
+      },
+    });
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      const parsed = result.value.payload as typeof payload;
+      expect(parsed.combatants[0].hpFraction).toBe(1); // clamped from 5
+    }
+  });
+
+  it('rejects a request with no combatants', () => {
+    const result = parseAiRequest({
+      schemaVersion: AI_GATEWAY_SCHEMA_VERSION,
+      task: 'strategy-hints',
+      payload: { ...payload, combatants: [] },
+    });
+    expect(result).toMatchObject({ ok: false });
+  });
+
+  it('accepts valid hint output, including an empty list', () => {
+    expect(parseTaskData('strategy-hints', { hints: [] }).ok).toBe(true);
+    const result = parseTaskData('strategy-hints', {
+      hints: [{ actorId: 'orc', targetId: 'wizard', bias: 50, reason: 'focus' }],
+    });
+    expect(result.ok).toBe(true);
+  });
+
+  it('rejects hint output with a non-finite bias or missing ids', () => {
+    expect(
+      parseTaskData('strategy-hints', { hints: [{ actorId: 'orc', targetId: 'wizard' }] }).ok
+    ).toBe(false);
+    expect(
+      parseTaskData('strategy-hints', {
+        hints: [{ actorId: 'orc', targetId: 'wizard', bias: Number.NaN }],
+      }).ok
+    ).toBe(false);
+    expect(parseTaskData('strategy-hints', {}).ok).toBe(false);
   });
 });

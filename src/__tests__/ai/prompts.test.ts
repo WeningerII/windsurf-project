@@ -5,6 +5,7 @@ import {
   buildIllustrateScenePrompt,
   buildPromptForTask,
   buildSceneNarrationPrompt,
+  buildStrategyHintsPrompt,
 } from '../../ai/prompts';
 import type { EncounterDraftPayload, IdentifyCreaturePayload } from '../../ai/contracts';
 
@@ -91,9 +92,52 @@ describe('buildIllustrateScenePrompt', () => {
   });
 });
 
+describe('buildStrategyHintsPrompt', () => {
+  it('names the side and round, rosters the combatants, and forbids invention', () => {
+    const prompt = buildStrategyHintsPrompt({
+      round: 3,
+      side: 'hostile',
+      combatants: [
+        { tokenId: 'orc', name: 'Orc', faction: 'hostile', hpFraction: 1 },
+        { tokenId: 'wizard', name: 'Wizard', faction: 'party', hpFraction: 0.25 },
+      ],
+    });
+    expect(prompt).toMatch(/'hostile' side in round 3/);
+    expect(prompt).toContain('orc (Orc, hostile, 100% hp)');
+    expect(prompt).toContain('wizard (Wizard, party, 25% hp)');
+    expect(prompt).toMatch(/do not invent combatants/i);
+    expect(prompt).toMatch(/empty list/i);
+  });
+
+  it('includes the GM directive and repair guidance only when supplied', () => {
+    const base = {
+      round: 1,
+      side: 'hostile',
+      combatants: [{ tokenId: 'orc', name: 'Orc', faction: 'hostile', hpFraction: 1 }],
+    };
+    expect(buildStrategyHintsPrompt(base)).not.toMatch(/GM directive/);
+    expect(buildStrategyHintsPrompt({ ...base, prompt: 'guard the door' })).toContain(
+      'guard the door'
+    );
+    expect(buildStrategyHintsPrompt({ ...base, repairIssues: ['bad id'] })).toMatch(
+      /previous attempt was rejected/i
+    );
+  });
+});
+
 describe('buildPromptForTask', () => {
   it('dispatches encounter-draft', () => {
     expect(buildPromptForTask('encounter-draft', payload)).toContain('combat encounter');
+  });
+
+  it('dispatches strategy-hints', () => {
+    expect(
+      buildPromptForTask('strategy-hints', {
+        round: 1,
+        side: 'hostile',
+        combatants: [{ tokenId: 'orc', name: 'Orc', faction: 'hostile', hpFraction: 1 }],
+      })
+    ).toMatch(/tactical strategist/i);
   });
 
   it('dispatches illustrate-scene', () => {
