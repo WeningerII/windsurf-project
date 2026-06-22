@@ -115,6 +115,7 @@ function AppContent() {
     addScene,
     addScenes,
     appendSceneEvent,
+    updateScene,
     deleteScene,
     flushPendingSaves: flushPendingSceneSaves,
   } = useScenes();
@@ -617,6 +618,7 @@ function AppContent() {
                 onAddScene={addScene}
                 onAddScenes={addScenes}
                 onAppendSceneEvent={appendSceneEvent}
+                onUpdateScene={updateScene}
                 onLogToCampaign={handleLogSceneToCampaign}
                 onDeleteScene={(id) =>
                   showConfirm(

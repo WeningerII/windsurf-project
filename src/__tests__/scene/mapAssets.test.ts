@@ -87,4 +87,26 @@ describe('referencedAssetHashes / pruneUnusedAssets', () => {
     const doc = docWith([PNG], [mapSetEvent(hash)]);
     expect(pruneUnusedAssets(doc)).toBe(doc);
   });
+
+  it('references only the active map after a replace, freeing the old art', () => {
+    const first = hashImageContent(PNG);
+    const second = hashImageContent(OTHER);
+    const doc = docWith([PNG, OTHER], [mapSetEvent(first), mapSetEvent(second)]);
+    expect([...referencedAssetHashes(doc)]).toEqual([second]);
+    expect(Object.keys(pruneUnusedAssets(doc).assets ?? {})).toEqual([second]);
+  });
+
+  it('references nothing once the map is cleared', () => {
+    const hash = hashImageContent(PNG);
+    const cleared: SceneEvent = {
+      id: 'clr',
+      type: 'map.cleared',
+      sequence: 2,
+      createdAt: new Date(),
+      payload: {},
+    };
+    const doc = docWith([PNG], [mapSetEvent(hash), cleared]);
+    expect(referencedAssetHashes(doc).size).toBe(0);
+    expect(pruneUnusedAssets(doc).assets).toEqual({});
+  });
 });

@@ -10,11 +10,18 @@ import { buildStrategySnapshot, requestStrategyHints } from '../ai/strategistFlo
 import { isAiEnabled } from '../ai/gatewayClient';
 import { getRecentAiTraces, getSessionUsage, readBudgetCaps } from '../ai/aiObservability';
 import {
+  appendSceneEvent,
   applySceneIntents,
   foldSceneEvents,
   positiveIntegerOrDefault,
   resolveSceneAction,
 } from '../scene/runtime';
+import {
+  addSceneMapAsset,
+  createMapAsset,
+  getSceneMapAsset,
+  pruneUnusedAssets,
+} from '../scene/mapAssets';
 import {
   buildDaggerheartAdversaryCombatant,
   buildSceneCombatants,
@@ -37,6 +44,7 @@ import type {
   SceneCheckMode,
   SceneDocument,
   SceneEvent,
+  SceneMapRegistration,
   SceneMarkerKind,
   SceneOracleOdds,
   SceneToken,
@@ -64,6 +72,7 @@ import { DicePanel } from './scene/DicePanel';
 import { RecapPanel } from './scene/RecapPanel';
 import { IllustrationPanel } from './scene/IllustrationPanel';
 import { AiUsagePanel } from './scene/AiUsagePanel';
+import { MapPanel } from './scene/MapPanel';
 import { SceneCreateForm } from './scene/SceneCreateForm';
 
 type PlacementMode = 'none' | 'token' | 'marker' | 'adversary';
@@ -78,6 +87,8 @@ interface Props {
   onAddScene: (scene: SceneDocument) => void;
   onAddScenes: (scenes: SceneDocument[]) => void;
   onAppendSceneEvent: (sceneId: string, event: SceneEvent) => void;
+  /** Document-level scene update (for content-addressed map assets). */
+  onUpdateScene: (scene: SceneDocument) => void;
   onDeleteScene: (id: string) => void;
   /** Append a factual recap of a scene to its linked campaign's session log. */
   onLogToCampaign?: (campaignId: string, title: string, body: string) => void;
@@ -105,6 +116,7 @@ export function SceneManager({
   onAddScene,
   onAddScenes,
   onAppendSceneEvent,
+  onUpdateScene,
   onDeleteScene,
   onLogToCampaign,
 }: Props) {
@@ -554,6 +566,63 @@ export function SceneManager({
           });
       }
     }
+  };
+
+  // Resolved data URL of the active background map asset (Phase 9), for the grid.
+  const mapImageUrl =
+    selectedScene && state?.map
+      ? getSceneMapAsset(selectedScene, state.map.assetHash)?.dataUrl
+      : undefined;
+
+  // Set/replace the background map: store the image content-addressed on the
+  // document AND append a map.set event referencing its hash, atomically.
+  const handleSetMapImage = (dataUrl: string, mediaType: string) => {
+    if (!selectedScene || !state) return;
+    const asset = createMapAsset(dataUrl, mediaType);
+    const withAsset = addSceneMapAsset(selectedScene, asset);
+    const registration: SceneMapRegistration = {
+      assetHash: asset.hash,
+      pixelsPerCell: state.map?.pixelsPerCell ?? selectedScene.initialState.grid.cellSize,
+      offsetX: state.map?.offsetX ?? 0,
+      offsetY: state.map?.offsetY ?? 0,
+    };
+    const result = resolveSceneAction(
+      withAsset,
+      { type: 'set-map', registration },
+      { eventId: generateUUID() }
+    );
+    if (!result.event) {
+      setActionIssues(result.issues.map((issue) => issue.message));
+      return;
+    }
+    // Prune drops a replaced map's now-unreferenced bytes so export stays lean.
+    onUpdateScene(pruneUnusedAssets(appendSceneEvent(withAsset, result.event)));
+  };
+
+  // Manual grid alignment correction: a new registration over the same asset.
+  const handleUpdateMapRegistration = (registration: SceneMapRegistration) => {
+    if (!selectedScene) return;
+    const result = resolveSceneAction(
+      selectedScene,
+      { type: 'set-map', registration },
+      { eventId: generateUUID() }
+    );
+    if (!result.event) {
+      setActionIssues(result.issues.map((issue) => issue.message));
+      return;
+    }
+    onAppendSceneEvent(selectedScene.id, result.event);
+  };
+
+  const handleClearMap = () => {
+    if (!selectedScene) return;
+    const result = resolveSceneAction(
+      selectedScene,
+      { type: 'clear-map' },
+      { eventId: generateUUID() }
+    );
+    if (!result.event) return;
+    onUpdateScene(pruneUnusedAssets(appendSceneEvent(selectedScene, result.event)));
   };
 
   const handleCellActivate = useCallback(
@@ -1045,9 +1114,35 @@ export function SceneManager({
                   selectedTokenId={selectedTokenId}
                   onCellActivate={handleCellActivate}
                   onTokenActivate={handleTokenActivate}
+                  mapImageUrl={mapImageUrl}
                 />
 
                 <div className="space-y-3">
+                  <MapPanel
+                    registration={state.map}
+                    defaultPixelsPerCell={state.grid.cellSize}
+                    onSetImage={handleSetMapImage}
+                    onUpdateRegistration={handleUpdateMapRegistration}
+                    onClear={handleClearMap}
+                    onGenerate={
+                      aiEnabled
+                        ? async (prompt) => {
+                            const result = await illustrateSceneWithAi({
+                              prompt,
+                              style: 'top-down tabletop battle map, grid-friendly',
+                            });
+                            return result.ok
+                              ? {
+                                  ok: true,
+                                  dataUrl: result.image.dataUrl,
+                                  mediaType: result.image.mediaType,
+                                }
+                              : { ok: false, error: result.error };
+                          }
+                        : undefined
+                    }
+                  />
+
                   <TokenPanel
                     eligibleDocuments={eligibleDocuments}
                     tokenDocumentId={tokenDocumentId}

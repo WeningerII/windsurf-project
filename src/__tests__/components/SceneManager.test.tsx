@@ -187,6 +187,9 @@ function SceneHarness({
           current.map((scene) => (scene.id === sceneId ? appendSceneEvent(scene, event) : scene))
         )
       }
+      onUpdateScene={(updated) =>
+        setScenes((current) => current.map((scene) => (scene.id === updated.id ? updated : scene)))
+      }
       onDeleteScene={(id) => setScenes((current) => current.filter((scene) => scene.id !== id))}
     />
   );
@@ -591,6 +594,33 @@ describe('SceneManager', () => {
       });
       expect(strategyCalls.length).toBeGreaterThan(0);
     });
+  });
+
+  it('PHASE 9: imports a background map onto the grid, then clears it', async () => {
+    vi.spyOn(FileReader.prototype, 'readAsDataURL').mockImplementation(function (this: FileReader) {
+      Object.defineProperty(this, 'result', {
+        value: 'data:image/png;base64,MAP',
+        configurable: true,
+      });
+      this.onload?.({} as ProgressEvent<FileReader>);
+    });
+    const user = userEvent.setup();
+    const { container } = render(<SceneHarness initialScenes={[makeScene()]} />);
+
+    // No background map until one is imported.
+    expect(container.querySelector('img')).toBeNull();
+
+    fireEvent.change(screen.getByLabelText('Import map image'), {
+      target: { files: [new File(['x'], 'map.png', { type: 'image/png' })] },
+    });
+
+    // The grid now shows the imported art (event-sourced + asset stored).
+    await waitFor(() => {
+      expect(container.querySelector('img')?.getAttribute('src')).toBe('data:image/png;base64,MAP');
+    });
+
+    await user.click(screen.getByRole('button', { name: /clear/i }));
+    await waitFor(() => expect(container.querySelector('img')).toBeNull());
   });
 
   it('REGRESSION (02-M2): typing an initiative value survives appended events', async () => {

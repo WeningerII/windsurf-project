@@ -53,6 +53,24 @@ function makeState(): SceneState {
   };
 }
 
+describe('SceneGridView — background map', () => {
+  it('renders the map image when a registration and url are supplied', () => {
+    const state = makeState();
+    state.map = { assetHash: 'h1', pixelsPerCell: 70, offsetX: 0, offsetY: 0 };
+    const { container } = render(
+      <SceneGridView state={state} mapImageUrl="data:image/png;base64,AAAA" />
+    );
+    const img = container.querySelector('img');
+    expect(img).not.toBeNull();
+    expect(img?.getAttribute('src')).toBe('data:image/png;base64,AAAA');
+  });
+
+  it('renders no map image when there is no registration', () => {
+    const { container } = render(<SceneGridView state={makeState()} />);
+    expect(container.querySelector('img')).toBeNull();
+  });
+});
+
 describe('SceneGridView', () => {
   it('colors and labels tokens by combat side, not kind', () => {
     const state = makeState();

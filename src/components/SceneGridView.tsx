@@ -1,9 +1,11 @@
-import { memo, useMemo } from 'react';
+import { memo, useMemo, useState } from 'react';
 import type { KeyboardEvent } from 'react';
 import { cn } from '@/lib/utils';
 import type {
   SceneAllegiance,
   SceneCoordinate,
+  SceneGrid,
+  SceneMapRegistration,
   SceneMarker,
   SceneState,
   SceneToken,
@@ -30,6 +32,53 @@ export interface SceneGridViewProps {
   selectedTokenId?: string;
   onCellActivate?: (position: SceneCoordinate) => void;
   onTokenActivate?: (token: SceneToken) => void;
+  /** Resolved data URL of the registered background map asset, if any. */
+  mapImageUrl?: string;
+}
+
+/**
+ * The background map, positioned by its registration. The image is placed in
+ * grid-relative percentages — its size and origin offset are expressed against
+ * the grid's total span in image pixels (cells x pixels-per-cell) — so it scales
+ * with the responsive grid without measuring the container. The GM corrects the
+ * pixels-per-cell and offset until the art's squares line up with the grid.
+ */
+function MapBackground({
+  imageUrl,
+  registration,
+  grid,
+}: {
+  imageUrl: string;
+  registration: SceneMapRegistration;
+  grid: SceneGrid;
+}) {
+  const [natural, setNatural] = useState<{ w: number; h: number } | null>(null);
+  const spanX = grid.width * registration.pixelsPerCell;
+  const spanY = grid.height * registration.pixelsPerCell;
+  const placed = natural && spanX > 0 && spanY > 0;
+  return (
+    <img
+      src={imageUrl}
+      alt=""
+      aria-hidden="true"
+      draggable={false}
+      onLoad={(event) =>
+        setNatural({ w: event.currentTarget.naturalWidth, h: event.currentTarget.naturalHeight })
+      }
+      className="pointer-events-none absolute select-none"
+      style={
+        placed
+          ? {
+              left: `${(-registration.offsetX / spanX) * 100}%`,
+              top: `${(-registration.offsetY / spanY) * 100}%`,
+              width: `${(natural.w / spanX) * 100}%`,
+              height: `${(natural.h / spanY) * 100}%`,
+              opacity: 0.85,
+            }
+          : { opacity: 0, width: 1, height: 1, left: 0, top: 0 }
+      }
+    />
+  );
 }
 
 /**
@@ -44,7 +93,9 @@ export const SceneGridView = memo(function SceneGridView({
   selectedTokenId,
   onCellActivate,
   onTokenActivate,
+  mapImageUrl,
 }: SceneGridViewProps) {
+  const hasMap = Boolean(state.map && mapImageUrl);
   const tokensByCell = useMemo(() => buildTokensByCell(state), [state]);
   // Cells covered by a multi-cell token's footprint (the chip renders in the
   // anchor cell; this lets the other cells it occupies be shaded so a large
@@ -94,11 +145,14 @@ export const SceneGridView = memo(function SceneGridView({
       <div
         role="grid"
         aria-label={`${state.name} grid`}
-        className="grid overflow-hidden rounded-lg border bg-card"
+        className="relative grid overflow-hidden rounded-lg border bg-card"
         style={{
           gridTemplateColumns: `repeat(${state.grid.width}, minmax(2rem, 1fr))`,
         }}
       >
+        {hasMap && state.map && (
+          <MapBackground imageUrl={mapImageUrl!} registration={state.map} grid={state.grid} />
+        )}
         {Array.from({ length: state.grid.height }).flatMap((_, y) =>
           Array.from({ length: state.grid.width }).map((__, x) => {
             const position = { x, y };
@@ -113,7 +167,10 @@ export const SceneGridView = memo(function SceneGridView({
                 aria-label={buildCellLabel(position, marker, cellTokens)}
                 tabIndex={0}
                 className={cn(
-                  'relative aspect-square min-h-8 border-b border-r border-border/70 bg-background p-0.5 outline-none transition-colors',
+                  'relative aspect-square min-h-8 border-b border-r border-border/70 p-0.5 outline-none transition-colors',
+                  // Transparent over a background map so the art shows through;
+                  // opaque otherwise (unchanged default).
+                  hasMap ? 'bg-transparent' : 'bg-background',
                   marker?.kind === 'terrain' && 'bg-emerald-500/10',
                   marker?.kind === 'hazard' && 'bg-amber-500/15',
                   // A multi-cell creature's reserved footprint, shaded so the

@@ -56,14 +56,20 @@ export function addSceneMapAsset(document: SceneDocument, asset: SceneMapAsset):
   };
 }
 
-/** Every asset hash referenced by the scene (its events and initial map). */
+/**
+ * The asset hash the scene's CURRENT map state references — the last `map.set`
+ * still in effect after the full event log (or the initial map, or none after a
+ * `map.cleared`). Pruning to this keeps export lean: the app always folds to the
+ * latest state, so only the active map's bytes are needed, while replacing or
+ * clearing a map frees the old art.
+ */
 export function referencedAssetHashes(document: SceneDocument): Set<string> {
-  const hashes = new Set<string>();
-  if (document.initialState.map) hashes.add(document.initialState.map.assetHash);
+  let activeHash = document.initialState.map?.assetHash;
   for (const event of document.events) {
-    if (event.type === 'map.set') hashes.add(event.payload.registration.assetHash);
+    if (event.type === 'map.set') activeHash = event.payload.registration.assetHash;
+    else if (event.type === 'map.cleared') activeHash = undefined;
   }
-  return hashes;
+  return new Set(activeHash ? [activeHash] : []);
 }
 
 /**

@@ -152,6 +152,26 @@ check/oracle outcomes that matter to the fiction. The parser is pure and
 bounds-checked (dice count and sides are capped) so a malformed or abusive
 expression surfaces an error instead of rolling.
 
+## Background map (landed, Phase 9)
+
+A scene can carry a background battle map. The image is **content-addressed**
+(`src/scene/mapAssets.ts`, a cyrb53 hash of its data URL): the bytes live on the
+`SceneDocument` (`assets`, keyed by hash, stored once and serialized with
+export/import), while the event log only references the hash. A `set-map` intent
+builds a `map.set` event carrying a `SceneMapRegistration` (asset hash + manual
+pixels-per-cell and origin offset); the fold sets `SceneState.map`, and
+`clear-map` → `map.cleared` clears it — both honoring the additive migration
+contract (older scenes simply have no `map`). Registration is validated at intent
+and (leniently) event level; a corrupt persisted `map.set` is skipped with an
+issue, never crashing the fold. `referencedAssetHashes`/`pruneUnusedAssets` keep
+an export lean by retaining only the bytes the current map state references. The
+import boundary (`parseSceneDocument`) passes each asset's data URL through the
+same scheme allowlist as a character image (`https:` / `data:image/*` only), so a
+hostile import cannot smuggle a `javascript:`/`http:` URL into an `<img src>`.
+`SceneGridView` overlays the art in grid-relative percentages so it scales with
+the responsive grid, and `MapPanel` imports (no key needed), optionally
+AI-generates, aligns, and clears it.
+
 ## Encounter-spec validation (landed)
 
 `validateEncounterSpec` (`src/scene/encounterSpec.ts`) is the deterministic gate
