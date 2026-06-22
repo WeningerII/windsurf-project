@@ -551,6 +551,48 @@ describe('SceneManager', () => {
     });
   });
 
+  it('PHASE 12: the AI strategist toggle fetches hints between rounds without blocking the turn', async () => {
+    vi.stubEnv('VITE_AI_ENABLED', 'true');
+    const fetchSpy = vi.fn(async (_url: string, _init?: { body?: string }) => ({
+      json: async () => ({
+        ok: true,
+        task: 'strategy-hints',
+        data: { hints: [] },
+        usage: { source: 'fixture' },
+      }),
+    }));
+    vi.stubGlobal('fetch', fetchSpy as unknown as typeof fetch);
+
+    const user = userEvent.setup();
+    render(<SceneHarness initialScenes={[makeScene()]} />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('combobox', { name: /encounter monster/i })).toHaveValue('goblin');
+    });
+    await user.clear(screen.getByRole('textbox', { name: /encounter count/i }));
+    await user.type(screen.getByRole('textbox', { name: /encounter count/i }), '2');
+    await user.click(screen.getByRole('button', { name: /add encounter/i }));
+    await waitFor(() => {
+      expect(screen.getByText(/Round 1, active Goblin/i)).toBeInTheDocument();
+    });
+
+    // Enable the strategist, then run a round. The round must complete
+    // synchronously (Round 2 shows) AND the strategist must have been consulted
+    // for the next round — proving the surface is reachable and non-blocking.
+    await user.click(screen.getByRole('checkbox', { name: /ai strategist/i }));
+    await user.click(screen.getByRole('button', { name: /run round/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText(/Round 2, active Goblin/i)).toBeInTheDocument();
+    });
+    await waitFor(() => {
+      const strategyCalls = fetchSpy.mock.calls.filter(([, init]) => {
+        return typeof init?.body === 'string' && JSON.parse(init.body).task === 'strategy-hints';
+      });
+      expect(strategyCalls.length).toBeGreaterThan(0);
+    });
+  });
+
   it('REGRESSION (02-M2): typing an initiative value survives appended events', async () => {
     const user = userEvent.setup();
     const doc = makeDoc('doc-1', 'Astra');

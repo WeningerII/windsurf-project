@@ -11,6 +11,25 @@
 import { callAiGateway } from './gatewayClient';
 import type { StrategyCombatantView, StrategyHintsData, TaskGatewayCall } from './contracts';
 import type { StrategyBlackboard, TacticalHint } from '../rules';
+import type { SceneState } from '../types/core/scene';
+import { tokenAllegiance } from '../scene/allegiance';
+
+/**
+ * Compact every living combatant in a scene into the snapshot the strategist
+ * reasons over: id, name, combat side, and HP fraction. Tokens without hit
+ * points (objects, markers) are not combatants and are omitted. Pure — the
+ * caller decides which `side` to advise and when to call the model.
+ */
+export function buildStrategySnapshot(state: SceneState): StrategyCombatantView[] {
+  return Object.values(state.tokens)
+    .filter((token) => token.hp && token.hp.max > 0 && token.hp.current > 0)
+    .map((token) => ({
+      tokenId: token.id,
+      name: token.name,
+      faction: tokenAllegiance(token),
+      hpFraction: Math.max(0, Math.min(1, token.hp!.current / token.hp!.max)),
+    }));
+}
 
 export interface RequestStrategyParams {
   round: number;

@@ -6,6 +6,7 @@ import { generateNpc } from '../scene/npcGenerator';
 import { supportsEncounterBudget } from '../scene/encounterDraft';
 import { narrateSceneWithAi } from '../ai/sceneNarrationFlow';
 import { illustrateSceneWithAi } from '../ai/illustrateSceneFlow';
+import { buildStrategySnapshot, requestStrategyHints } from '../ai/strategistFlow';
 import { isAiEnabled } from '../ai/gatewayClient';
 import {
   applySceneIntents,
@@ -22,6 +23,7 @@ import {
   resolveSceneAttack,
   runSceneRound,
   type ResolveCombatStats,
+  type StrategyBlackboard,
 } from '../rules';
 import { resolveSceneCombatStats } from '../scene/combatStats';
 import { createSeededRng } from '../scene/seededRng';
@@ -132,6 +134,13 @@ export function SceneManager({
   const [actionIssues, setActionIssues] = useState<string[]>([]);
   const [combatTargetId, setCombatTargetId] = useState('');
   const [combatLog, setCombatLog] = useState<string[]>([]);
+  // Optional AI strategist (Phase 12): when on, after each autonomous round we
+  // fetch fresh target-priority hints for the next round into this board. It is
+  // consulted synchronously by `runSceneRound`; the fetch is fire-and-forget, so
+  // a turn never blocks on a model call, and an absent/stale board means the
+  // round runs on the pure deterministic heuristic.
+  const [aiStrategist, setAiStrategist] = useState(false);
+  const strategistBoardRef = useRef<StrategyBlackboard | undefined>(undefined);
   // Per-click nonce so a missed attack (which appends no event) still advances
   // the RNG stream — otherwise re-clicking Attack would reproduce the same miss.
   const attackNonce = useRef(0);
@@ -497,6 +506,9 @@ export function SceneManager({
           resolveStats: resolveCombatStats,
           seed: `${selectedScene.initialState.seed}:round:${roundState.round}:${selectedScene.events.length}:${attackNonce.current++}`,
           round: roundState.round,
+          // Consulted synchronously — whatever the strategist last produced (or
+          // nothing). The model is never awaited inside the round.
+          blackboard: strategistBoardRef.current,
         }),
       {
         fallback: undefined,
@@ -519,6 +531,27 @@ export function SceneManager({
     events.forEach((event) => onAppendSceneEvent(selectedScene.id, event));
     setCombatLog((current) => [...outcome.log.slice().reverse(), ...current].slice(0, 30));
     setActionIssues(rejected);
+
+    // Refresh the strategist board for the NEXT round (Phase 12). Fire-and-forget
+    // off the post-round state, so the model call never blocks this turn; an
+    // error or AI-off simply leaves the board untouched and the next round runs
+    // on the deterministic heuristic.
+    if (aiEnabled && aiStrategist) {
+      const nextState = foldSceneEvents({
+        ...selectedScene,
+        events: [...selectedScene.events, ...events],
+      }).state;
+      const combatants = buildStrategySnapshot(nextState);
+      if (combatants.length >= 2) {
+        void requestStrategyHints({ round: nextState.round, side: 'hostile', combatants })
+          .then((result) => {
+            if (result.ok) strategistBoardRef.current = result.blackboard;
+          })
+          .catch(() => {
+            /* advisory only — keep the prior board, fall back to heuristic */
+          });
+      }
+    }
   };
 
   const handleCellActivate = useCallback(
@@ -1170,6 +1203,9 @@ export function SceneManager({
                     onAttack={handleCombatAttack}
                     onRunRound={handleRunRound}
                     combatConcluded={combatConcluded}
+                    {...(aiEnabled
+                      ? { strategistEnabled: aiStrategist, onToggleStrategist: setAiStrategist }
+                      : {})}
                     log={combatLog}
                   />
 

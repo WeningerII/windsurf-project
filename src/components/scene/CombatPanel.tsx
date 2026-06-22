@@ -20,6 +20,13 @@ interface CombatPanelProps {
    * autonomous round has nothing left to resolve, so Run Round is disabled.
    */
   combatConcluded?: boolean;
+  /**
+   * When provided, renders an "AI strategist" toggle (Phase 12). The strategist
+   * biases enemy target priority between rounds; it never blocks a turn and the
+   * round still resolves deterministically. Omitted when AI is disabled.
+   */
+  strategistEnabled?: boolean;
+  onToggleStrategist?: (enabled: boolean) => void;
   log: string[];
 }
 
@@ -38,6 +45,8 @@ export function CombatPanel({
   onAttack,
   onRunRound,
   combatConcluded = false,
+  strategistEnabled = false,
+  onToggleStrategist,
   log,
 }: CombatPanelProps) {
   const attacker = attackerId ? state.tokens[attackerId] : undefined;
@@ -58,6 +67,19 @@ export function CombatPanel({
         </h5>
         <div className="flex items-center gap-2">
           {hasCombatants && combatConcluded && <Badge variant="secondary">Combat over</Badge>}
+          {onToggleStrategist && (
+            <label
+              className="flex items-center gap-1 text-xs text-muted-foreground"
+              title="Let an AI strategist bias enemy target priority between rounds. The round still resolves deterministically; the model never blocks a turn."
+            >
+              <input
+                type="checkbox"
+                checked={strategistEnabled}
+                onChange={(event) => onToggleStrategist(event.target.checked)}
+              />
+              AI strategist
+            </label>
+          )}
           <Button
             variant="outline"
             size="sm"

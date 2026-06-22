@@ -1,11 +1,13 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import {
+  buildStrategySnapshot,
   requestStrategyHints,
   type GatewayCall,
   type RequestStrategyParams,
 } from '../../ai/strategistFlow';
 import type { AiResponse, StrategyHintsData } from '../../ai/contracts';
+import type { SceneState, SceneToken } from '../../types/core/scene';
 
 /**
  * PHASE 12 (RFC 002): the strategist flow turns validated model hints into a
@@ -101,5 +103,46 @@ describe('requestStrategyHints', () => {
     });
     const result = await requestStrategyHints(params, { call });
     expect(result).toEqual({ ok: false, error: 'AI is off.' });
+  });
+});
+
+describe('buildStrategySnapshot', () => {
+  function token(over: Partial<SceneToken> & Pick<SceneToken, 'id'>): SceneToken {
+    return {
+      name: over.id,
+      kind: 'monster',
+      position: { x: 0, y: 0 },
+      size: 1,
+      ...over,
+    };
+  }
+
+  const state: SceneState = {
+    sceneId: 's',
+    name: 'S',
+    systemId: 'dnd-5e-2014',
+    grid: { type: 'square', width: 10, height: 10, cellSize: 5 },
+    tokens: {
+      orc: token({ id: 'orc', kind: 'monster', hp: { current: 8, max: 16 } }),
+      hero: token({ id: 'hero', kind: 'character', hp: { current: 10, max: 10 } }),
+      ally: token({ id: 'ally', kind: 'npc', allegiance: 'party', hp: { current: 5, max: 5 } }),
+      wall: token({ id: 'wall', kind: 'object' }), // no hp → omitted
+      corpse: token({ id: 'corpse', kind: 'monster', hp: { current: 0, max: 12 } }), // dead → omitted
+    },
+    markers: {},
+    initiative: [],
+    round: 1,
+    seed: 's',
+    checkLog: [],
+    oracleLog: [],
+  };
+
+  it('includes only living combatants, with side and hp fraction', () => {
+    const snapshot = buildStrategySnapshot(state);
+    const byId = Object.fromEntries(snapshot.map((c) => [c.tokenId, c]));
+    expect(Object.keys(byId).sort()).toEqual(['ally', 'hero', 'orc']);
+    expect(byId.orc).toEqual({ tokenId: 'orc', name: 'orc', faction: 'hostile', hpFraction: 0.5 });
+    expect(byId.hero.faction).toBe('party'); // character → party
+    expect(byId.ally.faction).toBe('party'); // npc with explicit party allegiance
   });
 });

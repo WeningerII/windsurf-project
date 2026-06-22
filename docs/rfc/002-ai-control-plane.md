@@ -1,26 +1,27 @@
 # RFC 002: AI Control Plane For Frictionless Creation And Play
 
-**Status:** Active — foundation and four task surfaces shipped (2026-06-19). Sections below describe the target design; see "Implementation status" for exactly what has landed versus what remains.
+**Status:** Active — foundation and five task surfaces shipped (latest 2026-06-21). Sections below describe the target design; see "Implementation status" for exactly what has landed versus what remains.
 **Author:** product/engineering planning
 **Consolidated:** May 1, 2026
 
-## Implementation status (2026-06-19)
+## Implementation status (2026-06-21)
 
-The provider-agnostic control plane and its first four task surfaces are live. What shipped, mapped to this design:
+The provider-agnostic control plane and its first five task surfaces are live. What shipped, mapped to this design:
 
 - **Gateway foundation** (`src/ai/`): typed, dependency-free task contracts (`contracts.ts`) with hand-written parse-don't-cast validators; a pure, injectable gateway core (`gatewayCore.ts`) with fixture replay, a request timeout, and normalized typed failures; a browser client (`gatewayClient.ts`) gated behind `VITE_AI_ENABLED` that degrades every transport error to a manual fallback; pure prompt builders (`prompts.ts`) and HTTP glue (`gatewayHttp.ts`).
 - **Server gateway** (`netlify/functions/`): a Netlify Function holding the provider key in the server environment only (never the browser bundle), delegating to the pure core; a single Gemini adapter (Vercel AI SDK) is the only provider-bound code, behind the `AiProviderAdapter` seam. Task allowlist, request validation, and key-less degradation are enforced; per-task structured output schemas (or image routing) live in the adapter.
 - **Candidate pools + deterministic handshake**: encounter drafting and creature identification build loader-backed candidate pools and the model must return ids from them; an invented id is rejected deterministically. Encounter drafting reuses the shipped `validateEncounterSpec` budget gate with one bounded repair.
 - **Review-and-apply UI + local-first**: every surface is human-in-the-loop (selections reviewed before the deterministic builder applies them; narration edited before logging; identified statblock selected, not placed; imagery viewed/downloaded, never written to scene state). Default OFF; CI exercises the full path via fixtures without a key.
 
-Four task surfaces, one per modality:
+Five task surfaces:
 
 1. **encounter-draft** — prompt → structured selections, gated by the encounter-spec validator (structured output).
 2. **scene-narration** — deterministic recap → prose, grounded in those facts only (free text).
 3. **identify-creature** — image → a catalog id, validated against the candidate pool (vision / image input).
 4. **illustrate-scene** — prompt → an image via Imagen, a human-judged creative aid kept out of deterministic state (image output).
+5. **strategy-hints** — a compact combat snapshot → clamped, per-actor target-priority hints for the Phase 12 strategist blackboard. Validated to real on-side actors and real targets; consulted between rounds by the deterministic tactical executor, never in the per-move loop, and unable to make an illegal target actable (structured output, advisory).
 
-Still target design, not yet built: AI character-concept draft and draft repair (await deterministic guided creation), rule/provenance explanation, tactical intent hints, and the observability/cost-control layer (trace ids, latency, cost buckets, per-session ceilings) — only a per-request timeout and key-less/error degradation are implemented so far. The task allowlist grows one entry at a time as each remaining surface lands with its tests.
+Still target design, not yet built: AI character-concept draft and draft repair (await deterministic guided creation), rule/provenance explanation, narration faithfulness critic, and the observability/cost-control layer (trace ids, latency, cost buckets, per-session ceilings) — only a per-request timeout and key-less/error degradation are implemented so far. The task allowlist grows one entry at a time as each remaining surface lands with its tests.
 
 ## Summary
 
