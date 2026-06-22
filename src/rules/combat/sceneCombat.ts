@@ -25,6 +25,7 @@ import type {
 } from '../../types/core/scene';
 import type { EffectInstance } from '../ir/types';
 import { runCombatRound, type RoundCombatant, type RoundResult } from '../tactical/roundDriver';
+import { resolveRoundHints, type StrategyBlackboard } from '../tactical/strategy';
 import { cellKey, footprintCells } from '../../scene/grid';
 import { tokenAllegiance } from '../../scene/allegiance';
 import { resolveAttack } from '../resolver/attackResolution';
@@ -340,6 +341,12 @@ export function runSceneRound(params: {
   resolveStats: ResolveCombatStats;
   seed: string;
   round: number;
+  /**
+   * Optional strategist blackboard (Phase 12). Fresh per-actor hints for this
+   * round are resolved from it and bias target selection; a missing, empty, or
+   * stale board leaves the deterministic executor unchanged.
+   */
+  blackboard?: StrategyBlackboard;
 }): SceneRoundOutcome {
   const order = buildSceneCombatants(params.state, params.resolveStats);
 
@@ -363,6 +370,11 @@ export function runSceneRound(params: {
     degreeModel: degreeModelForScene(params.state),
     grid: { width: params.state.grid.width, height: params.state.grid.height },
     staticObstacles,
+    hintsByActor: resolveRoundHints(
+      params.blackboard,
+      order.map((combatant) => combatant.tokenId),
+      params.round
+    ),
   });
 
   const nameOf = (tokenId: string): string => params.state.tokens[tokenId]?.name ?? tokenId;

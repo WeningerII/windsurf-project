@@ -64,9 +64,15 @@ export {
   multiTargetAttackToDamageIntent,
 } from './resolver/sceneCombat';
 
-export type { ScoredTarget, TacticalActor, TacticalTarget } from './tactical/targetScoring';
+export type {
+  ScoredTarget,
+  TacticalActor,
+  TacticalHint,
+  TacticalTarget,
+} from './tactical/targetScoring';
 export {
   NEUTRAL_FACTION,
+  STRATEGY_BIAS_CAP,
   isHostile,
   maxPossibleDamage,
   scoreTarget,
@@ -87,6 +93,9 @@ export type {
   RunRoundInput,
 } from './tactical/roundDriver';
 export { isRoundConclusive, runCombatRound } from './tactical/roundDriver';
+
+export type { StrategyBlackboard } from './tactical/strategy';
+export { EMPTY_BLACKBOARD, hintsForActor, resolveRoundHints } from './tactical/strategy';
 
 export type {
   BuildDaggerheartCombatantResult,

@@ -73,6 +73,24 @@ export interface ScoredTarget {
   canFinish: boolean;
   /** Human-readable reasons that composed the score (provenance for the choice). */
   reasons: string[];
+  /** Clamped strategist bias folded into the score (0 when none). Surfaced so a
+   * decision record shows exactly how much an LLM hint moved this target. */
+  strategistBias: number;
+}
+
+/**
+ * A strategist hint: a bounded, advisory bias on ONE target's utility score
+ * (Phase 12). The async LLM strategist proposes these between rounds; the
+ * deterministic executor applies them as a clamped preference nudge. A hint can
+ * only reorder which already-legal target is chosen — it never makes a dead,
+ * allied, or out-of-reach target actable (legality is decided before scoring).
+ */
+export interface TacticalHint {
+  targetId: string;
+  /** Additive score bias; positive = prefer, negative = avoid. Clamped on apply. */
+  bias: number;
+  /** Optional one-line rationale, surfaced in the scored target's reasons. */
+  reason?: string;
 }
 
 // Scoring weights. Documented and centralized so the heuristic is legible and
@@ -82,6 +100,17 @@ const DISTANCE_WEIGHT = 2; // each cell of distance reduces desirability
 const WOUND_WEIGHT = 20; // prefer wounded targets (focus fire)
 const IN_REACH_BONUS = 10; // attackable now without moving
 const FINISHER_BONUS = 25; // can remove this combatant from the loop now
+
+/** Largest absolute strategist bias the executor will honour (Phase 12). Equal to
+ * the base score: an LLM hint can decisively reorder preference, yet never dwarf
+ * the deterministic heuristic by orders of magnitude — bounded and auditable. */
+export const STRATEGY_BIAS_CAP = SCORE_BASE;
+
+/** Clamp a raw hint bias into the honoured, finite range. */
+function clampBias(bias: number): number {
+  if (!Number.isFinite(bias)) return 0;
+  return Math.max(-STRATEGY_BIAS_CAP, Math.min(STRATEGY_BIAS_CAP, bias));
+}
 
 /** Max possible damage from a set of damage effects (die faces + flat adds). */
 export function maxPossibleDamage(damageEffects: readonly EffectInstance[]): number {
@@ -119,9 +148,15 @@ export function isHostile(actorFaction: string, targetFaction: string): boolean 
 
 /**
  * Score a single target for the actor. Pure; deterministic. Returns the score
- * and the reasons that composed it.
+ * and the reasons that composed it. An optional strategist `hint` folds a
+ * clamped advisory bias into the score (Phase 12) — preference only; legality is
+ * decided by the caller before a target is ever scored.
  */
-export function scoreTarget(actor: TacticalActor, target: TacticalTarget): ScoredTarget {
+export function scoreTarget(
+  actor: TacticalActor,
+  target: TacticalTarget,
+  hint?: TacticalHint
+): ScoredTarget {
   const distance = gridDistance(actor.position, target.position);
   const inReach = actor.reach === undefined || distance <= actor.reach;
   const reasons: string[] = [];
@@ -155,22 +190,42 @@ export function scoreTarget(actor: TacticalActor, target: TacticalTarget): Score
     reasons.push(`+${FINISHER_BONUS} can eliminate`);
   }
 
-  return { tokenId: target.tokenId, score, distance, inReach, canFinish, reasons };
+  const strategistBias = hint ? clampBias(hint.bias) : 0;
+  if (strategistBias !== 0) {
+    score += strategistBias;
+    reasons.push(
+      `${strategistBias >= 0 ? '+' : ''}${strategistBias} strategist${
+        hint?.reason ? ` (${hint.reason})` : ''
+      }`
+    );
+  }
+
+  return { tokenId: target.tokenId, score, distance, inReach, canFinish, reasons, strategistBias };
 }
 
 /**
  * Score every eligible (hostile, living) target. Returns ALL of them, sorted by
  * score descending with a deterministic id tie-break — so the full decision is
  * transparent and the top entry is the recommended target.
+ *
+ * Optional strategist `hints` (Phase 12) bias matching targets' scores. Hints are
+ * applied AFTER the hostile/living filter, so a hint on an ally, a corpse, or a
+ * neutral is silently inert — it can reorder real candidates, never conjure one.
  */
 export function scoreTargets(
   actor: TacticalActor,
-  targets: readonly TacticalTarget[]
+  targets: readonly TacticalTarget[],
+  hints?: readonly TacticalHint[]
 ): ScoredTarget[] {
+  const biasByTarget = new Map<string, TacticalHint>();
+  for (const hint of hints ?? []) {
+    // Last hint wins for a duplicated target id, deterministically.
+    biasByTarget.set(hint.targetId, hint);
+  }
   return targets
     .filter((target) => isHostile(actor.faction, target.faction))
     .filter((target) => !target.hp || target.hp.current > 0)
-    .map((target) => scoreTarget(actor, target))
+    .map((target) => scoreTarget(actor, target, biasByTarget.get(target.tokenId)))
     .sort((a, b) => b.score - a.score || compareTokenIds(a.tokenId, b.tokenId));
 }
 

@@ -24,7 +24,12 @@ import type { SceneCoordinate, SceneActionIntent } from '../../types/core/scene'
 import { cellKey, footprintCells } from '../../scene/grid';
 import { executeTacticalTurn, type TacticalTurnResult } from './tacticalExecutor';
 import type { GridBounds } from './pathfinding';
-import { NEUTRAL_FACTION, type TacticalActor, type TacticalTarget } from './targetScoring';
+import {
+  NEUTRAL_FACTION,
+  type TacticalActor,
+  type TacticalHint,
+  type TacticalTarget,
+} from './targetScoring';
 
 /** A combatant in the round: identity, faction, position, stats, and live HP. */
 export interface RoundCombatant {
@@ -94,6 +99,12 @@ export interface RunRoundInput {
    * from their live positions; these are the static blockers on top of them.
    */
   staticObstacles?: ReadonlySet<string>;
+  /**
+   * Strategist hints keyed by acting token id (Phase 12). Resolved for this round
+   * by the caller (already freshness-checked). A token absent here, or an empty
+   * map, leaves the deterministic heuristic untouched.
+   */
+  hintsByActor?: Record<string, readonly TacticalHint[]>;
 }
 
 function toActor(combatant: RoundCombatant): TacticalActor {
@@ -205,6 +216,7 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
       seed: `${input.seed}::round${input.round}::turn${turnIndex}`,
       degreeModel: input.degreeModel,
       movement: { ...(input.grid ? { bounds: input.grid } : {}), blocked },
+      hints: input.hintsByActor?.[combatant.tokenId],
     });
 
     // Movement executed this turn: update the working position so later

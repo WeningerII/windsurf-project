@@ -34,6 +34,7 @@ import {
   scoreTargets,
   type ScoredTarget,
   type TacticalActor,
+  type TacticalHint,
   type TacticalTarget,
 } from './targetScoring';
 
@@ -54,6 +55,12 @@ export interface TacticalTurnInput {
    * re-validation (no phantom damage, no token stacking).
    */
   movement?: MovementContext;
+  /**
+   * Strategist hints for THIS actor (Phase 12): a clamped, advisory bias on
+   * specific targets' utility scores. Omitted/empty → pure heuristic scoring.
+   * Advisory only — a hint cannot make an illegal target actable.
+   */
+  hints?: readonly TacticalHint[];
 }
 
 export type TacticalDecisionKind = 'attack' | 'move-to-engage' | 'no-target';
@@ -102,7 +109,7 @@ export interface TacticalTurnResult {
  *   produces an apply-damage intent (a miss produces none, but still `attack`).
  */
 export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResult {
-  const scored = scoreTargets(input.actor, input.targets);
+  const scored = scoreTargets(input.actor, input.targets, input.hints);
 
   if (scored.length === 0) {
     return {
@@ -150,7 +157,7 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
       };
       actor = { ...actor, position: plan.to };
       // Re-score from the new position; attack if anything is now in reach.
-      const rescored = scoreTargets(actor, input.targets);
+      const rescored = scoreTargets(actor, input.targets, input.hints);
       firstReachable = rescored.find((target) => target.inReach);
       if (!firstReachable) {
         return {
