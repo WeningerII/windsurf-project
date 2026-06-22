@@ -13,10 +13,17 @@
  * accepted box always maps to a legal scene marker). Manual registration
  * (Phase 9) remains the fallback when no proposal validates.
  */
+import type { SceneActionIntent, SceneMarkerKind } from '../types/core/scene';
 
-export type MapRegionKind = 'terrain' | 'hazard' | 'cover' | 'spawn';
+export const MAP_REGION_KINDS = ['terrain', 'hazard', 'cover', 'spawn'] as const;
+export type MapRegionKind = (typeof MAP_REGION_KINDS)[number];
 
-const REGION_KINDS: ReadonlySet<MapRegionKind> = new Set(['terrain', 'hazard', 'cover', 'spawn']);
+const REGION_KINDS: ReadonlySet<string> = new Set(MAP_REGION_KINDS);
+
+/** Narrowing guard for an untrusted region kind (single source for the set). */
+export function isMapRegionKind(value: unknown): value is MapRegionKind {
+  return typeof value === 'string' && REGION_KINDS.has(value);
+}
 
 /** A labelled rectangle in GRID CELL coordinates (x,y top-left; width/height in cells). */
 export interface MapRegion {
@@ -104,7 +111,7 @@ export function validateMapAnalysis(
   }
 
   analysis.regions.forEach((region, regionIndex) => {
-    if (!REGION_KINDS.has(region.kind)) {
+    if (!isMapRegionKind(region.kind)) {
       issues.push({
         code: 'invalid-region-kind',
         message: `Region ${regionIndex} has an unknown kind '${region.kind}'.`,
@@ -133,4 +140,55 @@ export function validateMapAnalysis(
   });
 
   return { valid: issues.length === 0, issues };
+}
+
+/** Hazards map to a hazard marker; the rest are terrain (the marker model has
+ * only those two kinds — the region kind is preserved in the marker label). */
+const REGION_MARKER_KIND: Record<MapRegionKind, SceneMarkerKind> = {
+  terrain: 'terrain',
+  cover: 'terrain',
+  spawn: 'terrain',
+  hazard: 'hazard',
+};
+
+/**
+ * Turn a VALIDATED analysis into the scene intents that apply it: one `set-map`
+ * for the grid registration, then an `add-marker` per region. The caller threads
+ * these through `applySceneIntents` so each is re-validated on the event-sourced
+ * path — exactly the path the manual tools use. Pure given the id factory.
+ */
+export function mapAnalysisToIntents(
+  analysis: MapAnalysis,
+  assetHash: string,
+  options: { markerIdFactory: () => string }
+): SceneActionIntent[] {
+  const intents: SceneActionIntent[] = [
+    {
+      type: 'set-map',
+      registration: {
+        assetHash,
+        pixelsPerCell: analysis.pixelsPerCell,
+        offsetX: analysis.offsetX,
+        offsetY: analysis.offsetY,
+      },
+    },
+  ];
+  for (const region of analysis.regions) {
+    const label =
+      region.kind === 'terrain' || region.kind === 'hazard'
+        ? region.label
+        : `${region.kind[0].toUpperCase()}${region.kind.slice(1)}: ${region.label}`;
+    intents.push({
+      type: 'add-marker',
+      marker: {
+        id: options.markerIdFactory(),
+        kind: REGION_MARKER_KIND[region.kind],
+        label,
+        position: { x: region.x, y: region.y },
+        width: region.width,
+        height: region.height,
+      },
+    });
+  }
+  return intents;
 }

@@ -398,6 +398,13 @@ describe('Capability scenarios', () => {
           { tokenId: 'wizard', name: 'Wizard', faction: 'party', hpFraction: 0.4 },
         ],
       },
+      'analyze-map': {
+        image: { dataUrl: 'data:image/png;base64,AAAA', mediaType: 'image/png' },
+        imageWidth: 700,
+        imageHeight: 700,
+        gridWidth: 10,
+        gridHeight: 10,
+      },
     };
     const fixtures: Record<AiTask, unknown> = {
       'encounter-draft': { selections: [{ monsterId: 'goblin', count: 2 }] },
@@ -405,6 +412,12 @@ describe('Capability scenarios', () => {
       'identify-creature': { monsterId: 'goblin', confidence: 0.8 },
       'illustrate-scene': { dataUrl: 'data:image/png;base64,AAAA', mediaType: 'image/png' },
       'strategy-hints': { hints: [{ actorId: 'orc', targetId: 'wizard', bias: 60 }] },
+      'analyze-map': {
+        pixelsPerCell: 70,
+        offsetX: 0,
+        offsetY: 0,
+        regions: [{ kind: 'hazard', label: 'Lava', x: 1, y: 1, width: 2, height: 2 }],
+      },
     };
 
     for (const task of AI_GATEWAY_TASKS) {

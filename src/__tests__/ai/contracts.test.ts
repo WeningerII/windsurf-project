@@ -193,6 +193,7 @@ describe('isAiTask / isAiResponse', () => {
     expect(isAiTask('identify-creature')).toBe(true);
     expect(isAiTask('illustrate-scene')).toBe(true);
     expect(isAiTask('strategy-hints')).toBe(true);
+    expect(isAiTask('analyze-map')).toBe(true);
     expect(isAiTask('something-else')).toBe(false);
   });
 
@@ -203,6 +204,48 @@ describe('isAiTask / isAiResponse', () => {
     expect(isAiResponse({ ok: false, code: 'timeout', message: 'slow' })).toBe(true);
     expect(isAiResponse({ ok: true, task: 'bogus', data: {}, usage: {} })).toBe(false);
     expect(isAiResponse(42)).toBe(false);
+  });
+});
+
+describe('analyze-map contract', () => {
+  const image = { dataUrl: 'data:image/png;base64,AAAA', mediaType: 'image/png' };
+
+  it('accepts a well-formed request and rejects non-positive dimensions', () => {
+    const ok = parseAiRequest({
+      schemaVersion: AI_GATEWAY_SCHEMA_VERSION,
+      task: 'analyze-map',
+      payload: { image, imageWidth: 700, imageHeight: 700, gridWidth: 10, gridHeight: 10 },
+    });
+    expect(ok.ok).toBe(true);
+
+    const bad = parseAiRequest({
+      schemaVersion: AI_GATEWAY_SCHEMA_VERSION,
+      task: 'analyze-map',
+      payload: { image, imageWidth: 0, imageHeight: 700, gridWidth: 10, gridHeight: 10 },
+    });
+    expect(bad).toMatchObject({ ok: false });
+  });
+
+  it('accepts valid analysis output and rejects an unknown region kind', () => {
+    expect(
+      parseTaskData('analyze-map', {
+        pixelsPerCell: 70,
+        offsetX: 0,
+        offsetY: 0,
+        regions: [{ kind: 'terrain', label: 'Brush', x: 0, y: 0, width: 1, height: 1 }],
+      }).ok
+    ).toBe(true);
+    expect(
+      parseTaskData('analyze-map', {
+        pixelsPerCell: 70,
+        offsetX: 0,
+        offsetY: 0,
+        regions: [{ kind: 'portal', label: 'X', x: 0, y: 0, width: 1, height: 1 }],
+      }).ok
+    ).toBe(false);
+    expect(parseTaskData('analyze-map', { pixelsPerCell: 70, offsetX: 0, offsetY: 0 }).ok).toBe(
+      false
+    );
   });
 });
 

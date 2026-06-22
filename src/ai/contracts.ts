@@ -10,6 +10,8 @@
  * never owns legality or state — it drafts; the rules decide.
  */
 
+import { isMapRegionKind, type MapAnalysis, type MapRegion } from '../scene/mapAnalysis';
+
 export const AI_GATEWAY_SCHEMA_VERSION = 'ai-gateway-v1' as const;
 export const AI_GATEWAY_ENDPOINT = '/.netlify/functions/ai-gateway' as const;
 
@@ -20,6 +22,7 @@ export const AI_GATEWAY_TASKS = [
   'identify-creature',
   'illustrate-scene',
   'strategy-hints',
+  'analyze-map',
 ] as const;
 export type AiTask = (typeof AI_GATEWAY_TASKS)[number];
 
@@ -201,6 +204,8 @@ function parseTaskPayload(task: AiTask, payload: unknown): AiParse<unknown> {
       return parseIllustrateScenePayload(payload);
     case 'strategy-hints':
       return parseStrategyHintsPayload(payload);
+    case 'analyze-map':
+      return parseAnalyzeMapPayload(payload);
     default:
       return { ok: false, message: `No validator for task '${task}'.` };
   }
@@ -250,6 +255,8 @@ export function parseTaskData(task: AiTask, raw: unknown): AiParse<unknown> {
       return parseGeneratedImageData(raw);
     case 'strategy-hints':
       return parseStrategyHintsData(raw);
+    case 'analyze-map':
+      return parseAnalyzeMapData(raw);
     default:
       return { ok: false, message: `No output validator for task '${task}'.` };
   }
@@ -561,6 +568,99 @@ function parseStrategyHintsPayload(raw: unknown): AiParse<StrategyHintsPayload> 
       ...(Array.isArray(raw.repairIssues)
         ? { repairIssues: raw.repairIssues.filter((s): s is string => typeof s === 'string') }
         : {}),
+    },
+  };
+}
+
+// --- Task: analyze-map (vision → grid + region geometry; Phase 10) ---------
+
+export interface AnalyzeMapPayload {
+  /** The map image to analyse. */
+  image: AiImageInput;
+  /** The image's natural pixel dimensions (so a proposal can be bounds-checked). */
+  imageWidth: number;
+  imageHeight: number;
+  /** The scene grid the proposal must fit, in cells. */
+  gridWidth: number;
+  gridHeight: number;
+  /** Structured issues from a prior attempt, for a bounded repair. */
+  repairIssues?: string[];
+}
+
+/** The model's proposed geometry — validated against the image/grid by the flow. */
+export type AnalyzeMapData = MapAnalysis;
+
+export type AnalyzeMapRequest = AiRequest<'analyze-map', AnalyzeMapPayload>;
+
+function parseAnalyzeMapPayload(raw: unknown): AiParse<AnalyzeMapPayload> {
+  if (!isRecord(raw)) return { ok: false, message: 'Analyze-map payload must be an object.' };
+  const image = parseAiImageInput(raw.image);
+  if (!image.ok) return image;
+  const dims = ['imageWidth', 'imageHeight', 'gridWidth', 'gridHeight'] as const;
+  for (const key of dims) {
+    if (!Number.isFinite(raw[key]) || (raw[key] as number) <= 0) {
+      return { ok: false, message: `Analyze-map payload needs a positive ${key}.` };
+    }
+  }
+  return {
+    ok: true,
+    value: {
+      image: image.value,
+      imageWidth: raw.imageWidth as number,
+      imageHeight: raw.imageHeight as number,
+      gridWidth: raw.gridWidth as number,
+      gridHeight: raw.gridHeight as number,
+      ...(Array.isArray(raw.repairIssues)
+        ? { repairIssues: raw.repairIssues.filter((s): s is string => typeof s === 'string') }
+        : {}),
+    },
+  };
+}
+
+function parseAnalyzeMapData(raw: unknown): AiParse<AnalyzeMapData> {
+  if (!isRecord(raw)) return { ok: false, message: 'Output must be an object.' };
+  if (
+    typeof raw.pixelsPerCell !== 'number' ||
+    typeof raw.offsetX !== 'number' ||
+    typeof raw.offsetY !== 'number'
+  ) {
+    return { ok: false, message: 'Map analysis needs numeric pixelsPerCell and offsets.' };
+  }
+  if (!Array.isArray(raw.regions)) {
+    return { ok: false, message: 'Map analysis needs a regions array (may be empty).' };
+  }
+  const regions: MapRegion[] = [];
+  for (const region of raw.regions) {
+    if (
+      !isRecord(region) ||
+      !isMapRegionKind(region.kind) ||
+      typeof region.label !== 'string' ||
+      typeof region.x !== 'number' ||
+      typeof region.y !== 'number' ||
+      typeof region.width !== 'number' ||
+      typeof region.height !== 'number'
+    ) {
+      return {
+        ok: false,
+        message: 'Each region needs a known kind, a label, and numeric x/y/width/height.',
+      };
+    }
+    regions.push({
+      kind: region.kind,
+      label: region.label,
+      x: region.x,
+      y: region.y,
+      width: region.width,
+      height: region.height,
+    });
+  }
+  return {
+    ok: true,
+    value: {
+      pixelsPerCell: raw.pixelsPerCell,
+      offsetX: raw.offsetX,
+      offsetY: raw.offsetY,
+      regions,
     },
   };
 }

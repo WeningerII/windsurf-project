@@ -623,6 +623,60 @@ describe('SceneManager', () => {
     await waitFor(() => expect(container.querySelector('img')).toBeNull());
   });
 
+  it('PHASE 10: AI analyzes the map and applies validated markers', async () => {
+    vi.stubEnv('VITE_AI_ENABLED', 'true');
+    // Importing the map reads a data URL; analyzing reads the image's size.
+    vi.spyOn(FileReader.prototype, 'readAsDataURL').mockImplementation(function (this: FileReader) {
+      Object.defineProperty(this, 'result', {
+        value: 'data:image/png;base64,MAP',
+        configurable: true,
+      });
+      this.onload?.({} as ProgressEvent<FileReader>);
+    });
+    class MockImage {
+      onload: (() => void) | null = null;
+      onerror: (() => void) | null = null;
+      naturalWidth = 700;
+      naturalHeight = 700;
+      set src(_value: string) {
+        this.onload?.();
+      }
+    }
+    vi.stubGlobal('Image', MockImage);
+    // The gateway proposes a grid (fits the 4x4 grid in a 700px image) + a hazard.
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({
+        json: async () => ({
+          ok: true,
+          task: 'analyze-map',
+          data: {
+            pixelsPerCell: 70,
+            offsetX: 0,
+            offsetY: 0,
+            regions: [{ kind: 'hazard', label: 'Lava', x: 1, y: 1, width: 1, height: 1 }],
+          },
+          usage: { source: 'fixture' },
+        }),
+      }))
+    );
+
+    const user = userEvent.setup();
+    render(<SceneHarness initialScenes={[makeScene()]} />);
+
+    fireEvent.change(screen.getByLabelText('Import map image'), {
+      target: { files: [new File(['x'], 'map.png', { type: 'image/png' })] },
+    });
+    await screen.findByRole('button', { name: /analyze with ai/i });
+
+    await user.click(screen.getByRole('button', { name: /analyze with ai/i }));
+
+    // The validated hazard region became a real scene marker on the grid.
+    await waitFor(() => {
+      expect(screen.getByRole('gridcell', { name: /Lava/i })).toBeInTheDocument();
+    });
+  });
+
   it('REGRESSION (02-M2): typing an initiative value survives appended events', async () => {
     const user = userEvent.setup();
     const doc = makeDoc('doc-1', 'Astra');

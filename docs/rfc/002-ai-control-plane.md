@@ -1,12 +1,12 @@
 # RFC 002: AI Control Plane For Frictionless Creation And Play
 
-**Status:** Active — foundation and five task surfaces shipped (latest 2026-06-21). Sections below describe the target design; see "Implementation status" for exactly what has landed versus what remains.
+**Status:** Active — foundation and six task surfaces shipped (latest 2026-06-22). Sections below describe the target design; see "Implementation status" for exactly what has landed versus what remains.
 **Author:** product/engineering planning
 **Consolidated:** May 1, 2026
 
 ## Implementation status (2026-06-21)
 
-The provider-agnostic control plane and its first five task surfaces are live. What shipped, mapped to this design:
+The provider-agnostic control plane and its first six task surfaces are live. What shipped, mapped to this design:
 
 - **Gateway foundation** (`src/ai/`): typed, dependency-free task contracts (`contracts.ts`) with hand-written parse-don't-cast validators; a pure, injectable gateway core (`gatewayCore.ts`) with fixture replay, a request timeout, and normalized typed failures; a browser client (`gatewayClient.ts`) gated behind `VITE_AI_ENABLED` that degrades every transport error to a manual fallback; pure prompt builders (`prompts.ts`) and HTTP glue (`gatewayHttp.ts`).
 - **Server gateway** (`netlify/functions/`): a Netlify Function holding the provider key in the server environment only (never the browser bundle), delegating to the pure core; a single Gemini adapter (Vercel AI SDK) is the only provider-bound code, behind the `AiProviderAdapter` seam. Task allowlist, request validation, and key-less degradation are enforced; per-task structured output schemas (or image routing) live in the adapter.
@@ -14,13 +14,14 @@ The provider-agnostic control plane and its first five task surfaces are live. W
 - **Review-and-apply UI + local-first**: every surface is human-in-the-loop (selections reviewed before the deterministic builder applies them; narration edited before logging; identified statblock selected, not placed; imagery viewed/downloaded, never written to scene state). Default OFF; CI exercises the full path via fixtures without a key.
 - **Observability + cost controls** (`src/ai/aiObservability.ts`): a repo-native, deterministic per-session budget (call + estimated-unit tallies; env-configurable `VITE_AI_MAX_CALLS`/`VITE_AI_MAX_UNITS` ceilings; finite generous defaults) that short-circuits a breaching call to a typed `over-budget` failure before any network, plus per-call trace records (trace id, task, prompt-template version, estimated units, provider/model, latency, result) kept in a bounded ring and shown read-only by an in-app AI usage meter. No new dependency (no Langfuse); CI runs without provider calls.
 
-Five task surfaces:
+Six task surfaces:
 
 1. **encounter-draft** — prompt → structured selections, gated by the encounter-spec validator (structured output).
 2. **scene-narration** — deterministic recap → prose, grounded in those facts only, gated by a deterministic faithfulness critic (one bounded rewrite, then fallback to the recap) (free text).
 3. **identify-creature** — image → a catalog id, validated against the candidate pool (vision / image input).
 4. **illustrate-scene** — prompt → an image via Imagen, a human-judged creative aid kept out of deterministic state (image output).
 5. **strategy-hints** — a compact combat snapshot → clamped, per-actor target-priority hints for the Phase 12 strategist blackboard. Validated to real on-side actors and real targets; consulted between rounds by the deterministic tactical executor, never in the per-move loop, and unable to make an illegal target actable (structured output, advisory).
+6. **analyze-map** — a battle-map image → a proposed grid registration + terrain/hazard/cover/spawn region boxes, gated by the deterministic geometry validator (grid fits the image; boxes fit the grid; one bounded repair). An accepted proposal applies through normal `set-map`/`add-marker` events; manual registration is the fallback (vision input + structured output).
 
 Still target design, not yet built: AI character-concept draft and draft repair (await deterministic guided creation), rule/provenance explanation, and — within the now-shipped observability layer — stamping trace ids onto persisted scene events (prompt → response → result → the user-visible meter already correlate by id today). The task allowlist grows one entry at a time as each remaining surface lands with its tests.
 

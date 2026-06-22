@@ -42,6 +42,21 @@ const TASK_SCHEMAS: Partial<Record<AiTask, z.ZodTypeAny>> = {
       })
     ),
   }),
+  'analyze-map': z.object({
+    pixelsPerCell: z.number(),
+    offsetX: z.number(),
+    offsetY: z.number(),
+    regions: z.array(
+      z.object({
+        kind: z.string(),
+        label: z.string(),
+        x: z.number(),
+        y: z.number(),
+        width: z.number(),
+        height: z.number(),
+      })
+    ),
+  }),
 };
 
 /** Image-output tasks route to the image model instead of `generateObject`. */

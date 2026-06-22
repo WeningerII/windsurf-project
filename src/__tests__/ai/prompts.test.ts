@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  buildAnalyzeMapPrompt,
   buildEncounterDraftPrompt,
   buildIdentifyCreaturePrompt,
   buildIllustrateScenePrompt,
@@ -135,9 +136,46 @@ describe('buildStrategyHintsPrompt', () => {
   });
 });
 
+describe('buildAnalyzeMapPrompt', () => {
+  const mapPayload = {
+    image: { dataUrl: 'data:image/png;base64,AAAA', mediaType: 'image/png' },
+    imageWidth: 700,
+    imageHeight: 700,
+    gridWidth: 10,
+    gridHeight: 12,
+  };
+
+  it('states the image and grid dimensions and the allowed region kinds', () => {
+    const prompt = buildAnalyzeMapPrompt(mapPayload);
+    expect(prompt).toContain('700x700 pixels');
+    expect(prompt).toContain('10x12 cell grid');
+    expect(prompt).toMatch(/terrain, hazard, cover, spawn/);
+    expect(prompt).toMatch(/MUST fit\s+inside the image/);
+  });
+
+  it('appends repair guidance only when prior issues are supplied', () => {
+    expect(buildAnalyzeMapPrompt(mapPayload)).not.toMatch(/previous attempt was rejected/i);
+    expect(
+      buildAnalyzeMapPrompt({ ...mapPayload, repairIssues: ['grid out of bounds'] })
+    ).toContain('grid out of bounds');
+  });
+});
+
 describe('buildPromptForTask', () => {
   it('dispatches encounter-draft', () => {
     expect(buildPromptForTask('encounter-draft', payload)).toContain('combat encounter');
+  });
+
+  it('dispatches analyze-map', () => {
+    expect(
+      buildPromptForTask('analyze-map', {
+        image: { dataUrl: 'data:image/png;base64,AAAA', mediaType: 'image/png' },
+        imageWidth: 700,
+        imageHeight: 700,
+        gridWidth: 10,
+        gridHeight: 10,
+      })
+    ).toMatch(/battle map/i);
   });
 
   it('dispatches strategy-hints', () => {

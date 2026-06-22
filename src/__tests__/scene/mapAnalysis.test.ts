@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  mapAnalysisToIntents,
   validateMapAnalysis,
   type MapAnalysis,
   type MapAnalysisContext,
@@ -81,18 +82,64 @@ describe('validateMapAnalysis', () => {
     expect(result.issues.map((i) => i.code)).toContain('invalid-region-kind');
   });
 
-  it('accepts every supported region kind in bounds', () => {
-    const result = validateMapAnalysis(
+  it('accepts every supported region kind in bounds, and the result applies cleanly', async () => {
+    const full = analysis({
+      regions: [
+        { kind: 'terrain', label: 'Brush', x: 0, y: 0, width: 1, height: 1 },
+        { kind: 'hazard', label: 'Pit', x: 2, y: 2, width: 1, height: 1 },
+        { kind: 'cover', label: 'Crates', x: 4, y: 4, width: 2, height: 1 },
+        { kind: 'spawn', label: 'Party', x: 0, y: 9, width: 3, height: 1 },
+      ],
+    });
+    expect(validateMapAnalysis(full, context)).toEqual({ valid: true, issues: [] });
+
+    // The validated analysis becomes a set-map + one add-marker per region, and
+    // every intent survives the event-sourced runtime's own re-validation.
+    let counter = 0;
+    const intents = mapAnalysisToIntents(full, 'asset-1', {
+      markerIdFactory: () => `m-${(counter += 1)}`,
+    });
+    expect(intents[0]).toMatchObject({ type: 'set-map', registration: { assetHash: 'asset-1' } });
+    expect(intents.filter((i) => i.type === 'add-marker')).toHaveLength(4);
+
+    const { createSceneDocument, applySceneIntents } = await import('../../scene/runtime');
+    const scene = createSceneDocument({
+      id: 's',
+      name: 'S',
+      systemId: 'dnd-5e-2014',
+      grid: { width: 10, height: 10, cellSize: 70 },
+    });
+    const withAsset = {
+      ...scene,
+      assets: {
+        'asset-1': {
+          hash: 'asset-1',
+          mediaType: 'image/png',
+          dataUrl: 'data:image/png;base64,AAAA',
+        },
+      },
+    };
+    let eventId = 0;
+    const { events, rejected } = applySceneIntents(withAsset, intents, {
+      eventIdFactory: () => `e-${(eventId += 1)}`,
+    });
+    expect(rejected).toEqual([]);
+    expect(events).toHaveLength(intents.length);
+  });
+
+  it('maps hazard → hazard markers and other kinds → labelled terrain markers', () => {
+    const intents = mapAnalysisToIntents(
       analysis({
         regions: [
-          { kind: 'terrain', label: 'Brush', x: 0, y: 0, width: 1, height: 1 },
-          { kind: 'hazard', label: 'Pit', x: 2, y: 2, width: 1, height: 1 },
-          { kind: 'cover', label: 'Crates', x: 4, y: 4, width: 2, height: 1 },
-          { kind: 'spawn', label: 'Party', x: 0, y: 9, width: 3, height: 1 },
+          { kind: 'hazard', label: 'Lava', x: 0, y: 0, width: 1, height: 1 },
+          { kind: 'cover', label: 'Wall', x: 1, y: 1, width: 1, height: 1 },
         ],
       }),
-      context
+      'a',
+      { markerIdFactory: () => 'm' }
     );
-    expect(result).toEqual({ valid: true, issues: [] });
+    const markers = intents.filter((i) => i.type === 'add-marker');
+    expect(markers[0]).toMatchObject({ marker: { kind: 'hazard', label: 'Lava' } });
+    expect(markers[1]).toMatchObject({ marker: { kind: 'terrain', label: 'Cover: Wall' } });
   });
 });

@@ -7,6 +7,7 @@ import { supportsEncounterBudget } from '../scene/encounterDraft';
 import { narrateSceneWithAi } from '../ai/sceneNarrationFlow';
 import { illustrateSceneWithAi } from '../ai/illustrateSceneFlow';
 import { buildStrategySnapshot, requestStrategyHints } from '../ai/strategistFlow';
+import { analyzeMapWithAi } from '../ai/analyzeMapFlow';
 import { isAiEnabled } from '../ai/gatewayClient';
 import { getRecentAiTraces, getSessionUsage, readBudgetCaps } from '../ai/aiObservability';
 import {
@@ -22,6 +23,7 @@ import {
   getSceneMapAsset,
   pruneUnusedAssets,
 } from '../scene/mapAssets';
+import { mapAnalysisToIntents } from '../scene/mapAnalysis';
 import {
   buildDaggerheartAdversaryCombatant,
   buildSceneCombatants,
@@ -625,6 +627,41 @@ export function SceneManager({
     onUpdateScene(pruneUnusedAssets(appendSceneEvent(selectedScene, result.event)));
   };
 
+  // AI vision (Phase 10): propose the grid registration + region markers from the
+  // current map, validated by the deterministic geometry gate, then applied
+  // through the normal event-sourced path. Manual registration stays the fallback.
+  const handleAnalyzeMap = async (): Promise<{ ok: boolean; error?: string }> => {
+    if (!selectedScene || !state?.map) return { ok: false, error: 'No map to analyze.' };
+    const asset = getSceneMapAsset(selectedScene, state.map.assetHash);
+    if (!asset) return { ok: false, error: 'The map asset is missing.' };
+    const size = await new Promise<{ width: number; height: number } | null>((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
+      img.onerror = () => resolve(null);
+      img.src = asset.dataUrl;
+    });
+    if (!size || size.width <= 0 || size.height <= 0) {
+      return { ok: false, error: 'Could not read the map image dimensions.' };
+    }
+    const result = await analyzeMapWithAi({
+      image: { dataUrl: asset.dataUrl, mediaType: asset.mediaType },
+      imageWidth: size.width,
+      imageHeight: size.height,
+      gridWidth: state.grid.width,
+      gridHeight: state.grid.height,
+    });
+    if (!result.ok) return { ok: false, error: result.error };
+    const intents = mapAnalysisToIntents(result.analysis, asset.hash, {
+      markerIdFactory: generateUUID,
+    });
+    const { events, rejected } = applySceneIntents(selectedScene, intents, {
+      eventIdFactory: generateUUID,
+    });
+    events.forEach((event) => onAppendSceneEvent(selectedScene.id, event));
+    if (rejected.length > 0) setActionIssues(rejected);
+    return { ok: true };
+  };
+
   const handleCellActivate = useCallback(
     (position: { x: number; y: number }) => {
       if (!selectedScene || !state) return;
@@ -1141,6 +1178,7 @@ export function SceneManager({
                           }
                         : undefined
                     }
+                    onAnalyze={aiEnabled && state.map ? handleAnalyzeMap : undefined}
                   />
 
                   <TokenPanel

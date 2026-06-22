@@ -7,6 +7,7 @@
  */
 import type {
   AiTask,
+  AnalyzeMapPayload,
   EncounterDraftCandidate,
   EncounterDraftPayload,
   IdentifyCreaturePayload,
@@ -14,6 +15,7 @@ import type {
   SceneNarrationPayload,
   StrategyHintsPayload,
 } from './contracts';
+import { MAP_REGION_KINDS } from '../scene/mapAnalysis';
 
 /**
  * Version stamp for the prompt templates in this file. Bump it whenever a builder
@@ -44,9 +46,35 @@ export function buildPromptForTask(task: AiTask, payload: unknown): string {
       return buildIllustrateScenePrompt(payload as IllustrateScenePayload);
     case 'strategy-hints':
       return buildStrategyHintsPrompt(payload as StrategyHintsPayload);
+    case 'analyze-map':
+      return buildAnalyzeMapPrompt(payload as AnalyzeMapPayload);
     default:
       throw new Error(`No prompt builder for task '${task}'.`);
   }
+}
+
+export function buildAnalyzeMapPrompt(payload: AnalyzeMapPayload): string {
+  const repair =
+    payload.repairIssues && payload.repairIssues.length > 0
+      ? `\n\nYour previous attempt was rejected for these reasons:\n${payload.repairIssues
+          .map((issue) => `- ${issue}`)
+          .join('\n')}\nReturn a corrected analysis that resolves them.`
+      : '';
+  return [
+    `Analyse the attached top-down battle map (${payload.imageWidth}x${payload.imageHeight} pixels).`,
+    `It should be overlaid with a ${payload.gridWidth}x${payload.gridHeight} cell grid.`,
+    ``,
+    `Return:`,
+    `- pixelsPerCell: image pixels per grid cell, and offsetX/offsetY: the image pixel`,
+    `  of the grid's top-left origin. The grid (offset + cells x pixelsPerCell) MUST fit`,
+    `  inside the image.`,
+    `- regions: notable rectangles in GRID CELL coordinates (integer x, y, width, height,`,
+    `  inside the ${payload.gridWidth}x${payload.gridHeight} grid), each with a kind`,
+    `  (${MAP_REGION_KINDS.join(', ')}) and a short label.`,
+    ``,
+    `Use only the kinds listed; keep every box inside the grid; do not invent areas not`,
+    `visible on the map.${repair}`,
+  ].join('\n');
 }
 
 export function buildEncounterDraftPrompt(payload: EncounterDraftPayload): string {

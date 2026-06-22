@@ -112,4 +112,46 @@ describe('MapPanel', () => {
     setup();
     expect(screen.queryByLabelText('Map generation prompt')).not.toBeInTheDocument();
   });
+
+  it('analyzes the current map via the optional AI hook', async () => {
+    const user = userEvent.setup();
+    const onAnalyze = vi.fn(async () => ({ ok: true }));
+    render(
+      <MapPanel
+        registration={registration}
+        defaultPixelsPerCell={70}
+        onSetImage={vi.fn()}
+        onUpdateRegistration={vi.fn()}
+        onClear={vi.fn()}
+        onAnalyze={onAnalyze}
+      />
+    );
+    await user.click(screen.getByRole('button', { name: /analyze with ai/i }));
+    expect(onAnalyze).toHaveBeenCalled();
+  });
+
+  it('offers analysis only when a map is set and an AI hook is provided', () => {
+    const { rerender } = render(
+      <MapPanel
+        defaultPixelsPerCell={70}
+        onSetImage={vi.fn()}
+        onUpdateRegistration={vi.fn()}
+        onClear={vi.fn()}
+        onAnalyze={vi.fn(async () => ({ ok: true }))}
+      />
+    );
+    // No map yet → no analyze button.
+    expect(screen.queryByRole('button', { name: /analyze with ai/i })).not.toBeInTheDocument();
+    rerender(
+      <MapPanel
+        registration={registration}
+        defaultPixelsPerCell={70}
+        onSetImage={vi.fn()}
+        onUpdateRegistration={vi.fn()}
+        onClear={vi.fn()}
+        onAnalyze={vi.fn(async () => ({ ok: true }))}
+      />
+    );
+    expect(screen.getByRole('button', { name: /analyze with ai/i })).toBeInTheDocument();
+  });
 });

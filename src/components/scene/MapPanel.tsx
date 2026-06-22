@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ImagePlus, Map as MapIcon, Sparkles, Trash2 } from 'lucide-react';
+import { ImagePlus, Map as MapIcon, ScanSearch, Sparkles, Trash2 } from 'lucide-react';
 import type { SceneMapRegistration } from '../../types/core/scene';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
@@ -23,6 +23,12 @@ interface MapPanelProps {
   onClear: () => void;
   /** Optional AI image generation (provided only when AI is enabled). */
   onGenerate?: (prompt: string) => Promise<MapGenerateResult>;
+  /**
+   * Optional AI vision analysis of the current map: proposes the grid registration
+   * and terrain/hazard/cover/spawn markers, applied through normal scene events.
+   * Provided only when AI is enabled and a map is set.
+   */
+  onAnalyze?: () => Promise<{ ok: boolean; error?: string }>;
 }
 
 /**
@@ -39,10 +45,12 @@ export function MapPanel({
   onUpdateRegistration,
   onClear,
   onGenerate,
+  onAnalyze,
 }: MapPanelProps) {
   const fileInput = useRef<HTMLInputElement>(null);
   const [prompt, setPrompt] = useState('');
   const [generating, setGenerating] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Local, editable alignment fields, re-seeded whenever a different map is set.
@@ -76,6 +84,18 @@ export function MapPanel({
       else setError(result.error ?? 'Could not generate a map.');
     } finally {
       setGenerating(false);
+    }
+  };
+
+  const handleAnalyze = async () => {
+    if (!onAnalyze) return;
+    setAnalyzing(true);
+    setError(null);
+    try {
+      const result = await onAnalyze();
+      if (!result.ok) setError(result.error ?? 'Could not analyse the map.');
+    } finally {
+      setAnalyzing(false);
     }
   };
 
@@ -121,6 +141,18 @@ export function MapPanel({
             <ImagePlus className="mr-1.5 h-4 w-4" />
             {registration ? 'Replace map' : 'Import map'}
           </Button>
+          {registration && onAnalyze && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleAnalyze}
+              disabled={analyzing}
+              title="Let AI propose the grid alignment and terrain/hazard markers from the map"
+            >
+              <ScanSearch className="mr-1.5 h-4 w-4" />
+              {analyzing ? 'Analyzing…' : 'Analyze with AI'}
+            </Button>
+          )}
           {registration && (
             <Button variant="ghost" size="sm" onClick={onClear} title="Remove the background map">
               <Trash2 className="mr-1.5 h-4 w-4" />

@@ -172,6 +172,20 @@ hostile import cannot smuggle a `javascript:`/`http:` URL into an `<img src>`.
 the responsive grid, and `MapPanel` imports (no key needed), optionally
 AI-generates, aligns, and clears it.
 
+## Vision/grid automation (landed, Phase 10)
+
+Optional AI vision can PROPOSE the grid registration and a set of labelled region
+boxes (terrain/hazard/cover/spawn) from a map image; `validateMapAnalysis`
+(`src/scene/mapAnalysis.ts`) is the deterministic gate — the proposed grid must
+fit inside the image and every box must fall within the grid in cell coordinates,
+or it is rejected with coded issues that drive one bounded repair. An accepted
+proposal is turned by `mapAnalysisToIntents` into ordinary `set-map` +
+`add-marker` intents and threaded through `applySceneIntents`, so it is
+re-validated on the same event-sourced path the manual tools use (an out-of-bounds
+box can never land). The AI half is the `analyze-map` control-plane task
+(`docs/rfc/002-ai-control-plane.md`); manual registration (above) remains the
+fallback whenever AI is off or no proposal validates.
+
 ## Encounter-spec validation (landed)
 
 `validateEncounterSpec` (`src/scene/encounterSpec.ts`) is the deterministic gate
