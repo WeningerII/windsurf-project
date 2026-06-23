@@ -96,4 +96,36 @@ describe('PF2e validator', () => {
     const issues = await validate(pf2eDoc((data) => (data.level = 99)));
     expect(codes(issues)).toContain('pf2e-invalid-level');
   });
+
+  it('errors when the document systemId is not pf2e', async () => {
+    const document = pf2eDoc();
+    (document as { systemId: string }).systemId = 'dnd5e';
+    const issues = await validate(document);
+    expect(issues).toContainEqual(
+      expect.objectContaining({
+        code: 'pf2e-system-mismatch',
+        severity: 'error',
+        path: 'systemId',
+        recoverable: false,
+      })
+    );
+  });
+
+  it('warns when a heritage is set but its ancestry does not resolve', async () => {
+    // Heritage without a resolvable ancestry: the validator can't check
+    // membership, so it warns (recoverable) rather than erroring on the id.
+    const issues = await validate(
+      pf2eDoc((data) => {
+        data.ancestryId = 'no-such-ancestry';
+        data.heritageId = 'skilled';
+      })
+    );
+    expect(issues).toContainEqual(
+      expect.objectContaining({
+        code: 'pf2e-heritage-without-ancestry',
+        severity: 'warning',
+        path: 'heritageId',
+      })
+    );
+  });
 });

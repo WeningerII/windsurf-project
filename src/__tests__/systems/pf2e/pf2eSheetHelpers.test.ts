@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { pf2eBackgrounds } from '../../../data/pathfinder/2e/backgrounds';
 import { human } from '../../../data/pathfinder/2e/ancestries/human';
+import { dwarf } from '../../../data/pathfinder/2e/ancestries/dwarf';
 import type { Archetype } from '../../../types/character-options/archetypes';
 import { SKILL_ABILITIES } from '../../../systems/pf2e/constants';
 import { createDefaultPf2eData } from '../../../systems/pf2e/data-model';
@@ -99,6 +100,73 @@ describe('PF2e sheet helpers', () => {
       },
       focusPoints: { current: 2, max: 2 },
     });
+  });
+
+  it('passes a non-caster (undefined spellcasting) through rest helpers unchanged', () => {
+    // A character without spellcasting has nothing to recover; both helpers
+    // return the input (undefined) rather than synthesising an empty block.
+    expect(shortRestPf2eSpellcasting(undefined)).toBeUndefined();
+    expect(longRestPf2eSpellcasting(undefined)).toBeUndefined();
+  });
+
+  it('emits ancestry choice slots only for choice increases, skipping fixed boosts', () => {
+    // Dwarf has a FIXED increase (con/wis/cha) followed by a single free CHOICE
+    // boost. Only the choice produces a selectable slot; the fixed entry is
+    // skipped by the slot builder.
+    const state = getPf2eSheetChoiceState({
+      data: {
+        ...createDefaultPf2eData(),
+        ancestryAbilityBoostSelections: ['str'],
+      },
+      archetypes: [],
+      selectedArchetypeIds: [],
+      selectedAncestry: dwarf,
+      selectedBackground: undefined,
+    });
+
+    expect(state.ancestryChoiceSlots).toHaveLength(1);
+    expect(state.ancestryChoiceSlots[0]).toMatchObject({ slotIndex: 0, value: 'str' });
+    // The free boost's options are exactly the dwarf choice options.
+    expect(state.ancestryChoiceSlots[0].options).toEqual(['str', 'dex', 'int']);
+  });
+
+  it('breaks archetype ordering ties alphabetically when both share the same class match', () => {
+    // Both archetypes belong to the SAME parent class as the character, so the
+    // class-match comparison is a tie and the sort falls through to name order.
+    const archetypes: Archetype[] = [
+      {
+        id: 'wizard-dedication',
+        name: 'Wizard Dedication',
+        system: 'pf2e',
+        source: 'Core Rulebook',
+        parentClassId: 'fighter',
+        description: '',
+        features: [],
+      },
+      {
+        id: 'acrobat-dedication',
+        name: 'Acrobat Dedication',
+        system: 'pf2e',
+        source: 'Core Rulebook',
+        parentClassId: 'fighter',
+        description: '',
+        features: [],
+      },
+    ];
+
+    const state = getPf2eSheetChoiceState({
+      data: { ...createDefaultPf2eData(), classId: 'fighter' },
+      archetypes,
+      selectedArchetypeIds: [],
+      selectedAncestry: undefined,
+      selectedBackground: undefined,
+    });
+
+    // Both match 'fighter', so alphabetical: Acrobat before Wizard.
+    expect(state.orderedArchetypes.map((entry) => entry.id)).toEqual([
+      'acrobat-dedication',
+      'wizard-dedication',
+    ]);
   });
 
   it('derives ancestry/background choice state and archetype ordering from PF2e sheet data', () => {
