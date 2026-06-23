@@ -1,6 +1,8 @@
 import { Plus, Swords, X } from 'lucide-react';
 import { DiceRollButton } from '../../../components/DiceRollButton';
+import { ContributionBreakdown } from '../../../components/shared/ContributionBreakdown';
 import { systemRegistry } from '../../../registry';
+import { entriesForTarget } from '../../../utils/contributionBreakdown';
 import { parseNum } from '../../../utils/math';
 import { ATTRIBUTES } from '../daggerheartSheetConstants';
 import { useStableListKeys } from '../useStableListKeys';
@@ -15,6 +17,7 @@ export function DaggerheartCharacterBasicsSection({ controller }: Props) {
   const { keys: experienceKeys, removeKeyAt: removeExperienceKeyAt } = useStableListKeys(
     data.experiences.length
   );
+  const evasionEntries = entriesForTarget(controller.contributionEntries, 'evasion');
 
   return (
     <>
@@ -22,6 +25,11 @@ export function DaggerheartCharacterBasicsSection({ controller }: Props) {
         <div className="rounded-lg border bg-card p-3 text-center">
           <div className="text-xs font-medium text-muted-foreground">Evasion</div>
           <div className="text-xl font-bold tabular-nums">{controller.derivedStats.evasion}</div>
+          {evasionEntries.length > 0 && (
+            <div className="mt-1 flex justify-center">
+              <ContributionBreakdown entries={evasionEntries} label="Evasion" />
+            </div>
+          )}
         </div>
         <div className="rounded-lg border bg-card p-3 text-center">
           <div className="text-xs font-medium text-muted-foreground">Armor Score</div>

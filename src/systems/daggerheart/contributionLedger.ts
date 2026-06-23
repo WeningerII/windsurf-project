@@ -13,11 +13,14 @@ import type { CharacterDocument } from '../../types/core/document';
 import { getDaggerheartInventoryDefinition } from '../../utils/daggerheartInventory';
 import {
   getDaggerheartActivePassiveDomainCards,
+  getDaggerheartAncestryAdjustments,
   getDaggerheartEffectiveAttribute,
   getDaggerheartProficiency,
   getDaggerheartTier,
   getEquippedDaggerheartArmor,
   getEquippedDaggerheartWeapon,
+  getSelectedDaggerheartAncestry,
+  getSelectedDaggerheartClass,
 } from '../../utils/daggerheartDerived';
 import type { DaggerheartDataModel } from './data-model';
 
@@ -35,13 +38,84 @@ type PassiveSource = {
 export function buildDaggerheartContributionLedger(
   document: CharacterDocument<DaggerheartDataModel>
 ): ContributionLedgerResult {
-  const sources = getDaggerheartPassiveSources(document.system);
-  const entries = sources.flatMap((source) => [
-    ...buildPassiveBonusEntries(source),
-    ...buildPassiveDerivedBonusEntries(document.system, source),
-  ]);
+  const { system } = document;
+  const sources = getDaggerheartPassiveSources(system);
+  const entries = [
+    // Base Evasion comes first so the breakdown folds set-then-add to the value
+    // the sheet shows (utils/contributionBreakdown.foldContributionTotal). The
+    // base mirrors getDaggerheartDerivedStats exactly: class starting Evasion
+    // plus the ancestry adjustment.
+    ...buildEvasionBaseEntries(system),
+    ...sources.flatMap((source) => [
+      ...buildPassiveBonusEntries(source),
+      ...buildPassiveDerivedBonusEntries(system, source),
+    ]),
+  ];
 
   return { entries };
+}
+
+/**
+ * The non-bonus part of Evasion: the class's starting Evasion (a `set` base) and
+ * the ancestry adjustment (an `add`). Together with the passive `add` entries
+ * below, these fold to getDaggerheartDerivedStats().evasion. Before a class is
+ * chosen, derived Evasion falls back to the stored value, so that raw number is
+ * the base — keeping the breakdown total honest rather than empty.
+ */
+function buildEvasionBaseEntries(system: DaggerheartDataModel): ContributionLedgerEntry[] {
+  const selectedClass = getSelectedDaggerheartClass(system);
+
+  if (!selectedClass) {
+    return [
+      createEntry({
+        source: { kind: 'system', id: 'evasion', label: 'Base Evasion', path: 'system.evasion' },
+        target: 'evasion',
+        label: 'Base Evasion',
+        operation: 'set',
+        value: system.evasion,
+        category: 'defense',
+      }),
+    ];
+  }
+
+  const selectedAncestry = getSelectedDaggerheartAncestry(system);
+  const ancestryAdjustment = getDaggerheartAncestryAdjustments(selectedAncestry).evasion;
+
+  const entries: ContributionLedgerEntry[] = [
+    createEntry({
+      source: {
+        kind: 'class',
+        id: selectedClass.id,
+        label: selectedClass.name,
+        path: 'system.class',
+      },
+      target: 'evasion',
+      label: 'Starting Evasion',
+      operation: 'set',
+      value: selectedClass.startingEvasion,
+      category: 'defense',
+    }),
+  ];
+
+  if (selectedAncestry && ancestryAdjustment !== 0) {
+    entries.push(
+      createEntry({
+        source: {
+          kind: 'species',
+          id: selectedAncestry.id,
+          label: selectedAncestry.name,
+          path: 'system.heritage',
+        },
+        target: 'evasion',
+        label: 'Ancestry Evasion adjustment',
+        operation: 'add',
+        value: ancestryAdjustment,
+        category: 'defense',
+      })
+    );
+  }
+
+  return entries;
 }
 
 function getDaggerheartPassiveSources(system: DaggerheartDataModel): PassiveSource[] {

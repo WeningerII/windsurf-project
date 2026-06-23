@@ -4,6 +4,8 @@ import {
   type DaggerheartDataModel,
 } from '../systems/daggerheart/data-model';
 import type { CharacterDocument } from '../types/core/document';
+import { entriesForTarget, foldContributionTotal } from '../utils/contributionBreakdown';
+import { getDaggerheartDerivedStats } from '../utils/daggerheartDerived';
 
 const TEST_DATE = new Date('2026-05-01T00:00:00.000Z');
 
@@ -41,6 +43,15 @@ describe('Daggerheart contribution ledger', () => {
 
     expect(ledger.entries).toEqual(
       expect.arrayContaining([
+        // With no class chosen the base is the stored Evasion (set), so the
+        // breakdown always folds to a real total instead of starting empty.
+        expect.objectContaining({
+          target: 'evasion',
+          source: expect.objectContaining({ kind: 'system' }),
+          operation: 'set',
+          value: 0,
+          category: 'defense',
+        }),
         expect.objectContaining({
           target: 'evasion',
           source: expect.objectContaining({
@@ -70,7 +81,44 @@ describe('Daggerheart contribution ledger', () => {
         }),
       ])
     );
+    // The surfaced breakdown is only trustworthy if it folds to the number the
+    // sheet shows. Base (set 0) + gambeson Evasion (+1) must equal derived Evasion.
+    expect(foldContributionTotal(entriesForTarget(ledger.entries, 'evasion'))).toBe(
+      getDaggerheartDerivedStats(system).evasion
+    );
     expect(JSON.stringify(document)).toBe(serializedBeforeLedger);
+  });
+
+  it('emits a class + ancestry Evasion base that folds to the derived Evasion', () => {
+    const system: DaggerheartDataModel = {
+      ...createDefaultDaggerheartData(),
+      class: 'Bard',
+      heritage: 'Simiah',
+    };
+
+    const ledger = buildDaggerheartContributionLedger(createDocument(system));
+    const evasionEntries = entriesForTarget(ledger.entries, 'evasion');
+
+    expect(evasionEntries).toEqual([
+      expect.objectContaining({
+        target: 'evasion',
+        source: expect.objectContaining({ kind: 'class', id: 'daggerheart-bard' }),
+        operation: 'set',
+        value: 10,
+        category: 'defense',
+      }),
+      expect.objectContaining({
+        target: 'evasion',
+        source: expect.objectContaining({ kind: 'species', id: 'simiah' }),
+        operation: 'add',
+        value: 1,
+        category: 'defense',
+      }),
+    ]);
+
+    // Mutation anchor: if the base calc ever drifts from getDaggerheartDerivedStats,
+    // the breakdown total would lie about the sheet's Evasion — this catches it.
+    expect(foldContributionTotal(evasionEntries)).toBe(getDaggerheartDerivedStats(system).evasion);
   });
 
   it('explains derived passive bonuses and ignores vault cards', () => {

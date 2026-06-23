@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
 import type { GameSystemId } from '../../types/game-systems';
+import { buildDaggerheartContributionLedger } from './contributionLedger';
 import type { DaggerheartDataModel } from './data-model';
 import { getDaggerheartSheetState } from './getDaggerheartSheetState';
 import { useDaggerheartMutationHandlers } from './useDaggerheartMutationHandlers';
@@ -149,12 +150,20 @@ export function useDaggerheartSheetController({
     ownedDomainCardIds: derivedState.ownedDomainCardIds,
   });
 
+  // Non-persisted contribution ledger powering the sheet's derived-value
+  // breakdowns (e.g. Evasion). Synchronous, so a memo is enough — no hook.
+  const contributionEntries = useMemo(
+    () => buildDaggerheartContributionLedger(document).entries,
+    [document]
+  );
+
   return {
     document,
     data,
     canUpdate,
     ...resources,
     ...derivedState,
+    contributionEntries,
     domainCardSearch,
     setDomainCardSearch,
     weaponSearch,
