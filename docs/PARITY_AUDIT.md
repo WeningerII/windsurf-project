@@ -23,7 +23,7 @@ contribution-ledger builder whose breakdown is surfaced in-sheet: Armor Class fo
 | Contribution ledger (builder) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Breakdown surfaced in sheet | ✅ AC | ✅ AC | ✅ AC | ✅ AC | ✅ power cost | ✅ Evasion |
 | Registry validator | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Test files (directional) | 116 | 47 | 67 (d20 shared) | ↤ | 24 | 27 |
+| Test files (directional) | 116 | 48 | 68 (d20 shared) | ↤ | 24 | 27 |
 
 ## What's a real spike vs. what isn't
 
@@ -60,7 +60,15 @@ contribution breakdowns surfaced in-sheet like every other system.
    d20-legacy term decompositions are single-sourced from `src/utils/armorClass.ts`
    so the breakdown can't drift from the engine), Evasion for Daggerheart, and
    per-power cost per rank for M&M 3e.
-3. **Test depth** — non-5e systems trail 5e; M&M/Daggerheart are thinnest.
+3. **Test depth** — substantially closed for the highest-value logic. Every
+   non-5e sheet's **mutation handlers** (the add/remove/equip/edit behaviors the
+   sheets drive) were the largest untested surface — M&M 41%, PF2e 43%, d20-legacy
+   45%, Daggerheart 67% statements by v8 — and now sit at 80–95%, each test
+   asserting the exact patch the handler emits. Engine `rollCheck` branches
+   (saves, attack, grapple/CMB, skill checks, the Daggerheart non-trait fallback)
+   and the M&M Enhanced-Trait defense contribution are covered too. Remaining
+   thin spots are the template-apply handlers (class/race/background) and a few
+   defensive/normalization branches — lower-value, tracked but not blocking.
 
 ## How parity capabilities are wired
 
