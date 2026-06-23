@@ -1,65 +1,36 @@
 /**
- * D&D 5e guided-creation orchestration (MASTER_PLAN Phase 4B — "D&D 5e Wizard
- * Path"). The async "apply a choice + validate" layer that sits between the pure
- * draft shell (`creationDraft.ts`) and the wizard UI.
+ * D&D 5e character-creation orchestrator — the first system to register the
+ * agnostic {@link CreationOrchestrator} contract consumed by the shared
+ * `CharacterCreator` UI. The same flow serves both 5e editions (2014 and 2024)
+ * via `Dnd5eLikeDataModel` + the shared applicators.
  *
- * It reuses the EXACT applicators manual sheet editing uses
- * (`applyDnd5eClassTemplate` / `applyDnd5eSpeciesTemplate` /
- * `applyDnd5eBackgroundTemplate`) and the registry's 5e validator — no parallel
- * creation rules. A selection is loaded from the candidate pool, applied onto the
- * draft's working document (un-applying the prior choice of that kind first), and
- * the result is validated; the new system data + issues are folded back into the
- * draft via `withResolvedSystem`. Loaders and the validator are injectable so the
- * orchestration is unit-testable without real catalog I/O.
+ * This module is deliberately light: it is imported eagerly by the 5e
+ * `SystemDefinition` (so the registry can advertise "this system is creatable"),
+ * so it must NOT statically pull in the heavy template applicators. The
+ * applicator-dependent "apply a choice + validate" core lives in `./dnd5eApply`
+ * and is `import()`ed only when the user actually applies a choice in the lazily-
+ * loaded creator — keeping the applicators out of the first-paint shell.
  */
 import type { Background } from '../types/character-options/backgrounds';
 import type { CharacterClass } from '../types/character-options/classes';
 import type { Species } from '../types/character-options/species';
-import type { CharacterDocument, SystemDataModel } from '../types/core/document';
 import type { GameSystemId } from '../types/game-systems';
-import type { ValidationIssue, ValidationResult } from '../registry/types';
 import { systemRegistry } from '../registry';
 import {
   loadBackgroundsForSystem,
   loadClassesForSystem,
   loadSpeciesForSystem,
 } from '../utils/dataLoader';
-import { applyDnd5eBackgroundTemplate } from '../utils/backgroundTemplate';
-import { applyDnd5eClassTemplate, removeDnd5eClassTemplate } from '../utils/classTemplate';
-import { applyDnd5eSpeciesTemplate } from '../utils/speciesTemplate';
-import type { Dnd5eLikeDataModel } from '../systems/dnd5e/shared/dnd5eSheetShared';
-import {
-  createCreationDraft,
-  setSelection,
-  withResolvedSystem,
-  type CreationDraft,
-} from './creationDraft';
+import { createCreationDraft, type CreationDraft } from './creationDraft';
+import type {
+  CreationOption,
+  CreationOrchestrator,
+  CreationStep,
+  CreationSummaryRow,
+} from './types';
 
-/** The ordered 5e creation steps (the wizard renders one per step). */
+/** The ordered 5e creation steps (the creator renders one per step). */
 export const DND5E_CREATION_STEPS = ['class', 'species', 'background', 'review'] as const;
-
-export type Dnd5eCreationSelection =
-  | { kind: 'class'; classId: string; level: number }
-  | { kind: 'species'; speciesId: string }
-  | { kind: 'background'; backgroundId: string };
-
-/** Injectable data/validation dependencies (real ones by default). */
-export interface Dnd5eCreationDeps {
-  loadClasses: (systemId: string) => Promise<CharacterClass[]>;
-  loadSpecies: (systemId: string) => Promise<Species[]>;
-  loadBackgrounds: (systemId: string) => Promise<Background[]>;
-  validate: (document: CharacterDocument) => Promise<ValidationResult>;
-}
-
-export const defaultDnd5eCreationDeps: Dnd5eCreationDeps = {
-  // The draft carries a generic `string` systemId while the loaders are typed to
-  // the `GameSystemId` union; bridge the two here (an unregistered id degrades to
-  // an empty catalog, so the orchestrator reports it as an unknown-choice issue).
-  loadClasses: (systemId) => loadClassesForSystem(systemId as GameSystemId),
-  loadSpecies: (systemId) => loadSpeciesForSystem(systemId as GameSystemId),
-  loadBackgrounds: (systemId) => loadBackgroundsForSystem(systemId as GameSystemId),
-  validate: (document) => systemRegistry.validateDocument(document, { reason: 'creation' }),
-};
 
 /** Start a 5e creation draft seeded from the registry's blank data + 5e steps. */
 export function createDnd5eCreationDraft(params: {
@@ -80,109 +51,127 @@ export function createDnd5eCreationDraft(params: {
   });
 }
 
-/** Wrap a draft's working system data in a CharacterDocument the applicators accept. */
-function draftDocument(draft: CreationDraft): CharacterDocument<Dnd5eLikeDataModel> {
-  return {
-    id: draft.id,
-    name: draft.name,
-    systemId: draft.systemId,
-    system: draft.system as Dnd5eLikeDataModel,
-    createdAt: new Date(draft.createdAt),
-    updatedAt: new Date(draft.createdAt),
-  };
+// --- Agnostic orchestrator -------------------------------------------------
+// These map 5e's loaders/applicators onto the system-agnostic CreationOrchestrator
+// the shared CharacterCreator UI consumes. All 5e specifics (the option subtitles,
+// the class-level param, the class/species/background step ids) live here, not in
+// the UI.
+
+const MIN_CLASS_LEVEL = 1;
+const MAX_CLASS_LEVEL = 20;
+
+const DND5E_STEPS: readonly CreationStep[] = [
+  {
+    id: 'class',
+    label: 'Class',
+    params: [
+      { id: 'level', label: 'Level', min: MIN_CLASS_LEVEL, max: MAX_CLASS_LEVEL, defaultValue: 1 },
+    ],
+  },
+  { id: 'species', label: 'Species' },
+  { id: 'background', label: 'Background' },
+  { id: 'review', label: 'Review' },
+];
+
+function classSubtitle(entry: CharacterClass): string {
+  const primary = entry.primaryAbility?.length
+    ? `Primary ${entry.primaryAbility.map((ability) => ability.toUpperCase()).join('/')}`
+    : '';
+  return [`Hit die ${entry.hitDie}`, primary].filter(Boolean).join(' · ');
 }
 
-function unknownIdIssue(message: string): ValidationIssue {
-  return { code: 'creation-unknown-choice', message, severity: 'error', recoverable: true };
+function speciesSubtitle(entry: Species): string {
+  return `Size ${entry.size} · Speed ${entry.speed} ft`;
+}
+
+function backgroundSubtitle(entry: Background): string {
+  return entry.feature?.name ? `Feature: ${entry.feature.name}` : '';
+}
+
+function stringSelection(draft: CreationDraft, key: string): string | null {
+  const value = draft.selections[key];
+  return typeof value === 'string' ? value : null;
 }
 
 /**
- * Apply one creation selection onto the draft and validate the result. An id not
- * in the candidate pool is reported as an error issue WITHOUT mutating the draft
- * (so the wizard can re-prompt); a valid choice applies through the shared
- * template applicators and the draft absorbs the new system data + issues.
+ * Build the 5e orchestrator for a given system id (2014 or 2024). Attached to the
+ * 5e {@link SystemDefinition}s so the shared creator resolves it via the registry.
  */
-export async function applyDnd5eCreationSelection(
-  draft: CreationDraft,
-  selection: Dnd5eCreationSelection,
-  deps: Dnd5eCreationDeps = defaultDnd5eCreationDeps
-): Promise<CreationDraft> {
-  const document = draftDocument(draft);
-
-  if (selection.kind === 'class') {
-    const classes = await deps.loadClasses(draft.systemId);
-    const classData = classes.find((entry) => entry.id === selection.classId);
-    if (!classData) {
-      return withResolvedSystem(draft, draft.system, [
-        unknownIdIssue(`Class '${selection.classId}' is not in the ${draft.systemId} catalog.`),
-      ]);
-    }
-    const previousClassId =
-      typeof draft.selections.classId === 'string' ? draft.selections.classId : undefined;
-    let next = document;
-    // Replace the prior class wholesale so re-picking yields a single clean class.
-    if (previousClassId && previousClassId !== selection.classId) {
-      next = removeDnd5eClassTemplate(next, previousClassId);
-    }
-    next = applyDnd5eClassTemplate(
-      next,
-      classData,
-      selection.level,
-      previousClassId === selection.classId
-        ? { mode: 'replace', targetClassId: selection.classId }
-        : { mode: 'add' }
-    );
-    return recordAndValidate(
-      draft,
-      next.system,
-      { classId: selection.classId, classLevel: selection.level },
-      deps
-    );
-  }
-
-  if (selection.kind === 'species') {
-    const speciesList = await deps.loadSpecies(draft.systemId);
-    const speciesData = speciesList.find((entry) => entry.id === selection.speciesId);
-    if (!speciesData) {
-      return withResolvedSystem(draft, draft.system, [
-        unknownIdIssue(`Species '${selection.speciesId}' is not in the ${draft.systemId} catalog.`),
-      ]);
-    }
-    const previous = speciesList.find((entry) => entry.id === draft.selections.speciesId);
-    const next = applyDnd5eSpeciesTemplate(document, speciesData, previous);
-    return recordAndValidate(draft, next.system, { speciesId: selection.speciesId }, deps);
-  }
-
-  const backgrounds = await deps.loadBackgrounds(draft.systemId);
-  const background = backgrounds.find((entry) => entry.id === selection.backgroundId);
-  if (!background) {
-    return withResolvedSystem(draft, draft.system, [
-      unknownIdIssue(
-        `Background '${selection.backgroundId}' is not in the ${draft.systemId} catalog.`
-      ),
-    ]);
-  }
-  const previousBackground = backgrounds.find(
-    (entry) => entry.id === draft.selections.backgroundId
-  );
-  const next = applyDnd5eBackgroundTemplate(document, background, previousBackground);
-  return recordAndValidate(draft, next.system, { backgroundId: selection.backgroundId }, deps);
-}
-
-async function recordAndValidate(
-  draft: CreationDraft,
-  system: Dnd5eLikeDataModel,
-  selections: Record<string, unknown>,
-  deps: Dnd5eCreationDeps
-): Promise<CreationDraft> {
-  let next = draft;
-  for (const [key, value] of Object.entries(selections)) {
-    next = setSelection(next, key, value);
-  }
-  const document: CharacterDocument = {
-    ...draftDocument(next),
-    system: system as SystemDataModel,
+export function createDnd5eCreationOrchestrator(systemId: string): CreationOrchestrator {
+  return {
+    steps: DND5E_STEPS,
+    createDraft: ({ id, now }) => createDnd5eCreationDraft({ id, systemId, now }),
+    loadOptions: async (draft, stepId): Promise<CreationOption[]> => {
+      const id = draft.systemId as GameSystemId;
+      if (stepId === 'class') {
+        return (await loadClassesForSystem(id)).map((entry) => ({
+          id: entry.id,
+          name: entry.name,
+          source: entry.source,
+          subtitle: classSubtitle(entry),
+        }));
+      }
+      if (stepId === 'species') {
+        return (await loadSpeciesForSystem(id)).map((entry) => ({
+          id: entry.id,
+          name: entry.name,
+          source: entry.source,
+          subtitle: speciesSubtitle(entry),
+        }));
+      }
+      if (stepId === 'background') {
+        return (await loadBackgroundsForSystem(id)).map((entry) => ({
+          id: entry.id,
+          name: entry.name,
+          source: entry.source,
+          subtitle: backgroundSubtitle(entry),
+        }));
+      }
+      return [];
+    },
+    selectedOptionId: (draft, stepId) => {
+      if (stepId === 'class') return stringSelection(draft, 'classId');
+      if (stepId === 'species') return stringSelection(draft, 'speciesId');
+      if (stepId === 'background') return stringSelection(draft, 'backgroundId');
+      return null;
+    },
+    paramValue: (draft, stepId, paramId) => {
+      if (stepId === 'class' && paramId === 'level') {
+        const value = draft.selections.classLevel;
+        return typeof value === 'number' ? value : 1;
+      }
+      return 0;
+    },
+    applyOption: async (draft, stepId, optionId, params) => {
+      // Loaded on demand so the heavy template applicators stay out of the shell.
+      const { applyDnd5eCreationSelection } = await import('./dnd5eApply');
+      if (stepId === 'class') {
+        return applyDnd5eCreationSelection(draft, {
+          kind: 'class',
+          classId: optionId,
+          level: params?.level ?? 1,
+        });
+      }
+      if (stepId === 'species') {
+        return applyDnd5eCreationSelection(draft, { kind: 'species', speciesId: optionId });
+      }
+      if (stepId === 'background') {
+        return applyDnd5eCreationSelection(draft, { kind: 'background', backgroundId: optionId });
+      }
+      return draft;
+    },
+    summary: (draft): CreationSummaryRow[] => {
+      const className = stringSelection(draft, 'className');
+      const level =
+        typeof draft.selections.classLevel === 'number' ? draft.selections.classLevel : null;
+      return [
+        {
+          label: 'Class',
+          value: className ? (level ? `${className} (level ${level})` : className) : null,
+        },
+        { label: 'Species', value: stringSelection(draft, 'speciesName') },
+        { label: 'Background', value: stringSelection(draft, 'backgroundName') },
+      ];
+    },
   };
-  const validation = await deps.validate(document);
-  return withResolvedSystem(next, system, validation.issues);
 }

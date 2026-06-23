@@ -3,7 +3,7 @@ import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { CharacterCreationWizard } from '../../components/CharacterCreationWizard';
+import { CharacterCreator } from '../../components/CharacterCreator';
 import { registerAllSystems } from '../../systems';
 import { systemRegistry } from '../../registry';
 import { loadClassesForSystem } from '../../utils/dataLoader';
@@ -17,11 +17,11 @@ import { loadCreationDraft, saveCreationDraft } from '../../creation/creationDra
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
 
 /**
- * PHASE 4B (MASTER_PLAN): the user-visible guided creator. These tests render the
- * wizard against the REAL draft shell + 5e orchestrator (no mocked rules) and
- * verify the acceptance surface: walk the steps → finalise a CharacterDocument,
- * resume a saved draft, cancel clears it, and validation issues are displayed and
- * gate finalisation.
+ * MASTER_PLAN creation track: the user-visible, system-agnostic character creator.
+ * These tests render it against the REAL draft shell + registry-resolved 5e
+ * orchestrator (no mocked rules) and verify the acceptance surface: walk the
+ * steps → finalise a CharacterDocument, resume a saved draft, cancel clears it,
+ * and validation issues are displayed and gate finalisation.
  */
 
 const SYSTEM_ID = 'dnd-5e-2024';
@@ -44,16 +44,14 @@ async function waitForEnabled(name: RegExp) {
   });
 }
 
-describe('CharacterCreationWizard', () => {
+describe('CharacterCreator', () => {
   it('walks class → species → background → review and finalises a CharacterDocument', async () => {
     const user = userEvent.setup();
     const classes = await loadClassesForSystem(SYSTEM_ID);
     const firstClass = classes[0];
     const onComplete = vi.fn();
 
-    render(
-      <CharacterCreationWizard systemId={SYSTEM_ID} onComplete={onComplete} onCancel={vi.fn()} />
-    );
+    render(<CharacterCreator systemId={SYSTEM_ID} onComplete={onComplete} onCancel={vi.fn()} />);
 
     // Class step: pick the first class (an async apply through the real applicator).
     const classButton = await screen.findByRole(
@@ -91,9 +89,7 @@ describe('CharacterCreationWizard', () => {
     );
     saveCreationDraft(base);
 
-    render(
-      <CharacterCreationWizard systemId={SYSTEM_ID} onComplete={vi.fn()} onCancel={vi.fn()} />
-    );
+    render(<CharacterCreator systemId={SYSTEM_ID} onComplete={vi.fn()} onCancel={vi.fn()} />);
 
     expect(await screen.findByTitle('Character name')).toHaveValue('Resumed Hero');
   });
@@ -111,9 +107,7 @@ describe('CharacterCreationWizard', () => {
     );
     saveCreationDraft(foreign);
 
-    render(
-      <CharacterCreationWizard systemId={SYSTEM_ID} onComplete={vi.fn()} onCancel={vi.fn()} />
-    );
+    render(<CharacterCreator systemId={SYSTEM_ID} onComplete={vi.fn()} onCancel={vi.fn()} />);
 
     expect(await screen.findByTitle('Character name')).toHaveValue('New Character');
   });
@@ -122,9 +116,7 @@ describe('CharacterCreationWizard', () => {
     const user = userEvent.setup();
     const onCancel = vi.fn();
 
-    render(
-      <CharacterCreationWizard systemId={SYSTEM_ID} onComplete={vi.fn()} onCancel={onCancel} />
-    );
+    render(<CharacterCreator systemId={SYSTEM_ID} onComplete={vi.fn()} onCancel={onCancel} />);
 
     await screen.findByTitle('Character name');
     await user.click(screen.getByRole('button', { name: /cancel creation/i }));
@@ -142,9 +134,7 @@ describe('CharacterCreationWizard', () => {
     );
     saveCreationDraft(blocked);
 
-    render(
-      <CharacterCreationWizard systemId={SYSTEM_ID} onComplete={vi.fn()} onCancel={vi.fn()} />
-    );
+    render(<CharacterCreator systemId={SYSTEM_ID} onComplete={vi.fn()} onCancel={vi.fn()} />);
 
     // The issue is shown live on every step.
     expect(await screen.findByText('You must choose two skills.')).toBeInTheDocument();

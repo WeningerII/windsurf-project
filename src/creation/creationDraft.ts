@@ -1,6 +1,6 @@
 /**
- * Deterministic guided-creation draft (MASTER_PLAN Phase 4A — "Wizard
- * Architecture", the shell).
+ * Deterministic character-creation draft — the pure, system-agnostic shell of the
+ * creation track (MASTER_PLAN).
  *
  * A `CreationDraft` is an in-progress character: the system's data (seeded from
  * `createDefaultData`, later mutated by the SAME template applicators manual
@@ -9,8 +9,8 @@
  * step navigation, selection bookkeeping, serialisation for a resumable local
  * draft, and finalisation into a normal {@link CharacterDocument}. It owns no
  * React, no storage, no async, and no per-system rules: the async "apply a
- * choice + validate" orchestration (Phase 4B) and the UI (the visible wizard)
- * layer on top and feed their results back in through {@link withResolvedSystem}.
+ * choice + validate" orchestration (per-system) and the creator UI layer on top
+ * and feed their results back in through {@link withResolvedSystem}.
  *
  * Constraints (MASTER_PLAN): the output is a normal CharacterDocument produced
  * via the existing applicators/validators — no parallel schema, no loader bypass,

@@ -1,7 +1,7 @@
 /**
- * Local-first persistence for the in-progress creation draft (Phase 4A —
- * "resumable local drafts"). One draft at a time: starting the wizard saves a
- * draft; resuming reads it back; finalising or cancelling clears it. Never
+ * Local-first persistence for the in-progress creation draft (the creation
+ * track's "resumable local drafts"). One draft at a time: starting the creator
+ * saves a draft; resuming reads it back; finalising or cancelling clears it. Never
  * touches Supabase, and every access goes through the throw-safe storage helpers
  * so a hostile storage environment degrades to a no-op. Reads run through
  * `parseCreationDraft`, so a corrupt stored draft is dropped, not crashed on.

@@ -30,11 +30,11 @@ import { CampaignManager } from './components/CampaignManager';
 const SceneManager = lazy(() =>
   import('./components/SceneManager').then((m) => ({ default: m.SceneManager }))
 );
-// Lazy-loaded for the same reason: the guided-creation wizard pulls in the 5e
+// Lazy-loaded for the same reason: the character creator pulls in per-system
 // template applicators, which must stay out of the eager first-paint shell.
-const CharacterCreationWizard = lazy(() =>
-  import('./components/CharacterCreationWizard').then((m) => ({
-    default: m.CharacterCreationWizard,
+const CharacterCreator = lazy(() =>
+  import('./components/CharacterCreator').then((m) => ({
+    default: m.CharacterCreator,
   }))
 );
 import { useScenes } from './hooks/useScenes';
@@ -52,13 +52,13 @@ const STORAGE_WARNING_THRESHOLD = Math.floor(STORAGE_LIMIT_BYTES * 0.8);
 // not happen on every keystroke of a controlled sheet/notes field.
 const PENDING_SYNC_COUNT_DEBOUNCE_MS = 2000;
 
-// Systems with a deterministic guided-creation orchestrator (src/creation/). 5e
-// is edition-agnostic (2024 + 2014 reuse the same flow); other systems keep the
-// quick blank-create path until they grow their own orchestrator.
-const GUIDED_CREATION_SYSTEMS: ReadonlySet<GameSystemId> = new Set<GameSystemId>([
-  'dnd-5e-2024',
-  'dnd-5e-2014',
-]);
+// A system offers guided creation iff it registered a creation orchestrator on
+// its SystemDefinition. The creator UI is agnostic: it dispatches through the
+// registry and names no system, so a system becomes creatable by registering an
+// orchestrator — nothing here changes. Systems without one keep quick blank-create.
+function systemSupportsGuidedCreation(systemId: GameSystemId | null): systemId is GameSystemId {
+  return systemId !== null && systemRegistry.get(systemId)?.creation != null;
+}
 
 function cloneSystemData(system: SystemDataModel): SystemDataModel {
   if (typeof structuredClone === 'function') {
@@ -99,7 +99,7 @@ function AppContent() {
   });
   const [currentDocId, setCurrentDocId] = useState<string | null>(null);
   const [selectedSystem, setSelectedSystem] = useState<GameSystemId | null>(null);
-  // Non-null while the guided-creation wizard is open (for that system).
+  // Non-null while the character creator is open (for that system).
   const [creatingSystem, setCreatingSystem] = useState<GameSystemId | null>(null);
 
   const [systemFilter, setSystemFilter] = useState<GameSystemId | 'all'>('all');
@@ -287,15 +287,15 @@ function AppContent() {
     setCurrentDocId(doc.id);
   };
 
-  // Guided creation: open the wizard for the selected system, and on finish drop
+  // Guided creation: open the creator for the selected system, and on finish drop
   // its finalised CharacterDocument into the same add+open path as quick-create.
   const handleStartGuidedCreation = () => {
-    if (selectedSystem && GUIDED_CREATION_SYSTEMS.has(selectedSystem)) {
+    if (systemSupportsGuidedCreation(selectedSystem)) {
       setCreatingSystem(selectedSystem);
     }
   };
 
-  const handleWizardComplete = useCallback(
+  const handleCreatorComplete = useCallback(
     (doc: CharacterDocument<SystemDataModel>) => {
       addDocument(doc);
       setCreatingSystem(null);
@@ -535,7 +535,7 @@ function AppContent() {
           </div>
         ) : creatingSystem ? (
           <div className="max-w-4xl mx-auto">
-            {/* Scoped boundary + Suspense: the wizard is a lazy chunk, like the
+            {/* Scoped boundary + Suspense: the creator is a lazy chunk, like the
                 sheet. A load failure must not take down the app, and the user can
                 always fall back to a blank quick-create. */}
             <ErrorBoundary
@@ -544,7 +544,7 @@ function AppContent() {
                 <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-8 text-center space-y-4">
                   <AlertCircle className="mx-auto h-8 w-8 text-destructive" />
                   <div className="space-y-1">
-                    <h2 className="text-lg font-semibold">The creation wizard failed to load</h2>
+                    <h2 className="text-lg font-semibold">The character creator failed to load</h2>
                     <p className="text-sm text-muted-foreground">
                       Reloading usually fixes it. You can also create a blank character and edit it
                       on the sheet.
@@ -568,9 +568,9 @@ function AppContent() {
                   </div>
                 }
               >
-                <CharacterCreationWizard
+                <CharacterCreator
                   systemId={creatingSystem}
-                  onComplete={handleWizardComplete}
+                  onComplete={handleCreatorComplete}
                   onCancel={() => setCreatingSystem(null)}
                 />
               </Suspense>
@@ -624,14 +624,14 @@ function AppContent() {
                   Import Character
                 </Button>
                 <Button
-                  variant={GUIDED_CREATION_SYSTEMS.has(selectedSystem) ? 'outline' : 'default'}
+                  variant={systemSupportsGuidedCreation(selectedSystem) ? 'outline' : 'default'}
                   size="lg"
                   onClick={handleCreateCharacter}
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Create New Character
                 </Button>
-                {GUIDED_CREATION_SYSTEMS.has(selectedSystem) && (
+                {systemSupportsGuidedCreation(selectedSystem) && (
                   <Button size="lg" onClick={handleStartGuidedCreation}>
                     <Wand2 className="w-4 h-4 mr-2" />
                     Guided Creation

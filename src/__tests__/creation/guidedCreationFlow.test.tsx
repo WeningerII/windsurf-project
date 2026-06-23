@@ -9,10 +9,11 @@ import { systemRegistry } from '../../registry';
 import { loadClassesForSystem } from '../../utils/dataLoader';
 
 /**
- * PHASE 4B (MASTER_PLAN) reachability: the guided creator must be wired into the
- * app, offered only for systems that have a creation orchestrator, and on finish
- * must land the user on the normal character sheet for the created document. The
- * existing quick blank-create path must still work (no regression).
+ * MASTER_PLAN creation track — reachability: the system-agnostic character creator
+ * must be wired into the app, offered only for systems that registered a creation
+ * orchestrator, and on finish must land the user on the normal character sheet for
+ * the created document. The existing quick blank-create path must still work (no
+ * regression).
  */
 
 const TIMEOUT = 20000;
@@ -41,12 +42,12 @@ describe('Guided creation flow (App wiring)', () => {
       await selectSystem(user, 'D&D 5e (2024)');
       await user.click(await screen.findByRole('button', { name: /guided creation/i }));
 
-      // The wizard is now showing.
+      // The character creator is now showing.
       expect(
-        await screen.findByRole('heading', { name: /guided character creation/i })
+        await screen.findByRole('heading', { name: /create a character/i })
       ).toBeInTheDocument();
 
-      // Name the character (the wizard's name field).
+      // Name the character (the creator's name field).
       const nameInput = await screen.findByTitle('Character name', {}, { timeout: TIMEOUT });
       await user.clear(nameInput);
       await user.type(nameInput, 'Guided Hero');
@@ -71,11 +72,11 @@ describe('Guided creation flow (App wiring)', () => {
 
       await user.click(await screen.findByRole('button', { name: /create character/i }));
 
-      // The wizard is gone and the sheet for the new character is shown.
+      // The creator is gone and the sheet for the new character is shown.
       await waitFor(
         () =>
           expect(
-            screen.queryByRole('heading', { name: /guided character creation/i })
+            screen.queryByRole('heading', { name: /create a character/i })
           ).not.toBeInTheDocument(),
         { timeout: TIMEOUT }
       );

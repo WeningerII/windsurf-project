@@ -2,6 +2,7 @@ import { SystemDefinition } from '../../registry/types';
 import { Dnd5e2024DataModel, createDefaultDnd5e2024Data } from './data-model';
 import { Dnd5e2024Engine } from './engine';
 import { createDnd5eValidator } from '../dnd5e/shared/validation';
+import { createDnd5eCreationOrchestrator } from '../../creation/dnd5eCreation';
 import { lazyWithPreload } from '../../utils/lazyWithPreload';
 
 export const Dnd5e2024SystemDef: SystemDefinition<Dnd5e2024DataModel> = {
@@ -65,6 +66,7 @@ export const Dnd5e2024SystemDef: SystemDefinition<Dnd5e2024DataModel> = {
   createDefaultData: createDefaultDnd5e2024Data,
   engine: new Dnd5e2024Engine(),
   validator: createDnd5eValidator<Dnd5e2024DataModel>('dnd-5e-2024'),
+  creation: createDnd5eCreationOrchestrator('dnd-5e-2024'),
   SheetComponent: lazyWithPreload(() =>
     import('./components/Dnd5e2024Sheet').then((m) => ({ default: m.Dnd5e2024Sheet }))
   ),

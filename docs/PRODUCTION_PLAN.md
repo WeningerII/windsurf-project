@@ -432,7 +432,7 @@ These are real gaps but are not blockers for shipping what exists:
 
 1. **Daggerheart content** — this note is now historical. The repo now ships SRD-backed Daggerheart classes, ancestries, communities, weapons, armor, loot, consumables, domains, domain cards, dedicated loaders, selector-backed reference panels, starter templates, browse tabs, and real loadout automation; deeper card-effect automation still remains open work.
 2. **Backend API / server sync** — `apiClient.ts` is a stub. No backend exists. This is a future feature, not a bug.
-3. **Guided character creation wizard** — doesn't exist. Users create blank sheets and fill manually (or use template dropdowns). This is a UX improvement, not a correctness issue.
+3. **Guided character creation** — now shipped as a system-agnostic character creator (`src/components/CharacterCreator.tsx`) that dispatches per-system through the registry; D&D 5e (2014 + 2024) is the first registered orchestrator. Quick blank-create (create a sheet and fill it manually) remains available, and systems without an orchestrator still use it.
 4. **Full feat/feature automation** — feat selection applies ASIs and proficiencies. Deeper feat riders remain manual. This is by design.
 5. **3.5e prestige class normalization** — this core SRD lane is now shipped. Any future expansion beyond the normalized 15-class SRD prestige catalog is additional content work, not a blocker for the current product slice.
 6. **5e 2014/2024 engine deduplication** — ~250 lines of identical code across the two engines. Real tech debt but not user-facing.

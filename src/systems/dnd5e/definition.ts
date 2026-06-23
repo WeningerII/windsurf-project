@@ -2,6 +2,7 @@ import { SystemDefinition } from '../../registry/types';
 import { Dnd5eDataModel, createDefaultDnd5eData } from './data-model';
 import { Dnd5eEngine } from './engine';
 import { createDnd5eValidator } from './shared/validation';
+import { createDnd5eCreationOrchestrator } from '../../creation/dnd5eCreation';
 import { lazyWithPreload } from '../../utils/lazyWithPreload';
 
 export const Dnd5eSystemDef: SystemDefinition<Dnd5eDataModel> = {
@@ -65,6 +66,7 @@ export const Dnd5eSystemDef: SystemDefinition<Dnd5eDataModel> = {
   createDefaultData: createDefaultDnd5eData,
   engine: new Dnd5eEngine(),
   validator: createDnd5eValidator<Dnd5eDataModel>('dnd-5e-2014'),
+  creation: createDnd5eCreationOrchestrator('dnd-5e-2014'),
   SheetComponent: lazyWithPreload(() =>
     import('./components/Dnd5eSheet').then((m) => ({ default: m.Dnd5eSheet }))
   ),

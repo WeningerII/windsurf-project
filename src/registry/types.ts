@@ -2,6 +2,7 @@ import { CharacterDocument, SystemDataModel } from '../types/core/document';
 export type { SystemDataModel };
 import React from 'react';
 import type { Attribute, Skill } from '../types/game-systems';
+import type { CreationOrchestrator } from '../creation/types';
 
 type SheetProps<T extends SystemDataModel> = {
   document: CharacterDocument<T>;
@@ -131,6 +132,11 @@ export interface SystemDefinition<T extends SystemDataModel> {
 
   // Optional validation hook for import, guided creation, and AI draft review.
   validator?: SystemValidator<T>;
+
+  // Optional system-agnostic character-creation orchestrator (steps + options +
+  // apply-through-applicators), consumed by the shared CharacterCreator UI. A
+  // system without one is still creatable via quick blank-create.
+  creation?: CreationOrchestrator;
 
   // The Main Character Sheet Component
   SheetComponent: SystemSheetComponent<T>;

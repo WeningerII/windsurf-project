@@ -2,10 +2,10 @@ import { beforeAll, describe, expect, it } from 'vitest';
 
 import {
   DND5E_CREATION_STEPS,
-  applyDnd5eCreationSelection,
   createDnd5eCreationDraft,
-  defaultDnd5eCreationDeps,
+  createDnd5eCreationOrchestrator,
 } from '../../creation/dnd5eCreation';
+import { applyDnd5eCreationSelection, defaultDnd5eCreationDeps } from '../../creation/dnd5eApply';
 import type { CreationDraft } from '../../creation/creationDraft';
 import { registerAllSystems } from '../../systems';
 import { systemRegistry } from '../../registry';
@@ -176,6 +176,45 @@ describe('D&D 5e guided creation', () => {
 
       expect(next.issues).toEqual([sentinel]);
       expect(system(next).classLevels).toMatchObject([{ classId: realFirst.id, level: 1 }]);
+    });
+  });
+
+  describe('agnostic CreationOrchestrator wrapper', () => {
+    it('exposes ordered steps ending in a review step, with a class-level param', () => {
+      const orchestrator = createDnd5eCreationOrchestrator(SYSTEM_ID);
+      expect(orchestrator.steps.map((step) => step.id)).toEqual([...DND5E_CREATION_STEPS]);
+      const classStep = orchestrator.steps.find((step) => step.id === 'class');
+      expect(classStep?.params).toEqual([
+        { id: 'level', label: 'Level', min: 1, max: 20, defaultValue: 1 },
+      ]);
+    });
+
+    it('maps loader-backed options (with source + subtitle) and none for review', async () => {
+      const orchestrator = createDnd5eCreationOrchestrator(SYSTEM_ID);
+      const draft = orchestrator.createDraft({ id: 'orch-1' });
+      const classes = await loadClassesForSystem(SYSTEM_ID);
+
+      const options = await orchestrator.loadOptions(draft, 'class');
+      expect(options).toHaveLength(classes.length);
+      expect(options[0]).toMatchObject({ id: classes[0].id, name: classes[0].name });
+      expect(options[0].subtitle).toContain('Hit die');
+
+      expect(await orchestrator.loadOptions(draft, 'review')).toEqual([]);
+    });
+
+    it('applies an option (routing the level param) and reflects it in selection + summary', async () => {
+      const orchestrator = createDnd5eCreationOrchestrator(SYSTEM_ID);
+      const [firstClass] = await loadClassesForSystem(SYSTEM_ID);
+      let draft = orchestrator.createDraft({ id: 'orch-2' });
+
+      draft = await orchestrator.applyOption(draft, 'class', firstClass.id, { level: 4 });
+
+      expect(orchestrator.selectedOptionId(draft, 'class')).toBe(firstClass.id);
+      expect(orchestrator.paramValue(draft, 'class', 'level')).toBe(4);
+      expect(orchestrator.summary(draft)).toContainEqual({
+        label: 'Class',
+        value: `${firstClass.name} (level 4)`,
+      });
     });
   });
 });
