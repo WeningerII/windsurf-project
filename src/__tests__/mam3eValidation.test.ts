@@ -75,3 +75,44 @@ describe('M&M 3e validator', () => {
     expect(codes(issues)).toContain('mam3e-system-mismatch');
   });
 });
+
+/**
+ * addIssue stamps each issue with a `source`, falling back across
+ * issue.source -> context.source -> context.reason. Covers both arms of the
+ * `source ? { ...issue, source } : issue` ternary (validation.ts:31).
+ */
+describe('M&M 3e validator issue source stamping', () => {
+  // System mismatch is a context-stamped issue: it carries no `source` of its
+  // own, so whatever ends up on it comes entirely from the context fallback.
+  const mismatch = (): CharacterDocument<Mam3eDataModel> => {
+    const document = mam3eDoc();
+    return { ...document, systemId: 'pf2e' };
+  };
+
+  function mismatchIssue(issues: ValidationIssue[]): ValidationIssue {
+    return issues.find((issue) => issue.code === 'mam3e-system-mismatch')!;
+  }
+
+  it('leaves the issue unstamped when neither reason nor source is supplied', async () => {
+    const { issues } = await validator.validateDocument(mismatch(), { systemId: 'mam3e' });
+    // Falsy branch: no context source/reason -> the raw issue is pushed as-is.
+    expect(mismatchIssue(issues).source).toBeUndefined();
+  });
+
+  it('stamps the context reason as the source when no explicit source is given', async () => {
+    const { issues } = await validator.validateDocument(mismatch(), {
+      systemId: 'mam3e',
+      reason: 'import',
+    });
+    expect(mismatchIssue(issues).source).toBe('import');
+  });
+
+  it('prefers an explicit context source over the reason', async () => {
+    const { issues } = await validator.validateDocument(mismatch(), {
+      systemId: 'mam3e',
+      reason: 'import',
+      source: 'ai-draft',
+    });
+    expect(mismatchIssue(issues).source).toBe('ai-draft');
+  });
+});
