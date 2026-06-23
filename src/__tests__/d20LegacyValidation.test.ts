@@ -130,6 +130,39 @@ describe('d20 legacy validator', () => {
         );
         expect(codes(issues)).toContain('d20-legacy-invalid-level');
       });
+
+      it('errors (non-recoverable) when the document systemId does not match the validator', async () => {
+        // Validate a doc carrying the OTHER d20-legacy systemId against this
+        // validator: the mismatch is a hard, non-recoverable error.
+        const otherSystemId = SYSTEM_ID === 'dnd-3.5e' ? 'pf1e' : 'dnd-3.5e';
+        const issues = await validate(SYSTEM_ID, d20Doc(otherSystemId));
+        expect(issues).toContainEqual(
+          expect.objectContaining({
+            code: 'd20-legacy-system-mismatch',
+            severity: 'error',
+            path: 'systemId',
+            recoverable: false,
+          })
+        );
+      });
+
+      it('errors on an out-of-range per-class level', async () => {
+        const [cls] = await loadClassesForSystem(SYSTEM_ID);
+        const issues = await validate(
+          SYSTEM_ID,
+          d20Doc(SYSTEM_ID, (data) => {
+            data.level = 21;
+            data.classLevels = [classLevel(cls.id, 21)];
+          })
+        );
+        expect(issues).toContainEqual(
+          expect.objectContaining({
+            code: 'd20-legacy-invalid-class-level',
+            severity: 'error',
+            path: 'classLevels.0.level',
+          })
+        );
+      });
     });
   }
 });

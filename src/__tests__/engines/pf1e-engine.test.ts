@@ -426,6 +426,39 @@ describe('Pf1eEngine', () => {
       expect((await engine.rollCheck(doc, 'save-ref')).formula).toBe('1d20 + 4');
       expect((await engine.rollCheck(doc, 'save-will')).flavor).toBe('Will Save');
     });
+
+    it('rolls a raw ability check from the ability modifier', async () => {
+      const doc = makeDoc({
+        baseAttributes: { str: 6, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+      });
+      const result = await engine.rollCheck(doc, 'str');
+      // Str 6 → -2 modifier; flavor is the upper-cased ability id.
+      expect(result.formula).toBe('1d20 + -2');
+      expect(result.flavor).toBe('STR Check');
+    });
+
+    it('applies the flat fear/sickened condition penalty to a save', async () => {
+      const doc = makeDoc({
+        saves: {
+          fortitude: { base: 4, ability: 2, misc: 0, total: 6 },
+          reflex: { base: 1, ability: 0, misc: 0, total: 1 },
+          will: { base: 1, ability: 1, misc: 0, total: 2 },
+        },
+        // One -2 from the fear family + one -2 from sickened = -4.
+        conditions: [
+          { id: 'panicked', name: 'Panicked' },
+          { id: 'sickened', name: 'Sickened' },
+        ],
+      });
+      const result = await engine.rollCheck(doc, 'save-fort');
+      expect(result.formula).toBe('1d20 + 2'); // 6 - 4
+    });
+
+    it('returns an empty flavor and bare modifier for an unrecognized check id', async () => {
+      const result = await engine.rollCheck(makeDoc(), 'not-a-real-check');
+      expect(result.formula).toBe('1d20 + 0');
+      expect(result.flavor).toBe('');
+    });
   });
 
   describe('applyDamage', () => {
