@@ -103,6 +103,7 @@ export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
 
       <Dnd5eOverviewSection
         armorClass={d.armorClass}
+        contributionEntries={controller.contributionEntries}
         hitPoints={d.hitPoints}
         initiative={d.initiative}
         speed={d.speed}

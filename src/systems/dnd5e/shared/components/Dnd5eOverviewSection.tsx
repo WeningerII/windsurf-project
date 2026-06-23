@@ -5,6 +5,7 @@ import { DeathSavesTracker } from '../../../../components/DeathSavesTracker';
 import { HitDiceTracker } from '../../../../components/HitDiceTracker';
 import { RestControls } from '../../../../components/RestControls';
 import { CombatStatCard } from '../../../../components/sheet';
+import { ContributionBreakdown } from '../../../../components/shared/ContributionBreakdown';
 import { SpellSlotTracker } from '../../../../components/SpellSlotTracker';
 import type {
   DeathSaves,
@@ -12,6 +13,8 @@ import type {
   PactMagicSlots,
   SpellSlots,
 } from '../../../../types/core/character';
+import type { ContributionLedgerEntry } from '../../../../types/core/contributionLedger';
+import { entriesForTarget } from '../../../../utils/contributionBreakdown';
 import { formatMod, parseNum } from '../../../../utils/math';
 
 type HitPoints = {
@@ -22,6 +25,8 @@ type HitPoints = {
 
 interface Props {
   armorClass: number;
+  /** Contribution-ledger entries for the derived stats shown here (e.g. AC). */
+  contributionEntries?: ContributionLedgerEntry[];
   hitPoints: HitPoints;
   initiative: number;
   speed: number;
@@ -57,6 +62,7 @@ function spellSlotCount(slots?: SpellSlots, pactMagic?: PactMagicSlots): number 
 
 export function Dnd5eOverviewSection({
   armorClass,
+  contributionEntries,
   hitPoints,
   initiative,
   speed,
@@ -79,10 +85,20 @@ export function Dnd5eOverviewSection({
   onRecoverPactSlot,
   onRecoverAllSpellSlots,
 }: Props) {
+  const armorClassEntries = entriesForTarget(contributionEntries ?? [], 'armorClass');
   return (
     <>
       <div className="grid grid-cols-2 gap-4 xl:grid-cols-5">
-        <CombatStatCard icon={Shield} title="Armor Class" value={armorClass} />
+        <CombatStatCard
+          icon={Shield}
+          title="Armor Class"
+          value={armorClass}
+          footer={
+            armorClassEntries.length > 0 ? (
+              <ContributionBreakdown entries={armorClassEntries} label="Armor Class" />
+            ) : undefined
+          }
+        />
         <CombatStatCard
           icon={Heart}
           title="Hit Points"

@@ -8,6 +8,8 @@ interface Props {
   subtitle?: React.ReactNode;
   iconClassName?: string;
   children?: React.ReactNode;
+  /** Optional block rendered below the value (e.g. a contribution breakdown). */
+  footer?: React.ReactNode;
 }
 
 export const CombatStatCard: React.FC<Props> = ({
@@ -17,6 +19,7 @@ export const CombatStatCard: React.FC<Props> = ({
   subtitle,
   iconClassName = 'text-primary',
   children,
+  footer,
 }) => {
   return (
     <div className="flex flex-col items-center p-4 bg-card rounded-xl border shadow-sm relative overflow-hidden group">
@@ -32,6 +35,7 @@ export const CombatStatCard: React.FC<Props> = ({
         <>
           <span className="text-3xl font-bold mb-1 tabular-nums">{value}</span>
           {subtitle && <span className="text-xs text-muted-foreground">{subtitle}</span>}
+          {footer}
         </>
       )}
     </div>

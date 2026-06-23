@@ -17,6 +17,8 @@ import { useDnd5eDocumentMutators } from './useDnd5eDocumentMutators';
 import { useDnd5eSheetResources } from './useDnd5eSheetResources';
 import { useDnd5eSheetActionHandlers } from './useDnd5eSheetActionHandlers';
 import { useDnd5eTemplateHandlers } from './useDnd5eTemplateHandlers';
+import { useDnd5eContributionLedger } from './useDnd5eContributionLedger';
+import type { Dnd5eValidationSystemId } from './validation';
 
 const EMPTY_WEAPON_MASTERIES: string[] = [];
 const EMPTY_FEATURE_OPTION_SELECTIONS: NonNullable<Dnd5eLikeDataModel['featureOptionSelections']> =
@@ -39,6 +41,11 @@ export function useDnd5eSheetController<T extends Dnd5eLikeDataModel>({
   const canUpdate = Boolean(onUpdate);
   const showFeatBrowser = true;
   const showFeatureOptionBrowser = systemId === 'dnd-5e-2014';
+  // Derived-value breakdowns (e.g. AC); async because it loads the class catalog.
+  const contributionEntries = useDnd5eContributionLedger(
+    document,
+    systemId as Dnd5eValidationSystemId
+  );
 
   const {
     backgrounds,
@@ -183,6 +190,7 @@ export function useDnd5eSheetController<T extends Dnd5eLikeDataModel>({
     d,
     canUpdate,
     profBonus,
+    contributionEntries,
     showFeatBrowser,
     showFeatureOptionBrowser,
     pendingClassId: templateHandlers.pendingClassId,
