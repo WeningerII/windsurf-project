@@ -87,6 +87,29 @@ describe('Guided creation flow (App wiring)', () => {
     TIMEOUT
   );
 
+  it(
+    'serves a second system (PF2e) through the same agnostic creator, ancestry-first',
+    async () => {
+      // The same UI must render a different system (different data model, different
+      // step ORDER) purely because PF2e registered an orchestrator — no UI fork.
+      const user = userEvent.setup();
+      render(<App />);
+
+      await selectSystem(user, 'Pathfinder 2e');
+      await user.click(await screen.findByRole('button', { name: /guided creation/i }));
+
+      expect(
+        await screen.findByRole('heading', { name: /create a character/i })
+      ).toBeInTheDocument();
+      // PF2e's first step is Ancestry (not Class), proving the steps come from the
+      // system's orchestrator, not the UI.
+      expect(
+        await screen.findByRole('button', { name: /^ancestry$/i }, { timeout: TIMEOUT })
+      ).toHaveAttribute('aria-current', 'step');
+    },
+    TIMEOUT
+  );
+
   it('does not offer Guided Creation for systems without an orchestrator', async () => {
     const user = userEvent.setup();
     render(<App />);
