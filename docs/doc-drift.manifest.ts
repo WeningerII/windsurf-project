@@ -88,6 +88,12 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: [],
   },
   {
+    path: 'docs/PARITY_AUDIT.md',
+    kind: 'plan',
+    owner: 'parity-audit',
+    rules: ['path_ref_rule'],
+  },
+  {
     path: 'docs/srd-sources.md',
     kind: 'plan',
     owner: 'srd-sources',

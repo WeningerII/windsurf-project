@@ -2,6 +2,7 @@ import { SystemDefinition } from '../../registry/types';
 import { DaggerheartDataModel, createDefaultDaggerheartData } from './data-model';
 import { DaggerheartEngine } from './engine';
 import { createDaggerheartCreationOrchestrator } from '../../creation/daggerheartCreation';
+import { createDaggerheartValidator } from './validation';
 import { lazyWithPreload } from '../../utils/lazyWithPreload';
 import { SYSTEM_SUPPORT_NOTES } from '../../utils/documentationCopy';
 
@@ -52,6 +53,7 @@ export const DaggerheartSystemDef: SystemDefinition<DaggerheartDataModel> = {
   skills: [],
   createDefaultData: createDefaultDaggerheartData,
   engine: new DaggerheartEngine(),
+  validator: createDaggerheartValidator(),
   creation: createDaggerheartCreationOrchestrator('daggerheart'),
   SheetComponent: lazyWithPreload(() =>
     import('./sheet').then((m) => ({ default: m.DaggerheartSheet }))

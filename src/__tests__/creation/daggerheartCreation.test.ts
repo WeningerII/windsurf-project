@@ -108,6 +108,20 @@ describe('Daggerheart guided creation', () => {
     expect(next.issues).toEqual([expect.objectContaining({ code: 'creation-unknown-choice' })]);
   });
 
+  it('surfaces the registered validator live during creation', async () => {
+    // The registry now routes Daggerheart through its validator, so an in-progress
+    // draft gets live legality feedback (parity with 5e): traits are assigned on
+    // the sheet, so a freshly built draft warns they are unassigned.
+    const [cls] = await loadDaggerheartClassesForSystem(SYSTEM_ID);
+    let draft = createDaggerheartCreationDraft({ id: 'dh-validate', systemId: SYSTEM_ID });
+    draft = await applyDaggerheartCreationSelection(draft, { kind: 'class', classId: cls.id });
+
+    const issueCodes = draft.issues.map((issue) => issue.code);
+    expect(issueCodes).toContain('daggerheart-traits-unassigned');
+    // Choosing a real class clears the missing-class error.
+    expect(issueCodes).not.toContain('daggerheart-missing-class');
+  });
+
   it('keeps starting Evasion/HP correct regardless of class/ancestry pick order', async () => {
     // Class and ancestry both feed starting Evasion/HP, so each apply must pass the
     // other. Pick the ancestry with the largest adjustment so the cross-reference

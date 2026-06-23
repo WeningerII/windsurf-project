@@ -225,6 +225,18 @@ The following older backlog claims are no longer true and must not re-enter the 
 > extraction" rule is now satisfied for creation too — four distinct orchestrators
 > (5e, PF2e, d20-legacy, Daggerheart) feed one creator UI — and overwhelmingly for
 > the resolver: seven effect compilers feed one resolver.
+>
+> **Validation parity (2026-06-23):** a per-capability parity audit
+> (`docs/PARITY_AUDIT.md`) confirmed the one genuine cross-system spike was the
+> registry validator — previously 5e-only. **M&M 3e** (`src/systems/mam3e/validation.ts`,
+> PL trade-off caps + power-point budget surfaced from the engine's own math) and
+> **Daggerheart** (`src/systems/daggerheart/validation.ts`, SRD creation trait
+> array + Hope bounds + class/ancestry legality) now have validators too. PF2e,
+> 3.5e, and PF1e remain (the next parity step), as does the contribution-breakdown
+> ledger for PF2e/3.5e/PF1e. The audit also confirmed M&M/Daggerheart are otherwise
+> at or above parity (full engines, sheets, content, and breakdown ledgers); their
+> remaining cross-cutting absences (resolver routing, conditions→IR, M&M creation)
+> are the intentional terminal boundaries above, not gaps.
 
 - `Active implementation track`: this is the main research-informed build program. It should be treated as a large product and architecture effort, not a small enhancement. The work touches `src/registry/types.ts`, `src/registry/index.ts`, `src/types/core/document.ts`, system engines, template handlers, loader-backed data, import/export behavior, local draft persistence, and visible sheet and character-creation UX.
 - `Active implementation track`: keep the current repo stack while building the missing primitives. React/Vite/npm, the system registry, per-system engines, loader-backed SRD data, browser-local persistence, optional Supabase sync, and Netlify remain the implementation frame. External research informs the shape of validation, structured draft output, and form/action modeling, but does not authorize a stack replacement.
