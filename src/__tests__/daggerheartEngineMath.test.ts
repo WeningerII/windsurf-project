@@ -348,6 +348,7 @@ describe('L10 Daggerheart gold and L6 ranges', () => {
   });
   it('range bands map to Defined-Ranges squares', () => {
     expect(getDaggerheartRangeSquares('melee')).toBe(1);
+    expect(getDaggerheartRangeSquares('very-close')).toBe(3);
     expect(getDaggerheartRangeSquares('close')).toBe(6);
     expect(getDaggerheartRangeSquares('far')).toBe(12);
     expect(getDaggerheartRangeSquares('very-far')).toBe(13);

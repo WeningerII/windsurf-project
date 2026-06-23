@@ -129,4 +129,29 @@ describe('Daggerheart validator', () => {
     );
     expect(codes(issues)).not.toContain('daggerheart-illegal-trait-array');
   });
+
+  it('errors (non-recoverable) when the document is not a Daggerheart document', async () => {
+    const document = dhDoc();
+    document.systemId = 'dnd-5e-2014';
+
+    const issues = await validate(document);
+    const mismatch = issues.find((issue) => issue.code === 'daggerheart-system-mismatch');
+    expect(mismatch).toBeDefined();
+    expect(mismatch?.severity).toBe('error');
+    expect(mismatch?.recoverable).toBe(false);
+    expect(mismatch?.path).toBe('systemId');
+  });
+
+  it('errors on a set-but-unrecognised ancestry name', async () => {
+    const issues = await validate(
+      dhDoc((data) => {
+        data.heritage = 'Voidkin';
+      })
+    );
+    expect(issues).toContainEqual(
+      expect.objectContaining({ code: 'daggerheart-unknown-ancestry', severity: 'error' })
+    );
+    // The "missing ancestry" warning is mutually exclusive with the unknown error.
+    expect(codes(issues)).not.toContain('daggerheart-missing-ancestry');
+  });
 });
