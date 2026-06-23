@@ -3,7 +3,10 @@ import { Eye, Heart, Swords } from 'lucide-react';
 import { DamageHealControl } from '../../../components/DamageHealControl';
 import { DiceRollButton } from '../../../components/DiceRollButton';
 import { RestControls } from '../../../components/RestControls';
+import { ContributionBreakdown } from '../../../components/shared/ContributionBreakdown';
 import { abilityMod, formatMod } from '../../../utils/math';
+import { entriesForTarget } from '../../../utils/contributionBreakdown';
+import type { ContributionLedgerEntry } from '../../../types/core/contributionLedger';
 import type { RollResult } from '../../../registry/types';
 import type { CharacterDocument } from '../../../types/core/document';
 import type { Pf2eDataModel } from '../data-model';
@@ -14,6 +17,8 @@ interface Props {
   canUpdate: boolean;
   /** Key-ability score for the class DC, or null when no key ability is set. */
   classDcScore: number | null;
+  /** Contribution-ledger entries for the derived stats shown here (AC). */
+  contributionEntries: ContributionLedgerEntry[];
   onHitPointsChange: (current: number, max: number) => void;
   onClassDcTierCycle: () => void;
   onPerceptionTierCycle: () => void;
@@ -27,6 +32,7 @@ export const Pf2eOverview: React.FC<Props> = ({
   document,
   canUpdate,
   classDcScore,
+  contributionEntries,
   onHitPointsChange,
   onClassDcTierCycle,
   onPerceptionTierCycle,
@@ -38,6 +44,7 @@ export const Pf2eOverview: React.FC<Props> = ({
   const data = document.system;
   const classDcProficiency = data.classDcProficiency ?? { tier: 'trained' as const, total: 0 };
   const equippedShield = data.equipment.find((item) => item.equipped && item.shieldBonus != null);
+  const armorClassEntries = entriesForTarget(contributionEntries, 'armorClass');
 
   return (
     <>
@@ -45,6 +52,11 @@ export const Pf2eOverview: React.FC<Props> = ({
         <div className="bg-card border rounded-lg p-4 text-center transition-shadow hover:shadow-sm">
           <div className="text-xs font-medium text-muted-foreground">AC</div>
           <div className="text-3xl font-bold tabular-nums">{data.armorClass}</div>
+          {armorClassEntries.length > 0 && (
+            <div className="mt-1 flex justify-center">
+              <ContributionBreakdown entries={armorClassEntries} label="Armor Class" />
+            </div>
+          )}
           {equippedShield && (
             <button
               type="button"

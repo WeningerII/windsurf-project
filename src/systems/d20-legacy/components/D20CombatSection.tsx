@@ -3,7 +3,10 @@ import { Shield, Heart, Swords, Footprints, Target } from 'lucide-react';
 import { CharacterDocument } from '../../../types/core/document';
 import { DamageHealControl } from '../../../components/DamageHealControl';
 import { DiceRollButton } from '../../../components/DiceRollButton';
+import { ContributionBreakdown } from '../../../components/shared/ContributionBreakdown';
 import { formatMod, parseNum } from '../../../utils/math';
+import { entriesForTarget } from '../../../utils/contributionBreakdown';
+import type { ContributionLedgerEntry } from '../../../types/core/contributionLedger';
 import { Dnd35eDataModel } from '../../dnd35e/data-model';
 import { Pf1eDataModel } from '../../pf1e/data-model';
 import { systemRegistry } from '../../../registry';
@@ -12,6 +15,8 @@ interface Props {
   document: CharacterDocument<Dnd35eDataModel | Pf1eDataModel>;
   isPf1e: boolean;
   armorClass: { total: number; touch: number; flatFooted: number };
+  /** Contribution-ledger entries for the derived stats shown here (total AC). */
+  contributionEntries: ContributionLedgerEntry[];
   hitPoints: { current: number; max: number; temp: number };
   baseAttackBonus: number;
   iterativeAttackBonuses: number[];
@@ -29,6 +34,7 @@ export const D20CombatSection: React.FC<Props> = ({
   document,
   isPf1e,
   armorClass,
+  contributionEntries,
   hitPoints,
   baseAttackBonus,
   iterativeAttackBonuses,
@@ -41,6 +47,7 @@ export const D20CombatSection: React.FC<Props> = ({
   onHitPointsChange,
   onApplyDamageOrHealing,
 }) => {
+  const armorClassEntries = entriesForTarget(contributionEntries, 'armorClass.total');
   return (
     <>
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
@@ -49,6 +56,11 @@ export const D20CombatSection: React.FC<Props> = ({
             <Shield className="w-3 h-3" /> AC
           </div>
           <div className="text-3xl font-bold tabular-nums">{armorClass.total}</div>
+          {armorClassEntries.length > 0 && (
+            <div className="mt-1 flex justify-center">
+              <ContributionBreakdown entries={armorClassEntries} label="Armor Class" />
+            </div>
+          )}
         </div>
         <div className="bg-card border rounded-lg p-3 text-center transition-shadow hover:shadow-sm">
           <div className="text-xs font-medium text-muted-foreground">Touch</div>

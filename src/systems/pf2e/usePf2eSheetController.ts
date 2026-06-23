@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
 import type { GameSystemId } from '../../types/game-systems';
 import { parseNum } from '../../utils/math';
+import { buildPf2eContributionLedger } from './contributionLedger';
 import type { Pf2eDataModel } from './data-model';
 import { getPf2eSheetChoiceState } from './getPf2eSheetChoiceState';
 import { countTrainedPf2eSkills } from './pf2eSheetShared';
@@ -22,6 +23,13 @@ export function usePf2eSheetController({ document, onUpdate }: UsePf2eSheetContr
   });
 
   const trainedSkillCount = countTrainedPf2eSkills(data.skillProficiencies);
+
+  // Non-persisted contribution ledger powering the overview's AC breakdown.
+  // Synchronous, so a memo is enough — no hook.
+  const contributionEntries = useMemo(
+    () => buildPf2eContributionLedger(document).entries,
+    [document]
+  );
 
   const {
     featDefs,
@@ -137,6 +145,7 @@ export function usePf2eSheetController({ document, onUpdate }: UsePf2eSheetContr
       document,
       canUpdate: mutationHandlers.canUpdate,
       classDcScore,
+      contributionEntries,
       onHitPointsChange: (current: number, max: number) =>
         mutationHandlers.updateHitPoints(parseNum(String(current), 0), parseNum(String(max), 1)),
       onClassDcTierCycle: mutationHandlers.cycleClassDcTier,

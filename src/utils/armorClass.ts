@@ -33,6 +33,29 @@ interface ArmorEquipItem {
   raised?: boolean;
 }
 
+/**
+ * One additive term of an AC total, kept purely numeric so this module stays a
+ * math util. The contribution-ledger builders map a term's `key` onto ledger
+ * provenance (source item, condition, etc.). `set` establishes the base; the
+ * rest add. Folding the terms reproduces the scalar AC exactly — that shared
+ * derivation is the whole point, so the breakdown can never drift from the value
+ * the sheet shows.
+ */
+export interface AcContributionTerm {
+  key: 'base' | 'armor' | 'shield' | 'dex' | 'proficiency' | 'size';
+  label: string;
+  value: number;
+  operation: 'set' | 'add';
+  details?: Record<string, unknown>;
+}
+
+function foldAcTerms(terms: AcContributionTerm[]): number {
+  return terms.reduce(
+    (total, term) => (term.operation === 'set' ? term.value : total + term.value),
+    0
+  );
+}
+
 // ─── 5e AC ───────────────────────────────────────────────────────────────────
 
 /**
@@ -90,11 +113,17 @@ export const D20_SIZE_MOD: Record<string, number> = {
   colossal: -8,
 };
 
-export function computeD20LegacyAC(
+/**
+ * 3.5e/PF1e total AC decomposed into its terms (base, armor, shield, Dex, size),
+ * alongside touch and flat-footed. `computeD20LegacyAC` is the scalar projection.
+ * The contribution ledger consumes the terms so its breakdown sums to the same
+ * total the engine stores.
+ */
+export function computeD20LegacyACBreakdown(
   dexScore: number,
   sizeCategory: string,
   equipment: Array<ArmorEquipItem>
-): { total: number; touch: number; flatFooted: number } {
+): { total: number; touch: number; flatFooted: number; terms: AcContributionTerm[] } {
   const dexMod = abilityMod(dexScore);
   const sizeMod = D20_SIZE_MOD[sizeCategory] ?? 0;
 
@@ -110,40 +139,114 @@ export function computeD20LegacyAC(
   const dexCap = armor?.dexBonusMax;
   const effectiveDex = dexCap != null ? Math.min(dexMod, dexCap) : dexMod;
 
-  const total = 10 + armorBonus + shieldBonus + effectiveDex + sizeMod;
+  const terms: AcContributionTerm[] = [
+    { key: 'base', label: 'Base', value: 10, operation: 'set' },
+    { key: 'armor', label: 'Armor', value: armorBonus, operation: 'add' },
+    { key: 'shield', label: 'Shield', value: shieldBonus, operation: 'add' },
+    {
+      key: 'dex',
+      label: 'Dexterity modifier',
+      value: effectiveDex,
+      operation: 'add',
+      details: { dexMod, dexCap: dexCap ?? null },
+    },
+    {
+      key: 'size',
+      label: 'Size modifier',
+      value: sizeMod,
+      operation: 'add',
+      details: { sizeCategory },
+    },
+  ];
+
+  const total = foldAcTerms(terms);
   const touch = 10 + effectiveDex + sizeMod; // No armor/shield, Dex still capped
   const flatFooted = 10 + armorBonus + shieldBonus + sizeMod; // No DEX
 
+  return { total, touch, flatFooted, terms };
+}
+
+export function computeD20LegacyAC(
+  dexScore: number,
+  sizeCategory: string,
+  equipment: Array<ArmorEquipItem>
+): { total: number; touch: number; flatFooted: number } {
+  const { total, touch, flatFooted } = computeD20LegacyACBreakdown(
+    dexScore,
+    sizeCategory,
+    equipment
+  );
   return { total, touch, flatFooted };
 }
 
 // ─── PF2e AC ─────────────────────────────────────────────────────────────────
+
+/**
+ * PF2e AC decomposed into its terms (base, armor, Dex, proficiency, raised
+ * shield). `computePf2eAC` is the scalar projection. The contribution ledger
+ * consumes the terms (plus the resolver's magic-item ledger and any condition
+ * status penalty, layered on by the engine) so its breakdown sums to the AC the
+ * sheet shows.
+ */
+export function computePf2eACBreakdown(
+  dexScore: number,
+  proficiencyBonus: number,
+  equipment: Array<ArmorEquipItem>
+): { total: number; terms: AcContributionTerm[] } {
+  const dexMod = abilityMod(dexScore);
+
+  const armor = equipment.find((e) => e.equipped && e.armorClass != null && !e.shieldBonus);
+  const shield = equipment.find((e) => e.equipped && e.shieldBonus != null);
+
+  const terms: AcContributionTerm[] = [{ key: 'base', label: 'Base', value: 10, operation: 'set' }];
+
+  if (armor) {
+    const dexCap = armor.dexBonusMax;
+    const effectiveDex = dexCap != null ? Math.min(dexMod, dexCap) : dexMod;
+    terms.push({ key: 'armor', label: 'Armor', value: armor.armorClass!, operation: 'add' });
+    terms.push({
+      key: 'dex',
+      label: 'Dexterity modifier',
+      value: effectiveDex,
+      operation: 'add',
+      details: { dexMod, dexCap: dexCap ?? null },
+    });
+  } else {
+    // Unarmored: full Dex, no cap.
+    terms.push({
+      key: 'dex',
+      label: 'Dexterity modifier',
+      value: dexMod,
+      operation: 'add',
+      details: { dexMod, dexCap: null },
+    });
+  }
+
+  terms.push({
+    key: 'proficiency',
+    label: 'Proficiency',
+    value: proficiencyBonus,
+    operation: 'add',
+  });
+
+  // CRB: a shield grants its bonus only while raised (the Raise a Shield
+  // action); holding an equipped shield grants nothing by itself.
+  if (shield?.raised) {
+    terms.push({
+      key: 'shield',
+      label: 'Raised shield',
+      value: shield.shieldBonus!,
+      operation: 'add',
+    });
+  }
+
+  return { total: foldAcTerms(terms), terms };
+}
 
 export function computePf2eAC(
   dexScore: number,
   proficiencyBonus: number,
   equipment: Array<ArmorEquipItem>
 ): number {
-  const dexMod = abilityMod(dexScore);
-
-  const armor = equipment.find((e) => e.equipped && e.armorClass != null && !e.shieldBonus);
-  const shield = equipment.find((e) => e.equipped && e.shieldBonus != null);
-
-  let ac: number;
-  if (!armor) {
-    // Unarmored: 10 + DEX + proficiency
-    ac = 10 + dexMod + proficiencyBonus;
-  } else {
-    const dexCap = armor.dexBonusMax;
-    const effectiveDex = dexCap != null ? Math.min(dexMod, dexCap) : dexMod;
-    ac = 10 + armor.armorClass! + effectiveDex + proficiencyBonus;
-  }
-
-  // CRB: a shield grants its bonus only while raised (the Raise a Shield
-  // action); holding an equipped shield grants nothing by itself.
-  if (shield?.raised) {
-    ac += shield.shieldBonus!;
-  }
-
-  return ac;
+  return computePf2eACBreakdown(dexScore, proficiencyBonus, equipment).total;
 }

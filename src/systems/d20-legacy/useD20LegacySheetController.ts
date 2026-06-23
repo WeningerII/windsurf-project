@@ -6,6 +6,10 @@ import type { Dnd35eDataModel } from '../dnd35e/data-model';
 import type { Pf1eTrait } from '../pf1e/data-model';
 import type { Pf1eDataModel } from '../pf1e/data-model';
 import { getD20LegacySpellSlotTable } from '../../utils/d20LegacySpellcasting';
+import {
+  buildD20LegacyContributionLedger,
+  type D20LegacyContributionSystemId,
+} from './contributionLedger';
 import { getIterativeAttackBonuses, type D20LegacyData } from './d20LegacySheetShared';
 import { useD20LegacyMutationHandlers } from './useD20LegacyMutationHandlers';
 import { availableD20LegacyToggles } from '../../rules/conditions/d20LegacyRiders';
@@ -52,6 +56,14 @@ export function useD20LegacySheetController({
   const iterativeAttackBonuses = useMemo(
     () => getIterativeAttackBonuses(baseAttackBonus),
     [baseAttackBonus]
+  );
+  // Non-persisted contribution ledger powering the combat section's AC breakdown.
+  // Synchronous, so a memo is enough — no hook.
+  const contributionEntries = useMemo(
+    () =>
+      buildD20LegacyContributionLedger(typedDocument, systemId as D20LegacyContributionSystemId)
+        .entries,
+    [typedDocument, systemId]
   );
   const spellSlots = useMemo(() => sys.spellsPerDay ?? {}, [sys.spellsPerDay]);
   const spellSlotLevels = useMemo(
@@ -174,6 +186,7 @@ export function useD20LegacySheetController({
       document: typedDocument,
       isPf1e,
       armorClass,
+      contributionEntries,
       hitPoints,
       baseAttackBonus,
       iterativeAttackBonuses,
