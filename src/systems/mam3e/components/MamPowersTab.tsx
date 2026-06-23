@@ -1,15 +1,21 @@
 import React from 'react';
 import { Activity, Plus, X } from 'lucide-react';
 import { Badge } from '../../../components/ui/Badge';
+import { ContributionBreakdown } from '../../../components/shared/ContributionBreakdown';
 import type { CharacterDocument } from '../../../types/core/document';
+import type { ContributionLedgerEntry } from '../../../types/core/contributionLedger';
 import type { Power } from '../../../types/mam/powers';
 import type { PowerModifier } from '../../../data/mutants-and-masterminds/3e/modifiers/extras';
 import type { Mam3eDataModel } from '../data-model';
 import { calculatePowerPointCost, getPowerModifierRank, getPowerRank } from '../powerMath';
+import { entriesForTarget } from '../../../utils/contributionBreakdown';
 
 interface Props {
   document: CharacterDocument<Mam3eDataModel>;
   canUpdate: boolean;
+  /** Contribution-ledger entries for the whole character; the per-power cost rows
+   *  are filtered out by target here. */
+  contributionEntries: ContributionLedgerEntry[];
   extraModifiers: PowerModifier[];
   flawModifiers: PowerModifier[];
   modifierById: Map<string, PowerModifier>;
@@ -29,6 +35,7 @@ interface Props {
 export const MamPowersTab: React.FC<Props> = ({
   document,
   canUpdate,
+  contributionEntries,
   extraModifiers,
   flawModifiers,
   modifierById,
@@ -51,9 +58,17 @@ export const MamPowersTab: React.FC<Props> = ({
         {data.powers.length === 0 ? (
           <p className="text-sm text-muted-foreground italic">No powers added yet.</p>
         ) : (
-          data.powers.map((power) => {
+          data.powers.map((power, index) => {
             const rank = getPowerRank(power);
             const powerCost = calculatePowerPointCost(power);
+            const costPerRankEntries = entriesForTarget(
+              contributionEntries,
+              `powers.${index}.costPerRank`
+            );
+            const flatCostEntries = entriesForTarget(
+              contributionEntries,
+              `powers.${index}.flatCost`
+            );
             const extraIds = power.extras ?? [];
             const flawIds = power.flaws ?? [];
             const availableExtras = extraModifiers.filter(
@@ -123,6 +138,17 @@ export const MamPowersTab: React.FC<Props> = ({
                     {powerCost} PP
                   </Badge>
                 </div>
+
+                {(costPerRankEntries.length > 0 || flatCostEntries.length > 0) && (
+                  <div className="mt-2 flex flex-col gap-1">
+                    {costPerRankEntries.length > 0 && (
+                      <ContributionBreakdown entries={costPerRankEntries} label="Cost per rank" />
+                    )}
+                    {flatCostEntries.length > 0 && (
+                      <ContributionBreakdown entries={flatCostEntries} label="Flat cost" />
+                    )}
+                  </div>
+                )}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
                   <ModifierColumn

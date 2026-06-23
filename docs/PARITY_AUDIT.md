@@ -5,8 +5,8 @@ data, not vibes. Referenced by `docs/MASTER_PLAN.md`. Update the cells as gaps
 close.
 
 _Last reviewed: 2026-06-23. All seven systems now have a registry validator;
-contribution breakdowns are now surfaced in-sheet for 5e (Armor Class) and
-Daggerheart (Evasion)._
+contribution breakdowns are now surfaced in-sheet for 5e (Armor Class),
+Daggerheart (Evasion), and M&M 3e (per-power cost)._
 
 **Legend:** ✅ at parity · ⚪ **terminal boundary** (intentional, documented in
 `docs/srd-manifest/_exclusions.ts` or `docs/rfc/003-rules-ir-and-effects.md`) ·
@@ -21,9 +21,9 @@ Daggerheart (Evasion)._
 | Effect-resolver routing (RFC-003) | ✅ | ✅ | ✅ | ✅ | ⚪ not a fold | ⚪ not a fold |
 | Conditions → IR | ✅ | ✅ | ✅ | ✅ | ⚪ none apply | ⚪ none apply |
 | Contribution ledger (builder) | ✅ | ❌ | ❌ | ❌ | ✅ | ✅ |
-| Breakdown surfaced in sheet | ✅ AC | ❌ | ❌ | ❌ | ⚪ built, not shown | ✅ Evasion |
+| Breakdown surfaced in sheet | ✅ AC | ❌ | ❌ | ❌ | ✅ power cost | ✅ Evasion |
 | Registry validator | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Test files (directional) | 116 | 45 | 65 (d20 shared) | ↤ | 23 | 27 |
+| Test files (directional) | 116 | 45 | 65 (d20 shared) | ↤ | 24 | 27 |
 
 ## What's a real spike vs. what isn't
 
@@ -53,12 +53,11 @@ breakdown ledgers PF2e/3.5e/PF1e lack.
      level-sum rule.
    - **PF2e** (`src/systems/pf2e/validation.ts`): ancestry/heritage/background/class
      id resolution (heritage within its ancestry), level bounds.
-2. **Breakdown ledgers** — now surfaced in-sheet for 5e (Armor Class) and
-   Daggerheart (Evasion) through the shared disclosure
-   `src/components/shared/ContributionBreakdown.tsx`, folding each system's ledger
-   to the exact number the sheet shows. Remaining: surface M&M's per-power cost
-   ledger in its powers list, and add builders (then surface) for PF2e, 3.5e, PF1e,
-   which have no ledger today.
+2. **Breakdown ledgers** — now surfaced in-sheet for 5e (Armor Class),
+   Daggerheart (Evasion), and M&M 3e (per-power cost per rank) through the shared
+   disclosure `src/components/shared/ContributionBreakdown.tsx`, each folding its
+   system's ledger to the value the sheet shows. Remaining: add builders (then
+   surface) for PF2e, 3.5e, PF1e, which have no contribution ledger today.
 3. **Test depth** — non-5e systems trail 5e; M&M/Daggerheart are thinnest.
 
 ## How parity capabilities are wired

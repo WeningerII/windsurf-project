@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
 import type { GameSystemId } from '../../types/game-systems';
 import { parseNum } from '../../utils/math';
+import { buildMam3eContributionLedger } from './contributionLedger';
 import type { Mam3eDataModel } from './data-model';
 import { getMam3eSheetState } from './getMam3eSheetState';
 import { useMam3eMutationHandlers } from './useMam3eMutationHandlers';
@@ -60,6 +61,13 @@ export function useMam3eSheetController({ document, onUpdate }: UseMam3eSheetCon
     pinnedArchetypeIds: derivedState.pinnedArchetypeIds,
     insertedComplicationIds: derivedState.insertedComplicationIds,
   });
+
+  // Non-persisted contribution ledger powering the powers tab's per-power cost
+  // breakdowns. Synchronous, so a memo is enough — no hook.
+  const contributionEntries = useMemo(
+    () => buildMam3eContributionLedger(document).entries,
+    [document]
+  );
 
   return {
     data,
@@ -122,6 +130,7 @@ export function useMam3eSheetController({ document, onUpdate }: UseMam3eSheetCon
     powersTabProps: {
       document,
       canUpdate,
+      contributionEntries,
       extraModifiers: derivedState.extraModifiers,
       flawModifiers: derivedState.flawModifiers,
       modifierById: derivedState.modifierById,
