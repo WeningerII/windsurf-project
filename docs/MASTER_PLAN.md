@@ -203,17 +203,19 @@ The following older backlog claims are no longer true and must not re-enter the 
 > `CharacterDocument`. It reads whatever each system's loaders and validators
 > expose, so it serves all seven equally. **D&D 5e was the first system to register
 > an orchestrator** (`src/creation/dnd5eCreation.ts`, one edition-agnostic flow for
-> 2014 and 2024); **PF2e is the second** (`src/creation/pf2eCreation.ts`), and it
-> validated the abstraction by adding a genuinely different system — a different
-> data model (`Pf2eDataModel`), a different step ORDER (ancestry → background →
-> class), and a different backgrounds loader — with **zero changes to the creator
-> UI**. The remaining systems (PF1e, 3.5e, M&M, Daggerheart) become creatable the
-> same way: register an orchestrator, no UI fork. The 5e-named rows in the legacy
-> table below are
-> retained as historical context and should be read as "first test fixture," not
-> "privileged path." The anti-overengineering "three named consumers before
-> extraction" rule is satisfied immediately and overwhelmingly: seven effect
-> compilers feed one resolver.
+> 2014 and 2024); **PF2e is the second** (`src/creation/pf2eCreation.ts`),
+> validating the abstraction with a genuinely different system — a different data
+> model (`Pf2eDataModel`), a different step ORDER (ancestry → background → class),
+> and a different backgrounds loader — with **zero changes to the creator UI**; and
+> **d20-legacy is the third** (`src/creation/d20LegacyCreation.ts`), one race →
+> class flow serving BOTH D&D 3.5e and PF1e. **Five of seven systems are now
+> creatable** (5e 2014, 5e 2024, PF2e, 3.5e, PF1e); M&M and Daggerheart become
+> creatable the same way: register an orchestrator, no UI fork. The 5e-named rows
+> in the legacy table below are retained as historical context and should be read
+> as "first test fixture," not "privileged path." The anti-overengineering "three
+> named consumers before extraction" rule is now satisfied for creation too — three
+> distinct orchestrators (5e, PF2e, d20-legacy) feed one creator UI — and
+> overwhelmingly for the resolver: seven effect compilers feed one resolver.
 
 - `Active implementation track`: this is the main research-informed build program. It should be treated as a large product and architecture effort, not a small enhancement. The work touches `src/registry/types.ts`, `src/registry/index.ts`, `src/types/core/document.ts`, system engines, template handlers, loader-backed data, import/export behavior, local draft persistence, and visible sheet and character-creation UX.
 - `Active implementation track`: keep the current repo stack while building the missing primitives. React/Vite/npm, the system registry, per-system engines, loader-backed SRD data, browser-local persistence, optional Supabase sync, and Netlify remain the implementation frame. External research informs the shape of validation, structured draft output, and form/action modeling, but does not authorize a stack replacement.
@@ -230,7 +232,7 @@ The following older backlog claims are no longer true and must not re-enter the 
 | 3. D&D 5e Activity Pilot | System-local action execution, not a universal bus | 5e feature-option and feat surfaces, 5e document update handlers | Local activity/action definitions for selected 2014 feature options or feat riders that currently only mirror text into `features`; definitions include inputs, eligibility, costs, outputs, and manual-boundary copy | Selection persistence still works; existing feature-option tests pass; atomic updates use current handlers; unsupported downstream automation is visibly manual |
 | 4A. Character-Creator Shell | New UX and draft state | character creation entry points, local storage layer, template handlers | **DONE (2026-06-22).** Deterministic, **system-agnostic** creation shell (`src/creation/creationDraft.ts` + `creationDraftStorage.ts`): pure draft reducer with step state, selection bookkeeping, validation-issue absorption, resumable local persistence, reset/cancel, and final `CharacterDocument` output. Owns no per-system rules | Draft resume tests, reset/cancel tests, no Supabase dependency, no new remote schema |
 | 4B. Per-System Creation Orchestrators (5e first) | First user-visible creator; registry-dispatched | system registry, per-system loaders/templates/validators | **Core path DONE for 5e (2026-06-22):** one system-agnostic creator UI (`src/components/CharacterCreator.tsx`) resolves the current system's orchestrator from the registry (`SystemDefinition.creation`) and walks its steps (class → species → background → review), driving the SAME applicators/validator the sheet uses and finalising a normal `CharacterDocument`. D&D 5e is the first registered orchestrator (`src/creation/dnd5eCreation.ts`), one edition-agnostic flow for 2014 and 2024. **Additional systems become creatable by registering their own orchestrator — no UI fork.** Remaining: ability/spell/equipment steps "where current data supports it" (today completed on the sheet after creation) | Template application tests, validation failure display, import/export roundtrip, existing engine/template regressions; adding a system's orchestrator needs no creator-UI change |
-| 4C. Remaining Systems' Orchestrators | Apply the same registry pattern to the other systems | each system's loaders/templates/validators | **PF2e DONE (2026-06-23):** `src/creation/pf2eCreation.ts` registers an ancestry → background → class orchestrator the SAME shared creator renders unchanged — proving the contract across a different data model, step order, and backgrounds loader. 5e 2014 falls out of the edition-agnostic 5e orchestrator (no separate fork). Remaining: PF1e, 3.5e, M&M, Daggerheart each register their own `creation` orchestrator | Per-system creation fixtures; the shared creator renders each system without modification; no regression to existing flows |
+| 4C. Remaining Systems' Orchestrators | Apply the same registry pattern to the other systems | each system's loaders/templates/validators | **PF2e + d20-legacy DONE (2026-06-23):** `pf2eCreation.ts` (ancestry → background → class) and `d20LegacyCreation.ts` (one race → class flow for BOTH 3.5e and PF1e) register orchestrators the SAME shared creator renders unchanged — proving the contract across different data models, step orders, and loaders. Five of seven systems are now creatable; 5e 2014 falls out of the edition-agnostic 5e orchestrator (no separate fork). Remaining: M&M and Daggerheart each register their own `creation` orchestrator | Per-system creation fixtures; the shared creator renders each system without modification; no regression to existing flows |
 | 5. Optional AI Draft Adapter | Optional spike after deterministic creation works | Netlify Functions, loader-derived candidate pools, validation registry | RFC and spike for one shared-provider path. Client sends prompt plus candidate pools; server returns structured draft; client validates and applies templates. Native provider JSON Schema is the default first path | Missing API key leaves deterministic creation fully functional; recorded fixtures cover CI; max 2 repair attempts with machine-readable `ValidationIssue[]`; session cost caps |
 | 6. Deferred Homebrew/Fusion | Explicitly blocked until foundations exist | validators, ledger, open-content policy, homebrew UX | Research plan for hybrid species/homebrew only after validation, provenance, name-policy, and homebrew/not-RAW UX are real | No generated homebrew mutates shipped SRD data; no balancing point system lands without a separate acceptance plan |
 
