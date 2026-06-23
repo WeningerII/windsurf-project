@@ -987,6 +987,22 @@ describe('DaggerheartEngine', () => {
       randomSpy.mockRestore();
     });
 
+    it('falls back to a +0 modifier for an unrecognised check id', async () => {
+      // The six traits resolve by name; any other check id (a derived/meta roll)
+      // contributes no modifier rather than throwing.
+      const randomSpy = vi
+        .spyOn(Math, 'random')
+        .mockReturnValueOnce(0.75)
+        .mockReturnValueOnce(0.25);
+
+      const result = await engine.rollCheck(makeDoc(), 'reputation');
+
+      expect(result.formula).toBe('2d12 + 0 (reputation)');
+      expect(result.total).toBe(14);
+
+      randomSpy.mockRestore();
+    });
+
     it('flags ANY matched duality dice as a critical success and never as a fumble', async () => {
       // Daggerheart SRD (Duality Dice): rolling matching values on the Hope
       // and Fear dice is a critical success — at any value. The system has no

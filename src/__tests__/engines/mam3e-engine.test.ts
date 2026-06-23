@@ -246,6 +246,38 @@ describe('Mam3eEngine', () => {
         result.system.plViolations?.some((entry) => entry.label === 'Close Attack + Effect')
       ).toBe(true);
     });
+
+    it('adds an Enhanced Trait power rank to the named defense', () => {
+      const zeroAbilities = { str: 0, sta: 0, agi: 0, dex: 0, fgt: 0, int: 0, awe: 0, pre: 0 };
+      const base = engine.prepareData(makeDoc({ abilities: zeroAbilities }));
+      const boosted = engine.prepareData(
+        makeDoc({
+          abilities: zeroAbilities,
+          powers: [
+            {
+              id: 'enhanced-trait',
+              name: 'Enhanced Dodge',
+              system: 'mam3e',
+              source: 'test',
+              type: 'attack',
+              action: 'standard',
+              range: 'close',
+              duration: 'instant',
+              baseCost: 1,
+              perRank: true,
+              rank: 3,
+              description: '',
+              effects: [],
+              descriptors: ['dodge'],
+            },
+          ],
+        })
+      );
+
+      // Enhanced Trait lifts the named defense by its rank (delta isolates it
+      // from whatever baseline the defense formula produces).
+      expect(boosted.system.defenses.dodge.total - base.system.defenses.dodge.total).toBe(3);
+    });
   });
 
   describe('rollCheck', () => {
@@ -267,6 +299,17 @@ describe('Mam3eEngine', () => {
       const result = await engine.rollCheck(doc, 'agi');
       // d20 + AGI rank (4)
       expect(result.formula).toBe('1d20 + 4');
+    });
+
+    it('rolls a skill check as ability rank + skill rank', async () => {
+      const doc = makeDoc({
+        abilities: { str: 0, sta: 0, agi: 3, dex: 0, fgt: 0, int: 0, awe: 0, pre: 0 },
+        skills: { acrobatics: { rank: 5, total: 8 } },
+      });
+      const result = await engine.rollCheck(doc, 'acrobatics');
+      // acrobatics maps to AGI: AGI rank 3 + skill rank 5 = 8.
+      expect(result.formula).toBe('1d20 + 8');
+      expect(result.flavor).toBe('acrobatics Check');
     });
 
     it('applies the cumulative -1 per Bruised to Toughness checks', async () => {

@@ -409,6 +409,23 @@ describe('Pf1eEngine', () => {
       expect(result.formula).toBe('1d20 + 9');
       expect(result.flavor).toBe('Combat Maneuver');
     });
+
+    it('rolls fortitude, reflex, and will saves from their totals', async () => {
+      const doc = makeDoc({
+        saves: {
+          fortitude: { base: 4, ability: 2, misc: 0, total: 6 },
+          reflex: { base: 1, ability: 3, misc: 0, total: 4 },
+          will: { base: 2, ability: 1, misc: 0, total: 3 },
+        },
+      });
+
+      const fort = await engine.rollCheck(doc, 'save-fort');
+      expect(fort.formula).toBe('1d20 + 6');
+      expect(fort.flavor).toBe('Fortitude Save');
+
+      expect((await engine.rollCheck(doc, 'save-ref')).formula).toBe('1d20 + 4');
+      expect((await engine.rollCheck(doc, 'save-will')).flavor).toBe('Will Save');
+    });
   });
 
   describe('applyDamage', () => {

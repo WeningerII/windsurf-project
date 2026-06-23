@@ -474,6 +474,43 @@ describe('Dnd35eEngine', () => {
       expect(result.formula).toBe('1d20 + 6');
       expect(result.flavor).toBe('Fortitude Save');
     });
+
+    it('rolls reflex and will saves from their totals', async () => {
+      const doc = makeDoc({
+        saves: {
+          fortitude: { base: 4, ability: 2, misc: 0, total: 6 },
+          reflex: { base: 1, ability: 3, misc: 0, total: 4 },
+          will: { base: 1, ability: 1, misc: 0, total: 2 },
+        },
+      });
+
+      const reflex = await engine.rollCheck(doc, 'save-ref');
+      expect(reflex.formula).toBe('1d20 + 4');
+      expect(reflex.flavor).toBe('Reflex Save');
+
+      const will = await engine.rollCheck(doc, 'save-will');
+      expect(will.formula).toBe('1d20 + 2');
+      expect(will.flavor).toBe('Will Save');
+    });
+
+    it('rolls an attack as BAB + STR + size modifier', async () => {
+      const doc = makeDoc({
+        baseAttackBonus: 3,
+        baseAttributes: { str: 14, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+        sizeCategory: 'small',
+      });
+
+      const result = await engine.rollCheck(doc, 'attack');
+      // BAB 3 + STR +2 + Small +1 = 6 (no equipped weapon or feat bonuses).
+      expect(result.formula).toBe('1d20 + 6');
+      expect(result.flavor).toBe('Attack Roll');
+    });
+
+    it('rolls a grapple check from the derived grapple total', async () => {
+      const result = await engine.rollCheck(makeDoc({ grapple: 7 }), 'grapple');
+      expect(result.formula).toBe('1d20 + 7');
+      expect(result.flavor).toBe('Grapple Check');
+    });
   });
 
   describe('applyDamage', () => {
