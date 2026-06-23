@@ -6,7 +6,9 @@ close.
 
 _Last reviewed: 2026-06-23. All seven systems now have a registry validator and a
 contribution-ledger builder whose breakdown is surfaced in-sheet: Armor Class for
-5e / PF2e / 3.5e / PF1e, Evasion for Daggerheart, per-power cost for M&M 3e._
+5e / PF2e / 3.5e / PF1e, Evasion for Daggerheart, per-power cost for M&M 3e. Logic
+test coverage for the four non-5e systems is now driven to ~100% (handlers,
+controllers, sheet-state, template handlers, engines, validators, utils)._
 
 **Legend:** ✅ at parity · ⚪ **terminal boundary** (intentional, documented in
 `docs/srd-manifest/_exclusions.ts` or `docs/rfc/003-rules-ir-and-effects.md`) ·
@@ -23,7 +25,7 @@ contribution-ledger builder whose breakdown is surfaced in-sheet: Armor Class fo
 | Contribution ledger (builder) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Breakdown surfaced in sheet | ✅ AC | ✅ AC | ✅ AC | ✅ AC | ✅ power cost | ✅ Evasion |
 | Registry validator | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Test files (directional) | 116 | 48 | 68 (d20 shared) | ↤ | 24 | 27 |
+| Test files (directional) | 116 | 51 | 71 (d20 shared) | ↤ | 27 | 32 |
 
 ## What's a real spike vs. what isn't
 
@@ -60,15 +62,20 @@ contribution breakdowns surfaced in-sheet like every other system.
    d20-legacy term decompositions are single-sourced from `src/utils/armorClass.ts`
    so the breakdown can't drift from the engine), Evasion for Daggerheart, and
    per-power cost per rank for M&M 3e.
-3. **Test depth** — substantially closed for the highest-value logic. Every
-   non-5e sheet's **mutation handlers** (the add/remove/equip/edit behaviors the
-   sheets drive) were the largest untested surface — M&M 41%, PF2e 43%, d20-legacy
-   45%, Daggerheart 67% statements by v8 — and now sit at 80–95%, each test
-   asserting the exact patch the handler emits. Engine `rollCheck` branches
-   (saves, attack, grapple/CMB, skill checks, the Daggerheart non-trait fallback)
-   and the M&M Enhanced-Trait defense contribution are covered too. Remaining
-   thin spots are the template-apply handlers (class/race/background) and a few
-   defensive/normalization branches — lower-value, tracked but not blocking.
+3. **Test depth** — ✅ **logic coverage driven to ~100% across all four non-5e
+   systems.** Every non-5e sheet's mutation handlers, sheet controller, sheet-state
+   builder, template-apply handlers, validator, and the M&M/PF2e/d20 engines now
+   sit at 95–100% statements (from 18–67% on the worst — the controllers and
+   template handlers), each test asserting the exact emitted patch / derived value,
+   not line-touching:
+   - **M&M 3e**: controller 45→100%, getMam3eSheetState→100%, engine→99%, validator→100%.
+   - **PF2e**: template handlers 51→100%, controller 62→97%, sheet-shared/choice-state/validator→100%, engine casting-type branch covered.
+   - **D&D 3.5e + PF1e**: template handlers 19→91%, controller 67→89%, shared spell-slot helpers & wrapper→100%, validator→100%, engines→~99%.
+   - **Daggerheart**: template handlers & controller→100%, inventory util→100%, sheet-state & derived target branches closed, validator→100%.
+
+   Remaining toward *truly equal* 100%: the sheet **components** (`.tsx`) sit at
+   ~50–71% across systems (render-level UI), and the **5e family's** own coverage
+   has not been re-leveled this pass. Both are the next round.
 
 ## How parity capabilities are wired
 
