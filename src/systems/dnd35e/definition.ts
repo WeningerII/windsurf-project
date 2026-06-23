@@ -2,6 +2,7 @@ import { SystemDefinition } from '../../registry/types';
 import { Dnd35eDataModel, createDefaultDnd35eData } from './data-model';
 import { Dnd35eEngine } from './engine';
 import { createD20LegacyCreationOrchestrator } from '../../creation/d20LegacyCreation';
+import { createD20LegacyValidator } from '../d20-legacy/validation';
 import { makeD20LegacySheet } from '../d20-legacy/wrapper';
 import { SYSTEM_SUPPORT_NOTES } from '../../utils/documentationCopy';
 
@@ -53,6 +54,7 @@ export const Dnd35eSystemDef: SystemDefinition<Dnd35eDataModel> = {
   ],
   createDefaultData: createDefaultDnd35eData,
   engine: new Dnd35eEngine(),
+  validator: createD20LegacyValidator<Dnd35eDataModel>('dnd-3.5e'),
   creation: createD20LegacyCreationOrchestrator('dnd-3.5e'),
   SheetComponent: makeD20LegacySheet<Dnd35eDataModel>(),
 };
