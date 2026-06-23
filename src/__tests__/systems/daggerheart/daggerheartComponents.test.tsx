@@ -445,10 +445,10 @@ describe('DaggerheartCharacterBasicsSection', () => {
     await renderSection(DaggerheartCharacterBasicsSection);
     const user = userEvent.setup();
 
-    // Each attribute renders a dice button wired to the engine. The button's
-    // title is "Roll <label>" where the section already passes label="Roll
-    // Strength", so the rendered title reads "Roll Roll Strength".
-    await user.click(screen.getByTitle('Roll Roll Strength'));
+    // Each attribute renders a dice button wired to the engine. DiceRollButton
+    // builds the title as "Roll <label>", so passing the bare trait label yields
+    // "Roll Strength".
+    await user.click(screen.getByTitle('Roll Strength'));
 
     // The engine's 2d12 result surfaces inline (no "Roll failed" error).
     expect(await screen.findByText(/2d12/)).toBeInTheDocument();

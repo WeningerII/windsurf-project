@@ -82,7 +82,7 @@ export function DaggerheartCharacterBasicsSection({ controller }: Props) {
                 </span>
               )}
               <DiceRollButton
-                label={`Roll ${attr.label}`}
+                label={attr.label}
                 onRoll={() =>
                   systemRegistry
                     .get(controller.document.systemId)!
