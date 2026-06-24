@@ -358,8 +358,10 @@ function validateFeatureOptions(
     return;
   }
 
+  // A malformed/imported document with a missing classLevels array is already
+  // reported by validateClassLevels; guard here so this pass doesn't crash on it.
   const classLevelById = new Map(
-    system.classLevels.map((classLevel) => [classLevel.classId, classLevel])
+    (system.classLevels ?? []).map((classLevel) => [classLevel.classId, classLevel])
   );
 
   selections.forEach((selection, index) => {

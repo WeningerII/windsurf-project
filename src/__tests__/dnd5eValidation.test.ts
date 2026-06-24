@@ -336,6 +336,26 @@ describe('D&D 5e validation — structural and cross-field branches', () => {
     expect(issueCodes(result)).not.toContain('dnd5e-unknown-feature-option');
   });
 
+  it('does not crash on a malformed document missing the classLevels array', async () => {
+    const registry = createRegistry();
+    // A malformed/imported document with classLevels stripped: resolving feature-
+    // option provenance must not throw (validateClassLevels reports the missing
+    // array separately; this pass guards classLevels.map against it).
+    const system = {
+      ...createDefaultDnd5eData(),
+      level: 1,
+      classLevels: undefined as unknown as Dnd5eDataModel['classLevels'],
+      featureOptionSelections: [{ group: 'ki-abilities', id: 'flurry-of-blows' }],
+    } as Dnd5eDataModel;
+
+    const result = await registry.validateDocument(createDocument('dnd-5e-2014', system));
+
+    // Returns an issues array instead of throwing, and still flags the orphaned
+    // feature option against the (now empty) class map.
+    expect(Array.isArray(result.issues)).toBe(true);
+    expect(issueCodes(result)).toContain('dnd5e-feature-option-class-mismatch');
+  });
+
   it('reports a missing spell-slot entry (non-numeric max/used) as invalid', async () => {
     const registry = createRegistry();
     const slots = createEmptySpellSlots();
