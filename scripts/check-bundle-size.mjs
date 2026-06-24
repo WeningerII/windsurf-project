@@ -13,7 +13,9 @@ const budgets = {
   // coverage-completion program (now spanning 5e-2014/2024, PF2e, and PF1e
   // corpora at or near 100%, plus the d20-legacy bestiary): genuine content,
   // not bloat. Lazy granularity is enforced by the per-data-chunk budget.
-  totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 1536 * 1024,
+  // 1536 → 1600 KiB for the full PF2e CRB feat catalog (93 → 814; the missing
+  // ~720 sourced from Pf2eTools by scripts/encode-pf2e-feats.mjs).
+  totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 1600 * 1024,
   // Restored to 80 KiB now that the 1296-LOC SceneManager view is lazy-loaded
   // out of the eager shell (it no longer rides the index chunk), reclaiming the
   // first-paint discipline the temporary 81 KiB bump had spent on the

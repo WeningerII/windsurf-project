@@ -9,6 +9,7 @@ import { generalFeats } from './feats/general';
 import { skillFeats } from './feats/skill';
 import { ancestryFeats } from './feats/ancestry';
 import { classFeats } from './feats/class';
+import { srdPf2eGeneratedFeats } from './feats/generated';
 import { pf2eWeapons } from './equipment/weapons';
 import { pf2eArmor } from './equipment/armor';
 import { pf2eMagicItems } from './equipment/magic-items';
@@ -38,12 +39,21 @@ export const pf2eMetadata = {
     },
 
     feats: {
-      count: generalFeats.length + skillFeats.length + ancestryFeats.length + classFeats.length,
+      count:
+        generalFeats.length +
+        skillFeats.length +
+        ancestryFeats.length +
+        classFeats.length +
+        srdPf2eGeneratedFeats.length,
       byType: {
         ancestry: ancestryFeats.length,
         class: classFeats.length,
         general: generalFeats.length,
         skill: skillFeats.length,
+        // Bulk CRB feats sourced from Pf2eTools (scripts/encode-pf2e-feats.mjs);
+        // the FeatDefinition catalog shape doesn't carry a per-feat type, so they
+        // are counted as one group rather than re-bucketed.
+        generated: srdPf2eGeneratedFeats.length,
       },
     },
 
