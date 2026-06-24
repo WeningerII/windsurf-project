@@ -21,11 +21,20 @@ export function useDnd5eContributionLedger<T extends Dnd5eLikeDataModel>(
 
   useEffect(() => {
     let cancelled = false;
-    void buildDnd5eContributionLedger(document, systemId).then((result) => {
-      if (!cancelled) {
-        setEntries(result.entries);
-      }
-    });
+    buildDnd5eContributionLedger(document, systemId)
+      .then((result) => {
+        if (!cancelled) {
+          setEntries(result.entries);
+        }
+      })
+      .catch(() => {
+        // The ledger is a non-persisted display aid that loads the class catalog
+        // and runs the effect resolver. If that async build fails, leave the
+        // breakdown empty rather than leak an unhandled rejection.
+        if (!cancelled) {
+          setEntries([]);
+        }
+      });
     return () => {
       cancelled = true;
     };
