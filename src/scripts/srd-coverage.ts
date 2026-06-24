@@ -33,6 +33,12 @@ import {
   loadAdvantagesForSystem,
   loadDaggerheartDomainCardsForSystem,
   loadDaggerheartDomainsForSystem,
+  loadDaggerheartClassesForSystem,
+  loadDaggerheartAncestriesForSystem,
+  loadDaggerheartCommunitiesForSystem,
+  loadDaggerheartAdversariesForSystem,
+  loadDaggerheartWeaponsForSystem,
+  loadDaggerheartArmorForSystem,
 } from '../utils/dataLoader';
 import { GameSystemId } from '../types/game-systems';
 
@@ -536,6 +542,43 @@ TARGETS.push({
   loader: () => loaderNames(loadDaggerheartDomainsForSystem, 'daggerheart'),
 });
 
+// Daggerheart catalog categories beyond domains/cards: the Batres3 SRD repo
+// stores one markdown file per entity under category directories (classes/,
+// ancestries/, communities/, adversaries/<Tier>/, weapons/, armor/), so the
+// filename stems are the authoritative SRD denominator. The agent proxy blocks
+// api.github.com, so the upstream git-tree listing is pinned (verbatim) as
+// scripts/data/daggerheart-srd-manifest.json — the same pattern the PF1e
+// bestiary denominator uses. Refresh by re-listing the upstream tree.
+async function daggerheartManifestNames(category: string): Promise<string[]> {
+  const manifestPath = path.resolve(
+    path.dirname(fileURLToPath(import.meta.url)),
+    '../../scripts/data/daggerheart-srd-manifest.json'
+  );
+  const manifest = JSON.parse(await fs.readFile(manifestPath, 'utf8')) as {
+    categories: Record<string, string[]>;
+  };
+  return manifest.categories[category] ?? [];
+}
+
+const daggerheartCatalog: Array<[string, (s: GameSystemId) => Promise<unknown[]>]> = [
+  ['classes', loadDaggerheartClassesForSystem],
+  ['ancestries', loadDaggerheartAncestriesForSystem],
+  ['communities', loadDaggerheartCommunitiesForSystem],
+  ['adversaries', loadDaggerheartAdversariesForSystem],
+  ['weapons', loadDaggerheartWeaponsForSystem],
+  ['armor', loadDaggerheartArmorForSystem],
+];
+for (const [category, loader] of daggerheartCatalog) {
+  TARGETS.push({
+    systemId: 'daggerheart',
+    systemLabel: 'Daggerheart',
+    category,
+    srdSource: `SRD 1.0 (Batres3/daggerheart-srd ${category}/ — pinned manifest)`,
+    srd: () => daggerheartManifestNames(category),
+    loader: () => loaderNames(loader, 'daggerheart'),
+  });
+}
+
 type Row = {
   systemLabel: string;
   category: string;
@@ -640,7 +683,10 @@ async function main(): Promise<void> {
     '- **D&D 3.5e** spells and monsters are measured against the clean core-only `olimot/srd-v3.5-md` chapters. The monster denominator counts every `## ` heading, which includes the SRD\'s category headers (e.g. "Angel", "Dragon", "Elemental") that nest individual stat blocks, so the monster percentage understates per-stat-block coverage. Remaining 3.5e categories (classes/feats/equipment) are unwired pending core-only sources. See `docs/srd-sources.md`.'
   );
   lines.push(
-    '- **Remaining categories** — PF2e/PF1e non-spell categories, M&M skills/conditions/equipment, Daggerheart classes/ancestries/communities/weapons/armor, and all monsters are documented in `docs/srd-sources.md` and pending wiring.'
+    '- **Daggerheart** classes/ancestries/communities/adversaries/weapons/armor are now wired against the pinned Batres3 SRD manifest (`scripts/data/daggerheart-srd-manifest.json`). The few weapon/armor/ancestry "not in SRD" suspects are denominator nuances — Mixed Ancestry (a rules option, not a per-file ancestry), the Combat Wheelchair line (a separate SRD doc), and upstream-mirror spelling typos (e.g. "Widgast"→correct "Widogast") — not provenance violations.'
+  );
+  lines.push(
+    '- **Remaining categories** — PF2e/PF1e non-spell categories, D&D 3.5e classes/feats/equipment, M&M skills/conditions/equipment, and Daggerheart environments/subclasses are documented in `docs/srd-sources.md` and pending wiring.'
   );
   lines.push('');
 

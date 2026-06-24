@@ -54,5 +54,14 @@ and diffs them against the product loaders by normalized name, writing
 spell catalogs are wired today (plus 5e/PF/3.5e monsters, M&M powers/advantages, and
 Daggerheart domains/cards); each is scoped to the policy's `allowedSources` (5e →
 full SRD; PF1e/PF2e → Core Rulebook; 3.5e → core SRD excluding psionics/epic; M&M →
-Hero's Handbook; Daggerheart → SRD 1.0). Remaining non-spell categories are documented
-above and pending wiring.
+Hero's Handbook; Daggerheart → SRD 1.0).
+
+Daggerheart's catalog categories — classes, ancestries, communities, adversaries,
+weapons, armor — are also wired, against a **pinned** snapshot of the Batres3 SRD
+repo's per-entity file list (`scripts/data/daggerheart-srd-manifest.json`). The
+snapshot is used because the agent proxy blocks `api.github.com` (the git-tree
+listing endpoint) while allowing `raw.githubusercontent.com`; this mirrors the PF1e
+bestiary's pinned-manifest approach. Refresh by re-listing the upstream tree. The
+remaining non-spell categories (PF2e/PF1e classes/ancestries/feats/equipment, D&D
+3.5e classes/feats/equipment, M&M skills/conditions/equipment, Daggerheart
+environments/subclasses) are documented above and pending wiring.
