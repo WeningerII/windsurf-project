@@ -537,6 +537,14 @@ TARGETS.push({
   srd: () => fetchJsArrayNames(MM_DATA_JS, 'ADVANTAGES'),
   loader: () => loaderNames(loadAdvantagesForSystem, 'mam3e'),
 });
+TARGETS.push({
+  systemId: 'mam3e',
+  systemLabel: 'Mutants & Masterminds 3e',
+  category: 'equipment',
+  srdSource: "Hero's Handbook (frnprt/mm3e-character-creator EQUIPMENT)",
+  srd: () => fetchJsArrayNames(MM_DATA_JS, 'EQUIPMENT'),
+  loader: () => loaderNames(loadEquipmentForSystem, 'mam3e'),
+});
 
 // --- Daggerheart (SRD 1.0 — whole SRD in scope) ---
 const DH_DOMAIN_REF =
