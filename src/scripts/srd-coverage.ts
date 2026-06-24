@@ -425,6 +425,22 @@ TARGETS.push({
   loader: () => loaderNames(loadMonstersForSystem, 'pf2e'),
 });
 
+// PF2e Core Rulebook feats: the high-value catalog check (hundreds of entries,
+// not eyeball-verifiable, unlike the 12 classes / handful of ancestries). Same
+// single-CRB-file shape as the spell denominator (feats-crb.json `{ feat: [...] }`).
+TARGETS.push({
+  systemId: 'pf2e',
+  systemLabel: 'Pathfinder 2e',
+  category: 'feats',
+  srdSource: 'Core Rulebook (Pf2eToolsOrg/Pf2eTools feats-crb.json)',
+  srd: () =>
+    fetchJsonPropNames(
+      'https://raw.githubusercontent.com/Pf2eToolsOrg/Pf2eTools/master/data/feats/feats-crb.json',
+      'feat'
+    ),
+  loader: () => loaderNames(loadFeatsForSystem, 'pf2e'),
+});
+
 // --- D&D 3.5e (SRD 3.5 core — olimot/srd-v3.5-md, clean core-only Markdown) ---
 // Spell names are the `## Name` headers across the nine alphabetical spell
 // files. This is the genuinely core-only denominator docs/srd-sources.md
