@@ -533,6 +533,61 @@ export const srdCr01Monsters35e: Monster[] = [
     ],
   },
   {
+    id: 'dire-rat-35e-monster',
+    name: 'Dire Rat',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'small',
+    type: 'animal',
+    alignment: 'true neutral',
+    challengeRating: 0.33,
+    experiencePoints: 0,
+    armorClass: 15,
+    hitPoints: {
+      count: 1,
+      die: 'd8',
+      notation: '1d8',
+    },
+    speed: {
+      walk: 40,
+      climb: 20,
+    },
+    abilities: {
+      str: 10,
+      dex: 17,
+      con: 12,
+      int: 1,
+      wis: 12,
+      cha: 4,
+    },
+    d20Saves: {
+      fort: 3,
+      ref: 5,
+      will: 1,
+    },
+    baseAttackBonus: 0,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Bite',
+        description:
+          'The creature attacks with its mouth, dealing piercing, slashing, and bludgeoning damage.',
+        attackBonus: 1,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd4',
+              notation: '1d4',
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: 'dog-35e-monster',
     name: 'Dog',
     system: 'dnd-3.5e',
@@ -893,6 +948,61 @@ export const srdCr01Monsters35e: Monster[] = [
         description:
           'The creature rips with a sharp appendage, dealing piercing and slashing damage.',
         attackBonus: 1,
+      },
+    ],
+  },
+  {
+    id: 'formian-worker-35e-monster',
+    name: 'Formian Worker',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'small',
+    type: 'outsider',
+    alignment: 'lawful neutral',
+    challengeRating: 0.5,
+    experiencePoints: 0,
+    armorClass: 17,
+    hitPoints: {
+      count: 1,
+      die: 'd8',
+      notation: '1d8',
+    },
+    speed: {
+      walk: 40,
+    },
+    abilities: {
+      str: 13,
+      dex: 14,
+      con: 13,
+      int: 6,
+      wis: 10,
+      cha: 9,
+    },
+    d20Saves: {
+      fort: 3,
+      ref: 4,
+      will: 2,
+    },
+    baseAttackBonus: 1,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Bite',
+        description:
+          'The creature attacks with its mouth, dealing piercing, slashing, and bludgeoning damage.',
+        attackBonus: 3,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd4',
+              notation: '1d4+1',
+              modifier: 1,
+            },
+            type: 'piercing',
+          },
+        ],
       },
     ],
   },
@@ -1502,6 +1612,78 @@ export const srdCr01Monsters35e: Monster[] = [
     ],
   },
   {
+    id: 'grig-35e-monster',
+    name: 'Grig',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'tiny',
+    type: 'fey',
+    alignment: 'neutral good',
+    challengeRating: 1,
+    experiencePoints: 0,
+    armorClass: 18,
+    hitPoints: {
+      count: 1,
+      die: 'd6',
+      notation: '1d6',
+    },
+    speed: {
+      walk: 20,
+      fly: 40,
+    },
+    abilities: {
+      str: 5,
+      dex: 18,
+      con: 13,
+      int: 10,
+      wis: 13,
+      cha: 14,
+    },
+    d20Saves: {
+      fort: 1,
+      ref: 6,
+      will: 3,
+    },
+    baseAttackBonus: 0,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Shortsword',
+        description: 'This sword is popular as an off-hand weapon.',
+        attackBonus: -1,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd3',
+              notation: '1d3-3',
+              modifier: -3,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+      {
+        name: 'Longbow',
+        description:
+          'You need at least two hands to use a bow, regardless of its size. A longbow is too unwieldy to use while you are mounted. If you have a penalty for low Strength, apply it to damage rolls when you use a longbow. If you have a bonus for high Strength, you can apply it to damage rolls when you use a co',
+        attackBonus: 6,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd4',
+              notation: '1d4-3',
+              modifier: -3,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: 'grimlock-35e-monster',
     name: 'Grimlock',
     system: 'dnd-3.5e',
@@ -1739,6 +1921,79 @@ export const srdCr01Monsters35e: Monster[] = [
     ],
   },
   {
+    id: 'lacedon-35e-monster',
+    name: 'Lacedon',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'medium',
+    type: 'undead',
+    alignment: 'chaotic evil',
+    challengeRating: 1,
+    experiencePoints: 0,
+    armorClass: 14,
+    hitPoints: {
+      count: 2,
+      die: 'd12',
+      notation: '2d12',
+    },
+    speed: {
+      walk: 30,
+      swim: 30,
+    },
+    abilities: {
+      str: 13,
+      dex: 15,
+      con: 0,
+      int: 13,
+      wis: 14,
+      cha: 12,
+    },
+    d20Saves: {
+      fort: 1,
+      ref: 2,
+      will: 5,
+    },
+    baseAttackBonus: 1,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Bite',
+        description:
+          'The creature attacks with its mouth, dealing piercing, slashing, and bludgeoning damage.',
+        attackBonus: 2,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd6',
+              notation: '1d6+1',
+              modifier: 1,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+      {
+        name: 'Claw',
+        description:
+          'The creature rips with a sharp appendage, dealing piercing and slashing damage.',
+        attackBonus: 2,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd3',
+              notation: '1d3+1',
+              modifier: 1,
+            },
+            type: 'slashing',
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: 'lizardfolk-35e-monster',
     name: 'Lizardfolk',
     system: 'dnd-3.5e',
@@ -1953,6 +2208,79 @@ export const srdCr01Monsters35e: Monster[] = [
     ],
   },
   {
+    id: 'nixie-35e-monster',
+    name: 'Nixie',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'small',
+    type: 'fey',
+    alignment: 'true neutral',
+    challengeRating: 1,
+    experiencePoints: 0,
+    armorClass: 14,
+    hitPoints: {
+      count: 1,
+      die: 'd6',
+      modifier: -1,
+      notation: '1d6-1',
+    },
+    speed: {
+      walk: 20,
+      swim: 30,
+    },
+    abilities: {
+      str: 7,
+      dex: 16,
+      con: 11,
+      int: 12,
+      wis: 13,
+      cha: 18,
+    },
+    d20Saves: {
+      fort: 0,
+      ref: 5,
+      will: 3,
+    },
+    baseAttackBonus: 0,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Shortsword',
+        description: 'This sword is popular as an off-hand weapon.',
+        attackBonus: -1,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd4',
+              notation: '1d4-2',
+              modifier: -2,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+      {
+        name: 'Light Crossbow',
+        description:
+          'You draw a light crossbow back by pulling a lever. Loading a light crossbow is a move action that provokes attacks of opportunity. Normally, operating a light crossbow requires two hands. However, you can shoot, but not load, a light crossbow with one hand at a –2 penalty on attack rolls. You can sh',
+        attackBonus: 4,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd6',
+              notation: '1d6-2',
+              modifier: -2,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: 'octopus-35e-monster',
     name: 'Octopus',
     system: 'dnd-3.5e',
@@ -2066,6 +2394,99 @@ export const srdCr01Monsters35e: Monster[] = [
               modifier: -2,
             },
             type: 'piercing',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'shrieker-35e-monster',
+    name: 'Shrieker',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'medium',
+    type: 'plant',
+    alignment: 'true neutral',
+    challengeRating: 1,
+    experiencePoints: 0,
+    armorClass: 8,
+    hitPoints: {
+      count: 2,
+      die: 'd8',
+      modifier: 2,
+      notation: '2d8+2',
+    },
+    speed: {
+      walk: 30,
+    },
+    abilities: {
+      str: 0,
+      dex: 0,
+      con: 13,
+      int: 0,
+      wis: 2,
+      cha: 1,
+    },
+    d20Saves: {
+      fort: 4,
+      ref: -5,
+      will: -4,
+    },
+    baseAttackBonus: 1,
+    senses: [],
+    languages: [],
+    actions: [],
+  },
+  {
+    id: 'spider-swarm-35e-monster',
+    name: 'Spider Swarm',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'tiny',
+    type: 'vermin',
+    alignment: 'true neutral',
+    challengeRating: 1,
+    experiencePoints: 0,
+    armorClass: 17,
+    hitPoints: {
+      count: 2,
+      die: 'd8',
+      notation: '2d8',
+    },
+    speed: {
+      walk: 20,
+      climb: 20,
+    },
+    abilities: {
+      str: 1,
+      dex: 17,
+      con: 10,
+      int: 0,
+      wis: 10,
+      cha: 2,
+    },
+    d20Saves: {
+      fort: 3,
+      ref: 3,
+      will: 0,
+    },
+    baseAttackBonus: 1,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Swarm',
+        description:
+          'In order to attack, a single swarm moves into opponents spaces, which provokes an attack of opportunity. It can occupy the same space as a creature of any size, since it crawls all over its prey, but remains a creature with a 10-foot space. Swarms never make attacks of opportunity, but they can prov',
+        attackBonus: 0,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd6',
+              notation: '1d6-5',
+              modifier: -5,
+            },
           },
         ],
       },

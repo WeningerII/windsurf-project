@@ -20,25 +20,8 @@
 import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { weaponDamageTypeByName } from './lib/weaponDamageType.mjs';
+import { fetchSrd35MonsterNames } from './lib/srd35Monsters.mjs';
 
-const OLIMOT = 'https://raw.githubusercontent.com/olimot/srd-v3.5-md/main/monsters';
-const OLIMOT_FILES = [
-  'monsters-intro-a.md',
-  'monsters-b-c.md',
-  'monsters-d-de.md',
-  'monsters-di-do.md',
-  'monsters-dr-dw.md',
-  'monsters-e-f.md',
-  'monsters-g.md',
-  'monsters-h-i.md',
-  'monsters-k-l.md',
-  'monsters-m-n.md',
-  'monsters-o-r.md',
-  'monsters-s.md',
-  'monsters-t-z.md',
-  'monsters-animals.md',
-  'monsters-vermin.md',
-];
 const D35E_BESTIARY = 'https://raw.githubusercontent.com/Rughalt/D35E/master/packs/bestiary.db';
 
 const SIZE_BY_CODE = {
@@ -184,12 +167,13 @@ function stripHtml(html) {
 const ts = (value) => JSON.stringify(value, null, 2).replace(/"([a-zA-Z_][a-zA-Z0-9_]*)":/g, '$1:');
 
 async function main() {
-  // Core name list = the olimot chapter headers.
-  const coreNames = new Set();
-  for (const file of OLIMOT_FILES) {
-    const text = await (await fetch(`${OLIMOT}/${file}`)).text();
-    for (const match of text.matchAll(/^## (.+)$/gm)) coreNames.add(normalizeName(match[1]));
-  }
+  // Core name list = the full SRD monster roster (## stat blocks plus ### nested
+  // stat blocks such as ### Balor / ### Red Dragon, with section scaffolding
+  // filtered). The roster is pinned to scripts/data below so the coverage
+  // denominator measures against the exact list this encoder tried to fill —
+  // catalog and percentage can never drift apart.
+  const roster = await fetchSrd35MonsterNames();
+  const coreNames = new Set(roster.map(normalizeName));
   console.log(`core SRD names: ${coreNames.size}`);
 
   const rows = (await (await fetch(D35E_BESTIARY)).text())
@@ -378,6 +362,24 @@ ${monsters.map((monster) => ts(monster)).join(',\n')},
     );
     console.log(`${bucket}.ts: ${monsters.length} monsters`);
   }
+
+  // Pin the SRD roster so the coverage denominator (src/scripts/srd-coverage.ts)
+  // measures against the exact list this encoder tried to fill — the committed
+  // upstream-manifest pattern already used for the PF1e bestiary. Regenerating
+  // the data refreshes it, so the catalog and the percentage stay in lockstep.
+  writeFileSync(
+    resolve('scripts/data/srd35-monster-roster.json'),
+    `${JSON.stringify(
+      {
+        source: 'olimot/srd-v3.5-md monster chapters (## stat blocks + ### nested stat blocks)',
+        count: roster.length,
+        names: roster,
+      },
+      null,
+      2
+    )}\n`
+  );
+  console.log(`srd35-monster-roster.json: ${roster.length} SRD names pinned`);
 
   console.log(`\nencoded: ${report.encoded} (non-core skipped: ${report.skippedNonCore})`);
   console.log(`skipped (unmappable): ${report.skipped.length}`);

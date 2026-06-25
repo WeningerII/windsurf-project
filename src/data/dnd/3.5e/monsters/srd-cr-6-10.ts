@@ -7,6 +7,186 @@ import { Monster } from '../../../../types/creatures/monsters';
 
 export const srdCr610Monsters35e: Monster[] = [
   {
+    id: 'annis-35e-monster',
+    name: 'Annis',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'large',
+    type: 'monstrous-humanoid',
+    alignment: 'chaotic evil',
+    challengeRating: 6,
+    experiencePoints: 0,
+    armorClass: 20,
+    hitPoints: {
+      count: 7,
+      die: 'd8',
+      modifier: 13,
+      notation: '7d8+13',
+    },
+    speed: {
+      walk: 40,
+    },
+    abilities: {
+      str: 25,
+      dex: 12,
+      con: 14,
+      int: 13,
+      wis: 13,
+      cha: 10,
+    },
+    d20Saves: {
+      fort: 6,
+      ref: 6,
+      will: 6,
+    },
+    baseAttackBonus: 7,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Rake',
+        description:
+          'A creature with this special attack gains extra natural attacks when it grapples its foe. Normally, a monster can attack with only one of its natural weapons while grappling, but a monster with the rake ability usually gains two additional claw attacks that it can use only against a grappled foe. Ra',
+        attackBonus: 13,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd6',
+              notation: '1d6+7',
+              modifier: 7,
+            },
+            type: 'slashing',
+          },
+        ],
+      },
+      {
+        name: 'Rend',
+        description:
+          'Createure with this attack can apply additional damage if conditions described in its description are fulfilled.',
+        attackBonus: 13,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd6',
+              notation: '2d6+7',
+              modifier: 7,
+            },
+            type: 'slashing',
+          },
+        ],
+      },
+      {
+        name: 'Bite',
+        description:
+          'The creature attacks with its mouth, dealing piercing, slashing, and bludgeoning damage.',
+        attackBonus: 13,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd6',
+              notation: '1d6+7',
+              modifier: 7,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+      {
+        name: 'Claw',
+        description:
+          'The creature rips with a sharp appendage, dealing piercing and slashing damage.',
+        attackBonus: 13,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd6',
+              notation: '1d6+7',
+              modifier: 7,
+            },
+            type: 'slashing',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'babau-35e-monster',
+    name: 'Babau',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'medium',
+    type: 'outsider',
+    alignment: 'chaotic evil',
+    challengeRating: 6,
+    experiencePoints: 0,
+    armorClass: 19,
+    hitPoints: {
+      count: 7,
+      die: 'd8',
+      modifier: 34,
+      notation: '7d8+34',
+    },
+    speed: {
+      walk: 30,
+    },
+    abilities: {
+      str: 21,
+      dex: 12,
+      con: 20,
+      int: 14,
+      wis: 13,
+      cha: 16,
+    },
+    d20Saves: {
+      fort: 10,
+      ref: 6,
+      will: 6,
+    },
+    baseAttackBonus: 7,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Bite',
+        description:
+          'The creature attacks with its mouth, dealing piercing, slashing, and bludgeoning damage.',
+        attackBonus: 12,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd6',
+              notation: '1d6+5',
+              modifier: 5,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+      {
+        name: 'Claw',
+        description:
+          'The creature rips with a sharp appendage, dealing piercing and slashing damage.',
+        attackBonus: 12,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd6',
+              notation: '1d6+5',
+              modifier: 5,
+            },
+            type: 'slashing',
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: 'belker-35e-monster',
     name: 'Belker',
     system: 'dnd-3.5e',
@@ -152,6 +332,44 @@ export const srdCr610Monsters35e: Monster[] = [
         ],
       },
     ],
+  },
+  {
+    id: 'chain-devil-35e-monster',
+    name: 'Chain Devil',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'medium',
+    type: 'outsider',
+    alignment: 'lawful evil',
+    challengeRating: 6,
+    experiencePoints: 0,
+    armorClass: 20,
+    hitPoints: {
+      count: 8,
+      die: 'd8',
+      modifier: 16,
+      notation: '8d8+16',
+    },
+    speed: {
+      walk: 30,
+    },
+    abilities: {
+      str: 15,
+      dex: 15,
+      con: 15,
+      int: 6,
+      wis: 10,
+      cha: 12,
+    },
+    d20Saves: {
+      fort: 8,
+      ref: 8,
+      will: 6,
+    },
+    baseAttackBonus: 8,
+    senses: [],
+    languages: [],
+    actions: [],
   },
   {
     id: 'digester-35e-monster',
@@ -414,6 +632,79 @@ export const srdCr610Monsters35e: Monster[] = [
         description:
           'The dagger is a common secondary weapon. You get a +2 bonus on Sleight of Hand checks made to conceal a dagger on your body (see the Sleight of Hand skill, page 81).',
         attackBonus: 12,
+      },
+    ],
+  },
+  {
+    id: 'megaraptor-35e-monster',
+    name: 'Megaraptor',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'huge',
+    type: 'animal',
+    alignment: 'true neutral',
+    challengeRating: 6,
+    experiencePoints: 0,
+    armorClass: 16,
+    hitPoints: {
+      count: 8,
+      die: 'd8',
+      modifier: 43,
+      notation: '8d8+43',
+    },
+    speed: {
+      walk: 60,
+    },
+    abilities: {
+      str: 21,
+      dex: 15,
+      con: 21,
+      int: 2,
+      wis: 15,
+      cha: 10,
+    },
+    d20Saves: {
+      fort: 11,
+      ref: 8,
+      will: 4,
+    },
+    baseAttackBonus: 6,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Talon',
+        description:
+          'The creature rips with a sharp appendage, dealing piercing and slashing damage.',
+        attackBonus: 9,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd8',
+              notation: '2d8+5',
+              modifier: 5,
+            },
+            type: 'slashing',
+          },
+        ],
+      },
+      {
+        name: 'Bite',
+        description:
+          'The creature attacks with its mouth, dealing piercing, slashing, and bludgeoning damage.',
+        attackBonus: 9,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd6',
+              notation: '2d6+5',
+              modifier: 5,
+            },
+            type: 'piercing',
+          },
+        ],
       },
     ],
   },
@@ -838,6 +1129,98 @@ export const srdCr610Monsters35e: Monster[] = [
     ],
   },
   {
+    id: 'black-pudding-35e-monster',
+    name: 'Black Pudding',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'huge',
+    type: 'ooze',
+    alignment: 'true neutral',
+    challengeRating: 7,
+    experiencePoints: 0,
+    armorClass: 3,
+    hitPoints: {
+      count: 10,
+      die: 'd10',
+      modifier: 60,
+      notation: '10d10+60',
+    },
+    speed: {
+      walk: 20,
+      climb: 20,
+    },
+    abilities: {
+      str: 17,
+      dex: 1,
+      con: 22,
+      int: 0,
+      wis: 1,
+      cha: 1,
+    },
+    d20Saves: {
+      fort: 9,
+      ref: -2,
+      will: -2,
+    },
+    baseAttackBonus: 7,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Constrict',
+        description:
+          'A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature s entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we',
+        attackBonus: 8,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd6',
+              notation: '2d6+3',
+              modifier: 3,
+            },
+            type: 'bludgeoning',
+          },
+          {
+            dice: {
+              count: 2,
+              die: 'd6',
+              notation: '2d6+3',
+              modifier: 3,
+            },
+            type: 'bludgeoning',
+          },
+        ],
+      },
+      {
+        name: 'Slam',
+        description:
+          'The creature batters opponents with an appendage, dealing bludgeoning damage.',
+        attackBonus: 8,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd6',
+              notation: '2d6+3',
+              modifier: 3,
+            },
+            type: 'bludgeoning',
+          },
+          {
+            dice: {
+              count: 2,
+              die: 'd6',
+              notation: '2d6+3',
+              modifier: 3,
+            },
+            type: 'bludgeoning',
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: 'bulette-35e-monster',
     name: 'Bulette',
     system: 'dnd-3.5e',
@@ -1229,6 +1612,170 @@ export const srdCr610Monsters35e: Monster[] = [
     ],
   },
   {
+    id: 'criosphinx-35e-monster',
+    name: 'Criosphinx',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'large',
+    type: 'magical-beast',
+    alignment: 'true neutral',
+    challengeRating: 7,
+    experiencePoints: 0,
+    armorClass: 20,
+    hitPoints: {
+      count: 10,
+      die: 'd10',
+      modifier: 30,
+      notation: '10d10+30',
+    },
+    speed: {
+      walk: 30,
+      fly: 60,
+    },
+    abilities: {
+      str: 23,
+      dex: 10,
+      con: 17,
+      int: 10,
+      wis: 11,
+      cha: 11,
+    },
+    d20Saves: {
+      fort: 10,
+      ref: 7,
+      will: 3,
+    },
+    baseAttackBonus: 10,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Rake',
+        description:
+          'A creature with this special attack gains extra natural attacks when it grapples its foe. Normally, a monster can attack with only one of its natural weapons while grappling, but a monster with the rake ability usually gains two additional claw attacks that it can use only against a grappled foe. Ra',
+        attackBonus: 15,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd6',
+              notation: '1d6+6',
+              modifier: 6,
+            },
+            type: 'slashing',
+          },
+        ],
+      },
+      {
+        name: 'Claw',
+        description:
+          'The creature rips with a sharp appendage, dealing piercing and slashing damage.',
+        attackBonus: 15,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd6',
+              notation: '1d6+6',
+              modifier: 6,
+            },
+            type: 'slashing',
+          },
+        ],
+      },
+      {
+        name: 'Gore',
+        description:
+          'The creature spears the opponent with an antler, horn, or similar appendage, dealing piercing damage.',
+        attackBonus: 15,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd6',
+              notation: '2d6+6',
+              modifier: 6,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'dire-bear-35e-monster',
+    name: 'Dire Bear',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'large',
+    type: 'animal',
+    alignment: 'true neutral',
+    challengeRating: 7,
+    experiencePoints: 0,
+    armorClass: 17,
+    hitPoints: {
+      count: 12,
+      die: 'd8',
+      modifier: 51,
+      notation: '12d8+51',
+    },
+    speed: {
+      walk: 40,
+    },
+    abilities: {
+      str: 31,
+      dex: 13,
+      con: 19,
+      int: 2,
+      wis: 12,
+      cha: 10,
+    },
+    d20Saves: {
+      fort: 12,
+      ref: 9,
+      will: 5,
+    },
+    baseAttackBonus: 9,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Bite',
+        description:
+          'The creature attacks with its mouth, dealing piercing, slashing, and bludgeoning damage.',
+        attackBonus: 18,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd8',
+              notation: '2d8+10',
+              modifier: 10,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+      {
+        name: 'Claw',
+        description:
+          'The creature rips with a sharp appendage, dealing piercing and slashing damage.',
+        attackBonus: 18,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd4',
+              notation: '2d4+10',
+              modifier: 10,
+            },
+            type: 'slashing',
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: 'dragonne-35e-monster',
     name: 'Dragonne',
     system: 'dnd-3.5e',
@@ -1383,6 +1930,63 @@ export const srdCr610Monsters35e: Monster[] = [
     ],
   },
   {
+    id: 'elasmosaurus-35e-monster',
+    name: 'Elasmosaurus',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'huge',
+    type: 'animal',
+    alignment: 'true neutral',
+    challengeRating: 7,
+    experiencePoints: 0,
+    armorClass: 13,
+    hitPoints: {
+      count: 10,
+      die: 'd8',
+      modifier: 66,
+      notation: '10d8+66',
+    },
+    speed: {
+      walk: 20,
+      swim: 50,
+    },
+    abilities: {
+      str: 26,
+      dex: 14,
+      con: 22,
+      int: 2,
+      wis: 13,
+      cha: 9,
+    },
+    d20Saves: {
+      fort: 15,
+      ref: 9,
+      will: 4,
+    },
+    baseAttackBonus: 7,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Bite',
+        description:
+          'The creature attacks with its mouth, dealing piercing, slashing, and bludgeoning damage.',
+        attackBonus: 13,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd8',
+              notation: '2d8+8',
+              modifier: 8,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: 'elephant-35e-monster',
     name: 'Elephant',
     system: 'dnd-3.5e',
@@ -1481,6 +2085,315 @@ export const srdCr610Monsters35e: Monster[] = [
               die: 'd6',
               notation: '2d6+10',
               modifier: 10,
+            },
+            type: 'bludgeoning',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'flesh-golem-35e-monster',
+    name: 'Flesh Golem',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'large',
+    type: 'construct',
+    alignment: 'true neutral',
+    challengeRating: 7,
+    experiencePoints: 0,
+    armorClass: 18,
+    hitPoints: {
+      count: 9,
+      die: 'd10',
+      modifier: 29,
+      notation: '9d10+29',
+    },
+    speed: {
+      walk: 30,
+    },
+    abilities: {
+      str: 21,
+      dex: 9,
+      con: 0,
+      int: 0,
+      wis: 11,
+      cha: 1,
+    },
+    d20Saves: {
+      fort: 3,
+      ref: 2,
+      will: 3,
+    },
+    baseAttackBonus: 6,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Slam',
+        description:
+          'The creature batters opponents with an appendage, dealing bludgeoning damage.',
+        attackBonus: 10,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd8',
+              notation: '2d8+5',
+              modifier: 5,
+            },
+            type: 'bludgeoning',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'formian-taskmaster-35e-monster',
+    name: 'Formian Taskmaster',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'medium',
+    type: 'outsider',
+    alignment: 'lawful neutral',
+    challengeRating: 7,
+    experiencePoints: 0,
+    armorClass: 19,
+    hitPoints: {
+      count: 6,
+      die: 'd8',
+      modifier: 12,
+      notation: '6d8+12',
+    },
+    speed: {
+      walk: 40,
+    },
+    abilities: {
+      str: 18,
+      dex: 16,
+      con: 14,
+      int: 11,
+      wis: 16,
+      cha: 19,
+    },
+    d20Saves: {
+      fort: 7,
+      ref: 8,
+      will: 8,
+    },
+    baseAttackBonus: 6,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Claw',
+        description:
+          'The creature rips with a sharp appendage, dealing piercing and slashing damage.',
+        attackBonus: 10,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd6',
+              notation: '1d6+4',
+              modifier: 4,
+            },
+            type: 'slashing',
+          },
+        ],
+      },
+      {
+        name: 'Sting',
+        description:
+          'The creature stabs with a stinger, dealing piercing damage. Sting attacks usually deal damage from poison in addition to hit point damage.',
+        attackBonus: 10,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd4',
+              notation: '2d4+4',
+              modifier: 4,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'hellcat-35e-monster',
+    name: 'Hellcat',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'large',
+    type: 'outsider',
+    alignment: 'lawful evil',
+    challengeRating: 7,
+    experiencePoints: 0,
+    armorClass: 21,
+    hitPoints: {
+      count: 8,
+      die: 'd8',
+      modifier: 24,
+      notation: '8d8+24',
+    },
+    speed: {
+      walk: 40,
+    },
+    abilities: {
+      str: 23,
+      dex: 21,
+      con: 17,
+      int: 10,
+      wis: 14,
+      cha: 10,
+    },
+    d20Saves: {
+      fort: 9,
+      ref: 11,
+      will: 8,
+    },
+    baseAttackBonus: 8,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Rake',
+        description:
+          'A creature with this special attack gains extra natural attacks when it grapples its foe. Normally, a monster can attack with only one of its natural weapons while grappling, but a monster with the rake ability usually gains two additional claw attacks that it can use only against a grappled foe. Ra',
+        attackBonus: 13,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd8',
+              notation: '1d8+6',
+              modifier: 6,
+            },
+            type: 'slashing',
+          },
+        ],
+      },
+      {
+        name: 'Bite',
+        description:
+          'The creature attacks with its mouth, dealing piercing, slashing, and bludgeoning damage.',
+        attackBonus: 13,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd8',
+              notation: '2d8+6',
+              modifier: 6,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+      {
+        name: 'Claw',
+        description:
+          'The creature rips with a sharp appendage, dealing piercing and slashing damage.',
+        attackBonus: 13,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd8',
+              notation: '1d8+6',
+              modifier: 6,
+            },
+            type: 'slashing',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'hill-giant-35e-monster',
+    name: 'Hill Giant',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'large',
+    type: 'giant',
+    alignment: 'chaotic evil',
+    challengeRating: 7,
+    experiencePoints: 0,
+    armorClass: 17,
+    hitPoints: {
+      count: 12,
+      die: 'd8',
+      modifier: 48,
+      notation: '12d8+48',
+    },
+    speed: {
+      walk: 30,
+    },
+    abilities: {
+      str: 25,
+      dex: 8,
+      con: 19,
+      int: 6,
+      wis: 10,
+      cha: 7,
+    },
+    d20Saves: {
+      fort: 12,
+      ref: 3,
+      will: 4,
+    },
+    baseAttackBonus: 9,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Greatclub',
+        description:
+          'A greatclub is a two-handed version of a regular club. It is often studded with nails or spikes or ringed by bands of iron.',
+        attackBonus: 15,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd8',
+              notation: '2d8+7',
+              modifier: 7,
+            },
+            type: 'bludgeoning',
+          },
+        ],
+      },
+      {
+        name: 'Slam',
+        description:
+          'The creature batters opponents with an appendage, dealing bludgeoning damage.',
+        attackBonus: 15,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd4',
+              notation: '1d4+7',
+              modifier: 7,
+            },
+            type: 'bludgeoning',
+          },
+        ],
+      },
+      {
+        name: 'Rock',
+        description:
+          'Adult giants are accomplished rock throwers and receive a +1 racial bonus on attack rolls when throwing rocks. A giant of at least Large size can hurl rocks weighing 40 to 50 pounds each (Small objects) up to five range increments. The size of the range increment varies with the giant s variety. A H',
+        attackBonus: 15,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd6',
+              notation: '2d6+7',
+              modifier: 7,
             },
             type: 'bludgeoning',
           },
@@ -1909,6 +2822,120 @@ export const srdCr610Monsters35e: Monster[] = [
     ],
   },
   {
+    id: 'succubus-35e-monster',
+    name: 'Succubus',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'medium',
+    type: 'outsider',
+    alignment: 'chaotic evil',
+    challengeRating: 7,
+    experiencePoints: 0,
+    armorClass: 20,
+    hitPoints: {
+      count: 6,
+      die: 'd8',
+      modifier: 6,
+      notation: '6d8+6',
+    },
+    speed: {
+      walk: 30,
+      fly: 50,
+    },
+    abilities: {
+      str: 13,
+      dex: 13,
+      con: 13,
+      int: 16,
+      wis: 14,
+      cha: 26,
+    },
+    d20Saves: {
+      fort: 6,
+      ref: 6,
+      will: 7,
+    },
+    baseAttackBonus: 6,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Claw',
+        description:
+          'The creature rips with a sharp appendage, dealing piercing and slashing damage.',
+        attackBonus: 7,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd6',
+              notation: '1d6+1',
+              modifier: 1,
+            },
+            type: 'slashing',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'water-naga-35e-monster',
+    name: 'Water Naga',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'large',
+    type: 'aberration',
+    alignment: 'true neutral',
+    challengeRating: 7,
+    experiencePoints: 0,
+    armorClass: 15,
+    hitPoints: {
+      count: 7,
+      die: 'd8',
+      modifier: 27,
+      notation: '7d8+27',
+    },
+    speed: {
+      walk: 30,
+      swim: 50,
+    },
+    abilities: {
+      str: 16,
+      dex: 13,
+      con: 18,
+      int: 10,
+      wis: 17,
+      cha: 15,
+    },
+    d20Saves: {
+      fort: 6,
+      ref: 5,
+      will: 8,
+    },
+    baseAttackBonus: 5,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Bite',
+        description:
+          'The creature attacks with its mouth, dealing piercing, slashing, and bludgeoning damage.',
+        attackBonus: 7,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd6',
+              notation: '2d6+3',
+              modifier: 3,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: 'athach-35e-monster',
     name: 'Athach',
     system: 'dnd-3.5e',
@@ -2160,6 +3187,79 @@ export const srdCr610Monsters35e: Monster[] = [
     ],
   },
   {
+    id: 'dark-naga-35e-monster',
+    name: 'Dark Naga',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'large',
+    type: 'aberration',
+    alignment: 'lawful evil',
+    challengeRating: 8,
+    experiencePoints: 0,
+    armorClass: 14,
+    hitPoints: {
+      count: 9,
+      die: 'd8',
+      modifier: 17,
+      notation: '9d8+17',
+    },
+    speed: {
+      walk: 40,
+    },
+    abilities: {
+      str: 14,
+      dex: 15,
+      con: 14,
+      int: 16,
+      wis: 15,
+      cha: 17,
+    },
+    d20Saves: {
+      fort: 5,
+      ref: 7,
+      will: 8,
+    },
+    baseAttackBonus: 6,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Bite',
+        description:
+          'The creature attacks with its mouth, dealing piercing, slashing, and bludgeoning damage.',
+        attackBonus: 7,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd4',
+              notation: '1d4+2',
+              modifier: 2,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+      {
+        name: 'Sting',
+        description:
+          'The creature stabs with a stinger, dealing piercing damage. Sting attacks usually deal damage from poison in addition to hit point damage.',
+        attackBonus: 7,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd4',
+              notation: '2d4+2',
+              modifier: 2,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: 'destrachan-35e-monster',
     name: 'Destrachan',
     system: 'dnd-3.5e',
@@ -2208,6 +3308,219 @@ export const srdCr610Monsters35e: Monster[] = [
               die: 'd6',
               notation: '1d6+4',
               modifier: 4,
+            },
+            type: 'slashing',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'dire-tiger-35e-monster',
+    name: 'Dire Tiger',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'large',
+    type: 'animal',
+    alignment: 'true neutral',
+    challengeRating: 8,
+    experiencePoints: 0,
+    armorClass: 17,
+    hitPoints: {
+      count: 16,
+      die: 'd8',
+      modifier: 48,
+      notation: '16d8+48',
+    },
+    speed: {
+      walk: 40,
+    },
+    abilities: {
+      str: 27,
+      dex: 15,
+      con: 17,
+      int: 2,
+      wis: 12,
+      cha: 10,
+    },
+    d20Saves: {
+      fort: 13,
+      ref: 12,
+      will: 6,
+    },
+    baseAttackBonus: 12,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Rake',
+        description:
+          'A creature with this special attack gains extra natural attacks when it grapples its foe. Normally, a monster can attack with only one of its natural weapons while grappling, but a monster with the rake ability usually gains two additional claw attacks that it can use only against a grappled foe. Ra',
+        attackBonus: 19,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd4',
+              notation: '2d4+8',
+              modifier: 8,
+            },
+            type: 'slashing',
+          },
+        ],
+      },
+      {
+        name: 'Bite',
+        description:
+          'The creature attacks with its mouth, dealing piercing, slashing, and bludgeoning damage.',
+        attackBonus: 19,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd6',
+              notation: '2d6+8',
+              modifier: 8,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+      {
+        name: 'Claw',
+        description:
+          'The creature rips with a sharp appendage, dealing piercing and slashing damage.',
+        attackBonus: 19,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd4',
+              notation: '2d4+8',
+              modifier: 8,
+            },
+            type: 'slashing',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'efreeti-35e-monster',
+    name: 'Efreeti',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'large',
+    type: 'outsider',
+    alignment: 'lawful evil',
+    challengeRating: 8,
+    experiencePoints: 0,
+    armorClass: 18,
+    hitPoints: {
+      count: 10,
+      die: 'd8',
+      modifier: 20,
+      notation: '10d8+20',
+    },
+    speed: {
+      walk: 20,
+      fly: 40,
+    },
+    abilities: {
+      str: 23,
+      dex: 17,
+      con: 14,
+      int: 12,
+      wis: 15,
+      cha: 15,
+    },
+    d20Saves: {
+      fort: 9,
+      ref: 10,
+      will: 9,
+    },
+    baseAttackBonus: 10,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Slam',
+        description:
+          'The creature batters opponents with an appendage, dealing bludgeoning damage.',
+        attackBonus: 15,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd8',
+              notation: '1d8+6',
+              modifier: 6,
+            },
+            type: 'bludgeoning',
+          },
+          {
+            dice: {
+              count: 1,
+              die: 'd6',
+              notation: '1d6+6',
+              modifier: 6,
+            },
+            type: 'bludgeoning',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'erinyes-35e-monster',
+    name: 'Erinyes',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'medium',
+    type: 'outsider',
+    alignment: 'lawful evil',
+    challengeRating: 8,
+    experiencePoints: 0,
+    armorClass: 23,
+    hitPoints: {
+      count: 9,
+      die: 'd8',
+      modifier: 44,
+      notation: '9d8+44',
+    },
+    speed: {
+      walk: 30,
+      fly: 50,
+    },
+    abilities: {
+      str: 21,
+      dex: 21,
+      con: 21,
+      int: 14,
+      wis: 18,
+      cha: 20,
+    },
+    d20Saves: {
+      fort: 11,
+      ref: 11,
+      will: 10,
+    },
+    baseAttackBonus: 9,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Longsword',
+        description:
+          'This classic, straight blade is the weapon of knighthood and valor. It is a favorite weapon of many paladins.',
+        attackBonus: 14,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd8',
+              notation: '1d8+5',
+              modifier: 5,
             },
             type: 'slashing',
           },
@@ -2373,6 +3686,190 @@ export const srdCr610Monsters35e: Monster[] = [
               modifier: 6,
             },
             type: 'slashing',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'greater-shadow-35e-monster',
+    name: 'Greater Shadow',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'medium',
+    type: 'undead',
+    alignment: 'chaotic evil',
+    challengeRating: 8,
+    experiencePoints: 0,
+    armorClass: 14,
+    hitPoints: {
+      count: 9,
+      die: 'd12',
+      modifier: -1,
+      notation: '9d12-1',
+    },
+    speed: {
+      walk: 40,
+    },
+    abilities: {
+      str: 0,
+      dex: 15,
+      con: 0,
+      int: 6,
+      wis: 12,
+      cha: 14,
+    },
+    d20Saves: {
+      fort: 5,
+      ref: 5,
+      will: 7,
+    },
+    baseAttackBonus: 4,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Incorporeal Touch',
+        description: 'Incorporeal Touch attack (melee).',
+        attackBonus: -1,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd8',
+              notation: '1d8-5',
+              modifier: -5,
+            },
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'gynosphinx-35e-monster',
+    name: 'Gynosphinx',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'large',
+    type: 'magical-beast',
+    alignment: 'true neutral',
+    challengeRating: 8,
+    experiencePoints: 0,
+    armorClass: 21,
+    hitPoints: {
+      count: 8,
+      die: 'd10',
+      modifier: 8,
+      notation: '8d10+8',
+    },
+    speed: {
+      walk: 40,
+      fly: 60,
+    },
+    abilities: {
+      str: 19,
+      dex: 12,
+      con: 13,
+      int: 18,
+      wis: 19,
+      cha: 19,
+    },
+    d20Saves: {
+      fort: 7,
+      ref: 7,
+      will: 8,
+    },
+    baseAttackBonus: 8,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Rake',
+        description:
+          'A creature with this special attack gains extra natural attacks when it grapples its foe. Normally, a monster can attack with only one of its natural weapons while grappling, but a monster with the rake ability usually gains two additional claw attacks that it can use only against a grappled foe. Ra',
+        attackBonus: 11,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd6',
+              notation: '1d6+4',
+              modifier: 4,
+            },
+            type: 'slashing',
+          },
+        ],
+      },
+      {
+        name: 'Claw',
+        description:
+          'The creature rips with a sharp appendage, dealing piercing and slashing damage.',
+        attackBonus: 11,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd6',
+              notation: '1d6+4',
+              modifier: 4,
+            },
+            type: 'slashing',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'hellwasp-swarm-35e-monster',
+    name: 'Hellwasp Swarm',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'tiny',
+    type: 'magical-beast',
+    alignment: 'lawful evil',
+    challengeRating: 8,
+    experiencePoints: 0,
+    armorClass: 20,
+    hitPoints: {
+      count: 12,
+      die: 'd10',
+      modifier: 27,
+      notation: '12d10+27',
+    },
+    speed: {
+      walk: 5,
+      fly: 40,
+    },
+    abilities: {
+      str: 1,
+      dex: 22,
+      con: 14,
+      int: 6,
+      wis: 13,
+      cha: 9,
+    },
+    d20Saves: {
+      fort: 10,
+      ref: 14,
+      will: 7,
+    },
+    baseAttackBonus: 12,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Swarm',
+        description:
+          'In order to attack, a single swarm moves into opponents spaces, which provokes an attack of opportunity. It can occupy the same space as a creature of any size, since it crawls all over its prey, but remains a creature with a 10-foot space. Swarms never make attacks of opportunity, but they can prov',
+        attackBonus: 11,
+        damage: [
+          {
+            dice: {
+              count: 3,
+              die: 'd6',
+              notation: '3d6-5',
+              modifier: -5,
+            },
           },
         ],
       },
@@ -2717,6 +4214,96 @@ export const srdCr610Monsters35e: Monster[] = [
     ],
   },
   {
+    id: 'stone-giant-35e-monster',
+    name: 'Stone Giant',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'large',
+    type: 'giant',
+    alignment: 'true neutral',
+    challengeRating: 8,
+    experiencePoints: 0,
+    armorClass: 22,
+    hitPoints: {
+      count: 14,
+      die: 'd8',
+      modifier: 56,
+      notation: '14d8+56',
+    },
+    speed: {
+      walk: 30,
+    },
+    abilities: {
+      str: 27,
+      dex: 15,
+      con: 19,
+      int: 10,
+      wis: 12,
+      cha: 11,
+    },
+    d20Saves: {
+      fort: 13,
+      ref: 6,
+      will: 7,
+    },
+    baseAttackBonus: 10,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Greatclub',
+        description:
+          'A greatclub is a two-handed version of a regular club. It is often studded with nails or spikes or ringed by bands of iron.',
+        attackBonus: 17,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd8',
+              notation: '2d8+8',
+              modifier: 8,
+            },
+            type: 'bludgeoning',
+          },
+        ],
+      },
+      {
+        name: 'Slam',
+        description:
+          'The creature batters opponents with an appendage, dealing bludgeoning damage.',
+        attackBonus: 17,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd4',
+              notation: '1d4+8',
+              modifier: 8,
+            },
+            type: 'bludgeoning',
+          },
+        ],
+      },
+      {
+        name: 'Rock',
+        description:
+          'Adult giants are accomplished rock throwers and receive a +1 racial bonus on attack rolls when throwing rocks. A giant of at least Large size can hurl rocks weighing 40 to 50 pounds each (Small objects) up to five range increments. The size of the range increment varies with the giant s variety. A H',
+        attackBonus: 17,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd6',
+              notation: '2d6+8',
+              modifier: 8,
+            },
+            type: 'bludgeoning',
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: 'treant-35e-monster',
     name: 'Treant',
     system: 'dnd-3.5e',
@@ -2784,6 +4371,136 @@ export const srdCr610Monsters35e: Monster[] = [
               modifier: 9,
             },
             type: 'bludgeoning',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'tyrannosaurus-35e-monster',
+    name: 'Tyrannosaurus',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'huge',
+    type: 'animal',
+    alignment: 'true neutral',
+    challengeRating: 8,
+    experiencePoints: 0,
+    armorClass: 14,
+    hitPoints: {
+      count: 18,
+      die: 'd8',
+      modifier: 99,
+      notation: '18d8+99',
+    },
+    speed: {
+      walk: 40,
+    },
+    abilities: {
+      str: 28,
+      dex: 12,
+      con: 21,
+      int: 2,
+      wis: 15,
+      cha: 10,
+    },
+    d20Saves: {
+      fort: 16,
+      ref: 12,
+      will: 8,
+    },
+    baseAttackBonus: 13,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Bite',
+        description:
+          'The creature attacks with its mouth, dealing piercing, slashing, and bludgeoning damage.',
+        attackBonus: 20,
+        damage: [
+          {
+            dice: {
+              count: 3,
+              die: 'd6',
+              notation: '3d6+9',
+              modifier: 9,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'androsphinx-35e-monster',
+    name: 'Androsphinx',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'large',
+    type: 'magical-beast',
+    alignment: 'chaotic good',
+    challengeRating: 9,
+    experiencePoints: 0,
+    armorClass: 22,
+    hitPoints: {
+      count: 12,
+      die: 'd10',
+      modifier: 48,
+      notation: '12d10+48',
+    },
+    speed: {
+      walk: 50,
+      fly: 80,
+    },
+    abilities: {
+      str: 25,
+      dex: 10,
+      con: 19,
+      int: 16,
+      wis: 17,
+      cha: 17,
+    },
+    d20Saves: {
+      fort: 12,
+      ref: 8,
+      will: 7,
+    },
+    baseAttackBonus: 12,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Rake',
+        description:
+          'A creature with this special attack gains extra natural attacks when it grapples its foe. Normally, a monster can attack with only one of its natural weapons while grappling, but a monster with the rake ability usually gains two additional claw attacks that it can use only against a grappled foe. Ra',
+        attackBonus: 18,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd4',
+              notation: '2d4+7',
+              modifier: 7,
+            },
+            type: 'slashing',
+          },
+        ],
+      },
+      {
+        name: 'Claw',
+        description:
+          'The creature rips with a sharp appendage, dealing piercing and slashing damage.',
+        attackBonus: 18,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd4',
+              notation: '2d4+7',
+              modifier: 7,
+            },
+            type: 'slashing',
           },
         ],
       },
@@ -2863,6 +4580,96 @@ export const srdCr610Monsters35e: Monster[] = [
     ],
   },
   {
+    id: 'bone-devil-35e-monster',
+    name: 'Bone Devil',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'large',
+    type: 'outsider',
+    alignment: 'lawful evil',
+    challengeRating: 9,
+    experiencePoints: 0,
+    armorClass: 25,
+    hitPoints: {
+      count: 10,
+      die: 'd8',
+      modifier: 50,
+      notation: '10d8+50',
+    },
+    speed: {
+      walk: 40,
+    },
+    abilities: {
+      str: 21,
+      dex: 21,
+      con: 21,
+      int: 14,
+      wis: 14,
+      cha: 14,
+    },
+    d20Saves: {
+      fort: 12,
+      ref: 12,
+      will: 11,
+    },
+    baseAttackBonus: 10,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Bite',
+        description:
+          'The creature attacks with its mouth, dealing piercing, slashing, and bludgeoning damage.',
+        attackBonus: 14,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd8',
+              notation: '1d8+5',
+              modifier: 5,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+      {
+        name: 'Claw',
+        description:
+          'The creature rips with a sharp appendage, dealing piercing and slashing damage.',
+        attackBonus: 14,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd4',
+              notation: '1d4+5',
+              modifier: 5,
+            },
+            type: 'slashing',
+          },
+        ],
+      },
+      {
+        name: 'Sting',
+        description:
+          'The creature stabs with a stinger, dealing piercing damage. Sting attacks usually deal damage from poison in addition to hit point damage.',
+        attackBonus: 14,
+        damage: [
+          {
+            dice: {
+              count: 3,
+              die: 'd4',
+              notation: '3d4+5',
+              modifier: 5,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: 'delver-35e-monster',
     name: 'Delver',
     system: 'dnd-3.5e',
@@ -2913,6 +4720,62 @@ export const srdCr610Monsters35e: Monster[] = [
               modifier: 8,
             },
             type: 'bludgeoning',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'dire-shark-35e-monster',
+    name: 'Dire Shark',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'huge',
+    type: 'animal',
+    alignment: 'true neutral',
+    challengeRating: 9,
+    experiencePoints: 0,
+    armorClass: 17,
+    hitPoints: {
+      count: 18,
+      die: 'd8',
+      modifier: 66,
+      notation: '18d8+66',
+    },
+    speed: {
+      walk: 60,
+    },
+    abilities: {
+      str: 23,
+      dex: 15,
+      con: 17,
+      int: 1,
+      wis: 12,
+      cha: 10,
+    },
+    d20Saves: {
+      fort: 14,
+      ref: 13,
+      will: 7,
+    },
+    baseAttackBonus: 13,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Bite',
+        description:
+          'The creature attacks with its mouth, dealing piercing, slashing, and bludgeoning damage.',
+        attackBonus: 17,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd8',
+              notation: '2d8+6',
+              modifier: 6,
+            },
+            type: 'piercing',
           },
         ],
       },
@@ -3003,6 +4866,141 @@ export const srdCr610Monsters35e: Monster[] = [
               notation: '12d6+8',
               modifier: 8,
             },
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'frost-giant-35e-monster',
+    name: 'Frost Giant',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'large',
+    type: 'giant',
+    alignment: 'chaotic evil',
+    challengeRating: 9,
+    experiencePoints: 0,
+    armorClass: 17,
+    hitPoints: {
+      count: 14,
+      die: 'd8',
+      modifier: 70,
+      notation: '14d8+70',
+    },
+    speed: {
+      walk: 40,
+    },
+    abilities: {
+      str: 29,
+      dex: 9,
+      con: 21,
+      int: 10,
+      wis: 14,
+      cha: 11,
+    },
+    d20Saves: {
+      fort: 14,
+      ref: 3,
+      will: 6,
+    },
+    baseAttackBonus: 10,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Greataxe',
+        description:
+          'This big, heavy axe is a favorite of barbarians and anybody else who wants the capability to deal out incredible damage.',
+        attackBonus: 18,
+      },
+      {
+        name: 'Slam',
+        description:
+          'The creature batters opponents with an appendage, dealing bludgeoning damage.',
+        attackBonus: 18,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd4',
+              notation: '1d4+9',
+              modifier: 9,
+            },
+            type: 'bludgeoning',
+          },
+        ],
+      },
+      {
+        name: 'Rock',
+        description:
+          'Adult giants are accomplished rock throwers and receive a +1 racial bonus on attack rolls when throwing rocks. A giant of at least Large size can hurl rocks weighing 40 to 50 pounds each (Small objects) up to five range increments. The size of the range increment varies with the giant s variety. A H',
+        attackBonus: 18,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd6',
+              notation: '2d6+9',
+              modifier: 9,
+            },
+            type: 'bludgeoning',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'nessian-warhound-35e-monster',
+    name: 'Nessian Warhound',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'large',
+    type: 'outsider',
+    alignment: 'lawful evil',
+    challengeRating: 9,
+    experiencePoints: 0,
+    armorClass: 18,
+    hitPoints: {
+      count: 12,
+      die: 'd8',
+      modifier: 60,
+      notation: '12d8+60',
+    },
+    speed: {
+      walk: 40,
+    },
+    abilities: {
+      str: 26,
+      dex: 14,
+      con: 20,
+      int: 4,
+      wis: 12,
+      cha: 6,
+    },
+    d20Saves: {
+      fort: 13,
+      ref: 10,
+      will: 9,
+    },
+    baseAttackBonus: 12,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Bite',
+        description:
+          'The creature attacks with its mouth, dealing piercing, slashing, and bludgeoning damage.',
+        attackBonus: 19,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd6',
+              notation: '2d6+8',
+              modifier: 8,
+            },
+            type: 'piercing',
           },
         ],
       },
@@ -3139,6 +5137,62 @@ export const srdCr610Monsters35e: Monster[] = [
     ],
   },
   {
+    id: 'spirit-naga-35e-monster',
+    name: 'Spirit Naga',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'large',
+    type: 'aberration',
+    alignment: 'chaotic evil',
+    challengeRating: 9,
+    experiencePoints: 0,
+    armorClass: 16,
+    hitPoints: {
+      count: 9,
+      die: 'd8',
+      modifier: 35,
+      notation: '9d8+35',
+    },
+    speed: {
+      walk: 40,
+    },
+    abilities: {
+      str: 18,
+      dex: 13,
+      con: 18,
+      int: 12,
+      wis: 17,
+      cha: 17,
+    },
+    d20Saves: {
+      fort: 7,
+      ref: 6,
+      will: 9,
+    },
+    baseAttackBonus: 6,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Bite',
+        description:
+          'The creature attacks with its mouth, dealing piercing, slashing, and bludgeoning damage.',
+        attackBonus: 9,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd6',
+              notation: '2d6+4',
+              modifier: 4,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: 'squid-giant-35e-monster',
     name: 'Squid, Giant',
     system: 'dnd-3.5e',
@@ -3228,6 +5282,170 @@ export const srdCr610Monsters35e: Monster[] = [
     ],
   },
   {
+    id: 'triceratops-35e-monster',
+    name: 'Triceratops',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'huge',
+    type: 'animal',
+    alignment: 'true neutral',
+    challengeRating: 9,
+    experiencePoints: 0,
+    armorClass: 18,
+    hitPoints: {
+      count: 16,
+      die: 'd8',
+      modifier: 124,
+      notation: '16d8+124',
+    },
+    speed: {
+      walk: 30,
+    },
+    abilities: {
+      str: 30,
+      dex: 9,
+      con: 25,
+      int: 1,
+      wis: 12,
+      cha: 7,
+    },
+    d20Saves: {
+      fort: 19,
+      ref: 9,
+      will: 6,
+    },
+    baseAttackBonus: 12,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Trample',
+        description:
+          'As a full-round action, a creature with this special attack can move up to twice its speed and literally run over any opponents at least one size category smaller than itself. The creature merely has to move over the opponents in its path; any creature whose space is completely covered by the trampl',
+        attackBonus: 20,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd12',
+              notation: '2d12+10',
+              modifier: 10,
+            },
+            type: 'bludgeoning',
+          },
+        ],
+      },
+      {
+        name: 'Gore',
+        description:
+          'The creature spears the opponent with an antler, horn, or similar appendage, dealing piercing damage.',
+        attackBonus: 20,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd8',
+              notation: '2d8+10',
+              modifier: 10,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'vrock-35e-monster',
+    name: 'Vrock',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'large',
+    type: 'outsider',
+    alignment: 'chaotic evil',
+    challengeRating: 9,
+    experiencePoints: 0,
+    armorClass: 22,
+    hitPoints: {
+      count: 10,
+      die: 'd8',
+      modifier: 70,
+      notation: '10d8+70',
+    },
+    speed: {
+      walk: 30,
+      fly: 50,
+    },
+    abilities: {
+      str: 23,
+      dex: 15,
+      con: 25,
+      int: 14,
+      wis: 16,
+      cha: 16,
+    },
+    d20Saves: {
+      fort: 14,
+      ref: 9,
+      will: 10,
+    },
+    baseAttackBonus: 10,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Bite',
+        description:
+          'The creature attacks with its mouth, dealing piercing, slashing, and bludgeoning damage.',
+        attackBonus: 15,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd8',
+              notation: '1d8+6',
+              modifier: 6,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+      {
+        name: 'Claw',
+        description:
+          'The creature rips with a sharp appendage, dealing piercing and slashing damage.',
+        attackBonus: 15,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd6',
+              notation: '2d6+6',
+              modifier: 6,
+            },
+            type: 'slashing',
+          },
+        ],
+      },
+      {
+        name: 'Talon',
+        description:
+          'The creature rips with a sharp appendage, dealing piercing and slashing damage.',
+        attackBonus: 15,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd6',
+              notation: '1d6+6',
+              modifier: 6,
+            },
+            type: 'slashing',
+          },
+        ],
+      },
+    ],
+  },
+  {
     id: 'yrthak-35e-monster',
     name: 'Yrthak',
     system: 'dnd-3.5e',
@@ -3302,6 +5520,52 @@ export const srdCr610Monsters35e: Monster[] = [
     ],
   },
   {
+    id: 'zelekhut-35e-monster',
+    name: 'Zelekhut',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'large',
+    type: 'construct',
+    alignment: 'lawful neutral',
+    challengeRating: 9,
+    experiencePoints: 0,
+    armorClass: 19,
+    hitPoints: {
+      count: 8,
+      die: 'd10',
+      modifier: 30,
+      notation: '8d10+30',
+    },
+    speed: {
+      walk: 35,
+      fly: 40,
+    },
+    abilities: {
+      str: 21,
+      dex: 11,
+      con: 0,
+      int: 10,
+      wis: 17,
+      cha: 15,
+    },
+    d20Saves: {
+      fort: 4,
+      ref: 2,
+      will: 5,
+    },
+    baseAttackBonus: 6,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Spiked Chain',
+        description:
+          'A spiked chain has reach, so you can strike opponents 10 feet away with it. In addition, unlike most other weapons with reach, it can be used against an adjacent foe. Because the chain can wrap around an enemy’s leg or other limb, you can make trip attacks with the chain. If you are tripped during y',
+        attackBonus: 10,
+      },
+    ],
+  },
+  {
     id: 'bat-35e-monster',
     name: 'Bat',
     system: 'dnd-3.5e',
@@ -3339,6 +5603,136 @@ export const srdCr610Monsters35e: Monster[] = [
     senses: [],
     languages: [],
     actions: [],
+  },
+  {
+    id: 'bebilith-35e-monster',
+    name: 'Bebilith',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'huge',
+    type: 'outsider',
+    alignment: 'chaotic evil',
+    challengeRating: 10,
+    experiencePoints: 0,
+    armorClass: 22,
+    hitPoints: {
+      count: 12,
+      die: 'd8',
+      modifier: 96,
+      notation: '12d8+96',
+    },
+    speed: {
+      walk: 40,
+      climb: 20,
+    },
+    abilities: {
+      str: 28,
+      dex: 12,
+      con: 26,
+      int: 11,
+      wis: 13,
+      cha: 13,
+    },
+    d20Saves: {
+      fort: 16,
+      ref: 9,
+      will: 9,
+    },
+    baseAttackBonus: 12,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Bite',
+        description:
+          'The creature attacks with its mouth, dealing piercing, slashing, and bludgeoning damage.',
+        attackBonus: 19,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd6',
+              notation: '2d6+9',
+              modifier: 9,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+      {
+        name: 'Claw',
+        description:
+          'The creature rips with a sharp appendage, dealing piercing and slashing damage.',
+        attackBonus: 19,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd4',
+              notation: '2d4+9',
+              modifier: 9,
+            },
+            type: 'slashing',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'clay-golem-35e-monster',
+    name: 'Clay Golem',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'large',
+    type: 'construct',
+    alignment: 'true neutral',
+    challengeRating: 10,
+    experiencePoints: 0,
+    armorClass: 22,
+    hitPoints: {
+      count: 11,
+      die: 'd10',
+      modifier: 29,
+      notation: '11d10+29',
+    },
+    speed: {
+      walk: 20,
+    },
+    abilities: {
+      str: 25,
+      dex: 9,
+      con: 0,
+      int: 0,
+      wis: 11,
+      cha: 1,
+    },
+    d20Saves: {
+      fort: 3,
+      ref: 2,
+      will: 3,
+    },
+    baseAttackBonus: 8,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Slam',
+        description:
+          'The creature batters opponents with an appendage, dealing bludgeoning damage.',
+        attackBonus: 14,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd10',
+              notation: '2d10+7',
+              modifier: 7,
+            },
+            type: 'bludgeoning',
+          },
+        ],
+      },
+    ],
   },
   {
     id: 'couatl-35e-monster',
@@ -3407,6 +5801,251 @@ export const srdCr610Monsters35e: Monster[] = [
               die: 'd3',
               notation: '1d3+4',
               modifier: 4,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'fire-giant-35e-monster',
+    name: 'Fire Giant',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'large',
+    type: 'giant',
+    alignment: 'lawful evil',
+    challengeRating: 10,
+    experiencePoints: 0,
+    armorClass: 16,
+    hitPoints: {
+      count: 15,
+      die: 'd8',
+      modifier: 74,
+      notation: '15d8+74',
+    },
+    speed: {
+      walk: 30,
+    },
+    abilities: {
+      str: 31,
+      dex: 9,
+      con: 21,
+      int: 10,
+      wis: 14,
+      cha: 11,
+    },
+    d20Saves: {
+      fort: 14,
+      ref: 4,
+      will: 9,
+    },
+    baseAttackBonus: 11,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Greatsword',
+        description:
+          'Adventurers recognize the greatsword as one of the best melee weapons available. It’s reliable and powerful.',
+        attackBonus: 20,
+        damage: [
+          {
+            dice: {
+              count: 3,
+              die: 'd6',
+              notation: '3d6+10',
+              modifier: 10,
+            },
+            type: 'slashing',
+          },
+        ],
+      },
+      {
+        name: 'Slam',
+        description:
+          'The creature batters opponents with an appendage, dealing bludgeoning damage.',
+        attackBonus: 20,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd4',
+              notation: '1d4+10',
+              modifier: 10,
+            },
+            type: 'bludgeoning',
+          },
+        ],
+      },
+      {
+        name: 'Rock',
+        description:
+          'Adult giants are accomplished rock throwers and receive a +1 racial bonus on attack rolls when throwing rocks. A giant of at least Large size can hurl rocks weighing 40 to 50 pounds each (Small objects) up to five range increments. The size of the range increment varies with the giant s variety. A H',
+        attackBonus: 20,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd6',
+              notation: '2d6+10',
+              modifier: 10,
+            },
+            type: 'bludgeoning',
+          },
+          {
+            dice: {
+              count: 2,
+              die: 'd6',
+              notation: '2d6+10',
+              modifier: 10,
+            },
+            type: 'bludgeoning',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'formian-myrmarch-35e-monster',
+    name: 'Formian Myrmarch',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'large',
+    type: 'outsider',
+    alignment: 'lawful neutral',
+    challengeRating: 10,
+    experiencePoints: 0,
+    armorClass: 28,
+    hitPoints: {
+      count: 12,
+      die: 'd8',
+      modifier: 48,
+      notation: '12d8+48',
+    },
+    speed: {
+      walk: 50,
+    },
+    abilities: {
+      str: 19,
+      dex: 18,
+      con: 18,
+      int: 16,
+      wis: 16,
+      cha: 17,
+    },
+    d20Saves: {
+      fort: 12,
+      ref: 12,
+      will: 11,
+    },
+    baseAttackBonus: 12,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Javelin',
+        description:
+          'This weapon is a light, flexible spear intended for throwing. You can use it in melee, but not well. Since it is not designed for melee, you are treated as nonproficient with it and take a –4 penalty on attack rolls if you use a javelin as a melee weapon.',
+        attackBonus: 15,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd8',
+              notation: '1d8+4',
+              modifier: 4,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+      {
+        name: 'Bite',
+        description:
+          'The creature attacks with its mouth, dealing piercing, slashing, and bludgeoning damage.',
+        attackBonus: 15,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd6',
+              notation: '2d6+4',
+              modifier: 4,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+      {
+        name: 'Sting',
+        description:
+          'The creature stabs with a stinger, dealing piercing damage. Sting attacks usually deal damage from poison in addition to hit point damage.',
+        attackBonus: 15,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd4',
+              notation: '2d4+4',
+              modifier: 4,
+            },
+            type: 'piercing',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'guardian-naga-35e-monster',
+    name: 'Guardian Naga',
+    system: 'dnd-3.5e',
+    source: 'SRD 3.5',
+    size: 'large',
+    type: 'aberration',
+    alignment: 'lawful good',
+    challengeRating: 10,
+    experiencePoints: 0,
+    armorClass: 18,
+    hitPoints: {
+      count: 11,
+      die: 'd8',
+      modifier: 43,
+      notation: '11d8+43',
+    },
+    speed: {
+      walk: 40,
+    },
+    abilities: {
+      str: 21,
+      dex: 14,
+      con: 19,
+      int: 16,
+      wis: 19,
+      cha: 18,
+    },
+    d20Saves: {
+      fort: 7,
+      ref: 7,
+      will: 11,
+    },
+    baseAttackBonus: 8,
+    senses: [],
+    languages: [],
+    actions: [
+      {
+        name: 'Bite',
+        description:
+          'The creature attacks with its mouth, dealing piercing, slashing, and bludgeoning damage.',
+        attackBonus: 12,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd6',
+              notation: '2d6+5',
+              modifier: 5,
             },
             type: 'piercing',
           },

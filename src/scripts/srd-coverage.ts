@@ -30,6 +30,7 @@ import {
   loadEquipmentForSystem,
   loadMonstersForSystem,
   loadBackgroundsForSystem,
+  loadPf2eBackgroundsForSystem,
   loadAdvantagesForSystem,
   loadDaggerheartDomainCardsForSystem,
   loadDaggerheartDomainsForSystem,
@@ -425,6 +426,34 @@ TARGETS.push({
   loader: () => loaderNames(loadMonstersForSystem, 'pf2e'),
 });
 
+// PF2e backgrounds (CRB) — single backgrounds-crb.json { background: [...] }.
+TARGETS.push({
+  systemId: 'pf2e',
+  systemLabel: 'Pathfinder 2e',
+  category: 'backgrounds',
+  srdSource: 'Core Rulebook (Pf2eToolsOrg/Pf2eTools backgrounds-crb.json)',
+  srd: () =>
+    fetchJsonPropNames(
+      'https://raw.githubusercontent.com/Pf2eToolsOrg/Pf2eTools/master/data/backgrounds/backgrounds-crb.json',
+      'background'
+    ),
+  loader: () => loaderNames(loadPf2eBackgroundsForSystem, 'pf2e'),
+});
+
+// PF2e equipment (CRB) — single items-crb.json { item: [...] }.
+TARGETS.push({
+  systemId: 'pf2e',
+  systemLabel: 'Pathfinder 2e',
+  category: 'equipment',
+  srdSource: 'Core Rulebook (Pf2eToolsOrg/Pf2eTools items-crb.json)',
+  srd: () =>
+    fetchJsonPropNames(
+      'https://raw.githubusercontent.com/Pf2eToolsOrg/Pf2eTools/master/data/items/items-crb.json',
+      'item'
+    ),
+  loader: () => loaderNames(loadEquipmentForSystem, 'pf2e'),
+});
+
 // PF2e Core Rulebook feats: the high-value catalog check (hundreds of entries,
 // not eyeball-verifiable, unlike the 12 classes / handful of ancestries). Same
 // single-CRB-file shape as the spell denominator (feats-crb.json `{ feat: [...] }`).
@@ -482,39 +511,27 @@ TARGETS.push({
   loader: () => loaderNames(loadSpellsForSystem, 'dnd-3.5e'),
 });
 
-const SRD35_MONSTER_FILES = [
-  'monsters-intro-a.md',
-  'monsters-b-c.md',
-  'monsters-d-de.md',
-  'monsters-di-do.md',
-  'monsters-dr-dw.md',
-  'monsters-e-f.md',
-  'monsters-g.md',
-  'monsters-h-i.md',
-  'monsters-k-l.md',
-  'monsters-m-n.md',
-  'monsters-o-r.md',
-  'monsters-s.md',
-  'monsters-t-z.md',
-  'monsters-animals.md',
-  'monsters-vermin.md',
-];
-async function fetchSrd35MonsterNames(): Promise<string[]> {
-  const names: string[] = [];
-  for (const file of SRD35_MONSTER_FILES) {
-    const text = await fetchText(
-      `https://raw.githubusercontent.com/olimot/srd-v3.5-md/main/monsters/${file}`
-    );
-    for (const match of text.matchAll(/^## (.+)$/gm)) names.push(match[1].trim());
-  }
-  return names;
-}
+// 3.5e monsters: the SRD nests many creatures (### Balor under ## Demon,
+// ### Red Dragon under ## Chromatic Dragons), so a flat "count every ## heading"
+// both miscounts each umbrella as one monster and misses every nested stat
+// block. The denominator is therefore the roster pinned by
+// scripts/encode-35e-monsters.mjs (scripts/lib/srd35Monsters.mjs extracts ##
+// stat blocks + ### nested stat blocks, section scaffolding filtered) — the same
+// committed-manifest pattern used for the PF1e bestiary, and the exact list the
+// encoder tried to fill, so the percentage can never drift from the catalog.
 TARGETS.push({
   systemId: 'dnd-3.5e',
   systemLabel: 'D&D 3.5e',
   category: 'monsters',
-  srdSource: 'SRD 3.5 (olimot/srd-v3.5-md monster chapters)',
-  srd: () => fetchSrd35MonsterNames(),
+  srdSource: 'SRD 3.5 (olimot/srd-v3.5-md monster chapters, pinned roster)',
+  srd: async () => {
+    const manifestPath = path.resolve(
+      path.dirname(fileURLToPath(import.meta.url)),
+      '../../scripts/data/srd35-monster-roster.json'
+    );
+    const manifest = JSON.parse(await fs.readFile(manifestPath, 'utf8')) as { names: string[] };
+    return manifest.names;
+  },
   loader: () => loaderNames(loadMonstersForSystem, 'dnd-3.5e'),
 });
 
@@ -704,7 +721,7 @@ async function main(): Promise<void> {
   lines.push('');
   lines.push('## Pending (independent source not yet wired or not cleanly scopable)');
   lines.push(
-    '- **D&D 3.5e** spells and monsters are measured against the clean core-only `olimot/srd-v3.5-md` chapters. The monster denominator counts every `## ` heading, which includes the SRD\'s category headers (e.g. "Angel", "Dragon", "Elemental") that nest individual stat blocks, so the monster percentage understates per-stat-block coverage. Remaining 3.5e categories (classes/feats/equipment) are unwired pending core-only sources. See `docs/srd-sources.md`.'
+    '- **D&D 3.5e** spells and monsters are measured against the clean core-only `olimot/srd-v3.5-md` chapters. The monster denominator is the pinned roster (`scripts/data/srd35-monster-roster.json`) that `scripts/encode-35e-monsters.mjs` extracts via `scripts/lib/srd35Monsters.mjs` — every `## ` stat block plus the `### ` stat blocks nested under category umbrellas (e.g. "Balor" under "Demon", "Red Dragon" under "Chromatic Dragons"), with section scaffolding (Combat, "X as Characters", "Creating a X") filtered out. The remaining gap is genuine shape mismatch: the structured D35E source names dragons by age band and elementals by size (`Red Dragon, Old`; `Fire Elemental, Medium`) rather than the SRD\'s single archetype entry, and carries no stat block for the player-race and template entries (Dwarf, Elf, Werewolf, Skeleton). See `docs/srd-sources.md`.'
   );
   lines.push(
     '- **Daggerheart** classes/ancestries/communities/adversaries/weapons/armor are now wired against the pinned Batres3 SRD manifest (`scripts/data/daggerheart-srd-manifest.json`). The few weapon/armor/ancestry "not in SRD" suspects are denominator nuances — Mixed Ancestry (a rules option, not a per-file ancestry), the Combat Wheelchair line (a separate SRD doc), and upstream-mirror spelling typos (e.g. "Widgast"→correct "Widogast") — not provenance violations.'
