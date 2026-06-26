@@ -16,7 +16,9 @@ export type OpenContentCategory =
   | 'advantages'
   | 'archetypes'
   | 'complications'
-  | 'powerModifiers';
+  | 'powerModifiers'
+  | 'conditions'
+  | 'environments';
 
 type SystemOpenContentPolicy = {
   allowedSources: readonly string[];

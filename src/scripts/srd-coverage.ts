@@ -32,6 +32,7 @@ import {
   loadBackgroundsForSystem,
   loadPf2eBackgroundsForSystem,
   loadAdvantagesForSystem,
+  loadConditionsForSystem,
   loadDaggerheartDomainCardsForSystem,
   loadDaggerheartDomainsForSystem,
   loadDaggerheartClassesForSystem,
@@ -40,6 +41,7 @@ import {
   loadDaggerheartAdversariesForSystem,
   loadDaggerheartWeaponsForSystem,
   loadDaggerheartArmorForSystem,
+  loadDaggerheartEnvironmentsForSystem,
 } from '../utils/dataLoader';
 import { GameSystemId } from '../types/game-systems';
 
@@ -589,6 +591,87 @@ TARGETS.push({
   loader: () => loaderNames(loadFeatsForSystem, 'dnd-3.5e'),
 });
 
+// D&D 3.5e equipment: the SRD equipment chapter's embedded HTML <table> blocks
+// ('Table: Weapons', 'Table: Armor and Shields', and the Adventuring Gear rows
+// of 'Table: Goods and Services'). Names are reordered like the encoder
+// ('Mace, light' -> 'Light Mace'); category/subhead/lock-quality rows are
+// sub-variants, not items, and are excluded on both sides.
+async function fetchSrd35EquipmentNames(): Promise<string[]> {
+  const md = await fetchText(
+    'https://raw.githubusercontent.com/olimot/srd-v3.5-md/main/basic-rules-and-legal/equipment.md'
+  );
+  const strip = (t: string) =>
+    String(t)
+      .replace(/<sup>.*?<\/sup>/gs, '')
+      .replace(/<br\s*\/?>/g, ' ')
+      .replace(/<[^>]+>/g, '')
+      .replace(/&nbsp;/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  const nat = (raw: string) => {
+    const p = raw.split(',').map((s) => s.trim());
+    if (p.length === 2)
+      return `${p[1]
+        .split(' ')
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(' ')} ${p[0]}`;
+    return raw;
+  };
+  const rows = (cap: string): string[][] => {
+    for (const t of md.matchAll(/<table[^>]*>(.*?)<\/table>/gs)) {
+      const b = t[1];
+      const c = /<caption>(.*?)<\/caption>/s.exec(b);
+      if (!c || strip(c[1]) !== cap) continue;
+      return [...b.matchAll(/<tr>(.*?)<\/tr>/gs)].map((m) =>
+        [...m[1].matchAll(/<t[dh][^>]*>(.*?)<\/t[dh]>/gs)].map((x) => strip(x[1]))
+      );
+    }
+    return [];
+  };
+  const names: string[] = [];
+  for (const cr of rows('Table: Weapons')) {
+    if (cr.length < 8) continue;
+    if (/^(Simple|Martial|Exotic) Weapons$/.test(cr[0])) continue;
+    if (cr[1] === 'Cost' || cr[3] === 'Dmg (M)') continue;
+    if (
+      /^(Light|One-Handed|Two-Handed) Melee Weapons$|^Ranged Weapons$|^Unarmed Attacks$/.test(
+        cr[0]
+      ) &&
+      cr.filter((x) => x).length === 1
+    )
+      continue;
+    if (!cr[3] || cr[3] === '—' || cr[3] === '-') continue;
+    names.push(nat(cr[0]));
+  }
+  for (const cr of rows('Table: Armor and Shields')) {
+    if (cr.length < 9) continue;
+    if (!/(gp|sp|cp)/.test(cr[1])) continue;
+    if (['Armor spikes', 'Gauntlet, locked', 'Shield spikes'].includes(cr[0])) continue;
+    names.push(nat(cr[0]));
+  }
+  let inGear = false;
+  for (const cr of rows('Table: Goods and Services')) {
+    if (cr[0] === 'Adventuring Gear') {
+      inGear = true;
+      continue;
+    }
+    if (cr[0] === 'Special Substances and Items') inGear = false;
+    if (!inGear || cr[0] === 'Item' || cr[0] === 'Lock') continue;
+    if (cr.length < 3 || !/(gp|sp|cp)/.test(cr[1])) continue;
+    if (['Very simple', 'Average', 'Good', 'Amazing'].includes(cr[0])) continue;
+    names.push(cr[0].replace(/\s*\(empty\)/i, '').trim());
+  }
+  return names;
+}
+TARGETS.push({
+  systemId: 'dnd-3.5e',
+  systemLabel: 'D&D 3.5e',
+  category: 'equipment',
+  srdSource: 'SRD 3.5 (olimot/srd-v3.5-md equipment chapter tables)',
+  srd: () => fetchSrd35EquipmentNames(),
+  loader: () => loaderNames(loadEquipmentForSystem, 'dnd-3.5e'),
+});
+
 // --- Mutants & Masterminds 3e (Hero's Handbook — whole DHH open content in scope) ---
 const MM_DATA_JS =
   'https://raw.githubusercontent.com/frnprt/mm3e-character-creator/master/js/data.js';
@@ -615,6 +698,14 @@ TARGETS.push({
   srdSource: "Hero's Handbook (frnprt/mm3e-character-creator EQUIPMENT)",
   srd: () => fetchJsArrayNames(MM_DATA_JS, 'EQUIPMENT'),
   loader: () => loaderNames(loadEquipmentForSystem, 'mam3e'),
+});
+TARGETS.push({
+  systemId: 'mam3e',
+  systemLabel: 'Mutants & Masterminds 3e',
+  category: 'conditions',
+  srdSource: "Hero's Handbook (frnprt/mm3e-character-creator CONDITIONS)",
+  srd: () => fetchJsArrayNames(MM_DATA_JS, 'CONDITIONS'),
+  loader: () => loaderNames(loadConditionsForSystem, 'mam3e'),
 });
 
 // --- Daggerheart (SRD 1.0 — whole SRD in scope) ---
@@ -662,6 +753,7 @@ const daggerheartCatalog: Array<[string, (s: GameSystemId) => Promise<unknown[]>
   ['adversaries', loadDaggerheartAdversariesForSystem],
   ['weapons', loadDaggerheartWeaponsForSystem],
   ['armor', loadDaggerheartArmorForSystem],
+  ['environments', loadDaggerheartEnvironmentsForSystem],
 ];
 for (const [category, loader] of daggerheartCatalog) {
   TARGETS.push({

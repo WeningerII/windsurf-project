@@ -26,8 +26,10 @@ import { FeatDefinition } from '../types/character-options/feats';
 import { Item } from '../types/equipment/items';
 import type { Pf2eBackgroundDefinition } from '../data/pathfinder/2e/backgrounds';
 import type { Complication } from '../data/mutants-and-masterminds/3e/complications';
+import type { Condition } from '../data/mutants-and-masterminds/3e/conditions';
 import type { PowerModifier } from '../data/mutants-and-masterminds/3e/modifiers/extras';
 import type { Pf1eTrait } from '../systems/pf1e/data-model';
+import type { DaggerheartEnvironment } from '../data/daggerheart/1.0/environments';
 import type {
   DaggerheartAncestry,
   DaggerheartArmor,
@@ -548,6 +550,11 @@ async function loadMam3eComplications(): Promise<Complication[]> {
   return complicationModule.complications || [];
 }
 
+async function loadMam3eConditions(): Promise<Condition[]> {
+  const conditionModule = await import('../data/mutants-and-masterminds/3e/conditions');
+  return conditionModule.allConditions || [];
+}
+
 async function loadMam3ePowerModifiers(): Promise<PowerModifier[]> {
   const modifierModule = await import('../data/mutants-and-masterminds/3e/modifiers');
   const { extras = [], flaws = [] } = modifierModule.powerModifiers || {};
@@ -823,6 +830,21 @@ export async function loadDaggerheartAdversariesForSystem(
   return finalizeLoadedItems(systemId, 'monsters', adversaryModule.daggerheartAdversaries || []);
 }
 
+export async function loadDaggerheartEnvironmentsForSystem(
+  systemId: GameSystemId
+): Promise<DaggerheartEnvironment[]> {
+  if (systemId !== 'daggerheart') {
+    return [];
+  }
+
+  const environmentModule = await import('../data/daggerheart/1.0/environments');
+  return finalizeLoadedItems(
+    systemId,
+    'environments',
+    environmentModule.daggerheartEnvironments || []
+  );
+}
+
 export async function loadDaggerheartDomainCardsForSystem(
   systemId: GameSystemId
 ): Promise<DaggerheartDomainCard[]> {
@@ -1026,6 +1048,15 @@ export async function loadComplicationsForSystem(systemId: GameSystemId): Promis
 
   const complications = await loadMam3eComplications();
   return finalizeLoadedItems(systemId, 'complications', complications);
+}
+
+export async function loadConditionsForSystem(systemId: GameSystemId): Promise<Condition[]> {
+  if (systemId !== 'mam3e') {
+    return [];
+  }
+
+  const conditions = await loadMam3eConditions();
+  return finalizeLoadedItems(systemId, 'conditions', conditions);
 }
 
 export async function loadPowerModifiersForSystem(
