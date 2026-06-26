@@ -300,6 +300,7 @@ export const vulnerable: Condition = {
   category: 'basic',
   description: 'Defense is halved (round up).',
   effects: ['Defense is halved (round up).'],
+  supersededBy: ['defenseless'],
 };
 
 export const weakened: Condition = {

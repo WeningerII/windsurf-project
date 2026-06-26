@@ -66,6 +66,9 @@ const SUPERSEDED_BY = {
   impaired: ['disabled', 'debilitated'],
   disabled: ['debilitated'],
   fatigued: ['exhausted'],
+  // Defenseless is the "2nd degree Vulnerable" in the source, mirroring the
+  // Dazed->Stunned / Hindered->Immobile degree pairs above.
+  vulnerable: ['defenseless'],
 };
 
 async function main() {
