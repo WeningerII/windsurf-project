@@ -46,6 +46,7 @@ export const dnd35eMetadata = {
         skill: dnd35eFeats.skill.length,
         ability: dnd35eFeats.ability.length,
         magic: dnd35eFeats.magic.length,
+        generated: dnd35eFeats.generated.length,
       },
     },
 

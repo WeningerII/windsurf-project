@@ -10,6 +10,7 @@ import { generalFeats } from './general';
 import { metamagicFeats } from './metamagic';
 import { itemCreationFeats } from './item-creation';
 import { magicFeats } from './magic';
+import { dnd35eGeneratedFeats } from './generated';
 
 export const dnd35eFeats = {
   general: generalFeats,
@@ -19,6 +20,9 @@ export const dnd35eFeats = {
   skill: [] as FeatDefinition[],
   ability: [] as FeatDefinition[],
   magic: magicFeats,
+  // SRD 3.5 feats from olimot/srd-v3.5-md not covered by the hand-written
+  // category files (generated; see scripts/encode-35e-feats.mjs).
+  generated: dnd35eGeneratedFeats,
 };
 
 export const getFeat = (id: string) => {
@@ -30,6 +34,7 @@ export const getFeat = (id: string) => {
     ...dnd35eFeats.skill,
     ...dnd35eFeats.ability,
     ...dnd35eFeats.magic,
+    ...dnd35eFeats.generated,
   ];
   return allFeats.find((f) => f.id === id);
 };
