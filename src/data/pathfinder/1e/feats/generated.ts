@@ -121,7 +121,7 @@ export const pf1eGeneratedFeats: FeatDefinition[] = [
     ],
     description: 'Your critical hits blind your opponents.',
     benefits: [
-      "Whenever you score a critical hit, your opponent is permanently blinded. A successful Fortitude save reduces this to dazzled for 1d4 rounds. The DC of this Fortitude save is equal to 10 + your base attack bonus. This feat has no effect on creatures that do not rely on eyes for sight or creatures with more than two eyes (although multiple critical hits might cause blindness, at the GM's discretion). Blindness can be cured by heal , regeneration , remove blindness , or similar abilities.",
+      "Whenever you score a critical hit, your opponent is permanently blinded. A successful Fortitude save reduces this to dazzled for 1d4 rounds. The DC of this Fortitude save is equal to 10 + your base attack bonus. This feat has no effect on creatures that do not rely on eyes for sight or creatures with more than two eyes (although multiple critical hits might cause blindness, at the GM's discretion). Blindness can be cured by heal, regeneration, remove blindness, or similar abilities.",
     ],
     special:
       'You can only apply the effects of one critical feat to a given critical hit unless you possess Critical Mastery.',
@@ -167,7 +167,7 @@ export const pf1eGeneratedFeats: FeatDefinition[] = [
     description:
       'Using foul powers of necromancy, you can command undead creatures, making them into your servants.',
     benefits: [
-      'As a standard action, you can use one of your uses of channel negative energy to enslave undead within 30 feet. Undead receive a Will save to negate the effect. The DC for this Will save is equal to 10 + 1/2 your cleric level + your Charisma modifier. Undead that fail their saves fall under your control, obeying your commands to the best of their ability, as if under the effects of control undead . Intelligent undead receive a new saving throw each day to resist your command. You can control any number of undead, so long as their total Hit Dice do not exceed your cleric level. If you use channel energy in this way, it has no other effect (it does not heal or harm nearby creatures). If an undead creature is under the control of another creature, you must make an opposed Charisma check whenever your orders conflict.',
+      'As a standard action, you can use one of your uses of channel negative energy to enslave undead within 30 feet. Undead receive a Will save to negate the effect. The DC for this Will save is equal to 10 + 1/2 your cleric level + your Charisma modifier. Undead that fail their saves fall under your control, obeying your commands to the best of their ability, as if under the effects of control undead. Intelligent undead receive a new saving throw each day to resist your command. You can control any number of undead, so long as their total Hit Dice do not exceed your cleric level. If you use channel energy in this way, it has no other effect (it does not heal or harm nearby creatures). If an undead creature is under the control of another creature, you must make an opposed Charisma check whenever your orders conflict.',
     ],
   },
   {
@@ -233,7 +233,7 @@ export const pf1eGeneratedFeats: FeatDefinition[] = [
     ],
     description: 'Your critical hits cause enemies to lose their hearing.',
     benefits: [
-      'Whenever you score a critical hit against an opponent, the victim is permanently deafened. A successful Fortitude save reduces the deafness to 1 round. The DC of this Fortitude save is equal to 10 + your base attack bonus. This feat has no effect on deaf creatures. This deafness can be cured by heal , regeneration , remove deafness , or a similar ability.',
+      'Whenever you score a critical hit against an opponent, the victim is permanently deafened. A successful Fortitude save reduces the deafness to 1 round. The DC of this Fortitude save is equal to 10 + your base attack bonus. This feat has no effect on deaf creatures. This deafness can be cured by heal, regeneration, remove deafness, or a similar ability.',
     ],
     special:
       'You can only apply the effects of one critical feat to a given critical hit unless you possess Critical Mastery.',
@@ -659,7 +659,7 @@ export const pf1eGeneratedFeats: FeatDefinition[] = [
     ],
     description: 'You can make a single attack that deals incredible damage.',
     benefits: [
-      "When you use the attack action, you can make one attack at your highest base attack bonus that deals additional damage. Roll the weapon's damage dice for the attack four times and add the results together before adding bonuses from Strength, weapon abilities (such as flaming ), precision based damage, and other damage bonuses. These extra weapon damage dice are not multiplied on a critical hit, but are added to the total.",
+      "When you use the attack action, you can make one attack at your highest base attack bonus that deals additional damage. Roll the weapon's damage dice for the attack four times and add the results together before adding bonuses from Strength, weapon abilities (such as flaming), precision based damage, and other damage bonuses. These extra weapon damage dice are not multiplied on a critical hit, but are added to the total.",
     ],
   },
   {
@@ -750,7 +750,7 @@ export const pf1eGeneratedFeats: FeatDefinition[] = [
     description:
       'This feat allows you to acquire a powerful familiar, but only when you could normally acquire a new familiar.',
     benefits: [
-      "When choosing a familiar, the creatures listed below are also available to you. You may choose a familiar with an alignment up to one step away on each alignment axis (lawful through chaotic, good through evil). Familiar Familiar Alignment Arcane Spellcaster Level Celestial hawk 1 Neutral good 3rd Dire rat Neutral 3rd Fiendish viper 2 Neutral evil 3rd Elemental, Small (any type) Neutral 5th Stirge Neutral 5th Homunculus 3 Any 7th Imp Lawful evil 7th Mephit (any type) Neutral 7th Pseudodragon Neutral good 7th Quasit Chaotic evil 7th 1 Or other celestial animal from the standard familiar list. 2 Or other fiendish animal from the standard familiar list. 3 The master must first create the homunculus. Improved familiars otherwise use the rules for regular familiars, with two exceptions: if the creature's type is something other than animal, its type does not change; and improved familiars do not gain the ability to speak with other creatures of their kind (although many of them already have the ability to communicate).",
+      "When choosing a familiar, the creatures listed below are also available to you. You may choose a familiar with an alignment up to one step away on each alignment axis (lawful through chaotic, good through evil). Familiar\nFamiliar | Alignment | Arcane Spellcaster Level\nCelestial hawk [1] | Neutral good | 3rd\nDire rat | Neutral | 3rd\nFiendish viper [2] | Neutral evil | 3rd\nElemental, Small (any type) | Neutral | 5th\nStirge | Neutral | 5th\nHomunculus [3] | Any | 7th\nImp | Lawful evil | 7th\nMephit (any type) | Neutral | 7th\nPseudodragon | Neutral good | 7th\nQuasit | Chaotic evil | 7th\n1 Or other celestial animal from the standard familiar list.\n2 Or other fiendish animal from the standard familiar list.\n3 The master must first create the homunculus.\nImproved familiars otherwise use the rules for regular familiars, with two exceptions: if the creature's type is something other than animal, its type does not change; and improved familiars do not gain the ability to speak with other creatures of their kind (although many of them already have the ability to communicate).",
     ],
   },
   {
@@ -883,7 +883,7 @@ export const pf1eGeneratedFeats: FeatDefinition[] = [
     ],
     description: 'You can make a single attack that deals a large amount of damage.',
     benefits: [
-      "When you use the attack action, you can make one attack at your highest base attack bonus that deals additional damage. Roll the weapon's damage dice for the attack three times and add the results together before adding bonuses from Strength, weapon special abilities (such as flaming ), precision based damage, and other damage bonuses. These extra weapon damage dice are not multiplied on a critical hit, but are added to the total.",
+      "When you use the attack action, you can make one attack at your highest base attack bonus that deals additional damage. Roll the weapon's damage dice for the attack three times and add the results together before adding bonuses from Strength, weapon special abilities (such as flaming), precision based damage, and other damage bonuses. These extra weapon damage dice are not multiplied on a critical hit, but are added to the total.",
     ],
   },
   {
@@ -1265,7 +1265,7 @@ export const pf1eGeneratedFeats: FeatDefinition[] = [
       'You have mastered a small handful of spells, and can prepare these spells without referencing your spellbooks at all.',
     benefits: [
       'Each time you take this feat, choose a number of spells that you already know equal to your Intelligence modifier. From that point on, you can prepare these spells without referring to a spellbook.',
-      'Normal: Without this feat, you must use a spellbook to prepare all your spells, except read magic .',
+      'Normal: Without this feat, you must use a spellbook to prepare all your spells, except read magic.',
     ],
   },
   {
