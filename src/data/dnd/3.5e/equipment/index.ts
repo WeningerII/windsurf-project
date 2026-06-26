@@ -2,17 +2,24 @@ import { dnd35eWeapons } from './weapons';
 import { dnd35eArmor, dnd35eShields } from './armor';
 import { dnd35eMagicItems } from './magic-items';
 import { dnd35eGear } from './gear';
+import {
+  dnd35eGeneratedWeapons,
+  dnd35eGeneratedArmor,
+  dnd35eGeneratedShields,
+  dnd35eGeneratedGear,
+} from './generated';
 
 export * from './armor';
 export * from './weapons';
 export * from './magic-items';
 export * from './gear';
+export * from './generated';
 
 export const dnd35eEquipment = {
-  weapons: dnd35eWeapons,
-  armor: dnd35eArmor,
-  shields: dnd35eShields,
-  adventuringGear: dnd35eGear,
+  weapons: [...dnd35eWeapons, ...dnd35eGeneratedWeapons],
+  armor: [...dnd35eArmor, ...dnd35eGeneratedArmor],
+  shields: [...dnd35eShields, ...dnd35eGeneratedShields],
+  adventuringGear: [...dnd35eGear, ...dnd35eGeneratedGear],
   magicItems: dnd35eMagicItems,
 };
 
