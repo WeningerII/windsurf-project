@@ -194,6 +194,12 @@ export default defineConfig({
           if (id.includes('src/data/pathfinder/2e/spells')) {
             return 'pf2e-spells-data';
           }
+          // The bulk CRB equipment catalog (scripts/encode-pf2e-equipment.mjs)
+          // rides its own lazy chunk so the core pf2e-data chunk stays within
+          // the per-data-chunk budget, mirroring the monsters/spells splits.
+          if (id.includes('src/data/pathfinder/2e/equipment')) {
+            return 'pf2e-equipment-data';
+          }
           if (id.includes('src/data/pathfinder/2e')) {
             return 'pf2e-data';
           }

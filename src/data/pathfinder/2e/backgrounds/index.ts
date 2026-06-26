@@ -6,10 +6,14 @@ export type {
   Pf2eBackgroundFeatGrant,
 } from '../../../../types/character-options/pf2eBackgrounds';
 import type { Pf2eBackgroundDefinition } from '../../../../types/character-options/pf2eBackgrounds';
+import { srdPf2eGeneratedBackgrounds } from './generated';
 
 const coreSource = 'Core Rulebook';
 
-export const pf2eBackgrounds: Pf2eBackgroundDefinition[] = [
+// Hand-written Core Rulebook backgrounds. The bulk CRB backgrounds sourced from
+// Pf2eTools (scripts/encode-pf2e-backgrounds.mjs) are appended below; the
+// hand-written entries here win on name match.
+const handWrittenBackgrounds: Pf2eBackgroundDefinition[] = [
   {
     id: 'pf2e-bg-acolyte',
     name: 'Acolyte',
@@ -268,4 +272,13 @@ export const pf2eBackgrounds: Pf2eBackgroundDefinition[] = [
       description: 'Granted by the Warrior background.',
     },
   },
+];
+
+export { handWrittenBackgrounds };
+
+// Full Core Rulebook background list: hand-written entries plus the generated
+// CRB backgrounds (which never duplicate a hand-written name).
+export const pf2eBackgrounds: Pf2eBackgroundDefinition[] = [
+  ...handWrittenBackgrounds,
+  ...srdPf2eGeneratedBackgrounds,
 ];

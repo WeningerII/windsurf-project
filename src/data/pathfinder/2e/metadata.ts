@@ -16,6 +16,7 @@ import { pf2eMagicItems } from './equipment/magic-items';
 import { pf2eMagicWeapons } from './equipment/magic-weapons';
 import { pf2eMagicArmor } from './equipment/magic-armor';
 import { pf2eGear } from './equipment/adventuring-gear';
+import { srdPf2eGeneratedEquipment } from './equipment/generated';
 
 export const pf2eMetadata = {
   system: 'pf2e',
@@ -66,6 +67,8 @@ export const pf2eMetadata = {
       armor: Object.keys(pf2eArmor).length,
       magicItems: pf2eMagicItems.length + pf2eMagicWeapons.length + pf2eMagicArmor.length,
       gear: Object.keys(pf2eGear).length,
+      // Bulk CRB items sourced from Pf2eTools (scripts/encode-pf2e-equipment.mjs).
+      generated: srdPf2eGeneratedEquipment.length,
     },
   },
 
@@ -89,7 +92,8 @@ export function getProgress(): number {
     stats.equipment.weapons +
     stats.equipment.armor +
     stats.equipment.magicItems +
-    stats.equipment.gear;
+    stats.equipment.gear +
+    stats.equipment.generated;
 
   // All present data is implemented — progress is 100%
   return totalItems > 0 ? 100 : 0;
