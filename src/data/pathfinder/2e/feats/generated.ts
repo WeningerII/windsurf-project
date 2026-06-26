@@ -106,10 +106,10 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'You gain one level=[1;10] feat. For the purpose of meeting its prerequisites, your wizard level is equal to half your character level.',
+      'You gain one wizard feat. For the purpose of meeting its prerequisites, your wizard level is equal to half your character level.',
     benefits: [],
     special:
-      'You can select this feat more than once. Each time you select it, you gain another level=[1;10] feat.',
+      'You can select this feat more than once. Each time you select it, you gain another wizard feat.',
   },
   {
     id: 'advanced-blood-potency',
@@ -123,10 +123,10 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'You gain one level=[1;10] feat. For the purpose of prerequisites, your sorcerer level is half your character level.',
+      'You gain one sorcerer feat. For the purpose of prerequisites, your sorcerer level is half your character level.',
     benefits: [],
     special:
-      'You can select this feat more than once. Each time you do, you gain another level=[1;10] feat.',
+      'You can select this feat more than once. Each time you do, you gain another sorcerer feat.',
   },
   {
     id: 'advanced-bloodline',
@@ -159,10 +159,10 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'You gain one level=[1;10] feat. For the purpose of meeting its prerequisites, your alchemist level is equal to half your character level.',
+      'You gain one alchemist feat. For the purpose of meeting its prerequisites, your alchemist level is equal to half your character level.',
     benefits: [],
     special:
-      'You can select this feat more than once. Each time you select it, you gain another level=[1;10] feat.',
+      'You can select this feat more than once. Each time you select it, you gain another alchemist feat.',
   },
   {
     id: 'advanced-deity-s-domain',
@@ -195,10 +195,10 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'You gain one level=[1;10] feat. For the purpose of meeting its prerequisites, your champion level is equal to half your character level.',
+      'You gain one champion feat. For the purpose of meeting its prerequisites, your champion level is equal to half your character level.',
     benefits: [],
     special:
-      'You can select this feat more than once. Each time you select it, you gain another level=[1;10] feat.',
+      'You can select this feat more than once. Each time you select it, you gain another champion feat.',
   },
   {
     id: 'advanced-dogma',
@@ -212,10 +212,10 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'You gain one level=[1;10] feat. For the purpose of meeting its prerequisites, your cleric level is equal to half your character level.',
+      'You gain one cleric feat. For the purpose of meeting its prerequisites, your cleric level is equal to half your character level.',
     benefits: [],
     special:
-      'You can select this feat more than once. Each time you select it, you gain another level=[1;10] feat.',
+      'You can select this feat more than once. Each time you select it, you gain another cleric feat.',
   },
   {
     id: 'advanced-domain',
@@ -248,10 +248,10 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'You gain one level=[1;10] feat. For the purpose of meeting its prerequisites, your barbarian level is equal to half your character level.',
+      'You gain one barbarian feat. For the purpose of meeting its prerequisites, your barbarian level is equal to half your character level.',
     benefits: [],
     special:
-      'You can select this feat more than once. Each time you select it, you gain another level=[1;10] feat.',
+      'You can select this feat more than once. Each time you select it, you gain another barbarian feat.',
   },
   {
     id: 'advanced-hunter-s-trick',
@@ -265,10 +265,10 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'You gain one level=[1;10] feat. For the purpose of meeting its prerequisites, your ranger level is equal to half your character level.',
+      'You gain one ranger feat. For the purpose of meeting its prerequisites, your ranger level is equal to half your character level.',
     benefits: [],
     special:
-      'You can select this feat more than once. Each time you select it, you gain another level=[1;10] feat.',
+      'You can select this feat more than once. Each time you select it, you gain another ranger feat.',
   },
   {
     id: 'advanced-kata',
@@ -282,10 +282,10 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'You gain one level=[1;10] feat. For the purpose of meeting its prerequisites, your monk level is equal to half your character level.',
+      'You gain one monk feat. For the purpose of meeting its prerequisites, your monk level is equal to half your character level.',
     benefits: [],
     special:
-      'You can select this feat more than once. Each time you select it, you gain another level=[1;10] feat.',
+      'You can select this feat more than once. Each time you select it, you gain another monk feat.',
   },
   {
     id: 'advanced-maneuver',
@@ -299,10 +299,10 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'You gain a level=[1;10] feat. For the purpose of meeting its prerequisites, your fighter level is equal to half your character level.',
+      'You gain a fighter feat. For the purpose of meeting its prerequisites, your fighter level is equal to half your character level.',
     benefits: [],
     special:
-      'You can select this feat more than once. Each time you select it, you gain another level=[1;10] feat.',
+      'You can select this feat more than once. Each time you select it, you gain another fighter feat.',
   },
   {
     id: 'advanced-muse-s-whispers',
@@ -316,10 +316,10 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'You gain one level=[1;10] feat. For the purpose of meeting its prerequisites, your bard level is equal to half your character level.',
+      'You gain one bard feat. For the purpose of meeting its prerequisites, your bard level is equal to half your character level.',
     benefits: [],
     special:
-      'You can select this feat more than once. Each time you select it, you gain another level=[1;10] feat.',
+      'You can select this feat more than once. Each time you select it, you gain another bard feat.',
   },
   {
     id: 'advanced-school-spell',
@@ -337,7 +337,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      "You gain access to a powerful new school spell depending on your arcane school. If you're an crb, you gain energy absorption; if you're a crb, you gain dimensional steps; if you're a crb, you gain vigilant eye; if you're an crb, you gain dread aura; if you're an crb, you gain elemental tempest; if you're an crb, you gain invisibility cloak; if you're a crb, you gain life siphon; and if you're a crb, you gain shifting form. Increase the number of Focus Points in your focus pool by 1.",
+      "You gain access to a powerful new school spell depending on your arcane school. If you're an abjurer, you gain energy absorption; if you're a conjurer, you gain dimensional steps; if you're a diviner, you gain vigilant eye; if you're an enchanter, you gain dread aura; if you're an evoker, you gain elemental tempest; if you're an illusionist, you gain invisibility cloak; if you're a necromancer, you gain life siphon; and if you're a transmuter, you gain shifting form. Increase the number of Focus Points in your focus pool by 1.",
     benefits: [],
   },
   {
@@ -352,10 +352,10 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'You gain one level=[1;10] feat. For the purpose of meeting its prerequisites, your rogue level is equal to half your character level.',
+      'You gain one rogue feat. For the purpose of meeting its prerequisites, your rogue level is equal to half your character level.',
     benefits: [],
     special:
-      'You can select this feat more than once. Each time you select it, you gain another level=[1;10] feat.',
+      'You can select this feat more than once. Each time you select it, you gain another rogue feat.',
   },
   {
     id: 'advanced-weapon-training',
@@ -385,10 +385,10 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'You gain one level=[1;10] feat. For the purpose of meeting its prerequisites, your druid level is equal to half your character level.',
+      'You gain one druid feat. For the purpose of meeting its prerequisites, your druid level is equal to half your character level.',
     benefits: [],
     special:
-      'You can select this feat more than once. Each time you select it, you gain another level=[1;10] feat.',
+      'You can select this feat more than once. Each time you select it, you gain another druid feat.',
   },
   {
     id: 'advantageous-assault',
@@ -423,7 +423,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'The divine grace that flows through you grants reprieve from an affliction. When you use Mercy, you can instead attempt to counteracting a curse, disease, or poison.',
+      'The divine grace that flows through you grants reprieve from an affliction. When you use Mercy, you can instead attempt to counteract a curse, disease, or poison.',
     benefits: [],
   },
   {
@@ -470,7 +470,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'You can use the Craft activity to create alchemical items. When you select this feat, you immediately add the formulas for four weapon==sand to your formula book.',
+      'You can use the Craft activity to create alchemical items. When you select this feat, you immediately add the formulas for four common 1st-level alchemical items to your formula book.',
     benefits: [],
   },
   {
@@ -485,7 +485,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'You have used alchemy to create life, a simple creature formed from alchemical materials, reagents, and a bit of your own blood. This alchemical familiar appears to be a small creature of flesh and blood, though it might have some unusual or distinguishing aspects depending on your creative process. Like other familiars, your alchemical familiar assists you in your laboratory and on adventures. The familiar uses your Intelligence modifier to determine its Perception, Acrobatics, and Stealth modifiers (see familiars for more information).',
+      'You have used alchemy to create life, a simple creature formed from alchemical materials, reagents, and a bit of your own blood. This alchemical familiar appears to be a small creature of flesh and blood, though it might have some unusual or distinguishing aspects depending on your creative process. Like other familiars, your alchemical familiar assists you in your laboratory and on adventures. The familiar uses your Intelligence modifier to determine its Perception, Acrobatics, and Stealth modifiers (see Familiars for more information).',
     benefits: [],
   },
   {
@@ -521,8 +521,8 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
     description:
       'You put your alchemical interest into practice. You become trained in alchemical bombs and Crafting; if you were already trained in Crafting, you instead become trained in a skill of your choice. You become trained in alchemist class DC.',
     benefits: [
-      "You gain the alchemist's 1 class feature, gaining a number of reagents each day equal to your level.",
-      "You also gain the Alchemical Crafting feat and four additional formulas for weapon==sand, as well as the ability to create free items during your daily preparations. Your advanced alchemy level is 1 and doesn't increase on its own.",
+      "You gain the alchemist's infused reagents class feature, gaining a number of reagents each day equal to your level.",
+      "You also gain the Alchemical Crafting feat and four additional formulas for 1st-level alchemical items, as well as the ability to create free items during your daily preparations. Your advanced alchemy level is 1 and doesn't increase on its own.",
     ],
     special:
       'You cannot select another dedication feat until you have gained two other feats from the alchemist archetype.',
@@ -581,7 +581,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      "Your aura hampers fiends' teleportation. Your aura attempts to counteracting teleportation spells cast by fiends within 15 feet, using the spell level and DC of your devotion spells.",
+      "Your aura hampers fiends' teleportation. Your aura attempts to counteract teleportation spells cast by fiends within 15 feet, using the spell level and DC of your devotion spells.",
     benefits: [],
   },
   {
@@ -596,11 +596,11 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'animal',
+        description: 'Animal order',
       },
     ],
     description:
-      'You gain the service of a young animal companions that travels with you on your adventures and obeys any simple commands you give it to the best of its abilities. See Animal Companions for more information.',
+      'You gain the service of a young animal companion that travels with you on your adventures and obeys any simple commands you give it to the best of its abilities. See Animal Companions for more information.',
     benefits: [],
   },
   {
@@ -634,7 +634,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'animal',
+        description: 'Animal instinct',
       },
     ],
     description:
@@ -653,11 +653,11 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'animal',
+        description: 'Animal instinct',
       },
     ],
     description:
-      "Your proficiency in unarmored defense increases to expert. When you are raging and unarmored, your skin transforms into a thick hide. You gain a +2 item bonus to AC (+3 if you have the 13 class feature). The thickness of your hide gives you a Dexterity modifier cap to your AC of +3. This item bonus to AC is cumulative with armor potency runes on your explorer's clothing, mage armor, and bracers of armor (generic).",
+      "Your proficiency in unarmored defense increases to expert. When you are raging and unarmored, your skin transforms into a thick hide. You gain a +2 item bonus to AC (+3 if you have the greater juggernaut class feature). The thickness of your hide gives you a Dexterity modifier cap to your AC of +3. This item bonus to AC is cumulative with armor potency runes on your explorer's clothing, mage armor, and bracers of armor (generic).",
     benefits: [],
   },
   {
@@ -907,7 +907,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'Guided by your ongoing care, your steed has developed incredible intelligence and skill. The mount you gained through the divine ally class feature is now a Specialized Animal Companions. You can select one of the usual specializations or the auspice specialization.',
+      'Guided by your ongoing care, your steed has developed incredible intelligence and skill. The mount you gained through the divine ally class feature is now a specialized animal companion. You can select one of the usual specializations or the auspice specialization.',
     benefits: [
       "Auspice mounts gain the following benefits: Your companion is marked by your deity's religious symbol as a sacred creature of your deity. Its proficiency rank in Religion increases to expert, it can speak the language associated with your deity's servitors (Celestial for champions who follow the tenets of good), and its Intelligence modifier increases by 2 and its Wisdom modifier by 1.",
     ],
@@ -982,7 +982,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       'You become trained in Athletics; if you were already trained in Athletics, you instead become trained in a skill of your choice. You become trained in barbarian class DC.',
     benefits: [
       'You can use the Rage action.',
-      "Choose an 1 as you would if you were a barbarian. You have that instinct for all purposes and become bound by its anathema, but you don't gain any of the other abilities it grants.",
+      "Choose an instinct as you would if you were a barbarian. You have that instinct for all purposes and become bound by its anathema, but you don't gain any of the other abilities it grants.",
     ],
     special:
       'You cannot select another dedication feat until you have gained two other feats from the barbarian archetype.',
@@ -1034,7 +1034,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'enigma',
+        description: 'Enigma muse',
       },
     ],
     description:
@@ -1052,7 +1052,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
         description: 'Wizard Dedication',
       },
     ],
-    description: 'You gain a level=[1;2] feat of your choice.',
+    description: 'You gain a 1st- or 2nd-level wizard feat of your choice.',
     benefits: [],
   },
   {
@@ -1067,7 +1067,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'You gain the spellcasting archetypes. Each time you gain a spell slot of a new level from the bard archetype, add a common occult spell or another spell you learned or discovered to your repertoire, of the appropriate spell level.',
+      'You gain the basic spellcasting benefits. Each time you gain a spell slot of a new level from the bard archetype, add a common occult spell or another spell you learned or discovered to your repertoire, of the appropriate spell level.',
     benefits: [],
   },
   {
@@ -1081,7 +1081,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
         description: 'Sorcerer Dedication',
       },
     ],
-    description: 'You gain a level=[1;2] feat.',
+    description: 'You gain a 1st- or 2nd-level sorcerer feat.',
     benefits: [],
   },
   {
@@ -1096,7 +1096,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      "You gain your 1's Class=Sorcerer. If you don't already have one, you also gain a focus pool of 1 Focus Point, which you can Refocus without any special effort.",
+      "You gain your bloodline's initial bloodline spell. If you don't already have one, you also gain a focus pool of 1 Focus Point, which you can Refocus without any special effort.",
     benefits: [],
   },
   {
@@ -1111,7 +1111,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      "You gain the spellcasting archetypes. You can prepare your deity's spells in your spell slots of the appropriate level from the cleric archetype.",
+      "You gain the basic spellcasting benefits. You can prepare your deity's spells in your spell slots of the appropriate level from the cleric archetype.",
     benefits: [],
   },
   {
@@ -1125,7 +1125,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
         description: 'Alchemist Dedication',
       },
     ],
-    description: 'You gain a level=[1;2] feat.',
+    description: 'You gain a 1st- or 2nd-level alchemist feat.',
     benefits: [],
   },
   {
@@ -1139,7 +1139,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
         description: 'Champion Dedication',
       },
     ],
-    description: 'You gain a level=[1;2] feat.',
+    description: 'You gain a 1st- or 2nd-level champion feat.',
     benefits: [],
   },
   {
@@ -1153,7 +1153,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
         description: 'Cleric Dedication',
       },
     ],
-    description: 'You gain a level=[1;2] feat.',
+    description: 'You gain a 1st- or 2nd-level cleric feat.',
     benefits: [],
   },
   {
@@ -1167,7 +1167,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
         description: 'Druid Dedication',
       },
     ],
-    description: 'You gain the spellcasting archetypes.',
+    description: 'You gain the basic spellcasting benefits.',
     benefits: [],
   },
   {
@@ -1181,7 +1181,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
         description: 'Barbarian Dedication',
       },
     ],
-    description: 'You gain a level=[1;2] feat.',
+    description: 'You gain a 1st- or 2nd-level barbarian feat.',
     benefits: [],
   },
   {
@@ -1195,7 +1195,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
         description: 'Ranger Dedication',
       },
     ],
-    description: 'You gain a level=[1;2] feat.',
+    description: 'You gain a 1st- or 2nd-level ranger feat.',
     benefits: [],
   },
   {
@@ -1209,7 +1209,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
         description: 'Monk Dedication',
       },
     ],
-    description: 'You gain a level=[1;2] feat.',
+    description: 'You gain a 1st- or 2nd-level monk feat.',
     benefits: [],
   },
   {
@@ -1223,7 +1223,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
         description: 'Fighter Dedication',
       },
     ],
-    description: 'You gain a level=[1;2] feat.',
+    description: 'You gain a 1st- or 2nd-level fighter feat.',
     benefits: [],
   },
   {
@@ -1237,7 +1237,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
         description: 'Bard Dedication',
       },
     ],
-    description: 'You gain a level=[1;2] feat.',
+    description: 'You gain a 1st- or 2nd-level bard feat.',
     benefits: [],
   },
   {
@@ -1252,7 +1252,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      "You gain the spellcasting archetypes. Each time you gain a spell slot of a new level from the sorcerer archetype, add a spell of the appropriate spell level to your repertoire: a common spell of your bloodline's tradition, one of your bloodline's granted spells, or another spell you have learned or discovered.",
+      "You gain the basic spellcasting benefits. Each time you gain a spell slot of a new level from the sorcerer archetype, add a spell of the appropriate spell level to your repertoire: a common spell of your bloodline's tradition, one of your bloodline's granted spells, or another spell you have learned or discovered.",
     benefits: [],
   },
   {
@@ -1266,7 +1266,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
         description: 'Rogue Dedication',
       },
     ],
-    description: 'You gain a level=[1;2] feat.',
+    description: 'You gain a 1st- or 2nd-level rogue feat.',
     benefits: [],
   },
   {
@@ -1280,7 +1280,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
         description: 'Druid Dedication',
       },
     ],
-    description: 'You gain a level=[1;2] feat.',
+    description: 'You gain a 1st- or 2nd-level druid feat.',
     benefits: [],
   },
   {
@@ -1295,7 +1295,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'You gain the spellcasting archetypes. Each time you gain a spell slot of a new level from the wizard archetype, add two common spells of that level to your spellbook.',
+      'You gain the basic spellcasting benefits. Each time you gain a spell slot of a new level from the wizard archetype, add two common spells of that level to your spellbook.',
     benefits: [],
   },
   {
@@ -1384,7 +1384,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'You call upon divine power and make a weapon or unarmed Strike against a foe you have witnessed harming an ally or innocent. The Strike deals two extra weapon damage dice if the target of your Strike is evil. Whether or not the target is evil, you can convert all the physical damage from the attack into good damage, and if you are a paladin, the Strike applies all effects that normally apply on a Retributive Strike (such as 9).',
+      'You call upon divine power and make a weapon or unarmed Strike against a foe you have witnessed harming an ally or innocent. The Strike deals two extra weapon damage dice if the target of your Strike is evil. Whether or not the target is evil, you can convert all the physical damage from the attack into good damage, and if you are a paladin, the Strike applies all effects that normally apply on a Retributive Strike (such as divine smite).',
     benefits: [],
   },
   {
@@ -1403,7 +1403,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      "Your deceptions confound even the most powerful mortal divinations. Detection, revelation, and scrying effects pass right over you, your possessions, and your auras, detecting nothing unless the detecting effect has a counteracting level of 10 or higher. For example, detect magic would still detect other magic in the area but not any magic on you, true seeing wouldn't reveal you, locate or scrying wouldn't find you, and so on.",
+      "Your deceptions confound even the most powerful mortal divinations. Detection, revelation, and scrying effects pass right over you, your possessions, and your auras, detecting nothing unless the detecting effect has a counteract level of 10 or higher. For example, detect magic would still detect other magic in the area but not any magic on you, true seeing wouldn't reveal you, locate or scrying wouldn't find you, and so on.",
     benefits: [],
   },
   {
@@ -1647,7 +1647,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'ruffian',
+        description: 'Ruffian racket',
       },
     ],
     description:
@@ -2101,7 +2101,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
     description:
       "You unparalleled athletic skill allows you to jump impossible distances. Triple the distance you Long Jump (so you could jump 60 feet on a successful DC 20 check). When you High Jump, use the calculation for a Long Jump but don't triple the distance.",
     benefits: [
-      'You can jump a distance greater than your Speed by spending additional actions when you Long Jump or High Jump. https://paizo.com/pathfinder/faq',
+      'You can jump a distance greater than your Speed by spending additional actions when you Long Jump or High Jump. For each additional action spent, add your Speed to the limit on how far you can Leap.',
     ],
   },
   {
@@ -2359,7 +2359,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      "You gain the counter performance composition spell. If you don't already have one, you gain a focus pool of 1 Focus Point, which you can Refocus by engaging your muse.",
+      "You gain the counter performance composition spells. If you don't already have one, you gain a focus pool of 1 Focus Point, which you can Refocus by engaging your muse.",
     benefits: [],
   },
   {
@@ -2654,7 +2654,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'enigma, legendary in Occultism',
+        description: 'Enigma muse, legendary in Occultism',
       },
     ],
     description:
@@ -2786,7 +2786,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      "Your training allows you to shrug off your foes' spells and conditions when the need is dire. Choose a single nonpermanent spell or condition that is affecting you. If you chose a condition, its effect on you ends. If you chose a spell, attempt to counteracting the spell (your counteract level is equal to half your level, rounded up, and you attempt a Will save as your counteract check)",
+      "Your training allows you to shrug off your foes' spells and conditions when the need is dire. Choose a single nonpermanent spell or condition that is affecting you. If you chose a condition, its effect on you ends. If you chose a spell, attempt to counteract the spell (your counteract level is equal to half your level, rounded up, and you attempt a Will save as your counteract check)",
     benefits: [
       "This doesn't remove any Hit Point damage normally dealt by the spell or condition, and it doesn't prevent the spell or debilitating effect from affecting other allies or the environment around you. It can't remove an ongoing affliction or prevent such an affliction from inflicting conditions on you later. It can't remove conditions from the situation (such as prone or flanked). If the effect comes from a creature, hazard, or item of 20th level or higher, Determination can't remove its effect on you.",
     ],
@@ -2934,7 +2934,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'Your sneak attack slices through the threads binding magic to a target. Make a Strike against a flat-footed creature (your choice). If your Strike deals sneak attack damage, you attempt to counteracting a single spell active on the target. Your counteract level is equal to half your level (rounded up), and your counteract check modifier is equal to your class DC – 10.',
+      'Your sneak attack slices through the threads binding magic to a target. Make a Strike against a flat-footed creature (your choice). If your Strike deals sneak attack damage, you attempt to counteract a single spell active on the target. Your counteract level is equal to half your level (rounded up), and your counteract check modifier is equal to your class DC – 10.',
     benefits: [],
   },
   {
@@ -2994,7 +2994,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'scoundrel',
+        description: 'Scoundrel racket',
       },
     ],
     description:
@@ -3058,7 +3058,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
         description: 'Champion Dedication',
       },
     ],
-    description: 'You gain a 3 of your choice.',
+    description: 'You gain a divine ally of your choice.',
     benefits: [],
   },
   {
@@ -3170,7 +3170,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'You use your shield to harry your enemies, preventing them from stepping away from or around you. All spaces adjacent to you are terrain for your enemies.',
+      'You use your shield to harry your enemies, preventing them from stepping away from or around you. All spaces adjacent to you are difficult terrain for your enemies.',
     benefits: [],
   },
   {
@@ -3222,7 +3222,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       "Your deity bestows a special spell related to their powers. Select one domain—a subject of particular interest to you within your religion—from your deity's list. You gain an initial domain spell for that domain, a spell unique to the domain and not available to other clerics. Each domain's theme and domain spells appear in Table 8–2: Domains.",
     benefits: [
       'Domain spells are a type of focus spell. It costs 1 Focus Point to cast a focus spell, and you start with a focus pool of 1 Focus Point. You refill your focus pool during your daily preparations, and you can regain 1 Focus Point by spending 10 minutes using the Refocus activity to pray to your deity or do service toward their causes.',
-      "Focus spells are automatically heightened to half your level rounded up. Focus spells don't require spell slots, nor can you cast them using spell slots. Certain feats can give you more focus spells and increase the size of your focus pool, though your focus pool can never hold more than 3 Focus Points. The full rules for focus spells can be found focus spells.",
+      "Focus spells are automatically heightened to half your level rounded up. Focus spells don't require spell slots, nor can you cast them using spell slots. Certain feats can give you more focus spells and increase the size of your focus pool, though your focus pool can never hold more than 3 Focus Points. The full rules for focus spells can be found here.",
     ],
     special:
       'You can select this feat multiple times, selecting a different domain each time and gaining its domain spell.',
@@ -3309,7 +3309,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'dragon',
+        description: 'dragon instinct',
       },
     ],
     description:
@@ -3328,7 +3328,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'dragon',
+        description: 'dragon instinct',
       },
     ],
     description:
@@ -3368,7 +3368,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
     description:
       "You enter the stance of a dragon and make powerful leg strikes like a lashing dragon's tail. You can make dragon tail attacks that deal 1d10 bludgeoning damage. They are in the brawling group and have the backswing, nonlethal, and unarmed traits.",
     benefits: [
-      'While in Dragon Stance, you can ignore the first square of terrain while Striding.',
+      'While in Dragon Stance, you can ignore the first square of difficult terrain while Striding.',
     ],
   },
   {
@@ -3383,7 +3383,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: "dragon, Dragon's Rage Wings",
+        description: "dragon instinct, Dragon's Rage Wings",
       },
     ],
     description:
@@ -3548,7 +3548,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      "You've learned cunning techniques to get the best effects out of your dwarven weapons. Whenever you critically hit using a battle axe, pick, warhammer, or a ancestry & heritage=dwarf, you apply the weapon's critical specialization effect.",
+      "You've learned cunning techniques to get the best effects out of your dwarven weapons. Whenever you critically hit using a battle axe, pick, warhammer, or a dwarf weapon, you apply the weapon's critical specialization effect.",
     benefits: [],
   },
   {
@@ -3567,7 +3567,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'Your dwarven affinity blends with your training, granting you great skill with dwarven weapons. Whenever you gain a class feature that grants you expert or greater proficiency in certain weapons, you also gain that proficiency for battle axes, picks, warhammers, and all ancestry & heritage=dwarf in which you are trained.',
+      'Your dwarven affinity blends with your training, granting you great skill with dwarven weapons. Whenever you gain a class feature that grants you expert or greater proficiency in certain weapons, you also gain that proficiency for battle axes, picks, warhammers, and all dwarven weapons in which you are trained.',
     benefits: [],
   },
   {
@@ -3616,7 +3616,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'polymath, master in Occultism',
+        description: 'Polymath muse, master in Occultism',
       },
     ],
     description:
@@ -3754,7 +3754,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      "You are attuned to the weapons of your elven ancestors and are particularly deadly when using them. Whenever you critically hit using an ancestry & heritage=elf or one of the weapons listed in Elven Weapon Familiarity, you apply the weapon's critical specialization effect.",
+      "You are attuned to the weapons of your elven ancestors and are particularly deadly when using them. Whenever you critically hit using an elf weapon or one of the weapons listed in Elven Weapon Familiarity, you apply the weapon's critical specialization effect.",
     benefits: [],
   },
   {
@@ -3773,7 +3773,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'Your elven affinity blends with your class training, granting you great skill with elven weapons. Whenever you gain a class feature that grants you expert or greater proficiency in certain weapons, you also gain that proficiency in longbows, composite longbows, longswords, rapiers, shortbows, composite shortbows, and all ancestry & heritage=elf in which you are trained.',
+      'Your elven affinity blends with your class training, granting you great skill with elven weapons. Whenever you gain a class feature that grants you expert or greater proficiency in certain weapons, you also gain that proficiency in longbows, composite longbows, longswords, rapiers, shortbows, composite shortbows, and all elf weapons in which you are trained.',
     benefits: [],
   },
   {
@@ -3796,7 +3796,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
     benefits: [
       'These effects have the same restrictions as the base options.',
       "Shield When the wielder has the shield raised, they gain the shield's circumstance bonus to saving throws against magic, and they can use Shield Block against damage from their enemies' spells.",
-      "Weapon When the weapon's wielder critically hits with the weapon, they can attempt to counteracting a spell on their target, using your counteract level is equal to half your level, rounded up. If they attempt to do so, the emblazoned symbol immediately disappears.",
+      "Weapon When the weapon's wielder critically hits with the weapon, they can attempt to counteract a spell on their target, using your counteract level is equal to half your level, rounded up. If they attempt to do so, the emblazoned symbol immediately disappears.",
     ],
   },
   {
@@ -3957,7 +3957,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'polymath',
+        description: 'Polymath muse',
       },
     ],
     description:
@@ -4016,7 +4016,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'maestro',
+        description: 'Maestro muse',
       },
     ],
     description:
@@ -4130,7 +4130,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
         description: 'Basic Bard Spellcasting, master in Occultism',
       },
     ],
-    description: 'You gain the spellcasting archetypes.',
+    description: 'You gain the expert spellcasting benefits.',
     benefits: [],
   },
   {
@@ -4144,7 +4144,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
         description: 'Basic Cleric Spellcasting, master in Religion',
       },
     ],
-    description: 'You gain the spellcasting archetypes.',
+    description: 'You gain the expert spellcasting benefits.',
     benefits: [],
   },
   {
@@ -4158,7 +4158,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
         description: 'Basic Druid Spellcasting, master in Nature',
       },
     ],
-    description: 'You gain the spellcasting archetypes.',
+    description: 'You gain the expert spellcasting benefits.',
     benefits: [],
   },
   {
@@ -4194,7 +4194,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
           'Basic Sorcerer Spellcasting; master in Arcana, Nature, Occultism, or Religion, depending on bloodline',
       },
     ],
-    description: 'You gain the spellcasting archetypes.',
+    description: 'You gain the expert spellcasting benefits.',
     benefits: [],
   },
   {
@@ -4208,7 +4208,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
         description: 'Basic Wizard Spellcasting, master in Arcana',
       },
     ],
-    description: 'You gain the spellcasting archetypes.',
+    description: 'You gain the expert spellcasting benefits.',
     benefits: [],
   },
   {
@@ -4399,7 +4399,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'You have studied a specific terrain to overcome its challenges. Choose aquatic, arctic, desert, forest, mountain, plains, sky, swamp, or underground as your favored terrain. When in that terrain, you can ignore the effects of non-magical terrain.',
+      'You have studied a specific terrain to overcome its challenges. Choose aquatic, arctic, desert, forest, mountain, plains, sky, swamp, or underground as your favored terrain. When in that terrain, you can ignore the effects of non-magical difficult terrain.',
     benefits: [
       'If you have the wild stride class feature, you gain a second benefit while in your favored terrain, depending on your choice.',
       'Aquatic You gain a swim Speed equal to your Speed. If you already had a swim Speed, you gain a +10-foot status bonus to your swim Speed.',
@@ -4408,7 +4408,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       'Forest, Mountain, or Underground You gain a climb Speed equal to your Speed. If you already had a climb Speed, you gain a +10-foot status bonus to your climb Speed.',
       'Plains You gain a +10-foot status bonus to your land Speed.',
       'Sky You gain a +10-foot status bonus to your fly Speed, if you have one',
-      'Swamp You can move across bogs at full Speed, even if they are deep enough to be terrain or to normally require you to Swim.',
+      'Swamp You can move across bogs at full Speed, even if they are deep enough to be greater difficult terrain or to normally require you to Swim.',
     ],
   },
   {
@@ -4437,7 +4437,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
         description: 'Dexterity 14',
       },
     ],
-    description: 'You step carefully and quickly. You can Step into terrain.',
+    description: 'You step carefully and quickly. You can Step into difficult terrain.',
     benefits: [],
   },
   {
@@ -4486,7 +4486,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      "Your bestial mutagen brings out the beast lurking within you, granting you especially sharp claws and teeth as well as a ferocious appearance. Whenever you're affected by a bestial mutagen, you gain the mutagen's item bonus to your Intimidation checks. In addition, your claws and jaws are increasingly vicious, and they gain the deadly <d10> trait. Finally, you can increase the mutagen's penalty to AC from –1 to –2 and, in exchange, increase the damage die size of your claws and jaws by one step.",
+      "Your bestial mutagen brings out the beast lurking within you, granting you especially sharp claws and teeth as well as a ferocious appearance. Whenever you're affected by a bestial mutagen, you gain the mutagen's item bonus to your Intimidation checks. In addition, your claws and jaws are increasingly vicious, and they gain the deadly d10 trait. Finally, you can increase the mutagen's penalty to AC from –1 to –2 and, in exchange, increase the damage die size of your claws and jaws by one step.",
     benefits: [],
   },
   {
@@ -4628,7 +4628,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'Your connection to the First World grants you a primal innate spell, much like those of the fey. Choose one cantrip from the Level=0. You can cast this spell as a primal innate spell at will. A cantrip is heightened to a spell level equal to half your level rounded up.',
+      'Your connection to the First World grants you a primal innate spell, much like those of the fey. Choose one cantrip from the primal spell list. You can cast this spell as a primal innate spell at will. A cantrip is heightened to a spell level equal to half your level rounded up.',
     benefits: [],
   },
   {
@@ -4882,7 +4882,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'giant',
+        description: 'Giant instinct',
       },
     ],
     description:
@@ -4901,7 +4901,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'giant',
+        description: 'Giant instinct',
       },
     ],
     description:
@@ -4969,7 +4969,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'Your gnome affinity blends with your class training, granting you great skill with gnome weapons. Whenever you gain a class feature that grants you expert or greater proficiency in a given weapon or weapons, you also gain that proficiency in the glaive, kukri, and all ancestry & heritage=gnome in which you are trained.',
+      'Your gnome affinity blends with your class training, granting you great skill with gnome weapons. Whenever you gain a class feature that grants you expert or greater proficiency in a given weapon or weapons, you also gain that proficiency in the glaive, kukri, and all gnome weapons in which you are trained.',
     benefits: [],
   },
   {
@@ -4988,7 +4988,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      "You produce outstanding results when wielding unusual weapons. Whenever you critically hit using a glaive, kukri, or ancestry & heritage=gnome, you apply the weapon's critical specialization effect.",
+      "You produce outstanding results when wielding unusual weapons. Whenever you critically hit using a glaive, kukri, or gnome weapon, you apply the weapon's critical specialization effect.",
     benefits: [],
   },
   {
@@ -5041,7 +5041,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'Your goblin affinity blends with your class training, granting you great skill with goblin weapons. Whenever you gain a class feature that grants you expert or greater proficiency in a given weapon or weapons, you also gain that proficiency in the dogslicer, horsechopper, and all ancestry & heritage=goblin in which you are trained.',
+      'Your goblin affinity blends with your class training, granting you great skill with goblin weapons. Whenever you gain a class feature that grants you expert or greater proficiency in a given weapon or weapons, you also gain that proficiency in the dogslicer, horsechopper, and all goblin weapons in which you are trained.',
     benefits: [],
   },
   {
@@ -5060,7 +5060,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      "You know how to wield your people's vicious weapons. Whenever you score a critical hit using a ancestry & heritage=goblin, you apply the weapon's critical specialization effect.",
+      "You know how to wield your people's vicious weapons. Whenever you score a critical hit using a goblin weapon, you apply the weapon's critical specialization effect.",
     benefits: [],
   },
   {
@@ -5212,7 +5212,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'Your additives contain panaceas that can remedy a plethora of maladies. When you use Merciful Elixir, your elixir can instead attempt to counteracting the blinded, deafened, sickened, or slowed condition.',
+      'Your additives contain panaceas that can remedy a plethora of maladies. When you use Merciful Elixir, your elixir can instead attempt to counteract the blinded, deafened, sickened, or slowed condition.',
     benefits: [],
   },
   {
@@ -5231,7 +5231,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'Your faith enhances your ability to remove conditions. When you use Mercy, you can instead attempt to counteracting the blinded, deafened, sickened, or slowed conditions.',
+      'Your faith enhances your ability to remove conditions. When you use Mercy, you can instead attempt to counteract the blinded, deafened, sickened, or slowed conditions.',
     benefits: [],
   },
   {
@@ -5265,11 +5265,11 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'leaf',
+        description: 'Leaf order',
       },
     ],
     description:
-      "You can communicate with plants and fungus on a basic level and use Diplomacy to Make an Impression on them and to make very simple Requests of them. Non-creature plants or fungus typically can't fulfill most requests you might ask of them unless you have access to other magic such as speak with plants. Because of your affiliation with the leaf, plants have a sense that you support them, so you gain a +2 circumstance bonus on your check to Make a Request of a plant using Green Empathy.",
+      "You can communicate with plants and fungus on a basic level and use Diplomacy to Make an Impression on them and to make very simple Requests of them. Non-creature plants or fungus typically can't fulfill most requests you might ask of them unless you have access to other magic such as speak with plants. Because of your affiliation with the leaf order, plants have a sense that you support them, so you gain a +2 circumstance bonus on your check to Make a Request of a plant using Green Empathy.",
     benefits: [],
   },
   {
@@ -5392,7 +5392,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'Your halfling affinity blends with your class training, granting you great skill with halfling weapons. Whenever you gain a class feature that grants you expert or greater proficiency in a given weapon or weapons, you also gain that proficiency in the sling, halfling sling staff, shortsword, and all ancestry & heritage=halfling in which you are trained.',
+      'Your halfling affinity blends with your class training, granting you great skill with halfling weapons. Whenever you gain a class feature that grants you expert or greater proficiency in a given weapon or weapons, you also gain that proficiency in the sling, halfling sling staff, shortsword, and all halfling weapons in which you are trained.',
     benefits: [],
   },
   {
@@ -5411,7 +5411,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      "You are particularly adept at fighting with your people's favored weapons. Whenever you critically succeed at an attack roll using a shortsword, a sling, or a ancestry & heritage=halfling, you apply the weapon's critical specialization effect.",
+      "You are particularly adept at fighting with your people's favored weapons. Whenever you critically succeed at an attack roll using a shortsword, a sling, or a halfling weapon, you apply the weapon's critical specialization effect.",
     benefits: [],
   },
   {
@@ -5445,7 +5445,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'maestro',
+        description: 'Maestro muse',
       },
     ],
     description:
@@ -5570,7 +5570,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'When you put your mind to slipping out of sight, you disappear completely. You become invisible for 1 minute, even if you use a hostile actions. Not even glitterdust, see invisibility, or similar effects can reveal you, though creatures can still use the Seek action to locate you as normal.',
+      'When you put your mind to slipping out of sight, you disappear completely. You become invisible for 1 minute, even if you use a hostile action. Not even glitterdust, see invisibility, or similar effects can reveal you, though creatures can still use the Seek action to locate you as normal.',
     benefits: [],
   },
   {
@@ -5664,7 +5664,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'leaf',
+        description: 'Leaf order',
       },
     ],
     description:
@@ -6174,7 +6174,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'maestro',
+        description: 'Maestro muse',
       },
     ],
     description:
@@ -6193,7 +6193,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'maestro',
+        description: 'Maestro muse',
       },
     ],
     description:
@@ -6212,7 +6212,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'maestro',
+        description: 'Maestro muse',
       },
     ],
     description:
@@ -6260,7 +6260,8 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
         description: 'Barbarian Dedication',
       },
     ],
-    description: 'You gain the 1 ability for the instinct you chose for Barbarian Dedication.',
+    description:
+      'You gain the instinct ability for the instinct you chose for Barbarian Dedication.',
     benefits: [],
   },
   {
@@ -6586,7 +6587,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'enigma',
+        description: 'Enigma muse',
       },
     ],
     description:
@@ -6620,7 +6621,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'redeemer',
+        description: 'Redeemer cause',
       },
     ],
     description:
@@ -6827,7 +6828,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'leaf',
+        description: 'Leaf order',
       },
     ],
     description:
@@ -6861,7 +6862,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'liberator',
+        description: 'Liberator cause',
       },
     ],
     description:
@@ -6880,7 +6881,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      "You aren't bothered by tricky footing. When you Stride or Step, you can ignore terrain.",
+      "You aren't bothered by tricky footing. When you Stride or Step, you can ignore difficult terrain.",
     benefits: [],
   },
   {
@@ -6914,7 +6915,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'maestro',
+        description: 'Maestro muse',
       },
     ],
     description:
@@ -7009,7 +7010,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'enigma',
+        description: 'Enigma muse',
       },
     ],
     description:
@@ -7032,7 +7033,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'You and your mount have grown closer, and your loyalty to each other is unbreakable. The mount you gained through the divine ally class feature is now a Mature Animal Companions. In addition, your mount never attacks you, even if it is magically compelled to do so.',
+      'You and your mount have grown closer, and your loyalty to each other is unbreakable. The mount you gained through the divine ally class feature is now a specialized animal companion. In addition, your mount never attacks you, even if it is magically compelled to do so.',
     benefits: [],
   },
   {
@@ -7195,7 +7196,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
         description: 'Expert Bard Spellcasting, legendary in Occultism',
       },
     ],
-    description: 'You gain the spellcasting archetypes.',
+    description: 'You gain the master spellcasting benefits.',
     benefits: [],
   },
   {
@@ -7209,7 +7210,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
         description: 'Expert Cleric Spellcasting, legendary in Religion',
       },
     ],
-    description: 'You gain the spellcasting archetypes.',
+    description: 'You gain the master spellcasting benefits.',
     benefits: [],
   },
   {
@@ -7223,7 +7224,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
         description: 'Expert Druid Spellcasting, legendary in Nature',
       },
     ],
-    description: 'You gain the spellcasting archetypes.',
+    description: 'You gain the master spellcasting benefits.',
     benefits: [],
   },
   {
@@ -7276,7 +7277,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
           'Expert Sorcerer Spellcasting; legendary in Arcana, Nature, Occultism, or Religion, depending on bloodline',
       },
     ],
-    description: 'You gain the spellcasting archetypes.',
+    description: 'You gain the master spellcasting benefits.',
     benefits: [],
   },
   {
@@ -7304,7 +7305,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
         description: 'Expert Wizard Spellcasting, legendary in Arcana',
       },
     ],
-    description: 'You gain the spellcasting archetypes.',
+    description: 'You gain the master spellcasting benefits.',
     benefits: [],
   },
   {
@@ -7342,7 +7343,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      "Your animal companion grows up, becoming a Mature Animal Companions, which grants it additional capabilities. Your animal companion is better trained than most. During an encounter, even if you don't use the Command an Animal action, your animal companion can still use 1 action on your turn that round to Stride or Strike.",
+      "Your animal companion grows up, becoming a specialized animal companion, which grants it additional capabilities. Your animal companion is better trained than most. During an encounter, even if you don't use the Command an Animal action, your animal companion can still use 1 action on your turn that round to Stride or Strike.",
     benefits: [],
   },
   {
@@ -7431,7 +7432,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      "You mix a special additive into your elixir that calms the drinker's body and mind. The elixir of life attempts to counteracting one fear effect or one effect imposing the paralyzed condition on the drinker using the item's level and a counteract modifier equal to your class DC – 10.",
+      "You mix a special additive into your elixir that calms the drinker's body and mind. The elixir of life attempts to counteract one fear effect or one effect imposing the paralyzed condition on the drinker using the item's level and a counteract modifier equal to your class DC – 10.",
     benefits: [],
   },
   {
@@ -7450,7 +7451,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'Your touch relieves fear and restores movement. If the next action you use is to cast lay on hands, you can attempt to counteracting a fear effect or an effect imposing the paralyzed condition on the target, in addition to the other benefits of lay on hands.',
+      'Your touch relieves fear and restores movement. If the next action you use is to cast lay on hands, you can attempt to counteract a fear effect or an effect imposing the paralyzed condition on the target, in addition to the other benefits of lay on hands.',
     benefits: [],
   },
   {
@@ -7510,7 +7511,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      "You've dabbled in a variety of tricks, gaining minor magical abilities from a particular tradition. Choose Rarity=Common, Rarity=Common, Rarity=Common, or Rarity=Common magic, and gain two cantrips from the common cantrips available to that tradition. You gain the Cast a Spell activity. Your key spellcasting ability is Charisma, and you're trained in spell attack rolls and DCs for the tradition of your chosen cantrips.",
+      "You've dabbled in a variety of tricks, gaining minor magical abilities from a particular tradition. Choose arcane, divine, occult, or primal magic, and gain two cantrips from the common cantrips available to that tradition. You gain the Cast a Spell activity. Your key spellcasting ability is Charisma, and you're trained in spell attack rolls and DCs for the tradition of your chosen cantrips.",
     benefits: [],
   },
   {
@@ -7604,7 +7605,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'You have trained with the traditional weaponry of your monastery or school. You gain access to class=monk that have the monk trait and become trained in class=monk. When your proficiency rank for unarmed attacks increases to expert or master, your proficiency rank for these weapons increases to expert or master as well. You can use melee monk weapons with any of your monk feats or monk abilities that normally require unarmed attacks, though not if the feat or ability requires you to use a single specific type of attack, such as Crane Stance.',
+      'You have trained with the traditional weaponry of your monastery or school. You gain access to uncommon weapons that have the monk trait and become trained in simple and martial monk weapons. When your proficiency rank for unarmed attacks increases to expert or master, your proficiency rank for these weapons increases to expert or master as well. You can use melee monk weapons with any of your monk feats or monk abilities that normally require unarmed attacks, though not if the feat or ability requires you to use a single specific type of attack, such as Crane Stance.',
     benefits: [],
   },
   {
@@ -7876,7 +7877,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      "You've learned to split your focus between multiple classes with ease. You gain a feat=multiclass, even if you normally couldn't take another dedication feat until you take more feats from your current archetype.",
+      "You've learned to split your focus between multiple classes with ease. You gain a 2nd-level multiclass dedication feat, even if you normally couldn't take another dedication feat until you take more feats from your current archetype.",
     benefits: [
       "If you're a half-elf, you don't need to meet the feat's ability score prerequisites.",
     ],
@@ -8095,7 +8096,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      "You are brutally efficient with the weapons of your orc ancestors. Whenever you critically hit using a falchion, a greataxe, or an ancestry & heritage=orc, you apply the weapon's critical specialization effect.",
+      "You are brutally efficient with the weapons of your orc ancestors. Whenever you critically hit using a falchion, a greataxe, or an orc weapon, you apply the weapon's critical specialization effect.",
     benefits: [],
   },
   {
@@ -8110,7 +8111,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'Your orc affinity blends with your class training, granting you great skill with orc weapons. Whenever you gain a class feature that grants you expert or greater proficiency in a given weapon or weapons, you also gain that proficiency in the falchion, the greataxe, and all ancestry & heritage=orc in which you are trained.',
+      'Your orc affinity blends with your class training, granting you great skill with orc weapons. Whenever you gain a class feature that grants you expert or greater proficiency in a given weapon or weapons, you also gain that proficiency in the falchion, the greataxe, and all orc weapons in which you are trained.',
     benefits: [],
   },
   {
@@ -8119,7 +8120,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
     system: 'pf2e',
     source: 'Core Rulebook',
     description:
-      'In combat, you favor the brutal weapons that are traditional for your orc ancestors. You are trained with the falchion and greataxe. In addition, you gain access to all ancestry & heritage=orc. For the purpose of determining your proficiency, martial orc weapons are simple weapons and advanced orc weapons are martial weapons.',
+      'In combat, you favor the brutal weapons that are traditional for your orc ancestors. You are trained with the falchion and greataxe. In addition, you gain access to all uncommon orc weapons. For the purpose of determining your proficiency, martial orc weapons are simple weapons and advanced orc weapons are martial weapons.',
     benefits: [],
   },
   {
@@ -8428,7 +8429,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'leaf or Wild Shape',
+        description: 'Leaf order or Wild Shape',
       },
     ],
     description:
@@ -8598,7 +8599,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'thief, Debilitating Strike',
+        description: 'Thief racket, Debilitating Strike',
       },
     ],
     description:
@@ -8620,7 +8621,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'animal',
+        description: 'Animal instinct',
       },
     ],
     description:
@@ -9048,7 +9049,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'Thrown weapons become especially deadly in your fury. You apply the additional damage from Rage to your thrown weapon attacks. If you have the Brutal Critical feat or the 19 class feature, apply their benefits to thrown weapon attacks.',
+      'Thrown weapons become especially deadly in your fury. You apply the additional damage from Rage to your thrown weapon attacks. If you have the Brutal Critical feat or the devastator class feature, apply their benefits to thrown weapon attacks.',
     benefits: [],
   },
   {
@@ -9063,7 +9064,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'paladin',
+        description: 'Paladin cause',
       },
     ],
     description:
@@ -9376,7 +9377,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      "You gain a skill feat and the rogue's 1 class feature. You become trained in light armor. In addition, you become trained in Stealth or Thievery plus one skill of your choice; if you are already trained in both Stealth and Thievery, you become trained in an additional skill of your choice. You become trained in rogue class DC.",
+      "You gain a skill feat and the rogue's surprise attack class feature. You become trained in light armor. In addition, you become trained in Stealth or Thievery plus one skill of your choice; if you are already trained in both Stealth and Thievery, you become trained in an additional skill of your choice. You become trained in rogue class DC.",
     benefits: [],
     special:
       'You cannot gain another dedication feat until you have gained two other feats from the rogue archetype.',
@@ -9564,7 +9565,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      "You can enter a second rage, but afterward you need to catch your breath. You can Rage without waiting for 1 minute after the previous Rage (or 1 round, with 17), but when you end this second Rage, you're fatigued until you rest for 10 minutes.",
+      "You can enter a second rage, but afterward you need to catch your breath. You can Rage without waiting for 1 minute after the previous Rage (or 1 round, with quick rage), but when you end this second Rage, you're fatigued until you rest for 10 minutes.",
     benefits: [],
   },
   {
@@ -10111,7 +10112,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'You specialize in creating quick traps to obstruct your enemies on the battlefield. If your proficiency rank in Crafting is expert, you gain the formulas for three weapon==sand. If your rank is master, you gain 6. If your rank is legendary, you gain 9.',
+      'You specialize in creating quick traps to obstruct your enemies on the battlefield. If your proficiency rank in Crafting is expert, you gain the formulas for three common or uncommon snares. If your rank is master, you gain 6. If your rank is legendary, you gain 9.',
     benefits: [
       "Each day during your daily preparations, you can prepare four snares from your formula book for quick deployment; if they normally take 1 minute to Craft, you can Craft them with 3 Interact actions. The number of snares increases to six if you have master proficiency in Crafting and eight if you have legendary proficiency in Crafting. Snares prepared in this way don't cost you any resources to Craft.",
     ],
@@ -10285,7 +10286,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'spirit',
+        description: 'Spirit instinct',
       },
     ],
     description:
@@ -10304,7 +10305,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'spirit',
+        description: 'Spirit instinct',
       },
     ],
     description:
@@ -10466,7 +10467,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'storm',
+        description: 'Storm order',
       },
     ],
     description:
@@ -10485,7 +10486,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'storm, tempest surge order spell',
+        description: 'Storm order, tempest surge order spell',
       },
     ],
     description:
@@ -10534,7 +10535,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'enigma, legendary in Occultism',
+        description: 'Enigma muse, legendary in Occultism',
       },
     ],
     description:
@@ -10740,7 +10741,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'scoundrel, Debilitating Strike',
+        description: 'Scoundrel racket, Debilitating Strike',
       },
     ],
     description:
@@ -10987,7 +10988,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: "giant, Giant's Stature",
+        description: "Giant instinct, Giant's Stature",
       },
     ],
     description:
@@ -11183,7 +11184,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'enigma',
+        description: 'Enigma muse',
       },
     ],
     description:
@@ -11374,7 +11375,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      "You are so skilled at navigating the wild, your movement is completely unaffected by terrain. You ignore the effects of all terrain, terrain, and hazardous terrain, and you don't trigger traps and hazards that are triggered by moving into an area (such as trip wires and pressure plates), unless you want to.",
+      "You are so skilled at navigating the wild, your movement is completely unaffected by terrain. You ignore the effects of all difficult terrain, greater difficult terrain, and hazardous terrain, and you don't trigger traps and hazards that are triggered by moving into an area (such as trip wires and pressure plates), unless you want to.",
     benefits: [],
   },
   {
@@ -11489,11 +11490,11 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'liberator',
+        description: 'Liberator cause',
       },
     ],
     description:
-      "With a burst of divine liberation, your ally's movement from your Liberating Step is unaffected by terrain, terrain, narrow surfaces, and uneven ground.",
+      "With a burst of divine liberation, your ally's movement from your Liberating Step is unaffected by difficult terrain, greater difficult terrain, narrow surfaces, and uneven ground.",
     benefits: [],
   },
   {
@@ -11527,7 +11528,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'universalist, Hand of the Apprentice',
+        description: 'Universalist wizard, Hand of the Apprentice',
       },
     ],
     description:
@@ -11564,7 +11565,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'polymath',
+        description: 'Polymath muse',
       },
     ],
     description:
@@ -11617,7 +11618,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'paladin',
+        description: 'Paladin cause',
       },
     ],
     description:
@@ -11657,7 +11658,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'leaf',
+        description: 'Leaf order',
       },
     ],
     description:
@@ -11697,7 +11698,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'polymath',
+        description: 'Polymath muse',
       },
     ],
     description:
@@ -11716,7 +11717,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'polymath',
+        description: 'Polymath muse',
       },
     ],
     description:
@@ -11769,7 +11770,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'ruffian, Debilitating Strike',
+        description: 'Ruffian racket, Debilitating Strike',
       },
     ],
     description:
@@ -11990,7 +11991,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'redeemer',
+        description: 'Redeemer cause',
       },
     ],
     description:
@@ -12079,7 +12080,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'wild',
+        description: 'Wild order',
       },
     ],
     description:
@@ -12136,7 +12137,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'storm',
+        description: 'Storm order',
       },
     ],
     description:
@@ -12191,7 +12192,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
     description:
       "You cast spells like a wizard, gaining a spellbook with four common arcane cantrips of your choice. You gain the Cast a Spell activity. You can prepare two cantrips each day from your spellbook. You're trained in arcane spell attack rolls and spell DCs. Your key spellcasting ability for wizard archetype spells is Int, and they are arcane wizard spells. You become trained in Arcana; if you were already trained in Arcana, you instead become trained in a skill of your choice.",
     benefits: [
-      "Select one arcane school of magic; you don't gain any abilities from your choice of school.",
+      "Select one arcane arcane school; you don't gain any abilities from your choice of school.",
     ],
     special:
       "You can't select another dedication feat until you have gained two other feats from the wizard archetype.",
@@ -12212,7 +12213,7 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
     ],
     description:
-      'You rip your enemy off their feet. Make a wolf jaw Strike. Your wolf jaw gains the fatal <d12> trait for this Strike, and if the attack succeeds, you knock the target prone.',
+      'You rip your enemy off their feet. Make a wolf jaw Strike. Your wolf jaw gains the fatal d12 trait for this Strike, and if the attack succeeds, you knock the target prone.',
     benefits: [],
   },
   {
@@ -12244,11 +12245,11 @@ export const srdPf2eGeneratedFeats: FeatDefinition[] = [
       },
       {
         type: 'other',
-        description: 'leaf',
+        description: 'Leaf order',
       },
     ],
     description:
-      "You can always find a path, almost as if foliage parted before you. You ignore any terrain caused by plants or fungus, such as bushes, vines, and undergrowth. Even plants manipulated by magic don't impede your progress.",
+      "You can always find a path, almost as if foliage parted before you. You ignore any difficult terrain caused by plants or fungus, such as bushes, vines, and undergrowth. Even plants manipulated by magic don't impede your progress.",
     benefits: [],
   },
   {

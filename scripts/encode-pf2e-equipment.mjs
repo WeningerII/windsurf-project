@@ -48,18 +48,51 @@ const slug = (name) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
 
-/** Reduce Pf2eTools {@tag value|link|display} markup to display text (nesting-aware). */
+// Pf2eTools tags render different pipe-segments as their display text. Most
+// tags are {@tag name|source|displayOverride} → the LAST non-empty segment.
+// But several put display FIRST and carry link/filter metadata afterward, and
+// {@class}/{@classFeature}/{@subclassFeature} carry the display in a fixed
+// later slot. Taking the last segment for these leaks filter queries
+// ("Level=[0]"), source codes ("CRB"), and page indices ("3") into prose.
+const FIRST_SEGMENT_TAGS = new Set(['filter', 'quickref', 'footnote', 'link']);
+
+function resolveTag(tag, inner) {
+  const parts = inner.split('|').map((s) => s.trim());
+  const t = tag.toLowerCase();
+  // {@filter display|datasource|key=value...}, {@quickref display|book|page|anchor},
+  // {@footnote displayText|note}, {@link displayText|url} → display is FIRST.
+  if (FIRST_SEGMENT_TAGS.has(t)) return parts[0] || parts[parts.length - 1];
+  // {@class name|source|displayText|locator|source} → 3rd segment (e.g. "abjurer").
+  if (t === 'class') return parts[2] || parts[0];
+  // {@classFeature name|class|classSource|level|displayText} → name, unless an
+  // explicit display override is present.
+  if (t === 'classfeature') return parts[4] || parts[0];
+  // {@subclassFeature name|class|classSource|subclass|subclassSource|level|display}.
+  if (t === 'subclassfeature') return parts[6] || parts[0];
+  // {@runeItem base|baseSource|rune1|rune1Source|...} → "<runes> <base>".
+  if (t === 'runeitem') {
+    const runes = parts.filter((_, i) => i >= 2 && i % 2 === 0 && parts[i]);
+    return [...runes, parts[0]].filter(Boolean).join(' ');
+  }
+  // Default {@tag name|source|displayOverride}: last non-empty, else the name.
+  return parts[parts.length - 1] || parts[0];
+}
+
+/**
+ * Reduce Pf2eTools {@tag value|link|display} markup to its display text. Tags
+ * can nest (e.g. {@footnote ...{@link Label|URL}}), so match only innermost
+ * tags ([^{}]) and loop until stable, resolving from the inside out.
+ */
 function detag(text) {
   let out = String(text);
   let previous;
   do {
     previous = out;
-    out = out.replace(/\{@\w+ ([^{}]*)\}/g, (_, inner) => {
-      const parts = inner.split('|');
-      return parts[parts.length - 1].trim() || parts[0].trim();
-    });
+    out = out.replace(/\{@(\w+) ([^{}]*)\}/g, (_, tag, inner) => resolveTag(tag, inner));
   } while (out !== previous);
-  return out;
+  // Pf2eTools sometimes prints dice in angle brackets inside a tag's display
+  // (e.g. the deadly trait as "deadly <d10>"); render them as plain dice.
+  return out.replace(/<(\d*d\d+)>/gi, '$1');
 }
 
 /** Flatten the first usable prose string out of an item's `entries`. */
@@ -78,6 +111,31 @@ function firstProse(entries) {
 // ItemType vocabulary. Consumable families (potions, elixirs, oils, bombs,
 // snares, poisons, talismans, scrolls, ammunition) map to 'consumable'.
 const MAGIC_CATEGORIES = new Set(['Rune', 'Staff', 'Wand', 'Apex']);
+// PF2e magic items derive their magic from a spell-tradition or magic-school
+// trait, not just the literal 'magical'/'invested'/'artifact' keyword. Any of
+// these traits on a Held/Worn/Companion item marks it as a magic item. (NOT
+// applied to mundane categories like Adventuring Gear/Material — those never
+// reach the fall-through branch where this set is consulted.)
+const MAGIC_TRAITS = new Set([
+  // explicit magic-item markers
+  'invested',
+  'magical',
+  'artifact',
+  // spell traditions — the tradition trait is itself a magical marker in PF2e
+  'arcane',
+  'divine',
+  'occult',
+  'primal',
+  // magic schools
+  'abjuration',
+  'conjuration',
+  'divination',
+  'enchantment',
+  'evocation',
+  'illusion',
+  'necromancy',
+  'transmutation',
+]);
 const CONSUMABLE_CATEGORIES = new Set([
   'Potion',
   'Elixir',
@@ -101,10 +159,12 @@ function itemType(item) {
   if (CONSUMABLE_CATEGORIES.has(cat)) return 'consumable';
   if (MAGIC_CATEGORIES.has(cat)) return 'magic-item';
   // Worn / Held / Companion / Structure / Material / Adventuring Gear:
-  // magical ones (invested or tagged magical, e.g. Worn magic items) become
-  // magic-item; plain mundane gear stays gear.
+  // magical ones become magic-item; plain mundane gear stays gear. A PF2e
+  // magic item is signaled by a magic-school or spell-tradition trait (e.g.
+  // 'evocation'/'sonic' on the Horn of Blasting, 'divine'/'necromancy' on Holy
+  // Prayer Beads), not only the literal 'magical'/'invested'/'artifact' keyword.
   const traits = (item.traits ?? []).map((t) => t.toLowerCase());
-  if (traits.includes('invested') || traits.includes('magical') || traits.includes('artifact')) {
+  if (traits.some((t) => MAGIC_TRAITS.has(t))) {
     return 'magic-item';
   }
   return 'gear';
@@ -194,7 +254,7 @@ async function main() {
     // so the lean catalog entry still conveys that the cost is the lowest grade.
     if (!item.price && Array.isArray(item.variants) && item.variants.length > 0) {
       const grades = item.variants
-        .map((v) => v.type)
+        .map((v) => v.variantType)
         .filter(Boolean)
         .join('; ');
       if (grades) description = `${description} Available as: ${grades}.`.trim();

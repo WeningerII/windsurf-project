@@ -21,7 +21,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This flask filled with corrosive acid deals 1 acid damage, the listed persistent acid damage, and the listed acid splash damage. Many types grant an item bonus to attack rolls.',
+      'This flask filled with corrosive acid deals 1 acid damage, the listed persistent acid damage, and the listed acid splash damage. Many types grant an item bonus to attack rolls. Available as: lesser; moderate; greater; major.',
     requiresAttunement: false,
   },
   {
@@ -37,7 +37,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Mined from rocks that fell from the heavens, adamantine is one of the hardest metals known. It has a shiny, black appearance, and it is prized for its amazing resiliency and ability to hold an incredibly sharp edge.',
+      'Mined from rocks that fell from the heavens, adamantine is one of the hardest metals known. It has a shiny, black appearance, and it is prized for its amazing resiliency and ability to hold an incredibly sharp edge. Available as: adamantine chunk; adamantine ingot; standard-grade adamantine object; high-grade adamantine object.',
     requiresAttunement: false,
   },
   {
@@ -52,7 +52,8 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       amount: 1600,
       currency: 'gp',
     },
-    description: 'Adamantine armor has a shiny, black appearance and is amazingly durable.',
+    description:
+      'Adamantine armor has a shiny, black appearance and is amazingly durable. Available as: standard-grade adamantine armor; high-grade adamantine armor.',
     requiresAttunement: false,
   },
   {
@@ -68,7 +69,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Adamantine shields are particularly sturdy, and when used for a shield bash, they are adamantine weapons.',
+      'Adamantine shields are particularly sturdy, and when used for a shield bash, they are adamantine weapons. Available as: standard-grade adamantine buckler; standard-grade adamantine shield; high-grade adamantine buckler; high-grade adamantine shield.',
     requiresAttunement: false,
   },
   {
@@ -84,7 +85,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "Adamantine weapons have a shiny black appearance and cut through lesser items with ease. They treat any object they hit as if it had half as much Hardness as usual, unless the object's Hardness is greater than that of the adamantine weapon.",
+      "Adamantine weapons have a shiny black appearance and cut through lesser items with ease. They treat any object they hit as if it had half as much Hardness as usual, unless the object's Hardness is greater than that of the adamantine weapon. Available as: standard-grade adamantine weapon; high-grade adamantine weapon.",
     requiresAttunement: false,
   },
   {
@@ -116,7 +117,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Over millennia, these mysterious, intricately cut gemstones have been hoarded by mystics and fanatics hoping to discover their secrets. Despite their myriad forms and functions, these stones are purportedly all fragments of crystal tools used by otherworldly entities to construct the universe in primeval times.',
+      'Over millennia, these mysterious, intricately cut gemstones have been hoarded by mystics and fanatics hoping to discover their secrets. Despite their myriad forms and functions, these stones are purportedly all fragments of crystal tools used by otherworldly entities to construct the universe in primeval times. Available as: clear spindle; dull gray; gold nodule; lavender and green ellipsoid; orange prism; pale lavender ellipsoid; pink rhomboid; tourmaline sphere; agate ellipsoid; azure briolette; dusty rose prism; pale orange rhomboid; pearlescent pyramid; pearly white spindle; western star; black pearl.',
     requiresAttunement: false,
   },
   {
@@ -148,7 +149,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'These brass goggles are engraved with flame patterns and have thick, heavy lenses. While worn, they give you a +1 item bonus to Crafting checks to Craft alchemical items and a +1 item bonus to attack rolls with alchemical bombs. You can also ignore lesser cover when making Strikes with alchemical bombs.',
+      'These brass goggles are engraved with flame patterns and have thick, heavy lenses. While worn, they give you a +1 item bonus to Crafting checks to Craft alchemical items and a +1 item bonus to attack rolls with alchemical bombs. You can also ignore lesser cover when making Strikes with alchemical bombs. Available as: alchemist goggles; greater alchemist goggles; major alchemist goggles.',
     requiresAttunement: false,
   },
   {
@@ -164,7 +165,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "Alchemist's fire is a combination of volatile liquids that ignite when exposed to air. Alchemist's fire deals the listed fire damage, persistent fire damage, and splash damage. Many types grant an item bonus to attack rolls.",
+      "Alchemist's fire is a combination of volatile liquids that ignite when exposed to air. Alchemist's fire deals the listed fire damage, persistent fire damage, and splash damage. Many types grant an item bonus to attack rolls. Available as: lesser; moderate; greater; major.",
     requiresAttunement: false,
   },
   {
@@ -226,7 +227,8 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       amount: 90,
       currency: 'gp',
     },
-    description: 'This staff is topped with carved animal and monster heads.',
+    description:
+      'This staff is topped with carved animal and monster heads. Available as: animal staff; greater animal staff; major animal staff.',
     requiresAttunement: false,
   },
   {
@@ -258,7 +260,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'An antidote protects you against toxins. Upon drinking an antidote, you gain an item bonus to Fortitude saving throws against poisons for 6 hours.',
+      'An antidote protects you against toxins. Upon drinking an antidote, you gain an item bonus to Fortitude saving throws against poisons for 6 hours. Available as: lesser; moderate; greater; major.',
     requiresAttunement: false,
   },
   {
@@ -304,7 +306,8 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       amount: 3,
       currency: 'gp',
     },
-    description: "Antiplague can fortify the body's defenses against diseases.",
+    description:
+      "Antiplague can fortify the body's defenses against diseases. Available as: lesser; moderate; greater; major.",
     requiresAttunement: false,
   },
   {
@@ -320,7 +323,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Skilled awl work has imprinted images of a muscled weightlifter into these tiered leather bands, which grant you enhanced stamina and skill when performing athletic exercises. While fastened to your upper arms, the armbands give you a +2 item bonus to Athletics checks. In addition, whenever you use an action to Climb or Swim and you succeed at the Athletics check, add a +5-foot item bonus to the distance you move.',
+      'Skilled awl work has imprinted images of a muscled weightlifter into these tiered leather bands, which grant you enhanced stamina and skill when performing athletic exercises. While fastened to your upper arms, the armbands give you a +2 item bonus to Athletics checks. In addition, whenever you use an action to Climb or Swim and you succeed at the Athletics check, add a +5-foot item bonus to the distance you move. Available as: armbands of athleticism; greater armbands of athleticism.',
     requiresAttunement: false,
   },
   {
@@ -336,7 +339,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "Magic wards deflect attacks. Increase the armor's item bonus to AC by 1. The armor can be etched with one property rune.",
+      "Magic wards deflect attacks. Increase the armor's item bonus to AC by 1. The armor can be etched with one property rune. Available as: +1 armor potency; +2 armor potency; +3 armor potency.",
     requiresAttunement: false,
   },
   {
@@ -352,7 +355,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'sp',
     },
     description:
-      'These projectiles are the ammunition for bows. The shaft of an arrow is made of wood. It is stabilized in flight by fletching at one end and bears a metal head on the other.',
+      'These projectiles are the ammunition for bows. The shaft of an arrow is made of wood. It is stabilized in flight by fletching at one end and bears a metal head on the other. Available as: 5-pack; 10-pack.',
     requiresAttunement: false,
   },
   {
@@ -447,7 +450,8 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       amount: 1,
       currency: 'sp',
     },
-    description: 'This book contains the 0 for Crafting Level=[0].',
+    description:
+      'This book contains the formulas for Crafting all 0-level common items in Chapter 6: Equipment of the Core Rulebook.',
     requiresAttunement: false,
   },
   {
@@ -543,7 +547,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "This bearskin includes the head and bared teeth of the mighty creature from which it was taken. When worn, the cloak drapes over your head and around your shoulders, imbuing you with a bear's ferocity. If you have the Rage action, while raging you grow jaws that deal 1d10 piercing damage and claws that deal 1d6 slashing damage and have the agile trait.",
+      "This bearskin includes the head and bared teeth of the mighty creature from which it was taken. When worn, the cloak drapes over your head and around your shoulders, imbuing you with a bear's ferocity. If you have the Rage action, while raging you grow jaws that deal 1d10 piercing damage and claws that deal 1d6 slashing damage and have the agile trait. Available as: berserker's cloak; greater berserker's cloak.",
     requiresAttunement: false,
   },
   {
@@ -559,7 +563,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Your features transform into something bestial and you take on muscle mass, but your lumbering form is clumsy.',
+      'Your features transform into something bestial and you take on muscle mass, but your lumbering form is clumsy. Available as: lesser; moderate; greater; major.',
     requiresAttunement: false,
   },
   {
@@ -701,7 +705,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'sp',
     },
     description:
-      'Shorter than traditional arrows but similar in construction, bolts are the ammunition used by crossbows.',
+      'Shorter than traditional arrows but similar in construction, bolts are the ammunition used by crossbows. Available as: 5-pack; 10-pack.',
     requiresAttunement: false,
   },
   {
@@ -733,7 +737,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This tincture lets you pinpoint your foes. For the next 5 minutes, your alchemical bomb Strikes reduce the circumstance bonus to AC your targets gain from cover.',
+      'This tincture lets you pinpoint your foes. For the next 5 minutes, your alchemical bomb Strikes reduce the circumstance bonus to AC your targets gain from cover. Available as: lesser; greater.',
     requiresAttunement: false,
   },
   {
@@ -749,7 +753,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'The springy soles of these sturdy leather boots cushion your feet and make each step lighter. These boots give you a +5-foot item bonus to your Speed and a +2 item bonus to Athletics checks to High Jump and Long Jump. In addition, when you use the Leap action, you can move 5 feet further if jumping horizontally or 3 feet higher if jumping vertically.',
+      'The springy soles of these sturdy leather boots cushion your feet and make each step lighter. These boots give you a +5-foot item bonus to your Speed and a +2 item bonus to Athletics checks to High Jump and Long Jump. In addition, when you use the Leap action, you can move 5 feet further if jumping horizontally or 3 feet higher if jumping vertically. Available as: boots of bounding; greater boots of bounding.',
     requiresAttunement: false,
   },
   {
@@ -765,7 +769,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'These tall, pointed boots are made from soft, supple black or green leather and are decorated with trim and buckles of gold. When worn, the boots allow you to move more nimbly, granting you a +1 item bonus to Acrobatics checks.',
+      'These tall, pointed boots are made from soft, supple black or green leather and are decorated with trim and buckles of gold. When worn, the boots allow you to move more nimbly, granting you a +1 item bonus to Acrobatics checks. Available as: boots of elvenkind; greater boots of elvenkind.',
     requiresAttunement: false,
   },
   {
@@ -797,7 +801,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Bottled lightning is packed with volatile reagents that create a blast of electricity when they are exposed to air. Bottled lightning deals the listed electricity damage and electricity splash damage. On a hit, the target becomes flat-footed until the start of your next turn. Many types grant an item bonus to attack rolls.',
+      'Bottled lightning is packed with volatile reagents that create a blast of electricity when they are exposed to air. Bottled lightning deals the listed electricity damage and electricity splash damage. On a hit, the target becomes flat-footed until the start of your next turn. Many types grant an item bonus to attack rolls. Available as: lesser; moderate; greater; major.',
     requiresAttunement: false,
   },
   {
@@ -829,7 +833,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'These stiff leather armguards grant you a +1 item bonus to AC and saving throws, and a maximum Dexterity modifier of +5. You can affix talismans to bracers of armor as though they were light armor.',
+      'These stiff leather armguards grant you a +1 item bonus to AC and saving throws, and a maximum Dexterity modifier of +5. You can affix talismans to bracers of armor as though they were light armor. Available as: I; II; III.',
     requiresAttunement: false,
   },
   {
@@ -845,7 +849,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'These bracers are made from plates of durable mithral and gleam like the summer sun.',
+      'These bracers are made from plates of durable mithral and gleam like the summer sun. Available as: bracers of missile deflection; greater bracers of missile deflection.',
     requiresAttunement: false,
   },
   {
@@ -861,7 +865,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This flask of foaming beer grants courage. For the next hour after drinking this elixir, you gain an item bonus to Will saves, which is greater when attempting Will saves against fear.',
+      'This flask of foaming beer grants courage. For the next hour after drinking this elixir, you gain an item bonus to Will saves, which is greater when attempting Will saves against fear. Available as: lesser; moderate; greater.',
     requiresAttunement: false,
   },
   {
@@ -877,7 +881,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "This +1 resilient breastplate is made from shining bronze overlaid with reinforcing golden panels in the shape of lion's heads. Wearing this breastplate grants you a commanding aura. You gain a +2 item bonus to Diplomacy checks, but you take a –2 item penalty to Stealth checks to Hide and Sneak and Deception checks to Impersonate.",
+      "This +1 resilient breastplate is made from shining bronze overlaid with reinforcing golden panels in the shape of lion's heads. Wearing this breastplate grants you a commanding aura. You gain a +2 item bonus to Diplomacy checks, but you take a –2 item penalty to Stealth checks to Hide and Sneak and Deception checks to Impersonate. Available as: breastplate of command; greater breastplate of command.",
     requiresAttunement: false,
   },
   {
@@ -1128,7 +1132,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Enzymatic compounds in this elixir strengthen and excite the muscles in your legs. You gain a status bonus to your Speed for the listed duration.',
+      'Enzymatic compounds in this elixir strengthen and excite the muscles in your legs. You gain a status bonus to your Speed for the listed duration. Available as: lesser; moderate; greater.',
     requiresAttunement: false,
   },
   {
@@ -1160,7 +1164,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "This platinum choker bears characters from a language's alphabet, and it gives knowledge of that language and the associated culture's customs. You gain a +1 item bonus to Society checks and the ability to understand, speak, and write the chosen language.",
+      "This platinum choker bears characters from a language's alphabet, and it gives knowledge of that language and the associated culture's customs. You gain a +1 item bonus to Society checks and the ability to understand, speak, and write the chosen language. Available as: choker of elocution; greater choker of elocution.",
     requiresAttunement: false,
   },
   {
@@ -1192,7 +1196,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'When you pull up the hood of this nondescript gray cloak (an Interact action), you become drab and uninteresting, gaining a +1 item bonus to Stealth checks and to Deception checks to Impersonate a forgettable background character, such as a servant, but also taking a –1 item penalty to Diplomacy and Intimidation checks.',
+      'When you pull up the hood of this nondescript gray cloak (an Interact action), you become drab and uninteresting, gaining a +1 item bonus to Stealth checks and to Deception checks to Impersonate a forgettable background character, such as a servant, but also taking a –1 item penalty to Diplomacy and Intimidation checks. Available as: clandestine cloak; greater clandestine cloak.',
     requiresAttunement: false,
   },
   {
@@ -1240,7 +1244,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "This cloak is deep green with a voluminous hood, embroidered with gold trim and symbols significant in elven culture. The cloak allows you to cast the ghost sound cantrip as an arcane innate spell. When you adjust the cloak's clasp (an Interact action), the cloak transforms to match the environment around you and muffles your sounds, granting you a +1 item bonus to Stealth checks.",
+      "This cloak is deep green with a voluminous hood, embroidered with gold trim and symbols significant in elven culture. The cloak allows you to cast the ghost sound cantrip as an arcane innate spell. When you adjust the cloak's clasp (an Interact action), the cloak transforms to match the environment around you and muffles your sounds, granting you a +1 item bonus to Stealth checks. Available as: cloak of elvenkind; greater cloak of elvenkind.",
     requiresAttunement: false,
   },
   {
@@ -1256,7 +1260,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Sewn from several long strips of luxurious brown and black silk, this cloak grants you a +2 item bonus to Stealth checks as well as to Acrobatics checks to Maneuver in Flight. You can also use your feet to hang from any surface that can support your weight, without requiring any check, though you still must attempt Athletics checks to Climb in order to move around while inverted.',
+      'Sewn from several long strips of luxurious brown and black silk, this cloak grants you a +2 item bonus to Stealth checks as well as to Acrobatics checks to Maneuver in Flight. You can also use your feet to hang from any surface that can support your weight, without requiring any check, though you still must attempt Athletics checks to Climb in order to move around while inverted. Available as: cloak of the bat; greater cloak of the bat.',
     requiresAttunement: false,
   },
   {
@@ -1271,7 +1275,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       amount: 1,
       currency: 'sp',
     },
-    description: 'Clothing',
+    description: "Clothing Available as: ordinary; explorer's; fine; high-fashion fine; winter.",
     requiresAttunement: false,
   },
   {
@@ -1287,7 +1291,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Your mind becomes clear and cognition flows freely, but physical matters seem ephemeral.',
+      'Your mind becomes clear and cognition flows freely, but physical matters seem ephemeral. Available as: lesser; moderate; greater; major.',
     requiresAttunement: false,
   },
   {
@@ -1302,7 +1306,8 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       amount: 10,
       currency: 'gp',
     },
-    description: 'Weapons made from cold iron are deadly to demons and fey alike.',
+    description:
+      'Weapons made from cold iron are deadly to demons and fey alike. Available as: cold iron chunk; cold iron ingot; low-grade cold iron object; standard-grade cold iron object; high-grade cold iron object.',
     requiresAttunement: false,
   },
   {
@@ -1318,7 +1323,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Cold iron armor sickens certain creatures that touch it. A creature with weakness to cold iron (such as most demons and fey) that critically fails an unarmed attack against a creature in cold iron armor becomes sickened 1. A creature with weakness to cold iron is sickened 1 as long as it wears cold iron armor.',
+      'Cold iron armor sickens certain creatures that touch it. A creature with weakness to cold iron (such as most demons and fey) that critically fails an unarmed attack against a creature in cold iron armor becomes sickened 1. A creature with weakness to cold iron is sickened 1 as long as it wears cold iron armor. Available as: low-grade cold iron armor; standard-grade cold iron armor; high-grade cold iron armor.',
     requiresAttunement: false,
   },
   {
@@ -1334,7 +1339,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "Cold iron shields don't typically have an additional effect, though when used for a shield bash, they are cold iron weapons.",
+      "Cold iron shields don't typically have an additional effect, though when used for a shield bash, they are cold iron weapons. Available as: low-grade cold iron buckler; low-grade cold iron shield; standard-grade cold iron buckler; standard-grade cold iron shield; high-grade cold iron buckler; high-grade cold iron shield.",
     requiresAttunement: false,
   },
   {
@@ -1350,7 +1355,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Cold iron weapons deal additional damage to creatures with weakness to cold iron, like demons and fey.',
+      'Cold iron weapons deal additional damage to creatures with weakness to cold iron, like demons and fey. Available as: low-grade cold iron weapon; standard-grade cold iron weapon; high-grade cold iron weapon.',
     requiresAttunement: false,
   },
   {
@@ -1398,7 +1403,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "This bitter draught opens your mind to the potential of the written word. For the listed duration after drinking this elixir, you can understand any words you read, so long as they are written in a common language. This elixir doesn't automatically allow you to understand codes or extremely esoteric passages—you still need to attempt a skill check to Decipher Writing.",
+      "This bitter draught opens your mind to the potential of the written word. For the listed duration after drinking this elixir, you can understand any words you read, so long as they are written in a common language. This elixir doesn't automatically allow you to understand codes or extremely esoteric passages—you still need to attempt a skill check to Decipher Writing. Available as: lesser; greater.",
     requiresAttunement: false,
   },
   {
@@ -1429,7 +1434,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Acid sizzles across the surface of the weapon. When you hit with the weapon, add 1d6 acid damage to the damage dealt.',
+      'Acid sizzles across the surface of the weapon. When you hit with the weapon, add 1d6 acid damage to the damage dealt. Available as: corrosive; greater corrosive.',
     requiresAttunement: false,
   },
   {
@@ -1444,7 +1449,8 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       amount: 60,
       currency: 'gp',
     },
-    description: 'This dusty coat is made of mangy brown-and-gray coyote fur.',
+    description:
+      'This dusty coat is made of mangy brown-and-gray coyote fur. Available as: coyote cloak; greater coyote cloak.',
     requiresAttunement: false,
   },
   {
@@ -1460,7 +1466,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This rugged metal eyepiece etched with square patterns is designed to be worn over a single eye. Twisting the lens reveals a faint three-dimensional outline of an item you plan to build or repair, with helpful labels on the component parts. While worn, this eyepiece gives you a +1 item bonus to Crafting checks. When you Repair an item, increase the Hit Points restored by 15 per proficiency rank instead of 10.',
+      "This rugged metal eyepiece etched with square patterns is designed to be worn over a single eye. Twisting the lens reveals a faint three-dimensional outline of an item you plan to build or repair, with helpful labels on the component parts. While worn, this eyepiece gives you a +1 item bonus to Crafting checks. When you Repair an item, increase the Hit Points restored by 15 per proficiency rank instead of 10. Available as: crafter's eyepiece; greater crafter's eyepiece.",
     requiresAttunement: false,
   },
   {
@@ -1492,7 +1498,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This polished crystal sphere enhances scrying magic. Any visual information received through a spell with the scrying trait that was cast by the crystal ball appears within the sphere, and any auditory information sounds out from the surface of the sphere. When you cast a scrying spell by any other means while holding the sphere, you can relay any information you receive in the same way, allowing others to see or hear the target.',
+      'This polished crystal sphere enhances scrying magic. Any visual information received through a spell with the scrying trait that was cast by the crystal ball appears within the sphere, and any auditory information sounds out from the surface of the sphere. When you cast a scrying spell by any other means while holding the sphere, you can relay any information you receive in the same way, allowing others to see or hear the target. Available as: clear quartz; selenite; moonstone; peridot; obsidian.',
     requiresAttunement: false,
   },
   {
@@ -1555,7 +1561,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This long and billowing scarf is typically woven of silk or sheer fabric and adorned with bells or other jangling bits of shiny metal. It grants a +1 item bonus to Performance checks to dance.',
+      'This long and billowing scarf is typically woven of silk or sheer fabric and adorned with bells or other jangling bits of shiny metal. It grants a +1 item bonus to Performance checks to dance. Available as: dancing scarf; greater dancing scarf.',
     requiresAttunement: false,
   },
   {
@@ -1571,7 +1577,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "These brightly colored, soft-soled boots motivate you to perform risky stunts and grant you the agility to succeed. The boots grant you a +2 item bonus to Acrobatics checks and a +1 circumstance bonus to checks to Tumble Through an enemy's space.",
+      "These brightly colored, soft-soled boots motivate you to perform risky stunts and grant you the agility to succeed. The boots grant you a +2 item bonus to Acrobatics checks and a +1 circumstance bonus to checks to Tumble Through an enemy's space. Available as: daredevil boots; greater daredevil boots.",
     requiresAttunement: false,
   },
   {
@@ -1587,7 +1593,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'After you drink this elixir, your sight becomes sharper in darkness. You gain darkvision for the listed duration.',
+      'After you drink this elixir, your sight becomes sharper in darkness. You gain darkvision for the listed duration. Available as: lesser; moderate; greater.',
     requiresAttunement: false,
   },
   {
@@ -1603,7 +1609,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "Darkwood is a very lightweight wood found primarily in oldgrowth forests in south-central Avistan; it is dark as ebony but has a slight purple tint. A darkwood item's Bulk is reduced by 1 (or to light Bulk if its normal Bulk is 1, with no effect on an item that normally has light Bulk). The Price of an item made of darkwood is based on the item's normal Bulk, not its reduced Bulk for being made of darkwood, but reduce the Bulk before making any further Bulk adjustments for the size of the item.",
+      "Darkwood is a very lightweight wood found primarily in oldgrowth forests in south-central Avistan; it is dark as ebony but has a slight purple tint. A darkwood item's Bulk is reduced by 1 (or to light Bulk if its normal Bulk is 1, with no effect on an item that normally has light Bulk). The Price of an item made of darkwood is based on the item's normal Bulk, not its reduced Bulk for being made of darkwood, but reduce the Bulk before making any further Bulk adjustments for the size of the item. Available as: darkwood branch; darkwood lumber; standard-grade darkwood object; high-grade darkwood object.",
     requiresAttunement: false,
   },
   {
@@ -1619,7 +1625,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "Darkwood armor is 1 Bulk lighter than normal (or light Bulk if its normal Bulk is 1, with no effect on armor that normally has light Bulk). It's easier to wear than normal wood armor, reducing the Strength score necessary to ignore its check penalty by 2 and reducing its Speed penalty by 5 feet. (There are no types of wood armor in this book.)",
+      "Darkwood armor is 1 Bulk lighter than normal (or light Bulk if its normal Bulk is 1, with no effect on armor that normally has light Bulk). It's easier to wear than normal wood armor, reducing the Strength score necessary to ignore its check penalty by 2 and reducing its Speed penalty by 5 feet. (There are no types of wood armor in this book.) Available as: standard-grade darkwood armor; high-grade darkwood armor.",
     requiresAttunement: false,
   },
   {
@@ -1635,7 +1641,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Darkwood shields are 1 Bulk lighter than normal (or light Bulk if their normal Bulk is 1, with no effect on a shield that normally has light Bulk).',
+      'Darkwood shields are 1 Bulk lighter than normal (or light Bulk if their normal Bulk is 1, with no effect on a shield that normally has light Bulk). Available as: standard-grade darkwood buckler; standard-grade darkwood shield; standard-grade darkwood tower shield; high-grade darkwood buckler; high-grade darkwood shield; high-grade darkwood tower shield.',
     requiresAttunement: false,
   },
   {
@@ -1651,7 +1657,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "Darkwood weapons are as dark as ebony, with a slight purple tint. A darkwood weapon's Bulk is reduced by 1 (or to light Bulk if its normal Bulk is 1, with no effect on a weapon that normally has light Bulk).",
+      "Darkwood weapons are as dark as ebony, with a slight purple tint. A darkwood weapon's Bulk is reduced by 1 (or to light Bulk if its normal Bulk is 1, with no effect on a weapon that normally has light Bulk). Available as: standard grade darkwood weapon; high-grade darkwood weapon.",
     requiresAttunement: false,
   },
   {
@@ -1730,7 +1736,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This terrifying mask is crafted in the visage of a leering demon and grants a +1 item bonus to Intimidation checks.',
+      'This terrifying mask is crafted in the visage of a leering demon and grants a +1 item bonus to Intimidation checks. Available as: demon mask; greater demon mask.',
     requiresAttunement: false,
   },
   {
@@ -1810,7 +1816,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'A disrupting weapon pulses with positive energy, dealing an extra 1d6 positive damage to undead. On a critical hit, the undead is also enfeebled 1 until the end of your next turn.',
+      'A disrupting weapon pulses with positive energy, dealing an extra 1d6 positive damage to undead. On a critical hit, the undead is also enfeebled 1 until the end of your next turn. Available as: disrupting; greater disrupting.',
     requiresAttunement: false,
   },
   {
@@ -1826,7 +1832,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "This item consists of two magically linked rings: an intricate, gleaming golden ring with a square-cut ruby, and a thick, plain iron ring. When you wield a melee weapon in the hand wearing the golden ring, the weapon's fundamental runes are replicated onto any melee weapon you wield in the hand wearing the iron ring. (The fundamental runes are weapon potency and striking, which add an item bonus to attack rolls and extra weapon damage dice, respectively.) Any fundamental runes on the weapon in the hand wearing the iron ring are suppressed.",
+      "This item consists of two magically linked rings: an intricate, gleaming golden ring with a square-cut ruby, and a thick, plain iron ring. When you wield a melee weapon in the hand wearing the golden ring, the weapon's fundamental runes are replicated onto any melee weapon you wield in the hand wearing the iron ring. (The fundamental runes are weapon potency and striking, which add an item bonus to attack rolls and extra weapon damage dice, respectively.) Any fundamental runes on the weapon in the hand wearing the iron ring are suppressed. Available as: doubling rings; greater doubling rings.",
     requiresAttunement: false,
   },
   {
@@ -1858,7 +1864,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "This liquid contains blood from a certain type of dragon. For 1 hour after you imbibe the concoction, you can unleash a breath weapon used by that type of dragon. The potency of the breath depends on the potion's type, based on the age of the dragon whose blood was used to make the potion.",
+      "This liquid contains blood from a certain type of dragon. For 1 hour after you imbibe the concoction, you can unleash a breath weapon used by that type of dragon. The potency of the breath depends on the potion's type, based on the age of the dragon whose blood was used to make the potion. Available as: young; adult; wyrm.",
     requiresAttunement: false,
   },
   {
@@ -1890,7 +1896,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "The hide and scales of a dragon can be used to Craft any item normally made of ordinary leather or hide. Dragonhide varies in color from blue to glittering gold, depending on the dragon it came from. Due to the scales' resiliency, it can also be used to Craft armor usually made out of metal plates (such as a breastplate, half plate, and full plate), allowing such armor to be made without metal. Dragonhide objects are immune to one damage type, depending on the type of dragon (see the table below).",
+      "The hide and scales of a dragon can be used to Craft any item normally made of ordinary leather or hide. Dragonhide varies in color from blue to glittering gold, depending on the dragon it came from. Due to the scales' resiliency, it can also be used to Craft armor usually made out of metal plates (such as a breastplate, half plate, and full plate), allowing such armor to be made without metal. Dragonhide objects are immune to one damage type, depending on the type of dragon (see the table below). Available as: standard-grade dragonhide object; high-grade dragonhide object.",
     requiresAttunement: false,
   },
   {
@@ -1906,7 +1912,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Dragonhide armor is immune to one damage type based on the type of dragon it is made from (as listed in the table on page 579). Wearing armor made from dragonhide also grants you a +1 circumstance bonus to your AC and saving throws against attacks and spells that deal the corresponding damage type.',
+      'Dragonhide armor is immune to one damage type based on the type of dragon it is made from (as listed in the table on page 579). Wearing armor made from dragonhide also grants you a +1 circumstance bonus to your AC and saving throws against attacks and spells that deal the corresponding damage type. Available as: standard-grade dragonhide armor; high-grade dragonhide armor.',
     requiresAttunement: false,
   },
   {
@@ -1922,7 +1928,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Dragonhide shields are each immune to one damage type based on the type of dragon (see Dragonhide on page 579).',
+      'Dragonhide shields are each immune to one damage type based on the type of dragon (see Dragonhide on page 579). Available as: standard-grade dragonhide buckler; standard-grade dragonhide shield; high-grade dragonhide buckler; high-grade dragonhide shield.',
     requiresAttunement: false,
   },
   {
@@ -2049,7 +2055,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'After you drink this elixir, you notice subtle visual details. For the next hour, you gain an item bonus to Perception checks that is greater when attempting to find secret doors and traps.',
+      'After you drink this elixir, you notice subtle visual details. For the next hour, you gain an item bonus to Perception checks that is greater when attempting to find secret doors and traps. Available as: lesser; moderate; greater; major.',
     requiresAttunement: false,
   },
   {
@@ -2113,7 +2119,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "Elixirs of life accelerate the body's natural healing processes and immune system. Upon drinking this elixir, you regain the listed number of Hit Points and gain an item bonus to saving throws against diseases and poisons for 10 minutes.",
+      "Elixirs of life accelerate the body's natural healing processes and immune system. Upon drinking this elixir, you regain the listed number of Hit Points and gain an item bonus to saving throws against diseases and poisons for 10 minutes. Available as: minor; lesser; moderate; greater; major; true.",
     requiresAttunement: false,
   },
   {
@@ -2145,7 +2151,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Elven chain is a chain shirt made of mithral that glitters in even the faintest light. It has no check penalty.',
+      'Elven chain is a chain shirt made of mithral that glitters in even the faintest light. It has no check penalty. Available as: standard-grade elven chain; high-grade elven chain.',
     requiresAttunement: false,
   },
   {
@@ -2177,7 +2183,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'These symbols convey protective forces from the Elemental Planes. You gain resistance 5 to acid, cold, electricity, or fire.',
+      'These symbols convey protective forces from the Elemental Planes. You gain resistance 5 to acid, cold, electricity, or fire. Available as: energy-resistant; greater energy-resistant.',
     requiresAttunement: false,
   },
   {
@@ -2240,7 +2246,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This piece of ammunition is coated in gritty black soot. When activated explosive ammunition hits a target, the missile explodes in a 10-foot burst, dealing 6d6 fire damage to each creature in the area (including the target). Each creature must attempt a DC 25 basic Reflex save.',
+      'This piece of ammunition is coated in gritty black soot. When activated explosive ammunition hits a target, the missile explodes in a 10-foot burst, dealing 6d6 fire damage to each creature in the area (including the target). Each creature must attempt a DC 25 basic Reflex save. Available as: standard; greater.',
     requiresAttunement: false,
   },
   {
@@ -2367,7 +2373,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "Each feather token appears to be a simple feather from some exotic bird. The feather's shaft, dipped in gold, bears a single arcane rune. Activating a feather token causes it to transform into another object, which then can be used as normal for that object. Each feather can be activated only once, with most of them permanently becoming the item in their description.",
+      "Each feather token appears to be a simple feather from some exotic bird. The feather's shaft, dipped in gold, bears a single arcane rune. Activating a feather token causes it to transform into another object, which then can be used as normal for that object. Each feather can be activated only once, with most of them permanently becoming the item in their description. Available as: anchor; bird; chest; fan; holly bush; ladder; swan boat; tree; whip; balloon; puddle.",
     requiresAttunement: false,
   },
   {
@@ -2415,7 +2421,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This +2 greater striking flaming longsword has an ornate brass hilt and a blade shaped like stylized flames. When wielded, the blade projects illumination resembling shimmering firelight, emitting dim light in a 10-foot radius.',
+      'This +2 greater striking flaming longsword has an ornate brass hilt and a blade shaped like stylized flames. When wielded, the blade projects illumination resembling shimmering firelight, emitting dim light in a 10-foot radius. Available as: flame tongue; greater flame tongue.',
     requiresAttunement: false,
   },
   {
@@ -2431,7 +2437,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This weapon is empowered by flickering flame. The weapon deals an additional 1d6 fire damage on a successful Strike, plus 1d10 persistent fire damage on a critical hit.',
+      'This weapon is empowered by flickering flame. The weapon deals an additional 1d6 fire damage on a successful Strike, plus 1d10 persistent fire damage on a critical hit. Available as: flaming; greater flaming.',
     requiresAttunement: false,
   },
   {
@@ -2463,7 +2469,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'A floating shield is usually carved with wing motifs. This buckler (Hardness 6, HP 24, BT 12) can protect you on its own.',
+      'A floating shield is usually carved with wing motifs. This buckler (Hardness 6, HP 24, BT 12) can protect you on its own. Available as: floating shield; greater floating shield.',
     requiresAttunement: false,
   },
   {
@@ -2542,7 +2548,8 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       amount: 2000,
       currency: 'gp',
     },
-    description: 'A fortification rune wards against the most deadly attacks.',
+    description:
+      'A fortification rune wards against the most deadly attacks. Available as: fortification; greater fortification.',
     requiresAttunement: false,
   },
   {
@@ -2558,7 +2565,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This weapon is empowered with freezing ice. It deals an additional 1d6 cold damage on a successful Strike. On a critical hit, the target is also slowed 1 until the end of your next turn unless it succeeds at a DC 24 Fortitude save.',
+      'This weapon is empowered with freezing ice. It deals an additional 1d6 cold damage on a successful Strike. On a critical hit, the target is also slowed 1 until the end of your next turn unless it succeeds at a DC 24 Fortitude save. Available as: frost; greater frost.',
     requiresAttunement: false,
   },
   {
@@ -2590,7 +2597,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'The liquid reagents in this vial rapidly absorb heat when exposed to air. A frost vial deals the listed cold damage and cold splash damage. On a hit, the target takes a status penalty to its Speeds until the end of its next turn. Many types of frost vial also grant an item bonus to attack rolls.',
+      'The liquid reagents in this vial rapidly absorb heat when exposed to air. A frost vial deals the listed cold damage and cold splash damage. On a hit, the target takes a status penalty to its Speeds until the end of its next turn. Many types of frost vial also grant an item bonus to attack rolls. Available as: lesser; moderate; greater; major.',
     requiresAttunement: false,
   },
   {
@@ -2778,7 +2785,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'The opaque crystal lenses of these sleek goggles do not obscure vision, but rather enhance it. While wearing the goggles, you gain a +1 item bonus to Perception checks involving sight.',
+      'The opaque crystal lenses of these sleek goggles do not obscure vision, but rather enhance it. While wearing the goggles, you gain a +1 item bonus to Perception checks involving sight. Available as: goggles of night; greater goggles of night; major goggles of night.',
     requiresAttunement: false,
   },
   {
@@ -2889,7 +2896,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "You arrange brambles, wires, sticky goo, or other materials to interfere with a creature's movement. The square with this snare, as well as three adjacent squares (to form a 10-foot-by-10-foot area), become terrain when the first creature enters the snare's square. The terrain affects the creature's movement right away, including its movement into the triggering square, and it lasts for 1d4 rounds after the snare is triggered. A creature can use an Interact action to clear the terrain out of a single square early.",
+      "You arrange brambles, wires, sticky goo, or other materials to interfere with a creature's movement. The square with this snare, as well as three adjacent squares (to form a 10-foot-by-10-foot area), become difficult terrain when the first creature enters the snare's square. The difficult terrain affects the creature's movement right away, including its movement into the triggering square, and it lasts for 1d4 rounds after the snare is triggered. A creature can use an Interact action to clear the difficult terrain out of a single square early.",
     requiresAttunement: false,
   },
   {
@@ -2921,7 +2928,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'As you invest these embroidered strips of cloth, you must meditate and slowly wrap them around your hands. These handwraps have weapon runes etched into them to give your unarmed attacks the benefits of those runes, making your unarmed attacks work like magic weapons. For example, +1 striking handwraps of mighty blows would give you a +1 item bonus to attack rolls with your unarmed attacks and increase the damage of your unarmed attacks from one weapon die to two (normally 2d4 instead of 1d4, but if your fists have a different weapon damage die or you have other unarmed attacks, use two of that die size instead)',
+      'As you invest these embroidered strips of cloth, you must meditate and slowly wrap them around your hands. These handwraps have weapon runes etched into them to give your unarmed attacks the benefits of those runes, making your unarmed attacks work like magic weapons. For example, +1 striking handwraps of mighty blows would give you a +1 item bonus to attack rolls with your unarmed attacks and increase the damage of your unarmed attacks from one weapon die to two (normally 2d4 instead of 1d4, but if your fists have a different weapon damage die or you have other unarmed attacks, use two of that die size instead) Available as: +1 handwraps of mighty blows; +1 striking handwraps of mighty blows; +2 striking handwraps of mighty blows; +2 greater striking handwraps of mighty blows; +3 greater striking handwraps of mighty blows; +3 major striking handwraps of mighty blows.',
     requiresAttunement: false,
   },
   {
@@ -2936,7 +2943,8 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       amount: 30,
       currency: 'gp',
     },
-    description: 'This ordinary-looking hat allows you to cloak yourself in illusions.',
+    description:
+      'This ordinary-looking hat allows you to cloak yourself in illusions. Available as: hat of disguise; greater hat of disguise.',
     requiresAttunement: false,
   },
   {
@@ -2952,7 +2960,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This hat comes in many forms, such as a colorful turban or a pointy hat with a brim, and can bear symbols or runes. It grants you a +1 item bonus to Arcana checks and allows you to cast the prestidigitation cantrip as an arcane innate spell.',
+      'This hat comes in many forms, such as a colorful turban or a pointy hat with a brim, and can bear symbols or runes. It grants you a +1 item bonus to Arcana checks and allows you to cast the prestidigitation cantrip as an arcane innate spell. Available as: hat of the magi; greater hat of the magi.',
     requiresAttunement: false,
   },
   {
@@ -2984,7 +2992,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'These clean, white gloves never show signs of blood, even when used to stitch up wounds or treat other ailments. They give you a +1 item bonus to Medicine checks.',
+      "These clean, white gloves never show signs of blood, even when used to stitch up wounds or treat other ailments. They give you a +1 item bonus to Medicine checks. Available as: healer's gloves; greater healer's gloves.",
     requiresAttunement: false,
   },
   {
@@ -3000,7 +3008,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "A healing potion is a vial of a ruby-red liquid that imparts a tingling sensation as the drinker's wounds heal rapidly. When you drink a healing potion, you regain the listed number of Hit Points.",
+      "A healing potion is a vial of a ruby-red liquid that imparts a tingling sensation as the drinker's wounds heal rapidly. When you drink a healing potion, you regain the listed number of Hit Points. Available as: minor; lesser; moderate; greater; major.",
     requiresAttunement: false,
   },
   {
@@ -3016,7 +3024,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "You can purchase special armor for animals, called barding. Combat-trained animals are trained in heavy barding. Barding uses the same rules as armor except for the following. The Price and Bulk of barding depend on the animal's size (use statistics for Small barding for creatures below Small size). Barding can't be etched with magic runes, though special barding might be available.",
+      "You can purchase special armor for animals, called barding. Combat-trained animals are trained in heavy barding. Barding uses the same rules as armor except for the following. The Price and Bulk of barding depend on the animal's size (use statistics for Small barding for creatures below Small size). Barding can't be etched with magic runes, though special barding might be available. Available as: small or medium; large.",
     requiresAttunement: false,
   },
   {
@@ -3104,7 +3112,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
     name: 'Holy Prayer Beads',
     system: 'pf2e',
     source: 'Core Rulebook',
-    type: 'gear',
+    type: 'magic-item',
     rarity: 'uncommon',
     weight: 0,
     cost: {
@@ -3112,7 +3120,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "This strand of ordinary-looking prayer beads glows with a soft light and becomes warm to the touch the first time you cast a divine spell while holding it. When you do, the prayer beads become attuned to your deity, changing their form and iconography to prominently incorporate your deity's religious symbol and iconography. The beads don't transform or function for an evil spellcaster.",
+      "This strand of ordinary-looking prayer beads glows with a soft light and becomes warm to the touch the first time you cast a divine spell while holding it. When you do, the prayer beads become attuned to your deity, changing their form and iconography to prominently incorporate your deity's religious symbol and iconography. The beads don't transform or function for an evil spellcaster. Available as: standard; greater.",
     requiresAttunement: false,
   },
   {
@@ -3136,7 +3144,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
     name: 'Horn of Blasting',
     system: 'pf2e',
     source: 'Core Rulebook',
-    type: 'gear',
+    type: 'magic-item',
     rarity: 'common',
     weight: 0,
     cost: {
@@ -3176,7 +3184,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'When you affix these simple iron horseshoes to the hooves of an ordinary horse or a quadrupedal animal companion and the animal companion invests them, that creature gains a +5-foot item bonus to its land Speed and a +2 item bonus to Athletics checks to High Jump and Long Jump. In addition, when it Leaps, it can move 5 feet farther if jumping horizontally or 3 feet higher if jumping vertically.',
+      'When you affix these simple iron horseshoes to the hooves of an ordinary horse or a quadrupedal animal companion and the animal companion invests them, that creature gains a +5-foot item bonus to its land Speed and a +2 item bonus to Athletics checks to High Jump and Long Jump. In addition, when it Leaps, it can move 5 feet farther if jumping horizontally or 3 feet higher if jumping vertically. Available as: horseshoes of speed; greater horseshoes of speed.',
     requiresAttunement: false,
   },
   {
@@ -3333,7 +3341,8 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       amount: 500,
       currency: 'gp',
     },
-    description: 'Light seems to partially penetrate this armor.',
+    description:
+      'Light seems to partially penetrate this armor. Available as: invisibility; greater invisibility.',
     requiresAttunement: false,
   },
   {
@@ -3443,7 +3452,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'A thumb-sized feline carved of rare stone, the jade cat is typically worn as a pendant upon a suit of armor. For 1 minute after you activate the cat, you treat all falls as 20 feet shorter, you are not flat-footed when you Balance, and narrow surfaces and uneven ground are not terrain for you.',
+      'A thumb-sized feline carved of rare stone, the jade cat is typically worn as a pendant upon a suit of armor. For 1 minute after you activate the cat, you treat all falls as 20 feet shorter, you are not flat-footed when you Balance, and narrow surfaces and uneven ground are not difficult terrain for you.',
     requiresAttunement: false,
   },
   {
@@ -3475,7 +3484,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'After you drink this mutagen, your body becomes thick and sturdy. You exhibit a healthy glow, though you tend to be ponderous and unobservant.',
+      'After you drink this mutagen, your body becomes thick and sturdy. You exhibit a healthy glow, though you tend to be ponderous and unobservant. Available as: lesser; moderate; greater; major.',
     requiresAttunement: false,
   },
   {
@@ -3523,7 +3532,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This sturdy leather satchel contains three compartments fastened with large clasps. The first compartment is lined in blue satin and contains an extradimensional space equivalent to a type II bag of holding.',
+      'This sturdy leather satchel contains three compartments fastened with large clasps. The first compartment is lined in blue satin and contains an extradimensional space equivalent to a type II bag of holding. Available as: knapsack of halflingkind; greater knapsack of halflingkind.',
     requiresAttunement: false,
   },
   {
@@ -3554,7 +3563,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "This tingly solution increases the elasticity and contraction of your leg muscles. For 1 minute after drinking this elixir, you can High Jump or Long Jump as a single action instead of 2 actions. If you do, you don't perform the initial Stride (nor do you fail if you don't Stride 10 feet).",
+      "This tingly solution increases the elasticity and contraction of your leg muscles. For 1 minute after drinking this elixir, you can High Jump or Long Jump as a single action instead of 2 actions. If you do, you don't perform the initial Stride (nor do you fail if you don't Stride 10 feet). Available as: lesser; greater.",
     requiresAttunement: false,
   },
   {
@@ -3618,7 +3627,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "You can purchase special armor for animals, called barding. All animals have a trained proficiency rank in light barding. Barding uses the same rules as armor except for the following. The Price and Bulk of barding depend on the animal's size (use statistics for Small barding for creatures below Small size). Barding can't be etched with magic runes, though special barding might be available.",
+      "You can purchase special armor for animals, called barding. All animals have a trained proficiency rank in light barding. Barding uses the same rules as armor except for the following. The Price and Bulk of barding depend on the animal's size (use statistics for Small barding for creatures below Small size). Barding can't be etched with magic runes, though special barding might be available. Available as: large; small or medium.",
     requiresAttunement: false,
   },
   {
@@ -3650,7 +3659,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Luck and good fortune bless the wielder of this +3 greater striking shortsword. Luck blades are crafted in a variety of styles, but their hilts or blades always incorporate symbols of luck, such as clovers, horseshoes, fish, ladybugs, or other symbols.',
+      'Luck and good fortune bless the wielder of this +3 greater striking shortsword. Luck blades are crafted in a variety of styles, but their hilts or blades always incorporate symbols of luck, such as clovers, horseshoes, fish, ladybugs, or other symbols. Available as: luck blade; wishing luck blade.',
     requiresAttunement: false,
   },
   {
@@ -3666,7 +3675,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "A maestro's instrument can be crafted in the form of any variety of handheld musical instrument. A maestro's instrument grants you a +1 item bonus to Performance checks while playing music with the instrument.",
+      "A maestro's instrument can be crafted in the form of any variety of handheld musical instrument. A maestro's instrument grants you a +1 item bonus to Performance checks while playing music with the instrument. Available as: lesser; moderate; greater.",
     requiresAttunement: false,
   },
   {
@@ -3682,7 +3691,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This baton is about a foot long and contains a single spell. The appearance typically relates to the spell within.',
+      'This baton is about a foot long and contains a single spell. The appearance typically relates to the spell within. Available as: 1st-level spell; 2nd-level spell; 3rd-level spell; 4th-level spell; 5th-level spell; 6th-level spell; 7th-level spell; 8th-level spell; 9th-level spell.',
     requiresAttunement: false,
   },
   {
@@ -3746,7 +3755,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "This set of healer's tools contains a seemingly endless supply of bandages, herbs, and healing items of impeccable quality, granting you a +2 item bonus to Medicine checks.",
+      "This set of healer's tools contains a seemingly endless supply of bandages, herbs, and healing items of impeccable quality, granting you a +2 item bonus to Medicine checks. Available as: standard; greater.",
     requiresAttunement: false,
   },
   {
@@ -3794,7 +3803,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This polished wooden staff bears a swirling motif reminiscent of the folds of a brain. While wielding the staff, you gain a +2 circumstance bonus to checks to identify mental magic.',
+      "This polished wooden staff bears a swirling motif reminiscent of the folds of a brain. While wielding the staff, you gain a +2 circumstance bonus to checks to identify mental magic. Available as: mentalist's staff; greater mentalist's staff; major mentalist's staff.",
     requiresAttunement: false,
   },
   {
@@ -3840,7 +3849,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This silver signet ring changes to match the insignia of a lord or organization you serve (or your own face, if you serve no one else). It grants you a +2 item bonus to Diplomacy checks and lets you cast message as an arcane innate spell at will.',
+      "This silver signet ring changes to match the insignia of a lord or organization you serve (or your own face, if you serve no one else). It grants you a +2 item bonus to Diplomacy checks and lets you cast message as an arcane innate spell at will. Available as: messenger's ring; greater messenger's ring.",
     requiresAttunement: false,
   },
   {
@@ -3887,7 +3896,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "A faint mist emanates from your skin, making you concealed for the listed duration. As usual being concealed when your position is still obvious, you can't use this concealment to Hide or Sneak.",
+      "A faint mist emanates from your skin, making you concealed for the listed duration. As usual being concealed when your position is still obvious, you can't use this concealment to Hide or Sneak. Available as: lesser; moderate; greater.",
     requiresAttunement: false,
   },
   {
@@ -3903,7 +3912,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "Mithral is renowned for its lightness, durability, and effectiveness against a range of creatures including devils and lycanthropes. It has the same sheen as silver but a slightly lighter hue. Mithral weapons and armor are treated as if they were silver for the purpose of damaging creatures with weakness to silver. A metal item made of mithral is lighter than one made of iron or steel: the item's Bulk is reduced by 1 (reduced to light Bulk if its normal Bulk is 1, with no effect on an item that normally has light Bulk). The Price of an item made of this material is based on the item's normal Bulk, not its reduced Bulk for being made of mithral, but reduce the Bulk before making any further Bulk adjustments for the size of the item.",
+      "Mithral is renowned for its lightness, durability, and effectiveness against a range of creatures including devils and lycanthropes. It has the same sheen as silver but a slightly lighter hue. Mithral weapons and armor are treated as if they were silver for the purpose of damaging creatures with weakness to silver. A metal item made of mithral is lighter than one made of iron or steel: the item's Bulk is reduced by 1 (reduced to light Bulk if its normal Bulk is 1, with no effect on an item that normally has light Bulk). The Price of an item made of this material is based on the item's normal Bulk, not its reduced Bulk for being made of mithral, but reduce the Bulk before making any further Bulk adjustments for the size of the item. Available as: mithral chunk; mithral ingot; standard-grade mithral object; high-grade mithral object.",
     requiresAttunement: false,
   },
   {
@@ -3919,7 +3928,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "Mithral armor is 1 Bulk lighter than normal (or light Bulk if its normal Bulk is 1, with no effect on armor that normally has light Bulk). It's easier to wear than normal metal armor, reducing the Strength score necessary to ignore its check penalty by 2 and reducing its Speed penalty by 5 feet.",
+      "Mithral armor is 1 Bulk lighter than normal (or light Bulk if its normal Bulk is 1, with no effect on armor that normally has light Bulk). It's easier to wear than normal metal armor, reducing the Strength score necessary to ignore its check penalty by 2 and reducing its Speed penalty by 5 feet. Available as: standard-grade mithral armor; high-grade mithral armor.",
     requiresAttunement: false,
   },
   {
@@ -3935,7 +3944,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Mithral shields are 1 Bulk lighter than normal (or light Bulk if their normal Bulk is 1, with no effect on a shield that normally has light Bulk). When used for a shield bash, they are treated as silver weapons.',
+      'Mithral shields are 1 Bulk lighter than normal (or light Bulk if their normal Bulk is 1, with no effect on a shield that normally has light Bulk). When used for a shield bash, they are treated as silver weapons. Available as: standard-grade mithral buckler; standard-grade mithral shield; high-grade mithral buckler; high-grade mithral shield.',
     requiresAttunement: false,
   },
   {
@@ -3951,7 +3960,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Mithral weapons are slightly lighter than silver. A mithral weapon is 1 Bulk lighter than normal (or light Bulk if its normal Bulk is 1, with no effect on a weapon that normally has light Bulk).',
+      'Mithral weapons are slightly lighter than silver. A mithral weapon is 1 Bulk lighter than normal (or light Bulk if its normal Bulk is 1, with no effect on a weapon that normally has light Bulk). Available as: standard-grade mithral weapon; high-grade mithral weapon.',
     requiresAttunement: false,
   },
   {
@@ -4046,7 +4055,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This string of beads appears to be a hemp string with lustrous red beads of various sizes hanging from it. When activated, it briefly appears in its true form: a golden chain with golden spheres attached by fine threads.',
+      'This string of beads appears to be a hemp string with lustrous red beads of various sizes hanging from it. When activated, it briefly appears in its true form: a golden chain with golden spheres attached by fine threads. Available as: I; II; III; IV; V; VI; VII.',
     requiresAttunement: false,
   },
   {
@@ -4221,7 +4230,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'You can spread this shimmering oil on an item of 1 Bulk or less to make it feel weightless. It has negligible Bulk for 1 hour.',
+      'You can spread this shimmering oil on an item of 1 Bulk or less to make it feel weightless. It has negligible Bulk for 1 hour. Available as: oil of weightlessness; greater oil of weightlessness.',
     requiresAttunement: false,
   },
   {
@@ -4269,7 +4278,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "The most rare and valuable skymetal, orichalcum is coveted for its incredible time-related magical properties. This dull, coppery metal isn't as physically sturdy as adamantine, but orichalcum's time-bending properties protect it, granting it greater Hardness and Hit Points. If an orichalcum item takes damage but isn't destroyed, it repairs itself completely 24 hours later.",
+      "The most rare and valuable skymetal, orichalcum is coveted for its incredible time-related magical properties. This dull, coppery metal isn't as physically sturdy as adamantine, but orichalcum's time-bending properties protect it, granting it greater Hardness and Hit Points. If an orichalcum item takes damage but isn't destroyed, it repairs itself completely 24 hours later. Available as: orichalcum chunk; orichalcum ingot; high-grade orichalcum object.",
     requiresAttunement: false,
   },
   {
@@ -4285,7 +4294,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Orichalcum armor can be etched with four magic property runes instead of three due to the magical empowerment of orichalcum. If you are wearing armor made of orichalcum, the armor grants you insights into the future, granting you a +1 circumstance bonus to initiative rolls.',
+      'Orichalcum armor can be etched with four magic property runes instead of three due to the magical empowerment of orichalcum. If you are wearing armor made of orichalcum, the armor grants you insights into the future, granting you a +1 circumstance bonus to initiative rolls. Available as: high-grade orichalcum armor.',
     requiresAttunement: false,
   },
   {
@@ -4301,7 +4310,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "Orichalcum shields' time-bending properties are particularly useful for keeping them intact. The first time each day an orichalcum shield would be destroyed, it is instead left with 1 Hit Point and the broken condition.",
+      "Orichalcum shields' time-bending properties are particularly useful for keeping them intact. The first time each day an orichalcum shield would be destroyed, it is instead left with 1 Hit Point and the broken condition. Available as: high-grade orichalcum buckler; high-grade orichalcum shield.",
     requiresAttunement: false,
   },
   {
@@ -4316,7 +4325,8 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       amount: 22500,
       currency: 'gp',
     },
-    description: 'Orichalcum weapons can have four magic property runes instead of three.',
+    description:
+      'Orichalcum weapons can have four magic property runes instead of three. Available as: high-grade orichalcum weapon.',
     requiresAttunement: false,
   },
   {
@@ -4364,7 +4374,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This amulet is hollow and shaped in the form of an unblinking eye. Its cavity typically holds some fragment of occult text. While wearing the pendant, you gain a +1 item bonus to Occultism checks, and you can cast the guidance cantrip as an occult innate spell.',
+      'This amulet is hollow and shaped in the form of an unblinking eye. Its cavity typically holds some fragment of occult text. While wearing the pendant, you gain a +1 item bonus to Occultism checks, and you can cast the guidance cantrip as an occult innate spell. Available as: pendant of the occult; greater pendant of the occult.',
     requiresAttunement: false,
   },
   {
@@ -4396,7 +4406,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Despite covering the entire face, this alabaster mask does not hinder vision or other senses. Wearing the mask grants a +1 item bonus to Performance checks while acting, orating, performing comedy, or singing.',
+      'Despite covering the entire face, this alabaster mask does not hinder vision or other senses. Wearing the mask grants a +1 item bonus to Performance checks while acting, orating, performing comedy, or singing. Available as: persona mask; greater persona mask.',
     requiresAttunement: false,
   },
   {
@@ -4428,7 +4438,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "This tiny box holds a fragment of religious scripture sacred to a particular deity. The box is worn by affixing it to a leather cord and tying it around your head just above your brow. You don't gain any benefit from the phylactery if you don't worship the affiliated deity. The phylactery grants you religious wisdom, which manifests as a +2 item bonus to Religion checks. Just before you perform an action that would be anathema to the phylactery's deity, the phylactery warns you of the potential transgression in time for you to change your mind.",
+      "This tiny box holds a fragment of religious scripture sacred to a particular deity. The box is worn by affixing it to a leather cord and tying it around your head just above your brow. You don't gain any benefit from the phylactery if you don't worship the affiliated deity. The phylactery grants you religious wisdom, which manifests as a +2 item bonus to Religion checks. Just before you perform an action that would be anathema to the phylactery's deity, the phylactery warns you of the potential transgression in time for you to change your mind. Available as: phylactery of faithfulness; greater phylactery of faithfulness.",
     requiresAttunement: false,
   },
   {
@@ -4522,7 +4532,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Upon drinking this effervescent concoction, you gain a fly Speed of 40 feet for 1 minute.',
+      'Upon drinking this effervescent concoction, you gain a fly Speed of 40 feet for 1 minute. Available as: standard; greater.',
     requiresAttunement: false,
   },
   {
@@ -4569,7 +4579,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Drinking this thick, fortifying potion grants resistance against a single damage type for 1 hour. Each potion of resistance is created to defend against acid, cold, electricity, fire, or sonic damage (and is called a lesser potion of fire resistance or the like).',
+      'Drinking this thick, fortifying potion grants resistance against a single damage type for 1 hour. Each potion of resistance is created to defend against acid, cold, electricity, fire, or sonic damage (and is called a lesser potion of fire resistance or the like). Available as: lesser; moderate; greater.',
     requiresAttunement: false,
   },
   {
@@ -4585,7 +4595,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This potion tastes like salt water, and sandy grit settles to the bottom of its container. When you drink it, you gain a swim Speed equal to your land Speed for 10 minutes.',
+      'This potion tastes like salt water, and sandy grit settles to the bottom of its container. When you drink it, you gain a swim Speed equal to your land Speed for 10 minutes. Available as: moderate; greater.',
     requiresAttunement: false,
   },
   {
@@ -4641,7 +4651,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
     name: 'Primeval Mistletoe',
     system: 'pf2e',
     source: 'Core Rulebook',
-    type: 'gear',
+    type: 'magic-item',
     rarity: 'common',
     weight: 0,
     cost: {
@@ -4649,7 +4659,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "This sprig of berry-festooned holly and mistletoe doesn't wilt or rot. It can be used as a primal focus, and it also grants the creature holding it a +1 item bonus to Nature checks.",
+      "This sprig of berry-festooned holly and mistletoe doesn't wilt or rot. It can be used as a primal focus, and it also grants the creature holding it a +1 item bonus to Nature checks. Available as: standard; greater.",
     requiresAttunement: false,
   },
   {
@@ -4680,7 +4690,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Your features become thin and angular. You become swifter and nimbler, but your body also becomes fragile.',
+      'Your features become thin and angular. You become swifter and nimbler, but your body also becomes fragile. Available as: lesser; moderate; greater; major.',
     requiresAttunement: false,
   },
   {
@@ -4728,7 +4738,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'A repair kit allows you to perform simple repairs while traveling. It contains a portable anvil, tongs, woodworking tools, a whetstone, and oils for conditioning leather and wood. You can use a repair kit to Repair items using the Crafting skill. You can draw and replace a worn repair kit as part of the action that uses it.',
+      'A repair kit allows you to perform simple repairs while traveling. It contains a portable anvil, tongs, woodworking tools, a whetstone, and oils for conditioning leather and wood. You can use a repair kit to Repair items using the Crafting skill. You can draw and replace a worn repair kit as part of the action that uses it. Available as: Base; Superb.',
     requiresAttunement: false,
   },
   {
@@ -4760,7 +4770,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'sp',
     },
     description:
-      "If your thieves' tools are broken, you can repair them by replacing the lock picks with replacement picks appropriate to your tools; this doesn't require using the Repair action.",
+      "If your thieves' tools are broken, you can repair them by replacing the lock picks with replacement picks appropriate to your tools; this doesn't require using the Repair action. Available as: Base; Infiltrator; Concealable.",
     requiresAttunement: false,
   },
   {
@@ -4775,7 +4785,8 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       amount: 340,
       currency: 'gp',
     },
-    description: 'Resilient runes imbue armor with additional protective magic.',
+    description:
+      'Resilient runes imbue armor with additional protective magic. Available as: resilient; greater resilient; major resilient.',
     requiresAttunement: false,
   },
   {
@@ -4791,7 +4802,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'The blade of this greataxe bears a design of a human skull. Whenever a creature damages you with an attack, the skull changes its appearance to look like the face of that creature. You gain a +2 circumstance bonus to your next damage roll against that creature before the end of your next turn.',
+      'The blade of this +1 weapon potency greataxe bears a design of a human skull. Whenever a creature damages you with an attack, the skull changes its appearance to look like the face of that creature. You gain a +2 circumstance bonus to your next damage roll against that creature before the end of your next turn.',
     requiresAttunement: false,
   },
   {
@@ -4871,7 +4882,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This ring grants you resistance 5 against one type of energy damage: acid, cold, electricity, fire, or sonic. Each ring is crafted to protect against a particular type of energy damage, and its design usually embodies the type of energy it protects the wearer from in some way. For instance, a ring of fire resistance might be capped with a ruby, whereas a ring of cold resistance features a sapphire instead.',
+      'This ring grants you resistance 5 against one type of energy damage: acid, cold, electricity, fire, or sonic. Each ring is crafted to protect against a particular type of energy damage, and its design usually embodies the type of energy it protects the wearer from in some way. For instance, a ring of fire resistance might be capped with a ruby, whereas a ring of cold resistance features a sapphire instead. Available as: ring of energy resistance; greater ring of energy resistance; major ring of energy resistance.',
     requiresAttunement: false,
   },
   {
@@ -4903,7 +4914,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "This ring seems like simple tarnished brass, but it enhances your curiosity about traps and devices of all kinds. You can use an Interact action to pull a set of thieves' tools from the ring. These tools appear in your hand and fold back into the ring if they would leave your possession. They grant you a +2 item bonus to Thievery checks to Disable a Device and to Pick a Lock, and the ring's insights grant you the same bonus to Crafting checks to Craft and Repair snares and traps.",
+      "This ring seems like simple tarnished brass, but it enhances your curiosity about traps and devices of all kinds. You can use an Interact action to pull a set of thieves' tools from the ring. These tools appear in your hand and fold back into the ring if they would leave your possession. They grant you a +2 item bonus to Thievery checks to Disable a Device and to Pick a Lock, and the ring's insights grant you the same bonus to Crafting checks to Craft and Repair snares and traps. Available as: ring of maniacal devices; greater ring of maniacal devices.",
     requiresAttunement: false,
   },
   {
@@ -4950,7 +4961,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This heavy iron ring is shaped to look like the head of a ram, with curling horns.',
+      'This heavy iron ring is shaped to look like the head of a ram, with curling horns. Available as: ring of the ram; greater ring of the ram.',
     requiresAttunement: false,
   },
   {
@@ -4966,7 +4977,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This ring is made from the purest platinum and is covered in esoteric arcane symbols. It does nothing unless you have a spellcasting class feature with the arcane tradition. While wearing the ring of wizardry, you gain a +1 item bonus to Arcana checks and have two additional 1st-level arcane spell slots each day. You prepare spells in these slots or cast from them spontaneously, just as you normally cast your spells.',
+      'This ring is made from the purest platinum and is covered in esoteric arcane symbols. It does nothing unless you have a spellcasting class feature with the arcane tradition. While wearing the ring of wizardry, you gain a +1 item bonus to Arcana checks and have two additional 1st-level arcane spell slots each day. You prepare spells in these slots or cast from them spontaneously, just as you normally cast your spells. Available as: I; II; III; IV.',
     requiresAttunement: false,
   },
   {
@@ -4998,7 +5009,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "Embroidered with fine silver thread in ornate arcane patterns, these robes come in one of three colors depending on their attuned alignment. Good robes are gold, neutral robes are light blue, and evil robes are red. An evil or good robe gains the appropriate trait. The robes benefit only characters who can cast arcane spells and whose alignment on the good-evil axis matches that of the robe. If your alignment does not match that of the robe, or you are not an arcane spellcaster, you are instead stupefied 2 while wearing a robe of the archmagi. This condition can't be removed in any way until you remove the robe.",
+      "Embroidered with fine silver thread in ornate arcane patterns, these robes come in one of three colors depending on their attuned alignment. Good robes are gold, neutral robes are light blue, and evil robes are red. An evil or good robe gains the appropriate trait. The robes benefit only characters who can cast arcane spells and whose alignment on the good-evil axis matches that of the robe. If your alignment does not match that of the robe, or you are not an arcane spellcaster, you are instead stupefied 2 while wearing a robe of the archmagi. This condition can't be removed in any way until you remove the robe. Available as: robe of the archmagi; greater robe of the archmagi.",
     requiresAttunement: false,
   },
   {
@@ -5108,7 +5119,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This elixir is made from salamander scales to withstand fire. For 24 hours, you are protected from the effects of severe heat.',
+      'This elixir is made from salamander scales to withstand fire. For 24 hours, you are protected from the effects of severe heat. Available as: lesser; moderate; greater.',
     requiresAttunement: false,
   },
   {
@@ -5124,7 +5135,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Applying this filmy salve to a creature helps it overcome magical paralysis. The creature recovers as if it were the target of a 3rd-level remove paralysis spell.',
+      'Applying this filmy salve to a creature helps it overcome magical paralysis. The creature recovers as if it were the target of a 3rd-level remove paralysis spell. Available as: salve of antiparalysis; greater salve of antiparalysis.',
     requiresAttunement: false,
   },
   {
@@ -5172,7 +5183,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Scholarly journals are uncommon. Each scholarly journal is a folio on a very specific topic, such as vampires or the history of a single town or neighborhood of a city. If you spend 1 minute referencing an academic journal before attempting a skill check to Recall Knowledge about the subject, you gain a +1 item bonus to the check. The GM determines what scholarly journals are available in any location.',
+      'Scholarly journals are uncommon. Each scholarly journal is a folio on a very specific topic, such as vampires or the history of a single town or neighborhood of a city. If you spend 1 minute referencing an academic journal before attempting a skill check to Recall Knowledge about the subject, you gain a +1 item bonus to the check. The GM determines what scholarly journals are available in any location. Available as: Scholarly Journal; Scholarly Journal Compendium.',
     requiresAttunement: false,
   },
   {
@@ -5188,7 +5199,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'A scroll contains a single spell that you can cast without having to expend a spell slot. A scroll can be Crafted to contain nearly any spell, so the types of scrolls available are limited only by the number of spells in the game. The exceptions are cantrips, focus spells, and rituals, none of which can be put on scrolls. The spell on a scroll can be cast only once, and the scroll is destroyed as part of the casting. The spell on the scroll is cast at a particular spell level, as determined by the scroll. For instance, a scroll of magic missile (1st level) can be used to cast the 1st-level version of magic missile, but not a magic missile heightened to 2nd level. If no level is listed, the scroll can be used to cast the spell at its lowest level.',
+      'A scroll contains a single spell that you can cast without having to expend a spell slot. A scroll can be Crafted to contain nearly any spell, so the types of scrolls available are limited only by the number of spells in the game. The exceptions are cantrips, focus spells, and rituals, none of which can be put on scrolls. The spell on a scroll can be cast only once, and the scroll is destroyed as part of the casting. The spell on the scroll is cast at a particular spell level, as determined by the scroll. For instance, a scroll of magic missile (1st level) can be used to cast the 1st-level version of magic missile, but not a magic missile heightened to 2nd level. If no level is listed, the scroll can be used to cast the spell at its lowest level. Available as: 1st-level spell; 2nd-level spell; 3rd-level spell; 4th-level spell; 5th-level spell; 6th-level spell; 7th-level spell; 8th-level spell; 9th-level spell; 10th-level spell.',
     requiresAttunement: false,
   },
   {
@@ -5219,7 +5230,8 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       amount: 22,
       currency: 'gp',
     },
-    description: 'This briny concoction alters the skin on your hands and feet.',
+    description:
+      'This briny concoction alters the skin on your hands and feet. Available as: lesser; moderate; greater.',
     requiresAttunement: false,
   },
   {
@@ -5235,7 +5247,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'You gain inner serenity, focused on fine details and steeled against mental assaults, but you find violence off-putting.',
+      'You gain inner serenity, focused on fine details and steeled against mental assaults, but you find violence off-putting. Available as: lesser; moderate; greater; major.',
     requiresAttunement: false,
   },
   {
@@ -5267,7 +5279,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Armor with this rune becomes hazy black. You gain a +1 item bonus to Stealth checks while wearing the armor.',
+      'Armor with this rune becomes hazy black. You gain a +1 item bonus to Stealth checks while wearing the armor. Available as: shadow; greater shadow; major shadow.',
     requiresAttunement: false,
   },
   {
@@ -5347,7 +5359,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Electric arcs crisscross this weapon, dealing an extra 1d6 electricity damage on a hit. On a critical hit, electricity arcs out to deal an equal amount of electricity damage to up to two other creatures of your choice within 10 feet of the target.',
+      'Electric arcs crisscross this weapon, dealing an extra 1d6 electricity damage on a hit. On a critical hit, electricity arcs out to deal an equal amount of electricity damage to up to two other creatures of your choice within 10 feet of the target. Available as: shock; greater shock.',
     requiresAttunement: false,
   },
   {
@@ -5363,7 +5375,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This fungus-flavored potion conveys the effects of the shrink spell to make you and all your gear smaller. After the onset, you remain small for 10 minutes.',
+      'This fungus-flavored potion conveys the effects of the shrink spell to make you and all your gear smaller. After the onset, you remain small for 10 minutes. Available as: standard; greater.',
     requiresAttunement: false,
   },
   {
@@ -5395,7 +5407,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Silver weapons are a bane to creatures ranging from devils to werewolves. Silver items are less durable than steel items, and low-grade silver items are usually merely silver-plated.',
+      'Silver weapons are a bane to creatures ranging from devils to werewolves. Silver items are less durable than steel items, and low-grade silver items are usually merely silver-plated. Available as: silver chunk; silver ingot; low-grade silver object; standard-grade silver object; high-grade silver object.',
     requiresAttunement: false,
   },
   {
@@ -5411,7 +5423,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Silver armor sickens certain creatures that touch it. A creature with weakness to silver that critically fails an unarmed attack against a creature in silver armor becomes sickened 1. A creature with weakness to silver is sickened 1 as long as it wears silver armor.',
+      'Silver armor sickens certain creatures that touch it. A creature with weakness to silver that critically fails an unarmed attack against a creature in silver armor becomes sickened 1. A creature with weakness to silver is sickened 1 as long as it wears silver armor. Available as: low-grade silver armor; standard-grade silver armor; high-grade silver armor.',
     requiresAttunement: false,
   },
   {
@@ -5427,7 +5439,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "Silver shields don't typically have an additional effect, though when used for a shield bash, they are silver weapons.",
+      "Silver shields don't typically have an additional effect, though when used for a shield bash, they are silver weapons. Available as: low-grade silver buckler; low-grade silver shield; standard-grade silver buckler; standard-grade silver shield; high-grade silver buckler; high-grade silver shield.",
     requiresAttunement: false,
   },
   {
@@ -5443,7 +5455,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Silver weapons deal additional damage to creatures with weakness to silver, like werewolves, and ignore the resistances of some other creatures, like devils.',
+      'Silver weapons deal additional damage to creatures with weakness to silver, like werewolves, and ignore the resistances of some other creatures, like devils. Available as: low-grade silver weapon; standard-grade silver weapon; high-grade silver weapon.',
     requiresAttunement: false,
   },
   {
@@ -5475,7 +5487,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Your features become striking and your voice becomes musical and commanding, though facts and figures become hazy for you and emotion clouds your ability to reason.',
+      'Your features become striking and your voice becomes musical and commanding, though facts and figures become hazy for you and emotion clouds your ability to reason. Available as: lesser; moderate; greater; major.',
     requiresAttunement: false,
   },
   {
@@ -5491,7 +5503,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "A grinning skull tops the bow of this macabre key. This key can be used in place of thieves' tools when attempting to Pick a Lock, and it grants a +1 item bonus to the Thievery check.",
+      "A grinning skull tops the bow of this macabre key. This key can be used in place of thieves' tools when attempting to Pick a Lock, and it grants a +1 item bonus to the Thievery check. Available as: standard; greater.",
     requiresAttunement: false,
   },
   {
@@ -5539,7 +5551,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This property makes armor slippery, as though it were coated with a thin film of oil. You gain a +1 item bonus to Acrobatics checks to Escape and Squeeze.',
+      'This property makes armor slippery, as though it were coated with a thin film of oil. You gain a +1 item bonus to Acrobatics checks to Escape and Squeeze. Available as: slick; greater slick; major slick.',
     requiresAttunement: false,
   },
   {
@@ -5603,7 +5615,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'With a sharp twist of this item, you instantly create a screen of thick, opaque smoke in a burst centered on one corner of your space. All creatures within that area are concealed, and all other creatures are concealed to them. The smoke lasts for 1 minute or until dispersed by a strong wind.',
+      'With a sharp twist of this item, you instantly create a screen of thick, opaque smoke in a burst centered on one corner of your space. All creatures within that area are concealed, and all other creatures are concealed to them. The smoke lasts for 1 minute or until dispersed by a strong wind. Available as: lesser; greater.',
     requiresAttunement: false,
   },
   {
@@ -5731,7 +5743,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "Mystic patterns create a magic reservoir within this ammunition. You activate spellstrike ammunition by Casting a Spell into the ammunition. The spell must be of a spell level the ammunition can hold, and the spell must be able to target a creature other than the caster. A creature hit by activated spellstrike ammunition is targeted by the spell. If the creature isn't a valid target for the spell, the spell is lost.",
+      "Mystic patterns create a magic reservoir within this ammunition. You activate spellstrike ammunition by Casting a Spell into the ammunition. The spell must be of a spell level the ammunition can hold, and the spell must be able to target a creature other than the caster. A creature hit by activated spellstrike ammunition is targeted by the spell. If the creature isn't a valid target for the spell, the spell is lost. Available as: I; II; III; IV; V; VI; VII; VIII; IX.",
     requiresAttunement: false,
   },
   {
@@ -5795,7 +5807,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This intricately carved wooden staff is warm to the touch and thrums with inner energy. While wielding the staff, you gain a +2 circumstance bonus to checks to identify abjuration magic.',
+      'This intricately carved wooden staff is warm to the touch and thrums with inner energy. While wielding the staff, you gain a +2 circumstance bonus to checks to identify abjuration magic. Available as: staff of abjuration; greater staff of abjuration; major staff of abjuration.',
     requiresAttunement: false,
   },
   {
@@ -5811,7 +5823,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This ash staff is decorated with animals; wielding it, you gain a +2 circumstance bonus to checks to identify conjuration magic.',
+      'This ash staff is decorated with animals; wielding it, you gain a +2 circumstance bonus to checks to identify conjuration magic. Available as: staff of conjuration; greater staff of conjuration; major staff of conjuration.',
     requiresAttunement: false,
   },
   {
@@ -5827,7 +5839,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Semiprecious gemstones emerge, seemingly at random, from the surface of this gnarled wooden staff. While wielding it, you gain a +2 circumstance bonus to checks to identify divination magic.',
+      'Semiprecious gemstones emerge, seemingly at random, from the surface of this gnarled wooden staff. While wielding it, you gain a +2 circumstance bonus to checks to identify divination magic. Available as: staff of divination; greater staff of divination; major staff of divination.',
     requiresAttunement: false,
   },
   {
@@ -5843,7 +5855,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'A mesmerizing gemstone caps the head of this handsomely crafted wooden staff. While wielding the staff, you gain a +2 circumstance bonus to checks to identify enchantment magic.',
+      'A mesmerizing gemstone caps the head of this handsomely crafted wooden staff. While wielding the staff, you gain a +2 circumstance bonus to checks to identify enchantment magic. Available as: staff of enchantment; greater staff of enchantment; major staff of enchantment.',
     requiresAttunement: false,
   },
   {
@@ -5859,7 +5871,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This staff is tapered at the base and carved into a gemstudded twist at the top. While wielding the staff, you gain a +2 circumstance bonus to checks to identify evocation magic.',
+      'This staff is tapered at the base and carved into a gemstudded twist at the top. While wielding the staff, you gain a +2 circumstance bonus to checks to identify evocation magic. Available as: staff of evocation; greater staff of evocation; major staff of evocation.',
     requiresAttunement: false,
   },
   {
@@ -5875,7 +5887,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This staff resembles a blackened and burned length of ashen wood. It smells faintly of soot and glows as if lit by embers.',
+      'This staff resembles a blackened and burned length of ashen wood. It smells faintly of soot and glows as if lit by embers. Available as: staff of fire; greater staff of fire; major staff of fire.',
     requiresAttunement: false,
   },
   {
@@ -5891,7 +5903,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Made of smooth, white wood, this staff is capped at each end with a golden cross adorned with a multitude of ruby cabochons. A staff of healing grants an item bonus to the Hit Points you restore anytime you cast the heal spell using your own spell slots or using charges from the staff.',
+      'Made of smooth, white wood, this staff is capped at each end with a golden cross adorned with a multitude of ruby cabochons. A staff of healing grants an item bonus to the Hit Points you restore anytime you cast the heal spell using your own spell slots or using charges from the staff. Available as: staff of healing; greater staff of healing; major staff of healing; true staff of healing.',
     requiresAttunement: false,
   },
   {
@@ -5922,7 +5934,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This ornately designed metal staff shines with precious inlays of gold. When you Cast a Spell from the staff, the illusory image of something you desire flashes across its surface.',
+      'This ornately designed metal staff shines with precious inlays of gold. When you Cast a Spell from the staff, the illusory image of something you desire flashes across its surface. Available as: staff of illusion; greater staff of illusion; major staff of illusion.',
     requiresAttunement: false,
   },
   {
@@ -5938,7 +5950,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This twisted and grim-looking staff is adorned with hideous skull and bone motifs. While wielding the staff, you gain a +2 circumstance bonus to checks to identify necromancy magic.',
+      'This twisted and grim-looking staff is adorned with hideous skull and bone motifs. While wielding the staff, you gain a +2 circumstance bonus to checks to identify necromancy magic. Available as: staff of necromancy; greater staff of necromancy; major staff of necromancy.',
     requiresAttunement: false,
   },
   {
@@ -5985,7 +5997,8 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       amount: 230,
       currency: 'gp',
     },
-    description: 'A glass orb atop this metal staff contains fine, undulating sand.',
+    description:
+      'A glass orb atop this metal staff contains fine, undulating sand. Available as: staff of transmutation; greater staff of transmutation; major staff of transmutation.',
     requiresAttunement: false,
   },
   {
@@ -6064,7 +6077,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "This +2 greater striking shock rapier has a golden blade, and miniature electric arcs flash across its guard while it's wielded. When out of its sheath under an open sky, the blade causes storm clouds to gather slowly above.",
+      "This +2 greater striking shock rapier has a golden blade, and miniature electric arcs flash across its guard while it's wielded. When out of its sheath under an open sky, the blade causes storm clouds to gather slowly above. Available as: storm flash; greater storm flash.",
     requiresAttunement: false,
   },
   {
@@ -6080,7 +6093,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'A striking rune stores destructive magic in the weapon, increasing the weapon damage dice it deals to two instead of one. For instance, a +1 striking dagger would deal 2d4 damage instead of 1d4 damage.',
+      'A striking rune stores destructive magic in the weapon, increasing the weapon damage dice it deals to two instead of one. For instance, a +1 striking dagger would deal 2d4 damage instead of 1d4 damage. Available as: striking; greater striking; major striking.',
     requiresAttunement: false,
   },
   {
@@ -6128,7 +6141,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'With a superior design and excellent craftsmanship, this steel shield has higher Hardness than its non-magical counterparts, making it harder to break and destroy.',
+      'With a superior design and excellent craftsmanship, this steel shield has higher Hardness than its non-magical counterparts, making it harder to break and destroy. Available as: minor; lesser; moderate; greater; major; supreme.',
     requiresAttunement: false,
   },
   {
@@ -6160,7 +6173,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Maps are uncommon. Most maps you can find are simple and functional. A survey map details a single location in excellent detail. One of these maps gives you a +1 item bonus to Survival checks and any skill checks to Recall Knowledge, provided the checks are related to the location detailed on the map. The GM determines what maps are available in any location.',
+      'Maps are uncommon. Most maps you can find are simple and functional. A survey map details a single location in excellent detail. One of these maps gives you a +1 item bonus to Survival checks and any skill checks to Recall Knowledge, provided the checks are related to the location detailed on the map. The GM determines what maps are available in any location. Available as: Survey Map; Survey Map Atlas.',
     requiresAttunement: false,
   },
   {
@@ -6207,7 +6220,8 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       amount: 3,
       currency: 'gp',
     },
-    description: 'A tanglefoot bag is filled with sticky substances.',
+    description:
+      'A tanglefoot bag is filled with sticky substances. Available as: lesser; moderate; greater; major.',
     requiresAttunement: false,
   },
   {
@@ -6271,7 +6285,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This weapon lets out a peal of thunder when it hits, dealing an extra 1d6 sonic damage on a successful Strike. On a critical hit, the target has to succeed at a DC 24 Fortitude save or be deafened for 1 minute (or 1 hour on a critical failure).',
+      'This weapon lets out a peal of thunder when it hits, dealing an extra 1d6 sonic damage on a successful Strike. On a critical hit, the target has to succeed at a DC 24 Fortitude save or be deafened for 1 minute (or 1 hour on a critical failure). Available as: thundering; greater thundering.',
     requiresAttunement: false,
   },
   {
@@ -6287,7 +6301,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'When this stone hits a creature or a hard surface, it explodes with a deafening bang. A thunderstone deals the listed sonic damage and sonic splash damage, and each creature within 10 feet of the space in which the stone exploded must succeed at a Fortitude saving throw with the listed DC or be deafened until the end of its next turn. Many types of thunderstone grant an item bonus to attack rolls.',
+      'When this stone hits a creature or a hard surface, it explodes with a deafening bang. A thunderstone deals the listed sonic damage and sonic splash damage, and each creature within 10 feet of the space in which the stone exploded must succeed at a Fortitude saving throw with the listed DC or be deafened until the end of its next turn. Many types of thunderstone grant an item bonus to attack rolls. Available as: lesser; moderate; greater; major.',
     requiresAttunement: false,
   },
   {
@@ -6295,14 +6309,15 @@ export const srdPf2eGeneratedEquipment: Item[] = [
     name: 'Thurible of Revelation',
     system: 'pf2e',
     source: 'Core Rulebook',
-    type: 'gear',
+    type: 'magic-item',
     rarity: 'common',
     weight: 1,
     cost: {
       amount: 55,
       currency: 'gp',
     },
-    description: 'This brass censer dangles on a length of chain.',
+    description:
+      'This brass censer dangles on a length of chain. Available as: lesser; moderate; greater.',
     requiresAttunement: false,
   },
   {
@@ -6350,7 +6365,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "This entry is a catchall for basic hand tools that don't have a specific adventuring purpose. A hoe, shovel, or sledgehammer is a long tool, and a hand drill, ice hook, or trowel is a short tool. A tool can usually be used as an improvised weapon, dealing 1d4 damage for a short tool or 1d6 for a long tool. The GM determines the damage type that's appropriate or adjusts the damage if needed.",
+      "This entry is a catchall for basic hand tools that don't have a specific adventuring purpose. A hoe, shovel, or sledgehammer is a long tool, and a hand drill, ice hook, or trowel is a short tool. A tool can usually be used as an improvised weapon, dealing 1d4 damage for a short tool or 1d6 for a long tool. The GM determines the damage type that's appropriate or adjusts the damage if needed. Available as: Long; Short.",
     requiresAttunement: false,
   },
   {
@@ -6366,7 +6381,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'These lenses of forest-green glass are bound in rough leather stitched with crude twine. While wearing these goggles, you gain a +1 bonus to Survival checks to Sense Direction and Track. If you fail a check to Track, you can try again after 30 minutes rather than an hour.',
+      "These lenses of forest-green glass are bound in rough leather stitched with crude twine. While wearing these goggles, you gain a +1 bonus to Survival checks to Sense Direction and Track. If you fail a check to Track, you can try again after 30 minutes rather than an hour. Available as: tracker's goggles; greater tracker's goggles.",
     requiresAttunement: false,
   },
   {
@@ -6525,7 +6540,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This elegant copper ring has miniature images of songbirds engraved around its circumference. You gain a +1 item bonus to Deception checks.',
+      "This elegant copper ring has miniature images of songbirds engraved around its circumference. You gain a +1 item bonus to Deception checks. Available as: ventriloquist's ring; greater ventriloquist's ring.",
     requiresAttunement: false,
   },
   {
@@ -6541,7 +6556,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This oak branch grows leaves in spring that change color in autumn and shed in winter. While wielding it, you gain a +2 circumstance bonus to checks to identify plants and fungus.',
+      'This oak branch grows leaves in spring that change color in autumn and shed in winter. While wielding it, you gain a +2 circumstance bonus to checks to identify plants and fungus. Available as: verdant staff; greater verdant staff.',
     requiresAttunement: false,
   },
   {
@@ -6636,7 +6651,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "This wand increases a spell's duration. Yellow embers spiral over its surface until the spell ends.",
+      "This wand increases a spell's duration. Yellow embers spiral over its surface until the spell ends. Available as: 1st-level spell; 2nd-level spell; 3rd-level spell; 4th-level spell; 5th-level spell; 6th-level spell; 7th-level spell; 8th-level spell.",
     requiresAttunement: false,
   },
   {
@@ -6652,7 +6667,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      "This wand features a carved dragon's head at its top and a polished metal sphere set in its midsection.",
+      "This wand features a carved dragon's head at its top and a polished metal sphere set in its midsection. Available as: 1st-level spell; 3rd-level spell; 5th-level spell; 7th-level spell.",
     requiresAttunement: false,
   },
   {
@@ -6668,7 +6683,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This polished black wand has a green gem at the tip, and anyone who looks into it sees a reflection of a grinning skull instead of their face.',
+      'This polished black wand has a green gem at the tip, and anyone who looks into it sees a reflection of a grinning skull instead of their face. Available as: 7th level spell; 8th level spell; 9th level spell.',
     requiresAttunement: false,
   },
   {
@@ -6683,7 +6698,8 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       amount: 500,
       currency: 'gp',
     },
-    description: 'This blackened, heavily burned stick smells faintly of bat guano.',
+    description:
+      'This blackened, heavily burned stick smells faintly of bat guano. Available as: 3rd-level spell; 5th-level spell; 7th-level spell; 9th-level spell.',
     requiresAttunement: false,
   },
   {
@@ -6698,7 +6714,8 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       amount: 100,
       currency: 'gp',
     },
-    description: 'The end of this wand is forked instead of tapered.',
+    description:
+      'The end of this wand is forked instead of tapered. Available as: 1st-level spell; 2nd-level spell; 3rd-level spell; 4th-level spell; 5th-level spell; 6th-level spell; 7th-level spell; 8th-level spell; 9th-level spell.',
     requiresAttunement: false,
   },
   {
@@ -6746,7 +6763,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Magical enhancements make this weapon strike true. Attack rolls with this weapon gain a +1 item bonus, and the weapon can be etched with one property rune.',
+      'Magical enhancements make this weapon strike true. Attack rolls with this weapon gain a +1 item bonus, and the weapon can be etched with one property rune. Available as: +1 weapon potency; +2 weapon potency; +3 weapon potency; +4 weapon potency.',
     requiresAttunement: false,
   },
   {
@@ -6794,7 +6811,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'This elixir warms your core and improves your circulation. For 24 hours, you are protected from the effects of severe cold.',
+      'This elixir warms your core and improves your circulation. For 24 hours, you are protected from the effects of severe cold. Available as: lesser; moderate; greater.',
     requiresAttunement: false,
   },
   {
@@ -6841,7 +6858,7 @@ export const srdPf2eGeneratedEquipment: Item[] = [
       currency: 'gp',
     },
     description:
-      'Each one of these statuettes is 1 inch in height, carved from a specific material and taking the shape of a particular animal or animals.',
+      'Each one of these statuettes is 1 inch in height, carved from a specific material and taking the shape of a particular animal or animals. Available as: golden lions; jade serpent; marble elephant; obsidian steed; onyx dog.',
     requiresAttunement: false,
   },
   {

@@ -67,9 +67,39 @@ const cap = (word) =>
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join('-');
 
+// Pf2eTools tags render different pipe-segments as their display text. Most
+// tags are {@tag name|source|displayOverride} → the LAST non-empty segment.
+// But several put display FIRST and carry link/filter metadata afterward, and
+// {@class}/{@classFeature}/{@subclassFeature} carry the display in a fixed
+// later slot. Taking the last segment for these leaks filter queries
+// ("Rarity=Common"), source codes ("crb"), and page indices ("17") into prose.
+const FIRST_SEGMENT_TAGS = new Set(['filter', 'quickref', 'footnote', 'link']);
+
+function resolveTag(tag, inner) {
+  const parts = inner.split('|').map((s) => s.trim());
+  const t = tag.toLowerCase();
+  // {@filter display|datasource|key=value...}, {@quickref display|book|page|anchor},
+  // {@footnote displayText|note}, {@link displayText|url} → display is FIRST.
+  if (FIRST_SEGMENT_TAGS.has(t)) return parts[0] || parts[parts.length - 1];
+  // {@class name|source|displayText|locator|source} → 3rd segment (e.g. "abjurer").
+  if (t === 'class') return parts[2] || parts[0];
+  // {@classFeature name|class|classSource|level|displayText} → name, unless an
+  // explicit display override is present.
+  if (t === 'classfeature') return parts[4] || parts[0];
+  // {@subclassFeature name|class|classSource|subclass|subclassSource|level|display}.
+  if (t === 'subclassfeature') return parts[6] || parts[0];
+  // {@runeItem base|baseSource|rune1|rune1Source|...} → "<runes> <base>".
+  if (t === 'runeitem') {
+    const runes = parts.filter((_, i) => i >= 2 && i % 2 === 0 && parts[i]);
+    return [...runes, parts[0]].filter(Boolean).join(' ');
+  }
+  // Default {@tag name|source|displayOverride}: last non-empty, else the name.
+  return parts[parts.length - 1] || parts[0];
+}
+
 /**
  * Reduce Pf2eTools {@tag value|link|display} markup to its display text. Tags
- * can nest (e.g. {@footnote ...{@skill Athletics}...}), so match only innermost
+ * can nest (e.g. {@footnote ...{@link Label|URL}}), so match only innermost
  * tags ([^{}]) and loop until stable, resolving from the inside out.
  */
 function detag(text) {
@@ -77,12 +107,11 @@ function detag(text) {
   let previous;
   do {
     previous = out;
-    out = out.replace(/\{@\w+ ([^{}]*)\}/g, (_, inner) => {
-      const parts = inner.split('|');
-      return parts[parts.length - 1].trim() || parts[0].trim();
-    });
+    out = out.replace(/\{@(\w+) ([^{}]*)\}/g, (_, tag, inner) => resolveTag(tag, inner));
   } while (out !== previous);
-  return out;
+  // Pf2eTools sometimes prints dice in angle brackets inside a tag's display
+  // (e.g. the deadly trait as "deadly <d10>"); render them as plain dice.
+  return out.replace(/<(\d*d\d+)>/gi, '$1');
 }
 
 /** Flatten Pf2eTools nested `entries` into readable prose lines. */
