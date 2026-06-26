@@ -271,8 +271,9 @@ export const dnd35eGeneratedFeats: FeatDefinition[] = [
     description: 'You can make a Bluff check to feint in combat as a move action.',
     benefits: [
       'You can make a Bluff check to feint in combat as a move action.',
-      'Normal: Feinting in combat is a standard action. A fighter may select Improved Feint as one of his fighter bonus feats.',
+      'Normal: Feinting in combat is a standard action.',
     ],
+    special: 'A fighter may select Improved Feint as one of his fighter bonus feats.',
   },
   {
     id: 'improved-grapple-35e',
@@ -567,7 +568,7 @@ export const dnd35eGeneratedFeats: FeatDefinition[] = [
       'Each time you take this feat, choose a number of spells equal to your Intelligence modifier that you already know.',
     benefits: [
       'Each time you take this feat, choose a number of spells equal to your Intelligence modifier that you already know. From that point on, you can prepare these spells without referring to a spellbook.',
-      'Normal: Without this feat, you must use a spellbook to prepare all your spells, except _read magic._',
+      'Normal: Without this feat, you must use a spellbook to prepare all your spells, except read magic.',
     ],
   },
   {

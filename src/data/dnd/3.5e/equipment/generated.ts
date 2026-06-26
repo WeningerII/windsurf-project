@@ -587,7 +587,7 @@ export const dnd35eGeneratedGear: DnD35eGear[] = [
     source: 'SRD 3.5',
     category: 'adventuring',
     cost: '3 cp',
-    weight: 0.5,
+    weight: 1.5,
     description: 'Flask (SRD 3.5 Goods and Services).',
   },
   {

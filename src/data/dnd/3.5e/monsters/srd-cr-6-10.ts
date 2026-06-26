@@ -70,8 +70,8 @@ export const srdCr610Monsters35e: Monster[] = [
             dice: {
               count: 2,
               die: 'd6',
-              notation: '2d6+7',
-              modifier: 7,
+              notation: '2d6+10',
+              modifier: 10,
             },
             type: 'slashing',
           },
@@ -530,8 +530,8 @@ export const srdCr610Monsters35e: Monster[] = [
             dice: {
               count: 2,
               die: 'd4',
-              notation: '2d4+6',
-              modifier: 6,
+              notation: '2d4+9',
+              modifier: 9,
             },
             type: 'slashing',
           },
@@ -632,6 +632,17 @@ export const srdCr610Monsters35e: Monster[] = [
         description:
           'The dagger is a common secondary weapon. You get a +2 bonus on Sleight of Hand checks made to conceal a dagger on your body (see the Sleight of Hand skill, page 81).',
         attackBonus: 12,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd6',
+              notation: '1d6+4',
+              modifier: 4,
+            },
+            type: 'piercing',
+          },
+        ],
       },
     ],
   },
@@ -749,15 +760,15 @@ export const srdCr610Monsters35e: Monster[] = [
       {
         name: 'Constrict',
         description:
-          'A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature s entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we',
+          "A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature's entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we",
         attackBonus: 10,
         damage: [
           {
             dice: {
               count: 2,
               die: 'd6',
-              notation: '2d6+5',
-              modifier: 5,
+              notation: '2d6+7',
+              modifier: 7,
             },
             type: 'bludgeoning',
           },
@@ -1063,8 +1074,7 @@ export const srdCr610Monsters35e: Monster[] = [
             dice: {
               count: 1,
               die: 'd8',
-              notation: '1d8+2',
-              modifier: 2,
+              notation: '1d8',
             },
             type: 'piercing',
           },
@@ -1169,15 +1179,15 @@ export const srdCr610Monsters35e: Monster[] = [
       {
         name: 'Constrict',
         description:
-          'A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature s entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we',
+          "A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature's entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we",
         attackBonus: 8,
         damage: [
           {
             dice: {
               count: 2,
               die: 'd6',
-              notation: '2d6+3',
-              modifier: 3,
+              notation: '2d6+4',
+              modifier: 4,
             },
             type: 'bludgeoning',
           },
@@ -1185,8 +1195,8 @@ export const srdCr610Monsters35e: Monster[] = [
             dice: {
               count: 2,
               die: 'd6',
-              notation: '2d6+3',
-              modifier: 3,
+              notation: '2d6+4',
+              modifier: 4,
             },
             type: 'bludgeoning',
           },
@@ -1448,8 +1458,7 @@ export const srdCr610Monsters35e: Monster[] = [
             dice: {
               count: 3,
               die: 'd8',
-              notation: '3d8+4',
-              modifier: 4,
+              notation: '3d8',
             },
           },
         ],
@@ -1464,8 +1473,7 @@ export const srdCr610Monsters35e: Monster[] = [
             dice: {
               count: 3,
               die: 'd8',
-              notation: '3d8+4',
-              modifier: 4,
+              notation: '3d8',
             },
           },
         ],
@@ -1480,8 +1488,7 @@ export const srdCr610Monsters35e: Monster[] = [
             dice: {
               count: 3,
               die: 'd8',
-              notation: '3d8+4',
-              modifier: 4,
+              notation: '3d8',
             },
           },
         ],
@@ -1496,8 +1503,7 @@ export const srdCr610Monsters35e: Monster[] = [
             dice: {
               count: 3,
               die: 'd8',
-              notation: '3d8+4',
-              modifier: 4,
+              notation: '3d8',
             },
           },
         ],
@@ -1512,8 +1518,7 @@ export const srdCr610Monsters35e: Monster[] = [
             dice: {
               count: 3,
               die: 'd8',
-              notation: '3d8+4',
-              modifier: 4,
+              notation: '3d8',
             },
           },
         ],
@@ -1578,15 +1583,15 @@ export const srdCr610Monsters35e: Monster[] = [
       {
         name: 'Constrict',
         description:
-          'A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature s entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we',
+          "A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature's entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we",
         attackBonus: 12,
         damage: [
           {
             dice: {
               count: 3,
               die: 'd6',
-              notation: '3d6+5',
-              modifier: 5,
+              notation: '3d6+7',
+              modifier: 7,
             },
             type: 'bludgeoning',
           },
@@ -1897,8 +1902,7 @@ export const srdCr610Monsters35e: Monster[] = [
             dice: {
               count: 1,
               die: 'd8',
-              notation: '1d8+2',
-              modifier: 2,
+              notation: '1d8',
             },
             type: 'piercing',
           },
@@ -1926,6 +1930,17 @@ export const srdCr610Monsters35e: Monster[] = [
         description:
           'The dagger is a common secondary weapon. You get a +2 bonus on Sleight of Hand checks made to conceal a dagger on your body (see the Sleight of Hand skill, page 81).',
         attackBonus: 5,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd6',
+              notation: '1d6+2',
+              modifier: 2,
+            },
+            type: 'piercing',
+          },
+        ],
       },
     ],
   },
@@ -2033,8 +2048,8 @@ export const srdCr610Monsters35e: Monster[] = [
             dice: {
               count: 2,
               die: 'd8',
-              notation: '2d8+10',
-              modifier: 10,
+              notation: '2d8+15',
+              modifier: 15,
             },
             type: 'bludgeoning',
           },
@@ -2358,8 +2373,8 @@ export const srdCr610Monsters35e: Monster[] = [
             dice: {
               count: 2,
               die: 'd8',
-              notation: '2d8+7',
-              modifier: 7,
+              notation: '2d8+10',
+              modifier: 10,
             },
             type: 'bludgeoning',
           },
@@ -2385,7 +2400,7 @@ export const srdCr610Monsters35e: Monster[] = [
       {
         name: 'Rock',
         description:
-          'Adult giants are accomplished rock throwers and receive a +1 racial bonus on attack rolls when throwing rocks. A giant of at least Large size can hurl rocks weighing 40 to 50 pounds each (Small objects) up to five range increments. The size of the range increment varies with the giant s variety. A H',
+          "Adult giants are accomplished rock throwers and receive a +1 racial bonus on attack rolls when throwing rocks. A giant of at least Large size can hurl rocks weighing 40 to 50 pounds each (Small objects) up to five range increments. The size of the range increment varies with the giant's variety. A H",
         attackBonus: 15,
         damage: [
           {
@@ -2499,15 +2514,15 @@ export const srdCr610Monsters35e: Monster[] = [
       {
         name: 'Constrict',
         description:
-          'A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature s entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we',
+          "A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature's entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we",
         attackBonus: 11,
         damage: [
           {
             dice: {
               count: 2,
               die: 'd6',
-              notation: '2d6+5',
-              modifier: 5,
+              notation: '2d6+7',
+              modifier: 7,
             },
             type: 'bludgeoning',
           },
@@ -2605,6 +2620,16 @@ export const srdCr610Monsters35e: Monster[] = [
         description:
           'The dagger is a common secondary weapon. You get a +2 bonus on Sleight of Hand checks made to conceal a dagger on your body (see the Sleight of Hand skill, page 81).',
         attackBonus: 6,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd4',
+              notation: '1d4',
+            },
+            type: 'piercing',
+          },
+        ],
       },
     ],
   },
@@ -2651,6 +2676,16 @@ export const srdCr610Monsters35e: Monster[] = [
         description:
           'The dagger is a common secondary weapon. You get a +2 bonus on Sleight of Hand checks made to conceal a dagger on your body (see the Sleight of Hand skill, page 81).',
         attackBonus: 3,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd4',
+              notation: '1d4',
+            },
+            type: 'piercing',
+          },
+        ],
       },
     ],
   },
@@ -2807,14 +2842,13 @@ export const srdCr610Monsters35e: Monster[] = [
       {
         name: 'Incorporeal Touch',
         description: 'Incorporeal Touch attack (melee).',
-        attackBonus: -2,
+        attackBonus: 6,
         damage: [
           {
             dice: {
               count: 1,
               die: 'd8',
-              notation: '1d8-5',
-              modifier: -5,
+              notation: '1d8',
             },
           },
         ],
@@ -3048,15 +3082,15 @@ export const srdCr610Monsters35e: Monster[] = [
       {
         name: 'Constrict',
         description:
-          'A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature s entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we',
+          "A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature's entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we",
         attackBonus: 15,
         damage: [
           {
             dice: {
               count: 2,
               die: 'd8',
-              notation: '2d8+8',
-              modifier: 8,
+              notation: '2d8+12',
+              modifier: 12,
             },
             type: 'bludgeoning',
           },
@@ -3122,8 +3156,7 @@ export const srdCr610Monsters35e: Monster[] = [
             dice: {
               count: 7,
               die: 'd6',
-              notation: '7d6+8',
-              modifier: 8,
+              notation: '7d6',
             },
           },
         ],
@@ -3575,8 +3608,8 @@ export const srdCr610Monsters35e: Monster[] = [
             dice: {
               count: 1,
               die: 'd8',
-              notation: '1d8+5',
-              modifier: 5,
+              notation: '1d8+7',
+              modifier: 7,
             },
             type: 'bludgeoning',
           },
@@ -3648,8 +3681,8 @@ export const srdCr610Monsters35e: Monster[] = [
             dice: {
               count: 2,
               die: 'd6',
-              notation: '2d6+6',
-              modifier: 6,
+              notation: '2d6+9',
+              modifier: 9,
             },
             type: 'slashing',
           },
@@ -3731,14 +3764,13 @@ export const srdCr610Monsters35e: Monster[] = [
       {
         name: 'Incorporeal Touch',
         description: 'Incorporeal Touch attack (melee).',
-        attackBonus: -1,
+        attackBonus: 6,
         damage: [
           {
             dice: {
               count: 1,
               die: 'd8',
-              notation: '1d8-5',
-              modifier: -5,
+              notation: '1d8',
             },
           },
         ],
@@ -3860,15 +3892,14 @@ export const srdCr610Monsters35e: Monster[] = [
       {
         name: 'Swarm',
         description:
-          'In order to attack, a single swarm moves into opponents spaces, which provokes an attack of opportunity. It can occupy the same space as a creature of any size, since it crawls all over its prey, but remains a creature with a 10-foot space. Swarms never make attacks of opportunity, but they can prov',
+          "In order to attack, a single swarm moves into opponents' spaces, which provokes an attack of opportunity. It can occupy the same space as a creature of any size, since it crawls all over its prey, but remains a creature with a 10-foot space. Swarms never make attacks of opportunity, but they can pro",
         attackBonus: 11,
         damage: [
           {
             dice: {
               count: 3,
               die: 'd6',
-              notation: '3d6-5',
-              modifier: -5,
+              notation: '3d6',
             },
           },
         ],
@@ -4131,8 +4162,7 @@ export const srdCr610Monsters35e: Monster[] = [
             dice: {
               count: 2,
               die: 'd6',
-              notation: '2d6+5',
-              modifier: 5,
+              notation: '2d6',
             },
             type: 'piercing',
           },
@@ -4148,8 +4178,8 @@ export const srdCr610Monsters35e: Monster[] = [
             dice: {
               count: 3,
               die: 'd6',
-              notation: '3d6+5',
-              modifier: 5,
+              notation: '3d6+7',
+              modifier: 7,
             },
             type: 'slashing',
           },
@@ -4260,8 +4290,8 @@ export const srdCr610Monsters35e: Monster[] = [
             dice: {
               count: 2,
               die: 'd8',
-              notation: '2d8+8',
-              modifier: 8,
+              notation: '2d8+12',
+              modifier: 12,
             },
             type: 'bludgeoning',
           },
@@ -4287,7 +4317,7 @@ export const srdCr610Monsters35e: Monster[] = [
       {
         name: 'Rock',
         description:
-          'Adult giants are accomplished rock throwers and receive a +1 racial bonus on attack rolls when throwing rocks. A giant of at least Large size can hurl rocks weighing 40 to 50 pounds each (Small objects) up to five range increments. The size of the range increment varies with the giant s variety. A H',
+          "Adult giants are accomplished rock throwers and receive a +1 racial bonus on attack rolls when throwing rocks. A giant of at least Large size can hurl rocks weighing 40 to 50 pounds each (Small objects) up to five range increments. The size of the range increment varies with the giant's variety. A H",
         attackBonus: 17,
         damage: [
           {
@@ -4350,8 +4380,8 @@ export const srdCr610Monsters35e: Monster[] = [
             dice: {
               count: 2,
               die: 'd6',
-              notation: '2d6+9',
-              modifier: 9,
+              notation: '2d6+13',
+              modifier: 13,
             },
             type: 'bludgeoning',
           },
@@ -4863,8 +4893,7 @@ export const srdCr610Monsters35e: Monster[] = [
             dice: {
               count: 12,
               die: 'd6',
-              notation: '12d6+8',
-              modifier: 8,
+              notation: '12d6',
             },
           },
         ],
@@ -4913,6 +4942,17 @@ export const srdCr610Monsters35e: Monster[] = [
         description:
           'This big, heavy axe is a favorite of barbarians and anybody else who wants the capability to deal out incredible damage.',
         attackBonus: 18,
+        damage: [
+          {
+            dice: {
+              count: 3,
+              die: 'd6',
+              notation: '3d6+13',
+              modifier: 13,
+            },
+            type: 'slashing',
+          },
+        ],
       },
       {
         name: 'Slam',
@@ -4934,7 +4974,7 @@ export const srdCr610Monsters35e: Monster[] = [
       {
         name: 'Rock',
         description:
-          'Adult giants are accomplished rock throwers and receive a +1 racial bonus on attack rolls when throwing rocks. A giant of at least Large size can hurl rocks weighing 40 to 50 pounds each (Small objects) up to five range increments. The size of the range increment varies with the giant s variety. A H',
+          "Adult giants are accomplished rock throwers and receive a +1 racial bonus on attack rolls when throwing rocks. A giant of at least Large size can hurl rocks weighing 40 to 50 pounds each (Small objects) up to five range increments. The size of the range increment varies with the giant's variety. A H",
         attackBonus: 18,
         damage: [
           {
@@ -5232,15 +5272,15 @@ export const srdCr610Monsters35e: Monster[] = [
       {
         name: 'Constrict',
         description:
-          'A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature s entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we',
+          "A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature's entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we",
         attackBonus: 15,
         damage: [
           {
             dice: {
               count: 1,
               die: 'd6',
-              notation: '1d6+8',
-              modifier: 8,
+              notation: '1d6+12',
+              modifier: 12,
             },
             type: 'bludgeoning',
           },
@@ -5328,8 +5368,8 @@ export const srdCr610Monsters35e: Monster[] = [
             dice: {
               count: 2,
               die: 'd12',
-              notation: '2d12+10',
-              modifier: 10,
+              notation: '2d12+15',
+              modifier: 15,
             },
             type: 'bludgeoning',
           },
@@ -5562,6 +5602,17 @@ export const srdCr610Monsters35e: Monster[] = [
         description:
           'A spiked chain has reach, so you can strike opponents 10 feet away with it. In addition, unlike most other weapons with reach, it can be used against an adjacent foe. Because the chain can wrap around an enemy’s leg or other limb, you can make trip attacks with the chain. If you are tripped during y',
         attackBonus: 10,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd6',
+              notation: '2d6+7',
+              modifier: 7,
+            },
+            type: 'piercing',
+          },
+        ],
       },
     ],
   },
@@ -5775,15 +5826,15 @@ export const srdCr610Monsters35e: Monster[] = [
       {
         name: 'Constrict',
         description:
-          'A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature s entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we',
+          "A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature's entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we",
         attackBonus: 12,
         damage: [
           {
             dice: {
               count: 2,
               die: 'd8',
-              notation: '2d8+4',
-              modifier: 4,
+              notation: '2d8+6',
+              modifier: 6,
             },
             type: 'bludgeoning',
           },
@@ -5855,8 +5906,8 @@ export const srdCr610Monsters35e: Monster[] = [
             dice: {
               count: 3,
               die: 'd6',
-              notation: '3d6+10',
-              modifier: 10,
+              notation: '3d6+15',
+              modifier: 15,
             },
             type: 'slashing',
           },
@@ -5882,7 +5933,7 @@ export const srdCr610Monsters35e: Monster[] = [
       {
         name: 'Rock',
         description:
-          'Adult giants are accomplished rock throwers and receive a +1 racial bonus on attack rolls when throwing rocks. A giant of at least Large size can hurl rocks weighing 40 to 50 pounds each (Small objects) up to five range increments. The size of the range increment varies with the giant s variety. A H',
+          "Adult giants are accomplished rock throwers and receive a +1 racial bonus on attack rolls when throwing rocks. A giant of at least Large size can hurl rocks weighing 40 to 50 pounds each (Small objects) up to five range increments. The size of the range increment varies with the giant's variety. A H",
         attackBonus: 20,
         damage: [
           {

@@ -193,15 +193,14 @@ export const srdCr25Monsters35e: Monster[] = [
       {
         name: 'Swarm',
         description:
-          'In order to attack, a single swarm moves into opponents spaces, which provokes an attack of opportunity. It can occupy the same space as a creature of any size, since it crawls all over its prey, but remains a creature with a 10-foot space. Swarms never make attacks of opportunity, but they can prov',
+          "In order to attack, a single swarm moves into opponents' spaces, which provokes an attack of opportunity. It can occupy the same space as a creature of any size, since it crawls all over its prey, but remains a creature with a 10-foot space. Swarms never make attacks of opportunity, but they can pro",
         attackBonus: 2,
         damage: [
           {
             dice: {
               count: 1,
               die: 'd6',
-              notation: '1d6-4',
-              modifier: -4,
+              notation: '1d6',
             },
           },
         ],
@@ -633,15 +632,15 @@ export const srdCr25Monsters35e: Monster[] = [
       {
         name: 'Constrict',
         description:
-          'A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature s entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we',
+          "A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature's entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we",
         attackBonus: 6,
         damage: [
           {
             dice: {
               count: 1,
               die: 'd3',
-              notation: '1d3+3',
-              modifier: 3,
+              notation: '1d3+4',
+              modifier: 4,
             },
             type: 'bludgeoning',
           },
@@ -707,15 +706,15 @@ export const srdCr25Monsters35e: Monster[] = [
       {
         name: 'Constrict',
         description:
-          'A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature s entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we',
+          "A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature's entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we",
         attackBonus: 5,
         damage: [
           {
             dice: {
               count: 1,
               die: 'd3',
-              notation: '1d3+3',
-              modifier: 3,
+              notation: '1d3+4',
+              modifier: 4,
             },
             type: 'bludgeoning',
           },
@@ -1558,15 +1557,14 @@ export const srdCr25Monsters35e: Monster[] = [
       {
         name: 'Swarm',
         description:
-          'In order to attack, a single swarm moves into opponents spaces, which provokes an attack of opportunity. It can occupy the same space as a creature of any size, since it crawls all over its prey, but remains a creature with a 10-foot space. Swarms never make attacks of opportunity, but they can prov',
+          "In order to attack, a single swarm moves into opponents' spaces, which provokes an attack of opportunity. It can occupy the same space as a creature of any size, since it crawls all over its prey, but remains a creature with a 10-foot space. Swarms never make attacks of opportunity, but they can pro",
         attackBonus: 1,
         damage: [
           {
             dice: {
               count: 1,
               die: 'd6',
-              notation: '1d6-4',
-              modifier: -4,
+              notation: '1d6',
             },
           },
         ],
@@ -1655,8 +1653,7 @@ export const srdCr25Monsters35e: Monster[] = [
             dice: {
               count: 1,
               die: 'd10',
-              notation: '1d10+2',
-              modifier: 2,
+              notation: '1d10',
             },
             type: 'piercing',
           },
@@ -1740,6 +1737,16 @@ export const srdCr25Monsters35e: Monster[] = [
         description:
           'The dagger is a common secondary weapon. You get a +2 bonus on Sleight of Hand checks made to conceal a dagger on your body (see the Sleight of Hand skill, page 81).',
         attackBonus: 2,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd4',
+              notation: '1d4',
+            },
+            type: 'piercing',
+          },
+        ],
       },
       {
         name: 'Shortbow',
@@ -2020,8 +2027,7 @@ export const srdCr25Monsters35e: Monster[] = [
             dice: {
               count: 1,
               die: 'd10',
-              notation: '1d10+1',
-              modifier: 1,
+              notation: '1d10',
             },
             type: 'piercing',
           },
@@ -2326,7 +2332,7 @@ export const srdCr25Monsters35e: Monster[] = [
         name: 'Incorporeal Touch',
         description:
           'An allip causes 1d4 points of Wisdom drain each time it hits with its incorporeal touch attack. On each such successful attack, it gains 5 temporary hit points.',
-        attackBonus: -3,
+        attackBonus: 3,
       },
     ],
   },
@@ -2426,15 +2432,15 @@ export const srdCr25Monsters35e: Monster[] = [
       {
         name: 'Constrict',
         description:
-          'A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature s entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we',
+          "A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature's entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we",
         attackBonus: 7,
         damage: [
           {
             dice: {
               count: 1,
               die: 'd6',
-              notation: '1d6+5',
-              modifier: 5,
+              notation: '1d6+7',
+              modifier: 7,
             },
             type: 'bludgeoning',
           },
@@ -2796,8 +2802,8 @@ export const srdCr25Monsters35e: Monster[] = [
             dice: {
               count: 2,
               die: 'd6',
-              notation: '2d6+6',
-              modifier: 6,
+              notation: '2d6+9',
+              modifier: 9,
             },
             type: 'slashing',
           },
@@ -2992,6 +2998,16 @@ export const srdCr25Monsters35e: Monster[] = [
         description:
           'The dagger is a common secondary weapon. You get a +2 bonus on Sleight of Hand checks made to conceal a dagger on your body (see the Sleight of Hand skill, page 81).',
         attackBonus: 2,
+        damage: [
+          {
+            dice: {
+              count: 1,
+              die: 'd4',
+              notation: '1d4',
+            },
+            type: 'piercing',
+          },
+        ],
       },
       {
         name: 'Longbow',
@@ -4110,15 +4126,14 @@ export const srdCr25Monsters35e: Monster[] = [
       {
         name: 'Swarm',
         description:
-          'In order to attack, a single swarm moves into opponents spaces, which provokes an attack of opportunity. It can occupy the same space as a creature of any size, since it crawls all over its prey, but remains a creature with a 10-foot space. Swarms never make attacks of opportunity, but they can prov',
+          "In order to attack, a single swarm moves into opponents' spaces, which provokes an attack of opportunity. It can occupy the same space as a creature of any size, since it crawls all over its prey, but remains a creature with a 10-foot space. Swarms never make attacks of opportunity, but they can pro",
         attackBonus: 3,
         damage: [
           {
             dice: {
               count: 2,
               die: 'd6',
-              notation: '2d6-5',
-              modifier: -5,
+              notation: '2d6',
             },
           },
         ],
@@ -4301,8 +4316,8 @@ export const srdCr25Monsters35e: Monster[] = [
             dice: {
               count: 2,
               die: 'd8',
-              notation: '2d8+5',
-              modifier: 5,
+              notation: '2d8+7',
+              modifier: 7,
             },
             type: 'bludgeoning',
           },
@@ -4723,14 +4738,13 @@ export const srdCr25Monsters35e: Monster[] = [
       {
         name: 'Incorporeal Touch',
         description: 'Incorporeal Touch attack (melee).',
-        attackBonus: -4,
+        attackBonus: 3,
         damage: [
           {
             dice: {
               count: 1,
               die: 'd6',
-              notation: '1d6-5',
-              modifier: -5,
+              notation: '1d6',
             },
           },
         ],
@@ -4969,8 +4983,7 @@ export const srdCr25Monsters35e: Monster[] = [
             dice: {
               count: 1,
               die: 'd8',
-              notation: '1d8+2',
-              modifier: 2,
+              notation: '1d8',
             },
           },
         ],
@@ -5406,15 +5419,14 @@ export const srdCr25Monsters35e: Monster[] = [
       {
         name: 'Swarm',
         description:
-          'In order to attack, a single swarm moves into opponents spaces, which provokes an attack of opportunity. It can occupy the same space as a creature of any size, since it crawls all over its prey, but remains a creature with a 10-foot space. Swarms never make attacks of opportunity, but they can prov',
+          "In order to attack, a single swarm moves into opponents' spaces, which provokes an attack of opportunity. It can occupy the same space as a creature of any size, since it crawls all over its prey, but remains a creature with a 10-foot space. Swarms never make attacks of opportunity, but they can pro",
         attackBonus: 5,
         damage: [
           {
             dice: {
               count: 2,
               die: 'd6',
-              notation: '2d6-5',
-              modifier: -5,
+              notation: '2d6',
             },
           },
         ],
@@ -5762,8 +5774,8 @@ export const srdCr25Monsters35e: Monster[] = [
             dice: {
               count: 2,
               die: 'd8',
-              notation: '2d8+6',
-              modifier: 6,
+              notation: '2d8+9',
+              modifier: 9,
             },
             type: 'bludgeoning',
           },
@@ -5828,7 +5840,7 @@ export const srdCr25Monsters35e: Monster[] = [
       {
         name: 'Constrict',
         description:
-          'A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature s entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we',
+          "A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature's entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we",
         attackBonus: 3,
         damage: [
           {
@@ -6076,8 +6088,8 @@ export const srdCr25Monsters35e: Monster[] = [
             dice: {
               count: 2,
               die: 'd6',
-              notation: '2d6+2',
-              modifier: 2,
+              notation: '2d6+3',
+              modifier: 3,
             },
             type: 'slashing',
           },
@@ -6256,6 +6268,17 @@ export const srdCr25Monsters35e: Monster[] = [
         description:
           'This big, heavy axe is a favorite of barbarians and anybody else who wants the capability to deal out incredible damage.',
         attackBonus: 9,
+        damage: [
+          {
+            dice: {
+              count: 3,
+              die: 'd6',
+              notation: '3d6+6',
+              modifier: 6,
+            },
+            type: 'slashing',
+          },
+        ],
       },
       {
         name: 'Gore',
@@ -6316,7 +6339,7 @@ export const srdCr25Monsters35e: Monster[] = [
       {
         name: 'Constrict',
         description:
-          'A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature s entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we',
+          "A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature's entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we",
         attackBonus: 3,
         damage: [
           {
@@ -6499,8 +6522,7 @@ export const srdCr25Monsters35e: Monster[] = [
             dice: {
               count: 1,
               die: 'd6',
-              notation: '1d6-2',
-              modifier: -2,
+              notation: '1d6',
             },
             type: 'piercing',
           },
@@ -6612,8 +6634,8 @@ export const srdCr25Monsters35e: Monster[] = [
             dice: {
               count: 2,
               die: 'd6',
-              notation: '2d6+4',
-              modifier: 4,
+              notation: '2d6+6',
+              modifier: 6,
             },
             type: 'slashing',
           },
@@ -7051,8 +7073,8 @@ export const srdCr25Monsters35e: Monster[] = [
             dice: {
               count: 1,
               die: 'd10',
-              notation: '1d10+2',
-              modifier: 2,
+              notation: '1d10+3',
+              modifier: 3,
             },
             type: 'slashing',
           },
@@ -7175,15 +7197,15 @@ export const srdCr25Monsters35e: Monster[] = [
       {
         name: 'Constrict',
         description:
-          'A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature s entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we',
+          "A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature's entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we",
         attackBonus: 13,
         damage: [
           {
             dice: {
               count: 1,
               die: 'd8',
-              notation: '1d8+7',
-              modifier: 7,
+              notation: '1d8+10',
+              modifier: 10,
             },
             type: 'bludgeoning',
           },
@@ -7403,7 +7425,7 @@ export const srdCr25Monsters35e: Monster[] = [
         name: 'Spittle',
         description:
           'As a free action every round, a gibbering mouther fires a stream of spittle at one opponent within 30 feet. The mouther makes a ranged touch attack; if it hits, it deals 1d4 points of acid damage, and the target must succeed on a DC 18 Fortitude save or be blinded for 1d4 rounds. Eyeless creatures a',
-        attackBonus: 3,
+        attackBonus: 4,
         damage: [
           {
             dice: {
@@ -7758,8 +7780,8 @@ export const srdCr25Monsters35e: Monster[] = [
             dice: {
               count: 1,
               die: 'd6',
-              notation: '1d6+7',
-              modifier: 7,
+              notation: '1d6+10',
+              modifier: 10,
             },
             type: 'bludgeoning',
           },
@@ -7881,15 +7903,15 @@ export const srdCr25Monsters35e: Monster[] = [
       {
         name: 'Constrict',
         description:
-          'A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature s entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we',
+          "A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature's entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we",
         attackBonus: 5,
         damage: [
           {
             dice: {
               count: 2,
               die: 'd4',
-              notation: '2d4+2',
-              modifier: 2,
+              notation: '2d4+3',
+              modifier: 3,
             },
             type: 'bludgeoning',
           },
@@ -8316,8 +8338,8 @@ export const srdCr25Monsters35e: Monster[] = [
             dice: {
               count: 2,
               die: 'd6',
-              notation: '2d6+6',
-              modifier: 6,
+              notation: '2d6+9',
+              modifier: 9,
             },
             type: 'slashing',
           },
@@ -8455,14 +8477,13 @@ export const srdCr25Monsters35e: Monster[] = [
       {
         name: 'Incorporeal Touch',
         description: 'Incorporeal Touch attack (melee).',
-        attackBonus: -3,
+        attackBonus: 5,
         damage: [
           {
             dice: {
               count: 1,
               die: 'd4',
-              notation: '1d4-5',
-              modifier: -5,
+              notation: '1d4',
             },
           },
         ],

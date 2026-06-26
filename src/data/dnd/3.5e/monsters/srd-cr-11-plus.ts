@@ -119,7 +119,7 @@ export const srdCr11PlusMonsters35e: Monster[] = [
       {
         name: 'Rock',
         description:
-          'Adult giants are accomplished rock throwers and receive a +1 racial bonus on attack rolls when throwing rocks. A giant of at least Large size can hurl rocks weighing 40 to 50 pounds each (Small objects) up to five range increments. The size of the range increment varies with the giant s variety. A H',
+          "Adult giants are accomplished rock throwers and receive a +1 racial bonus on attack rolls when throwing rocks. A giant of at least Large size can hurl rocks weighing 40 to 50 pounds each (Small objects) up to five range increments. The size of the range increment varies with the giant's variety. A H",
         attackBonus: 22,
         damage: [
           {
@@ -245,14 +245,13 @@ export const srdCr11PlusMonsters35e: Monster[] = [
       {
         name: 'Incorporeal Touch',
         description: 'Incorporeal Touch attack (melee).',
-        attackBonus: 2,
+        attackBonus: 16,
         damage: [
           {
             dice: {
               count: 2,
               die: 'd6',
-              notation: '2d6-5',
-              modifier: -5,
+              notation: '2d6',
             },
           },
         ],
@@ -558,15 +557,15 @@ export const srdCr11PlusMonsters35e: Monster[] = [
       {
         name: 'Constrict',
         description:
-          'A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature s entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we',
+          "A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature's entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we",
         attackBonus: 19,
         damage: [
           {
             dice: {
               count: 2,
               die: 'd8',
-              notation: '2d8+8',
-              modifier: 8,
+              notation: '2d8+12',
+              modifier: 12,
             },
             type: 'bludgeoning',
           },
@@ -687,15 +686,15 @@ export const srdCr11PlusMonsters35e: Monster[] = [
       {
         name: 'Constrict',
         description:
-          'A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature s entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we',
+          "A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature's entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we",
         attackBonus: 28,
         damage: [
           {
             dice: {
               count: 2,
               die: 'd8',
-              notation: '2d8+12',
-              modifier: 12,
+              notation: '2d8+18',
+              modifier: 18,
             },
             type: 'bludgeoning',
           },
@@ -1149,8 +1148,8 @@ export const srdCr11PlusMonsters35e: Monster[] = [
             dice: {
               count: 2,
               die: 'd6',
-              notation: '2d6+6',
-              modifier: 6,
+              notation: '2d6+9',
+              modifier: 9,
             },
             type: 'piercing',
           },
@@ -1295,8 +1294,8 @@ export const srdCr11PlusMonsters35e: Monster[] = [
             dice: {
               count: 4,
               die: 'd6',
-              notation: '4d6+14',
-              modifier: 14,
+              notation: '4d6+21',
+              modifier: 21,
             },
             type: 'slashing',
           },
@@ -1574,8 +1573,8 @@ export const srdCr11PlusMonsters35e: Monster[] = [
             dice: {
               count: 2,
               die: 'd6',
-              notation: '2d6+5',
-              modifier: 5,
+              notation: '2d6+7',
+              modifier: 7,
             },
             type: 'slashing',
           },
@@ -1687,8 +1686,8 @@ export const srdCr11PlusMonsters35e: Monster[] = [
             dice: {
               count: 3,
               die: 'd6',
-              notation: '3d6+7',
-              modifier: 7,
+              notation: '3d6+10',
+              modifier: 10,
             },
             type: 'slashing',
           },
@@ -1846,6 +1845,17 @@ export const srdCr11PlusMonsters35e: Monster[] = [
         description:
           'A spiked chain has reach, so you can strike opponents 10 feet away with it. In addition, unlike most other weapons with reach, it can be used against an adjacent foe. Because the chain can wrap around an enemy’s leg or other limb, you can make trip attacks with the chain. If you are tripped during y',
         attackBonus: 24,
+        damage: [
+          {
+            dice: {
+              count: 2,
+              die: 'd6',
+              notation: '2d6+15',
+              modifier: 15,
+            },
+            type: 'piercing',
+          },
+        ],
       },
       {
         name: 'Tail',
@@ -2000,15 +2010,15 @@ export const srdCr11PlusMonsters35e: Monster[] = [
       {
         name: 'Constrict',
         description:
-          'A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature s entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we',
+          "A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature's entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we",
         attackBonus: 24,
         damage: [
           {
             dice: {
               count: 4,
               die: 'd6',
-              notation: '4d6+9',
-              modifier: 9,
+              notation: '4d6+13',
+              modifier: 13,
             },
             type: 'bludgeoning',
           },
@@ -2254,15 +2264,15 @@ export const srdCr11PlusMonsters35e: Monster[] = [
       {
         name: 'Constrict',
         description:
-          'A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature s entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we',
+          "A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature's entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we",
         attackBonus: 30,
         damage: [
           {
             dice: {
               count: 2,
               die: 'd8',
-              notation: '2d8+13',
-              modifier: 13,
+              notation: '2d8+19',
+              modifier: 19,
             },
             type: 'bludgeoning',
           },
@@ -2376,7 +2386,7 @@ export const srdCr11PlusMonsters35e: Monster[] = [
       {
         name: 'Poison',
         description:
-          'Poison attacks deal initial damage, such as ability damage or some other effect, to the opponent on a failed Fortitude save. Unless otherwise noted, another saving throw is required 1 minute later (regardless of the first save s result) to avoid secondary damage. A creature s descriptive text provid',
+          "Poison attacks deal initial damage, such as ability damage or some other effect, to the opponent on a failed Fortitude save. Unless otherwise noted, another saving throw is required 1 minute later (regardless of the first save's result) to avoid secondary damage. A creature's descriptive text provid",
         attackBonus: 57,
       },
       {
@@ -2569,8 +2579,8 @@ export const srdCr11PlusMonsters35e: Monster[] = [
             dice: {
               count: 3,
               die: 'd6',
-              notation: '3d6+9',
-              modifier: 9,
+              notation: '3d6+13',
+              modifier: 13,
             },
             type: 'slashing',
           },

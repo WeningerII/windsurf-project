@@ -62,6 +62,7 @@ function stripInline(text) {
     .replace(/&[lr]squo;|&#8217;|’/g, "'")
     .replace(/&[lr]dquo;/g, '"')
     .replace(/\*\*/g, '')
+    .replace(/(?<![_\w])_(?!_)([^_\n]+?)_(?!_)/g, '$1')
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -152,6 +153,19 @@ async function main() {
       continue;
     }
     const s = parseSections(block.body);
+
+    // SRD quirk: Improved Feint's '**Special:**'-style fighter-bonus-feat note (feats.md
+    // line 499) is unlabeled, so parseSections leaves it glued to the preceding Normal
+    // section. Move any such bonus-feat sentence from normal -> special. (Empirically the
+    // only normal-section line in the corpus that matches, so no other entry is affected.)
+    const bonusFeatRe = /\bmay select .* as (?:one of his|a) .*bonus feat/i;
+    s.normal = s.normal.filter((line) => {
+      if (bonusFeatRe.test(line)) {
+        s.special.push(line);
+        return false;
+      }
+      return true;
+    });
 
     // description: the SRD's intro prose if present, else the first benefit
     // sentence, else the feat name (the catalog requires a non-empty string).

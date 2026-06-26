@@ -1322,15 +1322,15 @@ export const srdCr01Monsters35e: Monster[] = [
       {
         name: 'Constrict',
         description:
-          'A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature s entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we',
+          "A creature with this special attack can crush an opponent, dealing bludgeoning damage, after making a successful grapple check. The amount of damage is given in the creature's entry. If the creature also has the improved grab ability it deals constriction damage in addition to damage dealt by the we",
         attackBonus: 5,
         damage: [
           {
             dice: {
               count: 1,
               die: 'd4',
-              notation: '1d4+3',
-              modifier: 3,
+              notation: '1d4+4',
+              modifier: 4,
             },
             type: 'bludgeoning',
           },
@@ -1586,8 +1586,7 @@ export const srdCr01Monsters35e: Monster[] = [
             dice: {
               count: 1,
               die: 'd6',
-              notation: '1d6+2',
-              modifier: 2,
+              notation: '1d6',
             },
             type: 'piercing',
           },
@@ -1674,8 +1673,7 @@ export const srdCr01Monsters35e: Monster[] = [
             dice: {
               count: 1,
               die: 'd4',
-              notation: '1d4-3',
-              modifier: -3,
+              notation: '1d4',
             },
             type: 'piercing',
           },
@@ -2144,8 +2142,8 @@ export const srdCr01Monsters35e: Monster[] = [
             dice: {
               count: 1,
               die: 'd6',
-              notation: '1d6+2',
-              modifier: 2,
+              notation: '1d6+1',
+              modifier: 1,
             },
           },
         ],
@@ -2271,8 +2269,7 @@ export const srdCr01Monsters35e: Monster[] = [
             dice: {
               count: 1,
               die: 'd6',
-              notation: '1d6-2',
-              modifier: -2,
+              notation: '1d6',
             },
             type: 'piercing',
           },
@@ -2477,15 +2474,14 @@ export const srdCr01Monsters35e: Monster[] = [
       {
         name: 'Swarm',
         description:
-          'In order to attack, a single swarm moves into opponents spaces, which provokes an attack of opportunity. It can occupy the same space as a creature of any size, since it crawls all over its prey, but remains a creature with a 10-foot space. Swarms never make attacks of opportunity, but they can prov',
+          "In order to attack, a single swarm moves into opponents' spaces, which provokes an attack of opportunity. It can occupy the same space as a creature of any size, since it crawls all over its prey, but remains a creature with a 10-foot space. Swarms never make attacks of opportunity, but they can pro",
         attackBonus: 0,
         damage: [
           {
             dice: {
               count: 1,
               die: 'd6',
-              notation: '1d6-5',
-              modifier: -5,
+              notation: '1d6',
             },
           },
         ],

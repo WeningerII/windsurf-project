@@ -178,6 +178,12 @@ for (const cells of weaponRows) {
 
 function parseWeight(cell) {
   if (!cell || cell === '—' || cell === '-' || /special/i.test(cell)) return 0;
+  // SRD writes mixed numbers as "A-B/C" (e.g. "1-1/2 lb." = one and a half).
+  // Match the mixed form BEFORE the bare fraction so the integer part isn't
+  // dropped: "1-1/2" must read as 1 + 1/2 = 1.5, not the "1/2" substring (0.5).
+  const mixed = /(\d+)[ -](\d+)\/(\d+)/.exec(cell);
+  if (mixed)
+    return Math.round((Number(mixed[1]) + Number(mixed[2]) / Number(mixed[3])) * 100) / 100;
   const frac = /(\d+)\/(\d+)/.exec(cell);
   if (frac) return Math.round((Number(frac[1]) / Number(frac[2])) * 100) / 100;
   const n = parseFloat(cell);

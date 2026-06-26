@@ -79,6 +79,12 @@ const DICE_PROGRESSIONS = [
   ['1d4', '1d6', '1d8', '1d10', '2d6', '3d6', '4d6', '6d6', '8d6'],
   ['1d6', '1d8', '1d10', '2d6', '3d6', '4d6', '6d6', '8d6', '12d6'],
   ['1d8', '1d10', '2d6', '2d8', '3d8', '4d8', '6d8', '8d8', '12d8'],
+  // Manufactured-weapon medium bases the natural-attack rows above don't cover:
+  // dagger (1d4), spiked chain (2d4), greataxe (1d12). Cross-size values follow
+  // the SRD weapon-resize table (medium at column index 4).
+  ['1', '1', '1d2', '1d3', '1d4', '1d6', '1d8', '2d6', '3d6'],
+  ['1d2', '1d3', '1d4', '1d6', '2d4', '2d6', '3d6', '4d6', '6d6'],
+  ['1d4', '1d6', '1d8', '1d10', '1d12', '3d6', '4d6', '6d6', '8d6'],
 ];
 
 const TYPE_MAP = {
@@ -159,6 +165,18 @@ function resolveSizeRoll(count, die, sizeName, report, label) {
 function stripHtml(html) {
   return String(html ?? '')
     .replace(/<[^>]+>/g, ' ')
+    // Decode entities to their characters BEFORE collapsing whitespace; the old
+    // blanket "&\w+; -> space" split words at apostrophe entities ("creature s").
+    .replace(/&(?:rsquo|lsquo|apos|#8217|#8216|#39);/g, "'")
+    .replace(/&(?:rdquo|ldquo|quot|#8220|#8221);/g, '"')
+    .replace(/&(?:mdash|#8212);/g, '—')
+    .replace(/&(?:ndash|#8211);/g, '–')
+    .replace(/&(?:hellip|#8230);/g, '…')
+    .replace(/&(?:nbsp|#160);/g, ' ')
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
     .replace(/&\w+;/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
@@ -240,7 +258,24 @@ async function main() {
       const isRanged = /ranged|thrown|bow|javelin|sling|crossbow/i.test(
         `${item.name} ${item.data?.actionType ?? ''}`
       );
-      const attackBonus = bab + (isRanged ? mod(abilities.dex) : mod(abilities.str)) + sizeMod;
+      // Honor the D35E source's per-attack ability block rather than guessing
+      // Str-melee/Dex-ranged. A "—" ability is stored as total 0; its modifier
+      // is 0, NOT mod(0) = -5 (which inverted attacks for Str-less undead).
+      const amod = (key) => (abilities[key] === 0 ? 0 : mod(abilities[key]));
+      const atkAbility = item.data?.ability?.attack === 'dex' ? 'dex' : 'str';
+      const attackBonus = bab + amod(atkAbility) + sizeMod;
+      // Strength-to-damage follows ability.damage + damageMult (1.5x two-handed,
+      // floored per 3.5e). A null/'' ability.damage means no ability bonus —
+      // crossbows, regular bows, breath weapons, and energy saves add nothing.
+      // Composite bows add the wielder's rated Str, which D35E leaves implicit,
+      // so approximate it with the Str modifier.
+      const dmgAbility = item.data?.ability?.damage;
+      const dmgMult = Number(item.data?.ability?.damageMult ?? 1);
+      const dmgMod = dmgAbility
+        ? Math.floor(amod(dmgAbility) * dmgMult)
+        : /composite/i.test(item.name)
+          ? amod('str')
+          : 0;
       const damage = [];
       for (const part of item.data?.damage?.parts ?? []) {
         const formula = String(part[0] ?? '');
@@ -269,11 +304,15 @@ async function main() {
           const damageType =
             { B: 'bludgeoning', P: 'piercing', S: 'slashing' }[typeToken] ??
             weaponDamageTypeByName(item.name);
+          // Preserve an explicit +N/-N already in the source formula (e.g.
+          // Swallow Whole "2d8+8"); otherwise apply the ability-derived modifier.
+          const inline = /([+-]\d+)\s*$/.exec(formula);
+          const partMod = inline ? Number(inline[1]) : dmgMod;
           damage.push({
             dice: {
               ...dice,
-              ...(mod(abilities.str) ? { modifier: mod(abilities.str) } : {}),
-              notation: `${dice.notation}${mod(abilities.str) > 0 ? `+${mod(abilities.str)}` : mod(abilities.str) < 0 ? `${mod(abilities.str)}` : ''}`,
+              ...(partMod ? { modifier: partMod } : {}),
+              notation: `${dice.notation}${partMod > 0 ? `+${partMod}` : partMod < 0 ? `${partMod}` : ''}`,
             },
             ...(damageType ? { type: damageType } : {}),
           });
