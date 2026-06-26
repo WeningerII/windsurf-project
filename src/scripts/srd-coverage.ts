@@ -412,6 +412,33 @@ TARGETS.push({
   loader: () => loaderNames(loadMonstersForSystem, 'pf1e'),
 });
 
+// PF1e feats: the SHA-pinned Foundry pf1 system feats pack (OGL CRB content) —
+// the same NeDB JSON-lines source scripts/encode-pf1e-feats.mjs encodes from.
+async function fetchPf1eFeatNames(): Promise<string[]> {
+  const text = await fetchText(
+    'https://gitlab.com/foundryvtt_pathfinder1e/foundryvtt-pathfinder1/-/raw/90b689b032af9fc10ab09d2bd132669ca579c1ef/packs/feats.db'
+  );
+  const names: string[] = [];
+  for (const line of text.split('\n')) {
+    if (!line.trim()) continue;
+    try {
+      const name = (JSON.parse(line) as { name?: string }).name;
+      if (name) names.push(name);
+    } catch {
+      /* skip the occasional malformed NeDB line */
+    }
+  }
+  return names;
+}
+TARGETS.push({
+  systemId: 'pf1e',
+  systemLabel: 'Pathfinder 1e',
+  category: 'feats',
+  srdSource: 'Core Rulebook (Foundry pf1 feats.db, OGL — SHA-pinned)',
+  srd: () => fetchPf1eFeatNames(),
+  loader: () => loaderNames(loadFeatsForSystem, 'pf1e'),
+});
+
 // PF2e Bestiary 1: same Pf2eTools source family as the spell denominator.
 TARGETS.push({
   systemId: 'pf2e',
@@ -533,6 +560,33 @@ TARGETS.push({
     return manifest.names;
   },
   loader: () => loaderNames(loadMonstersForSystem, 'dnd-3.5e'),
+});
+
+// D&D 3.5e feats: the SRD Feats chapter lists each feat as a
+// "### Name <small>[Type]</small>" heading under "## Feat Descriptions" — the
+// same source and parse scripts/encode-35e-feats.mjs uses. The chapter's
+// "### Feat Name" format-example heading is documentation, not a feat.
+async function fetchSrd35FeatNames(): Promise<string[]> {
+  const lines = (
+    await fetchText(
+      'https://raw.githubusercontent.com/olimot/srd-v3.5-md/main/basic-rules-and-legal/feats.md'
+    )
+  ).split('\n');
+  const start = lines.findIndex((l) => /^## Feat Descriptions/.test(l));
+  const names: string[] = [];
+  for (let i = Math.max(start, 0); i < lines.length; i++) {
+    const m = lines[i].match(/^### (.+?)(?:\s*<small>\[[^\]]+\]<\/small>)?\s*$/);
+    if (m && m[1].trim() !== 'Feat Name') names.push(m[1].trim());
+  }
+  return names;
+}
+TARGETS.push({
+  systemId: 'dnd-3.5e',
+  systemLabel: 'D&D 3.5e',
+  category: 'feats',
+  srdSource: 'SRD 3.5 (olimot/srd-v3.5-md Feats chapter)',
+  srd: () => fetchSrd35FeatNames(),
+  loader: () => loaderNames(loadFeatsForSystem, 'dnd-3.5e'),
 });
 
 // --- Mutants & Masterminds 3e (Hero's Handbook — whole DHH open content in scope) ---
@@ -727,7 +781,7 @@ async function main(): Promise<void> {
     '- **Daggerheart** classes/ancestries/communities/adversaries/weapons/armor are now wired against the pinned Batres3 SRD manifest (`scripts/data/daggerheart-srd-manifest.json`). The few weapon/armor/ancestry "not in SRD" suspects are denominator nuances — Mixed Ancestry (a rules option, not a per-file ancestry), the Combat Wheelchair line (a separate SRD doc), and upstream-mirror spelling typos (e.g. "Widgast"→correct "Widogast") — not provenance violations.'
   );
   lines.push(
-    '- **Remaining categories** — PF2e/PF1e non-spell categories, D&D 3.5e classes/feats/equipment, M&M skills/conditions/equipment, and Daggerheart environments/subclasses are documented in `docs/srd-sources.md` and pending wiring.'
+    '- **Remaining categories** — PF1e/3.5e classes and equipment, M&M skills/conditions, and Daggerheart environments/subclasses are documented in `docs/srd-sources.md` and pending wiring. (PF2e classes/ancestries are already at full coverage but read from multi-file sources not yet wired as a single denominator.)'
   );
   lines.push('');
 
