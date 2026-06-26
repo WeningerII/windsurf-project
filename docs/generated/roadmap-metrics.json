@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T17:38:07.205Z",
+  "generatedAt": "2026-06-26T00:08:02.663Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -97,9 +97,9 @@
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 177,
+      "monsters": 292,
       "equipment": 207,
-      "feats": 80,
+      "feats": 118,
       "advantages": 0,
       "powerModifiers": 0
     },
@@ -114,7 +114,7 @@
       "complications": 0,
       "monsters": 331,
       "equipment": 70,
-      "feats": 86,
+      "feats": 177,
       "advantages": 0,
       "powerModifiers": 0
     },
@@ -122,13 +122,13 @@
       "spells": 551,
       "classes": 12,
       "species": 6,
-      "backgrounds": 16,
+      "backgrounds": 35,
       "traits": 0,
       "featureOptions": 0,
       "archetypes": 5,
       "complications": 0,
       "monsters": 413,
-      "equipment": 188,
+      "equipment": 622,
       "feats": 814,
       "advantages": 0,
       "powerModifiers": 0
@@ -204,9 +204,9 @@
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 177,
+      "monsters": 292,
       "equipment": 207,
-      "feats": 80,
+      "feats": 118,
       "advantages": 0,
       "powerModifiers": 0
     },
@@ -221,7 +221,7 @@
       "complications": 0,
       "monsters": 331,
       "equipment": 70,
-      "feats": 86,
+      "feats": 177,
       "advantages": 0,
       "powerModifiers": 0
     },
@@ -229,13 +229,13 @@
       "spells": 551,
       "classes": 12,
       "species": 6,
-      "backgrounds": 16,
+      "backgrounds": 35,
       "traits": 0,
       "featureOptions": 0,
       "archetypes": 5,
       "complications": 0,
       "monsters": 413,
-      "equipment": 188,
+      "equipment": 622,
       "feats": 814,
       "advantages": 0,
       "powerModifiers": 0
@@ -1194,13 +1194,13 @@
       "category": "monsters",
       "categoryLabel": "Monsters",
       "metrics": {
-        "rawCount": 177,
-        "uniqueCount": 177,
+        "rawCount": 292,
+        "uniqueCount": 292,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 3.5": 177
+          "SRD 3.5": 292
         }
       }
     },
@@ -1226,13 +1226,13 @@
       "category": "feats",
       "categoryLabel": "Feats",
       "metrics": {
-        "rawCount": 80,
-        "uniqueCount": 80,
+        "rawCount": 118,
+        "uniqueCount": 118,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 3.5": 80
+          "SRD 3.5": 118
         }
       }
     },
@@ -1338,13 +1338,13 @@
       "category": "feats",
       "categoryLabel": "Feats",
       "metrics": {
-        "rawCount": 86,
-        "uniqueCount": 86,
+        "rawCount": 177,
+        "uniqueCount": 177,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "CRB": 86
+          "CRB": 177
         }
       }
     },
@@ -1402,13 +1402,13 @@
       "category": "backgrounds",
       "categoryLabel": "Backgrounds",
       "metrics": {
-        "rawCount": 16,
-        "uniqueCount": 16,
+        "rawCount": 35,
+        "uniqueCount": 35,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "Core Rulebook": 16
+          "Core Rulebook": 35
         }
       }
     },
@@ -1450,13 +1450,13 @@
       "category": "equipment",
       "categoryLabel": "Equipment",
       "metrics": {
-        "rawCount": 188,
-        "uniqueCount": 188,
+        "rawCount": 622,
+        "uniqueCount": 622,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "Core Rulebook": 188
+          "Core Rulebook": 622
         }
       }
     },

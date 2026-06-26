@@ -15,7 +15,11 @@ const budgets = {
   // not bloat. Lazy granularity is enforced by the per-data-chunk budget.
   // 1536 → 1600 KiB for the full PF2e CRB feat catalog (93 → 814; the missing
   // ~720 sourced from Pf2eTools by scripts/encode-pf2e-feats.mjs).
-  totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 1600 * 1024,
+  // 1600 → 1700 KiB for the next coverage wave, all genuine sourced content:
+  // PF2e backgrounds (16 → 35) and equipment (30 → 464), the 3.5e SRD bestiary
+  // (177 → 292 via the nested-stat-block extractor), and the PF1e (+91) and
+  // 3.5e (+38) CRB feat catalogs. Lazy granularity is still enforced per chunk.
+  totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 1700 * 1024,
   // Restored to 80 KiB now that the 1296-LOC SceneManager view is lazy-loaded
   // out of the eager shell (it no longer rides the index chunk), reclaiming the
   // first-paint discipline the temporary 81 KiB bump had spent on the

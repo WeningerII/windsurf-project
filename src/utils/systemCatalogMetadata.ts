@@ -108,6 +108,8 @@ async function loadSystemCatalogSummaryFromMetadataInternal(
         ...Object.values(pf2eEquipment.pf2eGear || {}),
         ...(pf2eEquipment.pf2eMagicWeapons || []),
         ...(pf2eEquipment.pf2eMagicArmor || []),
+        // Mirrors loadPf2eEquipment (dataLoader.ts) so loader/metadata counts agree.
+        ...(pf2eEquipment.srdPf2eGeneratedEquipment || []),
       ]);
 
       appendCategories(
@@ -136,6 +138,7 @@ async function loadSystemCatalogSummaryFromMetadataInternal(
         ...dnd35eFeats.skill,
         ...dnd35eFeats.ability,
         ...dnd35eFeats.magic,
+        ...dnd35eFeats.generated,
       ]);
       const productEquipmentCount = countProductItems('dnd-3.5e', 'equipment', [
         ...dnd35eEquipment.weapons,
@@ -185,6 +188,7 @@ async function loadSystemCatalogSummaryFromMetadataInternal(
         ...pf1eFeats.combat,
         ...pf1eFeats.metamagic,
         ...pf1eFeats.general,
+        ...pf1eFeats.generated,
       ]);
       const productTraitCount = countProductItems('pf1e', 'traits', pf1eTraits);
       const productEquipmentCount = countProductItems('pf1e', 'equipment', [

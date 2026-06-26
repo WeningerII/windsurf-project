@@ -1,4 +1,4 @@
-_Generated: 2026-06-24T17:38:07.205Z_
+_Generated: 2026-06-26T00:08:02.663Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -6,9 +6,9 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | D&D 5e (2014) | 319 | 12 | 9 | 1 | 0 | 106 | 335 | 656 | 1 | 0 |
 | D&D 5e (2024) | 339 | 12 | 9 | 4 | 0 | 0 | 339 | 502 | 19 | 0 |
-| D&D 3.5e | 610 | 26 | 7 | 0 | 0 | 0 | 177 | 207 | 80 | 0 |
-| Pathfinder 1e | 625 | 18 | 7 | 0 | 12 | 0 | 331 | 70 | 86 | 0 |
-| Pathfinder 2e | 551 | 12 | 6 | 16 | 0 | 0 | 413 | 188 | 814 | 0 |
+| D&D 3.5e | 610 | 26 | 7 | 0 | 0 | 0 | 292 | 207 | 118 | 0 |
+| Pathfinder 1e | 625 | 18 | 7 | 0 | 12 | 0 | 331 | 70 | 177 | 0 |
+| Pathfinder 2e | 551 | 12 | 6 | 35 | 0 | 0 | 413 | 622 | 814 | 0 |
 | Mutants & Masterminds 3e | 61 | 0 | 0 | 0 | 0 | 0 | 0 | 140 | 0 | 74 |
 | Daggerheart | 0 | 9 | 19 | 9 | 0 | 0 | 0 | 353 | 0 | 0 |
 
@@ -44,23 +44,23 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | D&D 3.5e | Spells/Powers | 610 | 0 | 0 | 0 |
 | D&D 3.5e | Classes | 26 | 0 | 0 | 0 |
 | D&D 3.5e | Species/Races | 7 | 0 | 0 | 0 |
-| D&D 3.5e | Monsters | 177 | 0 | 0 | 0 |
+| D&D 3.5e | Monsters | 292 | 0 | 0 | 0 |
 | D&D 3.5e | Equipment | 207 | 0 | 0 | 0 |
-| D&D 3.5e | Feats | 80 | 0 | 0 | 0 |
+| D&D 3.5e | Feats | 118 | 0 | 0 | 0 |
 | Pathfinder 1e | Spells/Powers | 625 | 0 | 0 | 0 |
 | Pathfinder 1e | Classes | 18 | 0 | 0 | 0 |
 | Pathfinder 1e | Species/Races | 7 | 0 | 0 | 0 |
 | Pathfinder 1e | Traits | 12 | 0 | 0 | 0 |
 | Pathfinder 1e | Monsters | 331 | 0 | 0 | 0 |
 | Pathfinder 1e | Equipment | 70 | 0 | 0 | 0 |
-| Pathfinder 1e | Feats | 86 | 0 | 0 | 0 |
+| Pathfinder 1e | Feats | 177 | 0 | 0 | 0 |
 | Pathfinder 2e | Spells/Powers | 551 | 0 | 0 | 0 |
 | Pathfinder 2e | Classes | 12 | 0 | 0 | 0 |
 | Pathfinder 2e | Species/Races | 6 | 0 | 0 | 0 |
-| Pathfinder 2e | Backgrounds | 16 | 0 | 0 | 0 |
+| Pathfinder 2e | Backgrounds | 35 | 0 | 0 | 0 |
 | Pathfinder 2e | Archetypes | 5 | 0 | 0 | 0 |
 | Pathfinder 2e | Monsters | 413 | 0 | 0 | 0 |
-| Pathfinder 2e | Equipment | 188 | 0 | 0 | 0 |
+| Pathfinder 2e | Equipment | 622 | 0 | 0 | 0 |
 | Pathfinder 2e | Feats | 814 | 0 | 0 | 0 |
 | Mutants & Masterminds 3e | Spells/Powers | 61 | 0 | 0 | 0 |
 | Mutants & Masterminds 3e | Archetypes | 15 | 0 | 0 | 0 |
@@ -159,8 +159,8 @@ _Share of each system's loader-backed entries that are source-tagged AND open-co
 | --- | ---: | ---: | ---: |
 | D&D 5e (2014) | 1439 | 1439 | 100% |
 | D&D 5e (2024) | 1224 | 1224 | 100% |
-| D&D 3.5e | 1107 | 1107 | 100% |
-| Pathfinder 1e | 1149 | 1149 | 100% |
-| Pathfinder 2e | 2005 | 2005 | 100% |
+| D&D 3.5e | 1260 | 1260 | 100% |
+| Pathfinder 1e | 1240 | 1240 | 100% |
+| Pathfinder 2e | 2458 | 2458 | 100% |
 | Mutants & Masterminds 3e | 417 | 417 | 100% |
 | Daggerheart | 390 | 390 | 100% |

@@ -424,6 +424,7 @@ async function loadDnd35eFeats(): Promise<FeatDefinition[]> {
     ...feats.skill,
     ...feats.ability,
     ...feats.magic,
+    ...feats.generated,
   ];
   return allFeats;
 }
@@ -475,6 +476,8 @@ async function loadPf2eEquipment(): Promise<Item[]> {
     ...Object.values(equipModule.pf2eGear || {}),
     ...(equipModule.pf2eMagicWeapons || []),
     ...(equipModule.pf2eMagicArmor || []),
+    // Bulk CRB items sourced from Pf2eTools (scripts/encode-pf2e-equipment.mjs).
+    ...(equipModule.srdPf2eGeneratedEquipment || []),
   ];
   return allItems.filter((item: unknown) => {
     const i = item as Record<string, unknown>;
@@ -485,7 +488,12 @@ async function loadPf2eEquipment(): Promise<Item[]> {
 async function loadPf1eFeats(): Promise<FeatDefinition[]> {
   const featModule = await import('../data/pathfinder/1e/feats');
   const feats = featModule.pf1eFeats;
-  const allFeats: FeatDefinition[] = [...feats.combat, ...feats.metamagic, ...feats.general];
+  const allFeats: FeatDefinition[] = [
+    ...feats.combat,
+    ...feats.metamagic,
+    ...feats.general,
+    ...feats.generated,
+  ];
   return allFeats;
 }
 
