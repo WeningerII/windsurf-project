@@ -1,0 +1,304 @@
+{
+  "generatedAt": "2026-06-26T00:00:00.000Z",
+  "phases": [
+    {
+      "phase": "Phase 0",
+      "title": "Hardening Gates (build these first — all other phases depend on them)",
+      "items": [
+        {
+          "id": "hard-compute-register-gate",
+          "type": "hardening",
+          "system": "cross-system",
+          "category": "compute-register",
+          "status": "in-progress",
+          "legalBlocking": false,
+          "description": "Add check:compute-register CI gate. Without it, ~180 register entries marked 'verified' have no machine-enforced guarantee — status is known-unverified. Gate must run before any Phase 1+ work is considered done.",
+          "estimatedItems": 1,
+          "source": "ground-truth: denominator-b; roadmap-metrics.json computeCompletion"
+        },
+        {
+          "id": "hard-playwright-per-system",
+          "type": "hardening",
+          "system": "cross-system",
+          "category": "e2e-harness",
+          "status": "in-progress",
+          "legalBlocking": false,
+          "description": "Per-system Playwright user-outcome harness does not exist. Build one harness file per supported system covering critical user journeys (character creation, spell lookup, monster stat block, equipment browse). Required before Phase 2 consolidation work.",
+          "estimatedItems": 7,
+          "source": "ground-truth: hardening"
+        },
+        {
+          "id": "hard-ai-gateway-provider-agnostic",
+          "type": "hardening",
+          "system": "cross-system",
+          "category": "ai-gateway",
+          "status": "open",
+          "legalBlocking": false,
+          "description": "AI gateway is locked to Gemini via geminiAdapter.mts. Needs a provider-agnostic interface so other models (Claude, OpenAI, local) can be swapped in without code changes. Design an adapter interface and registry before any AI feature expansion.",
+          "estimatedItems": 1,
+          "source": "ground-truth: hardening; src/adapters/geminiAdapter.mts"
+        }
+      ]
+    },
+    {
+      "phase": "Phase 1",
+      "title": "Legal Blockers (must resolve before any public release or content expansion)",
+      "items": [
+        {
+          "id": "legal-mam3e-open-content-policy",
+          "type": "legal",
+          "system": "mam3e",
+          "category": "open-content-policy",
+          "status": "open",
+          "legalBlocking": true,
+          "description": "openContentPolicy.ts whitelists 'Hero's Handbook' (a commercial product title) as an allowedSource for M&M 3e. Must be re-pointed to the d20herosrd OGC designation (d20herosrd.com) to reflect actual open-content license basis. All mam3e content is tagged 'Hero's Handbook' in the loader — this is a systemic change.",
+          "estimatedItems": 1,
+          "source": "ground-truth: legal; src/utils/openContentPolicy.ts; roadmap-metrics.json loaderAudit mam3e"
+        },
+        {
+          "id": "legal-license-notice-files",
+          "type": "legal",
+          "system": "cross-system",
+          "category": "license-files",
+          "status": "open",
+          "legalBlocking": true,
+          "description": "No LICENSE or NOTICE file exists in the repo root. OGL/CC-BY compliance for SRD content (D&D 5e SRD 5.1/5.2, SRD 3.5, PFRPG, Daggerheart SRD, d20herosrd) requires these files. Add LICENSE (project license) and NOTICE (OGL/CC-BY attributions per system).",
+          "estimatedItems": 2,
+          "source": "ground-truth: legal"
+        },
+        {
+          "id": "legal-in-app-legal-route",
+          "type": "legal",
+          "system": "cross-system",
+          "category": "spa-legal-route",
+          "status": "open",
+          "legalBlocking": true,
+          "description": "No in-app Legal route exists in the SPA. Required by OGL Section 15 (must reproduce the OGL text) and CC-BY (attribution). Add a /legal route surfacing all open-content attributions per system, OGL text, and project license.",
+          "estimatedItems": 1,
+          "source": "ground-truth: legal"
+        }
+      ]
+    },
+    {
+      "phase": "Phase 2",
+      "title": "Denominator-A Gaps (SRD content missing from loaders — small gaps first)",
+      "items": [
+        {
+          "id": "dena-dnd5e2014-equipment-net",
+          "type": "denominator-a",
+          "system": "dnd-5e-2014",
+          "category": "equipment",
+          "status": "open",
+          "legalBlocking": false,
+          "description": "1 SRD item missing from the dnd-5e-2014 equipment loader: 'Net'. Encode it with correct SRD 5.1 source tag and stat block (weapon, thrown, special property).",
+          "estimatedItems": 1,
+          "source": "docs/generated/srd-coverage.md; SRD 5.1 (5e-bits/5e-database)"
+        },
+        {
+          "id": "dena-dnd5e2024-monsters-wisp",
+          "type": "denominator-a",
+          "system": "dnd-5e-2024",
+          "category": "monsters",
+          "status": "open",
+          "legalBlocking": false,
+          "description": "1 SRD monster missing from the dnd-5e-2024 monsters loader: 'Will-o'-Wisp'. SRD 5.2 uses this exact name (with typographic apostrophe). Encode it with SRD 5.2 source tag.",
+          "estimatedItems": 1,
+          "source": "docs/generated/srd-coverage.md; SRD 5.2 (downfallx SRD 5.2.1 markdown)"
+        },
+        {
+          "id": "dena-pf2e-equipment-three-items",
+          "type": "denominator-a",
+          "system": "pf2e",
+          "category": "equipment",
+          "status": "open",
+          "legalBlocking": false,
+          "description": "3 SRD items missing from the pf2e equipment loader: Bag of Holding, Boots of Speed, Ring of Sustenance. Encode all three with CRB source tag from Pf2eToolsOrg/Pf2eTools items-crb.json.",
+          "estimatedItems": 3,
+          "source": "docs/generated/srd-coverage.md; Pf2eToolsOrg/Pf2eTools items-crb.json"
+        },
+        {
+          "id": "dena-pf1e-spells-teleport-greater",
+          "type": "denominator-a",
+          "system": "pf1e",
+          "category": "spells",
+          "status": "open",
+          "legalBlocking": false,
+          "description": "1 SRD spell missing from the pf1e spells loader: 'Teleport, Greater'. Verify canonical name in PFRPG Core SRD CSV vs. what the loader currently has (suspected naming variant — loader may have 'Greater Teleport' which is the over-inclusion entry). If it is a name mismatch, normalize the loader entry; if genuinely absent, encode it.",
+          "estimatedItems": 1,
+          "source": "docs/generated/srd-coverage.md; wolfgangcodes/pathfinder-spellbook spells.csv; over-inclusion row shows 'Greater Teleport'"
+        },
+        {
+          "id": "dena-dnd35e-spells-shadow-evocation-greater",
+          "type": "denominator-a",
+          "system": "dnd-3.5e",
+          "category": "spells",
+          "status": "open",
+          "legalBlocking": false,
+          "description": "1 SRD spell missing from the dnd-3.5e spells loader: 'Shadow Evocation, Greater'. Verify canonical name in olimot/srd-v3.5-md vs. loader (over-inclusion shows 'Greater Shadow Evocation' already in the loader — likely a name-format mismatch, not a missing entry). If mismatch, normalize loader key; if genuinely absent, encode it.",
+          "estimatedItems": 1,
+          "source": "docs/generated/srd-coverage.md; olimot/srd-v3.5-md spell chapters; over-inclusion row shows 'Greater Shadow Evocation'"
+        },
+        {
+          "id": "dena-daggerheart-weapons-two-items",
+          "type": "denominator-a",
+          "system": "daggerheart",
+          "category": "weapons",
+          "status": "open",
+          "legalBlocking": false,
+          "description": "2 SRD weapon entries missing from the daggerheart loader: 'Sword of Light and Flame' and 'Widgast Pendant'. Over-inclusion audit shows 'Sword of Light & Flame' and 'Widogast Pendant' already in the loader — both are likely typo/ampersand variants. Verify against Batres3/daggerheart-srd pinned manifest and normalize the loader key; do not double-encode.",
+          "estimatedItems": 2,
+          "source": "docs/generated/srd-coverage.md; Batres3/daggerheart-srd weapons/ pinned manifest"
+        },
+        {
+          "id": "dena-daggerheart-armor-bellamie",
+          "type": "denominator-a",
+          "system": "daggerheart",
+          "category": "armor",
+          "status": "open",
+          "legalBlocking": false,
+          "description": "1 SRD armor entry missing from the daggerheart loader: 'Bellamie Fine Armor'. Over-inclusion shows 'Bellamoi Fine Armor' already present — likely a spelling typo. Verify canonical spelling in Batres3/daggerheart-srd armor/ pinned manifest and correct the loader key.",
+          "estimatedItems": 1,
+          "source": "docs/generated/srd-coverage.md; Batres3/daggerheart-srd armor/ pinned manifest"
+        },
+        {
+          "id": "dena-mam3e-equipment-68-items",
+          "type": "denominator-a",
+          "system": "mam3e",
+          "category": "equipment",
+          "status": "open",
+          "legalBlocking": false,
+          "description": "68 SRD equipment entries missing from the mam3e loader (SRD total is 113, loader has 45). Covers: weapons (Stun Gun, Warhammer, Chain, Chainsaw, Nunchaku, pistols, rifles, launcher), thrown/ranged (Bolos, Boomerang, Javelin), accessories (Laser Sight, Stun Ammo, Suppressor, Targeting Scope), grenades (Fragmentation, Smoke, Flash-bang, Sleep Gas, Tear Gas), explosives (Dynamite, Plastic Explosive), armor (Leather, Plate-mail, Full-plate, Undercover Shirt, Bulletproof Vest), shields (Small, Medium, Large), vehicles (Sedan, SUV/Truck, Van, Jet Fighter), tools/gadgets (Audio Recorder, Lock Release Gun, Restraints, Microphone, Mini-Tracer, Camo Clothing, Flash Goggles, SCUBA Gear, Caltrops, Toolkits), and HQ features (Size tiers + all Feature entries). Encode all from frnprt/mm3e-character-creator EQUIPMENT source after legal-mam3e-open-content-policy is resolved.",
+          "estimatedItems": 68,
+          "source": "docs/generated/srd-coverage.md; frnprt/mm3e-character-creator EQUIPMENT; BLOCKED by legal-mam3e-open-content-policy"
+        },
+        {
+          "id": "dena-pf1e-monsters-denominator-fix",
+          "type": "denominator-a",
+          "system": "pf1e",
+          "category": "monsters",
+          "status": "open",
+          "legalBlocking": false,
+          "description": "15 entries listed as missing from pf1e monsters (346 SRD total, 331 covered). The 10 dragon age variants (Black, Blue, Green, Red, White — Chromatic; Brass, Bronze, Copper, Gold, Silver — Metallic) and 4 Elemental size variants (Air, Earth, Fire, Water) are likely denominator inflation — the SRD source (devonjones/PSRD-Data) may enumerate sub-variants as separate entries. Step 1: collapse age/size variants in the denominator script so each archetype counts once. Step 2: if 'Skeletal Champion' remains genuinely absent after the fix, encode it. Verify the net genuine gap count before encoding.",
+          "estimatedItems": 15,
+          "source": "docs/generated/srd-coverage.md; devonjones/PSRD-Data Bestiary 1 pinned manifest"
+        },
+        {
+          "id": "dena-dnd35e-monsters-denominator-fix",
+          "type": "denominator-a",
+          "system": "dnd-3.5e",
+          "category": "monsters",
+          "status": "open",
+          "legalBlocking": false,
+          "description": "72 entries listed as missing from dnd-3.5e monsters (364 SRD total, 292 covered). The majority are sub-variants: dragon age bands (Black Dragon, Blue Dragon, etc.), elemental sizes (Air Elemental etc.), lycanthrope variants (Werewolf Lord, Hill Giant Dire Wereboar etc.), hydra types (Pyrohydra, Cryohydra), template-derived entries (Hound Archon Hero, Ghost, Lich, Mummy Lord), and player-race stat blocks (Dwarf, Elf, Gnome, Halfling, Goblin etc.). Step 1: fix denominator script in scripts/encode-35e-monsters.mjs / scripts/lib/srd35Monsters.mjs to collapse variants and filter player-race/template entries. Step 2: encode genuinely novel individuals that survive the collapse (e.g. Aboleth Mage, Frost Giant Jarl, Stone Giant Elders, Kolyarut, Golden Protector if they have distinct stat blocks in olimot/srd-v3.5-md).",
+          "estimatedItems": 72,
+          "source": "docs/generated/srd-coverage.md; olimot/srd-v3.5-md monster chapters; scripts/data/srd35-monster-roster.json"
+        }
+      ]
+    },
+    {
+      "phase": "Phase 3",
+      "title": "Denominator-B Gaps (compute-register coverage — layers not yet gate-verified)",
+      "items": [
+        {
+          "id": "denb-register-known-unverified",
+          "type": "denominator-b",
+          "system": "cross-system",
+          "category": "compute-register",
+          "status": "open",
+          "legalBlocking": false,
+          "description": "Approximately 180 register entries across all systems are marked 'verified' in the register but have no check:compute-register CI gate enforcing them. Status must be downgraded to 'known-unverified' until Phase 0 gate is live and all entries pass it. Run the gate after Phase 0 completion and triage failures.",
+          "estimatedItems": 180,
+          "source": "ground-truth: denominator-b; roadmap-metrics.json computeCompletion"
+        },
+        {
+          "id": "denb-l3-damage-assembly",
+          "type": "denominator-b",
+          "system": "cross-system",
+          "category": "compute-register",
+          "status": "open",
+          "legalBlocking": false,
+          "description": "L3 full damage assembly + riders (bonus damage types, conditions on hit, recharge) is missing from registers across systems. Add register entries and gate tests covering: base damage dice, bonus dice (e.g. sneak attack, divine smite), damage type, rider conditions (poisoned, frightened), and recharge notation.",
+          "estimatedItems": null,
+          "source": "ground-truth: denominator-b"
+        },
+        {
+          "id": "denb-l5-spell-economy",
+          "type": "denominator-b",
+          "system": "cross-system",
+          "category": "compute-register",
+          "status": "open",
+          "legalBlocking": false,
+          "description": "L5 spell economy (prepared/known/upcasting) is missing from registers. Add register entries and gate tests covering: number of spells prepared/known per class level, spell slot table, upcast damage scaling (e.g. Fireball +1d6/slot), and cantrip scaling.",
+          "estimatedItems": null,
+          "source": "ground-truth: denominator-b"
+        },
+        {
+          "id": "denb-l6-speed-penalty",
+          "type": "denominator-b",
+          "system": "cross-system",
+          "category": "compute-register",
+          "status": "open",
+          "legalBlocking": false,
+          "description": "L6 speed with penalty (encumbrance, armor penalty, condition-based speed reduction) is missing from registers. Add entries and gate tests covering: base speed per species/class, heavy armor speed penalty, encumbered/heavily encumbered reductions, prone/restrained/grappled speed interactions.",
+          "estimatedItems": null,
+          "source": "ground-truth: denominator-b"
+        },
+        {
+          "id": "denb-l7-asi-feat-cadence",
+          "type": "denominator-b",
+          "system": "cross-system",
+          "category": "compute-register",
+          "status": "open",
+          "legalBlocking": false,
+          "description": "L7 ASI/feat cadence is missing from registers for some systems. Add register entries and gate tests covering: which class levels grant ASI/feat choices, bonus ASI for fighters/rogues, the multiclass restriction (must qualify per class table), and feat prerequisites.",
+          "estimatedItems": null,
+          "source": "ground-truth: denominator-b"
+        },
+        {
+          "id": "denb-l8-resist-vuln-immune",
+          "type": "denominator-b",
+          "system": "cross-system",
+          "category": "compute-register",
+          "status": "open",
+          "legalBlocking": false,
+          "description": "L8 resist/vuln/immune is missing from registers for non-Daggerheart systems. Daggerheart already has L8 coverage (6/6 verified). Add entries and gate tests for dnd-5e-2014 (1 gap), dnd-5e-2024 (1 gap), and all other systems covering: damage resistance halving, vulnerability doubling, immunity bypass, condition immunities, and interaction order.",
+          "estimatedItems": null,
+          "source": "ground-truth: denominator-b; roadmap-metrics.json computeCompletion byLayer L8"
+        },
+        {
+          "id": "denb-l9-point-buy-prereqs-multiclass",
+          "type": "denominator-b",
+          "system": "cross-system",
+          "category": "compute-register",
+          "status": "open",
+          "legalBlocking": false,
+          "description": "L9 point-buy/prereqs/multiclass validators are missing from registers. Add entries and gate tests covering: standard array vs point-buy equivalence, ability score minimum for multiclassing (e.g. STR 13 for Fighter), multiclass proficiency rules (only first-level proficiencies granted), and cross-system prerequisite validators.",
+          "estimatedItems": null,
+          "source": "ground-truth: denominator-b"
+        },
+        {
+          "id": "denb-l10-dnd35e-encounter-budget",
+          "type": "denominator-b",
+          "system": "dnd-3.5e",
+          "category": "compute-register",
+          "status": "open",
+          "legalBlocking": false,
+          "description": "L10 encounter budget for D&D 3.5e is missing from registers. Add register entries and gate tests covering: CR to EL conversion, party-size XP adjustments, treasure per encounter (gold piece values by CR), and mixed-CR encounter EL calculation.",
+          "estimatedItems": null,
+          "source": "ground-truth: denominator-b"
+        },
+        {
+          "id": "denb-rfc003-effect-resolver-consolidate",
+          "type": "denominator-b",
+          "system": "cross-system",
+          "category": "compute-register",
+          "status": "open",
+          "legalBlocking": false,
+          "description": "RFC 003 (effect resolver) is not unbuilt — logic is distributed across contributionLedger.ts, armorClass.ts, and conditions modules. Phase 2 work is to consolidate into a unified effect resolver interface. Register entries that depend on effect ordering (e.g. resistance applied before vulnerability) must be re-verified after consolidation.",
+          "estimatedItems": null,
+          "source": "ground-truth: denominator-b; docs/rfc/003-rules-ir-and-effects.md; src/engine/contributionLedger.ts; src/engine/armorClass.ts"
+        }
+      ]
+    }
+  ]
+}

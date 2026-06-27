@@ -15,6 +15,8 @@
     "runtime:doctor": "node scripts/runtime-doctor.mjs",
     "build": "npm run node:check && tsc && vite build",
     "check:bundle-size": "node scripts/check-bundle-size.mjs",
+    "check:compute-register": "npm run node:check && node scripts/check-compute-register.mjs",
+    "check:legal-notices": "npm run node:check && node scripts/check-legal-notices.mjs",
     "check:doc-drift": "npm run node:check && tsx scripts/check-doc-drift.mjs",
     "check:generated-docs": "npm run node:check && node scripts/check-generated-docs.mjs",
     "check:repo-hygiene": "npm run node:check && node scripts/check-repo-hygiene.mjs",

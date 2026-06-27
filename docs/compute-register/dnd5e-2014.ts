@@ -176,7 +176,7 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       source: `${SRD}: Fighter — Extra Attack`,
       status: 'verified',
       testRef:
-        'src/__tests__/rules/characterCombatant.test.ts :: Extra Attack scales attacksPerRound',
+        'src/__tests__/rules/characterCombatant.test.ts :: 5e Extra Attack in scene combat (phase 4)',
     },
     {
       id: 'dnd5e2014.L3.rage-damage',
@@ -187,7 +187,7 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       edgeCases: ['barbarian 9 → +3', 'toggle without feature → no effect'],
       source: `${SRD}: Barbarian — Rage`,
       status: 'verified',
-      testRef: 'src/__tests__/rules/characterCombatant.test.ts :: 5e rider toggles in scene combat',
+      testRef: 'src/__tests__/rules/characterCombatant.test.ts :: 5e rider toggles in scene combat (phase 4)',
       note: 'Manual boundary: melee Strength attacks only (rider note travels with the effect).',
     },
     {
@@ -199,7 +199,7 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       edgeCases: ['feat-gated: toggle without feat → no effect'],
       source: `${SRD}: Feats — Great Weapon Master`,
       status: 'verified',
-      testRef: 'src/__tests__/rules/characterCombatant.test.ts :: 5e rider toggles in scene combat',
+      testRef: 'src/__tests__/rules/characterCombatant.test.ts :: 5e rider toggles in scene combat (phase 4)',
       note: 'Manual boundary: heavy melee weapons only.',
     },
     {
@@ -224,7 +224,7 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       edgeCases: ['rogue 1 → 1d6', 'rogue 20 → 10d6'],
       source: `${SRD}: Rogue — Sneak Attack`,
       status: 'verified',
-      testRef: 'src/__tests__/rules/characterCombatant.test.ts :: 5e rider toggles in scene combat',
+      testRef: 'src/__tests__/rules/characterCombatant.test.ts :: 5e rider toggles in scene combat (phase 4)',
       note: 'Manual boundary: once per turn, advantage or adjacent-ally positioning asserted by the toggle.',
     },
     {
