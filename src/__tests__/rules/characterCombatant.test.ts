@@ -571,6 +571,13 @@ describe('PF2e rider toggles in scene combat', () => {
   });
 });
 
+describe('5e sneak attack dice (phase 4)', () => {
+  it('scale at ceil(rogue level / 2)', async () => {
+    const { sneakAttackDice } = await import('../../rules/conditions/dnd5eRiders');
+    expect([1, 2, 3, 4, 5, 11, 20].map(sneakAttackDice)).toEqual([1, 1, 2, 2, 3, 6, 10]);
+  });
+});
+
 describe('PF1e Power Attack rider', () => {
   it('compiles the formula-fixed trade and scales with BAB', async () => {
     const { pf1ePowerAttackTrade, collectD20LegacyRiderEffects, availableD20LegacyToggles } =

@@ -30,6 +30,9 @@ docs/api
 spell-report.txt
 playwright-report/
 test-results/
+# Transient per-run diagnostic from check:compute-register (Tier A vs A+B content
+# differs per flag); the committed honest metric is docs/generated/roadmap-metrics.*.
+docs/generated/compute-register-gate.json
 
 # Repo-pinned Node runtime files and local runtime cache
 .cache/node-dist/
