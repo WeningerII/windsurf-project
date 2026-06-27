@@ -29,14 +29,16 @@ by normalized name, each scoped to the policy's `allowedSources`) — real cover
 unlike the loader-derived `docs/srd-manifest/`.
 
 **Measured (live numbers in `docs/generated/srd-coverage.md`):**
-- **5e-2014:** spells 214/319 (67%), monsters 38/334 (11%), equipment 189/598 (32%),
-  classes 12/12, species 9/9. **5e-2024:** spells 283/319 (89%), feats 12/17,
-  species 7/9, equipment 145/443 (33%).
-- **PF2e:** Core spells 129/537 (24%). **PF1e:** Core spells 131/623 (21%).
+- **5e-2014:** spells 319/319 (100%), monsters 334/334 (100%), equipment 597/598 (99.8%),
+  classes 12/12, species 9/9. **5e-2024:** spells 339/339 (100%), feats 17/17,
+  species 9/9, equipment 443/443 (100%), monsters 329/330 (99.7%).
+- **PF2e:** spells 537/537 (100%), feats 814/814 (100%), monsters 413/413 (100%),
+  backgrounds 35/35 (100%), equipment 464/467 (99.4%). **PF1e:** spells 622/623 (99.8%),
+  feats 176/176 (100%), monsters 331/346 (95.7%).
 - **M&M 3e:** powers 40/40, advantages 73/73 — **genuinely complete.**
 - **Daggerheart:** domain cards 189/189, domains 9/9 — **genuinely complete.**
-- So two non-5e systems (M&M, Daggerheart) are at true 100% independent coverage on
-  the wired categories; the Pathfinder/5e *spell* catalogs carry real gaps.
+- All four spell-heavy systems (PF2e, PF1e, 5e-2014/2024, 3.5e) are now at ~100% spell
+  coverage; the real residual gaps are non-spell (3.5e/PF1e monsters, M&M equipment).
 - **Provenance — feats/backgrounds [REMEDIATED]:** the loaders shipped PHB feats
   and backgrounds mislabeled with an SRD source tag (SRD 5.1 has only Acolyte +
   Grappler; SRD 5.2 has 4 backgrounds + 17 feats). The non-SRD entries were
@@ -66,13 +68,16 @@ unlike the loader-derived `docs/srd-manifest/`.
 **Still to do (sources in `docs/srd-sources.md`):**
 - **D&D 3.5e** is now wired [DONE]: the psionics/epic-mixed `Rughalt/D35E` packs were
   rejected in favor of the clean core-only `olimot/srd-v3.5-md` Markdown chapters,
-  giving spells 604/605 (99.8%) and a wired monster row (its % understates real
-  coverage — the denominator counts the SRD's category headings). Remaining 3.5e
-  categories (classes/feats/equipment) are still unwired pending core-only sources.
-- Wire the remaining categories (PF2e/PF1e non-spell, M&M skills/conditions/
-  equipment, Daggerheart classes/ancestries/communities/weapons/armor, all monsters).
-- Remediate under-covered categories (encode missing SRD entries — e.g. PF2e/PF1e/5e
-  spells) and the provenance over-inclusion (re-source or re-scope mislabeled entries).
+  giving spells 604/605 (99.8%), feats 110/110 (100%), and equipment 152/152 (100%),
+  now all wired against the pinned core-only roster. The 3.5e monster row is wired but
+  sits at 292/364 (80.2%) — a genuine remaining gap (some of the shortfall is the
+  age/size-variant denominator shape-mismatch tracked in the Master Gap Ledger).
+- Remaining content gaps are now narrow and enumerated in
+  `docs/generated/master-gap-ledger.json`: D&D 3.5e monsters 80.2%, PF1e monsters
+  95.7%, M&M equipment 39.8%, plus a handful of 1–3 item naming/typo gaps. Most
+  categories across all 7 systems are at 100% (see `docs/generated/srd-coverage.md`).
+- Remediate the remaining under-covered categories (encode the genuinely-missing SRD
+  entries) and keep the provenance reverse-diff guard green.
 - Decide whether to fold genuine coverage into the headline metric / replace the
   loader-mirror `docs/srd-manifest/` numbers.
 
