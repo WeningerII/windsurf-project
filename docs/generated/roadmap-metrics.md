@@ -1,4 +1,4 @@
-_Generated: 2026-06-26T03:09:53.744Z_
+_Generated: 2026-06-28T12:19:39.503Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -9,7 +9,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | D&D 3.5e | 610 | 26 | 7 | 0 | 0 | 0 | 292 | 265 | 118 | 0 |
 | Pathfinder 1e | 625 | 18 | 7 | 0 | 12 | 0 | 331 | 70 | 177 | 0 |
 | Pathfinder 2e | 551 | 12 | 6 | 35 | 0 | 0 | 413 | 622 | 814 | 0 |
-| Mutants & Masterminds 3e | 61 | 0 | 0 | 0 | 0 | 0 | 0 | 140 | 0 | 74 |
+| Mutants & Masterminds 3e | 61 | 0 | 0 | 0 | 0 | 0 | 0 | 208 | 0 | 74 |
 | Daggerheart | 0 | 9 | 19 | 9 | 0 | 0 | 0 | 353 | 0 | 0 |
 
 ### Extended Loader Totals (Product-Reachable)
@@ -65,7 +65,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | Mutants & Masterminds 3e | Spells/Powers | 61 | 0 | 0 | 0 |
 | Mutants & Masterminds 3e | Archetypes | 15 | 0 | 0 | 0 |
 | Mutants & Masterminds 3e | Complications | 28 | 0 | 0 | 0 |
-| Mutants & Masterminds 3e | Equipment | 140 | 0 | 0 | 0 |
+| Mutants & Masterminds 3e | Equipment | 208 | 0 | 0 | 0 |
 | Mutants & Masterminds 3e | Advantages | 74 | 0 | 0 | 0 |
 | Mutants & Masterminds 3e | Power Modifiers | 99 | 0 | 0 | 0 |
 | Daggerheart | Classes | 9 | 0 | 0 | 0 |
@@ -162,5 +162,5 @@ _Share of each system's loader-backed entries that are source-tagged AND open-co
 | D&D 3.5e | 1318 | 1318 | 100% |
 | Pathfinder 1e | 1240 | 1240 | 100% |
 | Pathfinder 2e | 2458 | 2458 | 100% |
-| Mutants & Masterminds 3e | 417 | 417 | 100% |
+| Mutants & Masterminds 3e | 485 | 485 | 100% |
 | Daggerheart | 390 | 390 | 100% |
