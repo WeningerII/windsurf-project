@@ -43,6 +43,8 @@ export interface TacticalTurnInput {
   cause?: string;
   /** Hit/crit model for every attack this turn (default 'd20'). */
   degreeModel?: 'd20' | 'pf2e';
+  /** Critical-damage model for every attack this turn (default 'double-dice'). */
+  critModel?: 'double-dice' | 'confirm-multiply';
 }
 
 export type TacticalDecisionKind = 'attack' | 'move-to-engage' | 'no-target';
@@ -219,6 +221,7 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
       targetValue: target.armorClass,
       critOn: actor.critOn,
       degreeModel: input.degreeModel,
+      critModel: input.critModel,
       rng: rngFor(currentTargetId),
     });
 

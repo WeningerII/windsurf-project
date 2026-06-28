@@ -65,6 +65,30 @@ export function pf1eManeuverSucceeds(cmbCheckTotal: number, targetCMD: number): 
   return cmbCheckTotal >= targetCMD;
 }
 
+/**
+ * SRD 3.5e / PF1e critical confirmation: a natural threat is only a critical hit
+ * if a second attack roll — the confirmation roll, made with the same attack
+ * bonus — also meets or beats the target's AC. Returns whether it confirms.
+ * (Unlike 5e, where a natural 20 auto-crits with no confirmation.)
+ */
+export function d20CriticalConfirmed(confirmationTotal: number, armorClass: number): boolean {
+  return confirmationTotal >= armorClass;
+}
+
+/**
+ * SRD 3.5e / PF1e confirmed-critical damage: the weapon's normal damage is
+ * multiplied by its critical multiplier (×2 default; ×3/×4 for some weapons).
+ * Extra dice from special abilities (sneak attack, flaming burst, …) are added
+ * once and NOT multiplied — they ride through `unmultipliedExtra`.
+ */
+export function d20CriticalDamage(
+  normalDamage: number,
+  multiplier: number,
+  unmultipliedExtra = 0
+): number {
+  return normalDamage * Math.max(1, Math.floor(multiplier)) + unmultipliedExtra;
+}
+
 // ─── D&D 5e ────────────────────────────────────────────────────────────────
 
 /** Barbarian Unarmored Defense = 10 + Dex mod + Con mod (no armor). */

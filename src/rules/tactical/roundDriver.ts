@@ -79,6 +79,8 @@ export interface RunRoundInput {
   round: number;
   /** Hit/crit model for the whole round (default 'd20'). */
   degreeModel?: 'd20' | 'pf2e';
+  /** Critical-damage model for the whole round (default 'double-dice'). */
+  critModel?: 'double-dice' | 'confirm-multiply';
 }
 
 function toActor(combatant: RoundCombatant): TacticalActor {
@@ -177,6 +179,7 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
       targets,
       seed: `${input.seed}::round${input.round}::turn${turnIndex}`,
       degreeModel: input.degreeModel,
+      critModel: input.critModel,
     });
 
     // Movement executed this turn: update the working position so later

@@ -127,6 +127,20 @@ export const pf1eComputeRegister: SystemComputeRegister = {
       note: 'Scene-wired: buildCharacterCombatant derives attacksPerRound/iterativePenaltyStep from BAB and the tactical executor applies the cumulative -5 (src/__tests__/rules/characterCombatant.test.ts :: legacy-d20 iterative attacks).',
     },
     {
+      id: 'pf1e.L3.crit-confirmation',
+      layer: 'L3',
+      quantity: 'Critical hit confirmation and multiplier',
+      formula:
+        'a natural threat confirms on a second attack roll (same bonus) vs AC; confirmed damage = normal damage × the weapon crit multiplier (×2 default), extra dice not multiplied',
+      inputs: ['threat', 'attack bonus', 'AC', 'critical multiplier'],
+      edgeCases: ['unconfirmed threat = ordinary hit', 'extra dice (sneak attack) not multiplied'],
+      source: `${CRB}: Combat — Critical Hits`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/rules/attackResolution.test.ts :: a confirmed threat multiplies normal damage by the weapon multiplier',
+      note: 'Scene-wired: resolveAttack rolls the confirmation d20 from the same seeded stream and applies d20CriticalDamage when critModel is "confirm-multiply" — selected for 3.5e/PF1e by sceneCombat (replacing the 5e double-dice default).',
+    },
+    {
       id: 'pf1e.L3.maneuver-types',
       layer: 'L3',
       quantity: 'Specific combat maneuvers (trip/disarm/grapple/etc.) vs CMD',

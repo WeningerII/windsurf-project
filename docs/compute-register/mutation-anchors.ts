@@ -167,6 +167,14 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'data.grapple = totalBAB + strMod + grappleSizeMod;',
     replace: 'data.grapple = totalBAB + strMod + grappleSizeMod + 1;',
   },
+  // Confirmed-crit damage = normal × multiplier (+ unmultiplied extra). Shared
+  // d20CriticalDamage helper backs both 3.5e and pf1e crit-confirmation; the gate
+  // dedups this find across them.
+  'dnd35e.L3.crit-confirmation': {
+    file: 'src/utils/derivedCombatMath.ts',
+    find: 'return normalDamage * Math.max(1, Math.floor(multiplier)) + unmultipliedExtra;',
+    replace: 'return normalDamage * Math.max(1, Math.floor(multiplier)) + unmultipliedExtra + 1;',
+  },
 
   // ── pf1e (shares d20 helpers + legacy AC with 3.5e) ──
   'pf1e.L2.ac': {
@@ -207,6 +215,12 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     file: 'src/utils/derivedCombatMath.ts',
     find: 'return cmbCheckTotal >= targetCMD;',
     replace: 'return cmbCheckTotal > targetCMD;',
+  },
+  // Shares d20CriticalDamage with 3.5e crit-confirmation (deduped by the gate).
+  'pf1e.L3.crit-confirmation': {
+    file: 'src/utils/derivedCombatMath.ts',
+    find: 'return normalDamage * Math.max(1, Math.floor(multiplier)) + unmultipliedExtra;',
+    replace: 'return normalDamage * Math.max(1, Math.floor(multiplier)) + unmultipliedExtra + 1;',
   },
 
   // ── pf2e ──

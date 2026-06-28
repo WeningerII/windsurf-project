@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-28T15:24:53.780Z",
+  "generatedAt": "2026-06-28T16:49:02.261Z",
   "summary": {
     "total": 23,
     "byStatus": {
@@ -246,7 +246,7 @@
       "phase": 3,
       "track": "B-compute",
       "title": "Mutation-anchor rollout (verified → mutation-proven)",
-      "detail": "check:compute-register --mutate proves 42 of the 184 verified entries today: proficiency/AC/saves, 5e spell save DC + attack, the full L3 damage-assembly set (5e riders rage/Divine Smite/GWM/Sharpshooter/Extra Attack, 3.5e/PF1e iteratives, M&M attack/resistance/affliction/critical/degrees DCs, Daggerheart weapon/critical/Spellcast damage dice), and the d20 offense leaves (3.5e/PF1e BAB tracks, grapple, CMB, CMD, maneuver resolution; PF2e MAP, striking runes, attack modifier). Author a real formula mutation anchor per remaining verified entry so \"verified\" graduates from test-linked (Tier A) to mutation-proven across all systems.",
+      "detail": "check:compute-register --mutate proves 44 of the 186 verified entries today: proficiency/AC/saves, 5e spell save DC + attack, the full L3 damage-assembly set (5e riders rage/Divine Smite/GWM/Sharpshooter/Extra Attack, 3.5e/PF1e iteratives + crit confirmation, M&M attack/resistance/affliction/critical/degrees DCs, Daggerheart weapon/critical/Spellcast damage dice), and the d20 offense leaves (3.5e/PF1e BAB tracks, grapple, CMB, CMD, maneuver resolution; PF2e MAP, striking runes, attack modifier). Author a real formula mutation anchor per remaining verified entry so \"verified\" graduates from test-linked (Tier A) to mutation-proven across all systems.",
       "status": "in-progress",
       "tags": [
         "rollout",
@@ -259,12 +259,12 @@
       "phase": 3,
       "track": "B-compute",
       "title": "L3 — full damage assembly with riders",
-      "detail": "Sneak Attack / Rage / Divine Smite / GWM / Sharpshooter / two-weapon / versatile / Extra Attack counts; 3.5e/PF1e iteratives + crit confirmation; Daggerheart crit damage + Spellcast dice; M&M Damage/Affliction DCs — rolled through the unified dice substrate + resolver add-die.",
+      "detail": "Sneak Attack / Rage / Divine Smite / GWM / Sharpshooter / Extra Attack counts, 3.5e/PF1e iteratives + crit confirmation, Daggerheart crit damage + Spellcast dice, and M&M Damage/Affliction DCs are wired through the seeded dice substrate + resolver and mutation-proven. REMAINING: two-weapon and versatile damage, which need the weapon-data-driven 5e damage path first — buildCharacterCombatant still rolls a baseline weaponDie default, not the equipped weapon dice.",
       "status": "pending",
       "tags": [
         "engineering"
       ],
-      "evidence": "docs/compute-register/*; src/rules/dice.ts (substrate ready)"
+      "evidence": "docs/compute-register/* (L3 entries mutation-proven); src/rules/resolver/attackResolution.ts (crit confirmation); src/__tests__/rules/attackResolution.test.ts"
     },
     {
       "id": "p3.derived-and-economy",
