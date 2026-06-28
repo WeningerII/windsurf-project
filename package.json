@@ -41,7 +41,9 @@
     "enhance": "tsx src/scripts/enhance-classes.ts",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx}\"",
-    "verify": "npm run node:check && npm run lint && npm run typecheck:test && npm run typecheck:netlify && npm run format:check && npm run test:coverage -- --run --maxWorkers=1 && npm run validate && npm run build && npm run check:bundle-size && npm run test:e2e && npm run check:repo-hygiene && npm run check:generated-docs && npm run check:doc-drift && npm run check:dead-code"
+    "verify": "npm run node:check && npm run lint && npm run typecheck:test && npm run typecheck:netlify && npm run format:check && npm run test:coverage -- --run --maxWorkers=1 && npm run validate && npm run build && npm run check:bundle-size && npm run test:e2e && npm run check:repo-hygiene && npm run check:generated-docs && npm run check:doc-drift && npm run check:dead-code && npm run check:compute-register && npm run check:legal-notices",
+    "legal:fetch": "node scripts/fetch-legal-texts.mjs",
+    "measure:user-outcome": "node scripts/measure-user-outcome.mjs"
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.83",

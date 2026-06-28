@@ -37,6 +37,9 @@ const CharacterCreator = lazy(() =>
     default: m.CharacterCreator,
   }))
 );
+// Lazy-loaded: the in-app Legal/licenses page bundles the verbatim OGL 1.0a +
+// CC-BY-4.0 texts (~30 KB) and is rarely opened, so it stays out of first paint.
+const LegalNotices = lazy(() => import('./components/LegalNotices'));
 import { useScenes } from './hooks/useScenes';
 import { prefetchSystemAssetsForIds } from './utils/systemAssetPrefetch';
 import { usePwaInstallPrompt } from './hooks/usePwaInstallPrompt';
@@ -101,6 +104,8 @@ function AppContent() {
   const [selectedSystem, setSelectedSystem] = useState<GameSystemId | null>(null);
   // Non-null while the character creator is open (for that system).
   const [creatingSystem, setCreatingSystem] = useState<GameSystemId | null>(null);
+  // Full-screen Legal & Licenses overlay (reached from the footer).
+  const [showLegal, setShowLegal] = useState(false);
 
   const [systemFilter, setSystemFilter] = useState<GameSystemId | 'all'>('all');
   const [sortOption, setSortOption] = useState<CharacterSortOption>('updated-desc');
@@ -734,8 +739,24 @@ function AppContent() {
             Built for tabletop RPG enthusiasts &bull; Supports D&amp;D, Pathfinder, M&amp;M, and
             more
           </p>
+          <p className="mt-2">
+            <button
+              type="button"
+              onClick={() => setShowLegal(true)}
+              className="underline hover:no-underline"
+            >
+              Legal &amp; Licenses
+            </button>
+          </p>
         </div>
       </footer>
+      {showLegal && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-background">
+          <Suspense fallback={null}>
+            <LegalNotices onClose={() => setShowLegal(false)} />
+          </Suspense>
+        </div>
+      )}
       <ConfirmDialog
         open={confirmDialog.open}
         title={confirmDialog.title}
