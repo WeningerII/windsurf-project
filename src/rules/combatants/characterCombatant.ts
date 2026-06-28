@@ -39,7 +39,7 @@ import { collectDnd5eRiderEffects } from '../conditions/dnd5eRiders';
 import { collectPf2eRiderEffects } from '../conditions/pf2eRiders';
 import { collectD20LegacyConditionEffects } from '../conditions/d20LegacyConditions';
 import { collectD20LegacyRiderEffects } from '../conditions/d20LegacyRiders';
-import { dnd5eVersatileDamageDie } from '../../utils/derivedCombatMath';
+import { dnd5eVersatileDamageDie, dnd5eOffHandDamageMod } from '../../utils/derivedCombatMath';
 import {
   compileEquipmentEffects,
   compileModifierEffects,
@@ -80,6 +80,12 @@ export interface CharacterCombatant {
   faction: string;
   attackEffects: EffectInstance[];
   damageEffects: EffectInstance[];
+  /**
+   * Optional 5e two-weapon bonus attack: the off-hand light weapon's attack and
+   * damage. Its damage omits the ability modifier (SRD) unless the Two-Weapon
+   * Fighting style is active. Resolved once after the main Attack-action attacks.
+   */
+  offHandAttack?: { attackEffects: EffectInstance[]; damageEffects: EffectInstance[] };
   reach: number;
   armorClass: number;
 }
@@ -377,6 +383,62 @@ export function buildCharacterCombatant(
     },
   ];
 
+  // 5e Two-Weapon Fighting: an equipped off-hand LIGHT weapon grants a bonus
+  // attack whose damage uses the off-hand weapon's dice but OMITS the ability
+  // modifier (SRD) unless the Two-Weapon Fighting style is active. Built as a
+  // separate profile so the executor resolves it after the Attack-action attacks.
+  const offHandWeapon = is5e
+    ? sheet.equipment.find(
+        (item) =>
+          item.slot === 'offHand' &&
+          item.weaponDamage &&
+          (item.weaponProperties ?? []).includes('light')
+      )
+    : undefined;
+  const hasTwoWeaponFightingStyle =
+    sheet.features.some((feature) => /two-weapon-fighting/.test(feature.id)) ||
+    sheet.feats.some((feat) => /two-weapon-fighting/.test(feat.id));
+  const offHandAttack = offHandWeapon?.weaponDamage
+    ? {
+        attackEffects,
+        damageEffects: [
+          ...Array.from(
+            { length: Math.max(1, offHandWeapon.weaponDamage.count) },
+            (_unused, index) => ({
+              id: `${systemId}:offhand:die:${document.id}:${index}`,
+              systemId,
+              target: 'damage' as const,
+              operation: 'add-die' as const,
+              value: offHandWeapon.weaponDamage!.die,
+              stackPolicy: 'sum' as const,
+              source: {
+                kind: 'custom' as const,
+                id: document.id,
+                label: `${document.name} off-hand`,
+              },
+              label: `1d${offHandWeapon.weaponDamage!.die} (off-hand)`,
+              category: 'other' as const,
+            })
+          ),
+          {
+            id: `${systemId}:offhand:mod:${document.id}`,
+            systemId,
+            target: 'damage' as const,
+            operation: 'add' as const,
+            value: dnd5eOffHandDamageMod(str, hasTwoWeaponFightingStyle),
+            stackPolicy: 'sum' as const,
+            source: {
+              kind: 'custom' as const,
+              id: document.id,
+              label: `${document.name} off-hand`,
+            },
+            label: 'Off-hand ability mod',
+            category: 'other' as const,
+          },
+        ],
+      }
+    : undefined;
+
   return {
     supported: true,
     combatant: {
@@ -394,6 +456,7 @@ export function buildCharacterCombatant(
       faction: options.faction ?? 'party',
       attackEffects: [...attackEffects, ...riderEffects.filter((e) => e.target === 'attack')],
       damageEffects: [...damageEffects, ...riderEffects.filter((e) => e.target === 'damage')],
+      ...(offHandAttack ? { offHandAttack } : {}),
       reach: options.reach ?? 1,
       armorClass: sheet.armorClass,
       // 5e Extra Attack: each granted 'extra-attack*' class feature adds one

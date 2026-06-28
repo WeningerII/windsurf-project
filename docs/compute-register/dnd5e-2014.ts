@@ -255,6 +255,24 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
         'src/__tests__/rules/characterCombatant.test.ts :: 5e Versatile: rolls the larger die when wielded two-handed (empty off-hand)',
       note: 'Engine-wired (Denominator B): buildCharacterCombatant consumes the equipped main-hand weapon’s dice via dnd5eVersatileDamageDie. Populating EquippedItem.weaponDamage from a weapon catalog at equip time is a separate Denominator-A content step.',
     },
+    {
+      id: 'dnd5e2014.L3.two-weapon-offhand',
+      layer: 'L3',
+      quantity: 'Two-weapon off-hand attack damage',
+      formula:
+        'bonus attack with an off-hand light weapon; its damage omits the ability modifier unless the Two-Weapon Fighting style is active (a negative modifier still applies)',
+      inputs: ['off-hand light weapon', 'ability mod', 'TWF style'],
+      edgeCases: [
+        'no off-hand light weapon → no bonus attack',
+        'TWF style adds the ability mod',
+        'negative modifier still applies',
+      ],
+      source: `${SRD}: Combat — Two-Weapon Fighting`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/rules/characterCombatant.test.ts :: grants an off-hand attack whose damage omits the ability modifier',
+      note: 'Engine-wired: buildCharacterCombatant builds the off-hand attack profile via dnd5eOffHandDamageMod and threads it to the tactical executor, which resolves it once after the Attack-action attacks. Populating EquippedItem.weaponDamage at equip time is a separate Denominator-A content step.',
+    },
 
     // ── L4 skills & derived checks ──
     {

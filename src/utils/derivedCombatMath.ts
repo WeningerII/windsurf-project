@@ -114,6 +114,19 @@ export function dnd5eVersatileDamageDie(
   return wieldedTwoHanded && versatileDie != null ? versatileDie : baseDie;
 }
 
+/**
+ * SRD 5e Two-Weapon Fighting: you don't add your ability modifier to the bonus
+ * (off-hand) attack's damage — unless that modifier is negative (a penalty still
+ * applies), or you have the Two-Weapon Fighting *style*, which lets you add it.
+ * Returns the ability-mod contribution to off-hand damage.
+ */
+export function dnd5eOffHandDamageMod(
+  abilityMod: number,
+  hasTwoWeaponFightingStyle: boolean
+): number {
+  return hasTwoWeaponFightingStyle ? abilityMod : Math.min(0, abilityMod);
+}
+
 // ─── Pathfinder 2e ───────────────────────────────────────────────────────
 
 /** Multiple attack penalty for the n-th attack this turn (agile reduces it). */

@@ -227,7 +227,7 @@ export const MASTER_GAP_LEDGER: readonly GapLedgerItem[] = [
     track: 'B-compute',
     title: 'Mutation-anchor rollout (verified → mutation-proven)',
     detail:
-      'check:compute-register --mutate proves 46 of the 188 verified entries today: proficiency/AC/saves, 5e spell save DC + attack, the full L3 damage-assembly set (5e riders rage/Divine Smite/GWM/Sharpshooter/Extra Attack + Versatile weapon die, 3.5e/PF1e iteratives + crit confirmation, M&M attack/resistance/affliction/critical/degrees DCs, Daggerheart weapon/critical/Spellcast damage dice), and the d20 offense leaves (3.5e/PF1e BAB tracks, grapple, CMB, CMD, maneuver resolution; PF2e MAP, striking runes, attack modifier). Author a real formula mutation anchor per remaining verified entry so "verified" graduates from test-linked (Tier A) to mutation-proven across all systems.',
+      'check:compute-register --mutate proves 48 of the 190 verified entries today: proficiency/AC/saves, 5e spell save DC + attack, the full L3 damage-assembly set (5e riders rage/Divine Smite/GWM/Sharpshooter/Extra Attack + Versatile weapon die + two-weapon off-hand, 3.5e/PF1e iteratives + crit confirmation, M&M attack/resistance/affliction/critical/degrees DCs, Daggerheart weapon/critical/Spellcast damage dice), and the d20 offense leaves (3.5e/PF1e BAB tracks, grapple, CMB, CMD, maneuver resolution; PF2e MAP, striking runes, attack modifier). Author a real formula mutation anchor per remaining verified entry so "verified" graduates from test-linked (Tier A) to mutation-proven across all systems.',
     status: 'in-progress',
     tags: ['rollout', 'engineering'],
     evidence: 'docs/compute-register/mutation-anchors.ts; check:compute-register:mutate',
@@ -238,11 +238,11 @@ export const MASTER_GAP_LEDGER: readonly GapLedgerItem[] = [
     track: 'B-compute',
     title: 'L3 — full damage assembly with riders',
     detail:
-      'Sneak Attack / Rage / Divine Smite / GWM / Sharpshooter / Extra Attack counts, 3.5e/PF1e iteratives + crit confirmation, Daggerheart crit damage + Spellcast dice, M&M Damage/Affliction DCs, and 5e Versatile weapon dice are wired through the seeded dice substrate + resolver/combatant and mutation-proven. buildCharacterCombatant now consumes the equipped main-hand weapon dice (EquippedItem.weaponDamage) with a placeholder fallback. REMAINING: two-weapon (off-hand attack + no-ability-mod damage); and Denominator-A population of EquippedItem.weaponDamage from a weapon catalog at equip time.',
-    status: 'pending',
+      'Denominator-B engine wiring complete: Sneak Attack / Rage / Divine Smite / GWM / Sharpshooter / Extra Attack, 3.5e/PF1e iteratives + crit confirmation, Daggerheart crit damage + Spellcast dice, M&M Damage/Affliction DCs, 5e Versatile weapon dice, and two-weapon off-hand attacks all assemble through the seeded dice substrate + resolver/combatant and are mutation-proven. buildCharacterCombatant consumes equipped weapon dice (EquippedItem.weaponDamage) and builds the off-hand profile (resolved by the tactical executor); a placeholder die remains the fallback. SEPARATE follow-on (Denominator-A content, not B-compute): populating EquippedItem.weaponDamage from a weapon catalog at equip time so these fire for real saved characters.',
+    status: 'done',
     tags: ['engineering'],
     evidence:
-      'docs/compute-register/* (L3 entries mutation-proven); src/rules/resolver/attackResolution.ts (crit confirmation); src/rules/combatants/characterCombatant.ts (weapon dice + Versatile); src/__tests__/rules/{attackResolution,characterCombatant}.test.ts',
+      'docs/compute-register/* (L3 entries mutation-proven); src/rules/resolver/attackResolution.ts (crit confirmation); src/rules/combatants/characterCombatant.ts (weapon dice + Versatile + off-hand); src/rules/tactical/tacticalExecutor.ts (off-hand resolution); src/__tests__/rules/{attackResolution,characterCombatant}.test.ts',
   },
   {
     id: 'p3.derived-and-economy',

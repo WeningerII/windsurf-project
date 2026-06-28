@@ -33,6 +33,11 @@ export interface RoundCombatant {
   hp: { current: number; max: number };
   attackEffects: readonly EffectInstance[];
   damageEffects: readonly EffectInstance[];
+  /** Optional 5e two-weapon off-hand bonus attack (its own damage profile). */
+  offHandAttack?: {
+    attackEffects: readonly EffectInstance[];
+    damageEffects: readonly EffectInstance[];
+  };
   reach?: number;
   critOn?: number;
   /** Attacks per turn (SRD Multiattack). Default 1. */
@@ -90,6 +95,7 @@ function toActor(combatant: RoundCombatant): TacticalActor {
     position: combatant.position,
     attackEffects: combatant.attackEffects,
     damageEffects: combatant.damageEffects,
+    ...(combatant.offHandAttack ? { offHandAttack: combatant.offHandAttack } : {}),
     reach: combatant.reach,
     critOn: combatant.critOn,
     attacksPerRound: combatant.attacksPerRound,

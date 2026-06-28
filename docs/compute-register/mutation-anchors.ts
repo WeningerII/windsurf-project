@@ -119,6 +119,14 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'return wieldedTwoHanded && versatileDie != null ? versatileDie : baseDie;',
     replace: 'return wieldedTwoHanded && versatileDie != null ? baseDie : baseDie;',
   },
+  // Off-hand damage omits the ability mod unless the TWF style; forcing it to
+  // always add the mod breaks the no-style test (expects 0). Shared
+  // dnd5eOffHandDamageMod helper serves both 2014 and 2024 (deduped by the gate).
+  'dnd5e2014.L3.two-weapon-offhand': {
+    file: 'src/utils/derivedCombatMath.ts',
+    find: 'return hasTwoWeaponFightingStyle ? abilityMod : Math.min(0, abilityMod);',
+    replace: 'return hasTwoWeaponFightingStyle ? abilityMod : abilityMod;',
+  },
 
   // ── dnd-5e-2024 (reuses the shared 5e leaf helpers) ──
   'dnd5e2024.L1.ability-mod': {
@@ -146,6 +154,12 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     file: 'src/utils/derivedCombatMath.ts',
     find: 'return wieldedTwoHanded && versatileDie != null ? versatileDie : baseDie;',
     replace: 'return wieldedTwoHanded && versatileDie != null ? baseDie : baseDie;',
+  },
+  // Shares dnd5eOffHandDamageMod with 2014 (deduped by the gate).
+  'dnd5e2024.L3.two-weapon-offhand': {
+    file: 'src/utils/derivedCombatMath.ts',
+    find: 'return hasTwoWeaponFightingStyle ? abilityMod : Math.min(0, abilityMod);',
+    replace: 'return hasTwoWeaponFightingStyle ? abilityMod : abilityMod;',
   },
 
   // ── dnd-3.5e ──

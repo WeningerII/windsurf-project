@@ -10,6 +10,7 @@ import {
 import {
   buildCharacterCombatant,
   buildMonsterCombatant,
+  executeTacticalTurn,
   runCombatRound,
   type RoundCombatant,
 } from '../../rules';
@@ -686,5 +687,101 @@ describe('buildCharacterCombatant — equipped weapon damage (versatile)', () =>
   it('falls back to the placeholder die when no weapon data is present', () => {
     const result = buildCharacterCombatant(doc([]), { position: { x: 0, y: 0 } });
     expect(weaponDie(result)).toBe(6); // d6 baseline, unchanged
+  });
+});
+
+describe('buildCharacterCombatant — two-weapon fighting (off-hand)', () => {
+  const mainLight = {
+    itemId: 'shortsword-main',
+    slot: 'mainHand' as const,
+    attuned: false,
+    weaponDamage: { count: 1, die: 6 },
+    weaponProperties: ['light'],
+  };
+  const offLight = {
+    itemId: 'shortsword-off',
+    slot: 'offHand' as const,
+    attuned: false,
+    weaponDamage: { count: 1, die: 6 },
+    weaponProperties: ['light'],
+  };
+
+  function doc(equipment: unknown[], features: unknown[] = []) {
+    return charDoc('dnd-5e-2014', {
+      level: 1,
+      baseAttributes: { str: 16, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+      armorClass: 12,
+      hitPoints: { current: 10, max: 10, temp: 0 },
+      equipment,
+      feats: [],
+      features,
+    });
+  }
+
+  function offHandAbilityMod(result: ReturnType<typeof buildCharacterCombatant>) {
+    if (!result.supported || !result.combatant.offHandAttack) return undefined;
+    return result.combatant.offHandAttack.damageEffects.find((e) => e.operation === 'add')?.value;
+  }
+
+  it('grants an off-hand attack whose damage omits the ability modifier', () => {
+    const result = buildCharacterCombatant(doc([mainLight, offLight]), {
+      position: { x: 0, y: 0 },
+    });
+    expect(result.supported).toBe(true);
+    if (!result.supported) return;
+    expect(result.combatant.offHandAttack).toBeDefined();
+    expect(offHandAbilityMod(result)).toBe(0); // STR +3 NOT added by default
+  });
+
+  it('the Two-Weapon Fighting style adds the ability modifier to off-hand damage', () => {
+    const result = buildCharacterCombatant(
+      doc(
+        [mainLight, offLight],
+        [
+          {
+            id: 'fighting-style-two-weapon-fighting',
+            name: 'Two-Weapon Fighting',
+            source: 'Fighter',
+          },
+        ]
+      ),
+      { position: { x: 0, y: 0 } }
+    );
+    expect(offHandAbilityMod(result)).toBe(3); // STR +3 now added
+  });
+
+  it('no off-hand attack without an equipped off-hand light weapon', () => {
+    const result = buildCharacterCombatant(doc([mainLight]), { position: { x: 0, y: 0 } });
+    if (!result.supported) return;
+    expect(result.combatant.offHandAttack).toBeUndefined();
+  });
+
+  it('the off-hand attack fires as an extra resolved attack in a turn', () => {
+    const built = buildCharacterCombatant(doc([mainLight, offLight]), { position: { x: 0, y: 0 } });
+    if (!built.supported) return;
+    const combatant = built.combatant;
+    const turn = executeTacticalTurn({
+      actor: {
+        tokenId: 'pc-1',
+        faction: 'party',
+        position: { x: 0, y: 0 },
+        attackEffects: combatant.attackEffects,
+        damageEffects: combatant.damageEffects,
+        offHandAttack: combatant.offHandAttack,
+        reach: 1,
+      },
+      targets: [
+        {
+          tokenId: 'goblin',
+          faction: 'monsters',
+          position: { x: 1, y: 0 },
+          armorClass: 5,
+          hp: { current: 50, max: 50 },
+        },
+      ],
+      seed: 'twf-1',
+    });
+    // One Attack-action attack + one off-hand bonus attack.
+    expect(turn.attacks.length).toBe(2);
   });
 });

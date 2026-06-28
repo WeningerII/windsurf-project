@@ -236,6 +236,38 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
     }
   }
 
+  // 5e Two-Weapon Fighting: one bonus-action off-hand attack after the
+  // Attack-action attacks, using the off-hand weapon's own damage profile
+  // (no ability modifier unless the TWF style). Re-targets if the current
+  // target dropped; draws from the same per-target seeded stream.
+  if (actor.offHandAttack && !move) {
+    if (currentTargetId == null || isDown(currentTargetId)) {
+      currentTargetId = scored.find(
+        (candidate) => candidate.inReach && !isDown(candidate.tokenId)
+      )?.tokenId;
+    }
+    if (currentTargetId != null) {
+      const target = targetsById.get(currentTargetId)!;
+      const resolution = resolveAttack({
+        attackEffects: actor.offHandAttack.attackEffects,
+        damageEffects: actor.offHandAttack.damageEffects,
+        targetValue: target.armorClass,
+        critOn: actor.critOn,
+        degreeModel: input.degreeModel,
+        critModel: input.critModel,
+        rng: rngFor(currentTargetId),
+      });
+      const intent = attackToDamageIntent(actor.tokenId, currentTargetId, resolution, input.cause);
+      attacks.push({ targetId: currentTargetId, resolution, intent });
+      if (resolution.isHit && workingHp.has(currentTargetId)) {
+        workingHp.set(
+          currentTargetId,
+          Math.max(0, workingHp.get(currentTargetId)! - resolution.damage)
+        );
+      }
+    }
+  }
+
   const first = attacks[0];
   const hits = attacks.filter((attack) => attack.resolution.isHit);
   const totalDamage = hits.reduce((sum, attack) => sum + attack.resolution.damage, 0);

@@ -164,6 +164,24 @@ export const dnd5e2024ComputeRegister: SystemComputeRegister = {
       note: 'Engine-wired in the shared, system-agnostic buildCharacterCombatant (the 2024 path inherits it via the same is5e branch as 2014). Populating EquippedItem.weaponDamage at equip time is a separate Denominator-A content step.',
     },
     {
+      id: 'dnd5e2024.L3.two-weapon-offhand',
+      layer: 'L3',
+      quantity: 'Two-weapon off-hand attack damage',
+      formula:
+        'bonus attack with an off-hand light weapon; its damage omits the ability modifier unless the Two-Weapon Fighting style is active (a negative modifier still applies)',
+      inputs: ['off-hand light weapon', 'ability mod', 'TWF style'],
+      edgeCases: [
+        'no off-hand light weapon → no bonus attack',
+        'TWF style adds the ability mod',
+        'negative modifier still applies',
+      ],
+      source: `${SRD}: Combat — Two-Weapon Fighting`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/rules/characterCombatant.test.ts :: grants an off-hand attack whose damage omits the ability modifier',
+      note: 'Engine-wired in the shared buildCharacterCombatant + tactical executor (the 2024 path inherits the same is5e branch). Populating EquippedItem.weaponDamage at equip time is a separate Denominator-A content step.',
+    },
+    {
       id: 'dnd5e2024.L6.jump-distances',
       layer: 'L6',
       quantity: 'Long jump / high jump distances',
