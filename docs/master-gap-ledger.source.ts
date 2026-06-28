@@ -227,7 +227,7 @@ export const MASTER_GAP_LEDGER: readonly GapLedgerItem[] = [
     track: 'B-compute',
     title: 'Mutation-anchor rollout (verified → mutation-proven)',
     detail:
-      'check:compute-register --mutate proves 33 of the 184 verified entries today (proficiency/AC/saves across systems, 5e spell save DC + attack, and the full L3 damage-assembly set: 5e riders rage/Divine Smite/GWM/Sharpshooter/Extra Attack, 3.5e/PF1e iteratives, M&M attack/resistance/affliction/critical/degrees DCs, and Daggerheart weapon/critical/Spellcast damage dice). Author a real formula mutation anchor per remaining verified entry so "verified" graduates from test-linked (Tier A) to mutation-proven across all systems.',
+      'check:compute-register --mutate proves 42 of the 184 verified entries today: proficiency/AC/saves, 5e spell save DC + attack, the full L3 damage-assembly set (5e riders rage/Divine Smite/GWM/Sharpshooter/Extra Attack, 3.5e/PF1e iteratives, M&M attack/resistance/affliction/critical/degrees DCs, Daggerheart weapon/critical/Spellcast damage dice), and the d20 offense leaves (3.5e/PF1e BAB tracks, grapple, CMB, CMD, maneuver resolution; PF2e MAP, striking runes, attack modifier). Author a real formula mutation anchor per remaining verified entry so "verified" graduates from test-linked (Tier A) to mutation-proven across all systems.',
     status: 'in-progress',
     tags: ['rollout', 'engineering'],
     evidence: 'docs/compute-register/mutation-anchors.ts; check:compute-register:mutate',

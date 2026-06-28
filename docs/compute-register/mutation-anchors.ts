@@ -154,6 +154,19 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'bonuses.push(bab - 5)',
     replace: 'bonuses.push(bab - 4)',
   },
+  // BAB-sum track: full BAB = level. The shared classBAB helper backs both 3.5e
+  // and pf1e bab-sum, so the gate dedups this find across them.
+  'dnd35e.L3.bab-sum': {
+    file: 'src/systems/shared/d20-helpers.ts',
+    find: "if (progression === 'full') return level;",
+    replace: "if (progression === 'full') return level + 1;",
+  },
+  // Grapple = BAB + Str mod + size mod (3.5e engine leaf).
+  'dnd35e.L3.grapple': {
+    file: 'src/systems/dnd35e/engine.ts',
+    find: 'data.grapple = totalBAB + strMod + grappleSizeMod;',
+    replace: 'data.grapple = totalBAB + strMod + grappleSizeMod + 1;',
+  },
 
   // ── pf1e (shares d20 helpers + legacy AC with 3.5e) ──
   'pf1e.L2.ac': {
@@ -172,6 +185,29 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'bonuses.push(bab - 5)',
     replace: 'bonuses.push(bab - 4)',
   },
+  // Shares classBAB with 3.5e (deduped by the gate).
+  'pf1e.L3.bab-sum': {
+    file: 'src/systems/shared/d20-helpers.ts',
+    find: "if (progression === 'full') return level;",
+    replace: "if (progression === 'full') return level + 1;",
+  },
+  // CMB = BAB + Str (or Dex if Tiny-) + size mod; CMD = 10 + BAB + Str + Dex + size.
+  'pf1e.L3.cmb': {
+    file: 'src/systems/pf1e/engine.ts',
+    find: 'data.cmb = totalBAB + (tinyOrSmaller ? dexMod : strMod) + cmbSizeMod;',
+    replace: 'data.cmb = totalBAB + (tinyOrSmaller ? dexMod : strMod) + cmbSizeMod + 1;',
+  },
+  'pf1e.L3.cmd': {
+    file: 'src/systems/pf1e/engine.ts',
+    find: 'data.cmd = 10 + totalBAB + strMod + dexMod + cmbSizeMod;',
+    replace: 'data.cmd = 11 + totalBAB + strMod + dexMod + cmbSizeMod;',
+  },
+  // A combat maneuver succeeds when the CMB check meets the target CMD (>=).
+  'pf1e.L3.maneuver-types': {
+    file: 'src/utils/derivedCombatMath.ts',
+    find: 'return cmbCheckTotal >= targetCMD;',
+    replace: 'return cmbCheckTotal > targetCMD;',
+  },
 
   // ── pf2e ──
   'pf2e.L8.degrees-of-success': {
@@ -183,6 +219,23 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     file: 'src/systems/pf2e/data-model.ts',
     find: 'trained: 2',
     replace: 'trained: 3',
+  },
+  // L3 offense: multiple-attack penalty (2nd attack -5, agile -4); striking-rune
+  // damage-dice count (striking = 2); attack modifier = ability + prof + item.
+  'pf2e.L3.map': {
+    file: 'src/utils/derivedCombatMath.ts',
+    find: 'if (attackNumber === 2) return agile ? -4 : -5;',
+    replace: 'if (attackNumber === 2) return agile ? -4 : -6;',
+  },
+  'pf2e.L3.striking-runes': {
+    file: 'src/utils/derivedCombatMath.ts',
+    find: '{ none: 1, striking: 2, greater: 3, major: 4 }',
+    replace: '{ none: 1, striking: 3, greater: 3, major: 4 }',
+  },
+  'pf2e.L3.attack-modifier': {
+    file: 'src/systems/pf2e/derivedMath.ts',
+    find: 'return abilityMod + proficiency + itemBonus;',
+    replace: 'return abilityMod + proficiency + itemBonus + 1;',
   },
 
   // ── mam3e ──
