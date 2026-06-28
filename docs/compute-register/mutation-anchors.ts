@@ -68,6 +68,49 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'return proficiencyBonus + abilityMod;',
     replace: 'return proficiencyBonus + abilityMod + 1;',
   },
+  // ── L3 damage assembly (riders + extra attack) ──
+  // Rage damage scales +2/+3/+4 at 1/9/16; the rider test runs a barbarian-9
+  // (=> +3), so breaking the >=9 branch flips its `toContain(3)`.
+  'dnd5e2014.L3.rage-damage': {
+    file: 'src/rules/conditions/dnd5eRiders.ts',
+    find: 'return 3;',
+    replace: 'return 2;',
+  },
+  // Divine Smite base is 2d8; the rider test asserts every smite die value === 8.
+  'dnd5e2014.L3.divine-smite-base': {
+    file: 'src/rules/conditions/dnd5eRiders.ts',
+    find: 'value: 8,',
+    replace: 'value: 9,',
+  },
+  // GWM trades -5 attack for +10 damage; perturb the +10 (multi-line find kept
+  // unique by the great-weapon-master source id, since -5/+10 recur for Sharpshooter).
+  'dnd5e2014.L3.gwm-tradeoff': {
+    file: 'src/rules/conditions/dnd5eRiders.ts',
+    find: `value: 10,
+        stackPolicy: 'sum',
+        source: { kind: 'feat', id: 'great-weapon-master', label: 'Great Weapon Master' },`,
+    replace: `value: 11,
+        stackPolicy: 'sum',
+        source: { kind: 'feat', id: 'great-weapon-master', label: 'Great Weapon Master' },`,
+  },
+  // Sharpshooter trades -5 attack for +10 damage; perturb the -5 (multi-line find
+  // kept unique by the sharpshooter source id).
+  'dnd5e2014.L3.sharpshooter-tradeoff': {
+    file: 'src/rules/conditions/dnd5eRiders.ts',
+    find: `value: -5,
+        stackPolicy: 'sum',
+        source: { kind: 'feat', id: 'sharpshooter', label: 'Sharpshooter' },`,
+    replace: `value: -6,
+        stackPolicy: 'sum',
+        source: { kind: 'feat', id: 'sharpshooter', label: 'Sharpshooter' },`,
+  },
+  // Extra Attack count = 1 + owned 'extra-attack*' features; break the matcher so
+  // no feature matches (=> 1 attack, not the test's expected 3).
+  'dnd5e2014.L3.extra-attack-count': {
+    file: 'src/rules/combatants/characterCombatant.ts',
+    find: '/^extra-attack(-\\d+)?$/',
+    replace: '/^extra-attackXX(-\\d+)?$/',
+  },
 
   // ── dnd-5e-2024 (reuses the shared 5e leaf helpers) ──
   'dnd5e2024.L1.ability-mod': {
@@ -102,6 +145,15 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'const total = 10 + armorBonus + shieldBonus + effectiveDex + sizeMod;',
     replace: 'const total = 11 + armorBonus + shieldBonus + effectiveDex + sizeMod;',
   },
+  // iterative-attacks: extra attacks at BAB +6/+11/+16, each at a cumulative -5.
+  // Breaking the first iterative step (bab-5 -> bab-4) makes
+  // iterativeAttackBonuses(6) === [6, 2] != [6, 1]. The shared derivedCombatMath
+  // helper backs both 3.5e and pf1e, so the gate dedups this find across both.
+  'dnd35e.L3.iterative-attacks': {
+    file: 'src/utils/derivedCombatMath.ts',
+    find: 'bonuses.push(bab - 5)',
+    replace: 'bonuses.push(bab - 4)',
+  },
 
   // ── pf1e (shares d20 helpers + legacy AC with 3.5e) ──
   'pf1e.L2.ac': {
@@ -113,6 +165,12 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     file: 'src/systems/shared/d20-helpers.ts',
     find: "if (quality === 'good') return 2 + Math.floor(level / 2);",
     replace: "if (quality === 'good') return 3 + Math.floor(level / 2);",
+  },
+  // Shares the derivedCombatMath iterative helper with 3.5e (deduped by the gate).
+  'pf1e.L3.iterative-attacks': {
+    file: 'src/utils/derivedCombatMath.ts',
+    find: 'bonuses.push(bab - 5)',
+    replace: 'bonuses.push(bab - 4)',
   },
 
   // ── pf2e ──
