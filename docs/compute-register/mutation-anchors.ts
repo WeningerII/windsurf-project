@@ -191,6 +191,29 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'return 10 + activeDefense;',
     replace: 'return 11 + activeDefense;',
   },
+  // L3 damage assembly: Damage resistance DC = 15 + rank; Affliction DC = 10 +
+  // rank; a critical hit adds +5 to the resistance DC; degrees of success step
+  // every 5 points. Each is a leaf formula in derivedMath.ts.
+  'mam3e.L3.damage-resistance-dc': {
+    file: 'src/systems/mam3e/derivedMath.ts',
+    find: 'return 15 + damageRank;',
+    replace: 'return 16 + damageRank;',
+  },
+  'mam3e.L3.affliction-dc': {
+    file: 'src/systems/mam3e/derivedMath.ts',
+    find: 'return 10 + rank;',
+    replace: 'return 11 + rank;',
+  },
+  'mam3e.L3.critical-hit': {
+    file: 'src/systems/mam3e/derivedMath.ts',
+    find: 'return baseDC + 5;',
+    replace: 'return baseDC + 6;',
+  },
+  'mam3e.L3.degrees-of-success': {
+    file: 'src/systems/mam3e/derivedMath.ts',
+    find: '1 + Math.floor((checkTotal - dc) / 5)',
+    replace: '1 + Math.floor((checkTotal - dc) / 6)',
+  },
 
   // ── daggerheart ──
   'daggerheart.L1.tier': {
@@ -204,5 +227,23 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     file: 'src/utils/daggerheartDerived.ts',
     find: 'if (level >= 8) {',
     replace: 'if (level >= 9) {',
+  },
+  // L3 damage assembly: weapon dice = proficiency; a crit adds the max of the
+  // damage dice (diceCount × dieSize) to the rolled total; Spellcast damage rolls
+  // a number of dice equal to the Spellcast trait (0 if non-positive).
+  'daggerheart.L3.attack-vs-difficulty': {
+    file: 'src/utils/derivedCombatMath.ts',
+    find: 'return Math.max(1, proficiency);',
+    replace: 'return Math.max(1, proficiency) + 1;',
+  },
+  'daggerheart.L3.critical-damage': {
+    file: 'src/utils/daggerheartDerived.ts',
+    find: 'return rolledTotal + Math.max(0, diceCount) * Math.max(0, dieSize);',
+    replace: 'return rolledTotal + Math.max(0, diceCount) * Math.max(0, dieSize) + 1;',
+  },
+  'daggerheart.L3.spellcast-damage-dice': {
+    file: 'src/utils/daggerheartDerived.ts',
+    find: 'return Math.max(0, spellcastTrait);',
+    replace: 'return Math.max(0, spellcastTrait) + 1;',
   },
 };
