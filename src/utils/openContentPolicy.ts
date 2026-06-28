@@ -52,12 +52,24 @@ export const strictOpenContentPolicy: Record<GameSystemId, SystemOpenContentPoli
     allowMissingSourceFor: [],
   },
   mam3e: {
-    // TODO(open-content): "Hero's Handbook" is the commercial book title, not
-    // an open-content designation. Per the SRD/OGL-only policy intent these
-    // citations should be re-pointed at the M&M 3e OGC SRD designation and the
-    // data re-verified against it. Left in place for now — re-sourcing the
-    // whole M&M corpus is out of scope for the current compliance pass.
-    allowedSources: ["Hero's Handbook", 'HH', "Mutants & Masterminds Hero's Handbook"],
+    // M&M 3e is Open Game Content. Green Ronin designates essentially the entire
+    // M&M game — the Hero's Handbook — as Open Game Content under OGL v1.0a; the
+    // sole Product Identity is the branded resource terms "Hero Points" and
+    // "Power Points" (used here for identification/compatibility only, never
+    // claimed as OGC). The shipped data was authored from and verified against
+    // the M&M 3e Hero SRD (d20herosrd.com) — see the powers/conditions data
+    // READMEs and docs/srd-sources.md — then labelled with the book title
+    // "Hero's Handbook". Both that book label and the explicit Hero SRD
+    // designation are therefore valid open-content provenance. Full attribution
+    // and §15 chain of title: src/legal/attributions.ts (LEGAL-2 resolved).
+    allowedSources: [
+      "Hero's Handbook",
+      'HH',
+      "Mutants & Masterminds Hero's Handbook",
+      'Hero SRD',
+      'M&M 3e Hero SRD',
+      'd20herosrd',
+    ],
     allowMissingSourceFor: [],
   },
   daggerheart: {

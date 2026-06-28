@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-28T03:19:24.764Z",
+  "generatedAt": "2026-06-28T03:39:45.133Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -42,7 +42,10 @@
       "allowedSources": [
         "Hero's Handbook",
         "HH",
-        "Mutants & Masterminds Hero's Handbook"
+        "Mutants & Masterminds Hero's Handbook",
+        "Hero SRD",
+        "M&M 3e Hero SRD",
+        "d20herosrd"
       ],
       "allowMissingSourceFor": []
     },

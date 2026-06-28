@@ -17,8 +17,11 @@ describe('LegalNotices', () => {
       expect(screen.getAllByText(system.systemLabel).length).toBeGreaterThan(0);
     }
 
-    // The honest M&M provenance flag is shown to the user, not hidden.
-    expect(screen.getByText(/Provenance under review/i)).toBeInTheDocument();
+    // LEGAL-2 resolved: M&M is attributed as Open Game Content with its sole
+    // Product Identity carve-out ("Hero Points"/"Power Points") disclosed to the
+    // user, and no shipped system is flagged with provenance under review.
+    expect(screen.getAllByText(/Hero Points.+Power Points/i).length).toBeGreaterThan(0);
+    expect(screen.queryByText(/Provenance under review/i)).not.toBeInTheDocument();
 
     // An OGL §15 chain-of-title line is rendered.
     expect(

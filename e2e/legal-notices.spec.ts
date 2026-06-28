@@ -35,8 +35,10 @@ test.describe('legal & open-content notices', () => {
     // DPCGL notice (Daggerheart).
     await expect(page.getByText(/Darrington Press Community Gaming/i).first()).toBeVisible();
 
-    // Honest M&M provenance flag must be visible, not buried.
-    await expect(page.getByText(/Provenance under review/i).first()).toBeVisible();
+    // LEGAL-2 resolved: M&M is attributed as Open Game Content with its sole
+    // Product Identity carve-out ("Hero Points"/"Power Points") disclosed in the
+    // rendered DOM, not hedged behind an under-review flag.
+    await expect(page.getByText(/Hero Points.+Power Points/i).first()).toBeVisible();
 
     // Required disclaimers.
     await expect(page.getByText(/not affiliated with/i).first()).toBeVisible();

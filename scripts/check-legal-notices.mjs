@@ -66,7 +66,10 @@ const noticeMarkers = [
   ['DPCGL notice', /Darrington Press Community Gaming/i],
   ['not-affiliated disclaimer', /not affiliated with/i],
   ['AI-generated-content disclaimer', /AI-generated content/i],
-  ['honest M&M provenance flag', /PROVENANCE UNDER REVIEW/],
+  // LEGAL-2 resolved: M&M provenance is asserted as Open Game Content AND its sole
+  // Product Identity carve-out is disclosed honestly, rather than hedged.
+  ['M&M attributed as Open Game Content', /Mutants & Masterminds 3e content is drawn from the Open Game Content/],
+  ['M&M Product Identity carve-out disclosed', /Hero Points.{0,15}Power Points/],
 ];
 for (const [label, pattern] of noticeMarkers) {
   check(`NOTICE contains ${label}`, notice && pattern.test(notice));

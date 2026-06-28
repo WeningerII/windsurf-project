@@ -144,11 +144,11 @@ export const MASTER_GAP_LEDGER: readonly GapLedgerItem[] = [
     track: 'A-content',
     title: 'M&M open-content provenance remediation (LEGAL-2)',
     detail:
-      'openContentPolicy.ts whitelists the commercial title "Hero\'s Handbook" (not an open-content designation). Re-point mam3e.allowedSources at the d20herosrd OGC designation and re-verify, OR demote M&M to "provenance under review" in UI + coverage. Surfaced honestly in the Legal Pack.',
-    status: 'pending',
+      'Resolved as Open Game Content. Green Ronin designates the M&M 3e Hero\'s Handbook as OGC under OGL v1.0a bar its sole Product Identity — the terms "Hero Points"/"Power Points" — and the shipped data was authored from and verified against the d20herosrd Hero SRD (data READMEs; docs/srd-sources.md). openContentPolicy.ts re-pointed (the book label and the explicit Hero SRD designation are both accepted), the attribution flipped to open with the completed 4-line §15 chain (OGL → SRD → DC Adventures 2010 → Hero\'s Handbook 2011) and the PI carve-out disclosed honestly rather than hedged.',
+    status: 'done',
     tags: ['launch-blocker', 'legal-blocking'],
     system: 'mam3e',
-    evidence: 'src/utils/openContentPolicy.ts (mam3e TODO); NOTICE (provenance under review)',
+    evidence: 'src/legal/attributions.ts (M&M provenanceStatus: open); src/utils/openContentPolicy.ts; NOTICE §15 chain; check:legal-notices OGC markers',
   },
   {
     id: 'p1.monster-denominator-fix',

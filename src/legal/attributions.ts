@@ -9,8 +9,10 @@
  * no hand-transcribed license text lives here.
  *
  * Provenance is grounded in `docs/srd-sources.md` and `src/utils/openContentPolicy.ts`.
- * Where the shipped provenance is genuinely unsettled (M&M 3e — see LEGAL-2 in the
- * production plan), it is reported honestly as `under-review`, never papered over.
+ * The `under-review` provenance status exists so any genuinely unsettled provenance
+ * can be reported honestly rather than papered over; today every shipped system
+ * resolves to `open`. (M&M 3e — LEGAL-2 — was reconciled against the d20herosrd
+ * Open Game Content designation it was authored from; see its attribution below.)
  */
 
 export type ProvenanceStatus = 'open' | 'under-review';
@@ -182,23 +184,27 @@ export const legalAttributions: LegalAttributions = {
     },
     {
       systemLabel: 'Mutants & Masterminds 3e',
-      content: 'Mutants & Masterminds 3e Hero SRD',
+      content:
+        'Mutants & Masterminds 3e Hero’s Handbook (Open Game Content, via the M&M 3e Hero SRD)',
       licenseId: 'OGL-1.0a',
       attribution:
-        'Mutants & Masterminds 3e content is intended to be drawn from the open-content ' +
-        'M&M 3e Hero SRD (d20herosrd.com) under the Open Game License v1.0a.',
+        'Mutants & Masterminds 3e content is drawn from the Open Game Content of the ' +
+        'M&M 3e Hero’s Handbook — which Green Ronin Publishing designates, in its ' +
+        'entirety bar two terms, as Open Game Content under the Open Game License ' +
+        'v1.0a — as compiled in and verified against the M&M 3e Hero SRD ' +
+        '(d20herosrd.com). The full §15 chain of title is reproduced below. The only ' +
+        'Product Identity in the M&M game, the resource terms “Hero Points” and ' +
+        '“Power Points”, is used here for identification and compatibility only and is ' +
+        'not claimed as Open Game Content.',
       section15: [
         OGL_SECTION_15,
+        D20_SRD_SECTION_15,
+        'DC Adventures Hero’s Handbook, Copyright 2010, Green Ronin Publishing, LLC; ' +
+          'Author Steve Kenson.',
         'Mutants & Masterminds Hero’s Handbook, Copyright 2011, Green Ronin ' +
           'Publishing, LLC; Author Steve Kenson.',
       ],
-      provenanceStatus: 'under-review',
-      provenanceNote:
-        'The shipped data currently cites the commercial book title “Hero’s ' +
-        'Handbook” rather than the open-content Hero SRD designation, which is not ' +
-        'itself an open-content marker. Pending re-verification of every entry against ' +
-        'the d20herosrd Open Game Content (tracked as LEGAL-2), this system’s ' +
-        'provenance is reported as under review rather than asserted as clean.',
+      provenanceStatus: 'open',
     },
     {
       systemLabel: 'Daggerheart',
