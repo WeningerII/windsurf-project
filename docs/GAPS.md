@@ -9,7 +9,7 @@ Current-state summary: `docs/STATUS.md`. Both denominators' tooling lives in
 each of the 7 systems' registers holds 26–28 `verified` quantities (Tier A:
 test-linked + actually passing) across L1–L10; per-system % lives in
 `roadmap-metrics.md` (not uniformly 100%), and mutation-proof is seeded and green
-on 11 anchors with full per-entry anchoring a tracked rollout. Content (Denominator A) is provenance-clean (every
+on a growing anchor subset with full per-entry anchoring a tracked rollout. Content (Denominator A) is provenance-clean (every
 shipped entry is encoded, loader-backed, source-tagged, policy-clean, and — for
 the categories with an authoritative SRD list — verified by reverse-diff to
 contain **no** non-SRD entries). Independent published-SRD *coverage* is now

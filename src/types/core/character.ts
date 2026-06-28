@@ -209,6 +209,14 @@ export interface SpellcastingClass {
   classId: string;
   ability: string; // INT, WIS, CHA
   spellcastingLevel: number; // For multiclassing
+  /**
+   * Derived (engine-computed in prepareData), per SRD Spellcasting:
+   *   spell save DC    = 8 + proficiency bonus + spellcasting ability modifier
+   *   spell attack mod =     proficiency bonus + spellcasting ability modifier
+   * Per spellcasting class, since multiclass casters can use different abilities.
+   */
+  spellSaveDc?: number;
+  spellAttackBonus?: number;
 }
 
 export interface SpellSlots {

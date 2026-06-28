@@ -411,10 +411,17 @@ async function main() {
   await fs.mkdir(SCRATCH, { recursive: true });
   await fs.mkdir(path.dirname(GATE_JSON), { recursive: true });
 
-  if (DO_WRITE) {
+  // --mutate perturbs engine source and restores it with `git checkout -- <file>`,
+  // which reverts to HEAD — so any UNCOMMITTED change to a mutated file would be
+  // silently clobbered. --write edits the register files. Both require a clean tree.
+  if (DO_WRITE || DO_MUTATE) {
     const dirty = spawnSync('git', ['diff', '--quiet'], { cwd: REPO_ROOT });
     if (dirty.status !== 0) {
-      console.error('Refusing to --write on a dirty tree. Commit or stash first.');
+      const flag = DO_WRITE ? '--write' : '--mutate';
+      console.error(
+        `Refusing to run ${flag} on a dirty tree (its git-checkout restore would ` +
+          'discard uncommitted changes). Commit or stash first.'
+      );
       process.exit(2);
     }
   }

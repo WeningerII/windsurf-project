@@ -56,6 +56,18 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'Math.ceil(level / 4) + 1',
     replace: 'Math.ceil(level / 4) + 2',
   },
+  // Spell DC / attack are now engine-wired (prepareData), so the helper mutation
+  // breaks the engine test "L2 spell save DC and attack (engine-wired)".
+  'dnd5e2014.L2.spell-save-dc': {
+    file: 'src/utils/derivedCasterMath.ts',
+    find: 'return 8 + proficiencyBonus + abilityMod;',
+    replace: 'return 9 + proficiencyBonus + abilityMod;',
+  },
+  'dnd5e2014.L2.spell-attack': {
+    file: 'src/utils/derivedCasterMath.ts',
+    find: 'return proficiencyBonus + abilityMod;',
+    replace: 'return proficiencyBonus + abilityMod + 1;',
+  },
 
   // ── dnd-5e-2024 (reuses the shared 5e leaf helpers) ──
   'dnd5e2024.L1.ability-mod': {
@@ -67,6 +79,16 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     file: 'src/systems/dnd5e/shared/engine.ts',
     find: 'Math.ceil(level / 4) + 1',
     replace: 'Math.ceil(level / 4) + 2',
+  },
+  'dnd5e2024.L2.spell-save-dc': {
+    file: 'src/utils/derivedCasterMath.ts',
+    find: 'return 8 + proficiencyBonus + abilityMod;',
+    replace: 'return 9 + proficiencyBonus + abilityMod;',
+  },
+  'dnd5e2024.L2.spell-attack': {
+    file: 'src/utils/derivedCasterMath.ts',
+    find: 'return proficiencyBonus + abilityMod;',
+    replace: 'return proficiencyBonus + abilityMod + 1;',
   },
 
   // ── dnd-3.5e ──

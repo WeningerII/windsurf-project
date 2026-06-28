@@ -2,6 +2,7 @@ import { SystemEngine, RollResult } from '../../../registry/types';
 import { CharacterDocument } from '../../../types/core/document';
 import { Dnd5eDataModel } from '../data-model';
 import { abilityMod } from '../../../utils/math';
+import { dnd5eSpellAttackBonus, dnd5eSpellSaveDC } from '../../../utils/derivedCasterMath';
 import { hitDieSize } from '../../../constants/hit-dice';
 import { compute5eAC } from '../../../utils/armorClass';
 import { clampCount } from '../../../utils/resourcePool';
@@ -200,6 +201,20 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
         warlockLevel,
         data.spellcasting.pactMagic
       );
+
+      // Spell save DC + attack bonus (SRD: Spellcasting). Derived per spellcasting
+      // class so a multiclass caster's INT/WIS/CHA entries each get their own.
+      // REPLACE the classes array (do not mutate its entries): the clone above
+      // shares this array with the input document, and prepareData must be pure.
+      const spellProficiency = profBonus(totalLevel);
+      data.spellcasting.classes = (data.spellcasting.classes ?? []).map((casterClass) => {
+        const spellMod = abilityMod(data.baseAttributes[casterClass.ability] ?? 10);
+        return {
+          ...casterClass,
+          spellSaveDc: dnd5eSpellSaveDC(spellProficiency, spellMod),
+          spellAttackBonus: dnd5eSpellAttackBonus(spellProficiency, spellMod),
+        };
+      });
     }
 
     return clonedDoc;

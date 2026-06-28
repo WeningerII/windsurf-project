@@ -148,9 +148,10 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       inputs: ['level', 'spellcasting ability'],
       edgeCases: ['per spellcasting class'],
       source: `${SRD}: Spellcasting — Spell save DC`,
-      status: 'missing',
-      testRef: 'src/__tests__/derivedCasterMath.test.ts :: 5e spell save DC and attack',
-      note: 'Canonical helper (derivedCasterMath.ts) is test-pinned but not consumed by any engine or sheet; per the legend, unwired quantities are missing.',
+      status: 'verified',
+      testRef:
+        'src/__tests__/dnd5e2014EngineMath.test.ts :: L2 spell save DC and attack (engine-wired)',
+      note: 'Wired in Dnd5eEngineBase.prepareData per spellcasting class (data.spellcasting.classes[].spellSaveDc / spellAttackBonus) via the derivedCasterMath helpers.',
     },
     {
       id: 'dnd5e2014.L2.spell-attack',
@@ -160,9 +161,10 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       inputs: ['level', 'spellcasting ability'],
       edgeCases: ['per spellcasting class'],
       source: `${SRD}: Spellcasting — Spell attack modifier`,
-      status: 'missing',
-      testRef: 'src/__tests__/derivedCasterMath.test.ts :: 5e spell save DC and attack',
-      note: 'Canonical helper (derivedCasterMath.ts) is test-pinned but not consumed by any engine or sheet; per the legend, unwired quantities are missing.',
+      status: 'verified',
+      testRef:
+        'src/__tests__/dnd5e2014EngineMath.test.ts :: L2 spell save DC and attack (engine-wired)',
+      note: 'Wired in Dnd5eEngineBase.prepareData per spellcasting class (data.spellcasting.classes[].spellSaveDc / spellAttackBonus) via the derivedCasterMath helpers.',
     },
 
     // ── L3 offense ──

@@ -73,9 +73,10 @@ export const dnd5e2024ComputeRegister: SystemComputeRegister = {
       inputs: ['level', 'spell ability'],
       edgeCases: ['per class'],
       source: `${SRD}: Spellcasting`,
-      status: 'missing',
-      testRef: 'src/__tests__/derivedCasterMath.test.ts :: 5e spell save DC and attack',
-      note: 'Canonical helper is test-pinned but not consumed by any engine or sheet; per the legend, unwired quantities are missing.',
+      status: 'verified',
+      testRef:
+        'src/__tests__/dnd5e2014EngineMath.test.ts :: L2 spell save DC and attack (engine-wired)',
+      note: 'Wired in the shared Dnd5eEngineBase.prepareData (the 2024 engine inherits it); proven by the shared-base test (T14).',
     },
     {
       id: 'dnd5e2024.L2.spell-attack',
@@ -85,9 +86,10 @@ export const dnd5e2024ComputeRegister: SystemComputeRegister = {
       inputs: ['level', 'spellcasting ability'],
       edgeCases: ['per spellcasting class'],
       source: `${SRD}: Spellcasting — Spell attack modifier`,
-      status: 'missing',
-      testRef: 'src/__tests__/derivedCasterMath.test.ts :: 5e spell save DC and attack',
-      note: 'Canonical helper is test-pinned but not consumed by any engine or sheet; per the legend, unwired quantities are missing.',
+      status: 'verified',
+      testRef:
+        'src/__tests__/dnd5e2014EngineMath.test.ts :: L2 spell save DC and attack (engine-wired)',
+      note: 'Wired in the shared Dnd5eEngineBase.prepareData (the 2024 engine inherits it); proven by the shared-base test (T14).',
     },
     {
       id: 'dnd5e2024.L2.ac.unarmored-defense-barbarian',
