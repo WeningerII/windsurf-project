@@ -1,0 +1,36 @@
+{
+  "$generatedBy": "scripts/measure-user-outcome.mjs",
+  "description": "Per-system user-outcome floors for e2e/user-outcome.spec.ts. All 7 systems are equal. timeToFirstSheetMaxMs is the upper bound (ms) for landing -> first rendered sheet via quick-create. Floors are a reviewed ratchet: tighten only with justification.",
+  "capturedAt": "2026-06-28T03:26:58.183Z",
+  "capturedEnv": "node v22.22.2 / linux",
+  "systems": {
+    "dnd-5e-2014": {
+      "timeToFirstSheetMaxMs": 8262,
+      "measuredMs": 262
+    },
+    "dnd-5e-2024": {
+      "timeToFirstSheetMaxMs": 8316,
+      "measuredMs": 316
+    },
+    "dnd-35e": {
+      "timeToFirstSheetMaxMs": 8303,
+      "measuredMs": 303
+    },
+    "pf1e": {
+      "timeToFirstSheetMaxMs": 8239,
+      "measuredMs": 239
+    },
+    "pf2e": {
+      "timeToFirstSheetMaxMs": 8282,
+      "measuredMs": 282
+    },
+    "mam3e": {
+      "timeToFirstSheetMaxMs": 8233,
+      "measuredMs": 233
+    },
+    "daggerheart": {
+      "timeToFirstSheetMaxMs": 8263,
+      "measuredMs": 263
+    }
+  }
+}
