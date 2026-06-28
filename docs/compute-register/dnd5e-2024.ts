@@ -151,6 +151,19 @@ export const dnd5e2024ComputeRegister: SystemComputeRegister = {
       note: 'Canonical helper (dnd5eMovement.ts) is test-pinned but not consumed by any engine or sheet; per the legend, unwired quantities are missing.',
     },
     {
+      id: 'dnd5e2024.L3.versatile-damage',
+      layer: 'L3',
+      quantity: 'Versatile weapon damage die',
+      formula: 'larger (two-handed) die when wielded in two hands; base die otherwise',
+      inputs: ['weapon dice', 'versatile die', 'off-hand occupancy'],
+      edgeCases: ['off-hand occupied (shield/second weapon) → base die'],
+      source: `${SRD}: Equipment — Weapon Properties (Versatile)`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/rules/characterCombatant.test.ts :: 5e Versatile: rolls the larger die when wielded two-handed (empty off-hand)',
+      note: 'Engine-wired in the shared, system-agnostic buildCharacterCombatant (the 2024 path inherits it via the same is5e branch as 2014). Populating EquippedItem.weaponDamage at equip time is a separate Denominator-A content step.',
+    },
+    {
       id: 'dnd5e2024.L6.jump-distances',
       layer: 'L6',
       quantity: 'Long jump / high jump distances',

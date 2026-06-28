@@ -1,4 +1,4 @@
-_Generated: 2026-06-28T16:49:04.022Z_
+_Generated: 2026-06-28T17:07:19.453Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -143,8 +143,8 @@ _The manifests in docs/srd-manifest/ are generated from the loaders, so this mea
 ### Engine-Math Completion (vs Compute Register — Denominator B)
 | System | Verified | In-Scope | Complete |
 | --- | ---: | ---: | ---: |
-| D&D 5e (2014) | 32 | 35 | 91.4% |
-| D&D 5e (2024) | 21 | 27 | 77.8% |
+| D&D 5e (2014) | 33 | 36 | 91.7% |
+| D&D 5e (2024) | 22 | 28 | 78.6% |
 | D&D 3.5e | 28 | 28 | 100% |
 | Pathfinder 1e | 27 | 27 | 100% |
 | Mutants & Masterminds 3e | 26 | 26 | 100% |

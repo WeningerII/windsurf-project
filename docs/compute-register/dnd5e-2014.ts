@@ -242,6 +242,19 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
         'src/__tests__/rules/characterCombatant.test.ts :: collectDnd5eRiderEffects: Sharpshooter and Divine Smite',
       note: 'Manual boundary: slot expenditure and per-slot/undead scaling are manual calls.',
     },
+    {
+      id: 'dnd5e2014.L3.versatile-damage',
+      layer: 'L3',
+      quantity: 'Versatile weapon damage die',
+      formula: 'larger (two-handed) die when wielded in two hands; base die otherwise',
+      inputs: ['weapon dice', 'versatile die', 'off-hand occupancy'],
+      edgeCases: ['off-hand occupied (shield/second weapon) → base die'],
+      source: `${SRD}: Equipment — Weapon Properties (Versatile)`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/rules/characterCombatant.test.ts :: 5e Versatile: rolls the larger die when wielded two-handed (empty off-hand)',
+      note: 'Engine-wired (Denominator B): buildCharacterCombatant consumes the equipped main-hand weapon’s dice via dnd5eVersatileDamageDie. Populating EquippedItem.weaponDamage from a weapon catalog at equip time is a separate Denominator-A content step.',
+    },
 
     // ── L4 skills & derived checks ──
     {

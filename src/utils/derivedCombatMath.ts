@@ -101,6 +101,19 @@ export function dnd5eUnarmoredDefenseMonk(dexMod: number, wisMod: number): numbe
   return 10 + dexMod + wisMod;
 }
 
+/**
+ * SRD 5e Versatile: a versatile weapon rolls its larger (two-handed) die when
+ * wielded in two hands — nothing in the other hand, no shield or second weapon —
+ * and its base die otherwise. Returns the die size to roll.
+ */
+export function dnd5eVersatileDamageDie(
+  baseDie: number,
+  versatileDie: number | undefined,
+  wieldedTwoHanded: boolean
+): number {
+  return wieldedTwoHanded && versatileDie != null ? versatileDie : baseDie;
+}
+
 // ─── Pathfinder 2e ───────────────────────────────────────────────────────
 
 /** Multiple attack penalty for the n-th attack this turn (agile reduces it). */

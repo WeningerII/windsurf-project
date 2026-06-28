@@ -39,6 +39,7 @@ import { collectDnd5eRiderEffects } from '../conditions/dnd5eRiders';
 import { collectPf2eRiderEffects } from '../conditions/pf2eRiders';
 import { collectD20LegacyConditionEffects } from '../conditions/d20LegacyConditions';
 import { collectD20LegacyRiderEffects } from '../conditions/d20LegacyRiders';
+import { dnd5eVersatileDamageDie } from '../../utils/derivedCombatMath';
 import {
   compileEquipmentEffects,
   compileModifierEffects,
@@ -326,19 +327,43 @@ export function buildCharacterCombatant(
       : [];
   riderEffects.push(...legacyConditionEffects);
 
-  const weaponDie = options.weaponDie ?? 6;
+  // Weapon damage dice: prefer the equipped main-hand weapon's real dice
+  // (count × die). A 5e Versatile weapon rolls its larger die when wielded in two
+  // hands — i.e. nothing occupies the off-hand slot. With no weapon data the
+  // caller's die (or the d6 placeholder) is used, so existing scenes are
+  // unchanged. Populating weaponDamage from a catalog at equip time is a separate
+  // Denominator-A content step.
+  const is5e = systemId === 'dnd-5e-2014' || systemId === 'dnd-5e-2024';
+  const mainHandWeapon = sheet.equipment.find(
+    (item) => item.slot === 'mainHand' && item.weaponDamage
+  );
+  const wieldedTwoHanded = !sheet.equipment.some((item) => item.slot === 'offHand');
+  let weaponDiceCount = 1;
+  let weaponDie = options.weaponDie ?? 6;
+  if (mainHandWeapon?.weaponDamage) {
+    weaponDiceCount = Math.max(1, mainHandWeapon.weaponDamage.count);
+    weaponDie = mainHandWeapon.weaponDamage.die;
+    if (is5e && (mainHandWeapon.weaponProperties ?? []).includes('versatile')) {
+      weaponDie = dnd5eVersatileDamageDie(
+        weaponDie,
+        mainHandWeapon.weaponVersatileDie,
+        wieldedTwoHanded
+      );
+    }
+  }
+
   const damageEffects: EffectInstance[] = [
-    {
-      id: `${systemId}:damage:die:${document.id}`,
+    ...Array.from({ length: weaponDiceCount }, (_unused, index) => ({
+      id: `${systemId}:damage:die:${document.id}:${index}`,
       systemId,
-      target: 'damage',
-      operation: 'add-die',
+      target: 'damage' as const,
+      operation: 'add-die' as const,
       value: weaponDie,
-      stackPolicy: 'sum',
-      source: { kind: 'custom', id: document.id, label: `${document.name} weapon` },
+      stackPolicy: 'sum' as const,
+      source: { kind: 'custom' as const, id: document.id, label: `${document.name} weapon` },
       label: `1d${weaponDie}`,
-      category: 'other',
-    },
+      category: 'other' as const,
+    })),
     {
       id: `${systemId}:damage:str:${document.id}`,
       systemId,

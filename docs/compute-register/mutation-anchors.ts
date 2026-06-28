@@ -111,6 +111,14 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: '/^extra-attack(-\\d+)?$/',
     replace: '/^extra-attackXX(-\\d+)?$/',
   },
+  // Versatile selects the larger die only when wielded two-handed; forcing it to
+  // always use the base die breaks the two-handed test. Shared dnd5eVersatileDamageDie
+  // helper serves both 2014 and 2024 (deduped by the gate).
+  'dnd5e2014.L3.versatile-damage': {
+    file: 'src/utils/derivedCombatMath.ts',
+    find: 'return wieldedTwoHanded && versatileDie != null ? versatileDie : baseDie;',
+    replace: 'return wieldedTwoHanded && versatileDie != null ? baseDie : baseDie;',
+  },
 
   // ── dnd-5e-2024 (reuses the shared 5e leaf helpers) ──
   'dnd5e2024.L1.ability-mod': {
@@ -132,6 +140,12 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     file: 'src/utils/derivedCasterMath.ts',
     find: 'return proficiencyBonus + abilityMod;',
     replace: 'return proficiencyBonus + abilityMod + 1;',
+  },
+  // Shares dnd5eVersatileDamageDie with 2014 (deduped by the gate).
+  'dnd5e2024.L3.versatile-damage': {
+    file: 'src/utils/derivedCombatMath.ts',
+    find: 'return wieldedTwoHanded && versatileDie != null ? versatileDie : baseDie;',
+    replace: 'return wieldedTwoHanded && versatileDie != null ? baseDie : baseDie;',
   },
 
   // ── dnd-3.5e ──

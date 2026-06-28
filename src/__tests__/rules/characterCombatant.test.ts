@@ -642,3 +642,49 @@ describe('PF1e Power Attack rider', () => {
     ).toBe(true);
   });
 });
+
+describe('buildCharacterCombatant — equipped weapon damage (versatile)', () => {
+  const longsword = {
+    itemId: 'longsword',
+    slot: 'mainHand' as const,
+    attuned: false,
+    weaponDamage: { count: 1, die: 8 },
+    weaponVersatileDie: 10,
+    weaponProperties: ['versatile'],
+  };
+
+  function weaponDie(result: ReturnType<typeof buildCharacterCombatant>) {
+    if (!result.supported) return undefined;
+    return result.combatant.damageEffects.find((effect) => effect.operation === 'add-die')?.value;
+  }
+
+  function doc(equipment: unknown[]) {
+    return charDoc('dnd-5e-2014', {
+      level: 1,
+      baseAttributes: { str: 16, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+      armorClass: 12,
+      hitPoints: { current: 10, max: 10, temp: 0 },
+      equipment,
+      feats: [],
+      features: [],
+    });
+  }
+
+  it('5e Versatile: rolls the larger die when wielded two-handed (empty off-hand)', () => {
+    const result = buildCharacterCombatant(doc([longsword]), { position: { x: 0, y: 0 } });
+    expect(weaponDie(result)).toBe(10); // 1d10 two-handed
+  });
+
+  it('5e Versatile: rolls the base die when a shield occupies the off-hand', () => {
+    const result = buildCharacterCombatant(
+      doc([longsword, { itemId: 'shield', slot: 'offHand', attuned: false, shieldBonus: 2 }]),
+      { position: { x: 0, y: 0 } }
+    );
+    expect(weaponDie(result)).toBe(8); // 1d8 one-handed
+  });
+
+  it('falls back to the placeholder die when no weapon data is present', () => {
+    const result = buildCharacterCombatant(doc([]), { position: { x: 0, y: 0 } });
+    expect(weaponDie(result)).toBe(6); // d6 baseline, unchanged
+  });
+});
