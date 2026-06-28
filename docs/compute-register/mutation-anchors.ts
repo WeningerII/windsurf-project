@@ -51,12 +51,22 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'Math.ceil(rogueLevel / 2)',
     replace: 'Math.ceil(rogueLevel / 3)',
   },
+  'dnd5e2014.L1.proficiency-bonus': {
+    file: 'src/systems/dnd5e/shared/engine.ts',
+    find: 'Math.ceil(level / 4) + 1',
+    replace: 'Math.ceil(level / 4) + 2',
+  },
 
   // ── dnd-5e-2024 (reuses the shared 5e leaf helpers) ──
   'dnd5e2024.L1.ability-mod': {
     file: 'src/utils/math.ts',
     find: 'Math.floor((score - 10) / 2)',
     replace: 'Math.floor((score - 11) / 2)',
+  },
+  'dnd5e2024.L1.proficiency-bonus': {
+    file: 'src/systems/dnd5e/shared/engine.ts',
+    find: 'Math.ceil(level / 4) + 1',
+    replace: 'Math.ceil(level / 4) + 2',
   },
 
   // ── dnd-3.5e ──
@@ -89,6 +99,11 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'if (total >= dc + 10) {',
     replace: 'if (total >= dc + 11) {',
   },
+  'pf2e.L1.proficiency': {
+    file: 'src/systems/pf2e/data-model.ts',
+    find: 'trained: 2',
+    replace: 'trained: 3',
+  },
 
   // ── mam3e ──
   'mam3e.L3.attack-dc': {
@@ -99,6 +114,13 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
 
   // ── daggerheart ──
   'daggerheart.L1.tier': {
+    file: 'src/utils/daggerheartDerived.ts',
+    find: 'if (level >= 8) {',
+    replace: 'if (level >= 9) {',
+  },
+  // proficiency == tier (getDaggerheartProficiency delegates to getDaggerheartTier),
+  // so the tier mutation breaks the shared "tier and proficiency" test for both.
+  'daggerheart.L1.proficiency': {
     file: 'src/utils/daggerheartDerived.ts',
     find: 'if (level >= 8) {',
     replace: 'if (level >= 9) {',

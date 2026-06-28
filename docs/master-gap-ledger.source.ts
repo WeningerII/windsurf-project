@@ -227,7 +227,7 @@ export const MASTER_GAP_LEDGER: readonly GapLedgerItem[] = [
     track: 'B-compute',
     title: 'Mutation-anchor rollout (verified → mutation-proven)',
     detail:
-      'check:compute-register --mutate proves 11/180 anchored entries today. Author a real formula mutation anchor per remaining verified entry so "verified" graduates from test-linked (Tier A) to mutation-proven across all systems.',
+      'check:compute-register --mutate proves 15/180 anchored entries today (proficiency math now covered across 5e, PF2e, and Daggerheart). Author a real formula mutation anchor per remaining verified entry so "verified" graduates from test-linked (Tier A) to mutation-proven across all systems.',
     status: 'in-progress',
     tags: ['rollout', 'engineering'],
     evidence: 'docs/compute-register/mutation-anchors.ts; check:compute-register:mutate',
