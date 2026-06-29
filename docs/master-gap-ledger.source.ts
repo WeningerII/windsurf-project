@@ -148,7 +148,8 @@ export const MASTER_GAP_LEDGER: readonly GapLedgerItem[] = [
     status: 'done',
     tags: ['launch-blocker', 'legal-blocking'],
     system: 'mam3e',
-    evidence: 'src/legal/attributions.ts (M&M provenanceStatus: open); src/utils/openContentPolicy.ts; NOTICE §15 chain; check:legal-notices OGC markers',
+    evidence:
+      'src/legal/attributions.ts (M&M provenanceStatus: open); src/utils/openContentPolicy.ts; NOTICE §15 chain; check:legal-notices OGC markers',
   },
   {
     id: 'p1.monster-denominator-fix',
@@ -178,7 +179,7 @@ export const MASTER_GAP_LEDGER: readonly GapLedgerItem[] = [
     track: 'A-content',
     title: 'Single-entry content gaps',
     detail:
-      '5e-2014 Net; 5e-2024 Will-o\'-Wisp (upstream source table defective — verify, do not guess); PF1e Teleport (Greater) [naming]; 3.5e Shadow Evocation (Greater) [naming]; verify the naming variants against the SRD before adding.',
+      "5e-2014 Net; 5e-2024 Will-o'-Wisp (upstream source table defective — verify, do not guess); PF1e Teleport (Greater) [naming]; 3.5e Shadow Evocation (Greater) [naming]; verify the naming variants against the SRD before adding.",
     status: 'missing',
     tags: ['engineering'],
     evidence: 'docs/generated/srd-coverage.md (Missing entries)',
@@ -227,10 +228,11 @@ export const MASTER_GAP_LEDGER: readonly GapLedgerItem[] = [
     track: 'B-compute',
     title: 'Mutation-anchor rollout (verified → mutation-proven)',
     detail:
-      'check:compute-register --mutate proves 48 of the 190 verified entries today: proficiency/AC/saves, 5e spell save DC + attack, the full L3 damage-assembly set (5e riders rage/Divine Smite/GWM/Sharpshooter/Extra Attack + Versatile weapon die + two-weapon off-hand, 3.5e/PF1e iteratives + crit confirmation, M&M attack/resistance/affliction/critical/degrees DCs, Daggerheart weapon/critical/Spellcast damage dice), and the d20 offense leaves (3.5e/PF1e BAB tracks, grapple, CMB, CMD, maneuver resolution; PF2e MAP, striking runes, attack modifier). Author a real formula mutation anchor per remaining verified entry so "verified" graduates from test-linked (Tier A) to mutation-proven across all systems.',
-    status: 'in-progress',
+      'Complete: check:compute-register --mutate proves all 190 of the 190 verified entries across every system (each carries a real formula mutation anchor whose perturbation flips a linked, register-independent test from pass to fail). "verified" has graduated from test-linked-and-passing (Tier A) to mutation-proven (Tier B) for the entire register. New verified entries must land with their anchor to keep the numerator at 100%.',
+    status: 'done',
     tags: ['rollout', 'engineering'],
-    evidence: 'docs/compute-register/mutation-anchors.ts; check:compute-register:mutate',
+    evidence:
+      'docs/compute-register/mutation-anchors.ts (190 anchors); docs/generated/compute-register-gate.json (Tier A+B, 0 demotions); check:compute-register:mutate',
   },
   {
     id: 'p3.L3-damage-assembly',
@@ -248,7 +250,8 @@ export const MASTER_GAP_LEDGER: readonly GapLedgerItem[] = [
     id: 'p3.derived-and-economy',
     phase: 3,
     track: 'B-compute',
-    title: 'L1/L2/L5-L10 — derived stats, spell economy, progression, defenses, legality, encounter',
+    title:
+      'L1/L2/L5-L10 — derived stats, spell economy, progression, defenses, legality, encounter',
     detail:
       'Spell DC/attack/passive/cantrip/Unarmored Defense/MAP/bulk/heighten; prepared/known/upcasting; speed-with-penalty; ASI/feat cadence; resist/vuln/immune; point-buy + prereq + multiclass-stacking validators; 3.5e encounter budget + wealth — surfaced in prepareData/sheets via the resolver.',
     status: 'pending',
@@ -298,7 +301,8 @@ export const MASTER_GAP_LEDGER: readonly GapLedgerItem[] = [
     id: 'p6.expansions',
     phase: 6,
     track: 'expansion',
-    title: 'RFC 005 resources/rest/leveling, RFC 004 bestiary surface, RFC 006 scene runtime, AI-DM',
+    title:
+      'RFC 005 resources/rest/leveling, RFC 004 bestiary surface, RFC 006 scene runtime, AI-DM',
     detail:
       'Short/long rest replenish + XP/milestone leveling (highest-leverage); cross-system bestiary browser; deeper event-sourced scene runtime + multi-system encounter generation; AI-DM autonomous runtime behind the AI control plane + its own RFC.',
     status: 'pending',

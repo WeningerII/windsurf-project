@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-06-28T17:31:00.506Z",
+  "generatedAt": "2026-06-29T18:39:48.135Z",
   "summary": {
     "total": 23,
     "byStatus": {
-      "done": 8,
+      "done": 9,
       "missing": 2,
       "pending": 10,
       "blocked": 1,
-      "in-progress": 2
+      "in-progress": 1
     },
     "byPhase": {
       "0": 6,
@@ -246,13 +246,13 @@
       "phase": 3,
       "track": "B-compute",
       "title": "Mutation-anchor rollout (verified → mutation-proven)",
-      "detail": "check:compute-register --mutate proves 48 of the 190 verified entries today: proficiency/AC/saves, 5e spell save DC + attack, the full L3 damage-assembly set (5e riders rage/Divine Smite/GWM/Sharpshooter/Extra Attack + Versatile weapon die + two-weapon off-hand, 3.5e/PF1e iteratives + crit confirmation, M&M attack/resistance/affliction/critical/degrees DCs, Daggerheart weapon/critical/Spellcast damage dice), and the d20 offense leaves (3.5e/PF1e BAB tracks, grapple, CMB, CMD, maneuver resolution; PF2e MAP, striking runes, attack modifier). Author a real formula mutation anchor per remaining verified entry so \"verified\" graduates from test-linked (Tier A) to mutation-proven across all systems.",
-      "status": "in-progress",
+      "detail": "Complete: check:compute-register --mutate proves all 190 of the 190 verified entries across every system (each carries a real formula mutation anchor whose perturbation flips a linked, register-independent test from pass to fail). \"verified\" has graduated from test-linked-and-passing (Tier A) to mutation-proven (Tier B) for the entire register. New verified entries must land with their anchor to keep the numerator at 100%.",
+      "status": "done",
       "tags": [
         "rollout",
         "engineering"
       ],
-      "evidence": "docs/compute-register/mutation-anchors.ts; check:compute-register:mutate"
+      "evidence": "docs/compute-register/mutation-anchors.ts (190 anchors); docs/generated/compute-register-gate.json (Tier A+B, 0 demotions); check:compute-register:mutate"
     },
     {
       "id": "p3.L3-damage-assembly",
