@@ -86,18 +86,23 @@ unlike the loader-derived `docs/srd-manifest/`.
 The registers are Tier-A-verified by `check:compute-register` (test-linked + passing) but per `roadmap-metrics.md` are not uniformly 100% complete, and two structural gaps sit behind the headline:
 
 **Rebalancing pass (done):** the registers were levelled so no system is
-neglected — each now holds 26–28 verified quantities across L1–L10 (previously
-13–28, with Daggerheart the outlier at 13). All additions were genuine,
-SRD-cited RAW math, not padding (see `docs/STATUS.md` for the list). This closed
-several items below; the remainder is the honest residual.
+neglected — each now holds two-to-three dozen verified quantities across L1–L10
+(previously 13–28, with Daggerheart the outlier at 13; exact per-system counts in
+`docs/generated/roadmap-metrics.md`). All additions were genuine, SRD-cited RAW
+math, not padding (see `docs/STATUS.md` for the list). This closed several items
+below; the remainder is the honest residual.
 
 - **Registers are a curated subset of the goal's full L1–L10 spec, not the
   exhaustive enumeration.** A complete register would be much larger and partly
   `missing`. Notably absent / uncounted today:
-  - L3: full damage assembly with riders wired (Sneak Attack / Rage / Divine
-    Smite / GWM / Sharpshooter / two-weapon / versatile); 5e Extra Attack counts;
-    3.5e/PF1e crit confirmation. (Daggerheart critical damage + Spellcast dice,
-    and M&M attack/Affliction/Damage DCs, are now covered.)
+  - L3: **Done (engine-wired + mutation-proven).** Full damage assembly with
+    riders — Sneak Attack / Rage / Divine Smite / GWM / Sharpshooter / Extra
+    Attack, 5e Versatile weapon dice and two-weapon off-hand attacks, 3.5e/PF1e
+    iteratives + crit confirmation, Daggerheart critical/Spellcast damage, and
+    M&M attack/Affliction/Damage DCs — all assemble through the seeded dice
+    substrate + resolver/combatant. Separate follow-on (Denominator-A content):
+    populating `EquippedItem.weaponDamage` from a weapon catalog at equip time so
+    Versatile/two-weapon fire for real saved characters, not just engine tests.
   - L5: prepared/known spell counts; upcasting; full PF2e heightening (only
     auto-heighten rank is covered). (3.5e/PF1e bonus-spells-by-ability done.)
   - L6: speed with armor/Str penalty still open. **Done:** 3.5e/PF1e carrying
