@@ -22,6 +22,7 @@
 import type { SeededRng } from '../../scene/seededRng';
 import { resolveEffects, type ResolveContext, type RollMode } from './resolve';
 import { pf2eDegreeOfSuccess, type Pf2eDegreeOfSuccess } from '../../utils/pf2eDegree';
+import { d20CriticalConfirmed, d20CriticalDamage } from '../../utils/derivedCombatMath';
 import type { EffectInstance } from '../ir/types';
 
 export interface AttackResolutionInput {
@@ -48,6 +49,17 @@ export interface AttackResolutionInput {
    * critical hit doubles the WHOLE damage, not just the dice.
    */
   degreeModel?: 'd20' | 'pf2e';
+  /**
+   * How a (non-pf2e) critical hit assembles damage:
+   *  - 'double-dice' (default): 5e — a natural crit auto-confirms and the damage
+   *    dice are rolled twice (flat bonuses not doubled).
+   *  - 'confirm-multiply': 3.5e/PF1e — a natural threat must be confirmed by a
+   *    second attack roll (same bonus) vs the AC; only then is damage multiplied
+   *    by `criticalMultiplier`. An unconfirmed threat deals normal damage.
+   */
+  critModel?: 'double-dice' | 'confirm-multiply';
+  /** Weapon critical multiplier for 'confirm-multiply' (×2 default; ×3/×4). */
+  criticalMultiplier?: number;
 }
 
 export interface AttackResolution {
@@ -63,6 +75,14 @@ export interface AttackResolution {
   isCriticalHit: boolean;
   isCriticalMiss: boolean;
   isHit: boolean;
+  /**
+   * Under critModel 'confirm-multiply': whether the threat's confirmation roll
+   * landed (undefined when no confirmation was rolled, i.e. not a threat or a
+   * different crit model).
+   */
+  criticalConfirmed?: boolean;
+  /** The confirmation roll's natural d20 (only set when one was rolled). */
+  confirmationRoll?: number;
   /** PF2e degree (only set under degreeModel 'pf2e'). */
   degreeOfSuccess?: Pf2eDegreeOfSuccess;
   /** Total damage (only rolled on a hit; 0 on a miss). */
@@ -126,6 +146,8 @@ export function resolveAttack(input: AttackResolutionInput): AttackResolution {
   let damage = 0;
   let damageDiceTerms: number[] = [];
   let damageBonus = 0;
+  let criticalConfirmed: boolean | undefined;
+  let confirmationRoll: number | undefined;
 
   if (isHit && input.damageEffects && input.damageEffects.length > 0) {
     const damageResolved = resolveEffects(input.damageEffects, ctx);
@@ -145,6 +167,19 @@ export function resolveAttack(input: AttackResolutionInput): AttackResolution {
       if (input.degreeModel === 'pf2e') {
         // PF2e CRB: a critical hit doubles the damage — dice AND static.
         damage *= 2;
+      } else if (input.critModel === 'confirm-multiply') {
+        // 3.5e/PF1e (SRD): the threat must be confirmed by a second attack roll
+        // (same bonus, same seeded stream) vs the AC. Only a confirmed crit
+        // multiplies damage by the weapon's multiplier; an unconfirmed threat is
+        // an ordinary hit.
+        const confirm = rollD20(input.rng, rollMode);
+        confirmationRoll = confirm.chosen;
+        criticalConfirmed = d20CriticalConfirmed(confirm.chosen + attackBonus, input.targetValue);
+        if (criticalConfirmed) {
+          damage = d20CriticalDamage(damage, input.criticalMultiplier ?? 2);
+        } else {
+          isCriticalHit = false;
+        }
       } else {
         // d20 model: double the dice rolled (5e crit rule: roll the damage
         // dice twice; flat bonuses are not doubled).
@@ -166,6 +201,8 @@ export function resolveAttack(input: AttackResolutionInput): AttackResolution {
     isCriticalHit,
     isCriticalMiss,
     isHit,
+    criticalConfirmed,
+    confirmationRoll,
     degreeOfSuccess,
     damage,
     damageDiceTerms,

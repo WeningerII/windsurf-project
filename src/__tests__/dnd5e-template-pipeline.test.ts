@@ -51,7 +51,7 @@ describe('D&D 5e template pipeline', () => {
     expect(prepared.system.hitDice).toEqual([
       { classId: 'wizard', die: 'd6', total: 3, remaining: 3 },
     ]);
-    expect(prepared.system.spellcasting?.classes).toEqual([
+    expect(prepared.system.spellcasting?.classes).toMatchObject([
       { classId: 'wizard', ability: 'int', spellcastingLevel: 3 },
     ]);
     expect(prepared.system.spellcasting?.spellSlots[1]).toEqual({ max: 4, used: 0 });
@@ -81,7 +81,7 @@ describe('D&D 5e template pipeline', () => {
       { classId: 'wizard', die: 'd6', total: 3, remaining: 3 },
       { classId: 'cleric', die: 'd8', total: 2, remaining: 2 },
     ]);
-    expect(prepared.system.spellcasting?.classes).toEqual([
+    expect(prepared.system.spellcasting?.classes).toMatchObject([
       { classId: 'wizard', ability: 'int', spellcastingLevel: 3 },
       { classId: 'cleric', ability: 'wis', spellcastingLevel: 2 },
     ]);

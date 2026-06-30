@@ -1,0 +1,42 @@
+{
+  "description": "User-outcome baseline (ORCH-14 / PROD-10, Launch-Blocker item 3). Per the D-equal decision all 7 systems are measured equally. X = interaction `steps` + wall-time to a legal non-trivial character sheet; Y = `legal` (a coherent, zero-error sheet whose core derived roll computes a valid formula). FLOOR: every system must stay legal. `timeBudgetMs` is a generous regression ceiling (CI/browser timing varies, so it guards against hangs, not micro-perf); change only via a reviewed ratchet.",
+  "measuredOn": "2026-06-27",
+  "harness": "e2e/outcome-baseline.spec.ts",
+  "systems": {
+    "dnd-5e-2014": {
+      "nonTrivial": "Fighter (Champion) at total level 5; Strength save roll",
+      "steps": 8,
+      "timeBudgetMs": 20000
+    },
+    "dnd-5e-2024": {
+      "nonTrivial": "Fighter at total level 5; Acrobatics check roll",
+      "steps": 7,
+      "timeBudgetMs": 20000
+    },
+    "dnd-3.5e": {
+      "nonTrivial": "Fighter 5 (full BAB +5); Attack roll",
+      "steps": 7,
+      "timeBudgetMs": 20000
+    },
+    "pf1e": {
+      "nonTrivial": "Fighter 5 (full BAB +5); Attack roll",
+      "steps": 7,
+      "timeBudgetMs": 20000
+    },
+    "pf2e": {
+      "nonTrivial": "Level-5 Fighter (key ability + Class DC wired); Perception roll",
+      "steps": 6,
+      "timeBudgetMs": 20000
+    },
+    "mam3e": {
+      "nonTrivial": "Power Level 12 superhero; Perception check roll",
+      "steps": 5,
+      "timeBudgetMs": 20000
+    },
+    "daggerheart": {
+      "nonTrivial": "Level-3 (tier 2) character; Duality (2d12) Agility roll",
+      "steps": 5,
+      "timeBudgetMs": 20000
+    }
+  }
+}

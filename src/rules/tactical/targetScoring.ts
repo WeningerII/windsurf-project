@@ -30,6 +30,15 @@ export interface TacticalActor {
   attackEffects: readonly EffectInstance[];
   /** Damage effects (weapon dice + flat bonuses). */
   damageEffects: readonly EffectInstance[];
+  /**
+   * Optional 5e two-weapon bonus attack (off-hand light weapon), resolved once
+   * after the Attack-action attacks. Its own damage profile omits the ability
+   * modifier unless the Two-Weapon Fighting style is active.
+   */
+  offHandAttack?: {
+    attackEffects: readonly EffectInstance[];
+    damageEffects: readonly EffectInstance[];
+  };
   /** Reach in grid cells (melee = 1). Undefined means unlimited (ranged). */
   reach?: number;
   critOn?: number;

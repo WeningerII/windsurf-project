@@ -148,9 +148,10 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       inputs: ['level', 'spellcasting ability'],
       edgeCases: ['per spellcasting class'],
       source: `${SRD}: Spellcasting — Spell save DC`,
-      status: 'missing',
-      testRef: 'src/__tests__/derivedCasterMath.test.ts :: 5e spell save DC and attack',
-      note: 'Canonical helper (derivedCasterMath.ts) is test-pinned but not consumed by any engine or sheet; per the legend, unwired quantities are missing.',
+      status: 'verified',
+      testRef:
+        'src/__tests__/dnd5e2014EngineMath.test.ts :: L2 spell save DC and attack (engine-wired)',
+      note: 'Wired in Dnd5eEngineBase.prepareData per spellcasting class (data.spellcasting.classes[].spellSaveDc / spellAttackBonus) via the derivedCasterMath helpers.',
     },
     {
       id: 'dnd5e2014.L2.spell-attack',
@@ -160,9 +161,10 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       inputs: ['level', 'spellcasting ability'],
       edgeCases: ['per spellcasting class'],
       source: `${SRD}: Spellcasting — Spell attack modifier`,
-      status: 'missing',
-      testRef: 'src/__tests__/derivedCasterMath.test.ts :: 5e spell save DC and attack',
-      note: 'Canonical helper (derivedCasterMath.ts) is test-pinned but not consumed by any engine or sheet; per the legend, unwired quantities are missing.',
+      status: 'verified',
+      testRef:
+        'src/__tests__/dnd5e2014EngineMath.test.ts :: L2 spell save DC and attack (engine-wired)',
+      note: 'Wired in Dnd5eEngineBase.prepareData per spellcasting class (data.spellcasting.classes[].spellSaveDc / spellAttackBonus) via the derivedCasterMath helpers.',
     },
 
     // ── L3 offense ──
@@ -176,7 +178,7 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       source: `${SRD}: Fighter — Extra Attack`,
       status: 'verified',
       testRef:
-        'src/__tests__/rules/characterCombatant.test.ts :: Extra Attack scales attacksPerRound',
+        'src/__tests__/rules/characterCombatant.test.ts :: 5e Extra Attack in scene combat (phase 4)',
     },
     {
       id: 'dnd5e2014.L3.rage-damage',
@@ -187,7 +189,7 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       edgeCases: ['barbarian 9 → +3', 'toggle without feature → no effect'],
       source: `${SRD}: Barbarian — Rage`,
       status: 'verified',
-      testRef: 'src/__tests__/rules/characterCombatant.test.ts :: 5e rider toggles in scene combat',
+      testRef: 'src/__tests__/rules/characterCombatant.test.ts :: 5e rider toggles in scene combat (phase 4)',
       note: 'Manual boundary: melee Strength attacks only (rider note travels with the effect).',
     },
     {
@@ -199,7 +201,7 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       edgeCases: ['feat-gated: toggle without feat → no effect'],
       source: `${SRD}: Feats — Great Weapon Master`,
       status: 'verified',
-      testRef: 'src/__tests__/rules/characterCombatant.test.ts :: 5e rider toggles in scene combat',
+      testRef: 'src/__tests__/rules/characterCombatant.test.ts :: 5e rider toggles in scene combat (phase 4)',
       note: 'Manual boundary: heavy melee weapons only.',
     },
     {
@@ -224,7 +226,7 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       edgeCases: ['rogue 1 → 1d6', 'rogue 20 → 10d6'],
       source: `${SRD}: Rogue — Sneak Attack`,
       status: 'verified',
-      testRef: 'src/__tests__/rules/characterCombatant.test.ts :: 5e rider toggles in scene combat',
+      testRef: 'src/__tests__/rules/characterCombatant.test.ts :: 5e sneak attack dice (phase 4)',
       note: 'Manual boundary: once per turn, advantage or adjacent-ally positioning asserted by the toggle.',
     },
     {
@@ -239,6 +241,37 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       testRef:
         'src/__tests__/rules/characterCombatant.test.ts :: collectDnd5eRiderEffects: Sharpshooter and Divine Smite',
       note: 'Manual boundary: slot expenditure and per-slot/undead scaling are manual calls.',
+    },
+    {
+      id: 'dnd5e2014.L3.versatile-damage',
+      layer: 'L3',
+      quantity: 'Versatile weapon damage die',
+      formula: 'larger (two-handed) die when wielded in two hands; base die otherwise',
+      inputs: ['weapon dice', 'versatile die', 'off-hand occupancy'],
+      edgeCases: ['off-hand occupied (shield/second weapon) → base die'],
+      source: `${SRD}: Equipment — Weapon Properties (Versatile)`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/rules/characterCombatant.test.ts :: 5e Versatile: rolls the larger die when wielded two-handed (empty off-hand)',
+      note: 'Engine-wired (Denominator B): buildCharacterCombatant consumes the equipped main-hand weapon’s dice via dnd5eVersatileDamageDie. Populating EquippedItem.weaponDamage from a weapon catalog at equip time is a separate Denominator-A content step.',
+    },
+    {
+      id: 'dnd5e2014.L3.two-weapon-offhand',
+      layer: 'L3',
+      quantity: 'Two-weapon off-hand attack damage',
+      formula:
+        'bonus attack with an off-hand light weapon; its damage omits the ability modifier unless the Two-Weapon Fighting style is active (a negative modifier still applies)',
+      inputs: ['off-hand light weapon', 'ability mod', 'TWF style'],
+      edgeCases: [
+        'no off-hand light weapon → no bonus attack',
+        'TWF style adds the ability mod',
+        'negative modifier still applies',
+      ],
+      source: `${SRD}: Combat — Two-Weapon Fighting`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/rules/characterCombatant.test.ts :: grants an off-hand attack whose damage omits the ability modifier',
+      note: 'Engine-wired: buildCharacterCombatant builds the off-hand attack profile via dnd5eOffHandDamageMod and threads it to the tactical executor, which resolves it once after the Attack-action attacks. Populating EquippedItem.weaponDamage at equip time is a separate Denominator-A content step.',
     },
 
     // ── L4 skills & derived checks ──

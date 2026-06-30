@@ -112,6 +112,18 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: [],
   },
   {
+    path: 'docs/generated/master-gap-ledger.md',
+    kind: 'generated',
+    owner: 'master-gap-ledger',
+    rules: ['path_ref_rule'],
+  },
+  {
+    path: 'docs/generated/master-gap-ledger.json',
+    kind: 'generated',
+    owner: 'master-gap-ledger',
+    rules: [],
+  },
+  {
     path: 'docs/generated/verification-baseline.json',
     kind: 'generated',
     owner: 'verification-baseline',

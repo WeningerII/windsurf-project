@@ -19,6 +19,11 @@
     "check:generated-docs": "npm run node:check && node scripts/check-generated-docs.mjs",
     "check:repo-hygiene": "npm run node:check && node scripts/check-repo-hygiene.mjs",
     "check:dead-code": "npm run node:check && knip",
+    "check:legal-notices": "npm run node:check && node scripts/check-legal-notices.mjs",
+    "legal:generate": "npm run node:check && tsx src/scripts/generate-legal-notice.ts",
+    "check:compute-register": "npm run node:check && tsx scripts/check-compute-register.mjs",
+    "check:compute-register:mutate": "npm run node:check && tsx scripts/check-compute-register.mjs --mutate",
+    "check:compute-register:write": "npm run node:check && tsx scripts/check-compute-register.mjs --mutate --write",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "typecheck:test": "tsc -p tsconfig.test.json --noEmit",
     "typecheck:netlify": "tsc -p tsconfig.netlify.json",
@@ -33,13 +38,14 @@
     "test:e2e:ui": "npm run node:check && node scripts/check-playwright-browsers.mjs && playwright test --ui",
     "docs": "typedoc",
     "roadmap:metrics": "npm run node:check && tsx src/scripts/generate-roadmap-metrics.ts",
+    "gap:ledger": "npm run node:check && tsx src/scripts/generate-master-gap-ledger.ts",
     "srd:coverage": "npm run node:check && tsx src/scripts/srd-coverage.ts",
     "progress": "tsx src/scripts/show-progress.ts",
     "validate": "npm run node:check && tsx src/scripts/validate-classes.ts",
     "enhance": "tsx src/scripts/enhance-classes.ts",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx}\"",
-    "verify": "npm run node:check && npm run lint && npm run typecheck:test && npm run typecheck:netlify && npm run format:check && npm run test:coverage -- --run --maxWorkers=1 && npm run validate && npm run build && npm run check:bundle-size && npm run test:e2e && npm run check:repo-hygiene && npm run check:generated-docs && npm run check:doc-drift && npm run check:dead-code"
+    "verify": "npm run node:check && npm run lint && npm run typecheck:test && npm run typecheck:netlify && npm run format:check && npm run test:coverage -- --run --maxWorkers=1 && npm run validate && npm run build && npm run check:bundle-size && npm run test:e2e && npm run check:repo-hygiene && npm run check:generated-docs && npm run check:doc-drift && npm run check:dead-code && npm run check:legal-notices && npm run check:compute-register"
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.83",

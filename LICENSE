@@ -1,0 +1,45 @@
+Copyright (c) 2026 The RPG Character Sheet & VTT Toolkit authors.
+All rights reserved.
+
+1. APPLICATION SOURCE CODE
+
+   This license covers the original source code of this application (the
+   "Software") — the React/TypeScript components, build tooling, scripts, and
+   other first-party code in this repository.
+
+   No permission is granted to use, copy, modify, merge, publish, distribute,
+   sublicense, or sell copies of the Software, except as expressly permitted in
+   writing by the copyright holders. The Software is provided "AS IS", without
+   warranty of any kind, express or implied, including but not limited to the
+   warranties of merchantability, fitness for a particular purpose, and
+   non-infringement. In no event shall the authors or copyright holders be
+   liable for any claim, damages, or other liability arising from, out of, or in
+   connection with the Software or its use.
+
+   (This is a conservative default for an otherwise-unlicensed private project.
+   If you intend to release the application code under an open-source license,
+   replace this section accordingly.)
+
+2. BUNDLED THIRD-PARTY GAME CONTENT
+
+   This application reproduces and builds upon open-game and open-content
+   materials (System Reference Documents and related rules content) that are NOT
+   covered by Section 1 and are NOT owned by the authors of this Software. That
+   material remains the property of its respective rights holders and is used
+   under their respective open licenses:
+
+     - Open Game License v1.0a (d20 / Pathfinder / M&M SRDs)
+     - Creative Commons Attribution 4.0 International (D&D SRD 5.1 and SRD 5.2)
+     - Darrington Press Community Gaming License (Daggerheart SRD 1.0)
+
+   The full attributions, chains of title, required notices, and verbatim
+   license texts are provided in the NOTICE file at the root of this repository
+   and are surfaced in-app on the "Legal & Open-Content Notices" screen. Your
+   use of that bundled content is governed by those licenses, not by Section 1.
+
+3. TRADEMARKS
+
+   Dungeons & Dragons, D&D, Pathfinder, Mutants & Masterminds, Daggerheart, and
+   all other product names and logos are trademarks of their respective owners.
+   This project is independent and is not affiliated with, endorsed, or
+   sponsored by any of those rights holders.

@@ -43,10 +43,26 @@ function degreeModelForScene(state: SceneState): 'd20' | 'pf2e' {
   return state.systemId === 'pf2e' ? 'pf2e' : 'd20';
 }
 
+/**
+ * Critical-hit damage model by system: 3.5e/PF1e confirm a natural threat with a
+ * second attack roll and multiply the damage; everyone else (the 5e default)
+ * auto-confirms and doubles the damage dice.
+ */
+function critModelForScene(state: SceneState): 'double-dice' | 'confirm-multiply' {
+  return state.systemId === 'dnd-3.5e' || state.systemId === 'pf1e'
+    ? 'confirm-multiply'
+    : 'double-dice';
+}
+
 /** Combat stats for a token, resolved from its statblock or character sheet. */
 export interface SceneCombatStats {
   attackEffects: EffectInstance[];
   damageEffects: EffectInstance[];
+  /** Optional 5e two-weapon off-hand bonus attack (its own damage profile). */
+  offHandAttack?: {
+    attackEffects: readonly EffectInstance[];
+    damageEffects: readonly EffectInstance[];
+  };
   armorClass: number;
   /** Reach in grid cells (melee = 1). */
   reach: number;
@@ -120,6 +136,7 @@ export function buildSceneCombatants(
       hp: { current: token.hp.current, max: token.hp.max },
       attackEffects: [...stats.attackEffects, ...conditionEffects],
       damageEffects: stats.damageEffects,
+      ...(stats.offHandAttack ? { offHandAttack: stats.offHandAttack } : {}),
       reach: stats.reach,
       critOn: stats.critOn,
       attacksPerRound: stats.attacksPerRound,
@@ -290,6 +307,7 @@ export function resolveSceneAttack(params: {
     targetValue: targetStats.armorClass,
     critOn: attackerStats.critOn,
     degreeModel: degreeModelForScene(state),
+    critModel: critModelForScene(state),
     rng: participantRng(seed, attackerId, targetId),
     context: {
       conditions: new Set(attackerConditions),
@@ -343,6 +361,7 @@ export function runSceneRound(params: {
     seed: params.seed,
     round: params.round,
     degreeModel: degreeModelForScene(params.state),
+    critModel: critModelForScene(params.state),
   });
 
   const nameOf = (tokenId: string): string => params.state.tokens[tokenId]?.name ?? tokenId;

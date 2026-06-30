@@ -5,8 +5,8 @@
  * (docs/compute-register/dnd5e-2014.ts) to its RAW formula, including edge
  * cases and the content x compute interactions (armor type x shield x Dex cap;
  * multiclass HP; exhaustion x HP). Asserts only behavior the engine actually
- * implements; quantities the engine does not compute (e.g. spell save DC) are
- * tracked as `missing` in the register, not asserted here.
+ * implements; quantities the engine does not compute yet are tracked as
+ * `missing` in the register, not asserted here.
  */
 import { Dnd5eEngine } from '../systems/dnd5e/engine';
 import { abilityMod } from '../utils/math';
@@ -358,6 +358,29 @@ describe('L8 exhaustion disadvantage (2014)', () => {
   it('level 3 imposes disadvantage on saving throws', async () => {
     const r = await engine.rollCheck(doc(atExhaustion(3)), 'save-con');
     expect(r.formula).toContain('2d20kl1');
+  });
+});
+
+// ── L2: spell save DC + attack — wired through prepareData ──────────────────
+describe('L2 spell save DC and attack (engine-wired)', () => {
+  it('derives per-class spell save DC and attack from proficiency + ability mod', () => {
+    const out = engine.prepareData(
+      doc({
+        ...createDefaultDnd5eData(),
+        baseAttributes: { str: 10, dex: 10, con: 10, int: 18, wis: 10, cha: 10 },
+        classLevels: [{ classId: 'wizard', level: 5, hitDieRolls: [] }],
+        spellcasting: {
+          classes: [{ classId: 'wizard', ability: 'int', spellcastingLevel: 5 }],
+          spellsKnown: [],
+          spellsPrepared: [],
+          spellSlots: compute5eSpellSlots([{ classId: 'wizard', level: 5 }]),
+        },
+      })
+    );
+    const wizard = out.system.spellcasting!.classes[0];
+    // level 5 → proficiency +3; INT 18 → +4. DC = 8+3+4 = 15; attack = 3+4 = 7.
+    expect(wizard.spellSaveDc).toBe(15);
+    expect(wizard.spellAttackBonus).toBe(7);
   });
 });
 
