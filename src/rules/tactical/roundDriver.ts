@@ -33,6 +33,11 @@ export interface RoundCombatant {
   hp: { current: number; max: number };
   attackEffects: readonly EffectInstance[];
   damageEffects: readonly EffectInstance[];
+  /** Optional 5e two-weapon off-hand bonus attack (its own damage profile). */
+  offHandAttack?: {
+    attackEffects: readonly EffectInstance[];
+    damageEffects: readonly EffectInstance[];
+  };
   reach?: number;
   critOn?: number;
   /** Attacks per turn (SRD Multiattack). Default 1. */
@@ -79,6 +84,8 @@ export interface RunRoundInput {
   round: number;
   /** Hit/crit model for the whole round (default 'd20'). */
   degreeModel?: 'd20' | 'pf2e';
+  /** Critical-damage model for the whole round (default 'double-dice'). */
+  critModel?: 'double-dice' | 'confirm-multiply';
 }
 
 function toActor(combatant: RoundCombatant): TacticalActor {
@@ -88,6 +95,7 @@ function toActor(combatant: RoundCombatant): TacticalActor {
     position: combatant.position,
     attackEffects: combatant.attackEffects,
     damageEffects: combatant.damageEffects,
+    ...(combatant.offHandAttack ? { offHandAttack: combatant.offHandAttack } : {}),
     reach: combatant.reach,
     critOn: combatant.critOn,
     attacksPerRound: combatant.attacksPerRound,
@@ -177,6 +185,7 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
       targets,
       seed: `${input.seed}::round${input.round}::turn${turnIndex}`,
       degreeModel: input.degreeModel,
+      critModel: input.critModel,
     });
 
     // Movement executed this turn: update the working position so later

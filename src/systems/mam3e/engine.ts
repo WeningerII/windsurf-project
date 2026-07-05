@@ -1,5 +1,6 @@
 import { SystemEngine, RollResult } from '../../registry/types';
 import { CharacterDocument } from '../../types/core/document';
+import { rollD20 } from '../../rules/dice';
 import { Mam3eConditionTrack, Mam3eDataModel } from './data-model';
 import { calculatePowerPointCost, getPowerRank } from './powerMath';
 
@@ -278,7 +279,7 @@ export class Mam3eEngine implements SystemEngine<Mam3eDataModel> {
     checkId: string
   ): Promise<RollResult> {
     const data = document.system;
-    const d20 = Math.floor(Math.random() * 20) + 1;
+    const d20 = rollD20('normal').chosen;
     let mod = 0;
     let flavor = '';
 

@@ -209,6 +209,14 @@ export interface SpellcastingClass {
   classId: string;
   ability: string; // INT, WIS, CHA
   spellcastingLevel: number; // For multiclassing
+  /**
+   * Derived (engine-computed in prepareData), per SRD Spellcasting:
+   *   spell save DC    = 8 + proficiency bonus + spellcasting ability modifier
+   *   spell attack mod =     proficiency bonus + spellcasting ability modifier
+   * Per spellcasting class, since multiclass casters can use different abilities.
+   */
+  spellSaveDc?: number;
+  spellAttackBonus?: number;
 }
 
 export interface SpellSlots {
@@ -246,6 +254,17 @@ export interface EquippedItem {
   bonusType?: BonusType;
   /** PF2e stacking bucket for this item's bonuses (defaults to 'item'). */
   pf2eBucket?: 'item' | 'status' | 'circumstance';
+  // Weapon stats — populated when equipping a weapon so the scene combatant can
+  // assemble real weapon damage instead of its placeholder die. This is the
+  // Denominator-B engine wiring; populating these fields from a weapon catalog at
+  // equip time is a separate Denominator-A content step. All optional, so existing
+  // equipment and the placeholder-die baseline are unaffected.
+  /** Base weapon damage dice, e.g. `{ count: 1, die: 8 }` for a longsword. */
+  weaponDamage?: { count: number; die: number };
+  /** Larger die rolled when a Versatile weapon is wielded in two hands (e.g. 10). */
+  weaponVersatileDie?: number;
+  /** Weapon properties driving assembly: 'light' | 'versatile' | 'two-handed' | … */
+  weaponProperties?: string[];
 }
 
 export type EquipmentSlot =

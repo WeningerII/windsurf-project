@@ -254,13 +254,13 @@ test('manages campaign membership and opens members from the campaign panel', as
   await backToCharacterList(page);
   await campaignSection.getByRole('button', { name: /System Smoke Campaign/i }).click();
   await page
-    .getByPlaceholder('Session notes, house rules, quest tracker...')
+    .getByPlaceholder('House rules, NPC names, loot...')
     .fill('Campaign smoke note');
   await page.reload();
 
   await expect(page.getByText('System Smoke Campaign')).toBeVisible();
   await campaignSection.getByRole('button', { name: /System Smoke Campaign/i }).click();
-  await expect(page.getByPlaceholder('Session notes, house rules, quest tracker...')).toHaveValue(
+  await expect(page.getByPlaceholder('House rules, NPC names, loot...')).toHaveValue(
     'Campaign smoke note'
   );
 });

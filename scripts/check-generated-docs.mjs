@@ -8,6 +8,8 @@ const projectRoot = process.cwd();
 const generatedFiles = [
   path.join(projectRoot, 'docs/generated/roadmap-metrics.md'),
   path.join(projectRoot, 'docs/generated/roadmap-metrics.json'),
+  path.join(projectRoot, 'docs/generated/master-gap-ledger.md'),
+  path.join(projectRoot, 'docs/generated/master-gap-ledger.json'),
 ];
 
 function normalizeGeneratedContent(filePath, contents) {
@@ -45,6 +47,11 @@ const beforeState = new Map(
 const npmCommand = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 
 execFileSync(npmCommand, ['run', 'roadmap:metrics', '--silent'], {
+  cwd: projectRoot,
+  stdio: 'inherit',
+});
+
+execFileSync(npmCommand, ['run', 'gap:ledger', '--silent'], {
   cwd: projectRoot,
   stdio: 'inherit',
 });

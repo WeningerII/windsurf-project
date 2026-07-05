@@ -73,9 +73,10 @@ export const dnd5e2024ComputeRegister: SystemComputeRegister = {
       inputs: ['level', 'spell ability'],
       edgeCases: ['per class'],
       source: `${SRD}: Spellcasting`,
-      status: 'missing',
-      testRef: 'src/__tests__/derivedCasterMath.test.ts :: 5e spell save DC and attack',
-      note: 'Canonical helper is test-pinned but not consumed by any engine or sheet; per the legend, unwired quantities are missing.',
+      status: 'verified',
+      testRef:
+        'src/__tests__/dnd5e2014EngineMath.test.ts :: L2 spell save DC and attack (engine-wired)',
+      note: 'Wired in the shared Dnd5eEngineBase.prepareData (the 2024 engine inherits it); proven by the shared-base test (T14).',
     },
     {
       id: 'dnd5e2024.L2.spell-attack',
@@ -85,9 +86,10 @@ export const dnd5e2024ComputeRegister: SystemComputeRegister = {
       inputs: ['level', 'spellcasting ability'],
       edgeCases: ['per spellcasting class'],
       source: `${SRD}: Spellcasting — Spell attack modifier`,
-      status: 'missing',
-      testRef: 'src/__tests__/derivedCasterMath.test.ts :: 5e spell save DC and attack',
-      note: 'Canonical helper is test-pinned but not consumed by any engine or sheet; per the legend, unwired quantities are missing.',
+      status: 'verified',
+      testRef:
+        'src/__tests__/dnd5e2014EngineMath.test.ts :: L2 spell save DC and attack (engine-wired)',
+      note: 'Wired in the shared Dnd5eEngineBase.prepareData (the 2024 engine inherits it); proven by the shared-base test (T14).',
     },
     {
       id: 'dnd5e2024.L2.ac.unarmored-defense-barbarian',
@@ -147,6 +149,37 @@ export const dnd5e2024ComputeRegister: SystemComputeRegister = {
       status: 'missing',
       testRef: 'src/__tests__/dnd5eMovement.test.ts :: 5e carrying capacity and push/drag/lift',
       note: 'Canonical helper (dnd5eMovement.ts) is test-pinned but not consumed by any engine or sheet; per the legend, unwired quantities are missing.',
+    },
+    {
+      id: 'dnd5e2024.L3.versatile-damage',
+      layer: 'L3',
+      quantity: 'Versatile weapon damage die',
+      formula: 'larger (two-handed) die when wielded in two hands; base die otherwise',
+      inputs: ['weapon dice', 'versatile die', 'off-hand occupancy'],
+      edgeCases: ['off-hand occupied (shield/second weapon) → base die'],
+      source: `${SRD}: Equipment — Weapon Properties (Versatile)`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/rules/characterCombatant.test.ts :: 5e Versatile: rolls the larger die when wielded two-handed (empty off-hand)',
+      note: 'Engine-wired in the shared, system-agnostic buildCharacterCombatant (the 2024 path inherits it via the same is5e branch as 2014). Populating EquippedItem.weaponDamage at equip time is a separate Denominator-A content step.',
+    },
+    {
+      id: 'dnd5e2024.L3.two-weapon-offhand',
+      layer: 'L3',
+      quantity: 'Two-weapon off-hand attack damage',
+      formula:
+        'bonus attack with an off-hand light weapon; its damage omits the ability modifier unless the Two-Weapon Fighting style is active (a negative modifier still applies)',
+      inputs: ['off-hand light weapon', 'ability mod', 'TWF style'],
+      edgeCases: [
+        'no off-hand light weapon → no bonus attack',
+        'TWF style adds the ability mod',
+        'negative modifier still applies',
+      ],
+      source: `${SRD}: Combat — Two-Weapon Fighting`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/rules/characterCombatant.test.ts :: grants an off-hand attack whose damage omits the ability modifier',
+      note: 'Engine-wired in the shared buildCharacterCombatant + tactical executor (the 2024 path inherits the same is5e branch). Populating EquippedItem.weaponDamage at equip time is a separate Denominator-A content step.',
     },
     {
       id: 'dnd5e2024.L6.jump-distances',

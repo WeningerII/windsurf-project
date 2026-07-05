@@ -1,4 +1,5 @@
 import { SystemEngine, RollResult } from '../../registry/types';
+import { rollD20 } from '../../rules/dice';
 import { CharacterDocument } from '../../types/core/document';
 import { Pf2eDataModel, profTotal } from './data-model';
 import { abilityMod } from '../../utils/math';
@@ -257,7 +258,7 @@ export class Pf2eEngine implements SystemEngine<Pf2eDataModel> {
       flavor = `${checkId.toUpperCase()} Check`;
     }
 
-    const d20 = Math.floor(Math.random() * 20) + 1;
+    const d20 = rollD20('normal').chosen;
     const total = d20 + modifier - conditionPenalty;
 
     // Degree of success (PF2e CRB p.445)

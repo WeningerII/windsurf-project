@@ -6,6 +6,7 @@
  */
 
 import { CharacterDocument } from '../../types/core/document';
+import { rollDuality } from '../../rules/dice';
 import { SystemEngine, RollResult } from '../../registry/types';
 import { clampCount } from '../../utils/resourcePool';
 import { createDefaultDaggerheartData, DaggerheartDataModel } from './data-model';
@@ -91,9 +92,8 @@ export class DaggerheartEngine implements SystemEngine<DaggerheartDataModel> {
         ? getDaggerheartEffectiveAttribute(document.system, checkId as DaggerheartTrait)
         : ((attrs as Record<string, number>)[checkId] ?? 0);
 
-    // Daggerheart uses 2d12 — Hope die and Fear die
-    const hopeDie = Math.floor(Math.random() * 12) + 1;
-    const fearDie = Math.floor(Math.random() * 12) + 1;
+    // Daggerheart uses 2d12 — Hope die and Fear die (shared, seedable roller).
+    const { hope: hopeDie, fear: fearDie } = rollDuality();
     const total = hopeDie + fearDie + mod;
 
     // Any matched Duality Dice is a critical success regardless of the value

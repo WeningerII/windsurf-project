@@ -5,9 +5,11 @@ are tracked explicitly rather than implied. Live numbers: `docs/generated/roadma
 Current-state summary: `docs/STATUS.md`. Both denominators' tooling lives in
 `docs/srd-manifest/` (content) and `docs/compute-register/` (engine math).
 
-**Snapshot:** Engine math (Denominator B) is verified and levelled to even depth —
-each of the 7 systems' compute registers now holds 26–28 test-pinned quantities
-across L1–L10 (was 13–28). Content (Denominator A) is provenance-clean (every
+**Snapshot:** Engine math (Denominator B) is gated by `check:compute-register` —
+each of the 7 systems' registers holds 26–28 `verified` quantities (Tier A:
+test-linked + actually passing) across L1–L10; per-system % lives in
+`roadmap-metrics.md` (not uniformly 100%), and mutation-proof is seeded and green
+on a growing anchor subset with full per-entry anchoring a tracked rollout. Content (Denominator A) is provenance-clean (every
 shipped entry is encoded, loader-backed, source-tagged, policy-clean, and — for
 the categories with an authoritative SRD list — verified by reverse-diff to
 contain **no** non-SRD entries). Independent published-SRD *coverage* is now
@@ -28,15 +30,18 @@ Node `fetch()` does not). Verified independent sources for all 7 systems are in
 by normalized name, each scoped to the policy's `allowedSources`) — real coverage,
 unlike the loader-derived `docs/srd-manifest/`.
 
-**Measured (live numbers in `docs/generated/srd-coverage.md`):**
-- **5e-2014:** spells 214/319 (67%), monsters 38/334 (11%), equipment 189/598 (32%),
-  classes 12/12, species 9/9. **5e-2024:** spells 283/319 (89%), feats 12/17,
-  species 7/9, equipment 145/443 (33%).
-- **PF2e:** Core spells 129/537 (24%). **PF1e:** Core spells 131/623 (21%).
-- **M&M 3e:** powers 40/40, advantages 73/73 — **genuinely complete.**
-- **Daggerheart:** domain cards 189/189, domains 9/9 — **genuinely complete.**
-- So two non-5e systems (M&M, Daggerheart) are at true 100% independent coverage on
-  the wired categories; the Pathfinder/5e *spell* catalogs carry real gaps.
+**Measured — `docs/generated/srd-coverage.md` is authoritative for live counts (do not restate them here; they drift):**
+- The earlier deep gaps (PF2e spells "24%", PF1e "21%", 5e-2014 "67%") were a stale
+  snapshot. Every wired spell catalog now reads complete or one entry short: PF2e
+  and both 5e editions at 100%, PF1e and 3.5e at 99.8%. 5e-2014/2024 monsters and
+  equipment are also at/near 100%.
+- **M&M 3e** (powers, advantages) and **Daggerheart** (domain cards, domains) are at
+  genuine 100% on their wired categories.
+- The genuine residual is small and itemized in `srd-coverage.md`: single-entry
+  gaps (5e-2014 Net, 5e-2024 Will-o'-Wisp, PF1e Teleport Greater, 3.5e Shadow
+  Evocation Greater), the M&M equipment encode, and the 3.5e/PF1e *monster* rows
+  whose percentage is understated by a denominator counting SRD category headings /
+  age-size variants rather than individual stat blocks.
 - **Provenance — feats/backgrounds [REMEDIATED]:** the loaders shipped PHB feats
   and backgrounds mislabeled with an SRD source tag (SRD 5.1 has only Acolyte +
   Grappler; SRD 5.2 has 4 backgrounds + 17 feats). The non-SRD entries were
@@ -78,21 +83,26 @@ unlike the loader-derived `docs/srd-manifest/`.
 
 ## 2. Compute (Denominator B) — register completeness + engine wiring
 
-The registers read 100%, but two real gaps sit behind that:
+The registers are Tier-A-verified by `check:compute-register` (test-linked + passing) but per `roadmap-metrics.md` are not uniformly 100% complete, and two structural gaps sit behind the headline:
 
 **Rebalancing pass (done):** the registers were levelled so no system is
-neglected — each now holds 26–28 verified quantities across L1–L10 (previously
-13–28, with Daggerheart the outlier at 13). All additions were genuine,
-SRD-cited RAW math, not padding (see `docs/STATUS.md` for the list). This closed
-several items below; the remainder is the honest residual.
+neglected — each now holds two-to-three dozen verified quantities across L1–L10
+(previously 13–28, with Daggerheart the outlier at 13; exact per-system counts in
+`docs/generated/roadmap-metrics.md`). All additions were genuine, SRD-cited RAW
+math, not padding (see `docs/STATUS.md` for the list). This closed several items
+below; the remainder is the honest residual.
 
 - **Registers are a curated subset of the goal's full L1–L10 spec, not the
   exhaustive enumeration.** A complete register would be much larger and partly
   `missing`. Notably absent / uncounted today:
-  - L3: full damage assembly with riders wired (Sneak Attack / Rage / Divine
-    Smite / GWM / Sharpshooter / two-weapon / versatile); 5e Extra Attack counts;
-    3.5e/PF1e crit confirmation. (Daggerheart critical damage + Spellcast dice,
-    and M&M attack/Affliction/Damage DCs, are now covered.)
+  - L3: **Done (engine-wired + mutation-proven).** Full damage assembly with
+    riders — Sneak Attack / Rage / Divine Smite / GWM / Sharpshooter / Extra
+    Attack, 5e Versatile weapon dice and two-weapon off-hand attacks, 3.5e/PF1e
+    iteratives + crit confirmation, Daggerheart critical/Spellcast damage, and
+    M&M attack/Affliction/Damage DCs — all assemble through the seeded dice
+    substrate + resolver/combatant. Separate follow-on (Denominator-A content):
+    populating `EquippedItem.weaponDamage` from a weapon catalog at equip time so
+    Versatile/two-weapon fire for real saved characters, not just engine tests.
   - L5: prepared/known spell counts; upcasting; full PF2e heightening (only
     auto-heighten rank is covered). (3.5e/PF1e bonus-spells-by-ability done.)
   - L6: speed with armor/Str penalty still open. **Done:** 3.5e/PF1e carrying
