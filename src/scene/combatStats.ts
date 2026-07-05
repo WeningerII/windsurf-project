@@ -120,6 +120,7 @@ export function resolveSceneCombatStats(
     return {
       attackEffects: built.combatant.attackEffects,
       damageEffects: built.combatant.damageEffects,
+      ...(built.combatant.offHandAttack ? { offHandAttack: built.combatant.offHandAttack } : {}),
       armorClass: built.combatant.armorClass,
       reach: built.combatant.reach,
       attacksPerRound: built.combatant.attacksPerRound,

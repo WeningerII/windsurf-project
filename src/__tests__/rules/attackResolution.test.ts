@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { createSeededRng } from '../../scene/seededRng';
+import { createSeededRng, type SeededRng } from '../../scene/seededRng';
 import {
   compileEquipmentEffects,
   makeEffectId,
@@ -323,5 +323,66 @@ describe("resolveAttack — PF2e degrees of success (degreeModel: 'pf2e')", () =
     // 5e crit: dice doubled, flat NOT doubled.
     const die = resolution.damageDiceTerms[0];
     expect(resolution.damage).toBe(2 * die + 4);
+  });
+});
+
+describe("resolveAttack — 3.5e/PF1e critical confirmation (critModel: 'confirm-multiply')", () => {
+  const SID = 'dnd-3.5e' as const;
+
+  // Scripted rng: rollDie(20) drains the queued naturals (attack threat, then
+  // the confirmation roll); every other die (the damage dice) returns its max,
+  // so damage is deterministic without coupling the test to add-die ordering.
+  function scriptedRng(d20s: number[]): SeededRng {
+    const queue = [...d20s];
+    return {
+      next: () => 0.5,
+      nextInt: (max: number) => max - 1,
+      rollDie: (sides: number) => (sides === 20 ? (queue.shift() ?? 1) : sides),
+    };
+  }
+
+  it('a confirmed threat multiplies normal damage by the weapon multiplier', () => {
+    // Attack nat 20 (threat), then confirmation nat 20 (25 vs AC 15 -> confirms).
+    const resolution = resolveAttack({
+      attackEffects: [attackEffect(SID, 5)],
+      damageEffects: weaponDamage(SID, 8, 3),
+      targetValue: 15,
+      critModel: 'confirm-multiply',
+      rng: scriptedRng([20, 20]),
+    });
+    expect(resolution.isCriticalHit).toBe(true);
+    expect(resolution.criticalConfirmed).toBe(true);
+    expect(resolution.confirmationRoll).toBe(20);
+    // Normal damage = max d8 (8) + 3 = 11; ×2 default multiplier = 22.
+    expect(resolution.damage).toBe(22);
+  });
+
+  it('honors a higher critical multiplier (×3)', () => {
+    const resolution = resolveAttack({
+      attackEffects: [attackEffect(SID, 5)],
+      damageEffects: weaponDamage(SID, 8, 3),
+      targetValue: 15,
+      critModel: 'confirm-multiply',
+      criticalMultiplier: 3,
+      rng: scriptedRng([20, 20]),
+    });
+    expect(resolution.criticalConfirmed).toBe(true);
+    expect(resolution.damage).toBe(33); // 11 × 3
+  });
+
+  it('an unconfirmed threat is an ordinary hit, not a crit', () => {
+    // Attack nat 20 (threat), confirmation nat 2 (2 + 5 = 7 < AC 15 -> fails).
+    const resolution = resolveAttack({
+      attackEffects: [attackEffect(SID, 5)],
+      damageEffects: weaponDamage(SID, 8, 3),
+      targetValue: 15,
+      critModel: 'confirm-multiply',
+      rng: scriptedRng([20, 2]),
+    });
+    expect(resolution.isHit).toBe(true);
+    expect(resolution.isCriticalHit).toBe(false);
+    expect(resolution.criticalConfirmed).toBe(false);
+    expect(resolution.confirmationRoll).toBe(2);
+    expect(resolution.damage).toBe(11); // normal, unmultiplied
   });
 });

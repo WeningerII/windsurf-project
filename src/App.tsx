@@ -30,6 +30,12 @@ import { CampaignManager } from './components/CampaignManager';
 const SceneManager = lazy(() =>
   import('./components/SceneManager').then((m) => ({ default: m.SceneManager }))
 );
+// Lazy-loaded: the Legal notices view bundles ~26 KB of verbatim license text
+// (OGL 1.0a / CC-BY-4.0 / DPCGL) imported with `?raw`, so it stays in its own
+// chunk off the app's first-paint budget — only fetched when a user opens it.
+const LegalNotices = lazy(() =>
+  import('./components/LegalNotices').then((m) => ({ default: m.LegalNotices }))
+);
 import { useScenes } from './hooks/useScenes';
 import { prefetchSystemAssetsForIds } from './utils/systemAssetPrefetch';
 import { usePwaInstallPrompt } from './hooks/usePwaInstallPrompt';
@@ -84,6 +90,7 @@ function AppContent() {
   });
   const [currentDocId, setCurrentDocId] = useState<string | null>(null);
   const [selectedSystem, setSelectedSystem] = useState<GameSystemId | null>(null);
+  const [showLegal, setShowLegal] = useState(false);
 
   const [systemFilter, setSystemFilter] = useState<GameSystemId | 'all'>('all');
   const [sortOption, setSortOption] = useState<CharacterSortOption>('updated-desc');
@@ -458,7 +465,11 @@ function AppContent() {
 
       {/* Main Content */}
       <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8">
-        {isLoading || scenesLoading ? (
+        {showLegal ? (
+          <Suspense fallback={<Skeleton className="h-64 w-full" />}>
+            <LegalNotices onBack={() => setShowLegal(false)} />
+          </Suspense>
+        ) : isLoading || scenesLoading ? (
           <div className="max-w-6xl mx-auto space-y-6 pt-4">
             <Skeleton className="h-10 w-64 mx-auto" />
             <Skeleton className="h-6 w-96 mx-auto" />
@@ -639,10 +650,21 @@ function AppContent() {
 
       {/* Footer */}
       <footer className="border-t mt-12 py-6">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
+        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground space-y-2">
           <p>
             Built for tabletop RPG enthusiasts &bull; Supports D&amp;D, Pathfinder, M&amp;M, and
             more
+          </p>
+          <p>
+            <button
+              type="button"
+              onClick={() => setShowLegal(true)}
+              className="underline underline-offset-2 hover:text-foreground"
+            >
+              Legal &amp; Open-Content Notices
+            </button>
+            <span className="mx-2">&bull;</span>
+            <span>Independent fan project — not affiliated with any rights holder.</span>
           </p>
         </div>
       </footer>

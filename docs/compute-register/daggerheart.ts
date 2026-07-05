@@ -175,7 +175,7 @@ export const daggerheartComputeRegister: SystemComputeRegister = {
       edgeCases: ['only when enabled', 'exactly at 2× severe'],
       source: `${SRD}: Hit Points & Damage Thresholds (optional rule)`,
       status: 'verified',
-      testRef: `${T} :: L8 Daggerheart massive damage`,
+      testRef: `${T} :: L8 Daggerheart massive damage (optional rule)`,
     },
     {
       id: 'daggerheart.L3.critical-damage',

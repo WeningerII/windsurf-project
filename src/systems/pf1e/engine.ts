@@ -1,5 +1,6 @@
 import { SystemEngine, RollResult } from '../../registry/types';
 import { CharacterDocument } from '../../types/core/document';
+import { rollD20 } from '../../rules/dice';
 import { Pf1eDataModel } from './data-model';
 import { abilityMod } from '../../utils/math';
 import { CMB_SIZE_MODS, baseSave, classBAB, d20SkillCheckPenalty } from '../shared/d20-helpers';
@@ -234,7 +235,7 @@ export class Pf1eEngine implements SystemEngine<Pf1eDataModel> {
     // check and save (worst fear state only; sickened stacks with fear).
     modifier -= d20LegacyCheckPenalty((d.conditions ?? []).map((condition) => condition.id));
 
-    const d20 = Math.floor(Math.random() * 20) + 1;
+    const d20 = rollD20('normal').chosen;
     return {
       total: d20 + modifier,
       formula: `1d20 + ${modifier}`,

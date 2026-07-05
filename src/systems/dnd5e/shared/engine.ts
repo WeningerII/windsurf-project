@@ -2,6 +2,7 @@ import { SystemEngine, RollResult } from '../../../registry/types';
 import { CharacterDocument } from '../../../types/core/document';
 import { Dnd5eDataModel } from '../data-model';
 import { abilityMod } from '../../../utils/math';
+import { dnd5eSpellAttackBonus, dnd5eSpellSaveDC } from '../../../utils/derivedCasterMath';
 import { hitDieSize } from '../../../constants/hit-dice';
 import { compute5eAC } from '../../../utils/armorClass';
 import { clampCount } from '../../../utils/resourcePool';
@@ -19,6 +20,7 @@ import { conditionImposesDisadvantage } from '../../../rules/conditions/dnd5eCon
 import type { GameSystemId } from '../../../types/game-systems';
 import { hasDnd5eCondition, normalizeDnd5eConditions } from '../conditions';
 import { getDnd5eDefenseStyleArmorClassBonus } from './activityState';
+import { rollD20, type RollMode, type D20Roll } from '../../../rules/dice';
 
 /** Proficiency bonus by total character level (D&D 5e SRD) */
 export function profBonus(level: number): number {
@@ -47,33 +49,10 @@ export const SKILL_ABILITIES: Record<string, string> = {
   survival: 'wis',
 };
 
-export type RollMode = 'normal' | 'advantage' | 'disadvantage';
-
-export interface D20Roll {
-  chosen: number;
-  formula: string;
-  terms: number[];
-}
-
-export function rollD20(mode: RollMode): D20Roll {
-  const r1 = Math.floor(Math.random() * 20) + 1;
-  if (mode === 'normal') {
-    return { chosen: r1, formula: '1d20', terms: [r1] };
-  }
-  const r2 = Math.floor(Math.random() * 20) + 1;
-  if (mode === 'advantage') {
-    return {
-      chosen: Math.max(r1, r2),
-      formula: '2d20kh1',
-      terms: [r1, r2],
-    };
-  }
-  return {
-    chosen: Math.min(r1, r2),
-    formula: '2d20kl1',
-    terms: [r1, r2],
-  };
-}
+// d20 rolling now lives in the shared dice module (one tested, seedable path for
+// every system's checks); re-exported here for back-compat with existing imports.
+export { rollD20 };
+export type { RollMode, D20Roll };
 
 export function normalizeDeathSaves(doc: CharacterDocument<Dnd5eDataModel>) {
   if (!doc.system.deathSaves) {
@@ -222,6 +201,20 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
         warlockLevel,
         data.spellcasting.pactMagic
       );
+
+      // Spell save DC + attack bonus (SRD: Spellcasting). Derived per spellcasting
+      // class so a multiclass caster's INT/WIS/CHA entries each get their own.
+      // REPLACE the classes array (do not mutate its entries): the clone above
+      // shares this array with the input document, and prepareData must be pure.
+      const spellProficiency = profBonus(totalLevel);
+      data.spellcasting.classes = (data.spellcasting.classes ?? []).map((casterClass) => {
+        const spellMod = abilityMod(data.baseAttributes[casterClass.ability] ?? 10);
+        return {
+          ...casterClass,
+          spellSaveDc: dnd5eSpellSaveDC(spellProficiency, spellMod),
+          spellAttackBonus: dnd5eSpellAttackBonus(spellProficiency, spellMod),
+        };
+      });
     }
 
     return clonedDoc;

@@ -116,6 +116,20 @@ export const dnd35eComputeRegister: SystemComputeRegister = {
       testRef: 'src/__tests__/derivedCombatMath.test.ts :: d20 iterative attacks',
     },
     {
+      id: 'dnd35e.L3.crit-confirmation',
+      layer: 'L3',
+      quantity: 'Critical hit confirmation and multiplier',
+      formula:
+        'a natural threat confirms on a second attack roll (same bonus) vs AC; confirmed damage = normal damage × the weapon crit multiplier (×2 default), extra dice not multiplied',
+      inputs: ['threat', 'attack bonus', 'AC', 'critical multiplier'],
+      edgeCases: ['unconfirmed threat = ordinary hit', 'extra dice (sneak attack) not multiplied'],
+      note: 'Scene-wired: resolveAttack rolls the confirmation d20 from the same seeded stream and applies d20CriticalDamage when critModel is "confirm-multiply" — selected for 3.5e/PF1e by sceneCombat (replacing the 5e double-dice default).',
+      source: `${SRD}: Combat — Critical Hits`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/rules/attackResolution.test.ts :: a confirmed threat multiplies normal damage by the weapon multiplier',
+    },
+    {
       id: 'dnd35e.L4.skill-ranks',
       layer: 'L4',
       quantity: 'Skill check modifier (ranks + ability)',

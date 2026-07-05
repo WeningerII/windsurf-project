@@ -65,6 +65,30 @@ export function pf1eManeuverSucceeds(cmbCheckTotal: number, targetCMD: number): 
   return cmbCheckTotal >= targetCMD;
 }
 
+/**
+ * SRD 3.5e / PF1e critical confirmation: a natural threat is only a critical hit
+ * if a second attack roll — the confirmation roll, made with the same attack
+ * bonus — also meets or beats the target's AC. Returns whether it confirms.
+ * (Unlike 5e, where a natural 20 auto-crits with no confirmation.)
+ */
+export function d20CriticalConfirmed(confirmationTotal: number, armorClass: number): boolean {
+  return confirmationTotal >= armorClass;
+}
+
+/**
+ * SRD 3.5e / PF1e confirmed-critical damage: the weapon's normal damage is
+ * multiplied by its critical multiplier (×2 default; ×3/×4 for some weapons).
+ * Extra dice from special abilities (sneak attack, flaming burst, …) are added
+ * once and NOT multiplied — they ride through `unmultipliedExtra`.
+ */
+export function d20CriticalDamage(
+  normalDamage: number,
+  multiplier: number,
+  unmultipliedExtra = 0
+): number {
+  return normalDamage * Math.max(1, Math.floor(multiplier)) + unmultipliedExtra;
+}
+
 // ─── D&D 5e ────────────────────────────────────────────────────────────────
 
 /** Barbarian Unarmored Defense = 10 + Dex mod + Con mod (no armor). */
@@ -75,6 +99,32 @@ export function dnd5eUnarmoredDefenseBarbarian(dexMod: number, conMod: number): 
 /** Monk Unarmored Defense = 10 + Dex mod + Wis mod (no armor, no shield). */
 export function dnd5eUnarmoredDefenseMonk(dexMod: number, wisMod: number): number {
   return 10 + dexMod + wisMod;
+}
+
+/**
+ * SRD 5e Versatile: a versatile weapon rolls its larger (two-handed) die when
+ * wielded in two hands — nothing in the other hand, no shield or second weapon —
+ * and its base die otherwise. Returns the die size to roll.
+ */
+export function dnd5eVersatileDamageDie(
+  baseDie: number,
+  versatileDie: number | undefined,
+  wieldedTwoHanded: boolean
+): number {
+  return wieldedTwoHanded && versatileDie != null ? versatileDie : baseDie;
+}
+
+/**
+ * SRD 5e Two-Weapon Fighting: you don't add your ability modifier to the bonus
+ * (off-hand) attack's damage — unless that modifier is negative (a penalty still
+ * applies), or you have the Two-Weapon Fighting *style*, which lets you add it.
+ * Returns the ability-mod contribution to off-hand damage.
+ */
+export function dnd5eOffHandDamageMod(
+  abilityMod: number,
+  hasTwoWeaponFightingStyle: boolean
+): number {
+  return hasTwoWeaponFightingStyle ? abilityMod : Math.min(0, abilityMod);
 }
 
 // ─── Pathfinder 2e ───────────────────────────────────────────────────────
