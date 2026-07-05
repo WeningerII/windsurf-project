@@ -21,7 +21,7 @@ import {
 import {
   clampDaggerheartInventoryQuantity,
   normalizeDaggerheartCurrency,
-} from './daggerheartInventory';
+} from '../../rules/daggerheartInventory';
 import { normalizeDaggerheartDocument } from './daggerheartNormalization';
 import type { DaggerheartTrait } from '../../types/daggerheart';
 

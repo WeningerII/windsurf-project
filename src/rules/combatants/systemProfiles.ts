@@ -21,7 +21,7 @@ import { collectDnd5eRiderEffects } from '../conditions/dnd5eRiders';
 import { collectPf2eRiderEffects } from '../conditions/pf2eRiders';
 import { collectD20LegacyConditionEffects } from '../conditions/d20LegacyConditions';
 import { collectD20LegacyRiderEffects } from '../conditions/d20LegacyRiders';
-import type { EffectInstance } from '../index';
+import type { EffectInstance } from '../ir/types';
 
 /** Sheet fields the adapter reads, normalized across the d20 family. */
 export interface NormalizedSheet {

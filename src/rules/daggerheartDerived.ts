@@ -14,7 +14,7 @@ import type {
   DaggerheartWeapon,
 } from '../types/daggerheart';
 import type { DaggerheartDataModel } from '../systems/daggerheart/data-model';
-import { getDaggerheartInventoryDefinition } from '../systems/daggerheart/daggerheartInventory';
+import { getDaggerheartInventoryDefinition } from './daggerheartInventory';
 
 export type DaggerheartAncestryAdjustments = {
   evasion: number;

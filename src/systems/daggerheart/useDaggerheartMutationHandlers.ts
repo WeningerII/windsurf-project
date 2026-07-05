@@ -9,7 +9,7 @@ import {
   clampDaggerheartInventoryQuantity,
   createDaggerheartInventoryEntry,
   normalizeDaggerheartCurrency,
-} from './daggerheartInventory';
+} from '../../rules/daggerheartInventory';
 import { INVENTORY_WEAPON_LIMIT, LOADOUT_LIMIT } from './daggerheartSheetConstants';
 import type { DaggerheartDataModel } from './data-model';
 

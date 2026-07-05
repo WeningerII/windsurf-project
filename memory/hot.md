@@ -4,21 +4,25 @@
 > `/save` — overwrite stale content, keep it under ~500 words. Durable facts go
 > to [[CLAUDE]] (CLAUDE.md) or `docs/`, not here.
 
-**Last updated:** 2026-07-05 (session: memory setup → PR steward → graph audit)
+**Last updated:** 2026-07-05 (session: memory setup → PR steward → audit → agnosticism sweep)
 
 ## Current focus
 
-Memory infra is MERGED to main (PR #28), as is PR #27 (launch-blocker
-instruments — two CI fixes from this session). A graph-driven architecture
-audit then found and fixed two issues, now on the restarted
-`claude/claude-obsidian-graphify-research-d8ufwc` branch awaiting PR/merge:
+Memory infra (PR #28) and launch-blocker instruments (PR #27) are MERGED to
+main. The restarted `claude/claude-obsidian-graphify-research-d8ufwc` branch
+now carries the full **system-agnosticism sweep**, awaiting PR/merge:
 
-- **Import cycle broken** (was the repo's only one): `src/rules/` no longer
-  imports the dnd5e engine — `profBonus` moved to `src/utils/math.ts` (engine
-  re-exports it; both proficiency-bonus mutation anchors repointed). Graph
-  report now says "Import Cycles: None detected."
-- **Duplicate vitest.d.ts removed**: `src/vitest.d.ts` was a strict subset of
-  `src/__tests__/vitest.d.ts`; deleted, tsconfig.test.json include dropped.
+- profBonus cycle fix + duplicate vitest.d.ts removal (morning audit)
+- 21 system-specific files relocated out of shared layers (templates,
+  daggerheart helpers, Mam browsers, FeatureOptionBrowser, pf2eDegree...)
+- characterCombatant refactored: per-system D20 profiles in
+  `rules/combatants/systemProfiles.ts` replace all inline systemId branches
+- **Layer boundary is now lint-enforced** (.eslintrc.json
+  no-restricted-imports: shared code cannot value-import src/systems/**;
+  exemptions: main.tsx bootstrap, dataLoader, docDrift). Negative-tested.
+- Graph clean: 4,192 nodes / 172 communities / zero import cycles.
+- Dead-code candidate flagged: `systems/dnd5e/shared/dnd5eMovement.ts`
+  (test-only, no product consumers).
 
 ## State of the repo
 

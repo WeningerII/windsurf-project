@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **GameSystemId** (76 connections) — `src/types/game-systems.ts`
+- **GameSystemId** (77 connections) — `src/types/game-systems.ts`
 - **useDnd5eSheetResources.ts** (37 connections) — `src/systems/dnd5e/shared/useDnd5eSheetResources.ts`
 - **loadSpellsForSystem()** (22 connections) — `src/utils/dataLoader.ts`
 - **useDnd5eSheetResources()** (19 connections) — `src/systems/dnd5e/shared/useDnd5eSheetResources.ts`
@@ -67,7 +67,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 221 (95%)
+- EXTRACTED: 222 (95%)
 - INFERRED: 11 (5%)
 - AMBIGUOUS: 0 (0%)
 

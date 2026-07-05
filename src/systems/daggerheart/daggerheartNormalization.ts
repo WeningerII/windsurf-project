@@ -17,7 +17,7 @@ import {
   clampDaggerheartInventoryQuantity,
   findDaggerheartInventoryDefinitionByName,
   getDaggerheartInventoryDefinition,
-} from './daggerheartInventory';
+} from '../../rules/daggerheartInventory';
 import { LOADOUT_LIMIT } from './daggerheartSheetConstants';
 import { stripDiacritics } from '../../utils/unicode';
 

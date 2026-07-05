@@ -40,7 +40,6 @@
 - [Sheet Header & Stat Cards](Sheet_Header_%26_Stat_Cards.md) (1 shared connections)
 - [Dnd5e Feat Templates](Dnd5e_Feat_Templates.md) (1 shared connections)
 - [System Validation Logic](System_Validation_Logic.md) (1 shared connections)
-- [Dnd5e Class Templates](Dnd5e_Class_Templates.md) (1 shared connections)
 
 ## Source Files
 

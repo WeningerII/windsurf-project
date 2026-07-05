@@ -4,10 +4,10 @@
 
 ## Key Concepts
 
-- **abilityMod()** (53 connections) — `src/utils/math.ts`
+- **abilityMod()** (54 connections) — `src/utils/math.ts`
 - **types.ts** (43 connections) — `src/registry/types.ts`
+- **math.ts** (43 connections) — `src/utils/math.ts`
 - **Pf2eDataModel** (42 connections) — `src/systems/pf2e/data-model.ts`
-- **math.ts** (42 connections) — `src/utils/math.ts`
 - **engine.ts** (39 connections) — `src/systems/pf2e/engine.ts`
 - **RollResult** (28 connections) — `src/registry/types.ts`
 - **formatMod()** (24 connections) — `src/utils/math.ts`
@@ -41,10 +41,10 @@
 - [Combat Toggles & Conditions](Combat_Toggles_%26_Conditions.md) (16 shared connections)
 - [Mam3e Data Model & Engine](Mam3e_Data_Model_%26_Engine.md) (12 shared connections)
 - [System Registry & Renderer](System_Registry_%26_Renderer.md) (11 shared connections)
-- [D20 Class Spellcasting](D20_Class_Spellcasting.md) (9 shared connections)
 - [Skills Tab & Combat Math](Skills_Tab_%26_Combat_Math.md) (8 shared connections)
 - [Sheet Header & Stat Cards](Sheet_Header_%26_Stat_Cards.md) (8 shared connections)
 - [Dnd35e/Pf1e Derived Math](Dnd35e-Pf1e_Derived_Math.md) (7 shared connections)
+- [System Definitions & Types](System_Definitions_%26_Types.md) (6 shared connections)
 
 ## Source Files
 
@@ -71,7 +71,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 617 (100%)
+- EXTRACTED: 619 (100%)
 - INFERRED: 3 (0%)
 - AMBIGUOUS: 0 (0%)
 

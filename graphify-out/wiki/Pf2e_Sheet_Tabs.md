@@ -34,7 +34,6 @@
 ## Relationships
 
 - [D20 Combat Controls](D20_Combat_Controls.md) (29 shared connections)
-- [Pf2e Character Templates](Pf2e_Character_Templates.md) (22 shared connections)
 - [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (17 shared connections)
 - [Combat Toggles & Conditions](Combat_Toggles_%26_Conditions.md) (12 shared connections)
 - [Class Enhancement & Headers](Class_Enhancement_%26_Headers.md) (9 shared connections)
@@ -45,6 +44,7 @@
 - [App Shell & Layout](App_Shell_%26_Layout.md) (4 shared connections)
 - [Sync Engine Tests](Sync_Engine_Tests.md) (3 shared connections)
 - [Dnd35e Saves & Data Model](Dnd35e_Saves_%26_Data_Model.md) (3 shared connections)
+- [D20 Legacy Spell Slots](D20_Legacy_Spell_Slots.md) (3 shared connections)
 
 ## Source Files
 

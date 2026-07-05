@@ -1,6 +1,6 @@
 # SRD Manifest Generator
 
-> 38 nodes · cohesion 0.09
+> 35 nodes · cohesion 0.09
 
 ## Key Concepts
 
@@ -19,17 +19,17 @@
 - **advantages.ts** (7 connections) — `src/types/mam/advantages.ts`
 - **MamResourceLoadError()** (6 connections) — `src/systems/mam3e/components/MamResourceLoadError.tsx`
 - **Advantage** (6 connections) — `src/types/mam/advantages.ts`
-- **MamArchetypeBrowser.tsx** (5 connections) — `src/components/MamArchetypeBrowser.tsx`
 - **MamArchetypesTab** (4 connections) — `src/systems/mam3e/components/MamArchetypesTab.tsx`
 - **MamComplicationsTab** (4 connections) — `src/systems/mam3e/components/MamComplicationsTab.tsx`
 - **MamEquipmentBrowserTab** (4 connections) — `src/systems/mam3e/components/MamEquipmentBrowserTab.tsx`
 - **MamPowerBrowserTab** (4 connections) — `src/systems/mam3e/components/MamPowerBrowserTab.tsx`
 - **MAM3E_ARCHETYPE_COPY** (3 connections) — `src/utils/documentationCopy.ts`
-- **MamArchetypeBrowser()** (2 connections) — `src/components/MamArchetypeBrowser.tsx`
-- **MamArchetypeBrowserProps** (2 connections) — `src/components/MamArchetypeBrowser.tsx`
 - **MamAdvantageBrowserTab()** (2 connections) — `src/systems/mam3e/components/MamAdvantageBrowserTab.tsx`
 - **Props** (2 connections) — `src/systems/mam3e/components/MamAdvantageBrowserTab.tsx`
-- *... and 13 more nodes in this community*
+- **Props** (2 connections) — `src/systems/mam3e/components/MamArchetypesTab.tsx`
+- **useLazyResource()** (2 connections) — `src/systems/mam3e/useMam3eSheetResources.ts`
+- **MamArchetypeBrowser.test.tsx** (2 connections) — `src/__tests__/components/MamArchetypeBrowser.test.tsx`
+- *... and 10 more nodes in this community*
 
 ## Relationships
 
@@ -50,7 +50,6 @@
 
 - `src/__tests__/components/MamArchetypeBrowser.test.tsx`
 - `src/__tests__/systems/mam3e/mam3eSheetResources.test.ts`
-- `src/components/MamArchetypeBrowser.tsx`
 - `src/systems/mam3e/components/MamAdvantageBrowserTab.tsx`
 - `src/systems/mam3e/components/MamArchetypesTab.tsx`
 - `src/systems/mam3e/components/MamComplicationsTab.tsx`
@@ -65,7 +64,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 210 (96%)
+- EXTRACTED: 201 (96%)
 - INFERRED: 8 (4%)
 - AMBIGUOUS: 0 (0%)
 

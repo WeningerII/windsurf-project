@@ -1,6 +1,6 @@
 # System Definitions & Types
 
-> 27 nodes · cohesion 0.14
+> 26 nodes · cohesion 0.14
 
 ## Key Concepts
 
@@ -11,7 +11,6 @@
 - **daggerheartCombatant.ts** (21 connections) — `src/rules/combatants/daggerheartCombatant.ts`
 - **createDefaultDaggerheartData()** (18 connections) — `src/systems/daggerheart/data-model.ts`
 - **definition.ts** (14 connections) — `src/systems/daggerheart/definition.ts`
-- **getDaggerheartEffectiveAttribute()** (12 connections) — `src/utils/daggerheartDerived.ts`
 - **daggerheartMutationHandlers.test.ts** (11 connections) — `src/__tests__/systems/daggerheart/daggerheartMutationHandlers.test.ts`
 - **DaggerheartEngine** (8 connections) — `src/systems/daggerheart/engine.ts`
 - **.rollCheck()** (7 connections) — `src/systems/daggerheart/engine.ts`
@@ -29,22 +28,23 @@
 - **daggerheartPassiveAuditAttributes** (1 connections) — `src/__tests__/engines/daggerheart-engine.test.ts`
 - **hasPassivePayload()** (1 connections) — `src/__tests__/engines/daggerheart-engine.test.ts`
 - **makeDomainCard()** (1 connections) — `src/__tests__/systems/daggerheart/daggerheartMutationHandlers.test.ts`
-- *... and 2 more nodes in this community*
+- **makeOwnedCardIdSet()** (1 connections) — `src/__tests__/systems/daggerheart/daggerheartMutationHandlers.test.ts`
+- *... and 1 more nodes in this community*
 
 ## Relationships
 
-- [Daggerheart Engine](Daggerheart_Engine.md) (27 shared connections)
-- [Equipment & Feature Browsers](Equipment_%26_Feature_Browsers.md) (17 shared connections)
-- [Daggerheart Data Model](Daggerheart_Data_Model.md) (16 shared connections)
+- [Daggerheart Data Model](Daggerheart_Data_Model.md) (15 shared connections)
 - [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (12 shared connections)
-- [Mam3e Derived Math](Mam3e_Derived_Math.md) (9 shared connections)
-- [Daggerheart Contribution Ledger](Daggerheart_Contribution_Ledger.md) (6 shared connections)
+- [Equipment & Feature Browsers](Equipment_%26_Feature_Browsers.md) (11 shared connections)
+- [Daggerheart Engine](Daggerheart_Engine.md) (9 shared connections)
+- [Mam3e Derived Math](Mam3e_Derived_Math.md) (6 shared connections)
 - [Tabs UI Component](Tabs_UI_Component.md) (6 shared connections)
 - [D20 Combat Controls](D20_Combat_Controls.md) (6 shared connections)
-- [Daggerheart Inventory](Daggerheart_Inventory.md) (5 shared connections)
-- [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (4 shared connections)
+- [Daggerheart Contribution Ledger](Daggerheart_Contribution_Ledger.md) (5 shared connections)
 - [App Shell & Layout](App_Shell_%26_Layout.md) (4 shared connections)
 - [System Registry & Renderer](System_Registry_%26_Renderer.md) (4 shared connections)
+- [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (3 shared connections)
+- [Dnd5e2024 Engine & Hit Dice](Dnd5e2024_Engine_%26_Hit_Dice.md) (3 shared connections)
 
 ## Source Files
 
@@ -58,11 +58,10 @@
 - `src/systems/daggerheart/definition.ts`
 - `src/systems/daggerheart/engine.ts`
 - `src/types/daggerheart.ts`
-- `src/utils/daggerheartDerived.ts`
 
 ## Audit Trail
 
-- EXTRACTED: 235 (100%)
+- EXTRACTED: 223 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

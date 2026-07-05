@@ -34,7 +34,6 @@
 - [Dnd5e Equipment & Features UI](Dnd5e_Equipment_%26_Features_UI.md) (10 shared connections)
 - [System Registry & Renderer](System_Registry_%26_Renderer.md) (4 shared connections)
 - [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (4 shared connections)
-- [Dnd5e Feat Templates](Dnd5e_Feat_Templates.md) (4 shared connections)
 - [App Shell & Layout](App_Shell_%26_Layout.md) (2 shared connections)
 - [Dnd5e Class Templates](Dnd5e_Class_Templates.md) (2 shared connections)
 - [Dnd5e2024 Engine & Hit Dice](Dnd5e2024_Engine_%26_Hit_Dice.md) (2 shared connections)

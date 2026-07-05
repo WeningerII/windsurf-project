@@ -29,7 +29,7 @@
 - engine.ts `EXTRACTED`
 - useSync.test.tsx `EXTRACTED`
 - daggerheartNormalization.ts `EXTRACTED`
-- characterCombatant.ts `EXTRACTED`
+- contributionLedger.ts `EXTRACTED`
 
 ### references
 - .prepareData() `EXTRACTED`

@@ -17,7 +17,7 @@ import {
 import {
   getDaggerheartInventoryDefinition,
   normalizeDaggerheartCurrency,
-} from './daggerheartInventory';
+} from '../../rules/daggerheartInventory';
 import { ATTRIBUTES, EMPTY_WEAPON_LOADOUT } from './daggerheartSheetConstants';
 import type { DaggerheartDataModel } from './data-model';
 

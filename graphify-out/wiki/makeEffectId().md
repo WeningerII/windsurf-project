@@ -15,15 +15,15 @@
 - compileModifierSource() `EXTRACTED`
 - collectDnd5eConditionEffects() `EXTRACTED`
 - markerToEffects() `EXTRACTED`
-- collectDnd5eRiderEffects() `EXTRACTED`
 - buildMam3eCombatant() `EXTRACTED`
 - monsterAttackEffects() `EXTRACTED`
 - monsterDamageEffects() `EXTRACTED`
 - collectD20LegacyRiderEffects() `EXTRACTED`
+- collectDnd5eRiderEffects() `EXTRACTED`
 - collectPf2eConditionEffects() `EXTRACTED`
-- collectPf2eRiderEffects() `EXTRACTED`
 - collectPf2eSceneConditionEffects() `EXTRACTED`
 - effect() `EXTRACTED`
+- collectPf2eRiderEffects() `EXTRACTED`
 - attack() `EXTRACTED`
 - atk() `EXTRACTED`
 - atk() `EXTRACTED`

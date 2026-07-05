@@ -1,6 +1,6 @@
 # Spells Tab Components
 
-> 23 nodes · cohesion 0.15
+> 22 nodes · cohesion 0.15
 
 ## Key Concepts
 
@@ -17,7 +17,6 @@
 - **compareSpells()** (2 connections) — `src/systems/d20-legacy/components/D20SpellsTab.tsx`
 - **formatSpellLevel()** (2 connections) — `src/systems/d20-legacy/components/D20SpellsTab.tsx`
 - **titleCase()** (2 connections) — `src/systems/d20-legacy/components/D20SpellsTab.tsx`
-- **D20_ARCANE_SCHOOLS** (2 connections) — `src/utils/d20LegacySpellcasting.ts`
 - **compareSpellEntries()** (2 connections) — `src/utils/spellPreparation.ts`
 - **dedupeSpellIds()** (2 connections) — `src/utils/spellPreparation.ts`
 - **humanizeSpellId()** (2 connections) — `src/utils/spellPreparation.ts`
@@ -39,22 +38,21 @@
 - [D20 Combat Controls](D20_Combat_Controls.md) (4 shared connections)
 - [Currency & Inventory Editors](Currency_%26_Inventory_Editors.md) (3 shared connections)
 - [D20 Legacy Spell Slots](D20_Legacy_Spell_Slots.md) (3 shared connections)
-- [D20 Class Spellcasting](D20_Class_Spellcasting.md) (2 shared connections)
 - [Sheet Resource Loading Hooks](Sheet_Resource_Loading_Hooks.md) (2 shared connections)
 - [App Shell & Layout](App_Shell_%26_Layout.md) (2 shared connections)
+- [Doc Drift Rules](Doc_Drift_Rules.md) (1 shared connections)
 
 ## Source Files
 
 - `src/systems/d20-legacy/components/D20SpellsTab.tsx`
 - `src/systems/pf2e/components/Pf2eSpellsTab.tsx`
 - `src/systems/pf2e/data-model.ts`
-- `src/utils/d20LegacySpellcasting.ts`
 - `src/utils/documentationCopy.ts`
 - `src/utils/spellPreparation.ts`
 
 ## Audit Trail
 
-- EXTRACTED: 117 (97%)
+- EXTRACTED: 115 (97%)
 - INFERRED: 4 (3%)
 - AMBIGUOUS: 0 (0%)
 
