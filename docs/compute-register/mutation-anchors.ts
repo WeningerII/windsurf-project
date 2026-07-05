@@ -107,7 +107,7 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
   // Extra Attack count = 1 + owned 'extra-attack*' features; break the matcher so
   // no feature matches (=> 1 attack, not the test's expected 3).
   'dnd5e2014.L3.extra-attack-count': {
-    file: 'src/rules/combatants/characterCombatant.ts',
+    file: 'src/rules/combatants/systemProfiles.ts',
     find: '/^extra-attack(-\\d+)?$/',
     replace: '/^extra-attackXX(-\\d+)?$/',
   },
