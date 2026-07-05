@@ -1,0 +1,30 @@
+# graphify extraction scope (gitignore syntax; .gitignore is also merged in).
+#
+# Generated SRD data tables: 505 machine-generated files, ~300k LOC of static
+# monster/spell tables. They dominate the corpus but carry no architectural
+# signal, so they are kept out of the graph.
+src/data/
+
+# Markdown/docs and media require an LLM backend for semantic extraction.
+# The graph stays code-only so `graphify update .` rebuilds keyless and
+# deterministically; docs are wired into agent context via CLAUDE.md instead.
+*.md
+*.mdx
+*.txt
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.webp
+*.ico
+*.pdf
+*.html
+*.yml
+*.yaml
+notion-site/
+public/
+
+# Lockfiles and graph output itself
+package-lock.json
+graphify-out/
