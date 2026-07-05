@@ -5,7 +5,7 @@ import { systemRegistry } from '../../registry';
 import type { Dnd35eDataModel } from '../dnd35e/data-model';
 import type { Pf1eTrait } from '../pf1e/data-model';
 import type { Pf1eDataModel } from '../pf1e/data-model';
-import { getD20LegacySpellSlotTable } from '../../utils/d20LegacySpellcasting';
+import { getD20LegacySpellSlotTable } from '../shared/d20LegacySpellcasting';
 import { getIterativeAttackBonuses, type D20LegacyData } from './d20LegacySheetShared';
 import { useD20LegacyMutationHandlers } from './useD20LegacyMutationHandlers';
 import { availableD20LegacyToggles } from '../../rules/conditions/d20LegacyRiders';

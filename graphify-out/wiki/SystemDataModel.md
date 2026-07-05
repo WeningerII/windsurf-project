@@ -20,7 +20,6 @@
 - Dnd5eSheetBase.tsx `EXTRACTED`
 - SystemSheets.test.tsx `EXTRACTED`
 - useSync.test.tsx `EXTRACTED`
-- characterCombatant.ts `EXTRACTED`
 - data-model.ts `EXTRACTED`
 - data-model.ts `EXTRACTED`
 - index.ts `EXTRACTED`
@@ -30,6 +29,7 @@
 - useSceneEncounter.ts `EXTRACTED`
 - sheet.tsx `EXTRACTED`
 - useDnd5eSheetController.ts `EXTRACTED`
+- characterCombatant.ts `EXTRACTED`
 
 ### inherits
 - [Dnd5eDataModel](Dnd5eDataModel.md) `EXTRACTED`

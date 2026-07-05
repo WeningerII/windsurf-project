@@ -4,15 +4,15 @@
 
 ## Key Concepts
 
-- **game-systems.ts** (76 connections) — `src/types/game-systems.ts`
-- **character.ts** (72 connections) — `src/types/core/character.ts`
+- **game-systems.ts** (77 connections) — `src/types/game-systems.ts`
+- **character.ts** (73 connections) — `src/types/core/character.ts`
 - **data-model.ts** (54 connections) — `src/systems/dnd5e/data-model.ts`
 - **Dnd5eDataModel** (49 connections) — `src/systems/dnd5e/data-model.ts`
 - **data-model.ts** (45 connections) — `src/systems/dnd5e-2024/data-model.ts`
 - **Dnd5e2024DataModel** (36 connections) — `src/systems/dnd5e-2024/data-model.ts`
 - **createDefaultDnd5eData()** (32 connections) — `src/systems/dnd5e/data-model.ts`
 - **dnd5eValidation.test.ts** (23 connections) — `src/__tests__/dnd5eValidation.test.ts`
-- **EquippedItem** (18 connections) — `src/types/core/character.ts`
+- **EquippedItem** (20 connections) — `src/types/core/character.ts`
 - **definition.ts** (15 connections) — `src/systems/dnd5e-2024/definition.ts`
 - **definition.ts** (15 connections) — `src/systems/dnd5e/definition.ts`
 - **activityState.ts** (15 connections) — `src/systems/dnd5e/shared/activityState.ts`
@@ -34,17 +34,17 @@
 ## Relationships
 
 - [Dnd5e2024 Engine & Hit Dice](Dnd5e2024_Engine_%26_Hit_Dice.md) (30 shared connections)
-- [Dnd5e Feature List Sections](Dnd5e_Feature_List_Sections.md) (27 shared connections)
 - [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (26 shared connections)
-- [Dnd5e Feat Templates](Dnd5e_Feat_Templates.md) (20 shared connections)
-- [Dnd5e Class Templates](Dnd5e_Class_Templates.md) (17 shared connections)
+- [Dnd5e Feature List Sections](Dnd5e_Feature_List_Sections.md) (26 shared connections)
 - [Dnd5e Activity Definitions](Dnd5e_Activity_Definitions.md) (15 shared connections)
+- [Dnd5e Feat Templates](Dnd5e_Feat_Templates.md) (14 shared connections)
 - [HP & Spell Slot Trackers](HP_%26_Spell_Slot_Trackers.md) (14 shared connections)
 - [Sync Engine Tests](Sync_Engine_Tests.md) (13 shared connections)
 - [System Registry & Renderer](System_Registry_%26_Renderer.md) (13 shared connections)
-- [Dnd5e Feature Options](Dnd5e_Feature_Options.md) (13 shared connections)
+- [Dnd5e Feature Options](Dnd5e_Feature_Options.md) (12 shared connections)
 - [Mam Browser Tabs](Mam_Browser_Tabs.md) (11 shared connections)
 - [System Validation Logic](System_Validation_Logic.md) (11 shared connections)
+- [Dnd5e Sheets & E2E Tests](Dnd5e_Sheets_%26_E2E_Tests.md) (10 shared connections)
 
 ## Source Files
 
@@ -71,7 +71,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 699 (100%)
+- EXTRACTED: 703 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

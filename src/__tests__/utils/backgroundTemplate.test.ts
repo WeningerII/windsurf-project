@@ -3,7 +3,7 @@ import { acolyte } from '../../data/dnd/5e-2014/backgrounds/acolyte';
 import { Background } from '../../types/character-options/backgrounds';
 import { createDefaultDnd5eData, Dnd5eDataModel } from '../../systems/dnd5e/data-model';
 import { CharacterDocument } from '../../types/core/document';
-import { applyDnd5eBackgroundTemplate } from '../../utils/backgroundTemplate';
+import { applyDnd5eBackgroundTemplate } from '../../systems/dnd5e/shared/backgroundTemplate';
 
 // Neutral test fixtures. The only SRD 5.1 background is Acolyte (imported above);
 // these generic backgrounds exist purely to exercise the template logic (skill

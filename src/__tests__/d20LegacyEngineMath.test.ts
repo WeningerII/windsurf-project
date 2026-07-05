@@ -47,7 +47,7 @@ import {
   type Pf1eDataModel,
 } from '../systems/pf1e/data-model';
 import type { CharacterDocument } from '../types/core/document';
-import { buildD20LegacySpellSlotTotals } from '../utils/d20LegacySpellcasting';
+import { buildD20LegacySpellSlotTotals } from '../systems/shared/d20LegacySpellcasting';
 import type { CharacterClass } from '../types/character-options/classes';
 
 const TEST_DATE = new Date('2026-05-01T00:00:00.000Z');

@@ -35,7 +35,7 @@
 
 - [Dnd5e Equipment & Features UI](Dnd5e_Equipment_%26_Features_UI.md) (15 shared connections)
 - [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (5 shared connections)
-- [Dnd5e Feature Options](Dnd5e_Feature_Options.md) (4 shared connections)
+- [Dnd5e Feature Options](Dnd5e_Feature_Options.md) (3 shared connections)
 - [Mam Browser Tabs](Mam_Browser_Tabs.md) (3 shared connections)
 - [HP & Spell Slot Trackers](HP_%26_Spell_Slot_Trackers.md) (2 shared connections)
 - [Dnd5e2024 Engine & Hit Dice](Dnd5e2024_Engine_%26_Hit_Dice.md) (2 shared connections)

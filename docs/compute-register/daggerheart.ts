@@ -1,6 +1,6 @@
 /**
  * Compute register (Denominator B) for Daggerheart, cited against the
- * Daggerheart SRD 1.0. Derived math: src/utils/daggerheartDerived.ts.
+ * Daggerheart SRD 1.0. Derived math: src/rules/daggerheartDerived.ts.
  * Triggered/narrative card effects and Hope/Fear narrative resolution are
  * accepted manual boundaries (see docs/srd-manifest/_exclusions.ts) and are not
  * counted here.

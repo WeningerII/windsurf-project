@@ -47,6 +47,38 @@
         "@typescript-eslint/no-unused-vars": "off",
         "no-console": "off"
       }
+    },
+    {
+      // Layer boundary: shared layers (rules/scene/utils/components/hooks/...)
+      // must never value-import from src/systems/**; systems import shared
+      // layers, never the reverse. Type-only imports are allowed (erased at
+      // compile time). Exempt: the systems tree itself, the registry bootstrap
+      // (main.tsx registerAllSystems), the per-system data-dispatch hub
+      // (dataLoader), the doc-drift verifier (imports every definition to
+      // check docs against truth), and tests/scripts.
+      "files": ["src/**/*.ts", "src/**/*.tsx"],
+      "excludedFiles": [
+        "src/systems/**",
+        "src/main.tsx",
+        "src/utils/dataLoader.ts",
+        "src/utils/docDrift.ts",
+        "src/__tests__/**",
+        "src/scripts/**"
+      ],
+      "rules": {
+        "@typescript-eslint/no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["**/systems/*", "**/systems/**"],
+                "message": "Layer boundary: shared code must not value-import from src/systems/**. Move system-specific code into src/systems/<id>/ (or the rules layer if rules consume it), or use a type-only import. See CLAUDE.md.",
+                "allowTypeImports": true
+              }
+            ]
+          }
+        ]
+      }
     }
   ],
   "settings": {

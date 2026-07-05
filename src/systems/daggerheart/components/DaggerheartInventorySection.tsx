@@ -6,7 +6,7 @@ import type { DaggerheartInventoryDefinition } from '../../../types/daggerheart'
 import {
   isDaggerheartConsumableDefinition,
   MAX_DAGGERHEART_CONSUMABLE_QUANTITY,
-} from '../../../utils/daggerheartInventory';
+} from '../../../rules/daggerheartInventory';
 import { parseNum } from '../../../utils/math';
 import { DAGGERHEART_CURRENCY_FIELDS } from '../daggerheartSheetConstants';
 import type { DaggerheartSheetController } from '../useDaggerheartSheetController';

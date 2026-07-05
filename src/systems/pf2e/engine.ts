@@ -3,7 +3,7 @@ import { rollD20 } from '../../rules/dice';
 import { CharacterDocument } from '../../types/core/document';
 import { Pf2eDataModel, profTotal } from './data-model';
 import { abilityMod } from '../../utils/math';
-import { pf2eDegreeOfSuccess } from '../../utils/pf2eDegree';
+import { pf2eDegreeOfSuccess } from '../../rules/resolver/pf2eDegree';
 import { SKILL_ABILITIES, SAVE_ABILITIES } from './constants';
 import { computePf2eAC } from '../../utils/armorClass';
 import { resolveCharacterEffects } from '../../rules';

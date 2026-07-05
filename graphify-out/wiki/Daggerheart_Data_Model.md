@@ -31,17 +31,17 @@
 ## Relationships
 
 - [Sheet Resource Loading Hooks](Sheet_Resource_Loading_Hooks.md) (21 shared connections)
-- [System Definitions & Types](System_Definitions_%26_Types.md) (16 shared connections)
-- [Equipment & Feature Browsers](Equipment_%26_Feature_Browsers.md) (15 shared connections)
-- [Daggerheart Engine](Daggerheart_Engine.md) (9 shared connections)
-- [Mam3e Derived Math](Mam3e_Derived_Math.md) (9 shared connections)
+- [System Definitions & Types](System_Definitions_%26_Types.md) (15 shared connections)
+- [Equipment & Feature Browsers](Equipment_%26_Feature_Browsers.md) (10 shared connections)
+- [Mam3e Derived Math](Mam3e_Derived_Math.md) (5 shared connections)
 - [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (5 shared connections)
 - [Tabs UI Component](Tabs_UI_Component.md) (4 shared connections)
 - [Daggerheart Sheet Automation](Daggerheart_Sheet_Automation.md) (4 shared connections)
 - [Daggerheart Contribution Ledger](Daggerheart_Contribution_Ledger.md) (3 shared connections)
-- [Daggerheart Inventory](Daggerheart_Inventory.md) (3 shared connections)
 - [Dnd5e Resource Loading Hooks](Dnd5e_Resource_Loading_Hooks.md) (2 shared connections)
 - [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (2 shared connections)
+- [Dnd5e Equipment & Features UI](Dnd5e_Equipment_%26_Features_UI.md) (1 shared connections)
+- [Dnd35e/Pf1e Derived Math](Dnd35e-Pf1e_Derived_Math.md) (1 shared connections)
 
 ## Source Files
 

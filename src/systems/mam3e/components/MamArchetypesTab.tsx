@@ -7,7 +7,7 @@ import { MAM3E_ARCHETYPE_COPY } from '../../../utils/documentationCopy';
 import { MamResourceLoadError } from './MamResourceLoadError';
 
 const MamArchetypeBrowser = lazyWithPreload(async () => {
-  const module = await import('../../../components/MamArchetypeBrowser');
+  const module = await import('./MamArchetypeBrowser');
   return { default: module.MamArchetypeBrowser };
 });
 

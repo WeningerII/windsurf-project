@@ -20,11 +20,11 @@ import {
   applyDnd5eFeatTemplate,
   getDnd5eFeatAutomationRequirements,
   removeDnd5eFeatTemplate,
-} from '../../../utils/featTemplate';
+} from './featTemplate';
 import {
   applyDnd5eFeatureOptionSelection,
   removeDnd5eFeatureOptionSelection,
-} from '../../../utils/dnd5eFeatureOptions';
+} from './dnd5eFeatureOptions';
 import {
   optionDisabledForRequirement,
   resolveFeatSelections,

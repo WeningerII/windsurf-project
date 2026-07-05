@@ -3,12 +3,12 @@ import type { Dnd5eFeatureOptionSelection } from '../../../types/character-optio
 import type { EquippedItem, Feat } from '../../../types/core/character';
 import type { CharacterDocument } from '../../../types/core/document';
 import type { Armor, Item, Shield as ShieldItem } from '../../../types/equipment/items';
-import type { Dnd5eFeatChoiceRequirement, Dnd5eFeatSelections } from '../../../utils/featTemplate';
+import type { Dnd5eFeatChoiceRequirement, Dnd5eFeatSelections } from './featTemplate';
 import {
   createDefaultDnd5eFeatSelections,
   getCurrentDnd5eFeatSelections,
   getDnd5eFeatAutomationRequirements,
-} from '../../../utils/featTemplate';
+} from './featTemplate';
 import { Dnd5e2024DataModel } from '../../dnd5e-2024/data-model';
 import { Dnd5eDataModel } from '../data-model';
 

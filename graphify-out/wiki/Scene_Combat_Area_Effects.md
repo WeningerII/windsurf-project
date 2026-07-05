@@ -1,6 +1,6 @@
 # Scene Combat Area Effects
 
-> 79 nodes · cohesion 0.07
+> 76 nodes · cohesion 0.07
 
 ## Key Concepts
 
@@ -29,7 +29,7 @@
 - **attackToDamageIntent()** (7 connections) — `src/rules/resolver/sceneCombat.ts`
 - **cellInArea()** (6 connections) — `src/rules/resolver/areaTargeting.ts`
 - **tokensInArea()** (6 connections) — `src/rules/resolver/areaTargeting.ts`
-- *... and 54 more nodes in this community*
+- *... and 51 more nodes in this community*
 
 ## Relationships
 
@@ -71,7 +71,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 694 (99%)
+- EXTRACTED: 683 (99%)
 - INFERRED: 4 (1%)
 - AMBIGUOUS: 0 (0%)
 

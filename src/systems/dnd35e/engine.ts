@@ -11,7 +11,7 @@ import { d20LegacyCheckPenalty } from '../../rules/conditions/d20LegacyCondition
 import { dnd35eClasses } from '../../data/dnd/3.5e/classes';
 import { dnd35eNormalizedPrestigeClasses } from '../../data/dnd/3.5e/prestige-classes';
 import { mergeVancianSpellSlots } from '../../utils/classSpellcasting';
-import { buildD20LegacySpellSlotTotals } from '../../utils/d20LegacySpellcasting';
+import { buildD20LegacySpellSlotTotals } from '../shared/d20LegacySpellcasting';
 
 const SKILL_ABILITIES: Record<string, string> = {
   appraise: 'int',

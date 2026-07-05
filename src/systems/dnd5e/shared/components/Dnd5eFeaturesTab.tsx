@@ -11,10 +11,7 @@ import type {
 } from '../../../../types/character-options/feature-options';
 import { Species } from '../../../../types/character-options/species';
 import { Feat, Feature } from '../../../../types/core/character';
-import type {
-  Dnd5eFeatChoiceRequirement,
-  Dnd5eFeatSelections,
-} from '../../../../utils/featTemplate';
+import type { Dnd5eFeatChoiceRequirement, Dnd5eFeatSelections } from '../featTemplate';
 import { DND5E_CONDITION_NAMES, Dnd5eCondition } from '../../../dnd5e/conditions';
 import { Dnd5eFeatureOptionsSection } from './Dnd5eFeatureOptionsSection';
 import { Dnd5eRiderTogglesSection } from './Dnd5eRiderTogglesSection';

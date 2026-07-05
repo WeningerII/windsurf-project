@@ -1,7 +1,7 @@
 import { SystemEngine, RollResult } from '../../../registry/types';
 import { CharacterDocument } from '../../../types/core/document';
 import { Dnd5eDataModel } from '../data-model';
-import { abilityMod } from '../../../utils/math';
+import { abilityMod, profBonus } from '../../../utils/math';
 import { dnd5eSpellAttackBonus, dnd5eSpellSaveDC } from '../../../utils/derivedCasterMath';
 import { hitDieSize } from '../../../constants/hit-dice';
 import { compute5eAC } from '../../../utils/armorClass';
@@ -22,10 +22,9 @@ import { hasDnd5eCondition, normalizeDnd5eConditions } from '../conditions';
 import { getDnd5eDefenseStyleArmorClassBonus } from './activityState';
 import { rollD20, type RollMode, type D20Roll } from '../../../rules/dice';
 
-/** Proficiency bonus by total character level (D&D 5e SRD) */
-export function profBonus(level: number): number {
-  return Math.ceil(level / 4) + 1;
-}
+// profBonus lives in utils/math so the system-agnostic rules layer can use it
+// without importing this engine (which itself imports src/rules — a cycle).
+export { profBonus };
 
 /** Skill → Ability mapping (D&D 5e SRD) */
 export const SKILL_ABILITIES: Record<string, string> = {

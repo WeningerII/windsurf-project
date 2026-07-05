@@ -4,7 +4,10 @@ import { createDefaultPf2eData, type Pf2eDataModel } from '../systems/pf2e/data-
 import type { Archetype } from '../types/character-options/archetypes';
 import type { CharacterDocument } from '../types/core/document';
 import { clearDocumentStorage, loadDocuments, saveDocuments } from '../utils/documentStorage';
-import { applyPf2eArchetypeTemplate, removePf2eArchetypeTemplate } from '../utils/pf2eTemplate';
+import {
+  applyPf2eArchetypeTemplate,
+  removePf2eArchetypeTemplate,
+} from '../systems/pf2e/pf2eTemplate';
 
 const archetypeIds = ['pf2e-wizard-archetype', 'pf2e-ranger-archetype'];
 

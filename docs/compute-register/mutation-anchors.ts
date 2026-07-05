@@ -52,7 +52,7 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     replace: 'Math.ceil(rogueLevel / 3)',
   },
   'dnd5e2014.L1.proficiency-bonus': {
-    file: 'src/systems/dnd5e/shared/engine.ts',
+    file: 'src/utils/math.ts',
     find: 'Math.ceil(level / 4) + 1',
     replace: 'Math.ceil(level / 4) + 2',
   },
@@ -107,7 +107,7 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
   // Extra Attack count = 1 + owned 'extra-attack*' features; break the matcher so
   // no feature matches (=> 1 attack, not the test's expected 3).
   'dnd5e2014.L3.extra-attack-count': {
-    file: 'src/rules/combatants/characterCombatant.ts',
+    file: 'src/rules/combatants/systemProfiles.ts',
     find: '/^extra-attack(-\\d+)?$/',
     replace: '/^extra-attackXX(-\\d+)?$/',
   },
@@ -135,7 +135,7 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     replace: 'Math.floor((score - 11) / 2)',
   },
   'dnd5e2024.L1.proficiency-bonus': {
-    file: 'src/systems/dnd5e/shared/engine.ts',
+    file: 'src/utils/math.ts',
     find: 'Math.ceil(level / 4) + 1',
     replace: 'Math.ceil(level / 4) + 2',
   },
@@ -253,7 +253,7 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
 
   // ── pf2e ──
   'pf2e.L8.degrees-of-success': {
-    file: 'src/utils/pf2eDegree.ts',
+    file: 'src/rules/resolver/pf2eDegree.ts',
     find: 'if (total >= dc + 10) {',
     replace: 'if (total >= dc + 11) {',
   },
@@ -312,14 +312,14 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
 
   // ── daggerheart ──
   'daggerheart.L1.tier': {
-    file: 'src/utils/daggerheartDerived.ts',
+    file: 'src/rules/daggerheartDerived.ts',
     find: 'if (level >= 8) {',
     replace: 'if (level >= 9) {',
   },
   // proficiency == tier (getDaggerheartProficiency delegates to getDaggerheartTier),
   // so the tier mutation breaks the shared "tier and proficiency" test for both.
   'daggerheart.L1.proficiency': {
-    file: 'src/utils/daggerheartDerived.ts',
+    file: 'src/rules/daggerheartDerived.ts',
     find: 'if (level >= 8) {',
     replace: 'if (level >= 9) {',
   },
@@ -332,12 +332,12 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     replace: 'return Math.max(1, proficiency) + 1;',
   },
   'daggerheart.L3.critical-damage': {
-    file: 'src/utils/daggerheartDerived.ts',
+    file: 'src/rules/daggerheartDerived.ts',
     find: 'return rolledTotal + Math.max(0, diceCount) * Math.max(0, dieSize);',
     replace: 'return rolledTotal + Math.max(0, diceCount) * Math.max(0, dieSize) + 1;',
   },
   'daggerheart.L3.spellcast-damage-dice': {
-    file: 'src/utils/daggerheartDerived.ts',
+    file: 'src/rules/daggerheartDerived.ts',
     find: 'return Math.max(0, spellcastTrait);',
     replace: 'return Math.max(0, spellcastTrait) + 1;',
   },
@@ -581,7 +581,7 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     replace: 'data.initiative = dexMod + 1;',
   },
   'dnd35e.L5.vancian-slots': {
-    file: 'src/utils/d20LegacySpellcasting.ts',
+    file: 'src/systems/shared/d20LegacySpellcasting.ts',
     find: '(slotTotals[numericLevel] ?? 0) + total + bonusSpells + domainSlot + specialistSlot;',
     replace:
       '(slotTotals[numericLevel] ?? 0) + total + 1 + bonusSpells + domainSlot + specialistSlot;',
@@ -682,7 +682,7 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     replace: 'data.initiative = dexMod + 1;',
   },
   'pf1e.L5.vancian-slots': {
-    file: 'src/utils/d20LegacySpellcasting.ts',
+    file: 'src/systems/shared/d20LegacySpellcasting.ts',
     find: '(slotTotals[numericLevel] ?? 0) + total + bonusSpells + domainSlot + specialistSlot;',
     replace:
       '(slotTotals[numericLevel] ?? 0) + total + bonusSpells + domainSlot + specialistSlot + 1;',
@@ -960,37 +960,37 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     replace: 'return rank0Value * 2 ** (rank + 1);',
   },
   'daggerheart.L1.ancestry-adjustments': {
-    file: 'src/utils/daggerheartDerived.ts',
+    file: 'src/rules/daggerheartDerived.ts',
     find: 'giant: { evasion: 0, hitPoints: 1, stress: 0 },',
     replace: 'giant: { evasion: 0, hitPoints: 2, stress: 0 },',
   },
   'daggerheart.L2.evasion': {
-    file: 'src/utils/daggerheartDerived.ts',
+    file: 'src/rules/daggerheartDerived.ts',
     find: ': system.evasion;',
     replace: ': system.evasion + 1;',
   },
   'daggerheart.L2.armor-score': {
-    file: 'src/utils/daggerheartDerived.ts',
+    file: 'src/rules/daggerheartDerived.ts',
     find: 'const armorMax = Math.max(0, Math.min(12, armorScoreBase + armorScoreBonus));',
     replace: 'const armorMax = Math.max(1, Math.min(12, armorScoreBase + armorScoreBonus));',
   },
   'daggerheart.L2.major-threshold': {
-    file: 'src/utils/daggerheartDerived.ts',
+    file: 'src/rules/daggerheartDerived.ts',
     find: ': (unarmoredBaseOverride?.majorThreshold ?? system.level);',
     replace: ': (unarmoredBaseOverride?.majorThreshold ?? system.level + 1);',
   },
   'daggerheart.L2.severe-threshold': {
-    file: 'src/utils/daggerheartDerived.ts',
+    file: 'src/rules/daggerheartDerived.ts',
     find: ': (unarmoredBaseOverride?.severeThreshold ?? system.level * 2);',
     replace: ': (unarmoredBaseOverride?.severeThreshold ?? system.level * 3);',
   },
   'daggerheart.L2.passive-bonuses': {
-    file: 'src/utils/daggerheartDerived.ts',
+    file: 'src/rules/daggerheartDerived.ts',
     find: 'evasion: (total.evasion || 0) + (next.evasion || 0),',
     replace: 'evasion: (total.evasion || 0) + (next.evasion || 0) + 1,',
   },
   'daggerheart.L1.effective-attribute': {
-    file: 'src/utils/daggerheartDerived.ts',
+    file: 'src/rules/daggerheartDerived.ts',
     find: 'return (system.attributes[trait] || 0) + passive;',
     replace: 'return (system.attributes[trait] || 0) + passive + 1;',
   },
@@ -1000,67 +1000,67 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     replace: 'hp.current = Math.min(hp.max, hp.current + amount + 1);',
   },
   'daggerheart.L8.hp-marked': {
-    file: 'src/utils/daggerheartDerived.ts',
+    file: 'src/rules/daggerheartDerived.ts',
     find: 'if (damage >= majorThreshold) return 2;',
     replace: 'if (damage > majorThreshold) return 2;',
   },
   'daggerheart.L8.duality-outcome': {
-    file: 'src/utils/daggerheartDerived.ts',
+    file: 'src/rules/daggerheartDerived.ts',
     find: "return hopeDie > fearDie ? 'hope' : 'fear';",
     replace: "return hopeDie < fearDie ? 'hope' : 'fear';",
   },
   'daggerheart.L8.massive-damage': {
-    file: 'src/utils/daggerheartDerived.ts',
+    file: 'src/rules/daggerheartDerived.ts',
     find: 'if (options?.massiveDamage && damage >= severeThreshold * 2) return 4;',
     replace: 'if (options?.massiveDamage && damage >= severeThreshold * 3) return 4;',
   },
   'daggerheart.L8.resistance-immunity': {
-    file: 'src/utils/daggerheartDerived.ts',
+    file: 'src/rules/daggerheartDerived.ts',
     find: 'const reduced = options.resistant ? Math.floor(damage / 2) : damage;',
     replace: 'const reduced = options.resistant ? Math.floor(damage / 3) : damage;',
   },
   'daggerheart.L8.armor-slot-reduction': {
-    file: 'src/utils/daggerheartDerived.ts',
+    file: 'src/rules/daggerheartDerived.ts',
     find: 'return Math.max(0, baseHpMarked - Math.max(0, Math.floor(armorSlotsMarked)));',
     replace: 'return Math.max(0, baseHpMarked - 2 * Math.max(0, Math.floor(armorSlotsMarked)));',
   },
   'daggerheart.L1.experience-bonus': {
-    file: 'src/utils/daggerheartDerived.ts',
+    file: 'src/rules/daggerheartDerived.ts',
     find: 'return DAGGERHEART_EXPERIENCE_BASE_BONUS + Math.max(0, Math.floor(increases));',
     replace: 'return DAGGERHEART_EXPERIENCE_BASE_BONUS + Math.max(0, Math.floor(increases)) + 1;',
   },
   'daggerheart.L1.starting-trait-array': {
-    file: 'src/utils/daggerheartDerived.ts',
+    file: 'src/rules/daggerheartDerived.ts',
     find: 'return [2, 1, 1, 0, 0, -1];',
     replace: 'return [2, 1, 1, 0, 0, 0];',
   },
   'daggerheart.L7.starting-hope': {
-    file: 'src/utils/daggerheartDerived.ts',
+    file: 'src/rules/daggerheartDerived.ts',
     find: 'DAGGERHEART_STARTING_HOPE = 2;',
     replace: 'DAGGERHEART_STARTING_HOPE = 3;',
   },
   'daggerheart.L10.gold-denominations': {
-    file: 'src/utils/daggerheartDerived.ts',
+    file: 'src/rules/daggerheartDerived.ts',
     find: 'return Math.max(0, handfuls) + 10 * Math.max(0, bags) + 100 * Math.max(0, chests);',
     replace: 'return Math.max(0, handfuls) + 11 * Math.max(0, bags) + 100 * Math.max(0, chests);',
   },
   'daggerheart.L6.range-squares': {
-    file: 'src/utils/daggerheartDerived.ts',
+    file: 'src/rules/daggerheartDerived.ts',
     find: "case 'very-far':\n      return 13;",
     replace: "case 'very-far':\n      return 14;",
   },
   'daggerheart.L7.short-rest-recovery': {
-    file: 'src/utils/daggerheartDerived.ts',
+    file: 'src/rules/daggerheartDerived.ts',
     find: 'return Math.max(0, Math.floor(d4Roll)) + Math.max(0, Math.floor(tier));',
     replace: 'return Math.max(0, Math.floor(d4Roll)) + Math.max(0, Math.floor(tier)) + 1;',
   },
   'daggerheart.L7.stress-vulnerable': {
-    file: 'src/utils/daggerheartDerived.ts',
+    file: 'src/rules/daggerheartDerived.ts',
     find: 'return currentStress >= maxStress;',
     replace: 'return currentStress > maxStress;',
   },
   'daggerheart.L8.death-moves': {
-    file: 'src/utils/daggerheartDerived.ts',
+    file: 'src/rules/daggerheartDerived.ts',
     find: 'return { survives: true, clears: hopeDie };',
     replace: 'return { survives: true, clears: hopeDie + 1 };',
   },

@@ -21,7 +21,7 @@
 
 import type { SeededRng } from '../../scene/seededRng';
 import { resolveEffects, type ResolveContext, type RollMode } from './resolve';
-import { pf2eDegreeOfSuccess, type Pf2eDegreeOfSuccess } from '../../utils/pf2eDegree';
+import { pf2eDegreeOfSuccess, type Pf2eDegreeOfSuccess } from './pf2eDegree';
 import { d20CriticalConfirmed, d20CriticalDamage } from '../../utils/derivedCombatMath';
 import type { EffectInstance } from '../ir/types';
 

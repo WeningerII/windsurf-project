@@ -17,7 +17,7 @@ import {
   applyDnd5eClassTemplate,
   applyDnd5eSubclassTemplate,
   removeDnd5eClassTemplate,
-} from '../../utils/classTemplate';
+} from '../../systems/dnd5e/shared/classTemplate';
 
 function makeDoc(overrides: Partial<Dnd5eDataModel> = {}): CharacterDocument<Dnd5eDataModel> {
   return {

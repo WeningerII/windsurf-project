@@ -36,7 +36,6 @@
 - [D20 Legacy System Engines](D20_Legacy_System_Engines.md) (38 shared connections)
 - [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (36 shared connections)
 - [D20 Combat Controls](D20_Combat_Controls.md) (19 shared connections)
-- [D20 Legacy Templates](D20_Legacy_Templates.md) (18 shared connections)
 - [D20 Legacy Spell Slots](D20_Legacy_Spell_Slots.md) (13 shared connections)
 - [App Shell & Layout](App_Shell_%26_Layout.md) (12 shared connections)
 - [Dnd5e Equipment & Features UI](Dnd5e_Equipment_%26_Features_UI.md) (10 shared connections)
@@ -44,6 +43,7 @@
 - [Currency & Inventory Editors](Currency_%26_Inventory_Editors.md) (8 shared connections)
 - [Doc Drift Rules](Doc_Drift_Rules.md) (8 shared connections)
 - [D20 Class Spellcasting](D20_Class_Spellcasting.md) (7 shared connections)
+- [D20 Legacy Templates](D20_Legacy_Templates.md) (6 shared connections)
 - [Dnd5e Feature List Sections](Dnd5e_Feature_List_Sections.md) (6 shared connections)
 
 ## Source Files

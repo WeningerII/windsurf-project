@@ -10,7 +10,7 @@ import type {
   DaggerheartPassiveDerivedBonus,
 } from '../../types/daggerheart';
 import type { CharacterDocument } from '../../types/core/document';
-import { getDaggerheartInventoryDefinition } from '../../utils/daggerheartInventory';
+import { getDaggerheartInventoryDefinition } from '../../rules/daggerheartInventory';
 import {
   getDaggerheartActivePassiveDomainCards,
   getDaggerheartEffectiveAttribute,
@@ -18,7 +18,7 @@ import {
   getDaggerheartTier,
   getEquippedDaggerheartArmor,
   getEquippedDaggerheartWeapon,
-} from '../../utils/daggerheartDerived';
+} from '../../rules/daggerheartDerived';
 import type { DaggerheartDataModel } from './data-model';
 
 type PassiveSource = {

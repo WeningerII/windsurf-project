@@ -11,7 +11,7 @@ import {
   applyPf2eAncestryTemplate,
   applyPf2eBackgroundTemplate,
   applyPf2eClassTemplate,
-} from '../../utils/pf2eTemplate';
+} from '../../systems/pf2e/pf2eTemplate';
 
 function makeDoc(overrides: Partial<Pf2eDataModel> = {}): CharacterDocument<Pf2eDataModel> {
   return {

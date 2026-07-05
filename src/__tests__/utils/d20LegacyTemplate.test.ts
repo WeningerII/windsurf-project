@@ -22,7 +22,7 @@ import {
   applyD20LegacyClassTemplate,
   applyD20LegacyRaceTemplate,
   removeD20LegacyClassTemplate,
-} from '../../utils/d20LegacyTemplate';
+} from '../../systems/d20-legacy/d20LegacyTemplate';
 import { exportDocuments, importDocuments } from '../../utils/documentStorage';
 import { wizard as wizardPf1 } from '../../data/pathfinder/1e/classes/wizard';
 import { cleric as clericPf1 } from '../../data/pathfinder/1e/classes/cleric';

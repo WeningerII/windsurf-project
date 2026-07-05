@@ -4,8 +4,8 @@ import type { CharacterDocument, SystemDataModel } from '../../../types/core/doc
 import type { GameSystemId } from '../../../types/game-systems';
 import { profBonus as engineProfBonus } from './engine';
 import { Dnd5e2024DataModel } from '../../dnd5e-2024/data-model';
-import { applyDnd5eLongRest, applyDnd5eShortRest } from '../../../utils/dnd5eRest';
-import { getEligibleDnd5eFeatureOptions } from '../../../utils/dnd5eFeatureOptions';
+import { applyDnd5eLongRest, applyDnd5eShortRest } from './dnd5eRest';
+import { getEligibleDnd5eFeatureOptions } from './dnd5eFeatureOptions';
 import {
   getDnd5eAlwaysPreparedSpellIds,
   getDnd5eAlwaysPreparedSpellSources,

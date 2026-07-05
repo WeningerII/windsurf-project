@@ -4,9 +4,9 @@
 
 ## Key Concepts
 
-- **EffectInstance** (59 connections) — `src/rules/ir/types.ts`
+- **EffectInstance** (61 connections) — `src/rules/ir/types.ts`
 - **makeEffectId()** (54 connections) — `src/rules/ir/types.ts`
-- **types.ts** (41 connections) — `src/rules/ir/types.ts`
+- **types.ts** (42 connections) — `src/rules/ir/types.ts`
 - **modifierEffects.ts** (21 connections) — `src/rules/compile/modifierEffects.ts`
 - **d20LegacyConditions.ts** (19 connections) — `src/rules/conditions/d20LegacyConditions.ts`
 - **sceneConditions.ts** (17 connections) — `src/rules/conditions/sceneConditions.ts`
@@ -34,7 +34,7 @@
 ## Relationships
 
 - [Scene Combat Area Effects](Scene_Combat_Area_Effects.md) (76 shared connections)
-- [Character Combatant Builder](Character_Combatant_Builder.md) (22 shared connections)
+- [Character Combatant Builder](Character_Combatant_Builder.md) (19 shared connections)
 - [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (16 shared connections)
 - [Condition Effects by System](Condition_Effects_by_System.md) (15 shared connections)
 - [Scene Combat Resolution](Scene_Combat_Resolution.md) (10 shared connections)
@@ -63,7 +63,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 512 (99%)
+- EXTRACTED: 515 (99%)
 - INFERRED: 3 (1%)
 - AMBIGUOUS: 0 (0%)
 

@@ -8,7 +8,7 @@ import {
   applyDaggerheartAncestryTemplate,
   applyDaggerheartClassTemplate,
   applyDaggerheartCommunityTemplate,
-} from '../../utils/daggerheartTemplate';
+} from '../../systems/daggerheart/daggerheartTemplate';
 import { getDaggerheartClass } from '../../data/daggerheart/1.0/classes';
 import { getDaggerheartAncestry } from '../../data/daggerheart/1.0/ancestries';
 import { getDaggerheartCommunity } from '../../data/daggerheart/1.0/communities';

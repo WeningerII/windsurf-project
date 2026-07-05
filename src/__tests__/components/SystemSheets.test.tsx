@@ -29,7 +29,7 @@ import { Mam3eCharacterSheet } from '../../systems/mam3e/sheet';
 import { createDefaultMam3eData } from '../../systems/mam3e/data-model';
 import { DaggerheartSheet } from '../../systems/daggerheart/sheet';
 import { createDefaultDaggerheartData } from '../../systems/daggerheart/data-model';
-import { applyDnd5eFeatTemplate } from '../../utils/featTemplate';
+import { applyDnd5eFeatTemplate } from '../../systems/dnd5e/shared/featTemplate';
 import { acolyte as acolyteBackground } from '../../data/dnd/5e-2014/backgrounds/acolyte';
 import { ranger as rangerClass2024 } from '../../data/dnd/5e-2024/classes/ranger';
 import { battlesuitArchetype } from '../../data/mutants-and-masterminds/3e/archetypes/battlesuit';
@@ -92,7 +92,7 @@ vi.mock('../../components/FeatBrowser', () => ({
   ),
 }));
 
-vi.mock('../../components/FeatureOptionBrowser', () => ({
+vi.mock('../../systems/dnd5e/shared/components/FeatureOptionBrowser', () => ({
   FeatureOptionBrowser: ({
     options,
     onSelectOption,

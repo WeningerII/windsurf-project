@@ -1,6 +1,6 @@
 # GameSystemId
 
-> God node · 76 connections · `src/types/game-systems.ts`
+> God node · 77 connections · `src/types/game-systems.ts`
 
 **Community:** [Dnd5e Resource Loading Hooks](Dnd5e_Resource_Loading_Hooks.md)
 
@@ -12,14 +12,13 @@
 ### imports
 - dataLoader.ts `EXTRACTED`
 - App.tsx `EXTRACTED`
-- [capabilityScenarios.test.tsx](capabilityScenarios.test.tsx.md) `EXTRACTED`
 - character.ts `EXTRACTED`
+- [capabilityScenarios.test.tsx](capabilityScenarios.test.tsx.md) `EXTRACTED`
 - docDrift.ts `EXTRACTED`
 - generate-roadmap-metrics.ts `EXTRACTED`
 - d20LegacyTemplate.ts `EXTRACTED`
 - D20LegacyTabs.tsx `EXTRACTED`
 - engine.ts `EXTRACTED`
-- characterCombatant.ts `EXTRACTED`
 - types.ts `EXTRACTED`
 - useSceneEncounter.ts `EXTRACTED`
 - srd-coverage.ts `EXTRACTED`
@@ -27,9 +26,10 @@
 - generate-srd-manifests.ts `EXTRACTED`
 - useDnd5eSheetController.ts `EXTRACTED`
 - useDnd5eSheetResources.ts `EXTRACTED`
+- characterCombatant.ts `EXTRACTED`
+- systemProfiles.ts `EXTRACTED`
 - useMam3eSheetResources.ts `EXTRACTED`
 - engineEquipIntegration.test.ts `EXTRACTED`
-- useD20LegacySheetController.ts `EXTRACTED`
 
 ### references
 - [EffectInstance](EffectInstance.md) `EXTRACTED`

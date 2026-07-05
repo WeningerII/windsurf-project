@@ -1,6 +1,6 @@
 # EffectInstance
 
-> God node · 59 connections · `src/rules/ir/types.ts`
+> God node · 61 connections · `src/rules/ir/types.ts`
 
 **Community:** [Character Effects Compilation](Character_Effects_Compilation.md)
 
@@ -12,6 +12,7 @@
 ### imports
 - sceneCombat.ts `EXTRACTED`
 - characterCombatant.ts `EXTRACTED`
+- systemProfiles.ts `EXTRACTED`
 - monsterCombatant.ts `EXTRACTED`
 - sceneCombatBridge.test.ts `EXTRACTED`
 - sceneCombatBridgeUi.test.ts `EXTRACTED`
@@ -29,7 +30,6 @@
 - targetScoring.ts `EXTRACTED`
 - mam3eCombatant.ts `EXTRACTED`
 - sceneTerrain.ts `EXTRACTED`
-- equipEffects.ts `EXTRACTED`
 
 ### re_exports
 - index.ts `EXTRACTED`

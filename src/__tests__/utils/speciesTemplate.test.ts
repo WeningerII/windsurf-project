@@ -12,7 +12,7 @@ import {
   Dnd5e2024DataModel,
 } from '../../systems/dnd5e-2024/data-model';
 import { CharacterDocument } from '../../types/core/document';
-import { applyDnd5eSpeciesTemplate } from '../../utils/speciesTemplate';
+import { applyDnd5eSpeciesTemplate } from '../../systems/dnd5e/shared/speciesTemplate';
 
 function makeDoc(overrides: Partial<Dnd5eDataModel> = {}): CharacterDocument<Dnd5eDataModel> {
   return {

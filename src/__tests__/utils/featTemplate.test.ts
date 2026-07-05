@@ -11,7 +11,7 @@ import {
   applyDnd5eFeatTemplate,
   getCurrentDnd5eFeatSelections,
   removeDnd5eFeatTemplate,
-} from '../../utils/featTemplate';
+} from '../../systems/dnd5e/shared/featTemplate';
 
 // Neutral feat fixtures. Only Grappler, Ability Score Improvement, Magic Initiate
 // (Cleric/Druid/Wizard), the four SRD fighting styles, the SRD epic boons, and

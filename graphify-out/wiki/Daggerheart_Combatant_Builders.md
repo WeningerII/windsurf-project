@@ -43,8 +43,8 @@
 - [Dnd5e Equipment & Features UI](Dnd5e_Equipment_%26_Features_UI.md) (26 shared connections)
 - [Sync Engine Tests](Sync_Engine_Tests.md) (17 shared connections)
 - [Pf2e Sheet Tabs](Pf2e_Sheet_Tabs.md) (17 shared connections)
-- [Dnd5e Feat Templates](Dnd5e_Feat_Templates.md) (14 shared connections)
 - [Dnd5e2024 Engine & Hit Dice](Dnd5e2024_Engine_%26_Hit_Dice.md) (14 shared connections)
+- [Document Sync Engine](Document_Sync_Engine.md) (13 shared connections)
 
 ## Source Files
 

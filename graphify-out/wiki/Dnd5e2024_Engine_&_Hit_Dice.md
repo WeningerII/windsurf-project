@@ -1,10 +1,10 @@
 # Dnd5e2024 Engine & Hit Dice
 
-> 77 nodes · cohesion 0.05
+> 76 nodes · cohesion 0.05
 
 ## Key Concepts
 
-- **engine.ts** (49 connections) — `src/systems/dnd5e/shared/engine.ts`
+- **engine.ts** (48 connections) — `src/systems/dnd5e/shared/engine.ts`
 - **dnd5e2014EngineMath.test.ts** (25 connections) — `src/__tests__/dnd5e2014EngineMath.test.ts`
 - **Dnd5eEngineBase** (19 connections) — `src/systems/dnd5e/shared/engine.ts`
 - **spellSlots.ts** (18 connections) — `src/utils/spellSlots.ts`
@@ -14,7 +14,6 @@
 - **engine.ts** (15 connections) — `src/systems/dnd5e-2024/engine.ts`
 - **.rollCheck()** (14 connections) — `src/systems/dnd5e/shared/engine.ts`
 - **Dnd5e2024Engine** (10 connections) — `src/systems/dnd5e-2024/engine.ts`
-- **profBonus()** (10 connections) — `src/systems/dnd5e/shared/engine.ts`
 - **derivedCasterMath.ts** (10 connections) — `src/utils/derivedCasterMath.ts`
 - **compute5eSpellSlots()** (10 connections) — `src/utils/spellSlots.ts`
 - **conditions.ts** (9 connections) — `src/systems/dnd5e/conditions.ts`
@@ -29,7 +28,8 @@
 - **computePactMagicSlots()** (5 connections) — `src/utils/spellSlots.ts`
 - **Dnd5eRulesEdition** (5 connections) — `src/utils/spellSlots.ts`
 - **hit-dice.ts** (4 connections) — `src/constants/hit-dice.ts`
-- *... and 52 more nodes in this community*
+- **hitDieSize()** (4 connections) — `src/constants/hit-dice.ts`
+- *... and 51 more nodes in this community*
 
 ## Relationships
 
@@ -41,10 +41,10 @@
 - [Scene Combat Area Effects](Scene_Combat_Area_Effects.md) (6 shared connections)
 - [Dice Panel & Mam3e Resolution](Dice_Panel_%26_Mam3e_Resolution.md) (4 shared connections)
 - [System Definitions & Types](System_Definitions_%26_Types.md) (3 shared connections)
-- [Character Combatant Builder](Character_Combatant_Builder.md) (3 shared connections)
 - [Character Effects Compilation](Character_Effects_Compilation.md) (3 shared connections)
 - [D20 Legacy Spell Slots](D20_Legacy_Spell_Slots.md) (3 shared connections)
 - [Dnd5e Sheets & E2E Tests](Dnd5e_Sheets_%26_E2E_Tests.md) (2 shared connections)
+- [Dnd35e Saves & Data Model](Dnd35e_Saves_%26_Data_Model.md) (2 shared connections)
 
 ## Source Files
 
@@ -65,7 +65,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 418 (100%)
+- EXTRACTED: 407 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

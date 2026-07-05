@@ -1,12 +1,9 @@
 // purpose: Selected feats section — lists chosen feats with manual-rider badge and removal/option editing.
 import { FeatDefinition } from '../../../../types/character-options/feats';
 import { Feat } from '../../../../types/core/character';
-import type {
-  Dnd5eFeatChoiceRequirement,
-  Dnd5eFeatSelections,
-} from '../../../../utils/featTemplate';
+import type { Dnd5eFeatChoiceRequirement, Dnd5eFeatSelections } from '../featTemplate';
 import { DND5E_FEAT_COPY } from '../../../../utils/documentationCopy';
-import { getDnd5eFeatAutomationRequirements } from '../../../../utils/featTemplate';
+import { getDnd5eFeatAutomationRequirements } from '../featTemplate';
 import { shouldShowDnd5eManualFeatBadge } from '../../../../utils/featManualBadge';
 
 interface Props {

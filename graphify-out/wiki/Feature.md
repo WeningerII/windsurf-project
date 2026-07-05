@@ -1,6 +1,6 @@
 # Feature
 
-> God node · 43 connections · `src/types/core/character.ts`
+> God node · 44 connections · `src/types/core/character.ts`
 
 **Community:** [Dnd5e Feature List Sections](Dnd5e_Feature_List_Sections.md)
 
@@ -16,20 +16,20 @@
 - D20LegacyTabs.tsx `EXTRACTED`
 - data-model.ts `EXTRACTED`
 - speciesTemplate.ts `EXTRACTED`
-- characterCombatant.ts `EXTRACTED`
 - data-model.ts `EXTRACTED`
 - data-model.ts `EXTRACTED`
 - Dnd5eFeaturesTab.tsx `EXTRACTED`
 - classes.ts `EXTRACTED`
+- characterCombatant.ts `EXTRACTED`
 - data-model.ts `EXTRACTED`
 - dnd5eFeatureOptions.ts `EXTRACTED`
+- systemProfiles.ts `EXTRACTED`
 - data-model.ts `EXTRACTED`
 - species.ts `EXTRACTED`
 - D20FeatsTab.tsx `EXTRACTED`
 - characterEffects.ts `EXTRACTED`
 - backgrounds.ts `EXTRACTED`
 - dnd5eRest.ts `EXTRACTED`
-- archetypes.ts `EXTRACTED`
 
 ### re_exports
 - game-systems.ts `EXTRACTED`
@@ -46,8 +46,8 @@
 - Props `EXTRACTED`
 - Props `EXTRACTED`
 - Modifier `EXTRACTED`
-- CharacterEffectInputs `EXTRACTED`
 - NormalizedSheet `EXTRACTED`
+- CharacterEffectInputs `EXTRACTED`
 - Props `EXTRACTED`
 - ClassFeatureProgression `EXTRACTED`
 - Subrace `EXTRACTED`

@@ -41,7 +41,7 @@ import type {
   DaggerheartWeapon,
 } from '../types/daggerheart';
 import { errorLogger, ErrorCategory, ErrorSeverity } from './errorLogger';
-import { loadDnd5e2014FeatureOptions } from './dnd5eFeatureOptions';
+import { loadDnd5e2014FeatureOptions } from '../systems/dnd5e/shared/dnd5eFeatureOptions';
 import { dedupeById } from './indexById';
 import { OpenContentCategory, filterOpenContentBySource } from './openContentPolicy';
 
