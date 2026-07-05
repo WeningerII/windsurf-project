@@ -1,6 +1,6 @@
 # PF2e Monster Encoder
 
-> 15 nodes · cohesion 0.23
+> 16 nodes · cohesion 0.21
 
 ## Key Concepts
 
@@ -9,11 +9,12 @@
 - **mapAttack()** (5 connections) — `scripts/encode-pf2e-monsters.mjs`
 - **untag()** (4 connections) — `scripts/encode-pf2e-monsters.mjs`
 - **parseDamage()** (3 connections) — `scripts/encode-pf2e-monsters.mjs`
+- **ts()** (3 connections) — `scripts/encode-pf2e-monsters.mjs`
+- **attack()** (3 connections) — `src/__tests__/rules/nonD20Resolution.test.ts`
 - **bucketFor()** (2 connections) — `scripts/encode-pf2e-monsters.mjs`
 - **normalizeName()** (2 connections) — `scripts/encode-pf2e-monsters.mjs`
 - **primaryDamageType()** (2 connections) — `scripts/encode-pf2e-monsters.mjs`
 - **slug()** (2 connections) — `scripts/encode-pf2e-monsters.mjs`
-- **ts()** (2 connections) — `scripts/encode-pf2e-monsters.mjs`
 - **ALIGNMENT_ABBREV** (1 connections) — `scripts/encode-pf2e-monsters.mjs`
 - **CREATURE_TYPES** (1 connections) — `scripts/encode-pf2e-monsters.mjs`
 - **DAMAGE_TYPES** (1 connections) — `scripts/encode-pf2e-monsters.mjs`
@@ -22,16 +23,19 @@
 
 ## Relationships
 
-- [Condition Effects by System](Condition_Effects_by_System.md) (1 shared connections)
+- [App Shell & Layout](App_Shell_%26_Layout.md) (1 shared connections)
+- [Scene Combat Area Effects](Scene_Combat_Area_Effects.md) (1 shared connections)
+- [Character Effects Compilation](Character_Effects_Compilation.md) (1 shared connections)
 
 ## Source Files
 
 - `scripts/encode-pf2e-monsters.mjs`
+- `src/__tests__/rules/nonD20Resolution.test.ts`
 
 ## Audit Trail
 
-- EXTRACTED: 48 (98%)
-- INFERRED: 1 (2%)
+- EXTRACTED: 51 (96%)
+- INFERRED: 2 (4%)
 - AMBIGUOUS: 0 (0%)
 
 ---

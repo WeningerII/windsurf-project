@@ -1,12 +1,13 @@
 # Toast Notifications
 
-> 10 nodes · cohesion 0.27
+> 11 nodes · cohesion 0.24
 
 ## Key Concepts
 
 - **Toast.tsx** (12 connections) — `src/components/ui/Toast.tsx`
 - **ToastVariant** (4 connections) — `src/utils/notifications.ts`
 - **ToastProvider()** (3 connections) — `src/components/ui/Toast.tsx`
+- **useToast()** (3 connections) — `src/components/ui/Toast.tsx`
 - **registerToastHandler()** (3 connections) — `src/utils/notifications.ts`
 - **ToastContextValue** (2 connections) — `src/components/ui/Toast.tsx`
 - **ToastItem** (2 connections) — `src/components/ui/Toast.tsx`
@@ -17,8 +18,9 @@
 
 ## Relationships
 
-- [App Shell & Layout](App_Shell_%26_Layout.md) (3 shared connections)
+- [Combat & Recap Panels](Combat_%26_Recap_Panels.md) (3 shared connections)
 - [Document Migrations & Storage](Document_Migrations_%26_Storage.md) (3 shared connections)
+- [App Shell & Layout](App_Shell_%26_Layout.md) (1 shared connections)
 
 ## Source Files
 
@@ -27,7 +29,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 30 (100%)
+- EXTRACTED: 33 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

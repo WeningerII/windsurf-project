@@ -1,61 +1,54 @@
 # Encounter Builder Logic
 
-> 32 nodes · cohesion 0.10
+> 21 nodes · cohesion 0.18
 
 ## Key Concepts
 
 - **encounterBuilder.ts** (53 connections) — `src/scene/encounterBuilder.ts`
-- **sceneEncounterBuilder.test.ts** (20 connections) — `src/__tests__/sceneEncounterBuilder.test.ts`
 - **buildEncounterSceneEvents()** (17 connections) — `src/scene/encounterBuilder.ts`
+- **cellKey()** (8 connections) — `src/scene/grid.ts`
 - **buildInitiativeEntries()** (7 connections) — `src/scene/encounterBuilder.ts`
-- **EncounterPanelProps** (6 connections) — `src/components/scene/EncounterPanel.tsx`
-- **summarizeEncounterPlan()** (6 connections) — `src/scene/encounterBuilder.ts`
-- **summarizeEncounterParty()** (5 connections) — `src/scene/encounterBuilder.ts`
 - **findOpenPosition()** (4 connections) — `src/scene/encounterBuilder.ts`
 - **getSceneTokenSize()** (4 connections) — `src/scene/encounterBuilder.ts`
 - **occupyCells()** (4 connections) — `src/scene/encounterBuilder.ts`
 - **buildOccupiedCells()** (3 connections) — `src/scene/encounterBuilder.ts`
-- **EncounterPartySummary** (3 connections) — `src/scene/encounterBuilder.ts`
-- **EncounterPlanSummary** (3 connections) — `src/scene/encounterBuilder.ts`
 - **isFootprintOpen()** (3 connections) — `src/scene/encounterBuilder.ts`
 - **planEncounterMonsters()** (3 connections) — `src/scene/encounterBuilder.ts`
-- **EncounterSpecValidation** (3 connections) — `src/scene/encounterSpec.ts`
 - **clampInteger()** (2 connections) — `src/scene/encounterBuilder.ts`
 - **compareTokenIds()** (2 connections) — `src/scene/encounterBuilder.ts`
 - **getAbilityModifier()** (2 connections) — `src/scene/encounterBuilder.ts`
-- **getCharacterLevel()** (2 connections) — `src/scene/encounterBuilder.ts`
 - **intersectBounds()** (2 connections) — `src/scene/encounterBuilder.ts`
 - **makeUniqueTokenId()** (2 connections) — `src/scene/encounterBuilder.ts`
 - **nextEventId()** (2 connections) — `src/scene/encounterBuilder.ts`
 - **readDocumentDexterity()** (2 connections) — `src/scene/encounterBuilder.ts`
 - **EncounterBuilderIssue** (1 connections) — `src/scene/encounterBuilder.ts`
-- *... and 7 more nodes in this community*
+- **EncounterPartyMember** (1 connections) — `src/scene/encounterBuilder.ts`
+- **EncounterPlanEntry** (1 connections) — `src/scene/encounterBuilder.ts`
+- **SpawnBounds** (1 connections) — `src/scene/encounterBuilder.ts`
 
 ## Relationships
 
-- [AI Encounter Drafting](AI_Encounter_Drafting.md) (14 shared connections)
-- [Scene Combat Resolution](Scene_Combat_Resolution.md) (11 shared connections)
-- [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (8 shared connections)
-- [Monster & NPC Generator](Monster_%26_NPC_Generator.md) (6 shared connections)
-- [Dice Panel & Mam3e Resolution](Dice_Panel_%26_Mam3e_Resolution.md) (5 shared connections)
-- [Scene Grid View](Scene_Grid_View.md) (4 shared connections)
+- [AI Creature Identification](AI_Creature_Identification.md) (9 shared connections)
+- [Check & Oracle Resolution](Check_%26_Oracle_Resolution.md) (7 shared connections)
+- [Scene Combat Resolution](Scene_Combat_Resolution.md) (7 shared connections)
+- [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (6 shared connections)
+- [AI Encounter Drafting](AI_Encounter_Drafting.md) (4 shared connections)
+- [Campaign File Transfer](Campaign_File_Transfer.md) (3 shared connections)
 - [Monster Combatant Builder](Monster_Combatant_Builder.md) (3 shared connections)
-- [Scene Management Hooks](Scene_Management_Hooks.md) (3 shared connections)
-- [Check & Oracle Resolution](Check_%26_Oracle_Resolution.md) (2 shared connections)
-- [Dnd5e Sheets & E2E Tests](Dnd5e_Sheets_%26_E2E_Tests.md) (2 shared connections)
-- [Dnd5e2024 Engine & Hit Dice](Dnd5e2024_Engine_%26_Hit_Dice.md) (2 shared connections)
-- [System Registry & Renderer](System_Registry_%26_Renderer.md) (2 shared connections)
+- [Dice Panel & Mam3e Resolution](Dice_Panel_%26_Mam3e_Resolution.md) (3 shared connections)
+- [Monster & NPC Generator](Monster_%26_NPC_Generator.md) (2 shared connections)
+- [Combat & Recap Panels](Combat_%26_Recap_Panels.md) (2 shared connections)
+- [Oracle Panel & Logic](Oracle_Panel_%26_Logic.md) (1 shared connections)
+- [Condition Effects by System](Condition_Effects_by_System.md) (1 shared connections)
 
 ## Source Files
 
-- `src/__tests__/sceneEncounterBuilder.test.ts`
-- `src/components/scene/EncounterPanel.tsx`
 - `src/scene/encounterBuilder.ts`
-- `src/scene/encounterSpec.ts`
+- `src/scene/grid.ts`
 
 ## Audit Trail
 
-- EXTRACTED: 168 (100%)
+- EXTRACTED: 124 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

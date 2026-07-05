@@ -1,18 +1,15 @@
 # Character Combatant Builder
 
-> 41 nodes · cohesion 0.09
+> 33 nodes · cohesion 0.11
 
 ## Key Concepts
 
-- **EffectInstance** (59 connections) — `src/rules/ir/types.ts`
-- **characterCombatant.ts** (43 connections) — `src/rules/combatants/characterCombatant.ts`
-- **buildCharacterCombatant()** (21 connections) — `src/rules/combatants/characterCombatant.ts`
-- **d20LegacyConditions.ts** (19 connections) — `src/rules/conditions/d20LegacyConditions.ts`
+- **characterCombatant.ts** (46 connections) — `src/rules/combatants/characterCombatant.ts`
+- **buildCharacterCombatant()** (23 connections) — `src/rules/combatants/characterCombatant.ts`
 - **d20LegacyRiders.ts** (13 connections) — `src/rules/conditions/d20LegacyRiders.ts`
-- **daggerheartResolution.ts** (13 connections) — `src/rules/resolver/daggerheartResolution.ts`
 - **dnd5eRiders.ts** (11 connections) — `src/rules/conditions/dnd5eRiders.ts`
 - **pf2eRiders.ts** (11 connections) — `src/rules/conditions/pf2eRiders.ts`
-- **ContributionManualBoundary** (7 connections) — `src/types/core/contributionLedger.ts`
+- **compileModifierEffects()** (8 connections) — `src/rules/compile/modifierEffects.ts`
 - **baseAttackBonus()** (6 connections) — `src/rules/combatants/characterCombatant.ts`
 - **num()** (6 connections) — `src/rules/combatants/characterCombatant.ts`
 - **collectDnd5eRiderEffects()** (6 connections) — `src/rules/conditions/dnd5eRiders.ts`
@@ -20,47 +17,48 @@
 - **collectPf2eRiderEffects()** (5 connections) — `src/rules/conditions/pf2eRiders.ts`
 - **normalizeSheet()** (4 connections) — `src/rules/combatants/characterCombatant.ts`
 - **D20LegacySystemId** (4 connections) — `src/rules/conditions/d20LegacyConditions.ts`
-- **DaggerheartAttackInput** (4 connections) — `src/rules/resolver/daggerheartResolution.ts`
 - **pf2eWeaponProficiency()** (3 connections) — `src/rules/combatants/characterCombatant.ts`
 - **readArmorClass()** (3 connections) — `src/rules/combatants/characterCombatant.ts`
-- **LegacyConditionTemplate** (3 connections) — `src/rules/conditions/d20LegacyConditions.ts`
-- **ConditionEffectTemplate** (3 connections) — `src/rules/conditions/dnd5eConditions.ts`
 - **availableDnd5eToggles()** (3 connections) — `src/rules/conditions/dnd5eRiders.ts`
-- **DaggerheartAttackResult** (3 connections) — `src/rules/resolver/daggerheartResolution.ts`
+- **dnd5eOffHandDamageMod()** (3 connections) — `src/utils/derivedCombatMath.ts`
+- **dnd5eVersatileDamageDie()** (3 connections) — `src/utils/derivedCombatMath.ts`
 - **activeWeapons()** (2 connections) — `src/rules/combatants/characterCombatant.ts`
 - **BuildCharacterCombatantResult** (2 connections) — `src/rules/combatants/characterCombatant.ts`
-- *... and 16 more nodes in this community*
+- **SUPPORTED** (2 connections) — `src/rules/combatants/characterCombatant.ts`
+- **toModifierSources()** (2 connections) — `src/rules/combatants/characterCombatant.ts`
+- **D20_LEGACY_TOGGLE_LABELS** (2 connections) — `src/rules/conditions/d20LegacyRiders.ts`
+- **D20LegacyRiderInputs** (2 connections) — `src/rules/conditions/d20LegacyRiders.ts`
+- **pf1ePowerAttackTrade()** (2 connections) — `src/rules/conditions/d20LegacyRiders.ts`
+- *... and 8 more nodes in this community*
 
 ## Relationships
 
-- [Scene Combat Area Effects](Scene_Combat_Area_Effects.md) (27 shared connections)
-- [Character Effects Compilation](Character_Effects_Compilation.md) (25 shared connections)
-- [Condition Effects by System](Condition_Effects_by_System.md) (20 shared connections)
-- [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (13 shared connections)
-- [Dice Panel & Mam3e Resolution](Dice_Panel_%26_Mam3e_Resolution.md) (7 shared connections)
-- [Dnd5e Equipment & Features UI](Dnd5e_Equipment_%26_Features_UI.md) (6 shared connections)
-- [D20 Legacy System Engines](D20_Legacy_System_Engines.md) (6 shared connections)
-- [Dnd5e2024 Engine & Hit Dice](Dnd5e2024_Engine_%26_Hit_Dice.md) (4 shared connections)
-- [Scene Combat Resolution](Scene_Combat_Resolution.md) (4 shared connections)
-- [Currency & Inventory Editors](Currency_%26_Inventory_Editors.md) (4 shared connections)
+- [Character Effects Compilation](Character_Effects_Compilation.md) (22 shared connections)
+- [Dnd5e Feature List Sections](Dnd5e_Feature_List_Sections.md) (7 shared connections)
+- [Scene Combat Area Effects](Scene_Combat_Area_Effects.md) (7 shared connections)
+- [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (5 shared connections)
+- [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (4 shared connections)
+- [D20 Combat Controls](D20_Combat_Controls.md) (4 shared connections)
+- [Dnd5e2024 Engine & Hit Dice](Dnd5e2024_Engine_%26_Hit_Dice.md) (3 shared connections)
+- [Dnd5e Equipment & Features UI](Dnd5e_Equipment_%26_Features_UI.md) (3 shared connections)
+- [Skills Tab & Combat Math](Skills_Tab_%26_Combat_Math.md) (3 shared connections)
 - [Combat Toggles & Conditions](Combat_Toggles_%26_Conditions.md) (3 shared connections)
-- [Dnd5e Sheets & E2E Tests](Dnd5e_Sheets_%26_E2E_Tests.md) (2 shared connections)
+- [D20 Class Spellcasting](D20_Class_Spellcasting.md) (2 shared connections)
+- [Currency & Inventory Editors](Currency_%26_Inventory_Editors.md) (2 shared connections)
 
 ## Source Files
 
 - `src/rules/combatants/characterCombatant.ts`
+- `src/rules/compile/modifierEffects.ts`
 - `src/rules/conditions/d20LegacyConditions.ts`
 - `src/rules/conditions/d20LegacyRiders.ts`
-- `src/rules/conditions/dnd5eConditions.ts`
 - `src/rules/conditions/dnd5eRiders.ts`
 - `src/rules/conditions/pf2eRiders.ts`
-- `src/rules/ir/types.ts`
-- `src/rules/resolver/daggerheartResolution.ts`
-- `src/types/core/contributionLedger.ts`
+- `src/utils/derivedCombatMath.ts`
 
 ## Audit Trail
 
-- EXTRACTED: 286 (100%)
+- EXTRACTED: 189 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

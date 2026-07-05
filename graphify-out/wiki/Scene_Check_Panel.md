@@ -1,42 +1,57 @@
 # Scene Check Panel
 
-> 12 nodes · cohesion 0.23
+> 32 nodes · cohesion 0.11
 
 ## Key Concepts
 
-- **CheckPanel.tsx** (17 connections) — `src/components/scene/CheckPanel.tsx`
-- **CheckPanel.test.tsx** (8 connections) — `src/__tests__/components/CheckPanel.test.tsx`
-- **SceneCheckLogEntry** (4 connections) — `src/types/core/scene.ts`
-- **SceneCheckMode** (4 connections) — `src/types/core/scene.ts`
-- **CheckPanel()** (3 connections) — `src/components/scene/CheckPanel.tsx`
-- **CheckPanelProps** (3 connections) — `src/components/scene/CheckPanel.tsx`
-- **SceneCheckResult** (3 connections) — `src/types/core/scene.ts`
-- **makeState()** (2 connections) — `src/__tests__/components/CheckPanel.test.tsx`
-- **token()** (2 connections) — `src/__tests__/components/CheckPanel.test.tsx`
-- **OUTCOME_BADGE** (1 connections) — `src/components/scene/CheckPanel.tsx`
-- **OUTCOME_LABEL** (1 connections) — `src/components/scene/CheckPanel.tsx`
-- **SKILL_SUGGESTIONS** (1 connections) — `src/components/scene/CheckPanel.tsx`
+- **backgroundTemplate.ts** (43 connections) — `src/utils/backgroundTemplate.ts`
+- **applyDnd5eBackgroundTemplate()** (16 connections) — `src/utils/backgroundTemplate.ts`
+- **dnd5eToolChoices.ts** (14 connections) — `src/utils/dnd5eToolChoices.ts`
+- **formatDnd5eToolLabel()** (8 connections) — `src/utils/dnd5eToolChoices.ts`
+- **toolChoiceSlots()** (7 connections) — `src/utils/backgroundTemplate.ts`
+- **expandDnd5eToolChoiceValue()** (6 connections) — `src/utils/dnd5eToolChoices.ts`
+- **isChoiceValue()** (5 connections) — `src/utils/backgroundTemplate.ts`
+- **normalizeBackgroundLanguageOptions()** (5 connections) — `src/utils/backgroundTemplate.ts`
+- **fixedToolValues()** (4 connections) — `src/utils/backgroundTemplate.ts`
+- **sanitizeBackgroundLanguageSelections()** (4 connections) — `src/utils/backgroundTemplate.ts`
+- **toolChoiceLabelForValue()** (4 connections) — `src/utils/backgroundTemplate.ts`
+- **toolChoiceOptionsForValue()** (4 connections) — `src/utils/backgroundTemplate.ts`
+- **MusicalInstrumentProficiency** (3 connections) — `src/constants/proficiencies.ts`
+- **fixedValues()** (3 connections) — `src/utils/backgroundTemplate.ts`
+- **sanitizeBackgroundToolSelections()** (3 connections) — `src/utils/backgroundTemplate.ts`
+- **GamingSetProficiency** (2 connections) — `src/constants/proficiencies.ts`
+- **appendInventoryFromBackground()** (2 connections) — `src/utils/backgroundTemplate.ts`
+- **backgroundDerivedState()** (2 connections) — `src/utils/backgroundTemplate.ts`
+- **mergeSkillSource()** (2 connections) — `src/utils/backgroundTemplate.ts`
+- **removeDerivedList()** (2 connections) — `src/utils/backgroundTemplate.ts`
+- **removeSkillSource()** (2 connections) — `src/utils/backgroundTemplate.ts`
+- **updateBackgroundTemplateState()** (2 connections) — `src/utils/backgroundTemplate.ts`
+- **humanizeId()** (2 connections) — `src/utils/dnd5eToolChoices.ts`
+- **BackgroundChoiceSlot** (1 connections) — `src/utils/backgroundTemplate.ts`
+- **BackgroundChoiceValue** (1 connections) — `src/utils/backgroundTemplate.ts`
+- *... and 7 more nodes in this community*
 
 ## Relationships
 
-- [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (6 shared connections)
-- [Oracle Panel & Logic](Oracle_Panel_%26_Logic.md) (5 shared connections)
-- [Combat & Recap Panels](Combat_%26_Recap_Panels.md) (3 shared connections)
-- [Campaign File Transfer](Campaign_File_Transfer.md) (2 shared connections)
-- [App Header & Auth UI](App_Header_%26_Auth_UI.md) (1 shared connections)
-- [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (1 shared connections)
-- [Check & Oracle Resolution](Check_%26_Oracle_Resolution.md) (1 shared connections)
+- [Dnd5e Background Templates](Dnd5e_Background_Templates.md) (13 shared connections)
+- [Dnd5e Class Templates](Dnd5e_Class_Templates.md) (12 shared connections)
+- [Dnd5e Equipment & Features UI](Dnd5e_Equipment_%26_Features_UI.md) (6 shared connections)
+- [Dnd5e Feature List Sections](Dnd5e_Feature_List_Sections.md) (5 shared connections)
+- [Game Rules & Proficiencies](Game_Rules_%26_Proficiencies.md) (4 shared connections)
+- [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (2 shared connections)
+- [Dnd5e Feat Templates](Dnd5e_Feat_Templates.md) (1 shared connections)
+- [Class Enhancement & Headers](Class_Enhancement_%26_Headers.md) (1 shared connections)
 
 ## Source Files
 
-- `src/__tests__/components/CheckPanel.test.tsx`
-- `src/components/scene/CheckPanel.tsx`
-- `src/types/core/scene.ts`
+- `src/constants/proficiencies.ts`
+- `src/utils/backgroundTemplate.ts`
+- `src/utils/dnd5eToolChoices.ts`
 
 ## Audit Trail
 
-- EXTRACTED: 49 (100%)
-- INFERRED: 0 (0%)
+- EXTRACTED: 152 (99%)
+- INFERRED: 2 (1%)
 - AMBIGUOUS: 0 (0%)
 
 ---

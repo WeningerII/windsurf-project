@@ -29,18 +29,18 @@
 
 ## Relationships
 
+- [Pf2e Spell Types & Traits](Pf2e_Spell_Types_%26_Traits.md) (8 shared connections)
 - [Spell Browser UI](Spell_Browser_UI.md) (7 shared connections)
-- [Pf2e Spell Types & Traits](Pf2e_Spell_Types_%26_Traits.md) (7 shared connections)
 - [Sheet Resource Loading Hooks](Sheet_Resource_Loading_Hooks.md) (6 shared connections)
-- [Spells Tab Components](Spells_Tab_Components.md) (5 shared connections)
-- [D20 Legacy Spell Slots](D20_Legacy_Spell_Slots.md) (3 shared connections)
+- [Spells Tab Components](Spells_Tab_Components.md) (4 shared connections)
+- [Currency & Inventory Editors](Currency_%26_Inventory_Editors.md) (2 shared connections)
+- [D20 Legacy Spell Slots](D20_Legacy_Spell_Slots.md) (2 shared connections)
 - [MAM Power Browser](MAM_Power_Browser.md) (2 shared connections)
 - [Browser Compat & Error Logging](Browser_Compat_%26_Error_Logging.md) (1 shared connections)
-- [Dnd5e Sheets & E2E Tests](Dnd5e_Sheets_%26_E2E_Tests.md) (1 shared connections)
+- [Sync Engine Tests](Sync_Engine_Tests.md) (1 shared connections)
 - [Dnd35e Saves & Data Model](Dnd35e_Saves_%26_Data_Model.md) (1 shared connections)
 - [Spell Validation Checks](Spell_Validation_Checks.md) (1 shared connections)
 - [Spell Catalog Parity Tests](Spell_Catalog_Parity_Tests.md) (1 shared connections)
-- [Currency & Inventory Editors](Currency_%26_Inventory_Editors.md) (1 shared connections)
 
 ## Source Files
 

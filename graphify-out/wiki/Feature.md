@@ -2,7 +2,7 @@
 
 > God node · 43 connections · `src/types/core/character.ts`
 
-**Community:** [Dnd5e Equipment & Features UI](Dnd5e_Equipment_%26_Features_UI.md)
+**Community:** [Dnd5e Feature List Sections](Dnd5e_Feature_List_Sections.md)
 
 ## Connections by Relation
 
@@ -16,9 +16,9 @@
 - D20LegacyTabs.tsx `EXTRACTED`
 - data-model.ts `EXTRACTED`
 - speciesTemplate.ts `EXTRACTED`
-- data-model.ts `EXTRACTED`
-- data-model.ts `EXTRACTED`
 - characterCombatant.ts `EXTRACTED`
+- data-model.ts `EXTRACTED`
+- data-model.ts `EXTRACTED`
 - Dnd5eFeaturesTab.tsx `EXTRACTED`
 - classes.ts `EXTRACTED`
 - data-model.ts `EXTRACTED`
@@ -36,7 +36,7 @@
 
 ### references
 - [Dnd5eDataModel](Dnd5eDataModel.md) `EXTRACTED`
-- [Pf2eDataModel](Pf2eDataModel.md) `EXTRACTED`
+- Pf2eDataModel `EXTRACTED`
 - Dnd5e2024DataModel `EXTRACTED`
 - Pf1eDataModel `EXTRACTED`
 - Species `EXTRACTED`

@@ -1,65 +1,64 @@
 # Error Boundary & Auth Context
 
-> 32 nodes · cohesion 0.11
+> 40 nodes · cohesion 0.09
 
 ## Key Concepts
 
-- **auth-context.ts** (26 connections) — `src/contexts/auth-context.ts`
 - **authAccountSwitch.test.tsx** (21 connections) — `src/__tests__/authAccountSwitch.test.tsx`
-- **clearLocalDataForAccountChange()** (14 connections) — `src/contexts/auth-context.ts`
+- **syncStatus.ts** (20 connections) — `src/utils/syncStatus.ts`
+- **useEntitySync.ts** (14 connections) — `src/hooks/useEntitySync.ts`
+- **UserMenu.tsx** (13 connections) — `src/components/UserMenu.tsx`
 - **AuthContext.tsx** (11 connections) — `src/contexts/AuthContext.tsx`
 - **useAuth()** (10 connections) — `src/hooks/useAuth.ts`
-- **supabaseClient.ts** (9 connections) — `src/utils/supabaseClient.ts`
-- **ErrorBoundary** (8 connections) — `src/components/ErrorBoundary.tsx`
+- **SignIn.tsx** (8 connections) — `src/components/SignIn.tsx`
 - **AuthProvider()** (8 connections) — `src/contexts/AuthContext.tsx`
+- **formatLastSyncedAt()** (8 connections) — `src/utils/syncStatus.ts`
 - **useAuth.ts** (7 connections) — `src/hooks/useAuth.ts`
-- **main.tsx** (7 connections) — `src/main.tsx`
+- **SyncState** (7 connections) — `src/hooks/useEntitySync.ts`
 - **AuthContext** (5 connections) — `src/contexts/auth-context.ts`
+- **EntitySyncAdapter** (5 connections) — `src/hooks/useEntitySync.ts`
 - **isSupabaseConfigured()** (5 connections) — `src/utils/supabaseClient.ts`
+- **SyncTombstone** (5 connections) — `src/utils/syncTombstones.ts`
+- **UserMenu()** (4 connections) — `src/components/UserMenu.tsx`
 - **getLastSyncedUserId()** (4 connections) — `src/contexts/auth-context.ts`
-- **clearSyncTombstones()** (4 connections) — `src/utils/syncTombstones.ts`
-- **AuthContextValue** (3 connections) — `src/contexts/auth-context.ts`
+- **RemoteFetchResult** (4 connections) — `src/utils/syncEngine.ts`
+- **SignIn()** (3 connections) — `src/components/SignIn.tsx`
 - **setLastSyncedUserId()** (3 connections) — `src/contexts/auth-context.ts`
-- **Probe()** (2 connections) — `src/__tests__/authAccountSwitch.test.tsx`
-- **SignOutGrabber()** (2 connections) — `src/__tests__/authAccountSwitch.test.tsx`
-- **.componentDidCatch()** (1 connections) — `src/components/ErrorBoundary.tsx`
-- **.getDerivedStateFromError()** (1 connections) — `src/components/ErrorBoundary.tsx`
-- **.handleReset()** (1 connections) — `src/components/ErrorBoundary.tsx`
-- **AuthCallback** (1 connections) — `src/__tests__/authAccountSwitch.test.tsx`
-- **createClientMock()** (1 connections) — `src/__tests__/authAccountSwitch.test.tsx`
-- **expectUserDataCleared()** (1 connections) — `src/__tests__/authAccountSwitch.test.tsx`
-- **expectUserDataPresent()** (1 connections) — `src/__tests__/authAccountSwitch.test.tsx`
-- *... and 7 more nodes in this community*
+- **formatDateAndTime()** (3 connections) — `src/utils/syncStatus.ts`
+- **formatTimeOfDay()** (3 connections) — `src/utils/syncStatus.ts`
+- **isPreviousLocalDay()** (3 connections) — `src/utils/syncStatus.ts`
+- **isSameLocalDay()** (3 connections) — `src/utils/syncStatus.ts`
+- **UserMenuProps** (2 connections) — `src/components/UserMenu.tsx`
+- *... and 15 more nodes in this community*
 
 ## Relationships
 
-- [Document Sync Engine](Document_Sync_Engine.md) (12 shared connections)
-- [Campaign Sync Hooks](Campaign_Sync_Hooks.md) (9 shared connections)
-- [Document Storage (IndexedDB)](Document_Storage_%28IndexedDB%29.md) (7 shared connections)
-- [App Header & Auth UI](App_Header_%26_Auth_UI.md) (6 shared connections)
-- [Sync Tombstones](Sync_Tombstones.md) (5 shared connections)
-- [Sync Engine Tests](Sync_Engine_Tests.md) (3 shared connections)
-- [Campaign Storage & Hooks](Campaign_Storage_%26_Hooks.md) (3 shared connections)
-- [Scene Management Hooks](Scene_Management_Hooks.md) (3 shared connections)
-- [App Shell & Layout](App_Shell_%26_Layout.md) (2 shared connections)
-- [Monster Stat Block & Status](Monster_Stat_Block_%26_Status.md) (2 shared connections)
-- [Browser Compat & Error Logging](Browser_Compat_%26_Error_Logging.md) (1 shared connections)
-- [Combat & Recap Panels](Combat_%26_Recap_Panels.md) (1 shared connections)
+- [Document Sync Engine](Document_Sync_Engine.md) (19 shared connections)
+- [Campaign Sync Hooks](Campaign_Sync_Hooks.md) (10 shared connections)
+- [Document Migrations & Storage](Document_Migrations_%26_Storage.md) (9 shared connections)
+- [Combat & Recap Panels](Combat_%26_Recap_Panels.md) (8 shared connections)
+- [App Shell & Layout](App_Shell_%26_Layout.md) (5 shared connections)
+- [System Registry & Renderer](System_Registry_%26_Renderer.md) (3 shared connections)
+- [Campaign Storage & Hooks](Campaign_Storage_%26_Hooks.md) (2 shared connections)
+- [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (1 shared connections)
 
 ## Source Files
 
 - `src/__tests__/authAccountSwitch.test.tsx`
-- `src/components/ErrorBoundary.tsx`
+- `src/components/SignIn.tsx`
+- `src/components/UserMenu.tsx`
 - `src/contexts/AuthContext.tsx`
 - `src/contexts/auth-context.ts`
 - `src/hooks/useAuth.ts`
-- `src/main.tsx`
+- `src/hooks/useEntitySync.ts`
 - `src/utils/supabaseClient.ts`
+- `src/utils/syncEngine.ts`
+- `src/utils/syncStatus.ts`
 - `src/utils/syncTombstones.ts`
 
 ## Audit Trail
 
-- EXTRACTED: 163 (100%)
+- EXTRACTED: 197 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

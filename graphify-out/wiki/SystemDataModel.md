@@ -2,7 +2,7 @@
 
 > God node · 125 connections · `src/types/core/document.ts`
 
-**Community:** [System Registry & Renderer](System_Registry_%26_Renderer.md)
+**Community:** [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md)
 
 ## Connections by Relation
 
@@ -12,7 +12,7 @@
 ### imports
 - SceneManager.tsx `EXTRACTED`
 - App.tsx `EXTRACTED`
-- capabilityScenarios.test.tsx `EXTRACTED`
+- [capabilityScenarios.test.tsx](capabilityScenarios.test.tsx.md) `EXTRACTED`
 - syncEngine.ts `EXTRACTED`
 - documentStorage.ts `EXTRACTED`
 - data-model.ts `EXTRACTED`
@@ -20,11 +20,11 @@
 - Dnd5eSheetBase.tsx `EXTRACTED`
 - SystemSheets.test.tsx `EXTRACTED`
 - useSync.test.tsx `EXTRACTED`
+- characterCombatant.ts `EXTRACTED`
 - data-model.ts `EXTRACTED`
 - data-model.ts `EXTRACTED`
 - index.ts `EXTRACTED`
 - types.ts `EXTRACTED`
-- characterCombatant.ts `EXTRACTED`
 - sheet.tsx `EXTRACTED`
 - useDnd5eSheetActionHandlers.ts `EXTRACTED`
 - useSceneEncounter.ts `EXTRACTED`
@@ -33,7 +33,7 @@
 
 ### inherits
 - [Dnd5eDataModel](Dnd5eDataModel.md) `EXTRACTED`
-- [Pf2eDataModel](Pf2eDataModel.md) `EXTRACTED`
+- Pf2eDataModel `EXTRACTED`
 - Dnd5e2024DataModel `EXTRACTED`
 - Mam3eDataModel `EXTRACTED`
 - DaggerheartDataModel `EXTRACTED`

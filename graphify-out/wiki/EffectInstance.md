@@ -2,7 +2,7 @@
 
 > God node · 59 connections · `src/rules/ir/types.ts`
 
-**Community:** [Character Combatant Builder](Character_Combatant_Builder.md)
+**Community:** [Character Effects Compilation](Character_Effects_Compilation.md)
 
 ## Connections by Relation
 
@@ -16,15 +16,15 @@
 - sceneCombatBridge.test.ts `EXTRACTED`
 - sceneCombatBridgeUi.test.ts `EXTRACTED`
 - participantResolution.ts `EXTRACTED`
-- tacticalExecutor.ts `EXTRACTED`
 - resolve.ts `EXTRACTED`
+- tacticalExecutor.ts `EXTRACTED`
+- attackResolution.ts `EXTRACTED`
 - tacticalExecutor.test.ts `EXTRACTED`
 - daggerheartCombatant.ts `EXTRACTED`
 - modifierEffects.ts `EXTRACTED`
 - roundDriver.ts `EXTRACTED`
 - participantResolution.test.ts `EXTRACTED`
 - d20LegacyConditions.ts `EXTRACTED`
-- attackResolution.ts `EXTRACTED`
 - sceneConditions.ts `EXTRACTED`
 - targetScoring.ts `EXTRACTED`
 - mam3eCombatant.ts `EXTRACTED`

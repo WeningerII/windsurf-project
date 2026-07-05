@@ -11,9 +11,9 @@
 - **AiResponse** (9 connections) — `src/ai/contracts.ts`
 - **AiTask** (8 connections) — `src/ai/contracts.ts`
 - **gatewayCore.test.ts** (8 connections) — `src/__tests__/ai/gatewayCore.test.ts`
-- **AiFailure** (7 connections) — `src/ai/contracts.ts`
+- **aiFailure** (7 connections) — `src/ai/contracts.ts`
+- **processGatewayHttp()** (7 connections) — `src/ai/gatewayHttp.ts`
 - **AI_GATEWAY_SCHEMA_VERSION** (6 connections) — `src/ai/contracts.ts`
-- **processGatewayHttp()** (6 connections) — `src/ai/gatewayHttp.ts`
 - **gatewayHttp.test.ts** (6 connections) — `src/__tests__/ai/gatewayHttp.test.ts`
 - **ai-gateway.mts** (4 connections) — `netlify/functions/ai-gateway.mts`
 - **AiProviderAdapter** (4 connections) — `src/ai/gatewayCore.ts`
@@ -34,11 +34,13 @@
 ## Relationships
 
 - [AI Gateway Contracts](AI_Gateway_Contracts.md) (14 shared connections)
-- [AI Gateway Client](AI_Gateway_Client.md) (7 shared connections)
-- [Monster & NPC Generator](Monster_%26_NPC_Generator.md) (4 shared connections)
+- [AI Gateway Client](AI_Gateway_Client.md) (5 shared connections)
+- [capabilityScenarios.test.tsx](capabilityScenarios.test.tsx.md) (4 shared connections)
 - [AI Prompt Builders](AI_Prompt_Builders.md) (3 shared connections)
-- [AI Encounter Draft Flow](AI_Encounter_Draft_Flow.md) (1 shared connections)
-- [AI Creature Identification](AI_Creature_Identification.md) (1 shared connections)
+- [AI Encounter Draft Flow](AI_Encounter_Draft_Flow.md) (2 shared connections)
+- [Scene Illustration Panel](Scene_Illustration_Panel.md) (1 shared connections)
+- [Resource Pool Tracking](Resource_Pool_Tracking.md) (1 shared connections)
+- [App Shell & Layout](App_Shell_%26_Layout.md) (1 shared connections)
 
 ## Source Files
 
@@ -52,7 +54,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 128 (100%)
+- EXTRACTED: 129 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

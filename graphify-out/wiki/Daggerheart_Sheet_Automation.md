@@ -17,9 +17,10 @@
 
 ## Relationships
 
-- [Tabs UI Component](Tabs_UI_Component.md) (6 shared connections)
+- [Tabs UI Component](Tabs_UI_Component.md) (5 shared connections)
 - [Daggerheart Data Model](Daggerheart_Data_Model.md) (4 shared connections)
-- [Campaign File Transfer](Campaign_File_Transfer.md) (2 shared connections)
+- [Combat Toggles & Conditions](Combat_Toggles_%26_Conditions.md) (2 shared connections)
+- [Sheet Header & Stat Cards](Sheet_Header_%26_Stat_Cards.md) (1 shared connections)
 
 ## Source Files
 

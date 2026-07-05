@@ -24,18 +24,18 @@
 
 ## Relationships
 
-- [Scene Combat Area Effects](Scene_Combat_Area_Effects.md) (13 shared connections)
+- [Scene Combat Area Effects](Scene_Combat_Area_Effects.md) (11 shared connections)
+- [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (5 shared connections)
+- [Character Effects Compilation](Character_Effects_Compilation.md) (5 shared connections)
 - [Scene Combat Resolution](Scene_Combat_Resolution.md) (5 shared connections)
-- [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (4 shared connections)
 - [Condition Effects by System](Condition_Effects_by_System.md) (3 shared connections)
 - [Monster & NPC Generator](Monster_%26_NPC_Generator.md) (3 shared connections)
 - [Encounter Builder Logic](Encounter_Builder_Logic.md) (3 shared connections)
-- [Character Effects Compilation](Character_Effects_Compilation.md) (2 shared connections)
+- [Pf2e Spell Types & Traits](Pf2e_Spell_Types_%26_Traits.md) (2 shared connections)
 - [Oracle Panel & Logic](Oracle_Panel_%26_Logic.md) (2 shared connections)
-- [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (2 shared connections)
-- [Character Combatant Builder](Character_Combatant_Builder.md) (1 shared connections)
-- [Pf2e Spell Types & Traits](Pf2e_Spell_Types_%26_Traits.md) (1 shared connections)
-- [Class Enhancement & Headers](Class_Enhancement_%26_Headers.md) (1 shared connections)
+- [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (1 shared connections)
+- [Check & Oracle Resolution](Check_%26_Oracle_Resolution.md) (1 shared connections)
+- [Scene Management Hooks](Scene_Management_Hooks.md) (1 shared connections)
 
 ## Source Files
 

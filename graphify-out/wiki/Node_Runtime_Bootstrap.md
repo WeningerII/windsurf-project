@@ -33,7 +33,7 @@
 
 ## Relationships
 
-- No strong cross-community connections detected
+- [App Shell & Layout](App_Shell_%26_Layout.md) (1 shared connections)
 
 ## Source Files
 
@@ -46,7 +46,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 258 (99%)
+- EXTRACTED: 259 (99%)
 - INFERRED: 2 (1%)
 - AMBIGUOUS: 0 (0%)
 

@@ -16,13 +16,11 @@
 
 ## Relationships
 
-- [SRD Manifest Generator](SRD_Manifest_Generator.md) (2 shared connections)
-- [Mam Browser Tabs](Mam_Browser_Tabs.md) (2 shared connections)
+- [SRD Manifest Generator](SRD_Manifest_Generator.md) (4 shared connections)
+- [Mam3e Data Model & Engine](Mam3e_Data_Model_%26_Engine.md) (3 shared connections)
 - [Spell Catalog Consistency Tests](Spell_Catalog_Consistency_Tests.md) (2 shared connections)
-- [Mam3e Data Model & Engine](Mam3e_Data_Model_%26_Engine.md) (2 shared connections)
-- [Equipment & Feature Browsers](Equipment_%26_Feature_Browsers.md) (2 shared connections)
+- [5e Feat Browser](5e_Feat_Browser.md) (2 shared connections)
 - [Pf2e Spell Types & Traits](Pf2e_Spell_Types_%26_Traits.md) (1 shared connections)
-- [Mam Character Sheet Tabs](Mam_Character_Sheet_Tabs.md) (1 shared connections)
 
 ## Source Files
 

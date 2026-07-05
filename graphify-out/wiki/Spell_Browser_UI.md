@@ -1,6 +1,6 @@
 # Spell Browser UI
 
-> 33 nodes · cohesion 0.13
+> 32 nodes · cohesion 0.13
 
 ## Key Concepts
 
@@ -15,7 +15,6 @@
 - **formatDuration()** (7 connections) — `src/utils/formatters.ts`
 - **formatRange()** (7 connections) — `src/utils/formatters.ts`
 - **toSpellBrowserSpell()** (5 connections) — `src/systems/d20-legacy/components/D20SpellBrowserPanel.tsx`
-- **Dnd5eSpellsTab** (5 connections) — `src/systems/dnd5e/shared/components/Dnd5eSpellsTab.tsx`
 - **toSpellBrowserSpell()** (5 connections) — `src/systems/pf2e/components/Pf2eSpellBrowserPanel.tsx`
 - **formatters.test.ts** (5 connections) — `src/__tests__/utils/formatters.test.ts`
 - **SpellBrowserSpell** (4 connections) — `src/components/SpellBrowser.tsx`
@@ -29,21 +28,21 @@
 - **SpellBrowserProps** (1 connections) — `src/components/SpellBrowser.tsx`
 - **D20SpellBrowserPanelComponent** (1 connections) — `src/systems/d20-legacy/components/D20SpellBrowserPanel.tsx`
 - **SpellBrowser** (1 connections) — `src/systems/d20-legacy/components/D20SpellBrowserPanel.tsx`
-- *... and 8 more nodes in this community*
+- **Dnd5eSpellsTabComponent** (1 connections) — `src/systems/dnd5e/shared/components/Dnd5eSpellsTab.tsx`
+- *... and 7 more nodes in this community*
 
 ## Relationships
 
 - [Pf2e Spell Types & Traits](Pf2e_Spell_Types_%26_Traits.md) (10 shared connections)
 - [Spell Catalog Consistency Tests](Spell_Catalog_Consistency_Tests.md) (7 shared connections)
-- [Equipment & Feature Browsers](Equipment_%26_Feature_Browsers.md) (6 shared connections)
+- [5e Feat Browser](5e_Feat_Browser.md) (6 shared connections)
 - [Spells Tab Components](Spells_Tab_Components.md) (5 shared connections)
-- [Tabs UI Component](Tabs_UI_Component.md) (4 shared connections)
-- [Spell Preparation Logic](Spell_Preparation_Logic.md) (3 shared connections)
+- [Sheet Header & Stat Cards](Sheet_Header_%26_Stat_Cards.md) (5 shared connections)
 - [Dnd5e Resource Loading Hooks](Dnd5e_Resource_Loading_Hooks.md) (3 shared connections)
+- [Spell Preparation Logic](Spell_Preparation_Logic.md) (3 shared connections)
 - [Currency & Inventory Editors](Currency_%26_Inventory_Editors.md) (2 shared connections)
-- [Campaign File Transfer](Campaign_File_Transfer.md) (2 shared connections)
-- [Sheet Header & Stat Cards](Sheet_Header_%26_Stat_Cards.md) (2 shared connections)
-- [System Definitions & Types](System_Definitions_%26_Types.md) (2 shared connections)
+- [Combat Toggles & Conditions](Combat_Toggles_%26_Conditions.md) (2 shared connections)
+- [Dnd35e Saves & Data Model](Dnd35e_Saves_%26_Data_Model.md) (2 shared connections)
 - [Doc Drift Rules](Doc_Drift_Rules.md) (1 shared connections)
 
 ## Source Files
@@ -61,7 +60,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 181 (100%)
+- EXTRACTED: 176 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

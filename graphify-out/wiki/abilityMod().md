@@ -2,18 +2,19 @@
 
 > God node · 53 connections · `src/utils/math.ts`
 
-**Community:** [D20 Legacy System Engines](D20_Legacy_System_Engines.md)
+**Community:** [D20 Combat Controls](D20_Combat_Controls.md)
 
 ## Connections by Relation
 
 ### calls
 - buildCharacterCombatant() `EXTRACTED`
-- AbilityScoreGrid() `EXTRACTED`
 - .prepareData() `EXTRACTED`
+- AbilityScoreGrid() `EXTRACTED`
 - .rollCheck() `EXTRACTED`
 - .prepareData() `EXTRACTED`
 - buildD20LegacySpellSlotTotals() `EXTRACTED`
 - .prepareData() `EXTRACTED`
+- .rollCheck() `EXTRACTED`
 - .prepareData() `EXTRACTED`
 - .rollCheck() `EXTRACTED`
 - computeD20LegacyAC() `EXTRACTED`
@@ -21,7 +22,6 @@
 - buildArmorClassEntries() `EXTRACTED`
 - .rollCheck() `EXTRACTED`
 - .computeBaseArmorClass() `EXTRACTED`
-- .rollCheck() `EXTRACTED`
 - compute5eAC() `EXTRACTED`
 - baseAttackBonus() `EXTRACTED`
 - D20AbilitiesTab() `EXTRACTED`
@@ -33,12 +33,12 @@
 
 ### imports
 - d20LegacyTemplate.ts `EXTRACTED`
-- contributionLedger.ts `EXTRACTED`
 - engine.ts `EXTRACTED`
 - characterCombatant.ts `EXTRACTED`
+- contributionLedger.ts `EXTRACTED`
+- engine.ts `EXTRACTED`
+- engine.ts `EXTRACTED`
 - d20LegacySpellcasting.ts `EXTRACTED`
-- engine.ts `EXTRACTED`
-- engine.ts `EXTRACTED`
 - engine.ts `EXTRACTED`
 - Pf2eSpellsTab.tsx `EXTRACTED`
 - dnd5e2014EngineMath.test.ts `EXTRACTED`

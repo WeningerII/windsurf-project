@@ -1,6 +1,6 @@
 # Quest & Session Log UI
 
-> 38 nodes · cohesion 0.13
+> 26 nodes · cohesion 0.21
 
 ## Key Concepts
 
@@ -8,12 +8,7 @@
 - **QuestList.tsx** (28 connections) — `src/components/campaign/QuestList.tsx`
 - **campaignStory.ts** (25 connections) — `src/utils/campaignStory.ts`
 - **campaignStory.test.ts** (21 connections) — `src/__tests__/utils/campaignStory.test.ts`
-- **SessionLog.tsx** (15 connections) — `src/components/campaign/SessionLog.tsx`
 - **QuestList()** (14 connections) — `src/components/campaign/QuestList.tsx`
-- **campaignStorySections.test.tsx** (9 connections) — `src/__tests__/components/campaignStorySections.test.tsx`
-- **SessionLog()** (7 connections) — `src/components/campaign/SessionLog.tsx`
-- **addSessionEntry()** (7 connections) — `src/utils/campaignStory.ts`
-- **createSessionEntry()** (7 connections) — `src/utils/campaignStory.ts`
 - **replaceQuest()** (6 connections) — `src/utils/campaignStory.ts`
 - **setQuestStatus()** (6 connections) — `src/utils/campaignStory.ts`
 - **CampaignQuest** (5 connections) — `src/types/core/campaign.ts`
@@ -28,36 +23,39 @@
 - **createObjective()** (4 connections) — `src/utils/campaignStory.ts`
 - **questProgress()** (4 connections) — `src/utils/campaignStory.ts`
 - **removeQuest()** (4 connections) — `src/utils/campaignStory.ts`
-- **removeSessionEntry()** (4 connections) — `src/utils/campaignStory.ts`
-- *... and 13 more nodes in this community*
+- **CampaignObjective** (3 connections) — `src/types/core/campaign.ts`
+- **STATUS_BADGE** (1 connections) — `src/components/campaign/QuestList.tsx`
+- **STATUS_OPTIONS** (1 connections) — `src/components/campaign/QuestList.tsx`
+- **makeCampaign()** (1 connections) — `src/__tests__/utils/campaignStory.test.ts`
+- **makeQuest()** (1 connections) — `src/__tests__/utils/campaignStory.test.ts`
+- **T0** (1 connections) — `src/__tests__/utils/campaignStory.test.ts`
+- *... and 1 more nodes in this community*
 
 ## Relationships
 
-- [Campaign Storage & Hooks](Campaign_Storage_%26_Hooks.md) (12 shared connections)
-- [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (10 shared connections)
-- [Campaign File Transfer](Campaign_File_Transfer.md) (7 shared connections)
-- [Monster & NPC Generator](Monster_%26_NPC_Generator.md) (7 shared connections)
+- [capabilityScenarios.test.tsx](capabilityScenarios.test.tsx.md) (21 shared connections)
+- [Combat & Recap Panels](Combat_%26_Recap_Panels.md) (10 shared connections)
 - [Boundary Validation Tests](Boundary_Validation_Tests.md) (5 shared connections)
-- [App Shell & Layout](App_Shell_%26_Layout.md) (5 shared connections)
+- [Campaign Storage & Hooks](Campaign_Storage_%26_Hooks.md) (4 shared connections)
+- [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (3 shared connections)
 - [Campaign Sync Hooks](Campaign_Sync_Hooks.md) (3 shared connections)
 - [Document Sync Engine](Document_Sync_Engine.md) (3 shared connections)
-- [App Header & Auth UI](App_Header_%26_Auth_UI.md) (2 shared connections)
-- [Browser Compat & Error Logging](Browser_Compat_%26_Error_Logging.md) (2 shared connections)
+- [Combat Toggles & Conditions](Combat_Toggles_%26_Conditions.md) (2 shared connections)
 - [System Registry & Renderer](System_Registry_%26_Renderer.md) (2 shared connections)
 - [Document Signature Hashing](Document_Signature_Hashing.md) (2 shared connections)
+- [Browser Compat & Error Logging](Browser_Compat_%26_Error_Logging.md) (1 shared connections)
+- [Scene Combat Resolution](Scene_Combat_Resolution.md) (1 shared connections)
 
 ## Source Files
 
-- `src/__tests__/components/campaignStorySections.test.tsx`
 - `src/__tests__/utils/campaignStory.test.ts`
 - `src/components/campaign/QuestList.tsx`
-- `src/components/campaign/SessionLog.tsx`
 - `src/types/core/campaign.ts`
 - `src/utils/campaignStory.ts`
 
 ## Audit Trail
 
-- EXTRACTED: 250 (100%)
+- EXTRACTED: 193 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

@@ -1,47 +1,54 @@
 # Dnd35e/Pf1e Derived Math
 
-> 19 nodes · cohesion 0.17
+> 16 nodes · cohesion 0.18
 
 ## Key Concepts
 
-- **d20LegacyEngineMath.test.ts** (50 connections) — `src/__tests__/d20LegacyEngineMath.test.ts`
-- **derivedMath.ts** (8 connections) — `src/systems/dnd35e/derivedMath.ts`
-- **derivedMath.ts** (5 connections) — `src/systems/pf1e/derivedMath.ts`
-- **dnd35eAbilityIncreases()** (2 connections) — `src/systems/dnd35e/derivedMath.ts`
-- **dnd35eConcentrationDCDamage()** (2 connections) — `src/systems/dnd35e/derivedMath.ts`
-- **dnd35eConcentrationDCDefensive()** (2 connections) — `src/systems/dnd35e/derivedMath.ts`
-- **dnd35eFeatsFromLevel()** (2 connections) — `src/systems/dnd35e/derivedMath.ts`
-- **Dnd35eHpState** (2 connections) — `src/systems/dnd35e/derivedMath.ts`
-- **dnd35eTriggersMassiveDamage()** (2 connections) — `src/systems/dnd35e/derivedMath.ts`
-- **dnd35eXpForLevel()** (2 connections) — `src/systems/dnd35e/derivedMath.ts`
-- **pf1eConcentrationDCDamage()** (2 connections) — `src/systems/pf1e/derivedMath.ts`
-- **pf1eConcentrationDCDefensive()** (2 connections) — `src/systems/pf1e/derivedMath.ts`
-- **pf1eFeatsFromLevel()** (2 connections) — `src/systems/pf1e/derivedMath.ts`
-- **Pf1eHpState** (2 connections) — `src/systems/pf1e/derivedMath.ts`
-- **cl35()** (1 connections) — `src/__tests__/d20LegacyEngineMath.test.ts`
-- **clPF()** (1 connections) — `src/__tests__/d20LegacyEngineMath.test.ts`
-- **dnd35Engine** (1 connections) — `src/__tests__/d20LegacyEngineMath.test.ts`
-- **pf1Engine** (1 connections) — `src/__tests__/d20LegacyEngineMath.test.ts`
-- **TEST_DATE** (1 connections) — `src/__tests__/d20LegacyEngineMath.test.ts`
+- **parseNum()** (35 connections) — `src/utils/math.ts`
+- **DaggerheartInventorySection.tsx** (22 connections) — `src/systems/daggerheart/components/DaggerheartInventorySection.tsx`
+- **CurrencyEditor.tsx** (10 connections) — `src/components/CurrencyEditor.tsx`
+- **D20LegacyHeader.tsx** (9 connections) — `src/systems/d20-legacy/components/D20LegacyHeader.tsx`
+- **CurrencyEditor()** (6 connections) — `src/components/CurrencyEditor.tsx`
+- **Dnd5eOverviewSection()** (5 connections) — `src/systems/dnd5e/shared/components/Dnd5eOverviewSection.tsx`
+- **DaggerheartInventorySection()** (4 connections) — `src/systems/daggerheart/components/DaggerheartInventorySection.tsx`
+- **isDaggerheartConsumableDefinition()** (4 connections) — `src/utils/daggerheartInventory.ts`
+- **D20LegacyHeader()** (3 connections) — `src/systems/d20-legacy/components/D20LegacyHeader.tsx`
+- **CurrencyEditor.test.tsx** (3 connections) — `src/__tests__/components/CurrencyEditor.test.tsx`
+- **Props** (2 connections) — `src/systems/daggerheart/components/DaggerheartInventorySection.tsx`
+- **spellSlotCount()** (2 connections) — `src/systems/dnd5e/shared/components/Dnd5eOverviewSection.tsx`
+- **CurrencyEntry** (1 connections) — `src/components/CurrencyEditor.tsx`
+- **DND_CURRENCIES** (1 connections) — `src/components/CurrencyEditor.tsx`
+- **Props** (1 connections) — `src/components/CurrencyEditor.tsx`
+- **sampleCurrency** (1 connections) — `src/__tests__/components/CurrencyEditor.test.tsx`
 
 ## Relationships
 
-- [D20 Legacy System Engines](D20_Legacy_System_Engines.md) (15 shared connections)
-- [Dnd35e Saves & Data Model](Dnd35e_Saves_%26_Data_Model.md) (10 shared connections)
+- [Tabs UI Component](Tabs_UI_Component.md) (10 shared connections)
+- [D20 Combat Controls](D20_Combat_Controls.md) (7 shared connections)
+- [Combat Toggles & Conditions](Combat_Toggles_%26_Conditions.md) (6 shared connections)
+- [Sheet Header & Stat Cards](Sheet_Header_%26_Stat_Cards.md) (6 shared connections)
+- [Equipment & Feature Browsers](Equipment_%26_Feature_Browsers.md) (5 shared connections)
+- [Class Enhancement & Headers](Class_Enhancement_%26_Headers.md) (4 shared connections)
 - [D20 Class Spellcasting](D20_Class_Spellcasting.md) (3 shared connections)
-- [Class Enhancement & Headers](Class_Enhancement_%26_Headers.md) (2 shared connections)
-- [Dnd5e Sheets & E2E Tests](Dnd5e_Sheets_%26_E2E_Tests.md) (1 shared connections)
-- [Dnd5e2024 Engine & Hit Dice](Dnd5e2024_Engine_%26_Hit_Dice.md) (1 shared connections)
+- [HP & Spell Slot Trackers](HP_%26_Spell_Slot_Trackers.md) (3 shared connections)
+- [Pf2e Sheet Tabs](Pf2e_Sheet_Tabs.md) (3 shared connections)
+- [Document Storage (IndexedDB)](Document_Storage_%28IndexedDB%29.md) (2 shared connections)
+- [Documents Hook & Persistence](Documents_Hook_%26_Persistence.md) (2 shared connections)
+- [Dnd35e Saves & Data Model](Dnd35e_Saves_%26_Data_Model.md) (2 shared connections)
 
 ## Source Files
 
-- `src/__tests__/d20LegacyEngineMath.test.ts`
-- `src/systems/dnd35e/derivedMath.ts`
-- `src/systems/pf1e/derivedMath.ts`
+- `src/__tests__/components/CurrencyEditor.test.tsx`
+- `src/components/CurrencyEditor.tsx`
+- `src/systems/d20-legacy/components/D20LegacyHeader.tsx`
+- `src/systems/daggerheart/components/DaggerheartInventorySection.tsx`
+- `src/systems/dnd5e/shared/components/Dnd5eOverviewSection.tsx`
+- `src/utils/daggerheartInventory.ts`
+- `src/utils/math.ts`
 
 ## Audit Trail
 
-- EXTRACTED: 90 (100%)
+- EXTRACTED: 109 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

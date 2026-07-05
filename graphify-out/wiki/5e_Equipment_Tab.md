@@ -1,11 +1,10 @@
 # 5e Equipment Tab
 
-> 15 nodes · cohesion 0.13
+> 14 nodes · cohesion 0.14
 
 ## Key Concepts
 
 - **Dnd5eEquipmentTab.tsx** (22 connections) — `src/systems/dnd5e/shared/components/Dnd5eEquipmentTab.tsx`
-- **Dnd5eEquipmentTab** (4 connections) — `src/systems/dnd5e/shared/components/Dnd5eEquipmentTab.tsx`
 - **Props** (3 connections) — `src/systems/dnd5e/shared/components/Dnd5eEquipmentTab.tsx`
 - **CurrencyEditor** (1 connections) — `src/systems/dnd5e/shared/components/Dnd5eEquipmentTab.tsx`
 - **CurrencyEditorProps** (1 connections) — `src/systems/dnd5e/shared/components/Dnd5eEquipmentTab.tsx`
@@ -24,9 +23,9 @@
 
 - [Dnd5e Equipment & Features UI](Dnd5e_Equipment_%26_Features_UI.md) (3 shared connections)
 - [Equipped Armor Section](Equipped_Armor_Section.md) (3 shared connections)
-- [Dnd5e Resource Loading Hooks](Dnd5e_Resource_Loading_Hooks.md) (3 shared connections)
-- [Sheet Header & Stat Cards](Sheet_Header_%26_Stat_Cards.md) (2 shared connections)
-- [Equipment & Feature Browsers](Equipment_%26_Feature_Browsers.md) (2 shared connections)
+- [Dnd5e Resource Loading Hooks](Dnd5e_Resource_Loading_Hooks.md) (2 shared connections)
+- [5e Feat Browser](5e_Feat_Browser.md) (2 shared connections)
+- [Sheet Header & Stat Cards](Sheet_Header_%26_Stat_Cards.md) (1 shared connections)
 
 ## Source Files
 
@@ -34,7 +33,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 41 (100%)
+- EXTRACTED: 37 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

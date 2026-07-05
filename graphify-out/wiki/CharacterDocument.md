@@ -2,7 +2,7 @@
 
 > God node · 229 connections · `src/types/core/document.ts`
 
-**Community:** [Dnd5e2024 Engine & Hit Dice](Dnd5e2024_Engine_%26_Hit_Dice.md)
+**Community:** [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md)
 
 ## Connections by Relation
 
@@ -13,7 +13,7 @@
 - SceneManager.tsx `EXTRACTED`
 - App.tsx `EXTRACTED`
 - classTemplate.ts `EXTRACTED`
-- capabilityScenarios.test.tsx `EXTRACTED`
+- [capabilityScenarios.test.tsx](capabilityScenarios.test.tsx.md) `EXTRACTED`
 - featTemplate.ts `EXTRACTED`
 - syncEngine.ts `EXTRACTED`
 - documentStorage.ts `EXTRACTED`
@@ -25,11 +25,11 @@
 - d20LegacyEngineMath.test.ts `EXTRACTED`
 - Dnd5eSheetBase.tsx `EXTRACTED`
 - SystemSheets.test.tsx `EXTRACTED`
+- engine.ts `EXTRACTED`
 - speciesTemplate.ts `EXTRACTED`
 - useSync.test.tsx `EXTRACTED`
+- characterCombatant.ts `EXTRACTED`
 - daggerheartNormalization.ts `EXTRACTED`
-- contributionLedger.ts `EXTRACTED`
-- engine.ts `EXTRACTED`
 
 ### references
 - .prepareData() `EXTRACTED`
@@ -37,20 +37,20 @@
 - .prepareData() `EXTRACTED`
 - .prepareData() `EXTRACTED`
 - Props `EXTRACTED`
+- .rollCheck() `EXTRACTED`
 - .prepareData() `EXTRACTED`
 - .prepareData() `EXTRACTED`
 - .rollCheck() `EXTRACTED`
 - .rollCheck() `EXTRACTED`
 - CombatStatsSources `EXTRACTED`
+- .rollCheck() `EXTRACTED`
 - .applySubsystemRules() `EXTRACTED`
 - .prepareData() `EXTRACTED`
-- .rollCheck() `EXTRACTED`
 - Props `EXTRACTED`
 - UseSceneEncounterParams `EXTRACTED`
 - BuildEncounterEventsParams `EXTRACTED`
 - PlaceTokenInput `EXTRACTED`
 - UseD20LegacyMutationHandlersProps `EXTRACTED`
-- .rollCheck() `EXTRACTED`
 - UseDaggerheartTemplateHandlersProps `EXTRACTED`
 
 ---

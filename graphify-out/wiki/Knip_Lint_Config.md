@@ -1,14 +1,15 @@
 # Knip Lint Config
 
-> 15 nodes · cohesion 0.13
+> 16 nodes · cohesion 0.12
 
 ## Key Concepts
 
+- **knip.json** (8 connections) — `knip.json`
 - **rules** (8 connections) — `knip.json`
-- **knip.json** (7 connections) — `knip.json`
 - **knip** (2 connections) — `package.json`
 - **entry** (1 connections) — `knip.json`
 - **ignore** (1 connections) — `knip.json`
+- **ignoreBinaries** (1 connections) — `knip.json`
 - **ignoreDependencies** (1 connections) — `knip.json`
 - **project** (1 connections) — `knip.json`
 - **classMembers** (1 connections) — `knip.json`
@@ -31,7 +32,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 29 (100%)
+- EXTRACTED: 31 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

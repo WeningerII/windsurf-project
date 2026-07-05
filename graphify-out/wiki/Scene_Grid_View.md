@@ -1,56 +1,56 @@
 # Scene Grid View
 
-> 21 nodes · cohesion 0.15
+> 23 nodes · cohesion 0.18
 
 ## Key Concepts
 
-- **SceneGridView.tsx** (25 connections) — `src/components/SceneGridView.tsx`
-- **allegiance.ts** (9 connections) — `src/scene/allegiance.ts`
-- **grid.ts** (8 connections) — `src/scene/grid.ts`
-- **cellKey()** (8 connections) — `src/scene/grid.ts`
-- **tokenAllegiance()** (7 connections) — `src/scene/allegiance.ts`
-- **footprintPlacementIssues()** (5 connections) — `src/scene/runtime.ts`
-- **SceneGridView.test.tsx** (5 connections) — `src/__tests__/components/SceneGridView.test.tsx`
-- **allegiance.test.ts** (5 connections) — `src/__tests__/scene/allegiance.test.ts`
-- **footprintCells()** (4 connections) — `src/scene/grid.ts`
-- **SceneGridView** (3 connections) — `src/components/SceneGridView.tsx`
-- **defaultAllegiance()** (3 connections) — `src/scene/allegiance.ts`
-- **footprintWithinGrid()** (3 connections) — `src/scene/grid.ts`
-- **buildTokenLabel()** (2 connections) — `src/components/SceneGridView.tsx`
-- **buildTokensByCell()** (2 connections) — `src/components/SceneGridView.tsx`
-- **TokenHpBar()** (2 connections) — `src/components/SceneGridView.tsx`
-- **ALLEGIANCE_LABEL** (1 connections) — `src/components/SceneGridView.tsx`
-- **ALLEGIANCE_TOKEN_CLASS** (1 connections) — `src/components/SceneGridView.tsx`
-- **buildCellLabel()** (1 connections) — `src/components/SceneGridView.tsx`
-- **getTokenInitials()** (1 connections) — `src/components/SceneGridView.tsx`
-- **handleCellKeyDown()** (1 connections) — `src/components/SceneGridView.tsx`
-- **makeState()** (1 connections) — `src/__tests__/components/SceneGridView.test.tsx`
+- **index.ts** (20 connections) — `docs/srd-manifest/index.ts`
+- **types.ts** (19 connections) — `docs/srd-manifest/types.ts`
+- **SystemManifest** (9 connections) — `docs/srd-manifest/types.ts`
+- **daggerheart.ts** (4 connections) — `docs/srd-manifest/daggerheart.ts`
+- **dnd35e.ts** (4 connections) — `docs/srd-manifest/dnd35e.ts`
+- **dnd5e-2014.ts** (4 connections) — `docs/srd-manifest/dnd5e-2014.ts`
+- **dnd5e-2024.ts** (4 connections) — `docs/srd-manifest/dnd5e-2024.ts`
+- **mam3e.ts** (4 connections) — `docs/srd-manifest/mam3e.ts`
+- **pf1e.ts** (4 connections) — `docs/srd-manifest/pf1e.ts`
+- **pf2e.ts** (4 connections) — `docs/srd-manifest/pf2e.ts`
+- **SRD_MANIFESTS** (3 connections) — `docs/srd-manifest/index.ts`
+- **daggerheartManifest** (2 connections) — `docs/srd-manifest/daggerheart.ts`
+- **dnd35eManifest** (2 connections) — `docs/srd-manifest/dnd35e.ts`
+- **dnd5e2014Manifest** (2 connections) — `docs/srd-manifest/dnd5e-2014.ts`
+- **dnd5e2024Manifest** (2 connections) — `docs/srd-manifest/dnd5e-2024.ts`
+- **manifestForSystem()** (2 connections) — `docs/srd-manifest/index.ts`
+- **mam3eManifest** (2 connections) — `docs/srd-manifest/mam3e.ts`
+- **pf1eManifest** (2 connections) — `docs/srd-manifest/pf1e.ts`
+- **pf2eManifest** (2 connections) — `docs/srd-manifest/pf2e.ts`
+- **categoryProgress()** (2 connections) — `docs/srd-manifest/types.ts`
+- **isInScope()** (2 connections) — `docs/srd-manifest/types.ts`
+- **ManifestEntryStatus** (1 connections) — `docs/srd-manifest/types.ts`
+- **SrdManifestEntry** (1 connections) — `docs/srd-manifest/types.ts`
 
 ## Relationships
 
-- [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (8 shared connections)
-- [Check & Oracle Resolution](Check_%26_Oracle_Resolution.md) (6 shared connections)
-- [Oracle Panel & Logic](Oracle_Panel_%26_Logic.md) (5 shared connections)
-- [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (4 shared connections)
-- [Scene Combat Area Effects](Scene_Combat_Area_Effects.md) (4 shared connections)
-- [Encounter Builder Logic](Encounter_Builder_Logic.md) (4 shared connections)
-- [Combat & Recap Panels](Combat_%26_Recap_Panels.md) (2 shared connections)
-- [Scene Terrain Effects](Scene_Terrain_Effects.md) (1 shared connections)
-- [Scene Combat Resolution](Scene_Combat_Resolution.md) (1 shared connections)
+- [Service Worker Update Banner](Service_Worker_Update_Banner.md) (3 shared connections)
+- [Roadmap Metrics Generator](Roadmap_Metrics_Generator.md) (2 shared connections)
+- [System Compute Registers](System_Compute_Registers.md) (2 shared connections)
+- [Monster Stat Block & Status](Monster_Stat_Block_%26_Status.md) (2 shared connections)
 
 ## Source Files
 
-- `src/__tests__/components/SceneGridView.test.tsx`
-- `src/__tests__/scene/allegiance.test.ts`
-- `src/components/SceneGridView.tsx`
-- `src/scene/allegiance.ts`
-- `src/scene/grid.ts`
-- `src/scene/runtime.ts`
+- `docs/srd-manifest/daggerheart.ts`
+- `docs/srd-manifest/dnd35e.ts`
+- `docs/srd-manifest/dnd5e-2014.ts`
+- `docs/srd-manifest/dnd5e-2024.ts`
+- `docs/srd-manifest/index.ts`
+- `docs/srd-manifest/mam3e.ts`
+- `docs/srd-manifest/pf1e.ts`
+- `docs/srd-manifest/pf2e.ts`
+- `docs/srd-manifest/types.ts`
 
 ## Audit Trail
 
-- EXTRACTED: 97 (100%)
-- INFERRED: 0 (0%)
+- EXTRACTED: 99 (98%)
+- INFERRED: 2 (2%)
 - AMBIGUOUS: 0 (0%)
 
 ---

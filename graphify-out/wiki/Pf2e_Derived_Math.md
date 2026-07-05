@@ -26,10 +26,9 @@
 
 ## Relationships
 
-- [Pf2e Engine & Constants](Pf2e_Engine_%26_Constants.md) (6 shared connections)
-- [Pf2e Sheet Tabs](Pf2e_Sheet_Tabs.md) (4 shared connections)
-- [Dnd5e Sheets & E2E Tests](Dnd5e_Sheets_%26_E2E_Tests.md) (1 shared connections)
-- [Dnd5e2024 Engine & Hit Dice](Dnd5e2024_Engine_%26_Hit_Dice.md) (1 shared connections)
+- [Pf2e Sheet Tabs](Pf2e_Sheet_Tabs.md) (5 shared connections)
+- [D20 Combat Controls](D20_Combat_Controls.md) (5 shared connections)
+- [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (2 shared connections)
 
 ## Source Files
 

@@ -33,12 +33,11 @@
 
 ## Relationships
 
-- [Dnd5e Background Templates](Dnd5e_Background_Templates.md) (4 shared connections)
+- [Scene Check Panel](Scene_Check_Panel.md) (4 shared connections)
 - [Dnd5e Feat Templates](Dnd5e_Feat_Templates.md) (3 shared connections)
+- [D20 Combat Controls](D20_Combat_Controls.md) (2 shared connections)
 - [Dnd5e Equipment & Features UI](Dnd5e_Equipment_%26_Features_UI.md) (2 shared connections)
 - [Class Enhancement & Headers](Class_Enhancement_%26_Headers.md) (2 shared connections)
-- [D20 Combat Controls](D20_Combat_Controls.md) (1 shared connections)
-- [D20 Legacy System Engines](D20_Legacy_System_Engines.md) (1 shared connections)
 
 ## Source Files
 

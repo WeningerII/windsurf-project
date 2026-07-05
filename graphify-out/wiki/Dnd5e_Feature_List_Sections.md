@@ -1,74 +1,75 @@
 # Dnd5e Feature List Sections
 
-> 39 nodes · cohesion 0.09
+> 36 nodes · cohesion 0.11
 
 ## Key Concepts
 
+- **Feature** (43 connections) — `src/types/core/character.ts`
 - **Dnd5eFeaturesTab.tsx** (42 connections) — `src/systems/dnd5e/shared/components/Dnd5eFeaturesTab.tsx`
-- **FeatDefinition** (25 connections) — `src/types/character-options/feats.ts`
-- **feats.ts** (22 connections) — `src/types/character-options/feats.ts`
+- **Feat** (21 connections) — `src/types/core/character.ts`
+- **characterEffects.ts** (19 connections) — `src/rules/compile/characterEffects.ts`
 - **Dnd5eSelectedFeatsSection.tsx** (16 connections) — `src/systems/dnd5e/shared/components/Dnd5eSelectedFeatsSection.tsx`
 - **Background** (15 connections) — `src/types/character-options/backgrounds.ts`
 - **backgrounds.ts** (13 connections) — `src/types/character-options/backgrounds.ts`
-- **D20FeatBrowserTab.tsx** (11 connections) — `src/systems/d20-legacy/components/D20FeatBrowserTab.tsx`
 - **Props** (11 connections) — `src/systems/dnd5e/shared/components/Dnd5eFeaturesTab.tsx`
-- **featManualBadge.ts** (11 connections) — `src/utils/featManualBadge.ts`
-- **Props** (10 connections) — `src/systems/d20-legacy/components/D20LegacyTabs.tsx`
 - **Dnd5eBackgroundSection.tsx** (10 connections) — `src/systems/dnd5e/shared/components/Dnd5eBackgroundSection.tsx`
-- **Dnd5eSelectedFeatsSection()** (7 connections) — `src/systems/dnd5e/shared/components/Dnd5eSelectedFeatsSection.tsx`
+- **equipParity.test.ts** (10 connections) — `src/__tests__/rules/equipParity.test.ts`
+- **Modifier** (10 connections) — `src/types/core/common.ts`
+- **FeaturesSection.tsx** (9 connections) — `src/components/FeaturesSection.tsx`
+- **MagicBonusItem** (8 connections) — `src/rules/compile/equipEffects.ts`
 - **Dnd5eFeatSelections** (7 connections) — `src/utils/featTemplate.ts`
-- **Prerequisite** (6 connections) — `src/types/core/common.ts`
-- **shouldShowDnd5eManualFeatBadge()** (6 connections) — `src/utils/featManualBadge.ts`
+- **ModifierSource** (6 connections) — `src/rules/compile/modifierEffects.ts`
 - **Dnd5eFeatChoiceRequirement** (6 connections) — `src/utils/featTemplate.ts`
 - **ProficiencyListSection.tsx** (5 connections) — `src/components/ProficiencyListSection.tsx`
+- **CharacterEffectInputs** (5 connections) — `src/rules/compile/characterEffects.ts`
 - **Props** (5 connections) — `src/systems/dnd5e/shared/components/Dnd5eSelectedFeatsSection.tsx`
-- **optionDisabledForRequirement()** (5 connections) — `src/systems/dnd5e/shared/dnd5eSheetShared.ts`
+- **FeaturesSection.test.tsx** (5 connections) — `src/__tests__/components/FeaturesSection.test.tsx`
+- **FeaturesSection()** (4 connections) — `src/components/FeaturesSection.tsx`
+- **NormalizedSheet** (4 connections) — `src/rules/combatants/characterCombatant.ts`
 - **formatBackgroundToolLabel()** (4 connections) — `src/utils/backgroundTemplate.ts`
 - **ProficiencyListSection()** (3 connections) — `src/components/ProficiencyListSection.tsx`
-- **Props** (3 connections) — `src/systems/d20-legacy/components/D20FeatBrowserTab.tsx`
 - **Dnd5eBackgroundSection()** (3 connections) — `src/systems/dnd5e/shared/components/Dnd5eBackgroundSection.tsx`
-- **Props** (3 connections) — `src/systems/pf2e/components/Pf2eFeatBrowserTab.tsx`
-- **FeatAutomationState** (3 connections) — `src/types/core/character.ts`
-- *... and 14 more nodes in this community*
+- *... and 11 more nodes in this community*
 
 ## Relationships
 
-- [Dnd5e Equipment & Features UI](Dnd5e_Equipment_%26_Features_UI.md) (34 shared connections)
-- [Dnd5e Feat Templates](Dnd5e_Feat_Templates.md) (12 shared connections)
-- [Class Enhancement & Headers](Class_Enhancement_%26_Headers.md) (10 shared connections)
-- [5e Feat Browser](5e_Feat_Browser.md) (10 shared connections)
-- [Sheet Resource Loading Hooks](Sheet_Resource_Loading_Hooks.md) (8 shared connections)
-- [Dnd5e Resource Loading Hooks](Dnd5e_Resource_Loading_Hooks.md) (7 shared connections)
-- [Equipment & Feature Browsers](Equipment_%26_Feature_Browsers.md) (7 shared connections)
-- [Dnd5e Background Templates](Dnd5e_Background_Templates.md) (7 shared connections)
+- [Dnd5e Equipment & Features UI](Dnd5e_Equipment_%26_Features_UI.md) (27 shared connections)
+- [Class Enhancement & Headers](Class_Enhancement_%26_Headers.md) (15 shared connections)
+- [5e Feat Browser](5e_Feat_Browser.md) (14 shared connections)
+- [Dnd5e Feat Templates](Dnd5e_Feat_Templates.md) (13 shared connections)
+- [Scene Combat Area Effects](Scene_Combat_Area_Effects.md) (11 shared connections)
+- [Dnd5e Feature Options](Dnd5e_Feature_Options.md) (9 shared connections)
+- [Character Combatant Builder](Character_Combatant_Builder.md) (7 shared connections)
+- [Character Effects Compilation](Character_Effects_Compilation.md) (7 shared connections)
+- [Combat Toggles & Conditions](Combat_Toggles_%26_Conditions.md) (6 shared connections)
 - [Currency & Inventory Editors](Currency_%26_Inventory_Editors.md) (6 shared connections)
-- [Dnd5e Sheets & E2E Tests](Dnd5e_Sheets_%26_E2E_Tests.md) (6 shared connections)
-- [Dnd5e2024 Engine & Hit Dice](Dnd5e2024_Engine_%26_Hit_Dice.md) (4 shared connections)
-- [Combat Toggles & Conditions](Combat_Toggles_%26_Conditions.md) (4 shared connections)
+- [Dnd5e Resource Loading Hooks](Dnd5e_Resource_Loading_Hooks.md) (6 shared connections)
+- [Dnd35e Saves & Data Model](Dnd35e_Saves_%26_Data_Model.md) (6 shared connections)
 
 ## Source Files
 
+- `src/__tests__/components/FeaturesSection.test.tsx`
 - `src/__tests__/components/ProficiencyListSection.test.tsx`
+- `src/__tests__/rules/equipParity.test.ts`
+- `src/components/FeaturesSection.tsx`
 - `src/components/ProficiencyListSection.tsx`
-- `src/systems/d20-legacy/components/D20FeatBrowserTab.tsx`
-- `src/systems/d20-legacy/components/D20LegacyTabs.tsx`
+- `src/rules/combatants/characterCombatant.ts`
+- `src/rules/compile/characterEffects.ts`
+- `src/rules/compile/equipEffects.ts`
+- `src/rules/compile/modifierEffects.ts`
 - `src/systems/dnd5e/shared/components/Dnd5eBackgroundSection.tsx`
 - `src/systems/dnd5e/shared/components/Dnd5eFeaturesTab.tsx`
 - `src/systems/dnd5e/shared/components/Dnd5eSelectedFeatsSection.tsx`
-- `src/systems/dnd5e/shared/dnd5eSheetShared.ts`
-- `src/systems/pf2e/components/Pf2eFeatBrowserTab.tsx`
 - `src/types/character-options/backgrounds.ts`
-- `src/types/character-options/feats.ts`
 - `src/types/core/character.ts`
 - `src/types/core/common.ts`
 - `src/utils/backgroundTemplate.ts`
-- `src/utils/featManualBadge.ts`
 - `src/utils/featTemplate.ts`
 
 ## Audit Trail
 
-- EXTRACTED: 268 (99%)
-- INFERRED: 4 (1%)
+- EXTRACTED: 300 (100%)
+- INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 
 ---

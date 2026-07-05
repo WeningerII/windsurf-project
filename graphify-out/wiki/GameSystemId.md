@@ -12,7 +12,7 @@
 ### imports
 - dataLoader.ts `EXTRACTED`
 - App.tsx `EXTRACTED`
-- capabilityScenarios.test.tsx `EXTRACTED`
+- [capabilityScenarios.test.tsx](capabilityScenarios.test.tsx.md) `EXTRACTED`
 - character.ts `EXTRACTED`
 - docDrift.ts `EXTRACTED`
 - generate-roadmap-metrics.ts `EXTRACTED`

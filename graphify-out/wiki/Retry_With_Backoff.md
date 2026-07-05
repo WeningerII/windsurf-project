@@ -1,10 +1,9 @@
 # Retry With Backoff
 
-> 10 nodes · cohesion 0.36
+> 9 nodes · cohesion 0.31
 
 ## Key Concepts
 
-- **retryWithBackoff()** (16 connections) — `src/utils/retry.ts`
 - **retry.ts** (10 connections) — `src/utils/retry.ts`
 - **retry.test.ts** (4 connections) — `src/__tests__/utils/retry.test.ts`
 - **isRetryableError()** (3 connections) — `src/utils/retry.ts`
@@ -17,8 +16,7 @@
 
 ## Relationships
 
-- [Document Sync Engine](Document_Sync_Engine.md) (8 shared connections)
-- [Campaign Sync Hooks](Campaign_Sync_Hooks.md) (4 shared connections)
+- [Document Sync Engine](Document_Sync_Engine.md) (6 shared connections)
 
 ## Source Files
 
@@ -27,7 +25,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 44 (100%)
+- EXTRACTED: 28 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

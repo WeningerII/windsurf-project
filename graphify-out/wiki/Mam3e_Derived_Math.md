@@ -1,46 +1,43 @@
 # Mam3e Derived Math
 
-> 18 nodes · cohesion 0.20
+> 13 nodes · cohesion 0.35
 
 ## Key Concepts
 
-- **mam3eEngineMath.test.ts** (34 connections) — `src/__tests__/mam3eEngineMath.test.ts`
-- **derivedMath.ts** (12 connections) — `src/systems/mam3e/derivedMath.ts`
-- **mam3eAttackDC()** (3 connections) — `src/systems/mam3e/derivedMath.ts`
-- **mam3eAttackHits()** (3 connections) — `src/systems/mam3e/derivedMath.ts`
-- **mam3ePointsRemaining()** (3 connections) — `src/systems/mam3e/powerMath.ts`
-- **sumMam3ePointsSpent()** (3 connections) — `src/systems/mam3e/powerMath.ts`
-- **mam3eAfflictionDC()** (2 connections) — `src/systems/mam3e/derivedMath.ts`
-- **mam3eCriticalDC()** (2 connections) — `src/systems/mam3e/derivedMath.ts`
-- **mam3eDamageResistanceDC()** (2 connections) — `src/systems/mam3e/derivedMath.ts`
-- **mam3eDegreesOfFailure()** (2 connections) — `src/systems/mam3e/derivedMath.ts`
-- **mam3eDegreesOfSuccess()** (2 connections) — `src/systems/mam3e/derivedMath.ts`
-- **mam3eEquipmentPoints()** (2 connections) — `src/systems/mam3e/derivedMath.ts`
-- **mam3eHeroPoints()** (2 connections) — `src/systems/mam3e/derivedMath.ts`
-- **mam3eInitiative()** (2 connections) — `src/systems/mam3e/derivedMath.ts`
-- **mam3eStartingPowerPoints()** (2 connections) — `src/systems/mam3e/derivedMath.ts`
-- **mam3eMeasurementByRank()** (2 connections) — `src/systems/mam3e/powerMath.ts`
-- **engine** (1 connections) — `src/__tests__/mam3eEngineMath.test.ts`
-- **TEST_DATE** (1 connections) — `src/__tests__/mam3eEngineMath.test.ts`
+- **daggerheartTemplate.ts** (24 connections) — `src/utils/daggerheartTemplate.ts`
+- **useDaggerheartTemplateHandlers.ts** (15 connections) — `src/systems/daggerheart/useDaggerheartTemplateHandlers.ts`
+- **daggerheartTemplate.test.ts** (10 connections) — `src/__tests__/utils/daggerheartTemplate.test.ts`
+- **applyDaggerheartClassTemplate()** (10 connections) — `src/utils/daggerheartTemplate.ts`
+- **applyDaggerheartCommunityTemplate()** (9 connections) — `src/utils/daggerheartTemplate.ts`
+- **getDaggerheartAncestryAdjustments()** (8 connections) — `src/utils/daggerheartDerived.ts`
+- **useDaggerheartTemplateHandlers()** (6 connections) — `src/systems/daggerheart/useDaggerheartTemplateHandlers.ts`
+- **applyDaggerheartAncestryTemplate()** (6 connections) — `src/utils/daggerheartTemplate.ts`
+- **replaceTemplateInventoryItems()** (3 connections) — `src/utils/daggerheartTemplate.ts`
+- **classTemplateItems()** (2 connections) — `src/utils/daggerheartTemplate.ts`
+- **communityTemplateItems()** (2 connections) — `src/utils/daggerheartTemplate.ts`
+- **DaggerheartInventoryEntry** (1 connections) — `src/utils/daggerheartTemplate.ts`
+- **DEFAULTS** (1 connections) — `src/utils/daggerheartTemplate.ts`
 
 ## Relationships
 
-- [Mam Powers & Cost Ledger](Mam_Powers_%26_Cost_Ledger.md) (10 shared connections)
-- [Mam3e Data Model & Engine](Mam3e_Data_Model_%26_Engine.md) (4 shared connections)
-- [MAM3e Rules Engine](MAM3e_Rules_Engine.md) (3 shared connections)
-- [Mam Character Sheet Tabs](Mam_Character_Sheet_Tabs.md) (1 shared connections)
-- [Dnd5e Sheets & E2E Tests](Dnd5e_Sheets_%26_E2E_Tests.md) (1 shared connections)
-- [Dnd5e2024 Engine & Hit Dice](Dnd5e2024_Engine_%26_Hit_Dice.md) (1 shared connections)
+- [System Definitions & Types](System_Definitions_%26_Types.md) (9 shared connections)
+- [Daggerheart Data Model](Daggerheart_Data_Model.md) (9 shared connections)
+- [Daggerheart Inventory](Daggerheart_Inventory.md) (7 shared connections)
+- [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (6 shared connections)
+- [Dnd5e Class Templates](Dnd5e_Class_Templates.md) (5 shared connections)
+- [Daggerheart Engine](Daggerheart_Engine.md) (4 shared connections)
+- [Equipment & Feature Browsers](Equipment_%26_Feature_Browsers.md) (3 shared connections)
 
 ## Source Files
 
-- `src/__tests__/mam3eEngineMath.test.ts`
-- `src/systems/mam3e/derivedMath.ts`
-- `src/systems/mam3e/powerMath.ts`
+- `src/__tests__/utils/daggerheartTemplate.test.ts`
+- `src/systems/daggerheart/useDaggerheartTemplateHandlers.ts`
+- `src/utils/daggerheartDerived.ts`
+- `src/utils/daggerheartTemplate.ts`
 
 ## Audit Trail
 
-- EXTRACTED: 80 (100%)
+- EXTRACTED: 97 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

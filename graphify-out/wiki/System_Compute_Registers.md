@@ -1,40 +1,40 @@
 # System Compute Registers
 
-> 52 nodes · cohesion 0.08
+> 24 nodes · cohesion 0.17
 
 ## Key Concepts
 
-- **index.ts** (21 connections) — `docs/compute-register/index.ts`
-- **index.ts** (20 connections) — `docs/srd-manifest/index.ts`
-- **types.ts** (19 connections) — `docs/srd-manifest/types.ts`
+- **index.ts** (22 connections) — `docs/compute-register/index.ts`
 - **types.ts** (16 connections) — `docs/compute-register/types.ts`
 - **SystemComputeRegister** (10 connections) — `docs/compute-register/types.ts`
-- **SystemManifest** (9 connections) — `docs/srd-manifest/types.ts`
-- **ManifestSystemId** (7 connections) — `docs/srd-manifest/types.ts`
-- **_exclusions.ts** (6 connections) — `docs/srd-manifest/_exclusions.ts`
 - **daggerheart.ts** (4 connections) — `docs/compute-register/daggerheart.ts`
 - **dnd35e.ts** (4 connections) — `docs/compute-register/dnd35e.ts`
 - **dnd5e-2014.ts** (4 connections) — `docs/compute-register/dnd5e-2014.ts`
 - **dnd5e-2024.ts** (4 connections) — `docs/compute-register/dnd5e-2024.ts`
+- **COMPUTE_REGISTERS** (4 connections) — `docs/compute-register/index.ts`
 - **mam3e.ts** (4 connections) — `docs/compute-register/mam3e.ts`
 - **pf1e.ts** (4 connections) — `docs/compute-register/pf1e.ts`
 - **pf2e.ts** (4 connections) — `docs/compute-register/pf2e.ts`
-- **daggerheart.ts** (4 connections) — `docs/srd-manifest/daggerheart.ts`
-- **dnd35e.ts** (4 connections) — `docs/srd-manifest/dnd35e.ts`
-- **dnd5e-2014.ts** (4 connections) — `docs/srd-manifest/dnd5e-2014.ts`
-- **dnd5e-2024.ts** (4 connections) — `docs/srd-manifest/dnd5e-2024.ts`
-- **mam3e.ts** (4 connections) — `docs/srd-manifest/mam3e.ts`
-- **pf1e.ts** (4 connections) — `docs/srd-manifest/pf1e.ts`
-- **pf2e.ts** (4 connections) — `docs/srd-manifest/pf2e.ts`
-- **COMPUTE_REGISTERS** (3 connections) — `docs/compute-register/index.ts`
-- **SRD_MANIFESTS** (3 connections) — `docs/srd-manifest/index.ts`
 - **daggerheartComputeRegister** (2 connections) — `docs/compute-register/daggerheart.ts`
-- *... and 27 more nodes in this community*
+- **dnd35eComputeRegister** (2 connections) — `docs/compute-register/dnd35e.ts`
+- **dnd5e2014ComputeRegister** (2 connections) — `docs/compute-register/dnd5e-2014.ts`
+- **dnd5e2024ComputeRegister** (2 connections) — `docs/compute-register/dnd5e-2024.ts`
+- **registerForSystem()** (2 connections) — `docs/compute-register/index.ts`
+- **mam3eComputeRegister** (2 connections) — `docs/compute-register/mam3e.ts`
+- **pf1eComputeRegister** (2 connections) — `docs/compute-register/pf1e.ts`
+- **pf2eComputeRegister** (2 connections) — `docs/compute-register/pf2e.ts`
+- **isInScope()** (2 connections) — `docs/compute-register/types.ts`
+- **layerProgress()** (2 connections) — `docs/compute-register/types.ts`
+- **ComputeEntryStatus** (1 connections) — `docs/compute-register/types.ts`
+- **ComputeLayer** (1 connections) — `docs/compute-register/types.ts`
+- **ComputeRegisterEntry** (1 connections) — `docs/compute-register/types.ts`
 
 ## Relationships
 
-- [Roadmap Metrics Generator](Roadmap_Metrics_Generator.md) (6 shared connections)
-- [SRD Manifest Generator](SRD_Manifest_Generator.md) (2 shared connections)
+- [Service Worker Update Banner](Service_Worker_Update_Banner.md) (3 shared connections)
+- [Scene Grid View](Scene_Grid_View.md) (2 shared connections)
+- [Mam Character Sheet Tabs](Mam_Character_Sheet_Tabs.md) (2 shared connections)
+- [Roadmap Metrics Generator](Roadmap_Metrics_Generator.md) (2 shared connections)
 
 ## Source Files
 
@@ -47,21 +47,11 @@
 - `docs/compute-register/pf1e.ts`
 - `docs/compute-register/pf2e.ts`
 - `docs/compute-register/types.ts`
-- `docs/srd-manifest/_exclusions.ts`
-- `docs/srd-manifest/daggerheart.ts`
-- `docs/srd-manifest/dnd35e.ts`
-- `docs/srd-manifest/dnd5e-2014.ts`
-- `docs/srd-manifest/dnd5e-2024.ts`
-- `docs/srd-manifest/index.ts`
-- `docs/srd-manifest/mam3e.ts`
-- `docs/srd-manifest/pf1e.ts`
-- `docs/srd-manifest/pf2e.ts`
-- `docs/srd-manifest/types.ts`
 
 ## Audit Trail
 
-- EXTRACTED: 216 (98%)
-- INFERRED: 4 (2%)
+- EXTRACTED: 101 (98%)
+- INFERRED: 2 (2%)
 - AMBIGUOUS: 0 (0%)
 
 ---

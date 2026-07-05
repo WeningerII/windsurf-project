@@ -2,13 +2,13 @@
 
 > God node · 54 connections · `src/rules/ir/types.ts`
 
-**Community:** [Condition Effects by System](Condition_Effects_by_System.md)
+**Community:** [Character Effects Compilation](Character_Effects_Compilation.md)
 
 ## Connections by Relation
 
 ### calls
-- compileEquipmentEffects() `EXTRACTED`
 - executeTacticalTurn() `EXTRACTED`
+- compileEquipmentEffects() `EXTRACTED`
 - buildDaggerheartAdversaryCombatant() `EXTRACTED`
 - buildDaggerheartCombatant() `EXTRACTED`
 - collectD20LegacyConditionEffects() `EXTRACTED`
@@ -47,10 +47,10 @@
 - sceneTerrain.ts `EXTRACTED`
 - equipEffects.ts `EXTRACTED`
 - pf2eConditions.ts `EXTRACTED`
+- attackResolution.test.ts `EXTRACTED`
 - daggerheartAdversary.ts `EXTRACTED`
 - d20LegacyRiders.ts `EXTRACTED`
 - dnd5eConditions.ts `EXTRACTED`
-- attackResolution.test.ts `EXTRACTED`
 - nonD20Resolution.test.ts `EXTRACTED`
 
 ### re_exports

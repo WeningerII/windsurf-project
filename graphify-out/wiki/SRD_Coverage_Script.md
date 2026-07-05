@@ -10,11 +10,11 @@
 - **loaderNormVariants()** (4 connections) — `src/scripts/srd-coverage.ts`
 - **norm()** (4 connections) — `src/scripts/srd-coverage.ts`
 - **fetchCsvNames()** (3 connections) — `src/scripts/srd-coverage.ts`
+- **fetchJsonPropNames()** (3 connections) — `src/scripts/srd-coverage.ts`
 - **main()** (3 connections) — `src/scripts/srd-coverage.ts`
 - **csvRows()** (2 connections) — `src/scripts/srd-coverage.ts`
 - **extractJsArray()** (2 connections) — `src/scripts/srd-coverage.ts`
 - **extractNameValues()** (2 connections) — `src/scripts/srd-coverage.ts`
-- **fetchJsonPropNames()** (2 connections) — `src/scripts/srd-coverage.ts`
 - **fetchMarkdownHeadings()** (2 connections) — `src/scripts/srd-coverage.ts`
 - **fetchMarkdownLinkNames()** (2 connections) — `src/scripts/srd-coverage.ts`
 - **fetchSrd35MonsterNames()** (2 connections) — `src/scripts/srd-coverage.ts`
@@ -34,9 +34,11 @@
 ## Relationships
 
 - [Sheet Resource Loading Hooks](Sheet_Resource_Loading_Hooks.md) (8 shared connections)
-- [Dnd5e Resource Loading Hooks](Dnd5e_Resource_Loading_Hooks.md) (5 shared connections)
+- [Dnd5e Resource Loading Hooks](Dnd5e_Resource_Loading_Hooks.md) (4 shared connections)
 - [Dnd5e Equipment & Features UI](Dnd5e_Equipment_%26_Features_UI.md) (1 shared connections)
 - [SRD Manifest Generator](SRD_Manifest_Generator.md) (1 shared connections)
+- [System Validation Logic](System_Validation_Logic.md) (1 shared connections)
+- [App Shell & Layout](App_Shell_%26_Layout.md) (1 shared connections)
 
 ## Source Files
 
@@ -44,7 +46,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 93 (96%)
+- EXTRACTED: 94 (96%)
 - INFERRED: 4 (4%)
 - AMBIGUOUS: 0 (0%)
 

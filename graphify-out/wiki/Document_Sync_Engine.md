@@ -1,17 +1,22 @@
 # Document Sync Engine
 
-> 37 nodes · cohesion 0.15
+> 66 nodes · cohesion 0.07
 
 ## Key Concepts
 
 - **syncEngine.ts** (68 connections) — `src/utils/syncEngine.ts`
+- **useSync.test.tsx** (46 connections) — `src/__tests__/hooks/useSync.test.tsx`
 - **useSync.ts** (34 connections) — `src/hooks/useSync.ts`
 - **syncEngine.test.ts** (24 connections) — `src/__tests__/utils/syncEngine.test.ts`
 - **useSync()** (21 connections) — `src/hooks/useSync.ts`
 - **getSupabaseClient()** (21 connections) — `src/utils/supabaseClient.ts`
+- **retryWithBackoff()** (16 connections) — `src/utils/retry.ts`
+- **getQueuedSyncSnapshot()** (10 connections) — `src/utils/syncEngine.ts`
+- **supabaseClient.ts** (9 connections) — `src/utils/supabaseClient.ts`
+- **fetchRemoteCampaigns()** (9 connections) — `src/utils/syncEngine.ts`
 - **fetchRemoteDocuments()** (9 connections) — `src/utils/syncEngine.ts`
 - **getQueuedDeletedDocumentIds()** (9 connections) — `src/utils/syncEngine.ts`
-- **getQueuedSyncSnapshot()** (9 connections) — `src/utils/syncEngine.ts`
+- **pushCampaigns()** (9 connections) — `src/utils/syncEngine.ts`
 - **pushDocuments()** (9 connections) — `src/utils/syncEngine.ts`
 - **clearQueuedDeletedDocumentIds()** (8 connections) — `src/utils/syncEngine.ts`
 - **clearQueuedSyncSnapshot()** (7 connections) — `src/utils/syncEngine.ts`
@@ -22,41 +27,37 @@
 - **pushCampaign()** (6 connections) — `src/utils/syncEngine.ts`
 - **pushDocument()** (6 connections) — `src/utils/syncEngine.ts`
 - **queueDeletedDocumentIds()** (6 connections) — `src/utils/syncEngine.ts`
+- **queueSyncSnapshot()** (6 connections) — `src/utils/syncEngine.ts`
 - **subscribeToRemoteDocuments()** (6 connections) — `src/utils/syncEngine.ts`
-- **queueSyncSnapshot()** (5 connections) — `src/utils/syncEngine.ts`
-- **toRemoteCampaign()** (5 connections) — `src/utils/syncEngine.ts`
-- **queueIds()** (4 connections) — `src/utils/syncEngine.ts`
-- **readQueuedIds()** (4 connections) — `src/utils/syncEngine.ts`
-- **toRemote()** (4 connections) — `src/utils/syncEngine.ts`
-- **clearQueuedIds()** (3 connections) — `src/utils/syncEngine.ts`
-- *... and 12 more nodes in this community*
+- *... and 41 more nodes in this community*
 
 ## Relationships
 
-- [Campaign Sync Hooks](Campaign_Sync_Hooks.md) (32 shared connections)
-- [Sync Engine Tests](Sync_Engine_Tests.md) (15 shared connections)
-- [Sync Tombstones](Sync_Tombstones.md) (13 shared connections)
-- [App Shell & Layout](App_Shell_%26_Layout.md) (12 shared connections)
-- [Error Boundary & Auth Context](Error_Boundary_%26_Auth_Context.md) (12 shared connections)
-- [Retry With Backoff](Retry_With_Backoff.md) (8 shared connections)
-- [Boundary Validation Tests](Boundary_Validation_Tests.md) (5 shared connections)
-- [System Registry & Renderer](System_Registry_%26_Renderer.md) (4 shared connections)
-- [App Header & Auth UI](App_Header_%26_Auth_UI.md) (3 shared connections)
-- [Dnd5e Sheets & E2E Tests](Dnd5e_Sheets_%26_E2E_Tests.md) (3 shared connections)
-- [Dnd5e2024 Engine & Hit Dice](Dnd5e2024_Engine_%26_Hit_Dice.md) (3 shared connections)
+- [Campaign Sync Hooks](Campaign_Sync_Hooks.md) (50 shared connections)
+- [Error Boundary & Auth Context](Error_Boundary_%26_Auth_Context.md) (19 shared connections)
+- [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (13 shared connections)
+- [App Shell & Layout](App_Shell_%26_Layout.md) (8 shared connections)
+- [Document Migrations & Storage](Document_Migrations_%26_Storage.md) (6 shared connections)
+- [Retry With Backoff](Retry_With_Backoff.md) (6 shared connections)
+- [Boundary Validation Tests](Boundary_Validation_Tests.md) (6 shared connections)
+- [Combat & Recap Panels](Combat_%26_Recap_Panels.md) (3 shared connections)
 - [Document Signature Hashing](Document_Signature_Hashing.md) (3 shared connections)
+- [capabilityScenarios.test.tsx](capabilityScenarios.test.tsx.md) (3 shared connections)
+- [Quest & Session Log UI](Quest_%26_Session_Log_UI.md) (3 shared connections)
 
 ## Source Files
 
+- `src/__tests__/hooks/useSync.test.tsx`
 - `src/__tests__/utils/syncEngine.test.ts`
 - `src/hooks/useSync.ts`
+- `src/utils/retry.ts`
 - `src/utils/supabaseClient.ts`
 - `src/utils/syncEngine.ts`
 
 ## Audit Trail
 
-- EXTRACTED: 288 (91%)
-- INFERRED: 29 (9%)
+- EXTRACTED: 405 (93%)
+- INFERRED: 31 (7%)
 - AMBIGUOUS: 0 (0%)
 
 ---

@@ -1,54 +1,48 @@
 # Documents Hook & Persistence
 
-> 19 nodes · cohesion 0.17
+> 20 nodes · cohesion 0.18
 
 ## Key Concepts
 
-- **useDocuments.ts** (25 connections) — `src/hooks/useDocuments.ts`
-- **dnd5e-feature-options-persistence.test.ts** (21 connections) — `src/__tests__/dnd5e-feature-options-persistence.test.ts`
-- **useDocuments()** (17 connections) — `src/hooks/useDocuments.ts`
-- **loadDocuments()** (12 connections) — `src/utils/documentStorage.ts`
-- **parseDocumentsSnapshot()** (6 connections) — `src/utils/documentStorage.ts`
-- **mergeDocumentCollections()** (5 connections) — `src/utils/documentStorage.ts`
-- **tryLoadV2Documents()** (4 connections) — `src/utils/documentStorage.ts`
-- **prepareDocumentsWithEngines()** (3 connections) — `src/hooks/useDocuments.ts`
-- **prepareDocumentWithEngine()** (3 connections) — `src/hooks/useDocuments.ts`
-- **stashCorruptPayload()** (3 connections) — `src/utils/documentStorage.ts`
-- **cloneDocumentsSnapshot()** (2 connections) — `src/hooks/useDocuments.ts`
-- **documentsChanged()** (2 connections) — `src/hooks/useDocuments.ts`
-- **makeSystem()** (2 connections) — `src/__tests__/dnd5e-feature-options-persistence.test.ts`
-- **reloadSingleDocument()** (2 connections) — `src/__tests__/dnd5e-feature-options-persistence.test.ts`
-- **getDocumentVersion()** (2 connections) — `src/utils/documentStorage.ts`
-- **FeatureOptionRoundtripCase** (1 connections) — `src/__tests__/dnd5e-feature-options-persistence.test.ts`
-- **makeDocument()** (1 connections) — `src/__tests__/dnd5e-feature-options-persistence.test.ts`
-- **optionCases** (1 connections) — `src/__tests__/dnd5e-feature-options-persistence.test.ts`
-- **DOCUMENTS_STORAGE_KEY** (1 connections) — `src/utils/documentStorage.ts`
+- **AbilityScoreGrid.tsx** (24 connections) — `src/components/sheet/AbilityScoreGrid.tsx`
+- **AbilityScoreGrid()** (16 connections) — `src/components/sheet/AbilityScoreGrid.tsx`
+- **buildPointBuyDraft()** (4 connections) — `src/components/sheet/AbilityScoreGrid.tsx`
+- **buildStandardArrayDraft()** (4 connections) — `src/components/sheet/AbilityScoreGrid.tsx`
+- **isValidPointBuyDraft()** (4 connections) — `src/components/sheet/AbilityScoreGrid.tsx`
+- **AbilityScoreGrid.test.tsx** (4 connections) — `src/__tests__/components/AbilityScoreGrid.test.tsx`
+- **emptyPointBuyDraft()** (3 connections) — `src/components/sheet/AbilityScoreGrid.tsx`
+- **emptyStandardArrayDraft()** (3 connections) — `src/components/sheet/AbilityScoreGrid.tsx`
+- **totalPointBuyCost()** (3 connections) — `src/components/sheet/AbilityScoreGrid.tsx`
+- **clampPointBuyScore()** (2 connections) — `src/components/sheet/AbilityScoreGrid.tsx`
+- **isStandardArrayComplete()** (2 connections) — `src/components/sheet/AbilityScoreGrid.tsx`
+- **matchesStandardArray()** (2 connections) — `src/components/sheet/AbilityScoreGrid.tsx`
+- **remainingStandardArrayValues()** (2 connections) — `src/components/sheet/AbilityScoreGrid.tsx`
+- **PlannerMode** (1 connections) — `src/components/sheet/AbilityScoreGrid.tsx`
+- **POINT_BUY_COSTS** (1 connections) — `src/components/sheet/AbilityScoreGrid.tsx`
+- **Props** (1 connections) — `src/components/sheet/AbilityScoreGrid.tsx`
+- **STANDARD_ARRAY** (1 connections) — `src/components/sheet/AbilityScoreGrid.tsx`
+- **StandardArrayDraft** (1 connections) — `src/components/sheet/AbilityScoreGrid.tsx`
+- **ABILITY_NAMES** (1 connections) — `src/__tests__/components/AbilityScoreGrid.test.tsx`
+- **makeAttributes()** (1 connections) — `src/__tests__/components/AbilityScoreGrid.test.tsx`
 
 ## Relationships
 
-- [Document Migrations & Storage](Document_Migrations_%26_Storage.md) (13 shared connections)
-- [System Registry & Renderer](System_Registry_%26_Renderer.md) (8 shared connections)
-- [Document Storage (IndexedDB)](Document_Storage_%28IndexedDB%29.md) (8 shared connections)
-- [Dnd5e Sheets & E2E Tests](Dnd5e_Sheets_%26_E2E_Tests.md) (4 shared connections)
-- [Dnd5e Feature Options](Dnd5e_Feature_Options.md) (4 shared connections)
-- [App Shell & Layout](App_Shell_%26_Layout.md) (3 shared connections)
-- [Debounced Persistence Utils](Debounced_Persistence_Utils.md) (3 shared connections)
-- [Document Signature Hashing](Document_Signature_Hashing.md) (3 shared connections)
-- [Dnd5e Equipment & Features UI](Dnd5e_Equipment_%26_Features_UI.md) (3 shared connections)
-- [Dnd5e2024 Engine & Hit Dice](Dnd5e2024_Engine_%26_Hit_Dice.md) (2 shared connections)
-- [PF2e Archetypes Tab](PF2e_Archetypes_Tab.md) (2 shared connections)
-- [Dnd5e Activity Definitions](Dnd5e_Activity_Definitions.md) (1 shared connections)
+- [D20 Combat Controls](D20_Combat_Controls.md) (5 shared connections)
+- [Combat & Recap Panels](Combat_%26_Recap_Panels.md) (2 shared connections)
+- [Dnd35e/Pf1e Derived Math](Dnd35e-Pf1e_Derived_Math.md) (2 shared connections)
+- [Scene Reaction Panel](Scene_Reaction_Panel.md) (1 shared connections)
+- [3.5e Monster Data Encoder](3.5e_Monster_Data_Encoder.md) (1 shared connections)
+- [Sheet Header & Stat Cards](Sheet_Header_%26_Stat_Cards.md) (1 shared connections)
 
 ## Source Files
 
-- `src/__tests__/dnd5e-feature-options-persistence.test.ts`
-- `src/hooks/useDocuments.ts`
-- `src/utils/documentStorage.ts`
+- `src/__tests__/components/AbilityScoreGrid.test.tsx`
+- `src/components/sheet/AbilityScoreGrid.tsx`
 
 ## Audit Trail
 
-- EXTRACTED: 113 (100%)
-- INFERRED: 0 (0%)
+- EXTRACTED: 79 (99%)
+- INFERRED: 1 (1%)
 - AMBIGUOUS: 0 (0%)
 
 ---

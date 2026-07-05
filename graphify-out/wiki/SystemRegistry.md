@@ -12,7 +12,7 @@
 ### imports
 - SceneManager.tsx `EXTRACTED`
 - App.tsx `EXTRACTED`
-- capabilityScenarios.test.tsx `EXTRACTED`
+- [capabilityScenarios.test.tsx](capabilityScenarios.test.tsx.md) `EXTRACTED`
 - SystemSheets.test.tsx `EXTRACTED`
 - useDnd5eSheetController.ts `EXTRACTED`
 - index.ts `EXTRACTED`

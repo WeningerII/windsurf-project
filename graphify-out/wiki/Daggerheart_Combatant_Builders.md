@@ -1,68 +1,77 @@
 # Daggerheart Combatant Builders
 
-> 29 nodes · cohesion 0.11
+> 61 nodes · cohesion 0.07
 
 ## Key Concepts
 
-- **SceneToken** (34 connections) — `src/types/core/scene.ts`
-- **combatStats.ts** (22 connections) — `src/scene/combatStats.ts`
-- **daggerheartCombatant.ts** (21 connections) — `src/rules/combatants/daggerheartCombatant.ts`
+- **CharacterDocument** (229 connections) — `src/types/core/document.ts`
+- **document.ts** (157 connections) — `src/types/core/document.ts`
+- **SystemDataModel** (125 connections) — `src/types/core/document.ts`
+- **tokenPlacement.ts** (19 connections) — `src/scene/tokenPlacement.ts`
+- **TokenPanel.tsx** (16 connections) — `src/components/scene/TokenPanel.tsx`
 - **mam3eCombatant.ts** (16 connections) — `src/rules/combatants/mam3eCombatant.ts`
-- **daggerheartAdversary.ts** (13 connections) — `src/rules/combatants/daggerheartAdversary.ts`
 - **combatStats.test.ts** (12 connections) — `src/__tests__/scene/combatStats.test.ts`
-- **DaggerheartWeapon** (11 connections) — `src/types/daggerheart.ts`
-- **resolveSceneCombatStats()** (10 connections) — `src/scene/combatStats.ts`
-- **buildDaggerheartAdversaryCombatant()** (8 connections) — `src/rules/combatants/daggerheartAdversary.ts`
-- **buildDaggerheartCombatant()** (8 connections) — `src/rules/combatants/daggerheartCombatant.ts`
+- **tokenPlacement.test.ts** (12 connections) — `src/__tests__/scene/tokenPlacement.test.ts`
+- **documentMigrations.test.ts** (12 connections) — `src/__tests__/utils/documentMigrations.test.ts`
+- **SystemSheetRenderer.tsx** (11 connections) — `src/components/SystemSheetRenderer.tsx`
+- **Dnd5e2024Sheet.tsx** (10 connections) — `src/systems/dnd5e-2024/components/Dnd5e2024Sheet.tsx`
+- **SceneAllegiance** (10 connections) — `src/types/core/scene.ts`
+- **SceneTokenKind** (9 connections) — `src/types/core/scene.ts`
+- **useDnd5eDocumentMutators.ts** (8 connections) — `src/systems/dnd5e/shared/useDnd5eDocumentMutators.ts`
+- **SystemSheetRenderer.test.tsx** (8 connections) — `src/__tests__/SystemSheetRenderer.test.tsx`
+- **documentMigrations.ts** (8 connections) — `src/utils/documentMigrations.ts`
 - **CombatStatsSources** (7 connections) — `src/scene/combatStats.ts`
-- **SceneCombatStats** (6 connections) — `src/rules/combat/sceneCombat.ts`
-- **buildMam3eCombatant()** (5 connections) — `src/rules/combatants/mam3eCombatant.ts`
-- **DaggerheartAdversary** (5 connections) — `src/types/daggerheart.ts`
-- **SceneGridViewProps** (4 connections) — `src/components/SceneGridView.tsx`
-- **CharacterCombatant** (4 connections) — `src/rules/combatants/characterCombatant.ts`
-- **DaggerheartAdversaryCombatant** (4 connections) — `src/rules/combatants/daggerheartAdversary.ts`
-- **DaggerheartCombatant** (4 connections) — `src/rules/combatants/daggerheartCombatant.ts`
-- **Mam3eCombatant** (4 connections) — `src/rules/combatants/mam3eCombatant.ts`
-- **nextMam3eTokenConditions()** (4 connections) — `src/rules/combatants/mam3eCombatant.ts`
-- **MonsterCombatant** (4 connections) — `src/rules/combatants/monsterCombatant.ts`
-- **BuildDaggerheartAdversaryResult** (2 connections) — `src/rules/combatants/daggerheartAdversary.ts`
-- **BuildDaggerheartCombatantResult** (2 connections) — `src/rules/combatants/daggerheartCombatant.ts`
-- **BuildMam3eCombatantResult** (2 connections) — `src/rules/combatants/mam3eCombatant.ts`
-- **RANGE_CELLS** (1 connections) — `src/rules/combatants/daggerheartAdversary.ts`
-- *... and 4 more nodes in this community*
+- **Pf2eNotesTab.tsx** (7 connections) — `src/systems/pf2e/components/Pf2eNotesTab.tsx`
+- **UseSceneEncounterParams** (6 connections) — `src/components/scene/useSceneEncounter.ts`
+- **Props** (6 connections) — `src/components/SceneManager.tsx`
+- **BuildEncounterEventsParams** (6 connections) — `src/scene/encounterBuilder.ts`
+- **PlaceTokenInput** (6 connections) — `src/scene/tokenPlacement.ts`
+- **UseD20LegacyMutationHandlersProps** (6 connections) — `src/systems/d20-legacy/useD20LegacyMutationHandlers.ts`
+- **TokenPanelProps** (5 connections) — `src/components/scene/TokenPanel.tsx`
+- **UseDnd5eSheetActionHandlersProps** (5 connections) — `src/systems/dnd5e/shared/useDnd5eSheetActionHandlers.ts`
+- *... and 36 more nodes in this community*
 
 ## Relationships
 
-- [Scene Combat Area Effects](Scene_Combat_Area_Effects.md) (27 shared connections)
-- [Character Combatant Builder](Character_Combatant_Builder.md) (13 shared connections)
-- [Daggerheart Data Model](Daggerheart_Data_Model.md) (10 shared connections)
-- [Condition Effects by System](Condition_Effects_by_System.md) (9 shared connections)
-- [Scene Combat Resolution](Scene_Combat_Resolution.md) (8 shared connections)
-- [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (8 shared connections)
-- [Daggerheart Engine](Daggerheart_Engine.md) (8 shared connections)
-- [Oracle Panel & Logic](Oracle_Panel_%26_Logic.md) (6 shared connections)
-- [Monster & NPC Generator](Monster_%26_NPC_Generator.md) (6 shared connections)
-- [Dnd5e2024 Engine & Hit Dice](Dnd5e2024_Engine_%26_Hit_Dice.md) (5 shared connections)
-- [System Registry & Renderer](System_Registry_%26_Renderer.md) (5 shared connections)
-- [Scene Grid View](Scene_Grid_View.md) (4 shared connections)
+- [Mam3e Data Model & Engine](Mam3e_Data_Model_%26_Engine.md) (40 shared connections)
+- [Dnd35e Saves & Data Model](Dnd35e_Saves_%26_Data_Model.md) (36 shared connections)
+- [D20 Combat Controls](D20_Combat_Controls.md) (31 shared connections)
+- [System Registry & Renderer](System_Registry_%26_Renderer.md) (28 shared connections)
+- [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (27 shared connections)
+- [Document Migrations & Storage](Document_Migrations_%26_Storage.md) (27 shared connections)
+- [Combat & Recap Panels](Combat_%26_Recap_Panels.md) (26 shared connections)
+- [Dnd5e Equipment & Features UI](Dnd5e_Equipment_%26_Features_UI.md) (26 shared connections)
+- [Sync Engine Tests](Sync_Engine_Tests.md) (17 shared connections)
+- [Pf2e Sheet Tabs](Pf2e_Sheet_Tabs.md) (17 shared connections)
+- [Dnd5e Feat Templates](Dnd5e_Feat_Templates.md) (14 shared connections)
+- [Dnd5e2024 Engine & Hit Dice](Dnd5e2024_Engine_%26_Hit_Dice.md) (14 shared connections)
 
 ## Source Files
 
+- `src/__tests__/SystemSheetRenderer.test.tsx`
+- `src/__tests__/components/TokenPanel.test.tsx`
 - `src/__tests__/scene/combatStats.test.ts`
-- `src/components/SceneGridView.tsx`
-- `src/rules/combat/sceneCombat.ts`
-- `src/rules/combatants/characterCombatant.ts`
-- `src/rules/combatants/daggerheartAdversary.ts`
-- `src/rules/combatants/daggerheartCombatant.ts`
+- `src/__tests__/scene/tokenPlacement.test.ts`
+- `src/__tests__/utils/documentMigrations.test.ts`
+- `src/components/AppHeader.tsx`
+- `src/components/CampaignManager.tsx`
+- `src/components/CharacterCard.tsx`
+- `src/components/CharacterListView.tsx`
+- `src/components/SceneManager.tsx`
+- `src/components/SystemSheetRenderer.tsx`
+- `src/components/scene/TokenPanel.tsx`
+- `src/components/scene/useSceneEncounter.ts`
 - `src/rules/combatants/mam3eCombatant.ts`
-- `src/rules/combatants/monsterCombatant.ts`
 - `src/scene/combatStats.ts`
-- `src/types/core/scene.ts`
-- `src/types/daggerheart.ts`
+- `src/scene/encounterBuilder.ts`
+- `src/scene/tokenPlacement.ts`
+- `src/systems/d20-legacy/sheet.tsx`
+- `src/systems/d20-legacy/useD20LegacyMutationHandlers.ts`
+- `src/systems/d20-legacy/useD20LegacySheetController.ts`
 
 ## Audit Trail
 
-- EXTRACTED: 217 (100%)
+- EXTRACTED: 817 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

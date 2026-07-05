@@ -1,6 +1,6 @@
 # AI Gateway Contracts
 
-> 28 nodes · cohesion 0.15
+> 29 nodes · cohesion 0.14
 
 ## Key Concepts
 
@@ -22,24 +22,25 @@
 - **parseIllustrateScenePayload()** (3 connections) — `src/ai/contracts.ts`
 - **parseSceneNarrationData()** (3 connections) — `src/ai/contracts.ts`
 - **parseSceneNarrationPayload()** (3 connections) — `src/ai/contracts.ts`
+- **AI_GATEWAY_TASKS** (2 connections) — `src/ai/contracts.ts`
 - **AiFailureCode** (1 connections) — `src/ai/contracts.ts`
 - **AiParse** (1 connections) — `src/ai/contracts.ts`
 - **AiSuccess** (1 connections) — `src/ai/contracts.ts`
 - **AiUsage** (1 connections) — `src/ai/contracts.ts`
 - **EncounterDraftRequest** (1 connections) — `src/ai/contracts.ts`
 - **IdentifyCreatureRequest** (1 connections) — `src/ai/contracts.ts`
-- **IllustrateSceneRequest** (1 connections) — `src/ai/contracts.ts`
-- *... and 3 more nodes in this community*
+- *... and 4 more nodes in this community*
 
 ## Relationships
 
 - [AI Gateway Adapters](AI_Gateway_Adapters.md) (14 shared connections)
-- [AI Gateway Client](AI_Gateway_Client.md) (13 shared connections)
+- [AI Encounter Draft Flow](AI_Encounter_Draft_Flow.md) (10 shared connections)
+- [AI Gateway Client](AI_Gateway_Client.md) (6 shared connections)
 - [AI Prompt Builders](AI_Prompt_Builders.md) (6 shared connections)
-- [AI Encounter Draft Flow](AI_Encounter_Draft_Flow.md) (5 shared connections)
-- [AI Creature Identification](AI_Creature_Identification.md) (5 shared connections)
-- [Monster & NPC Generator](Monster_%26_NPC_Generator.md) (2 shared connections)
-- [Scene Illustration Panel](Scene_Illustration_Panel.md) (1 shared connections)
+- [Scene Illustration Panel](Scene_Illustration_Panel.md) (4 shared connections)
+- [Resource Pool Tracking](Resource_Pool_Tracking.md) (3 shared connections)
+- [capabilityScenarios.test.tsx](capabilityScenarios.test.tsx.md) (2 shared connections)
+- [AI Creature Identification](AI_Creature_Identification.md) (1 shared connections)
 
 ## Source Files
 
@@ -48,7 +49,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 158 (100%)
+- EXTRACTED: 160 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

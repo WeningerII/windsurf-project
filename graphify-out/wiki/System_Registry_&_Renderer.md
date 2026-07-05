@@ -1,54 +1,54 @@
 # System Registry & Renderer
 
-> 44 nodes · cohesion 0.08
+> 51 nodes · cohesion 0.07
 
 ## Key Concepts
 
-- **SystemDataModel** (125 connections) — `src/types/core/document.ts`
 - **index.ts** (43 connections) — `src/registry/index.ts`
 - **SystemRegistry** (42 connections) — `src/registry/index.ts`
+- **index.ts** (35 connections) — `src/systems/index.ts`
 - **registerAllSystems()** (19 connections) — `src/systems/index.ts`
+- **SystemDefinition** (18 connections) — `src/registry/types.ts`
 - **applyMergedCollections.test.tsx** (17 connections) — `src/__tests__/hooks/applyMergedCollections.test.tsx`
 - **useDocuments.test.tsx** (17 connections) — `src/__tests__/hooks/useDocuments.test.tsx`
+- **systemAssetPrefetch.ts** (15 connections) — `src/utils/systemAssetPrefetch.ts`
 - **CampaignManager.test.tsx** (14 connections) — `src/__tests__/components/CampaignManager.test.tsx`
 - **registryValidation.test.ts** (14 connections) — `src/__tests__/registryValidation.test.ts`
-- **SystemSheetRenderer.tsx** (11 connections) — `src/components/SystemSheetRenderer.tsx`
+- **systemAssetPrefetch.test.ts** (12 connections) — `src/__tests__/utils/systemAssetPrefetch.test.ts`
 - **character-creation-flow.test.tsx** (11 connections) — `src/__tests__/character-creation-flow.test.tsx`
 - **CharacterCard.test.tsx** (11 connections) — `src/__tests__/components/CharacterCard.test.tsx`
+- **App.test.tsx** (10 connections) — `src/__tests__/App.test.tsx`
 - **app-sheet-error-boundary.test.tsx** (8 connections) — `src/__tests__/app-sheet-error-boundary.test.tsx`
-- **SystemSheetRenderer.test.tsx** (8 connections) — `src/__tests__/SystemSheetRenderer.test.tsx`
+- **main.tsx** (7 connections) — `src/main.tsx`
 - **.validateDocument()** (5 connections) — `src/registry/index.ts`
-- **CharacterListViewProps** (4 connections) — `src/components/CharacterListView.tsx`
+- **prefetchSystemAssetsForIds()** (5 connections) — `src/utils/systemAssetPrefetch.ts`
+- **.register()** (4 connections) — `src/registry/index.ts`
+- **SystemValidator** (4 connections) — `src/registry/types.ts`
 - **ValidationContext** (4 connections) — `src/registry/types.ts`
-- **CharacterCardProps** (3 connections) — `src/components/CharacterCard.tsx`
-- **Props** (3 connections) — `src/components/SystemSheetRenderer.tsx`
-- **SystemSheetRenderer()** (3 connections) — `src/components/SystemSheetRenderer.tsx`
 - **.get()** (3 connections) — `src/registry/index.ts`
 - **.getAll()** (3 connections) — `src/registry/index.ts`
 - **ValidationResult** (3 connections) — `src/registry/types.ts`
-- **DocumentStorageData** (3 connections) — `src/utils/documentStorage.ts`
-- **ImportDocumentsResult** (3 connections) — `src/utils/documentStorage.ts`
-- **makeDoc()** (2 connections) — `src/__tests__/hooks/applyMergedCollections.test.tsx`
-- *... and 19 more nodes in this community*
+- **Mam3eSystemDef** (3 connections) — `src/systems/mam3e/definition.ts`
+- *... and 26 more nodes in this community*
 
 ## Relationships
 
-- [Dnd5e Sheets & E2E Tests](Dnd5e_Sheets_%26_E2E_Tests.md) (26 shared connections)
-- [System Definitions & Types](System_Definitions_%26_Types.md) (20 shared connections)
-- [Dnd5e2024 Engine & Hit Dice](Dnd5e2024_Engine_%26_Hit_Dice.md) (15 shared connections)
-- [Character Card Presenter](Character_Card_Presenter.md) (12 shared connections)
-- [App Shell & Layout](App_Shell_%26_Layout.md) (10 shared connections)
-- [Dnd5e Equipment & Features UI](Dnd5e_Equipment_%26_Features_UI.md) (10 shared connections)
-- [Pf2e Sheet Tabs](Pf2e_Sheet_Tabs.md) (10 shared connections)
-- [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (9 shared connections)
-- [Documents Hook & Persistence](Documents_Hook_%26_Persistence.md) (8 shared connections)
-- [Mam3e Data Model & Engine](Mam3e_Data_Model_%26_Engine.md) (8 shared connections)
-- [Dnd35e Saves & Data Model](Dnd35e_Saves_%26_Data_Model.md) (7 shared connections)
-- [D20 Legacy Spell Slots](D20_Legacy_Spell_Slots.md) (7 shared connections)
+- [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (28 shared connections)
+- [Combat & Recap Panels](Combat_%26_Recap_Panels.md) (17 shared connections)
+- [Game System Selector](Game_System_Selector.md) (16 shared connections)
+- [Dnd5e Equipment & Features UI](Dnd5e_Equipment_%26_Features_UI.md) (13 shared connections)
+- [D20 Combat Controls](D20_Combat_Controls.md) (11 shared connections)
+- [Sync Engine Tests](Sync_Engine_Tests.md) (9 shared connections)
+- [Dnd35e Saves & Data Model](Dnd35e_Saves_%26_Data_Model.md) (8 shared connections)
+- [App Shell & Layout](App_Shell_%26_Layout.md) (7 shared connections)
+- [Document Migrations & Storage](Document_Migrations_%26_Storage.md) (7 shared connections)
+- [capabilityScenarios.test.tsx](capabilityScenarios.test.tsx.md) (6 shared connections)
+- [Mam3e Data Model & Engine](Mam3e_Data_Model_%26_Engine.md) (5 shared connections)
+- [Doc Drift Rules](Doc_Drift_Rules.md) (5 shared connections)
 
 ## Source Files
 
-- `src/__tests__/SystemSheetRenderer.test.tsx`
+- `src/__tests__/App.test.tsx`
 - `src/__tests__/app-sheet-error-boundary.test.tsx`
 - `src/__tests__/character-creation-flow.test.tsx`
 - `src/__tests__/components/CampaignManager.test.tsx`
@@ -56,19 +56,18 @@
 - `src/__tests__/hooks/applyMergedCollections.test.tsx`
 - `src/__tests__/hooks/useDocuments.test.tsx`
 - `src/__tests__/registryValidation.test.ts`
-- `src/components/CharacterCard.tsx`
-- `src/components/CharacterListView.tsx`
-- `src/components/SystemSheetRenderer.tsx`
+- `src/__tests__/utils/systemAssetPrefetch.test.ts`
+- `src/main.tsx`
 - `src/registry/index.ts`
 - `src/registry/types.ts`
 - `src/systems/index.ts`
-- `src/types/core/document.ts`
-- `src/utils/documentStorage.ts`
+- `src/systems/mam3e/definition.ts`
+- `src/utils/systemAssetPrefetch.ts`
 
 ## Audit Trail
 
-- EXTRACTED: 400 (100%)
-- INFERRED: 0 (0%)
+- EXTRACTED: 357 (100%)
+- INFERRED: 1 (0%)
 - AMBIGUOUS: 0 (0%)
 
 ---

@@ -15,13 +15,13 @@
 - **parseEntries()** (3 connections) — `scripts/encode-2024-monsters.mjs`
 - **parseMeta()** (3 connections) — `scripts/encode-2024-monsters.mjs`
 - **slug()** (3 connections) — `scripts/encode-2024-monsters.mjs`
+- **ts()** (3 connections) — `scripts/encode-2024-monsters.mjs`
 - **bucketFor()** (2 connections) — `scripts/encode-2024-monsters.mjs`
 - **classifyImmunityList()** (2 connections) — `scripts/encode-2024-monsters.mjs`
 - **mapAlignment()** (2 connections) — `scripts/encode-2024-monsters.mjs`
 - **normalizeName()** (2 connections) — `scripts/encode-2024-monsters.mjs`
 - **parseSpeed()** (2 connections) — `scripts/encode-2024-monsters.mjs`
 - **splitBlocks()** (2 connections) — `scripts/encode-2024-monsters.mjs`
-- **ts()** (2 connections) — `scripts/encode-2024-monsters.mjs`
 - **ABILITIES** (1 connections) — `scripts/encode-2024-monsters.mjs`
 - **ALIGNMENTS** (1 connections) — `scripts/encode-2024-monsters.mjs`
 - **CR_FRACTIONS** (1 connections) — `scripts/encode-2024-monsters.mjs`
@@ -31,7 +31,7 @@
 
 ## Relationships
 
-- No strong cross-community connections detected
+- [App Shell & Layout](App_Shell_%26_Layout.md) (1 shared connections)
 
 ## Source Files
 
@@ -39,7 +39,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 88 (100%)
+- EXTRACTED: 89 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 
