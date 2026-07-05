@@ -8,6 +8,9 @@
   },
   "scripts": {
     "dev": "vite",
+    "graph:update": "graphify update .",
+    "graph:wiki": "graphify export wiki",
+    "graph:vault": "graphify export obsidian",
     "node:check": "node scripts/check-node-version.mjs",
     "preinstall": "node scripts/check-node-version.mjs",
     "bootstrap:node": "node scripts/bootstrap-node.mjs",

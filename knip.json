@@ -13,6 +13,7 @@
   "project": ["src/**/*.{ts,tsx}", "scripts/**/*.mjs", "netlify/functions/**/*.mts"],
   "ignore": ["src/__tests__/vitest.d.ts"],
   "ignoreDependencies": ["playwright-core"],
+  "ignoreBinaries": ["graphify"],
   "rules": {
     "types": "off",
     "exports": "off",

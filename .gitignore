@@ -42,7 +42,23 @@ scratch/
 # Local agent/tooling artifacts (never commit)
 .codex
 .aider*
-.claude/
+
+# Claude Code: project settings and commands are shared; local state is not
+.claude/*
+!.claude/settings.json
+!.claude/commands/
+
+# Obsidian workspace state (repo root opens as a vault; per-user config stays local)
+.obsidian/
+
+# graphify: graph.json, labels, GRAPH_REPORT.md and wiki/ are committed shared
+# memory. Bulky regenerable artifacts are not — rebuild with:
+#   npm run graph:vault   (per-symbol Obsidian vault -> graphify-out/obsidian/)
+#   graphify cluster-only .   (graph.html visualization)
+graphify-out/cache/
+graphify-out/graph.html
+graphify-out/GRAPH_TREE.html
+graphify-out/obsidian/
 
 # Editor directories and files
 .vscode/*
