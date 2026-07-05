@@ -7,7 +7,7 @@
 - **abilityMod()** (53 connections) — `src/utils/math.ts`
 - **types.ts** (43 connections) — `src/registry/types.ts`
 - **Pf2eDataModel** (42 connections) — `src/systems/pf2e/data-model.ts`
-- **math.ts** (41 connections) — `src/utils/math.ts`
+- **math.ts** (42 connections) — `src/utils/math.ts`
 - **engine.ts** (39 connections) — `src/systems/pf2e/engine.ts`
 - **RollResult** (28 connections) — `src/registry/types.ts`
 - **formatMod()** (24 connections) — `src/utils/math.ts`
@@ -71,7 +71,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 616 (100%)
+- EXTRACTED: 617 (100%)
 - INFERRED: 3 (0%)
 - AMBIGUOUS: 0 (0%)
 

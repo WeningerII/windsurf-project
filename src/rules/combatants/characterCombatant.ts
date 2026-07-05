@@ -33,8 +33,7 @@ import type { CharacterDocument, SystemDataModel } from '../../types/core/docume
 import type { GameSystemId } from '../../types/game-systems';
 import type { EquippedItem, Feat, Feature } from '../../types/core/character';
 import type { SceneCoordinate, SceneToken } from '../../types/core/scene';
-import { abilityMod } from '../../utils/math';
-import { profBonus } from '../../systems/dnd5e/shared/engine';
+import { abilityMod, profBonus } from '../../utils/math';
 import { collectDnd5eRiderEffects } from '../conditions/dnd5eRiders';
 import { collectPf2eRiderEffects } from '../conditions/pf2eRiders';
 import { collectD20LegacyConditionEffects } from '../conditions/d20LegacyConditions';

@@ -52,7 +52,7 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     replace: 'Math.ceil(rogueLevel / 3)',
   },
   'dnd5e2014.L1.proficiency-bonus': {
-    file: 'src/systems/dnd5e/shared/engine.ts',
+    file: 'src/utils/math.ts',
     find: 'Math.ceil(level / 4) + 1',
     replace: 'Math.ceil(level / 4) + 2',
   },
@@ -135,7 +135,7 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     replace: 'Math.floor((score - 11) / 2)',
   },
   'dnd5e2024.L1.proficiency-bonus': {
-    file: 'src/systems/dnd5e/shared/engine.ts',
+    file: 'src/utils/math.ts',
     find: 'Math.ceil(level / 4) + 1',
     replace: 'Math.ceil(level / 4) + 2',
   },

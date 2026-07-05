@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **characterCombatant.ts** (46 connections) — `src/rules/combatants/characterCombatant.ts`
+- **characterCombatant.ts** (45 connections) — `src/rules/combatants/characterCombatant.ts`
 - **buildCharacterCombatant()** (23 connections) — `src/rules/combatants/characterCombatant.ts`
 - **d20LegacyRiders.ts** (13 connections) — `src/rules/conditions/d20LegacyRiders.ts`
 - **dnd5eRiders.ts** (11 connections) — `src/rules/conditions/dnd5eRiders.ts`
@@ -39,12 +39,12 @@
 - [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (5 shared connections)
 - [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (4 shared connections)
 - [D20 Combat Controls](D20_Combat_Controls.md) (4 shared connections)
-- [Dnd5e2024 Engine & Hit Dice](Dnd5e2024_Engine_%26_Hit_Dice.md) (3 shared connections)
 - [Dnd5e Equipment & Features UI](Dnd5e_Equipment_%26_Features_UI.md) (3 shared connections)
 - [Skills Tab & Combat Math](Skills_Tab_%26_Combat_Math.md) (3 shared connections)
 - [Combat Toggles & Conditions](Combat_Toggles_%26_Conditions.md) (3 shared connections)
 - [D20 Class Spellcasting](D20_Class_Spellcasting.md) (2 shared connections)
 - [Currency & Inventory Editors](Currency_%26_Inventory_Editors.md) (2 shared connections)
+- [Sheet Header & Stat Cards](Sheet_Header_%26_Stat_Cards.md) (2 shared connections)
 
 ## Source Files
 
@@ -58,7 +58,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 189 (100%)
+- EXTRACTED: 188 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

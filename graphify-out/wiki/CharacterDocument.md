@@ -25,11 +25,11 @@
 - d20LegacyEngineMath.test.ts `EXTRACTED`
 - Dnd5eSheetBase.tsx `EXTRACTED`
 - SystemSheets.test.tsx `EXTRACTED`
-- engine.ts `EXTRACTED`
 - speciesTemplate.ts `EXTRACTED`
+- engine.ts `EXTRACTED`
 - useSync.test.tsx `EXTRACTED`
-- characterCombatant.ts `EXTRACTED`
 - daggerheartNormalization.ts `EXTRACTED`
+- characterCombatant.ts `EXTRACTED`
 
 ### references
 - .prepareData() `EXTRACTED`

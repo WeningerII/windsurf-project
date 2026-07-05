@@ -1820,8 +1820,8 @@
     "semantic_hash": ""
   },
   "src/rules/combatants/characterCombatant.ts": {
-    "mtime": 1783271538.2673218,
-    "ast_hash": "8946f1b84e7bbc434d2cc19348af55b2",
+    "mtime": 1783279771.4017634,
+    "ast_hash": "a19ef463d5103a643d89d7c6dff42b77",
     "semantic_hash": ""
   },
   "src/rules/combatants/daggerheartAdversary.ts": {
@@ -2470,8 +2470,8 @@
     "semantic_hash": "9a0342aa1a00d8486db53654292518fd"
   },
   "src/systems/dnd5e/shared/engine.ts": {
-    "mtime": 1783271538.2673218,
-    "ast_hash": "e1670c5f904e752e5b8ac0516ecb8804",
+    "mtime": 1783279758.625764,
+    "ast_hash": "54e9103df5ad5feac8acdacd3617d231",
     "semantic_hash": ""
   },
   "src/systems/dnd5e/shared/getDnd5eTemplateChoiceState.ts": {
@@ -3125,9 +3125,9 @@
     "semantic_hash": "64fd9e18daa2d72fdc1f0f49710ed7a4"
   },
   "src/utils/math.ts": {
-    "mtime": 1782755282.7830884,
-    "ast_hash": "9bb55f7b94988503f027fc2753555f74",
-    "semantic_hash": "9bb55f7b94988503f027fc2753555f74"
+    "mtime": 1783279745.2377641,
+    "ast_hash": "51f21c044f93f47884244c74b8c1858f",
+    "semantic_hash": ""
   },
   "src/utils/notifications.ts": {
     "mtime": 1782755282.7830884,
@@ -3259,11 +3259,6 @@
     "ast_hash": "0352474ba2918efe13895edbc3780d94",
     "semantic_hash": "0352474ba2918efe13895edbc3780d94"
   },
-  "src/vitest.d.ts": {
-    "mtime": 1782755282.7910886,
-    "ast_hash": "00e47f7b9836e8f731101981fa2bb2de",
-    "semantic_hash": "00e47f7b9836e8f731101981fa2bb2de"
-  },
   "supabase/migrations/001_initial.sql": {
     "mtime": 1782755282.793583,
     "ast_hash": "983d3938084ed95a2df76d6ee685cb64",
@@ -3305,9 +3300,9 @@
     "semantic_hash": "26323aca8707e3ed0ec087fbb879439a"
   },
   "tsconfig.test.json": {
-    "mtime": 1782755282.794058,
-    "ast_hash": "7a55579e02ff682bcf7e572efc96740d",
-    "semantic_hash": "7a55579e02ff682bcf7e572efc96740d"
+    "mtime": 1783279905.3017604,
+    "ast_hash": "750aee9f7bd540b7fdf8e3b70f8d0bb2",
+    "semantic_hash": ""
   },
   "typedoc.json": {
     "mtime": 1782755282.794058,
@@ -3330,8 +3325,8 @@
     "semantic_hash": ""
   },
   "docs/compute-register/mutation-anchors.ts": {
-    "mtime": 1783271538.259227,
-    "ast_hash": "0fa50e8adf6f9110fd7f7dbae145c65e",
+    "mtime": 1783279787.093763,
+    "ast_hash": "2b99f05c1b7b51f6766dfc718652c0b7",
     "semantic_hash": ""
   },
   "docs/generated/master-gap-ledger.json": {
