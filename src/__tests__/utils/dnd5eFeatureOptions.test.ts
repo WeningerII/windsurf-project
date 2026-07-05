@@ -6,7 +6,7 @@ import {
   loadDnd5e2014FeatureOptions,
   removeDnd5eFeatureOptionSelection,
   synchronizeDnd5eFeatureOptionSelections,
-} from '../../utils/dnd5eFeatureOptions';
+} from '../../systems/dnd5e/shared/dnd5eFeatureOptions';
 import type { Feature } from '../../types/core/character';
 
 describe('dnd5eFeatureOptions', () => {

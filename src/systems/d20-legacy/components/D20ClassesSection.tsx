@@ -9,7 +9,7 @@ import type { GameSystemId } from '../../../types/game-systems';
 import {
   getD20LegacySpellcastingAdvancement,
   getEligibleD20LegacySpellcastingTargets,
-} from '../../../utils/d20LegacySpellcasting';
+} from '../../shared/d20LegacySpellcasting';
 
 type D20LegacyClassLevel = {
   classId: string;

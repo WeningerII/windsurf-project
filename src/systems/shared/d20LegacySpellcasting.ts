@@ -2,12 +2,12 @@ import type {
   CharacterClass,
   D20SpellcastingAdvancement,
   D20SpellcastingAdvancementTrack,
-} from '../types/character-options/classes';
-import type { GameSystemId } from '../types/game-systems';
-import { pf1eClassSpellSlotTables } from '../data/pathfinder/1e/classSpellSlotTables';
-import { d20BonusSpells } from '../systems/shared/d20-helpers';
-import { abilityMod } from './math';
-import { getSpellSlotsAtClassLevel } from './classSpellcasting';
+} from '../../types/character-options/classes';
+import type { GameSystemId } from '../../types/game-systems';
+import { pf1eClassSpellSlotTables } from '../../data/pathfinder/1e/classSpellSlotTables';
+import { d20BonusSpells } from './d20-helpers';
+import { abilityMod } from '../../utils/math';
+import { getSpellSlotsAtClassLevel } from '../../utils/classSpellcasting';
 
 type D20LegacySpellSlotTable = Record<number, number[]>;
 

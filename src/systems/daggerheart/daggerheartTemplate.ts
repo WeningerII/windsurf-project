@@ -2,14 +2,11 @@ import type {
   DaggerheartAncestry,
   DaggerheartClass,
   DaggerheartCommunity,
-} from '../types/daggerheart';
-import type { CharacterDocument } from '../types/core/document';
-import { cloneDocument } from './templateShared';
-import {
-  createDefaultDaggerheartData,
-  type DaggerheartDataModel,
-} from '../systems/daggerheart/data-model';
-import { getDaggerheartAncestryAdjustments } from './daggerheartDerived';
+} from '../../types/daggerheart';
+import type { CharacterDocument } from '../../types/core/document';
+import { cloneDocument } from '../../utils/templateShared';
+import { createDefaultDaggerheartData, type DaggerheartDataModel } from './data-model';
+import { getDaggerheartAncestryAdjustments } from '../../rules/daggerheartDerived';
 
 const DEFAULTS = createDefaultDaggerheartData();
 const CLASS_ITEM_PREFIX = 'template:class-item:';

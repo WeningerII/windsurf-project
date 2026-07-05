@@ -7,7 +7,7 @@ import type { Mam3eDataModel } from '../data-model';
 import { MamResourceLoadError } from './MamResourceLoadError';
 
 const MamComplicationBrowser = lazyWithPreload(async () => {
-  const module = await import('../../../components/MamComplicationBrowser');
+  const module = await import('./MamComplicationBrowser');
   return { default: module.MamComplicationBrowser };
 });
 

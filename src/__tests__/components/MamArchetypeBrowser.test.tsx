@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import { MamArchetypeBrowser } from '../../components/MamArchetypeBrowser';
+import { MamArchetypeBrowser } from '../../systems/mam3e/components/MamArchetypeBrowser';
 import { battlesuitArchetype } from '../../data/mutants-and-masterminds/3e/archetypes/battlesuit';
 import { constructArchetype } from '../../data/mutants-and-masterminds/3e/archetypes/construct';
 

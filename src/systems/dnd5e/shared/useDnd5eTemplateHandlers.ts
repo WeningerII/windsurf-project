@@ -3,14 +3,14 @@ import type { Background } from '../../../types/character-options/backgrounds';
 import type { CharacterClass } from '../../../types/character-options/classes';
 import type { Species } from '../../../types/character-options/species';
 import type { CharacterDocument } from '../../../types/core/document';
-import { applyDnd5eBackgroundTemplate } from '../../../utils/backgroundTemplate';
+import { applyDnd5eBackgroundTemplate } from './backgroundTemplate';
 import {
   applyDnd5eClassTemplate,
   applyDnd5eSubclassTemplate,
   removeDnd5eClassTemplate,
-} from '../../../utils/classTemplate';
+} from './classTemplate';
 import { parseNum } from '../../../utils/math';
-import { applyDnd5eSpeciesTemplate } from '../../../utils/speciesTemplate';
+import { applyDnd5eSpeciesTemplate } from './speciesTemplate';
 import type { Dnd5eSheetMutators, Dnd5eLikeDataModel } from './dnd5eSheetShared';
 
 interface UseDnd5eTemplateHandlersProps<T extends Dnd5eLikeDataModel> {

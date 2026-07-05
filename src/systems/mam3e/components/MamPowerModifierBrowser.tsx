@@ -1,6 +1,6 @@
 import React, { useDeferredValue, useMemo, useState } from 'react';
 import { Search, Wand2 } from 'lucide-react';
-import type { PowerModifier } from '../data/mutants-and-masterminds/3e/modifiers/extras';
+import type { PowerModifier } from '../../../data/mutants-and-masterminds/3e/modifiers/extras';
 
 interface MamPowerModifierBrowserProps {
   modifiers: PowerModifier[];

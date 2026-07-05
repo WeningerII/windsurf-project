@@ -1,8 +1,8 @@
-import { cloneDocument, dedupe } from './templateShared';
-import { Background } from '../types/character-options/backgrounds';
-import { CharacterDocument } from '../types/core/document';
-import { Dnd5e2024DataModel } from '../systems/dnd5e-2024/data-model';
-import { Dnd5eDataModel } from '../systems/dnd5e/data-model';
+import { cloneDocument, dedupe } from '../../../utils/templateShared';
+import { Background } from '../../../types/character-options/backgrounds';
+import { CharacterDocument } from '../../../types/core/document';
+import { Dnd5e2024DataModel } from '../../dnd5e-2024/data-model';
+import { Dnd5eDataModel } from '../data-model';
 import { expandDnd5eToolChoiceValue, formatDnd5eToolLabel } from './dnd5eToolChoices';
 
 type Dnd5eLikeDataModel = Dnd5eDataModel | Dnd5e2024DataModel;

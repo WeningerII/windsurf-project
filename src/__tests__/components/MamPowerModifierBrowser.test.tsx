@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
-import { MamPowerModifierBrowser } from '../../components/MamPowerModifierBrowser';
+import { MamPowerModifierBrowser } from '../../systems/mam3e/components/MamPowerModifierBrowser';
 import { accurate } from '../../data/mutants-and-masterminds/3e/modifiers/extras';
 import { activation } from '../../data/mutants-and-masterminds/3e/modifiers/flaws';
 

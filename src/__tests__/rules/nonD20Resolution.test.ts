@@ -402,7 +402,7 @@ describe('Daggerheart weapon features and derived defenses reach the adapter', (
   it('Reliable (+1 to attack rolls) compiles; evasion/thresholds use derived math', async () => {
     const { buildDaggerheartCombatant } = await import('../../rules');
     const { createDefaultDaggerheartData } = await import('../../systems/daggerheart/data-model');
-    const { getDaggerheartDerivedStats } = await import('../../utils/daggerheartDerived');
+    const { getDaggerheartDerivedStats } = await import('../../rules/daggerheartDerived');
     const weapon = {
       id: 'w-reliable',
       name: 'Broadsword',

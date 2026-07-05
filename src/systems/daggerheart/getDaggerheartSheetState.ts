@@ -13,11 +13,11 @@ import {
   getDaggerheartDerivedStats,
   getDaggerheartEffectiveAttribute,
   getDaggerheartTier,
-} from '../../utils/daggerheartDerived';
+} from '../../rules/daggerheartDerived';
 import {
   getDaggerheartInventoryDefinition,
   normalizeDaggerheartCurrency,
-} from '../../utils/daggerheartInventory';
+} from './daggerheartInventory';
 import { ATTRIBUTES, EMPTY_WEAPON_LOADOUT } from './daggerheartSheetConstants';
 import type { DaggerheartDataModel } from './data-model';
 

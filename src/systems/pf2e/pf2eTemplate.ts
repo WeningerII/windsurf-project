@@ -1,16 +1,11 @@
-import { cloneDocument } from './templateShared';
-import { Subrace, Species } from '../types/character-options/species';
-import type { Archetype } from '../types/character-options/archetypes';
-import { CharacterClass } from '../types/character-options/classes';
-import { CharacterDocument } from '../types/core/document';
-import { Feature } from '../types/core/character';
-import {
-  Pf2eDataModel,
-  Pf2eFeat,
-  Pf2eProficiency,
-  Pf2eProficiencyTier,
-} from '../systems/pf2e/data-model';
-import { Pf2eBackgroundDefinition } from '../data/pathfinder/2e/backgrounds';
+import { cloneDocument } from '../../utils/templateShared';
+import { Subrace, Species } from '../../types/character-options/species';
+import type { Archetype } from '../../types/character-options/archetypes';
+import { CharacterClass } from '../../types/character-options/classes';
+import { CharacterDocument } from '../../types/core/document';
+import { Feature } from '../../types/core/character';
+import { Pf2eDataModel, Pf2eFeat, Pf2eProficiency, Pf2eProficiencyTier } from './data-model';
+import { Pf2eBackgroundDefinition } from '../../data/pathfinder/2e/backgrounds';
 
 const DEFAULT_ANCESTRY_HP = 8;
 const DEFAULT_SIZE: Pf2eDataModel['size'] = 'medium';

@@ -1,21 +1,17 @@
-import { cloneDocument, dedupe, seedHitDieRolls } from './templateShared';
-import { CharacterClass, D20ClassProfile } from '../types/character-options/classes';
-import { Feature } from '../types/core/character';
-import { CharacterDocument } from '../types/core/document';
-import { Species } from '../types/character-options/species';
-import { abilityMod } from './math';
-import { dnd35eClasses } from '../data/dnd/3.5e/classes';
-import { dnd35eProductPrestigeClasses } from '../data/dnd/3.5e/prestige-classes';
-import { pf1eClasses } from '../data/pathfinder/1e/classes';
-import { pf1ePrestigeClasses } from '../data/pathfinder/1e/prestige-classes';
-import {
-  createDefaultDnd35eData,
-  Dnd35eClassLevel,
-  Dnd35eDataModel,
-} from '../systems/dnd35e/data-model';
-import { Pf1eClassLevel, Pf1eDataModel } from '../systems/pf1e/data-model';
-import { syncD20LegacySpellcastingSelections } from './d20LegacySpellcasting';
-import { GameSystemId } from '../types/game-systems';
+import { cloneDocument, dedupe, seedHitDieRolls } from '../../utils/templateShared';
+import { CharacterClass, D20ClassProfile } from '../../types/character-options/classes';
+import { Feature } from '../../types/core/character';
+import { CharacterDocument } from '../../types/core/document';
+import { Species } from '../../types/character-options/species';
+import { abilityMod } from '../../utils/math';
+import { dnd35eClasses } from '../../data/dnd/3.5e/classes';
+import { dnd35eProductPrestigeClasses } from '../../data/dnd/3.5e/prestige-classes';
+import { pf1eClasses } from '../../data/pathfinder/1e/classes';
+import { pf1ePrestigeClasses } from '../../data/pathfinder/1e/prestige-classes';
+import { createDefaultDnd35eData, Dnd35eClassLevel, Dnd35eDataModel } from '../dnd35e/data-model';
+import { Pf1eClassLevel, Pf1eDataModel } from '../pf1e/data-model';
+import { syncD20LegacySpellcastingSelections } from '../shared/d20LegacySpellcasting';
+import { GameSystemId } from '../../types/game-systems';
 
 type D20LegacyDataModel = Dnd35eDataModel | Pf1eDataModel;
 

@@ -1,6 +1,9 @@
-import { daggerheartConsumables, daggerheartLoot } from '../data/daggerheart/1.0/equipment';
-import type { DaggerheartDataModel } from '../systems/daggerheart/data-model';
-import type { DaggerheartConsumable, DaggerheartInventoryDefinition } from '../types/daggerheart';
+import { daggerheartConsumables, daggerheartLoot } from '../../data/daggerheart/1.0/equipment';
+import type { DaggerheartDataModel } from './data-model';
+import type {
+  DaggerheartConsumable,
+  DaggerheartInventoryDefinition,
+} from '../../types/daggerheart';
 
 export const MAX_DAGGERHEART_HANDFULS = 9;
 export const MAX_DAGGERHEART_BAGS = 9;

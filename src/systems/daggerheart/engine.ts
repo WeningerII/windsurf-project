@@ -17,12 +17,12 @@ import {
   getDaggerheartEffectiveAttribute,
   getDaggerheartHpMarked,
   getDaggerheartHpMarkedAfterArmor,
-} from '../../utils/daggerheartDerived';
+} from '../../rules/daggerheartDerived';
 import {
   clampDaggerheartInventoryQuantity,
   normalizeDaggerheartCurrency,
-} from '../../utils/daggerheartInventory';
-import { normalizeDaggerheartDocument } from '../../utils/daggerheartNormalization';
+} from './daggerheartInventory';
+import { normalizeDaggerheartDocument } from './daggerheartNormalization';
 import type { DaggerheartTrait } from '../../types/daggerheart';
 
 export class DaggerheartEngine implements SystemEngine<DaggerheartDataModel> {

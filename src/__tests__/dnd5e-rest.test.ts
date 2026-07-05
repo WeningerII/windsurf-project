@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { applyDnd5eLongRest, applyDnd5eShortRest } from '../utils/dnd5eRest';
+import { applyDnd5eLongRest, applyDnd5eShortRest } from '../systems/dnd5e/shared/dnd5eRest';
 import { createDefaultDnd5eData } from '../systems/dnd5e/data-model';
 
 describe('dnd5e rest helpers', () => {

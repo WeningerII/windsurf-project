@@ -4,7 +4,7 @@ import type {
   Dnd5eFeatureOptionDefinition,
   Dnd5eFeatureOptionSelection,
 } from '../../../../types/character-options/feature-options';
-import { getDnd5eFeatureOptionGroupLabel } from '../../../../utils/dnd5eFeatureOptions';
+import { getDnd5eFeatureOptionGroupLabel } from '../dnd5eFeatureOptions';
 import { lazyWithPreload } from '../../../../utils/lazyWithPreload';
 import { DND5E_FEATURE_OPTION_COPY } from '../../../../utils/documentationCopy';
 
@@ -15,7 +15,7 @@ type FeatureOptionBrowserProps = {
 };
 
 const FeatureOptionBrowser = lazyWithPreload<FeatureOptionBrowserProps>(async () => {
-  const module = await import('../../../../components/FeatureOptionBrowser');
+  const module = await import('./FeatureOptionBrowser');
   return {
     default: module.FeatureOptionBrowser as ComponentType<FeatureOptionBrowserProps>,
   };

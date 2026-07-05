@@ -8,8 +8,8 @@ import {
   applyD20LegacyClassTemplate,
   applyD20LegacyRaceTemplate,
   removeD20LegacyClassTemplate,
-} from '../../utils/d20LegacyTemplate';
-import { syncD20LegacySpellcastingSelections } from '../../utils/d20LegacySpellcasting';
+} from './d20LegacyTemplate';
+import { syncD20LegacySpellcastingSelections } from '../shared/d20LegacySpellcasting';
 import type { Dnd35eDataModel } from '../dnd35e/data-model';
 import type { Pf1eDataModel } from '../pf1e/data-model';
 import type { D20LegacyData } from './d20LegacySheetShared';

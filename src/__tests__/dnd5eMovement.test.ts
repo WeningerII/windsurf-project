@@ -7,7 +7,7 @@ import {
   dnd5ePushDragLift,
   dnd5eLongJump,
   dnd5eHighJump,
-} from '../utils/dnd5eMovement';
+} from '../systems/dnd5e/shared/dnd5eMovement';
 
 describe('5e carrying capacity and push/drag/lift', () => {
   it('carrying capacity is Strength score × 15', () => {

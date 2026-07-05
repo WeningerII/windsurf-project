@@ -1,9 +1,9 @@
-import { cloneDocument, dedupe } from './templateShared';
-import { Feature, ProficiencyLevel } from '../types/core/character';
-import { CharacterDocument } from '../types/core/document';
-import { Species } from '../types/character-options/species';
-import { Dnd5e2024DataModel } from '../systems/dnd5e-2024/data-model';
-import { Dnd5eDataModel } from '../systems/dnd5e/data-model';
+import { cloneDocument, dedupe } from '../../../utils/templateShared';
+import { Feature, ProficiencyLevel } from '../../../types/core/character';
+import { CharacterDocument } from '../../../types/core/document';
+import { Species } from '../../../types/character-options/species';
+import { Dnd5e2024DataModel } from '../../dnd5e-2024/data-model';
+import { Dnd5eDataModel } from '../data-model';
 import { formatDnd5eToolLabel } from './dnd5eToolChoices';
 
 type Dnd5eLikeDataModel = Dnd5eDataModel | Dnd5e2024DataModel;

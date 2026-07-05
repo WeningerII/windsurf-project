@@ -4,13 +4,13 @@ import {
   getBackgroundFixedToolProficiencies,
   getBackgroundLanguageOptions,
   getBackgroundToolChoiceSlots,
-} from '../../../utils/backgroundTemplate';
+} from './backgroundTemplate';
 import {
   getDnd5eSpeciesAbilityChoiceSlots,
   getDnd5eSpeciesLanguageChoiceSlots,
   getDnd5eSpeciesSkillChoiceSlots,
   getDnd5eSpeciesToolChoiceSlots,
-} from '../../../utils/speciesTemplate';
+} from './speciesTemplate';
 import type { Dnd5eLikeDataModel } from './dnd5eSheetShared';
 
 interface GetDnd5eTemplateChoiceStateProps<T extends Dnd5eLikeDataModel> {

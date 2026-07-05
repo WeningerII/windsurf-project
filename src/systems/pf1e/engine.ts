@@ -10,7 +10,7 @@ import { d20LegacyCheckPenalty } from '../../rules/conditions/d20LegacyCondition
 import { mergeVancianSpellSlots } from '../../utils/classSpellcasting';
 import { pf1eClasses } from '../../data/pathfinder/1e/classes';
 import { pf1ePrestigeClasses } from '../../data/pathfinder/1e/prestige-classes';
-import { buildD20LegacySpellSlotTotals } from '../../utils/d20LegacySpellcasting';
+import { buildD20LegacySpellSlotTotals } from '../shared/d20LegacySpellcasting';
 
 const SKILL_ABILITIES: Record<string, string> = {
   acrobatics: 'dex',

@@ -1,6 +1,6 @@
 import React, { useDeferredValue, useMemo, useState } from 'react';
 import { AlertTriangle, Check, Search } from 'lucide-react';
-import type { Complication } from '../data/mutants-and-masterminds/3e/complications';
+import type { Complication } from '../../../data/mutants-and-masterminds/3e/complications';
 
 interface MamComplicationBrowserProps {
   complications: Complication[];

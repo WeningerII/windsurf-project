@@ -8,7 +8,7 @@ import {
   formatDnd5eClassToolChoiceLabel,
   getDnd5eClassSkillChoiceSlots,
   getDnd5eClassToolChoiceSlots,
-} from '../../../../utils/classTemplate';
+} from '../classTemplate';
 
 interface Props {
   classLevels: ClassLevel[];

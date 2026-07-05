@@ -6,7 +6,7 @@ import {
   resolveSpellPreparationEntry,
 } from '../../../utils/spellPreparation';
 import { D20_LEGACY_MANUAL_NOTES } from '../../../utils/documentationCopy';
-import { D20_ARCANE_SCHOOLS } from '../../../utils/d20LegacySpellcasting';
+import { D20_ARCANE_SCHOOLS } from '../../shared/d20LegacySpellcasting';
 import type { D20LegacyData } from '../d20LegacySheetShared';
 import { D20SpellBrowserPanel } from './D20SpellBrowserPanel';
 

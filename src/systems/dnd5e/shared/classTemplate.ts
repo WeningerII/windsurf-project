@@ -1,18 +1,18 @@
-import { cloneDocument, dedupe, hitDieFaces, seedHitDieRolls } from './templateShared';
-import { dnd5eClasses } from '../data/dnd/5e-2014/classes';
-import { dnd5e2024Classes } from '../data/dnd/5e-2024/classes';
+import { cloneDocument, dedupe, hitDieFaces, seedHitDieRolls } from '../../../utils/templateShared';
+import { dnd5eClasses } from '../../../data/dnd/5e-2014/classes';
+import { dnd5e2024Classes } from '../../../data/dnd/5e-2024/classes';
 import {
   CharacterClass,
   ClassFeatureProgression,
   Subclass,
-} from '../types/character-options/classes';
-import { Feature, SpellSlots } from '../types/core/character';
-import { Prerequisite } from '../types/core/common';
-import { CharacterDocument } from '../types/core/document';
-import { Dnd5e2024DataModel } from '../systems/dnd5e-2024/data-model';
-import { Dnd5eDataModel } from '../systems/dnd5e/data-model';
-import { getDnd5eAlwaysPreparedSpellIds } from '../systems/dnd5e/shared/spellPreparation';
-import { Choice } from '../types/core/common';
+} from '../../../types/character-options/classes';
+import { Feature, SpellSlots } from '../../../types/core/character';
+import { Prerequisite } from '../../../types/core/common';
+import { CharacterDocument } from '../../../types/core/document';
+import { Dnd5e2024DataModel } from '../../dnd5e-2024/data-model';
+import { Dnd5eDataModel } from '../data-model';
+import { getDnd5eAlwaysPreparedSpellIds } from './spellPreparation';
+import { Choice } from '../../../types/core/common';
 import { expandDnd5eToolChoiceValue, formatDnd5eToolLabel } from './dnd5eToolChoices';
 
 type Dnd5eLikeDataModel = Dnd5eDataModel | Dnd5e2024DataModel;

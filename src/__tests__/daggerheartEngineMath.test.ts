@@ -26,7 +26,7 @@ import {
   DAGGERHEART_STARTING_HOPE,
   getDaggerheartGoldInHandfuls,
   getDaggerheartRangeSquares,
-} from '../utils/daggerheartDerived';
+} from '../rules/daggerheartDerived';
 import {
   createDefaultDaggerheartData,
   type DaggerheartDataModel,

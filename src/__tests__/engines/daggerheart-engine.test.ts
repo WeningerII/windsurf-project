@@ -7,7 +7,7 @@ import {
 import {
   getDaggerheartDerivedStats,
   getDaggerheartEffectiveAttribute,
-} from '../../utils/daggerheartDerived';
+} from '../../rules/daggerheartDerived';
 import { exportDocuments, importDocuments } from '../../utils/documentStorage';
 import {
   DaggerheartDataModel,

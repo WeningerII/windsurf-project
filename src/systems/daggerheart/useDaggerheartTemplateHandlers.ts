@@ -9,7 +9,7 @@ import {
   applyDaggerheartAncestryTemplate,
   applyDaggerheartClassTemplate,
   applyDaggerheartCommunityTemplate,
-} from '../../utils/daggerheartTemplate';
+} from './daggerheartTemplate';
 import type { DaggerheartDataModel } from './data-model';
 
 interface UseDaggerheartTemplateHandlersProps {

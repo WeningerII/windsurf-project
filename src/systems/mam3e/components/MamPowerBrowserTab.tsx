@@ -11,7 +11,7 @@ const SpellBrowser = lazyWithPreload(async () => {
 });
 
 const MamPowerModifierBrowser = lazyWithPreload(async () => {
-  const module = await import('../../../components/MamPowerModifierBrowser');
+  const module = await import('./MamPowerModifierBrowser');
   return { default: module.MamPowerModifierBrowser };
 });
 

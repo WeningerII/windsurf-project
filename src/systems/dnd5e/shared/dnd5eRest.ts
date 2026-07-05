@@ -1,4 +1,4 @@
-import { Feature, HitDice, SpellcastingInfo } from '../types/core/character';
+import { Feature, HitDice, SpellcastingInfo } from '../../../types/core/character';
 
 function recoverFeatures(features: Feature[], restType: 'short' | 'long'): Feature[] {
   return features.map((feature) => {

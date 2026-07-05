@@ -2,7 +2,7 @@ import {
   ArtisanToolProficiency,
   GamingSetProficiency,
   MusicalInstrumentProficiency,
-} from '../constants/proficiencies';
+} from '../../../constants/proficiencies';
 
 const TOOL_LABELS: Record<string, string> = {
   'alchemists-supplies': "Alchemist's Supplies",

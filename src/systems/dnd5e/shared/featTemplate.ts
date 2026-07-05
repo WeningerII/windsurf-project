@@ -1,15 +1,15 @@
-import { cloneDocument, dedupe } from './templateShared';
-import { dnd5e2024Weapons } from '../data/dnd/5e-2024/equipment/weapons';
+import { cloneDocument, dedupe } from '../../../utils/templateShared';
+import { dnd5e2024Weapons } from '../../../data/dnd/5e-2024/equipment/weapons';
 import {
   ArtisanToolProficiency,
   MusicalInstrumentProficiency,
   OtherToolProficiency,
-} from '../constants/proficiencies';
-import { FeatDefinition } from '../types/character-options/feats';
-import { Feat, FeatAutomationState, ProficiencyLevel } from '../types/core/character';
-import { CharacterDocument } from '../types/core/document';
-import { Dnd5e2024DataModel } from '../systems/dnd5e-2024/data-model';
-import { Dnd5eDataModel } from '../systems/dnd5e/data-model';
+} from '../../../constants/proficiencies';
+import { FeatDefinition } from '../../../types/character-options/feats';
+import { Feat, FeatAutomationState, ProficiencyLevel } from '../../../types/core/character';
+import { CharacterDocument } from '../../../types/core/document';
+import { Dnd5e2024DataModel } from '../../dnd5e-2024/data-model';
+import { Dnd5eDataModel } from '../data-model';
 
 type Dnd5eLikeDataModel = Dnd5eDataModel | Dnd5e2024DataModel;
 

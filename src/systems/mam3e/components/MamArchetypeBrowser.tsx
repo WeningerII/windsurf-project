@@ -1,6 +1,6 @@
 import React, { useDeferredValue, useMemo, useState } from 'react';
 import { Check, Search, Shield } from 'lucide-react';
-import type { Mam3eArchetype } from '../types/mam/archetypes';
+import type { Mam3eArchetype } from '../../../types/mam/archetypes';
 
 interface MamArchetypeBrowserProps {
   archetypes: Mam3eArchetype[];

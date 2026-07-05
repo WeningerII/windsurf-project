@@ -6,7 +6,7 @@ import {
   applyDnd5eFeatureOptionSelection,
   loadDnd5e2014FeatureOptions,
   removeDnd5eFeatureOptionSelection,
-} from '../utils/dnd5eFeatureOptions';
+} from '../systems/dnd5e/shared/dnd5eFeatureOptions';
 import { clearDocumentStorage, loadDocuments, saveDocuments } from '../utils/documentStorage';
 
 type FeatureOptionRoundtripCase = {

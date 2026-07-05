@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import { FeatureOptionBrowser } from '../../components/FeatureOptionBrowser';
+import { FeatureOptionBrowser } from '../../systems/dnd5e/shared/components/FeatureOptionBrowser';
 import type { Dnd5eFeatureOptionDefinition } from '../../types/character-options/feature-options';
 
 const featureOptions: Dnd5eFeatureOptionDefinition[] = [

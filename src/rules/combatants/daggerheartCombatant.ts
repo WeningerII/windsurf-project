@@ -24,7 +24,7 @@ import {
   getDaggerheartDerivedStats,
   getDaggerheartEffectiveAttribute,
   getDaggerheartProficiency,
-} from '../../utils/daggerheartDerived';
+} from '../daggerheartDerived';
 import { makeEffectId, type EffectInstance } from '../index';
 
 /** Daggerheart range bands → grid cells (5 ft. per cell, SRD distances). */

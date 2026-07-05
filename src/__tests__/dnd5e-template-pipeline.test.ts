@@ -7,8 +7,8 @@ import { human } from '../data/dnd/5e-2014/species/human';
 import { createDefaultDnd5eData, Dnd5eDataModel } from '../systems/dnd5e/data-model';
 import { Dnd5eEngine } from '../systems/dnd5e/engine';
 import { CharacterDocument } from '../types/core/document';
-import { applyDnd5eClassTemplate } from '../utils/classTemplate';
-import { applyDnd5eSpeciesTemplate } from '../utils/speciesTemplate';
+import { applyDnd5eClassTemplate } from '../systems/dnd5e/shared/classTemplate';
+import { applyDnd5eSpeciesTemplate } from '../systems/dnd5e/shared/speciesTemplate';
 
 function makeDoc(overrides: Partial<Dnd5eDataModel> = {}): CharacterDocument<Dnd5eDataModel> {
   return {

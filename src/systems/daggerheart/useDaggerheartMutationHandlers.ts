@@ -4,12 +4,12 @@ import type {
   DaggerheartInventoryDefinition,
   DaggerheartWeapon,
 } from '../../types/daggerheart';
-import { getDaggerheartDerivedStats } from '../../utils/daggerheartDerived';
+import { getDaggerheartDerivedStats } from '../../rules/daggerheartDerived';
 import {
   clampDaggerheartInventoryQuantity,
   createDaggerheartInventoryEntry,
   normalizeDaggerheartCurrency,
-} from '../../utils/daggerheartInventory';
+} from './daggerheartInventory';
 import { INVENTORY_WEAPON_LIMIT, LOADOUT_LIMIT } from './daggerheartSheetConstants';
 import type { DaggerheartDataModel } from './data-model';
 

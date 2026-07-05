@@ -2,8 +2,8 @@ import type {
   Dnd5eFeatureOptionDefinition,
   Dnd5eFeatureOptionGroup,
   Dnd5eFeatureOptionSelection,
-} from '../types/character-options/feature-options';
-import type { Feature } from '../types/core/character';
+} from '../../../types/character-options/feature-options';
+import type { Feature } from '../../../types/core/character';
 
 type ClassLevelLike = {
   classId: string;
@@ -132,14 +132,14 @@ export async function loadDnd5e2014FeatureOptions(): Promise<Dnd5eFeatureOptionD
     channelDivinityModule,
     wildShapesModule,
   ] = await Promise.all([
-    import('../data/dnd/5e-2014/special-abilities/eldritch-invocations'),
-    import('../data/dnd/5e-2014/special-abilities/divine-smites'),
-    import('../data/dnd/5e-2014/special-abilities/fighting-styles'),
-    import('../data/dnd/5e-2014/special-abilities/ki-abilities'),
-    import('../data/dnd/5e-2014/special-abilities/sorcerer-metamagic'),
-    import('../data/dnd/5e-2014/special-abilities/maneuvers'),
-    import('../data/dnd/5e-2014/class-features/cleric/channel-divinity'),
-    import('../data/dnd/5e-2014/class-features/druid/wild-shapes'),
+    import('../../../data/dnd/5e-2014/special-abilities/eldritch-invocations'),
+    import('../../../data/dnd/5e-2014/special-abilities/divine-smites'),
+    import('../../../data/dnd/5e-2014/special-abilities/fighting-styles'),
+    import('../../../data/dnd/5e-2014/special-abilities/ki-abilities'),
+    import('../../../data/dnd/5e-2014/special-abilities/sorcerer-metamagic'),
+    import('../../../data/dnd/5e-2014/special-abilities/maneuvers'),
+    import('../../../data/dnd/5e-2014/class-features/cleric/channel-divinity'),
+    import('../../../data/dnd/5e-2014/class-features/druid/wild-shapes'),
   ]);
 
   const options: Dnd5eFeatureOptionDefinition[] = [

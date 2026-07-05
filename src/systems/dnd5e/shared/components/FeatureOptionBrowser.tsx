@@ -3,8 +3,8 @@ import { Check, Search, Sparkles } from 'lucide-react';
 import type {
   Dnd5eFeatureOptionDefinition,
   Dnd5eFeatureOptionSelection,
-} from '../types/character-options/feature-options';
-import { getDnd5eFeatureOptionGroupLabel } from '../utils/dnd5eFeatureOptions';
+} from '../../../../types/character-options/feature-options';
+import { getDnd5eFeatureOptionGroupLabel } from '../dnd5eFeatureOptions';
 
 interface FeatureOptionBrowserProps {
   options: Dnd5eFeatureOptionDefinition[];

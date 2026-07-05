@@ -1,7 +1,7 @@
 import { Heart, Shield, Star, Zap } from 'lucide-react';
 import { domainDisplayName } from '../daggerheartSheetConstants';
 import { Badge } from '../../../components/ui/Badge';
-import { DAGGERHEART_MAX_HOPE } from '../../../utils/daggerheartDerived';
+import { DAGGERHEART_MAX_HOPE } from '../../../rules/daggerheartDerived';
 import { parseNum } from '../../../utils/math';
 import type { DaggerheartSheetController } from '../useDaggerheartSheetController';
 

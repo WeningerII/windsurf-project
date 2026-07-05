@@ -13,7 +13,7 @@ import { CharacterDocument } from '../types/core/document';
 import {
   applyD20LegacyClassTemplate,
   applyD20LegacyRaceTemplate,
-} from '../utils/d20LegacyTemplate';
+} from '../systems/d20-legacy/d20LegacyTemplate';
 
 function make35Doc(overrides: Partial<Dnd35eDataModel> = {}): CharacterDocument<Dnd35eDataModel> {
   return {

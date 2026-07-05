@@ -10,7 +10,7 @@ import {
   applyPf2eBackgroundTemplate,
   applyPf2eClassTemplate,
   removePf2eArchetypeTemplate,
-} from '../../utils/pf2eTemplate';
+} from './pf2eTemplate';
 import { parseNum } from '../../utils/math';
 import type { Pf2eDataModel } from './data-model';
 
