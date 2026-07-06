@@ -88,6 +88,12 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: [],
   },
   {
+    path: 'docs/design/vtt-ui-ux-research.md',
+    kind: 'plan',
+    owner: 'ui-shell-redesign',
+    rules: ['path_ref_rule'],
+  },
+  {
     path: 'docs/srd-sources.md',
     kind: 'plan',
     owner: 'srd-sources',

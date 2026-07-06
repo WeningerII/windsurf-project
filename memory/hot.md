@@ -4,13 +4,13 @@
 > `/save` — overwrite stale content, keep it under ~500 words. Durable facts go
 > to [[CLAUDE]] (CLAUDE.md) or `docs/`, not here.
 
-**Last updated:** 2026-07-05 (session: memory setup → PR steward → audit → agnosticism sweep)
+**Last updated:** 2026-07-06 (VTT UI/UX research — see docs/design/vtt-ui-ux-research.md)
 
 ## Current focus
 
 Memory infra (PR #28) and launch-blocker instruments (PR #27) are MERGED to
 main. The restarted `claude/claude-obsidian-graphify-research-d8ufwc` branch
-now carries the full **system-agnosticism sweep**, awaiting PR/merge:
+carried the **system-agnosticism sweep** — MERGED (PR #29). Newest: VTT UX research doc for the coming shell redesign (docs/design/vtt-ui-ux-research.md); branch restarted from main:
 
 - profBonus cycle fix + duplicate vitest.d.ts removal (morning audit)
 - 21 system-specific files relocated out of shared layers (templates,
