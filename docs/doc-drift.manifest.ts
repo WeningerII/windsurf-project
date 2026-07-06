@@ -94,6 +94,15 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: ['path_ref_rule'],
   },
   {
+    // Forward-looking plan: deliberately references proposed src/dock/** and
+    // src/shell/** files that do not exist yet, so path_ref_rule must NOT apply
+    // (mirrors REMEDIATION_PLAN.md / GAPS.md, which also carry no rules).
+    path: 'docs/design/ui-shell-redesign-plan.md',
+    kind: 'plan',
+    owner: 'ui-shell-redesign',
+    rules: [],
+  },
+  {
     path: 'docs/srd-sources.md',
     kind: 'plan',
     owner: 'srd-sources',

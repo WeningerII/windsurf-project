@@ -4,9 +4,26 @@
 > `/save` — overwrite stale content, keep it under ~500 words. Durable facts go
 > to [[CLAUDE]] (CLAUDE.md) or `docs/`, not here.
 
-**Last updated:** 2026-07-06 (VTT UI/UX research — see docs/design/vtt-ui-ux-research.md)
+**Last updated:** 2026-07-06 (UI shell redesign plan — see docs/design/ui-shell-redesign-plan.md)
 
 ## Current focus
+
+Design-planning phase for the **UI shell redesign** (prompted by "our UI is slop").
+Two design docs now on branch `claude/claude-obsidian-graphify-research-d8ufwc`
+(restarted from post-#29 main), no code changed:
+- `docs/design/vtt-ui-ux-research.md` — Owlbear Rodeo is the verified UI/UX winner;
+  eight principles translated to our shell.
+- `docs/design/ui-shell-redesign-plan.md` — phased, file-grounded build plan (via an
+  11-agent design workflow + adversarial critique). Target: h-dvh frame,
+  [Library|Sheet|Scene] surfaces, one shared summonable dock, drag-drop with drop-time
+  classification. Invariant: the deterministic event core (scene/runtime.ts) untouched.
+
+**Awaiting the user on FOUR product decisions** (doc §2) before implementation:
+character-creation home, campaign first-class home, scene-authoring home, drag form
+factor. Recommended first build: monster-from-dock→scene-token prototype (Phases 1-3b).
+
+## Prior focus (shipped)
+
 
 Memory infra (PR #28) and launch-blocker instruments (PR #27) are MERGED to
 main. The restarted `claude/claude-obsidian-graphify-research-d8ufwc` branch
