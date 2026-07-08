@@ -4,7 +4,7 @@
 > `/save` — overwrite stale content, keep it under ~500 words. Durable facts go
 > to [[CLAUDE]] (CLAUDE.md) or `docs/`, not here.
 
-**Last updated:** 2026-07-08 (UI redesign build-specs — re-grounded; Phase 1 build-ready)
+**Last updated:** 2026-07-08 (Phase 1 IMPLEMENTATION in progress — first code of the redesign)
 
 ## Current focus
 
@@ -35,7 +35,35 @@ is strict 2-action (chip needs a new component); doc-drift is 3 coupled files;
 assertNever lives only in frozen runtime.ts (define a local one). FIRST COMMIT if we
 build: src/hooks/useAppNav.ts + test (total nav union, assertNever over both
 discriminants) -- green under npm test, red under knip until App.tsx consumes it.
-Still NO code changed.
+Still NO code changed [SUPERSEDED — implementation started].
+
+## Phase 1 IMPLEMENTATION (in progress — the ONE atomic PR; branch has real code now)
+Building the plan-of-record Phase 1. Commits so far on the branch:
+- `69b84a5` useAppNav total nav union + 9 tests (src/hooks/useAppNav.ts,
+  test at src/__tests__/hooks/**, NOT src/hooks/__tests__ — kickoff path was wrong).
+- `c698d07` NewCharacterDialog: modal that EMBEDS the existing GameSystemSelector
+  (create-on-select) so GameSystemSelector stays rendered = knip + doc-drift-guard safe.
+REMAINING (interdependent core — must land atomically, verify stays RED until all done):
+  (a) LibraryScenesView.tsx (extract SceneManager L884-915 scene-list rail + reuse
+      SceneCreateForm; hosts the relocated L807/L872 select-and-flip-to-canvas writers).
+  (b) AppHeader.tsx: center segment nav (Characters/Campaigns/Scenes/Library) + primary
+      New Character + Import controls; UNGATE onImport; re-home current-char Export/Delete
+      into a Sheet-surface overflow (Finding 18); per-card Export/Delete/Import in
+      CharacterListView overflow.
+  (c) App.tsx: replace L467-648 render ladder with useAppNav-driven surfaces; delete hero
+      (L513-519) + action bar (L552-563); wire the 6 openSheet + 3 closeSheet writers;
+      render one Library segment per librarySegment; footer slim; keep error banner/
+      ConfirmDialog/toasts/storage-warning; Alt+N opens dialog.
+  (d) SceneManager.tsx: controlled selectedSceneId prop (5 writers; L807/L872 relocate to
+      LibraryScenesView) + lazy-mount-on-FIRST-visit + visibility keepalive (NOT
+      display:none, NOT content-visibility:auto) + relocate 18rem LEFT list rail only
+      (KEEP 20rem RIGHT operating rail + onLogToCampaign L79/L105).
+  (e) Rewrite 6 suites: App.test / character-creation-flow / character-management-flow /
+      app-sheet-error-boundary (all assert deleted "Choose a Game System" copy) +
+      SceneManager.test + capabilityScenarios (controlled scene-selection).
+Then FULL `npm run verify` green (knip is RED until App.tsx consumes useAppNav/dialog).
+Anchors were re-verified current (ui-redesign-phase-build-specs.md) — trust those line #s.
+Invariant: do NOT touch src/scene/runtime.ts or the 12 SceneActionIntents.
 
 ## Prior focus (shipped)
 
