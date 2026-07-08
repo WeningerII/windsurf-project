@@ -111,6 +111,14 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: [],
   },
   {
+    // Build-ready per-phase specs (re-grounded anchors + kickoff); references
+    // proposed files by design, so no path_ref_rule.
+    path: 'docs/design/ui-redesign-phase-build-specs.md',
+    kind: 'plan',
+    owner: 'ui-shell-redesign',
+    rules: [],
+  },
+  {
     path: 'docs/srd-sources.md',
     kind: 'plan',
     owner: 'srd-sources',

@@ -4,7 +4,7 @@
 > `/save` — overwrite stale content, keep it under ~500 words. Durable facts go
 > to [[CLAUDE]] (CLAUDE.md) or `docs/`, not here.
 
-**Last updated:** 2026-07-08 (UI redesign FINAL plan via adversarial tournament — docs/design/ui-shell-redesign-final-plan.md)
+**Last updated:** 2026-07-08 (UI redesign build-specs — re-grounded; Phase 1 build-ready)
 
 ## Current focus
 
@@ -25,9 +25,17 @@ Two design docs now on branch `claude/claude-obsidian-graphify-research-d8ufwc`
 - HONEST CAVEAT: hardening did NOT converge (8/8/6/7 defects/round over the 4-round cap)
   -- strategy locked, but phase-level detail keeps spawning edge cases in implementation.
 
-All 6 product/convergence decisions now RESOLVED in the final plan (§2). Recommended
-first build: Phase 1 (handoff frame + total nav union) as the declutter-in-days, then
-the dock->scene-token prototype GATE before any broad eviction. Still no code changed.
+All 6 decisions resolved. NEW: `docs/design/ui-redesign-phase-build-specs.md` — a
+workflow re-grounded every phase anchor vs current code. Phase 1 anchors 100% VALID
+(build-ready). Sequencing verified CLEAN DAG (1->2->...->7, zero violations; P4/P5 are
+independent siblings). Drift found for later phases: src/context/->src/contexts/
+(PLURAL, the repo convention + coverage glob); RUNTIME_COPY_RULES is 15 entries not 13;
+the bestiary tab is doc-drift-SAFE (simpler delete) but threads 4 files; ConfirmDialog
+is strict 2-action (chip needs a new component); doc-drift is 3 coupled files;
+assertNever lives only in frozen runtime.ts (define a local one). FIRST COMMIT if we
+build: src/hooks/useAppNav.ts + test (total nav union, assertNever over both
+discriminants) -- green under npm test, red under knip until App.tsx consumes it.
+Still NO code changed.
 
 ## Prior focus (shipped)
 
