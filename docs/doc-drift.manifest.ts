@@ -103,6 +103,14 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: [],
   },
   {
+    // The adversarial-tournament plan of record; references many proposed
+    // (not-yet-existing) files by design, so no path_ref_rule.
+    path: 'docs/design/ui-shell-redesign-final-plan.md',
+    kind: 'plan',
+    owner: 'ui-shell-redesign',
+    rules: [],
+  },
+  {
     path: 'docs/srd-sources.md',
     kind: 'plan',
     owner: 'srd-sources',

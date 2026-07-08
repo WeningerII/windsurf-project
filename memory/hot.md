@@ -4,7 +4,7 @@
 > `/save` — overwrite stale content, keep it under ~500 words. Durable facts go
 > to [[CLAUDE]] (CLAUDE.md) or `docs/`, not here.
 
-**Last updated:** 2026-07-06 (UI shell redesign plan — see docs/design/ui-shell-redesign-plan.md)
+**Last updated:** 2026-07-08 (UI redesign FINAL plan via adversarial tournament — docs/design/ui-shell-redesign-final-plan.md)
 
 ## Current focus
 
@@ -13,14 +13,21 @@ Two design docs now on branch `claude/claude-obsidian-graphify-research-d8ufwc`
 (restarted from post-#29 main), no code changed:
 - `docs/design/vtt-ui-ux-research.md` — Owlbear Rodeo is the verified UI/UX winner;
   eight principles translated to our shell.
-- `docs/design/ui-shell-redesign-plan.md` — phased, file-grounded build plan (via an
-  11-agent design workflow + adversarial critique). Target: h-dvh frame,
-  [Library|Sheet|Scene] surfaces, one shared summonable dock, drag-drop with drop-time
-  classification. Invariant: the deterministic event core (scene/runtime.ts) untouched.
+- `docs/design/ui-shell-redesign-final-plan.md` — PLAN OF RECORD. 57-agent adversarial
+  tournament: 4 camps -> red-team -> 4 judges -> synthesis -> 4 hardening rounds.
+  WINNER: Staged Convergence (3/4 judges) = ship the pragmatic handoff frame first
+  (declutter in days), then layer Owlbear interaction (dock, pointer-drag, canvas-first
+  Scene) as chapters, riskiest greenfield LAST. Nav = ONE total discriminated union
+  from day 1 (the anti-build-twice hinge). Hybrid verb: drag ONLY on Scene canvas,
+  click-to-add on Sheet (no drop targets). Invariant: scene/runtime.ts never touched.
+  7 phases; prototype GATE = dock->scene-token (party-doc 1-choice + monster 2+ chip).
+  (Earlier `ui-shell-redesign-plan.md` kept as first-pass synthesis.)
+- HONEST CAVEAT: hardening did NOT converge (8/8/6/7 defects/round over the 4-round cap)
+  -- strategy locked, but phase-level detail keeps spawning edge cases in implementation.
 
-**Awaiting the user on FOUR product decisions** (doc §2) before implementation:
-character-creation home, campaign first-class home, scene-authoring home, drag form
-factor. Recommended first build: monster-from-dock→scene-token prototype (Phases 1-3b).
+All 6 product/convergence decisions now RESOLVED in the final plan (§2). Recommended
+first build: Phase 1 (handoff frame + total nav union) as the declutter-in-days, then
+the dock->scene-token prototype GATE before any broad eviction. Still no code changed.
 
 ## Prior focus (shipped)
 
