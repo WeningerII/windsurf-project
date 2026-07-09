@@ -4,7 +4,7 @@
 > `/save` — overwrite stale content, keep it under ~500 words. Durable facts go
 > to [[CLAUDE]] (CLAUDE.md) or `docs/`, not here.
 
-**Last updated:** 2026-07-08 (Phase 1 IMPLEMENTATION in progress — first code of the redesign)
+**Last updated:** 2026-07-08 (Phase 1 core LANDED — unit+static green; e2e updated, CI-verify pending)
 
 ## Current focus
 
