@@ -3,13 +3,13 @@ import { expect, test, type Page } from '@playwright/test';
 import { createDefaultDnd5e2024Data } from '../src/systems/dnd5e-2024/data-model';
 
 /**
- * Select a system card and click "Create New Character".
- * The current UI flow: click system card → action bar appears → click create.
+ * Open the New Character dialog and pick a system (which creates immediately).
+ * The current UI flow: click "New Character" → dialog → click a system card.
  * This opens the character sheet directly (no wizard).
  */
 async function createCharacterForSystem(page: Page, systemPattern: RegExp = /D&D 5e \(2024\)/i) {
+  await page.getByRole('button', { name: /New Character/i }).click();
   await page.getByRole('button', { name: systemPattern }).click();
-  await page.getByRole('button', { name: /Create New Character/i }).click();
   // Sheet opens — the header shows "New Character" and the Back button
   await expect(page.getByRole('button', { name: /^Back$/i })).toBeVisible();
 }
@@ -124,11 +124,11 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/', { waitUntil: 'domcontentloaded' });
   await page.evaluate(() => localStorage.clear());
   await page.goto('/', { waitUntil: 'domcontentloaded' });
-  await expect(page.getByText('Choose a Game System')).toBeVisible();
+  await expect(page.getByText('Your Characters')).toBeVisible();
 });
 
 test('renders landing page with system choices', async ({ page }) => {
-  await expect(page.getByText('Choose a Game System')).toBeVisible();
+  await expect(page.getByText('Your Characters')).toBeVisible();
   await expect(page.getByRole('button', { name: /D&D 5e \(2024\)/i })).toBeVisible();
   await expect(page.getByRole('button', { name: /D&D 5e \(2014\)/i })).toBeVisible();
   await expect(page.getByRole('button', { name: /Pathfinder 2e/i })).toBeVisible();

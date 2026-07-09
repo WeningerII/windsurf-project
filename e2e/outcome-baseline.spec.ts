@@ -38,7 +38,7 @@ async function resetToLanding(page: Page): Promise<void> {
   await page.goto('/', { waitUntil: 'domcontentloaded' });
   await page.evaluate(() => localStorage.clear());
   await page.goto('/', { waitUntil: 'domcontentloaded' });
-  await expect(page.getByText('Choose a Game System')).toBeVisible();
+  await expect(page.getByText('Your Characters')).toBeVisible();
 }
 
 async function createCharacter(
@@ -47,9 +47,9 @@ async function createCharacter(
   name: string,
   tick: () => void
 ): Promise<void> {
-  await page.getByRole('button', { name: systemPattern }).click();
+  await page.getByRole('button', { name: /New Character/i }).click();
   tick();
-  await page.getByRole('button', { name: /Create New Character/i }).click();
+  await page.getByRole('button', { name: systemPattern }).click();
   tick();
   await expect(page.getByRole('button', { name: /^Back$/i })).toBeVisible();
   const titledInput = page.locator('input[title="Character name"]');
