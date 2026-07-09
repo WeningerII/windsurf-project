@@ -88,6 +88,37 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: [],
   },
   {
+    path: 'docs/design/vtt-ui-ux-research.md',
+    kind: 'plan',
+    owner: 'ui-shell-redesign',
+    rules: ['path_ref_rule'],
+  },
+  {
+    // Forward-looking plan: deliberately references proposed src/dock/** and
+    // src/shell/** files that do not exist yet, so path_ref_rule must NOT apply
+    // (mirrors REMEDIATION_PLAN.md / GAPS.md, which also carry no rules).
+    path: 'docs/design/ui-shell-redesign-plan.md',
+    kind: 'plan',
+    owner: 'ui-shell-redesign',
+    rules: [],
+  },
+  {
+    // The adversarial-tournament plan of record; references many proposed
+    // (not-yet-existing) files by design, so no path_ref_rule.
+    path: 'docs/design/ui-shell-redesign-final-plan.md',
+    kind: 'plan',
+    owner: 'ui-shell-redesign',
+    rules: [],
+  },
+  {
+    // Build-ready per-phase specs (re-grounded anchors + kickoff); references
+    // proposed files by design, so no path_ref_rule.
+    path: 'docs/design/ui-redesign-phase-build-specs.md',
+    kind: 'plan',
+    owner: 'ui-shell-redesign',
+    rules: [],
+  },
+  {
     path: 'docs/srd-sources.md',
     kind: 'plan',
     owner: 'srd-sources',

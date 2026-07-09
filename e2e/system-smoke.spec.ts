@@ -4,7 +4,7 @@ async function openLandingPage(page: Page) {
   await page.goto('/', { waitUntil: 'domcontentloaded' });
   await page.evaluate(() => localStorage.clear());
   await page.goto('/', { waitUntil: 'domcontentloaded' });
-  await expect(page.getByText('Choose a Game System')).toBeVisible();
+  await expect(page.getByText('Your Characters')).toBeVisible();
 }
 
 async function getCharacterNameInput(page: Page) {
@@ -21,8 +21,8 @@ async function renameCharacter(page: Page, name: string) {
 }
 
 async function createCharacterForSystem(page: Page, systemPattern: RegExp, name: string) {
+  await page.getByRole('button', { name: /New Character/i }).click();
   await page.getByRole('button', { name: systemPattern }).click();
-  await page.getByRole('button', { name: /Create New Character/i }).click();
   await expect(page.getByRole('button', { name: /^Back$/i })).toBeVisible();
   await renameCharacter(page, name);
 }
@@ -30,6 +30,12 @@ async function createCharacterForSystem(page: Page, systemPattern: RegExp, name:
 async function backToCharacterList(page: Page) {
   await page.getByRole('button', { name: /^Back$/i }).click();
   await expect(page.getByRole('heading', { name: 'Your Characters' })).toBeVisible();
+}
+
+async function gotoLibraryTab(page: Page, name: 'Characters' | 'Campaigns' | 'Scenes' | 'Library') {
+  // Library segments (Characters / Campaigns / Scenes / Library) are now header
+  // tabs; navigate to one before interacting with its content.
+  await page.getByRole('button', { name, exact: true }).click();
 }
 
 async function clickTab(page: Page, name: string | RegExp) {
@@ -228,6 +234,7 @@ test('manages campaign membership and opens members from the campaign panel', as
   await createCharacterForSystem(page, /Pathfinder 2e/i, 'Campaign Scholar');
   await backToCharacterList(page);
 
+  await gotoLibraryTab(page, 'Campaigns');
   const campaignSection = page.locator('section').filter({
     has: page.getByRole('heading', { name: 'Campaigns' }),
   });
@@ -252,12 +259,12 @@ test('manages campaign membership and opens members from the campaign panel', as
   await expect(nameInput).toHaveValue('Campaign Vanguard');
 
   await backToCharacterList(page);
+  await gotoLibraryTab(page, 'Campaigns');
   await campaignSection.getByRole('button', { name: /System Smoke Campaign/i }).click();
-  await page
-    .getByPlaceholder('House rules, NPC names, loot...')
-    .fill('Campaign smoke note');
+  await page.getByPlaceholder('House rules, NPC names, loot...').fill('Campaign smoke note');
   await page.reload();
 
+  await gotoLibraryTab(page, 'Campaigns');
   await expect(page.getByText('System Smoke Campaign')).toBeVisible();
   await campaignSection.getByRole('button', { name: /System Smoke Campaign/i }).click();
   await expect(page.getByPlaceholder('House rules, NPC names, loot...')).toHaveValue(

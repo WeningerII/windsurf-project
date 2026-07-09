@@ -96,15 +96,15 @@ describe('App', () => {
     expect(screen.getByText('Multi-system tabletop character manager')).toBeInTheDocument();
   });
 
-  it('displays system selector on initial load', () => {
+  it('shows the New Character entry point on initial load', () => {
     render(<App />);
-    expect(screen.getByText('Choose a Game System')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /new character/i })).toBeInTheDocument();
   });
 
-  it('shows create character button when system is selected', () => {
+  it('opens the new character dialog with system options', () => {
     render(<App />);
-    fireEvent.click(screen.getByRole('button', { name: /D&D 5e \(2024\)/i }));
-    expect(screen.getByText('Create New Character')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /new character/i }));
+    expect(screen.getByRole('button', { name: /D&D 5e \(2024\)/i })).toBeInTheDocument();
   });
 
   it(
@@ -112,8 +112,8 @@ describe('App', () => {
     async () => {
       render(<App />);
 
+      fireEvent.click(screen.getByRole('button', { name: /new character/i }));
       fireEvent.click(screen.getByRole('button', { name: /D&D 5e \(2024\)/i }));
-      fireEvent.click(screen.getByRole('button', { name: /create new character/i }));
 
       expect(
         await screen.findByTitle('Character name', {}, { timeout: SHEET_LOAD_TIMEOUT_MS })
@@ -143,8 +143,8 @@ describe('App', () => {
     async () => {
       render(<App />);
 
+      fireEvent.click(screen.getByRole('button', { name: /new character/i }));
       fireEvent.click(screen.getByRole('button', { name: /D&D 5e \(2024\)/i }));
-      fireEvent.click(screen.getByRole('button', { name: /create new character/i }));
 
       const nameInput = await screen.findByTitle(
         'Character name',
@@ -176,8 +176,9 @@ describe('App', () => {
     async () => {
       render(<App />);
 
-      fireEvent.click(screen.getByRole('button', { name: /D&D 5e \(2024\)/i }));
+      // Alt+N opens the New Character dialog; picking a system creates + opens.
       fireEvent.keyDown(document.body, { key: 'n', altKey: true });
+      fireEvent.click(screen.getByRole('button', { name: /D&D 5e \(2024\)/i }));
 
       expect(
         await screen.findByTitle('Character name', {}, { timeout: SHEET_LOAD_TIMEOUT_MS })
@@ -192,8 +193,9 @@ describe('App', () => {
       const pendingSpy = vi.mocked(getPendingSyncCount);
       render(<App />);
 
-      // Campaign notes update per keystroke, which used to re-read the sync
-      // queues on every change.
+      // Campaigns are now a Library tab; switch to it first. Campaign notes
+      // update per keystroke, which used to re-read the sync queues each change.
+      fireEvent.click(screen.getByRole('button', { name: /^campaigns$/i }));
       fireEvent.click(screen.getByRole('button', { name: /new campaign/i }));
       fireEvent.change(screen.getByPlaceholderText('Campaign name...'), {
         target: { value: 'Debounce Camp' },

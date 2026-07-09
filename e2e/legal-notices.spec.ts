@@ -4,7 +4,7 @@ async function openLanding(page: Page) {
   await page.goto('/', { waitUntil: 'domcontentloaded' });
   await page.evaluate(() => localStorage.clear());
   await page.goto('/', { waitUntil: 'domcontentloaded' });
-  await expect(page.getByText('Choose a Game System')).toBeVisible();
+  await expect(page.getByText('Your Characters')).toBeVisible();
 }
 
 // Launch-blocker LEGAL-1: file presence is explicitly insufficient — the legal
@@ -46,6 +46,6 @@ test.describe('legal & open-content notices', () => {
 
     // The view is dismissible back to the app.
     await page.getByRole('button', { name: /^Back$/i }).click();
-    await expect(page.getByText('Choose a Game System')).toBeVisible();
+    await expect(page.getByText('Your Characters')).toBeVisible();
   });
 });

@@ -39,8 +39,8 @@ async function selectSystemAndStartCreation(
   user: ReturnType<typeof userEvent.setup>,
   timeoutMs = SHEET_LOAD_TIMEOUT_MS
 ) {
+  await user.click(screen.getByRole('button', { name: /new character/i }));
   await user.click(screen.getByRole('button', { name: /D&D 5e \(2024\)/i }));
-  await user.click(screen.getByRole('button', { name: /create new character/i }));
   await screen.findByTitle('Character name', {}, { timeout: timeoutMs });
   await waitFor(
     () => {
@@ -71,11 +71,7 @@ async function createCharacter(_user: ReturnType<typeof userEvent.setup>, name: 
 async function returnToList(user: ReturnType<typeof userEvent.setup>) {
   await user.click(screen.getByRole('button', { name: /^back$/i }));
   expect(
-    await screen.findByRole(
-      'button',
-      { name: /create new character/i },
-      { timeout: SHEET_LOAD_TIMEOUT_MS }
-    )
+    await screen.findByText('Your Characters', {}, { timeout: SHEET_LOAD_TIMEOUT_MS })
   ).toBeInTheDocument();
 }
 
@@ -252,7 +248,7 @@ describe('Character Management Flow', () => {
 
       await waitFor(
         () => {
-          expect(screen.getByText('Choose a Game System')).toBeInTheDocument();
+          expect(screen.getByRole('button', { name: /new character/i })).toBeInTheDocument();
           expect(getStoredDocuments()).toHaveLength(0);
         },
         { timeout: FLOW_WAIT_TIMEOUT_MS }
@@ -339,8 +335,8 @@ describe('Character Management Flow', () => {
       await createCharacter(user, 'System A Hero');
       await returnToList(user);
 
+      await user.click(screen.getByRole('button', { name: /new character/i }));
       await user.click(screen.getByRole('button', { name: /Pathfinder 2e/i }));
-      await user.click(screen.getByRole('button', { name: /create new character/i }));
       await createCharacter(user, 'System B Hero');
       await returnToList(user);
 
@@ -486,7 +482,7 @@ describe('Character Management Flow', () => {
         makeStoredDocument('importable-hero-doc', 'Importable Hero'),
       ]);
 
-      await user.click(screen.getByRole('button', { name: /D&D 5e \(2024\)/i }));
+      // Import is always available from the header now (no system pre-select).
       await importViaDynamicInput(user, exported);
 
       await waitFor(
