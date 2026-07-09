@@ -44,8 +44,8 @@ vi.mock('../components/SystemSheetRenderer', () => ({
 
 async function openBrokenSheet() {
   render(<App />);
+  fireEvent.click(screen.getByRole('button', { name: /new character/i }));
   fireEvent.click(screen.getByRole('button', { name: /D&D 5e \(2024\)/i }));
-  fireEvent.click(screen.getByRole('button', { name: /create new character/i }));
   expect(await screen.findByText('This character sheet failed to load')).toBeInTheDocument();
 }
 
@@ -77,7 +77,7 @@ describe('App sheet error boundary', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /back to list/i }));
 
-    expect(screen.getByText('Choose a Game System')).toBeInTheDocument();
+    expect(screen.getByText('Your Characters')).toBeInTheDocument();
     expect(screen.queryByText('This character sheet failed to load')).not.toBeInTheDocument();
   });
 

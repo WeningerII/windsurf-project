@@ -1,10 +1,9 @@
 import { useState, useEffect, useCallback, useMemo, lazy, Suspense } from 'react';
-import { GameSystemSelector } from './components/GameSystemSelector';
 import { SystemStatusDashboard } from './components/SystemStatusDashboard';
 import { GameSystemId } from './types/game-systems';
 import { systemRegistry } from './registry';
 import { Button } from './components/ui/Button';
-import { Plus, Download, Upload, AlertCircle, X } from 'lucide-react';
+import { AlertCircle, Download, X } from 'lucide-react';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { useSync } from './hooks/useSync';
 import { useCampaignSync } from './hooks/useCampaignSync';
@@ -23,10 +22,10 @@ import { ServiceWorkerUpdateBanner } from './components/ServiceWorkerUpdateBanne
 import { useCampaigns } from './hooks/useCampaigns';
 import { addSessionEntry, createSessionEntry } from './utils/campaignStory';
 import { CampaignManager } from './components/CampaignManager';
-// Lazy-loaded: the scene/VTT view is the app's heaviest feature component and
-// is only used in the dashboard branch, so it stays out of the eager app shell
-// (keeps the index chunk well under its first-paint budget). Matches the
-// Suspense pattern used by SystemSheetRenderer.
+// Lazy-loaded: the scene/VTT view is the app's heaviest feature component. It
+// stays out of the eager app shell AND is only mounted the first time the user
+// opens the Scenes tab (never at boot), so users who never open a scene never
+// pay for its chunk or its event-folding.
 const SceneManager = lazy(() =>
   import('./components/SceneManager').then((m) => ({ default: m.SceneManager }))
 );
@@ -43,6 +42,8 @@ import { combineSyncStates, getMostRecentSyncDate, getPendingSyncCount } from '.
 import { getDocumentLevelValue } from './utils/characterPresenter';
 import { CharacterListView, type CharacterSortOption } from './components/CharacterListView';
 import { AppHeader } from './components/AppHeader';
+import { NewCharacterDialog } from './components/NewCharacterDialog';
+import { useAppNav } from './hooks/useAppNav';
 
 const STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const STORAGE_WARNING_THRESHOLD = Math.floor(STORAGE_LIMIT_BYTES * 0.8);
@@ -88,9 +89,22 @@ function AppContent() {
     // an entity deleted on another device.
     onMerge: applyMergedDocuments,
   });
-  const [currentDocId, setCurrentDocId] = useState<string | null>(null);
-  const [selectedSystem, setSelectedSystem] = useState<GameSystemId | null>(null);
-  const [showLegal, setShowLegal] = useState(false);
+
+  // Total shell-nav model (Phase 1): one discriminated union replaces the old
+  // currentDocId / selectedSystem / showLegal flags. Phase 2 relocates the
+  // reducer into a ShellContext without changing this call site.
+  const { nav, openSheet, closeSheet, setLibrarySegment, openOverlay, closeOverlay } = useAppNav();
+  const [newCharacterDialogOpen, setNewCharacterDialogOpen] = useState(false);
+  // The heavy SceneManager chunk is mounted only the first time the Scenes tab
+  // is opened, then kept alive (hidden) so its ~30 transient useState survive
+  // tab switches without re-running foldSceneEvents or re-fetching the chunk.
+  const [hasVisitedScenes, setHasVisitedScenes] = useState(false);
+
+  const isLibrary = nav.surface === 'library';
+  const isScenesSegment = isLibrary && nav.librarySegment === 'scenes';
+  useEffect(() => {
+    if (isScenesSegment) setHasVisitedScenes(true);
+  }, [isScenesSegment]);
 
   const [systemFilter, setSystemFilter] = useState<GameSystemId | 'all'>('all');
   const [sortOption, setSortOption] = useState<CharacterSortOption>('updated-desc');
@@ -187,8 +201,8 @@ function AppContent() {
     flushPendingDocumentSaves();
     flushPendingCampaignSaves();
     flushPendingSceneSaves();
-    setCurrentDocId(null);
-  }, [flushPendingCampaignSaves, flushPendingDocumentSaves, flushPendingSceneSaves]);
+    closeSheet();
+  }, [flushPendingCampaignSaves, flushPendingDocumentSaves, flushPendingSceneSaves, closeSheet]);
 
   const filteredAndSortedDocuments = useMemo(() => {
     const filtered =
@@ -217,10 +231,10 @@ function AppContent() {
     return filtered;
   }, [documents, sortOption, systemFilter]);
 
-  // Only the character-list view renders the storage warning, so skip the
-  // full-collection serialization entirely while a sheet is open — otherwise
-  // it would re-run on every keystroke in a controlled sheet field.
-  const isCharacterListVisible = currentDocId === null;
+  // Only the Characters library segment renders the storage warning, so skip
+  // the full-collection serialization entirely otherwise — it must not re-run
+  // on every keystroke in a controlled sheet field.
+  const isCharacterListVisible = isLibrary && nav.librarySegment === 'characters';
   const storageUsageBytes = useMemo(() => {
     if (!isCharacterListVisible) {
       return 0;
@@ -252,29 +266,28 @@ function AppContent() {
   useEffect(() => {
     const activeSystemIds = new Set<GameSystemId>();
     documents.forEach((doc) => activeSystemIds.add(doc.systemId as GameSystemId));
-    if (selectedSystem) {
-      activeSystemIds.add(selectedSystem);
-    }
     prefetchSystemAssetsForIds(activeSystemIds);
-  }, [documents, selectedSystem]);
+  }, [documents]);
 
-  const handleCreateCharacter = () => {
-    if (!selectedSystem) return;
-    const sysDef = systemRegistry.get(selectedSystem);
-    if (!sysDef) return;
+  const handleCreateCharacter = useCallback(
+    (systemId: GameSystemId) => {
+      const sysDef = systemRegistry.get(systemId);
+      if (!sysDef) return;
 
-    const doc: CharacterDocument<SystemDataModel> = {
-      id: generateUUID(),
-      name: 'New Character',
-      systemId: selectedSystem,
-      system: sysDef.createDefaultData(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      version: CURRENT_DOCUMENT_VERSION,
-    };
-    addDocument(doc);
-    setCurrentDocId(doc.id);
-  };
+      const doc: CharacterDocument<SystemDataModel> = {
+        id: generateUUID(),
+        name: 'New Character',
+        systemId,
+        system: sysDef.createDefaultData(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        version: CURRENT_DOCUMENT_VERSION,
+      };
+      addDocument(doc);
+      openSheet(doc.id);
+    },
+    [addDocument, openSheet]
+  );
 
   const handleDeleteDocument = (id: string) => {
     const doc = documents.find((d) => d.id === id);
@@ -283,7 +296,7 @@ function AppContent() {
     // Characters" / "Delete Campaign" instead of deleting on a single click.
     showConfirm('Delete Character', `This will permanently delete "${doc.name}".`, () => {
       deleteDocument(id);
-      if (currentDocId === id) setCurrentDocId(null);
+      if (nav.sheetDocId === id) closeSheet();
       toast(`Deleted "${doc.name}"`, 'success');
     });
   };
@@ -325,13 +338,13 @@ function AppContent() {
         version: CURRENT_DOCUMENT_VERSION,
       };
       addDocument(clone);
-      setCurrentDocId(clone.id);
+      openSheet(clone.id);
       toast(`Cloned "${doc.name}"`, 'success');
     },
-    [addDocument, toast]
+    [addDocument, openSheet, toast]
   );
 
-  const handleImportDocument = () => {
+  const handleImportDocument = useCallback(() => {
     pickTextFile((jsonString) => {
       try {
         const { documents: imported, droppedCount } = importDocumentsWithReport(jsonString);
@@ -343,7 +356,7 @@ function AppContent() {
             updatedAt: new Date(),
           }));
           addDocuments(normalized);
-          setCurrentDocId(normalized[0].id);
+          openSheet(normalized[0].id);
           toast(
             droppedCount > 0
               ? `Imported ${normalized.length} of ${normalized.length + droppedCount} characters — ${droppedCount} invalid ${droppedCount === 1 ? 'entry' : 'entries'} skipped`
@@ -362,24 +375,26 @@ function AppContent() {
         toast('Failed to import character. Please ensure the file is a valid export.', 'error');
       }
     });
-  };
+  }, [addDocuments, openSheet, toast]);
+
+  const openNewCharacterDialog = useCallback(() => setNewCharacterDialogOpen(true), []);
 
   // Keyboard shortcuts
   useKeyboardNavigation([
     {
       key: 'Escape',
       callback: () => {
-        if (currentDocId) handleReturnToList();
+        if (nav.surface === 'sheet') handleReturnToList();
       },
       description: 'Back to character list',
     },
     {
       // Alt+N, not Ctrl+N: Chromium never delivers Ctrl/Cmd+N to the page
-      // (it opens a new window).
+      // (it opens a new window). Now opens the New Character dialog.
       key: 'n',
       alt: true,
       callback: () => {
-        if (selectedSystem && !currentDocId) handleCreateCharacter();
+        if (nav.surface !== 'sheet') openNewCharacterDialog();
       },
       description: 'Create new character',
     },
@@ -387,7 +402,7 @@ function AppContent() {
       key: 'i',
       ctrl: true,
       callback: () => {
-        if (!currentDocId) handleImportDocument();
+        if (nav.surface !== 'sheet') handleImportDocument();
       },
       description: 'Import character',
     },
@@ -410,7 +425,8 @@ function AppContent() {
     },
   ]);
 
-  const currentDoc = documents.find((d) => d.id === currentDocId);
+  const currentDoc = documents.find((d) => d.id === nav.sheetDocId);
+  const isSheet = nav.surface === 'sheet' && Boolean(currentDoc);
   const appError = error ?? campaignError ?? sceneError;
   const clearAppError = error ? clearError : campaignError ? clearCampaignError : clearSceneError;
 
@@ -425,14 +441,17 @@ function AppContent() {
       {/* Header */}
       <AppHeader
         currentDoc={currentDoc ?? null}
-        currentDocId={currentDocId}
+        currentDocId={nav.sheetDocId}
         documents={documents}
+        librarySegment={nav.librarySegment}
+        onSelectSegment={setLibrarySegment}
+        onNewCharacter={openNewCharacterDialog}
         canUndo={canUndo}
         canRedo={canRedo}
         onUndo={undo}
         onRedo={redo}
         onReturnToList={handleReturnToList}
-        onSelectCharacter={setCurrentDocId}
+        onSelectCharacter={openSheet}
         onClone={handleCloneDocument}
         onExport={handleExportDocument}
         onImport={handleImportDocument}
@@ -465,9 +484,9 @@ function AppContent() {
 
       {/* Main Content */}
       <main id="main-content" tabIndex={-1} className="container mx-auto px-4 py-8">
-        {showLegal ? (
+        {nav.overlay === 'legal' ? (
           <Suspense fallback={<Skeleton className="h-64 w-full" />}>
-            <LegalNotices onBack={() => setShowLegal(false)} />
+            <LegalNotices onBack={closeOverlay} />
           </Suspense>
         ) : isLoading || scenesLoading ? (
           <div className="max-w-6xl mx-auto space-y-6 pt-4">
@@ -479,7 +498,7 @@ function AppContent() {
               ))}
             </div>
           </div>
-        ) : currentDoc ? (
+        ) : isSheet && currentDoc ? (
           <div className="max-w-7xl mx-auto">
             {/* Scoped boundary: a lazy sheet chunk that fails to load (stale
                 deploy, flaky offline cache) must not take down the whole app.
@@ -510,15 +529,8 @@ function AppContent() {
           </div>
         ) : (
           <div className="max-w-6xl mx-auto space-y-10">
-            {/* Hero Section */}
-            <div className="text-center space-y-3 pt-4">
-              <h2 className="text-4xl font-bold tracking-tight">Choose a Game System</h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Select from 7 registered RPG systems with full or partial SRD-backed support
-              </p>
-            </div>
-
-            {canInstall && (
+            {/* Characters segment */}
+            {isLibrary && nav.librarySegment === 'characters' && canInstall && (
               <section className="mx-auto max-w-3xl rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card p-5 shadow-sm">
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                   <div className="flex items-start gap-3">
@@ -544,106 +556,96 @@ function AppContent() {
                 </div>
               </section>
             )}
-
-            {/* System Selector */}
-            <GameSystemSelector selectedSystem={selectedSystem} onSelect={setSelectedSystem} />
-
-            {/* Action Bar */}
-            {selectedSystem && (
-              <div className="flex justify-center gap-3 animate-in fade-in-0">
-                <Button variant="outline" size="lg" onClick={handleImportDocument}>
-                  <Upload className="w-4 h-4 mr-2" />
-                  Import Character
-                </Button>
-                <Button onClick={handleCreateCharacter} size="lg">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Create New Character
-                </Button>
-              </div>
-            )}
-
-            {/* Characters Section */}
-            <CharacterListView
-              documents={documents}
-              filteredDocuments={filteredAndSortedDocuments}
-              systemFilter={systemFilter}
-              onSystemFilterChange={setSystemFilter}
-              sortOption={sortOption}
-              onSortOptionChange={setSortOption}
-              onExportAll={handleExportAllDocuments}
-              onClearAll={() =>
-                showConfirm(
-                  'Delete All Characters',
-                  'This will permanently delete all saved characters. This action cannot be undone.',
-                  () => {
-                    clearAllDocuments();
-                    setCurrentDocId(null);
-                    toast('All characters deleted', 'success');
-                  }
-                )
-              }
-              onOpenCharacter={setCurrentDocId}
-              onCloneCharacter={handleCloneDocument}
-              storageWarning={
-                isNearStorageLimit ? { percent: storageUsagePercent, mb: storageUsageMb } : null
-              }
-            />
-
-            {/* Campaigns */}
-            <CampaignManager
-              campaigns={campaigns}
-              documents={documents}
-              onAddCampaign={addCampaign}
-              onUpdateCampaign={updateCampaign}
-              onDeleteCampaign={(id) =>
-                showConfirm(
-                  'Delete Campaign',
-                  'This will delete the campaign. Characters in it will not be affected.',
-                  () => {
-                    deleteCampaign(id);
-                    toast('Campaign deleted', 'success');
-                  }
-                )
-              }
-              onAddCharacter={(cid, charId) => {
-                addCharacterToCampaign(cid, charId);
-                const doc = documents.find((d) => d.id === charId);
-                if (doc) toast(`Added ${doc.name} to campaign`, 'success');
-              }}
-              onRemoveCharacter={(cid, charId) => {
-                removeCharacterFromCampaign(cid, charId);
-                const doc = documents.find((d) => d.id === charId);
-                if (doc) toast(`Removed ${doc.name} from campaign`, 'success');
-              }}
-              onOpenCharacter={(charId) => setCurrentDocId(charId)}
-              onImportCampaigns={addCampaigns}
-            />
-
-            {/* Scenes */}
-            <Suspense fallback={<Skeleton className="h-64 w-full" />}>
-              <SceneManager
-                scenes={scenes}
+            {isLibrary && nav.librarySegment === 'characters' && (
+              <CharacterListView
                 documents={documents}
-                campaigns={campaigns}
-                onAddScene={addScene}
-                onAddScenes={addScenes}
-                onAppendSceneEvent={appendSceneEvent}
-                onLogToCampaign={handleLogSceneToCampaign}
-                onDeleteScene={(id) =>
+                filteredDocuments={filteredAndSortedDocuments}
+                systemFilter={systemFilter}
+                onSystemFilterChange={setSystemFilter}
+                sortOption={sortOption}
+                onSortOptionChange={setSortOption}
+                onExportAll={handleExportAllDocuments}
+                onClearAll={() =>
                   showConfirm(
-                    'Delete Scene',
-                    'This will delete the scene and its event log. Characters and campaigns will not be affected.',
+                    'Delete All Characters',
+                    'This will permanently delete all saved characters. This action cannot be undone.',
                     () => {
-                      deleteScene(id);
-                      toast('Scene deleted', 'success');
+                      clearAllDocuments();
+                      closeSheet();
+                      toast('All characters deleted', 'success');
                     }
                   )
                 }
+                onOpenCharacter={openSheet}
+                onCloneCharacter={handleCloneDocument}
+                storageWarning={
+                  isNearStorageLimit ? { percent: storageUsagePercent, mb: storageUsageMb } : null
+                }
               />
-            </Suspense>
+            )}
 
-            {/* System Dashboard */}
-            <SystemStatusDashboard />
+            {/* Campaigns segment */}
+            {isLibrary && nav.librarySegment === 'campaigns' && (
+              <CampaignManager
+                campaigns={campaigns}
+                documents={documents}
+                onAddCampaign={addCampaign}
+                onUpdateCampaign={updateCampaign}
+                onDeleteCampaign={(id) =>
+                  showConfirm(
+                    'Delete Campaign',
+                    'This will delete the campaign. Characters in it will not be affected.',
+                    () => {
+                      deleteCampaign(id);
+                      toast('Campaign deleted', 'success');
+                    }
+                  )
+                }
+                onAddCharacter={(cid, charId) => {
+                  addCharacterToCampaign(cid, charId);
+                  const doc = documents.find((d) => d.id === charId);
+                  if (doc) toast(`Added ${doc.name} to campaign`, 'success');
+                }}
+                onRemoveCharacter={(cid, charId) => {
+                  removeCharacterFromCampaign(cid, charId);
+                  const doc = documents.find((d) => d.id === charId);
+                  if (doc) toast(`Removed ${doc.name} from campaign`, 'success');
+                }}
+                onOpenCharacter={openSheet}
+                onImportCampaigns={addCampaigns}
+              />
+            )}
+
+            {/* Content library segment */}
+            {isLibrary && nav.librarySegment === 'content' && <SystemStatusDashboard />}
+
+            {/* Scenes segment: mounted on first visit, then kept alive (hidden)
+                so in-progress scene state survives tab switches. */}
+            {hasVisitedScenes && (
+              <div hidden={!isScenesSegment}>
+                <Suspense fallback={<Skeleton className="h-64 w-full" />}>
+                  <SceneManager
+                    scenes={scenes}
+                    documents={documents}
+                    campaigns={campaigns}
+                    onAddScene={addScene}
+                    onAddScenes={addScenes}
+                    onAppendSceneEvent={appendSceneEvent}
+                    onLogToCampaign={handleLogSceneToCampaign}
+                    onDeleteScene={(id) =>
+                      showConfirm(
+                        'Delete Scene',
+                        'This will delete the scene and its event log. Characters and campaigns will not be affected.',
+                        () => {
+                          deleteScene(id);
+                          toast('Scene deleted', 'success');
+                        }
+                      )
+                    }
+                  />
+                </Suspense>
+              </div>
+            )}
           </div>
         )}
       </main>
@@ -658,7 +660,7 @@ function AppContent() {
           <p>
             <button
               type="button"
-              onClick={() => setShowLegal(true)}
+              onClick={() => openOverlay('legal')}
               className="underline underline-offset-2 hover:text-foreground"
             >
               Legal &amp; Open-Content Notices
@@ -679,6 +681,11 @@ function AppContent() {
           closeConfirm();
         }}
         onCancel={closeConfirm}
+      />
+      <NewCharacterDialog
+        open={newCharacterDialogOpen}
+        onClose={() => setNewCharacterDialogOpen(false)}
+        onCreate={handleCreateCharacter}
       />
     </div>
   );

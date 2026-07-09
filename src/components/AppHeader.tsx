@@ -1,4 +1,14 @@
-import { ArrowLeft, BookOpen, Copy, Download, Redo2, Trash2, Undo2, Upload } from 'lucide-react';
+import {
+  ArrowLeft,
+  BookOpen,
+  Copy,
+  Download,
+  Plus,
+  Redo2,
+  Trash2,
+  Undo2,
+  Upload,
+} from 'lucide-react';
 import type { CharacterDocument, SystemDataModel } from '../types/core/document';
 import type { SyncState } from '../hooks/useSync';
 import { systemRegistry } from '../registry';
@@ -6,11 +16,16 @@ import { Button } from './ui/Button';
 import { Select } from './ui/Select';
 import { ThemeToggle } from './ui/ThemeToggle';
 import { UserMenu } from './UserMenu';
+import { type LibrarySegment, LIBRARY_SEGMENTS, librarySegmentLabel } from '../hooks/useAppNav';
 
 interface AppHeaderProps {
   currentDoc: CharacterDocument<SystemDataModel> | null;
   currentDocId: string | null;
   documents: CharacterDocument<SystemDataModel>[];
+  /** Active Library tab (list mode only). */
+  librarySegment: LibrarySegment;
+  onSelectSegment: (segment: LibrarySegment) => void;
+  onNewCharacter: () => void;
   canUndo: boolean;
   canRedo: boolean;
   onUndo: () => void;
@@ -27,11 +42,19 @@ interface AppHeaderProps {
   pendingSyncCount: number;
 }
 
-/** Sticky top toolbar: title/back, undo/redo, current-character actions, sync, theme. */
+/**
+ * Sticky top toolbar. In list mode it carries the Library tab nav
+ * (Characters / Campaigns / Scenes / Library) plus the primary New Character
+ * and Import actions; in sheet mode it swaps to back/switcher and the current
+ * character's clone / export / import / delete controls.
+ */
 export function AppHeader({
   currentDoc,
   currentDocId,
   documents,
+  librarySegment,
+  onSelectSegment,
+  onNewCharacter,
   canUndo,
   canRedo,
   onUndo,
@@ -78,6 +101,31 @@ export function AppHeader({
               </p>
             </div>
           </div>
+
+          {/* Library tab nav (list mode only) */}
+          {!currentDoc && (
+            <nav aria-label="Library" className="hidden md:flex items-center gap-1">
+              {LIBRARY_SEGMENTS.map((segment) => {
+                const active = librarySegment === segment;
+                return (
+                  <button
+                    key={segment}
+                    type="button"
+                    aria-current={active ? 'page' : undefined}
+                    onClick={() => onSelectSegment(segment)}
+                    className={`h-9 rounded-lg px-3.5 text-sm transition-colors ${
+                      active
+                        ? 'bg-muted font-semibold text-foreground'
+                        : 'font-medium text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+                    }`}
+                  >
+                    {librarySegmentLabel(segment)}
+                  </button>
+                );
+              })}
+            </nav>
+          )}
+
           <div className="flex items-center gap-1.5 shrink-0">
             <Button
               variant="ghost"
@@ -99,7 +147,7 @@ export function AppHeader({
             >
               <Redo2 className="w-4 h-4" />
             </Button>
-            {currentDoc && (
+            {currentDoc ? (
               <>
                 <Select
                   value={currentDocId || ''}
@@ -149,6 +197,23 @@ export function AppHeader({
                   aria-label="Delete character"
                 >
                   <Trash2 className="w-4 h-4" />
+                </Button>
+              </>
+            ) : (
+              <>
+                <div className="mx-1 hidden h-5 w-px bg-border sm:block" />
+                <Button size="sm" onClick={onNewCharacter}>
+                  <Plus className="mr-1.5 h-4 w-4" />
+                  New Character
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={onImport}
+                  title="Import character"
+                  aria-label="Import Character"
+                >
+                  <Upload className="w-4 h-4" />
                 </Button>
               </>
             )}

@@ -156,7 +156,10 @@ export function useAppNav(initial: ShellNavState = INITIAL_NAV_STATE): UseAppNav
 
   const openSheet = useCallback((docId: string) => dispatch({ type: 'openSheet', docId }), []);
   const closeSheet = useCallback(() => dispatch({ type: 'closeSheet' }), []);
-  const setSurface = useCallback((surface: Surface) => dispatch({ type: 'setSurface', surface }), []);
+  const setSurface = useCallback(
+    (surface: Surface) => dispatch({ type: 'setSurface', surface }),
+    []
+  );
   const setLibrarySegment = useCallback(
     (segment: LibrarySegment) => dispatch({ type: 'setLibrarySegment', segment }),
     []
@@ -182,6 +185,15 @@ export function useAppNav(initial: ShellNavState = INITIAL_NAV_STATE): UseAppNav
       openOverlay,
       closeOverlay,
     }),
-    [nav, openSheet, closeSheet, setSurface, setLibrarySegment, selectScene, openOverlay, closeOverlay]
+    [
+      nav,
+      openSheet,
+      closeSheet,
+      setSurface,
+      setLibrarySegment,
+      selectScene,
+      openOverlay,
+      closeOverlay,
+    ]
   );
 }

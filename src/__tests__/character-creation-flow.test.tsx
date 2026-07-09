@@ -24,12 +24,16 @@ function getStoredDocuments(): Array<Record<string, unknown>> {
 }
 
 async function selectSystem(user: ReturnType<typeof userEvent.setup>, systemName: string) {
+  // Creation now flows through the New Character dialog: open it, then pick the
+  // system — which creates the character and opens its sheet immediately.
+  await user.click(screen.getByRole('button', { name: /new character/i }));
   const escaped = systemName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   await user.click(screen.getByRole('button', { name: new RegExp(escaped, 'i') }));
 }
 
 async function startCreation(user: ReturnType<typeof userEvent.setup>) {
-  await user.click(screen.getByRole('button', { name: /create new character/i }));
+  // selectSystem already created + opened the sheet; just confirm it rendered.
+  void user;
   expect(
     await screen.findByTitle('Character name', {}, { timeout: SHEET_LOAD_TIMEOUT_MS })
   ).toHaveValue('New Character');
@@ -166,8 +170,7 @@ describe('Character Creation Flow', () => {
     await startCreation(user);
     await user.click(screen.getByRole('button', { name: /^back$/i }));
 
-    expect(screen.getByText('Choose a Game System')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /create new character/i })).toBeInTheDocument();
+    expect(screen.getByText('Your Characters')).toBeInTheDocument();
   });
 
   it('navigates back to list and can reopen the created character', async () => {
