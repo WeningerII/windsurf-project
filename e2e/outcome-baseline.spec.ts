@@ -34,15 +34,31 @@ interface SystemOutcome {
 
 type RunFn = (page: Page, tick: () => void) => Promise<void>;
 
-async function openFreshLanding(page: Page): Promise<void> {
-  // Each system runs in its own browser context (see the loop below), so the
-  // page boots with genuinely empty storage. In-page localStorage.clear()
-  // cannot deliver that: the app flushes pending debounced saves on pagehide
-  // (which Chrome may run concurrently with the next document's load) AND
-  // mirrors documents into IndexedDB, from which a fresh boot can restore a
-  // roster that localStorage no longer has.
-  await page.goto('/', { waitUntil: 'domcontentloaded' });
-  // Fresh boot has no characters, so the roster's empty state is the landing anchor.
+// Return the app to an empty roster between systems WITHOUT reloading. The
+// reset goes through the app's own "Clear All Characters" flow, which purges
+// both localStorage and the IndexedDB mirror (see clearDocumentStorage). This
+// is race-free precisely because we never navigate/reload after the initial
+// boot: storage is only ever written (debounced saves), never re-read, so the
+// pagehide-flush + IndexedDB-restore resurrection that defeats a manual
+// localStorage.clear() cannot happen. It also keeps the shell/service-worker
+// warm across all seven systems — one cold boot instead of seven, which is
+// what kept an occasional cold-boot stall from tripping the mount timeout.
+async function resetRoster(page: Page): Promise<void> {
+  // If a run left us on a sheet, get back to the roster first.
+  const back = page.getByRole('button', { name: /^Back$/i });
+  if (await back.isVisible().catch(() => false)) {
+    await back.click().catch(() => {});
+  }
+  // The header's New Character button renders only in roster (list) mode, so
+  // waiting for it confirms the roster has rendered before we probe for the
+  // Clear-All control (isVisible() is an immediate, non-waiting check).
+  await expect(page.getByRole('button', { name: /New Character/i })).toBeVisible();
+  // Delete any characters this iteration created, via the real UI path.
+  const clearAll = page.getByRole('button', { name: /Clear All Characters/i });
+  if (await clearAll.isVisible().catch(() => false)) {
+    await clearAll.click();
+    await page.getByRole('button', { name: /^Delete$/i }).click();
+  }
   await expect(page.getByRole('heading', { name: 'No characters yet' })).toBeVisible();
 }
 
@@ -205,18 +221,17 @@ const SYSTEMS: Array<{ id: string; nonTrivial: string; run: RunFn }> = [
 ];
 
 test('user-outcome baseline: a fresh user reaches a legal non-trivial character in every system', async ({
-  browser,
+  page,
 }) => {
   test.setTimeout(240_000);
-  const { baseURL } = test.info().project.use;
   const results: SystemOutcome[] = [];
 
+  // Boot once into an empty roster; every system then starts from a clean
+  // roster produced by resetRoster (which never reloads — see its comment).
+  await page.goto('/', { waitUntil: 'domcontentloaded' });
+  await expect(page.getByRole('heading', { name: 'No characters yet' })).toBeVisible();
+
   for (const system of SYSTEMS) {
-    // A fresh context per system is the literal test premise ("a fresh
-    // user") and the only reliable isolation: it resets localStorage AND the
-    // app's IndexedDB document mirror, which in-page clearing cannot.
-    const context = await browser.newContext({ baseURL });
-    const page = await context.newPage();
     let steps = 0;
     let legal = false;
     let error: string | null = null;
@@ -225,13 +240,12 @@ test('user-outcome baseline: a fresh user reaches a legal non-trivial character 
       steps += 1;
     };
     try {
-      await openFreshLanding(page);
       await system.run(page, tick);
       legal = true;
     } catch (caught) {
       error = (caught as Error).message.split('\n')[0].slice(0, 240);
     } finally {
-      await context.close();
+      await resetRoster(page);
     }
     results.push({
       systemId: system.id,
