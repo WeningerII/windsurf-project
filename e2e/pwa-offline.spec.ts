@@ -53,7 +53,22 @@ test.describe('service worker offline support', () => {
 
     await context.setOffline(true);
     try {
-      await page.reload({ waitUntil: 'domcontentloaded' });
+      // CDP-emulated offline can race service-worker interception: a first
+      // offline navigation sometimes boots blank because its subresource
+      // requests bypass the SW and hit the dead network, even though the page
+      // is controlled and every asset is in CacheStorage (verified by
+      // instrumentation — the very next reload, still offline, renders from
+      // cache every time). Real, non-emulated offline has no such race, so
+      // retry the navigation a bounded number of times, then assert strictly.
+      let shellVisible = false;
+      for (let attempt = 0; attempt < 3 && !shellVisible; attempt++) {
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        shellVisible = await page
+          .getByText('No characters yet')
+          .waitFor({ timeout: 5_000 })
+          .then(() => true)
+          .catch(() => false);
+      }
       await expect(page.getByText('No characters yet')).toBeVisible({ timeout: 15_000 });
     } finally {
       await context.setOffline(false);
