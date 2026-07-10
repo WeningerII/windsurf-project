@@ -225,7 +225,10 @@ test('supports in-sheet dice interactions across all registered system families'
 
   await createCharacterForSystem(page, /Daggerheart/i, 'Daggerheart Roller');
   await expectRollResult(page, 'Roll Agility', /\(2d12/);
-  await expect(page.getByText(/with Hope|with Fear|Critical!/i)).toBeVisible();
+  // A critical (doubles on 2d12, 1-in-12) renders BOTH the "Critical!" badge
+  // and the "— Critical!" breakdown line, so a bare getByText is a strict-mode
+  // violation on that outcome — anchor on the first match.
+  await expect(page.getByText(/with Hope|with Fear|Critical!/i).first()).toBeVisible();
 });
 
 test('manages campaign membership and opens members from the campaign panel', async ({ page }) => {

@@ -193,7 +193,11 @@ const SYSTEMS: Array<{ id: string; nonTrivial: string; run: RunFn }> = [
       await expect(page.locator('input[title="Character level"]')).toHaveValue('3');
       await exerciseRoll(page, 'Roll Agility', /\(2d12/);
       tick();
-      await expect(page.getByText(/with Hope|with Fear|Critical!/i)).toBeVisible();
+      // A critical (doubles on 2d12, 1-in-12) renders BOTH the "Critical!"
+      // badge and the "Hope (x) = Fear (x) — Critical!" breakdown, so a bare
+      // getByText is a strict-mode violation on that outcome — anchor on the
+      // first match.
+      await expect(page.getByText(/with Hope|with Fear|Critical!/i).first()).toBeVisible();
       await assertNoErrorState(page);
     },
   },
