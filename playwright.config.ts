@@ -8,6 +8,10 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
+  // A systemic breakage (52 tests x 2 retries on 1 worker) outruns the CI job
+  // timeout, which reports the run as "cancelled" and swallows the failure
+  // summary. Stop early so real failures surface as failures with output.
+  maxFailures: process.env.CI ? 10 : 0,
   workers: 1,
   reporter: [['list'], ['html', { open: 'never' }]],
   use: {
