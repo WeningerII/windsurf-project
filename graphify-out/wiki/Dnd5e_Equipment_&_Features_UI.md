@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **game-systems.ts** (77 connections) — `src/types/game-systems.ts`
+- **game-systems.ts** (78 connections) — `src/types/game-systems.ts`
 - **character.ts** (73 connections) — `src/types/core/character.ts`
 - **data-model.ts** (54 connections) — `src/systems/dnd5e/data-model.ts`
 - **Dnd5eDataModel** (49 connections) — `src/systems/dnd5e/data-model.ts`
@@ -18,8 +18,8 @@
 - **activityState.ts** (15 connections) — `src/systems/dnd5e/shared/activityState.ts`
 - **speciesTemplate.test.ts** (14 connections) — `src/__tests__/utils/speciesTemplate.test.ts`
 - **Dnd5eEngine** (13 connections) — `src/systems/dnd5e/engine.ts`
+- **conditionsIr.test.ts** (13 connections) — `src/__tests__/rules/conditionsIr.test.ts`
 - **dnd5e-template-pipeline.test.ts** (12 connections) — `src/__tests__/dnd5e-template-pipeline.test.ts`
-- **conditionsIr.test.ts** (12 connections) — `src/__tests__/rules/conditionsIr.test.ts`
 - **backgroundTemplate.test.ts** (12 connections) — `src/__tests__/utils/backgroundTemplate.test.ts`
 - **ClassLevel** (11 connections) — `src/types/core/character.ts`
 - **HitDice** (11 connections) — `src/types/core/character.ts`
@@ -71,7 +71,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 703 (100%)
+- EXTRACTED: 705 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

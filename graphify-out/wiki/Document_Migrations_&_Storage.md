@@ -23,7 +23,7 @@
 - **idbLoadDocuments()** (9 connections) — `src/utils/indexedDBAdapter.ts`
 - **idbSetMigrated()** (8 connections) — `src/utils/indexedDBAdapter.ts`
 - **notifications.ts** (8 connections) — `src/utils/notifications.ts`
-- **parseDocumentsSnapshot()** (7 connections) — `src/utils/documentStorage.ts`
+- **parseDocumentsSnapshot()** (6 connections) — `src/utils/documentStorage.ts`
 - **idbHasMigrated()** (6 connections) — `src/utils/indexedDBAdapter.ts`
 - **openDB()** (6 connections) — `src/utils/indexedDBAdapter.ts`
 - **mergeDocumentCollections()** (5 connections) — `src/utils/documentStorage.ts`
@@ -34,7 +34,7 @@
 ## Relationships
 
 - [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (27 shared connections)
-- [App Shell & Layout](App_Shell_%26_Layout.md) (23 shared connections)
+- [App Shell & Layout](App_Shell_%26_Layout.md) (19 shared connections)
 - [Error Boundary & Auth Context](Error_Boundary_%26_Auth_Context.md) (9 shared connections)
 - [Campaign Sync Hooks](Campaign_Sync_Hooks.md) (9 shared connections)
 - [System Registry & Renderer](System_Registry_%26_Renderer.md) (7 shared connections)
@@ -61,7 +61,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 404 (100%)
+- EXTRACTED: 400 (100%)
 - INFERRED: 2 (0%)
 - AMBIGUOUS: 0 (0%)
 

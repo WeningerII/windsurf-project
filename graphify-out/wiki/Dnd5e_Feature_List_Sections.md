@@ -12,8 +12,8 @@
 - **Background** (15 connections) — `src/types/character-options/backgrounds.ts`
 - **backgrounds.ts** (13 connections) — `src/types/character-options/backgrounds.ts`
 - **Props** (11 connections) — `src/systems/dnd5e/shared/components/Dnd5eFeaturesTab.tsx`
+- **equipParity.test.ts** (11 connections) — `src/__tests__/rules/equipParity.test.ts`
 - **Dnd5eBackgroundSection.tsx** (10 connections) — `src/systems/dnd5e/shared/components/Dnd5eBackgroundSection.tsx`
-- **equipParity.test.ts** (10 connections) — `src/__tests__/rules/equipParity.test.ts`
 - **Modifier** (10 connections) — `src/types/core/common.ts`
 - **FeaturesSection.tsx** (9 connections) — `src/components/FeaturesSection.tsx`
 - **MagicBonusItem** (8 connections) — `src/rules/compile/equipEffects.ts`
@@ -65,7 +65,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 278 (100%)
+- EXTRACTED: 279 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

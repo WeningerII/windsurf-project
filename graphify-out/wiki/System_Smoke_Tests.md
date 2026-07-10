@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **system-smoke.spec.ts** (7 connections) — `e2e/system-smoke.spec.ts`
+- **system-smoke.spec.ts** (8 connections) — `e2e/system-smoke.spec.ts`
 - **renameCharacter()** (3 connections) — `e2e/system-smoke.spec.ts`
 - **createCharacterForSystem()** (2 connections) — `e2e/system-smoke.spec.ts`
 - **getCharacterNameInput()** (2 connections) — `e2e/system-smoke.spec.ts`
@@ -23,7 +23,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 18 (100%)
+- EXTRACTED: 19 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

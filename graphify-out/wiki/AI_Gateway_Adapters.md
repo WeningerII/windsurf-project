@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **gatewayCore.ts** (15 connections) — `src/ai/gatewayCore.ts`
+- **gatewayCore.ts** (16 connections) — `src/ai/gatewayCore.ts`
 - **geminiAdapter.mts** (11 connections) — `netlify/functions/geminiAdapter.mts`
 - **gatewayHttp.ts** (11 connections) — `src/ai/gatewayHttp.ts`
 - **handleAiRequest()** (10 connections) — `src/ai/gatewayCore.ts`
@@ -12,8 +12,8 @@
 - **AiTask** (8 connections) — `src/ai/contracts.ts`
 - **gatewayCore.test.ts** (8 connections) — `src/__tests__/ai/gatewayCore.test.ts`
 - **aiFailure** (7 connections) — `src/ai/contracts.ts`
-- **processGatewayHttp()** (7 connections) — `src/ai/gatewayHttp.ts`
 - **AI_GATEWAY_SCHEMA_VERSION** (6 connections) — `src/ai/contracts.ts`
+- **processGatewayHttp()** (6 connections) — `src/ai/gatewayHttp.ts`
 - **gatewayHttp.test.ts** (6 connections) — `src/__tests__/ai/gatewayHttp.test.ts`
 - **ai-gateway.mts** (4 connections) — `netlify/functions/ai-gateway.mts`
 - **AiProviderAdapter** (4 connections) — `src/ai/gatewayCore.ts`
@@ -40,7 +40,6 @@
 - [AI Encounter Draft Flow](AI_Encounter_Draft_Flow.md) (2 shared connections)
 - [Scene Illustration Panel](Scene_Illustration_Panel.md) (1 shared connections)
 - [Resource Pool Tracking](Resource_Pool_Tracking.md) (1 shared connections)
-- [App Shell & Layout](App_Shell_%26_Layout.md) (1 shared connections)
 
 ## Source Files
 

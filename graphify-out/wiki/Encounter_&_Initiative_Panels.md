@@ -25,10 +25,10 @@
 - **SceneCreateForm()** (6 connections) — `src/components/scene/SceneCreateForm.tsx`
 - **Input** (6 connections) — `src/components/ui/Input.tsx`
 - **SceneCombatStats** (6 connections) — `src/rules/combat/sceneCombat.ts`
-- **exportScenes()** (6 connections) — `src/utils/sceneStorage.ts`
 - **buildMam3eCombatant()** (5 connections) — `src/rules/combatants/mam3eCombatant.ts`
 - **isRoundConclusive()** (5 connections) — `src/rules/tactical/roundDriver.ts`
 - **allegiance.test.ts** (5 connections) — `src/__tests__/scene/allegiance.test.ts`
+- **DaggerheartAdversary** (5 connections) — `src/types/daggerheart.ts`
 - *... and 21 more nodes in this community*
 
 ## Relationships
@@ -71,7 +71,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 411 (100%)
+- EXTRACTED: 410 (100%)
 - INFERRED: 1 (0%)
 - AMBIGUOUS: 0 (0%)
 

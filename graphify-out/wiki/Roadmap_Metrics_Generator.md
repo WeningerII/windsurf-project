@@ -5,7 +5,7 @@
 ## Key Concepts
 
 - **generate-roadmap-metrics.ts** (64 connections) — `src/scripts/generate-roadmap-metrics.ts`
-- **main()** (9 connections) — `src/scripts/generate-roadmap-metrics.ts`
+- **main()** (8 connections) — `src/scripts/generate-roadmap-metrics.ts`
 - **computeMetrics()** (6 connections) — `src/scripts/generate-roadmap-metrics.ts`
 - **buildMarkdownReport()** (5 connections) — `src/scripts/generate-roadmap-metrics.ts`
 - **buildComputeCompletion()** (4 connections) — `src/scripts/generate-roadmap-metrics.ts`
@@ -42,7 +42,6 @@
 - [Scene Grid View](Scene_Grid_View.md) (2 shared connections)
 - [Dnd5e Equipment & Features UI](Dnd5e_Equipment_%26_Features_UI.md) (1 shared connections)
 - [System Validation Logic](System_Validation_Logic.md) (1 shared connections)
-- [App Shell & Layout](App_Shell_%26_Layout.md) (1 shared connections)
 
 ## Source Files
 
@@ -50,7 +49,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 124 (97%)
+- EXTRACTED: 123 (97%)
 - INFERRED: 4 (3%)
 - AMBIGUOUS: 0 (0%)
 

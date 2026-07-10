@@ -37,7 +37,7 @@
 - [Campaign Sync Hooks](Campaign_Sync_Hooks.md) (10 shared connections)
 - [Document Migrations & Storage](Document_Migrations_%26_Storage.md) (9 shared connections)
 - [Combat & Recap Panels](Combat_%26_Recap_Panels.md) (8 shared connections)
-- [App Shell & Layout](App_Shell_%26_Layout.md) (5 shared connections)
+- [App Shell & Layout](App_Shell_%26_Layout.md) (4 shared connections)
 - [System Registry & Renderer](System_Registry_%26_Renderer.md) (3 shared connections)
 - [Campaign Storage & Hooks](Campaign_Storage_%26_Hooks.md) (2 shared connections)
 - [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (1 shared connections)
@@ -58,7 +58,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 197 (100%)
+- EXTRACTED: 196 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

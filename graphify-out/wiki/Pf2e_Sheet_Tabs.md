@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **data-model.ts** (44 connections) — `src/systems/pf2e/data-model.ts`
+- **data-model.ts** (45 connections) — `src/systems/pf2e/data-model.ts`
 - **usePf2eSheetController.ts** (23 connections) — `src/systems/pf2e/usePf2eSheetController.ts`
 - **pf2e-archetype-persistence.test.ts** (18 connections) — `src/__tests__/pf2e-archetype-persistence.test.ts`
 - **createDefaultPf2eData()** (17 connections) — `src/systems/pf2e/data-model.ts`
@@ -67,7 +67,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 309 (100%)
+- EXTRACTED: 310 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

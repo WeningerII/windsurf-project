@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **useSceneEncounter.ts** (39 connections) — `src/components/scene/useSceneEncounter.ts`
+- **useSceneEncounter.ts** (40 connections) — `src/components/scene/useSceneEncounter.ts`
 - **sceneEncounterBuilder.test.ts** (20 connections) — `src/__tests__/sceneEncounterBuilder.test.ts`
 - **useSceneEncounter()** (17 connections) — `src/components/scene/useSceneEncounter.ts`
 - **imageInput.ts** (6 connections) — `src/ai/imageInput.ts`
@@ -47,7 +47,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 113 (99%)
+- EXTRACTED: 114 (99%)
 - INFERRED: 1 (1%)
 - AMBIGUOUS: 0 (0%)
 

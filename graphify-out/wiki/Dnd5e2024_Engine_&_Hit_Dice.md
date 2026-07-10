@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **engine.ts** (48 connections) — `src/systems/dnd5e/shared/engine.ts`
+- **engine.ts** (49 connections) — `src/systems/dnd5e/shared/engine.ts`
 - **dnd5e2014EngineMath.test.ts** (25 connections) — `src/__tests__/dnd5e2014EngineMath.test.ts`
 - **Dnd5eEngineBase** (19 connections) — `src/systems/dnd5e/shared/engine.ts`
 - **spellSlots.ts** (18 connections) — `src/utils/spellSlots.ts`
@@ -65,7 +65,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 407 (100%)
+- EXTRACTED: 408 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

@@ -15,12 +15,12 @@
 - **cloneSceneState()** (6 connections) — `src/scene/runtime.ts`
 - **validateKnownToken()** (6 connections) — `src/scene/runtime.ts`
 - **isOracleOdds()** (5 connections) — `src/scene/oracle.ts`
-- **assertNever()** (5 connections) — `src/scene/runtime.ts`
 - **footprintPlacementIssues()** (5 connections) — `src/scene/runtime.ts`
 - **validateCoordinateInGrid()** (5 connections) — `src/scene/runtime.ts`
 - **validateSceneIntent()** (5 connections) — `src/scene/runtime.ts`
 - **footprintCells()** (4 connections) — `src/scene/grid.ts`
 - **resolveOracle()** (4 connections) — `src/scene/oracle.ts`
+- **assertNever()** (4 connections) — `src/scene/runtime.ts`
 - **cloneMarker()** (4 connections) — `src/scene/runtime.ts`
 - **cloneToken()** (4 connections) — `src/scene/runtime.ts`
 - **normalizeGrid()** (4 connections) — `src/scene/runtime.ts`
@@ -57,8 +57,8 @@
 
 ## Audit Trail
 
-- EXTRACTED: 275 (100%)
-- INFERRED: 1 (0%)
+- EXTRACTED: 274 (100%)
+- INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 
 ---

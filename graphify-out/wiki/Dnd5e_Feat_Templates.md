@@ -8,11 +8,11 @@
 - **dnd5eSheetShared.ts** (37 connections) — `src/systems/dnd5e/shared/dnd5eSheetShared.ts`
 - **useDnd5eSheetActionHandlers()** (14 connections) — `src/systems/dnd5e/shared/useDnd5eSheetActionHandlers.ts`
 - **toggleSkillProficiency.test.tsx** (9 connections) — `src/__tests__/systems/dnd5e/toggleSkillProficiency.test.tsx`
-- **Dnd5eSelectedFeatsSection()** (7 connections) — `src/systems/dnd5e/shared/components/Dnd5eSelectedFeatsSection.tsx`
 - **Dnd5eLikeDataModel** (7 connections) — `src/systems/dnd5e/shared/dnd5eSheetShared.ts`
-- **resolveFeatSelections()** (7 connections) — `src/systems/dnd5e/shared/dnd5eSheetShared.ts`
 - **Dnd5eSheetMutators** (6 connections) — `src/systems/dnd5e/shared/dnd5eSheetShared.ts`
-- **optionDisabledForRequirement()** (5 connections) — `src/systems/dnd5e/shared/dnd5eSheetShared.ts`
+- **resolveFeatSelections()** (6 connections) — `src/systems/dnd5e/shared/dnd5eSheetShared.ts`
+- **Dnd5eSelectedFeatsSection()** (5 connections) — `src/systems/dnd5e/shared/components/Dnd5eSelectedFeatsSection.tsx`
+- **optionDisabledForRequirement()** (4 connections) — `src/systems/dnd5e/shared/dnd5eSheetShared.ts`
 - **toEquippedItem()** (4 connections) — `src/systems/dnd5e/shared/dnd5eSheetShared.ts`
 - **renderHandlers()** (3 connections) — `src/__tests__/systems/dnd5e/toggleSkillProficiency.test.tsx`
 - **countSelections()** (2 connections) — `src/systems/dnd5e/shared/dnd5eSheetShared.ts`
@@ -46,8 +46,8 @@
 
 ## Audit Trail
 
-- EXTRACTED: 142 (95%)
-- INFERRED: 8 (5%)
+- EXTRACTED: 142 (97%)
+- INFERRED: 4 (3%)
 - AMBIGUOUS: 0 (0%)
 
 ---

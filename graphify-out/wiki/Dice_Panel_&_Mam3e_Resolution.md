@@ -8,9 +8,9 @@
 - **createSeededRng()** (30 connections) — `src/scene/seededRng.ts`
 - **SeededRng** (19 connections) — `src/scene/seededRng.ts`
 - **ReactionPanel.tsx** (17 connections) — `src/components/scene/ReactionPanel.tsx`
+- **attackResolution.test.ts** (14 connections) — `src/__tests__/rules/attackResolution.test.ts`
 - **DicePanel.tsx** (13 connections) — `src/components/scene/DicePanel.tsx`
 - **npcGenerator.ts** (13 connections) — `src/scene/npcGenerator.ts`
-- **attackResolution.test.ts** (13 connections) — `src/__tests__/rules/attackResolution.test.ts`
 - **dice.ts** (11 connections) — `src/scene/dice.ts`
 - **reaction.ts** (9 connections) — `src/scene/reaction.ts`
 - **rollDiceExpression()** (8 connections) — `src/scene/dice.ts`
@@ -64,7 +64,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 276 (100%)
+- EXTRACTED: 277 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

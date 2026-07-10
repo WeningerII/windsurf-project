@@ -10,7 +10,7 @@
 - **useCampaignSync()** (21 connections) — `src/hooks/useCampaignSync.ts`
 - **syncTombstones.ts** (20 connections) — `src/utils/syncTombstones.ts`
 - **recordSyncTombstones()** (11 connections) — `src/utils/syncTombstones.ts`
-- **getQueuedCampaignsSnapshot()** (10 connections) — `src/utils/syncEngine.ts`
+- **getQueuedCampaignsSnapshot()** (9 connections) — `src/utils/syncEngine.ts`
 - **getQueuedDeletedCampaignIds()** (9 connections) — `src/utils/syncEngine.ts`
 - **getPendingSyncCount()** (9 connections) — `src/utils/syncStatus.ts`
 - **getSyncTombstonedIds()** (9 connections) — `src/utils/syncTombstones.ts`
@@ -21,14 +21,14 @@
 - **clearQueuedCampaignsSnapshot()** (7 connections) — `src/utils/syncEngine.ts`
 - **deleteRemoteCampaign()** (7 connections) — `src/utils/syncEngine.ts`
 - **restoreRemoteCampaign()** (7 connections) — `src/utils/syncEngine.ts`
-- **queueCampaignsSnapshot()** (6 connections) — `src/utils/syncEngine.ts`
 - **queueDeletedCampaignIds()** (6 connections) — `src/utils/syncEngine.ts`
 - **subscribeToRemoteCampaigns()** (6 connections) — `src/utils/syncEngine.ts`
 - **mergeCampaigns()** (5 connections) — `src/utils/syncEngine.ts`
+- **queueCampaignsSnapshot()** (5 connections) — `src/utils/syncEngine.ts`
 - **getSyncTombstones()** (5 connections) — `src/utils/syncTombstones.ts`
-- **readStored()** (5 connections) — `src/utils/syncTombstones.ts`
-- **writeStored()** (4 connections) — `src/utils/syncTombstones.ts`
+- **readStored()** (4 connections) — `src/utils/syncTombstones.ts`
 - **AuthContextValue** (3 connections) — `src/contexts/auth-context.ts`
+- **pruneExpired()** (3 connections) — `src/utils/syncTombstones.ts`
 - *... and 31 more nodes in this community*
 
 ## Relationships
@@ -36,7 +36,7 @@
 - [Document Sync Engine](Document_Sync_Engine.md) (50 shared connections)
 - [Error Boundary & Auth Context](Error_Boundary_%26_Auth_Context.md) (10 shared connections)
 - [Document Migrations & Storage](Document_Migrations_%26_Storage.md) (9 shared connections)
-- [App Shell & Layout](App_Shell_%26_Layout.md) (9 shared connections)
+- [App Shell & Layout](App_Shell_%26_Layout.md) (5 shared connections)
 - [capabilityScenarios.test.tsx](capabilityScenarios.test.tsx.md) (4 shared connections)
 - [Combat & Recap Panels](Combat_%26_Recap_Panels.md) (3 shared connections)
 - [Quest & Session Log UI](Quest_%26_Session_Log_UI.md) (3 shared connections)
@@ -59,8 +59,8 @@
 
 ## Audit Trail
 
-- EXTRACTED: 287 (93%)
-- INFERRED: 23 (7%)
+- EXTRACTED: 283 (92%)
+- INFERRED: 23 (8%)
 - AMBIGUOUS: 0 (0%)
 
 ---

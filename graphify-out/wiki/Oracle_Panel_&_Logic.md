@@ -9,7 +9,7 @@
 - **CheckPanel.tsx** (17 connections) — `src/components/scene/CheckPanel.tsx`
 - **sceneTerrain.ts** (16 connections) — `src/rules/terrain/sceneTerrain.ts`
 - **oracle.ts** (15 connections) — `src/scene/oracle.ts`
-- **sceneTerrain.test.ts** (14 connections) — `src/__tests__/rules/sceneTerrain.test.ts`
+- **sceneTerrain.test.ts** (15 connections) — `src/__tests__/rules/sceneTerrain.test.ts`
 - **MarkerPanel.tsx** (12 connections) — `src/components/scene/MarkerPanel.tsx`
 - **CheckPanel.test.tsx** (8 connections) — `src/__tests__/components/CheckPanel.test.tsx`
 - **markerToEffects()** (7 connections) — `src/rules/terrain/sceneTerrain.ts`
@@ -62,7 +62,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 309 (100%)
+- EXTRACTED: 310 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

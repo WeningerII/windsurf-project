@@ -5,19 +5,19 @@
 ## Key Concepts
 
 - **check-compute-register.mjs** (25 connections) — `scripts/check-compute-register.mjs`
-- **main()** (6 connections) — `scripts/check-compute-register.mjs`
 - **evaluateMutation()** (5 connections) — `scripts/check-compute-register.mjs`
 - **evaluateTierA()** (5 connections) — `scripts/check-compute-register.mjs`
+- **main()** (5 connections) — `scripts/check-compute-register.mjs`
 - **applyDemotion()** (4 connections) — `scripts/check-compute-register.mjs`
 - **mutation-anchors.ts** (3 connections) — `docs/compute-register/mutation-anchors.ts`
 - **matchingAssertions()** (3 connections) — `scripts/check-compute-register.mjs`
-- **runVitestFile()** (3 connections) — `scripts/check-compute-register.mjs`
-- **runVitestFileFresh()** (3 connections) — `scripts/check-compute-register.mjs`
 - **MUTATION_ANCHORS** (2 connections) — `docs/compute-register/mutation-anchors.ts`
 - **escapeRe()** (2 connections) — `scripts/check-compute-register.mjs`
 - **flattenEntries()** (2 connections) — `scripts/check-compute-register.mjs`
 - **gitRestore()** (2 connections) — `scripts/check-compute-register.mjs`
 - **matchBrace()** (2 connections) — `scripts/check-compute-register.mjs`
+- **runVitestFile()** (2 connections) — `scripts/check-compute-register.mjs`
+- **runVitestFileFresh()** (2 connections) — `scripts/check-compute-register.mjs`
 - **testImportsRegister()** (2 connections) — `scripts/check-compute-register.mjs`
 - **MutationAnchor** (1 connections) — `docs/compute-register/mutation-anchors.ts`
 - **DO_MUTATE** (1 connections) — `scripts/check-compute-register.mjs`
@@ -32,7 +32,6 @@
 
 ## Relationships
 
-- [App Shell & Layout](App_Shell_%26_Layout.md) (3 shared connections)
 - [System Compute Registers](System_Compute_Registers.md) (2 shared connections)
 
 ## Source Files
@@ -42,7 +41,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 79 (100%)
+- EXTRACTED: 76 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

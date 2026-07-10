@@ -1,6 +1,6 @@
 # Doc Drift Tests
 
-> 11 nodes · cohesion 0.18
+> 10 nodes · cohesion 0.18
 
 ## Key Concepts
 
@@ -11,7 +11,6 @@
 - **createCharacter()** (1 connections) — `e2e/outcome-baseline.spec.ts`
 - **exerciseRoll()** (1 connections) — `e2e/outcome-baseline.spec.ts`
 - **OUTCOME_DIR** (1 connections) — `e2e/outcome-baseline.spec.ts`
-- **resetToLanding()** (1 connections) — `e2e/outcome-baseline.spec.ts`
 - **RunFn** (1 connections) — `e2e/outcome-baseline.spec.ts`
 - **SystemOutcome** (1 connections) — `e2e/outcome-baseline.spec.ts`
 - **SYSTEMS** (1 connections) — `e2e/outcome-baseline.spec.ts`
@@ -26,7 +25,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 20 (100%)
+- EXTRACTED: 19 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

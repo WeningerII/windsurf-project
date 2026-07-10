@@ -8,14 +8,14 @@
 - **main()** (11 connections) — `scripts/encode-pf2e-spells.mjs`
 - **detag()** (6 connections) — `scripts/encode-pf2e-spells.mjs`
 - **flattenEntries()** (3 connections) — `scripts/encode-pf2e-spells.mjs`
-- **mapCast()** (3 connections) — `scripts/encode-pf2e-spells.mjs`
 - **mapDuration()** (3 connections) — `scripts/encode-pf2e-spells.mjs`
 - **mapHeightening()** (3 connections) — `scripts/encode-pf2e-spells.mjs`
 - **mapRange()** (3 connections) — `scripts/encode-pf2e-spells.mjs`
-- **ts()** (3 connections) — `scripts/encode-pf2e-spells.mjs`
 - **CLASS_TRAITS** (2 connections) — `scripts/encode-pf2e-spells.mjs`
+- **mapCast()** (2 connections) — `scripts/encode-pf2e-spells.mjs`
 - **normalizeName()** (2 connections) — `scripts/encode-pf2e-spells.mjs`
 - **slug()** (2 connections) — `scripts/encode-pf2e-spells.mjs`
+- **ts()** (2 connections) — `scripts/encode-pf2e-spells.mjs`
 - **BLOODLINE_TRADITIONS** (1 connections) — `scripts/encode-pf2e-spells.mjs`
 - **CLASS_TRADITIONS** (1 connections) — `scripts/encode-pf2e-spells.mjs`
 - **SAVE_ATTRIBUTES** (1 connections) — `scripts/encode-pf2e-spells.mjs`
@@ -25,7 +25,7 @@
 
 ## Relationships
 
-- [App Shell & Layout](App_Shell_%26_Layout.md) (2 shared connections)
+- No strong cross-community connections detected
 
 ## Source Files
 
@@ -33,7 +33,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 64 (100%)
+- EXTRACTED: 62 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

@@ -40,8 +40,8 @@
 - [D20 Combat Controls](D20_Combat_Controls.md) (11 shared connections)
 - [Sync Engine Tests](Sync_Engine_Tests.md) (9 shared connections)
 - [Dnd35e Saves & Data Model](Dnd35e_Saves_%26_Data_Model.md) (8 shared connections)
-- [App Shell & Layout](App_Shell_%26_Layout.md) (7 shared connections)
 - [Document Migrations & Storage](Document_Migrations_%26_Storage.md) (7 shared connections)
+- [App Shell & Layout](App_Shell_%26_Layout.md) (6 shared connections)
 - [capabilityScenarios.test.tsx](capabilityScenarios.test.tsx.md) (6 shared connections)
 - [Mam3e Data Model & Engine](Mam3e_Data_Model_%26_Engine.md) (5 shared connections)
 - [Doc Drift Rules](Doc_Drift_Rules.md) (5 shared connections)
@@ -66,7 +66,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 357 (100%)
+- EXTRACTED: 356 (100%)
 - INFERRED: 1 (0%)
 - AMBIGUOUS: 0 (0%)
 

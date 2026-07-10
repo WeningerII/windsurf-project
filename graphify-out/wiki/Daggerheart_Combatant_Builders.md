@@ -27,8 +27,8 @@
 - **BuildEncounterEventsParams** (6 connections) — `src/scene/encounterBuilder.ts`
 - **PlaceTokenInput** (6 connections) — `src/scene/tokenPlacement.ts`
 - **UseD20LegacyMutationHandlersProps** (6 connections) — `src/systems/d20-legacy/useD20LegacyMutationHandlers.ts`
+- **AppHeaderProps** (5 connections) — `src/components/AppHeader.tsx`
 - **TokenPanelProps** (5 connections) — `src/components/scene/TokenPanel.tsx`
-- **UseDnd5eSheetActionHandlersProps** (5 connections) — `src/systems/dnd5e/shared/useDnd5eSheetActionHandlers.ts`
 - *... and 36 more nodes in this community*
 
 ## Relationships
@@ -71,7 +71,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 817 (100%)
+- EXTRACTED: 818 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

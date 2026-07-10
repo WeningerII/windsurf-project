@@ -4,17 +4,17 @@
 
 ## Key Concepts
 
-- **srd-coverage.ts** (39 connections) — `src/scripts/srd-coverage.ts`
+- **srd-coverage.ts** (40 connections) — `src/scripts/srd-coverage.ts`
 - **fetchText()** (10 connections) — `src/scripts/srd-coverage.ts`
 - **fetchJsArrayNames()** (4 connections) — `src/scripts/srd-coverage.ts`
 - **loaderNormVariants()** (4 connections) — `src/scripts/srd-coverage.ts`
 - **norm()** (4 connections) — `src/scripts/srd-coverage.ts`
 - **fetchCsvNames()** (3 connections) — `src/scripts/srd-coverage.ts`
-- **fetchJsonPropNames()** (3 connections) — `src/scripts/srd-coverage.ts`
 - **main()** (3 connections) — `src/scripts/srd-coverage.ts`
 - **csvRows()** (2 connections) — `src/scripts/srd-coverage.ts`
 - **extractJsArray()** (2 connections) — `src/scripts/srd-coverage.ts`
 - **extractNameValues()** (2 connections) — `src/scripts/srd-coverage.ts`
+- **fetchJsonPropNames()** (2 connections) — `src/scripts/srd-coverage.ts`
 - **fetchMarkdownHeadings()** (2 connections) — `src/scripts/srd-coverage.ts`
 - **fetchMarkdownLinkNames()** (2 connections) — `src/scripts/srd-coverage.ts`
 - **fetchSrd35MonsterNames()** (2 connections) — `src/scripts/srd-coverage.ts`
@@ -38,7 +38,6 @@
 - [Dnd5e Equipment & Features UI](Dnd5e_Equipment_%26_Features_UI.md) (1 shared connections)
 - [SRD Manifest Generator](SRD_Manifest_Generator.md) (1 shared connections)
 - [System Validation Logic](System_Validation_Logic.md) (1 shared connections)
-- [App Shell & Layout](App_Shell_%26_Layout.md) (1 shared connections)
 
 ## Source Files
 

@@ -5,7 +5,7 @@
 ## Key Concepts
 
 - **generate-master-gap-ledger.ts** (19 connections) — `src/scripts/generate-master-gap-ledger.ts`
-- **master-gap-ledger.source.ts** (7 connections) — `docs/master-gap-ledger.source.ts`
+- **master-gap-ledger.source.ts** (8 connections) — `docs/master-gap-ledger.source.ts`
 - **GapLedgerItem** (2 connections) — `docs/master-gap-ledger.source.ts`
 - **LedgerStatus** (2 connections) — `docs/master-gap-ledger.source.ts`
 - **MASTER_GAP_LEDGER** (2 connections) — `docs/master-gap-ledger.source.ts`
@@ -38,7 +38,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 49 (100%)
+- EXTRACTED: 50 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

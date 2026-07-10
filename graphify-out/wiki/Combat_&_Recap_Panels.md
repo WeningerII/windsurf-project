@@ -4,14 +4,14 @@
 
 ## Key Concepts
 
-- **App.tsx** (79 connections) — `src/App.tsx`
+- **App.tsx** (81 connections) — `src/App.tsx`
 - **Button.tsx** (35 connections) — `src/components/ui/Button.tsx`
 - **Button** (30 connections) — `src/components/ui/Button.tsx`
 - **CampaignManager.tsx** (29 connections) — `src/components/CampaignManager.tsx`
 - **SceneState** (28 connections) — `src/types/core/scene.ts`
 - **SceneGridView.tsx** (25 connections) — `src/components/SceneGridView.tsx`
 - **generateUUID()** (25 connections) — `src/utils/browserCompat.ts`
-- **AppHeader.tsx** (18 connections) — `src/components/AppHeader.tsx`
+- **AppHeader.tsx** (22 connections) — `src/components/AppHeader.tsx`
 - **Select.tsx** (18 connections) — `src/components/ui/Select.tsx`
 - **CharacterListView.tsx** (17 connections) — `src/components/CharacterListView.tsx`
 - **RecapPanel.tsx** (15 connections) — `src/components/scene/RecapPanel.tsx`
@@ -44,7 +44,7 @@
 - [Error Boundary & Auth Context](Error_Boundary_%26_Auth_Context.md) (8 shared connections)
 - [Campaign Storage & Hooks](Campaign_Storage_%26_Hooks.md) (7 shared connections)
 - [Combat Toggles & Conditions](Combat_Toggles_%26_Conditions.md) (7 shared connections)
-- [Game System Selector](Game_System_Selector.md) (6 shared connections)
+- [Character Card Presenter](Character_Card_Presenter.md) (6 shared connections)
 
 ## Source Files
 
@@ -71,8 +71,8 @@
 
 ## Audit Trail
 
-- EXTRACTED: 549 (99%)
-- INFERRED: 4 (1%)
+- EXTRACTED: 556 (99%)
+- INFERRED: 3 (1%)
 - AMBIGUOUS: 0 (0%)
 
 ---

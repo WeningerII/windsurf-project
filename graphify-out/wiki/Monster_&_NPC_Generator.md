@@ -16,7 +16,6 @@
 - **formatChallengeRating()** (2 connections) — `src/components/MonsterBrowser.tsx`
 - **MonsterBrowserProps** (2 connections) — `src/components/MonsterBrowser.tsx`
 - **Props** (2 connections) — `src/systems/dnd5e/shared/components/Dnd5eMonsterBrowserTab.tsx`
-- **loadMonsters()** (2 connections) — `src/__tests__/data/monsterDataIntegrity.test.ts`
 - **SpellcastingProgression** (2 connections) — `src/types/character-options/classes.ts`
 - **CR_XP_TABLE** (1 connections) — `src/components/MonsterBrowser.tsx`
 - **Dnd5eMonsterBrowserTabComponent** (1 connections) — `src/systems/dnd5e/shared/components/Dnd5eMonsterBrowserTab.tsx`
@@ -24,6 +23,7 @@
 - **MonsterBrowserProps** (1 connections) — `src/systems/dnd5e/shared/components/Dnd5eMonsterBrowserTab.tsx`
 - **monsters** (1 connections) — `src/__tests__/components/MonsterBrowser.test.tsx`
 - **expectNoNaN()** (1 connections) — `src/__tests__/data/monsterDataIntegrity.test.ts`
+- **loadMonsters()** (1 connections) — `src/__tests__/data/monsterDataIntegrity.test.ts`
 - **VALID_DAMAGE_TYPES** (1 connections) — `src/__tests__/data/monsterDataIntegrity.test.ts`
 - **AbilityScores** (1 connections) — `src/types/creatures/monsters.ts`
 - **Alignment** (1 connections) — `src/types/creatures/monsters.ts`
@@ -41,10 +41,10 @@
 - [AI Creature Identification](AI_Creature_Identification.md) (4 shared connections)
 - [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (4 shared connections)
 - [Sheet Header & Stat Cards](Sheet_Header_%26_Stat_Cards.md) (3 shared connections)
-- [Dnd5e Resource Loading Hooks](Dnd5e_Resource_Loading_Hooks.md) (3 shared connections)
 - [Class Enhancement & Headers](Class_Enhancement_%26_Headers.md) (3 shared connections)
 - [Campaign File Transfer](Campaign_File_Transfer.md) (3 shared connections)
 - [Monster Combatant Builder](Monster_Combatant_Builder.md) (3 shared connections)
+- [Dnd5e Resource Loading Hooks](Dnd5e_Resource_Loading_Hooks.md) (2 shared connections)
 
 ## Source Files
 
@@ -58,8 +58,8 @@
 
 ## Audit Trail
 
-- EXTRACTED: 139 (99%)
-- INFERRED: 1 (1%)
+- EXTRACTED: 139 (100%)
+- INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 
 ---

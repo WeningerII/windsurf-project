@@ -9,8 +9,8 @@
 - **types.ts** (42 connections) — `src/rules/ir/types.ts`
 - **modifierEffects.ts** (21 connections) — `src/rules/compile/modifierEffects.ts`
 - **d20LegacyConditions.ts** (19 connections) — `src/rules/conditions/d20LegacyConditions.ts`
+- **contributionLedger.ts** (18 connections) — `src/types/core/contributionLedger.ts`
 - **sceneConditions.ts** (17 connections) — `src/rules/conditions/sceneConditions.ts`
-- **contributionLedger.ts** (17 connections) — `src/types/core/contributionLedger.ts`
 - **sceneConditions.test.ts** (16 connections) — `src/__tests__/rules/sceneConditions.test.ts`
 - **equipEffects.ts** (15 connections) — `src/rules/compile/equipEffects.ts`
 - **pf2eConditions.ts** (14 connections) — `src/rules/conditions/pf2eConditions.ts`
@@ -23,11 +23,11 @@
 - **collectD20LegacyConditionEffects()** (8 connections) — `src/rules/conditions/d20LegacyConditions.ts`
 - **compileModifierSource()** (7 connections) — `src/rules/compile/modifierEffects.ts`
 - **collectDnd5eConditionEffects()** (7 connections) — `src/rules/conditions/dnd5eConditions.ts`
+- **pf2eConditionsIr.test.ts** (7 connections) — `src/__tests__/rules/pf2eConditionsIr.test.ts`
 - **ContributionCategory** (7 connections) — `src/types/core/contributionLedger.ts`
 - **ContributionManualBoundary** (7 connections) — `src/types/core/contributionLedger.ts`
 - **conditionImposesDisadvantage()** (6 connections) — `src/rules/conditions/dnd5eConditions.ts`
 - **StackPolicy** (6 connections) — `src/rules/ir/types.ts`
-- **pf2eConditionsIr.test.ts** (6 connections) — `src/__tests__/rules/pf2eConditionsIr.test.ts`
 - **collectPf2eConditionEffects()** (5 connections) — `src/rules/conditions/pf2eConditions.ts`
 - *... and 45 more nodes in this community*
 
@@ -63,7 +63,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 515 (99%)
+- EXTRACTED: 517 (99%)
 - INFERRED: 3 (1%)
 - AMBIGUOUS: 0 (0%)
 
