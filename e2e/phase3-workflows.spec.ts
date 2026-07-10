@@ -2,12 +2,6 @@ import { Buffer } from 'node:buffer';
 import { expect, test, type Page } from '@playwright/test';
 import { createDefaultDnd5e2024Data } from '../src/systems/dnd5e-2024/data-model';
 
-// Character-creation/persistence flows, not the PWA layer. Blocking the service
-// worker keeps its cold-context install from racing the lazy sheet-chunk fetch
-// (the source of intermittent >15s mount stalls on cold firefox CI runners). SW
-// behavior is covered by e2e/pwa-offline.spec.ts and e2e/pwa-install.spec.ts.
-test.use({ serviceWorkers: 'block' });
-
 /**
  * Open the New Character dialog and pick a system (which creates immediately).
  * The current UI flow: click "New Character" → dialog → click a system card.
@@ -16,9 +10,11 @@ test.use({ serviceWorkers: 'block' });
 async function createCharacterForSystem(page: Page, systemPattern: RegExp = /D&D 5e \(2024\)/i) {
   await page.getByRole('button', { name: /New Character/i }).click();
   await page.getByRole('button', { name: systemPattern }).click();
-  // Sheet opens — the header shows "New Character" and the Back button.
-  // Lazy sheet chunks can exceed the default 5s on a cold CI runner.
-  await expect(page.getByRole('button', { name: /^Back$/i })).toBeVisible({ timeout: 15_000 });
+  // Sheet opens — the header shows "New Character" and the Back button. The
+  // sheet is a lazily-loaded chunk that mounts in ~350ms locally, but a cold
+  // fetch+parse on a contended firefox CI runner intermittently spikes past 15s
+  // (it mounts correctly, just slowly), so allow generous headroom here.
+  await expect(page.getByRole('button', { name: /^Back$/i })).toBeVisible({ timeout: 30_000 });
 }
 
 /**

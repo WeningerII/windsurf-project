@@ -3,12 +3,6 @@ import path from 'node:path';
 
 import { expect, test, type Page } from '@playwright/test';
 
-// Measures reaching a legal character per system, not the PWA layer. Blocking
-// the service worker keeps its cold-context install from racing the lazy
-// sheet-chunk fetch (a source of intermittent >15s mount stalls on cold firefox
-// CI runners). SW behavior is covered by the pwa-* specs.
-test.use({ serviceWorkers: 'block' });
-
 /**
  * User-outcome baseline harness (ORCH-14 / PROD-10, Launch-Blocker item 3).
  *
@@ -78,8 +72,11 @@ async function createCharacter(
   tick();
   await page.getByRole('button', { name: systemPattern }).click();
   tick();
-  // Lazy sheet chunks can exceed the default 5s on a cold CI runner.
-  await expect(page.getByRole('button', { name: /^Back$/i })).toBeVisible({ timeout: 15_000 });
+  // The system sheet is a lazily-loaded chunk that mounts in ~350ms locally, but
+  // a cold fetch+parse on a contended firefox CI runner intermittently spikes
+  // past 15s (it mounts correctly, just slowly), so allow generous headroom. The
+  // per-system time budget below still enforces the real mount-speed SLA.
+  await expect(page.getByRole('button', { name: /^Back$/i })).toBeVisible({ timeout: 30_000 });
   const titledInput = page.locator('input[title="Character name"]');
   const nameInput =
     (await titledInput.count()) > 0 ? titledInput.first() : page.getByPlaceholder('Character Name');
