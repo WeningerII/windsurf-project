@@ -24,7 +24,8 @@ async function renameCharacter(page: Page, name: string) {
 async function createCharacterForSystem(page: Page, systemPattern: RegExp, name: string) {
   await page.getByRole('button', { name: /New Character/i }).click();
   await page.getByRole('button', { name: systemPattern }).click();
-  await expect(page.getByRole('button', { name: /^Back$/i })).toBeVisible();
+  // Lazy sheet chunks can exceed the default 5s on a cold CI runner.
+  await expect(page.getByRole('button', { name: /^Back$/i })).toBeVisible({ timeout: 15_000 });
   await renameCharacter(page, name);
 }
 

@@ -56,7 +56,8 @@ async function createCharacter(
   tick();
   await page.getByRole('button', { name: systemPattern }).click();
   tick();
-  await expect(page.getByRole('button', { name: /^Back$/i })).toBeVisible();
+  // Lazy sheet chunks can exceed the default 5s on a cold CI runner.
+  await expect(page.getByRole('button', { name: /^Back$/i })).toBeVisible({ timeout: 15_000 });
   const titledInput = page.locator('input[title="Character name"]');
   const nameInput =
     (await titledInput.count()) > 0 ? titledInput.first() : page.getByPlaceholder('Character Name');

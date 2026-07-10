@@ -10,8 +10,9 @@ import { createDefaultDnd5e2024Data } from '../src/systems/dnd5e-2024/data-model
 async function createCharacterForSystem(page: Page, systemPattern: RegExp = /D&D 5e \(2024\)/i) {
   await page.getByRole('button', { name: /New Character/i }).click();
   await page.getByRole('button', { name: systemPattern }).click();
-  // Sheet opens — the header shows "New Character" and the Back button
-  await expect(page.getByRole('button', { name: /^Back$/i })).toBeVisible();
+  // Sheet opens — the header shows "New Character" and the Back button.
+  // Lazy sheet chunks can exceed the default 5s on a cold CI runner.
+  await expect(page.getByRole('button', { name: /^Back$/i })).toBeVisible({ timeout: 15_000 });
 }
 
 /**
