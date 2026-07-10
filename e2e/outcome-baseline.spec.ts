@@ -38,6 +38,12 @@ async function resetToLanding(page: Page): Promise<void> {
   await page.goto('/', { waitUntil: 'domcontentloaded' });
   await page.evaluate(() => localStorage.clear());
   await page.goto('/', { waitUntil: 'domcontentloaded' });
+  // The outgoing app instance flushes pending debounced saves on pagehide, so
+  // the navigation above can resurrect just-cleared documents. The freshly
+  // booted instance has nothing pending, so a second clear + reload yields a
+  // deterministically empty roster.
+  await page.evaluate(() => localStorage.clear());
+  await page.reload({ waitUntil: 'domcontentloaded' });
   // Fresh boot has no characters, so the roster's empty state is the landing anchor.
   await expect(page.getByRole('heading', { name: 'No characters yet' })).toBeVisible();
 }
