@@ -3,6 +3,12 @@ import path from 'node:path';
 
 import { expect, test, type Page } from '@playwright/test';
 
+// Measures reaching a legal character per system, not the PWA layer. Blocking
+// the service worker keeps its cold-context install from racing the lazy
+// sheet-chunk fetch (a source of intermittent >15s mount stalls on cold firefox
+// CI runners). SW behavior is covered by the pwa-* specs.
+test.use({ serviceWorkers: 'block' });
+
 /**
  * User-outcome baseline harness (ORCH-14 / PROD-10, Launch-Blocker item 3).
  *

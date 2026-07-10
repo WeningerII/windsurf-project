@@ -1,5 +1,12 @@
 import { expect, test, type Page } from '@playwright/test';
 
+// This suite exercises system sheets, not the PWA/offline layer. Blocking the
+// service worker keeps its cold-context install from racing the lazy
+// sheet-chunk fetch — the source of intermittent >15s mount stalls on cold
+// firefox CI runners (the sheet otherwise mounts in ~350ms). SW behavior is
+// covered by e2e/pwa-offline.spec.ts and e2e/pwa-install.spec.ts.
+test.use({ serviceWorkers: 'block' });
+
 async function openLandingPage(page: Page) {
   await page.goto('/', { waitUntil: 'domcontentloaded' });
   await page.evaluate(() => localStorage.clear());

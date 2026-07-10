@@ -2,6 +2,12 @@ import { Buffer } from 'node:buffer';
 import { expect, test, type Page } from '@playwright/test';
 import { createDefaultDnd5e2024Data } from '../src/systems/dnd5e-2024/data-model';
 
+// Character-creation/persistence flows, not the PWA layer. Blocking the service
+// worker keeps its cold-context install from racing the lazy sheet-chunk fetch
+// (the source of intermittent >15s mount stalls on cold firefox CI runners). SW
+// behavior is covered by e2e/pwa-offline.spec.ts and e2e/pwa-install.spec.ts.
+test.use({ serviceWorkers: 'block' });
+
 /**
  * Open the New Character dialog and pick a system (which creates immediately).
  * The current UI flow: click "New Character" → dialog → click a system card.
