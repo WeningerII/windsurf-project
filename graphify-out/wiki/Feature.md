@@ -20,8 +20,8 @@
 - data-model.ts `EXTRACTED`
 - Dnd5eFeaturesTab.tsx `EXTRACTED`
 - classes.ts `EXTRACTED`
-- characterCombatant.ts `EXTRACTED`
 - data-model.ts `EXTRACTED`
+- characterCombatant.ts `EXTRACTED`
 - dnd5eFeatureOptions.ts `EXTRACTED`
 - systemProfiles.ts `EXTRACTED`
 - data-model.ts `EXTRACTED`

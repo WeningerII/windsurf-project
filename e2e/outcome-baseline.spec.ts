@@ -34,11 +34,32 @@ interface SystemOutcome {
 
 type RunFn = (page: Page, tick: () => void) => Promise<void>;
 
-async function resetToLanding(page: Page): Promise<void> {
-  await page.goto('/', { waitUntil: 'domcontentloaded' });
-  await page.evaluate(() => localStorage.clear());
-  await page.goto('/', { waitUntil: 'domcontentloaded' });
-  await expect(page.getByText('Your Characters')).toBeVisible();
+// Return the app to an empty roster between systems WITHOUT reloading. The
+// reset goes through the app's own "Clear All Characters" flow, which purges
+// both localStorage and the IndexedDB mirror (see clearDocumentStorage). This
+// is race-free precisely because we never navigate/reload after the initial
+// boot: storage is only ever written (debounced saves), never re-read, so the
+// pagehide-flush + IndexedDB-restore resurrection that defeats a manual
+// localStorage.clear() cannot happen. It also keeps the shell/service-worker
+// warm across all seven systems — one cold boot instead of seven, which is
+// what kept an occasional cold-boot stall from tripping the mount timeout.
+async function resetRoster(page: Page): Promise<void> {
+  // If a run left us on a sheet, get back to the roster first.
+  const back = page.getByRole('button', { name: /^Back$/i });
+  if (await back.isVisible().catch(() => false)) {
+    await back.click().catch(() => {});
+  }
+  // The header's New Character button renders only in roster (list) mode, so
+  // waiting for it confirms the roster has rendered before we probe for the
+  // Clear-All control (isVisible() is an immediate, non-waiting check).
+  await expect(page.getByRole('button', { name: /New Character/i })).toBeVisible();
+  // Delete any characters this iteration created, via the real UI path.
+  const clearAll = page.getByRole('button', { name: /Clear All Characters/i });
+  if (await clearAll.isVisible().catch(() => false)) {
+    await clearAll.click();
+    await page.getByRole('button', { name: /^Delete$/i }).click();
+  }
+  await expect(page.getByRole('heading', { name: 'No characters yet' })).toBeVisible();
 }
 
 async function createCharacter(
@@ -51,7 +72,11 @@ async function createCharacter(
   tick();
   await page.getByRole('button', { name: systemPattern }).click();
   tick();
-  await expect(page.getByRole('button', { name: /^Back$/i })).toBeVisible();
+  // The system sheet is a lazily-loaded chunk that mounts in ~350ms locally, but
+  // a cold fetch+parse on a contended firefox CI runner intermittently spikes
+  // past 15s (it mounts correctly, just slowly), so allow generous headroom. The
+  // per-system time budget below still enforces the real mount-speed SLA.
+  await expect(page.getByRole('button', { name: /^Back$/i })).toBeVisible({ timeout: 30_000 });
   const titledInput = page.locator('input[title="Character name"]');
   const nameInput =
     (await titledInput.count()) > 0 ? titledInput.first() : page.getByPlaceholder('Character Name');
@@ -188,7 +213,11 @@ const SYSTEMS: Array<{ id: string; nonTrivial: string; run: RunFn }> = [
       await expect(page.locator('input[title="Character level"]')).toHaveValue('3');
       await exerciseRoll(page, 'Roll Agility', /\(2d12/);
       tick();
-      await expect(page.getByText(/with Hope|with Fear|Critical!/i)).toBeVisible();
+      // A critical (doubles on 2d12, 1-in-12) renders BOTH the "Critical!"
+      // badge and the "Hope (x) = Fear (x) — Critical!" breakdown, so a bare
+      // getByText is a strict-mode violation on that outcome — anchor on the
+      // first match.
+      await expect(page.getByText(/with Hope|with Fear|Critical!/i).first()).toBeVisible();
       await assertNoErrorState(page);
     },
   },
@@ -200,6 +229,11 @@ test('user-outcome baseline: a fresh user reaches a legal non-trivial character 
   test.setTimeout(240_000);
   const results: SystemOutcome[] = [];
 
+  // Boot once into an empty roster; every system then starts from a clean
+  // roster produced by resetRoster (which never reloads — see its comment).
+  await page.goto('/', { waitUntil: 'domcontentloaded' });
+  await expect(page.getByRole('heading', { name: 'No characters yet' })).toBeVisible();
+
   for (const system of SYSTEMS) {
     let steps = 0;
     let legal = false;
@@ -209,11 +243,12 @@ test('user-outcome baseline: a fresh user reaches a legal non-trivial character 
       steps += 1;
     };
     try {
-      await resetToLanding(page);
       await system.run(page, tick);
       legal = true;
     } catch (caught) {
       error = (caught as Error).message.split('\n')[0].slice(0, 240);
+    } finally {
+      await resetRoster(page);
     }
     results.push({
       systemId: system.id,

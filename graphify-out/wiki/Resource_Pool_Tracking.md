@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **sceneNarrationFlow.ts** (12 connections) — `src/ai/sceneNarrationFlow.ts`
+- **sceneNarrationFlow.ts** (13 connections) — `src/ai/sceneNarrationFlow.ts`
 - **sceneNarrationFlow.test.ts** (8 connections) — `src/__tests__/ai/sceneNarrationFlow.test.ts`
 - **narrateSceneWithAi()** (4 connections) — `src/ai/sceneNarrationFlow.ts`
 - **SceneNarrationData** (3 connections) — `src/ai/contracts.ts`
@@ -30,7 +30,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 32 (100%)
+- EXTRACTED: 33 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

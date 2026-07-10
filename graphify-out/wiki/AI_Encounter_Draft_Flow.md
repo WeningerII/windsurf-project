@@ -4,8 +4,8 @@
 
 ## Key Concepts
 
-- **encounterDraftFlow.ts** (14 connections) — `src/ai/encounterDraftFlow.ts`
-- **identifyCreatureFlow.ts** (13 connections) — `src/ai/identifyCreatureFlow.ts`
+- **encounterDraftFlow.ts** (15 connections) — `src/ai/encounterDraftFlow.ts`
+- **identifyCreatureFlow.ts** (14 connections) — `src/ai/identifyCreatureFlow.ts`
 - **encounterDraftFlow.test.ts** (10 connections) — `src/__tests__/ai/encounterDraftFlow.test.ts`
 - **identifyCreatureFlow.test.ts** (10 connections) — `src/__tests__/ai/identifyCreatureFlow.test.ts`
 - **EncounterDraftCandidate** (6 connections) — `src/ai/contracts.ts`
@@ -49,7 +49,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 94 (100%)
+- EXTRACTED: 96 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

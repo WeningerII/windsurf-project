@@ -37,7 +37,7 @@
 - [Dnd5e Resource Loading Hooks](Dnd5e_Resource_Loading_Hooks.md) (9 shared connections)
 - [Browser Compat & Error Logging](Browser_Compat_%26_Error_Logging.md) (9 shared connections)
 - [Dnd5e Equipment & Features UI](Dnd5e_Equipment_%26_Features_UI.md) (7 shared connections)
-- [Combat & Recap Panels](Combat_%26_Recap_Panels.md) (6 shared connections)
+- [Combat & Recap Panels](Combat_%26_Recap_Panels.md) (4 shared connections)
 - [Monster Stat Block & Status](Monster_Stat_Block_%26_Status.md) (4 shared connections)
 - [Sheet Resource Loading Hooks](Sheet_Resource_Loading_Hooks.md) (3 shared connections)
 

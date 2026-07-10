@@ -24,11 +24,11 @@
 - **WeaponProperty** (3 connections) — `src/types/mechanics/combat.ts`
 - **Props** (2 connections) — `src/components/EquippedArmorSection.tsx`
 - **Props** (2 connections) — `src/systems/mam3e/components/MamEquipmentBrowserTab.tsx`
-- **renderSection()** (2 connections) — `src/__tests__/components/EquippedArmorSection.test.tsx`
 - **EquipArmorInput** (1 connections) — `src/components/EquippedArmorSection.tsx`
 - **EquipEntry** (1 connections) — `src/components/EquippedArmorSection.tsx`
 - **EquipShieldInput** (1 connections) — `src/components/EquippedArmorSection.tsx`
 - **EquipmentBrowser** (1 connections) — `src/systems/mam3e/components/MamEquipmentBrowserTab.tsx`
+- **formatMamEquipmentCost()** (1 connections) — `src/systems/mam3e/components/MamEquipmentBrowserTab.tsx`
 - *... and 8 more nodes in this community*
 
 ## Relationships
@@ -44,7 +44,7 @@
 - [Combat Toggles & Conditions](Combat_Toggles_%26_Conditions.md) (2 shared connections)
 - [Dnd5e Feature List Sections](Dnd5e_Feature_List_Sections.md) (2 shared connections)
 - [Mam3e Data Model & Engine](Mam3e_Data_Model_%26_Engine.md) (1 shared connections)
-- [Sync Engine Tests](Sync_Engine_Tests.md) (1 shared connections)
+- [Dnd5e2024 Engine & Hit Dice](Dnd5e2024_Engine_%26_Hit_Dice.md) (1 shared connections)
 
 ## Source Files
 
@@ -60,8 +60,8 @@
 
 ## Audit Trail
 
-- EXTRACTED: 173 (99%)
-- INFERRED: 1 (1%)
+- EXTRACTED: 173 (100%)
+- INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 
 ---

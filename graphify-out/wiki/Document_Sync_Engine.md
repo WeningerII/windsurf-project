@@ -11,11 +11,11 @@
 - **useSync()** (21 connections) — `src/hooks/useSync.ts`
 - **getSupabaseClient()** (21 connections) — `src/utils/supabaseClient.ts`
 - **retryWithBackoff()** (16 connections) — `src/utils/retry.ts`
-- **getQueuedSyncSnapshot()** (10 connections) — `src/utils/syncEngine.ts`
 - **supabaseClient.ts** (9 connections) — `src/utils/supabaseClient.ts`
 - **fetchRemoteCampaigns()** (9 connections) — `src/utils/syncEngine.ts`
 - **fetchRemoteDocuments()** (9 connections) — `src/utils/syncEngine.ts`
 - **getQueuedDeletedDocumentIds()** (9 connections) — `src/utils/syncEngine.ts`
+- **getQueuedSyncSnapshot()** (9 connections) — `src/utils/syncEngine.ts`
 - **pushCampaigns()** (9 connections) — `src/utils/syncEngine.ts`
 - **pushDocuments()** (9 connections) — `src/utils/syncEngine.ts`
 - **clearQueuedDeletedDocumentIds()** (8 connections) — `src/utils/syncEngine.ts`
@@ -27,8 +27,8 @@
 - **pushCampaign()** (6 connections) — `src/utils/syncEngine.ts`
 - **pushDocument()** (6 connections) — `src/utils/syncEngine.ts`
 - **queueDeletedDocumentIds()** (6 connections) — `src/utils/syncEngine.ts`
-- **queueSyncSnapshot()** (6 connections) — `src/utils/syncEngine.ts`
 - **subscribeToRemoteDocuments()** (6 connections) — `src/utils/syncEngine.ts`
+- **queueSyncSnapshot()** (5 connections) — `src/utils/syncEngine.ts`
 - *... and 41 more nodes in this community*
 
 ## Relationships
@@ -36,10 +36,10 @@
 - [Campaign Sync Hooks](Campaign_Sync_Hooks.md) (50 shared connections)
 - [Error Boundary & Auth Context](Error_Boundary_%26_Auth_Context.md) (19 shared connections)
 - [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (13 shared connections)
-- [App Shell & Layout](App_Shell_%26_Layout.md) (8 shared connections)
 - [Document Migrations & Storage](Document_Migrations_%26_Storage.md) (6 shared connections)
 - [Retry With Backoff](Retry_With_Backoff.md) (6 shared connections)
 - [Boundary Validation Tests](Boundary_Validation_Tests.md) (6 shared connections)
+- [App Shell & Layout](App_Shell_%26_Layout.md) (4 shared connections)
 - [Combat & Recap Panels](Combat_%26_Recap_Panels.md) (3 shared connections)
 - [Document Signature Hashing](Document_Signature_Hashing.md) (3 shared connections)
 - [capabilityScenarios.test.tsx](capabilityScenarios.test.tsx.md) (3 shared connections)
@@ -56,7 +56,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 405 (93%)
+- EXTRACTED: 401 (93%)
 - INFERRED: 31 (7%)
 - AMBIGUOUS: 0 (0%)
 

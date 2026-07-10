@@ -38,11 +38,11 @@
 - [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (8 shared connections)
 - [Dnd5e Resource Loading Hooks](Dnd5e_Resource_Loading_Hooks.md) (6 shared connections)
 - [Monster & NPC Generator](Monster_%26_NPC_Generator.md) (5 shared connections)
-- [App Shell & Layout](App_Shell_%26_Layout.md) (5 shared connections)
 - [System Registry & Renderer](System_Registry_%26_Renderer.md) (4 shared connections)
 - [Sheet Resource Loading Hooks](Sheet_Resource_Loading_Hooks.md) (4 shared connections)
 - [Document Migrations & Storage](Document_Migrations_%26_Storage.md) (4 shared connections)
 - [Mam3e Data Model & Engine](Mam3e_Data_Model_%26_Engine.md) (3 shared connections)
+- [App Shell & Layout](App_Shell_%26_Layout.md) (3 shared connections)
 - [Sync Engine Tests](Sync_Engine_Tests.md) (1 shared connections)
 - [Document Storage (IndexedDB)](Document_Storage_%28IndexedDB%29.md) (1 shared connections)
 
@@ -65,7 +65,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 335 (100%)
+- EXTRACTED: 333 (100%)
 - INFERRED: 1 (0%)
 - AMBIGUOUS: 0 (0%)
 

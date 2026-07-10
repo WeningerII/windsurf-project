@@ -5,7 +5,7 @@
 ## Key Concepts
 
 - **encounterDraft.ts** (33 connections) — `src/scene/encounterDraft.ts`
-- **encounterSpec.ts** (20 connections) — `src/scene/encounterSpec.ts`
+- **encounterSpec.ts** (21 connections) — `src/scene/encounterSpec.ts`
 - **encounterSpec.test.ts** (17 connections) — `src/__tests__/scene/encounterSpec.test.ts`
 - **encounterPartyBudget()** (9 connections) — `src/scene/encounterDraft.ts`
 - **validateEncounterSpec()** (9 connections) — `src/scene/encounterSpec.ts`
@@ -52,7 +52,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 168 (100%)
+- EXTRACTED: 169 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

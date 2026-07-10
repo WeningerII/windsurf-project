@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **contributionLedger.ts** (45 connections) — `src/systems/dnd5e/shared/contributionLedger.ts`
+- **contributionLedger.ts** (46 connections) — `src/systems/dnd5e/shared/contributionLedger.ts`
 - **buildDnd5eContributionLedger()** (10 connections) — `src/systems/dnd5e/shared/contributionLedger.ts`
 - **dnd5eContributionLedger.test.ts** (10 connections) — `src/__tests__/dnd5eContributionLedger.test.ts`
 - **toContributionLedger()** (7 connections) — `src/rules/ir/ledgerView.ts`
@@ -45,7 +45,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 103 (99%)
+- EXTRACTED: 104 (99%)
 - INFERRED: 1 (1%)
 - AMBIGUOUS: 0 (0%)
 

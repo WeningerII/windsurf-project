@@ -5,7 +5,7 @@
 ## Key Concepts
 
 - **gatewayClient.ts** (16 connections) — `src/ai/gatewayClient.ts`
-- **callAiGateway()** (10 connections) — `src/ai/gatewayClient.ts`
+- **callAiGateway()** (9 connections) — `src/ai/gatewayClient.ts`
 - **gatewayClient.test.ts** (7 connections) — `src/__tests__/ai/gatewayClient.test.ts`
 - **isAiEnabled()** (5 connections) — `src/ai/gatewayClient.ts`
 - **AI_GATEWAY_ENDPOINT** (3 connections) — `src/ai/contracts.ts`
@@ -21,7 +21,6 @@
 - [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (3 shared connections)
 - [Scene Illustration Panel](Scene_Illustration_Panel.md) (2 shared connections)
 - [Resource Pool Tracking](Resource_Pool_Tracking.md) (2 shared connections)
-- [App Shell & Layout](App_Shell_%26_Layout.md) (1 shared connections)
 
 ## Source Files
 
@@ -31,7 +30,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 45 (100%)
+- EXTRACTED: 44 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

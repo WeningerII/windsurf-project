@@ -5,8 +5,14 @@ name: Deploy app to GitHub Pages
 # IS the deploy. BASE_PATH makes Vite emit every asset URL under the project-
 # pages sub-path (https://weningerii.github.io/windsurf-project/). The app
 # needs no backend env — it runs local-only when Supabase is unconfigured.
+#
+# Deploys are gated on the CI/CD Pipeline: this fires when that workflow
+# finishes on main and only proceeds if it passed, so an unverified build
+# can never ship. workflow_dispatch remains as a manual escape hatch.
 on:
-  push:
+  workflow_run:
+    workflows: ['CI/CD Pipeline']
+    types: [completed]
     branches: [main]
   workflow_dispatch:
 
@@ -22,12 +28,16 @@ concurrency:
 
 jobs:
   build-and-deploy:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Deploy exactly the tree the CI pipeline verified.
+          ref: ${{ github.event.workflow_run.head_sha || github.ref }}
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:

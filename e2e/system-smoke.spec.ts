@@ -4,7 +4,8 @@ async function openLandingPage(page: Page) {
   await page.goto('/', { waitUntil: 'domcontentloaded' });
   await page.evaluate(() => localStorage.clear());
   await page.goto('/', { waitUntil: 'domcontentloaded' });
-  await expect(page.getByText('Your Characters')).toBeVisible();
+  // Fresh boot has no characters, so the roster's empty state is the landing anchor.
+  await expect(page.getByRole('heading', { name: 'No characters yet' })).toBeVisible();
 }
 
 async function getCharacterNameInput(page: Page) {
@@ -23,7 +24,11 @@ async function renameCharacter(page: Page, name: string) {
 async function createCharacterForSystem(page: Page, systemPattern: RegExp, name: string) {
   await page.getByRole('button', { name: /New Character/i }).click();
   await page.getByRole('button', { name: systemPattern }).click();
-  await expect(page.getByRole('button', { name: /^Back$/i })).toBeVisible();
+  // The system sheet is a lazily-loaded chunk. It mounts in ~350ms locally, but
+  // a cold fetch+parse on a contended firefox CI runner intermittently spikes
+  // past 15s — the sheet mounts correctly, just slowly, so allow generous
+  // headroom here. Mount-speed itself is enforced by outcome-baseline's budget.
+  await expect(page.getByRole('button', { name: /^Back$/i })).toBeVisible({ timeout: 30_000 });
   await renameCharacter(page, name);
 }
 
@@ -224,7 +229,10 @@ test('supports in-sheet dice interactions across all registered system families'
 
   await createCharacterForSystem(page, /Daggerheart/i, 'Daggerheart Roller');
   await expectRollResult(page, 'Roll Agility', /\(2d12/);
-  await expect(page.getByText(/with Hope|with Fear|Critical!/i)).toBeVisible();
+  // A critical (doubles on 2d12, 1-in-12) renders BOTH the "Critical!" badge
+  // and the "— Critical!" breakdown line, so a bare getByText is a strict-mode
+  // violation on that outcome — anchor on the first match.
+  await expect(page.getByText(/with Hope|with Fear|Critical!/i).first()).toBeVisible();
 });
 
 test('manages campaign membership and opens members from the campaign panel', async ({ page }) => {

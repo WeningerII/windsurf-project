@@ -5,7 +5,7 @@
 ## Key Concepts
 
 - **monsterCombatant.ts** (29 connections) — `src/rules/combatants/monsterCombatant.ts`
-- **monsterCombatant.test.ts** (16 connections) — `src/__tests__/rules/monsterCombatant.test.ts`
+- **monsterCombatant.test.ts** (17 connections) — `src/__tests__/rules/monsterCombatant.test.ts`
 - **buildMonsterCombatant()** (12 connections) — `src/rules/combatants/monsterCombatant.ts`
 - **monsterAverageHitPoints()** (9 connections) — `src/rules/combatants/monsterCombatant.ts`
 - **normalizeAttack()** (9 connections) — `src/rules/combatants/monsterCombatant.ts`
@@ -44,7 +44,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 116 (100%)
+- EXTRACTED: 117 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

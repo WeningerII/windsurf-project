@@ -4,21 +4,21 @@
 
 ## Key Concepts
 
-- **encode-pf1e-spells.mjs** (10 connections) — `scripts/encode-pf1e-spells.mjs`
+- **encode-pf1e-spells.mjs** (11 connections) — `scripts/encode-pf1e-spells.mjs`
 - **main()** (8 connections) — `scripts/encode-pf1e-spells.mjs`
-- **ts()** (3 connections) — `scripts/encode-pf1e-spells.mjs`
 - **mapCastingTime()** (2 connections) — `scripts/encode-pf1e-spells.mjs`
 - **mapDuration()** (2 connections) — `scripts/encode-pf1e-spells.mjs`
 - **mapRange()** (2 connections) — `scripts/encode-pf1e-spells.mjs`
 - **normalizeName()** (2 connections) — `scripts/encode-pf1e-spells.mjs`
 - **parseCsv()** (2 connections) — `scripts/encode-pf1e-spells.mjs`
 - **slug()** (2 connections) — `scripts/encode-pf1e-spells.mjs`
+- **ts()** (2 connections) — `scripts/encode-pf1e-spells.mjs`
 - **CLASS_COLUMNS** (1 connections) — `scripts/encode-pf1e-spells.mjs`
 - **SCHOOLS** (1 connections) — `scripts/encode-pf1e-spells.mjs`
 
 ## Relationships
 
-- [App Shell & Layout](App_Shell_%26_Layout.md) (1 shared connections)
+- No strong cross-community connections detected
 
 ## Source Files
 

@@ -4,7 +4,8 @@ async function openLanding(page: Page) {
   await page.goto('/', { waitUntil: 'domcontentloaded' });
   await page.evaluate(() => localStorage.clear());
   await page.goto('/', { waitUntil: 'domcontentloaded' });
-  await expect(page.getByText('Your Characters')).toBeVisible();
+  // Fresh boot has no characters, so the roster's empty state is the landing anchor.
+  await expect(page.getByRole('heading', { name: 'No characters yet' })).toBeVisible();
 }
 
 // Launch-blocker LEGAL-1: file presence is explicitly insufficient — the legal
@@ -46,6 +47,6 @@ test.describe('legal & open-content notices', () => {
 
     // The view is dismissible back to the app.
     await page.getByRole('button', { name: /^Back$/i }).click();
-    await expect(page.getByText('Your Characters')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'No characters yet' })).toBeVisible();
   });
 });

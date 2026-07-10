@@ -29,7 +29,7 @@
 - useSceneEncounter.ts `EXTRACTED`
 - sheet.tsx `EXTRACTED`
 - useDnd5eSheetController.ts `EXTRACTED`
-- characterCombatant.ts `EXTRACTED`
+- data-model.ts `EXTRACTED`
 
 ### inherits
 - [Dnd5eDataModel](Dnd5eDataModel.md) `EXTRACTED`
@@ -49,10 +49,10 @@
 - BuildEncounterEventsParams `EXTRACTED`
 - PlaceTokenInput `EXTRACTED`
 - UseD20LegacyMutationHandlersProps `EXTRACTED`
+- AppHeaderProps `EXTRACTED`
 - TokenPanelProps `EXTRACTED`
 - UseDnd5eSheetActionHandlersProps `EXTRACTED`
 - UseMam3eMutationHandlersProps `EXTRACTED`
-- AppHeaderProps `EXTRACTED`
 - Props `EXTRACTED`
 - CharacterListViewProps `EXTRACTED`
 - Props `EXTRACTED`

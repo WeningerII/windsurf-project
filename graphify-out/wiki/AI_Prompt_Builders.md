@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **prompts.ts** (15 connections) — `src/ai/prompts.ts`
+- **prompts.ts** (16 connections) — `src/ai/prompts.ts`
 - **prompts.test.ts** (10 connections) — `src/__tests__/ai/prompts.test.ts`
 - **buildPromptForTask()** (7 connections) — `src/ai/prompts.ts`
 - **buildEncounterDraftPrompt()** (4 connections) — `src/ai/prompts.ts`
@@ -32,7 +32,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 60 (100%)
+- EXTRACTED: 61 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

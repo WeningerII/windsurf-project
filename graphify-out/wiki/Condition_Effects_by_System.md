@@ -5,8 +5,8 @@
 ## Key Concepts
 
 - **tacticalExecutor.ts** (25 connections) — `src/rules/tactical/tacticalExecutor.ts`
+- **tacticalExecutor.test.ts** (22 connections) — `src/__tests__/rules/tacticalExecutor.test.ts`
 - **roundDriver.ts** (21 connections) — `src/rules/tactical/roundDriver.ts`
-- **tacticalExecutor.test.ts** (21 connections) — `src/__tests__/rules/tacticalExecutor.test.ts`
 - **SceneCoordinate** (18 connections) — `src/types/core/scene.ts`
 - **targetScoring.ts** (17 connections) — `src/rules/tactical/targetScoring.ts`
 - **SceneActionIntent** (16 connections) — `src/types/core/scene.ts`
@@ -58,7 +58,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 233 (100%)
+- EXTRACTED: 234 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

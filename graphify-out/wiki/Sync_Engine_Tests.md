@@ -8,14 +8,11 @@
 - **dnd5e-equipment-slot-handlers.test.tsx** (17 connections) — `src/__tests__/dnd5e-equipment-slot-handlers.test.tsx`
 - **dnd5e-host-edit-handlers.test.tsx** (14 connections) — `src/__tests__/dnd5e-host-edit-handlers.test.tsx`
 - **Dnd5eSheet.tsx** (12 connections) — `src/systems/dnd5e/components/Dnd5eSheet.tsx`
-- **.render()** (7 connections) — `src/components/ErrorBoundary.tsx`
 - **Dnd5eSheetBase()** (6 connections) — `src/systems/dnd5e/shared/Dnd5eSheetBase.tsx`
 - **Dnd5eSheet()** (4 connections) — `src/systems/dnd5e/components/Dnd5eSheet.tsx`
 - **Dnd5e2024Sheet()** (2 connections) — `src/systems/dnd5e-2024/components/Dnd5e2024Sheet.tsx`
-- **openBrokenSheet()** (2 connections) — `src/__tests__/app-sheet-error-boundary.test.tsx`
-- **renderPanel()** (2 connections) — `src/__tests__/components/TokenPanel.test.tsx`
-- **renderEditableDnd5eSheet()** (2 connections) — `src/__tests__/dnd5e-equipment-slot-handlers.test.tsx`
-- **renderEditableDnd5eSheet()** (2 connections) — `src/__tests__/dnd5e-host-edit-handlers.test.tsx`
+- **.render()** (1 connections) — `src/components/ErrorBoundary.tsx`
+- **openBrokenSheet()** (1 connections) — `src/__tests__/app-sheet-error-boundary.test.tsx`
 - **createDeferred()** (1 connections) — `src/__tests__/components/SystemSheets.test.tsx`
 - **make5eSpellSlots()** (1 connections) — `src/__tests__/components/SystemSheets.test.tsx`
 - **makeDoc()** (1 connections) — `src/__tests__/components/SystemSheets.test.tsx`
@@ -23,10 +20,13 @@
 - **outlawBackground** (1 connections) — `src/__tests__/components/SystemSheets.test.tsx`
 - **resilient** (1 connections) — `src/__tests__/components/SystemSheets.test.tsx`
 - **Shared5eDoc** (1 connections) — `src/__tests__/components/SystemSheets.test.tsx`
+- **renderPanel()** (1 connections) — `src/__tests__/components/TokenPanel.test.tsx`
 - **Dnd5eDocument** (1 connections) — `src/__tests__/dnd5e-equipment-slot-handlers.test.tsx`
+- **renderEditableDnd5eSheet()** (1 connections) — `src/__tests__/dnd5e-equipment-slot-handlers.test.tsx`
 - **ringOfProtection()** (1 connections) — `src/__tests__/dnd5e-equipment-slot-handlers.test.tsx`
 - **stubShared5eLoaders()** (1 connections) — `src/__tests__/dnd5e-equipment-slot-handlers.test.tsx`
 - **Dnd5eDocument** (1 connections) — `src/__tests__/dnd5e-host-edit-handlers.test.tsx`
+- **renderEditableDnd5eSheet()** (1 connections) — `src/__tests__/dnd5e-host-edit-handlers.test.tsx`
 - **stubShared5eLoaders()** (1 connections) — `src/__tests__/dnd5e-host-edit-handlers.test.tsx`
 
 ## Relationships
@@ -58,8 +58,8 @@
 
 ## Audit Trail
 
-- EXTRACTED: 121 (92%)
-- INFERRED: 10 (8%)
+- EXTRACTED: 121 (100%)
+- INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 
 ---

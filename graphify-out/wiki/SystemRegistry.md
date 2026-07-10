@@ -23,11 +23,11 @@
 - SceneManager.test.tsx `EXTRACTED`
 - useDocuments.ts `EXTRACTED`
 - dnd5eValidation.test.ts `EXTRACTED`
+- AppHeader.tsx `EXTRACTED`
 - GameSystemSelector.tsx `EXTRACTED`
 - systemCatalogShared.ts `EXTRACTED`
 - character-management-flow.test.tsx `EXTRACTED`
 - D20SavesTab.tsx `EXTRACTED`
-- AppHeader.tsx `EXTRACTED`
 - D20CombatSection.tsx `EXTRACTED`
 - applyMergedCollections.test.tsx `EXTRACTED`
 

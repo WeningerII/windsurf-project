@@ -10,15 +10,15 @@
 - **resolve.ts** (25 connections) — `src/rules/resolver/resolve.ts`
 - **resolveEffects()** (23 connections) — `src/rules/resolver/resolve.ts`
 - **attackResolution.ts** (22 connections) — `src/rules/resolver/attackResolution.ts`
+- **participantResolution.test.ts** (21 connections) — `src/__tests__/rules/participantResolution.test.ts`
 - **resolveSceneAttack()** (20 connections) — `src/rules/combat/sceneCombat.ts`
-- **participantResolution.test.ts** (20 connections) — `src/__tests__/rules/participantResolution.test.ts`
 - **resolveAttack()** (15 connections) — `src/rules/resolver/attackResolution.ts`
 - **mam3eResolution.ts** (15 connections) — `src/rules/resolver/mam3eResolution.ts`
 - **sceneCombat.ts** (14 connections) — `src/rules/resolver/sceneCombat.ts`
 - **daggerheartResolution.ts** (13 connections) — `src/rules/resolver/daggerheartResolution.ts`
 - **areaTargeting.ts** (12 connections) — `src/rules/resolver/areaTargeting.ts`
+- **nonD20Resolution.test.ts** (12 connections) — `src/__tests__/rules/nonD20Resolution.test.ts`
 - **AttackResolution** (11 connections) — `src/rules/resolver/attackResolution.ts`
-- **nonD20Resolution.test.ts** (11 connections) — `src/__tests__/rules/nonD20Resolution.test.ts`
 - **participantRng()** (9 connections) — `src/rules/resolver/participantResolution.ts`
 - **resolveAreaEffect()** (9 connections) — `src/rules/resolver/participantResolution.ts`
 - **ResolveContext** (9 connections) — `src/rules/resolver/resolve.ts`
@@ -71,7 +71,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 683 (99%)
+- EXTRACTED: 685 (99%)
 - INFERRED: 4 (1%)
 - AMBIGUOUS: 0 (0%)
 

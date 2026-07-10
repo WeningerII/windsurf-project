@@ -4,9 +4,9 @@
 
 ## Key Concepts
 
-- **data-model.ts** (36 connections) — `src/systems/pf1e/data-model.ts`
-- **data-model.ts** (32 connections) — `src/systems/dnd35e/data-model.ts`
-- **engineEquipIntegration.test.ts** (30 connections) — `src/__tests__/rules/engineEquipIntegration.test.ts`
+- **data-model.ts** (37 connections) — `src/systems/pf1e/data-model.ts`
+- **data-model.ts** (33 connections) — `src/systems/dnd35e/data-model.ts`
+- **engineEquipIntegration.test.ts** (31 connections) — `src/__tests__/rules/engineEquipIntegration.test.ts`
 - **Pf1eDataModel** (26 connections) — `src/systems/pf1e/data-model.ts`
 - **d20-legacy-vancian-prep.test.ts** (26 connections) — `src/__tests__/d20-legacy-vancian-prep.test.ts`
 - **Dnd35eDataModel** (24 connections) — `src/systems/dnd35e/data-model.ts`
@@ -20,10 +20,10 @@
 - **d20-legacy-template-pipeline.test.ts** (17 connections) — `src/__tests__/d20-legacy-template-pipeline.test.ts`
 - **definition.ts** (14 connections) — `src/systems/dnd35e/definition.ts`
 - **definition.ts** (14 connections) — `src/systems/pf1e/definition.ts`
+- **engineAttackIntegration.test.ts** (14 connections) — `src/__tests__/rules/engineAttackIntegration.test.ts`
 - **BonusType** (14 connections) — `src/types/core/common.ts`
 - **Dnd35eEngine** (13 connections) — `src/systems/dnd35e/engine.ts`
 - **Pf1eEngine** (13 connections) — `src/systems/pf1e/engine.ts`
-- **engineAttackIntegration.test.ts** (13 connections) — `src/__tests__/rules/engineAttackIntegration.test.ts`
 - **wrapper.ts** (10 connections) — `src/systems/d20-legacy/wrapper.ts`
 - **dnd35e-engine.test.ts** (8 connections) — `src/__tests__/engines/dnd35e-engine.test.ts`
 - **pf1e-engine.test.ts** (8 connections) — `src/__tests__/engines/pf1e-engine.test.ts`
@@ -71,7 +71,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 502 (100%)
+- EXTRACTED: 506 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

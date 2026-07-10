@@ -4,10 +4,10 @@
 
 ## Key Concepts
 
-- **GameSystemId** (77 connections) — `src/types/game-systems.ts`
+- **GameSystemId** (79 connections) — `src/types/game-systems.ts`
 - **useDnd5eSheetResources.ts** (37 connections) — `src/systems/dnd5e/shared/useDnd5eSheetResources.ts`
 - **loadSpellsForSystem()** (22 connections) — `src/utils/dataLoader.ts`
-- **useDnd5eSheetResources()** (19 connections) — `src/systems/dnd5e/shared/useDnd5eSheetResources.ts`
+- **useDnd5eSheetResources()** (18 connections) — `src/systems/dnd5e/shared/useDnd5eSheetResources.ts`
 - **loadFeatureOptionsForSystem()** (10 connections) — `src/utils/dataLoader.ts`
 - **useDnd5eSheetResources.test.tsx** (8 connections) — `src/__tests__/systems/dnd5e/useDnd5eSheetResources.test.tsx`
 - **Dnd5eFeatBrowserTab** (5 connections) — `src/systems/dnd5e/shared/components/Dnd5eFeatBrowserTab.tsx`
@@ -67,8 +67,8 @@
 
 ## Audit Trail
 
-- EXTRACTED: 222 (95%)
-- INFERRED: 11 (5%)
+- EXTRACTED: 224 (96%)
+- INFERRED: 10 (4%)
 - AMBIGUOUS: 0 (0%)
 
 ---

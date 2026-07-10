@@ -13,8 +13,8 @@
 - **isNonEmptyString()** (7 connections) — `src/utils/boundaryValidation.ts`
 - **isRecord()** (7 connections) — `src/utils/boundaryValidation.ts`
 - **coerceDate()** (6 connections) — `src/utils/boundaryValidation.ts`
-- **issue()** (6 connections) — `src/utils/boundaryValidation.ts`
 - **coerceSessionLog()** (5 connections) — `src/utils/boundaryValidation.ts`
+- **issue()** (5 connections) — `src/utils/boundaryValidation.ts`
 - **coerceObjectives()** (4 connections) — `src/utils/boundaryValidation.ts`
 - **ValidationIssue** (3 connections) — `src/registry/types.ts`
 - **parseImg()** (3 connections) — `src/__tests__/utils/boundaryValidation.test.ts`
@@ -39,7 +39,7 @@
 - [System Validation Logic](System_Validation_Logic.md) (1 shared connections)
 - [capabilityScenarios.test.tsx](capabilityScenarios.test.tsx.md) (1 shared connections)
 - [Oracle Panel & Logic](Oracle_Panel_%26_Logic.md) (1 shared connections)
-- [Check & Oracle Resolution](Check_%26_Oracle_Resolution.md) (1 shared connections)
+- [Doc Drift Rules](Doc_Drift_Rules.md) (1 shared connections)
 
 ## Source Files
 
@@ -50,7 +50,7 @@
 ## Audit Trail
 
 - EXTRACTED: 139 (99%)
-- INFERRED: 2 (1%)
+- INFERRED: 1 (1%)
 - AMBIGUOUS: 0 (0%)
 
 ---

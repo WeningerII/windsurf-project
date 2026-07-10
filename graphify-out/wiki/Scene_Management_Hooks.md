@@ -12,16 +12,16 @@
 - **useScenes.test.tsx** (10 connections) — `src/__tests__/hooks/useScenes.test.tsx`
 - **loadScenes()** (9 connections) — `src/utils/sceneStorage.ts`
 - **importScenesWithReport()** (8 connections) — `src/utils/sceneStorage.ts`
-- **saveScenes()** (8 connections) — `src/utils/sceneStorage.ts`
 - **clearSceneStorage()** (7 connections) — `src/utils/sceneStorage.ts`
+- **saveScenes()** (7 connections) — `src/utils/sceneStorage.ts`
 - **parseScenesSnapshot()** (6 connections) — `src/utils/sceneStorage.ts`
 - **collectValidScenes()** (5 connections) — `src/utils/sceneStorage.ts`
-- **deleteScene()** (5 connections) — `src/utils/sceneStorage.ts`
 - **upsertScene()** (5 connections) — `src/utils/sceneStorage.ts`
+- **deleteScene()** (4 connections) — `src/utils/sceneStorage.ts`
 - **hydrateScene()** (4 connections) — `src/utils/sceneStorage.ts`
 - **importScenes()** (4 connections) — `src/utils/sceneStorage.ts`
-- **readScenesField()** (4 connections) — `src/utils/sceneStorage.ts`
 - **loadScene()** (3 connections) — `src/utils/sceneStorage.ts`
+- **readScenesField()** (3 connections) — `src/utils/sceneStorage.ts`
 - **makeScene()** (2 connections) — `src/__tests__/hooks/useScenes.test.tsx`
 - **hydrateSceneEvent()** (2 connections) — `src/utils/sceneStorage.ts`
 - **ImportScenesResult** (2 connections) — `src/utils/sceneStorage.ts`
@@ -39,11 +39,11 @@
 - [Boundary Validation Tests](Boundary_Validation_Tests.md) (6 shared connections)
 - [Oracle Panel & Logic](Oracle_Panel_%26_Logic.md) (4 shared connections)
 - [Document Signature Hashing](Document_Signature_Hashing.md) (4 shared connections)
-- [App Shell & Layout](App_Shell_%26_Layout.md) (4 shared connections)
 - [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (3 shared connections)
 - [Document Migrations & Storage](Document_Migrations_%26_Storage.md) (3 shared connections)
 - [Combat & Recap Panels](Combat_%26_Recap_Panels.md) (2 shared connections)
 - [capabilityScenarios.test.tsx](capabilityScenarios.test.tsx.md) (2 shared connections)
+- [App Shell & Layout](App_Shell_%26_Layout.md) (1 shared connections)
 
 ## Source Files
 
@@ -55,8 +55,8 @@
 
 ## Audit Trail
 
-- EXTRACTED: 184 (98%)
-- INFERRED: 3 (2%)
+- EXTRACTED: 182 (99%)
+- INFERRED: 2 (1%)
 - AMBIGUOUS: 0 (0%)
 
 ---

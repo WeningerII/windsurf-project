@@ -13,8 +13,8 @@
 - classTemplate.ts `EXTRACTED`
 - featTemplate.ts `EXTRACTED`
 - validation.ts `EXTRACTED`
-- speciesTemplate.ts `EXTRACTED`
 - engine.ts `EXTRACTED`
+- speciesTemplate.ts `EXTRACTED`
 - contributionLedger.ts `EXTRACTED`
 - backgroundTemplate.ts `EXTRACTED`
 - dnd5eSheetShared.ts `EXTRACTED`
@@ -27,8 +27,8 @@
 - activityState.ts `EXTRACTED`
 - classTemplate.test.ts `EXTRACTED`
 - speciesTemplate.test.ts `EXTRACTED`
-- dnd5e-template-pipeline.test.ts `EXTRACTED`
 - conditionsIr.test.ts `EXTRACTED`
+- dnd5e-template-pipeline.test.ts `EXTRACTED`
 - backgroundTemplate.test.ts `EXTRACTED`
 
 ### inherits

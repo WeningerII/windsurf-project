@@ -25,8 +25,8 @@
 - d20LegacyEngineMath.test.ts `EXTRACTED`
 - Dnd5eSheetBase.tsx `EXTRACTED`
 - SystemSheets.test.tsx `EXTRACTED`
-- speciesTemplate.ts `EXTRACTED`
 - engine.ts `EXTRACTED`
+- speciesTemplate.ts `EXTRACTED`
 - useSync.test.tsx `EXTRACTED`
 - daggerheartNormalization.ts `EXTRACTED`
 - contributionLedger.ts `EXTRACTED`

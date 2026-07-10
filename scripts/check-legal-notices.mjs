@@ -45,7 +45,10 @@ const ccBy = fileText('src/legal/texts/CC-BY-4.0.txt');
 const dpcgl = fileText('src/legal/texts/DPCGL-1.0.txt');
 check(
   'OGL 1.0a verbatim text present and complete',
-  ogl && ogl.length >= 4000 && /OPEN GAME LICENSE\s+Version 1\.0a/i.test(ogl) && /COPYRIGHT NOTICE/i.test(ogl)
+  ogl &&
+    ogl.length >= 4000 &&
+    /OPEN GAME LICENSE\s+Version 1\.0a/i.test(ogl) &&
+    /COPYRIGHT NOTICE/i.test(ogl)
 );
 check(
   'CC-BY-4.0 verbatim text present and complete',
@@ -68,7 +71,10 @@ const noticeMarkers = [
   ['AI-generated-content disclaimer', /AI-generated content/i],
   // LEGAL-2 resolved: M&M provenance is asserted as Open Game Content AND its sole
   // Product Identity carve-out is disclosed honestly, rather than hedged.
-  ['M&M attributed as Open Game Content', /Mutants & Masterminds 3e content is drawn from the Open Game Content/],
+  [
+    'M&M attributed as Open Game Content',
+    /Mutants & Masterminds 3e content is drawn from the Open Game Content/,
+  ],
   ['M&M Product Identity carve-out disclosed', /Hero Points.{0,15}Power Points/],
 ];
 for (const [label, pattern] of noticeMarkers) {
@@ -100,7 +106,8 @@ check(
 );
 const app = fileText('src/App.tsx');
 check('App wires the Legal view', app && /LegalNotices/.test(app));
-check('App exposes a control to open the Legal view', app && /setShowLegal\(true\)/.test(app));
+// Phase 1 replaced the showLegal boolean with the nav union's legal overlay.
+check('App exposes a control to open the Legal view', app && /openOverlay\('legal'\)/.test(app));
 
 // Report ----------------------------------------------------------------------
 for (const { label, ok } of checks) {
