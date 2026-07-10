@@ -35,15 +35,11 @@ interface SystemOutcome {
 type RunFn = (page: Page, tick: () => void) => Promise<void>;
 
 async function resetToLanding(page: Page): Promise<void> {
+  // localStorage is cleared at document-start of each navigation (see the
+  // addInitScript below) — the only race-free ordering: the app flushes
+  // pending debounced saves on pagehide, so a clear issued from a live page
+  // can be silently overwritten by that flush during the next navigation.
   await page.goto('/', { waitUntil: 'domcontentloaded' });
-  await page.evaluate(() => localStorage.clear());
-  await page.goto('/', { waitUntil: 'domcontentloaded' });
-  // The outgoing app instance flushes pending debounced saves on pagehide, so
-  // the navigation above can resurrect just-cleared documents. The freshly
-  // booted instance has nothing pending, so a second clear + reload yields a
-  // deterministically empty roster.
-  await page.evaluate(() => localStorage.clear());
-  await page.reload({ waitUntil: 'domcontentloaded' });
   // Fresh boot has no characters, so the roster's empty state is the landing anchor.
   await expect(page.getByRole('heading', { name: 'No characters yet' })).toBeVisible();
 }
@@ -205,6 +201,10 @@ test('user-outcome baseline: a fresh user reaches a legal non-trivial character 
   page,
 }) => {
   test.setTimeout(240_000);
+  // Every navigation starts from a clean slate: this runs after the outgoing
+  // page's pagehide save-flush and before the app boots, so no debounced save
+  // can resurrect cleared documents between per-system resets.
+  await page.addInitScript(() => localStorage.clear());
   const results: SystemOutcome[] = [];
 
   for (const system of SYSTEMS) {
