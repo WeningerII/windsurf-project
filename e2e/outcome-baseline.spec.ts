@@ -34,11 +34,13 @@ interface SystemOutcome {
 
 type RunFn = (page: Page, tick: () => void) => Promise<void>;
 
-async function resetToLanding(page: Page): Promise<void> {
-  // localStorage is cleared at document-start of each navigation (see the
-  // addInitScript below) — the only race-free ordering: the app flushes
-  // pending debounced saves on pagehide, so a clear issued from a live page
-  // can be silently overwritten by that flush during the next navigation.
+async function openFreshLanding(page: Page): Promise<void> {
+  // Each system runs in its own browser context (see the loop below), so the
+  // page boots with genuinely empty storage. In-page localStorage.clear()
+  // cannot deliver that: the app flushes pending debounced saves on pagehide
+  // (which Chrome may run concurrently with the next document's load) AND
+  // mirrors documents into IndexedDB, from which a fresh boot can restore a
+  // roster that localStorage no longer has.
   await page.goto('/', { waitUntil: 'domcontentloaded' });
   // Fresh boot has no characters, so the roster's empty state is the landing anchor.
   await expect(page.getByRole('heading', { name: 'No characters yet' })).toBeVisible();
@@ -198,16 +200,18 @@ const SYSTEMS: Array<{ id: string; nonTrivial: string; run: RunFn }> = [
 ];
 
 test('user-outcome baseline: a fresh user reaches a legal non-trivial character in every system', async ({
-  page,
+  browser,
 }) => {
   test.setTimeout(240_000);
-  // Every navigation starts from a clean slate: this runs after the outgoing
-  // page's pagehide save-flush and before the app boots, so no debounced save
-  // can resurrect cleared documents between per-system resets.
-  await page.addInitScript(() => localStorage.clear());
+  const { baseURL } = test.info().project.use;
   const results: SystemOutcome[] = [];
 
   for (const system of SYSTEMS) {
+    // A fresh context per system is the literal test premise ("a fresh
+    // user") and the only reliable isolation: it resets localStorage AND the
+    // app's IndexedDB document mirror, which in-page clearing cannot.
+    const context = await browser.newContext({ baseURL });
+    const page = await context.newPage();
     let steps = 0;
     let legal = false;
     let error: string | null = null;
@@ -216,11 +220,13 @@ test('user-outcome baseline: a fresh user reaches a legal non-trivial character 
       steps += 1;
     };
     try {
-      await resetToLanding(page);
+      await openFreshLanding(page);
       await system.run(page, tick);
       legal = true;
     } catch (caught) {
       error = (caught as Error).message.split('\n')[0].slice(0, 240);
+    } finally {
+      await context.close();
     }
     results.push({
       systemId: system.id,
