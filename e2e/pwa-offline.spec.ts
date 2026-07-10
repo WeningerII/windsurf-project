@@ -49,12 +49,12 @@ test.describe('service worker offline support', () => {
     // Warm the runtime cache: with the worker controlling the page, this
     // reload routes the document and every chunk through the fetch handler.
     await page.reload({ waitUntil: 'load' });
-    await expect(page.getByText('Your Characters')).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText('No characters yet')).toBeVisible({ timeout: 15_000 });
 
     await context.setOffline(true);
     try {
       await page.reload({ waitUntil: 'domcontentloaded' });
-      await expect(page.getByText('Your Characters')).toBeVisible({ timeout: 15_000 });
+      await expect(page.getByText('No characters yet')).toBeVisible({ timeout: 15_000 });
     } finally {
       await context.setOffline(false);
     }

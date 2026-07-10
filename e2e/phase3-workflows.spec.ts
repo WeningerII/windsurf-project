@@ -124,11 +124,15 @@ test.beforeEach(async ({ page }) => {
   await page.goto('/', { waitUntil: 'domcontentloaded' });
   await page.evaluate(() => localStorage.clear());
   await page.goto('/', { waitUntil: 'domcontentloaded' });
-  await expect(page.getByText('Your Characters')).toBeVisible();
+  // Fresh boot has no characters, so the roster's empty state is the landing anchor.
+  await expect(page.getByRole('heading', { name: 'No characters yet' })).toBeVisible();
 });
 
-test('renders landing page with system choices', async ({ page }) => {
-  await expect(page.getByText('Your Characters')).toBeVisible();
+test('offers system choices in the New Character dialog', async ({ page }) => {
+  // Creation is dialog-first: the landing shows the empty roster, and the
+  // system choices live inside the New Character dialog.
+  await expect(page.getByRole('heading', { name: 'No characters yet' })).toBeVisible();
+  await page.getByRole('button', { name: /New Character/i }).click();
   await expect(page.getByRole('button', { name: /D&D 5e \(2024\)/i })).toBeVisible();
   await expect(page.getByRole('button', { name: /D&D 5e \(2014\)/i })).toBeVisible();
   await expect(page.getByRole('button', { name: /Pathfinder 2e/i })).toBeVisible();
@@ -194,11 +198,8 @@ test('imports a character snapshot through the file input', async ({ page }) => 
   await page.getByRole('button', { name: /^Delete$/i }).click();
   await expect(page.getByRole('heading', { name: 'Your Characters' })).toHaveCount(0);
 
-  // Select a system so the Import button appears in the action bar
-  await page.getByRole('button', { name: /D&D 5e \(2024\)/i }).click();
-
-  // The Import button triggers a hidden file input via JS.
-  // We intercept the file chooser event to supply our file.
+  // The header's Import button (always available in list mode) triggers a
+  // hidden file input via JS; intercept the file chooser to supply our file.
   const [fileChooser] = await Promise.all([
     page.waitForEvent('filechooser'),
     page.getByRole('button', { name: /Import Character/i }).click(),
@@ -403,7 +404,6 @@ test('roundtrips a Daggerheart character with loadout, vault, and inventory stat
   await page.getByRole('button', { name: /^Delete$/i }).click();
   await expect(page.getByText('Roundtrip Hopebound')).toHaveCount(0);
 
-  await page.getByRole('button', { name: /Daggerheart/i }).click();
   const [fileChooser] = await Promise.all([
     page.waitForEvent('filechooser'),
     page.getByRole('button', { name: /Import Character/i }).click(),
@@ -468,7 +468,6 @@ test('roundtrips exported characters through clear-all and import', async ({ pag
   await page.getByRole('button', { name: /^Delete$/i }).click();
   await expect(page.getByRole('heading', { name: 'Your Characters' })).toHaveCount(0);
 
-  await page.getByRole('button', { name: /D&D 5e \(2024\)/i }).click();
   const [fileChooser] = await Promise.all([
     page.waitForEvent('filechooser'),
     page.getByRole('button', { name: /Import Character/i }).click(),

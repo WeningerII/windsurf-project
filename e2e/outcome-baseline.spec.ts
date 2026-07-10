@@ -38,7 +38,8 @@ async function resetToLanding(page: Page): Promise<void> {
   await page.goto('/', { waitUntil: 'domcontentloaded' });
   await page.evaluate(() => localStorage.clear());
   await page.goto('/', { waitUntil: 'domcontentloaded' });
-  await expect(page.getByText('Your Characters')).toBeVisible();
+  // Fresh boot has no characters, so the roster's empty state is the landing anchor.
+  await expect(page.getByRole('heading', { name: 'No characters yet' })).toBeVisible();
 }
 
 async function createCharacter(

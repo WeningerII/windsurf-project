@@ -4,7 +4,8 @@ async function openLandingPage(page: Page) {
   await page.goto('/', { waitUntil: 'domcontentloaded' });
   await page.evaluate(() => localStorage.clear());
   await page.goto('/', { waitUntil: 'domcontentloaded' });
-  await expect(page.getByText('Your Characters')).toBeVisible();
+  // Fresh boot has no characters, so the roster's empty state is the landing anchor.
+  await expect(page.getByRole('heading', { name: 'No characters yet' })).toBeVisible();
 }
 
 async function dispatchInstallPrompt(page: Page, outcome: 'accepted' | 'dismissed' = 'accepted') {
@@ -54,7 +55,7 @@ test('persists install prompt dismissal', async ({ page }) => {
     .toBe('true');
 
   await page.reload();
-  await expect(page.getByText('Your Characters')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'No characters yet' })).toBeVisible();
 
   await dispatchInstallPrompt(page, 'accepted');
   await expect(page.getByRole('heading', { name: 'Install the app' })).toHaveCount(0);

@@ -556,6 +556,19 @@ function AppContent() {
                 </div>
               </section>
             )}
+            {/* First-run empty state: CharacterListView renders nothing when no
+                characters exist, so an empty roster needs an explicit path into
+                the dialog-first creation flow. */}
+            {isLibrary && nav.librarySegment === 'characters' && documents.length === 0 && (
+              <section className="mx-auto max-w-xl rounded-2xl border border-border bg-card p-10 text-center space-y-4">
+                <h3 className="text-2xl font-semibold tracking-tight">No characters yet</h3>
+                <p className="text-sm text-muted-foreground">
+                  Create your first character to get started, or bring one back with Import in the
+                  header.
+                </p>
+                <Button onClick={openNewCharacterDialog}>Create Your First Character</Button>
+              </section>
+            )}
             {isLibrary && nav.librarySegment === 'characters' && (
               <CharacterListView
                 documents={documents}
