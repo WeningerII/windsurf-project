@@ -6,10 +6,11 @@ Current-state summary: `docs/STATUS.md`. Both denominators' tooling lives in
 `docs/srd-manifest/` (content) and `docs/compute-register/` (engine math).
 
 **Snapshot:** Engine math (Denominator B) is gated by `check:compute-register` —
-each of the 7 systems' registers holds 26–28 `verified` quantities (Tier A:
-test-linked + actually passing) across L1–L10; per-system % lives in
-`roadmap-metrics.md` (not uniformly 100%), and mutation-proof is seeded and green
-on a growing anchor subset with full per-entry anchoring a tracked rollout. Content (Denominator A) is provenance-clean (every
+every `verified` quantity across the 7 systems' registers is Tier A (test-linked
++ actually passing) across L1–L10, and mutation-proof now covers the **entire
+register**: every verified entry carries a real formula anchor (Tier B; see
+`docs/STATUS.md`). Per-system counts and % live in `roadmap-metrics.md` (not
+uniformly 100%; do not restate the numbers here — they drift). Content (Denominator A) is provenance-clean (every
 shipped entry is encoded, loader-backed, source-tagged, policy-clean, and — for
 the categories with an authoritative SRD list — verified by reverse-diff to
 contain **no** non-SRD entries). Independent published-SRD *coverage* is now
@@ -101,16 +102,28 @@ below; the remainder is the honest residual.
     iteratives + crit confirmation, Daggerheart critical/Spellcast damage, and
     M&M attack/Affliction/Damage DCs — all assemble through the seeded dice
     substrate + resolver/combatant. Separate follow-on (Denominator-A content):
-    populating `EquippedItem.weaponDamage` from a weapon catalog at equip time so
-    Versatile/two-weapon fire for real saved characters, not just engine tests.
-  - L5: prepared/known spell counts; upcasting; full PF2e heightening (only
-    auto-heighten rank is covered). (3.5e/PF1e bonus-spells-by-ability done.)
+    populating `EquippedItem.weaponDamage` from a weapon catalog at equip time.
+    The consumer is written (`src/rules/combatants/characterCombatant.ts` reads
+    it for main-hand dice and off-hand attacks) but `toEquippedItem` never
+    populates it, so Versatile/two-weapon fire only for engine-built inputs,
+    not real saved characters — an S-sized fix.
+  - L5: **Partial.** Prepared-spell limits are wired — the 5e spells tab shows
+    each prepared caster's RAW limit (`getDnd5ePreparedCasterSummaries` through
+    the sheet controller). Still absent: known-spell-count enforcement (the
+    sheet's known list is unbounded; the class tables' `spellsKnown` progression
+    is only shape-validated), mechanical upcasting (only descriptive
+    at-higher-levels text renders), and full PF2e heightening (the auto-heighten
+    rank helper exists but is unwired — see below). (3.5e/PF1e
+    bonus-spells-by-ability done.)
   - L6: speed with armor/Str penalty still open. **Done:** 3.5e/PF1e carrying
     capacity, load categories, encumbrance penalties, and lift/drag limits;
     PF2e Bulk limits.
-  - L7: ASI/feat cadence still open. **Done:** 3.5e XP-to-level table; M&M
-    starting power points + hero points; Daggerheart short-rest recovery,
-    Experience bonus, starting Hope; PF2e/3.5e HP/death state.
+  - L7: ASI/feat cadence — ASI features land at the RAW levels from class data
+    (and the 2024 ASI feat applies its score bumps), but no register-linked
+    cadence helper or build validator counting spent ASIs/feats exists.
+    **Done:** 3.5e XP-to-level table; M&M starting power points + hero points;
+    Daggerheart short-rest recovery, Experience bonus, starting Hope;
+    PF2e/3.5e HP/death state.
   - L8: resist/vuln/immune transforms outside Daggerheart still open. **Done:**
     PF2e dying/wounded/recovery track; 3.5e disabled/dying/dead track + massive
     damage; Daggerheart resistance/immunity, Armor-Slot reduction, massive-damage
@@ -125,20 +138,37 @@ below; the remainder is the honest residual.
     dispatch and gated by `validateEncounterSpec` (`src/scene/encounterSpec.ts`);
     PF2e creature XP by level difference; M&M equipment points and measurements
     doubling.
-- **Several "verified" quantities are tested helpers, not engine-wired.** Spell
-  save DC, spell attack, passive Perception, concentration DC, cantrip scaling,
-  Monk/Barbarian Unarmored Defense, iterative attacks, PF2e MAP/striking/bulk/
-  heighten, M&M measurements: the RAW formula is proven by
-  test, but `prepareData` / the character sheet does not actually compute or
-  display it. Wiring these into the engines is outstanding. **(3.5e skill synergy,
-  max-rank enforcement, and the full check penalty are now wired** —
-  synergy applies in both the skills tab and `rollCheck`; the skills tab shows
-  each skill's RAW rank cap and flags over-cap values; the check penalty applies
-  to physical skills from both carried weight (encumbrance) and the equipped
-  armor/shield armor-check penalty, sourced from the catalog-backed equip flow.
-  Conditional and Knowledge-subtype synergies stay manual. Cleric domain, wizard
-  specialist, and Dragon Disciple bonus spell slots are also now auto-resolved
-  into the spells-per-day totals.)
+- **Helper-vs-engine wiring is mixed** (the earlier blanket "tested helpers,
+  not engine-wired" claim went half stale as wiring landed). Verified states:
+  - **Now wired:** 5e spell save DC + spell attack bonus, computed per casting
+    class in `Dnd5eEngineBase.prepareData` (`src/systems/dnd5e/shared/engine.ts`)
+    but not yet displayed by any sheet — an S-sized display gap. Monk/Barbarian
+    Unarmored Defense, applied in the same engine's `computeBaseArmorClass`.
+    3.5e/PF1e iterative attacks, displayed by the d20-legacy sheet and applied
+    per attack via the tactical executor's iterative penalty steps — though
+    through duplicate implementations: the register-linked
+    `iterativeAttackBonuses` in `src/utils/derivedCombatMath.ts` is itself
+    test-only, a dedupe hygiene item. PF2e Bulk limits: `Pf2eInventoryTab`
+    computes total Bulk and flags encumbered/overloaded via `getPf2eBulkState`,
+    with the same duplicate-implementation caveat for the register-linked
+    `pf2eBulkLimits`. Also wired earlier: 3.5e skill synergy, max-rank
+    enforcement, and the full check penalty — synergy applies in both the
+    skills tab and `rollCheck`; the skills tab shows each skill's RAW rank cap
+    and flags over-cap values; the check penalty applies to physical skills
+    from both carried weight (encumbrance) and the equipped armor/shield
+    armor-check penalty, sourced from the catalog-backed equip flow
+    (conditional and Knowledge-subtype synergies stay manual). Cleric domain,
+    wizard specialist, and Dragon Disciple bonus spell slots auto-resolve into
+    the spells-per-day totals.
+  - **Still helper-only** (RAW formula proven by test, but nothing in
+    `prepareData` or a sheet computes or displays it): passive Perception;
+    concentration DC in all three flavors (5e, 3.5e, PF1e); cantrip scaling;
+    PF2e multiple-attack penalty — the pf2e combat profile reuses the 5e
+    feature-based attack economy and declares no MAP penalty step
+    (`iterativePenaltyStep`), so the tactical executor never applies the
+    multiple-attack penalty; PF2e striking rune
+    dice — `EquippedItem` has no rune field to read; PF2e auto-heighten rank;
+    M&M measurements. Wiring these into the engines/sheets is outstanding.
 - **Stricter spec criteria not met:** comprehensive typed-bonus *stacking* tests
   (e.g., 3.5e dodge-stacks-but-others-don't); the content×compute cross-product
   fixtures (Monk+shield AC, PF2e striking+enfeebled as combined cases);
@@ -147,10 +177,16 @@ below; the remainder is the honest residual.
 
 ## 3. Bestiaries / RFC 004
 
-`docs/rfc/004-monster-product-surface.md` is a **proposal only**. No monster data
-was added for 3.5e/PF1e/PF2e/M&M/Daggerheart, and the MASTER_PLAN "no monster
-product surface" boundary was **not** flipped. Bestiaries are unbuilt and gated on
-the same external open-content data as §1.
+No longer proposal-only: the plan in `docs/rfc/004-monster-product-surface.md`
+was executed for the d20 systems. D&D 3.5e (core SRD monsters), PF1e
+(Bestiary 1), and PF2e monster data shipped 2026-06-12, loader-backed behind the
+existing `loadMonstersForSystem` contract (`src/utils/dataLoader.ts`) and
+product-reachable through the scene encounter flow
+(`src/components/scene/useSceneEncounter.ts`). Per-system monster coverage lives
+in `docs/generated/roadmap-metrics.md` and `docs/generated/srd-coverage.md`, not
+here. The residual: M&M 3e / Daggerheart adversary (reference) data, and the
+3.5e XP/CR data needed before Encounter-Level budgeting (§2 L10) can land. RFC
+004 was executed without formal acceptance; its status line records that.
 
 ## 4. GLOBAL DONE criteria still outstanding
 
@@ -164,13 +200,16 @@ the same external open-content data as §1.
   triggered/narrative card resolution, M&M freeform descriptors — never
   unfinished automation. Independent content coverage is proven across the board
   (3.5e spells 99.8%, PF1e 99.8%, PF2e/5e ~100%).
-- README.md and MASTER_PLAN.md not updated to declare completion / cite both
-  denominators (only STATUS.md was, and it explicitly does not claim
-  RAW-coverage-complete).
-- `npm run verify` not confirmed fully green end-to-end: lint, format, tests,
-  validate, repo-hygiene, generated-docs, doc-drift, dead-code pass; full `build`,
-  `check:bundle-size`, and coverage-threshold runs were not executed end-to-end,
-  and Playwright `test:e2e` cannot run in this container (no browsers).
+- MASTER_PLAN.md now mirrors the two-denominator completion goal and adopts
+  this file as the completion-tracking doc (2026-07-14). README.md is still not
+  updated to cite both denominators, and no doc claims RAW-coverage-complete.
+- The full `npm run verify` gate runs in CI on every main merge — including
+  `build`, `check:bundle-size`, coverage thresholds, and Playwright `test:e2e`
+  on both chromium and firefox — and was fully green end-to-end on the latest
+  main merge (`b0f0371`, 2026-07-10). Not every historical main-merge run was
+  green (e.g. the PR #30 merge run was cancelled and needed follow-up e2e
+  fixes). The earlier caveat that this container cannot run e2e is stale as a
+  gate concern; CI is the authority for the full gate.
 
 ## 5. Review item — a shipped behavior change
 
