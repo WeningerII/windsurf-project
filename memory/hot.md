@@ -5,7 +5,8 @@
 > to [[CLAUDE]] (CLAUDE.md) or `docs/`, not here.
 
 **Last updated:** 2026-07-14 (doc realignment `6f03cad` + shell increment
-`5e499a4` pushed on `claude/next-priorities-98pzof`; no PR yet)
+`5e499a4` MERGED to main via PR #32, `3f5df56`; CI green incl. firefox's
+first pass; branch fast-forwarded onto main)
 
 ## Current focus
 
@@ -31,8 +32,11 @@ Two landings this session, both pushed:
 
 ## Next steps
 
-1. Open PR for `claude/next-priorities-98pzof` when owner asks; watch first
-   CI run (firefox e2e untested locally — no container binary).
+1. [DONE 2026-07-14] PR #32 opened, CI green (run #143, firefox included),
+   merged as `3f5df56`. Owner-agreed order of operations: shell Phase-1
+   closeout → IR Phase-1 + quick wins → IR 2-3 → shell Phase 2 → fork
+   (shell 3-6 vs terrain+validators); toolchain (ESLint 9 etc.) between
+   programs.
 2. Remaining Phase-1 deferrals, now unblocked: tasks 7-8 (Export/Delete
    re-home + per-card roster controls), task 9's Alt+1/2/3 (third surface now
    exists), task 11 (performance.mark/measure baseline + sceneManagerChunk
