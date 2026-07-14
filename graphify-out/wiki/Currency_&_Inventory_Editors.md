@@ -4,13 +4,13 @@
 
 ## Key Concepts
 
-- **D20LegacyTabs.tsx** (54 connections) — `src/systems/d20-legacy/components/D20LegacyTabs.tsx`
-- **D20FeatsTab.tsx** (20 connections) — `src/systems/d20-legacy/components/D20FeatsTab.tsx`
+- **D20LegacyTabs.tsx** (55 connections) — `src/systems/d20-legacy/components/D20LegacyTabs.tsx`
+- **D20FeatsTab.tsx** (21 connections) — `src/systems/d20-legacy/components/D20FeatsTab.tsx`
 - **Props** (10 connections) — `src/systems/d20-legacy/components/D20LegacyTabs.tsx`
 - **Pf1eTrait** (10 connections) — `src/systems/pf1e/data-model.ts`
 - **D20LegacyTabs()** (6 connections) — `src/systems/d20-legacy/components/D20LegacyTabs.tsx`
+- **D20NotesTab.tsx** (5 connections) — `src/systems/d20-legacy/components/D20NotesTab.tsx`
 - **D20SavesTab()** (5 connections) — `src/systems/d20-legacy/components/D20SavesTab.tsx`
-- **D20NotesTab.tsx** (4 connections) — `src/systems/d20-legacy/components/D20NotesTab.tsx`
 - **D20SpellBrowserPanel** (4 connections) — `src/systems/d20-legacy/components/D20SpellBrowserPanel.tsx`
 - **D20EquipmentBrowserTab** (3 connections) — `src/systems/d20-legacy/components/D20EquipmentBrowserTab.tsx`
 - **D20FeatBrowserTab** (3 connections) — `src/systems/d20-legacy/components/D20FeatBrowserTab.tsx`
@@ -55,7 +55,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 136 (100%)
+- EXTRACTED: 139 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

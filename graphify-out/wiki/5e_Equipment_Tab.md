@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **Dnd5eEquipmentTab.tsx** (22 connections) — `src/systems/dnd5e/shared/components/Dnd5eEquipmentTab.tsx`
+- **Dnd5eEquipmentTab.tsx** (23 connections) — `src/systems/dnd5e/shared/components/Dnd5eEquipmentTab.tsx`
 - **Props** (3 connections) — `src/systems/dnd5e/shared/components/Dnd5eEquipmentTab.tsx`
 - **CurrencyEditor** (1 connections) — `src/systems/dnd5e/shared/components/Dnd5eEquipmentTab.tsx`
 - **CurrencyEditorProps** (1 connections) — `src/systems/dnd5e/shared/components/Dnd5eEquipmentTab.tsx`
@@ -33,7 +33,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 37 (100%)
+- EXTRACTED: 38 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

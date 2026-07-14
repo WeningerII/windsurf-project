@@ -4,8 +4,8 @@
 
 ## Key Concepts
 
-- **D20InventoryTab.tsx** (9 connections) — `src/systems/d20-legacy/components/D20InventoryTab.tsx`
-- **InventoryManager.tsx** (8 connections) — `src/components/InventoryManager.tsx`
+- **D20InventoryTab.tsx** (10 connections) — `src/systems/d20-legacy/components/D20InventoryTab.tsx`
+- **InventoryManager.tsx** (9 connections) — `src/components/InventoryManager.tsx`
 - **InventoryManager()** (5 connections) — `src/components/InventoryManager.tsx`
 - **InventoryManager.test.tsx** (3 connections) — `src/__tests__/components/InventoryManager.test.tsx`
 - **D20InventoryTab()** (2 connections) — `src/systems/d20-legacy/components/D20InventoryTab.tsx`
@@ -32,7 +32,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 33 (100%)
+- EXTRACTED: 35 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

@@ -4,13 +4,13 @@
 
 ## Key Concepts
 
-- **createSceneDocument()** (31 connections) — `src/scene/runtime.ts`
+- **createSceneDocument()** (33 connections) — `src/scene/runtime.ts`
+- **foldSceneEvents()** (30 connections) — `src/scene/runtime.ts`
 - **resolveSceneAction()** (29 connections) — `src/scene/runtime.ts`
 - **sceneCombatBridge.test.ts** (29 connections) — `src/__tests__/rules/sceneCombatBridge.test.ts`
-- **foldSceneEvents()** (28 connections) — `src/scene/runtime.ts`
 - **sceneCombatBridgeUi.test.ts** (27 connections) — `src/__tests__/rules/sceneCombatBridgeUi.test.ts`
 - **appendSceneEvent()** (26 connections) — `src/scene/runtime.ts`
-- **SceneManager.test.tsx** (25 connections) — `src/__tests__/components/SceneManager.test.tsx`
+- **SceneManager.test.tsx** (26 connections) — `src/__tests__/components/SceneManager.test.tsx`
 - **characterCombatant.test.ts** (23 connections) — `src/__tests__/rules/characterCombatant.test.ts`
 - **sceneRuntime.test.ts** (20 connections) — `src/__tests__/sceneRuntime.test.ts`
 - **sceneCombat.test.ts** (12 connections) — `src/__tests__/rules/sceneCombat.test.ts`
@@ -60,7 +60,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 337 (100%)
+- EXTRACTED: 342 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

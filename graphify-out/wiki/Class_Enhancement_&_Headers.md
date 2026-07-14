@@ -8,8 +8,8 @@
 - **CharacterClass** (29 connections) — `src/types/character-options/classes.ts`
 - **Species** (26 connections) — `src/types/character-options/species.ts`
 - **species.ts** (25 connections) — `src/types/character-options/species.ts`
-- **usePf2eTemplateHandlers.ts** (23 connections) — `src/systems/pf2e/usePf2eTemplateHandlers.ts`
-- **Pf2eHeader.tsx** (13 connections) — `src/systems/pf2e/components/Pf2eHeader.tsx`
+- **usePf2eTemplateHandlers.ts** (24 connections) — `src/systems/pf2e/usePf2eTemplateHandlers.ts`
+- **Pf2eHeader.tsx** (14 connections) — `src/systems/pf2e/components/Pf2eHeader.tsx`
 - **Dnd5eSpeciesSection.tsx** (10 connections) — `src/systems/dnd5e/shared/components/Dnd5eSpeciesSection.tsx`
 - **Choice** (10 connections) — `src/types/core/common.ts`
 - **UseDnd5eTemplateHandlersProps** (6 connections) — `src/systems/dnd5e/shared/useDnd5eTemplateHandlers.ts`
@@ -61,7 +61,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 242 (100%)
+- EXTRACTED: 244 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

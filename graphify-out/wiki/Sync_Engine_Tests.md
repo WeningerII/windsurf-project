@@ -7,7 +7,7 @@
 - **SystemSheets.test.tsx** (49 connections) — `src/__tests__/components/SystemSheets.test.tsx`
 - **dnd5e-equipment-slot-handlers.test.tsx** (17 connections) — `src/__tests__/dnd5e-equipment-slot-handlers.test.tsx`
 - **dnd5e-host-edit-handlers.test.tsx** (14 connections) — `src/__tests__/dnd5e-host-edit-handlers.test.tsx`
-- **Dnd5eSheet.tsx** (12 connections) — `src/systems/dnd5e/components/Dnd5eSheet.tsx`
+- **Dnd5eSheet.tsx** (13 connections) — `src/systems/dnd5e/components/Dnd5eSheet.tsx`
 - **Dnd5eSheetBase()** (6 connections) — `src/systems/dnd5e/shared/Dnd5eSheetBase.tsx`
 - **Dnd5eSheet()** (4 connections) — `src/systems/dnd5e/components/Dnd5eSheet.tsx`
 - **Dnd5e2024Sheet()** (2 connections) — `src/systems/dnd5e-2024/components/Dnd5e2024Sheet.tsx`
@@ -58,7 +58,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 121 (100%)
+- EXTRACTED: 122 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

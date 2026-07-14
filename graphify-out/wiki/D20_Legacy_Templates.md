@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **useD20LegacyTemplateHandlers.ts** (25 connections) — `src/systems/d20-legacy/useD20LegacyTemplateHandlers.ts`
+- **useD20LegacyTemplateHandlers.ts** (26 connections) — `src/systems/d20-legacy/useD20LegacyTemplateHandlers.ts`
 - **useD20LegacyTemplateHandlers()** (8 connections) — `src/systems/d20-legacy/useD20LegacyTemplateHandlers.ts`
 - **Dnd35eClassLevel** (3 connections) — `src/systems/dnd35e/data-model.ts`
 - **Pf1eClassLevel** (3 connections) — `src/systems/pf1e/data-model.ts`
@@ -30,7 +30,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 39 (100%)
+- EXTRACTED: 40 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

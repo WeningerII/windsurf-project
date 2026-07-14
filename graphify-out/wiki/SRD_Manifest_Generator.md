@@ -4,18 +4,18 @@
 
 ## Key Concepts
 
-- **useMam3eSheetResources.ts** (31 connections) — `src/systems/mam3e/useMam3eSheetResources.ts`
-- **MamArchetypesTab.tsx** (16 connections) — `src/systems/mam3e/components/MamArchetypesTab.tsx`
+- **useMam3eSheetResources.ts** (32 connections) — `src/systems/mam3e/useMam3eSheetResources.ts`
+- **MamArchetypesTab.tsx** (17 connections) — `src/systems/mam3e/components/MamArchetypesTab.tsx`
 - **useMam3eSheetResources()** (15 connections) — `src/systems/mam3e/useMam3eSheetResources.ts`
 - **Mam3eArchetype** (13 connections) — `src/types/mam/archetypes.ts`
 - **archetypes.ts** (11 connections) — `src/types/mam/archetypes.ts`
+- **MamAdvantageBrowserTab.tsx** (10 connections) — `src/systems/mam3e/components/MamAdvantageBrowserTab.tsx`
 - **mam3eSheetResources.test.ts** (10 connections) — `src/__tests__/systems/mam3e/mam3eSheetResources.test.ts`
-- **MamAdvantageBrowserTab.tsx** (9 connections) — `src/systems/mam3e/components/MamAdvantageBrowserTab.tsx`
 - **loadAdvantagesForSystem()** (9 connections) — `src/utils/dataLoader.ts`
 - **loadMam3eArchetypesForSystem()** (9 connections) — `src/utils/dataLoader.ts`
 - **loadPowerModifiersForSystem()** (9 connections) — `src/utils/dataLoader.ts`
+- **MamResourceLoadError.tsx** (8 connections) — `src/systems/mam3e/components/MamResourceLoadError.tsx`
 - **loadComplicationsForSystem()** (8 connections) — `src/utils/dataLoader.ts`
-- **MamResourceLoadError.tsx** (7 connections) — `src/systems/mam3e/components/MamResourceLoadError.tsx`
 - **advantages.ts** (7 connections) — `src/types/mam/advantages.ts`
 - **MamResourceLoadError()** (6 connections) — `src/systems/mam3e/components/MamResourceLoadError.tsx`
 - **Advantage** (6 connections) — `src/types/mam/advantages.ts`
@@ -64,7 +64,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 201 (96%)
+- EXTRACTED: 205 (96%)
 - INFERRED: 8 (4%)
 - AMBIGUOUS: 0 (0%)
 

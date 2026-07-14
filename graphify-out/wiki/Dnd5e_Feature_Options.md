@@ -5,8 +5,8 @@
 ## Key Concepts
 
 - **dnd5e-feature-options-persistence.test.ts** (21 connections) — `src/__tests__/dnd5e-feature-options-persistence.test.ts`
+- **Dnd5eFeatureOptionsSection.tsx** (17 connections) — `src/systems/dnd5e/shared/components/Dnd5eFeatureOptionsSection.tsx`
 - **feature-options.ts** (17 connections) — `src/types/character-options/feature-options.ts`
-- **Dnd5eFeatureOptionsSection.tsx** (16 connections) — `src/systems/dnd5e/shared/components/Dnd5eFeatureOptionsSection.tsx`
 - **Dnd5eFeatureOptionSelection** (14 connections) — `src/types/character-options/feature-options.ts`
 - **Dnd5eFeatureOptionDefinition** (12 connections) — `src/types/character-options/feature-options.ts`
 - **dnd5eFeatureOptions.test.ts** (9 connections) — `src/__tests__/utils/dnd5eFeatureOptions.test.ts`
@@ -50,7 +50,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 117 (100%)
+- EXTRACTED: 118 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

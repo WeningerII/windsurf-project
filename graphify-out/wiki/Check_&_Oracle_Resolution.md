@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **runtime.ts** (79 connections) — `src/scene/runtime.ts`
+- **runtime.ts** (81 connections) — `src/scene/runtime.ts`
 - **validateSceneEvent()** (18 connections) — `src/scene/runtime.ts`
 - **SceneEvent** (15 connections) — `src/types/core/scene.ts`
 - **pushIssue()** (11 connections) — `src/scene/runtime.ts`
@@ -57,7 +57,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 274 (100%)
+- EXTRACTED: 276 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

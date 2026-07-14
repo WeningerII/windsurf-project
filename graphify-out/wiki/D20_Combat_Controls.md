@@ -5,29 +5,29 @@
 ## Key Concepts
 
 - **abilityMod()** (54 connections) — `src/utils/math.ts`
-- **types.ts** (43 connections) — `src/registry/types.ts`
+- **types.ts** (44 connections) — `src/registry/types.ts`
 - **math.ts** (43 connections) — `src/utils/math.ts`
 - **Pf2eDataModel** (42 connections) — `src/systems/pf2e/data-model.ts`
 - **engine.ts** (40 connections) — `src/systems/pf2e/engine.ts`
 - **RollResult** (28 connections) — `src/registry/types.ts`
 - **formatMod()** (24 connections) — `src/utils/math.ts`
-- **Pf2eOverview.tsx** (20 connections) — `src/systems/pf2e/components/Pf2eOverview.tsx`
-- **Pf2eSkillsTab.tsx** (20 connections) — `src/systems/pf2e/components/Pf2eSkillsTab.tsx`
-- **Pf2eSavesTab.tsx** (18 connections) — `src/systems/pf2e/components/Pf2eSavesTab.tsx`
+- **Pf2eOverview.tsx** (21 connections) — `src/systems/pf2e/components/Pf2eOverview.tsx`
+- **Pf2eSkillsTab.tsx** (21 connections) — `src/systems/pf2e/components/Pf2eSkillsTab.tsx`
+- **Pf2eSavesTab.tsx** (19 connections) — `src/systems/pf2e/components/Pf2eSavesTab.tsx`
 - **SystemEngine** (17 connections) — `src/registry/types.ts`
-- **DiceRollButton.tsx** (14 connections) — `src/components/DiceRollButton.tsx`
+- **DiceRollButton.tsx** (15 connections) — `src/components/DiceRollButton.tsx`
 - **Dnd5eSkillsTab.tsx** (14 connections) — `src/systems/dnd5e/shared/components/Dnd5eSkillsTab.tsx`
 - **.prepareData()** (14 connections) — `src/systems/pf2e/engine.ts`
+- **Pf2eAbilitiesTab.tsx** (13 connections) — `src/systems/pf2e/components/Pf2eAbilitiesTab.tsx`
 - **Dnd5eSavesTab.tsx** (12 connections) — `src/systems/dnd5e/shared/components/Dnd5eSavesTab.tsx`
-- **Pf2eAbilitiesTab.tsx** (12 connections) — `src/systems/pf2e/components/Pf2eAbilitiesTab.tsx`
 - **definition.ts** (12 connections) — `src/systems/pf2e/definition.ts`
 - **DiceRollButton()** (11 connections) — `src/components/DiceRollButton.tsx`
 - **Pf2eEngine** (10 connections) — `src/systems/pf2e/engine.ts`
 - **classSpellcasting.ts** (10 connections) — `src/utils/classSpellcasting.ts`
-- **D20AbilitiesTab.tsx** (8 connections) — `src/systems/d20-legacy/components/D20AbilitiesTab.tsx`
+- **D20AbilitiesTab.tsx** (9 connections) — `src/systems/d20-legacy/components/D20AbilitiesTab.tsx`
 - **.rollCheck()** (8 connections) — `src/systems/pf2e/engine.ts`
 - **pf2e-engine.test.ts** (8 connections) — `src/__tests__/engines/pf2e-engine.test.ts`
-- **DamageHealControl.tsx** (6 connections) — `src/components/DamageHealControl.tsx`
+- **DamageHealControl.tsx** (7 connections) — `src/components/DamageHealControl.tsx`
 - **D20AbilitiesTab()** (6 connections) — `src/systems/d20-legacy/components/D20AbilitiesTab.tsx`
 - *... and 47 more nodes in this community*
 
@@ -71,7 +71,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 620 (100%)
+- EXTRACTED: 628 (100%)
 - INFERRED: 3 (0%)
 - AMBIGUOUS: 0 (0%)
 

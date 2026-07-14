@@ -68,3 +68,49 @@ encounter phrasing). Details in the commit message and hot.md.
 2. IR Phase-1 closeout (daggerheart/mam3e engines).
 3. Owner: GAPS §5 exhaustion review; README two-denominator citation;
    REMEDIATION Phase 6 archive decision; PR for this branch.
+
+---
+
+# Addendum (same session): shell increment — tasks 3+5+12 + keepalive swap
+
+## What was done
+
+Landed `5e499a4` on `claude/next-priorities-98pzof` (pushed): the coupled
+Phase-1 remainder the morning's amendment recommended.
+
+- SceneManager → controlled selection seam (props `selectedSceneId` +
+  `onSelectScene`); five internal writers removed (init/auto-reset via a
+  seam-dispatching effect; rail-click/create/import relocated). Transient
+  per-scene state (token, placement, combat target/log, spawn zone) clears in
+  the selection-keyed effect. LEFT 18rem rail + create form + import handler
+  extracted; canvas widened; "No scene selected" empty state added.
+- New `src/components/LibraryScenesView.tsx`: select-only picker (header,
+  create, import, campaign filter, aria-pressed cards). Import summary uses a
+  toast because successful import flips surfaces; failure keeps a local banner.
+- App: scenes segment renders the picker; scene surface keepalives SceneManager
+  after first visit via `invisible absolute inset-x-0 top-0 -translate-x-[200vw]
+  pointer-events-none` + aria-hidden (parent made `relative`), replacing
+  `<div hidden>`; keepalive scope unchanged (sheet surface still unmounts it —
+  Phase 2 generalizes).
+- Tests: SceneManager suite rewritten (harness owns selection, stand-in picker
+  buttons, onSelectScene spy; two new auto-reset tests; create test moved to the
+  new LibraryScenesView suite, 5 tests). New `e2e/phase1-scene-selection.spec.ts`
+  = gates (c)/(e)/(h).
+
+## Verification
+
+Full vitest 2075 green; coverage thresholds green; lint/typecheck (app+test+
+netlify)/format green; build + bundle budgets green; doc-drift/repo-hygiene/
+generated-docs/legal/dead-code/validate/compute-register green. Playwright
+chromium 27/27 locally through the rev-1194 symlink bridge (see hot.md
+landmine — ffmpeg must be bridged too). Firefox not runnable in-container;
+CI covers it on the PR.
+
+## Notes
+
+- capabilityScenarios.test.tsx needed NO changes (engine-level; the build-specs
+  task-12 claim that it mounts SceneManager was wrong).
+- No doc-drift manifest pair covers SceneManager/App/useAppNav, so no paired
+  doc edit was required for this code change.
+- Follow-ups: tasks 7-8, 9 (Alt+1/2/3 now unblocked), 11, 14 remainder; then
+  Phase 2.

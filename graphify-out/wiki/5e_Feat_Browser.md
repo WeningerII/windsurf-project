@@ -4,16 +4,16 @@
 
 ## Key Concepts
 
+- **lazyWithPreload.ts** (26 connections) — `src/utils/lazyWithPreload.ts`
 - **FeatDefinition** (25 connections) — `src/types/character-options/feats.ts`
-- **lazyWithPreload.ts** (25 connections) — `src/utils/lazyWithPreload.ts`
 - **lazyWithPreload()** (24 connections) — `src/utils/lazyWithPreload.ts`
 - **feats.ts** (22 connections) — `src/types/character-options/feats.ts`
-- **Dnd5eFeatBrowserTab.tsx** (19 connections) — `src/systems/dnd5e/shared/components/Dnd5eFeatBrowserTab.tsx`
+- **Dnd5eFeatBrowserTab.tsx** (20 connections) — `src/systems/dnd5e/shared/components/Dnd5eFeatBrowserTab.tsx`
 - **Dnd5eFeatManualBadge.test.tsx** (14 connections) — `src/__tests__/components/Dnd5eFeatManualBadge.test.tsx`
-- **Pf2eFeatBrowserTab.tsx** (12 connections) — `src/systems/pf2e/components/Pf2eFeatBrowserTab.tsx`
-- **D20FeatBrowserTab.tsx** (11 connections) — `src/systems/d20-legacy/components/D20FeatBrowserTab.tsx`
+- **Pf2eFeatBrowserTab.tsx** (13 connections) — `src/systems/pf2e/components/Pf2eFeatBrowserTab.tsx`
+- **D20FeatBrowserTab.tsx** (12 connections) — `src/systems/d20-legacy/components/D20FeatBrowserTab.tsx`
 - **featManualBadge.ts** (11 connections) — `src/utils/featManualBadge.ts`
-- **D20EquipmentBrowserTab.tsx** (9 connections) — `src/systems/d20-legacy/components/D20EquipmentBrowserTab.tsx`
+- **D20EquipmentBrowserTab.tsx** (10 connections) — `src/systems/d20-legacy/components/D20EquipmentBrowserTab.tsx`
 - **Prerequisite** (6 connections) — `src/types/core/common.ts`
 - **shouldShowDnd5eManualFeatBadge()** (6 connections) — `src/utils/featManualBadge.ts`
 - **DND5E_FEAT_COPY** (4 connections) — `src/utils/documentationCopy.ts`
@@ -63,7 +63,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 226 (100%)
+- EXTRACTED: 231 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

@@ -4,61 +4,60 @@
 > `/save` — overwrite stale content, keep it under ~500 words. Durable facts go
 > to [[CLAUDE]] (CLAUDE.md) or `docs/`, not here.
 
-**Last updated:** 2026-07-14 (planning-doc realignment committed `6f03cad` and
-pushed on `claude/next-priorities-98pzof`; no PR yet)
+**Last updated:** 2026-07-14 (doc realignment `6f03cad` + shell increment
+`5e499a4` pushed on `claude/next-priorities-98pzof`; no PR yet)
 
 ## Current focus
 
-Planning docs realigned with shipped reality. Two verification workflows (a
-5-agent survey, then an 8-agent draft/gate/adversarial-review pass) grounded
-every change in code before writing:
+Two landings this session, both pushed:
 
-- **MASTER_PLAN**: shipped AI surfaces + tactical executor (landed 2026-05-31,
-  wired by 06-12) recorded; stale 3.5e/PF1e "no monster product surface"
-  dropped (bestiaries shipped 2026-06-12, incl. PF2e); scene-runtime phase
-  table annotated (0–8 + 11 shipped, 9/10/13 slice, 12/14 open); RFC 004/005/006
-  provenance rows added, rfc/002 reclassified Active; UI-shell redesign mirrored
-  as an Active track (Phase 1 = PR #30 with enumerated deferrals); two-denominator
-  completion goal + REMEDIATION_PLAN closeout (Phases 6–7 pending) mirrored; IR
-  per-phase actuals: Phase 0 DONE, 1–5 PARTIAL (daggerheart/mam3e engines not
-  resolver-routed; all-seven parity holds only in tests).
-- **GAPS §2** split into verified now-wired vs still-helper-only (helper-only:
-  passive Perception, concentration DC, cantrip scaling, PF2e MAP/striking/
-  heighten, M&M measurements). Quick win flagged: populate
-  `EquippedItem.weaponDamage` in `toEquippedItem` (consumer already written).
-- **build-specs**: dated amendment — PR #30 landed-vs-deferred, the
-  `<div hidden>` keepalive deviation (Findings 7+14), corrected Phase-2
-  prerequisite gate, recommended next increment.
-
-Doc gates green (doc-drift, generated-docs, repo-hygiene). Docs/memory only —
-graph not refreshed.
+1. **Planning-doc realignment** (`6f03cad`): MASTER_PLAN/GAPS/RFC-004/build-specs
+   now match shipped reality (details in the 2026-07-14 session log).
+2. **Shell increment — build-specs tasks 3+5+12 + keepalive swap** (`5e499a4`):
+   - SceneManager selection is a controlled seam (`selectedSceneId`/
+     `onSelectScene`); all five internal writers gone; LEFT 18rem rail,
+     create, and import moved out; canvas full-width + empty state.
+   - New `LibraryScenesView` = select-only scenes home (cards with
+     aria-pressed, campaign filter, create/import through the seam).
+     `useAppNav.selectScene` + `surface:'scene'` are now CONSUMED —
+     create/import/pick land on the live canvas.
+   - Keepalive re-anchored to the Scene surface using visibility:hidden +
+     off-screen transform (the forbidden `<div hidden>` is gone).
+   - SceneManager suite rewritten (harness plays the shell); new
+     LibraryScenesView suite; new `e2e/phase1-scene-selection.spec.ts`
+     covering acceptance gates (c)/(e)/(h).
+   - Verified: full vitest + coverage, all static gates, build/bundle,
+     Playwright chromium 27/27 locally (firefox → CI).
 
 ## Next steps
 
-1. Open PR for `claude/next-priorities-98pzof` when owner asks; CI runs the
-   full verify gate on merge.
-2. Next code increment (agreed priority): coupled shell tasks **3+5+12** —
-   five-writer scene-selection lift (`useAppNav.selectScene` exists unconsumed;
-   writers at SceneManager.tsx L109/143/807/872/926), LibraryScenesView +
-   18rem left-rail removal, same-commit SceneManager/capabilityScenarios test
-   rewrites — bundling the keepalive swap (App.tsx L638 `hidden` →
-   visibility:hidden). See build-specs "Amendment — 2026-07-14".
-3. Then IR Phase-1 closeout: route daggerheart + mam3e engine `prepareData`
-   through `resolveCharacterEffects` with outputs unchanged.
-4. Owner items: GAPS §5 human review (5e-2024 exhaustion −2/level); README
-   still doesn't cite the two denominators; REMEDIATION Phase 6 doc-archive
-   decision.
+1. Open PR for `claude/next-priorities-98pzof` when owner asks; watch first
+   CI run (firefox e2e untested locally — no container binary).
+2. Remaining Phase-1 deferrals, now unblocked: tasks 7-8 (Export/Delete
+   re-home + per-card roster controls), task 9's Alt+1/2/3 (third surface now
+   exists), task 11 (performance.mark/measure baseline + sceneManagerChunk
+   guard), task 14's remaining gates (a/b/d/f/g). Then Phase 2 (ShellContext +
+   SurfaceStage) — its three prerequisite blockers are closed.
+3. IR Phase-1 closeout: route daggerheart + mam3e engine prepareData through
+   resolveCharacterEffects (all-seven parity currently tests-only).
+4. Owner items: GAPS §5 review (5e-2024 exhaustion −2/level); README
+   two-denominator citation; REMEDIATION Phase 6 doc-archive decision.
 
-## Watch items
+## Landmines (2026-07-14)
 
-- firefox `phase3-workflows.spec.ts:368` (Daggerheart roundtrip) flaked once
-  in CI, passed retry #1. `pwa-offline` passed clean in CI; the local blank
-  shell is the rev-1194 browser-bridge artifact (see 2026-07-10 session log;
-  NEVER `playwright install` in this container).
-- Main CI green at `b0f0371`: Verify 9m20s vs 30m cap, e2e ~3m — ample headroom.
+- Playwright bridge for this container: browsers rev 1194 at
+  /opt/pw-browsers, toolchain wants 1208/firefox-1509. NEVER `playwright
+  install`. Symlink-bridge chromium-1208/chrome-linux AND
+  chromium_headless_shell-1208/chrome-headless-shell-linux64/chrome-headless-shell
+  AND ffmpeg-1011 (missing ffmpeg crashes retries with a misleading
+  "just installed" banner) under a scratchpad PLAYWRIGHT_BROWSERS_PATH; run
+  `--project=chromium` only.
+- `importScenesWithReport` requires the `{scenes:[...]}` envelope; a bare
+  array throws (parse-error path), it does not report zero scenes.
 
 ## Open questions
 
-- Ship the shell increment as one PR, or split LibraryScenesView from the lift?
-- GAPS §1 decision still open: fold genuine srd-coverage numbers into the
-  headline metric / retire the loader-mirror manifests?
+- Auto-reset edge: a cross-tab scene deletion while SceneManager is
+  keepalive-hidden now flips the user to the Scene surface (seam couples
+  selection to surface). Rare; revisit in Phase 2's SurfaceStage.
+- GAPS §1: fold genuine srd-coverage numbers into the headline metric?

@@ -6,8 +6,8 @@
 
 - **Dnd5eHeaderSection.tsx** (8 connections) — `src/systems/dnd5e/shared/components/Dnd5eHeaderSection.tsx`
 - **index.ts** (6 connections) — `src/components/sheet/index.ts`
-- **CombatStatCard.tsx** (3 connections) — `src/components/sheet/CombatStatCard.tsx`
-- **SheetHeader.tsx** (3 connections) — `src/components/sheet/SheetHeader.tsx`
+- **CombatStatCard.tsx** (4 connections) — `src/components/sheet/CombatStatCard.tsx`
+- **SheetHeader.tsx** (4 connections) — `src/components/sheet/SheetHeader.tsx`
 - **Dnd5eHeaderSection()** (3 connections) — `src/systems/dnd5e/shared/components/Dnd5eHeaderSection.tsx`
 - **CombatStatCard()** (2 connections) — `src/components/sheet/CombatStatCard.tsx`
 - **SheetHeader()** (2 connections) — `src/components/sheet/SheetHeader.tsx`
@@ -33,7 +33,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 31 (100%)
+- EXTRACTED: 33 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

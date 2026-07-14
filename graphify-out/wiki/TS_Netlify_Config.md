@@ -4,13 +4,13 @@
 
 ## Key Concepts
 
+- **tsconfig.netlify.json** (4 connections) — `tsconfig.netlify.json`
 - **compilerOptions** (4 connections) — `tsconfig.netlify.json`
-- **tsconfig.netlify.json** (3 connections) — `tsconfig.netlify.json`
+- **types** (2 connections) — `tsconfig.netlify.json`
+- **include** (2 connections) — `tsconfig.netlify.json`
 - **allowImportingTsExtensions** (1 connections) — `tsconfig.netlify.json`
 - **noEmit** (1 connections) — `tsconfig.netlify.json`
-- **types** (1 connections) — `tsconfig.netlify.json`
 - **extends** (1 connections) — `tsconfig.netlify.json`
-- **include** (1 connections) — `tsconfig.netlify.json`
 
 ## Relationships
 
@@ -22,7 +22,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 12 (100%)
+- EXTRACTED: 15 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

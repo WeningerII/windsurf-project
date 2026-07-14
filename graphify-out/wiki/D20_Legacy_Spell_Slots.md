@@ -5,7 +5,7 @@
 ## Key Concepts
 
 - **d20LegacySheetShared.ts** (24 connections) — `src/systems/d20-legacy/d20LegacySheetShared.ts`
-- **useD20LegacyMutationHandlers.ts** (18 connections) — `src/systems/d20-legacy/useD20LegacyMutationHandlers.ts`
+- **useD20LegacyMutationHandlers.ts** (19 connections) — `src/systems/d20-legacy/useD20LegacyMutationHandlers.ts`
 - **resourcePool.ts** (18 connections) — `src/utils/resourcePool.ts`
 - **clampCount()** (14 connections) — `src/utils/resourcePool.ts`
 - **resourcePool.test.ts** (12 connections) — `src/__tests__/utils/resourcePool.test.ts`
@@ -59,7 +59,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 193 (100%)
+- EXTRACTED: 194 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

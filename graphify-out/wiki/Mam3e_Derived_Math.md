@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **useDaggerheartTemplateHandlers.ts** (15 connections) — `src/systems/daggerheart/useDaggerheartTemplateHandlers.ts`
+- **useDaggerheartTemplateHandlers.ts** (16 connections) — `src/systems/daggerheart/useDaggerheartTemplateHandlers.ts`
 - **daggerheartTemplate.test.ts** (10 connections) — `src/__tests__/utils/daggerheartTemplate.test.ts`
 - **useDaggerheartTemplateHandlers()** (6 connections) — `src/systems/daggerheart/useDaggerheartTemplateHandlers.ts`
 
@@ -22,7 +22,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 31 (100%)
+- EXTRACTED: 32 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

@@ -4,8 +4,8 @@
 
 ## Key Concepts
 
+- **useKeyboardNavigation.ts** (6 connections) — `src/hooks/useKeyboardNavigation.ts`
 - **useKeyboardNavigation()** (6 connections) — `src/hooks/useKeyboardNavigation.ts`
-- **useKeyboardNavigation.ts** (5 connections) — `src/hooks/useKeyboardNavigation.ts`
 - **useKeyboardNavigation.test.tsx** (4 connections) — `src/__tests__/hooks/useKeyboardNavigation.test.tsx`
 - **getEditableTarget()** (2 connections) — `src/hooks/useKeyboardNavigation.ts`
 - **Harness()** (2 connections) — `src/__tests__/hooks/useKeyboardNavigation.test.tsx`
@@ -24,7 +24,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 21 (100%)
+- EXTRACTED: 22 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

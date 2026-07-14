@@ -4,12 +4,12 @@
 
 ## Key Concepts
 
-- **Dnd5eSpellsTab.tsx** (30 connections) — `src/systems/dnd5e/shared/components/Dnd5eSpellsTab.tsx`
-- **D20SpellBrowserPanel.tsx** (18 connections) — `src/systems/d20-legacy/components/D20SpellBrowserPanel.tsx`
-- **Pf2eSpellBrowserPanel.tsx** (18 connections) — `src/systems/pf2e/components/Pf2eSpellBrowserPanel.tsx`
+- **Dnd5eSpellsTab.tsx** (31 connections) — `src/systems/dnd5e/shared/components/Dnd5eSpellsTab.tsx`
+- **D20SpellBrowserPanel.tsx** (19 connections) — `src/systems/d20-legacy/components/D20SpellBrowserPanel.tsx`
+- **Pf2eSpellBrowserPanel.tsx** (19 connections) — `src/systems/pf2e/components/Pf2eSpellBrowserPanel.tsx`
 - **formatters.ts** (14 connections) — `src/utils/formatters.ts`
 - **SpellBrowserPanels.test.tsx** (10 connections) — `src/__tests__/components/SpellBrowserPanels.test.tsx`
-- **SpellBrowser.tsx** (7 connections) — `src/components/SpellBrowser.tsx`
+- **SpellBrowser.tsx** (8 connections) — `src/components/SpellBrowser.tsx`
 - **formatAreaOfEffect()** (7 connections) — `src/utils/formatters.ts`
 - **formatCastingTime()** (7 connections) — `src/utils/formatters.ts`
 - **formatDuration()** (7 connections) — `src/utils/formatters.ts`
@@ -60,7 +60,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 176 (100%)
+- EXTRACTED: 180 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

@@ -7,7 +7,7 @@
 - **parseNum()** (35 connections) — `src/utils/math.ts`
 - **DaggerheartInventorySection.tsx** (22 connections) — `src/systems/daggerheart/components/DaggerheartInventorySection.tsx`
 - **CurrencyEditor.tsx** (10 connections) — `src/components/CurrencyEditor.tsx`
-- **D20LegacyHeader.tsx** (9 connections) — `src/systems/d20-legacy/components/D20LegacyHeader.tsx`
+- **D20LegacyHeader.tsx** (10 connections) — `src/systems/d20-legacy/components/D20LegacyHeader.tsx`
 - **CurrencyEditor()** (6 connections) — `src/components/CurrencyEditor.tsx`
 - **Dnd5eOverviewSection()** (5 connections) — `src/systems/dnd5e/shared/components/Dnd5eOverviewSection.tsx`
 - **DaggerheartInventorySection()** (4 connections) — `src/systems/daggerheart/components/DaggerheartInventorySection.tsx`
@@ -46,7 +46,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 105 (100%)
+- EXTRACTED: 106 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

@@ -5,14 +5,14 @@
 ## Key Concepts
 
 - **data-model.ts** (45 connections) — `src/systems/pf2e/data-model.ts`
-- **usePf2eSheetController.ts** (23 connections) — `src/systems/pf2e/usePf2eSheetController.ts`
+- **usePf2eSheetController.ts** (24 connections) — `src/systems/pf2e/usePf2eSheetController.ts`
 - **pf2e-archetype-persistence.test.ts** (18 connections) — `src/__tests__/pf2e-archetype-persistence.test.ts`
 - **createDefaultPf2eData()** (17 connections) — `src/systems/pf2e/data-model.ts`
 - **pf2eSheetShared.ts** (17 connections) — `src/systems/pf2e/pf2eSheetShared.ts`
-- **usePf2eMutationHandlers.ts** (16 connections) — `src/systems/pf2e/usePf2eMutationHandlers.ts`
+- **usePf2eMutationHandlers.ts** (17 connections) — `src/systems/pf2e/usePf2eMutationHandlers.ts`
 - **pf2eSheetHelpers.test.ts** (14 connections) — `src/__tests__/systems/pf2e/pf2eSheetHelpers.test.ts`
+- **Pf2eProficiencyBadge.tsx** (12 connections) — `src/systems/pf2e/components/Pf2eProficiencyBadge.tsx`
 - **pf2e-template-pipeline.test.ts** (12 connections) — `src/__tests__/pf2e-template-pipeline.test.ts`
-- **Pf2eProficiencyBadge.tsx** (11 connections) — `src/systems/pf2e/components/Pf2eProficiencyBadge.tsx`
 - **getPf2eSheetChoiceState.ts** (11 connections) — `src/systems/pf2e/getPf2eSheetChoiceState.ts`
 - **Archetype** (11 connections) — `src/types/character-options/archetypes.ts`
 - **pf2eTemplate.test.ts** (10 connections) — `src/__tests__/utils/pf2eTemplate.test.ts`
@@ -67,7 +67,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 310 (100%)
+- EXTRACTED: 313 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

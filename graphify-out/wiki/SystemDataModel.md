@@ -20,9 +20,9 @@
 - Dnd5eSheetBase.tsx `EXTRACTED`
 - SystemSheets.test.tsx `EXTRACTED`
 - useSync.test.tsx `EXTRACTED`
-- data-model.ts `EXTRACTED`
-- data-model.ts `EXTRACTED`
 - index.ts `EXTRACTED`
+- data-model.ts `EXTRACTED`
+- data-model.ts `EXTRACTED`
 - types.ts `EXTRACTED`
 - sheet.tsx `EXTRACTED`
 - useDnd5eSheetActionHandlers.ts `EXTRACTED`

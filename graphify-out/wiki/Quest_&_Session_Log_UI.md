@@ -4,8 +4,8 @@
 
 ## Key Concepts
 
-- **campaign.ts** (29 connections) — `src/types/core/campaign.ts`
-- **QuestList.tsx** (28 connections) — `src/components/campaign/QuestList.tsx`
+- **campaign.ts** (31 connections) — `src/types/core/campaign.ts`
+- **QuestList.tsx** (29 connections) — `src/components/campaign/QuestList.tsx`
 - **campaignStory.ts** (25 connections) — `src/utils/campaignStory.ts`
 - **campaignStory.test.ts** (21 connections) — `src/__tests__/utils/campaignStory.test.ts`
 - **QuestList()** (14 connections) — `src/components/campaign/QuestList.tsx`
@@ -55,7 +55,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 193 (100%)
+- EXTRACTED: 196 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

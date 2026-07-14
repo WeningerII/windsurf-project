@@ -4,11 +4,11 @@
 
 ## Key Concepts
 
-- **useD20LegacySheetController.ts** (30 connections) — `src/systems/d20-legacy/useD20LegacySheetController.ts`
-- **sheet.tsx** (19 connections) — `src/systems/d20-legacy/sheet.tsx`
-- **D20ClassesSection.tsx** (16 connections) — `src/systems/d20-legacy/components/D20ClassesSection.tsx`
+- **useD20LegacySheetController.ts** (31 connections) — `src/systems/d20-legacy/useD20LegacySheetController.ts`
+- **sheet.tsx** (20 connections) — `src/systems/d20-legacy/sheet.tsx`
+- **D20ClassesSection.tsx** (17 connections) — `src/systems/d20-legacy/components/D20ClassesSection.tsx`
 - **useD20LegacySheetController()** (10 connections) — `src/systems/d20-legacy/useD20LegacySheetController.ts`
-- **RestControls.tsx** (7 connections) — `src/components/RestControls.tsx`
+- **RestControls.tsx** (8 connections) — `src/components/RestControls.tsx`
 - **RestControls()** (6 connections) — `src/components/RestControls.tsx`
 - **D20ClassesSection()** (5 connections) — `src/systems/d20-legacy/components/D20ClassesSection.tsx`
 - **D20CombatSection()** (4 connections) — `src/systems/d20-legacy/components/D20CombatSection.tsx`
@@ -56,7 +56,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 127 (99%)
+- EXTRACTED: 131 (99%)
 - INFERRED: 1 (1%)
 - AMBIGUOUS: 0 (0%)
 

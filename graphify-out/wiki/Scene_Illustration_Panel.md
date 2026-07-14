@@ -4,8 +4,8 @@
 
 ## Key Concepts
 
+- **IllustrationPanel.tsx** (14 connections) — `src/components/scene/IllustrationPanel.tsx`
 - **illustrateSceneFlow.ts** (13 connections) — `src/ai/illustrateSceneFlow.ts`
-- **IllustrationPanel.tsx** (13 connections) — `src/components/scene/IllustrationPanel.tsx`
 - **illustrateSceneFlow.test.ts** (8 connections) — `src/__tests__/ai/illustrateSceneFlow.test.ts`
 - **GeneratedImageData** (4 connections) — `src/ai/contracts.ts`
 - **IllustrateSceneResult** (3 connections) — `src/ai/illustrateSceneFlow.ts`
@@ -38,7 +38,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 56 (100%)
+- EXTRACTED: 57 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

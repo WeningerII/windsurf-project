@@ -4,10 +4,10 @@
 
 ## Key Concepts
 
-- **Toast.tsx** (12 connections) — `src/components/ui/Toast.tsx`
+- **Toast.tsx** (14 connections) — `src/components/ui/Toast.tsx`
+- **useToast()** (5 connections) — `src/components/ui/Toast.tsx`
 - **ToastVariant** (4 connections) — `src/utils/notifications.ts`
 - **ToastProvider()** (3 connections) — `src/components/ui/Toast.tsx`
-- **useToast()** (3 connections) — `src/components/ui/Toast.tsx`
 - **registerToastHandler()** (3 connections) — `src/utils/notifications.ts`
 - **ToastContextValue** (2 connections) — `src/components/ui/Toast.tsx`
 - **ToastItem** (2 connections) — `src/components/ui/Toast.tsx`
@@ -29,7 +29,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 33 (100%)
+- EXTRACTED: 37 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **useDnd5eSheetActionHandlers.ts** (42 connections) — `src/systems/dnd5e/shared/useDnd5eSheetActionHandlers.ts`
+- **useDnd5eSheetActionHandlers.ts** (43 connections) — `src/systems/dnd5e/shared/useDnd5eSheetActionHandlers.ts`
 - **dnd5eSheetShared.ts** (37 connections) — `src/systems/dnd5e/shared/dnd5eSheetShared.ts`
 - **useDnd5eSheetActionHandlers()** (14 connections) — `src/systems/dnd5e/shared/useDnd5eSheetActionHandlers.ts`
 - **toggleSkillProficiency.test.tsx** (9 connections) — `src/__tests__/systems/dnd5e/toggleSkillProficiency.test.tsx`
@@ -46,7 +46,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 142 (97%)
+- EXTRACTED: 143 (97%)
 - INFERRED: 4 (3%)
 - AMBIGUOUS: 0 (0%)
 

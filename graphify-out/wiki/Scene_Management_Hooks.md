@@ -4,9 +4,9 @@
 
 ## Key Concepts
 
-- **sceneStorage.ts** (29 connections) — `src/utils/sceneStorage.ts`
-- **SceneDocument** (26 connections) — `src/types/core/scene.ts`
-- **useScenes.ts** (18 connections) — `src/hooks/useScenes.ts`
+- **sceneStorage.ts** (31 connections) — `src/utils/sceneStorage.ts`
+- **SceneDocument** (29 connections) — `src/types/core/scene.ts`
+- **useScenes.ts** (19 connections) — `src/hooks/useScenes.ts`
 - **sceneStorage.test.ts** (15 connections) — `src/__tests__/utils/sceneStorage.test.ts`
 - **useScenes()** (10 connections) — `src/hooks/useScenes.ts`
 - **useScenes.test.tsx** (10 connections) — `src/__tests__/hooks/useScenes.test.tsx`
@@ -34,8 +34,8 @@
 
 - [Scene Combat Resolution](Scene_Combat_Resolution.md) (13 shared connections)
 - [Campaign Storage & Hooks](Campaign_Storage_%26_Hooks.md) (9 shared connections)
-- [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (8 shared connections)
 - [Check & Oracle Resolution](Check_%26_Oracle_Resolution.md) (6 shared connections)
+- [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (6 shared connections)
 - [Boundary Validation Tests](Boundary_Validation_Tests.md) (6 shared connections)
 - [Oracle Panel & Logic](Oracle_Panel_%26_Logic.md) (4 shared connections)
 - [Document Signature Hashing](Document_Signature_Hashing.md) (4 shared connections)
@@ -55,7 +55,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 182 (99%)
+- EXTRACTED: 188 (99%)
 - INFERRED: 2 (1%)
 - AMBIGUOUS: 0 (0%)
 

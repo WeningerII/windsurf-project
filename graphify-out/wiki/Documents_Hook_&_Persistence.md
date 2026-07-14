@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **AbilityScoreGrid.tsx** (24 connections) — `src/components/sheet/AbilityScoreGrid.tsx`
+- **AbilityScoreGrid.tsx** (25 connections) — `src/components/sheet/AbilityScoreGrid.tsx`
 - **AbilityScoreGrid()** (16 connections) — `src/components/sheet/AbilityScoreGrid.tsx`
 - **buildPointBuyDraft()** (4 connections) — `src/components/sheet/AbilityScoreGrid.tsx`
 - **buildStandardArrayDraft()** (4 connections) — `src/components/sheet/AbilityScoreGrid.tsx`
@@ -41,7 +41,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 79 (99%)
+- EXTRACTED: 80 (99%)
 - INFERRED: 1 (1%)
 - AMBIGUOUS: 0 (0%)
 

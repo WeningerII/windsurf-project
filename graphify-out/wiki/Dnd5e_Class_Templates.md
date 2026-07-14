@@ -5,7 +5,7 @@
 ## Key Concepts
 
 - **cloneDocument()** (26 connections) — `src/utils/templateShared.ts`
-- **useDnd5eTemplateHandlers.ts** (24 connections) — `src/systems/dnd5e/shared/useDnd5eTemplateHandlers.ts`
+- **useDnd5eTemplateHandlers.ts** (25 connections) — `src/systems/dnd5e/shared/useDnd5eTemplateHandlers.ts`
 - **Dnd5eClassesSection.tsx** (17 connections) — `src/systems/dnd5e/shared/components/Dnd5eClassesSection.tsx`
 - **templateShared.ts** (16 connections) — `src/utils/templateShared.ts`
 - **classTemplate.test.ts** (14 connections) — `src/__tests__/utils/classTemplate.test.ts`
@@ -40,7 +40,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 132 (100%)
+- EXTRACTED: 133 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

@@ -6,7 +6,7 @@
 
 - **derivedCombatMath.ts** (25 connections) — `src/utils/derivedCombatMath.ts`
 - **derivedCombatMath.test.ts** (16 connections) — `src/__tests__/derivedCombatMath.test.ts`
-- **D20SkillsTab.tsx** (14 connections) — `src/systems/d20-legacy/components/D20SkillsTab.tsx`
+- **D20SkillsTab.tsx** (15 connections) — `src/systems/d20-legacy/components/D20SkillsTab.tsx`
 - **D20SkillsTab()** (8 connections) — `src/systems/d20-legacy/components/D20SkillsTab.tsx`
 - **buildArmorClassEntries()** (8 connections) — `src/systems/dnd5e/shared/contributionLedger.ts`
 - **Skill** (8 connections) — `src/types/game-systems.ts`
@@ -53,7 +53,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 133 (100%)
+- EXTRACTED: 134 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

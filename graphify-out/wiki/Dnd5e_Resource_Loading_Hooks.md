@@ -5,14 +5,14 @@
 ## Key Concepts
 
 - **GameSystemId** (79 connections) — `src/types/game-systems.ts`
-- **useDnd5eSheetResources.ts** (37 connections) — `src/systems/dnd5e/shared/useDnd5eSheetResources.ts`
+- **useDnd5eSheetResources.ts** (38 connections) — `src/systems/dnd5e/shared/useDnd5eSheetResources.ts`
 - **loadSpellsForSystem()** (22 connections) — `src/utils/dataLoader.ts`
 - **useDnd5eSheetResources()** (18 connections) — `src/systems/dnd5e/shared/useDnd5eSheetResources.ts`
 - **loadFeatureOptionsForSystem()** (10 connections) — `src/utils/dataLoader.ts`
 - **useDnd5eSheetResources.test.tsx** (8 connections) — `src/__tests__/systems/dnd5e/useDnd5eSheetResources.test.tsx`
+- **useDnd5eDeferredResource.ts** (6 connections) — `src/systems/dnd5e/shared/useDnd5eDeferredResource.ts`
 - **Dnd5eFeatBrowserTab** (5 connections) — `src/systems/dnd5e/shared/components/Dnd5eFeatBrowserTab.tsx`
 - **Dnd5eSpellsTab** (5 connections) — `src/systems/dnd5e/shared/components/Dnd5eSpellsTab.tsx`
-- **useDnd5eDeferredResource.ts** (5 connections) — `src/systems/dnd5e/shared/useDnd5eDeferredResource.ts`
 - **Dnd5eEquipmentTab** (4 connections) — `src/systems/dnd5e/shared/components/Dnd5eEquipmentTab.tsx`
 - **Dnd5eFeaturesTab** (4 connections) — `src/systems/dnd5e/shared/components/Dnd5eFeaturesTab.tsx`
 - **Dnd5eMonsterBrowserTab** (4 connections) — `src/systems/dnd5e/shared/components/Dnd5eMonsterBrowserTab.tsx`
@@ -67,7 +67,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 224 (96%)
+- EXTRACTED: 226 (96%)
 - INFERRED: 10 (4%)
 - AMBIGUOUS: 0 (0%)
 

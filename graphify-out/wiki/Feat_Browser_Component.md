@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **FeatBrowser.tsx** (4 connections) — `src/components/FeatBrowser.tsx`
+- **FeatBrowser.tsx** (5 connections) — `src/components/FeatBrowser.tsx`
 - **FeatBrowser.test.tsx** (3 connections) — `src/__tests__/components/FeatBrowser.test.tsx`
 - **FeatBrowser()** (2 connections) — `src/components/FeatBrowser.tsx`
 - **Feat** (1 connections) — `src/components/FeatBrowser.tsx`
@@ -22,7 +22,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 12 (100%)
+- EXTRACTED: 13 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

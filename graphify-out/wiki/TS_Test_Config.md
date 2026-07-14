@@ -4,14 +4,14 @@
 
 ## Key Concepts
 
-- **tsconfig.test.json** (5 connections) — `tsconfig.test.json`
+- **tsconfig.test.json** (6 connections) — `tsconfig.test.json`
+- **types** (5 connections) — `tsconfig.test.json`
+- **include** (5 connections) — `tsconfig.test.json`
 - **compilerOptions** (4 connections) — `tsconfig.test.json`
-- **lib** (1 connections) — `tsconfig.test.json`
+- **lib** (4 connections) — `tsconfig.test.json`
 - **noEmit** (1 connections) — `tsconfig.test.json`
-- **types** (1 connections) — `tsconfig.test.json`
 - **exclude** (1 connections) — `tsconfig.test.json`
 - **extends** (1 connections) — `tsconfig.test.json`
-- **include** (1 connections) — `tsconfig.test.json`
 - **references** (1 connections) — `tsconfig.test.json`
 
 ## Relationships
@@ -24,7 +24,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 16 (100%)
+- EXTRACTED: 28 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

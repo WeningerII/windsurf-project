@@ -4,13 +4,13 @@
 
 ## Key Concepts
 
-- **sheet.tsx** (43 connections) — `src/systems/pf2e/sheet.tsx`
-- **Badge.tsx** (41 connections) — `src/components/ui/Badge.tsx`
-- **Badge()** (39 connections) — `src/components/ui/Badge.tsx`
-- **Pf2eFeatsConditionsTab.tsx** (18 connections) — `src/systems/pf2e/components/Pf2eFeatsConditionsTab.tsx`
-- **Pf2eInventoryTab.tsx** (17 connections) — `src/systems/pf2e/components/Pf2eInventoryTab.tsx`
-- **ConditionPicker.tsx** (7 connections) — `src/components/ConditionPicker.tsx`
-- **Pf2eArchetypesTab.tsx** (7 connections) — `src/systems/pf2e/components/Pf2eArchetypesTab.tsx`
+- **sheet.tsx** (44 connections) — `src/systems/pf2e/sheet.tsx`
+- **Badge.tsx** (43 connections) — `src/components/ui/Badge.tsx`
+- **Badge()** (40 connections) — `src/components/ui/Badge.tsx`
+- **Pf2eFeatsConditionsTab.tsx** (19 connections) — `src/systems/pf2e/components/Pf2eFeatsConditionsTab.tsx`
+- **Pf2eInventoryTab.tsx** (18 connections) — `src/systems/pf2e/components/Pf2eInventoryTab.tsx`
+- **ConditionPicker.tsx** (8 connections) — `src/components/ConditionPicker.tsx`
+- **Pf2eArchetypesTab.tsx** (8 connections) — `src/systems/pf2e/components/Pf2eArchetypesTab.tsx`
 - **ConditionPicker()** (5 connections) — `src/components/ConditionPicker.tsx`
 - **Pf2eInventoryTab()** (4 connections) — `src/systems/pf2e/components/Pf2eInventoryTab.tsx`
 - **ConditionPicker.test.tsx** (4 connections) — `src/__tests__/components/ConditionPicker.test.tsx`
@@ -56,7 +56,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 208 (100%)
+- EXTRACTED: 216 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 
