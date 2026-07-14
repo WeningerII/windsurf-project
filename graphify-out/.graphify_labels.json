@@ -184,5 +184,16 @@
   "182": "tokenPlacement.ts",
   "183": "loadEquipmentForSystem",
   "184": "EncounterPanel.tsx",
-  "185": "templateShared.ts"
+  "185": "templateShared.ts",
+  "186": "eslint-plugin-react",
+  "187": "fake-indexeddb",
+  "188": "knip",
+  "189": "postcss",
+  "190": "rollup-plugin-visualizer",
+  "191": "@testing-library/jest-dom",
+  "192": "tsx",
+  "193": "@types/react",
+  "194": "@types/react-dom",
+  "195": "vitest",
+  "196": "@vitest/coverage-v8"
 }

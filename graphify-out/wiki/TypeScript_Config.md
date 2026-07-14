@@ -6,13 +6,16 @@
 
 - **compilerOptions** (19 connections) — `tsconfig.json`
 - **tsconfig.json** (4 connections) — `tsconfig.json`
+- **lib** (4 connections) — `tsconfig.json`
 - **paths** (2 connections) — `tsconfig.json`
+- **exclude** (2 connections) — `tsconfig.json`
+- **include** (2 connections) — `tsconfig.json`
+- **@/*** (2 connections) — `tsconfig.json`
 - **allowImportingTsExtensions** (1 connections) — `tsconfig.json`
 - **baseUrl** (1 connections) — `tsconfig.json`
 - **forceConsistentCasingInFileNames** (1 connections) — `tsconfig.json`
 - **isolatedModules** (1 connections) — `tsconfig.json`
 - **jsx** (1 connections) — `tsconfig.json`
-- **lib** (1 connections) — `tsconfig.json`
 - **module** (1 connections) — `tsconfig.json`
 - **moduleResolution** (1 connections) — `tsconfig.json`
 - **noEmit** (1 connections) — `tsconfig.json`
@@ -24,9 +27,6 @@
 - **strict** (1 connections) — `tsconfig.json`
 - **target** (1 connections) — `tsconfig.json`
 - **useDefineForClassFields** (1 connections) — `tsconfig.json`
-- **exclude** (1 connections) — `tsconfig.json`
-- **include** (1 connections) — `tsconfig.json`
-- **@/*** (1 connections) — `tsconfig.json`
 - **references** (1 connections) — `tsconfig.json`
 
 ## Relationships
@@ -39,7 +39,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 46 (100%)
+- EXTRACTED: 52 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

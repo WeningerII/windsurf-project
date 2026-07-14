@@ -4,37 +4,37 @@
 
 ## Key Concepts
 
-- **App.tsx** (81 connections) — `src/App.tsx`
-- **Button.tsx** (35 connections) — `src/components/ui/Button.tsx`
-- **Button** (30 connections) — `src/components/ui/Button.tsx`
-- **CampaignManager.tsx** (29 connections) — `src/components/CampaignManager.tsx`
+- **App.tsx** (84 connections) — `src/App.tsx`
+- **Button.tsx** (37 connections) — `src/components/ui/Button.tsx`
+- **Button** (31 connections) — `src/components/ui/Button.tsx`
+- **CampaignManager.tsx** (30 connections) — `src/components/CampaignManager.tsx`
 - **SceneState** (28 connections) — `src/types/core/scene.ts`
-- **SceneGridView.tsx** (25 connections) — `src/components/SceneGridView.tsx`
+- **SceneGridView.tsx** (26 connections) — `src/components/SceneGridView.tsx`
 - **generateUUID()** (25 connections) — `src/utils/browserCompat.ts`
 - **AppHeader.tsx** (22 connections) — `src/components/AppHeader.tsx`
-- **Select.tsx** (18 connections) — `src/components/ui/Select.tsx`
+- **Select.tsx** (20 connections) — `src/components/ui/Select.tsx`
 - **CharacterListView.tsx** (17 connections) — `src/components/CharacterListView.tsx`
-- **RecapPanel.tsx** (15 connections) — `src/components/scene/RecapPanel.tsx`
-- **Select** (15 connections) — `src/components/ui/Select.tsx`
+- **RecapPanel.tsx** (16 connections) — `src/components/scene/RecapPanel.tsx`
+- **Select** (16 connections) — `src/components/ui/Select.tsx`
 - **CombatPanel.tsx** (12 connections) — `src/components/scene/CombatPanel.tsx`
 - **cn()** (12 connections) — `src/lib/utils.ts`
+- **downloadTextFile()** (10 connections) — `src/utils/fileTransfer.ts`
 - **utils.ts** (9 connections) — `src/lib/utils.ts`
 - **sceneRecap.ts** (9 connections) — `src/scene/sceneRecap.ts`
 - **CampaignManager()** (8 connections) — `src/components/CampaignManager.tsx`
 - **CombatPanel.test.tsx** (8 connections) — `src/__tests__/components/CombatPanel.test.tsx`
-- **downloadTextFile()** (8 connections) — `src/utils/fileTransfer.ts`
 - **pickTextFile()** (8 connections) — `src/utils/fileTransfer.ts`
+- **ConfirmDialog.tsx** (7 connections) — `src/components/ui/ConfirmDialog.tsx`
+- **Skeleton.tsx** (7 connections) — `src/components/ui/Skeleton.tsx`
 - **sceneRecap.test.ts** (7 connections) — `src/__tests__/scene/sceneRecap.test.ts`
+- **fileTransfer.ts** (7 connections) — `src/utils/fileTransfer.ts`
 - **ServiceWorkerUpdateBanner.tsx** (6 connections) — `src/components/ServiceWorkerUpdateBanner.tsx`
-- **ConfirmDialog.tsx** (6 connections) — `src/components/ui/ConfirmDialog.tsx`
-- **Skeleton.tsx** (6 connections) — `src/components/ui/Skeleton.tsx`
-- **useServiceWorkerUpdate()** (6 connections) — `src/hooks/useServiceWorkerUpdate.ts`
 - *... and 52 more nodes in this community*
 
 ## Relationships
 
-- [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (33 shared connections)
 - [Oracle Panel & Logic](Oracle_Panel_%26_Logic.md) (33 shared connections)
+- [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (31 shared connections)
 - [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (26 shared connections)
 - [System Registry & Renderer](System_Registry_%26_Renderer.md) (17 shared connections)
 - [Browser Compat & Error Logging](Browser_Compat_%26_Error_Logging.md) (13 shared connections)
@@ -71,7 +71,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 556 (99%)
+- EXTRACTED: 574 (99%)
 - INFERRED: 3 (1%)
 - AMBIGUOUS: 0 (0%)
 

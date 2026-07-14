@@ -4,8 +4,8 @@
 
 ## Key Concepts
 
-- **useDaggerheartSheetController.ts** (27 connections) — `src/systems/daggerheart/useDaggerheartSheetController.ts`
-- **useDaggerheartMutationHandlers.ts** (18 connections) — `src/systems/daggerheart/useDaggerheartMutationHandlers.ts`
+- **useDaggerheartSheetController.ts** (28 connections) — `src/systems/daggerheart/useDaggerheartSheetController.ts`
+- **useDaggerheartMutationHandlers.ts** (19 connections) — `src/systems/daggerheart/useDaggerheartMutationHandlers.ts`
 - **getDaggerheartSheetState()** (10 connections) — `src/systems/daggerheart/getDaggerheartSheetState.ts`
 - **.prepareData()** (9 connections) — `src/systems/daggerheart/engine.ts`
 - **useDaggerheartMutationHandlers()** (8 connections) — `src/systems/daggerheart/useDaggerheartMutationHandlers.ts`
@@ -42,7 +42,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 97 (100%)
+- EXTRACTED: 99 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

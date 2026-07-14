@@ -1,6 +1,6 @@
 # SystemRegistry
 
-> God node · 42 connections · `src/registry/index.ts`
+> God node · 44 connections · `src/registry/index.ts`
 
 **Community:** [System Registry & Renderer](System_Registry_%26_Renderer.md)
 
@@ -18,18 +18,18 @@
 - index.ts `EXTRACTED`
 - useD20LegacySheetController.ts `EXTRACTED`
 - CampaignManager.tsx `EXTRACTED`
+- LibraryScenesView.tsx `EXTRACTED`
 - SystemStatusDashboard.tsx `EXTRACTED`
 - useMam3eMutationHandlers.ts `EXTRACTED`
 - SceneManager.test.tsx `EXTRACTED`
 - useDocuments.ts `EXTRACTED`
 - dnd5eValidation.test.ts `EXTRACTED`
-- AppHeader.tsx `EXTRACTED`
 - GameSystemSelector.tsx `EXTRACTED`
+- AppHeader.tsx `EXTRACTED`
+- D20SavesTab.tsx `EXTRACTED`
 - systemCatalogShared.ts `EXTRACTED`
 - character-management-flow.test.tsx `EXTRACTED`
-- D20SavesTab.tsx `EXTRACTED`
-- D20CombatSection.tsx `EXTRACTED`
-- applyMergedCollections.test.tsx `EXTRACTED`
+- LibraryScenesView.test.tsx `EXTRACTED`
 
 ### method
 - .validateDocument() `EXTRACTED`

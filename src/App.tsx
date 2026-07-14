@@ -41,6 +41,7 @@ import { usePwaInstallPrompt } from './hooks/usePwaInstallPrompt';
 import { combineSyncStates, getMostRecentSyncDate, getPendingSyncCount } from './utils/syncStatus';
 import { getDocumentLevelValue } from './utils/characterPresenter';
 import { CharacterListView, type CharacterSortOption } from './components/CharacterListView';
+import { LibraryScenesView } from './components/LibraryScenesView';
 import { AppHeader } from './components/AppHeader';
 import { NewCharacterDialog } from './components/NewCharacterDialog';
 import { useAppNav } from './hooks/useAppNav';
@@ -93,18 +94,21 @@ function AppContent() {
   // Total shell-nav model (Phase 1): one discriminated union replaces the old
   // currentDocId / selectedSystem / showLegal flags. Phase 2 relocates the
   // reducer into a ShellContext without changing this call site.
-  const { nav, openSheet, closeSheet, setLibrarySegment, openOverlay, closeOverlay } = useAppNav();
+  const { nav, openSheet, closeSheet, setLibrarySegment, selectScene, openOverlay, closeOverlay } =
+    useAppNav();
   const [newCharacterDialogOpen, setNewCharacterDialogOpen] = useState(false);
-  // The heavy SceneManager chunk is mounted only the first time the Scenes tab
-  // is opened, then kept alive (hidden) so its ~30 transient useState survive
-  // tab switches without re-running foldSceneEvents or re-fetching the chunk.
-  const [hasVisitedScenes, setHasVisitedScenes] = useState(false);
+  // The heavy SceneManager chunk is mounted only the first time the Scene
+  // surface is opened (selecting a scene in LibraryScenesView flips there),
+  // then kept alive (hidden) so its ~30 transient useState survive surface
+  // switches without re-running foldSceneEvents or re-fetching the chunk.
+  const [hasVisitedSceneSurface, setHasVisitedSceneSurface] = useState(false);
 
   const isLibrary = nav.surface === 'library';
   const isScenesSegment = isLibrary && nav.librarySegment === 'scenes';
+  const isSceneSurface = nav.surface === 'scene';
   useEffect(() => {
-    if (isScenesSegment) setHasVisitedScenes(true);
-  }, [isScenesSegment]);
+    if (isSceneSurface) setHasVisitedSceneSurface(true);
+  }, [isSceneSurface]);
 
   const [systemFilter, setSystemFilter] = useState<GameSystemId | 'all'>('all');
   const [sortOption, setSortOption] = useState<CharacterSortOption>('updated-desc');
@@ -528,7 +532,7 @@ function AppContent() {
             </ErrorBoundary>
           </div>
         ) : (
-          <div className="max-w-6xl mx-auto space-y-10">
+          <div className="relative max-w-6xl mx-auto space-y-10">
             {/* Characters segment */}
             {isLibrary && nav.librarySegment === 'characters' && canInstall && (
               <section className="mx-auto max-w-3xl rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card p-5 shadow-sm">
@@ -632,17 +636,42 @@ function AppContent() {
             {/* Content library segment */}
             {isLibrary && nav.librarySegment === 'content' && <SystemStatusDashboard />}
 
-            {/* Scenes segment: mounted on first visit, then kept alive (hidden)
-                so in-progress scene state survives tab switches. */}
-            {hasVisitedScenes && (
-              <div hidden={!isScenesSegment}>
+            {/* Scenes segment: the select-only picker (create/import included).
+                Selecting a scene flips to the Scene surface below. */}
+            {isScenesSegment && (
+              <LibraryScenesView
+                scenes={scenes}
+                campaigns={campaigns}
+                selectedSceneId={nav.sceneId}
+                onSelectScene={selectScene}
+                onAddScene={addScene}
+                onAddScenes={addScenes}
+              />
+            )}
+
+            {/* Scene surface (the operating canvas): mounted on first visit,
+                then kept alive so in-progress scene state survives surface
+                switches. Hidden via visibility:hidden + off-screen transform,
+                NOT display:none — the hidden subtree must keep its layout so
+                re-showing does not re-lay-out the grid (ui-shell-redesign
+                final plan, Findings 7+14). absolute takes it out of flow;
+                visibility:hidden drops it from the a11y tree and tab order. */}
+            {hasVisitedSceneSurface && (
+              <div
+                aria-hidden={!isSceneSurface}
+                className={
+                  isSceneSurface
+                    ? undefined
+                    : 'invisible absolute inset-x-0 top-0 -translate-x-[200vw] pointer-events-none'
+                }
+              >
                 <Suspense fallback={<Skeleton className="h-64 w-full" />}>
                   <SceneManager
                     scenes={scenes}
                     documents={documents}
                     campaigns={campaigns}
-                    onAddScene={addScene}
-                    onAddScenes={addScenes}
+                    selectedSceneId={nav.sceneId}
+                    onSelectScene={selectScene}
                     onAppendSceneEvent={appendSceneEvent}
                     onLogToCampaign={handleLogSceneToCampaign}
                     onDeleteScene={(id) =>

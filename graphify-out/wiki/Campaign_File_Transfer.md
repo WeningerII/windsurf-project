@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **EncounterPanel.tsx** (19 connections) — `src/components/scene/EncounterPanel.tsx`
+- **EncounterPanel.tsx** (20 connections) — `src/components/scene/EncounterPanel.tsx`
 - **EncounterPanelProps** (6 connections) — `src/components/scene/EncounterPanel.tsx`
 - **EncounterDifficulty** (6 connections) — `src/scene/encounterDraft.ts`
 - **EncounterPanel()** (3 connections) — `src/components/scene/EncounterPanel.tsx`
@@ -31,7 +31,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 45 (100%)
+- EXTRACTED: 46 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

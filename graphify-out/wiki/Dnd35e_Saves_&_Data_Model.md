@@ -11,11 +11,11 @@
 - **d20-legacy-vancian-prep.test.ts** (26 connections) — `src/__tests__/d20-legacy-vancian-prep.test.ts`
 - **Dnd35eDataModel** (24 connections) — `src/systems/dnd35e/data-model.ts`
 - **d20LegacyTemplate.test.ts** (21 connections) — `src/__tests__/utils/d20LegacyTemplate.test.ts`
+- **D20SavesTab.tsx** (20 connections) — `src/systems/d20-legacy/components/D20SavesTab.tsx`
 - **createDefaultDnd35eData()** (20 connections) — `src/systems/dnd35e/data-model.ts`
 - **d20-legacy-manual-extras.test.tsx** (20 connections) — `src/__tests__/d20-legacy-manual-extras.test.tsx`
 - **documentationCopy.ts** (20 connections) — `src/utils/documentationCopy.ts`
-- **D20SavesTab.tsx** (19 connections) — `src/systems/d20-legacy/components/D20SavesTab.tsx`
-- **D20CombatSection.tsx** (18 connections) — `src/systems/d20-legacy/components/D20CombatSection.tsx`
+- **D20CombatSection.tsx** (19 connections) — `src/systems/d20-legacy/components/D20CombatSection.tsx`
 - **createDefaultPf1eData()** (18 connections) — `src/systems/pf1e/data-model.ts`
 - **d20-legacy-template-pipeline.test.ts** (17 connections) — `src/__tests__/d20-legacy-template-pipeline.test.ts`
 - **definition.ts** (14 connections) — `src/systems/dnd35e/definition.ts`
@@ -24,7 +24,7 @@
 - **BonusType** (14 connections) — `src/types/core/common.ts`
 - **Dnd35eEngine** (13 connections) — `src/systems/dnd35e/engine.ts`
 - **Pf1eEngine** (13 connections) — `src/systems/pf1e/engine.ts`
-- **wrapper.ts** (10 connections) — `src/systems/d20-legacy/wrapper.ts`
+- **wrapper.ts** (11 connections) — `src/systems/d20-legacy/wrapper.ts`
 - **dnd35e-engine.test.ts** (8 connections) — `src/__tests__/engines/dnd35e-engine.test.ts`
 - **pf1e-engine.test.ts** (8 connections) — `src/__tests__/engines/pf1e-engine.test.ts`
 - **makeD20LegacySheet()** (5 connections) — `src/systems/d20-legacy/wrapper.ts`
@@ -71,7 +71,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 506 (100%)
+- EXTRACTED: 509 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

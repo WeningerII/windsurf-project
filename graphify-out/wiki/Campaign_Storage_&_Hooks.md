@@ -5,9 +5,9 @@
 ## Key Concepts
 
 - **campaignStorage.ts** (25 connections) — `src/utils/campaignStorage.ts`
-- **useCampaigns.ts** (16 connections) — `src/hooks/useCampaigns.ts`
+- **useCampaigns.ts** (17 connections) — `src/hooks/useCampaigns.ts`
+- **useDebouncedPersistence.ts** (12 connections) — `src/hooks/useDebouncedPersistence.ts`
 - **useCampaigns()** (11 connections) — `src/hooks/useCampaigns.ts`
-- **useDebouncedPersistence.ts** (11 connections) — `src/hooks/useDebouncedPersistence.ts`
 - **safeStorage.test.ts** (11 connections) — `src/__tests__/utils/safeStorage.test.ts`
 - **campaignStorage.test.ts** (10 connections) — `src/__tests__/campaignStorage.test.ts`
 - **canUseLocalStorage()** (9 connections) — `src/utils/safeStorage.ts`
@@ -58,7 +58,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 194 (100%)
+- EXTRACTED: 196 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

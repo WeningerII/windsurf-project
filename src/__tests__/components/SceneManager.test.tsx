@@ -168,27 +168,49 @@ function SceneHarness({
   initialScenes = [],
   documents = [],
   campaigns = [],
+  onSelectSceneSpy,
 }: {
   initialScenes?: SceneDocument[];
   documents?: CharacterDocument<SystemDataModel>[];
   campaigns?: Campaign[];
+  /** Observes every shell-seam selection request (build-specs task 12). */
+  onSelectSceneSpy?: (id: string | null) => void;
 }) {
   const [scenes, setScenes] = useState(initialScenes);
+  // The harness plays the shell: it owns selection the way useAppNav does.
+  // SceneManager no longer holds selection state — creation, import, and
+  // picking live in LibraryScenesView, so this suite mounts the canvas with
+  // the controlled selectedSceneId/onSelectScene contract.
+  const [selectedSceneId, setSelectedSceneId] = useState<string | null>(
+    initialScenes[0]?.id ?? null
+  );
+  const handleSelectScene = (id: string | null) => {
+    onSelectSceneSpy?.(id);
+    setSelectedSceneId(id);
+  };
 
   return (
-    <SceneManager
-      scenes={scenes}
-      documents={documents}
-      campaigns={campaigns}
-      onAddScene={(scene) => setScenes((current) => [...current, scene])}
-      onAddScenes={(incoming) => setScenes((current) => [...current, ...incoming])}
-      onAppendSceneEvent={(sceneId: string, event: SceneEvent) =>
-        setScenes((current) =>
-          current.map((scene) => (scene.id === sceneId ? appendSceneEvent(scene, event) : scene))
-        )
-      }
-      onDeleteScene={(id) => setScenes((current) => current.filter((scene) => scene.id !== id))}
-    />
+    <>
+      {/* Stand-in for LibraryScenesView: shell-driven selection switches. */}
+      {scenes.map((scene) => (
+        <button key={scene.id} type="button" onClick={() => handleSelectScene(scene.id)}>
+          {`harness-select ${scene.name}`}
+        </button>
+      ))}
+      <SceneManager
+        scenes={scenes}
+        documents={documents}
+        campaigns={campaigns}
+        selectedSceneId={selectedSceneId}
+        onSelectScene={handleSelectScene}
+        onAppendSceneEvent={(sceneId: string, event: SceneEvent) =>
+          setScenes((current) =>
+            current.map((scene) => (scene.id === sceneId ? appendSceneEvent(scene, event) : scene))
+          )
+        }
+        onDeleteScene={(id) => setScenes((current) => current.filter((scene) => scene.id !== id))}
+      />
+    </>
   );
 }
 
@@ -206,18 +228,52 @@ afterEach(() => {
 });
 
 describe('SceneManager', () => {
-  it('creates a scene and opens the manual grid', async () => {
-    const user = userEvent.setup();
-    render(<SceneHarness />);
-
-    expect(screen.getByText('0 scenes saved')).toBeInTheDocument();
-
-    await user.click(screen.getByRole('button', { name: /new scene/i }));
-    await user.type(screen.getByPlaceholderText('Scene name'), 'Training Room');
-    await user.click(screen.getByRole('button', { name: /^create$/i }));
-
-    expect(screen.getByText('1 scene saved')).toBeInTheDocument();
+  it('renders the shell-selected scene grid, and an empty state when nothing is selected', () => {
+    const { unmount } = render(<SceneHarness initialScenes={[makeScene()]} />);
     expect(screen.getByRole('grid', { name: /Training Room grid/i })).toBeInTheDocument();
+    unmount();
+
+    // Scene creation/import/picking live in LibraryScenesView now; with no
+    // shell selection the canvas points the user back at the picker.
+    render(<SceneHarness />);
+    expect(screen.getByText('No scene selected')).toBeInTheDocument();
+  });
+
+  it('shell-owned auto-reset: deleting the selected scene reselects the first remaining via the seam', async () => {
+    const user = userEvent.setup();
+    const onSelectSceneSpy = vi.fn();
+    const otherScene = createSceneDocument({
+      id: 'scene-2',
+      name: 'Empty Hall',
+      systemId: 'dnd-5e-2024',
+      grid: { width: 4, height: 4 },
+      now,
+    });
+    render(
+      <SceneHarness initialScenes={[makeScene(), otherScene]} onSelectSceneSpy={onSelectSceneSpy} />
+    );
+
+    await user.click(screen.getByRole('button', { name: /^delete$/i }));
+
+    // Stale selection → the effect re-anchors on the first remaining scene
+    // through onSelectScene(scenes[0].id), not by mutating internal state.
+    await waitFor(() => {
+      expect(screen.getByRole('grid', { name: /Empty Hall grid/i })).toBeInTheDocument();
+    });
+    expect(onSelectSceneSpy).toHaveBeenCalledWith('scene-2');
+  });
+
+  it('shell-owned auto-reset: deleting the last scene clears the selection through the seam', async () => {
+    const user = userEvent.setup();
+    const onSelectSceneSpy = vi.fn();
+    render(<SceneHarness initialScenes={[makeScene()]} onSelectSceneSpy={onSelectSceneSpy} />);
+
+    await user.click(screen.getByRole('button', { name: /^delete$/i }));
+
+    await waitFor(() => {
+      expect(screen.getByText('No scene selected')).toBeInTheDocument();
+    });
+    expect(onSelectSceneSpy).toHaveBeenCalledWith(null);
   });
 
   it('places a linked token, moves it through grid activation, and advances initiative', async () => {

@@ -22,14 +22,14 @@
 - types.ts `EXTRACTED`
 - useSceneEncounter.ts `EXTRACTED`
 - srd-coverage.ts `EXTRACTED`
+- useDnd5eSheetController.ts `EXTRACTED`
 - d20LegacySpellcasting.ts `EXTRACTED`
 - generate-srd-manifests.ts `EXTRACTED`
-- useDnd5eSheetController.ts `EXTRACTED`
 - useDnd5eSheetResources.ts `EXTRACTED`
 - characterCombatant.ts `EXTRACTED`
 - systemProfiles.ts `EXTRACTED`
-- engineEquipIntegration.test.ts `EXTRACTED`
 - useMam3eSheetResources.ts `EXTRACTED`
+- engineEquipIntegration.test.ts `EXTRACTED`
 
 ### references
 - [EffectInstance](EffectInstance.md) `EXTRACTED`

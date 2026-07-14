@@ -1,6 +1,6 @@
 # RFC 004: Monster Product Surface (Bestiaries Beyond 5e)
 
-**Status:** Draft (Proposed) — not accepted; no monster data or UI added by this RFC.
+**Status:** Draft (Proposed), subsequently executed — the monster data and scene encounter surface this RFC planned shipped 2026-06-12 without formal acceptance; see `docs/MASTER_PLAN.md` and `docs/GAPS.md` §3.
 **Author:** engineering planning
 **Created:** May 31, 2026
 

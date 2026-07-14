@@ -24,7 +24,7 @@
 - **ClassLevel** (11 connections) — `src/types/core/character.ts`
 - **HitDice** (11 connections) — `src/types/core/character.ts`
 - **engine.ts** (10 connections) — `src/systems/dnd5e/engine.ts`
-- **EquippedItemsSection.tsx** (8 connections) — `src/components/EquippedItemsSection.tsx`
+- **EquippedItemsSection.tsx** (9 connections) — `src/components/EquippedItemsSection.tsx`
 - **dnd5e-engine.test.ts** (8 connections) — `src/__tests__/engines/dnd5e-engine.test.ts`
 - **DeathSaves** (8 connections) — `src/types/core/character.ts`
 - **SkillProficiency** (8 connections) — `src/types/core/character.ts`
@@ -71,7 +71,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 705 (100%)
+- EXTRACTED: 706 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

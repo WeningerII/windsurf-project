@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **MamPowerBrowserTab.tsx** (19 connections) — `src/systems/mam3e/components/MamPowerBrowserTab.tsx`
+- **MamPowerBrowserTab.tsx** (20 connections) — `src/systems/mam3e/components/MamPowerBrowserTab.tsx`
 - **humanizeMamToken()** (4 connections) — `src/systems/mam3e/components/MamPowerBrowserTab.tsx`
 - **formatMamPowerAction()** (2 connections) — `src/systems/mam3e/components/MamPowerBrowserTab.tsx`
 - **formatMamPowerDuration()** (2 connections) — `src/systems/mam3e/components/MamPowerBrowserTab.tsx`
@@ -28,7 +28,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 34 (100%)
+- EXTRACTED: 35 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

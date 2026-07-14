@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **useDnd5eSheetController.ts** (38 connections) — `src/systems/dnd5e/shared/useDnd5eSheetController.ts`
+- **useDnd5eSheetController.ts** (39 connections) — `src/systems/dnd5e/shared/useDnd5eSheetController.ts`
 - **spellPreparation.ts** (25 connections) — `src/systems/dnd5e/shared/spellPreparation.ts`
 - **useDnd5eSheetController()** (15 connections) — `src/systems/dnd5e/shared/useDnd5eSheetController.ts`
 - **getDnd5eAlwaysPreparedSpellSources()** (10 connections) — `src/systems/dnd5e/shared/spellPreparation.ts`
@@ -52,7 +52,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 135 (99%)
+- EXTRACTED: 136 (99%)
 - INFERRED: 2 (1%)
 - AMBIGUOUS: 0 (0%)
 

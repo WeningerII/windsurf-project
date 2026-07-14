@@ -4,8 +4,8 @@
 
 ## Key Concepts
 
-- **useCampaignSync.test.tsx** (43 connections) — `src/__tests__/hooks/useCampaignSync.test.tsx`
-- **useCampaignSync.ts** (28 connections) — `src/hooks/useCampaignSync.ts`
+- **useCampaignSync.test.tsx** (44 connections) — `src/__tests__/hooks/useCampaignSync.test.tsx`
+- **useCampaignSync.ts** (29 connections) — `src/hooks/useCampaignSync.ts`
 - **syncEngineCampaigns.test.ts** (23 connections) — `src/__tests__/utils/syncEngineCampaigns.test.ts`
 - **useCampaignSync()** (21 connections) — `src/hooks/useCampaignSync.ts`
 - **syncTombstones.ts** (20 connections) — `src/utils/syncTombstones.ts`
@@ -59,8 +59,8 @@
 
 ## Audit Trail
 
-- EXTRACTED: 283 (92%)
-- INFERRED: 23 (8%)
+- EXTRACTED: 285 (93%)
+- INFERRED: 23 (7%)
 - AMBIGUOUS: 0 (0%)
 
 ---

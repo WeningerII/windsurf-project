@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Download, Map as MapIcon, MousePointer2, Plus, Trash2, Upload } from 'lucide-react';
+import { Download, MousePointer2, Trash2 } from 'lucide-react';
 import { buildPlacedToken } from '../scene/tokenPlacement';
 import { useSceneEncounter } from './scene/useSceneEncounter';
 import { generateNpc } from '../scene/npcGenerator';
@@ -42,8 +42,8 @@ import type {
 import { systemRegistry } from '../registry';
 import { loadDaggerheartAdversariesForSystem } from '../utils/dataLoader';
 import { errorLogger, guardSync, ErrorCategory, ErrorSeverity } from '../utils/errorLogger';
-import { exportScenes, importScenesWithReport } from '../utils/sceneStorage';
-import { downloadTextFile, pickTextFile } from '../utils/fileTransfer';
+import { exportScenes } from '../utils/sceneStorage';
+import { downloadTextFile } from '../utils/fileTransfer';
 import { generateUUID } from '../utils/browserCompat';
 import { Button } from './ui/Button';
 import { Badge } from './ui/Badge';
@@ -60,7 +60,6 @@ import { ReactionPanel } from './scene/ReactionPanel';
 import { DicePanel } from './scene/DicePanel';
 import { RecapPanel } from './scene/RecapPanel';
 import { IllustrationPanel } from './scene/IllustrationPanel';
-import { SceneCreateForm } from './scene/SceneCreateForm';
 
 type PlacementMode = 'none' | 'token' | 'marker' | 'adversary';
 
@@ -71,15 +70,22 @@ interface Props {
   scenes: SceneDocument[];
   documents: CharacterDocument<SystemDataModel>[];
   campaigns: Campaign[];
-  onAddScene: (scene: SceneDocument) => void;
-  onAddScenes: (scenes: SceneDocument[]) => void;
+  /**
+   * Controlled scene selection — shell-owned (useAppNav.sceneId). Scene
+   * creation, import, and picking live in LibraryScenesView; this component
+   * is the operating canvas for the selected scene.
+   */
+  selectedSceneId: string | null;
+  /**
+   * The shell's scene-selection seam (useAppNav.selectScene). Non-null ids
+   * also flip the shell to the Scene surface.
+   */
+  onSelectScene: (id: string | null) => void;
   onAppendSceneEvent: (sceneId: string, event: SceneEvent) => void;
   onDeleteScene: (id: string) => void;
   /** Append a factual recap of a scene to its linked campaign's session log. */
   onLogToCampaign?: (campaignId: string, title: string, body: string) => void;
 }
-
-const DEFAULT_SYSTEM_ID = 'dnd-5e-2024';
 
 // Conditions offered on tokens: exactly the ids the rules layer compiles into
 // combat effects (collectDnd5eConditionEffects); 5e vocabulary, so the section
@@ -98,19 +104,12 @@ export function SceneManager({
   scenes,
   documents,
   campaigns,
-  onAddScene,
-  onAddScenes,
+  selectedSceneId,
+  onSelectScene,
   onAppendSceneEvent,
   onDeleteScene,
   onLogToCampaign,
 }: Props) {
-  const systemOptions = useMemo(() => systemRegistry.getAll(), []);
-  const fallbackSystemId = systemOptions[0]?.id ?? DEFAULT_SYSTEM_ID;
-  const [selectedSceneId, setSelectedSceneId] = useState<string | null>(scenes[0]?.id ?? null);
-  const [creatingNew, setCreatingNew] = useState(false);
-  // Scene-list filter: '' = all, a campaign id = that campaign's encounters,
-  // 'none' = scenes not assigned to any campaign.
-  const [sceneCampaignFilter, setSceneCampaignFilter] = useState('');
   const [placementMode, setPlacementMode] = useState<PlacementMode>('none');
   const [selectedTokenId, setSelectedTokenId] = useState<string | undefined>();
   const [tokenDocumentId, setTokenDocumentId] = useState('');
@@ -138,22 +137,22 @@ export function SceneManager({
   // Monotonic nonce so each "Generate NPC" yields a fresh (still seeded) result.
   const npcGenNonce = useRef(0);
 
+  // Shell-owned init/auto-reset (build-specs task 3): a stale or missing
+  // selection re-anchors on the first scene through the shell seam. The
+  // matching transient-state clears live in the per-scene effect below, which
+  // fires on ANY selection change (shell-driven included). Note the seam flips
+  // to the Scene surface on non-null ids, so a reselect while this component
+  // is kept alive hidden surfaces the canvas — acceptable until Phase 2's
+  // SurfaceStage owns visibility.
   useEffect(() => {
     if (selectedSceneId && scenes.some((scene) => scene.id === selectedSceneId)) return;
-    setSelectedSceneId(scenes[0]?.id ?? null);
-    setSelectedTokenId(undefined);
-    setPlacementMode('none');
-  }, [scenes, selectedSceneId]);
+    if (!selectedSceneId && scenes.length === 0) return;
+    onSelectScene(scenes[0]?.id ?? null);
+  }, [scenes, selectedSceneId, onSelectScene]);
 
   const selectedScene = useMemo(
     () => scenes.find((scene) => scene.id === selectedSceneId),
     [scenes, selectedSceneId]
-  );
-  // Sidebar fold summaries: event logs grow without bound, and folding every
-  // scene inline made each keystroke O(total events across all scenes).
-  const foldedScenesById = useMemo(
-    () => new Map(scenes.map((scene) => [scene.id, foldSceneEvents(scene)])),
-    [scenes]
   );
   const foldedScene = useMemo(
     () => (selectedScene ? foldSceneEvents(selectedScene) : undefined),
@@ -331,10 +330,15 @@ export function SceneManager({
     }
   }, [selectedTokenId, state]);
 
-  // Combat selections are per-scene: switching scenes clears the chosen target,
-  // the rolling log (otherwise another scene's log lingers), and the spawn
-  // zone (marker ids belong to the previous scene).
+  // Transient selections are per-scene: switching scenes (now shell-driven —
+  // the picker, create, and import all live in LibraryScenesView) clears the
+  // chosen token and placement mode (formerly cleared by the in-component
+  // rail click), the combat target, the rolling log (otherwise another
+  // scene's log lingers), and the spawn zone (marker ids belong to the
+  // previous scene).
   useEffect(() => {
+    setSelectedTokenId(undefined);
+    setPlacementMode('none');
     setCombatTargetId('');
     setCombatLog([]);
     setEncounterZoneId('');
@@ -784,422 +788,272 @@ export function SceneManager({
     emitSceneAction(selectedScene, { type: 'consult-oracle', ...params });
   };
 
-  const handleImportScenes = () => {
-    pickTextFile((text) => {
-      try {
-        const { scenes: imported, droppedCount } = importScenesWithReport(text);
-        const skipped =
-          droppedCount > 0
-            ? ` — ${droppedCount} invalid ${droppedCount === 1 ? 'entry' : 'entries'} skipped`
-            : '';
-        // Valid JSON can still contain no usable scenes (every candidate
-        // structurally invalid). Say so instead of silently no-op'ing while
-        // clearing the message — which reads as a successful import.
-        if (imported.length === 0) {
-          setActionIssues([
-            droppedCount > 0
-              ? `No valid scenes were found in that file${skipped}.`
-              : 'No valid scenes were found in that file.',
-          ]);
-          return;
-        }
-        onAddScenes(imported);
-        setSelectedSceneId(imported[0]?.id ?? selectedSceneId);
-        // A partial import (some entries dropped) is surfaced, not silent.
-        setActionIssues(
-          droppedCount > 0
-            ? [`Imported ${imported.length} of ${imported.length + droppedCount} scenes${skipped}.`]
-            : []
-        );
-      } catch (err) {
-        setActionIssues([err instanceof Error ? err.message : 'Failed to import scenes.']);
-      }
-    });
-  };
-
   const handleExportScenes = (targetScenes: SceneDocument[], filename: string) => {
     downloadTextFile(exportScenes(targetScenes), filename);
   };
 
   return (
     <section className="space-y-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h3 className="flex items-center gap-2 text-2xl font-semibold tracking-tight">
-            <MapIcon className="h-6 w-6" /> Scenes
-          </h3>
-          <p className="text-sm text-muted-foreground">
-            {scenes.length} scene{scenes.length !== 1 ? 's' : ''} saved
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" onClick={handleImportScenes}>
-            <Upload className="mr-1.5 h-4 w-4" />
-            Import Scenes
-          </Button>
-          {scenes.length > 0 && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() =>
-                handleExportScenes(
-                  scenes,
-                  `all_scenes_${new Date().toISOString().slice(0, 10)}.json`
-                )
-              }
-            >
-              <Download className="mr-1.5 h-4 w-4" />
-              Export All Scenes
-            </Button>
-          )}
-          {!creatingNew && (
-            <Button variant="outline" size="sm" onClick={() => setCreatingNew(true)}>
-              <Plus className="mr-1.5 h-4 w-4" />
-              New Scene
-            </Button>
-          )}
-        </div>
-      </div>
-
-      <SceneCreateForm
-        open={creatingNew}
-        systemOptions={systemOptions}
-        campaigns={campaigns}
-        defaultSystemId={fallbackSystemId}
-        onCancel={() => setCreatingNew(false)}
-        onCreate={(scene) => {
-          onAddScene(scene);
-          setSelectedSceneId(scene.id);
-          setCreatingNew(false);
-          setActionIssues([]);
-        }}
-      />
-
       {actionIssues.length > 0 && (
         <div className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
           {actionIssues[0]}
         </div>
       )}
 
-      {scenes.length > 0 && (
-        <div className="grid gap-4 xl:grid-cols-[18rem_minmax(0,1fr)]">
-          <div className="space-y-2">
-            {campaigns.length > 0 && (
-              <Select
-                aria-label="Filter scenes by campaign"
-                value={sceneCampaignFilter}
-                onChange={(event) => setSceneCampaignFilter(event.target.value)}
+      {/* The former LEFT 18rem list rail (picker, create, import) now lives in
+          LibraryScenesView; this component is the full-width operating canvas
+          for the shell-selected scene, with the RIGHT operating rail docked. */}
+      {!selectedScene || !state ? (
+        <div className="mx-auto max-w-xl rounded-2xl border border-border bg-card p-10 text-center space-y-2">
+          <h3 className="text-2xl font-semibold tracking-tight">No scene selected</h3>
+          <p className="text-sm text-muted-foreground">
+            Pick a scene from the Library&apos;s Scenes tab, or create one there.
+          </p>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          <div className="flex flex-col gap-3 rounded-lg border bg-card p-3 lg:flex-row lg:items-center lg:justify-between">
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <h4 className="truncate text-lg font-semibold tracking-tight">
+                  {selectedScene.name}
+                </h4>
+                {placementMode !== 'none' && (
+                  <Badge variant="info">
+                    <MousePointer2 className="mr-1 h-3 w-3" />
+                    {placementMode}
+                  </Badge>
+                )}
+              </div>
+              <div className="text-xs text-muted-foreground">
+                {systemRegistry.get(selectedScene.systemId)?.label ?? selectedScene.systemId} /
+                Round {state.round}
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  handleExportScenes(
+                    [selectedScene],
+                    `${selectedScene.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_scene.json`
+                  )
+                }
               >
-                <option value="">All campaigns</option>
-                {campaigns.map((campaign) => (
-                  <option key={campaign.id} value={campaign.id}>
-                    {campaign.name}
-                  </option>
-                ))}
-                <option value="none">No campaign</option>
-              </Select>
-            )}
-            {scenes
-              .filter((scene) =>
-                sceneCampaignFilter === ''
-                  ? true
-                  : sceneCampaignFilter === 'none'
-                    ? !scene.campaignId
-                    : scene.campaignId === sceneCampaignFilter
-              )
-              .map((scene) => {
-                const { state: sceneState, issues } = foldedScenesById.get(scene.id)!;
-                const system = systemRegistry.get(scene.systemId);
-                const campaign = scene.campaignId
-                  ? campaigns.find((entry) => entry.id === scene.campaignId)
-                  : undefined;
-                const isSelected = scene.id === selectedScene?.id;
-
-                return (
-                  <button
-                    key={scene.id}
-                    type="button"
-                    className={`w-full rounded-lg border p-3 text-left transition-colors ${
-                      isSelected ? 'border-primary bg-primary/5' : 'bg-card hover:bg-muted/50'
-                    }`}
-                    onClick={() => {
-                      setSelectedSceneId(scene.id);
-                      setSelectedTokenId(undefined);
-                      setPlacementMode('none');
-                    }}
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="min-w-0">
-                        <div className="truncate font-medium">{scene.name}</div>
-                        <div className="text-xs text-muted-foreground">
-                          {system?.label ?? scene.systemId}
-                          {campaign ? ` / ${campaign.name}` : ''}
-                        </div>
-                      </div>
-                      {issues.length > 0 && (
-                        <Badge variant="destructive" className="shrink-0">
-                          {issues.length}
-                        </Badge>
-                      )}
-                    </div>
-                    <div className="mt-2 flex flex-wrap gap-1 text-xs text-muted-foreground">
-                      <span>{Object.keys(sceneState.tokens).length} tokens</span>
-                      <span>{Object.keys(sceneState.markers).length} markers</span>
-                      <span>{scene.events.length} events</span>
-                    </div>
-                  </button>
-                );
-              })}
+                <Download className="mr-1.5 h-4 w-4" />
+                Export
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+                onClick={() => onDeleteScene(selectedScene.id)}
+              >
+                <Trash2 className="mr-1.5 h-4 w-4" />
+                Delete
+              </Button>
+            </div>
           </div>
 
-          {selectedScene && state && (
-            <div className="space-y-4">
-              <div className="flex flex-col gap-3 rounded-lg border bg-card p-3 lg:flex-row lg:items-center lg:justify-between">
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h4 className="truncate text-lg font-semibold tracking-tight">
-                      {selectedScene.name}
-                    </h4>
-                    {placementMode !== 'none' && (
-                      <Badge variant="info">
-                        <MousePointer2 className="mr-1 h-3 w-3" />
-                        {placementMode}
-                      </Badge>
-                    )}
-                  </div>
-                  <div className="text-xs text-muted-foreground">
-                    {systemRegistry.get(selectedScene.systemId)?.label ?? selectedScene.systemId} /
-                    Round {state.round}
-                  </div>
-                </div>
-                <div className="flex flex-wrap gap-2">
+          {foldedScene?.issues.length ? (
+            <div className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+              {foldedScene.issues[0].message}
+            </div>
+          ) : null}
+
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
+            <SceneGridView
+              state={state}
+              selectedTokenId={selectedTokenId}
+              onCellActivate={handleCellActivate}
+              onTokenActivate={handleTokenActivate}
+            />
+
+            <div className="space-y-3">
+              <TokenPanel
+                eligibleDocuments={eligibleDocuments}
+                tokenDocumentId={tokenDocumentId}
+                onSelectLinkedDocument={handleSelectLinkedDocument}
+                tokenName={tokenName}
+                onTokenNameChange={setTokenName}
+                tokenKind={tokenKind}
+                onTokenKindChange={setTokenKind}
+                tokenAllegiance={tokenAllegiance}
+                onTokenAllegianceChange={setTokenAllegiance}
+                eligibleStatblocks={eligibleStatblocks}
+                tokenStatblockId={tokenStatblockId}
+                onSelectStatblock={handleSelectStatblock}
+                onGenerateNpc={handleGenerateNpc}
+                isPlacing={placementMode === 'token'}
+                onTogglePlace={() =>
+                  setPlacementMode((current) => (current === 'token' ? 'none' : 'token'))
+                }
+                canDeleteToken={Boolean(selectedTokenId)}
+                onDeleteSelectedToken={handleDeleteSelectedToken}
+                conditionOptions={
+                  sceneSystemId === 'dnd-5e-2014' || sceneSystemId === 'dnd-5e-2024'
+                    ? DND5E_SCENE_CONDITIONS
+                    : []
+                }
+                selectedTokenConditions={
+                  (selectedTokenId && state.tokens[selectedTokenId]?.conditions) || []
+                }
+                onToggleSelectedTokenCondition={handleToggleSelectedTokenCondition}
+                selectedTokenSide={selectedTokenSide}
+                onSetSelectedTokenSide={handleSetSelectedTokenSide}
+              />
+
+              {sceneSystemId === 'daggerheart' && daggerheartAdversariesById.size > 0 && (
+                <div className="rounded-lg border bg-card p-3 space-y-2">
+                  <h5 className="text-sm font-semibold">Adversaries</h5>
+                  <Select
+                    aria-label="Adversary"
+                    value={adversaryId}
+                    onChange={(event) => setAdversaryId(event.target.value)}
+                  >
+                    {[...daggerheartAdversariesById.values()].map((adversary) => (
+                      <option key={adversary.id} value={adversary.id}>
+                        {adversary.name} (T{adversary.tier} {adversary.role})
+                      </option>
+                    ))}
+                  </Select>
                   <Button
-                    variant="outline"
+                    variant={placementMode === 'adversary' ? 'default' : 'outline'}
                     size="sm"
+                    disabled={!adversaryId}
                     onClick={() =>
-                      handleExportScenes(
-                        [selectedScene],
-                        `${selectedScene.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_scene.json`
+                      setPlacementMode((current) =>
+                        current === 'adversary' ? 'none' : 'adversary'
                       )
                     }
                   >
-                    <Download className="mr-1.5 h-4 w-4" />
-                    Export
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-destructive hover:bg-destructive/10 hover:text-destructive"
-                    onClick={() => onDeleteScene(selectedScene.id)}
-                  >
-                    <Trash2 className="mr-1.5 h-4 w-4" />
-                    Delete
+                    {placementMode === 'adversary'
+                      ? 'Click the grid to place...'
+                      : 'Place Adversary'}
                   </Button>
                 </div>
-              </div>
+              )}
 
-              {foldedScene?.issues.length ? (
-                <div className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-                  {foldedScene.issues[0].message}
-                </div>
-              ) : null}
+              <EncounterPanel
+                monsters={encounterMonsters}
+                monsterId={encounterMonsterId}
+                onMonsterChange={setEncounterMonsterId}
+                count={encounterCount}
+                onCountChange={setEncounterCount}
+                originX={encounterOriginX}
+                onOriginXChange={setEncounterOriginX}
+                originY={encounterOriginY}
+                onOriginYChange={setEncounterOriginY}
+                loading={monstersLoading}
+                loadError={monsterLoadError}
+                selectedMonster={selectedEncounterMonster}
+                selectedMonsterTotalXp={selectedEncounterTotalXp}
+                canAddEncounter={pendingEncounterSelections.length > 0}
+                hasSelections={encounterSelections.length > 0}
+                plan={encounterPlan}
+                party={encounterParty}
+                xpPerPartyLevel={encounterXpPerPartyLevel}
+                onQueueMonster={handleQueueEncounterMonster}
+                onAddEncounter={handleAddEncounter}
+                onRemoveSelection={handleRemoveEncounterSelection}
+                onAdjustSelection={handleAdjustEncounterSelection}
+                zoneOptions={Object.values(state.markers).map((marker) => ({
+                  id: marker.id,
+                  label: marker.label,
+                }))}
+                zoneId={encounterZoneId}
+                onZoneChange={setEncounterZoneId}
+                // Drafting is offered only where a cited budget table
+                // applies (see supportsEncounterBudget).
+                onDraftEncounter={
+                  supportsEncounterBudget(sceneSystemId ?? '') ? handleDraftEncounter : undefined
+                }
+                difficulty={encounterDifficulty}
+                onDifficultyChange={setEncounterDifficulty}
+                validation={encounterValidation}
+                // AI drafting rides the same difficulty + deterministic gate
+                // as the manual draft, offered only when AI is enabled and
+                // the system has a cited budget table.
+                onAiDraft={
+                  aiEnabled && supportsEncounterBudget(sceneSystemId ?? '')
+                    ? handleAiDraftEncounter
+                    : undefined
+                }
+                aiPrompt={aiEncounterPrompt}
+                onAiPromptChange={setAiEncounterPrompt}
+                aiDrafting={aiDrafting}
+                // Vision: identify a creature from an image (needs only the
+                // loaded catalog, so it is offered wherever AI is enabled).
+                onIdentifyImage={aiEnabled ? handleIdentifyCreature : undefined}
+                identifying={aiIdentifying}
+                identifyNotice={identifyNotice}
+              />
 
-              <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
-                <SceneGridView
+              <MarkerPanel
+                markerLabel={markerLabel}
+                onMarkerLabelChange={setMarkerLabel}
+                markerKind={markerKind}
+                onMarkerKindChange={setMarkerKind}
+                markerWidth={markerWidth}
+                onMarkerWidthChange={setMarkerWidth}
+                markerHeight={markerHeight}
+                onMarkerHeightChange={setMarkerHeight}
+                isPlacing={placementMode === 'marker'}
+                onTogglePlace={() =>
+                  setPlacementMode((current) => (current === 'marker' ? 'none' : 'marker'))
+                }
+                markers={state.markers}
+                onDeleteMarker={handleDeleteMarker}
+              />
+
+              <InitiativeTracker
+                tokens={state.tokens}
+                initiativeValues={initiativeValues}
+                onInitiativeChange={(tokenId, value) =>
+                  setInitiativeValues((current) => ({ ...current, [tokenId]: value }))
+                }
+                onAdvanceTurn={handleAdvanceTurn}
+                onSetOrder={handleSetInitiative}
+              />
+
+              <CombatPanel
+                state={state}
+                attackerId={selectedTokenId}
+                combatReadyIds={combatReadyIds}
+                targetId={combatTargetId}
+                onTargetChange={setCombatTargetId}
+                onAttack={handleCombatAttack}
+                onRunRound={handleRunRound}
+                combatConcluded={combatConcluded}
+                log={combatLog}
+              />
+
+              <CheckPanel state={state} actorId={selectedTokenId} onRoll={handleRollCheck} />
+
+              <OraclePanel state={state} onConsult={handleConsultOracle} />
+
+              <ReactionPanel seed={state.seed} />
+
+              <DicePanel seed={state.seed} />
+
+              {/* Image-output surface: a creative aid, not scene state. */}
+              {aiEnabled && (
+                <IllustrationPanel illustrate={(params) => illustrateSceneWithAi(params)} />
+              )}
+
+              {onLogToCampaign && linkedCampaign && (
+                <RecapPanel
                   state={state}
-                  selectedTokenId={selectedTokenId}
-                  onCellActivate={handleCellActivate}
-                  onTokenActivate={handleTokenActivate}
+                  campaignName={linkedCampaign.name}
+                  onLog={(title, body) => onLogToCampaign(linkedCampaign.id, title, body)}
+                  // The model restyles the deterministic recap into prose the
+                  // GM edits before logging; hidden entirely when AI is off.
+                  narrate={aiEnabled ? (params) => narrateSceneWithAi(params) : undefined}
                 />
-
-                <div className="space-y-3">
-                  <TokenPanel
-                    eligibleDocuments={eligibleDocuments}
-                    tokenDocumentId={tokenDocumentId}
-                    onSelectLinkedDocument={handleSelectLinkedDocument}
-                    tokenName={tokenName}
-                    onTokenNameChange={setTokenName}
-                    tokenKind={tokenKind}
-                    onTokenKindChange={setTokenKind}
-                    tokenAllegiance={tokenAllegiance}
-                    onTokenAllegianceChange={setTokenAllegiance}
-                    eligibleStatblocks={eligibleStatblocks}
-                    tokenStatblockId={tokenStatblockId}
-                    onSelectStatblock={handleSelectStatblock}
-                    onGenerateNpc={handleGenerateNpc}
-                    isPlacing={placementMode === 'token'}
-                    onTogglePlace={() =>
-                      setPlacementMode((current) => (current === 'token' ? 'none' : 'token'))
-                    }
-                    canDeleteToken={Boolean(selectedTokenId)}
-                    onDeleteSelectedToken={handleDeleteSelectedToken}
-                    conditionOptions={
-                      sceneSystemId === 'dnd-5e-2014' || sceneSystemId === 'dnd-5e-2024'
-                        ? DND5E_SCENE_CONDITIONS
-                        : []
-                    }
-                    selectedTokenConditions={
-                      (selectedTokenId && state.tokens[selectedTokenId]?.conditions) || []
-                    }
-                    onToggleSelectedTokenCondition={handleToggleSelectedTokenCondition}
-                    selectedTokenSide={selectedTokenSide}
-                    onSetSelectedTokenSide={handleSetSelectedTokenSide}
-                  />
-
-                  {sceneSystemId === 'daggerheart' && daggerheartAdversariesById.size > 0 && (
-                    <div className="rounded-lg border bg-card p-3 space-y-2">
-                      <h5 className="text-sm font-semibold">Adversaries</h5>
-                      <Select
-                        aria-label="Adversary"
-                        value={adversaryId}
-                        onChange={(event) => setAdversaryId(event.target.value)}
-                      >
-                        {[...daggerheartAdversariesById.values()].map((adversary) => (
-                          <option key={adversary.id} value={adversary.id}>
-                            {adversary.name} (T{adversary.tier} {adversary.role})
-                          </option>
-                        ))}
-                      </Select>
-                      <Button
-                        variant={placementMode === 'adversary' ? 'default' : 'outline'}
-                        size="sm"
-                        disabled={!adversaryId}
-                        onClick={() =>
-                          setPlacementMode((current) =>
-                            current === 'adversary' ? 'none' : 'adversary'
-                          )
-                        }
-                      >
-                        {placementMode === 'adversary'
-                          ? 'Click the grid to place...'
-                          : 'Place Adversary'}
-                      </Button>
-                    </div>
-                  )}
-
-                  <EncounterPanel
-                    monsters={encounterMonsters}
-                    monsterId={encounterMonsterId}
-                    onMonsterChange={setEncounterMonsterId}
-                    count={encounterCount}
-                    onCountChange={setEncounterCount}
-                    originX={encounterOriginX}
-                    onOriginXChange={setEncounterOriginX}
-                    originY={encounterOriginY}
-                    onOriginYChange={setEncounterOriginY}
-                    loading={monstersLoading}
-                    loadError={monsterLoadError}
-                    selectedMonster={selectedEncounterMonster}
-                    selectedMonsterTotalXp={selectedEncounterTotalXp}
-                    canAddEncounter={pendingEncounterSelections.length > 0}
-                    hasSelections={encounterSelections.length > 0}
-                    plan={encounterPlan}
-                    party={encounterParty}
-                    xpPerPartyLevel={encounterXpPerPartyLevel}
-                    onQueueMonster={handleQueueEncounterMonster}
-                    onAddEncounter={handleAddEncounter}
-                    onRemoveSelection={handleRemoveEncounterSelection}
-                    onAdjustSelection={handleAdjustEncounterSelection}
-                    zoneOptions={Object.values(state.markers).map((marker) => ({
-                      id: marker.id,
-                      label: marker.label,
-                    }))}
-                    zoneId={encounterZoneId}
-                    onZoneChange={setEncounterZoneId}
-                    // Drafting is offered only where a cited budget table
-                    // applies (see supportsEncounterBudget).
-                    onDraftEncounter={
-                      supportsEncounterBudget(sceneSystemId ?? '')
-                        ? handleDraftEncounter
-                        : undefined
-                    }
-                    difficulty={encounterDifficulty}
-                    onDifficultyChange={setEncounterDifficulty}
-                    validation={encounterValidation}
-                    // AI drafting rides the same difficulty + deterministic gate
-                    // as the manual draft, offered only when AI is enabled and
-                    // the system has a cited budget table.
-                    onAiDraft={
-                      aiEnabled && supportsEncounterBudget(sceneSystemId ?? '')
-                        ? handleAiDraftEncounter
-                        : undefined
-                    }
-                    aiPrompt={aiEncounterPrompt}
-                    onAiPromptChange={setAiEncounterPrompt}
-                    aiDrafting={aiDrafting}
-                    // Vision: identify a creature from an image (needs only the
-                    // loaded catalog, so it is offered wherever AI is enabled).
-                    onIdentifyImage={aiEnabled ? handleIdentifyCreature : undefined}
-                    identifying={aiIdentifying}
-                    identifyNotice={identifyNotice}
-                  />
-
-                  <MarkerPanel
-                    markerLabel={markerLabel}
-                    onMarkerLabelChange={setMarkerLabel}
-                    markerKind={markerKind}
-                    onMarkerKindChange={setMarkerKind}
-                    markerWidth={markerWidth}
-                    onMarkerWidthChange={setMarkerWidth}
-                    markerHeight={markerHeight}
-                    onMarkerHeightChange={setMarkerHeight}
-                    isPlacing={placementMode === 'marker'}
-                    onTogglePlace={() =>
-                      setPlacementMode((current) => (current === 'marker' ? 'none' : 'marker'))
-                    }
-                    markers={state.markers}
-                    onDeleteMarker={handleDeleteMarker}
-                  />
-
-                  <InitiativeTracker
-                    tokens={state.tokens}
-                    initiativeValues={initiativeValues}
-                    onInitiativeChange={(tokenId, value) =>
-                      setInitiativeValues((current) => ({ ...current, [tokenId]: value }))
-                    }
-                    onAdvanceTurn={handleAdvanceTurn}
-                    onSetOrder={handleSetInitiative}
-                  />
-
-                  <CombatPanel
-                    state={state}
-                    attackerId={selectedTokenId}
-                    combatReadyIds={combatReadyIds}
-                    targetId={combatTargetId}
-                    onTargetChange={setCombatTargetId}
-                    onAttack={handleCombatAttack}
-                    onRunRound={handleRunRound}
-                    combatConcluded={combatConcluded}
-                    log={combatLog}
-                  />
-
-                  <CheckPanel state={state} actorId={selectedTokenId} onRoll={handleRollCheck} />
-
-                  <OraclePanel state={state} onConsult={handleConsultOracle} />
-
-                  <ReactionPanel seed={state.seed} />
-
-                  <DicePanel seed={state.seed} />
-
-                  {/* Image-output surface: a creative aid, not scene state. */}
-                  {aiEnabled && (
-                    <IllustrationPanel illustrate={(params) => illustrateSceneWithAi(params)} />
-                  )}
-
-                  {onLogToCampaign && linkedCampaign && (
-                    <RecapPanel
-                      state={state}
-                      campaignName={linkedCampaign.name}
-                      onLog={(title, body) => onLogToCampaign(linkedCampaign.id, title, body)}
-                      // The model restyles the deterministic recap into prose the
-                      // GM edits before logging; hidden entirely when AI is off.
-                      narrate={aiEnabled ? (params) => narrateSceneWithAi(params) : undefined}
-                    />
-                  )}
-                </div>
-              </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
       )}
     </section>

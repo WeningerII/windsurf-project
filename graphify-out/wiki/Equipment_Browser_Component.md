@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **EquipmentBrowser.tsx** (4 connections) — `src/components/EquipmentBrowser.tsx`
+- **EquipmentBrowser.tsx** (5 connections) — `src/components/EquipmentBrowser.tsx`
 - **EquipmentBrowser.test.tsx** (3 connections) — `src/__tests__/components/EquipmentBrowser.test.tsx`
 - **EquipmentBrowser()** (2 connections) — `src/components/EquipmentBrowser.tsx`
 - **Equipment** (1 connections) — `src/components/EquipmentBrowser.tsx`
@@ -22,7 +22,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 12 (100%)
+- EXTRACTED: 13 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

@@ -7,14 +7,14 @@
 - **browserCompat.ts** (23 connections) — `src/utils/browserCompat.ts`
 - **ErrorLogger** (22 connections) — `src/utils/errorLogger.ts`
 - **errorLogger.ts** (21 connections) — `src/utils/errorLogger.ts`
-- **ErrorBoundary.tsx** (18 connections) — `src/components/ErrorBoundary.tsx`
+- **ErrorBoundary.tsx** (19 connections) — `src/components/ErrorBoundary.tsx`
 - **generate-legal-notice.ts** (17 connections) — `src/scripts/generate-legal-notice.ts`
 - **LegalNotices.tsx** (13 connections) — `src/components/LegalNotices.tsx`
-- **Card.tsx** (12 connections) — `src/components/ui/Card.tsx`
+- **Card.tsx** (13 connections) — `src/components/ui/Card.tsx`
 - **ErrorCategory** (12 connections) — `src/utils/errorLogger.ts`
 - **ErrorSeverity** (12 connections) — `src/utils/errorLogger.ts`
+- **MonsterStatBlock.tsx** (11 connections) — `src/components/MonsterStatBlock.tsx`
 - **browserCompat.test.ts** (11 connections) — `src/__tests__/browserCompat.test.ts`
-- **MonsterStatBlock.tsx** (10 connections) — `src/components/MonsterStatBlock.tsx`
 - **ErrorBoundary** (8 connections) — `src/components/ErrorBoundary.tsx`
 - **attributions.ts** (7 connections) — `src/legal/attributions.ts`
 - **ErrorBoundary.test.tsx** (7 connections) — `src/__tests__/components/ErrorBoundary.test.tsx`
@@ -65,7 +65,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 333 (100%)
+- EXTRACTED: 336 (100%)
 - INFERRED: 1 (0%)
 - AMBIGUOUS: 0 (0%)
 

@@ -43,8 +43,8 @@
 - systemProfiles.ts `EXTRACTED`
 - Pf2eSpellsTab.tsx `EXTRACTED`
 - dnd5e2014EngineMath.test.ts `EXTRACTED`
-- spellPreparation.ts `EXTRACTED`
 - AbilityScoreGrid.tsx `EXTRACTED`
+- spellPreparation.ts `EXTRACTED`
 - Pf2eOverview.tsx `EXTRACTED`
 - Pf2eSkillsTab.tsx `EXTRACTED`
 - Pf2eSavesTab.tsx `EXTRACTED`

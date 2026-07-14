@@ -4,9 +4,9 @@
 
 ## Key Concepts
 
-- **scene.ts** (86 connections) — `src/types/core/scene.ts`
-- **OraclePanel.tsx** (19 connections) — `src/components/scene/OraclePanel.tsx`
-- **CheckPanel.tsx** (17 connections) — `src/components/scene/CheckPanel.tsx`
+- **scene.ts** (88 connections) — `src/types/core/scene.ts`
+- **OraclePanel.tsx** (20 connections) — `src/components/scene/OraclePanel.tsx`
+- **CheckPanel.tsx** (18 connections) — `src/components/scene/CheckPanel.tsx`
 - **sceneTerrain.ts** (16 connections) — `src/rules/terrain/sceneTerrain.ts`
 - **oracle.ts** (15 connections) — `src/scene/oracle.ts`
 - **sceneTerrain.test.ts** (15 connections) — `src/__tests__/rules/sceneTerrain.test.ts`
@@ -62,7 +62,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 310 (100%)
+- EXTRACTED: 314 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

@@ -5,9 +5,9 @@
 ## Key Concepts
 
 - **capabilityScenarios.test.tsx** (72 connections) — `src/__tests__/scenarios/capabilityScenarios.test.tsx`
-- **Campaign** (33 connections) — `src/types/core/campaign.ts`
-- **SessionLog.tsx** (15 connections) — `src/components/campaign/SessionLog.tsx`
-- **campaignStorySections.test.tsx** (9 connections) — `src/__tests__/components/campaignStorySections.test.tsx`
+- **Campaign** (36 connections) — `src/types/core/campaign.ts`
+- **SessionLog.tsx** (16 connections) — `src/components/campaign/SessionLog.tsx`
+- **campaignStorySections.test.tsx** (10 connections) — `src/__tests__/components/campaignStorySections.test.tsx`
 - **SessionLog()** (7 connections) — `src/components/campaign/SessionLog.tsx`
 - **addSessionEntry()** (7 connections) — `src/utils/campaignStory.ts`
 - **createSessionEntry()** (7 connections) — `src/utils/campaignStory.ts`
@@ -55,7 +55,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 173 (100%)
+- EXTRACTED: 178 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

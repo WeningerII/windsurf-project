@@ -4,8 +4,8 @@
 
 ## Key Concepts
 
-- **Pf2eSpellsTab.tsx** (26 connections) — `src/systems/pf2e/components/Pf2eSpellsTab.tsx`
-- **D20SpellsTab.tsx** (22 connections) — `src/systems/d20-legacy/components/D20SpellsTab.tsx`
+- **Pf2eSpellsTab.tsx** (27 connections) — `src/systems/pf2e/components/Pf2eSpellsTab.tsx`
+- **D20SpellsTab.tsx** (23 connections) — `src/systems/d20-legacy/components/D20SpellsTab.tsx`
 - **spellPreparation.ts** (15 connections) — `src/utils/spellPreparation.ts`
 - **buildSpellPreparationConcepts()** (9 connections) — `src/utils/spellPreparation.ts`
 - **D20SpellsTab()** (8 connections) — `src/systems/d20-legacy/components/D20SpellsTab.tsx`
@@ -52,7 +52,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 115 (97%)
+- EXTRACTED: 117 (97%)
 - INFERRED: 4 (3%)
 - AMBIGUOUS: 0 (0%)
 

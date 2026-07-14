@@ -5,8 +5,8 @@
 ## Key Concepts
 
 - **syncEngine.ts** (68 connections) — `src/utils/syncEngine.ts`
-- **useSync.test.tsx** (46 connections) — `src/__tests__/hooks/useSync.test.tsx`
-- **useSync.ts** (34 connections) — `src/hooks/useSync.ts`
+- **useSync.test.tsx** (47 connections) — `src/__tests__/hooks/useSync.test.tsx`
+- **useSync.ts** (35 connections) — `src/hooks/useSync.ts`
 - **syncEngine.test.ts** (24 connections) — `src/__tests__/utils/syncEngine.test.ts`
 - **useSync()** (21 connections) — `src/hooks/useSync.ts`
 - **getSupabaseClient()** (21 connections) — `src/utils/supabaseClient.ts`
@@ -56,7 +56,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 401 (93%)
+- EXTRACTED: 403 (93%)
 - INFERRED: 31 (7%)
 - AMBIGUOUS: 0 (0%)
 

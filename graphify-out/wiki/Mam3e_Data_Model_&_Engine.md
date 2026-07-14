@@ -4,15 +4,15 @@
 
 ## Key Concepts
 
-- **sheet.tsx** (39 connections) — `src/systems/mam3e/sheet.tsx`
+- **sheet.tsx** (40 connections) — `src/systems/mam3e/sheet.tsx`
 - **Mam3eDataModel** (33 connections) — `src/systems/mam3e/data-model.ts`
 - **data-model.ts** (30 connections) — `src/systems/mam3e/data-model.ts`
-- **useMam3eMutationHandlers.ts** (27 connections) — `src/systems/mam3e/useMam3eMutationHandlers.ts`
+- **useMam3eMutationHandlers.ts** (28 connections) — `src/systems/mam3e/useMam3eMutationHandlers.ts`
 - **engine.ts** (22 connections) — `src/systems/mam3e/engine.ts`
-- **useMam3eSheetController.ts** (18 connections) — `src/systems/mam3e/useMam3eSheetController.ts`
-- **MamSkillsAdvantagesTab.tsx** (16 connections) — `src/systems/mam3e/components/MamSkillsAdvantagesTab.tsx`
+- **useMam3eSheetController.ts** (19 connections) — `src/systems/mam3e/useMam3eSheetController.ts`
+- **MamSkillsAdvantagesTab.tsx** (17 connections) — `src/systems/mam3e/components/MamSkillsAdvantagesTab.tsx`
+- **MamComplicationsTab.tsx** (15 connections) — `src/systems/mam3e/components/MamComplicationsTab.tsx`
 - **mam3e-reference-surface-persistence.test.ts** (15 connections) — `src/__tests__/mam3e-reference-surface-persistence.test.ts`
-- **MamComplicationsTab.tsx** (14 connections) — `src/systems/mam3e/components/MamComplicationsTab.tsx`
 - **createDefaultMam3eData()** (14 connections) — `src/systems/mam3e/data-model.ts`
 - **powers.ts** (14 connections) — `src/types/mam/powers.ts`
 - **mam3eMutationHandlers.test.ts** (13 connections) — `src/__tests__/systems/mam3e/mam3eMutationHandlers.test.ts`
@@ -20,13 +20,13 @@
 - **getMam3eSheetState.ts** (12 connections) — `src/systems/mam3e/getMam3eSheetState.ts`
 - **useMam3eMutationHandlers()** (11 connections) — `src/systems/mam3e/useMam3eMutationHandlers.ts`
 - **Power** (11 connections) — `src/types/mam/powers.ts`
+- **MamAbilitiesTab.tsx** (10 connections) — `src/systems/mam3e/components/MamAbilitiesTab.tsx`
 - **mam3eSheetShared.ts** (10 connections) — `src/systems/mam3e/mam3eSheetShared.ts`
 - **mam3eSheetHelpers.test.ts** (10 connections) — `src/__tests__/systems/mam3e/mam3eSheetHelpers.test.ts`
-- **MamAbilitiesTab.tsx** (9 connections) — `src/systems/mam3e/components/MamAbilitiesTab.tsx`
 - **Mam3eEngine** (9 connections) — `src/systems/mam3e/engine.ts`
+- **MamHeader.tsx** (8 connections) — `src/systems/mam3e/components/MamHeader.tsx`
 - **useMam3eSheetController()** (8 connections) — `src/systems/mam3e/useMam3eSheetController.ts`
 - **mam3e-engine.test.ts** (8 connections) — `src/__tests__/engines/mam3e-engine.test.ts`
-- **MamHeader.tsx** (7 connections) — `src/systems/mam3e/components/MamHeader.tsx`
 - **Mam3eConditionTrack** (7 connections) — `src/systems/mam3e/data-model.ts`
 - **getMam3eSheetState()** (7 connections) — `src/systems/mam3e/getMam3eSheetState.ts`
 - *... and 39 more nodes in this community*
@@ -70,7 +70,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 471 (100%)
+- EXTRACTED: 480 (100%)
 - INFERRED: 2 (0%)
 - AMBIGUOUS: 0 (0%)
 

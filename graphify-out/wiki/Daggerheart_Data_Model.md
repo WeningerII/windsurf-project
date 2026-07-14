@@ -6,7 +6,7 @@
 
 - **daggerheart.ts** (48 connections) — `src/types/daggerheart.ts`
 - **getDaggerheartSheetState.ts** (26 connections) — `src/systems/daggerheart/getDaggerheartSheetState.ts`
-- **useDaggerheartSheetResources.ts** (25 connections) — `src/systems/daggerheart/useDaggerheartSheetResources.ts`
+- **useDaggerheartSheetResources.ts** (26 connections) — `src/systems/daggerheart/useDaggerheartSheetResources.ts`
 - **DaggerheartDomainCard** (12 connections) — `src/types/daggerheart.ts`
 - **GetDaggerheartSheetStateProps** (11 connections) — `src/systems/daggerheart/getDaggerheartSheetState.ts`
 - **DaggerheartWeapon** (11 connections) — `src/types/daggerheart.ts`
@@ -52,7 +52,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 201 (100%)
+- EXTRACTED: 202 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

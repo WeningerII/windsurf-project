@@ -5,7 +5,7 @@
 ## Key Concepts
 
 - **Dnd5eSheetBase.tsx** (50 connections) — `src/systems/dnd5e/shared/Dnd5eSheetBase.tsx`
-- **Tabs.tsx** (33 connections) — `src/components/ui/Tabs.tsx`
+- **Tabs.tsx** (34 connections) — `src/components/ui/Tabs.tsx`
 - **TabsContent** (19 connections) — `src/components/ui/Tabs.tsx`
 - **DaggerheartReferenceLibrarySection.tsx** (16 connections) — `src/systems/daggerheart/components/DaggerheartReferenceLibrarySection.tsx`
 - **DaggerheartEquipmentSection.tsx** (13 connections) — `src/systems/daggerheart/components/DaggerheartEquipmentSection.tsx`
@@ -61,7 +61,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 226 (100%)
+- EXTRACTED: 227 (100%)
 - INFERRED: 1 (0%)
 - AMBIGUOUS: 0 (0%)
 

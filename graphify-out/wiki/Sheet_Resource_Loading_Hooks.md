@@ -5,20 +5,20 @@
 ## Key Concepts
 
 - **dataLoader.ts** (147 connections) — `src/utils/dataLoader.ts`
-- **usePf2eSheetResources.ts** (28 connections) — `src/systems/pf2e/usePf2eSheetResources.ts`
+- **usePf2eSheetResources.ts** (29 connections) — `src/systems/pf2e/usePf2eSheetResources.ts`
 - **finalizeLoadedItems()** (28 connections) — `src/utils/dataLoader.ts`
 - **dataLoader.test.ts** (26 connections) — `src/__tests__/dataLoader.test.ts`
-- **useD20LegacySheetResources.ts** (22 connections) — `src/systems/d20-legacy/useD20LegacySheetResources.ts`
+- **useD20LegacySheetResources.ts** (23 connections) — `src/systems/d20-legacy/useD20LegacySheetResources.ts`
 - **loadEquipmentForSystem()** (22 connections) — `src/utils/dataLoader.ts`
 - **loadFeatsForSystem()** (20 connections) — `src/utils/dataLoader.ts`
 - **loadClassesForSystem()** (19 connections) — `src/utils/dataLoader.ts`
 - **loadSpeciesForSystem()** (17 connections) — `src/utils/dataLoader.ts`
-- **useLazyResource.ts** (13 connections) — `src/hooks/useLazyResource.ts`
+- **useLazyResource.ts** (14 connections) — `src/hooks/useLazyResource.ts`
 - **usePf2eSheetResources()** (13 connections) — `src/systems/pf2e/usePf2eSheetResources.ts`
 - **useDaggerheartSheetResources()** (12 connections) — `src/systems/daggerheart/useDaggerheartSheetResources.ts`
 - **loadMonstersForSystem()** (12 connections) — `src/utils/dataLoader.ts`
+- **Pf2eEquipmentBrowserTab.tsx** (11 connections) — `src/systems/pf2e/components/Pf2eEquipmentBrowserTab.tsx`
 - **useD20LegacySheetResources()** (10 connections) — `src/systems/d20-legacy/useD20LegacySheetResources.ts`
-- **Pf2eEquipmentBrowserTab.tsx** (10 connections) — `src/systems/pf2e/components/Pf2eEquipmentBrowserTab.tsx`
 - **loadArchetypesForSystem()** (8 connections) — `src/utils/dataLoader.ts`
 - **loadDaggerheartAncestriesForSystem()** (8 connections) — `src/utils/dataLoader.ts`
 - **loadDaggerheartArmorForSystem()** (8 connections) — `src/utils/dataLoader.ts`
@@ -62,7 +62,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 583 (97%)
+- EXTRACTED: 587 (97%)
 - INFERRED: 20 (3%)
 - AMBIGUOUS: 0 (0%)
 

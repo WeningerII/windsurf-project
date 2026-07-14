@@ -6,11 +6,11 @@
 
 - **Dnd5eOverviewSection.tsx** (25 connections) — `src/systems/dnd5e/shared/components/Dnd5eOverviewSection.tsx`
 - **SpellSlots** (14 connections) — `src/types/core/character.ts`
-- **SpellSlotTracker.tsx** (9 connections) — `src/components/SpellSlotTracker.tsx`
-- **HitDiceTracker.tsx** (6 connections) — `src/components/HitDiceTracker.tsx`
+- **SpellSlotTracker.tsx** (10 connections) — `src/components/SpellSlotTracker.tsx`
+- **HitDiceTracker.tsx** (7 connections) — `src/components/HitDiceTracker.tsx`
+- **DeathSavesTracker.tsx** (6 connections) — `src/components/DeathSavesTracker.tsx`
 - **SpellSlotTracker.test.tsx** (6 connections) — `src/__tests__/components/SpellSlotTracker.test.tsx`
 - **PactMagicSlots** (6 connections) — `src/types/core/character.ts`
-- **DeathSavesTracker.tsx** (5 connections) — `src/components/DeathSavesTracker.tsx`
 - **Props** (5 connections) — `src/systems/dnd5e/shared/components/Dnd5eOverviewSection.tsx`
 - **SpellSlotTracker()** (4 connections) — `src/components/SpellSlotTracker.tsx`
 - **DeathSavesTracker()** (3 connections) — `src/components/DeathSavesTracker.tsx`
@@ -53,7 +53,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 105 (100%)
+- EXTRACTED: 108 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

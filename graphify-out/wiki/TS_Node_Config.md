@@ -6,13 +6,13 @@
 
 - **compilerOptions** (7 connections) — `tsconfig.node.json`
 - **tsconfig.node.json** (2 connections) — `tsconfig.node.json`
+- **include** (2 connections) — `tsconfig.node.json`
 - **allowSyntheticDefaultImports** (1 connections) — `tsconfig.node.json`
 - **composite** (1 connections) — `tsconfig.node.json`
 - **forceConsistentCasingInFileNames** (1 connections) — `tsconfig.node.json`
 - **module** (1 connections) — `tsconfig.node.json`
 - **moduleResolution** (1 connections) — `tsconfig.node.json`
 - **skipLibCheck** (1 connections) — `tsconfig.node.json`
-- **include** (1 connections) — `tsconfig.node.json`
 
 ## Relationships
 
@@ -24,7 +24,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 16 (100%)
+- EXTRACTED: 17 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

@@ -5,8 +5,8 @@
 ## Key Concepts
 
 - **documentStorage.ts** (61 connections) — `src/utils/documentStorage.ts`
-- **auth-context.ts** (26 connections) — `src/contexts/auth-context.ts`
-- **useDocuments.ts** (25 connections) — `src/hooks/useDocuments.ts`
+- **auth-context.ts** (27 connections) — `src/contexts/auth-context.ts`
+- **useDocuments.ts** (26 connections) — `src/hooks/useDocuments.ts`
 - **indexedDBAdapter.ts** (19 connections) — `src/utils/indexedDBAdapter.ts`
 - **useDocuments()** (17 connections) — `src/hooks/useDocuments.ts`
 - **saveDocuments()** (17 connections) — `src/utils/documentStorage.ts`
@@ -61,7 +61,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 400 (100%)
+- EXTRACTED: 402 (100%)
 - INFERRED: 2 (0%)
 - AMBIGUOUS: 0 (0%)
 

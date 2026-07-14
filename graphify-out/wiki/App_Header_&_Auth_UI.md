@@ -4,9 +4,9 @@
 
 ## Key Concepts
 
-- **useTheme.ts** (8 connections) — `src/hooks/useTheme.ts`
+- **useTheme.ts** (9 connections) — `src/hooks/useTheme.ts`
 - **useTheme()** (7 connections) — `src/hooks/useTheme.ts`
-- **ThemeToggle.tsx** (4 connections) — `src/components/ui/ThemeToggle.tsx`
+- **ThemeToggle.tsx** (5 connections) — `src/components/ui/ThemeToggle.tsx`
 - **ThemeToggle()** (3 connections) — `src/components/ui/ThemeToggle.tsx`
 - **applyTheme()** (3 connections) — `src/hooks/useTheme.ts`
 - **getSystemTheme()** (3 connections) — `src/hooks/useTheme.ts`
@@ -27,7 +27,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 34 (100%)
+- EXTRACTED: 36 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

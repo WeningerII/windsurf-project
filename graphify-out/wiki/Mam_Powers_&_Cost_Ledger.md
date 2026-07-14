@@ -7,7 +7,7 @@
 - **mam3eEngineMath.test.ts** (34 connections) — `src/__tests__/mam3eEngineMath.test.ts`
 - **contributionLedger.ts** (20 connections) — `src/systems/mam3e/contributionLedger.ts`
 - **powerMath.ts** (19 connections) — `src/systems/mam3e/powerMath.ts`
-- **MamPowersTab.tsx** (17 connections) — `src/systems/mam3e/components/MamPowersTab.tsx`
+- **MamPowersTab.tsx** (18 connections) — `src/systems/mam3e/components/MamPowersTab.tsx`
 - **derivedMath.ts** (12 connections) — `src/systems/mam3e/derivedMath.ts`
 - **mam3eContributionLedger.test.ts** (12 connections) — `src/__tests__/mam3eContributionLedger.test.ts`
 - **calculatePowerPointCost()** (11 connections) — `src/systems/mam3e/powerMath.ts`
@@ -51,7 +51,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 229 (97%)
+- EXTRACTED: 230 (97%)
 - INFERRED: 7 (3%)
 - AMBIGUOUS: 0 (0%)
 

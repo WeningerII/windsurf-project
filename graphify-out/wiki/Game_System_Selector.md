@@ -4,9 +4,9 @@
 
 ## Key Concepts
 
-- **SystemStatusDashboard.tsx** (27 connections) — `src/components/SystemStatusDashboard.tsx`
+- **SystemStatusDashboard.tsx** (28 connections) — `src/components/SystemStatusDashboard.tsx`
 - **systemCatalogMetadata.ts** (27 connections) — `src/utils/systemCatalogMetadata.ts`
-- **GameSystemSelector.tsx** (22 connections) — `src/components/GameSystemSelector.tsx`
+- **GameSystemSelector.tsx** (23 connections) — `src/components/GameSystemSelector.tsx`
 - **systemCatalogShared.ts** (20 connections) — `src/utils/systemCatalogShared.ts`
 - **systemCatalog.ts** (17 connections) — `src/utils/systemCatalog.ts`
 - **systemCatalog.integration.test.ts** (14 connections) — `src/__tests__/utils/systemCatalog.integration.test.ts`
@@ -57,7 +57,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 294 (99%)
+- EXTRACTED: 296 (99%)
 - INFERRED: 2 (1%)
 - AMBIGUOUS: 0 (0%)
 

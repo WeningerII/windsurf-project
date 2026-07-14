@@ -12,8 +12,8 @@
 - **DaggerheartSelectionOverviewSection.tsx** (12 connections) — `src/systems/daggerheart/components/DaggerheartSelectionOverviewSection.tsx`
 - **DaggerheartSheetHeader.tsx** (12 connections) — `src/systems/daggerheart/components/DaggerheartSheetHeader.tsx`
 - **domainDisplayName()** (7 connections) — `src/systems/daggerheart/daggerheartSheetConstants.ts`
+- **useStableListKeys.ts** (6 connections) — `src/systems/daggerheart/useStableListKeys.ts`
 - **DaggerheartNotesSection.tsx** (5 connections) — `src/systems/daggerheart/components/DaggerheartNotesSection.tsx`
-- **useStableListKeys.ts** (5 connections) — `src/systems/daggerheart/useStableListKeys.ts`
 - **useStableListKeys()** (5 connections) — `src/systems/daggerheart/useStableListKeys.ts`
 - **DaggerheartCharacterBasicsSection()** (4 connections) — `src/systems/daggerheart/components/DaggerheartCharacterBasicsSection.tsx`
 - **DaggerheartSheetHeader()** (4 connections) — `src/systems/daggerheart/components/DaggerheartSheetHeader.tsx`
@@ -64,7 +64,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 195 (99%)
+- EXTRACTED: 196 (99%)
 - INFERRED: 2 (1%)
 - AMBIGUOUS: 0 (0%)
 

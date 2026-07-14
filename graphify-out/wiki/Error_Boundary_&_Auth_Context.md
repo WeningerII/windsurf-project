@@ -4,16 +4,16 @@
 
 ## Key Concepts
 
-- **authAccountSwitch.test.tsx** (21 connections) — `src/__tests__/authAccountSwitch.test.tsx`
+- **authAccountSwitch.test.tsx** (22 connections) — `src/__tests__/authAccountSwitch.test.tsx`
 - **syncStatus.ts** (20 connections) — `src/utils/syncStatus.ts`
-- **useEntitySync.ts** (14 connections) — `src/hooks/useEntitySync.ts`
-- **UserMenu.tsx** (13 connections) — `src/components/UserMenu.tsx`
-- **AuthContext.tsx** (11 connections) — `src/contexts/AuthContext.tsx`
+- **useEntitySync.ts** (15 connections) — `src/hooks/useEntitySync.ts`
+- **UserMenu.tsx** (14 connections) — `src/components/UserMenu.tsx`
+- **AuthContext.tsx** (12 connections) — `src/contexts/AuthContext.tsx`
 - **useAuth()** (10 connections) — `src/hooks/useAuth.ts`
-- **SignIn.tsx** (8 connections) — `src/components/SignIn.tsx`
+- **SignIn.tsx** (9 connections) — `src/components/SignIn.tsx`
 - **AuthProvider()** (8 connections) — `src/contexts/AuthContext.tsx`
+- **useAuth.ts** (8 connections) — `src/hooks/useAuth.ts`
 - **formatLastSyncedAt()** (8 connections) — `src/utils/syncStatus.ts`
-- **useAuth.ts** (7 connections) — `src/hooks/useAuth.ts`
 - **SyncState** (7 connections) — `src/hooks/useEntitySync.ts`
 - **AuthContext** (5 connections) — `src/contexts/auth-context.ts`
 - **EntitySyncAdapter** (5 connections) — `src/hooks/useEntitySync.ts`
@@ -58,7 +58,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 196 (100%)
+- EXTRACTED: 202 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

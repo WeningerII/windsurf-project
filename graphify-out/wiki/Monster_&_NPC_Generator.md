@@ -6,8 +6,8 @@
 
 - **monsters.ts** (37 connections) — `src/types/creatures/monsters.ts`
 - **Monster** (36 connections) — `src/types/creatures/monsters.ts`
-- **Dnd5eMonsterBrowserTab.tsx** (13 connections) — `src/systems/dnd5e/shared/components/Dnd5eMonsterBrowserTab.tsx`
-- **MonsterBrowser.tsx** (7 connections) — `src/components/MonsterBrowser.tsx`
+- **Dnd5eMonsterBrowserTab.tsx** (14 connections) — `src/systems/dnd5e/shared/components/Dnd5eMonsterBrowserTab.tsx`
+- **MonsterBrowser.tsx** (8 connections) — `src/components/MonsterBrowser.tsx`
 - **AbilityScore** (7 connections) — `src/types/core/common.ts`
 - **MonsterBrowser.test.tsx** (5 connections) — `src/__tests__/components/MonsterBrowser.test.tsx`
 - **monsterDataIntegrity.test.ts** (5 connections) — `src/__tests__/data/monsterDataIntegrity.test.ts`
@@ -58,7 +58,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 139 (100%)
+- EXTRACTED: 141 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

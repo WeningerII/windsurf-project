@@ -10,18 +10,18 @@
 - **tokenPlacement.ts** (19 connections) — `src/scene/tokenPlacement.ts`
 - **TokenPanel.tsx** (16 connections) — `src/components/scene/TokenPanel.tsx`
 - **mam3eCombatant.ts** (16 connections) — `src/rules/combatants/mam3eCombatant.ts`
+- **SystemSheetRenderer.tsx** (12 connections) — `src/components/SystemSheetRenderer.tsx`
 - **combatStats.test.ts** (12 connections) — `src/__tests__/scene/combatStats.test.ts`
 - **tokenPlacement.test.ts** (12 connections) — `src/__tests__/scene/tokenPlacement.test.ts`
 - **documentMigrations.test.ts** (12 connections) — `src/__tests__/utils/documentMigrations.test.ts`
-- **SystemSheetRenderer.tsx** (11 connections) — `src/components/SystemSheetRenderer.tsx`
-- **Dnd5e2024Sheet.tsx** (10 connections) — `src/systems/dnd5e-2024/components/Dnd5e2024Sheet.tsx`
+- **Dnd5e2024Sheet.tsx** (11 connections) — `src/systems/dnd5e-2024/components/Dnd5e2024Sheet.tsx`
 - **SceneAllegiance** (10 connections) — `src/types/core/scene.ts`
+- **useDnd5eDocumentMutators.ts** (9 connections) — `src/systems/dnd5e/shared/useDnd5eDocumentMutators.ts`
+- **SystemSheetRenderer.test.tsx** (9 connections) — `src/__tests__/SystemSheetRenderer.test.tsx`
 - **SceneTokenKind** (9 connections) — `src/types/core/scene.ts`
-- **useDnd5eDocumentMutators.ts** (8 connections) — `src/systems/dnd5e/shared/useDnd5eDocumentMutators.ts`
-- **SystemSheetRenderer.test.tsx** (8 connections) — `src/__tests__/SystemSheetRenderer.test.tsx`
+- **Pf2eNotesTab.tsx** (8 connections) — `src/systems/pf2e/components/Pf2eNotesTab.tsx`
 - **documentMigrations.ts** (8 connections) — `src/utils/documentMigrations.ts`
 - **CombatStatsSources** (7 connections) — `src/scene/combatStats.ts`
-- **Pf2eNotesTab.tsx** (7 connections) — `src/systems/pf2e/components/Pf2eNotesTab.tsx`
 - **UseSceneEncounterParams** (6 connections) — `src/components/scene/useSceneEncounter.ts`
 - **Props** (6 connections) — `src/components/SceneManager.tsx`
 - **BuildEncounterEventsParams** (6 connections) — `src/scene/encounterBuilder.ts`
@@ -71,7 +71,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 818 (100%)
+- EXTRACTED: 823 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

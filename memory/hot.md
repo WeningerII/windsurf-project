@@ -4,61 +4,60 @@
 > `/save` — overwrite stale content, keep it under ~500 words. Durable facts go
 > to [[CLAUDE]] (CLAUDE.md) or `docs/`, not here.
 
-**Last updated:** 2026-07-10 (e2e gate FIXED on `claude/next-priorities-16xgyl`; 26/26 chromium green locally; branch pushed, no PR yet)
+**Last updated:** 2026-07-14 (doc realignment `6f03cad` + shell increment
+`5e499a4` pushed on `claude/next-priorities-98pzof`; no PR yet)
 
 ## Current focus
 
-Main's release gate was RED and masked: after PR #30 (Phase 1 shell) merged,
-ALL 52 Playwright tests failed on both browsers, but 52 fails × 2 retries ×
-1 worker outran the 30-min Verify cap, so CI recorded "cancelled" (no failure
-summary) — and pages.yml deployed the unverified build anyway. Fixed in 5
-commits on `claude/next-priorities-16xgyl` (pushed, needs PR + merge):
+Two landings this session, both pushed:
 
-- Root cause: every spec's fresh-boot helper asserted "Your Characters", but
-  CharacterListView returns null when empty — the anchor never renders on a
-  cleared profile. Added a real first-run empty state ("No characters yet" +
-  create CTA) to App.tsx; re-anchored all boot helpers on it; adapted 3
-  phase3-workflows tests still assuming the deleted inline system buttons /
-  gated Import.
-- outcome-baseline harness rewritten: fresh browser CONTEXT per system.
-- CI hygiene: playwright maxFailures:10 in CI; pages.yml now triggers on
-  CI/CD Pipeline completion and deploys only on success (exact verified SHA).
-
-## Landmines learned (2026-07-10)
-
-- In-page `localStorage.clear()` CANNOT produce a fresh user in e2e: the app
-  flushes debounced saves on pagehide (Chrome may run it concurrently with
-  the next document's load — even addInitScript loses) AND mirrors documents
-  to IndexedDB, which a fresh boot restores from. Use a fresh browser context.
-- Container Playwright browsers are rev 1194; repo's @playwright/test wants
-  1208. NEVER `playwright install` here — symlink-bridge the revisions under
-  a scratchpad PLAYWRIGHT_BROWSERS_PATH (layout differs: headless shell is
-  chrome-headless-shell-linux64/ now, chrome-linux/headless_shell in 1194).
-- e2e/pwa-offline is locally flaky (~1/4 blank offline shell). Watch it in CI.
-
-## Phase 1 truth (survey verified vs plan-of-record)
-
-Landed: useAppNav union, NewCharacterDialog, header segment nav, 6+3 writers,
-lazy-mount Scenes, suite rewrites. NOT landed (deferred "to Phase 2" but the
-build-specs doc calls them Phase-2 prerequisites): LibraryScenesView, 5-writer
-scene-selection lift (SceneManager L109 still internal), 18rem left-rail
-relocation, full Export/Delete re-home + per-card controls, phase1-*.spec
-gates, sceneManagerChunk guard, Alt+1/2/3. Keepalive uses `<div hidden>` —
-plan forbids display:none (Findings 7+14, unmeasured).
+1. **Planning-doc realignment** (`6f03cad`): MASTER_PLAN/GAPS/RFC-004/build-specs
+   now match shipped reality (details in the 2026-07-14 session log).
+2. **Shell increment — build-specs tasks 3+5+12 + keepalive swap** (`5e499a4`):
+   - SceneManager selection is a controlled seam (`selectedSceneId`/
+     `onSelectScene`); all five internal writers gone; LEFT 18rem rail,
+     create, and import moved out; canvas full-width + empty state.
+   - New `LibraryScenesView` = select-only scenes home (cards with
+     aria-pressed, campaign filter, create/import through the seam).
+     `useAppNav.selectScene` + `surface:'scene'` are now CONSUMED —
+     create/import/pick land on the live canvas.
+   - Keepalive re-anchored to the Scene surface using visibility:hidden +
+     off-screen transform (the forbidden `<div hidden>` is gone).
+   - SceneManager suite rewritten (harness plays the shell); new
+     LibraryScenesView suite; new `e2e/phase1-scene-selection.spec.ts`
+     covering acceptance gates (c)/(e)/(h).
+   - Verified: full vitest + coverage, all static gates, build/bundle,
+     Playwright chromium 27/27 locally (firefox → CI).
 
 ## Next steps
 
-1. Open PR for `claude/next-priorities-16xgyl`; watch first CI run (verify
-   now fails fast if anything is still red; firefox untested locally).
-2. Owner decisions: shell Phase-1 remainder vs MASTER_PLAN programs (IR
-   Phase 1, GAPS §1/§2); mirror the shell program into MASTER_PLAN (its
-   governance rule is currently violated); 5e-2024 exhaustion -2/level still
-   awaits the human review GAPS §5 flags.
-3. Stale docs: MASTER_PLAN lists the tactical executor + encounter-spec
-   validation as open; both shipped (RFC 006, STATUS.md).
+1. Open PR for `claude/next-priorities-98pzof` when owner asks; watch first
+   CI run (firefox e2e untested locally — no container binary).
+2. Remaining Phase-1 deferrals, now unblocked: tasks 7-8 (Export/Delete
+   re-home + per-card roster controls), task 9's Alt+1/2/3 (third surface now
+   exists), task 11 (performance.mark/measure baseline + sceneManagerChunk
+   guard), task 14's remaining gates (a/b/d/f/g). Then Phase 2 (ShellContext +
+   SurfaceStage) — its three prerequisite blockers are closed.
+3. IR Phase-1 closeout: route daggerheart + mam3e engine prepareData through
+   resolveCharacterEffects (all-seven parity currently tests-only).
+4. Owner items: GAPS §5 review (5e-2024 exhaustion −2/level); README
+   two-denominator citation; REMEDIATION Phase 6 doc-archive decision.
+
+## Landmines (2026-07-14)
+
+- Playwright bridge for this container: browsers rev 1194 at
+  /opt/pw-browsers, toolchain wants 1208/firefox-1509. NEVER `playwright
+  install`. Symlink-bridge chromium-1208/chrome-linux AND
+  chromium_headless_shell-1208/chrome-headless-shell-linux64/chrome-headless-shell
+  AND ffmpeg-1011 (missing ffmpeg crashes retries with a misleading
+  "just installed" banner) under a scratchpad PLAYWRIGHT_BROWSERS_PATH; run
+  `--project=chromium` only.
+- `importScenesWithReport` requires the `{scenes:[...]}` envelope; a bare
+  array throws (parse-error path), it does not report zero scenes.
 
 ## Open questions
 
-- Is pwa-offline's blank-shell flake env-only (rev-1194 bridge) or real?
-- Should PR #30's Phase-1 deferrals be recorded as a spec amendment in
-  ui-redesign-phase-build-specs.md?
+- Auto-reset edge: a cross-tab scene deletion while SceneManager is
+  keepalive-hidden now flips the user to the Scene surface (seam couples
+  selection to surface). Rare; revisit in Phase 2's SurfaceStage.
+- GAPS §1: fold genuine srd-coverage numbers into the headline metric?

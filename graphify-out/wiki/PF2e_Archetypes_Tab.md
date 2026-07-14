@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **usePwaInstallPrompt.ts** (8 connections) — `src/hooks/usePwaInstallPrompt.ts`
+- **usePwaInstallPrompt.ts** (9 connections) — `src/hooks/usePwaInstallPrompt.ts`
 - **usePwaInstallPrompt()** (6 connections) — `src/hooks/usePwaInstallPrompt.ts`
 - **isStandaloneMode()** (2 connections) — `src/hooks/usePwaInstallPrompt.ts`
 - **readDismissedState()** (2 connections) — `src/hooks/usePwaInstallPrompt.ts`
@@ -24,7 +24,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 22 (100%)
+- EXTRACTED: 23 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

@@ -6,8 +6,8 @@
 
 - **items.ts** (28 connections) — `src/types/equipment/items.ts`
 - **Item** (24 connections) — `src/types/equipment/items.ts`
-- **MamEquipmentBrowserTab.tsx** (13 connections) — `src/systems/mam3e/components/MamEquipmentBrowserTab.tsx`
-- **EquippedArmorSection.tsx** (12 connections) — `src/components/EquippedArmorSection.tsx`
+- **MamEquipmentBrowserTab.tsx** (14 connections) — `src/systems/mam3e/components/MamEquipmentBrowserTab.tsx`
+- **EquippedArmorSection.tsx** (13 connections) — `src/components/EquippedArmorSection.tsx`
 - **DiceRoll** (12 connections) — `src/types/core/common.ts`
 - **DamageType** (10 connections) — `src/types/core/common.ts`
 - **EquippedArmorSection.test.tsx** (8 connections) — `src/__tests__/components/EquippedArmorSection.test.tsx`
@@ -60,7 +60,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 173 (100%)
+- EXTRACTED: 175 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

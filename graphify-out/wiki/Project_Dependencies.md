@@ -5,17 +5,17 @@
 ## Key Concepts
 
 - **dependencies** (12 connections) — `package.json`
-- **ai** (1 connections) — `package.json`
-- **@ai-sdk/google** (1 connections) — `package.json`
-- **class-variance-authority** (1 connections) — `package.json`
-- **clsx** (1 connections) — `package.json`
-- **lucide-react** (1 connections) — `package.json`
-- **react** (1 connections) — `package.json`
-- **react-dom** (1 connections) — `package.json`
-- **@sentry/browser** (1 connections) — `package.json`
-- **@supabase/supabase-js** (1 connections) — `package.json`
-- **tailwind-merge** (1 connections) — `package.json`
-- **zod** (1 connections) — `package.json`
+- **ai** (2 connections) — `package.json`
+- **@ai-sdk/google** (2 connections) — `package.json`
+- **class-variance-authority** (2 connections) — `package.json`
+- **clsx** (2 connections) — `package.json`
+- **lucide-react** (2 connections) — `package.json`
+- **react** (2 connections) — `package.json`
+- **react-dom** (2 connections) — `package.json`
+- **@sentry/browser** (2 connections) — `package.json`
+- **@supabase/supabase-js** (2 connections) — `package.json`
+- **tailwind-merge** (2 connections) — `package.json`
+- **zod** (2 connections) — `package.json`
 
 ## Relationships
 
@@ -27,7 +27,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 23 (100%)
+- EXTRACTED: 34 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 
