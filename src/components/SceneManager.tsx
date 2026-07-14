@@ -805,6 +805,9 @@ export function SceneManager({
           for the shell-selected scene, with the RIGHT operating rail docked. */}
       {!selectedScene || !state ? (
         <div className="mx-auto max-w-xl rounded-2xl border border-border bg-card p-10 text-center space-y-2">
+          {/* "No scene selected" doubles as the lazy-chunk marker in
+              scripts/check-bundle-size.mjs (Finding 17). Keep them in sync if
+              this copy changes, or that CI guard will fail loudly. */}
           <h3 className="text-2xl font-semibold tracking-tight">No scene selected</h3>
           <p className="text-sm text-muted-foreground">
             Pick a scene from the Library&apos;s Scenes tab, or create one there.

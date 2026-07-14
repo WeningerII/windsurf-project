@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { Download, Trash2 } from 'lucide-react';
 import type { CharacterDocument, SystemDataModel } from '../types/core/document';
 import type { GameSystemId } from '../types/game-systems';
 import { systemRegistry } from '../registry';
 import { Button } from './ui/Button';
+import { Input } from './ui/Input';
 import { Select } from './ui/Select';
 import { CharacterCard } from './CharacterCard';
 
@@ -25,6 +27,8 @@ interface CharacterListViewProps {
   onClearAll: () => void;
   onOpenCharacter: (id: string) => void;
   onCloneCharacter: (document: CharacterDocument<SystemDataModel>) => void;
+  onExportCharacter: (id: string) => void;
+  onDeleteCharacter: (id: string) => void;
   storageWarning: { percent: number; mb: string } | null;
 }
 
@@ -40,9 +44,20 @@ export function CharacterListView({
   onClearAll,
   onOpenCharacter,
   onCloneCharacter,
+  onExportCharacter,
+  onDeleteCharacter,
   storageWarning,
 }: CharacterListViewProps) {
+  // Name search is view-local: it narrows on top of the App-owned system
+  // filter + sort without re-running that memoized pipeline per keystroke.
+  const [searchQuery, setSearchQuery] = useState('');
+
   if (documents.length === 0) return null;
+
+  const query = searchQuery.trim().toLowerCase();
+  const visibleDocuments = query
+    ? filteredDocuments.filter((doc) => doc.name.toLowerCase().includes(query))
+    : filteredDocuments;
 
   return (
     <section className="space-y-4">
@@ -50,12 +65,21 @@ export function CharacterListView({
         <div>
           <h3 className="text-2xl font-semibold tracking-tight">Your Characters</h3>
           <p className="text-sm text-muted-foreground">
-            {filteredDocuments.length === documents.length
+            {visibleDocuments.length === documents.length
               ? `${documents.length} character${documents.length !== 1 ? 's' : ''} saved`
-              : `Showing ${filteredDocuments.length} of ${documents.length} characters`}
+              : `Showing ${visibleDocuments.length} of ${documents.length} characters`}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          <Input
+            type="search"
+            title="Search characters"
+            aria-label="Search characters"
+            placeholder="Search by name..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="h-10 w-44"
+          />
           <Select
             title="Filter by system"
             value={systemFilter}
@@ -109,16 +133,22 @@ export function CharacterListView({
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredDocuments.map((doc) => (
-          <CharacterCard
-            key={doc.id}
-            document={doc}
-            onOpen={onOpenCharacter}
-            onClone={onCloneCharacter}
-          />
-        ))}
-      </div>
+      {visibleDocuments.length === 0 ? (
+        <p className="text-sm text-muted-foreground">No characters match the current filters.</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {visibleDocuments.map((doc) => (
+            <CharacterCard
+              key={doc.id}
+              document={doc}
+              onOpen={onOpenCharacter}
+              onClone={onCloneCharacter}
+              onExport={onExportCharacter}
+              onDelete={onDeleteCharacter}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 }

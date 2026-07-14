@@ -13,6 +13,7 @@ import type { CharacterDocument, SystemDataModel } from '../types/core/document'
 import type { SyncState } from '../hooks/useSync';
 import { systemRegistry } from '../registry';
 import { Button } from './ui/Button';
+import { OverflowMenu } from './ui/OverflowMenu';
 import { Select } from './ui/Select';
 import { ThemeToggle } from './ui/ThemeToggle';
 import { UserMenu } from './UserMenu';
@@ -46,7 +47,8 @@ interface AppHeaderProps {
  * Sticky top toolbar. In list mode it carries the Library tab nav
  * (Characters / Campaigns / Scenes / Library) plus the primary New Character
  * and Import actions; in sheet mode it swaps to back/switcher and the current
- * character's clone / export / import / delete controls.
+ * character's clone / import controls, with Export and Delete in a '…'
+ * overflow menu (Finding 18 re-home).
  */
 export function AppHeader({
   currentDoc,
@@ -173,31 +175,30 @@ export function AppHeader({
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => onExport(currentDoc)}
-                  title="Export character"
-                  aria-label="Export character"
-                >
-                  <Download className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
                   onClick={onImport}
                   title="Import character"
                   aria-label="Import Character"
                 >
                   <Upload className="w-4 h-4" />
                 </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                  onClick={() => currentDocId && onDelete(currentDocId)}
-                  title="Delete character"
-                  aria-label="Delete character"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
+                <OverflowMenu
+                  label="Character actions"
+                  items={[
+                    {
+                      label: 'Export character',
+                      icon: <Download className="w-4 h-4" />,
+                      onSelect: () => onExport(currentDoc),
+                    },
+                    {
+                      label: 'Delete character',
+                      icon: <Trash2 className="w-4 h-4" />,
+                      destructive: true,
+                      onSelect: () => {
+                        if (currentDocId) onDelete(currentDocId);
+                      },
+                    },
+                  ]}
+                />
               </>
             ) : (
               <>
