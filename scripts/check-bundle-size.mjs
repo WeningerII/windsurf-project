@@ -4,7 +4,36 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { gzipSync } from 'node:zlib';
 
-const assetsDir = path.resolve(process.cwd(), 'dist/assets');
+const distDir = path.resolve(process.cwd(), 'dist');
+const assetsDir = path.join(distDir, 'assets');
+
+// The set of JS chunks the browser loads eagerly at first paint: the entry
+// module plus its static-import closure. Vite emits these into index.html as
+// the entry `<script type="module">` and one `<link rel="modulepreload">` per
+// statically-imported chunk, so index.html is the authoritative eager set —
+// far more robust than guessing from the `index-*` filename, which silently
+// misclassifies SceneManager code hoisted into vendor/icons/data chunks.
+function readEagerChunkNames() {
+  const indexHtml = path.join(distDir, 'index.html');
+  if (!fs.existsSync(indexHtml)) {
+    return null;
+  }
+  const html = fs.readFileSync(indexHtml, 'utf8');
+  const names = new Set();
+  const refPattern = /(?:src|href)="[^"]*\/assets\/([^"]+\.js)"/g;
+  let match;
+  while ((match = refPattern.exec(html)) !== null) {
+    names.add(match[1]);
+  }
+  return names;
+}
+
+// Finding 17 (ui-shell Phase 1): SceneManager must stay in its own lazy chunk,
+// never folded into the eager `index-*` app chunk. The marker is the
+// "No scene selected" empty-state copy — a string literal unique to
+// SceneManager.tsx that survives minification (the same words appear in
+// App.tsx only inside a comment, which the minifier strips).
+const SCENE_MANAGER_MARKER = 'No scene selected';
 
 const budgets = {
   // Total JS counts EVERY chunk, including per-system SRD data that only
@@ -54,11 +83,21 @@ const chunks = jsFiles.map((file) => {
     file,
     rawBytes: source.byteLength,
     gzipBytes: gzipSync(source).byteLength,
+    hasSceneManagerMarker: source.includes(SCENE_MANAGER_MARKER),
   };
 });
 
 const totalJsGzipBytes = chunks.reduce((sum, chunk) => sum + chunk.gzipBytes, 0);
 const appChunks = chunks.filter((chunk) => /^index-.*\.js$/.test(chunk.file));
+// Classify SceneManager's chunk against the real eager set (entry + static
+// imports) from index.html; fall back to the `index-*` heuristic only if the
+// HTML is missing (it never is after `npm run build`).
+const eagerChunkNames = readEagerChunkNames();
+const isEagerChunk = (file) =>
+  eagerChunkNames ? eagerChunkNames.has(file) : /^index-.*\.js$/.test(file);
+const sceneManagerChunks = chunks.filter((chunk) => chunk.hasSceneManagerMarker);
+const lazySceneManagerChunk = sceneManagerChunks.find((chunk) => !isEagerChunk(chunk.file));
+const eagerSceneManagerChunk = sceneManagerChunks.find((chunk) => isEagerChunk(chunk.file));
 const appChunk = appChunks.reduce(
   (largest, chunk) => (!largest || chunk.gzipBytes > largest.gzipBytes ? chunk : largest),
   null
@@ -77,6 +116,9 @@ for (const chunk of chunks) {
   console.log(`- ${chunk.file}: ${formatBytes(chunk.gzipBytes)}`);
 }
 console.log(`- total JS: ${formatBytes(totalJsGzipBytes)}`);
+if (lazySceneManagerChunk) {
+  console.log(`- SceneManager lazy chunk: ${lazySceneManagerChunk.file}`);
+}
 
 const violations = [];
 
@@ -99,6 +141,18 @@ if (!vendorChunk) {
 } else if (vendorChunk.gzipBytes > budgets.vendorChunkGzipBytes) {
   violations.push(
     `vendor chunk ${vendorChunk.file} is ${formatBytes(vendorChunk.gzipBytes)} (budget ${formatBytes(budgets.vendorChunkGzipBytes)})`
+  );
+}
+
+if (!lazySceneManagerChunk) {
+  violations.push(
+    `could not find a lazy SceneManager chunk — no non-index chunk contains the marker ${JSON.stringify(SCENE_MANAGER_MARKER)}`
+  );
+}
+
+if (eagerSceneManagerChunk) {
+  violations.push(
+    `eager chunk ${eagerSceneManagerChunk.file} (loaded at first paint per index.html) contains SceneManager code (marker ${JSON.stringify(SCENE_MANAGER_MARKER)}) — the scene view must stay lazy-loaded`
   );
 }
 

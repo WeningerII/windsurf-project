@@ -238,7 +238,9 @@ describe('Character Management Flow', () => {
 
       await user.click(deleteCardButton);
 
-      await user.click(screen.getByTitle('Delete character'));
+      // Delete lives in the sheet header's '…' overflow (Finding 18 re-home).
+      await user.click(screen.getByRole('button', { name: 'Character actions' }));
+      await user.click(screen.getByRole('menuitem', { name: 'Delete character' }));
 
       // The destructive header action requires confirmation and names the
       // character being deleted.
@@ -273,14 +275,52 @@ describe('Character Management Flow', () => {
 
       await user.click(keepCardButton);
 
-      await user.click(screen.getByTitle('Delete character'));
+      await user.click(screen.getByRole('button', { name: 'Character actions' }));
+      await user.click(screen.getByRole('menuitem', { name: 'Delete character' }));
       const dialog = await screen.findByRole('alertdialog');
       await user.click(within(dialog).getByRole('button', { name: /cancel/i }));
 
       expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument();
-      // Still on the open sheet with the document intact.
-      expect(screen.getByTitle('Delete character')).toBeInTheDocument();
+      // Still on the open sheet with the document intact — Delete stays
+      // reachable through the header overflow.
+      await user.click(screen.getByRole('button', { name: 'Character actions' }));
+      expect(screen.getByRole('menuitem', { name: 'Delete character' })).toBeInTheDocument();
       expect(getStoredDocuments()).toHaveLength(1);
+    },
+    FLOW_TEST_TIMEOUT_MS
+  );
+
+  it(
+    'deletes a character from its card overflow after confirmation',
+    async () => {
+      const user = userEvent.setup();
+      setStoredDocuments([
+        makeStoredDocument('card-delete-doc', 'Card Delete Me'),
+        makeStoredDocument('card-keep-doc', 'Card Keep Me'),
+      ]);
+      render(<App />);
+
+      expect(
+        await screen.findByText('Card Delete Me', {}, { timeout: FLOW_WAIT_TIMEOUT_MS })
+      ).toBeInTheDocument();
+
+      // Per-card Delete routes through the same App-level confirm flow as the
+      // header action (Finding 18 re-home).
+      await user.click(screen.getByRole('button', { name: 'More actions for Card Delete Me' }));
+      await user.click(screen.getByRole('menuitem', { name: 'Delete' }));
+
+      const dialog = await screen.findByRole('alertdialog');
+      expect(dialog).toHaveTextContent('Card Delete Me');
+      await user.click(within(dialog).getByRole('button', { name: /^delete$/i }));
+
+      await waitFor(
+        () => {
+          expect(screen.queryByText('Card Delete Me')).not.toBeInTheDocument();
+          expect(screen.getByText('Card Keep Me')).toBeInTheDocument();
+          expect(getStoredDocuments()).toHaveLength(1);
+        },
+        { timeout: FLOW_WAIT_TIMEOUT_MS }
+      );
     },
     FLOW_TEST_TIMEOUT_MS
   );
@@ -385,7 +425,9 @@ describe('Character Management Flow', () => {
       const revokeObjectURLSpy = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
 
       try {
-        await user.click(screen.getByTitle('Export character'));
+        // Export lives in the sheet header's '…' overflow (Finding 18 re-home).
+        await user.click(screen.getByRole('button', { name: 'Character actions' }));
+        await user.click(screen.getByRole('menuitem', { name: 'Export character' }));
 
         expect(clickSpy).toHaveBeenCalledTimes(1);
         expect(capturedDownload).toBe('exportable_hero_character.json');

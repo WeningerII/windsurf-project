@@ -45,6 +45,7 @@ import { LibraryScenesView } from './components/LibraryScenesView';
 import { AppHeader } from './components/AppHeader';
 import { NewCharacterDialog } from './components/NewCharacterDialog';
 import { useAppNav } from './hooks/useAppNav';
+import { useSurfaceSwitchMetrics } from './hooks/useSurfaceSwitchMetrics';
 
 const STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
 const STORAGE_WARNING_THRESHOLD = Math.floor(STORAGE_LIMIT_BYTES * 0.8);
@@ -94,8 +95,19 @@ function AppContent() {
   // Total shell-nav model (Phase 1): one discriminated union replaces the old
   // currentDocId / selectedSystem / showLegal flags. Phase 2 relocates the
   // reducer into a ShellContext without changing this call site.
-  const { nav, openSheet, closeSheet, setLibrarySegment, selectScene, openOverlay, closeOverlay } =
-    useAppNav();
+  const {
+    nav,
+    openSheet,
+    closeSheet,
+    setSurface,
+    setLibrarySegment,
+    selectScene,
+    openOverlay,
+    closeOverlay,
+  } = useAppNav();
+  // Surface-switch user timing (marks + measures): the recorded baseline the
+  // Phase-7 interaction-budget gate is calibrated against later.
+  useSurfaceSwitchMetrics(nav.surface);
   const [newCharacterDialogOpen, setNewCharacterDialogOpen] = useState(false);
   // The heavy SceneManager chunk is mounted only the first time the Scene
   // surface is opened (selecting a scene in LibraryScenesView flips there),
@@ -411,6 +423,31 @@ function AppContent() {
       description: 'Import character',
     },
     {
+      // Alt+1/2/3 mirror the header's Library / Sheet / Scene navigation.
+      key: '1',
+      alt: true,
+      callback: () => setSurface('library'),
+      description: 'Switch to Library',
+    },
+    {
+      key: '2',
+      alt: true,
+      callback: () => {
+        // A sheet surface with no open document renders nothing, so the
+        // switch only fires once a sheet has been opened.
+        if (nav.sheetDocId !== null) setSurface('sheet');
+      },
+      description: 'Switch to character sheet',
+    },
+    {
+      // Unguarded: the Scene surface mounts on first visit and shows its
+      // "No scene selected" empty state when nothing is picked yet.
+      key: '3',
+      alt: true,
+      callback: () => setSurface('scene'),
+      description: 'Switch to Scene',
+    },
+    {
       key: 'z',
       ctrl: true,
       callback: () => {
@@ -595,6 +632,11 @@ function AppContent() {
                 }
                 onOpenCharacter={openSheet}
                 onCloneCharacter={handleCloneDocument}
+                onExportCharacter={(id) => {
+                  const doc = documents.find((d) => d.id === id);
+                  if (doc) handleExportDocument(doc);
+                }}
+                onDeleteCharacter={handleDeleteDocument}
                 storageWarning={
                   isNearStorageLimit ? { percent: storageUsagePercent, mb: storageUsageMb } : null
                 }

@@ -1,7 +1,8 @@
-import { Copy } from 'lucide-react';
+import { Copy, Download, Trash2 } from 'lucide-react';
 import type { CharacterDocument, SystemDataModel } from '../types/core/document';
 import { systemRegistry } from '../registry';
 import { Button } from './ui/Button';
+import { OverflowMenu } from './ui/OverflowMenu';
 import {
   getClassLabel,
   getHitPointLabel,
@@ -13,10 +14,21 @@ interface CharacterCardProps {
   document: CharacterDocument<SystemDataModel>;
   onOpen: (id: string) => void;
   onClone: (document: CharacterDocument<SystemDataModel>) => void;
+  onExport: (id: string) => void;
+  onDelete: (id: string) => void;
 }
 
-/** A single character tile in the list view: opens the sheet, clone on hover. */
-export function CharacterCard({ document, onOpen, onClone }: CharacterCardProps) {
+/**
+ * A single character tile in the list view: opens the sheet, clone on hover,
+ * with Export/Delete in a per-card '…' overflow (Finding 18 re-home).
+ */
+export function CharacterCard({
+  document,
+  onOpen,
+  onClone,
+  onExport,
+  onDelete,
+}: CharacterCardProps) {
   const sys = systemRegistry.get(document.systemId);
   const levelLabel = getLevelLabel(document);
   const classLabel = getClassLabel(document.system);
@@ -73,6 +85,27 @@ export function CharacterCard({ document, onOpen, onClone }: CharacterCardProps)
       >
         <Copy className="w-3.5 h-3.5" />
       </Button>
+      {/* Sits in the corner the header row's pr-9 reserves; also a sibling of
+          the open button, and kept visible while expanded so the open menu
+          never fades out from under the pointer. */}
+      <OverflowMenu
+        label={`More actions for ${document.name}`}
+        className="absolute top-2 right-2"
+        triggerClassName="h-8 w-8 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 aria-expanded:opacity-100 transition-opacity"
+        items={[
+          {
+            label: 'Export',
+            icon: <Download className="w-3.5 h-3.5" />,
+            onSelect: () => onExport(document.id),
+          },
+          {
+            label: 'Delete',
+            icon: <Trash2 className="w-3.5 h-3.5" />,
+            destructive: true,
+            onSelect: () => onDelete(document.id),
+          },
+        ]}
+      />
     </div>
   );
 }
