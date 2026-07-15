@@ -161,7 +161,7 @@ export const dnd5e2024ComputeRegister: SystemComputeRegister = {
       status: 'verified',
       testRef:
         'src/__tests__/rules/characterCombatant.test.ts :: 5e Versatile: rolls the larger die when wielded two-handed (empty off-hand)',
-      note: 'Engine-wired in the shared, system-agnostic buildCharacterCombatant (the 2024 path inherits it via the same is5e branch as 2014). Populating EquippedItem.weaponDamage at equip time is a separate Denominator-A content step.',
+      note: 'Engine-wired in the shared, system-agnostic buildCharacterCombatant (the 2024 path inherits it via the same is5e branch as 2014). Populating EquippedItem.weaponDamage at equip time (a separate Denominator-A content step) shipped for 5e on 2026-07-14: toEquippedItem now converts the catalog Weapon.damage DiceRoll into the numeric {count, die} the combatant reads.',
     },
     {
       id: 'dnd5e2024.L3.two-weapon-offhand',
@@ -179,7 +179,7 @@ export const dnd5e2024ComputeRegister: SystemComputeRegister = {
       status: 'verified',
       testRef:
         'src/__tests__/rules/characterCombatant.test.ts :: grants an off-hand attack whose damage omits the ability modifier',
-      note: 'Engine-wired in the shared buildCharacterCombatant + tactical executor (the 2024 path inherits the same is5e branch). Populating EquippedItem.weaponDamage at equip time is a separate Denominator-A content step.',
+      note: 'Engine-wired in the shared buildCharacterCombatant + tactical executor (the 2024 path inherits the same is5e branch). Populating EquippedItem.weaponDamage at equip time (a separate Denominator-A content step) shipped for 5e on 2026-07-14: toEquippedItem now converts the catalog Weapon.damage DiceRoll into the numeric {count, die} the combatant reads.',
     },
     {
       id: 'dnd5e2024.L6.jump-distances',

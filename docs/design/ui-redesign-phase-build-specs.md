@@ -463,7 +463,25 @@ The point of this pass was to catch drift between the plan and reality before a 
 
 ## Amendment — 2026-07-14: Phase 1 as actually merged (PR #30)
 
-**Status note.** Phase 1 did NOT land as the ONE atomic PR this spec mandates. PR #30 (merged 2026-07-09) landed a subset; everything below is verified against main `b0f0371` (2026-07-14). The Phase-1 sections above are preserved unedited as the plan of record for the remaining work — read them THROUGH this amendment. Task numbers below are the Phase-1 task numbers (1-14) above. Any gate elsewhere in this doc phrased as "confirm Phase 1 merged" (Phase 2's prerequisite-gap bullet, Phase 4 task 1, the per-phase prerequisite gates) must now be evaluated against the itemized list here, not against the merge of PR #30 — a bare "is P1 merged?" check would falsely pass.
+> **UPDATE — 2026-07-15: PHASE 1 IS COMPLETE. Everything in the "Deferred" and
+> "Recommended next increment" sections below has since shipped and merged to
+> main; read them as resolved history, not open work.** The deferrals landed in
+> two PRs: **#32** (2026-07-14) — task 3 scene-selection lift (`SceneManager`
+> takes controlled `selectedSceneId`/`onSelectScene`; `useAppNav.selectScene`
+> consumed), task 5 `LibraryScenesView` + the 18rem left-rail relocation, the
+> task-12 suite rewrites (`capabilityScenarios.test.tsx` needed no change — it is
+> engine-level), and the plan-compliant keepalive (`visibility:hidden` +
+> off-screen, replacing the forbidden `<div hidden>`); and **#33** (2026-07-14) —
+> tasks 7–8 Export/Delete re-home + per-card roster controls + roster search,
+> task 9 Alt+1/2/3, task 11 `performance.mark`/`measure` instrumentation + the
+> `sceneManagerChunk` bundle guard (eager-vs-lazy classified from `dist/index.html`),
+> and task 14's eight `e2e/phase1-*.spec.ts` acceptance gates. The keepalive
+> deviation in the "Deviation" section is FIXED, and all three Phase-2
+> prerequisites in the "Phase-2 prerequisite gate" section are now MET, so
+> **Phase 2 is unblocked**. The point-in-time detail below is preserved as the
+> record of what PR #30 left undone.
+
+**Status note (as of 2026-07-14, superseded by the update above).** Phase 1 did NOT land as the ONE atomic PR this spec mandates. PR #30 (merged 2026-07-09) landed a subset; everything below is verified against main `b0f0371` (2026-07-14). The Phase-1 sections above are preserved unedited as the plan of record for the remaining work — read them THROUGH this amendment. Task numbers below are the Phase-1 task numbers (1-14) above. Any gate elsewhere in this doc phrased as "confirm Phase 1 merged" (Phase 2's prerequisite-gap bullet, Phase 4 task 1, the per-phase prerequisite gates) must now be evaluated against the itemized list here, not against the merge of PR #30 — a bare "is P1 merged?" check would falsely pass.
 
 ### Landed in PR #30
 
