@@ -253,7 +253,7 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       status: 'verified',
       testRef:
         'src/__tests__/rules/characterCombatant.test.ts :: 5e Versatile: rolls the larger die when wielded two-handed (empty off-hand)',
-      note: 'Engine-wired (Denominator B): buildCharacterCombatant consumes the equipped main-hand weapon’s dice via dnd5eVersatileDamageDie. Populating EquippedItem.weaponDamage from a weapon catalog at equip time is a separate Denominator-A content step.',
+      note: 'Engine-wired (Denominator B): buildCharacterCombatant consumes the equipped main-hand weapon’s dice via dnd5eVersatileDamageDie. Populating EquippedItem.weaponDamage at equip time (a separate Denominator-A content step) shipped for 5e on 2026-07-14: toEquippedItem now converts the catalog Weapon.damage DiceRoll into the numeric {count, die} the combatant reads.',
     },
     {
       id: 'dnd5e2014.L3.two-weapon-offhand',
@@ -271,7 +271,7 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       status: 'verified',
       testRef:
         'src/__tests__/rules/characterCombatant.test.ts :: grants an off-hand attack whose damage omits the ability modifier',
-      note: 'Engine-wired: buildCharacterCombatant builds the off-hand attack profile via dnd5eOffHandDamageMod and threads it to the tactical executor, which resolves it once after the Attack-action attacks. Populating EquippedItem.weaponDamage at equip time is a separate Denominator-A content step.',
+      note: 'Engine-wired: buildCharacterCombatant builds the off-hand attack profile via dnd5eOffHandDamageMod and threads it to the tactical executor, which resolves it once after the Attack-action attacks. Populating EquippedItem.weaponDamage at equip time (a separate Denominator-A content step) shipped for 5e on 2026-07-14: toEquippedItem now converts the catalog Weapon.damage DiceRoll into the numeric {count, die} the combatant reads.',
     },
 
     // ── L4 skills & derived checks ──
