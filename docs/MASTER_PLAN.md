@@ -182,11 +182,25 @@ The following older backlog claims are no longer true and must not re-enter the 
 >   (`src/rules/resolver/resolve.ts`), and the contribution-ledger view
 >   (`src/rules/ir/ledgerView.ts`) all exist with cross-system worked-encoding
 >   and determinism tests.
-> - **Phase 1 — PARTIAL.** Instead of per-system `effectCompiler` files there is
->   one shared systemId-parameterized compile layer (`src/rules/compile/`), and
->   5 of 7 sheet engines route AC through the resolver in engine code — the
->   Daggerheart and M&M 3e engines are untouched, so all-seven equip parity
->   holds only in tests, not in every engine.
+> - **Phase 1 — DONE for the additive-shaped systems; the remaining two are an
+>   accepted architectural boundary (reviewed 2026-07-15).** A shared
+>   systemId-parameterized compile layer (`src/rules/compile/`) feeds one
+>   additive resolver (`resolveCharacterEffects` — additive by design: it turns
+>   equipped items + feat/feature modifiers into per-target *sums*). All 5 d20/
+>   PF2e engines route AC (and d20 attack) through it in engine code, so the
+>   "equip resolution identical across systems" proof point holds for every
+>   system whose equipment contributes additive typed bonuses. The Daggerheart
+>   and M&M 3e engines are **intentionally not routed**: their derived defenses
+>   are not additive-bonus-shaped. Daggerheart's `getDaggerheartDerivedStats`
+>   uses conditional base *overrides* (`unarmored-defense-by-tier`, max-combined
+>   across cards), attribute-*derived* terms (`evasion-half-trait` = ⌊trait/2⌋),
+>   and proficiency/tier terms the additive resolver cannot express; M&M defenses
+>   (ability + purchased rank + power contributions) *could* route but only by
+>   synthesizing modifier sources from powers and widening the shared compiler's
+>   target vocabulary — real regression risk on a working, well-tested engine for
+>   no user-visible change. Forcing either buys marginal, partial unification at
+>   real cost, so both stay on their bespoke (test-pinned) derivation. Equip
+>   parity for the additive systems is covered by `equipParity.test.ts`.
 > - **Phase 2 — PARTIAL.** IR condition catalogs cover all systems via the scene
 >   dispatcher, but only the 5e engines replaced imperative rollCheck condition
 >   math with resolver folds.

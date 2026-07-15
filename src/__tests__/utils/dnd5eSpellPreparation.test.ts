@@ -4,6 +4,7 @@ import { dnd5eClasses } from '../../data/dnd/5e-2014/classes';
 import { paladin } from '../../data/dnd/5e-2014/classes/paladin';
 import { wizard } from '../../data/dnd/5e-2014/classes/wizard';
 import { bard } from '../../data/dnd/5e-2014/classes/bard';
+import { fighter } from '../../data/dnd/5e-2014/classes/fighter';
 import { dnd5eSpellsById } from '../../data/dnd/5e-2014/spells';
 import { dnd5e2024Classes } from '../../data/dnd/5e-2024/classes';
 import { dnd5e2024SpellsById } from '../../data/dnd/5e-2024/spells';
@@ -12,6 +13,7 @@ import {
   getDnd5eAlwaysPreparedSpellIds,
   getDnd5eAlwaysPreparedSpellSources,
   getDnd5ePreparedCasterSummaries,
+  getDnd5eSpellcastingClassSummaries,
 } from '../../systems/dnd5e/shared/spellPreparation';
 
 function collectStructuredAlwaysPreparedSpellIds(classes: CharacterClass[]): string[] {
@@ -93,6 +95,82 @@ describe('dnd5e spell preparation summaries', () => {
       [{ classId: 'bard', level: 3, hitDieRolls: [6, 4, 5] }],
       [bard],
       { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 16 }
+    );
+
+    expect(summaries).toEqual([]);
+  });
+
+  it('derives save DC + attack for a single caster using the shared cited helpers', () => {
+    // Wizard 3: prof +2, INT 16 (+3) → DC 8+2+3=13, attack +2+3=+5.
+    const summaries = getDnd5eSpellcastingClassSummaries(
+      [{ classId: 'wizard', level: 3, hitDieRolls: [6, 4, 5] }],
+      [wizard],
+      { str: 10, dex: 10, con: 10, int: 16, wis: 10, cha: 10 },
+      2
+    );
+
+    expect(summaries).toEqual([
+      {
+        classId: 'wizard',
+        className: 'Wizard',
+        ability: 'int',
+        spellSaveDc: 13,
+        spellAttackBonus: 5,
+      },
+    ]);
+  });
+
+  it('covers KNOWN casters that the prepared-caster summary omits', () => {
+    // Bard has a spellcasting block but no prepared-caster formula, so it is
+    // absent from getDnd5ePreparedCasterSummaries yet still has a save DC.
+    const classLevels = [{ classId: 'bard', level: 3, hitDieRolls: [6, 4, 5] }];
+    const attrs = { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 16 };
+
+    expect(getDnd5ePreparedCasterSummaries(classLevels, [bard], attrs)).toEqual([]);
+    // Bard 3: prof +2, CHA 16 (+3) → DC 13, attack +5.
+    expect(getDnd5eSpellcastingClassSummaries(classLevels, [bard], attrs, 2)).toEqual([
+      { classId: 'bard', className: 'Bard', ability: 'cha', spellSaveDc: 13, spellAttackBonus: 5 },
+    ]);
+  });
+
+  it('uses total-level proficiency for each class in a multiclass caster', () => {
+    // Wizard 3 / Cleric 2 → total level 5 → prof +3 for BOTH.
+    const summaries = getDnd5eSpellcastingClassSummaries(
+      [
+        { classId: 'wizard', level: 3, hitDieRolls: [6, 4, 5] },
+        { classId: 'cleric', level: 2, hitDieRolls: [8, 5] },
+      ],
+      [wizard, cleric],
+      { str: 10, dex: 10, con: 12, int: 14, wis: 16, cha: 10 },
+      3
+    );
+
+    expect(summaries).toEqual([
+      // INT 14 (+2): DC 8+3+2=13, attack +5.
+      {
+        classId: 'wizard',
+        className: 'Wizard',
+        ability: 'int',
+        spellSaveDc: 13,
+        spellAttackBonus: 5,
+      },
+      // WIS 16 (+3): DC 8+3+3=14, attack +6.
+      {
+        classId: 'cleric',
+        className: 'Cleric',
+        ability: 'wis',
+        spellSaveDc: 14,
+        spellAttackBonus: 6,
+      },
+    ]);
+  });
+
+  it('returns nothing for a non-caster class', () => {
+    const summaries = getDnd5eSpellcastingClassSummaries(
+      [{ classId: 'fighter', level: 5, hitDieRolls: [10, 6, 6, 6, 6] }],
+      [fighter],
+      { str: 16, dex: 12, con: 14, int: 10, wis: 10, cha: 10 },
+      3
     );
 
     expect(summaries).toEqual([]);

@@ -10,6 +10,7 @@ import {
   getDnd5eAlwaysPreparedSpellIds,
   getDnd5eAlwaysPreparedSpellSources,
   getDnd5ePreparedCasterSummaries,
+  getDnd5eSpellcastingClassSummaries,
 } from './spellPreparation';
 import { Dnd5eLikeDataModel, featureOptionSelectionKey } from './dnd5eSheetShared';
 import { getDnd5eTemplateChoiceState } from './getDnd5eTemplateChoiceState';
@@ -123,6 +124,13 @@ export function useDnd5eSheetController<T extends Dnd5eLikeDataModel>({
     () => getDnd5ePreparedCasterSummaries(d.classLevels, classes, d.baseAttributes),
     [d.classLevels, classes, d.baseAttributes]
   );
+  // Save DC + attack per spellcasting class (all casters, not just prepared),
+  // computed via the same cited helpers the engine uses so the sheet display
+  // and prepareData never diverge.
+  const spellcastingClassSummaries = useMemo(
+    () => getDnd5eSpellcastingClassSummaries(d.classLevels, classes, d.baseAttributes, profBonus),
+    [d.classLevels, classes, d.baseAttributes, profBonus]
+  );
   const singlePreparedCaster =
     preparedCasterSummaries.length === 1 ? preparedCasterSummaries[0] : undefined;
   const singlePreparedCasterLimit = singlePreparedCaster?.preparedLimit;
@@ -220,6 +228,7 @@ export function useDnd5eSheetController<T extends Dnd5eLikeDataModel>({
     alwaysPreparedSpellSources: derivedAlwaysPreparedSpellSources,
     preparedSpellIds,
     preparedCasterSummaries,
+    spellcastingClassSummaries,
     featDefinitionsById,
     featureOptionSelections,
     selectedFeatureOptions,

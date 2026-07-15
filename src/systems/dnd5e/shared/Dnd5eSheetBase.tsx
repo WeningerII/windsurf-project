@@ -241,6 +241,7 @@ export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
           alwaysPreparedSpellSources={controller.alwaysPreparedSpellSources}
           preparedSpellIds={controller.preparedSpellIds}
           preparedCasterSummaries={controller.preparedCasterSummaries}
+          spellcastingClassSummaries={controller.spellcastingClassSummaries}
           onTogglePreparedSpell={onUpdate ? controller.handleTogglePreparedSpell : undefined}
           onSelectSpell={onUpdate ? controller.handleSpellSelect : undefined}
         />

@@ -16,6 +16,7 @@ import { DND5E_SPELLS_COPY } from '../../../../utils/documentationCopy';
 import type {
   Dnd5eAlwaysPreparedSpellSource,
   Dnd5ePreparedCasterSummary,
+  Dnd5eSpellcastingClassSummary,
 } from '../spellPreparation';
 
 type SpellBrowserProps = {
@@ -43,6 +44,7 @@ interface Props {
   alwaysPreparedSpellSources?: Dnd5eAlwaysPreparedSpellSource[];
   preparedSpellIds: Set<string>;
   preparedCasterSummaries: Dnd5ePreparedCasterSummary[];
+  spellcastingClassSummaries?: Dnd5eSpellcastingClassSummary[];
   onTogglePreparedSpell?: (spellId: string) => void;
   onSelectSpell?: (spell: Spell) => void;
 }
@@ -60,6 +62,7 @@ export const Dnd5eSpellsTab = (({
   alwaysPreparedSpellSources = [],
   preparedSpellIds,
   preparedCasterSummaries,
+  spellcastingClassSummaries = [],
   onTogglePreparedSpell,
   onSelectSpell,
 }: Props) => {
@@ -108,6 +111,31 @@ export const Dnd5eSpellsTab = (({
                 )}
               </div>
             </div>
+            {spellcastingClassSummaries.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {spellcastingClassSummaries.map((caster) => (
+                  <div
+                    key={caster.classId}
+                    className="rounded-md border bg-muted/30 px-3 py-1.5 text-sm"
+                  >
+                    <span className="font-medium">{caster.className}</span>{' '}
+                    <span className="text-muted-foreground">({caster.ability.toUpperCase()})</span>
+                    <span className="mx-2 text-muted-foreground">·</span>
+                    <span aria-label={`${caster.className} spell save DC`}>
+                      Save DC <span className="font-semibold">{caster.spellSaveDc}</span>
+                    </span>
+                    <span className="mx-2 text-muted-foreground">·</span>
+                    <span aria-label={`${caster.className} spell attack bonus`}>
+                      Attack{' '}
+                      <span className="font-semibold">
+                        {caster.spellAttackBonus >= 0 ? '+' : ''}
+                        {caster.spellAttackBonus}
+                      </span>
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
             {!hasPreparedCasters && (
               <p className="text-sm text-muted-foreground">{DND5E_SPELLS_COPY.knownSpellCasting}</p>
             )}

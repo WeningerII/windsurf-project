@@ -5,6 +5,7 @@ import type {
 } from '../../../types/character-options/classes';
 import type { ClassLevel } from '../../../types/core/character';
 import { abilityMod } from '../../../utils/math';
+import { dnd5eSpellAttackBonus, dnd5eSpellSaveDC } from '../../../utils/derivedCasterMath';
 
 const ABILITY_TOKEN_MAP: Record<string, string> = {
   str: 'str',
@@ -27,6 +28,51 @@ export interface Dnd5ePreparedCasterSummary {
   level: number;
   ability: string;
   preparedLimit: number;
+}
+
+/**
+ * Spell save DC + attack bonus per spellcasting class, for display on the
+ * sheet. Unlike {@link Dnd5ePreparedCasterSummary} this covers EVERY caster
+ * (prepared and known), since save DC/attack apply to all of them.
+ */
+export interface Dnd5eSpellcastingClassSummary {
+  classId: string;
+  className: string;
+  ability: string;
+  spellSaveDc: number;
+  spellAttackBonus: number;
+}
+
+/**
+ * Derive each spellcasting class's save DC and attack bonus using the SAME
+ * cited helpers the engine's prepareData uses (`dnd5eSpellSaveDC` /
+ * `dnd5eSpellAttackBonus`), so the sheet display and the engine share one
+ * formula source. Proficiency is the character's total-level bonus (5e RAW:
+ * a multiclass caster's DC uses total level), passed in by the caller.
+ */
+export function getDnd5eSpellcastingClassSummaries(
+  classLevels: ClassLevel[],
+  classes: CharacterClass[],
+  baseAttributes: Record<string, number>,
+  proficiencyBonus: number
+): Dnd5eSpellcastingClassSummary[] {
+  return classLevels.flatMap((classLevel) => {
+    const classData = classes.find((entry) => entry.id === classLevel.classId);
+    if (!classData?.spellcasting) {
+      return [];
+    }
+    const ability = classData.spellcasting.ability;
+    const spellMod = abilityMod(baseAttributes[ability] ?? 10);
+    return [
+      {
+        classId: classData.id,
+        className: classData.name,
+        ability,
+        spellSaveDc: dnd5eSpellSaveDC(proficiencyBonus, spellMod),
+        spellAttackBonus: dnd5eSpellAttackBonus(proficiencyBonus, spellMod),
+      },
+    ];
+  });
 }
 
 export interface Dnd5eAlwaysPreparedSpellSource {

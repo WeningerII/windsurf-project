@@ -101,12 +101,15 @@ below; the remainder is the honest residual.
     Attack, 5e Versatile weapon dice and two-weapon off-hand attacks, 3.5e/PF1e
     iteratives + crit confirmation, Daggerheart critical/Spellcast damage, and
     M&M attack/Affliction/Damage DCs — all assemble through the seeded dice
-    substrate + resolver/combatant. Separate follow-on (Denominator-A content):
-    populating `EquippedItem.weaponDamage` from a weapon catalog at equip time.
-    The consumer is written (`src/rules/combatants/characterCombatant.ts` reads
-    it for main-hand dice and off-hand attacks) but `toEquippedItem` never
-    populates it, so Versatile/two-weapon fire only for engine-built inputs,
-    not real saved characters — an S-sized fix.
+    substrate + resolver/combatant. Follow-on (Denominator-A content) **DONE
+    for 5e (2026-07-14):** the 5e `toEquippedItem` now converts the catalog
+    `Weapon.damage` DiceRoll into the numeric `{count, die}` shape the combatant
+    reads, so equipping a weapon gives a real saved character its weapon dice in
+    scene combat (previously only engine-built inputs carried it). Base
+    one-handed damage; versatile two-handed mode isn't representable in the
+    single `weaponDamage` field and stays a follow-up, as does the equivalent
+    populate for the d20-legacy/PF2e equip flows (their weapon data shapes
+    differ from the 5e DiceRoll catalog).
   - L5: **Partial.** Prepared-spell limits are wired — the 5e spells tab shows
     each prepared caster's RAW limit (`getDnd5ePreparedCasterSummaries` through
     the sheet controller). Still absent: known-spell-count enforcement (the
@@ -140,9 +143,12 @@ below; the remainder is the honest residual.
     doubling.
 - **Helper-vs-engine wiring is mixed** (the earlier blanket "tested helpers,
   not engine-wired" claim went half stale as wiring landed). Verified states:
-  - **Now wired:** 5e spell save DC + spell attack bonus, computed per casting
-    class in `Dnd5eEngineBase.prepareData` (`src/systems/dnd5e/shared/engine.ts`)
-    but not yet displayed by any sheet — an S-sized display gap. Monk/Barbarian
+  - **Now wired:** 5e spell save DC + spell attack bonus — computed per casting
+    class in `Dnd5eEngineBase.prepareData` and, as of 2026-07-14, **displayed**
+    on the 5e spells tab: the sheet controller derives them for every casting
+    class (prepared and known) via `getDnd5eSpellcastingClassSummaries`, using
+    the same cited `dnd5eSpellSaveDC`/`dnd5eSpellAttackBonus` helpers the engine
+    uses, so display and engine share one formula source. Monk/Barbarian
     Unarmored Defense, applied in the same engine's `computeBaseArmorClass`.
     3.5e/PF1e iterative attacks, displayed by the d20-legacy sheet and applied
     per attack via the tactical executor's iterative penalty steps — though
