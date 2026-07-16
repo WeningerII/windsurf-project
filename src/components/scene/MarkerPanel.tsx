@@ -1,9 +1,20 @@
-import { Mountain, Plus, Shield, Trash2 } from 'lucide-react';
-import type { SceneMarker, SceneMarkerKind } from '../../types/core/scene';
+import { Footprints, Mountain, Plus, Shield, Trash2 } from 'lucide-react';
+import type { SceneMarker, SceneMarkerKind, SceneTerrainEffect } from '../../types/core/scene';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { Select } from '../ui/Select';
-import { MARKER_EFFECT_OPTIONS, type MarkerEffectPreset } from './markerEffects';
+import { MARKER_EFFECT_OPTIONS, markerEffectHelp, type MarkerEffectPreset } from './markerEffects';
+
+/** Badge glyph for a marker's terrain: shield=cover, footprints=movement, else high ground. */
+function terrainBadgeIcon(effects: SceneTerrainEffect[]) {
+  if (effects.some((effect) => effect.target === 'ac')) {
+    return <Shield className="h-3 w-3" />;
+  }
+  if (effects.some((effect) => effect.target === 'movement')) {
+    return <Footprints className="h-3 w-3" />;
+  }
+  return <Mountain className="h-3 w-3" />;
+}
 
 interface MarkerPanelProps {
   markerLabel: string;
@@ -86,13 +97,7 @@ export function MarkerPanel({
             ))}
           </Select>
           {markerEffect !== 'none' && (
-            <p className="text-xs text-muted-foreground">
-              {markerEffect.startsWith('cover')
-                ? 'Cover raises the defense of a token standing on this cell.'
-                : 'High ground raises the to-hit of a token attacking from this cell.'}{' '}
-              Applies when resolving attacks in scene combat — every system, manual attacks and
-              autonomous Run Round alike.
-            </p>
+            <p className="text-xs text-muted-foreground">{markerEffectHelp(markerEffect)}</p>
           )}
         </div>
         <Button
@@ -122,11 +127,7 @@ export function MarkerPanel({
                       title={`Functional terrain: ${marker.effects.map((effect) => effect.label).join(', ')}`}
                       aria-label={`Functional terrain: ${marker.effects.map((effect) => effect.label).join(', ')}`}
                     >
-                      {marker.effects.some((effect) => effect.target === 'ac') ? (
-                        <Shield className="h-3 w-3" />
-                      ) : (
-                        <Mountain className="h-3 w-3" />
-                      )}
+                      {terrainBadgeIcon(marker.effects)}
                       {marker.effects.map((effect) => effect.label).join(', ')}
                     </span>
                   )}

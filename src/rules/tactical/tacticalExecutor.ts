@@ -116,6 +116,15 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
     };
   }
 
+  // Difficult terrain (RFC 003 Phase 4): the movement cost to ENTER a cell —
+  // base 1, raised by any `target:'movement'` terrain effect there. Reuses the
+  // same terrainAt lookup as attack terrain; absent callback → a flat 1, so
+  // scenes without difficult terrain move exactly as before.
+  const movementCostAt = (pos: SceneCoordinate): number =>
+    input.terrainAt
+      ? Math.max(1, 1 + (resolveEffects(input.terrainAt(pos), {}).byTarget.movement?.total ?? 0))
+      : 1;
+
   let firstReachable = scored.find((target) => target.inReach);
   let move;
   let actor = input.actor;
@@ -132,10 +141,17 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
     let { x, y } = from;
     let stepsLeft = speed;
     while (stepsLeft > 0 && Math.max(Math.abs(goal.x - x), Math.abs(goal.y - y)) > reach) {
-      x += Math.sign(goal.x - x);
-      y += Math.sign(goal.y - y);
-      stepsLeft -= 1;
+      const nx = x + Math.sign(goal.x - x);
+      const ny = y + Math.sign(goal.y - y);
+      // Entering the next cell costs its movement cost; RAW you cannot step into
+      // difficult terrain without the full movement to do so, so stop if unpaid.
+      const cost = movementCostAt({ x: nx, y: ny });
+      if (cost > stepsLeft) break;
+      x = nx;
+      y = ny;
+      stepsLeft -= cost;
     }
+    const cellsMoved = Math.max(Math.abs(x - from.x), Math.abs(y - from.y));
     if (x !== from.x || y !== from.y) {
       move = {
         to: { x, y },
@@ -153,7 +169,7 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
           chosenTargetId: nearest.tokenId,
           move,
           attacks: [],
-          rationale: `Moved ${speed} cells toward ${nearest.tokenId} (still ${Math.max(
+          rationale: `Moved ${cellsMoved} cells toward ${nearest.tokenId} (still ${Math.max(
             Math.abs(goal.x - x),
             Math.abs(goal.y - y)
           )} cells away).`,

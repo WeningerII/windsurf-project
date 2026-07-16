@@ -6,11 +6,11 @@
 
 **Last updated:** 2026-07-16 — everything from the 2026-07-14/15 session is
 MERGED to main. SIX PRs landed: #32, #33, #34, #35, #36. **PR #38 is OPEN
-(not yet merged)** and now carries THREE terrain Phase-4 slices: (a) marker-effects
-authoring UI, (b) cross-system fold (M&M + Daggerheart manual branches, not just
-d20/5e/PF), (c) autonomous-round attack terrain (Run Round applies cover/high
-ground too). Terrain now resolves in EVERY attack path; only movement-cost /
-difficult terrain remains. Branch `claude/next-priorities-98pzof` carries #38.
+(not yet merged)** and carries FOUR terrain slices that COMPLETE IR Phase 4
+(scene-runtime scope): (a) marker-effects authoring UI, (b) cross-system fold
+(M&M + Daggerheart manual branches), (c) autonomous-round attack terrain (Run
+Round applies cover/high ground), (d) difficult terrain (`target:'movement'`)
+slows autonomous move-to-engage. Branch `claude/next-priorities-98pzof` carries #38.
 
 ## What shipped (all on main)
 
@@ -64,10 +64,20 @@ difficult terrain remains. Branch `claude/next-priorities-98pzof` carries #38.
    target *scoring* left untouched (AI-under-cover is a separate concern). Optional
    callback → additive; existing roundDriver tests unchanged. +1 test (covered
    target flips hit→miss on Run Round). Copy/doc/MASTER_PLAN caveats flipped.
-4. **Movement-cost / difficult terrain** — the ONLY remaining terrain item:
-   terrain does not yet slow how far a token moves. `executeTacticalTurn`'s move
-   step (the `while (stepsLeft > 0 ...)` loop) uses a flat per-cell cost of 1 and
-   ignores per-cell terrain cost. NEXT.
+4. ~~**Movement-cost / difficult terrain**~~ — DONE, in **PR #38**. New
+   `difficult` preset emits `{target:'movement', operation:'add', value:1}`;
+   `executeTacticalTurn`'s move loop charges `movementCostAt(cell)` (base 1 +
+   movement effects, reusing the same `terrainAt` callback) per entered cell and
+   stops when the next cell is unaffordable. Autonomous-only (manual dragging is
+   GM-adjudicated). +2 tests (executor halves the closing move; difficult-terrain
+   authoring). **IR Phase 4 is now COMPLETE for the scene-runtime scope.**
+
+**IR ladder status:** Phase 0 ✅, Phase 1 ✅ (M&M/DH accepted boundary), Phase 2
+🟡 (only 5e engines fold conditions), Phase 3 🟡 (only 5e ledger re-backed),
+Phase 4 ✅, Phase 5 🟡 (validators for 2/7, no legal-actions seam). Next natural
+IR work: Phase 2 (conditions-as-IR for the other 6 systems' engines) or Phase 5
+(validators). Broader roadmap: see docs/generated/master-gap-ledger.md.
+
 5. **Owner items still open:** GAPS §5 (5e-2024 exhaustion −2/level review);
    README two-denominator citation; REMEDIATION Phase 6 (archive superseded
    plan docs) + Phase 7 (toolchain: ESLint 9 → React 19 → Tailwind 4 → Vite 8).

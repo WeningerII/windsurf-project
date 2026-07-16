@@ -378,6 +378,34 @@ describe('SceneManager', () => {
     expect(screen.getByText('+5 cover')).toBeInTheDocument();
   });
 
+  it('authors difficult terrain onto the placed marker (target:movement, surfaced as a badge)', async () => {
+    const user = userEvent.setup();
+    const onAppendSceneEventSpy = vi.fn();
+    render(
+      <SceneHarness initialScenes={[makeScene()]} onAppendSceneEventSpy={onAppendSceneEventSpy} />
+    );
+
+    await user.type(screen.getByRole('textbox', { name: /marker label/i }), 'Bog');
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: /functional terrain/i }),
+      'difficult'
+    );
+    await user.click(screen.getByRole('button', { name: /place marker/i }));
+    await user.click(screen.getByRole('gridcell', { name: /Cell 1, 1/i }));
+
+    // The movement-cost tuple the tactical executor reads for difficult terrain.
+    const added = onAppendSceneEventSpy.mock.calls
+      .map(([, event]) => event as SceneEvent)
+      .find(
+        (event): event is Extract<SceneEvent, { type: 'marker.added' }> =>
+          event.type === 'marker.added'
+      );
+    expect(added?.payload.marker.effects).toEqual([
+      { target: 'movement', operation: 'add', value: 1, label: 'difficult terrain' },
+    ]);
+    expect(screen.getByText('difficult terrain')).toBeInTheDocument();
+  });
+
   it('places a marker without terrain by default, carrying no effects (additive parity)', async () => {
     const user = userEvent.setup();
     const onAppendSceneEventSpy = vi.fn();

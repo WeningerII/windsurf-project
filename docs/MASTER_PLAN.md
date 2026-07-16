@@ -206,18 +206,20 @@ The following older backlog claims are no longer true and must not re-enter the 
 >   math with resolver folds.
 > - **Phase 3 — PARTIAL.** Only the 5e ledger is re-backed onto the resolver;
 >   the Daggerheart and M&M ledger builders still hand-build entries.
-> - **Phase 4 — PARTIAL (advancing).** Seeded scene resolution shipped, and
->   functional terrain is now authorable and resolves across every system: the
->   marker-creation flow offers cover / high-ground presets (2026-07-16), and
->   both the manual path (`resolveSceneAttack`, every system branch — d20/5e/PF2e,
->   M&M, and Daggerheart) and the autonomous round (`runSceneRound` via the
->   tactical executor, looked up by live position) fold a cell's terrain effects:
->   terrain at the attacker's cell joins the attack effects (e.g. high ground),
->   terrain at the target's cell that raises the defense value models cover
->   (+AC / +Dodge / +Parry / +Evasion), with the effective defense reported in the
->   manual combat log. Additive (a cell with no terrain resolves identically).
->   Remaining: movement-cost / difficult terrain (terrain does not yet slow how
->   far a token moves in `runSceneRound`).
+> - **Phase 4 — DONE (scene-runtime scope).** Seeded scene resolution shipped, and
+>   functional terrain is authorable and mechanically live across every system: the
+>   marker-creation flow offers cover / high-ground / difficult-terrain presets
+>   (2026-07-16). Cover + high ground fold into both the manual path
+>   (`resolveSceneAttack`, every system branch — d20/5e/PF2e, M&M, Daggerheart) and
+>   the autonomous round (`runSceneRound` via the tactical executor), looked up by
+>   live position: attacker-cell terrain joins the attack effects (high ground),
+>   target-cell cover raises the effective defense (+AC / +Dodge / +Parry /
+>   +Evasion), reported in the manual combat log. Difficult terrain
+>   (`target:'movement'`) raises the cost to ENTER a cell, so the autonomous
+>   move-to-engage crosses fewer cells of rough ground per turn (manual dragging
+>   stays GM-adjudicated). Additive (a cell with no terrain resolves and moves
+>   identically). Deeper terrain — line-of-sight, elevation, hazards that tick each
+>   round — is future RFC-006 scene-runtime work, not this phase.
 > - **Phase 5 — PARTIAL.** The grounded gateway ships, but validators exist for
 >   only 2 of 7 systems and there is no resolver legal-actions seam.
 
