@@ -31,6 +31,8 @@ import { gridDistance } from '../resolver/areaTargeting';
 import { participantRng } from '../resolver/participantResolution';
 import { attackToDamageIntent } from '../resolver/sceneCombat';
 import { collectSceneConditionEffects, mam3eBruisePenalty } from '../conditions/sceneConditions';
+import { collectTerrainEffectsAt } from '../terrain/sceneTerrain';
+import { resolveEffects } from '../resolver/resolve';
 import { daggerheartHpMarked, resolveDaggerheartAttack } from '../resolver/daggerheartResolution';
 import { resolveMam3eAttack } from '../resolver/mam3eResolution';
 import { resolveAreaEffect } from '../resolver/participantResolution';
@@ -298,13 +300,25 @@ export function resolveSceneAttack(params: {
   // fire. Unknown ids contribute nothing.
   const attackerConditions = attacker.conditions ?? [];
   const targetConditions = new Set(target.conditions ?? []);
+
+  // Functional terrain (RFC 003 Phase 4): a grid cell's terrain markers
+  // contribute real effects to resolution. Terrain at the ATTACKER's cell folds
+  // into this attack's effects (e.g. high ground → an `attack` bonus); terrain
+  // at the TARGET's cell that raises the defense value models cover → +AC.
+  // Additive by construction: a cell with no functional terrain yields no
+  // effects and a 0 cover bonus, so scenes without terrain resolve identically.
+  const attackerTerrain = collectTerrainEffectsAt(state, attacker.position);
+  const targetTerrain = collectTerrainEffectsAt(state, target.position);
+  const coverBonus = resolveEffects(targetTerrain, {}).byTarget.ac?.total ?? 0;
+
   const resolution = resolveAttack({
     attackEffects: [
       ...attackerStats.attackEffects,
       ...collectSceneConditionEffects(state.systemId, attackerConditions),
+      ...attackerTerrain,
     ],
     damageEffects: attackerStats.damageEffects,
-    targetValue: targetStats.armorClass,
+    targetValue: targetStats.armorClass + coverBonus,
     critOn: attackerStats.critOn,
     degreeModel: degreeModelForScene(state),
     critModel: critModelForScene(state),
@@ -318,9 +332,11 @@ export function resolveSceneAttack(params: {
 
   const intent = attackToDamageIntent(attackerId, targetId, resolution, params.cause);
   const verb = resolution.isCriticalHit ? 'crits' : resolution.isHit ? 'hits' : 'misses';
-  const detail = resolution.isHit
-    ? ` for ${resolution.damage} (rolled ${resolution.naturalRoll}+${resolution.attackBonus} vs AC ${targetStats.armorClass})`
-    : ` (rolled ${resolution.naturalRoll}+${resolution.attackBonus} vs AC ${targetStats.armorClass})`;
+  // Report the EFFECTIVE AC (resolution.targetValue echoes the input, i.e. base
+  // AC + terrain cover), noting cover so the miss/hit reads honestly.
+  const coverNote = coverBonus > 0 ? `, +${coverBonus} cover` : '';
+  const roll = `rolled ${resolution.naturalRoll}+${resolution.attackBonus} vs AC ${resolution.targetValue}${coverNote}`;
+  const detail = resolution.isHit ? ` for ${resolution.damage} (${roll})` : ` (${roll})`;
 
   return {
     intent,
