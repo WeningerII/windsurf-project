@@ -23,8 +23,9 @@
  * the choice without ever being in the per-turn loop.
  */
 
-import type { SceneActionIntent } from '../../types/core/scene';
+import type { SceneActionIntent, SceneCoordinate } from '../../types/core/scene';
 import { resolveAttack, type AttackResolution } from '../resolver/attackResolution';
+import { resolveEffects } from '../resolver/resolve';
 import { makeEffectId, type EffectInstance } from '../ir/types';
 import { participantRng } from '../resolver/participantResolution';
 import { attackToDamageIntent } from '../resolver/sceneCombat';
@@ -45,6 +46,16 @@ export interface TacticalTurnInput {
   degreeModel?: 'd20' | 'pf2e';
   /** Critical-damage model for every attack this turn (default 'double-dice'). */
   critModel?: 'double-dice' | 'confirm-multiply';
+  /**
+   * Functional terrain (RFC 003 Phase 4): the effects at a grid cell, looked up
+   * by CURRENT position so a combatant that moved this turn is judged from where
+   * it ends up. Attacker-cell effects join the attack (high ground → +to-hit);
+   * the target-cell cover bonus raises the AC the attack must beat — the same
+   * fold `resolveSceneAttack` applies on the manual path. Omitted → no terrain
+   * (a byte-identical round). Kept as a callback so this layer stays free of
+   * scene plumbing; it only affects resolution here, not target scoring.
+   */
+  terrainAt?: (pos: SceneCoordinate) => readonly EffectInstance[];
 }
 
 export type TacticalDecisionKind = 'attack' | 'move-to-engage' | 'no-target';
@@ -161,6 +172,16 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
   }
 
   const targetsById = new Map(input.targets.map((candidate) => [candidate.tokenId, candidate]));
+
+  // Terrain at the actor's FINAL cell (after any move this turn) folds into
+  // every attack; each target's cover is read from ITS cell at resolve time.
+  // The resolver buckets by target, so attacker-cell cover adds no bogus to-hit
+  // and a target on high ground gains no bogus cover. Empty/absent → no change.
+  const attackerTerrain = input.terrainAt ? input.terrainAt(actor.position) : [];
+  const coverBonusAt = (candidate: TacticalTarget): number =>
+    input.terrainAt
+      ? (resolveEffects(input.terrainAt(candidate.position), {}).byTarget.ac?.total ?? 0)
+      : 0;
   // Working HP for this turn only, so a Multiattack sequence re-targets after
   // a kill. Targets without HP are treated as standing (cannot drop).
   const workingHp = new Map<string, number>();
@@ -200,25 +221,27 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
     // a cumulative -step (3.5e/PF1e: -5/-10/-15). Zero/undefined keeps the 5e
     // Multiattack model (full bonus on every attack).
     const iterativePenalty = (actor.iterativePenaltyStep ?? 0) * attackIndex;
-    const attackEffects: readonly EffectInstance[] = iterativePenalty
-      ? [
-          ...actor.attackEffects,
-          {
-            id: makeEffectId('tactical', 'iterative', actor.tokenId, attackIndex),
-            systemId: actor.attackEffects[0]?.systemId ?? 'pf1e',
-            target: 'attack',
-            operation: 'subtract',
-            value: iterativePenalty,
-            stackPolicy: 'sum',
-            source: { kind: 'system', label: 'iterative attack' },
-            label: `Iterative attack ${attackIndex + 1} (-${iterativePenalty})`,
-          },
-        ]
-      : actor.attackEffects;
+    const iterativeEffect: EffectInstance | null = iterativePenalty
+      ? {
+          id: makeEffectId('tactical', 'iterative', actor.tokenId, attackIndex),
+          systemId: actor.attackEffects[0]?.systemId ?? 'pf1e',
+          target: 'attack',
+          operation: 'subtract',
+          value: iterativePenalty,
+          stackPolicy: 'sum',
+          source: { kind: 'system', label: 'iterative attack' },
+          label: `Iterative attack ${attackIndex + 1} (-${iterativePenalty})`,
+        }
+      : null;
+    const attackEffects: readonly EffectInstance[] = [
+      ...actor.attackEffects,
+      ...attackerTerrain,
+      ...(iterativeEffect ? [iterativeEffect] : []),
+    ];
     const resolution = resolveAttack({
       attackEffects,
       damageEffects: actor.damageEffects,
-      targetValue: target.armorClass,
+      targetValue: target.armorClass + coverBonusAt(target),
       critOn: actor.critOn,
       degreeModel: input.degreeModel,
       critModel: input.critModel,
@@ -249,9 +272,9 @@ export function executeTacticalTurn(input: TacticalTurnInput): TacticalTurnResul
     if (currentTargetId != null) {
       const target = targetsById.get(currentTargetId)!;
       const resolution = resolveAttack({
-        attackEffects: actor.offHandAttack.attackEffects,
+        attackEffects: [...actor.offHandAttack.attackEffects, ...attackerTerrain],
         damageEffects: actor.offHandAttack.damageEffects,
-        targetValue: target.armorClass,
+        targetValue: target.armorClass + coverBonusAt(target),
         critOn: actor.critOn,
         degreeModel: input.degreeModel,
         critModel: input.critModel,

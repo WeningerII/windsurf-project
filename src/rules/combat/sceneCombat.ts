@@ -220,10 +220,9 @@ export function resolveSceneAttack(params: {
   // so an attacker standing in cover gets no bogus to-hit and a target on high
   // ground gets no bogus cover. Additive by construction: a cell with no
   // functional terrain yields no effects and a 0 cover bonus, so scenes without
-  // terrain resolve identically in every system. (Autonomous rounds via
-  // `buildSceneCombatants`/`runSceneRound` do not apply terrain yet — cover is a
-  // property of the cell a token is attacked in, which the manual path knows and
-  // a static per-round combatant does not.)
+  // terrain resolve identically in every system. (Autonomous rounds apply the
+  // same fold via the tactical executor, looked up by each token's live position;
+  // only movement-cost / difficult terrain remains a follow-up.)
   const attackerTerrain = collectTerrainEffectsAt(state, attacker.position);
   const targetTerrain = collectTerrainEffectsAt(state, target.position);
   const coverBonus = resolveEffects(targetTerrain, {}).byTarget.ac?.total ?? 0;
@@ -395,6 +394,10 @@ export function runSceneRound(params: {
     round: params.round,
     degreeModel: degreeModelForScene(params.state),
     critModel: critModelForScene(params.state),
+    // Functional terrain (RFC 003 Phase 4): fold each cell's effects into
+    // autonomous attacks by LIVE position, so cover/high ground work the same
+    // whether the GM clicks Attack or Run Round. Additive when there is none.
+    terrainAt: (pos) => collectTerrainEffectsAt(params.state, pos),
   });
 
   const nameOf = (tokenId: string): string => params.state.tokens[tokenId]?.name ?? tokenId;

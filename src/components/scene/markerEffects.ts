@@ -8,8 +8,10 @@ import type { SceneTerrainEffect } from '../../types/core/scene';
  * high ground reads a `target:'attack'` bonus off the ATTACKER's cell (raising the
  * to-hit). We do not offer damage/other targets — they resolve to nothing today,
  * and a fake option would violate the project's no-fake-automation principle. Both
- * fold into every system's manual attack branch (d20/5e/PF-family, M&M, and
- * Daggerheart); the autonomous round (`runSceneRound`) does not apply terrain yet.
+ * fold into every system's attack resolution — the manual path (`resolveSceneAttack`,
+ * all system branches) and the autonomous round (`runSceneRound` via the tactical
+ * executor), looked up by live position. (Movement-cost / difficult terrain is still
+ * a follow-up: terrain does not yet slow how far a token moves in a round.)
  */
 export type MarkerEffectPreset = 'none' | 'cover-2' | 'cover-5' | 'high-ground-1';
 

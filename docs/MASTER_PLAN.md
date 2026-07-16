@@ -209,14 +209,15 @@ The following older backlog claims are no longer true and must not re-enter the 
 > - **Phase 4 — PARTIAL (advancing).** Seeded scene resolution shipped, and
 >   functional terrain is now authorable and resolves across every system: the
 >   marker-creation flow offers cover / high-ground presets (2026-07-16), and
->   `resolveSceneAttack` folds a cell's terrain effects into every system's
->   manual attack branch (d20/5e/PF2e, M&M, and Daggerheart) — terrain at the
->   attacker's cell joins the attack effects (e.g. high ground), terrain at the
->   target's cell that raises the defense value models cover (+AC / +Dodge /
->   +Parry / +Evasion), with the effective defense reported in the combat log.
->   Additive (a cell with no terrain resolves identically). Remaining:
->   movement-cost/difficult-terrain in `runSceneRound` — autonomous rounds via
->   `buildSceneCombatants` do not yet apply terrain.
+>   both the manual path (`resolveSceneAttack`, every system branch — d20/5e/PF2e,
+>   M&M, and Daggerheart) and the autonomous round (`runSceneRound` via the
+>   tactical executor, looked up by live position) fold a cell's terrain effects:
+>   terrain at the attacker's cell joins the attack effects (e.g. high ground),
+>   terrain at the target's cell that raises the defense value models cover
+>   (+AC / +Dodge / +Parry / +Evasion), with the effective defense reported in the
+>   manual combat log. Additive (a cell with no terrain resolves identically).
+>   Remaining: movement-cost / difficult terrain (terrain does not yet slow how
+>   far a token moves in `runSceneRound`).
 > - **Phase 5 — PARTIAL.** The grounded gateway ships, but validators exist for
 >   only 2 of 7 systems and there is no resolver legal-actions seam.
 

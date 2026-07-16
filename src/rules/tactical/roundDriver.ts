@@ -86,6 +86,12 @@ export interface RunRoundInput {
   degreeModel?: 'd20' | 'pf2e';
   /** Critical-damage model for the whole round (default 'double-dice'). */
   critModel?: 'double-dice' | 'confirm-multiply';
+  /**
+   * Functional terrain (RFC 003 Phase 4): effects at a grid cell, looked up by
+   * live position so a combatant that moved mid-round is judged from where it
+   * ends up. Threaded straight to each turn's resolution; omitted → no terrain.
+   */
+  terrainAt?: (pos: SceneCoordinate) => readonly EffectInstance[];
 }
 
 function toActor(combatant: RoundCombatant): TacticalActor {
@@ -186,6 +192,7 @@ export function runCombatRound(input: RunRoundInput): RoundResult {
       seed: `${input.seed}::round${input.round}::turn${turnIndex}`,
       degreeModel: input.degreeModel,
       critModel: input.critModel,
+      terrainAt: input.terrainAt,
     });
 
     // Movement executed this turn: update the working position so later

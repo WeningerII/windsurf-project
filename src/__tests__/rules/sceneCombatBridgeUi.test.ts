@@ -465,6 +465,75 @@ describe('runSceneRound', () => {
       runSceneRound({ state, resolveStats: () => hittingStats, seed: 'x', round: 1 });
     expect(JSON.stringify(run().intents)).toBe(JSON.stringify(run().intents));
   });
+
+  it('applies functional terrain: a covered target is harder to hit on Run Round too', () => {
+    // hero (0,0) vs goblin (1,0), adjacent. A +100 cover marker sits under the
+    // goblin. atk(50) beats AC 10 on any non-nat-1 roll; the covered AC 110 can
+    // only be beaten by a natural-20 crit — so the autonomous round's hero→goblin
+    // attack flips hit → miss with the marker, exactly like the manual path.
+    const build = (withCover: boolean) => {
+      let scene = sceneWith(
+        combatToken('hero', 'character', 20, 0),
+        combatToken('goblin', 'monster', 20, 1)
+      );
+      const init = resolveSceneAction(
+        scene,
+        {
+          type: 'set-initiative',
+          entries: [
+            { tokenId: 'hero', value: 20 },
+            { tokenId: 'goblin', value: 5 },
+          ],
+          activeTokenId: 'hero',
+        },
+        { eventId: 'i' }
+      );
+      scene = appendSceneEvent(scene, init.event!);
+      if (withCover) {
+        const m = resolveSceneAction(
+          scene,
+          {
+            type: 'add-marker',
+            marker: {
+              id: 'cov',
+              kind: 'hazard',
+              label: 'Cover',
+              position: { x: 1, y: 0 },
+              width: 1,
+              height: 1,
+              effects: [{ target: 'ac', operation: 'add', value: 100, label: '+100 cover' }],
+            },
+          },
+          { eventId: 'm' }
+        );
+        scene = appendSceneEvent(scene, m.event!);
+      }
+      return foldSceneEvents(scene).state;
+    };
+    const strong: ResolveCombatStats = () => ({
+      attackEffects: [atk(50)],
+      damageEffects: flatDamage(5),
+      armorClass: 10,
+      reach: 10,
+    });
+    const heroHit = (outcome: ReturnType<typeof runSceneRound>) =>
+      outcome.result.turns.find((turn) => turn.tokenId === 'hero')?.turn.resolution?.isHit;
+
+    const flat = runSceneRound({
+      state: build(false),
+      resolveStats: strong,
+      seed: 'auto-terrain',
+      round: 1,
+    });
+    const covered = runSceneRound({
+      state: build(true),
+      resolveStats: strong,
+      seed: 'auto-terrain',
+      round: 1,
+    });
+    expect(heroHit(flat)).toBe(true);
+    expect(heroHit(covered)).toBe(false);
+  });
 });
 
 describe('token conditions in scene combat (grid-combat review)', () => {

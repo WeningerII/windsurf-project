@@ -6,10 +6,11 @@
 
 **Last updated:** 2026-07-16 — everything from the 2026-07-14/15 session is
 MERGED to main. SIX PRs landed: #32, #33, #34, #35, #36. **PR #38 is OPEN
-(not yet merged)** and now carries TWO terrain Phase-4 slices: (a) marker-effects
-authoring UI, (b) cross-system fold — terrain resolves in the M&M + Daggerheart
-attack branches too, not just d20/5e/PF. Branch `claude/next-priorities-98pzof`
-carries #38's commits (`3008ec7` = authoring; cross-system fold on top).
+(not yet merged)** and now carries THREE terrain Phase-4 slices: (a) marker-effects
+authoring UI, (b) cross-system fold (M&M + Daggerheart manual branches, not just
+d20/5e/PF), (c) autonomous-round attack terrain (Run Round applies cover/high
+ground too). Terrain now resolves in EVERY attack path; only movement-cost /
+difficult terrain remains. Branch `claude/next-priorities-98pzof` carries #38.
 
 ## What shipped (all on main)
 
@@ -56,12 +57,18 @@ carries #38's commits (`3008ec7` = authoring; cross-system fold on top).
    defense (not fake). UI scope copy + `markerEffects` doc + MASTER_PLAN Phase-4
    updated to "all systems". +3 tests (M&M cover flip, M&M high ground, DH cover
    flip). 418 rules+scene tests green.
-3. **Movement-cost / difficult terrain** in `runSceneRound` — the sole remaining
-   terrain follow-up. Autonomous rounds (`buildSceneCombatants`) do NOT apply
-   terrain yet: cover is a property of the cell a token is attacked in, which a
-   static per-round combatant doesn't carry — needs the round driver to
-   recompute per-attack from live positions. NEXT.
-4. **Owner items still open:** GAPS §5 (5e-2024 exhaustion −2/level review);
+3. ~~**Autonomous-round attack terrain**~~ — DONE, in **PR #38**. Threaded a
+   `terrainAt(pos)` callback through `runSceneRound` → `runCombatRound` →
+   `executeTacticalTurn`; folds attacker/target-cell terrain into each autonomous
+   attack by LIVE position (after any move that turn). Resolution-only by design —
+   target *scoring* left untouched (AI-under-cover is a separate concern). Optional
+   callback → additive; existing roundDriver tests unchanged. +1 test (covered
+   target flips hit→miss on Run Round). Copy/doc/MASTER_PLAN caveats flipped.
+4. **Movement-cost / difficult terrain** — the ONLY remaining terrain item:
+   terrain does not yet slow how far a token moves. `executeTacticalTurn`'s move
+   step (the `while (stepsLeft > 0 ...)` loop) uses a flat per-cell cost of 1 and
+   ignores per-cell terrain cost. NEXT.
+5. **Owner items still open:** GAPS §5 (5e-2024 exhaustion −2/level review);
    README two-denominator citation; REMEDIATION Phase 6 (archive superseded
    plan docs) + Phase 7 (toolchain: ESLint 9 → React 19 → Tailwind 4 → Vite 8).
 

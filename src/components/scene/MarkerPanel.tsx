@@ -90,8 +90,8 @@ export function MarkerPanel({
               {markerEffect.startsWith('cover')
                 ? 'Cover raises the defense of a token standing on this cell.'
                 : 'High ground raises the to-hit of a token attacking from this cell.'}{' '}
-              Applies to attacks you resolve in scene combat, in every system (autonomous Run Round
-              does not apply terrain yet).
+              Applies when resolving attacks in scene combat — every system, manual attacks and
+              autonomous Run Round alike.
             </p>
           )}
         </div>
