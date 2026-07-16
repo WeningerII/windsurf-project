@@ -2,12 +2,14 @@ import type { SceneTerrainEffect } from '../../types/core/scene';
 
 /**
  * Authorable functional-terrain presets for the marker-creation flow. Deliberately
- * the ONLY two mechanically live shapes in `resolveSceneAttack`'s d20-family branch
+ * the ONLY two mechanically live shapes in `resolveSceneAttack`
  * (src/rules/combat/sceneCombat.ts): cover reads a `target:'ac'` bonus off the
- * TARGET's cell, and high ground reads a `target:'attack'` bonus off the ATTACKER's
- * cell. We do not offer damage/other targets — they resolve to nothing today, and a
- * fake option would violate the project's no-fake-automation principle. Terrain
- * folds only into that manual d20/5e/PF-family attack path (not M&M/Daggerheart).
+ * TARGET's cell (raising the effective defense — AC / Dodge / Parry / Evasion), and
+ * high ground reads a `target:'attack'` bonus off the ATTACKER's cell (raising the
+ * to-hit). We do not offer damage/other targets — they resolve to nothing today,
+ * and a fake option would violate the project's no-fake-automation principle. Both
+ * fold into every system's manual attack branch (d20/5e/PF-family, M&M, and
+ * Daggerheart); the autonomous round (`runSceneRound`) does not apply terrain yet.
  */
 export type MarkerEffectPreset = 'none' | 'cover-2' | 'cover-5' | 'high-ground-1';
 
@@ -27,7 +29,8 @@ export const MARKER_EFFECT_OPTIONS: readonly MarkerEffectOption[] = [
  * Map an authored preset to the marker's stored terrain effects. `none` returns
  * `undefined` so a marker placed without terrain stays byte-identical to today (no
  * `effects` field) — the strict-additive contract. Cover belongs under the DEFENDER
- * at resolution (raises effective AC); high ground under the ATTACKER (raises to-hit).
+ * at resolution (raises effective defense); high ground under the ATTACKER (raises
+ * to-hit).
  */
 export function terrainEffectsForPreset(
   preset: MarkerEffectPreset

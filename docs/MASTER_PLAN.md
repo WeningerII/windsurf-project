@@ -207,15 +207,16 @@ The following older backlog claims are no longer true and must not re-enter the 
 > - **Phase 3 — PARTIAL.** Only the 5e ledger is re-backed onto the resolver;
 >   the Daggerheart and M&M ledger builders still hand-build entries.
 > - **Phase 4 — PARTIAL (advancing).** Seeded scene resolution shipped, and
->   functional terrain now has its first real consumer (2026-07-15): scene
->   attack resolution folds a cell's terrain effects into the default
->   d20/5e/PF2e path — terrain at the attacker's cell joins the attack effects
->   (e.g. high ground), terrain at the target's cell that raises the defense
->   value models cover (+AC), with the effective AC reported in the combat log.
->   Additive (a cell with no terrain resolves identically). Remaining: the M&M
->   and Daggerheart resolution branches, movement-cost/difficult-terrain in
->   `runSceneRound`, and a marker-effects authoring UI (the data model, intent,
->   import/export, and `collectTerrainEffectsAt` bridge already support it).
+>   functional terrain is now authorable and resolves across every system: the
+>   marker-creation flow offers cover / high-ground presets (2026-07-16), and
+>   `resolveSceneAttack` folds a cell's terrain effects into every system's
+>   manual attack branch (d20/5e/PF2e, M&M, and Daggerheart) — terrain at the
+>   attacker's cell joins the attack effects (e.g. high ground), terrain at the
+>   target's cell that raises the defense value models cover (+AC / +Dodge /
+>   +Parry / +Evasion), with the effective defense reported in the combat log.
+>   Additive (a cell with no terrain resolves identically). Remaining:
+>   movement-cost/difficult-terrain in `runSceneRound` — autonomous rounds via
+>   `buildSceneCombatants` do not yet apply terrain.
 > - **Phase 5 — PARTIAL.** The grounded gateway ships, but validators exist for
 >   only 2 of 7 systems and there is no resolver legal-actions seam.
 

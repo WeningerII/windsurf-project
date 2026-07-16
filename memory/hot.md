@@ -4,9 +4,12 @@
 > `/save` — overwrite stale content, keep it under ~500 words. Durable facts go
 > to [[CLAUDE]] (CLAUDE.md) or `docs/`, not here.
 
-**Last updated:** 2026-07-15 — everything from the 2026-07-14/15 session is
-MERGED to main (`cd316ae`). SIX PRs landed: #32, #33, #34, #35, #36. Branch
-`claude/next-priorities-98pzof` == main.
+**Last updated:** 2026-07-16 — everything from the 2026-07-14/15 session is
+MERGED to main. SIX PRs landed: #32, #33, #34, #35, #36. **PR #38 is OPEN
+(not yet merged)** and now carries TWO terrain Phase-4 slices: (a) marker-effects
+authoring UI, (b) cross-system fold — terrain resolves in the M&M + Daggerheart
+attack branches too, not just d20/5e/PF. Branch `claude/next-priorities-98pzof`
+carries #38's commits (`3008ec7` = authoring; cross-system fold on top).
 
 ## What shipped (all on main)
 
@@ -41,15 +44,23 @@ MERGED to main (`cd316ae`). SIX PRs landed: #32, #33, #34, #35, #36. Branch
 
 ## Next steps — continue IR Phase 4 (functional terrain), value order
 
-1. **Marker-effects authoring UI** (HIGHEST VALUE next) — terrain is currently
-   rules-first / reachable only via imported scenes; add an effects editor to
-   the marker create/edit flow (MarkerPanel + the `add-marker` intent already
-   carries `effects`; `SceneTerrainEffect` = {target, operation, value, label}).
-2. **Movement-cost / difficult terrain** in `runSceneRound` (tactical executor
-   move-to-engage).
-3. **M&M + Daggerheart** attack branches — fold cover into `resolveMam3eAttack`
-   (targetDefense) and `resolveDaggerheartAttack` (evasion) so cover works in
-   all 7 systems.
+1. ~~**Marker-effects authoring UI**~~ — DONE, in **PR #38**. `markerEffects.ts`
+   honest presets (cover +AC / high-ground +attack, the only two live shapes in
+   the bridge); MarkerPanel `<Select>` + badge; SceneManager threads the preset
+   into `add-marker`. Additive; 3 new tests.
+2. ~~**M&M + Daggerheart** attack branches~~ — DONE, in **PR #38** (stacked on
+   the authoring commit). `resolveSceneAttack` hoists terrain above all three
+   branches; cover folds into `resolveMam3eAttack` (targetDefense) and
+   `resolveDaggerheartAttack` (evasion), high ground into their attackEffects.
+   Verified both resolvers actually consume `byTarget.attack`/compare the
+   defense (not fake). UI scope copy + `markerEffects` doc + MASTER_PLAN Phase-4
+   updated to "all systems". +3 tests (M&M cover flip, M&M high ground, DH cover
+   flip). 418 rules+scene tests green.
+3. **Movement-cost / difficult terrain** in `runSceneRound` — the sole remaining
+   terrain follow-up. Autonomous rounds (`buildSceneCombatants`) do NOT apply
+   terrain yet: cover is a property of the cell a token is attacked in, which a
+   static per-round combatant doesn't carry — needs the round driver to
+   recompute per-attack from live positions. NEXT.
 4. **Owner items still open:** GAPS §5 (5e-2024 exhaustion −2/level review);
    README two-denominator citation; REMEDIATION Phase 6 (archive superseded
    plan docs) + Phase 7 (toolchain: ESLint 9 → React 19 → Tailwind 4 → Vite 8).

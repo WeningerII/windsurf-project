@@ -872,6 +872,183 @@ describe('functional terrain in scene combat (RFC 003 Phase 4)', () => {
   });
 });
 
+describe('functional terrain across the M&M and Daggerheart branches (RFC 003 Phase 4)', () => {
+  // Cover (+defense off the TARGET's cell) and high ground (+to-hit off the
+  // ATTACKER's cell) must fold into every system's manual attack branch, not
+  // just the d20-family default — otherwise the authoring UI would offer terrain
+  // that silently does nothing in M&M/Daggerheart scenes.
+  function coverAt(x: number, y: number, ac: number): SceneMarker {
+    return {
+      id: `cov-${x}-${y}`,
+      kind: 'hazard',
+      label: 'Cover',
+      position: { x, y },
+      width: 1,
+      height: 1,
+      effects: [{ target: 'ac', operation: 'add', value: ac, label: `+${ac} cover` }],
+    };
+  }
+  function highGroundAt(x: number, y: number, bonus: number): SceneMarker {
+    return {
+      id: `hg-${x}-${y}`,
+      kind: 'terrain',
+      label: 'High ground',
+      position: { x, y },
+      width: 1,
+      height: 1,
+      effects: [
+        { target: 'attack', operation: 'add', value: bonus, label: `+${bonus} high ground` },
+      ],
+    };
+  }
+  function build(
+    systemId: 'mam3e' | 'daggerheart',
+    markers: SceneMarker[],
+    ...tokens: SceneToken[]
+  ) {
+    let scene = createSceneDocument({ id: 'ft', name: 'FT', systemId, seed: 'fixed' });
+    for (const token of tokens) {
+      const r = resolveSceneAction(
+        scene,
+        { type: 'place-token', token },
+        { eventId: `p-${token.id}` }
+      );
+      scene = appendSceneEvent(scene, r.event!);
+    }
+    for (const marker of markers) {
+      const r = resolveSceneAction(
+        scene,
+        { type: 'add-marker', marker },
+        { eventId: `m-${marker.id}` }
+      );
+      scene = appendSceneEvent(scene, r.event!);
+    }
+    return foldSceneEvents(scene).state;
+  }
+
+  const mamAttack = (bonus: number): EffectInstance => ({
+    id: `mam-atk-${bonus}`,
+    systemId: 'mam3e',
+    target: 'attack',
+    operation: 'add',
+    value: bonus,
+    stackPolicy: 'sum',
+    source: { kind: 'system', label: 'fgt' },
+    label: 'fgt',
+  });
+  // Toughness -100 so any hit incapacitates: a clean binary hit/miss signal.
+  const mamStats = (bonus: number): SceneCombatStats => ({
+    attackEffects: [mamAttack(bonus)],
+    damageEffects: [],
+    armorClass: 10,
+    reach: 1,
+    mam3e: { parry: 10, toughness: -100, effectRank: 10, ranged: false },
+  });
+
+  it('M&M: cover at the target cell raises Parry and can turn a hit into a miss', () => {
+    const hero = combatToken('hero', 'character', 1, 0);
+    const villain = combatToken('villain', 'character', 1, 1);
+    // +100 to hit beats Parry 10 on any non-nat-1 roll; +200 cover (Parry 210)
+    // can only be beaten by a natural-20 crit. Same seed → same roll, so the
+    // marker is the only difference.
+    const clean = resolveSceneAttack({
+      state: build('mam3e', [], hero, villain),
+      attackerId: 'hero',
+      targetId: 'villain',
+      resolveStats: () => mamStats(100),
+      seed: 'mam-cover',
+    });
+    const covered = resolveSceneAttack({
+      state: build('mam3e', [coverAt(1, 0, 200)], hero, villain),
+      attackerId: 'hero',
+      targetId: 'villain',
+      resolveStats: () => mamStats(100),
+      seed: 'mam-cover',
+    });
+    expect(clean.hit).toBe(true);
+    expect(covered.hit).toBe(false);
+    expect(covered.log).toMatch(/\+200 cover/);
+  });
+
+  it('M&M: high ground at the attacker cell raises the to-hit bonus', () => {
+    const hero = combatToken('hero', 'character', 1, 0);
+    const villain = combatToken('villain', 'character', 1, 1);
+    // Same seed → same natural roll; only the +attack bonus shifts by the
+    // terrain, whether the swing lands or not.
+    const flat = resolveSceneAttack({
+      state: build('mam3e', [], hero, villain),
+      attackerId: 'hero',
+      targetId: 'villain',
+      resolveStats: () => mamStats(0),
+      seed: 'mam-hg',
+    });
+    const high = resolveSceneAttack({
+      state: build('mam3e', [highGroundAt(0, 0, 1)], hero, villain),
+      attackerId: 'hero',
+      targetId: 'villain',
+      resolveStats: () => mamStats(0),
+      seed: 'mam-hg',
+    });
+    expect(flat.log).toMatch(/rolled \d+\+0 vs Parry/);
+    expect(high.log).toMatch(/rolled \d+\+1 vs Parry/);
+  });
+
+  const dhStats = (): SceneCombatStats => ({
+    attackEffects: [
+      {
+        id: 'dh-atk',
+        systemId: 'daggerheart',
+        target: 'attack',
+        operation: 'add',
+        value: 100, // beats base Evasion 10 on any non-crit roll
+        stackPolicy: 'sum',
+        source: { kind: 'system', label: 'trait' },
+        label: 'trait',
+      },
+    ],
+    damageEffects: [
+      {
+        id: 'dh-dmg',
+        systemId: 'daggerheart',
+        target: 'damage',
+        operation: 'add',
+        value: 20,
+        stackPolicy: 'sum',
+        source: { kind: 'item', label: 'sword' },
+        label: 'sword',
+      },
+    ],
+    armorClass: 10, // Evasion
+    reach: 1,
+    daggerheart: { thresholds: { major: 7, severe: 12 } },
+  });
+
+  it('Daggerheart: cover at the target cell raises Evasion (shown in the log) and can force a miss', () => {
+    const hero = combatToken('hero', 'character', 6, 0);
+    const foe = combatToken('foe', 'character', 6, 1);
+    // attackTotal maxes at hope+fear (24) + 100; +200 cover (Evasion 210) is out
+    // of reach for a non-critical roll, so a would-be hit becomes a miss unless
+    // the duality dice match (a crit auto-hits). Same seed → same dice.
+    const clean = resolveSceneAttack({
+      state: build('daggerheart', [], hero, foe),
+      attackerId: 'hero',
+      targetId: 'foe',
+      resolveStats: dhStats,
+      seed: 'dh-cover',
+    });
+    const covered = resolveSceneAttack({
+      state: build('daggerheart', [coverAt(1, 0, 200)], hero, foe),
+      attackerId: 'hero',
+      targetId: 'foe',
+      resolveStats: dhStats,
+      seed: 'dh-cover',
+    });
+    expect(clean.hit).toBe(true);
+    expect(covered.hit).toBe(false);
+    expect(covered.log).toMatch(/vs Evasion 210, \+200 cover/);
+  });
+});
+
 describe('scene area effects (phase 3 tail — AoE product-reachable)', () => {
   it('rolls shared damage once, saves independently, and lands one intent', async () => {
     const { resolveSceneAreaEffect } = await import('../../rules');

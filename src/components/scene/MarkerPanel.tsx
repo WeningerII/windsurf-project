@@ -88,9 +88,10 @@ export function MarkerPanel({
           {markerEffect !== 'none' && (
             <p className="text-xs text-muted-foreground">
               {markerEffect.startsWith('cover')
-                ? 'Cover raises the AC of a token standing on this cell.'
+                ? 'Cover raises the defense of a token standing on this cell.'
                 : 'High ground raises the to-hit of a token attacking from this cell.'}{' '}
-              Applies in d20/5e/PF-family scene combat only (not M&M or Daggerheart).
+              Applies to attacks you resolve in scene combat, in every system (autonomous Run Round
+              does not apply terrain yet).
             </p>
           )}
         </div>
