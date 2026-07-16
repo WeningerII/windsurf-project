@@ -5,13 +5,13 @@
 ## Key Concepts
 
 - **index.ts** (171 connections) — `src/rules/index.ts`
-- **sceneCombat.ts** (48 connections) — `src/rules/combat/sceneCombat.ts`
+- **sceneCombat.ts** (53 connections) — `src/rules/combat/sceneCombat.ts`
+- **resolve.ts** (26 connections) — `src/rules/resolver/resolve.ts`
 - **participantResolution.ts** (25 connections) — `src/rules/resolver/participantResolution.ts`
-- **resolve.ts** (25 connections) — `src/rules/resolver/resolve.ts`
-- **resolveEffects()** (23 connections) — `src/rules/resolver/resolve.ts`
+- **resolveEffects()** (25 connections) — `src/rules/resolver/resolve.ts`
+- **resolveSceneAttack()** (22 connections) — `src/rules/combat/sceneCombat.ts`
 - **attackResolution.ts** (22 connections) — `src/rules/resolver/attackResolution.ts`
 - **participantResolution.test.ts** (21 connections) — `src/__tests__/rules/participantResolution.test.ts`
-- **resolveSceneAttack()** (20 connections) — `src/rules/combat/sceneCombat.ts`
 - **resolveAttack()** (15 connections) — `src/rules/resolver/attackResolution.ts`
 - **mam3eResolution.ts** (15 connections) — `src/rules/resolver/mam3eResolution.ts`
 - **sceneCombat.ts** (14 connections) — `src/rules/resolver/sceneCombat.ts`
@@ -38,7 +38,7 @@
 - [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (30 shared connections)
 - [Dice Panel & Mam3e Resolution](Dice_Panel_%26_Mam3e_Resolution.md) (24 shared connections)
 - [Scene Combat Resolution](Scene_Combat_Resolution.md) (18 shared connections)
-- [Oracle Panel & Logic](Oracle_Panel_%26_Logic.md) (11 shared connections)
+- [Oracle Panel & Logic](Oracle_Panel_%26_Logic.md) (14 shared connections)
 - [Dnd5e Feature List Sections](Dnd5e_Feature_List_Sections.md) (11 shared connections)
 - [Monster Combatant Builder](Monster_Combatant_Builder.md) (11 shared connections)
 - [Character Combatant Builder](Character_Combatant_Builder.md) (7 shared connections)
@@ -71,7 +71,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 685 (99%)
+- EXTRACTED: 695 (99%)
 - INFERRED: 4 (1%)
 - AMBIGUOUS: 0 (0%)
 

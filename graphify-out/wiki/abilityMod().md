@@ -1,6 +1,6 @@
 # abilityMod()
 
-> God node · 54 connections · `src/utils/math.ts`
+> God node · 55 connections · `src/utils/math.ts`
 
 **Community:** [D20 Combat Controls](D20_Combat_Controls.md)
 
@@ -20,13 +20,13 @@
 - computeD20LegacyAC() `EXTRACTED`
 - D20SkillsTab() `EXTRACTED`
 - buildArmorClassEntries() `EXTRACTED`
+- getDnd5eSpellcastingClassSummaries() `EXTRACTED`
 - .rollCheck() `EXTRACTED`
 - .computeBaseArmorClass() `EXTRACTED`
 - compute5eAC() `EXTRACTED`
 - D20AbilitiesTab() `EXTRACTED`
 - Pf2eAbilitiesTab() `EXTRACTED`
 - Pf2eSkillsTab() `EXTRACTED`
-- computePf2eAC() `EXTRACTED`
 
 ### contains
 - math.ts `EXTRACTED`
@@ -41,10 +41,10 @@
 - engine.ts `EXTRACTED`
 - characterCombatant.ts `EXTRACTED`
 - systemProfiles.ts `EXTRACTED`
+- spellPreparation.ts `EXTRACTED`
 - Pf2eSpellsTab.tsx `EXTRACTED`
 - dnd5e2014EngineMath.test.ts `EXTRACTED`
 - AbilityScoreGrid.tsx `EXTRACTED`
-- spellPreparation.ts `EXTRACTED`
 - Pf2eOverview.tsx `EXTRACTED`
 - Pf2eSkillsTab.tsx `EXTRACTED`
 - Pf2eSavesTab.tsx `EXTRACTED`

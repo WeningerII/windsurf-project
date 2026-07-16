@@ -4,22 +4,22 @@
 
 ## Key Concepts
 
-- **App.tsx** (84 connections) — `src/App.tsx`
-- **Button.tsx** (37 connections) — `src/components/ui/Button.tsx`
-- **Button** (31 connections) — `src/components/ui/Button.tsx`
+- **App.tsx** (87 connections) — `src/App.tsx`
+- **Button.tsx** (38 connections) — `src/components/ui/Button.tsx`
+- **Button** (32 connections) — `src/components/ui/Button.tsx`
 - **CampaignManager.tsx** (30 connections) — `src/components/CampaignManager.tsx`
 - **SceneState** (28 connections) — `src/types/core/scene.ts`
 - **SceneGridView.tsx** (26 connections) — `src/components/SceneGridView.tsx`
 - **generateUUID()** (25 connections) — `src/utils/browserCompat.ts`
-- **AppHeader.tsx** (22 connections) — `src/components/AppHeader.tsx`
+- **AppHeader.tsx** (24 connections) — `src/components/AppHeader.tsx`
+- **CharacterListView.tsx** (21 connections) — `src/components/CharacterListView.tsx`
 - **Select.tsx** (20 connections) — `src/components/ui/Select.tsx`
-- **CharacterListView.tsx** (17 connections) — `src/components/CharacterListView.tsx`
 - **RecapPanel.tsx** (16 connections) — `src/components/scene/RecapPanel.tsx`
 - **Select** (16 connections) — `src/components/ui/Select.tsx`
+- **cn()** (14 connections) — `src/lib/utils.ts`
 - **CombatPanel.tsx** (12 connections) — `src/components/scene/CombatPanel.tsx`
-- **cn()** (12 connections) — `src/lib/utils.ts`
+- **utils.ts** (10 connections) — `src/lib/utils.ts`
 - **downloadTextFile()** (10 connections) — `src/utils/fileTransfer.ts`
-- **utils.ts** (9 connections) — `src/lib/utils.ts`
 - **sceneRecap.ts** (9 connections) — `src/scene/sceneRecap.ts`
 - **CampaignManager()** (8 connections) — `src/components/CampaignManager.tsx`
 - **CombatPanel.test.tsx** (8 connections) — `src/__tests__/components/CombatPanel.test.tsx`
@@ -33,8 +33,8 @@
 
 ## Relationships
 
+- [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (33 shared connections)
 - [Oracle Panel & Logic](Oracle_Panel_%26_Logic.md) (33 shared connections)
-- [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (31 shared connections)
 - [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (26 shared connections)
 - [System Registry & Renderer](System_Registry_%26_Renderer.md) (17 shared connections)
 - [Browser Compat & Error Logging](Browser_Compat_%26_Error_Logging.md) (13 shared connections)
@@ -71,7 +71,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 574 (99%)
+- EXTRACTED: 589 (99%)
 - INFERRED: 3 (1%)
 - AMBIGUOUS: 0 (0%)
 

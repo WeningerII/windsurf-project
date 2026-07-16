@@ -5,7 +5,7 @@
 ## Key Concepts
 
 - **spells.ts** (40 connections) — `src/types/magic/spells.ts`
-- **common.ts** (31 connections) — `src/types/core/common.ts`
+- **common.ts** (32 connections) — `src/types/core/common.ts`
 - **Pf2eSpellsTab.test.tsx** (5 connections) — `src/__tests__/components/Pf2eSpellsTab.test.tsx`
 - **pf2eSpellTraits.test.ts** (5 connections) — `src/__tests__/pf2eSpellTraits.test.ts`
 - **AreaOfEffect** (4 connections) — `src/types/core/common.ts`
@@ -36,9 +36,9 @@
 - [Dnd35e Saves & Data Model](Dnd35e_Saves_%26_Data_Model.md) (4 shared connections)
 - [Character Effects Compilation](Character_Effects_Compilation.md) (3 shared connections)
 - [Monster Combatant Builder](Monster_Combatant_Builder.md) (2 shared connections)
+- [Dnd5e Feat Templates](Dnd5e_Feat_Templates.md) (2 shared connections)
 - [Dnd5e Feature List Sections](Dnd5e_Feature_List_Sections.md) (2 shared connections)
 - [5e Feat Browser](5e_Feat_Browser.md) (2 shared connections)
-- [Monster & NPC Generator](Monster_%26_NPC_Generator.md) (2 shared connections)
 
 ## Source Files
 
@@ -49,7 +49,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 110 (100%)
+- EXTRACTED: 111 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

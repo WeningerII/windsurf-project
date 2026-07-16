@@ -5,7 +5,7 @@
 ## Key Concepts
 
 - **documentStorage.test.ts** (31 connections) — `src/__tests__/documentStorage.test.ts`
-- **AppContent()** (24 connections) — `src/App.tsx`
+- **AppContent()** (25 connections) — `src/App.tsx`
 - **character-management-flow.test.tsx** (19 connections) — `src/__tests__/character-management-flow.test.tsx`
 - **alwaysPreparedSpellPrep.test.ts** (19 connections) — `src/__tests__/utils/alwaysPreparedSpellPrep.test.ts`
 - **exportDocuments()** (15 connections) — `src/utils/documentStorage.ts`
@@ -61,7 +61,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 170 (100%)
+- EXTRACTED: 171 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **Dnd5eSpellsTab.tsx** (31 connections) — `src/systems/dnd5e/shared/components/Dnd5eSpellsTab.tsx`
+- **Dnd5eSpellsTab.tsx** (32 connections) — `src/systems/dnd5e/shared/components/Dnd5eSpellsTab.tsx`
 - **D20SpellBrowserPanel.tsx** (19 connections) — `src/systems/d20-legacy/components/D20SpellBrowserPanel.tsx`
 - **Pf2eSpellBrowserPanel.tsx** (19 connections) — `src/systems/pf2e/components/Pf2eSpellBrowserPanel.tsx`
 - **formatters.ts** (14 connections) — `src/utils/formatters.ts`
@@ -15,10 +15,10 @@
 - **formatDuration()** (7 connections) — `src/utils/formatters.ts`
 - **formatRange()** (7 connections) — `src/utils/formatters.ts`
 - **toSpellBrowserSpell()** (5 connections) — `src/systems/d20-legacy/components/D20SpellBrowserPanel.tsx`
+- **Props** (5 connections) — `src/systems/dnd5e/shared/components/Dnd5eSpellsTab.tsx`
 - **toSpellBrowserSpell()** (5 connections) — `src/systems/pf2e/components/Pf2eSpellBrowserPanel.tsx`
 - **formatters.test.ts** (5 connections) — `src/__tests__/utils/formatters.test.ts`
 - **SpellBrowserSpell** (4 connections) — `src/components/SpellBrowser.tsx`
-- **Props** (4 connections) — `src/systems/dnd5e/shared/components/Dnd5eSpellsTab.tsx`
 - **Dnd5eAlwaysPreparedSpellSource** (3 connections) — `src/systems/dnd5e/shared/spellPreparation.ts`
 - **Dnd5ePreparedCasterSummary** (3 connections) — `src/systems/dnd5e/shared/spellPreparation.ts`
 - **Pf2eSpellBrowserPanel** (3 connections) — `src/systems/pf2e/components/Pf2eSpellBrowserPanel.tsx`
@@ -60,7 +60,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 180 (100%)
+- EXTRACTED: 182 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 
