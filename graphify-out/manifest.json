@@ -65,8 +65,8 @@
     "semantic_hash": "7d81f6d2b5a01dbf70bb8cb2775ae990"
   },
   "docs/generated/roadmap-metrics.json": {
-    "mtime": 1784239143.8136878,
-    "ast_hash": "a527717c0a7c5b85edeeda3209a244f0",
+    "mtime": 1784239901.4096894,
+    "ast_hash": "2699aa6e4034b352949e04503761bb0b",
     "semantic_hash": ""
   },
   "docs/generated/verification-baseline.json": {
@@ -3230,8 +3230,8 @@
     "semantic_hash": ""
   },
   "docs/generated/master-gap-ledger.json": {
-    "mtime": 1784239143.8136878,
-    "ast_hash": "6c770443f3f04cc1670b06087d204c88",
+    "mtime": 1784239901.4096894,
+    "ast_hash": "3654581c20a970502b5fa18bfeda6ff7",
     "semantic_hash": ""
   },
   "docs/master-gap-ledger.source.ts": {
