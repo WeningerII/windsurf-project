@@ -1,8 +1,9 @@
-import { Plus, Trash2 } from 'lucide-react';
+import { Mountain, Plus, Shield, Trash2 } from 'lucide-react';
 import type { SceneMarker, SceneMarkerKind } from '../../types/core/scene';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { Select } from '../ui/Select';
+import { MARKER_EFFECT_OPTIONS, type MarkerEffectPreset } from './markerEffects';
 
 interface MarkerPanelProps {
   markerLabel: string;
@@ -13,6 +14,8 @@ interface MarkerPanelProps {
   onMarkerWidthChange: (value: string) => void;
   markerHeight: string;
   onMarkerHeightChange: (value: string) => void;
+  markerEffect: MarkerEffectPreset;
+  onMarkerEffectChange: (value: MarkerEffectPreset) => void;
   isPlacing: boolean;
   onTogglePlace: () => void;
   markers: Record<string, SceneMarker>;
@@ -29,6 +32,8 @@ export function MarkerPanel({
   onMarkerWidthChange,
   markerHeight,
   onMarkerHeightChange,
+  markerEffect,
+  onMarkerEffectChange,
   isPlacing,
   onTogglePlace,
   markers,
@@ -68,6 +73,27 @@ export function MarkerPanel({
             onChange={(event) => onMarkerHeightChange(event.target.value)}
           />
         </div>
+        <div className="space-y-1">
+          <Select
+            aria-label="Functional terrain"
+            value={markerEffect}
+            onChange={(event) => onMarkerEffectChange(event.target.value as MarkerEffectPreset)}
+          >
+            {MARKER_EFFECT_OPTIONS.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.value === 'none' ? 'Functional terrain: none' : option.label}
+              </option>
+            ))}
+          </Select>
+          {markerEffect !== 'none' && (
+            <p className="text-xs text-muted-foreground">
+              {markerEffect.startsWith('cover')
+                ? 'Cover raises the AC of a token standing on this cell.'
+                : 'High ground raises the to-hit of a token attacking from this cell.'}{' '}
+              Applies in d20/5e/PF-family scene combat only (not M&M or Daggerheart).
+            </p>
+          )}
+        </div>
         <Button
           variant={isPlacing ? 'default' : 'outline'}
           size="sm"
@@ -85,8 +111,24 @@ export function MarkerPanel({
                 key={marker.id}
                 className="flex items-center justify-between gap-2 rounded border px-2 py-1 text-sm"
               >
-                <span className="min-w-0 truncate">
-                  {marker.label} ({marker.kind})
+                <span className="flex min-w-0 items-center gap-1.5">
+                  <span className="min-w-0 truncate">
+                    {marker.label} ({marker.kind})
+                  </span>
+                  {marker.effects && marker.effects.length > 0 && (
+                    <span
+                      className="inline-flex shrink-0 items-center gap-0.5 rounded bg-primary/10 px-1.5 py-0.5 text-xs font-medium text-primary"
+                      title={`Functional terrain: ${marker.effects.map((effect) => effect.label).join(', ')}`}
+                      aria-label={`Functional terrain: ${marker.effects.map((effect) => effect.label).join(', ')}`}
+                    >
+                      {marker.effects.some((effect) => effect.target === 'ac') ? (
+                        <Shield className="h-3 w-3" />
+                      ) : (
+                        <Mountain className="h-3 w-3" />
+                      )}
+                      {marker.effects.map((effect) => effect.label).join(', ')}
+                    </span>
+                  )}
                 </span>
                 <Button
                   variant="ghost"

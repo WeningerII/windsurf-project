@@ -52,6 +52,7 @@ import { SceneGridView } from './SceneGridView';
 import { EncounterPanel } from './scene/EncounterPanel';
 import { InitiativeTracker } from './scene/InitiativeTracker';
 import { MarkerPanel } from './scene/MarkerPanel';
+import { terrainEffectsForPreset, type MarkerEffectPreset } from './scene/markerEffects';
 import { TokenPanel } from './scene/TokenPanel';
 import { CombatPanel } from './scene/CombatPanel';
 import { CheckPanel } from './scene/CheckPanel';
@@ -124,6 +125,9 @@ export function SceneManager({
   const [markerKind, setMarkerKind] = useState<SceneMarkerKind>('hazard');
   const [markerWidth, setMarkerWidth] = useState('1');
   const [markerHeight, setMarkerHeight] = useState('1');
+  // Optional functional-terrain preset authored for the next placed marker; 'none'
+  // leaves the marker's `effects` absent so placement stays strictly additive.
+  const [markerEffect, setMarkerEffect] = useState<MarkerEffectPreset>('none');
   // AI affordances are build-time gated (default OFF); each surface adds its own
   // further preconditions (e.g. a cited budget table for drafting).
   const aiEnabled = isAiEnabled();
@@ -579,6 +583,10 @@ export function SceneManager({
         const label = markerLabel.trim();
         if (!label) return;
 
+        // 'none' → undefined, so a marker authored without terrain omits `effects`
+        // entirely and resolves exactly as before (strict-additive).
+        const effects = terrainEffectsForPreset(markerEffect);
+
         const placed = emitSceneAction(selectedScene, {
           type: 'add-marker',
           marker: {
@@ -588,12 +596,14 @@ export function SceneManager({
             position,
             width: positiveIntegerOrDefault(markerWidth, 1),
             height: positiveIntegerOrDefault(markerHeight, 1),
+            ...(effects ? { effects } : {}),
           },
         });
 
         if (placed) {
           setPlacementMode('none');
           setMarkerLabel('');
+          setMarkerEffect('none');
         }
         return;
       }
@@ -623,6 +633,7 @@ export function SceneManager({
       markerKind,
       markerWidth,
       markerHeight,
+      markerEffect,
       selectedTokenId,
       emitSceneAction,
     ]
@@ -1002,6 +1013,8 @@ export function SceneManager({
                 onMarkerWidthChange={setMarkerWidth}
                 markerHeight={markerHeight}
                 onMarkerHeightChange={setMarkerHeight}
+                markerEffect={markerEffect}
+                onMarkerEffectChange={setMarkerEffect}
                 isPlacing={placementMode === 'marker'}
                 onTogglePlace={() =>
                   setPlacementMode((current) => (current === 'marker' ? 'none' : 'marker'))

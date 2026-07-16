@@ -793,6 +793,51 @@ describe('functional terrain in scene combat (RFC 003 Phase 4)', () => {
     expect(b.log).toBe(a.log); // off-cell terrain changes nothing
   });
 
+  // A 1x1 marker whose stored IR effect raises to-hit by `bonus` on the cell it
+  // covers — the honest "high ground" shape the authoring UI emits (target
+  // 'attack', read from the ATTACKER's cell).
+  function highGroundMarker(id: string, x: number, y: number, bonus: number): SceneMarker {
+    return {
+      id,
+      kind: 'terrain',
+      label: 'High ground',
+      position: { x, y },
+      width: 1,
+      height: 1,
+      effects: [
+        { target: 'attack', operation: 'add', value: bonus, label: `+${bonus} high ground` },
+      ],
+    };
+  }
+
+  it('a high-ground marker at the attacker cell raises the to-hit bonus in resolution', () => {
+    // hero (0,0) attacks goblin (1,0); the marker sits under the ATTACKER at (0,0).
+    const base = sceneWith(
+      combatToken('hero', 'character', 20, 0),
+      combatToken('goblin', 'monster', 7, 1)
+    );
+    const elevated = withMarker(base, highGroundMarker('hg', 0, 0, 1));
+
+    const flat = resolveSceneAttack({
+      state: foldSceneEvents(base).state,
+      attackerId: 'hero',
+      targetId: 'goblin',
+      resolveStats: acStats,
+      seed: 'hg',
+    });
+    const high = resolveSceneAttack({
+      state: foldSceneEvents(elevated).state,
+      attackerId: 'hero',
+      targetId: 'goblin',
+      resolveStats: acStats,
+      seed: 'hg',
+    });
+
+    // Same seed → same natural roll; only the +attack bonus shifts by the terrain.
+    expect(flat.log).toMatch(/\+0 vs AC 10/);
+    expect(high.log).toMatch(/\+1 vs AC 10/);
+  });
+
   it('enough cover turns a would-be hit into a miss, deterministically', () => {
     const base = sceneWith(
       combatToken('hero', 'character', 20, 0),
