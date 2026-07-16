@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **check-bundle-size.mjs** (12 connections) — `scripts/check-bundle-size.mjs`
+- **check-bundle-size.mjs** (19 connections) — `scripts/check-bundle-size.mjs`
 - **appChunk** (1 connections) — `scripts/check-bundle-size.mjs`
 - **appChunks** (1 connections) — `scripts/check-bundle-size.mjs`
 - **assetsDir** (1 connections) — `scripts/check-bundle-size.mjs`
@@ -28,7 +28,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 24 (100%)
+- EXTRACTED: 31 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

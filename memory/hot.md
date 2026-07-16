@@ -5,7 +5,7 @@
 > to [[CLAUDE]] (CLAUDE.md) or `docs/`, not here.
 
 **Last updated:** 2026-07-15 — everything from the 2026-07-14/15 session is
-MERGED to main (`9007a62`). Three PRs landed: #32, #33, #34. Branch
+MERGED to main (`cd316ae`). SIX PRs landed: #32, #33, #34, #35, #36. Branch
 `claude/next-priorities-98pzof` == main.
 
 ## What shipped (all on main)
@@ -29,15 +29,28 @@ MERGED to main (`9007a62`). Three PRs landed: #32, #33, #34. Branch
    `resolveCharacterEffects` — it is additive-only, and their derived defenses
    use conditional base-overrides / attribute-derived / max-combining the
    additive resolver can't express. Documented in MASTER_PLAN + GAPS §2.
+4. **Doc-staleness sweep** (#35) — post-merge cleanup so no doc understated
+   shipped work (shell Phase 1 marked complete, weaponDamage notes, memory).
+5. **IR Phase 4 — functional terrain STARTED** (#36). `resolveSceneAttack`'s
+   default d20/5e/PF2e branch now folds a cell's terrain effects: attacker-cell
+   terrain → attack effects (high ground); target-cell terrain raising the
+   defense value → cover (+AC), effective AC shown in the log. Additive (26
+   existing combat tests unchanged); 3 new terrain tests. The bridge
+   (`src/rules/terrain/sceneTerrain.ts`) was already complete — this is its
+   first consumer.
 
-## Next steps
+## Next steps — continue IR Phase 4 (functional terrain), value order
 
-1. **Step-6 direction (OWNER DECISION, pending):** terrain + validators
-   (my lean — thread functional terrain into scene combat, then per-system
-   validators + resolver legal-actions seam, which unlocks the AI-DM ladder
-   scene-runtime 12–14) vs. shell Phases 2–6 (ShellContext/SurfaceStage → dock
-   → drag keystone → canvas). Phase 2 is now unblocked.
-2. **Owner items still open:** GAPS §5 (5e-2024 exhaustion −2/level review);
+1. **Marker-effects authoring UI** (HIGHEST VALUE next) — terrain is currently
+   rules-first / reachable only via imported scenes; add an effects editor to
+   the marker create/edit flow (MarkerPanel + the `add-marker` intent already
+   carries `effects`; `SceneTerrainEffect` = {target, operation, value, label}).
+2. **Movement-cost / difficult terrain** in `runSceneRound` (tactical executor
+   move-to-engage).
+3. **M&M + Daggerheart** attack branches — fold cover into `resolveMam3eAttack`
+   (targetDefense) and `resolveDaggerheartAttack` (evasion) so cover works in
+   all 7 systems.
+4. **Owner items still open:** GAPS §5 (5e-2024 exhaustion −2/level review);
    README two-denominator citation; REMEDIATION Phase 6 (archive superseded
    plan docs) + Phase 7 (toolchain: ESLint 9 → React 19 → Tailwind 4 → Vite 8).
 

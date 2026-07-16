@@ -13,11 +13,11 @@
 - sceneCombat.ts `EXTRACTED`
 - characterCombatant.ts `EXTRACTED`
 - systemProfiles.ts `EXTRACTED`
+- sceneCombatBridgeUi.test.ts `EXTRACTED`
 - sceneCombatBridge.test.ts `EXTRACTED`
 - monsterCombatant.ts `EXTRACTED`
-- sceneCombatBridgeUi.test.ts `EXTRACTED`
-- participantResolution.ts `EXTRACTED`
 - resolve.ts `EXTRACTED`
+- participantResolution.ts `EXTRACTED`
 - tacticalExecutor.ts `EXTRACTED`
 - tacticalExecutor.test.ts `EXTRACTED`
 - attackResolution.ts `EXTRACTED`
@@ -28,8 +28,8 @@
 - d20LegacyConditions.ts `EXTRACTED`
 - sceneConditions.ts `EXTRACTED`
 - targetScoring.ts `EXTRACTED`
-- mam3eCombatant.ts `EXTRACTED`
 - sceneTerrain.ts `EXTRACTED`
+- mam3eCombatant.ts `EXTRACTED`
 
 ### re_exports
 - index.ts `EXTRACTED`

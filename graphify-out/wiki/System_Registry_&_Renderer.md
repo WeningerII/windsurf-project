@@ -4,19 +4,19 @@
 
 ## Key Concepts
 
-- **index.ts** (45 connections) — `src/registry/index.ts`
-- **SystemRegistry** (44 connections) — `src/registry/index.ts`
-- **index.ts** (36 connections) — `src/systems/index.ts`
-- **registerAllSystems()** (20 connections) — `src/systems/index.ts`
+- **index.ts** (47 connections) — `src/registry/index.ts`
+- **SystemRegistry** (46 connections) — `src/registry/index.ts`
+- **index.ts** (38 connections) — `src/systems/index.ts`
+- **registerAllSystems()** (22 connections) — `src/systems/index.ts`
 - **SystemDefinition** (18 connections) — `src/registry/types.ts`
 - **useDocuments.test.tsx** (18 connections) — `src/__tests__/hooks/useDocuments.test.tsx`
 - **applyMergedCollections.test.tsx** (17 connections) — `src/__tests__/hooks/applyMergedCollections.test.tsx`
 - **systemAssetPrefetch.ts** (15 connections) — `src/utils/systemAssetPrefetch.ts`
 - **CampaignManager.test.tsx** (14 connections) — `src/__tests__/components/CampaignManager.test.tsx`
 - **registryValidation.test.ts** (14 connections) — `src/__tests__/registryValidation.test.ts`
+- **CharacterCard.test.tsx** (12 connections) — `src/__tests__/components/CharacterCard.test.tsx`
 - **systemAssetPrefetch.test.ts** (12 connections) — `src/__tests__/utils/systemAssetPrefetch.test.ts`
 - **character-creation-flow.test.tsx** (11 connections) — `src/__tests__/character-creation-flow.test.tsx`
-- **CharacterCard.test.tsx** (11 connections) — `src/__tests__/components/CharacterCard.test.tsx`
 - **App.test.tsx** (10 connections) — `src/__tests__/App.test.tsx`
 - **main.tsx** (8 connections) — `src/main.tsx`
 - **app-sheet-error-boundary.test.tsx** (8 connections) — `src/__tests__/app-sheet-error-boundary.test.tsx`
@@ -66,7 +66,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 364 (100%)
+- EXTRACTED: 374 (100%)
 - INFERRED: 1 (0%)
 - AMBIGUOUS: 0 (0%)
 

@@ -4,18 +4,18 @@
 
 ## Key Concepts
 
-- **items.ts** (28 connections) — `src/types/equipment/items.ts`
+- **items.ts** (29 connections) — `src/types/equipment/items.ts`
 - **Item** (24 connections) — `src/types/equipment/items.ts`
 - **MamEquipmentBrowserTab.tsx** (14 connections) — `src/systems/mam3e/components/MamEquipmentBrowserTab.tsx`
 - **EquippedArmorSection.tsx** (13 connections) — `src/components/EquippedArmorSection.tsx`
-- **DiceRoll** (12 connections) — `src/types/core/common.ts`
+- **DiceRoll** (13 connections) — `src/types/core/common.ts`
 - **DamageType** (10 connections) — `src/types/core/common.ts`
 - **EquippedArmorSection.test.tsx** (8 connections) — `src/__tests__/components/EquippedArmorSection.test.tsx`
 - **dnd35eArmorCatalog.test.ts** (7 connections) — `src/__tests__/dnd35eArmorCatalog.test.ts`
+- **Weapon** (7 connections) — `src/types/equipment/items.ts`
 - **combat.ts** (7 connections) — `src/types/mechanics/combat.ts`
-- **Armor** (5 connections) — `src/types/equipment/items.ts`
+- **Armor** (6 connections) — `src/types/equipment/items.ts`
 - **Shield** (5 connections) — `src/types/equipment/items.ts`
-- **Weapon** (5 connections) — `src/types/equipment/items.ts`
 - **EquippedArmorSection()** (4 connections) — `src/components/EquippedArmorSection.tsx`
 - **MagicItem** (4 connections) — `src/types/equipment/items.ts`
 - **ActionDamage** (3 connections) — `src/types/creatures/monsters.ts`
@@ -34,9 +34,9 @@
 ## Relationships
 
 - [Sheet Resource Loading Hooks](Sheet_Resource_Loading_Hooks.md) (11 shared connections)
+- [Dnd5e Feat Templates](Dnd5e_Feat_Templates.md) (8 shared connections)
 - [Pf2e Spell Types & Traits](Pf2e_Spell_Types_%26_Traits.md) (7 shared connections)
 - [SRD Manifest Generator](SRD_Manifest_Generator.md) (6 shared connections)
-- [Dnd5e Feat Templates](Dnd5e_Feat_Templates.md) (6 shared connections)
 - [Currency & Inventory Editors](Currency_%26_Inventory_Editors.md) (5 shared connections)
 - [5e Feat Browser](5e_Feat_Browser.md) (5 shared connections)
 - [Monster & NPC Generator](Monster_%26_NPC_Generator.md) (5 shared connections)
@@ -60,7 +60,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 175 (100%)
+- EXTRACTED: 180 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

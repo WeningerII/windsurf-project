@@ -7,16 +7,16 @@
 - **scene.ts** (88 connections) — `src/types/core/scene.ts`
 - **OraclePanel.tsx** (20 connections) — `src/components/scene/OraclePanel.tsx`
 - **CheckPanel.tsx** (18 connections) — `src/components/scene/CheckPanel.tsx`
-- **sceneTerrain.ts** (16 connections) — `src/rules/terrain/sceneTerrain.ts`
+- **sceneTerrain.ts** (17 connections) — `src/rules/terrain/sceneTerrain.ts`
 - **oracle.ts** (15 connections) — `src/scene/oracle.ts`
 - **sceneTerrain.test.ts** (15 connections) — `src/__tests__/rules/sceneTerrain.test.ts`
 - **MarkerPanel.tsx** (12 connections) — `src/components/scene/MarkerPanel.tsx`
 - **CheckPanel.test.tsx** (8 connections) — `src/__tests__/components/CheckPanel.test.tsx`
+- **SceneMarker** (8 connections) — `src/types/core/scene.ts`
+- **collectTerrainEffectsAt()** (7 connections) — `src/rules/terrain/sceneTerrain.ts`
 - **markerToEffects()** (7 connections) — `src/rules/terrain/sceneTerrain.ts`
-- **SceneMarker** (7 connections) — `src/types/core/scene.ts`
 - **check.ts** (6 connections) — `src/scene/check.ts`
 - **OraclePanel.test.tsx** (6 connections) — `src/__tests__/components/OraclePanel.test.tsx`
-- **collectTerrainEffectsAt()** (5 connections) — `src/rules/terrain/sceneTerrain.ts`
 - **SceneOracleOdds** (5 connections) — `src/types/core/scene.ts`
 - **markerCoversCell()** (4 connections) — `src/rules/terrain/sceneTerrain.ts`
 - **resolveCheck()** (4 connections) — `src/scene/check.ts`
@@ -36,8 +36,8 @@
 - [Combat & Recap Panels](Combat_%26_Recap_Panels.md) (33 shared connections)
 - [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (20 shared connections)
 - [Check & Oracle Resolution](Check_%26_Oracle_Resolution.md) (15 shared connections)
-- [Scene Combat Area Effects](Scene_Combat_Area_Effects.md) (11 shared connections)
-- [Scene Combat Resolution](Scene_Combat_Resolution.md) (10 shared connections)
+- [Scene Combat Area Effects](Scene_Combat_Area_Effects.md) (14 shared connections)
+- [Scene Combat Resolution](Scene_Combat_Resolution.md) (11 shared connections)
 - [Character Effects Compilation](Character_Effects_Compilation.md) (7 shared connections)
 - [Condition Effects by System](Condition_Effects_by_System.md) (7 shared connections)
 - [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (7 shared connections)
@@ -62,7 +62,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 314 (100%)
+- EXTRACTED: 318 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

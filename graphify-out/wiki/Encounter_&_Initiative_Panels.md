@@ -10,7 +10,7 @@
 - **combatStats.ts** (22 connections) — `src/scene/combatStats.ts`
 - **SceneCreateForm.tsx** (20 connections) — `src/components/scene/SceneCreateForm.tsx`
 - **daggerheartAdversary.ts** (13 connections) — `src/rules/combatants/daggerheartAdversary.ts`
-- **Input.tsx** (10 connections) — `src/components/ui/Input.tsx`
+- **Input.tsx** (11 connections) — `src/components/ui/Input.tsx`
 - **resolveSceneCombatStats()** (10 connections) — `src/scene/combatStats.ts`
 - **InitiativeTracker.tsx** (9 connections) — `src/components/scene/InitiativeTracker.tsx`
 - **runSceneRound()** (9 connections) — `src/rules/combat/sceneCombat.ts`
@@ -20,11 +20,11 @@
 - **buildDaggerheartCombatant()** (8 connections) — `src/rules/combatants/daggerheartCombatant.ts`
 - **buildPlacedToken()** (8 connections) — `src/scene/tokenPlacement.ts`
 - **exportScenes()** (8 connections) — `src/utils/sceneStorage.ts`
+- **Input** (7 connections) — `src/components/ui/Input.tsx`
 - **factionForToken()** (7 connections) — `src/rules/combat/sceneCombat.ts`
 - **tokenAllegiance()** (7 connections) — `src/scene/allegiance.ts`
 - **SceneCreateForm.test.tsx** (7 connections) — `src/__tests__/components/SceneCreateForm.test.tsx`
 - **SceneCreateForm()** (6 connections) — `src/components/scene/SceneCreateForm.tsx`
-- **Input** (6 connections) — `src/components/ui/Input.tsx`
 - **SceneCombatStats** (6 connections) — `src/rules/combat/sceneCombat.ts`
 - **buildMam3eCombatant()** (5 connections) — `src/rules/combatants/mam3eCombatant.ts`
 - **isRoundConclusive()** (5 connections) — `src/rules/tactical/roundDriver.ts`
@@ -33,7 +33,7 @@
 
 ## Relationships
 
-- [Combat & Recap Panels](Combat_%26_Recap_Panels.md) (31 shared connections)
+- [Combat & Recap Panels](Combat_%26_Recap_Panels.md) (33 shared connections)
 - [Scene Combat Area Effects](Scene_Combat_Area_Effects.md) (30 shared connections)
 - [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md) (27 shared connections)
 - [Oracle Panel & Logic](Oracle_Panel_%26_Logic.md) (20 shared connections)
@@ -71,7 +71,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 410 (100%)
+- EXTRACTED: 412 (100%)
 - INFERRED: 1 (0%)
 - AMBIGUOUS: 0 (0%)
 

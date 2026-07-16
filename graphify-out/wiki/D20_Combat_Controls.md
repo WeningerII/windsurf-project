@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **abilityMod()** (54 connections) — `src/utils/math.ts`
+- **abilityMod()** (55 connections) — `src/utils/math.ts`
 - **types.ts** (44 connections) — `src/registry/types.ts`
 - **math.ts** (43 connections) — `src/utils/math.ts`
 - **Pf2eDataModel** (42 connections) — `src/systems/pf2e/data-model.ts`
@@ -71,7 +71,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 628 (100%)
+- EXTRACTED: 629 (100%)
 - INFERRED: 3 (0%)
 - AMBIGUOUS: 0 (0%)
 

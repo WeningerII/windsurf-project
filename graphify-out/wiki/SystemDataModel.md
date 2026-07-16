@@ -1,6 +1,6 @@
 # SystemDataModel
 
-> God node · 125 connections · `src/types/core/document.ts`
+> God node · 126 connections · `src/types/core/document.ts`
 
 **Community:** [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md)
 
@@ -27,8 +27,8 @@
 - sheet.tsx `EXTRACTED`
 - useDnd5eSheetActionHandlers.ts `EXTRACTED`
 - useSceneEncounter.ts `EXTRACTED`
-- sheet.tsx `EXTRACTED`
 - useDnd5eSheetController.ts `EXTRACTED`
+- sheet.tsx `EXTRACTED`
 - data-model.ts `EXTRACTED`
 
 ### inherits

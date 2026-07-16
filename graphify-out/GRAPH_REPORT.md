@@ -1,16 +1,16 @@
-# Graph Report - windsurf-project  (2026-07-14)
+# Graph Report - windsurf-project  (2026-07-16)
 
 ## Corpus Check
-- 688 files · ~478,977 words
+- 699 files · ~485,746 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 4379 nodes · 12371 edges · 197 communities (177 shown, 20 thin omitted)
-- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 101 edges (avg confidence: 0.71)
+- 4426 nodes · 12479 edges · 192 communities (174 shown, 18 thin omitted)
+- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 102 edges (avg confidence: 0.71)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `5e499a48`
+- Built from commit: `cd316ae3`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -161,7 +161,6 @@
 - Package Manifest
 - Verification Baseline Script
 - Scene Illustration Panel
-- Dnd5eEquipmentTab.tsx
 - TS Netlify Config
 - Generated Docs Check
 - Playwright Browser Check
@@ -172,8 +171,6 @@
 - 5e Movement Rules
 - contributionLedger.ts
 - MAM Power Modifier Browser
-- MAM Complication Browser
-- characterCombatant.test.ts
 - capabilityScenarios.test.tsx
 - PF2e Backgrounds Data
 - Host Size Budget Test
@@ -181,14 +178,8 @@
 - MAM Complications Data
 - MAM Power Modifiers Data
 - Vitest Coverage Config
-- syncTombstones.ts
-- useSceneEncounter.ts
 - featTemplate.test.ts
-- daggerheart-engine.test.ts
-- sceneTerrain.ts
-- tokenPlacement.ts
 - loadEquipmentForSystem
-- EncounterPanel.tsx
 - eslint-plugin-react
 - fake-indexeddb
 - knip
@@ -202,15 +193,15 @@
 - @vitest/coverage-v8
 
 ## God Nodes (most connected - your core abstractions)
-1. `CharacterDocument` - 229 edges
-2. `react` - 159 edges
-3. `SystemDataModel` - 125 edges
+1. `CharacterDocument` - 230 edges
+2. `react` - 162 edges
+3. `SystemDataModel` - 126 edges
 4. `GameSystemId` - 79 edges
 5. `EffectInstance` - 61 edges
-6. `makeEffectId()` - 54 edges
-7. `abilityMod()` - 54 edges
+6. `abilityMod()` - 55 edges
+7. `makeEffectId()` - 54 edges
 8. `Dnd5eDataModel` - 49 edges
-9. `SystemRegistry` - 44 edges
+9. `SystemRegistry` - 46 edges
 10. `Feature` - 44 edges
 
 ## Surprising Connections (you probably didn't know these)
@@ -228,51 +219,51 @@
 ## Import Cycles
 - None detected.
 
-## Communities (197 total, 20 thin omitted)
+## Communities (192 total, 18 thin omitted)
 
 ### Community 0 - "Sheet Resource Loading Hooks"
-Cohesion: 0.08
-Nodes (45): useLazyResource(), useSystemOptions(), useD20LegacySheetResources(), UseD20LegacySheetResourcesProps, loadClassesForSystem(), loadDaggerheartAdversariesForSystem(), loadDaggerheartArmor(), loadDaggerheartClasses() (+37 more)
+Cohesion: 0.05
+Nodes (94): useLazyResource(), useSystemOptions(), buildSystem(), CATEGORY_LOADERS, CategoryLoader, escape(), isRecord(), Loaded (+86 more)
 
 ### Community 1 - "Dnd5e Sheets & E2E Tests"
-Cohesion: 0.10
-Nodes (8): createDefaultDnd5e2024Data(), makeStoredDocument(), setStoredDocuments(), makeDoc(), makeDoc(), makeDoc(), make2024Doc(), make2024Doc()
+Cohesion: 0.12
+Nodes (22): RollResult, Props, Props, Props, SAVE_ABILITIES, SKILL_ABILITIES, createDefaultPf2eData(), Pf2eDataModel (+14 more)
 
 ### Community 2 - "Dnd5e Equipment & Features UI"
-Cohesion: 0.15
-Nodes (34): EquippedItemsSection(), Props, SLOT_LABELS, SLOT_ORDER, FeaturesSection(), Props, NormalizedSheet, Dnd5e2024DataModel (+26 more)
+Cohesion: 0.05
+Nodes (62): EquippedItemsSection(), Props, SLOT_LABELS, SLOT_ORDER, HitDiceTracker(), Props, Props, SLOT_LEVELS (+54 more)
 
 ### Community 3 - "Dnd5e Background Templates"
-Cohesion: 0.07
-Nodes (56): resolveFeatSelections(), ABILITY_NAME_TO_ID, ABILITY_OPTIONS, abilityAutomationFromSelections(), aggregateFeatAutomation(), applyDnd5eFeatTemplate(), applyFeatSkillSources(), buildAutomatedFeat() (+48 more)
+Cohesion: 0.06
+Nodes (58): resolveFeatSelections(), ABILITY_NAME_TO_ID, ABILITY_OPTIONS, abilityAutomationFromSelections(), aggregateFeatAutomation(), applyDnd5eFeatTemplate(), applyFeatSkillSources(), buildAutomatedFeat() (+50 more)
 
 ### Community 4 - "Dnd5e2024 Engine & Hit Dice"
-Cohesion: 0.18
-Nodes (12): engine, SHIELD, TEST_DATE, CasterType, casterTypeForClass(), compute5eSpellSlots(), Compute5eSpellSlotsOptions, computePactMagicSlots() (+4 more)
+Cohesion: 0.07
+Nodes (29): HIT_DICE, hitDieSize(), hitDieString(), D20Roll, Dnd5e2024Engine, hasAlertFeat(), totalCharacterLevel(), DND5E_CONDITION_NAMES (+21 more)
 
 ### Community 5 - "Daggerheart Engine"
 Cohesion: 0.08
-Nodes (49): applyDnd5eClassTemplate(), applyDnd5eSubclassTemplate(), assertMulticlassRequirements(), ATTRIBUTE_NAME_TO_ID, buildChoiceSlots(), buildDerivedProficiencies(), buildSpellcastingState(), canSelectSubclass() (+41 more)
+Nodes (50): applyDnd5eClassTemplate(), applyDnd5eSubclassTemplate(), assertMulticlassRequirements(), ATTRIBUTE_NAME_TO_ID, buildChoiceSlots(), buildDerivedProficiencies(), buildSpellcastingState(), canSelectSubclass() (+42 more)
 
 ### Community 6 - "3.5e Monster Data Encoder"
 Cohesion: 0.09
 Nodes (35): ALIGNMENTS, DICE_PROGRESSIONS, main(), mapAlignment(), mod(), MONSTER_SIZE, normalizeName(), OLIMOT_FILES (+27 more)
 
 ### Community 7 - "Tabs UI Component"
-Cohesion: 0.07
-Nodes (42): Tabs, TabsContentProps, TabsContext, TabsContextValue, TabsList, TabsProps, TabsTrigger, TabsTriggerProps (+34 more)
+Cohesion: 0.15
+Nodes (15): Tabs, TabsContentProps, TabsContext, TabsContextValue, TabsList, TabsProps, TabsTrigger, TabsTriggerProps (+7 more)
 
 ### Community 8 - "Node Runtime Bootstrap"
 Cohesion: 0.09
 Nodes (48): main(), runBootstrapNodeInstall(), getPinnedCommandArgs(), main(), runPinnedNpmCommand(), formatRuntimeDoctorReport(), main(), readWorkflowPinSource() (+40 more)
 
 ### Community 9 - "Scene Combat Resolution"
-Cohesion: 0.06
-Nodes (44): SceneManager(), buildSceneCombatants(), factionForToken(), ResolveCombatStats, appendSceneEvent(), applySceneIntents(), createSceneDocument(), foldSceneEvents() (+36 more)
+Cohesion: 0.07
+Nodes (42): Props, SceneCreateFormProps, ResolveCombatStats, appendSceneEvent(), createSceneDocument(), foldSceneEvents(), resolveSceneAction(), makeScene() (+34 more)
 
 ### Community 10 - "Dnd5e Class Templates"
 Cohesion: 0.14
-Nodes (30): applyAbilityAdjustments(), applyD20LegacyClassTemplate(), applyD20LegacyRaceTemplate(), buildClassSkills(), classFeaturesUpToLevel(), classSkillOptions(), collectClassFeatureSignatures(), create35eClassLevel() (+22 more)
+Nodes (29): applyAbilityAdjustments(), applyD20LegacyClassTemplate(), applyD20LegacyRaceTemplate(), buildClassSkills(), classFeaturesUpToLevel(), classSkillOptions(), collectClassFeatureSignatures(), create35eClassLevel() (+21 more)
 
 ### Community 11 - "System Compute Registers"
 Cohesion: 0.17
@@ -283,210 +274,184 @@ Cohesion: 0.13
 Nodes (19): Props, State, LegalNotices(), LegalNoticesProps, licenseTexts, MonsterStatBlock(), MonsterStatBlockProps, Card (+11 more)
 
 ### Community 13 - "Dnd5e Activity Definitions"
-Cohesion: 0.07
-Nodes (41): Dnd5eTemplateState, buildDefenseStyleActivity(), buildDivineSmiteActivities(), buildDivineSmiteActivity(), buildDnd5eActivityDefinitions(), buildUnsupportedDivineSmiteActivity(), divineSmiteSlotLevel(), Dnd5eActivityCost (+33 more)
+Cohesion: 0.11
+Nodes (26): buildDefenseStyleActivity(), buildDivineSmiteActivities(), buildDivineSmiteActivity(), buildDnd5eActivityDefinitions(), buildUnsupportedDivineSmiteActivity(), divineSmiteSlotLevel(), Dnd5eActivityCost, Dnd5eActivityCostKind (+18 more)
 
 ### Community 14 - "Monster & NPC Generator"
-Cohesion: 0.18
-Nodes (13): Props, ChoiceSlot, Dnd5eSpeciesSection(), Props, GetDnd5eTemplateChoiceStateProps, formatDnd5eSpeciesToolLabel(), MulticlassProficiencies, AbilityScoreIncrease (+5 more)
+Cohesion: 0.09
+Nodes (27): FeaturesSection(), Props, NormalizedSheet, CharacterEffectInputs, MagicBonusItem, ModifierSource, casterTypes, classResourcesNeeded (+19 more)
 
 ### Community 15 - "Dnd5e Feat Templates"
-Cohesion: 0.18
-Nodes (9): createDefaultDnd5eData(), Dnd5eEngine, makeDoc(), makeDoc(), makeDoc(), RFC-003, makeDoc(), makeDoc() (+1 more)
+Cohesion: 0.14
+Nodes (18): Badge(), BadgeProps, badgeVariants, D20EquipmentBrowserTab, D20FeatBrowserTab, D20FeatsTab(), FeatEntry, Props (+10 more)
 
 ### Community 16 - "App Shell & Layout"
 Cohesion: 0.19
-Nodes (17): mockedGetQueuedCampaignsSnapshot, mockedGetQueuedDeletedCampaignIds, mockedGetQueuedDeletedDocumentIds, mockedGetQueuedSyncSnapshot, getQueuedDeletedCampaignIds(), getQueuedDeletedDocumentIds(), queueIds(), readQueuedIds() (+9 more)
+Nodes (18): AppContent(), cloneSystemData(), mockedGetQueuedCampaignsSnapshot, mockedGetQueuedDeletedCampaignIds, mockedGetQueuedDeletedDocumentIds, mockedGetQueuedSyncSnapshot, getQueuedCampaignsSnapshot(), getQueuedDeletedDocumentIds() (+10 more)
 
 ### Community 17 - "D20 Combat Controls"
-Cohesion: 0.10
-Nodes (20): CombatStatCard(), Props, Props, SheetHeader(), TabsContent, Dnd5eAbilitiesTab(), Props, Dnd5eHeaderSection() (+12 more)
+Cohesion: 0.19
+Nodes (12): TabsContent, Dnd5eAbilitiesTab(), Props, Dnd5eNotesTab(), Dnd5ePersonality, Props, Dnd5eWeaponMasteriesTab(), Props (+4 more)
 
 ### Community 18 - "Game System Selector"
-Cohesion: 0.14
-Nodes (22): registryMeta, SupportMeta, {
-  systemRegistryGetMock,
-  loadAdvantagesForSystemMock,
-  loadArchetypesForSystemMock,
-  loadBackgroundsForSystemMock,
-  loadClassesForSystemMock,
-  loadComplicationsForSystemMock,
-  loadDaggerheartAncestriesForSystemMock,
-  loadDaggerheartClassesForSystemMock,
-  loadDaggerheartCommunitiesForSystemMock,
-  loadDaggerheartConsumablesForSystemMock,
-  loadDaggerheartDomainCardsForSystemMock,
-  loadDaggerheartDomainsForSystemMock,
-  loadDaggerheartArmorForSystemMock,
-  loadDaggerheartLootForSystemMock,
-  loadDaggerheartWeaponsForSystemMock,
-  loadEquipmentForSystemMock,
-  loadFeatsForSystemMock,
-  loadFeatureOptionsForSystemMock,
-  loadMam3eArchetypesForSystemMock,
-  loadMonstersForSystemMock,
-  loadPf2eBackgroundsForSystemMock,
-  loadPowerModifiersForSystemMock,
-  loadSpeciesForSystemMock,
-  loadSpellsForSystemMock,
-  loadTraitsForSystemMock,
-}, SystemContentSummary, clearSystemCatalogSummaryCache(), loadAllSystemCatalogSummaries(), loadSystemCatalogDataLoaders(), loadSystemCatalogSummary() (+14 more)
+Cohesion: 0.09
+Nodes (37): categoryIcons, GameSystemSelector(), GameSystemSelectorProps, systemAccents, supportBadgeLabels, supportBadgeStyles, buildInitialSummaryStates(), categoryDisplay (+29 more)
 
 ### Community 19 - "Combat & Recap Panels"
-Cohesion: 0.10
-Nodes (37): MamPowersTab(), ModifierColumn(), ModifierColumnProps, buildMam3eContributionLedger(), buildMam3ePowerCostLedgerEntries(), createPowerCostEntry(), ledgerId(), mam3eAfflictionDC() (+29 more)
+Cohesion: 0.08
+Nodes (53): MamPowersTab(), ModifierColumn(), ModifierColumnProps, Props, buildMam3eContributionLedger(), buildMam3ePowerCostLedgerEntries(), createPowerCostEntry(), ledgerId() (+45 more)
 
 ### Community 20 - "D20 Legacy System Engines"
-Cohesion: 0.13
-Nodes (19): dnd35eAbilityIncreases(), dnd35eConcentrationDCDamage(), dnd35eConcentrationDCDefensive(), dnd35eFeatsFromLevel(), dnd35eHpState, dnd35eTriggersMassiveDamage(), dnd35eXpForLevel(), pf1eConcentrationDCDamage() (+11 more)
+Cohesion: 0.10
+Nodes (25): dnd35eAbilityIncreases(), dnd35eConcentrationDCDamage(), dnd35eConcentrationDCDefensive(), dnd35eFeatsFromLevel(), dnd35eHpState, dnd35eTriggersMassiveDamage(), dnd35eXpForLevel(), pf1eConcentrationDCDamage() (+17 more)
 
 ### Community 21 - "Dnd35e Saves & Data Model"
-Cohesion: 0.06
-Nodes (41): Props, Props, createDefaultDnd35eData(), Dnd35eClassLevel, Dnd35eDataModel, Dnd35eFeat, Dnd35eManualSpellcastingExtras, Dnd35eSaves (+33 more)
+Cohesion: 0.07
+Nodes (33): createDefaultDnd35eData(), Dnd35eClassLevel, Dnd35eFeat, Dnd35eManualSpellcastingExtras, Dnd35eSaves, RFC-003, Dnd35eEngine, createDefaultPf1eData() (+25 more)
 
 ### Community 22 - "Daggerheart Data Model"
-Cohesion: 0.15
-Nodes (19): EMPTY_WEAPON_LOADOUT, GetDaggerheartSheetStateProps, matchesQuery(), DaggerheartAdversaryRole, DaggerheartArmor, DaggerheartConsumable, DaggerheartDamageType, DaggerheartDomain (+11 more)
+Cohesion: 0.22
+Nodes (9): DaggerheartCharacterBasicsSection(), Props, DaggerheartDomainCardsSection(), Props, ATTRIBUTES, DOMAIN_CARD_TYPE_LABELS, EMPTY_WEAPON_LOADOUT, normalizeDomainId() (+1 more)
 
 ### Community 23 - "System Registry & Renderer"
-Cohesion: 0.08
-Nodes (13): SystemRegistry, SystemDefinition, SystemValidator, ValidationContext, ValidationResult, registerAllSystems(), MockBeforeInstallPromptEvent, CreationOptions (+5 more)
+Cohesion: 0.06
+Nodes (28): CharacterListView(), SystemRegistry, SheetProps, SystemDefinition, SystemSheetComponent, ValidationContext, ValidationIssue, ValidationReason (+20 more)
 
 ### Community 24 - "Game Rules & Proficiencies"
 Cohesion: 0.07
-Nodes (33): GAME_RULES, ArmorProficiency, ArmorProficiencyType, ArtisanToolProficiency, isValidArmorProficiency(), isValidSkillProficiency(), isValidToolProficiency(), isValidWeaponProficiency() (+25 more)
+Nodes (33): GAME_RULES, ArmorProficiency, ArmorProficiencyType, GamingSetProficiency, isValidArmorProficiency(), isValidSkillProficiency(), isValidToolProficiency(), isValidWeaponProficiency() (+25 more)
 
 ### Community 25 - "Campaign Sync Hooks"
 Cohesion: 0.16
-Nodes (31): Doc, useSync(), UseSyncOptions, mockedGetSupabaseClient, retryWithBackoff(), getSupabaseClient(), deleteRemoteCampaign(), deleteRemoteDocument() (+23 more)
+Nodes (14): Pf2eProficiencyBadge(), Props, TIER_COLORS, TIER_LABELS, formatPf2eOptionLabel(), Pf2eSkillsTab(), Pf2eSpellsTabComponent, Props (+6 more)
 
 ### Community 26 - "Daggerheart Inventory"
 Cohesion: 0.12
-Nodes (25): ancestryLookup, armorLookup, buildLookup(), classLookup, communityLookup, DEFAULTS, domainCardByName, domainCardByNameAndDomain (+17 more)
+Nodes (27): findDaggerheartInventoryDefinitionByName(), ancestryLookup, armorLookup, buildLookup(), classLookup, communityLookup, DEFAULTS, domainCardByName (+19 more)
 
 ### Community 27 - "Pf2e Character Templates"
 Cohesion: 0.11
-Nodes (37): abilityBoostValue(), ancestryFeatures(), applyAbilityAdjustments(), applyPf2eAncestryTemplate(), applyPf2eBackgroundTemplate(), applyPf2eClassTemplate(), archetypeSource(), archetypeTemplateFeatures() (+29 more)
+Nodes (40): abilityBoostValue(), ancestryFeatures(), applyAbilityAdjustments(), applyPf2eAncestryTemplate(), applyPf2eArchetypeTemplate(), applyPf2eBackgroundTemplate(), applyPf2eClassTemplate(), archetypeSource() (+32 more)
 
 ### Community 28 - "Roadmap Metrics Generator"
 Cohesion: 0.09
-Nodes (38): applyRepoResidentOverrides(), buildComputeCompletion(), buildContentCompletion(), buildMarkdownReport(), ComputeCompletionRow, computeMetrics(), ContentCompletionRow, createEmptyCategoryCounts() (+30 more)
+Nodes (39): ManifestCategory, applyRepoResidentOverrides(), buildComputeCompletion(), buildContentCompletion(), buildMarkdownReport(), ComputeCompletionRow, computeMetrics(), ContentCompletionRow (+31 more)
 
 ### Community 29 - "Dnd5e Feature List Sections"
-Cohesion: 0.09
-Nodes (35): DamageHealControl(), DamageHealControlProps, DiceRollButton(), DiceRollButtonProps, RollResult, ABILITIES, D20AbilitiesTab(), Props (+27 more)
+Cohesion: 0.10
+Nodes (29): DamageHealControl(), DamageHealControlProps, DiceRollButton(), DiceRollButtonProps, ABILITIES, D20AbilitiesTab(), Props, D20CombatSection() (+21 more)
 
 ### Community 30 - "Encounter & Initiative Panels"
-Cohesion: 0.08
-Nodes (39): GamingSetProficiency, MusicalInstrumentProficiency, appendInventoryFromBackground(), applyDnd5eBackgroundTemplate(), BackgroundChoiceSlot, BackgroundChoiceValue, backgroundDerivedState(), COMMON_LANGUAGE_OPTIONS (+31 more)
+Cohesion: 0.05
+Nodes (77): ArtisanToolProficiency, MusicalInstrumentProficiency, appendInventoryFromBackground(), applyDnd5eBackgroundTemplate(), BackgroundChoiceSlot, BackgroundChoiceValue, backgroundDerivedState(), COMMON_LANGUAGE_OPTIONS (+69 more)
 
 ### Community 31 - "Class Enhancement & Headers"
-Cohesion: 0.07
-Nodes (45): casterTypes, classResourcesNeeded, classTags, Props, getBackgroundFixedToolProficiencies(), getBackgroundToolChoiceSlots(), getEligibleDnd5eFeatureOptions(), applyDnd5eLongRest() (+37 more)
+Cohesion: 0.10
+Nodes (32): getEligibleDnd5eFeatureOptions(), applyDnd5eLongRest(), applyDnd5eShortRest(), recoverAllSpellSlots(), recoverFeatures(), recoverLongRestHitDice(), recoverPactMagicSlots(), featureOptionSelectionKey() (+24 more)
 
 ### Community 32 - "Pf2e Sheet Tabs"
-Cohesion: 0.11
-Nodes (27): Pf2eArchetypesTab(), Props, Props, Pf2eProficiencyTier, Pf2eSpellcasting, getPf2eSheetChoiceState(), GetPf2eSheetChoiceStateProps, Pf2eChoiceSlot (+19 more)
+Cohesion: 0.12
+Nodes (24): Pf2eArchetypesTab(), Props, Pf2eInventoryTab(), Props, Pf2eNotesTab(), Props, getPf2eSheetChoiceState(), GetPf2eSheetChoiceStateProps (+16 more)
 
 ### Community 33 - "AI Encounter Drafting"
-Cohesion: 0.14
-Nodes (20): DIFFICULTY_COLUMN, draftEncounter(), DraftEncounterParams, ENCOUNTER_BUDGET_SYSTEMS, EncounterBudgetSystem, encounterPartyBudget(), monsterEncounterCost(), partyXpBudget() (+12 more)
+Cohesion: 0.08
+Nodes (36): draftEncounterWithAi(), fileToAiImageInput(), readAsDataUrl(), isMonsterSystemId(), RFC-006, useSceneEncounter(), EncounterMonsterSelection, DIFFICULTY_COLUMN (+28 more)
 
 ### Community 34 - "Quest & Session Log UI"
 Cohesion: 0.10
-Nodes (33): Props, QuestList(), STATUS_BADGE, STATUS_OPTIONS, DATE_FORMAT, Props, SessionLog(), BRUTE (+25 more)
+Nodes (35): Props, QuestList(), STATUS_BADGE, STATUS_OPTIONS, DATE_FORMAT, Props, SessionLog(), SceneCreateForm() (+27 more)
 
 ### Community 35 - "Currency & Inventory Editors"
-Cohesion: 0.08
-Nodes (26): CombatTogglesSection(), Props, Condition, ConditionPicker(), Props, D20_LEGACY_CONDITION_NAMES, availablePf2eToggles(), collectPf2eRiderEffects() (+18 more)
+Cohesion: 0.32
+Nodes (5): CombatTogglesSection(), Props, Dnd5eRiderTogglesSection(), Props, TOGGLE_LABELS
 
 ### Community 36 - "Document Sync Engine"
 Cohesion: 0.10
-Nodes (27): IllustrateSceneResult, CharacterListView(), CharacterSortOption, EncounterPanel(), formatAverageLevel(), ILLUSTRATION_STYLES, IllustrationPanel(), IllustrationPanelProps (+19 more)
+Nodes (22): illustrateSceneWithAi(), LibraryScenesView(), InitiativeTracker(), MarkerPanel(), DND5E_SCENE_CONDITIONS, PlacementMode, SceneManager(), useToast() (+14 more)
 
 ### Community 37 - "Sheet Header & Stat Cards"
-Cohesion: 0.15
-Nodes (15): useCampaignSync(), UseCampaignSyncOptions, EntitySyncAdapter, useEntitySync(), UseEntitySyncOptions, mockedGetSupabaseClient, debounce(), getQueuedCampaignsSnapshot() (+7 more)
+Cohesion: 0.36
+Nodes (6): EntitySyncAdapter, useEntitySync(), UseEntitySyncOptions, debounce(), RemoteFetchResult, SyncTombstone
 
 ### Community 38 - "Check & Oracle Resolution"
 Cohesion: 0.10
-Nodes (40): resolveCheck(), BuildEncounterEventsResult, footprintCells(), footprintWithinGrid(), isOracleOdds(), resolveOracle(), applyHitPointDelta(), applySceneEvent() (+32 more)
+Nodes (41): resolveCheck(), BuildEncounterEventsResult, footprintCells(), footprintWithinGrid(), isOracleAnswer(), applyHitPointDelta(), applySceneEvent(), applySceneIntents() (+33 more)
 
 ### Community 39 - "Mam3e Data Model & Engine"
-Cohesion: 0.13
-Nodes (18): clampTrack(), DeathSaves, DeathSavesTracker(), Props, HitDiceTracker(), Props, Props, SLOT_LEVELS (+10 more)
+Cohesion: 0.50
+Nodes (4): clampTrack(), DeathSaves, DeathSavesTracker(), Props
 
 ### Community 40 - "Doc Drift Rules"
-Cohesion: 0.07
-Nodes (50): DOC_DRIFT_MANIFEST, DocDriftRuleType, DocDriftSurface, DocDriftSurfaceKind, CAPABILITY_PHRASE_RULES, CapabilityPhraseRule, capitalizeSupportLevel(), COMMAND_RUNTIME_RULES (+42 more)
+Cohesion: 0.09
+Nodes (38): DOC_DRIFT_MANIFEST, DocDriftRuleType, DocDriftSurface, DocDriftSurfaceKind, capitalizeSupportLevel(), RUNTIME_COPY_RULES, tempDirs, buildDocDriftTruth() (+30 more)
 
 ### Community 41 - "NPM Build Scripts"
 Cohesion: 0.05
 Nodes (43): scripts, bootstrap:node, build, check:bundle-size, check:compute-register, check:compute-register:mutate, check:compute-register:write, check:dead-code (+35 more)
 
 ### Community 42 - "Condition Effects by System"
-Cohesion: 0.07
-Nodes (36): AppContent(), cloneSystemData(), LegalNotices, SceneManager, STORAGE_WARNING_THRESHOLD, CampaignManager(), LibraryScenesView(), NewCharacterDialog() (+28 more)
+Cohesion: 0.12
+Nodes (18): LegalNotices, SceneManager, STORAGE_WARNING_THRESHOLD, CharacterSortOption, SystemSheetRenderer(), Skeleton(), getEditableTarget(), KeyboardShortcut (+10 more)
 
 ### Community 43 - "Equipped Armor Section"
-Cohesion: 0.13
-Nodes (19): EquipArmorInput, EquipEntry, EquippedArmorSection(), EquipShieldInput, Props, Props, EquipmentBrowser, Pf2eEquipmentBrowserTabComponent (+11 more)
+Cohesion: 0.06
+Nodes (45): EquipArmorInput, EquipEntry, EquippedArmorSection(), EquipShieldInput, Props, D20EquipmentBrowserTabComponent, EquipmentBrowser, Props (+37 more)
 
 ### Community 44 - "Spell Browser UI"
-Cohesion: 0.14
-Nodes (23): SpellBrowser(), SpellBrowserProps, SpellBrowserSpell, D20SpellBrowserPanelComponent, SpellBrowser, toSpellBrowserSpell(), Dnd5eSpellsTabComponent, Props (+15 more)
+Cohesion: 0.33
+Nodes (11): SpellBrowserSpell, D20SpellBrowserPanelComponent, SpellBrowser, toSpellBrowserSpell(), Pf2eSpellBrowserPanelComponent, SpellBrowser, toSpellBrowserSpell(), formatAreaOfEffect() (+3 more)
 
 ### Community 45 - "Scene Combat Area Effects"
-Cohesion: 0.08
-Nodes (43): SceneGridViewProps, critModelForScene(), degreeModelForScene(), runSceneRound(), SceneAreaEffectOutcome, SceneAttackOutcome, SceneRoundOutcome, AreaEffectResult (+35 more)
+Cohesion: 0.10
+Nodes (33): SceneAreaEffectOutcome, SceneAttackOutcome, RoundCombatant, RoundTurnRecord, runCombatRound(), RunRoundInput, toActor(), toTarget() (+25 more)
 
 ### Community 46 - "Error Boundary & Auth Context"
-Cohesion: 0.12
-Nodes (20): AuthContext, clearLocalDataForAccountChange(), getLastSyncedUserId(), setLastSyncedUserId(), AuthProvider(), AuthCallback, mockedGetSupabaseClient, mockedIsSupabaseConfigured (+12 more)
+Cohesion: 0.13
+Nodes (17): AuthContext, AuthContextValue, clearLocalDataForAccountChange(), getLastSyncedUserId(), setLastSyncedUserId(), AuthProvider(), AuthCallback, mockedGetSupabaseClient (+9 more)
 
 ### Community 47 - "Encounter Builder Logic"
 Cohesion: 0.17
 Nodes (15): buildNotice(), FetchTarget, fetchValidated(), HTML_ENTITIES, looksLikeHtml(), main(), normalize(), noticePath (+7 more)
 
 ### Community 48 - "Scene Management Hooks"
-Cohesion: 0.13
-Nodes (27): Props, SceneCreateFormProps, useScenes(), makeScene(), now, pickTextFileMock, makeScene(), NOW (+19 more)
+Cohesion: 0.28
+Nodes (16): useScenes(), NOW, clearSceneStorage(), collectValidScenes(), deleteScene(), hydrateScene(), hydrateSceneEvent(), importScenes() (+8 more)
 
 ### Community 49 - "Monster Combatant Builder"
-Cohesion: 0.10
-Nodes (21): CR_XP_TABLE, formatChallengeRating(), MonsterBrowser(), MonsterBrowserProps, Dnd5eMonsterBrowserTabComponent, MonsterBrowser, MonsterBrowserProps, Props (+13 more)
+Cohesion: 0.08
+Nodes (23): CR_XP_TABLE, formatChallengeRating(), MonsterBrowser(), MonsterBrowserProps, Dnd5eMonsterBrowserTabComponent, MonsterBrowser, MonsterBrowserProps, Props (+15 more)
 
 ### Community 50 - "D20 Legacy Templates"
-Cohesion: 0.26
-Nodes (16): availableD20LegacyToggles(), D20LegacyData, D20LegacySpellSlots, getIterativeAttackBonuses(), recoverD20LegacySpellSlot(), resetD20LegacySpellSlots(), setD20LegacyPreparedSpell(), setD20LegacySpellSlotTotal() (+8 more)
+Cohesion: 0.22
+Nodes (20): availableD20LegacyToggles(), Props, Props, D20LegacyData, D20LegacySpellSlots, getIterativeAttackBonuses(), recoverD20LegacySpellSlot(), resetD20LegacySpellSlots() (+12 more)
 
 ### Community 51 - "Campaign Storage & Hooks"
-Cohesion: 0.19
-Nodes (17): useCampaigns(), DebouncedPersistence, IMPORTANT: a begun generation must end in either `persist` or, hostileStorage, CAMPAIGNS_STORAGE_KEY, clearCampaignStorage(), importCampaigns(), importCampaignsWithReport() (+9 more)
+Cohesion: 0.16
+Nodes (19): CampaignManager(), useCampaigns(), DebouncedPersistence, IMPORTANT: a begun generation must end in either `persist` or, useDebouncedPersistence(), hostileStorage, CAMPAIGNS_STORAGE_KEY, exportCampaigns() (+11 more)
 
 ### Community 52 - "Spell Preparation Logic"
-Cohesion: 0.17
-Nodes (15): categoryIcons, GameSystemSelector(), GameSystemSelectorProps, systemAccents, supportBadgeLabels, supportBadgeStyles, buildInitialSummaryStates(), categoryDisplay (+7 more)
+Cohesion: 0.25
+Nodes (13): DaggerheartNotesSection(), Props, DaggerheartReferenceLibrarySection(), Props, DaggerheartSelectionOverviewSection(), Props, DaggerheartSheetHeader(), Props (+5 more)
 
 ### Community 53 - "Dev Dependencies"
 Cohesion: 0.05
 Nodes (41): autoprefixer, eslint, eslint-config-prettier, eslint-plugin-react-hooks, eslint-plugin-react-refresh, happy-dom, devDependencies, autoprefixer (+33 more)
 
 ### Community 54 - "Character Combatant Builder"
-Cohesion: 0.09
-Nodes (36): TargetMapping, D20_LEGACY_CONDITION_EFFECTS, hasD20LegacyConditionEffects(), LegacyConditionTemplate, ConditionEffectTemplate, conditionImposesDisadvantage(), DND5E_CONDITION_EFFECTS, hasDnd5eConditionEffects() (+28 more)
+Cohesion: 0.08
+Nodes (38): compileEquipmentEffects(), equipStackPolicy(), isMeaningful(), TYPED_STACK_SYSTEMS, compileModifierEffects(), compileModifierSource(), formatSigned(), isNamedBonusType() (+30 more)
 
 ### Community 55 - "D20 Class Spellcasting"
-Cohesion: 0.11
-Nodes (20): react, ServiceWorkerUpdateBanner(), Mode, SignIn(), SignInProps, Button, ButtonProps, buttonVariants (+12 more)
+Cohesion: 0.08
+Nodes (38): react, IllustrateSceneResult, NarrateSceneResult, AppHeaderProps, EncounterPanel(), EncounterPanelProps, formatAverageLevel(), ILLUSTRATION_STYLES (+30 more)
 
 ### Community 56 - "SRD Manifest Generator"
-Cohesion: 0.17
-Nodes (18): CharacterEffectInputs, ResolvedCharacterEffects, compileEquipmentEffects(), equipStackPolicy(), isMeaningful(), MagicBonusItem, TYPED_STACK_SYSTEMS, compileModifierEffects() (+10 more)
+Cohesion: 0.19
+Nodes (15): InitiativeTrackerProps, CharacterCombatant, BuildDaggerheartAdversaryResult, DaggerheartAdversaryCombatant, RANGE_CELLS, DaggerheartCombatant, Mam3eCombatant, MonsterCombatant (+7 more)
 
 ### Community 57 - "Daggerheart Combatant Builders"
-Cohesion: 0.07
-Nodes (41): AppHeaderProps, Props, CharacterCardProps, CharacterListViewProps, UseSceneEncounterParams, Props, Props, SystemSheetRenderer() (+33 more)
+Cohesion: 0.06
+Nodes (41): Props, CharacterCardProps, CharacterListViewProps, UseSceneEncounterParams, Props, Props, SystemValidator, CombatStatsSources (+33 more)
 
 ### Community 58 - "AI Gateway Adapters"
 Cohesion: 0.12
@@ -497,12 +462,12 @@ Cohesion: 0.14
 Nodes (26): AI_GATEWAY_TASKS, AiFailureCode, AiParse, AiSuccess, AiUsage, EncounterDraftRequest, IdentifyCreatureRequest, IllustrateSceneRequest (+18 more)
 
 ### Community 60 - "System Definitions & Types"
-Cohesion: 0.27
-Nodes (14): getDaggerheartAncestryAdjustments(), applyDaggerheartAncestryTemplate(), applyDaggerheartClassTemplate(), applyDaggerheartCommunityTemplate(), classTemplateItems(), communityTemplateItems(), DaggerheartInventoryEntry, DEFAULTS (+6 more)
+Cohesion: 0.21
+Nodes (10): SpellBrowser(), SpellBrowserProps, Dnd5eSpellsTabComponent, Props, SpellBrowser, SpellBrowserProps, Dnd5eAlwaysPreparedSpellSource, Dnd5ePreparedCasterSummary (+2 more)
 
 ### Community 61 - "D20 Legacy Spell Slots"
-Cohesion: 0.16
-Nodes (22): buildEncounterSceneEvents(), buildInitiativeEntries(), buildOccupiedCells(), clampInteger(), compareTokenIds(), EncounterBuilderIssue, EncounterPartyMember, EncounterPlanEntry (+14 more)
+Cohesion: 0.12
+Nodes (26): buildEncounterSceneEvents(), buildInitiativeEntries(), buildOccupiedCells(), clampInteger(), compareTokenIds(), EncounterBuilderIssue, EncounterPartyMember, EncounterPlanEntry (+18 more)
 
 ### Community 62 - "SRD Coverage Script"
 Cohesion: 0.11
@@ -513,24 +478,24 @@ Cohesion: 0.05
 Nodes (39): jsx, env, browser, es2021, node, extends, ignorePatterns, overrides (+31 more)
 
 ### Community 64 - "Spells Tab Components"
-Cohesion: 0.17
-Nodes (16): compareSpells(), D20SpellsTab(), formatSpellLevel(), Props, titleCase(), D20_ARCANE_SCHOOLS, D20_LEGACY_MANUAL_NOTES, buildSpellPreparationConcepts() (+8 more)
+Cohesion: 0.21
+Nodes (15): compareSpells(), D20SpellsTab(), formatSpellLevel(), Props, titleCase(), D20_ARCANE_SCHOOLS, buildSpellPreparationConcepts(), compareSpellEntries() (+7 more)
 
 ### Community 65 - "Browser Compat & Error Logging"
-Cohesion: 0.18
-Nodes (12): BrowserCapabilities, checkBrowserCapabilities(), initBrowserCompat(), isBrowserSupported(), showCompatibilityWarning(), ErrorCategory, ErrorLog, ErrorLogger (+4 more)
+Cohesion: 0.13
+Nodes (14): ErrorBoundary, e(), BrowserCapabilities, checkBrowserCapabilities(), initBrowserCompat(), isBrowserSupported(), showCompatibilityWarning(), ErrorCategory (+6 more)
 
 ### Community 66 - "AI Gateway Client"
-Cohesion: 0.39
-Nodes (5): AI_GATEWAY_ENDPOINT, AiRequest, callAiGateway(), isAiEnabled(), payload
+Cohesion: 0.24
+Nodes (9): ToastContext, ToastContextValue, ToastItem, ToastProvider(), VARIANT_ICONS, VARIANT_STYLES, registerToastHandler(), ToastHandler (+1 more)
 
 ### Community 67 - "2024 Monster Data Encoder"
 Cohesion: 0.16
 Nodes (23): ABILITIES, ALIGNMENTS, bucketFor(), classifyImmunityList(), cleanProse(), CR_FRACTIONS, CREATURE_TYPES, DAMAGE_TYPES (+15 more)
 
 ### Community 68 - "Character Effects Compilation"
-Cohesion: 0.08
-Nodes (31): buildCharacterCombatant(), BuildCharacterCombatantResult, normalizeSheet(), readArmorClass(), toMagicBonusItems(), toModifierSources(), AttackEconomy, bestAttackAbility() (+23 more)
+Cohesion: 0.07
+Nodes (37): buildCharacterCombatant(), BuildCharacterCombatantResult, normalizeSheet(), readArmorClass(), toMagicBonusItems(), toModifierSources(), buildDaggerheartAdversaryCombatant(), buildMam3eCombatant() (+29 more)
 
 ### Community 69 - "TypeScript Config"
 Cohesion: 0.07
@@ -541,88 +506,92 @@ Cohesion: 0.12
 Nodes (23): MUTATION_ANCHORS, MutationAnchor, applyDemotion(), DO_MUTATE, DO_WRITE, escapeRe(), evaluateMutation(), evaluateTierA() (+15 more)
 
 ### Community 71 - "Monster Stat Block & Status"
-Cohesion: 0.18
-Nodes (14): Props, UseDaggerheartSheetResourcesProps, UseDnd5eDeferredResourceOptions, UseDnd5eSheetResourcesOptions, Pf2eEquipmentBrowserTab, FeatBrowser, Pf2eFeatBrowserTab, Pf2eFeatBrowserTabComponent (+6 more)
+Cohesion: 0.20
+Nodes (7): CombatStatCard(), Props, Props, SheetHeader(), Dnd5eHeaderSection(), HeaderOption, Props
 
 ### Community 72 - "Dice Panel & Mam3e Resolution"
-Cohesion: 0.06
-Nodes (54): D20Roll, DualityRoll, rollDuality(), AttackResolution, AttackResolutionInput, resolveAttack(), rollD20(), DaggerheartAttackInput (+46 more)
+Cohesion: 0.11
+Nodes (31): ResolvedCharacterEffects, EffectCondition, AttackResolution, AttackResolutionInput, resolveAttack(), rollD20(), AreaEffectOutcome, AreaEffectResult (+23 more)
 
 ### Community 73 - "System Validation Logic"
-Cohesion: 0.20
-Nodes (24): ABILITY_SCORE_IDS, addIssue(), createDnd5eValidator(), Dnd5eValidationData, Dnd5eValidationDataModel, Dnd5eValidationSystemId, featureOptionKey(), isIntegerInRange() (+16 more)
+Cohesion: 0.23
+Nodes (22): ABILITY_SCORE_IDS, addIssue(), Dnd5eValidationData, Dnd5eValidationDataModel, featureOptionKey(), isIntegerInRange(), loadValidationData(), SPELL_SLOT_LEVELS (+14 more)
 
 ### Community 74 - "Spell Catalog Consistency Tests"
-Cohesion: 0.10
-Nodes (22): Props, Props, focusPulseSpell, PF2E_DERIVED_TRAITS, PF2E_SCHOOL_TRAITS, PF2E_TRADITIONS, e(), ExpectedSpellIdentity (+14 more)
+Cohesion: 0.16
+Nodes (14): ExpectedSpellIdentity, iconicSpellExpectations, SystemKey, systems, dedupeById(), Identified, indexById(), warnDuplicateId() (+6 more)
 
 ### Community 75 - "Dnd5e Resource Loading Hooks"
-Cohesion: 0.19
-Nodes (15): Dnd5eEquipmentTab, Dnd5eFeatBrowserTab, Dnd5eFeaturesTab, Dnd5eMonsterBrowserTab, Dnd5eSpellsTab, useDnd5eDeferredResource(), useDnd5eSheetResources(), defaultOptions (+7 more)
+Cohesion: 0.20
+Nodes (13): Dnd5eEquipmentTab, Dnd5eFeatBrowserTab, Dnd5eFeaturesTab, Dnd5eMonsterBrowserTab, Dnd5eSpellsTab, useDnd5eDeferredResource(), UseDnd5eDeferredResourceOptions, useDnd5eSheetResources() (+5 more)
 
 ### Community 76 - "Mam Powers & Cost Ledger"
-Cohesion: 0.09
-Nodes (34): ABILITIES, DEFENSES, MamAbilitiesTab(), Props, MamConditionsTab(), Props, MamHeader(), Props (+26 more)
+Cohesion: 0.29
+Nodes (7): MamArchetypeBrowser(), MamArchetypeBrowserProps, getMam3eSheetState(), GetMam3eSheetStateProps, uniqueNonEmptyStrings(), createEmptyMam3eConditionTrack(), Mam3eArchetype
 
 ### Community 77 - "Sync Engine Tests"
 Cohesion: 0.11
-Nodes (26): SystemEngine, resolveCharacterEffects(), d20LegacyCheckPenalty(), rollD20(), DND35E_CLASS_CATALOG, NOTE: 3.5e class files currently lack full `spellcasting.spellSlots` tables., SKILL_ABILITIES, RFC-003 (+18 more)
+Nodes (23): SystemEngine, resolveCharacterEffects(), d20LegacyCheckPenalty(), rollD20(), DND35E_CLASS_CATALOG, NOTE: 3.5e class files currently lack full `spellcasting.spellSlots` tables., SKILL_ABILITIES, RFC-003 (+15 more)
 
 ### Community 78 - "Dnd5e Feature Options"
-Cohesion: 0.07
-Nodes (46): Dnd5eFeatureOptionsSection(), Dnd5eFeatureOptionsSectionComponent, FeatureOptionBrowser, FeatureOptionBrowserProps, featureOptionSelectionKey(), Props, FeatureOptionBrowser(), FeatureOptionBrowserProps (+38 more)
+Cohesion: 0.09
+Nodes (39): Dnd5eFeatureOptionsSection(), Dnd5eFeatureOptionsSectionComponent, FeatureOptionBrowser, FeatureOptionBrowserProps, featureOptionSelectionKey(), Props, FeatureOptionBrowser(), FeatureOptionBrowserProps (+31 more)
 
 ### Community 79 - "Document Migrations & Storage"
-Cohesion: 0.09
-Nodes (42): useDebouncedPersistence(), cloneDocumentsSnapshot(), documentsChanged(), prepareDocumentsWithEngines(), prepareDocumentWithEngine(), useDocuments(), FeatureOptionRoundtripCase, makeSystem() (+34 more)
+Cohesion: 0.07
+Nodes (47): cloneDocumentsSnapshot(), documentsChanged(), prepareDocumentsWithEngines(), prepareDocumentWithEngine(), useDocuments(), setStoredDocuments(), FeatureOptionRoundtripCase, makeSystem() (+39 more)
 
 ### Community 80 - "App Header & Auth UI"
-Cohesion: 0.14
-Nodes (20): AppHeader(), ThemeToggle(), assertNever(), INITIAL_NAV_STATE, LIBRARY_SEGMENTS, LibrarySegment, librarySegmentLabel(), NavAction (+12 more)
+Cohesion: 0.18
+Nodes (15): AppHeader(), assertNever(), INITIAL_NAV_STATE, LIBRARY_SEGMENTS, librarySegmentLabel(), NavAction, navReducer(), Overlay (+7 more)
 
 ### Community 81 - "Combat Toggles & Conditions"
-Cohesion: 0.09
-Nodes (16): baseAuthValue, mockedClearQueuedDeletedDocumentIds, mockedClearQueuedSyncSnapshot, mockedDeleteRemoteDocument, mockedFetchRemoteDocuments, mockedGetQueuedDeletedDocumentIds, mockedGetQueuedSyncSnapshot, mockedGetSyncTombstonedIds (+8 more)
+Cohesion: 0.07
+Nodes (40): Doc, useSync(), UseSyncOptions, baseAuthValue, mockedClearQueuedDeletedDocumentIds, mockedClearQueuedSyncSnapshot, mockedDeleteRemoteDocument, mockedFetchRemoteDocuments (+32 more)
 
 ### Community 82 - "HP & Spell Slot Trackers"
-Cohesion: 0.19
-Nodes (9): EncounterDraftData, EncounterDraftSelection, TaskGatewayCall, DraftEncounterParams, DraftEncounterResult, GatewayCall, SelectionValidator, RFC-002 (+1 more)
+Cohesion: 0.21
+Nodes (9): EncounterDraftCandidate, EncounterDraftData, EncounterDraftSelection, DraftEncounterParams, DraftEncounterResult, GatewayCall, SelectionValidator, RFC-002 (+1 more)
 
 ### Community 83 - "Scene Grid View"
 Cohesion: 0.18
 Nodes (14): daggerheartManifest, dnd35eManifest, dnd5e2014Manifest, dnd5e2024Manifest, manifestForSystem(), SRD_MANIFESTS, mam3eManifest, pf1eManifest (+6 more)
 
 ### Community 84 - "Boundary Validation Tests"
-Cohesion: 0.24
-Nodes (18): ValidationIssue, NOW, parseImg(), validDocInput(), coerceDate(), coerceObjectives(), coerceQuests(), coerceSessionLog() (+10 more)
+Cohesion: 0.26
+Nodes (17): NOW, parseImg(), validDocInput(), coerceDate(), coerceObjectives(), coerceQuests(), coerceSessionLog(), coerceStringArray() (+9 more)
 
 ### Community 85 - "capabilityScenarios.test.tsx"
-Cohesion: 0.11
-Nodes (34): ManifestCategory, buildSystem(), CATEGORY_LOADERS, CategoryLoader, escape(), isRecord(), Loaded, main() (+26 more)
+Cohesion: 0.24
+Nodes (10): DaggerheartDomainCardAutomation(), DaggerheartDomainCardAutomationProps, DaggerheartFeatureListProps, DaggerheartSubclassFeatureGroup(), DaggerheartSubclassFeatureGroupProps, DOMAIN_CARD_AUTOMATION_LABELS, DOMAIN_CARD_AUTOMATION_VARIANTS, humanizeEffectTag() (+2 more)
 
 ### Community 86 - "Equipment & Feature Browsers"
-Cohesion: 0.11
-Nodes (26): clampDaggerheartInventoryQuantity(), createDaggerheartInventoryEntry(), daggerheartInventoryDefinitions, findDaggerheartInventoryDefinitionByName(), getDaggerheartInventoryDefinition(), inventoryDefinitionById, inventoryDefinitionByName, isDaggerheartConsumableDefinition() (+18 more)
+Cohesion: 0.07
+Nodes (52): getDaggerheartAncestryAdjustments(), clampDaggerheartInventoryQuantity(), createDaggerheartInventoryEntry(), daggerheartInventoryDefinitions, inventoryDefinitionById, inventoryDefinitionByName, isDaggerheartConsumableDefinition(), normalizeDaggerheartCurrency() (+44 more)
 
 ### Community 87 - "Pf2e Engine & Constants"
 Cohesion: 0.09
 Nodes (20): GapLedgerItem, LedgerPhase, LedgerStatus, LedgerTag, LedgerTrack, MASTER_GAP_LEDGER, RFC-003, byPhase (+12 more)
 
 ### Community 88 - "Documents Hook & Persistence"
-Cohesion: 0.13
-Nodes (13): ALLEGIANCE_LABEL, ALLEGIANCE_TOKEN_CLASS, buildTokenLabel(), buildTokensByCell(), SceneGridView, TokenHpBar(), Badge(), BadgeProps (+5 more)
+Cohesion: 0.12
+Nodes (14): TokenPanel(), TokenPanelProps, ALLEGIANCE_LABEL, ALLEGIANCE_TOKEN_CLASS, buildTokenLabel(), buildTokensByCell(), SceneGridView, SceneGridViewProps (+6 more)
 
 ### Community 89 - "Daggerheart Contribution Ledger"
-Cohesion: 0.10
-Nodes (36): ANCESTRY_ADJUSTMENTS_BY_ID, ancestryByName, classByName, DAGGERHEART_TRAITS, DaggerheartAncestryAdjustments, DaggerheartRange, DEFAULT_DAGGERHEART_ANCESTRY_ADJUSTMENTS, doesDaggerheartPassiveConditionApply() (+28 more)
+Cohesion: 0.07
+Nodes (59): buildDaggerheartCombatant(), RANGE_CELLS, ANCESTRY_ADJUSTMENTS_BY_ID, ancestryByName, classByName, DAGGERHEART_TRAITS, DaggerheartAncestryAdjustments, DaggerheartRange (+51 more)
+
+### Community 90 - "Dnd35e/Pf1e Derived Math"
+Cohesion: 0.36
+Nodes (7): ThemeToggle(), applyTheme(), getSystemTheme(), isTheme(), Theme, useTheme(), VALID_THEMES
 
 ### Community 91 - "Mam Browser Tabs"
-Cohesion: 0.15
-Nodes (19): AbilityScores, AreaOfEffect, DamageType, DiceRoll, Duration, Range, ActionDamage, Weapon (+11 more)
+Cohesion: 0.11
+Nodes (20): Props, Pf2eSpellBrowserPanel, Props, focusPulseSpell, stinkingCloudSpell, teleportSpell, PF2E_DERIVED_TRAITS, PF2E_SCHOOL_TRAITS (+12 more)
 
 ### Community 92 - "Pf2e Derived Math"
-Cohesion: 0.08
-Nodes (39): Props, Pf2eHeader(), Props, Pf2eNotesTab(), Props, createDefaultPf2eData(), Pf2eClassLevel, Pf2eDataModel (+31 more)
+Cohesion: 0.17
+Nodes (17): profTotal(), tierBonus(), CREATURE_XP_BY_LEVEL_DIFF, pf2eAttackModifier(), pf2eCreatureXP(), Pf2eDegree, pf2eDyingAfterRecovery(), pf2eEncounterBudget() (+9 more)
 
 ### Community 93 - "TypeDoc Config"
 Cohesion: 0.07
@@ -637,12 +606,12 @@ Cohesion: 0.13
 Nodes (12): app, ccBy, checks, component, dpcgl, failures, license, notice (+4 more)
 
 ### Community 96 - "Skills Tab & Combat Math"
-Cohesion: 0.23
-Nodes (11): DicePanel(), DicePanelProps, formatBreakdown(), QUICK_ROLLS, applyKeep(), DiceRollResult, DiceTerm, DiceTermResult (+3 more)
+Cohesion: 0.08
+Nodes (32): DicePanel(), DicePanelProps, formatBreakdown(), QUICK_ROLLS, DISPOSITION_BADGE, DISPOSITION_LABEL, ReactionHistoryEntry, ReactionPanel() (+24 more)
 
 ### Community 97 - "Mam3e Derived Math"
-Cohesion: 0.38
-Nodes (10): CharacterCard(), asNumber(), asRecord(), asString(), getClassLabel(), getDocumentLevelValue(), getHitPointLabel(), getLevelLabel() (+2 more)
+Cohesion: 0.27
+Nodes (13): CharacterCard(), makeDoc(), now, renderCard(), asNumber(), asRecord(), asString(), getClassLabel() (+5 more)
 
 ### Community 98 - "Doc Drift Tests"
 Cohesion: 0.18
@@ -653,12 +622,12 @@ Cohesion: 0.11
 Nodes (5): DND35E_SOURCE_BLOCKED_SPELL_IDS, fieldCoverageBaselines, PF1E_SOURCE_ROWS_WITHOUT_SAVING_THROW, SpellModule, spellModules
 
 ### Community 100 - "Pf2e Spell Types & Traits"
-Cohesion: 0.26
-Nodes (10): DISPOSITION_BADGE, DISPOSITION_LABEL, ReactionHistoryEntry, ReactionPanel(), ReactionPanelProps, dispositionForTotal(), resolveReaction(), rollReaction() (+2 more)
+Cohesion: 0.31
+Nodes (7): GeneratedNpc, generateNpc(), generateNpcName(), NAME_ENDS, NAME_MIDS, NAME_STARTS, catalog
 
 ### Community 101 - "Document Storage (IndexedDB)"
-Cohesion: 0.07
-Nodes (31): CurrencyEditor(), CurrencyEntry, DND_CURRENCIES, Props, InventoryItem, InventoryManager(), InventoryManagerProps, D20EquipmentBrowserTab (+23 more)
+Cohesion: 0.14
+Nodes (13): CurrencyEditor(), CurrencyEntry, DND_CURRENCIES, Props, InventoryItem, InventoryManager(), InventoryManagerProps, Currency (+5 more)
 
 ### Community 102 - "5e Monster Encoder"
 Cohesion: 0.22
@@ -673,8 +642,8 @@ Cohesion: 0.23
 Nodes (14): ALIGNMENT_ABBREV, bucketFor(), CREATURE_TYPES, DAMAGE_TYPES, main(), mapAttack(), normalizeName(), parseDamage() (+6 more)
 
 ### Community 105 - "AI Creature Identification"
-Cohesion: 0.09
-Nodes (16): AuthContextValue, baseAuthValue, mockedClearQueuedCampaignsSnapshot, mockedClearQueuedDeletedCampaignIds, mockedDeleteRemoteCampaign, mockedFetchRemoteCampaigns, mockedGetQueuedCampaignsSnapshot, mockedGetQueuedDeletedCampaignIds (+8 more)
+Cohesion: 0.08
+Nodes (47): useCampaignSync(), baseAuthValue, mockedClearQueuedCampaignsSnapshot, mockedClearQueuedDeletedCampaignIds, mockedDeleteRemoteCampaign, mockedFetchRemoteCampaigns, mockedGetQueuedCampaignsSnapshot, mockedGetQueuedDeletedCampaignIds (+39 more)
 
 ### Community 106 - "Character Card Presenter"
 Cohesion: 0.18
@@ -682,51 +651,51 @@ Nodes (17): AbilityScoreGrid(), buildPointBuyDraft(), buildStandardArrayDraft(),
 
 ### Community 107 - "Oracle Panel & Logic"
 Cohesion: 0.06
-Nodes (41): NarrateSceneResult, CheckPanel(), CheckPanelProps, OUTCOME_BADGE, OUTCOME_LABEL, SKILL_SUGGESTIONS, CombatPanel(), CombatPanelProps (+33 more)
+Nodes (41): CheckPanel(), CheckPanelProps, OUTCOME_BADGE, OUTCOME_LABEL, SKILL_SUGGESTIONS, CombatPanel(), CombatPanelProps, MarkerPanelProps (+33 more)
 
 ### Community 108 - "5e Equipment Tab"
-Cohesion: 0.12
-Nodes (20): SheetProps, SystemSheetComponent, ValidationReason, ValidationSeverity, D20EquipmentBrowserTabComponent, EquipmentBrowser, D20FeatBrowserTabComponent, FeatBrowser (+12 more)
+Cohesion: 0.14
+Nodes (17): CAPABILITY_PHRASE_RULES, CapabilityPhraseRule, COMMAND_RUNTIME_RULES, COUNT_RULES, ExpectedTextRule, HISTORICAL_BANNER_RULES, RuntimeCopyRule, SUPPORT_MATRIX_RULES (+9 more)
 
 ### Community 109 - "Scene Reaction Panel"
-Cohesion: 0.15
-Nodes (25): applyDnd5eSpeciesTemplate(), buildAbilityChoiceSlots(), buildSpeciesFeatures(), choiceAbilityBonuses(), COMMON_LANGUAGE_OPTIONS, Dnd5eLikeDataModel, Dnd5eSpeciesChoiceSlot, Dnd5eSpeciesTemplateSelections (+17 more)
+Cohesion: 0.39
+Nodes (4): ServiceWorkerUpdateBanner(), isServiceWorkerSupported(), ServiceWorkerUpdateState, useServiceWorkerUpdate()
 
 ### Community 110 - "Document Signature Hashing"
 Cohesion: 0.27
 Nodes (9): makeScene(), campaignSignatureFor(), sameCampaignSignatures(), sameDocumentSignatures(), sameSceneSignatures(), sameSignatureMultisets(), sceneSignatureFor(), signatureFor() (+1 more)
 
 ### Community 111 - "Resource Pool Tracking"
-Cohesion: 0.31
-Nodes (5): SceneNarrationData, NarrateSceneParams, narrateSceneWithAi(), NarrationGatewayCall, RFC-002
+Cohesion: 0.18
+Nodes (10): AI_GATEWAY_ENDPOINT, AiRequest, SceneNarrationData, callAiGateway(), isAiEnabled(), NarrateSceneParams, narrateSceneWithAi(), NarrationGatewayCall (+2 more)
 
 ### Community 112 - "Bundle Size Check"
-Cohesion: 0.15
-Nodes (10): appChunk, appChunks, assetsDir, budgets, chunks, dataChunks, jsFiles, largestDataChunk (+2 more)
+Cohesion: 0.10
+Nodes (15): appChunk, appChunks, assetsDir, budgets, chunks, dataChunks, distDir, eagerChunkNames (+7 more)
 
 ### Community 113 - "AI Prompt Builders"
 Cohesion: 0.29
 Nodes (12): EncounterDraftPayload, IdentifyCreaturePayload, IllustrateScenePayload, SceneNarrationPayload, buildEncounterDraftPrompt(), buildIdentifyCreaturePrompt(), buildIllustrateScenePrompt(), buildPromptForTask() (+4 more)
 
 ### Community 114 - "5e Feat Browser"
-Cohesion: 0.10
-Nodes (27): ProficiencyListSection(), Props, BrowserFeat, Dnd5eFeatBrowserTabComponent, FeatBrowser, FeatBrowserProps, Props, ChoiceSlot (+19 more)
+Cohesion: 0.08
+Nodes (36): ProficiencyListSection(), Props, D20FeatBrowserTabComponent, FeatBrowser, Props, BrowserFeat, Dnd5eFeatBrowserTabComponent, FeatBrowser (+28 more)
 
 ### Community 115 - "Project Dependencies"
 Cohesion: 0.09
 Nodes (23): ai, @ai-sdk/google, class-variance-authority, clsx, lucide-react, dependencies, ai, @ai-sdk/google (+15 more)
 
 ### Community 116 - "3.5e Spell Encoder"
-Cohesion: 0.23
-Nodes (11): resolveSceneAreaEffect(), AreaShape, cellInArea(), cellOnLine(), gridDistance(), tokensInArea(), attackEffect(), fireballDamage() (+3 more)
+Cohesion: 0.10
+Nodes (40): critModelForScene(), degreeModelForScene(), resolveSceneAreaEffect(), resolveSceneAttack(), SceneCombatStats, SceneRoundOutcome, RFC-003, BuildDaggerheartCombatantResult (+32 more)
 
 ### Community 117 - "AI Encounter Draft Flow"
-Cohesion: 0.23
-Nodes (9): AiImageInput, EncounterDraftCandidate, IdentifyCreatureData, IdentifyCreatureParams, IdentifyCreatureResult, identifyCreatureWithAi(), IdentifyGatewayCall, RFC-002 (+1 more)
+Cohesion: 0.24
+Nodes (8): AiImageInput, IdentifyCreatureData, IdentifyCreatureParams, IdentifyCreatureResult, identifyCreatureWithAi(), IdentifyGatewayCall, RFC-002, params
 
 ### Community 118 - "Campaign File Transfer"
-Cohesion: 0.19
-Nodes (18): D20SkillsTab(), Props, buildArmorClassEntries(), Skill, daggerheartDamageDiceCount(), DND35E_SYNERGY_SOURCES, dnd35eMaxSkillRanks(), dnd35eSkillSynergyTotal() (+10 more)
+Cohesion: 0.11
+Nodes (32): toContributionLedger(), D20SkillsTab(), Dnd5eTemplateState, AddEntryInput, buildAlwaysPreparedSpellEntries(), buildArmorClassEntries(), buildDnd5eContributionLedger(), buildFeatAutomationEntries() (+24 more)
 
 ### Community 119 - "MAM Archetype Browser"
 Cohesion: 0.27
@@ -737,8 +706,8 @@ Cohesion: 0.27
 Nodes (11): CLASS_COLUMNS, main(), mapCastingTime(), mapDuration(), mapRange(), RFC-4180, normalizeName(), parseCsv() (+3 more)
 
 ### Community 122 - "PF2e Archetypes Tab"
-Cohesion: 0.11
-Nodes (28): resolveSceneAttack(), collectD20LegacyConditionEffects(), collectDnd5eConditionEffects(), collectPf2eConditionEffects(), ConditionScope, getPf2eConditionStatusPenalty(), highestValue(), magnitude() (+20 more)
+Cohesion: 0.12
+Nodes (24): collectD20LegacyConditionEffects(), collectDnd5eConditionEffects(), DND5E_CONDITION_EFFECTS, hasDnd5eConditionEffects(), collectPf2eConditionEffects(), ConditionScope, getPf2eConditionStatusPenalty(), highestValue() (+16 more)
 
 ### Community 123 - "3.5e Gear & Weapons"
 Cohesion: 0.25
@@ -761,12 +730,16 @@ Cohesion: 0.50
 Nodes (3): MANUAL_EXCLUSIONS, ManualExclusion, ManifestSystemId
 
 ### Community 128 - "Toast Notifications"
-Cohesion: 0.08
-Nodes (32): MamAdvantageBrowserTab(), Props, MamArchetypeBrowser(), MamArchetypeBrowserProps, MamArchetypeBrowser, MamArchetypesTab, MamArchetypesTabComponent, Props (+24 more)
+Cohesion: 0.06
+Nodes (44): ABILITIES, DEFENSES, MamAbilitiesTab(), Props, MamAdvantageBrowserTab(), Props, MamArchetypeBrowser, MamArchetypesTab (+36 more)
+
+### Community 129 - "Daggerheart Sheet Automation"
+Cohesion: 0.33
+Nodes (5): Condition, ConditionPicker(), Props, available, valued
 
 ### Community 130 - "d20LegacySpellcasting.ts"
-Cohesion: 0.11
-Nodes (26): D20ClassesSection(), D20LegacyClassLevel, renderClassOptions(), d20BonusSpells(), buildD20LegacySpellSlotTotals(), countAdvancementLevels(), D20_DOMAIN_CLASS_IDS, D20_FALLBACK_CASTING_ABILITIES (+18 more)
+Cohesion: 0.12
+Nodes (23): D20ClassesSection(), D20LegacyClassLevel, Props, renderClassOptions(), d20BonusSpells(), buildD20LegacySpellSlotTotals(), countAdvancementLevels(), D20_DOMAIN_CLASS_IDS (+15 more)
 
 ### Community 131 - "Retry With Backoff"
 Cohesion: 0.31
@@ -777,8 +750,8 @@ Cohesion: 0.39
 Nodes (8): main(), mapCastingTime(), mapDuration(), mapRange(), normalizeName(), SCHOOLS, slug(), ts()
 
 ### Community 133 - "MAM Power Browser"
-Cohesion: 0.31
-Nodes (8): formatMamPowerAction(), formatMamPowerDuration(), formatMamPowerRange(), humanizeMamToken(), MamPowerBrowserTabComponent, MamPowerModifierBrowser, Props, SpellBrowser
+Cohesion: 0.40
+Nodes (5): availablePf2eToggles(), PF2E_CONDITIONS, PF2E_VALUED_CONDITIONS, Pf2eFeatsConditionsTab(), Props
 
 ### Community 134 - "Spell Validation Checks"
 Cohesion: 0.28
@@ -801,12 +774,12 @@ Cohesion: 0.25
 Nodes (7): arrowParens, endOfLine, printWidth, semi, singleQuote, tabWidth, trailingComma
 
 ### Community 140 - "pf2eConditions.ts"
-Cohesion: 0.26
-Nodes (9): HIT_DICE, hitDieSize(), hitDieString(), DND5E_CONDITION_NAMES, hasDnd5eCondition(), normalizeConditionId(), normalizeDnd5eConditions(), SKILL_ABILITIES (+1 more)
+Cohesion: 0.40
+Nodes (5): UseD20LegacyTemplateHandlersProps, Pf2eHeader(), Props, UsePf2eTemplateHandlersProps, CharacterClass
 
 ### Community 141 - "pf2eSpellTraits.test.ts"
-Cohesion: 0.12
-Nodes (34): SceneCombatStats, CharacterCombatant, buildDaggerheartAdversaryCombatant(), BuildDaggerheartAdversaryResult, DaggerheartAdversaryCombatant, RANGE_CELLS, buildDaggerheartCombatant(), BuildDaggerheartCombatantResult (+26 more)
+Cohesion: 0.25
+Nodes (16): actionReachCells(), ATTACK_COUNT_WORDS, averageDie(), buildMonsterCombatant(), dieFaces(), isMinusSign(), monsterAttackEffects(), monsterAttacksPerRound() (+8 more)
 
 ### Community 142 - "TS Base Config"
 Cohesion: 0.10
@@ -825,12 +798,8 @@ Cohesion: 0.29
 Nodes (4): args, baselinePath, currentBaseline, nextBaseline
 
 ### Community 146 - "Scene Illustration Panel"
-Cohesion: 0.31
-Nodes (6): GeneratedImageData, IllustrateGatewayCall, IllustrateSceneParams, illustrateSceneWithAi(), RFC-002, image
-
-### Community 147 - "Dnd5eEquipmentTab.tsx"
-Cohesion: 0.14
-Nodes (13): CurrencyEditor, CurrencyEditorProps, Dnd5eEquipmentTabComponent, EquipmentBrowser, EquipmentBrowserItem, EquipmentBrowserProps, EquippedItemsSection, EquippedItemsSectionProps (+5 more)
+Cohesion: 0.28
+Nodes (6): GeneratedImageData, TaskGatewayCall, IllustrateGatewayCall, IllustrateSceneParams, RFC-002, image
 
 ### Community 148 - "TS Netlify Config"
 Cohesion: 0.20
@@ -864,77 +833,45 @@ Nodes (12): clampCount(), createPool(), isExhausted(), isFull(), poolFromRemaini
 Cohesion: 0.60
 Nodes (4): dnd5eCarryingCapacity(), dnd5eHighJump(), dnd5eLongJump(), dnd5ePushDragLift()
 
-### Community 156 - "contributionLedger.ts"
-Cohesion: 0.23
-Nodes (13): getDaggerheartProficiency(), getDaggerheartTier(), getEquippedDaggerheartArmor(), getEquippedDaggerheartWeapon(), buildDaggerheartContributionLedger(), buildPassiveBonusEntries(), buildPassiveDerivedBonusEntries(), createEntry() (+5 more)
-
 ### Community 157 - "MAM Power Modifier Browser"
 Cohesion: 0.60
 Nodes (3): formatModifierCost(), MamPowerModifierBrowser(), MamPowerModifierBrowserProps
 
-### Community 158 - "MAM Complication Browser"
-Cohesion: 0.27
-Nodes (5): Dnd5e2024Engine, hasAlertFeat(), totalCharacterLevel(), profBonus(), Dnd5eRulesEdition
-
-### Community 159 - "characterCombatant.test.ts"
-Cohesion: 0.36
-Nodes (8): d20LegacySpellSaveDC(), dnd5eCantripScaleTier(), dnd5eConcentrationDC(), dnd5ePassivePerception(), Dnd5eSkillProficiency, dnd5eSpellAttackBonus(), dnd5eSpellSaveDC(), pf2eClassOrSpellDC()
-
 ### Community 160 - "capabilityScenarios.test.tsx"
-Cohesion: 0.27
-Nodes (8): SYSTEM_IDS, getSystemAssetPrefetchStateForTests(), prefetchedSystemAssets, prefetchedSystemRuntimeData, prefetchedSystemSheets, prefetchSystemAssetsForIds(), resetSystemAssetPrefetchStateForTests(), systemAssetPrefetchers
+Cohesion: 0.14
+Nodes (17): DocDriftTruth, NewCharacterDialog(), Props, UseDaggerheartSheetResourcesProps, SYSTEM_IDS, Character, FeatureUses, SpellcastingClass (+9 more)
 
 ### Community 161 - "PF2e Backgrounds Data"
 Cohesion: 0.50
 Nodes (3): Pf2eBackgroundChoice, Pf2eBackgroundDefinition, Pf2eBackgroundFeatGrant
 
-### Community 175 - "syncTombstones.ts"
-Cohesion: 0.31
-Nodes (11): NOW, getSyncTombstonedIds(), getSyncTombstones(), pruneExpired(), readStored(), recordSyncTombstones(), removeSyncTombstones(), STORAGE_KEYS (+3 more)
-
-### Community 177 - "useSceneEncounter.ts"
-Cohesion: 0.36
-Nodes (7): draftEncounterWithAi(), fileToAiImageInput(), readAsDataUrl(), isMonsterSystemId(), RFC-006, useSceneEncounter(), summarizeEncounterPlan()
-
 ### Community 179 - "featTemplate.test.ts"
-Cohesion: 0.36
-Nodes (5): clampExhaustion(), Props, RestControls(), D20LegacyHeader(), D20LegacySheet()
-
-### Community 180 - "daggerheart-engine.test.ts"
-Cohesion: 0.24
-Nodes (9): createDefaultDaggerheartData(), dhDoc(), DaggerheartDomainCardEntry, daggerheartPassiveAuditAttributes, makeDoc(), makeDomainCardEntry(), makePassiveAuditSystem(), passiveAuditSignature() (+1 more)
-
-### Community 181 - "sceneTerrain.ts"
-Cohesion: 0.25
-Nodes (4): Dnd5e2024SystemDef, Dnd5eSystemDef, createRegistry(), TEST_DATE
+Cohesion: 0.43
+Nodes (4): clampExhaustion(), Props, RestControls(), D20LegacySheet()
 
 ### Community 183 - "loadEquipmentForSystem"
 Cohesion: 0.50
 Nodes (3): Answer, Outcome, Q: where are pending debounced document saves flushed to localStorage on page hide or unload (persistence flush)
 
-### Community 184 - "EncounterPanel.tsx"
-Cohesion: 0.21
-Nodes (11): EncounterPanelProps, EncounterMonsterSelection, EncounterPartySummary, EncounterPlanSummary, DraftEncounterResult, EncounterDifficulty, EncounterSpec, EncounterSpecIssue (+3 more)
-
 ## Knowledge Gaps
-- **1112 isolated node(s):** `browser`, `es2021`, `node`, `eslint:recommended`, `plugin:@typescript-eslint/recommended` (+1107 more)
+- **1122 isolated node(s):** `browser`, `es2021`, `node`, `eslint:recommended`, `plugin:@typescript-eslint/recommended` (+1117 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **20 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **18 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `CharacterDocument` connect `Daggerheart Combatant Builders` to `Daggerheart Sheet Automation`, `Dnd5e Equipment & Features UI`, `Dnd5e Background Templates`, `Dnd5e2024 Engine & Hit Dice`, `Daggerheart Engine`, `Dnd5e Sheets & E2E Tests`, `Scene Combat Resolution`, `Dnd5e Class Templates`, `pf2eConditions.ts`, `pf2eSpellTraits.test.ts`, `Dnd5e Activity Definitions`, `Dnd5e Feat Templates`, `D20 Combat Controls`, `Combat & Recap Panels`, `D20 Legacy System Engines`, `Dnd35e Saves & Data Model`, `System Registry & Renderer`, `Campaign Sync Hooks`, `Daggerheart Inventory`, `Pf2e Character Templates`, `contributionLedger.ts`, `Dnd5e Feature List Sections`, `MAM Complication Browser`, `Encounter & Initiative Panels`, `Class Enhancement & Headers`, `Pf2e Sheet Tabs`, `Quest & Session Log UI`, `Currency & Inventory Editors`, `Document Sync Engine`, `Condition Effects by System`, `useSceneEncounter.ts`, `D20 Legacy Templates`, `featTemplate.test.ts`, `daggerheart-engine.test.ts`, `sceneTerrain.ts`, `tokenPlacement.ts`, `System Definitions & Types`, `D20 Legacy Spell Slots`, `Spells Tab Components`, `Character Effects Compilation`, `Monster Stat Block & Status`, `System Validation Logic`, `Mam Powers & Cost Ledger`, `Sync Engine Tests`, `Dnd5e Feature Options`, `Document Migrations & Storage`, `App Header & Auth UI`, `Combat Toggles & Conditions`, `Boundary Validation Tests`, `Equipment & Feature Browsers`, `Daggerheart Contribution Ledger`, `Pf2e Derived Math`, `Mam3e Derived Math`, `Document Storage (IndexedDB)`, `5e Equipment Tab`, `Scene Reaction Panel`, `Document Signature Hashing`?**
-  _High betweenness centrality (0.126) - this node is a cross-community bridge._
-- **Why does `react` connect `D20 Class Spellcasting` to `Sheet Resource Loading Hooks`, `Toast Notifications`, `Dnd5e Equipment & Features UI`, `d20LegacySpellcasting.ts`, `Dnd5e Sheets & E2E Tests`, `Daggerheart Engine`, `MAM Power Browser`, `Tabs UI Component`, `Scene Combat Resolution`, `Dnd5e Class Templates`, `Scene Check Panel`, `Monster & NPC Generator`, `D20 Combat Controls`, `Dnd5eEquipmentTab.tsx`, `Combat & Recap Panels`, `Equipment Browser Component`, `Feat Browser Component`, `Campaign Sync Hooks`, `Dnd5e Feature List Sections`, `MAM Power Modifier Browser`, `Class Enhancement & Headers`, `Pf2e Sheet Tabs`, `Quest & Session Log UI`, `Currency & Inventory Editors`, `Document Sync Engine`, `Sheet Header & Stat Cards`, `Mam3e Data Model & Engine`, `Condition Effects by System`, `Equipped Armor Section`, `Spell Browser UI`, `Error Boundary & Auth Context`, `Scene Management Hooks`, `Monster Combatant Builder`, `useSceneEncounter.ts`, `featTemplate.test.ts`, `Spell Preparation Logic`, `Campaign Storage & Hooks`, `D20 Legacy Templates`, `Daggerheart Combatant Builders`, `System Definitions & Types`, `ESLint Config`, `Spells Tab Components`, `Monster Stat Block & Status`, `Dnd5e Resource Loading Hooks`, `Mam Powers & Cost Ledger`, `Dnd5e Feature Options`, `Document Migrations & Storage`, `App Header & Auth UI`, `Combat Toggles & Conditions`, `capabilityScenarios.test.tsx`, `Equipment & Feature Browsers`, `Documents Hook & Persistence`, `Pf2e Derived Math`, `Skills Tab & Combat Math`, `Pf2e Spell Types & Traits`, `Document Storage (IndexedDB)`, `AI Creature Identification`, `Character Card Presenter`, `Oracle Panel & Logic`, `5e Equipment Tab`, `5e Feat Browser`, `Campaign File Transfer`?**
-  _High betweenness centrality (0.109) - this node is a cross-community bridge._
-- **Why does `GameSystemId` connect `Monster Stat Block & Status` to `Sheet Resource Loading Hooks`, `Toast Notifications`, `d20LegacySpellcasting.ts`, `Dnd5e Equipment & Features UI`, `Scene Combat Resolution`, `Dnd5e Class Templates`, `pf2eConditions.ts`, `Game System Selector`, `Dnd35e Saves & Data Model`, `Roadmap Metrics Generator`, `Class Enhancement & Headers`, `Pf2e Sheet Tabs`, `capabilityScenarios.test.tsx`, `Quest & Session Log UI`, `Currency & Inventory Editors`, `Document Sync Engine`, `Doc Drift Rules`, `Condition Effects by System`, `useSceneEncounter.ts`, `D20 Legacy Templates`, `Spell Preparation Logic`, `Character Combatant Builder`, `SRD Manifest Generator`, `Daggerheart Combatant Builders`, `SRD Coverage Script`, `Character Effects Compilation`, `Dnd5e Resource Loading Hooks`, `Mam Powers & Cost Ledger`, `capabilityScenarios.test.tsx`, `Equipment & Feature Browsers`, `Document Storage (IndexedDB)`, `5e Equipment Tab`?**
-  _High betweenness centrality (0.067) - this node is a cross-community bridge._
+- **Why does `CharacterDocument` connect `Daggerheart Combatant Builders` to `Toast Notifications`, `Dnd5e Sheets & E2E Tests`, `Dnd5e Equipment & Features UI`, `Dnd5e Background Templates`, `Dnd5e2024 Engine & Hit Dice`, `Daggerheart Engine`, `MAM Power Browser`, `Scene Combat Resolution`, `Dnd5e Class Templates`, `pf2eConditions.ts`, `Dnd5e Activity Definitions`, `Monster & NPC Generator`, `Dnd5e Feat Templates`, `D20 Combat Controls`, `Combat & Recap Panels`, `D20 Legacy System Engines`, `Dnd35e Saves & Data Model`, `System Registry & Renderer`, `Campaign Sync Hooks`, `Daggerheart Inventory`, `Pf2e Character Templates`, `Dnd5e Feature List Sections`, `Encounter & Initiative Panels`, `Class Enhancement & Headers`, `Pf2e Sheet Tabs`, `AI Encounter Drafting`, `Document Sync Engine`, `Condition Effects by System`, `Equipped Armor Section`, `Monster Combatant Builder`, `D20 Legacy Templates`, `featTemplate.test.ts`, `Spell Preparation Logic`, `D20 Class Spellcasting`, `D20 Legacy Spell Slots`, `Character Effects Compilation`, `System Validation Logic`, `Sync Engine Tests`, `Dnd5e Feature Options`, `Document Migrations & Storage`, `Combat Toggles & Conditions`, `Boundary Validation Tests`, `Equipment & Feature Browsers`, `Documents Hook & Persistence`, `Daggerheart Contribution Ledger`, `Pf2e Derived Math`, `Mam3e Derived Math`, `AI Creature Identification`, `Document Signature Hashing`, `Campaign File Transfer`?**
+  _High betweenness centrality (0.134) - this node is a cross-community bridge._
+- **Why does `react` connect `D20 Class Spellcasting` to `Sheet Resource Loading Hooks`, `Daggerheart Sheet Automation`, `Dnd5e Equipment & Features UI`, `d20LegacySpellcasting.ts`, `Toast Notifications`, `Daggerheart Engine`, `MAM Power Browser`, `Tabs UI Component`, `Dnd5e Sheets & E2E Tests`, `Dnd5e Class Templates`, `Scene Check Panel`, `pf2eConditions.ts`, `Monster & NPC Generator`, `Dnd5e Feat Templates`, `Game System Selector`, `Combat & Recap Panels`, `Daggerheart Data Model`, `System Registry & Renderer`, `Equipment Browser Component`, `Feat Browser Component`, `Campaign Sync Hooks`, `Pf2e Character Templates`, `contributionLedger.ts`, `Dnd5e Feature List Sections`, `MAM Power Modifier Browser`, `Class Enhancement & Headers`, `capabilityScenarios.test.tsx`, `AI Encounter Drafting`, `Quest & Session Log UI`, `Currency & Inventory Editors`, `Document Sync Engine`, `Sheet Header & Stat Cards`, `Pf2e Sheet Tabs`, `Mam3e Data Model & Engine`, `Condition Effects by System`, `Equipped Armor Section`, `Spell Browser UI`, `Error Boundary & Auth Context`, `Scene Management Hooks`, `Monster Combatant Builder`, `D20 Legacy Templates`, `featTemplate.test.ts`, `Campaign Storage & Hooks`, `Spell Preparation Logic`, `Daggerheart Combatant Builders`, `System Definitions & Types`, `ESLint Config`, `Spells Tab Components`, `AI Gateway Client`, `Monster Stat Block & Status`, `Dnd5e Resource Loading Hooks`, `Mam Powers & Cost Ledger`, `Dnd5e Feature Options`, `Document Migrations & Storage`, `App Header & Auth UI`, `Combat Toggles & Conditions`, `Equipment & Feature Browsers`, `Documents Hook & Persistence`, `Dnd35e/Pf1e Derived Math`, `Skills Tab & Combat Math`, `Document Storage (IndexedDB)`, `AI Creature Identification`, `Character Card Presenter`, `Oracle Panel & Logic`, `Scene Reaction Panel`, `5e Feat Browser`, `Campaign File Transfer`?**
+  _High betweenness centrality (0.114) - this node is a cross-community bridge._
+- **Why does `GameSystemId` connect `capabilityScenarios.test.tsx` to `Sheet Resource Loading Hooks`, `Toast Notifications`, `d20LegacySpellcasting.ts`, `Dnd5e Equipment & Features UI`, `Dnd5e2024 Engine & Hit Dice`, `Scene Combat Resolution`, `Dnd5e Class Templates`, `pf2eConditions.ts`, `Monster & NPC Generator`, `Dnd5e Feat Templates`, `Game System Selector`, `Dnd35e Saves & Data Model`, `Roadmap Metrics Generator`, `Class Enhancement & Headers`, `Pf2e Sheet Tabs`, `AI Encounter Drafting`, `Doc Drift Rules`, `Condition Effects by System`, `D20 Legacy Templates`, `Spell Preparation Logic`, `Character Combatant Builder`, `D20 Class Spellcasting`, `SRD Manifest Generator`, `Daggerheart Combatant Builders`, `SRD Coverage Script`, `Character Effects Compilation`, `Dnd5e Resource Loading Hooks`, `5e Equipment Tab`, `5e Feat Browser`?**
+  _High betweenness centrality (0.056) - this node is a cross-community bridge._
 - **What connects `browser`, `es2021`, `node` to the rest of the system?**
-  _1112 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _1122 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Sheet Resource Loading Hooks` be split into smaller, more focused modules?**
-  _Cohesion score 0.08 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.050314465408805034 - nodes in this community are weakly interconnected._
 - **Should `Dnd5e Sheets & E2E Tests` be split into smaller, more focused modules?**
-  _Cohesion score 0.09782608695652174 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.11693548387096774 - nodes in this community are weakly interconnected._
 - **Should `Dnd5e Equipment & Features UI` be split into smaller, more focused modules?**
-  _Cohesion score 0.14587737843551796 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.048539518900343644 - nodes in this community are weakly interconnected._

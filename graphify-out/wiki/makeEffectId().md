@@ -32,9 +32,9 @@
 - types.ts `EXTRACTED`
 
 ### imports
+- sceneCombatBridgeUi.test.ts `EXTRACTED`
 - sceneCombatBridge.test.ts `EXTRACTED`
 - monsterCombatant.ts `EXTRACTED`
-- sceneCombatBridgeUi.test.ts `EXTRACTED`
 - tacticalExecutor.ts `EXTRACTED`
 - tacticalExecutor.test.ts `EXTRACTED`
 - participantResolution.test.ts `EXTRACTED`
@@ -42,9 +42,9 @@
 - modifierEffects.ts `EXTRACTED`
 - d20LegacyConditions.ts `EXTRACTED`
 - sceneConditions.ts `EXTRACTED`
+- sceneTerrain.ts `EXTRACTED`
 - sceneConditions.test.ts `EXTRACTED`
 - mam3eCombatant.ts `EXTRACTED`
-- sceneTerrain.ts `EXTRACTED`
 - equipEffects.ts `EXTRACTED`
 - attackResolution.test.ts `EXTRACTED`
 - pf2eConditions.ts `EXTRACTED`

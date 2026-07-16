@@ -4,7 +4,7 @@
 
 ## Key Concepts
 
-- **CharacterCard.tsx** (16 connections) — `src/components/CharacterCard.tsx`
+- **CharacterCard.tsx** (18 connections) — `src/components/CharacterCard.tsx`
 - **characterPresenter.ts** (15 connections) — `src/utils/characterPresenter.ts`
 - **characterPresenter.test.ts** (10 connections) — `src/__tests__/utils/characterPresenter.test.ts`
 - **CharacterCard()** (7 connections) — `src/components/CharacterCard.tsx`
@@ -34,7 +34,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 91 (100%)
+- EXTRACTED: 93 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

@@ -1,6 +1,6 @@
 # CharacterDocument
 
-> God node · 229 connections · `src/types/core/document.ts`
+> God node · 230 connections · `src/types/core/document.ts`
 
 **Community:** [Daggerheart Combatant Builders](Daggerheart_Combatant_Builders.md)
 
@@ -28,8 +28,8 @@
 - engine.ts `EXTRACTED`
 - speciesTemplate.ts `EXTRACTED`
 - useSync.test.tsx `EXTRACTED`
+- index.ts `EXTRACTED`
 - daggerheartNormalization.ts `EXTRACTED`
-- contributionLedger.ts `EXTRACTED`
 
 ### references
 - .prepareData() `EXTRACTED`

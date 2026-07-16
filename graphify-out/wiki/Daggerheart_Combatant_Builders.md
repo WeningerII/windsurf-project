@@ -4,9 +4,9 @@
 
 ## Key Concepts
 
-- **CharacterDocument** (229 connections) — `src/types/core/document.ts`
-- **document.ts** (157 connections) — `src/types/core/document.ts`
-- **SystemDataModel** (125 connections) — `src/types/core/document.ts`
+- **CharacterDocument** (230 connections) — `src/types/core/document.ts`
+- **document.ts** (158 connections) — `src/types/core/document.ts`
+- **SystemDataModel** (126 connections) — `src/types/core/document.ts`
 - **tokenPlacement.ts** (19 connections) — `src/scene/tokenPlacement.ts`
 - **TokenPanel.tsx** (16 connections) — `src/components/scene/TokenPanel.tsx`
 - **mam3eCombatant.ts** (16 connections) — `src/rules/combatants/mam3eCombatant.ts`
@@ -71,7 +71,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 823 (100%)
+- EXTRACTED: 826 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

@@ -6,10 +6,10 @@
 
 - **createSceneDocument()** (33 connections) — `src/scene/runtime.ts`
 - **foldSceneEvents()** (30 connections) — `src/scene/runtime.ts`
-- **resolveSceneAction()** (29 connections) — `src/scene/runtime.ts`
+- **resolveSceneAction()** (30 connections) — `src/scene/runtime.ts`
+- **sceneCombatBridgeUi.test.ts** (30 connections) — `src/__tests__/rules/sceneCombatBridgeUi.test.ts`
 - **sceneCombatBridge.test.ts** (29 connections) — `src/__tests__/rules/sceneCombatBridge.test.ts`
-- **sceneCombatBridgeUi.test.ts** (27 connections) — `src/__tests__/rules/sceneCombatBridgeUi.test.ts`
-- **appendSceneEvent()** (26 connections) — `src/scene/runtime.ts`
+- **appendSceneEvent()** (27 connections) — `src/scene/runtime.ts`
 - **SceneManager.test.tsx** (26 connections) — `src/__tests__/components/SceneManager.test.tsx`
 - **characterCombatant.test.ts** (23 connections) — `src/__tests__/rules/characterCombatant.test.ts`
 - **sceneRuntime.test.ts** (20 connections) — `src/__tests__/sceneRuntime.test.ts`
@@ -37,8 +37,8 @@
 - [Encounter & Initiative Panels](Encounter_%26_Initiative_Panels.md) (19 shared connections)
 - [Scene Combat Area Effects](Scene_Combat_Area_Effects.md) (18 shared connections)
 - [Scene Management Hooks](Scene_Management_Hooks.md) (13 shared connections)
+- [Oracle Panel & Logic](Oracle_Panel_%26_Logic.md) (11 shared connections)
 - [Character Effects Compilation](Character_Effects_Compilation.md) (10 shared connections)
-- [Oracle Panel & Logic](Oracle_Panel_%26_Logic.md) (10 shared connections)
 - [Condition Effects by System](Condition_Effects_by_System.md) (9 shared connections)
 - [capabilityScenarios.test.tsx](capabilityScenarios.test.tsx.md) (7 shared connections)
 - [Encounter Builder Logic](Encounter_Builder_Logic.md) (7 shared connections)
@@ -60,7 +60,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 342 (100%)
+- EXTRACTED: 347 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 
