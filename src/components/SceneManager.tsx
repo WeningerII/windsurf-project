@@ -1051,7 +1051,7 @@ export function SceneManager({
 
               <ReactionPanel seed={state.seed} />
 
-              <DicePanel seed={state.seed} />
+              <DicePanel seed={state.seed} systemId={sceneSystemId} />
 
               {/* Image-output surface: a creative aid, not scene state. */}
               {aiEnabled && (

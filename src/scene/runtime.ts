@@ -211,7 +211,7 @@ function checkIntentIssues(
     issue('scene-check-modifier-invalid', 'A check modifier must be a finite number.', 'modifier');
   }
   if (intent.dc !== undefined && !Number.isFinite(intent.dc)) {
-    issue('scene-check-dc-invalid', 'A check DC must be a finite number when set.', 'dc');
+    issue('scene-check-dc-invalid', 'A check difficulty must be a finite number when set.', 'dc');
   }
   if (intent.actorTokenId !== undefined && !state.tokens[intent.actorTokenId]) {
     issue(

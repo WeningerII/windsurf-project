@@ -43,7 +43,7 @@ describe('CheckPanel', () => {
 
     await user.type(screen.getByLabelText('Check label'), 'Stealth');
     await user.type(screen.getByLabelText('Check modifier'), '7');
-    await user.type(screen.getByLabelText('Check DC'), '15');
+    await user.type(screen.getByLabelText('Check difficulty'), '15');
     await user.click(screen.getByRole('button', { name: /^Roll$/i }));
 
     expect(onRoll).toHaveBeenCalledWith({ label: 'Stealth', modifier: 7, dc: 15 });

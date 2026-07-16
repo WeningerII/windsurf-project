@@ -7,9 +7,18 @@ import { Button } from '../ui/Button';
 interface DicePanelProps {
   /** Scene seed, mixed with a per-roll nonce so each roll varies but stays seeded. */
   seed: string;
+  /** Scene system id; picks the quick-roll chips (default: the d20-family set). */
+  systemId?: string;
 }
 
-const QUICK_ROLLS = ['d20', 'd100', '2d6', '4d6kh3'];
+// Quick-roll chips by system. The d20 family (default) keeps d20 + the D&D
+// ability-score method; Daggerheart leads with its 2d12 duality dice. Kept as a
+// local map — the layer boundary forbids shared components value-importing from
+// src/systems/**. The input stays free-text for anything else.
+const QUICK_ROLLS_BY_SYSTEM: Record<string, readonly string[]> = {
+  daggerheart: ['2d12', 'd6', 'd20', 'd100'],
+};
+const DEFAULT_QUICK_ROLLS = ['d20', 'd100', '2d6', '4d6kh3'] as const;
 const MAX_HISTORY = 10;
 
 // App-wide monotonic roll counter: mixed into each seed so every roll is
@@ -24,10 +33,11 @@ let globalRollNonce = 0;
  * real (seeded RNG) but transient: they live in an in-memory history rather than
  * the replayable scene event log.
  */
-export function DicePanel({ seed }: DicePanelProps) {
+export function DicePanel({ seed, systemId }: DicePanelProps) {
   const [expression, setExpression] = useState('');
   const [history, setHistory] = useState<DiceRollResult[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const quickRolls = QUICK_ROLLS_BY_SYSTEM[systemId ?? ''] ?? DEFAULT_QUICK_ROLLS;
 
   const roll = (expr: string) => {
     const trimmed = expr.trim();
@@ -72,7 +82,7 @@ export function DicePanel({ seed }: DicePanelProps) {
         </div>
 
         <div className="flex flex-wrap gap-1.5">
-          {QUICK_ROLLS.map((quick) => (
+          {quickRolls.map((quick) => (
             <Button
               key={quick}
               variant="ghost"

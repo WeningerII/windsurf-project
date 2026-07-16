@@ -76,7 +76,7 @@ describe('summarizeSceneForLog', () => {
         ],
       })
     );
-    expect(recap).toBe('Checks: Perception 17 vs DC 15 (success); Insight 8.');
+    expect(recap).toBe('Checks: Perception 17 vs difficulty 15 (success); Insight 8.');
   });
 
   it('summarizes oracle answers, falling back to "Oracle" without a question', () => {
@@ -138,7 +138,7 @@ describe('summarizeSceneForLog', () => {
     );
     expect(recap.split('\n')).toEqual([
       'Combat: reached round 2; defeated Goblin.',
-      'Checks: Stealth 7 vs DC 12 (failure).',
+      'Checks: Stealth 7 vs difficulty 12 (failure).',
       'Oracle: Reinforcements? → No.',
     ]);
   });

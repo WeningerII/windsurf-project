@@ -5,21 +5,7 @@ import { Button } from '../ui/Button';
 import { Select } from '../ui/Select';
 import { Badge } from '../ui/Badge';
 
-interface CheckPanelProps {
-  state: SceneState;
-  /** Selected token, offered as the default roller. */
-  actorId?: string;
-  onRoll: (params: {
-    label: string;
-    modifier: number;
-    dc?: number;
-    actorTokenId?: string;
-    mode?: SceneCheckMode;
-  }) => void;
-}
-
-/** Common d20 skill labels across systems; the input stays free-text. */
-const SKILL_SUGGESTIONS = [
+const DND5E_SKILLS = [
   'Perception',
   'Investigation',
   'Insight',
@@ -33,7 +19,84 @@ const SKILL_SUGGESTIONS = [
   'History',
   'Nature',
   'Survival',
-];
+] as const;
+
+interface CheckPanelProps {
+  state: SceneState;
+  /** Selected token, offered as the default roller. */
+  actorId?: string;
+  onRoll: (params: {
+    label: string;
+    modifier: number;
+    dc?: number;
+    actorTokenId?: string;
+    mode?: SceneCheckMode;
+  }) => void;
+}
+
+/**
+ * Per-system check-label suggestions; the input stays free-text either way.
+ * Kept as a local map (the lint-enforced layer boundary forbids shared
+ * components value-importing from src/systems/**): 5e names for the 5e family,
+ * each system's own skill vocabulary elsewhere, and Daggerheart's six TRAITS —
+ * it has no skill list. Unknown/unset system ids get a small neutral set.
+ */
+const SKILL_SUGGESTIONS_BY_SYSTEM: Record<string, readonly string[]> = {
+  'dnd-5e-2014': DND5E_SKILLS,
+  'dnd-5e-2024': DND5E_SKILLS,
+  'dnd-3.5e': [
+    'Spot',
+    'Listen',
+    'Search',
+    'Hide',
+    'Move Silently',
+    'Sense Motive',
+    'Bluff',
+    'Diplomacy',
+    'Intimidate',
+    'Tumble',
+  ],
+  pf1e: [
+    'Perception',
+    'Stealth',
+    'Acrobatics',
+    'Sense Motive',
+    'Bluff',
+    'Diplomacy',
+    'Intimidate',
+    'Survival',
+  ],
+  pf2e: [
+    'Perception',
+    'Stealth',
+    'Athletics',
+    'Acrobatics',
+    'Deception',
+    'Diplomacy',
+    'Intimidation',
+    'Arcana',
+    'Nature',
+    'Society',
+    'Survival',
+  ],
+  mam3e: [
+    'Perception',
+    'Investigation',
+    'Insight',
+    'Stealth',
+    'Athletics',
+    'Acrobatics',
+    'Deception',
+    'Persuasion',
+    'Intimidation',
+    'Expertise',
+    'Technology',
+    'Treatment',
+  ],
+  daggerheart: ['Agility', 'Strength', 'Finesse', 'Instinct', 'Presence', 'Knowledge'],
+};
+
+const DEFAULT_SUGGESTIONS = ['Perception', 'Stealth', 'Persuasion'];
 
 const OUTCOME_BADGE: Record<SceneCheckLogEntry['outcome'], string> = {
   success: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400',
@@ -44,7 +107,7 @@ const OUTCOME_BADGE: Record<SceneCheckLogEntry['outcome'], string> = {
 const OUTCOME_LABEL: Record<SceneCheckLogEntry['outcome'], string> = {
   success: 'Success',
   failure: 'Failure',
-  unresolved: 'No DC',
+  unresolved: 'No difficulty',
 };
 
 /**
@@ -134,15 +197,17 @@ export function CheckPanel({ state, actorId, onRoll }: CheckPanelProps) {
             onKeyDown={(e) => {
               if (e.key === 'Enter') handleRoll();
             }}
-            placeholder="DC"
-            aria-label="Check DC"
+            placeholder="Difficulty"
+            aria-label="Check difficulty"
             className="h-9 min-w-0 rounded-md border border-input bg-transparent px-2 text-sm focus:outline-none focus:border-primary"
           />
         </div>
         <datalist id="scene-check-skills">
-          {SKILL_SUGGESTIONS.map((skill) => (
-            <option key={skill} value={skill} />
-          ))}
+          {(SKILL_SUGGESTIONS_BY_SYSTEM[state.systemId ?? ''] ?? DEFAULT_SUGGESTIONS).map(
+            (skill) => (
+              <option key={skill} value={skill} />
+            )
+          )}
         </datalist>
 
         <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] items-center gap-2">
@@ -192,7 +257,7 @@ export function CheckPanel({ state, actorId, onRoll }: CheckPanelProps) {
                   {entry.modifier >= 0 ? ` + ${entry.modifier}` : ` − ${Math.abs(entry.modifier)}`}
                   {' = '}
                   <span className="font-semibold text-foreground">{entry.total}</span>
-                  {entry.dc !== undefined ? ` vs DC ${entry.dc}` : ''}
+                  {entry.dc !== undefined ? ` vs difficulty ${entry.dc}` : ''}
                 </span>
                 <Badge
                   variant="secondary"

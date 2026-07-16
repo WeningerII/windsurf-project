@@ -313,7 +313,7 @@ describe('resolveSceneAttack', () => {
     });
     expect(phantom.hit).toBe(false);
     expect(phantom.intent).toBeUndefined();
-    expect(phantom.log).toMatch(/ghost has no hit points to damage/i);
+    expect(phantom.log).toMatch(/ghost has no health to damage/i);
   });
 });
 

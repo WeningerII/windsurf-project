@@ -191,7 +191,7 @@ export function resolveSceneAttack(params: {
     return {
       log: target.hp
         ? `${target.name} is already down.`
-        : `${target.name} has no hit points to damage.`,
+        : `${target.name} has no health to damage.`,
       hit: false,
     };
   }
