@@ -17,7 +17,7 @@ import {
   type ResolveCombatStats,
   type SceneCombatStats,
 } from '../../rules';
-import type { SceneDocument, SceneToken } from '../../types/core/scene';
+import type { SceneDocument, SceneMarker, SceneToken } from '../../types/core/scene';
 
 /**
  * UI bridge (RFC 003): the deterministic combat engine wired to a scene. Stub
@@ -709,6 +709,121 @@ describe('M&M 3e scene combat (phase 3 adapter)', () => {
       // The save held for this seed — legal, but the log must say so.
       expect(outcome.log).toContain('holds');
     }
+  });
+});
+
+describe('functional terrain in scene combat (RFC 003 Phase 4)', () => {
+  // A 1x1 marker whose stored IR effect raises AC by `ac` on the cell it covers.
+  function coverMarker(id: string, x: number, y: number, ac: number): SceneMarker {
+    return {
+      id,
+      kind: 'hazard',
+      label: 'Cover',
+      position: { x, y },
+      width: 1,
+      height: 1,
+      effects: [{ target: 'ac', operation: 'add', value: ac, label: `+${ac} cover` }],
+    };
+  }
+  function withMarker(scene: SceneDocument, marker: SceneMarker): SceneDocument {
+    const r = resolveSceneAction(
+      scene,
+      { type: 'add-marker', marker },
+      { eventId: `m-${marker.id}` }
+    );
+    return appendSceneEvent(scene, r.event!);
+  }
+  const acStats: ResolveCombatStats = () => ({
+    attackEffects: [atk(0)],
+    damageEffects: flatDamage(5),
+    armorClass: 10,
+    reach: 10,
+  });
+
+  it('a cover marker at the target cell raises the effective AC in resolution and the log', () => {
+    // hero (0,0) attacks goblin (1,0); the marker covers (1,0).
+    const base = sceneWith(
+      combatToken('hero', 'character', 20, 0),
+      combatToken('goblin', 'monster', 7, 1)
+    );
+    const covered = withMarker(base, coverMarker('cover', 1, 0, 5));
+
+    const outcome = resolveSceneAttack({
+      state: foldSceneEvents(covered).state,
+      attackerId: 'hero',
+      targetId: 'goblin',
+      resolveStats: acStats,
+      seed: 'cover',
+    });
+    expect(outcome.log).toMatch(/vs AC 15, \+5 cover/);
+
+    // Control: no marker → base AC, no cover note.
+    const clean = resolveSceneAttack({
+      state: foldSceneEvents(base).state,
+      attackerId: 'hero',
+      targetId: 'goblin',
+      resolveStats: acStats,
+      seed: 'cover',
+    });
+    expect(clean.log).toMatch(/vs AC 10/);
+    expect(clean.log).not.toMatch(/cover/);
+  });
+
+  it('terrain applies only at the cell it covers — a marker elsewhere is inert', () => {
+    const base = sceneWith(
+      combatToken('hero', 'character', 20, 0),
+      combatToken('goblin', 'monster', 7, 1)
+    );
+    const elsewhere = withMarker(base, coverMarker('c', 5, 5, 5)); // far from both tokens
+
+    const a = resolveSceneAttack({
+      state: foldSceneEvents(base).state,
+      attackerId: 'hero',
+      targetId: 'goblin',
+      resolveStats: acStats,
+      seed: 'x',
+    });
+    const b = resolveSceneAttack({
+      state: foldSceneEvents(elsewhere).state,
+      attackerId: 'hero',
+      targetId: 'goblin',
+      resolveStats: acStats,
+      seed: 'x',
+    });
+    expect(b.log).toBe(a.log); // off-cell terrain changes nothing
+  });
+
+  it('enough cover turns a would-be hit into a miss, deterministically', () => {
+    const base = sceneWith(
+      combatToken('hero', 'character', 20, 0),
+      combatToken('goblin', 'monster', 7, 1)
+    );
+    const covered = withMarker(base, coverMarker('c', 1, 0, 100));
+    // atk(50) beats AC 10 on any non-nat-1 roll; +100 cover (AC 110) can only be
+    // beaten by a natural-20 crit. Seed 'flip' rolls neither a 1 nor a 20.
+    const strong: ResolveCombatStats = () => ({
+      attackEffects: [atk(50)],
+      damageEffects: flatDamage(5),
+      armorClass: 10,
+      reach: 10,
+    });
+
+    const hit = resolveSceneAttack({
+      state: foldSceneEvents(base).state,
+      attackerId: 'hero',
+      targetId: 'goblin',
+      resolveStats: strong,
+      seed: 'flip',
+    });
+    const miss = resolveSceneAttack({
+      state: foldSceneEvents(covered).state,
+      attackerId: 'hero',
+      targetId: 'goblin',
+      resolveStats: strong,
+      seed: 'flip',
+    });
+    expect(hit.hit).toBe(true);
+    expect(miss.hit).toBe(false);
   });
 });
 
