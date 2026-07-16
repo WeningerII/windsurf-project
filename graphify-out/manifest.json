@@ -65,7 +65,7 @@
     "semantic_hash": "7d81f6d2b5a01dbf70bb8cb2775ae990"
   },
   "docs/generated/roadmap-metrics.json": {
-    "mtime": 1784234846.3264847,
+    "mtime": 1784239143.8136878,
     "ast_hash": "a527717c0a7c5b85edeeda3209a244f0",
     "semantic_hash": ""
   },
@@ -585,8 +585,8 @@
     "semantic_hash": "f0e1cadf42d000e8e7557fe6fc3299fd"
   },
   "src/__tests__/components/SceneManager.test.tsx": {
-    "mtime": 1784224556.8913858,
-    "ast_hash": "d639e7902c6161f90c25784eb0cdc9f9",
+    "mtime": 1784238930.3536873,
+    "ast_hash": "9dc69adc52170400d15ea51f127419fd",
     "semantic_hash": ""
   },
   "src/__tests__/components/SpellBrowser.test.tsx": {
@@ -975,9 +975,9 @@
     "semantic_hash": "b62dc417dad15f14878c5fd90ee9c42e"
   },
   "src/__tests__/rules/tacticalExecutor.test.ts": {
-    "mtime": 1783633520.4489114,
-    "ast_hash": "b84e9c434869ab7526466bc0ecab4d73",
-    "semantic_hash": "b84e9c434869ab7526466bc0ecab4d73"
+    "mtime": 1784238896.8096874,
+    "ast_hash": "4008130cae185790c52b53c5d71d2023",
+    "semantic_hash": ""
   },
   "src/__tests__/scenarios/capabilityScenarios.test.tsx": {
     "mtime": 1783633520.4489114,
@@ -1570,8 +1570,8 @@
     "semantic_hash": "7a6d8a6ed43f0229d9b667225db93828"
   },
   "src/components/scene/MarkerPanel.tsx": {
-    "mtime": 1784234655.866489,
-    "ast_hash": "e3ff64f43e3d0ce940645012e1b2cdfb",
+    "mtime": 1784238708.0376868,
+    "ast_hash": "7298ffd7f18e53f55ab4ab543491b0a2",
     "semantic_hash": ""
   },
   "src/components/scene/OraclePanel.tsx": {
@@ -1930,8 +1930,8 @@
     "semantic_hash": ""
   },
   "src/rules/tactical/tacticalExecutor.ts": {
-    "mtime": 1784234498.7984924,
-    "ast_hash": "e75ff88fb1787f0c65bd3f3ba4625bf2",
+    "mtime": 1784238620.6096869,
+    "ast_hash": "e90d122954b52a95a4d27d72aed9a4de",
     "semantic_hash": ""
   },
   "src/rules/tactical/targetScoring.ts": {
@@ -3230,7 +3230,7 @@
     "semantic_hash": ""
   },
   "docs/generated/master-gap-ledger.json": {
-    "mtime": 1784234846.3264847,
+    "mtime": 1784239143.8136878,
     "ast_hash": "6c770443f3f04cc1670b06087d204c88",
     "semantic_hash": ""
   },
@@ -3495,8 +3495,8 @@
     "semantic_hash": ""
   },
   "src/components/scene/markerEffects.ts": {
-    "mtime": 1784234671.9664886,
-    "ast_hash": "b7efb5c88a2bfe8ac0832520a3bb9be5",
+    "mtime": 1784239034.4816875,
+    "ast_hash": "e6f8db47a9315a1fe14f18b3f5feeebd",
     "semantic_hash": ""
   }
 }

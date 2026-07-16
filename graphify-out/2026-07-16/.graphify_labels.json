@@ -190,11 +190,7 @@
   "188": "knip",
   "189": "postcss",
   "190": "rollup-plugin-visualizer",
-  "191": "@testing-library/jest-dom",
-  "192": "tsx",
   "193": "@types/react",
   "194": "@types/react-dom",
-  "195": "vitest",
-  "196": "@vitest/coverage-v8",
-  "197": "@vitest/ui"
+  "196": "@vitest/coverage-v8"
 }
