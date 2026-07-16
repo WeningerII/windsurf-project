@@ -20,13 +20,13 @@
     "semantic_hash": ""
   },
   "docs/compute-register/dnd5e-2014.ts": {
-    "mtime": 1783633520.05478,
-    "ast_hash": "c5fe7d1fb737b793a43814263fc2af70",
+    "mtime": 1784139338.0685906,
+    "ast_hash": "7f8649dac7609c4337b7c4681062512d",
     "semantic_hash": ""
   },
   "docs/compute-register/dnd5e-2024.ts": {
-    "mtime": 1783633520.05478,
-    "ast_hash": "0ab76d4c303141853be24422543ce20b",
+    "mtime": 1784139338.0689983,
+    "ast_hash": "f9479c585f86cf5e37fdb95e85a5f403",
     "semantic_hash": ""
   },
   "docs/compute-register/index.ts": {
@@ -65,7 +65,7 @@
     "semantic_hash": "7d81f6d2b5a01dbf70bb8cb2775ae990"
   },
   "docs/generated/roadmap-metrics.json": {
-    "mtime": 1784044275.0865183,
+    "mtime": 1784139552.411402,
     "ast_hash": "a527717c0a7c5b85edeeda3209a244f0",
     "semantic_hash": ""
   },
@@ -180,9 +180,9 @@
     "semantic_hash": "7f1577df726a50757ee737404ffa2262"
   },
   "scripts/check-bundle-size.mjs": {
-    "mtime": 1783633520.4031625,
-    "ast_hash": "28d2ff912e64e15d0c488452e2f8daf5",
-    "semantic_hash": "28d2ff912e64e15d0c488452e2f8daf5"
+    "mtime": 1784061081.1347823,
+    "ast_hash": "b9d21f6e036b24d90fbc3b5ef3a5c644",
+    "semantic_hash": ""
   },
   "scripts/check-doc-drift.mjs": {
     "mtime": 1783633520.4031625,
@@ -305,8 +305,8 @@
     "semantic_hash": "9ba2c2e7f685d5b78174929cdbe910c3"
   },
   "src/App.tsx": {
-    "mtime": 1784043760.7785301,
-    "ast_hash": "4e7da00953f681f4dffbf9baf6b42200",
+    "mtime": 1784057280.097973,
+    "ast_hash": "16a12c3950a20668da2439c217bff59c",
     "semantic_hash": ""
   },
   "src/__tests__/App.test.tsx": {
@@ -395,8 +395,8 @@
     "semantic_hash": ""
   },
   "src/__tests__/character-management-flow.test.tsx": {
-    "mtime": 1783633520.4141893,
-    "ast_hash": "9365bb427d19f64263b459741d55f6ce",
+    "mtime": 1784056647.7699876,
+    "ast_hash": "3a4cdca208101f9ce33dc532635cdb2f",
     "semantic_hash": ""
   },
   "src/__tests__/components/AbilityScoreGrid.test.tsx": {
@@ -410,9 +410,9 @@
     "semantic_hash": "1622aa07bc0261607a8684ebb25e6e64"
   },
   "src/__tests__/components/CharacterCard.test.tsx": {
-    "mtime": 1783633520.4187632,
-    "ast_hash": "ae77ae4f6a0e2dad8c6dbd3a4200b850",
-    "semantic_hash": "ae77ae4f6a0e2dad8c6dbd3a4200b850"
+    "mtime": 1784056664.5499873,
+    "ast_hash": "03d8306d7fe7f7e722e6113fc262e6bb",
+    "semantic_hash": ""
   },
   "src/__tests__/components/CheckPanel.test.tsx": {
     "mtime": 1783633520.4187632,
@@ -585,8 +585,8 @@
     "semantic_hash": "f0e1cadf42d000e8e7557fe6fc3299fd"
   },
   "src/__tests__/components/SceneManager.test.tsx": {
-    "mtime": 1784044196.72252,
-    "ast_hash": "037ba7a3009272069a3c339c01bb6942",
+    "mtime": 1784224556.8913858,
+    "ast_hash": "d639e7902c6161f90c25784eb0cdc9f9",
     "semantic_hash": ""
   },
   "src/__tests__/components/SpellBrowser.test.tsx": {
@@ -960,9 +960,9 @@
     "semantic_hash": "2328236213b990700c17328da22546d1"
   },
   "src/__tests__/rules/sceneCombatBridgeUi.test.ts": {
-    "mtime": 1783633520.4489114,
-    "ast_hash": "2435af00a27df4edbe08b004b9c045db",
-    "semantic_hash": "2435af00a27df4edbe08b004b9c045db"
+    "mtime": 1784224356.5833905,
+    "ast_hash": "2baaf5fbd3a48a133dc4453722515758",
+    "semantic_hash": ""
   },
   "src/__tests__/rules/sceneConditions.test.ts": {
     "mtime": 1783633520.4489114,
@@ -1185,9 +1185,9 @@
     "semantic_hash": ""
   },
   "src/__tests__/utils/dnd5eSpellPreparation.test.ts": {
-    "mtime": 1783633520.4609113,
-    "ast_hash": "4be33cc45ebbf1f4ab2592900b4f433b",
-    "semantic_hash": "4be33cc45ebbf1f4ab2592900b4f433b"
+    "mtime": 1784128780.7982602,
+    "ast_hash": "12d500c7590a26b5611447d724f2a024",
+    "semantic_hash": ""
   },
   "src/__tests__/utils/documentMigrations.test.ts": {
     "mtime": 1783633520.4609113,
@@ -1370,8 +1370,8 @@
     "semantic_hash": "2b1d5395a1c560c8277d4b46fa644e0c"
   },
   "src/components/AppHeader.tsx": {
-    "mtime": 1783633520.4729114,
-    "ast_hash": "647e2b3d26fdd4a5406917bab848ce3e",
+    "mtime": 1784056564.2459896,
+    "ast_hash": "cd9f0e398afa5e4c55130804fdfdf5be",
     "semantic_hash": ""
   },
   "src/components/CampaignManager.tsx": {
@@ -1380,14 +1380,14 @@
     "semantic_hash": "5fe2d1897998fe4accd56bda68512623"
   },
   "src/components/CharacterCard.tsx": {
-    "mtime": 1783633520.4745362,
-    "ast_hash": "ecac17bb1e84e83ac398e0c5aaa88ef3",
-    "semantic_hash": "ecac17bb1e84e83ac398e0c5aaa88ef3"
+    "mtime": 1784056736.1259856,
+    "ast_hash": "0b6e07611e050a7428b49b0d366ab26f",
+    "semantic_hash": ""
   },
   "src/components/CharacterListView.tsx": {
-    "mtime": 1783633520.4745362,
-    "ast_hash": "c4dbf09e03aafbecda4b79e5b063fc00",
-    "semantic_hash": "c4dbf09e03aafbecda4b79e5b063fc00"
+    "mtime": 1784056611.4579885,
+    "ast_hash": "f4edc37835bc129e74af344d1af62b11",
+    "semantic_hash": ""
   },
   "src/components/CombatTogglesSection.tsx": {
     "mtime": 1783633520.4745362,
@@ -1490,8 +1490,8 @@
     "semantic_hash": "e353553f7965f5507fd85b9851b84d06"
   },
   "src/components/SceneManager.tsx": {
-    "mtime": 1784043778.1745298,
-    "ast_hash": "0af5fed90f2d5a35fb307c1fb22975d0",
+    "mtime": 1784224448.2633884,
+    "ast_hash": "b6700215734fdc047a59f30a0f52f853",
     "semantic_hash": ""
   },
   "src/components/ServiceWorkerUpdateBanner.tsx": {
@@ -1570,9 +1570,9 @@
     "semantic_hash": "7a6d8a6ed43f0229d9b667225db93828"
   },
   "src/components/scene/MarkerPanel.tsx": {
-    "mtime": 1783633520.4841247,
-    "ast_hash": "b153c8dff0ee75c31e8727f2d227d287",
-    "semantic_hash": "b153c8dff0ee75c31e8727f2d227d287"
+    "mtime": 1784224444.2593884,
+    "ast_hash": "5deb3377fd81175e573fabaf2372f0cb",
+    "semantic_hash": ""
   },
   "src/components/scene/OraclePanel.tsx": {
     "mtime": 1783633520.4841247,
@@ -1795,8 +1795,8 @@
     "semantic_hash": "8596607361237dee22136a4b1e9347d9"
   },
   "src/rules/combat/sceneCombat.ts": {
-    "mtime": 1783633520.7298787,
-    "ast_hash": "6b896fcdf8caea8ef466e43f679ae65e",
+    "mtime": 1784214378.4592795,
+    "ast_hash": "e21af56b4b04f10838b0271f7bf299b4",
     "semantic_hash": ""
   },
   "src/rules/combatants/characterCombatant.ts": {
@@ -2325,9 +2325,9 @@
     "semantic_hash": "2eccf478bd0528f2a948f9909250952e"
   },
   "src/systems/dnd5e/shared/Dnd5eSheetBase.tsx": {
-    "mtime": 1783633520.761615,
-    "ast_hash": "ecd728288c6de98f4f437ee721c12ec9",
-    "semantic_hash": "ecd728288c6de98f4f437ee721c12ec9"
+    "mtime": 1784128595.390249,
+    "ast_hash": "a27b41e1beee4679f05d2736852f862f",
+    "semantic_hash": ""
   },
   "src/systems/dnd5e/shared/activities.ts": {
     "mtime": 1783633520.7632532,
@@ -2420,9 +2420,9 @@
     "semantic_hash": ""
   },
   "src/systems/dnd5e/shared/components/Dnd5eSpellsTab.tsx": {
-    "mtime": 1783633520.7649512,
-    "ast_hash": "06f62fce47abf78d7436e1076ca9e433",
-    "semantic_hash": "06f62fce47abf78d7436e1076ca9e433"
+    "mtime": 1784128644.014252,
+    "ast_hash": "6acab83dd9259742c909f03c28e4ffa9",
+    "semantic_hash": ""
   },
   "src/systems/dnd5e/shared/components/Dnd5eTabsNavigation.tsx": {
     "mtime": 1783633520.7649512,
@@ -2445,8 +2445,8 @@
     "semantic_hash": "35a450ff7879ac0dc836fcb901a30196"
   },
   "src/systems/dnd5e/shared/dnd5eSheetShared.ts": {
-    "mtime": 1783633520.7649512,
-    "ast_hash": "b60f7cde8397c5d5dbab1b7bdf72799f",
+    "mtime": 1784128969.2702713,
+    "ast_hash": "068b7612a303aefecf0ebaadbaf968fb",
     "semantic_hash": ""
   },
   "src/systems/dnd5e/shared/engine.ts": {
@@ -2460,9 +2460,9 @@
     "semantic_hash": ""
   },
   "src/systems/dnd5e/shared/spellPreparation.ts": {
-    "mtime": 1783633520.7689114,
-    "ast_hash": "f7e89e346c7dd2196cdedc95d2d7c05d",
-    "semantic_hash": "f7e89e346c7dd2196cdedc95d2d7c05d"
+    "mtime": 1784128553.8382466,
+    "ast_hash": "40b2d6bfef3e96c9d4aa07aacdff07a3",
+    "semantic_hash": ""
   },
   "src/systems/dnd5e/shared/useDnd5eDeferredResource.ts": {
     "mtime": 1783633520.7689114,
@@ -2480,8 +2480,8 @@
     "semantic_hash": ""
   },
   "src/systems/dnd5e/shared/useDnd5eSheetController.ts": {
-    "mtime": 1783633520.7689114,
-    "ast_hash": "fe4ccce6e1d396517dcacfa624df1901",
+    "mtime": 1784128585.3302486,
+    "ast_hash": "0f5e3061021c14c226f46c0ee2e4d594",
     "semantic_hash": ""
   },
   "src/systems/dnd5e/shared/useDnd5eSheetResources.ts": {
@@ -3230,7 +3230,7 @@
     "semantic_hash": ""
   },
   "docs/generated/master-gap-ledger.json": {
-    "mtime": 1784044275.0865183,
+    "mtime": 1784139552.411402,
     "ast_hash": "6c770443f3f04cc1670b06087d204c88",
     "semantic_hash": ""
   },
@@ -3437,6 +3437,66 @@
   "graphify-out/memory/query_20260710_141008_where_are_pending_debounced_document_saves_flushed.md": {
     "mtime": 1783977929.4218576,
     "ast_hash": "52d58c68d0efc9592ffce834f3525cea",
+    "semantic_hash": ""
+  },
+  "e2e/phase1-bundle-tti.spec.ts": {
+    "mtime": 1784057973.8139572,
+    "ast_hash": "4aecc486574b52fb7b9b7a4cfeccee99",
+    "semantic_hash": ""
+  },
+  "e2e/phase1-header-actions.spec.ts": {
+    "mtime": 1784057920.0659585,
+    "ast_hash": "34472d8aae2a9a89aab767b18fba1a17",
+    "semantic_hash": ""
+  },
+  "e2e/phase1-scene-keepalive.spec.ts": {
+    "mtime": 1784058261.1979508,
+    "ast_hash": "bf82c467dca4fc623787ffee6dbf3c7c",
+    "semantic_hash": ""
+  },
+  "e2e/phase1-sheet-open.spec.ts": {
+    "mtime": 1784057942.2059581,
+    "ast_hash": "d2d3610dfef37725144d15089cfe335d",
+    "semantic_hash": ""
+  },
+  "src/__tests__/app-surface-shortcuts.test.tsx": {
+    "mtime": 1784057324.917972,
+    "ast_hash": "175d05dd43ad63c724a6fb2f92375511",
+    "semantic_hash": ""
+  },
+  "src/__tests__/components/CharacterListView.test.tsx": {
+    "mtime": 1784056704.4099863,
+    "ast_hash": "568441f0df40c0267af1dc59a40d044a",
+    "semantic_hash": ""
+  },
+  "src/__tests__/components/OverflowMenu.test.tsx": {
+    "mtime": 1784061206.9467795,
+    "ast_hash": "282fe0f5fcdb24a5d9ae696bac9571c0",
+    "semantic_hash": ""
+  },
+  "src/__tests__/hooks/useSurfaceSwitchMetrics.test.ts": {
+    "mtime": 1784057295.9619727,
+    "ast_hash": "0afb7756003c8511d6f30bce8aa90be3",
+    "semantic_hash": ""
+  },
+  "src/__tests__/systems/dnd5eToEquippedItem.test.ts": {
+    "mtime": 1784129085.1942782,
+    "ast_hash": "513b0f1b75249ed2a41165bf7739c849",
+    "semantic_hash": ""
+  },
+  "src/components/ui/OverflowMenu.tsx": {
+    "mtime": 1784061039.6987834,
+    "ast_hash": "4f49f07c5f56f4c91467b431fe67498b",
+    "semantic_hash": ""
+  },
+  "src/hooks/useSurfaceSwitchMetrics.ts": {
+    "mtime": 1784057265.0939736,
+    "ast_hash": "2b06641b1f16040dbcb6ffc20dcf5fda",
+    "semantic_hash": ""
+  },
+  "src/components/scene/markerEffects.ts": {
+    "mtime": 1784224431.5233889,
+    "ast_hash": "58c189d0852ee6b81049a7601a2f716f",
     "semantic_hash": ""
   }
 }

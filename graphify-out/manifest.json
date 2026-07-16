@@ -65,7 +65,7 @@
     "semantic_hash": "7d81f6d2b5a01dbf70bb8cb2775ae990"
   },
   "docs/generated/roadmap-metrics.json": {
-    "mtime": 1784139552.411402,
+    "mtime": 1784234846.3264847,
     "ast_hash": "a527717c0a7c5b85edeeda3209a244f0",
     "semantic_hash": ""
   },
@@ -585,8 +585,8 @@
     "semantic_hash": "f0e1cadf42d000e8e7557fe6fc3299fd"
   },
   "src/__tests__/components/SceneManager.test.tsx": {
-    "mtime": 1784044196.72252,
-    "ast_hash": "037ba7a3009272069a3c339c01bb6942",
+    "mtime": 1784224556.8913858,
+    "ast_hash": "d639e7902c6161f90c25784eb0cdc9f9",
     "semantic_hash": ""
   },
   "src/__tests__/components/SpellBrowser.test.tsx": {
@@ -960,8 +960,8 @@
     "semantic_hash": "2328236213b990700c17328da22546d1"
   },
   "src/__tests__/rules/sceneCombatBridgeUi.test.ts": {
-    "mtime": 1784214653.3312957,
-    "ast_hash": "21ed1c08ea91922c370060308a4c645c",
+    "mtime": 1784234623.2584896,
+    "ast_hash": "c6a80304d658a838302abde0ff19b92d",
     "semantic_hash": ""
   },
   "src/__tests__/rules/sceneConditions.test.ts": {
@@ -1490,8 +1490,8 @@
     "semantic_hash": "e353553f7965f5507fd85b9851b84d06"
   },
   "src/components/SceneManager.tsx": {
-    "mtime": 1784061092.002782,
-    "ast_hash": "095eb57f8c1ecddc43f70f8ff63d2c73",
+    "mtime": 1784224448.2633884,
+    "ast_hash": "b6700215734fdc047a59f30a0f52f853",
     "semantic_hash": ""
   },
   "src/components/ServiceWorkerUpdateBanner.tsx": {
@@ -1570,9 +1570,9 @@
     "semantic_hash": "7a6d8a6ed43f0229d9b667225db93828"
   },
   "src/components/scene/MarkerPanel.tsx": {
-    "mtime": 1783633520.4841247,
-    "ast_hash": "b153c8dff0ee75c31e8727f2d227d287",
-    "semantic_hash": "b153c8dff0ee75c31e8727f2d227d287"
+    "mtime": 1784234655.866489,
+    "ast_hash": "e3ff64f43e3d0ce940645012e1b2cdfb",
+    "semantic_hash": ""
   },
   "src/components/scene/OraclePanel.tsx": {
     "mtime": 1783633520.4841247,
@@ -1795,8 +1795,8 @@
     "semantic_hash": "8596607361237dee22136a4b1e9347d9"
   },
   "src/rules/combat/sceneCombat.ts": {
-    "mtime": 1784214378.4592795,
-    "ast_hash": "e21af56b4b04f10838b0271f7bf299b4",
+    "mtime": 1784234682.0384884,
+    "ast_hash": "4de3c49e0ca741a2edbd4ae7a13b9659",
     "semantic_hash": ""
   },
   "src/rules/combatants/characterCombatant.ts": {
@@ -1925,13 +1925,13 @@
     "semantic_hash": "5d08fb01bfacfb665c78b7e530f63dcd"
   },
   "src/rules/tactical/roundDriver.ts": {
-    "mtime": 1783633520.7356243,
-    "ast_hash": "4270d594355e2a935e76c362778b9c51",
+    "mtime": 1784234513.730492,
+    "ast_hash": "cbe0d96492d6cd61d1e4fd6d2992c745",
     "semantic_hash": ""
   },
   "src/rules/tactical/tacticalExecutor.ts": {
-    "mtime": 1783633520.7372966,
-    "ast_hash": "72639d6a0773e4c54bfd8ba3928ac8a0",
+    "mtime": 1784234498.7984924,
+    "ast_hash": "e75ff88fb1787f0c65bd3f3ba4625bf2",
     "semantic_hash": ""
   },
   "src/rules/tactical/targetScoring.ts": {
@@ -3230,7 +3230,7 @@
     "semantic_hash": ""
   },
   "docs/generated/master-gap-ledger.json": {
-    "mtime": 1784139552.411402,
+    "mtime": 1784234846.3264847,
     "ast_hash": "6c770443f3f04cc1670b06087d204c88",
     "semantic_hash": ""
   },
@@ -3492,6 +3492,11 @@
   "src/hooks/useSurfaceSwitchMetrics.ts": {
     "mtime": 1784057265.0939736,
     "ast_hash": "2b06641b1f16040dbcb6ffc20dcf5fda",
+    "semantic_hash": ""
+  },
+  "src/components/scene/markerEffects.ts": {
+    "mtime": 1784234671.9664886,
+    "ast_hash": "b7efb5c88a2bfe8ac0832520a3bb9be5",
     "semantic_hash": ""
   }
 }
