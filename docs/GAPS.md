@@ -211,11 +211,11 @@ here. The residual: M&M 3e / Daggerheart adversary (reference) data, and the
   updated to cite both denominators, and no doc claims RAW-coverage-complete.
 - The full `npm run verify` gate runs in CI on every main merge — including
   `build`, `check:bundle-size`, coverage thresholds, and Playwright `test:e2e`
-  on both chromium and firefox — and was fully green end-to-end on the latest
-  main merge (`b0f0371`, 2026-07-10). Not every historical main-merge run was
-  green (e.g. the PR #30 merge run was cancelled and needed follow-up e2e
-  fixes). The earlier caveat that this container cannot run e2e is stale as a
-  gate concern; CI is the authority for the full gate.
+  on both chromium and firefox; the latest such merge is `245876a` (PR #37,
+  2026-07-16). Not every historical main-merge run was green (e.g. the PR #30
+  merge run was cancelled and needed follow-up e2e fixes). The earlier caveat
+  that this container cannot run e2e is stale as a gate concern; CI is the
+  authority for the full gate.
 
 ## 5. Review item — a shipped behavior change
 

@@ -169,12 +169,15 @@ function SceneHarness({
   documents = [],
   campaigns = [],
   onSelectSceneSpy,
+  onAppendSceneEventSpy,
 }: {
   initialScenes?: SceneDocument[];
   documents?: CharacterDocument<SystemDataModel>[];
   campaigns?: Campaign[];
   /** Observes every shell-seam selection request (build-specs task 12). */
   onSelectSceneSpy?: (id: string | null) => void;
+  /** Observes every appended scene event (e.g. the authored marker.added). */
+  onAppendSceneEventSpy?: (sceneId: string, event: SceneEvent) => void;
 }) {
   const [scenes, setScenes] = useState(initialScenes);
   // The harness plays the shell: it owns selection the way useAppNav does.
@@ -203,11 +206,12 @@ function SceneHarness({
         campaigns={campaigns}
         selectedSceneId={selectedSceneId}
         onSelectScene={handleSelectScene}
-        onAppendSceneEvent={(sceneId: string, event: SceneEvent) =>
+        onAppendSceneEvent={(sceneId: string, event: SceneEvent) => {
+          onAppendSceneEventSpy?.(sceneId, event);
           setScenes((current) =>
             current.map((scene) => (scene.id === sceneId ? appendSceneEvent(scene, event) : scene))
-          )
-        }
+          );
+        }}
         onDeleteScene={(id) => setScenes((current) => current.filter((scene) => scene.id !== id))}
       />
     </>
@@ -342,6 +346,88 @@ describe('SceneManager', () => {
 
     await user.click(screen.getByRole('button', { name: /remove fire/i }));
     expect(screen.queryByRole('gridcell', { name: /Cell 1, 1, Fire/i })).not.toBeInTheDocument();
+  });
+
+  it('authors a functional-terrain preset onto the placed marker and surfaces it as a badge', async () => {
+    const user = userEvent.setup();
+    const onAppendSceneEventSpy = vi.fn();
+    render(
+      <SceneHarness initialScenes={[makeScene()]} onAppendSceneEventSpy={onAppendSceneEventSpy} />
+    );
+
+    await user.type(screen.getByRole('textbox', { name: /marker label/i }), 'Boulder');
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: /functional terrain/i }),
+      'cover-5'
+    );
+    await user.click(screen.getByRole('button', { name: /place marker/i }));
+    await user.click(screen.getByRole('gridcell', { name: /Cell 1, 1/i }));
+
+    // The dispatched marker carries exactly the honest cover tuple the resolver reads.
+    const added = onAppendSceneEventSpy.mock.calls
+      .map(([, event]) => event as SceneEvent)
+      .find(
+        (event): event is Extract<SceneEvent, { type: 'marker.added' }> =>
+          event.type === 'marker.added'
+      );
+    expect(added?.payload.marker.effects).toEqual([
+      { target: 'ac', operation: 'add', value: 5, label: '+5 cover' },
+    ]);
+
+    // ...and the marker list surfaces the terrain honestly, not as hidden state.
+    expect(screen.getByText('+5 cover')).toBeInTheDocument();
+  });
+
+  it('authors difficult terrain onto the placed marker (target:movement, surfaced as a badge)', async () => {
+    const user = userEvent.setup();
+    const onAppendSceneEventSpy = vi.fn();
+    render(
+      <SceneHarness initialScenes={[makeScene()]} onAppendSceneEventSpy={onAppendSceneEventSpy} />
+    );
+
+    await user.type(screen.getByRole('textbox', { name: /marker label/i }), 'Bog');
+    await user.selectOptions(
+      screen.getByRole('combobox', { name: /functional terrain/i }),
+      'difficult'
+    );
+    await user.click(screen.getByRole('button', { name: /place marker/i }));
+    await user.click(screen.getByRole('gridcell', { name: /Cell 1, 1/i }));
+
+    // The movement-cost tuple the tactical executor reads for difficult terrain.
+    const added = onAppendSceneEventSpy.mock.calls
+      .map(([, event]) => event as SceneEvent)
+      .find(
+        (event): event is Extract<SceneEvent, { type: 'marker.added' }> =>
+          event.type === 'marker.added'
+      );
+    expect(added?.payload.marker.effects).toEqual([
+      { target: 'movement', operation: 'add', value: 1, label: 'difficult terrain' },
+    ]);
+    expect(screen.getByText('difficult terrain')).toBeInTheDocument();
+  });
+
+  it('places a marker without terrain by default, carrying no effects (additive parity)', async () => {
+    const user = userEvent.setup();
+    const onAppendSceneEventSpy = vi.fn();
+    render(
+      <SceneHarness initialScenes={[makeScene()]} onAppendSceneEventSpy={onAppendSceneEventSpy} />
+    );
+
+    await user.type(screen.getByRole('textbox', { name: /marker label/i }), 'Plain');
+    await user.click(screen.getByRole('button', { name: /place marker/i }));
+    await user.click(screen.getByRole('gridcell', { name: /Cell 1, 1/i }));
+
+    const added = onAppendSceneEventSpy.mock.calls
+      .map(([, event]) => event as SceneEvent)
+      .find(
+        (event): event is Extract<SceneEvent, { type: 'marker.added' }> =>
+          event.type === 'marker.added'
+      );
+    // 'none' preset → no `effects` field at all, byte-identical to pre-terrain markers.
+    expect(added?.payload.marker.effects).toBeUndefined();
+    // No terrain badge in the marker list (the `+N cover` / `+N high ground` label
+    // shape is unique to the badge; it never appears in the preset <option> text).
+    expect(screen.queryByText(/\+\d+ (cover|high ground)/i)).not.toBeInTheDocument();
   });
 
   it('adds loader-backed monsters as an event-backed encounter', async () => {

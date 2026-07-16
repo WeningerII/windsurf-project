@@ -336,6 +336,38 @@ describe('movement execution (grid-combat phase 3)', () => {
     expect(turn.attacks).toHaveLength(0);
   });
 
+  it('difficult terrain (target:movement) halves the closing move — fewer cells per turn', () => {
+    // Actor at (0,0), speed 4, reach 1; target far at (10,0). A movement +1
+    // terrain effect on every cell doubles the entering cost, so the actor that
+    // would step 4 cells on open ground affords only 2 across difficult terrain.
+    const difficult: EffectInstance = {
+      id: 'diff',
+      systemId: SID,
+      target: 'movement',
+      operation: 'add',
+      value: 1,
+      stackPolicy: 'sum',
+      source: { kind: 'system', label: 'difficult' },
+      label: 'difficult terrain',
+    };
+    const base = {
+      actor: actor({ position: { x: 0, y: 0 }, reach: 1, speedCells: 4 }),
+      targets: [target('distant', { position: { x: 10, y: 0 } })],
+      seed: 'difficult-seed',
+    };
+
+    const open = executeTacticalTurn(base);
+    const rough = executeTacticalTurn({ ...base, terrainAt: () => [difficult] });
+
+    // Both fall short of the distant target (move-to-engage), but terrain cuts
+    // the distance covered from 4 cells to 2.
+    expect(open.decision).toBe('move-to-engage');
+    expect(open.move?.to).toEqual({ x: 4, y: 0 });
+    expect(rough.decision).toBe('move-to-engage');
+    expect(rough.move?.to).toEqual({ x: 2, y: 0 });
+    expect(rough.rationale).toContain('Moved 2 cells');
+  });
+
   it('rounds converge: distant melee combatants close and fight over successive rounds', async () => {
     const { runCombatRound } = await import('../../rules');
     const combatant = (tokenId: string, faction: string, x: number) => ({

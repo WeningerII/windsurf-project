@@ -45,7 +45,7 @@ Every inherited item below is classified as one of:
 ## Current Repo Truth
 
 - The repo currently ships 7 registered systems.
-- The documented repo-wide verification baseline is green as of May 30, 2026 via `npm run verify` under Node `20.19.0`. Verification claims and scripted re-checks must stay tied to the supported runtime policy (`20.19+`, `22.12+`, or `24+`). Since then, CI is the authority for the full gate: `.github/workflows/ci.yml` runs the full `npm run verify` (including Playwright e2e on chromium and firefox) on every main merge, and the latest main merge (`b0f0371`, 2026-07-10) was green end-to-end.
+- The documented repo-wide verification baseline is green as of May 30, 2026 via `npm run verify` under Node `20.19.0`. Verification claims and scripted re-checks must stay tied to the supported runtime policy (`20.19+`, `22.12+`, or `24+`). Since then, CI is the authority for the full gate: `.github/workflows/ci.yml` runs the full `npm run verify` (including Playwright e2e on chromium and firefox) on every main merge; the latest is `245876a` (PR #37, 2026-07-16).
 - Netlify is the canonical deployment target represented in repo docs and CI.
 - The app is **local-first with an optional cloud sync layer**. Signed-out users and users without Supabase env vars configured behave exactly as the historical browser-local product: IndexedDB primary, localStorage fallback, dual-write persistence. Signed-in users get character-document and campaign sync against Supabase with per-user RLS, last-writer-wins merge semantics, offline queueing, realtime change propagation, and exponential-backoff retry on transient failures. The shipped design is documented in `docs/rfc/001-backend-sync.md`.
 - Loader-backed counts and support summaries live in `docs/generated/roadmap-metrics.md` and `docs/generated/roadmap-metrics.json`. Narrative docs should summarize them, not compete with them, and must stay aligned with the metadata-backed selector/dashboard summary path already used in-app.
@@ -206,16 +206,20 @@ The following older backlog claims are no longer true and must not re-enter the 
 >   math with resolver folds.
 > - **Phase 3 — PARTIAL.** Only the 5e ledger is re-backed onto the resolver;
 >   the Daggerheart and M&M ledger builders still hand-build entries.
-> - **Phase 4 — PARTIAL (advancing).** Seeded scene resolution shipped, and
->   functional terrain now has its first real consumer (2026-07-15): scene
->   attack resolution folds a cell's terrain effects into the default
->   d20/5e/PF2e path — terrain at the attacker's cell joins the attack effects
->   (e.g. high ground), terrain at the target's cell that raises the defense
->   value models cover (+AC), with the effective AC reported in the combat log.
->   Additive (a cell with no terrain resolves identically). Remaining: the M&M
->   and Daggerheart resolution branches, movement-cost/difficult-terrain in
->   `runSceneRound`, and a marker-effects authoring UI (the data model, intent,
->   import/export, and `collectTerrainEffectsAt` bridge already support it).
+> - **Phase 4 — DONE (scene-runtime scope).** Seeded scene resolution shipped, and
+>   functional terrain is authorable and mechanically live across every system: the
+>   marker-creation flow offers cover / high-ground / difficult-terrain presets
+>   (2026-07-16). Cover + high ground fold into both the manual path
+>   (`resolveSceneAttack`, every system branch — d20/5e/PF2e, M&M, Daggerheart) and
+>   the autonomous round (`runSceneRound` via the tactical executor), looked up by
+>   live position: attacker-cell terrain joins the attack effects (high ground),
+>   target-cell cover raises the effective defense (+AC / +Dodge / +Parry /
+>   +Evasion), reported in the manual combat log. Difficult terrain
+>   (`target:'movement'`) raises the cost to ENTER a cell, so the autonomous
+>   move-to-engage crosses fewer cells of rough ground per turn (manual dragging
+>   stays GM-adjudicated). Additive (a cell with no terrain resolves and moves
+>   identically). Deeper terrain — line-of-sight, elevation, hazards that tick each
+>   round — is future RFC-006 scene-runtime work, not this phase.
 > - **Phase 5 — PARTIAL.** The grounded gateway ships, but validators exist for
 >   only 2 of 7 systems and there is no resolver legal-actions seam.
 

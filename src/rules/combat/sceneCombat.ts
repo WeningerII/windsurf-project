@@ -212,23 +212,43 @@ export function resolveSceneAttack(params: {
     };
   }
 
+  // Functional terrain (RFC 003 Phase 4), folded UNIFORMLY across every
+  // system's manual attack branch below. Terrain at the ATTACKER's cell adds
+  // attack effects (high ground → an `attack` bonus, resolved into the to-hit);
+  // terrain at the TARGET's cell that raises the defense value models cover
+  // (+AC / +Dodge / +Parry / +Evasion). The resolvers bucket effects by target,
+  // so an attacker standing in cover gets no bogus to-hit and a target on high
+  // ground gets no bogus cover. Additive by construction: a cell with no
+  // functional terrain yields no effects and a 0 cover bonus, so scenes without
+  // terrain resolve identically in every system. (Autonomous rounds apply the
+  // same fold via the tactical executor, looked up by each token's live position;
+  // only movement-cost / difficult terrain remains a follow-up.)
+  const attackerTerrain = collectTerrainEffectsAt(state, attacker.position);
+  const targetTerrain = collectTerrainEffectsAt(state, target.position);
+  const coverBonus = resolveEffects(targetTerrain, {}).byTarget.ac?.total ?? 0;
+
   // M&M scenes resolve by the system's own model: d20 vs Dodge/Parry, then a
   // Toughness save whose shortfall drives the CONDITION track. Incapacitation
   // downs the token (hp is a pure up/down flag for M&M tokens); other
   // outcomes persist as token conditions.
   if (state.systemId === 'mam3e' && attackerStats.mam3e && targetStats.mam3e) {
+    const baseDefense = attackerStats.mam3e.ranged
+      ? targetStats.armorClass
+      : targetStats.mam3e.parry;
     const result = resolveMam3eAttack({
-      attackEffects: attackerStats.attackEffects,
-      targetDefense: attackerStats.mam3e.ranged ? targetStats.armorClass : targetStats.mam3e.parry,
+      attackEffects: [...attackerStats.attackEffects, ...attackerTerrain],
+      // Cover raises the active defense (Dodge/Parry) the attack must beat.
+      targetDefense: baseDefense + coverBonus,
       effectRank: attackerStats.mam3e.effectRank,
       // The bruise track imposes a cumulative -1 per Bruised on later
       // Toughness saves (M&M 3e Handbook: Damage).
       toughness: targetStats.mam3e.toughness - mam3eBruisePenalty(target.conditions ?? []),
       rng: participantRng(seed, attackerId, targetId),
     });
+    const coverNote = coverBonus > 0 ? ` (+${coverBonus} cover)` : '';
     const roll = `rolled ${result.naturalRoll}+${result.attackBonus} vs ${
       attackerStats.mam3e.ranged ? 'Dodge' : 'Parry'
-    }`;
+    }${coverNote}`;
     if (!result.isHit) {
       return { hit: false, log: `${attacker.name} misses ${target.name} (${roll}).` };
     }
@@ -264,10 +284,13 @@ export function resolveSceneAttack(params: {
   // Daggerheart scenes resolve by the system's own model: 2d12 duality vs
   // Evasion, damage compared to thresholds, MARKED HP as the damage amount.
   if (state.systemId === 'daggerheart' && targetStats.daggerheart) {
+    // Cover raises the Evasion the duality roll must beat (a critical success —
+    // matching dice — still hits regardless, per SRD).
+    const effectiveEvasion = targetStats.armorClass + coverBonus;
     const result = resolveDaggerheartAttack({
-      attackEffects: attackerStats.attackEffects,
+      attackEffects: [...attackerStats.attackEffects, ...attackerTerrain],
       damageEffects: attackerStats.damageEffects,
-      evasion: targetStats.armorClass,
+      evasion: effectiveEvasion,
       thresholds: targetStats.daggerheart.thresholds,
       rng: participantRng(seed, attackerId, targetId),
     });
@@ -284,12 +307,13 @@ export function resolveSceneAttack(params: {
           } as SceneActionIntent)
         : undefined;
     const dice = `Hope ${result.hopeDie} / Fear ${result.fearDie}`;
+    const coverNote = coverBonus > 0 ? `, +${coverBonus} cover` : '';
     return {
       intent,
       hit: result.isHit,
       log: result.isHit
-        ? `${attacker.name} ${result.isCritical ? 'critically hits' : 'hits'} ${target.name} (${dice} vs Evasion ${targetStats.armorClass}) — marks ${marked} HP.`
-        : `${attacker.name} misses ${target.name} (${dice} vs Evasion ${targetStats.armorClass}).`,
+        ? `${attacker.name} ${result.isCritical ? 'critically hits' : 'hits'} ${target.name} (${dice} vs Evasion ${effectiveEvasion}${coverNote}) — marks ${marked} HP.`
+        : `${attacker.name} misses ${target.name} (${dice} vs Evasion ${effectiveEvasion}${coverNote}).`,
     };
   }
 
@@ -301,16 +325,8 @@ export function resolveSceneAttack(params: {
   const attackerConditions = attacker.conditions ?? [];
   const targetConditions = new Set(target.conditions ?? []);
 
-  // Functional terrain (RFC 003 Phase 4): a grid cell's terrain markers
-  // contribute real effects to resolution. Terrain at the ATTACKER's cell folds
-  // into this attack's effects (e.g. high ground → an `attack` bonus); terrain
-  // at the TARGET's cell that raises the defense value models cover → +AC.
-  // Additive by construction: a cell with no functional terrain yields no
-  // effects and a 0 cover bonus, so scenes without terrain resolve identically.
-  const attackerTerrain = collectTerrainEffectsAt(state, attacker.position);
-  const targetTerrain = collectTerrainEffectsAt(state, target.position);
-  const coverBonus = resolveEffects(targetTerrain, {}).byTarget.ac?.total ?? 0;
-
+  // Terrain (hoisted above): attacker-cell effects fold into the to-hit; the
+  // target-cell cover bonus raises the effective AC.
   const resolution = resolveAttack({
     attackEffects: [
       ...attackerStats.attackEffects,
@@ -378,6 +394,10 @@ export function runSceneRound(params: {
     round: params.round,
     degreeModel: degreeModelForScene(params.state),
     critModel: critModelForScene(params.state),
+    // Functional terrain (RFC 003 Phase 4): fold each cell's effects into
+    // autonomous attacks by LIVE position, so cover/high ground work the same
+    // whether the GM clicks Attack or Run Round. Additive when there is none.
+    terrainAt: (pos) => collectTerrainEffectsAt(params.state, pos),
   });
 
   const nameOf = (tokenId: string): string => params.state.tokens[tokenId]?.name ?? tokenId;
