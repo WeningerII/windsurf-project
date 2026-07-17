@@ -32,7 +32,7 @@ export function CharacterCard({
   const sys = systemRegistry.get(document.systemId);
   const levelLabel = getLevelLabel(document);
   const classLabel = getClassLabel(document.system);
-  const speciesLabel = getSpeciesLabel(document.system);
+  const origin = getSpeciesLabel(document);
   const hitPointLabel = getHitPointLabel(document.system);
 
   return (
@@ -51,16 +51,16 @@ export function CharacterCard({
         </div>
         <h4 className="font-semibold text-lg leading-tight mb-1">{document.name}</h4>
         <p className="text-sm text-muted-foreground">{levelLabel ?? 'New character'}</p>
-        {(classLabel || speciesLabel || hitPointLabel) && (
+        {(classLabel || origin || hitPointLabel) && (
           <div className="mt-2 space-y-0.5 text-xs text-muted-foreground">
             {classLabel && (
               <p>
                 Class: <span className="text-foreground">{classLabel}</span>
               </p>
             )}
-            {speciesLabel && (
+            {origin && (
               <p>
-                Species: <span className="text-foreground">{speciesLabel}</span>
+                {origin.label}: <span className="text-foreground">{origin.value}</span>
               </p>
             )}
             {hitPointLabel && (

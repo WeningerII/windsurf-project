@@ -15,12 +15,15 @@ interface InventoryManagerProps {
   items: InventoryItem[];
   onAddItem?: (item: InventoryItem) => void;
   onRemoveItem?: (itemId: string) => void;
+  /** Unit for the weight fields — 'lbs' by default; PF2e passes 'Bulk'. */
+  weightUnit?: string;
 }
 
 export const InventoryManager: React.FC<InventoryManagerProps> = ({
   items,
   onAddItem,
   onRemoveItem,
+  weightUnit = 'lbs',
 }) => {
   // HTML min attributes only affect spinners/validation styling, so typed
   // values are clamped here to keep quantity >= 1 and weight >= 0 (which in
@@ -82,7 +85,7 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({
         <div>
           <h2 className="text-2xl font-bold">Inventory</h2>
           <p className="text-sm text-muted-foreground">
-            {items.length} items • {totalWeight.toFixed(1)} lbs
+            {items.length} items • {totalWeight.toFixed(1)} {weightUnit}
           </p>
         </div>
         <button
@@ -124,7 +127,7 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Weight (lbs)</label>
+              <label className="block text-sm font-medium mb-2">Weight ({weightUnit})</label>
               <input
                 type="number"
                 min="0"
@@ -193,7 +196,7 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({
                   </div>
                   <div>
                     <span className="font-medium">Weight:</span>{' '}
-                    {(item.weight * item.quantity).toFixed(1)} lbs
+                    {(item.weight * item.quantity).toFixed(1)} {weightUnit}
                   </div>
                   <div>
                     <span className="font-medium">Value:</span> {item.value}

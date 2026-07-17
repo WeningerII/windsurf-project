@@ -7,7 +7,8 @@ interface Equipment {
   type: string;
   rarity: string;
   cost: string;
-  weight: number;
+  /** Carry weight/burden; omit to hide the line (M&M gear has no weight stat). */
+  weight?: number;
   description: string;
   properties?: string[];
 }
@@ -15,11 +16,14 @@ interface Equipment {
 interface EquipmentBrowserProps {
   equipment: Equipment[];
   onSelectEquipment?: (item: Equipment) => void;
+  /** Unit shown after the weight value — 'lbs' by default; PF2e passes 'Bulk'. */
+  weightUnit?: string;
 }
 
 export const EquipmentBrowser: React.FC<EquipmentBrowserProps> = ({
   equipment,
   onSelectEquipment,
+  weightUnit = 'lbs',
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const deferredSearchTerm = useDeferredValue(searchTerm);
@@ -144,7 +148,11 @@ export const EquipmentBrowser: React.FC<EquipmentBrowserProps> = ({
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-medium">{item.cost}</p>
-                    <p className="text-xs text-muted-foreground">{item.weight} lbs</p>
+                    {item.weight != null && (
+                      <p className="text-xs text-muted-foreground">
+                        {item.weight} {weightUnit}
+                      </p>
+                    )}
                   </div>
                 </div>
 

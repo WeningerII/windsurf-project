@@ -37,6 +37,9 @@ export const Pf2eEquipmentBrowserTab = (({ equipmentLoaded, equipmentItems }) =>
           weight: item.weight ?? 0,
           description: item.description,
         }))}
+        // PF2e item weight carries Bulk (usePf2eMutationHandlers maps
+        // item.weight -> bulk), so labeling it 'lbs' printed Bulk as pounds.
+        weightUnit="Bulk"
       />
     </Suspense>
   )) as Pf2eEquipmentBrowserTabComponent;
