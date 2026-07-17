@@ -121,8 +121,11 @@ export function hasD20LegacyConditionEffects(conditionId: string): boolean {
   return conditionId in D20_LEGACY_CONDITION_EFFECTS;
 }
 
+/** Catalog-backed condition ids, for pickers that store normalized ids. */
+export const D20_LEGACY_CONDITION_IDS = Object.keys(D20_LEGACY_CONDITION_EFFECTS);
+
 /** Display names for the sheet condition picker (catalog-backed only). */
-export const D20_LEGACY_CONDITION_NAMES = Object.keys(D20_LEGACY_CONDITION_EFFECTS).map(
+export const D20_LEGACY_CONDITION_NAMES = D20_LEGACY_CONDITION_IDS.map(
   (id) => id.charAt(0).toUpperCase() + id.slice(1)
 );
 

@@ -195,7 +195,7 @@ export function TokenPanel({
                         ? 'border-amber-500 bg-amber-500/15 text-amber-600'
                         : 'text-muted-foreground hover:border-primary hover:text-primary'
                     }`}
-                    title={`${active ? 'Clear' : 'Apply'} ${conditionId} on the selected token — folds into its attack rolls in combat`}
+                    title={`${active ? 'Clear' : 'Apply'} ${conditionId} on the selected token — applied under this system's rules in combat`}
                   >
                     {conditionId}
                   </button>
