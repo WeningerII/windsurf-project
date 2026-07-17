@@ -3,6 +3,7 @@ import { domainDisplayName } from '../daggerheartSheetConstants';
 import { Badge } from '../../../components/ui/Badge';
 import { DAGGERHEART_MAX_HOPE } from '../../../rules/daggerheartDerived';
 import { parseNum } from '../../../utils/math';
+import { clampCount } from '../../../utils/resourcePool';
 import type { DaggerheartSheetController } from '../useDaggerheartSheetController';
 import { DaggerheartDowntimeControls } from './DaggerheartDowntimeControls';
 
@@ -121,6 +122,18 @@ export function DaggerheartSheetHeader({ controller }: Props) {
           </label>
           <label className="flex items-center gap-1">
             <span className="text-muted-foreground">Level:</span>
+            <button
+              type="button"
+              onClick={() => controller.update({ level: clampCount(data.level - 1, 10, 1) })}
+              className="flex h-6 w-6 items-center justify-center rounded border border-input text-muted-foreground hover:bg-muted focus:border-primary focus:outline-none disabled:opacity-40"
+              disabled={!canUpdate}
+              // Milestone leveling: a plain level patch (Daggerheart has no
+              // class-template re-application); the engine re-derives level-based
+              // stats on prepareData. Does not gate on XP or apply per-level choices.
+              title="Milestone level down (−1)"
+            >
+              −
+            </button>
             <input
               type="number"
               value={data.level}
@@ -131,6 +144,15 @@ export function DaggerheartSheetHeader({ controller }: Props) {
               disabled={!canUpdate}
               title="Character level"
             />
+            <button
+              type="button"
+              onClick={() => controller.update({ level: clampCount(data.level + 1, 10, 1) })}
+              className="flex h-6 w-6 items-center justify-center rounded border border-input text-muted-foreground hover:bg-muted focus:border-primary focus:outline-none disabled:opacity-40"
+              disabled={!canUpdate}
+              title="Milestone level up (+1)"
+            >
+              +
+            </button>
           </label>
         </div>
         {controller.optionsState === 'error' && (

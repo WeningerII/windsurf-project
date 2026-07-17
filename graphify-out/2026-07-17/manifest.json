@@ -1080,9 +1080,9 @@
     "semantic_hash": "6b39faede7767da1b4b9f83e620de7f9"
   },
   "src/__tests__/systems/daggerheart/daggerheartMutationHandlers.test.ts": {
-    "mtime": 1783633520.4574237,
-    "ast_hash": "ea65a194580af3da486d0e5eaedf399d",
-    "semantic_hash": "ea65a194580af3da486d0e5eaedf399d"
+    "mtime": 1784252048.37467,
+    "ast_hash": "dfb338997eb55490ec41811f068fd8b7",
+    "semantic_hash": ""
   },
   "src/__tests__/systems/daggerheart/useStableListKeys.test.ts": {
     "mtime": 1783633520.4579008,
@@ -2190,8 +2190,8 @@
     "semantic_hash": "6017b746fe9aa6260367b369ce932dbc"
   },
   "src/systems/daggerheart/components/DaggerheartSheetHeader.tsx": {
-    "mtime": 1783633520.7529113,
-    "ast_hash": "38e0f3fc80354000a264d64f763d9eeb",
+    "mtime": 1784252088.69867,
+    "ast_hash": "31fa43410ae5f17dc0c24ded47916b37",
     "semantic_hash": ""
   },
   "src/systems/daggerheart/contributionLedger.ts": {
@@ -2235,8 +2235,8 @@
     "semantic_hash": "cfb62d7865af8b59b7b4eea6c6e44f51"
   },
   "src/systems/daggerheart/useDaggerheartMutationHandlers.ts": {
-    "mtime": 1783633520.7529113,
-    "ast_hash": "05eab6f27ff001ca05b731b5a21ac88b",
+    "mtime": 1784251925.1986706,
+    "ast_hash": "24d1707cb69d40ddc7f9b396efa5978d",
     "semantic_hash": ""
   },
   "src/systems/daggerheart/useDaggerheartSheetController.ts": {
@@ -3507,6 +3507,21 @@
   "src/components/scene/sceneConditionOptions.ts": {
     "mtime": 1784246701.558987,
     "ast_hash": "a3ba26d9ac9879b9d1fc7c967e163e13",
+    "semantic_hash": ""
+  },
+  "src/__tests__/systems/daggerheart/daggerheartRest.test.ts": {
+    "mtime": 1784252039.3066702,
+    "ast_hash": "d75eec58b4641dfdb374c153ea7b1135",
+    "semantic_hash": ""
+  },
+  "src/systems/daggerheart/components/DaggerheartDowntimeControls.tsx": {
+    "mtime": 1784251938.9746706,
+    "ast_hash": "7e2706038313723efc0949d12909d137",
+    "semantic_hash": ""
+  },
+  "src/systems/daggerheart/daggerheartRest.ts": {
+    "mtime": 1784251908.3386707,
+    "ast_hash": "d0dd72ead634ff22c8ed37344eee075a",
     "semantic_hash": ""
   }
 }

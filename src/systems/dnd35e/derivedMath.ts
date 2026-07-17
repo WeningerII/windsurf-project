@@ -18,6 +18,26 @@ export function dnd35eXpForLevel(level: number): number {
 }
 
 /**
+ * Inverse of {@link dnd35eXpForLevel}: the highest character level (1–20) whose
+ * XP threshold the given total XP has reached, i.e. the largest L with
+ * dnd35eXpForLevel(L) ≤ xp. Level 1 costs 0 XP, so any non-negative total is at
+ * least level 1; the result is capped at the 20th-level table entry. Because the
+ * XP table is monotonic, a linear scan suffices. 3.5e-specific — Pathfinder 1e
+ * uses a different XP track, so this must not drive a PF1e sheet.
+ */
+export function dnd35eLevelForXp(xp: number): number {
+  let level = 1;
+  for (let l = 2; l <= 20; l += 1) {
+    if (dnd35eXpForLevel(l) <= xp) {
+      level = l;
+    } else {
+      break;
+    }
+  }
+  return level;
+}
+
+/**
  * Massive damage (SRD 3.5: Injury and Death): a single source dealing 50 or more
  * damage forces a DC 15 Fortitude save, on a failure of which the creature dies
  * regardless of its current hit points.

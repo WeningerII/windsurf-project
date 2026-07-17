@@ -6,6 +6,7 @@ import type { CharacterClass } from '../../../types/character-options/classes';
 import type { Species } from '../../../types/character-options/species';
 import type { Pf2eBackgroundDefinition } from '../../../data/pathfinder/2e/backgrounds';
 import type { Pf2eDataModel } from '../data-model';
+import { clampCount } from '../../../utils/resourcePool';
 
 interface Props {
   document: CharacterDocument<Pf2eDataModel>;
@@ -61,6 +62,17 @@ export const Pf2eHeader: React.FC<Props> = ({
         />
         <div className="flex items-center gap-3 text-sm text-muted-foreground flex-wrap">
           <Badge variant="info">Level {data.level}</Badge>
+          <button
+            type="button"
+            onClick={() => onLevelChange(String(clampCount(data.level - 1, 20, 1)))}
+            className="flex h-6 w-6 items-center justify-center rounded border border-input text-muted-foreground hover:bg-muted focus:outline-none focus:border-primary disabled:opacity-40"
+            disabled={!canUpdate}
+            // Milestone leveling: steps level by 1 and re-derives via the class
+            // template. It does not gate on XP or apply per-level choices.
+            title="Milestone level down (−1)"
+          >
+            −
+          </button>
           <input
             type="number"
             value={data.level}
@@ -71,6 +83,15 @@ export const Pf2eHeader: React.FC<Props> = ({
             disabled={!canUpdate}
             title="Character level"
           />
+          <button
+            type="button"
+            onClick={() => onLevelChange(String(clampCount(data.level + 1, 20, 1)))}
+            className="flex h-6 w-6 items-center justify-center rounded border border-input text-muted-foreground hover:bg-muted focus:outline-none focus:border-primary disabled:opacity-40"
+            disabled={!canUpdate}
+            title="Milestone level up (+1)"
+          >
+            +
+          </button>
           <select
             value={data.classId || ''}
             onChange={(event) => onClassChange(event.target.value)}

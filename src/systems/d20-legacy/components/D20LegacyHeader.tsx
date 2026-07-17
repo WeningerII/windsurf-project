@@ -2,6 +2,7 @@ import React from 'react';
 import { Badge } from '../../../components/ui/Badge';
 import type { Species } from '../../../types/character-options/species';
 import { parseNum } from '../../../utils/math';
+import { dnd35eLevelForXp } from '../../dnd35e/derivedMath';
 
 interface Props {
   documentName: string;
@@ -104,6 +105,14 @@ export const D20LegacyHeader: React.FC<Props> = ({
         disabled={!canUpdate}
         title="Experience Points"
       />
+      {!isPf1e && (
+        <span
+          className="text-xs text-muted-foreground tabular-nums"
+          title="Level the stored XP has earned (SRD 3.5 Character Advancement). Read-only — set your own level."
+        >
+          XP earns level {dnd35eLevelForXp(experiencePoints ?? 0)}
+        </span>
+      )}
     </div>
   </div>
 );
