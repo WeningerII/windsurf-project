@@ -107,6 +107,13 @@ export function factionForToken(token: SceneToken): SceneAllegiance {
  * Assemble combat-ready combatants from the scene, in initiative order when an
  * initiative list exists (else token insertion order). Tokens without resolvable
  * stats or without HP are omitted.
+ *
+ * HONEST LIMIT: the mapping to {@link RoundCombatant} drops the `daggerheart`
+ * and `mam3e` variant payloads (thresholds, Toughness/Parry), so autonomous
+ * rounds currently resolve Daggerheart and M&M tokens through the shared d20
+ * attack model — their native duality/Toughness models run only on the manual
+ * path (`resolveSceneAttack`). Threading the variants through the round driver
+ * is the known follow-up.
  */
 export function buildSceneCombatants(
   state: SceneState,
@@ -127,8 +134,10 @@ export function buildSceneCombatants(
     if (!stats) continue;
     // The token's own conditions compile into its attack effects under the
     // SCENE'S system rules (poisoned -> disadvantage in 5e, shaken -> -2 in
-    // PF1e/3.5e, ...), so autonomous rounds fight the same as the manual
-    // path. Unknown condition ids contribute nothing.
+    // PF1e/3.5e, ...), matching the manual path's condition folding. Unknown
+    // condition ids contribute nothing. (The MODEL parity claim is narrower —
+    // see the function JSDoc: M&M/Daggerheart variant payloads do not ride
+    // into autonomous rounds yet.)
     const conditionEffects = collectSceneConditionEffects(state.systemId, token.conditions ?? []);
     combatants.push({
       tokenId: token.id,

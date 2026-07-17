@@ -82,7 +82,9 @@ export function buildIllustrateScenePrompt(payload: IllustrateScenePayload): str
   const style = payload.style ? `, ${payload.style} style` : '';
   // Image models take a single descriptive line; keep it focused and add a
   // genre anchor so results read as tabletop RPG art.
-  return `${payload.prompt.trim()}${style}. Fantasy tabletop RPG illustration, high detail, no text or watermarks.`;
+  // Genre-neutral anchor: the panel serves every system's scenes (M&M is
+  // superhero, not fantasy), and no systemId rides the payload to specialize.
+  return `${payload.prompt.trim()}${style}. Tabletop RPG illustration, high detail, no text or watermarks.`;
 }
 
 export function buildSceneNarrationPrompt(payload: SceneNarrationPayload): string {

@@ -29,6 +29,12 @@ export interface RoundCombatant {
   tokenId: string;
   faction: string;
   position: SceneCoordinate;
+  /**
+   * Defense target value an attack must meet: AC in the d20 systems; carries
+   * Evasion/Difficulty (Daggerheart) or Dodge (M&M 3e) when those tokens enter
+   * autonomous rounds via `buildSceneCombatants` (which resolves them through
+   * the shared d20 model — see its JSDoc).
+   */
   armorClass: number;
   hp: { current: number; max: number };
   attackEffects: readonly EffectInstance[];
