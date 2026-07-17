@@ -650,8 +650,8 @@
     "semantic_hash": "63c29ca840d912f72a87ef79445f9737"
   },
   "src/__tests__/d20LegacyEngineMath.test.ts": {
-    "mtime": 1783633520.4289112,
-    "ast_hash": "d0d1f2e61c782f591106f200bcd93e45",
+    "mtime": 1784256037.5239682,
+    "ast_hash": "ffef12a549bf1baeed9248504a5482cd",
     "semantic_hash": ""
   },
   "src/__tests__/daggerheartContributionLedger.test.ts": {
@@ -2085,9 +2085,9 @@
     "semantic_hash": "9d24b174f2679f0403f420592952d470"
   },
   "src/systems/d20-legacy/components/D20LegacyHeader.tsx": {
-    "mtime": 1783633520.7461765,
-    "ast_hash": "d380204fb4272f70f7eb351041466c41",
-    "semantic_hash": "d380204fb4272f70f7eb351041466c41"
+    "mtime": 1784256021.8999684,
+    "ast_hash": "b59eedaecc746e04958e54d901b50cd3",
+    "semantic_hash": ""
   },
   "src/systems/d20-legacy/components/D20LegacyTabs.tsx": {
     "mtime": 1783633520.7461765,
@@ -2190,8 +2190,8 @@
     "semantic_hash": "6017b746fe9aa6260367b369ce932dbc"
   },
   "src/systems/daggerheart/components/DaggerheartSheetHeader.tsx": {
-    "mtime": 1784252088.69867,
-    "ast_hash": "31fa43410ae5f17dc0c24ded47916b37",
+    "mtime": 1784256859.54396,
+    "ast_hash": "06c23b4993f0bdcd39d9813a3015846d",
     "semantic_hash": ""
   },
   "src/systems/daggerheart/contributionLedger.ts": {
@@ -2270,9 +2270,9 @@
     "semantic_hash": "e92c73a78c813c79977f0f3481ad770c"
   },
   "src/systems/dnd35e/derivedMath.ts": {
-    "mtime": 1783633520.7591248,
-    "ast_hash": "e780343c8ecdf937dc348c26a28feecb",
-    "semantic_hash": "e780343c8ecdf937dc348c26a28feecb"
+    "mtime": 1784255998.4079685,
+    "ast_hash": "a074c762937d5f363a980689059e2db6",
+    "semantic_hash": ""
   },
   "src/systems/dnd35e/engine.ts": {
     "mtime": 1783633520.7591248,
@@ -2670,9 +2670,9 @@
     "semantic_hash": "0c9f799321d6e239beea4a1670373a2a"
   },
   "src/systems/pf2e/components/Pf2eHeader.tsx": {
-    "mtime": 1783633520.7822158,
-    "ast_hash": "dc9a17440aa1bbc0c26cb036f6c1356e",
-    "semantic_hash": "dc9a17440aa1bbc0c26cb036f6c1356e"
+    "mtime": 1784256230.7719662,
+    "ast_hash": "7128e7ae4e2e1335999fb901b0ecbafe",
+    "semantic_hash": ""
   },
   "src/systems/pf2e/components/Pf2eInventoryTab.tsx": {
     "mtime": 1784246254.670986,
@@ -2745,9 +2745,9 @@
     "semantic_hash": "f3c23f62d2fcbc8919c4433951c5e785"
   },
   "src/systems/pf2e/pf2eSheetShared.ts": {
-    "mtime": 1783633520.7849114,
-    "ast_hash": "ffa929430b4d8d6cc385808c70947f20",
-    "semantic_hash": "ffa929430b4d8d6cc385808c70947f20"
+    "mtime": 1784256955.795959,
+    "ast_hash": "874a98237977acafc165e8fb866e55c1",
+    "semantic_hash": ""
   },
   "src/systems/pf2e/sheet.tsx": {
     "mtime": 1783633520.7849114,
@@ -3360,8 +3360,8 @@
     "semantic_hash": ""
   },
   "src/systems/dnd5e/shared/dnd5eRest.ts": {
-    "mtime": 1783633520.7649512,
-    "ast_hash": "90b73a29e66df9c6b0007be2c8301940",
+    "mtime": 1784256019.6239684,
+    "ast_hash": "703310e17e4a00f780034a4221befd2d",
     "semantic_hash": ""
   },
   "src/systems/dnd5e/shared/dnd5eToolChoices.ts": {
@@ -3522,6 +3522,16 @@
   "src/systems/daggerheart/daggerheartRest.ts": {
     "mtime": 1784251908.3386707,
     "ast_hash": "d0dd72ead634ff22c8ed37344eee075a",
+    "semantic_hash": ""
+  },
+  "src/__tests__/components/DaggerheartSheetHeader.test.tsx": {
+    "mtime": 1784256297.7799656,
+    "ast_hash": "a723a15a803b9fc51086ae134d353649",
+    "semantic_hash": ""
+  },
+  "src/__tests__/components/Pf2eHeader.test.tsx": {
+    "mtime": 1784256286.075966,
+    "ast_hash": "21b691c16490d14c167526469beb06a3",
     "semantic_hash": ""
   }
 }
