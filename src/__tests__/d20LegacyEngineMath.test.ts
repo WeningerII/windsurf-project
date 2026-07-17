@@ -20,6 +20,7 @@ import {
 } from '../systems/shared/d20-helpers';
 import {
   dnd35eXpForLevel,
+  dnd35eLevelForXp,
   dnd35eTriggersMassiveDamage,
   dnd35eHpState,
   dnd35eConcentrationDCDefensive,
@@ -598,6 +599,26 @@ describe('L1 D&D 3.5e XP-to-level table', () => {
     expect(dnd35eXpForLevel(5)).toBe(10000);
     expect(dnd35eXpForLevel(8)).toBe(28000);
     expect(dnd35eXpForLevel(20)).toBe(190000);
+  });
+
+  it('inverts the table: level earned for a given total XP', () => {
+    // Exactly on a threshold earns that level.
+    expect(dnd35eLevelForXp(0)).toBe(1);
+    expect(dnd35eLevelForXp(1000)).toBe(2);
+    expect(dnd35eLevelForXp(10000)).toBe(5);
+    expect(dnd35eLevelForXp(190000)).toBe(20);
+  });
+
+  it('rounds XP between thresholds down to the level attained', () => {
+    expect(dnd35eLevelForXp(999)).toBe(1); // just shy of level 2 (1000)
+    expect(dnd35eLevelForXp(2999)).toBe(2); // just shy of level 3 (3000)
+    expect(dnd35eLevelForXp(9999)).toBe(4); // just shy of level 5 (10000)
+  });
+
+  it('floors below zero XP at level 1 and caps above the table at 20', () => {
+    expect(dnd35eLevelForXp(-500)).toBe(1);
+    expect(dnd35eLevelForXp(190000 - 1)).toBe(19); // one short of the level-20 line
+    expect(dnd35eLevelForXp(5_000_000)).toBe(20); // never exceeds the 20th-level cap
   });
 });
 
