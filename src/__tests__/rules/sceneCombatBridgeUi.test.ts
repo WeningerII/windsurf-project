@@ -700,6 +700,33 @@ describe('Daggerheart scene combat (phase 3 adapter)', () => {
       damages: [{ tokenId: 'foe', amount: 3 }],
     });
   });
+
+  it('refuses honestly when the target lacks the daggerheart payload — never a silent d20 fallback', () => {
+    let scene = createSceneDocument({ id: 'dh2', name: 'DH2', systemId: 'daggerheart', seed: 'd' });
+    for (const token of [
+      combatToken('hero', 'character', 6, 0),
+      combatToken('foe', 'character', 6, 1),
+    ]) {
+      const r = resolveSceneAction(
+        scene,
+        { type: 'place-token', token },
+        { eventId: `p-${token.id}` }
+      );
+      scene = appendSceneEvent(scene, r.event!);
+    }
+    // d20-shaped stats (no daggerheart thresholds): before the guard this fell
+    // through to the generic d20 resolver inside a Daggerheart scene.
+    const outcome = resolveSceneAttack({
+      state: foldSceneEvents(scene).state,
+      attackerId: 'hero',
+      targetId: 'foe',
+      resolveStats: () => hittingStats,
+      seed: 'dh-foreign',
+    });
+    expect(outcome.hit).toBe(false);
+    expect(outcome.intent).toBeUndefined();
+    expect(outcome.log).toMatch(/cannot resolve combat stats/i);
+  });
 });
 
 describe('M&M 3e scene combat (phase 3 adapter)', () => {
@@ -754,6 +781,29 @@ describe('M&M 3e scene combat (phase 3 adapter)', () => {
       type: 'apply-damage',
       damages: [{ tokenId: 'villain', amount: 1 }],
     });
+  });
+
+  it('refuses honestly when stats lack the mam3e payload — never a silent d20 fallback', () => {
+    // A token whose refId points at another system's document resolves
+    // d20-shaped stats (no mam3e field). Before the guard, this fell through
+    // to the generic d20 resolver and quietly fought under 5e-style rules in
+    // an M&M scene; now it is refused like any other unresolvable attack.
+    const d20Shaped: SceneCombatStats = {
+      attackEffects: [atk(100)],
+      damageEffects: flatDamage(5),
+      armorClass: 10,
+      reach: 1,
+    };
+    const outcome = resolveSceneAttack({
+      state: mamScene(),
+      attackerId: 'hero',
+      targetId: 'villain',
+      resolveStats: () => d20Shaped,
+      seed: 'mam-foreign',
+    });
+    expect(outcome.hit).toBe(false);
+    expect(outcome.intent).toBeUndefined();
+    expect(outcome.log).toMatch(/cannot resolve combat stats/i);
   });
 
   it('a moderate failure persists the condition track on the token', () => {

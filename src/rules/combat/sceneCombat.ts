@@ -227,6 +227,17 @@ export function resolveSceneAttack(params: {
   const targetTerrain = collectTerrainEffectsAt(state, target.position);
   const coverBonus = resolveEffects(targetTerrain, {}).byTarget.ac?.total ?? 0;
 
+  // Honest refusal, not a silent model swap: in an M&M or Daggerheart scene, a
+  // combatant whose stats lack that system's payload (e.g. a token imported
+  // from another system's documents) must NOT fall through to the generic d20
+  // resolver below and quietly fight under 5e-style rules.
+  if (state.systemId === 'mam3e' && (!attackerStats.mam3e || !targetStats.mam3e)) {
+    return { log: `${attacker.name} cannot resolve combat stats for this attack.`, hit: false };
+  }
+  if (state.systemId === 'daggerheart' && !targetStats.daggerheart) {
+    return { log: `${attacker.name} cannot resolve combat stats for this attack.`, hit: false };
+  }
+
   // M&M scenes resolve by the system's own model: d20 vs Dodge/Parry, then a
   // Toughness save whose shortfall drives the CONDITION track. Incapacitation
   // downs the token (hp is a pure up/down flag for M&M tokens); other
