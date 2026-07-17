@@ -16,10 +16,31 @@ pin no-dead-options), honest-refusal guard vs silent d20 fallback in M&M/DH
 scenes, genre-neutral AI illustration prompt, README/CONTRIBUTING/VISION
 de-5e'd (two-denominator citation closed the GAPS §4 owner item). 2131 tests.
 
-**NEXT BUILD (owner-endorsed direction pending a fresh 'proceed'): rest &
-leveling (RFC 005)** — the gap ledger's highest-leverage expansion. Build it
-with per-system vocabulary from day one (the sweep set the standard: honest
-labels via props with 5e defaults; no d20 terms on shared surfaces).
+**IN FLIGHT on `claude/next-priorities-98pzof`: RFC 005 rest & leveling.**
+Slice 1 DONE (commit `dd36e2e`, not yet pushed/PR'd): **Daggerheart long-rest
+downtime moves** — it was the only system with per-day pools but no rest.
+`src/systems/daggerheart/daggerheartRest.ts` (pure patch builders on the RFC 005
+`reset`/`clampCount` verbs) + downtime-move handlers + a header control group.
+HONEST to move-based rest: individual moves (Tend to All Wounds / Clear All
+Stress / Repair All Armor / Prepare), NOT a blanket reset; short-rest `1d4+tier`
+variants deliberately deferred (seeded roll). +7 tests. Survey (see below) drove
+the pick.
+
+**RFC 005 SURVEY (Explore agent, evidence-backed):** Rest exists in 5/7 (5e via
+`dnd5eRest.ts`, PF2e `pf2eSheetShared.ts`, d20-legacy `useD20LegacyMutationHandlers`);
+M&M correctly has none (build-budget, no per-day pools = accepted boundary);
+Daggerheart was the real gap (now done). LEVELING: NO advancement flow anywhere
+— level is a raw field everywhere; `dnd35eXpForLevel` exists but is UNWIRED.
+`resourcePool.ts` verbs used only by d20-legacy + now Daggerheart; 5e/PF2e rest
+still hand-roll clamps (RFC 005 consolidation target).
+
+**NEXT RFC 005 slices (value order):** (2) 5e/PF2e rest → route through the pool
+verbs (pure consolidation refactor). (3) LEVELING: wire `dnd35eXpForLevel` as a
+read-only "level for current XP" indicator by the d20-legacy XP field
+(safest/net-new), then milestone +/- level for the single-scalar systems
+(Daggerheart, PF2e). Defer 5e/d20 interactive advancement (template
+re-application reverts manual edits — 2026-06-09 review). Build all with
+per-system vocabulary (the sweep's standard).
 
 ## What shipped (all on main)
 
