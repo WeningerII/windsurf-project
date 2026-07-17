@@ -1,5 +1,21 @@
 import type { Pf2eDataModel, Pf2eProficiencyTier, Pf2eSpellcasting } from './data-model';
-import { clampCount } from '../../utils/resourcePool';
+import {
+  poolFromRemaining,
+  remainingShape,
+  reset,
+  restore,
+  type ResourcePool,
+} from '../../utils/resourcePool';
+
+/**
+ * View one PF2e spell-slot rank as a generic resource pool: the cap lives in
+ * `max` and the expended count in `used`, mapping directly onto a pool's
+ * `max`/`spent`. Restoring all slots on a daily preparation is a `reset`.
+ */
+const slotPool = (slot: { max: number; used: number }): ResourcePool => ({
+  max: slot.max,
+  spent: slot.used,
+});
 
 const PF2E_TIER_ORDER: Pf2eProficiencyTier[] = [
   'untrained',
@@ -54,11 +70,15 @@ export function shortRestPf2eSpellcasting(
     return spellcasting;
   }
 
+  // A short rest returns to the pool a single expended focus point (CRB: Refocus
+  // recovers 1). On the {current,max} focus pool that is a `restore` of 1.
   return {
     ...spellcasting,
     focusPoints: {
       ...spellcasting.focusPoints,
-      current: clampCount(spellcasting.focusPoints.current + 1, spellcasting.focusPoints.max),
+      current: remainingShape(
+        restore(poolFromRemaining(spellcasting.focusPoints.current, spellcasting.focusPoints.max))
+      ).current,
     },
   };
 }
@@ -70,9 +90,11 @@ export function longRestPf2eSpellcasting(
     return spellcasting;
   }
 
+  // Daily preparations refill every slot rank and all focus points: each slot's
+  // expended count is `reset` to 0, and the focus pool is `reset` to full.
   const slots: Record<number, { max: number; used: number }> = {};
   for (const [level, slot] of Object.entries(spellcasting.spellSlots)) {
-    slots[Number(level)] = { ...slot, used: 0 };
+    slots[Number(level)] = { ...slot, used: reset(slotPool(slot)).spent };
   }
 
   return {
@@ -80,7 +102,9 @@ export function longRestPf2eSpellcasting(
     spellSlots: slots,
     focusPoints: {
       ...spellcasting.focusPoints,
-      current: spellcasting.focusPoints.max,
+      current: remainingShape(
+        reset(poolFromRemaining(spellcasting.focusPoints.current, spellcasting.focusPoints.max))
+      ).current,
     },
   };
 }

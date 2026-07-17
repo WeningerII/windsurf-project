@@ -1,4 +1,21 @@
 import { Feature, HitDice, SpellcastingInfo } from '../../../types/core/character';
+import {
+  poolFromRemaining,
+  remainingShape,
+  reset,
+  type ResourcePool,
+} from '../../../utils/resourcePool';
+
+/**
+ * View one 5e spell-slot (or pact-magic) level as a generic resource pool: the
+ * cap lives in `max` and the consumed count in `used`, mapping directly onto a
+ * pool's `max`/`spent`. Any extra per-level fields (e.g. pact magic's `level`)
+ * stay on the slot and are untouched by reset.
+ */
+const slotPool = (slot: { max: number; used: number }): ResourcePool => ({
+  max: slot.max,
+  spent: slot.used,
+});
 
 function recoverFeatures(features: Feature[], restType: 'short' | 'long'): Feature[] {
   return features.map((feature) => {
@@ -42,7 +59,7 @@ function recoverPactMagicSlots(spellcasting?: SpellcastingInfo): SpellcastingInf
 
   return {
     ...spellcasting,
-    pactMagic: { ...spellcasting.pactMagic, used: 0 },
+    pactMagic: { ...spellcasting.pactMagic, used: reset(slotPool(spellcasting.pactMagic)).spent },
   };
 }
 
@@ -52,7 +69,7 @@ function recoverAllSpellSlots(spellcasting?: SpellcastingInfo): SpellcastingInfo
   const slots = { ...spellcasting.spellSlots };
   for (let level = 1; level <= 9; level += 1) {
     const key = level as keyof typeof slots;
-    slots[key] = { ...slots[key], used: 0 };
+    slots[key] = { ...slots[key], used: reset(slotPool(slots[key])).spent };
   }
 
   return recoverPactMagicSlots({
@@ -81,11 +98,15 @@ export function applyDnd5eLongRest<
     exhaustionLevel: number;
   },
 >(state: T): T {
+  const healedHitPoints = remainingShape(
+    reset(poolFromRemaining(state.hitPoints.current, state.hitPoints.max))
+  );
+
   return {
     ...state,
     hitPoints: {
       ...state.hitPoints,
-      current: state.hitPoints.max,
+      current: healedHitPoints.current,
       temp: 0,
     },
     hitDice: recoverLongRestHitDice(state.hitDice),
