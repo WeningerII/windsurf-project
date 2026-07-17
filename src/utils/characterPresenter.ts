@@ -57,13 +57,27 @@ export function getClassLabel(system: SystemDataModel): string | null {
   return classId ? humanizeToken(classId) : null;
 }
 
-export function getSpeciesLabel(system: SystemDataModel): string | null {
-  const data = system as Record<string, unknown>;
+/**
+ * A character's origin line with each system's own caption — mirroring the
+ * captions the systems' sheets ship: 3.5e/PF1e say 'Race', PF2e and Daggerheart
+ * say 'Ancestry' (PF2e via `ancestryId`, Daggerheart via `heritage`), the 5e
+ * family says 'Species'. Returns null when no origin field is set.
+ */
+export function getSpeciesLabel(
+  doc: CharacterDocument<SystemDataModel>
+): { label: string; value: string } | null {
+  const data = doc.system as Record<string, unknown>;
   const speciesId = asString(data.speciesId);
-  if (speciesId) return humanizeToken(speciesId);
+  if (speciesId) {
+    const label = doc.systemId === 'dnd-3.5e' || doc.systemId === 'pf1e' ? 'Race' : 'Species';
+    return { label, value: humanizeToken(speciesId) };
+  }
 
   const ancestryId = asString(data.ancestryId);
-  if (ancestryId) return humanizeToken(ancestryId);
+  if (ancestryId) return { label: 'Ancestry', value: humanizeToken(ancestryId) };
+
+  const heritage = asString(data.heritage);
+  if (heritage) return { label: 'Ancestry', value: humanizeToken(heritage) };
 
   return null;
 }

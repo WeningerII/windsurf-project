@@ -8,11 +8,14 @@ import {
 } from '../../utils/characterPresenter';
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
 
-function makeDoc(system: Record<string, unknown>): CharacterDocument<SystemDataModel> {
+function makeDoc(
+  system: Record<string, unknown>,
+  systemId = 'dnd-5e-2024'
+): CharacterDocument<SystemDataModel> {
   return {
     id: 'doc-1',
     name: 'Hero',
-    systemId: 'dnd-5e-2024',
+    systemId,
     system: system as SystemDataModel,
     createdAt: new Date('2026-01-01T00:00:00.000Z'),
     updatedAt: new Date('2026-01-02T00:00:00.000Z'),
@@ -61,10 +64,31 @@ describe('characterPresenter', () => {
   });
 
   describe('getSpeciesLabel', () => {
-    it('prefers speciesId, falls back to ancestryId, else null', () => {
-      expect(getSpeciesLabel({ speciesId: 'half-elf' } as SystemDataModel)).toBe('Half Elf');
-      expect(getSpeciesLabel({ ancestryId: 'dwarf' } as SystemDataModel)).toBe('Dwarf');
-      expect(getSpeciesLabel({} as SystemDataModel)).toBeNull();
+    it('prefers speciesId, falls back to ancestryId then heritage, else null', () => {
+      expect(getSpeciesLabel(makeDoc({ speciesId: 'half-elf' }))).toEqual({
+        label: 'Species',
+        value: 'Half Elf',
+      });
+      expect(getSpeciesLabel(makeDoc({ ancestryId: 'dwarf' }, 'pf2e'))).toEqual({
+        label: 'Ancestry',
+        value: 'Dwarf',
+      });
+      expect(getSpeciesLabel(makeDoc({ heritage: 'ribbet' }, 'daggerheart'))).toEqual({
+        label: 'Ancestry',
+        value: 'Ribbet',
+      });
+      expect(getSpeciesLabel(makeDoc({}))).toBeNull();
+    });
+
+    it("captions each system with its own term — 3.5e/PF1e say 'Race'", () => {
+      expect(getSpeciesLabel(makeDoc({ speciesId: 'half-orc' }, 'dnd-3.5e'))).toEqual({
+        label: 'Race',
+        value: 'Half Orc',
+      });
+      expect(getSpeciesLabel(makeDoc({ speciesId: 'gnome' }, 'pf1e'))).toEqual({
+        label: 'Race',
+        value: 'Gnome',
+      });
     });
   });
 

@@ -182,7 +182,7 @@ test('smokes Mutants & Masterminds 3e reference browsers', async ({ page }) => {
   await expect(page.getByLabel('Search archetypes')).toBeVisible({ timeout: 10000 });
 
   await clickTab(page, /^Powers DB$/i);
-  await expect(page.getByLabel('Search spells')).toBeVisible();
+  await expect(page.getByLabel('Search powers')).toBeVisible();
   await expect(page.getByLabel('Search modifiers')).toBeVisible();
 
   await clickTab(page, /^Advantages DB$/i);

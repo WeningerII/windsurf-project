@@ -95,7 +95,7 @@ This project ships **only** SRD / open-license content. Before adding any:
 
 - Vitest specs live in `src/__tests__/`; Playwright e2e specs live in `e2e/`. Tests are **not** co-located with source.
 - Test behavior, not implementation; cover edge and error cases before the happy path.
-- Every data file should have a validation test (unique ids, required fields, level/shape invariants). `npm run validate` runs the cross-system data validators.
+- Every data file should have a validation test (unique ids, required fields, level/shape invariants). `npm run validate` currently runs the D&D 5e (2014) class-data validator (`src/scripts/validate-classes.ts`); data checks for the other systems live as Vitest data tests in `src/__tests__/` and run via `npm test` and the coverage gate.
 - Coverage thresholds are enforced on `npm run test:coverage` (see `vitest.config.ts`).
 
 ## Pull Requests

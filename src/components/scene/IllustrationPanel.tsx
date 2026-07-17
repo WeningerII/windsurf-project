@@ -51,7 +51,7 @@ export function IllustrationPanel({ illustrate }: IllustrationPanelProps) {
           aria-label="Illustration prompt"
           value={prompt}
           onChange={(event) => setPrompt(event.target.value)}
-          placeholder="e.g. a torchlit crypt with cracked sarcophagi and green mist…"
+          placeholder="Describe the setting, key figures, lighting, and mood…"
           rows={2}
           disabled={busy}
           className="w-full resize-none rounded-md border border-input bg-transparent px-2.5 py-1.5 text-sm focus:border-primary focus:outline-none disabled:opacity-50"

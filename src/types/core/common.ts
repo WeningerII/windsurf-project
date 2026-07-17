@@ -21,7 +21,11 @@
  * consumers key by (systemId, id), never by id alone.
  */
 
-// Common types used across the application
+// Shared vocabulary types — largely d20-family, despite living in core:
+// AbilityScore is the six d20 abilities, DamageType is the 5e list plus
+// 3.5e's electricity/sonic, BonusType is d20/PF named-bonus stacking.
+// Daggerheart's traits (agility/instinct/presence/…) and M&M's abilities
+// (fgt/awe/…) live in their own system types, not here.
 
 // d2/d3 appear in the SRD 3.5 size-step damage table (Tiny weapon dice).
 export type DiceType = 'd1' | 'd2' | 'd3' | 'd4' | 'd6' | 'd8' | 'd10' | 'd12' | 'd20' | 'd100';

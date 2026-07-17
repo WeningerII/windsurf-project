@@ -23,6 +23,7 @@ import {
   runSceneRound,
   type ResolveCombatStats,
 } from '../rules';
+import { sceneConditionOptions } from './scene/sceneConditionOptions';
 import { resolveSceneCombatStats } from '../scene/combatStats';
 import { createSeededRng } from '../scene/seededRng';
 import type { Campaign } from '../types/core/campaign';
@@ -87,19 +88,6 @@ interface Props {
   /** Append a factual recap of a scene to its linked campaign's session log. */
   onLogToCampaign?: (campaignId: string, title: string, body: string) => void;
 }
-
-// Conditions offered on tokens: exactly the ids the rules layer compiles into
-// combat effects (collectDnd5eConditionEffects); 5e vocabulary, so the section
-// only renders for 5e-family scenes.
-const DND5E_SCENE_CONDITIONS = [
-  'blinded',
-  'frightened',
-  'poisoned',
-  'prone',
-  'restrained',
-  'paralyzed',
-  'stunned',
-] as const;
 
 export function SceneManager({
   scenes,
@@ -905,11 +893,7 @@ export function SceneManager({
                 }
                 canDeleteToken={Boolean(selectedTokenId)}
                 onDeleteSelectedToken={handleDeleteSelectedToken}
-                conditionOptions={
-                  sceneSystemId === 'dnd-5e-2014' || sceneSystemId === 'dnd-5e-2024'
-                    ? DND5E_SCENE_CONDITIONS
-                    : []
-                }
+                conditionOptions={sceneConditionOptions(sceneSystemId)}
                 selectedTokenConditions={
                   (selectedTokenId && state.tokens[selectedTokenId]?.conditions) || []
                 }
@@ -1051,7 +1035,7 @@ export function SceneManager({
 
               <ReactionPanel seed={state.seed} />
 
-              <DicePanel seed={state.seed} />
+              <DicePanel seed={state.seed} systemId={sceneSystemId} />
 
               {/* Image-output surface: a creative aid, not scene state. */}
               {aiEnabled && (

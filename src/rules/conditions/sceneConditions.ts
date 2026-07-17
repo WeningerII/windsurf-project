@@ -29,6 +29,9 @@ const DAGGERHEART_CONDITION_NOTES: Record<string, string> = {
   hidden: 'Hidden: rolls against you have disadvantage until you are seen',
 };
 
+/** Catalog-backed Daggerheart condition ids, for pickers that store ids. */
+export const DAGGERHEART_CONDITION_IDS = Object.keys(DAGGERHEART_CONDITION_NOTES);
+
 /** Parse a 'name-N' condition id into its value-bearing form ('frightened-2'). */
 function parseValuedCondition(conditionId: string): { name: string; value?: number } {
   const match = /^(.*)-(\d+)$/.exec(conditionId);

@@ -19,12 +19,60 @@ export interface SpellBrowserSpell {
   scaling?: string;
 }
 
+/**
+ * Display vocabulary for the browser. The defaults are the d20 spell terms;
+ * non-spell consumers override them — M&M 3e reuses this browser for POWERS
+ * (rank rides `level`, power type rides `school`/`classes`, action rides
+ * `castingTime`), so its captions must say Rank/Type/Action, not
+ * Level/School/Casting Time.
+ */
+export interface SpellBrowserLabels {
+  nounPlural: string;
+  searchPlaceholder: string;
+  searchAria: string;
+  level: string;
+  levelAria: string;
+  levelZero: string;
+  levelPrefix: string;
+  allLevels: string;
+  school: string;
+  schoolAria: string;
+  allSchools: string;
+  classLabel: string;
+  classAria: string;
+  allClasses: string;
+  castingTime: string;
+  empty: string;
+}
+
+const DEFAULT_LABELS: SpellBrowserLabels = {
+  nounPlural: 'spells',
+  searchPlaceholder: 'Search spells by name or description...',
+  searchAria: 'Search spells',
+  level: 'Spell Level',
+  levelAria: 'Filter by spell level',
+  levelZero: 'Cantrip',
+  levelPrefix: 'Level',
+  allLevels: 'All Levels',
+  school: 'School',
+  schoolAria: 'Filter by spell school',
+  allSchools: 'All Schools',
+  classLabel: 'Class',
+  classAria: 'Filter by class',
+  allClasses: 'All Classes',
+  castingTime: 'Casting Time',
+  empty: 'No spells found matching your criteria.',
+};
+
 interface SpellBrowserProps {
   spells: SpellBrowserSpell[];
   onSelectSpell?: (spell: SpellBrowserSpell) => void;
+  /** Partial vocabulary overrides; unset keys keep the d20 spell defaults. */
+  labels?: Partial<SpellBrowserLabels>;
 }
 
-export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpell }) => {
+export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpell, labels }) => {
+  const t = { ...DEFAULT_LABELS, ...labels };
   const [searchTerm, setSearchTerm] = useState('');
   const deferredSearchTerm = useDeferredValue(searchTerm);
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
@@ -113,11 +161,11 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpel
         <Search className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
         <input
           type="text"
-          placeholder="Search spells by name or description..."
+          placeholder={t.searchPlaceholder}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full pl-10 pr-4 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-          aria-label="Search spells"
+          aria-label={t.searchAria}
         />
       </div>
 
@@ -125,17 +173,17 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpel
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         {/* Level Filter */}
         <div>
-          <label className="block text-sm font-medium mb-2">Spell Level</label>
+          <label className="block text-sm font-medium mb-2">{t.level}</label>
           <select
             value={selectedLevel ?? ''}
             onChange={(e) => setSelectedLevel(e.target.value ? parseInt(e.target.value) : null)}
             className="w-full px-3 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            aria-label="Filter by spell level"
+            aria-label={t.levelAria}
           >
-            <option value="">All Levels</option>
+            <option value="">{t.allLevels}</option>
             {levels.map((level) => (
               <option key={level} value={level}>
-                {level === 0 ? 'Cantrip' : `Level ${level}`}
+                {level === 0 ? t.levelZero : `${t.levelPrefix} ${level}`}
               </option>
             ))}
           </select>
@@ -143,14 +191,14 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpel
 
         {/* School Filter */}
         <div>
-          <label className="block text-sm font-medium mb-2">School</label>
+          <label className="block text-sm font-medium mb-2">{t.school}</label>
           <select
             value={selectedSchool ?? ''}
             onChange={(e) => setSelectedSchool(e.target.value || null)}
             className="w-full px-3 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            aria-label="Filter by spell school"
+            aria-label={t.schoolAria}
           >
-            <option value="">All Schools</option>
+            <option value="">{t.allSchools}</option>
             {schools.map((school) => (
               <option key={school} value={school}>
                 {school.charAt(0).toUpperCase() + school.slice(1)}
@@ -161,14 +209,14 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpel
 
         {/* Class Filter */}
         <div>
-          <label className="block text-sm font-medium mb-2">Class</label>
+          <label className="block text-sm font-medium mb-2">{t.classLabel}</label>
           <select
             value={selectedClass ?? ''}
             onChange={(e) => setSelectedClass(e.target.value || null)}
             className="w-full px-3 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            aria-label="Filter by class"
+            aria-label={t.classAria}
           >
-            <option value="">All Classes</option>
+            <option value="">{t.allClasses}</option>
             {classes.map((cls) => (
               <option key={cls} value={cls}>
                 {cls.charAt(0).toUpperCase() + cls.slice(1)}
@@ -212,7 +260,7 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpel
       {/* Results */}
       <div>
         <p className="text-sm text-muted-foreground mb-4" aria-live="polite" aria-atomic="true">
-          Showing {filteredSpells.length} of {spells.length} spells
+          Showing {filteredSpells.length} of {spells.length} {t.nounPlural}
         </p>
 
         <div className="grid grid-cols-1 gap-4">
@@ -228,7 +276,7 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpel
                   <div>
                     <h3 className="font-semibold text-lg">{spell.name}</h3>
                     <p className="text-sm text-muted-foreground">
-                      Level {spell.level} {spell.school}
+                      {t.levelPrefix} {spell.level} {spell.school}
                     </p>
                   </div>
                   <div className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
@@ -259,7 +307,7 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpel
 
                 <div className="grid grid-cols-3 gap-4 text-sm mb-3">
                   <div>
-                    <span className="font-medium">Casting Time:</span> {spell.castingTime}
+                    <span className="font-medium">{t.castingTime}:</span> {spell.castingTime}
                   </div>
                   <div>
                     <span className="font-medium">Range:</span> {spell.range}
@@ -299,7 +347,7 @@ export const SpellBrowser: React.FC<SpellBrowserProps> = ({ spells, onSelectSpel
             ))
           ) : (
             <div className="text-center py-8 text-muted-foreground">
-              <p>No spells found matching your criteria.</p>
+              <p>{t.empty}</p>
             </div>
           )}
         </div>

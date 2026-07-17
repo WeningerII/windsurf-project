@@ -17,7 +17,7 @@ Today this is a deterministic, multi-system character-sheet and scene toolkit �
 - ✅ **Spell catalog parity baseline**: shared spell indexes and alias-safe lookups across all five spell systems, including PF2e rank-10 browser support
 - ✅ **Mutants & Masterminds 3e**: native point-buy sheet with browseable SRD reference surfaces
 - ✅ **Daggerheart**: SRD-backed support with selectors, templates, equipment, domains, domain-card loadouts, and deterministic passive automation; triggered/narrative card resolution is GM-adjudicated by design
-- ✅ **Manual scenes**: local scene/grid manager with event-backed tokens, queued loader-backed D&D 5e encounter seeding, party-level XP preview, terrain or hazard markers, initiative controls, and scene import/export
+- ✅ **Manual scenes**: local scene/grid manager with event-backed tokens, queued loader-backed encounter seeding across the d20 systems (5e 2014/2024, D&D 3.5e, PF1e, PF2e — 3.5e Encounter-Level budgeting honestly reported as unsupported) with party-level XP preview, terrain or hazard markers including functional terrain (cover, high ground, difficult terrain) that resolves in scene combat across all seven systems, initiative controls, and scene import/export
 - ✅ **AI control plane (default-off, RFC 002)**: provider-agnostic gateway with four task surfaces — encounter drafting, recap narration, image-based creature identification, and scene illustration — gated behind `VITE_AI_ENABLED`, with the provider key held server-side only and deterministic validators deciding what applies
 - ✅ **Open-content policy**: strict source-filtered SRD/core-only shipping
 
@@ -62,7 +62,7 @@ npm run runtime:doctor  # Show host/runtime policy state and recovery commands
 ```bash
 npm run lint       # Run ESLint
 npm run typecheck:test  # Type-check unit tests, e2e specs, and tool configs
-npm run validate   # Validate all game data
+npm run validate   # Validate D&D 5e (2014) class data (cross-system data invariants run in the Vitest suites)
 npm run check:doc-drift  # Validate live docs, historical banners, and audited support-copy claims
 npm test           # Run the Vitest suite once
 npm run test:watch # Run the Vitest suite in watch mode
@@ -134,21 +134,23 @@ npx tsc --noEmit
 - Check storage quota: Data Management screen shows current usage
 
 ### Key Features
-- **Template-Driven Character Setup**: Select class/species/background from dropdowns to auto-populate proficiencies, features, HP, and spell slots
+- **Character Management**: Create, edit, and manage characters across 7 game systems
+- **Template-Driven Character Setup**: dropdown selections seed system-appropriate starting state — 5e class/species/background auto-populates proficiencies, features, HP, and spell slots; Daggerheart class/ancestry/community templates seed supported starting stats and inventory; PF2e ancestry/background selections are loader-backed
+- **Cross-System Spell Browser**: Normalized spell catalogs now drive shared browser filters, alias-safe lookup, PF2e rank-10 level filtering, and richer target/effect/area/scaling display
+- **Tabbed Character Sheet**: system-appropriate tabs for sheets, inventory, and browse surfaces (spells and feats, powers and advantages, domain cards, equipment)
+- **Export/Import**: Backup and share characters via JSON files
+- **Auto-Save**: Changes automatically saved to browser localStorage
+- **System Dashboard**: Live status view of all game systems
+- **Data Management**: Export/import/clear all characters from the home screen
 - **5e Class Builder**: Manage multiclass rows and pick the shipped SRD subclass directly from the shared 2014/2024 sheet
 - **5e 2014 Feature-Option Browser**: Browse and persist SRD invocations, fighting styles, metamagic, maneuvers, ki abilities, channel divinity options, wild shapes, and smites from the shared Features tab
 - **5e Feat Automation**: 2024 feat selection now applies supported ASIs and proficiency grants; deeper feat riders remain manual
 - **5e Ability Score Planner**: Use a built-in 27-point-buy planner or assign the standard array from the shared 5e ability tab
-- **Cross-System Spell Browser**: Normalized spell catalogs now drive shared browser filters, alias-safe lookup, PF2e rank-10 level filtering, and richer target/effect/area/scaling display
+- **5e Skill Management**: Interactive proficiency toggling (none/proficient/expertise)
+- **Legacy d20 Auto-Resolution (3.5e/PF1e)**: deterministic RAW auto-resolution for base and prestige classes — spells-per-day (casting-ability, cleric domain, wizard specialist, and Dragon Disciple bonus slots), synergy/encumbrance/gear skills, and equipped-armor AC
+- **Daggerheart Loadout Automation**: active armor derives Armor Score and damage thresholds, equipped weapons enforce burden and slot rules, and supported passive domain-card bonuses apply only from loadout
 - **M&M Reference Surfaces**: Pin loader-backed archetypes, insert SRD complications, and browse the shared power-modifier catalog from the native M&M sheet
 - **PF2e + M&M Native Sheet Decomposition**: Both systems now split headers, tab bodies, and browser-heavy surfaces into dedicated components, with state/template orchestration moved into system-local controller hooks and browse surfaces prewarming loaders and lazy chunks on focus/hover
-- **Character Management**: Create, edit, and manage characters across 7 game systems
-- **Export/Import**: Backup and share characters via JSON files
-- **Auto-Save**: Changes automatically saved to browser localStorage
-- **Tabbed Character Sheet**: System-specific tabs for sheets, inventory, spells, feats, equipment, and other supported browse surfaces
-- **System Dashboard**: Live status view of all game systems
-- **Data Management**: Export/import/clear all characters from the home screen
-- **Skill Management**: Interactive proficiency toggling (none/proficient/expertise)
 
 ### Deployment
 ```bash
@@ -295,21 +297,15 @@ Counts below summarize the current generated metrics in [docs/generated/roadmap-
 | **System Support** | 7 full/partial ✅ |
 | **Architecture** | V2 Document & Data Model ✅ |
 
-## 🔍 Validation System
+**Completion methodology**: every system is measured on two denominators — **content%** (Denominator A: the cited per-system catalogs in `docs/srd-manifest/` joined against actually-loaded ids; this certifies catalog parity and provenance, with independent full-SRD coverage reported separately in `docs/generated/srd-coverage.md`) and **compute%** (Denominator B: `docs/compute-register/` registers of every derived quantity, counted verified only when test-linked, passing, and mutation-proven via `check:compute-register`). Both are reported per system in `docs/generated/roadmap-metrics.md`; manual/reference-only boundaries are enumerated in `docs/srd-manifest/_exclusions.ts` so the metric is never gamed by fake automation. See `docs/STATUS.md` § Completion Tracking (Denominators) and `docs/GAPS.md`.
 
-Run comprehensive data validation:
+## 🔍 5e Class-Data Validation
 
 ```bash
 npm run validate
 ```
 
-Validates:
-- Required fields and structure
-- Proficiency consistency
-- Spell slot array lengths
-- Feature progression completeness
-- Multiclass rules
-- Type safety compliance
+`npm run validate` runs the D&D 5e (2014) class-data validator (progressions, proficiency consistency, spell-slot arrays, multiclass rules). Cross-system data invariants are enforced by per-system validation tests in `src/__tests__/` (run via `npm test`) and by the full `npm run verify` gate.
 
 ## 📚 Documentation
 
@@ -324,19 +320,16 @@ Validates:
 
 ## 🛠️ Development Guide
 
-### Adding a New Class
-1. Create directory: `src/data/dnd/5e-2014/classes/[class-name]/`
-2. Implement: `index.ts` (base class) and `[subclass].ts`
-3. Use existing classes as templates
-4. Run validation: `npm run validate`
+### Adding Content (any system)
+Each system's SRD data lives under `src/data/` (see Project Structure) — e.g. `src/data/dnd/5e-2014/`, `src/data/pathfinder/2e/`, `src/data/daggerheart/1.0/`, `src/data/mutants-and-masterminds/3e/`.
 
-### Adding a Spell
-1. Add spell to the appropriate level file: `src/data/dnd/5e-2014/spells/level-[N].ts`
-2. Follow `Spell` interface from `types/`
-3. Run validation
+1. **Encoder-emitted families** (spells, monsters/adversaries, equipment) are regenerated via the matching `scripts/encode-*.mjs` encoder — do not hand-edit those files.
+2. **Hand-maintained families** (e.g. classes) follow the existing entries in the target system's tree — for 5e-2014 classes that means a directory under `src/data/dnd/5e-2014/classes/` with an `index.ts` base class, using existing classes as templates.
+3. Every entry must carry an allowed open-content source string, enforced per system by `src/utils/openContentPolicy.ts`.
+4. Then run `npm run validate` (5e-2014 class data), `npm test`, and `npm run roadmap:metrics` to refresh the generated counts.
 
 ### Type Safety
-All proficiencies use standardized constants from `src/constants/proficiencies.ts`:
+All D&D 5e proficiencies use standardized constants from `src/constants/proficiencies.ts`:
 
 ```typescript
 import { WeaponProficiency, ArmorProficiency, Skill } from './constants/proficiencies';

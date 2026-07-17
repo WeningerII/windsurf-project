@@ -24,8 +24,8 @@ interface MarkerEffectOption {
 
 export const MARKER_EFFECT_OPTIONS: readonly MarkerEffectOption[] = [
   { value: 'none', label: 'None' },
-  { value: 'cover-2', label: 'Cover (+2 AC)' },
-  { value: 'cover-5', label: 'Cover (+5 AC)' },
+  { value: 'cover-2', label: 'Cover (+2 defense)' },
+  { value: 'cover-5', label: 'Cover (+5 defense)' },
   { value: 'high-ground-1', label: 'High ground (+1 attack)' },
   { value: 'difficult', label: 'Difficult terrain (×2 move)' },
 ];

@@ -89,6 +89,27 @@ export const MamPowerBrowserTab = (({
               classes: [humanizeMamToken(power.type)],
             };
           })}
+          // M&M vocabulary: rank rides `level`, power type rides `school` and
+          // `classes`, the action rides `castingTime` — so the captions must say
+          // Rank/Type/Action, never the browser's default spell terms.
+          labels={{
+            nounPlural: 'powers',
+            searchPlaceholder: 'Search powers by name or description...',
+            searchAria: 'Search powers',
+            level: 'Rank',
+            levelAria: 'Filter by power rank',
+            levelZero: 'Rank 0',
+            levelPrefix: 'Rank',
+            allLevels: 'All Ranks',
+            school: 'Type',
+            schoolAria: 'Filter by power type',
+            allSchools: 'All Types',
+            classLabel: 'Type',
+            classAria: 'Filter by type',
+            allClasses: 'All Types',
+            castingTime: 'Action',
+            empty: 'No powers found matching your criteria.',
+          }}
         />
       </Suspense>
     )}

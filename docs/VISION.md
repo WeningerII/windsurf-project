@@ -1,6 +1,6 @@
 # Vision
 
-**Last updated:** May 31, 2026
+**Last updated:** July 17, 2026
 
 This document records the *why* of the project — the long-horizon thesis that
 the product is built to test. It is deliberately separate from the roadmap.
@@ -91,16 +91,20 @@ is the proof: it already encodes **seven** systems faithfully, and the shared
 grammar has *not* fallen out of the pile. Each engine encodes its own system
 idiomatically. The only place commonality has been factored into a reusable
 shape is where someone **deliberately designed it** — the small shared d20
-helper layer — and even that covers only the d20 family.
+helper layer, and now the RFC 003 rules IR: a shared resolver and condition
+catalogs that reach all seven systems, with a compile layer the five
+additive-shaped engines route through.
 
 The lesson: **a cross-system rules grammar has to be built, not discovered.**
 Faithful per-system data is the *corpus* — necessary, expensive, and now
 largely paid for. But turning a corpus into a grammar is a modeling act: an
 explicit intermediate representation of what an *effect*, a *condition*, an
 *action*, a *modifier*, and a *terrain feature* are, independent of any one
-system, that every engine maps onto. That representation is the connective
-tissue this project most needs and least has today. It is proposed in
-`docs/rfc/003-rules-ir-and-effects.md`.
+system, that every engine maps onto. That representation was deliberately
+designed — not discovered — in `docs/rfc/003-rules-ir-and-effects.md`
+(Accepted; the IR, resolver, and per-system compile layer have begun
+shipping), proving the point: the shared grammar appeared exactly where it
+was explicitly built, and nowhere else.
 
 Synthesis of new content — the original dream — is therefore correctly the
 *last* thing, not the first. It is not a feature to bolt on; it is the
@@ -146,13 +150,23 @@ the authoritative current state:
 
 - **Built and solid:** the deterministic core. Seven systems behind a unified
   document/engine/registry abstraction; engines that compute (not just store)
-  HP, proficiency, AC, saves, spell slots, and system-specific math;
-  substantial loader-backed RAW; local-first persistence with optional sync; an
-  event-sourced scene runtime with a manual grid/initiative/encounter slice.
-- **Begun:** rule validation and provenance primitives.
-- **Not yet built:** the cross-system rules grammar (RFC 003), functional
-  terrain and effect resolution, guided creation, and the entire AI layer
-  (no model integration ships today).
+  HP, proficiency, per-system defenses (AC, Evasion, Dodge/Parry/Toughness),
+  saves, damage thresholds, and per-system resource math (spell slots,
+  power-point costs); substantial loader-backed RAW; local-first persistence
+  with optional sync; an event-sourced scene runtime with a manual
+  grid/initiative/encounter slice.
+- **Built and begun:** the system-agnostic rules IR and effect resolver
+  (RFC 003, Accepted) — IR, pure resolver, contribution-ledger view, and shared
+  compile layer shipped and routed through the five additive-shaped engines,
+  with the bespoke Daggerheart and M&M derivations an accepted architectural
+  boundary; functional terrain (cover, high ground, difficult-terrain movement
+  cost) resolving in scene combat across all seven systems; rule validation and
+  provenance primitives; and the default-off AI control plane (RFC 002) — a
+  server-side gateway with four task surfaces, where deterministic validators
+  decide what applies.
+- **Not yet built:** guided creation, the LLM strategist and narration critic,
+  observability/cost controls, and IR condition/ledger unification beyond the
+  5e engines.
 
 The foundation — the part that is hard to fake and expensive to earn — exists.
-The grammar and the AI layer are the road ahead.
+Finishing the grammar's adoption and deepening the AI layer are the road ahead.

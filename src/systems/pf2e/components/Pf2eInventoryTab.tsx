@@ -84,6 +84,8 @@ export const Pf2eInventoryTab: React.FC<Props> = ({
         }))}
         onAddItem={canUpdate ? onAddItem : undefined}
         onRemoveItem={canUpdate ? onRemoveItem : undefined}
+        // `weight` carries Bulk here (see the mapping above) — label it as such.
+        weightUnit="Bulk"
       />
     </>
   );

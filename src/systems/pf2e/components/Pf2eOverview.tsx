@@ -155,6 +155,10 @@ export const Pf2eOverview: React.FC<Props> = ({
         showExhaustion={false}
         onShortRest={canUpdate ? onShortRest : undefined}
         onLongRest={canUpdate ? onLongRest : undefined}
+        // PF2e vocabulary matching what the handlers do: the short handler
+        // heals and restores a Focus Point; the long one is daily preparations.
+        shortRestLabel="Rest & Refocus (10 min)"
+        longRestLabel="Daily Preparations"
       />
     </>
   );

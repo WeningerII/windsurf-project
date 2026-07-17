@@ -29,7 +29,7 @@ export function summarizeSceneForLog(state: SceneState): string {
 
   if (state.checkLog.length > 0) {
     const items = state.checkLog.map((entry) => {
-      const vs = entry.dc !== undefined ? ` vs DC ${entry.dc}` : '';
+      const vs = entry.dc !== undefined ? ` vs difficulty ${entry.dc}` : '';
       const tag = entry.outcome === 'unresolved' ? '' : ` (${entry.outcome})`;
       return `${entry.label} ${entry.total}${vs}${tag}`;
     });

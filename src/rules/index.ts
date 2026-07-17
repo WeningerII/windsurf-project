@@ -164,6 +164,11 @@ export type { D20LegacySystemId } from './conditions/d20LegacyConditions';
 export {
   collectD20LegacyConditionEffects,
   hasD20LegacyConditionEffects,
+  D20_LEGACY_CONDITION_IDS,
 } from './conditions/d20LegacyConditions';
 
-export { collectSceneConditionEffects, mam3eBruisePenalty } from './conditions/sceneConditions';
+export {
+  collectSceneConditionEffects,
+  mam3eBruisePenalty,
+  DAGGERHEART_CONDITION_IDS,
+} from './conditions/sceneConditions';

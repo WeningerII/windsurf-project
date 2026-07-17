@@ -35,7 +35,9 @@ function makeState(): SceneState {
 describe('RecapPanel', () => {
   it('previews the factual recap text', () => {
     render(<RecapPanel state={makeState()} campaignName="Saltmarsh" onLog={vi.fn()} />);
-    expect(screen.getByText(/Checks: Perception 17 vs DC 15 \(success\)\./)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Checks: Perception 17 vs difficulty 15 \(success\)\./)
+    ).toBeInTheDocument();
   });
 
   it('logs the scene name and recap, then confirms', async () => {
@@ -45,7 +47,10 @@ describe('RecapPanel', () => {
 
     await user.click(screen.getByRole('button', { name: /Log to Saltmarsh/i }));
 
-    expect(onLog).toHaveBeenCalledWith('The Crypt', 'Checks: Perception 17 vs DC 15 (success).');
+    expect(onLog).toHaveBeenCalledWith(
+      'The Crypt',
+      'Checks: Perception 17 vs difficulty 15 (success).'
+    );
     // Button flips to a logged state and a confirmation appears.
     expect(screen.getByRole('button', { name: /Logged/i })).toBeInTheDocument();
     expect(screen.getByText(/Added to Saltmarsh/i)).toBeInTheDocument();
@@ -98,7 +103,7 @@ describe('RecapPanel', () => {
     expect(draft).toHaveValue('The crypt fell silent.');
     // The deterministic recap is the model's only source material; tone defaults.
     expect(narrate).toHaveBeenCalledWith({
-      facts: 'Checks: Perception 17 vs DC 15 (success).',
+      facts: 'Checks: Perception 17 vs difficulty 15 (success).',
       tone: 'cinematic',
     });
 
@@ -120,7 +125,10 @@ describe('RecapPanel', () => {
     expect(screen.queryByRole('textbox', { name: /ai narration draft/i })).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: /Log to Saltmarsh/i }));
-    expect(onLog).toHaveBeenCalledWith('The Crypt', 'Checks: Perception 17 vs DC 15 (success).');
+    expect(onLog).toHaveBeenCalledWith(
+      'The Crypt',
+      'Checks: Perception 17 vs difficulty 15 (success).'
+    );
   });
 
   it('disables narration when the scene has no facts yet', () => {

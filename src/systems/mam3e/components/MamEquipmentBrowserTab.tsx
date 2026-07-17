@@ -63,7 +63,9 @@ export const MamEquipmentBrowserTab = (({
           type: item.type || 'gear',
           rarity: item.rarity || 'common',
           cost: formatMamEquipmentCost(item),
-          weight: item.weight ?? 0,
+          // M&M gear carries no weight stat; omitting it hides the browser's
+          // weight line instead of printing a fake '0 lbs'.
+          ...(item.weight != null ? { weight: item.weight } : {}),
           description: item.description,
         }))}
       />

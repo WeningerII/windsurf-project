@@ -200,6 +200,10 @@ export function useD20LegacySheetController({
       showExhaustion: false,
       onShortRest: mutationHandlers.onShortRest,
       onLongRest: mutationHandlers.onLongRest,
+      // 3.5e/PF1e have no 'short rest' rule; the handlers implement a brief
+      // breather heal and the overnight recovery that resets daily spell slots.
+      shortRestLabel: 'Rest',
+      longRestLabel: 'Overnight Rest',
     },
     tabsProps: {
       document: typedDocument,

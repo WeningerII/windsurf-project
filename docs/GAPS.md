@@ -207,8 +207,9 @@ here. The residual: M&M 3e / Daggerheart adversary (reference) data, and the
   unfinished automation. Independent content coverage is proven across the board
   (3.5e spells 99.8%, PF1e 99.8%, PF2e/5e ~100%).
 - MASTER_PLAN.md now mirrors the two-denominator completion goal and adopts
-  this file as the completion-tracking doc (2026-07-14). README.md is still not
-  updated to cite both denominators, and no doc claims RAW-coverage-complete.
+  this file as the completion-tracking doc (2026-07-14). README.md cites both
+  denominators under Quality Metrics ("Completion methodology", 2026-07-17),
+  and no doc claims RAW-coverage-complete.
 - The full `npm run verify` gate runs in CI on every main merge — including
   `build`, `check:bundle-size`, coverage thresholds, and Playwright `test:e2e`
   on both chromium and firefox; the latest such merge is `245876a` (PR #37,

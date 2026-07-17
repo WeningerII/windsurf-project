@@ -62,6 +62,11 @@ export interface TacticalTarget {
   tokenId: string;
   faction: string;
   position: SceneCoordinate;
+  /**
+   * Defense target value the attack must beat: AC in the d20 systems;
+   * Evasion/Difficulty (Daggerheart) or Dodge (M&M 3e) ride this channel for
+   * tokens flowing in from `buildSceneCombatants`.
+   */
   armorClass: number;
   hp?: { current: number; max: number };
 }

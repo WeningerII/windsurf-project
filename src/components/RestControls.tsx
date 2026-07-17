@@ -6,6 +6,13 @@ interface Props {
   onShortRest?: () => void;
   onLongRest?: () => void;
   showExhaustion?: boolean;
+  /**
+   * Button labels — 'Short Rest'/'Long Rest' (the 5e terms) by default. Non-5e
+   * sheets pass their own rule vocabulary: PF2e 'Rest & Refocus (10 min)' /
+   * 'Daily Preparations', legacy d20 'Rest' / 'Overnight Rest'.
+   */
+  shortRestLabel?: string;
+  longRestLabel?: string;
 }
 
 /**
@@ -23,6 +30,8 @@ export const RestControls: React.FC<Props> = ({
   onShortRest,
   onLongRest,
   showExhaustion = true,
+  shortRestLabel = 'Short Rest',
+  longRestLabel = 'Long Rest',
 }) => {
   const normalizedExhaustion = clampExhaustion(exhaustionLevel ?? 0);
   const canEditExhaustion = Boolean(onExhaustionChange);
@@ -36,18 +45,18 @@ export const RestControls: React.FC<Props> = ({
           className="px-3 py-1.5 rounded border text-sm hover:border-primary hover:text-primary disabled:opacity-50"
           onClick={onShortRest}
           disabled={!onShortRest}
-          title="Short Rest"
+          title={shortRestLabel}
         >
-          Short Rest
+          {shortRestLabel}
         </button>
         <button
           type="button"
           className="px-3 py-1.5 rounded border text-sm hover:border-primary hover:text-primary disabled:opacity-50"
           onClick={onLongRest}
           disabled={!onLongRest}
-          title="Long Rest"
+          title={longRestLabel}
         >
-          Long Rest
+          {longRestLabel}
         </button>
       </div>
       {showExhaustion && (
