@@ -109,5 +109,12 @@ eventual home for these verbs; this primitive is the first step toward it.
 - A typed `consume` verb for item charges/ammunition (missing everywhere today),
   expressed against `ResourcePool`.
 - Rest as a first-class `reset` across the systems that lack rest automation.
+  **Begun (2026-07-17):** Daggerheart gained its long-rest downtime moves
+  (`src/systems/daggerheart/daggerheartRest.ts`) — Tend to All Wounds / Clear
+  All Stress / Repair All Armor built on `reset`, Prepare on `clampCount` —
+  offered as individual moves (Daggerheart rest is move-based), with the
+  short-rest `1d4 + tier` variants a follow-up. The two hand-rolled rest
+  handlers (5e `dnd5eRest.ts`, PF2e `pf2eSheetShared.ts`) still inline their
+  clamps and remain a consolidation target.
 - Optional: a generic per-pool registry so a UI stepper and an AI-DM action
   drive the same code path.
