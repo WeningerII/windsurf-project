@@ -101,6 +101,36 @@ describe('useDaggerheartMutationHandlers', () => {
     expect(update).not.toHaveBeenCalled();
   });
 
+  it('dispatches each long-rest downtime move as its own pool patch', () => {
+    const update = vi.fn();
+    const data: DaggerheartDataModel = {
+      ...createDefaultDaggerheartData(),
+      hitPoints: { current: 1, max: 6 },
+      stress: { current: 5, max: 6 },
+      armor: { current: 2, max: 3 },
+      hope: 2,
+    };
+
+    const { result } = renderHook(() =>
+      useDaggerheartMutationHandlers({
+        data,
+        update,
+        weaponLoadout: data.weapons,
+        weaponOptions: [],
+        ownedDomainCardIds: makeOwnedCardIdSet(data.domainCards),
+      })
+    );
+
+    act(() => result.current.restTendToAllWounds());
+    expect(update).toHaveBeenLastCalledWith({ hitPoints: { current: 6, max: 6 } });
+    act(() => result.current.restClearAllStress());
+    expect(update).toHaveBeenLastCalledWith({ stress: { current: 0, max: 6 } });
+    act(() => result.current.restRepairAllArmor());
+    expect(update).toHaveBeenLastCalledWith({ armor: { current: 0, max: 3 } });
+    act(() => result.current.restPrepare());
+    expect(update).toHaveBeenLastCalledWith({ hope: 3 });
+  });
+
   it('still allows adding cards to the vault when the loadout is already full', () => {
     const update = vi.fn();
     const data: DaggerheartDataModel = {

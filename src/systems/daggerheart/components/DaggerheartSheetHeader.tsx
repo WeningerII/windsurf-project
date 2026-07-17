@@ -4,6 +4,7 @@ import { Badge } from '../../../components/ui/Badge';
 import { DAGGERHEART_MAX_HOPE } from '../../../rules/daggerheartDerived';
 import { parseNum } from '../../../utils/math';
 import type { DaggerheartSheetController } from '../useDaggerheartSheetController';
+import { DaggerheartDowntimeControls } from './DaggerheartDowntimeControls';
 
 interface Props {
   controller: DaggerheartSheetController;
@@ -165,85 +166,95 @@ export function DaggerheartSheetHeader({ controller }: Props) {
         )}
       </div>
 
-      <div className="flex flex-wrap gap-3 text-center">
-        <div className="min-w-[80px] rounded-lg bg-muted/30 p-3">
-          <div className="flex items-center justify-center gap-1 text-xs font-medium text-muted-foreground">
-            <Heart className="h-3 w-3" /> HP
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-wrap gap-3 text-center">
+          <div className="min-w-[80px] rounded-lg bg-muted/30 p-3">
+            <div className="flex items-center justify-center gap-1 text-xs font-medium text-muted-foreground">
+              <Heart className="h-3 w-3" /> HP
+            </div>
+            <div className="mt-1 flex items-center justify-center gap-1">
+              <input
+                type="number"
+                value={data.hitPoints.current}
+                onChange={(event) =>
+                  controller.update({
+                    hitPoints: { ...data.hitPoints, current: parseNum(event.target.value, 0) },
+                  })
+                }
+                className="w-10 border-b border-input bg-transparent text-center text-lg font-bold tabular-nums focus:border-primary focus:outline-none"
+                disabled={!canUpdate}
+                title="Current HP"
+              />
+              <span className="text-muted-foreground">/</span>
+              <span className="text-lg font-bold tabular-nums">{data.hitPoints.max}</span>
+            </div>
           </div>
-          <div className="mt-1 flex items-center justify-center gap-1">
+          <div className="min-w-[80px] rounded-lg bg-muted/30 p-3">
+            <div className="flex items-center justify-center gap-1 text-xs font-medium text-muted-foreground">
+              <Zap className="h-3 w-3" /> Stress
+            </div>
+            <div className="mt-1 flex items-center justify-center gap-1">
+              <input
+                type="number"
+                value={data.stress.current}
+                onChange={(event) =>
+                  controller.update({
+                    stress: { ...data.stress, current: parseNum(event.target.value, 0) },
+                  })
+                }
+                className="w-10 border-b border-input bg-transparent text-center text-lg font-bold tabular-nums focus:border-primary focus:outline-none"
+                disabled={!canUpdate}
+                title="Current Stress"
+              />
+              <span className="text-muted-foreground">/</span>
+              <span className="text-lg font-bold tabular-nums">{data.stress.max}</span>
+            </div>
+          </div>
+          <div className="min-w-[80px] rounded-lg bg-muted/30 p-3">
+            <div className="flex items-center justify-center gap-1 text-xs font-medium text-muted-foreground">
+              <Shield className="h-3 w-3" /> Armor
+            </div>
+            <div className="mt-1 flex items-center justify-center gap-1">
+              <input
+                type="number"
+                value={data.armor.current}
+                onChange={(event) =>
+                  controller.update({
+                    armor: { ...data.armor, current: parseNum(event.target.value, 0) },
+                  })
+                }
+                className="w-10 border-b border-input bg-transparent text-center text-lg font-bold tabular-nums focus:border-primary focus:outline-none"
+                disabled={!canUpdate}
+                title="Current Armor"
+              />
+              <span className="text-muted-foreground">/</span>
+              <span className="text-lg font-bold tabular-nums">{derivedStats.armorMax}</span>
+            </div>
+          </div>
+          <div className="min-w-[80px] rounded-lg border border-amber-500/30 bg-amber-500/10 p-3">
+            <div className="flex items-center justify-center gap-1 text-xs font-medium text-amber-600 dark:text-amber-400">
+              <Star className="h-3 w-3" /> Hope
+            </div>
             <input
               type="number"
-              value={data.hitPoints.current}
-              onChange={(event) =>
-                controller.update({
-                  hitPoints: { ...data.hitPoints, current: parseNum(event.target.value, 0) },
-                })
-              }
-              className="w-10 border-b border-input bg-transparent text-center text-lg font-bold tabular-nums focus:border-primary focus:outline-none"
+              value={data.hope}
+              onChange={(event) => controller.update({ hope: parseNum(event.target.value, 0) })}
+              className="mx-auto mt-1 block w-10 border-b border-amber-400 bg-transparent text-center text-xl font-bold tabular-nums focus:border-amber-500 focus:outline-none"
+              min={0}
+              max={DAGGERHEART_MAX_HOPE}
               disabled={!canUpdate}
-              title="Current HP"
+              title="Hope tokens"
             />
-            <span className="text-muted-foreground">/</span>
-            <span className="text-lg font-bold tabular-nums">{data.hitPoints.max}</span>
           </div>
         </div>
-        <div className="min-w-[80px] rounded-lg bg-muted/30 p-3">
-          <div className="flex items-center justify-center gap-1 text-xs font-medium text-muted-foreground">
-            <Zap className="h-3 w-3" /> Stress
-          </div>
-          <div className="mt-1 flex items-center justify-center gap-1">
-            <input
-              type="number"
-              value={data.stress.current}
-              onChange={(event) =>
-                controller.update({
-                  stress: { ...data.stress, current: parseNum(event.target.value, 0) },
-                })
-              }
-              className="w-10 border-b border-input bg-transparent text-center text-lg font-bold tabular-nums focus:border-primary focus:outline-none"
-              disabled={!canUpdate}
-              title="Current Stress"
-            />
-            <span className="text-muted-foreground">/</span>
-            <span className="text-lg font-bold tabular-nums">{data.stress.max}</span>
-          </div>
-        </div>
-        <div className="min-w-[80px] rounded-lg bg-muted/30 p-3">
-          <div className="flex items-center justify-center gap-1 text-xs font-medium text-muted-foreground">
-            <Shield className="h-3 w-3" /> Armor
-          </div>
-          <div className="mt-1 flex items-center justify-center gap-1">
-            <input
-              type="number"
-              value={data.armor.current}
-              onChange={(event) =>
-                controller.update({
-                  armor: { ...data.armor, current: parseNum(event.target.value, 0) },
-                })
-              }
-              className="w-10 border-b border-input bg-transparent text-center text-lg font-bold tabular-nums focus:border-primary focus:outline-none"
-              disabled={!canUpdate}
-              title="Current Armor"
-            />
-            <span className="text-muted-foreground">/</span>
-            <span className="text-lg font-bold tabular-nums">{derivedStats.armorMax}</span>
-          </div>
-        </div>
-        <div className="min-w-[80px] rounded-lg border border-amber-500/30 bg-amber-500/10 p-3">
-          <div className="flex items-center justify-center gap-1 text-xs font-medium text-amber-600 dark:text-amber-400">
-            <Star className="h-3 w-3" /> Hope
-          </div>
-          <input
-            type="number"
-            value={data.hope}
-            onChange={(event) => controller.update({ hope: parseNum(event.target.value, 0) })}
-            className="mx-auto mt-1 block w-10 border-b border-amber-400 bg-transparent text-center text-xl font-bold tabular-nums focus:border-amber-500 focus:outline-none"
-            min={0}
-            max={DAGGERHEART_MAX_HOPE}
-            disabled={!canUpdate}
-            title="Hope tokens"
-          />
-        </div>
+
+        <DaggerheartDowntimeControls
+          canUpdate={canUpdate}
+          onTendToAllWounds={controller.restTendToAllWounds}
+          onClearAllStress={controller.restClearAllStress}
+          onRepairAllArmor={controller.restRepairAllArmor}
+          onPrepare={controller.restPrepare}
+        />
       </div>
     </div>
   );

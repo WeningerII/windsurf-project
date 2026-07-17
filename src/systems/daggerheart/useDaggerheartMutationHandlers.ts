@@ -10,6 +10,12 @@ import {
   createDaggerheartInventoryEntry,
   normalizeDaggerheartCurrency,
 } from '../../rules/daggerheartInventory';
+import {
+  clearAllStress,
+  prepareGainHope,
+  repairAllArmor,
+  tendToAllWounds,
+} from './daggerheartRest';
 import { INVENTORY_WEAPON_LIMIT, LOADOUT_LIMIT } from './daggerheartSheetConstants';
 import type { DaggerheartDataModel } from './data-model';
 
@@ -326,7 +332,19 @@ export function useDaggerheartMutationHandlers({
     [data.domainCards, update]
   );
 
+  // Long-rest downtime moves (SRD). Each applies exactly one deterministic move
+  // — the player picks the two they make on a long rest; the short-rest
+  // dice-based variants stay a follow-up (see daggerheartRest.ts).
+  const restTendToAllWounds = useCallback(() => update(tendToAllWounds(data)), [data, update]);
+  const restClearAllStress = useCallback(() => update(clearAllStress(data)), [data, update]);
+  const restRepairAllArmor = useCallback(() => update(repairAllArmor(data)), [data, update]);
+  const restPrepare = useCallback(() => update(prepareGainHope(data)), [data, update]);
+
   return {
+    restTendToAllWounds,
+    restClearAllStress,
+    restRepairAllArmor,
+    restPrepare,
     equipPrimaryWeapon,
     equipSecondaryWeapon,
     storeWeapon,
