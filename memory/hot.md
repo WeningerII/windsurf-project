@@ -4,13 +4,18 @@
 > `/save` — overwrite stale content, keep it under ~500 words. Durable facts go
 > to [[CLAUDE]] (CLAUDE.md) or `docs/`, not here.
 
-**Last updated:** 2026-07-16 — everything from the 2026-07-14/15 session is
-MERGED to main. SIX PRs landed: #32, #33, #34, #35, #36. **PR #38 is OPEN
-(not yet merged)** and carries FOUR terrain slices that COMPLETE IR Phase 4
-(scene-runtime scope): (a) marker-effects authoring UI, (b) cross-system fold
-(M&M + Daggerheart manual branches), (c) autonomous-round attack terrain (Run
-Round applies cover/high ground), (d) difficult terrain (`target:'movement'`)
-slows autonomous move-to-engage. Branch `claude/next-priorities-98pzof` carries #38.
+**Last updated:** 2026-07-17 — **PR #38 MERGED** (terrain Phase 4 complete +
+roadmap-doc reconciliation; merge `86a196f`). Everything through #38 is on main.
+**IN FLIGHT on `claude/next-priorities-98pzof`: the 5e-VESTIGE SWEEP** — an
+ultracode workflow (5 finder lenses → adversarial verify → completeness critic;
+69 raw → 33 confirmed, 0 rejected, 16 accepted boundaries) found 5e/d20 bias on
+cross-system surfaces; all confirmed fixes are applied in 7 commits (scene copy,
+M&M power-browser vocabulary via SpellBrowser `labels` prop, per-system
+units/captions incl. PF2e Bulk + rest labels + origin captions, per-system
+condition picker, honest-refusal guard against silent d20 fallback in M&M/DH
+scenes, honest JSDoc + genre-neutral AI prompt, README/CONTRIBUTING/VISION
+de-5e'd incl. the two-denominator citation closing a GAPS §4 owner item).
+Full gate green: 2131 tests (+9), lint/typecheck/knip/doc-drift/hygiene clean.
 
 ## What shipped (all on main)
 
