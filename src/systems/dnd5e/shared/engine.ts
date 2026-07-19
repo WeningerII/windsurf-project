@@ -2,7 +2,11 @@ import { SystemEngine, RollResult } from '../../../registry/types';
 import { CharacterDocument } from '../../../types/core/document';
 import { Dnd5eDataModel } from '../data-model';
 import { abilityMod, profBonus } from '../../../utils/math';
-import { dnd5eSpellAttackBonus, dnd5eSpellSaveDC } from '../../../utils/derivedCasterMath';
+import {
+  dnd5ePassivePerception,
+  dnd5eSpellAttackBonus,
+  dnd5eSpellSaveDC,
+} from '../../../utils/derivedCasterMath';
 import { hitDieSize } from '../../../constants/hit-dice';
 import { compute5eAC } from '../../../utils/armorClass';
 import { clampCount } from '../../../utils/resourcePool';
@@ -241,6 +245,20 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
         features: data.features,
       }).bonus('ac');
     data.initiative = dexMod;
+
+    // Passive Perception (SRD): 10 + Wis(Perception) modifier, with proficiency
+    // and expertise folded in. Surfaced on the sheet so play never needs the
+    // manual "10 + passive" calc every time a DM calls for a hidden check.
+    const perceptionProficiency = data.skillProficiencies.perception?.level;
+    data.passivePerception = dnd5ePassivePerception(
+      abilityMod(data.baseAttributes.wis ?? 10),
+      profBonus(data.level),
+      perceptionProficiency === 'expertise' || perceptionProficiency === 'double'
+        ? 'expertise'
+        : perceptionProficiency === 'proficient'
+          ? 'proficient'
+          : 'none'
+    );
   }
 
   /**

@@ -189,7 +189,8 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       edgeCases: ['barbarian 9 → +3', 'toggle without feature → no effect'],
       source: `${SRD}: Barbarian — Rage`,
       status: 'verified',
-      testRef: 'src/__tests__/rules/characterCombatant.test.ts :: 5e rider toggles in scene combat (phase 4)',
+      testRef:
+        'src/__tests__/rules/characterCombatant.test.ts :: 5e rider toggles in scene combat (phase 4)',
       note: 'Manual boundary: melee Strength attacks only (rider note travels with the effect).',
     },
     {
@@ -201,7 +202,8 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       edgeCases: ['feat-gated: toggle without feat → no effect'],
       source: `${SRD}: Feats — Great Weapon Master`,
       status: 'verified',
-      testRef: 'src/__tests__/rules/characterCombatant.test.ts :: 5e rider toggles in scene combat (phase 4)',
+      testRef:
+        'src/__tests__/rules/characterCombatant.test.ts :: 5e rider toggles in scene combat (phase 4)',
       note: 'Manual boundary: heavy melee weapons only.',
     },
     {
@@ -305,9 +307,9 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       inputs: ['Wis score', 'Perception proficiency'],
       edgeCases: ['advantage +5', 'disadvantage -5'],
       source: `${SRD}: Passive Checks`,
-      status: 'missing',
-      testRef: 'src/__tests__/derivedCasterMath.test.ts :: 5e passive Perception',
-      note: 'Canonical helper (derivedCasterMath.ts) is test-pinned but not consumed by any engine or sheet; per the legend, unwired quantities are missing.',
+      status: 'verified',
+      testRef:
+        'src/__tests__/engines/dnd5e-engine.test.ts :: folds Perception proficiency into Passive Perception (engine-wired)',
     },
     {
       id: 'dnd5e2014.L4.d20-modes',

@@ -87,6 +87,8 @@ export interface Dnd5eDataModel extends SystemDataModel {
   armorClass: number;
   initiative: number;
   speed: number;
+  /** Passive Perception = 10 + Wis(Perception) modifier (SRD). Engine-derived. */
+  passivePerception: number;
 
   // Proficiencies
   armorProficiencies: string[];
@@ -139,6 +141,7 @@ export const createDefaultDnd5eData = (): Dnd5eDataModel => ({
   armorClass: 10,
   initiative: 0,
   speed: 30,
+  passivePerception: 10,
   armorProficiencies: [],
   weaponProficiencies: [],
   toolProficiencies: [],

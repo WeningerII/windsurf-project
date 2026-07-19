@@ -234,9 +234,9 @@ export const dnd5e2024ComputeRegister: SystemComputeRegister = {
       inputs: ['Wis', 'proficiency'],
       edgeCases: ['advantage/disadvantage ±5'],
       source: `${SRD}: Passive Checks`,
-      status: 'missing',
-      testRef: 'src/__tests__/derivedCasterMath.test.ts :: 5e passive Perception',
-      note: 'Canonical helper is test-pinned but not consumed by any engine or sheet; per the legend, unwired quantities are missing.',
+      status: 'verified',
+      testRef:
+        'src/__tests__/engines/dnd5e-engine.test.ts :: folds Perception proficiency into Passive Perception (engine-wired)',
     },
     {
       id: 'dnd5e2024.L5.multiclass-spell-slots',

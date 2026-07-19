@@ -39,6 +39,18 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'Math.floor((score - 10) / 2)',
     replace: 'Math.floor((score - 11) / 2)',
   },
+  // passive Perception: both editions engine-wire the same shared helper, so the
+  // one formula perturbation (base 10 -> 11) flips the engine-wired test for each.
+  'dnd5e2014.L4.passive-perception': {
+    file: 'src/utils/derivedCasterMath.ts',
+    find: 'return 10 + wisMod + profPart;',
+    replace: 'return 11 + wisMod + profPart;',
+  },
+  'dnd5e2024.L4.passive-perception': {
+    file: 'src/utils/derivedCasterMath.ts',
+    find: 'return 10 + wisMod + profPart;',
+    replace: 'return 11 + wisMod + profPart;',
+  },
   'dnd5e2014.L2.ac.unarmored': {
     file: 'src/utils/armorClass.ts',
     find: '(armor ? armor.armorClass! : 10) + dnd5eArmorDexContribution(armor, dexMod)',

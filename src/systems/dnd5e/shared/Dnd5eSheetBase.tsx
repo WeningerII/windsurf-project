@@ -106,6 +106,7 @@ export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
         hitPoints={d.hitPoints}
         initiative={d.initiative}
         speed={d.speed}
+        passivePerception={d.passivePerception}
         spellcasting={d.spellcasting}
         exhaustionLevel={d.exhaustionLevel}
         deathSaves={d.deathSaves}

@@ -1,5 +1,5 @@
 // purpose: Overview section — at-a-glance HP/AC/initiative/spell-attack snapshot above the tabs.
-import { BookOpen, Heart, Shield, Sparkles, Target } from 'lucide-react';
+import { BookOpen, Eye, Heart, Shield, Sparkles, Target } from 'lucide-react';
 import { DamageHealControl } from '../../../../components/DamageHealControl';
 import { DeathSavesTracker } from '../../../../components/DeathSavesTracker';
 import { HitDiceTracker } from '../../../../components/HitDiceTracker';
@@ -25,6 +25,7 @@ interface Props {
   hitPoints: HitPoints;
   initiative: number;
   speed: number;
+  passivePerception: number;
   spellcasting?: {
     classes: Array<unknown>;
     spellSlots: SpellSlots;
@@ -60,6 +61,7 @@ export function Dnd5eOverviewSection({
   hitPoints,
   initiative,
   speed,
+  passivePerception,
   spellcasting,
   exhaustionLevel,
   deathSaves,
@@ -81,7 +83,7 @@ export function Dnd5eOverviewSection({
 }: Props) {
   return (
     <>
-      <div className="grid grid-cols-2 gap-4 xl:grid-cols-5">
+      <div className="grid grid-cols-2 gap-4 xl:grid-cols-6">
         <CombatStatCard icon={Shield} title="Armor Class" value={armorClass} />
         <CombatStatCard
           icon={Heart}
@@ -118,6 +120,7 @@ export function Dnd5eOverviewSection({
         </CombatStatCard>
         <CombatStatCard icon={Target} title="Initiative" value={formatMod(initiative)} />
         <CombatStatCard icon={Sparkles} title="Speed" value={`${speed} ft`} />
+        <CombatStatCard icon={Eye} title="Passive Perception" value={passivePerception} />
         <CombatStatCard
           icon={BookOpen}
           title="Spell Slots"
