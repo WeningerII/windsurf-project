@@ -51,6 +51,11 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'return 10 + wisMod + profPart;',
     replace: 'return 11 + wisMod + profPart;',
   },
+  'dnd5e2024.L6.carrying-capacity': {
+    file: 'src/systems/dnd5e/shared/dnd5eMovement.ts',
+    find: 'Math.max(0, strengthScore) * 15',
+    replace: 'Math.max(0, strengthScore) * 16',
+  },
   'dnd5e2014.L2.ac.unarmored': {
     file: 'src/utils/armorClass.ts',
     find: '(armor ? armor.armorClass! : 10) + dnd5eArmorDexContribution(armor, dexMod)',

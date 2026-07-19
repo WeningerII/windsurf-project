@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-19T15:51:50.417Z",
+  "generatedAt": "2026-07-19T17:54:03.619Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -661,9 +661,9 @@
     {
       "systemId": "dnd-5e-2024",
       "systemLabel": "D&D 5e (2024)",
-      "verified": 24,
+      "verified": 25,
       "inScope": 29,
-      "percent": 82.8,
+      "percent": 86.2,
       "byLayer": {
         "L1": {
           "verified": 2,
@@ -678,7 +678,7 @@
           "inScope": 3
         },
         "L6": {
-          "verified": 0,
+          "verified": 1,
           "inScope": 3
         },
         "L3": {

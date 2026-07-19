@@ -1,5 +1,7 @@
 // purpose: Overview section — at-a-glance HP/AC/initiative/spell-attack snapshot above the tabs.
-import { BookOpen, Eye, Heart, Shield, Sparkles, Target } from 'lucide-react';
+import { BookOpen, Eye, Gauge, Heart, Shield, Sparkles, Target, Weight } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import type { PresentedDerivedQuantity } from '../../../../rules/derivation';
 import { DamageHealControl } from '../../../../components/DamageHealControl';
 import { DeathSavesTracker } from '../../../../components/DeathSavesTracker';
 import { HitDiceTracker } from '../../../../components/HitDiceTracker';
@@ -20,12 +22,21 @@ type HitPoints = {
   temp: number;
 };
 
+// Icons the declarative derived quantities may name (spec.display.icon). Unknown
+// names fall back to a neutral gauge, so a new quantity renders without editing
+// this component.
+const DERIVED_ICON_BY_NAME: Record<string, LucideIcon> = { Eye, Weight };
+function derivedIcon(name?: string): LucideIcon {
+  return (name && DERIVED_ICON_BY_NAME[name]) || Gauge;
+}
+
 interface Props {
   armorClass: number;
   hitPoints: HitPoints;
   initiative: number;
   speed: number;
-  passivePerception: number;
+  /** Render-ready derived quantities from the declarative derivation layer. */
+  derivedCards: PresentedDerivedQuantity[];
   spellcasting?: {
     classes: Array<unknown>;
     spellSlots: SpellSlots;
@@ -61,7 +72,7 @@ export function Dnd5eOverviewSection({
   hitPoints,
   initiative,
   speed,
-  passivePerception,
+  derivedCards,
   spellcasting,
   exhaustionLevel,
   deathSaves,
@@ -120,7 +131,14 @@ export function Dnd5eOverviewSection({
         </CombatStatCard>
         <CombatStatCard icon={Target} title="Initiative" value={formatMod(initiative)} />
         <CombatStatCard icon={Sparkles} title="Speed" value={`${speed} ft`} />
-        <CombatStatCard icon={Eye} title="Passive Perception" value={passivePerception} />
+        {derivedCards.map((card) => (
+          <CombatStatCard
+            key={card.id}
+            icon={derivedIcon(card.icon)}
+            title={card.label}
+            value={card.text}
+          />
+        ))}
         <CombatStatCard
           icon={BookOpen}
           title="Spell Slots"

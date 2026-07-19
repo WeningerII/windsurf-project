@@ -2,11 +2,9 @@ import { SystemEngine, RollResult } from '../../../registry/types';
 import { CharacterDocument } from '../../../types/core/document';
 import { Dnd5eDataModel } from '../data-model';
 import { abilityMod, profBonus } from '../../../utils/math';
-import {
-  dnd5ePassivePerception,
-  dnd5eSpellAttackBonus,
-  dnd5eSpellSaveDC,
-} from '../../../utils/derivedCasterMath';
+import { dnd5eSpellAttackBonus, dnd5eSpellSaveDC } from '../../../utils/derivedCasterMath';
+import { applyDerivedQuantities } from '../../../rules/derivation';
+import { DND5E_DERIVED_QUANTITIES } from './derivedQuantities';
 import { hitDieSize } from '../../../constants/hit-dice';
 import { compute5eAC } from '../../../utils/armorClass';
 import { clampCount } from '../../../utils/resourcePool';
@@ -246,19 +244,11 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
       }).bonus('ac');
     data.initiative = dexMod;
 
-    // Passive Perception (SRD): 10 + Wis(Perception) modifier, with proficiency
-    // and expertise folded in. Surfaced on the sheet so play never needs the
-    // manual "10 + passive" calc every time a DM calls for a hidden check.
-    const perceptionProficiency = data.skillProficiencies.perception?.level;
-    data.passivePerception = dnd5ePassivePerception(
-      abilityMod(data.baseAttributes.wis ?? 10),
-      profBonus(data.level),
-      perceptionProficiency === 'expertise' || perceptionProficiency === 'double'
-        ? 'expertise'
-        : perceptionProficiency === 'proficient'
-          ? 'proficient'
-          : 'none'
-    );
+    // Derived quantities (Passive Perception, carrying capacity, ...) come from
+    // the declarative derivation layer: each is a single cited declaration in
+    // ./derivedQuantities, computed generically here, surfaced on the sheet, and
+    // verified by one test. Adding one needs no new engine code.
+    data.derived = applyDerivedQuantities(data, DND5E_DERIVED_QUANTITIES);
   }
 
   /**

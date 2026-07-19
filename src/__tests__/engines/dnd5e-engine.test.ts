@@ -144,35 +144,16 @@ describe('Dnd5eEngine', () => {
       expect(result.system.armorClass).toBe(13);
     });
 
-    it('derives Passive Perception = 10 + Wis mod (no proficiency)', () => {
+    it('populates data.derived from the declarative derivation layer', () => {
       const doc = makeDoc({
-        baseAttributes: { str: 10, dex: 10, con: 10, int: 10, wis: 14, cha: 10 },
-      });
-      const result = engine.prepareData(doc);
-      // WIS 14 = +2 mod, no Perception proficiency: 10 + 2 = 12.
-      expect(result.system.passivePerception).toBe(12);
-    });
-
-    it('folds Perception proficiency into Passive Perception (engine-wired)', () => {
-      const doc = makeDoc({
-        level: 5,
-        baseAttributes: { str: 10, dex: 10, con: 10, int: 10, wis: 14, cha: 10 },
+        baseAttributes: { str: 15, dex: 10, con: 10, int: 10, wis: 14, cha: 10 },
         skillProficiencies: { perception: { level: 'proficient', source: ['test'] } },
       });
       const result = engine.prepareData(doc);
-      // WIS +2, level 5 => proficiency +3, proficient: 10 + 2 + 3 = 15.
-      expect(result.system.passivePerception).toBe(15);
-    });
-
-    it('doubles the proficiency bonus for Perception expertise', () => {
-      const doc = makeDoc({
-        level: 5,
-        baseAttributes: { str: 10, dex: 10, con: 10, int: 10, wis: 14, cha: 10 },
-        skillProficiencies: { perception: { level: 'expertise', source: ['test'] } },
-      });
-      const result = engine.prepareData(doc);
-      // WIS +2, level 5 => proficiency +3 doubled to +6: 10 + 2 + 6 = 18.
-      expect(result.system.passivePerception).toBe(18);
+      // Passive Perception: WIS +2, level 1 proficiency +2, proficient = 14.
+      expect(result.system.derived['dnd5e.L4.passive-perception']).toBe(14);
+      // Carrying capacity: Str 15 × 15 = 225 lb.
+      expect(result.system.derived['dnd5e.L6.carrying-capacity']).toBe(225);
     });
 
     it('calculates initiative = DEX mod', () => {

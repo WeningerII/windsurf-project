@@ -309,7 +309,7 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       source: `${SRD}: Passive Checks`,
       status: 'verified',
       testRef:
-        'src/__tests__/engines/dnd5e-engine.test.ts :: folds Perception proficiency into Passive Perception (engine-wired)',
+        'src/__tests__/derivation/dnd5eDerivedQuantities.test.ts :: dnd5e.L4.passive-perception',
     },
     {
       id: 'dnd5e2014.L4.d20-modes',

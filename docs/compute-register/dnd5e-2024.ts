@@ -134,9 +134,9 @@ export const dnd5e2024ComputeRegister: SystemComputeRegister = {
       inputs: ['Strength score'],
       edgeCases: ['exceeding it (up to push/drag/lift) drops Speed to 5 ft'],
       source: `${SRD}: Carrying Capacity`,
-      status: 'missing',
-      testRef: 'src/__tests__/dnd5eMovement.test.ts :: 5e carrying capacity and push/drag/lift',
-      note: 'Canonical helper (dnd5eMovement.ts) is test-pinned but not consumed by any engine or sheet; per the legend, unwired quantities are missing.',
+      status: 'verified',
+      testRef:
+        'src/__tests__/derivation/dnd5eDerivedQuantities.test.ts :: dnd5e.L6.carrying-capacity',
     },
     {
       id: 'dnd5e2024.L6.push-drag-lift',
@@ -236,7 +236,7 @@ export const dnd5e2024ComputeRegister: SystemComputeRegister = {
       source: `${SRD}: Passive Checks`,
       status: 'verified',
       testRef:
-        'src/__tests__/engines/dnd5e-engine.test.ts :: folds Perception proficiency into Passive Perception (engine-wired)',
+        'src/__tests__/derivation/dnd5eDerivedQuantities.test.ts :: dnd5e.L4.passive-perception',
     },
     {
       id: 'dnd5e2024.L5.multiclass-spell-slots',
