@@ -276,6 +276,9 @@ export function DaggerheartSheetHeader({ controller }: Props) {
           onClearAllStress={controller.restClearAllStress}
           onRepairAllArmor={controller.restRepairAllArmor}
           onPrepare={controller.restPrepare}
+          onShortTendToWounds={controller.restShortTendToWounds}
+          onShortClearStress={controller.restShortClearStress}
+          onShortRepairArmor={controller.restShortRepairArmor}
         />
       </div>
     </div>

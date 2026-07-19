@@ -4,28 +4,34 @@ import {
   poolFromRemaining,
   remainingShape,
   reset,
+  restore,
 } from '../../utils/resourcePool';
 import { DAGGERHEART_MAX_HOPE } from '../../rules/daggerheartDerived';
 import type { DaggerheartDataModel } from './data-model';
 
 /**
- * Daggerheart long-rest downtime moves as pure, deterministic patch builders.
+ * Daggerheart downtime moves as pure, deterministic patch builders.
  *
- * Daggerheart rest is MOVE-BASED: on a long rest each character makes two
- * downtime moves (SRD "Downtime"). The moves modeled here are the fully
- * deterministic long-rest versions — "...All..." clears and Prepare — each
- * built on RFC 005's resource-pool `reset` verb (that RFC's future work names
- * "rest as a first-class `reset`"). Deliberately NOT modeled, to avoid faking a
- * roll or a choice: the short-rest variants (Tend to Wounds / Clear Stress /
- * Repair Armor clear `1d4 + tier`, a seeded roll) and the narrative "Work on a
- * Project" move — those stay GM-adjudicated follow-ups. Nothing here applies a
- * whole rest at once; the caller offers the moves and the player picks the two
- * they make.
+ * Daggerheart rest is MOVE-BASED: on a rest each character makes downtime moves
+ * (SRD "Downtime") — two on a long rest, one on a short rest. Both kinds are
+ * modeled here as individual, honestly-labeled patches; nothing applies a whole
+ * rest at once, so the caller offers the moves and the player picks which they
+ * make.
  *
- * Pool shapes: Hit Points are a REMAINING pool (`current` = HP left), so a full
- * heal is `reset` of the remaining view; Stress and Armor Slots are MARKED
- * pools (`current` = marked), so clearing is `reset` to zero marked; Hope is a
- * plain counter capped at {@link DAGGERHEART_MAX_HOPE}.
+ * Long-rest moves ("...All..." clears and Prepare) are fully deterministic —
+ * each built on RFC 005's resource-pool `reset` verb (that RFC's future work
+ * named "rest as a first-class `reset`"). Short-rest moves (Tend to Wounds /
+ * Clear Stress / Repair Armor) clear `1d4 + tier`; each builder takes the
+ * ALREADY-ROLLED recovery amount (see {@link getDaggerheartShortRestRecovery})
+ * rather than an Rng, so it stays deterministic and unit-testable — the caller
+ * rolls the live d4 and passes the total in. The narrative "Work on a Project"
+ * move stays GM-adjudicated.
+ *
+ * Pool shapes: Hit Points are a REMAINING pool (`current` = HP left), so a heal
+ * is `restore` of the remaining view (a full heal is `reset`); Stress and Armor
+ * Slots are MARKED pools (`current` = marked), so clearing is `restore` toward
+ * zero marked (`reset` clears the whole track); Hope is a plain counter capped
+ * at {@link DAGGERHEART_MAX_HOPE}.
  */
 
 /** Tend to All Wounds: clear every marked Hit Point (heal to full). */
@@ -49,4 +55,46 @@ export function repairAllArmor(data: DaggerheartDataModel): Partial<DaggerheartD
 /** Prepare: gain 1 Hope (clamped to the Hope maximum). */
 export function prepareGainHope(data: DaggerheartDataModel): Partial<DaggerheartDataModel> {
   return { hope: clampCount(data.hope + 1, DAGGERHEART_MAX_HOPE) };
+}
+
+/**
+ * Tend to Wounds (short rest): heal `recovery` Hit Points, where `recovery` is
+ * the already-rolled `1d4 + tier` (SRD: Downtime; see
+ * {@link getDaggerheartShortRestRecovery}). `restore` on the REMAINING view,
+ * clamped so healing never carries HP above max.
+ */
+export function tendToWounds(
+  data: DaggerheartDataModel,
+  recovery: number
+): Partial<DaggerheartDataModel> {
+  const healed = restore(poolFromRemaining(data.hitPoints.current, data.hitPoints.max), recovery);
+  return { hitPoints: { ...data.hitPoints, ...remainingShape(healed) } };
+}
+
+/**
+ * Clear Stress (short rest): clear `recovery` marked Stress, where `recovery` is
+ * the already-rolled `1d4 + tier` (SRD: Downtime; see
+ * {@link getDaggerheartShortRestRecovery}). `restore` on the MARKED pool,
+ * clamped at zero marked.
+ */
+export function clearStress(
+  data: DaggerheartDataModel,
+  recovery: number
+): Partial<DaggerheartDataModel> {
+  const cleared = restore(createPool(data.stress.max, data.stress.current), recovery);
+  return { stress: { ...data.stress, current: cleared.spent } };
+}
+
+/**
+ * Repair Armor (short rest): clear `recovery` marked Armor Slots, where
+ * `recovery` is the already-rolled `1d4 + tier` (SRD: Downtime; see
+ * {@link getDaggerheartShortRestRecovery}). `restore` on the MARKED pool,
+ * clamped at zero marked.
+ */
+export function repairArmor(
+  data: DaggerheartDataModel,
+  recovery: number
+): Partial<DaggerheartDataModel> {
+  const repaired = restore(createPool(data.armor.max, data.armor.current), recovery);
+  return { armor: { ...data.armor, current: repaired.spent } };
 }
