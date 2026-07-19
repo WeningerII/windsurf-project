@@ -341,8 +341,8 @@ export function useDaggerheartMutationHandlers({
   );
 
   // Long-rest downtime moves (SRD). Each applies exactly one deterministic move
-  // — the player picks the two they make on a long rest; the short-rest
-  // dice-based variants stay a follow-up (see daggerheartRest.ts).
+  // — the player picks the two they make on a long rest. The short-rest
+  // dice-based variants follow below (restShort*).
   const restTendToAllWounds = useCallback(() => update(tendToAllWounds(data)), [data, update]);
   const restClearAllStress = useCallback(() => update(clearAllStress(data)), [data, update]);
   const restRepairAllArmor = useCallback(() => update(repairAllArmor(data)), [data, update]);
