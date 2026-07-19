@@ -1,6 +1,7 @@
 /**
  * Shared helpers for d20 3.x-family systems (D&D 3.5e and Pathfinder 1e).
  */
+import { linearRate } from '../../rules/derivation';
 
 /** Size modifier for grapple (D&D 3.5e — opposite sign, larger steps) */
 export const GRAPPLE_SIZE_MODS: Record<string, number> = {
@@ -34,8 +35,8 @@ export const CMB_SIZE_MODS: Record<string, number> = {
  * Poor save: level/3 (floored)
  */
 export function baseSave(level: number, quality: 'good' | 'poor'): number {
-  if (quality === 'good') return 2 + Math.floor(level / 2);
-  return Math.floor(level / 3);
+  // good = floor(level/2) + 2; poor = floor(level/3).
+  return quality === 'good' ? linearRate(level, 1, 2, 2) : linearRate(level, 1, 3);
 }
 
 /**
@@ -45,9 +46,10 @@ export function baseSave(level: number, quality: 'good' | 'poor'): number {
  * Half: floor(level / 2)
  */
 export function classBAB(level: number, progression: 'full' | 'three-quarter' | 'half'): number {
-  if (progression === 'full') return level;
-  if (progression === 'three-quarter') return Math.floor((level * 3) / 4);
-  return Math.floor(level / 2);
+  // full = level (1/1); three-quarter = floor(level×3/4); half = floor(level/2).
+  if (progression === 'full') return linearRate(level, 1, 1);
+  if (progression === 'three-quarter') return linearRate(level, 3, 4);
+  return linearRate(level, 1, 2);
 }
 
 // ── Carrying capacity & encumbrance ─────────────────────────────────────────

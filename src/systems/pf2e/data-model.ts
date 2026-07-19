@@ -1,6 +1,7 @@
 import { Feature } from '../../types/core/character';
 import { SystemDataModel } from '../../types/core/document';
 import type { BonusType } from '../../types/core/common';
+import { levelPlus } from '../../rules/derivation';
 
 /**
  * Pathfinder 2e Data Model
@@ -161,7 +162,7 @@ export function tierBonus(tier: Pf2eProficiencyTier): number {
 /** PF2e proficiency total: untrained = 0 (no level), trained+ = level + tier bonus */
 export function profTotal(level: number, tier: Pf2eProficiencyTier): number {
   if (tier === 'untrained') return 0;
-  return level + tierBonus(tier);
+  return levelPlus(level, tierBonus(tier));
 }
 
 export const createDefaultPf2eData = (): Pf2eDataModel => ({

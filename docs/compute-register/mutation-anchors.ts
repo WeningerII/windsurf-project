@@ -182,8 +182,8 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
   // ── dnd-3.5e ──
   'dnd35e.L1.save-progression': {
     file: 'src/systems/shared/d20-helpers.ts',
-    find: "if (quality === 'good') return 2 + Math.floor(level / 2);",
-    replace: "if (quality === 'good') return 3 + Math.floor(level / 2);",
+    find: 'linearRate(level, 1, 2, 2)',
+    replace: 'linearRate(level, 1, 2, 3)',
   },
   'dnd35e.L2.ac': {
     file: 'src/utils/armorClass.ts',
@@ -203,8 +203,8 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
   // and pf1e bab-sum, so the gate dedups this find across them.
   'dnd35e.L3.bab-sum': {
     file: 'src/systems/shared/d20-helpers.ts',
-    find: "if (progression === 'full') return level;",
-    replace: "if (progression === 'full') return level + 1;",
+    find: 'linearRate(level, 1, 1)',
+    replace: 'linearRate(level, 2, 1)',
   },
   // Grapple = BAB + Str mod + size mod (3.5e engine leaf).
   'dnd35e.L3.grapple': {
@@ -229,8 +229,8 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
   },
   'pf1e.L1.save-progression': {
     file: 'src/systems/shared/d20-helpers.ts',
-    find: "if (quality === 'good') return 2 + Math.floor(level / 2);",
-    replace: "if (quality === 'good') return 3 + Math.floor(level / 2);",
+    find: 'linearRate(level, 1, 2, 2)',
+    replace: 'linearRate(level, 1, 2, 3)',
   },
   // Shares the derivedCombatMath iterative helper with 3.5e (deduped by the gate).
   'pf1e.L3.iterative-attacks': {
@@ -241,8 +241,8 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
   // Shares classBAB with 3.5e (deduped by the gate).
   'pf1e.L3.bab-sum': {
     file: 'src/systems/shared/d20-helpers.ts',
-    find: "if (progression === 'full') return level;",
-    replace: "if (progression === 'full') return level + 1;",
+    find: 'linearRate(level, 1, 1)',
+    replace: 'linearRate(level, 2, 1)',
   },
   // CMB = BAB + Str (or Dex if Tiny-) + size mod; CMD = 10 + BAB + Str + Dex + size.
   'pf1e.L3.cmb': {
@@ -330,15 +330,15 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
   // ── daggerheart ──
   'daggerheart.L1.tier': {
     file: 'src/rules/daggerheartDerived.ts',
-    find: 'if (level >= 8) {',
-    replace: 'if (level >= 9) {',
+    find: 'breakpoints(level, DAGGERHEART_TIER_BREAKPOINTS, 1)',
+    replace: 'breakpoints(level, DAGGERHEART_TIER_BREAKPOINTS, 2)',
   },
   // proficiency == tier (getDaggerheartProficiency delegates to getDaggerheartTier),
   // so the tier mutation breaks the shared "tier and proficiency" test for both.
   'daggerheart.L1.proficiency': {
     file: 'src/rules/daggerheartDerived.ts',
-    find: 'if (level >= 8) {',
-    replace: 'if (level >= 9) {',
+    find: 'breakpoints(level, DAGGERHEART_TIER_BREAKPOINTS, 1)',
+    replace: 'breakpoints(level, DAGGERHEART_TIER_BREAKPOINTS, 2)',
   },
   // L3 damage assembly: weapon dice = proficiency; a crit adds the max of the
   // damage dice (diceCount × dieSize) to the rolled total; Spellcast damage rolls
@@ -564,8 +564,8 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
   },
   'dnd35e.L1.bab-track': {
     file: 'src/systems/shared/d20-helpers.ts',
-    find: "if (progression === 'three-quarter') return Math.floor((level * 3) / 4);",
-    replace: "if (progression === 'three-quarter') return Math.floor((level * 4) / 4);",
+    find: 'linearRate(level, 3, 4)',
+    replace: 'linearRate(level, 1, 4)',
   },
   'dnd35e.L2.saves-total': {
     file: 'src/systems/dnd35e/engine.ts',
@@ -675,8 +675,8 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
   },
   'pf1e.L1.bab-track': {
     file: 'src/systems/shared/d20-helpers.ts',
-    find: "if (progression === 'three-quarter') return Math.floor((level * 3) / 4);",
-    replace: "if (progression === 'three-quarter') return Math.floor((level * 4) / 4);",
+    find: 'linearRate(level, 3, 4)',
+    replace: 'linearRate(level, 1, 4)',
   },
   'pf1e.L2.saves-total': {
     file: 'src/systems/pf1e/engine.ts',

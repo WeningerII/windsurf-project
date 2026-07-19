@@ -15,6 +15,7 @@ import type {
 } from '../types/daggerheart';
 import type { DaggerheartDataModel } from '../systems/daggerheart/data-model';
 import { getDaggerheartInventoryDefinition } from './daggerheartInventory';
+import { breakpoints } from './derivation';
 
 export type DaggerheartAncestryAdjustments = {
   evasion: number;
@@ -98,17 +99,16 @@ function scalePassiveBonuses(
   };
 }
 
+/** Tier thresholds (Daggerheart SRD: Leveling Up): tier 1 at level 1, 2 at
+ * 2–4, 3 at 5–7, 4 at 8–10. */
+const DAGGERHEART_TIER_BREAKPOINTS = [
+  [2, 2],
+  [5, 3],
+  [8, 4],
+] as const;
+
 export function getDaggerheartTier(level: number): 1 | 2 | 3 | 4 {
-  if (level >= 8) {
-    return 4;
-  }
-  if (level >= 5) {
-    return 3;
-  }
-  if (level >= 2) {
-    return 2;
-  }
-  return 1;
+  return breakpoints(level, DAGGERHEART_TIER_BREAKPOINTS, 1) as 1 | 2 | 3 | 4;
 }
 
 export function getDaggerheartProficiency(level: number): number {
