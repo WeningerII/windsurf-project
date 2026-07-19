@@ -65,7 +65,7 @@
     "semantic_hash": "7d81f6d2b5a01dbf70bb8cb2775ae990"
   },
   "docs/generated/roadmap-metrics.json": {
-    "mtime": 1784247241.430988,
+    "mtime": 1784473634.4178262,
     "ast_hash": "2699aa6e4034b352949e04503761bb0b",
     "semantic_hash": ""
   },
@@ -140,8 +140,8 @@
     "semantic_hash": ""
   },
   "e2e/system-smoke.spec.ts": {
-    "mtime": 1784246073.7989857,
-    "ast_hash": "22adde3b63141102937a638cde692e07",
+    "mtime": 1784473994.8058476,
+    "ast_hash": "fc4ad559b88473b048fb3774b2d21ee4",
     "semantic_hash": ""
   },
   "knip.json": {
@@ -305,8 +305,8 @@
     "semantic_hash": "9ba2c2e7f685d5b78174929cdbe910c3"
   },
   "src/App.tsx": {
-    "mtime": 1784057280.097973,
-    "ast_hash": "16a12c3950a20668da2439c217bff59c",
+    "mtime": 1784473610.8538249,
+    "ast_hash": "08a01833dc2e2b62ace493772772f51a",
     "semantic_hash": ""
   },
   "src/__tests__/App.test.tsx": {
@@ -1790,9 +1790,9 @@
     "semantic_hash": "25810382c66fad2462e8009c142e036f"
   },
   "src/registry/types.ts": {
-    "mtime": 1783633520.7294586,
-    "ast_hash": "8596607361237dee22136a4b1e9347d9",
-    "semantic_hash": "8596607361237dee22136a4b1e9347d9"
+    "mtime": 1784473158.5457978,
+    "ast_hash": "fe7f7a6b46d714cd9b759d13dfcff5e0",
+    "semantic_hash": ""
   },
   "src/rules/combat/sceneCombat.ts": {
     "mtime": 1784246912.1029873,
@@ -2040,7 +2040,7 @@
     "semantic_hash": "0183ab4bfbff4e8495cf6459f9ef9698"
   },
   "src/scripts/srd-coverage.ts": {
-    "mtime": 1783633520.7438374,
+    "mtime": 1784258224.4078426,
     "ast_hash": "c87794170b66a79f252882d3dfed61bb",
     "semantic_hash": "c87794170b66a79f252882d3dfed61bb"
   },
@@ -2190,8 +2190,8 @@
     "semantic_hash": "6017b746fe9aa6260367b369ce932dbc"
   },
   "src/systems/daggerheart/components/DaggerheartSheetHeader.tsx": {
-    "mtime": 1784256859.54396,
-    "ast_hash": "06c23b4993f0bdcd39d9813a3015846d",
+    "mtime": 1784472246.5897436,
+    "ast_hash": "be559fa2b217b6e3c952a118ed182b9c",
     "semantic_hash": ""
   },
   "src/systems/daggerheart/contributionLedger.ts": {
@@ -2235,8 +2235,8 @@
     "semantic_hash": "cfb62d7865af8b59b7b4eea6c6e44f51"
   },
   "src/systems/daggerheart/useDaggerheartMutationHandlers.ts": {
-    "mtime": 1784251925.1986706,
-    "ast_hash": "24d1707cb69d40ddc7f9b396efa5978d",
+    "mtime": 1784472641.7617671,
+    "ast_hash": "5dfdb8220ab33062ab3ba442fb3396ec",
     "semantic_hash": ""
   },
   "src/systems/daggerheart/useDaggerheartSheetController.ts": {
@@ -2575,9 +2575,9 @@
     "semantic_hash": "5473432a9872deb951444112a7cf156d"
   },
   "src/systems/mam3e/definition.ts": {
-    "mtime": 1783633520.7769113,
-    "ast_hash": "078b1903cff40d2a198b53e585d66e0e",
-    "semantic_hash": "078b1903cff40d2a198b53e585d66e0e"
+    "mtime": 1784473165.5177984,
+    "ast_hash": "eba107bdc47aba0a7125e92df272daa2",
+    "semantic_hash": ""
   },
   "src/systems/mam3e/derivedMath.ts": {
     "mtime": 1783633520.7769113,
@@ -3230,7 +3230,7 @@
     "semantic_hash": ""
   },
   "docs/generated/master-gap-ledger.json": {
-    "mtime": 1784247241.434988,
+    "mtime": 1784473634.4178262,
     "ast_hash": "3654581c20a970502b5fa18bfeda6ff7",
     "semantic_hash": ""
   },
@@ -3245,13 +3245,13 @@
     "semantic_hash": ""
   },
   "e2e/outcome-baseline.spec.ts": {
-    "mtime": 1783977929.1138575,
-    "ast_hash": "7ec702197bc067f98c92f0b54cc768bc",
+    "mtime": 1784474013.1138487,
+    "ast_hash": "20a45f07a23b4c0290dd85a19c049ef8",
     "semantic_hash": ""
   },
   "e2e/outcome/baseline.json": {
-    "mtime": 1783633520.084128,
-    "ast_hash": "1933a4988010b38eecbd33aabd083c7f",
+    "mtime": 1784474025.6178493,
+    "ast_hash": "beeab7ec2016c588cc53d53fa2603e91",
     "semantic_hash": ""
   },
   "scripts/check-compute-register.mjs": {
@@ -3510,18 +3510,18 @@
     "semantic_hash": ""
   },
   "src/__tests__/systems/daggerheart/daggerheartRest.test.ts": {
-    "mtime": 1784252039.3066702,
-    "ast_hash": "d75eec58b4641dfdb374c153ea7b1135",
+    "mtime": 1784472286.1137462,
+    "ast_hash": "d2fa1272805c2aac4ed5536a7c349797",
     "semantic_hash": ""
   },
   "src/systems/daggerheart/components/DaggerheartDowntimeControls.tsx": {
-    "mtime": 1784251938.9746706,
-    "ast_hash": "7e2706038313723efc0949d12909d137",
+    "mtime": 1784472241.1417434,
+    "ast_hash": "9c9bc3bc78410527e7c4de4d94de846b",
     "semantic_hash": ""
   },
   "src/systems/daggerheart/daggerheartRest.ts": {
-    "mtime": 1784251908.3386707,
-    "ast_hash": "d0dd72ead634ff22c8ed37344eee075a",
+    "mtime": 1784472198.149741,
+    "ast_hash": "b57fc1f8b3bd6945ab4799302387f0c2",
     "semantic_hash": ""
   },
   "src/__tests__/components/DaggerheartSheetHeader.test.tsx": {
@@ -3532,6 +3532,31 @@
   "src/__tests__/components/Pf2eHeader.test.tsx": {
     "mtime": 1784256286.075966,
     "ast_hash": "21b691c16490d14c167526469beb06a3",
+    "semantic_hash": ""
+  },
+  "src/__tests__/systems/mam3e/mam3eCreator.test.tsx": {
+    "mtime": 1784473405.9258127,
+    "ast_hash": "2470516e3ca19e2dcad8a8db3f2bc2a9",
+    "semantic_hash": ""
+  },
+  "src/systems/mam3e/creator/Mam3eCreator.tsx": {
+    "mtime": 1784473610.9178247,
+    "ast_hash": "a3ea7301719a5760d7ca07fadd0945ac",
+    "semantic_hash": ""
+  },
+  "src/systems/mam3e/creator/useMam3eCreatorDraft.ts": {
+    "mtime": 1784473362.06581,
+    "ast_hash": "c72b5ade2a492cc16f180d6177933b46",
+    "semantic_hash": ""
+  },
+  "src/__tests__/systems/mam3e/useMam3eCreatorDraft.test.ts": {
+    "mtime": 1784472529.2257605,
+    "ast_hash": "9b6cf99a2a2f99a0e0bb89dfa4f2c8a9",
+    "semantic_hash": ""
+  },
+  "src/components/GuidedCreatorDialog.tsx": {
+    "mtime": 1784473185.1537995,
+    "ast_hash": "beef37944ca7de750d5b5d8f1df6d4b9",
     "semantic_hash": ""
   }
 }
