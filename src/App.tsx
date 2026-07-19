@@ -44,6 +44,7 @@ import { CharacterListView, type CharacterSortOption } from './components/Charac
 import { LibraryScenesView } from './components/LibraryScenesView';
 import { AppHeader } from './components/AppHeader';
 import { NewCharacterDialog } from './components/NewCharacterDialog';
+import { GuidedCreatorDialog } from './components/GuidedCreatorDialog';
 import { useAppNav } from './hooks/useAppNav';
 import { useSurfaceSwitchMetrics } from './hooks/useSurfaceSwitchMetrics';
 
@@ -53,6 +54,22 @@ const STORAGE_WARNING_THRESHOLD = Math.floor(STORAGE_LIMIT_BYTES * 0.8);
 // queues re-parses full collection snapshots from localStorage, which must
 // not happen on every keystroke of a controlled sheet/notes field.
 const PENDING_SYNC_COUNT_DEBOUNCE_MS = 2000;
+
+function buildNewCharacterDocument(
+  systemId: GameSystemId,
+  system: SystemDataModel,
+  name: string
+): CharacterDocument<SystemDataModel> {
+  return {
+    id: generateUUID(),
+    name: name.trim() || 'New Character',
+    systemId,
+    system,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    version: CURRENT_DOCUMENT_VERSION,
+  };
+}
 
 function cloneSystemData(system: SystemDataModel): SystemDataModel {
   if (typeof structuredClone === 'function') {
@@ -109,6 +126,9 @@ function AppContent() {
   // Phase-7 interaction-budget gate is calibrated against later.
   useSurfaceSwitchMetrics(nav.surface);
   const [newCharacterDialogOpen, setNewCharacterDialogOpen] = useState(false);
+  // System id whose guided creator modal is open (null = none). Set instead of
+  // creating immediately when the picked system provides a CreatorComponent.
+  const [creatorSystemId, setCreatorSystemId] = useState<GameSystemId | null>(null);
   // The heavy SceneManager chunk is mounted only the first time the Scene
   // surface is opened (selecting a scene in LibraryScenesView flips there),
   // then kept alive (hidden) so its ~30 transient useState survive surface
@@ -290,19 +310,30 @@ function AppContent() {
       const sysDef = systemRegistry.get(systemId);
       if (!sysDef) return;
 
-      const doc: CharacterDocument<SystemDataModel> = {
-        id: generateUUID(),
-        name: 'New Character',
-        systemId,
-        system: sysDef.createDefaultData(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        version: CURRENT_DOCUMENT_VERSION,
-      };
+      // Systems that ship a guided creator open it in a modal first; the modal's
+      // onCreate builds and persists the character. Others create immediately
+      // from the SRD default template.
+      if (sysDef.CreatorComponent) {
+        setCreatorSystemId(systemId);
+        return;
+      }
+
+      const doc = buildNewCharacterDocument(systemId, sysDef.createDefaultData(), 'New Character');
       addDocument(doc);
       openSheet(doc.id);
     },
     [addDocument, openSheet]
+  );
+
+  const handleGuidedCreate = useCallback(
+    (system: SystemDataModel, name: string) => {
+      if (!creatorSystemId) return;
+      const doc = buildNewCharacterDocument(creatorSystemId, system, name);
+      addDocument(doc);
+      openSheet(doc.id);
+      setCreatorSystemId(null);
+    },
+    [creatorSystemId, addDocument, openSheet]
   );
 
   const handleDeleteDocument = (id: string) => {
@@ -771,6 +802,23 @@ function AppContent() {
         onClose={() => setNewCharacterDialogOpen(false)}
         onCreate={handleCreateCharacter}
       />
+      <GuidedCreatorDialog open={creatorSystemId !== null} onClose={() => setCreatorSystemId(null)}>
+        {creatorSystemId !== null &&
+          (() => {
+            const CreatorComponent = systemRegistry.get(creatorSystemId)?.CreatorComponent;
+            return CreatorComponent ? (
+              <Suspense
+                fallback={
+                  <div className="p-8">
+                    <Skeleton className="h-72 w-full" />
+                  </div>
+                }
+              >
+                <CreatorComponent onCreate={handleGuidedCreate} />
+              </Suspense>
+            ) : null;
+          })()}
+      </GuidedCreatorDialog>
     </div>
   );
 }

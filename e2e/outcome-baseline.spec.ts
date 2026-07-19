@@ -72,11 +72,23 @@ async function createCharacter(
   tick();
   await page.getByRole('button', { name: systemPattern }).click();
   tick();
+  // Systems that ship a guided creator (M&M 3e) open a modal before the sheet.
+  // Wait for whichever lands first — the creator's Create button or the sheet's
+  // Back button — and, when it is the creator, name the hero and confirm.
+  const backButton = page.getByRole('button', { name: /^Back$/i });
+  const createButton = page.getByRole('button', { name: /^Create character$/i });
+  await expect(backButton.or(createButton).first()).toBeVisible({ timeout: 30_000 });
+  if (await createButton.isVisible()) {
+    await page.locator('input[title="Character name"]').fill(name);
+    tick();
+    await createButton.click();
+    tick();
+  }
   // The system sheet is a lazily-loaded chunk that mounts in ~350ms locally, but
   // a cold fetch+parse on a contended firefox CI runner intermittently spikes
   // past 15s (it mounts correctly, just slowly), so allow generous headroom. The
   // per-system time budget below still enforces the real mount-speed SLA.
-  await expect(page.getByRole('button', { name: /^Back$/i })).toBeVisible({ timeout: 30_000 });
+  await expect(backButton).toBeVisible({ timeout: 30_000 });
   const titledInput = page.locator('input[title="Character name"]');
   const nameInput =
     (await titledInput.count()) > 0 ? titledInput.first() : page.getByPlaceholder('Character Name');

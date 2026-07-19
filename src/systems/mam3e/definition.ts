@@ -56,4 +56,9 @@ export const Mam3eSystemDef: SystemDefinition<Mam3eDataModel> = {
   SheetComponent: lazyWithPreload(() =>
     import('./sheet').then((m) => ({ default: m.Mam3eCharacterSheet }))
   ),
+  // Guided point-buy creator (RFC / Phase-4 parity: M&M was the one system
+  // without one). Lazy so it stays out of the eager registry bootstrap bundle.
+  CreatorComponent: lazyWithPreload(() =>
+    import('./creator/Mam3eCreator').then((m) => ({ default: m.Mam3eCreator }))
+  ),
 };
