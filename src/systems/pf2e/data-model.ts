@@ -1,7 +1,7 @@
 import { Feature } from '../../types/core/character';
 import { SystemDataModel } from '../../types/core/document';
 import type { BonusType } from '../../types/core/common';
-import { levelPlus } from '../../rules/derivation';
+import { levelPlus } from '../../utils/scaling';
 
 /**
  * Pathfinder 2e Data Model

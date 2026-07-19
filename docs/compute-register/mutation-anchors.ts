@@ -90,8 +90,8 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
   // (=> +3), so breaking the >=9 branch flips its `toContain(3)`.
   'dnd5e2014.L3.rage-damage': {
     file: 'src/rules/conditions/dnd5eRiders.ts',
-    find: 'return 3;',
-    replace: 'return 2;',
+    find: '[9, 3]',
+    replace: '[9, 2]',
   },
   // Divine Smite base is 2d8; the rider test asserts every smite die value === 8.
   'dnd5e2014.L3.divine-smite-base': {
@@ -645,13 +645,13 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
   },
   'dnd35e.L7.feats-from-level': {
     file: 'src/systems/dnd35e/derivedMath.ts',
-    find: 'return 1 + Math.floor(l / 3);',
-    replace: 'return 2 + Math.floor(l / 3);',
+    find: 'return linearRate(l, 1, 3, 1);',
+    replace: 'return linearRate(l, 1, 3, 2);',
   },
   'dnd35e.L7.ability-increases': {
     file: 'src/systems/dnd35e/derivedMath.ts',
-    find: 'return Math.floor(Math.max(0, level) / 4);',
-    replace: 'return Math.floor(Math.max(0, level) / 5);',
+    find: 'return linearRate(Math.max(0, level), 1, 4);',
+    replace: 'return linearRate(Math.max(0, level), 1, 5);',
   },
   'dnd35e.L1.xp-to-level': {
     file: 'src/systems/dnd35e/derivedMath.ts',

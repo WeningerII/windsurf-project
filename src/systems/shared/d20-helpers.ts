@@ -1,7 +1,7 @@
 /**
  * Shared helpers for d20 3.x-family systems (D&D 3.5e and Pathfinder 1e).
  */
-import { linearRate } from '../../rules/derivation';
+import { linearRate } from '../../utils/scaling';
 
 /** Size modifier for grapple (D&D 3.5e — opposite sign, larger steps) */
 export const GRAPPLE_SIZE_MODS: Record<string, number> = {

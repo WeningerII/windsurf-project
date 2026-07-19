@@ -4,6 +4,7 @@
  * (the same pattern as compute5eAC / baseSave / classBAB) so each derived
  * quantity has one verified implementation. Formulas are SRD/OGC RAW.
  */
+import { breakpoints } from './scaling';
 
 // ─── D&D 5e (SRD 5.1 / 5.2) ───────────────────────────────────────────────
 
@@ -40,11 +41,13 @@ export function dnd5ePassivePerception(
 }
 
 /** Cantrip damage-dice tier: increases at character levels 5, 11, and 17. */
+const DND5E_CANTRIP_SCALE_BREAKPOINTS = [
+  [5, 2],
+  [11, 3],
+  [17, 4],
+] as const;
 export function dnd5eCantripScaleTier(characterLevel: number): 1 | 2 | 3 | 4 {
-  if (characterLevel >= 17) return 4;
-  if (characterLevel >= 11) return 3;
-  if (characterLevel >= 5) return 2;
-  return 1;
+  return breakpoints(characterLevel, DND5E_CANTRIP_SCALE_BREAKPOINTS, 1) as 1 | 2 | 3 | 4;
 }
 
 // ─── D&D 3.5e / Pathfinder 1e (d20 legacy) ────────────────────────────────

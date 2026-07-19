@@ -5,7 +5,7 @@
  * drift from these three primitives.
  */
 import { describe, it, expect } from 'vitest';
-import { breakpoints, linearRate, levelPlus } from '../../rules/derivation';
+import { breakpoints, linearRate, levelPlus } from '../../utils/scaling';
 
 describe('scaling shapes', () => {
   describe('breakpoints — Daggerheart tier (2/5/8)', () => {
