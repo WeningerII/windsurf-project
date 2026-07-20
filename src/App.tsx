@@ -42,6 +42,7 @@ import { combineSyncStates, getMostRecentSyncDate, getPendingSyncCount } from '.
 import { getDocumentLevelValue } from './utils/characterPresenter';
 import { CharacterListView, type CharacterSortOption } from './components/CharacterListView';
 import { LibraryScenesView } from './components/LibraryScenesView';
+import { LibraryBestiaryView } from './components/LibraryBestiaryView';
 import { AppHeader } from './components/AppHeader';
 import { NewCharacterDialog } from './components/NewCharacterDialog';
 import { GuidedCreatorDialog } from './components/GuidedCreatorDialog';
@@ -705,6 +706,9 @@ function AppContent() {
                 onImportCampaigns={addCampaigns}
               />
             )}
+
+            {/* Bestiary library segment: read-only monster catalog (RFC-004) */}
+            {isLibrary && nav.librarySegment === 'bestiary' && <LibraryBestiaryView />}
 
             {/* Content library segment */}
             {isLibrary && nav.librarySegment === 'content' && <SystemStatusDashboard />}
