@@ -42,7 +42,10 @@ const budgets = {
   // coverage-completion program (now spanning 5e-2014/2024, PF2e, and PF1e
   // corpora at or near 100%, plus the d20-legacy bestiary): genuine content,
   // not bloat. Lazy granularity is enforced by the per-data-chunk budget.
-  totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 1536 * 1024,
+  // Bumped 1536 -> 1664 KiB for the PF1e Core Rulebook equipment + magic-items
+  // corpus (243 + 347 SRD items, code-split into its own pf1e-equipment-data
+  // chunk that stays well under the per-data-chunk budget).
+  totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 1664 * 1024,
   // Restored to 80 KiB now that the 1296-LOC SceneManager view is lazy-loaded
   // out of the eager shell (it no longer rides the index chunk), reclaiming the
   // first-paint discipline the temporary 81 KiB bump had spent on the
