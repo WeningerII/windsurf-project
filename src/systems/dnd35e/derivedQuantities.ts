@@ -14,12 +14,23 @@
  * the SHARED thing is the mechanism, not the formula: 3.5e's BAB tracks, skill
  * rank caps, and feat/ability-increase cadence stay first-class here.
  *
- * ARMOR CLASS (total / touch / flat-footed) is deliberately NOT declared here:
- * it is computed through the AC resolver fold (src/rules/compile/defense.ts) and
- * reserved for a later wave.
+ * ARMOR CLASS is declared here as THREE scalar specs (the shape forbids tuples),
+ * all DISPLAY-LESS: the shared d20-legacy combat header (D20CombatSection) already
+ * renders AC / touch / flat-footed, so — exactly like `bab-sum` above — these
+ * compute (and, for `ac.total`, register-verify) without a `display` card, which
+ * avoids a double-render on the derived strip.
+ *   - `ac.total` reproduces the engine's resolver fold — the shared base formula
+ *     computeD20LegacyAC(...).total seeds a `set` on 'ac' and the magic/feat/
+ *     equipment AC effects add on top (resolveCharacterEffects(...).bonus('ac')),
+ *     so compute() === data.armorClass.total (faithful). With no bonus-bearing
+ *     gear it reduces to the base formula, so mutating defense.ts flips a case
+ *     (mutation-verifiable) — this is the register-anchored quantity.
+ *   - `ac.touch` / `ac.flat-footed` are PURE (computeD20LegacyAC(...).touch /
+ *     .flatFooted): no resolver bonuses and no compute-register row.
  */
 import type { DerivedQuantitySpec } from '../../rules/derivation';
 import { classBAB } from '../shared/d20-helpers';
+import { resolveCharacterEffects, computeD20LegacyAC } from '../../rules';
 import { dnd35eMaxSkillRanks } from '../../utils/derivedCombatMath';
 import { dnd35eAbilityIncreases, dnd35eFeatsFromLevel } from './derivedMath';
 import type { Dnd35eDataModel } from './data-model';
@@ -27,6 +38,33 @@ import type { Dnd35eDataModel } from './data-model';
 /** Total base attack bonus: sum each class's BAB track across all class levels. */
 function totalBaseAttackBonus(system: Dnd35eDataModel): number {
   return system.classLevels.reduce((sum, cl) => sum + classBAB(cl.level, cl.bab), 0);
+}
+
+/** Build a full ability-score block from partial overrides (defaults are 10). */
+function attrs(overrides: Partial<Record<string, number>>): Record<string, number> {
+  return { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10, ...overrides };
+}
+
+/**
+ * FULL Armor Class total, faithful to the engine's prepareData: the shared base
+ * formula (computeD20LegacyAC(...).total) seeds a `set` on 'ac' and the equipped
+ * magic-item / feat / feature AC effects layer on through the resolver, so this
+ * equals data.armorClass.total exactly. With no bonus-bearing gear it collapses
+ * to the base formula, so mutating the anchored defense.ts `total` line flips a
+ * no-gear case red — keeping the migrated register row mutation-verifiable.
+ */
+function armorClassTotal(system: Dnd35eDataModel): number {
+  const ac = computeD20LegacyAC(
+    system.baseAttributes.dex ?? 10,
+    system.sizeCategory,
+    system.equipment
+  );
+  return resolveCharacterEffects('dnd-3.5e', {
+    equipment: system.equipment.filter((item) => item.equipped),
+    feats: system.feats,
+    features: system.features,
+    baseArmorClass: ac.total,
+  }).bonus('ac');
 }
 
 export const DND35E_DERIVED_QUANTITIES: ReadonlyArray<DerivedQuantitySpec<Dnd35eDataModel>> = [
@@ -148,5 +186,100 @@ export const DND35E_DERIVED_QUANTITIES: ReadonlyArray<DerivedQuantitySpec<Dnd35e
       { name: 'level 20 → 5', system: { level: 20 }, expected: 5 },
     ],
     display: { label: 'Ability Increases', icon: 'TrendingUp' },
+  },
+  {
+    // FAITHFUL + MUTATION-VERIFIABLE (register-anchored). compute() reproduces the
+    // resolver fold so it equals data.armorClass.total; the no-gear cases reduce
+    // to the anchored base `const total = 10 + armor + shield + Dex + size` in
+    // defense.ts, so the dnd35e.L2.ac mutation flips them.
+    id: 'dnd35e.L2.ac.total',
+    layer: 'L2',
+    quantity: 'Armor Class (total)',
+    formula:
+      '10 + armor + shield + min(Dex, armor cap) + size, then + magic/feat/equipment AC bonuses',
+    source: 'SRD 3.5: Combat — Armor Class',
+    compute: armorClassTotal,
+    cases: [
+      { name: 'unarmored, medium, Dex 10 → 10', system: {}, expected: 10 },
+      {
+        name: 'Dex 14 (+2), unarmored, medium → 12',
+        system: { baseAttributes: attrs({ dex: 14 }) },
+        expected: 12,
+      },
+      {
+        name: 'small (+1 size), Dex 12 (+1), unarmored → 12',
+        system: { sizeCategory: 'small', baseAttributes: attrs({ dex: 12 }) },
+        expected: 12,
+      },
+    ],
+  },
+  {
+    // PURE scalar (no resolver bonuses) → no compute-register row; display-less
+    // because the d20-legacy combat header already renders it.
+    id: 'dnd35e.L2.ac.touch',
+    layer: 'L2',
+    quantity: 'Touch AC',
+    formula: '10 + min(Dex, armor cap) + size (ignores armor and shield)',
+    source: 'SRD 3.5: Combat — Armor Class (Touch Attacks)',
+    compute: (s) =>
+      computeD20LegacyAC(s.baseAttributes.dex ?? 10, s.sizeCategory, s.equipment).touch,
+    cases: [
+      {
+        name: 'Dex 14 (+2), medium → 12',
+        system: { baseAttributes: attrs({ dex: 14 }) },
+        expected: 12,
+      },
+      {
+        name: 'armor ignored: Full Plate (+8) equipped, Dex 14 → 12',
+        system: {
+          baseAttributes: attrs({ dex: 14 }),
+          equipment: [
+            {
+              itemId: 'plate',
+              name: 'Full Plate',
+              equipped: true,
+              armorClass: 8,
+              armorType: 'heavy',
+            },
+          ],
+        },
+        expected: 12,
+      },
+      { name: 'small (+1 size), Dex 10 → 11', system: { sizeCategory: 'small' }, expected: 11 },
+    ],
+  },
+  {
+    // PURE scalar (no resolver bonuses) → no compute-register row; display-less
+    // because the d20-legacy combat header already renders it.
+    id: 'dnd35e.L2.ac.flat-footed',
+    layer: 'L2',
+    quantity: 'Flat-footed AC',
+    formula: '10 + armor + shield + size (no Dex)',
+    source: 'SRD 3.5: Combat — Armor Class (Flat-Footed)',
+    compute: (s) =>
+      computeD20LegacyAC(s.baseAttributes.dex ?? 10, s.sizeCategory, s.equipment).flatFooted,
+    cases: [
+      {
+        name: 'Dex ignored: Dex 18, unarmored, medium → 10',
+        system: { baseAttributes: attrs({ dex: 18 }) },
+        expected: 10,
+      },
+      {
+        name: 'armor counts: Full Plate (+8) equipped, medium → 18',
+        system: {
+          equipment: [
+            {
+              itemId: 'plate',
+              name: 'Full Plate',
+              equipped: true,
+              armorClass: 8,
+              armorType: 'heavy',
+            },
+          ],
+        },
+        expected: 18,
+      },
+      { name: 'large (-1 size), unarmored → 9', system: { sizeCategory: 'large' }, expected: 9 },
+    ],
   },
 ];

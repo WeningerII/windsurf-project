@@ -54,9 +54,10 @@ export const pf1eComputeRegister: SystemComputeRegister = {
         'total=10+armor+shield+min(Dex,cap)+size; touch=10+Dex+size; flatFooted=10+armor+shield+size',
       inputs: ['Dex', 'size', 'armor', 'shield'],
       edgeCases: ['touch ignores armor/shield', 'flat-footed ignores Dex', 'Dex cap'],
+      note: 'Migrated to the declarative derivation layer (PF1E_DERIVED_QUANTITIES). The anchored `total` is pf1e.L2.ac.total, whose faithful compute folds the shared base (computeD20LegacyAC(...).total) through the resolver so it equals data.armorClass.total; a no-gear case reduces to the anchored `const total = 10 + armor + shield + Dex + size` (defense.ts, shared with 3.5e), keeping the pf1e.L2.ac mutation live. touch/flat-footed are pure display-bearing scalars (ac.touch / ac.flat-footed) with no register row.',
       source: `${CRB}: Combat — Armor Class`,
       status: 'verified',
-      testRef: `${T} :: L2 d20-legacy AC (touch / flat-footed / size)`,
+      testRef: 'src/__tests__/derivation/pf1eDerivedQuantities.test.ts :: pf1e.L2.ac.total',
     },
     {
       id: 'pf1e.L2.saves-total',

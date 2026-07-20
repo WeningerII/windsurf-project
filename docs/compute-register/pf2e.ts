@@ -40,10 +40,11 @@ export const pf2eComputeRegister: SystemComputeRegister = {
       quantity: 'AC = 10 + Dex mod + armor proficiency + armor item bonus',
       formula: '10 + Dex mod (capped) + armor proficiency total + armor item bonus (+ shield)',
       inputs: ['Dex', 'armor proficiency', 'armor'],
-      edgeCases: ['unarmored trained', 'Dex cap by armor'],
+      edgeCases: ['unarmored trained', 'Dex cap by armor', 'full AC incl. magic/feat bonuses'],
+      note: 'Migrated to the declarative derivation layer (PF2E_DERIVED_QUANTITIES pf2e.L2.ac): a single display-bearing scalar whose compute reproduces the resolver fold (base + magic/feat AC bonuses) minus the worst Dex status penalty, so it equals data.armorClass. The unarmored case reduces to the anchored base `ac = 10 + dexMod + proficiencyBonus` (defense.ts), keeping the pf2e.L2.ac mutation live.',
       source: `${CRB}: Armor Class`,
       status: 'verified',
-      testRef: `${T} :: L2 PF2e AC`,
+      testRef: 'src/__tests__/derivation/pf2eDerivedQuantities.test.ts :: pf2e.L2.ac',
     },
     {
       id: 'pf2e.L2.ac-clumsy',
