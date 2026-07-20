@@ -108,6 +108,45 @@ spell-DC/attack path consolidation is explicitly deferred beyond it.
 Final integration (orchestrator): staged gate (never monolithic verify),
 docs/generated regen, memory /save, PR merge per standing directive.
 
+## Sub-wave 1c execution grounding (scouted 2026-07-20, 3 Explore agents)
+
+Launch order (2-wide, OOM-safe — concurrent tsc in verify is memory-heavy): item 8
++ item 11 first; item 10 when a slot frees. All three confirmed file-disjoint.
+
+- **Item 8 (AI-gateway hardening)** — task `ws75xyl0k` RUNNING. Domain: netlify/functions/**,
+  src/ai/**, NEW src/utils/rateLimit.ts, NEW src/ai/gatewayLog.ts, NEW src/ai/mockAdapter.ts,
+  NEW netlify/functions/providerFactory.mts, .env.example (append), docs/rfc/002 (status prose),
+  tests in __tests__/ai + __tests__/utils. Seam exists: AiProviderAdapter + GatewayContext in
+  gatewayCore.ts (~L22-39); factory plugs at ai-gateway.mts ~L15-17 (DI, SDK-free); rate-limit
+  reuses over-budget→429 (gatewayHttp.ts ~L55), new optional ctx.rateLimiter before adapter call;
+  logger = new optional ctx.log. SDK (@ai-sdk/google) stays confined to geminiAdapter.mts. Must NOT
+  touch syncEngine.ts/App.tsx/useAppNav/src/data.
+- **Item 11 (RFC004 bestiary route)** — task `w0sw8lp5n` RUNNING. OWNS src/hooks/useAppNav.ts +
+  src/App.tsx; NEW src/components/LibraryBestiaryView.tsx + a __tests__/components test. Nav edit =
+  3 spots in useAppNav.ts (LibrarySegment union ~L26 add 'bestiary'; librarySegmentLabel case ~L88-89
+  before assertNever; LIBRARY_SEGMENTS array ~L95-100). navReducer + AppHeader NEED NO edit
+  (data-driven). App.tsx = import + one `isLibrary && segment==='bestiary' && <LibraryBestiaryView/>`
+  block (~L710, mirror 'content'). Consume loadMonstersForSystem (src/utils/dataLoader.ts ~L881,
+  Promise<Monster[]>) + MonsterBrowser READ-ONLY; empty state for not-shipped systems; do NOT edit
+  dataLoader.ts or create data. Agnostic system selector, catalog-only (RFC004 non-goals).
+- **Item 10 (content coverage)** — task PENDING (launch when slot frees). Domain (PURE-LOCAL only):
+  src/scripts/srd-coverage.ts (note src/scripts NOT scripts/), docs/GAPS.md, docs/srd-sources.md,
+  docs/master-gap-ledger.source.ts, NEW unit test for the collapse helpers. Code-doable = (a) collapse
+  3.5e category-heading denominator in fetchSrd35MonsterNames (~L480-489); (b) collapse PF1e
+  dragon/elemental container records in denominator path (~L395-405, 14 of 15 "missing"); (c) add M&M
+  equipment CoverageTarget (data already ships + runtime wired — only the measurement target missing);
+  (d) extend norm/loaderNormVariants (~L39-53) for confirmed provenance naming-variant false-positives.
+  Make collapse logic PURE + unit-tested with fixture heading/name lists (NO network). DEFERRED (do
+  NOT do): running `npm run srd:coverage` (network), encoding missing individuals (PF1e Skeletal
+  Champion; 3.5e Lich/Ghost/Salamander/Hydra) via scripts/encode-*.mjs, provenance deletions from
+  src/data, executing the M&M equipment target (frnprt fetch). Agent must NOT edit docs/generated/**
+  or run `npm run gap:ledger` — ORCHESTRATOR regenerates generated docs at the wave-1 barrier.
+  Deferred shared-data regen is the only (integration-time) coupling with item 11's loader.
+
+Wave-1 barrier (after all 1c commit+push): tree reconcile → `graphify update` → regen docs/generated
+(`npm run gap:ledger` + generated-docs) → typecheck app+test → full `test:coverage -- --run
+--maxWorkers=1` → build. Then `check:compute-register` (Tier A) stays green (no 1c anchors).
+
 ## Cannot be completed by ANY workflow (bounds "complete")
 
 - Human sign-off: dnd5e-2024 exhaustion −2/level; screen-reader pass; final go/no-go.
