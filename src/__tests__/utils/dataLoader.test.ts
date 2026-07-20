@@ -1,3 +1,5 @@
+import { readFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { loadEquipmentForSystem } from '../../utils/dataLoader';
 describe('legacy equipment normalization (review M-3)', () => {
@@ -55,5 +57,40 @@ describe('5e-2014 equipment consolidation (review M-2)', () => {
     expect(byId.get('potion-of-heroism')?.type).toBe('consumable');
     // A duplicated id resolves to the canonical (family A) copy.
     expect(byId.get('bag-of-holding')?.cost).toEqual({ amount: 0, currency: 'gp' });
+  });
+});
+
+describe('pf1e SRD equipment merge (encode-pf1e-equipment.mjs)', () => {
+  it('lands the SRD denominator in the loader set with unique ids', async () => {
+    const items = await loadEquipmentForSystem('pf1e');
+    // The Core Rulebook denominator is 243 Equipment + 347 Magic Items = 590
+    // unique SRD ids; hand-authored-only ids can only add to that.
+    expect(items.length).toBeGreaterThanOrEqual(590);
+    const ids = items.map((item) => item.id);
+    expect(new Set(ids).size, 'no duplicate ids in the merged pf1e set').toBe(ids.length);
+    // SRD-only entries the hand-authored sample never carried.
+    expect(ids).toContain('axe-orc-double'); // SRD martial weapon
+    expect(ids).toContain('shield-tower'); // SRD shield
+    expect(ids).toContain('rope-of-entanglement'); // SRD magic item
+  });
+
+  it('keeps hand-authored entries winning on id collision with the SRD', async () => {
+    const items = await loadEquipmentForSystem('pf1e');
+    const byId = new Map(items.map((item) => [item.id, item]));
+    // Both 'club' and 'dagger' also exist in the SRD weapons bucket; the
+    // curated hand-authored description must survive the merge (spread last).
+    expect(byId.get('club')?.description).toBe('A simple wooden club.');
+    expect(byId.get('dagger')?.description).toBe(
+      'A small blade useful for both melee and ranged attacks.'
+    );
+  });
+
+  it('splits the pinned manifest into the 243 / 347 coverage denominators', async () => {
+    // vitest runs from the repo root, so the manifest resolves off cwd.
+    const manifest = JSON.parse(
+      await readFile(resolve('scripts/data/pf1e-equipment-manifest.json'), 'utf8')
+    ) as { entries: Array<{ scope: string }> };
+    expect(manifest.entries.filter((entry) => entry.scope === 'equipment').length).toBe(243);
+    expect(manifest.entries.filter((entry) => entry.scope === 'magic').length).toBe(347);
   });
 });
