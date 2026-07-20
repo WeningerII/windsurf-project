@@ -215,16 +215,18 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: [],
   },
   {
-    // Ops runbook (turnkey-when-provisioned); prose spec, not code-paired.
+    // Ops runbook (turnkey-when-provisioned); prose spec, not code-paired, so
+    // 'plan' (rules-free prose) like srd-sources.md — 'live' requires rule coverage.
     path: 'docs/runbooks/sentry-alerts.md',
-    kind: 'live',
+    kind: 'plan',
     owner: 'ops-runbooks',
     rules: [],
   },
   {
-    // Ops runbook (turnkey-when-provisioned); prose spec, not code-paired.
+    // Ops runbook (turnkey-when-provisioned); prose spec, not code-paired, so
+    // 'plan' (rules-free prose) like srd-sources.md — 'live' requires rule coverage.
     path: 'docs/runbooks/supabase-backup-restore.md',
-    kind: 'live',
+    kind: 'plan',
     owner: 'ops-runbooks',
     rules: [],
   },
