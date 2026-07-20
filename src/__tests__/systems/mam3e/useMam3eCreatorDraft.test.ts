@@ -97,10 +97,7 @@ describe('deriveMam3eCreatorTotals (engine-backed budget math)', () => {
 
   it('reports no violations for a balanced build exactly at the cap', () => {
     // PL 10 → 2×PL = 20; Sta/Agi/Fgt/Awe 10 put every defense pair at exactly 20.
-    const totals = deriveMam3eCreatorTotals(
-      10,
-      abilities({ sta: 10, agi: 10, fgt: 10, awe: 10 })
-    );
+    const totals = deriveMam3eCreatorTotals(10, abilities({ sta: 10, agi: 10, fgt: 10, awe: 10 }));
     expect(totals.plViolations).toEqual([]);
   });
 
@@ -148,7 +145,12 @@ describe('deriveMam3eCreatorTotals — defenses (engine cost = 1 PP per rank)', 
 
   it('adds the purchased rank on top of the governing ability in the total', () => {
     // Dodge total = AGI 4 + purchased rank 2 = 6.
-    const totals = deriveMam3eCreatorTotals(10, abilities({ agi: 4 }), {}, defenseRanks({ dodge: 2 }));
+    const totals = deriveMam3eCreatorTotals(
+      10,
+      abilities({ agi: 4 }),
+      {},
+      defenseRanks({ dodge: 2 })
+    );
     expect(totals.system.defenses.dodge.total).toBe(6);
   });
 
@@ -161,7 +163,11 @@ describe('deriveMam3eCreatorTotals — defenses (engine cost = 1 PP per rank)', 
       {},
       defenseRanks({ dodge: 8, toughness: 5 })
     );
-    expect(totals.plViolations).toContainEqual({ label: 'Dodge + Toughness', value: 13, limit: 10 });
+    expect(totals.plViolations).toContainEqual({
+      label: 'Dodge + Toughness',
+      value: 13,
+      limit: 10,
+    });
   });
 });
 
@@ -186,12 +192,7 @@ describe('buildMam3eCreatorData — carries skills + defenses (raw, pre-engine)'
   });
 
   it('seeds all five defense ranks with total 0', () => {
-    const data = buildMam3eCreatorData(
-      10,
-      abilities(),
-      {},
-      defenseRanks({ dodge: 2, will: 1 })
-    );
+    const data = buildMam3eCreatorData(10, abilities(), {}, defenseRanks({ dodge: 2, will: 1 }));
     expect(data.defenses.dodge).toEqual({ rank: 2, total: 0 });
     expect(data.defenses.will).toEqual({ rank: 1, total: 0 });
     // Raw model: spend still zero (the engine computes it at add time).

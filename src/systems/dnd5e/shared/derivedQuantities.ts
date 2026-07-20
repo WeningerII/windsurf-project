@@ -125,7 +125,11 @@ export const DND5E_DERIVED_QUANTITIES: ReadonlyArray<DerivedQuantitySpec<Dnd5eLi
     source: 'D&D 5e SRD (5.1/5.2): Jumping — Long Jump',
     compute: (s) => dnd5eLongJump(s.baseAttributes.str ?? 10),
     cases: [
-      { name: 'Str 10 → 10 ft (running start)', system: { baseAttributes: attrs({ str: 10 }) }, expected: 10 },
+      {
+        name: 'Str 10 → 10 ft (running start)',
+        system: { baseAttributes: attrs({ str: 10 }) },
+        expected: 10,
+      },
       { name: 'Str 15 → 15 ft', system: { baseAttributes: attrs({ str: 15 }) }, expected: 15 },
       { name: 'Str 20 → 20 ft', system: { baseAttributes: attrs({ str: 20 }) }, expected: 20 },
     ],
@@ -135,13 +139,26 @@ export const DND5E_DERIVED_QUANTITIES: ReadonlyArray<DerivedQuantitySpec<Dnd5eLi
     id: 'dnd5e.L6.high-jump',
     layer: 'L6',
     quantity: 'High jump height',
-    formula: '3 + Strength modifier in feet with a 10-ft running start (half, rounded down, standing), min 0',
+    formula:
+      '3 + Strength modifier in feet with a 10-ft running start (half, rounded down, standing), min 0',
     source: 'D&D 5e SRD (5.1/5.2): Jumping — High Jump',
     compute: (s) => dnd5eHighJump(abilityMod(s.baseAttributes.str ?? 10)),
     cases: [
-      { name: 'Str 10 (mod +0) → 3 ft', system: { baseAttributes: attrs({ str: 10 }) }, expected: 3 },
-      { name: 'Str 20 (mod +5) → 8 ft', system: { baseAttributes: attrs({ str: 20 }) }, expected: 8 },
-      { name: 'Str 1 (mod −5) → 0 ft (floored at 0)', system: { baseAttributes: attrs({ str: 1 }) }, expected: 0 },
+      {
+        name: 'Str 10 (mod +0) → 3 ft',
+        system: { baseAttributes: attrs({ str: 10 }) },
+        expected: 3,
+      },
+      {
+        name: 'Str 20 (mod +5) → 8 ft',
+        system: { baseAttributes: attrs({ str: 20 }) },
+        expected: 8,
+      },
+      {
+        name: 'Str 1 (mod −5) → 0 ft (floored at 0)',
+        system: { baseAttributes: attrs({ str: 1 }) },
+        expected: 0,
+      },
     ],
     display: { label: 'High Jump', icon: 'MoveVertical', format: (v) => `${v} ft` },
   },

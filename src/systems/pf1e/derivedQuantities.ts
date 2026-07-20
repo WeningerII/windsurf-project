@@ -114,7 +114,8 @@ export const PF1E_DERIVED_QUANTITIES: ReadonlyArray<DerivedQuantitySpec<Pf1eData
     id: 'pf1e.L4.max-rank-cap',
     layer: 'L4',
     quantity: 'Max skill ranks per skill',
-    formula: 'max ranks in a skill = character level (class skills add +3 to the bonus, not the cap)',
+    formula:
+      'max ranks in a skill = character level (class skills add +3 to the bonus, not the cap)',
     source: 'PF1e Core Rulebook (OGC): Skills — Ranks',
     compute: (s) => pf1eMaxSkillRanks(s.level),
     cases: [
