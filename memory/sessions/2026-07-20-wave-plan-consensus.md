@@ -251,3 +251,21 @@ Wave-1 barrier (after all 1c commit+push): tree reconcile → `graphify update` 
 - Source-blocked: PF1e CRB equipment list (pin a clean OGC source or formalize exclusion).
 - Needs own RFC: AI-DM autonomous runtime.
 - Deferred beyond plan (code-doable later): ledger spell-DC/attack resolver consolidation.
+
+---
+
+## COMPLETION STAMP (2026-07-20)
+
+**All 22 items executed, consensus ACCEPT each, fully gated green on
+`claude/next-priorities-98pzof`.** Final commits: wave-3 items 18 `02a4a34`,
+19 `8190769`, 20 `d1a665e`, 22 `94a591c`; regen `56e891b`. Wave-3 barrier green:
+full suite 245 files / 2452 tests (cov 86.04%), compute-register Tier A 210 /
+Tier B --mutate 0 demotions (10 new L9 legality anchors all mutation-proven),
+build, bundle-size, knip, validate, generated-docs, doc-drift, secrets,
+legal-notices, repo-hygiene, e2e chromium 36 passed. Item 22 shipped
+`src/rules/legality/{dnd5e,dnd35e,pf1e,pf2e}.ts` — pure per-system build-legality
+validators (SRD/OGC-cited, peer-distinct rules: 3.5e class/cross-class skill-rank
+split vs PF1e flat cap vs PF2e level+tier proficiency budget vs 5e score-20 cap),
+test-only, layer-boundary + anti-bootstrap clean. Plan fully executed; remaining
+excluded items are human-sign-off / secrets / infra / OGC-source blocked (listed
+above), not code-doable this session.
