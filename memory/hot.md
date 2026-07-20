@@ -32,17 +32,37 @@ as "5e vs non-5e" (hard, repeated user constraint).**
   `edcc88e` (consensus ACCEPT — derived CR→value scale pinned to SRD +2-doubling,
   additive, drafter↔validator consistent; RFC prose updated four→five systems).
 
-**NEXT:** sub-wave 1c (3 items, disjoint domains per consensus) → closes wave 1:
-- item 8 AI-gateway hardening (netlify/functions/**, src/ai/**, utils/syncEngine.ts,
-  utils/rateLimit.ts NEW, .env.example, rfc/002).
-- item 10 content coverage (scripts/srd-coverage.ts, src/data/**, docs/srd-sources.md,
-  pf1e-bestiary-manifest.json; network regen deferred to integration).
-- item 11 RFC004 bestiary route (new page, hooks/useAppNav.ts OWNED, App.tsx OWNED,
-  monster-loader WIRING that consumes existing loaders — must NOT edit src/data/**).
-After 1c: `graphify update` + full wave-1 barrier (`test:coverage -- --run
---maxWorkers=1`). Then Wave 2 (7 items incl. item 12 AC/defense resolver fold with
-atomic anchor re-pin) + Wave 3 (4 items). Blocked items (human sign-off / secrets /
-infra / OGC source) excluded from "complete".
+- 1c ✅ COMPLETE (all consensus ACCEPT): item 8 AI-gateway hardening `7a3fc31`
+  (factory+mock+rate-limit+structured-logs, SDK-free via DI, over-budget→429
+  reused, all-optional ctx = additive; 92 AI tests); item 11 RFC004 bestiary
+  route `ea3d59a` + nav-test fixup `2a86120` (closed-union segment, agnostic
+  data-driven selector, read-only loader, empty states); item 10 content
+  coverage `fa29ae2` (3.5e/PF1e denominator collapse + M&M equipment target +
+  provenance norm, offline-unit-tested; NETWORK REGEN of srd-coverage.md +
+  encoding missing individuals still DEFERRED).
+
+**WAVE-1 BARRIER — all gates green** (staged, OOM-safe): regen commits
+`569e32b` (gap-ledger+graph) `b59df87` (roadmap-metrics) `b083137` (prettier);
+typecheck app+test+netlify ✓; lint ✓; format ✓; **full suite 2368 tests / 233
+files ✓** (cov 86% stmts); compute-register Tier-A **200** ✓; doc-drift ✓
+repo-hygiene ✓ legal-notices ✓ generated-docs ✓ validate ✓; build ✓
+bundle-size ✓ dead-code/knip ✓. e2e chromium-only via scratchpad/pw-bridge
+RUNNING (last check). **WAVE 1 DONE** pending e2e confirmation.
+
+**NEXT:** Wave 2 (7 items, sub-waves 2a/2b) — headliner item 12 P2 spine-α: fold
+base AC/defense into the resolver + retire src/utils/armorClass.ts, migrating a
+NINE-importer closure (5 src + 4 test) ATOMICALLY, preserving every describe+it
+title verbatim, MANDATORY re-pin of all 8 pre-existing armorClass.ts anchors
+applied+committed at the 2a barrier before any --mutate. Also 13 (conditions-IR
+mam3e+daggerheart), 14 (pf2e multiclass dedication), 15 (RFC005 consume verb),
+16 (CI a11y+secrets-guard), 17 (feature-flags), 21 (L2 AC register migration).
+Then Wave 3 (18,19,20,22). See consensus doc for domains + constraints. Blocked
+items (human sign-off / secrets / infra / OGC source) excluded from "complete".
+
+**Landmine (pw-bridge intact this session):** scratchpad/pw-bridge has
+chromium-1208 + chromium_headless_shell-1208 symlinked → 1194 binaries; run e2e
+with PLAYWRIGHT_BROWSERS_PATH=<bridge> --project=chromium (firefox NOT bridged).
+webServer does its own build+preview on :4173.
 
 ## Landmines
 
