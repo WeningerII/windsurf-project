@@ -52,6 +52,85 @@ describe('Mam3eCreator', () => {
     expect(violations).toHaveTextContent(/Dodge \+ Toughness: 10 exceeds PL cap of 2/);
   });
 
+  it('charges skills at ceil(totalRanks / 2) via the engine and updates the readouts', () => {
+    render(<Mam3eCreator onCreate={vi.fn()} />);
+
+    fireEvent.change(screen.getByTitle('Acrobatics rank'), { target: { value: '3' } });
+    fireEvent.change(screen.getByTitle('Athletics rank'), { target: { value: '2' } });
+
+    // 3 + 2 = 5 total ranks → ceil(5 / 2) = 3 PP.
+    expect(screen.getByTestId('mam3e-creator-skills-cost')).toHaveTextContent('3 PP');
+    expect(ppReadout()).toHaveTextContent('3 / 150');
+  });
+
+  it('charges 1 PP per purchased defense rank via the engine and updates the readouts', () => {
+    render(<Mam3eCreator onCreate={vi.fn()} />);
+
+    fireEvent.change(screen.getByTitle('Dodge rank'), { target: { value: '4' } });
+    fireEvent.change(screen.getByTitle('Will rank'), { target: { value: '2' } });
+
+    // 4 + 2 = 6 purchased ranks × 1 PP = 6 PP.
+    expect(screen.getByTestId('mam3e-creator-defenses-cost')).toHaveTextContent('6 PP');
+    expect(ppReadout()).toHaveTextContent('6 / 150');
+  });
+
+  it('feeds purchased defense ranks into the engine PL-cap check', () => {
+    render(<Mam3eCreator onCreate={vi.fn()} />);
+
+    // PL 5 → Dodge+Toughness cap is 10; purchased Dodge 8 + Toughness 5 = 13.
+    fireEvent.change(screen.getByTitle('Power level'), { target: { value: '5' } });
+    fireEvent.change(screen.getByTitle('Dodge rank'), { target: { value: '8' } });
+    fireEvent.change(screen.getByTitle('Toughness rank'), { target: { value: '5' } });
+
+    expect(screen.getByTestId('mam3e-creator-pl-violations')).toHaveTextContent(
+      /Dodge \+ Toughness: 13 exceeds PL cap of 10/
+    );
+  });
+
+  it('clamps illegal negative purchased skill and defense ranks to 0', () => {
+    render(<Mam3eCreator onCreate={vi.fn()} />);
+
+    fireEvent.change(screen.getByTitle('Stealth rank'), { target: { value: '-5' } });
+    fireEvent.change(screen.getByTitle('Parry rank'), { target: { value: '-3' } });
+
+    expect(screen.getByTestId('mam3e-creator-skills-cost')).toHaveTextContent('0 PP');
+    expect(screen.getByTestId('mam3e-creator-defenses-cost')).toHaveTextContent('0 PP');
+    expect(ppReadout()).toHaveTextContent('0 / 150');
+    expect(screen.getByTitle('Stealth rank')).toHaveValue(0);
+    expect(screen.getByTitle('Parry rank')).toHaveValue(0);
+  });
+
+  it('commits skills and defenses in the raw data, which the engine then costs', () => {
+    const onCreate = vi.fn<(data: Mam3eDataModel, name: string) => void>();
+    render(<Mam3eCreator onCreate={onCreate} />);
+
+    fireEvent.change(screen.getByTitle('Perception rank'), { target: { value: '3' } });
+    fireEvent.change(screen.getByTitle('Dodge rank'), { target: { value: '2' } });
+
+    fireEvent.click(screen.getByRole('button', { name: /create character/i }));
+
+    const [data] = onCreate.mock.calls[0];
+    // Raw, pre-engine model: purchased ranks present, totals seeded to 0, spend
+    // still zero (the engine populates it at add time).
+    expect(data.skills.perception).toEqual({ rank: 3, total: 0 });
+    expect(data.defenses.dodge.rank).toBe(2);
+    expect(data.powerPoints.spent.skills).toBe(0);
+    expect(data.powerPoints.spent.defenses).toBe(0);
+
+    // Mirror the production add path: prepareData populates the spend.
+    const prepared = new Mam3eEngine().prepareData({
+      id: 'mam3e-skills-defenses',
+      name: 'Skilled Defender',
+      systemId: 'mam3e',
+      system: data,
+      createdAt: new Date(0),
+      updatedAt: new Date(0),
+      version: CURRENT_DOCUMENT_VERSION,
+    } as CharacterDocument<Mam3eDataModel>);
+    expect(prepared.system.powerPoints.spent.skills).toBe(2); // ceil(3 / 2)
+    expect(prepared.system.powerPoints.spent.defenses).toBe(2); // 2 ranks × 1 PP
+  });
+
   it('commits raw data that, prepared by the engine, round-trips through the sheet', () => {
     const onCreate = vi.fn<(data: Mam3eDataModel, name: string) => void>();
     const { unmount } = render(<Mam3eCreator onCreate={onCreate} />);
