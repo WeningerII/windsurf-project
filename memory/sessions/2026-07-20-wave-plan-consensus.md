@@ -108,6 +108,50 @@ spell-DC/attack path consolidation is explicitly deferred beyond it.
 Final integration (orchestrator): staged gate (never monolithic verify),
 docs/generated regen, memory /save, PR merge per standing directive.
 
+## Wave 3 execution grounding (scouted 2026-07-20, 4 Explore agents)
+
+All 4 mutually disjoint. 3a = items 18 + 19 concurrent; item 20 = tiny ORCHESTRATOR
+edit. 3b = item 22 alone (register owner, long tail). Contribution ledgers are
+TEST-ONLY builders (no UI consumers) — items 18/19 land as builder + tests.
+
+- **Item 18 (dnd5e-shared ledger)**: EDIT src/systems/dnd5e/shared/contributionLedger.ts
+  (add buildSpellcastingEntries — hand-built spell-DC/attack provenance rows,
+  category 'spell', wired into entries ~L66; RFC-003 P4 posture, NOT full resolver
+  routing) + dnd5eFeatureOptions.ts (carry `modifiers` through toFeature ~L92-99 so
+  feature-option effects reach resolveCharacterEffects, replacing the hand-built
+  Defense-style special-case) + src/types/character-options/feature-options.ts (add
+  modifiers?: Modifier[]) + MAYBE src/rules/compile/modifierEffects.ts (targetForModifierType
+  spell-DC/attack mappings). ZERO register edits (spell-DC/attack rows already exist
+  verified in dnd5e-2014.ts L143-168 / dnd5e-2024.ts). Disjoint from 19/20/22.
+- **Item 19 (d20-legacy ledger)**: NEW src/systems/d20-legacy/contributionLedger.ts
+  (buildD20LegacyContributionLedger, SYNCHRONOUS, mirror 5e createEntry/ledgerId;
+  BAB per-class-level add rows, saves base+abilityMod rows, 3.5e-ONLY skill-synergy
+  +2 rows [pf1e has no synergy]) + NEW src/__tests__/d20LegacyContributionLedger.test.ts
+  + OPTIONAL d20LegacySheetShared/useD20LegacySheetController surfacing (defer per
+  test-only precedent). NO register edits. Disjoint.
+- **Item 20 (prod-smoke)**: ORCHESTRATOR does it (tiny). Add `{ tag: '@smoke' }` to 3
+  existing tests: e2e/phase1-header-actions.spec.ts:63, e2e/phase3-workflows.spec.ts:144,
+  e2e/phase1-scene-selection.spec.ts:30; add package.json `test:e2e:smoke`:
+  `... && playwright test --grep @smoke --project=chromium` after :42. Do NOT touch
+  verify:52 or item 16's check:secret-exposure:26.
+- **Item 22 (build-legality validators, 3b alone)**: NEW src/rules/legality/{dnd5e,dnd35e,
+  pf1e,pf2e}.ts (validate<Sys>Build(system) → {legal, violations: BuildViolation[]};
+  pure/sync/reads engine-prepared; dnd5e shared for 2014+2024; put in src/rules/legality/
+  NOT src/systems/dnd5e/shared to avoid item 18) + NEW behavioral tests
+  src/__tests__/legality/<sys>Legality.test.ts (must NOT import docs/compute-register/**)
+  + EDIT the 5 register files docs/compute-register/{dnd5e-2014,dnd5e-2024,dnd35e,pf1e,
+  pf2e}.ts (APPEND L9 bespoke-boolean rows: formula 'flag when ...', status verified,
+  testRef → the behavioral test; zero L9 rows today = greenfield; mirror mam3e.L9.pl-cap-*
+  in mam3e.ts:229-305). RETURN new L9 mutation anchors AS DATA (orchestrator applies to
+  mutation-anchors.ts, then --mutate). NO package.json/index.ts edit (gate auto-discovers).
+  Legal rules: dnd5e class-level==level/multiclass-prereq/ASI-count; dnd35e skill-cap
+  level+3/feats 1+floor(L/3)/ASI every 4; pf1e skill-cap=level/feats ceil(L/2); pf2e
+  proficiency/boost budgets. mam3e legality is item 6's (NOT item 22).
+
+Wave-3 barrier: apply item 22 anchors → commit → typecheck → test:coverage --run
+--maxWorkers=1 → check:compute-register --mutate (flip new L9 rows) → build → e2e →
+all gates. Then FINAL integration: graphify update, regen generated docs, /save.
+
 ## Sub-wave 2a execution grounding (scouted 2026-07-20, 4 Explore agents)
 
 STRATEGY (refined from scouts): **item 12 ALONE first (2a-i)**, then **13/14/15
