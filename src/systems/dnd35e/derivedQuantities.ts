@@ -15,7 +15,8 @@
  * rank caps, and feat/ability-increase cadence stay first-class here.
  *
  * ARMOR CLASS (total / touch / flat-footed) is deliberately NOT declared here:
- * it is computed off src/utils/armorClass.ts and reserved for a later wave.
+ * it is computed through the AC resolver fold (src/rules/compile/defense.ts) and
+ * reserved for a later wave.
  */
 import type { DerivedQuantitySpec } from '../../rules/derivation';
 import { classBAB } from '../shared/d20-helpers';

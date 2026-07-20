@@ -6,7 +6,6 @@ import { dnd5eSpellAttackBonus, dnd5eSpellSaveDC } from '../../../utils/derivedC
 import { applyDerivedQuantities } from '../../../rules/derivation';
 import { DND5E_DERIVED_QUANTITIES } from './derivedQuantities';
 import { hitDieSize } from '../../../constants/hit-dice';
-import { compute5eAC } from '../../../utils/armorClass';
 import { clampCount } from '../../../utils/resourcePool';
 import {
   compute5eSpellSlots,
@@ -17,7 +16,7 @@ import {
   dnd5eUnarmoredDefenseBarbarian,
   dnd5eUnarmoredDefenseMonk,
 } from '../../../utils/derivedCombatMath';
-import { resolveCharacterEffects } from '../../../rules';
+import { resolveCharacterEffects, compute5eAC } from '../../../rules';
 import { conditionImposesDisadvantage } from '../../../rules/conditions/dnd5eConditions';
 import type { GameSystemId } from '../../../types/game-systems';
 import { hasDnd5eCondition, normalizeDnd5eConditions } from '../conditions';
@@ -234,14 +233,14 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
     // feat/feature AC bonuses through the shared rules resolver (RFC 003).
     // Additive: with no bonus-bearing gear or modifiers this contributes 0, so
     // existing AC outputs are unchanged.
-    data.armorClass =
-      this.computeBaseArmorClass(data, dexMod) +
-      getDnd5eDefenseStyleArmorClassBonus(data) +
-      resolveCharacterEffects(doc.systemId as GameSystemId, {
-        equipment: data.equipment,
-        feats: data.feats,
-        features: data.features,
-      }).bonus('ac');
+    const baseArmorClass =
+      this.computeBaseArmorClass(data, dexMod) + getDnd5eDefenseStyleArmorClassBonus(data);
+    data.armorClass = resolveCharacterEffects(doc.systemId as GameSystemId, {
+      equipment: data.equipment,
+      feats: data.feats,
+      features: data.features,
+      baseArmorClass,
+    }).bonus('ac');
     data.initiative = dexMod;
 
     // Derived quantities (Passive Perception, carrying capacity, ...) come from

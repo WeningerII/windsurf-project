@@ -7,7 +7,7 @@
  *   missing     — the rules define it; the engine does not compute it yet.
  *
  * Engine sources: src/systems/dnd5e/shared/engine.ts, src/systems/dnd5e/engine.ts,
- * src/utils/armorClass.ts, src/utils/math.ts, src/utils/spellSlots.ts.
+ * src/rules/compile/defense.ts, src/utils/math.ts, src/utils/spellSlots.ts.
  */
 
 import type { SystemComputeRegister } from './types';

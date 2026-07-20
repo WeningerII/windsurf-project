@@ -7,8 +7,11 @@ import type {
 } from '../../../types/core/contributionLedger';
 import type { ClassLevel } from '../../../types/core/character';
 import type { CharacterDocument } from '../../../types/core/document';
-import { resolveCharacterEffects, toContributionLedger } from '../../../rules';
-import { dnd5eArmorDexContribution } from '../../../utils/armorClass';
+import {
+  resolveCharacterEffects,
+  toContributionLedger,
+  dnd5eArmorDexContribution,
+} from '../../../rules';
 import { loadClassesForSystem } from '../../../utils/dataLoader';
 import {
   dnd5eUnarmoredDefenseBarbarian,

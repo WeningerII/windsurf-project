@@ -1,7 +1,7 @@
 /**
  * Compute register (Denominator B) for Pathfinder 1e, cited against the Core
  * Rulebook (open game content). Engine: src/systems/pf1e/engine.ts; shared:
- * src/systems/shared/d20-helpers.ts, src/utils/armorClass.ts.
+ * src/systems/shared/d20-helpers.ts, src/rules/compile/defense.ts.
  */
 
 import type { SystemComputeRegister } from './types';
@@ -166,7 +166,8 @@ export const pf1eComputeRegister: SystemComputeRegister = {
       id: 'pf1e.L4.max-rank-cap',
       layer: 'L4',
       quantity: 'Max skill ranks per skill',
-      formula: 'max ranks in a skill = character level (class skills add +3 to the bonus, not the cap)',
+      formula:
+        'max ranks in a skill = character level (class skills add +3 to the bonus, not the cap)',
       inputs: ['level'],
       edgeCases: ['cap is the character level, unlike 3.5e class/cross-class split'],
       source: `${CRB}: Skills — Ranks`,
@@ -248,8 +249,7 @@ export const pf1eComputeRegister: SystemComputeRegister = {
       edgeCases: ['racial/class bonus feats added separately'],
       source: `${CRB}: Character Advancement`,
       status: 'verified',
-      testRef:
-        'src/__tests__/derivation/pf1eDerivedQuantities.test.ts :: pf1e.L7.feats-from-level',
+      testRef: 'src/__tests__/derivation/pf1eDerivedQuantities.test.ts :: pf1e.L7.feats-from-level',
     },
     {
       id: 'pf1e.L6.carrying-capacity',

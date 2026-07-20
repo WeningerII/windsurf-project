@@ -149,6 +149,15 @@ export type { CharacterEffectInputs, ResolvedCharacterEffects } from './compile/
 export { resolveCharacterEffects } from './compile/characterEffects';
 
 export {
+  compute5eAC,
+  computeD20LegacyAC,
+  computePf2eAC,
+  dnd5eArmorDexContribution,
+  compileBaseArmorClassEffects,
+  D20_SIZE_MOD,
+} from './compile/defense';
+
+export {
   collectDnd5eConditionEffects,
   conditionImposesDisadvantage,
   hasDnd5eConditionEffects,

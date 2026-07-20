@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { compute5eAC, computeD20LegacyAC, computePf2eAC } from '../../utils/armorClass';
+import { compute5eAC, computeD20LegacyAC, computePf2eAC } from '../../rules/compile/defense';
 
 describe('compute5eAC', () => {
   it('handles unarmored and light/medium/heavy armor with shields', () => {

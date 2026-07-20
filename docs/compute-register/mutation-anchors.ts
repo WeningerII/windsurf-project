@@ -84,7 +84,7 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     replace: '[5, 3]',
   },
   'dnd5e2014.L2.ac.unarmored': {
-    file: 'src/utils/armorClass.ts',
+    file: 'src/rules/compile/defense.ts',
     find: '(armor ? armor.armorClass! : 10) + dnd5eArmorDexContribution(armor, dexMod)',
     replace: '(armor ? armor.armorClass! : 11) + dnd5eArmorDexContribution(armor, dexMod)',
   },
@@ -213,7 +213,7 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     replace: 'linearRate(level, 1, 2, 3)',
   },
   'dnd35e.L2.ac': {
-    file: 'src/utils/armorClass.ts',
+    file: 'src/rules/compile/defense.ts',
     find: 'const total = 10 + armorBonus + shieldBonus + effectiveDex + sizeMod;',
     replace: 'const total = 11 + armorBonus + shieldBonus + effectiveDex + sizeMod;',
   },
@@ -250,7 +250,7 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
 
   // ── pf1e (shares d20 helpers + legacy AC with 3.5e) ──
   'pf1e.L2.ac': {
-    file: 'src/utils/armorClass.ts',
+    file: 'src/rules/compile/defense.ts',
     find: 'const total = 10 + armorBonus + shieldBonus + effectiveDex + sizeMod;',
     replace: 'const total = 11 + armorBonus + shieldBonus + effectiveDex + sizeMod;',
   },
@@ -389,17 +389,17 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
   // 141 leaf-formula anchors scoped per system, each independently
   // preflighted (find occurs exactly once) and gate-verified via --mutate.
   'dnd5e2014.L2.ac.light': {
-    file: 'src/utils/armorClass.ts',
+    file: 'src/rules/compile/defense.ts',
     find: 'return dexMod;',
     replace: 'return dexMod + 1;',
   },
   'dnd5e2014.L2.ac.medium': {
-    file: 'src/utils/armorClass.ts',
+    file: 'src/rules/compile/defense.ts',
     find: 'Math.min(dexMod, armor.dexBonusMax ?? 2)',
     replace: 'Math.min(dexMod, armor.dexBonusMax ?? 3)',
   },
   'dnd5e2014.L2.ac.heavy': {
-    file: 'src/utils/armorClass.ts',
+    file: 'src/rules/compile/defense.ts',
     find: 'return 0;',
     replace: 'return 1;',
   },
@@ -495,7 +495,7 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
       "      target: 'ability-check-disabled',\n      operation: 'disadvantage',\n      label: 'Poisoned: disadvantage on ability checks',",
   },
   'dnd5e2024.L2.ac-formula-set': {
-    file: 'src/utils/armorClass.ts',
+    file: 'src/rules/compile/defense.ts',
     find: '(armor ? armor.armorClass! : 10) + dnd5eArmorDexContribution(armor, dexMod)',
     replace: '(armor ? armor.armorClass! : 11) + dnd5eArmorDexContribution(armor, dexMod)',
   },
@@ -803,7 +803,7 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     replace: 'Math.floor((score - 11) / 2)',
   },
   'pf2e.L2.ac': {
-    file: 'src/utils/armorClass.ts',
+    file: 'src/rules/compile/defense.ts',
     find: 'ac = 10 + dexMod + proficiencyBonus;',
     replace: 'ac = 11 + dexMod + proficiencyBonus;',
   },

@@ -1,5 +1,16 @@
 /**
- * Shared AC computation for d20 systems.
+ * Shared d20 defense (Armor Class) computation, relocated into the rules layer
+ * from the retired `src/utils/armorClass.ts`.
+ *
+ * Two responsibilities live here:
+ *   1. The per-system BASE-defense formulas (`compute5eAC`, `computeD20LegacyAC`,
+ *      `computePf2eAC`, and the `dnd5eArmorDexContribution` leaf they share). The
+ *      arithmetic is byte-identical to the old util so every AC test keeps its
+ *      asserted values.
+ *   2. `compileBaseArmorClassEffects`, which seeds a computed base AC as a `set`
+ *      contribution on target `'ac'` so it flows THROUGH the resolver alongside
+ *      the additive magic/feat/equip AC effects. `resolveCharacterEffects(...)
+ *      .bonus('ac')` then returns the FULL armor class (base + bonuses).
  *
  * D&D 5e (2014 & 2024):
  *   - Unarmored: 10 + DEX mod
@@ -20,7 +31,9 @@
  *     action, one round at a time) — merely equipping/holding it grants nothing
  */
 
-import { abilityMod } from './math';
+import type { GameSystemId } from '../../types/game-systems';
+import { abilityMod } from '../../utils/math';
+import { makeEffectId, type EffectInstance } from '../ir/types';
 
 /** Equipment item with optional armor stats */
 interface ArmorEquipItem {
@@ -146,4 +159,34 @@ export function computePf2eAC(
   }
 
   return ac;
+}
+
+// ─── Base AC → resolver `set` contribution ───────────────────────────────────
+
+/**
+ * Compile an already-computed base armor class into a `set` effect on target
+ * `'ac'`. The resolver folds `set` as the last-wins base, then sums the additive
+ * magic/feat/equip AC contributions on top — so a caller that also compiles
+ * equipment/modifier effects gets `base + bonuses` from `bonus('ac')`.
+ *
+ * Additive-safe: the `set` merely establishes the value the engine already
+ * computed today, so wiring it through the resolver cannot change existing AC.
+ */
+export function compileBaseArmorClassEffects(
+  systemId: GameSystemId,
+  baseArmorClass: number
+): EffectInstance[] {
+  return [
+    {
+      id: makeEffectId(systemId, 'ac', 'base', baseArmorClass),
+      systemId,
+      target: 'ac',
+      operation: 'set',
+      value: baseArmorClass,
+      stackPolicy: 'sum',
+      source: { kind: 'system', id: 'base-armor-class', label: 'Base armor class' },
+      label: 'Base armor class',
+      category: 'defense',
+    },
+  ];
 }

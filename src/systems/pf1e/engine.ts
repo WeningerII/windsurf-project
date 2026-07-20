@@ -6,8 +6,7 @@ import { Pf1eDataModel } from './data-model';
 import { PF1E_DERIVED_QUANTITIES } from './derivedQuantities';
 import { abilityMod } from '../../utils/math';
 import { CMB_SIZE_MODS, baseSave, classBAB, d20SkillCheckPenalty } from '../shared/d20-helpers';
-import { computeD20LegacyAC, D20_SIZE_MOD } from '../../utils/armorClass';
-import { resolveCharacterEffects } from '../../rules';
+import { resolveCharacterEffects, computeD20LegacyAC, D20_SIZE_MOD } from '../../rules';
 import { d20LegacyCheckPenalty } from '../../rules/conditions/d20LegacyConditions';
 import { mergeVancianSpellSlots } from '../../utils/classSpellcasting';
 import { pf1eClasses } from '../../data/pathfinder/1e/classes';
@@ -143,13 +142,18 @@ export class Pf1eEngine implements SystemEngine<Pf1eDataModel> {
     // shared rules resolver (RFC 003). Per-bonus-type routing to touch/flat-
     // footed is a Phase 2 refinement; the resolved delta applies to total here.
     // Additive: contributes 0 without bonus-bearing gear/modifiers.
+    // The {total, touch, flatFooted} tuple is not a single scalar, and today
+    // only `total` receives additive AC bonuses (touch/flat-footed take none).
+    // So the relocated helper produces the tuple, and only `total` flows through
+    // the resolver: its base seeds a `set` on 'ac', the magic/feat/equip effects
+    // add on top, and bonus('ac') returns base + bonuses — identical to before.
     const ac = computeD20LegacyAC(data.baseAttributes.dex ?? 10, data.sizeCategory, data.equipment);
-    const acBonus = resolveCharacterEffects('pf1e', {
+    data.armorClass.total = resolveCharacterEffects('pf1e', {
       equipment: data.equipment.filter((item) => item.equipped),
       feats: data.feats,
       features: data.features,
+      baseArmorClass: ac.total,
     }).bonus('ac');
-    data.armorClass.total = ac.total + acBonus;
     data.armorClass.touch = ac.touch;
     data.armorClass.flatFooted = ac.flatFooted;
 

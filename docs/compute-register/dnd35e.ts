@@ -1,7 +1,7 @@
 /**
  * Compute register (Denominator B) for D&D 3.5e, cited against SRD 3.5.
  * Engine: src/systems/dnd35e/engine.ts; shared: src/systems/shared/d20-helpers.ts,
- * src/utils/armorClass.ts.
+ * src/rules/compile/defense.ts.
  */
 
 import type { SystemComputeRegister } from './types';
