@@ -41,6 +41,49 @@ export interface Pf2eFeat {
   source: string;
 }
 
+/**
+ * Which proficiency map a multiclass dedication grant trains. Restricted to the
+ * two maps that start empty on a fresh sheet (skills, lore) so source-scoped
+ * merge/remove can aggregate and revert a dedication cleanly without disturbing
+ * the always-present base armor/weapon slots.
+ */
+export type Pf2eDedicationProficiencyCategory = 'skill' | 'lore';
+
+/**
+ * A single proficiency grant contributed by a multiclass dedication feat. The
+ * dedication trains `id` (a skill or lore key) to at least `tier`; aggregation
+ * keeps the stronger of this and any tier the class/background already granted.
+ */
+export interface Pf2eDedicationProficiencyGrant {
+  category: Pf2eDedicationProficiencyCategory;
+  id: string;
+  tier: Pf2eProficiencyTier;
+}
+
+/**
+ * Dedication proficiency progression keyed by archetype id. PF2e-local because
+ * the shared `Archetype` type carries no proficiency fields; consumed by
+ * applyPf2eArchetypeTemplate / removePf2eArchetypeTemplate to aggregate a
+ * dedication's grants into the character's proficiencies (the engine then
+ * recomputes each map's `total` generically). Cited against the PF2e Core
+ * Rulebook (OGC): Archetypes / Dedication feats.
+ */
+export const PF2E_ARCHETYPE_DEDICATION_GRANTS: Record<string, Pf2eDedicationProficiencyGrant[]> = {
+  // Wizard Dedication: trained in Arcana, plus a Lore tied to arcane academia.
+  'pf2e-wizard-archetype': [
+    { category: 'skill', id: 'arcana', tier: 'trained' },
+    { category: 'lore', id: 'academia', tier: 'trained' },
+  ],
+  // Ranger Dedication: trained in Survival.
+  'pf2e-ranger-archetype': [{ category: 'skill', id: 'survival', tier: 'trained' }],
+  // Cleric Dedication: trained in Religion.
+  'pf2e-cleric-archetype': [{ category: 'skill', id: 'religion', tier: 'trained' }],
+  // Champion Dedication: trained in Religion (deity tenets).
+  'pf2e-champion-archetype': [{ category: 'skill', id: 'religion', tier: 'trained' }],
+  // Rogue Dedication: trained in a skill of choice (Stealth).
+  'pf2e-rogue-archetype': [{ category: 'skill', id: 'stealth', tier: 'trained' }],
+};
+
 export interface Pf2eSpellcasting {
   tradition: 'arcane' | 'divine' | 'occult' | 'primal';
   type: 'prepared' | 'spontaneous' | 'innate';
