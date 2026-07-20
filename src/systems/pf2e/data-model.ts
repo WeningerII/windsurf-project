@@ -97,6 +97,9 @@ export interface Pf2eDataModel extends SystemDataModel {
   hitPoints: { current: number; max: number; temp: number; maxBonus?: number };
   armorClass: number;
   speed: number;
+  /** Engine-derived quantities keyed by compute-register id, populated by the
+   * declarative derivation layer (src/rules/derivation) in prepareData. */
+  derived: Record<string, number>;
 
   // Feats (organized by type)
   feats: Pf2eFeat[];
@@ -200,6 +203,7 @@ export const createDefaultPf2eData = (): Pf2eDataModel => ({
   hitPoints: { current: 10, max: 10, temp: 0 },
   armorClass: 10,
   speed: 25,
+  derived: {},
   feats: [],
   features: [],
   equipment: [],

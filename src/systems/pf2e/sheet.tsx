@@ -11,6 +11,9 @@ import { Pf2eArchetypesTab } from './components/Pf2eArchetypesTab';
 import { Pf2eSpellsTab } from './components/Pf2eSpellsTab';
 import { Pf2eHeader } from './components/Pf2eHeader';
 import { Pf2eOverview } from './components/Pf2eOverview';
+import { Pf2eDerivedStats } from './components/Pf2eDerivedStats';
+import { presentDerivedQuantities } from '../../rules/derivation';
+import { PF2E_DERIVED_QUANTITIES } from './derivedQuantities';
 import { Pf2eAbilitiesTab } from './components/Pf2eAbilitiesTab';
 import { Pf2eSavesTab } from './components/Pf2eSavesTab';
 import { Pf2eSkillsTab } from './components/Pf2eSkillsTab';
@@ -26,11 +29,17 @@ interface Props {
 
 export const Pf2eCharacterSheet: React.FC<Props> = ({ document, onUpdate }) => {
   const controller = usePf2eSheetController({ document, onUpdate });
+  const derivedCards = presentDerivedQuantities(
+    PF2E_DERIVED_QUANTITIES,
+    controller.data,
+    controller.data.derived
+  );
 
   return (
     <div className="max-w-5xl mx-auto space-y-6 p-6">
       <Pf2eHeader {...controller.headerProps} />
       <Pf2eOverview {...controller.overviewProps} />
+      <Pf2eDerivedStats derivedCards={derivedCards} />
       <Tabs defaultValue="abilities">
         <TabsList className="w-full grid grid-cols-10">
           <TabsTrigger value="abilities" className="flex items-center gap-1.5">

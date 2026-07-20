@@ -11,6 +11,8 @@ import { getPf2eConditionStatusPenalty } from '../../rules/conditions/pf2eCondit
 import { pf2eClasses } from '../../data/pathfinder/2e/classes';
 import { getSpellSlotsAtClassLevel, mergeMaxUsedSpellSlots } from '../../utils/classSpellcasting';
 import { hitDieFaces } from '../../utils/templateShared';
+import { applyDerivedQuantities } from '../../rules/derivation';
+import { PF2E_DERIVED_QUANTITIES } from './derivedQuantities';
 
 type Pf2eSpellcastingData = NonNullable<Pf2eDataModel['spellcasting']>;
 
@@ -222,6 +224,12 @@ export class Pf2eEngine implements SystemEngine<Pf2eDataModel> {
         },
       };
     }
+
+    // Declarative derived quantities (Bulk limits, auto-heighten rank, Class DC)
+    // come from the declarative derivation layer: each is a single cited
+    // declaration in ./derivedQuantities, computed generically here, surfaced on
+    // the sheet, and verified by one test. Adding one needs no new engine code.
+    data.derived = applyDerivedQuantities(data, PF2E_DERIVED_QUANTITIES);
 
     return clonedDoc;
   }

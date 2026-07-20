@@ -835,6 +835,11 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'return { encumbered: strMod + 5, max: strMod + 10 };',
     replace: 'return { encumbered: strMod + 6, max: strMod + 10 };',
   },
+  'pf2e.L6.bulk-max': {
+    file: 'src/utils/derivedCombatMath.ts',
+    find: 'max: strMod + 10',
+    replace: 'max: strMod + 11',
+  },
   'pf2e.L8.shield-block': {
     file: 'src/systems/pf2e/derivedMath.ts',
     find: 'return Math.max(0, damage - Math.max(0, hardness));',
