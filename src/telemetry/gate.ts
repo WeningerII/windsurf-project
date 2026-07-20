@@ -17,6 +17,8 @@
  * throw on `localStorage` degrade to "not enabled", never to a crash.
  */
 
+import { isFeatureEnabled } from '../config/featureFlags';
+
 /** localStorage key holding the user's explicit opt-in choice ('true'/'false'). */
 export const OPT_IN_STORAGE_KEY = 'telemetry:opt-in';
 
@@ -33,7 +35,7 @@ function readStoredOptIn(): boolean | undefined {
 }
 
 function readBuildDefault(): boolean {
-  return import.meta.env.VITE_TELEMETRY_ENABLED === 'true';
+  return isFeatureEnabled('telemetry');
 }
 
 /**
