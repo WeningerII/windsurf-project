@@ -33,11 +33,35 @@ gap-ledger 23 items 9 done, roadmap-metrics, graph); secrets ✓ legal-notices �
 repo-hygiene ✓; **e2e chromium 36 passed ✓** (via pw-bridge). Waves 1 & 2 were
 each independently fully gated earlier.
 
-**STATE: plan fully executed & pushed.** HEAD `56e891b`. No open work items from
-the wave plan. Blocked items (human sign-off / secrets / infra / OGC source,
-e.g. srd-coverage NETWORK regen, encoding missing individuals) remain
-intentionally OUT of scope for "complete" — see consensus doc. Next session:
-await new direction; if resuming, `/resume` + re-read the consensus doc.
+**FOLLOW-UP BATCH (post-plan, maintainer approved "all recommendations") — DONE
++ FULLY GATED GREEN:** the previously-blocked items I could action:
+- **Exhaustion −2/level sign-off RATIFIED** `14727e7` (ledger review item → done;
+  SRD 5.2 RAW confirmed).
+- **a11y color-contrast remediated + ENFORCED** `507e888`: KNOWN_A11Y_DEBT now
+  EMPTY. Fixed `--muted-foreground` 46.9→43% L and `--destructive` 60.2→42% L
+  (red-700) — red-500 failed AA as both text (3.29–3.76:1) AND button label;
+  darkened globally (maintainer had no-preference). Light theme only; a11y e2e green.
+- **AI-gateway provider-agnosticism + durable rate-limit store** `c5b0959`
+  (netlify/functions/**): AI_PROVIDER registry (delegates to selectAiProvider) +
+  RateLimitStore interface (in-memory default + inert RATE_LIMIT_STORE_URL stub) +
+  adapter README + 11 tests. Built on item-8 DI; default-off byte-identical.
+- **RFC 007 AI-DM runtime (Draft)** `62e3da5`; **Sentry+Supabase DR runbooks**
+  `30258f7` (docs/runbooks/, honest DORMANT-alert notes); **PF1e equipment sourcing
+  recommendation** `30258f7` (docs/proposals/ — verdict: source via PSRD-Data
+  core_rulebook/item, 590 Core items, encode is a follow-on).
+- doc-drift manifest register `4eea6a1`+`bcacdf3` (new docs; runbooks='plan' not
+  'live' — live requires rule coverage). Regen/graph this batch: graphify only.
+- **BATCH BARRIER ALL GREEN:** full suite 245 files / 2463 tests (cov ~86%),
+  lint, build, bundle, compute-register Tier A 210, knip, validate,
+  typecheck:netlify + 103 gateway tests, doc-drift, generated-docs, secrets,
+  legal, repo-hygiene, **e2e 36 passed**, a11y e2e (contrast enforced) passed.
+
+**STILL BLOCKED (need human/secrets/infra/network, NOT code-doable here):**
+screen-reader listen-through; live secrets/infra (Sentry DSN, Supabase creds,
+durable rate-limit backend, staged rollout); PF1e equipment ENCODE (network +
+follow-on per the proposal); AI-DM implementation (RFC 007 must be accepted
+first). srd-coverage network regen + encoding missing individuals still deferred.
+Next session: await direction; `/resume` + re-read the consensus doc.
 
 ## Landmines
 
