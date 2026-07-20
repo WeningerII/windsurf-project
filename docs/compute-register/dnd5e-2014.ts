@@ -361,9 +361,9 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       inputs: ['character level'],
       edgeCases: ['per-cantrip dice progression'],
       source: `${SRD}: Cantrips`,
-      status: 'missing',
-      testRef: 'src/__tests__/derivedCasterMath.test.ts :: 5e cantrip scaling tier',
-      note: 'Canonical helper (derivedCasterMath.ts) is test-pinned but not consumed by any engine or sheet; per the legend, unwired quantities are missing.',
+      status: 'verified',
+      testRef:
+        'src/__tests__/derivation/dnd5eDerivedQuantities.test.ts :: dnd5e.L5.cantrip-scaling',
     },
 
     // ── L7 resources & progression ──

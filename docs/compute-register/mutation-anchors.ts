@@ -56,6 +56,33 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'Math.max(0, strengthScore) * 15',
     replace: 'Math.max(0, strengthScore) * 16',
   },
+  'dnd5e2024.L6.push-drag-lift': {
+    file: 'src/systems/dnd5e/shared/dnd5eMovement.ts',
+    find: 'Math.max(0, strengthScore) * 30',
+    replace: 'Math.max(0, strengthScore) * 31',
+  },
+  'dnd5e2024.L6.long-jump': {
+    file: 'src/systems/dnd5e/shared/dnd5eMovement.ts',
+    find: 'const full = Math.max(0, strengthScore);',
+    replace: 'const full = Math.max(0, strengthScore) + 1;',
+  },
+  'dnd5e2024.L6.high-jump': {
+    file: 'src/systems/dnd5e/shared/dnd5eMovement.ts',
+    find: 'const full = Math.max(0, 3 + strengthMod);',
+    replace: 'const full = Math.max(0, 4 + strengthMod);',
+  },
+  // cantrip damage tier: both editions share dnd5eCantripScaleTier (breakpoints
+  // 5/11/17); the same [5, 2] base-step perturbation flips each edition's test.
+  'dnd5e2014.L5.cantrip-scaling': {
+    file: 'src/utils/derivedCasterMath.ts',
+    find: '[5, 2]',
+    replace: '[5, 3]',
+  },
+  'dnd5e2024.L5.cantrip-scaling': {
+    file: 'src/utils/derivedCasterMath.ts',
+    find: '[5, 2]',
+    replace: '[5, 3]',
+  },
   'dnd5e2014.L2.ac.unarmored': {
     file: 'src/utils/armorClass.ts',
     find: '(armor ? armor.armorClass! : 10) + dnd5eArmorDexContribution(armor, dexMod)',

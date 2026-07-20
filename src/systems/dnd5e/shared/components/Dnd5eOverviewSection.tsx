@@ -1,5 +1,17 @@
 // purpose: Overview section — at-a-glance HP/AC/initiative/spell-attack snapshot above the tabs.
-import { BookOpen, Eye, Gauge, Heart, Shield, Sparkles, Target, Weight } from 'lucide-react';
+import {
+  BookOpen,
+  Dumbbell,
+  Eye,
+  Gauge,
+  Heart,
+  MoveHorizontal,
+  MoveVertical,
+  Shield,
+  Sparkles,
+  Target,
+  Weight,
+} from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import type { PresentedDerivedQuantity } from '../../../../rules/derivation';
 import { DamageHealControl } from '../../../../components/DamageHealControl';
@@ -25,7 +37,13 @@ type HitPoints = {
 // Icons the declarative derived quantities may name (spec.display.icon). Unknown
 // names fall back to a neutral gauge, so a new quantity renders without editing
 // this component.
-const DERIVED_ICON_BY_NAME: Record<string, LucideIcon> = { Eye, Weight };
+const DERIVED_ICON_BY_NAME: Record<string, LucideIcon> = {
+  Eye,
+  Weight,
+  Dumbbell,
+  MoveHorizontal,
+  MoveVertical,
+};
 function derivedIcon(name?: string): LucideIcon {
   return (name && DERIVED_ICON_BY_NAME[name]) || Gauge;
 }
