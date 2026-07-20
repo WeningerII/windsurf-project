@@ -54,12 +54,17 @@ scratchpad/pw-bridge, 2.4m). **WAVE 1 COMPLETE + FULLY GATED (green).**
 `6555170`. Barrier: tsc, lint, format, --mutate(200/0), full suite 2435 tests,
 build, bundle, knip, all light gates, e2e 34 flows + a11y gate GREEN (fixed
 aria-prohibited-attr/select-name/label-title-only; color-contrast baselined as
-KNOWN_A11Y_DEBT for a design pass). **NEXT: WAVE 3** — 3a items 18 (dnd5e-shared
-ledger) + 19 (d20-legacy ledger) concurrent; item 20 (prod-smoke) = ORCHESTRATOR
-edit (3 @smoke tags + package.json test:e2e:smoke); 3b item 22 (build-legality
-validators, register owner) alone. Grounding + domains in
-[[sessions/2026-07-20-wave-plan-consensus]]. Then final integration
-(graphify update, regen generated docs, /save).
+KNOWN_A11Y_DEBT for a design pass). **WAVE 3 IN FLIGHT (3a done, 3b running):**
+item 20 (prod-smoke @smoke tags + package.json test:e2e:smoke) ✅ `d1a665e`;
+item 18 (dnd5e-shared spell-DC/attack ledger + feature-option resolver surfacing)
+✅ `02a4a34`; item 19 (d20-legacy BAB/saves/3.5e-synergy ledger, test-only,
+consensus ACCEPT) ✅ `8190769`. **3b item 22 (build-legality validators, register
+owner) RUNNING** (wf implement→3-lens verify: SRD-correctness/scope+anti-bootstrap/
+mutation-sensitivity; returns L9 mutation anchors AS DATA for orchestrator to apply
+to mutation-anchors.ts). After ACCEPT: apply anchors → commit → wave-3 barrier
+(tsc, test:coverage --maxWorkers=1, --mutate flip new L9 rows, build, e2e) → final
+integration (graphify update, regen gap-ledger/roadmap-metrics/generated-docs,
+/save). Grounding in [[sessions/2026-07-20-wave-plan-consensus]].
 
 **--- prior wave-2 detail (superseded) ---**
 Sub-wave 2a-i ✅: **item 12 (AC/defense resolver fold)**
