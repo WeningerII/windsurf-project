@@ -25,7 +25,19 @@ import {
   normalizeDaggerheartCurrency,
 } from '../../rules/daggerheartInventory';
 import { normalizeDaggerheartDocument } from './daggerheartNormalization';
+import { collectDaggerheartConditionEffects } from '../../rules/conditions/daggerheartConditions';
 import type { DaggerheartTrait } from '../../types/daggerheart';
+
+/**
+ * Read any self-condition ids a document carries. Daggerheart's data model has no
+ * conditions field of its own, so this narrows defensively — an absent/malformed
+ * field yields no conditions and no provenance.
+ */
+function readDaggerheartSelfConditionIds(system: DaggerheartDataModel): string[] {
+  const raw = (system as { conditions?: unknown }).conditions;
+  if (!Array.isArray(raw)) return [];
+  return raw.filter((id): id is string => typeof id === 'string');
+}
 
 export class DaggerheartEngine implements SystemEngine<DaggerheartDataModel> {
   prepareData(
@@ -109,6 +121,20 @@ export class DaggerheartEngine implements SystemEngine<DaggerheartDataModel> {
     // rolled; Daggerheart has no fumble result (Daggerheart SRD: Duality Dice).
     const outcome = getDaggerheartDualityOutcome(hopeDie, fearDie);
 
+    // RAW: the roller's OWN conditions (Vulnerable/Restrained/Hidden) change
+    // INCOMING rolls and movement — never their own duality roll. Collect them
+    // purely as note-only provenance; they NEVER fold into total/terms/outcome.
+    // When absent (the common case, and every existing roll) flavor is unchanged.
+    const conditionNotes = collectDaggerheartConditionEffects(
+      readDaggerheartSelfConditionIds(document.system)
+    );
+    const baseFlavor =
+      outcome === 'hope'
+        ? `Hope (${hopeDie}) vs Fear (${fearDie}) — with Hope!`
+        : outcome === 'critical'
+          ? `Hope (${hopeDie}) = Fear (${fearDie}) — Critical!`
+          : `Hope (${hopeDie}) vs Fear (${fearDie}) — with Fear`;
+
     return {
       total,
       formula: `2d12 + ${mod} (${checkId})`,
@@ -117,12 +143,9 @@ export class DaggerheartEngine implements SystemEngine<DaggerheartDataModel> {
       isFumble: false,
       // Daggerheart vocabulary, not the d20 "NAT 20!" default.
       outcomeLabel: outcome === 'critical' ? 'Critical!' : undefined,
-      flavor:
-        outcome === 'hope'
-          ? `Hope (${hopeDie}) vs Fear (${fearDie}) — with Hope!`
-          : outcome === 'critical'
-            ? `Hope (${hopeDie}) = Fear (${fearDie}) — Critical!`
-            : `Hope (${hopeDie}) vs Fear (${fearDie}) — with Fear`,
+      flavor: conditionNotes.length
+        ? `${baseFlavor} [${conditionNotes.map((effect) => effect.source.label).join(', ')}]`
+        : baseFlavor,
     };
   }
 

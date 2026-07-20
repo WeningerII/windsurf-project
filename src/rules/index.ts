@@ -176,8 +176,16 @@ export {
   D20_LEGACY_CONDITION_IDS,
 } from './conditions/d20LegacyConditions';
 
+export { collectSceneConditionEffects } from './conditions/sceneConditions';
+
 export {
-  collectSceneConditionEffects,
+  collectMam3eConditionEffects,
   mam3eBruisePenalty,
+  mam3eToughnessPenalty,
+} from './conditions/mam3eConditions';
+
+export {
+  collectDaggerheartConditionEffects,
+  hasDaggerheartConditionEffects,
   DAGGERHEART_CONDITION_IDS,
-} from './conditions/sceneConditions';
+} from './conditions/daggerheartConditions';
