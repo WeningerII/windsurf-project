@@ -1119,4 +1119,59 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'return { survives: true, clears: hopeDie };',
     replace: 'return { survives: true, clears: hopeDie + 1 };',
   },
+  // ── L9 build-legality validators (src/rules/legality/**) ──
+  // Each anchor weakens one cap comparison (`> cap` -> `> cap + 100`) so the
+  // rule never flags; its illegal fixture then loses its violation and the
+  // testRef'd legality assertion flips red. Per-edition/per-rule variable names
+  // keep every find string unique within its file.
+  'dnd5e2014.L9.ability-score-cap': {
+    file: 'src/rules/legality/dnd5e.ts',
+    find: 'abilityScoreValue2014 > abilityScoreCap2014',
+    replace: 'abilityScoreValue2014 > abilityScoreCap2014 + 100',
+  },
+  'dnd5e2014.L9.class-level-sum': {
+    file: 'src/rules/legality/dnd5e.ts',
+    find: 'classLevelSumValue2014 > characterLevelValue2014',
+    replace: 'classLevelSumValue2014 > characterLevelValue2014 + 100',
+  },
+  'dnd5e2024.L9.ability-score-cap': {
+    file: 'src/rules/legality/dnd5e.ts',
+    find: 'abilityScoreValue2024 > abilityScoreCap2024',
+    replace: 'abilityScoreValue2024 > abilityScoreCap2024 + 100',
+  },
+  'dnd5e2024.L9.class-level-sum': {
+    file: 'src/rules/legality/dnd5e.ts',
+    find: 'classLevelSumValue2024 > characterLevelValue2024',
+    replace: 'classLevelSumValue2024 > characterLevelValue2024 + 100',
+  },
+  'dnd35e.L9.skill-max-ranks': {
+    file: 'src/rules/legality/dnd35e.ts',
+    find: 'skillRankValue > skillRankCap',
+    replace: 'skillRankValue > skillRankCap + 100',
+  },
+  'dnd35e.L9.class-level-sum': {
+    file: 'src/rules/legality/dnd35e.ts',
+    find: 'classLevelSumValue > characterLevelValue',
+    replace: 'classLevelSumValue > characterLevelValue + 100',
+  },
+  'pf1e.L9.skill-max-ranks': {
+    file: 'src/rules/legality/pf1e.ts',
+    find: 'skillRankValue > skillRankLimit',
+    replace: 'skillRankValue > skillRankLimit + 100',
+  },
+  'pf1e.L9.class-level-sum': {
+    file: 'src/rules/legality/pf1e.ts',
+    find: 'classLevelSumValue > characterLevelValue',
+    replace: 'classLevelSumValue > characterLevelValue + 100',
+  },
+  'pf2e.L9.ability-score-cap': {
+    file: 'src/rules/legality/pf2e.ts',
+    find: 'abilityScoreValue > abilityScoreCap',
+    replace: 'abilityScoreValue > abilityScoreCap + 100',
+  },
+  'pf2e.L9.proficiency-budget': {
+    file: 'src/rules/legality/pf2e.ts',
+    find: 'proficiencyTotalValue > proficiencyBudget',
+    replace: 'proficiencyTotalValue > proficiencyBudget + 100',
+  },
 };

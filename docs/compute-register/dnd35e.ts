@@ -331,6 +331,31 @@ export const dnd35eComputeRegister: SystemComputeRegister = {
       status: 'verified',
       testRef: `${T} :: L8 D&D 3.5e massive damage and HP state`,
     },
+    {
+      id: 'dnd35e.L9.skill-max-ranks',
+      layer: 'L9',
+      quantity: 'Max skill ranks (class = level+3, cross-class = ⌊(level+3)/2⌋)',
+      formula:
+        "flag when a skill's ranks exceed its maximum (class skill = level+3; cross-class = ⌊(level+3)/2⌋)",
+      inputs: ['skillRanks', 'classSkills', 'level'],
+      edgeCases: ['exactly at limit legal', 'over limit flagged'],
+      source: `${SRD}: Skills — Maximum Ranks`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/legality/dnd35eLegality.test.ts :: dnd35e flags skill ranks above the class-skill maximum',
+    },
+    {
+      id: 'dnd35e.L9.class-level-sum',
+      layer: 'L9',
+      quantity: 'Class levels sum to character level',
+      formula: 'flag when Σ classLevels.level exceeds character level',
+      inputs: ['classLevels', 'level'],
+      edgeCases: ['exactly at limit legal', 'over limit flagged'],
+      source: `${SRD}: Advancement`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/legality/dnd35eLegality.test.ts :: dnd35e flags class levels exceeding character level',
+    },
   ],
 };
 

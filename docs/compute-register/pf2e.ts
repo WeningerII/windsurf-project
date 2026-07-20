@@ -319,6 +319,31 @@ export const pf2eComputeRegister: SystemComputeRegister = {
       status: 'verified',
       testRef: `${T} :: L10 PF2e encounter math`,
     },
+    {
+      id: 'pf2e.L9.ability-score-cap',
+      layer: 'L9',
+      quantity: 'Ability score creation cap (≤ 18 at level 1)',
+      formula: 'flag when a level-1 base ability score exceeds 18',
+      inputs: ['baseAttributes', 'level'],
+      edgeCases: ['exactly at limit legal', 'over limit flagged'],
+      source: `${CRB}: Character Creation — Ability Scores`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/legality/pf2eLegality.test.ts :: pf2e flags a level-1 ability score above 18',
+    },
+    {
+      id: 'pf2e.L9.proficiency-budget',
+      layer: 'L9',
+      quantity: 'Proficiency total budget (≤ level + tier bonus)',
+      formula:
+        'flag when a proficiency total exceeds level + tier bonus (untrained budget is 0)',
+      inputs: ['skillProficiencies', 'saveProficiencies', 'armorProficiencies', 'level'],
+      edgeCases: ['exactly at limit legal', 'over limit flagged'],
+      source: `${CRB}: Proficiency`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/legality/pf2eLegality.test.ts :: pf2e flags a proficiency total above the level-plus-tier budget',
+    },
   ],
 };
 

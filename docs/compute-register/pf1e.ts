@@ -330,6 +330,30 @@ export const pf1eComputeRegister: SystemComputeRegister = {
       status: 'verified',
       testRef: `${T} :: L8 d20-legacy damage application`,
     },
+    {
+      id: 'pf1e.L9.skill-max-ranks',
+      layer: 'L9',
+      quantity: 'Max skill ranks per skill (≤ character level)',
+      formula: "flag when a skill's ranks exceed the character level",
+      inputs: ['skillRanks', 'level'],
+      edgeCases: ['exactly at limit legal', 'over limit flagged'],
+      source: `${CRB}: Skills — Ranks`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/legality/pf1eLegality.test.ts :: pf1e flags skill ranks above the character level',
+    },
+    {
+      id: 'pf1e.L9.class-level-sum',
+      layer: 'L9',
+      quantity: 'Class levels sum to character level',
+      formula: 'flag when Σ classLevels.level exceeds character level',
+      inputs: ['classLevels', 'level'],
+      edgeCases: ['exactly at limit legal', 'over limit flagged'],
+      source: `${CRB}: Character Advancement`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/legality/pf1eLegality.test.ts :: pf1e flags class levels exceeding character level',
+    },
   ],
 };
 

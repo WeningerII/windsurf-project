@@ -373,6 +373,30 @@ export const dnd5e2024ComputeRegister: SystemComputeRegister = {
       testRef: 'src/__tests__/derivedCasterMath.test.ts :: 5e concentration DC',
       note: 'Canonical helper is test-pinned but not consumed by any engine or sheet; per the legend, unwired quantities are missing.',
     },
+    {
+      id: 'dnd5e2024.L9.ability-score-cap',
+      layer: 'L9',
+      quantity: 'Ability score cap (base score ≤ 20)',
+      formula: 'flag when any base ability score exceeds 20',
+      inputs: ['baseAttributes'],
+      edgeCases: ['exactly at limit legal', 'over limit flagged'],
+      source: `${SRD}: Ability Scores and Modifiers (maximum 20)`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/legality/dnd5eLegality.test.ts :: dnd5e 2024 flags a base ability score above 20',
+    },
+    {
+      id: 'dnd5e2024.L9.class-level-sum',
+      layer: 'L9',
+      quantity: 'Class levels sum to character level',
+      formula: 'flag when Σ classLevels.level exceeds character level',
+      inputs: ['classLevels', 'level'],
+      edgeCases: ['exactly at limit legal', 'over limit flagged'],
+      source: `${SRD}: Multiclassing`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/legality/dnd5eLegality.test.ts :: dnd5e 2024 flags class levels exceeding character level',
+    },
   ],
 };
 
