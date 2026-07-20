@@ -23,21 +23,26 @@ as "5e vs non-5e" (hard, repeated user constraint).**
 **Wave 1 progress (sub-waves 1a done, 1b in flight, 1c queued):**
 - 1a ✅ pf2e `f6606ef`, mam3e `f3b507f`, daggerheart `592a134`, 5e-family
   `4a5864f`, housekeeping `2dc4d2c` — declarative derived quantities, gated.
-- 1b: item 6 M&M creator inc2 ✅ `d606754`; item 5 d20-family (3.5e+PF1e derived
-  quantities, generic `presentDerivedQuantities` render) ✅ `808f8f8` (added
-  anchor `pf1e.L4.max-rank-cap`; Tier-A = 200 verified entries, all resolve).
-  Item 9 telemetry scaffold ⏳ running (task `wyhu79olz`; domain src/telemetry/**,
-  performanceMonitoring.ts, main.tsx). Item 7 RFC006 3.5e Encounter-Level
-  budgets ⏳ running (task `w07imq9bh`; domain src/scene/**, components/scene/**,
-  __tests__/scene/**, rfc/006). No more 1b items to launch.
+- 1b ✅ COMPLETE + barrier-gated (typecheck app+test clean; 572 tests/41 files
+  green single-worker): item 6 M&M creator inc2 `d606754`; item 5 d20-family
+  (3.5e+PF1e derived quantities, generic `presentDerivedQuantities` render)
+  `808f8f8` (added anchor `pf1e.L4.max-rank-cap`; Tier-A = 200 verified entries);
+  item 9 telemetry scaffold `5c856fb` (opt-in/no-PII; I fixed CLS rounding →
+  cumulative + fractional precision); item 7 RFC006 3.5e Encounter-Level budgets
+  `edcc88e` (consensus ACCEPT — derived CR→value scale pinned to SRD +2-doubling,
+  additive, drafter↔validator consistent; RFC prose updated four→five systems).
 
-**NEXT:** (1) await items 7+9 → per-completion commit+push each; (2) 1b barrier
-gate (tree reconcile → typecheck → targeted vitest on changed domains,
-single-worker); (3) sub-wave 1c: item 8 AI-gateway hardening, item 10 content
-coverage, item 11 RFC004 bestiary route → closes wave 1 (`graphify update` +
-full wave-1 barrier). Then Wave 2 (7 items incl. item 12 AC/defense resolver
-fold with atomic anchor re-pin) + Wave 3 (4 items). Blocked items (human
-sign-off / secrets / infra / OGC source) excluded from "complete".
+**NEXT:** sub-wave 1c (3 items, disjoint domains per consensus) → closes wave 1:
+- item 8 AI-gateway hardening (netlify/functions/**, src/ai/**, utils/syncEngine.ts,
+  utils/rateLimit.ts NEW, .env.example, rfc/002).
+- item 10 content coverage (scripts/srd-coverage.ts, src/data/**, docs/srd-sources.md,
+  pf1e-bestiary-manifest.json; network regen deferred to integration).
+- item 11 RFC004 bestiary route (new page, hooks/useAppNav.ts OWNED, App.tsx OWNED,
+  monster-loader WIRING that consumes existing loaders — must NOT edit src/data/**).
+After 1c: `graphify update` + full wave-1 barrier (`test:coverage -- --run
+--maxWorkers=1`). Then Wave 2 (7 items incl. item 12 AC/defense resolver fold with
+atomic anchor re-pin) + Wave 3 (4 items). Blocked items (human sign-off / secrets /
+infra / OGC source) excluded from "complete".
 
 ## Landmines
 
