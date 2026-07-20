@@ -16,6 +16,7 @@ export const SheetHeader: React.FC<Props> = ({ name, onNameChange, children, rig
           onChange={(e) => onNameChange?.(e.target.value)}
           className="text-2xl font-bold bg-transparent border-b border-transparent hover:border-input focus:border-primary focus:outline-none w-full"
           title="Character name"
+          aria-label="Character name"
           placeholder="Character name"
           disabled={!onNameChange}
         />

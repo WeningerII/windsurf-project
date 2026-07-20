@@ -129,6 +129,7 @@ export function Dnd5eOverviewSection({
                 }
                 className="w-16 text-center text-3xl font-bold bg-transparent border-b border-input focus:outline-none focus:border-primary tabular-nums"
                 title="Current hit points"
+                aria-label="Current hit points"
                 disabled={!canUpdate}
               />
               <span className="text-muted-foreground">/</span>
@@ -138,6 +139,7 @@ export function Dnd5eOverviewSection({
                 onChange={(event) => onHitPointsChange?.({ max: parseNum(event.target.value, 1) })}
                 className="w-16 text-center text-lg bg-transparent border-b border-input focus:outline-none focus:border-primary tabular-nums"
                 title="Maximum hit points"
+                aria-label="Maximum hit points"
                 disabled={!canUpdate}
               />
             </div>

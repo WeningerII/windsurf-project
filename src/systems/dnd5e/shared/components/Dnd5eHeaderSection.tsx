@@ -56,6 +56,7 @@ export function Dnd5eHeaderSection({
         onChange={(event) => onSpeciesChange?.(event.target.value)}
         className="px-2 py-0.5 border border-input rounded bg-transparent focus:outline-none focus:border-primary text-sm"
         title="Species"
+        aria-label="Species"
         disabled={!canUpdate}
       >
         <option value="">Species...</option>
@@ -70,6 +71,7 @@ export function Dnd5eHeaderSection({
         onChange={(event) => onBackgroundChange?.(event.target.value)}
         className="px-2 py-0.5 border border-input rounded bg-transparent focus:outline-none focus:border-primary text-sm"
         title="Background"
+        aria-label="Background"
         disabled={!canUpdate}
       >
         <option value="">Background...</option>
@@ -87,6 +89,7 @@ export function Dnd5eHeaderSection({
         className="w-20 text-center bg-transparent border-b border-input focus:outline-none focus:border-primary tabular-nums"
         min={0}
         title="Experience points"
+        aria-label="Experience points"
         disabled={!canUpdate}
       />
     </SheetHeader>

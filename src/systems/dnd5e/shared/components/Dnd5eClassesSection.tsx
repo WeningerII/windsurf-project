@@ -174,6 +174,7 @@ export function Dnd5eClassesSection({
                     }
                     className="w-full px-3 py-2 border border-input rounded-md bg-transparent focus:outline-none focus:border-primary text-sm"
                     title={`Class ${index + 1}`}
+                    aria-label={`Class ${index + 1}`}
                     disabled={!canUpdate}
                   >
                     <option value="">Class...</option>

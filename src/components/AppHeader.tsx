@@ -155,6 +155,7 @@ export function AppHeader({
                   value={currentDocId || ''}
                   onChange={(e) => onSelectCharacter(e.target.value)}
                   className="w-40 md:w-56 hidden sm:flex"
+                  aria-label="Switch character"
                 >
                   <option value="">Switch character...</option>
                   {documents.map((doc) => (

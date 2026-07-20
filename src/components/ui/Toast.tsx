@@ -40,6 +40,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     <ToastContext.Provider value={{ toast }}>
       {children}
       <div
+        role="region"
         className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm"
         aria-label="Notifications"
       >
