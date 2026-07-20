@@ -1,7 +1,9 @@
 import { SystemEngine, RollResult } from '../../registry/types';
 import { CharacterDocument } from '../../types/core/document';
 import { rollD20 } from '../../rules/dice';
+import { applyDerivedQuantities } from '../../rules/derivation';
 import { Dnd35eDataModel } from './data-model';
+import { DND35E_DERIVED_QUANTITIES } from './derivedQuantities';
 import { abilityMod } from '../../utils/math';
 import { dnd35eSkillSynergyTotal } from '../../utils/derivedCombatMath';
 import { GRAPPLE_SIZE_MODS, baseSave, classBAB, d20SkillCheckPenalty } from '../shared/d20-helpers';
@@ -157,6 +159,12 @@ export class Dnd35eEngine implements SystemEngine<Dnd35eDataModel> {
 
     // --- Grapple ---
     data.grapple = totalBAB + strMod + grappleSizeMod;
+
+    // --- Declarative standing derived quantities (total BAB, max skill ranks,
+    // feats/ability increases from level, …). One call computes every spec in
+    // derivedQuantities.ts; the shared d20-legacy sheet reads data.derived and
+    // the compute register's mutation gate verifies each. ---
+    data.derived = applyDerivedQuantities(data, DND35E_DERIVED_QUANTITIES);
 
     return clonedDoc;
   }

@@ -619,6 +619,12 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'return isClassSkill ? level + 3 : Math.floor((level + 3) / 2);',
     replace: 'return isClassSkill ? level + 4 : Math.floor((level + 3) / 2);',
   },
+  // PF1e caps ranks at character level (no class/cross-class split).
+  'pf1e.L4.max-rank-cap': {
+    file: 'src/utils/derivedCombatMath.ts',
+    find: 'return level;',
+    replace: 'return level + 1;',
+  },
   'dnd35e.L4.initiative': {
     file: 'src/systems/dnd35e/engine.ts',
     find: 'data.initiative = dexMod;',

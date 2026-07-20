@@ -78,7 +78,7 @@ export const pf1eComputeRegister: SystemComputeRegister = {
       edgeCases: ['feeds CMB/CMD'],
       source: `${CRB}: Combat — Attack Bonus`,
       status: 'verified',
-      testRef: `${T} :: L3 Pathfinder 1e CMB / CMD and favored-class HP`,
+      testRef: 'src/__tests__/derivation/pf1eDerivedQuantities.test.ts :: pf1e.L3.bab-sum',
     },
     {
       id: 'pf1e.L3.cmb',
@@ -163,6 +163,17 @@ export const pf1eComputeRegister: SystemComputeRegister = {
       testRef: `${T} :: L2/L4 Pathfinder 1e check resolution`,
     },
     {
+      id: 'pf1e.L4.max-rank-cap',
+      layer: 'L4',
+      quantity: 'Max skill ranks per skill',
+      formula: 'max ranks in a skill = character level (class skills add +3 to the bonus, not the cap)',
+      inputs: ['level'],
+      edgeCases: ['cap is the character level, unlike 3.5e class/cross-class split'],
+      source: `${CRB}: Skills — Ranks`,
+      status: 'verified',
+      testRef: 'src/__tests__/derivation/pf1eDerivedQuantities.test.ts :: pf1e.L4.max-rank-cap',
+    },
+    {
       id: 'pf1e.L4.initiative',
       layer: 'L4',
       quantity: 'Initiative',
@@ -237,7 +248,8 @@ export const pf1eComputeRegister: SystemComputeRegister = {
       edgeCases: ['racial/class bonus feats added separately'],
       source: `${CRB}: Character Advancement`,
       status: 'verified',
-      testRef: `${T} :: L5/L8 Pathfinder 1e concentration, death, and feats`,
+      testRef:
+        'src/__tests__/derivation/pf1eDerivedQuantities.test.ts :: pf1e.L7.feats-from-level',
     },
     {
       id: 'pf1e.L6.carrying-capacity',

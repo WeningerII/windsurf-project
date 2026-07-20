@@ -1,7 +1,9 @@
 import { SystemEngine, RollResult } from '../../registry/types';
 import { CharacterDocument } from '../../types/core/document';
 import { rollD20 } from '../../rules/dice';
+import { applyDerivedQuantities } from '../../rules/derivation';
 import { Pf1eDataModel } from './data-model';
+import { PF1E_DERIVED_QUANTITIES } from './derivedQuantities';
 import { abilityMod } from '../../utils/math';
 import { CMB_SIZE_MODS, baseSave, classBAB, d20SkillCheckPenalty } from '../shared/d20-helpers';
 import { computeD20LegacyAC, D20_SIZE_MOD } from '../../utils/armorClass';
@@ -163,6 +165,12 @@ export class Pf1eEngine implements SystemEngine<Pf1eDataModel> {
       data.sizeCategory === 'fine';
     data.cmb = totalBAB + (tinyOrSmaller ? dexMod : strMod) + cmbSizeMod;
     data.cmd = 10 + totalBAB + strMod + dexMod + cmbSizeMod;
+
+    // --- Declarative standing derived quantities (total BAB, max skill ranks,
+    // feats from level, …). One call computes every spec in derivedQuantities.ts;
+    // the shared d20-legacy sheet reads data.derived and the compute register's
+    // mutation gate verifies each. ---
+    data.derived = applyDerivedQuantities(data, PF1E_DERIVED_QUANTITIES);
 
     return clonedDoc;
   }

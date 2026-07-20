@@ -78,7 +78,7 @@ export const dnd35eComputeRegister: SystemComputeRegister = {
       edgeCases: ['multiclass full + half'],
       source: `${SRD}: Combat — Attack Bonus`,
       status: 'verified',
-      testRef: `${T} :: L3 D&D 3.5e BAB, saves, HP, grapple`,
+      testRef: 'src/__tests__/derivation/dnd35eDerivedQuantities.test.ts :: dnd35e.L3.bab-sum',
     },
     {
       id: 'dnd35e.L3.grapple',
@@ -160,7 +160,7 @@ export const dnd35eComputeRegister: SystemComputeRegister = {
       edgeCases: ['cross-class half cap'],
       source: `${SRD}: Skills — Ranks`,
       status: 'verified',
-      testRef: 'src/__tests__/derivedCombatMath.test.ts :: 3.5e skill synergy and max ranks',
+      testRef: 'src/__tests__/derivation/dnd35eDerivedQuantities.test.ts :: dnd35e.L4.max-rank-cap',
     },
     {
       id: 'dnd35e.L4.initiative',
@@ -282,7 +282,8 @@ export const dnd35eComputeRegister: SystemComputeRegister = {
       edgeCases: ['racial/class bonus feats added separately'],
       source: `${SRD}: Character Advancement`,
       status: 'verified',
-      testRef: `${T} :: L5/L7 D&D 3.5e concentration, feats, and ability increases`,
+      testRef:
+        'src/__tests__/derivation/dnd35eDerivedQuantities.test.ts :: dnd35e.L7.feats-from-level',
     },
     {
       id: 'dnd35e.L7.ability-increases',
@@ -293,7 +294,8 @@ export const dnd35eComputeRegister: SystemComputeRegister = {
       edgeCases: ['at 4th/8th/12th/16th/20th'],
       source: `${SRD}: Character Advancement`,
       status: 'verified',
-      testRef: `${T} :: L5/L7 D&D 3.5e concentration, feats, and ability increases`,
+      testRef:
+        'src/__tests__/derivation/dnd35eDerivedQuantities.test.ts :: dnd35e.L7.ability-increases',
     },
     {
       id: 'dnd35e.L1.xp-to-level',
