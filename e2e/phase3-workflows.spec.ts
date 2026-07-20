@@ -141,7 +141,7 @@ test('offers system choices in the New Character dialog', async ({ page }) => {
   await expect(page.getByRole('button', { name: /Pathfinder 2e/i })).toBeVisible();
 });
 
-test('creates a D&D 5e-2024 character and displays character sheet', async ({ page }) => {
+test('creates a D&D 5e-2024 character and displays character sheet', { tag: '@smoke' }, async ({ page }) => {
   await createCharacterForSystem(page);
   await renameCharacter(page, 'E2E Fighter');
 

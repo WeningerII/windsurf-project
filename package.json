@@ -40,6 +40,7 @@
     "test:e2e": "npm run node:check && node scripts/check-playwright-browsers.mjs && playwright test",
     "test:e2e:headed": "npm run node:check && node scripts/check-playwright-browsers.mjs && playwright test --headed",
     "test:e2e:ui": "npm run node:check && node scripts/check-playwright-browsers.mjs && playwright test --ui",
+    "test:e2e:smoke": "npm run node:check && node scripts/check-playwright-browsers.mjs && playwright test --grep @smoke --project=chromium",
     "docs": "typedoc",
     "roadmap:metrics": "npm run node:check && tsx src/scripts/generate-roadmap-metrics.ts",
     "gap:ledger": "npm run node:check && tsx src/scripts/generate-master-gap-ledger.ts",
