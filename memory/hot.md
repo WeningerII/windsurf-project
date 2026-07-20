@@ -49,7 +49,20 @@ repo-hygiene ✓ legal-notices ✓ generated-docs ✓ validate ✓; build ✓
 bundle-size ✓ dead-code/knip ✓. **e2e chromium 34 passed ✓** (via
 scratchpad/pw-bridge, 2.4m). **WAVE 1 COMPLETE + FULLY GATED (green).**
 
-**WAVE 2 IN FLIGHT.** Sub-wave 2a-i ✅: **item 12 (AC/defense resolver fold)**
+**WAVE 2 ✅ COMPLETE + FULLY GATED GREEN.** Items 12 `d286b2d`, 13 `6e9bc6d`, 14
+`baaa9f2`, 15 `3c1881d`, 17 `98d8fbc`, 16 `343fbec`, 21 `ecaf780` + a11y fix
+`6555170`. Barrier: tsc, lint, format, --mutate(200/0), full suite 2435 tests,
+build, bundle, knip, all light gates, e2e 34 flows + a11y gate GREEN (fixed
+aria-prohibited-attr/select-name/label-title-only; color-contrast baselined as
+KNOWN_A11Y_DEBT for a design pass). **NEXT: WAVE 3** — 3a items 18 (dnd5e-shared
+ledger) + 19 (d20-legacy ledger) concurrent; item 20 (prod-smoke) = ORCHESTRATOR
+edit (3 @smoke tags + package.json test:e2e:smoke); 3b item 22 (build-legality
+validators, register owner) alone. Grounding + domains in
+[[sessions/2026-07-20-wave-plan-consensus]]. Then final integration
+(graphify update, regen generated docs, /save).
+
+**--- prior wave-2 detail (superseded) ---**
+Sub-wave 2a-i ✅: **item 12 (AC/defense resolver fold)**
 landed `d286b2d` — retired src/utils/armorClass.ts → src/rules/compile/defense.ts
 (base AC as resolver `set` on target 'ac'; d20 touch/flatFooted = relocated
 helper; D20_SIZE_MOD preserved for attacks). 9-importer atomic migration,
