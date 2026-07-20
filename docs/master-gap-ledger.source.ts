@@ -330,12 +330,12 @@ export const MASTER_GAP_LEDGER: readonly GapLedgerItem[] = [
     id: 'review.dnd5e-2024-exhaustion',
     phase: 3,
     track: 'B-compute',
-    title: '5e-2024 exhaustion −2/level change — human sign-off',
+    title: '5e-2024 exhaustion −2/level change — human sign-off (ratified)',
     detail:
-      'The only shipped rule-behavior change (src/systems/dnd5e-2024/engine.ts exhaustion −2 per level) warrants explicit human sign-off before it is considered settled.',
-    status: 'pending',
+      'The only shipped rule-behavior change (src/systems/dnd5e-2024/engine.ts exhaustion −2 per level) required explicit human sign-off. RATIFIED 2026-07-20: confirmed against SRD 5.2 RAW (each level of exhaustion imposes −2 to d20 tests); Dnd5e2024Engine.getExhaustionD20Penalty is settled and test-pinned.',
+    status: 'done',
     tags: ['human-signoff'],
     system: 'dnd-5e-2024',
-    evidence: 'src/systems/dnd5e-2024/engine.ts',
+    evidence: 'src/systems/dnd5e-2024/engine.ts; ratified by maintainer 2026-07-20 (SRD 5.2 RAW)',
   },
 ];
