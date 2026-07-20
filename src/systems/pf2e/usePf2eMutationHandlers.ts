@@ -7,6 +7,7 @@ import {
   nextPf2eTier,
   shortRestPf2eSpellcasting,
 } from './pf2eSheetShared';
+import { consume, poolFromRemaining, remainingOf } from '../../utils/resourcePool';
 
 export type Pf2eInventoryBrowserItem = {
   id: string;
@@ -214,6 +215,34 @@ export function usePf2eMutationHandlers({ document, onUpdate }: UsePf2eMutationH
     [data.inventory, update]
   );
 
+  const consumeInventoryItem = useCallback(
+    (itemId: string) => {
+      const index = data.inventory.findIndex((item) => item.itemId === itemId);
+      if (index < 0) {
+        return;
+      }
+
+      const current = data.inventory[index];
+      // Deplete one unit through the shared `consume` verb; `depleted` drives
+      // removal of the emptied stack.
+      const { pool, depleted } = consume(poolFromRemaining(current.quantity, current.quantity));
+      if (depleted) {
+        update({
+          inventory: data.inventory.filter((_, entryIndex) => entryIndex !== index),
+        });
+        return;
+      }
+
+      const nextQuantity = remainingOf(pool);
+      update({
+        inventory: data.inventory.map((item, entryIndex) =>
+          entryIndex === index ? { ...item, quantity: nextQuantity } : item
+        ),
+      });
+    },
+    [data.inventory, update]
+  );
+
   const rollCheck = useCallback(
     (checkId: string) => systemRegistry.get(document.systemId)!.engine.rollCheck(document, checkId),
     [document]
@@ -335,6 +364,7 @@ export function usePf2eMutationHandlers({ document, onUpdate }: UsePf2eMutationH
     removeFeat,
     addInventoryItem,
     removeInventoryItem,
+    consumeInventoryItem,
     equipArmor,
     equipShield,
     unequipArmor,

@@ -11,6 +11,7 @@ import {
   spendD20LegacySpellSlot,
   type D20LegacyData,
 } from './d20LegacySheetShared';
+import { consume, poolFromRemaining, remainingOf } from '../../utils/resourcePool';
 
 interface UseD20LegacyMutationHandlersProps {
   typedDocument: CharacterDocument<D20LegacyData>;
@@ -364,6 +365,34 @@ export function useD20LegacyMutationHandlers({
     [sys.inventory, update]
   );
 
+  const consumeItem = useCallback(
+    (itemId: string) => {
+      const index = sys.inventory.findIndex((entry) => entry.itemId === itemId);
+      if (index < 0) {
+        return;
+      }
+
+      const current = sys.inventory[index];
+      // Deplete one stacked unit through the shared `consume` verb; drop the
+      // whole entry once `depleted` reports the stack is empty.
+      const { pool, depleted } = consume(poolFromRemaining(current.quantity, current.quantity));
+      if (depleted) {
+        update({
+          inventory: sys.inventory.filter((_, entryIndex) => entryIndex !== index),
+        } as Partial<D20LegacyData>);
+        return;
+      }
+
+      const nextQuantity = remainingOf(pool);
+      update({
+        inventory: sys.inventory.map((entry, entryIndex) =>
+          entryIndex === index ? { ...entry, quantity: nextQuantity } : entry
+        ),
+      } as Partial<D20LegacyData>);
+    },
+    [sys.inventory, update]
+  );
+
   return {
     canUpdate,
     selectedTraitId,
@@ -386,6 +415,7 @@ export function useD20LegacyMutationHandlers({
     setArcaneSpecialtySchool,
     addFeat,
     addItem,
+    consumeItem,
     equipArmor,
     equipShield,
     unequipArmor,

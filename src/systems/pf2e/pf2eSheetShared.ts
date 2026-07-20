@@ -4,6 +4,7 @@ import {
   remainingShape,
   reset,
   restore,
+  setMax,
   type ResourcePool,
 } from '../../utils/resourcePool';
 
@@ -60,6 +61,37 @@ export function getPf2eBulkState(totalBulk: number, strengthModifier: number): P
     maxBulk,
     isEncumbered: totalBulk > encumbered,
     isOverloaded: totalBulk > maxBulk,
+  };
+}
+
+/**
+ * Re-cap the focus pool to `nextMax` when the character's capacity changes on a
+ * level-up (or any recompute), routing the change through the shared `setMax`
+ * leveling primitive so the count of *expended* focus points is preserved and
+ * the remaining `current` is re-clamped into the new capacity — never silently
+ * refunded on a cap drop, never overflowed on a cap raise. The `nextMax` is the
+ * value produced by the existing capacity derivation (the formula stays in the
+ * data-model/engine); this only applies it against the pool. A `nextMax` equal
+ * to the current cap is a pure, behavior-preserving re-validation.
+ */
+export function setPf2eFocusMax(
+  spellcasting: Pf2eSpellcasting | undefined,
+  nextMax: number
+): Pf2eSpellcasting | undefined {
+  if (!spellcasting) {
+    return spellcasting;
+  }
+
+  const next = remainingShape(
+    setMax(
+      poolFromRemaining(spellcasting.focusPoints.current, spellcasting.focusPoints.max),
+      nextMax
+    )
+  );
+
+  return {
+    ...spellcasting,
+    focusPoints: { ...spellcasting.focusPoints, current: next.current, max: next.max },
   };
 }
 

@@ -15,6 +15,7 @@ import {
   normalizeDaggerheartCurrency,
 } from '../../rules/daggerheartInventory';
 import { createLiveRng } from '../../scene/seededRng';
+import { consume, poolFromRemaining, remainingOf } from '../../utils/resourcePool';
 import {
   clearAllStress,
   clearStress,
@@ -249,14 +250,19 @@ export function useDaggerheartMutationHandlers({
       }
 
       const current = data.inventory[index];
-      if (current.quantity <= 1) {
+      // Generalized onto the shared `consume` verb: model the stacked quantity
+      // as a pool, deplete one unit, and let `depleted` decide whether the
+      // emptied stack is removed from the sheet.
+      const { pool, depleted } = consume(poolFromRemaining(current.quantity, current.quantity));
+      if (depleted) {
         removeInventoryEntry(index);
         return;
       }
 
+      const nextQuantity = remainingOf(pool);
       updateInventory(
         data.inventory.map((entry, entryIndex) =>
-          entryIndex === index ? { ...entry, quantity: entry.quantity - 1 } : entry
+          entryIndex === index ? { ...entry, quantity: nextQuantity } : entry
         )
       );
     },
