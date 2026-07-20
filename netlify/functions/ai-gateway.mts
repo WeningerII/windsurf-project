@@ -1,30 +1,40 @@
 /**
  * AI gateway — Netlify Function entry point. Thin glue: read the provider key
- * from the server environment (never the browser bundle), select an adapter via
- * the SDK-free provider factory (injecting the real Gemini builder), and delegate
- * to the pure, tested HTTP/core logic. With no key and the default provider the
- * core returns `provider-not-configured` and the client falls back to the manual
- * tools — the local-first guarantee.
+ * from the server environment (never the browser bundle), resolve an adapter via
+ * the provider-agnostic registry (`AI_PROVIDER`, default `gemini`; injecting the
+ * real Gemini builder), and delegate to the pure, tested HTTP/core logic. With no
+ * key and the default provider the core returns `provider-not-configured` and the
+ * client falls back to the manual tools — the local-first guarantee.
  *
  * The only provider SDK (`@ai-sdk/google`) is confined to `geminiAdapter.mts`;
- * the factory here merely chooses which adapter to build, keeping `src/ai/**`
- * and the browser bundle SDK-free.
+ * the registry here merely chooses which adapter to build, keeping `src/ai/**`
+ * and the browser bundle SDK-free. Rate limiting goes through a pluggable
+ * {@link RateLimitStore} (in-memory by default; durable-ready via
+ * `RATE_LIMIT_STORE_URL`) — see `netlify/functions/README.md`.
  */
 import { processGatewayHttp } from '../../src/ai/gatewayHttp';
-import { selectAiProvider } from '../../src/ai/providerFactory';
 import { createConsoleLogSink } from '../../src/ai/gatewayLog';
-import { createRateLimiter, type RateLimiter } from '../../src/utils/rateLimit';
+import type { RateLimiter } from '../../src/utils/rateLimit';
+import { resolveProviderAdapter } from './providerRegistry.mts';
+import { rateLimiterFromStore, resolveRateLimitStore } from './rateLimitStore.mts';
 import { createGeminiAdapter } from './geminiAdapter.mts';
 
 /**
  * Build a request limiter from env, or `undefined` (no limiting — today's
- * behavior) when `AI_RATE_LIMIT` is unset or non-positive.
+ * behavior) when `AI_RATE_LIMIT` is unset or non-positive. Counting lives behind
+ * a {@link RateLimitStore}: the in-memory default, or a durable backend when one
+ * is provisioned (`RATE_LIMIT_STORE_URL` + a wired driver); with neither set this
+ * is byte-for-byte the previous in-memory limiter.
  */
 function rateLimiterFromEnv(): RateLimiter | undefined {
   const limit = Number(process.env.AI_RATE_LIMIT);
   if (!Number.isFinite(limit) || limit <= 0) return undefined;
   const windowMs = Number(process.env.AI_RATE_LIMIT_WINDOW_MS);
-  return createRateLimiter({
+  // No durable driver is wired in this entry yet, so the resolver returns the
+  // in-memory store whether or not RATE_LIMIT_STORE_URL is set. Wire a driver
+  // here (second arg) once a backend is provisioned.
+  const store = resolveRateLimitStore({ RATE_LIMIT_STORE_URL: process.env.RATE_LIMIT_STORE_URL });
+  return rateLimiterFromStore(store, {
     limit,
     windowMs: Number.isFinite(windowMs) && windowMs > 0 ? windowMs : 60_000,
   });
@@ -42,10 +52,10 @@ export default async (req: Request): Promise<Response> => {
   const model = process.env.AI_GATEWAY_MODEL;
   const imageModel = process.env.AI_IMAGE_MODEL;
 
-  const adapter = selectAiProvider(
+  const adapter = resolveProviderAdapter(
     { provider: process.env.AI_PROVIDER, apiKey },
     {
-      // Only invoked when the factory selects Google AND a key is present, so the
+      // Only invoked when the registry selects Gemini AND a key is present, so the
       // non-null assertion is safe. Keeps the SDK import confined to the adapter.
       createGoogleAdapter: () =>
         createGeminiAdapter(apiKey as string, model || undefined, imageModel || undefined),
