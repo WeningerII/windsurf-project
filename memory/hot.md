@@ -46,8 +46,8 @@ as "5e vs non-5e" (hard, repeated user constraint).**
 typecheck app+test+netlify ✓; lint ✓; format ✓; **full suite 2368 tests / 233
 files ✓** (cov 86% stmts); compute-register Tier-A **200** ✓; doc-drift ✓
 repo-hygiene ✓ legal-notices ✓ generated-docs ✓ validate ✓; build ✓
-bundle-size ✓ dead-code/knip ✓. e2e chromium-only via scratchpad/pw-bridge
-RUNNING (last check). **WAVE 1 DONE** pending e2e confirmation.
+bundle-size ✓ dead-code/knip ✓. **e2e chromium 34 passed ✓** (via
+scratchpad/pw-bridge, 2.4m). **WAVE 1 COMPLETE + FULLY GATED (green).**
 
 **NEXT:** Wave 2 (7 items, sub-waves 2a/2b) — headliner item 12 P2 spine-α: fold
 base AC/defense into the resolver + retire src/utils/armorClass.ts, migrating a
