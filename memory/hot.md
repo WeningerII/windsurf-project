@@ -56,10 +56,17 @@ helper; D20_SIZE_MOD preserved for attacks). 9-importer atomic migration,
 consensus ACCEPT (3 skeptics). Orchestrator re-pinned all 8 AC anchors to
 defense.ts + fixed 2 stale comments. Mini-barrier GREEN: tsc app+test, 694
 AC/engine/resolver tests, compute-register Tier-A 200 (full --mutate deferred to
-2a barrier). Sub-wave 2a-ii RUNNING: items 13 (conditions-IR mam3e+daggerheart),
-14 (pf2e multiclass dedication), 15 (RFC005 consume verb + leveling) — mutually
-disjoint, launched against item 12's base. After 2a-ii: 2a barrier (incl.
-compute-register --mutate to flip all 8 AC anchors) → sub-wave 2b (16,17,21).
+2a barrier). Sub-wave 2a-ii ✅ ALL ACCEPT: item 13 conditions-IR `6e9bc6d` (mam3e Toughness
+selector + daggerheart note-only, engines byte-identical, applyMam3eToughness
+Failure export preserved); item 14 pf2e dedication `baaa9f2` (PF2e-local grants
+table + mergeProficiencySource, signatures stable, no engine edit); item 15
+RFC005 consume verb + leveling `3c1881d` (pure consume returning {pool,depleted},
+per-system consume handlers, setPf2eFocusMax via setMax; mam3e untouched per
+RFC005). **2a BARRIER:** typecheck app+test ✓; targeted vitest 1189 tests/78
+files ✓ (all engines/resolver/conditions/dedication/consume). ⏳
+check:compute-register --mutate RUNNING (mandatory: flip all 8 re-pinned AC
+anchors). After --mutate green: sub-wave 2b (16 CI a11y+secrets-guard, 17
+feature-flags, 21 L2 AC register migration). Then Wave 3 (18,19,20,22).
 
 **PRIOR NEXT (now superseded):** Wave 2 (7 items, sub-waves 2a/2b) — headliner item 12 P2 spine-α: fold
 base AC/defense into the resolver + retire src/utils/armorClass.ts, migrating a
