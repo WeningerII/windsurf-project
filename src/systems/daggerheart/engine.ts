@@ -8,8 +8,10 @@
 import { CharacterDocument } from '../../types/core/document';
 import { rollDuality } from '../../rules/dice';
 import { SystemEngine, RollResult } from '../../registry/types';
+import { applyDerivedQuantities } from '../../rules/derivation';
 import { clampCount } from '../../utils/resourcePool';
 import { createDefaultDaggerheartData, DaggerheartDataModel } from './data-model';
+import { DAGGERHEART_DERIVED_QUANTITIES } from './derivedQuantities';
 import {
   DAGGERHEART_MAX_HOPE,
   getDaggerheartDerivedStats,
@@ -78,6 +80,13 @@ export class DaggerheartEngine implements SystemEngine<DaggerheartDataModel> {
     d.system.armor.current = clampCount(d.system.armor.current, d.system.armor.max);
     // Hope is capped at 6 (Daggerheart SRD: Hope) and can never go negative.
     d.system.hope = clampCount(d.system.hope, DAGGERHEART_MAX_HOPE);
+
+    // Declarative standing derived quantities (Tier, Proficiency, damage
+    // thresholds, …). One call computes every spec in derivedQuantities.ts; the
+    // sheet reads system.derived and the compute register's mutation gate
+    // verifies each. Runs after the derived-stats block so the thresholds it
+    // reads are already prepared.
+    d.system.derived = applyDerivedQuantities(d.system, DAGGERHEART_DERIVED_QUANTITIES);
 
     return d;
   }
