@@ -10,6 +10,8 @@ import {
   pf1eEncounterXpBudget,
   pf2eEncounterBudget,
   pf2eCreatureXp,
+  dnd35eEncounterBudget,
+  dnd35eCreatureValue,
 } from '../../scene/encounterDraft';
 import { validateEncounterSpec, type EncounterSpec } from '../../scene/encounterSpec';
 
@@ -64,8 +66,8 @@ describe('validateEncounterSpec — happy path', () => {
 });
 
 describe('validateEncounterSpec — error codes', () => {
-  it('unsupported-system: 3.5e has no summed-XP budget model', () => {
-    const result = validateEncounterSpec(spec({ systemId: 'dnd-3.5e' }), { monsters: catalog });
+  it('unsupported-system: a system with no budget model at all', () => {
+    const result = validateEncounterSpec(spec({ systemId: 'daggerheart' }), { monsters: catalog });
     expect(result.valid).toBe(false);
     expect(result.issues.map((i) => i.code)).toEqual(['unsupported-system']);
     expect(result.budget).toBe(0);
@@ -175,12 +177,12 @@ describe('validateEncounterSpec — warnings', () => {
 });
 
 describe('shared budget/cost dispatch', () => {
-  it('supportsEncounterBudget gates exactly the four budgeted systems', () => {
+  it('supportsEncounterBudget gates exactly the five budgeted systems', () => {
     expect(supportsEncounterBudget('dnd-5e-2014')).toBe(true);
     expect(supportsEncounterBudget('dnd-5e-2024')).toBe(true);
+    expect(supportsEncounterBudget('dnd-3.5e')).toBe(true);
     expect(supportsEncounterBudget('pf1e')).toBe(true);
     expect(supportsEncounterBudget('pf2e')).toBe(true);
-    expect(supportsEncounterBudget('dnd-3.5e')).toBe(false);
     expect(supportsEncounterBudget('mam3e')).toBe(false);
     expect(supportsEncounterBudget('daggerheart')).toBe(false);
   });
@@ -195,16 +197,24 @@ describe('shared budget/cost dispatch', () => {
     expect(encounterPartyBudget('pf2e', party, 'moderate')).toBe(
       pf2eEncounterBudget(party, 'moderate')
     );
-    expect(encounterPartyBudget('dnd-3.5e', party, 'moderate')).toBe(0);
+    expect(encounterPartyBudget('dnd-3.5e', party, 'high')).toBe(
+      dnd35eEncounterBudget(party, 'high')
+    );
+    // APL 4, moderate -> EL 4 -> derived value 200.
+    expect(encounterPartyBudget('dnd-3.5e', party, 'moderate')).toBe(200);
   });
 
-  it('monsterEncounterCost uses XP for d20 systems and party-relative cost for PF2e', () => {
+  it('monsterEncounterCost uses XP for 5e/PF1e, party-relative for PF2e, EL-value for 3.5e', () => {
     const m = monster({ id: 'x', experiencePoints: 700, challengeRating: 3, system: 'pf2e' });
     expect(monsterEncounterCost('dnd-5e-2014', m, [3, 3, 3, 3])).toBe(700);
     expect(monsterEncounterCost('pf1e', m, [3, 3, 3, 3])).toBe(700);
     // PF2e: party level = round(avg(3,3,3,3)) = 3; creature level 3 vs party 3 = 40.
     expect(monsterEncounterCost('pf2e', m, [3, 3, 3, 3])).toBe(pf2eCreatureXp(3, 3));
     expect(monsterEncounterCost('pf2e', m, [3, 3, 3, 3])).toBe(40);
+    // 3.5e ignores raw XP and prices off the derived EL-value scale (CR 3 = 140).
+    const m35 = monster({ id: 'y', experiencePoints: 700, challengeRating: 3, system: 'dnd-3.5e' });
+    expect(monsterEncounterCost('dnd-3.5e', m35, [4, 4, 4, 4])).toBe(dnd35eCreatureValue(3));
+    expect(monsterEncounterCost('dnd-3.5e', m35, [4, 4, 4, 4])).toBe(140);
   });
 });
 
@@ -256,5 +266,33 @@ describe('drafter <-> validator consistency', () => {
     );
     expect(result.valid).toBe(true);
     expect(result.totalXp).toBe(draft.totalXp);
+  });
+
+  it('a 3.5e draft (derived EL-value cost) validates with the shared dispatch', () => {
+    const dnd35eCatalog = [
+      monster({ id: 'dnd35e-a', system: 'dnd-3.5e', source: 'SRD 3.5', challengeRating: 1 }),
+      monster({ id: 'dnd35e-b', system: 'dnd-3.5e', source: 'SRD 3.5', challengeRating: 2 }),
+      monster({ id: 'dnd35e-c', system: 'dnd-3.5e', source: 'SRD 3.5', challengeRating: 4 }),
+    ];
+    const partyLevels = [4, 4, 4, 4];
+    const draft = draftEncounter({
+      monsters: dnd35eCatalog,
+      partyLevels,
+      difficulty: 'high',
+      seed: 'consistency-dnd35e',
+      systemId: 'dnd-3.5e',
+      budget: encounterPartyBudget('dnd-3.5e', partyLevels, 'high'),
+      costFor: (m) => monsterEncounterCost('dnd-3.5e', m, partyLevels),
+    });
+    expect(draft.selections.length).toBeGreaterThan(0);
+
+    const result = validateEncounterSpec(
+      { systemId: 'dnd-3.5e', difficulty: 'high', partyLevels, selections: draft.selections },
+      { monsters: dnd35eCatalog }
+    );
+    expect(result.valid).toBe(true);
+    expect(result.issues.filter((i) => i.severity === 'error')).toHaveLength(0);
+    expect(result.totalXp).toBe(draft.totalXp);
+    expect(result.remaining).toBeGreaterThanOrEqual(0);
   });
 });

@@ -1,6 +1,13 @@
 import { describe, it, expect } from 'vitest';
 
-import { draftEncounter, partyXpBudget, xpBudgetPerCharacter } from '../../scene/encounterDraft';
+import {
+  draftEncounter,
+  partyXpBudget,
+  xpBudgetPerCharacter,
+  dnd35eEncounterBudget,
+  dnd35eCreatureValue,
+  monsterEncounterCost,
+} from '../../scene/encounterDraft';
 import { summarizeEncounterPlan } from '../../scene/encounterBuilder';
 import type { Monster } from '../../types/creatures/monsters';
 
@@ -146,6 +153,77 @@ describe('PF1e CRB encounter budgets', () => {
     });
     expect(summary.issues).toHaveLength(0);
     expect(summary.totalXp).toBe(draft.totalXp);
+  });
+});
+
+describe('D&D 3.5e Encounter-Level budgets (derived EL-value scale)', () => {
+  it('preserves the SRD +2-EL-doubling invariant: value(CR+2) === 2 * value(CR)', () => {
+    // The core correctness contract. Two CR-X creatures cost 2*value(X), which
+    // must equal value(X+2) — i.e. exactly an EL X+2 encounter.
+    for (let cr = 1; cr <= 18; cr += 1) {
+      expect(dnd35eCreatureValue(cr + 2)).toBe(2 * dnd35eCreatureValue(cr));
+    }
+    // Spot-check both parity chains numerically.
+    expect(dnd35eCreatureValue(3)).toBe(2 * dnd35eCreatureValue(1)); // 140 === 2*70
+    expect(dnd35eCreatureValue(4)).toBe(2 * dnd35eCreatureValue(2)); // 200 === 2*100
+    expect(dnd35eCreatureValue(20)).toBe(2 * dnd35eCreatureValue(18)); // 51200 === 2*25600
+  });
+
+  it('two CR-X monsters cost the same as one EL-(X+2) budget', () => {
+    // Standard encounter at EL 5 for an APL-5 party = value(5). Two CR-3
+    // monsters (2 * value(3)) compose to that same EL 5 value.
+    const twoCr3 = 2 * dnd35eCreatureValue(3);
+    expect(twoCr3).toBe(dnd35eCreatureValue(5));
+    // And an APL-5 moderate budget is exactly value(5).
+    expect(dnd35eEncounterBudget([5, 5, 5, 5], 'moderate')).toBe(dnd35eCreatureValue(5));
+  });
+
+  it('maps low/moderate/high to EL = APL-1/APL/APL+1 for a party of four', () => {
+    const party4 = [4, 4, 4, 4]; // APL 4
+    expect(dnd35eEncounterBudget(party4, 'low')).toBe(dnd35eCreatureValue(3)); // EL 3 = 140
+    expect(dnd35eEncounterBudget(party4, 'moderate')).toBe(dnd35eCreatureValue(4)); // EL 4 = 200
+    expect(dnd35eEncounterBudget(party4, 'high')).toBe(dnd35eCreatureValue(5)); // EL 5 = 280
+    // A lone on-APL monster spends the standard (moderate) budget exactly.
+    expect(dnd35eEncounterBudget(party4, 'moderate')).toBe(200);
+  });
+
+  it('rounds APL to the nearest whole level and clamps the target EL to 1..20', () => {
+    // avg 4.5 rounds to 5 (Math.round: half up).
+    expect(dnd35eEncounterBudget([4, 4, 5, 5], 'moderate')).toBe(dnd35eCreatureValue(5));
+    // APL 1, low difficulty would be EL 0 -> clamped to EL 1.
+    expect(dnd35eEncounterBudget([1, 1, 1, 1], 'low')).toBe(dnd35eCreatureValue(1));
+    // APL 20, high difficulty would be EL 21 -> clamped to EL 20.
+    expect(dnd35eEncounterBudget([20, 20, 20, 20], 'high')).toBe(dnd35eCreatureValue(20));
+    // No party -> no budget.
+    expect(dnd35eEncounterBudget([], 'moderate')).toBe(0);
+  });
+
+  it('drafts 3.5e monsters within the EL budget, deterministically', () => {
+    const base = monster('x', 0, 'dnd-3.5e');
+    const catalog35 = [
+      { ...base, id: 'kobold', challengeRating: 1 },
+      { ...base, id: 'orc', challengeRating: 2 },
+      { ...base, id: 'ogre', challengeRating: 3 },
+      { ...base, id: 'giant', challengeRating: 8 },
+    ] as unknown as Monster[];
+    const partyLevels = [6, 6, 6, 6]; // APL 6, high -> EL 7 -> value 560
+    const budget = dnd35eEncounterBudget(partyLevels, 'high');
+    const params = {
+      monsters: catalog35,
+      partyLevels,
+      difficulty: 'high' as const,
+      seed: 'dnd35e-draft-1',
+      systemId: 'dnd-3.5e',
+      budget,
+      costFor: (m: Monster) => monsterEncounterCost('dnd-3.5e', m, partyLevels),
+    };
+    const draft = draftEncounter(params);
+    expect(draft.budget).toBe(560);
+    expect(draft.selections.length).toBeGreaterThan(0);
+    expect(draft.totalXp).toBeLessThanOrEqual(budget);
+    // The CR-8 giant (value 800 > 560) can never be drafted into this budget.
+    expect(draft.selections.some((s) => s.monsterId === 'giant')).toBe(false);
+    expect(draftEncounter(params).selections).toEqual(draft.selections);
   });
 });
 
