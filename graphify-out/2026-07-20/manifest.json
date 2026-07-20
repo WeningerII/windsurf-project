@@ -55,8 +55,8 @@
     "semantic_hash": "a1b8f23b1952493828f101c62cd3d27b"
   },
   "docs/doc-drift.manifest.ts": {
-    "mtime": 1783633520.0609114,
-    "ast_hash": "670bb6a28cc8ce06f47f573e15233cd2",
+    "mtime": 1784585660.1951902,
+    "ast_hash": "fdf9248d21b8db46022cc5614187ef12",
     "semantic_hash": ""
   },
   "docs/doc-drift.rules.ts": {
@@ -65,8 +65,8 @@
     "semantic_hash": "7d81f6d2b5a01dbf70bb8cb2775ae990"
   },
   "docs/generated/roadmap-metrics.json": {
-    "mtime": 1784575381.243139,
-    "ast_hash": "96e197849801e263b45e56aa7d3f641e",
+    "mtime": 1784585301.2271886,
+    "ast_hash": "4c2131c76be0012b7af4487ef510c451",
     "semantic_hash": ""
   },
   "docs/generated/verification-baseline.json": {
@@ -150,8 +150,8 @@
     "semantic_hash": ""
   },
   "netlify/functions/ai-gateway.mts": {
-    "mtime": 1784565768.395091,
-    "ast_hash": "78d4acb9ab3311d1e2e2673f0d3785ff",
+    "mtime": 1784584457.7111843,
+    "ast_hash": "18dba8b578712bd40d21e64a29933989",
     "semantic_hash": ""
   },
   "netlify/functions/geminiAdapter.mts": {
@@ -3225,13 +3225,13 @@
     "semantic_hash": ""
   },
   "docs/generated/master-gap-ledger.json": {
-    "mtime": 1784575381.243139,
-    "ast_hash": "5781ee6f876dc1c02c568a8633076ca2",
+    "mtime": 1784585301.2271886,
+    "ast_hash": "b0abe63d797765faed7a33292990df13",
     "semantic_hash": ""
   },
   "docs/master-gap-ledger.source.ts": {
-    "mtime": 1784567108.1430976,
-    "ast_hash": "6d2a254c3606251c1afa5dbd8091da76",
+    "mtime": 1784583774.0351808,
+    "ast_hash": "5907b154cf733c7a1d35a44c7afb6664",
     "semantic_hash": ""
   },
   "e2e/legal-notices.spec.ts": {
@@ -3795,8 +3795,8 @@
     "semantic_hash": ""
   },
   "e2e/a11y.spec.ts": {
-    "mtime": 1784577670.0551505,
-    "ast_hash": "a0bf102a5e25e38a15f52e5a477d6cca",
+    "mtime": 1784584258.6071832,
+    "ast_hash": "e9065d034c6aa726aaa97e2c8a9367a3",
     "semantic_hash": ""
   },
   "scripts/check-secret-exposure.mjs": {
@@ -3912,6 +3912,21 @@
   "src/systems/d20-legacy/contributionLedger.ts": {
     "mtime": 1784578938.1911566,
     "ast_hash": "59ad4f3f9f5c243cfd92602b83eb4948",
+    "semantic_hash": ""
+  },
+  "netlify/functions/gatewayHardening.registry.test.mts": {
+    "mtime": 1784584403.911184,
+    "ast_hash": "c3db640050405561c4fcbd0f4dbdd0c0",
+    "semantic_hash": ""
+  },
+  "netlify/functions/providerRegistry.mts": {
+    "mtime": 1784584283.4271834,
+    "ast_hash": "c6a2ff013258f8684379832c7284ad5f",
+    "semantic_hash": ""
+  },
+  "netlify/functions/rateLimitStore.mts": {
+    "mtime": 1784584322.0911837,
+    "ast_hash": "cb0f1491ea79a96b4d72d6b820538d40",
     "semantic_hash": ""
   }
 }

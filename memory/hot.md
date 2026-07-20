@@ -56,12 +56,32 @@ each independently fully gated earlier.
   typecheck:netlify + 103 gateway tests, doc-drift, generated-docs, secrets,
   legal, repo-hygiene, **e2e 36 passed**, a11y e2e (contrast enforced) passed.
 
-**STILL BLOCKED (need human/secrets/infra/network, NOT code-doable here):**
+**PF1e EQUIPMENT ENCODE — DONE + FULLY GATED GREEN** `97b330d` (+regen `0ccee43`,
+bundle-split `35b00e7`): the last source-blocked content gap, now closed. New
+scripts/encode-pf1e-equipment.mjs reads a blobless sparse clone of
+devonjones/PSRD-Data core_rulebook/item/** (OGL/OGC, same repo as the bestiary)
+→ src/data/pathfinder/1e/equipment/srd-{weapons,armor,gear,magic-items}.ts
+(243 mundane + 347 magic = 590 Core items), prettier-normalized + deterministic
+(encoder shells to local prettier bin). index.ts merges srd+hand (hand wins on
+id); loader unchanged. Manifest scripts/data/pf1e-equipment-manifest.json pins the
+denominator; srd-coverage.ts gains pf1e equipment/magic-items CoverageTargets.
+Ledger p1.pf1e-equipment blocked→in-progress (only networked srd:coverage publish
+remains). PF1e equipment loader total 70→617. Bundle: split into its own
+pf1e-equipment-data lazy chunk (100.3 KiB < 140 per-chunk budget); total-JS budget
+1536→1664 KiB. Gated: full suite 2466, tsc, lint, build, bundle, e2e 36,
+generated-docs, doc-drift, all green. Honest-mapping: exotic→martial+prose,
+8 damageless→gear, non-numeric prices/negligible weights at type default.
+
+**⚠ CONTAINER RECYCLED mid-session** (before the encode) — local HEAD reset to an
+old commit but ALL work was safe on origin; recovered via `git fetch origin
+<branch> && git reset --hard origin/<branch>`. node_modules came back incomplete
+(@axe-core/playwright missing) → `npm install` restored it. Commit+push per slice.
+
+**STILL BLOCKED (need human/secrets/infra, NOT code-doable here):**
 screen-reader listen-through; live secrets/infra (Sentry DSN, Supabase creds,
-durable rate-limit backend, staged rollout); PF1e equipment ENCODE (network +
-follow-on per the proposal); AI-DM implementation (RFC 007 must be accepted
-first). srd-coverage network regen + encoding missing individuals still deferred.
-Next session: await direction; `/resume` + re-read the consensus doc.
+durable rate-limit backend, staged rollout); AI-DM implementation (RFC 007 must be
+accepted first); the networked srd:coverage publish + encoding missing PF1e/3.5e
+individuals. Next session: await direction; `/resume` + re-read the consensus doc.
 
 ## Landmines
 
