@@ -1,7 +1,9 @@
 import { SystemEngine, RollResult } from '../../registry/types';
 import { CharacterDocument } from '../../types/core/document';
 import { rollD20 } from '../../rules/dice';
+import { applyDerivedQuantities } from '../../rules/derivation';
 import { Mam3eConditionTrack, Mam3eDataModel } from './data-model';
+import { MAM3E_DERIVED_QUANTITIES } from './derivedQuantities';
 import { calculatePowerPointCost, getPowerRank } from './powerMath';
 
 /** Skill → Ability mapping for M&M 3e */
@@ -270,6 +272,11 @@ export class Mam3eEngine implements SystemEngine<Mam3eDataModel> {
     }
 
     data.plViolations = violations;
+
+    // 7. Declarative standing derived quantities (Initiative, starting PP budget,
+    // …). One call computes every spec in derivedQuantities.ts; the sheet reads
+    // data.derived and the compute register's mutation gate verifies each.
+    data.derived = applyDerivedQuantities(data, MAM3E_DERIVED_QUANTITIES);
 
     return clonedDoc;
   }

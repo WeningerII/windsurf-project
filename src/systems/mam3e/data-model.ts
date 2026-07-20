@@ -87,6 +87,10 @@ export interface Mam3eDataModel extends SystemDataModel {
   // M&M damage condition track (replaces HP attrition model)
   conditionTrack: Mam3eConditionTrack;
 
+  /** Engine-derived quantities keyed by compute-register id, populated by the
+   * declarative derivation layer (src/rules/derivation) in prepareData. */
+  derived: Record<string, number>;
+
   notes?: string;
 
   // PL cap violations (computed by engine). Partial coverage: attack-bonus
@@ -136,5 +140,6 @@ export const createDefaultMam3eData = (): Mam3eDataModel => ({
     staggered: false,
     incapacitated: false,
   },
+  derived: {},
   notes: '',
 });
