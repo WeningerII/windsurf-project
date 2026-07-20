@@ -108,6 +108,57 @@ spell-DC/attack path consolidation is explicitly deferred beyond it.
 Final integration (orchestrator): staged gate (never monolithic verify),
 docs/generated regen, memory /save, PR merge per standing directive.
 
+## Sub-wave 2a execution grounding (scouted 2026-07-20, 4 Explore agents)
+
+STRATEGY (refined from scouts): **item 12 ALONE first (2a-i)**, then **13/14/15
+concurrent (2a-ii)** against item 12's settled base. Reason: item 12 owns shared
+files (rules/index.ts barrel shared w/ 13; resolver/compile; pf2e engine; the AC
+register files) — isolate it, gate it (incl. --mutate anchor re-pin), then the
+mutually-disjoint 13/14/15 parallelize cleanly.
+
+- **Item 12 (AC/defense resolver fold, retire armorClass.ts)** — HIGHEST RISK.
+  armorClass.ts exports: dnd5eArmorDexContribution, compute5eAC, D20_SIZE_MOD
+  (⚠ also used for ATTACK rolls dnd35e/pf1e engine ~L221/233), computeD20LegacyAC
+  (→{total,touch,flatFooted}), computePf2eAC. 9 importers = 5 src (dnd5e/shared/
+  {engine L9,contributionLedger L11}, dnd35e/engine L10, pf1e/engine L9, pf2e/
+  engine L8) + 4 test (armorClass.test, dnd5e2014EngineMath.test L14, d20Legacy
+  EngineMath.test L37, dnd35eArmorCatalog.test L12). Fold seam = rules/compile/
+  equipEffects.ts (already emits target:'ac' add) + resolveEffects set-then-add;
+  base AC becomes a 'set' on 'ac' so resolveCharacterEffects('ac')=full AC. 3.5e/
+  pf1e touch/flatFooted tuple → 3 targets OR relocated helper (scalar can't hold
+  tuple; implementer judgment, correctness first). PF2e fold = pf2e/engine.ts ONLY
+  (NOT data-model — item 14 safe). 8 anchors (all file:armorClass.ts today):
+  dnd5e2014.L2.ac.unarmored, dnd35e.L2.ac, pf1e.L2.ac (shares find w/ dnd35e),
+  dnd5e2014.L2.ac.light('return dexMod;'⚠), .medium('?? 2'→'?? 3'), .heavy
+  ('return 0;'⚠), dnd5e2024.L2.ac-formula-set (shares find w/ unarmored), pf2e.L2.ac.
+  Re-pins RETURNED AS STRUCTURED DATA (orchestrator applies to mutation-anchors.ts,
+  then check:compute-register --mutate). Preserve ALL describe/it titles verbatim
+  (testRef = filename::title); pf2eEngineMath.test UNCHANGED (engine-wired). Item
+  12 MAY edit docs/compute-register/{dnd5e-2014,2024,dnd35e,pf1e,pf2e}.ts during
+  its solo sub-wave (no concurrent sibling then). Behavior MUST be byte-identical.
+- **Item 13 (conditions-IR mam3e+daggerheart)** — NEW rules/conditions/{mam3e,
+  daggerheart}Conditions.ts + 2 tests (__tests__/rules/*ConditionsIr.test.ts) +
+  mam3e/engine.ts rollCheck (~L306-315 Toughness bruise) + daggerheart/engine.ts
+  rollCheck (~L94-127, note-only hook) + rules/index.ts barrel + maybe
+  sceneConditions.ts (relocate daggerheart stubs). Mirror dnd5eConditions.ts +
+  engine wiring. PRESERVE applyMam3eToughnessFailure export (item 15 imports it).
+- **Item 14 (pf2e multiclass dedication)** — pf2e/{data-model, pf2eTemplate
+  (extend applyPf2eArchetypeTemplate via mergeProficiencySource), derivedMath,
+  derivedQuantities} + own test (pf2eDedication.test). KEEP archetype-template fn
+  SIGNATURES stable (else collides w/ item 15 handlers). Register rows for pf2e
+  RETURNED AS DATA (orchestrator appends to pf2e.ts AFTER item 12) — item 14 does
+  NOT edit docs/compute-register/pf2e.ts. NO engine.ts (item 12 owns it).
+- **Item 15 (RFC005 consume verb + leveling)** — utils/resourcePool.ts (new
+  consume verb after reset ~L76, returns depletion state) + types/equipment/
+  items.ts (consumable quantity/charges) + per-system HANDLER/CONTROLLER/RESOURCES/
+  TEMPLATE-HANDLER/HEADER (NOT engines): dnd5e useDnd5eSheetActionHandlers/
+  Controller/Resources/TemplateHandlers/Dnd5eHeaderSection; d20 useD20Legacy*;
+  pf2e usePf2e{MutationHandlers,SheetController,SheetResources,TemplateHandlers}+
+  Pf2eHeader + pf2eSheetShared.ts (focus leveling); mam3e handlers/controller/
+  resources (leveling only, no consume); daggerheart handlers (consumeInventory
+  Item L244-264 = ref pattern)/controller/resources/templatehandlers/header. OWN
+  new test files ONLY — NEVER add to item 12's engine-math test describes.
+
 ## Sub-wave 1c execution grounding (scouted 2026-07-20, 3 Explore agents)
 
 Launch order (2-wide, OOM-safe — concurrent tsc in verify is memory-heavy): item 8
