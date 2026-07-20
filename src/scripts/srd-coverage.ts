@@ -35,22 +35,13 @@ import {
   loadDaggerheartDomainsForSystem,
 } from '../utils/dataLoader';
 import { GameSystemId } from '../types/game-systems';
-
-const norm = (s: string): string => s.toLowerCase().replace(/[^a-z0-9]+/g, '');
-/**
- * Loader entries may encode an SRD entry under a qualified name — e.g. the
- * SRD 5.2 feat "Archery" ships as "Fighting Style: Archery", and "Magic
- * Initiate" ships pre-split as "Magic Initiate (Cleric)". Matching also
- * against the prefix-/parenthetical-stripped form keeps coverage honest
- * without forcing id-breaking renames of shipped data.
- */
-const loaderNormVariants = (s: string): string[] => {
-  const variants = new Set([norm(s)]);
-  variants.add(norm(s.replace(/^[\w\s]+:\s*/, '')));
-  variants.add(norm(s.replace(/\s*\([^)]*\)\s*$/, '')));
-  variants.delete('');
-  return [...variants];
-};
+import {
+  norm,
+  loaderNormVariants,
+  srdNormVariants,
+  collapse35eMonsterHeadings,
+  collapsePf1eContainerRecords,
+} from './srdCoverageShape';
 
 const RAW5E = 'https://raw.githubusercontent.com/5e-bits/5e-database/main/src';
 
@@ -400,7 +391,11 @@ TARGETS.push({
     const manifest = JSON.parse(await fs.readFile(manifestPath, 'utf8')) as {
       entries: Array<{ name: string }>;
     };
-    return manifest.entries.map((entry) => entry.name);
+    // Collapse the dragon/elemental PARENT records (each nests age/size stat
+    // blocks the loader encoded under distinct names) so they stop counting as
+    // spurious "missing" entries; the individual variants and genuine misses
+    // (e.g. Skeletal Champion) are preserved. See src/scripts/srdCoverageShape.ts.
+    return collapsePf1eContainerRecords(manifest.entries.map((entry) => entry.name));
   },
   loader: () => loaderNames(loadMonstersForSystem, 'pf1e'),
 });
@@ -478,14 +473,18 @@ const SRD35_MONSTER_FILES = [
   'monsters-vermin.md',
 ];
 async function fetchSrd35MonsterNames(): Promise<string[]> {
-  const names: string[] = [];
+  const headings: string[] = [];
   for (const file of SRD35_MONSTER_FILES) {
     const text = await fetchText(
       `https://raw.githubusercontent.com/olimot/srd-v3.5-md/main/monsters/${file}`
     );
-    for (const match of text.matchAll(/^## (.+)$/gm)) names.push(match[1].trim());
+    for (const match of text.matchAll(/^## (.+)$/gm)) headings.push(match[1].trim());
   }
-  return names;
+  // Reshape to individual stat blocks: drop the SRD's taxonomic category
+  // headers (Angel/Dragon/Elemental/…) that merely nest separately-named
+  // members, and fold age/size variant rows to their archetype. See
+  // src/scripts/srdCoverageShape.ts.
+  return collapse35eMonsterHeadings(headings);
 }
 TARGETS.push({
   systemId: 'dnd-3.5e',
@@ -514,6 +513,18 @@ TARGETS.push({
   srdSource: "Hero's Handbook (frnprt/mm3e-character-creator ADVANTAGES)",
   srd: () => fetchJsArrayNames(MM_DATA_JS, 'ADVANTAGES'),
   loader: () => loaderNames(loadAdvantagesForSystem, 'mam3e'),
+});
+// M&M equipment: the DHH equipment data already ships and the runtime is wired
+// (loadMam3eEquipment / loadEquipmentForSystem case 'mam3e'); this target adds
+// the coverage MEASUREMENT, diffing the frnprt EQUIPMENT list against the
+// loader. Executing it (frnprt fetch) is deferred to a networked coverage run.
+TARGETS.push({
+  systemId: 'mam3e',
+  systemLabel: 'Mutants & Masterminds 3e',
+  category: 'equipment',
+  srdSource: "Hero's Handbook (frnprt/mm3e-character-creator EQUIPMENT)",
+  srd: () => fetchJsArrayNames(MM_DATA_JS, 'EQUIPMENT'),
+  loader: () => loaderNames(loadEquipmentForSystem, 'mam3e'),
 });
 
 // --- Daggerheart (SRD 1.0 — whole SRD in scope) ---
@@ -555,7 +566,11 @@ async function main(): Promise<void> {
     try {
       const [srdNames, loaderRaw] = await Promise.all([t.srd(), t.loader()]);
       const loaderSet = new Set(loaderRaw.flatMap(loaderNormVariants));
-      const srdSet = new Set(srdNames.map(norm));
+      // Symmetric qualifier word-order variants on the SRD side clear confirmed
+      // naming-convention false-positives (loader "Greater Invisibility" vs SRD
+      // "Invisibility, Greater") from the over-inclusion suspects without
+      // masking genuine non-SRD entries.
+      const srdSet = new Set(srdNames.flatMap(srdNormVariants));
       const srdUnique = [...new Map(srdNames.map((n) => [norm(n), n])).values()];
       const loaderUnique = [...new Map(loaderRaw.map((n) => [norm(n), n])).values()];
       const missing = srdUnique.filter((n) => !loaderSet.has(norm(n)));
@@ -637,7 +652,7 @@ async function main(): Promise<void> {
   lines.push('');
   lines.push('## Pending (independent source not yet wired or not cleanly scopable)');
   lines.push(
-    '- **D&D 3.5e** spells and monsters are measured against the clean core-only `olimot/srd-v3.5-md` chapters. The monster denominator counts every `## ` heading, which includes the SRD\'s category headers (e.g. "Angel", "Dragon", "Elemental") that nest individual stat blocks, so the monster percentage understates per-stat-block coverage. Remaining 3.5e categories (classes/feats/equipment) are unwired pending core-only sources. See `docs/srd-sources.md`.'
+    '- **D&D 3.5e** spells and monsters are measured against the clean core-only `olimot/srd-v3.5-md` chapters. The monster denominator now counts INDIVIDUAL stat blocks: `collapse35eMonsterHeadings` (`src/scripts/srdCoverageShape.ts`) drops the SRD\'s taxonomic category headers (e.g. "Angel", "Dragon", "Elemental") that merely nest separately-named members and folds age/size variant rows to their archetype. Remaining 3.5e categories (classes/feats/equipment) are unwired pending core-only sources. See `docs/srd-sources.md`.'
   );
   lines.push(
     '- **Remaining categories** — PF2e/PF1e non-spell categories, M&M skills/conditions/equipment, Daggerheart classes/ancestries/communities/weapons/armor, and all monsters are documented in `docs/srd-sources.md` and pending wiring.'
