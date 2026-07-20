@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-07-16T22:08:44.533Z",
+  "generatedAt": "2026-07-20T17:14:52.606Z",
   "summary": {
     "total": 23,
     "byStatus": {
       "done": 9,
-      "missing": 2,
-      "pending": 10,
-      "blocked": 1,
-      "in-progress": 1
+      "in-progress": 3,
+      "pending": 9,
+      "missing": 1,
+      "blocked": 1
     },
     "byPhase": {
       "0": 6,
@@ -144,14 +144,14 @@
       "id": "p1.mam-equipment",
       "phase": 1,
       "track": "A-content",
-      "title": "Encode Mutants & Masterminds equipment",
-      "detail": "M&M equipment (weapons/armor/grenades/vehicles/HQ) is not wired in srd-coverage; encode from the frnprt/mm3e-character-creator EQUIPMENT source. The single largest content gap.",
-      "status": "missing",
+      "title": "Mutants & Masterminds equipment — data, runtime, and coverage target",
+      "detail": "The DHH equipment data ships (src/data/mutants-and-masterminds/3e/equipment/*) and the runtime loader is wired (loadMam3eEquipment / loadEquipmentForSystem case mam3e). The remaining piece was the srd:coverage MEASUREMENT: a mam3e/equipment CoverageTarget (frnprt EQUIPMENT list vs loadEquipmentForSystem(\"mam3e\")) is now added to src/scripts/srd-coverage.ts. Executing it (the frnprt fetch) is deferred to a networked coverage run, so the published equipment coverage number lands at integration.",
+      "status": "in-progress",
       "tags": [
         "engineering"
       ],
       "system": "mam3e",
-      "evidence": "docs/srd-sources.md (M&M); docs/generated/srd-coverage.md"
+      "evidence": "src/scripts/srd-coverage.ts (mam3e/equipment target); src/utils/dataLoader.ts (loadMam3eEquipment); docs/srd-sources.md (M&M)"
     },
     {
       "id": "p1.mam-provenance-LEGAL-2",
@@ -172,13 +172,13 @@
       "phase": 1,
       "track": "A-content",
       "title": "3.5e / PF1e monster denominator shape-mismatch",
-      "detail": "srd-coverage shows 3.5e monsters 74.1% and PF1e 95.7%, but those are artifacts: the denominator counts SRD category headings / age-size variants, not individual stat blocks. Collapse variants to their archetype on both sides; encode the genuine missing individuals (Lich, Ghost, Salamander, Hydra line, Skeletal Champion, …).",
-      "status": "pending",
+      "detail": "The shape-mismatch is fixed in code: the denominator previously counted SRD 3.5 category headings / PF1e dragon-elemental parent records as if they were individual stat blocks. Pure, unit-tested helpers (src/scripts/srdCoverageShape.ts collapse35eMonsterHeadings + collapsePf1eContainerRecords) now drop those containers and fold 3.5e age/size variants to their archetype, so both denominators count individual stat blocks (the 14 PF1e parents collapse; Skeletal Champion stays a genuine miss). Counting LOGIC fixed and tested offline; the refreshed published percentages come from the next networked srd:coverage run, and encoding the genuine missing individuals (Lich, Ghost, Salamander, Hydra line, Skeletal Champion) is a separate follow-on.",
+      "status": "in-progress",
       "tags": [
         "denominator-fix",
         "engineering"
       ],
-      "evidence": "docs/generated/srd-coverage.md (monster rows + Pending note)"
+      "evidence": "src/scripts/srdCoverageShape.ts; src/scripts/srd-coverage.ts (PF1e + 3.5e monster paths); src/__tests__/scripts/srdCoverageShape.test.ts"
     },
     {
       "id": "p1.provenance-over-inclusion-audit",
