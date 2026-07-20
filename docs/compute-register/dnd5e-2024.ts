@@ -147,8 +147,7 @@ export const dnd5e2024ComputeRegister: SystemComputeRegister = {
       edgeCases: ['twice carrying capacity'],
       source: `${SRD}: Carrying Capacity — Push, Drag, or Lift`,
       status: 'verified',
-      testRef:
-        'src/__tests__/derivation/dnd5eDerivedQuantities.test.ts :: dnd5e.L6.push-drag-lift',
+      testRef: 'src/__tests__/derivation/dnd5eDerivedQuantities.test.ts :: dnd5e.L6.push-drag-lift',
     },
     {
       id: 'dnd5e2024.L3.versatile-damage',

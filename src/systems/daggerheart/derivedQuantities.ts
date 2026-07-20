@@ -43,7 +43,11 @@ export const DAGGERHEART_DERIVED_QUANTITIES: ReadonlyArray<
       // level 1 is the mutation-sensitive case: the tier `breakpoints(...)` base
       // only shows through below the first (L2) breakpoint, so a base perturbation
       // is caught here and nowhere else.
-      { name: 'level 1 → tier 1 (base, below first breakpoint)', system: { level: 1 }, expected: 1 },
+      {
+        name: 'level 1 → tier 1 (base, below first breakpoint)',
+        system: { level: 1 },
+        expected: 1,
+      },
       { name: 'level 2 → tier 2 (first breakpoint)', system: { level: 2 }, expected: 2 },
       { name: 'level 5 → tier 3', system: { level: 5 }, expected: 3 },
       { name: 'level 8 → tier 4', system: { level: 8 }, expected: 4 },

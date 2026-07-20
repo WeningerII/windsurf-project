@@ -18,9 +18,7 @@ import { mam3eInitiative, mam3eStartingPowerPoints } from './derivedMath';
 import type { Mam3eDataModel } from './data-model';
 
 /** Build a full M&M ability block from partial overrides (ranks default to 0). */
-function abilities(
-  overrides: Partial<Mam3eDataModel['abilities']>
-): Mam3eDataModel['abilities'] {
+function abilities(overrides: Partial<Mam3eDataModel['abilities']>): Mam3eDataModel['abilities'] {
   return { str: 0, sta: 0, agi: 0, dex: 0, fgt: 0, int: 0, awe: 0, pre: 0, ...overrides };
 }
 
