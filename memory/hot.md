@@ -4,41 +4,40 @@
 > `/save` — overwrite stale content, keep it under ~500 words. Durable facts go
 > to [[CLAUDE]] (CLAUDE.md) or `docs/`, not here.
 
-**Last updated:** 2026-07-19 — **Two slices landed on
-`claude/next-priorities-98pzof` (3 commits, pushed; PR pending).** Built via
-parallel workflow (2 build slices, each implement→adversarial-verify), then
-integrated + full-gated + real-browser e2e by hand.
+**Last updated:** 2026-07-20 — **Executing the 22-item wave plan on
+`claude/next-priorities-98pzof`.** Authoritative plan + binding execution rules:
+[[sessions/2026-07-20-wave-plan-consensus]] (reached via 5-round adversarial
+consensus). Model: each item = own background Workflow (implement→adversarial-
+verify); orchestrator does per-completion path-scoped commit+push, then staged
+OOM-safe barrier gates (never monolithic `verify`; use
+`test:coverage -- --run --maxWorkers=1`). Agents never edit orchestrator-owned
+files (mutation-anchors.ts, compute-register/index.ts, docs/generated/**,
+package.json, App.tsx, main.tsx, memory/**).
 
-1. **Daggerheart short-rest downtime moves** (`4327b75` + comment fix `2f79b5f`)
-   — the RFC 005 follow-up the long-rest slice deferred. Pure builders
-   `tendToWounds/clearStress/repairArmor(data, recovery)` in `daggerheartRest.ts`
-   apply an already-rolled `1d4 + tier` through the pool `restore` verb (HP =
-   remaining pool, Stress/Armor = marked). Handlers roll a live d4 via
-   `createLiveRng().rollDie(4)` + `getDaggerheartShortRestRecovery` +
-   `getDaggerheartTier` — no inline Math.random. UI + header threaded. +7 tests
-   (14 rest tests total).
-2. **M&M 3e guided point-buy creator** (`0494b76`) — closes the Phase-4 "one
-   system without a creator" gap. New registry seam `CreatorComponent?`
-   (registry/types.ts) so App stays system-agnostic; mam3e/definition.ts wires
-   it lazily (own chunk). `src/systems/mam3e/creator/` = draft hook + single
-   screen: PL→budget (`mam3eStartingPowerPoints` 15×PL), 8 ability ranks feeding
-   the **real `Mam3eEngine.prepareData`** (spend + PL-cap warnings read straight
-   back — no parallel cost math). New `GuidedCreatorDialog` (content-agnostic
-   modal, imports no systems → layer boundary holds). App create-flow: picking a
-   system with a creator opens the modal; `onCreate` builds+persists;
-   `useDocuments.addDocument` runs prepareData at add time so spend populates.
+**Theme:** declarative derivation layer (`src/rules/derivation/**`, READ-ONLY
+for agents) + scaling shapes (`src/utils/scaling.ts`); one numeric
+`DerivedQuantitySpec` per scalar; compute-register (Denominator B) pins
+engine-math with mutation anchors. **ALL 7 SYSTEMS ARE PEERS — never frame work
+as "5e vs non-5e" (hard, repeated user constraint).**
 
-**Gates all green** (this branch): tsc app+test, 2171 unit tests, lint, knip,
-prettier, doc-drift, generated-docs, repo-hygiene, build, bundle-size (creator =
-own lazy chunk), **e2e system-smoke M&M + outcome-baseline all-7** (real browser
-via the pw-bridge; mam3e re-measured 7 steps / ~0.6s / legal).
+**Wave 1 progress (sub-waves 1a done, 1b in flight, 1c queued):**
+- 1a ✅ pf2e `f6606ef`, mam3e `f3b507f`, daggerheart `592a134`, 5e-family
+  `4a5864f`, housekeeping `2dc4d2c` — declarative derived quantities, gated.
+- 1b: item 6 M&M creator inc2 ✅ `d606754`; item 5 d20-family (3.5e+PF1e derived
+  quantities, generic `presentDerivedQuantities` render) ✅ `808f8f8` (added
+  anchor `pf1e.L4.max-rank-cap`; Tier-A = 200 verified entries, all resolve).
+  Item 9 telemetry scaffold ⏳ running (task `wyhu79olz`; domain src/telemetry/**,
+  performanceMonitoring.ts, main.tsx). Item 7 RFC006 3.5e Encounter-Level
+  budgets ⏳ running (task `w07imq9bh`; domain src/scene/**, components/scene/**,
+  __tests__/scene/**, rfc/006). No more 1b items to launch.
 
-**NEXT (master plan, `docs/generated/master-gap-ledger.md`):** still-open,
-code-doable-now items — 3.5e/PF1e monster denominator shape-mismatch (collapse
-SRD category headings); provenance over-inclusion audit; M&M creator increments
-2+ (powers/skills/advantages, archetypes); L1/L2/L5-L10 engine-math wiring; 7×N
-parity matrix. Needs-infra/human: AI gateway provider-agnosticism, rate-limit/
-a11y/observability (Phase 5), release eng (Phase 7), 5e-2024 exhaustion sign-off.
+**NEXT:** (1) await items 7+9 → per-completion commit+push each; (2) 1b barrier
+gate (tree reconcile → typecheck → targeted vitest on changed domains,
+single-worker); (3) sub-wave 1c: item 8 AI-gateway hardening, item 10 content
+coverage, item 11 RFC004 bestiary route → closes wave 1 (`graphify update` +
+full wave-1 barrier). Then Wave 2 (7 items incl. item 12 AC/defense resolver
+fold with atomic anchor re-pin) + Wave 3 (4 items). Blocked items (human
+sign-off / secrets / infra / OGC source) excluded from "complete".
 
 ## Landmines
 
