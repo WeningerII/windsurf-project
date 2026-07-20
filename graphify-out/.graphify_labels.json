@@ -195,5 +195,10 @@
   "193": "@types/react",
   "194": "@types/react-dom",
   "195": "imageInput.ts",
-  "196": "@vitest/coverage-v8"
+  "196": "@vitest/coverage-v8",
+  "197": "@playwright/test",
+  "198": "@testing-library/user-event",
+  "199": "@typescript-eslint/eslint-plugin",
+  "200": "@typescript-eslint/parser",
+  "201": "@vitest/ui"
 }
