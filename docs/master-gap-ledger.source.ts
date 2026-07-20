@@ -190,13 +190,14 @@ export const MASTER_GAP_LEDGER: readonly GapLedgerItem[] = [
     id: 'p1.pf1e-equipment',
     phase: 1,
     track: 'A-content',
-    title: 'PF1e equipment (source-blocked)',
+    title: 'PF1e Core equipment + magic items — data, manifest, coverage target',
     detail:
-      'Pin a clean CRB-scoped OGC equipment list (a PSRD-Data manifest like the bestiary, or a source-tagged Foundry pack); if none is reachable, formalize the honest exclusion in docs/srd-sources.md + this ledger.',
-    status: 'blocked',
-    tags: ['source-blocked'],
+      'Sourced + encoded. scripts/encode-pf1e-equipment.mjs reads devonjones/PSRD-Data core_rulebook/item/** (Paizo PRD, OGL 1.0a / OGC — the repo already pinned for the bestiary) and generates src/data/pathfinder/1e/equipment/srd-{weapons,armor,gear,magic-items}.ts (243 mundane equipment + 347 magic items), merged so hand-authored entries win on id. scripts/data/pf1e-equipment-manifest.json pins the denominator, and src/scripts/srd-coverage.ts gains pf1e equipment + magic-items CoverageTargets (loader side loadEquipmentForSystem(\'pf1e\')). Remaining piece is the srd:coverage MEASUREMENT publish, deferred to a networked run (same as p1.mam-equipment).',
+    status: 'in-progress',
+    tags: ['engineering'],
     system: 'pf1e',
-    evidence: 'docs/srd-sources.md (PF1e)',
+    evidence:
+      'scripts/encode-pf1e-equipment.mjs; scripts/data/pf1e-equipment-manifest.json; src/data/pathfinder/1e/equipment/srd-*.ts; src/scripts/srd-coverage.ts (pf1e equipment/magic-items targets)',
   },
   {
     id: 'p1.wire-remaining-denominators',
