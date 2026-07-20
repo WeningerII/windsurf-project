@@ -167,16 +167,24 @@ Crucially, the per-system **budget and per-monster cost dispatch is a single
 source of truth** (`encounterPartyBudget` / `monsterEncounterCost` /
 `supportsEncounterBudget` in `encounterDraft.ts`) shared by the drafter and the
 validator, so a spec the drafter produces always validates (proven by a
-consistency test). The four budgeted systems are 5e (2014/2024), PF1e, and PF2e;
-D&D 3.5e uses an Encounter-Level model that is **not yet implemented**, so it is
-honestly reported `unsupported-system` rather than borrowing the 5e table. The
-scene UI consumes the validator live (the encounter panel shows on/over-budget
-for the chosen difficulty).
+consistency test). The five budgeted systems are 5e (2014/2024), D&D 3.5e, PF1e,
+and PF2e. 5e spends the SRD 5.2.1 XP-budget table as a plain sum; PF1e reads the
+CRB CR→XP awards; PF2e uses the party-relative Table 10-2 creature XP. D&D 3.5e
+uses an Encounter-Level model rather than a printed summed-XP table: the SRD
+(d20srd.org, OGL 1.0a) states that a lone CR-X creature is EL X and that doubling
+the number of identical creatures raises the EL by 2. To host that inside the
+summed-cost machinery, `dnd35eEncounterBudget`/`dnd35eCreatureValue` derive a
+CR→encounter-value scale (a repo modeling choice, **not** an SRD table) pinned to
+the SRD's rule by construction — `value(CR+2) === 2·value(CR)` — so two CR-X
+creatures cost exactly one EL-(X+2) encounter. A four-member party of level L
+meets a standard fight at EL L; low/moderate/high map to EL = APL−1/APL/APL+1,
+with APL the average level rounded to the nearest whole number (no party-size
+adjustment, unlike PF1e). Any other system is honestly reported
+`unsupported-system`. The scene UI consumes the validator live (the encounter
+panel shows on/over-budget for the chosen difficulty).
 
 ## Next increments (named, not yet built)
 
-- **D&D 3.5e Encounter-Level budgets** — model the EL/XP-by-CR system so 3.5e
-  encounters can be budgeted and validated like the other four systems.
 - **AI encounter-spec drafting** (Phase 8) — prompt → structured spec →
   `validateEncounterSpec` → repair loop → the same builder path manual selection
   uses. The gate above is its entry contract.

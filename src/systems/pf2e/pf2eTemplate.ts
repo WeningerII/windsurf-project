@@ -4,7 +4,14 @@ import type { Archetype } from '../../types/character-options/archetypes';
 import { CharacterClass } from '../../types/character-options/classes';
 import { CharacterDocument } from '../../types/core/document';
 import { Feature } from '../../types/core/character';
-import { Pf2eDataModel, Pf2eFeat, Pf2eProficiency, Pf2eProficiencyTier } from './data-model';
+import {
+  PF2E_ARCHETYPE_DEDICATION_GRANTS,
+  Pf2eDataModel,
+  Pf2eDedicationProficiencyGrant,
+  Pf2eFeat,
+  Pf2eProficiency,
+  Pf2eProficiencyTier,
+} from './data-model';
 import { Pf2eBackgroundDefinition } from '../../data/pathfinder/2e/backgrounds';
 
 const DEFAULT_ANCESTRY_HP = 8;
@@ -511,6 +518,24 @@ function archetypeSource(archetype: Archetype): string {
   return `Archetype: ${archetype.name}`;
 }
 
+function dedicationProficiencyGrants(archetype: Archetype): Pf2eDedicationProficiencyGrant[] {
+  return PF2E_ARCHETYPE_DEDICATION_GRANTS[archetype.id] ?? [];
+}
+
+/**
+ * The proficiency map a dedication grant aggregates into. Both maps start empty
+ * on a fresh sheet, so mergeProficiencySource / removeProficiencySource — the
+ * same source-scoped machinery class and background templates use — add and
+ * later revert a dedication's entries without touching manually trained data or
+ * the always-present base armor/weapon slots.
+ */
+function dedicationProficiencyMap(
+  sys: Pf2eDataModel,
+  category: Pf2eDedicationProficiencyGrant['category']
+): Record<string, Pf2eProficiency> {
+  return category === 'lore' ? sys.loreProficiencies : sys.skillProficiencies;
+}
+
 function archetypeTemplateFeatures(archetype: Archetype, maxLevel?: number): Feature[] {
   const source = archetypeSource(archetype);
   return archetype.features
@@ -892,6 +917,20 @@ export function applyPf2eArchetypeTemplate(
     sys.features.push(feature);
   });
 
+  // Aggregate the dedication's proficiency progression the same way class and
+  // background templates do: source-scoped so a stronger existing tier wins and
+  // removal reverts cleanly. Runs only on first selection (the early return
+  // above keeps a re-selected archetype idempotent), so grants never stack.
+  const dedicationSource = archetypeSource(archetype);
+  dedicationProficiencyGrants(archetype).forEach((grant) => {
+    mergeProficiencySource(
+      dedicationProficiencyMap(sys, grant.category),
+      grant.id,
+      dedicationSource,
+      grant.tier
+    );
+  });
+
   return nextDocument;
 }
 
@@ -908,6 +947,18 @@ export function removePf2eArchetypeTemplate(
 
   const signatures = new Set(archetypeTemplateFeatures(archetype).map(featureSignature));
   sys.features = removeFeaturesBySignatures(sys.features || [], signatures);
+
+  // Revert the dedication's proficiency grants. removeProficiencySource is
+  // source-scoped: it only strips this archetype's provenance, so a skill the
+  // class/background also trained (or the player trained by hand) survives.
+  const dedicationSource = archetypeSource(archetype);
+  dedicationProficiencyGrants(archetype).forEach((grant) => {
+    removeProficiencySource(
+      dedicationProficiencyMap(sys, grant.category),
+      grant.id,
+      dedicationSource
+    );
+  });
 
   return nextDocument;
 }

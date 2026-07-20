@@ -60,7 +60,7 @@ async function installDownloadCapture(page: Page) {
   });
 }
 
-test('New Character and Import are reachable with no sheet open', async ({ page }) => {
+test('New Character and Import are reachable with no sheet open', { tag: '@smoke' }, async ({ page }) => {
   // Gate (b): no sheet is open (no Back control), yet both primary actions
   // are live in the header.
   await expect(page.getByRole('button', { name: /^Back$/i })).toHaveCount(0);

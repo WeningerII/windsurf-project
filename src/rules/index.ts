@@ -149,6 +149,15 @@ export type { CharacterEffectInputs, ResolvedCharacterEffects } from './compile/
 export { resolveCharacterEffects } from './compile/characterEffects';
 
 export {
+  compute5eAC,
+  computeD20LegacyAC,
+  computePf2eAC,
+  dnd5eArmorDexContribution,
+  compileBaseArmorClassEffects,
+  D20_SIZE_MOD,
+} from './compile/defense';
+
+export {
   collectDnd5eConditionEffects,
   conditionImposesDisadvantage,
   hasDnd5eConditionEffects,
@@ -167,8 +176,16 @@ export {
   D20_LEGACY_CONDITION_IDS,
 } from './conditions/d20LegacyConditions';
 
+export { collectSceneConditionEffects } from './conditions/sceneConditions';
+
 export {
-  collectSceneConditionEffects,
+  collectMam3eConditionEffects,
   mam3eBruisePenalty,
+  mam3eToughnessPenalty,
+} from './conditions/mam3eConditions';
+
+export {
+  collectDaggerheartConditionEffects,
+  hasDaggerheartConditionEffects,
   DAGGERHEART_CONDITION_IDS,
-} from './conditions/sceneConditions';
+} from './conditions/daggerheartConditions';

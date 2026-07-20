@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T22:08:46.336Z",
+  "generatedAt": "2026-07-20T21:16:31.342Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -624,9 +624,9 @@
     {
       "systemId": "dnd-5e-2014",
       "systemLabel": "D&D 5e (2014)",
-      "verified": 34,
-      "inScope": 37,
-      "percent": 91.9,
+      "verified": 38,
+      "inScope": 39,
+      "percent": 97.4,
       "byLayer": {
         "L1": {
           "verified": 2,
@@ -641,11 +641,11 @@
           "inScope": 8
         },
         "L4": {
-          "verified": 3,
+          "verified": 4,
           "inScope": 4
         },
         "L5": {
-          "verified": 2,
+          "verified": 3,
           "inScope": 3
         },
         "L7": {
@@ -655,15 +655,19 @@
         "L8": {
           "verified": 7,
           "inScope": 8
+        },
+        "L9": {
+          "verified": 2,
+          "inScope": 2
         }
       }
     },
     {
       "systemId": "dnd-5e-2024",
       "systemLabel": "D&D 5e (2024)",
-      "verified": 23,
-      "inScope": 29,
-      "percent": 79.3,
+      "verified": 31,
+      "inScope": 32,
+      "percent": 96.9,
       "byLayer": {
         "L1": {
           "verified": 2,
@@ -674,19 +678,19 @@
           "inScope": 6
         },
         "L5": {
-          "verified": 2,
+          "verified": 3,
           "inScope": 3
         },
         "L6": {
-          "verified": 0,
-          "inScope": 3
+          "verified": 4,
+          "inScope": 4
         },
         "L3": {
           "verified": 2,
           "inScope": 2
         },
         "L4": {
-          "verified": 3,
+          "verified": 4,
           "inScope": 4
         },
         "L7": {
@@ -696,14 +700,18 @@
         "L8": {
           "verified": 6,
           "inScope": 7
+        },
+        "L9": {
+          "verified": 2,
+          "inScope": 2
         }
       }
     },
     {
       "systemId": "dnd-3.5e",
       "systemLabel": "D&D 3.5e",
-      "verified": 28,
-      "inScope": 28,
+      "verified": 30,
+      "inScope": 30,
       "percent": 100,
       "byLayer": {
         "L1": {
@@ -737,14 +745,18 @@
         "L8": {
           "verified": 3,
           "inScope": 3
+        },
+        "L9": {
+          "verified": 2,
+          "inScope": 2
         }
       }
     },
     {
       "systemId": "pf1e",
       "systemLabel": "Pathfinder 1e",
-      "verified": 27,
-      "inScope": 27,
+      "verified": 30,
+      "inScope": 30,
       "percent": 100,
       "byLayer": {
         "L1": {
@@ -760,8 +772,8 @@
           "inScope": 7
         },
         "L4": {
-          "verified": 2,
-          "inScope": 2
+          "verified": 3,
+          "inScope": 3
         },
         "L5": {
           "verified": 4,
@@ -778,6 +790,10 @@
         "L6": {
           "verified": 3,
           "inScope": 3
+        },
+        "L9": {
+          "verified": 2,
+          "inScope": 2
         }
       }
     },
@@ -825,8 +841,8 @@
     {
       "systemId": "pf2e",
       "systemLabel": "Pathfinder 2e",
-      "verified": 26,
-      "inScope": 26,
+      "verified": 29,
+      "inScope": 29,
       "percent": 100,
       "byLayer": {
         "L1": {
@@ -858,10 +874,14 @@
           "inScope": 3
         },
         "L6": {
-          "verified": 1,
-          "inScope": 1
+          "verified": 2,
+          "inScope": 2
         },
         "L10": {
+          "verified": 2,
+          "inScope": 2
+        },
+        "L9": {
           "verified": 2,
           "inScope": 2
         }

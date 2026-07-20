@@ -1,5 +1,19 @@
 // purpose: Overview section — at-a-glance HP/AC/initiative/spell-attack snapshot above the tabs.
-import { BookOpen, Heart, Shield, Sparkles, Target } from 'lucide-react';
+import {
+  BookOpen,
+  Dumbbell,
+  Eye,
+  Gauge,
+  Heart,
+  MoveHorizontal,
+  MoveVertical,
+  Shield,
+  Sparkles,
+  Target,
+  Weight,
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import type { PresentedDerivedQuantity } from '../../../../rules/derivation';
 import { DamageHealControl } from '../../../../components/DamageHealControl';
 import { DeathSavesTracker } from '../../../../components/DeathSavesTracker';
 import { HitDiceTracker } from '../../../../components/HitDiceTracker';
@@ -20,11 +34,27 @@ type HitPoints = {
   temp: number;
 };
 
+// Icons the declarative derived quantities may name (spec.display.icon). Unknown
+// names fall back to a neutral gauge, so a new quantity renders without editing
+// this component.
+const DERIVED_ICON_BY_NAME: Record<string, LucideIcon> = {
+  Eye,
+  Weight,
+  Dumbbell,
+  MoveHorizontal,
+  MoveVertical,
+};
+function derivedIcon(name?: string): LucideIcon {
+  return (name && DERIVED_ICON_BY_NAME[name]) || Gauge;
+}
+
 interface Props {
   armorClass: number;
   hitPoints: HitPoints;
   initiative: number;
   speed: number;
+  /** Render-ready derived quantities from the declarative derivation layer. */
+  derivedCards: PresentedDerivedQuantity[];
   spellcasting?: {
     classes: Array<unknown>;
     spellSlots: SpellSlots;
@@ -60,6 +90,7 @@ export function Dnd5eOverviewSection({
   hitPoints,
   initiative,
   speed,
+  derivedCards,
   spellcasting,
   exhaustionLevel,
   deathSaves,
@@ -81,7 +112,7 @@ export function Dnd5eOverviewSection({
 }: Props) {
   return (
     <>
-      <div className="grid grid-cols-2 gap-4 xl:grid-cols-5">
+      <div className="grid grid-cols-2 gap-4 xl:grid-cols-6">
         <CombatStatCard icon={Shield} title="Armor Class" value={armorClass} />
         <CombatStatCard
           icon={Heart}
@@ -98,6 +129,7 @@ export function Dnd5eOverviewSection({
                 }
                 className="w-16 text-center text-3xl font-bold bg-transparent border-b border-input focus:outline-none focus:border-primary tabular-nums"
                 title="Current hit points"
+                aria-label="Current hit points"
                 disabled={!canUpdate}
               />
               <span className="text-muted-foreground">/</span>
@@ -107,6 +139,7 @@ export function Dnd5eOverviewSection({
                 onChange={(event) => onHitPointsChange?.({ max: parseNum(event.target.value, 1) })}
                 className="w-16 text-center text-lg bg-transparent border-b border-input focus:outline-none focus:border-primary tabular-nums"
                 title="Maximum hit points"
+                aria-label="Maximum hit points"
                 disabled={!canUpdate}
               />
             </div>
@@ -118,6 +151,14 @@ export function Dnd5eOverviewSection({
         </CombatStatCard>
         <CombatStatCard icon={Target} title="Initiative" value={formatMod(initiative)} />
         <CombatStatCard icon={Sparkles} title="Speed" value={`${speed} ft`} />
+        {derivedCards.map((card) => (
+          <CombatStatCard
+            key={card.id}
+            icon={derivedIcon(card.icon)}
+            title={card.label}
+            value={card.text}
+          />
+        ))}
         <CombatStatCard
           icon={BookOpen}
           title="Spell Slots"

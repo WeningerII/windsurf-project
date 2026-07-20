@@ -5,12 +5,13 @@ import { Pf2eDataModel, profTotal } from './data-model';
 import { abilityMod } from '../../utils/math';
 import { pf2eDegreeOfSuccess } from '../../rules/resolver/pf2eDegree';
 import { SKILL_ABILITIES, SAVE_ABILITIES } from './constants';
-import { computePf2eAC } from '../../utils/armorClass';
-import { resolveCharacterEffects } from '../../rules';
+import { resolveCharacterEffects, computePf2eAC } from '../../rules';
 import { getPf2eConditionStatusPenalty } from '../../rules/conditions/pf2eConditions';
 import { pf2eClasses } from '../../data/pathfinder/2e/classes';
 import { getSpellSlotsAtClassLevel, mergeMaxUsedSpellSlots } from '../../utils/classSpellcasting';
 import { hitDieFaces } from '../../utils/templateShared';
+import { applyDerivedQuantities } from '../../rules/derivation';
+import { PF2E_DERIVED_QUANTITIES } from './derivedQuantities';
 
 type Pf2eSpellcastingData = NonNullable<Pf2eDataModel['spellcasting']>;
 
@@ -154,14 +155,16 @@ export class Pf2eEngine implements SystemEngine<Pf2eDataModel> {
       }
     }
     const acStatusPenalty = getPf2eStatusPenalty(data.conditions, 'dex');
+    // Base AC (scalar) seeds a `set` on 'ac'; the magic-item/feat/feature effects
+    // add on top through the resolver, so bonus('ac') is base + bonuses. The
+    // status penalty is then subtracted, exactly as before.
     data.armorClass =
-      computePf2eAC(data.baseAttributes.dex ?? 10, armorProf, data.equipment) +
       resolveCharacterEffects('pf2e', {
         equipment: data.equipment.filter((item) => item.equipped),
         feats: data.feats,
         features: data.features,
-      }).bonus('ac') -
-      acStatusPenalty;
+        baseArmorClass: computePf2eAC(data.baseAttributes.dex ?? 10, armorProf, data.equipment),
+      }).bonus('ac') - acStatusPenalty;
 
     // --- HP = ancestryHP + level × (class HP die + CON mod) + manual bonus ---
     // PF2e CRB p.26: Ancestry HP (flat) + level × (class HP + CON mod). Class HP
@@ -222,6 +225,12 @@ export class Pf2eEngine implements SystemEngine<Pf2eDataModel> {
         },
       };
     }
+
+    // Declarative derived quantities (Bulk limits, auto-heighten rank, Class DC)
+    // come from the declarative derivation layer: each is a single cited
+    // declaration in ./derivedQuantities, computed generically here, surfaced on
+    // the sheet, and verified by one test. Adding one needs no new engine code.
+    data.derived = applyDerivedQuantities(data, PF2E_DERIVED_QUANTITIES);
 
     return clonedDoc;
   }

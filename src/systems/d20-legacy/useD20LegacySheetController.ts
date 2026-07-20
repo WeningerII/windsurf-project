@@ -2,9 +2,12 @@ import { useEffect, useMemo } from 'react';
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
 import type { GameSystemId, Skill } from '../../types/game-systems';
 import { systemRegistry } from '../../registry';
+import { presentDerivedQuantities, type PresentedDerivedQuantity } from '../../rules/derivation';
 import type { Dnd35eDataModel } from '../dnd35e/data-model';
+import { DND35E_DERIVED_QUANTITIES } from '../dnd35e/derivedQuantities';
 import type { Pf1eTrait } from '../pf1e/data-model';
 import type { Pf1eDataModel } from '../pf1e/data-model';
+import { PF1E_DERIVED_QUANTITIES } from '../pf1e/derivedQuantities';
 import { getD20LegacySpellSlotTable } from '../shared/d20LegacySpellcasting';
 import { getIterativeAttackBonuses, type D20LegacyData } from './d20LegacySheetShared';
 import { useD20LegacyMutationHandlers } from './useD20LegacyMutationHandlers';
@@ -63,6 +66,26 @@ export function useD20LegacySheetController({
     [spellSlots]
   );
   const skills = useMemo(() => (systemRegistry.get(systemId)?.skills ?? []) as Skill[], [systemId]);
+
+  // Generic strip of declarative derived quantities. Each system declares its
+  // own specs (src/systems/<id>/derivedQuantities.ts); the engine stores their
+  // values on `sys.derived`, and presentDerivedQuantities selects/formats the
+  // surfaced ones. New specs auto-surface with no further sheet edit.
+  const derivedCards = useMemo<PresentedDerivedQuantity[]>(
+    () =>
+      isPf1e
+        ? presentDerivedQuantities(
+            PF1E_DERIVED_QUANTITIES,
+            sys as Pf1eDataModel,
+            (sys as Pf1eDataModel).derived
+          )
+        : presentDerivedQuantities(
+            DND35E_DERIVED_QUANTITIES,
+            sys as Dnd35eDataModel,
+            (sys as Dnd35eDataModel).derived
+          ),
+    [isPf1e, sys]
+  );
 
   const {
     featDefs,
@@ -133,6 +156,7 @@ export function useD20LegacySheetController({
   });
 
   return {
+    derivedCards,
     headerProps: {
       documentName: typedDocument.name,
       isPf1e,

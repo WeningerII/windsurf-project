@@ -21,16 +21,16 @@ import { makeEffectId, type EffectInstance } from '../ir/types';
 import { collectDnd5eConditionEffects } from './dnd5eConditions';
 import { collectD20LegacyConditionEffects } from './d20LegacyConditions';
 import { getPf2eConditionStatusPenalty } from './pf2eConditions';
+import {
+  collectDaggerheartConditionEffects,
+  DAGGERHEART_CONDITION_IDS,
+} from './daggerheartConditions';
+import { mam3eBruisePenalty } from './mam3eConditions';
 
-/** Daggerheart conditions all modify incoming rolls or movement — notes only. */
-const DAGGERHEART_CONDITION_NOTES: Record<string, string> = {
-  vulnerable: 'Vulnerable: rolls against you have advantage',
-  restrained: 'Restrained: you cannot move (attacks unaffected)',
-  hidden: 'Hidden: rolls against you have disadvantage until you are seen',
-};
-
-/** Catalog-backed Daggerheart condition ids, for pickers that store ids. */
-export const DAGGERHEART_CONDITION_IDS = Object.keys(DAGGERHEART_CONDITION_NOTES);
+// Daggerheart's note-only condition catalog and M&M's bruise selector now live in
+// their own per-system modules; re-export them so the historical import surface
+// (`./sceneConditions`) — used by the barrel and sceneCombat — stays stable.
+export { DAGGERHEART_CONDITION_IDS, mam3eBruisePenalty };
 
 /** Parse a 'name-N' condition id into its value-bearing form ('frightened-2'). */
 function parseValuedCondition(conditionId: string): { name: string; value?: number } {
@@ -58,43 +58,6 @@ function collectPf2eSceneConditionEffects(conditionIds: readonly string[]): Effe
       category: 'other',
     },
   ];
-}
-
-function collectDaggerheartConditionEffects(conditionIds: readonly string[]): EffectInstance[] {
-  const effects: EffectInstance[] = [];
-  for (const conditionId of conditionIds) {
-    const note = DAGGERHEART_CONDITION_NOTES[conditionId];
-    if (!note) continue;
-    effects.push({
-      id: makeEffectId('daggerheart', 'condition', conditionId, 'attack'),
-      systemId: 'daggerheart',
-      target: 'attack',
-      operation: 'note',
-      value: null,
-      stackPolicy: 'sum',
-      source: { kind: 'condition', id: conditionId, label: conditionId },
-      label: note,
-      category: 'other',
-      condition: { kind: 'has-condition', conditionId },
-      manualBoundary: {
-        kind: 'manual',
-        note: 'Affects incoming rolls/movement; resolved on the other side of the attack.',
-      },
-    });
-  }
-  return effects;
-}
-
-/**
- * Cumulative Toughness-save penalty from the bruise track ('bruised-N').
- * M&M 3e: each Bruised result imposes a further -1 on later Toughness saves.
- */
-export function mam3eBruisePenalty(conditionIds: readonly string[]): number {
-  for (const conditionId of conditionIds) {
-    const match = /^bruised-(\d+)$/.exec(conditionId);
-    if (match) return Number(match[1]);
-  }
-  return 0;
 }
 
 /**

@@ -9,7 +9,7 @@
  */
 import { describe, expect, it } from 'vitest';
 import { loadEquipmentForSystem } from '../utils/dataLoader';
-import { computeD20LegacyAC } from '../utils/armorClass';
+import { computeD20LegacyAC } from '../rules/compile/defense';
 import type { Armor, Shield } from '../types/equipment/items';
 
 describe('3.5e armor catalog → AC pipeline', () => {

@@ -17,6 +17,7 @@ import type { GameSystemId } from '../../types/game-systems';
 import type { Feat, Feature } from '../../types/core/character';
 import { compileEquipmentEffects, type MagicBonusItem } from './equipEffects';
 import { compileModifierEffects, type ModifierSource } from './modifierEffects';
+import { compileBaseArmorClassEffects } from './defense';
 import { resolveEffects, type ResolveContext, type ResolveResult } from '../resolver/resolve';
 
 /** The subset of a system data model the resolver reads. All fields optional. */
@@ -24,6 +25,13 @@ export interface CharacterEffectInputs {
   equipment?: readonly MagicBonusItem[];
   feats?: readonly Feat[];
   features?: readonly Feature[];
+  /**
+   * Precomputed base armor class. When provided it is seeded as a `set` on the
+   * `'ac'` target, so `bonus('ac')` returns the FULL AC (base + magic/feat/equip
+   * bonuses) instead of just the additive delta. Omit it and AC resolution stays
+   * purely additive (the historical behavior for callers that add base later).
+   */
+  baseArmorClass?: number;
 }
 
 export interface ResolvedCharacterEffects {
@@ -63,6 +71,9 @@ export function resolveCharacterEffects(
   ];
 
   const effects = [
+    ...(inputs.baseArmorClass !== undefined
+      ? compileBaseArmorClassEffects(systemId, inputs.baseArmorClass)
+      : []),
     ...compileEquipmentEffects(systemId, inputs.equipment ?? []),
     ...compileModifierEffects(systemId, sources),
   ];

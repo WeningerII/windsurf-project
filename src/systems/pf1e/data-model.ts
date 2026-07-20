@@ -92,6 +92,10 @@ export interface Pf1eDataModel extends SystemDataModel {
 
   saves: Pf1eSaves;
 
+  /** Engine-derived quantities keyed by compute-register id, populated by the
+   * declarative derivation layer (src/rules/derivation) in prepareData. */
+  derived: Record<string, number>;
+
   /**
    * Active OGL conditions (shaken, sickened, ...) persisted by the sheet's
    * condition picker; compiled into check penalties and scene attack effects
@@ -172,6 +176,7 @@ export const createDefaultPf1eData = (): Pf1eDataModel => ({
     reflex: { base: 0, ability: 0, misc: 0, total: 0 },
     will: { base: 0, ability: 0, misc: 0, total: 0 },
   },
+  derived: {},
   features: [],
   feats: [],
   traits: [],

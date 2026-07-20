@@ -1,7 +1,7 @@
 /**
  * Compute register (Denominator B) for Pathfinder 1e, cited against the Core
  * Rulebook (open game content). Engine: src/systems/pf1e/engine.ts; shared:
- * src/systems/shared/d20-helpers.ts, src/utils/armorClass.ts.
+ * src/systems/shared/d20-helpers.ts, src/rules/compile/defense.ts.
  */
 
 import type { SystemComputeRegister } from './types';
@@ -54,9 +54,10 @@ export const pf1eComputeRegister: SystemComputeRegister = {
         'total=10+armor+shield+min(Dex,cap)+size; touch=10+Dex+size; flatFooted=10+armor+shield+size',
       inputs: ['Dex', 'size', 'armor', 'shield'],
       edgeCases: ['touch ignores armor/shield', 'flat-footed ignores Dex', 'Dex cap'],
+      note: 'Migrated to the declarative derivation layer (PF1E_DERIVED_QUANTITIES). The anchored `total` is pf1e.L2.ac.total, whose faithful compute folds the shared base (computeD20LegacyAC(...).total) through the resolver so it equals data.armorClass.total; a no-gear case reduces to the anchored `const total = 10 + armor + shield + Dex + size` (defense.ts, shared with 3.5e), keeping the pf1e.L2.ac mutation live. touch/flat-footed are pure display-bearing scalars (ac.touch / ac.flat-footed) with no register row.',
       source: `${CRB}: Combat — Armor Class`,
       status: 'verified',
-      testRef: `${T} :: L2 d20-legacy AC (touch / flat-footed / size)`,
+      testRef: 'src/__tests__/derivation/pf1eDerivedQuantities.test.ts :: pf1e.L2.ac.total',
     },
     {
       id: 'pf1e.L2.saves-total',
@@ -78,7 +79,7 @@ export const pf1eComputeRegister: SystemComputeRegister = {
       edgeCases: ['feeds CMB/CMD'],
       source: `${CRB}: Combat — Attack Bonus`,
       status: 'verified',
-      testRef: `${T} :: L3 Pathfinder 1e CMB / CMD and favored-class HP`,
+      testRef: 'src/__tests__/derivation/pf1eDerivedQuantities.test.ts :: pf1e.L3.bab-sum',
     },
     {
       id: 'pf1e.L3.cmb',
@@ -163,6 +164,18 @@ export const pf1eComputeRegister: SystemComputeRegister = {
       testRef: `${T} :: L2/L4 Pathfinder 1e check resolution`,
     },
     {
+      id: 'pf1e.L4.max-rank-cap',
+      layer: 'L4',
+      quantity: 'Max skill ranks per skill',
+      formula:
+        'max ranks in a skill = character level (class skills add +3 to the bonus, not the cap)',
+      inputs: ['level'],
+      edgeCases: ['cap is the character level, unlike 3.5e class/cross-class split'],
+      source: `${CRB}: Skills — Ranks`,
+      status: 'verified',
+      testRef: 'src/__tests__/derivation/pf1eDerivedQuantities.test.ts :: pf1e.L4.max-rank-cap',
+    },
+    {
       id: 'pf1e.L4.initiative',
       layer: 'L4',
       quantity: 'Initiative',
@@ -237,7 +250,7 @@ export const pf1eComputeRegister: SystemComputeRegister = {
       edgeCases: ['racial/class bonus feats added separately'],
       source: `${CRB}: Character Advancement`,
       status: 'verified',
-      testRef: `${T} :: L5/L8 Pathfinder 1e concentration, death, and feats`,
+      testRef: 'src/__tests__/derivation/pf1eDerivedQuantities.test.ts :: pf1e.L7.feats-from-level',
     },
     {
       id: 'pf1e.L6.carrying-capacity',
@@ -316,6 +329,30 @@ export const pf1eComputeRegister: SystemComputeRegister = {
       source: `${CRB}: Combat — Injury and Death`,
       status: 'verified',
       testRef: `${T} :: L8 d20-legacy damage application`,
+    },
+    {
+      id: 'pf1e.L9.skill-max-ranks',
+      layer: 'L9',
+      quantity: 'Max skill ranks per skill (≤ character level)',
+      formula: "flag when a skill's ranks exceed the character level",
+      inputs: ['skillRanks', 'level'],
+      edgeCases: ['exactly at limit legal', 'over limit flagged'],
+      source: `${CRB}: Skills — Ranks`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/legality/pf1eLegality.test.ts :: pf1e flags skill ranks above the character level',
+    },
+    {
+      id: 'pf1e.L9.class-level-sum',
+      layer: 'L9',
+      quantity: 'Class levels sum to character level',
+      formula: 'flag when Σ classLevels.level exceeds character level',
+      inputs: ['classLevels', 'level'],
+      edgeCases: ['exactly at limit legal', 'over limit flagged'],
+      source: `${CRB}: Character Advancement`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/legality/pf1eLegality.test.ts :: pf1e flags class levels exceeding character level',
     },
   ],
 };

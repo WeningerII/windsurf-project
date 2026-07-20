@@ -23,7 +23,7 @@ export type Surface = 'library' | 'sheet' | 'scene';
  * them into an internal segment control. `content` is the SRD content stats
  * view (was `SystemStatusDashboard`), labelled "Library" in the tab bar.
  */
-export type LibrarySegment = 'characters' | 'campaigns' | 'scenes' | 'content';
+export type LibrarySegment = 'characters' | 'campaigns' | 'scenes' | 'bestiary' | 'content';
 
 /** A modal layer rendered above the active surface. */
 export type Overlay = 'legal' | null;
@@ -84,6 +84,8 @@ export function librarySegmentLabel(segment: LibrarySegment): string {
       return 'Campaigns';
     case 'scenes':
       return 'Scenes';
+    case 'bestiary':
+      return 'Bestiary';
     case 'content':
       return 'Library';
     default:
@@ -96,6 +98,7 @@ export const LIBRARY_SEGMENTS: readonly LibrarySegment[] = [
   'characters',
   'campaigns',
   'scenes',
+  'bestiary',
   'content',
 ];
 

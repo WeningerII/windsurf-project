@@ -1,8 +1,11 @@
 import { SystemEngine, RollResult } from '../../registry/types';
 import { CharacterDocument } from '../../types/core/document';
 import { rollD20 } from '../../rules/dice';
+import { applyDerivedQuantities } from '../../rules/derivation';
 import { Mam3eConditionTrack, Mam3eDataModel } from './data-model';
+import { MAM3E_DERIVED_QUANTITIES } from './derivedQuantities';
 import { calculatePowerPointCost, getPowerRank } from './powerMath';
+import { mam3eToughnessPenalty } from '../../rules/conditions/mam3eConditions';
 
 /** Skill → Ability mapping for M&M 3e */
 const SKILL_ABILITY_MAP: Record<string, string> = {
@@ -271,6 +274,11 @@ export class Mam3eEngine implements SystemEngine<Mam3eDataModel> {
 
     data.plViolations = violations;
 
+    // 7. Declarative standing derived quantities (Initiative, starting PP budget,
+    // …). One call computes every spec in derivedQuantities.ts; the sheet reads
+    // data.derived and the compute register's mutation gate verifies each.
+    data.derived = applyDerivedQuantities(data, MAM3E_DERIVED_QUANTITIES);
+
     return clonedDoc;
   }
 
@@ -300,9 +308,11 @@ export class Mam3eEngine implements SystemEngine<Mam3eDataModel> {
       // Defense check (e.g., Toughness save)
       mod = data.defenses[checkId as keyof typeof data.defenses].total;
       // Each Bruised condition imposes a cumulative -1 on further Toughness
-      // resistance checks (Hero's Handbook, Damage).
+      // resistance checks (Hero's Handbook, Damage). Sourced from the shared
+      // condition IR (mam3eConditions) so the rule lives in one place; the
+      // value is identical to the former inline `- bruised`.
       if (checkId === 'toughness') {
-        mod -= normalizeConditionTrack(data.conditionTrack).bruised;
+        mod -= mam3eToughnessPenalty(normalizeConditionTrack(data.conditionTrack));
       }
       flavor = `${checkId.charAt(0).toUpperCase() + checkId.slice(1)} Check`;
     }

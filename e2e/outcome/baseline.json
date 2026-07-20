@@ -29,8 +29,8 @@
       "timeBudgetMs": 20000
     },
     "mam3e": {
-      "nonTrivial": "Power Level 12 superhero; Perception check roll",
-      "steps": 5,
+      "nonTrivial": "Guided creator (name + confirm) → Power Level 12 superhero; Perception check roll",
+      "steps": 7,
       "timeBudgetMs": 20000
     },
     "daggerheart": {

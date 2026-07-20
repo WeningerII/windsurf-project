@@ -15,6 +15,9 @@ import {
 } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
 import { Badge } from '../../components/ui/Badge';
+import { presentDerivedQuantities } from '../../rules/derivation';
+import { MAM3E_DERIVED_QUANTITIES } from './derivedQuantities';
+import { MamDerivedStats } from './components/MamDerivedStats';
 import { MamArchetypesTab } from './components/MamArchetypesTab';
 import { MamComplicationsTab } from './components/MamComplicationsTab';
 import { MamPowerBrowserTab } from './components/MamPowerBrowserTab';
@@ -35,10 +38,16 @@ interface Props {
 
 export const Mam3eCharacterSheet: React.FC<Props> = ({ document, onUpdate }) => {
   const controller = useMam3eSheetController({ document, onUpdate });
+  const derivedCards = presentDerivedQuantities(
+    MAM3E_DERIVED_QUANTITIES,
+    controller.data,
+    controller.data.derived
+  );
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 p-6">
       <MamHeader {...controller.headerProps} />
+      <MamDerivedStats derivedCards={derivedCards} />
       <Tabs defaultValue="abilities">
         <TabsList className="w-full grid grid-cols-2 md:grid-cols-5 h-auto gap-1">
           <TabsTrigger value="abilities" className="flex items-center gap-1.5">

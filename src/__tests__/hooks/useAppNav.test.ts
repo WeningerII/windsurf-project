@@ -89,6 +89,7 @@ describe('useAppNav', () => {
       'Characters',
       'Campaigns',
       'Scenes',
+      'Bestiary',
       'Library',
     ]);
   });

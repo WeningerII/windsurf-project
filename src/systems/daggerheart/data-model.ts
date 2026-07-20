@@ -29,6 +29,10 @@ export interface DaggerheartDataModel extends SystemDataModel {
   majorThreshold: number;
   severeThreshold: number;
 
+  /** Engine-derived quantities keyed by compute-register id, populated by the
+   * declarative derivation layer (src/rules/derivation) in prepareData. */
+  derived: Record<string, number>;
+
   // Hit Points and Stress
   hitPoints: { current: number; max: number };
   stress: { current: number; max: number };
@@ -89,6 +93,7 @@ export const createDefaultDaggerheartData = (): DaggerheartDataModel => ({
   armorScore: 0,
   majorThreshold: 0,
   severeThreshold: 0,
+  derived: {},
   hitPoints: { current: 6, max: 6 },
   stress: { current: 0, max: 6 },
   armor: { current: 0, max: 0 },

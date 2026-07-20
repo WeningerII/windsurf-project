@@ -11,7 +11,7 @@
 import { Dnd5eEngine } from '../systems/dnd5e/engine';
 import { abilityMod } from '../utils/math';
 import { profBonus, rollD20, normalizeDeathSaves } from '../systems/dnd5e/shared/engine';
-import { compute5eAC } from '../utils/armorClass';
+import { compute5eAC } from '../rules/compile/defense';
 import { compute5eSpellSlots, computePactMagicSlots } from '../utils/spellSlots';
 import { createDefaultDnd5eData, type Dnd5eDataModel } from '../systems/dnd5e/data-model';
 import type { EquippedItem } from '../types/core/character';

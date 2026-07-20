@@ -27,7 +27,7 @@ async function createScene(page: import('@playwright/test').Page, name: string) 
   await expect(page.getByRole('grid', { name: `${name} grid` })).toBeVisible({ timeout: 30_000 });
 }
 
-test('scene create-then-open lands on the canvas; picking round-trips selection', async ({
+test('scene create-then-open lands on the canvas; picking round-trips selection', { tag: '@smoke' }, async ({
   page,
 }) => {
   // The Scenes tab hosts the select-only picker.

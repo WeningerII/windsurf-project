@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { clampCount } from '../../../utils/resourcePool';
+import { clampCount, consume, poolFromRemaining, remainingOf } from '../../../utils/resourcePool';
 import type { FeatDefinition } from '../../../types/character-options/feats';
 import type {
   Dnd5eFeatureOptionDefinition,
@@ -348,6 +348,34 @@ export function useDnd5eSheetActionHandlers<T extends Dnd5eLikeDataModel>({
     [system.inventory, update]
   );
 
+  const handleConsumeInventoryItem = useCallback(
+    (itemId: string) => {
+      const index = system.inventory.findIndex((entry) => entry.itemId === itemId);
+      if (index < 0) {
+        return;
+      }
+
+      const current = system.inventory[index];
+      // Deplete one stacked unit via the shared `consume` verb; `depleted`
+      // decides whether the emptied stack is dropped from inventory.
+      const { pool, depleted } = consume(poolFromRemaining(current.quantity, current.quantity));
+      if (depleted) {
+        update({
+          inventory: system.inventory.filter((_, entryIndex) => entryIndex !== index),
+        } as Partial<T>);
+        return;
+      }
+
+      const nextQuantity = remainingOf(pool);
+      update({
+        inventory: system.inventory.map((entry, entryIndex) =>
+          entryIndex === index ? { ...entry, quantity: nextQuantity } : entry
+        ),
+      } as Partial<T>);
+    },
+    [system.inventory, update]
+  );
+
   const handleSpellSelect = useCallback(
     (spell: Spell) => {
       if (
@@ -581,6 +609,7 @@ export function useDnd5eSheetActionHandlers<T extends Dnd5eLikeDataModel>({
     handleToggleAttune,
     handleAddInventoryItem,
     handleRemoveInventoryItem,
+    handleConsumeInventoryItem,
     handleSpellSelect,
     handleTogglePreparedSpell,
     handleFeatSelect,

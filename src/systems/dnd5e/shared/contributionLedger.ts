@@ -7,14 +7,18 @@ import type {
 } from '../../../types/core/contributionLedger';
 import type { ClassLevel } from '../../../types/core/character';
 import type { CharacterDocument } from '../../../types/core/document';
-import { resolveCharacterEffects, toContributionLedger } from '../../../rules';
-import { dnd5eArmorDexContribution } from '../../../utils/armorClass';
+import {
+  resolveCharacterEffects,
+  toContributionLedger,
+  dnd5eArmorDexContribution,
+} from '../../../rules';
 import { loadClassesForSystem } from '../../../utils/dataLoader';
 import {
   dnd5eUnarmoredDefenseBarbarian,
   dnd5eUnarmoredDefenseMonk,
 } from '../../../utils/derivedCombatMath';
-import { abilityMod } from '../../../utils/math';
+import { dnd5eSpellAttackBonus, dnd5eSpellSaveDC } from '../../../utils/derivedCasterMath';
+import { abilityMod, profBonus } from '../../../utils/math';
 import type { Dnd5e2024DataModel } from '../../dnd5e-2024/data-model';
 import type { Dnd5eDataModel, Dnd5eTemplateState } from '../data-model';
 import { getDnd5eDefenseStyleArmorClassBonus } from './activityState';
@@ -61,6 +65,7 @@ export async function buildDnd5eContributionLedger<T extends Dnd5eContributionDa
     ),
     ...buildTemplateProficiencyEntries(systemId, document.system.templateState),
     ...buildAlwaysPreparedSpellEntries(systemId, document.system.classLevels, classes),
+    ...buildSpellcastingEntries(systemId, document.system),
   ];
 
   return { entries };
@@ -376,6 +381,122 @@ function buildAlwaysPreparedSpellEntries(
       },
     })
   );
+}
+
+/**
+ * Provenance rows for each spellcasting class's spell save DC and spell attack
+ * bonus. RFC 003 defers re-backing these through the resolver, so — like
+ * `buildArmorClassEntries` — the terms are hand-built here. They re-derive with
+ * the SAME cited helpers the engine uses in `prepareData` (`dnd5eSpellSaveDC` /
+ * `dnd5eSpellAttackBonus` over `profBonus(totalLevel)` and the spellcasting
+ * ability modifier), so the emitted rows sum to the engine's
+ * `data.spellcasting.classes[].spellSaveDc` / `spellAttackBonus` exactly.
+ */
+function buildSpellcastingEntries(
+  systemId: Dnd5eValidationSystemId,
+  system: Dnd5eContributionDataModel
+): ContributionLedgerEntry[] {
+  const spellcasting = system.spellcasting;
+  if (!spellcasting || spellcasting.classes.length === 0) {
+    return [];
+  }
+
+  // Mirror the engine's total-level derivation so the proficiency bonus term
+  // matches `profBonus(totalLevel)` used by prepareData.
+  const totalLevel =
+    system.classLevels.length > 0
+      ? system.classLevels.reduce((sum, cl) => sum + cl.level, 0)
+      : system.level;
+  const proficiencyBonus = profBonus(totalLevel);
+
+  return spellcasting.classes.flatMap((casterClass) => {
+    // Index baseAttributes with `casterClass.ability` exactly as the engine
+    // does, so the ability modifier term is identical regardless of key casing.
+    const abilityScore = system.baseAttributes[casterClass.ability] ?? 10;
+    const spellMod = abilityMod(abilityScore);
+    const saveDcTarget = `spellcasting.classes.${casterClass.classId}.spellSaveDc`;
+    const attackTarget = `spellcasting.classes.${casterClass.classId}.spellAttackBonus`;
+    const details = {
+      classId: casterClass.classId,
+      ability: casterClass.ability,
+      abilityScore,
+      proficiencyBonus,
+      spellcastingAbilityModifier: spellMod,
+      // The composed totals these rows explain (and must sum to).
+      spellSaveDc: dnd5eSpellSaveDC(proficiencyBonus, spellMod),
+      spellAttackBonus: dnd5eSpellAttackBonus(proficiencyBonus, spellMod),
+    };
+
+    return [
+      // Spell save DC = 8 + proficiency bonus + spellcasting ability modifier.
+      createEntry({
+        systemId,
+        target: saveDcTarget,
+        sourceKind: 'system',
+        sourceId: 'spell-save-dc-base',
+        sourceLabel: 'Spell save DC base',
+        label: 'Spell save DC base',
+        operation: 'set',
+        value: 8,
+        category: 'spell',
+        sourcePath: 'system.spellcasting.classes',
+        details,
+      }),
+      createEntry({
+        systemId,
+        target: saveDcTarget,
+        sourceKind: 'class',
+        sourceId: casterClass.classId,
+        sourceLabel: casterClass.classId,
+        label: 'Spell save DC proficiency bonus',
+        operation: 'add',
+        value: proficiencyBonus,
+        category: 'spell',
+        sourcePath: 'system.spellcasting.classes',
+        details,
+      }),
+      createEntry({
+        systemId,
+        target: saveDcTarget,
+        sourceKind: 'system',
+        sourceId: `${casterClass.ability}-modifier`,
+        sourceLabel: `${casterClass.ability} modifier`,
+        label: 'Spell save DC ability modifier',
+        operation: 'add',
+        value: spellMod,
+        category: 'spell',
+        sourcePath: 'system.spellcasting.classes',
+        details,
+      }),
+      // Spell attack bonus = proficiency bonus + spellcasting ability modifier.
+      createEntry({
+        systemId,
+        target: attackTarget,
+        sourceKind: 'class',
+        sourceId: casterClass.classId,
+        sourceLabel: casterClass.classId,
+        label: 'Spell attack proficiency bonus',
+        operation: 'add',
+        value: proficiencyBonus,
+        category: 'spell',
+        sourcePath: 'system.spellcasting.classes',
+        details,
+      }),
+      createEntry({
+        systemId,
+        target: attackTarget,
+        sourceKind: 'system',
+        sourceId: `${casterClass.ability}-modifier`,
+        sourceLabel: `${casterClass.ability} modifier`,
+        label: 'Spell attack ability modifier',
+        operation: 'add',
+        value: spellMod,
+        category: 'spell',
+        sourcePath: 'system.spellcasting.classes',
+        details,
+      }),
+    ];
+  });
 }
 
 function buildListEntry(params: {

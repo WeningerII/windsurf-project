@@ -3,6 +3,7 @@ import type { CharacterDocument, SystemDataModel } from '../../types/core/docume
 import { RestControls } from '../../components/RestControls';
 import { D20ClassesSection } from './components/D20ClassesSection';
 import { D20CombatSection } from './components/D20CombatSection';
+import { D20DerivedStats } from './components/D20DerivedStats';
 import { D20LegacyHeader } from './components/D20LegacyHeader';
 import { D20LegacyTabs } from './components/D20LegacyTabs';
 import { useD20LegacySheetController } from './useD20LegacySheetController';
@@ -13,7 +14,7 @@ interface Props {
 }
 
 export const D20LegacySheet: React.FC<Props> = ({ document, onUpdate }) => {
-  const { headerProps, classesProps, combatProps, restProps, tabsProps } =
+  const { derivedCards, headerProps, classesProps, combatProps, restProps, tabsProps } =
     useD20LegacySheetController({
       document,
       onUpdate,
@@ -24,6 +25,7 @@ export const D20LegacySheet: React.FC<Props> = ({ document, onUpdate }) => {
       <D20LegacyHeader {...headerProps} />
       <D20ClassesSection {...classesProps} />
       <D20CombatSection {...combatProps} />
+      <D20DerivedStats derivedCards={derivedCards} />
       <RestControls {...restProps} />
       <D20LegacyTabs {...tabsProps} />
     </div>

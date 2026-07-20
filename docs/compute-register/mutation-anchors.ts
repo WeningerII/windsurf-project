@@ -39,8 +39,52 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'Math.floor((score - 10) / 2)',
     replace: 'Math.floor((score - 11) / 2)',
   },
+  // passive Perception: both editions engine-wire the same shared helper, so the
+  // one formula perturbation (base 10 -> 11) flips the engine-wired test for each.
+  'dnd5e2014.L4.passive-perception': {
+    file: 'src/utils/derivedCasterMath.ts',
+    find: 'return 10 + wisMod + profPart;',
+    replace: 'return 11 + wisMod + profPart;',
+  },
+  'dnd5e2024.L4.passive-perception': {
+    file: 'src/utils/derivedCasterMath.ts',
+    find: 'return 10 + wisMod + profPart;',
+    replace: 'return 11 + wisMod + profPart;',
+  },
+  'dnd5e2024.L6.carrying-capacity': {
+    file: 'src/systems/dnd5e/shared/dnd5eMovement.ts',
+    find: 'Math.max(0, strengthScore) * 15',
+    replace: 'Math.max(0, strengthScore) * 16',
+  },
+  'dnd5e2024.L6.push-drag-lift': {
+    file: 'src/systems/dnd5e/shared/dnd5eMovement.ts',
+    find: 'Math.max(0, strengthScore) * 30',
+    replace: 'Math.max(0, strengthScore) * 31',
+  },
+  'dnd5e2024.L6.long-jump': {
+    file: 'src/systems/dnd5e/shared/dnd5eMovement.ts',
+    find: 'const full = Math.max(0, strengthScore);',
+    replace: 'const full = Math.max(0, strengthScore) + 1;',
+  },
+  'dnd5e2024.L6.high-jump': {
+    file: 'src/systems/dnd5e/shared/dnd5eMovement.ts',
+    find: 'const full = Math.max(0, 3 + strengthMod);',
+    replace: 'const full = Math.max(0, 4 + strengthMod);',
+  },
+  // cantrip damage tier: both editions share dnd5eCantripScaleTier (breakpoints
+  // 5/11/17); the same [5, 2] base-step perturbation flips each edition's test.
+  'dnd5e2014.L5.cantrip-scaling': {
+    file: 'src/utils/derivedCasterMath.ts',
+    find: '[5, 2]',
+    replace: '[5, 3]',
+  },
+  'dnd5e2024.L5.cantrip-scaling': {
+    file: 'src/utils/derivedCasterMath.ts',
+    find: '[5, 2]',
+    replace: '[5, 3]',
+  },
   'dnd5e2014.L2.ac.unarmored': {
-    file: 'src/utils/armorClass.ts',
+    file: 'src/rules/compile/defense.ts',
     find: '(armor ? armor.armorClass! : 10) + dnd5eArmorDexContribution(armor, dexMod)',
     replace: '(armor ? armor.armorClass! : 11) + dnd5eArmorDexContribution(armor, dexMod)',
   },
@@ -73,8 +117,8 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
   // (=> +3), so breaking the >=9 branch flips its `toContain(3)`.
   'dnd5e2014.L3.rage-damage': {
     file: 'src/rules/conditions/dnd5eRiders.ts',
-    find: 'return 3;',
-    replace: 'return 2;',
+    find: '[9, 3]',
+    replace: '[9, 2]',
   },
   // Divine Smite base is 2d8; the rider test asserts every smite die value === 8.
   'dnd5e2014.L3.divine-smite-base': {
@@ -165,11 +209,11 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
   // ── dnd-3.5e ──
   'dnd35e.L1.save-progression': {
     file: 'src/systems/shared/d20-helpers.ts',
-    find: "if (quality === 'good') return 2 + Math.floor(level / 2);",
-    replace: "if (quality === 'good') return 3 + Math.floor(level / 2);",
+    find: 'linearRate(level, 1, 2, 2)',
+    replace: 'linearRate(level, 1, 2, 3)',
   },
   'dnd35e.L2.ac': {
-    file: 'src/utils/armorClass.ts',
+    file: 'src/rules/compile/defense.ts',
     find: 'const total = 10 + armorBonus + shieldBonus + effectiveDex + sizeMod;',
     replace: 'const total = 11 + armorBonus + shieldBonus + effectiveDex + sizeMod;',
   },
@@ -186,8 +230,8 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
   // and pf1e bab-sum, so the gate dedups this find across them.
   'dnd35e.L3.bab-sum': {
     file: 'src/systems/shared/d20-helpers.ts',
-    find: "if (progression === 'full') return level;",
-    replace: "if (progression === 'full') return level + 1;",
+    find: 'linearRate(level, 1, 1)',
+    replace: 'linearRate(level, 2, 1)',
   },
   // Grapple = BAB + Str mod + size mod (3.5e engine leaf).
   'dnd35e.L3.grapple': {
@@ -206,14 +250,14 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
 
   // ── pf1e (shares d20 helpers + legacy AC with 3.5e) ──
   'pf1e.L2.ac': {
-    file: 'src/utils/armorClass.ts',
+    file: 'src/rules/compile/defense.ts',
     find: 'const total = 10 + armorBonus + shieldBonus + effectiveDex + sizeMod;',
     replace: 'const total = 11 + armorBonus + shieldBonus + effectiveDex + sizeMod;',
   },
   'pf1e.L1.save-progression': {
     file: 'src/systems/shared/d20-helpers.ts',
-    find: "if (quality === 'good') return 2 + Math.floor(level / 2);",
-    replace: "if (quality === 'good') return 3 + Math.floor(level / 2);",
+    find: 'linearRate(level, 1, 2, 2)',
+    replace: 'linearRate(level, 1, 2, 3)',
   },
   // Shares the derivedCombatMath iterative helper with 3.5e (deduped by the gate).
   'pf1e.L3.iterative-attacks': {
@@ -224,8 +268,8 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
   // Shares classBAB with 3.5e (deduped by the gate).
   'pf1e.L3.bab-sum': {
     file: 'src/systems/shared/d20-helpers.ts',
-    find: "if (progression === 'full') return level;",
-    replace: "if (progression === 'full') return level + 1;",
+    find: 'linearRate(level, 1, 1)',
+    replace: 'linearRate(level, 2, 1)',
   },
   // CMB = BAB + Str (or Dex if Tiny-) + size mod; CMD = 10 + BAB + Str + Dex + size.
   'pf1e.L3.cmb': {
@@ -313,15 +357,15 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
   // ── daggerheart ──
   'daggerheart.L1.tier': {
     file: 'src/rules/daggerheartDerived.ts',
-    find: 'if (level >= 8) {',
-    replace: 'if (level >= 9) {',
+    find: 'breakpoints(level, DAGGERHEART_TIER_BREAKPOINTS, 1)',
+    replace: 'breakpoints(level, DAGGERHEART_TIER_BREAKPOINTS, 2)',
   },
   // proficiency == tier (getDaggerheartProficiency delegates to getDaggerheartTier),
   // so the tier mutation breaks the shared "tier and proficiency" test for both.
   'daggerheart.L1.proficiency': {
     file: 'src/rules/daggerheartDerived.ts',
-    find: 'if (level >= 8) {',
-    replace: 'if (level >= 9) {',
+    find: 'breakpoints(level, DAGGERHEART_TIER_BREAKPOINTS, 1)',
+    replace: 'breakpoints(level, DAGGERHEART_TIER_BREAKPOINTS, 2)',
   },
   // L3 damage assembly: weapon dice = proficiency; a crit adds the max of the
   // damage dice (diceCount × dieSize) to the rolled total; Spellcast damage rolls
@@ -345,17 +389,17 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
   // 141 leaf-formula anchors scoped per system, each independently
   // preflighted (find occurs exactly once) and gate-verified via --mutate.
   'dnd5e2014.L2.ac.light': {
-    file: 'src/utils/armorClass.ts',
+    file: 'src/rules/compile/defense.ts',
     find: 'return dexMod;',
     replace: 'return dexMod + 1;',
   },
   'dnd5e2014.L2.ac.medium': {
-    file: 'src/utils/armorClass.ts',
+    file: 'src/rules/compile/defense.ts',
     find: 'Math.min(dexMod, armor.dexBonusMax ?? 2)',
     replace: 'Math.min(dexMod, armor.dexBonusMax ?? 3)',
   },
   'dnd5e2014.L2.ac.heavy': {
-    file: 'src/utils/armorClass.ts',
+    file: 'src/rules/compile/defense.ts',
     find: 'return 0;',
     replace: 'return 1;',
   },
@@ -451,7 +495,7 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
       "      target: 'ability-check-disabled',\n      operation: 'disadvantage',\n      label: 'Poisoned: disadvantage on ability checks',",
   },
   'dnd5e2024.L2.ac-formula-set': {
-    file: 'src/utils/armorClass.ts',
+    file: 'src/rules/compile/defense.ts',
     find: '(armor ? armor.armorClass! : 10) + dnd5eArmorDexContribution(armor, dexMod)',
     replace: '(armor ? armor.armorClass! : 11) + dnd5eArmorDexContribution(armor, dexMod)',
   },
@@ -547,8 +591,8 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
   },
   'dnd35e.L1.bab-track': {
     file: 'src/systems/shared/d20-helpers.ts',
-    find: "if (progression === 'three-quarter') return Math.floor((level * 3) / 4);",
-    replace: "if (progression === 'three-quarter') return Math.floor((level * 4) / 4);",
+    find: 'linearRate(level, 3, 4)',
+    replace: 'linearRate(level, 1, 4)',
   },
   'dnd35e.L2.saves-total': {
     file: 'src/systems/dnd35e/engine.ts',
@@ -574,6 +618,12 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     file: 'src/utils/derivedCombatMath.ts',
     find: 'return isClassSkill ? level + 3 : Math.floor((level + 3) / 2);',
     replace: 'return isClassSkill ? level + 4 : Math.floor((level + 3) / 2);',
+  },
+  // PF1e caps ranks at character level (no class/cross-class split).
+  'pf1e.L4.max-rank-cap': {
+    file: 'src/utils/derivedCombatMath.ts',
+    find: 'return level;',
+    replace: 'return level + 1;',
   },
   'dnd35e.L4.initiative': {
     file: 'src/systems/dnd35e/engine.ts',
@@ -628,13 +678,13 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
   },
   'dnd35e.L7.feats-from-level': {
     file: 'src/systems/dnd35e/derivedMath.ts',
-    find: 'return 1 + Math.floor(l / 3);',
-    replace: 'return 2 + Math.floor(l / 3);',
+    find: 'return linearRate(l, 1, 3, 1);',
+    replace: 'return linearRate(l, 1, 3, 2);',
   },
   'dnd35e.L7.ability-increases': {
     file: 'src/systems/dnd35e/derivedMath.ts',
-    find: 'return Math.floor(Math.max(0, level) / 4);',
-    replace: 'return Math.floor(Math.max(0, level) / 5);',
+    find: 'return linearRate(Math.max(0, level), 1, 4);',
+    replace: 'return linearRate(Math.max(0, level), 1, 5);',
   },
   'dnd35e.L1.xp-to-level': {
     file: 'src/systems/dnd35e/derivedMath.ts',
@@ -658,8 +708,8 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
   },
   'pf1e.L1.bab-track': {
     file: 'src/systems/shared/d20-helpers.ts',
-    find: "if (progression === 'three-quarter') return Math.floor((level * 3) / 4);",
-    replace: "if (progression === 'three-quarter') return Math.floor((level * 4) / 4);",
+    find: 'linearRate(level, 3, 4)',
+    replace: 'linearRate(level, 1, 4)',
   },
   'pf1e.L2.saves-total': {
     file: 'src/systems/pf1e/engine.ts',
@@ -753,7 +803,7 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     replace: 'Math.floor((score - 11) / 2)',
   },
   'pf2e.L2.ac': {
-    file: 'src/utils/armorClass.ts',
+    file: 'src/rules/compile/defense.ts',
     find: 'ac = 10 + dexMod + proficiencyBonus;',
     replace: 'ac = 11 + dexMod + proficiencyBonus;',
   },
@@ -817,6 +867,11 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     file: 'src/utils/derivedCombatMath.ts',
     find: 'return { encumbered: strMod + 5, max: strMod + 10 };',
     replace: 'return { encumbered: strMod + 6, max: strMod + 10 };',
+  },
+  'pf2e.L6.bulk-max': {
+    file: 'src/utils/derivedCombatMath.ts',
+    find: 'max: strMod + 10',
+    replace: 'max: strMod + 11',
   },
   'pf2e.L8.shield-block': {
     file: 'src/systems/pf2e/derivedMath.ts',
@@ -1063,5 +1118,60 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     file: 'src/rules/daggerheartDerived.ts',
     find: 'return { survives: true, clears: hopeDie };',
     replace: 'return { survives: true, clears: hopeDie + 1 };',
+  },
+  // ── L9 build-legality validators (src/rules/legality/**) ──
+  // Each anchor weakens one cap comparison (`> cap` -> `> cap + 100`) so the
+  // rule never flags; its illegal fixture then loses its violation and the
+  // testRef'd legality assertion flips red. Per-edition/per-rule variable names
+  // keep every find string unique within its file.
+  'dnd5e2014.L9.ability-score-cap': {
+    file: 'src/rules/legality/dnd5e.ts',
+    find: 'abilityScoreValue2014 > abilityScoreCap2014',
+    replace: 'abilityScoreValue2014 > abilityScoreCap2014 + 100',
+  },
+  'dnd5e2014.L9.class-level-sum': {
+    file: 'src/rules/legality/dnd5e.ts',
+    find: 'classLevelSumValue2014 > characterLevelValue2014',
+    replace: 'classLevelSumValue2014 > characterLevelValue2014 + 100',
+  },
+  'dnd5e2024.L9.ability-score-cap': {
+    file: 'src/rules/legality/dnd5e.ts',
+    find: 'abilityScoreValue2024 > abilityScoreCap2024',
+    replace: 'abilityScoreValue2024 > abilityScoreCap2024 + 100',
+  },
+  'dnd5e2024.L9.class-level-sum': {
+    file: 'src/rules/legality/dnd5e.ts',
+    find: 'classLevelSumValue2024 > characterLevelValue2024',
+    replace: 'classLevelSumValue2024 > characterLevelValue2024 + 100',
+  },
+  'dnd35e.L9.skill-max-ranks': {
+    file: 'src/rules/legality/dnd35e.ts',
+    find: 'skillRankValue > skillRankCap',
+    replace: 'skillRankValue > skillRankCap + 100',
+  },
+  'dnd35e.L9.class-level-sum': {
+    file: 'src/rules/legality/dnd35e.ts',
+    find: 'classLevelSumValue > characterLevelValue',
+    replace: 'classLevelSumValue > characterLevelValue + 100',
+  },
+  'pf1e.L9.skill-max-ranks': {
+    file: 'src/rules/legality/pf1e.ts',
+    find: 'skillRankValue > skillRankLimit',
+    replace: 'skillRankValue > skillRankLimit + 100',
+  },
+  'pf1e.L9.class-level-sum': {
+    file: 'src/rules/legality/pf1e.ts',
+    find: 'classLevelSumValue > characterLevelValue',
+    replace: 'classLevelSumValue > characterLevelValue + 100',
+  },
+  'pf2e.L9.ability-score-cap': {
+    file: 'src/rules/legality/pf2e.ts',
+    find: 'abilityScoreValue > abilityScoreCap',
+    replace: 'abilityScoreValue > abilityScoreCap + 100',
+  },
+  'pf2e.L9.proficiency-budget': {
+    file: 'src/rules/legality/pf2e.ts',
+    find: 'proficiencyTotalValue > proficiencyBudget',
+    replace: 'proficiencyTotalValue > proficiencyBudget + 100',
   },
 };

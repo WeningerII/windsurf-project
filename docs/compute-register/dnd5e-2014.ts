@@ -7,7 +7,7 @@
  *   missing     — the rules define it; the engine does not compute it yet.
  *
  * Engine sources: src/systems/dnd5e/shared/engine.ts, src/systems/dnd5e/engine.ts,
- * src/utils/armorClass.ts, src/utils/math.ts, src/utils/spellSlots.ts.
+ * src/rules/compile/defense.ts, src/utils/math.ts, src/utils/spellSlots.ts.
  */
 
 import type { SystemComputeRegister } from './types';
@@ -189,7 +189,8 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       edgeCases: ['barbarian 9 → +3', 'toggle without feature → no effect'],
       source: `${SRD}: Barbarian — Rage`,
       status: 'verified',
-      testRef: 'src/__tests__/rules/characterCombatant.test.ts :: 5e rider toggles in scene combat (phase 4)',
+      testRef:
+        'src/__tests__/rules/characterCombatant.test.ts :: 5e rider toggles in scene combat (phase 4)',
       note: 'Manual boundary: melee Strength attacks only (rider note travels with the effect).',
     },
     {
@@ -201,7 +202,8 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       edgeCases: ['feat-gated: toggle without feat → no effect'],
       source: `${SRD}: Feats — Great Weapon Master`,
       status: 'verified',
-      testRef: 'src/__tests__/rules/characterCombatant.test.ts :: 5e rider toggles in scene combat (phase 4)',
+      testRef:
+        'src/__tests__/rules/characterCombatant.test.ts :: 5e rider toggles in scene combat (phase 4)',
       note: 'Manual boundary: heavy melee weapons only.',
     },
     {
@@ -305,9 +307,9 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       inputs: ['Wis score', 'Perception proficiency'],
       edgeCases: ['advantage +5', 'disadvantage -5'],
       source: `${SRD}: Passive Checks`,
-      status: 'missing',
-      testRef: 'src/__tests__/derivedCasterMath.test.ts :: 5e passive Perception',
-      note: 'Canonical helper (derivedCasterMath.ts) is test-pinned but not consumed by any engine or sheet; per the legend, unwired quantities are missing.',
+      status: 'verified',
+      testRef:
+        'src/__tests__/derivation/dnd5eDerivedQuantities.test.ts :: dnd5e.L4.passive-perception',
     },
     {
       id: 'dnd5e2014.L4.d20-modes',
@@ -359,9 +361,9 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       inputs: ['character level'],
       edgeCases: ['per-cantrip dice progression'],
       source: `${SRD}: Cantrips`,
-      status: 'missing',
-      testRef: 'src/__tests__/derivedCasterMath.test.ts :: 5e cantrip scaling tier',
-      note: 'Canonical helper (derivedCasterMath.ts) is test-pinned but not consumed by any engine or sheet; per the legend, unwired quantities are missing.',
+      status: 'verified',
+      testRef:
+        'src/__tests__/derivation/dnd5eDerivedQuantities.test.ts :: dnd5e.L5.cantrip-scaling',
     },
 
     // ── L7 resources & progression ──
@@ -490,6 +492,30 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       status: 'missing',
       testRef: 'src/__tests__/derivedCasterMath.test.ts :: 5e concentration DC',
       note: 'Canonical helper (derivedCasterMath.ts) is test-pinned but not consumed by any engine or sheet; per the legend, unwired quantities are missing.',
+    },
+    {
+      id: 'dnd5e2014.L9.ability-score-cap',
+      layer: 'L9',
+      quantity: 'Ability score cap (base score ≤ 20)',
+      formula: 'flag when any base ability score exceeds 20',
+      inputs: ['baseAttributes'],
+      edgeCases: ['exactly at limit legal', 'over limit flagged'],
+      source: `${SRD}: Ability Scores and Modifiers (maximum 20)`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/legality/dnd5eLegality.test.ts :: dnd5e 2014 flags a base ability score above 20',
+    },
+    {
+      id: 'dnd5e2014.L9.class-level-sum',
+      layer: 'L9',
+      quantity: 'Class levels sum to character level',
+      formula: 'flag when Σ classLevels.level exceeds character level',
+      inputs: ['classLevels', 'level'],
+      edgeCases: ['exactly at limit legal', 'over limit flagged'],
+      source: `${SRD}: Multiclassing`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/legality/dnd5eLegality.test.ts :: dnd5e 2014 flags class levels exceeding character level',
     },
   ],
 };

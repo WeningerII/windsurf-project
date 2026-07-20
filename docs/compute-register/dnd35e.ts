@@ -1,7 +1,7 @@
 /**
  * Compute register (Denominator B) for D&D 3.5e, cited against SRD 3.5.
  * Engine: src/systems/dnd35e/engine.ts; shared: src/systems/shared/d20-helpers.ts,
- * src/utils/armorClass.ts.
+ * src/rules/compile/defense.ts.
  */
 
 import type { SystemComputeRegister } from './types';
@@ -54,9 +54,10 @@ export const dnd35eComputeRegister: SystemComputeRegister = {
         'total=10+armor+shield+min(Dex,cap)+size; touch=10+Dex+size; flatFooted=10+armor+shield+size',
       inputs: ['Dex', 'size', 'armor', 'shield'],
       edgeCases: ['touch ignores armor/shield', 'flat-footed ignores Dex', 'size +/-', 'Dex cap'],
+      note: 'Migrated to the declarative derivation layer (DND35E_DERIVED_QUANTITIES). The anchored `total` is dnd35e.L2.ac.total, whose faithful compute folds the shared base (computeD20LegacyAC(...).total) through the resolver so it equals data.armorClass.total; a no-gear case reduces to the anchored `const total = 10 + armor + shield + Dex + size` (defense.ts), keeping the dnd35e.L2.ac mutation live. touch/flat-footed are pure display-bearing scalars (ac.touch / ac.flat-footed) with no register row.',
       source: `${SRD}: Combat — Armor Class`,
       status: 'verified',
-      testRef: `${T} :: L2 d20-legacy AC (touch / flat-footed / size)`,
+      testRef: 'src/__tests__/derivation/dnd35eDerivedQuantities.test.ts :: dnd35e.L2.ac.total',
     },
     {
       id: 'dnd35e.L2.saves-total',
@@ -78,7 +79,7 @@ export const dnd35eComputeRegister: SystemComputeRegister = {
       edgeCases: ['multiclass full + half'],
       source: `${SRD}: Combat — Attack Bonus`,
       status: 'verified',
-      testRef: `${T} :: L3 D&D 3.5e BAB, saves, HP, grapple`,
+      testRef: 'src/__tests__/derivation/dnd35eDerivedQuantities.test.ts :: dnd35e.L3.bab-sum',
     },
     {
       id: 'dnd35e.L3.grapple',
@@ -160,7 +161,7 @@ export const dnd35eComputeRegister: SystemComputeRegister = {
       edgeCases: ['cross-class half cap'],
       source: `${SRD}: Skills — Ranks`,
       status: 'verified',
-      testRef: 'src/__tests__/derivedCombatMath.test.ts :: 3.5e skill synergy and max ranks',
+      testRef: 'src/__tests__/derivation/dnd35eDerivedQuantities.test.ts :: dnd35e.L4.max-rank-cap',
     },
     {
       id: 'dnd35e.L4.initiative',
@@ -282,7 +283,8 @@ export const dnd35eComputeRegister: SystemComputeRegister = {
       edgeCases: ['racial/class bonus feats added separately'],
       source: `${SRD}: Character Advancement`,
       status: 'verified',
-      testRef: `${T} :: L5/L7 D&D 3.5e concentration, feats, and ability increases`,
+      testRef:
+        'src/__tests__/derivation/dnd35eDerivedQuantities.test.ts :: dnd35e.L7.feats-from-level',
     },
     {
       id: 'dnd35e.L7.ability-increases',
@@ -293,7 +295,8 @@ export const dnd35eComputeRegister: SystemComputeRegister = {
       edgeCases: ['at 4th/8th/12th/16th/20th'],
       source: `${SRD}: Character Advancement`,
       status: 'verified',
-      testRef: `${T} :: L5/L7 D&D 3.5e concentration, feats, and ability increases`,
+      testRef:
+        'src/__tests__/derivation/dnd35eDerivedQuantities.test.ts :: dnd35e.L7.ability-increases',
     },
     {
       id: 'dnd35e.L1.xp-to-level',
@@ -327,6 +330,31 @@ export const dnd35eComputeRegister: SystemComputeRegister = {
       source: `${SRD}: Combat — Injury and Death`,
       status: 'verified',
       testRef: `${T} :: L8 D&D 3.5e massive damage and HP state`,
+    },
+    {
+      id: 'dnd35e.L9.skill-max-ranks',
+      layer: 'L9',
+      quantity: 'Max skill ranks (class = level+3, cross-class = ⌊(level+3)/2⌋)',
+      formula:
+        "flag when a skill's ranks exceed its maximum (class skill = level+3; cross-class = ⌊(level+3)/2⌋)",
+      inputs: ['skillRanks', 'classSkills', 'level'],
+      edgeCases: ['exactly at limit legal', 'over limit flagged'],
+      source: `${SRD}: Skills — Maximum Ranks`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/legality/dnd35eLegality.test.ts :: dnd35e flags skill ranks above the class-skill maximum',
+    },
+    {
+      id: 'dnd35e.L9.class-level-sum',
+      layer: 'L9',
+      quantity: 'Class levels sum to character level',
+      formula: 'flag when Σ classLevels.level exceeds character level',
+      inputs: ['classLevels', 'level'],
+      edgeCases: ['exactly at limit legal', 'over limit flagged'],
+      source: `${SRD}: Advancement`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/legality/dnd35eLegality.test.ts :: dnd35e flags class levels exceeding character level',
     },
   ],
 };

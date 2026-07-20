@@ -14,6 +14,7 @@
  */
 
 import { makeEffectId, type EffectInstance } from '../ir/types';
+import { breakpoints } from '../../utils/scaling';
 
 const SYSTEM_ID = 'dnd-5e-2014';
 
@@ -30,11 +31,13 @@ export interface Dnd5eRiderInputs {
   rogueLevel: number;
 }
 
-/** SRD: Rage damage bonus by barbarian level. */
+/** SRD: Rage damage bonus by barbarian level (+2, then +3 at 9th, +4 at 16th). */
+const RAGE_DAMAGE_BREAKPOINTS = [
+  [9, 3],
+  [16, 4],
+] as const;
 export function rageDamageBonus(barbarianLevel: number): number {
-  if (barbarianLevel >= 16) return 4;
-  if (barbarianLevel >= 9) return 3;
-  return 2;
+  return breakpoints(barbarianLevel, RAGE_DAMAGE_BREAKPOINTS, 2);
 }
 
 /** SRD: Sneak Attack dice by rogue level. */

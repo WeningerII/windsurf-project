@@ -90,12 +90,20 @@ export function getDnd5eFeatureOptionGroupLabel(group: Dnd5eFeatureOptionGroup):
 }
 
 function toFeature(option: Dnd5eFeatureOptionDefinition): Feature {
-  return {
+  const feature: Feature = {
     id: featureIdForOption(option),
     name: option.name,
     source: DND5E_FEATURE_OPTION_SOURCE_LABELS[option.group],
     description: option.description,
   };
+  // Surface an option's numeric bonuses onto the synthesized feature so they
+  // reach `resolveCharacterEffects` (RFC 003) — the shared path feats/features
+  // already use. Only attach the key when modifiers exist, so options without
+  // them serialize byte-for-byte as before (no `modifiers: undefined`).
+  if (option.modifiers && option.modifiers.length > 0) {
+    feature.modifiers = option.modifiers;
+  }
+  return feature;
 }
 
 function sameSelection(

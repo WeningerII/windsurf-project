@@ -6,6 +6,7 @@
  * threshold), so they live apart from src/systems/shared/d20-helpers.ts. Pure
  * functions; pinned by src/__tests__/d20LegacyEngineMath.test.ts.
  */
+import { linearRate } from '../../utils/scaling';
 
 /**
  * Total XP required to attain a character level (SRD 3.5: Character Advancement):
@@ -73,7 +74,7 @@ export function dnd35eConcentrationDCDamage(damageTaken: number, spellLevel: num
  */
 export function dnd35eFeatsFromLevel(level: number): number {
   const l = Math.max(1, Math.floor(level));
-  return 1 + Math.floor(l / 3);
+  return linearRate(l, 1, 3, 1);
 }
 
 /**
@@ -81,7 +82,7 @@ export function dnd35eFeatsFromLevel(level: number): number {
  * +1 to one ability at every fourth level (4th, 8th, 12th, …) = floor(level / 4).
  */
 export function dnd35eAbilityIncreases(level: number): number {
-  return Math.floor(Math.max(0, level) / 4);
+  return linearRate(Math.max(0, level), 1, 4);
 }
 
 export type Dnd35eHpState = 'healthy' | 'disabled' | 'dying' | 'dead';

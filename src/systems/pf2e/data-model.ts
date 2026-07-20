@@ -1,6 +1,7 @@
 import { Feature } from '../../types/core/character';
 import { SystemDataModel } from '../../types/core/document';
 import type { BonusType } from '../../types/core/common';
+import { levelPlus } from '../../utils/scaling';
 
 /**
  * Pathfinder 2e Data Model
@@ -39,6 +40,49 @@ export interface Pf2eFeat {
   type: 'ancestry' | 'class' | 'skill' | 'general' | 'archetype';
   source: string;
 }
+
+/**
+ * Which proficiency map a multiclass dedication grant trains. Restricted to the
+ * two maps that start empty on a fresh sheet (skills, lore) so source-scoped
+ * merge/remove can aggregate and revert a dedication cleanly without disturbing
+ * the always-present base armor/weapon slots.
+ */
+export type Pf2eDedicationProficiencyCategory = 'skill' | 'lore';
+
+/**
+ * A single proficiency grant contributed by a multiclass dedication feat. The
+ * dedication trains `id` (a skill or lore key) to at least `tier`; aggregation
+ * keeps the stronger of this and any tier the class/background already granted.
+ */
+export interface Pf2eDedicationProficiencyGrant {
+  category: Pf2eDedicationProficiencyCategory;
+  id: string;
+  tier: Pf2eProficiencyTier;
+}
+
+/**
+ * Dedication proficiency progression keyed by archetype id. PF2e-local because
+ * the shared `Archetype` type carries no proficiency fields; consumed by
+ * applyPf2eArchetypeTemplate / removePf2eArchetypeTemplate to aggregate a
+ * dedication's grants into the character's proficiencies (the engine then
+ * recomputes each map's `total` generically). Cited against the PF2e Core
+ * Rulebook (OGC): Archetypes / Dedication feats.
+ */
+export const PF2E_ARCHETYPE_DEDICATION_GRANTS: Record<string, Pf2eDedicationProficiencyGrant[]> = {
+  // Wizard Dedication: trained in Arcana, plus a Lore tied to arcane academia.
+  'pf2e-wizard-archetype': [
+    { category: 'skill', id: 'arcana', tier: 'trained' },
+    { category: 'lore', id: 'academia', tier: 'trained' },
+  ],
+  // Ranger Dedication: trained in Survival.
+  'pf2e-ranger-archetype': [{ category: 'skill', id: 'survival', tier: 'trained' }],
+  // Cleric Dedication: trained in Religion.
+  'pf2e-cleric-archetype': [{ category: 'skill', id: 'religion', tier: 'trained' }],
+  // Champion Dedication: trained in Religion (deity tenets).
+  'pf2e-champion-archetype': [{ category: 'skill', id: 'religion', tier: 'trained' }],
+  // Rogue Dedication: trained in a skill of choice (Stealth).
+  'pf2e-rogue-archetype': [{ category: 'skill', id: 'stealth', tier: 'trained' }],
+};
 
 export interface Pf2eSpellcasting {
   tradition: 'arcane' | 'divine' | 'occult' | 'primal';
@@ -96,6 +140,9 @@ export interface Pf2eDataModel extends SystemDataModel {
   hitPoints: { current: number; max: number; temp: number; maxBonus?: number };
   armorClass: number;
   speed: number;
+  /** Engine-derived quantities keyed by compute-register id, populated by the
+   * declarative derivation layer (src/rules/derivation) in prepareData. */
+  derived: Record<string, number>;
 
   // Feats (organized by type)
   feats: Pf2eFeat[];
@@ -161,7 +208,7 @@ export function tierBonus(tier: Pf2eProficiencyTier): number {
 /** PF2e proficiency total: untrained = 0 (no level), trained+ = level + tier bonus */
 export function profTotal(level: number, tier: Pf2eProficiencyTier): number {
   if (tier === 'untrained') return 0;
-  return level + tierBonus(tier);
+  return levelPlus(level, tierBonus(tier));
 }
 
 export const createDefaultPf2eData = (): Pf2eDataModel => ({
@@ -199,6 +246,7 @@ export const createDefaultPf2eData = (): Pf2eDataModel => ({
   hitPoints: { current: 10, max: 10, temp: 0 },
   armorClass: 10,
   speed: 25,
+  derived: {},
   feats: [],
   features: [],
   equipment: [],

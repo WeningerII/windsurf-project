@@ -233,9 +233,10 @@ export function useSceneEncounter(params: UseSceneEncounterParams) {
       systemId: sceneSystemId,
       // Budget and per-monster cost dispatch to each system's cited table
       // through the shared helpers the encounter-spec validator also uses, so
-      // the draft and the gate can never disagree. Systems without a budget
-      // model (e.g. 3.5e's Encounter-Level system) get a 0 budget and draft
-      // nothing, rather than borrowing the 5e table.
+      // the draft and the gate can never disagree. Each system spends its own
+      // cited model (5e's XP table, PF1e/PF2e's CRB tables, 3.5e's derived
+      // Encounter-Level value scale); systems without a budget model get a 0
+      // budget and draft nothing, rather than borrowing the 5e table.
       budget: encounterPartyBudget(sceneSystemId ?? '', partyLevels, difficulty),
       costFor: (monster: Monster) =>
         monsterEncounterCost(sceneSystemId ?? '', monster, partyLevels),

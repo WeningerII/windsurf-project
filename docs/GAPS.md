@@ -16,8 +16,9 @@ the categories with an authoritative SRD list — verified by reverse-diff to
 contain **no** non-SRD entries). Independent published-SRD *coverage* is now
 measured for all 7 systems (`docs/generated/srd-coverage.md`): D&D 3.5e is wired
 against the clean core-only `olimot/srd-v3.5-md` chapters (spells 604/605 = 99.8%;
-the monster % understates real coverage because the denominator counts the SRD's
-category headings, e.g. "Angel", "Dragon").
+the monster denominator now counts individual stat blocks — the category-heading
+shape-mismatch is fixed in code, see §1 — with the refreshed published % produced
+by the next networked coverage run).
 
 ---
 
@@ -40,9 +41,27 @@ unlike the loader-derived `docs/srd-manifest/`.
   genuine 100% on their wired categories.
 - The genuine residual is small and itemized in `srd-coverage.md`: single-entry
   gaps (5e-2014 Net, 5e-2024 Will-o'-Wisp, PF1e Teleport Greater, 3.5e Shadow
-  Evocation Greater), the M&M equipment encode, and the 3.5e/PF1e *monster* rows
-  whose percentage is understated by a denominator counting SRD category headings /
-  age-size variants rather than individual stat blocks.
+  Evocation Greater), and the genuine missing monster individuals now isolated by
+  the denominator-shape fix (PF1e Skeletal Champion; 3.5e Lich/Ghost/Salamander/
+  Hydra) — whose encodes are a separate follow-on.
+- **Monster denominator shape-mismatch [FIXED IN CODE; published % deferred]:**
+  the 3.5e and PF1e monster denominators previously counted taxonomic CONTAINER
+  entries — the SRD 3.5 category headers (Angel/Dragon/Elemental/…) and the PF1e
+  bestiary dragon/elemental PARENT records — as if they were individual stat
+  blocks, understating coverage. Pure, unit-tested helpers in
+  `src/scripts/srdCoverageShape.ts` (`collapse35eMonsterHeadings`,
+  `collapsePf1eContainerRecords`) now drop those containers (and fold 3.5e age/
+  size variant rows to their archetype) so both denominators count individual
+  stat blocks; the 14 PF1e parents collapse while Skeletal Champion stays a
+  genuine miss. The counting LOGIC is fixed and tested offline; the refreshed
+  `docs/generated/srd-coverage.md` percentages come from the next networked
+  `npm run srd:coverage` run.
+- **M&M equipment coverage target [WIRED; execution deferred]:** the DHH
+  equipment data already ships and its runtime loader is wired
+  (`loadEquipmentForSystem('mam3e')`); the remaining gap was the coverage
+  *measurement*. A `mam3e`/`equipment` `CoverageTarget` (frnprt EQUIPMENT vs the
+  loader) is now added to `srd-coverage.ts`; running it (the frnprt fetch) is
+  deferred to a networked coverage run.
 - **Provenance — feats/backgrounds [REMEDIATED]:** the loaders shipped PHB feats
   and backgrounds mislabeled with an SRD source tag (SRD 5.1 has only Acolyte +
   Grappler; SRD 5.2 has 4 backgrounds + 17 feats). The non-SRD entries were
@@ -72,8 +91,9 @@ unlike the loader-derived `docs/srd-manifest/`.
 **Still to do (sources in `docs/srd-sources.md`):**
 - **D&D 3.5e** is now wired [DONE]: the psionics/epic-mixed `Rughalt/D35E` packs were
   rejected in favor of the clean core-only `olimot/srd-v3.5-md` Markdown chapters,
-  giving spells 604/605 (99.8%) and a wired monster row (its % understates real
-  coverage — the denominator counts the SRD's category headings). Remaining 3.5e
+  giving spells 604/605 (99.8%) and a wired monster row. The monster denominator's
+  category-heading shape-mismatch is now fixed in code (`collapse35eMonsterHeadings`);
+  the refreshed % is produced by the next networked coverage run. Remaining 3.5e
   categories (classes/feats/equipment) are still unwired pending core-only sources.
 - Wire the remaining categories (PF2e/PF1e non-spell, M&M skills/conditions/
   equipment, Daggerheart classes/ancestries/communities/weapons/armor, all monsters).

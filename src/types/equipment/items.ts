@@ -22,6 +22,32 @@ export interface Item {
 
   description: string;
   requiresAttunement: boolean;
+
+  /**
+   * How many identical units of this item are stacked in inventory (potions,
+   * ammunition, rations). Optional and additive — absent means a single,
+   * unstacked item. The `consume` verb depletes this; when it would drop to 0
+   * the item is destroyed. See {@link ItemCharges} for internal-charge items
+   * (a wand's uses) versus this whole-item stack count.
+   */
+  quantity?: number;
+}
+
+/**
+ * The canonical `{ max, spent }`-projectable charge shape shared by everything
+ * that carries finite internal uses (a wand's charges, a staff's charges, a
+ * limited consumable's doses). Kept structurally identical to `MagicItem.charges` so it
+ * remains backward compatible, and maps directly onto a `ResourcePool`
+ * (`max → max`, `spent → max - remaining`) for the `consume` verb to target
+ * uniformly across systems.
+ */
+export interface ItemCharges {
+  /** Total charge capacity. */
+  max: number;
+  /** Charges already spent (0..max). Absent/`undefined` means fully charged. */
+  spent?: number;
+  rechargeDice?: DiceRoll;
+  rechargeTime?: 'dawn' | 'dusk' | 'long-rest';
 }
 
 export type ItemType =

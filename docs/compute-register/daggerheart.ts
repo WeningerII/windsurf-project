@@ -10,6 +10,9 @@ import type { SystemComputeRegister } from './types';
 
 const SRD = 'Daggerheart SRD 1.0';
 const T = 'src/__tests__/daggerheartEngineMath.test.ts';
+// Generic derivation test — one describe(spec.id) block per declared standing
+// quantity in src/systems/daggerheart/derivedQuantities.ts.
+const D = 'src/__tests__/derivation/daggerheartDerivedQuantities.test.ts';
 
 export const daggerheartComputeRegister: SystemComputeRegister = {
   systemId: 'daggerheart',
@@ -24,7 +27,7 @@ export const daggerheartComputeRegister: SystemComputeRegister = {
       edgeCases: ['tier boundaries 2/5/8'],
       source: `${SRD}: Leveling Up`,
       status: 'verified',
-      testRef: `${T} :: L1 Daggerheart tier and proficiency`,
+      testRef: `${D} :: daggerheart.L1.tier`,
     },
     {
       id: 'daggerheart.L1.proficiency',
@@ -35,7 +38,7 @@ export const daggerheartComputeRegister: SystemComputeRegister = {
       edgeCases: ['multiplies number of weapon damage dice'],
       source: `${SRD}: Proficiency`,
       status: 'verified',
-      testRef: `${T} :: L1 Daggerheart tier and proficiency`,
+      testRef: `${D} :: daggerheart.L1.proficiency`,
     },
     {
       id: 'daggerheart.L1.ancestry-adjustments',
@@ -79,7 +82,7 @@ export const daggerheartComputeRegister: SystemComputeRegister = {
       edgeCases: ['unarmored = level'],
       source: `${SRD}: Damage Thresholds`,
       status: 'verified',
-      testRef: `${T} :: L2 Daggerheart derived stats (unarmored)`,
+      testRef: `${D} :: daggerheart.L2.major-threshold`,
     },
     {
       id: 'daggerheart.L2.severe-threshold',
@@ -90,7 +93,7 @@ export const daggerheartComputeRegister: SystemComputeRegister = {
       edgeCases: ['unarmored = level × 2'],
       source: `${SRD}: Damage Thresholds`,
       status: 'verified',
-      testRef: `${T} :: L2 Daggerheart derived stats (unarmored)`,
+      testRef: `${D} :: daggerheart.L2.severe-threshold`,
     },
     {
       id: 'daggerheart.L2.passive-bonuses',

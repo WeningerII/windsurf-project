@@ -15,6 +15,23 @@ export type SystemSheetComponent<T extends SystemDataModel> =
     });
 
 /**
+ * Props a system's optional guided creator receives. The creator gathers the
+ * draft and calls `onCreate` with the raw system data + character name; the app
+ * builds and persists the `CharacterDocument` (running it through the engine's
+ * `prepareData` at add time), so the creator never touches storage or the
+ * document envelope.
+ */
+export type SystemCreatorProps<T extends SystemDataModel> = {
+  onCreate: (data: T, name: string) => void;
+};
+
+export type SystemCreatorComponent<T extends SystemDataModel> =
+  | React.ComponentType<SystemCreatorProps<T>>
+  | (React.LazyExoticComponent<React.ComponentType<SystemCreatorProps<T>>> & {
+      preload?: () => Promise<unknown>;
+    });
+
+/**
  * Result of a mechanical roll.
  * Systems can extend this to add their own metadata (e.g., "Critical Success").
  */
@@ -134,4 +151,9 @@ export interface SystemDefinition<T extends SystemDataModel> {
 
   // The Main Character Sheet Component
   SheetComponent: SystemSheetComponent<T>;
+
+  // Optional guided character creator, shown in a modal before the sheet when a
+  // new character of this system is created. Systems without one fall straight
+  // through to a default-seeded sheet.
+  CreatorComponent?: SystemCreatorComponent<T>;
 }

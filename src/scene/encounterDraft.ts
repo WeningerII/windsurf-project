@@ -167,12 +167,107 @@ export function pf2eCreatureXp(creatureLevel: number, partyLevel: number): numbe
 }
 
 /**
- * The systems with a cited encounter-budget model in this repo. D&D 3.5e is a
- * monster system but uses an Encounter-Level model (not a summed-XP budget) that
- * is not yet implemented, so it is deliberately absent — encounter budgeting is
- * reported as unsupported for it rather than borrowing the 5e table.
+ * D&D 3.5e Encounter-Level budgets.
+ *
+ * 3.5e sizes fights by Encounter Level (EL), not a published summed-XP budget
+ * table. Two SRD facts drive everything (d20srd.org, "Dungeon Mastering", OGL
+ * 1.0a — CITED-OFFICIAL): a lone creature of Challenge Rating X is an EL X
+ * encounter, and DOUBLING the number of identical creatures raises the EL by 2
+ * (two CR X creatures = EL X+2). A four-member party of a given level meets a
+ * standard/"even" challenge at EL equal to that level.
+ *
+ * This repo's budget machinery is summed-cost (budget is a number; each monster
+ * has a cost; the draft keeps the running sum <= budget). To host EL inside it
+ * we DERIVE a CR->encounter-value scale (the numbers below are a MODELING CHOICE,
+ * not an SRD table — 3.5e never prints one). The scale is pinned to the SRD's
+ * +2-EL-doubling rule by construction: value(CR + 2) === 2 * value(CR). Because
+ * value doubles every +2 CR, two CR-X creatures cost 2 * value(X) === value(X+2),
+ * i.e. exactly an EL X+2 encounter — the invariant is preserved arithmetically.
+ * A single CR-X creature costs value(X) === the EL-X budget, so one on-level
+ * monster spends a standard encounter exactly.
+ *
+ * DERIVED numbers: two exact geometric chains (one per CR parity) so the
+ * doubling holds without rounding drift; cross-parity steps land near the sqrt(2)
+ * ratio the +2-doubling implies. Fractional CRs (< 1) are derived flavor below
+ * value(1) and are not bound by the +2 rule (CR + 2 leaves the fractional band).
  */
-export const ENCOUNTER_BUDGET_SYSTEMS = ['dnd-5e-2014', 'dnd-5e-2024', 'pf1e', 'pf2e'] as const;
+const DND35E_EL_VALUE: Record<number, number> = {
+  // Fractional CRs — DERIVED, monotonic, below the EL-1 value. Not +2-bound.
+  0.125: 15,
+  [1 / 6]: 20,
+  0.25: 25,
+  [1 / 3]: 35,
+  0.5: 50,
+  // Odd-CR chain — DERIVED, anchored at EL 1, doubling every +2 CR.
+  1: 70,
+  3: 140,
+  5: 280,
+  7: 560,
+  9: 1120,
+  11: 2240,
+  13: 4480,
+  15: 8960,
+  17: 17920,
+  19: 35840,
+  // Even-CR chain — DERIVED, doubling every +2 CR.
+  2: 100,
+  4: 200,
+  6: 400,
+  8: 800,
+  10: 1600,
+  12: 3200,
+  14: 6400,
+  16: 12800,
+  18: 25600,
+  20: 51200,
+};
+
+/**
+ * One 3.5e creature's encounter value: its EL-value from the derived CR scale.
+ * A CR outside the modeled range has no value (cost 0 → excluded from a draft
+ * and flagged no-xp-cost by the validator), mirroring the PF tables' bounds.
+ */
+export function dnd35eCreatureValue(challengeRating: number): number {
+  return DND35E_EL_VALUE[challengeRating] ?? 0;
+}
+
+/**
+ * A 3.5e party's encounter budget for a difficulty. The SRD's encounter tables
+ * assume a party of four and treat EL = party level as a standard fight
+ * (CITED-OFFICIAL). APL is the average character level rounded to the NEAREST
+ * whole number (DERIVED rounding — the SRD states the party-of-four baseline but
+ * prints no APL formula; unlike PF1e there is no party-size +/-1 adjustment
+ * here). low/moderate/high map to EL = APL-1 / APL / APL+1 (DERIVED difficulty
+ * band, mirroring the sibling systems' offset vocabulary). The budget is the
+ * derived EL-value at the target EL, so a lone on-target-CR monster spends it
+ * exactly.
+ */
+export function dnd35eEncounterBudget(
+  partyLevels: readonly number[],
+  difficulty: EncounterDifficulty
+): number {
+  if (!partyLevels.length) return 0;
+  const average = partyLevels.reduce((total, level) => total + level, 0) / partyLevels.length;
+  const apl = Math.max(1, Math.round(average));
+  const offset = { low: -1, moderate: 0, high: 1 }[difficulty];
+  const targetEl = Math.min(20, Math.max(1, apl + offset));
+  return dnd35eCreatureValue(targetEl);
+}
+
+/**
+ * The systems with a cited encounter-budget model in this repo. D&D 3.5e joins
+ * the summed-XP systems via its Encounter-Level model, linearized into a derived
+ * CR->value scale that preserves the SRD's +2-EL-doubling rule (see
+ * {@link dnd35eEncounterBudget}); its budget and per-creature cost flow through
+ * the same dispatch as the other systems.
+ */
+export const ENCOUNTER_BUDGET_SYSTEMS = [
+  'dnd-5e-2014',
+  'dnd-5e-2024',
+  'dnd-3.5e',
+  'pf1e',
+  'pf2e',
+] as const;
 
 export type EncounterBudgetSystem = (typeof ENCOUNTER_BUDGET_SYSTEMS)[number];
 
@@ -206,6 +301,8 @@ export function encounterPartyBudget(
       return pf1eEncounterXpBudget(partyLevels, difficulty);
     case 'pf2e':
       return pf2eEncounterBudget(partyLevels, difficulty);
+    case 'dnd-3.5e':
+      return dnd35eEncounterBudget(partyLevels, difficulty);
     case 'dnd-5e-2014':
     case 'dnd-5e-2024':
       return partyXpBudget(partyLevels, difficulty);
@@ -226,6 +323,11 @@ export function monsterEncounterCost(
 ): number {
   if (systemId === 'pf2e') {
     return pf2eCreatureXp(monster.challengeRating, pf2ePartyLevel(partyLevels));
+  }
+  if (systemId === 'dnd-3.5e') {
+    // 3.5e prices creatures off the derived EL-value scale, not raw XP, so the
+    // +2-EL-doubling composition holds (two CR-X monsters === one EL X+2).
+    return dnd35eCreatureValue(monster.challengeRating);
   }
   return monster.experiencePoints;
 }

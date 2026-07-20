@@ -73,6 +73,7 @@ export const RestControls: React.FC<Props> = ({
             className="w-16 text-center border border-input rounded bg-transparent px-2 py-1 text-sm tabular-nums"
             disabled={!canEditExhaustion}
             title="Exhaustion Level"
+            aria-label="Exhaustion Level"
           />
         </div>
       )}

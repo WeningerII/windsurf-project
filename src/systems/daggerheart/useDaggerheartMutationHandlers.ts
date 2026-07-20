@@ -4,17 +4,26 @@ import type {
   DaggerheartInventoryDefinition,
   DaggerheartWeapon,
 } from '../../types/daggerheart';
-import { getDaggerheartDerivedStats } from '../../rules/daggerheartDerived';
+import {
+  getDaggerheartDerivedStats,
+  getDaggerheartShortRestRecovery,
+  getDaggerheartTier,
+} from '../../rules/daggerheartDerived';
 import {
   clampDaggerheartInventoryQuantity,
   createDaggerheartInventoryEntry,
   normalizeDaggerheartCurrency,
 } from '../../rules/daggerheartInventory';
+import { createLiveRng } from '../../scene/seededRng';
+import { consume, poolFromRemaining, remainingOf } from '../../utils/resourcePool';
 import {
   clearAllStress,
+  clearStress,
   prepareGainHope,
   repairAllArmor,
+  repairArmor,
   tendToAllWounds,
+  tendToWounds,
 } from './daggerheartRest';
 import { INVENTORY_WEAPON_LIMIT, LOADOUT_LIMIT } from './daggerheartSheetConstants';
 import type { DaggerheartDataModel } from './data-model';
@@ -241,14 +250,19 @@ export function useDaggerheartMutationHandlers({
       }
 
       const current = data.inventory[index];
-      if (current.quantity <= 1) {
+      // Generalized onto the shared `consume` verb: model the stacked quantity
+      // as a pool, deplete one unit, and let `depleted` decide whether the
+      // emptied stack is removed from the sheet.
+      const { pool, depleted } = consume(poolFromRemaining(current.quantity, current.quantity));
+      if (depleted) {
         removeInventoryEntry(index);
         return;
       }
 
+      const nextQuantity = remainingOf(pool);
       updateInventory(
         data.inventory.map((entry, entryIndex) =>
-          entryIndex === index ? { ...entry, quantity: entry.quantity - 1 } : entry
+          entryIndex === index ? { ...entry, quantity: nextQuantity } : entry
         )
       );
     },
@@ -333,18 +347,46 @@ export function useDaggerheartMutationHandlers({
   );
 
   // Long-rest downtime moves (SRD). Each applies exactly one deterministic move
-  // — the player picks the two they make on a long rest; the short-rest
-  // dice-based variants stay a follow-up (see daggerheartRest.ts).
+  // — the player picks the two they make on a long rest. The short-rest
+  // dice-based variants follow below (restShort*).
   const restTendToAllWounds = useCallback(() => update(tendToAllWounds(data)), [data, update]);
   const restClearAllStress = useCallback(() => update(clearAllStress(data)), [data, update]);
   const restRepairAllArmor = useCallback(() => update(repairAllArmor(data)), [data, update]);
   const restPrepare = useCallback(() => update(prepareGainHope(data)), [data, update]);
+
+  // Short-rest downtime moves (SRD). Each clears `1d4 + tier`: a fresh live d4 is
+  // rolled through the shared Rng on every click (honestly non-deterministic),
+  // then the deterministic builder applies the rolled amount to its pool.
+  const restShortTendToWounds = useCallback(() => {
+    const recovery = getDaggerheartShortRestRecovery(
+      createLiveRng().rollDie(4),
+      getDaggerheartTier(data.level)
+    );
+    update(tendToWounds(data, recovery));
+  }, [data, update]);
+  const restShortClearStress = useCallback(() => {
+    const recovery = getDaggerheartShortRestRecovery(
+      createLiveRng().rollDie(4),
+      getDaggerheartTier(data.level)
+    );
+    update(clearStress(data, recovery));
+  }, [data, update]);
+  const restShortRepairArmor = useCallback(() => {
+    const recovery = getDaggerheartShortRestRecovery(
+      createLiveRng().rollDie(4),
+      getDaggerheartTier(data.level)
+    );
+    update(repairArmor(data, recovery));
+  }, [data, update]);
 
   return {
     restTendToAllWounds,
     restClearAllStress,
     restRepairAllArmor,
     restPrepare,
+    restShortTendToWounds,
+    restShortClearStress,
+    restShortRepairArmor,
     equipPrimaryWeapon,
     equipSecondaryWeapon,
     storeWeapon,

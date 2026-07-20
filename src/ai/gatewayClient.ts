@@ -14,6 +14,7 @@ import {
   type AiResponse,
   type AiTask,
 } from './contracts';
+import { isFeatureEnabled } from '../config/featureFlags';
 
 /**
  * Whether AI affordances should render at all. Build-time, default OFF, so the
@@ -21,7 +22,7 @@ import {
  * even when on, the gateway still degrades server-side if no key is set.
  */
 export function isAiEnabled(): boolean {
-  return import.meta.env.VITE_AI_ENABLED === 'true';
+  return isFeatureEnabled('ai');
 }
 
 export async function callAiGateway<TData>(

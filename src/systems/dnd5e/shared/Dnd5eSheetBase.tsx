@@ -34,6 +34,8 @@ import {
 import type { Dnd5eLikeDataModel } from './dnd5eSheetShared';
 import { useDnd5eSheetController } from './useDnd5eSheetController';
 import { availableDnd5eToggles } from '../../../rules/conditions/dnd5eRiders';
+import { presentDerivedQuantities } from '../../../rules/derivation';
+import { DND5E_DERIVED_QUANTITIES } from './derivedQuantities';
 
 interface Props<T extends Dnd5eLikeDataModel> {
   document: CharacterDocument<T>;
@@ -52,6 +54,7 @@ export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
     enableWeaponMasteries,
   });
   const d = controller.d;
+  const derivedCards = presentDerivedQuantities(DND5E_DERIVED_QUANTITIES, d, d.derived);
   const updatePatch = (patch: Partial<Dnd5eLikeDataModel>) =>
     controller.update(patch as unknown as Partial<T>);
 
@@ -106,6 +109,7 @@ export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
         hitPoints={d.hitPoints}
         initiative={d.initiative}
         speed={d.speed}
+        derivedCards={derivedCards}
         spellcasting={d.spellcasting}
         exhaustionLevel={d.exhaustionLevel}
         deathSaves={d.deathSaves}

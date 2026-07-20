@@ -23,6 +23,7 @@
     "check:repo-hygiene": "npm run node:check && node scripts/check-repo-hygiene.mjs",
     "check:dead-code": "npm run node:check && knip",
     "check:legal-notices": "npm run node:check && node scripts/check-legal-notices.mjs",
+    "check:secret-exposure": "npm run node:check && node scripts/check-secret-exposure.mjs",
     "legal:generate": "npm run node:check && tsx src/scripts/generate-legal-notice.ts",
     "check:compute-register": "npm run node:check && tsx scripts/check-compute-register.mjs",
     "check:compute-register:mutate": "npm run node:check && tsx scripts/check-compute-register.mjs --mutate",
@@ -39,6 +40,7 @@
     "test:e2e": "npm run node:check && node scripts/check-playwright-browsers.mjs && playwright test",
     "test:e2e:headed": "npm run node:check && node scripts/check-playwright-browsers.mjs && playwright test --headed",
     "test:e2e:ui": "npm run node:check && node scripts/check-playwright-browsers.mjs && playwright test --ui",
+    "test:e2e:smoke": "npm run node:check && node scripts/check-playwright-browsers.mjs && playwright test --grep @smoke --project=chromium",
     "docs": "typedoc",
     "roadmap:metrics": "npm run node:check && tsx src/scripts/generate-roadmap-metrics.ts",
     "gap:ledger": "npm run node:check && tsx src/scripts/generate-master-gap-ledger.ts",
@@ -48,7 +50,7 @@
     "enhance": "tsx src/scripts/enhance-classes.ts",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx}\"",
-    "verify": "npm run node:check && npm run lint && npm run typecheck:test && npm run typecheck:netlify && npm run format:check && npm run test:coverage -- --run --maxWorkers=1 && npm run validate && npm run build && npm run check:bundle-size && npm run test:e2e && npm run check:repo-hygiene && npm run check:generated-docs && npm run check:doc-drift && npm run check:dead-code && npm run check:legal-notices && npm run check:compute-register"
+    "verify": "npm run node:check && npm run lint && npm run typecheck:test && npm run typecheck:netlify && npm run format:check && npm run test:coverage -- --run --maxWorkers=1 && npm run validate && npm run build && npm run check:bundle-size && npm run test:e2e && npm run check:repo-hygiene && npm run check:generated-docs && npm run check:doc-drift && npm run check:dead-code && npm run check:legal-notices && npm run check:compute-register && npm run check:secret-exposure"
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.83",
@@ -64,6 +66,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.12.1",
     "@playwright/test": "^1.58.2",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.1",

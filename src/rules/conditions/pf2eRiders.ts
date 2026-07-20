@@ -12,6 +12,7 @@
  */
 
 import { makeEffectId, type EffectInstance } from '../ir/types';
+import { breakpoints } from '../../utils/scaling';
 
 const SYSTEM_ID = 'pf2e';
 
@@ -25,11 +26,13 @@ export interface Pf2eRiderInputs {
 }
 
 /** CRB: Sneak Attack dice by rogue level (1d6 / 2d6@5 / 3d6@11 / 4d6@17). */
+const PF2E_SNEAK_ATTACK_BREAKPOINTS = [
+  [5, 2],
+  [11, 3],
+  [17, 4],
+] as const;
 export function pf2eSneakAttackDice(level: number): number {
-  if (level >= 17) return 4;
-  if (level >= 11) return 3;
-  if (level >= 5) return 2;
-  return 1;
+  return breakpoints(level, PF2E_SNEAK_ATTACK_BREAKPOINTS, 1);
 }
 
 export const PF2E_TOGGLE_IDS = ['rage', 'sneak-attack'] as const;

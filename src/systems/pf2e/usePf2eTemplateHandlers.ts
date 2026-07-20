@@ -12,6 +12,7 @@ import {
   removePf2eArchetypeTemplate,
 } from './pf2eTemplate';
 import { parseNum } from '../../utils/math';
+import { setPf2eFocusMax } from './pf2eSheetShared';
 import type { Pf2eDataModel } from './data-model';
 
 type Heritage = NonNullable<Species['subraces']>[number];
@@ -103,13 +104,27 @@ export function usePf2eTemplateHandlers({
       const nextLevel = parseNum(value, 1);
 
       if (!selectedClass) {
-        update({ level: nextLevel });
+        // No class template to re-run, but still re-validate the focus pool
+        // against its cap through the shared setMax leveling primitive so a
+        // level edit keeps expended focus consistent with capacity. The cap is
+        // unchanged here (PF2e focus max is focus-spell driven, not level
+        // driven), so this is behavior-preserving — it is the canonical hook a
+        // level-derived cap would flow through.
+        const nextSpellcasting = setPf2eFocusMax(
+          data.spellcasting,
+          data.spellcasting?.focusPoints.max ?? 0
+        );
+        update(
+          nextSpellcasting
+            ? { level: nextLevel, spellcasting: nextSpellcasting }
+            : { level: nextLevel }
+        );
         return;
       }
 
       replaceDocument(applyPf2eClassTemplate(document, selectedClass, nextLevel, selectedClass));
     },
-    [document, replaceDocument, selectedClass, update]
+    [data.spellcasting, document, replaceDocument, selectedClass, update]
   );
 
   const handleAncestryChange = useCallback(

@@ -75,6 +75,31 @@ export function reset(pool: ResourcePool): ResourcePool {
   return { ...pool, spent: 0 };
 }
 
+/**
+ * The outcome of a {@link consume}: the pool after depleting `amount`, plus a
+ * `depleted` flag that is `true` once nothing remains. Callers use `depleted`
+ * to drive destruction of a spent consumable (drop the last potion / arrow /
+ * charge from the sheet) — the signal {@link spend} deliberately does not give.
+ */
+export interface ConsumeResult {
+  pool: ResourcePool;
+  /** True when the pool is now exhausted — the caller should destroy the item. */
+  depleted: boolean;
+}
+
+/**
+ * Consume `amount` (default 1) charges/units from the pool and SIGNAL whether it
+ * is now empty. Unlike {@link spend} — which only floors `spent` at `max` and
+ * returns a bare pool — this is the verb for finite item charges and stacked
+ * consumables: the returned `depleted` tells the inventory handler to remove the
+ * emptied item (RFC 005's "typed consume verb for item charges/ammunition").
+ * Deterministic, clamped, pure.
+ */
+export function consume(pool: ResourcePool, amount = 1): ConsumeResult {
+  const next = spend(pool, amount);
+  return { pool: next, depleted: isExhausted(next) };
+}
+
 /** Change the capacity, keeping `spent` but clamping it to the new `max`. */
 export function setMax(pool: ResourcePool, max: number): ResourcePool {
   const safeMax = Math.max(0, Math.trunc(max));

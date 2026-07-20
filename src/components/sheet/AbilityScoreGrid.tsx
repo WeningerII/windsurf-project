@@ -289,6 +289,7 @@ export const AbilityScoreGrid: React.FC<Props> = ({ attributes, names, onUpdate,
                   onChange={(event) => handleStandardArrayUpdate(key, event.target.value)}
                   className="w-16 rounded-md border border-input bg-transparent px-1 py-1 text-center text-base font-bold focus:outline-none focus:border-primary"
                   title={`${name} standard array`}
+                  aria-label={`${name} standard array`}
                   disabled={!onUpdate}
                 >
                   <option value="">--</option>
@@ -311,6 +312,7 @@ export const AbilityScoreGrid: React.FC<Props> = ({ attributes, names, onUpdate,
                   min={plannerMode === 'point-buy' ? POINT_BUY_MIN : undefined}
                   max={plannerMode === 'point-buy' ? POINT_BUY_MAX : undefined}
                   title={`${name} Score`}
+                  aria-label={`${name} Score`}
                   disabled={!onUpdate}
                 />
               )}

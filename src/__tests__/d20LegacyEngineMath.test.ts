@@ -34,7 +34,7 @@ import {
   pf1eHpState,
   pf1eFeatsFromLevel,
 } from '../systems/pf1e/derivedMath';
-import { computeD20LegacyAC } from '../utils/armorClass';
+import { computeD20LegacyAC } from '../rules/compile/defense';
 import { Dnd35eEngine } from '../systems/dnd35e/engine';
 import { Pf1eEngine } from '../systems/pf1e/engine';
 import {

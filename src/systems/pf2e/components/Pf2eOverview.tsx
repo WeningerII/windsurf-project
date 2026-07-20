@@ -41,28 +41,12 @@ export const Pf2eOverview: React.FC<Props> = ({
 
   return (
     <>
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-        <div className="bg-card border rounded-lg p-4 text-center transition-shadow hover:shadow-sm">
-          <div className="text-xs font-medium text-muted-foreground">AC</div>
-          <div className="text-3xl font-bold tabular-nums">{data.armorClass}</div>
-          {equippedShield && (
-            <button
-              type="button"
-              onClick={canUpdate ? onToggleShieldRaised : undefined}
-              disabled={!canUpdate || !onToggleShieldRaised}
-              className={`mt-1 text-[10px] px-2 py-0.5 rounded border transition-colors ${
-                equippedShield.raised
-                  ? 'bg-primary text-primary-foreground border-primary'
-                  : 'text-muted-foreground hover:bg-muted'
-              }`}
-              title="CRB: a shield adds its AC bonus only while raised (Raise a Shield action)"
-            >
-              {equippedShield.raised
-                ? `Shield raised (+${equippedShield.shieldBonus})`
-                : 'Raise Shield'}
-            </button>
-          )}
-        </div>
+      {/* AC now surfaces via the declarative derivation strip (Pf2eDerivedStats),
+          rendered below this overview — see PF2E_DERIVED_QUANTITIES 'pf2e.L2.ac'.
+          The bespoke AC tile is gone so AC is not double-rendered; only the
+          shield's Raise-a-Shield control (interactive, not a derived scalar)
+          stays here, relocated beneath the grid. */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-card border rounded-lg p-4 text-center transition-shadow hover:shadow-sm">
           <div className="text-xs font-medium text-muted-foreground flex items-center justify-center gap-1">
             <Heart className="w-3 h-3" /> HP
@@ -150,6 +134,26 @@ export const Pf2eOverview: React.FC<Props> = ({
           </div>
         </div>
       </div>
+
+      {equippedShield && (
+        <div className="flex justify-center">
+          <button
+            type="button"
+            onClick={canUpdate ? onToggleShieldRaised : undefined}
+            disabled={!canUpdate || !onToggleShieldRaised}
+            className={`text-xs px-3 py-1 rounded border transition-colors ${
+              equippedShield.raised
+                ? 'bg-primary text-primary-foreground border-primary'
+                : 'text-muted-foreground hover:bg-muted'
+            }`}
+            title="CRB: a shield adds its AC bonus only while raised (Raise a Shield action)"
+          >
+            {equippedShield.raised
+              ? `Shield raised (+${equippedShield.shieldBonus})`
+              : 'Raise Shield'}
+          </button>
+        </div>
+      )}
 
       <RestControls
         showExhaustion={false}

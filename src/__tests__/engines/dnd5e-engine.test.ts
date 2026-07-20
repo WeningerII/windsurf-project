@@ -144,6 +144,18 @@ describe('Dnd5eEngine', () => {
       expect(result.system.armorClass).toBe(13);
     });
 
+    it('populates data.derived from the declarative derivation layer', () => {
+      const doc = makeDoc({
+        baseAttributes: { str: 15, dex: 10, con: 10, int: 10, wis: 14, cha: 10 },
+        skillProficiencies: { perception: { level: 'proficient', source: ['test'] } },
+      });
+      const result = engine.prepareData(doc);
+      // Passive Perception: WIS +2, level 1 proficiency +2, proficient = 14.
+      expect(result.system.derived['dnd5e.L4.passive-perception']).toBe(14);
+      // Carrying capacity: Str 15 × 15 = 225 lb.
+      expect(result.system.derived['dnd5e.L6.carrying-capacity']).toBe(225);
+    });
+
     it('calculates initiative = DEX mod', () => {
       const doc = makeDoc({
         baseAttributes: { str: 10, dex: 18, con: 10, int: 10, wis: 10, cha: 10 },

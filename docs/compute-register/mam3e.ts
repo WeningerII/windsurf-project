@@ -22,7 +22,7 @@ export const mam3eComputeRegister: SystemComputeRegister = {
       edgeCases: ['no advantage → Agility only', 'rank floored at 0'],
       source: `${HH}: Initiative`,
       status: 'verified',
-      testRef: `${T} :: L1 initiative and L7 starting power points`,
+      testRef: 'src/__tests__/derivation/mam3eDerivedQuantities.test.ts :: mam3e.L1.initiative',
     },
     {
       id: 'mam3e.L3.attack-dc',
@@ -115,7 +115,8 @@ export const mam3eComputeRegister: SystemComputeRegister = {
       edgeCases: ['PL floored at 0'],
       source: `${HH}: Power Level`,
       status: 'verified',
-      testRef: `${T} :: L1 initiative and L7 starting power points`,
+      testRef:
+        'src/__tests__/derivation/mam3eDerivedQuantities.test.ts :: mam3e.L7.starting-power-points',
     },
     {
       id: 'mam3e.L2.defense-totals',

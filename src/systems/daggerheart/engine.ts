@@ -8,8 +8,10 @@
 import { CharacterDocument } from '../../types/core/document';
 import { rollDuality } from '../../rules/dice';
 import { SystemEngine, RollResult } from '../../registry/types';
+import { applyDerivedQuantities } from '../../rules/derivation';
 import { clampCount } from '../../utils/resourcePool';
 import { createDefaultDaggerheartData, DaggerheartDataModel } from './data-model';
+import { DAGGERHEART_DERIVED_QUANTITIES } from './derivedQuantities';
 import {
   DAGGERHEART_MAX_HOPE,
   getDaggerheartDerivedStats,
@@ -23,7 +25,19 @@ import {
   normalizeDaggerheartCurrency,
 } from '../../rules/daggerheartInventory';
 import { normalizeDaggerheartDocument } from './daggerheartNormalization';
+import { collectDaggerheartConditionEffects } from '../../rules/conditions/daggerheartConditions';
 import type { DaggerheartTrait } from '../../types/daggerheart';
+
+/**
+ * Read any self-condition ids a document carries. Daggerheart's data model has no
+ * conditions field of its own, so this narrows defensively — an absent/malformed
+ * field yields no conditions and no provenance.
+ */
+function readDaggerheartSelfConditionIds(system: DaggerheartDataModel): string[] {
+  const raw = (system as { conditions?: unknown }).conditions;
+  if (!Array.isArray(raw)) return [];
+  return raw.filter((id): id is string => typeof id === 'string');
+}
 
 export class DaggerheartEngine implements SystemEngine<DaggerheartDataModel> {
   prepareData(
@@ -79,6 +93,13 @@ export class DaggerheartEngine implements SystemEngine<DaggerheartDataModel> {
     // Hope is capped at 6 (Daggerheart SRD: Hope) and can never go negative.
     d.system.hope = clampCount(d.system.hope, DAGGERHEART_MAX_HOPE);
 
+    // Declarative standing derived quantities (Tier, Proficiency, damage
+    // thresholds, …). One call computes every spec in derivedQuantities.ts; the
+    // sheet reads system.derived and the compute register's mutation gate
+    // verifies each. Runs after the derived-stats block so the thresholds it
+    // reads are already prepared.
+    d.system.derived = applyDerivedQuantities(d.system, DAGGERHEART_DERIVED_QUANTITIES);
+
     return d;
   }
 
@@ -100,6 +121,20 @@ export class DaggerheartEngine implements SystemEngine<DaggerheartDataModel> {
     // rolled; Daggerheart has no fumble result (Daggerheart SRD: Duality Dice).
     const outcome = getDaggerheartDualityOutcome(hopeDie, fearDie);
 
+    // RAW: the roller's OWN conditions (Vulnerable/Restrained/Hidden) change
+    // INCOMING rolls and movement — never their own duality roll. Collect them
+    // purely as note-only provenance; they NEVER fold into total/terms/outcome.
+    // When absent (the common case, and every existing roll) flavor is unchanged.
+    const conditionNotes = collectDaggerheartConditionEffects(
+      readDaggerheartSelfConditionIds(document.system)
+    );
+    const baseFlavor =
+      outcome === 'hope'
+        ? `Hope (${hopeDie}) vs Fear (${fearDie}) — with Hope!`
+        : outcome === 'critical'
+          ? `Hope (${hopeDie}) = Fear (${fearDie}) — Critical!`
+          : `Hope (${hopeDie}) vs Fear (${fearDie}) — with Fear`;
+
     return {
       total,
       formula: `2d12 + ${mod} (${checkId})`,
@@ -108,12 +143,9 @@ export class DaggerheartEngine implements SystemEngine<DaggerheartDataModel> {
       isFumble: false,
       // Daggerheart vocabulary, not the d20 "NAT 20!" default.
       outcomeLabel: outcome === 'critical' ? 'Critical!' : undefined,
-      flavor:
-        outcome === 'hope'
-          ? `Hope (${hopeDie}) vs Fear (${fearDie}) — with Hope!`
-          : outcome === 'critical'
-            ? `Hope (${hopeDie}) = Fear (${fearDie}) — Critical!`
-            : `Hope (${hopeDie}) vs Fear (${fearDie}) — with Fear`,
+      flavor: conditionNotes.length
+        ? `${baseFlavor} [${conditionNotes.map((effect) => effect.source.label).join(', ')}]`
+        : baseFlavor,
     };
   }
 
