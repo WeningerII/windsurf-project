@@ -39,7 +39,7 @@ fetchers behind WAFs, so they are confirmed via search indexing.
 ## Mutants & Masterminds 3e — Hero's Handbook SRD (OGL 1.0a)
 
 - **Human-readable:** `https://www.d20herosrd.com/` (Hypertext M&M 3e SRD; OGL — note "Hero Points"→"Victory Points", "Power Points"→"Character Points" renames). Green Ronin free downloads `https://greenronin.com/freeronin/...`.
-- **Machine-readable (verified by clone):** `frnprt/mm3e-character-creator` (GPL-3.0 code; data in `js/data.js` derived from d20herosrd) — powers/effects **46**, advantages **77**, skills **16**, abilities 8, conditions **28**, equipment ~100. Matches the Hero's Handbook. The DHH equipment data already ships and its runtime loader is wired (`loadEquipmentForSystem('mam3e')`); a `mam3e`/`equipment` coverage target (the frnprt `EQUIPMENT` list vs the loader) is now wired into `npm run srd:coverage` — executing it (the frnprt fetch) is deferred to a networked coverage run.
+- **Machine-readable (verified by clone):** `frnprt/mm3e-character-creator` (GPL-3.0 code; data in `js/data.js` derived from d20herosrd) — powers/effects **46**, advantages **77**, skills **16**, abilities 8, conditions **28**, equipment ~100. Matches the Hero's Handbook. The DHH equipment data already ships and its runtime loader is wired (`loadEquipmentForSystem('mam3e')`); a `mam3e`/`equipment` coverage target (the frnprt `EQUIPMENT` list vs the loader) is wired into `npm run srd:coverage` and has been measured (see `docs/generated/srd-coverage.md`).
 
 ## Daggerheart — SRD 1.0 (Darrington Press Community Gaming License)
 
