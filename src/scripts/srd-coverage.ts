@@ -528,6 +528,75 @@ TARGETS.push({
   loader: () => loaderNames(loadMonstersForSystem, 'dnd-3.5e'),
 });
 
+// --- D&D 3.5e classes & feats (olimot core-only chapters) ---
+// These are the clean core-only denominators docs/srd-sources.md recommends over
+// the psionics/epic-mixed D35E packs (still rejected). The base PC classes are
+// `## Name` headings across the two Character Classes chapters and the SRD
+// prestige classes are `## Name` in the Prestige Classes chapter; the loader
+// (`loadClassesForSystem('dnd-3.5e')`) ships BOTH the base and prestige sets, so
+// the denominator unions all three chapters. The chapters' non-class section
+// headers ("Multiclass Characters", "Definitions of Terms") are excluded.
+const SRD35_RULES =
+  'https://raw.githubusercontent.com/olimot/srd-v3.5-md/main/basic-rules-and-legal';
+const SRD35_CLASS_FILES = [
+  'character-classes-i.md',
+  'character-classes-ii.md',
+  'prestige-classes.md',
+];
+const SRD35_NON_CLASS_HEADINGS = new Set(['Multiclass Characters', 'Definitions of Terms']);
+async function fetchSrd35ClassNames(): Promise<string[]> {
+  const names: string[] = [];
+  for (const file of SRD35_CLASS_FILES) {
+    const text = await fetchText(`${SRD35_RULES}/${file}`);
+    for (const match of text.matchAll(/^## (.+)$/gm)) {
+      const name = match[1].trim();
+      if (!SRD35_NON_CLASS_HEADINGS.has(name)) names.push(name);
+    }
+  }
+  return names;
+}
+TARGETS.push({
+  systemId: 'dnd-3.5e',
+  systemLabel: 'D&D 3.5e',
+  category: 'classes',
+  srdSource: 'SRD 3.5 (olimot/srd-v3.5-md base + prestige class chapters)',
+  srd: () => fetchSrd35ClassNames(),
+  loader: () => loaderNames(loadClassesForSystem, 'dnd-3.5e'),
+});
+
+// Feats are `### Name <small>[Type]</small>` headings under "## Feat
+// Descriptions". The `<small>[...]</small>` type tag is what distinguishes a real
+// feat from the untagged section sub-headers (Fighter Bonus Feats / Item Creation
+// Feats / Metamagic Feats) that describe feat categories; the literal "Feat Name"
+// documentation template row is dropped so it cannot inflate the denominator.
+async function fetchSrd35FeatNames(): Promise<string[]> {
+  const text = await fetchText(`${SRD35_RULES}/feats.md`);
+  const names: string[] = [];
+  for (const match of text.matchAll(/^###\s+(.+?)\s*<small>\[[^\]]*\]<\/small>\s*$/gm)) {
+    const name = match[1].trim();
+    if (name.toLowerCase() === 'feat name') continue;
+    names.push(name);
+  }
+  return names;
+}
+TARGETS.push({
+  systemId: 'dnd-3.5e',
+  systemLabel: 'D&D 3.5e',
+  category: 'feats',
+  srdSource: 'SRD 3.5 (olimot/srd-v3.5-md feats chapter)',
+  srd: () => fetchSrd35FeatNames(),
+  loader: () => loaderNames(loadFeatsForSystem, 'dnd-3.5e'),
+});
+
+// 3.5e equipment is CLOSED-BY-NO-SOURCE (close-by-recorded-decision): the only
+// clean core-only source (olimot `equipment.md`) presents items as prose tables
+// under "Goods and Services" interleaved with services, lodging, food, mounts,
+// and transport rows that fall OUTSIDE the loader's weapons/armor/shields/gear
+// scope (`loadEquipmentForSystem('dnd-3.5e')`). A table scrape would poison the
+// denominator with non-item rows, so no target is wired — honest absence beats a
+// poisoned denominator. The D35E Foundry packs remain rejected (psionics/epic).
+// See docs/srd-sources.md.
+
 // --- Mutants & Masterminds 3e (Hero's Handbook — whole DHH open content in scope) ---
 const MM_DATA_JS =
   'https://raw.githubusercontent.com/frnprt/mm3e-character-creator/master/js/data.js';
@@ -686,7 +755,7 @@ async function main(): Promise<void> {
   lines.push('');
   lines.push('## Pending (independent source not yet wired or not cleanly scopable)');
   lines.push(
-    '- **D&D 3.5e** spells and monsters are measured against the clean core-only `olimot/srd-v3.5-md` chapters. The monster denominator now counts INDIVIDUAL stat blocks: `collapse35eMonsterHeadings` (`src/scripts/srdCoverageShape.ts`) drops the SRD\'s taxonomic category headers (e.g. "Angel", "Dragon", "Elemental") that merely nest separately-named members and folds age/size variant rows to their archetype. Remaining 3.5e categories (classes/feats/equipment) are unwired pending core-only sources. See `docs/srd-sources.md`.'
+    '- **D&D 3.5e** spells, monsters, classes, and feats are measured against the clean core-only `olimot/srd-v3.5-md` chapters. The monster denominator counts INDIVIDUAL stat blocks: `collapse35eMonsterHeadings` (`src/scripts/srdCoverageShape.ts`) drops the SRD\'s taxonomic category headers (e.g. "Angel", "Dragon", "Elemental") that merely nest separately-named members and folds age/size variant rows to their archetype. **3.5e equipment is closed-by-no-source**: the olimot `equipment.md` tables interleave services/lodging/food/mounts/transport outside the loader\'s weapons/armor/shields/gear scope, so a scrape would poison the denominator (D35E packs remain rejected for psionics/epic). See `docs/srd-sources.md`.'
   );
   lines.push(
     '- **Remaining categories** — PF2e non-spell/non-monster categories, PF1e classes/feats, M&M skills/conditions, and Daggerheart classes/ancestries/communities/weapons/armor/adversaries are documented in `docs/srd-sources.md` and pending wiring. M&M equipment is wired and measured above.'
