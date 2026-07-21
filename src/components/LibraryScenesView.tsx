@@ -4,7 +4,11 @@ import { foldSceneEvents } from '../scene/runtime';
 import { systemRegistry } from '../registry';
 import type { Campaign } from '../types/core/campaign';
 import type { SceneDocument } from '../types/core/scene';
-import { exportScenes, importScenesWithReport } from '../utils/sceneStorage';
+import {
+  exportScenes,
+  importMapAssetsFromPayload,
+  importScenesWithReport,
+} from '../utils/sceneStorage';
 import { downloadTextFile, pickTextFile } from '../utils/fileTransfer';
 import { Badge } from './ui/Badge';
 import { Button } from './ui/Button';
@@ -88,6 +92,17 @@ export function LibraryScenesView({
             'info'
           );
         }
+        // Map images ride the export by value; each is re-hashed before it is
+        // stored, and a failed check only drops the image (the scene renders
+        // its bare grid). Async on purpose — scene import stays synchronous.
+        void importMapAssetsFromPayload(text).then(({ droppedCount: droppedAssets }) => {
+          if (droppedAssets > 0) {
+            toast(
+              `${droppedAssets} map image${droppedAssets === 1 ? '' : 's'} failed verification and ${droppedAssets === 1 ? 'was' : 'were'} skipped.`,
+              'info'
+            );
+          }
+        });
         onSelectScene(imported[0].id);
       } catch (err) {
         setImportIssue(err instanceof Error ? err.message : 'Failed to import scenes.');

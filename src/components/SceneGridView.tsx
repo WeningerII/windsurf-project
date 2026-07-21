@@ -1,9 +1,10 @@
-import { memo, useMemo } from 'react';
-import type { KeyboardEvent } from 'react';
+import { memo, useMemo, useState } from 'react';
+import type { CSSProperties, KeyboardEvent } from 'react';
 import { cn } from '@/lib/utils';
 import type {
   SceneAllegiance,
   SceneCoordinate,
+  SceneGridRegistration,
   SceneMarker,
   SceneState,
   SceneToken,
@@ -25,9 +26,22 @@ const ALLEGIANCE_LABEL: Record<SceneAllegiance, string> = {
   neutral: 'neutral',
 };
 
+/** A resolved map backdrop: the asset's data URL plus its grid registration. */
+export interface SceneMapImage {
+  dataUrl: string;
+  registration: SceneGridRegistration;
+}
+
 export interface SceneGridViewProps {
   state: SceneState;
   selectedTokenId?: string;
+  /**
+   * Optional map image rendered under the grid cells (RFC 006 Phase 9). The
+   * caller resolves the scene's `map.assetHash` against local asset storage;
+   * when the asset is missing this is simply omitted and the grid renders
+   * exactly as it always has (graceful absence).
+   */
+  mapImage?: SceneMapImage;
   onCellActivate?: (position: SceneCoordinate) => void;
   onTokenActivate?: (token: SceneToken) => void;
 }
@@ -42,6 +56,7 @@ export interface SceneGridViewProps {
 export const SceneGridView = memo(function SceneGridView({
   state,
   selectedTokenId,
+  mapImage,
   onCellActivate,
   onTokenActivate,
 }: SceneGridViewProps) {
@@ -94,11 +109,13 @@ export const SceneGridView = memo(function SceneGridView({
       <div
         role="grid"
         aria-label={`${state.name} grid`}
-        className="grid overflow-hidden rounded-lg border bg-card"
+        className="relative grid overflow-hidden rounded-lg border bg-card"
         style={{
           gridTemplateColumns: `repeat(${state.grid.width}, minmax(2rem, 1fr))`,
         }}
       >
+        {/* Backdrop first in DOM: the (also-positioned) cells paint above it. */}
+        {mapImage && <SceneMapImageLayer grid={state.grid} mapImage={mapImage} />}
         {Array.from({ length: state.grid.height }).flatMap((_, y) =>
           Array.from({ length: state.grid.width }).map((__, x) => {
             const position = { x, y };
@@ -113,7 +130,10 @@ export const SceneGridView = memo(function SceneGridView({
                 aria-label={buildCellLabel(position, marker, cellTokens)}
                 tabIndex={0}
                 className={cn(
-                  'relative aspect-square min-h-8 border-b border-r border-border/70 bg-background p-0.5 outline-none transition-colors',
+                  'relative aspect-square min-h-8 border-b border-r border-border/70 p-0.5 outline-none transition-colors',
+                  // With a map backdrop the cells go transparent so the image
+                  // shows through the gridlines; without one, exactly as before.
+                  mapImage ? 'bg-transparent' : 'bg-background',
                   marker?.kind === 'terrain' && 'bg-emerald-500/10',
                   marker?.kind === 'hazard' && 'bg-amber-500/15',
                   // A multi-cell creature's reserved footprint, shaded so the
@@ -167,6 +187,65 @@ export const SceneGridView = memo(function SceneGridView({
     </section>
   );
 });
+
+/**
+ * Percentage-based placement of the map image inside the grid container, from
+ * the image's natural pixel size and its manual registration. Pure and
+ * unit-tested: with square cells the container is `grid.width` cells wide and
+ * `grid.height` cells tall, so an image spanning `natural / cellSizePx` cells
+ * maps to percentages independent of the responsive rendered cell size.
+ */
+export function mapImageLayerStyle(
+  natural: { width: number; height: number },
+  registration: SceneGridRegistration,
+  grid: { width: number; height: number }
+): CSSProperties {
+  const cell = registration.cellSizePx > 0 ? registration.cellSizePx : 1;
+  return {
+    left: `${(-registration.offsetX / cell / grid.width) * 100}%`,
+    top: `${(-registration.offsetY / cell / grid.height) * 100}%`,
+    width: `${(natural.width / cell / grid.width) * 100}%`,
+    height: `${(natural.height / cell / grid.height) * 100}%`,
+    maxWidth: 'none',
+  };
+}
+
+/**
+ * The map backdrop. Natural size is read from the decoded image itself (the
+ * asset stores only hash/mime/dataUrl), so the layer stays hidden until the
+ * browser reports real dimensions.
+ */
+function SceneMapImageLayer({
+  grid,
+  mapImage,
+}: {
+  grid: { width: number; height: number };
+  mapImage: SceneMapImage;
+}) {
+  const [natural, setNatural] = useState<{ width: number; height: number } | null>(null);
+  const ready = natural !== null && natural.width > 0 && natural.height > 0;
+  return (
+    <img
+      src={mapImage.dataUrl}
+      alt=""
+      aria-hidden="true"
+      data-testid="scene-map-image"
+      draggable={false}
+      onLoad={(event) =>
+        setNatural({
+          width: event.currentTarget.naturalWidth,
+          height: event.currentTarget.naturalHeight,
+        })
+      }
+      className="pointer-events-none absolute select-none"
+      style={
+        ready
+          ? mapImageLayerStyle(natural, mapImage.registration, grid)
+          : { visibility: 'hidden' }
+      }
+    />
+  );
+}
 
 function buildTokensByCell(state: SceneState): Map<string, SceneToken[]> {
   const byCell = new Map<string, SceneToken[]>();
