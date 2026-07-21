@@ -65,23 +65,33 @@ devonjones/PSRD-Data core_rulebook/item/** (OGL/OGC, same repo as the bestiary)
 (encoder shells to local prettier bin). index.ts merges srd+hand (hand wins on
 id); loader unchanged. Manifest scripts/data/pf1e-equipment-manifest.json pins the
 denominator; srd-coverage.ts gains pf1e equipment/magic-items CoverageTargets.
-Ledger p1.pf1e-equipment blocked→in-progress (only networked srd:coverage publish
-remains). PF1e equipment loader total 70→617. Bundle: split into its own
+Ledger p1.pf1e-equipment blocked→DONE (coverage published 100%). PF1e equipment
+loader total 70→617. Bundle: split into its own
 pf1e-equipment-data lazy chunk (100.3 KiB < 140 per-chunk budget); total-JS budget
 1536→1664 KiB. Gated: full suite 2466, tsc, lint, build, bundle, e2e 36,
 generated-docs, doc-drift, all green. Honest-mapping: exotic→martial+prose,
 8 damageless→gear, non-numeric prices/negligible weights at type default.
 
-**⚠ CONTAINER RECYCLED mid-session** (before the encode) — local HEAD reset to an
-old commit but ALL work was safe on origin; recovered via `git fetch origin
-<branch> && git reset --hard origin/<branch>`. node_modules came back incomplete
-(@axe-core/playwright missing) → `npm install` restored it. Commit+push per slice.
+**COVERAGE PUBLISHED + MASTER PLAN UPDATED** (`8783ceb` srd-coverage.md, `38bd423`
+ledger, `3700264` MASTER_PLAN). Networked `npm run srd:coverage` WORKS here (all
+GitHub-raw open-content sources reachable through the proxy): PF1e equipment
+243/243 + magic 347/347 = 100%; M&M equipment now measured 45/113 (39.8%, frnprt) —
+reveals 68 missing Hero SRD items; PF1e monsters 331/332 (1 gap: Skeletal Champion,
+likely a template). Ledger 11 done/23. MASTER_PLAN.md gained a dated 2026-07-21
+Current-Repo-Truth summary + RFC 007 provenance row + gateway/AI-DM + PF1e-equipment
+notes (doc-drift/generated-docs/repo-hygiene green; pinned phrases preserved).
 
-**STILL BLOCKED (need human/secrets/infra, NOT code-doable here):**
+**⚠ CONTAINER RECYCLED TWICE this session** — each time local HEAD reset to old
+`1965c16`, ALL work safe on origin; recover: `git fetch origin <branch> && git reset
+--hard origin/<branch>`, then `npm install` (node_modules comes back missing
+@axe-core/playwright). COMMIT+PUSH PER SLICE — recycles ~every 30-45 min.
+
+**STILL BLOCKED / next candidates (need human/secrets/infra, or a content push):**
 screen-reader listen-through; live secrets/infra (Sentry DSN, Supabase creds,
-durable rate-limit backend, staged rollout); AI-DM implementation (RFC 007 must be
-accepted first); the networked srd:coverage publish + encoding missing PF1e/3.5e
-individuals. Next session: await direction; `/resume` + re-read the consensus doc.
+durable rate-limit backend, staged rollout); AI-DM implementation (RFC 007 accept
+first). Code-doable content gaps NOW QUANTIFIED by coverage: M&M equipment 68
+missing (frnprt source, biggest real gap); PF1e Skeletal Champion (1, check if
+template); 3.5e monsters ~62 mostly denominator artifact. Next: await direction.
 
 ## Landmines
 
