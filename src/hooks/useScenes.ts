@@ -21,6 +21,18 @@ export const useScenes = () => {
     setIsLoading(false);
   }, []);
 
+  // Re-read the persisted snapshot on demand. The Scene surface calls this on
+  // its hidden->visible transition (Phase 2 keepalive): the L86-98 cross-tab
+  // storage listener stays UNGATED, but a tab that never received a storage
+  // event while the Scene surface was hidden (e.g. it was backgrounded) picks
+  // up other tabs' edits on return. Deliberately a raw replace, not a merge —
+  // when returning to Scene any local edit's debounced save has already
+  // flushed, so localStorage is authoritative.
+  const reloadScenes = useCallback(() => {
+    setScenes(loadScenes());
+    setIsLoading(false);
+  }, []);
+
   const persist = useCallback((nextScenes: SceneDocument[]) => {
     try {
       saveScenes(nextScenes);
@@ -166,6 +178,7 @@ export const useScenes = () => {
     appendSceneEvent,
     deleteScene,
     clearAllScenes,
+    reloadScenes,
     flushPendingSaves: persistence.flush,
   };
 };

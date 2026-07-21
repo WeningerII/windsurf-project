@@ -29,10 +29,12 @@ type Doc = CharacterDocument<SystemDataModel>;
 interface UseSyncOptions {
   documents: Doc[];
   onMerge: (merged: Doc[]) => void;
+  /** Pause/resume knob forwarded to `useEntitySync` (defaults to true). */
+  active?: boolean;
 }
 
 /** Character-document sync — a thin adapter over the generic `useEntitySync`. */
-export function useSync({ documents, onMerge }: UseSyncOptions) {
+export function useSync({ documents, onMerge, active }: UseSyncOptions) {
   const adapter = useMemo<EntitySyncAdapter<Doc>>(
     () => ({
       sameSignatures: sameDocumentSignatures,
@@ -55,5 +57,5 @@ export function useSync({ documents, onMerge }: UseSyncOptions) {
     []
   );
 
-  return useEntitySync({ entities: documents, onMerge, adapter });
+  return useEntitySync({ entities: documents, onMerge, adapter, active });
 }

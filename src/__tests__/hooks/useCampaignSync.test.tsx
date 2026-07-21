@@ -432,4 +432,31 @@ describe('useCampaignSync', () => {
     expect(onMerge.mock.calls[1][0]).toEqual([]);
     expect(mockedPushCampaigns).not.toHaveBeenCalled();
   });
+
+  it('subscribes by default when active is omitted (back-compat)', async () => {
+    const onMerge = vi.fn();
+
+    renderHook(() => useCampaignSync({ campaigns: [makeCampaign('c-1')], onMerge }), {
+      wrapper: createWrapper(() => authValue),
+    });
+
+    await waitFor(() => {
+      expect(mockedSubscribeToRemoteCampaigns).toHaveBeenCalledWith('user-1', expect.any(Function));
+    });
+  });
+
+  it('forwards active:false to useEntitySync so the realtime subscription is skipped', async () => {
+    const onMerge = vi.fn();
+
+    renderHook(
+      () => useCampaignSync({ campaigns: [makeCampaign('c-1')], onMerge, active: false }),
+      { wrapper: createWrapper(() => authValue) }
+    );
+
+    // The initial sync still runs, but `active:false` gates the subscription.
+    await waitFor(() => {
+      expect(mockedFetchRemoteCampaigns).toHaveBeenCalledTimes(1);
+    });
+    expect(mockedSubscribeToRemoteCampaigns).not.toHaveBeenCalled();
+  });
 });

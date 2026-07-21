@@ -34,6 +34,14 @@ interface UseEntitySyncOptions<T> {
   entities: T[];
   onMerge: (merged: T[]) => void;
   adapter: EntitySyncAdapter<T>;
+  /**
+   * Pause/resume knob (Phase 2 keepalive surfaces). Defaults to `true` — the
+   * local-first behaviour is unchanged for callers that omit it. When `false`,
+   * ONLY the realtime subscription is quiesced (a hidden surface stops holding
+   * a channel open); local edits still push. Flipping `false`->`true` runs one
+   * reconciling `sync()` so any remote event missed while paused is caught up.
+   */
+  active?: boolean;
 }
 
 /**
@@ -48,6 +56,7 @@ export function useEntitySync<T extends { id: string }>({
   entities,
   onMerge,
   adapter,
+  active = true,
 }: UseEntitySyncOptions<T>) {
   const { user, isConfigured } = useAuth();
   // Effects key off the id string, not the session/user object: supabase-js
@@ -206,6 +215,24 @@ export function useEntitySync<T extends { id: string }>({
     }
   }, [userId, isConfigured, sync]);
 
+  // Pause/resume-WITH-RECONCILE (Phase 2). While `active` is false the
+  // subscription below is torn down, so remote events are missed; a single
+  // sync() on the false->true edge reconciles them. `prevActiveRef` is seeded
+  // with the FIRST `active` value so a surface that mounts already-active does
+  // NOT double-fire alongside the initial-sync effect above (a true->true
+  // "transition" is a no-op). sync()'s own in-flight guard
+  // (isSyncingRef/pendingResyncRef) makes a reconcile racing an existing sync
+  // safe. `active` is deliberately absent from the subscription effect's
+  // reconcile — this is where resume catches up, not the subscription itself.
+  const prevActiveRef = useRef(active);
+  useEffect(() => {
+    const wasActive = prevActiveRef.current;
+    prevActiveRef.current = active;
+    if (!wasActive && active && userId && isConfigured) {
+      void sync();
+    }
+  }, [active, userId, isConfigured, sync]);
+
   useEffect(() => {
     if (userId && isConfigured) {
       return;
@@ -320,14 +347,18 @@ export function useEntitySync<T extends { id: string }>({
   }, [isConfigured, sync, userId]);
 
   useEffect(() => {
-    if (!userId || !isConfigured) {
+    // Gate ONLY the realtime subscription on `active` (never the push): a
+    // hidden keepalive surface stops holding a channel open. `active` is in
+    // the dep array so flipping back to true re-subscribes; the reconcile
+    // effect above pairs that re-subscribe with a catch-up sync().
+    if (!userId || !isConfigured || !active) {
       return undefined;
     }
 
     return adapter.subscribeToRemote(userId, () => {
       void sync();
     });
-  }, [adapter, isConfigured, sync, userId]);
+  }, [active, adapter, isConfigured, sync, userId]);
 
   useEffect(() => () => debouncedPush.flush(), [debouncedPush]);
 
