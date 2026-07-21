@@ -289,11 +289,17 @@ RFC 004 was executed without formal acceptance; its status line records that.
   that this container cannot run e2e is stale as a gate concern; CI is the
   authority for the full gate.
 
-## 5. Review item — a shipped behavior change
+## 5. Review item — a shipped behavior change [RATIFIED 2026-07-20]
 
 5e-2024 exhaustion was changed from −1/level to **−2/level** (RAW per SRD 5.2 and
 the goal text) in `src/systems/dnd5e-2024/engine.ts`. It is the only shipped
-game-rule behavior change (vs. test-only additions) and warrants a human review.
+game-rule behavior change (vs. test-only additions), so it required explicit human
+sign-off. That sign-off landed: **ratified 2026-07-20** (commit `14727e7`,
+gap-ledger entry `review.dnd5e-2024-exhaustion`, status `done`), confirmed against
+SRD 5.2 RAW — "each level of Exhaustion reduces D20 Tests by 2 times your
+Exhaustion level"; the −1/level figure matched only the One D&D playtest draft.
+`Dnd5e2024Engine.getExhaustionD20Penalty` is settled and test-pinned. No open
+action remains.
 
 ## 6. Reconsider artifact — DECIDED 2026-07-21, execution scheduled Wave 2
 
