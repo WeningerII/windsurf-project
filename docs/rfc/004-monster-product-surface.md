@@ -1,8 +1,14 @@
 # RFC 004: Monster Product Surface (Bestiaries Beyond 5e)
 
-**Status:** Draft (Proposed), subsequently executed — the monster data and scene encounter surface this RFC planned shipped 2026-06-12 without formal acceptance; see `docs/MASTER_PLAN.md` and `docs/GAPS.md` §3.
+**Status:** Accepted (formalized 2026-07-21). History preserved: this RFC was
+Draft (Proposed) when the monster data and scene encounter surface it planned
+shipped on 2026-06-12 — i.e. it was executed without formal acceptance — and
+the user's 2026-07-21 acceptance formalizes that already-executed decision
+after the fact. See `docs/MASTER_PLAN.md` and `docs/GAPS.md` §3.
 **Author:** engineering planning
 **Created:** May 31, 2026
+**Executed:** June 12, 2026 (without formal acceptance)
+**Accepted:** July 21, 2026 (formalized retroactively)
 
 ## Summary
 

@@ -12,7 +12,7 @@
 | 3 · Boundary parsing | ✅ Done | import + Supabase + offline-queue validated (union retype 3.1 deferred) |
 | 4 · Defer per-system load | ✅ Done | `modulePreload` filter: initial prefetch ~2.4 MB → ~0.57 MB; data loads on demand |
 | 5 · Security/privacy | ✅ Done | Sentry PII fix; `npm audit` 0 vulns |
-| 6 · Slim docs/process | ⏳ Pending | check-in point per owner |
+| 6 · Slim docs/process | ✅ Done (2026-07-21) | Superseded planning docs archived to `docs/history/`; `CONTRIBUTING.md` already slimmed (~111 lines) |
 | 7 · Toolchain | ⏳ Pending | ESLint 8 EOL is the priority |
 
 Verified locally each step: `tsc`, vitest (929 green), lint, format, `knip`,
@@ -163,13 +163,17 @@ the types → harden → slim the ceremony → modernize → resume features.**
 - **Housekeeping:** `npm audit fix` (3 moderate); tighten CSP wildcards
   (`netlify.toml:78`); add an origin check to the SW `CACHE_URLS` handler.
 
-### Phase 6 — Slim the process apparatus · ~½ day · risk: low
+### Phase 6 — Slim the process apparatus · ~½ day · risk: low · ✅ DONE 2026-07-21
 - **Keep** the reality-checking gates: `roadmap-metrics` + `check:generated-docs`,
-  `check:repo-hygiene`, `check:bundle-size`, node-version gating.
+  `check:repo-hygiene`, `check:bundle-size`, node-version gating. (Kept.)
 - **Archive** to `docs/history/`: `PRODUCTION_PLAN.md`, both
   `EVIDENCE_LINKED_PARITY_*`, `DAGGERHEART_DATA_ORGANIZATION_PLAN.md`.
+  (Done 2026-07-21 — see `docs/history/README.md`; doc-drift manifest/rules
+  and all cross-references updated to the new paths.)
 - **Slim** `MASTER_PLAN.md` to North Star + constraints + active phases; slim
-  `CONTRIBUTING.md` (992 → ~150 lines repo-specific).
+  `CONTRIBUTING.md` (992 → ~150 lines repo-specific). (Already satisfied by
+  2026-07-21: `CONTRIBUTING.md` is ~111 lines and `docs/MASTER_PLAN.md` is
+  maintained as the single roadmap authority at ~430 lines.)
 
 ### Phase 7 — Toolchain modernization (deliberate, last) · ~1–2 days · risk: med
 - Most pressing: ESLint 8 is EOL → 8→9/10 flat-config migration.

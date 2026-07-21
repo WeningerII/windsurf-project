@@ -101,22 +101,22 @@ export const COUNT_RULES: ExpectedTextRule[] = [
       `canonical ${truth.spellCounts['dnd-3.5e']}-spell loader-backed catalog`,
   },
   {
-    path: 'docs/PRODUCTION_PLAN.md',
+    path: 'docs/history/PRODUCTION_PLAN.md',
     description: 'historical current-truth 3.5e spell count',
     expectedText: (truth) => `${truth.spellCounts['dnd-3.5e']} for D&D 3.5e`,
   },
   {
-    path: 'docs/PRODUCTION_PLAN.md',
+    path: 'docs/history/PRODUCTION_PLAN.md',
     description: 'historical current-truth PF2e spell count',
     expectedText: (truth) => `${truth.spellCounts.pf2e} for PF2e`,
   },
   {
-    path: 'docs/EVIDENCE_LINKED_PARITY_AUDIT.md',
+    path: 'docs/history/EVIDENCE_LINKED_PARITY_AUDIT.md',
     description: 'historical current-truth 3.5e spell count',
     expectedText: (truth) => `${truth.spellCounts['dnd-3.5e']} loader-backed D&D 3.5e spells`,
   },
   {
-    path: 'docs/EVIDENCE_LINKED_PARITY_AUDIT.md',
+    path: 'docs/history/EVIDENCE_LINKED_PARITY_AUDIT.md',
     description: 'historical current-truth PF2e spell count',
     expectedText: (truth) => `${truth.spellCounts.pf2e} loader-backed PF2e spells`,
   },
@@ -271,19 +271,19 @@ export const CAPABILITY_PHRASE_RULES: CapabilityPhraseRule[] = [
 
 export const HISTORICAL_BANNER_RULES = [
   {
-    path: 'docs/PRODUCTION_PLAN.md',
+    path: 'docs/history/PRODUCTION_PLAN.md',
     description: 'historical execution record banner',
   },
   {
-    path: 'docs/EVIDENCE_LINKED_PARITY_AUDIT.md',
+    path: 'docs/history/EVIDENCE_LINKED_PARITY_AUDIT.md',
     description: 'historical audit banner',
   },
   {
-    path: 'docs/EVIDENCE_LINKED_PARITY_REMEDIATION_PLAN.md',
+    path: 'docs/history/EVIDENCE_LINKED_PARITY_REMEDIATION_PLAN.md',
     description: 'historical remediation banner',
   },
   {
-    path: 'docs/DAGGERHEART_DATA_ORGANIZATION_PLAN.md',
+    path: 'docs/history/DAGGERHEART_DATA_ORGANIZATION_PLAN.md',
     description: 'historical Daggerheart banner',
   },
 ] as const;

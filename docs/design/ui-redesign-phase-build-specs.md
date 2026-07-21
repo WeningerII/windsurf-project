@@ -481,6 +481,13 @@ The point of this pass was to catch drift between the plan and reality before a 
 > **Phase 2 is unblocked**. The point-in-time detail below is preserved as the
 > record of what PR #30 left undone.
 
+> **STATUS AUTHORITY — 2026-07-21:** the "UI Shell Redesign" track in
+> `docs/MASTER_PLAN.md` is the authoritative status record for this work; this
+> appendix is the historical build-spec record. The per-bullet statuses below
+> have been corrected in place: every task this appendix recorded as "NOT
+> landed" after PR #30 subsequently landed via PR #32 or PR #33 (both
+> 2026-07-14). Nothing in this appendix is open work.
+
 **Status note (as of 2026-07-14, superseded by the update above).** Phase 1 did NOT land as the ONE atomic PR this spec mandates. PR #30 (merged 2026-07-09) landed a subset; everything below is verified against main `b0f0371` (2026-07-14). The Phase-1 sections above are preserved unedited as the plan of record for the remaining work — read them THROUGH this amendment. Task numbers below are the Phase-1 task numbers (1-14) above. Any gate elsewhere in this doc phrased as "confirm Phase 1 merged" (Phase 2's prerequisite-gap bullet, Phase 4 task 1, the per-phase prerequisite gates) must now be evaluated against the itemized list here, not against the merge of PR #30 — a bare "is P1 merged?" check would falsely pass.
 
 ### Landed in PR #30
@@ -493,23 +500,23 @@ The point of this pass was to catch drift between the plan and reality before a 
 - **Task 9, first half — landed.** Alt+N repointed to open NewCharacterDialog (App.tsx L395-397, guarded off the sheet surface). Alt+1/2/3 did NOT land.
 - **Task 10 — landed in modified form.** The home cascade/hero/action bar are replaced by one Library segment view per `nav.librarySegment`, with SystemStatusDashboard re-hosted as the content segment and doc-drift tokens intact; BUT the scenes segment hosts the full SceneManager (App.tsx L637-658), not the spec'd LibraryScenesView.
 
-### Deferred — verified absent on main b0f0371 (2026-07-14)
+### Deferred by PR #30 — all since landed via PRs #32/#33 (point-in-time record of main b0f0371, 2026-07-14; statuses corrected 2026-07-21)
 
-- **Task 3 (scene-selection lift): NOT landed.** All five scene-selection writers are still internal `setSelectedSceneId` calls in `src/components/SceneManager.tsx` — init L109, auto-reset L143, import-select L807, create-select L872, rail-click L926. No `selectedSceneId`/`onSelectScene` props exist. Since the hook side is done (task 1 above), the remaining lift is SceneManager/App/test work only.
-- **Task 5 (LibraryScenesView): NOT landed.** No such file exists under `src/`; the scenes home is the full SceneManager, create/import UI included, rendered as a Library segment.
-- **Task 5 residue — LEFT-rail relocation: NOT landed.** The 18rem left list rail is intact (`src/components/SceneManager.tsx` L885, `xl:grid-cols-[18rem_minmax(0,1fr)]`); the grid has not widened. The RIGHT 20rem operating rail is docked, as required.
-- **Tasks 7-8 (Export/Delete re-home + per-card roster controls): NOT landed.** AppHeader still renders Export and Delete as inline icon buttons inside the `currentDoc`-gated block (L150), not a Sheet-surface overflow menu; CharacterListView has only the bulk Export All / Clear All controls (L89-101), and CharacterCard receives only onOpen/onClone (L113-119) — no per-card Export/Delete/Import overflow. (The old header location still works, so this is IA debt, not a capability regression.)
-- **Task 9, second half (Alt+1/2/3): NOT landed.** The only alt-modified binding in App.tsx's shortcut array is Alt+N. It is also semantically blocked: the landed shell treats Scenes as a Library segment and `surface:'scene'` is unconsumed, so there is no third surface to switch to until task 3 lands.
-- **Task 11 (instrumentation + sceneManagerChunk guard): NOT landed.** No performance.mark/measure exists in `src/` — the Phase-7 interaction-budget gate has no baseline number. There is no explicit assertion that the SceneManager chunk stays out of the eager index chunk; the only protection is indirect — the 80 KiB gzip `index-*` app-chunk budget in `scripts/check-bundle-size.mjs` (L21), whose comment notes it was re-tightened BECAUSE SceneManager is lazy. De-lazying would likely blow that budget, but nothing asserts the chunk boundary itself (Finding 17 is unguarded).
-- **Task 12 (direct-SceneManager suite rewrites): outstanding by coupling.** The controlled-prop contract they rewrite against is task 3's, which never landed; SceneManager.test.tsx and capabilityScenarios.test.tsx still exercise internal selection ownership.
-- **Task 14 (the eight phase1-*.spec Playwright acceptance gates): NOT landed.** `e2e/` contains no phase1 spec. Gates (c), (e), and (h) are unwritable until tasks 3+5 land; gate (a)'s frame-budget half also depends on the missing task-11 instrumentation.
-- **Keepalive measurement harness (task 4's second half; blast-radius item sceneMountHide.perf.test.ts): never built.** The 3-way comparison (display:none vs visibility-hidden-only vs visibility+content-visibility:auto) that was to justify the hide mechanism does not exist.
+- **Task 3 (scene-selection lift): not in PR #30 — landed in PR #32 (2026-07-14).** Pre-#32 record: All five scene-selection writers are still internal `setSelectedSceneId` calls in `src/components/SceneManager.tsx` — init L109, auto-reset L143, import-select L807, create-select L872, rail-click L926. No `selectedSceneId`/`onSelectScene` props exist. Since the hook side is done (task 1 above), the remaining lift is SceneManager/App/test work only.
+- **Task 5 (LibraryScenesView): not in PR #30 — landed in PR #32 (2026-07-14).** Pre-#32 record: No such file exists under `src/`; the scenes home is the full SceneManager, create/import UI included, rendered as a Library segment.
+- **Task 5 residue — LEFT-rail relocation: not in PR #30 — landed in PR #32 (2026-07-14).** Pre-#32 record: The 18rem left list rail is intact (`src/components/SceneManager.tsx` L885, `xl:grid-cols-[18rem_minmax(0,1fr)]`); the grid has not widened. The RIGHT 20rem operating rail is docked, as required.
+- **Tasks 7-8 (Export/Delete re-home + per-card roster controls): not in PR #30 — landed in PR #33 (2026-07-14).** Pre-#33 record: AppHeader still renders Export and Delete as inline icon buttons inside the `currentDoc`-gated block (L150), not a Sheet-surface overflow menu; CharacterListView has only the bulk Export All / Clear All controls (L89-101), and CharacterCard receives only onOpen/onClone (L113-119) — no per-card Export/Delete/Import overflow. (The old header location still works, so this is IA debt, not a capability regression.)
+- **Task 9, second half (Alt+1/2/3): not in PR #30 — landed in PR #33 (2026-07-14).** Pre-#33 record: The only alt-modified binding in App.tsx's shortcut array is Alt+N. It is also semantically blocked: the landed shell treats Scenes as a Library segment and `surface:'scene'` is unconsumed, so there is no third surface to switch to until task 3 lands.
+- **Task 11 (instrumentation + sceneManagerChunk guard): not in PR #30 — landed in PR #33 (2026-07-14).** Pre-#33 record: No performance.mark/measure exists in `src/` — the Phase-7 interaction-budget gate has no baseline number. There is no explicit assertion that the SceneManager chunk stays out of the eager index chunk; the only protection is indirect — the 80 KiB gzip `index-*` app-chunk budget in `scripts/check-bundle-size.mjs` (L21), whose comment notes it was re-tightened BECAUSE SceneManager is lazy. De-lazying would likely blow that budget, but nothing asserts the chunk boundary itself (Finding 17 is unguarded).
+- **Task 12 (direct-SceneManager suite rewrites): not in PR #30 — landed in PR #32 (2026-07-14) alongside task 3 (`capabilityScenarios.test.tsx` needed no change — it is engine-level).** Pre-#32 record (outstanding by coupling): The controlled-prop contract they rewrite against is task 3's, which never landed; SceneManager.test.tsx and capabilityScenarios.test.tsx still exercise internal selection ownership.
+- **Task 14 (the eight phase1-*.spec Playwright acceptance gates): not in PR #30 — landed in PR #33 (2026-07-14).** Pre-#33 record: `e2e/` contains no phase1 spec. Gates (c), (e), and (h) are unwritable until tasks 3+5 land; gate (a)'s frame-budget half also depends on the missing task-11 instrumentation.
+- **Keepalive measurement harness (task 4's second half; blast-radius item sceneMountHide.perf.test.ts): superseded — PR #32 (2026-07-14) shipped the plan-compliant keepalive (`visibility:hidden` + off-screen), resolving the deviation this harness was to measure.** Pre-#32 record (never built): The 3-way comparison (display:none vs visibility-hidden-only vs visibility+content-visibility:auto) that was to justify the hide mechanism does not exist.
 
-### Deviation — keepalive mechanism violates the plan of record
+### Deviation — keepalive mechanism violated the plan of record (FIXED in PR #32, 2026-07-14)
 
 The shipped keepalive hides the mounted SceneManager with `<div hidden={!isScenesSegment}>` (`src/App.tsx` L638). The HTML `hidden` attribute is UA-stylesheet `display:none` — precisely the mechanism task 4 above and the final plan's Findings 7+14 (`docs/design/ui-shell-redesign-final-plan.md`) forbid in favor of visibility:hidden + off-screen positioning. Because the measurement harness was also skipped, the deviation is UNMEASURED: the per-switch re-layout cost of the hidden grid is unknown. Treat this as a standing plan violation to be fixed, not a ratified change — and it must NOT be generalized as-is by Phase 2's SurfaceStage.
 
-### Phase-2 prerequisite gate — corrected reading
+### Phase-2 prerequisite gate — corrected reading (all three UNMET items below landed in PRs #32/#33; gate MET as of 2026-07-14)
 
 Phase 2's PREREQUISITE GAP drift bullet was written when none of the Phase-1 artifacts existed; that is no longer the state, but "Phase 1 merged" still does not hold. Itemized:
 
@@ -520,7 +527,7 @@ Phase 2's PREREQUISITE GAP drift bullet was written when none of the Phase-1 art
 
 Phase 2 has no explicit task-0 precondition gate (unlike Phase 5); its prerequisite lives in the drift bullet above, which must now be read per this list. The same three items gate Phase 4 task 1's "confirm Phases 1-3 merged" check on the Phase-1 side.
 
-### Recommended next increment
+### Recommended next increment (executed — landed as PRs #32/#33, 2026-07-14)
 
 The coupled **tasks 3+5+12**: lift the five-writer scene-selection seam to controlled props, create LibraryScenesView (relocating the L807/L872 writers into it per task 5), remove the LEFT 18rem rail so the grid widens, and rewrite SceneManager.test.tsx + capabilityScenarios.test.tsx in the same commit — the task-3/task-12 atomicity rule above still binds. Bundle the S-sized keepalive swap (App.tsx L638 `hidden` → visibility:hidden + off-screen positioning) into the same increment so Phase 2 has a compliant mechanism to generalize. The hook-side seam already existing shrinks the increment to SceneManager/App/test work; landing it unblocks tasks 7-8's re-home, task 14's gates (c)(e)(h), the missing third surface for Alt+1/2/3, and all three unmet Phase-2 prerequisites at once. The original atomic-landing rationale (every sub-task breaks the others' suites) applied to the full 14-task set; with the union and writers already merged, the remainder decomposes into the coupled increments above without half-wiring the nav union further.
 

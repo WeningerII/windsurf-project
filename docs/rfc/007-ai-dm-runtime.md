@@ -1,11 +1,14 @@
 # RFC 007: Autonomous AI-DM Runtime — Proposals Over The Scene Runtime
 
-**Status:** Draft — proposed, not yet implemented. This RFC describes a target
-design layered on shipped infrastructure (RFC 002 gateway, RFC 005 resource
-pools, RFC 006 scene runtime); nothing here has landed. It supersedes nothing
-and introduces no new provider dependency beyond the existing gateway.
+**Status:** Accepted (2026-07-21) — implementation scheduled, not yet landed.
+Drafted 2026-07-20; accepted by the user on 2026-07-21. This RFC describes a
+target design layered on shipped infrastructure (RFC 002 gateway, RFC 005
+resource pools, RFC 006 scene runtime); nothing here has landed yet. It
+supersedes nothing and introduces no new provider dependency beyond the
+existing gateway.
 **Author:** engineering planning
 **Created:** July 20, 2026
+**Accepted:** July 21, 2026
 
 ## Summary
 
