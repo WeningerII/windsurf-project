@@ -231,8 +231,10 @@ export function usePf2eSheetController({ document, onUpdate }: UsePf2eSheetContr
       canUpdate: mutationHandlers.canUpdate,
       onEquipArmor: mutationHandlers.equipArmor,
       onEquipShield: mutationHandlers.equipShield,
+      onEquipWeapon: mutationHandlers.equipWeapon,
       onUnequipArmor: mutationHandlers.unequipArmor,
       onUnequipShield: mutationHandlers.unequipShield,
+      onUnequipWeapon: mutationHandlers.unequipWeapon,
     },
     inventoryTabProps: {
       document,

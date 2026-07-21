@@ -150,8 +150,12 @@ below; the remainder is the honest residual.
     and carries the catalog `properties` into `weaponProperties`, so an equipped
     versatile weapon rolls its larger die in two hands in scene combat (the
     combatant already consumed both fields). The equivalent populate for the
-    d20-legacy/PF2e equip flows also remains (their weapon data shapes differ
-    from the 5e DiceRoll catalog).
+    d20-legacy and PF2e equip flows **also shipped 2026-07-21**: each now has an
+    `equipWeapon` handler (`useD20LegacyMutationHandlers` / `usePf2eMutationHandlers`)
+    that maps a catalog weapon onto a `mainHand` entry carrying `weaponDamage`,
+    parsed from that system's OWN shape via the shared `parseWeaponDamageDice`
+    (3.5e's notation-string `damage`, PF1e/PF2e's DiceRoll) — not forced through
+    the 5e DiceRoll catalog.
   - L5: **Partial.** Prepared-spell limits are wired — the 5e spells tab shows
     each prepared caster's RAW limit (`getDnd5ePreparedCasterSummaries` through
     the sheet controller). Still absent: known-spell-count enforcement (the
