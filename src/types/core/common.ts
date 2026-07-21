@@ -75,6 +75,7 @@ export type BonusType =
   | 'proficiency'
   | 'alchemical'
   | 'divine'
+  | 'dodge'
   | 'armor-class'
   | 'damage'
   | 'ability-score'

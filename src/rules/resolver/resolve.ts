@@ -123,7 +123,8 @@ function isBonusTypePolicy(policy: StackPolicy): policy is { bonusType: BonusTyp
  *   1. `set` establishes a base (the LAST set wins, so later overrides apply).
  *   2. additive contributions:
  *        - `'sum'` policy: all `add`/`subtract` instances accumulate;
- *        - `{ bonusType }` policy: only the largest add per named type;
+ *        - `{ bonusType }` policy: only the largest add per named type
+ *          (except `'dodge'`, which stacks — same-type dodge adds sum);
  *        - PF2e buckets: the largest add per bucket, then buckets sum.
  *   3. `multiply` factors apply to the running total.
  *   4. `min`/`max` clamp.
@@ -159,13 +160,19 @@ function foldTarget(target: string, group: EffectInstance[], ctx: ResolveContext
   }
 
   // Named-bonus-type policy (d20/PF): only the largest of each type counts.
+  // EXCEPTION: 'dodge' bonuses explicitly stack with each other (3.5e/PF1e
+  // rules-as-written), so same-type dodge instances accumulate instead.
   const byBonusType = new Map<string, number>();
   for (const effect of additive) {
     if (isBonusTypePolicy(effect.stackPolicy)) {
       const key = effect.stackPolicy.bonusType;
       const current = byBonusType.get(key);
       const candidate = signed(effect);
-      byBonusType.set(key, current === undefined ? candidate : Math.max(current, candidate));
+      if (key === 'dodge') {
+        byBonusType.set(key, (current ?? 0) + candidate);
+      } else {
+        byBonusType.set(key, current === undefined ? candidate : Math.max(current, candidate));
+      }
     }
   }
   for (const value of byBonusType.values()) {
