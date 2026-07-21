@@ -548,9 +548,10 @@ TARGETS.push({
   loader: () => loaderNames(loadAdvantagesForSystem, 'mam3e'),
 });
 // M&M equipment: the DHH equipment data already ships and the runtime is wired
-// (loadMam3eEquipment / loadEquipmentForSystem case 'mam3e'); this target adds
-// the coverage MEASUREMENT, diffing the frnprt EQUIPMENT list against the
-// loader. Executing it (frnprt fetch) is deferred to a networked coverage run.
+// (loadMam3eEquipment / loadEquipmentForSystem case 'mam3e'); this target is the
+// coverage MEASUREMENT, diffing the frnprt EQUIPMENT list against the loader.
+// It runs with the rest of the networked report (first measured 2026-07:
+// see docs/generated/srd-coverage.md for the current numbers).
 TARGETS.push({
   systemId: 'mam3e',
   systemLabel: 'Mutants & Masterminds 3e',
@@ -688,7 +689,7 @@ async function main(): Promise<void> {
     '- **D&D 3.5e** spells and monsters are measured against the clean core-only `olimot/srd-v3.5-md` chapters. The monster denominator now counts INDIVIDUAL stat blocks: `collapse35eMonsterHeadings` (`src/scripts/srdCoverageShape.ts`) drops the SRD\'s taxonomic category headers (e.g. "Angel", "Dragon", "Elemental") that merely nest separately-named members and folds age/size variant rows to their archetype. Remaining 3.5e categories (classes/feats/equipment) are unwired pending core-only sources. See `docs/srd-sources.md`.'
   );
   lines.push(
-    '- **Remaining categories** — PF2e/PF1e non-spell categories, M&M skills/conditions/equipment, Daggerheart classes/ancestries/communities/weapons/armor, and all monsters are documented in `docs/srd-sources.md` and pending wiring.'
+    '- **Remaining categories** — PF2e non-spell/non-monster categories, PF1e classes/feats, M&M skills/conditions, and Daggerheart classes/ancestries/communities/weapons/armor/adversaries are documented in `docs/srd-sources.md` and pending wiring. M&M equipment is wired and measured above.'
   );
   lines.push('');
 
