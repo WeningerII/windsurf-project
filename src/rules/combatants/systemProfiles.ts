@@ -63,6 +63,11 @@ export interface D20SystemProfile {
   supportsVersatile: boolean;
   /** 5e-family: off-hand light weapon grants a bonus attack (Two-Weapon Fighting). */
   supportsOffHand: boolean;
+  /**
+   * PF2e-family: a striking rune (striking/greater/major) sets the equipped
+   * weapon's damage-dice count to 2/3/4. Other d20 systems have no such rune.
+   */
+  supportsStrikingRunes: boolean;
   /** Attack action economy: Extra Attack features vs BAB-driven iteratives. */
   attackEconomy(sheet: NormalizedSheet): AttackEconomy;
 }
@@ -119,6 +124,7 @@ const dnd5eProfile: D20SystemProfile = {
     }),
   supportsVersatile: true,
   supportsOffHand: true,
+  supportsStrikingRunes: false,
   attackEconomy: featureAttackEconomy,
 };
 
@@ -135,6 +141,7 @@ const pf2eProfile: D20SystemProfile = {
     }),
   supportsVersatile: false,
   supportsOffHand: false,
+  supportsStrikingRunes: true,
   // PF2e three-action economy: a full offensive turn spends all three actions
   // Striking (up to three Strikes). Every Strike after the first takes the
   // Multiple Attack Penalty — a cumulative −5 (register-linked
@@ -170,6 +177,7 @@ const legacyD20Profile = (systemId: 'dnd-3.5e' | 'pf1e'): D20SystemProfile => ({
   ],
   supportsVersatile: false,
   supportsOffHand: false,
+  supportsStrikingRunes: false,
   // Iteratives from BAB (extra attack at +6/+11/+16, each at a cumulative -5
   // on a full attack — SRD: Base Attack Bonus / Full Attack).
   attackEconomy: (sheet) => ({

@@ -26,7 +26,11 @@ import type { GameSystemId } from '../../types/game-systems';
 import type { EquippedItem, Feat, Feature } from '../../types/core/character';
 import type { SceneCoordinate, SceneToken } from '../../types/core/scene';
 import { abilityMod } from '../../utils/math';
-import { dnd5eVersatileDamageDie, dnd5eOffHandDamageMod } from '../../utils/derivedCombatMath';
+import {
+  dnd5eVersatileDamageDie,
+  dnd5eOffHandDamageMod,
+  pf2eStrikingDice,
+} from '../../utils/derivedCombatMath';
 import { D20_PROFILES, num, type NormalizedSheet, type RiderContext } from './systemProfiles';
 import {
   compileEquipmentEffects,
@@ -238,6 +242,12 @@ export function buildCharacterCombatant(
         mainHandWeapon.weaponVersatileDie,
         wieldedTwoHanded
       );
+    }
+    // PF2e striking rune: a striking/greater/major rune SETS the weapon's
+    // damage-dice count to 2/3/4 (CRB Runes). Only PF2e weapons carry one, so
+    // the profile gates it; other systems leave the base count untouched.
+    if (profile.supportsStrikingRunes && mainHandWeapon.strikingRune) {
+      weaponDiceCount = pf2eStrikingDice(mainHandWeapon.strikingRune);
     }
   }
 
