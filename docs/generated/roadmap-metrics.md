@@ -1,4 +1,4 @@
-_Generated: 2026-07-20T23:44:08.224Z_
+_Generated: 2026-07-21T01:11:35.209Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
