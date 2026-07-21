@@ -18,6 +18,31 @@ registry, and the rate-limit store stay SDK-free; SDK-bound builders are injecte
 | `providerRegistry.mts` | Provider-agnostic registry: maps a provider id (from `AI_PROVIDER`) to an adapter builder. |
 | `geminiAdapter.mts` | The Google/Gemini `AiProviderAdapter` (the only file importing `@ai-sdk/google`). |
 | `rateLimitStore.mts` | Pluggable rate-limit store: in-memory default + durable-backend stub. |
+| `supabaseJwt.mts` | Supabase-JWT (HS256) request auth: verifier + env resolver, plain `node:crypto`. |
+
+## Authentication (Supabase JWT)
+
+Auth is **off by default** and engages only when there is something to protect:
+requests must carry `Authorization: Bearer <supabase access token>` **iff** a
+real provider adapter resolved (a key is set) **and** `SUPABASE_JWT_SECRET` is
+set. `supabaseJwt.mts` verifies the token with plain `node:crypto` (HS256 HMAC —
+the algorithm Supabase signs access tokens with): algorithm pin (anything but
+`HS256`, including `none`, is rejected), constant-time signature comparison,
+then `exp` (required) and `nbf`. A missing/expired/forged token is answered
+`401` with the typed failure code `unauthorized` **before** the body is parsed;
+the browser client falls back to the manual tools like any other failure.
+
+Degradation matrix (the local-first guarantee):
+
+| Provider key | `SUPABASE_JWT_SECRET` | Behavior |
+| --- | --- | --- |
+| unset | either | `provider-not-configured` (503), exactly as before — never 401. |
+| set | unset | Open gateway, today's behavior (rate limit only). Set the secret on any deploy with a real key. |
+| set | set | Valid Supabase JWT required; signed-in clients attach it automatically (`gatewayClient.ts`). |
+
+The verification secret is the Supabase project's **JWT secret** (dashboard →
+Settings → API). It is server-only: never expose it via a `VITE_` name (the
+`check:secret-exposure` gate hunts for that).
 
 ## Provider adapter contract
 
@@ -111,6 +136,7 @@ no rate limiting, in-memory counting.
 | `GOOGLE_GENERATIVE_AI_API_KEY` / `GEMINI_API_KEY` | — | No key → default provider yields no adapter → `provider-not-configured` (client uses manual tools). |
 | `AI_GATEWAY_MODEL` | adapter default | Gemini adapter's built-in model id. |
 | `AI_IMAGE_MODEL` | adapter default | Gemini adapter's built-in image model id. |
+| `SUPABASE_JWT_SECRET` | — (off) | Unset → no auth check (local-first deploys unchanged). Set + a provider key → valid Supabase JWT required (401 otherwise). |
 | `AI_RATE_LIMIT` | — (off) | Unset/≤0 → **no** rate limiting (today's behavior). |
 | `AI_RATE_LIMIT_WINDOW_MS` | `60000` | Window length; only used when `AI_RATE_LIMIT` is set. |
 | `RATE_LIMIT_STORE_URL` | — | Unset → durable store disabled; counting stays in-memory. Set + a wired driver → durable store. |

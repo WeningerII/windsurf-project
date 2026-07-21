@@ -11,6 +11,12 @@
  * and the browser bundle SDK-free. Rate limiting goes through a pluggable
  * {@link RateLimitStore} (in-memory by default; durable-ready via
  * `RATE_LIMIT_STORE_URL`) — see `netlify/functions/README.md`.
+ *
+ * Auth (Phase 5 M2): when a real provider resolved AND `SUPABASE_JWT_SECRET`
+ * is set, every request must carry a valid Supabase access token
+ * (`Authorization: Bearer ...`, HS256-verified in `supabaseJwt.mts`) or it is
+ * rejected 401 before the body is parsed. Without the secret (pure local-first
+ * deploys) or without a provider key, nothing changes.
  */
 import { processGatewayHttp } from '../../src/ai/gatewayHttp';
 import { createConsoleLogSink } from '../../src/ai/gatewayLog';
@@ -18,6 +24,7 @@ import type { RateLimiter } from '../../src/utils/rateLimit';
 import { resolveProviderAdapter } from './providerRegistry.mts';
 import { rateLimiterFromStore, resolveRateLimitStore } from './rateLimitStore.mts';
 import { createGeminiAdapter } from './geminiAdapter.mts';
+import { resolveGatewayAuth } from './supabaseJwt.mts';
 
 /**
  * Build a request limiter from env, or `undefined` (no limiting — today's
@@ -62,13 +69,25 @@ export default async (req: Request): Promise<Response> => {
     }
   );
 
+  // The JWT check engages only when there is something to protect (a real
+  // adapter) and auth is configured; otherwise the authorizer stays undefined
+  // and the request flows exactly as before — key-less degradation unchanged.
+  const verifyJwt = resolveGatewayAuth({ SUPABASE_JWT_SECRET: process.env.SUPABASE_JWT_SECRET });
+  const authorize =
+    adapter && verifyJwt ? () => verifyJwt(req.headers.get('authorization')) : undefined;
+
   const rawBody = req.method.toUpperCase() === 'POST' ? await req.text() : '';
-  const { status, body } = await processGatewayHttp(req.method, rawBody, {
-    adapter,
-    rateLimiter: rateLimiterFromEnv(),
-    rateLimitKey: clientKey(req),
-    log: createConsoleLogSink(),
-  });
+  const { status, body } = await processGatewayHttp(
+    req.method,
+    rawBody,
+    {
+      adapter,
+      rateLimiter: rateLimiterFromEnv(),
+      rateLimitKey: clientKey(req),
+      log: createConsoleLogSink(),
+    },
+    authorize
+  );
 
   return new Response(JSON.stringify(body), {
     status,

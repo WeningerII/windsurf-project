@@ -1,8 +1,10 @@
 /**
  * HTTP mapping for the gateway, kept pure (no SDK, no Netlify types) so it is
  * unit-testable and the Netlify entry point stays a thin wrapper. It enforces
- * POST, parses the JSON body, delegates to the provider-agnostic core, and maps
- * the typed response to a sensible HTTP status.
+ * POST, runs an optional injected authorizer (the Supabase-JWT check on real
+ * deploys — see `netlify/functions/supabaseJwt.mts`), parses the JSON body,
+ * delegates to the provider-agnostic core, and maps the typed response to a
+ * sensible HTTP status.
  */
 import { aiFailure, type AiResponse } from './contracts';
 import { handleAiRequest, type GatewayContext } from './gatewayCore';
@@ -11,6 +13,17 @@ export interface GatewayHttpResult {
   status: number;
   body: AiResponse;
 }
+
+/** Outcome of the injected request authorizer (verdict only; no throw). */
+export type GatewayAuthVerdict = { ok: true } | { ok: false; message: string };
+
+/**
+ * The auth seam. The Netlify entry injects a closure over the request's
+ * `Authorization` header (Supabase-JWT verification, Node crypto) ONLY when
+ * auth is configured AND a real provider is wired; when absent, requests flow
+ * exactly as before — the local-first / key-less deploy stays untouched.
+ */
+export type GatewayAuthorizer = () => GatewayAuthVerdict;
 
 /**
  * Hard ceiling on the request body, kept below the host's synchronous-function
@@ -22,10 +35,20 @@ export const MAX_GATEWAY_REQUEST_BYTES = 6_000_000;
 export async function processGatewayHttp(
   method: string,
   rawBody: string,
-  ctx: GatewayContext
+  ctx: GatewayContext,
+  authorize?: GatewayAuthorizer
 ): Promise<GatewayHttpResult> {
   if (method.toUpperCase() !== 'POST') {
     return { status: 405, body: aiFailure('invalid-request', 'The AI gateway only accepts POST.') };
+  }
+
+  // Auth runs before any body handling: an unauthenticated caller learns
+  // nothing about payload validation, and we do no parsing work for them.
+  if (authorize) {
+    const verdict = authorize();
+    if (!verdict.ok) {
+      return { status: 401, body: aiFailure('unauthorized', verdict.message) };
+    }
   }
 
   if (rawBody.length > MAX_GATEWAY_REQUEST_BYTES) {
@@ -52,6 +75,8 @@ function statusForResponse(response: AiResponse): number {
     case 'unsupported-task':
     case 'invalid-request':
       return 400;
+    case 'unauthorized':
+      return 401;
     case 'over-budget':
       return 429;
     case 'provider-not-configured':

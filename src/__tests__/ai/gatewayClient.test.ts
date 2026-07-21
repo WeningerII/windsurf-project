@@ -1,10 +1,18 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { callAiGateway, isAiEnabled } from '../../ai/gatewayClient';
 import { AI_GATEWAY_ENDPOINT } from '../../ai/contracts';
+import { getSupabaseClient, type SupabaseClient } from '../../utils/supabaseClient';
+
+// Signed-out by default: no Supabase client, so no Authorization header —
+// which is also the pre-auth behavior every existing test below assumes.
+vi.mock('../../utils/supabaseClient', () => ({
+  getSupabaseClient: vi.fn(() => null),
+}));
 
 afterEach(() => {
   vi.unstubAllEnvs();
   vi.unstubAllGlobals();
+  vi.mocked(getSupabaseClient).mockReturnValue(null);
 });
 
 const payload = {
@@ -56,6 +64,43 @@ describe('callAiGateway', () => {
       AI_GATEWAY_ENDPOINT,
       expect.objectContaining({ method: 'POST' })
     );
+  });
+
+  it('attaches the Supabase access token as a Bearer header when signed in', async () => {
+    vi.stubEnv('VITE_AI_ENABLED', 'true');
+    const accessToken = 'stub.access.token';
+    vi.mocked(getSupabaseClient).mockReturnValue({
+      auth: { getSession: async () => ({ data: { session: { access_token: accessToken } } }) },
+    } as unknown as SupabaseClient);
+    const fetchSpy = vi.fn(async () => jsonResponse({ ok: false, code: 'x', message: 'x' }));
+    vi.stubGlobal('fetch', fetchSpy);
+
+    await callAiGateway('encounter-draft', payload);
+    expect(fetchSpy).toHaveBeenCalledWith(
+      AI_GATEWAY_ENDPOINT,
+      expect.objectContaining({
+        headers: expect.objectContaining({ authorization: `Bearer ${accessToken}` }),
+      })
+    );
+  });
+
+  it('sends no Authorization header when signed out (and survives a session error)', async () => {
+    vi.stubEnv('VITE_AI_ENABLED', 'true');
+    vi.mocked(getSupabaseClient).mockReturnValue({
+      auth: {
+        getSession: async () => {
+          throw new Error('auth backend down');
+        },
+      },
+    } as unknown as SupabaseClient);
+    const fetchSpy = vi.fn(async (_input: unknown, _init?: RequestInit) =>
+      jsonResponse({ ok: false, code: 'x', message: 'x' })
+    );
+    vi.stubGlobal('fetch', fetchSpy);
+
+    await callAiGateway('encounter-draft', payload);
+    const headers = (fetchSpy.mock.calls[0]?.[1]?.headers ?? {}) as Record<string, string>;
+    expect(headers.authorization).toBeUndefined();
   });
 
   it('normalizes a network error to provider-error', async () => {

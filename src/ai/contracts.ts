@@ -30,6 +30,7 @@ export function isAiTask(value: unknown): value is AiTask {
 export type AiFailureCode =
   | 'unsupported-task'
   | 'invalid-request'
+  | 'unauthorized'
   | 'provider-not-configured'
   | 'provider-error'
   | 'invalid-provider-output'

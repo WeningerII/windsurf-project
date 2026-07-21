@@ -43,6 +43,21 @@ describe('processGatewayHttp', () => {
     expect(res.body).toMatchObject({ ok: true, usage: { source: 'fixture' } });
   });
 
+  it('returns 401 unauthorized when the injected authorizer rejects — before parsing', async () => {
+    const res = await processGatewayHttp('POST', '{not even json', { fixtures }, () => ({
+      ok: false,
+      message: 'Sign in to use AI features.',
+    }));
+    expect(res.status).toBe(401);
+    expect(res.body).toMatchObject({ ok: false, code: 'unauthorized' });
+  });
+
+  it('proceeds normally when the injected authorizer accepts', async () => {
+    const res = await processGatewayHttp('POST', body, { fixtures }, () => ({ ok: true }));
+    expect(res.status).toBe(200);
+    expect(res.body).toMatchObject({ ok: true, usage: { source: 'fixture' } });
+  });
+
   it('maps no-provider to 503 and unknown task to 400', async () => {
     expect((await processGatewayHttp('POST', body, {})).status).toBe(503);
     const badTask = JSON.stringify({
