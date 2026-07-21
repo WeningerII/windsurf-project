@@ -33,11 +33,65 @@ gap-ledger 23 items 9 done, roadmap-metrics, graph); secrets ✓ legal-notices �
 repo-hygiene ✓; **e2e chromium 36 passed ✓** (via pw-bridge). Waves 1 & 2 were
 each independently fully gated earlier.
 
-**STATE: plan fully executed & pushed.** HEAD `56e891b`. No open work items from
-the wave plan. Blocked items (human sign-off / secrets / infra / OGC source,
-e.g. srd-coverage NETWORK regen, encoding missing individuals) remain
-intentionally OUT of scope for "complete" — see consensus doc. Next session:
-await new direction; if resuming, `/resume` + re-read the consensus doc.
+**FOLLOW-UP BATCH (post-plan, maintainer approved "all recommendations") — DONE
++ FULLY GATED GREEN:** the previously-blocked items I could action:
+- **Exhaustion −2/level sign-off RATIFIED** `14727e7` (ledger review item → done;
+  SRD 5.2 RAW confirmed).
+- **a11y color-contrast remediated + ENFORCED** `507e888`: KNOWN_A11Y_DEBT now
+  EMPTY. Fixed `--muted-foreground` 46.9→43% L and `--destructive` 60.2→42% L
+  (red-700) — red-500 failed AA as both text (3.29–3.76:1) AND button label;
+  darkened globally (maintainer had no-preference). Light theme only; a11y e2e green.
+- **AI-gateway provider-agnosticism + durable rate-limit store** `c5b0959`
+  (netlify/functions/**): AI_PROVIDER registry (delegates to selectAiProvider) +
+  RateLimitStore interface (in-memory default + inert RATE_LIMIT_STORE_URL stub) +
+  adapter README + 11 tests. Built on item-8 DI; default-off byte-identical.
+- **RFC 007 AI-DM runtime (Draft)** `62e3da5`; **Sentry+Supabase DR runbooks**
+  `30258f7` (docs/runbooks/, honest DORMANT-alert notes); **PF1e equipment sourcing
+  recommendation** `30258f7` (docs/proposals/ — verdict: source via PSRD-Data
+  core_rulebook/item, 590 Core items, encode is a follow-on).
+- doc-drift manifest register `4eea6a1`+`bcacdf3` (new docs; runbooks='plan' not
+  'live' — live requires rule coverage). Regen/graph this batch: graphify only.
+- **BATCH BARRIER ALL GREEN:** full suite 245 files / 2463 tests (cov ~86%),
+  lint, build, bundle, compute-register Tier A 210, knip, validate,
+  typecheck:netlify + 103 gateway tests, doc-drift, generated-docs, secrets,
+  legal, repo-hygiene, **e2e 36 passed**, a11y e2e (contrast enforced) passed.
+
+**PF1e EQUIPMENT ENCODE — DONE + FULLY GATED GREEN** `97b330d` (+regen `0ccee43`,
+bundle-split `35b00e7`): the last source-blocked content gap, now closed. New
+scripts/encode-pf1e-equipment.mjs reads a blobless sparse clone of
+devonjones/PSRD-Data core_rulebook/item/** (OGL/OGC, same repo as the bestiary)
+→ src/data/pathfinder/1e/equipment/srd-{weapons,armor,gear,magic-items}.ts
+(243 mundane + 347 magic = 590 Core items), prettier-normalized + deterministic
+(encoder shells to local prettier bin). index.ts merges srd+hand (hand wins on
+id); loader unchanged. Manifest scripts/data/pf1e-equipment-manifest.json pins the
+denominator; srd-coverage.ts gains pf1e equipment/magic-items CoverageTargets.
+Ledger p1.pf1e-equipment blocked→DONE (coverage published 100%). PF1e equipment
+loader total 70→617. Bundle: split into its own
+pf1e-equipment-data lazy chunk (100.3 KiB < 140 per-chunk budget); total-JS budget
+1536→1664 KiB. Gated: full suite 2466, tsc, lint, build, bundle, e2e 36,
+generated-docs, doc-drift, all green. Honest-mapping: exotic→martial+prose,
+8 damageless→gear, non-numeric prices/negligible weights at type default.
+
+**COVERAGE PUBLISHED + MASTER PLAN UPDATED** (`8783ceb` srd-coverage.md, `38bd423`
+ledger, `3700264` MASTER_PLAN). Networked `npm run srd:coverage` WORKS here (all
+GitHub-raw open-content sources reachable through the proxy): PF1e equipment
+243/243 + magic 347/347 = 100%; M&M equipment now measured 45/113 (39.8%, frnprt) —
+reveals 68 missing Hero SRD items; PF1e monsters 331/332 (1 gap: Skeletal Champion,
+likely a template). Ledger 11 done/23. MASTER_PLAN.md gained a dated 2026-07-21
+Current-Repo-Truth summary + RFC 007 provenance row + gateway/AI-DM + PF1e-equipment
+notes (doc-drift/generated-docs/repo-hygiene green; pinned phrases preserved).
+
+**⚠ CONTAINER RECYCLED TWICE this session** — each time local HEAD reset to old
+`1965c16`, ALL work safe on origin; recover: `git fetch origin <branch> && git reset
+--hard origin/<branch>`, then `npm install` (node_modules comes back missing
+@axe-core/playwright). COMMIT+PUSH PER SLICE — recycles ~every 30-45 min.
+
+**STILL BLOCKED / next candidates (need human/secrets/infra, or a content push):**
+screen-reader listen-through; live secrets/infra (Sentry DSN, Supabase creds,
+durable rate-limit backend, staged rollout); AI-DM implementation (RFC 007 accept
+first). Code-doable content gaps NOW QUANTIFIED by coverage: M&M equipment 68
+missing (frnprt source, biggest real gap); PF1e Skeletal Champion (1, check if
+template); 3.5e monsters ~62 mostly denominator artifact. Next: await direction.
 
 ## Landmines
 

@@ -185,6 +185,9 @@ export default defineConfig({
           if (id.includes('src/data/pathfinder/1e/spells')) {
             return 'pf1e-spells-data';
           }
+          if (id.includes('src/data/pathfinder/1e/equipment')) {
+            return 'pf1e-equipment-data';
+          }
           if (id.includes('src/data/pathfinder/1e')) {
             return 'pf1e-data';
           }

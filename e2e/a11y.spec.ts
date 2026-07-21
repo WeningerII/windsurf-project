@@ -15,16 +15,10 @@ const BLOCKING_IMPACTS = new Set(['critical', 'serious']);
 // gate stays green on what we've already remediated while STILL failing on any
 // other critical/serious violation.
 //
-// TODO(a11y): `color-contrast` — several `text-muted-foreground`-on-card nodes
-// fall below WCAG AA. This is a design-token/palette issue with broad visual
-// impact that needs design review; it must be fixed by adjusting the theme
-// tokens, not silenced here. Track and remove this exemption once the palette
-// contrast pass lands.
-//
 // Only add a rule here for genuinely tracked design debt — never to dodge a
 // real regression. Every other critical/serious violation, INCLUDING any new
 // rule id, must continue to fail this gate.
-const KNOWN_A11Y_DEBT = new Set(['color-contrast']);
+const KNOWN_A11Y_DEBT = new Set<string>();
 
 async function openLandingPage(page: Page) {
   await page.goto('/', { waitUntil: 'domcontentloaded' });

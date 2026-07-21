@@ -197,6 +197,40 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: ['path_ref_rule'],
   },
   {
+    // Forward-looking design: cites shipped seams alongside PROPOSED paths
+    // (src/scene/aiDm/, the src/systems/** glob) that do not exist yet, so
+    // path_ref_rule must NOT apply (mirrors the plan docs above).
+    path: 'docs/rfc/007-ai-dm-runtime.md',
+    kind: 'rfc',
+    owner: 'ai-dm-runtime-rfc',
+    rules: [],
+  },
+  {
+    // Sourcing recommendation for the last source-blocked content gap; names a
+    // PROPOSED encoder + manifest (scripts/encode-pf1e-equipment.mjs, …) that
+    // are follow-on work, so no path_ref_rule (mirrors srd-sources.md).
+    path: 'docs/proposals/pf1e-equipment-sourcing.md',
+    kind: 'plan',
+    owner: 'pf1e-equipment-sourcing',
+    rules: [],
+  },
+  {
+    // Ops runbook (turnkey-when-provisioned); prose spec, not code-paired, so
+    // 'plan' (rules-free prose) like srd-sources.md — 'live' requires rule coverage.
+    path: 'docs/runbooks/sentry-alerts.md',
+    kind: 'plan',
+    owner: 'ops-runbooks',
+    rules: [],
+  },
+  {
+    // Ops runbook (turnkey-when-provisioned); prose spec, not code-paired, so
+    // 'plan' (rules-free prose) like srd-sources.md — 'live' requires rule coverage.
+    path: 'docs/runbooks/supabase-backup-restore.md',
+    kind: 'plan',
+    owner: 'ops-runbooks',
+    rules: [],
+  },
+  {
     path: 'docs/PRODUCTION_PLAN.md',
     kind: 'historical',
     owner: 'historical-planning',

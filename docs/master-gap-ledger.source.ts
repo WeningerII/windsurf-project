@@ -132,12 +132,12 @@ export const MASTER_GAP_LEDGER: readonly GapLedgerItem[] = [
     track: 'A-content',
     title: 'Mutants & Masterminds equipment — data, runtime, and coverage target',
     detail:
-      'The DHH equipment data ships (src/data/mutants-and-masterminds/3e/equipment/*) and the runtime loader is wired (loadMam3eEquipment / loadEquipmentForSystem case mam3e). The remaining piece was the srd:coverage MEASUREMENT: a mam3e/equipment CoverageTarget (frnprt EQUIPMENT list vs loadEquipmentForSystem("mam3e")) is now added to src/scripts/srd-coverage.ts. Executing it (the frnprt fetch) is deferred to a networked coverage run, so the published equipment coverage number lands at integration.',
+      'The DHH equipment data ships (src/data/mutants-and-masterminds/3e/equipment/*), the runtime loader is wired (loadMam3eEquipment / loadEquipmentForSystem case mam3e), and the mam3e/equipment CoverageTarget (frnprt EQUIPMENT list) is published: the networked npm run srd:coverage measures 45/113 (39.8%) in docs/generated/srd-coverage.md. Wiring + measurement are done; the published number reveals 68 Hero SRD equipment items (weapons, armor, vehicles, HQ features/sizes) the loader lacks — a content-completion follow-on.',
     status: 'in-progress',
     tags: ['engineering'],
     system: 'mam3e',
     evidence:
-      'src/scripts/srd-coverage.ts (mam3e/equipment target); src/utils/dataLoader.ts (loadMam3eEquipment); docs/srd-sources.md (M&M)',
+      'docs/generated/srd-coverage.md (M&M equipment 45/113); src/scripts/srd-coverage.ts (mam3e/equipment target); src/utils/dataLoader.ts (loadMam3eEquipment)',
   },
   {
     id: 'p1.mam-provenance-LEGAL-2',
@@ -190,13 +190,14 @@ export const MASTER_GAP_LEDGER: readonly GapLedgerItem[] = [
     id: 'p1.pf1e-equipment',
     phase: 1,
     track: 'A-content',
-    title: 'PF1e equipment (source-blocked)',
+    title: 'PF1e Core equipment + magic items — data, manifest, coverage',
     detail:
-      'Pin a clean CRB-scoped OGC equipment list (a PSRD-Data manifest like the bestiary, or a source-tagged Foundry pack); if none is reachable, formalize the honest exclusion in docs/srd-sources.md + this ledger.',
-    status: 'blocked',
-    tags: ['source-blocked'],
+      'Sourced, encoded, and coverage PUBLISHED at 100%. scripts/encode-pf1e-equipment.mjs reads devonjones/PSRD-Data core_rulebook/item/** (Paizo PRD, OGL 1.0a / OGC — the repo already pinned for the bestiary) and generates src/data/pathfinder/1e/equipment/srd-{weapons,armor,gear,magic-items}.ts (243 mundane equipment + 347 magic items), merged so hand-authored entries win on id. scripts/data/pf1e-equipment-manifest.json pins the denominator; src/scripts/srd-coverage.ts has pf1e equipment + magic-items CoverageTargets. The networked npm run srd:coverage published PF1e equipment 243/243 (100%) and magic-items 347/347 (100%) in docs/generated/srd-coverage.md.',
+    status: 'done',
+    tags: ['engineering'],
     system: 'pf1e',
-    evidence: 'docs/srd-sources.md (PF1e)',
+    evidence:
+      'scripts/encode-pf1e-equipment.mjs; scripts/data/pf1e-equipment-manifest.json; src/data/pathfinder/1e/equipment/srd-*.ts; docs/generated/srd-coverage.md (PF1e equipment/magic-items 100%)',
   },
   {
     id: 'p1.wire-remaining-denominators',
@@ -330,12 +331,12 @@ export const MASTER_GAP_LEDGER: readonly GapLedgerItem[] = [
     id: 'review.dnd5e-2024-exhaustion',
     phase: 3,
     track: 'B-compute',
-    title: '5e-2024 exhaustion −2/level change — human sign-off',
+    title: '5e-2024 exhaustion −2/level change — human sign-off (ratified)',
     detail:
-      'The only shipped rule-behavior change (src/systems/dnd5e-2024/engine.ts exhaustion −2 per level) warrants explicit human sign-off before it is considered settled.',
-    status: 'pending',
+      'The only shipped rule-behavior change (src/systems/dnd5e-2024/engine.ts exhaustion −2 per level) required explicit human sign-off. RATIFIED 2026-07-20: confirmed against SRD 5.2 RAW (each level of exhaustion imposes −2 to d20 tests); Dnd5e2024Engine.getExhaustionD20Penalty is settled and test-pinned.',
+    status: 'done',
     tags: ['human-signoff'],
     system: 'dnd-5e-2024',
-    evidence: 'src/systems/dnd5e-2024/engine.ts',
+    evidence: 'src/systems/dnd5e-2024/engine.ts; ratified by maintainer 2026-07-20 (SRD 5.2 RAW)',
   },
 ];

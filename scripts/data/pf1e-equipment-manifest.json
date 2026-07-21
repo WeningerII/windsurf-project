@@ -1,0 +1,2956 @@
+{
+  "source": "devonjones/PSRD-Data core_rulebook/item (Core Rulebook, PRD OGC)",
+  "generatedBy": "scripts/encode-pf1e-equipment.mjs",
+  "entries": [
+    {
+      "file": "acid.json",
+      "name": "Acid",
+      "scope": "equipment"
+    },
+    {
+      "file": "adamantine_battleaxe.json",
+      "name": "Adamantine Battleaxe",
+      "scope": "magic"
+    },
+    {
+      "file": "adamantine_dagger.json",
+      "name": "Adamantine Dagger",
+      "scope": "magic"
+    },
+    {
+      "file": "alchemists_fire.json",
+      "name": "Alchemist's Fire",
+      "scope": "equipment"
+    },
+    {
+      "file": "alchemists_lab.json",
+      "name": "Alchemist's Lab",
+      "scope": "equipment"
+    },
+    {
+      "file": "antitoxin.json",
+      "name": "Antitoxin",
+      "scope": "equipment"
+    },
+    {
+      "file": "apparatus_of_the_crab.json",
+      "name": "Apparatus of the Crab",
+      "scope": "magic"
+    },
+    {
+      "file": "armor/adamantine_breastplate.json",
+      "name": "Adamantine Breastplate",
+      "scope": "magic"
+    },
+    {
+      "file": "armor/armor_of_arrow_attraction.json",
+      "name": "Armor of Arrow Attraction",
+      "scope": "magic"
+    },
+    {
+      "file": "armor/banded_mail_of_luck.json",
+      "name": "Banded Mail of Luck",
+      "scope": "magic"
+    },
+    {
+      "file": "armor/breastplate_of_command.json",
+      "name": "Breastplate of Command",
+      "scope": "magic"
+    },
+    {
+      "file": "armor/celestial_armor.json",
+      "name": "Celestial Armor",
+      "scope": "magic"
+    },
+    {
+      "file": "armor/demon_armor.json",
+      "name": "Demon Armor",
+      "scope": "magic"
+    },
+    {
+      "file": "armor/dragonhide_plate.json",
+      "name": "Dragonhide Plate",
+      "scope": "magic"
+    },
+    {
+      "file": "armor/dwarven_plate.json",
+      "name": "Dwarven Plate",
+      "scope": "magic"
+    },
+    {
+      "file": "armor/elven_chain.json",
+      "name": "Elven Chain",
+      "scope": "magic"
+    },
+    {
+      "file": "armor/mithral_full_plate_of_speed.json",
+      "name": "Mithral Full Plate of Speed",
+      "scope": "magic"
+    },
+    {
+      "file": "armor/mithral_shirt.json",
+      "name": "Mithral Shirt",
+      "scope": "magic"
+    },
+    {
+      "file": "armor/plate_armor_of_the_deep.json",
+      "name": "Plate Armor of the Deep",
+      "scope": "magic"
+    },
+    {
+      "file": "armor/rhino_hide.json",
+      "name": "Rhino Hide",
+      "scope": "magic"
+    },
+    {
+      "file": "armor_spikes.json",
+      "name": "Armor Spikes",
+      "scope": "equipment"
+    },
+    {
+      "file": "arms/bracers_of_defenselessness.json",
+      "name": "Bracers of Defenselessness",
+      "scope": "magic"
+    },
+    {
+      "file": "arrows.json",
+      "name": "Arrows",
+      "scope": "equipment"
+    },
+    {
+      "file": "artisans_outfit.json",
+      "name": "Artisan's Outfit",
+      "scope": "equipment"
+    },
+    {
+      "file": "artisans_tools.json",
+      "name": "Artisan's Tools",
+      "scope": "equipment"
+    },
+    {
+      "file": "artisans_tools_masterwork.json",
+      "name": "Artisan's Tools, Masterwork",
+      "scope": "equipment"
+    },
+    {
+      "file": "assassins_dagger.json",
+      "name": "Assassin's Dagger",
+      "scope": "magic"
+    },
+    {
+      "file": "axe_of_the_dwarvish_lords.json",
+      "name": "Axe of the Dwarvish Lords",
+      "scope": "magic"
+    },
+    {
+      "file": "axe_orc_double.json",
+      "name": "Axe, Orc Double",
+      "scope": "equipment"
+    },
+    {
+      "file": "backpack.json",
+      "name": "Backpack",
+      "scope": "equipment"
+    },
+    {
+      "file": "bag_of_devouring.json",
+      "name": "Bag of Devouring",
+      "scope": "magic"
+    },
+    {
+      "file": "bag_of_holding.json",
+      "name": "Bag of Holding",
+      "scope": "magic"
+    },
+    {
+      "file": "bag_of_tricks.json",
+      "name": "Bag of Tricks",
+      "scope": "magic"
+    },
+    {
+      "file": "banded_mail.json",
+      "name": "Banded Mail",
+      "scope": "equipment"
+    },
+    {
+      "file": "barding_medium_creature_and_large_creature.json",
+      "name": "Barding, Medium Creature and Large Creature",
+      "scope": "equipment"
+    },
+    {
+      "file": "barrel.json",
+      "name": "Barrel",
+      "scope": "equipment"
+    },
+    {
+      "file": "basket.json",
+      "name": "Basket",
+      "scope": "equipment"
+    },
+    {
+      "file": "battleaxe.json",
+      "name": "Battleaxe",
+      "scope": "equipment"
+    },
+    {
+      "file": "bead_of_force.json",
+      "name": "Bead of Force",
+      "scope": "magic"
+    },
+    {
+      "file": "bedroll.json",
+      "name": "Bedroll",
+      "scope": "equipment"
+    },
+    {
+      "file": "bell.json",
+      "name": "Bell",
+      "scope": "equipment"
+    },
+    {
+      "file": "belt/belt_of_dwarvenkind.json",
+      "name": "Belt of Dwarvenkind",
+      "scope": "magic"
+    },
+    {
+      "file": "belt/belt_of_giant_strength.json",
+      "name": "Belt of Giant Strength",
+      "scope": "magic"
+    },
+    {
+      "file": "belt/belt_of_incredible_dexterity.json",
+      "name": "Belt of Incredible Dexterity",
+      "scope": "magic"
+    },
+    {
+      "file": "belt/belt_of_mighty_constitution.json",
+      "name": "Belt of Mighty Constitution",
+      "scope": "magic"
+    },
+    {
+      "file": "belt/belt_of_physical_might.json",
+      "name": "Belt of Physical Might",
+      "scope": "magic"
+    },
+    {
+      "file": "belt/belt_of_physical_perfection.json",
+      "name": "Belt of Physical Perfection",
+      "scope": "magic"
+    },
+    {
+      "file": "belt_pouch.json",
+      "name": "Belt Pouch",
+      "scope": "equipment"
+    },
+    {
+      "file": "bit_and_bridle.json",
+      "name": "Bit and Bridle",
+      "scope": "equipment"
+    },
+    {
+      "file": "blanket.json",
+      "name": "Blanket",
+      "scope": "equipment"
+    },
+    {
+      "file": "blessed_book.json",
+      "name": "Blessed Book",
+      "scope": "magic"
+    },
+    {
+      "file": "block_and_tackle.json",
+      "name": "Block and Tackle",
+      "scope": "equipment"
+    },
+    {
+      "file": "blowgun.json",
+      "name": "Blowgun",
+      "scope": "equipment"
+    },
+    {
+      "file": "blowgun_darts.json",
+      "name": "Blowgun Darts",
+      "scope": "equipment"
+    },
+    {
+      "file": "boat_folding.json",
+      "name": "Boat, Folding",
+      "scope": "magic"
+    },
+    {
+      "file": "body/armor_of_rage.json",
+      "name": "Armor of Rage",
+      "scope": "magic"
+    },
+    {
+      "file": "body/robe_monks.json",
+      "name": "Robe, Monk's",
+      "scope": "magic"
+    },
+    {
+      "file": "body/robe_of_blending.json",
+      "name": "Robe of Blending",
+      "scope": "magic"
+    },
+    {
+      "file": "body/robe_of_bones.json",
+      "name": "Robe of Bones",
+      "scope": "magic"
+    },
+    {
+      "file": "body/robe_of_eyes.json",
+      "name": "Robe of Eyes",
+      "scope": "magic"
+    },
+    {
+      "file": "body/robe_of_powerlessness.json",
+      "name": "Robe of Powerlessness",
+      "scope": "magic"
+    },
+    {
+      "file": "body/robe_of_scintillating_colors.json",
+      "name": "Robe of Scintillating Colors",
+      "scope": "magic"
+    },
+    {
+      "file": "body/robe_of_stars.json",
+      "name": "Robe of Stars",
+      "scope": "magic"
+    },
+    {
+      "file": "body/robe_of_the_archmagi.json",
+      "name": "Robe of the Archmagi",
+      "scope": "magic"
+    },
+    {
+      "file": "body/robe_of_useful_items.json",
+      "name": "Robe of Useful Items",
+      "scope": "magic"
+    },
+    {
+      "file": "body/robe_of_vermin.json",
+      "name": "Robe of Vermin",
+      "scope": "magic"
+    },
+    {
+      "file": "body/vestment_druids.json",
+      "name": "Vestment, Druid's",
+      "scope": "magic"
+    },
+    {
+      "file": "bolas.json",
+      "name": "Bolas",
+      "scope": "equipment"
+    },
+    {
+      "file": "bolts.json",
+      "name": "Bolts",
+      "scope": "equipment"
+    },
+    {
+      "file": "book_of_infinite_spells.json",
+      "name": "Book of Infinite Spells",
+      "scope": "magic"
+    },
+    {
+      "file": "bottle.json",
+      "name": "Bottle",
+      "scope": "equipment"
+    },
+    {
+      "file": "bottle_of_air.json",
+      "name": "Bottle of Air",
+      "scope": "magic"
+    },
+    {
+      "file": "breastplate.json",
+      "name": "Breastplate",
+      "scope": "equipment"
+    },
+    {
+      "file": "broom_of_animated_attack.json",
+      "name": "Broom of Animated Attack",
+      "scope": "magic"
+    },
+    {
+      "file": "broom_of_flying.json",
+      "name": "Broom of Flying",
+      "scope": "magic"
+    },
+    {
+      "file": "bucket.json",
+      "name": "Bucket",
+      "scope": "equipment"
+    },
+    {
+      "file": "buckler.json",
+      "name": "Buckler",
+      "scope": "equipment"
+    },
+    {
+      "file": "bullets_sling.json",
+      "name": "Bullets, Sling",
+      "scope": "equipment"
+    },
+    {
+      "file": "caltrops.json",
+      "name": "Caltrops",
+      "scope": "equipment"
+    },
+    {
+      "file": "candle.json",
+      "name": "Candle",
+      "scope": "equipment"
+    },
+    {
+      "file": "candle_of_invocation.json",
+      "name": "Candle of Invocation",
+      "scope": "magic"
+    },
+    {
+      "file": "candle_of_truth.json",
+      "name": "Candle of Truth",
+      "scope": "magic"
+    },
+    {
+      "file": "canvas.json",
+      "name": "Canvas",
+      "scope": "equipment"
+    },
+    {
+      "file": "carpet_of_flying.json",
+      "name": "Carpet of Flying",
+      "scope": "magic"
+    },
+    {
+      "file": "carriage.json",
+      "name": "Carriage",
+      "scope": "equipment"
+    },
+    {
+      "file": "cart.json",
+      "name": "Cart",
+      "scope": "equipment"
+    },
+    {
+      "file": "chain.json",
+      "name": "Chain",
+      "scope": "equipment"
+    },
+    {
+      "file": "chain_shirt.json",
+      "name": "Chain Shirt",
+      "scope": "equipment"
+    },
+    {
+      "file": "chain_spiked.json",
+      "name": "Chain, Spiked",
+      "scope": "equipment"
+    },
+    {
+      "file": "chainmail.json",
+      "name": "Chainmail",
+      "scope": "equipment"
+    },
+    {
+      "file": "chalk.json",
+      "name": "Chalk",
+      "scope": "equipment"
+    },
+    {
+      "file": "chest.json",
+      "name": "Chest",
+      "scope": "equipment"
+    },
+    {
+      "file": "chest/mantle_of_faith.json",
+      "name": "Mantle of Faith",
+      "scope": "magic"
+    },
+    {
+      "file": "chest/mantle_of_spell_resistance.json",
+      "name": "Mantle of Spell Resistance",
+      "scope": "magic"
+    },
+    {
+      "file": "chest/vest_of_escape.json",
+      "name": "Vest of Escape",
+      "scope": "magic"
+    },
+    {
+      "file": "chime_of_interruption.json",
+      "name": "Chime of Interruption",
+      "scope": "magic"
+    },
+    {
+      "file": "chime_of_opening.json",
+      "name": "Chime of Opening",
+      "scope": "magic"
+    },
+    {
+      "file": "clerics_vestments.json",
+      "name": "Cleric's Vestments",
+      "scope": "equipment"
+    },
+    {
+      "file": "climbers_kit.json",
+      "name": "Climber's Kit",
+      "scope": "equipment"
+    },
+    {
+      "file": "club.json",
+      "name": "Club",
+      "scope": "equipment"
+    },
+    {
+      "file": "coach_cab.json",
+      "name": "Coach Cab",
+      "scope": "equipment"
+    },
+    {
+      "file": "codex_of_the_infinite_planes.json",
+      "name": "Codex of the Infinite Planes",
+      "scope": "magic"
+    },
+    {
+      "file": "cold-weather_outfit.json",
+      "name": "Cold-Weather Outfit",
+      "scope": "equipment"
+    },
+    {
+      "file": "courtiers_outfit.json",
+      "name": "Courtier's Outfit",
+      "scope": "equipment"
+    },
+    {
+      "file": "crossbow_hand.json",
+      "name": "Crossbow, Hand",
+      "scope": "equipment"
+    },
+    {
+      "file": "crossbow_heavy.json",
+      "name": "Crossbow, Heavy",
+      "scope": "equipment"
+    },
+    {
+      "file": "crossbow_light.json",
+      "name": "Crossbow, Light",
+      "scope": "equipment"
+    },
+    {
+      "file": "crossbow_repeating_heavy.json",
+      "name": "Crossbow, Repeating Heavy",
+      "scope": "equipment"
+    },
+    {
+      "file": "crossbow_repeating_light.json",
+      "name": "Crossbow, Repeating Light",
+      "scope": "equipment"
+    },
+    {
+      "file": "crowbar.json",
+      "name": "Crowbar",
+      "scope": "equipment"
+    },
+    {
+      "file": "crystal_ball.json",
+      "name": "Crystal Ball",
+      "scope": "magic"
+    },
+    {
+      "file": "crystal_hypnosis_ball.json",
+      "name": "Crystal Hypnosis Ball",
+      "scope": "magic"
+    },
+    {
+      "file": "cube_of_force.json",
+      "name": "Cube of Force",
+      "scope": "magic"
+    },
+    {
+      "file": "cube_of_frost_resistance.json",
+      "name": "Cube of Frost Resistance",
+      "scope": "magic"
+    },
+    {
+      "file": "cubic_gate.json",
+      "name": "Cubic Gate",
+      "scope": "magic"
+    },
+    {
+      "file": "curve_blade_elven.json",
+      "name": "Curve Blade, Elven",
+      "scope": "equipment"
+    },
+    {
+      "file": "dagger.json",
+      "name": "Dagger",
+      "scope": "equipment"
+    },
+    {
+      "file": "dagger_of_venom.json",
+      "name": "Dagger of Venom",
+      "scope": "magic"
+    },
+    {
+      "file": "dagger_punching.json",
+      "name": "Dagger, Punching",
+      "scope": "equipment"
+    },
+    {
+      "file": "darkskull.json",
+      "name": "Darkskull",
+      "scope": "magic"
+    },
+    {
+      "file": "dart.json",
+      "name": "Dart",
+      "scope": "equipment"
+    },
+    {
+      "file": "decanter_of_endless_water.json",
+      "name": "Decanter of Endless Water",
+      "scope": "magic"
+    },
+    {
+      "file": "deck_of_illusions.json",
+      "name": "Deck of Illusions",
+      "scope": "magic"
+    },
+    {
+      "file": "deck_of_many_things.json",
+      "name": "Deck of Many Things",
+      "scope": "magic"
+    },
+    {
+      "file": "disguise_kit.json",
+      "name": "Disguise Kit",
+      "scope": "equipment"
+    },
+    {
+      "file": "dog_guard.json",
+      "name": "Dog, Guard",
+      "scope": "equipment"
+    },
+    {
+      "file": "dog_riding.json",
+      "name": "Dog, Riding",
+      "scope": "equipment"
+    },
+    {
+      "file": "donkey_or_mule.json",
+      "name": "Donkey or Mule",
+      "scope": "equipment"
+    },
+    {
+      "file": "drums_of_panic.json",
+      "name": "Drums of Panic",
+      "scope": "magic"
+    },
+    {
+      "file": "dust_of_appearance.json",
+      "name": "Dust of Appearance",
+      "scope": "magic"
+    },
+    {
+      "file": "dust_of_disappearance.json",
+      "name": "Dust of Disappearance",
+      "scope": "magic"
+    },
+    {
+      "file": "dust_of_dryness.json",
+      "name": "Dust of Dryness",
+      "scope": "magic"
+    },
+    {
+      "file": "dust_of_illusion.json",
+      "name": "Dust of Illusion",
+      "scope": "magic"
+    },
+    {
+      "file": "dust_of_sneezing_and_choking.json",
+      "name": "Dust of Sneezing and Choking",
+      "scope": "magic"
+    },
+    {
+      "file": "dust_of_tracelessness.json",
+      "name": "Dust of Tracelessness",
+      "scope": "magic"
+    },
+    {
+      "file": "dwarven_thrower.json",
+      "name": "Dwarven Thrower",
+      "scope": "magic"
+    },
+    {
+      "file": "efficient_quiver.json",
+      "name": "Efficient Quiver",
+      "scope": "magic"
+    },
+    {
+      "file": "efreeti_bottle.json",
+      "name": "Efreeti Bottle",
+      "scope": "magic"
+    },
+    {
+      "file": "elemental_gem.json",
+      "name": "Elemental Gem",
+      "scope": "magic"
+    },
+    {
+      "file": "elixir_of_fire_breath.json",
+      "name": "Elixir of Fire Breath",
+      "scope": "magic"
+    },
+    {
+      "file": "elixir_of_hiding.json",
+      "name": "Elixir of Hiding",
+      "scope": "magic"
+    },
+    {
+      "file": "elixir_of_love.json",
+      "name": "Elixir of Love",
+      "scope": "magic"
+    },
+    {
+      "file": "elixir_of_swimming.json",
+      "name": "Elixir of Swimming",
+      "scope": "magic"
+    },
+    {
+      "file": "elixir_of_truth.json",
+      "name": "Elixir of Truth",
+      "scope": "magic"
+    },
+    {
+      "file": "elixir_of_tumbling.json",
+      "name": "Elixir of Tumbling",
+      "scope": "magic"
+    },
+    {
+      "file": "elixir_of_vision.json",
+      "name": "Elixir of Vision",
+      "scope": "magic"
+    },
+    {
+      "file": "entertainers_outfit.json",
+      "name": "Entertainer's Outfit",
+      "scope": "equipment"
+    },
+    {
+      "file": "everburning_torch.json",
+      "name": "Everburning Torch",
+      "scope": "equipment"
+    },
+    {
+      "file": "eversmoking_bottle.json",
+      "name": "Eversmoking Bottle",
+      "scope": "magic"
+    },
+    {
+      "file": "explorers_outfit.json",
+      "name": "Explorer's Outfit",
+      "scope": "equipment"
+    },
+    {
+      "file": "eyes/eyes_of_charming.json",
+      "name": "Eyes of Charming",
+      "scope": "magic"
+    },
+    {
+      "file": "eyes/eyes_of_doom.json",
+      "name": "Eyes of Doom",
+      "scope": "magic"
+    },
+    {
+      "file": "eyes/eyes_of_the_eagle.json",
+      "name": "Eyes of the Eagle",
+      "scope": "magic"
+    },
+    {
+      "file": "eyes/goggles_of_minute_seeing.json",
+      "name": "Goggles of Minute Seeing",
+      "scope": "magic"
+    },
+    {
+      "file": "eyes/goggles_of_night.json",
+      "name": "Goggles of Night",
+      "scope": "magic"
+    },
+    {
+      "file": "eyes/lens_of_detection.json",
+      "name": "Lens of Detection",
+      "scope": "magic"
+    },
+    {
+      "file": "falchion.json",
+      "name": "Falchion",
+      "scope": "equipment"
+    },
+    {
+      "file": "feather_token.json",
+      "name": "Feather Token",
+      "scope": "magic"
+    },
+    {
+      "file": "feed.json",
+      "name": "Feed",
+      "scope": "equipment"
+    },
+    {
+      "file": "feet/boots_of_dancing.json",
+      "name": "Boots of Dancing",
+      "scope": "magic"
+    },
+    {
+      "file": "feet/boots_of_elvenkind.json",
+      "name": "Boots of Elvenkind",
+      "scope": "magic"
+    },
+    {
+      "file": "feet/boots_of_levitation.json",
+      "name": "Boots of Levitation",
+      "scope": "magic"
+    },
+    {
+      "file": "feet/boots_of_speed.json",
+      "name": "Boots of Speed",
+      "scope": "magic"
+    },
+    {
+      "file": "feet/boots_of_striding_and_springing.json",
+      "name": "Boots of Striding and Springing",
+      "scope": "magic"
+    },
+    {
+      "file": "feet/boots_of_teleportation.json",
+      "name": "Boots of Teleportation",
+      "scope": "magic"
+    },
+    {
+      "file": "feet/boots_of_the_winterlands.json",
+      "name": "Boots of the Winterlands",
+      "scope": "magic"
+    },
+    {
+      "file": "feet/boots_winged.json",
+      "name": "Boots, Winged",
+      "scope": "magic"
+    },
+    {
+      "file": "feet/horseshoes_of_a_zephyr.json",
+      "name": "Horseshoes of a Zephyr",
+      "scope": "magic"
+    },
+    {
+      "file": "feet/horseshoes_of_speed.json",
+      "name": "Horseshoes of Speed",
+      "scope": "magic"
+    },
+    {
+      "file": "feet/slippers_of_spider_climbing.json",
+      "name": "Slippers of Spider Climbing",
+      "scope": "magic"
+    },
+    {
+      "file": "figurines_of_wondrous_power.json",
+      "name": "Figurines of Wondrous Power",
+      "scope": "magic"
+    },
+    {
+      "file": "firewood.json",
+      "name": "Firewood",
+      "scope": "equipment"
+    },
+    {
+      "file": "fishhook.json",
+      "name": "Fishhook",
+      "scope": "equipment"
+    },
+    {
+      "file": "fishing_net.json",
+      "name": "Fishing Net",
+      "scope": "equipment"
+    },
+    {
+      "file": "flail.json",
+      "name": "Flail",
+      "scope": "equipment"
+    },
+    {
+      "file": "flail_dire.json",
+      "name": "Flail, Dire",
+      "scope": "equipment"
+    },
+    {
+      "file": "flail_heavy.json",
+      "name": "Flail, Heavy",
+      "scope": "equipment"
+    },
+    {
+      "file": "flame_tongue.json",
+      "name": "Flame Tongue",
+      "scope": "magic"
+    },
+    {
+      "file": "flask.json",
+      "name": "Flask",
+      "scope": "equipment"
+    },
+    {
+      "file": "flask_of_curses.json",
+      "name": "Flask of Curses",
+      "scope": "magic"
+    },
+    {
+      "file": "flint_and_steel.json",
+      "name": "Flint and Steel",
+      "scope": "equipment"
+    },
+    {
+      "file": "frost_brand.json",
+      "name": "Frost Brand",
+      "scope": "magic"
+    },
+    {
+      "file": "full_plate.json",
+      "name": "Full Plate",
+      "scope": "equipment"
+    },
+    {
+      "file": "galley.json",
+      "name": "Galley",
+      "scope": "equipment"
+    },
+    {
+      "file": "gauntlet_locked.json",
+      "name": "Gauntlet, Locked",
+      "scope": "equipment"
+    },
+    {
+      "file": "gauntlet_spiked.json",
+      "name": "Gauntlet, Spiked",
+      "scope": "equipment"
+    },
+    {
+      "file": "gem_of_brightness.json",
+      "name": "Gem of Brightness",
+      "scope": "magic"
+    },
+    {
+      "file": "gem_of_seeing.json",
+      "name": "Gem of Seeing",
+      "scope": "magic"
+    },
+    {
+      "file": "glaive.json",
+      "name": "Glaive",
+      "scope": "equipment"
+    },
+    {
+      "file": "golem_manual.json",
+      "name": "Golem Manual",
+      "scope": "magic"
+    },
+    {
+      "file": "grappling_hook.json",
+      "name": "Grappling Hook",
+      "scope": "equipment"
+    },
+    {
+      "file": "greataxe.json",
+      "name": "Greataxe",
+      "scope": "equipment"
+    },
+    {
+      "file": "greatclub.json",
+      "name": "Greatclub",
+      "scope": "equipment"
+    },
+    {
+      "file": "greatsword.json",
+      "name": "Greatsword",
+      "scope": "equipment"
+    },
+    {
+      "file": "guisarme.json",
+      "name": "Guisarme",
+      "scope": "equipment"
+    },
+    {
+      "file": "halberd.json",
+      "name": "Halberd",
+      "scope": "equipment"
+    },
+    {
+      "file": "half-plate.json",
+      "name": "Half-Plate",
+      "scope": "equipment"
+    },
+    {
+      "file": "hammer.json",
+      "name": "Hammer",
+      "scope": "equipment"
+    },
+    {
+      "file": "hammer_gnome_hooked.json",
+      "name": "Hammer, Gnome Hooked",
+      "scope": "equipment"
+    },
+    {
+      "file": "handaxe.json",
+      "name": "Handaxe",
+      "scope": "equipment"
+    },
+    {
+      "file": "hands/gauntlet_of_rust.json",
+      "name": "Gauntlet of Rust",
+      "scope": "magic"
+    },
+    {
+      "file": "hands/gauntlets_of_fumbling.json",
+      "name": "Gauntlets of Fumbling",
+      "scope": "magic"
+    },
+    {
+      "file": "hands/glove_of_storing.json",
+      "name": "Glove of Storing",
+      "scope": "magic"
+    },
+    {
+      "file": "hands/gloves_of_arrow_snaring.json",
+      "name": "Gloves of Arrow Snaring",
+      "scope": "magic"
+    },
+    {
+      "file": "hands/gloves_of_swimming_and_climbing.json",
+      "name": "Gloves of Swimming and Climbing",
+      "scope": "magic"
+    },
+    {
+      "file": "handy_haversack.json",
+      "name": "Handy Haversack",
+      "scope": "magic"
+    },
+    {
+      "file": "harp_of_charming.json",
+      "name": "Harp of Charming",
+      "scope": "magic"
+    },
+    {
+      "file": "head/circlet_of_persuasion.json",
+      "name": "Circlet of Persuasion",
+      "scope": "magic"
+    },
+    {
+      "file": "head/crown_of_blasting_major.json",
+      "name": "Crown of Blasting, Major",
+      "scope": "magic"
+    },
+    {
+      "file": "head/crown_of_blasting_minor.json",
+      "name": "Crown of Blasting, Minor",
+      "scope": "magic"
+    },
+    {
+      "file": "head/hat_of_disguise.json",
+      "name": "Hat of Disguise",
+      "scope": "magic"
+    },
+    {
+      "file": "head/helm_of_brilliance.json",
+      "name": "Helm of Brilliance",
+      "scope": "magic"
+    },
+    {
+      "file": "head/helm_of_comprehend_languages_and_read_magic.json",
+      "name": "Helm of Comprehend Languages and Read Magic",
+      "scope": "magic"
+    },
+    {
+      "file": "head/helm_of_opposite_alignment.json",
+      "name": "Helm of Opposite Alignment",
+      "scope": "magic"
+    },
+    {
+      "file": "head/helm_of_telepathy.json",
+      "name": "Helm of Telepathy",
+      "scope": "magic"
+    },
+    {
+      "file": "head/helm_of_teleportation.json",
+      "name": "Helm of Teleportation",
+      "scope": "magic"
+    },
+    {
+      "file": "head/helm_of_underwater_action.json",
+      "name": "Helm of Underwater Action",
+      "scope": "magic"
+    },
+    {
+      "file": "head/mask_of_the_skull.json",
+      "name": "Mask of the Skull",
+      "scope": "magic"
+    },
+    {
+      "file": "headband/headband_of_alluring_charisma.json",
+      "name": "Headband of Alluring Charisma",
+      "scope": "magic"
+    },
+    {
+      "file": "headband/headband_of_inspired_wisdom.json",
+      "name": "Headband of Inspired Wisdom",
+      "scope": "magic"
+    },
+    {
+      "file": "headband/headband_of_mental_prowess.json",
+      "name": "Headband of Mental Prowess",
+      "scope": "magic"
+    },
+    {
+      "file": "headband/headband_of_mental_superiority.json",
+      "name": "Headband of Mental Superiority",
+      "scope": "magic"
+    },
+    {
+      "file": "headband/headband_of_vast_intelligence.json",
+      "name": "Headband of Vast Intelligence",
+      "scope": "magic"
+    },
+    {
+      "file": "headband/phylactery_of_faithfulness.json",
+      "name": "Phylactery of Faithfulness",
+      "scope": "magic"
+    },
+    {
+      "file": "headband/phylactery_of_negative_channeling.json",
+      "name": "Phylactery of Negative Channeling",
+      "scope": "magic"
+    },
+    {
+      "file": "headband/phylactery_of_positive_channeling.json",
+      "name": "Phylactery of Positive Channeling",
+      "scope": "magic"
+    },
+    {
+      "file": "healers_kit.json",
+      "name": "Healer's Kit",
+      "scope": "equipment"
+    },
+    {
+      "file": "heavy_pick.json",
+      "name": "Heavy Pick",
+      "scope": "equipment"
+    },
+    {
+      "file": "hide.json",
+      "name": "Hide",
+      "scope": "equipment"
+    },
+    {
+      "file": "hireling_trained.json",
+      "name": "Hireling, Trained",
+      "scope": "equipment"
+    },
+    {
+      "file": "hireling_untrained.json",
+      "name": "Hireling, Untrained",
+      "scope": "equipment"
+    },
+    {
+      "file": "holly_and_mistletoe.json",
+      "name": "Holly and Mistletoe",
+      "scope": "equipment"
+    },
+    {
+      "file": "holy_avenger.json",
+      "name": "Holy Avenger",
+      "scope": "magic"
+    },
+    {
+      "file": "holy_symbol_silver_or_wooden.json",
+      "name": "Holy Symbol, Silver or Wooden",
+      "scope": "equipment"
+    },
+    {
+      "file": "holy_water.json",
+      "name": "Holy Water",
+      "scope": "equipment"
+    },
+    {
+      "file": "horn_of_blasting.json",
+      "name": "Horn of Blasting",
+      "scope": "magic"
+    },
+    {
+      "file": "horn_of_blasting_greater.json",
+      "name": "Horn of Blasting, Greater",
+      "scope": "magic"
+    },
+    {
+      "file": "horn_of_fog.json",
+      "name": "Horn of Fog",
+      "scope": "magic"
+    },
+    {
+      "file": "horn_of_goodnessevil.json",
+      "name": "Horn of Goodness/Evil",
+      "scope": "magic"
+    },
+    {
+      "file": "horn_of_valhalla.json",
+      "name": "Horn of Valhalla",
+      "scope": "magic"
+    },
+    {
+      "file": "horse.json",
+      "name": "Horse",
+      "scope": "equipment"
+    },
+    {
+      "file": "hourglass.json",
+      "name": "Hourglass",
+      "scope": "equipment"
+    },
+    {
+      "file": "immovable_rod.json",
+      "name": "Immovable Rod",
+      "scope": "magic"
+    },
+    {
+      "file": "incense_of_meditation.json",
+      "name": "Incense of Meditation",
+      "scope": "magic"
+    },
+    {
+      "file": "incense_of_obsession.json",
+      "name": "Incense of Obsession",
+      "scope": "magic"
+    },
+    {
+      "file": "ink.json",
+      "name": "Ink",
+      "scope": "equipment"
+    },
+    {
+      "file": "inkpen.json",
+      "name": "Inkpen",
+      "scope": "equipment"
+    },
+    {
+      "file": "inn.json",
+      "name": "Inn",
+      "scope": "equipment"
+    },
+    {
+      "file": "instant_fortress.json",
+      "name": "Instant Fortress",
+      "scope": "magic"
+    },
+    {
+      "file": "ioun_stones.json",
+      "name": "Ioun Stones",
+      "scope": "magic"
+    },
+    {
+      "file": "iron_bands_of_binding.json",
+      "name": "Iron Bands of Binding",
+      "scope": "magic"
+    },
+    {
+      "file": "iron_flask.json",
+      "name": "Iron Flask",
+      "scope": "magic"
+    },
+    {
+      "file": "javelin.json",
+      "name": "Javelin",
+      "scope": "equipment"
+    },
+    {
+      "file": "javelin_of_lightning.json",
+      "name": "Javelin of Lightning",
+      "scope": "magic"
+    },
+    {
+      "file": "jug_clay.json",
+      "name": "Jug, Clay",
+      "scope": "equipment"
+    },
+    {
+      "file": "kama.json",
+      "name": "Kama",
+      "scope": "equipment"
+    },
+    {
+      "file": "keelboat.json",
+      "name": "Keelboat",
+      "scope": "equipment"
+    },
+    {
+      "file": "kukri.json",
+      "name": "Kukri",
+      "scope": "equipment"
+    },
+    {
+      "file": "ladder.json",
+      "name": "Ladder",
+      "scope": "equipment"
+    },
+    {
+      "file": "lamp_common.json",
+      "name": "Lamp, Common",
+      "scope": "equipment"
+    },
+    {
+      "file": "lance.json",
+      "name": "Lance",
+      "scope": "equipment"
+    },
+    {
+      "file": "lantern_bullseye.json",
+      "name": "Lantern, Bullseye",
+      "scope": "equipment"
+    },
+    {
+      "file": "lantern_hooded.json",
+      "name": "Lantern, Hooded",
+      "scope": "equipment"
+    },
+    {
+      "file": "lantern_of_revealing.json",
+      "name": "Lantern of Revealing",
+      "scope": "magic"
+    },
+    {
+      "file": "leather.json",
+      "name": "Leather",
+      "scope": "equipment"
+    },
+    {
+      "file": "life-drinker.json",
+      "name": "Life-Drinker",
+      "scope": "magic"
+    },
+    {
+      "file": "light_hammer.json",
+      "name": "Light Hammer",
+      "scope": "equipment"
+    },
+    {
+      "file": "light_pick.json",
+      "name": "Light Pick",
+      "scope": "equipment"
+    },
+    {
+      "file": "lock.json",
+      "name": "Lock",
+      "scope": "equipment"
+    },
+    {
+      "file": "longbow.json",
+      "name": "Longbow",
+      "scope": "equipment"
+    },
+    {
+      "file": "longbow_composite.json",
+      "name": "Longbow, Composite",
+      "scope": "equipment"
+    },
+    {
+      "file": "longship.json",
+      "name": "Longship",
+      "scope": "equipment"
+    },
+    {
+      "file": "longspear.json",
+      "name": "Longspear",
+      "scope": "equipment"
+    },
+    {
+      "file": "longsword.json",
+      "name": "Longsword",
+      "scope": "equipment"
+    },
+    {
+      "file": "longsword_cold_iron_masterwork.json",
+      "name": "Longsword, Cold Iron Masterwork",
+      "scope": "magic"
+    },
+    {
+      "file": "luck_blade.json",
+      "name": "Luck Blade",
+      "scope": "magic"
+    },
+    {
+      "file": "lyre_of_building.json",
+      "name": "Lyre of Building",
+      "scope": "magic"
+    },
+    {
+      "file": "mace.json",
+      "name": "Mace",
+      "scope": "equipment"
+    },
+    {
+      "file": "mace_heavy.json",
+      "name": "Mace, Heavy",
+      "scope": "equipment"
+    },
+    {
+      "file": "mace_of_blood.json",
+      "name": "Mace of Blood",
+      "scope": "magic"
+    },
+    {
+      "file": "mace_of_smiting.json",
+      "name": "Mace of Smiting",
+      "scope": "magic"
+    },
+    {
+      "file": "mace_of_terror.json",
+      "name": "Mace of Terror",
+      "scope": "magic"
+    },
+    {
+      "file": "magnifying_glass.json",
+      "name": "Magnifying Glass",
+      "scope": "equipment"
+    },
+    {
+      "file": "manacles_standard_and_masterwork.json",
+      "name": "Manacles, Standard and Masterwork",
+      "scope": "equipment"
+    },
+    {
+      "file": "manual_of_bodily_health.json",
+      "name": "Manual of Bodily Health",
+      "scope": "magic"
+    },
+    {
+      "file": "manual_of_gainful_exercise.json",
+      "name": "Manual of Gainful Exercise",
+      "scope": "magic"
+    },
+    {
+      "file": "manual_of_quickness_of_action.json",
+      "name": "Manual of Quickness of Action",
+      "scope": "magic"
+    },
+    {
+      "file": "marvelous_pigments.json",
+      "name": "Marvelous Pigments",
+      "scope": "magic"
+    },
+    {
+      "file": "material/adamantine.json",
+      "name": "Adamantine",
+      "scope": "equipment"
+    },
+    {
+      "file": "material/darkwood.json",
+      "name": "Darkwood",
+      "scope": "equipment"
+    },
+    {
+      "file": "material/dragonhide.json",
+      "name": "Dragonhide",
+      "scope": "equipment"
+    },
+    {
+      "file": "material/iron_cold.json",
+      "name": "Iron, Cold",
+      "scope": "equipment"
+    },
+    {
+      "file": "material/mithral.json",
+      "name": "Mithral",
+      "scope": "equipment"
+    },
+    {
+      "file": "material/silver_alchemical.json",
+      "name": "Silver, Alchemical",
+      "scope": "equipment"
+    },
+    {
+      "file": "mattock_of_the_titans.json",
+      "name": "Mattock of the Titans",
+      "scope": "magic"
+    },
+    {
+      "file": "maul_of_the_titans.json",
+      "name": "Maul of the Titans",
+      "scope": "magic"
+    },
+    {
+      "file": "meals.json",
+      "name": "Meals",
+      "scope": "equipment"
+    },
+    {
+      "file": "messenger.json",
+      "name": "Messenger",
+      "scope": "equipment"
+    },
+    {
+      "file": "metamagic_empower.json",
+      "name": "Metamagic, Empower",
+      "scope": "magic"
+    },
+    {
+      "file": "metamagic_enlarge.json",
+      "name": "Metamagic, Enlarge",
+      "scope": "magic"
+    },
+    {
+      "file": "metamagic_extend.json",
+      "name": "Metamagic, Extend",
+      "scope": "magic"
+    },
+    {
+      "file": "metamagic_maximize.json",
+      "name": "Metamagic, Maximize",
+      "scope": "magic"
+    },
+    {
+      "file": "metamagic_quicken.json",
+      "name": "Metamagic, Quicken",
+      "scope": "magic"
+    },
+    {
+      "file": "metamagic_silent.json",
+      "name": "Metamagic, Silent",
+      "scope": "magic"
+    },
+    {
+      "file": "mirror.json",
+      "name": "Mirror",
+      "scope": "equipment"
+    },
+    {
+      "file": "mirror_of_life_trapping.json",
+      "name": "Mirror of Life Trapping",
+      "scope": "magic"
+    },
+    {
+      "file": "mirror_of_opposition.json",
+      "name": "Mirror of Opposition",
+      "scope": "magic"
+    },
+    {
+      "file": "monks_outfit.json",
+      "name": "Monk's Outfit",
+      "scope": "equipment"
+    },
+    {
+      "file": "morningstar.json",
+      "name": "Morningstar",
+      "scope": "equipment"
+    },
+    {
+      "file": "mugtankard.json",
+      "name": "Mug/Tankard",
+      "scope": "equipment"
+    },
+    {
+      "file": "musical_instrument_common_or_masterwork.json",
+      "name": "Musical Instrument, Common or Masterwork",
+      "scope": "equipment"
+    },
+    {
+      "file": "neck/amulet_of_inescapable_location.json",
+      "name": "Amulet of Inescapable Location",
+      "scope": "magic"
+    },
+    {
+      "file": "neck/amulet_of_mighty_fists.json",
+      "name": "Amulet of Mighty Fists",
+      "scope": "magic"
+    },
+    {
+      "file": "neck/amulet_of_natural_armor.json",
+      "name": "Amulet of Natural Armor",
+      "scope": "magic"
+    },
+    {
+      "file": "neck/amulet_of_proof_against_detection_and_location.json",
+      "name": "Amulet of Proof against Detection and Location",
+      "scope": "magic"
+    },
+    {
+      "file": "neck/amulet_of_the_planes.json",
+      "name": "Amulet of the Planes",
+      "scope": "magic"
+    },
+    {
+      "file": "neck/brooch_of_shielding.json",
+      "name": "Brooch of Shielding",
+      "scope": "magic"
+    },
+    {
+      "file": "neck/hand_of_glory.json",
+      "name": "Hand of Glory",
+      "scope": "magic"
+    },
+    {
+      "file": "neck/hand_of_the_mage.json",
+      "name": "Hand of the Mage",
+      "scope": "magic"
+    },
+    {
+      "file": "neck/medallion_of_thought_projection.json",
+      "name": "Medallion of Thought Projection",
+      "scope": "magic"
+    },
+    {
+      "file": "neck/medallion_of_thoughts.json",
+      "name": "Medallion of Thoughts",
+      "scope": "magic"
+    },
+    {
+      "file": "neck/necklace_of_adaptation.json",
+      "name": "Necklace of Adaptation",
+      "scope": "magic"
+    },
+    {
+      "file": "neck/necklace_of_strangulation.json",
+      "name": "Necklace of Strangulation",
+      "scope": "magic"
+    },
+    {
+      "file": "neck/periapt_of_foul_rotting.json",
+      "name": "Periapt of Foul Rotting",
+      "scope": "magic"
+    },
+    {
+      "file": "neck/periapt_of_health.json",
+      "name": "Periapt of Health",
+      "scope": "magic"
+    },
+    {
+      "file": "neck/periapt_of_proof_against_poison.json",
+      "name": "Periapt of Proof against Poison",
+      "scope": "magic"
+    },
+    {
+      "file": "neck/periapt_of_wound_closure.json",
+      "name": "Periapt of Wound Closure",
+      "scope": "magic"
+    },
+    {
+      "file": "neck/scarab_golembane.json",
+      "name": "Scarab, Golembane",
+      "scope": "magic"
+    },
+    {
+      "file": "neck/scarab_of_death.json",
+      "name": "Scarab of Death",
+      "scope": "magic"
+    },
+    {
+      "file": "neck/scarab_of_protection.json",
+      "name": "Scarab of Protection",
+      "scope": "magic"
+    },
+    {
+      "file": "necklace_of_fireballs.json",
+      "name": "Necklace of Fireballs",
+      "scope": "magic"
+    },
+    {
+      "file": "net.json",
+      "name": "Net",
+      "scope": "equipment"
+    },
+    {
+      "file": "net_of_snaring.json",
+      "name": "Net of Snaring",
+      "scope": "magic"
+    },
+    {
+      "file": "nine_lives_stealer.json",
+      "name": "Nine Lives Stealer",
+      "scope": "magic"
+    },
+    {
+      "file": "nobles_outfit.json",
+      "name": "Noble's Outfit",
+      "scope": "equipment"
+    },
+    {
+      "file": "nunchaku.json",
+      "name": "Nunchaku",
+      "scope": "equipment"
+    },
+    {
+      "file": "oar.json",
+      "name": "Oar",
+      "scope": "equipment"
+    },
+    {
+      "file": "oathbow.json",
+      "name": "Oathbow",
+      "scope": "magic"
+    },
+    {
+      "file": "oil.json",
+      "name": "Oil",
+      "scope": "equipment"
+    },
+    {
+      "file": "orb_of_storms.json",
+      "name": "Orb of Storms",
+      "scope": "magic"
+    },
+    {
+      "file": "padded.json",
+      "name": "Padded",
+      "scope": "equipment"
+    },
+    {
+      "file": "paper.json",
+      "name": "Paper",
+      "scope": "equipment"
+    },
+    {
+      "file": "parchment.json",
+      "name": "Parchment",
+      "scope": "equipment"
+    },
+    {
+      "file": "pearl_of_power.json",
+      "name": "Pearl of Power",
+      "scope": "magic"
+    },
+    {
+      "file": "pearl_of_the_sirines.json",
+      "name": "Pearl of the Sirines",
+      "scope": "magic"
+    },
+    {
+      "file": "peasants_outfit.json",
+      "name": "Peasant's Outfit",
+      "scope": "equipment"
+    },
+    {
+      "file": "philosophers_stone.json",
+      "name": "Philosopher's Stone",
+      "scope": "magic"
+    },
+    {
+      "file": "pick_miners.json",
+      "name": "Pick, Miner's",
+      "scope": "equipment"
+    },
+    {
+      "file": "pipes_of_haunting.json",
+      "name": "Pipes of Haunting",
+      "scope": "magic"
+    },
+    {
+      "file": "pipes_of_sounding.json",
+      "name": "Pipes of Sounding",
+      "scope": "magic"
+    },
+    {
+      "file": "pipes_of_the_sewers.json",
+      "name": "Pipes of the Sewers",
+      "scope": "magic"
+    },
+    {
+      "file": "pitcher.json",
+      "name": "Pitcher",
+      "scope": "equipment"
+    },
+    {
+      "file": "piton.json",
+      "name": "Piton",
+      "scope": "equipment"
+    },
+    {
+      "file": "pole.json",
+      "name": "Pole",
+      "scope": "equipment"
+    },
+    {
+      "file": "portable_hole.json",
+      "name": "Portable Hole",
+      "scope": "magic"
+    },
+    {
+      "file": "pot.json",
+      "name": "Pot",
+      "scope": "equipment"
+    },
+    {
+      "file": "potion_of_poison.json",
+      "name": "Potion of Poison",
+      "scope": "magic"
+    },
+    {
+      "file": "quarterstaff.json",
+      "name": "Quarterstaff",
+      "scope": "equipment"
+    },
+    {
+      "file": "ram_portable.json",
+      "name": "Ram, Portable",
+      "scope": "equipment"
+    },
+    {
+      "file": "ranseur.json",
+      "name": "Ranseur",
+      "scope": "equipment"
+    },
+    {
+      "file": "rapier.json",
+      "name": "Rapier",
+      "scope": "equipment"
+    },
+    {
+      "file": "rapier_of_puncturing.json",
+      "name": "Rapier of Puncturing",
+      "scope": "magic"
+    },
+    {
+      "file": "restorative_ointment.json",
+      "name": "Restorative Ointment",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_animal_friendship.json",
+      "name": "Ring of Animal Friendship",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_blinking.json",
+      "name": "Ring of Blinking",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_chameleon_power.json",
+      "name": "Ring of Chameleon Power",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_climbing.json",
+      "name": "Ring of Climbing",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_climbing_improved.json",
+      "name": "Ring of Climbing, Improved",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_clumsiness.json",
+      "name": "Ring of Clumsiness",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_counterspells.json",
+      "name": "Ring of Counterspells",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_djinni_calling.json",
+      "name": "Ring of Djinni Calling",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_elemental_command.json",
+      "name": "Ring of Elemental Command",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_energy_resistance.json",
+      "name": "Ring of Energy Resistance",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_evasion.json",
+      "name": "Ring of Evasion",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_feather_falling.json",
+      "name": "Ring of Feather Falling",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_force_shield.json",
+      "name": "Ring of Force Shield",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_freedom_of_movement.json",
+      "name": "Ring of Freedom of Movement",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_friend_shield.json",
+      "name": "Ring of Friend Shield",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_invisibility.json",
+      "name": "Ring of Invisibility",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_jumping.json",
+      "name": "Ring of Jumping",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_jumping_improved.json",
+      "name": "Ring of Jumping, Improved",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_mind_shielding.json",
+      "name": "Ring of Mind Shielding",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_protection.json",
+      "name": "Ring of Protection",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_regeneration.json",
+      "name": "Ring of Regeneration",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_shooting_stars.json",
+      "name": "Ring of Shooting Stars",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_spell_storing.json",
+      "name": "Ring of Spell Storing",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_spell_storing_major.json",
+      "name": "Ring of Spell Storing, Major",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_spell_storing_minor.json",
+      "name": "Ring of Spell Storing, Minor",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_spell_turning.json",
+      "name": "Ring of Spell Turning",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_sustenance.json",
+      "name": "Ring of Sustenance",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_swimming.json",
+      "name": "Ring of Swimming",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_swimming_improved.json",
+      "name": "Ring of Swimming, Improved",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_telekinesis.json",
+      "name": "Ring of Telekinesis",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_the_ram.json",
+      "name": "Ring of the Ram",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_three_wishes.json",
+      "name": "Ring of Three Wishes",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_water_walking.json",
+      "name": "Ring of Water Walking",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_wizardry.json",
+      "name": "Ring of Wizardry",
+      "scope": "magic"
+    },
+    {
+      "file": "ring/ring_of_x-ray_vision.json",
+      "name": "Ring of X-Ray Vision",
+      "scope": "magic"
+    },
+    {
+      "file": "ring_gates.json",
+      "name": "Ring Gates",
+      "scope": "magic"
+    },
+    {
+      "file": "road_or_gate_toll.json",
+      "name": "Road or Gate Toll",
+      "scope": "equipment"
+    },
+    {
+      "file": "rod_of_absorption.json",
+      "name": "Rod of Absorption",
+      "scope": "magic"
+    },
+    {
+      "file": "rod_of_alertness.json",
+      "name": "Rod of Alertness",
+      "scope": "magic"
+    },
+    {
+      "file": "rod_of_cancellation.json",
+      "name": "Rod of Cancellation",
+      "scope": "magic"
+    },
+    {
+      "file": "rod_of_enemy_detection.json",
+      "name": "Rod of Enemy Detection",
+      "scope": "magic"
+    },
+    {
+      "file": "rod_of_flailing.json",
+      "name": "Rod of Flailing",
+      "scope": "magic"
+    },
+    {
+      "file": "rod_of_flame_extinguishing.json",
+      "name": "Rod of Flame Extinguishing",
+      "scope": "magic"
+    },
+    {
+      "file": "rod_of_lordly_might.json",
+      "name": "Rod of Lordly Might",
+      "scope": "magic"
+    },
+    {
+      "file": "rod_of_metal_and_mineral_detection.json",
+      "name": "Rod of Metal and Mineral Detection",
+      "scope": "magic"
+    },
+    {
+      "file": "rod_of_negation.json",
+      "name": "Rod of Negation",
+      "scope": "magic"
+    },
+    {
+      "file": "rod_of_rulership.json",
+      "name": "Rod of Rulership",
+      "scope": "magic"
+    },
+    {
+      "file": "rod_of_security.json",
+      "name": "Rod of Security",
+      "scope": "magic"
+    },
+    {
+      "file": "rod_of_splendor.json",
+      "name": "Rod of Splendor",
+      "scope": "magic"
+    },
+    {
+      "file": "rod_of_the_python.json",
+      "name": "Rod of the Python",
+      "scope": "magic"
+    },
+    {
+      "file": "rod_of_the_viper.json",
+      "name": "Rod of the Viper",
+      "scope": "magic"
+    },
+    {
+      "file": "rod_of_thunder_and_lightning.json",
+      "name": "Rod of Thunder and Lightning",
+      "scope": "magic"
+    },
+    {
+      "file": "rod_of_withering.json",
+      "name": "Rod of Withering",
+      "scope": "magic"
+    },
+    {
+      "file": "rod_of_wonder.json",
+      "name": "Rod of Wonder",
+      "scope": "magic"
+    },
+    {
+      "file": "rope_hemp.json",
+      "name": "Rope, Hemp",
+      "scope": "equipment"
+    },
+    {
+      "file": "rope_of_climbing.json",
+      "name": "Rope of Climbing",
+      "scope": "magic"
+    },
+    {
+      "file": "rope_of_entanglement.json",
+      "name": "Rope of Entanglement",
+      "scope": "magic"
+    },
+    {
+      "file": "rope_silk.json",
+      "name": "Rope, Silk",
+      "scope": "equipment"
+    },
+    {
+      "file": "rowboat.json",
+      "name": "Rowboat",
+      "scope": "equipment"
+    },
+    {
+      "file": "royal_outfit.json",
+      "name": "Royal Outfit",
+      "scope": "equipment"
+    },
+    {
+      "file": "sack.json",
+      "name": "Sack",
+      "scope": "equipment"
+    },
+    {
+      "file": "saddle_exotic.json",
+      "name": "Saddle, Exotic",
+      "scope": "equipment"
+    },
+    {
+      "file": "saddle_military.json",
+      "name": "Saddle, Military",
+      "scope": "equipment"
+    },
+    {
+      "file": "saddle_pack.json",
+      "name": "Saddle, Pack",
+      "scope": "equipment"
+    },
+    {
+      "file": "saddle_riding.json",
+      "name": "Saddle, Riding",
+      "scope": "equipment"
+    },
+    {
+      "file": "saddlebags.json",
+      "name": "Saddlebags",
+      "scope": "equipment"
+    },
+    {
+      "file": "sai.json",
+      "name": "Sai",
+      "scope": "equipment"
+    },
+    {
+      "file": "sailing_ship.json",
+      "name": "Sailing Ship",
+      "scope": "equipment"
+    },
+    {
+      "file": "salve_of_slipperiness.json",
+      "name": "Salve of Slipperiness",
+      "scope": "magic"
+    },
+    {
+      "file": "sap.json",
+      "name": "Sap",
+      "scope": "equipment"
+    },
+    {
+      "file": "scabbard_of_keen_edges.json",
+      "name": "Scabbard of Keen Edges",
+      "scope": "magic"
+    },
+    {
+      "file": "scale_mail.json",
+      "name": "Scale Mail",
+      "scope": "equipment"
+    },
+    {
+      "file": "scale_merchants.json",
+      "name": "Scale, Merchant's",
+      "scope": "equipment"
+    },
+    {
+      "file": "scholars_outfit.json",
+      "name": "Scholar's Outfit",
+      "scope": "equipment"
+    },
+    {
+      "file": "scimitar.json",
+      "name": "Scimitar",
+      "scope": "equipment"
+    },
+    {
+      "file": "screaming_bolt.json",
+      "name": "Screaming Bolt",
+      "scope": "magic"
+    },
+    {
+      "file": "scroll_case.json",
+      "name": "Scroll Case",
+      "scope": "equipment"
+    },
+    {
+      "file": "scythe.json",
+      "name": "Scythe",
+      "scope": "equipment"
+    },
+    {
+      "file": "sealing_wax.json",
+      "name": "Sealing Wax",
+      "scope": "equipment"
+    },
+    {
+      "file": "sewing_needle.json",
+      "name": "Sewing Needle",
+      "scope": "equipment"
+    },
+    {
+      "file": "shatterspike.json",
+      "name": "Shatterspike",
+      "scope": "magic"
+    },
+    {
+      "file": "shield/absorbing_shield.json",
+      "name": "Absorbing Shield",
+      "scope": "magic"
+    },
+    {
+      "file": "shield/casters_shield.json",
+      "name": "Caster's Shield",
+      "scope": "magic"
+    },
+    {
+      "file": "shield/darkwood_buckler.json",
+      "name": "Darkwood Buckler",
+      "scope": "magic"
+    },
+    {
+      "file": "shield/darkwood_shield.json",
+      "name": "Darkwood Shield",
+      "scope": "magic"
+    },
+    {
+      "file": "shield/lions_shield.json",
+      "name": "Lion's Shield",
+      "scope": "magic"
+    },
+    {
+      "file": "shield/mithral_heavy_shield.json",
+      "name": "Mithral Heavy Shield",
+      "scope": "magic"
+    },
+    {
+      "file": "shield/spined_shield.json",
+      "name": "Spined Shield",
+      "scope": "magic"
+    },
+    {
+      "file": "shield/winged_shield.json",
+      "name": "Winged Shield",
+      "scope": "magic"
+    },
+    {
+      "file": "shield_heavy.json",
+      "name": "Shield, Heavy",
+      "scope": "equipment"
+    },
+    {
+      "file": "shield_heavy_steel.json",
+      "name": "Shield, Heavy; Steel",
+      "scope": "equipment"
+    },
+    {
+      "file": "shield_heavy_wooden.json",
+      "name": "Shield, Heavy; Wooden",
+      "scope": "equipment"
+    },
+    {
+      "file": "shield_light.json",
+      "name": "Shield, Light",
+      "scope": "equipment"
+    },
+    {
+      "file": "shield_light_steel.json",
+      "name": "Shield, Light; Steel",
+      "scope": "equipment"
+    },
+    {
+      "file": "shield_light_wooden.json",
+      "name": "Shield, Light; Wooden",
+      "scope": "equipment"
+    },
+    {
+      "file": "shield_spikes.json",
+      "name": "Shield Spikes",
+      "scope": "equipment"
+    },
+    {
+      "file": "shield_tower.json",
+      "name": "Shield, Tower",
+      "scope": "equipment"
+    },
+    {
+      "file": "shifters_sorrow.json",
+      "name": "Shifter's Sorrow",
+      "scope": "magic"
+    },
+    {
+      "file": "ships_passage.json",
+      "name": "Ship's Passage",
+      "scope": "equipment"
+    },
+    {
+      "file": "shortbow.json",
+      "name": "Shortbow",
+      "scope": "equipment"
+    },
+    {
+      "file": "shortbow_composite.json",
+      "name": "Shortbow, Composite",
+      "scope": "equipment"
+    },
+    {
+      "file": "shortspear.json",
+      "name": "Shortspear",
+      "scope": "equipment"
+    },
+    {
+      "file": "shortsword.json",
+      "name": "Shortsword",
+      "scope": "equipment"
+    },
+    {
+      "file": "shoulders/cape_of_the_mountebank.json",
+      "name": "Cape of the Mountebank",
+      "scope": "magic"
+    },
+    {
+      "file": "shoulders/cloak_of_arachnida.json",
+      "name": "Cloak of Arachnida",
+      "scope": "magic"
+    },
+    {
+      "file": "shoulders/cloak_of_displacement_major.json",
+      "name": "Cloak of Displacement, Major",
+      "scope": "magic"
+    },
+    {
+      "file": "shoulders/cloak_of_displacement_minor.json",
+      "name": "Cloak of Displacement, Minor",
+      "scope": "magic"
+    },
+    {
+      "file": "shoulders/cloak_of_elvenkind.json",
+      "name": "Cloak of Elvenkind",
+      "scope": "magic"
+    },
+    {
+      "file": "shoulders/cloak_of_etherealness.json",
+      "name": "Cloak of Etherealness",
+      "scope": "magic"
+    },
+    {
+      "file": "shoulders/cloak_of_resistance.json",
+      "name": "Cloak of Resistance",
+      "scope": "magic"
+    },
+    {
+      "file": "shoulders/cloak_of_the_bat.json",
+      "name": "Cloak of the Bat",
+      "scope": "magic"
+    },
+    {
+      "file": "shoulders/cloak_of_the_manta_ray.json",
+      "name": "Cloak of the Manta Ray",
+      "scope": "magic"
+    },
+    {
+      "file": "shoulders/poisonous_cloak.json",
+      "name": "Poisonous Cloak",
+      "scope": "magic"
+    },
+    {
+      "file": "shoulders/wings_of_flying.json",
+      "name": "Wings of Flying",
+      "scope": "magic"
+    },
+    {
+      "file": "shovel.json",
+      "name": "Shovel",
+      "scope": "equipment"
+    },
+    {
+      "file": "shuriken.json",
+      "name": "Shuriken",
+      "scope": "equipment"
+    },
+    {
+      "file": "siangham.json",
+      "name": "Siangham",
+      "scope": "equipment"
+    },
+    {
+      "file": "sickle.json",
+      "name": "Sickle",
+      "scope": "equipment"
+    },
+    {
+      "file": "signal_whistle.json",
+      "name": "Signal Whistle",
+      "scope": "equipment"
+    },
+    {
+      "file": "signet_ring.json",
+      "name": "Signet Ring",
+      "scope": "equipment"
+    },
+    {
+      "file": "silver_dagger_masterwork.json",
+      "name": "Silver Dagger, Masterwork",
+      "scope": "magic"
+    },
+    {
+      "file": "silversheen.json",
+      "name": "Silversheen",
+      "scope": "magic"
+    },
+    {
+      "file": "slaying_arrow.json",
+      "name": "Slaying Arrow",
+      "scope": "magic"
+    },
+    {
+      "file": "sled.json",
+      "name": "Sled",
+      "scope": "equipment"
+    },
+    {
+      "file": "sledge.json",
+      "name": "Sledge",
+      "scope": "equipment"
+    },
+    {
+      "file": "sleep_arrow.json",
+      "name": "Sleep Arrow",
+      "scope": "magic"
+    },
+    {
+      "file": "sling.json",
+      "name": "Sling",
+      "scope": "equipment"
+    },
+    {
+      "file": "sling_staff_halfling.json",
+      "name": "Sling Staff, Halfling",
+      "scope": "equipment"
+    },
+    {
+      "file": "smokestick.json",
+      "name": "Smokestick",
+      "scope": "equipment"
+    },
+    {
+      "file": "soap.json",
+      "name": "Soap",
+      "scope": "equipment"
+    },
+    {
+      "file": "sovereign_glue.json",
+      "name": "Sovereign Glue",
+      "scope": "magic"
+    },
+    {
+      "file": "spear.json",
+      "name": "Spear",
+      "scope": "equipment"
+    },
+    {
+      "file": "spear_cursed_backbiter.json",
+      "name": "Spear, Cursed Backbiter",
+      "scope": "magic"
+    },
+    {
+      "file": "spell_component_pouch.json",
+      "name": "Spell Component Pouch",
+      "scope": "equipment"
+    },
+    {
+      "file": "spellbook_wizards.json",
+      "name": "Spellbook, Wizard's",
+      "scope": "equipment"
+    },
+    {
+      "file": "spellcasting.json",
+      "name": "Spellcasting",
+      "scope": "equipment"
+    },
+    {
+      "file": "sphere_of_annihilation.json",
+      "name": "Sphere of Annihilation",
+      "scope": "magic"
+    },
+    {
+      "file": "spiked_armor.json",
+      "name": "Spiked Armor",
+      "scope": "equipment"
+    },
+    {
+      "file": "spiked_shield_heavy.json",
+      "name": "Spiked Shield, Heavy",
+      "scope": "equipment"
+    },
+    {
+      "file": "spiked_shield_light.json",
+      "name": "Spiked Shield, Light",
+      "scope": "equipment"
+    },
+    {
+      "file": "splint_mail.json",
+      "name": "Splint Mail",
+      "scope": "equipment"
+    },
+    {
+      "file": "spyglass.json",
+      "name": "Spyglass",
+      "scope": "equipment"
+    },
+    {
+      "file": "stabling.json",
+      "name": "Stabling",
+      "scope": "equipment"
+    },
+    {
+      "file": "staff_of_abjuration.json",
+      "name": "Staff of Abjuration",
+      "scope": "magic"
+    },
+    {
+      "file": "staff_of_charming.json",
+      "name": "Staff of Charming",
+      "scope": "magic"
+    },
+    {
+      "file": "staff_of_conjuration.json",
+      "name": "Staff of Conjuration",
+      "scope": "magic"
+    },
+    {
+      "file": "staff_of_defense.json",
+      "name": "Staff of Defense",
+      "scope": "magic"
+    },
+    {
+      "file": "staff_of_divination.json",
+      "name": "Staff of Divination",
+      "scope": "magic"
+    },
+    {
+      "file": "staff_of_earth_and_stone.json",
+      "name": "Staff of Earth and Stone",
+      "scope": "magic"
+    },
+    {
+      "file": "staff_of_enchantment.json",
+      "name": "Staff of Enchantment",
+      "scope": "magic"
+    },
+    {
+      "file": "staff_of_evocation.json",
+      "name": "Staff of Evocation",
+      "scope": "magic"
+    },
+    {
+      "file": "staff_of_fire.json",
+      "name": "Staff of Fire",
+      "scope": "magic"
+    },
+    {
+      "file": "staff_of_frost.json",
+      "name": "Staff of Frost",
+      "scope": "magic"
+    },
+    {
+      "file": "staff_of_healing.json",
+      "name": "Staff of Healing",
+      "scope": "magic"
+    },
+    {
+      "file": "staff_of_illumination.json",
+      "name": "Staff of Illumination",
+      "scope": "magic"
+    },
+    {
+      "file": "staff_of_illusion.json",
+      "name": "Staff of Illusion",
+      "scope": "magic"
+    },
+    {
+      "file": "staff_of_life.json",
+      "name": "Staff of Life",
+      "scope": "magic"
+    },
+    {
+      "file": "staff_of_necromancy.json",
+      "name": "Staff of Necromancy",
+      "scope": "magic"
+    },
+    {
+      "file": "staff_of_passage.json",
+      "name": "Staff of Passage",
+      "scope": "magic"
+    },
+    {
+      "file": "staff_of_power.json",
+      "name": "Staff of Power",
+      "scope": "magic"
+    },
+    {
+      "file": "staff_of_size_alteration.json",
+      "name": "Staff of Size Alteration",
+      "scope": "magic"
+    },
+    {
+      "file": "staff_of_swarming_insects.json",
+      "name": "Staff of Swarming Insects",
+      "scope": "magic"
+    },
+    {
+      "file": "staff_of_the_magi.json",
+      "name": "Staff of the Magi",
+      "scope": "magic"
+    },
+    {
+      "file": "staff_of_the_woodlands.json",
+      "name": "Staff of the Woodlands",
+      "scope": "magic"
+    },
+    {
+      "file": "staff_of_transmutation.json",
+      "name": "Staff of Transmutation",
+      "scope": "magic"
+    },
+    {
+      "file": "starknife.json",
+      "name": "Starknife",
+      "scope": "equipment"
+    },
+    {
+      "file": "stone_of_alarm.json",
+      "name": "Stone of Alarm",
+      "scope": "magic"
+    },
+    {
+      "file": "stone_of_good_luck.json",
+      "name": "Stone of Good Luck",
+      "scope": "magic"
+    },
+    {
+      "file": "stone_of_weight_loadstone.json",
+      "name": "Stone of Weight (Loadstone)",
+      "scope": "magic"
+    },
+    {
+      "file": "stone_salve.json",
+      "name": "Stone Salve",
+      "scope": "magic"
+    },
+    {
+      "file": "strand_of_prayer_beads.json",
+      "name": "Strand of Prayer Beads",
+      "scope": "magic"
+    },
+    {
+      "file": "strike_unarmed.json",
+      "name": "Strike, Unarmed",
+      "scope": "equipment"
+    },
+    {
+      "file": "studded_leather.json",
+      "name": "Studded Leather",
+      "scope": "equipment"
+    },
+    {
+      "file": "sun_blade.json",
+      "name": "Sun Blade",
+      "scope": "magic"
+    },
+    {
+      "file": "sunrod.json",
+      "name": "Sunrod",
+      "scope": "equipment"
+    },
+    {
+      "file": "sustaining_spoon.json",
+      "name": "Sustaining Spoon",
+      "scope": "magic"
+    },
+    {
+      "file": "sword_-2_cursed.json",
+      "name": "Sword, -2 Cursed",
+      "scope": "magic"
+    },
+    {
+      "file": "sword_bastard.json",
+      "name": "Sword, Bastard",
+      "scope": "equipment"
+    },
+    {
+      "file": "sword_berserking.json",
+      "name": "Sword, Berserking",
+      "scope": "magic"
+    },
+    {
+      "file": "sword_of_life_stealing.json",
+      "name": "Sword of Life Stealing",
+      "scope": "magic"
+    },
+    {
+      "file": "sword_of_subtlety.json",
+      "name": "Sword of Subtlety",
+      "scope": "magic"
+    },
+    {
+      "file": "sword_of_the_planes.json",
+      "name": "Sword of the Planes",
+      "scope": "magic"
+    },
+    {
+      "file": "sword_two-bladed.json",
+      "name": "Sword, Two-Bladed",
+      "scope": "equipment"
+    },
+    {
+      "file": "sylvan_scimitar.json",
+      "name": "Sylvan Scimitar",
+      "scope": "magic"
+    },
+    {
+      "file": "talisman_of_pure_good.json",
+      "name": "Talisman of Pure Good",
+      "scope": "magic"
+    },
+    {
+      "file": "talisman_of_the_sphere.json",
+      "name": "Talisman of the Sphere",
+      "scope": "magic"
+    },
+    {
+      "file": "talisman_of_ultimate_evil.json",
+      "name": "Talisman of Ultimate Evil",
+      "scope": "magic"
+    },
+    {
+      "file": "tanglefoot_bag.json",
+      "name": "Tanglefoot Bag",
+      "scope": "equipment"
+    },
+    {
+      "file": "tent.json",
+      "name": "Tent",
+      "scope": "equipment"
+    },
+    {
+      "file": "the_orbs_of_dragonkind.json",
+      "name": "The Orbs of Dragonkind",
+      "scope": "magic"
+    },
+    {
+      "file": "the_shadowstaff.json",
+      "name": "The Shadowstaff",
+      "scope": "magic"
+    },
+    {
+      "file": "thieves_tools.json",
+      "name": "Thieves' Tools",
+      "scope": "equipment"
+    },
+    {
+      "file": "thieves_tools_masterwork.json",
+      "name": "Thieves' Tools, Masterwork",
+      "scope": "equipment"
+    },
+    {
+      "file": "throwing_axe.json",
+      "name": "Throwing Axe",
+      "scope": "equipment"
+    },
+    {
+      "file": "thunderstone.json",
+      "name": "Thunderstone",
+      "scope": "equipment"
+    },
+    {
+      "file": "tindertwig.json",
+      "name": "Tindertwig",
+      "scope": "equipment"
+    },
+    {
+      "file": "tome_of_clear_thought.json",
+      "name": "Tome of Clear Thought",
+      "scope": "magic"
+    },
+    {
+      "file": "tome_of_leadership_and_influence.json",
+      "name": "Tome of Leadership and Influence",
+      "scope": "magic"
+    },
+    {
+      "file": "tome_of_understanding.json",
+      "name": "Tome of Understanding",
+      "scope": "magic"
+    },
+    {
+      "file": "tool_masterwork.json",
+      "name": "Tool, Masterwork",
+      "scope": "equipment"
+    },
+    {
+      "file": "torch.json",
+      "name": "Torch",
+      "scope": "equipment"
+    },
+    {
+      "file": "trail_rations.json",
+      "name": "Trail Rations",
+      "scope": "equipment"
+    },
+    {
+      "file": "travelers_outfit.json",
+      "name": "Traveler's Outfit",
+      "scope": "equipment"
+    },
+    {
+      "file": "trident.json",
+      "name": "Trident",
+      "scope": "equipment"
+    },
+    {
+      "file": "trident_of_fish_command.json",
+      "name": "Trident of Fish Command",
+      "scope": "magic"
+    },
+    {
+      "file": "trident_of_warning.json",
+      "name": "Trident of Warning",
+      "scope": "magic"
+    },
+    {
+      "file": "unguent_of_timelessness.json",
+      "name": "Unguent of Timelessness",
+      "scope": "magic"
+    },
+    {
+      "file": "universal_solvent.json",
+      "name": "Universal Solvent",
+      "scope": "magic"
+    },
+    {
+      "file": "urgrosh_dwarven.json",
+      "name": "Urgrosh, Dwarven",
+      "scope": "equipment"
+    },
+    {
+      "file": "vacuous_grimoire.json",
+      "name": "Vacuous Grimoire",
+      "scope": "magic"
+    },
+    {
+      "file": "vial.json",
+      "name": "Vial",
+      "scope": "equipment"
+    },
+    {
+      "file": "wagon.json",
+      "name": "Wagon",
+      "scope": "equipment"
+    },
+    {
+      "file": "waraxe_dwarven.json",
+      "name": "Waraxe, Dwarven",
+      "scope": "equipment"
+    },
+    {
+      "file": "warhammer.json",
+      "name": "Warhammer",
+      "scope": "equipment"
+    },
+    {
+      "file": "warship.json",
+      "name": "Warship",
+      "scope": "equipment"
+    },
+    {
+      "file": "water_clock.json",
+      "name": "Water Clock",
+      "scope": "equipment"
+    },
+    {
+      "file": "waterskin.json",
+      "name": "Waterskin",
+      "scope": "equipment"
+    },
+    {
+      "file": "weapon/gauntlet.json",
+      "name": "Gauntlet",
+      "scope": "equipment"
+    },
+    {
+      "file": "well_of_many_worlds.json",
+      "name": "Well of Many Worlds",
+      "scope": "magic"
+    },
+    {
+      "file": "whetstone.json",
+      "name": "Whetstone",
+      "scope": "equipment"
+    },
+    {
+      "file": "whip.json",
+      "name": "Whip",
+      "scope": "equipment"
+    },
+    {
+      "file": "wind_fan.json",
+      "name": "Wind Fan",
+      "scope": "magic"
+    },
+    {
+      "file": "wrist/bracelet_of_friends.json",
+      "name": "Bracelet of Friends",
+      "scope": "magic"
+    },
+    {
+      "file": "wrist/bracers_of_archery_greater.json",
+      "name": "Bracers of Archery, Greater",
+      "scope": "magic"
+    },
+    {
+      "file": "wrist/bracers_of_archery_lesser.json",
+      "name": "Bracers of Archery, Lesser",
+      "scope": "magic"
+    },
+    {
+      "file": "wrist/bracers_of_armor.json",
+      "name": "Bracers of Armor",
+      "scope": "magic"
+    },
+    {
+      "file": "wrist/dimensional_shackles.json",
+      "name": "Dimensional Shackles",
+      "scope": "magic"
+    }
+  ]
+}

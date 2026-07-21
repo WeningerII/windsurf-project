@@ -400,6 +400,39 @@ TARGETS.push({
   loader: () => loaderNames(loadMonstersForSystem, 'pf1e'),
 });
 
+// PF1e Core Rulebook equipment + magic items: the denominators are the pinned
+// upstream manifest written by encode-pf1e-equipment.mjs (devonjones/PSRD-Data
+// core_rulebook/item), split by the url-derived `scope` — 243 Equipment vs 347
+// Magic Items (kept SPLIT, mirroring the two loader files). The loader
+// (loadEquipmentForSystem('pf1e')) returns the MERGED weapons/armor/gear/magic
+// set, so both targets diff their scoped denominator against the same superset.
+async function pf1eEquipmentManifestNames(scope: 'equipment' | 'magic'): Promise<string[]> {
+  const manifestPath = path.resolve(
+    path.dirname(fileURLToPath(import.meta.url)),
+    '../../scripts/data/pf1e-equipment-manifest.json'
+  );
+  const manifest = JSON.parse(await fs.readFile(manifestPath, 'utf8')) as {
+    entries: Array<{ name: string; scope: string }>;
+  };
+  return manifest.entries.filter((entry) => entry.scope === scope).map((entry) => entry.name);
+}
+TARGETS.push({
+  systemId: 'pf1e',
+  systemLabel: 'Pathfinder 1e',
+  category: 'equipment',
+  srdSource: 'Core Rulebook (devonjones/PSRD-Data, pinned manifest — Equipment scope)',
+  srd: () => pf1eEquipmentManifestNames('equipment'),
+  loader: () => loaderNames(loadEquipmentForSystem, 'pf1e'),
+});
+TARGETS.push({
+  systemId: 'pf1e',
+  systemLabel: 'Pathfinder 1e',
+  category: 'magic-items',
+  srdSource: 'Core Rulebook (devonjones/PSRD-Data, pinned manifest — Magic Items scope)',
+  srd: () => pf1eEquipmentManifestNames('magic'),
+  loader: () => loaderNames(loadEquipmentForSystem, 'pf1e'),
+});
+
 // PF2e Bestiary 1: same Pf2eTools source family as the spell denominator.
 TARGETS.push({
   systemId: 'pf2e',

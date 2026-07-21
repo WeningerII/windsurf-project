@@ -15,10 +15,20 @@
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
     --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Darkened from 46.9% L (#64748b, 4.34:1 on --muted #f1f5f9) to 43% L
+       (#5c6a80, ~5.0:1) so muted text meets WCAG AA on muted/secondary/accent
+       surfaces (e.g. inactive TabsList tabs). Same slate hue, still well below
+       full --foreground. */
+    --muted-foreground: 215.4 16.3% 43%;
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
+    /* Darkened from 60.2% L (#ef4444, red-500) to 42% L (#ba1c1c, red-700) for
+       WCAG AA: red-500 as text failed on white (3.76:1) and on the destructive/10
+       & /15 tints (3.29:1, e.g. the Monsters browser); red-500 as a button
+       background also fell short with its near-white label. red-700 clears 4.5:1
+       as text on those tints (~5.0–5.4:1) and lifts white-label destructive
+       buttons well past AA. */
+    --destructive: 0 74% 42%;
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
