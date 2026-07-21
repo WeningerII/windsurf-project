@@ -21,9 +21,10 @@ If `graphify` is not on PATH: `pip3 install --user graphifyy`, then use
 
 - `npm run dev` — Vite dev server; `npm run build` — typecheck + build
 - `npm test` — Vitest; `npm run test:e2e` — Playwright
-- `npm run verify` — the full CI gate (lint, typecheck, format, coverage, build,
-  bundle-size, e2e, repo-hygiene, generated-docs, doc-drift, dead-code). Run the
-  individual `check:*` / `lint` / `typecheck:test` scripts while iterating.
+- `npm run verify` — the full CI gate (lint, typecheck incl. netlify, format,
+  coverage, validate, build, bundle-size, e2e, repo-hygiene, generated-docs,
+  doc-drift, dead-code, legal-notices, compute-register, secret-exposure). Run
+  the individual `check:*` / `lint` / `typecheck:test` scripts while iterating.
 - `npm run graph:update` — refresh the knowledge graph after code changes
   (AST-only, local, no API key)
 
@@ -53,7 +54,7 @@ If `graphify` is not on PATH: `pip3 install --user graphifyy`, then use
 - Layer boundary is lint-enforced: shared layers (`rules/`, `scene/`, `utils/`,
   `components/`, ...) must not value-import from `src/systems/**` — systems
   import shared, never the reverse. Type-only imports are allowed. Exemptions
-  (registry bootstrap, dataLoader, docDrift) are listed in `.eslintrc.json`.
+  (registry bootstrap, dataLoader, docDrift) are listed in `eslint.config.js`.
 - Doc drift is machine-checked: `docs/doc-drift.manifest.ts` pairs code with docs;
   touching documented behavior means updating the paired doc or CI fails.
 - Repo hygiene, generated docs, and dead code (knip) are also CI-enforced —

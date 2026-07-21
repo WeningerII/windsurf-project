@@ -153,6 +153,48 @@ describe('resolveEffects — cross-system stacking parity (RFC 003 worked encodi
     expect(result.byTarget.attack.total).toBe(2);
   });
 
+  it('D&D 3.5e dodge bonus: same-type dodge bonuses STACK (canonical exemption)', () => {
+    const effects: EffectInstance[] = [
+      // Two dodge bonuses on AC: unlike every other named type, dodge stacks.
+      effect({
+        systemId: 'dnd-3.5e',
+        target: 'ac',
+        operation: 'add',
+        value: 1,
+        stackPolicy: { bonusType: 'dodge' },
+        label: 'Dodge feat',
+      }),
+      effect({
+        systemId: 'dnd-3.5e',
+        target: 'ac',
+        operation: 'add',
+        value: 2,
+        stackPolicy: { bonusType: 'dodge' },
+        label: 'Mobility (vs AoO)',
+      }),
+      // Control: two enhancement bonuses on the same target still take-largest.
+      effect({
+        systemId: 'dnd-3.5e',
+        target: 'ac',
+        operation: 'add',
+        value: 2,
+        stackPolicy: { bonusType: 'enhancement' },
+        label: '+2 Chain Shirt',
+      }),
+      effect({
+        systemId: 'dnd-3.5e',
+        target: 'ac',
+        operation: 'add',
+        value: 1,
+        stackPolicy: { bonusType: 'enhancement' },
+        label: 'lesser enhancement',
+      }),
+    ];
+    const result = resolveEffects(effects);
+    // dodge: 1 + 2 = 3 (stacks); enhancement: max(2, 1) = 2 (largest only).
+    expect(result.byTarget.ac.total).toBe(5);
+  });
+
   it('PF1e size + enhancement on AC: different named types both apply', () => {
     const effects: EffectInstance[] = [
       effect({
