@@ -17,6 +17,7 @@
 import type { GameSystemId } from '../../types/game-systems';
 import type { EquippedItem, Feat, Feature } from '../../types/core/character';
 import { abilityMod, profBonus } from '../../utils/math';
+import { pf2eMultipleAttackPenalty } from '../../utils/derivedCombatMath';
 import { collectDnd5eRiderEffects } from '../conditions/dnd5eRiders';
 import { collectPf2eRiderEffects } from '../conditions/pf2eRiders';
 import { collectD20LegacyConditionEffects } from '../conditions/d20LegacyConditions';
@@ -134,7 +135,21 @@ const pf2eProfile: D20SystemProfile = {
     }),
   supportsVersatile: false,
   supportsOffHand: false,
-  attackEconomy: featureAttackEconomy,
+  // PF2e three-action economy: a full offensive turn spends all three actions
+  // Striking (up to three Strikes). Every Strike after the first takes the
+  // Multiple Attack Penalty — a cumulative −5 (register-linked
+  // pf2eMultipleAttackPenalty; the step is |MAP(2nd attack)| = 5), which the
+  // tactical executor applies as iterativePenaltyStep × attackIndex → 0/−5/−10.
+  //
+  // Agile's reduced −4 / −8 MAP is deliberately NOT automated here: no equipped
+  // weapon carries an `agile` trait in the current equipment data, so lowering
+  // the step would be fake automation. When weapon-trait data lands, an agile
+  // main weapon can drive the reduced step; until then the boundary stays honest
+  // at the CRB non-agile default.
+  attackEconomy: (): AttackEconomy => ({
+    attacksPerRound: 3,
+    iterativePenaltyStep: Math.abs(pf2eMultipleAttackPenalty(2, false)),
+  }),
 };
 
 /** 3.5e / PF1e share the legacy-d20 shape; the systemId picks rider numbers. */
