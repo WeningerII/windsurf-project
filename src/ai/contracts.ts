@@ -35,13 +35,45 @@ export type AiFailureCode =
   | 'provider-error'
   | 'invalid-provider-output'
   | 'timeout'
-  | 'over-budget';
+  | 'over-budget'
+  | 'budget-exceeded';
+
+/**
+ * Coarse task classes for latency budgets (Phase 14): text generation, image
+ * understanding (vision), and image generation have very different latency
+ * profiles, so budgets are configured per class rather than per task.
+ */
+export type AiTaskClass = 'text' | 'vision' | 'image';
+
+/** Which latency/cost class each task belongs to. Grows with the allowlist. */
+export const AI_TASK_CLASS: Record<AiTask, AiTaskClass> = {
+  'encounter-draft': 'text',
+  'scene-narration': 'text',
+  'identify-creature': 'vision',
+  'illustrate-scene': 'image',
+};
+
+/**
+ * Deterministic per-request cost, in abstract budget units, charged against a
+ * session's cap BEFORE the provider call (Phase 14 cost controls). Weights
+ * reflect relative provider cost (image generation >> vision >> text) without
+ * depending on post-hoc token counts, so caps trip deterministically and are
+ * fixture-testable. Tune here, not at call sites.
+ */
+export const AI_TASK_UNIT_COST: Record<AiTask, number> = {
+  'encounter-draft': 1,
+  'scene-narration': 1,
+  'identify-creature': 2,
+  'illustrate-scene': 5,
+};
 
 /** Where a successful result came from (lets the UI label provider vs replay). */
 export interface AiUsage {
   source: 'provider' | 'fixture';
   provider?: string;
   model?: string;
+  /** The prompt-template version used for the task (see `AI_PROMPT_VERSIONS`). */
+  promptVersion?: string;
 }
 
 export interface AiRequest<TTask extends AiTask = AiTask, TPayload = unknown> {
@@ -55,6 +87,8 @@ export interface AiSuccess<TData = unknown> {
   task: AiTask;
   data: TData;
   usage: AiUsage;
+  /** Correlates this response with the gateway's structured log record. */
+  traceId?: string;
   /** Non-fatal notes (e.g. the draft was repaired, or a field was dropped). */
   warnings?: string[];
 }
@@ -64,6 +98,8 @@ export interface AiFailure {
   task?: AiTask;
   code: AiFailureCode;
   message: string;
+  /** Correlates this failure with the gateway's structured log record. */
+  traceId?: string;
 }
 
 export type AiResponse<TData = unknown> = AiSuccess<TData> | AiFailure;
