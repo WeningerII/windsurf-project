@@ -1,6 +1,7 @@
 import { SystemDefinition } from '../../registry/types';
 import { Mam3eDataModel, createDefaultMam3eData } from './data-model';
 import { Mam3eEngine } from './engine';
+import { createMam3eValidator } from './validation';
 import { lazyWithPreload } from '../../utils/lazyWithPreload';
 
 export const Mam3eSystemDef: SystemDefinition<Mam3eDataModel> = {
@@ -53,6 +54,9 @@ export const Mam3eSystemDef: SystemDefinition<Mam3eDataModel> = {
   ],
   createDefaultData: createDefaultMam3eData,
   engine: new Mam3eEngine(),
+  // Point-buy validator derived from the engine's own M&M math (PL caps,
+  // budgets, cost arithmetic, catalogs). Warns/annotates only — never blocks.
+  validator: createMam3eValidator(),
   SheetComponent: lazyWithPreload(() =>
     import('./sheet').then((m) => ({ default: m.Mam3eCharacterSheet }))
   ),
