@@ -54,7 +54,7 @@ If `graphify` is not on PATH: `pip3 install --user graphifyy`, then use
 - Layer boundary is lint-enforced: shared layers (`rules/`, `scene/`, `utils/`,
   `components/`, ...) must not value-import from `src/systems/**` — systems
   import shared, never the reverse. Type-only imports are allowed. Exemptions
-  (registry bootstrap, dataLoader, docDrift) are listed in `.eslintrc.json`.
+  (registry bootstrap, dataLoader, docDrift) are listed in `eslint.config.js`.
 - Doc drift is machine-checked: `docs/doc-drift.manifest.ts` pairs code with docs;
   touching documented behavior means updating the paired doc or CI fails.
 - Repo hygiene, generated docs, and dead code (knip) are also CI-enforced —
