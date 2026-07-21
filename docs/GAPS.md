@@ -144,11 +144,12 @@ below; the remainder is the honest residual.
     for 5e (2026-07-14):** the 5e `toEquippedItem` now converts the catalog
     `Weapon.damage` DiceRoll into the numeric `{count, die}` shape the combatant
     reads, so equipping a weapon gives a real saved character its weapon dice in
-    scene combat (previously only engine-built inputs carried it). Base
-    one-handed damage; the versatile two-handed die IS representable
-    (`EquippedItem.weaponVersatileDie` exists and the combatant consumes it —
-    corrected 2026-07-21, the earlier "isn't representable" was wrong): only
-    equip-time population is missing. The equivalent populate for the
+    scene combat (previously only engine-built inputs carried it). The versatile
+    two-handed die is now populated too (**done 2026-07-21**): `toEquippedItem`
+    reads the catalog `Weapon.versatileDamage` into `EquippedItem.weaponVersatileDie`
+    and carries the catalog `properties` into `weaponProperties`, so an equipped
+    versatile weapon rolls its larger die in two hands in scene combat (the
+    combatant already consumed both fields). The equivalent populate for the
     d20-legacy/PF2e equip flows also remains (their weapon data shapes differ
     from the 5e DiceRoll catalog).
   - L5: **Partial.** Prepared-spell limits are wired — the 5e spells tab shows
