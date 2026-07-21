@@ -47,6 +47,7 @@ import { AppHeader } from './components/AppHeader';
 import { NewCharacterDialog } from './components/NewCharacterDialog';
 import { GuidedCreatorDialog } from './components/GuidedCreatorDialog';
 import { useAppNav } from './hooks/useAppNav';
+import { ShellProvider } from './contexts/ShellContext';
 import { useSurfaceSwitchMetrics } from './hooks/useSurfaceSwitchMetrics';
 
 const STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
@@ -110,9 +111,10 @@ function AppContent() {
     onMerge: applyMergedDocuments,
   });
 
-  // Total shell-nav model (Phase 1): one discriminated union replaces the old
-  // currentDocId / selectedSystem / showLegal flags. Phase 2 relocates the
-  // reducer into a ShellContext without changing this call site.
+  // Total shell-nav model: one discriminated union replaces the old
+  // currentDocId / selectedSystem / showLegal flags. Phase 2 moved the
+  // reducer into ShellContext (src/contexts/shell-context.ts); this call
+  // site — a thin context read — is unchanged, as planned.
   const {
     nav,
     openSheet,
@@ -833,7 +835,9 @@ function AppContent() {
 function App() {
   return (
     <ToastProvider>
-      <AppContent />
+      <ShellProvider>
+        <AppContent />
+      </ShellProvider>
       <ServiceWorkerUpdateBanner />
     </ToastProvider>
   );
