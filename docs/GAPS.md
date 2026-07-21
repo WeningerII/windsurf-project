@@ -15,10 +15,10 @@ shipped entry is encoded, loader-backed, source-tagged, policy-clean, and — fo
 the categories with an authoritative SRD list — verified by reverse-diff to
 contain **no** non-SRD entries). Independent published-SRD *coverage* is now
 measured for all 7 systems (`docs/generated/srd-coverage.md`): D&D 3.5e is wired
-against the clean core-only `olimot/srd-v3.5-md` chapters (spells 604/605 = 99.8%;
-the monster denominator now counts individual stat blocks — the category-heading
-shape-mismatch is fixed in code, see §1 — with the refreshed published % produced
-by the next networked coverage run).
+against the clean core-only `olimot/srd-v3.5-md` chapters (spells now 605/605;
+the monster denominator counts individual stat blocks — the shape fix is in code
+AND published as of the 2026-07-21 coverage run: PF1e monsters 331/332, 3.5e
+177/222).
 
 ---
 
@@ -39,11 +39,15 @@ unlike the loader-derived `docs/srd-manifest/`.
   equipment are also at/near 100%.
 - **M&M 3e** (powers, advantages) and **Daggerheart** (domain cards, domains) are at
   genuine 100% on their wired categories.
-- The genuine residual is small and itemized in `srd-coverage.md`: single-entry
-  gaps (5e-2014 Net, 5e-2024 Will-o'-Wisp, PF1e Teleport Greater, 3.5e Shadow
-  Evocation Greater), and the genuine missing monster individuals now isolated by
-  the denominator-shape fix (PF1e Skeletal Champion; 3.5e Lich/Ghost/Salamander/
-  Hydra) — whose encodes are a separate follow-on.
+- The genuine residual is small and itemized in `srd-coverage.md`: two
+  single-entry gaps (5e-2014 Net equipment, 5e-2024 Will-o'-Wisp monster —
+  PF1e Greater Teleport and 3.5e Greater Shadow Evocation were since encoded
+  and are no longer missing; corrected 2026-07-21), and the genuine missing
+  monster individuals isolated by the denominator-shape fix (PF1e Skeletal
+  Champion; 3.5e's 45-row missing list, e.g. Lich/Ghost/Salamander/Hydra —
+  that list still contains container-like rows the collapse missed, such as
+  "Chromatic Dragons" and "Celestial Creature", so it overstates genuine
+  misses; tightening the collapse is a follow-on alongside the encodes).
 - **Monster denominator shape-mismatch [FIXED IN CODE; published % deferred]:**
   the 3.5e and PF1e monster denominators previously counted taxonomic CONTAINER
   entries — the SRD 3.5 category headers (Angel/Dragon/Elemental/…) and the PF1e
@@ -53,20 +57,29 @@ unlike the loader-derived `docs/srd-manifest/`.
   `collapsePf1eContainerRecords`) now drop those containers (and fold 3.5e age/
   size variant rows to their archetype) so both denominators count individual
   stat blocks; the 14 PF1e parents collapse while Skeletal Champion stays a
-  genuine miss. The counting LOGIC is fixed and tested offline; the refreshed
-  `docs/generated/srd-coverage.md` percentages come from the next networked
-  `npm run srd:coverage` run.
+  genuine miss. The counting LOGIC is fixed and tested, and the refreshed
+  percentages are PUBLISHED (2026-07-21 networked run): PF1e monsters
+  331/332 = 99.7%, 3.5e monsters 177/222 = 79.7%. Residual: the 3.5e missing
+  list still carries container-like rows outside the collapse list (see the
+  residual bullet above).
 - **M&M equipment coverage target [WIRED; execution deferred]:** the DHH
   equipment data already ships and its runtime loader is wired
   (`loadEquipmentForSystem('mam3e')`); the remaining gap was the coverage
-  *measurement*. A `mam3e`/`equipment` `CoverageTarget` (frnprt EQUIPMENT vs the
-  loader) is now added to `srd-coverage.ts`; running it (the frnprt fetch) is
-  deferred to a networked coverage run.
+  *measurement*. The `mam3e`/`equipment` `CoverageTarget` (frnprt EQUIPMENT vs
+  the loader) has now RUN (2026-07-21 networked pass): 45/113 = 39.8%, with the
+  68 missing entries itemized in the report. Cleanup note: two stale prose
+  strings inside the generator (`src/scripts/srd-coverage.ts` — a "deferred"
+  comment and a hardcoded "M&M … equipment … pending wiring" Pending line)
+  contradict the measured table and will reprint on every run until removed.
 - **Provenance — feats/backgrounds [REMEDIATED]:** the loaders shipped PHB feats
   and backgrounds mislabeled with an SRD source tag (SRD 5.1 has only Acolyte +
   Grappler; SRD 5.2 has 4 backgrounds + 17 feats). The non-SRD entries were
   deleted (see the over-inclusion table in `docs/generated/srd-coverage.md`, now
-  0 genuine suspects for these categories). The reverse-diff audit (loader entries
+  0 genuine suspects for these categories). One cosmetic residue (noted
+  2026-07-21): 7 qualifier-named 2024 feat variants ("Magic Initiate (Cleric)",
+  "Fighting Style: …") still print as nominal over-inclusion rows because the
+  reverse-diff normalizes loader names less aggressively than the coverage
+  side; genuine over-inclusion is zero. The reverse-diff audit (loader entries
   absent from the independent SRD) is the standing guard against re-introduction.
 - **Provenance — 5e-2024 species [REMEDIATED]:** Half-Elf and Half-Orc (SRD 5.1
   species dropped from SRD 5.2) were removed from the SRD-5.2-only 2024 loader;
@@ -85,8 +98,10 @@ unlike the loader-derived `docs/srd-manifest/`.
   Feeblemind + homebrew like Glass Staff). The Ranger's non-SRD always-prepared
   grants (Conjure Barrage/Volley) were removed accordingly. 2024 spells: 294/294
   in-SRD (86.7% of the 339), 0 over-inclusion.
-- The 5e-database 2024 monsters file looks partial (~3 entries) — validate that
-  source before trusting the 2024 monster row.
+- RESOLVED (2026-07-21): the partial (~3-entry) 5e-database 2024 monsters JSON
+  was validated and rejected by the coverage script itself; the 2024 monster
+  denominator is the SRD 5.2.1 markdown (330 stat blocks), the loaders hold
+  339, and coverage measures 329/330 (Will-o'-Wisp the sole miss).
 
 **Still to do (sources in `docs/srd-sources.md`):**
 - **D&D 3.5e** is now wired [DONE]: the psionics/epic-mixed `Rughalt/D35E` packs were
@@ -95,8 +110,12 @@ unlike the loader-derived `docs/srd-manifest/`.
   category-heading shape-mismatch is now fixed in code (`collapse35eMonsterHeadings`);
   the refreshed % is produced by the next networked coverage run. Remaining 3.5e
   categories (classes/feats/equipment) are still unwired pending core-only sources.
-- Wire the remaining categories (PF2e/PF1e non-spell, M&M skills/conditions/
-  equipment, Daggerheart classes/ancestries/communities/weapons/armor, all monsters).
+- Wire the remaining categories (3.5e classes/feats/equipment; PF2e non-spell/
+  non-monster; PF1e non-spell besides monsters/equipment/magic items; M&M
+  skills/conditions; Daggerheart classes/ancestries/communities/weapons/armor;
+  M&M/Daggerheart adversaries). Corrected 2026-07-21: monsters for all five
+  d20-family systems and M&M equipment are already wired and measured — the
+  earlier "all monsters" phrasing here was stale.
 - Remediate under-covered categories (encode missing SRD entries — e.g. PF2e/PF1e/5e
   spells) and the provenance over-inclusion (re-source or re-scope mislabeled entries).
 - Decide whether to fold genuine coverage into the headline metric / replace the
@@ -126,10 +145,12 @@ below; the remainder is the honest residual.
     `Weapon.damage` DiceRoll into the numeric `{count, die}` shape the combatant
     reads, so equipping a weapon gives a real saved character its weapon dice in
     scene combat (previously only engine-built inputs carried it). Base
-    one-handed damage; versatile two-handed mode isn't representable in the
-    single `weaponDamage` field and stays a follow-up, as does the equivalent
-    populate for the d20-legacy/PF2e equip flows (their weapon data shapes
-    differ from the 5e DiceRoll catalog).
+    one-handed damage; the versatile two-handed die IS representable
+    (`EquippedItem.weaponVersatileDie` exists and the combatant consumes it —
+    corrected 2026-07-21, the earlier "isn't representable" was wrong): only
+    equip-time population is missing. The equivalent populate for the
+    d20-legacy/PF2e equip flows also remains (their weapon data shapes differ
+    from the 5e DiceRoll catalog).
   - L5: **Partial.** Prepared-spell limits are wired — the 5e spells tab shows
     each prepared caster's RAW limit (`getDnd5ePreparedCasterSummaries` through
     the sheet controller). Still absent: known-spell-count enforcement (the
@@ -154,9 +175,12 @@ below; the remainder is the honest residual.
   - L9: point-buy ability arrays; feat/prereq gating; multiclass slot/save/BAB/prof
     stacking as *validators* (M&M PL caps + point-buy costs exist; M&M degrees of
     success now covered).
-  - L10: D&D 3.5e Encounter-Level budgeting and wealth-by-level still open (3.5e
-    monsters carry no XP, so the encounter-spec validator honestly reports it
-    `unsupported-system`). **Done:** 5e (SRD 5.2.1), PF1e (CRB target-CR), and
+  - L10: wealth-by-level still open. **Done (corrected 2026-07-21):** D&D 3.5e
+    Encounter-Level budgeting shipped on a derived-EL model
+    (`dnd35eEncounterBudget` in `src/scene/encounterDraft.ts`; the old
+    "honestly reports `unsupported-system`" note went stale — though 3.5e
+    monster `experiencePoints` remain uniformly 0, so any future XP-award
+    feature still lacks data); plus 5e (SRD 5.2.1), PF1e (CRB target-CR), and
     PF2e (party-relative) encounter budgets, all behind one shared budget/cost
     dispatch and gated by `validateEncounterSpec` (`src/scene/encounterSpec.ts`);
     PF2e creature XP by level difference; M&M equipment points and measurements
@@ -173,11 +197,13 @@ below; the remainder is the honest residual.
     3.5e/PF1e iterative attacks, displayed by the d20-legacy sheet and applied
     per attack via the tactical executor's iterative penalty steps — though
     through duplicate implementations: the register-linked
-    `iterativeAttackBonuses` in `src/utils/derivedCombatMath.ts` is itself
-    test-only, a dedupe hygiene item. PF2e Bulk limits: `Pf2eInventoryTab`
-    computes total Bulk and flags encumbered/overloaded via `getPf2eBulkState`,
-    with the same duplicate-implementation caveat for the register-linked
-    `pf2eBulkLimits`. Also wired earlier: 3.5e skill synergy, max-rank
+    `iterativeAttackBonuses` in `src/utils/derivedCombatMath.ts` remains
+    test-only while the d20-legacy sheet and the tactical executor's profile
+    each carry their own encoding — three encodings of one formula, a dedupe
+    hygiene item. PF2e Bulk limits: `Pf2eInventoryTab` computes total Bulk via
+    `getPf2eBulkState`, while the register-linked `pf2eBulkLimits` now ALSO
+    ships through derived-quantity cards (no longer test-only) — so the
+    duplication persists and both formula sources currently render to users. Also wired earlier: 3.5e skill synergy, max-rank
     enforcement, and the full check penalty — synergy applies in both the
     skills tab and `rollCheck`; the skills tab shows each skill's RAW rank cap
     and flags over-cap values; the check penalty applies to physical skills
@@ -186,20 +212,38 @@ below; the remainder is the honest residual.
     (conditional and Knowledge-subtype synergies stay manual). Cleric domain,
     wizard specialist, and Dragon Disciple bonus spell slots auto-resolve into
     the spells-per-day totals.
-  - **Still helper-only** (RAW formula proven by test, but nothing in
-    `prepareData` or a sheet computes or displays it): passive Perception;
-    concentration DC in all three flavors (5e, 3.5e, PF1e); cantrip scaling;
-    PF2e multiple-attack penalty — the pf2e combat profile reuses the 5e
+  - **Still helper-only** (re-audited 2026-07-21; RAW formula proven by test,
+    but nothing in `prepareData` or a sheet computes or displays it):
+    concentration DC in all three flavors (5e, 3.5e, PF1e — the legacy flavors
+    live in per-system `derivedMath.ts`, not `src/utils/`); PF2e
+    multiple-attack penalty — the pf2e combat profile reuses the 5e
     feature-based attack economy and declares no MAP penalty step
-    (`iterativePenaltyStep`), so the tactical executor never applies the
-    multiple-attack penalty; PF2e striking rune
-    dice — `EquippedItem` has no rune field to read; PF2e auto-heighten rank;
-    M&M measurements. Wiring these into the engines/sheets is outstanding.
-- **Stricter spec criteria not met:** comprehensive typed-bonus *stacking* tests
-  (e.g., 3.5e dodge-stacks-but-others-don't); the content×compute cross-product
-  fixtures (Monk+shield AC, PF2e striking+enfeebled as combined cases);
-  build-legality validators that REJECT illegal and ACCEPT legal builds (only M&M
-  PL-cap detection exists).
+    (`iterativePenaltyStep`), so the tactical executor never applies it; PF2e
+    striking rune dice — `EquippedItem` has no rune field to read; M&M
+    measurements. **Wired since the last update (removed from this list):**
+    passive Perception (5e computes AND displays it through the derivation
+    layer; no other system declares one yet) and PF2e auto-heighten rank
+    (computed and displayed as a derived card; per-spell mechanical
+    heightening still absent). **Computed-but-inert (new category):** 5e
+    cantrip scaling and PF2e Class DC are engine-computed and
+    register-anchored but deliberately display-less, and nothing in scene
+    combat consumes them — cantrip damage in play still doesn't scale.
+- **Stricter spec criteria (re-audited 2026-07-21 — the earlier text here was
+  wrong in both directions):** typed-bonus stacking tests EXIST — the resolver
+  implements per-`bonusType` largest-wins stacking with 3.5e-enhancement and
+  PF2e-bucket regressions (`resolver.test.ts`, `equipParity.test.ts`) — but
+  `BonusType` has no `dodge` member, so the canonical
+  3.5e-dodge-stacks-while-others-don't case is unrepresentable: a
+  type-vocabulary gap, not a test gap. The Monk+shield AC cross-product fixture
+  EXISTS (`dnd5e-engine.test.ts`); PF2e striking+enfeebled does not (blocked on
+  the missing rune field above). Build-legality validators for D&D 5e (both
+  editions), D&D 3.5e, PF1e, and PF2e EXIST under `src/rules/legality/` — with
+  accept-legal AND reject-illegal tests, register-linked L9 rows, and mutation
+  anchors gated by `check:compute-register` — so the old "only M&M PL-cap
+  detection exists" claim was stale. The genuine gap: NOTHING at runtime
+  invokes them — no engine, sheet, or registry imports `validate*Build`, so
+  the legality layer is itself helper-only at the app level. Wiring it into
+  import/creation surfaces is the open work.
 
 ## 3. Bestiaries / RFC 004
 
@@ -210,9 +254,14 @@ existing `loadMonstersForSystem` contract (`src/utils/dataLoader.ts`) and
 product-reachable through the scene encounter flow
 (`src/components/scene/useSceneEncounter.ts`). Per-system monster coverage lives
 in `docs/generated/roadmap-metrics.md` and `docs/generated/srd-coverage.md`, not
-here. The residual: M&M 3e / Daggerheart adversary (reference) data, and the
-3.5e XP/CR data needed before Encounter-Level budgeting (§2 L10) can land. RFC
-004 was executed without formal acceptance; its status line records that.
+here. The residual: M&M 3e adversary (reference) data only — Daggerheart ships 129
+loader-backed SRD adversaries (`loadDaggerheartAdversariesForSystem` in
+`src/utils/dataLoader.ts`, fieldable as monster-kind scene tokens since
+2026-06-12; the earlier claim here that Daggerheart adversary data was missing
+was WRONG, corrected 2026-07-21). 3.5e Encounter-Level budgeting no longer
+blocks on XP data — it shipped on a derived-EL model (§2 L10) — though 3.5e
+monster `experiencePoints` remain uniformly 0 for any future XP-award feature.
+RFC 004 was executed without formal acceptance; its status line records that.
 
 ## 4. GLOBAL DONE criteria still outstanding
 
@@ -225,7 +274,9 @@ here. The residual: M&M 3e / Daggerheart adversary (reference) data, and the
   — d20 Vancian prepared-slot assignment + spontaneous conversion, Daggerheart
   triggered/narrative card resolution, M&M freeform descriptors — never
   unfinished automation. Independent content coverage is proven across the board
-  (3.5e spells 99.8%, PF1e 99.8%, PF2e/5e ~100%).
+  (all five wired spell catalogs at 100% as of the 2026-07-21 coverage run;
+  the residuals are two non-spell single entries and the monster /
+  M&M-equipment gaps itemized in §1).
 - MASTER_PLAN.md now mirrors the two-denominator completion goal and adopts
   this file as the completion-tracking doc (2026-07-14). README.md cites both
   denominators under Quality Metrics ("Completion methodology", 2026-07-17),
@@ -246,10 +297,15 @@ game-rule behavior change (vs. test-only additions) and warrants a human review.
 
 ## 6. Reconsider artifact
 
-The 4,053-entry loader-mirror manifests under `docs/srd-manifest/` are honest
-(catalog/provenance) but somewhat redundant with the loaders. Decide whether they
-belong in-repo as committed files or should be regenerated on demand now that a real
-independent denominator (`docs/generated/srd-coverage.md`) exists for most systems.
+The loader-mirror manifests under `docs/srd-manifest/` hold 3,614 entries as
+committed (the "4,053" previously cited here matches nothing committed;
+corrected 2026-07-21) and are honest on catalog/provenance but now BADLY
+diverged from the loaders they mirror — unregenerated since ~2026-06-17, e.g.
+the 5e-2014 manifest lists 39 monsters and 230 equipment against current
+loaders' 335 and 656. Decide whether they belong in-repo as committed files
+(and get regenerated) or should be produced on demand, now that a real
+independent denominator (`docs/generated/srd-coverage.md`) exists for most
+systems.
 
 ## 7. Rules-IR parity debt — per-system accounting (added 2026-07-21)
 
