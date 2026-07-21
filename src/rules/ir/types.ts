@@ -29,6 +29,8 @@ import type {
  *   bonuses, Daggerheart passives, and M&M cost math.
  * - `{ bonusType }`: d20/PF named-bonus stacking — only the LARGEST instance of
  *   a given named bonus type counts; different types stack with each other.
+ *   Exception: `'dodge'` bonuses stack with each other (3.5e/PF1e RAW), so
+ *   same-type dodge instances sum in the resolver.
  * - `'pf2e-item' | 'pf2e-status' | 'pf2e-circumstance'`: PF2e's three stacking
  *   buckets — the highest within each bucket applies, and the buckets sum.
  */

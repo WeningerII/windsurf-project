@@ -60,6 +60,7 @@ function targetForModifierType(type: BonusType): TargetMapping | undefined {
     case 'proficiency':
     case 'alchemical':
     case 'divine':
+    case 'dodge':
     case 'ability-score':
     case 'untyped':
       return undefined;
@@ -92,6 +93,7 @@ function isNamedBonusType(type: BonusType): boolean {
     type === 'luck' ||
     type === 'alchemical' ||
     type === 'divine' ||
+    type === 'dodge' ||
     type === 'untyped'
   );
 }

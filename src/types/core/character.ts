@@ -263,6 +263,13 @@ export interface EquippedItem {
   weaponDamage?: { count: number; die: number };
   /** Larger die rolled when a Versatile weapon is wielded in two hands (e.g. 10). */
   weaponVersatileDie?: number;
+  /**
+   * PF2e striking rune tier on this weapon: 'striking' rolls 2 weapon damage
+   * dice, 'greater' 3, 'major' 4. Type-only for now — no engine consumes it
+   * yet (Lane F wires it into damage assembly); optional so all existing
+   * equipment is unaffected.
+   */
+  strikingRune?: 'striking' | 'greater' | 'major';
   /** Weapon properties driving assembly: 'light' | 'versatile' | 'two-handed' | … */
   weaponProperties?: string[];
 }
