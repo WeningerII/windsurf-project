@@ -265,6 +265,36 @@ describe('parseSceneDocument', () => {
     if (result.ok) return;
     expect(result.issues.map((i) => i.code)).toContain('scene-invalid-events');
   });
+
+  it('preserves a well-formed map reference', () => {
+    const map = {
+      assetHash: 'a'.repeat(64),
+      gridRegistration: { offsetX: 10, offsetY: -5, cellSizePx: 70 },
+    };
+    const result = parseSceneDocument(validSceneInput({ map }), NOW);
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.value.map).toEqual(map);
+  });
+
+  it('drops a malformed map reference without rejecting the scene', () => {
+    const malformed: unknown[] = [
+      'not an object',
+      { assetHash: '' },
+      { assetHash: 'a'.repeat(64) }, // no registration
+      { assetHash: 'a'.repeat(64), gridRegistration: { offsetX: 0, offsetY: 0, cellSizePx: 0 } },
+      { assetHash: 'a'.repeat(64), gridRegistration: { offsetX: 0, offsetY: 0, cellSizePx: -3 } },
+      { assetHash: 'a'.repeat(64), gridRegistration: { offsetX: NaN, offsetY: 0, cellSizePx: 5 } },
+      { assetHash: 'a'.repeat(64), gridRegistration: { offsetX: 0, offsetY: '2', cellSizePx: 5 } },
+    ];
+    for (const map of malformed) {
+      const result = parseSceneDocument(validSceneInput({ map }), NOW);
+      expect(result.ok, `map candidate ${JSON.stringify(map)}`).toBe(true);
+      if (!result.ok) continue;
+      // The scene imports; its map degrades to absent (bare grid).
+      expect(result.value.map, `map candidate ${JSON.stringify(map)}`).toBeUndefined();
+    }
+  });
 });
 
 describe('importScenes boundary parsing', () => {

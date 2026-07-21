@@ -935,3 +935,48 @@ describe('applySceneIntents', () => {
     expect(rejected.length).toBeGreaterThan(0);
   });
 });
+
+describe('map reference vs replay determinism (RFC 006 Phase 9)', () => {
+  it('folds byte-identically with and without a map reference', () => {
+    // The map backdrop is document-level metadata the fold never reads:
+    // attaching, retuning, or removing one must not perturb replay by a byte.
+    let scene = createSceneDocument({
+      id: 'scene-map-replay',
+      name: 'Mapped Ambush',
+      systemId: 'dnd-5e-2024',
+      grid: { width: 8, height: 8 },
+      seed: 'map-replay-seed',
+      now: NOW,
+    });
+    scene = appendResolved(
+      scene,
+      resolveSceneAction(
+        scene,
+        { type: 'place-token', token: makeToken('hero', 1, 1) },
+        { eventId: 'event-1', createdAt: NOW }
+      )
+    );
+    scene = appendResolved(
+      scene,
+      resolveSceneAction(
+        scene,
+        { type: 'roll-check', label: 'Stealth', modifier: 2, dc: 12 },
+        { eventId: 'event-2', createdAt: NOW }
+      )
+    );
+
+    const withMap: SceneDocument = {
+      ...scene,
+      map: {
+        assetHash: 'c'.repeat(64),
+        gridRegistration: { offsetX: 3, offsetY: 7, cellSizePx: 70 },
+      },
+    };
+
+    const bare = foldSceneEvents(scene);
+    const mapped = foldSceneEvents(withMap);
+    expect(JSON.stringify(mapped)).toBe(JSON.stringify(bare));
+    // The seeded check die landed identically (spot check on the seeded path).
+    expect(mapped.state.checkLog).toEqual(bare.state.checkLog);
+  });
+});

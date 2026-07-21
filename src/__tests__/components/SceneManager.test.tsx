@@ -212,6 +212,13 @@ function SceneHarness({
             current.map((scene) => (scene.id === sceneId ? appendSceneEvent(scene, event) : scene))
           );
         }}
+        onUpdateScene={(scene) =>
+          setScenes((current) =>
+            current.map((entry) =>
+              entry.id === scene.id ? { ...scene, updatedAt: new Date() } : entry
+            )
+          )
+        }
         onDeleteScene={(id) => setScenes((current) => current.filter((scene) => scene.id !== id))}
       />
     </>

@@ -35,6 +35,7 @@ import type {
   SceneCheckMode,
   SceneDocument,
   SceneEvent,
+  SceneGridRegistration,
   SceneMarkerKind,
   SceneOracleOdds,
   SceneToken,
@@ -44,7 +45,8 @@ import { systemRegistry } from '../registry';
 import { loadDaggerheartAdversariesForSystem } from '../utils/dataLoader';
 import { errorLogger, guardSync, ErrorCategory, ErrorSeverity } from '../utils/errorLogger';
 import { exportScenes } from '../utils/sceneStorage';
-import { downloadTextFile } from '../utils/fileTransfer';
+import { createMapAsset, loadMapAsset } from '../utils/mapAssetStorage';
+import { downloadTextFile, readFileAsDataUrl } from '../utils/fileTransfer';
 import { generateUUID } from '../utils/browserCompat';
 import { Button } from './ui/Button';
 import { Badge } from './ui/Badge';
@@ -52,6 +54,7 @@ import { Select } from './ui/Select';
 import { SceneGridView } from './SceneGridView';
 import { EncounterPanel } from './scene/EncounterPanel';
 import { InitiativeTracker } from './scene/InitiativeTracker';
+import { MapPanel } from './scene/MapPanel';
 import { MarkerPanel } from './scene/MarkerPanel';
 import { terrainEffectsForPreset, type MarkerEffectPreset } from './scene/markerEffects';
 import { TokenPanel } from './scene/TokenPanel';
@@ -64,6 +67,24 @@ import { RecapPanel } from './scene/RecapPanel';
 import { IllustrationPanel } from './scene/IllustrationPanel';
 
 type PlacementMode = 'none' | 'token' | 'marker' | 'adversary';
+
+/**
+ * Decode an image data URL just far enough to read its natural size, for the
+ * fit-the-grid default cell registration. Resolves null (never rejects) when
+ * decoding is unavailable or fails — the caller falls back to a fixed default.
+ */
+function measureImageSize(dataUrl: string): Promise<{ width: number; height: number } | null> {
+  return new Promise((resolve) => {
+    if (typeof Image === 'undefined') {
+      resolve(null);
+      return;
+    }
+    const image = new Image();
+    image.onload = () => resolve({ width: image.naturalWidth, height: image.naturalHeight });
+    image.onerror = () => resolve(null);
+    image.src = dataUrl;
+  });
+}
 
 /** Shown when a guarded engine call throws (the failure is logged to Sentry). */
 const ENGINE_FAILURE_ISSUE = 'This action could not be applied. The error was logged.';
@@ -84,6 +105,12 @@ interface Props {
    */
   onSelectScene: (id: string | null) => void;
   onAppendSceneEvent: (sceneId: string, event: SceneEvent) => void;
+  /**
+   * Replace a scene document (document-level metadata edits — currently the
+   * map reference). Event-log changes never go through here; they stay on
+   * `onAppendSceneEvent` so the replay contract is untouched.
+   */
+  onUpdateScene: (scene: SceneDocument) => void;
   onDeleteScene: (id: string) => void;
   /** Append a factual recap of a scene to its linked campaign's session log. */
   onLogToCampaign?: (campaignId: string, title: string, body: string) => void;
@@ -96,6 +123,7 @@ export function SceneManager({
   selectedSceneId,
   onSelectScene,
   onAppendSceneEvent,
+  onUpdateScene,
   onDeleteScene,
   onLogToCampaign,
 }: Props) {
@@ -121,6 +149,8 @@ export function SceneManager({
   const aiEnabled = isAiEnabled();
   const [initiativeValues, setInitiativeValues] = useState<Record<string, string>>({});
   const [actionIssues, setActionIssues] = useState<string[]>([]);
+  // Map-image import/storage problem, surfaced inside the Map panel.
+  const [mapNotice, setMapNotice] = useState<string | null>(null);
   const [combatTargetId, setCombatTargetId] = useState('');
   const [combatLog, setCombatLog] = useState<string[]>([]);
   // Per-click nonce so a missed attack (which appends no event) still advances
@@ -333,6 +363,7 @@ export function SceneManager({
     setPlacementMode('none');
     setCombatTargetId('');
     setCombatLog([]);
+    setMapNotice(null);
     setEncounterZoneId('');
     // setEncounterZoneId comes from useSceneEncounter (a stable useState setter,
     // so it never re-fires this); listed to satisfy exhaustive-deps now that it
@@ -791,6 +822,78 @@ export function SceneManager({
     downloadTextFile(exportScenes(targetScenes), filename);
   };
 
+  // --- Map backdrop (RFC 006 Phase 9): document-level metadata, not events. ---
+  // Storage lookup keyed on the reference object: every map update creates a
+  // fresh `map` object, so an import that just stored a new asset re-reads
+  // storage through this memo without an extra invalidation signal.
+  const sceneMap = selectedScene?.map;
+  const mapAsset = useMemo(
+    () => (sceneMap ? loadMapAsset(sceneMap.assetHash) : undefined),
+    [sceneMap]
+  );
+  const mapImage =
+    sceneMap && mapAsset
+      ? { dataUrl: mapAsset.dataUrl, registration: sceneMap.gridRegistration }
+      : undefined;
+
+  const handleImportMapImage = useCallback(
+    async (file: File) => {
+      if (!selectedScene || !state) return;
+      try {
+        const dataUrl = await readFileAsDataUrl(file);
+        const result = await createMapAsset(file.type, dataUrl);
+        if (!result.ok) {
+          setMapNotice(result.error);
+          return;
+        }
+        setMapNotice(null);
+        const existing = selectedScene.map;
+        // Same image re-imported: keep the registration the user already
+        // dialed in. Otherwise default to fit-the-grid-width (or 50px/cell
+        // when the image cannot be decoded here).
+        const measured = await measureImageSize(dataUrl);
+        const cellSizePx =
+          measured && measured.width > 0
+            ? Math.max(1, Math.round(measured.width / state.grid.width))
+            : 50;
+        onUpdateScene({
+          ...selectedScene,
+          map: {
+            assetHash: result.asset.hash,
+            gridRegistration:
+              existing && existing.assetHash === result.asset.hash
+                ? existing.gridRegistration
+                : { offsetX: 0, offsetY: 0, cellSizePx },
+          },
+        });
+      } catch {
+        setMapNotice('The image could not be read.');
+      }
+    },
+    [selectedScene, state, onUpdateScene]
+  );
+
+  const handleChangeMapRegistration = useCallback(
+    (gridRegistration: SceneGridRegistration) => {
+      if (!selectedScene?.map) return;
+      onUpdateScene({
+        ...selectedScene,
+        map: { ...selectedScene.map, gridRegistration },
+      });
+    },
+    [selectedScene, onUpdateScene]
+  );
+
+  const handleRemoveMap = useCallback(() => {
+    if (!selectedScene?.map) return;
+    // Drop only the reference; the content-addressed asset stays stored (other
+    // scenes may share it, and re-adding the same image is then instant).
+    const rest = { ...selectedScene };
+    delete rest.map;
+    onUpdateScene(rest);
+    setMapNotice(null);
+  }, [selectedScene, onUpdateScene]);
+
   return (
     <section className="space-y-4">
       {actionIssues.length > 0 && (
@@ -868,6 +971,7 @@ export function SceneManager({
             <SceneGridView
               state={state}
               selectedTokenId={selectedTokenId}
+              mapImage={mapImage}
               onCellActivate={handleCellActivate}
               onTokenActivate={handleTokenActivate}
             />
@@ -986,6 +1090,15 @@ export function SceneManager({
                 onIdentifyImage={aiEnabled ? handleIdentifyCreature : undefined}
                 identifying={aiIdentifying}
                 identifyNotice={identifyNotice}
+              />
+
+              <MapPanel
+                map={selectedScene.map}
+                hasAsset={Boolean(mapAsset)}
+                onImportImage={(file) => void handleImportMapImage(file)}
+                onChangeRegistration={handleChangeMapRegistration}
+                onRemoveMap={handleRemoveMap}
+                notice={mapNotice}
               />
 
               <MarkerPanel
