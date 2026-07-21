@@ -93,6 +93,7 @@ The following older backlog claims are no longer true and must not re-enter the 
 - `Provider details are planning inputs`: model names, prices, capability tables, and provider-specific routing claims are not roadmap commitments. Pin and benchmark any future model choices inside an accepted AI RFC, not in the master-plan narrative.
 - `AI-DM dependencies are phase-scoped`: Vercel AI SDK, Langfuse, image generation, vector memory, tactical AI, grid registration, and vision-analysis dependencies are valid candidates for the AI-DM track, but each must land only in the phase that consumes it with a focused integration note, tests, and local-first fallback.
 - `No content-pack rewrite`: current loaders, source filtering, generated metrics, source manifests, and system registry remain canonical. Do not replace the data tree with a Foundry-style pack architecture unless a future plan proves loader/reporting parity and migration safety.
+- `All-seven-equal phrasing` (adopted 2026-07-21): roadmap deliverables, phase names, workstreams, and acceptance criteria are stated per **capability across all seven systems** (or against an enumerated accepted boundary), never as "system X first, generalize later." A system name may appear in a *status* line (truthfully reporting asymmetric reality) but never as the subject of a *deliverable* line — "per-system validators, 5 owing: 3.5e, PF1e, PF2e, M&M, Daggerheart" is compliant; "5e Validation Depth" is not. Editions count as systems: any tally over "the systems" uses the denominator 7, with both 5e editions counted separately. Where progress is asymmetric, the plan records it as an explicit per-system debt (done/owed/owed-by) rather than naming the leading system as the deliverable. Rationale: planning docs are executable — sessions pick the named task, so 5e-named deliverables generate 5e-first work regardless of disclaimers, and the shared abstractions they produce accrete the pilot system's shape.
 - `Narrative docs do not own counts`: precise counts belong in generated metrics first, then in compact summaries that cite those metrics.
 - `Historical docs remain on disk but cannot steer roadmap`: legacy plan files are source records, not active backlog.
 
@@ -142,9 +143,11 @@ The following older backlog claims are no longer true and must not re-enter the 
 ### Rule Truth, Provenance, Activities, And Guided Creation
 
 > **Direction update (2026-05-31): system-agnostic, all-seven-equal sequencing.**
-> The phase table further down in this section was originally written
+> This track's phase table was originally written
 > D&D-5e-first (a "5e validation depth" pass, a "5e activity pilot," a "5e 2024
-> wizard" as the first user-visible creator). That sequencing is **superseded**.
+> wizard" as the first user-visible creator). That sequencing is **superseded**,
+> and the 5e-named table itself was deleted on 2026-07-21 — the live workstream
+> table below replaces it.
 > Under the locked-in direction, all seven systems are equal and the foundation
 > is the shared rules IR + effect resolver in `docs/rfc/003-rules-ir-and-effects.md`
 > (Accepted). The corrected critical path is:
@@ -172,13 +175,20 @@ The following older backlog claims are no longer true and must not re-enter the 
 >
 > Any creation UI is system-agnostic by construction: it renders the choices a
 > system's loaders and validators expose, so it serves all seven equally. The
-> 5e-named rows in the legacy table below are retained as historical context and
-> should be read as "first test fixture," not "privileged path." The
+> original 5e-named phase table that used to sit below ("5e Validation Depth,"
+> "D&D 5e Activity Pilot," "5e 2024 Wizard Path," …) was **deleted on
+> 2026-07-21** under the all-seven-equal phrasing constraint (see Non-Negotiable
+> Constraints): retaining it as "historical context" inside a live track kept
+> generating 5e-first work, even after the 2026-05-31 correction told readers
+> not to treat it as the privileged path. Its still-open work is restated
+> capability-first in the workstream table below; nothing open was dropped. The
 > anti-overengineering "three named consumers before extraction" rule is
 > satisfied immediately and overwhelmingly: seven effect compilers feed one
 > resolver.
 >
-> **Per-phase actuals (2026-07-14):**
+> **Per-phase actuals (2026-07-14, re-verified against code 2026-07-21 — the
+> Phase 2 and Phase 3 lines below were corrected because the earlier wording
+> misreported per-system state in 5e's favor):**
 > - **Phase 0 — DONE.** The IR (`src/rules/ir/`), the pure resolver fold
 >   (`src/rules/resolver/resolve.ts`), and the contribution-ledger view
 >   (`src/rules/ir/ledgerView.ts`) all exist with cross-system worked-encoding
@@ -202,11 +212,27 @@ The following older backlog claims are no longer true and must not re-enter the 
 >   no user-visible change. Forcing either buys marginal, partial unification at
 >   real cost, so both stay on their bespoke (test-pinned) derivation. Equip
 >   parity for the additive systems is covered by `equipParity.test.ts`.
-> - **Phase 2 — PARTIAL.** IR condition catalogs cover all systems via the scene
->   dispatcher, but only the 5e engines replaced imperative rollCheck condition
->   math with resolver folds.
-> - **Phase 3 — PARTIAL.** Only the 5e ledger is re-backed onto the resolver;
->   the Daggerheart and M&M ledger builders still hand-build entries.
+> - **Phase 2 — PARTIAL (previously misreported).** IR condition catalogs cover
+>   all seven systems (`src/rules/conditions/` — the 5e and d20-legacy catalogs
+>   each serve two systems), and — contrary to the earlier "only the 5e engines"
+>   claim — **every engine** now single-sources its condition math from those
+>   catalogs (verified 2026-07-21: `d20LegacyCheckPenalty` in both legacy
+>   engines, `getPf2eConditionStatusPenalty`, `mam3eToughnessPenalty`,
+>   `collectDaggerheartConditionEffects`, and 5e's
+>   `conditionImposesDisadvantage`). The genuinely open remainder is **uniform
+>   across all seven, not 5e-vs-rest**: engines consume the catalogs through
+>   per-system helper reads in their check/AC paths, and the shared compile
+>   layer (`src/rules/compile/`) compiles no conditions at all, so condition
+>   effects never enter `resolveCharacterEffects` — no system's conditions
+>   appear in resolver ledgers or stacking.
+> - **Phase 3 — PARTIAL (previously misreported).** Counted per system, 4 of 7
+>   are re-backed onto the resolver: the shared 5e builder
+>   (`src/systems/dnd5e/shared/contributionLedger.ts`) covers both 5e editions,
+>   and the d20-legacy builder (`src/systems/d20-legacy/contributionLedger.ts`)
+>   covers D&D 3.5e and PF1e — the earlier "only the 5e ledger" wording failed
+>   to credit the shipped 3.5e/PF1e work. Owed by 3 systems: PF2e has no ledger
+>   builder at all, and the M&M 3e and Daggerheart builders still hand-build
+>   entries.
 > - **Phase 4 — DONE (scene-runtime scope).** Seeded scene resolution shipped, and
 >   functional terrain is authorable and mechanically live across every system: the
 >   marker-creation flow offers cover / high-ground / difficult-terrain presets
@@ -221,34 +247,57 @@ The following older backlog claims are no longer true and must not re-enter the 
 >   stays GM-adjudicated). Additive (a cell with no terrain resolves and moves
 >   identically). Deeper terrain — line-of-sight, elevation, hazards that tick each
 >   round — is future RFC-006 scene-runtime work, not this phase.
-> - **Phase 5 — PARTIAL.** The grounded gateway ships, but validators exist for
->   only 2 of 7 systems and there is no resolver legal-actions seam.
+> - **Phase 5 — PARTIAL.** The grounded gateway ships, but the only registered
+>   `SystemValidator` is the shared 5e one
+>   (`src/systems/dnd5e/shared/validation.ts`, covering the two 5e editions):
+>   2 of 7. Owed by 5 systems — D&D 3.5e, PF1e, PF2e, M&M 3e, and Daggerheart —
+>   plus the resolver legal-actions seam, which is owed by all seven.
+>
+> **Per-system parity debt (2026-07-21).** The remaining IR work, counted
+> against all seven systems so the debt cannot hide behind edition ambiguity
+> (also tracked in `docs/GAPS.md` §7):
+>
+> | Parity debt | Done | Owed | Owed by |
+> | --- | --- | --- | --- |
+> | Ledger re-backed on resolver | 4 | 3 | PF2e (no builder exists), M&M 3e, Daggerheart (hand-built) |
+> | Condition effects through the resolver fold | 0 | 7 | all seven (catalogs shipped and engine-consumed; fold-through open everywhere) |
+> | AI-seam validators | 2 | 5 | D&D 3.5e, PF1e, PF2e, M&M 3e, Daggerheart |
+> | Resolver legal-actions seam | 0 | 7 | all seven |
+> | Additive equip routing | 5 | 2 — accepted boundary | Daggerheart, M&M 3e (non-additive derivation; revisit only if the IR gains override/derived operations for other reasons) |
+>
+> The repetition in the "Owed by" column is the reason for the all-seven-equal
+> phrasing constraint: the systems owed the most are exactly the ones the old
+> 5e-named phase rows never scheduled.
 
 - `Active implementation track`: this is the main research-informed build program. It should be treated as a large product and architecture effort, not a small enhancement. The work touches `src/registry/types.ts`, `src/registry/index.ts`, `src/types/core/document.ts`, system engines, template handlers, loader-backed data, import/export behavior, local draft persistence, and visible sheet/wizard UX.
 - `Active implementation track`: keep the current repo stack while building the missing primitives. React/Vite/npm, the system registry, per-system engines, loader-backed SRD data, browser-local persistence, optional Supabase sync, and Netlify remain the implementation frame. External research informs the shape of validation, structured draft output, and form/action modeling, but does not authorize a stack replacement.
 - `Active implementation track`: AI expansion enters through the control-plane contract in `docs/rfc/002-ai-control-plane.md`. That RFC defines AI as a server-side, task-scoped drafting/orchestration layer over existing automation: candidate pools come from loaders, validation owns legality, accepted drafts use normal template/document handlers, and missing provider keys leave deterministic creation fully functional.
 - `Active implementation track`: implementation must be incremental and testable. Each phase below should land behind repo-native tests before the next phase depends on it. README and STATUS updates wait until user-visible capability ships; `docs/MASTER_PLAN.md` remains the planning source during the build.
 
-| Phase | Workload signal | Primary surfaces | Deliverable | Acceptance |
-| --- | --- | --- | --- | --- |
-| 0. Constraints/RFC Intake | Required first step, docs-only but decision-heavy | `docs/rfc/`, `docs/MASTER_PLAN.md` | RFC that translates the external research into repo-native decisions: validation owns legality, AI is draft-only, browser secrets are forbidden, loaders remain canonical, and shared abstractions need real consumers | `npm run check:doc-drift`, `npm run check:repo-hygiene`; no runtime code changes |
-| 1A. Validation Registry | New core contract | `src/registry/types.ts`, `src/registry/index.ts`, system definitions | Per-system validation entry point parallel to `SystemEngine`: document plus context in, structured issues out | Unit tests prove systems can opt in without changing persistence or sync schema |
-| 1B. D&D 5e Validation Depth | First large rules pass | `src/systems/dnd5e/`, `src/systems/dnd5e-2024/`, `src/systems/dnd5e/shared/`, 5e loaders/templates | 2014/2024 validators for ids, level bounds, class/subclass availability, point-buy or standard-array choices, spell references, prepared limits, feat choices, and open-content source compliance | Valid and invalid 5e fixtures; import/export preserves documents; validators warn/annotate rather than globally blocking edits |
-| 2A. Contribution Ledger Contract | New derived explanation primitive | system engines, sheet state builders, shared tooltip/breakdown UI | Non-persisted ledger entry shape for derived contributions: id, system, target, source, label, operation, value, category, and manual boundary | Tests prove ledgers do not alter stored document shape and can be generated from prepared documents |
-| 2B. Ledger Consumers | Cross-system proof before any abstraction grows | 5e shared engine/templates, `src/systems/daggerheart/`, `src/systems/mam3e/powerMath.ts` | Breakdowns for 5e AC/proficiencies/spell grants, Daggerheart passive bonuses, and M&M power modifier cost math | Computed totals equal existing engine outputs; each ledger row identifies its source and whether manual interpretation remains |
-| 3. D&D 5e Activity Pilot | System-local action execution, not a universal bus | 5e feature-option and feat surfaces, 5e document update handlers | Local activity/action definitions for selected 2014 feature options or feat riders that currently only mirror text into `features`; definitions include inputs, eligibility, costs, outputs, and manual-boundary copy | Selection persistence still works; existing feature-option tests pass; atomic updates use current handlers; unsupported downstream automation is visibly manual |
-| 4A. Wizard Architecture | New UX and draft state | character creation entry points, local storage layer, template handlers | Deterministic guided-creation shell with resumable local drafts, step state, validation display, and final `CharacterDocument` output | Draft resume tests, reset/cancel tests, no Supabase dependency, no new remote schema |
-| 4B. D&D 5e 2024 Wizard Path | First user-visible guided creator | 5e 2024 loaders/templates, ability/spell/equipment surfaces where supported | Non-AI wizard for system selection, class, species, background, choices, ability planning, spells, and equipment where current data supports it | Template application tests, validation failure display, import/export roundtrip, existing 5e engine/template regressions |
-| 4C. D&D 5e 2014 Reuse | Compatibility pass, not a fork unless necessary | 5e 2014 loaders/templates and shared 5e wizard components | Reuse the 2024 wizard flow where the validation surface stays compatible; isolate only edition-specific steps | 2014 fixture coverage for class/species/background/feat/feature-option paths; no regression to 2024 flow |
-| 5. Optional AI Draft Adapter | Optional spike after deterministic wizard works | Netlify Functions, loader-derived candidate pools, validation registry | RFC and spike for one shared-provider path. Client sends prompt plus candidate pools; server returns structured draft; client validates and applies templates. Native provider JSON Schema is the default first path | Missing API key leaves deterministic wizard fully functional; recorded fixtures cover CI; max 2 repair attempts with machine-readable `ValidationIssue[]`; session cost caps |
-| 6. Deferred Homebrew/Fusion | Explicitly blocked until foundations exist | validators, ledger, open-content policy, homebrew UX | Research plan for hybrid species/homebrew only after validation, provenance, name-policy, and homebrew/not-RAW UX are real | No generated homebrew mutates shipped SRD data; no balancing point system lands without a separate acceptance plan |
+The workstream table below is the live restatement of this track (2026-07-21).
+Workstreams are named by **capability, never by system**; where per-system work
+remains, the deliverable enumerates the owing systems explicitly so no system
+can silently wait behind another. Statuses were verified against code, not
+carried forward from prose.
 
-- `Active implementation track`: Phase 1 is the first real code gate. Until the validation registry exists, AI repair has no machine-readable error loop, and import warnings cannot distinguish malformed data from merely manual data.
-- `Active implementation track`: Phase 2 is the second real code gate. Until the ledger exists, the app cannot explain why a value changed and cannot safely promote one-off activity outputs into shared derived behavior.
+| Workstream | Status (2026-07-21) | Remaining deliverable | Acceptance |
+| --- | --- | --- | --- |
+| W1. Validation registry (core contract) | **Shipped** | — (`SystemRegistry.validateDocument` takes document plus context, returns structured issues) | Covered by `src/__tests__/registryValidation.test.ts`; systems opt in without changing persistence or sync schema |
+| W2. Per-system validators, all 7 | **2 of 7** (the shared validator in `src/systems/dnd5e/shared/validation.ts` covers both 5e editions) | Registered validators for the 5 owing systems — D&D 3.5e, PF1e, PF2e, M&M 3e, Daggerheart — covering ids, level bounds, class/option availability, choice legality, spell references, prepared limits, and open-content source compliance as each system's own RAW defines them; each system lands as its own increment, none waits on another | Valid and invalid fixtures per system; validators warn/annotate rather than globally blocking edits; import/export preserves documents |
+| W3. Contribution-ledger contract | **Shipped** | — (non-persisted entry shape in `src/types/core/contributionLedger.ts`; resolver projection via `toContributionLedger`) | Existing ledger tests; ledgers never alter stored document shape |
+| W4. Ledger completion, all 7 | **4 of 7** re-backed (5e ×2 via the shared builder, 3.5e + PF1e via the d20-legacy builder) | A PF2e ledger builder (none exists), and the M&M 3e and Daggerheart builders re-backed onto the resolver instead of hand-building entries | Computed totals equal existing engine outputs; each row names its source and whether manual interpretation remains; existing ledger tests pass unchanged |
+| W5. Conditions through the resolver fold, all 7 | **0 of 7** (catalogs in `src/rules/conditions/` shipped and consumed by every engine as helper reads) | Compile condition effects into the shared resolver path so ledgers and stacking see them, per system, retiring or re-backing the helper reads | Outputs identical to today's helper math; condition contributions appear as ledger rows naming the condition |
+| W6. Executable activities | **Pilot shipped in one system** (5e-local by prior decision); shared contract open | Graduate to a shared input/eligibility/cost/output contract once at least 3 systems need the same shape; Daggerheart triggered/manual cards are the named next consumer | The 3-consumer extraction rule; selection persistence and existing feature-option tests unchanged; unsupported downstream automation visibly manual |
+| W7. Guided-creation shell | **Open** | Deterministic, system-agnostic wizard shell with resumable local drafts, step state, validation display, and final `CharacterDocument` output through existing template applicators; it renders whatever choices a system's loaders and validators expose, so W2 is its prerequisite, not any one system | Behaves identically for every system with a registered validator; draft resume/reset/cancel tests; no Supabase dependency; import/export roundtrip |
+| W8. AI draft adapter | **Gateway shipped**; blocked on W2 (all 7) plus the resolver legal-actions seam | Structured draft-in/validate/apply loop per RFC 002 over loader-derived candidate pools, for every system with a validator | Missing API key leaves deterministic creation fully functional; recorded fixtures cover CI; max 2 repair attempts with machine-readable `ValidationIssue[]`; session cost caps |
+| W9. Homebrew/fusion | **Blocked** until foundations exist | Research plan only after validation, provenance, name-policy, and homebrew/not-RAW UX are real | No generated homebrew mutates shipped SRD data; no balancing point system lands without a separate acceptance plan |
+
+- `Active implementation track`: W2 is the first real code gate. Until every system has a validator, AI repair has no machine-readable error loop for that system, import warnings cannot distinguish malformed data from merely manual data, and the guided-creation shell (W7) would launch privileging whichever systems happen to have validators — which is how the 5e bias entered last time.
+- `Active implementation track`: W4 and W5 are the second real code gate. Until the ledger and condition fold-through are complete for a system, the app cannot explain why that system's values changed and cannot safely promote one-off activity outputs into shared derived behavior.
 - `Active implementation track`: the contribution-ledger primitive and a deterministic effect resolver are two views of one shape — explaining a value versus producing it. `docs/rfc/003-rules-ir-and-effects.md` (Accepted) unifies them into a system-independent, system-agnostic rules intermediate representation. It is the connective tissue under this track's ledger work and the scene runtime's resolution and functional-terrain phases. The anti-overengineering "at least three named consumers before extraction" rule is satisfied immediately and overwhelmingly: seven per-system effect compilers feed one shared resolver. It is a connective-layer specification, not a new track.
-- `Active implementation track`: Phase 3 deliberately stays D&D 5e-local. The goal is to learn what executable feature/action definitions need in this repo before extracting a shared contract. Graduation requires Daggerheart triggered/manual cards and one additional system to need the same input/eligibility/cost/output shape.
-- `Active implementation track`: Phase 4 is optional and subordinate to the automation foundations. AI can speed up drafting only after validation, candidate-pool construction, and template application are already working without it.
-- `Active implementation track`: the critical path is Phase 0 -> Phase 1A -> Phase 1B -> Phase 3. Phase 2 can begin after Phase 1A, Phase 3 should wait for at least the first 5e validator and ledger shape, and Phase 4 must wait for working validation and ledger infrastructure.
+- `Active implementation track`: the W6 activity pilot was deliberately kept system-local to learn what executable feature/action definitions need in this repo before extracting a shared contract — a legitimate pilot, not a privileged path. Graduation requires at least 3 systems to need the same input/eligibility/cost/output shape; Daggerheart triggered/manual cards plus one more system are the named candidates, and the extracted contract must be proven against a non-d20 system before it is called shared.
+- `Active implementation track`: W8 (AI drafting) is optional and subordinate to the automation foundations. AI can speed up drafting only after validation, candidate-pool construction, and template application are already working without it — for every system, so AI assistance never becomes a capability some systems have and others lack.
+- `Active implementation track`: the critical path is W2 (validators, all 7) -> W4/W5 (ledger and condition fold-through, all 7) -> W7 (guided-creation shell). W4/W5 may begin per system as soon as that system's validator lands; W6 graduates on the 3-consumer rule independently; W8 waits for W2 to complete across all seven. Within every workstream, per-system increments are ordered by convenience or dependency, never by system preference — finishing the five owing validators before deepening the two shipped ones is the standing default.
 - `Active implementation track`: final verification for each implementation phase includes targeted Vitest suites plus the relevant existing engine/template/browser regressions. Before merging a phase, run `npm run verify` under a supported Node runtime unless the phase is explicitly docs-only.
 
 Research anchors for this track: SRD 5.2.1 and CC-BY status at https://www.dndbeyond.com/srd/; OpenAI Structured Outputs at https://platform.openai.com/docs/guides/structured-outputs; Gemini structured output and validation guidance at https://ai.google.dev/gemini-api/docs/structured-output; Anthropic JSON-schema tool use at https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/implement-tool-use; BAML generated client behavior at https://docs.boundaryml.com/guide/introduction/baml_client; vLLM/XGrammar structured output at https://docs.vllm.ai/usage/structured_outputs.html; RJSF form/widget behavior at https://rjsf-team.github.io/react-jsonschema-form/docs/.
@@ -371,10 +420,11 @@ Research anchors for this track: Vercel AI SDK provider abstraction and telemetr
 When roadmap content changes:
 
 1. Update `docs/MASTER_PLAN.md` first.
-2. Keep `docs/STATUS.md` as a concise current-state summary only.
-3. Update `README.md` only if the public product overview changes.
-4. If support notes or reachable categories changed, update the support-note copy and the selector/dashboard summary expectations together with the roadmap text.
-5. Run `npm run roadmap:metrics` if count-bearing docs or reporting assumptions changed.
-6. Run `npm run check:generated-docs`.
-7. Run `npm run check:repo-hygiene`.
-8. Run `npm run check:doc-drift`.
+2. Check new or edited roadmap text against the `All-seven-equal phrasing` constraint: no system name as the subject of a deliverable line, tallies use denominator 7, asymmetric progress recorded as per-system debt (done/owed/owed-by).
+3. Keep `docs/STATUS.md` as a concise current-state summary only.
+4. Update `README.md` only if the public product overview changes.
+5. If support notes or reachable categories changed, update the support-note copy and the selector/dashboard summary expectations together with the roadmap text.
+6. Run `npm run roadmap:metrics` if count-bearing docs or reporting assumptions changed.
+7. Run `npm run check:generated-docs`.
+8. Run `npm run check:repo-hygiene`.
+9. Run `npm run check:doc-drift`.
