@@ -85,8 +85,7 @@ export function MapPanel({
         {registration && (
           <>
             <p className="text-xs text-muted-foreground">
-              Align the grid: image-pixel offset of the top-left corner, and image pixels per
-              cell.
+              Align the grid: image-pixel offset of the top-left corner, and image pixels per cell.
             </p>
             <div className="grid grid-cols-3 gap-2">
               <label className="space-y-1 text-xs text-muted-foreground">

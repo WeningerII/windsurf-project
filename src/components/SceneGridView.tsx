@@ -1,6 +1,7 @@
 import { memo, useMemo, useState } from 'react';
-import type { CSSProperties, KeyboardEvent } from 'react';
+import type { KeyboardEvent } from 'react';
 import { cn } from '@/lib/utils';
+import { mapImageLayerStyle } from './scene/mapImageLayer';
 import type {
   SceneAllegiance,
   SceneCoordinate,
@@ -189,28 +190,6 @@ export const SceneGridView = memo(function SceneGridView({
 });
 
 /**
- * Percentage-based placement of the map image inside the grid container, from
- * the image's natural pixel size and its manual registration. Pure and
- * unit-tested: with square cells the container is `grid.width` cells wide and
- * `grid.height` cells tall, so an image spanning `natural / cellSizePx` cells
- * maps to percentages independent of the responsive rendered cell size.
- */
-export function mapImageLayerStyle(
-  natural: { width: number; height: number },
-  registration: SceneGridRegistration,
-  grid: { width: number; height: number }
-): CSSProperties {
-  const cell = registration.cellSizePx > 0 ? registration.cellSizePx : 1;
-  return {
-    left: `${(-registration.offsetX / cell / grid.width) * 100}%`,
-    top: `${(-registration.offsetY / cell / grid.height) * 100}%`,
-    width: `${(natural.width / cell / grid.width) * 100}%`,
-    height: `${(natural.height / cell / grid.height) * 100}%`,
-    maxWidth: 'none',
-  };
-}
-
-/**
  * The map backdrop. Natural size is read from the decoded image itself (the
  * asset stores only hash/mime/dataUrl), so the layer stays hidden until the
  * browser reports real dimensions.
@@ -239,9 +218,7 @@ function SceneMapImageLayer({
       }
       className="pointer-events-none absolute select-none"
       style={
-        ready
-          ? mapImageLayerStyle(natural, mapImage.registration, grid)
-          : { visibility: 'hidden' }
+        ready ? mapImageLayerStyle(natural, mapImage.registration, grid) : { visibility: 'hidden' }
       }
     />
   );
