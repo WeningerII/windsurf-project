@@ -14,8 +14,12 @@ export interface GatewayHttpResult {
   body: AiResponse;
 }
 
-/** Outcome of the injected request authorizer (verdict only; no throw). */
-export type GatewayAuthVerdict = { ok: true } | { ok: false; message: string };
+/**
+ * Outcome of the injected request authorizer (verdict only; no throw). On
+ * success it may carry the authenticated `subject` (the JWT `sub` claim), which
+ * becomes the session-budget key — a stable per-user identity beats a client ip.
+ */
+export type GatewayAuthVerdict = { ok: true; subject?: string } | { ok: false; message: string };
 
 /**
  * The auth seam. The Netlify entry injects a closure over the request's
@@ -44,10 +48,16 @@ export async function processGatewayHttp(
 
   // Auth runs before any body handling: an unauthenticated caller learns
   // nothing about payload validation, and we do no parsing work for them.
+  // A verified subject (JWT `sub`) upgrades the session-budget key from the
+  // caller-supplied default (typically a client ip) to a per-user identity.
+  let effectiveCtx = ctx;
   if (authorize) {
     const verdict = authorize();
     if (!verdict.ok) {
       return { status: 401, body: aiFailure('unauthorized', verdict.message) };
+    }
+    if (verdict.subject) {
+      effectiveCtx = { ...ctx, sessionKey: verdict.subject };
     }
   }
 
@@ -65,7 +75,7 @@ export async function processGatewayHttp(
     return { status: 400, body: aiFailure('invalid-request', 'Request body must be valid JSON.') };
   }
 
-  const response = await handleAiRequest(parsed, ctx);
+  const response = await handleAiRequest(parsed, effectiveCtx);
   return { status: statusForResponse(response), body: response };
 }
 
@@ -78,6 +88,7 @@ function statusForResponse(response: AiResponse): number {
     case 'unauthorized':
       return 401;
     case 'over-budget':
+    case 'budget-exceeded':
       return 429;
     case 'provider-not-configured':
       return 503;

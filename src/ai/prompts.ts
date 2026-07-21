@@ -14,6 +14,26 @@ import type {
   SceneNarrationPayload,
 } from './contracts';
 
+/**
+ * Prompt-template versions (Phase 14 observability). Every task's template
+ * carries an explicit version that the gateway stamps into the structured log
+ * record and the response metadata (`usage.promptVersion`), so a trace always
+ * says WHICH template produced an output. Bump the version whenever the
+ * corresponding builder's wording changes — the template-fingerprint test in
+ * `src/__tests__/ai/prompts.test.ts` fails if a template changes without a bump.
+ */
+export const AI_PROMPT_VERSIONS = {
+  'encounter-draft': 'encounter-draft.v1',
+  'scene-narration': 'scene-narration.v1',
+  'identify-creature': 'identify-creature.v1',
+  'illustrate-scene': 'illustrate-scene.v1',
+} as const satisfies Record<AiTask, string>;
+
+/** The template version for a task (total over the allowlist by construction). */
+export function promptVersionForTask(task: AiTask): string {
+  return AI_PROMPT_VERSIONS[task];
+}
+
 /** Compact one-per-line roster of candidate ids the model must choose among. */
 function formatCandidateRoster(candidates: EncounterDraftCandidate[]): string {
   return candidates

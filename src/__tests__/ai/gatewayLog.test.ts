@@ -55,6 +55,40 @@ describe('buildGatewayLogRecord', () => {
     });
     expect(record).not.toHaveProperty('task');
   });
+
+  it('stamps promptVersion and the latency budget, flagging exceedance both ways', () => {
+    const response = aiFailure('timeout', 'slow', 'scene-narration');
+    const within = buildGatewayLogRecord({
+      response,
+      traceId: 't4',
+      latencyMs: 10,
+      promptVersion: 'scene-narration.v1',
+      latencyBudgetMs: 10,
+    });
+    expect(within).toMatchObject({
+      promptVersion: 'scene-narration.v1',
+      latencyBudgetMs: 10,
+      latencyBudgetExceeded: false, // at the budget is within it
+    });
+    const over = buildGatewayLogRecord({
+      response,
+      traceId: 't5',
+      latencyMs: 11,
+      latencyBudgetMs: 10,
+    });
+    expect(over).toMatchObject({ latencyBudgetMs: 10, latencyBudgetExceeded: true });
+  });
+
+  it('omits promptVersion and latency-budget fields when they are not supplied', () => {
+    const record = buildGatewayLogRecord({
+      response: aiFailure('invalid-request', 'bad'),
+      traceId: 't6',
+      latencyMs: 1,
+    });
+    expect(record).not.toHaveProperty('promptVersion');
+    expect(record).not.toHaveProperty('latencyBudgetMs');
+    expect(record).not.toHaveProperty('latencyBudgetExceeded');
+  });
 });
 
 describe('newTraceId', () => {
