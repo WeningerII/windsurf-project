@@ -30,6 +30,7 @@ import {
   loadEquipmentForSystem,
   loadMonstersForSystem,
   loadBackgroundsForSystem,
+  loadPf2eBackgroundsForSystem,
   loadAdvantagesForSystem,
   loadDaggerheartDomainCardsForSystem,
   loadDaggerheartDomainsForSystem,
@@ -447,6 +448,83 @@ TARGETS.push({
   loader: () => loaderNames(loadMonstersForSystem, 'pf2e'),
 });
 
+// --- Pathfinder 2e non-spell/non-monster categories (Core Rulebook scope) ---
+// Same Pf2eTools source family as the spell/monster denominators. The repo
+// policy scopes PF2e to the Core Rulebook, so every denominator here is CRB-only:
+// feats/backgrounds/items ship a single `*-crb.json` (all source "CRB"), while
+// classes and ancestries are per-entity directories whose files span many books,
+// so those are filtered to `source === "CRB"`. Archetypes are deliberately NOT
+// wired (see the closed-by-no-source note below).
+const PF2E_DATA = 'https://raw.githubusercontent.com/Pf2eToolsOrg/Pf2eTools/master/data';
+type SourcedEntry = { name?: unknown; source?: unknown };
+/**
+ * CRB-scoped names from a Pf2eTools per-entity DIRECTORY: read `index.json`
+ * (name → file), fetch each distinct file, and keep only `prop` entries tagged
+ * `source: "CRB"`. Used for classes/ancestries, which have no single CRB file.
+ */
+async function fetchPf2eCrbNamesFromDir(dir: string, prop: string): Promise<string[]> {
+  const index = JSON.parse(await fetchText(`${PF2E_DATA}/${dir}/index.json`)) as Record<
+    string,
+    string
+  >;
+  const names: string[] = [];
+  for (const file of [...new Set(Object.values(index))]) {
+    const data = JSON.parse(await fetchText(`${PF2E_DATA}/${dir}/${file}`)) as Record<
+      string,
+      SourcedEntry[]
+    >;
+    for (const e of data[prop] ?? []) {
+      if (e.source === 'CRB' && typeof e.name === 'string') names.push(e.name);
+    }
+  }
+  return names;
+}
+TARGETS.push({
+  systemId: 'pf2e',
+  systemLabel: 'Pathfinder 2e',
+  category: 'classes',
+  srdSource: 'Core Rulebook (Pf2eToolsOrg/Pf2eTools class/*, source="CRB")',
+  srd: () => fetchPf2eCrbNamesFromDir('class', 'class'),
+  loader: () => loaderNames(loadClassesForSystem, 'pf2e'),
+});
+TARGETS.push({
+  systemId: 'pf2e',
+  systemLabel: 'Pathfinder 2e',
+  category: 'ancestries',
+  srdSource: 'Core Rulebook (Pf2eToolsOrg/Pf2eTools ancestries/*, source="CRB")',
+  srd: () => fetchPf2eCrbNamesFromDir('ancestries', 'ancestry'),
+  loader: () => loaderNames(loadSpeciesForSystem, 'pf2e'),
+});
+TARGETS.push({
+  systemId: 'pf2e',
+  systemLabel: 'Pathfinder 2e',
+  category: 'backgrounds',
+  srdSource: 'Core Rulebook (Pf2eToolsOrg/Pf2eTools backgrounds-crb.json)',
+  srd: () => fetchJsonPropNames(`${PF2E_DATA}/backgrounds/backgrounds-crb.json`, 'background'),
+  loader: () => loaderNames(loadPf2eBackgroundsForSystem, 'pf2e'),
+});
+TARGETS.push({
+  systemId: 'pf2e',
+  systemLabel: 'Pathfinder 2e',
+  category: 'feats',
+  srdSource: 'Core Rulebook (Pf2eToolsOrg/Pf2eTools feats-crb.json)',
+  srd: () => fetchJsonPropNames(`${PF2E_DATA}/feats/feats-crb.json`, 'feat'),
+  loader: () => loaderNames(loadFeatsForSystem, 'pf2e'),
+});
+TARGETS.push({
+  systemId: 'pf2e',
+  systemLabel: 'Pathfinder 2e',
+  category: 'equipment',
+  srdSource: 'Core Rulebook (Pf2eToolsOrg/Pf2eTools items-crb.json)',
+  srd: () => fetchJsonPropNames(`${PF2E_DATA}/items/items-crb.json`, 'item'),
+  loader: () => loaderNames(loadEquipmentForSystem, 'pf2e'),
+});
+// PF2e archetypes are CLOSED-BY-NO-SOURCE (close-by-recorded-decision): archetypes
+// are an Advanced Player's Guide-era system with NO Core Rulebook entries (the
+// Pf2eTools archetypes.json carries only post-CRB sources), and the repo policy
+// scopes PF2e to the Core Rulebook. A CRB-scoped archetype denominator would be
+// empty, so no target is wired rather than fabricating one. See docs/srd-sources.md.
+
 // --- D&D 3.5e (SRD 3.5 core — olimot/srd-v3.5-md, clean core-only Markdown) ---
 // Spell names are the `## Name` headers across the nine alphabetical spell
 // files. This is the genuinely core-only denominator docs/srd-sources.md
@@ -758,7 +836,7 @@ async function main(): Promise<void> {
     '- **D&D 3.5e** spells, monsters, classes, and feats are measured against the clean core-only `olimot/srd-v3.5-md` chapters. The monster denominator counts INDIVIDUAL stat blocks: `collapse35eMonsterHeadings` (`src/scripts/srdCoverageShape.ts`) drops the SRD\'s taxonomic category headers (e.g. "Angel", "Dragon", "Elemental") that merely nest separately-named members and folds age/size variant rows to their archetype. **3.5e equipment is closed-by-no-source**: the olimot `equipment.md` tables interleave services/lodging/food/mounts/transport outside the loader\'s weapons/armor/shields/gear scope, so a scrape would poison the denominator (D35E packs remain rejected for psionics/epic). See `docs/srd-sources.md`.'
   );
   lines.push(
-    '- **Remaining categories** — PF2e non-spell/non-monster categories, PF1e classes/feats, M&M skills/conditions, and Daggerheart classes/ancestries/communities/weapons/armor/adversaries are documented in `docs/srd-sources.md` and pending wiring. M&M equipment is wired and measured above.'
+    '- **Remaining categories** — PF2e classes/ancestries/backgrounds/feats/equipment are wired above (Core Rulebook scope; **archetypes closed-by-no-source** — an APG-era system with no CRB entries). PF1e classes/feats, M&M skills/conditions, and Daggerheart classes/ancestries/communities/weapons/armor/adversaries are documented in `docs/srd-sources.md` and pending wiring. M&M equipment is wired and measured above.'
   );
   lines.push('');
 
