@@ -83,7 +83,10 @@ export function verifySupabaseJwt(
     return fail('Invalid access token.');
   }
 
-  return { ok: true };
+  // Surface the verified subject (Supabase user id) so the gateway can key the
+  // per-session cost budget on a stable identity instead of a client ip.
+  const sub = payload.sub;
+  return { ok: true, ...(typeof sub === 'string' && sub ? { subject: sub } : {}) };
 }
 
 /**
