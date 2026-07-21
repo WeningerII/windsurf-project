@@ -140,9 +140,9 @@ The following older backlog claims are no longer true and must not re-enter the 
 ### Rule Truth, Provenance, And Activities
 
 > **Direction update (2026-05-31): system-agnostic, all-seven-equal sequencing.**
-> The phase table further down in this section was originally written
-> D&D-5e-first (a "5e validation depth" pass and a "5e activity pilot"). That
-> sequencing is **superseded**.
+> An earlier draft of this track's sequencing was written D&D-5e-first (a "5e
+> validation depth" pass, then a "5e activity pilot"); that sequencing is
+> **superseded** and has been removed.
 > Under the locked-in direction, all seven systems are equal and the foundation
 > is the shared rules IR + effect resolver in `docs/rfc/003-rules-ir-and-effects.md`
 > (Accepted). The corrected critical path is:
@@ -168,9 +168,7 @@ The following older backlog claims are no longer true and must not re-enter the 
 >    legal actions; validators for all seven systems; server-side draft gateway
 >    with fixtures and a no-keys fallback).
 >
-> The 5e-named rows in the legacy table below are retained as historical context
-> and should be read as "first test fixture," not "privileged path." The
-> anti-overengineering "three named consumers before extraction" rule is
+> The anti-overengineering "three named consumers before extraction" rule is
 > satisfied immediately and overwhelmingly: seven effect compilers feed one
 > resolver.
 >
@@ -223,23 +221,9 @@ The following older backlog claims are no longer true and must not re-enter the 
 - `Active implementation track`: this is the main research-informed build program. It should be treated as a large product and architecture effort, not a small enhancement. The work touches `src/registry/types.ts`, `src/registry/index.ts`, `src/types/core/document.ts`, system engines, template handlers, loader-backed data, import/export behavior, local draft persistence, and visible sheet UX.
 - `Active implementation track`: keep the current repo stack while building the missing primitives. React/Vite/npm, the system registry, per-system engines, loader-backed SRD data, browser-local persistence, optional Supabase sync, and Netlify remain the implementation frame. External research informs the shape of validation, structured draft output, and form/action modeling, but does not authorize a stack replacement.
 - `Active implementation track`: AI expansion enters through the control-plane contract in `docs/rfc/002-ai-control-plane.md`. That RFC defines AI as a server-side, task-scoped drafting/orchestration layer over existing automation: candidate pools come from loaders, validation owns legality, accepted drafts use normal template/document handlers, and missing provider keys leave deterministic creation fully functional.
-- `Active implementation track`: implementation must be incremental and testable. Each phase below should land behind repo-native tests before the next phase depends on it. README and STATUS updates wait until user-visible capability ships; `docs/MASTER_PLAN.md` remains the planning source during the build.
-
-| Phase | Workload signal | Primary surfaces | Deliverable | Acceptance |
-| --- | --- | --- | --- | --- |
-| 0. Constraints/RFC Intake | Required first step, docs-only but decision-heavy | `docs/rfc/`, `docs/MASTER_PLAN.md` | RFC that translates the external research into repo-native decisions: validation owns legality, AI is draft-only, browser secrets are forbidden, loaders remain canonical, and shared abstractions need real consumers | `npm run check:doc-drift`, `npm run check:repo-hygiene`; no runtime code changes |
-| 1A. Validation Registry | New core contract | `src/registry/types.ts`, `src/registry/index.ts`, system definitions | Per-system validation entry point parallel to `SystemEngine`: document plus context in, structured issues out | Unit tests prove systems can opt in without changing persistence or sync schema |
-| 1B. D&D 5e Validation Depth | First large rules pass | `src/systems/dnd5e/`, `src/systems/dnd5e-2024/`, `src/systems/dnd5e/shared/`, 5e loaders/templates | 2014/2024 validators for ids, level bounds, class/subclass availability, point-buy or standard-array choices, spell references, prepared limits, feat choices, and open-content source compliance | Valid and invalid 5e fixtures; import/export preserves documents; validators warn/annotate rather than globally blocking edits |
-| 2A. Contribution Ledger Contract | New derived explanation primitive | system engines, sheet state builders, shared tooltip/breakdown UI | Non-persisted ledger entry shape for derived contributions: id, system, target, source, label, operation, value, category, and manual boundary | Tests prove ledgers do not alter stored document shape and can be generated from prepared documents |
-| 2B. Ledger Consumers | Cross-system proof before any abstraction grows | 5e shared engine/templates, `src/systems/daggerheart/`, `src/systems/mam3e/powerMath.ts` | Breakdowns for 5e AC/proficiencies/spell grants, Daggerheart passive bonuses, and M&M power modifier cost math | Computed totals equal existing engine outputs; each ledger row identifies its source and whether manual interpretation remains |
-| 3. D&D 5e Activity Pilot | System-local action execution, not a universal bus | 5e feature-option and feat surfaces, 5e document update handlers | Local activity/action definitions for selected 2014 feature options or feat riders that currently only mirror text into `features`; definitions include inputs, eligibility, costs, outputs, and manual-boundary copy | Selection persistence still works; existing feature-option tests pass; atomic updates use current handlers; unsupported downstream automation is visibly manual |
-| 4. Deferred Homebrew/Fusion | Explicitly blocked until foundations exist | validators, ledger, open-content policy, homebrew UX | Research plan for hybrid species/homebrew only after validation, provenance, name-policy, and homebrew/not-RAW UX are real | No generated homebrew mutates shipped SRD data; no balancing point system lands without a separate acceptance plan |
-
-- `Active implementation track`: Phase 1 is the first real code gate. Until the validation registry exists, AI repair has no machine-readable error loop, and import warnings cannot distinguish malformed data from merely manual data.
-- `Active implementation track`: Phase 2 is the second real code gate. Until the ledger exists, the app cannot explain why a value changed and cannot safely promote one-off activity outputs into shared derived behavior.
+- `Active implementation track`: implementation must be incremental and testable. Each phase (the system-agnostic IR phases above) should land behind repo-native tests before the next phase depends on it. README and STATUS updates wait until user-visible capability ships; `docs/MASTER_PLAN.md` remains the planning source during the build.
+- `Active implementation track`: the standing supporting work under this track — built for all seven systems, privileging none — is a per-system validation entry point (a `SystemValidator` parallel to `SystemEngine`: document + context in, structured issues out, opt-in without changing persistence, in `src/registry/types.ts` / `src/registry/index.ts`), and executable activity/action definitions for the feature/feat riders that today only mirror text (inputs, eligibility, costs, outputs, and manual-boundary copy), learned in-repo before extracting a shared contract — graduation requires more than one system needing the same shape. Hybrid species / homebrew fusion stays deferred (see Accepted Product Boundaries), gated on those foundations.
 - `Active implementation track`: the contribution-ledger primitive and a deterministic effect resolver are two views of one shape — explaining a value versus producing it. `docs/rfc/003-rules-ir-and-effects.md` (Accepted) unifies them into a system-independent, system-agnostic rules intermediate representation. It is the connective tissue under this track's ledger work and the scene runtime's resolution and functional-terrain phases. The anti-overengineering "at least three named consumers before extraction" rule is satisfied immediately and overwhelmingly: seven per-system effect compilers feed one shared resolver. It is a connective-layer specification, not a new track.
-- `Active implementation track`: Phase 3 deliberately stays D&D 5e-local. The goal is to learn what executable feature/action definitions need in this repo before extracting a shared contract. Graduation requires Daggerheart triggered/manual cards and one additional system to need the same input/eligibility/cost/output shape.
-- `Active implementation track`: the critical path is Phase 0 -> Phase 1A -> Phase 1B -> Phase 3. Phase 2 can begin after Phase 1A, and Phase 3 should wait for at least the first 5e validator and ledger shape.
 - `Active implementation track`: final verification for each implementation phase includes targeted Vitest suites plus the relevant existing engine/template/browser regressions. Before merging a phase, run `npm run verify` under a supported Node runtime unless the phase is explicitly docs-only.
 
 Research anchors for this track: SRD 5.2.1 and CC-BY status at https://www.dndbeyond.com/srd/; OpenAI Structured Outputs at https://platform.openai.com/docs/guides/structured-outputs; Gemini structured output and validation guidance at https://ai.google.dev/gemini-api/docs/structured-output; Anthropic JSON-schema tool use at https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/implement-tool-use; BAML generated client behavior at https://docs.boundaryml.com/guide/introduction/baml_client; vLLM/XGrammar structured output at https://docs.vllm.ai/usage/structured_outputs.html; RJSF form/widget behavior at https://rjsf-team.github.io/react-jsonschema-form/docs/.
