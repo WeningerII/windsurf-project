@@ -246,6 +246,23 @@ type CoverageTarget = {
 
 const TARGETS: CoverageTarget[] = [];
 
+/**
+ * Categories deliberately NOT rendered as a measured coverage row because a
+ * percentage would be poisoned or fabricated — typically because the product
+ * ships no loader/data for the category, so the diff would be a misleading 0/N.
+ * Listed as explicit honest gap markers so the omission is transparent rather
+ * than silent (honest absence beats a poisoned denominator).
+ */
+type AbsentCategory = { systemLabel: string; category: string; reason: string };
+const ABSENT: AbsentCategory[] = [
+  {
+    systemLabel: 'Mutants & Masterminds 3e',
+    category: 'conditions',
+    reason:
+      'The frnprt CONDITIONS list is an available SRD source, but the product ships no conditions catalog to diff against — src/data/mutants-and-masterminds/3e/conditions holds only a README, and M&M conditions live in the rules IR (src/rules/conditions/mam3eConditions.ts damage track), not a browsable data set. A 0/N catalog measure would misrepresent that as total absence, so this is an honest gap marker pending a conditions data module.',
+  },
+];
+
 // --- D&D 5e 2014 (SRD 5.1) ---
 const en2014 = `${RAW5E}/2014/en`;
 const cats5e2014: Array<[string, () => Promise<string[]>, () => Promise<string[]>]> = [
@@ -719,6 +736,27 @@ TARGETS.push({
   srd: () => fetchJsArrayNames(MM_DATA_JS, 'EQUIPMENT'),
   loader: () => loaderNames(loadEquipmentForSystem, 'mam3e'),
 });
+// M&M skills: the frnprt SKILLS list vs the shipped skills data set
+// (`src/data/mutants-and-masterminds/3e/skills` exports `skills`). There is no
+// `loadSkillsForSystem` in the runtime loader surface, so this target imports the
+// data module directly (as the PF1e manifest / Daggerheart adversary targets do
+// for their sources) — the measurement doesn't need a UI loader to exist.
+TARGETS.push({
+  systemId: 'mam3e',
+  systemLabel: 'Mutants & Masterminds 3e',
+  category: 'skills',
+  srdSource: "Hero's Handbook (frnprt/mm3e-character-creator SKILLS)",
+  srd: () => fetchJsArrayNames(MM_DATA_JS, 'SKILLS'),
+  loader: async () => {
+    const mod = await import('../data/mutants-and-masterminds/3e/skills');
+    return (mod.skills as Array<{ name?: unknown }>)
+      .filter((s) => typeof s.name === 'string')
+      .map((s) => s.name as string);
+  },
+});
+// M&M conditions are recorded as an ABSENT gap marker (see ABSENT below): the
+// frnprt CONDITIONS source exists, but the product ships no conditions catalog to
+// diff it against, so a measured row would be a poisoned 0/N.
 
 // --- Daggerheart (SRD 1.0 — whole SRD in scope) ---
 const DH_DOMAIN_REF =
@@ -843,12 +881,26 @@ async function main(): Promise<void> {
     );
   }
   lines.push('');
+  if (ABSENT.length > 0) {
+    lines.push('## Absent categories (honest gap markers — no measurable coverage row)');
+    lines.push('');
+    lines.push(
+      '_Not rendered as a coverage row because a measured percentage would be poisoned or fabricated (e.g. the product ships no loader/data for the category, so the diff would be a misleading 0/N). Listed explicitly so the omission is transparent, not silent._'
+    );
+    lines.push('');
+    lines.push('| System | Category | Status | Reason |');
+    lines.push('| --- | --- | --- | --- |');
+    for (const a of ABSENT) {
+      lines.push(`| ${a.systemLabel} | ${a.category} | absent | ${a.reason} |`);
+    }
+    lines.push('');
+  }
   lines.push('## Pending (independent source not yet wired or not cleanly scopable)');
   lines.push(
     '- **D&D 3.5e** spells, monsters, classes, and feats are measured against the clean core-only `olimot/srd-v3.5-md` chapters. The monster denominator counts INDIVIDUAL stat blocks: `collapse35eMonsterHeadings` (`src/scripts/srdCoverageShape.ts`) drops the SRD\'s taxonomic category headers (e.g. "Angel", "Dragon", "Elemental") that merely nest separately-named members and folds age/size variant rows to their archetype. **3.5e equipment is closed-by-no-source**: the olimot `equipment.md` tables interleave services/lodging/food/mounts/transport outside the loader\'s weapons/armor/shields/gear scope, so a scrape would poison the denominator (D35E packs remain rejected for psionics/epic). See `docs/srd-sources.md`.'
   );
   lines.push(
-    '- **Remaining categories** — PF2e classes/ancestries/backgrounds/feats/equipment are wired above (Core Rulebook scope; **archetypes closed-by-no-source** — an APG-era system with no CRB entries). **PF1e classes/feats are closed-by-no-source** (no runtime-enumerable Core source; PSRD-Data needs an encoder-produced pinned manifest). M&M skills/conditions and Daggerheart classes/ancestries/communities/weapons/armor/adversaries are documented in `docs/srd-sources.md` and pending wiring. M&M equipment is wired and measured above.'
+    '- **Remaining categories** — PF2e classes/ancestries/backgrounds/feats/equipment are wired above (Core Rulebook scope; **archetypes closed-by-no-source** — an APG-era system with no CRB entries). **PF1e classes/feats are closed-by-no-source** (no runtime-enumerable Core source; PSRD-Data needs an encoder-produced pinned manifest). Daggerheart classes/ancestries/communities/weapons/armor/adversaries are documented in `docs/srd-sources.md` and pending wiring. M&M skills and equipment are wired and measured above; **M&M conditions is an absent gap marker** (no conditions catalog ships — see the Absent section).'
   );
   lines.push('');
 
