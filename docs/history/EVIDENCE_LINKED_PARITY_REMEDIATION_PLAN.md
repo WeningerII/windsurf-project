@@ -12,7 +12,7 @@ Status note (March 7, 2026): at the time of this remediation snapshot, the Vites
 
 Current repo truth note (March 16, 2026): this file is now primarily a historical execution record. Use `docs/MASTER_PLAN.md` for the live backlog and `docs/generated/roadmap-metrics.md` for current counts. Since this snapshot, Daggerheart data productization, 3.5e prestige reachability, shared spell preparation, and the spell-catalog parity baseline have landed; the remaining live work is narrower and is tracked in the master plan.
 
-Source of truth for gaps: `docs/EVIDENCE_LINKED_PARITY_AUDIT.md`
+Source of truth for gaps: `docs/history/EVIDENCE_LINKED_PARITY_AUDIT.md`
 
 ## Purpose
 

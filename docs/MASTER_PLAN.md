@@ -19,10 +19,10 @@ The durable *why* behind this direction — the thesis the product exists to tes
 This file merges the still-valid planning content from these repo planning documents:
 
 - `docs/STATUS.md`
-- `docs/PRODUCTION_PLAN.md`
-- `docs/EVIDENCE_LINKED_PARITY_REMEDIATION_PLAN.md`
-- `docs/EVIDENCE_LINKED_PARITY_AUDIT.md`
-- `docs/DAGGERHEART_DATA_ORGANIZATION_PLAN.md`
+- `docs/history/PRODUCTION_PLAN.md` (archived to `docs/history/` by Remediation Phase 6, 2026-07-21)
+- `docs/history/EVIDENCE_LINKED_PARITY_REMEDIATION_PLAN.md` (archived)
+- `docs/history/EVIDENCE_LINKED_PARITY_AUDIT.md` (archived)
+- `docs/history/DAGGERHEART_DATA_ORGANIZATION_PLAN.md` (archived)
 
 These non-planning documents were also consulted where they contained planning-adjacent policy or product-scope statements, but they are not roadmap authorities:
 
@@ -357,7 +357,7 @@ Research anchors for this track: Vercel AI SDK provider abstraction and telemetr
 
 ### Technical Remediation Closeout
 
-- `Maintenance track`: mirrored here (2026-07-14) from `docs/REMEDIATION_PLAN.md` (Status: Active) so its remaining sequencing is roadmap-authoritative under the sole-authority rule. Phases 0–5 (truthful green build, real CI gating, dead-code cleanup, boundary parsing, deferred per-system data load, security/privacy hardening) are done. Still pending: **Phase 6 (slim docs/process)** — archive the superseded planning docs (PRODUCTION_PLAN, both EVIDENCE_LINKED_PARITY docs, DAGGERHEART_DATA_ORGANIZATION_PLAN) to a docs history folder and slim `docs/MASTER_PLAN.md` and `CONTRIBUTING.md` — and **Phase 7 (toolchain modernization)** — ESLint 8→9 flat-config migration first (ESLint 8 is EOL), then risk-ordered React 19, Tailwind 4, Vite 8, and runtime-pin reconciliation. Until Phase 6 executes, the Historical Provenance table below and the source-document list above intentionally still cite those docs in place. Audit note (2026-07-21): two items marked done carry unfinished residue — Phase 3's discriminated-union retype (3.1) was deferred, and Phase 5's gateway milestone shipped only its rate-limit half: the required Supabase-JWT check on the AI gateway is unimplemented while a real provider is wired (open security follow-up). The verify chain has also grown past its doc descriptions: it now additionally includes `typecheck:netlify`, `validate`, `check:legal-notices`, `check:compute-register`, and `check:secret-exposure`.
+- `Maintenance track`: mirrored here (2026-07-14) from `docs/REMEDIATION_PLAN.md` (Status: Active) so its remaining sequencing is roadmap-authoritative under the sole-authority rule. Phases 0–5 (truthful green build, real CI gating, dead-code cleanup, boundary parsing, deferred per-system data load, security/privacy hardening) are done. **Phase 6 (slim docs/process) is DONE (2026-07-21)**: the superseded planning docs (PRODUCTION_PLAN, both EVIDENCE_LINKED_PARITY docs, DAGGERHEART_DATA_ORGANIZATION_PLAN) are archived under `docs/history/` (see `docs/history/README.md`), and the slim-docs half was already satisfied — `CONTRIBUTING.md` is ~111 lines and this plan is maintained as the single roadmap authority. The Historical Provenance table below and the source-document list above now cite the archived `docs/history/` paths. The two audit-flagged residues behind "Phases 0–5 done" have since closed (2026-07-21): the Supabase-JWT gateway check shipped (PR #47) and the discriminated-union retype landed (PR #51). **Phase 7 (toolchain modernization)** is underway: the ESLint 8→9 flat-config migration is DONE (2026-07-21, PR #49, behavior byte-equivalent); remaining, risk-ordered: React 19, Tailwind 4, Vite 8, and runtime-pin reconciliation. Note: the verify chain includes `typecheck:netlify`, `validate`, `check:legal-notices`, `check:compute-register`, and `check:secret-exposure` beyond the historically documented gates.
 
 ### D&D 5e (2014 + 2024)
 
@@ -403,10 +403,10 @@ Research anchors for this track: Vercel AI SDK provider abstraction and telemetr
 
 | Source document | Classification | Unique value retained |
 | --- | --- | --- |
-| `docs/PRODUCTION_PLAN.md` | Historical context | March 2026 production-hardening sequence, launch-risk ordering, and resolved ship-quality work |
-| `docs/EVIDENCE_LINKED_PARITY_REMEDIATION_PLAN.md` | Historical context | Exhaustive remediation sequencing, row-to-workstream mapping, and parity decision matrix |
-| `docs/EVIDENCE_LINKED_PARITY_AUDIT.md` | Historical context | Evidence snapshot showing what the repo looked like before the March 2026 parity/productization push landed |
-| `docs/DAGGERHEART_DATA_ORGANIZATION_PLAN.md` | Historical context | Original Daggerheart data-shape rationale, plus superseded early structure proposals that informed the shipped data tree |
+| `docs/history/PRODUCTION_PLAN.md` | Historical context (archived 2026-07-21) | March 2026 production-hardening sequence, launch-risk ordering, and resolved ship-quality work |
+| `docs/history/EVIDENCE_LINKED_PARITY_REMEDIATION_PLAN.md` | Historical context (archived 2026-07-21) | Exhaustive remediation sequencing, row-to-workstream mapping, and parity decision matrix |
+| `docs/history/EVIDENCE_LINKED_PARITY_AUDIT.md` | Historical context (archived 2026-07-21) | Evidence snapshot showing what the repo looked like before the March 2026 parity/productization push landed |
+| `docs/history/DAGGERHEART_DATA_ORGANIZATION_PLAN.md` | Historical context (archived 2026-07-21) | Original Daggerheart data-shape rationale, plus superseded early structure proposals that informed the shipped data tree |
 | `docs/rfc/001-backend-sync.md` | Accepted RFC | Canonical description of the shipped local-first sync architecture: auth, schema, merge semantics, offline queue, realtime, retry, migration-from-local, Netlify/runtime implications, accepted boundaries |
 | `docs/rfc/002-ai-control-plane.md` | Active RFC — foundation and four task surfaces shipped (2026-06-19) | AI integration contract for frictionless creation and play: server-side task gateway, loader-derived candidate pools, deterministic validation/repair, user approval, typed action/event boundaries, fixture replay, and cost/timeout fallbacks |
 | `docs/rfc/003-rules-ir-and-effects.md` | Accepted RFC | System-independent, system-agnostic rules intermediate representation and deterministic effect resolver that unify the contribution ledger with scene resolution across all seven systems equally, enabling RAW auto-resolution of equipment/feat/spell/condition effects, mechanical condition application, and functional terrain; first proof point is cross-system equip resolution; the three-consumer extraction rule is satisfied by seven per-system effect compilers, and the content-pack-rewrite prohibition still holds (the IR is computed from loaded data) |
