@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { downloadTextFile, pickTextFile } from '../../utils/fileTransfer';
+import { downloadTextFile, pickTextFile, readFileAsDataUrl } from '../../utils/fileTransfer';
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -77,5 +77,16 @@ describe('pickTextFile', () => {
     pickTextFile(onText);
     selectFile(getInput() as HTMLInputElement, null);
     expect(onText).not.toHaveBeenCalled();
+  });
+});
+
+describe('readFileAsDataUrl', () => {
+  it('reads a File into a data URL', async () => {
+    const file = new File(['map-bytes'], 'map.png', { type: 'image/png' });
+
+    const dataUrl = await readFileAsDataUrl(file);
+
+    expect(dataUrl.startsWith('data:')).toBe(true);
+    expect(dataUrl).toContain('base64,');
   });
 });
