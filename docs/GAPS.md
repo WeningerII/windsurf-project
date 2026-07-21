@@ -251,6 +251,28 @@ The 4,053-entry loader-mirror manifests under `docs/srd-manifest/` are honest
 belong in-repo as committed files or should be regenerated on demand now that a real
 independent denominator (`docs/generated/srd-coverage.md`) exists for most systems.
 
+## 7. Rules-IR parity debt — per-system accounting (added 2026-07-21)
+
+The open RFC 003 work, counted against all seven systems (both 5e editions
+count separately) so edition ambiguity cannot hide debt. Verified against code,
+not carried forward from prose — this pass also corrected two stale claims in
+`docs/MASTER_PLAN.md` that misreported per-system state in 5e's favor (the
+d20-legacy ledger was already re-backed; every engine already consumes the
+shared condition catalogs).
+
+| Parity debt | Done | Owed | Owed by |
+| --- | --- | --- | --- |
+| Ledger re-backed on resolver | 4 | 3 | PF2e (no builder exists), M&M 3e, Daggerheart (hand-built) |
+| Condition effects through the resolver fold | 0 | 7 | all seven (catalogs in `src/rules/conditions/` shipped and engine-consumed as helper reads; fold-through open everywhere) |
+| AI-seam validators | 2 | 5 | D&D 3.5e, PF1e, PF2e, M&M 3e, Daggerheart |
+| Resolver legal-actions seam | 0 | 7 | all seven |
+| Additive equip routing | 5 | 2 — accepted boundary | Daggerheart, M&M 3e (non-additive derivation; revisit only if the IR gains override/derived operations for other reasons) |
+
+Deliverable phrasing for this debt lives in the W-numbered workstream table in
+`docs/MASTER_PLAN.md` (W2, W4, W5, W8), governed by the `All-seven-equal
+phrasing` constraint there: system names may appear in status lines, never as
+the subject of deliverable lines.
+
 ---
 
 **Highest-leverage unblock:** the §1 data input. With authoritative SRD/CRB
