@@ -37,6 +37,7 @@ export const Pf2eSystemDef: SystemDefinition<Pf2eDataModel> = {
   ],
   createDefaultData: createDefaultPf2eData,
   engine: new Pf2eEngine(),
+  loadValidator: () => import('./validation').then((m) => m.createPf2eValidator()),
   SheetComponent: lazyWithPreload(() =>
     import('./sheet').then((m) => ({ default: m.Pf2eCharacterSheet }))
   ),

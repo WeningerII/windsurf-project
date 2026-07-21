@@ -51,6 +51,7 @@ export const DaggerheartSystemDef: SystemDefinition<DaggerheartDataModel> = {
   skills: [],
   createDefaultData: createDefaultDaggerheartData,
   engine: new DaggerheartEngine(),
+  loadValidator: () => import('./validation').then((m) => m.createDaggerheartValidator()),
   SheetComponent: lazyWithPreload(() =>
     import('./sheet').then((m) => ({ default: m.DaggerheartSheet }))
   ),

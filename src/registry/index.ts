@@ -1,6 +1,7 @@
 import {
   SystemDefinition,
   SystemDataModel,
+  type SystemValidator,
   type ValidationContext,
   type ValidationResult,
 } from './types';
@@ -12,6 +13,10 @@ import type { CharacterDocument } from '../types/core/document';
  */
 export class SystemRegistry {
   private systems: Map<string, SystemDefinition<SystemDataModel>> = new Map();
+
+  // Caches the promise from each system's lazy `loadValidator`, so a validator
+  // chunk is imported at most once regardless of how many documents are checked.
+  private validatorCache: Map<string, Promise<SystemValidator<SystemDataModel>>> = new Map();
 
   /**
    * Register a new game system.
@@ -67,14 +72,37 @@ export class SystemRegistry {
       };
     }
 
-    if (!systemDef.validator) {
+    const validator = await this.resolveValidator(systemDef);
+    if (!validator) {
       return { issues: [] };
     }
 
-    return systemDef.validator.validateDocument(document, {
+    return validator.validateDocument(document, {
       ...context,
       systemId: systemDef.id,
     });
+  }
+
+  /**
+   * Resolve a definition's validator, preferring the lazy `loadValidator`
+   * dynamic import and caching the resolved instance so the chunk is fetched at
+   * most once per system. Falls back to an eagerly-supplied `validator`.
+   */
+  private async resolveValidator<T extends SystemDataModel>(
+    systemDef: SystemDefinition<T>
+  ): Promise<SystemValidator<T> | undefined> {
+    if (systemDef.validator) {
+      return systemDef.validator;
+    }
+    if (!systemDef.loadValidator) {
+      return undefined;
+    }
+    let pending = this.validatorCache.get(systemDef.id) as Promise<SystemValidator<T>> | undefined;
+    if (!pending) {
+      pending = systemDef.loadValidator();
+      this.validatorCache.set(systemDef.id, pending as Promise<SystemValidator<SystemDataModel>>);
+    }
+    return pending;
   }
 }
 
