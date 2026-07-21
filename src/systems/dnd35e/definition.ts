@@ -52,5 +52,6 @@ export const Dnd35eSystemDef: SystemDefinition<Dnd35eDataModel> = {
   ],
   createDefaultData: createDefaultDnd35eData,
   engine: new Dnd35eEngine(),
+  loadValidator: () => import('./validation').then((m) => m.createDnd35eValidator()),
   SheetComponent: makeD20LegacySheet<Dnd35eDataModel>(),
 };

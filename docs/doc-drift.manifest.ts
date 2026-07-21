@@ -231,19 +231,26 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: [],
   },
   {
-    path: 'docs/PRODUCTION_PLAN.md',
+    // Archive folder guide for the docs moved below (Remediation Phase 6, 2026-07-21).
+    path: 'docs/history/README.md',
+    kind: 'plan',
+    owner: 'historical-planning',
+    rules: ['path_ref_rule'],
+  },
+  {
+    path: 'docs/history/PRODUCTION_PLAN.md',
     kind: 'historical',
     owner: 'historical-planning',
     rules: ['historical_banner_rule', 'path_ref_rule'],
   },
   {
-    path: 'docs/EVIDENCE_LINKED_PARITY_AUDIT.md',
+    path: 'docs/history/EVIDENCE_LINKED_PARITY_AUDIT.md',
     kind: 'historical',
     owner: 'historical-audit',
     rules: ['historical_banner_rule', 'path_ref_rule'],
   },
   {
-    path: 'docs/EVIDENCE_LINKED_PARITY_REMEDIATION_PLAN.md',
+    path: 'docs/history/EVIDENCE_LINKED_PARITY_REMEDIATION_PLAN.md',
     kind: 'historical',
     owner: 'historical-remediation',
     rules: ['historical_banner_rule', 'path_ref_rule'],
@@ -255,7 +262,7 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: ['historical_banner_rule', 'path_ref_rule'],
   },
   {
-    path: 'docs/DAGGERHEART_DATA_ORGANIZATION_PLAN.md',
+    path: 'docs/history/DAGGERHEART_DATA_ORGANIZATION_PLAN.md',
     kind: 'historical',
     owner: 'historical-daggerheart-plan',
     rules: ['historical_banner_rule', 'path_ref_rule'],

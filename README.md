@@ -314,8 +314,7 @@ npm run validate
 - **docs/STATUS.md** - Current-state summary and verified test baseline
 - **docs/rfc/** - Design RFCs: 001 backend sync (accepted), 002 AI control plane (active — foundation + four task surfaces shipped), 003 rules IR & effects (accepted)
 - **docs/generated/roadmap-metrics.md** - Generated product-reachable counts plus raw-export audit
-- **docs/EVIDENCE_LINKED_PARITY_AUDIT.md** - Historical March 2026 audit snapshot
-- **docs/EVIDENCE_LINKED_PARITY_REMEDIATION_PLAN.md** - Historical remediation sequencing record
+- **docs/history/** - Archived superseded planning documents (Remediation Phase 6, 2026-07-21), including the historical March 2026 parity audit snapshot and remediation sequencing record
 - **CONTRIBUTING.md** - Developer guide, environment requirements, and engineering standards
 
 ## 🛠️ Development Guide

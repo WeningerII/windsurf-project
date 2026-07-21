@@ -149,6 +149,12 @@ export interface SystemDefinition<T extends SystemDataModel> {
   // Optional validation hook for import, guided creation, and AI draft review.
   validator?: SystemValidator<T>;
 
+  // Lazy variant of `validator`: a dynamic import that resolves the validator on
+  // first use. Preferred over `validator` so a system's (often large) validation
+  // logic is code-split into its own chunk instead of riding the eager registry
+  // bootstrap chunk. The registry caches the resolved instance per system.
+  loadValidator?: () => Promise<SystemValidator<T>>;
+
   // The Main Character Sheet Component
   SheetComponent: SystemSheetComponent<T>;
 

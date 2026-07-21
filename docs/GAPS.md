@@ -289,23 +289,35 @@ RFC 004 was executed without formal acceptance; its status line records that.
   that this container cannot run e2e is stale as a gate concern; CI is the
   authority for the full gate.
 
-## 5. Review item — a shipped behavior change
+## 5. Review item — a shipped behavior change [RATIFIED 2026-07-20]
 
 5e-2024 exhaustion was changed from −1/level to **−2/level** (RAW per SRD 5.2 and
 the goal text) in `src/systems/dnd5e-2024/engine.ts`. It is the only shipped
-game-rule behavior change (vs. test-only additions) and warrants a human review.
+game-rule behavior change (vs. test-only additions), so it required explicit human
+sign-off. That sign-off landed: **ratified 2026-07-20** (commit `14727e7`,
+gap-ledger entry `review.dnd5e-2024-exhaustion`, status `done`), confirmed against
+SRD 5.2 RAW — "each level of Exhaustion reduces D20 Tests by 2 times your
+Exhaustion level"; the −1/level figure matched only the One D&D playtest draft.
+`Dnd5e2024Engine.getExhaustionD20Penalty` is settled and test-pinned. No open
+action remains.
 
-## 6. Reconsider artifact
+## 6. Reconsider artifact — DECIDED 2026-07-21, execution scheduled Wave 2
 
 The loader-mirror manifests under `docs/srd-manifest/` hold 3,614 entries as
 committed (the "4,053" previously cited here matches nothing committed;
 corrected 2026-07-21) and are honest on catalog/provenance but now BADLY
 diverged from the loaders they mirror — unregenerated since ~2026-06-17, e.g.
 the 5e-2014 manifest lists 39 monsters and 230 equipment against current
-loaders' 335 and 656. Decide whether they belong in-repo as committed files
-(and get regenerated) or should be produced on demand, now that a real
-independent denominator (`docs/generated/srd-coverage.md`) exists for most
-systems.
+loaders' 335 and 656. That open question is now settled:
+
+**Decision (user, 2026-07-21):** `docs/srd-manifest/` moves to **on-demand
+generation** (no longer committed) and is **demoted from denominator duty** —
+`docs/generated/srd-coverage.md` becomes the **sole content denominator**
+(Denominator A). Execution of the demotion is **scheduled for Wave 2**; nothing
+is deleted yet — until the demotion executes, the committed manifests and the
+docs/metrics that cite them (e.g. the two-denominator completion goal in
+`docs/MASTER_PLAN.md`, `docs/generated/roadmap-metrics.md`, `_exclusions.ts`)
+remain in place and accurate as-is. This section records the decision only.
 
 ## 7. Rules-IR parity debt — per-system accounting (added 2026-07-21)
 
