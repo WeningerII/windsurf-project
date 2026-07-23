@@ -172,4 +172,71 @@ export const shadow: Monster = {
   environment: ['dungeon', 'ruins'],
 };
 
-export const undeadCR0to5: Monster[] = [skeleton, zombie, ghoul, shadow];
+export const willOWisp: Monster = {
+  id: 'will-o-wisp-2024',
+  name: "Will-o'-Wisp",
+  system: 'dnd-5e-2024',
+  source: 'SRD 5.2',
+  size: 'tiny',
+  type: 'undead',
+  alignment: 'chaotic evil',
+  armorClass: 19,
+  hitPoints: { count: 9, die: 'd4', notation: '9d4' },
+  speed: { walk: 0, fly: 50 },
+  abilities: { str: 1, dex: 28, con: 10, int: 13, wis: 14, cha: 11 },
+  damageResistances: [
+    'acid',
+    'cold',
+    'fire',
+    'necrotic',
+    'thunder',
+    'bludgeoning',
+    'piercing',
+    'slashing',
+  ],
+  damageImmunities: ['lightning', 'poison'],
+  conditionImmunities: [
+    'exhaustion',
+    'grappled',
+    'paralyzed',
+    'poisoned',
+    'prone',
+    'restrained',
+    'unconscious',
+  ],
+  senses: ['darkvision 120 ft.', 'passive Perception 12'],
+  languages: ['the languages it knew in life'],
+  challengeRating: 2,
+  experiencePoints: 450,
+  specialAbilities: [
+    {
+      name: 'Consume Life',
+      description:
+        "As a bonus action, the will-o'-wisp can target one creature it can see within 5 feet of it that has 0 hit points and is still alive. The target must succeed on a DC 10 Constitution saving throw against this magic or die. If the target dies, the will-o'-wisp regains 10 (3d6) hit points.",
+    },
+    {
+      name: 'Ephemeral',
+      description: "The will-o'-wisp can't wear or carry anything.",
+    },
+    {
+      name: 'Incorporeal Movement',
+      description:
+        "The will-o'-wisp can move through other creatures and objects as if they were difficult terrain. It takes 5 (1d10) force damage if it ends its turn inside an object.",
+    },
+    {
+      name: 'Variable Illumination',
+      description:
+        "The will-o'-wisp sheds bright light in a 5- to 20-foot radius and dim light for an additional number of feet equal to the chosen radius. The will-o'-wisp can alter the radius as a bonus action.",
+    },
+  ],
+  actions: [
+    {
+      name: 'Shock',
+      description:
+        'Melee Spell Attack: +4 to hit, reach 5 ft., one creature. Hit: 9 (2d8) lightning damage.',
+    },
+  ],
+  environment: ['swamp', 'ruins'],
+};
+
+export const undeadCR0to5: Monster[] = [skeleton, zombie, ghoul, shadow, willOWisp];

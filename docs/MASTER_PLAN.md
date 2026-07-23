@@ -247,11 +247,16 @@ The following older backlog claims are no longer true and must not re-enter the 
 >   stays GM-adjudicated). Additive (a cell with no terrain resolves and moves
 >   identically). Deeper terrain — line-of-sight, elevation, hazards that tick each
 >   round — is future RFC-006 scene-runtime work, not this phase.
-> - **Phase 5 — PARTIAL.** The grounded gateway ships, but the only registered
->   `SystemValidator` is the shared 5e one
->   (`src/systems/dnd5e/shared/validation.ts`, covering the two 5e editions):
->   2 of 7. Owed by 5 systems — D&D 3.5e, PF1e, PF2e, M&M 3e, and Daggerheart —
->   plus the resolver legal-actions seam, which is owed by all seven.
+> - **Phase 5 — PARTIAL.** Registered `SystemValidator`s now cover **7 of 7**
+>   systems (2026-07-21): the shared 5e validator
+>   (`src/systems/dnd5e/shared/validation.ts`, both editions) plus per-system
+>   validators for D&D 3.5e, PF1e, PF2e, M&M 3e, and Daggerheart, each deriving
+>   checks from its own RAW/loaders and consuming its `src/rules/legality/`
+>   build validator as warnings where one exists. All are lazy-loaded
+>   (`SystemDefinition.loadValidator`) so validator weight stays out of the eager
+>   bootstrap chunk. Still owed on this phase: the resolver legal-actions seam
+>   (0 of 7), and a provider-backed draft loop over the now-complete validator
+>   set (W8).
 >
 > **Per-system parity debt (2026-07-21).** The remaining IR work, counted
 > against all seven systems so the debt cannot hide behind edition ambiguity
@@ -261,7 +266,7 @@ The following older backlog claims are no longer true and must not re-enter the 
 > | --- | --- | --- | --- |
 > | Ledger re-backed on resolver | 4 | 3 | PF2e (no builder exists), M&M 3e, Daggerheart (hand-built) |
 > | Condition effects through the resolver fold | 0 | 7 | all seven (catalogs shipped and engine-consumed; fold-through open everywhere) |
-> | AI-seam validators | 2 | 5 | D&D 3.5e, PF1e, PF2e, M&M 3e, Daggerheart |
+> | AI-seam validators | 7 | 0 | **COMPLETE (2026-07-21)** — all seven registered, lazy-loaded |
 > | Resolver legal-actions seam | 0 | 7 | all seven |
 > | Additive equip routing | 5 | 2 — accepted boundary | Daggerheart, M&M 3e (non-additive derivation; revisit only if the IR gains override/derived operations for other reasons) |
 >
@@ -283,7 +288,7 @@ carried forward from prose.
 | Workstream | Status (2026-07-21) | Remaining deliverable | Acceptance |
 | --- | --- | --- | --- |
 | W1. Validation registry (core contract) | **Shipped** | — (`SystemRegistry.validateDocument` takes document plus context, returns structured issues) | Covered by `src/__tests__/registryValidation.test.ts`; systems opt in without changing persistence or sync schema |
-| W2. Per-system validators, all 7 | **2 of 7** (the shared validator in `src/systems/dnd5e/shared/validation.ts` covers both 5e editions) | Registered validators for the 5 owing systems — D&D 3.5e, PF1e, PF2e, M&M 3e, Daggerheart — covering ids, level bounds, class/option availability, choice legality, spell references, prepared limits, and open-content source compliance as each system's own RAW defines them; each system lands as its own increment, none waits on another | Valid and invalid fixtures per system; validators warn/annotate rather than globally blocking edits; import/export preserves documents |
+| W2. Per-system validators, all 7 | **COMPLETE — 7 of 7 (2026-07-21)**: the shared 5e validator (both editions) plus per-system validators for D&D 3.5e, PF1e, PF2e, M&M 3e, and Daggerheart, all lazy-loaded via `SystemDefinition.loadValidator` | — (done) | Met: valid+invalid fixtures per system; warn/annotate not block; import/export preserved; the two non-d20 validators (M&M, Daggerheart) shaped by their own models, not d20 |
 | W3. Contribution-ledger contract | **Shipped** | — (non-persisted entry shape in `src/types/core/contributionLedger.ts`; resolver projection via `toContributionLedger`) | Existing ledger tests; ledgers never alter stored document shape |
 | W4. Ledger completion, all 7 | **4 of 7** re-backed (5e ×2 via the shared builder, 3.5e + PF1e via the d20-legacy builder) | A PF2e ledger builder (none exists), and the M&M 3e and Daggerheart builders re-backed onto the resolver instead of hand-building entries | Computed totals equal existing engine outputs; each row names its source and whether manual interpretation remains; existing ledger tests pass unchanged |
 | W5. Conditions through the resolver fold, all 7 | **0 of 7** (catalogs in `src/rules/conditions/` shipped and consumed by every engine as helper reads) | Compile condition effects into the shared resolver path so ledgers and stacking see them, per system, retiring or re-backing the helper reads | Outputs identical to today's helper math; condition contributions appear as ledger rows naming the condition |

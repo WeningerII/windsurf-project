@@ -14,11 +14,11 @@ registry, and the rate-limit store stay SDK-free; SDK-bound builders are injecte
 
 | File | Role |
 | --- | --- |
-| `ai-gateway.mts` | Netlify entry. Reads env, injects the Gemini builder, resolves adapter + limiter, delegates to the core. |
+| `ai-gateway.mts` | Netlify entry. Reads env, injects the Gemini builder, resolves adapter + limiter + session budget + latency budgets, delegates to the core. |
 | `providerRegistry.mts` | Provider-agnostic registry: maps a provider id (from `AI_PROVIDER`) to an adapter builder. |
 | `geminiAdapter.mts` | The Google/Gemini `AiProviderAdapter` (the only file importing `@ai-sdk/google`). |
-| `rateLimitStore.mts` | Pluggable rate-limit store: in-memory default + durable-backend stub. |
-| `supabaseJwt.mts` | Supabase-JWT (HS256) request auth: verifier + env resolver, plain `node:crypto`. |
+| `rateLimitStore.mts` | Pluggable counter store: in-memory default + durable-backend stub. Backs request rate limiting AND the session cost budget (`sessionBudgetFromStore`). |
+| `supabaseJwt.mts` | Supabase-JWT (HS256) request auth: verifier + env resolver, plain `node:crypto`. Surfaces the verified `sub` as the session-budget key. |
 
 ## Authentication (Supabase JWT)
 
@@ -52,7 +52,8 @@ An adapter is the seam where a real provider lives. Interface
 ```ts
 interface AiProviderAdapter {
   readonly id: string;    // provenance tag, echoed in AiResponse.usage.provider (e.g. 'google', 'mock')
-  readonly model: string; // echoed in AiResponse.usage.model
+  readonly model: string; // default model id, echoed in AiResponse.usage.model
+  modelFor?(task: AiTask): string; // per-task model, when it differs (e.g. the image model)
   generate(task: AiTask, payload: unknown): Promise<unknown>;
 }
 ```
@@ -72,8 +73,14 @@ Semantics `generate` MUST honor:
   `provider-error` (502). Do **not** return a sentinel error object.
 - **No ambient secrets.** Build the adapter from an explicitly passed key; never
   read `process.env` inside the adapter. The entry point owns env.
-- **Timeouts.** The core wraps `generate` in a timeout (`GatewayContext.timeoutMs`,
-  default 20 s); adapters need not implement their own.
+- **Timeouts.** The core wraps `generate` in the task-class latency budget
+  (text 10 s / vision 15 s / image 25 s by default, env-overridable below;
+  `GatewayContext.timeoutMs` is a single-knob override of all three); adapters
+  need not implement their own.
+- **Metadata normalization.** `usage.model` and the trace log carry
+  `modelFor(task)` when implemented, else `model` — so an adapter that routes
+  tasks to different models (the Gemini adapter's image tasks run on
+  `AI_IMAGE_MODEL`) reports the model that actually served.
 
 ### Registering / selecting an adapter
 
@@ -125,10 +132,43 @@ rollover/TTL deadline. The seam is **synchronous** to match the core's synchrono
   provisioned, pass its `RateLimitStoreDriver` as the second arg to
   `resolveRateLimitStore` in `ai-gateway.mts`; nothing else changes.
 
+## Session cost budget (Phase 14)
+
+A per-session cost cap, **off by default**, engaging only when
+`AI_SESSION_BUDGET_UNITS` is set positive. Each adapter-bound request is charged
+its task's **deterministic unit cost** (`AI_TASK_UNIT_COST` in
+`src/ai/contracts.ts`: text 1, vision 2, image 5 — relative provider cost, not
+post-hoc token counts) just before the provider call. Semantics:
+
+- **Session key.** The verified Supabase user id (JWT `sub`) when auth is on,
+  else the client ip. The pure HTTP layer performs the upgrade, so the cap
+  follows the user across connections once they sign in.
+- **Charge-then-check.** The crossing request's units stay counted and the
+  verdict fails once cumulative spend exceeds the cap, so a tripped cap stays
+  tripped — deterministically — until the fixed window resets
+  (`AI_SESSION_BUDGET_WINDOW_MS`, default 6 h). Spend that lands exactly on the
+  cap is still served.
+- **Typed degradation.** A tripped cap answers the typed `budget-exceeded`
+  failure (HTTP 429) — never a throw — and the client falls back to the manual
+  tools. Fixture replay is never charged (it costs no provider spend).
+- **Counting.** `sessionBudgetFromStore` adapts the same pluggable
+  `RateLimitStore` used for rate limiting (weighted `increment`; keys namespaced
+  `ai-budget:`), and the entry holds **one module-scope store** so both counters
+  survive warm invocations and would move to a durable backend together.
+
+## Per-task-class latency budgets (Phase 14)
+
+Each task class has a latency budget that is BOTH the hard cap on the provider
+call (exceeding it is the typed `timeout` failure, HTTP 504) and the threshold
+for the `latencyBudgetExceeded` flag in the structured trace log: `text` 10 s,
+`vision` 15 s, `image` 25 s, individually overridable via
+`AI_LATENCY_BUDGET_*_MS` below. Task→class assignments live in `AI_TASK_CLASS`
+(`src/ai/contracts.ts`).
+
 ## Environment variables
 
 All optional. With **none** set, behavior is exactly as before: default provider,
-no rate limiting, in-memory counting.
+no rate limiting, no session cap, in-memory counting.
 
 | Var | Default | Effect when unset (inert behavior) |
 | --- | --- | --- |
@@ -139,4 +179,9 @@ no rate limiting, in-memory counting.
 | `SUPABASE_JWT_SECRET` | — (off) | Unset → no auth check (local-first deploys unchanged). Set + a provider key → valid Supabase JWT required (401 otherwise). |
 | `AI_RATE_LIMIT` | — (off) | Unset/≤0 → **no** rate limiting (today's behavior). |
 | `AI_RATE_LIMIT_WINDOW_MS` | `60000` | Window length; only used when `AI_RATE_LIMIT` is set. |
-| `RATE_LIMIT_STORE_URL` | — | Unset → durable store disabled; counting stays in-memory. Set + a wired driver → durable store. |
+| `AI_SESSION_BUDGET_UNITS` | — (off) | Unset/≤0 → **no** session cost cap. Set → per-session unit budget (see above). |
+| `AI_SESSION_BUDGET_WINDOW_MS` | `21600000` (6 h) | Budget window; only used when `AI_SESSION_BUDGET_UNITS` is set. |
+| `AI_LATENCY_BUDGET_TEXT_MS` | `10000` | Latency budget for text tasks (provider-call cap + trace flag threshold). |
+| `AI_LATENCY_BUDGET_VISION_MS` | `15000` | Latency budget for vision tasks. |
+| `AI_LATENCY_BUDGET_IMAGE_MS` | `25000` | Latency budget for image-generation tasks. |
+| `RATE_LIMIT_STORE_URL` | — | Unset → durable store disabled; counting stays in-memory. Set + a wired driver → durable store (rate limit + session budget). |

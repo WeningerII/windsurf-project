@@ -678,6 +678,28 @@ export const longbow: Weapon = {
   requiresAttunement: false,
 };
 
+export const net: Weapon = {
+  id: 'net',
+  name: 'Net',
+  system: 'dnd-5e-2014',
+  source: 'SRD 5.1',
+  type: 'weapon',
+  weaponType: 'martial',
+  category: 'ranged',
+  rarity: 'common',
+  // A net deals no damage; it restrains rather than wounds. The zero-count
+  // roll keeps the DiceRoll shape uniform while encoding "no damage" faithfully.
+  damage: { count: 0, die: 'd4', notation: '—' },
+  damageType: 'bludgeoning',
+  properties: ['special', 'thrown'],
+  range: { normal: 5, max: 15 },
+  weight: 3,
+  cost: { amount: 1, currency: 'gp' },
+  description:
+    'A Large or smaller creature hit by a net is restrained until it is freed. A net has no effect on creatures that are formless, or creatures that are Huge or larger. A creature can use its action to make a DC 10 Strength check, freeing itself or another creature within its reach on a success. Dealing 5 slashing damage to the net (AC 10) also frees the creature without harming it, ending the effect and destroying the net. When you use an action, bonus action, or reaction to attack with a net, you can make only one attack regardless of the number of attacks you can normally make.',
+  requiresAttunement: false,
+};
+
 export const dnd5eWeapons: Weapon[] = [
   // Simple Melee
   club,
@@ -719,6 +741,7 @@ export const dnd5eWeapons: Weapon[] = [
   handCrossbow,
   heavyCrossbow,
   longbow,
+  net,
 ];
 import { Item } from '../../../../types/equipment/items';
 

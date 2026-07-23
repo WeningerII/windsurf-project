@@ -252,6 +252,34 @@ function coerceSessionLog(value: unknown, now: Date): CampaignSessionEntry[] {
 }
 
 /**
+ * Coerce a scene's optional map reference (document-level metadata, RFC 006
+ * Phase 9). A malformed reference is dropped — never a reason to reject the
+ * scene — because the map is a backdrop the runtime fold does not read: a
+ * scene without its map renders the bare grid exactly as before.
+ */
+function coerceSceneMapReference(value: unknown): SceneDocument['map'] {
+  if (!isRecord(value) || !isNonEmptyString(value.assetHash)) return undefined;
+  const registration = value.gridRegistration;
+  if (!isRecord(registration)) return undefined;
+  const { offsetX, offsetY, cellSizePx } = registration;
+  if (
+    typeof offsetX !== 'number' ||
+    !Number.isFinite(offsetX) ||
+    typeof offsetY !== 'number' ||
+    !Number.isFinite(offsetY) ||
+    typeof cellSizePx !== 'number' ||
+    !Number.isFinite(cellSizePx) ||
+    cellSizePx <= 0
+  ) {
+    return undefined;
+  }
+  return {
+    assetHash: value.assetHash,
+    gridRegistration: { offsetX, offsetY, cellSizePx },
+  };
+}
+
+/**
  * Validate a `SceneDocument` envelope from untrusted input. The grid/token/
  * marker/initiative substructure and the event log are required to be the right
  * shape so downstream hydration and the event fold cannot crash on a malformed
@@ -309,11 +337,13 @@ export function parseSceneDocument(
     return { ok: false, issues };
   }
 
+  const map = coerceSceneMapReference(value.map);
   const scene: SceneDocument = {
     id: value.id as string,
     name: value.name as string,
     systemId: value.systemId as string,
     ...(isNonEmptyString(value.campaignId) ? { campaignId: value.campaignId } : {}),
+    ...(map ? { map } : {}),
     initialState: value.initialState as SceneDocument['initialState'],
     events: value.events as SceneDocument['events'],
     createdAt: coerceDate(value.createdAt, now),

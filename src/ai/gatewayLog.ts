@@ -26,8 +26,14 @@ export interface GatewayLogRecord {
   model?: string;
   /** Normalized failure reason, on the failure path. */
   failureCode?: AiFailureCode;
+  /** The prompt-template version for the task, when the task is known. */
+  promptVersion?: string;
   /** Wall-clock time spent handling the request (ms). */
   latencyMs: number;
+  /** The task-class latency budget in effect (ms), when the task is known. */
+  latencyBudgetMs?: number;
+  /** Whether `latencyMs` exceeded `latencyBudgetMs` (present iff a budget was). */
+  latencyBudgetExceeded?: boolean;
   /** How many prior validation issues this request carried in for repair. */
   repairCount: number;
 }
@@ -42,6 +48,10 @@ export interface BuildGatewayLogRecordInput {
   repairCount?: number;
   /** The adapter attempted, so failures still record which provider was tried. */
   adapterId?: string;
+  /** The prompt-template version for the task, when known. */
+  promptVersion?: string;
+  /** The task-class latency budget in effect; enables the exceedance flag. */
+  latencyBudgetMs?: number;
 }
 
 /** Flatten a terminal gateway response into a {@link GatewayLogRecord}. */
@@ -54,6 +64,13 @@ export function buildGatewayLogRecord(input: BuildGatewayLogRecordInput): Gatewa
     latencyMs,
     repairCount: input.repairCount ?? 0,
     ...(response.task ? { task: response.task } : {}),
+    ...(input.promptVersion ? { promptVersion: input.promptVersion } : {}),
+    ...(input.latencyBudgetMs !== undefined
+      ? {
+          latencyBudgetMs: input.latencyBudgetMs,
+          latencyBudgetExceeded: latencyMs > input.latencyBudgetMs,
+        }
+      : {}),
   };
 
   if (response.ok) {

@@ -1,5 +1,12 @@
 import type { SceneDocument, SceneEvent } from '../types/core/scene';
 import { parseSceneDocument } from './boundaryValidation';
+import {
+  isMapAssetShape,
+  loadMapAsset,
+  saveMapAsset,
+  verifyMapAssetHash,
+  type SceneMapAsset,
+} from './mapAssetStorage';
 import { canUseLocalStorage } from './safeStorage';
 
 const STORAGE_KEY = 'rpg-scenes-v1';
@@ -11,6 +18,16 @@ interface SceneStorageData {
   version: typeof STORAGE_VERSION;
   scenes: SceneDocument[];
   lastModified: string;
+}
+
+/**
+ * The export envelope: the storage payload plus, when any exported scene
+ * references a map image, that asset carried **by value** so the scene
+ * round-trips on another machine. Additive — importers that predate `assets`
+ * (and `importScenesWithReport` itself) read only `scenes` and are unaffected.
+ */
+interface SceneExportData extends SceneStorageData {
+  assets?: Record<string, SceneMapAsset>;
 }
 
 function readScenesField(raw: string): unknown[] | null {
@@ -110,12 +127,69 @@ export function clearSceneStorage(): void {
 }
 
 export function exportScenes(scenes: SceneDocument[]): string {
-  const payload: SceneStorageData = {
+  // Carry each referenced map asset by value (deduplicated by hash). A
+  // reference whose asset is not on this device exports without it — the
+  // receiving end renders the bare grid, exactly like this one does.
+  const assets: Record<string, SceneMapAsset> = {};
+  for (const scene of scenes) {
+    const hash = scene.map?.assetHash;
+    if (!hash || assets[hash]) continue;
+    const asset = loadMapAsset(hash);
+    if (asset) assets[hash] = asset;
+  }
+  const payload: SceneExportData = {
     version: STORAGE_VERSION,
     scenes,
     lastModified: new Date().toISOString(),
+    ...(Object.keys(assets).length > 0 ? { assets } : {}),
   };
   return JSON.stringify(payload, null, 2);
+}
+
+export interface ImportMapAssetsResult {
+  /** Assets stored (or already present) after passing shape + hash checks. */
+  storedCount: number;
+  /** Candidates rejected by validation or hash mismatch. */
+  droppedCount: number;
+}
+
+/**
+ * Store the map assets carried by a scene export, verifying each declared
+ * hash against the actual digest of its data URL — a tampered or corrupted
+ * image is dropped (its scene still imports and renders the bare grid).
+ * Async because hashing is; scene import itself stays synchronous.
+ */
+export async function importMapAssetsFromPayload(
+  jsonString: string
+): Promise<ImportMapAssetsResult> {
+  let assetsField: unknown;
+  try {
+    const parsed: unknown = JSON.parse(jsonString);
+    assetsField =
+      parsed && typeof parsed === 'object' && !Array.isArray(parsed)
+        ? (parsed as { assets?: unknown }).assets
+        : undefined;
+  } catch {
+    return { storedCount: 0, droppedCount: 0 };
+  }
+  if (!assetsField || typeof assetsField !== 'object' || Array.isArray(assetsField)) {
+    return { storedCount: 0, droppedCount: 0 };
+  }
+
+  let storedCount = 0;
+  let droppedCount = 0;
+  for (const candidate of Object.values(assetsField)) {
+    if (!isMapAssetShape(candidate) || !(await verifyMapAssetHash(candidate))) {
+      droppedCount += 1;
+      continue;
+    }
+    if (saveMapAsset(candidate)) {
+      storedCount += 1;
+    } else {
+      droppedCount += 1; // over the size cap or storage full
+    }
+  }
+  return { storedCount, droppedCount };
 }
 
 export interface ImportScenesResult {
