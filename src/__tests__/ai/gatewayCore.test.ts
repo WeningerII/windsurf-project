@@ -46,6 +46,19 @@ describe('handleAiRequest', () => {
     });
   });
 
+  it('normalizes usage.model via modelFor when the adapter serves tasks on different models', async () => {
+    const res = await handleAiRequest(request, {
+      adapter: {
+        ...adapter(async () => validOutput),
+        modelFor: (task) => (task === 'encounter-draft' ? 'gemini-task-model' : 'other'),
+      },
+    });
+    expect(res).toMatchObject({
+      ok: true,
+      usage: { source: 'provider', provider: 'google', model: 'gemini-task-model' },
+    });
+  });
+
   it('normalizes an adapter throw to provider-error', async () => {
     const res = await handleAiRequest(request, {
       adapter: adapter(async () => {

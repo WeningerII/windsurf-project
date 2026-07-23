@@ -23,10 +23,11 @@
  * durable path here is the scaffold for exactly that.
  */
 import type { RateLimiter, RateLimitResult } from '../../src/utils/rateLimit';
+import type { SessionBudget, SessionBudgetVerdict } from '../../src/ai/gatewayCore';
 
 /** One key's fixed-window counter state. `resetAt` doubles as the TTL deadline. */
 export interface RateLimitRecord {
-  /** Requests counted in the current window. */
+  /** Requests (or weighted budget units) counted in the current window. */
   count: number;
   /** Epoch ms when the window (and this record's TTL) expires. */
   resetAt: number;
@@ -40,10 +41,13 @@ export interface RateLimitStore {
   /** Current live record for `key`, or `undefined` if none or expired. */
   get(key: string): RateLimitRecord | undefined;
   /**
-   * Count one request against `key`, opening a fresh `windowMs` window when the
-   * prior one is absent or expired. Returns the post-increment record.
+   * Count `amount` (default 1) against `key`, opening a fresh `windowMs` window
+   * when the prior one is absent or expired. Returns the post-increment record.
+   * The optional weight lets the same store back both request rate limiting
+   * (amount 1) and the Phase 14 session cost budget (per-task unit costs) with
+   * one durable seam.
    */
-  increment(key: string, windowMs: number): RateLimitRecord;
+  increment(key: string, windowMs: number, amount?: number): RateLimitRecord;
   /** Drop `key`'s record (window reset). */
   reset(key: string): void;
 }
@@ -69,7 +73,8 @@ function windowedIncrement(
   now: Clock,
   read: (key: string) => RateLimitRecord | undefined,
   key: string,
-  windowMs: number
+  windowMs: number,
+  amount: number
 ): RateLimitRecord {
   const t = now();
   const prior = read(key);
@@ -77,9 +82,9 @@ function windowedIncrement(
   // mirrors `createRateLimiter`'s `t - windowStart >= windowMs` test exactly
   // (windowStart + windowMs === resetAt).
   if (!prior || t >= prior.resetAt) {
-    return { count: 1, resetAt: t + windowMs };
+    return { count: amount, resetAt: t + windowMs };
   }
-  return { count: prior.count + 1, resetAt: prior.resetAt };
+  return { count: prior.count + amount, resetAt: prior.resetAt };
 }
 
 /**
@@ -104,8 +109,8 @@ export function createInMemoryRateLimitStore(now: Clock = Date.now): RateLimitSt
       const rec = liveRecord(key);
       return rec ? { ...rec } : undefined;
     },
-    increment(key, windowMs) {
-      const next = windowedIncrement(now, liveRecord, key, windowMs);
+    increment(key, windowMs, amount = 1) {
+      const next = windowedIncrement(now, liveRecord, key, windowMs, amount);
       records.set(key, next);
       return { ...next };
     },
@@ -132,8 +137,8 @@ function storeFromDriver(driver: RateLimitStoreDriver, now: Clock): RateLimitSto
       const rec = liveRecord(key);
       return rec ? { ...rec } : undefined;
     },
-    increment(key, windowMs) {
-      const next = windowedIncrement(now, liveRecord, key, windowMs);
+    increment(key, windowMs, amount = 1) {
+      const next = windowedIncrement(now, liveRecord, key, windowMs, amount);
       // TTL is the remaining window; never negative.
       driver.write(key, next, Math.max(0, next.resetAt - now()));
       return { ...next };
@@ -216,6 +221,52 @@ export function rateLimiterFromStore(
       return {
         ok: rec.count <= limit,
         remaining: Math.max(0, limit - rec.count),
+        resetAt: rec.resetAt,
+      };
+    },
+  };
+}
+
+/**
+ * Namespace prefix for session-budget keys, so a budget counter and a rate-limit
+ * counter for the same caller never collide when they share one (durable) store.
+ */
+export const SESSION_BUDGET_KEY_PREFIX = 'ai-budget:';
+
+/** Options for adapting a store into the core's {@link SessionBudget}. */
+export interface StoreSessionBudgetOptions {
+  /** Max budget units per key within a window. `<= 0` disables the cap. */
+  maxUnits: number;
+  /** Budget window (session TTL) in milliseconds. */
+  windowMs: number;
+  /** Injectable clock (ms) for the disabled branch; defaults to `Date.now`. */
+  now?: Clock;
+}
+
+/**
+ * Adapt any {@link RateLimitStore} into the synchronous {@link SessionBudget}
+ * the gateway core consumes (Phase 14 cost caps). Charge-then-check semantics
+ * mirror {@link rateLimiterFromStore}: the crossing charge's units are recorded
+ * and the verdict fails once the cumulative spend exceeds `maxUnits`, so a
+ * tripped cap stays tripped — deterministically — until the window resets.
+ * Keys are namespaced with {@link SESSION_BUDGET_KEY_PREFIX}. A `maxUnits <= 0`
+ * yields an always-open budget (cap disabled).
+ */
+export function sessionBudgetFromStore(
+  store: RateLimitStore,
+  options: StoreSessionBudgetOptions
+): SessionBudget {
+  const { maxUnits, windowMs } = options;
+  const now = options.now ?? Date.now;
+  return {
+    charge(key: string, units: number): SessionBudgetVerdict {
+      if (maxUnits <= 0) {
+        return { ok: true, remainingUnits: Number.POSITIVE_INFINITY, resetAt: now() + windowMs };
+      }
+      const rec = store.increment(`${SESSION_BUDGET_KEY_PREFIX}${key}`, windowMs, units);
+      return {
+        ok: rec.count <= maxUnits,
+        remainingUnits: Math.max(0, maxUnits - rec.count),
         resetAt: rec.resetAt,
       };
     },

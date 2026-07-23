@@ -66,6 +66,9 @@ export function createGeminiAdapter(
   return {
     id: 'google',
     model: modelId,
+    // Metadata normalization (Phase 14): image tasks run on the image model, so
+    // report it — traces and usage must name the model that actually served.
+    modelFor: (task: AiTask) => (IMAGE_TASKS.has(task) ? imageModelId : modelId),
     async generate(task: AiTask, payload: unknown): Promise<unknown> {
       const prompt = buildPromptForTask(task, payload);
 

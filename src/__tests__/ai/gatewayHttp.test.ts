@@ -58,6 +58,43 @@ describe('processGatewayHttp', () => {
     expect(res.body).toMatchObject({ ok: true, usage: { source: 'fixture' } });
   });
 
+  it('maps a tripped session cap to 429 with the typed budget-exceeded failure', async () => {
+    const res = await processGatewayHttp('POST', body, {
+      adapter: {
+        id: 'mock',
+        model: 'mock',
+        generate: async () => ({ selections: [{ monsterId: 'goblin', count: 1 }] }),
+      },
+      sessionBudget: { charge: () => ({ ok: false, remainingUnits: 0, resetAt: 0 }) },
+    });
+    expect(res.status).toBe(429);
+    expect(res.body).toMatchObject({ ok: false, code: 'budget-exceeded' });
+  });
+
+  it('rebinds the session-budget key to the verified JWT subject when the authorizer supplies one', async () => {
+    const keys: string[] = [];
+    const ctx = {
+      adapter: {
+        id: 'mock',
+        model: 'mock',
+        generate: async () => ({ selections: [{ monsterId: 'goblin', count: 1 }] }),
+      },
+      sessionBudget: {
+        charge: (key: string) => {
+          keys.push(key);
+          return { ok: true, remainingUnits: 1, resetAt: 0 };
+        },
+      },
+      sessionKey: 'ip-1',
+    };
+    // With a verified subject, the per-user id replaces the client-ip default...
+    await processGatewayHttp('POST', body, ctx, () => ({ ok: true, subject: 'user-9' }));
+    // ...without one (or without auth), the caller-supplied key stands.
+    await processGatewayHttp('POST', body, ctx, () => ({ ok: true }));
+    await processGatewayHttp('POST', body, ctx);
+    expect(keys).toEqual(['user-9', 'ip-1', 'ip-1']);
+  });
+
   it('maps no-provider to 503 and unknown task to 400', async () => {
     expect((await processGatewayHttp('POST', body, {})).status).toBe(503);
     const badTask = JSON.stringify({

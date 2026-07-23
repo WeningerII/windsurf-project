@@ -25,6 +25,19 @@ export function downloadTextFile(
 }
 
 /**
+ * Read a `File` (e.g. from an `<input type="file">`) as a `data:` URL.
+ * Rejects when the read fails; resolves '' for an empty result.
+ */
+export function readFileAsDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(typeof reader.result === 'string' ? reader.result : '');
+    reader.onerror = () => reject(reader.error ?? new Error('Failed to read file.'));
+    reader.readAsDataURL(file);
+  });
+}
+
+/**
  * Prompt for a file and read it as text, passing the contents to `onText`.
  * Does nothing if the user cancels the picker (no file chosen).
  */
