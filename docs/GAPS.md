@@ -67,20 +67,23 @@ unlike the loader-derived `docs/srd-manifest/`.
   (`loadEquipmentForSystem('mam3e')`); the remaining gap was the coverage
   *measurement*. The `mam3e`/`equipment` `CoverageTarget` (frnprt EQUIPMENT vs
   the loader) has now RUN (2026-07-21 networked pass): 45/113 = 39.8%, with the
-  68 missing entries itemized in the report. Cleanup note: two stale prose
-  strings inside the generator (`src/scripts/srd-coverage.ts` — a "deferred"
-  comment and a hardcoded "M&M … equipment … pending wiring" Pending line)
-  contradict the measured table and will reprint on every run until removed.
+  68 missing entries itemized in the report. Cleanup note [DONE]: the two stale
+  generator prose strings (`src/scripts/srd-coverage.ts` — a "deferred" comment
+  and a hardcoded "M&M … equipment … pending wiring" Pending line) have been
+  removed; the Pending line now reflects the measured M&M skills/equipment rows.
 - **Provenance — feats/backgrounds [REMEDIATED]:** the loaders shipped PHB feats
   and backgrounds mislabeled with an SRD source tag (SRD 5.1 has only Acolyte +
   Grappler; SRD 5.2 has 4 backgrounds + 17 feats). The non-SRD entries were
   deleted (see the over-inclusion table in `docs/generated/srd-coverage.md`, now
-  0 genuine suspects for these categories). One cosmetic residue (noted
-  2026-07-21): 7 qualifier-named 2024 feat variants ("Magic Initiate (Cleric)",
-  "Fighting Style: …") still print as nominal over-inclusion rows because the
-  reverse-diff normalizes loader names less aggressively than the coverage
-  side; genuine over-inclusion is zero. The reverse-diff audit (loader entries
-  absent from the independent SRD) is the standing guard against re-introduction.
+  0 genuine suspects for these categories). The cosmetic residue (noted
+  2026-07-21) is now FIXED: the 7 qualifier-named 2024 feat variants ("Magic
+  Initiate (Cleric)", "Fighting Style: …") no longer print as nominal
+  over-inclusion rows — the reverse diff now normalizes the loader side with the
+  SAME `loaderNormVariants` the forward pass uses (`overInclusionSuspects` in
+  `src/scripts/srdCoverageShape.ts`, unit-tested), clearing prefix/parenthetical
+  variants against the SRD base while still flagging genuinely non-SRD entries.
+  The reverse-diff audit (loader entries absent from the independent SRD) remains
+  the standing guard against re-introduction.
 - **Provenance — 5e-2024 species [REMEDIATED]:** Half-Elf and Half-Orc (SRD 5.1
   species dropped from SRD 5.2) were removed from the SRD-5.2-only 2024 loader;
   srd-coverage now reports 0 over-inclusion for 2024 species.

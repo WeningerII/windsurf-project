@@ -40,6 +40,7 @@ import {
   norm,
   loaderNormVariants,
   srdNormVariants,
+  overInclusionSuspects,
   collapse35eMonsterHeadings,
   collapsePf1eContainerRecords,
 } from './srdCoverageShape';
@@ -808,7 +809,12 @@ async function main(): Promise<void> {
       // Provenance suspects: loader entries absent from the independent SRD list.
       // The loaders already pass the source-tag policy, so these are entries whose
       // tag claims an allowed SRD they are not actually part of (or name variants).
-      const extra = loaderUnique.filter((n) => !srdSet.has(norm(n)));
+      // The reverse diff normalizes the LOADER side exactly as the forward pass
+      // does (`overInclusionSuspects` → `loaderNormVariants`), so a qualifier-named
+      // loader variant ("Magic Initiate (Cleric)", "Fighting Style: Archery") is
+      // cleared against the SRD base instead of printing as a nominal suspect,
+      // while a genuinely non-SRD entry still surfaces. See docs/GAPS.md.
+      const extra = overInclusionSuspects(loaderUnique, srdSet);
       const covered = srdUnique.length - missing.length;
       rows.push({
         systemLabel: t.systemLabel,

@@ -85,6 +85,27 @@ export function srdNormVariants(s: string): string[] {
   return [...variants];
 }
 
+/**
+ * Over-inclusion (provenance suspect) filter, kept SYMMETRIC with the forward
+ * coverage pass. A loader entry is a suspect only when NONE of its
+ * `loaderNormVariants` — plain norm, `"Prefix: "` strip, trailing `"(…)"`
+ * strip, and the confirmed qualifier word-order swap — matches an SRD key.
+ *
+ * Applying the SAME loader-side normalization the coverage pass already uses
+ * stops a qualifier-named loader variant ("Magic Initiate (Cleric)", "Fighting
+ * Style: Archery") from printing as a nominal over-inclusion row when the SRD
+ * ships the plain base ("Magic Initiate", "Archery") — the asymmetry noted in
+ * docs/GAPS.md. It still flags a genuinely non-SRD entry, whose stripped base
+ * has no SRD counterpart (loader "Greater Fireball" vs an SRD with only
+ * "Fireball" stays a suspect), so a real gap is never hidden.
+ */
+export function overInclusionSuspects(
+  loaderNames: string[],
+  srdKeys: ReadonlySet<string>
+): string[] {
+  return loaderNames.filter((name) => !loaderNormVariants(name).some((k) => srdKeys.has(k)));
+}
+
 // --- PF1e bestiary container-record collapse --------------------------------
 
 /**

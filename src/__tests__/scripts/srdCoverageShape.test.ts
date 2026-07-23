@@ -14,6 +14,7 @@ import {
   qualifierOrderVariants,
   loaderNormVariants,
   srdNormVariants,
+  overInclusionSuspects,
   collapsePf1eContainerRecords,
   pf1eContainerRecords,
   collapse35eMonsterHeadings,
@@ -219,5 +220,46 @@ describe('qualifier word-order normalization (confirmed provenance variants)', (
     // "Fireball, Greater") — it must stay a suspect, not be silently cleared.
     const srdSet = new Set(srdNormVariants('Fireball'));
     expect(srdSet.has(norm('Greater Fireball'))).toBe(false);
+  });
+});
+
+describe('overInclusionSuspects (reverse-diff symmetry with the coverage pass)', () => {
+  // The SRD side of the diff, built exactly as srd-coverage main() does.
+  const srdKeys = new Set(
+    ['Magic Initiate', 'Archery', 'Invisibility, Greater', 'Fireball'].flatMap(srdNormVariants)
+  );
+
+  it('clears qualifier-named loader variants against their SRD base', () => {
+    // The 2024 feat variants from docs/GAPS.md: parenthetical option + "Prefix: "
+    // forms whose stripped base IS in the SRD must NOT print as suspects.
+    const loader = [
+      'Magic Initiate (Cleric)',
+      'Magic Initiate (Druid)',
+      'Magic Initiate (Wizard)',
+      'Fighting Style: Archery',
+    ];
+    expect(overInclusionSuspects(loader, srdKeys)).toEqual([]);
+  });
+
+  it('clears a confirmed qualifier word-order variant', () => {
+    // Loader "Greater Invisibility" vs SRD "Invisibility, Greater".
+    expect(overInclusionSuspects(['Greater Invisibility'], srdKeys)).toEqual([]);
+  });
+
+  it('still flags a genuinely non-SRD loader entry', () => {
+    // "Greater Fireball" has no SRD counterpart (SRD only has plain "Fireball"),
+    // and "Hex" is absent entirely — both must remain suspects.
+    expect(overInclusionSuspects(['Greater Fireball', 'Hex'], srdKeys)).toEqual([
+      'Greater Fireball',
+      'Hex',
+    ]);
+  });
+
+  it('is symmetric with the forward coverage pass on the same fixture', () => {
+    // A loader entry cleared as a suspect here must also be countable as covering
+    // its SRD base in the forward direction (loaderNormVariants ∩ SRD plain norm).
+    const loaderSet = new Set(loaderNormVariants('Magic Initiate (Cleric)'));
+    expect(loaderSet.has(norm('Magic Initiate'))).toBe(true);
+    expect(overInclusionSuspects(['Magic Initiate (Cleric)'], srdKeys)).toEqual([]);
   });
 });
