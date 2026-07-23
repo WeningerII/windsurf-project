@@ -160,8 +160,11 @@ export function pf1eContainerRecords(names: string[], minChildren = 2): string[]
 export const SRD_35E_MONSTER_CATEGORY_HEADINGS: readonly string[] = [
   'Angel',
   'Archon',
+  'Chromatic Dragons',
   'Demon',
   'Devil',
+  'Dinosaur',
+  'Dire Animal',
   'Dragon',
   'Dragon, True',
   'True Dragon',
@@ -174,10 +177,28 @@ export const SRD_35E_MONSTER_CATEGORY_HEADINGS: readonly string[] = [
   'Inevitable',
   'Lycanthrope',
   'Mephit',
+  'Metallic Dragons',
   'Naga',
   'Nightshade',
   'Slaad',
   'Sphinx',
+];
+
+/**
+ * NON-stat-block `## ` headings the olimot SRD 3.5 monster chapters carry that
+ * are NOT creatures at all: prose sub-sections of the chapter intro ("Reading
+ * the Entries", "Combat") and TEMPLATE headers whose example is applied to an
+ * existing base creature rather than shipped as its own enumerable monster
+ * ("Celestial Creature", "Fiendish Creature"). Dropping them keeps the
+ * denominator to individual monster stat blocks. Kept distinct from the
+ * taxonomic CONTAINER list above because they nest nothing — they are just
+ * non-monster headings — but both are removed by `collapse35eMonsterHeadings`.
+ */
+export const SRD_35E_MONSTER_NONBLOCK_HEADINGS: readonly string[] = [
+  'Reading the Entries',
+  'Combat',
+  'Celestial Creature',
+  'Fiendish Creature',
 ];
 
 /**
@@ -228,13 +249,16 @@ function foldMonsterVariant(name: string): string {
 /**
  * Reshape the raw `## ` monster headings from the olimot SRD 3.5 chapters into
  * an individual-stat-block list: drop the taxonomic category CONTAINER headers
- * (`SRD_35E_MONSTER_CATEGORY_HEADINGS`) and fold age/size variant rows to their
- * archetype (first occurrence wins; later variants of the same archetype are
- * de-duplicated). Order is preserved. Genuine standalone monsters and genuine
- * misses (Salamander, Hydra, …) pass through unchanged.
+ * (`SRD_35E_MONSTER_CATEGORY_HEADINGS`) and the non-creature prose/template
+ * headings (`SRD_35E_MONSTER_NONBLOCK_HEADINGS`), then fold age/size variant
+ * rows to their archetype (first occurrence wins; later variants of the same
+ * archetype are de-duplicated). Order is preserved. Genuine standalone monsters
+ * and genuine misses (Salamander, Hydra, …) pass through unchanged.
  */
 export function collapse35eMonsterHeadings(headings: string[]): string[] {
-  const categorySet = new Set(SRD_35E_MONSTER_CATEGORY_HEADINGS.map(norm));
+  const categorySet = new Set(
+    [...SRD_35E_MONSTER_CATEGORY_HEADINGS, ...SRD_35E_MONSTER_NONBLOCK_HEADINGS].map(norm)
+  );
   const seenArchetype = new Set<string>();
   const kept: string[] = [];
   for (const heading of headings) {

@@ -19,6 +19,7 @@ import {
   pf1eContainerRecords,
   collapse35eMonsterHeadings,
   SRD_35E_MONSTER_CATEGORY_HEADINGS,
+  SRD_35E_MONSTER_NONBLOCK_HEADINGS,
 } from '../../scripts/srdCoverageShape';
 
 describe('collapsePf1eContainerRecords (PF1e bestiary container collapse)', () => {
@@ -179,6 +180,61 @@ describe('collapse35eMonsterHeadings (3.5e SRD monster denominator shape)', () =
     for (const individual of ['Salamander', 'Hydra', 'Lich', 'Ghost']) {
       expect(cats).not.toContain(norm(individual));
     }
+  });
+});
+
+describe('collapse35eMonsterHeadings (extended non-block + sub-group headings)', () => {
+  // The sub-group dragon containers, the animal/dinosaur containers, the two
+  // template headers, and the two prose sub-section headers — each interleaved
+  // with a genuine individual member that MUST survive.
+  const headings = [
+    'Reading the Entries', // chapter intro prose — not a creature
+    'Combat', // chapter intro prose — not a creature
+    'Chromatic Dragons', // sub-group container
+    'Black Dragon', // member individual (folded from age rows elsewhere)
+    'Metallic Dragons', // sub-group container
+    'Gold Dragon', // member individual
+    'Celestial Creature', // template header — not an enumerable base monster
+    'Fiendish Creature', // template header
+    'Dire Animal', // group container
+    'Dire Bear', // individual — "Dire" is not a variant word, survives
+    'Dinosaur', // group container
+    'Deinonychus', // member individual
+    'Aboleth', // plain individual
+  ];
+
+  const result = collapse35eMonsterHeadings(headings);
+
+  it('drops the extended sub-group / template / prose headings', () => {
+    for (const dropped of [
+      'Reading the Entries',
+      'Combat',
+      'Chromatic Dragons',
+      'Metallic Dragons',
+      'Celestial Creature',
+      'Fiendish Creature',
+      'Dire Animal',
+      'Dinosaur',
+    ]) {
+      expect(result).not.toContain(dropped);
+    }
+  });
+
+  it('keeps the individual members and standalone monsters', () => {
+    expect(result).toEqual(
+      expect.arrayContaining(['Black Dragon', 'Gold Dragon', 'Dire Bear', 'Deinonychus', 'Aboleth'])
+    );
+  });
+
+  it('exposes the non-block headings as a distinct list, disjoint from the containers', () => {
+    const containers = new Set(SRD_35E_MONSTER_CATEGORY_HEADINGS.map(norm));
+    for (const h of SRD_35E_MONSTER_NONBLOCK_HEADINGS) {
+      expect(containers.has(norm(h))).toBe(false);
+    }
+    // Both new sub-group containers live on the taxonomic list, not the prose one.
+    expect(SRD_35E_MONSTER_CATEGORY_HEADINGS.map(norm)).toEqual(
+      expect.arrayContaining([norm('Chromatic Dragons'), norm('Metallic Dragons')])
+    );
   });
 });
 
