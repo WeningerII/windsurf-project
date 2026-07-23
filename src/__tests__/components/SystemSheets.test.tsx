@@ -2093,7 +2093,9 @@ describe('System Sheets', () => {
     });
 
     expect(screen.getByText('Hero Points')).toBeInTheDocument();
-    expect(screen.getByText('Class DC')).toBeInTheDocument();
+    // Class DC now renders both as the interactive Overview tile and as a
+    // read-only card in the derived-stats strip, so more than one match is expected.
+    expect(screen.getAllByText('Class DC').length).toBeGreaterThan(0);
 
     await user.click(screen.getByRole('tab', { name: /archetypes/i }));
     await waitFor(() => {

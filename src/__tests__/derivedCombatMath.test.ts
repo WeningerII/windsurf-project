@@ -18,6 +18,7 @@ import {
   pf2eAutoHeightenRank,
   daggerheartDamageDiceCount,
 } from '../utils/derivedCombatMath';
+import { getPf2eConditionStatusPenalty } from '../rules/conditions/pf2eConditions';
 import { abilityMod } from '../utils/math';
 
 describe('shared ability modifier', () => {
@@ -97,6 +98,24 @@ describe('PF2e MAP, striking, bulk, heightening', () => {
     expect(pf2eStrikingDice('striking')).toBe(2);
     expect(pf2eStrikingDice('greater')).toBe(3);
     expect(pf2eStrikingDice('major')).toBe(4);
+  });
+  it('cross-product: a greater-striking Strike under enfeebled 2 rolls 3 dice at −2 Str', () => {
+    // Two independent register-linked formulas compose on ONE Strike:
+    // pf2e.L3.striking-runes (greater striking → 3 weapon dice) and
+    // pf2e.L8.valued-conditions (enfeebled 2 → −2 status penalty to Str-based
+    // damage). A STR 18 (+4) fighter under enfeebled 2 nets +2 flat per hit.
+    const dice = pf2eStrikingDice('greater');
+    const strStatusPenalty = getPf2eConditionStatusPenalty(
+      [{ name: 'enfeebled', value: 2 }],
+      'str'
+    );
+    const strMod = abilityMod(18);
+    expect(dice).toBe(3);
+    expect(strStatusPenalty).toBe(2);
+    // Enfeebled is a Str-scoped status penalty: it hits the Str damage mod, not
+    // the weapon dice count — the two effects stack without interfering.
+    expect(strMod - strStatusPenalty).toBe(2);
+    expect(getPf2eConditionStatusPenalty([{ name: 'enfeebled', value: 2 }], 'dex')).toBe(0);
   });
   it('bulk limits: encumbered at Str+5, max at Str+10', () => {
     expect(pf2eBulkLimits(3)).toEqual({ encumbered: 8, max: 13 });

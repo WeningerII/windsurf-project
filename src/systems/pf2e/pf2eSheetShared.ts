@@ -1,4 +1,5 @@
 import type { Pf2eDataModel, Pf2eProficiencyTier, Pf2eSpellcasting } from './data-model';
+import { pf2eBulkLimits } from '../../utils/derivedCombatMath';
 import {
   poolFromRemaining,
   remainingShape,
@@ -52,10 +53,13 @@ export interface Pf2eBulkState {
  * than 5 + your Strength modifier" and "you can't hold or carry more Bulk than
  * 10 + your Strength modifier" — both strictly greater-than, so carrying
  * exactly 5 + Str is NOT encumbered.
+ *
+ * The thresholds are the single register-linked formula (pf2eBulkLimits, the
+ * pf2e.L6.bulk / bulk-max source of truth); this view only adds the inventory
+ * tab's carried-Bulk comparison on top of them, so the two are one formula.
  */
 export function getPf2eBulkState(totalBulk: number, strengthModifier: number): Pf2eBulkState {
-  const encumbered = 5 + strengthModifier;
-  const maxBulk = 10 + strengthModifier;
+  const { encumbered, max: maxBulk } = pf2eBulkLimits(strengthModifier);
   return {
     encumbered,
     maxBulk,
