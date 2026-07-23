@@ -30,44 +30,50 @@ async function createScene(page: import('@playwright/test').Page, name: string) 
   await expect(page.getByRole('grid', { name: `${name} grid` })).toBeVisible({ timeout: 30_000 });
 }
 
-test('scene create-then-open lands on the canvas; picking round-trips selection', { tag: '@smoke' }, async ({
-  page,
-}) => {
-  // The Scenes tab hosts the select-only picker.
-  await page.getByRole('button', { name: 'Scenes', exact: true }).click();
-  await expect(page.getByText('0 scenes saved')).toBeVisible();
+test(
+  'scene create-then-open lands on the canvas; picking round-trips selection',
+  { tag: '@smoke' },
+  async ({ page }) => {
+    // The Scenes tab hosts the select-only picker.
+    await page.getByRole('button', { name: 'Scenes', exact: true }).click();
+    await expect(page.getByText('0 scenes saved')).toBeVisible();
 
-  // Gate (e): creating flips to the Scene surface rendering the new grid.
-  await createScene(page, 'Test Chamber');
+    // Gate (e): creating flips to the Scene surface rendering the new grid.
+    await createScene(page, 'Test Chamber');
 
-  // Gate (h): no LEFT list rail on the canvas — the picker's artifacts
-  // (create button, saved-count copy, campaign filter) are not on this surface.
-  await expect(page.getByRole('button', { name: 'New Scene' })).toHaveCount(0);
-  await expect(page.getByText(/scenes? saved/)).toHaveCount(0);
+    // Gate (h): no LEFT list rail on the canvas — the picker's artifacts
+    // (create button, saved-count copy, campaign filter) are not presented on
+    // this surface. Under Phase-2 keepalive the Library surface stays mounted
+    // but aria-hidden + visibility:hidden, so role queries (New Scene button)
+    // already resolve to 0; the saved-count copy is asserted not-visible rather
+    // than not-in-DOM (getByText, unlike getByRole, still matches hidden nodes).
+    await expect(page.getByRole('button', { name: 'New Scene' })).toHaveCount(0);
+    await expect(page.getByText(/scenes? saved/)).toBeHidden();
 
-  // Second scene, so the selection assertion below is non-tautological.
-  await page.getByRole('button', { name: 'Scenes', exact: true }).click();
-  await createScene(page, 'Side Room');
+    // Second scene, so the selection assertion below is non-tautological.
+    await page.getByRole('button', { name: 'Scenes', exact: true }).click();
+    await createScene(page, 'Side Room');
 
-  // Gate (c): pick the FIRST scene → the canvas renders that grid only.
-  await page.getByRole('button', { name: 'Scenes', exact: true }).click();
-  await expect(page.getByText('2 scenes saved')).toBeVisible();
-  await page.getByRole('button', { name: /Test Chamber/ }).click();
-  await expect(page.getByRole('grid', { name: 'Test Chamber grid' })).toBeVisible();
-  await expect(page.getByRole('grid', { name: 'Side Room grid' })).toHaveCount(0);
+    // Gate (c): pick the FIRST scene → the canvas renders that grid only.
+    await page.getByRole('button', { name: 'Scenes', exact: true }).click();
+    await expect(page.getByText('2 scenes saved')).toBeVisible();
+    await page.getByRole('button', { name: /Test Chamber/ }).click();
+    await expect(page.getByRole('grid', { name: 'Test Chamber grid' })).toBeVisible();
+    await expect(page.getByRole('grid', { name: 'Side Room grid' })).toHaveCount(0);
 
-  // Round trip: back on the picker, the selection persisted (selectedSceneId
-  // lives in the shell nav, surfaced as the card's pressed state).
-  await page.getByRole('button', { name: 'Scenes', exact: true }).click();
-  await expect(page.getByRole('button', { name: /Test Chamber/ })).toHaveAttribute(
-    'aria-pressed',
-    'true'
-  );
-  await expect(page.getByRole('button', { name: /Side Room/ })).toHaveAttribute(
-    'aria-pressed',
-    'false'
-  );
-});
+    // Round trip: back on the picker, the selection persisted (selectedSceneId
+    // lives in the shell nav, surfaced as the card's pressed state).
+    await page.getByRole('button', { name: 'Scenes', exact: true }).click();
+    await expect(page.getByRole('button', { name: /Test Chamber/ })).toHaveAttribute(
+      'aria-pressed',
+      'true'
+    );
+    await expect(page.getByRole('button', { name: /Side Room/ })).toHaveAttribute(
+      'aria-pressed',
+      'false'
+    );
+  }
+);
 
 test('importing a scenes file selects the imported scene and lands on its canvas', async ({
   page,
