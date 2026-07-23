@@ -34,6 +34,11 @@ import {
   loadAdvantagesForSystem,
   loadDaggerheartDomainCardsForSystem,
   loadDaggerheartDomainsForSystem,
+  loadDaggerheartClassesForSystem,
+  loadDaggerheartAncestriesForSystem,
+  loadDaggerheartCommunitiesForSystem,
+  loadDaggerheartWeaponsForSystem,
+  loadDaggerheartArmorForSystem,
 } from '../utils/dataLoader';
 import { GameSystemId } from '../types/game-systems';
 import {
@@ -779,6 +784,87 @@ TARGETS.push({
   loader: () => loaderNames(loadDaggerheartDomainsForSystem, 'daggerheart'),
 });
 
+// Daggerheart non-domain SRD categories. Each reference page lists its entries as
+// markdown links into a per-entity directory, so the href fragment isolates the
+// real entries from the section's other cross-links (e.g. Classes.md also links
+// domains): classes → /classes/, ancestries → /ancestries/ (the "Mixed Ancestry"
+// prose heading is not a link, so it is naturally excluded), communities →
+// /communities/. Weapons span the Primary + Secondary weapon table pages; armor
+// is on the Armor Tables page. The loaders map ancestries→species and
+// communities→backgrounds, matching the runtime loader shapes.
+const DH_CONTENTS = 'https://raw.githubusercontent.com/Batres3/daggerheart-srd/main/contents';
+TARGETS.push({
+  systemId: 'daggerheart',
+  systemLabel: 'Daggerheart',
+  category: 'classes',
+  srdSource: 'SRD 1.0 (Batres3/daggerheart-srd Classes)',
+  srd: () => fetchMarkdownLinkNames(`${DH_CONTENTS}/Classes.md`, '/classes/'),
+  loader: () => loaderNames(loadDaggerheartClassesForSystem, 'daggerheart'),
+});
+TARGETS.push({
+  systemId: 'daggerheart',
+  systemLabel: 'Daggerheart',
+  category: 'ancestries',
+  srdSource: 'SRD 1.0 (Batres3/daggerheart-srd Ancestries)',
+  srd: () => fetchMarkdownLinkNames(`${DH_CONTENTS}/Ancestries.md`, '/ancestries/'),
+  loader: () => loaderNames(loadDaggerheartAncestriesForSystem, 'daggerheart'),
+});
+TARGETS.push({
+  systemId: 'daggerheart',
+  systemLabel: 'Daggerheart',
+  category: 'communities',
+  srdSource: 'SRD 1.0 (Batres3/daggerheart-srd Communities)',
+  srd: () => fetchMarkdownLinkNames(`${DH_CONTENTS}/Communities.md`, '/communities/'),
+  loader: () => loaderNames(loadDaggerheartCommunitiesForSystem, 'daggerheart'),
+});
+TARGETS.push({
+  systemId: 'daggerheart',
+  systemLabel: 'Daggerheart',
+  category: 'weapons',
+  srdSource: 'SRD 1.0 (Batres3/daggerheart-srd Primary + Secondary Weapon Tables)',
+  srd: async () => [
+    ...(await fetchMarkdownLinkNames(`${DH_CONTENTS}/Primary%20Weapon%20Tables.md`, '/weapons/')),
+    ...(await fetchMarkdownLinkNames(`${DH_CONTENTS}/Secondary%20Weapon%20Tables.md`, '/weapons/')),
+  ],
+  loader: () => loaderNames(loadDaggerheartWeaponsForSystem, 'daggerheart'),
+});
+TARGETS.push({
+  systemId: 'daggerheart',
+  systemLabel: 'Daggerheart',
+  category: 'armor',
+  srdSource: 'SRD 1.0 (Batres3/daggerheart-srd Armor Tables)',
+  srd: () => fetchMarkdownLinkNames(`${DH_CONTENTS}/Armor%20Tables.md`, '/armor/'),
+  loader: () => loaderNames(loadDaggerheartArmorForSystem, 'daggerheart'),
+});
+// Daggerheart adversaries: the SRD ships one markdown statblock per adversary
+// under adversaries/Tier {1-4}/ with NO single link-listing page (the Fantasy
+// Statblocks plugin reads the folder, and GitHub's tree API is rate-limited), so
+// the denominator is the pinned upstream roster written alongside the encoder —
+// scripts/data/daggerheart-adversary-manifest.json, exactly the PF1e-bestiary
+// pattern. The loader side imports the shipped adversary data module directly
+// (adversaries are combatants, not character-builder options, so there is no
+// loadDaggerheart…ForSystem surface — as the M&M skills target does for its data).
+TARGETS.push({
+  systemId: 'daggerheart',
+  systemLabel: 'Daggerheart',
+  category: 'adversaries',
+  srdSource: 'SRD 1.0 (Batres3/daggerheart-srd adversaries, pinned manifest)',
+  srd: async () => {
+    const manifestPath = path.resolve(
+      path.dirname(fileURLToPath(import.meta.url)),
+      '../../scripts/data/daggerheart-adversary-manifest.json'
+    );
+    const manifest = JSON.parse(await fs.readFile(manifestPath, 'utf8')) as {
+      entries: Array<{ name: string }>;
+    };
+    return manifest.entries.map((entry) => entry.name);
+  },
+  loader: async () => {
+    const mod = await import('../data/daggerheart/1.0/adversaries');
+    return mod.daggerheartAdversaries.map((a) => a.name);
+  },
+});
+
 type Row = {
   systemLabel: string;
   category: string;
@@ -903,10 +989,10 @@ async function main(): Promise<void> {
   }
   lines.push('## Pending (independent source not yet wired or not cleanly scopable)');
   lines.push(
-    '- **D&D 3.5e** spells, monsters, classes, and feats are measured against the clean core-only `olimot/srd-v3.5-md` chapters. The monster denominator counts INDIVIDUAL stat blocks: `collapse35eMonsterHeadings` (`src/scripts/srdCoverageShape.ts`) drops the SRD\'s taxonomic category headers (e.g. "Angel", "Dragon", "Elemental") that merely nest separately-named members and folds age/size variant rows to their archetype. **3.5e equipment is closed-by-no-source**: the olimot `equipment.md` tables interleave services/lodging/food/mounts/transport outside the loader\'s weapons/armor/shields/gear scope, so a scrape would poison the denominator (D35E packs remain rejected for psionics/epic). See `docs/srd-sources.md`.'
+    '- **D&D 3.5e** spells, monsters, classes, and feats are measured against the clean core-only `olimot/srd-v3.5-md` chapters. The monster denominator counts INDIVIDUAL stat blocks: `collapse35eMonsterHeadings` (`src/scripts/srdCoverageShape.ts`) drops the SRD\'s taxonomic category headers (e.g. "Angel", "Dragon", "Chromatic Dragons", "Dinosaur") that merely nest separately-named members, drops non-creature prose/template headings ("Reading the Entries", "Combat", "Celestial Creature", "Fiendish Creature"), and folds age/size variant rows to their archetype. **3.5e equipment is closed-by-no-source**: the olimot `equipment.md` tables interleave services/lodging/food/mounts/transport outside the loader\'s weapons/armor/shields/gear scope, so a scrape would poison the denominator (D35E packs remain rejected for psionics/epic). See `docs/srd-sources.md`.'
   );
   lines.push(
-    '- **Remaining categories** — PF2e classes/ancestries/backgrounds/feats/equipment are wired above (Core Rulebook scope; **archetypes closed-by-no-source** — an APG-era system with no CRB entries). **PF1e classes/feats are closed-by-no-source** (no runtime-enumerable Core source; PSRD-Data needs an encoder-produced pinned manifest). Daggerheart classes/ancestries/communities/weapons/armor/adversaries are documented in `docs/srd-sources.md` and pending wiring. M&M skills and equipment are wired and measured above; **M&M conditions is an absent gap marker** (no conditions catalog ships — see the Absent section).'
+    '- **Remaining categories** — PF2e classes/ancestries/backgrounds/feats/equipment are wired above (Core Rulebook scope; **archetypes closed-by-no-source** — an APG-era system with no CRB entries). **PF1e classes/feats are closed-by-no-source** (no runtime-enumerable Core source; PSRD-Data needs an encoder-produced pinned manifest). Daggerheart classes/ancestries/communities/weapons/armor/adversaries are wired and measured above (adversaries against the pinned `scripts/data/daggerheart-adversary-manifest.json` roster). M&M skills and equipment are wired and measured above; **M&M conditions is an absent gap marker** (no conditions catalog ships — see the Absent section).'
   );
   lines.push('');
 

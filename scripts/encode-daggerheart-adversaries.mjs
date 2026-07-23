@@ -148,6 +148,7 @@ function main() {
 
   const indexImports = [];
   const indexSpreads = [];
+  const manifestEntries = [];
   for (const tier of [1, 2, 3, 4]) {
     const dir = join(SRC, 'adversaries', `Tier ${tier}`);
     const adversaries = [];
@@ -157,6 +158,7 @@ function main() {
       if (adversary) adversaries.push(adversary);
     }
     adversaries.sort((a, b) => a.id.localeCompare(b.id));
+    for (const adversary of adversaries) manifestEntries.push({ name: adversary.name, tier });
     report.byTier[tier] = adversaries.length;
     report.encoded += adversaries.length;
 
@@ -191,6 +193,27 @@ export const daggerheartAdversaries: DaggerheartAdversary[] = [
 ${indexSpreads.join('\n')}
 ];
 `
+  );
+
+  // Pinned upstream roster for src/scripts/srd-coverage.ts (Daggerheart
+  // adversaries category). There is no single link-listing page upstream and
+  // GitHub's tree API is rate-limited, so the verbatim adversary list is
+  // committed alongside the encoder — mirroring scripts/data/pf1e-bestiary-manifest.json.
+  manifestEntries.sort((a, b) => a.tier - b.tier || a.name.localeCompare(b.name));
+  mkdirSync(resolve('scripts/data'), { recursive: true });
+  writeFileSync(
+    resolve('scripts/data/daggerheart-adversary-manifest.json'),
+    JSON.stringify(
+      {
+        source:
+          'Batres3/daggerheart-srd (Daggerheart SRD 1.0, DPCGL) adversaries/Tier {1-4}/*.md — one markdown statblock per adversary. Pinned upstream roster; there is no single link-listing page upstream (the Fantasy Statblocks plugin reads the folder), so the denominator is pinned here, mirroring scripts/data/pf1e-bestiary-manifest.json. Regenerate via scripts/encode-daggerheart-adversaries.mjs.',
+        total: manifestEntries.length,
+        byTier: report.byTier,
+        entries: manifestEntries,
+      },
+      null,
+      2
+    ) + '\n'
   );
 
   console.log(`\nencoded: ${report.encoded} (by tier: ${JSON.stringify(report.byTier)})`);
