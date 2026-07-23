@@ -167,6 +167,14 @@ export interface Pf2eDataModel extends SystemDataModel {
      * action). Toggled per round from the sheet; cleared on unequip.
      */
     raised?: boolean;
+    /**
+     * Base weapon damage dice (numeric faces), copied from the catalog at equip
+     * time so buildCharacterCombatant rolls the real weapon in scene combat.
+     * Present on a `slot: 'mainHand'` weapon entry; absent for armor/shields.
+     */
+    weaponDamage?: { count: number; die: number };
+    /** Weapon slot marker so the combatant reads this entry's dice as the main-hand weapon. */
+    slot?: 'mainHand';
     // Magic/effect bonuses consumed by the system-agnostic rules IR (RFC 003).
     // Optional and additive; base AC math is unaffected. PF2e bonuses default to
     // the item bucket unless pf2eBucket says otherwise.

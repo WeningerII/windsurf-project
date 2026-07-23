@@ -8,6 +8,39 @@ import {
   shortRestPf2eSpellcasting,
 } from './pf2eSheetShared';
 import { consume, poolFromRemaining, remainingOf } from '../../utils/resourcePool';
+import { parseWeaponDamageDice } from '../../utils/derivedCombatMath';
+
+/**
+ * Map a PF2e catalog weapon onto a `mainHand` equipment entry carrying the
+ * numeric weapon dice the scene combatant reads. The PF2e catalog authors the
+ * canonical `Weapon.damage` `DiceRoll`, parsed via {@link parseWeaponDamageDice}
+ * (which tolerates any catalog shape, not just the 5e one). Returns null when
+ * the damage is missing or unparseable, so a malformed entry equips nothing.
+ */
+export function toEquippedPf2eWeapon(item: {
+  id: string;
+  name: string;
+  bulk?: number;
+  damage?: string | { count?: number; die?: number | string } | null;
+}): {
+  itemId: string;
+  name: string;
+  bulk: number;
+  equipped: true;
+  slot: 'mainHand';
+  weaponDamage: { count: number; die: number };
+} | null {
+  const weaponDamage = parseWeaponDamageDice(item.damage);
+  if (!weaponDamage) return null;
+  return {
+    itemId: item.id,
+    name: item.name,
+    bulk: item.bulk ?? 0,
+    equipped: true,
+    slot: 'mainHand',
+    weaponDamage,
+  };
+}
 
 export type Pf2eInventoryBrowserItem = {
   id: string;
@@ -340,6 +373,34 @@ export function usePf2eMutationHandlers({ document, onUpdate }: UsePf2eMutationH
     [data.equipment, update]
   );
 
+  // Equip a main-hand weapon: replace any previously-equipped main-hand weapon
+  // and copy the catalog's DiceRoll dice onto the entry, which
+  // buildCharacterCombatant then rolls in scene combat. Coexists with
+  // armor/shield (which carry no `slot: 'mainHand'`).
+  const isEquippedPf2eWeapon = (entry: { slot?: string }) => entry.slot === 'mainHand';
+
+  const equipWeapon = useCallback(
+    (item: {
+      id: string;
+      name: string;
+      bulk?: number;
+      damage?: string | { count?: number; die?: number | string } | null;
+    }) => {
+      const entry = toEquippedPf2eWeapon(item);
+      if (!entry) {
+        return;
+      }
+      update({
+        equipment: [...data.equipment.filter((entry) => !isEquippedPf2eWeapon(entry)), entry],
+      });
+    },
+    [data.equipment, update]
+  );
+
+  const unequipWeapon = useCallback(() => {
+    update({ equipment: data.equipment.filter((entry) => !isEquippedPf2eWeapon(entry)) });
+  }, [data.equipment, update]);
+
   const unequipArmor = useCallback(() => {
     update({ equipment: data.equipment.filter((entry) => !isEquippedPf2eArmor(entry)) });
   }, [data.equipment, update]);
@@ -367,8 +428,10 @@ export function usePf2eMutationHandlers({ document, onUpdate }: UsePf2eMutationH
     consumeInventoryItem,
     equipArmor,
     equipShield,
+    equipWeapon,
     unequipArmor,
     unequipShield,
+    unequipWeapon,
     rollCheck,
     toggleShieldRaised,
     cycleSpellProficiencyTier,

@@ -369,9 +369,10 @@ export const dnd5e2024ComputeRegister: SystemComputeRegister = {
       inputs: ['damage'],
       edgeCases: ['floors at 10'],
       source: `${SRD}: Concentration`,
-      status: 'missing',
-      testRef: 'src/__tests__/derivedCasterMath.test.ts :: 5e concentration DC',
-      note: 'Canonical helper is test-pinned but not consumed by any engine or sheet; per the legend, unwired quantities are missing.',
+      status: 'verified',
+      testRef:
+        'src/__tests__/derivation/dnd5eDerivedQuantities.test.ts :: dnd5e.L8.concentration-dc',
+      note: 'Wired 2026-07-21 (helper-only → wired): the shared DND5E_DERIVED_QUANTITIES card (dnd5e.L8.concentration-dc) is applied by the shared 5e engine and rendered on the 2024 sheet just as on 2014, pinned by the generic derivation test. The DC scales with in-play damage, so the card shows the RAW min-10 floor with the damage-scaling rule in its hint.',
     },
     {
       id: 'dnd5e2024.L9.ability-score-cap',

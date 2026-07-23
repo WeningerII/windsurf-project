@@ -203,9 +203,11 @@ export const PF2E_DERIVED_QUANTITIES: ReadonlyArray<DerivedQuantitySpec<Pf2eData
   },
   {
     // Class DC = 10 + key ability mod + class-DC proficiency total (level + tier).
-    // Standing scalar: computed and registered here, but NOT surfaced via the
-    // generic cards — the Overview already renders a dedicated Class DC card with
-    // its own proficiency-badge cycling, so this omits `display`.
+    // Surfaced as a read-only card in the generic derived-stats strip, consistent
+    // with AC / Bulk / Auto-Heighten. The Pf2eOverview additionally keeps an
+    // INTERACTIVE Class DC tile whose proficiency badge cycles the tier (the same
+    // pattern as Perception): the strip is the canonical scalar readout, the
+    // Overview tile is the editor for the proficiency rank.
     id: 'pf2e.L2.class-spell-dc',
     layer: 'L2',
     quantity: 'Class DC',
@@ -243,5 +245,10 @@ export const PF2E_DERIVED_QUANTITIES: ReadonlyArray<DerivedQuantitySpec<Pf2eData
         expected: 12,
       },
     ],
+    display: {
+      label: 'Class DC',
+      icon: 'Swords',
+      hint: '10 + key ability + proficiency',
+    },
   },
 ];

@@ -690,6 +690,88 @@ describe('buildCharacterCombatant — equipped weapon damage (versatile)', () =>
   });
 });
 
+describe('buildCharacterCombatant — PF2e striking runes (weapon damage dice)', () => {
+  const strikingLongsword = (rune?: 'striking' | 'greater' | 'major') => ({
+    itemId: 'longsword',
+    slot: 'mainHand' as const,
+    attuned: false,
+    equipped: true,
+    weaponDamage: { count: 1, die: 8 },
+    ...(rune ? { strikingRune: rune } : {}),
+  });
+
+  function pf2eDoc(equipment: unknown[]) {
+    return charDoc('pf2e', {
+      level: 5,
+      baseAttributes: { str: 18, dex: 12, con: 14, int: 10, wis: 10, cha: 10 },
+      armorClass: 20,
+      hitPoints: { current: 50, max: 50, temp: 0 },
+      weaponProficiencies: { martial: { tier: 'expert', total: 9 } },
+      equipment,
+      feats: [],
+      features: [],
+    });
+  }
+
+  function dieCount(result: ReturnType<typeof buildCharacterCombatant>) {
+    if (!result.supported) return undefined;
+    return result.combatant.damageEffects.filter((e) => e.operation === 'add-die').length;
+  }
+
+  it('a striking rune sets the weapon to 2 damage dice', () => {
+    const result = buildCharacterCombatant(pf2eDoc([strikingLongsword('striking')]), {
+      position: { x: 0, y: 0 },
+    });
+    expect(dieCount(result)).toBe(2);
+  });
+
+  it('greater / major striking roll 3 / 4 weapon dice', () => {
+    expect(
+      dieCount(
+        buildCharacterCombatant(pf2eDoc([strikingLongsword('greater')]), {
+          position: { x: 0, y: 0 },
+        })
+      )
+    ).toBe(3);
+    expect(
+      dieCount(
+        buildCharacterCombatant(pf2eDoc([strikingLongsword('major')]), { position: { x: 0, y: 0 } })
+      )
+    ).toBe(4);
+  });
+
+  it('an unruned weapon is unchanged (1 weapon die)', () => {
+    const result = buildCharacterCombatant(pf2eDoc([strikingLongsword()]), {
+      position: { x: 0, y: 0 },
+    });
+    expect(dieCount(result)).toBe(1);
+  });
+
+  it('the rune is inert for a non-PF2e system (a 5e sheet ignores strikingRune)', () => {
+    const result = buildCharacterCombatant(
+      charDoc('dnd-5e-2014', {
+        level: 5,
+        baseAttributes: { str: 16, dex: 10, con: 10, int: 10, wis: 10, cha: 10 },
+        armorClass: 16,
+        hitPoints: { current: 40, max: 40, temp: 0 },
+        equipment: [
+          {
+            itemId: 'sword',
+            slot: 'mainHand',
+            attuned: false,
+            weaponDamage: { count: 1, die: 8 },
+            strikingRune: 'striking',
+          },
+        ],
+        feats: [],
+        features: [],
+      }),
+      { position: { x: 0, y: 0 } }
+    );
+    expect(dieCount(result)).toBe(1);
+  });
+});
+
 describe('buildCharacterCombatant — two-weapon fighting (off-hand)', () => {
   const mainLight = {
     itemId: 'shortsword-main',

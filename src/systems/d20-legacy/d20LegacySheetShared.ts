@@ -112,16 +112,3 @@ export function setD20LegacySpellSlotTotal(
     },
   };
 }
-
-export function getIterativeAttackBonuses(baseAttackBonus: number): number[] {
-  const attacks = [baseAttackBonus];
-  for (let penalty = 5; attacks.length < 4; penalty += 5) {
-    const bonus = baseAttackBonus - penalty;
-    if (bonus < 1) {
-      break;
-    }
-    attacks.push(bonus);
-  }
-
-  return attacks;
-}

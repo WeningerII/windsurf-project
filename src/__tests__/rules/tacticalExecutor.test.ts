@@ -395,6 +395,66 @@ describe('movement execution (grid-combat phase 3)', () => {
   });
 });
 
+describe('PF2e Multiple Attack Penalty in the turn executor', () => {
+  it('a PF2e combatant carries −5 / −10 MAP on its 2nd / 3rd Strikes', async () => {
+    const { buildCharacterCombatant, executeTacticalTurn } = await import('../../rules');
+    const built = buildCharacterCombatant(
+      {
+        id: 'pf2e-striker',
+        name: 'Striker',
+        systemId: 'pf2e',
+        system: {
+          level: 5,
+          baseAttributes: { str: 18, dex: 12, con: 14, int: 10, wis: 10, cha: 10 },
+          armorClass: 20,
+          hitPoints: { current: 60, max: 60, temp: 0 },
+          weaponProficiencies: { martial: { tier: 'expert', total: 9 } },
+          equipment: [],
+          feats: [],
+          features: [],
+        },
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      { tokenId: 'a', position: { x: 0, y: 0 } }
+    );
+    expect(built.supported).toBe(true);
+    if (!built.supported) return;
+    // The pf2e profile wires the three-action economy (3 Strikes) and MAP (−5 step).
+    expect(built.combatant.attacksPerRound).toBe(3);
+    expect(built.combatant.iterativePenaltyStep).toBe(5);
+
+    const turn = executeTacticalTurn({
+      actor: {
+        tokenId: 'a',
+        faction: 'party',
+        position: { x: 0, y: 0 },
+        attackEffects: built.combatant.attackEffects,
+        damageEffects: built.combatant.damageEffects,
+        reach: 1,
+        attacksPerRound: built.combatant.attacksPerRound,
+        iterativePenaltyStep: built.combatant.iterativePenaltyStep,
+      },
+      targets: [
+        {
+          tokenId: 'b',
+          faction: 'monsters',
+          position: { x: 1, y: 0 },
+          armorClass: 15,
+          hp: { current: 999, max: 999 },
+        },
+      ],
+      seed: 'pf2e-map-seed',
+      degreeModel: 'pf2e',
+    });
+    // Three Strikes at the same target; MAP is applied to the attack bonus.
+    expect(turn.attacks).toHaveLength(3);
+    const base = turn.attacks[0].resolution.attackBonus;
+    expect(turn.attacks[1].resolution.attackBonus).toBe(base - 5);
+    expect(turn.attacks[2].resolution.attackBonus).toBe(base - 10);
+  });
+});
+
 describe('iterative attack penalties in the turn executor', () => {
   it('the second attack of a full attack rolls at -5', async () => {
     const { executeTacticalTurn } = await import('../../rules/tactical/tacticalExecutor');

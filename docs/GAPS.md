@@ -147,13 +147,18 @@ below; the remainder is the honest residual.
     for 5e (2026-07-14):** the 5e `toEquippedItem` now converts the catalog
     `Weapon.damage` DiceRoll into the numeric `{count, die}` shape the combatant
     reads, so equipping a weapon gives a real saved character its weapon dice in
-    scene combat (previously only engine-built inputs carried it). Base
-    one-handed damage; the versatile two-handed die IS representable
-    (`EquippedItem.weaponVersatileDie` exists and the combatant consumes it —
-    corrected 2026-07-21, the earlier "isn't representable" was wrong): only
-    equip-time population is missing. The equivalent populate for the
-    d20-legacy/PF2e equip flows also remains (their weapon data shapes differ
-    from the 5e DiceRoll catalog).
+    scene combat (previously only engine-built inputs carried it). The versatile
+    two-handed die is now populated too (**done 2026-07-21**): `toEquippedItem`
+    reads the catalog `Weapon.versatileDamage` into `EquippedItem.weaponVersatileDie`
+    and carries the catalog `properties` into `weaponProperties`, so an equipped
+    versatile weapon rolls its larger die in two hands in scene combat (the
+    combatant already consumed both fields). The equivalent populate for the
+    d20-legacy and PF2e equip flows **also shipped 2026-07-21**: each now has an
+    `equipWeapon` handler (`useD20LegacyMutationHandlers` / `usePf2eMutationHandlers`)
+    that maps a catalog weapon onto a `mainHand` entry carrying `weaponDamage`,
+    parsed from that system's OWN shape via the shared `parseWeaponDamageDice`
+    (3.5e's notation-string `damage`, PF1e/PF2e's DiceRoll) — not forced through
+    the 5e DiceRoll catalog.
   - L5: **Partial.** Prepared-spell limits are wired — the 5e spells tab shows
     each prepared caster's RAW limit (`getDnd5ePreparedCasterSummaries` through
     the sheet controller). Still absent: known-spell-count enforcement (the
@@ -198,12 +203,13 @@ below; the remainder is the honest residual.
     uses, so display and engine share one formula source. Monk/Barbarian
     Unarmored Defense, applied in the same engine's `computeBaseArmorClass`.
     3.5e/PF1e iterative attacks, displayed by the d20-legacy sheet and applied
-    per attack via the tactical executor's iterative penalty steps — though
-    through duplicate implementations: the register-linked
-    `iterativeAttackBonuses` in `src/utils/derivedCombatMath.ts` remains
-    test-only while the d20-legacy sheet and the tactical executor's profile
-    each carry their own encoding — three encodings of one formula, a dedupe
-    hygiene item. PF2e Bulk limits: `Pf2eInventoryTab` computes total Bulk via
+    per attack via the tactical executor's iterative penalty steps. The
+    d20-legacy sheet controller now consumes the register-linked
+    `iterativeAttackBonuses` in `src/utils/derivedCombatMath.ts` directly (the
+    sheet's own `getIterativeAttackBonuses` duplicate was deleted 2026-07-21),
+    so the canonical helper is no longer test-only; the tactical executor's
+    profile still carries its own penalty-step encoding — two encodings of one
+    formula remain, a smaller dedupe hygiene item. PF2e Bulk limits: `Pf2eInventoryTab` computes total Bulk via
     `getPf2eBulkState`, while the register-linked `pf2eBulkLimits` now ALSO
     ships through derived-quantity cards (no longer test-only) — so the
     duplication persists and both formula sources currently render to users. Also wired earlier: 3.5e skill synergy, max-rank
@@ -216,14 +222,17 @@ below; the remainder is the honest residual.
     wizard specialist, and Dragon Disciple bonus spell slots auto-resolve into
     the spells-per-day totals.
   - **Still helper-only** (re-audited 2026-07-21; RAW formula proven by test,
-    but nothing in `prepareData` or a sheet computes or displays it):
-    concentration DC in all three flavors (5e, 3.5e, PF1e — the legacy flavors
-    live in per-system `derivedMath.ts`, not `src/utils/`); PF2e
+    but nothing in `prepareData` or a sheet computes or displays it): PF2e
     multiple-attack penalty — the pf2e combat profile reuses the 5e
     feature-based attack economy and declares no MAP penalty step
     (`iterativePenaltyStep`), so the tactical executor never applies it; PF2e
     striking rune dice — `EquippedItem` has no rune field to read; M&M
-    measurements. **Wired since the last update (removed from this list):**
+    measurements (parameterized by a per-measure rank-0 anchor + rank, so it is
+    register/test-pinned only — deliberately not a standing sheet card). **Wired
+    since the last update (removed from this list):** concentration DC in all
+    three flavors (5e/3.5e/PF1e — each now surfaces as a derived-quantity card
+    through its system's `*_DERIVED_QUANTITIES`, using the same cited helper the
+    register anchors; 5e's card renders on both the 2014 and 2024 sheets);
     passive Perception (5e computes AND displays it through the derivation
     layer; no other system declares one yet) and PF2e auto-heighten rank
     (computed and displayed as a derived card; per-spell mechanical
