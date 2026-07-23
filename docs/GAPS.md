@@ -200,12 +200,13 @@ below; the remainder is the honest residual.
     uses, so display and engine share one formula source. Monk/Barbarian
     Unarmored Defense, applied in the same engine's `computeBaseArmorClass`.
     3.5e/PF1e iterative attacks, displayed by the d20-legacy sheet and applied
-    per attack via the tactical executor's iterative penalty steps — though
-    through duplicate implementations: the register-linked
-    `iterativeAttackBonuses` in `src/utils/derivedCombatMath.ts` remains
-    test-only while the d20-legacy sheet and the tactical executor's profile
-    each carry their own encoding — three encodings of one formula, a dedupe
-    hygiene item. PF2e Bulk limits: `Pf2eInventoryTab` computes total Bulk via
+    per attack via the tactical executor's iterative penalty steps. The
+    d20-legacy sheet controller now consumes the register-linked
+    `iterativeAttackBonuses` in `src/utils/derivedCombatMath.ts` directly (the
+    sheet's own `getIterativeAttackBonuses` duplicate was deleted 2026-07-21),
+    so the canonical helper is no longer test-only; the tactical executor's
+    profile still carries its own penalty-step encoding — two encodings of one
+    formula remain, a smaller dedupe hygiene item. PF2e Bulk limits: `Pf2eInventoryTab` computes total Bulk via
     `getPf2eBulkState`, while the register-linked `pf2eBulkLimits` now ALSO
     ships through derived-quantity cards (no longer test-only) — so the
     duplication persists and both formula sources currently render to users. Also wired earlier: 3.5e skill synergy, max-rank

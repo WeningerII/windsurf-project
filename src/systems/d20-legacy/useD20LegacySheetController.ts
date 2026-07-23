@@ -9,7 +9,8 @@ import type { Pf1eTrait } from '../pf1e/data-model';
 import type { Pf1eDataModel } from '../pf1e/data-model';
 import { PF1E_DERIVED_QUANTITIES } from '../pf1e/derivedQuantities';
 import { getD20LegacySpellSlotTable } from '../shared/d20LegacySpellcasting';
-import { getIterativeAttackBonuses, type D20LegacyData } from './d20LegacySheetShared';
+import { iterativeAttackBonuses as computeIterativeAttackBonuses } from '../../utils/derivedCombatMath';
+import { type D20LegacyData } from './d20LegacySheetShared';
 import { useD20LegacyMutationHandlers } from './useD20LegacyMutationHandlers';
 import { availableD20LegacyToggles } from '../../rules/conditions/d20LegacyRiders';
 import { useD20LegacySheetResources } from './useD20LegacySheetResources';
@@ -53,7 +54,7 @@ export function useD20LegacySheetController({
   const cmb = isPf1e ? (sys as Pf1eDataModel).cmb : undefined;
   const cmd = isPf1e ? (sys as Pf1eDataModel).cmd : undefined;
   const iterativeAttackBonuses = useMemo(
-    () => getIterativeAttackBonuses(baseAttackBonus),
+    () => computeIterativeAttackBonuses(baseAttackBonus),
     [baseAttackBonus]
   );
   const spellSlots = useMemo(() => sys.spellsPerDay ?? {}, [sys.spellsPerDay]);
