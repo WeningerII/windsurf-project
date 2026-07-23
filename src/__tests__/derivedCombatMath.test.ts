@@ -33,6 +33,7 @@ describe('d20 iterative attacks', () => {
   it('adds extra attacks at BAB +6/+11/+16, each −5', () => {
     expect(iterativeAttackBonuses(5)).toEqual([5]);
     expect(iterativeAttackBonuses(6)).toEqual([6, 1]);
+    expect(iterativeAttackBonuses(8)).toEqual([8, 3]);
     expect(iterativeAttackBonuses(11)).toEqual([11, 6, 1]);
     expect(iterativeAttackBonuses(16)).toEqual([16, 11, 6, 1]);
     expect(iterativeAttackBonuses(20)).toEqual([20, 15, 10, 5]);

@@ -133,6 +133,12 @@ export interface Dnd35eDataModel extends SystemDataModel {
     shieldBonus?: number;
     /** d20 armor check penalty (<= 0), copied from the catalog at equip time. */
     armorCheckPenalty?: number;
+    /**
+     * Base weapon damage dice (numeric faces), copied from the catalog at equip
+     * time so buildCharacterCombatant rolls the real weapon in scene combat.
+     * Present on a `slot: 'mainHand'` weapon entry; absent for armor/shields.
+     */
+    weaponDamage?: { count: number; die: number };
     // Magic/effect bonuses consumed by the system-agnostic rules IR (RFC 003).
     // Optional and additive; base AC math is unaffected.
     attackBonus?: number;

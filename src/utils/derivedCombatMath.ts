@@ -4,6 +4,44 @@
  * test-pinned (same pattern as compute5eAC / baseSave / classBAB).
  */
 
+// ─── Weapon damage dice (equip-time population) ───────────────────────────
+
+/**
+ * Parse a weapon's catalog damage into the numeric `{ count, die }` shape the
+ * scene combatant reads, tolerating the divergent catalog shapes the d20 systems
+ * author (deliberately NOT assuming the 5e `DiceRoll` `{ count, die: 'd8' }`):
+ *   - a plain notation STRING like `'2d6'`, `'1d8'`, or `'d10'` (3.5e's
+ *     `DnD35eWeapon.damage`), and
+ *   - a `DiceRoll`-like object whose `die` is a face string (`'d8'`) or a raw
+ *     number (`8`) — the canonical `Weapon.damage` PF1e/PF2e/5e author.
+ * Returns `null` for missing/unparseable input so non-weapons and malformed data
+ * simply leave `weaponDamage` unset. Count defaults to 1; a non-positive die is
+ * rejected.
+ */
+export function parseWeaponDamageDice(
+  damage: string | { count?: number; die?: number | string } | null | undefined
+): { count: number; die: number } | null {
+  if (damage == null) return null;
+  let count = 1;
+  let faces: number;
+  if (typeof damage === 'string') {
+    const match = /^\s*(\d*)\s*d\s*(\d+)/i.exec(damage);
+    if (!match) return null;
+    count = match[1] ? parseInt(match[1], 10) : 1;
+    faces = parseInt(match[2], 10);
+  } else {
+    if (typeof damage.count === 'number' && Number.isFinite(damage.count)) {
+      count = damage.count;
+    }
+    faces =
+      typeof damage.die === 'number'
+        ? damage.die
+        : parseInt(String(damage.die ?? '').replace(/^d/i, ''), 10);
+  }
+  if (!Number.isFinite(faces) || faces <= 0) return null;
+  return { count: Math.max(1, count), die: faces };
+}
+
 // ─── D&D 3.5e / Pathfinder 1e ─────────────────────────────────────────────
 
 /** Iterative attack bonuses for a full attack: extra attacks at BAB +6/+11/+16. */

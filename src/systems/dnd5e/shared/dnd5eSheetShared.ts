@@ -76,14 +76,26 @@ export function toEquippedItem(item: Item): EquippedItem | null {
   }
 
   if (item.type === 'weapon') {
+    const weapon = item as Weapon;
     // Populate weapon dice at equip time so scene combat rolls the real
     // weapon for a saved character (the combatant reads item.weaponDamage;
-    // previously only engine-built inputs carried it). Base (one-handed)
-    // damage; versatile two-handed mode is not modeled by the single
-    // weaponDamage field and stays a follow-up.
-    const weaponDamage = toWeaponDamage((item as Weapon).damage);
+    // previously only engine-built inputs carried it). Base (one-handed) damage.
+    const weaponDamage = toWeaponDamage(weapon.damage);
     if (weaponDamage) {
       equippedItem.weaponDamage = weaponDamage;
+    }
+    // Versatile two-handed die (e.g. a longsword's d10): the combatant rolls it
+    // instead of the base die when the weapon is a versatile property AND nothing
+    // occupies the off-hand (buildCharacterCombatant → dnd5eVersatileDamageDie).
+    // Reuse the same DiceRoll → face parsing, keeping only the die size.
+    const versatile = toWeaponDamage(weapon.versatileDamage);
+    if (versatile) {
+      equippedItem.weaponVersatileDie = versatile.die;
+    }
+    // Carry the catalog weapon properties so the combatant can gate versatile /
+    // light (two-weapon off-hand) behavior on real weapon data, not just presence.
+    if (weapon.properties.length > 0) {
+      equippedItem.weaponProperties = [...weapon.properties];
     }
   }
 

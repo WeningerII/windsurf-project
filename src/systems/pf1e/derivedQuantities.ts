@@ -32,7 +32,7 @@ import type { DerivedQuantitySpec } from '../../rules/derivation';
 import { classBAB } from '../shared/d20-helpers';
 import { resolveCharacterEffects, computeD20LegacyAC } from '../../rules';
 import { pf1eMaxSkillRanks } from '../../utils/derivedCombatMath';
-import { pf1eFeatsFromLevel } from './derivedMath';
+import { pf1eConcentrationDCDefensive, pf1eFeatsFromLevel } from './derivedMath';
 import type { Pf1eDataModel } from './data-model';
 
 /** Total base attack bonus: sum each class's BAB track across all class levels. */
@@ -177,6 +177,24 @@ export const PF1E_DERIVED_QUANTITIES: ReadonlyArray<DerivedQuantitySpec<Pf1eData
       { name: 'level 20 → 10 feats', system: { level: 20 }, expected: 10 },
     ],
     display: { label: 'Feats', icon: 'Award' },
+  },
+  {
+    id: 'pf1e.L5.concentration-dc',
+    layer: 'L5',
+    quantity: 'Defensive-casting Concentration DC',
+    formula: 'defensive = 15 + 2 × spell level (while damaged = 10 + damage + spell level)',
+    source: 'PF1e Core Rulebook (OGC): Magic — Concentration',
+    // The DC scales with the spell level (and, for the damage flavor, in-play
+    // damage), so the standing derived value is the base for a 0-level spell —
+    // the floor the hint's formula scales up from. compute() calls the cited
+    // defensive helper so the register's mutation anchor still bites.
+    compute: () => pf1eConcentrationDCDefensive(0),
+    cases: [{ name: 'base defensive DC (0-level spell) = 15', system: {}, expected: 15 }],
+    display: {
+      label: 'Defensive Casting DC',
+      icon: 'Brain',
+      hint: '15 + 2 × spell level — cast defensively to avoid an attack of opportunity (concentration check)',
+    },
   },
   {
     // FAITHFUL + MUTATION-VERIFIABLE (register-anchored). compute() reproduces the

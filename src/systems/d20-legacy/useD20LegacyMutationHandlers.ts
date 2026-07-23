@@ -12,6 +12,31 @@ import {
   type D20LegacyData,
 } from './d20LegacySheetShared';
 import { consume, poolFromRemaining, remainingOf } from '../../utils/resourcePool';
+import { parseWeaponDamageDice } from '../../utils/derivedCombatMath';
+
+/**
+ * Map a d20-legacy catalog weapon onto a `mainHand` equipment entry carrying the
+ * numeric weapon dice the scene combatant reads. Accepts the divergent shapes
+ * the two legacy systems author — 3.5e's notation-string `damage` (`'1d8'`) and
+ * PF1e's canonical `DiceRoll` — via {@link parseWeaponDamageDice}; it does NOT
+ * assume the 5e DiceRoll shape. Returns null when the damage is missing or
+ * unparseable, so a malformed catalog entry equips nothing.
+ */
+export function toEquippedD20LegacyWeapon(item: {
+  id: string;
+  name: string;
+  damage?: string | { count?: number; die?: number | string } | null;
+}): {
+  itemId: string;
+  name: string;
+  equipped: true;
+  slot: 'mainHand';
+  weaponDamage: { count: number; die: number };
+} | null {
+  const weaponDamage = parseWeaponDamageDice(item.damage);
+  if (!weaponDamage) return null;
+  return { itemId: item.id, name: item.name, equipped: true, slot: 'mainHand', weaponDamage };
+}
 
 interface UseD20LegacyMutationHandlersProps {
   typedDocument: CharacterDocument<D20LegacyData>;
@@ -336,6 +361,35 @@ export function useD20LegacyMutationHandlers({
     [sys.equipment, update]
   );
 
+  // Equip a main-hand weapon: replace any previously-equipped main-hand weapon
+  // and copy the catalog's dice (parsed from 3.5e's string notation or PF1e's
+  // DiceRoll) onto the entry, which buildCharacterCombatant then rolls in scene
+  // combat. Coexists with armor/shield (which carry no `slot: 'mainHand'`).
+  const isEquippedWeapon = (entry: { slot?: string }) => entry.slot === 'mainHand';
+
+  const equipWeapon = useCallback(
+    (item: {
+      id: string;
+      name: string;
+      damage?: string | { count?: number; die?: number | string } | null;
+    }) => {
+      const entry = toEquippedD20LegacyWeapon(item);
+      if (!entry) {
+        return;
+      }
+      update({
+        equipment: [...sys.equipment.filter((entry) => !isEquippedWeapon(entry)), entry],
+      } as Partial<D20LegacyData>);
+    },
+    [sys.equipment, update]
+  );
+
+  const unequipWeapon = useCallback(() => {
+    update({
+      equipment: sys.equipment.filter((entry) => !isEquippedWeapon(entry)),
+    } as Partial<D20LegacyData>);
+  }, [sys.equipment, update]);
+
   const unequipArmor = useCallback(() => {
     update({
       equipment: sys.equipment.filter((entry) => !isEquippedArmor(entry)),
@@ -418,7 +472,9 @@ export function useD20LegacyMutationHandlers({
     consumeItem,
     equipArmor,
     equipShield,
+    equipWeapon,
     unequipArmor,
     unequipShield,
+    unequipWeapon,
   };
 }
