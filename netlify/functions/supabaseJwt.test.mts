@@ -42,8 +42,17 @@ const validToken = () => mintToken({ sub: 'user-1', exp: FUTURE_EXP });
 const bearer = (token: string) => `Bearer ${token}`;
 
 describe('verifySupabaseJwt', () => {
-  it('accepts a well-formed HS256 token with a future exp', () => {
-    expect(verifySupabaseJwt(validToken(), SECRET, NOW_MS)).toEqual({ ok: true });
+  it('accepts a well-formed HS256 token with a future exp, surfacing the subject', () => {
+    // The verified `sub` claim rides the verdict so the gateway can key the
+    // per-session cost budget on a stable user id instead of a client ip.
+    expect(verifySupabaseJwt(validToken(), SECRET, NOW_MS)).toEqual({
+      ok: true,
+      subject: 'user-1',
+    });
+  });
+
+  it('accepts a token without a sub claim, omitting the subject', () => {
+    expect(verifySupabaseJwt(mintToken({ exp: FUTURE_EXP }), SECRET, NOW_MS)).toEqual({ ok: true });
   });
 
   it('rejects a token signed with a different secret (forged signature)', () => {
@@ -102,8 +111,8 @@ describe('createSupabaseJwtVerifier — header handling', () => {
   });
 
   it('accepts a valid Bearer token (scheme is case-insensitive)', () => {
-    expect(verify(bearer(validToken()))).toEqual({ ok: true });
-    expect(verify(`bearer ${validToken()}`)).toEqual({ ok: true });
+    expect(verify(bearer(validToken()))).toEqual({ ok: true, subject: 'user-1' });
+    expect(verify(`bearer ${validToken()}`)).toEqual({ ok: true, subject: 'user-1' });
   });
 });
 
@@ -115,7 +124,7 @@ describe('resolveGatewayAuth — env gating (the unconfigured-Supabase policy)',
 
   it('returns a working verifier when the secret is set', () => {
     const verify = resolveGatewayAuth({ SUPABASE_JWT_SECRET: SECRET }, clock);
-    expect(verify?.(bearer(validToken()))).toEqual({ ok: true });
+    expect(verify?.(bearer(validToken()))).toEqual({ ok: true, subject: 'user-1' });
   });
 });
 

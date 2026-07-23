@@ -232,11 +232,42 @@ export type SceneEvent =
   | SceneEventBase<'check.rolled', SceneCheckResult & { label: string; actorTokenId?: string }>
   | SceneEventBase<'oracle.consulted', SceneOracleResult & { question?: string }>;
 
+/**
+ * Manual registration of a map image under the scene's square grid: the
+ * image-pixel point that lines up with the grid origin plus how many image
+ * pixels one grid cell spans. Pure presentation geometry — never part of
+ * `SceneState`, never folded, so replay stays byte-identical with or without
+ * a map (RFC 006's determinism contract).
+ */
+export interface SceneGridRegistration {
+  /** Image-pixel x aligned with the left edge of cell (0,0). */
+  offsetX: number;
+  /** Image-pixel y aligned with the top edge of cell (0,0). */
+  offsetY: number;
+  /** Image pixels per grid cell (> 0). */
+  cellSizePx: number;
+}
+
+/**
+ * Document-level reference to a browser-local map image asset
+ * (`src/utils/mapAssetStorage.ts`), addressed by the SHA-256 of its data URL.
+ * Lives beside `name`/`campaignId` as scene metadata — NOT in the event log —
+ * because the map is a backdrop the fold never reads. A missing asset (e.g. a
+ * scene imported without its image) renders the grid exactly as before.
+ */
+export interface SceneMapReference {
+  /** SHA-256 (lowercase hex) of the asset's data URL — the storage key. */
+  assetHash: string;
+  gridRegistration: SceneGridRegistration;
+}
+
 export interface SceneDocument {
   id: string;
   name: string;
   systemId: string;
   campaignId?: string;
+  /** Optional map-image backdrop (additive; absent scenes behave exactly as before). */
+  map?: SceneMapReference;
   initialState: SceneState;
   events: SceneEvent[];
   createdAt: Date;

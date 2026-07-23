@@ -172,6 +172,7 @@ function AppContent() {
     clearError: clearSceneError,
     addScene,
     addScenes,
+    updateScene,
     appendSceneEvent,
     deleteScene,
     flushPendingSaves: flushPendingSceneSaves,
@@ -750,6 +751,7 @@ function AppContent() {
                     selectedSceneId={nav.sceneId}
                     onSelectScene={selectScene}
                     onAppendSceneEvent={appendSceneEvent}
+                    onUpdateScene={updateScene}
                     onLogToCampaign={handleLogSceneToCampaign}
                     onDeleteScene={(id) =>
                       showConfirm(

@@ -332,7 +332,7 @@ shared condition catalogs).
 | --- | --- | --- | --- |
 | Ledger re-backed on resolver | 4 | 3 | PF2e (no builder exists), M&M 3e, Daggerheart (hand-built) |
 | Condition effects through the resolver fold | 0 | 7 | all seven (catalogs in `src/rules/conditions/` shipped and engine-consumed as helper reads; fold-through open everywhere) |
-| AI-seam validators | 2 | 5 | D&D 3.5e, PF1e, PF2e, M&M 3e, Daggerheart |
+| AI-seam validators | 7 | 0 | **COMPLETE (2026-07-21)** — all seven registered and lazy-loaded (`SystemDefinition.loadValidator`); each derives checks from its own RAW/loaders and consumes its `src/rules/legality/` build validator as warnings where present |
 | Resolver legal-actions seam | 0 | 7 | all seven |
 | Additive equip routing | 5 | 2 — accepted boundary | Daggerheart, M&M 3e (non-additive derivation; revisit only if the IR gains override/derived operations for other reasons) |
 

@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
   AI_GATEWAY_SCHEMA_VERSION,
+  AI_GATEWAY_TASKS,
+  AI_TASK_CLASS,
+  AI_TASK_UNIT_COST,
   isAiResponse,
   isAiTask,
   parseAiRequest,
@@ -188,5 +191,24 @@ describe('isAiTask / isAiResponse', () => {
     expect(isAiResponse({ ok: false, code: 'timeout', message: 'slow' })).toBe(true);
     expect(isAiResponse({ ok: true, task: 'bogus', data: {}, usage: {} })).toBe(false);
     expect(isAiResponse(42)).toBe(false);
+  });
+});
+
+describe('Phase 14 cost/latency metadata is total over the task allowlist', () => {
+  it('assigns every task a class and a positive integer unit cost', () => {
+    for (const task of AI_GATEWAY_TASKS) {
+      expect(['text', 'vision', 'image']).toContain(AI_TASK_CLASS[task]);
+      expect(Number.isInteger(AI_TASK_UNIT_COST[task])).toBe(true);
+      expect(AI_TASK_UNIT_COST[task]).toBeGreaterThan(0);
+    }
+  });
+
+  it('weights costlier modalities above text (image > vision > text)', () => {
+    expect(AI_TASK_UNIT_COST['illustrate-scene']).toBeGreaterThan(
+      AI_TASK_UNIT_COST['identify-creature']
+    );
+    expect(AI_TASK_UNIT_COST['identify-creature']).toBeGreaterThan(
+      AI_TASK_UNIT_COST['encounter-draft']
+    );
   });
 });

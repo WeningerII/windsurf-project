@@ -22,6 +22,8 @@ import {
   createInMemoryRateLimitStore,
   rateLimiterFromStore,
   resolveRateLimitStore,
+  SESSION_BUDGET_KEY_PREFIX,
+  sessionBudgetFromStore,
   type RateLimitRecord,
   type RateLimitStoreDriver,
 } from './rateLimitStore.mts';
@@ -69,7 +71,9 @@ describe('provider registry — env selection', () => {
   it('falls back to the default provider for an unrecognized value (graceful typo handling)', () => {
     const { deps } = makeDeps();
     expect(resolveProviderAdapter({ provider: 'nonsense', apiKey: 'k' }, deps)).toBe(googleAdapter);
-    expect(resolveProviderAdapter({ provider: 'nonsense', apiKey: undefined }, deps)).toBeUndefined();
+    expect(
+      resolveProviderAdapter({ provider: 'nonsense', apiKey: undefined }, deps)
+    ).toBeUndefined();
   });
 });
 
@@ -141,13 +145,19 @@ describe('rate-limit store — durable stub is inert without URL + driver', () =
   });
 
   it('stays inert when a URL is set but no driver is wired (turnkey scaffold)', () => {
-    expect(createDurableRateLimitStore({ RATE_LIMIT_STORE_URL: 'redis://example' })).toBeUndefined();
+    expect(
+      createDurableRateLimitStore({ RATE_LIMIT_STORE_URL: 'redis://example' })
+    ).toBeUndefined();
   });
 
   it('engages the durable store when URL and driver are both present', () => {
     let t = 0;
     const d = driver();
-    const store = createDurableRateLimitStore({ RATE_LIMIT_STORE_URL: 'redis://example' }, d, () => t);
+    const store = createDurableRateLimitStore(
+      { RATE_LIMIT_STORE_URL: 'redis://example' },
+      d,
+      () => t
+    );
     expect(store).toBeDefined();
     const rec = store!.increment('k', 1_000);
     expect(rec).toEqual<RateLimitRecord>({ count: 1, resetAt: 1_000 });
@@ -163,12 +173,97 @@ describe('rate-limit store — durable stub is inert without URL + driver', () =
     // Provisioned: URL + driver => durable path writes through the driver.
     let t = 0;
     const d = driver();
-    const durable = resolveRateLimitStore(
-      { RATE_LIMIT_STORE_URL: 'redis://example' },
-      d,
-      () => t
-    );
+    const durable = resolveRateLimitStore({ RATE_LIMIT_STORE_URL: 'redis://example' }, d, () => t);
     durable.increment('y', 1_000);
     expect(d.read('y')?.count).toBe(1);
+  });
+});
+
+describe('rate-limit store — weighted increments (session-budget seam)', () => {
+  it('counts an explicit amount and defaults to 1', () => {
+    let t = 0;
+    const store = createInMemoryRateLimitStore(() => t);
+    expect(store.increment('k', 1_000, 3)).toEqual<RateLimitRecord>({ count: 3, resetAt: 1_000 });
+    expect(store.increment('k', 1_000, 2).count).toBe(5);
+    expect(store.increment('k', 1_000).count).toBe(6); // default weight 1
+
+    // A fresh window starts at the crossing charge's weight, not 1.
+    t = 1_000;
+    expect(store.increment('k', 1_000, 4)).toEqual<RateLimitRecord>({ count: 4, resetAt: 2_000 });
+  });
+
+  it('persists weighted counts through the durable driver too', () => {
+    const map = new Map<string, RateLimitRecord>();
+    const driver: RateLimitStoreDriver = {
+      read: (k) => map.get(k),
+      write: (k, rec) => void map.set(k, rec),
+      remove: (k) => void map.delete(k),
+    };
+    const store = createDurableRateLimitStore(
+      { RATE_LIMIT_STORE_URL: 'redis://x' },
+      driver,
+      () => 0
+    );
+    store!.increment('k', 1_000, 5);
+    expect(driver.read('k')?.count).toBe(5);
+  });
+});
+
+describe('sessionBudgetFromStore — Phase 14 session cost cap semantics', () => {
+  it('allows spend up to the cap, then trips deterministically and stays tripped', () => {
+    let t = 0;
+    const clock = () => t;
+    const budget = sessionBudgetFromStore(createInMemoryRateLimitStore(clock), {
+      maxUnits: 3,
+      windowMs: 1_000,
+      now: clock,
+    });
+
+    // 2 units spent: within the cap.
+    expect(budget.charge('user-1', 2)).toEqual({ ok: true, remainingUnits: 1, resetAt: 1_000 });
+    // The crossing charge (2 more, total 4 > 3) is denied — charge-then-check.
+    expect(budget.charge('user-1', 2)).toEqual({ ok: false, remainingUnits: 0, resetAt: 1_000 });
+    // The crossing units stayed counted, so even a 1-unit retry stays denied.
+    expect(budget.charge('user-1', 1)).toMatchObject({ ok: false, remainingUnits: 0 });
+    // A different session is unaffected.
+    expect(budget.charge('user-2', 3)).toMatchObject({ ok: true, remainingUnits: 0 });
+
+    // The window reset restores the budget.
+    t = 1_000;
+    expect(budget.charge('user-1', 1)).toEqual({ ok: true, remainingUnits: 2, resetAt: 2_000 });
+  });
+
+  it('spend that lands exactly on the cap is still allowed', () => {
+    const budget = sessionBudgetFromStore(
+      createInMemoryRateLimitStore(() => 0),
+      {
+        maxUnits: 5,
+        windowMs: 1_000,
+        now: () => 0,
+      }
+    );
+    expect(budget.charge('u', 5)).toMatchObject({ ok: true, remainingUnits: 0 });
+    expect(budget.charge('u', 1)).toMatchObject({ ok: false });
+  });
+
+  it('namespaces budget keys so they never collide with rate-limit counters', () => {
+    const store = createInMemoryRateLimitStore(() => 0);
+    const budget = sessionBudgetFromStore(store, { maxUnits: 10, windowMs: 1_000, now: () => 0 });
+    store.increment('user-1', 1_000); // a rate-limit counter under the bare key
+    budget.charge('user-1', 5);
+    expect(store.get('user-1')?.count).toBe(1);
+    expect(store.get(`${SESSION_BUDGET_KEY_PREFIX}user-1`)?.count).toBe(5);
+  });
+
+  it('is an always-open budget when maxUnits <= 0 (cap disabled)', () => {
+    const store = createInMemoryRateLimitStore(() => 0);
+    const budget = sessionBudgetFromStore(store, { maxUnits: 0, windowMs: 1_000, now: () => 7 });
+    expect(budget.charge('u', 1_000_000)).toEqual({
+      ok: true,
+      remainingUnits: Number.POSITIVE_INFINITY,
+      resetAt: 1_007,
+    });
+    // Nothing is counted against the store on the disabled path.
+    expect(store.get(`${SESSION_BUDGET_KEY_PREFIX}u`)).toBeUndefined();
   });
 });
