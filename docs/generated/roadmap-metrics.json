@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-21T01:11:35.209Z",
+  "generatedAt": "2026-07-23T19:46:31.701Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -71,7 +71,7 @@
       "archetypes": 0,
       "complications": 0,
       "monsters": 335,
-      "equipment": 656,
+      "equipment": 657,
       "feats": 1,
       "advantages": 0,
       "powerModifiers": 0
@@ -85,7 +85,7 @@
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 339,
+      "monsters": 340,
       "equipment": 502,
       "feats": 19,
       "advantages": 0,
@@ -100,7 +100,7 @@
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 177,
+      "monsters": 188,
       "equipment": 207,
       "feats": 80,
       "advantages": 0,
@@ -115,7 +115,7 @@
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 331,
+      "monsters": 332,
       "equipment": 617,
       "feats": 86,
       "advantages": 0,
@@ -178,7 +178,7 @@
       "archetypes": 0,
       "complications": 0,
       "monsters": 335,
-      "equipment": 656,
+      "equipment": 657,
       "feats": 1,
       "advantages": 0,
       "powerModifiers": 0
@@ -192,7 +192,7 @@
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 339,
+      "monsters": 340,
       "equipment": 502,
       "feats": 19,
       "advantages": 0,
@@ -207,7 +207,7 @@
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 177,
+      "monsters": 188,
       "equipment": 207,
       "feats": 80,
       "advantages": 0,
@@ -222,7 +222,7 @@
       "featureOptions": 0,
       "archetypes": 0,
       "complications": 0,
-      "monsters": 331,
+      "monsters": 332,
       "equipment": 617,
       "feats": 86,
       "advantages": 0,
@@ -624,9 +624,9 @@
     {
       "systemId": "dnd-5e-2014",
       "systemLabel": "D&D 5e (2014)",
-      "verified": 38,
+      "verified": 39,
       "inScope": 39,
-      "percent": 97.4,
+      "percent": 100,
       "byLayer": {
         "L1": {
           "verified": 2,
@@ -653,7 +653,7 @@
           "inScope": 2
         },
         "L8": {
-          "verified": 7,
+          "verified": 8,
           "inScope": 8
         },
         "L9": {
@@ -665,9 +665,9 @@
     {
       "systemId": "dnd-5e-2024",
       "systemLabel": "D&D 5e (2024)",
-      "verified": 31,
+      "verified": 32,
       "inScope": 32,
-      "percent": 96.9,
+      "percent": 100,
       "byLayer": {
         "L1": {
           "verified": 2,
@@ -698,7 +698,7 @@
           "inScope": 2
         },
         "L8": {
-          "verified": 6,
+          "verified": 7,
           "inScope": 7
         },
         "L9": {
@@ -1029,13 +1029,13 @@
       "category": "equipment",
       "categoryLabel": "Equipment",
       "metrics": {
-        "rawCount": 656,
-        "uniqueCount": 656,
+        "rawCount": 657,
+        "uniqueCount": 657,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 5.1": 656
+          "SRD 5.1": 657
         }
       }
     },
@@ -1125,13 +1125,13 @@
       "category": "monsters",
       "categoryLabel": "Monsters",
       "metrics": {
-        "rawCount": 339,
-        "uniqueCount": 339,
+        "rawCount": 340,
+        "uniqueCount": 340,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 5.2": 339
+          "SRD 5.2": 340
         }
       }
     },
@@ -1221,13 +1221,13 @@
       "category": "monsters",
       "categoryLabel": "Monsters",
       "metrics": {
-        "rawCount": 177,
-        "uniqueCount": 177,
+        "rawCount": 188,
+        "uniqueCount": 188,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "SRD 3.5": 177
+          "SRD 3.5": 188
         }
       }
     },
@@ -1333,13 +1333,13 @@
       "category": "monsters",
       "categoryLabel": "Monsters",
       "metrics": {
-        "rawCount": 331,
-        "uniqueCount": 331,
+        "rawCount": 332,
+        "uniqueCount": 332,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "Bestiary": 331
+          "Bestiary": 332
         }
       }
     },
