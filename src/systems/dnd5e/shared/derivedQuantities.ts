@@ -12,7 +12,11 @@
  */
 import type { DerivedQuantitySpec } from '../../../rules/derivation';
 import { abilityMod, profBonus } from '../../../utils/math';
-import { dnd5eCantripScaleTier, dnd5ePassivePerception } from '../../../utils/derivedCasterMath';
+import {
+  dnd5eCantripScaleTier,
+  dnd5eConcentrationDC,
+  dnd5ePassivePerception,
+} from '../../../utils/derivedCasterMath';
 import {
   dnd5eCarryingCapacity,
   dnd5eHighJump,
@@ -161,5 +165,22 @@ export const DND5E_DERIVED_QUANTITIES: ReadonlyArray<DerivedQuantitySpec<Dnd5eLi
       },
     ],
     display: { label: 'High Jump', icon: 'MoveVertical', format: (v) => `${v} ft` },
+  },
+  {
+    id: 'dnd5e.L8.concentration-dc',
+    layer: 'L8',
+    quantity: 'Concentration save DC',
+    formula: 'max(10, floor(damage taken / 2))',
+    source: 'D&D 5e SRD (5.1/5.2): Concentration',
+    // The DC scales with the damage taken in play (a runtime input), so the
+    // standing derived value is the RAW floor — the minimum DC a concentrating
+    // caster ever faces; the hint carries the damage-scaling rule.
+    compute: () => dnd5eConcentrationDC(0),
+    cases: [{ name: 'floors at 10 with no / low damage', system: {}, expected: 10 }],
+    display: {
+      label: 'Concentration DC',
+      icon: 'Brain',
+      hint: '10, or half the damage taken (whichever is higher), on a Con save to keep concentration',
+    },
   },
 ];

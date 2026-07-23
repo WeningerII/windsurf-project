@@ -218,14 +218,17 @@ below; the remainder is the honest residual.
     wizard specialist, and Dragon Disciple bonus spell slots auto-resolve into
     the spells-per-day totals.
   - **Still helper-only** (re-audited 2026-07-21; RAW formula proven by test,
-    but nothing in `prepareData` or a sheet computes or displays it):
-    concentration DC in all three flavors (5e, 3.5e, PF1e — the legacy flavors
-    live in per-system `derivedMath.ts`, not `src/utils/`); PF2e
+    but nothing in `prepareData` or a sheet computes or displays it): PF2e
     multiple-attack penalty — the pf2e combat profile reuses the 5e
     feature-based attack economy and declares no MAP penalty step
     (`iterativePenaltyStep`), so the tactical executor never applies it; PF2e
     striking rune dice — `EquippedItem` has no rune field to read; M&M
-    measurements. **Wired since the last update (removed from this list):**
+    measurements (parameterized by a per-measure rank-0 anchor + rank, so it is
+    register/test-pinned only — deliberately not a standing sheet card). **Wired
+    since the last update (removed from this list):** concentration DC in all
+    three flavors (5e/3.5e/PF1e — each now surfaces as a derived-quantity card
+    through its system's `*_DERIVED_QUANTITIES`, using the same cited helper the
+    register anchors; 5e's card renders on both the 2014 and 2024 sheets);
     passive Perception (5e computes AND displays it through the derivation
     layer; no other system declares one yet) and PF2e auto-heighten rank
     (computed and displayed as a derived card; per-spell mechanical

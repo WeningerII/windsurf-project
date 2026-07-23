@@ -32,7 +32,11 @@ import type { DerivedQuantitySpec } from '../../rules/derivation';
 import { classBAB } from '../shared/d20-helpers';
 import { resolveCharacterEffects, computeD20LegacyAC } from '../../rules';
 import { dnd35eMaxSkillRanks } from '../../utils/derivedCombatMath';
-import { dnd35eAbilityIncreases, dnd35eFeatsFromLevel } from './derivedMath';
+import {
+  dnd35eAbilityIncreases,
+  dnd35eConcentrationDCDefensive,
+  dnd35eFeatsFromLevel,
+} from './derivedMath';
 import type { Dnd35eDataModel } from './data-model';
 
 /** Total base attack bonus: sum each class's BAB track across all class levels. */
@@ -186,6 +190,24 @@ export const DND35E_DERIVED_QUANTITIES: ReadonlyArray<DerivedQuantitySpec<Dnd35e
       { name: 'level 20 → 5', system: { level: 20 }, expected: 5 },
     ],
     display: { label: 'Ability Increases', icon: 'TrendingUp' },
+  },
+  {
+    id: 'dnd35e.L5.concentration-dc',
+    layer: 'L5',
+    quantity: 'Defensive-casting Concentration DC',
+    formula: 'defensive = 15 + spell level (while damaged = 10 + damage + spell level)',
+    source: 'SRD 3.5: Skills — Concentration',
+    // The DC scales with the spell level (and, for the damage flavor, in-play
+    // damage), so the standing derived value is the base for a 0-level spell —
+    // the floor the hint's formula scales up from. compute() calls the cited
+    // defensive helper so the register's mutation anchor still bites.
+    compute: () => dnd35eConcentrationDCDefensive(0),
+    cases: [{ name: 'base defensive DC (0-level spell) = 15', system: {}, expected: 15 }],
+    display: {
+      label: 'Defensive Casting DC',
+      icon: 'Brain',
+      hint: '15 + spell level — cast defensively to avoid an attack of opportunity (Concentration skill check)',
+    },
   },
   {
     // FAITHFUL + MUTATION-VERIFIABLE (register-anchored). compute() reproduces the
