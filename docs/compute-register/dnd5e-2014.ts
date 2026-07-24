@@ -340,6 +340,24 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
 
     // ── L5 spellcasting economy ──
     {
+      id: 'dnd5e2014.L5.known-spell-limit',
+      layer: 'L5',
+      quantity: 'Known-spell count limit (known casters)',
+      formula:
+        'class table spellsKnown[level] + cantripsKnown[level] (clamped to the table); prepared casters exempt (no fixed cap)',
+      inputs: ['class spellcasting progression', 'class level'],
+      edgeCases: [
+        'level clamps below 1 to the first row',
+        'level past the table clamps to the last row',
+        'prepared caster returns no cap',
+        'overage reports count above the cap, 0 within',
+      ],
+      source: `${SRD}: Spellcasting — Spells Known of 1st Level and Higher`,
+      status: 'verified',
+      testRef: 'src/__tests__/dnd5eKnownSpells.test.ts :: dnd5e.L5.known-spell-limit',
+      note: 'Enforced warn-not-block in createDnd5eValidator (validateKnownSpellCount) via the dnd5eKnownSpellLimit/Overage helpers this row anchors.',
+    },
+    {
       id: 'dnd5e2014.L5.multiclass-spell-slots',
       layer: 'L5',
       quantity: 'Spell slots (single-class tables + multiclass combined-level table)',
