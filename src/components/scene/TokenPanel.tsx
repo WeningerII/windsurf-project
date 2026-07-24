@@ -24,6 +24,12 @@ interface TokenPanelProps {
   onGenerateNpc: () => void;
   isPlacing: boolean;
   onTogglePlace: () => void;
+  /**
+   * Whether the click-to-place button renders (Phase 4). Default true. When
+   * scene-drag is enabled SceneManager hides it so exactly one character
+   * placement affordance (the drag) exists — mutual exclusion, Finding 21.
+   */
+  showPlaceButton?: boolean;
   canDeleteToken: boolean;
   onDeleteSelectedToken: () => void;
   /** Condition ids offered for the selected token (empty hides the section). */
@@ -53,6 +59,7 @@ export function TokenPanel({
   onGenerateNpc,
   isPlacing,
   onTogglePlace,
+  showPlaceButton = true,
   canDeleteToken,
   onDeleteSelectedToken,
   conditionOptions = [],
@@ -150,16 +157,18 @@ export function TokenPanel({
             )}
           </>
         )}
-        <Button
-          variant={isPlacing ? 'default' : 'outline'}
-          size="sm"
-          className="w-full"
-          onClick={onTogglePlace}
-          disabled={!tokenName.trim() && !tokenDocumentId && !tokenStatblockId}
-        >
-          <Plus className="mr-1.5 h-4 w-4" />
-          Place Token
-        </Button>
+        {showPlaceButton && (
+          <Button
+            variant={isPlacing ? 'default' : 'outline'}
+            size="sm"
+            className="w-full"
+            onClick={onTogglePlace}
+            disabled={!tokenName.trim() && !tokenDocumentId && !tokenStatblockId}
+          >
+            <Plus className="mr-1.5 h-4 w-4" />
+            Place Token
+          </Button>
+        )}
         {selectedTokenSide && onSetSelectedTokenSide && (
           <div>
             <div className="mb-1 text-xs font-medium text-muted-foreground">

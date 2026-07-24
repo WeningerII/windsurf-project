@@ -52,6 +52,9 @@ import { Button } from './ui/Button';
 import { Badge } from './ui/Badge';
 import { Select } from './ui/Select';
 import { SceneGridView } from './SceneGridView';
+import { SceneDispatchContext } from '../contexts/scene-dispatch-context';
+import { SceneDropController } from './drag/SceneDropController';
+import { isSceneDragEnabled } from './drag/sceneDragFlag';
 import { EncounterPanel } from './scene/EncounterPanel';
 import { InitiativeTracker } from './scene/InitiativeTracker';
 import { MapPanel } from './scene/MapPanel';
@@ -158,6 +161,11 @@ export function SceneManager({
   const attackNonce = useRef(0);
   // Monotonic nonce so each "Generate NPC" yields a fresh (still seeded) result.
   const npcGenNonce = useRef(0);
+  // Phase-4 drag: the grid container the interim drop target hit-tests, and the
+  // single feature predicate that gates BOTH the drag mount and the paired
+  // PlacementMode-button hiding (mutual exclusion, Finding 21).
+  const gridRef = useRef<HTMLDivElement>(null);
+  const sceneDragEnabled = isSceneDragEnabled();
 
   // Shell-owned init/auto-reset (build-specs task 3): a stale or missing
   // selection re-anchors on the first scene through the shell seam. The
@@ -415,6 +423,16 @@ export function SceneManager({
       return true;
     },
     [onAppendSceneEvent]
+  );
+
+  // The zero-arg bound emit seam (Phase 4): a shared-layer drop handler emits an
+  // EXISTING intent through this without knowing about scene resolution. Bound to
+  // the shell-resolved selectedScene; a no-op returning false when none resolves,
+  // so a drop never targets a stale scene. runtime.ts + the 12 intents untouched.
+  const emitBoundSceneAction = useCallback(
+    (intent: SceneActionIntent): boolean =>
+      selectedScene ? emitSceneAction(selectedScene, intent) : false,
+    [selectedScene, emitSceneAction]
   );
 
   // Combat stats are resolved at action time from a token's refId (monster
@@ -968,13 +986,23 @@ export function SceneManager({
           ) : null}
 
           <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
-            <SceneGridView
-              state={state}
-              selectedTokenId={selectedTokenId}
-              mapImage={mapImage}
-              onCellActivate={handleCellActivate}
-              onTokenActivate={handleTokenActivate}
-            />
+            <SceneDispatchContext.Provider value={emitBoundSceneAction}>
+              <SceneGridView
+                state={state}
+                selectedTokenId={selectedTokenId}
+                mapImage={mapImage}
+                onCellActivate={handleCellActivate}
+                onTokenActivate={handleTokenActivate}
+                gridRef={gridRef}
+              />
+              {sceneDragEnabled && (
+                <SceneDropController
+                  gridRef={gridRef}
+                  documents={documents}
+                  resolveStatblock={(statblockId) => monstersById.get(statblockId)}
+                />
+              )}
+            </SceneDispatchContext.Provider>
 
             <div className="space-y-3">
               <TokenPanel
@@ -995,6 +1023,7 @@ export function SceneManager({
                 onTogglePlace={() =>
                   setPlacementMode((current) => (current === 'token' ? 'none' : 'token'))
                 }
+                showPlaceButton={!sceneDragEnabled}
                 canDeleteToken={Boolean(selectedTokenId)}
                 onDeleteSelectedToken={handleDeleteSelectedToken}
                 conditionOptions={sceneConditionOptions(sceneSystemId)}
@@ -1020,20 +1049,22 @@ export function SceneManager({
                       </option>
                     ))}
                   </Select>
-                  <Button
-                    variant={placementMode === 'adversary' ? 'default' : 'outline'}
-                    size="sm"
-                    disabled={!adversaryId}
-                    onClick={() =>
-                      setPlacementMode((current) =>
-                        current === 'adversary' ? 'none' : 'adversary'
-                      )
-                    }
-                  >
-                    {placementMode === 'adversary'
-                      ? 'Click the grid to place...'
-                      : 'Place Adversary'}
-                  </Button>
+                  {!sceneDragEnabled && (
+                    <Button
+                      variant={placementMode === 'adversary' ? 'default' : 'outline'}
+                      size="sm"
+                      disabled={!adversaryId}
+                      onClick={() =>
+                        setPlacementMode((current) =>
+                          current === 'adversary' ? 'none' : 'adversary'
+                        )
+                      }
+                    >
+                      {placementMode === 'adversary'
+                        ? 'Click the grid to place...'
+                        : 'Place Adversary'}
+                    </Button>
+                  )}
                 </div>
               )}
 
