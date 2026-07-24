@@ -18,6 +18,7 @@
     "runtime:doctor": "node scripts/runtime-doctor.mjs",
     "build": "npm run node:check && tsc && vite build",
     "check:bundle-size": "node scripts/check-bundle-size.mjs",
+    "check:keepalive-budget": "node scripts/check-keepalive-budget.mjs",
     "check:doc-drift": "npm run node:check && tsx scripts/check-doc-drift.mjs",
     "check:generated-docs": "npm run node:check && node scripts/check-generated-docs.mjs",
     "check:repo-hygiene": "npm run node:check && node scripts/check-repo-hygiene.mjs",
@@ -50,7 +51,7 @@
     "enhance": "tsx src/scripts/enhance-classes.ts",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx}\"",
-    "verify": "npm run node:check && npm run lint && npm run typecheck:test && npm run typecheck:netlify && npm run format:check && npm run test:coverage -- --run --maxWorkers=1 && npm run validate && npm run build && npm run check:bundle-size && npm run test:e2e && npm run check:repo-hygiene && npm run check:generated-docs && npm run check:doc-drift && npm run check:dead-code && npm run check:legal-notices && npm run check:compute-register && npm run check:secret-exposure"
+    "verify": "npm run node:check && npm run lint && npm run typecheck:test && npm run typecheck:netlify && npm run format:check && npm run test:coverage -- --run --maxWorkers=1 && npm run check:keepalive-budget && npm run validate && npm run build && npm run check:bundle-size && npm run test:e2e && npm run check:repo-hygiene && npm run check:generated-docs && npm run check:doc-drift && npm run check:dead-code && npm run check:legal-notices && npm run check:compute-register && npm run check:secret-exposure"
   },
   "dependencies": {
     "@ai-sdk/google": "^3.0.83",
