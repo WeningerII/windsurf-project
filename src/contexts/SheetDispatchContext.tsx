@@ -1,8 +1,10 @@
 import { useCallback, useMemo, useState, type ReactNode } from 'react';
 import {
-  SheetDispatchContext,
+  SheetDispatchRegistryContext,
+  SheetDispatchStateContext,
   type SheetAddHandlers,
-  type SheetDispatchContextValue,
+  type SheetDispatchRegistry,
+  type SheetDispatchState,
 } from './sheet-dispatch-context';
 
 /**
@@ -12,12 +14,20 @@ import {
  * (inside SurfaceStage) and the shared Dock (rendered at the shell root) share
  * one registry — see `sheet-dispatch-context.ts` for the full rationale.
  *
- * The provider component lives alone in this `.tsx` (the context object + hooks
+ * The registry ({register, unregister}) and the volatile state
+ * ({activeDocId, handlers}) are published through SEPARATE contexts: the
+ * registry object is referentially stable (its `register`/`unregister` are
+ * stable callbacks), so a registering sheet — which consumes only the registry
+ * context — never re-renders when the volatile state changes. That is what
+ * keeps `register()` from re-rendering the very sheet that called it, closing
+ * off the register → setState → re-render → register loop.
+ *
+ * The provider component lives alone in this `.tsx` (the context objects + hooks
  * are in the non-JSX `sheet-dispatch-context.ts`) so the react-refresh
  * only-export-components lint stays green.
  */
 export function SheetDispatchProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<{ activeDocId: string | null; handlers: SheetAddHandlers }>({
+  const [state, setState] = useState<SheetDispatchState>({
     activeDocId: null,
     handlers: {},
   });
@@ -32,15 +42,19 @@ export function SheetDispatchProvider({ children }: { children: ReactNode }) {
     setState((prev) => (prev.activeDocId === docId ? { activeDocId: null, handlers: {} } : prev));
   }, []);
 
-  const value = useMemo<SheetDispatchContextValue>(
-    () => ({
-      activeDocId: state.activeDocId,
-      handlers: state.handlers,
-      register,
-      unregister,
-    }),
-    [state.activeDocId, state.handlers, register, unregister]
+  // Stable across the provider's whole lifetime (register/unregister never
+  // change identity), so the registry context value never changes — registrant
+  // sheets consuming it never re-render on registry state churn.
+  const registry = useMemo<SheetDispatchRegistry>(
+    () => ({ register, unregister }),
+    [register, unregister]
   );
 
-  return <SheetDispatchContext.Provider value={value}>{children}</SheetDispatchContext.Provider>;
+  return (
+    <SheetDispatchRegistryContext.Provider value={registry}>
+      <SheetDispatchStateContext.Provider value={state}>
+        {children}
+      </SheetDispatchStateContext.Provider>
+    </SheetDispatchRegistryContext.Provider>
+  );
 }
