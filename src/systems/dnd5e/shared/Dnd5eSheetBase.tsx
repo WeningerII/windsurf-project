@@ -33,7 +33,7 @@ import {
 import type { Dnd5eLikeDataModel } from './dnd5eSheetShared';
 import { useSheetDispatchRegister } from '../../../contexts/sheet-dispatch-context';
 import { useDnd5eSheetController } from './useDnd5eSheetController';
-import { availableDnd5eToggles } from '../../../rules/conditions/dnd5eRiders';
+import { availableDnd5eToggles, dnd5eEditionOf } from '../../../rules/conditions/dnd5eRiders';
 import { presentDerivedQuantities } from '../../../rules/derivation';
 import { DND5E_DERIVED_QUANTITIES } from './derivedQuantities';
 
@@ -237,6 +237,7 @@ export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
           onFeatureOptionSelect={onUpdate ? controller.handleFeatureOptionSelect : undefined}
           onConditionChange={onUpdate ? (conditions) => updatePatch({ conditions }) : undefined}
           availableToggles={availableDnd5eToggles({
+            systemId: dnd5eEditionOf(document.systemId),
             featureIds: new Set(d.features.map((feature) => feature.id)),
             featIds: new Set(d.feats.map((feat) => feat.id)),
           })}
