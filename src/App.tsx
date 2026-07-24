@@ -35,6 +35,12 @@ const SceneManager = lazy(() =>
 const LegalNotices = lazy(() =>
   import('./components/LegalNotices').then((m) => ({ default: m.LegalNotices }))
 );
+// Lazy-loaded: the system-agnostic guided-creation wizard shell + every system's
+// creation plan + template-applicator closures stay in their own chunk, off the
+// eager first-paint budget. Only fetched when a user starts guided creation.
+const CreationWizardHost = lazy(() =>
+  import('./creation/CreationWizardHost').then((m) => ({ default: m.CreationWizardHost }))
+);
 import { useScenes } from './hooks/useScenes';
 import { prefetchSystemAssetsForIds } from './utils/systemAssetPrefetch';
 import { usePwaInstallPrompt } from './hooks/usePwaInstallPrompt';
@@ -340,10 +346,10 @@ function AppContent() {
       const sysDef = systemRegistry.get(systemId);
       if (!sysDef) return;
 
-      // Systems that ship a guided creator open it in a modal first; the modal's
-      // onCreate builds and persists the character. Others create immediately
-      // from the SRD default template.
-      if (sysDef.CreatorComponent) {
+      // Systems that expose a guided-creation plan open the system-agnostic
+      // wizard shell first; its onComplete builds and persists the character.
+      // Others create immediately from the SRD default template.
+      if (sysDef.loadCreationPlan) {
         setCreatorSystemId(systemId);
         return;
       }
@@ -854,21 +860,21 @@ function AppContent() {
           open={creatorSystemId !== null}
           onClose={() => setCreatorSystemId(null)}
         >
-          {creatorSystemId !== null &&
-            (() => {
-              const CreatorComponent = systemRegistry.get(creatorSystemId)?.CreatorComponent;
-              return CreatorComponent ? (
-                <Suspense
-                  fallback={
-                    <div className="p-8">
-                      <Skeleton className="h-72 w-full" />
-                    </div>
-                  }
-                >
-                  <CreatorComponent onCreate={handleGuidedCreate} />
-                </Suspense>
-              ) : null;
-            })()}
+          {creatorSystemId !== null && (
+            <Suspense
+              fallback={
+                <div className="p-8">
+                  <Skeleton className="h-72 w-full" />
+                </div>
+              }
+            >
+              <CreationWizardHost
+                systemId={creatorSystemId}
+                onComplete={handleGuidedCreate}
+                onCancel={() => setCreatorSystemId(null)}
+              />
+            </Suspense>
+          )}
         </GuidedCreatorDialog>
 
         {/* Shared summonable Dock (Phase 3): rendered once at the shell root so
