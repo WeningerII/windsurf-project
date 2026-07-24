@@ -369,6 +369,44 @@ export const pf1eComputeRegister: SystemComputeRegister = {
       testRef:
         'src/__tests__/legality/pf1eLegality.test.ts :: pf1e flags class levels exceeding character level',
     },
+    {
+      id: 'pf1e.L4.skill-check-penalty',
+      layer: 'L4',
+      quantity: 'Skill check penalty (encumbrance load + equipped armor/shield) on physical skills',
+      formula:
+        'affected physical skill: encumbrance load check penalty (light 0 / medium −3 / heavy −6) + Σ equipped armor/shield armor-check-penalty; 0 for unaffected skills',
+      inputs: ['Strength', 'carried weight', 'equipped armor/shield ACP', 'skillId'],
+      edgeCases: [
+        'unaffected skill → 0',
+        'unequipped armor contributes 0',
+        'load penalty and armor ACP stack',
+        'PF1e affected-skill list (Acrobatics/Climb/Fly/Stealth/Swim/…) differs from 3.5e',
+      ],
+      stacking: 'the encumbrance (load) penalty and the equipped armor/shield check penalty add',
+      source: `${CRB}: Carrying Capacity — Encumbrance; Armor — Armor Check Penalty`,
+      status: 'verified',
+      testRef: `${T} :: applies the check penalty (load) per the system affected-skill list`,
+      note: 'Wired into Pf1eEngine.rollCheck for physical skills via d20SkillCheckPenalty (src/systems/shared/d20-helpers.ts); the armor-ACP composition is separately proven by "adds the equipped armor/shield check penalty to the load penalty" in the same suite.',
+    },
+    {
+      id: 'pf1e.L8.condition-check-penalty',
+      layer: 'L8',
+      quantity: 'Fear/sickened flat penalty on saves and checks',
+      formula:
+        'fear family (shaken / frightened / panicked) contributes a single −2 (escalating states of one track, not stacked) + sickened −2 (separate, stacks) on every save, skill, and ability check',
+      inputs: ['active condition ids'],
+      edgeCases: [
+        'fear states do not stack with each other (one −2 from the family)',
+        'sickened stacks with fear',
+        'attack-only riders (dazzled/entangled/prone/blinded/stunned) contribute 0 to the check penalty',
+      ],
+      stacking: 'fear track dedups to a single −2; sickened adds on top',
+      source: `${CRB}: Conditions`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/rules/d20LegacyConditionFold.test.ts :: rollCheck modifier is baseline minus the check penalty for every condition/check',
+      note: "Pf1eEngine.rollCheck folds fear/sickened through resolveCharacterEffects(...).bonus('check'), pinned byte-identical to the closed-form d20LegacyCheckPenalty for every catalog condition and combination.",
+    },
   ],
 };
 
