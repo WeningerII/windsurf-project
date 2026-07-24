@@ -26,6 +26,7 @@ import {
 } from '../../rules/daggerheartInventory';
 import { normalizeDaggerheartDocument } from './daggerheartNormalization';
 import { collectDaggerheartConditionEffects } from '../../rules/conditions/daggerheartConditions';
+import { resolveCharacterEffects } from '../../rules';
 import type { DaggerheartTrait } from '../../types/daggerheart';
 
 /**
@@ -122,12 +123,17 @@ export class DaggerheartEngine implements SystemEngine<DaggerheartDataModel> {
     const outcome = getDaggerheartDualityOutcome(hopeDie, fearDie);
 
     // RAW: the roller's OWN conditions (Vulnerable/Restrained/Hidden) change
-    // INCOMING rolls and movement — never their own duality roll. Collect them
-    // purely as note-only provenance; they NEVER fold into total/terms/outcome.
-    // When absent (the common case, and every existing roll) flavor is unchanged.
-    const conditionNotes = collectDaggerheartConditionEffects(
-      readDaggerheartSelfConditionIds(document.system)
-    );
+    // INCOMING rolls and movement — never their own duality roll. They are routed
+    // through the SHARED resolver fold (W5) rather than read directly: as the
+    // genuinely-non-d20 vocabulary they compile to `note`s, which the resolver
+    // folds to ZERO magnitude, so they surface in the resolver result/ledger for
+    // provenance while NEVER touching total/terms/outcome. When absent (the common
+    // case, and every existing roll) flavor is byte-identical.
+    const conditionNotes = resolveCharacterEffects('daggerheart', {
+      conditions: collectDaggerheartConditionEffects(
+        readDaggerheartSelfConditionIds(document.system)
+      ),
+    }).result.ledger;
     const baseFlavor =
       outcome === 'hope'
         ? `Hope (${hopeDie}) vs Fear (${fearDie}) — with Hope!`
