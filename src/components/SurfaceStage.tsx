@@ -18,6 +18,13 @@ import type { Surface } from '../contexts/shell-context';
  * must render under a <ShellProvider>. Slots stay owner-rendered (App builds
  * the subtrees and threads its own state/handlers); the stage owns ONLY
  * mount-once bookkeeping and the hide mechanism.
+ *
+ * The COST of that mechanism is CI-budgeted as of Phase 7: a surface switch may
+ * write at most six attributes and must produce zero structural DOM mutations
+ * and zero remounts, for every system and every surface pair, independent of
+ * hidden-subtree size. Editing this component means re-running `npm test` (the
+ * gate rejects a measurement taken against a different SurfaceStage). Budgets
+ * and derivations: `scripts/lib/shellKeepaliveBudget.mjs`.
  */
 
 interface SurfaceStageProps {
