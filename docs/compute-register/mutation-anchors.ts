@@ -297,6 +297,13 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'linearRate(level, 1, 1)',
     replace: 'linearRate(level, 2, 1)',
   },
+  // wealth-by-level: perturb the table-index calculation so the read shifts one
+  // row, flipping the mid-table (level 5) case.
+  'pf1e.L10.wealth-by-level': {
+    file: 'src/systems/pf1e/derivedMath.ts',
+    find: 'Math.min(Math.max(1, Math.floor(level)), PF1E_WEALTH_BY_LEVEL_GP.length) - 1',
+    replace: 'Math.min(Math.max(1, Math.floor(level)), PF1E_WEALTH_BY_LEVEL_GP.length) - 2',
+  },
   // CMB = BAB + Str (or Dex if Tiny-) + size mod; CMD = 10 + BAB + Str + Dex + size.
   'pf1e.L3.cmb': {
     file: 'src/systems/pf1e/engine.ts',

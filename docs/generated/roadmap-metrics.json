@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-24T15:16:24.464Z",
+  "generatedAt": "2026-07-24T15:30:07.596Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -759,8 +759,8 @@
     {
       "systemId": "pf1e",
       "systemLabel": "Pathfinder 1e",
-      "verified": 30,
-      "inScope": 30,
+      "verified": 31,
+      "inScope": 31,
       "percent": 100,
       "byLayer": {
         "L1": {
@@ -774,6 +774,10 @@
         "L3": {
           "verified": 7,
           "inScope": 7
+        },
+        "L10": {
+          "verified": 1,
+          "inScope": 1
         },
         "L4": {
           "verified": 3,

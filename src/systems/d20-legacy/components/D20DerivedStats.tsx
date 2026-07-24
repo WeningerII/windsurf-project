@@ -2,7 +2,7 @@
 // declarative derived quantities (max skill ranks, feats/ability increases from
 // level, …) rendered as stat cards. Driven entirely by each system's derived
 // map via presentDerivedQuantities, so a new spec surfaces here with no edit.
-import { Award, Gauge, GraduationCap, TrendingUp } from 'lucide-react';
+import { Award, Coins, Gauge, GraduationCap, TrendingUp } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import type { PresentedDerivedQuantity } from '../../../rules/derivation';
 import { CombatStatCard } from '../../../components/sheet';
@@ -12,6 +12,7 @@ import { CombatStatCard } from '../../../components/sheet';
 // this component.
 const DERIVED_ICON_BY_NAME: Record<string, LucideIcon> = {
   Award,
+  Coins,
   GraduationCap,
   TrendingUp,
 };

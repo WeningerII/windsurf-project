@@ -32,7 +32,7 @@ import type { DerivedQuantitySpec } from '../../rules/derivation';
 import { classBAB } from '../shared/d20-helpers';
 import { resolveCharacterEffects, computeD20LegacyAC } from '../../rules';
 import { pf1eMaxSkillRanks } from '../../utils/derivedCombatMath';
-import { pf1eConcentrationDCDefensive, pf1eFeatsFromLevel } from './derivedMath';
+import { pf1eConcentrationDCDefensive, pf1eFeatsFromLevel, pf1eWealthByLevel } from './derivedMath';
 import type { Pf1eDataModel } from './data-model';
 
 /** Total base attack bonus: sum each class's BAB track across all class levels. */
@@ -195,6 +195,20 @@ export const PF1E_DERIVED_QUANTITIES: ReadonlyArray<DerivedQuantitySpec<Pf1eData
       icon: 'Brain',
       hint: '15 + 2 × spell level — cast defensively to avoid an attack of opportunity (concentration check)',
     },
+  },
+  {
+    id: 'pf1e.L10.wealth-by-level',
+    layer: 'L10',
+    quantity: 'Expected character wealth (gp) by level',
+    formula: 'CRB "Character Wealth by Level" table (index = level − 1)',
+    source: 'PF1e Core Rulebook (OGC): Character Wealth by Level',
+    compute: (s) => pf1eWealthByLevel(s.level),
+    cases: [
+      { name: 'level 1 → 0 (use class starting wealth)', system: { level: 1 }, expected: 0 },
+      { name: 'level 5 → 10,500 gp', system: { level: 5 }, expected: 10500 },
+      { name: 'level 20 → 880,000 gp', system: { level: 20 }, expected: 880000 },
+    ],
+    display: { label: 'Wealth by Level', icon: 'Coins', format: (v) => `${v.toLocaleString()} gp` },
   },
   {
     // FAITHFUL + MUTATION-VERIFIABLE (register-anchored). compute() reproduces the

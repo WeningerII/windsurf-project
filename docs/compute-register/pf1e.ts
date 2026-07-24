@@ -82,6 +82,21 @@ export const pf1eComputeRegister: SystemComputeRegister = {
       testRef: 'src/__tests__/derivation/pf1eDerivedQuantities.test.ts :: pf1e.L3.bab-sum',
     },
     {
+      id: 'pf1e.L10.wealth-by-level',
+      layer: 'L10',
+      quantity: 'Expected character wealth (gp) by level',
+      formula: 'CRB "Character Wealth by Level" table (index = level − 1)',
+      inputs: ['character level'],
+      edgeCases: [
+        'level 1 → 0 (class starting wealth, not on the table)',
+        'mid table (level 5 → 10,500)',
+        'clamps past 20 to the 20th-level figure',
+      ],
+      source: `${CRB}: Character Wealth by Level`,
+      status: 'verified',
+      testRef: 'src/__tests__/derivation/pf1eDerivedQuantities.test.ts :: pf1e.L10.wealth-by-level',
+    },
+    {
       id: 'pf1e.L3.cmb',
       layer: 'L3',
       quantity: 'Combat Maneuver Bonus (CMB)',
