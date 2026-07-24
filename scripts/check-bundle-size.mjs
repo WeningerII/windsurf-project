@@ -52,11 +52,19 @@ const budgets = {
   // all seven engines at registry bootstrap, so they cannot be code-split the
   // way per-system sheets/validators/legal-actions PROVIDERS/data already are
   // (those remain lazy — verified: validation-*/legalActions-* ride their own
-  // chunks). This is genuine cross-system capability, not bloat; the structural
-  // reclaim path if the eager shell keeps climbing is lazy-loading the per-system
-  // engines behind the registry (a larger async-boundary change, tracked
-  // separately). The budget still catches a large jump — it is +4 KiB, not open.
-  appChunkGzipBytes: parseInt(process.env.BUNDLE_BUDGET_APP_GZIP_BYTES || '', 10) || 84 * 1024,
+  // chunks). This is genuine cross-system capability, not bloat.
+  // 84 -> 85 KiB (2026-07-24) for the Wave-3 all-seven UI shell landing together:
+  // the guided-creation wizard front-door (loadCreationPlan registry seam +
+  // New-Character routing, App-shell eager) and the Dock<->sheet dispatch seam
+  // (split registry/state contexts wired across all seven sheets) push the
+  // post-merge eager shell to ~84.0; each PR measured green against a different
+  // base, so the combined footprint only resolves at merge. Still universal,
+  // all-system capability, not per-system bloat. The eager shell has now reached
+  // the point the previous note flagged: the NEXT climb must be paid by the
+  // STRUCTURAL reclaim — lazy-loading the per-system engines behind the registry
+  // (a larger async-boundary change, tracked separately) — not another bump.
+  // The budget still catches a large jump — it is +1 KiB, with ~0.9 KiB headroom.
+  appChunkGzipBytes: parseInt(process.env.BUNDLE_BUDGET_APP_GZIP_BYTES || '', 10) || 85 * 1024,
   vendorChunkGzipBytes:
     parseInt(process.env.BUNDLE_BUDGET_VENDOR_GZIP_BYTES || '', 10) || 200 * 1024,
   largestDataChunkGzipBytes:
