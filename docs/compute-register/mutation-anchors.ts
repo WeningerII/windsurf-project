@@ -1177,6 +1177,19 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'classLevelSumValue2024 > characterLevelValue2024',
     replace: 'classLevelSumValue2024 > characterLevelValue2024 + 100',
   },
+  // ASI/feat cadence: both editions share the one feats-vs-slots comparison;
+  // pushing the limit out of reach drops the over-spend violation and flips
+  // each edition's illegal-fixture assertion. Deduped by (file, find).
+  'dnd5e2014.L7.asi-feat-cadence': {
+    file: 'src/rules/legality/dnd5e.ts',
+    find: 'featCount > grantedAsiSlots',
+    replace: 'featCount > grantedAsiSlots + 100',
+  },
+  'dnd5e2024.L7.asi-feat-cadence': {
+    file: 'src/rules/legality/dnd5e.ts',
+    find: 'featCount > grantedAsiSlots',
+    replace: 'featCount > grantedAsiSlots + 100',
+  },
   // Multiclass prerequisite: both editions share the one 13-minimum comparison,
   // so lowering the minimum out of reach drops every violation and flips each
   // edition's illegal-fixture assertion. Deduped by (file, find) in the gate.

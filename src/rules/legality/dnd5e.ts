@@ -13,6 +13,8 @@
  *     character's level (SRD Multiclassing / advancement).
  *   - Multiclass prerequisites: a build with 2+ classes must meet each class's
  *     13-minimum ability prerequisite (SRD Multiclassing — Prerequisites).
+ *   - ASI/feat cadence: feats taken cannot exceed the ASI slots the class
+ *     levels grant (SRD class tables + Feats — a feat forgoes an ASI).
  *
  * The `systemId` selects the edition so each edition's compute-register L9 row
  * anchors a distinct comparison line; the caps happen to be identical across
@@ -35,6 +37,28 @@ const DND5E_ABILITY_SCORE_MAX = 20;
  * satisfies it), e.g. Fighter = [[str, dex]] (Str 13 OR Dex 13), Paladin =
  * [[str], [cha]] (Str 13 AND Cha 13).
  */
+/**
+ * SRD 5.1 / SRD 5.2 class tables — Ability Score Improvement levels. Most
+ * classes gain an ASI at 4/8/12/16/19; Fighter and Rogue gain extra ASIs. A
+ * character may forgo an ASI to take a feat (SRD Feats), so the number of feats
+ * can never exceed the ASI slots the class levels have granted.
+ */
+const DND5E_BASE_ASI_LEVELS: readonly number[] = [4, 8, 12, 16, 19];
+const DND5E_ASI_LEVELS_BY_CLASS: Record<string, readonly number[]> = {
+  fighter: [4, 6, 8, 12, 14, 16, 19],
+  rogue: [4, 8, 10, 12, 16, 19],
+};
+
+/** ASI slots granted across all class levels (each class uses its own table). */
+function dnd5eAsiSlotsGranted(classLevels: Dnd5eDataModel['classLevels']): number {
+  let granted = 0;
+  for (const cl of classLevels) {
+    const levels = DND5E_ASI_LEVELS_BY_CLASS[cl.classId] ?? DND5E_BASE_ASI_LEVELS;
+    granted += levels.filter((asiLevel) => cl.level >= asiLevel).length;
+  }
+  return granted;
+}
+
 const DND5E_MULTICLASS_MIN = 13;
 const DND5E_MULTICLASS_PREREQ: Record<string, ReadonlyArray<readonly string[]>> = {
   barbarian: [['str']],
@@ -137,6 +161,18 @@ export function validateDnd5eBuild(system: Dnd5eDataModel, systemId?: string): B
         }
       }
     }
+  }
+
+  // --- ASI/feat cadence: feats cannot exceed granted ASI slots ---
+  const grantedAsiSlots = dnd5eAsiSlotsGranted(system.classLevels);
+  const featCount = system.feats.length;
+  if (featCount > grantedAsiSlots) {
+    violations.push({
+      rule: is2024 ? 'dnd5e2024.L7.asi-feat-cadence' : 'dnd5e2014.L7.asi-feat-cadence',
+      label: 'Feats taken vs granted ASI slots',
+      value: featCount,
+      limit: grantedAsiSlots,
+    });
   }
 
   return { legal: violations.length === 0, violations };

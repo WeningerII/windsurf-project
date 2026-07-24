@@ -432,6 +432,23 @@ export const dnd5e2024ComputeRegister: SystemComputeRegister = {
         'src/__tests__/legality/dnd5eLegality.test.ts :: dnd5e 2024 flags class levels exceeding character level',
     },
     {
+      id: 'dnd5e2024.L7.asi-feat-cadence',
+      layer: 'L7',
+      quantity: 'ASI/feat cadence (feats ≤ granted ASI slots)',
+      formula:
+        'granted ASI slots = Σ per class of count(class ASI levels ≤ class level); flag when feats taken exceed it',
+      inputs: ['classLevels', 'feats'],
+      edgeCases: [
+        'Fighter/Rogue extra ASI levels counted',
+        'feats within granted slots → legal',
+        'feats over granted slots → flagged',
+      ],
+      source: `${SRD}: Class tables (Ability Score Improvement); Feats`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/legality/dnd5eLegality.test.ts :: dnd5e 2024 flags more feats than granted ASI slots',
+    },
+    {
       id: 'dnd5e2024.L9.multiclass-prereq',
       layer: 'L9',
       quantity: 'Multiclass ability prerequisites',

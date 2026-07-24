@@ -39,6 +39,10 @@ const legalOver: Partial<Dnd5eDataModel> = {
 const engine2014 = new Dnd5eEngine();
 const engine2024 = new Dnd5e2024Engine();
 
+function feat(id: string): Dnd5eDataModel['feats'][number] {
+  return { id, name: id, description: '', source: 'SRD' };
+}
+
 describe('dnd5e 2014 build legality', () => {
   it('dnd5e 2014 flags a base ability score above 20', () => {
     const legal = engine2014.prepareData(doc('dnd-5e-2014', legalOver)).system;
@@ -55,6 +59,29 @@ describe('dnd5e 2014 build legality', () => {
     const result = validateDnd5eBuild(illegal, 'dnd-5e-2014');
     expect(result.legal).toBe(false);
     expect(result.violations.some((v) => v.rule === 'dnd5e2014.L9.ability-score-cap')).toBe(true);
+  });
+
+  it('dnd5e 2014 flags more feats than granted ASI slots', () => {
+    // Fighter 6 grants 2 ASI slots (levels 4 and 6). One feat is legal.
+    const base: Partial<Dnd5eDataModel> = {
+      level: 6,
+      classLevels: [{ classId: 'fighter', level: 6, hitDieRolls: [10, 6, 6, 6, 6, 6] }],
+      baseAttributes: { str: 16, dex: 14, con: 14, int: 10, wis: 12, cha: 8 },
+    };
+    const legal = engine2014.prepareData(doc('dnd-5e-2014', base)).system;
+    const legalResult = validateDnd5eBuild({ ...legal, feats: [feat('grappler')] }, 'dnd-5e-2014');
+    expect(legalResult.violations.some((v) => v.rule === 'dnd5e2014.L7.asi-feat-cadence')).toBe(
+      false
+    );
+
+    // Three feats exceed the 2 granted slots.
+    const illegal: Dnd5eDataModel = {
+      ...legal,
+      feats: [feat('a'), feat('b'), feat('c')],
+    };
+    const result = validateDnd5eBuild(illegal, 'dnd-5e-2014');
+    expect(result.legal).toBe(false);
+    expect(result.violations.some((v) => v.rule === 'dnd5e2014.L7.asi-feat-cadence')).toBe(true);
   });
 
   it('dnd5e 2014 flags a multiclass build missing an ability prerequisite', () => {
@@ -117,6 +144,32 @@ describe('dnd5e 2024 build legality', () => {
     const result = validateDnd5eBuild(illegal, 'dnd-5e-2024');
     expect(result.legal).toBe(false);
     expect(result.violations.some((v) => v.rule === 'dnd5e2024.L9.ability-score-cap')).toBe(true);
+  });
+
+  it('dnd5e 2024 flags more feats than granted ASI slots', () => {
+    // Rogue 10 grants 3 ASI slots (levels 4, 8, 10). Two feats are legal.
+    const base: Partial<Dnd5eDataModel> = {
+      level: 10,
+      classLevels: [{ classId: 'rogue', level: 10, hitDieRolls: [8, 5, 5, 5, 5, 5, 5, 5, 5, 5] }],
+      baseAttributes: { str: 8, dex: 16, con: 14, int: 12, wis: 12, cha: 10 },
+    };
+    const legal = engine2024.prepareData(doc('dnd-5e-2024', base)).system;
+    const legalResult = validateDnd5eBuild(
+      { ...legal, feats: [feat('a'), feat('b')] },
+      'dnd-5e-2024'
+    );
+    expect(legalResult.violations.some((v) => v.rule === 'dnd5e2024.L7.asi-feat-cadence')).toBe(
+      false
+    );
+
+    // Four feats exceed the 3 granted slots.
+    const illegal: Dnd5eDataModel = {
+      ...legal,
+      feats: [feat('a'), feat('b'), feat('c'), feat('d')],
+    };
+    const result = validateDnd5eBuild(illegal, 'dnd-5e-2024');
+    expect(result.legal).toBe(false);
+    expect(result.violations.some((v) => v.rule === 'dnd5e2024.L7.asi-feat-cadence')).toBe(true);
   });
 
   it('dnd5e 2024 flags a multiclass build missing an ability prerequisite', () => {
