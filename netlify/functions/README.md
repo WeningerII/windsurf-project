@@ -61,12 +61,16 @@ interface AiProviderAdapter {
 Semantics `generate` MUST honor:
 
 - **Input.** `task` is one of the `AiTask` ids (`encounter-draft`,
-  `scene-narration`, `identify-creature`, `illustrate-scene`). `payload` is the
-  request body already validated by `parseAiRequest`; treat it as opaque.
+  `scene-narration`, `identify-creature`, `illustrate-scene`, `character-draft`).
+  `payload` is the request body already validated by `parseAiRequest`; treat it
+  as opaque.
 - **Output is untrusted.** Return the raw structured result. The core
   **re-validates** it with `parseTaskData` regardless of provider — shaping output
   to look valid does not bypass the gate (the mock adapter is deliberately
-  re-validated too). Structured-text tasks return the task's object; image tasks
+  re-validated too). Structured-text tasks return the task's object (e.g.
+  `character-draft` returns `{ name, classId?, ancestryId?, backgroundId?,
+  featIds?, spellIds? }` — ids the client validates against the candidate pools
+  and applies through the existing template/creation path); image tasks
   (`illustrate-scene`) return `{ dataUrl, mediaType }`.
 - **Errors throw.** On any provider/transport failure, throw (any `Error`). The
   core normalizes: a timeout → `timeout` (HTTP 504), anything else →
