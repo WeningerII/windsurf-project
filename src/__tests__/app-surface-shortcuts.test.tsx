@@ -70,7 +70,12 @@ describe('App surface shortcuts (Alt+1/2/3)', () => {
     fireEvent.keyDown(document.body, { key: '3', altKey: true });
     await screen.findByTestId('scene-canvas');
     expect(sceneCanvasWrapper()).toHaveAttribute('aria-hidden', 'false');
-    expect(screen.queryByText('No characters yet')).not.toBeInTheDocument();
+    // Keepalive: the Library stays mounted but leaves the a11y tree (its
+    // SurfaceStage wrapper is aria-hidden), rather than unmounting.
+    expect(screen.getByText('No characters yet').closest('[aria-hidden]')).toHaveAttribute(
+      'aria-hidden',
+      'true'
+    );
 
     // Alt+1 flips back to the Library; the canvas stays mounted (keepalive)
     // but leaves the accessibility tree.
@@ -101,8 +106,13 @@ describe('App surface shortcuts (Alt+1/2/3)', () => {
       ).toBeInTheDocument();
 
       fireEvent.keyDown(document.body, { key: '1', altKey: true });
+      // Keepalive: the open sheet stays mounted (its doc is still set) but its
+      // SurfaceStage wrapper goes aria-hidden while the Library is active.
       await waitFor(() => {
-        expect(screen.queryByTitle('Character name')).not.toBeInTheDocument();
+        expect(screen.getByTitle('Character name').closest('[aria-hidden]')).toHaveAttribute(
+          'aria-hidden',
+          'true'
+        );
       });
 
       // The sheet doc is still set, so Alt+2 re-shows the same sheet.

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo, lazy, Suspense } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo, lazy, Suspense } from 'react';
 import { SystemStatusDashboard } from './components/SystemStatusDashboard';
 import { GameSystemId } from './types/game-systems';
 import { systemRegistry } from './registry';
@@ -44,9 +44,11 @@ import { CharacterListView, type CharacterSortOption } from './components/Charac
 import { LibraryScenesView } from './components/LibraryScenesView';
 import { LibraryBestiaryView } from './components/LibraryBestiaryView';
 import { AppHeader } from './components/AppHeader';
+import { SurfaceStage } from './components/SurfaceStage';
 import { NewCharacterDialog } from './components/NewCharacterDialog';
 import { GuidedCreatorDialog } from './components/GuidedCreatorDialog';
 import { useAppNav } from './hooks/useAppNav';
+import { ShellProvider } from './contexts/ShellContext';
 import { useSurfaceSwitchMetrics } from './hooks/useSurfaceSwitchMetrics';
 
 const STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
@@ -98,21 +100,11 @@ function AppContent() {
     flushPendingSaves: flushPendingDocumentSaves,
   } = useDocuments();
 
-  const {
-    syncState: documentSyncState,
-    lastSyncedAt: lastDocumentSyncedAt,
-    sync: syncDocuments,
-  } = useSync({
-    documents,
-    // The sync merge is authoritative (it already applied tombstones), so it
-    // must replace the collection — an upsert-only merge could never remove
-    // an entity deleted on another device.
-    onMerge: applyMergedDocuments,
-  });
-
-  // Total shell-nav model (Phase 1): one discriminated union replaces the old
-  // currentDocId / selectedSystem / showLegal flags. Phase 2 relocates the
-  // reducer into a ShellContext without changing this call site.
+  // Total shell-nav model: one discriminated union replaces the old
+  // currentDocId / selectedSystem / showLegal flags. Phase 2 moved the
+  // reducer into ShellContext (src/contexts/shell-context.ts); this call
+  // site — a thin context read — is unchanged, as planned. It is read BEFORE
+  // the sync hooks so `nav.surface` can gate their subscriptions (below).
   const {
     nav,
     openSheet,
@@ -126,22 +118,37 @@ function AppContent() {
   // Surface-switch user timing (marks + measures): the recorded baseline the
   // Phase-7 interaction-budget gate is calibrated against later.
   useSurfaceSwitchMetrics(nav.surface);
+
+  // Per-surface sync quiescence (Phase 2 pause/resume-with-reconcile). Each
+  // entity table's realtime subscription is kept open only while a surface
+  // that DISPLAYS that data is visible; local edits always push regardless,
+  // and returning to the surface runs one reconciling sync() to catch up on
+  // events missed while paused. Documents back both the Sheet and the Library
+  // Characters segment, so they stay active for either; campaigns back only
+  // the Library Campaigns segment. (Mapping per build-specs Open Question — the
+  // spec's proposed default.)
+  const documentsSyncActive =
+    nav.surface === 'sheet' || (nav.surface === 'library' && nav.librarySegment === 'characters');
+  const campaignsSyncActive = nav.surface === 'library' && nav.librarySegment === 'campaigns';
+
+  const {
+    syncState: documentSyncState,
+    lastSyncedAt: lastDocumentSyncedAt,
+    sync: syncDocuments,
+  } = useSync({
+    documents,
+    // The sync merge is authoritative (it already applied tombstones), so it
+    // must replace the collection — an upsert-only merge could never remove
+    // an entity deleted on another device.
+    onMerge: applyMergedDocuments,
+    active: documentsSyncActive,
+  });
   const [newCharacterDialogOpen, setNewCharacterDialogOpen] = useState(false);
   // System id whose guided creator modal is open (null = none). Set instead of
   // creating immediately when the picked system provides a CreatorComponent.
   const [creatorSystemId, setCreatorSystemId] = useState<GameSystemId | null>(null);
-  // The heavy SceneManager chunk is mounted only the first time the Scene
-  // surface is opened (selecting a scene in LibraryScenesView flips there),
-  // then kept alive (hidden) so its ~30 transient useState survive surface
-  // switches without re-running foldSceneEvents or re-fetching the chunk.
-  const [hasVisitedSceneSurface, setHasVisitedSceneSurface] = useState(false);
 
   const isLibrary = nav.surface === 'library';
-  const isScenesSegment = isLibrary && nav.librarySegment === 'scenes';
-  const isSceneSurface = nav.surface === 'scene';
-  useEffect(() => {
-    if (isSceneSurface) setHasVisitedSceneSurface(true);
-  }, [isSceneSurface]);
 
   const [systemFilter, setSystemFilter] = useState<GameSystemId | 'all'>('all');
   const [sortOption, setSortOption] = useState<CharacterSortOption>('updated-desc');
@@ -175,8 +182,25 @@ function AppContent() {
     updateScene,
     appendSceneEvent,
     deleteScene,
+    reloadScenes,
     flushPendingSaves: flushPendingSceneSaves,
   } = useScenes();
+
+  // Scenes have no realtime channel to quiesce (they are localStorage-backed
+  // with an UNGATED cross-tab storage listener). Phase 2's reconcile for the
+  // Scene surface is instead a re-read on its hidden->visible transition, so a
+  // tab that missed a storage event while the keepalive Scene surface was
+  // hidden picks up other tabs' edits on return. The initial mount load in
+  // useScenes covers the first visit; this fires only on genuine reactivations.
+  const isSceneSurface = nav.surface === 'scene';
+  const prevSceneSurfaceRef = useRef(isSceneSurface);
+  useEffect(() => {
+    const wasActive = prevSceneSurfaceRef.current;
+    prevSceneSurfaceRef.current = isSceneSurface;
+    if (!wasActive && isSceneSurface) {
+      reloadScenes();
+    }
+  }, [isSceneSurface, reloadScenes]);
 
   // Bridge a scene back to its linked campaign: append a factual recap as a
   // session-log entry. Campaign mutation stays here (the owner of useCampaigns)
@@ -199,6 +223,7 @@ function AppContent() {
     campaigns,
     // Replace, not upsert — see the documents onMerge above.
     onMerge: applyMergedCampaigns,
+    active: campaignsSyncActive,
   });
   const syncState = combineSyncStates([documentSyncState, campaignSyncState]);
   const lastSyncedAt = getMostRecentSyncDate([lastDocumentSyncedAt, lastCampaignSyncedAt]);
@@ -500,7 +525,6 @@ function AppContent() {
   ]);
 
   const currentDoc = documents.find((d) => d.id === nav.sheetDocId);
-  const isSheet = nav.surface === 'sheet' && Boolean(currentDoc);
   const appError = error ?? campaignError ?? sceneError;
   const clearAppError = error ? clearError : campaignError ? clearCampaignError : clearSceneError;
 
@@ -572,177 +596,183 @@ function AppContent() {
               ))}
             </div>
           </div>
-        ) : isSheet && currentDoc ? (
-          <div className="max-w-7xl mx-auto">
-            {/* Scoped boundary: a lazy sheet chunk that fails to load (stale
+        ) : (
+          /* Keepalive stage (Phase 2): Library, Sheet and Scene are mounted
+             peers — each mounts on first visit, then survives surface
+             switches hidden via visibility:hidden + off-screen transform
+             (mechanism and rationale live in SurfaceStage.tsx). */
+          <SurfaceStage
+            sheet={
+              currentDoc ? (
+                <div className="max-w-7xl mx-auto">
+                  {/* Scoped boundary: a lazy sheet chunk that fails to load (stale
                 deploy, flaky offline cache) must not take down the whole app.
                 Keyed by document id so switching characters retries cleanly. */}
-            <ErrorBoundary
-              key={currentDoc.id}
-              fallback={
-                <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-8 text-center space-y-4">
-                  <AlertCircle className="mx-auto h-8 w-8 text-destructive" />
-                  <div className="space-y-1">
-                    <h2 className="text-lg font-semibold">This character sheet failed to load</h2>
-                    <p className="text-sm text-muted-foreground">
-                      The sheet may have failed to download (for example after an update or while
-                      offline). Reloading usually fixes it — your character data is safe.
-                    </p>
-                  </div>
-                  <div className="flex justify-center gap-2">
-                    <Button onClick={() => window.location.reload()}>Reload sheet</Button>
-                    <Button variant="outline" onClick={handleReturnToList}>
-                      Back to list
-                    </Button>
-                  </div>
+                  <ErrorBoundary
+                    key={currentDoc.id}
+                    fallback={
+                      <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-8 text-center space-y-4">
+                        <AlertCircle className="mx-auto h-8 w-8 text-destructive" />
+                        <div className="space-y-1">
+                          <h2 className="text-lg font-semibold">
+                            This character sheet failed to load
+                          </h2>
+                          <p className="text-sm text-muted-foreground">
+                            The sheet may have failed to download (for example after an update or
+                            while offline). Reloading usually fixes it — your character data is
+                            safe.
+                          </p>
+                        </div>
+                        <div className="flex justify-center gap-2">
+                          <Button onClick={() => window.location.reload()}>Reload sheet</Button>
+                          <Button variant="outline" onClick={handleReturnToList}>
+                            Back to list
+                          </Button>
+                        </div>
+                      </div>
+                    }
+                  >
+                    <SystemSheetRenderer document={currentDoc} onUpdate={updateDocument} />
+                  </ErrorBoundary>
                 </div>
-              }
-            >
-              <SystemSheetRenderer document={currentDoc} onUpdate={updateDocument} />
-            </ErrorBoundary>
-          </div>
-        ) : (
-          <div className="relative max-w-6xl mx-auto space-y-10">
-            {/* Characters segment */}
-            {isLibrary && nav.librarySegment === 'characters' && canInstall && (
-              <section className="mx-auto max-w-3xl rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card p-5 shadow-sm">
-                <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                  <div className="flex items-start gap-3">
-                    <div className="rounded-xl bg-primary/10 p-3 text-primary">
-                      <Download className="h-5 w-5" />
+              ) : null
+            }
+            library={
+              <div className="relative max-w-6xl mx-auto space-y-10">
+                {/* Characters segment. Segment views still mount per segment —
+                keepalive is surface-granular; only the surface as a whole
+                stays alive while hidden. */}
+                {nav.librarySegment === 'characters' && canInstall && (
+                  <section className="mx-auto max-w-3xl rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-card to-card p-5 shadow-sm">
+                    <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                      <div className="flex items-start gap-3">
+                        <div className="rounded-xl bg-primary/10 p-3 text-primary">
+                          <Download className="h-5 w-5" />
+                        </div>
+                        <div className="space-y-1">
+                          <h3 className="text-lg font-semibold tracking-tight">Install the app</h3>
+                          <p className="text-sm text-muted-foreground">
+                            Add it to your home screen for faster launches and offline-friendly
+                            access.
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <Button variant="outline" onClick={dismissInstallPrompt}>
+                          Not now
+                        </Button>
+                        <Button onClick={() => void promptInstall()} disabled={isInstalling}>
+                          <Download className="mr-2 h-4 w-4" />
+                          {isInstalling ? 'Opening Prompt...' : 'Install App'}
+                        </Button>
+                      </div>
                     </div>
-                    <div className="space-y-1">
-                      <h3 className="text-lg font-semibold tracking-tight">Install the app</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Add it to your home screen for faster launches and offline-friendly access.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    <Button variant="outline" onClick={dismissInstallPrompt}>
-                      Not now
-                    </Button>
-                    <Button onClick={() => void promptInstall()} disabled={isInstalling}>
-                      <Download className="mr-2 h-4 w-4" />
-                      {isInstalling ? 'Opening Prompt...' : 'Install App'}
-                    </Button>
-                  </div>
-                </div>
-              </section>
-            )}
-            {/* First-run empty state: CharacterListView renders nothing when no
+                  </section>
+                )}
+                {/* First-run empty state: CharacterListView renders nothing when no
                 characters exist, so an empty roster needs an explicit path into
                 the dialog-first creation flow. */}
-            {isLibrary && nav.librarySegment === 'characters' && documents.length === 0 && (
-              <section className="mx-auto max-w-xl rounded-2xl border border-border bg-card p-10 text-center space-y-4">
-                <h3 className="text-2xl font-semibold tracking-tight">No characters yet</h3>
-                <p className="text-sm text-muted-foreground">
-                  Create your first character to get started, or bring one back with Import in the
-                  header.
-                </p>
-                <Button onClick={openNewCharacterDialog}>Create Your First Character</Button>
-              </section>
-            )}
-            {isLibrary && nav.librarySegment === 'characters' && (
-              <CharacterListView
-                documents={documents}
-                filteredDocuments={filteredAndSortedDocuments}
-                systemFilter={systemFilter}
-                onSystemFilterChange={setSystemFilter}
-                sortOption={sortOption}
-                onSortOptionChange={setSortOption}
-                onExportAll={handleExportAllDocuments}
-                onClearAll={() =>
-                  showConfirm(
-                    'Delete All Characters',
-                    'This will permanently delete all saved characters. This action cannot be undone.',
-                    () => {
-                      clearAllDocuments();
-                      closeSheet();
-                      toast('All characters deleted', 'success');
+                {nav.librarySegment === 'characters' && documents.length === 0 && (
+                  <section className="mx-auto max-w-xl rounded-2xl border border-border bg-card p-10 text-center space-y-4">
+                    <h3 className="text-2xl font-semibold tracking-tight">No characters yet</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Create your first character to get started, or bring one back with Import in
+                      the header.
+                    </p>
+                    <Button onClick={openNewCharacterDialog}>Create Your First Character</Button>
+                  </section>
+                )}
+                {nav.librarySegment === 'characters' && (
+                  <CharacterListView
+                    documents={documents}
+                    filteredDocuments={filteredAndSortedDocuments}
+                    systemFilter={systemFilter}
+                    onSystemFilterChange={setSystemFilter}
+                    sortOption={sortOption}
+                    onSortOptionChange={setSortOption}
+                    onExportAll={handleExportAllDocuments}
+                    onClearAll={() =>
+                      showConfirm(
+                        'Delete All Characters',
+                        'This will permanently delete all saved characters. This action cannot be undone.',
+                        () => {
+                          clearAllDocuments();
+                          closeSheet();
+                          toast('All characters deleted', 'success');
+                        }
+                      )
                     }
-                  )
-                }
-                onOpenCharacter={openSheet}
-                onCloneCharacter={handleCloneDocument}
-                onExportCharacter={(id) => {
-                  const doc = documents.find((d) => d.id === id);
-                  if (doc) handleExportDocument(doc);
-                }}
-                onDeleteCharacter={handleDeleteDocument}
-                storageWarning={
-                  isNearStorageLimit ? { percent: storageUsagePercent, mb: storageUsageMb } : null
-                }
-              />
-            )}
-
-            {/* Campaigns segment */}
-            {isLibrary && nav.librarySegment === 'campaigns' && (
-              <CampaignManager
-                campaigns={campaigns}
-                documents={documents}
-                onAddCampaign={addCampaign}
-                onUpdateCampaign={updateCampaign}
-                onDeleteCampaign={(id) =>
-                  showConfirm(
-                    'Delete Campaign',
-                    'This will delete the campaign. Characters in it will not be affected.',
-                    () => {
-                      deleteCampaign(id);
-                      toast('Campaign deleted', 'success');
+                    onOpenCharacter={openSheet}
+                    onCloneCharacter={handleCloneDocument}
+                    onExportCharacter={(id) => {
+                      const doc = documents.find((d) => d.id === id);
+                      if (doc) handleExportDocument(doc);
+                    }}
+                    onDeleteCharacter={handleDeleteDocument}
+                    storageWarning={
+                      isNearStorageLimit
+                        ? { percent: storageUsagePercent, mb: storageUsageMb }
+                        : null
                     }
-                  )
-                }
-                onAddCharacter={(cid, charId) => {
-                  addCharacterToCampaign(cid, charId);
-                  const doc = documents.find((d) => d.id === charId);
-                  if (doc) toast(`Added ${doc.name} to campaign`, 'success');
-                }}
-                onRemoveCharacter={(cid, charId) => {
-                  removeCharacterFromCampaign(cid, charId);
-                  const doc = documents.find((d) => d.id === charId);
-                  if (doc) toast(`Removed ${doc.name} from campaign`, 'success');
-                }}
-                onOpenCharacter={openSheet}
-                onImportCampaigns={addCampaigns}
-              />
-            )}
+                  />
+                )}
 
-            {/* Bestiary library segment: read-only monster catalog (RFC-004) */}
-            {isLibrary && nav.librarySegment === 'bestiary' && <LibraryBestiaryView />}
+                {/* Campaigns segment */}
+                {nav.librarySegment === 'campaigns' && (
+                  <CampaignManager
+                    campaigns={campaigns}
+                    documents={documents}
+                    onAddCampaign={addCampaign}
+                    onUpdateCampaign={updateCampaign}
+                    onDeleteCampaign={(id) =>
+                      showConfirm(
+                        'Delete Campaign',
+                        'This will delete the campaign. Characters in it will not be affected.',
+                        () => {
+                          deleteCampaign(id);
+                          toast('Campaign deleted', 'success');
+                        }
+                      )
+                    }
+                    onAddCharacter={(cid, charId) => {
+                      addCharacterToCampaign(cid, charId);
+                      const doc = documents.find((d) => d.id === charId);
+                      if (doc) toast(`Added ${doc.name} to campaign`, 'success');
+                    }}
+                    onRemoveCharacter={(cid, charId) => {
+                      removeCharacterFromCampaign(cid, charId);
+                      const doc = documents.find((d) => d.id === charId);
+                      if (doc) toast(`Removed ${doc.name} from campaign`, 'success');
+                    }}
+                    onOpenCharacter={openSheet}
+                    onImportCampaigns={addCampaigns}
+                  />
+                )}
 
-            {/* Content library segment */}
-            {isLibrary && nav.librarySegment === 'content' && <SystemStatusDashboard />}
+                {/* Bestiary library segment: read-only monster catalog (RFC-004) */}
+                {nav.librarySegment === 'bestiary' && <LibraryBestiaryView />}
 
-            {/* Scenes segment: the select-only picker (create/import included).
-                Selecting a scene flips to the Scene surface below. */}
-            {isScenesSegment && (
-              <LibraryScenesView
-                scenes={scenes}
-                campaigns={campaigns}
-                selectedSceneId={nav.sceneId}
-                onSelectScene={selectScene}
-                onAddScene={addScene}
-                onAddScenes={addScenes}
-              />
-            )}
+                {/* Content library segment */}
+                {nav.librarySegment === 'content' && <SystemStatusDashboard />}
 
-            {/* Scene surface (the operating canvas): mounted on first visit,
-                then kept alive so in-progress scene state survives surface
-                switches. Hidden via visibility:hidden + off-screen transform,
-                NOT display:none — the hidden subtree must keep its layout so
-                re-showing does not re-lay-out the grid (ui-shell-redesign
-                final plan, Findings 7+14). absolute takes it out of flow;
-                visibility:hidden drops it from the a11y tree and tab order. */}
-            {hasVisitedSceneSurface && (
-              <div
-                aria-hidden={!isSceneSurface}
-                className={
-                  isSceneSurface
-                    ? undefined
-                    : 'invisible absolute inset-x-0 top-0 -translate-x-[200vw] pointer-events-none'
-                }
-              >
+                {/* Scenes segment: the select-only picker (create/import included).
+                Selecting a scene flips to the Scene surface. */}
+                {nav.librarySegment === 'scenes' && (
+                  <LibraryScenesView
+                    scenes={scenes}
+                    campaigns={campaigns}
+                    selectedSceneId={nav.sceneId}
+                    onSelectScene={selectScene}
+                    onAddScene={addScene}
+                    onAddScenes={addScenes}
+                  />
+                )}
+              </div>
+            }
+            scene={
+              /* The operating canvas: SceneManager stays a lazy chunk, so a
+                 user who never opens a scene never fetches it. */
+              <div className="relative max-w-6xl mx-auto">
                 <Suspense fallback={<Skeleton className="h-64 w-full" />}>
                   <SceneManager
                     scenes={scenes}
@@ -766,8 +796,8 @@ function AppContent() {
                   />
                 </Suspense>
               </div>
-            )}
-          </div>
+            }
+          />
         )}
       </main>
 
@@ -835,7 +865,9 @@ function AppContent() {
 function App() {
   return (
     <ToastProvider>
-      <AppContent />
+      <ShellProvider>
+        <AppContent />
+      </ShellProvider>
       <ServiceWorkerUpdateBanner />
     </ToastProvider>
   );

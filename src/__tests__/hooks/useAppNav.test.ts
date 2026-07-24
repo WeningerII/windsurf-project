@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
+import { createElement, type ReactNode } from 'react';
 import {
   useAppNav,
   INITIAL_NAV_STATE,
@@ -7,10 +8,25 @@ import {
   librarySegmentLabel,
   surfaceLabel,
 } from '../../hooks/useAppNav';
+import { ShellProvider } from '../../contexts/ShellContext';
+
+// Phase 2: the hook is a thin consumer of ShellContext, so every renderHook
+// mounts under the provider. The assertions below are unchanged from Phase 1
+// — the point of the swap is that the hook's public behavior is identical.
+function wrapper({ children }: { children: ReactNode }) {
+  return createElement(ShellProvider, null, children);
+}
+
+function renderNav() {
+  return renderHook(() => useAppNav(), { wrapper });
+}
 
 describe('useAppNav', () => {
+  it('throws a loud error when mounted without a ShellProvider', () => {
+    expect(() => renderHook(() => useAppNav())).toThrowError(/ShellProvider/);
+  });
   it('starts on the Library/Characters surface with nothing open', () => {
-    const { result } = renderHook(() => useAppNav());
+    const { result } = renderNav();
     expect(result.current.nav).toEqual(INITIAL_NAV_STATE);
     expect(result.current.nav).toEqual({
       surface: 'library',
@@ -22,7 +38,7 @@ describe('useAppNav', () => {
   });
 
   it('openSheet is compound: sets the doc AND switches to the sheet surface', () => {
-    const { result } = renderHook(() => useAppNav());
+    const { result } = renderNav();
     act(() => result.current.setLibrarySegment('campaigns'));
     // Simulates the cross-segment CampaignManager.onOpenCharacter writer.
     act(() => result.current.openSheet('doc-1'));
@@ -31,7 +47,7 @@ describe('useAppNav', () => {
   });
 
   it('closeSheet returns to Library/Characters and clears the open sheet', () => {
-    const { result } = renderHook(() => useAppNav());
+    const { result } = renderNav();
     act(() => result.current.openSheet('doc-1'));
     act(() => result.current.closeSheet());
     expect(result.current.nav.surface).toBe('library');
@@ -40,14 +56,14 @@ describe('useAppNav', () => {
   });
 
   it('selectScene(id) selects the scene AND switches to the Scene surface', () => {
-    const { result } = renderHook(() => useAppNav());
+    const { result } = renderNav();
     act(() => result.current.selectScene('scene-9'));
     expect(result.current.nav.sceneId).toBe('scene-9');
     expect(result.current.nav.surface).toBe('scene');
   });
 
   it('selectScene(null) clears the scene without changing surface', () => {
-    const { result } = renderHook(() => useAppNav());
+    const { result } = renderNav();
     act(() => result.current.setLibrarySegment('scenes'));
     act(() => result.current.selectScene(null));
     expect(result.current.nav.sceneId).toBeNull();
@@ -55,7 +71,7 @@ describe('useAppNav', () => {
   });
 
   it('setSurface and setLibrarySegment round-trip', () => {
-    const { result } = renderHook(() => useAppNav());
+    const { result } = renderNav();
     act(() => result.current.setLibrarySegment('content'));
     expect(result.current.nav.surface).toBe('library');
     expect(result.current.nav.librarySegment).toBe('content');
@@ -64,7 +80,7 @@ describe('useAppNav', () => {
   });
 
   it('overlay opens and closes independently of the surface', () => {
-    const { result } = renderHook(() => useAppNav());
+    const { result } = renderNav();
     act(() => result.current.openSheet('doc-1'));
     act(() => result.current.openOverlay('legal'));
     expect(result.current.nav.overlay).toBe('legal');
@@ -74,7 +90,7 @@ describe('useAppNav', () => {
   });
 
   it('opening a sheet dismisses any open overlay', () => {
-    const { result } = renderHook(() => useAppNav());
+    const { result } = renderNav();
     act(() => result.current.openOverlay('legal'));
     act(() => result.current.openSheet('doc-2'));
     expect(result.current.nav.overlay).toBeNull();

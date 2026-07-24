@@ -528,4 +528,30 @@ describe('useSync', () => {
     expect(mockedSubscribeToRemoteDocuments).not.toHaveBeenCalled();
     expect(result.current.syncState).toBe('idle');
   });
+
+  it('subscribes by default when active is omitted (back-compat)', async () => {
+    const onMerge = vi.fn();
+
+    renderHook(() => useSync({ documents: [makeDoc('doc-1')], onMerge }), {
+      wrapper: createWrapper(),
+    });
+
+    await waitFor(() => {
+      expect(mockedSubscribeToRemoteDocuments).toHaveBeenCalledWith('user-1', expect.any(Function));
+    });
+  });
+
+  it('forwards active:false to useEntitySync so the realtime subscription is skipped', async () => {
+    const onMerge = vi.fn();
+
+    renderHook(() => useSync({ documents: [makeDoc('doc-1')], onMerge, active: false }), {
+      wrapper: createWrapper(),
+    });
+
+    // The initial sync still runs, but `active:false` gates the subscription.
+    await waitFor(() => {
+      expect(mockedFetchRemoteDocuments).toHaveBeenCalledTimes(1);
+    });
+    expect(mockedSubscribeToRemoteDocuments).not.toHaveBeenCalled();
+  });
 });

@@ -21,6 +21,43 @@ export const useScenes = () => {
     setIsLoading(false);
   }, []);
 
+  // Reconcile the persisted snapshot into the live collection on demand. The
+  // Scene surface calls this on its hidden->visible transition (Phase 2
+  // keepalive): the L86-98 cross-tab storage listener stays UNGATED, but a tab
+  // that never received a storage event while the Scene surface was hidden
+  // (e.g. it was backgrounded) picks up other tabs' edits on return.
+  //
+  // This MERGES rather than raw-replaces (`setScenes(loadScenes())`). A raw
+  // replace drops any scene whose debounced save has not yet flushed — notably
+  // a scene JUST created or imported on the Library Scenes segment, whose
+  // onSelectScene flips to the Scene surface (triggering this very
+  // reactivation) in the same tick, BEFORE the debounce fires. loadScenes()
+  // then returns a stale snapshot without that scene, and a replace clobbers
+  // it out of memory so its canvas never renders. The updatedAt-aware upsert
+  // below (identical to the cross-tab listener's merge) keeps those unsaved
+  // local additions while still surfacing edits other tabs wrote to storage
+  // while this surface was hidden. An empty snapshot leaves the live
+  // collection untouched.
+  const reloadScenes = useCallback(() => {
+    setIsLoading(false);
+    setScenes((current) => {
+      const loaded = loadScenes();
+      if (loaded.length === 0) return current;
+      const byId = new Map(current.map((scene) => [scene.id, scene] as const));
+      loaded.forEach((scene) => {
+        const existing = byId.get(scene.id);
+        if (!existing || scene.updatedAt >= existing.updatedAt) {
+          byId.set(scene.id, scene);
+        }
+      });
+      const next = Array.from(byId.values());
+      // Signature-compare so an idempotent re-read stays a true no-op (same
+      // reference), matching addScenes and keeping React from re-rendering the
+      // keepalive canvas needlessly.
+      return sameSceneSignatures(current, next) ? current : next;
+    });
+  }, []);
+
   const persist = useCallback((nextScenes: SceneDocument[]) => {
     try {
       saveScenes(nextScenes);
@@ -166,6 +203,7 @@ export const useScenes = () => {
     appendSceneEvent,
     deleteScene,
     clearAllScenes,
+    reloadScenes,
     flushPendingSaves: persistence.flush,
   };
 };

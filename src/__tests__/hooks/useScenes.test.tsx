@@ -180,4 +180,22 @@ describe('useScenes', () => {
 
     expect(result.current.scenes).toBe(before);
   });
+
+  it('reloadScenes re-reads the persisted snapshot (Phase 2 Scene-surface reactivate)', () => {
+    const { result } = renderHook(() => useScenes());
+
+    // Simulate another tab having written a scene to storage while this hook's
+    // Scene surface was hidden and it never received the storage event.
+    const externalScene = makeScene({ id: 'scene-from-other-tab', name: 'Other Tab Scene' });
+    localStorage.setItem('rpg-scenes-v1', JSON.stringify({ version: 1, scenes: [externalScene] }));
+    expect(result.current.scenes).toEqual([]);
+
+    // On Scene reactivate App calls reloadScenes(): the missed edit is picked up.
+    act(() => {
+      result.current.reloadScenes();
+    });
+
+    expect(result.current.scenes.map((scene) => scene.id)).toEqual(['scene-from-other-tab']);
+    expect(result.current.isLoading).toBe(false);
+  });
 });

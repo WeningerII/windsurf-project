@@ -33,9 +33,11 @@ import { useEntitySync, type EntitySyncAdapter } from './useEntitySync';
 interface UseCampaignSyncOptions {
   campaigns: Campaign[];
   onMerge: (merged: Campaign[]) => void;
+  /** Pause/resume knob forwarded to `useEntitySync` (defaults to true). */
+  active?: boolean;
 }
 
-export function useCampaignSync({ campaigns, onMerge }: UseCampaignSyncOptions) {
+export function useCampaignSync({ campaigns, onMerge, active }: UseCampaignSyncOptions) {
   const adapter = useMemo<EntitySyncAdapter<Campaign>>(
     () => ({
       sameSignatures: sameCampaignSignatures,
@@ -58,5 +60,5 @@ export function useCampaignSync({ campaigns, onMerge }: UseCampaignSyncOptions) 
     []
   );
 
-  return useEntitySync({ entities: campaigns, onMerge, adapter });
+  return useEntitySync({ entities: campaigns, onMerge, adapter, active });
 }
