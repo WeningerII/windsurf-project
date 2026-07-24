@@ -7,7 +7,7 @@ import { PF1E_DERIVED_QUANTITIES } from './derivedQuantities';
 import { abilityMod } from '../../utils/math';
 import { CMB_SIZE_MODS, baseSave, classBAB, d20SkillCheckPenalty } from '../shared/d20-helpers';
 import { resolveCharacterEffects, computeD20LegacyAC, D20_SIZE_MOD } from '../../rules';
-import { d20LegacyCheckPenalty } from '../../rules/conditions/d20LegacyConditions';
+import { collectD20LegacyConditionEffects } from '../../rules/conditions/d20LegacyConditions';
 import { mergeVancianSpellSlots } from '../../utils/classSpellcasting';
 import { pf1eClasses } from '../../data/pathfinder/1e/classes';
 import { pf1ePrestigeClasses } from '../../data/pathfinder/1e/prestige-classes';
@@ -244,8 +244,17 @@ export class Pf1eEngine implements SystemEngine<Pf1eDataModel> {
     }
 
     // Active fear/sickened conditions impose their flat SRD penalty on every
-    // check and save (worst fear state only; sickened stacks with fear).
-    modifier -= d20LegacyCheckPenalty((d.conditions ?? []).map((condition) => condition.id));
+    // check and save (worst fear state only; sickened stacks with fear). Routed
+    // through the shared resolver fold (W5): the collected condition effects
+    // enter the SAME resolver as equipment/feat effects, so they surface in the
+    // ledger for provenance. `bonus('check')` reads the generic per-check
+    // penalty — the fear/sickened `check`-targeted effects — which equals the
+    // old d20LegacyCheckPenalty scalar; the attack-only riders (dazzled/prone/
+    // entangled) carry no `check` effect, so this stays byte-identical.
+    const conditionIds = (d.conditions ?? []).map((condition) => condition.id);
+    modifier += resolveCharacterEffects('pf1e', {
+      conditions: collectD20LegacyConditionEffects('pf1e', conditionIds),
+    }).bonus('check');
 
     const d20 = rollD20('normal').chosen;
     return {

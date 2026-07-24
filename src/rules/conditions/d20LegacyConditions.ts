@@ -7,6 +7,15 @@
  * share the same OGL condition text for the entries encoded here, so one
  * catalog serves both, stamped with the caller's system id.
  *
+ * Targets: an entry lands on `attack` (the to-hit rider that the scene attack
+ * pipeline reads) and/or on `check` (the generic per-check penalty the sheet
+ * engine subtracts from every save/skill/ability roll). The fear track and
+ * sickened apply to BOTH — the SRD text is "-2 on attack rolls, saves, skill
+ * and ability checks" — so each emits one `attack` and one `check` effect, and
+ * `bonus('check')` reproduces `d20LegacyCheckPenalty` exactly. The attack-only
+ * riders (dazzled/entangled/prone) deliberately carry NO `check` effect, so they
+ * never leak onto a saving throw.
+ *
  * Honesty rules mirror the other condition catalogs: only penalties that apply
  * unconditionally to the roll target are folded as numbers; scoped ones (prone
  * is melee-only) carry a partial manualBoundary note; non-numeric outcomes
@@ -35,6 +44,12 @@ const D20_LEGACY_CONDITION_EFFECTS: Record<string, LegacyConditionTemplate[]> = 
       value: 2,
       label: 'Shaken: -2 on attack rolls, saves, skill and ability checks',
     },
+    {
+      target: 'check',
+      operation: 'subtract',
+      value: 2,
+      label: 'Shaken: -2 on saves, skill and ability checks',
+    },
   ],
   frightened: [
     {
@@ -43,6 +58,12 @@ const D20_LEGACY_CONDITION_EFFECTS: Record<string, LegacyConditionTemplate[]> = 
       value: 2,
       label: 'Frightened: -2 on attack rolls, saves, skill and ability checks',
       manualBoundary: { kind: 'partial', note: 'SRD: the creature must also flee if able.' },
+    },
+    {
+      target: 'check',
+      operation: 'subtract',
+      value: 2,
+      label: 'Frightened: -2 on saves, skill and ability checks',
     },
   ],
   panicked: [
@@ -55,6 +76,12 @@ const D20_LEGACY_CONDITION_EFFECTS: Record<string, LegacyConditionTemplate[]> = 
         kind: 'partial',
         note: 'SRD: a panicked creature flees and cannot normally attack at all.',
       },
+    },
+    {
+      target: 'check',
+      operation: 'subtract',
+      value: 2,
+      label: 'Panicked: -2 on saves, skill and ability checks',
     },
   ],
   sickened: [
@@ -69,6 +96,12 @@ const D20_LEGACY_CONDITION_EFFECTS: Record<string, LegacyConditionTemplate[]> = 
       operation: 'subtract',
       value: 2,
       label: 'Sickened: -2 on weapon damage rolls',
+    },
+    {
+      target: 'check',
+      operation: 'subtract',
+      value: 2,
+      label: 'Sickened: -2 on saves, skill and ability checks',
     },
   ],
   dazzled: [
@@ -134,6 +167,12 @@ export const D20_LEGACY_CONDITION_NAMES = D20_LEGACY_CONDITION_IDS.map(
  * checks. Shaken/frightened/panicked are escalating states of the SAME fear
  * track (frightened subsumes shaken), so only one -2 applies from the fear
  * family; sickened is a separate effect and stacks with fear.
+ *
+ * This is the scalar the sheet engines used to subtract directly; they now route
+ * the same math through the resolver fold as `-resolveCharacterEffects(...,
+ * { conditions }).bonus('check')`, which equals this value for every catalog
+ * condition (the `check`-targeted effects mirror it, and the attack-only riders
+ * carry none). Retained as the closed-form spec the fold is pinned against.
  */
 export function d20LegacyCheckPenalty(conditionIds: readonly string[]): number {
   const ids = new Set(conditionIds);
