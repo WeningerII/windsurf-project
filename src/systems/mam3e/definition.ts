@@ -56,6 +56,11 @@ export const Mam3eSystemDef: SystemDefinition<Mam3eDataModel> = {
   // Point-buy validator derived from the engine's own M&M math (PL caps,
   // budgets, cost arithmetic, catalogs). Warns/annotates only — never blocks.
   loadValidator: () => import('./validation').then((m) => m.createMam3eValidator()),
+  // Lazy legal-actions provider (RFC-003 AI-draft substrate). Enumerates M&M's
+  // OWN action economy — standard/move/free actions over powers + basic actions,
+  // NOT the d20 economy. Code-split like the validator, resolved+cached on first
+  // use, mirroring the PF2e/Daggerheart pattern.
+  loadLegalActions: () => import('./legalActions').then((m) => m.createMam3eLegalActions()),
   SheetComponent: lazyWithPreload(() =>
     import('./sheet').then((m) => ({ default: m.Mam3eCharacterSheet }))
   ),
