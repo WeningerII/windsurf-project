@@ -85,6 +85,27 @@ export function srdNormVariants(s: string): string[] {
   return [...variants];
 }
 
+/**
+ * Over-inclusion (provenance suspect) filter, kept SYMMETRIC with the forward
+ * coverage pass. A loader entry is a suspect only when NONE of its
+ * `loaderNormVariants` — plain norm, `"Prefix: "` strip, trailing `"(…)"`
+ * strip, and the confirmed qualifier word-order swap — matches an SRD key.
+ *
+ * Applying the SAME loader-side normalization the coverage pass already uses
+ * stops a qualifier-named loader variant ("Magic Initiate (Cleric)", "Fighting
+ * Style: Archery") from printing as a nominal over-inclusion row when the SRD
+ * ships the plain base ("Magic Initiate", "Archery") — the asymmetry noted in
+ * docs/GAPS.md. It still flags a genuinely non-SRD entry, whose stripped base
+ * has no SRD counterpart (loader "Greater Fireball" vs an SRD with only
+ * "Fireball" stays a suspect), so a real gap is never hidden.
+ */
+export function overInclusionSuspects(
+  loaderNames: string[],
+  srdKeys: ReadonlySet<string>
+): string[] {
+  return loaderNames.filter((name) => !loaderNormVariants(name).some((k) => srdKeys.has(k)));
+}
+
 // --- PF1e bestiary container-record collapse --------------------------------
 
 /**
@@ -139,8 +160,11 @@ export function pf1eContainerRecords(names: string[], minChildren = 2): string[]
 export const SRD_35E_MONSTER_CATEGORY_HEADINGS: readonly string[] = [
   'Angel',
   'Archon',
+  'Chromatic Dragons',
   'Demon',
   'Devil',
+  'Dinosaur',
+  'Dire Animal',
   'Dragon',
   'Dragon, True',
   'True Dragon',
@@ -153,10 +177,28 @@ export const SRD_35E_MONSTER_CATEGORY_HEADINGS: readonly string[] = [
   'Inevitable',
   'Lycanthrope',
   'Mephit',
+  'Metallic Dragons',
   'Naga',
   'Nightshade',
   'Slaad',
   'Sphinx',
+];
+
+/**
+ * NON-stat-block `## ` headings the olimot SRD 3.5 monster chapters carry that
+ * are NOT creatures at all: prose sub-sections of the chapter intro ("Reading
+ * the Entries", "Combat") and TEMPLATE headers whose example is applied to an
+ * existing base creature rather than shipped as its own enumerable monster
+ * ("Celestial Creature", "Fiendish Creature"). Dropping them keeps the
+ * denominator to individual monster stat blocks. Kept distinct from the
+ * taxonomic CONTAINER list above because they nest nothing — they are just
+ * non-monster headings — but both are removed by `collapse35eMonsterHeadings`.
+ */
+export const SRD_35E_MONSTER_NONBLOCK_HEADINGS: readonly string[] = [
+  'Reading the Entries',
+  'Combat',
+  'Celestial Creature',
+  'Fiendish Creature',
 ];
 
 /**
@@ -207,13 +249,16 @@ function foldMonsterVariant(name: string): string {
 /**
  * Reshape the raw `## ` monster headings from the olimot SRD 3.5 chapters into
  * an individual-stat-block list: drop the taxonomic category CONTAINER headers
- * (`SRD_35E_MONSTER_CATEGORY_HEADINGS`) and fold age/size variant rows to their
- * archetype (first occurrence wins; later variants of the same archetype are
- * de-duplicated). Order is preserved. Genuine standalone monsters and genuine
- * misses (Salamander, Hydra, …) pass through unchanged.
+ * (`SRD_35E_MONSTER_CATEGORY_HEADINGS`) and the non-creature prose/template
+ * headings (`SRD_35E_MONSTER_NONBLOCK_HEADINGS`), then fold age/size variant
+ * rows to their archetype (first occurrence wins; later variants of the same
+ * archetype are de-duplicated). Order is preserved. Genuine standalone monsters
+ * and genuine misses (Salamander, Hydra, …) pass through unchanged.
  */
 export function collapse35eMonsterHeadings(headings: string[]): string[] {
-  const categorySet = new Set(SRD_35E_MONSTER_CATEGORY_HEADINGS.map(norm));
+  const categorySet = new Set(
+    [...SRD_35E_MONSTER_CATEGORY_HEADINGS, ...SRD_35E_MONSTER_NONBLOCK_HEADINGS].map(norm)
+  );
   const seenArchetype = new Set<string>();
   const kept: string[] = [];
   for (const heading of headings) {

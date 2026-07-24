@@ -14,10 +14,12 @@ import {
   qualifierOrderVariants,
   loaderNormVariants,
   srdNormVariants,
+  overInclusionSuspects,
   collapsePf1eContainerRecords,
   pf1eContainerRecords,
   collapse35eMonsterHeadings,
   SRD_35E_MONSTER_CATEGORY_HEADINGS,
+  SRD_35E_MONSTER_NONBLOCK_HEADINGS,
 } from '../../scripts/srdCoverageShape';
 
 describe('collapsePf1eContainerRecords (PF1e bestiary container collapse)', () => {
@@ -181,6 +183,61 @@ describe('collapse35eMonsterHeadings (3.5e SRD monster denominator shape)', () =
   });
 });
 
+describe('collapse35eMonsterHeadings (extended non-block + sub-group headings)', () => {
+  // The sub-group dragon containers, the animal/dinosaur containers, the two
+  // template headers, and the two prose sub-section headers — each interleaved
+  // with a genuine individual member that MUST survive.
+  const headings = [
+    'Reading the Entries', // chapter intro prose — not a creature
+    'Combat', // chapter intro prose — not a creature
+    'Chromatic Dragons', // sub-group container
+    'Black Dragon', // member individual (folded from age rows elsewhere)
+    'Metallic Dragons', // sub-group container
+    'Gold Dragon', // member individual
+    'Celestial Creature', // template header — not an enumerable base monster
+    'Fiendish Creature', // template header
+    'Dire Animal', // group container
+    'Dire Bear', // individual — "Dire" is not a variant word, survives
+    'Dinosaur', // group container
+    'Deinonychus', // member individual
+    'Aboleth', // plain individual
+  ];
+
+  const result = collapse35eMonsterHeadings(headings);
+
+  it('drops the extended sub-group / template / prose headings', () => {
+    for (const dropped of [
+      'Reading the Entries',
+      'Combat',
+      'Chromatic Dragons',
+      'Metallic Dragons',
+      'Celestial Creature',
+      'Fiendish Creature',
+      'Dire Animal',
+      'Dinosaur',
+    ]) {
+      expect(result).not.toContain(dropped);
+    }
+  });
+
+  it('keeps the individual members and standalone monsters', () => {
+    expect(result).toEqual(
+      expect.arrayContaining(['Black Dragon', 'Gold Dragon', 'Dire Bear', 'Deinonychus', 'Aboleth'])
+    );
+  });
+
+  it('exposes the non-block headings as a distinct list, disjoint from the containers', () => {
+    const containers = new Set(SRD_35E_MONSTER_CATEGORY_HEADINGS.map(norm));
+    for (const h of SRD_35E_MONSTER_NONBLOCK_HEADINGS) {
+      expect(containers.has(norm(h))).toBe(false);
+    }
+    // Both new sub-group containers live on the taxonomic list, not the prose one.
+    expect(SRD_35E_MONSTER_CATEGORY_HEADINGS.map(norm)).toEqual(
+      expect.arrayContaining([norm('Chromatic Dragons'), norm('Metallic Dragons')])
+    );
+  });
+});
+
 describe('qualifier word-order normalization (confirmed provenance variants)', () => {
   it('maps "Greater X" and "X, Greater" to a shared key on both sides', () => {
     const loaderKeys = loaderNormVariants('Greater Invisibility');
@@ -219,5 +276,46 @@ describe('qualifier word-order normalization (confirmed provenance variants)', (
     // "Fireball, Greater") — it must stay a suspect, not be silently cleared.
     const srdSet = new Set(srdNormVariants('Fireball'));
     expect(srdSet.has(norm('Greater Fireball'))).toBe(false);
+  });
+});
+
+describe('overInclusionSuspects (reverse-diff symmetry with the coverage pass)', () => {
+  // The SRD side of the diff, built exactly as srd-coverage main() does.
+  const srdKeys = new Set(
+    ['Magic Initiate', 'Archery', 'Invisibility, Greater', 'Fireball'].flatMap(srdNormVariants)
+  );
+
+  it('clears qualifier-named loader variants against their SRD base', () => {
+    // The 2024 feat variants from docs/GAPS.md: parenthetical option + "Prefix: "
+    // forms whose stripped base IS in the SRD must NOT print as suspects.
+    const loader = [
+      'Magic Initiate (Cleric)',
+      'Magic Initiate (Druid)',
+      'Magic Initiate (Wizard)',
+      'Fighting Style: Archery',
+    ];
+    expect(overInclusionSuspects(loader, srdKeys)).toEqual([]);
+  });
+
+  it('clears a confirmed qualifier word-order variant', () => {
+    // Loader "Greater Invisibility" vs SRD "Invisibility, Greater".
+    expect(overInclusionSuspects(['Greater Invisibility'], srdKeys)).toEqual([]);
+  });
+
+  it('still flags a genuinely non-SRD loader entry', () => {
+    // "Greater Fireball" has no SRD counterpart (SRD only has plain "Fireball"),
+    // and "Hex" is absent entirely — both must remain suspects.
+    expect(overInclusionSuspects(['Greater Fireball', 'Hex'], srdKeys)).toEqual([
+      'Greater Fireball',
+      'Hex',
+    ]);
+  });
+
+  it('is symmetric with the forward coverage pass on the same fixture', () => {
+    // A loader entry cleared as a suspect here must also be countable as covering
+    // its SRD base in the forward direction (loaderNormVariants ∩ SRD plain norm).
+    const loaderSet = new Set(loaderNormVariants('Magic Initiate (Cleric)'));
+    expect(loaderSet.has(norm('Magic Initiate'))).toBe(true);
+    expect(overInclusionSuspects(['Magic Initiate (Cleric)'], srdKeys)).toEqual([]);
   });
 });

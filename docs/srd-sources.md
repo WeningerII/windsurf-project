@@ -51,8 +51,12 @@ fetchers behind WAFs, so they are confirmed via search indexing.
 **Usage:** `npm run srd:coverage` fetches the independent lists above (where wired)
 and diffs them against the product loaders by normalized name, writing
 `docs/generated/srd-coverage.md` — the genuine coverage/gap report. All 7 systems'
-spell catalogs are wired today (plus 5e/PF/3.5e monsters, M&M powers/advantages/equipment, and
-Daggerheart domains/cards); each is scoped to the policy's `allowedSources` (5e →
-full SRD; PF1e/PF2e → Core Rulebook; 3.5e → core SRD excluding psionics/epic; M&M →
-Hero's Handbook; Daggerheart → SRD 1.0). Remaining non-spell categories are documented
-above and pending wiring.
+spell catalogs are wired today (plus 5e/PF/3.5e monsters, 3.5e/PF2e classes & feats,
+M&M powers/advantages/equipment/skills, and Daggerheart domains/cards, classes,
+ancestries, communities, weapons, armor, and adversaries); each is scoped to the
+policy's `allowedSources` (5e → full SRD; PF1e/PF2e → Core Rulebook; 3.5e → core SRD
+excluding psionics/epic; M&M → Hero's Handbook; Daggerheart → SRD 1.0). Daggerheart
+adversaries are measured against the pinned `scripts/data/daggerheart-adversary-manifest.json`
+roster (129 = T1 52 / T2 36 / T3 23 / T4 18), written by the encoder alongside the tier
+data. Remaining unwired categories are closed-by-no-source (3.5e equipment, PF1e
+classes/feats, PF2e archetypes) or absent gap markers (M&M conditions), documented above.
