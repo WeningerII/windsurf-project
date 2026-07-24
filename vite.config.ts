@@ -96,6 +96,58 @@ function serviceWorkerPrecachePlugin(): Plugin {
   };
 }
 
+/**
+ * Build-time chunk-graph emitter (UI-shell Phase 7).
+ *
+ * The eager-vs-lazy split is the shell's central bundle discipline: the app
+ * shell boots, and every surface (Scene canvas) and every per-system sheet is
+ * pulled in on demand. `scripts/check-bundle-size.mjs` used to infer that split
+ * from `dist/index.html` plus a minified copy marker, which only answers "is
+ * SceneManager eager?" and breaks the moment the marker copy is reworded.
+ *
+ * Rollup already knows the exact answer, keyed by SOURCE PATH: which chunk each
+ * module landed in, which chunks are entries, and which chunk imports are
+ * static (eager) versus dynamic (lazy). This plugin writes that graph out so
+ * the budget checker can assert eager-set purity for all seven systems without
+ * ever string-matching UI copy.
+ *
+ * The artifact is written OUTSIDE `dist/` (into the gitignored `.tmp/build/`)
+ * so nothing new is deployed and the shipped bundle is byte-unchanged.
+ */
+const CHUNK_GRAPH_PATH = '.tmp/build/chunk-graph.json';
+
+function chunkGraphPlugin(): Plugin {
+  return {
+    name: 'shell-chunk-graph',
+    apply: 'build',
+    writeBundle(_options, bundle) {
+      const root = __dirname;
+      const chunks = Object.values(bundle).filter(
+        (output): output is Rollup.OutputChunk => output.type === 'chunk'
+      );
+      const graph = chunks.map((chunk) => ({
+        fileName: chunk.fileName,
+        isEntry: chunk.isEntry,
+        isDynamicEntry: chunk.isDynamicEntry,
+        // Static imports = the eager closure edges. Dynamic imports are the
+        // lazy boundaries the shell's budgets exist to protect.
+        imports: chunk.imports,
+        dynamicImports: chunk.dynamicImports,
+        // Project modules only: `src/data/**` is generated SRD content that
+        // would balloon the artifact without informing any shell budget, and
+        // node_modules ids say nothing about the shell's own layering.
+        moduleIds: chunk.moduleIds
+          .map((id) => path.relative(root, id).split(path.sep).join('/'))
+          .filter((id) => id.startsWith('src/') && !id.startsWith('src/data/')),
+      }));
+
+      const outFile = path.resolve(root, CHUNK_GRAPH_PATH);
+      fs.mkdirSync(path.dirname(outFile), { recursive: true });
+      fs.writeFileSync(outFile, `${JSON.stringify(graph, null, 2)}\n`);
+    },
+  };
+}
+
 export default defineConfig({
   // Deploy base path. Defaults to "/" for local dev, the Netlify root deploy,
   // and the e2e/preview server; the GitHub Pages workflow sets BASE_PATH to
@@ -105,6 +157,7 @@ export default defineConfig({
   plugins: [
     react(),
     serviceWorkerPrecachePlugin(),
+    chunkGraphPlugin(),
     viteCompression({
       algorithm: 'gzip',
       ext: '.gz',
