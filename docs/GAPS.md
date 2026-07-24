@@ -389,6 +389,49 @@ Deliverable phrasing for this debt lives in the W-numbered workstream table in
 phrasing` constraint there: system names may appear in status lines, never as
 the subject of deliverable lines.
 
+## 8. Make-me-a-game flow — what it composes and what it deliberately does NOT (added 2026-07-24)
+
+`makeMeAGame` (`src/ai/makeMeAGameFlow.ts`) joins the shipped drafting, creation,
+and scene pieces into one seeded path: drafted party → drafted encounter →
+scene with tokens placed and initiative rolled. It composes only capabilities
+that genuinely exist today; the list below is what it does **not** include, so no
+reader mistakes the join for a larger surface than it is. **Nothing here is
+stubbed** — an absent capability is absent, not faked.
+
+**Deliberately NOT included (no stub shipped for any of these):**
+
+- **No LLM strategist / blackboard.** RFC 002 lists "AI strategy hints that feed
+  local tactical executors"; RFC 007 specifies `dm-turn-intent`. Neither is
+  built: there is no `dm-*` gateway task, no strategist contract, and no shared
+  planning state. The flow therefore stops at a *ready* table — it does not play
+  a turn. Per-turn decisions remain the deterministic tactical executor's
+  (`src/rules/tactical/`), which is the RFC 002 out-of-scope rule ("no LLMs in
+  per-move mechanical hot paths"), not a temporary shortfall.
+- **No narration or narration critic in the flow.** The `scene-narration` task
+  ships and works, but a fresh scene has no events to recap yet, so wiring it
+  here would generate prose from nothing. There is no critic/grader surface at
+  all; none was invented to fill the slot.
+- **No AI map, terrain, or spawn-zone proposal.** `gridGeometryProposal.ts` is
+  deterministic; the flow places the party at the grid origin row and lets the
+  existing encounter builder place monsters. No `illustrate-scene` call is made.
+- **No persistence and no UI.** The flow returns documents and a `SceneDocument`
+  for a caller to review and save through the normal paths; it writes nothing to
+  storage or sync, and no screen calls it yet. It is a composition seam with
+  tests, not a shipped user-facing button.
+- **No campaign scaffolding** (quests, factions, NPC rosters, session zero).
+
+**Per-system participation — real reasons, never a silent 5e fallback:**
+
+| Step | Participates | Does not, and why |
+| --- | --- | --- |
+| Party draft + deterministic validation | all 7 | — |
+| Draft ids applied through the system's own creation plan | 5 (`dnd-5e-2014`, `dnd-5e-2024`, `dnd-3.5e`, `pf1e`, `pf2e`) | **Daggerheart**: offers real class/ancestry/community pools but its `CreationPlan` declares no loader-driven choice steps yet, so legal ids come back in `unroutedIds` and the document is default-seeded. **M&M 3e**: its build is point-buy, exposed as a *component* step the headless applier cannot drive; its only pool is power effects, also unroutable. |
+| Encounter draft + budget gate | 5 (the `ENCOUNTER_BUDGET_SYSTEMS` set) | **M&M 3e** and **Daggerheart** have no cited encounter-budget model in `src/scene/encounterDraft.ts` *and* no loader-backed creature catalog, so an encounter cannot be sized or validated for them. The flow records the reason per system and still builds the party and the scene. |
+| Scene build (tokens, initiative) | all 7 | — |
+
+Closing the Daggerheart/M&M 3e rows is creation-plan and catalog work in those
+systems, not AI work; it is tracked as such rather than papered over here.
+
 ---
 
 **Highest-leverage unblock:** the §1 data input. With authoritative SRD/CRB
