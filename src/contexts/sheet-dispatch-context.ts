@@ -10,7 +10,7 @@ import type { Spell } from '../types/magic/spells';
  * spell / feat / equipment item into the CURRENTLY OPEN character sheet — but
  * the shared layer must never value-import from `src/systems/**` (the
  * lint-enforced layer boundary). So control is inverted: the active per-system
- * sheet PUBLISHES its existing add-handlers UP into this context (via
+ * sheet PUBLISHES its existing add-handlers UP into this registry (via
  * `useSheetDispatchRegister`) together with the resolved active-document id,
  * and the Dock READS them DOWN (via `useSheetDispatch`). The Dock depends only
  * on shared domain types (`Spell` / `FeatDefinition` / `Item`), never on any
@@ -20,6 +20,22 @@ import type { Spell } from '../types/magic/spells';
  * (or a sheet that published no handler) `canAdd*` is false and the add verb
  * is a no-op, so the Dock can never silently target a stale/last-mounted
  * controller.
+ *
+ * ## Two split contexts (Phase 5)
+ * The registry is split into a STABLE half and a CHANGING half so a registering
+ * sheet never re-renders as a side effect of its own registration:
+ *   - `SheetDispatchRegistryContext` holds `{register, unregister}` — a
+ *     referentially-stable object that NEVER changes identity. A sheet consumes
+ *     only this (via `useSheetDispatchRegister`), so a `register()` call —
+ *     which setStates the provider — does not re-render the sheet. This makes
+ *     the register → setState → re-render → register loop structurally
+ *     impossible, independent of whether a sheet perfectly memoizes its
+ *     handlers (Phase 5 wired five systems, and not every controller-derived
+ *     handler dependency is guaranteed stable — one unstable dep must not hang
+ *     the app).
+ *   - `SheetDispatchStateContext` holds `{activeDocId, handlers}` — the volatile
+ *     half. Only the Dock consumes it (via `useSheetDispatch`), so registry
+ *     churn re-renders the (cheap) Dock, never the sheets.
  *
  * No JSX lives in this file (the provider component is in
  * `SheetDispatchContext.tsx`) so the react-refresh only-export-components lint
@@ -35,28 +51,39 @@ export interface SheetAddHandlers {
   addEquipment?: (item: Item) => void;
 }
 
-export interface SheetDispatchContextValue {
+/** The volatile half: which sheet currently publishes, and its handlers. */
+export interface SheetDispatchState {
   /** The resolved id of the sheet currently publishing handlers, or null. */
   activeDocId: string | null;
   handlers: SheetAddHandlers;
+}
+
+/** The stable half: publish/clear entry points. Its identity never changes, so
+ * a component that consumes only this (a registering sheet) never re-renders
+ * when the volatile state changes. */
+export interface SheetDispatchRegistry {
   register: (docId: string | null, handlers: SheetAddHandlers) => void;
   unregister: (docId: string) => void;
 }
 
-/** Null outside a provider so a sheet mounted standalone (unit tests, the
+/** Both null outside a provider so a sheet mounted standalone (unit tests, the
  * Library card previews) registers into a harmless no-op rather than throwing. */
-export const SheetDispatchContext = createContext<SheetDispatchContextValue | null>(null);
+export const SheetDispatchStateContext = createContext<SheetDispatchState | null>(null);
+export const SheetDispatchRegistryContext = createContext<SheetDispatchRegistry | null>(null);
 
 /**
  * Publish the active sheet's add-handlers + resolved doc id UP into the
  * registry. Pass `docId: null` to publish nothing (e.g. a read-only sheet with
  * no `onUpdate`). Re-registers whenever the id or any handler identity changes,
  * and clears its own entry on unmount. A no-op when rendered without a provider.
+ *
+ * Consumes only the STABLE registry context, so this hook never causes its host
+ * sheet to re-render in response to registry state changes.
  */
 export function useSheetDispatchRegister(docId: string | null, handlers: SheetAddHandlers): void {
-  const ctx = useContext(SheetDispatchContext);
-  const register = ctx?.register;
-  const unregister = ctx?.unregister;
+  const registry = useContext(SheetDispatchRegistryContext);
+  const register = registry?.register;
+  const unregister = registry?.unregister;
   const { addSpell, addFeat, addEquipment } = handlers;
 
   useEffect(() => {
@@ -89,9 +116,9 @@ interface SheetDispatch {
  * controller.
  */
 export function useSheetDispatch(): SheetDispatch {
-  const ctx = useContext(SheetDispatchContext);
-  const activeDocId = ctx?.activeDocId ?? null;
-  const handlers = ctx?.handlers ?? {};
+  const state = useContext(SheetDispatchStateContext);
+  const activeDocId = state?.activeDocId ?? null;
+  const handlers = state?.handlers ?? {};
   const canAddSpell = Boolean(activeDocId && handlers.addSpell);
   const canAddFeat = Boolean(activeDocId && handlers.addFeat);
   const canAddEquipment = Boolean(activeDocId && handlers.addEquipment);
