@@ -117,6 +117,108 @@ export interface SystemValidator<T extends SystemDataModel> {
 }
 
 /**
+ * Legal-actions seam (RFC-003 substrate).
+ *
+ * Given a character (or scene-combatant) document plus resolver-derived state, a
+ * system can enumerate the actions that are LEGAL for that build, right now,
+ * deterministically, from its OWN loaders and rules. This is the substrate a
+ * future AI draft / AI-DM layer proposes over: the model suggests from this
+ * enumerated set; deterministic validators (and the resolver) decide.
+ *
+ * The contract is deliberately system-agnostic and does NOT privilege the d20
+ * action economy. Costs are expressed in each system's own resource vocabulary
+ * (PF2e spends `action`/`reaction`; Daggerheart spends `spotlight`/`hope`/
+ * `stress`), and `kind` is each system's own taxonomy string, not a fixed enum.
+ */
+
+/** A cost paid in one of the producing system's own resources. */
+export interface LegalActionCost {
+  /** Resource id in the system's vocabulary (e.g. 'action'/'reaction' for PF2e;
+   * 'spotlight'/'hope'/'stress' for Daggerheart). */
+  resource: string;
+  /** Amount of that resource spent (e.g. 2 for a PF2e two-action activity). */
+  amount: number;
+}
+
+/** What an action can affect, in the system's own range/targeting vocabulary. */
+export interface LegalActionTarget {
+  /** Coarse target category, e.g. 'self', 'creature', 'ally', 'object', 'area',
+   * 'none'. */
+  kind: string;
+  /** Verbatim system range/reach label when known (e.g. 'Melee', 'Close',
+   * 'reach'); omitted when the system does not pin one down. */
+  range?: string;
+  /** Number of targets; omitted when the system leaves it open. */
+  count?: number;
+}
+
+/** Whether an enumerated action can actually be taken from the current state. */
+export type LegalActionEligibility = 'available' | 'conditional' | 'unavailable';
+
+/**
+ * One legal action available to a build. Descriptors are data, not behavior:
+ * the seam names and costs an action but never resolves it — resolution is the
+ * engine/resolver's job (or the GM's, for `manualBoundary` actions).
+ */
+export interface LegalActionDescriptor {
+  /** Stable id, unique within a LegalActionList (e.g. 'pf2e:strike:longsword'). */
+  id: string;
+  /** The system's own action-taxonomy bucket — NOT a cross-system enum. */
+  kind: string;
+  /** Human-readable name for display. */
+  label: string;
+  /** Can it be taken right now, given derived state. */
+  eligibility: LegalActionEligibility;
+  /** Why, when eligibility is 'conditional' or 'unavailable'. */
+  eligibilityReason?: string;
+  /** Costs in the system's own economy; empty = free / no tracked cost. */
+  costs: LegalActionCost[];
+  /** Targets; empty = untargeted. */
+  targets: LegalActionTarget[];
+  /**
+   * TRUE when the action's RESOLUTION stays GM-adjudicated: the seam can name
+   * and cost it, but its effect is not deterministically modeled (triggered
+   * card text, readied triggers, free-form spell effects). The AI layer MUST
+   * present these as suggestions for a human to resolve — never auto-resolve
+   * them. Marking honestly here is what keeps the seam free of fake automation.
+   */
+  manualBoundary: boolean;
+  /** Provenance: the loader/data id this action was derived from, when any. */
+  source?: string;
+  /** System-specific extras (weapon dice, trait, multiple-attack note, ...). */
+  details?: Record<string, unknown>;
+}
+
+/** The enumerated legal actions for one document. */
+export interface LegalActionList {
+  /** systemId that produced this list. */
+  systemId: string;
+  actions: LegalActionDescriptor[];
+}
+
+/**
+ * Framing passed to a provider; all optional so out-of-combat enumeration
+ * (character builder, AI draft) works with no scene context.
+ */
+export interface LegalActionsContext {
+  systemId: string;
+  /** Scene phase when enumerating for an active encounter. */
+  phase?: 'exploration' | 'combat' | 'downtime';
+  source?: string;
+}
+
+/**
+ * Optional per-system legal-actions hook. Providers are pure: they read the
+ * document + loaders and return descriptors; they never mutate or persist.
+ */
+export interface SystemLegalActionsProvider<T extends SystemDataModel> {
+  legalActions(
+    document: CharacterDocument<T>,
+    context: LegalActionsContext
+  ): LegalActionList | Promise<LegalActionList>;
+}
+
+/**
  * A complete definition of a Game System module.
  */
 export interface SystemDefinition<T extends SystemDataModel> {
@@ -154,6 +256,14 @@ export interface SystemDefinition<T extends SystemDataModel> {
   // logic is code-split into its own chunk instead of riding the eager registry
   // bootstrap chunk. The registry caches the resolved instance per system.
   loadValidator?: () => Promise<SystemValidator<T>>;
+
+  // Lazy legal-actions provider (RFC-003 substrate for the AI draft / AI-DM
+  // layer). Same lazy+cached pattern as `loadValidator`: a system's own (often
+  // large) enumeration logic is code-split into its own chunk, resolved on
+  // first use, and cached per system by the registry — keeping it out of the
+  // eager bootstrap chunk. Systems without one enumerate no actions (an empty
+  // list, never an error), so their behavior is unchanged.
+  loadLegalActions?: () => Promise<SystemLegalActionsProvider<T>>;
 
   // The Main Character Sheet Component
   SheetComponent: SystemSheetComponent<T>;
