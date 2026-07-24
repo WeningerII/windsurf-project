@@ -65,6 +65,13 @@ export const Dnd5e2024SystemDef: SystemDefinition<Dnd5e2024DataModel> = {
   createDefaultData: createDefaultDnd5e2024Data,
   engine: new Dnd5e2024Engine(),
   validator: createDnd5eValidator<Dnd5e2024DataModel>('dnd-5e-2024'),
+  // Shared 5e enumeration (see dnd5e/shared/legalActions): the 2024 edition runs
+  // the same engine and action economy, so it lazy-loads the same provider,
+  // stamped with its own systemId — mirroring the shared `createDnd5eValidator`.
+  loadLegalActions: () =>
+    import('../dnd5e/shared/legalActions').then((m) =>
+      m.createDnd5eLegalActions<Dnd5e2024DataModel>('dnd-5e-2024')
+    ),
   SheetComponent: lazyWithPreload(() =>
     import('./components/Dnd5e2024Sheet').then((m) => ({ default: m.Dnd5e2024Sheet }))
   ),

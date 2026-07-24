@@ -65,6 +65,13 @@ export const Dnd5eSystemDef: SystemDefinition<Dnd5eDataModel> = {
   createDefaultData: createDefaultDnd5eData,
   engine: new Dnd5eEngine(),
   validator: createDnd5eValidator<Dnd5eDataModel>('dnd-5e-2014'),
+  // Shared with the 2024 edition (same engine, same action economy): the lazy
+  // provider is code-split out of the eager bootstrap chunk, mirroring how the
+  // two editions share `createDnd5eValidator`.
+  loadLegalActions: () =>
+    import('./shared/legalActions').then((m) =>
+      m.createDnd5eLegalActions<Dnd5eDataModel>('dnd-5e-2014')
+    ),
   SheetComponent: lazyWithPreload(() =>
     import('./components/Dnd5eSheet').then((m) => ({ default: m.Dnd5eSheet }))
   ),
