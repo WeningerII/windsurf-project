@@ -49,6 +49,8 @@ import { NewCharacterDialog } from './components/NewCharacterDialog';
 import { GuidedCreatorDialog } from './components/GuidedCreatorDialog';
 import { useAppNav } from './hooks/useAppNav';
 import { ShellProvider } from './contexts/ShellContext';
+import { SheetDispatchProvider } from './contexts/SheetDispatchContext';
+import { Dock } from './dock/Dock';
 import { useSurfaceSwitchMetrics } from './hooks/useSurfaceSwitchMetrics';
 
 const STORAGE_LIMIT_BYTES = 5 * 1024 * 1024;
@@ -855,6 +857,12 @@ function AppContent() {
             ) : null;
           })()}
       </GuidedCreatorDialog>
+
+      {/* Shared summonable Dock (Phase 3): rendered once at the shell root so
+          it is reachable identically from the Library, Sheet and Scene
+          surfaces. Its spell/feat/equipment click-add dispatches into the
+          active sheet via SheetDispatchContext. */}
+      <Dock documents={documents} initialSystemId={currentDoc?.systemId} />
     </div>
   );
 }
@@ -866,7 +874,9 @@ function App() {
   return (
     <ToastProvider>
       <ShellProvider>
-        <AppContent />
+        <SheetDispatchProvider>
+          <AppContent />
+        </SheetDispatchProvider>
       </ShellProvider>
       <ServiceWorkerUpdateBanner />
     </ToastProvider>
