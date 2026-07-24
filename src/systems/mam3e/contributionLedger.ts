@@ -3,6 +3,8 @@ import type {
   ContributionLedgerResult,
 } from '../../types/core/contributionLedger';
 import type { CharacterDocument } from '../../types/core/document';
+import type { EffectInstance } from '../../rules';
+import { resolveEffects, toContributionLedger } from '../../rules';
 import type { Power } from '../../types/mam/powers';
 import type { Mam3eDataModel } from './data-model';
 import {
@@ -12,23 +14,62 @@ import {
   MAM3E_MODIFIER_BY_ID,
 } from './powerMath';
 
+/**
+ * Non-persisted contribution ledger for Mutants & Masterminds 3e. It explains
+ * where each power's point cost comes from: the base cost-per-rank, every
+ * extra/flaw's per-rank and flat contribution, and the final total after the
+ * minimum-cost rule.
+ *
+ * W4 re-backing: rather than hand-assembling `ContributionLedgerEntry` objects,
+ * the builder now emits the SAME primitive the resolver reads — `EffectInstance`s
+ * over M&M's cost targets (`powers.<i>.costPerRank|flatCost|totalCost`, the
+ * namespace the IR reserves for "M&M cost math", see `StackPolicy`) — folds them
+ * through `resolveEffects`, and projects the applied-effect ledger with
+ * `toContributionLedger`. Provenance and resolution are therefore one computation,
+ * mirroring how `buildPf2eContributionLedger` / `buildD20LegacyContributionLedger`
+ * project resolver output into rows. `resolveCharacterLedger` itself is exactly
+ * this seam (`toContributionLedger(resolveCharacterEffects(...).result.ledger)`)
+ * specialized to equipment/feat/feature/condition inputs; M&M's cost targets ride
+ * the same underlying `resolveEffects` → `toContributionLedger` pair without
+ * needing a shared-file input shape for power costs.
+ *
+ * These rows are EXPLANATION only — never stored on the document, never an
+ * alternate state source. Because the cost effects use `'sum'` stacking and are
+ * unconditional, the projected ledger is row-for-row equivalent to the previous
+ * hand-built output (totals + sources unchanged).
+ */
 export function buildMam3eContributionLedger(
   document: CharacterDocument<Mam3eDataModel>
 ): ContributionLedgerResult {
-  return {
-    entries: document.system.powers.flatMap((power, index) =>
-      buildMam3ePowerCostLedgerEntries(power, index)
-    ),
-  };
+  const effects = document.system.powers.flatMap((power, index) =>
+    buildMam3ePowerCostEffects(power, index)
+  );
+  return toContributionLedger(resolveEffects(effects).ledger);
 }
 
+/**
+ * Resolver-projected cost-ledger rows for a single power. Builds the power's cost
+ * effects and folds them through the resolver, so the returned entries are the
+ * exact projection of the applied-effect ledger.
+ */
 export function buildMam3ePowerCostLedgerEntries(
   power: Power,
   powerIndex = 0
 ): ContributionLedgerEntry[] {
+  return toContributionLedger(resolveEffects(buildMam3ePowerCostEffects(power, powerIndex)).ledger)
+    .entries;
+}
+
+/**
+ * Compile a power's cost math into `EffectInstance`s over its cost targets. The
+ * arithmetic is unchanged from the previous hand-built ledger (base cost per rank,
+ * each extra/flaw's per-rank and flat contribution, and the final total via
+ * `calculateMam3eFinalPowerCost`); only the shape is now the shared IR primitive.
+ */
+function buildMam3ePowerCostEffects(power: Power, powerIndex = 0): EffectInstance[] {
   const rank = getPowerRank(power);
-  const entries: ContributionLedgerEntry[] = [
-    createPowerCostEntry(powerIndex, {
+  const effects: EffectInstance[] = [
+    createPowerCostEffect(powerIndex, {
       target: 'costPerRank',
       sourceId: power.id,
       sourceLabel: power.name,
@@ -45,8 +86,8 @@ export function buildMam3ePowerCostLedgerEntries(
     const modifier = MAM3E_MODIFIER_BY_ID.get(modifierId);
 
     if (!modifier) {
-      entries.push(
-        createPowerCostEntry(powerIndex, {
+      effects.push(
+        createPowerCostEffect(powerIndex, {
           target: 'totalCost',
           sourceId: modifierId,
           sourceLabel: modifierId,
@@ -69,8 +110,8 @@ export function buildMam3ePowerCostLedgerEntries(
     flatCost += flatContribution;
 
     if (perRankContribution !== 0) {
-      entries.push(
-        createPowerCostEntry(powerIndex, {
+      effects.push(
+        createPowerCostEffect(powerIndex, {
           target: 'costPerRank',
           sourceId: modifier.id,
           sourceLabel: modifier.name,
@@ -83,8 +124,8 @@ export function buildMam3ePowerCostLedgerEntries(
     }
 
     if (flatContribution !== 0) {
-      entries.push(
-        createPowerCostEntry(powerIndex, {
+      effects.push(
+        createPowerCostEffect(powerIndex, {
           target: 'flatCost',
           sourceId: modifier.id,
           sourceLabel: modifier.name,
@@ -102,8 +143,8 @@ export function buildMam3ePowerCostLedgerEntries(
   // ranks, rounded up, and the final cost never falls below 1 (Hero's
   // Handbook, Powers — Modifiers).
   const totalCost = calculateMam3eFinalPowerCost(rank, costPerRank, flatCost);
-  entries.push(
-    createPowerCostEntry(powerIndex, {
+  effects.push(
+    createPowerCostEffect(powerIndex, {
       target: 'totalCost',
       sourceId: power.id,
       sourceLabel: power.name,
@@ -120,10 +161,10 @@ export function buildMam3ePowerCostLedgerEntries(
     })
   );
 
-  return entries;
+  return effects;
 }
 
-function createPowerCostEntry(
+function createPowerCostEffect(
   powerIndex: number,
   params: {
     target: 'costPerRank' | 'flatCost' | 'totalCost';
@@ -134,15 +175,18 @@ function createPowerCostEntry(
     value: number;
     operation?: 'add' | 'set';
     details?: Record<string, unknown>;
-    manualBoundary?: ContributionLedgerEntry['manualBoundary'];
+    manualBoundary?: EffectInstance['manualBoundary'];
   }
-): ContributionLedgerEntry {
+): EffectInstance {
   const target = `powers.${powerIndex}.${params.target}`;
 
   return {
     id: ledgerId('mam3e', target, params.sourceLabel, params.label, String(params.value)),
     systemId: 'mam3e',
     target,
+    // M&M cost math sums additively (Hero's Handbook, Powers — Modifiers); 'sum'
+    // is the IR's canonical stacking for it (see the `StackPolicy` doc comment).
+    stackPolicy: 'sum',
     source: {
       kind: params.sourceKind,
       id: params.sourceId,
