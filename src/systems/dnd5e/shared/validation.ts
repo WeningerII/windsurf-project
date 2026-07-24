@@ -13,6 +13,7 @@ import {
 } from '../../../utils/dataLoader';
 import type { Dnd5e2024DataModel } from '../../dnd5e-2024/data-model';
 import type { Dnd5eDataModel } from '../data-model';
+import { dnd5eKnownSpellLimit, dnd5eKnownSpellOverage } from './dnd5eKnownSpells';
 
 export type Dnd5eValidationSystemId = 'dnd-5e-2014' | 'dnd-5e-2024';
 
@@ -512,7 +513,49 @@ function validateSpellcasting(
   );
 
   validatePreparedSpellTracking(issues, context, spellcasting);
+  validateKnownSpellCount(issues, context, spellcasting, classLevels, validationData);
   validateSpellSlots(issues, context, spellcasting.spellSlots);
+}
+
+/**
+ * Known-spell-count enforcement (SRD Spellcasting — Spells Known). A known
+ * caster may carry only as many spells as its class table lists at its level.
+ * Enforced warn-not-block, and only when EVERY spellcasting class the character
+ * has is a known caster — a prepared caster (null limit) makes the flat known
+ * list unattributable, so enforcement is skipped rather than guessed at.
+ */
+function validateKnownSpellCount(
+  issues: ValidationIssue[],
+  context: ValidationContext,
+  spellcasting: SpellcastingInfo,
+  classLevels: ClassLevel[],
+  validationData: Dnd5eValidationData
+) {
+  if (spellcasting.classes.length === 0) return;
+  const classesById = new Map(validationData.classes.map((c) => [c.id, c]));
+  const classLevelById = new Map(classLevels.map((cl) => [cl.classId, cl]));
+
+  let totalLimit = 0;
+  for (const spellcastingClass of spellcasting.classes) {
+    const classDefinition = classesById.get(spellcastingClass.classId);
+    const level = classLevelById.get(spellcastingClass.classId)?.level ?? 0;
+    const limit = dnd5eKnownSpellLimit(classDefinition?.spellcasting, level);
+    if (limit === null) return; // prepared caster present — do not enforce
+    totalLimit += limit;
+  }
+
+  const knownCount = spellcasting.spellsKnown.length;
+  const overage = dnd5eKnownSpellOverage(knownCount, totalLimit);
+  if (overage > 0) {
+    addIssue(issues, context, {
+      code: 'dnd5e-known-spell-overage',
+      severity: 'warning',
+      path: 'system.spellcasting.spellsKnown',
+      message: `Known spells (${knownCount}) exceed the class table limit (${totalLimit}) by ${overage}.`,
+      recoverable: true,
+      details: { knownCount, limit: totalLimit, overage },
+    });
+  }
 }
 
 function validatePreparedSpellTracking(

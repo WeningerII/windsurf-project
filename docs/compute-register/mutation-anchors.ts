@@ -61,6 +61,32 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'Math.max(0, strengthScore) * 30',
     replace: 'Math.max(0, strengthScore) * 31',
   },
+  // known-spell-count limit: both editions share dnd5eKnownSpellLimit's
+  // table-index clamp, so the one `- 1` perturbation shifts the read row and
+  // flips a level-3 case for each edition's register row.
+  'dnd5e2014.L5.known-spell-limit': {
+    file: 'src/systems/dnd5e/shared/dnd5eKnownSpells.ts',
+    find: 'return Math.min(Math.max(1, classLevel), length) - 1;',
+    replace: 'return Math.min(Math.max(1, classLevel), length) - 2;',
+  },
+  'dnd5e2024.L5.known-spell-limit': {
+    file: 'src/systems/dnd5e/shared/dnd5eKnownSpells.ts',
+    find: 'return Math.min(Math.max(1, classLevel), length) - 1;',
+    replace: 'return Math.min(Math.max(1, classLevel), length) - 2;',
+  },
+  // heavy-armor speed penalty: both editions engine-wire the same shared
+  // dnd5eSpeedWithArmor helper, so the one `baseSpeed - 10` perturbation flips
+  // the penalized case for each edition's register row.
+  'dnd5e2014.L6.speed-armored': {
+    file: 'src/systems/dnd5e/shared/dnd5eMovement.ts',
+    find: 'Math.max(0, baseSpeed - 10)',
+    replace: 'Math.max(0, baseSpeed - 9)',
+  },
+  'dnd5e2024.L6.speed-armored': {
+    file: 'src/systems/dnd5e/shared/dnd5eMovement.ts',
+    find: 'Math.max(0, baseSpeed - 10)',
+    replace: 'Math.max(0, baseSpeed - 9)',
+  },
   'dnd5e2024.L6.long-jump': {
     file: 'src/systems/dnd5e/shared/dnd5eMovement.ts',
     find: 'const full = Math.max(0, strengthScore);',
@@ -270,6 +296,13 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     file: 'src/systems/shared/d20-helpers.ts',
     find: 'linearRate(level, 1, 1)',
     replace: 'linearRate(level, 2, 1)',
+  },
+  // wealth-by-level: perturb the table-index calculation so the read shifts one
+  // row, flipping the mid-table (level 5) case.
+  'pf1e.L10.wealth-by-level': {
+    file: 'src/systems/pf1e/derivedMath.ts',
+    find: 'Math.min(Math.max(1, Math.floor(level)), PF1E_WEALTH_BY_LEVEL_GP.length) - 1',
+    replace: 'Math.min(Math.max(1, Math.floor(level)), PF1E_WEALTH_BY_LEVEL_GP.length) - 2',
   },
   // CMB = BAB + Str (or Dex if Tiny-) + size mod; CMD = 10 + BAB + Str + Dex + size.
   'pf1e.L3.cmb': {
@@ -1143,6 +1176,32 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     file: 'src/rules/legality/dnd5e.ts',
     find: 'classLevelSumValue2024 > characterLevelValue2024',
     replace: 'classLevelSumValue2024 > characterLevelValue2024 + 100',
+  },
+  // ASI/feat cadence: both editions share the one feats-vs-slots comparison;
+  // pushing the limit out of reach drops the over-spend violation and flips
+  // each edition's illegal-fixture assertion. Deduped by (file, find).
+  'dnd5e2014.L7.asi-feat-cadence': {
+    file: 'src/rules/legality/dnd5e.ts',
+    find: 'featCount > grantedAsiSlots',
+    replace: 'featCount > grantedAsiSlots + 100',
+  },
+  'dnd5e2024.L7.asi-feat-cadence': {
+    file: 'src/rules/legality/dnd5e.ts',
+    find: 'featCount > grantedAsiSlots',
+    replace: 'featCount > grantedAsiSlots + 100',
+  },
+  // Multiclass prerequisite: both editions share the one 13-minimum comparison,
+  // so lowering the minimum out of reach drops every violation and flips each
+  // edition's illegal-fixture assertion. Deduped by (file, find) in the gate.
+  'dnd5e2014.L9.multiclass-prereq': {
+    file: 'src/rules/legality/dnd5e.ts',
+    find: 'bestInGroup < DND5E_MULTICLASS_MIN',
+    replace: 'bestInGroup < DND5E_MULTICLASS_MIN - 100',
+  },
+  'dnd5e2024.L9.multiclass-prereq': {
+    file: 'src/rules/legality/dnd5e.ts',
+    find: 'bestInGroup < DND5E_MULTICLASS_MIN',
+    replace: 'bestInGroup < DND5E_MULTICLASS_MIN - 100',
   },
   'dnd35e.L9.skill-max-ranks': {
     file: 'src/rules/legality/dnd35e.ts',

@@ -312,6 +312,21 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
         'src/__tests__/derivation/dnd5eDerivedQuantities.test.ts :: dnd5e.L4.passive-perception',
     },
     {
+      id: 'dnd5e2014.L6.speed-armored',
+      layer: 'L6',
+      quantity: 'Walking speed after heavy-armor Strength penalty',
+      formula: 'base speed − 10 ft when armor Str requirement exceeds wearer Strength; else base',
+      inputs: ['base speed', 'Strength score', 'worn armor Strength requirement'],
+      edgeCases: [
+        'no armor requirement → unchanged',
+        'under the requirement → −10 ft',
+        'meets the requirement → unchanged',
+      ],
+      source: `${SRD}: Armor — Heavy Armor (Strength requirement)`,
+      status: 'verified',
+      testRef: 'src/__tests__/derivation/dnd5eDerivedQuantities.test.ts :: dnd5e.L6.speed-armored',
+    },
+    {
       id: 'dnd5e2014.L4.d20-modes',
       layer: 'L4',
       quantity: 'Advantage / disadvantage roll resolution',
@@ -324,6 +339,24 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
     },
 
     // ── L5 spellcasting economy ──
+    {
+      id: 'dnd5e2014.L5.known-spell-limit',
+      layer: 'L5',
+      quantity: 'Known-spell count limit (known casters)',
+      formula:
+        'class table spellsKnown[level] + cantripsKnown[level] (clamped to the table); prepared casters exempt (no fixed cap)',
+      inputs: ['class spellcasting progression', 'class level'],
+      edgeCases: [
+        'level clamps below 1 to the first row',
+        'level past the table clamps to the last row',
+        'prepared caster returns no cap',
+        'overage reports count above the cap, 0 within',
+      ],
+      source: `${SRD}: Spellcasting — Spells Known of 1st Level and Higher`,
+      status: 'verified',
+      testRef: 'src/__tests__/dnd5eKnownSpells.test.ts :: dnd5e.L5.known-spell-limit',
+      note: 'Enforced warn-not-block in createDnd5eValidator (validateKnownSpellCount) via the dnd5eKnownSpellLimit/Overage helpers this row anchors.',
+    },
     {
       id: 'dnd5e2014.L5.multiclass-spell-slots',
       layer: 'L5',
@@ -517,6 +550,40 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       status: 'verified',
       testRef:
         'src/__tests__/legality/dnd5eLegality.test.ts :: dnd5e 2014 flags class levels exceeding character level',
+    },
+    {
+      id: 'dnd5e2014.L7.asi-feat-cadence',
+      layer: 'L7',
+      quantity: 'ASI/feat cadence (feats ≤ granted ASI slots)',
+      formula:
+        'granted ASI slots = Σ per class of count(class ASI levels ≤ class level); flag when feats taken exceed it',
+      inputs: ['classLevels', 'feats'],
+      edgeCases: [
+        'Fighter/Rogue extra ASI levels counted',
+        'feats within granted slots → legal',
+        'feats over granted slots → flagged',
+      ],
+      source: `${SRD}: Class tables (Ability Score Improvement); Feats`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/legality/dnd5eLegality.test.ts :: dnd5e 2014 flags more feats than granted ASI slots',
+    },
+    {
+      id: 'dnd5e2014.L9.multiclass-prereq',
+      layer: 'L9',
+      quantity: 'Multiclass ability prerequisites',
+      formula:
+        'when 2+ classes, each class must meet its 13-minimum ability prerequisite (OR within a group, AND across groups)',
+      inputs: ['classLevels', 'baseAttributes'],
+      edgeCases: [
+        'single class exempt',
+        'meets every prerequisite → legal',
+        'below a class minimum → flagged',
+      ],
+      source: `${SRD}: Multiclassing — Prerequisites`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/legality/dnd5eLegality.test.ts :: dnd5e 2014 flags a multiclass build missing an ability prerequisite',
     },
   ],
 };

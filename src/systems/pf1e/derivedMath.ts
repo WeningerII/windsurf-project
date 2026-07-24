@@ -45,3 +45,37 @@ export function pf1eHpState(currentHp: number, constitution: number): Pf1eHpStat
 export function pf1eFeatsFromLevel(level: number): number {
   return Math.ceil(Math.max(0, Math.floor(level)) / 2);
 }
+
+/**
+ * Expected character wealth in gp for a level, per the PF1e Core Rulebook
+ * "Character Wealth by Level" table (OGC). Index is level − 1. Level 1 is not
+ * on the table (a starting character uses its class's starting-wealth roll), so
+ * it returns 0 here; levels beyond 20 clamp to the 20th-level figure.
+ */
+const PF1E_WEALTH_BY_LEVEL_GP: readonly number[] = [
+  0, // 1st — use class starting wealth
+  1000,
+  3000,
+  6000,
+  10500,
+  16000,
+  23500,
+  33000,
+  46000,
+  62000,
+  82000,
+  108000,
+  140000,
+  185000,
+  240000,
+  315000,
+  410000,
+  530000,
+  685000,
+  880000,
+];
+
+export function pf1eWealthByLevel(level: number): number {
+  const index = Math.min(Math.max(1, Math.floor(level)), PF1E_WEALTH_BY_LEVEL_GP.length) - 1;
+  return PF1E_WEALTH_BY_LEVEL_GP[index] ?? 0;
+}

@@ -240,6 +240,12 @@ export interface EquippedItem {
   armorClass?: number; // Base AC for armor (e.g. 14 for scale mail)
   armorType?: 'light' | 'medium' | 'heavy';
   dexBonusMax?: number; // Max DEX bonus (undefined = unlimited, 0 = none)
+  /**
+   * Minimum Strength score the armor lists (5e SRD "Str 13"/"Str 15" heavy
+   * armor). When the wearer's Strength is lower, walking speed drops by 10 ft.
+   * Optional so light/medium armor and all non-armor gear are unaffected.
+   */
+  strengthRequirement?: number;
   shieldBonus?: number; // AC bonus from shield (e.g. 2)
   // Magic/effect bonuses (additive; consumed by the system-agnostic rules IR —
   // see docs/rfc/003-rules-ir-and-effects.md). Optional so existing AC math and
