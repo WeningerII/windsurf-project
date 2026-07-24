@@ -175,12 +175,77 @@ describe('illustrate-scene request/output', () => {
   });
 });
 
+describe('character-draft request/output', () => {
+  const pools = {
+    classes: [{ id: 'fighter', name: 'Fighter' }],
+    ancestries: [{ id: 'human', name: 'Human' }],
+    backgrounds: [],
+    feats: [],
+    spells: [],
+  };
+
+  it('accepts a well-formed character-draft request with allowed empty pools', () => {
+    const result = parseAiRequest({
+      schemaVersion: AI_GATEWAY_SCHEMA_VERSION,
+      task: 'character-draft',
+      payload: { systemId: 'dnd-5e-2024', prompt: 'a brave knight', pools },
+    });
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.value.task).toBe('character-draft');
+  });
+
+  it('rejects a payload missing the pools', () => {
+    const result = parseAiRequest({
+      schemaVersion: AI_GATEWAY_SCHEMA_VERSION,
+      task: 'character-draft',
+      payload: { systemId: 'dnd-5e-2024', prompt: 'x' },
+    });
+    expect(result).toMatchObject({ ok: false });
+  });
+
+  it('rejects a pool entry missing id/name', () => {
+    const result = parseAiRequest({
+      schemaVersion: AI_GATEWAY_SCHEMA_VERSION,
+      task: 'character-draft',
+      payload: {
+        systemId: 'dnd-5e-2024',
+        prompt: 'x',
+        pools: { ...pools, classes: [{ id: 'fighter' }] },
+      },
+    });
+    expect(result).toMatchObject({ ok: false });
+  });
+
+  it('accepts a name + chosen ids and drops absent optional fields', () => {
+    const result = parseTaskData('character-draft', {
+      name: 'Sir Reginald',
+      classId: 'fighter',
+      featIds: ['tough'],
+      rationale: 'a stalwart defender',
+    });
+    expect(result.ok).toBe(true);
+    if (result.ok)
+      expect(result.value).toEqual({
+        name: 'Sir Reginald',
+        classId: 'fighter',
+        featIds: ['tough'],
+        rationale: 'a stalwart defender',
+      });
+  });
+
+  it('rejects an empty name and a non-string id list', () => {
+    expect(parseTaskData('character-draft', { name: '   ' }).ok).toBe(false);
+    expect(parseTaskData('character-draft', { name: 'A', featIds: [3] }).ok).toBe(false);
+  });
+});
+
 describe('isAiTask / isAiResponse', () => {
   it('recognizes the task allowlist', () => {
     expect(isAiTask('encounter-draft')).toBe(true);
     expect(isAiTask('scene-narration')).toBe(true);
     expect(isAiTask('identify-creature')).toBe(true);
     expect(isAiTask('illustrate-scene')).toBe(true);
+    expect(isAiTask('character-draft')).toBe(true);
     expect(isAiTask('something-else')).toBe(false);
   });
 

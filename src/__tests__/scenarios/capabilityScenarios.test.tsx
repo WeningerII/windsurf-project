@@ -389,12 +389,24 @@ describe('Capability scenarios', () => {
         image: { dataUrl: 'data:image/png;base64,AAAA', mediaType: 'image/png' },
       },
       'illustrate-scene': { prompt: 'a torchlit crypt' },
+      'character-draft': {
+        systemId: 'dnd-5e-2024',
+        prompt: 'a brave knight',
+        pools: {
+          classes: [{ id: 'fighter', name: 'Fighter' }],
+          ancestries: [],
+          backgrounds: [],
+          feats: [],
+          spells: [],
+        },
+      },
     };
     const fixtures: Record<AiTask, unknown> = {
       'encounter-draft': { selections: [{ monsterId: 'goblin', count: 2 }] },
       'scene-narration': { narrative: 'The crypt fell silent.' },
       'identify-creature': { monsterId: 'goblin', confidence: 0.8 },
       'illustrate-scene': { dataUrl: 'data:image/png;base64,AAAA', mediaType: 'image/png' },
+      'character-draft': { name: 'Sir Reginald', classId: 'fighter' },
     };
 
     for (const task of AI_GATEWAY_TASKS) {

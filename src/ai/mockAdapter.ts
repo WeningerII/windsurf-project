@@ -37,6 +37,19 @@ function firstCandidateId(payload: unknown): string | undefined {
   return undefined;
 }
 
+/** First id from a named character-draft pool on the payload, if non-empty. */
+function firstPoolId(payload: unknown, pool: string): string | undefined {
+  if (payload && typeof payload === 'object' && 'pools' in payload) {
+    const pools = (payload as { pools?: Record<string, unknown> }).pools;
+    const entries = pools?.[pool];
+    if (Array.isArray(entries) && entries.length > 0) {
+      const first = entries[0] as { id?: unknown };
+      if (first && typeof first.id === 'string') return first.id;
+    }
+  }
+  return undefined;
+}
+
 /** Free-text `facts` from a scene-narration payload, if present. */
 function factsOf(payload: unknown): string {
   if (payload && typeof payload === 'object' && 'facts' in payload) {
@@ -78,6 +91,18 @@ export function createMockAdapter(): AiProviderAdapter {
         }
         case 'illustrate-scene':
           return Promise.resolve({ dataUrl: MOCK_PNG_DATA_URL, mediaType: 'image/png' });
+        case 'character-draft': {
+          const classId = firstPoolId(payload, 'classes');
+          const ancestryId = firstPoolId(payload, 'ancestries');
+          const backgroundId = firstPoolId(payload, 'backgrounds');
+          return Promise.resolve({
+            name: 'Mock Hero',
+            ...(classId ? { classId } : {}),
+            ...(ancestryId ? { ancestryId } : {}),
+            ...(backgroundId ? { backgroundId } : {}),
+            rationale: 'Deterministic mock character draft.',
+          });
+        }
         default:
           // Unknown task: throw like a real adapter would; the core normalizes it.
           return Promise.reject(new Error(`Mock adapter has no output for task '${task}'.`));
