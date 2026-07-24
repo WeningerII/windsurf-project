@@ -161,29 +161,65 @@ below; the remainder is the honest residual.
     the 5e DiceRoll catalog.
   - L5: **Partial.** Prepared-spell limits are wired — the 5e spells tab shows
     each prepared caster's RAW limit (`getDnd5ePreparedCasterSummaries` through
-    the sheet controller). Still absent: known-spell-count enforcement (the
-    sheet's known list is unbounded; the class tables' `spellsKnown` progression
-    is only shape-validated), mechanical upcasting (only descriptive
-    at-higher-levels text renders), and full PF2e heightening (the auto-heighten
-    rank helper exists but is unwired — see below). (3.5e/PF1e
-    bonus-spells-by-ability done.)
-  - L6: speed with armor/Str penalty still open. **Done:** 3.5e/PF1e carrying
-    capacity, load categories, encumbrance penalties, and lift/drag limits;
-    PF2e Bulk limits.
-  - L7: ASI/feat cadence — ASI features land at the RAW levels from class data
-    (and the 2024 ASI feat applies its score bumps), but no register-linked
-    cadence helper or build validator counting spent ASIs/feats exists.
-    **Done:** 3.5e XP-to-level table; M&M starting power points + hero points;
-    Daggerheart short-rest recovery, Experience bonus, starting Hope;
-    PF2e/3.5e HP/death state.
-  - L8: resist/vuln/immune transforms outside Daggerheart still open. **Done:**
-    PF2e dying/wounded/recovery track; 3.5e disabled/dying/dead track + massive
-    damage; Daggerheart resistance/immunity, Armor-Slot reduction, massive-damage
-    option, and death moves.
-  - L9: point-buy ability arrays; feat/prereq gating; multiclass slot/save/BAB/prof
-    stacking as *validators* (M&M PL caps + point-buy costs exist; M&M degrees of
-    success now covered).
-  - L10: wealth-by-level still open. **Done (corrected 2026-07-21):** D&D 3.5e
+    the sheet controller). **Known-spell-count enforcement DONE (2026-07-24):**
+    the 5e validator (`validateKnownSpellCount` in
+    `src/systems/dnd5e/shared/validation.ts`) warns-not-blocks when a known
+    caster's stored known list exceeds the class table's `spellsKnown[level]`
+    (+ cantrips) via the cited `dnd5eKnownSpellLimit`/`Overage` helpers
+    (`dnd5eKnownSpells.ts`); register rows `dnd5e{2014,2024}.L5.known-spell-limit`
+    verified + mutation-proven. Still absent: mechanical upcasting (only
+    descriptive at-higher-levels text renders — **skipped this wave:** the 5e
+    spell catalog stores `atHigherLevels` as prose, not a structured
+    dice-per-slot scaling field, so a mechanical upcast helper would have no
+    RAW-cited data to read; needs a Denominator-A content encode first), and
+    full PF2e heightening (the auto-heighten rank helper exists but per-spell
+    mechanical heightening is **skipped this wave:** PF2e spell data carries
+    heightening as `heightened` prose entries, not a structured per-rank
+    damage/effect delta the engine can apply — same content-encode blocker).
+    (3.5e/PF1e bonus-spells-by-ability done.)
+  - L6: **speed with armor/Str penalty DONE for 5e (2026-07-24):**
+    `dnd5eSpeedWithArmor` (SRD heavy-armor Str requirement → −10 ft) is
+    engine-computed via the `dnd5e.L5/L6.speed-armored` derived quantity
+    (`EquippedItem.strengthRequirement` added); register rows
+    `dnd5e{2014,2024}.L6.speed-armored` verified + mutation-proven. 3.5e/PF1e
+    armor speed reduction (30→20 for medium/heavy) and PF2e bulk/armor speed
+    remain open (follow-on: those tables live in armor content, not yet on the
+    equip flow). **Done earlier:** 3.5e/PF1e carrying capacity, load categories,
+    encumbrance penalties, lift/drag limits; PF2e Bulk limits.
+  - L7: **ASI/feat cadence validator DONE for 5e (2026-07-24):**
+    `dnd5eAsiSlotsGranted` + a `validateDnd5eBuild` check flag feats exceeding
+    the ASI slots the class levels grant (SRD class tables 4/8/12/16/19 +
+    Fighter 6/14 + Rogue 10); register rows `dnd5e{2014,2024}.L7.asi-feat-cadence`
+    verified + mutation-proven. **Done earlier:** 3.5e XP-to-level table; M&M
+    starting power points + hero points; Daggerheart short-rest recovery,
+    Experience bonus, starting Hope; PF2e/3.5e HP/death state.
+  - L8: resist/vuln/immune transforms outside Daggerheart still open
+    (**skipped this wave — honest reason:** applying damage-type
+    resistance/vulnerability/immunity in 5e/d20/PF2e requires plumbing target
+    defense data onto scene tokens AND carrying the per-type damage breakdown
+    through the `apply-damage` scene event (today it collapses to a single
+    untyped amount at `token.damaged` in `src/scene/runtime.ts`). That is a
+    multi-file scene-schema + validation + persistence change, not a clean
+    single-commit engine wiring; a pure transform helper with no genuine
+    consumer would be helper-only, so it was deferred rather than faked).
+    **Done:** PF2e dying/wounded/recovery track; 3.5e disabled/dying/dead track
+    + massive damage; Daggerheart resistance/immunity, Armor-Slot reduction,
+    massive-damage option, and death moves.
+  - L9: **multiclass ability-prerequisite validator DONE for 5e (2026-07-24):**
+    `validateDnd5eBuild` flags a 2+-class build missing any class's 13-minimum
+    ability prerequisite (SRD Multiclassing — Prerequisites); register rows
+    `dnd5e{2014,2024}.L9.multiclass-prereq` verified + mutation-proven. Still
+    open: point-buy ability arrays (not in the 5e/3.5e SRDs — DMG/PHB variant),
+    3.5e/PF1e feat-prereq gating, and multiclass slot/save/BAB/prof stacking as
+    validators (M&M PL caps + point-buy costs exist; M&M degrees of success
+    covered).
+  - L10: **wealth-by-level DONE for PF1e (2026-07-24):** the CRB (OGC)
+    "Character Wealth by Level" table ships as `pf1eWealthByLevel` and the
+    `pf1e.L10.wealth-by-level` derived quantity (surfaced as a d20-legacy
+    "Wealth by Level" card); register row verified + mutation-proven. 3.5e is
+    **not covered — SRD-blocked:** its wealth-by-level table is DMG content,
+    absent from the 3.5e SRD, so encoding it would violate "cited, never
+    invented". **Done (corrected 2026-07-21):** D&D 3.5e
     Encounter-Level budgeting shipped on a derived-EL model
     (`dnd35eEncounterBudget` in `src/scene/encounterDraft.ts`; the old
     "honestly reports `unsupported-system`" note went stale — though 3.5e
