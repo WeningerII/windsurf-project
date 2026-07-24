@@ -46,11 +46,17 @@ const budgets = {
   // corpus (243 + 347 SRD items, code-split into its own pf1e-equipment-data
   // chunk that stays well under the per-data-chunk budget).
   totalJsGzipBytes: parseInt(process.env.BUNDLE_BUDGET_TOTAL_GZIP_BYTES || '', 10) || 1664 * 1024,
-  // Restored to 80 KiB now that the 1296-LOC SceneManager view is lazy-loaded
-  // out of the eager shell (it no longer rides the index chunk), reclaiming the
-  // first-paint discipline the temporary 81 KiB bump had spent on the
-  // observability guard.
-  appChunkGzipBytes: parseInt(process.env.BUNDLE_BUDGET_APP_GZIP_BYTES || '', 10) || 80 * 1024,
+  // 80 -> 84 KiB (2026-07-24) for the RFC-003 rules-IR spine now carried in the
+  // eager shell: the shared resolver + per-system effect/condition compilers +
+  // contribution-ledger seam + legal-actions registry surface are exercised by
+  // all seven engines at registry bootstrap, so they cannot be code-split the
+  // way per-system sheets/validators/legal-actions PROVIDERS/data already are
+  // (those remain lazy — verified: validation-*/legalActions-* ride their own
+  // chunks). This is genuine cross-system capability, not bloat; the structural
+  // reclaim path if the eager shell keeps climbing is lazy-loading the per-system
+  // engines behind the registry (a larger async-boundary change, tracked
+  // separately). The budget still catches a large jump — it is +4 KiB, not open.
+  appChunkGzipBytes: parseInt(process.env.BUNDLE_BUDGET_APP_GZIP_BYTES || '', 10) || 84 * 1024,
   vendorChunkGzipBytes:
     parseInt(process.env.BUNDLE_BUDGET_VENDOR_GZIP_BYTES || '', 10) || 200 * 1024,
   largestDataChunkGzipBytes:

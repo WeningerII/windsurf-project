@@ -8,7 +8,7 @@ import { abilityMod } from '../../utils/math';
 import { dnd35eSkillSynergyTotal } from '../../utils/derivedCombatMath';
 import { GRAPPLE_SIZE_MODS, baseSave, classBAB, d20SkillCheckPenalty } from '../shared/d20-helpers';
 import { resolveCharacterEffects, computeD20LegacyAC, D20_SIZE_MOD } from '../../rules';
-import { d20LegacyCheckPenalty } from '../../rules/conditions/d20LegacyConditions';
+import { collectD20LegacyConditionEffects } from '../../rules/conditions/d20LegacyConditions';
 import { dnd35eClasses } from '../../data/dnd/3.5e/classes';
 import { dnd35eNormalizedPrestigeClasses } from '../../data/dnd/3.5e/prestige-classes';
 import { mergeVancianSpellSlots } from '../../utils/classSpellcasting';
@@ -235,8 +235,17 @@ export class Dnd35eEngine implements SystemEngine<Dnd35eDataModel> {
     }
 
     // Active fear/sickened conditions impose their flat SRD penalty on every
-    // check and save (worst fear state only; sickened stacks with fear).
-    modifier -= d20LegacyCheckPenalty((d.conditions ?? []).map((condition) => condition.id));
+    // check and save (worst fear state only; sickened stacks with fear). Routed
+    // through the shared resolver fold (W5): the collected condition effects
+    // enter the SAME resolver as equipment/feat effects, so they surface in the
+    // ledger for provenance. `bonus('check')` reads the generic per-check
+    // penalty — the fear/sickened `check`-targeted effects — which equals the
+    // old d20LegacyCheckPenalty scalar; the attack-only riders (dazzled/prone/
+    // entangled) carry no `check` effect, so this stays byte-identical.
+    const conditionIds = (d.conditions ?? []).map((condition) => condition.id);
+    modifier += resolveCharacterEffects('dnd-3.5e', {
+      conditions: collectD20LegacyConditionEffects('dnd-3.5e', conditionIds),
+    }).bonus('check');
 
     const d20 = rollD20('normal').chosen;
     return {

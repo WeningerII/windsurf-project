@@ -46,5 +46,9 @@ export const Pf1eSystemDef: SystemDefinition<Pf1eDataModel> = {
   createDefaultData: createDefaultPf1eData,
   engine: new Pf1eEngine(),
   loadValidator: () => import('./validation').then((m) => m.pf1eValidator),
+  loadLegalActions: () =>
+    import('../d20-legacy/legalActions').then((m) =>
+      m.createD20LegacyLegalActions<Pf1eDataModel>('pf1e')
+    ),
   SheetComponent: makeD20LegacySheet<Pf1eDataModel>(),
 };
