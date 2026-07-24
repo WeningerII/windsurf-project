@@ -119,6 +119,15 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: [],
   },
   {
+    // Phase-7 budgets of record: the measured numbers behind the bundle and
+    // keepalive gates, plus the honest hard-gated / soft-logged ledger. Cites
+    // only files that exist, so path_ref_rule applies.
+    path: 'docs/design/ui-shell-phase7-budgets.md',
+    kind: 'live',
+    owner: 'ui-shell-redesign',
+    rules: ['path_ref_rule'],
+  },
+  {
     path: 'docs/srd-sources.md',
     kind: 'plan',
     owner: 'srd-sources',
