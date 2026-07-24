@@ -50,5 +50,6 @@ export const Pf1eSystemDef: SystemDefinition<Pf1eDataModel> = {
     import('../d20-legacy/legalActions').then((m) =>
       m.createD20LegacyLegalActions<Pf1eDataModel>('pf1e')
     ),
+  loadCreationPlan: () => import('./creationPlan').then((m) => m.createPf1eCreationPlan()),
   SheetComponent: makeD20LegacySheet<Pf1eDataModel>(),
 };

@@ -72,6 +72,11 @@ export const Dnd5e2024SystemDef: SystemDefinition<Dnd5e2024DataModel> = {
     import('../dnd5e/shared/legalActions').then((m) =>
       m.createDnd5eLegalActions<Dnd5e2024DataModel>('dnd-5e-2024')
     ),
+  // Shared 5e guided-creation plan, stamped with the 2024 systemId.
+  loadCreationPlan: () =>
+    import('../dnd5e/shared/creationPlan').then((m) =>
+      m.createDnd5eCreationPlan<Dnd5e2024DataModel>('dnd-5e-2024')
+    ),
   SheetComponent: lazyWithPreload(() =>
     import('./components/Dnd5e2024Sheet').then((m) => ({ default: m.Dnd5e2024Sheet }))
   ),

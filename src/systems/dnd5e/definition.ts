@@ -72,6 +72,12 @@ export const Dnd5eSystemDef: SystemDefinition<Dnd5eDataModel> = {
     import('./shared/legalActions').then((m) =>
       m.createDnd5eLegalActions<Dnd5eDataModel>('dnd-5e-2014')
     ),
+  // Guided-creation plan for the system-agnostic wizard shell. Shared factory
+  // with the 2024 edition; code-split out of the eager bootstrap chunk.
+  loadCreationPlan: () =>
+    import('./shared/creationPlan').then((m) =>
+      m.createDnd5eCreationPlan<Dnd5eDataModel>('dnd-5e-2014')
+    ),
   SheetComponent: lazyWithPreload(() =>
     import('./components/Dnd5eSheet').then((m) => ({ default: m.Dnd5eSheet }))
   ),

@@ -9,6 +9,7 @@ import {
   type LegalActionList,
 } from './types';
 import type { CharacterDocument } from '../types/core/document';
+import type { CreationPlan } from '../creation/types';
 
 /**
  * Central Registry for all Game Systems.
@@ -26,6 +27,11 @@ export class SystemRegistry {
   // enumerated. Mirrors `validatorCache`.
   private legalActionsCache: Map<string, Promise<SystemLegalActionsProvider<SystemDataModel>>> =
     new Map();
+
+  // Caches the promise from each system's lazy `loadCreationPlan`, so a plan
+  // chunk is imported at most once no matter how often the wizard is opened.
+  // Mirrors `validatorCache`.
+  private creationPlanCache: Map<string, Promise<CreationPlan<SystemDataModel>>> = new Map();
 
   /**
    * Register a new game system.
@@ -142,6 +148,30 @@ export class SystemRegistry {
       ...context,
       systemId: systemDef.id,
     });
+  }
+
+  /**
+   * Resolve a system's lazy guided-creation plan for the wizard shell, caching
+   * the resolved plan so the chunk is fetched at most once per system. Systems
+   * without a `loadCreationPlan` resolve to `undefined` (the wizard cannot drive
+   * them; callers fall back to default-seeded creation) — never an error.
+   */
+  async getCreationPlan<T extends SystemDataModel = SystemDataModel>(
+    systemId: string
+  ): Promise<CreationPlan<T> | undefined> {
+    const systemDef = this.get<T>(systemId);
+    if (!systemDef || !systemDef.loadCreationPlan) {
+      return undefined;
+    }
+    let pending = this.creationPlanCache.get(systemId) as Promise<CreationPlan<T>> | undefined;
+    if (!pending) {
+      pending = systemDef.loadCreationPlan();
+      this.creationPlanCache.set(
+        systemId,
+        pending as unknown as Promise<CreationPlan<SystemDataModel>>
+      );
+    }
+    return pending;
   }
 
   /**

@@ -4,6 +4,7 @@ import { act, render, screen, fireEvent, waitFor } from '@testing-library/react'
 import App from '../App';
 import { registerAllSystems } from '../systems';
 import { systemRegistry } from '../registry';
+import { completeGuidedCreationFromDefaults } from './helpers/guidedCreate';
 import { PWA_INSTALL_DISMISSED_STORAGE_KEY } from '../hooks/usePwaInstallPrompt';
 import { getPendingSyncCount } from '../utils/syncStatus';
 
@@ -114,6 +115,7 @@ describe('App', () => {
 
       fireEvent.click(screen.getByRole('button', { name: /new character/i }));
       fireEvent.click(screen.getByRole('button', { name: /D&D 5e \(2024\)/i }));
+      await completeGuidedCreationFromDefaults(SHEET_LOAD_TIMEOUT_MS);
 
       expect(
         await screen.findByTitle('Character name', {}, { timeout: SHEET_LOAD_TIMEOUT_MS })
@@ -145,6 +147,7 @@ describe('App', () => {
 
       fireEvent.click(screen.getByRole('button', { name: /new character/i }));
       fireEvent.click(screen.getByRole('button', { name: /D&D 5e \(2024\)/i }));
+      await completeGuidedCreationFromDefaults(SHEET_LOAD_TIMEOUT_MS);
 
       const nameInput = await screen.findByTitle(
         'Character name',
@@ -179,6 +182,7 @@ describe('App', () => {
       // Alt+N opens the New Character dialog; picking a system creates + opens.
       fireEvent.keyDown(document.body, { key: 'n', altKey: true });
       fireEvent.click(screen.getByRole('button', { name: /D&D 5e \(2024\)/i }));
+      await completeGuidedCreationFromDefaults(SHEET_LOAD_TIMEOUT_MS);
 
       expect(
         await screen.findByTitle('Character name', {}, { timeout: SHEET_LOAD_TIMEOUT_MS })

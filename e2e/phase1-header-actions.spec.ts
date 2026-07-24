@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { completeGuidedCreationFromDefaults } from './helpers/guidedCreate';
 
 /**
  * Phase-1 acceptance gates (build-specs task 14) for the header actions:
@@ -17,10 +18,11 @@ test.beforeEach(async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'No characters yet' })).toBeVisible();
 });
 
-/** Create a character via the dialog-first flow (a system click creates immediately). */
+/** Create a character via the dialog → guided-creation wizard (create from defaults). */
 async function createCharacterForSystem(page: Page, systemPattern: RegExp = /D&D 5e \(2024\)/i) {
   await page.getByRole('button', { name: /New Character/i }).click();
   await page.getByRole('button', { name: systemPattern }).click();
+  await completeGuidedCreationFromDefaults(page);
   // The sheet is a lazily-loaded chunk; a cold CI fetch+parse can be slow.
   await expect(page.getByRole('button', { name: /^Back$/i })).toBeVisible({ timeout: 30_000 });
 }
@@ -60,22 +62,26 @@ async function installDownloadCapture(page: Page) {
   });
 }
 
-test('New Character and Import are reachable with no sheet open', { tag: '@smoke' }, async ({ page }) => {
-  // Gate (b): no sheet is open (no Back control), yet both primary actions
-  // are live in the header.
-  await expect(page.getByRole('button', { name: /^Back$/i })).toHaveCount(0);
+test(
+  'New Character and Import are reachable with no sheet open',
+  { tag: '@smoke' },
+  async ({ page }) => {
+    // Gate (b): no sheet is open (no Back control), yet both primary actions
+    // are live in the header.
+    await expect(page.getByRole('button', { name: /^Back$/i })).toHaveCount(0);
 
-  // Import is reachable: clicking it opens the hidden file input's chooser.
-  const [fileChooser] = await Promise.all([
-    page.waitForEvent('filechooser'),
-    page.getByRole('button', { name: /Import Character/i }).click(),
-  ]);
-  expect(fileChooser).toBeTruthy();
+    // Import is reachable: clicking it opens the hidden file input's chooser.
+    const [fileChooser] = await Promise.all([
+      page.waitForEvent('filechooser'),
+      page.getByRole('button', { name: /Import Character/i }).click(),
+    ]);
+    expect(fileChooser).toBeTruthy();
 
-  // New Character is reachable: it opens the system-picker dialog.
-  await page.getByRole('button', { name: /New Character/i }).click();
-  await expect(page.getByRole('button', { name: /D&D 5e \(2024\)/i })).toBeVisible();
-});
+    // New Character is reachable: it opens the system-picker dialog.
+    await page.getByRole('button', { name: /New Character/i }).click();
+    await expect(page.getByRole('button', { name: /D&D 5e \(2024\)/i })).toBeVisible();
+  }
+);
 
 test('Export and Delete are functional from the sheet header overflow', async ({ page }) => {
   await createCharacterForSystem(page);

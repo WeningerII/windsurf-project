@@ -29,6 +29,18 @@ async function selectSystem(user: ReturnType<typeof userEvent.setup>, systemName
   await user.click(screen.getByRole('button', { name: /new character/i }));
   const escaped = systemName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   await user.click(screen.getByRole('button', { name: new RegExp(escaped, 'i') }));
+  // Picking a system opens the guided-creation wizard. Jump to the Review step
+  // and create from the SRD defaults (skipping optional class/species choices)
+  // to land on the sheet, where the existing name/class/species assertions run.
+  await screen.findByTestId('creation-wizard', {}, { timeout: SHEET_LOAD_TIMEOUT_MS });
+  await user.click(screen.getByRole('button', { name: /\breview\b/i }));
+  const createBtn = await screen.findByTestId(
+    'creation-create',
+    {},
+    { timeout: SHEET_LOAD_TIMEOUT_MS }
+  );
+  await waitFor(() => expect(createBtn).toBeEnabled(), { timeout: SHEET_LOAD_TIMEOUT_MS });
+  await user.click(createBtn);
 }
 
 async function startCreation(user: ReturnType<typeof userEvent.setup>) {

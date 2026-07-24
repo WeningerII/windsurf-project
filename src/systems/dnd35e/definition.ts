@@ -57,5 +57,6 @@ export const Dnd35eSystemDef: SystemDefinition<Dnd35eDataModel> = {
     import('../d20-legacy/legalActions').then((m) =>
       m.createD20LegacyLegalActions<Dnd35eDataModel>('dnd-3.5e')
     ),
+  loadCreationPlan: () => import('./creationPlan').then((m) => m.createDnd35eCreationPlan()),
   SheetComponent: makeD20LegacySheet<Dnd35eDataModel>(),
 };

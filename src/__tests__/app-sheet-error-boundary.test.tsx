@@ -5,6 +5,7 @@ import App from '../App';
 import { registerAllSystems } from '../systems';
 import { systemRegistry } from '../registry';
 import { errorLogger } from '../utils/errorLogger';
+import { completeGuidedCreationFromDefaults } from './helpers/guidedCreate';
 
 vi.mock('../components/GameSystemSelector', () => ({
   GameSystemSelector: ({
@@ -46,6 +47,7 @@ async function openBrokenSheet() {
   render(<App />);
   fireEvent.click(screen.getByRole('button', { name: /new character/i }));
   fireEvent.click(screen.getByRole('button', { name: /D&D 5e \(2024\)/i }));
+  await completeGuidedCreationFromDefaults();
   expect(await screen.findByText('This character sheet failed to load')).toBeInTheDocument();
 }
 

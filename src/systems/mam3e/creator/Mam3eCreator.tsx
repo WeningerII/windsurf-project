@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AlertTriangle, Brain, Info, Shield, Sparkles, Target, Zap } from 'lucide-react';
 import type { Mam3eDataModel } from '../data-model';
 import {
@@ -15,12 +15,26 @@ interface Mam3eCreatorProps {
    * {@link Mam3eDataModel} (from `toData()`) plus the character name; the app
    * builds and persists the {@link CharacterDocument}, and the engine's
    * `prepareData` runs at add time to populate spent totals + PL violations.
+   *
+   * Optional in `embedded` mode: there the point-buy is a wizard STEP, so the
+   * guided-creation shell owns the name + Create action and reads live data via
+   * {@link Mam3eCreatorProps.onChange} instead of a terminal commit.
    */
-  onCreate: (data: Mam3eDataModel, name: string) => void;
+  onCreate?: (data: Mam3eDataModel, name: string) => void;
   /** When explicitly `false`, the Create button is disabled. */
   canCreate?: boolean;
   /** Optional starting name for the draft. */
   initialName?: string;
+  /**
+   * Embedded mode for the system-agnostic guided-creation wizard: hides the name
+   * field and the Create button (the shell owns both) and streams the draft's
+   * raw data model out via {@link Mam3eCreatorProps.onChange} on every edit. This
+   * lets the wizard REUSE the exact M&M point-buy UI + engine-backed math as a
+   * step, rather than duplicating it.
+   */
+  embedded?: boolean;
+  /** Fires with the raw {@link Mam3eDataModel} on every draft change (embedded). */
+  onChange?: (data: Mam3eDataModel) => void;
 }
 
 // Same eight abilities and ordering the sheet's MamAbilitiesTab uses.
@@ -66,12 +80,28 @@ const DEFENSES: Array<{ label: string; key: Mam3eDefenseKey }> = [
   { label: 'Will', key: 'will' },
 ];
 
-export const Mam3eCreator: React.FC<Mam3eCreatorProps> = ({ onCreate, canCreate, initialName }) => {
+export const Mam3eCreator: React.FC<Mam3eCreatorProps> = ({
+  onCreate,
+  canCreate,
+  initialName,
+  embedded = false,
+  onChange,
+}) => {
   const draft = useMam3eCreatorDraft({ initialName });
   const disabled = canCreate === false;
 
+  // Embedded (wizard-step) mode: stream the raw data model out on every change.
+  // `draft.toData` is recreated whenever the point-buy state changes, so this
+  // effect re-fires exactly when the build changes.
+  const draftData = draft.toData;
+  useEffect(() => {
+    if (embedded && onChange) {
+      onChange(draftData());
+    }
+  }, [embedded, onChange, draftData]);
+
   const handleCreate = () => {
-    onCreate(draft.toData(), draft.name);
+    onCreate?.(draft.toData(), draft.name);
   };
 
   return (
@@ -88,22 +118,24 @@ export const Mam3eCreator: React.FC<Mam3eCreatorProps> = ({ onCreate, canCreate,
       </header>
 
       <section className="bg-card p-4 rounded-lg border space-y-4">
-        <div className="flex flex-col gap-1">
-          <label
-            htmlFor="mam3e-creator-name"
-            className="text-xs font-semibold text-muted-foreground uppercase"
-          >
-            Name
-          </label>
-          <input
-            id="mam3e-creator-name"
-            value={draft.name}
-            onChange={(event) => draft.setName(event.target.value)}
-            className="w-full bg-transparent border-b border-input focus:outline-none focus:border-primary"
-            title="Character name"
-            placeholder="Character name"
-          />
-        </div>
+        {!embedded && (
+          <div className="flex flex-col gap-1">
+            <label
+              htmlFor="mam3e-creator-name"
+              className="text-xs font-semibold text-muted-foreground uppercase"
+            >
+              Name
+            </label>
+            <input
+              id="mam3e-creator-name"
+              value={draft.name}
+              onChange={(event) => draft.setName(event.target.value)}
+              className="w-full bg-transparent border-b border-input focus:outline-none focus:border-primary"
+              title="Character name"
+              placeholder="Character name"
+            />
+          </div>
+        )}
 
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div className="flex flex-col gap-1">
@@ -290,16 +322,18 @@ export const Mam3eCreator: React.FC<Mam3eCreatorProps> = ({ onCreate, canCreate,
         </div>
       </section>
 
-      <div className="flex justify-end">
-        <button
-          type="button"
-          onClick={handleCreate}
-          disabled={disabled}
-          className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <Zap className="w-4 h-4" /> Create character
-        </button>
-      </div>
+      {!embedded && (
+        <div className="flex justify-end">
+          <button
+            type="button"
+            onClick={handleCreate}
+            disabled={disabled}
+            className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Zap className="w-4 h-4" /> Create character
+          </button>
+        </div>
+      )}
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import App from '../App';
 import { registerAllSystems } from '../systems';
 import { systemRegistry } from '../registry';
+import { completeGuidedCreationFromDefaults } from './helpers/guidedCreate';
 
 const SHEET_LOAD_TIMEOUT_MS = 15000;
 const FLOW_TEST_TIMEOUT_MS = 20000;
@@ -101,6 +102,7 @@ describe('App surface shortcuts (Alt+1/2/3)', () => {
 
       fireEvent.click(screen.getByRole('button', { name: /new character/i }));
       fireEvent.click(screen.getByRole('button', { name: /D&D 5e \(2024\)/i }));
+      await completeGuidedCreationFromDefaults(SHEET_LOAD_TIMEOUT_MS);
       expect(
         await screen.findByTitle('Character name', {}, { timeout: SHEET_LOAD_TIMEOUT_MS })
       ).toBeInTheDocument();
