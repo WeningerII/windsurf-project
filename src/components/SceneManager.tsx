@@ -52,9 +52,11 @@ import { Button } from './ui/Button';
 import { Badge } from './ui/Badge';
 import { Select } from './ui/Select';
 import { SceneGridView } from './SceneGridView';
+import { SceneCanvas } from './SceneCanvas';
 import { SceneDispatchContext } from '../contexts/scene-dispatch-context';
 import { SceneDropController } from './drag/SceneDropController';
 import { isSceneDragEnabled } from './drag/sceneDragFlag';
+import { isSceneCanvasEnabled } from './scene/sceneCanvasFlag';
 import { EncounterPanel } from './scene/EncounterPanel';
 import { InitiativeTracker } from './scene/InitiativeTracker';
 import { MapPanel } from './scene/MapPanel';
@@ -166,6 +168,10 @@ export function SceneManager({
   // PlacementMode-button hiding (mutual exclusion, Finding 21).
   const gridRef = useRef<HTMLDivElement>(null);
   const sceneDragEnabled = isSceneDragEnabled();
+  // Phase-6 opt-in canvas view. When on it REPLACES the DOM grid, so the
+  // pointer-drag drop controller (which hit-tests the DOM grid's per-cell
+  // `data-scene-cell` targets) is not mounted alongside it.
+  const sceneCanvasEnabled = isSceneCanvasEnabled();
 
   // Shell-owned init/auto-reset (build-specs task 3): a stale or missing
   // selection re-anchors on the first scene through the shell seam. The
@@ -987,15 +993,24 @@ export function SceneManager({
 
           <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
             <SceneDispatchContext.Provider value={emitBoundSceneAction}>
-              <SceneGridView
-                state={state}
-                selectedTokenId={selectedTokenId}
-                mapImage={mapImage}
-                onCellActivate={handleCellActivate}
-                onTokenActivate={handleTokenActivate}
-                gridRef={gridRef}
-              />
-              {sceneDragEnabled && (
+              {sceneCanvasEnabled ? (
+                <SceneCanvas
+                  state={state}
+                  selectedTokenId={selectedTokenId}
+                  onCellActivate={handleCellActivate}
+                  onTokenActivate={handleTokenActivate}
+                />
+              ) : (
+                <SceneGridView
+                  state={state}
+                  selectedTokenId={selectedTokenId}
+                  mapImage={mapImage}
+                  onCellActivate={handleCellActivate}
+                  onTokenActivate={handleTokenActivate}
+                  gridRef={gridRef}
+                />
+              )}
+              {sceneDragEnabled && !sceneCanvasEnabled && (
                 <SceneDropController
                   gridRef={gridRef}
                   documents={documents}
