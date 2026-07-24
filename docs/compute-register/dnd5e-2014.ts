@@ -203,8 +203,8 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       source: `${SRD}: Feats — Great Weapon Master`,
       status: 'verified',
       testRef:
-        'src/__tests__/rules/characterCombatant.test.ts :: 5e rider toggles in scene combat (phase 4)',
-      note: 'Manual boundary: heavy melee weapons only.',
+        'src/__tests__/rules/characterCombatant.test.ts :: 5e rider edition routing: 2014 keeps -5/+10, 2024 refuses it',
+      note: 'Manual boundary: heavy melee weapons only. EDITION-SCOPED: this trade is SRD 5.1 only. SRD 5.2 does not open Great Weapon Master (see src/data/dnd/5e-2024/feats/), so collectDnd5eRiderEffects refuses it for dnd-5e-2024 characters; the routing is pinned by the same test.',
     },
     {
       id: 'dnd5e2014.L3.sharpshooter-tradeoff',
@@ -216,8 +216,8 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       source: `${SRD}: Feats — Sharpshooter`,
       status: 'verified',
       testRef:
-        'src/__tests__/rules/characterCombatant.test.ts :: collectDnd5eRiderEffects: Sharpshooter and Divine Smite',
-      note: 'Manual boundary: ranged weapons with proficiency only.',
+        'src/__tests__/rules/characterCombatant.test.ts :: 5e rider edition routing: 2014 keeps -5/+10, 2024 refuses it',
+      note: 'Manual boundary: ranged weapons with proficiency only. EDITION-SCOPED: this trade is SRD 5.1 only. SRD 5.2 does not open Sharpshooter (see src/data/dnd/5e-2024/feats/), so collectDnd5eRiderEffects refuses it for dnd-5e-2024 characters; the routing is pinned by the same test.',
     },
     {
       id: 'dnd5e2014.L3.sneak-attack-dice',
