@@ -34,7 +34,11 @@ async function selectSystem(user: ReturnType<typeof userEvent.setup>, systemName
   // to land on the sheet, where the existing name/class/species assertions run.
   await screen.findByTestId('creation-wizard', {}, { timeout: SHEET_LOAD_TIMEOUT_MS });
   await user.click(screen.getByRole('button', { name: /\breview\b/i }));
-  const createBtn = await screen.findByTestId('creation-create', {}, { timeout: SHEET_LOAD_TIMEOUT_MS });
+  const createBtn = await screen.findByTestId(
+    'creation-create',
+    {},
+    { timeout: SHEET_LOAD_TIMEOUT_MS }
+  );
   await waitFor(() => expect(createBtn).toBeEnabled(), { timeout: SHEET_LOAD_TIMEOUT_MS });
   await user.click(createBtn);
 }
