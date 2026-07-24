@@ -37,6 +37,13 @@ export default defineConfig({
         '**/*.config.*',
         '**/dist/**',
         'src/components/ui/**',
+        // Phase-4 drag: DOM/rAF-only pieces exercised by Playwright, not vitest.
+        // The portaled ghost is positioned by an imperative ref transform and
+        // DragRoot is a lazy-import boundary — neither is unit-meaningful. The
+        // pure engine (pointerEngine), the hit-test (useDropTarget), the seam
+        // and the drop controller ARE unit-tested.
+        'src/components/drag/DragLayer.tsx',
+        'src/components/drag/DragRoot.tsx',
         'src/data/**',
         'src/scripts/**',
         'src/types/**',

@@ -15,7 +15,7 @@
  */
 
 /** The set of centralized boolean feature flags. Extend as new toggles land. */
-export type FeatureFlag = 'ai' | 'telemetry';
+export type FeatureFlag = 'ai' | 'telemetry' | 'sceneDrag';
 
 /** One registry entry: which env var drives the flag and its build default. */
 export interface FeatureFlagDefinition {
@@ -32,6 +32,11 @@ export interface FeatureFlagDefinition {
 export const FEATURE_FLAGS: Readonly<Record<FeatureFlag, FeatureFlagDefinition>> = {
   ai: { envVar: 'VITE_AI_ENABLED', default: false },
   telemetry: { envVar: 'VITE_TELEMETRY_ENABLED', default: false },
+  // Phase-4 pointer-drag keystone: the click-and-drag add-to-scene affordance
+  // (party character + bestiary monster) plus the paired PlacementMode-button
+  // hiding. Default OFF, so the shipped UI keeps the legacy Place buttons and
+  // the drag machinery never loads — the eager index chunk is unchanged.
+  sceneDrag: { envVar: 'VITE_SCENE_DRAG_ENABLED', default: false },
 };
 
 /**

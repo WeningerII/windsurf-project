@@ -817,3 +817,38 @@ describe('SceneManager', () => {
     expect(screen.queryByText(/Peasant 1 .*Peasant 2/i)).not.toBeInTheDocument();
   });
 });
+
+describe('SceneManager — Phase-4 scene-drag flag mutual exclusion', () => {
+  it('with the flag OFF (default) the legacy Place Token affordance renders', () => {
+    render(<SceneHarness initialScenes={[makeScene()]} />);
+    expect(screen.getByRole('button', { name: 'Place Token' })).toBeInTheDocument();
+    // The marker toggle is drag-agnostic and always present.
+    expect(screen.getByRole('button', { name: /place marker/i })).toBeInTheDocument();
+  });
+
+  it('with the flag ON the Place Token button is hidden while the marker toggle remains', () => {
+    vi.stubEnv('VITE_SCENE_DRAG_ENABLED', 'true');
+    render(<SceneHarness initialScenes={[makeScene()]} />);
+    // Exactly one character-placement affordance exists (the drag), so the
+    // legacy click-to-place button is gone.
+    expect(screen.queryByRole('button', { name: 'Place Token' })).not.toBeInTheDocument();
+    // Marker is untouched — markers are not drag-covered until Phase 6.
+    expect(screen.getByRole('button', { name: /place marker/i })).toBeInTheDocument();
+  });
+
+  it('with the flag OFF the legacy click-to-place path still emits place-token (regression)', async () => {
+    const user = userEvent.setup();
+    const onAppendSceneEventSpy = vi.fn();
+    render(
+      <SceneHarness initialScenes={[makeScene()]} onAppendSceneEventSpy={onAppendSceneEventSpy} />
+    );
+    await user.type(screen.getByRole('textbox', { name: /token name/i }), 'Sentinel');
+    await user.click(screen.getByRole('button', { name: 'Place Token' }));
+    // Click a grid cell to place at that coordinate via handleCellActivate.
+    await user.click(screen.getAllByRole('gridcell')[0]);
+    const placed = onAppendSceneEventSpy.mock.calls.find(
+      ([, event]) => (event as SceneEvent).type === 'token.added'
+    );
+    expect(placed).toBeDefined();
+  });
+});

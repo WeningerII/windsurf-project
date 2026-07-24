@@ -1,10 +1,17 @@
 import React, { useState, useMemo, useCallback, useDeferredValue } from 'react';
 import { Search, Filter, Skull } from 'lucide-react';
 import { Monster } from '../types/creatures/monsters';
+import type { DragSourceHandlers } from './drag/dragTypes';
 
 interface MonsterBrowserProps {
   monsters: Monster[];
   onSelectMonster?: (monster: Monster) => void;
+  /**
+   * Optional per-row drag handlers (Phase 4). When provided (the scene-drag
+   * flag is on in the Dock) each statblock row becomes a drag SOURCE carrying a
+   * {monsterId} payload. Absent everywhere else, so no other usage changes.
+   */
+  getItemDragHandlers?: (monster: Monster) => DragSourceHandlers;
 }
 
 /** 5e CR → XP awards (DMG/SRD), used when a CR bucket carries no XP data. */
@@ -53,7 +60,11 @@ function formatChallengeRating(cr: number): string {
   return `${cr}`;
 }
 
-export const MonsterBrowser: React.FC<MonsterBrowserProps> = ({ monsters, onSelectMonster }) => {
+export const MonsterBrowser: React.FC<MonsterBrowserProps> = ({
+  monsters,
+  onSelectMonster,
+  getItemDragHandlers,
+}) => {
   const [searchTerm, setSearchTerm] = useState('');
   const deferredSearchTerm = useDeferredValue(searchTerm);
   const [selectedType, setSelectedType] = useState<string | null>(null);
@@ -225,7 +236,10 @@ export const MonsterBrowser: React.FC<MonsterBrowserProps> = ({ monsters, onSele
                 type="button"
                 key={monster.id}
                 onClick={() => onSelectMonster?.(monster)}
-                className="w-full p-4 border border-input rounded-lg text-left hover:border-primary/50 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-all cursor-pointer"
+                {...getItemDragHandlers?.(monster)}
+                className={`w-full p-4 border border-input rounded-lg text-left hover:border-primary/50 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-all${
+                  getItemDragHandlers ? ' cursor-grab' : ' cursor-pointer'
+                }`}
               >
                 <div className="flex justify-between items-start mb-2">
                   <div className="flex items-center gap-3">

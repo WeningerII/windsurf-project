@@ -7,6 +7,7 @@ import { systemRegistry } from '../registry';
 import type { CharacterDocument } from '../types/core/document';
 import type { GameSystemId } from '../types/game-systems';
 import type { Monster } from '../types/creatures/monsters';
+import type { DragSourceHandlers } from '../components/drag/dragTypes';
 import { KNOWN_SYSTEM_IDS } from '../utils/systemCatalogMetadata';
 import {
   formatAreaOfEffect,
@@ -15,6 +16,7 @@ import {
   formatRange,
 } from '../utils/formatters';
 import { lazyWithPreload } from '../utils/lazyWithPreload';
+import { useDragContext, useDragSource } from '../components/drag/dragContext';
 import { DOCK_TABS } from './dockRegistry';
 import { PartyDockTab } from './PartyDockTab';
 import { useDockResources } from './useDockResources';
@@ -87,6 +89,7 @@ const EquipmentBrowser = lazyWithPreload<EquipmentBrowserProps>(async () => {
 type MonsterBrowserProps = {
   monsters: Monster[];
   onSelectMonster?: (monster: Monster) => void;
+  getItemDragHandlers?: (monster: Monster) => DragSourceHandlers;
 };
 const MonsterBrowser = lazyWithPreload<MonsterBrowserProps>(async () => {
   const module = await import('../components/MonsterBrowser');
@@ -174,6 +177,11 @@ function DockPanel({
 }: DockPanelProps) {
   const resources = useDockResources(selectedSystem);
   const dispatch = useSheetDispatch();
+  // Phase-4 drag sources: a factory yielding {documentId}/{monsterId} payloads.
+  // Only wired when a DragProvider is mounted (the scene-drag flag is on); with
+  // no provider these stay undefined and party/monster tabs render browse-only.
+  const makeDrag = useDragSource();
+  const dragMounted = useDragContext() !== null;
 
   const browserSpells = useMemo<SpellBrowserSpell[]>(
     () =>
@@ -280,7 +288,14 @@ function DockPanel({
           </TabsList>
 
           <TabsContent value="party" className="space-y-4">
-            <PartyDockTab documents={documents} />
+            <PartyDockTab
+              documents={documents}
+              makeDragHandlers={
+                dragMounted
+                  ? (documentId, label) => makeDrag({ kind: 'character', documentId, label })
+                  : undefined
+              }
+            />
           </TabsContent>
 
           <TabsContent value="monster" className="space-y-4">
@@ -292,7 +307,15 @@ function DockPanel({
               </div>
             ) : (
               <Suspense fallback={BROWSER_FALLBACK}>
-                <MonsterBrowser monsters={resources.monsters} />
+                <MonsterBrowser
+                  monsters={resources.monsters}
+                  getItemDragHandlers={
+                    dragMounted
+                      ? (monster) =>
+                          makeDrag({ kind: 'monster', monsterId: monster.id, label: monster.name })
+                      : undefined
+                  }
+                />
               </Suspense>
             )}
           </TabsContent>

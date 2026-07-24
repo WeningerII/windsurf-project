@@ -1,5 +1,5 @@
 import { memo, useMemo, useState } from 'react';
-import type { KeyboardEvent } from 'react';
+import type { KeyboardEvent, Ref } from 'react';
 import { cn } from '@/lib/utils';
 import { mapImageLayerStyle } from './scene/mapImageLayer';
 import type {
@@ -45,6 +45,13 @@ export interface SceneGridViewProps {
   mapImage?: SceneMapImage;
   onCellActivate?: (position: SceneCoordinate) => void;
   onTokenActivate?: (token: SceneToken) => void;
+  /**
+   * Optional ref to the grid container (Phase 4). The interim drag drop target
+   * registers this element and hit-tests the pointer against the per-cell
+   * `data-scene-cell` / `data-x` / `data-y` attributes below. Purely additive:
+   * the click/keyboard `onCellActivate` contract and all aria are unchanged.
+   */
+  gridRef?: Ref<HTMLDivElement>;
 }
 
 /**
@@ -60,6 +67,7 @@ export const SceneGridView = memo(function SceneGridView({
   mapImage,
   onCellActivate,
   onTokenActivate,
+  gridRef,
 }: SceneGridViewProps) {
   const tokensByCell = useMemo(() => buildTokensByCell(state), [state]);
   // Cells covered by a multi-cell token's footprint (the chip renders in the
@@ -108,6 +116,7 @@ export const SceneGridView = memo(function SceneGridView({
         </div>
       </div>
       <div
+        ref={gridRef}
         role="grid"
         aria-label={`${state.name} grid`}
         className="relative grid overflow-hidden rounded-lg border bg-card"
@@ -130,6 +139,9 @@ export const SceneGridView = memo(function SceneGridView({
                 role="gridcell"
                 aria-label={buildCellLabel(position, marker, cellTokens)}
                 tabIndex={0}
+                data-scene-cell=""
+                data-x={x}
+                data-y={y}
                 className={cn(
                   'relative aspect-square min-h-8 border-b border-r border-border/70 p-0.5 outline-none transition-colors',
                   // With a map backdrop the cells go transparent so the image
