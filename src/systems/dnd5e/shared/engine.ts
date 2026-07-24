@@ -17,7 +17,7 @@ import {
   dnd5eUnarmoredDefenseMonk,
 } from '../../../utils/derivedCombatMath';
 import { resolveCharacterEffects, compute5eAC } from '../../../rules';
-import { conditionImposesDisadvantage } from '../../../rules/conditions/dnd5eConditions';
+import { collectDnd5eConditionEffects } from '../../../rules/conditions/dnd5eConditions';
 import type { GameSystemId } from '../../../types/game-systems';
 import { hasDnd5eCondition, normalizeDnd5eConditions } from '../conditions';
 import { getDnd5eDefenseStyleArmorClassBonus } from './activityState';
@@ -363,19 +363,30 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
       };
     }
 
-    // Condition-derived disadvantage now comes from the shared condition IR
-    // (RFC 003) rather than bespoke branches: ability checks read the
-    // 'ability-check' target; saves read 'save' and the ability-specific
-    // 'save.<attr>'. Only deterministic, non-situational effects count
-    // (situational ones are notes). Exhaustion stays a separate engine concern.
+    // Condition-derived disadvantage now flows through the SAME resolver fold as
+    // equipment/feat/feature effects (W5 seam): the active conditions compile to
+    // `EffectInstance[]` (disadvantage on roll targets) via
+    // `collectDnd5eConditionEffects`, and `resolveCharacterEffects` folds them —
+    // `has-condition` guards are satisfied automatically from the passed effects
+    // — into a per-target `rollMode`. Ability checks read the 'ability-check'
+    // target; saves read 'save' and the ability-specific 'save.<attr>'. Only
+    // deterministic, non-situational effects fold to a roll mode (situational
+    // ones are `note`s, which never set a mode). This reproduces the previous
+    // `conditionImposesDisadvantage` decision byte-for-byte while sourcing it
+    // from the resolver instead of a bespoke read. Exhaustion stays a separate
+    // engine concern.
     const conditionIds = d.conditions.map((condition) => condition.id);
     const rollTargets = isAbilityCheck
       ? ['ability-check']
       : isSavingThrow
         ? ['save', `save.${saveAttribute}`]
         : [];
-    const conditionDisadvantage =
-      rollTargets.length > 0 && conditionImposesDisadvantage(conditionIds, rollTargets);
+    const foldedConditions = resolveCharacterEffects(document.systemId as GameSystemId, {
+      conditions: collectDnd5eConditionEffects(conditionIds),
+    }).result;
+    const conditionDisadvantage = rollTargets.some(
+      (target) => foldedConditions.byTarget[target]?.rollMode === 'disadvantage'
+    );
 
     const hasDisadvantage =
       (isAbilityCheck && this.getExhaustionSkillPenalty(d.exhaustionLevel)) ||
