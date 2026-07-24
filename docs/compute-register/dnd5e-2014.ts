@@ -551,6 +551,23 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
       testRef:
         'src/__tests__/legality/dnd5eLegality.test.ts :: dnd5e 2014 flags class levels exceeding character level',
     },
+    {
+      id: 'dnd5e2014.L9.multiclass-prereq',
+      layer: 'L9',
+      quantity: 'Multiclass ability prerequisites',
+      formula:
+        'when 2+ classes, each class must meet its 13-minimum ability prerequisite (OR within a group, AND across groups)',
+      inputs: ['classLevels', 'baseAttributes'],
+      edgeCases: [
+        'single class exempt',
+        'meets every prerequisite → legal',
+        'below a class minimum → flagged',
+      ],
+      source: `${SRD}: Multiclassing — Prerequisites`,
+      status: 'verified',
+      testRef:
+        'src/__tests__/legality/dnd5eLegality.test.ts :: dnd5e 2014 flags a multiclass build missing an ability prerequisite',
+    },
   ],
 };
 

@@ -1177,6 +1177,19 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'classLevelSumValue2024 > characterLevelValue2024',
     replace: 'classLevelSumValue2024 > characterLevelValue2024 + 100',
   },
+  // Multiclass prerequisite: both editions share the one 13-minimum comparison,
+  // so lowering the minimum out of reach drops every violation and flips each
+  // edition's illegal-fixture assertion. Deduped by (file, find) in the gate.
+  'dnd5e2014.L9.multiclass-prereq': {
+    file: 'src/rules/legality/dnd5e.ts',
+    find: 'bestInGroup < DND5E_MULTICLASS_MIN',
+    replace: 'bestInGroup < DND5E_MULTICLASS_MIN - 100',
+  },
+  'dnd5e2024.L9.multiclass-prereq': {
+    file: 'src/rules/legality/dnd5e.ts',
+    find: 'bestInGroup < DND5E_MULTICLASS_MIN',
+    replace: 'bestInGroup < DND5E_MULTICLASS_MIN - 100',
+  },
   'dnd35e.L9.skill-max-ranks': {
     file: 'src/rules/legality/dnd35e.ts',
     find: 'skillRankValue > skillRankCap',
