@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { completeGuidedCreationFromDefaults } from './helpers/guidedCreate';
 
 async function openLandingPage(page: Page) {
   await page.goto('/', { waitUntil: 'domcontentloaded' });
@@ -24,16 +25,11 @@ async function renameCharacter(page: Page, name: string) {
 async function createCharacterForSystem(page: Page, systemPattern: RegExp, name: string) {
   await page.getByRole('button', { name: /New Character/i }).click();
   await page.getByRole('button', { name: systemPattern }).click();
-  // Systems that ship a guided creator (M&M 3e) open a modal before the sheet.
-  // Wait for whichever lands first — the creator's Create button or the sheet's
-  // Back button — and, when it is the creator, name the hero and confirm.
+  // Picking a system opens the system-agnostic guided-creation wizard for every
+  // system; create from the SRD defaults (skipping optional choices) to reach
+  // the sheet, then rename below.
+  await completeGuidedCreationFromDefaults(page);
   const backButton = page.getByRole('button', { name: /^Back$/i });
-  const createButton = page.getByRole('button', { name: /^Create character$/i });
-  await expect(backButton.or(createButton).first()).toBeVisible({ timeout: 30_000 });
-  if (await createButton.isVisible()) {
-    await page.locator('input[title="Character name"]').fill(name);
-    await createButton.click();
-  }
   // The system sheet is a lazily-loaded chunk. It mounts in ~350ms locally, but
   // a cold fetch+parse on a contended firefox CI runner intermittently spikes
   // past 15s — the sheet mounts correctly, just slowly, so allow generous

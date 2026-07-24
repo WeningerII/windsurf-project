@@ -1,5 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
+import { completeGuidedCreationFromDefaults } from './helpers/guidedCreate';
 
 // Accessibility gate: key surfaces must be free of CRITICAL and SERIOUS axe-core
 // violations. Minor/moderate findings are not failed here so the gate stays
@@ -38,6 +39,7 @@ async function getCharacterNameInput(page: Page) {
 async function createCharacterForSystem(page: Page, systemPattern: RegExp, name: string) {
   await page.getByRole('button', { name: /New Character/i }).click();
   await page.getByRole('button', { name: systemPattern }).click();
+  await completeGuidedCreationFromDefaults(page);
   const backButton = page.getByRole('button', { name: /^Back$/i });
   const createButton = page.getByRole('button', { name: /^Create character$/i });
   await expect(backButton.or(createButton).first()).toBeVisible({ timeout: 30_000 });

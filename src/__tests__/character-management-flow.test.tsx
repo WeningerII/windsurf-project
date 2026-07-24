@@ -41,6 +41,14 @@ async function selectSystemAndStartCreation(
 ) {
   await user.click(screen.getByRole('button', { name: /new character/i }));
   await user.click(screen.getByRole('button', { name: /D&D 5e \(2024\)/i }));
+  // Picking a system opens the guided-creation wizard; jump to Review and create
+  // from the SRD defaults (no choices) to land on the sheet, where the rest of
+  // the flow runs.
+  await screen.findByTestId('creation-wizard', {}, { timeout: timeoutMs });
+  await user.click(screen.getByRole('button', { name: /\breview\b/i }));
+  const createBtn = await screen.findByTestId('creation-create', {}, { timeout: timeoutMs });
+  await waitFor(() => expect(createBtn).toBeEnabled(), { timeout: timeoutMs });
+  await user.click(createBtn);
   await screen.findByTitle('Character name', {}, { timeout: timeoutMs });
   await waitFor(
     () => {
@@ -377,6 +385,16 @@ describe('Character Management Flow', () => {
 
       await user.click(screen.getByRole('button', { name: /new character/i }));
       await user.click(screen.getByRole('button', { name: /Pathfinder 2e/i }));
+      // Guided wizard opens on pick: jump to Review and create from defaults.
+      await screen.findByTestId('creation-wizard', {}, { timeout: SHEET_LOAD_TIMEOUT_MS });
+      await user.click(screen.getByRole('button', { name: /\breview\b/i }));
+      const pf2eCreate = await screen.findByTestId(
+        'creation-create',
+        {},
+        { timeout: SHEET_LOAD_TIMEOUT_MS }
+      );
+      await waitFor(() => expect(pf2eCreate).toBeEnabled(), { timeout: SHEET_LOAD_TIMEOUT_MS });
+      await user.click(pf2eCreate);
       await createCharacter(user, 'System B Hero');
       await returnToList(user);
 

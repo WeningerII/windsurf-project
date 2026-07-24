@@ -1,15 +1,17 @@
 import { Buffer } from 'node:buffer';
 import { expect, test, type Page } from '@playwright/test';
+import { completeGuidedCreationFromDefaults } from './helpers/guidedCreate';
 import { createDefaultDnd5e2024Data } from '../src/systems/dnd5e-2024/data-model';
 
 /**
- * Open the New Character dialog and pick a system (which creates immediately).
- * The current UI flow: click "New Character" → dialog → click a system card.
- * This opens the character sheet directly (no wizard).
+ * Open the New Character dialog, pick a system, and complete the guided-creation
+ * wizard from SRD defaults. Flow: click "New Character" → dialog → system card →
+ * wizard (Review → Create) → character sheet.
  */
 async function createCharacterForSystem(page: Page, systemPattern: RegExp = /D&D 5e \(2024\)/i) {
   await page.getByRole('button', { name: /New Character/i }).click();
   await page.getByRole('button', { name: systemPattern }).click();
+  await completeGuidedCreationFromDefaults(page);
   // Sheet opens — the header shows "New Character" and the Back button. The
   // sheet is a lazily-loaded chunk that mounts in ~350ms locally, but a cold
   // fetch+parse on a contended firefox CI runner intermittently spikes past 15s
@@ -141,17 +143,21 @@ test('offers system choices in the New Character dialog', async ({ page }) => {
   await expect(page.getByRole('button', { name: /Pathfinder 2e/i })).toBeVisible();
 });
 
-test('creates a D&D 5e-2024 character and displays character sheet', { tag: '@smoke' }, async ({ page }) => {
-  await createCharacterForSystem(page);
-  await renameCharacter(page, 'E2E Fighter');
+test(
+  'creates a D&D 5e-2024 character and displays character sheet',
+  { tag: '@smoke' },
+  async ({ page }) => {
+    await createCharacterForSystem(page);
+    await renameCharacter(page, 'E2E Fighter');
 
-  // Verify the name input has the new value
-  const nameInput = page.locator('input[title="Character name"]');
-  await expect(nameInput).toHaveValue('E2E Fighter');
+    // Verify the name input has the new value
+    const nameInput = page.locator('input[title="Character name"]');
+    await expect(nameInput).toHaveValue('E2E Fighter');
 
-  // Verify the header shows the character name
-  await expect(page.getByRole('heading', { name: 'E2E Fighter' })).toBeVisible();
-});
+    // Verify the header shows the character name
+    await expect(page.getByRole('heading', { name: 'E2E Fighter' })).toBeVisible();
+  }
+);
 
 test('persists created character after reload', async ({ page }) => {
   await createCharacterForSystem(page);

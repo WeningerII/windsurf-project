@@ -1,5 +1,6 @@
 import { Buffer } from 'node:buffer';
 import { expect, test, type Page } from '@playwright/test';
+import { completeGuidedCreationFromDefaults } from './helpers/guidedCreate';
 
 /**
  * Phase-1 acceptance gate (d) (build-specs task 14) — compound sheet-open:
@@ -20,6 +21,7 @@ test.beforeEach(async ({ page }) => {
 async function createCharacterForSystem(page: Page, systemPattern: RegExp = /D&D 5e \(2024\)/i) {
   await page.getByRole('button', { name: /New Character/i }).click();
   await page.getByRole('button', { name: systemPattern }).click();
+  await completeGuidedCreationFromDefaults(page);
   // The sheet is a lazily-loaded chunk; a cold CI fetch+parse can be slow.
   await expect(page.getByRole('button', { name: /^Back$/i })).toBeVisible({ timeout: 30_000 });
 }
