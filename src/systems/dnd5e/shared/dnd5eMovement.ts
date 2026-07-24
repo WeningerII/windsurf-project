@@ -29,6 +29,22 @@ export function dnd5eLongJump(strengthScore: number, runningStart = true): numbe
 }
 
 /**
+ * Walking speed after the heavy-armor Strength penalty. If the worn armor lists
+ * a minimum Strength ("Str 13"/"Str 15" heavy armor) and the wearer's Strength
+ * score is lower, speed is reduced by 10 feet; otherwise the base speed stands.
+ * A requirement of 0 (light/medium armor, or unarmored) never penalizes.
+ * (SRD 5.1/5.2: Armor — Heavy Armor, Strength requirement.)
+ */
+export function dnd5eSpeedWithArmor(
+  baseSpeed: number,
+  strengthScore: number,
+  armorStrengthRequirement = 0
+): number {
+  const underStrength = armorStrengthRequirement > 0 && strengthScore < armorStrengthRequirement;
+  return underStrength ? Math.max(0, baseSpeed - 10) : baseSpeed;
+}
+
+/**
  * High jump height in feet: with a 10-foot running start you reach 3 + your
  * Strength modifier feet; a standing high jump reaches half that, rounded down
  * (SRD: Jumping — High Jump).

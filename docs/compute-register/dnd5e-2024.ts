@@ -139,6 +139,21 @@ export const dnd5e2024ComputeRegister: SystemComputeRegister = {
         'src/__tests__/derivation/dnd5eDerivedQuantities.test.ts :: dnd5e.L6.carrying-capacity',
     },
     {
+      id: 'dnd5e2024.L6.speed-armored',
+      layer: 'L6',
+      quantity: 'Walking speed after heavy-armor Strength penalty',
+      formula: 'base speed − 10 ft when armor Str requirement exceeds wearer Strength; else base',
+      inputs: ['base speed', 'Strength score', 'worn armor Strength requirement'],
+      edgeCases: [
+        'no armor requirement → unchanged',
+        'under the requirement → −10 ft',
+        'meets the requirement → unchanged',
+      ],
+      source: `${SRD}: Armor — Heavy Armor (Strength requirement)`,
+      status: 'verified',
+      testRef: 'src/__tests__/derivation/dnd5eDerivedQuantities.test.ts :: dnd5e.L6.speed-armored',
+    },
+    {
       id: 'dnd5e2024.L6.push-drag-lift',
       layer: 'L6',
       quantity: 'Push / drag / lift maximum',

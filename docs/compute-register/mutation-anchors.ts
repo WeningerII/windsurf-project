@@ -61,6 +61,19 @@ export const MUTATION_ANCHORS: Record<string, MutationAnchor> = {
     find: 'Math.max(0, strengthScore) * 30',
     replace: 'Math.max(0, strengthScore) * 31',
   },
+  // heavy-armor speed penalty: both editions engine-wire the same shared
+  // dnd5eSpeedWithArmor helper, so the one `baseSpeed - 10` perturbation flips
+  // the penalized case for each edition's register row.
+  'dnd5e2014.L6.speed-armored': {
+    file: 'src/systems/dnd5e/shared/dnd5eMovement.ts',
+    find: 'Math.max(0, baseSpeed - 10)',
+    replace: 'Math.max(0, baseSpeed - 9)',
+  },
+  'dnd5e2024.L6.speed-armored': {
+    file: 'src/systems/dnd5e/shared/dnd5eMovement.ts',
+    find: 'Math.max(0, baseSpeed - 10)',
+    replace: 'Math.max(0, baseSpeed - 9)',
+  },
   'dnd5e2024.L6.long-jump': {
     file: 'src/systems/dnd5e/shared/dnd5eMovement.ts',
     find: 'const full = Math.max(0, strengthScore);',

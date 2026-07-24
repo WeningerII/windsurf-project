@@ -312,6 +312,21 @@ export const dnd5e2014ComputeRegister: SystemComputeRegister = {
         'src/__tests__/derivation/dnd5eDerivedQuantities.test.ts :: dnd5e.L4.passive-perception',
     },
     {
+      id: 'dnd5e2014.L6.speed-armored',
+      layer: 'L6',
+      quantity: 'Walking speed after heavy-armor Strength penalty',
+      formula: 'base speed − 10 ft when armor Str requirement exceeds wearer Strength; else base',
+      inputs: ['base speed', 'Strength score', 'worn armor Strength requirement'],
+      edgeCases: [
+        'no armor requirement → unchanged',
+        'under the requirement → −10 ft',
+        'meets the requirement → unchanged',
+      ],
+      source: `${SRD}: Armor — Heavy Armor (Strength requirement)`,
+      status: 'verified',
+      testRef: 'src/__tests__/derivation/dnd5eDerivedQuantities.test.ts :: dnd5e.L6.speed-armored',
+    },
+    {
       id: 'dnd5e2014.L4.d20-modes',
       layer: 'L4',
       quantity: 'Advantage / disadvantage roll resolution',

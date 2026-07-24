@@ -22,12 +22,25 @@ import {
   dnd5eHighJump,
   dnd5eLongJump,
   dnd5ePushDragLift,
+  dnd5eSpeedWithArmor,
 } from './dnd5eMovement';
 import type { Dnd5eLikeDataModel } from './dnd5eSheetShared';
 
 /** Build a full ability-score block from partial overrides (defaults are 10). */
 function attrs(overrides: Partial<Record<string, number>>): Record<string, number> {
   return { str: 10, dex: 10, con: 10, int: 10, wis: 10, cha: 10, ...overrides };
+}
+
+/**
+ * Highest Strength requirement among equipped armor (heavy armor lists "Str 13"
+ * / "Str 15"; light/medium and non-armor gear list none). 0 when nothing worn
+ * imposes one — the value that never triggers the speed penalty.
+ */
+function equippedArmorStrengthRequirement(system: Dnd5eLikeDataModel): number {
+  return (system.equipment ?? []).reduce((max, item) => {
+    const req = item.strengthRequirement ?? 0;
+    return req > max ? req : max;
+  }, 0);
 }
 
 function perceptionProficiency(system: Dnd5eLikeDataModel): 'none' | 'proficient' | 'expertise' {
@@ -90,6 +103,63 @@ export const DND5E_DERIVED_QUANTITIES: ReadonlyArray<DerivedQuantitySpec<Dnd5eLi
       { name: 'Str 20 → 300 lb', system: { baseAttributes: attrs({ str: 20 }) }, expected: 300 },
     ],
     display: { label: 'Carrying Capacity', icon: 'Weight', format: (v) => `${v} lb` },
+  },
+  {
+    id: 'dnd5e.L6.speed-armored',
+    layer: 'L6',
+    quantity: 'Walking speed after heavy-armor Strength penalty',
+    formula:
+      'base speed − 10 ft when worn armor lists a Strength requirement above the wearer’s Strength; base speed otherwise',
+    source: 'D&D 5e SRD (5.1/5.2): Armor — Heavy Armor (Strength requirement)',
+    compute: (s) =>
+      dnd5eSpeedWithArmor(
+        s.speed ?? 30,
+        s.baseAttributes.str ?? 10,
+        equippedArmorStrengthRequirement(s)
+      ),
+    cases: [
+      {
+        name: 'no armor requirement → base speed unchanged',
+        system: { speed: 30, baseAttributes: attrs({ str: 8 }) },
+        expected: 30,
+      },
+      {
+        name: 'heavy armor Str 15, wearer Str 13 → speed reduced by 10',
+        system: {
+          speed: 30,
+          baseAttributes: attrs({ str: 13 }),
+          equipment: [
+            {
+              itemId: 'plate',
+              slot: 'chest',
+              attuned: false,
+              armorType: 'heavy',
+              strengthRequirement: 15,
+            },
+          ],
+        },
+        expected: 20,
+      },
+      {
+        name: 'heavy armor Str 15, wearer Str 15 → meets requirement, no penalty',
+        system: {
+          speed: 30,
+          baseAttributes: attrs({ str: 15 }),
+          equipment: [
+            {
+              itemId: 'plate',
+              slot: 'chest',
+              attuned: false,
+              armorType: 'heavy',
+              strengthRequirement: 15,
+            },
+          ],
+        },
+        expected: 30,
+      },
+    ],
+    // No `display`: the sheet already renders Speed; this registers and
+    // engine-computes the armor-penalized value without a redundant card.
   },
   {
     id: 'dnd5e.L5.cantrip-scaling',
