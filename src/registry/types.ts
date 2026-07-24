@@ -2,6 +2,7 @@ import { CharacterDocument, SystemDataModel } from '../types/core/document';
 export type { SystemDataModel };
 import React from 'react';
 import type { Attribute, Skill } from '../types/game-systems';
+import type { CreationPlan } from '../creation/types';
 
 type SheetProps<T extends SystemDataModel> = {
   document: CharacterDocument<T>;
@@ -272,4 +273,15 @@ export interface SystemDefinition<T extends SystemDataModel> {
   // new character of this system is created. Systems without one fall straight
   // through to a default-seeded sheet.
   CreatorComponent?: SystemCreatorComponent<T>;
+
+  // Lazy guided-creation plan for the system-agnostic wizard shell (RFC /
+  // Phase-4 parity). A plan is a list of step descriptors the shell renders
+  // generically: name → the system's own class/ancestry/background/point-buy
+  // choices (WHERE its loaders support them) → live validation → a normal
+  // CharacterDocument through the EXISTING template applicators. Same lazy+cached
+  // pattern as `loadValidator`/`loadLegalActions`, so a system's (often large)
+  // plan + applicator closures code-split out of the eager registry bootstrap
+  // chunk. Systems without one are simply undrivable by the wizard (callers fall
+  // back to default-seeded creation) — never an error.
+  loadCreationPlan?: () => Promise<CreationPlan<T>>;
 }
