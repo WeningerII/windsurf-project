@@ -53,10 +53,6 @@ async function createCharacterForSystem(page: Page, systemPattern: RegExp, name:
   await expect(nameInput).toHaveValue(name);
 }
 
-async function clickTab(page: Page, name: string | RegExp) {
-  await page.getByRole('tab', { name }).click();
-}
-
 /**
  * Run axe against the current DOM and assert there are no critical/serious
  * violations. On failure, surface a compact, readable summary (rule id, impact,
@@ -88,7 +84,7 @@ test('landing / empty-roster page has no critical or serious a11y violations', a
   await expectNoBlockingViolations(page, 'Landing (empty roster)');
 });
 
-test('a created character sheet and its bestiary browser have no critical or serious a11y violations', async ({
+test('a created character sheet and the Library bestiary browser have no critical or serious a11y violations', async ({
   page,
 }) => {
   await createCharacterForSystem(page, /D&D 5e \(2024\)/i, 'A11y Sheet Hero');
@@ -96,8 +92,16 @@ test('a created character sheet and its bestiary browser have no critical or ser
   // The default sheet view.
   await expectNoBlockingViolations(page, 'Character sheet (D&D 5e 2024)');
 
-  // The Monsters/Bestiary reference browser is a distinct heavy surface.
-  await clickTab(page, /^Monsters$/i);
+  // Phase 3: the bestiary was evicted from the sheet — it is single-homed in
+  // the Library route now (RFC-004 LibraryBestiaryView), reachable from all
+  // surfaces, so the sheet tab strip must NOT expose a Monsters tab.
+  await expect(page.getByRole('tab', { name: /^Monsters$/i })).toHaveCount(0);
+
+  // Return to the Library and open the Bestiary segment; the Monsters/Bestiary
+  // reference browser is a distinct heavy surface hosted there now.
+  await page.getByRole('button', { name: /^Back$/i }).click();
+  await page.getByRole('button', { name: 'Bestiary', exact: true }).click();
+  await page.getByLabel('Select game system').selectOption('dnd-5e-2024');
   await expect(page.getByLabel('Search monsters')).toBeVisible({ timeout: 30_000 });
-  await expectNoBlockingViolations(page, 'Bestiary (Monsters browser)');
+  await expectNoBlockingViolations(page, 'Bestiary (Library route)');
 });

@@ -16,7 +16,6 @@ import { Dnd5eEquipmentTab } from './components/Dnd5eEquipmentTab';
 import { Dnd5eFeaturesTab } from './components/Dnd5eFeaturesTab';
 import { Dnd5eFeatBrowserTab } from './components/Dnd5eFeatBrowserTab';
 import { Dnd5eHeaderSection } from './components/Dnd5eHeaderSection';
-import { Dnd5eMonsterBrowserTab } from './components/Dnd5eMonsterBrowserTab';
 import { Dnd5eClassesSection } from './components/Dnd5eClassesSection';
 import { Dnd5eNotesTab } from './components/Dnd5eNotesTab';
 import { Dnd5eOverviewSection } from './components/Dnd5eOverviewSection';
@@ -32,6 +31,7 @@ import {
   DND5E_WEAPON_MASTERY_OPTIONS,
 } from './dnd5eSheetConstants';
 import type { Dnd5eLikeDataModel } from './dnd5eSheetShared';
+import { useSheetDispatchRegister } from '../../../contexts/sheet-dispatch-context';
 import { useDnd5eSheetController } from './useDnd5eSheetController';
 import { availableDnd5eToggles } from '../../../rules/conditions/dnd5eRiders';
 import { presentDerivedQuantities } from '../../../rules/derivation';
@@ -54,6 +54,17 @@ export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
     enableWeaponMasteries,
   });
   const d = controller.d;
+
+  // Publish the sheet's add-handlers UP into the shared Dock's dispatch
+  // registry (Phase 3, inverted control). Gated on a resolved active-doc id:
+  // an uneditable sheet (no onUpdate) registers null so the Dock's click-add
+  // stays disabled rather than targeting a stale controller.
+  useSheetDispatchRegister(onUpdate ? document.id : null, {
+    addSpell: onUpdate ? controller.handleSpellSelect : undefined,
+    addFeat: onUpdate ? controller.handleFeatSelect : undefined,
+    addEquipment: onUpdate ? controller.handleEquipmentSelect : undefined,
+  });
+
   const derivedCards = presentDerivedQuantities(DND5E_DERIVED_QUANTITIES, d, d.derived);
   const updatePatch = (patch: Partial<Dnd5eLikeDataModel>) =>
     controller.update(patch as unknown as Partial<T>);
@@ -138,7 +149,6 @@ export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
           onWarmSpells={controller.warmSpellsTab}
           onWarmFeats={controller.warmFeatBrowser}
           onWarmEquipment={controller.warmEquipmentTab}
-          onWarmMonsters={controller.warmMonsterBrowser}
         />
 
         <Dnd5eAbilitiesTab
@@ -276,11 +286,6 @@ export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
             onSelectEquipment={onUpdate ? controller.handleEquipmentSelect : undefined}
           />
         </TabsContent>
-
-        <Dnd5eMonsterBrowserTab
-          monstersLoaded={controller.monstersLoaded}
-          monsters={controller.monsters}
-        />
 
         <Dnd5eNotesTab
           personality={d.personality}

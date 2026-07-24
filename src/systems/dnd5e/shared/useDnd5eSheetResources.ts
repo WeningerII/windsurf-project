@@ -9,7 +9,6 @@ import {
   loadEquipmentForSystem,
   loadFeatsForSystem,
   loadFeatureOptionsForSystem,
-  loadMonstersForSystem,
   loadSpeciesForSystem,
   loadSpellsForSystem,
 } from '../../../utils/dataLoader';
@@ -17,7 +16,6 @@ import { errorLogger, ErrorCategory, ErrorSeverity } from '../../../utils/errorL
 import { Dnd5eEquipmentTab } from './components/Dnd5eEquipmentTab';
 import { Dnd5eFeatBrowserTab } from './components/Dnd5eFeatBrowserTab';
 import { Dnd5eFeaturesTab } from './components/Dnd5eFeaturesTab';
-import { Dnd5eMonsterBrowserTab } from './components/Dnd5eMonsterBrowserTab';
 import { Dnd5eSpellsTab } from './components/Dnd5eSpellsTab';
 import { useDnd5eDeferredResource } from './useDnd5eDeferredResource';
 
@@ -102,16 +100,6 @@ export function useDnd5eSheetResources({
     activeSystemIdRef,
     loader: loadFeatureOptionsForSystem,
   });
-  const {
-    data: monsters,
-    loaded: monstersLoaded,
-    load: loadMonsters,
-    reset: resetMonsters,
-  } = useDnd5eDeferredResource({
-    systemId,
-    activeSystemIdRef,
-    loader: loadMonstersForSystem,
-  });
 
   useEffect(() => {
     let cancelled = false;
@@ -126,7 +114,6 @@ export function useDnd5eSheetResources({
     resetEquipment();
     resetFeatDefs();
     resetFeatureOptions();
-    resetMonsters();
 
     void Promise.all([
       loadClassesForSystem(systemId),
@@ -159,7 +146,6 @@ export function useDnd5eSheetResources({
     resetEquipment,
     resetFeatDefs,
     resetFeatureOptions,
-    resetMonsters,
     resetSpells,
     systemId,
   ]);
@@ -224,13 +210,6 @@ export function useDnd5eSheetResources({
     void Dnd5eEquipmentTab.preload();
   }, [loadEquipment, reportResourceLoadError, systemId]);
 
-  const warmMonsterBrowser = useCallback(() => {
-    void loadMonsters().catch((error: unknown) => {
-      reportResourceLoadError('monsters', systemId, error);
-    });
-    void Dnd5eMonsterBrowserTab.preload();
-  }, [loadMonsters, reportResourceLoadError, systemId]);
-
   return {
     backgrounds,
     classes,
@@ -240,8 +219,6 @@ export function useDnd5eSheetResources({
     featsLoaded,
     featureOptions,
     featureOptionsLoaded,
-    monsters,
-    monstersLoaded,
     resourceLoadError,
     species,
     spells,
@@ -249,7 +226,6 @@ export function useDnd5eSheetResources({
     warmEquipmentTab,
     warmFeatBrowser,
     warmFeaturesTab,
-    warmMonsterBrowser,
     warmSpellsTab,
   };
 }

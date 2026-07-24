@@ -1,14 +1,5 @@
 // purpose: Tabs navigation — top-level tab strip with conditional weapon-mastery tab for 2024 edition.
-import {
-  Backpack,
-  BookOpen,
-  Crosshair,
-  Skull,
-  Sparkles,
-  StickyNote,
-  Target,
-  User,
-} from 'lucide-react';
+import { Backpack, BookOpen, Crosshair, Sparkles, StickyNote, Target, User } from 'lucide-react';
 import { Shield } from 'lucide-react';
 import { TabsList, TabsTrigger } from '../../../../components/ui/Tabs';
 
@@ -19,7 +10,6 @@ interface Props {
   onWarmSpells: () => void;
   onWarmFeats: () => void;
   onWarmEquipment: () => void;
-  onWarmMonsters: () => void;
 }
 
 export function Dnd5eTabsNavigation({
@@ -29,11 +19,13 @@ export function Dnd5eTabsNavigation({
   onWarmSpells,
   onWarmFeats,
   onWarmEquipment,
-  onWarmMonsters,
 }: Props) {
+  // The read-only bestiary (Monsters) tab moved out of the sheet into the
+  // shared Dock / Library Bestiary route (Phase 3), so the tab strip is one
+  // column narrower than before.
   const tabsListClassName = showWeaponMasteries
-    ? 'w-full grid grid-cols-3 gap-1 md:grid-cols-5 xl:grid-cols-10'
-    : 'w-full grid grid-cols-3 gap-1 md:grid-cols-5 xl:grid-cols-9';
+    ? 'w-full grid grid-cols-3 gap-1 md:grid-cols-5 xl:grid-cols-9'
+    : 'w-full grid grid-cols-3 gap-1 md:grid-cols-5 xl:grid-cols-8';
 
   return (
     <TabsList className={tabsListClassName}>
@@ -83,15 +75,6 @@ export function Dnd5eTabsNavigation({
         onPointerEnter={onWarmEquipment}
       >
         <Backpack className="w-4 h-4" /> Equipment
-      </TabsTrigger>
-      <TabsTrigger
-        value="monsters"
-        className="flex items-center gap-1.5"
-        onClick={onWarmMonsters}
-        onFocus={onWarmMonsters}
-        onPointerEnter={onWarmMonsters}
-      >
-        <Skull className="w-4 h-4" /> Monsters
       </TabsTrigger>
       <TabsTrigger value="notes" className="flex items-center gap-1.5">
         <StickyNote className="w-4 h-4" /> Notes
