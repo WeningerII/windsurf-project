@@ -389,6 +389,68 @@ Deliverable phrasing for this debt lives in the W-numbered workstream table in
 phrasing` constraint there: system names may appear in status lines, never as
 the subject of deliverable lines.
 
+## 8. W6 executable-activity contract — CLOSE-BY-RULE under constraint 5 (added 2026-07-24)
+
+**Disposition: NOT graduated. The W6 executable-activity contract stays a
+system-local 5e pilot — one real consumer — because a genuine second and third
+consumer of the *executable* shape do not exist without inventing automation the
+codebase deliberately refuses to fake.** This is a valid close under the
+anti-premature-abstraction rule (MASTER_PLAN: "at least three named consumers
+before extraction"; the extracted contract "must be proven against a non-d20
+system before it is called shared"). Verified against code, not carried forward
+from the W6 status prose.
+
+**What the contract is.** The executable-activity shape lives entirely in
+`src/systems/dnd5e/shared/activities.ts` — `Dnd5eActivityDefinition`
+(id/label/kind/source/eligibility/**costs**/**outputs**/inputs/manualBoundary)
+plus `executeDnd5eActivity`, which *spends* a cost and *mutates* the document
+(marks a spell slot used for Divine Smite). Its distinctive value over mere
+enumeration is the **execution half**: document-mutating `outputs`.
+
+**Real consumer count of the executable contract = 1 (5e), and it is not even
+UI-wired.** Every type is `Dnd5e`-prefixed and 5e-local; there is no shared
+extraction (a repo search for `Dnd5eActivityDefinition` / `executeDnd5eActivity`
+/ `ExecutableActivity` returns only `activities.ts`). `buildDnd5eActivityDefinitions`
+early-returns `[]` unless `systemId === 'dnd-5e-2014'`. The only importer is its
+own unit test, `src/__tests__/dnd5eActivities.test.ts` — it is not consumed by
+the 5e sheet controller/UI, nor by any other system.
+
+**Correction to the record (consumer 2).** The W6 status named "Daggerheart
+triggered/manual cards" as the next consumer. Those cards are real, but they do
+**not** consume the executable contract. They live in the *separate* legal-actions
+enumeration seam (`LegalActionDescriptor` in `src/registry/types.ts`, produced by
+`src/systems/daggerheart/legalActions.ts`), where domain-card and Hope-feature
+activations are deliberately `manualBoundary: true` with `costs: []` and no
+execution ("Activation cost and effect are on the card, adjudicated at the
+table"). That is the *opposite* of an executable-activity consumer: it is the
+honest non-d20 finding that card/spell activation resists deterministic
+execution and stays GM-adjudicated.
+
+**No genuine third consumer without inventing scope.** PF2e, M&M 3e, and the
+d20-legacy systems each have a real *activity surface*, but it is the enumeration
+seam (`legalActions` providers), not the executable contract — PF2e spell casts
+and M&M powers are honestly `manualBoundary: true`. Wiring any of them to
+"execute" would fabricate automation the manualBoundary discipline exists to
+forbid, which is precisely the premature abstraction constraint 5 blocks.
+
+**Where the genuinely-shared "activity" abstraction actually lives (not W6).**
+The cross-system "actionable card/activity/ability" representation that *has*
+graduated is the **enumeration** seam `LegalActionDescriptor` (RFC-003 substrate,
+`src/registry/types.ts`) — system-agnostic, costs in each system's own resource
+vocabulary, `manualBoundary` honesty — with **five real provider implementations
+across the seven systems**: 5e (`dnd5e/shared/legalActions.ts`, used by both
+editions), Daggerheart, PF2e, M&M 3e, and d20-legacy (used by 3.5e and PF1e).
+That seam is descriptor-only by design — "descriptors are data, not behavior:
+the seam names and costs an action but never resolves it." The W6 *execution*
+half (document-mutating outputs) is the part that lacks three consumers.
+
+**Kept-as.** The W6 executable-activity pilot remains a 5e-local, single-consumer
+module — legitimate as a pilot, not promoted to a shared abstraction. Revisit
+graduation only if a second system grows a real, deterministic activity-execution
+surface of its own (its own already-landed behavior, no faked automation, no
+`src/systems/**` value-import into shared). Until then the shared shape the
+codebase needs is already served by the enumeration seam above.
+
 ---
 
 **Highest-leverage unblock:** the §1 data input. With authoritative SRD/CRB
