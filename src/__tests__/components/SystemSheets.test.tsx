@@ -651,9 +651,7 @@ describe('System Sheets', () => {
     );
   });
 
-  it('shows feats tab for 5e-2014 and loads monsters', async () => {
-    const user = userEvent.setup();
-    const loadMonstersSpy = vi.spyOn(dataLoader, 'loadMonstersForSystem');
+  it('shows the feats tab but no bestiary tab for 5e-2014 (bestiary evicted to the Dock)', () => {
     const doc = makeDoc('dnd-5e-2014', createDefaultDnd5eData());
 
     render(
@@ -664,12 +662,9 @@ describe('System Sheets', () => {
     );
 
     expect(screen.getByRole('tab', { name: /^feats$/i })).toBeInTheDocument();
-
-    await user.click(screen.getByRole('tab', { name: /monsters/i }));
-
-    await waitFor(() => {
-      expect(loadMonstersSpy).toHaveBeenCalledWith('dnd-5e-2014');
-    });
+    // Phase 3: the read-only bestiary moved out of the sheet into the shared
+    // Dock / Library Bestiary route, so the sheet tab strip has no Monsters tab.
+    expect(screen.queryByRole('tab', { name: /monsters/i })).not.toBeInTheDocument();
   });
 
   it('persists 5e-2014 feature options through shared sheet rerenders', async () => {
@@ -961,59 +956,9 @@ describe('System Sheets', () => {
     });
   });
 
-  it('warms and renders the extracted shared 5e monster tab', async () => {
-    const user = userEvent.setup();
-    vi.spyOn(dataLoader, 'loadClassesForSystem').mockResolvedValue([]);
-    vi.spyOn(dataLoader, 'loadSpeciesForSystem').mockResolvedValue([]);
-    vi.spyOn(dataLoader, 'loadBackgroundsForSystem').mockResolvedValue([]);
-    const loadMonstersSpy = vi.spyOn(dataLoader, 'loadMonstersForSystem').mockResolvedValue([
-      {
-        id: 'young-red-dragon',
-        name: 'Young Red Dragon',
-        type: 'dragon',
-        size: 'large',
-        alignment: 'chaotic evil',
-        challengeRating: 10,
-        experiencePoints: 5900,
-        armorClass: 18,
-        hitPoints: { count: 19, die: 10, bonus: 76 },
-        speed: 40,
-        specialAbilities: [
-          {
-            name: 'Fire Breath',
-            description: 'The dragon exhales fire in a cone.',
-          },
-        ],
-      } as never,
-    ]);
-    const doc = makeDoc('dnd-5e-2024', createDefaultDnd5e2024Data());
-
-    render(
-      <Dnd5e2024Sheet
-        document={doc as CharacterDocument<ReturnType<typeof createDefaultDnd5e2024Data>>}
-        onUpdate={vi.fn()}
-      />
-    );
-
-    const monstersTab = screen.getByRole('tab', { name: /^monsters$/i });
-    fireEvent.focus(monstersTab);
-    fireEvent.pointerEnter(monstersTab);
-    fireEvent.focus(monstersTab);
-    await waitFor(() => {
-      expect(loadMonstersSpy).toHaveBeenCalledWith('dnd-5e-2024');
-    });
-    await user.click(monstersTab);
-    expect(await screen.findByText('Young Red Dragon')).toBeInTheDocument();
-    expect(await screen.findByPlaceholderText(/search monsters/i)).toBeInTheDocument();
-    await waitFor(() => {
-      expect(loadMonstersSpy).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  it('renders Dnd5e2024Sheet and masteries tab', async () => {
+  it('renders Dnd5e2024Sheet and masteries tab, with no in-sheet bestiary tab', async () => {
     const user = userEvent.setup();
     const onUpdate = vi.fn();
-    const loadMonstersSpy = vi.spyOn(dataLoader, 'loadMonstersForSystem');
     const doc = makeDoc('dnd-5e-2024', createDefaultDnd5e2024Data());
     render(
       <Dnd5e2024Sheet
@@ -1022,10 +967,8 @@ describe('System Sheets', () => {
       />
     );
     expect(screen.getByRole('tab', { name: /^feats$/i })).toBeInTheDocument();
-    await user.click(screen.getByRole('tab', { name: /monsters/i }));
-    await waitFor(() => {
-      expect(loadMonstersSpy).toHaveBeenCalledWith('dnd-5e-2024');
-    });
+    // Phase 3: bestiary evicted from the sheet into the shared Dock / Library.
+    expect(screen.queryByRole('tab', { name: /monsters/i })).not.toBeInTheDocument();
     await user.click(screen.getByRole('tab', { name: /masteries/i }));
     expect(screen.getByText('Weapon Masteries')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'Cleave' }));

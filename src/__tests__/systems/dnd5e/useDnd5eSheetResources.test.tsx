@@ -17,7 +17,6 @@ vi.mock('../../../utils/dataLoader', () => ({
   loadEquipmentForSystem: vi.fn(() => Promise.resolve([])),
   loadFeatsForSystem: vi.fn(() => Promise.resolve([])),
   loadFeatureOptionsForSystem: vi.fn(() => Promise.resolve([])),
-  loadMonstersForSystem: vi.fn(() => Promise.resolve([])),
   loadSpeciesForSystem: vi.fn(() => Promise.resolve([])),
   loadSpellsForSystem: vi.fn(() => Promise.resolve([])),
 }));

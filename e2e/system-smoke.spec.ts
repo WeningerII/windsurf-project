@@ -88,8 +88,9 @@ test('smokes D&D 5e 2014 content surfaces', async ({ page }) => {
   await clickTab(page, /^Equipment$/i);
   await expect(page.getByPlaceholder('Search equipment...')).toBeVisible();
 
-  await clickTab(page, /^Monsters$/i);
-  await expect(page.getByLabel('Search monsters')).toBeVisible();
+  // Phase 3: the bestiary was evicted from the sheet into the shared Dock /
+  // Library Bestiary route, so the sheet tab strip no longer has a Monsters tab.
+  await expect(page.getByRole('tab', { name: /^Monsters$/i })).toHaveCount(0);
 
   await expect(page.getByText('Something went wrong')).toHaveCount(0);
 });
@@ -111,8 +112,8 @@ test('smokes D&D 5e 2024 content surfaces', async ({ page }) => {
   await clickTab(page, /^Equipment$/i);
   await expect(page.getByPlaceholder('Search equipment...')).toBeVisible();
 
-  await clickTab(page, /^Monsters$/i);
-  await expect(page.getByLabel('Search monsters')).toBeVisible();
+  // Phase 3: bestiary evicted from the sheet — single-homed in the Library now.
+  await expect(page.getByRole('tab', { name: /^Monsters$/i })).toHaveCount(0);
 
   await expect(page.getByText('Something went wrong')).toHaveCount(0);
 });
