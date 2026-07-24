@@ -53,6 +53,7 @@ export const DaggerheartSystemDef: SystemDefinition<DaggerheartDataModel> = {
   engine: new DaggerheartEngine(),
   loadValidator: () => import('./validation').then((m) => m.createDaggerheartValidator()),
   loadLegalActions: () => import('./legalActions').then((m) => m.createDaggerheartLegalActions()),
+  loadCreationPlan: () => import('./creationPlan').then((m) => m.createDaggerheartCreationPlan()),
   SheetComponent: lazyWithPreload(() =>
     import('./sheet').then((m) => ({ default: m.DaggerheartSheet }))
   ),

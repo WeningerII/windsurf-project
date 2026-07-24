@@ -6,7 +6,7 @@ import { Dnd5e2024DataModel } from '../../dnd5e-2024/data-model';
 import { Dnd5eDataModel } from '../data-model';
 import { formatDnd5eToolLabel } from './dnd5eToolChoices';
 
-type Dnd5eLikeDataModel = Dnd5eDataModel | Dnd5e2024DataModel;
+export type Dnd5eLikeDataModel = Dnd5eDataModel | Dnd5e2024DataModel;
 
 export interface Dnd5eSpeciesChoiceSlot {
   label: string;
