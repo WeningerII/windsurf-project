@@ -1,5 +1,8 @@
 import React from 'react';
 import type { CharacterDocument, SystemDataModel } from '../../types/core/document';
+import type { Item } from '../../types/equipment/items';
+import type { Spell } from '../../types/magic/spells';
+import { useSheetDispatchRegister } from '../../contexts/sheet-dispatch-context';
 import type { Pf2eDataModel } from './data-model';
 import { Shield, Zap, User, BookOpen, Backpack, StickyNote, Sparkles, Sword } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../components/ui/Tabs';
@@ -29,6 +32,51 @@ interface Props {
 
 export const Pf2eCharacterSheet: React.FC<Props> = ({ document, onUpdate }) => {
   const controller = usePf2eSheetController({ document, onUpdate });
+
+  // Publish the sheet's add-handlers UP into the shared Dock's dispatch
+  // registry (Phase 5, inverted control — same contract as the 5e pilot).
+  // PF2e reuses its exposed inventory-add (`inventoryTabProps.onAddItem` ->
+  // `addInventoryItem`) for equipment, and its exposed spellcasting setter
+  // (`spellsTabProps.onSpellcastingChange`) to learn a spell (append to
+  // `spellsKnown`, mirroring Pf2eSpellsTab's own learn guard). PF2e feats are
+  // template/class-granted with no add-BY-DEFINITION handler, so `addFeat`
+  // stays unpublished and the Dock's feat verb correctly disables here.
+  const { spellcasting } = controller.data;
+  const { onSpellcastingChange } = controller.spellsTabProps;
+  const { onAddItem } = controller.inventoryTabProps;
+  const addSpell = React.useCallback(
+    (spell: Spell) => {
+      if (!spellcasting || !onSpellcastingChange) {
+        return;
+      }
+      if (
+        spellcasting.spellsKnown.includes(spell.id) ||
+        spellcasting.alwaysPreparedSpellIds?.includes(spell.id)
+      ) {
+        return;
+      }
+      onSpellcastingChange({
+        ...spellcasting,
+        spellsKnown: [...spellcasting.spellsKnown, spell.id],
+      });
+    },
+    [onSpellcastingChange, spellcasting]
+  );
+  const addEquipment = React.useCallback(
+    (item: Item) =>
+      onAddItem?.({
+        id: item.id,
+        name: item.name,
+        quantity: item.quantity ?? 1,
+        weight: item.weight,
+      }),
+    [onAddItem]
+  );
+  useSheetDispatchRegister(onUpdate ? document.id : null, {
+    addSpell: onUpdate && spellcasting ? addSpell : undefined,
+    addEquipment: onUpdate ? addEquipment : undefined,
+  });
+
   const derivedCards = presentDerivedQuantities(
     PF2E_DERIVED_QUANTITIES,
     controller.data,
