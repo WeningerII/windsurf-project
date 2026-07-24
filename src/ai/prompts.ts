@@ -5,13 +5,16 @@
  * user's request — never large raw rules text, and instructs the model to pick
  * from the supplied ids rather than invent names.
  */
-import type {
-  AiTask,
-  EncounterDraftCandidate,
-  EncounterDraftPayload,
-  IdentifyCreaturePayload,
-  IllustrateScenePayload,
-  SceneNarrationPayload,
+import {
+  CHARACTER_DRAFT_POOL_KEYS,
+  type AiTask,
+  type CharacterDraftCandidate,
+  type CharacterDraftPayload,
+  type EncounterDraftCandidate,
+  type EncounterDraftPayload,
+  type IdentifyCreaturePayload,
+  type IllustrateScenePayload,
+  type SceneNarrationPayload,
 } from './contracts';
 
 /**
@@ -27,6 +30,7 @@ export const AI_PROMPT_VERSIONS = {
   'scene-narration': 'scene-narration.v1',
   'identify-creature': 'identify-creature.v1',
   'illustrate-scene': 'illustrate-scene.v1',
+  'character-draft': 'character-draft.v1',
 } as const satisfies Record<AiTask, string>;
 
 /** The template version for a task (total over the allowlist by construction). */
@@ -54,6 +58,8 @@ export function buildPromptForTask(task: AiTask, payload: unknown): string {
       return buildIdentifyCreaturePrompt(payload as IdentifyCreaturePayload);
     case 'illustrate-scene':
       return buildIllustrateScenePrompt(payload as IllustrateScenePayload);
+    case 'character-draft':
+      return buildCharacterDraftPrompt(payload as CharacterDraftPayload);
     default:
       throw new Error(`No prompt builder for task '${task}'.`);
   }
@@ -105,6 +111,38 @@ export function buildIllustrateScenePrompt(payload: IllustrateScenePayload): str
   // Genre-neutral anchor: the panel serves every system's scenes (M&M is
   // superhero, not fantasy), and no systemId rides the payload to specialize.
   return `${payload.prompt.trim()}${style}. Tabletop RPG illustration, high detail, no text or watermarks.`;
+}
+
+/** Compact one-per-line roster for a character-draft option pool. */
+function formatOptionRoster(candidates: CharacterDraftCandidate[]): string {
+  return candidates.map((candidate) => `- ${candidate.id} (${candidate.name})`).join('\n');
+}
+
+export function buildCharacterDraftPrompt(payload: CharacterDraftPayload): string {
+  // Only offer pools the system actually populates, using the stable key order.
+  const pools = CHARACTER_DRAFT_POOL_KEYS.filter((key) => payload.pools[key].length > 0).map(
+    (key) => `${key}:\n${formatOptionRoster(payload.pools[key])}`
+  );
+  const rosters = pools.length > 0 ? pools.join('\n\n') : '(this system uses no id-based options)';
+  const repair =
+    payload.repairIssues && payload.repairIssues.length > 0
+      ? `\n\nYour previous attempt was rejected for these reasons:\n${payload.repairIssues
+          .map((issue) => `- ${issue}`)
+          .join('\n')}\nReturn a corrected character that resolves them.`
+      : '';
+
+  return [
+    `Draft a tabletop RPG character for the ${payload.systemId} system.`,
+    ``,
+    `Request: ${payload.prompt}`,
+    ``,
+    `Choose only from these options, using the exact id shown:`,
+    rosters,
+    ``,
+    `Return a character name and the chosen ids (classId, ancestryId, backgroundId,` +
+      ` and any featIds/spellIds). Every id MUST be one of the ids above; do not invent` +
+      ` options. Omit a field when the system does not use it.${repair}`,
+  ].join('\n');
 }
 
 export function buildSceneNarrationPrompt(payload: SceneNarrationPayload): string {

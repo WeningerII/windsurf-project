@@ -32,6 +32,15 @@ const TASK_SCHEMAS: Partial<Record<AiTask, z.ZodTypeAny>> = {
     confidence: z.number(),
     reason: z.string().optional(),
   }),
+  'character-draft': z.object({
+    name: z.string().min(1),
+    classId: z.string().optional(),
+    ancestryId: z.string().optional(),
+    backgroundId: z.string().optional(),
+    featIds: z.array(z.string()).optional(),
+    spellIds: z.array(z.string()).optional(),
+    rationale: z.string().optional(),
+  }),
 };
 
 /** Image-output tasks route to the image model instead of `generateObject`. */

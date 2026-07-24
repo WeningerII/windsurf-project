@@ -19,6 +19,7 @@ export const AI_GATEWAY_TASKS = [
   'scene-narration',
   'identify-creature',
   'illustrate-scene',
+  'character-draft',
 ] as const;
 export type AiTask = (typeof AI_GATEWAY_TASKS)[number];
 
@@ -51,6 +52,7 @@ export const AI_TASK_CLASS: Record<AiTask, AiTaskClass> = {
   'scene-narration': 'text',
   'identify-creature': 'vision',
   'illustrate-scene': 'image',
+  'character-draft': 'text',
 };
 
 /**
@@ -65,6 +67,7 @@ export const AI_TASK_UNIT_COST: Record<AiTask, number> = {
   'scene-narration': 1,
   'identify-creature': 2,
   'illustrate-scene': 5,
+  'character-draft': 1,
 };
 
 /** Where a successful result came from (lets the UI label provider vs replay). */
@@ -235,6 +238,8 @@ function parseTaskPayload(task: AiTask, payload: unknown): AiParse<unknown> {
       return parseIdentifyCreaturePayload(payload);
     case 'illustrate-scene':
       return parseIllustrateScenePayload(payload);
+    case 'character-draft':
+      return parseCharacterDraftPayload(payload);
     default:
       return { ok: false, message: `No validator for task '${task}'.` };
   }
@@ -282,6 +287,8 @@ export function parseTaskData(task: AiTask, raw: unknown): AiParse<unknown> {
       return parseIdentifyCreatureData(raw);
     case 'illustrate-scene':
       return parseGeneratedImageData(raw);
+    case 'character-draft':
+      return parseCharacterDraftData(raw);
     default:
       return { ok: false, message: `No output validator for task '${task}'.` };
   }
@@ -311,6 +318,159 @@ function parseEncounterDraftData(raw: unknown): AiParse<EncounterDraftData> {
     ok: true,
     value: {
       selections,
+      ...(typeof raw.rationale === 'string' ? { rationale: raw.rationale } : {}),
+    },
+  };
+}
+
+// --- Task: character-draft --------------------------------------------------
+
+/** One loader-derived option the model may pick (it returns ids, never invents). */
+export interface CharacterDraftCandidate {
+  id: string;
+  name: string;
+}
+
+/**
+ * Loader-derived candidate pools for a target system (RFC 002 candidate pools).
+ * Each pool is the set of LEGAL ids for that option category, built from the SAME
+ * loaders the system's validator checks against, so the model picks real ids and
+ * the flow rejects any invention before the deterministic validator ever runs.
+ * Categories a system does not use are empty (e.g. mam3e has no classes;
+ * daggerheart has no feats), which is a valid, expected shape.
+ */
+export interface CharacterDraftCandidatePools {
+  classes: CharacterDraftCandidate[];
+  ancestries: CharacterDraftCandidate[];
+  backgrounds: CharacterDraftCandidate[];
+  feats: CharacterDraftCandidate[];
+  spells: CharacterDraftCandidate[];
+}
+
+/** The option categories a draft can reference, in a stable order for messages. */
+export const CHARACTER_DRAFT_POOL_KEYS = [
+  'classes',
+  'ancestries',
+  'backgrounds',
+  'feats',
+  'spells',
+] as const satisfies ReadonlyArray<keyof CharacterDraftCandidatePools>;
+
+export interface CharacterDraftPayload {
+  systemId: string;
+  /** Free-text description of the desired character. */
+  prompt: string;
+  /** The allowed options, by category. The model must choose ids from these. */
+  pools: CharacterDraftCandidatePools;
+  /** Structured validation issues from a prior attempt, for a bounded repair. */
+  repairIssues?: string[];
+}
+
+/**
+ * The model's structured character draft: a name plus option ids CHOSEN FROM the
+ * pools. Every id is optional because systems use different subsets; the flow
+ * validates each supplied id against its pool, then hands the draft to the
+ * client's existing template/creation path — the model never decides RAW
+ * legality, the deterministic validators do.
+ */
+export interface CharacterDraftData {
+  name: string;
+  classId?: string;
+  ancestryId?: string;
+  backgroundId?: string;
+  featIds?: string[];
+  spellIds?: string[];
+  /** One-line in-character concept summary, optional. */
+  rationale?: string;
+}
+
+export type CharacterDraftRequest = AiRequest<'character-draft', CharacterDraftPayload>;
+
+/** Parse a candidate pool (may be empty); each entry needs a string id and name. */
+function parseCandidatePool(raw: unknown, label: string): AiParse<CharacterDraftCandidate[]> {
+  if (!Array.isArray(raw)) {
+    return { ok: false, message: `The ${label} pool must be an array.` };
+  }
+  const pool: CharacterDraftCandidate[] = [];
+  for (const entry of raw) {
+    if (!isRecord(entry) || typeof entry.id !== 'string' || typeof entry.name !== 'string') {
+      return { ok: false, message: `Each ${label} option needs a string id and name.` };
+    }
+    pool.push({ id: entry.id, name: entry.name });
+  }
+  return { ok: true, value: pool };
+}
+
+function parseCharacterDraftPools(raw: unknown): AiParse<CharacterDraftCandidatePools> {
+  if (!isRecord(raw))
+    return { ok: false, message: 'Character-draft payload needs candidate pools.' };
+  const pools = {} as CharacterDraftCandidatePools;
+  for (const key of CHARACTER_DRAFT_POOL_KEYS) {
+    const parsed = parseCandidatePool(raw[key], key);
+    if (!parsed.ok) return parsed;
+    pools[key] = parsed.value;
+  }
+  return { ok: true, value: pools };
+}
+
+function parseCharacterDraftPayload(raw: unknown): AiParse<CharacterDraftPayload> {
+  if (!isRecord(raw)) return { ok: false, message: 'Character-draft payload must be an object.' };
+  if (typeof raw.systemId !== 'string' || !raw.systemId) {
+    return { ok: false, message: 'Character-draft payload needs a systemId.' };
+  }
+  if (typeof raw.prompt !== 'string') {
+    return { ok: false, message: 'Character-draft payload needs a prompt.' };
+  }
+  const pools = parseCharacterDraftPools(raw.pools);
+  if (!pools.ok) return pools;
+  return {
+    ok: true,
+    value: {
+      systemId: raw.systemId,
+      prompt: raw.prompt,
+      pools: pools.value,
+      ...(Array.isArray(raw.repairIssues)
+        ? { repairIssues: raw.repairIssues.filter((s): s is string => typeof s === 'string') }
+        : {}),
+    },
+  };
+}
+
+/** Validate a supplied optional id field (string when present), else omit it. */
+function optionalId(raw: unknown): string | undefined {
+  return typeof raw === 'string' && raw ? raw : undefined;
+}
+
+/** Validate a supplied optional id-list field (array of non-empty strings). */
+function parseIdList(raw: unknown): AiParse<string[] | undefined> {
+  if (raw === undefined) return { ok: true, value: undefined };
+  if (!Array.isArray(raw) || !raw.every((id) => typeof id === 'string' && id)) {
+    return { ok: false, message: 'Character draft id lists must be arrays of non-empty strings.' };
+  }
+  return { ok: true, value: raw as string[] };
+}
+
+function parseCharacterDraftData(raw: unknown): AiParse<CharacterDraftData> {
+  if (!isRecord(raw)) return { ok: false, message: 'Output must be an object.' };
+  if (typeof raw.name !== 'string' || !raw.name.trim()) {
+    return { ok: false, message: 'Character draft needs a non-empty name.' };
+  }
+  const featIds = parseIdList(raw.featIds);
+  if (!featIds.ok) return featIds;
+  const spellIds = parseIdList(raw.spellIds);
+  if (!spellIds.ok) return spellIds;
+  const classId = optionalId(raw.classId);
+  const ancestryId = optionalId(raw.ancestryId);
+  const backgroundId = optionalId(raw.backgroundId);
+  return {
+    ok: true,
+    value: {
+      name: raw.name,
+      ...(classId ? { classId } : {}),
+      ...(ancestryId ? { ancestryId } : {}),
+      ...(backgroundId ? { backgroundId } : {}),
+      ...(featIds.value ? { featIds: featIds.value } : {}),
+      ...(spellIds.value ? { spellIds: spellIds.value } : {}),
       ...(typeof raw.rationale === 'string' ? { rationale: raw.rationale } : {}),
     },
   };

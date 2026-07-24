@@ -165,6 +165,21 @@ const CANONICAL_PAYLOADS: Record<AiTask, unknown> = {
     hint: 'canonical hint',
   },
   'illustrate-scene': { prompt: 'canonical illustration request', style: 'ink' },
+  'character-draft': {
+    systemId: 'canonical-system',
+    prompt: 'canonical character request',
+    pools: {
+      classes: [
+        { id: 'alpha', name: 'Alpha' },
+        { id: 'beta', name: 'Beta' },
+      ],
+      ancestries: [{ id: 'gamma', name: 'Gamma' }],
+      backgrounds: [],
+      feats: [{ id: 'delta', name: 'Delta' }],
+      spells: [],
+    },
+    repairIssues: ['canonical prior issue'],
+  },
 };
 
 /**
@@ -179,6 +194,7 @@ const TEMPLATE_FINGERPRINTS: Record<string, string> = {
   'scene-narration.v1': '1531d36e',
   'identify-creature.v1': '07f756fe',
   'illustrate-scene.v1': 'd34f4528',
+  'character-draft.v1': 'b0e684da',
 };
 
 describe('template fingerprints (change a template => bump its version)', () => {
