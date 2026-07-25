@@ -180,6 +180,19 @@ test('the Scene surface and the shared Dock have no critical or serious a11y vio
   await page.getByRole('button', { name: 'Scenes', exact: true }).click();
   await expectNoBlockingViolations(page, 'Library — Scenes segment');
 
+  // A scene MUST be created before the grid scan: `openLandingPage` clears
+  // localStorage and nothing seeds a scene, so `SceneGridView` (the role="grid"
+  // this test exists to cover) never mounts on the empty Scenes segment. The
+  // scan above therefore says nothing about the grid — this one does.
+  await page.getByRole('button', { name: 'New Scene' }).click();
+  await page.getByPlaceholder('Scene name').fill('A11y Chamber');
+  await page.getByRole('button', { name: 'Create', exact: true }).click();
+  // The scene canvas is a lazily-loaded chunk; a cold CI fetch+parse can be slow.
+  await expect(page.getByRole('grid', { name: 'A11y Chamber grid' })).toBeVisible({
+    timeout: 30_000,
+  });
+  await expectNoBlockingViolations(page, 'Scene DOM grid');
+
   await page.getByRole('button', { name: 'Toggle toolkit dock' }).click();
   await expect(page.getByRole('complementary', { name: 'Toolkit dock' })).toBeVisible();
   await expectNoBlockingViolations(page, 'Toolkit dock');
