@@ -1,10 +1,32 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from './useAuth';
 import { debounce } from '../utils/performance';
+import { ErrorCategory, errorLogger, ErrorSeverity } from '../utils/errorLogger';
 import type { RemoteFetchResult } from '../utils/syncEngine';
 import type { SyncTombstone } from '../utils/syncTombstones';
 
 export type SyncState = 'idle' | 'syncing' | 'error' | 'offline';
+
+/**
+ * Report a sync-path failure to production monitoring (`docs/runbooks/
+ * sentry-alerts.md` rule (c) — previously dormant because every `catch` here
+ * swallowed the failure into `syncState: 'error'` and nothing reached Sentry).
+ *
+ * Observability only: the caller still sets `'error'` and still queues the
+ * snapshot, so behaviour is unchanged. The payload is deliberately
+ * content-free — a static message plus a `{ surface: 'sync', stage }` tag.
+ * Entities, names, and notes are never attached, and `errorLogger` forwards
+ * nothing at all unless a Sentry DSN is configured.
+ */
+function reportSyncFailure(stage: 'push' | 'delete' | 'sync', error?: unknown): void {
+  errorLogger.log(
+    ErrorCategory.NETWORK,
+    ErrorSeverity.HIGH,
+    'sync failed',
+    error instanceof Error ? error : undefined,
+    { surface: 'sync', stage }
+  );
+}
 
 /**
  * Operations a synced entity table must supply. Every member is expected to be
@@ -100,9 +122,10 @@ export function useEntitySync<T extends { id: string }>({
         adapter.clearQueuedSnapshot();
         setLastSyncedAt(new Date());
         setSyncState('idle');
-      } catch {
+      } catch (error) {
         adapter.queueSnapshot(snapshot);
         setSyncState('error');
+        reportSyncFailure('push', error);
       }
     },
     [adapter, isConfigured, userId]
@@ -175,10 +198,12 @@ export function useEntitySync<T extends { id: string }>({
           queuedDeletedIds.map((id) => adapter.deleteRemote(id))
         );
 
-        if (results.some((result) => result.status === 'rejected')) {
+        const rejected = results.find((result) => result.status === 'rejected');
+        if (rejected) {
           adapter.queueSnapshot(merged);
           adapter.queueDeletedIds(queuedDeletedIds);
           setSyncState('error');
+          reportSyncFailure('delete', rejected.reason);
           return;
         }
       }
@@ -193,8 +218,9 @@ export function useEntitySync<T extends { id: string }>({
       adapter.clearQueuedDeletedIds();
       setLastSyncedAt(new Date());
       setSyncState('idle');
-    } catch {
+    } catch (error) {
       setSyncState('error');
+      reportSyncFailure('sync', error);
     } finally {
       isSyncingRef.current = false;
       if (pendingResyncRef.current) {

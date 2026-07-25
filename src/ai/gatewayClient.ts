@@ -23,6 +23,45 @@ import {
 } from './contracts';
 import { isFeatureEnabled } from '../config/featureFlags';
 import { getSupabaseClient } from '../utils/supabaseClient';
+import { ErrorCategory, errorLogger, ErrorSeverity } from '../utils/errorLogger';
+
+/**
+ * Failure codes that are the gateway working AS DESIGNED, not a health signal:
+ * cost controls tripping, auth doing its job, a key-less local-first deploy, and
+ * a request the allowlist rejects. Reporting these would drown rule (b) in
+ * intended behaviour — `docs/runbooks/sentry-alerts.md` calls out the 429 case
+ * explicitly. Everything else is provider/transport trouble worth an alert.
+ */
+const BY_DESIGN_FAILURE_CODES: ReadonlySet<string> = new Set([
+  'over-budget',
+  'budget-exceeded',
+  'unauthorized',
+  'provider-not-configured',
+  'invalid-request',
+  'unsupported-task',
+]);
+
+/**
+ * Surface an unhealthy gateway outcome to production monitoring
+ * (`docs/runbooks/sentry-alerts.md` rule (b) — dormant until now because the
+ * browser client degraded every failure silently and the Netlify Function's
+ * structured trace log, `src/ai/gatewayLog.ts`, only reaches the function log).
+ *
+ * Observability only: the typed failure is still returned and callers still
+ * degrade to the manual tools. The payload carries NO prompt, payload, or
+ * response content — only the task, the normalized failure code, the gateway's
+ * own `traceId` (which correlates with the server record), and a `surface: 'ai'`
+ * tag. `errorLogger` forwards nothing unless a Sentry DSN is configured.
+ */
+function reportGatewayFailure(task: AiTask, code: string, traceId?: string): void {
+  if (BY_DESIGN_FAILURE_CODES.has(code)) return;
+  errorLogger.log(ErrorCategory.NETWORK, ErrorSeverity.HIGH, 'ai gateway call failed', undefined, {
+    surface: 'ai',
+    task,
+    code,
+    ...(traceId ? { traceId } : {}),
+  });
+}
 
 /**
  * Whether AI affordances should render at all. Build-time, default OFF, so the
@@ -71,6 +110,7 @@ export async function callAiGateway<TData>(
       signal,
     });
   } catch {
+    reportGatewayFailure(task, 'transport-error');
     return aiFailure('provider-error', 'Could not reach the AI gateway.', task);
   }
 
@@ -78,11 +118,18 @@ export async function callAiGateway<TData>(
   try {
     json = await response.json();
   } catch {
+    reportGatewayFailure(task, 'unreadable-response');
     return aiFailure('provider-error', 'The AI gateway returned an unreadable response.', task);
   }
 
   if (!isAiResponse(json)) {
+    reportGatewayFailure(task, 'malformed-response');
     return aiFailure('provider-error', 'The AI gateway returned an unexpected response.', task);
   }
-  return json as AiResponse<TData>;
+
+  const parsed = json as AiResponse<TData>;
+  if (!parsed.ok) {
+    reportGatewayFailure(task, parsed.code, parsed.traceId);
+  }
+  return parsed;
 }
