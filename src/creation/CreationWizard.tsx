@@ -188,7 +188,10 @@ export function CreationWizard<T extends SystemDataModel = SystemDataModel>({
             <input
               id="creation-name"
               data-testid="creation-name-input"
-              aria-label="Draft character name"
+              // No aria-label here on purpose: one would OVERRIDE the visible
+              // <label> above, leaving the accessible name ("Draft character
+              // name") different from the label a user reads and speaks
+              // ("Character name") — WCAG 2.5.3 Label in Name.
               value={draft.name}
               onChange={(event) => setName(event.target.value)}
               className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
@@ -342,11 +345,21 @@ function ChoiceStepView<T extends SystemDataModel>({
       {options.length === 0 && !error ? (
         <p className="text-sm text-muted-foreground">No options available for this system.</p>
       ) : (
-        <ul className="grid gap-2 sm:grid-cols-2" role="listbox" aria-label={step.title}>
+        <ul
+          className="grid gap-2 sm:grid-cols-2"
+          role="listbox"
+          aria-label={step.title}
+          aria-multiselectable={maxSelections > 1 || undefined}
+        >
           {options.map((option) => {
             const selected = selectedIds.includes(option.id);
             return (
-              <li key={option.id}>
+              // role="presentation" strips the <li>'s implicit `listitem` role
+              // so each `option` is an allowed child of the `listbox` above.
+              // Without it every option is an invalid-parent violation (axe
+              // aria-required-children / aria-required-parent, serious) and
+              // screen readers lose the "N of M" option position entirely.
+              <li key={option.id} role="presentation">
                 <button
                   type="button"
                   role="option"
