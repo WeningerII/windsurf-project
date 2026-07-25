@@ -79,7 +79,9 @@ export interface MakeGameParams {
   /**
    * Drives EVERY seeded choice in the flow: document ids, scene id, token ids,
    * event ids, monster placement, and initiative. Same seed + same recorded
-   * gateway transcript ⇒ the same game, byte for byte.
+   * gateway transcript ⇒ the same game. Byte-for-byte equality additionally
+   * requires a fixed `seams.now`: timestamps are wall-clock by default and are
+   * the one output the seed cannot pin on its own.
    */
   seed: string;
   sceneName?: string;
@@ -151,7 +153,11 @@ export interface MakeGameSeams {
   resolveSystem?: (systemId: GameSystemId) => Promise<MakeGameSystemBinding | undefined>;
   /** Deterministic document gate. Defaults to `registry.validateDocument`. */
   validateDocument?: DocumentValidator;
-  /** Wall clock for document/scene/event timestamps. */
+  /**
+   * Clock for document, scene and event timestamps. Defaults to wall time;
+   * inject a fixed clock to make a seeded run fully reproducible — timestamps
+   * are the one part of the output that seeding alone cannot pin.
+   */
   now?: () => Date;
   /** Cap per candidate-pool category (keeps the drafting prompt bounded). */
   poolLimit?: number;
@@ -213,6 +219,7 @@ export async function makeMeAGame(
     loadPools,
     resolveSystem,
     validateDocument,
+    now,
     steps,
     errors,
   });
@@ -251,6 +258,7 @@ async function draftParty(
     loadPools: (systemId: GameSystemId) => Promise<CharacterDraftCandidatePools>;
     resolveSystem: (systemId: GameSystemId) => Promise<MakeGameSystemBinding | undefined>;
     validateDocument: DocumentValidator;
+    now: () => Date;
     steps: MakeGameStepOutcome[];
     errors: string[];
   }
@@ -289,7 +297,10 @@ async function draftParty(
           binding.plan,
           binding.createDefaultData,
           draft.name,
-          draftOptionIds(draft)
+          draftOptionIds(draft),
+          // Same clock the scene uses: without it the envelope stamps wall time
+          // and two runs of one seed differ on createdAt/updatedAt alone.
+          ctx.now
         );
         unroutedIds = built.unrouted;
         // Seeded, stable document id so the same seed rebuilds the same game.

@@ -168,6 +168,22 @@ describe('makeMeAGame — seeded end-to-end replay, all seven systems, no API ke
       first.result.party.map((member) => member.document.id)
     );
     expect(JSON.stringify(second.result.encounter)).toBe(JSON.stringify(first.result.encounter));
+
+    // The WHOLE result, not a chosen subset. This is the assertion that makes
+    // the seed's "byte for byte" promise checkable: with the transcript and
+    // `seams.now` both fixed, nothing in the output may vary between runs.
+    // It previously could not hold — the party envelope stamped wall time
+    // regardless of the injected clock, so createdAt/updatedAt drifted while
+    // every id stayed stable. The clock is now threaded through
+    // buildDocumentFromPlanIds, so a whole-object compare is meaningful.
+    expect(JSON.stringify(second.result)).toBe(JSON.stringify(first.result));
+
+    // And prove the timestamps specifically are the injected clock, so this
+    // cannot silently pass again by both runs merely being fast enough.
+    for (const member of first.result.party) {
+      expect(new Date(member.document.createdAt).toISOString()).toBe(FIXED_NOW().toISOString());
+      expect(new Date(member.document.updatedAt).toISOString()).toBe(FIXED_NOW().toISOString());
+    }
   }, 60_000);
 
   it('reports ids a system’s creation plan cannot apply instead of hiding them', async () => {

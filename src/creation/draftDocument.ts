@@ -13,16 +13,23 @@ import type { CreationDraftState, CreationPlan, CreationStep } from './types';
 export function buildWorkingDocumentEnvelope<T extends SystemDataModel>(
   systemId: string,
   system: T,
-  name: string
+  name: string,
+  /**
+   * Optional clock. Defaults to wall time; callers that need a REPRODUCIBLE
+   * document (the seeded make-me-a-game replay) inject a fixed clock so two
+   * runs of the same seed produce byte-identical documents. Without this the
+   * envelope's timestamps drift between runs even when every id is stable.
+   */
+  now: () => Date = () => new Date()
 ): CharacterDocument<T> {
-  const now = new Date();
+  const stamp = now();
   return {
     id: generateUUID(),
     name: name.trim() || 'New Character',
     systemId,
     system,
-    createdAt: now,
-    updatedAt: now,
+    createdAt: stamp,
+    updatedAt: stamp,
     version: CURRENT_DOCUMENT_VERSION,
   };
 }
@@ -37,9 +44,11 @@ export function buildWorkingDocumentEnvelope<T extends SystemDataModel>(
 export async function buildWorkingDocument<T extends SystemDataModel>(
   plan: CreationPlan<T>,
   createDefaultData: () => T,
-  draft: CreationDraftState
+  draft: CreationDraftState,
+  /** Optional fixed clock — see {@link buildWorkingDocumentEnvelope}. */
+  now?: () => Date
 ): Promise<CharacterDocument<T>> {
-  let document = buildWorkingDocumentEnvelope(plan.systemId, createDefaultData(), draft.name);
+  let document = buildWorkingDocumentEnvelope(plan.systemId, createDefaultData(), draft.name, now);
 
   for (const step of plan.steps) {
     if (step.kind === 'choice') {
@@ -138,15 +147,24 @@ export async function buildDocumentFromPlanIds<T extends SystemDataModel>(
   plan: CreationPlan<T>,
   createDefaultData: () => T,
   name: string,
-  ids: readonly string[]
+  ids: readonly string[],
+  /** Optional fixed clock — see {@link buildWorkingDocumentEnvelope}. Injected
+   * by seeded replay so the produced document is reproducible, timestamps
+   * included. */
+  now?: () => Date
 ): Promise<{ document: CharacterDocument<T>; unrouted: string[] }> {
-  const seed = buildWorkingDocumentEnvelope(plan.systemId, createDefaultData(), name);
+  const seed = buildWorkingDocumentEnvelope(plan.systemId, createDefaultData(), name, now);
   const { choices, unrouted } = await routeIdsThroughPlan(plan, seed, ids);
-  const document = await buildWorkingDocument(plan, createDefaultData, {
-    name,
-    stepIndex: 0,
-    choices,
-    componentData: {},
-  });
+  const document = await buildWorkingDocument(
+    plan,
+    createDefaultData,
+    {
+      name,
+      stepIndex: 0,
+      choices,
+      componentData: {},
+    },
+    now
+  );
   return { document, unrouted };
 }
