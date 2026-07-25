@@ -6,17 +6,21 @@ adapter, runs the pure/tested core (`src/ai/gatewayHttp` → `gatewayCore`), and
 returns a typed `AiResponse`. All AI is **default-off**: with no provider key the
 core returns `provider-not-configured` and the client falls back to manual tools.
 
-Provider SDKs are confined to their adapter file — `@ai-sdk/google` is imported
-**only** by `geminiAdapter.mts`. `src/**`, the browser bundle, the provider
-registry, and the rate-limit store stay SDK-free; SDK-bound builders are injected.
+Each provider SDK is confined to its own adapter file — `@ai-sdk/google` is
+imported **only** by `geminiAdapter.mts`, `@ai-sdk/anthropic` **only** by
+`anthropicAdapter.mts`. `src/**`, the browser bundle, the provider registry, the
+shared adapter body, and the rate-limit store stay free of provider SDKs;
+SDK-bound builders are injected.
 
 ## Files
 
 | File | Role |
 | --- | --- |
-| `ai-gateway.mts` | Netlify entry. Reads env, injects the Gemini builder, resolves adapter + limiter + session budget + latency budgets, delegates to the core. |
-| `providerRegistry.mts` | Provider-agnostic registry: maps a provider id (from `AI_PROVIDER`) to an adapter builder. |
-| `geminiAdapter.mts` | The Google/Gemini `AiProviderAdapter` (the only file importing `@ai-sdk/google`). |
+| `ai-gateway.mts` | Netlify entry. Hands `process.env` to the registry, injects the SDK-bound builders, resolves adapter + limiter + session budget + latency budgets, delegates to the core. Names no provider secret. |
+| `providerRegistry.mts` | Provider-agnostic registry: provider ids/aliases (from `AI_PROVIDER`) **and** the env-var names holding each provider's key and model overrides. |
+| `aiSdkAdapter.mts` | The shared, provider-agnostic AI-SDK adapter body: per-task schemas, prompt call, vision/image routing, token-usage reporting. Imports the vendor-neutral `ai` package only. |
+| `geminiAdapter.mts` | The Google/Gemini `AiProviderAdapter` — model ids + the only `@ai-sdk/google` import. |
+| `anthropicAdapter.mts` | The Anthropic/Claude `AiProviderAdapter` — model id + the only `@ai-sdk/anthropic` import. Text/vision only (no image generation). |
 | `rateLimitStore.mts` | Pluggable counter store: in-memory default + durable-backend stub. Backs request rate limiting AND the session cost budget (`sessionBudgetFromStore`). |
 | `supabaseJwt.mts` | Supabase-JWT (HS256) request auth: verifier + env resolver, plain `node:crypto`. Surfaces the verified `sub` as the session-budget key. |
 
@@ -51,12 +55,20 @@ An adapter is the seam where a real provider lives. Interface
 
 ```ts
 interface AiProviderAdapter {
-  readonly id: string;    // provenance tag, echoed in AiResponse.usage.provider (e.g. 'google', 'mock')
+  readonly id: string;    // provenance tag, echoed in AiResponse.usage.provider (e.g. 'google', 'anthropic', 'mock')
   readonly model: string; // default model id, echoed in AiResponse.usage.model
   modelFor?(task: AiTask): string; // per-task model, when it differs (e.g. the image model)
-  generate(task: AiTask, payload: unknown): Promise<unknown>;
+  generate(
+    task: AiTask,
+    payload: unknown,
+    reportUsage?: (usage: AiTokenUsage) => void, // optional: input/output/total tokens
+  ): Promise<unknown>;
 }
 ```
+
+This is the **entire** contract between the gateway and a provider. It is why a
+provider swap is a deployment decision: nothing in `src/ai/**`, no client flow,
+and no game system knows which provider is configured.
 
 Semantics `generate` MUST honor:
 
@@ -85,23 +97,51 @@ Semantics `generate` MUST honor:
   `modelFor(task)` when implemented, else `model` — so an adapter that routes
   tasks to different models (the Gemini adapter's image tasks run on
   `AI_IMAGE_MODEL`) reports the model that actually served.
+- **Usage reporting is optional.** An adapter that knows its token spend calls
+  the `reportUsage` third argument; the core normalizes the figures (dropping
+  non-finite or negative ones) into `AiResponse.usage.tokens` and the trace
+  record. Reported tokens are **observability only** — budgets charge the
+  deterministic `AI_TASK_UNIT_COST`, so caps trip identically whichever provider
+  serves. An adapter that never reports changes no behavior.
+- **Capability gaps fail honestly.** A provider that cannot serve a task throws
+  a clear error (normalized to `provider-error`); it must never fabricate output
+  to look capable.
 
 ### Registering / selecting an adapter
 
 `providerRegistry.mts` keys entries by a canonical id plus aliases and resolves
-one from env at request time:
+one from the server environment at request time:
 
 - `AI_PROVIDER` selects the entry. **Default `gemini`** when unset/blank.
 - Lookup is case-insensitive; unrecognized values fall back to the default
   (`DEFAULT_AI_PROVIDER`), so a typo degrades gracefully.
-- Built-ins: `gemini` (alias `google`) and `mock`. Each entry's `build(env, deps)`
-  returns an `AiProviderAdapter` or `undefined` when the provider is selected but
-  unusable (e.g. no key) — which the core maps to `provider-not-configured`.
+- Built-ins: `gemini` (alias `google`), `anthropic` (alias `claude`), and `mock`.
+  Each entry's `build(env, deps)` returns an `AiProviderAdapter` or `undefined`
+  when the provider is selected but unusable (e.g. no key) — which the core maps
+  to `provider-not-configured`.
+- Each entry declares **its own** key/model env vars (`keyEnvVars`,
+  `modelEnvVar`, `imageModelEnvVar`), and the registry resolves the key from the
+  *selected* provider's vars only. Setting `ANTHROPIC_API_KEY` while leaving
+  `AI_PROVIDER` unset therefore leaves the gateway off: provider choice is
+  explicit configuration, never inferred from which secret happens to exist.
 
-Add a provider by appending a `ProviderRegistration` (`{ id, aliases?, build }`)
-via `createProviderRegistry([...])`. SDK-bound builders are injected through
-`ProviderRegistryDeps` (today: `createGoogleAdapter`) so the registry stays pure
-and unit-testable without loading any SDK. Selection never throws.
+Add a provider by writing a thin adapter file (its SDK import + model ids, over
+the shared `createAiSdkAdapter`), adding a `ProviderRegistration`
+(`{ id, aliases?, keyEnvVars, modelEnvVar?, build }`), and injecting its builder.
+SDK-bound builders arrive through `ProviderRegistryDeps` so the registry stays
+pure and unit-testable without loading any SDK. Selection never throws, and no
+call site in `src/ai/**` changes.
+
+#### Provider capability matrix
+
+| Task | `gemini` | `anthropic` | `mock` |
+| --- | --- | --- | --- |
+| `encounter-draft`, `scene-narration`, `character-draft` (text) | ✅ | ✅ | ✅ |
+| `identify-creature` (vision) | ✅ | ✅ | ✅ |
+| `illustrate-scene` (image generation) | ✅ | ❌ `provider-error` — no image endpoint | ✅ (1×1 PNG) |
+
+The ❌ is a real, reported failure, not a silent downgrade: the client handles it
+like any other gateway failure and falls back to its manual tools.
 
 ## Rate-limit store contract
 
@@ -176,10 +216,12 @@ no rate limiting, no session cap, in-memory counting.
 
 | Var | Default | Effect when unset (inert behavior) |
 | --- | --- | --- |
-| `AI_PROVIDER` | `gemini` | Default provider selected; unrecognized values also fall back to it. |
-| `GOOGLE_GENERATIVE_AI_API_KEY` / `GEMINI_API_KEY` | — | No key → default provider yields no adapter → `provider-not-configured` (client uses manual tools). |
-| `AI_GATEWAY_MODEL` | adapter default | Gemini adapter's built-in model id. |
+| `AI_PROVIDER` | `gemini` | Default provider selected; unrecognized values also fall back to it. Accepts `gemini`/`google`, `anthropic`/`claude`, `mock`. |
+| `GOOGLE_GENERATIVE_AI_API_KEY` / `GEMINI_API_KEY` | — | No key → default provider yields no adapter → `provider-not-configured` (client uses manual tools). First var wins. |
+| `AI_GATEWAY_MODEL` | adapter default | Gemini adapter's built-in text/vision model id. |
 | `AI_IMAGE_MODEL` | adapter default | Gemini adapter's built-in image model id. |
+| `ANTHROPIC_API_KEY` | — | Only read when `AI_PROVIDER` selects `anthropic`; absent → no adapter → `provider-not-configured`. |
+| `AI_ANTHROPIC_MODEL` | adapter default | Anthropic adapter's built-in model id. |
 | `SUPABASE_JWT_SECRET` | — (off) | Unset → no auth check (local-first deploys unchanged). Set + a provider key → valid Supabase JWT required (401 otherwise). |
 | `AI_RATE_LIMIT` | — (off) | Unset/≤0 → **no** rate limiting (today's behavior). |
 | `AI_RATE_LIMIT_WINDOW_MS` | `60000` | Window length; only used when `AI_RATE_LIMIT` is set. |
