@@ -7,9 +7,11 @@ import type {
 } from '../../../types/core/contributionLedger';
 import type { ClassLevel } from '../../../types/core/character';
 import type { CharacterDocument } from '../../../types/core/document';
+import type { EffectInstance, EffectOperation, EffectValue } from '../../../rules';
 import {
   computeDnd5eBaseArmorClass,
   resolveCharacterEffects,
+  resolveEffects,
   toContributionLedger,
   dnd5eArmorDexContribution,
 } from '../../../rules';
@@ -38,6 +40,36 @@ type AddEntryInput = {
   details?: Record<string, unknown>;
 };
 
+type AddEffectInput = Omit<AddEntryInput, 'operation' | 'value'> & {
+  operation: EffectOperation;
+  value: EffectValue;
+};
+
+/**
+ * A single contribution: either a resolver effect or an explicit ledger entry
+ * the IR provably cannot carry. The two are stitched back into one ordered
+ * ledger, exactly as the Daggerheart builder does.
+ */
+type LedgerPart =
+  | { kind: 'effect'; effect: EffectInstance }
+  | { kind: 'entry'; entry: ContributionLedgerEntry };
+
+/**
+ * W4 re-backing (RFC 003 Phase 3). Every numeric and string-valued row — armor
+ * class, feat ability-score automation, always-prepared spell grants, spell save
+ * DC / spell attack bonus — is compiled into the shared `EffectInstance`
+ * primitive, folded ONCE through `resolveEffects` alongside the equipment /
+ * feat / feature effects, and projected with `toContributionLedger`. Resolution
+ * and provenance are one computation.
+ *
+ * The ONE population that stays hand-built is the LIST-valued proficiency rows
+ * (`proficiencies.armor`, `.weapons`, `.tools`, `.languages`, `.savingThrows`),
+ * whose value is a `string[]`. The IR's `EffectValue` is
+ * `number | string | number[] | null` — it provably cannot carry a string list
+ * (RFC 003, "The shared primitive"). Routing them through the resolver would
+ * mean either faking the value or widening the RFC's published IR shape, so they
+ * stay explicit ledger entries, stitched back in at their original positions.
+ */
 export async function buildDnd5eContributionLedger<T extends Dnd5eContributionDataModel>(
   document: CharacterDocument<T>,
   systemId: Dnd5eValidationSystemId
@@ -52,36 +84,49 @@ export async function buildDnd5eContributionLedger<T extends Dnd5eContributionDa
     feats: document.system.feats,
     features: document.system.features,
   });
-  const entries = [
-    ...buildArmorClassEntries(systemId, document.system),
+  const parts: LedgerPart[] = [
+    ...buildArmorClassParts(systemId, document.system),
     // The resolver speaks the RFC 003 target namespace ('ac'); this ledger
     // speaks the 5e data model's ('armorClass'). Normalize so a viewer
     // grouping by target shows ONE armor-class breakdown.
-    ...toContributionLedger(resolved.result.ledger).entries.map((entry) =>
-      entry.target === 'ac' ? { ...entry, target: 'armorClass' } : entry
+    ...resolved.result.ledger.map(
+      (effect): LedgerPart => ({
+        kind: 'effect',
+        effect: effect.target === 'ac' ? { ...effect, target: 'armorClass' } : effect,
+      })
     ),
-    ...buildTemplateProficiencyEntries(systemId, document.system.templateState),
-    ...buildAlwaysPreparedSpellEntries(systemId, document.system.classLevels, classes),
-    ...buildSpellcastingEntries(systemId, document.system),
+    ...buildTemplateProficiencyParts(systemId, document.system.templateState),
+    ...buildAlwaysPreparedSpellParts(systemId, document.system.classLevels, classes),
+    ...buildSpellcastingParts(systemId, document.system),
   ];
+
+  // ONE fold, ONE projection. None of these effects carries a gating condition
+  // (and the equipment/feat effects were already resolved under the same empty
+  // context), so `resolveEffects` keeps them all, in input order.
+  const projected = toContributionLedger(
+    resolveEffects(parts.flatMap((part) => (part.kind === 'effect' ? [part.effect] : []))).ledger
+  ).entries;
+
+  let cursor = 0;
+  const entries = parts.map((part) => (part.kind === 'effect' ? projected[cursor++] : part.entry));
 
   return { entries };
 }
 
-function buildArmorClassEntries(
+function buildArmorClassParts(
   systemId: Dnd5eValidationSystemId,
   system: Dnd5eContributionDataModel
-): ContributionLedgerEntry[] {
+): LedgerPart[] {
   const armor = system.equipment.find((item) => item.slot === 'chest' && item.armorClass != null);
   const shield = system.equipment.find(
     (item) => item.slot === 'offHand' && item.shieldBonus != null
   );
   const dexMod = abilityMod(system.baseAttributes.dex ?? 10);
-  const entries: ContributionLedgerEntry[] = [];
+  const parts: LedgerPart[] = [];
 
   if (armor) {
-    entries.push(
-      createEntry({
+    parts.push(
+      effectPart({
         systemId,
         target: 'armorClass',
         sourceKind: 'item',
@@ -96,8 +141,8 @@ function buildArmorClassEntries(
       })
     );
   } else {
-    entries.push(
-      createEntry({
+    parts.push(
+      effectPart({
         systemId,
         target: 'armorClass',
         sourceKind: 'system',
@@ -113,8 +158,8 @@ function buildArmorClassEntries(
 
   const dexContribution = dnd5eArmorDexContribution(armor, dexMod);
   if (dexContribution !== 0) {
-    entries.push(
-      createEntry({
+    parts.push(
+      effectPart({
         systemId,
         target: 'armorClass',
         sourceKind: 'system',
@@ -134,8 +179,8 @@ function buildArmorClassEntries(
   }
 
   if (shield?.shieldBonus) {
-    entries.push(
-      createEntry({
+    parts.push(
+      effectPart({
         systemId,
         target: 'armorClass',
         sourceKind: 'item',
@@ -161,8 +206,8 @@ function buildArmorClassEntries(
     const { plainUnarmored, unarmoredDefense } = computeDnd5eBaseArmorClass(system, dexMod);
 
     if (unarmoredDefense && unarmoredDefense.total > plainUnarmored) {
-      entries.push(
-        createEntry({
+      parts.push(
+        effectPart({
           systemId,
           target: 'armorClass',
           sourceKind: 'feature',
@@ -180,8 +225,8 @@ function buildArmorClassEntries(
 
   const defenseStyleBonus = getDnd5eDefenseStyleArmorClassBonus(system);
   if (defenseStyleBonus !== 0) {
-    entries.push(
-      createEntry({
+    parts.push(
+      effectPart({
         systemId,
         target: 'armorClass',
         sourceKind: 'feature-option',
@@ -196,13 +241,13 @@ function buildArmorClassEntries(
     );
   }
 
-  return entries;
+  return parts;
 }
 
-function buildTemplateProficiencyEntries(
+function buildTemplateProficiencyParts(
   systemId: Dnd5eValidationSystemId,
   templateState: Dnd5eTemplateState | undefined
-): ContributionLedgerEntry[] {
+): LedgerPart[] {
   if (!templateState) {
     return [];
   }
@@ -262,17 +307,17 @@ function buildTemplateProficiencyEntries(
       values: templateState.backgroundDerived.languages,
       sourcePath: 'system.templateState.backgroundDerived.languages',
     }),
-    ...buildFeatAutomationEntries(systemId, templateState),
+    ...buildFeatAutomationParts(systemId, templateState),
   ];
 }
 
-function buildFeatAutomationEntries(
+function buildFeatAutomationParts(
   systemId: Dnd5eValidationSystemId,
   templateState: Dnd5eTemplateState
-): ContributionLedgerEntry[] {
-  const entries = Object.entries(templateState.featDerivedAutomation.abilityScores).map(
+): LedgerPart[] {
+  const abilityScoreParts = Object.entries(templateState.featDerivedAutomation.abilityScores).map(
     ([abilityId, bonus]) =>
-      createEntry({
+      effectPart({
         systemId,
         target: `baseAttributes.${abilityId}`,
         sourceKind: 'feat',
@@ -286,7 +331,7 @@ function buildFeatAutomationEntries(
   );
 
   return [
-    ...entries,
+    ...abilityScoreParts,
     ...buildListEntry({
       systemId,
       target: 'proficiencies.armor',
@@ -335,13 +380,13 @@ function buildFeatAutomationEntries(
   ];
 }
 
-function buildAlwaysPreparedSpellEntries(
+function buildAlwaysPreparedSpellParts(
   systemId: Dnd5eValidationSystemId,
   classLevels: ClassLevel[],
   classes: Awaited<ReturnType<typeof loadClassesForSystem>>
-): ContributionLedgerEntry[] {
+): LedgerPart[] {
   return getDnd5eAlwaysPreparedSpellSources(classLevels, classes).map((source) =>
-    createEntry({
+    effectPart({
       systemId,
       target: 'spellcasting.alwaysPreparedSpellIds',
       sourceKind: 'class',
@@ -362,17 +407,16 @@ function buildAlwaysPreparedSpellEntries(
 
 /**
  * Provenance rows for each spellcasting class's spell save DC and spell attack
- * bonus. RFC 003 defers re-backing these through the resolver, so — like
- * `buildArmorClassEntries` — the terms are hand-built here. They re-derive with
- * the SAME cited helpers the engine uses in `prepareData` (`dnd5eSpellSaveDC` /
- * `dnd5eSpellAttackBonus` over `profBonus(totalLevel)` and the spellcasting
- * ability modifier), so the emitted rows sum to the engine's
+ * bonus, compiled into the shared IR and folded with everything else. They
+ * re-derive with the SAME cited helpers the engine uses in `prepareData`
+ * (`dnd5eSpellSaveDC` / `dnd5eSpellAttackBonus` over `profBonus(totalLevel)` and
+ * the spellcasting ability modifier), so the emitted rows sum to the engine's
  * `data.spellcasting.classes[].spellSaveDc` / `spellAttackBonus` exactly.
  */
-function buildSpellcastingEntries(
+function buildSpellcastingParts(
   systemId: Dnd5eValidationSystemId,
   system: Dnd5eContributionDataModel
-): ContributionLedgerEntry[] {
+): LedgerPart[] {
   const spellcasting = system.spellcasting;
   if (!spellcasting || spellcasting.classes.length === 0) {
     return [];
@@ -406,7 +450,7 @@ function buildSpellcastingEntries(
 
     return [
       // Spell save DC = 8 + proficiency bonus + spellcasting ability modifier.
-      createEntry({
+      effectPart({
         systemId,
         target: saveDcTarget,
         sourceKind: 'system',
@@ -419,7 +463,7 @@ function buildSpellcastingEntries(
         sourcePath: 'system.spellcasting.classes',
         details,
       }),
-      createEntry({
+      effectPart({
         systemId,
         target: saveDcTarget,
         sourceKind: 'class',
@@ -432,7 +476,7 @@ function buildSpellcastingEntries(
         sourcePath: 'system.spellcasting.classes',
         details,
       }),
-      createEntry({
+      effectPart({
         systemId,
         target: saveDcTarget,
         sourceKind: 'system',
@@ -446,7 +490,7 @@ function buildSpellcastingEntries(
         details,
       }),
       // Spell attack bonus = proficiency bonus + spellcasting ability modifier.
-      createEntry({
+      effectPart({
         systemId,
         target: attackTarget,
         sourceKind: 'class',
@@ -459,7 +503,7 @@ function buildSpellcastingEntries(
         sourcePath: 'system.spellcasting.classes',
         details,
       }),
-      createEntry({
+      effectPart({
         systemId,
         target: attackTarget,
         sourceKind: 'system',
@@ -484,26 +528,71 @@ function buildListEntry(params: {
   label: string;
   values: string[];
   sourcePath: string;
-}): ContributionLedgerEntry[] {
+}): LedgerPart[] {
   if (params.values.length === 0) {
     return [];
   }
 
   return [
-    createEntry({
-      systemId: params.systemId,
-      target: params.target,
-      sourceKind: params.sourceKind,
-      sourceLabel: params.sourceLabel,
-      label: params.label,
-      operation: 'add',
-      value: [...params.values],
-      category: 'proficiency',
-      sourcePath: params.sourcePath,
-    }),
+    {
+      kind: 'entry',
+      entry: createEntry({
+        systemId: params.systemId,
+        target: params.target,
+        sourceKind: params.sourceKind,
+        sourceLabel: params.sourceLabel,
+        label: params.label,
+        operation: 'add',
+        value: [...params.values],
+        category: 'proficiency',
+        sourcePath: params.sourcePath,
+      }),
+    },
   ];
 }
 
+/**
+ * One contribution as the shared IR primitive, wrapped as an ordered ledger
+ * part. Projected through `toContributionLedger` it yields exactly the entry
+ * this builder used to hand-assemble — same id, target, source, operation,
+ * value, category. Stacking is `'sum'`: 5e has no named-bonus stacking system,
+ * so every term here accumulates (SRD).
+ */
+function effectPart(params: AddEffectInput): LedgerPart {
+  return {
+    kind: 'effect',
+    effect: {
+      id: ledgerId(
+        params.systemId,
+        params.category,
+        params.target,
+        params.sourceLabel,
+        params.label,
+        String(params.value)
+      ),
+      systemId: params.systemId,
+      target: params.target,
+      operation: params.operation,
+      value: params.value,
+      stackPolicy: 'sum',
+      source: {
+        kind: params.sourceKind,
+        label: params.sourceLabel,
+        id: params.sourceId,
+        path: params.sourcePath,
+      },
+      label: params.label,
+      category: params.category,
+      details: params.details,
+    },
+  };
+}
+
+/**
+ * A LIST-valued contribution, kept as an explicit ledger entry: the IR's
+ * `EffectValue` (`number | string | number[] | null`) provably cannot carry a
+ * `string[]`, so routing these through the resolver would mean faking the value.
+ */
 function createEntry(params: AddEntryInput): ContributionLedgerEntry {
   return {
     id: ledgerId(
