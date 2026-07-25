@@ -17,7 +17,7 @@ import { abilityMod } from '../../utils/math';
 import { pf2eAutoHeightenRank, pf2eBulkLimits } from '../../utils/derivedCombatMath';
 import { pf2eClassOrSpellDC } from '../../utils/derivedCasterMath';
 import { resolvePf2eArmorClass } from '../../rules';
-import { getPf2eConditionStatusPenalty } from '../../rules/conditions/pf2eConditions';
+import { resolvePf2eCheckPenalty } from '../../rules/conditions/pf2eConditions';
 import { profTotal, type Pf2eDataModel, type Pf2eProficiencyTier } from './data-model';
 
 /** Build a full ability-score block from partial overrides (defaults are 10). */
@@ -42,6 +42,10 @@ function strMod(system: Pf2eDataModel): number {
  * what the engine's prepareData stores, so the compute works on both prepared and
  * default data.
  *
+ * The status penalty is resolved through the SAME shared fold the engine uses
+ * (`collectPf2eCheckConditionEffects` → resolver `pf2e-status` bucket), not a
+ * second scalar read.
+ *
  * MUTATION-VERIFIABLE: an unarmored case with no bonus-bearing gear reduces to
  * the anchored base `ac = 10 + dexMod + proficiencyBonus` in defense.ts, so the
  * pf2e.L2.ac mutation flips it. (The clumsy status penalty rides on
@@ -59,7 +63,7 @@ function armorClass(system: Pf2eDataModel): number {
   return resolvePf2eArmorClass(
     system,
     profTotal(system.level, armorTier),
-    getPf2eConditionStatusPenalty(system.conditions, 'dex')
+    resolvePf2eCheckPenalty(system.conditions, 'dex')
   );
 }
 

@@ -17,6 +17,7 @@
  *   - the penalty applied is the highest matching value (worst penalty).
  */
 
+import { resolveCharacterEffects } from '../compile/characterEffects';
 import { makeEffectId, type EffectInstance } from '../ir/types';
 
 const SYSTEM_ID = 'pf2e';
@@ -63,6 +64,12 @@ function scopeAppliesToAbility(scope: ConditionScope, ability?: string): boolean
  * The status penalty (a positive magnitude to subtract) that applies to a check
  * keyed by `ability`. All matching conditions are status penalties, so the worst
  * (highest) one wins. Returns 0 when none apply.
+ *
+ * The engines now route this same math through the resolver fold as
+ * `-resolveCharacterEffects(..., { conditions: collectPf2eCheckConditionEffects(
+ * conditions, ability) }).bonus('check')`, which equals this value for every
+ * catalog condition at every magnitude. Retained as the closed-form spec the
+ * fold is pinned against — exactly as `d20LegacyCheckPenalty` is for 3.5e/PF1e.
  */
 export function getPf2eConditionStatusPenalty(
   conditions: readonly Pf2eConditionLike[],
@@ -77,9 +84,78 @@ export function getPf2eConditionStatusPenalty(
 }
 
 /**
+ * Compile the status conditions that apply to a check keyed by `ability` onto a
+ * SINGLE `check` target, so the resolver's `pf2e-status` bucket selects the one
+ * worst penalty — the same "worst wins" rule `getPf2eConditionStatusPenalty`
+ * computes with `Math.max`, now expressed as a fold that also carries
+ * per-condition provenance into the ledger.
+ *
+ * The single target is load-bearing. PF2e status penalties do NOT stack with one
+ * another, and the resolver selects the worst WITHIN a target group but SUMS
+ * across groups — so splitting frightened and clumsy across `check` and
+ * `check.dex` (the shape the whole-character `collectPf2eConditionEffects` view
+ * below uses, where each target is read independently) would ADD them instead of
+ * selecting. Scoping to one target is exactly what makes the fold reproduce the
+ * engine's scalar.
+ */
+export function collectPf2eCheckConditionEffects(
+  conditions: readonly Pf2eConditionLike[],
+  ability?: string
+): EffectInstance[] {
+  const effects: EffectInstance[] = [];
+  for (const [name, scope] of Object.entries(PF2E_STATUS_CONDITIONS)) {
+    if (!scopeAppliesToAbility(scope, ability)) continue;
+    const value = highestValue(conditions, name);
+    if (value <= 0) continue;
+    effects.push({
+      id: makeEffectId(SYSTEM_ID, 'condition', name, 'check', value),
+      systemId: SYSTEM_ID,
+      target: 'check',
+      operation: 'subtract',
+      value,
+      stackPolicy: 'pf2e-status',
+      source: { kind: 'condition', id: name, label: name },
+      label: `${name} ${value}: -${value} status penalty`,
+      category: 'other',
+      condition: { kind: 'has-condition', conditionId: name },
+    });
+  }
+  return effects;
+}
+
+/**
+ * The status penalty (a positive magnitude to subtract) for a check keyed by
+ * `ability`, RESOLVED THROUGH THE SHARED FOLD.
+ *
+ * This is the one entry point the PF2e engine and its declarative derived
+ * quantities both call, so the roll path and the AC path cannot drift. It is the
+ * same shape the 3.5e/PF1e engines use — compile conditions to IR, hand them to
+ * `resolveCharacterEffects`, read the folded target — which makes all seven
+ * systems resolve conditions identically, and puts every applied condition in
+ * the ledger instead of an opaque subtraction.
+ *
+ * Returns `0` (never `-0`) when nothing applies, so it is Object.is-identical to
+ * the closed-form selector it replaces.
+ */
+export function resolvePf2eCheckPenalty(
+  conditions: readonly Pf2eConditionLike[],
+  ability?: string
+): number {
+  const folded = resolveCharacterEffects(SYSTEM_ID, {
+    conditions: collectPf2eCheckConditionEffects(conditions, ability),
+  }).bonus('check');
+  return folded === 0 ? 0 : -folded;
+}
+
+/**
  * Compile active PF2e status conditions into effect instances for provenance.
  * Each is a `pf2e-status` penalty (negative value) on the appropriate check
  * target. The resolver's PF2e-bucket fold takes the single worst penalty.
+ *
+ * This is the WHOLE-CHARACTER ledger view: one row per active condition, each on
+ * the target naming its scope, so a reader sees every condition it might meet.
+ * For resolving ONE check use `resolvePf2eCheckPenalty`, which scopes to a
+ * single target so the bucket fold selects rather than sums.
  */
 export function collectPf2eConditionEffects(
   conditions: readonly Pf2eConditionLike[]

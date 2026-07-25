@@ -6,7 +6,7 @@ import { abilityMod } from '../../utils/math';
 import { pf2eDegreeOfSuccess } from '../../rules/resolver/pf2eDegree';
 import { SKILL_ABILITIES, SAVE_ABILITIES } from './constants';
 import { resolvePf2eArmorClass } from '../../rules';
-import { getPf2eConditionStatusPenalty } from '../../rules/conditions/pf2eConditions';
+import { resolvePf2eCheckPenalty } from '../../rules/conditions/pf2eConditions';
 import { pf2eClasses } from '../../data/pathfinder/2e/classes';
 import { getSpellSlotsAtClassLevel, mergeMaxUsedSpellSlots } from '../../utils/classSpellcasting';
 import { hitDieFaces } from '../../utils/templateShared';
@@ -15,12 +15,21 @@ import { PF2E_DERIVED_QUANTITIES } from './derivedQuantities';
 
 type Pf2eSpellcastingData = NonNullable<Pf2eDataModel['spellcasting']>;
 
-// Condition status-penalty selection now lives in the shared condition IR
-// (src/rules/conditions/pf2eConditions.ts) so the rule is defined once and
-// also surfaces as ledger provenance. This thin wrapper preserves the engine's
-// call sites and signature.
+/**
+ * The status penalty for a check keyed by `ability`, resolved through the SHARED
+ * fold (RFC 003 W5) rather than read as a scalar: the applicable conditions are
+ * compiled to IR and folded by the resolver, whose `pf2e-status` bucket keeps
+ * only the single worst penalty. This is the same shape the 3.5e/PF1e engines
+ * use (`resolveCharacterEffects(...).bonus('check')`), so all seven systems now
+ * resolve conditions the same way — and every applied condition reaches the
+ * ledger as first-class provenance instead of vanishing into a subtraction.
+ *
+ * Byte-identical to the closed-form `getPf2eConditionStatusPenalty` it replaces;
+ * pinned for every catalog condition, magnitude and ability scope by
+ * src/__tests__/rules/pf2eConditionFold.test.ts.
+ */
 function getPf2eStatusPenalty(conditions: Pf2eDataModel['conditions'], ability?: string): number {
-  return getPf2eConditionStatusPenalty(conditions, ability);
+  return resolvePf2eCheckPenalty(conditions, ability);
 }
 
 function inferPf2eTradition(spellListId: string): Pf2eSpellcastingData['tradition'] {
