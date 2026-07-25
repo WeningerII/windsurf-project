@@ -760,3 +760,106 @@ not mis-transcribed *fields*. No gate checks field-level fidelity today.
 indices in-repo, content coverage becomes measurable and the rest of Denominator A
 is mechanical. Next-largest body of genuine work: §2 — expand the compute
 registers to the full L1–L10 set and wire the proven helpers into the engines.
+---
+
+## 14. `p5.infra-gaps` — inventory, what was closed, and what is deliberately NOT built (added 2026-07-25)
+
+Ledger item `p5.infra-gaps` bundles six unrelated concerns
+("rate-limiting, analytics, a11y, observability, secrets-audit, backup/DR") behind
+one `pending` status. That status was wrong: **four of the six were already
+built** and the genuine remainder was two things. Recorded here so the next reader
+does not re-scope work that exists, and so the parts that will NOT be built are a
+decision rather than an omission.
+
+### 14.1 Inventory (what actually exists)
+
+| Sub-item | State | Where |
+|---|---|---|
+| **Rate-limiting** | **Built** | `netlify/functions/rateLimitStore.mts` — pluggable store behind a `RateLimitStoreDriver`, in-memory by default, durable-ready via `RATE_LIMIT_STORE_URL`. Drives request limiting (`AI_RATE_LIMIT`), a per-session cost cap (`AI_SESSION_BUDGET_UNITS`) sharing one module-scope counter across warm invocations, and per-task-class latency budgets. Client-side limiter in `src/utils/rateLimit.ts`. Inert by default; documented in `netlify/functions/README.md`. |
+| **Analytics** | **Built as far as it should be** — see 14.3 | `src/telemetry/**`: event catalog, PII-stripping guard (`schema.ts`), default-OFF opt-in gate (`gate.ts`), bounded ring buffer, pluggable sink. Ships with `noopSink`. **No network sink, by design.** |
+| **a11y** | **Built** | Keyboard/semantics pass + `e2e/a11y.spec.ts` axe gate with `KNOWN_A11Y_DEBT`. One quarantined scan remains — §12 above, tracked there, not here. |
+| **Observability** | **Was partial → closed here** | `src/ai/gatewayLog.ts` (structured per-request server trace + console sink wired into `netlify/functions/ai-gateway.mts`), `src/utils/errorLogger.ts` (single Sentry funnel, HIGH/CRITICAL only), `docs/runbooks/sentry-alerts.md` (committed alert-rule spec). |
+| **Secrets-audit** | **Built** | `scripts/check-secret-exposure.mjs`, run inside `npm run verify`; fails on any `VITE_`-prefixed server secret or committed credential. |
+| **Backup/DR** | **Was half → closed here** | `docs/runbooks/supabase-backup-restore.md` covered the **optional cloud** copy. The **browser-local** store — the data of record on a default install — had no documented procedure and no proof its export format was lossless. |
+
+### 14.2 What was closed
+
+1. **Observability — the two dormant alert rules are now live.**
+   `sentry-alerts.md` defined rules (b) "AI-gateway failure" and (c) "Supabase
+   sync failures" and marked both DORMANT, because the code swallowed exactly
+   those failures: `useEntitySync` did `catch { setSyncState('error') }` and the
+   browser gateway client degraded every failure silently. Both now report
+   through the existing `errorLogger` funnel (`{ surface: 'sync' | 'ai' }`), so
+   the committed alert rules describe reality. Reporting is **additive** — the
+   local-first degrade behaviour at every call site is unchanged — and the
+   payloads are **content-free by construction** (no entities, names, or notes;
+   the AI event carries only task, failure code, and the gateway's own
+   `traceId`, which joins to the server-side record in `gatewayLog.ts`).
+   By-design outcomes (the 429 cost controls, auth, an unconfigured provider,
+   a rejected request) are excluded **at the source**, so the alert cannot drown
+   in intended behaviour. Pinned both ways — positive and negative — by
+   `src/__tests__/observability/failureReporting.test.tsx`.
+
+2. **Backup/DR for the browser-local store.**
+   `docs/runbooks/local-data-recovery.md` documents where the data lives (the
+   IndexedDB + localStorage pair and their per-document merge), the failure
+   modes and what each actually means, the recovery procedures, and an explicit
+   list of what the app does **not** promise (no automatic off-device backup, no
+   local point-in-time recovery, no sync without sign-in). The runbook tells an
+   operator to trust the JSON export;
+   `src/__tests__/backupRestoreRoundTrip.test.ts` is what makes that honest —
+   export→import round-trips losslessly for **each of the seven systems**, seeded
+   from each system's own registered default data model, asserting deep equality
+   of the whole envelope including the system payload, `Date` revival at the
+   original instants, restore-of-a-restore stability, and a non-zero dropped
+   count on a damaged backup. The one field a restore can lose (`img`, when the
+   URL is not `https:` or `data:image/*`) is pinned as a deliberate security
+   behaviour rather than left to be rediscovered as a bug.
+
+### 14.3 DECIDED: no analytics network sink, no third-party tracker
+
+**Decision: the telemetry scaffold stays sink-less. This is the finished state,
+not a stub awaiting a vendor.**
+
+The ledger phrases the sub-item as "privacy-respecting telemetry", and
+`src/telemetry/sinks.ts` documents a `createBeaconSink` seam as "infra-blocked".
+Re-reading that as a to-do would be a mistake:
+
+- This is an **offline-capable, local-first** app whose entire value proposition
+  is that a user's characters never have to leave their browser. Any default-on
+  beacon contradicts the product, and an opt-in beacon nobody opts into is
+  infrastructure with a maintenance cost and no signal.
+- A third-party analytics SDK is **excluded outright** — it would add a
+  network dependency, a `connect-src` CSP hole, a bundle cost against an eager
+  chunk with ~200 bytes of headroom, and a data-processor relationship, in
+  exchange for usage counts on a tool that already works offline.
+- What the scaffold provides today is the part with real engineering value: a
+  typed event catalog and a guard that makes it **structurally impossible** to
+  record free-form user content. If a maintainer ever wants numbers, that guard
+  is the hard part and it is already built and tested.
+
+**What would change this:** an explicit product decision by the owner to run
+*self-hosted* metrics, plus a stated retention policy and a user-visible opt-in
+control. Until all three exist, `noopSink` is correct. Anyone tempted to wire a
+sink should treat this section as the review that must be re-opened first.
+
+### 14.4 NOT done, and why (open, with reasons)
+
+- **Sentry `release` + separate preview/production environments.** Both are
+  one-line additions to `Sentry.init` in `src/main.tsx`, and both would genuinely
+  improve regression grouping (`sentry-alerts.md` §5). Not taken because
+  `main.tsx` is in the eager first-paint chunk, which is at **84.8 / 85.0 KiB
+  gzip**. The documented reclaim (lazy-loading per-system engines) is a separate
+  piece of work; these two should land immediately after it, not before.
+- **AI-gateway server-side 5xx in Sentry.** The function already emits one
+  structured JSON line per request to the Netlify function log, and its
+  `traceId` joins to the client-side events wired in 14.2 — so a client alert is
+  debuggable. Full server-side alerting needs a Netlify log drain or
+  `@sentry/node` inside the function, i.e. provisioning the maintainer must do,
+  not code. Deliberately left as ops config.
+- **A durable rate-limit store driver.** `resolveRateLimitStore` takes a driver
+  and `RATE_LIMIT_STORE_URL`, but no driver is wired, so counters are per-warm-
+  instance. This is correct until there is a real backend to point at and real
+  traffic to justify it; the seam exists so it is a driver, not a rewrite.
+- **§12's quarantined a11y contrast finding**, which needs a live browser and is
+  tracked in §12.

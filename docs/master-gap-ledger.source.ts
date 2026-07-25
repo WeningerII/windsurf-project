@@ -309,10 +309,11 @@ export const MASTER_GAP_LEDGER: readonly GapLedgerItem[] = [
     track: 'hardening',
     title: 'Rate-limiting, analytics, a11y, observability, secrets-audit, backup/DR',
     detail:
-      'Client + server rate-limiting on the AI gateway and sync path; privacy-respecting telemetry; axe/pa11y a11y project + screen-reader pass; Sentry alert rules + structured logs; a pre-deploy guard failing on VITE_*-exposed server secrets; Supabase backup/restore runbook.',
-    status: 'pending',
+      'Rate-limiting (pluggable store + session budget + latency budgets), opt-in no-PII telemetry, the axe a11y gate, and the VITE_*-secret guard are all built. Observability closed 2026-07-25: the sync and AI-gateway failure paths now report through errorLogger, so sentry-alerts.md rules (b)/(c) are live rather than dormant. Backup/DR closed for the browser-local store (the data of record): a recovery runbook plus an all-seven-systems lossless export/import round-trip gate. Remaining and RECORDED as decisions in GAPS.md §14 — no analytics network sink (deliberate, not a stub), Sentry release/environment wiring deferred behind the eager-bundle budget, server-side 5xx alerting is ops provisioning, and §12 a11y contrast.',
+    status: 'in-progress',
     tags: ['engineering'],
-    evidence: 'netlify/functions/*.mts; .github/workflows/ci.yml',
+    evidence:
+      'docs/GAPS.md §14; docs/runbooks/local-data-recovery.md; src/__tests__/backupRestoreRoundTrip.test.ts; src/__tests__/observability/failureReporting.test.tsx; netlify/functions/rateLimitStore.mts; scripts/check-secret-exposure.mjs',
   },
 
   // ── Phase 6 — roadmap expansions (gated after the production bar) ─────────
