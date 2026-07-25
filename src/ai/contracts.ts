@@ -70,6 +70,18 @@ export const AI_TASK_UNIT_COST: Record<AiTask, number> = {
   'character-draft': 1,
 };
 
+/**
+ * Token counts a provider reported for one call. Every field is optional: a
+ * provider may report none, some, or all of them, and the gateway never depends
+ * on any of them — the deterministic per-task {@link AI_TASK_UNIT_COST} is what
+ * the budget caps actually charge. This is observability, not accounting.
+ */
+export interface AiTokenUsage {
+  inputTokens?: number;
+  outputTokens?: number;
+  totalTokens?: number;
+}
+
 /** Where a successful result came from (lets the UI label provider vs replay). */
 export interface AiUsage {
   source: 'provider' | 'fixture';
@@ -77,6 +89,12 @@ export interface AiUsage {
   model?: string;
   /** The prompt-template version used for the task (see `AI_PROMPT_VERSIONS`). */
   promptVersion?: string;
+  /**
+   * Provider-reported token counts, present only when the serving adapter
+   * reported at least one usable figure. Absent on the fixture/replay path,
+   * which spends no provider tokens.
+   */
+  tokens?: AiTokenUsage;
 }
 
 export interface AiRequest<TTask extends AiTask = AiTask, TPayload = unknown> {

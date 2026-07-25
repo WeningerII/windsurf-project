@@ -15,15 +15,30 @@ import {
   type AiResponse,
   type AiTask,
   type AiTaskClass,
+  type AiTokenUsage,
 } from './contracts';
 import { buildGatewayLogRecord, newTraceId, type GatewayLogSink } from './gatewayLog';
 import { promptVersionForTask } from './prompts';
 import type { RateLimiter } from '../utils/rateLimit';
 
 /**
- * The seam where a real provider lives. `generate` takes a validated request
- * and returns the raw structured output (still untrusted — the core validates
- * its shape). It throws on a provider/transport error; the core normalizes it.
+ * The channel an adapter uses to report what one call cost, in provider tokens.
+ * Optional by construction: an adapter that cannot (or chooses not to) report
+ * simply never calls it, and the response carries no `usage.tokens`.
+ */
+export type AiTokenUsageReporter = (usage: AiTokenUsage) => void;
+
+/**
+ * The seam where a real provider lives — the ONE interface the gateway needs
+ * from any provider, and the reason a provider swap never reaches `src/ai/**`
+ * call sites or the browser client.
+ *
+ * `generate` takes a validated request and returns the raw structured output
+ * (still untrusted — the core validates its shape with `parseTaskData`). It
+ * throws on a provider/transport error; the core normalizes it. `reportUsage`
+ * is an OPTIONAL third argument: an adapter that knows its token spend calls it
+ * to surface that through `AiResponse.usage.tokens` and the trace log. Adapters
+ * predating it (and test fakes) ignore the extra argument and keep working.
  */
 export interface AiProviderAdapter {
   readonly id: string;
@@ -35,7 +50,23 @@ export interface AiProviderAdapter {
    * traces name the model that really ran, not just the adapter's default.
    */
   modelFor?(task: AiTask): string;
-  generate(task: AiTask, payload: unknown): Promise<unknown>;
+  generate(task: AiTask, payload: unknown, reportUsage?: AiTokenUsageReporter): Promise<unknown>;
+}
+
+/**
+ * Keep only finite, non-negative token counts, and return `undefined` when
+ * nothing usable survives. A provider's usage numbers are as untrusted as its
+ * output: junk must not reach the response envelope or the trace log.
+ */
+function normalizeTokenUsage(usage: AiTokenUsage): AiTokenUsage | undefined {
+  const keep = (value: number | undefined): number | undefined =>
+    typeof value === 'number' && Number.isFinite(value) && value >= 0 ? value : undefined;
+  const normalized: AiTokenUsage = {
+    ...(keep(usage.inputTokens) !== undefined ? { inputTokens: keep(usage.inputTokens) } : {}),
+    ...(keep(usage.outputTokens) !== undefined ? { outputTokens: keep(usage.outputTokens) } : {}),
+    ...(keep(usage.totalTokens) !== undefined ? { totalTokens: keep(usage.totalTokens) } : {}),
+  };
+  return Object.keys(normalized).length > 0 ? normalized : undefined;
 }
 
 /** The normalized model id for a task: the per-task override, else the default. */
@@ -252,9 +283,20 @@ export async function handleAiRequest(raw: unknown, ctx: GatewayContext): Promis
     }
   }
 
+  // Provider-reported token spend for this one call, when the adapter reports
+  // it. Collected through the seam's optional reporter so an adapter that does
+  // not report costs nothing and changes no behavior.
+  let reportedTokens: AiTokenUsage | undefined;
+  const reportUsage: AiTokenUsageReporter = (usage) => {
+    reportedTokens = normalizeTokenUsage(usage);
+  };
+
   let output: unknown;
   try {
-    output = await withTimeout(ctx.adapter.generate(task, payload), latencyBudgetFor(task, ctx));
+    output = await withTimeout(
+      ctx.adapter.generate(task, payload, reportUsage),
+      latencyBudgetFor(task, ctx)
+    );
   } catch (error) {
     if (error instanceof GatewayTimeoutError) {
       return emit(
@@ -279,6 +321,7 @@ export async function handleAiRequest(raw: unknown, ctx: GatewayContext): Promis
         source: 'provider',
         provider: ctx.adapter.id,
         model: modelForTask(ctx.adapter, task),
+        ...(reportedTokens ? { tokens: reportedTokens } : {}),
       },
     },
     repairCount
