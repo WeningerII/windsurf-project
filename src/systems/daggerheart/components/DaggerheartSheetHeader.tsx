@@ -26,6 +26,13 @@ export function DaggerheartSheetHeader({ controller }: Props) {
         <div className="flex items-center gap-3">
           <input
             type="text"
+            // Every other system names its character-name field (the shared
+            // SheetHeader via title+aria-label for 5e/5e-2024; title on pf2e,
+            // mam3e and the d20-legacy header that pf1e and 3.5e both use).
+            // Daggerheart was the only sheet whose primary field had no
+            // accessible name at all (axe `label`, critical).
+            title="Character name"
+            aria-label="Character name"
             value={controller.document.name}
             onChange={(event) => controller.onNameChange(event.target.value)}
             className="w-full border-b border-transparent bg-transparent text-2xl font-bold hover:border-input focus:border-primary focus:outline-none"

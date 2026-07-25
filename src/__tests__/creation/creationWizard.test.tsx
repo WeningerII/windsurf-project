@@ -45,6 +45,19 @@ async function settleValidation() {
   );
 }
 
+/**
+ * Every `option` must be a DIRECT child of its `listbox` (a bare <li> between
+ * them contributes an implicit `listitem` role that makes each option both an
+ * invalid child and an invalid-parent violation — axe aria-required-children /
+ * aria-required-parent, both serious).
+ */
+function expectOptionsAreDirectListboxChildren(): void {
+  screen.queryAllByRole('option').forEach((option) => {
+    expect(option.parentElement).toHaveAttribute('role', 'presentation');
+    expect(option.parentElement?.parentElement).toHaveAttribute('role', 'listbox');
+  });
+}
+
 async function renderWizardFor(systemId: string) {
   const def = systemRegistry.get(systemId);
   if (!def) throw new Error(`missing system ${systemId}`);
@@ -81,6 +94,16 @@ describe('guided-creation wizard — 7/7 system parity', () => {
       async () => {
         const user = userEvent.setup();
         const { onComplete } = await renderWizardFor(systemId);
+
+        // A11y invariants of the shared wizard shell, asserted here so they hold
+        // for EVERY system rather than only for the synthetic-plan harness in
+        // `src/__tests__/a11y/creationWizard.a11y.test.tsx`. Riding along on
+        // this render keeps the all-seven coverage free: a separate suite that
+        // re-mounted seven real SRD plans did not finish in a usable time.
+        // The visible <label> must BE the accessible name — no overriding
+        // aria-label (WCAG 2.5.3 Label in Name).
+        expect(screen.getByTestId('creation-name-input')).toHaveAccessibleName('Character name');
+        expectOptionsAreDirectListboxChildren();
 
         const name = `Wizard ${systemId}`;
         fireEvent.change(screen.getByTestId('creation-name-input'), { target: { value: name } });

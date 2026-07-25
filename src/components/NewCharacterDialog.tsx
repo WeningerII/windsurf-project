@@ -2,6 +2,7 @@ import { useEffect, useRef, type FC } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import type { GameSystemId } from '../types/game-systems';
+import { DIALOG_FOCUSABLE_SELECTOR } from './ui/ConfirmDialog';
 import { GameSystemSelector } from './GameSystemSelector';
 
 interface Props {
@@ -47,10 +48,8 @@ export const NewCharacterDialog: FC<Props> = ({ open, onClose, onCreate }) => {
       }
       if (e.key !== 'Tab') return;
       const focusable = Array.from(
-        dialogRef.current?.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        ) ?? []
-      ).filter((el) => !el.closest('[aria-hidden="true"]'));
+        dialogRef.current?.querySelectorAll<HTMLElement>(DIALOG_FOCUSABLE_SELECTOR) ?? []
+      ).filter((el) => !el.closest('[aria-hidden="true"],[inert]'));
       if (focusable.length === 0) return;
       const first = focusable[0];
       const last = focusable[focusable.length - 1];

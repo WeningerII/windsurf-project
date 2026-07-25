@@ -77,6 +77,11 @@ export function SceneCreateForm({
     <div className="grid gap-2 rounded-lg border bg-card p-3 md:grid-cols-[minmax(0,1fr)_minmax(10rem,14rem)_minmax(10rem,14rem)_5rem_5rem_auto_auto] md:items-center">
       <Input
         autoFocus
+        // A placeholder is NOT an accessible name: it disappears the moment the
+        // field has content, and axe reports a placeholder-only field as an
+        // unlabelled control (rule `label`, critical). Every sibling control in
+        // this row already carries an aria-label; this one was the exception.
+        aria-label="Scene name"
         value={name}
         onChange={(event) => setName(event.target.value)}
         onKeyDown={(event) => {

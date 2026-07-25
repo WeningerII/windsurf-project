@@ -3,6 +3,17 @@ import { createPortal } from 'react-dom';
 import { AlertTriangle } from 'lucide-react';
 import { Button } from './Button';
 
+/**
+ * Tab-cycle members of a modal. Disabled controls are excluded because they are
+ * NOT reachable by Tab: treating one as the cycle's first or last element means
+ * the wrap-around never fires there and focus escapes the modal — the exact
+ * leak a trap exists to prevent. (The guided creator's "Back" button is
+ * disabled on step one, so this is reachable, not theoretical.) Exported so the
+ * three modals in this codebase share one definition of "focusable".
+ */
+export const DIALOG_FOCUSABLE_SELECTOR =
+  'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 interface Props {
   open: boolean;
   title: string;
@@ -54,10 +65,8 @@ export const ConfirmDialog: React.FC<Props> = ({
       if (e.key === 'Escape') onCancel();
       if (e.key === 'Tab') {
         const focusable = Array.from(
-          dialogRef.current?.querySelectorAll<HTMLElement>(
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-          ) ?? []
-        ).filter((el) => !el.closest('[aria-hidden="true"]'));
+          dialogRef.current?.querySelectorAll<HTMLElement>(DIALOG_FOCUSABLE_SELECTOR) ?? []
+        ).filter((el) => !el.closest('[aria-hidden="true"],[inert]'));
 
         if (focusable.length === 0) return;
 

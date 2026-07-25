@@ -1,4 +1,12 @@
-import { Suspense, useMemo, useState, type ComponentType } from 'react';
+import {
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ComponentType,
+} from 'react';
 import { X } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/Tabs';
 import type { SpellBrowserSpell } from '../components/SpellBrowser';
@@ -115,6 +123,8 @@ interface DockProps {
   initialSystemId?: string;
 }
 
+const DOCK_PANEL_ID = 'toolkit-dock-panel';
+
 export function Dock({ documents, initialSystemId }: DockProps) {
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string>(DOCK_TABS[0].id);
@@ -124,22 +134,62 @@ export function Dock({ documents, initialSystemId }: DockProps) {
       ? (initialSystemId as GameSystemId)
       : systemIds[0]
   );
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLElement>(null);
+
+  // Dismissing must put focus back on the summon control. Without this the
+  // panel unmounts under the user's focus and focus resets to <body> — a
+  // keyboard user is dumped at the top of the document with no way back to
+  // where they were. Shared by the close button and Escape.
+  const close = useCallback(() => {
+    setOpen(false);
+    triggerRef.current?.focus();
+  }, []);
+
+  // Summoning moves focus INTO the panel: the dock is rendered at the shell
+  // root, so without this the next Tab from the trigger continues through the
+  // rest of the shell rather than the panel the user just opened.
+  useEffect(() => {
+    if (!open) return;
+    panelRef.current?.focus();
+  }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape') return;
+      // Capture + stopPropagation, matching OverflowMenu: App registers a
+      // global Escape that returns from the sheet surface, and dismissing the
+      // dock must not also navigate the user off the surface behind it.
+      event.stopPropagation();
+      close();
+    };
+    window.addEventListener('keydown', handleKey, { capture: true });
+    return () => window.removeEventListener('keydown', handleKey, { capture: true });
+  }, [open, close]);
 
   return (
     <>
       <button
+        ref={triggerRef}
         type="button"
         aria-label="Toggle toolkit dock"
         aria-expanded={open}
-        onClick={() => setOpen((prev) => !prev)}
+        aria-controls={open ? DOCK_PANEL_ID : undefined}
+        onClick={() => (open ? close() : setOpen(true))}
         className="fixed bottom-4 right-4 z-40 flex h-12 items-center gap-2 rounded-full border bg-card px-4 text-sm font-medium shadow-lg transition-colors hover:bg-muted"
       >
         Toolkit
       </button>
       {open && (
         <aside
+          ref={panelRef}
+          id={DOCK_PANEL_ID}
           aria-label="Toolkit dock"
-          className="fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col border-l bg-background shadow-xl"
+          // Programmatically focusable only — the panel is a focus destination
+          // on summon, not an extra Tab stop once the user is inside it.
+          tabIndex={-1}
+          className="fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col border-l bg-background shadow-xl outline-none"
         >
           <DockPanel
             documents={documents}
@@ -148,7 +198,7 @@ export function Dock({ documents, initialSystemId }: DockProps) {
             onSelectSystem={setSelectedSystem}
             activeTab={activeTab}
             onSelectTab={setActiveTab}
-            onClose={() => setOpen(false)}
+            onClose={close}
           />
         </aside>
       )}
@@ -247,15 +297,17 @@ function DockPanel({
       <div className="flex items-center justify-between gap-2 border-b p-3">
         <h2 className="text-base font-semibold">Toolkit</h2>
         <div className="flex items-center gap-2">
+          {/* One source of truth for the name: the aria-label that used to sit
+              on the <select> silently OVERRODE this label, so the element's
+              accessible name and its associated label text disagreed. */}
           <label htmlFor="dock-system" className="sr-only">
-            System
+            Select game system
           </label>
           <select
             id="dock-system"
             value={selectedSystem}
             onChange={(event) => onSelectSystem(event.target.value as GameSystemId)}
             className="rounded-md border border-input px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-            aria-label="Select game system"
           >
             {systemIds.map((systemId) => (
               <option key={systemId} value={systemId}>
