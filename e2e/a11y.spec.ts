@@ -21,10 +21,43 @@ const BLOCKING_IMPACTS = new Set(['critical', 'serious']);
 // rule id, must continue to fail this gate.
 const KNOWN_A11Y_DEBT = new Set<string>();
 
+/**
+ * Freeze entrance animations for the whole spec.
+ *
+ * axe computes `color-contrast` from COMPOSITED colours, so scanning a surface
+ * mid-animation measures a blend, not the design. Concretely: the guided-creation
+ * dialog carries `animate-in fade-in zoom-in-95`
+ * (`src/components/GuidedCreatorDialog.tsx`), and a scan that landed partway
+ * through that fade reported `#6b788c` on white — 4.47:1 — and failed the gate.
+ * That colour is `--muted-foreground` (`#5c6a80`, a genuine 5.49:1) composited
+ * over white at ~90.6% opacity; the token itself passes comfortably and had
+ * already been darkened once for AA.
+ *
+ * So the violation was an artifact of scan timing, not a real contrast defect —
+ * and the two tempting "fixes" were both wrong: darkening the token again would
+ * change the design system to satisfy a measurement error, and allowlisting
+ * `color-contrast` would blind the gate to every genuine contrast regression.
+ *
+ * Disabling animations makes every scan in this file measure settled pixels.
+ * It is deliberately NOT `prefers-reduced-motion` (which the app may honour with
+ * different styling) — this forces zero duration on whatever is actually there.
+ */
+async function freezeAnimations(page: Page) {
+  await page.addStyleTag({
+    content: `*, *::before, *::after {
+      animation-duration: 0s !important;
+      animation-delay: 0s !important;
+      transition-duration: 0s !important;
+      transition-delay: 0s !important;
+    }`,
+  });
+}
+
 async function openLandingPage(page: Page) {
   await page.goto('/', { waitUntil: 'domcontentloaded' });
   await page.evaluate(() => localStorage.clear());
   await page.goto('/', { waitUntil: 'domcontentloaded' });
+  await freezeAnimations(page);
   // Fresh boot has no characters, so the roster's empty state is the landing anchor.
   await expect(page.getByRole('heading', { name: 'No characters yet' })).toBeVisible();
 }
