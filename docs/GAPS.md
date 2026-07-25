@@ -1021,3 +1021,93 @@ sink should treat this section as the review that must be re-opened first.
   traffic to justify it; the seam exists so it is a driver, not a rewrite.
 - **§12's quarantined a11y contrast finding**, which needs a live browser and is
   tracked in §12.
+
+## 16. Lazy per-system engines — what was reclaimed, and exactly what blocks the rest (added 2026-07-25)
+
+The eager app chunk budget note in `scripts/check-bundle-size.mjs` names ONE
+structural reclaim as the thing that must pay for the next climb: **lazy-loading
+the per-system engines behind the registry**. §14.4 defers work on that basis.
+This section records what that reclaim is actually worth, what part of it
+landed, and the precise, reproducible reason the rest cannot land as a pure
+code-splitting change.
+
+### 16.1 The measured ceiling
+
+Stubbing `engine:` out of all seven `src/systems/<id>/definition.ts` files and
+rebuilding (a throwaway measurement, not a shippable state) moves the eager
+`index-*.js` chunk from **84.7 KiB to 61.1 KiB gzip — a 23.6 KiB ceiling**. The
+52 modules that leave the eager static-import closure are the seven engines,
+their per-system derived-quantity/derived-math modules, and the shared rules-IR
+surface those pull: `src/rules/derivation`, `src/rules/resolver`,
+`src/rules/compile/*`, all five `src/rules/conditions/*` compilers,
+`src/rules/dice.ts`, plus `src/utils/{math,spellSlots,classSpellcasting,
+derivedCasterMath,derivedCombatMath,resourcePool,scaling,templateShared}` and
+`src/constants/hit-dice.ts`. That is the size of the prize.
+
+### 16.2 What landed
+
+Only the part that needed no new mechanism: `dnd-5e-2014` and `dnd-5e-2024` were
+the last two systems still supplying an EAGER `validator:`; the other five
+already used the registry's lazy `loadValidator` dynamic-import-and-cache seam.
+Migrating them onto the same seam drops `src/systems/dnd5e/shared/validation.ts`
+and `src/systems/dnd5e/shared/dnd5eKnownSpells.ts` out of the eager closure:
+**86,833 B -> 84,382 B gzip (-2,451 B)**, eager shell 190.1 -> 187.7 KiB, with
+`appChunkGzipBytes` unchanged at 85 KiB. Budget headroom goes from 207 B to
+2,658 B. All seven systems now use the identical validator seam.
+
+### 16.3 What blocks the engine reclaim (reproducible)
+
+`SystemDefinition.engine` is a REQUIRED, SYNCHRONOUS property. Making it lazy
+means `engine?: SystemEngine<T>` + `loadEngine?: () => Promise<SystemEngine<T>>`
+(the exact shape of the existing `validator`/`loadValidator` pair). Applying
+that change and running `npm run typecheck:test` yields 13 errors, which sort
+into three groups:
+
+1. **Nine call sites inside `src/systems/**` that are already async.** Every one
+   is `.engine.rollCheck(...)`, whose result is already awaited
+   (`D20CombatSection.tsx:140,147,154`, `D20SavesTab.tsx:55`,
+   `DaggerheartCharacterBasicsSection.tsx:79`, `Dnd5eSheetBase.tsx:170,184`,
+   `useMam3eMutationHandlers.ts:276`, `usePf2eMutationHandlers.ts:280`), plus
+   `useDnd5eSheetActionHandlers.ts:255` (`applyDamage`, sync but inside an
+   already-lazy sheet chunk). **These are NOT the blocker** — they all live
+   behind a lazy sheet boundary and would migrate cleanly to an awaited registry
+   accessor.
+
+2. **`src/hooks/useDocuments.ts:22` — the real blocker.** This is the ONLY eager
+   consumer of an engine: `prepareDocumentWithEngine` calls
+   `sysDef.engine.prepareData(doc)` synchronously, and it is called from inside
+   `setDocuments` updaters on the load path AND on every add / update / import /
+   cross-tab-merge / sync-merge path. There is no synchronous way to obtain a
+   dynamically-imported module, so lazy engines force this path async. That is
+   observable: documents would be published to React unprepared for at least one
+   microtask on cold start, and mutation ordering inside the state updaters
+   changes. It is therefore NOT a pure code-splitting change, which is the
+   standing safety bar for touching engine math.
+
+3. **Two test files break at COMPILE time, not at assertion time.**
+   `src/__tests__/mam3eValidation.test.ts:33` (`Mam3eSystemDef.engine
+   .prepareData(...)`) and `src/__tests__/scenarios/capabilityScenarios.test.tsx
+   :323` (`def.engine.prepareData(doc)`) both read `.engine` synchronously off a
+   real definition, in synchronous `it(...)` bodies. No arrangement of the lazy
+   seam keeps them working: in Vitest, `import()` is still a promise, so a
+   throw-if-unresolved facade throws and an optional property fails
+   `typecheck:test`. Their expectations are correct and must not change; their
+   CALL SHAPE must, and that requires explicit authorization.
+
+### 16.4 What unblocking it needs (not authorized here)
+
+- A decision that publishing documents one microtask later on cold start is
+  acceptable, or a design that guarantees the engine is resolved before
+  `useDocuments` publishes (preload gated on the systems present in the loaded
+  collection, plus at the create/import/merge entry points).
+- Authorization to adapt the CALL SHAPE (not the expectations) of the two test
+  files in 16.3(3).
+
+Explicitly rejected while investigating, and recorded so they are not
+re-proposed: splitting `rollCheck` behind an engine-internal dynamic import
+(measured at only 2.5 KiB, and it is a SECOND loading mechanism for engines
+alongside the registry seam); awaiting the engine chunk in `main.tsx` before
+`createRoot().render()` (shrinks `index-*.js` without shrinking first paint —
+it makes the fetch serial, so it games the gate rather than paying it); and any
+environment-divergent arrangement that keeps engines eager under test and lazy
+in the browser.
