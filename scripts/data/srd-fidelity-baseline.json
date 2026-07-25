@@ -1,0 +1,1538 @@
+{
+  "note": "Known, RECORDED field-level divergences between shipped SRD content and the source it cites (docs/GAPS.md §15). Every entry pins the EXACT current encoded value, so the baseline is a ratchet: if a baselined field changes at all — fixed or drifted further — scripts/check-srd-fidelity.mjs fails and demands this file be updated. Entries here are DEBT, not approval. Regenerate the divergence block with `npm run srd:fidelity:record` after a deliberate, reviewed change; hand-maintain `upstreamDefects`.",
+  "upstreamDefects": {
+    "dnd-5e-2014/monsters/basilisk|armorClass": {
+      "name": "Basilisk",
+      "taggedSource": "SRD",
+      "encoded": 15,
+      "source": 12,
+      "evidence": "The shipped value is CORRECT and the upstream denominator is wrong. SRD 5.1 prints Basilisk AC 15 (natural armor); 5e-bits/5e-database 2014 5e-SRD-Monsters.json records armor_class [{type:'natural', value:12}]. Corroborated independently by the SRD 5.2.1 markdown (downfallx/dnd-5e-srd-markdown monsters-A-Z.md), which also prints **AC** 15, and the Basilisk stat block is otherwise identical across the two editions. Recorded rather than normalized, per the GAPS §13 precedent for the Will-o'-Wisp STR cell. Do NOT 'fix' the shipped 15."
+    }
+  },
+  "divergences": {
+    "dnd-5e-2024/backgrounds/acolyte|toolProficiencies": {
+      "name": "Acolyte",
+      "taggedSource": "SRD 5.2",
+      "encoded": "",
+      "source": "calligrapherssupplies"
+    },
+    "dnd-5e-2024/backgrounds/criminal|skillProficiencies": {
+      "name": "Criminal",
+      "taggedSource": "SRD 5.2",
+      "encoded": "deception,stealth",
+      "source": "sleightofhand,stealth"
+    },
+    "dnd-5e-2024/backgrounds/criminal|toolProficiencies": {
+      "name": "Criminal",
+      "taggedSource": "SRD 5.2",
+      "encoded": "onegamingset,thievestools",
+      "source": "thievestools"
+    },
+    "dnd-5e-2024/backgrounds/sage|toolProficiencies": {
+      "name": "Sage",
+      "taggedSource": "SRD 5.2",
+      "encoded": "",
+      "source": "calligrapherssupplies"
+    },
+    "dnd-5e-2024/backgrounds/soldier|toolProficiencies": {
+      "name": "Soldier",
+      "taggedSource": "SRD 5.2",
+      "encoded": "onegamingset,vehiclesland",
+      "source": ""
+    },
+    "dnd-5e-2024/monsters/aboleth|abilities.con": {
+      "name": "Aboleth",
+      "taggedSource": "SRD 5.2",
+      "encoded": 20,
+      "source": 15
+    },
+    "dnd-5e-2024/monsters/aboleth|hitPoints.count": {
+      "name": "Aboleth",
+      "taggedSource": "SRD 5.2",
+      "encoded": 18,
+      "source": 20
+    },
+    "dnd-5e-2024/monsters/aboleth|hitPoints.modifier": {
+      "name": "Aboleth",
+      "taggedSource": "SRD 5.2",
+      "encoded": 90,
+      "source": 40
+    },
+    "dnd-5e-2024/monsters/adultreddragon|abilities.cha": {
+      "name": "Adult Red Dragon",
+      "taggedSource": "SRD 5.2",
+      "encoded": 21,
+      "source": 23
+    },
+    "dnd-5e-2024/monsters/adultreddragon|hitPoints.modifier": {
+      "name": "Adult Red Dragon",
+      "taggedSource": "SRD 5.2",
+      "encoded": 95,
+      "source": 133
+    },
+    "dnd-5e-2024/monsters/adultreddragon|speed.climb": {
+      "name": "Adult Red Dragon",
+      "taggedSource": "SRD 5.2",
+      "encoded": 0,
+      "source": 40
+    },
+    "dnd-5e-2024/monsters/airelemental|armorClass": {
+      "name": "Air Elemental",
+      "taggedSource": "SRD 5.2",
+      "encoded": 18,
+      "source": 15
+    },
+    "dnd-5e-2024/monsters/airelemental|hitPoints.count": {
+      "name": "Air Elemental",
+      "taggedSource": "SRD 5.2",
+      "encoded": 5,
+      "source": 12
+    },
+    "dnd-5e-2024/monsters/airelemental|hitPoints.modifier": {
+      "name": "Air Elemental",
+      "taggedSource": "SRD 5.2",
+      "encoded": 10,
+      "source": 24
+    },
+    "dnd-5e-2024/monsters/airelemental|speed.walk": {
+      "name": "Air Elemental",
+      "taggedSource": "SRD 5.2",
+      "encoded": 0,
+      "source": 10
+    },
+    "dnd-5e-2024/monsters/archmage|abilities.con": {
+      "name": "Archmage",
+      "taggedSource": "SRD 5.2",
+      "encoded": 14,
+      "source": 12
+    },
+    "dnd-5e-2024/monsters/archmage|armorClass": {
+      "name": "Archmage",
+      "taggedSource": "SRD 5.2",
+      "encoded": 12,
+      "source": 17
+    },
+    "dnd-5e-2024/monsters/archmage|hitPoints.count": {
+      "name": "Archmage",
+      "taggedSource": "SRD 5.2",
+      "encoded": 18,
+      "source": 31
+    },
+    "dnd-5e-2024/monsters/archmage|hitPoints.modifier": {
+      "name": "Archmage",
+      "taggedSource": "SRD 5.2",
+      "encoded": 36,
+      "source": 31
+    },
+    "dnd-5e-2024/monsters/archmage|speed.fly": {
+      "name": "Archmage",
+      "taggedSource": "SRD 5.2",
+      "encoded": 30,
+      "source": 0
+    },
+    "dnd-5e-2024/monsters/assassin|abilities.dex": {
+      "name": "Assassin",
+      "taggedSource": "SRD 5.2",
+      "encoded": 16,
+      "source": 18
+    },
+    "dnd-5e-2024/monsters/assassin|abilities.int": {
+      "name": "Assassin",
+      "taggedSource": "SRD 5.2",
+      "encoded": 13,
+      "source": 16
+    },
+    "dnd-5e-2024/monsters/assassin|armorClass": {
+      "name": "Assassin",
+      "taggedSource": "SRD 5.2",
+      "encoded": 15,
+      "source": 16
+    },
+    "dnd-5e-2024/monsters/assassin|hitPoints.count": {
+      "name": "Assassin",
+      "taggedSource": "SRD 5.2",
+      "encoded": 12,
+      "source": 15
+    },
+    "dnd-5e-2024/monsters/assassin|hitPoints.modifier": {
+      "name": "Assassin",
+      "taggedSource": "SRD 5.2",
+      "encoded": 24,
+      "source": 30
+    },
+    "dnd-5e-2024/monsters/awakenedshrub|hitPoints.count": {
+      "name": "Awakened Shrub",
+      "taggedSource": "SRD 5.2",
+      "encoded": 1,
+      "source": 3
+    },
+    "dnd-5e-2024/monsters/balor|hitPoints.count": {
+      "name": "Balor",
+      "taggedSource": "SRD 5.2",
+      "encoded": 21,
+      "source": 23
+    },
+    "dnd-5e-2024/monsters/balor|hitPoints.modifier": {
+      "name": "Balor",
+      "taggedSource": "SRD 5.2",
+      "encoded": 105,
+      "source": 138
+    },
+    "dnd-5e-2024/monsters/berserker|abilities.con": {
+      "name": "Berserker",
+      "taggedSource": "SRD 5.2",
+      "encoded": 15,
+      "source": 17
+    },
+    "dnd-5e-2024/monsters/berserker|hitPoints.modifier": {
+      "name": "Berserker",
+      "taggedSource": "SRD 5.2",
+      "encoded": 18,
+      "source": 27
+    },
+    "dnd-5e-2024/monsters/blackbear|abilities.dex": {
+      "name": "Black Bear",
+      "taggedSource": "SRD 5.2",
+      "encoded": 10,
+      "source": 12
+    },
+    "dnd-5e-2024/monsters/blackbear|speed.swim": {
+      "name": "Black Bear",
+      "taggedSource": "SRD 5.2",
+      "encoded": 0,
+      "source": 30
+    },
+    "dnd-5e-2024/monsters/blackbear|speed.walk": {
+      "name": "Black Bear",
+      "taggedSource": "SRD 5.2",
+      "encoded": 40,
+      "source": 30
+    },
+    "dnd-5e-2024/monsters/blackpudding|hitPoints.count": {
+      "name": "Black Pudding",
+      "taggedSource": "SRD 5.2",
+      "encoded": 11,
+      "source": 8
+    },
+    "dnd-5e-2024/monsters/blackpudding|hitPoints.modifier": {
+      "name": "Black Pudding",
+      "taggedSource": "SRD 5.2",
+      "encoded": 33,
+      "source": 24
+    },
+    "dnd-5e-2024/monsters/boar|abilities.con": {
+      "name": "Boar",
+      "taggedSource": "SRD 5.2",
+      "encoded": 12,
+      "source": 14
+    },
+    "dnd-5e-2024/monsters/boar|hitPoints.modifier": {
+      "name": "Boar",
+      "taggedSource": "SRD 5.2",
+      "encoded": 2,
+      "source": 4
+    },
+    "dnd-5e-2024/monsters/brownbear|abilities.con": {
+      "name": "Brown Bear",
+      "taggedSource": "SRD 5.2",
+      "encoded": 16,
+      "source": 15
+    },
+    "dnd-5e-2024/monsters/brownbear|abilities.dex": {
+      "name": "Brown Bear",
+      "taggedSource": "SRD 5.2",
+      "encoded": 10,
+      "source": 12
+    },
+    "dnd-5e-2024/monsters/brownbear|abilities.str": {
+      "name": "Brown Bear",
+      "taggedSource": "SRD 5.2",
+      "encoded": 19,
+      "source": 17
+    },
+    "dnd-5e-2024/monsters/brownbear|hitPoints.count": {
+      "name": "Brown Bear",
+      "taggedSource": "SRD 5.2",
+      "encoded": 4,
+      "source": 3
+    },
+    "dnd-5e-2024/monsters/brownbear|hitPoints.modifier": {
+      "name": "Brown Bear",
+      "taggedSource": "SRD 5.2",
+      "encoded": 12,
+      "source": 6
+    },
+    "dnd-5e-2024/monsters/chuul|abilities.cha": {
+      "name": "Chuul",
+      "taggedSource": "SRD 5.2",
+      "encoded": 6,
+      "source": 5
+    },
+    "dnd-5e-2024/monsters/chuul|abilities.dex": {
+      "name": "Chuul",
+      "taggedSource": "SRD 5.2",
+      "encoded": 15,
+      "source": 10
+    },
+    "dnd-5e-2024/monsters/chuul|abilities.int": {
+      "name": "Chuul",
+      "taggedSource": "SRD 5.2",
+      "encoded": 2,
+      "source": 5
+    },
+    "dnd-5e-2024/monsters/chuul|abilities.wis": {
+      "name": "Chuul",
+      "taggedSource": "SRD 5.2",
+      "encoded": 10,
+      "source": 11
+    },
+    "dnd-5e-2024/monsters/chuul|hitPoints.count": {
+      "name": "Chuul",
+      "taggedSource": "SRD 5.2",
+      "encoded": 15,
+      "source": 9
+    },
+    "dnd-5e-2024/monsters/chuul|hitPoints.modifier": {
+      "name": "Chuul",
+      "taggedSource": "SRD 5.2",
+      "encoded": 30,
+      "source": 27
+    },
+    "dnd-5e-2024/monsters/claygolem|abilities.con": {
+      "name": "Clay Golem",
+      "taggedSource": "SRD 5.2",
+      "encoded": 16,
+      "source": 18
+    },
+    "dnd-5e-2024/monsters/claygolem|challengeRating": {
+      "name": "Clay Golem",
+      "taggedSource": "SRD 5.2",
+      "encoded": 5,
+      "source": 9
+    },
+    "dnd-5e-2024/monsters/claygolem|hitPoints.modifier": {
+      "name": "Clay Golem",
+      "taggedSource": "SRD 5.2",
+      "encoded": 39,
+      "source": 52
+    },
+    "dnd-5e-2024/monsters/claygolem|speed.walk": {
+      "name": "Clay Golem",
+      "taggedSource": "SRD 5.2",
+      "encoded": 20,
+      "source": 30
+    },
+    "dnd-5e-2024/monsters/constrictorsnake|armorClass": {
+      "name": "Constrictor Snake",
+      "taggedSource": "SRD 5.2",
+      "encoded": 12,
+      "source": 13
+    },
+    "dnd-5e-2024/monsters/crocodile|hitPoints.count": {
+      "name": "Crocodile",
+      "taggedSource": "SRD 5.2",
+      "encoded": 3,
+      "source": 2
+    },
+    "dnd-5e-2024/monsters/crocodile|hitPoints.modifier": {
+      "name": "Crocodile",
+      "taggedSource": "SRD 5.2",
+      "encoded": 3,
+      "source": 2
+    },
+    "dnd-5e-2024/monsters/deva|abilities.cha": {
+      "name": "Deva",
+      "taggedSource": "SRD 5.2",
+      "encoded": 16,
+      "source": 20
+    },
+    "dnd-5e-2024/monsters/deva|abilities.con": {
+      "name": "Deva",
+      "taggedSource": "SRD 5.2",
+      "encoded": 16,
+      "source": 18
+    },
+    "dnd-5e-2024/monsters/deva|abilities.dex": {
+      "name": "Deva",
+      "taggedSource": "SRD 5.2",
+      "encoded": 16,
+      "source": 18
+    },
+    "dnd-5e-2024/monsters/deva|abilities.int": {
+      "name": "Deva",
+      "taggedSource": "SRD 5.2",
+      "encoded": 16,
+      "source": 17
+    },
+    "dnd-5e-2024/monsters/deva|abilities.wis": {
+      "name": "Deva",
+      "taggedSource": "SRD 5.2",
+      "encoded": 16,
+      "source": 20
+    },
+    "dnd-5e-2024/monsters/deva|challengeRating": {
+      "name": "Deva",
+      "taggedSource": "SRD 5.2",
+      "encoded": 5,
+      "source": 10
+    },
+    "dnd-5e-2024/monsters/deva|hitPoints.count": {
+      "name": "Deva",
+      "taggedSource": "SRD 5.2",
+      "encoded": 8,
+      "source": 27
+    },
+    "dnd-5e-2024/monsters/deva|hitPoints.modifier": {
+      "name": "Deva",
+      "taggedSource": "SRD 5.2",
+      "encoded": 24,
+      "source": 108
+    },
+    "dnd-5e-2024/monsters/direwolf|hitPoints.count": {
+      "name": "Dire Wolf",
+      "taggedSource": "SRD 5.2",
+      "encoded": 5,
+      "source": 3
+    },
+    "dnd-5e-2024/monsters/direwolf|hitPoints.modifier": {
+      "name": "Dire Wolf",
+      "taggedSource": "SRD 5.2",
+      "encoded": 10,
+      "source": 6
+    },
+    "dnd-5e-2024/monsters/druid|abilities.wis": {
+      "name": "Druid",
+      "taggedSource": "SRD 5.2",
+      "encoded": 15,
+      "source": 16
+    },
+    "dnd-5e-2024/monsters/druid|armorClass": {
+      "name": "Druid",
+      "taggedSource": "SRD 5.2",
+      "encoded": 11,
+      "source": 13
+    },
+    "dnd-5e-2024/monsters/druid|hitPoints.count": {
+      "name": "Druid",
+      "taggedSource": "SRD 5.2",
+      "encoded": 5,
+      "source": 8
+    },
+    "dnd-5e-2024/monsters/druid|hitPoints.modifier": {
+      "name": "Druid",
+      "taggedSource": "SRD 5.2",
+      "encoded": 5,
+      "source": 8
+    },
+    "dnd-5e-2024/monsters/dryad|abilities.cha": {
+      "name": "Dryad",
+      "taggedSource": "SRD 5.2",
+      "encoded": 12,
+      "source": 18
+    },
+    "dnd-5e-2024/monsters/dryad|abilities.con": {
+      "name": "Dryad",
+      "taggedSource": "SRD 5.2",
+      "encoded": 13,
+      "source": 11
+    },
+    "dnd-5e-2024/monsters/dryad|armorClass": {
+      "name": "Dryad",
+      "taggedSource": "SRD 5.2",
+      "encoded": 14,
+      "source": 16
+    },
+    "dnd-5e-2024/monsters/dryad|hitPoints.count": {
+      "name": "Dryad",
+      "taggedSource": "SRD 5.2",
+      "encoded": 8,
+      "source": 5
+    },
+    "dnd-5e-2024/monsters/dryad|hitPoints.modifier": {
+      "name": "Dryad",
+      "taggedSource": "SRD 5.2",
+      "encoded": 16,
+      "source": 0
+    },
+    "dnd-5e-2024/monsters/eagle|abilities.con": {
+      "name": "Eagle",
+      "taggedSource": "SRD 5.2",
+      "encoded": 10,
+      "source": 12
+    },
+    "dnd-5e-2024/monsters/earthelemental|abilities.cha": {
+      "name": "Earth Elemental",
+      "taggedSource": "SRD 5.2",
+      "encoded": 6,
+      "source": 5
+    },
+    "dnd-5e-2024/monsters/earthelemental|abilities.con": {
+      "name": "Earth Elemental",
+      "taggedSource": "SRD 5.2",
+      "encoded": 16,
+      "source": 20
+    },
+    "dnd-5e-2024/monsters/earthelemental|abilities.int": {
+      "name": "Earth Elemental",
+      "taggedSource": "SRD 5.2",
+      "encoded": 6,
+      "source": 5
+    },
+    "dnd-5e-2024/monsters/earthelemental|abilities.str": {
+      "name": "Earth Elemental",
+      "taggedSource": "SRD 5.2",
+      "encoded": 19,
+      "source": 20
+    },
+    "dnd-5e-2024/monsters/earthelemental|armorClass": {
+      "name": "Earth Elemental",
+      "taggedSource": "SRD 5.2",
+      "encoded": 18,
+      "source": 17
+    },
+    "dnd-5e-2024/monsters/earthelemental|hitPoints.count": {
+      "name": "Earth Elemental",
+      "taggedSource": "SRD 5.2",
+      "encoded": 5,
+      "source": 14
+    },
+    "dnd-5e-2024/monsters/earthelemental|hitPoints.modifier": {
+      "name": "Earth Elemental",
+      "taggedSource": "SRD 5.2",
+      "encoded": 10,
+      "source": 70
+    },
+    "dnd-5e-2024/monsters/earthelemental|speed.burrow": {
+      "name": "Earth Elemental",
+      "taggedSource": "SRD 5.2",
+      "encoded": 60,
+      "source": 30
+    },
+    "dnd-5e-2024/monsters/elk|abilities.con": {
+      "name": "Elk",
+      "taggedSource": "SRD 5.2",
+      "encoded": 12,
+      "source": 11
+    },
+    "dnd-5e-2024/monsters/elk|hitPoints.modifier": {
+      "name": "Elk",
+      "taggedSource": "SRD 5.2",
+      "encoded": 2,
+      "source": 0
+    },
+    "dnd-5e-2024/monsters/fireelemental|armorClass": {
+      "name": "Fire Elemental",
+      "taggedSource": "SRD 5.2",
+      "encoded": 15,
+      "source": 13
+    },
+    "dnd-5e-2024/monsters/fireelemental|hitPoints.count": {
+      "name": "Fire Elemental",
+      "taggedSource": "SRD 5.2",
+      "encoded": 6,
+      "source": 11
+    },
+    "dnd-5e-2024/monsters/fireelemental|hitPoints.modifier": {
+      "name": "Fire Elemental",
+      "taggedSource": "SRD 5.2",
+      "encoded": 12,
+      "source": 33
+    },
+    "dnd-5e-2024/monsters/gelatinouscube|abilities.con": {
+      "name": "Gelatinous Cube",
+      "taggedSource": "SRD 5.2",
+      "encoded": 16,
+      "source": 20
+    },
+    "dnd-5e-2024/monsters/gelatinouscube|challengeRating": {
+      "name": "Gelatinous Cube",
+      "taggedSource": "SRD 5.2",
+      "encoded": 3,
+      "source": 2
+    },
+    "dnd-5e-2024/monsters/gelatinouscube|hitPoints.count": {
+      "name": "Gelatinous Cube",
+      "taggedSource": "SRD 5.2",
+      "encoded": 10,
+      "source": 6
+    },
+    "dnd-5e-2024/monsters/gelatinouscube|hitPoints.modifier": {
+      "name": "Gelatinous Cube",
+      "taggedSource": "SRD 5.2",
+      "encoded": 20,
+      "source": 30
+    },
+    "dnd-5e-2024/monsters/giantape|abilities.int": {
+      "name": "Giant Ape",
+      "taggedSource": "SRD 5.2",
+      "encoded": 7,
+      "source": 5
+    },
+    "dnd-5e-2024/monsters/giantape|hitPoints.count": {
+      "name": "Giant Ape",
+      "taggedSource": "SRD 5.2",
+      "encoded": 19,
+      "source": 16
+    },
+    "dnd-5e-2024/monsters/giantape|hitPoints.modifier": {
+      "name": "Giant Ape",
+      "taggedSource": "SRD 5.2",
+      "encoded": 76,
+      "source": 64
+    },
+    "dnd-5e-2024/monsters/giantbat|hitPoints.modifier": {
+      "name": "Giant Bat",
+      "taggedSource": "SRD 5.2",
+      "encoded": 4,
+      "source": 0
+    },
+    "dnd-5e-2024/monsters/giantcentipede|armorClass": {
+      "name": "Giant Centipede",
+      "taggedSource": "SRD 5.2",
+      "encoded": 13,
+      "source": 14
+    },
+    "dnd-5e-2024/monsters/giantcentipede|hitPoints.count": {
+      "name": "Giant Centipede",
+      "taggedSource": "SRD 5.2",
+      "encoded": 1,
+      "source": 2
+    },
+    "dnd-5e-2024/monsters/giantcentipede|hitPoints.modifier": {
+      "name": "Giant Centipede",
+      "taggedSource": "SRD 5.2",
+      "encoded": 1,
+      "source": 2
+    },
+    "dnd-5e-2024/monsters/giantelk|abilities.dex": {
+      "name": "Giant Elk",
+      "taggedSource": "SRD 5.2",
+      "encoded": 16,
+      "source": 18
+    },
+    "dnd-5e-2024/monsters/giantelk|hitPoints.count": {
+      "name": "Giant Elk",
+      "taggedSource": "SRD 5.2",
+      "encoded": 8,
+      "source": 5
+    },
+    "dnd-5e-2024/monsters/giantelk|hitPoints.modifier": {
+      "name": "Giant Elk",
+      "taggedSource": "SRD 5.2",
+      "encoded": 24,
+      "source": 10
+    },
+    "dnd-5e-2024/monsters/giantrat|abilities.dex": {
+      "name": "Giant Rat",
+      "taggedSource": "SRD 5.2",
+      "encoded": 15,
+      "source": 16
+    },
+    "dnd-5e-2024/monsters/giantrat|armorClass": {
+      "name": "Giant Rat",
+      "taggedSource": "SRD 5.2",
+      "encoded": 12,
+      "source": 13
+    },
+    "dnd-5e-2024/monsters/giantrat|speed.climb": {
+      "name": "Giant Rat",
+      "taggedSource": "SRD 5.2",
+      "encoded": 0,
+      "source": 30
+    },
+    "dnd-5e-2024/monsters/giantwasp|armorClass": {
+      "name": "Giant Wasp",
+      "taggedSource": "SRD 5.2",
+      "encoded": 12,
+      "source": 13
+    },
+    "dnd-5e-2024/monsters/giantwasp|hitPoints.count": {
+      "name": "Giant Wasp",
+      "taggedSource": "SRD 5.2",
+      "encoded": 4,
+      "source": 5
+    },
+    "dnd-5e-2024/monsters/giantwasp|hitPoints.modifier": {
+      "name": "Giant Wasp",
+      "taggedSource": "SRD 5.2",
+      "encoded": 4,
+      "source": 0
+    },
+    "dnd-5e-2024/monsters/gladiator|hitPoints.modifier": {
+      "name": "Gladiator",
+      "taggedSource": "SRD 5.2",
+      "encoded": 30,
+      "source": 45
+    },
+    "dnd-5e-2024/monsters/griffon|abilities.con": {
+      "name": "Griffon",
+      "taggedSource": "SRD 5.2",
+      "encoded": 14,
+      "source": 16
+    },
+    "dnd-5e-2024/monsters/griffon|abilities.dex": {
+      "name": "Griffon",
+      "taggedSource": "SRD 5.2",
+      "encoded": 13,
+      "source": 15
+    },
+    "dnd-5e-2024/monsters/griffon|abilities.wis": {
+      "name": "Griffon",
+      "taggedSource": "SRD 5.2",
+      "encoded": 12,
+      "source": 13
+    },
+    "dnd-5e-2024/monsters/griffon|hitPoints.count": {
+      "name": "Griffon",
+      "taggedSource": "SRD 5.2",
+      "encoded": 5,
+      "source": 7
+    },
+    "dnd-5e-2024/monsters/griffon|hitPoints.modifier": {
+      "name": "Griffon",
+      "taggedSource": "SRD 5.2",
+      "encoded": 10,
+      "source": 21
+    },
+    "dnd-5e-2024/monsters/grimlock|abilities.con": {
+      "name": "Grimlock",
+      "taggedSource": "SRD 5.2",
+      "encoded": 14,
+      "source": 12
+    },
+    "dnd-5e-2024/monsters/grimlock|abilities.int": {
+      "name": "Grimlock",
+      "taggedSource": "SRD 5.2",
+      "encoded": 3,
+      "source": 9
+    },
+    "dnd-5e-2024/monsters/grimlock|armorClass": {
+      "name": "Grimlock",
+      "taggedSource": "SRD 5.2",
+      "encoded": 13,
+      "source": 11
+    },
+    "dnd-5e-2024/monsters/grimlock|hitPoints.modifier": {
+      "name": "Grimlock",
+      "taggedSource": "SRD 5.2",
+      "encoded": 4,
+      "source": 2
+    },
+    "dnd-5e-2024/monsters/huntershark|abilities.dex": {
+      "name": "Hunter Shark",
+      "taggedSource": "SRD 5.2",
+      "encoded": 13,
+      "source": 14
+    },
+    "dnd-5e-2024/monsters/huntershark|speed.walk": {
+      "name": "Hunter Shark",
+      "taggedSource": "SRD 5.2",
+      "encoded": 0,
+      "source": 5
+    },
+    "dnd-5e-2024/monsters/hydra|abilities.con": {
+      "name": "Hydra",
+      "taggedSource": "SRD 5.2",
+      "encoded": 18,
+      "source": 20
+    },
+    "dnd-5e-2024/monsters/hydra|abilities.int": {
+      "name": "Hydra",
+      "taggedSource": "SRD 5.2",
+      "encoded": 3,
+      "source": 2
+    },
+    "dnd-5e-2024/monsters/hydra|abilities.wis": {
+      "name": "Hydra",
+      "taggedSource": "SRD 5.2",
+      "encoded": 12,
+      "source": 10
+    },
+    "dnd-5e-2024/monsters/hydra|hitPoints.count": {
+      "name": "Hydra",
+      "taggedSource": "SRD 5.2",
+      "encoded": 11,
+      "source": 16
+    },
+    "dnd-5e-2024/monsters/hydra|hitPoints.modifier": {
+      "name": "Hydra",
+      "taggedSource": "SRD 5.2",
+      "encoded": 44,
+      "source": 80
+    },
+    "dnd-5e-2024/monsters/hydra|speed.swim": {
+      "name": "Hydra",
+      "taggedSource": "SRD 5.2",
+      "encoded": 30,
+      "source": 40
+    },
+    "dnd-5e-2024/monsters/hydra|speed.walk": {
+      "name": "Hydra",
+      "taggedSource": "SRD 5.2",
+      "encoded": 30,
+      "source": 40
+    },
+    "dnd-5e-2024/monsters/imp|abilities.con": {
+      "name": "Imp",
+      "taggedSource": "SRD 5.2",
+      "encoded": 10,
+      "source": 13
+    },
+    "dnd-5e-2024/monsters/imp|hitPoints.count": {
+      "name": "Imp",
+      "taggedSource": "SRD 5.2",
+      "encoded": 3,
+      "source": 6
+    },
+    "dnd-5e-2024/monsters/imp|hitPoints.modifier": {
+      "name": "Imp",
+      "taggedSource": "SRD 5.2",
+      "encoded": 3,
+      "source": 6
+    },
+    "dnd-5e-2024/monsters/irongolem|hitPoints.count": {
+      "name": "Iron Golem",
+      "taggedSource": "SRD 5.2",
+      "encoded": 20,
+      "source": 24
+    },
+    "dnd-5e-2024/monsters/irongolem|hitPoints.modifier": {
+      "name": "Iron Golem",
+      "taggedSource": "SRD 5.2",
+      "encoded": 100,
+      "source": 120
+    },
+    "dnd-5e-2024/monsters/lich|abilities.int": {
+      "name": "Lich",
+      "taggedSource": "SRD 5.2",
+      "encoded": 20,
+      "source": 21
+    },
+    "dnd-5e-2024/monsters/lich|abilities.str": {
+      "name": "Lich",
+      "taggedSource": "SRD 5.2",
+      "encoded": 16,
+      "source": 11
+    },
+    "dnd-5e-2024/monsters/lich|armorClass": {
+      "name": "Lich",
+      "taggedSource": "SRD 5.2",
+      "encoded": 17,
+      "source": 20
+    },
+    "dnd-5e-2024/monsters/lich|hitPoints.count": {
+      "name": "Lich",
+      "taggedSource": "SRD 5.2",
+      "encoded": 18,
+      "source": 42
+    },
+    "dnd-5e-2024/monsters/lich|hitPoints.modifier": {
+      "name": "Lich",
+      "taggedSource": "SRD 5.2",
+      "encoded": 72,
+      "source": 126
+    },
+    "dnd-5e-2024/monsters/lion|abilities.con": {
+      "name": "Lion",
+      "taggedSource": "SRD 5.2",
+      "encoded": 13,
+      "source": 11
+    },
+    "dnd-5e-2024/monsters/lion|hitPoints.modifier": {
+      "name": "Lion",
+      "taggedSource": "SRD 5.2",
+      "encoded": 4,
+      "source": 0
+    },
+    "dnd-5e-2024/monsters/mage|abilities.con": {
+      "name": "Mage",
+      "taggedSource": "SRD 5.2",
+      "encoded": 12,
+      "source": 11
+    },
+    "dnd-5e-2024/monsters/mage|abilities.int": {
+      "name": "Mage",
+      "taggedSource": "SRD 5.2",
+      "encoded": 16,
+      "source": 17
+    },
+    "dnd-5e-2024/monsters/mage|abilities.wis": {
+      "name": "Mage",
+      "taggedSource": "SRD 5.2",
+      "encoded": 13,
+      "source": 12
+    },
+    "dnd-5e-2024/monsters/mage|armorClass": {
+      "name": "Mage",
+      "taggedSource": "SRD 5.2",
+      "encoded": 12,
+      "source": 15
+    },
+    "dnd-5e-2024/monsters/mage|hitPoints.count": {
+      "name": "Mage",
+      "taggedSource": "SRD 5.2",
+      "encoded": 6,
+      "source": 18
+    },
+    "dnd-5e-2024/monsters/mage|hitPoints.modifier": {
+      "name": "Mage",
+      "taggedSource": "SRD 5.2",
+      "encoded": 6,
+      "source": 0
+    },
+    "dnd-5e-2024/monsters/mammoth|hitPoints.count": {
+      "name": "Mammoth",
+      "taggedSource": "SRD 5.2",
+      "encoded": 15,
+      "source": 11
+    },
+    "dnd-5e-2024/monsters/mammoth|hitPoints.modifier": {
+      "name": "Mammoth",
+      "taggedSource": "SRD 5.2",
+      "encoded": 60,
+      "source": 55
+    },
+    "dnd-5e-2024/monsters/mammoth|speed.walk": {
+      "name": "Mammoth",
+      "taggedSource": "SRD 5.2",
+      "encoded": 40,
+      "source": 50
+    },
+    "dnd-5e-2024/monsters/manticore|abilities.cha": {
+      "name": "Manticore",
+      "taggedSource": "SRD 5.2",
+      "encoded": 6,
+      "source": 8
+    },
+    "dnd-5e-2024/monsters/manticore|abilities.con": {
+      "name": "Manticore",
+      "taggedSource": "SRD 5.2",
+      "encoded": 16,
+      "source": 17
+    },
+    "dnd-5e-2024/monsters/manticore|abilities.str": {
+      "name": "Manticore",
+      "taggedSource": "SRD 5.2",
+      "encoded": 19,
+      "source": 17
+    },
+    "dnd-5e-2024/monsters/manticore|abilities.wis": {
+      "name": "Manticore",
+      "taggedSource": "SRD 5.2",
+      "encoded": 10,
+      "source": 12
+    },
+    "dnd-5e-2024/monsters/manticore|armorClass": {
+      "name": "Manticore",
+      "taggedSource": "SRD 5.2",
+      "encoded": 16,
+      "source": 14
+    },
+    "dnd-5e-2024/monsters/manticore|challengeRating": {
+      "name": "Manticore",
+      "taggedSource": "SRD 5.2",
+      "encoded": 7,
+      "source": 3
+    },
+    "dnd-5e-2024/monsters/manticore|hitPoints.count": {
+      "name": "Manticore",
+      "taggedSource": "SRD 5.2",
+      "encoded": 13,
+      "source": 8
+    },
+    "dnd-5e-2024/monsters/manticore|hitPoints.modifier": {
+      "name": "Manticore",
+      "taggedSource": "SRD 5.2",
+      "encoded": 39,
+      "source": 24
+    },
+    "dnd-5e-2024/monsters/manticore|speed.fly": {
+      "name": "Manticore",
+      "taggedSource": "SRD 5.2",
+      "encoded": 30,
+      "source": 50
+    },
+    "dnd-5e-2024/monsters/mummy|abilities.wis": {
+      "name": "Mummy",
+      "taggedSource": "SRD 5.2",
+      "encoded": 16,
+      "source": 12
+    },
+    "dnd-5e-2024/monsters/mummy|hitPoints.modifier": {
+      "name": "Mummy",
+      "taggedSource": "SRD 5.2",
+      "encoded": 27,
+      "source": 18
+    },
+    "dnd-5e-2024/monsters/noble|hitPoints.modifier": {
+      "name": "Noble",
+      "taggedSource": "SRD 5.2",
+      "encoded": 2,
+      "source": 0
+    },
+    "dnd-5e-2024/monsters/otyugh|abilities.con": {
+      "name": "Otyugh",
+      "taggedSource": "SRD 5.2",
+      "encoded": 16,
+      "source": 19
+    },
+    "dnd-5e-2024/monsters/otyugh|hitPoints.count": {
+      "name": "Otyugh",
+      "taggedSource": "SRD 5.2",
+      "encoded": 6,
+      "source": 11
+    },
+    "dnd-5e-2024/monsters/otyugh|hitPoints.modifier": {
+      "name": "Otyugh",
+      "taggedSource": "SRD 5.2",
+      "encoded": 12,
+      "source": 44
+    },
+    "dnd-5e-2024/monsters/panther|abilities.dex": {
+      "name": "Panther",
+      "taggedSource": "SRD 5.2",
+      "encoded": 15,
+      "source": 16
+    },
+    "dnd-5e-2024/monsters/panther|armorClass": {
+      "name": "Panther",
+      "taggedSource": "SRD 5.2",
+      "encoded": 12,
+      "source": 13
+    },
+    "dnd-5e-2024/monsters/panther|hitPoints.modifier": {
+      "name": "Panther",
+      "taggedSource": "SRD 5.2",
+      "encoded": 3,
+      "source": 0
+    },
+    "dnd-5e-2024/monsters/planetar|abilities.cha": {
+      "name": "Planetar",
+      "taggedSource": "SRD 5.2",
+      "encoded": 21,
+      "source": 25
+    },
+    "dnd-5e-2024/monsters/planetar|abilities.con": {
+      "name": "Planetar",
+      "taggedSource": "SRD 5.2",
+      "encoded": 20,
+      "source": 24
+    },
+    "dnd-5e-2024/monsters/planetar|challengeRating": {
+      "name": "Planetar",
+      "taggedSource": "SRD 5.2",
+      "encoded": 9,
+      "source": 16
+    },
+    "dnd-5e-2024/monsters/planetar|hitPoints.count": {
+      "name": "Planetar",
+      "taggedSource": "SRD 5.2",
+      "encoded": 16,
+      "source": 21
+    },
+    "dnd-5e-2024/monsters/planetar|hitPoints.modifier": {
+      "name": "Planetar",
+      "taggedSource": "SRD 5.2",
+      "encoded": 80,
+      "source": 147
+    },
+    "dnd-5e-2024/monsters/polarbear|abilities.dex": {
+      "name": "Polar Bear",
+      "taggedSource": "SRD 5.2",
+      "encoded": 10,
+      "source": 14
+    },
+    "dnd-5e-2024/monsters/polarbear|speed.swim": {
+      "name": "Polar Bear",
+      "taggedSource": "SRD 5.2",
+      "encoded": 30,
+      "source": 40
+    },
+    "dnd-5e-2024/monsters/priest|abilities.str": {
+      "name": "Priest",
+      "taggedSource": "SRD 5.2",
+      "encoded": 10,
+      "source": 16
+    },
+    "dnd-5e-2024/monsters/priest|hitPoints.count": {
+      "name": "Priest",
+      "taggedSource": "SRD 5.2",
+      "encoded": 5,
+      "source": 7
+    },
+    "dnd-5e-2024/monsters/priest|hitPoints.modifier": {
+      "name": "Priest",
+      "taggedSource": "SRD 5.2",
+      "encoded": 5,
+      "source": 7
+    },
+    "dnd-5e-2024/monsters/quasit|hitPoints.count": {
+      "name": "Quasit",
+      "taggedSource": "SRD 5.2",
+      "encoded": 3,
+      "source": 10
+    },
+    "dnd-5e-2024/monsters/quasit|speed.fly": {
+      "name": "Quasit",
+      "taggedSource": "SRD 5.2",
+      "encoded": 40,
+      "source": 0
+    },
+    "dnd-5e-2024/monsters/quasit|speed.walk": {
+      "name": "Quasit",
+      "taggedSource": "SRD 5.2",
+      "encoded": 20,
+      "source": 40
+    },
+    "dnd-5e-2024/monsters/reddragonwyrmling|abilities.cha": {
+      "name": "Red Dragon Wyrmling",
+      "taggedSource": "SRD 5.2",
+      "encoded": 10,
+      "source": 15
+    },
+    "dnd-5e-2024/monsters/reddragonwyrmling|abilities.con": {
+      "name": "Red Dragon Wyrmling",
+      "taggedSource": "SRD 5.2",
+      "encoded": 13,
+      "source": 17
+    },
+    "dnd-5e-2024/monsters/reddragonwyrmling|abilities.int": {
+      "name": "Red Dragon Wyrmling",
+      "taggedSource": "SRD 5.2",
+      "encoded": 8,
+      "source": 12
+    },
+    "dnd-5e-2024/monsters/reddragonwyrmling|abilities.str": {
+      "name": "Red Dragon Wyrmling",
+      "taggedSource": "SRD 5.2",
+      "encoded": 15,
+      "source": 19
+    },
+    "dnd-5e-2024/monsters/reddragonwyrmling|challengeRating": {
+      "name": "Red Dragon Wyrmling",
+      "taggedSource": "SRD 5.2",
+      "encoded": 3,
+      "source": 4
+    },
+    "dnd-5e-2024/monsters/reddragonwyrmling|hitPoints.count": {
+      "name": "Red Dragon Wyrmling",
+      "taggedSource": "SRD 5.2",
+      "encoded": 4,
+      "source": 10
+    },
+    "dnd-5e-2024/monsters/reddragonwyrmling|hitPoints.die": {
+      "name": "Red Dragon Wyrmling",
+      "taggedSource": "SRD 5.2",
+      "encoded": "d6",
+      "source": "d8"
+    },
+    "dnd-5e-2024/monsters/reddragonwyrmling|hitPoints.modifier": {
+      "name": "Red Dragon Wyrmling",
+      "taggedSource": "SRD 5.2",
+      "encoded": 8,
+      "source": 30
+    },
+    "dnd-5e-2024/monsters/reddragonwyrmling|size": {
+      "name": "Red Dragon Wyrmling",
+      "taggedSource": "SRD 5.2",
+      "encoded": "small",
+      "source": "medium"
+    },
+    "dnd-5e-2024/monsters/reddragonwyrmling|speed.climb": {
+      "name": "Red Dragon Wyrmling",
+      "taggedSource": "SRD 5.2",
+      "encoded": 0,
+      "source": 30
+    },
+    "dnd-5e-2024/monsters/reefshark|abilities.dex": {
+      "name": "Reef Shark",
+      "taggedSource": "SRD 5.2",
+      "encoded": 13,
+      "source": 15
+    },
+    "dnd-5e-2024/monsters/reefshark|speed.swim": {
+      "name": "Reef Shark",
+      "taggedSource": "SRD 5.2",
+      "encoded": 40,
+      "source": 30
+    },
+    "dnd-5e-2024/monsters/reefshark|speed.walk": {
+      "name": "Reef Shark",
+      "taggedSource": "SRD 5.2",
+      "encoded": 0,
+      "source": 5
+    },
+    "dnd-5e-2024/monsters/rhinoceros|armorClass": {
+      "name": "Rhinoceros",
+      "taggedSource": "SRD 5.2",
+      "encoded": 11,
+      "source": 13
+    },
+    "dnd-5e-2024/monsters/sabertoothedtiger|abilities.dex": {
+      "name": "Saber-Toothed Tiger",
+      "taggedSource": "SRD 5.2",
+      "encoded": 14,
+      "source": 17
+    },
+    "dnd-5e-2024/monsters/sabertoothedtiger|armorClass": {
+      "name": "Saber-Toothed Tiger",
+      "taggedSource": "SRD 5.2",
+      "encoded": 12,
+      "source": 13
+    },
+    "dnd-5e-2024/monsters/shadow|hitPoints.count": {
+      "name": "Shadow",
+      "taggedSource": "SRD 5.2",
+      "encoded": 3,
+      "source": 5
+    },
+    "dnd-5e-2024/monsters/shadow|hitPoints.modifier": {
+      "name": "Shadow",
+      "taggedSource": "SRD 5.2",
+      "encoded": 3,
+      "source": 5
+    },
+    "dnd-5e-2024/monsters/skeleton|abilities.dex": {
+      "name": "Skeleton",
+      "taggedSource": "SRD 5.2",
+      "encoded": 14,
+      "source": 16
+    },
+    "dnd-5e-2024/monsters/skeleton|armorClass": {
+      "name": "Skeleton",
+      "taggedSource": "SRD 5.2",
+      "encoded": 13,
+      "source": 14
+    },
+    "dnd-5e-2024/monsters/solar|abilities.cha": {
+      "name": "Solar",
+      "taggedSource": "SRD 5.2",
+      "encoded": 26,
+      "source": 30
+    },
+    "dnd-5e-2024/monsters/solar|abilities.con": {
+      "name": "Solar",
+      "taggedSource": "SRD 5.2",
+      "encoded": 22,
+      "source": 26
+    },
+    "dnd-5e-2024/monsters/solar|hitPoints.modifier": {
+      "name": "Solar",
+      "taggedSource": "SRD 5.2",
+      "encoded": 132,
+      "source": 176
+    },
+    "dnd-5e-2024/monsters/spy|hitPoints.modifier": {
+      "name": "Spy",
+      "taggedSource": "SRD 5.2",
+      "encoded": 6,
+      "source": 0
+    },
+    "dnd-5e-2024/monsters/spy|speed.climb": {
+      "name": "Spy",
+      "taggedSource": "SRD 5.2",
+      "encoded": 0,
+      "source": 30
+    },
+    "dnd-5e-2024/monsters/stonegolem|armorClass": {
+      "name": "Stone Golem",
+      "taggedSource": "SRD 5.2",
+      "encoded": 17,
+      "source": 18
+    },
+    "dnd-5e-2024/monsters/stonegolem|hitPoints.count": {
+      "name": "Stone Golem",
+      "taggedSource": "SRD 5.2",
+      "encoded": 17,
+      "source": 21
+    },
+    "dnd-5e-2024/monsters/stonegolem|hitPoints.modifier": {
+      "name": "Stone Golem",
+      "taggedSource": "SRD 5.2",
+      "encoded": 85,
+      "source": 105
+    },
+    "dnd-5e-2024/monsters/stormgiant|abilities.wis": {
+      "name": "Storm Giant",
+      "taggedSource": "SRD 5.2",
+      "encoded": 18,
+      "source": 20
+    },
+    "dnd-5e-2024/monsters/stormgiant|challengeRating": {
+      "name": "Storm Giant",
+      "taggedSource": "SRD 5.2",
+      "encoded": 16,
+      "source": 13
+    },
+    "dnd-5e-2024/monsters/stormgiant|hitPoints.count": {
+      "name": "Storm Giant",
+      "taggedSource": "SRD 5.2",
+      "encoded": 16,
+      "source": 20
+    },
+    "dnd-5e-2024/monsters/stormgiant|hitPoints.modifier": {
+      "name": "Storm Giant",
+      "taggedSource": "SRD 5.2",
+      "encoded": 80,
+      "source": 100
+    },
+    "dnd-5e-2024/monsters/stormgiant|speed.fly": {
+      "name": "Storm Giant",
+      "taggedSource": "SRD 5.2",
+      "encoded": 50,
+      "source": 25
+    },
+    "dnd-5e-2024/monsters/stormgiant|speed.swim": {
+      "name": "Storm Giant",
+      "taggedSource": "SRD 5.2",
+      "encoded": 0,
+      "source": 50
+    },
+    "dnd-5e-2024/monsters/succubus|hitPoints.count": {
+      "name": "Succubus",
+      "taggedSource": "SRD 5.2",
+      "encoded": 6,
+      "source": 13
+    },
+    "dnd-5e-2024/monsters/succubus|hitPoints.modifier": {
+      "name": "Succubus",
+      "taggedSource": "SRD 5.2",
+      "encoded": 12,
+      "source": 13
+    },
+    "dnd-5e-2024/monsters/treant|abilities.con": {
+      "name": "Treant",
+      "taggedSource": "SRD 5.2",
+      "encoded": 16,
+      "source": 21
+    },
+    "dnd-5e-2024/monsters/treant|abilities.str": {
+      "name": "Treant",
+      "taggedSource": "SRD 5.2",
+      "encoded": 21,
+      "source": 23
+    },
+    "dnd-5e-2024/monsters/treant|hitPoints.count": {
+      "name": "Treant",
+      "taggedSource": "SRD 5.2",
+      "encoded": 13,
+      "source": 12
+    },
+    "dnd-5e-2024/monsters/treant|hitPoints.modifier": {
+      "name": "Treant",
+      "taggedSource": "SRD 5.2",
+      "encoded": 39,
+      "source": 60
+    },
+    "dnd-5e-2024/monsters/tyrannosaurusrex|abilities.con": {
+      "name": "Tyrannosaurus Rex",
+      "taggedSource": "SRD 5.2",
+      "encoded": 21,
+      "source": 19
+    },
+    "dnd-5e-2024/monsters/tyrannosaurusrex|hitPoints.count": {
+      "name": "Tyrannosaurus Rex",
+      "taggedSource": "SRD 5.2",
+      "encoded": 18,
+      "source": 13
+    },
+    "dnd-5e-2024/monsters/tyrannosaurusrex|hitPoints.modifier": {
+      "name": "Tyrannosaurus Rex",
+      "taggedSource": "SRD 5.2",
+      "encoded": 90,
+      "source": 52
+    },
+    "dnd-5e-2024/monsters/vampire|hitPoints.count": {
+      "name": "Vampire",
+      "taggedSource": "SRD 5.2",
+      "encoded": 16,
+      "source": 23
+    },
+    "dnd-5e-2024/monsters/vampire|hitPoints.modifier": {
+      "name": "Vampire",
+      "taggedSource": "SRD 5.2",
+      "encoded": 64,
+      "source": 92
+    },
+    "dnd-5e-2024/monsters/vampire|speed.climb": {
+      "name": "Vampire",
+      "taggedSource": "SRD 5.2",
+      "encoded": 0,
+      "source": 40
+    },
+    "dnd-5e-2024/monsters/vampire|speed.fly": {
+      "name": "Vampire",
+      "taggedSource": "SRD 5.2",
+      "encoded": 30,
+      "source": 0
+    },
+    "dnd-5e-2024/monsters/vampire|speed.walk": {
+      "name": "Vampire",
+      "taggedSource": "SRD 5.2",
+      "encoded": 30,
+      "source": 40
+    },
+    "dnd-5e-2024/monsters/vampirespawn|abilities.con": {
+      "name": "Vampire Spawn",
+      "taggedSource": "SRD 5.2",
+      "encoded": 14,
+      "source": 16
+    },
+    "dnd-5e-2024/monsters/vampirespawn|armorClass": {
+      "name": "Vampire Spawn",
+      "taggedSource": "SRD 5.2",
+      "encoded": 15,
+      "source": 16
+    },
+    "dnd-5e-2024/monsters/vampirespawn|hitPoints.count": {
+      "name": "Vampire Spawn",
+      "taggedSource": "SRD 5.2",
+      "encoded": 10,
+      "source": 12
+    },
+    "dnd-5e-2024/monsters/vampirespawn|hitPoints.modifier": {
+      "name": "Vampire Spawn",
+      "taggedSource": "SRD 5.2",
+      "encoded": 20,
+      "source": 36
+    },
+    "dnd-5e-2024/monsters/vampirespawn|speed.fly": {
+      "name": "Vampire Spawn",
+      "taggedSource": "SRD 5.2",
+      "encoded": 30,
+      "source": 0
+    },
+    "dnd-5e-2024/monsters/waterelemental|abilities.cha": {
+      "name": "Water Elemental",
+      "taggedSource": "SRD 5.2",
+      "encoded": 6,
+      "source": 8
+    },
+    "dnd-5e-2024/monsters/waterelemental|abilities.con": {
+      "name": "Water Elemental",
+      "taggedSource": "SRD 5.2",
+      "encoded": 14,
+      "source": 18
+    },
+    "dnd-5e-2024/monsters/waterelemental|abilities.int": {
+      "name": "Water Elemental",
+      "taggedSource": "SRD 5.2",
+      "encoded": 6,
+      "source": 5
+    },
+    "dnd-5e-2024/monsters/waterelemental|abilities.str": {
+      "name": "Water Elemental",
+      "taggedSource": "SRD 5.2",
+      "encoded": 16,
+      "source": 18
+    },
+    "dnd-5e-2024/monsters/waterelemental|hitPoints.count": {
+      "name": "Water Elemental",
+      "taggedSource": "SRD 5.2",
+      "encoded": 5,
+      "source": 12
+    },
+    "dnd-5e-2024/monsters/waterelemental|hitPoints.modifier": {
+      "name": "Water Elemental",
+      "taggedSource": "SRD 5.2",
+      "encoded": 10,
+      "source": 48
+    },
+    "dnd-5e-2024/monsters/waterelemental|speed.walk": {
+      "name": "Water Elemental",
+      "taggedSource": "SRD 5.2",
+      "encoded": 0,
+      "source": 30
+    },
+    "dnd-5e-2024/monsters/wolf|abilities.str": {
+      "name": "Wolf",
+      "taggedSource": "SRD 5.2",
+      "encoded": 12,
+      "source": 14
+    },
+    "dnd-5e-2024/monsters/wolf|armorClass": {
+      "name": "Wolf",
+      "taggedSource": "SRD 5.2",
+      "encoded": 13,
+      "source": 12
+    },
+    "dnd-5e-2024/monsters/wraith|hitPoints.count": {
+      "name": "Wraith",
+      "taggedSource": "SRD 5.2",
+      "encoded": 6,
+      "source": 9
+    },
+    "dnd-5e-2024/monsters/wraith|hitPoints.modifier": {
+      "name": "Wraith",
+      "taggedSource": "SRD 5.2",
+      "encoded": 18,
+      "source": 27
+    },
+    "dnd-5e-2024/monsters/wraith|speed.walk": {
+      "name": "Wraith",
+      "taggedSource": "SRD 5.2",
+      "encoded": 0,
+      "source": 5
+    },
+    "dnd-5e-2024/monsters/youngreddragon|abilities.cha": {
+      "name": "Young Red Dragon",
+      "taggedSource": "SRD 5.2",
+      "encoded": 15,
+      "source": 19
+    },
+    "dnd-5e-2024/monsters/youngreddragon|abilities.con": {
+      "name": "Young Red Dragon",
+      "taggedSource": "SRD 5.2",
+      "encoded": 17,
+      "source": 21
+    },
+    "dnd-5e-2024/monsters/youngreddragon|abilities.int": {
+      "name": "Young Red Dragon",
+      "taggedSource": "SRD 5.2",
+      "encoded": 12,
+      "source": 14
+    },
+    "dnd-5e-2024/monsters/youngreddragon|abilities.str": {
+      "name": "Young Red Dragon",
+      "taggedSource": "SRD 5.2",
+      "encoded": 19,
+      "source": 23
+    },
+    "dnd-5e-2024/monsters/youngreddragon|abilities.wis": {
+      "name": "Young Red Dragon",
+      "taggedSource": "SRD 5.2",
+      "encoded": 15,
+      "source": 11
+    },
+    "dnd-5e-2024/monsters/youngreddragon|hitPoints.count": {
+      "name": "Young Red Dragon",
+      "taggedSource": "SRD 5.2",
+      "encoded": 10,
+      "source": 17
+    },
+    "dnd-5e-2024/monsters/youngreddragon|hitPoints.modifier": {
+      "name": "Young Red Dragon",
+      "taggedSource": "SRD 5.2",
+      "encoded": 40,
+      "source": 85
+    },
+    "dnd-5e-2024/monsters/youngreddragon|speed.climb": {
+      "name": "Young Red Dragon",
+      "taggedSource": "SRD 5.2",
+      "encoded": 0,
+      "source": 40
+    },
+    "dnd-5e-2024/monsters/zombie|hitPoints.count": {
+      "name": "Zombie",
+      "taggedSource": "SRD 5.2",
+      "encoded": 3,
+      "source": 2
+    },
+    "dnd-5e-2024/monsters/zombie|hitPoints.modifier": {
+      "name": "Zombie",
+      "taggedSource": "SRD 5.2",
+      "encoded": 9,
+      "source": 6
+    }
+  }
+}
