@@ -89,7 +89,10 @@ describe('shared 5e host edit handlers', () => {
     updatedDoc = sheet.applyLatestUpdate();
     expect(updatedDoc.system.personality?.appearance).toBe('Blue cloak and silver clasp');
 
-    fireEvent.change(screen.getByLabelText('Notes'), {
+    // By role, not label: the Notes TAB PANEL is now named from its tab
+    // (aria-labelledby, the ARIA tabs pattern), so "Notes" alone is ambiguous
+    // between the panel and the textarea inside it. Only one is a textbox.
+    fireEvent.change(screen.getByRole('textbox', { name: 'Notes' }), {
       target: { value: 'Keeps careful maps.' },
     });
     await waitFor(() => expect(sheet.onUpdate).toHaveBeenCalled());
