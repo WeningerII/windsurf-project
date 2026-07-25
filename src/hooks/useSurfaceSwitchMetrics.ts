@@ -10,6 +10,19 @@ import type { Surface } from './useAppNav';
  * threshold is asserted here on purpose — the budget number must come from
  * recorded baselines, not be invented up front.
  *
+ * PHASE-7 OUTCOME (2026-07-24): this instrument stays SOFT-LOGGED, and the
+ * keepalive budget was made hard by counting DOM work instead
+ * (`scripts/lib/shellKeepaliveBudget.mjs`). Two reasons, both recorded in
+ * `docs/design/ui-shell-phase7-budgets.md`: (a) the measure below spans the
+ * PREVIOUS surface's mark to the current one, so its duration is dwell time on
+ * the previous surface plus the switch — not switch latency; thresholding it
+ * would gate on how long a user or test lingered. (b) A keepalive switch is
+ * four attribute writes, and the observed wall-clock spread for that work was
+ * 12.6-48.5ms on an idle machine, an order of magnitude above the signal.
+ * Making this hard requires re-scoping it first: mark immediately before the
+ * nav dispatch and measure to a post-commit mark. That is a change to the
+ * writer side (App -> ShellContext) and is deliberately not bundled here.
+ *
  * Side-effect only: runs after commit (never in the render path) and is a
  * no-op wherever the User Timing API is missing or throws.
  */

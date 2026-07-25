@@ -7,8 +7,15 @@ import { expect, test } from '@playwright/test';
  * canvas is kept alive (visibility:hidden + off-screen) rather than
  * unmounted. The switch duration is soft-logged from the shell's
  * performance.measure entries (useSurfaceSwitchMetrics) as an annotation —
- * no hard frame-budget number is asserted here; the Phase-7 budget must be
- * pinned from recorded baselines, not invented in a spec.
+ * no hard frame-budget number is asserted here.
+ *
+ * Phase 7 (2026-07-24) resolved the "the budget must be pinned from recorded
+ * baselines" note this comment used to carry: the frame budget IS now hard, but
+ * as counted DOM work rather than wall-clock, because the measure read below
+ * spans dwell time on the previous surface rather than switch latency (it
+ * includes this spec's scene creation and its 30s canvas-chunk wait). The hard
+ * gate lives in `npm run check:keepalive-budget`; the annotation here stays
+ * soft-logged. Rationale: docs/design/ui-shell-phase7-budgets.md.
  */
 
 test.beforeEach(async ({ page }) => {
