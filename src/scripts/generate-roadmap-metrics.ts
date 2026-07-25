@@ -32,6 +32,7 @@ import {
   OpenContentCategory,
   extractSourceAttribution,
   isOpenContentCompliant,
+  isOriginalContentSource,
   strictOpenContentPolicy,
 } from '../utils/openContentPolicy';
 
@@ -83,6 +84,13 @@ type Metrics = {
   duplicateCount: number;
   missingSourceCount: number;
   nonCompliantCount: number;
+  /**
+   * Entries citing a declared `originalContentSources` label — authored for
+   * this app, NOT transcribed from an open document. They are cited and
+   * policy-clean, so they are not violations, but they are not open content
+   * either and must never be folded into an open-content compliance figure.
+   */
+  originalContentCount: number;
   sourceCounts: Record<string, number>;
 };
 
@@ -235,6 +243,7 @@ function computeMetrics(
 
   let missingSourceCount = 0;
   let nonCompliantCount = 0;
+  let originalContentCount = 0;
 
   uniqueItems.forEach((item) => {
     const source = extractSourceAttribution(item);
@@ -242,6 +251,9 @@ function computeMetrics(
       missingSourceCount += 1;
     } else {
       sourceCounts.set(source, (sourceCounts.get(source) ?? 0) + 1);
+      if (isOriginalContentSource(systemId, source)) {
+        originalContentCount += 1;
+      }
     }
 
     if (!isOpenContentCompliant(systemId, category, item)) {
@@ -255,6 +267,7 @@ function computeMetrics(
     duplicateCount: rawItems.length - uniqueItems.length,
     missingSourceCount,
     nonCompliantCount,
+    originalContentCount,
     sourceCounts: Object.fromEntries([...sourceCounts.entries()].sort((a, b) => b[1] - a[1])),
   };
 }
@@ -502,9 +515,10 @@ function buildMarkdownReport(
       'Duplicates Removed',
       'Missing Source',
       'Non-Compliant',
+      'Original (non-SRD)',
     ])
   );
-  lines.push(markdownTableRow(['---', '---', '---:', '---:', '---:', '---:']));
+  lines.push(markdownTableRow(['---', '---', '---:', '---:', '---:', '---:', '---:']));
   loaderRows.forEach((row) => {
     lines.push(
       markdownTableRow([
@@ -514,15 +528,23 @@ function buildMarkdownReport(
         row.metrics.duplicateCount,
         row.metrics.missingSourceCount,
         row.metrics.nonCompliantCount,
+        row.metrics.originalContentCount,
       ])
     );
   });
   lines.push('');
   lines.push('### Referenced Module Audit (Repo-Resident Raw Exports)');
   lines.push(
-    markdownTableRow(['Dataset', 'Unique Items', 'Duplicates', 'Missing Source', 'Non-Compliant'])
+    markdownTableRow([
+      'Dataset',
+      'Unique Items',
+      'Duplicates',
+      'Missing Source',
+      'Non-Compliant',
+      'Original (non-SRD)',
+    ])
   );
-  lines.push(markdownTableRow(['---', '---:', '---:', '---:', '---:']));
+  lines.push(markdownTableRow(['---', '---:', '---:', '---:', '---:', '---:']));
   moduleRows.forEach((row) => {
     lines.push(
       markdownTableRow([
@@ -531,6 +553,7 @@ function buildMarkdownReport(
         row.metrics.duplicateCount,
         row.metrics.missingSourceCount,
         row.metrics.nonCompliantCount,
+        row.metrics.originalContentCount,
       ])
     );
   });
@@ -627,19 +650,45 @@ function buildMarkdownReport(
 
   lines.push('### Content Integrity (Denominator A — provenance + policy)');
   lines.push(
-    "_Share of each system's loader-backed entries that are source-tagged AND open-content-policy-clean — i.e. the content DONE conditions 'encoded, loader-backed, source-tagged, policy-clean'. This certifies CATALOG INTEGRITY (every shipped open-content entry is cited and compliant). It is NOT coverage vs the full published SRD: measuring which SRD entries are MISSING requires an external authoritative SRD index that is unavailable in this environment, so that coverage dimension is flagged unresolved rather than asserted._"
+    "_Share of each system's **open-content** loader-backed entries that are source-tagged AND open-content-policy-clean — i.e. the content DONE conditions 'encoded, loader-backed, source-tagged, policy-clean'. This certifies CATALOG INTEGRITY (every shipped open-content entry is cited and compliant). It is NOT coverage vs the full published SRD: measuring which SRD entries are MISSING requires an external authoritative SRD index that is unavailable in this environment, so that coverage dimension is flagged unresolved rather than asserted._"
   );
-  lines.push(markdownTableRow(['System', 'Loader Entries', 'Cited + Policy-Clean', 'Integrity']));
-  lines.push(markdownTableRow(['---', '---:', '---:', '---:']));
+  lines.push(
+    '_`Original (non-SRD)` counts entries this project AUTHORED rather than transcribed from an open document, declared via `originalContentSources` in `src/utils/openContentPolicy.ts`. They are cited and shippable, but they are not open content, so they are excluded from BOTH sides of the Integrity ratio — counting them as compliant open content would launder exactly the mislabeling that channel exists to expose (see `docs/mam3e-equipment-provenance.md`). `Open-Content Pop.` is `Loader Entries` minus that column._'
+  );
+  lines.push(
+    markdownTableRow([
+      'System',
+      'Loader Entries',
+      'Original (non-SRD)',
+      'Open-Content Pop.',
+      'Cited + Policy-Clean',
+      'Integrity',
+    ])
+  );
+  lines.push(markdownTableRow(['---', '---:', '---:', '---:', '---:', '---:']));
   systems.forEach((system) => {
     const rows = loaderRows.filter((row) => row.systemId === system.id);
     const total = rows.reduce((sum, row) => sum + row.metrics.uniqueCount, 0);
+    const original = rows.reduce((sum, row) => sum + row.metrics.originalContentCount, 0);
     const violations = rows.reduce(
       (sum, row) => sum + row.metrics.missingSourceCount + row.metrics.nonCompliantCount,
       0
     );
-    const clean = total - violations;
-    lines.push(markdownTableRow([system.label, total, clean, `${toPercent(clean, total)}%`]));
+    // Original-content entries are cited and policy-clean by construction, so
+    // they are never part of `violations` — subtracting them from the
+    // population cannot hide a real violation.
+    const openContentPopulation = total - original;
+    const clean = openContentPopulation - violations;
+    lines.push(
+      markdownTableRow([
+        system.label,
+        total,
+        original,
+        openContentPopulation,
+        clean,
+        `${toPercent(clean, openContentPopulation)}%`,
+      ])
+    );
   });
 
   return lines.join('\n');

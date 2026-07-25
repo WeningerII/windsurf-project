@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-25T16:02:10.476Z",
+  "generatedAt": "2026-07-25T16:32:29.867Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -570,8 +570,8 @@
       "systemId": "mam3e",
       "systemLabel": "Mutants & Masterminds 3e",
       "category": "equipment",
-      "encoded": 192,
-      "target": 192,
+      "encoded": 113,
+      "target": 113,
       "percent": 100
     },
     {
@@ -948,6 +948,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.1": 319
         }
@@ -964,6 +965,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.1": 12
         }
@@ -980,6 +982,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.1": 9
         }
@@ -996,6 +999,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.1": 1
         }
@@ -1012,6 +1016,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.1": 106
         }
@@ -1028,6 +1033,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.1": 296,
           "SRD": 39
@@ -1045,6 +1051,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.1": 657
         }
@@ -1061,6 +1068,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.1": 1
         }
@@ -1077,6 +1085,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.2": 339
         }
@@ -1093,6 +1102,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.2": 12
         }
@@ -1109,6 +1119,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.2": 9
         }
@@ -1125,6 +1136,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.2": 4
         }
@@ -1141,6 +1153,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.2": 340
         }
@@ -1157,6 +1170,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.2": 502
         }
@@ -1173,6 +1187,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 5.2": 19
         }
@@ -1189,6 +1204,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 3.5": 610
         }
@@ -1205,6 +1221,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 3.5": 26
         }
@@ -1221,6 +1238,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 3.5": 7
         }
@@ -1237,6 +1255,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 3.5": 188
         }
@@ -1253,6 +1272,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 3.5": 207
         }
@@ -1269,6 +1289,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "SRD 3.5": 80
         }
@@ -1285,6 +1306,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Core Rulebook": 625
         }
@@ -1301,6 +1323,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Core Rulebook": 18
         }
@@ -1317,6 +1340,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Core Rulebook": 7
         }
@@ -1333,6 +1357,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Core Rulebook": 12
         }
@@ -1349,6 +1374,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Bestiary": 332
         }
@@ -1365,6 +1391,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Core Rulebook": 617
         }
@@ -1381,6 +1408,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "CRB": 86
         }
@@ -1397,6 +1425,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Core Rulebook": 551
         }
@@ -1413,6 +1442,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Core Rulebook": 12
         }
@@ -1429,6 +1459,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Core Rulebook": 6
         }
@@ -1445,6 +1476,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Core Rulebook": 16
         }
@@ -1461,6 +1493,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Core Rulebook": 5
         }
@@ -1477,6 +1510,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "B1": 413
         }
@@ -1493,6 +1527,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Core Rulebook": 188
         }
@@ -1509,6 +1544,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Core Rulebook": 93
         }
@@ -1525,6 +1561,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Hero's Handbook": 61
         }
@@ -1541,6 +1578,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Hero's Handbook": 15
         }
@@ -1557,6 +1595,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Hero's Handbook": 28
         }
@@ -1573,6 +1612,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 79,
         "sourceCounts": {
           "M&M 3e Hero SRD": 113,
           "Original Content (not SRD)": 79
@@ -1590,6 +1630,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Hero's Handbook": 74
         }
@@ -1606,6 +1647,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Hero's Handbook": 99
         }
@@ -1622,6 +1664,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Daggerheart SRD 1.0": 9
         }
@@ -1638,6 +1681,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Daggerheart SRD 1.0": 19
         }
@@ -1654,6 +1698,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Daggerheart SRD 1.0": 9
         }
@@ -1670,6 +1715,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Daggerheart SRD 1.0": 353
         }
@@ -1687,6 +1733,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Hero's Handbook": 61
         }
@@ -1702,6 +1749,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Hero's Handbook": 74
         }
@@ -1717,6 +1765,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Hero's Handbook": 15
         }
@@ -1732,6 +1781,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Hero's Handbook": 28
         }
@@ -1747,6 +1797,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Hero's Handbook": 99
         }
@@ -1762,6 +1813,7 @@
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
+        "originalContentCount": 0,
         "sourceCounts": {
           "Core Rulebook": 5
         }

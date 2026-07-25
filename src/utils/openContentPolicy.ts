@@ -172,11 +172,17 @@ function isSourceAllowed(systemId: GameSystemId, source: string): boolean {
  * an open document. Such entries are shippable but are NOT open-content
  * provenance — see `SystemOpenContentPolicy.originalContentSources`.
  *
+ * EXPORTED because `isOpenContentCompliant` is the SHIPPING gate (open content
+ * OR declared original content), which is the wrong predicate for anything
+ * *measuring* open-content compliance. `generate-roadmap-metrics.ts` uses this
+ * to keep the two populations separate in the published Content Integrity
+ * table instead of reporting self-authored entries as compliant open content.
+ *
  * Scanned rather than pre-indexed: only mam3e declares any, and the eager shell
  * is ~130 bytes from its gzip budget, so a seventh module-level Set map is not
  * worth the first-paint cost.
  */
-function isOriginalContentSource(systemId: GameSystemId, source: string): boolean {
+export function isOriginalContentSource(systemId: GameSystemId, source: string): boolean {
   const declared = strictOpenContentPolicy[systemId].originalContentSources;
   if (!declared) return false;
   const normalized = normalizeSource(source);
