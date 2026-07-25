@@ -561,7 +561,7 @@ bundle. Bumping it means re-checking that dedupe, not just the changelog.
 - **No provider is priced.** Nothing in the repo knows what a call costs in
   money; the "units" are relative weights, not currency.
 
-## 9. Provenance over-inclusion outside `src/data/` (added 2026-07-25)
+## 11. Provenance over-inclusion outside `src/data/` (added 2026-07-25)
 
 **The blind spot.** `npm run srd:coverage` is a reverse-diff audit: it fetches
 published open-content lists and diffs them against what the LOADERS expose. It
@@ -642,11 +642,29 @@ denominator of SRD section titles, which does not exist in-repo.
    entry/chapter boundary. The structured `source:` fields on the same effects
    are checked, which is what catches OC-1. **Manual review.**
 4. **Per-system reach is uneven, and that is a property of the corpus, not the
-   gate** — the gate treats all seven systems identically, but 3.5e, PF1e and
-   Daggerheart currently have *no* named-entry citations and no literal content
-   effect sources outside `src/data/`, so they have nothing to resolve. They are
-   still covered by assertion A (edition validity) and by the D/scope ratchet,
-   which fires the moment such content appears.
+   gate** — the gate treats all seven systems identically, but what each system
+   currently exposes to resolve differs. **Daggerheart** alone has neither
+   named-entry citations nor literal content effect sources outside `src/data/`,
+   so it has nothing to resolve; it stays covered by assertion A (edition
+   validity) and the D/scope ratchet, which fire the moment such content
+   appears. **3.5e and PF1e do have literal content effect sources** — the gate
+   CLEARS `feat "Power Attack"` for both at
+   `src/rules/conditions/d20LegacyRiders.ts:74,84`. (An earlier revision of this
+   note listed 3.5e and PF1e alongside Daggerheart as having none; the gate's own
+   CLEARED output disproves it.)
+5. **`src/systems/**` is not scanned for literal effect sources** — only
+   `src/rules/**` and `src/scene/**` are (`RULES_SCAN_DIRS`), plus the
+   declarative `derivedQuantities*.ts` specs for their structured citations. So
+   an effect-source literal living in a system module is outside the population
+   the gate reports on. This is not hypothetical:
+   `src/systems/dnd5e/shared/activities.ts` carries three today (a
+   `feature-option` "Defense Fighting Style" and two "Divine Smite" sources), and
+   "Defense Fighting Style" does **not** resolve against
+   `loadFeatureOptionsForSystem('dnd-5e-2014')` — the corpus name is "Defense",
+   so this looks like a label mismatch rather than an open-content defect, but
+   the gate does not currently say either way. Widening the scan means first
+   deciding how to treat label-vs-corpus-name mismatches so legitimate SRD
+   content is not mis-flagged as a licensing finding. **Manual review.**
 
 ---
 

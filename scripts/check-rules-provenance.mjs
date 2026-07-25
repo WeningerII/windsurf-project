@@ -150,10 +150,27 @@ const DERIVED_QUANTITY_FILE_SCOPE = {
  * Assertion D makes each entry self-expiring: once the underlying citation is
  * fixed or removed, the now-stale entry FAILS the gate and must be deleted. So
  * this list can shrink silently but never grow silently.
+ *
+ * Each entry is also CONTENT-ADDRESSED: it pins the exact `citation` text and
+ * the `assertion` that was reviewed, not just the finding id. Keying on the id
+ * alone granted blanket immunity — the id encodes only location + kind + entry
+ * id, so a reviewed verdict for one citation silently absolved that location of
+ * EVERY future failure, including a strictly worse one. Demonstrated: rewriting
+ * a register citation to name an outright closed book ("Player's Handbook 2014:
+ * Feats — Great Weapon Master") still matched the id, printed the reviewed
+ * reason about SRD 5.1, and exited 0. That is the "quarantine rots into a
+ * rubber stamp" failure this gate exists to avoid, and it mattered because the
+ * gate ships green only by virtue of these quarantined findings.
+ *
+ * A finding now quarantines only when the id, the assertion AND the citation
+ * all match what was reviewed. Anything else is a failure, even at a
+ * location that already carries an entry.
  */
 const ALLOWLIST = [
   {
     id: 'rules:src/rules/conditions/dnd5eRiders.ts:feat:great-weapon-master',
+    assertion: 'C/content-literal',
+    citation: 'feat "Great Weapon Master"',
     verdict: 'unsubstantiated',
     gapsAnchor: 'OC-1',
     reason:
@@ -161,6 +178,8 @@ const ALLOWLIST = [
   },
   {
     id: 'rules:src/rules/conditions/dnd5eRiders.ts:feat:sharpshooter',
+    assertion: 'C/content-literal',
+    citation: 'feat "Sharpshooter"',
     verdict: 'unsubstantiated',
     gapsAnchor: 'OC-1',
     reason:
@@ -168,6 +187,8 @@ const ALLOWLIST = [
   },
   {
     id: 'register:dnd5e2014.L3.gwm-tradeoff',
+    assertion: 'B/named-entry',
+    citation: 'SRD 5.1: Feats — Great Weapon Master',
     verdict: 'unsubstantiated',
     gapsAnchor: 'OC-1',
     reason:
@@ -175,6 +196,8 @@ const ALLOWLIST = [
   },
   {
     id: 'register:dnd5e2014.L3.sharpshooter-tradeoff',
+    assertion: 'B/named-entry',
+    citation: 'SRD 5.1: Feats — Sharpshooter',
     verdict: 'unsubstantiated',
     gapsAnchor: 'OC-1',
     reason:
@@ -182,6 +205,8 @@ const ALLOWLIST = [
   },
   {
     id: 'register:mam3e.L9.power-cost',
+    assertion: 'B/named-entry',
+    citation: "M&M 3e Hero's Handbook (DHH OGC): Powers — Power Cost; Modifiers (minimum cost)",
     verdict: 'chapter-section',
     gapsAnchor: 'OC-2',
     reason:
@@ -256,13 +281,28 @@ const stats = {
 
 function record(finding) {
   const allowed = ALLOWED_BY_ID.get(finding.id);
-  if (allowed) {
+  // Content-addressed quarantine: the id alone is NOT enough. The reviewed
+  // assertion and citation text must both match, so a DIFFERENT defect at an
+  // already-reviewed location (a worse citation, or the same entry failing a
+  // different assertion) fails instead of inheriting the reviewed verdict.
+  if (allowed && allowed.assertion === finding.assertion && allowed.citation === finding.citation) {
     allowlistHits.add(finding.id);
     quarantined.push({
       ...finding,
       verdict: allowed.verdict,
       gapsAnchor: allowed.gapsAnchor,
       reason: allowed.reason,
+    });
+    return;
+  }
+  if (allowed) {
+    failures.push({
+      ...finding,
+      detail:
+        `${finding.detail} — and this is NOT the reviewed finding for id ${JSON.stringify(finding.id)}: ` +
+        `the allowlist pins assertion ${JSON.stringify(allowed.assertion)} / citation ${JSON.stringify(allowed.citation)}, ` +
+        `but this is assertion ${JSON.stringify(finding.assertion)} / citation ${JSON.stringify(finding.citation)}. ` +
+        `A reviewed verdict covers one specific citation, never the location in general.`,
     });
     return;
   }
@@ -467,6 +507,36 @@ for (const register of COMPUTE_REGISTERS) {
 }
 
 const DERIVED_SOURCE = /^\s*source:\s*(?:'((?:[^'\\]|\\.)*)'|"((?:[^"\\]|\\.)*)")\s*,\s*$/gm;
+// Completeness ratchet for the derived-quantity map, mirroring assertion D over
+// RULES_FILE_SYSTEM_SCOPE. Without this, iterating a hardcoded map means a NEW
+// derived-quantity spec file silently drops out of coverage: it is simply never
+// read, and the citation count stays flat so nothing looks wrong. Seven systems
+// share six files today only because src/systems/dnd5e/shared serves both 5e
+// editions — splitting it would silently unscan one.
+const declaredDerivedFiles = new Set(Object.keys(DERIVED_QUANTITY_FILE_SCOPE));
+for (const systemDir of await readdir(path.join(REPO_ROOT, 'src/systems'), {
+  withFileTypes: true,
+})) {
+  if (!systemDir.isDirectory()) continue;
+  const dirPath = path.join(REPO_ROOT, 'src/systems', systemDir.name);
+  for (const entry of await readdir(dirPath, { withFileTypes: true, recursive: true })) {
+    if (!entry.isFile() || !/^derivedQuantities.*\.ts$/.test(entry.name)) continue;
+    const rel = path
+      .relative(REPO_ROOT, path.join(entry.parentPath ?? entry.path ?? dirPath, entry.name))
+      .split(path.sep)
+      .join('/');
+    if (declaredDerivedFiles.has(rel)) continue;
+    failures.push({
+      id: `scope:${rel}`,
+      where: rel,
+      citation: rel,
+      assertion: 'D/scope',
+      detail:
+        'derived-quantity spec file is not declared in DERIVED_QUANTITY_FILE_SCOPE — declare which systems it serves, or its open-content citations are never audited',
+    });
+  }
+}
+
 for (const [rel, systems] of Object.entries(DERIVED_QUANTITY_FILE_SCOPE)) {
   const text = readFileSync(path.join(REPO_ROOT, rel), 'utf8');
   DERIVED_SOURCE.lastIndex = 0;
