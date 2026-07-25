@@ -56,8 +56,13 @@ const SCENE_MANAGER_MARKER = 'No scene selected';
  * so the all-seven-equal rule is machine-checked, not assumed: seven ids, six
  * distinct modules, because `dnd-3.5e` and `pf1e` deliberately share the
  * d20-legacy sheet host (`makeD20LegacySheet`) and dnd5e/dnd5e-2024 each have
- * their own entry over a shared `Dnd5eSheetBase` chunk. If a system is added,
- * add it here — an unlisted system would silently escape the gate.
+ * their own entry over a shared `Dnd5eSheetBase` chunk.
+ *
+ * This map alone cannot enforce all-seven: iterating it would silently pass for
+ * any system missing from it. So it is cross-checked below against the system
+ * directories that actually ship a `definition.ts` (the same technique
+ * `scripts/check-keepalive-budget.mjs` uses) — adding an eighth system without
+ * adding it here fails the gate instead of escaping it.
  */
 const SYSTEM_SHEET_MODULES = {
   'dnd-5e-2014': 'src/systems/dnd5e/components/Dnd5eSheet.tsx',
@@ -89,12 +94,17 @@ const LAZY_SURFACE_MODULES = ['src/components/SceneManager.tsx', 'src/components
  * evaluates all of them before the entry module runs. Measured 2026-07-24: 755.0
  * KiB gzip across these eleven chunks, versus 189.4 KiB for the shell's own code.
  *
- * The all-seven picture is deliberately recorded because it is UNEQUAL today:
- * daggerheart, mam3e, dnd-3.5e, pf1e and pf2e pay full eager freight, dnd-5e-2024
- * pays partially (spells only), and dnd-5e-2014 pays nothing. Fixing that is the
- * STRUCTURAL reclaim already named in the app-chunk budget note (lazy-loading the
- * per-system engines behind the registry) — a larger async-boundary change tracked
- * separately, NOT something Phase 7 hardening should smuggle in.
+ * Do NOT read these chunk NAMES as a per-system attribution of the debt. The
+ * names reflect `manualChunks` placement, and several of these chunks export
+ * symbols other systems consume — `daggerheart-data-*`, for instance, is
+ * statically imported by the dnd-5e-2014, dnd-3.5e, pf1e, pf2e and dnd-5e-2024
+ * spell/monster data chunks — so a chunk is often eager because a SHARED symbol
+ * lives in that system's directory, not because that system bootstraps eagerly.
+ * Attributing this debt per system needs symbol-level analysis this gate does not
+ * do. What is certain: 755.0 KiB rides first paint, and it must not grow.
+ * Reducing it is the STRUCTURAL reclaim already named in the app-chunk budget
+ * note (lazy-loading the per-system engines behind the registry) — a larger
+ * async-boundary change tracked separately, NOT something Phase 7 should smuggle in.
  *
  * What IS hard-gated here: the list may only ever SHRINK. Any per-system data
  * chunk that newly joins the eager closure fails the build, so the debt cannot
@@ -355,6 +365,28 @@ for (const chunk of eagerDataChunks) {
 // ── Phase 7 gate 3: all-seven lazy-sheet + lazy-surface purity ─────────────
 // System-agnostic by construction: every registered system is checked against
 // the same rule, and no system's sheet may ride first paint.
+//
+// Drift guard first: iterating SYSTEM_SHEET_MODULES can only vouch for the
+// systems already IN it, so a system added to src/systems without a map entry
+// would escape every assertion below. Cross-check the map against the system
+// directories that actually ship a definition (same technique as
+// scripts/check-keepalive-budget.mjs), so the all-seven claim is enforced
+// rather than assumed.
+const systemsSrcDir = path.resolve(process.cwd(), 'src/systems');
+if (fs.existsSync(systemsSrcDir)) {
+  const definitionDirs = fs
+    .readdirSync(systemsSrcDir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .filter((entry) => fs.existsSync(path.join(systemsSrcDir, entry.name, 'definition.ts')))
+    .map((entry) => entry.name);
+  const mappedSystemCount = Object.keys(SYSTEM_SHEET_MODULES).length;
+  if (definitionDirs.length > mappedSystemCount) {
+    violations.push(
+      `src/systems has ${definitionDirs.length} systems shipping a definition.ts (${definitionDirs.join(', ')}) but SYSTEM_SHEET_MODULES maps only ${mappedSystemCount} — add the new system there so its sheet is held to the same lazy-loading rule as every other system`
+    );
+  }
+}
+
 for (const [systemId, moduleId] of Object.entries(SYSTEM_SHEET_MODULES)) {
   const owningChunk = chunkForModule.get(moduleId);
   if (!owningChunk) {

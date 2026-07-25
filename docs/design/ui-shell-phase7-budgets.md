@@ -25,6 +25,12 @@ app, with a `MutationObserver` counting the DOM writes a surface switch actually
 performs. Measured for **all seven systems** and **all six ordered surface
 transitions** — 42 switches per run.
 
+Read that "42" precisely: `SurfaceStage` takes `ReactNode` slots and never sees
+system code, so the seven sweeps drive an identical probe subtree under seven
+system ids. They prove the shell seam costs the same for every system and that
+no system is skipped — not that seven different sheets were rendered. The
+per-system rendering itself is covered by the e2e smoke suite (see §3).
+
 **It is deterministic (counted), not wall-clock (timed).** That is a deliberate
 choice, and the reasoning is load-bearing:
 
@@ -113,9 +119,16 @@ still fetches and evaluates all of them before the entry runs. Real first-paint
 JS is **944.4 KiB gzip**, not the 189.4 KiB the old check could see.
 
 That total splits as **189.4 KiB of shell code** and **755.0 KiB of per-system
-SRD data**, and the data half is unequal across the seven systems: daggerheart,
-mam3e, dnd-3.5e, pf1e and pf2e pay full eager freight, dnd-5e-2024 pays
-partially (spells only), dnd-5e-2014 pays nothing. Phase 7 does not fix this —
+SRD data**. The 755.0 KiB total and the ratchet over it are measured facts; do
+**not** read the chunk *names* as a per-system attribution. Those names are a
+`manualChunks` placement artifact: several of these chunks export symbols that
+other systems consume, so a chunk is often eager because a shared symbol happens
+to live in that system's data directory, not because that system bootstraps
+eagerly. (For example `daggerheart-data-*` is statically imported by the
+dnd-5e-2014, dnd-3.5e, pf1e, pf2e and dnd-5e-2024 spell/monster data chunks.)
+Attributing the debt per system needs symbol-level analysis this gate does not
+do — it budgets the total and forbids a twelfth chunk. Phase 7 does not fix the
+underlying eagerness —
 that is the structural reclaim (lazy-loading the per-system engines behind the
 registry), a larger async-boundary change tracked separately. Phase 7 makes it
 **visible and un-growable**.
