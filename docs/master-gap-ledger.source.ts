@@ -257,9 +257,18 @@ export const MASTER_GAP_LEDGER: readonly GapLedgerItem[] = [
       'L1/L2/L5-L10 — derived stats, spell economy, progression, defenses, legality, encounter',
     detail:
       'Spell DC/attack/passive/cantrip/Unarmored Defense/MAP/bulk/heighten; prepared/known/upcasting; speed-with-penalty; ASI/feat cadence; resist/vuln/immune; point-buy + prereq + multiclass-stacking validators; 3.5e encounter budget + wealth — surfaced in prepareData/sheets via the resolver.',
-    status: 'pending',
+    status: 'done',
     tags: ['engineering'],
-    evidence: 'docs/compute-register/* (per-layer in-scope < verified)',
+    // Corrected 2026-07-25: the previous evidence read "per-layer in-scope <
+    // verified", which is no longer true. roadmap-metrics computeCompletion now
+    // reads 234/234 = 100% for ALL SEVEN systems with every layer L1–L10 at
+    // in-scope == verified (Tier A test-linked AND mutation-proven, 0
+    // demotions). Scope note, so this does not overclaim: 100% is of the
+    // register's DECLARED in-scope set — `register-full-enumeration` is what
+    // keeps that set honest, and it records `not-computed`/`excluded` entries
+    // rather than silently narrowing scope.
+    evidence:
+      'docs/generated/roadmap-metrics.json computeCompletion (234/234 in-scope, L1–L10, all 7)',
   },
 
   // ── Phase 4 — cross-system parity & UX ───────────────────────────────────
@@ -272,7 +281,14 @@ export const MASTER_GAP_LEDGER: readonly GapLedgerItem[] = [
       '5e-2024 ledger spell-DC/attack rows; d20-legacy (PF1e/3.5e) ledger breadth (BAB/saves/skill-synergy); M&M conditions UI + a guided creation orchestrator (the one system lacking a creator); PF2e multiclass aggregation; feature-option effect surfacing via the resolver.',
     status: 'pending',
     tags: ['engineering'],
-    evidence: 'src/systems/*/contributionLedger.ts; src/creation/ (absent for mam3e)',
+    // Evidence corrected 2026-07-25: the "(absent for mam3e)" clause was stale —
+    // ALL SEVEN systems now expose `loadCreationPlan`, mam3e included (it embeds
+    // Mam3eCreator as a component step). Contribution ledgers are likewise 7/7.
+    // The item stays PENDING because the rest of the 7×N matrix in `detail`
+    // (M&M conditions UI, PF2e multiclass aggregation, feature-option effect
+    // surfacing) is not proven closed — only the creation-plan and ledger
+    // columns are.
+    evidence: 'src/systems/*/contributionLedger.ts (7/7); src/creation/ (7/7 loadCreationPlan)',
   },
 
   // ── Phase 5 — production hardening ────────────────────────────────────────
