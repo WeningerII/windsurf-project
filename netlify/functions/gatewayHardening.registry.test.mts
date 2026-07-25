@@ -28,52 +28,150 @@ import {
   type RateLimitStoreDriver,
 } from './rateLimitStore.mts';
 
-/** A fake SDK-bound Google adapter, returned by the injected builder. */
+/** Fake SDK-bound adapters, returned by the injected builders. */
 const googleAdapter: AiProviderAdapter = {
   id: 'google',
-  model: 'fake-model',
+  model: 'fake-google-model',
+  generate: () => Promise.resolve({}),
+};
+const anthropicAdapter: AiProviderAdapter = {
+  id: 'anthropic',
+  model: 'fake-anthropic-model',
   generate: () => Promise.resolve({}),
 };
 
-function makeDeps(): { deps: ProviderRegistryDeps; calls: () => number } {
-  const build = vi.fn(() => googleAdapter);
-  return { deps: { createGoogleAdapter: build }, calls: () => build.mock.calls.length };
+function makeDeps(): {
+  deps: ProviderRegistryDeps;
+  google: ReturnType<typeof vi.fn>;
+  anthropic: ReturnType<typeof vi.fn>;
+  calls: () => number;
+} {
+  const google = vi.fn(() => googleAdapter);
+  const anthropic = vi.fn(() => anthropicAdapter);
+  return {
+    deps: { createGoogleAdapter: google, createAnthropicAdapter: anthropic },
+    google,
+    anthropic,
+    calls: () => google.mock.calls.length + anthropic.mock.calls.length,
+  };
 }
 
 describe('provider registry — env selection', () => {
-  it('defaults to Gemini when AI_PROVIDER is unset and a key is present', () => {
+  it('defaults to Gemini when AI_PROVIDER is unset and a Google key is present', () => {
     const { deps } = makeDeps();
-    const adapter = resolveProviderAdapter({ provider: undefined, apiKey: 'key' }, deps);
+    const adapter = resolveProviderAdapter({ GEMINI_API_KEY: 'key' }, deps);
     expect(adapter).toBe(googleAdapter);
     expect(DEFAULT_AI_PROVIDER).toBe('gemini');
   });
 
-  it('preserves default-off: no key + default provider => no adapter', () => {
+  it('preserves default-off: no key + default provider => no adapter, no builder call', () => {
     const { deps, calls } = makeDeps();
-    const adapter = resolveProviderAdapter({ provider: undefined, apiKey: undefined }, deps);
-    expect(adapter).toBeUndefined();
-    expect(calls()).toBe(0); // builder never invoked without a key
+    expect(resolveProviderAdapter({}, deps)).toBeUndefined();
+    expect(calls()).toBe(0); // no builder invoked without a key
   });
 
-  it("resolves the mock adapter for AI_PROVIDER='mock' without touching the SDK builder", () => {
+  it("resolves the mock adapter for AI_PROVIDER='mock' without touching any SDK builder", () => {
     const { deps, calls } = makeDeps();
-    const adapter = resolveProviderAdapter({ provider: 'mock', apiKey: undefined }, deps);
+    const adapter = resolveProviderAdapter({ AI_PROVIDER: 'mock' }, deps);
     expect(adapter?.id).toBe('mock');
     expect(calls()).toBe(0);
   });
 
   it("treats 'google' as an alias of the Gemini entry, case-insensitively", () => {
     const { deps } = makeDeps();
-    expect(resolveProviderAdapter({ provider: 'google', apiKey: 'k' }, deps)).toBe(googleAdapter);
-    expect(resolveProviderAdapter({ provider: 'GEMINI', apiKey: 'k' }, deps)).toBe(googleAdapter);
+    expect(resolveProviderAdapter({ AI_PROVIDER: 'google', GEMINI_API_KEY: 'k' }, deps)).toBe(
+      googleAdapter
+    );
+    expect(resolveProviderAdapter({ AI_PROVIDER: 'GEMINI', GEMINI_API_KEY: 'k' }, deps)).toBe(
+      googleAdapter
+    );
   });
 
   it('falls back to the default provider for an unrecognized value (graceful typo handling)', () => {
     const { deps } = makeDeps();
-    expect(resolveProviderAdapter({ provider: 'nonsense', apiKey: 'k' }, deps)).toBe(googleAdapter);
+    expect(resolveProviderAdapter({ AI_PROVIDER: 'nonsense', GEMINI_API_KEY: 'k' }, deps)).toBe(
+      googleAdapter
+    );
+    expect(resolveProviderAdapter({ AI_PROVIDER: 'nonsense' }, deps)).toBeUndefined();
+  });
+
+  it('prefers GOOGLE_GENERATIVE_AI_API_KEY over GEMINI_API_KEY, and ignores blank values', () => {
+    const { deps, google } = makeDeps();
+    resolveProviderAdapter(
+      { GOOGLE_GENERATIVE_AI_API_KEY: 'primary', GEMINI_API_KEY: 'secondary' },
+      deps
+    );
+    expect(google.mock.calls[0]?.[0]).toMatchObject({ apiKey: 'primary' });
+
+    const blank = makeDeps();
+    expect(resolveProviderAdapter({ GEMINI_API_KEY: '   ' }, blank.deps)).toBeUndefined();
+    expect(blank.calls()).toBe(0);
+  });
+
+  it('passes the Gemini model + image-model overrides through from their declared env vars', () => {
+    const { deps, google } = makeDeps();
+    resolveProviderAdapter(
+      { GEMINI_API_KEY: 'k', AI_GATEWAY_MODEL: 'text-x', AI_IMAGE_MODEL: 'image-y' },
+      deps
+    );
+    expect(google).toHaveBeenCalledWith({ apiKey: 'k', model: 'text-x', imageModel: 'image-y' });
+  });
+});
+
+describe('provider registry — the second provider is selected by configuration alone', () => {
+  it("selects the Anthropic adapter for AI_PROVIDER='anthropic' with its own key", () => {
+    const { deps, anthropic, google } = makeDeps();
+    const adapter = resolveProviderAdapter(
+      { AI_PROVIDER: 'anthropic', ANTHROPIC_API_KEY: 'sk-test' },
+      deps
+    );
+    expect(adapter).toBe(anthropicAdapter);
+    expect(anthropic).toHaveBeenCalledOnce();
+    expect(google).not.toHaveBeenCalled();
+  });
+
+  it("treats 'claude' as an alias, case-insensitively", () => {
+    const { deps } = makeDeps();
+    expect(resolveProviderAdapter({ AI_PROVIDER: 'CLAUDE', ANTHROPIC_API_KEY: 'k' }, deps)).toBe(
+      anthropicAdapter
+    );
+  });
+
+  it('applies the SAME key-less degradation as the default provider', () => {
+    const { deps, calls } = makeDeps();
+    expect(resolveProviderAdapter({ AI_PROVIDER: 'anthropic' }, deps)).toBeUndefined();
+    expect(calls()).toBe(0);
+  });
+
+  it('passes the Anthropic model override from AI_ANTHROPIC_MODEL and no image model', () => {
+    const { deps, anthropic } = makeDeps();
+    resolveProviderAdapter(
+      { AI_PROVIDER: 'anthropic', ANTHROPIC_API_KEY: 'k', AI_ANTHROPIC_MODEL: 'claude-test' },
+      deps
+    );
+    expect(anthropic).toHaveBeenCalledWith({ apiKey: 'k', model: 'claude-test' });
+  });
+
+  it('never infers the provider from which secret happens to be present', () => {
+    // ANTHROPIC_API_KEY set but AI_PROVIDER unset: the default provider is
+    // Gemini, Gemini has no key, so the gateway stays off. Provider choice is
+    // explicit configuration, never a side effect of secret presence.
+    const { deps, calls } = makeDeps();
+    expect(resolveProviderAdapter({ ANTHROPIC_API_KEY: 'k' }, deps)).toBeUndefined();
+    expect(calls()).toBe(0);
+  });
+
+  it('keeps each provider key scoped to its own provider', () => {
+    const { deps, calls } = makeDeps();
+    // A Google key does not unlock Anthropic...
     expect(
-      resolveProviderAdapter({ provider: 'nonsense', apiKey: undefined }, deps)
+      resolveProviderAdapter({ AI_PROVIDER: 'anthropic', GEMINI_API_KEY: 'k' }, deps)
     ).toBeUndefined();
+    // ...and an Anthropic key does not unlock Gemini.
+    expect(
+      resolveProviderAdapter({ AI_PROVIDER: 'gemini', ANTHROPIC_API_KEY: 'k' }, deps)
+    ).toBeUndefined();
+    expect(calls()).toBe(0);
   });
 });
 

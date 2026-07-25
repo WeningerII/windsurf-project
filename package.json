@@ -54,6 +54,7 @@
     "verify": "npm run node:check && npm run lint && npm run typecheck:test && npm run typecheck:netlify && npm run format:check && npm run test:coverage -- --run --maxWorkers=1 && npm run check:keepalive-budget && npm run validate && npm run build && npm run check:bundle-size && npm run test:e2e && npm run check:repo-hygiene && npm run check:generated-docs && npm run check:doc-drift && npm run check:dead-code && npm run check:legal-notices && npm run check:compute-register && npm run check:secret-exposure"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "3.0.86",
     "@ai-sdk/google": "^3.0.83",
     "@sentry/browser": "^10.44.0",
     "@supabase/supabase-js": "^2.99.2",
