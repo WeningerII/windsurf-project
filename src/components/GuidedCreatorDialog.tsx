@@ -1,6 +1,7 @@
 import { useEffect, useRef, type FC, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
+import { DIALOG_FOCUSABLE_SELECTOR } from './ui/ConfirmDialog';
 
 interface Props {
   open: boolean;
@@ -42,10 +43,8 @@ export const GuidedCreatorDialog: FC<Props> = ({ open, onClose, children }) => {
       }
       if (e.key !== 'Tab') return;
       const focusable = Array.from(
-        dialogRef.current?.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        ) ?? []
-      ).filter((el) => !el.closest('[aria-hidden="true"]'));
+        dialogRef.current?.querySelectorAll<HTMLElement>(DIALOG_FOCUSABLE_SELECTOR) ?? []
+      ).filter((el) => !el.closest('[aria-hidden="true"],[inert]'));
       if (focusable.length === 0) return;
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
