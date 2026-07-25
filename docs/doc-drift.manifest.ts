@@ -240,6 +240,14 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: [],
   },
   {
+    // Support/on-call procedure for the BROWSER-LOCAL store (the data of record
+    // on a default, sync-less install). Prose runbook like its two siblings.
+    path: 'docs/runbooks/local-data-recovery.md',
+    kind: 'plan',
+    owner: 'ops-runbooks',
+    rules: [],
+  },
+  {
     // Archive folder guide for the docs moved below (Remediation Phase 6, 2026-07-21).
     path: 'docs/history/README.md',
     kind: 'plan',
