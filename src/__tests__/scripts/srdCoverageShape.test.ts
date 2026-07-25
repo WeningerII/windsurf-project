@@ -238,6 +238,77 @@ describe('collapse35eMonsterHeadings (extended non-block + sub-group headings)',
   });
 });
 
+describe('collapse35eMonsterHeadings (residual container rows in the missing list)', () => {
+  // The rows that still leaked into the published 3.5e "missing" list even after
+  // the first collapse pass. Each was verified against the upstream olimot
+  // chapters: the `## ` section is PROSE ONLY and every stat block sits under a
+  // separately-named `### ` child (the ratified Angel → Astral Deva shape), or —
+  // for the two templates — the section carries no stat table at all.
+  const residualContainers = [
+    'Ooze', // → Black Pudding / Gelatinous Cube / Gray Ooze / Ochre Jelly
+    'Planetouched', // → Aasimar / Tiefling
+    'Snake', // → Constrictor Snake / Viper Snake
+    'Sprite', // → Grig / Nixie / Pixie
+    'Swarm', // → Bat / Centipede / Hellwasp / Locust / Rat / Spider Swarm
+  ];
+  const residualTemplates = [
+    'Half-Celestial', // template header, no stat table anywhere in the section
+    'Half-Fiend', // template header, no stat table anywhere in the section
+  ];
+  // Individuals that MUST survive — the whole point of the denominator work is
+  // that a real gap is never masked to improve a percentage.
+  const genuineMisses = [
+    'Lich',
+    'Ghost',
+    'Salamander',
+    'Hydra',
+    'Vampire',
+    'Skeleton',
+    'Zombie',
+    'Half-Dragon', // its section DOES print a sample stat block
+    'Fungus', // `## ` owns a combined Shrieker/Violet Fungus table
+    'Horse',
+    'Arrowhawk',
+    'Animated Object',
+  ];
+
+  const result = collapse35eMonsterHeadings([
+    ...residualContainers,
+    ...residualTemplates,
+    ...genuineMisses,
+    'Gelatinous Cube', // a member individual, listed in its own right
+    'Pixie',
+  ]);
+
+  it('drops the residual taxonomic container rows', () => {
+    for (const dropped of residualContainers) expect(result).not.toContain(dropped);
+  });
+
+  it('drops the two stat-block-less template headers', () => {
+    for (const dropped of residualTemplates) expect(result).not.toContain(dropped);
+  });
+
+  it('still counts every confirmed genuine individual as a real miss', () => {
+    expect(result).toEqual(expect.arrayContaining(genuineMisses));
+  });
+
+  it('keeps member individuals that are listed in their own right', () => {
+    expect(result).toEqual(expect.arrayContaining(['Gelatinous Cube', 'Pixie']));
+  });
+
+  it('classifies the residuals onto the correct list', () => {
+    const containers = SRD_35E_MONSTER_CATEGORY_HEADINGS.map(norm);
+    const nonBlocks = SRD_35E_MONSTER_NONBLOCK_HEADINGS.map(norm);
+    expect(containers).toEqual(expect.arrayContaining(residualContainers.map(norm)));
+    expect(nonBlocks).toEqual(expect.arrayContaining(residualTemplates.map(norm)));
+    // and the protected individuals appear on NEITHER drop list
+    for (const keep of genuineMisses) {
+      expect(containers).not.toContain(norm(keep));
+      expect(nonBlocks).not.toContain(norm(keep));
+    }
+  });
+});
+
 describe('qualifier word-order normalization (confirmed provenance variants)', () => {
   it('maps "Greater X" and "X, Greater" to a shared key on both sides', () => {
     const loaderKeys = loaderNormVariants('Greater Invisibility');

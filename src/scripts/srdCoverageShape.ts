@@ -153,9 +153,17 @@ export function pf1eContainerRecords(names: string[], minChildren = 2): string[]
  * member is counted on its own entry, so the bare group header is NOT an
  * individual stat block and inflates the denominator.
  *
+ * The membership test is STRUCTURAL and verified against the upstream chapters:
+ * a heading belongs here only when its `## ` section is PROSE ONLY (no stat
+ * table of its own) and every stat block sits under a separately-named `### `
+ * child — the Angel → Astral Deva/Planetar/Solar shape.
+ *
  * Confirmed INDIVIDUALS are deliberately EXCLUDED — Salamander, Hydra, Lich and
  * Ghost are single stat blocks (with, at most, their own inline variants), so
- * they remain genuine misses while unencoded rather than being hidden.
+ * they remain genuine misses while unencoded rather than being hidden. Headings
+ * whose `## ` section OWNS a combined multi-column table are likewise excluded
+ * even when it covers several named creatures (Fungus → Shrieker/Violet Fungus,
+ * Arrowhawk → juvenile/adult/elder), because the table is one stat block.
  */
 export const SRD_35E_MONSTER_CATEGORY_HEADINGS: readonly string[] = [
   'Angel',
@@ -180,8 +188,13 @@ export const SRD_35E_MONSTER_CATEGORY_HEADINGS: readonly string[] = [
   'Metallic Dragons',
   'Naga',
   'Nightshade',
+  'Ooze',
+  'Planetouched',
   'Slaad',
+  'Snake',
   'Sphinx',
+  'Sprite',
+  'Swarm',
 ];
 
 /**
@@ -189,16 +202,25 @@ export const SRD_35E_MONSTER_CATEGORY_HEADINGS: readonly string[] = [
  * are NOT creatures at all: prose sub-sections of the chapter intro ("Reading
  * the Entries", "Combat") and TEMPLATE headers whose example is applied to an
  * existing base creature rather than shipped as its own enumerable monster
- * ("Celestial Creature", "Fiendish Creature"). Dropping them keeps the
- * denominator to individual monster stat blocks. Kept distinct from the
- * taxonomic CONTAINER list above because they nest nothing — they are just
- * non-monster headings — but both are removed by `collapse35eMonsterHeadings`.
+ * ("Celestial Creature", "Fiendish Creature", "Half-Celestial", "Half-Fiend").
+ * Dropping them keeps the denominator to individual monster stat blocks. Kept
+ * distinct from the taxonomic CONTAINER list above because they nest nothing —
+ * they are just non-monster headings — but both are removed by
+ * `collapse35eMonsterHeadings`.
+ *
+ * The template entries here are the ones whose upstream section contains NO
+ * stat table at all (no `Hit Dice:` row anywhere under the heading), verified
+ * against the chapters. "Half-Dragon" is deliberately ABSENT: its section does
+ * print a sample stat block, so it stays a countable individual and a genuine
+ * miss.
  */
 export const SRD_35E_MONSTER_NONBLOCK_HEADINGS: readonly string[] = [
   'Reading the Entries',
   'Combat',
   'Celestial Creature',
   'Fiendish Creature',
+  'Half-Celestial',
+  'Half-Fiend',
 ];
 
 /**

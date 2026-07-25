@@ -39,15 +39,19 @@ unlike the loader-derived `docs/srd-manifest/`.
   equipment are also at/near 100%.
 - **M&M 3e** (powers, advantages) and **Daggerheart** (domain cards, domains) are at
   genuine 100% on their wired categories.
-- The genuine residual is small and itemized in `srd-coverage.md`: two
-  single-entry gaps (5e-2014 Net equipment, 5e-2024 Will-o'-Wisp monster —
-  PF1e Greater Teleport and 3.5e Greater Shadow Evocation were since encoded
-  and are no longer missing; corrected 2026-07-21), and the genuine missing
-  monster individuals isolated by the denominator-shape fix (PF1e Skeletal
-  Champion; 3.5e's 45-row missing list, e.g. Lich/Ghost/Salamander/Hydra —
-  that list still contains container-like rows the collapse missed, such as
-  "Chromatic Dragons" and "Celestial Creature", so it overstates genuine
-  misses; tightening the collapse is a follow-on alongside the encodes).
+- CLOSED 2026-07-25: the three named single-entry gaps are all encoded and
+  measured at 100% — 5e-2014 **Net** (`0bf4a75`), PF1e **Skeletal Champion**
+  (`4eb9beb`), 5e-2024 **Will-o'-Wisp** (`168e9b5`, re-transcribed from the
+  5.2.1 source; see §13 for the upstream STR-score defect and the
+  wrong-edition provenance defect that re-transcription fixed). PF1e Greater
+  Teleport and 3.5e Greater Shadow Evocation were encoded earlier.
+- The genuine residual is now the 3.5e monster missing list, itemized in
+  `srd-coverage.md`. The container-like rows the first collapse pass missed
+  ("Chromatic Dragons", "Celestial Creature", then Ooze/Planetouched/Snake/
+  Sprite/Swarm and the stat-block-less Half-Celestial/Half-Fiend templates)
+  are now dropped; the confirmed individuals **Lich, Ghost, Salamander,
+  Hydra** remain counted as genuine misses, as do Vampire/Skeleton/Zombie/
+  Half-Dragon/Fungus/Horse (their sections do carry a stat block).
 - **Monster denominator shape-mismatch [FIXED IN CODE; published % deferred]:**
   the 3.5e and PF1e monster denominators previously counted taxonomic CONTAINER
   entries — the SRD 3.5 category headers (Angel/Dragon/Elemental/…) and the PF1e
@@ -57,11 +61,13 @@ unlike the loader-derived `docs/srd-manifest/`.
   `collapsePf1eContainerRecords`) now drop those containers (and fold 3.5e age/
   size variant rows to their archetype) so both denominators count individual
   stat blocks; the 14 PF1e parents collapse while Skeletal Champion stays a
-  genuine miss. The counting LOGIC is fixed and tested, and the refreshed
-  percentages are PUBLISHED (2026-07-21 networked run): PF1e monsters
-  331/332 = 99.7%, 3.5e monsters 177/222 = 79.7%. Residual: the 3.5e missing
-  list still carries container-like rows outside the collapse list (see the
-  residual bullet above).
+  genuine miss. The counting LOGIC is fixed and tested. CLOSED 2026-07-25: the
+  residual container rows are now dropped too (Ooze, Planetouched, Snake,
+  Sprite, Swarm as taxonomic containers whose `## ` section is prose-only with
+  every stat block under a separately-named `### ` child; Half-Celestial and
+  Half-Fiend as template headers carrying no stat table at all). Live
+  percentages are in `docs/generated/srd-coverage.md` — do not restate them
+  here.
 - **M&M equipment coverage target [WIRED; execution deferred]:** the DHH
   equipment data already ships and its runtime loader is wired
   (`loadEquipmentForSystem('mam3e')`); the remaining gap was the coverage
@@ -666,13 +672,6 @@ denominator of SRD section titles, which does not exist in-repo.
    deciding how to treat label-vs-corpus-name mismatches so legitimate SRD
    content is not mis-flagged as a licensing finding. **Manual review.**
 
----
-
-**Highest-leverage unblock:** the §1 data input. With authoritative SRD/CRB
-indices in-repo, content coverage becomes measurable and the rest of Denominator A
-is mechanical. Next-largest body of genuine work: §2 — expand the compute
-registers to the full L1–L10 set and wire the proven helpers into the engines.
-
 ## 12. Unresolved a11y contrast finding on the creation surface (added 2026-07-25)
 
 `e2e/a11y.spec.ts` scans the New Character dialog + guided-creation wizard for
@@ -715,3 +714,49 @@ a second time if the composite is legitimate and unavoidable.
 to `KNOWN_A11Y_DEBT` — would blind the gate to every genuine contrast regression
 on every surface. One skipped scan is a far smaller loss than a blinded rule.
 Every other surface in the spec stays scanned, `color-contrast` included.
+
+## 13. SRD 5.2.1 Will-o'-Wisp — upstream STR-score defect (added 2026-07-25)
+
+**The defect is real and still present upstream.** In the authoritative SRD
+5.2.1 markdown (`downfallx/dnd-5e-srd-markdown` `monsters-A-Z.md`, CC-BY-4.0 —
+the same file `npm run srd:coverage` uses as the 2024 monster denominator), the
+Will-o'-Wisp ability table prints the STR **modifier** in the cell where the
+**score** belongs:
+
+```
+<td><strong>STR</strong></td><td>-5</td><td>-5</td>   <!-- score cell holds "-5" -->
+<td><strong>DEX</strong></td><td>28</td><td>+9</td>   <!-- every other ability: score, then mod -->
+```
+
+So the STR *score* is simply absent upstream. Re-verified 2026-07-25.
+
+**What was found and corrected.** The entry was NOT left un-encoded: commit
+`168e9b5` shipped a `willOWisp` stat block tagged `source: 'SRD 5.2'` that was
+in fact the **SRD 5.1 (2014)** stat block. Measured against the cited 5.2.1
+source it was wrong in eight places — HP 22 (9d4) vs **27 (11d4)**; Speed
+walk 0 vs **5 ft.**; a Thunder resistance the 5.2 entry does not grant; a
+missing **Petrified** condition immunity; Languages "the languages it knew in
+life" vs **"Common plus one other language"**; 5.1's Consume Life / Variable
+Illumination traits instead of 5.2's **Ephemeral / Illumination / Incorporeal
+Movement** traits plus **Consume Life / Vanish** Bonus Actions; and Shock at
+9 (2d8) instead of **11 (2d8 + 2)**. That is content attributed to a source
+that does not contain it — a provenance defect, not a formatting nit. The entry
+has been re-transcribed verbatim from the 5.2.1 source.
+
+**The one derived field.** `str: 1` is derived, not guessed: the source supplies
+the modifier (-5), and in 5e exactly one legal ability score (1) yields a -5
+modifier, so the score is recoverable from the datum the source does provide.
+This is recorded here rather than silently normalized. Everything else in the
+entry is verbatim.
+
+**Standing risk this illustrates.** `npm run srd:coverage` diffs entry **names**,
+so a stat block encoded from the *wrong edition* still scores as covered. Name
+coverage is not fidelity coverage; the reverse-diff catches non-SRD *entries*,
+not mis-transcribed *fields*. No gate checks field-level fidelity today.
+
+---
+
+**Highest-leverage unblock:** the §1 data input. With authoritative SRD/CRB
+indices in-repo, content coverage becomes measurable and the rest of Denominator A
+is mechanical. Next-largest body of genuine work: §2 — expand the compute
+registers to the full L1–L10 set and wire the proven helpers into the engines.

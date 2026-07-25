@@ -172,6 +172,19 @@ export const shadow: Monster = {
   environment: ['dungeon', 'ruins'],
 };
 
+/**
+ * SRD 5.2.1 Will-o'-Wisp, transcribed from the authoritative SRD 5.2.1 markdown
+ * (`downfallx/dnd-5e-srd-markdown` `monsters-A-Z.md`, CC-BY-4.0) — the same
+ * source `npm run srd:coverage` uses as the 2024 monster denominator.
+ *
+ * SOURCE DEFECT (see docs/GAPS.md §13): the upstream ability table prints the
+ * STR MODIFIER (`-5`) in the cell where the SCORE belongs — every other ability
+ * prints score-then-modifier (DEX `28` / `+9`), so the STR score is simply
+ * absent upstream. It is NOT guessed here: in 5e a printed modifier of -5 is
+ * produced by exactly one legal ability score (1), so `str: 1` is derived from
+ * the one datum the source does supply, and the defect is recorded rather than
+ * papered over. Everything else below is verbatim from the 5.2.1 entry.
+ */
 export const willOWisp: Monster = {
   id: 'will-o-wisp-2024',
   name: "Will-o'-Wisp",
@@ -181,59 +194,56 @@ export const willOWisp: Monster = {
   type: 'undead',
   alignment: 'chaotic evil',
   armorClass: 19,
-  hitPoints: { count: 9, die: 'd4', notation: '9d4' },
-  speed: { walk: 0, fly: 50 },
+  hitPoints: { count: 11, die: 'd4', notation: '11d4' },
+  // "Speed 5 ft., Fly 50 ft. (hover)" — CreatureSpeed cannot express hover.
+  speed: { walk: 5, fly: 50 },
   abilities: { str: 1, dex: 28, con: 10, int: 13, wis: 14, cha: 11 },
-  damageResistances: [
-    'acid',
-    'cold',
-    'fire',
-    'necrotic',
-    'thunder',
-    'bludgeoning',
-    'piercing',
-    'slashing',
-  ],
+  damageResistances: ['acid', 'bludgeoning', 'cold', 'fire', 'necrotic', 'piercing', 'slashing'],
   damageImmunities: ['lightning', 'poison'],
   conditionImmunities: [
     'exhaustion',
     'grappled',
     'paralyzed',
+    'petrified',
     'poisoned',
     'prone',
     'restrained',
     'unconscious',
   ],
-  senses: ['darkvision 120 ft.', 'passive Perception 12'],
-  languages: ['the languages it knew in life'],
+  senses: ['Darkvision 120 ft.', 'Passive Perception 12'],
+  languages: ['Common plus one other language'],
   challengeRating: 2,
   experiencePoints: 450,
   specialAbilities: [
     {
-      name: 'Consume Life',
-      description:
-        "As a bonus action, the will-o'-wisp can target one creature it can see within 5 feet of it that has 0 hit points and is still alive. The target must succeed on a DC 10 Constitution saving throw against this magic or die. If the target dies, the will-o'-wisp regains 10 (3d6) hit points.",
+      name: 'Ephemeral',
+      description: "The wisp can't wear or carry anything.",
     },
     {
-      name: 'Ephemeral',
-      description: "The will-o'-wisp can't wear or carry anything.",
+      name: 'Illumination',
+      description:
+        'The wisp sheds Bright Light in a 20-foot radius and Dim Light for an additional 20 feet.',
     },
     {
       name: 'Incorporeal Movement',
       description:
-        "The will-o'-wisp can move through other creatures and objects as if they were difficult terrain. It takes 5 (1d10) force damage if it ends its turn inside an object.",
-    },
-    {
-      name: 'Variable Illumination',
-      description:
-        "The will-o'-wisp sheds bright light in a 5- to 20-foot radius and dim light for an additional number of feet equal to the chosen radius. The will-o'-wisp can alter the radius as a bonus action.",
+        'The wisp can move through other creatures and objects as if they were Difficult Terrain. It takes 5 (1d10) Force damage if it ends its turn inside an object.',
     },
   ],
   actions: [
     {
       name: 'Shock',
+      description: 'Melee Attack Roll: +4, reach 5 ft. Hit: 11 (2d8 + 2) Lightning damage.',
+    },
+    {
+      name: 'Consume Life (Bonus Action)',
       description:
-        'Melee Spell Attack: +4 to hit, reach 5 ft., one creature. Hit: 9 (2d8) lightning damage.',
+        'Constitution Saving Throw: DC 10, one living creature the wisp can see within 5 feet that has 0 Hit Points. Failure: The target dies, and the wisp regains 10 (3d6) Hit Points.',
+    },
+    {
+      name: 'Vanish (Bonus Action)',
+      description:
+        "The wisp and its light have the Invisible condition until the wisp's Concentration ends on this effect, which ends early immediately after the wisp makes an attack roll or uses Consume Life.",
     },
   ],
   environment: ['swamp', 'ruins'],
