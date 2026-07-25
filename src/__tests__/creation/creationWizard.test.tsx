@@ -51,8 +51,21 @@ async function settleValidation() {
  * invalid child and an invalid-parent violation — axe aria-required-children /
  * aria-required-parent, both serious).
  */
+/**
+ * Options must be DIRECT children of the listbox: the `<li>` wrapper carries
+ * `role="presentation"` so it contributes no implicit `listitem` role (axe
+ * aria-required-children / aria-required-parent).
+ *
+ * Requires at least one option, because an empty collection makes this
+ * assertion vacuous. It previously ran on the NAME step of the all-seven loop,
+ * where `queryAllByRole('option')` is always `[]` — so it executed ZERO
+ * assertions for every system and stayed green with `role="presentation"`
+ * deleted. It now runs where options genuinely render (see below).
+ */
 function expectOptionsAreDirectListboxChildren(): void {
-  screen.queryAllByRole('option').forEach((option) => {
+  const options = screen.queryAllByRole('option');
+  expect(options.length).toBeGreaterThan(0);
+  options.forEach((option) => {
     expect(option.parentElement).toHaveAttribute('role', 'presentation');
     expect(option.parentElement?.parentElement).toHaveAttribute('role', 'listbox');
   });
@@ -103,7 +116,6 @@ describe('guided-creation wizard — 7/7 system parity', () => {
         // The visible <label> must BE the accessible name — no overriding
         // aria-label (WCAG 2.5.3 Label in Name).
         expect(screen.getByTestId('creation-name-input')).toHaveAccessibleName('Character name');
-        expectOptionsAreDirectListboxChildren();
 
         const name = `Wizard ${systemId}`;
         fireEvent.change(screen.getByTestId('creation-name-input'), { target: { value: name } });
@@ -153,6 +165,14 @@ describe('guided-creation wizard — loader-driven choice application', () => {
       // Advance to the Class step and pick Fighter from the loader-exposed options.
       await user.click(screen.getByRole('button', { name: /\bclass\b/i }));
       const fighter = await screen.findByTestId('creation-option-fighter', {}, { timeout: 15000 });
+
+      // Assert the listbox/option parentage HERE, where real options are on
+      // screen. This is shell markup in CreationWizard.tsx, identical for every
+      // system, so exercising it once against a genuinely-populated listbox is
+      // what makes it enforceable — asserting it in the all-seven loop looked
+      // broader but ran against an empty collection and could never fail.
+      expectOptionsAreDirectListboxChildren();
+
       await user.click(fighter);
 
       await user.click(screen.getByRole('button', { name: /\breview\b/i }));

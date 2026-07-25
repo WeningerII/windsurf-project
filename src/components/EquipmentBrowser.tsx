@@ -76,8 +76,11 @@ export const EquipmentBrowser: React.FC<EquipmentBrowserProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Type Filter */}
         <div>
-          <label className="block text-sm font-medium mb-2">Type</label>
+          <label className="block text-sm font-medium mb-2" htmlFor="equipment-type-filter">
+            Type
+          </label>
           <select
+            id="equipment-type-filter"
             value={selectedType ?? ''}
             onChange={(e) => setSelectedType(e.target.value || null)}
             className="w-full px-3 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
@@ -93,8 +96,11 @@ export const EquipmentBrowser: React.FC<EquipmentBrowserProps> = ({
 
         {/* Rarity Filter */}
         <div>
-          <label className="block text-sm font-medium mb-2">Rarity</label>
+          <label className="block text-sm font-medium mb-2" htmlFor="equipment-rarity-filter">
+            Rarity
+          </label>
           <select
+            id="equipment-rarity-filter"
             value={selectedRarity ?? ''}
             onChange={(e) => setSelectedRarity(e.target.value || null)}
             className="w-full px-3 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"

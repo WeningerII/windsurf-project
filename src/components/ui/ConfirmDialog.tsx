@@ -7,8 +7,10 @@ import { Button } from './Button';
  * Tab-cycle members of a modal. Disabled controls are excluded because they are
  * NOT reachable by Tab: treating one as the cycle's first or last element means
  * the wrap-around never fires there and focus escapes the modal — the exact
- * leak a trap exists to prevent. (The guided creator's "Back" button is
- * disabled on step one, so this is reachable, not theoretical.) Exported so the
+ * leak a trap exists to prevent. The wrap keys off the FIRST and LAST members
+ * only, so a disabled control in the middle is harmless; the reachable case is
+ * the guided creator's "Create character", which is `disabled` until a working
+ * document validates and IS the last control in the footer. Exported so the
  * three modals in this codebase share one definition of "focusable".
  */
 export const DIALOG_FOCUSABLE_SELECTOR =
