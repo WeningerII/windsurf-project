@@ -1,12 +1,11 @@
 import type {
   ContributionCategory,
-  ContributionLedgerEntry,
-  ContributionLedgerResult,
-  ContributionOperation,
   ContributionSourceKind,
+  ContributionLedgerResult,
 } from '../../types/core/contributionLedger';
 import type { CharacterDocument } from '../../types/core/document';
-import { resolveCharacterEffects, toContributionLedger } from '../../rules';
+import type { EffectInstance, EffectOperation, EffectValue } from '../../rules';
+import { resolveCharacterEffects, resolveEffects, toContributionLedger } from '../../rules';
 import { abilityMod } from '../../utils/math';
 import { baseSave, classBAB } from '../shared/d20-helpers';
 import { dnd35eSynergyBonus } from '../../utils/derivedCombatMath';
@@ -14,10 +13,20 @@ import type { D20LegacyData } from './d20LegacySheetShared';
 
 /**
  * Non-persisted contribution ledger for the d20-legacy systems (D&D 3.5e and
- * Pathfinder 1e). Mirrors `buildDnd5eContributionLedger`: it explains where the
- * engine's derived Base Attack Bonus, saving-throw totals, and (3.5e-only) skill
- * synergy bonuses come from, plus the magic-item/feat/feature AC and attack
- * provenance projected straight from the shared rules resolver (RFC 003).
+ * Pathfinder 1e). It explains where the engine's derived Base Attack Bonus,
+ * saving-throw totals, and (3.5e-only) skill synergy bonuses come from, plus the
+ * magic-item/feat/feature AC and attack provenance.
+ *
+ * W4 re-backing (RFC 003 Phase 3): EVERY row is now the projection of a single
+ * resolver fold. The BAB / save / synergy terms are compiled into the shared
+ * `EffectInstance` primitive (like every other contribution), concatenated with
+ * the equipment/feat/feature effects the resolver already produced, folded ONCE
+ * through `resolveEffects`, and projected with `toContributionLedger`. The
+ * builder no longer carries its own `ContributionLedgerEntry` factory — a third
+ * parallel implementation of the entry shape, free to drift from
+ * `effectToLedgerEntry`. Same rows, same order, same ids: the compiled effects
+ * carry no gating condition, so the fold keeps them all in input order, and the
+ * equipment/feat effects were already resolved under the same (empty) context.
  *
  * These rows are EXPLANATION only — they are never stored on the document and
  * must not be treated as an alternate state source. Every value is derived with
@@ -89,14 +98,14 @@ const DND35E_SYNERGY_TARGETS_BY_SOURCE: Record<string, readonly string[]> = {
   'handle-animal': ['ride'],
 };
 
-type AddEntryInput = {
+type AddEffectInput = {
   systemId: D20LegacySystemId;
   target: string;
   sourceKind: ContributionSourceKind;
   sourceLabel: string;
   label: string;
-  operation: ContributionOperation;
-  value: ContributionLedgerEntry['value'];
+  operation: EffectOperation;
+  value: EffectValue;
   category: ContributionCategory;
   sourceId?: string;
   sourcePath?: string;
@@ -114,23 +123,26 @@ export function buildD20LegacyContributionLedger(
   // ledger is projected straight into contribution rows so magic-item / feat AC
   // and attack terms get first-class provenance instead of being re-derived
   // (and drifting) here. Additive: a character with no bonus-bearing gear or
-  // modifiers contributes no resolver rows.
+  // modifiers contributes no resolver rows. Its `result.ledger` is already an
+  // EffectInstance[], so it concatenates straight into the single fold below.
   const resolved = resolveCharacterEffects(systemId, {
     equipment: system.equipment.filter((item) => item.equipped),
     feats: system.feats,
     features: system.features,
   });
 
-  const entries: ContributionLedgerEntry[] = [
-    ...buildBaseAttackBonusEntries(systemId, system),
-    ...buildSaveEntries(systemId, system),
-    ...toContributionLedger(resolved.result.ledger).entries,
+  const effects: EffectInstance[] = [
+    ...buildBaseAttackBonusEffects(systemId, system),
+    ...buildSaveEffects(systemId, system),
+    ...resolved.result.ledger,
     // Skill synergy is a 3.5e-only subsystem; PF1e has no synergy bonuses, so no
     // rows are emitted for it (do not invent a PF1e synergy).
-    ...(systemId === 'dnd-3.5e' ? buildSkillSynergyEntries(systemId, system) : []),
+    ...(systemId === 'dnd-3.5e' ? buildSkillSynergyEffects(systemId, system) : []),
   ];
 
-  return { entries };
+  // ONE fold, ONE projection. `resolveEffects` keeps every applied effect in
+  // input order, so the ledger reads exactly as it did when hand-assembled.
+  return toContributionLedger(resolveEffects(effects).ledger);
 }
 
 /**
@@ -138,14 +150,14 @@ export function buildD20LegacyContributionLedger(
  * `data.baseAttackBonus` — the engine computes that total the same way
  * (Σ classBAB across the multiclass).
  */
-function buildBaseAttackBonusEntries(
+function buildBaseAttackBonusEffects(
   systemId: D20LegacySystemId,
   system: D20LegacyData
-): ContributionLedgerEntry[] {
+): EffectInstance[] {
   const classLevels: readonly D20LegacyClassLevelView[] = system.classLevels;
 
   return classLevels.map((classLevel, index) =>
-    createEntry({
+    createEffect({
       systemId,
       target: 'baseAttackBonus',
       sourceKind: 'class',
@@ -167,12 +179,9 @@ function buildBaseAttackBonusEntries(
  * (they contribute nothing), so the emitted rows still sum to
  * `data.saves.<save>.total` = Σ baseSave + abilityMod + misc.
  */
-function buildSaveEntries(
-  systemId: D20LegacySystemId,
-  system: D20LegacyData
-): ContributionLedgerEntry[] {
+function buildSaveEffects(systemId: D20LegacySystemId, system: D20LegacyData): EffectInstance[] {
   const classLevels: readonly D20LegacyClassLevelView[] = system.classLevels;
-  const entries: ContributionLedgerEntry[] = [];
+  const effects: EffectInstance[] = [];
 
   for (const config of SAVE_CONFIG) {
     classLevels.forEach((classLevel, index) => {
@@ -181,8 +190,8 @@ function buildSaveEntries(
       if (base === 0) {
         return;
       }
-      entries.push(
-        createEntry({
+      effects.push(
+        createEffect({
           systemId,
           target: config.target,
           sourceKind: 'class',
@@ -201,8 +210,8 @@ function buildSaveEntries(
     const abilityScore = system.baseAttributes[config.ability] ?? 10;
     const abilityModifier = abilityMod(abilityScore);
     if (abilityModifier !== 0) {
-      entries.push(
-        createEntry({
+      effects.push(
+        createEffect({
           systemId,
           target: config.target,
           sourceKind: 'system',
@@ -220,8 +229,8 @@ function buildSaveEntries(
 
     const misc = system.saves[config.key].misc ?? 0;
     if (misc !== 0) {
-      entries.push(
-        createEntry({
+      effects.push(
+        createEffect({
           systemId,
           target: config.target,
           sourceKind: 'system',
@@ -237,7 +246,7 @@ function buildSaveEntries(
     }
   }
 
-  return entries;
+  return effects;
 }
 
 /**
@@ -246,12 +255,12 @@ function buildSaveEntries(
  * comes from `dnd35eSynergyBonus`, so the rows targeting a skill sum to
  * `dnd35eSkillSynergyTotal(skill, skillRanks)`.
  */
-function buildSkillSynergyEntries(
+function buildSkillSynergyEffects(
   systemId: D20LegacySystemId,
   system: D20LegacyData
-): ContributionLedgerEntry[] {
+): EffectInstance[] {
   const skillRanks = system.skillRanks;
-  const entries: ContributionLedgerEntry[] = [];
+  const effects: EffectInstance[] = [];
 
   for (const [sourceSkill, targets] of Object.entries(DND35E_SYNERGY_TARGETS_BY_SOURCE)) {
     const sourceRanks = skillRanks[sourceSkill] ?? 0;
@@ -260,8 +269,8 @@ function buildSkillSynergyEntries(
       continue;
     }
     for (const targetSkill of targets) {
-      entries.push(
-        createEntry({
+      effects.push(
+        createEffect({
           systemId,
           target: `skills.${targetSkill}`,
           sourceKind: 'system',
@@ -278,10 +287,17 @@ function buildSkillSynergyEntries(
     }
   }
 
-  return entries;
+  return effects;
 }
 
-function createEntry(params: AddEntryInput): ContributionLedgerEntry {
+/**
+ * One contribution as the shared IR primitive. Projected through
+ * `toContributionLedger` it yields exactly the ledger entry this builder used to
+ * hand-assemble — same id, target, source, operation, value, category. The
+ * stacking is `'sum'`: every d20-legacy term here (per-class BAB, per-class base
+ * save, ability modifier, misc, synergy) accumulates by SRD.
+ */
+function createEffect(params: AddEffectInput): EffectInstance {
   return {
     id: ledgerId(
       params.systemId,
@@ -293,6 +309,9 @@ function createEntry(params: AddEntryInput): ContributionLedgerEntry {
     ),
     systemId: params.systemId,
     target: params.target,
+    operation: params.operation,
+    value: params.value,
+    stackPolicy: 'sum',
     source: {
       kind: params.sourceKind,
       label: params.sourceLabel,
@@ -300,8 +319,6 @@ function createEntry(params: AddEntryInput): ContributionLedgerEntry {
       path: params.sourcePath,
     },
     label: params.label,
-    operation: params.operation,
-    value: params.value,
     category: params.category,
     details: params.details,
   };

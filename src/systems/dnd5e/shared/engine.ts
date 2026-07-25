@@ -12,11 +12,7 @@ import {
   computePactMagicSlots,
   type Dnd5eRulesEdition,
 } from '../../../utils/spellSlots';
-import {
-  dnd5eUnarmoredDefenseBarbarian,
-  dnd5eUnarmoredDefenseMonk,
-} from '../../../utils/derivedCombatMath';
-import { resolveCharacterEffects, compute5eAC } from '../../../rules';
+import { resolveCharacterEffects, resolveDnd5eArmorClass } from '../../../rules';
 import { collectDnd5eConditionEffects } from '../../../rules/conditions/dnd5eConditions';
 import type { GameSystemId } from '../../../types/game-systems';
 import { hasDnd5eCondition, normalizeDnd5eConditions } from '../conditions';
@@ -228,19 +224,18 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
   // Hook for 2014 vs 2024 specifics
   protected applySubsystemRules(doc: CharacterDocument<Dnd5eDataModel>, dexMod: number): void {
     const data = doc.system;
-    // Base AC from armor/shield (with Unarmored Defense when the class feature
-    // is present) + Defense fighting style, then layer magic-item and
-    // feat/feature AC bonuses through the shared rules resolver (RFC 003).
-    // Additive: with no bonus-bearing gear or modifiers this contributes 0, so
-    // existing AC outputs are unchanged.
-    const baseArmorClass =
-      this.computeBaseArmorClass(data, dexMod) + getDnd5eDefenseStyleArmorClassBonus(data);
-    data.armorClass = resolveCharacterEffects(doc.systemId as GameSystemId, {
-      equipment: data.equipment,
-      feats: data.feats,
-      features: data.features,
-      baseArmorClass,
-    }).bonus('ac');
+    // ONE shared composition (rules/compile/armorClass): base AC from
+    // armor/shield (with Unarmored Defense when the class feature is present)
+    // plus the Defense fighting style, then the magic-item and feat/feature AC
+    // effects folded on top through the shared resolver (RFC 003). The
+    // contribution ledger EXPLAINS the same fold from the same helper instead of
+    // re-deriving Unarmored Defense a second time.
+    data.armorClass = resolveDnd5eArmorClass(
+      doc.systemId as GameSystemId,
+      data,
+      dexMod,
+      getDnd5eDefenseStyleArmorClassBonus(data)
+    );
     data.initiative = dexMod;
 
     // Derived quantities (Passive Perception, carrying capacity, ...) come from
@@ -248,40 +243,6 @@ export abstract class Dnd5eEngineBase implements SystemEngine<Dnd5eDataModel> {
     // ./derivedQuantities, computed generically here, surfaced on the sheet, and
     // verified by one test. Adding one needs no new engine code.
     data.derived = applyDerivedQuantities(data, DND5E_DERIVED_QUANTITIES);
-  }
-
-  /**
-   * Armor/shield AC, taking the best applicable Unarmored Defense formula
-   * (SRD 5.1/5.2, identical in both editions) when the character has the
-   * class feature and wears no armor:
-   *   - Barbarian: 10 + Dex mod + Con mod (a shield still applies)
-   *   - Monk:      10 + Dex mod + Wis mod (no armor AND no shield)
-   */
-  protected computeBaseArmorClass(data: Dnd5eDataModel, dexMod: number): number {
-    let baseAC = compute5eAC(data.baseAttributes.dex ?? 10, data.equipment);
-
-    const armor = data.equipment.find((e) => e.slot === 'chest' && e.armorClass != null);
-    if (armor) {
-      return baseAC;
-    }
-
-    const shield = data.equipment.find((e) => e.slot === 'offHand' && e.shieldBonus != null);
-    const hasFeature = (featureId: string) =>
-      data.features.some((feature) => feature.id === featureId);
-
-    if (hasFeature('unarmored-defense-barbarian')) {
-      const conMod = abilityMod(data.baseAttributes.con ?? 10);
-      baseAC = Math.max(
-        baseAC,
-        dnd5eUnarmoredDefenseBarbarian(dexMod, conMod) + (shield?.shieldBonus ?? 0)
-      );
-    }
-    if (!shield && hasFeature('unarmored-defense-monk')) {
-      const wisMod = abilityMod(data.baseAttributes.wis ?? 10);
-      baseAC = Math.max(baseAC, dnd5eUnarmoredDefenseMonk(dexMod, wisMod));
-    }
-
-    return baseAC;
   }
 
   protected applyExhaustionMaxHP(_exhaustion: number, maxHP: number): number {

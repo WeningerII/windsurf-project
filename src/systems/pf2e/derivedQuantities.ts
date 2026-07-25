@@ -16,8 +16,8 @@ import type { DerivedQuantitySpec } from '../../rules/derivation';
 import { abilityMod } from '../../utils/math';
 import { pf2eAutoHeightenRank, pf2eBulkLimits } from '../../utils/derivedCombatMath';
 import { pf2eClassOrSpellDC } from '../../utils/derivedCasterMath';
-import { resolveCharacterEffects, computePf2eAC } from '../../rules';
-import { getPf2eConditionStatusPenalty } from '../../rules/conditions/pf2eConditions';
+import { resolvePf2eArmorClass } from '../../rules';
+import { resolvePf2eCheckPenalty } from '../../rules/conditions/pf2eConditions';
 import { profTotal, type Pf2eDataModel, type Pf2eProficiencyTier } from './data-model';
 
 /** Build a full ability-score block from partial overrides (defaults are 10). */
@@ -31,13 +31,20 @@ function strMod(system: Pf2eDataModel): number {
 }
 
 /**
- * FULL Armor Class, faithful to the engine's prepareData: the base formula
- * computePf2eAC(dex, armor proficiency, equipment) seeds a `set` on 'ac', the
- * equipped magic-item / feat / feature AC effects layer on through the resolver,
- * and the single worst Dex-scoped status penalty (frightened/sickened/clumsy) is
- * subtracted — so compute() === data.armorClass exactly. The armor proficiency
- * total is recomputed from its tier (profTotal), matching what the engine's
- * prepareData stores, so the compute works on both prepared and default data.
+ * FULL Armor Class. Faithful to the engine's prepareData BY CONSTRUCTION: this
+ * calls the very same shared composition (`resolvePf2eArmorClass`,
+ * rules/compile/armorClass) the engine calls — base formula seeds a `set` on
+ * 'ac', the equipped magic-item / feat / feature AC effects layer on through the
+ * resolver, and the single worst Dex-scoped status penalty
+ * (frightened/sickened/clumsy) is subtracted — so `compute() === data.armorClass`
+ * is no longer a claim two copies have to keep agreeing on. The armor
+ * proficiency total is recomputed from its tier (profTotal, PF2e-local), matching
+ * what the engine's prepareData stores, so the compute works on both prepared and
+ * default data.
+ *
+ * The status penalty is resolved through the SAME shared fold the engine uses
+ * (`collectPf2eCheckConditionEffects` → resolver `pf2e-status` bucket), not a
+ * second scalar read.
  *
  * MUTATION-VERIFIABLE: an unarmored case with no bonus-bearing gear reduces to
  * the anchored base `ac = 10 + dexMod + proficiencyBonus` in defense.ts, so the
@@ -53,16 +60,10 @@ function armorClass(system: Pf2eDataModel): number {
     system.armorProficiencies[armorCategory]?.tier ??
     system.armorProficiencies.unarmored?.tier ??
     'untrained';
-  const armorProf = profTotal(system.level, armorTier);
-  const base = computePf2eAC(system.baseAttributes.dex ?? 10, armorProf, system.equipment);
-  const acStatusPenalty = getPf2eConditionStatusPenalty(system.conditions, 'dex');
-  return (
-    resolveCharacterEffects('pf2e', {
-      equipment: system.equipment.filter((item) => item.equipped),
-      feats: system.feats,
-      features: system.features,
-      baseArmorClass: base,
-    }).bonus('ac') - acStatusPenalty
+  return resolvePf2eArmorClass(
+    system,
+    profTotal(system.level, armorTier),
+    resolvePf2eCheckPenalty(system.conditions, 'dex')
   );
 }
 

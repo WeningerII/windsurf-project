@@ -68,7 +68,7 @@ export function dnd5eArmorDexContribution(
 
 export function compute5eAC(
   dexScore: number,
-  equipment: Array<{ slot?: string } & ArmorEquipItem>
+  equipment: ReadonlyArray<{ slot?: string } & ArmorEquipItem>
 ): number {
   const dexMod = abilityMod(dexScore);
 
@@ -106,7 +106,7 @@ export const D20_SIZE_MOD: Record<string, number> = {
 export function computeD20LegacyAC(
   dexScore: number,
   sizeCategory: string,
-  equipment: Array<ArmorEquipItem>
+  equipment: ReadonlyArray<ArmorEquipItem>
 ): { total: number; touch: number; flatFooted: number } {
   const dexMod = abilityMod(dexScore);
   const sizeMod = D20_SIZE_MOD[sizeCategory] ?? 0;
@@ -135,7 +135,7 @@ export function computeD20LegacyAC(
 export function computePf2eAC(
   dexScore: number,
   proficiencyBonus: number,
-  equipment: Array<ArmorEquipItem>
+  equipment: ReadonlyArray<ArmorEquipItem>
 ): number {
   const dexMod = abilityMod(dexScore);
 

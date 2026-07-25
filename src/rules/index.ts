@@ -157,6 +157,18 @@ export {
   D20_SIZE_MOD,
 } from './compile/defense';
 
+export type {
+  ArmorClassCharacter,
+  ArmorClassItem,
+  Dnd5eUnarmoredDefense,
+} from './compile/armorClass';
+export {
+  computeDnd5eBaseArmorClass,
+  resolveD20LegacyArmorClass,
+  resolveDnd5eArmorClass,
+  resolvePf2eArmorClass,
+} from './compile/armorClass';
+
 export {
   collectDnd5eConditionEffects,
   conditionImposesDisadvantage,

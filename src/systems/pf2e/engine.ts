@@ -5,8 +5,8 @@ import { Pf2eDataModel, profTotal } from './data-model';
 import { abilityMod } from '../../utils/math';
 import { pf2eDegreeOfSuccess } from '../../rules/resolver/pf2eDegree';
 import { SKILL_ABILITIES, SAVE_ABILITIES } from './constants';
-import { resolveCharacterEffects, computePf2eAC } from '../../rules';
-import { getPf2eConditionStatusPenalty } from '../../rules/conditions/pf2eConditions';
+import { resolvePf2eArmorClass } from '../../rules';
+import { resolvePf2eCheckPenalty } from '../../rules/conditions/pf2eConditions';
 import { pf2eClasses } from '../../data/pathfinder/2e/classes';
 import { getSpellSlotsAtClassLevel, mergeMaxUsedSpellSlots } from '../../utils/classSpellcasting';
 import { hitDieFaces } from '../../utils/templateShared';
@@ -15,12 +15,21 @@ import { PF2E_DERIVED_QUANTITIES } from './derivedQuantities';
 
 type Pf2eSpellcastingData = NonNullable<Pf2eDataModel['spellcasting']>;
 
-// Condition status-penalty selection now lives in the shared condition IR
-// (src/rules/conditions/pf2eConditions.ts) so the rule is defined once and
-// also surfaces as ledger provenance. This thin wrapper preserves the engine's
-// call sites and signature.
+/**
+ * The status penalty for a check keyed by `ability`, resolved through the SHARED
+ * fold (RFC 003 W5) rather than read as a scalar: the applicable conditions are
+ * compiled to IR and folded by the resolver, whose `pf2e-status` bucket keeps
+ * only the single worst penalty. This is the same shape the 3.5e/PF1e engines
+ * use (`resolveCharacterEffects(...).bonus('check')`), so all seven systems now
+ * resolve conditions the same way — and every applied condition reaches the
+ * ledger as first-class provenance instead of vanishing into a subtraction.
+ *
+ * Byte-identical to the closed-form `getPf2eConditionStatusPenalty` it replaces;
+ * pinned for every catalog condition, magnitude and ability scope by
+ * src/__tests__/rules/pf2eConditionFold.test.ts.
+ */
 function getPf2eStatusPenalty(conditions: Pf2eDataModel['conditions'], ability?: string): number {
-  return getPf2eConditionStatusPenalty(conditions, ability);
+  return resolvePf2eCheckPenalty(conditions, ability);
 }
 
 function inferPf2eTradition(spellListId: string): Pf2eSpellcastingData['tradition'] {
@@ -136,17 +145,6 @@ export class Pf2eEngine implements SystemEngine<Pf2eDataModel> {
       data.armorProficiencies[armorCategory]?.total ??
       data.armorProficiencies.unarmored?.total ??
       0;
-    // Base AC, then layer magic-item (item bonus) and feat/feature AC bonuses
-    // through the shared rules resolver (RFC 003). PF2e item bonuses take the
-    // highest per bucket; buckets sum. Additive without bonus-bearing gear.
-    //
-    // Status penalties to AC (CRB Conditions Appendix): frightened and
-    // sickened penalize "all your checks and DCs" — AC included — and clumsy
-    // penalizes "Dexterity-based checks and DCs, including AC". They are all
-    // status penalties, so only the single worst one applies, and it applies
-    // AFTER the armor's Dex cap (a clumsy fighter in full plate still loses
-    // AC). getPf2eConditionStatusPenalty(conditions, 'dex') selects exactly
-    // that set: the 'all' conditions plus the Dex-scoped clumsy.
     // A shield that isn't equipped can't be raised — clear stale flags so a
     // re-equipped shield starts lowered (Raise a Shield is a per-round action).
     for (const item of data.equipment) {
@@ -154,17 +152,17 @@ export class Pf2eEngine implements SystemEngine<Pf2eDataModel> {
         item.raised = false;
       }
     }
-    const acStatusPenalty = getPf2eStatusPenalty(data.conditions, 'dex');
-    // Base AC (scalar) seeds a `set` on 'ac'; the magic-item/feat/feature effects
-    // add on top through the resolver, so bonus('ac') is base + bonuses. The
-    // status penalty is then subtracted, exactly as before.
-    data.armorClass =
-      resolveCharacterEffects('pf2e', {
-        equipment: data.equipment.filter((item) => item.equipped),
-        feats: data.feats,
-        features: data.features,
-        baseArmorClass: computePf2eAC(data.baseAttributes.dex ?? 10, armorProf, data.equipment),
-      }).bonus('ac') - acStatusPenalty;
+    // ONE shared composition (rules/compile/armorClass): the base AC seeds a
+    // `set` on 'ac', the magic-item (item bonus) and feat/feature AC effects fold
+    // on top through the shared resolver (RFC 003; highest per bucket, buckets
+    // sum), and the single worst Dex-scoped status penalty is subtracted. The
+    // declarative `pf2e.L2.ac` derived quantity calls the SAME function, so the
+    // engine and the register can no longer drift.
+    data.armorClass = resolvePf2eArmorClass(
+      data,
+      armorProf,
+      getPf2eStatusPenalty(data.conditions, 'dex')
+    );
 
     // --- HP = ancestryHP + level × (class HP die + CON mod) + manual bonus ---
     // PF2e CRB p.26: Ancestry HP (flat) + level × (class HP + CON mod). Class HP

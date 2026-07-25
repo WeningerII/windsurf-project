@@ -6,7 +6,7 @@ import { Pf1eDataModel } from './data-model';
 import { PF1E_DERIVED_QUANTITIES } from './derivedQuantities';
 import { abilityMod } from '../../utils/math';
 import { CMB_SIZE_MODS, baseSave, classBAB, d20SkillCheckPenalty } from '../shared/d20-helpers';
-import { resolveCharacterEffects, computeD20LegacyAC, D20_SIZE_MOD } from '../../rules';
+import { resolveCharacterEffects, resolveD20LegacyArmorClass, D20_SIZE_MOD } from '../../rules';
 import { collectD20LegacyConditionEffects } from '../../rules/conditions/d20LegacyConditions';
 import { mergeVancianSpellSlots } from '../../utils/classSpellcasting';
 import { pf1eClasses } from '../../data/pathfinder/1e/classes';
@@ -138,22 +138,14 @@ export class Pf1eEngine implements SystemEngine<Pf1eDataModel> {
     data.spellsPerDay = mergeVancianSpellSlots(data.spellsPerDay, slotTotals);
 
     // --- AC (from equipped armor items + size) ---
-    // Base AC, then layer magic-item and feat/feature AC bonuses through the
-    // shared rules resolver (RFC 003). Per-bonus-type routing to touch/flat-
-    // footed is a Phase 2 refinement; the resolved delta applies to total here.
-    // Additive: contributes 0 without bonus-bearing gear/modifiers.
-    // The {total, touch, flatFooted} tuple is not a single scalar, and today
-    // only `total` receives additive AC bonuses (touch/flat-footed take none).
-    // So the relocated helper produces the tuple, and only `total` flows through
-    // the resolver: its base seeds a `set` on 'ac', the magic/feat/equip effects
-    // add on top, and bonus('ac') returns base + bonuses — identical to before.
-    const ac = computeD20LegacyAC(data.baseAttributes.dex ?? 10, data.sizeCategory, data.equipment);
-    data.armorClass.total = resolveCharacterEffects('pf1e', {
-      equipment: data.equipment.filter((item) => item.equipped),
-      feats: data.feats,
-      features: data.features,
-      baseArmorClass: ac.total,
-    }).bonus('ac');
+    // ONE shared composition (rules/compile/armorClass): the base formula seeds a
+    // `set` on 'ac' and the equipped magic-item / feat / feature AC effects fold
+    // on top through the shared resolver (RFC 003). Per-bonus-type routing to
+    // touch/flat-footed is a Phase 2 refinement; the resolved delta applies to
+    // total. The declarative `pf1e.L2.ac.total` derived quantity calls the SAME
+    // function, so the engine and the register can no longer drift.
+    const ac = resolveD20LegacyArmorClass('pf1e', data);
+    data.armorClass.total = ac.total;
     data.armorClass.touch = ac.touch;
     data.armorClass.flatFooted = ac.flatFooted;
 
