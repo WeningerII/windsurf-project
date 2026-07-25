@@ -753,6 +753,164 @@ entry is verbatim.
 so a stat block encoded from the *wrong edition* still scores as covered. Name
 coverage is not fidelity coverage; the reverse-diff catches non-SRD *entries*,
 not mis-transcribed *fields*. No gate checks field-level fidelity today.
+**Superseded 2026-07-25 by §15:** a gate now exists (`npm run check:srd-fidelity`),
+and the audit it was built for found the Will-o'-Wisp was **not** an isolated case.
+
+---
+
+## 15. Field-level SRD fidelity — audit result + the gate that now guards it (added 2026-07-25)
+
+§13 recorded that nothing checks whether an entry's CONTENT matches the source it
+cites. This section records what a systematic audit found, and the check now wired
+into `npm run verify`.
+
+### 15.1 The gate
+
+`npm run check:srd-fidelity` (`scripts/check-srd-fidelity.mjs`) compares the
+product loaders' SCALAR fields against verbatim values pinned from the same
+open-content sources `srd:coverage` uses (`docs/srd-sources.md`). It is **offline**
+— `scripts/data/srd-fidelity-manifest.json` holds the pinned upstream values — so
+it can live inside `verify`, which the networked `srd:coverage` deliberately cannot.
+
+- Coverage today: **666 entries / 11,247 field comparisons** — 5e-2014 monsters
+  (334, vs 5e-bits/5e-database 2014 JSON), 5e-2024 monsters (327, vs the downfallx
+  SRD 5.2.1 markdown), and 5e-2014 + 5e-2024 backgrounds (5, vs 5e-database).
+  Fields: `armorClass`, `hitPoints.{count,die,modifier}`, `challengeRating`,
+  `size`, all six ability scores, all five speeds; backgrounds compare the skill
+  and tool proficiency sets.
+- Refresh the pinned manifest with `npm run srd:fidelity:write` (networked; commit
+  the result). The 5.2.1 parser inside the check is deliberately **independent of**
+  `scripts/encode-2024-monsters.mjs`: a check sharing the encoder's parser cannot
+  catch the encoder's own mistakes.
+- Known divergences live in `scripts/data/srd-fidelity-baseline.json` pinned to
+  their **exact** current encoded value. The baseline is a **ratchet, not a
+  blanket**: a baselined field that changes at all — fixed or drifted further —
+  fails the check and demands the record be removed or re-recorded. Anything
+  diverging that is not baselined fails immediately.
+- Proven to fail (2026-07-25 scratch-break, reverted): giving the 5e-2014 Black
+  Dragon Wyrmling a 9d4 hit-dice line → 3 FIDELITY failures, exit 1. Giving the
+  **generated** 5e-2024 Ogre its SRD 5.1 line (7d10+21 instead of 8d10+24) — the
+  exact Will-o'-Wisp signature → 2 FIDELITY failures, exit 1. Fixing a baselined
+  field → STALE BASELINE failure. Drifting one → BASELINE DRIFT failure.
+
+**What the gate does NOT cover (residual risk, stated so it is known):** prose
+(descriptions, traits, actions), damage/condition immunity and language lists,
+alignment and creature type (both are modelled, not transcribed), and every
+category outside the four above — all 5e spells/equipment/species/classes/feats,
+and **every** PF1e, PF2e, 3.5e, M&M and Daggerheart category. Those were covered by
+the 15.2 sweep but have no standing gate.
+
+### 15.2 What was audited, and how
+
+1. **Encoder-regeneration sweep, all 7 systems.** Every encoder in `scripts/`
+   (5e-2014/2024 monsters + spells + equipment, 3.5e monsters + spells, PF1e
+   monsters + spells + equipment, PF2e monsters + spells, Daggerheart adversaries)
+   was re-run against live upstream and its output diffed against what is
+   committed. **All reproduce byte-identically after `prettier`.** No hand-edit has
+   drifted into any encoder-generated data file in any system. This is the clean
+   part of the result and it is a real one.
+2. **Hand-written entries** — the entries encoders skip on name match, and the
+   residual risk surface — were compared field-by-field against their cited source.
+3. **Cross-edition byte-identity** between the 5e-2014 and 5e-2024 catalogs (the
+   "identical names, different content" blind spot) was measured for every shared
+   category: spells 30/317 shared names byte-identical, equipment 124/448,
+   backgrounds 1/1, monsters 0/287, species 0/7, classes 0/12, feats 0/1.
+   Byte-identity is a **signal, not a verdict** — spot-checks confirmed genuinely
+   unchanged entries (e.g. Misty Step is verbatim identical in 5.1 and 5.2), so
+   this was used to target inspection, not as a pass/fail rule.
+
+### 15.3 Findings
+
+**(a) 5e-2014 hand-written monsters — 17 entries wrong, FIXED in this lane.**
+Of the 334 shipped SRD 5.1 monsters, 296 are encoder-written and **zero** diverged.
+All divergence was in the 38 hand-written entries (tagged with the nonstandard
+`source: 'SRD'`). Every corrected value is corroborated twice: by the upstream JSON
+*and* by 5e's own HP arithmetic (`modifier == floor((CON-10)/2) * count`).
+
+| Entry | Field | Was | Now (source) |
+| --- | --- | --- | --- |
+| Aboleth | HP | 18d10+72 | 18d10+36 |
+| Ancient Blue Dragon | HP | 28d20+252 | 26d20+208 |
+| Ankheg | HP | 6d10+12 | 6d10+6 |
+| Black Dragon Wyrmling | CON / CON save / HP | 15 / +4 / 6d8+12 | 13 / +3 / 6d8+6 |
+| Chimera | HP | 12d10+36 | 12d10+48 |
+| Gladiator | CON / CON save / HP | 18 / +7 / 15d8+60 | 16 / +6 / 15d8+45 |
+| Mage | HP | 9d8+9 | 9d8 |
+| Young White Dragon | HP | 16d10+64 | 14d10+56 |
+| Rat, Spider | HP | 1d4 | 1d4−1 |
+| Balor | HP | 21d12+147 | 21d12+126 |
+| Bandit, Basilisk, Kobold, Kraken, Medusa, Wolf, Wyvern | `hitPoints.modifier` | absent (read as 0) while `notation` carried the right value | populated |
+
+The last row is a structural bug, not a transcription one: consumers reading the
+typed `modifier` field got HP totals that disagreed with the entry's own notation
+string.
+
+**(b) 5e-2024 hand-written monsters — 77 of 85 diverge from SRD 5.2.1. NOT FIXED.**
+The Will-o'-Wisp (§13) was not an isolated case; it was one instance of a
+systemic pattern. The 5e-2024 loader ships ~96 hand-written monsters that override
+the encoder on name match, tagged `source: 'SRD 5.2'`. Of the 85 whose SRD 5.2.1
+stat block is machine-readable, **77 diverge** — mostly carrying the SRD 5.1 (2014)
+values (Wolf AC 13 vs 12; Skeleton AC 13 vs 14; Vampire 16d8+64 vs 23d8+92;
+Lich AC 17/18d8+72 vs 20/42d8+126; Deva CR 5 vs 10; Manticore CR 7 vs 3), and some
+carrying values found in **neither** edition (Air Elemental 5d10+10 is neither
+5.1's 12d10+24 nor 5.2's — an invented or placeholder line). All 254 scalar
+divergences are itemized field-by-field in
+`scripts/data/srd-fidelity-baseline.json`.
+Not fixed here: correct remediation is re-transcription of ~77 full stat blocks
+(prose, traits and actions included, which this lane's scalar gate does not even
+measure), or deleting the hand-written overrides so the encoder's verbatim 5.2.1
+output wins. Both have a blast radius well beyond an audit lane. **This is the
+single largest open content-integrity item in the repo.**
+
+**(c) 5e-2024 backgrounds — all 4 carry 2014 content, and 3 are NOT open content.**
+Acolyte, Criminal, Sage and Soldier all ship tagged `source: 'SRD 5.2'` carrying
+the 2014 model: `suggestedCharacteristics` tables, a background `feature`
+("Shelter of the Faithful", "Criminal Contact", "Researcher", "Military Rank") and
+language grants — none of which exist in SRD 5.2, which instead grants ability
+scores, an origin feat and a tool proficiency. Acolyte is byte-identical to the
+repo's own 5e-2014 Acolyte. Criminal's skills are the 2014 Deception/Stealth, not
+5.2's Sleight of Hand/Stealth.
+**Open-content risk:** SRD 5.1 contains exactly ONE background (Acolyte). The 2014
+Criminal / Sage / Soldier text is *Player's Handbook* content, which is not open.
+So three shipped entries carry non-open content under an SRD tag. The name-based
+reverse diff cannot see this, because the NAMES are legitimate SRD 5.2 names. This
+is the same class as OC-1 (§11) and needs priority remediation — but the fix
+requires a `Background` type that can express the 2024 model (ability scores +
+origin feat), so it is recorded rather than papered over. **Do not fix by editing
+the source tag.**
+
+**(d) Upstream source defects — recorded, never normalized.**
+- **Basilisk AC.** `5e-bits/5e-database` 2014 records `armor_class: [{type:
+  'natural', value: 12}]`. SRD 5.1 prints **AC 15**, corroborated by the SRD 5.2.1
+  markdown (`**AC** 15`, block otherwise identical). The shipped 15 is correct and
+  the denominator is wrong; recorded under `upstreamDefects` in the baseline.
+- **Malformed SRD 5.2.1 ability tables.** Three blocks merge the MOD and SAVE
+  cells (`<td>13 +1</td>`): **Ancient Red Dragon**, **Remorhaz**, and the
+  **Will-o'-Wisp** (§13's known STR-score defect). The fidelity check's parser
+  rejects them rather than guessing, so they are listed in the manifest's
+  `skippedUnparseable` and are **not** field-checked. Note the consequence: the
+  §13 entry itself cannot be guarded by this gate until upstream is fixed.
+
+**(e) Nothing else found.** No divergence was found in any encoder-generated data
+in any of the 7 systems, and no divergence in 5e-2014 outside the 38 hand-written
+monsters.
+
+### 15.4 Not covered — residual risk, itemized
+
+- **5e-2024 monster names absent from SRD 5.2.1** (Goblin, Acolyte, Kobold,
+  Hobgoblin, Bugbear, Thug, Veteran, Captain, Necromancer, Pixie) are already
+  reported as over-inclusion in `docs/generated/srd-coverage.md`. Confirmed here:
+  Thug / Necromancer / Pixie have **no** 5.2.1 stat block under any name; the rest
+  exist only qualified (Goblin Warrior, Priest Acolyte, Kobold Warrior, Warrior
+  Veteran, …). Their content is 5.1 content. Unresolved.
+- **Field-level fidelity of hand-written entries outside 5e monsters/backgrounds**
+  is unaudited: 5e-2014 spells (222 hand-written), 5e equipment (241), PF1e spells
+  (132), and the hand-written residue in 3.5e / PF2e / M&M / Daggerheart. The
+  encoder-regeneration sweep proves the *generated* portions are faithful; it says
+  nothing about the hand-written ones.
+- **Prose fidelity is unaudited everywhere.** Every finding above is scalar.
+- **M&M 3e and Daggerheart** have no scalar gate at all; only the
+  encoder-regeneration sweep covered them.
 
 ---
 
