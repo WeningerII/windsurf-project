@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-07-24T18:59:18.892Z",
+  "generatedAt": "2026-07-25T03:31:51.069Z",
   "summary": {
     "total": 23,
     "byStatus": {
-      "done": 11,
+      "done": 12,
       "in-progress": 3,
-      "pending": 8,
+      "pending": 7,
       "missing": 1
     },
     "byPhase": {
@@ -271,11 +271,11 @@
       "track": "B-compute",
       "title": "L1/L2/L5-L10 — derived stats, spell economy, progression, defenses, legality, encounter",
       "detail": "Spell DC/attack/passive/cantrip/Unarmored Defense/MAP/bulk/heighten; prepared/known/upcasting; speed-with-penalty; ASI/feat cadence; resist/vuln/immune; point-buy + prereq + multiclass-stacking validators; 3.5e encounter budget + wealth — surfaced in prepareData/sheets via the resolver.",
-      "status": "pending",
+      "status": "done",
       "tags": [
         "engineering"
       ],
-      "evidence": "docs/compute-register/* (per-layer in-scope < verified)"
+      "evidence": "docs/generated/roadmap-metrics.json computeCompletion (234/234 in-scope, L1–L10, all 7)"
     },
     {
       "id": "p4.parity-matrix",
@@ -287,7 +287,7 @@
       "tags": [
         "engineering"
       ],
-      "evidence": "src/systems/*/contributionLedger.ts; src/creation/ (absent for mam3e)"
+      "evidence": "src/systems/*/contributionLedger.ts (7/7); src/creation/ (7/7 loadCreationPlan)"
     },
     {
       "id": "p5.ai-provider-agnostic",
