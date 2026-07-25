@@ -18,7 +18,7 @@ import type { GameSystemId } from '../../types/game-systems';
 import type { EquippedItem, Feat, Feature } from '../../types/core/character';
 import { abilityMod, profBonus } from '../../utils/math';
 import { pf2eMultipleAttackPenalty } from '../../utils/derivedCombatMath';
-import { collectDnd5eRiderEffects } from '../conditions/dnd5eRiders';
+import { collectDnd5eRiderEffects, type Dnd5eSystemId } from '../conditions/dnd5eRiders';
 import { collectPf2eRiderEffects } from '../conditions/pf2eRiders';
 import { collectD20LegacyConditionEffects } from '../conditions/d20LegacyConditions';
 import { collectD20LegacyRiderEffects } from '../conditions/d20LegacyRiders';
@@ -108,14 +108,22 @@ const featureAttackEconomy = (sheet: NormalizedSheet): AttackEconomy => ({
   attacksPerRound: 1 + extraAttackCount(sheet.features),
 });
 
-/** Shared by both 5e editions (the 2024 engine extends the 2014 base). */
-const dnd5eProfile: D20SystemProfile = {
+/**
+ * Shared by both 5e editions (the 2024 engine extends the 2014 base) — but
+ * PARAMETERIZED by edition, exactly as `legacyD20Profile` is for 3.5e/PF1e.
+ * The shape is identical; the rider set is not. SRD 5.2 does not open Great
+ * Weapon Master or Sharpshooter, so the -5/+10 trade must not reach a 2024
+ * combatant. Passing the edition down is what keeps that honest — see the
+ * EDITION ROUTING note in `../conditions/dnd5eRiders`.
+ */
+const dnd5eProfile = (systemId: Dnd5eSystemId): D20SystemProfile => ({
   baseAttackBonus: (sheet) => profBonus(sheet.level) + bestAttackAbility(sheet),
   // 5e marks worn items by slot; an explicit `equipped` flag also counts.
   isActiveWeapon: (item) =>
     item.slot === 'mainHand' || (item as unknown as { equipped?: boolean }).equipped === true,
   collectRiderEffects: (ctx) =>
     collectDnd5eRiderEffects({
+      systemId,
       activeToggles: ctx.activeToggles,
       featureIds: ctx.featureIds,
       featIds: ctx.featIds,
@@ -126,7 +134,7 @@ const dnd5eProfile: D20SystemProfile = {
   supportsOffHand: true,
   supportsStrikingRunes: false,
   attackEconomy: featureAttackEconomy,
-};
+});
 
 const pf2eProfile: D20SystemProfile = {
   baseAttackBonus: (sheet, system) => pf2eWeaponProficiency(system) + bestAttackAbility(sheet),
@@ -193,8 +201,8 @@ const legacyD20Profile = (systemId: 'dnd-3.5e' | 'pf1e'): D20SystemProfile => ({
  * adapters instead of being faked into this shape.
  */
 export const D20_PROFILES: Partial<Record<GameSystemId, D20SystemProfile>> = {
-  'dnd-5e-2014': dnd5eProfile,
-  'dnd-5e-2024': dnd5eProfile,
+  'dnd-5e-2014': dnd5eProfile('dnd-5e-2014'),
+  'dnd-5e-2024': dnd5eProfile('dnd-5e-2024'),
   'dnd-3.5e': legacyD20Profile('dnd-3.5e'),
   pf1e: legacyD20Profile('pf1e'),
   pf2e: pf2eProfile,

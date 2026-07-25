@@ -432,6 +432,7 @@ describe('collectDnd5eRiderEffects: Sharpshooter and Divine Smite', () => {
     const { collectDnd5eRiderEffects, availableDnd5eToggles } =
       await import('../../rules/conditions/dnd5eRiders');
     const inputs = {
+      systemId: 'dnd-5e-2014' as const,
       activeToggles: ['sharpshooter', 'divine-smite'],
       featureIds: new Set(['divine-smite']),
       featIds: new Set(['sharpshooter']),
@@ -457,6 +458,7 @@ describe('collectDnd5eRiderEffects: Sharpshooter and Divine Smite', () => {
   it('Divine Smite without the feature compiles nothing', async () => {
     const { collectDnd5eRiderEffects } = await import('../../rules/conditions/dnd5eRiders');
     const effects = collectDnd5eRiderEffects({
+      systemId: 'dnd-5e-2014',
       activeToggles: ['divine-smite', 'sharpshooter'],
       featureIds: new Set<string>(),
       featIds: new Set<string>(),
@@ -464,6 +466,127 @@ describe('collectDnd5eRiderEffects: Sharpshooter and Divine Smite', () => {
       rogueLevel: 0,
     });
     expect(effects).toHaveLength(0);
+  });
+});
+
+/**
+ * EDITION CONFLATION REGRESSION (2014 vs 2024).
+ *
+ * `dnd5eRiders` is shared by both 5e editions. It used to hardcode
+ * `systemId = 'dnd-5e-2014'`, so a D&D 5e 2024 character silently ran the SRD
+ * 5.1 Great Weapon Master / Sharpshooter -5 attack / +10 damage trade.
+ *
+ * SRD 5.2 does not open either feat — the encoded 5.2 corpus
+ * (`src/data/dnd/5e-2024/feats/`) is Ability Score Improvement, Grappler, the
+ * origin feats, four Fighting Styles and seven epic boons, with provenance
+ * comments stating the rest is non-open Player's Handbook content. So there is
+ * no cited SRD 5.2 trade to compile, and the 2014 one must not leak across.
+ *
+ * These tests pin BOTH sides: 2014 keeps its verified -5/+10, 2024 refuses it,
+ * and the riders SRD 5.2 does share (Rage) still compile for 2024 — proving the
+ * gate is edition-scoped, not a blanket disable.
+ */
+describe('5e rider edition routing: 2014 keeps -5/+10, 2024 refuses it', () => {
+  const tradeoffInputs = (systemId: 'dnd-5e-2014' | 'dnd-5e-2024') => ({
+    systemId,
+    activeToggles: ['great-weapon-master', 'sharpshooter'],
+    featureIds: new Set<string>(),
+    featIds: new Set(['great-weapon-master', 'sharpshooter']),
+    barbarianLevel: 0,
+    rogueLevel: 0,
+  });
+
+  it('2014 compiles the SRD 5.1 GWM and Sharpshooter -5/+10 trade (no regression)', async () => {
+    const { collectDnd5eRiderEffects, availableDnd5eToggles } =
+      await import('../../rules/conditions/dnd5eRiders');
+    const inputs = tradeoffInputs('dnd-5e-2014');
+    expect(availableDnd5eToggles(inputs)).toEqual(['great-weapon-master', 'sharpshooter']);
+
+    const effects = collectDnd5eRiderEffects(inputs);
+    // One -5 attack and one +10 damage per feat, and nothing else.
+    expect(effects.filter((effect) => effect.target === 'attack').map((e) => e.value)).toEqual([
+      -5, -5,
+    ]);
+    expect(effects.filter((effect) => effect.target === 'damage').map((e) => e.value)).toEqual([
+      10, 10,
+    ]);
+    expect(effects.every((effect) => effect.systemId === 'dnd-5e-2014')).toBe(true);
+  });
+
+  it('2024 compiles NOTHING for GWM/Sharpshooter and never offers the toggles', async () => {
+    const { collectDnd5eRiderEffects, availableDnd5eToggles } =
+      await import('../../rules/conditions/dnd5eRiders');
+    const inputs = tradeoffInputs('dnd-5e-2024');
+    // Same feats, same active toggles — the ONLY difference is the edition.
+    expect(availableDnd5eToggles(inputs)).toEqual([]);
+    expect(collectDnd5eRiderEffects(inputs)).toEqual([]);
+  });
+
+  it('2024 still compiles the riders SRD 5.2 shares, stamped with its own edition', async () => {
+    const { collectDnd5eRiderEffects } = await import('../../rules/conditions/dnd5eRiders');
+    const effects = collectDnd5eRiderEffects({
+      systemId: 'dnd-5e-2024',
+      activeToggles: ['rage', 'great-weapon-master'],
+      featureIds: new Set(['rage']),
+      featIds: new Set(['great-weapon-master']),
+      barbarianLevel: 9,
+      rogueLevel: 0,
+    });
+    // Rage survives at its barbarian-9 value; GWM does not ride along.
+    expect(effects.map((effect) => effect.value)).toEqual([3]);
+    // Provenance is the character's real edition, not a hardcoded 2014 stamp.
+    expect(effects[0].systemId).toBe('dnd-5e-2024');
+    expect(effects[0].id.startsWith('dnd-5e-2024:')).toBe(true);
+  });
+
+  it('dnd5eEditionOf routes 2024 documents to 2024 and everything else to 2014', async () => {
+    const { dnd5eEditionOf } = await import('../../rules/conditions/dnd5eRiders');
+    expect(dnd5eEditionOf('dnd-5e-2024')).toBe('dnd-5e-2024');
+    expect(dnd5eEditionOf('dnd-5e-2014')).toBe('dnd-5e-2014');
+  });
+
+  it('scene combat: an identical GWM sheet gets -5/+10 in 2014 and not in 2024', async () => {
+    const { buildCharacterCombatant } = await import('../../rules');
+    const { createDefaultDnd5eData } = await import('../../systems/dnd5e/data-model');
+    const { createDefaultDnd5e2024Data } = await import('../../systems/dnd5e-2024/data-model');
+
+    const gwmSheet = {
+      activeToggles: ['great-weapon-master'],
+      feats: [
+        {
+          id: 'great-weapon-master',
+          name: 'Great Weapon Master',
+          source: 'Feat',
+          description: '-5/+10.',
+        },
+      ],
+    };
+
+    const build = (systemId: GameSystemId, base: Record<string, unknown>) =>
+      buildCharacterCombatant(charDoc(systemId, { ...base, ...gwmSheet }, `gwm-${systemId}`), {
+        tokenId: `t-${systemId}`,
+        position: { x: 0, y: 0 },
+      });
+
+    const built2014 = build('dnd-5e-2014', createDefaultDnd5eData());
+    const built2024 = build('dnd-5e-2024', createDefaultDnd5e2024Data());
+    expect(built2014.supported).toBe(true);
+    expect(built2024.supported).toBe(true);
+    if (!built2014.supported || !built2024.supported) return;
+
+    // 2014: the verified trade reaches the scene combatant.
+    expect(built2014.combatant.attackEffects.some((effect) => effect.value === -5)).toBe(true);
+    expect(built2014.combatant.damageEffects.some((effect) => effect.value === 10)).toBe(true);
+
+    // 2024: another edition's math must NOT reach the combatant.
+    expect(
+      built2024.combatant.attackEffects.some((effect) => /weapon master/i.test(effect.label))
+    ).toBe(false);
+    expect(
+      built2024.combatant.damageEffects.some((effect) => /weapon master/i.test(effect.label))
+    ).toBe(false);
+    expect(built2024.combatant.attackEffects.some((effect) => effect.value === -5)).toBe(false);
+    expect(built2024.combatant.damageEffects.some((effect) => effect.value === 10)).toBe(false);
   });
 });
 
