@@ -122,8 +122,8 @@ Default scope for all rules: `environment:production`.
 |---|---|---|---|---|---|---|
 | a | Client error-rate spike | `event.type:error` count, all categories | warn ≥ 25 events; crit ≥ 100 events | 5 min (rolling) | warning → critical | `<CHAN_OPS>` → `<CHAN_ONCALL>` |
 | a′ | Crash-free sessions drop | Crash-free session rate | < 99.0% | 1 hour | warning | `<CHAN_OPS>` |
-| b | AI-gateway failure / 5xx | AI-flow failures reported to Sentry (`tags.category:network` + AI tag) **or** Netlify Function 5xx | warn ≥ 10% of AI calls failing; crit ≥ 25 events | 15 min | warning | `<CHAN_OPS>` (dormant — see prereq) |
-| c | Supabase sync failures | Sync-path errors reported to Sentry (`tags.category:network`, `severity:high`) | warn ≥ 15 events; crit ≥ 50 events | 10 min | warning → critical | `<CHAN_OPS>` → `<CHAN_ONCALL>` |
+| b | AI-gateway failure / 5xx | AI-flow failures reported to Sentry (`tags.category:network`, `extra.surface:ai`) **or** Netlify Function 5xx | warn ≥ 10% of AI calls failing; crit ≥ 25 events | 15 min | warning | `<CHAN_OPS>` |
+| c | Supabase sync failures | Sync-path errors reported to Sentry (`tags.category:network`, `severity:high`, `extra.surface:sync`) | warn ≥ 15 events; crit ≥ 50 events | 10 min | warning → critical | `<CHAN_OPS>` → `<CHAN_ONCALL>` |
 | d | Unhandled promise rejections | `mechanism.type:onunhandledrejection` | warn ≥ 10 events; also alert on first-seen new issue | 5 min | warning | `<CHAN_OPS>` |
 
 ### (a) Client error-rate spike — YAML-ish spec
@@ -170,7 +170,7 @@ signal_source: LIVE only if release-health/session tracking is enabled.
 ```yaml
 name: ai-gateway-failure-rate
 environment: production
-filter: tags.category:network AND tags.surface:ai   # tag not emitted yet — see prereq
+filter: tags.category:network AND message:"ai gateway call failed"
 conditions:
   - metric: failure_ratio      # failed AI calls / total AI calls
     window: 15m
@@ -179,24 +179,35 @@ conditions:
     window: 15m
     critical: { op: ">=", value: 25 }
 notify: { warning: <CHAN_OPS>, critical: <CHAN_OPS> }
-status: DORMANT
-prerequisites:
-  - VITE_AI_ENABLED = "true"   (default OFF; feature must be turned on to have traffic)
-  - The AI gateway is a SERVER-SIDE Netlify Function (netlify/functions/ai-gateway.mts).
-    Sentry here is the BROWSER SDK only; the function has no Sentry today, so server
-    5xx are NOT in Sentry. Two ways to make this rule live:
-      1. Client-side: have the gateway client report degraded/failed calls via
-         errorLogger.log(ErrorCategory.NETWORK, ErrorSeverity.HIGH, ..., { surface: 'ai' })
-         so they arrive as category:network with a surface:ai tag (one-line seam,
-         not currently wired — do NOT add app code as part of this runbook).
-      2. Server-side: add a Netlify Functions log-drain / uptime alert on 5xx from
-         the /.netlify/functions/ai-gateway route, OR wire @sentry/node in the
-         function (separate project or environment).
+status: LIVE (client-side seam wired 2026-07-25) — but only carries traffic when
+  VITE_AI_ENABLED = "true" (default OFF).
+signal_source: >
+  src/ai/gatewayClient.ts calls errorLogger.log(NETWORK, HIGH, 'ai gateway call
+  failed', undefined, { surface: 'ai', task, code, traceId? }) on every UNHEALTHY
+  outcome: a transport throw ('transport-error'), an unreadable body
+  ('unreadable-response'), a response that is not an AiResponse
+  ('malformed-response'), and any server-returned failure code not on the
+  by-design list. Wired + pinned by src/__tests__/observability/failureReporting.test.ts.
+  Sentry receives these as tags.category:network / tags.severity:high with the
+  detail in `extra` (surface/task/code/traceId) — filter on `extra.surface:ai` if
+  your Sentry plan indexes extras, else on the message above.
+by_design_exclusions: >
+  over-budget, budget-exceeded (the 429 cost controls), unauthorized,
+  provider-not-configured, invalid-request, unsupported-task are NOT reported —
+  they are the gateway working as designed and would drown this rule. This
+  replaces the old "filter out status:429" advice: the exclusion now happens at
+  the source, so no Sentry-side filter is required.
+still_not_covered:
+  - SERVER-side 5xx from the function itself (a crash before it can answer) are
+    still invisible to the browser SDK. The function emits one structured JSON
+    line per request (src/ai/gatewayLog.ts, createConsoleLogSink) to the Netlify
+    function log — `traceId` there joins to the `traceId` on these client events.
+    A Netlify log-drain or @sentry/node in the function remains the way to alert
+    on that; not wired.
 notes: >
-  The browser gateway client degrades every transport error to a manual fallback,
+  The browser gateway client still degrades every failure to a manual fallback,
   so users are not blocked; this alert is about provider/quota health, not UX
-  breakage. Rate-limit exhaustion returns 429 by design and should be EXCLUDED
-  (filter out status:429) to avoid alerting on intended cost control.
+  breakage.
 ```
 
 ### (c) Supabase sync failures — YAML-ish spec
@@ -211,14 +222,18 @@ conditions:
     warning:  { op: ">=", value: 15 }
     critical: { op: ">=", value: 50 }   # broad failure => suspect Supabase outage / RLS / expired anon key
 notify: { warning: <CHAN_OPS>, critical: <CHAN_ONCALL> }
-status: DORMANT (see prerequisite)
+status: LIVE (seam wired 2026-07-25)
+signal_source: >
+  src/hooks/useEntitySync.ts reports every sync-path failure through
+  errorLogger.log(NETWORK, HIGH, 'sync failed', err, { surface: 'sync', stage })
+  where stage is 'push' (debounced local-change push), 'delete' (a rejected
+  remote delete during reconciliation), or 'sync' (the full fetch/merge/push
+  cycle). Reporting is ADDITIVE: each site still sets syncState:'error' and still
+  queues the snapshot, so local-first behaviour is unchanged. Pinned by
+  src/__tests__/observability/failureReporting.test.ts. The payload is
+  content-free by construction — no entities, names, or notes — so this rule
+  cannot leak user content into Sentry.
 prerequisites:
-  - The sync engine currently SWALLOWS transient sync failures into a UI state:
-    useEntitySync.ts:94-96 and :187-188 do `catch { setSyncState('error') }` with no
-    Sentry emit. So sync failures do NOT reach Sentry today. To make this rule live,
-    the sync error path must report through errorLogger, e.g.
-    errorLogger.log(ErrorCategory.NETWORK, ErrorSeverity.HIGH, 'sync failed', err)
-    (a small additive seam — NOT added by this runbook).
   - Note: retry.ts already short-circuits non-retryable errors (auth, RLS, schema,
     'invalid api key', 'jwt expired', ...). A spike here most often means the anon key
     or JWT config is wrong, or Supabase is down — check the Supabase status page and
@@ -260,11 +275,12 @@ Steps that need console/credential access are marked **[NEEDS ACCESS]**.
 2. **[NEEDS ACCESS]** Set `VITE_SENTRY_DSN` in Netlify production env vars; redeploy
    so Vite inlines it. Confirm `npm run verify` still passes (the secret-exposure
    guard tolerates the public DSN name).
-3. **[NEEDS ACCESS]** In Sentry, create alert rules (a), (a′), (d) as specified —
-   these are **live immediately** on the existing signal.
-4. Create rules (b) and (c) but leave them **muted/dormant** until their
-   prerequisites (AI enabled; sync/AI reporting seam) are in place. Track those as
-   follow-up engineering tasks, not ops config.
+3. **[NEEDS ACCESS]** In Sentry, create alert rules (a), (a′), (c), (d) as
+   specified — these are **live immediately** on the existing signal.
+4. Create rule (b) too. Its seam is wired, but it only carries traffic once
+   `VITE_AI_ENABLED = "true"`; on a default (AI-off) deployment it will simply
+   never fire. Leave it enabled rather than muted — there is nothing left to
+   wire.
 5. **[NEEDS ACCESS]** Replace `<CHAN_OPS>` / `<CHAN_ONCALL>` / `<EMAIL_OPS>` with the
    real Sentry alert integrations (Slack app, PagerDuty service, email list).
 6. Optional but recommended: enable release health / session tracking (populates
@@ -285,9 +301,24 @@ Steps that need console/credential access are marked **[NEEDS ACCESS]**.
 
 ## 5. Known gaps (track as engineering follow-ups, not ops config)
 
-- Sync failures are not reported to Sentry (rule c prerequisite).
-- AI-gateway server 5xx are not in Sentry; only the browser client sees failures,
-  and it degrades them silently (rule b prerequisite).
-- No `release` wired → weaker regression grouping.
-- Preview and production deploys share `environment:production` → alerts cannot
-  distinguish them without extra wiring.
+**Closed 2026-07-25** (were the rule (b)/(c) prerequisites):
+
+- ~~Sync failures are not reported to Sentry.~~ Wired in `src/hooks/useEntitySync.ts`.
+- ~~AI-gateway failures are degraded silently by the browser client.~~ Wired in
+  `src/ai/gatewayClient.ts`, with by-design outcomes excluded at the source.
+
+**Still open:**
+
+- **AI-gateway SERVER-side 5xx are not in Sentry.** The function's structured
+  trace (`src/ai/gatewayLog.ts`) goes to the Netlify function log only. Its
+  `traceId` joins to the client-side events above, so a client alert is
+  debuggable — but a crash the client only sees as a transport error is not
+  separately attributable. Needs a Netlify log drain or `@sentry/node` in the
+  function.
+- **No `release` wired** in `Sentry.init` → weaker regression grouping.
+- **Preview and production deploys share `environment:production`** → alerts
+  cannot distinguish them without extra wiring.
+
+The last two are one-line `src/main.tsx` changes, deliberately **not** taken
+here: `main.tsx` is in the eager first-paint chunk, which is at 84.8 / 85.0 KiB
+gzip. See `docs/GAPS.md` §14.
