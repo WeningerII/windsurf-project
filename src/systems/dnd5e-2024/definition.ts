@@ -1,7 +1,6 @@
 import { SystemDefinition } from '../../registry/types';
 import { Dnd5e2024DataModel, createDefaultDnd5e2024Data } from './data-model';
 import { Dnd5e2024Engine } from './engine';
-import { createDnd5eValidator } from '../dnd5e/shared/validation';
 import { lazyWithPreload } from '../../utils/lazyWithPreload';
 
 export const Dnd5e2024SystemDef: SystemDefinition<Dnd5e2024DataModel> = {
@@ -64,7 +63,12 @@ export const Dnd5e2024SystemDef: SystemDefinition<Dnd5e2024DataModel> = {
   ],
   createDefaultData: createDefaultDnd5e2024Data,
   engine: new Dnd5e2024Engine(),
-  validator: createDnd5eValidator<Dnd5e2024DataModel>('dnd-5e-2024'),
+  // Shared 5e validation, stamped with the 2024 systemId and code-split out of
+  // the eager bootstrap chunk like every other system's validator.
+  loadValidator: () =>
+    import('../dnd5e/shared/validation').then((m) =>
+      m.createDnd5eValidator<Dnd5e2024DataModel>('dnd-5e-2024')
+    ),
   // Shared 5e enumeration (see dnd5e/shared/legalActions): the 2024 edition runs
   // the same engine and action economy, so it lazy-loads the same provider,
   // stamped with its own systemId — mirroring the shared `createDnd5eValidator`.

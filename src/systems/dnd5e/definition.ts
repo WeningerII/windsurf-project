@@ -1,7 +1,6 @@
 import { SystemDefinition } from '../../registry/types';
 import { Dnd5eDataModel, createDefaultDnd5eData } from './data-model';
 import { Dnd5eEngine } from './engine';
-import { createDnd5eValidator } from './shared/validation';
 import { lazyWithPreload } from '../../utils/lazyWithPreload';
 
 export const Dnd5eSystemDef: SystemDefinition<Dnd5eDataModel> = {
@@ -64,7 +63,13 @@ export const Dnd5eSystemDef: SystemDefinition<Dnd5eDataModel> = {
   ],
   createDefaultData: createDefaultDnd5eData,
   engine: new Dnd5eEngine(),
-  validator: createDnd5eValidator<Dnd5eDataModel>('dnd-5e-2014'),
+  // Shared with the 2024 edition; the lazy loader keeps the (large) 5e
+  // validation logic out of the eager bootstrap chunk, matching how the other
+  // five systems already wire theirs.
+  loadValidator: () =>
+    import('./shared/validation').then((m) =>
+      m.createDnd5eValidator<Dnd5eDataModel>('dnd-5e-2014')
+    ),
   // Shared with the 2024 edition (same engine, same action economy): the lazy
   // provider is code-split out of the eager bootstrap chunk, mirroring how the
   // two editions share `createDnd5eValidator`.
