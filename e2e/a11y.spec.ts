@@ -86,6 +86,43 @@ test('landing / empty-roster page has no critical or serious a11y violations', a
   await expectNoBlockingViolations(page, 'Landing (empty roster)');
 });
 
+test('the New Character dialog and the guided-creation wizard have no critical or serious a11y violations', async ({
+  page,
+}) => {
+  // Two surfaces the gate never reached before: the portaled system-picker
+  // modal, and the wizard behind it — which is where every character in this
+  // app is born, for all seven systems. The wizard's option list in particular
+  // was an invalid listbox/option structure until the p5 a11y lane.
+  await page.getByRole('button', { name: /New Character/i }).click();
+  await expect(page.getByRole('dialog', { name: /New character/i })).toBeVisible();
+  await expectNoBlockingViolations(page, 'New Character dialog');
+
+  await page.getByRole('button', { name: /D&D 5e \(2024\)/i }).click();
+  await page.getByTestId('creation-wizard').waitFor({ timeout: 30_000 });
+  // Land on a step that actually renders the option listbox, not just the name
+  // field, so the structural roles are in the scanned DOM.
+  const choiceStep = page.getByRole('button', { name: /^2\./ });
+  if (await choiceStep.count()) {
+    await choiceStep.first().click();
+    await expect(page.getByTestId('creation-choice-loading')).toHaveCount(0, { timeout: 30_000 });
+  }
+  await expectNoBlockingViolations(page, 'Guided creation wizard');
+});
+
+test('the Scene surface and the shared Dock have no critical or serious a11y violations', async ({
+  page,
+}) => {
+  // The Scene DOM grid is the keyboard-accessible scene surface (the canvas is
+  // flag-gated off by default), and the Dock is reachable identically from
+  // every surface — neither was ever scanned before.
+  await page.getByRole('button', { name: 'Scenes', exact: true }).click();
+  await expectNoBlockingViolations(page, 'Library — Scenes segment');
+
+  await page.getByRole('button', { name: 'Toggle toolkit dock' }).click();
+  await expect(page.getByRole('complementary', { name: 'Toolkit dock' })).toBeVisible();
+  await expectNoBlockingViolations(page, 'Toolkit dock');
+});
+
 test('a created character sheet and the Library bestiary browser have no critical or serious a11y violations', async ({
   page,
 }) => {
