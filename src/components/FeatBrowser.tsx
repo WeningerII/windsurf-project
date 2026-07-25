@@ -42,6 +42,7 @@ export const FeatBrowser: React.FC<FeatBrowserProps> = ({ feats, onSelectFeat })
         <Search className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
         <input
           type="text"
+          aria-label="Search feats"
           placeholder="Search feats by name or description..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}

@@ -12,6 +12,7 @@ export function DaggerheartNotesSection({ controller }: Props) {
         <StickyNote className="h-5 w-5" /> Notes
       </h3>
       <textarea
+        aria-label="Notes"
         value={controller.data.notes || ''}
         onChange={(event) => controller.update({ notes: event.target.value })}
         className="min-h-[120px] w-full resize-y rounded-lg border border-input bg-transparent px-3 py-2 text-sm focus:border-primary focus:outline-none"

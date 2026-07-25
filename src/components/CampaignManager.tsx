@@ -171,6 +171,9 @@ export const CampaignManager: React.FC<Props> = ({
         <div className="grid gap-2 p-3 rounded-lg border bg-card sm:grid-cols-[minmax(0,1fr)_minmax(12rem,16rem)_auto_auto] sm:items-center">
           <input
             autoFocus
+            // Placeholder-only fields have NO accessible name (axe `label`,
+            // critical) — the placeholder also vanishes once the user types.
+            aria-label="Campaign name"
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
             onKeyDown={(e) => {
@@ -427,6 +430,9 @@ export const CampaignManager: React.FC<Props> = ({
                       <StickyNote className="w-3 h-3" /> Campaign Notes
                     </div>
                     <textarea
+                      // The "Campaign Notes" caption above is a <div>, not a
+                      // <label>, so it names nothing programmatically.
+                      aria-label={`Notes for ${campaign.name}`}
                       value={campaign.notes}
                       onChange={(e) => onUpdateCampaign({ ...campaign, notes: e.target.value })}
                       placeholder="House rules, NPC names, loot..."

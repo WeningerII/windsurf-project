@@ -31,6 +31,7 @@ export const D20NotesTab: React.FC<Props> = ({
           value={personality?.description || ''}
           onChange={(event) => onDescriptionChange(event.target.value)}
           className="w-full px-3 py-2 border border-input rounded-lg bg-transparent focus:outline-none focus:border-primary text-sm min-h-[80px]"
+          aria-label="Description"
           placeholder="Physical description..."
           disabled={!canUpdate}
         />
@@ -41,6 +42,7 @@ export const D20NotesTab: React.FC<Props> = ({
           value={personality?.backstory || ''}
           onChange={(event) => onBackstoryChange(event.target.value)}
           className="w-full px-3 py-2 border border-input rounded-lg bg-transparent focus:outline-none focus:border-primary text-sm min-h-[80px]"
+          aria-label="Backstory"
           placeholder="Character backstory..."
           disabled={!canUpdate}
         />
@@ -52,6 +54,7 @@ export const D20NotesTab: React.FC<Props> = ({
         value={notes || ''}
         onChange={(event) => onNotesChange(event.target.value)}
         className="w-full px-3 py-2 border border-input rounded-lg bg-transparent focus:outline-none focus:border-primary text-sm min-h-[120px]"
+        aria-label="Notes"
         placeholder="Additional notes..."
         disabled={!canUpdate}
       />

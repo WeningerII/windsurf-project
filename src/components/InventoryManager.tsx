@@ -25,6 +25,13 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({
   onRemoveItem,
   weightUnit = 'lbs',
 }) => {
+  // The add-item form's captions were orphan <label> elements — no htmlFor, not
+  // wrapping their control — so every field in it was an unlabelled input (axe
+  // `label`, critical). Binding them with a per-instance id prefix makes the
+  // caption the real programmatic label AND keeps ids unique when more than one
+  // inventory is mounted (the sheet and a Dock-hosted browser, say).
+  const fieldId = React.useId();
+  const inputId = (field: string) => `${fieldId}-${field}`;
   // HTML min attributes only affect spinners/validation styling, so typed
   // values are clamped here to keep quantity >= 1 and weight >= 0 (which in
   // turn keeps the total weight non-negative).
@@ -102,8 +109,11 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({
         <div className="bg-card border border-input rounded-lg p-4 space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Item Name</label>
+              <label htmlFor={inputId('name')} className="block text-sm font-medium mb-2">
+                Item Name
+              </label>
               <input
+                id={inputId('name')}
                 type="text"
                 value={formData.name || ''}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -112,8 +122,11 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Quantity</label>
+              <label htmlFor={inputId('quantity')} className="block text-sm font-medium mb-2">
+                Quantity
+              </label>
               <input
+                id={inputId('quantity')}
                 type="number"
                 min="1"
                 value={formData.quantity ?? 1}
@@ -127,8 +140,11 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Weight ({weightUnit})</label>
+              <label htmlFor={inputId('weight')} className="block text-sm font-medium mb-2">
+                Weight ({weightUnit})
+              </label>
               <input
+                id={inputId('weight')}
                 type="number"
                 min="0"
                 step="0.1"
@@ -143,8 +159,11 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Value</label>
+              <label htmlFor={inputId('value')} className="block text-sm font-medium mb-2">
+                Value
+              </label>
               <input
+                id={inputId('value')}
                 type="text"
                 value={formData.value || '0 gp'}
                 onChange={(e) => setFormData({ ...formData, value: e.target.value })}
@@ -154,8 +173,11 @@ export const InventoryManager: React.FC<InventoryManagerProps> = ({
             </div>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Description</label>
+            <label htmlFor={inputId('description')} className="block text-sm font-medium mb-2">
+              Description
+            </label>
             <textarea
+              id={inputId('description')}
               value={formData.description || ''}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               className="w-full px-3 py-2 border border-input rounded-lg"

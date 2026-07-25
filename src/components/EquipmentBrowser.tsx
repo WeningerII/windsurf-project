@@ -64,6 +64,7 @@ export const EquipmentBrowser: React.FC<EquipmentBrowserProps> = ({
         <Search className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
         <input
           type="text"
+          aria-label="Search equipment"
           placeholder="Search equipment..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
