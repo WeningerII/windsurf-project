@@ -672,6 +672,49 @@ denominator of SRD section titles, which does not exist in-repo.
    deciding how to treat label-vs-corpus-name mismatches so legitimate SRD
    content is not mis-flagged as a licensing finding. **Manual review.**
 
+## 12. Unresolved a11y contrast finding on the creation surface (added 2026-07-25)
+
+`e2e/a11y.spec.ts` scans the New Character dialog + guided-creation wizard for
+critical/serious axe violations. That scan is currently **`test.fixme`** — a
+quarantined finding, not a dodge, and not an allowlisted rule.
+
+**What axe reports.** `color-contrast` (serious): `#6b788c` on `#ffffff` =
+**4.47:1**, needing 4.5:1, on the ability-score labels
+(`<span class="text-xs font-semibold text-muted-foreground uppercase">`,
+`src/components/sheet/AbilityScoreGrid.tsx:285`). Both browsers, reproducibly.
+
+**Why this is NOT simply "darken the token".** The colour axe measured is not
+what the token declares:
+
+- Built CSS ships `--muted-foreground: 215.4 16.3% 43%` = `#5c6a80` = a genuine
+  **5.49:1** on white — comfortably passing.
+- It is emitted as `text-muted-foreground{color:hsl(var(--muted-foreground))}`,
+  with **no alpha**, and `tailwind.config.js` maps it as plain
+  `hsl(var(--muted-foreground))`.
+- `src/index.css` records that this token was **already darkened once**
+  (46.9% -> 43% L) for exactly this WCAG AA criterion.
+
+`#6b788c` is precisely `#5c6a80` composited over white at **~90.6% opacity**,
+consistent to a rounding step across all three channels. So some ancestor or
+state applies opacity that the declaration does not.
+
+**Ruled out.** The entrance fade on both dialogs (`animate-in fade-in
+zoom-in-95` — `GuidedCreatorDialog.tsx:78`, `NewCharacterDialog.tsx:89`) was the
+leading hypothesis: axe computes contrast from *composited* pixels, so a scan
+landing mid-fade would produce exactly this. A zero-duration stylesheet
+(`freezeAnimations`, kept in the spec because it makes every other scan
+deterministic) did **not** change the result. Not the cause.
+
+**What it needs.** Computed styles on the ancestor chain in a live browser —
+the opacity source is not determinable from source alone, and Playwright is
+CI-only in the dev container. Then either fix that source, or darken the token
+a second time if the composite is legitimate and unavoidable.
+
+**Why quarantined at the test level.** The alternative — adding `color-contrast`
+to `KNOWN_A11Y_DEBT` — would blind the gate to every genuine contrast regression
+on every surface. One skipped scan is a far smaller loss than a blinded rule.
+Every other surface in the spec stays scanned, `color-contrast` included.
+
 ## 13. SRD 5.2.1 Will-o'-Wisp — upstream STR-score defect (added 2026-07-25)
 
 **The defect is real and still present upstream.** In the authoritative SRD
@@ -717,46 +760,3 @@ not mis-transcribed *fields*. No gate checks field-level fidelity today.
 indices in-repo, content coverage becomes measurable and the rest of Denominator A
 is mechanical. Next-largest body of genuine work: §2 — expand the compute
 registers to the full L1–L10 set and wire the proven helpers into the engines.
-
-## 12. Unresolved a11y contrast finding on the creation surface (added 2026-07-25)
-
-`e2e/a11y.spec.ts` scans the New Character dialog + guided-creation wizard for
-critical/serious axe violations. That scan is currently **`test.fixme`** — a
-quarantined finding, not a dodge, and not an allowlisted rule.
-
-**What axe reports.** `color-contrast` (serious): `#6b788c` on `#ffffff` =
-**4.47:1**, needing 4.5:1, on the ability-score labels
-(`<span class="text-xs font-semibold text-muted-foreground uppercase">`,
-`src/components/sheet/AbilityScoreGrid.tsx:285`). Both browsers, reproducibly.
-
-**Why this is NOT simply "darken the token".** The colour axe measured is not
-what the token declares:
-
-- Built CSS ships `--muted-foreground: 215.4 16.3% 43%` = `#5c6a80` = a genuine
-  **5.49:1** on white — comfortably passing.
-- It is emitted as `text-muted-foreground{color:hsl(var(--muted-foreground))}`,
-  with **no alpha**, and `tailwind.config.js` maps it as plain
-  `hsl(var(--muted-foreground))`.
-- `src/index.css` records that this token was **already darkened once**
-  (46.9% -> 43% L) for exactly this WCAG AA criterion.
-
-`#6b788c` is precisely `#5c6a80` composited over white at **~90.6% opacity**,
-consistent to a rounding step across all three channels. So some ancestor or
-state applies opacity that the declaration does not.
-
-**Ruled out.** The entrance fade on both dialogs (`animate-in fade-in
-zoom-in-95` — `GuidedCreatorDialog.tsx:78`, `NewCharacterDialog.tsx:89`) was the
-leading hypothesis: axe computes contrast from *composited* pixels, so a scan
-landing mid-fade would produce exactly this. A zero-duration stylesheet
-(`freezeAnimations`, kept in the spec because it makes every other scan
-deterministic) did **not** change the result. Not the cause.
-
-**What it needs.** Computed styles on the ancestor chain in a live browser —
-the opacity source is not determinable from source alone, and Playwright is
-CI-only in the dev container. Then either fix that source, or darken the token
-a second time if the composite is legitimate and unavoidable.
-
-**Why quarantined at the test level.** The alternative — adding `color-contrast`
-to `KNOWN_A11Y_DEBT` — would blind the gate to every genuine contrast regression
-on every surface. One skipped scan is a far smaller loss than a blinded rule.
-Every other surface in the spec stays scanned, `color-contrast` included.
