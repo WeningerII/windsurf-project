@@ -159,6 +159,32 @@ below; the remainder is the honest residual.
     parsed from that system's OWN shape via the shared `parseWeaponDamageDice`
     (3.5e's notation-string `damage`, PF1e/PF2e's DiceRoll) — not forced through
     the 5e DiceRoll catalog.
+    - **Edition-conflation fix, and the honest residual it leaves (2026-07-24).**
+      `src/rules/conditions/dnd5eRiders.ts` is shared by both 5e editions but
+      hardcoded `systemId = 'dnd-5e-2014'`, so a **D&D 5e 2024 character was
+      silently given the SRD 5.1 Great Weapon Master / Sharpshooter -5 attack /
+      +10 damage trade** — another edition's math, in scene combat and on the
+      sheet's toggle chips. The compiler now takes the edition as an input
+      (mirroring `d20LegacyRiders`, which already keeps 3.5e and PF1e apart),
+      `D20_PROFILES` passes each 5e edition its own profile, and effect ids and
+      `systemId` provenance now carry the character's real edition.
+      **What 2024 does NOT get, and why:** SRD 5.2's feat chapter is 17 feats —
+      Ability Score Improvement, Grappler, the origin feats, four Fighting Style
+      feats and seven epic boons (the encoded corpus under
+      `src/data/dnd/5e-2024/feats/`, whose provenance comments state that the
+      remainder is non-open Player's Handbook content). **Neither Great Weapon
+      Master nor Sharpshooter is open content in SRD 5.2**, so there is no cited
+      RAW for this repo to compile, and no 2024 rider was invented to replace
+      the removed one: a 2024 character simply is not offered the toggle and
+      compiles no effect for it. Removing another edition's math is the
+      correctness win; encoding the 2024 redesign would require content this
+      repo cannot legally carry. Both sides are pinned by
+      `src/__tests__/rules/characterCombatant.test.ts :: 5e rider edition
+      routing: 2014 keeps -5/+10, 2024 refuses it`, and the 2014 register rows
+      `dnd5e2014.L3.gwm-tradeoff` / `.sharpshooter-tradeoff` now cite it and
+      carry the edition scope in their notes. **No `dnd5e2024.L3.*-tradeoff`
+      register row exists or should be added** — the quantity is not in SRD 5.2's
+      scope at all, so it is not a 2024 denominator item.
   - L5: **Partial.** Prepared-spell limits are wired — the 5e spells tab shows
     each prepared caster's RAW limit (`getDnd5ePreparedCasterSummaries` through
     the sheet controller). **Known-spell-count enforcement DONE (2026-07-24):**
