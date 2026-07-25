@@ -19,18 +19,18 @@
  * renders AC / touch / flat-footed, so — exactly like `bab-sum` above — these
  * compute (and, for `ac.total`, register-verify) without a `display` card, which
  * avoids a double-render on the derived strip.
- *   - `ac.total` reproduces the engine's resolver fold — the shared base formula
- *     computeD20LegacyAC(...).total seeds a `set` on 'ac' and the magic/feat/
- *     equipment AC effects add on top (resolveCharacterEffects(...).bonus('ac')),
- *     so compute() === data.armorClass.total (faithful). With no bonus-bearing
- *     gear it reduces to the base formula, so mutating defense.ts flips a case
- *     (mutation-verifiable) — this is the register-anchored quantity.
+ *   - `ac.total` CALLS the engine's own composition (resolveD20LegacyArmorClass
+ *     in rules/compile/armorClass): the shared base formula seeds a `set` on 'ac'
+ *     and the magic/feat/equipment AC effects add on top, so compute() ===
+ *     data.armorClass.total by construction rather than by two copies agreeing.
+ *     With no bonus-bearing gear it reduces to the base formula, so mutating
+ *     defense.ts flips a case (mutation-verifiable) — the register-anchored one.
  *   - `ac.touch` / `ac.flat-footed` are PURE (computeD20LegacyAC(...).touch /
  *     .flatFooted): no resolver bonuses and no compute-register row.
  */
 import type { DerivedQuantitySpec } from '../../rules/derivation';
 import { classBAB } from '../shared/d20-helpers';
-import { resolveCharacterEffects, computeD20LegacyAC } from '../../rules';
+import { computeD20LegacyAC, resolveD20LegacyArmorClass } from '../../rules';
 import { dnd35eMaxSkillRanks } from '../../utils/derivedCombatMath';
 import {
   dnd35eAbilityIncreases,
@@ -50,25 +50,16 @@ function attrs(overrides: Partial<Record<string, number>>): Record<string, numbe
 }
 
 /**
- * FULL Armor Class total, faithful to the engine's prepareData: the shared base
- * formula (computeD20LegacyAC(...).total) seeds a `set` on 'ac' and the equipped
- * magic-item / feat / feature AC effects layer on through the resolver, so this
- * equals data.armorClass.total exactly. With no bonus-bearing gear it collapses
- * to the base formula, so mutating the anchored defense.ts `total` line flips a
- * no-gear case red — keeping the migrated register row mutation-verifiable.
+ * FULL Armor Class total. Faithful to the engine's prepareData BY CONSTRUCTION:
+ * this calls the very same shared composition (`resolveD20LegacyArmorClass`,
+ * rules/compile/armorClass) the engine calls, so `compute() === data.armorClass
+ * .total` is no longer a claim two copies have to keep agreeing on. With no
+ * bonus-bearing gear it collapses to the base formula, so mutating the anchored
+ * defense.ts `total` line flips a no-gear case red — keeping the migrated
+ * register row mutation-verifiable.
  */
 function armorClassTotal(system: Dnd35eDataModel): number {
-  const ac = computeD20LegacyAC(
-    system.baseAttributes.dex ?? 10,
-    system.sizeCategory,
-    system.equipment
-  );
-  return resolveCharacterEffects('dnd-3.5e', {
-    equipment: system.equipment.filter((item) => item.equipped),
-    feats: system.feats,
-    features: system.features,
-    baseArmorClass: ac.total,
-  }).bonus('ac');
+  return resolveD20LegacyArmorClass('dnd-3.5e', system).total;
 }
 
 export const DND35E_DERIVED_QUANTITIES: ReadonlyArray<DerivedQuantitySpec<Dnd35eDataModel>> = [

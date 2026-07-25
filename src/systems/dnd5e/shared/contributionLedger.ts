@@ -8,15 +8,12 @@ import type {
 import type { ClassLevel } from '../../../types/core/character';
 import type { CharacterDocument } from '../../../types/core/document';
 import {
+  computeDnd5eBaseArmorClass,
   resolveCharacterEffects,
   toContributionLedger,
   dnd5eArmorDexContribution,
 } from '../../../rules';
 import { loadClassesForSystem } from '../../../utils/dataLoader';
-import {
-  dnd5eUnarmoredDefenseBarbarian,
-  dnd5eUnarmoredDefenseMonk,
-} from '../../../utils/derivedCombatMath';
 import { dnd5eSpellAttackBonus, dnd5eSpellSaveDC } from '../../../utils/derivedCasterMath';
 import { abilityMod, profBonus } from '../../../utils/math';
 import type { Dnd5e2024DataModel } from '../../dnd5e-2024/data-model';
@@ -156,32 +153,12 @@ function buildArmorClassEntries(
   // Unarmored Defense (SRD): the engine takes the BEST of plain 10 + Dex and
   // the feature formula. When the feature formula wins, the delta is the
   // feature's contribution — emitted here so the entries still sum to the
-  // displayed AC for barbarians/monks.
+  // displayed AC for barbarians/monks. The winner and the plain baseline come
+  // from the SAME shared fold the engine resolves AC with
+  // (`computeDnd5eBaseArmorClass`), so this row can no longer drift from the
+  // number it explains; it used to be an independent second implementation.
   if (!armor) {
-    const plainUnarmored = 10 + dexMod + (shield?.shieldBonus ?? 0);
-    const hasFeature = (featureId: string) =>
-      system.features.some((feature) => feature.id === featureId);
-    let unarmoredDefense: { featureId: string; label: string; total: number } | null = null;
-
-    if (hasFeature('unarmored-defense-barbarian')) {
-      const conMod = abilityMod(system.baseAttributes.con ?? 10);
-      unarmoredDefense = {
-        featureId: 'unarmored-defense-barbarian',
-        label: 'Unarmored Defense (Barbarian)',
-        total: dnd5eUnarmoredDefenseBarbarian(dexMod, conMod) + (shield?.shieldBonus ?? 0),
-      };
-    }
-    if (!shield && hasFeature('unarmored-defense-monk')) {
-      const wisMod = abilityMod(system.baseAttributes.wis ?? 10);
-      const monkTotal = dnd5eUnarmoredDefenseMonk(dexMod, wisMod);
-      if (monkTotal > (unarmoredDefense?.total ?? 0)) {
-        unarmoredDefense = {
-          featureId: 'unarmored-defense-monk',
-          label: 'Unarmored Defense (Monk)',
-          total: monkTotal,
-        };
-      }
-    }
+    const { plainUnarmored, unarmoredDefense } = computeDnd5eBaseArmorClass(system, dexMod);
 
     if (unarmoredDefense && unarmoredDefense.total > plainUnarmored) {
       entries.push(
