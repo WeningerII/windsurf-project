@@ -519,6 +519,48 @@ stubbed** — an absent capability is absent, not faked.
 Closing the Daggerheart/M&M 3e rows is creation-plan and catalog work in those
 systems, not AI work; it is tracked as such rather than papered over here.
 
+## 10. AI gateway provider-agnosticism — what is proven and what is not (added 2026-07-25)
+
+The gateway's provider is now configuration, not a hardcoded dependency:
+`AI_PROVIDER` selects a registration, each registration declares its own key and
+model env vars, and each provider is a thin adapter file over one shared
+`createAiSdkAdapter` body. Two real providers ship (`gemini`, `anthropic`) plus
+the deterministic `mock`. Adding a third touches no call site in `src/ai/**`.
+
+**New dependency — flagged.** `@ai-sdk/anthropic` is pinned at the exact version
+`3.0.86`, not a caret range. That is deliberate: the AI SDK provider packages pin
+`@ai-sdk/provider` / `@ai-sdk/provider-utils` to *exact* versions internally, and
+`3.0.86` is the last release whose pins (`3.0.10` / `4.0.30`) match what the
+installed `ai@6` and `@ai-sdk/google@3` already resolve. A floating range would
+silently install a **duplicate** copy of the provider core. `npm install` reports
+exactly one added package; it is server-side only and never enters the client
+bundle. Bumping it means re-checking that dedupe, not just the changelog.
+
+**What is genuinely NOT covered:**
+
+- **Neither adapter is verified against a live API.** CI has no provider key, by
+  design. The Anthropic adapter is proven at the *protocol* level — the real
+  `generateObject` path with the SDK's `MockLanguageModelV3` in place of the
+  network model (`netlify/functions/aiSdkAdapter.test.mts`) — and its selection,
+  key handling, and env wiring are proven in
+  `netlify/functions/gatewayHardening.registry.test.mts`. What is untested is the
+  round trip against Anthropic's servers, exactly as for Gemini. First real use
+  of either provider is still a live smoke test somebody has to run.
+- **`illustrate-scene` does not work on Anthropic.** Anthropic has no
+  image-generation endpoint, so that task fails there with a typed
+  `provider-error` and the client falls back to manual tools. This is a real
+  capability gap, deliberately not papered over with a stub image.
+- **No cross-provider failover.** Selection is static per deploy; a failing
+  provider is not retried on another. The typed failure + manual fallback is the
+  whole recovery story.
+- **Token usage is observed, not enforced.** Adapters may report input/output
+  token counts through the seam, and they surface in `usage.tokens` and the trace
+  record — but every budget still charges the deterministic `AI_TASK_UNIT_COST`.
+  That is intentional (caps must trip identically whichever provider serves), so
+  true token-metered spend accounting remains unbuilt.
+- **No provider is priced.** Nothing in the repo knows what a call costs in
+  money; the "units" are relative weights, not currency.
+
 ---
 
 **Highest-leverage unblock:** the §1 data input. With authoritative SRD/CRB

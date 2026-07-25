@@ -1,10 +1,14 @@
 /**
- * AI gateway — Netlify Function entry point. Thin glue: read the provider key
- * from the server environment (never the browser bundle), resolve an adapter via
- * the provider-agnostic registry (`AI_PROVIDER`, default `gemini`; injecting the
- * real Gemini builder), and delegate to the pure, tested HTTP/core logic. With no
- * key and the default provider the core returns `provider-not-configured` and the
- * client falls back to the manual tools — the local-first guarantee.
+ * AI gateway — Netlify Function entry point. Thin glue: hand the server
+ * environment to the provider-agnostic registry (`AI_PROVIDER`, default
+ * `gemini`), inject the SDK-bound adapter builders, and delegate to the pure,
+ * tested HTTP/core logic. With no key and the default provider the core returns
+ * `provider-not-configured` and the client falls back to the manual tools — the
+ * local-first guarantee.
+ *
+ * This file names no provider key: which env var holds which provider's secret
+ * is declared on the registry's entries, so adding or swapping a provider is a
+ * registry + adapter change, never an entry-point change.
  *
  * Cost controls (Phase 14): request rate limiting (`AI_RATE_LIMIT`) and a
  * per-session cost cap (`AI_SESSION_BUDGET_UNITS`) share ONE module-scope
@@ -12,8 +16,9 @@
  * budgets (`AI_LATENCY_BUDGET_*_MS`) cap each provider call and flag slow
  * traces. All are off/inert by default — see `netlify/functions/README.md`.
  *
- * The only provider SDK (`@ai-sdk/google`) is confined to `geminiAdapter.mts`;
- * the registry here merely chooses which adapter to build, keeping `src/ai/**`
+ * Provider SDKs are confined to their adapter files (`@ai-sdk/google` in
+ * `geminiAdapter.mts`, `@ai-sdk/anthropic` in `anthropicAdapter.mts`); the
+ * registry here merely chooses which adapter to build, keeping `src/ai/**`
  * and the browser bundle SDK-free. Rate limiting goes through a pluggable
  * {@link RateLimitStore} (in-memory by default; durable-ready via
  * `RATE_LIMIT_STORE_URL`) — see `netlify/functions/README.md`.
@@ -36,6 +41,7 @@ import {
   sessionBudgetFromStore,
 } from './rateLimitStore.mts';
 import { createGeminiAdapter } from './geminiAdapter.mts';
+import { createAnthropicAdapter } from './anthropicAdapter.mts';
 import { resolveGatewayAuth } from './supabaseJwt.mts';
 
 /** Parse a positive number from env, else the fallback. */
@@ -107,19 +113,14 @@ function clientKey(req: Request): string {
 }
 
 export default async (req: Request): Promise<Response> => {
-  const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY ?? process.env.GEMINI_API_KEY;
-  const model = process.env.AI_GATEWAY_MODEL;
-  const imageModel = process.env.AI_IMAGE_MODEL;
-
-  const adapter = resolveProviderAdapter(
-    { provider: process.env.AI_PROVIDER, apiKey },
-    {
-      // Only invoked when the registry selects Gemini AND a key is present, so the
-      // non-null assertion is safe. Keeps the SDK import confined to the adapter.
-      createGoogleAdapter: () =>
-        createGeminiAdapter(apiKey as string, model || undefined, imageModel || undefined),
-    }
-  );
+  // The registry reads `AI_PROVIDER` plus the selected provider's own declared
+  // key/model vars straight from the server environment. Builders are injected
+  // so the provider SDKs never leave their adapter files, and each is invoked
+  // only when its provider is selected AND keyed.
+  const adapter = resolveProviderAdapter(process.env, {
+    createGoogleAdapter: createGeminiAdapter,
+    createAnthropicAdapter: createAnthropicAdapter,
+  });
 
   // The JWT check engages only when there is something to protect (a real
   // adapter) and auth is configured; otherwise the authorizer stays undefined

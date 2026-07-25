@@ -16,9 +16,10 @@
   command = "npm run build"
   publish = "dist"
 
-# Server-side AI gateway (RFC 002). The provider key lives only in this
-# function's environment (GOOGLE_GENERATIVE_AI_API_KEY), never in the browser
-# bundle. With no key the function returns provider-not-configured and the app
+# Server-side AI gateway (RFC 002). Provider keys live only in this function's
+# environment (GOOGLE_GENERATIVE_AI_API_KEY, ANTHROPIC_API_KEY — whichever the
+# configured AI_PROVIDER declares), never in the browser bundle. With no key for
+# the selected provider the function returns provider-not-configured and the app
 # falls back to its deterministic/manual tools. The browser calls it same-origin
 # at /.netlify/functions/ai-gateway, already covered by the connect-src 'self' CSP.
 [functions]

@@ -24,6 +24,14 @@ export interface GatewayLogRecord {
   provider?: string;
   /** The model id, when a provider served the request. */
   model?: string;
+  /**
+   * Provider-reported token spend, flattened. Present only when the serving
+   * adapter reported the figure — the fixture/replay path never does, and an
+   * adapter that does not report usage omits these entirely.
+   */
+  inputTokens?: number;
+  outputTokens?: number;
+  totalTokens?: number;
   /** Normalized failure reason, on the failure path. */
   failureCode?: AiFailureCode;
   /** The prompt-template version for the task, when the task is known. */
@@ -74,11 +82,15 @@ export function buildGatewayLogRecord(input: BuildGatewayLogRecordInput): Gatewa
   };
 
   if (response.ok) {
+    const tokens = response.usage.tokens;
     return {
       ...base,
       source: response.usage.source,
       ...(response.usage.provider ? { provider: response.usage.provider } : {}),
       ...(response.usage.model ? { model: response.usage.model } : {}),
+      ...(tokens?.inputTokens !== undefined ? { inputTokens: tokens.inputTokens } : {}),
+      ...(tokens?.outputTokens !== undefined ? { outputTokens: tokens.outputTokens } : {}),
+      ...(tokens?.totalTokens !== undefined ? { totalTokens: tokens.totalTokens } : {}),
     };
   }
 
