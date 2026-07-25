@@ -561,6 +561,111 @@ bundle. Bumping it means re-checking that dedupe, not just the changelog.
 - **No provider is priced.** Nothing in the repo knows what a call costs in
   money; the "units" are relative weights, not currency.
 
+## 11. Provenance over-inclusion outside `src/data/` (added 2026-07-25)
+
+**The blind spot.** `npm run srd:coverage` is a reverse-diff audit: it fetches
+published open-content lists and diffs them against what the LOADERS expose. It
+therefore only ever sees `src/data/`. Content encoded directly in the **rules
+layer** (`src/rules/**`), in the **compute register** (`docs/compute-register/`)
+or in the **declarative derived-quantity specs** (`src/systems/**/derivedQuantities.ts`)
+never passes through a loader and was structurally invisible to it — so an SRD
+citation naming an entry the SRD does not contain could ship unchallenged. That
+is the same defect class the reverse diff already caught and removed inside
+`src/data/`, hiding in the directories it cannot reach.
+
+**Now gated.** `npm run check:rules-provenance` (in `verify`) audits those three
+populations offline. Assertions and their fail modes are documented in
+`scripts/check-rules-provenance.mjs`; the pure parsing half is
+`src/scripts/rulesProvenanceShape.ts` with unit coverage in
+`src/__tests__/scripts/rulesProvenanceShape.test.ts`.
+
+### OC-1 — Great Weapon Master / Sharpshooter cite SRD 5.1, which does not contain them [OWNER DECISION]
+
+**Evidence (all in-repo, all authoritative):**
+
+- `docs/srd-sources.md` (Counts, verified): **SRD 5.1 feats = 1 (Grappler)**.
+- `src/data/dnd/5e-2014/feats/index.ts` header: *"The SRD v5.1 includes exactly
+  one feat: Grappler. All other 5e feats are Player's Handbook content (not open)
+  and are intentionally excluded."* The module exports exactly `[grappler]`, and
+  `loadFeatsForSystem('dnd-5e-2014')` returns 1 entry.
+- `docs/compute-register/dnd5e-2014.ts` nevertheless cites
+  `SRD 5.1: Feats — Great Weapon Master` and `SRD 5.1: Feats — Sharpshooter`.
+- `src/rules/conditions/dnd5eRiders.ts` compiles the −5/+10 trade for both feats,
+  its header asserts *"SRD 5.1 carries it"*, and its `manualBoundary` notes are
+  prefixed `SRD:`.
+
+Both citations name a source that does not contain the entry. The 2014 versions
+of these feats are Player's Handbook content. (The 2024 side is already correct:
+`docs/compute-register/dnd5e-2024.ts` records both as `excluded` — *absent from
+SRD 5.2* — and the rider compiler refuses them for `dnd-5e-2024` characters.)
+
+**Deliberately NOT remediated here.** Removing or relabelling shipped content is
+a licensing and product decision reserved to the repo owner. The four citations
+are quarantined in the gate's `ALLOWLIST` with `verdict: 'unsubstantiated'`. The
+quarantine is self-expiring: if the citations are fixed or removed, the stale
+allowlist entries FAIL the gate and must be deleted along with this section.
+
+**Options for the owner:** (a) remove the two riders and their register rows;
+(b) keep the mechanic but re-source it — no open 5e edition carries it, so this
+means dropping the SRD citation and marking the rows `flagged`; (c) accept the
+risk explicitly and record the acceptance here.
+
+### OC-2 — `Powers — Power Cost` is a chapter section, not a power [NO ACTION]
+
+`docs/compute-register/mam3e.ts` cites
+`M&M 3e Hero's Handbook (DHH OGC): Powers — Power Cost; Modifiers (minimum cost)`.
+"Power Cost" is the cost SECTION of the Powers chapter, not a power effect; the
+shipped mam3e power corpus is a list of power *effects*, so the name cannot
+resolve. The citation is sound. Recorded with `verdict: 'chapter-section'`
+because the parser cannot distinguish a chapter section from an entry without a
+denominator of SRD section titles, which does not exist in-repo.
+
+### What the gate still cannot check (honest residual)
+
+1. **Chapter-level citations** — 279 of the 288 scanned citation segments name a
+   book SECTION (`SRD 5.1: Carrying Capacity`), not an entry. There is no in-repo
+   denominator of SRD section titles, so they are counted and reported but not
+   resolved. Building one would mean transcribing seven books' tables of
+   contents; a fabricated one would be worse than the gap. **Manual review.**
+2. **`kind: 'feature'` and `kind: 'condition'` effect sources** — class/racial
+   features and conditions live in the rules IR itself, so there is no
+   INDEPENDENT open-content corpus to resolve them against (checking the rules
+   layer against the rules layer is circular). 7 such literals are reported as
+   unresolvable each run: Rage / Sneak Attack / Divine Smite (5e), Rage / Sneak
+   Attack (PF2e), `bruised` (M&M), `status-penalty` (scene-synthetic). All are
+   plausibly open (SRD class features), but the gate does not claim to have
+   proved it. **Manual review**; closing this needs a features/conditions
+   catalog under `src/data/` with its own `srd:coverage` target — which is the
+   same work `srd-coverage.ts` already flags for M&M conditions (`ABSENT`).
+3. **Prose citations in comments** — `// SRD: heavy melee weapons only.` is a
+   provenance claim the gate does not parse, because free text has no reliable
+   entry/chapter boundary. The structured `source:` fields on the same effects
+   are checked, which is what catches OC-1. **Manual review.**
+4. **Per-system reach is uneven, and that is a property of the corpus, not the
+   gate** — the gate treats all seven systems identically, but what each system
+   currently exposes to resolve differs. **Daggerheart** alone has neither
+   named-entry citations nor literal content effect sources outside `src/data/`,
+   so it has nothing to resolve; it stays covered by assertion A (edition
+   validity) and the D/scope ratchet, which fire the moment such content
+   appears. **3.5e and PF1e do have literal content effect sources** — the gate
+   CLEARS `feat "Power Attack"` for both at
+   `src/rules/conditions/d20LegacyRiders.ts:74,84`. (An earlier revision of this
+   note listed 3.5e and PF1e alongside Daggerheart as having none; the gate's own
+   CLEARED output disproves it.)
+5. **`src/systems/**` is not scanned for literal effect sources** — only
+   `src/rules/**` and `src/scene/**` are (`RULES_SCAN_DIRS`), plus the
+   declarative `derivedQuantities*.ts` specs for their structured citations. So
+   an effect-source literal living in a system module is outside the population
+   the gate reports on. This is not hypothetical:
+   `src/systems/dnd5e/shared/activities.ts` carries three today (a
+   `feature-option` "Defense Fighting Style" and two "Divine Smite" sources), and
+   "Defense Fighting Style" does **not** resolve against
+   `loadFeatureOptionsForSystem('dnd-5e-2014')` — the corpus name is "Defense",
+   so this looks like a label mismatch rather than an open-content defect, but
+   the gate does not currently say either way. Widening the scan means first
+   deciding how to treat label-vs-corpus-name mismatches so legitimate SRD
+   content is not mis-flagged as a licensing finding. **Manual review.**
+
 ---
 
 **Highest-leverage unblock:** the §1 data input. With authoritative SRD/CRB
