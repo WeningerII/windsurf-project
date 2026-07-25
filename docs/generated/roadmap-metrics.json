@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-25T03:31:35.336Z",
+  "generatedAt": "2026-07-25T16:02:10.476Z",
   "policy": {
     "dnd-5e-2014": {
       "allowedSources": [
@@ -47,7 +47,10 @@
         "M&M 3e Hero SRD",
         "d20herosrd"
       ],
-      "allowMissingSourceFor": []
+      "allowMissingSourceFor": [],
+      "originalContentSources": [
+        "Original Content (not SRD)"
+      ]
     },
     "daggerheart": {
       "allowedSources": [
@@ -146,7 +149,7 @@
       "archetypes": 15,
       "complications": 28,
       "monsters": 0,
-      "equipment": 150,
+      "equipment": 192,
       "feats": 0,
       "advantages": 74,
       "powerModifiers": 99
@@ -253,7 +256,7 @@
       "archetypes": 15,
       "complications": 28,
       "monsters": 0,
-      "equipment": 150,
+      "equipment": 192,
       "feats": 0,
       "advantages": 74,
       "powerModifiers": 99
@@ -567,8 +570,8 @@
       "systemId": "mam3e",
       "systemLabel": "Mutants & Masterminds 3e",
       "category": "equipment",
-      "encoded": 150,
-      "target": 150,
+      "encoded": 192,
+      "target": 192,
       "percent": 100
     },
     {
@@ -1565,13 +1568,14 @@
       "category": "equipment",
       "categoryLabel": "Equipment",
       "metrics": {
-        "rawCount": 150,
-        "uniqueCount": 150,
+        "rawCount": 192,
+        "uniqueCount": 192,
         "duplicateCount": 0,
         "missingSourceCount": 0,
         "nonCompliantCount": 0,
         "sourceCounts": {
-          "Hero's Handbook": 150
+          "M&M 3e Hero SRD": 113,
+          "Original Content (not SRD)": 79
         }
       }
     },

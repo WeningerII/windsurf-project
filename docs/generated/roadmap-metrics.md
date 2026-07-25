@@ -1,4 +1,4 @@
-_Generated: 2026-07-25T03:31:35.336Z_
+_Generated: 2026-07-25T16:02:10.476Z_
 _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 
 ### Loader Totals (Product-Reachable)
@@ -9,7 +9,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | D&D 3.5e | 610 | 26 | 7 | 0 | 0 | 0 | 188 | 207 | 80 | 0 |
 | Pathfinder 1e | 625 | 18 | 7 | 0 | 12 | 0 | 332 | 617 | 86 | 0 |
 | Pathfinder 2e | 551 | 12 | 6 | 16 | 0 | 0 | 413 | 188 | 93 | 0 |
-| Mutants & Masterminds 3e | 61 | 0 | 0 | 0 | 0 | 0 | 0 | 150 | 0 | 74 |
+| Mutants & Masterminds 3e | 61 | 0 | 0 | 0 | 0 | 0 | 0 | 192 | 0 | 74 |
 | Daggerheart | 0 | 9 | 19 | 9 | 0 | 0 | 0 | 353 | 0 | 0 |
 
 ### Extended Loader Totals (Product-Reachable)
@@ -65,7 +65,7 @@ _Policy: strict core/SRD-only (`src/utils/openContentPolicy.ts`)_
 | Mutants & Masterminds 3e | Spells/Powers | 61 | 0 | 0 | 0 |
 | Mutants & Masterminds 3e | Archetypes | 15 | 0 | 0 | 0 |
 | Mutants & Masterminds 3e | Complications | 28 | 0 | 0 | 0 |
-| Mutants & Masterminds 3e | Equipment | 150 | 0 | 0 | 0 |
+| Mutants & Masterminds 3e | Equipment | 192 | 0 | 0 | 0 |
 | Mutants & Masterminds 3e | Advantages | 74 | 0 | 0 | 0 |
 | Mutants & Masterminds 3e | Power Modifiers | 99 | 0 | 0 | 0 |
 | Daggerheart | Classes | 9 | 0 | 0 | 0 |
@@ -132,7 +132,7 @@ _The manifests in docs/srd-manifest/ are generated from the loaders, so this mea
 | Mutants & Masterminds 3e | spells | 61 | 61 | 100% |
 | Mutants & Masterminds 3e | archetypes | 15 | 15 | 100% |
 | Mutants & Masterminds 3e | complications | 28 | 28 | 100% |
-| Mutants & Masterminds 3e | equipment | 150 | 150 | 100% |
+| Mutants & Masterminds 3e | equipment | 192 | 192 | 100% |
 | Mutants & Masterminds 3e | advantages | 74 | 74 | 100% |
 | Mutants & Masterminds 3e | powerModifiers | 99 | 99 | 100% |
 | Daggerheart | classes | 9 | 9 | 100% |
@@ -162,5 +162,5 @@ _Share of each system's loader-backed entries that are source-tagged AND open-co
 | D&D 3.5e | 1118 | 1118 | 100% |
 | Pathfinder 1e | 1697 | 1697 | 100% |
 | Pathfinder 2e | 1284 | 1284 | 100% |
-| Mutants & Masterminds 3e | 427 | 427 | 100% |
+| Mutants & Masterminds 3e | 469 | 469 | 100% |
 | Daggerheart | 390 | 390 | 100% |
