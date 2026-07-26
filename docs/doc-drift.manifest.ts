@@ -55,6 +55,16 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: ['command_rule', 'path_ref_rule'],
   },
   {
+    // The forward-looking work queue: what to do next and what it unblocks.
+    // MASTER_PLAN owns status and decisions, GAPS owns evidence, this owns
+    // ordering. Cites real paths so path_ref_rule applies; owns no counts and
+    // names no commit, so the count and verification rules do not.
+    path: 'docs/WORK_PLAN.md',
+    kind: 'plan',
+    owner: 'work-queue',
+    rules: ['path_ref_rule'],
+  },
+  {
     path: 'docs/MASTER_PLAN.md',
     kind: 'live',
     owner: 'roadmap',

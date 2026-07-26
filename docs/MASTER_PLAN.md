@@ -4,6 +4,13 @@
 
 `docs/MASTER_PLAN.md` is the sole planning authority for this repo. If another document appears to define roadmap, sequencing, or long-horizon scope, treat that content as historical or descriptive unless it is explicitly mirrored here. `docs/README.md` gives the full authority order across the docs tree.
 
+> **Looking for what to work on next? Read `docs/WORK_PLAN.md`, not this file.**
+> This document answers *where are we* — status, decisions, constraints, and the
+> reasoning behind them. It is deliberately not ordered by what to do next, and
+> reading it that way is how work has been mis-scheduled here before. The work queue
+> derives from this document; where the two disagree, this one wins and the queue is
+> stale.
+
 ## How to read this document
 
 Status lines here are **verified against code, not carried forward from prose**. On 2026-07-26 four independent passes checked roughly seventy status-bearing claims in this file: 39 were accurate, 21 understated shipped work, 7 overstated, and 3 were flatly wrong. Every correction from that pass is marked inline as `corrected 2026-07-26` so the next reader can tell a verified line from an inherited one.

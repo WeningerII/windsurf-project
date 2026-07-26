@@ -17,11 +17,17 @@ it is the order the CI gates enforce.
 3. **`MASTER_PLAN.md`** — the sole planning authority. Roadmap, sequencing, phase
    status, and long-horizon scope. If another document appears to define roadmap,
    treat it as historical or descriptive.
-4. **`GAPS.md`** — the tracking document for outstanding gaps and the GLOBAL DONE
+4. **`WORK_PLAN.md`** — the forward-looking work queue: what to do next, in what
+   order, and what each item unblocks. It derives from the plan and the gaps; where
+   it disagrees with either, they win and the queue is stale. **This is the document
+   to open when the question is "what should I pick up?"** — the plan answers "where
+   are we," which is a different question and was for a long time the only one the
+   tree could answer.
+5. **`GAPS.md`** — the tracking document for outstanding gaps and the GLOBAL DONE
    criteria. Findings and their evidence live here; the plan summarizes them.
-5. **`STATUS.md`** — a current-state summary *only*. It must not compete with the
+6. **`STATUS.md`** — a current-state summary *only*. It must not compete with the
    plan on sequencing or with `generated/` on counts.
-6. **`rfc/`** — accepted architecture decision records. An RFC describes a decision,
+7. **`rfc/`** — accepted architecture decision records. An RFC describes a decision,
    not its rollout status; the plan owns rollout status.
 
 `VISION.md` sits outside this ladder on purpose: it is the durable *why* and changes
@@ -30,11 +36,16 @@ disagree about scope, the plan wins.
 
 ## Reading order for a new session
 
+**To pick up work:** `WORK_PLAN.md` first, and often only. It opens with the decisions
+that gate everything else, then the queue in dependency order. Follow a citation into
+`GAPS.md` when you need the evidence behind an item.
+
+**To understand the project:**
+
 1. `../CLAUDE.md` — repo shape, commands, and the gotchas that bite first.
 2. `../memory/hot.md` — what was in flight last session.
 3. `MASTER_PLAN.md` — "Current Repo Truth", then the active-track tables.
-4. `GAPS.md` — the numbered sections are the open findings, most recent last.
-5. `generated/roadmap-metrics.md` and `generated/srd-coverage.md` — the live numbers.
+4. `generated/roadmap-metrics.md` and `generated/srd-coverage.md` — the live numbers.
 
 Do not start from a design doc or an RFC. They describe intent at a point in time,
 and several have been overtaken by what shipped.
