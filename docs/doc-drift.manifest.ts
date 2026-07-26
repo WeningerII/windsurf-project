@@ -181,6 +181,16 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: [],
   },
   {
+    // RFC index: one line per decision, plus the statement that an RFC owns the
+    // DECISION and the plan owns rollout status. Names real RFC paths, so
+    // path_ref_rule applies; owns no counts and no commit, so the count and
+    // verification rules do not.
+    path: 'docs/rfc/README.md',
+    kind: 'rfc',
+    owner: 'rfc-index',
+    rules: ['path_ref_rule'],
+  },
+  {
     path: 'docs/rfc/001-backend-sync.md',
     kind: 'rfc',
     owner: 'backend-sync-rfc',
