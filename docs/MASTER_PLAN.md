@@ -1,8 +1,25 @@
 # Master Plan
 
-**Last consolidated:** July 14, 2026
+**Last consolidated:** July 14, 2026 · **Last verified against code:** July 26, 2026
 
-`docs/MASTER_PLAN.md` is the sole planning authority for this repo. If another document appears to define roadmap, sequencing, or long-horizon scope, treat that content as historical or descriptive unless it is explicitly mirrored here.
+`docs/MASTER_PLAN.md` is the sole planning authority for this repo. If another document appears to define roadmap, sequencing, or long-horizon scope, treat that content as historical or descriptive unless it is explicitly mirrored here. `docs/README.md` gives the full authority order across the docs tree.
+
+## How to read this document
+
+Status lines here are **verified against code, not carried forward from prose**. On 2026-07-26 four independent passes checked roughly seventy status-bearing claims in this file: 39 were accurate, 21 understated shipped work, 7 overstated, and 3 were flatly wrong. Every correction from that pass is marked inline as `corrected 2026-07-26` so the next reader can tell a verified line from an inherited one.
+
+Two habits caused the drift, and both are now rules rather than advice. **Narrative docs do not own counts** — a number restated in prose is wrong within a week, so counts live in `docs/generated/` and are cited. **Do not claim a guard you have not proven can fail** — several "enforced" and "cannot be gamed" claims here described mechanisms structurally incapable of going red.
+
+| Section | What it answers |
+| --- | --- |
+| [Product North Star](#product-north-star) | What the product is for, and the all-seven-equal bar |
+| [Current Repo Truth](#current-repo-truth) | What exists today, with the caveats that apply |
+| [Non-Negotiable Constraints](#non-negotiable-constraints) | What no plan may propose |
+| [Completed Foundation](#completed-foundation) · [Accepted Product Boundaries](#accepted-product-boundaries) | What is done, and what is deliberately manual |
+| [Active Implementation Tracks](#active-implementation-tracks) | The three live programs and their per-phase status |
+| [Maintenance Tracks](#maintenance-tracks) | Per-area contracts that must not regress |
+| [Historical Provenance](#historical-provenance) | Where this plan's content came from |
+| [Maintenance Rule](#maintenance-rule) | The order of operations for changing it |
 
 ## Product North Star
 
@@ -14,33 +31,11 @@ The long-term user experience is: describe a character, encounter, scene, or des
 
 The durable *why* behind this direction — the thesis the product exists to test — lives in `docs/VISION.md`. This plan is the *what* and *how* and changes often; `docs/VISION.md` is the *why* and changes rarely. If the two disagree about scope, this plan wins.
 
-## Purpose And Source Documents
+## Item Classification
 
-This file merges the still-valid planning content from these repo planning documents:
+Every item below is tagged as one of `Completed foundation`, `Accepted product boundary`, `Active implementation track`, `Maintenance track`, `Discovery track`, or `Historical context`. The tag is load-bearing: an `Accepted product boundary` is a deliberate decision that must not be re-litigated as backlog, and a `Maintenance track` is a contract that must not regress — neither is open work.
 
-- `docs/STATUS.md`
-- `docs/history/PRODUCTION_PLAN.md` (archived to `docs/history/` by Remediation Phase 6, 2026-07-21)
-- `docs/history/EVIDENCE_LINKED_PARITY_REMEDIATION_PLAN.md` (archived)
-- `docs/history/EVIDENCE_LINKED_PARITY_AUDIT.md` (archived)
-- `docs/history/DAGGERHEART_DATA_ORGANIZATION_PLAN.md` (archived)
-
-These non-planning documents were also consulted where they contained planning-adjacent policy or product-scope statements, but they are not roadmap authorities:
-
-- `README.md`
-- `CONTRIBUTING.md`
-- `docs/rfc/002-ai-control-plane.md`
-- `docs/generated/roadmap-metrics.md`
-- `src/data/mutants-and-masterminds/3e/conditions/README.md`
-- `src/data/mutants-and-masterminds/3e/powers/README.md`
-
-Every inherited item below is classified as one of:
-
-- `Completed foundation`
-- `Accepted product boundary`
-- `Active implementation track`
-- `Maintenance track`
-- `Discovery track`
-- `Historical context`
+This file merges the still-valid planning content of several earlier planning documents, all now archived under `docs/history/`. That inheritance — which document contributed what, and what unique value each retains — is recorded once in [Historical Provenance](#historical-provenance) rather than restated here.
 
 ## Current Repo Truth
 
@@ -439,14 +434,12 @@ Research anchors for this track: Vercel AI SDK provider abstraction and telemetr
 
 ## Maintenance Rule
 
-When roadmap content changes:
+`docs/README.md` carries the tree-wide order of operations and the gate sequence. The rules below are the ones specific to *this* document.
 
-1. Update `docs/MASTER_PLAN.md` first.
-2. Check new or edited roadmap text against the `All-seven-equal phrasing` constraint: no system name as the subject of a deliverable line, tallies use denominator 7, asymmetric progress recorded as per-system debt (done/owed/owed-by).
-3. Keep `docs/STATUS.md` as a concise current-state summary only.
-4. Update `README.md` only if the public product overview changes.
-5. If support notes or reachable categories changed, update the support-note copy and the selector/dashboard summary expectations together with the roadmap text.
-6. Run `npm run roadmap:metrics` if count-bearing docs or reporting assumptions changed.
-7. Run `npm run check:generated-docs`.
-8. Run `npm run check:repo-hygiene`.
-9. Run `npm run check:doc-drift`.
+1. **Change the code first.** A plan describing unshipped behaviour is the failure mode this file spent 2026-07-26 recovering from.
+2. **Update this file before the others.** It is the planning authority; `docs/STATUS.md` summarizes it and must stay a concise current-state summary, never a competing roadmap.
+3. **Check every edited line against the `All-seven-equal phrasing` constraint**: no system name as the subject of a deliverable line, tallies use denominator 7, asymmetric progress recorded as explicit per-system debt (done / owed / owed-by).
+4. **State status only where you checked the code.** If a claim is inherited rather than verified, say so. An honest "unverified" costs a reader nothing; a confidently wrong status costs them a lane of rebuilt work — that has happened here.
+5. **Never restate a count or pin a commit SHA.** Counts belong in `docs/generated/`, cited. A SHA in prose rots at every merge.
+6. Update `README.md` only if the public product overview changed, and update support-note copy together with the selector/dashboard summary expectations if reachable categories moved.
+7. Regenerate and verify: `npm run check:generated-docs`, then `npm run check:repo-hygiene` and `npm run check:doc-drift`.
