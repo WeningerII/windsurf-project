@@ -1,12 +1,73 @@
 # RFC 003: Rules Intermediate Representation And Effect Resolution
 
-**Status:** Accepted — foundational connective layer. Phase 0 (types + resolver)
-implemented; cross-system adoption in progress.
+**Status:** Accepted
+**Date:** May 31, 2026
 **Author:** engineering planning
-**Created:** May 31, 2026
-**Last revised:** May 31, 2026 — re-centered on system-agnostic-from-day-one
-sequencing and all-systems RAW parity (supersedes the earlier "5e pilot, then
-extract" draft).
+**Supersedes:** the earlier "5e pilot, then extract" draft of this RFC, withdrawn
+in favour of system-agnostic-from-day-one sequencing and all-systems RAW parity
+**Implementation status lives in:** `docs/MASTER_PLAN.md`
+
+> An RFC records a decision — its context, the options weighed, the choice, and
+> the constraints that choice imposes. It does not own rollout status. Where this
+> document states what has shipped, the statement is dated and was checked against
+> code on that date; `docs/MASTER_PLAN.md` is the authority on sequencing and
+> phase status, and wins on any disagreement.
+
+## Adoption as of 2026-07-26 (verified against code)
+
+The status line of this RFC formerly read "Phase 0 implemented; cross-system
+adoption in progress." That understated the position by a wide margin. Against
+the phase list at the end of this document:
+
+- **Phase 0 (IR + resolver)** — landed. `src/rules/ir/types.ts`,
+  `src/rules/resolver/resolve.ts`, `src/rules/ir/ledgerView.ts`.
+- **Phase 1 (cross-system equipment proof)** — landed for the five systems whose
+  bonuses are d20-namespace-shaped, through one shared compiler
+  (`src/rules/compile/equipEffects.ts`) that chooses stacking discipline from
+  `systemId`. Daggerheart and M&M 3e do **not** route through it — see "Two
+  systems off the equipment compiler" below. That is an accepted architectural
+  boundary, not an outstanding gap.
+- **Phase 2 (conditions as IR)** — landed for all seven systems. Condition
+  effects are compiled in `src/rules/conditions/` and folded by the shared
+  resolver; each engine reads the folded target rather than applying bespoke
+  imperative math inside `rollCheck`.
+- **Phase 3 (ledger unification)** — landed for all seven systems. Every
+  contribution ledger is now a projection of resolver output via
+  `toContributionLedger`, so "compute a value" and "explain a value" are one
+  computation. The duplicate derivation this RFC was written to remove is gone.
+- **Phase 4 (functional terrain + seeded scene resolution)** — terrain effects
+  are real (`src/rules/terrain/`, and the optional `effects` field on scene
+  markers); they feed movement cost and cover through the resolver.
+- **Phase 5 (AI grounding seam)** — specified and partly built under
+  `docs/rfc/002-ai-control-plane.md`, which owns it.
+
+`docs/MASTER_PLAN.md` is authoritative on what remains and in what order. Treat
+the list above as a dated observation, not a tracker.
+
+### Two systems off the equipment compiler
+
+Daggerheart and M&M 3e reach the resolver, but not through
+`compileEquipmentEffects`. The reason is a real property of those systems, not a
+shortfall:
+
+- The shared equipment compiler's target namespace is the d20 family
+  (`attack` / `damage` / `ac` / `save` / `skill`). Daggerheart's derived targets
+  are `evasion`, damage thresholds, `armorScore`, `spellcast`, and per-trait
+  attributes. Forcing them through a d20-shaped compiler would mean pretending
+  Daggerheart bonuses are equipment bonuses in the d20 sense. Instead Daggerheart
+  adapts its additive passives into the IR directly and folds them with the same
+  `resolveEffects` + `toContributionLedger` primitives.
+- Daggerheart's unarmored-defence-by-tier rule *sets* an object
+  (`{armorScore, majorThreshold, severeThreshold}`) from a per-tier table. The
+  IR's `EffectValue` is `number | string | number[] | null` and provably cannot
+  carry that shape, so it stays an explicit annotated ledger entry rather than a
+  faked effect.
+- M&M 3e has no equipment-slot model to compile from; its power-point budget is a
+  computed cost, not a bonus-bearing item set.
+
+The invariant the RFC actually asserts — *one resolver, one ledger projection,
+all seven systems* — holds. "All seven route through the equipment compiler" was
+never the invariant, and should not be written as though it were.
 
 ## Summary
 
@@ -276,10 +337,15 @@ when the AI-DM layer lands, rather than being reinvented per loop.
 Terrain features carry `effects: EffectInstance[]` from the same IR, drawn from a
 small open-content terrain catalog (e.g. *deep water* →
 `{ target: 'damage.fire', operation: 'multiply', value: 0.5 }` plus a drowning
-hazard). Rendering is unchanged; resolution now has something to read. Whether
-terrain effects live on `SceneMarker` or a dedicated terrain layer is settled in
-favor of a dedicated, additive, optional field on scene state, so marker
-rendering is untouched and no persisted event schema changes.
+hazard). Rendering is unchanged; resolution now has something to read.
+
+The choice between a dedicated terrain layer and hanging effects off the existing
+marker was settled in favour of **an additive, optional field on the existing
+`SceneMarker`** — a marker without effects renders and behaves exactly as before,
+so marker rendering is untouched and no persisted event schema changes. The field
+is typed structurally at the scene-types boundary so `src/types/core/scene.ts`
+takes no dependency on the rules module; the terrain helper in `src/rules/terrain/`
+maps it onto real `EffectInstance`s.
 
 ## AI grounding contract (above this layer)
 

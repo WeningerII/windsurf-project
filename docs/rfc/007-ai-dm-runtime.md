@@ -1,14 +1,30 @@
 # RFC 007: Autonomous AI-DM Runtime — Proposals Over The Scene Runtime
 
-**Status:** Accepted (2026-07-21) — implementation scheduled, not yet landed.
-Drafted 2026-07-20; accepted by the user on 2026-07-21. This RFC describes a
-target design layered on shipped infrastructure (RFC 002 gateway, RFC 005
-resource pools, RFC 006 scene runtime); nothing here has landed yet. It
-supersedes nothing and introduces no new provider dependency beyond the
-existing gateway.
+**Status:** Accepted
+**Date:** July 21, 2026 (accepted); July 20, 2026 (drafted)
 **Author:** engineering planning
-**Created:** July 20, 2026
-**Accepted:** July 21, 2026
+**Supersedes:** nothing
+**Implementation status lives in:** `docs/MASTER_PLAN.md`
+
+> An RFC records a decision — its context, the options weighed, the choice, and
+> the constraints that choice imposes. It does not own rollout status. Where this
+> document states what has shipped, the statement is dated and was checked against
+> code on that date; `docs/MASTER_PLAN.md` is the authority on sequencing and
+> phase status, and wins on any disagreement.
+
+**Nothing in this RFC has been implemented (verified against code 2026-07-26.)**
+No AI-DM loop module exists, and none of the four task classes this document
+proposes — `dm-turn-intent`, `dm-narration`, `dm-pacing`, `dm-adjudicate` —
+appears in the gateway task allowlist or anywhere else in the tree. Every path
+this RFC names as a *proposed* home is therefore a proposal, not a location.
+Everything it cites as existing infrastructure does exist, and is unchanged by
+this document.
+
+This is a target design layered on shipped infrastructure: the gateway of
+`docs/rfc/002-ai-control-plane.md`, the resource pools of
+`docs/rfc/005-resource-pools.md`, and the scene runtime of
+`docs/rfc/006-scene-runtime.md`. It introduces no provider dependency beyond the
+existing gateway.
 
 ## Summary
 
