@@ -70,6 +70,7 @@ Live numbers: `docs/generated/roadmap-metrics.md` (both denominators) and
 | [14](#14-p5infra-gaps--inventory-what-was-closed-and-what-is-deliberately-not-built-added-2026-07-25) | `p5.infra-gaps` | 14.4 — Sentry release/env, server 5xx, durable rate-limit store |
 | [15](#15-field-level-srd-fidelity--audit-result--the-gate-that-now-guards-it-added-2026-07-25) | Field-level SRD fidelity | **(b)** and **(c)** unfixed — the largest open content-integrity item |
 | [16](#16-lazy-per-system-engines--what-was-reclaimed-and-exactly-what-blocks-the-rest-added-2026-07-25) | Lazy per-system engines | engine reclaim blocked, needs authorization |
+| [18](#18-provenance-over-inclusion--the-audit-result-and-the-gate-that-now-bounds-it-added-2026-07-25) | Provenance over-inclusion — 1,045 classified + gated | 31 records carry a false citation (owner decision); 3 measurement defects diagnosed, not repaired |
 
 **Closed, decided, or standing reference — kept for the evidence trail:**
 
@@ -1491,6 +1492,437 @@ also shipped **twice under different ids** — `Plate Armor`
   genuinely open item in an otherwise closed section.
 
 ---
+
+## 18. Provenance over-inclusion — the audit result, and the gate that now bounds it (added 2026-07-25)
+
+§15 audited whether a shipped entry's CONTENT matches the source it cites. This
+section audits the other face of the same defect: entries the product ships that
+are **not in the cited open-content source at all**. `npm run srd:coverage` has
+reported that population as a bare count and a truncated name list since it was
+built; nobody had classified it, so a genuinely non-open item and a harmless
+word-order variant were indistinguishable in the report.
+
+**Headline.** Of **1,045** reported suspects across the 41 wired
+(system × category) denominators:
+
+- **753 are not provenance problems at all** — the entry is in the cited source
+  and the *measurement* is wrong (incomplete source slice, granularity mismatch,
+  a name the normalizer does not fold, or a defect in the source itself).
+- **117 are catalog-hygiene findings** — 69 duplicated rows and 48 pre-built
+  instances of a generic source row.
+- **173 are genuine provenance findings** (158 distinct entries) — 95 records with
+  no counterpart in any cited open-content source, and 78 records of real open
+  content cited to the wrong edition or the wrong game.
+- **2 remain `undetermined`**, each stating why (18.6).
+
+The reported number was never a measure of the problem, and 173 is a **lower
+bound, not a measure** — §15(c) already proved a name diff cannot see the worst
+case (18.5.3).
+
+**Of the 95 `genuine-non-open-content` records, 64 are M&M 3e equipment that is
+already honestly labelled** `Original Content (not SRD)` and segregated by §17 —
+no false citation remains on them. They stay in the licensing class because the
+*finding* (no open-content counterpart) is what the class records, and because
+whether names like `Power Ring`, `Web Shooters` and `Mystic Amulet` should ship at
+all is a trade-dress judgment reserved to the owner (§17.2). **31 records carry a
+false citation today**; that is the number that describes live exposure, not 95.
+
+### 18.1 The gate
+
+`npm run check:provenance-over-inclusion`
+(`scripts/check-provenance-over-inclusion.mjs`, wired into `verify`) re-runs the
+reverse diff **offline** and requires every suspect to carry a classification
+with evidence.
+
+- `scripts/data/srd-overinclusion-manifest.json` pins the entry-name list of
+  every wired denominator, fetched from exactly the sources
+  `src/scripts/srd-coverage.ts` cites — its `TARGETS` array is now exported and
+  **imported by the gate**, so the two cannot drift apart. Refresh with
+  `npm run srd:overinclusion:write` (networked; commit the result).
+- The diff uses the same `src/scripts/srdCoverageShape.ts` helpers as the
+  networked report, so the offline gate and `srd:coverage` cannot disagree about
+  what a suspect is. Both report the same 1,045 today, and
+  `docs/generated/srd-coverage.md` regenerates **byte-identical** after this
+  lane's refactor.
+- `scripts/data/srd-overinclusion-classification.json` is the audit ledger: one
+  record per suspect, carrying `class`, `evidence`, and the entry's **current**
+  `source` tag. Regenerate the skeleton with
+  `npm run srd:overinclusion:record` (preserves existing classifications). The
+  classification itself is not machine-derivable — it *is* the audit.
+
+**Proven to fail** (2026-07-25 scratch-breaks, each reverted):
+
+| Deliberate break | Failure | Exit |
+| --- | --- | --- |
+| Retag the non-open `Cloak of the Archmagi` from `SRD 5.1` to `SRD` — both are allowlisted, so `openContentPolicy` stays green | `SOURCE-TAG DRIFT dnd-5e-2014/equipment\|cloakofthearchmagi: recorded taggedSource="SRD 5.1", now "SRD".` | 1 |
+| Ship an invented `Amulet of the Nine Hells` tagged `SRD 5.1` | `UNCLASSIFIED dnd-5e-2014/equipment: "Amulet of the Nine Hells" (tagged "SRD 5.1") is shipped but absent from the pinned open-content source, and has no classification.` | 1 |
+| Downgrade a licensing finding's evidence to `"no evidence"`; add a classification for an entry that is not a suspect | `NO EVIDENCE dnd-5e-2014/equipment\|alchemyjug` + `STALE CLASSIFICATION dnd-5e-2014/equipment\|ghostitemthatdoesnotship` | 1 |
+
+The first break is the one that matters: it is the exact move §15 warns against —
+making a provenance finding disappear by editing the tag rather than the content.
+
+### 18.2 The classification
+
+| Class | n | Meaning |
+| --- | ---: | --- |
+| `denominator-scope-defect` | 707 | The entry IS in the cited source; the coverage script fetches an incomplete slice of it. |
+| **`genuine-non-open-content`** | **95** | **No counterpart in any cited open-content source, under any name.** 64 of these are the honestly-labelled M&M originals. |
+| **`wrong-edition-attribution`** | **78** | **Real open content, but from a different edition/game than the tag claims.** |
+| `duplicate-alias` | 69 | The loader ALSO ships the entry under its correct source name. A duplicated catalog row. |
+| `generic-entry-instantiation` | 48 | The source ships a generic rule/table row; the product ships pre-built instances. |
+| `naming-variant` | 26 | Same entry, different name; the source-named entry does NOT also ship. |
+| `denominator-shape-artifact` | 14 | Source and product disagree about entry granularity, so the diff double-counts. |
+| `upstream-defect` | 3 | The entry is in the source; the *source* is wrong. |
+| `category-rollup` | 3 | The shipped entry is a source table/category header, not an entry (cf. §11 OC-2). |
+| `undetermined` | 2 | Could not be established; each record states why. |
+
+Per population:
+
+| Population | Suspects | Breakdown |
+| --- | ---: | --- |
+| PF1e equipment | 372 | scope-defect 347; then the 25-entry residual: generic-instantiation 11, duplicate-alias 10, wrong-edition 3, non-open 1 |
+| PF1e magic-items | 269 | scope-defect 244; the same 25-entry residual |
+| PF2e equipment | 156 | scope-defect 77, **wrong-edition 47**, naming-variant 26, non-open 4, duplicate-alias 2 |
+| 5e-2014 equipment | 46 | duplicate-alias 24, generic-instantiation 9, non-open 8, category-rollup 3, wrong-edition 2 |
+| 5e-2024 equipment | 44 | generic-instantiation 11, duplicate-alias 11, wrong-edition 9, non-open 8, scope-defect 3, shape-artifact 2 |
+| M&M 3e powers | 21 | scope-defect 21 |
+| PF2e spells | 14 | wrong-edition 5, non-open 5, duplicate-alias 3, scope-defect 1 |
+| Daggerheart weapons | 14 | scope-defect 12, upstream-defect 2 |
+| 3.5e monsters | 11 | shape-artifact 11 |
+| 5e-2024 monsters | 10 | wrong-edition 8, non-open 2 |
+| 3.5e spells | 5 | duplicate-alias 2, non-open 2, wrong-edition 1 |
+| 5e-2014 monsters | 1 | shape-artifact 1 |
+| Daggerheart ancestries | 1 | scope-defect 1 |
+| Daggerheart armor | 1 | upstream-defect 1 |
+| M&M 3e advantages | 1 | scope-defect 1 |
+| M&M 3e equipment | 79 | **non-open 64, duplicate-alias 7, generic-instantiation 6, undetermined 2** (hand-off completed 2026-07-26, see 18.6) |
+
+### 18.3 The measurement is the single biggest defect (753 of 1,045)
+
+**Most of what the report calls over-inclusion is the report being wrong.** Four
+distinct causes:
+
+1. **PF1e equipment / magic-items double-count each other — 591 records.** Both
+   targets diff the **same** merged 616-entry loader
+   (`loadEquipmentForSystem('pf1e')`) against **one scoped half** of the pinned
+   PSRD manifest (243 Equipment vs 347 Magic Items). Each row therefore reports
+   the other row's entire content as "not in SRD". Only **25** entries are absent
+   from the union of both scopes. Fix: union the denominator, or split the loader
+   by scope. Until then the PF1e over-inclusion figures in
+   `docs/generated/srd-coverage.md` mean nothing.
+2. **Incomplete source slices — 116 more records.**
+   - **PF2e equipment (77).** 69 resolve exactly against Pf2eTools
+     `items/baseitems.json` (`source === "CRB"`), a file the coverage script
+     never fetches; 7 more are graded runes nested at
+     `item[].variants[]`, which the script's top-level `item[].name` read cannot
+     see; `Unarmed Strike` has no items-derived counterpart in any Pf2eTools file.
+   - **M&M 3e powers (21) and advantages (1).** The `frnprt` `POWER_EFFECTS`
+     array is an *effects-only* list of 40 and cannot measure the 21 **Sample
+     Powers** the Deluxe Hero's Handbook also publishes; the repo's own powers
+     README states the split ("61 Total — 40 Core Effects + 21 Sample Powers"),
+     and all 21 resolve as headings in an independent transcription of the DHH
+     Powers chapter. `Improvised Weapon` is a real DHH combat advantage (p.85)
+     that the 73-entry `ADVANTAGES` array simply omits.
+   - **Daggerheart (13).** The 12 Combat Wheelchair weapons live in the SRD's
+     `contents/Combat Wheelchair.md`, which the script does not fetch (it reads
+     only the Primary and Secondary Weapon Tables); every shipped field matches
+     the SRD table rows. `Mixed Ancestry` is a full mechanical section of
+     `Ancestries.md` that the link-list denominator cannot see.
+   - **5e-2024 equipment (3).** The 5e-bits/5e-database 2024 JSON has **no entry
+     matching `/focus|symbol/` at all**, while SRD 5.2.1 `equipment.md` carries
+     `#### Arcane Focus (Varies)`, `#### Druidic Focus (Varies)` and
+     `#### Holy Symbol (Varies)` as named entries.
+   - **PF2e spells (1).** `Aid` is real CRB open content — but it is the Aid
+     *basic action*, shipped as a level-2 spell. The licensing answer is clean;
+     the actual defect is loader miscategorisation.
+3. **Names the normalizer does not fold — 26 records (PF2e equipment).** The CRB
+   *does* carry `Rope (50 feet)`, `Chalk (10)`, `Sack (5)`, `Candle (10)`,
+   `Chain (10 feet)`, `Ladder (10-foot)`, `Ten-Foot Pole`, `Spellbook (Blank)`,
+   `Leather`, `Hide`, and 16 bare rune names (`Striking`, `Flaming`,
+   `Resilient`, …) — the product ships the same entries under parenthetical or
+   `… Rune`-suffixed forms. This is the one class where **extending
+   `srdCoverageShape.ts` normalization is the right remedy**, on two axes
+   (parenthetical-quantity suffixes, and the `Rune` suffix).
+4. **Granularity and upstream defects — 20 records.** SRD 3.5 prints ONE
+   `## Salamander` and ONE `## Hydra` section, each a single combined table with
+   a column per variety; `srdCoverageShape.ts` deliberately excludes both from
+   the container collapse, so the source counts 1 and the product counts 3 and 8
+   — the same entry is reported as *missing* and as an *over-inclusion*
+   simultaneously. SRD 5.1 likewise prints one `Werewolf` entry that 5e-database
+   splits into three form rows, and SRD 5.2 folds the healing-potion tiers into
+   one entry's table. Three are defects in the SOURCE, recorded and never
+   normalized (§15(d) precedent): the pinned `Batres3/daggerheart-srd` repo
+   misspells `Widogast Pendant` as "Widgast", misspells `Bellamoi Fine Armor` as
+   "Bellamie", and normalizes `Sword of Light & Flame` to "and" — verified
+   against the official Darrington Press SRD text and two independent datasets.
+   **In all three the shipped name is correct and the denominator is wrong.**
+
+**None of these is fixed here.** They are measurement bugs with real blast radius
+— changing a denominator moves published coverage percentages — and this lane's
+remit was the classification. Each is recorded per entry with the upstream file
+that resolves it, so the fix is mechanical rather than investigative.
+
+### 18.4 Duplicated catalog rows — 69 records, and NOT a normalization problem
+
+The largest genuine *data* finding. **The product ships both a correctly
+SRD-named row and a colloquially-named duplicate of the same item**, and only the
+duplicate surfaces as over-inclusion. In 5e-2014 equipment, 18 of the 24 pairs are
+**byte-identical** on every compared field (cost, weight, category, rarity,
+damage, armour class, properties, source): `Light Crossbow` alongside
+`Crossbow, light`; `Padded` alongside `Padded Armor`; `Telescope` alongside
+`Spyglass` (both 1,000 gp / 1 lb); `Sledgehammer` alongside `Hammer, sledge`. The
+other 6 differ only in a stray field — and those differences are themselves
+unaudited fidelity divergences: `Helmet of Telepathy` weighs 1 lb where
+`Helm of Telepathy` weighs 3; `Robes of the Archmagi` 1 lb vs `Robe of the
+Archmagi` 4. PF1e has the same shape for a different reason: a faithful
+PSRD-derived `srd-*.ts` family shipped alongside an older hand-written
+`weapons.ts` / `armor.ts` / `adventuring-gear.ts` catalog using colloquial names
+(and `Belt of Strength` priced 30,000 gp against the source's 4,000). 3.5e ships
+`Clairvoyance` beside `Clairaudience/Clairvoyance` and a `Globe of
+Invulnerability, Greater` beside the plain 6th-level SRD `Globe of
+Invulnerability`. PF2e ships `Whistle` beside `Signal Whistle`, and a `Chain`
+typed as a fabricated 1d6-slashing reach weapon beside the real gear row.
+
+**The obvious remedy — extending name normalization — is the wrong one for this
+class, and was deliberately not taken.** Folding `Light Crossbow` onto
+`Crossbow, light` would clear the report while leaving the user looking at two
+identical crossbows in the equipment browser. The finding is a duplicated
+catalog; hiding it in the measurement is exactly the failure mode this lane
+exists to stop. De-duplication is a product decision (which name wins, which ids
+break) reserved to the owner.
+
+### 18.5 LICENSING FINDINGS — escalated, not remediated
+
+173 records (158 distinct entries) are genuine provenance findings; **31 of them
+carry a false citation today** — the 64 honestly-labelled M&M originals do not. Following the §11 /
+OC-1 precedent, **nothing here was deleted or relabelled.** Re-tagging is not
+cosmetic: `filterOpenContentBySource` (`src/utils/openContentPolicy.ts`) drops
+any entry whose source leaves the allowlist, so "correcting" the tag silently
+removes the item from the product. That is the owner's decision. Every entry is
+quarantined in the classification ledger, and the ledger is self-expiring —
+change the entry and the gate fails until the record is redone.
+
+#### 18.5.1 The PF2e equipment catalog is mostly not PF2e content [LARGEST FINDING]
+
+Of 188 shipped PF2e equipment entries, **45 are not Pathfinder 2e Core Rulebook
+content at all**, every one tagged `source: "Core Rulebook"`. They fall into two
+coherent layers, which is what makes this a systematic import rather than
+scattered error:
+
+- **A PF1e weapon table at a systematic ÷10 price downshift.** `Cestus`
+  (PF1e 5 gp → shipped 5 sp), `Siangham` (3 gp → 3 sp), `Throwing Axe` (8 gp →
+  8 sp, range 10 preserved), `Boar Spear` (5 gp → 5 sp), `Boomerang` (3 gp →
+  3 sp, range 30), `Orc Double Axe` (60 gp → 6 gp), `Wakizashi` (35 gp → 3 gp),
+  `Chakram` (1 gp, PF1e weight and 30 ft range exact), plus `Banded Mail`.
+- **A D&D 5e SRD gear and armour layer with exact table matches.** `Handaxe`
+  (1d6 S, Light + Thrown 20/60 — and note PF2e's actual `Hatchet` is **absent**
+  from the loader, so this is a substitution, not a naming variant), `Pike`,
+  `War Pick`, `Ring Mail`, `Net`, `Tinderbox` (5 sp), `Ball Bearings` (1 gp),
+  `Hunting Trap` (5 gp), `Herbalism Kit` (5 gp), `Ink Pen` (2 cp), `Bucket`
+  (5 cp), `Shovel` (2 gp), `Dice Set`, `Playing Cards`, `Map/Scroll Case`, and
+  the d20-SRD sundries `Vial`, `Flask`, `Jug`, `Blanket`, `Bell`, `Basket`,
+  `Bottle (glass)`, `Sealing Wax`, `Parchment (sheet)`, `Ink (1 oz vial)`,
+  `Marbles`, `Block and Tackle`, `Pickaxe`, `Saw`, `Pouch`, `Net (fishing)`,
+  `Rope, Silk (50 ft.)` (verbatim 3.5 SRD row, 10 gp exact).
+- Four more are **right game, wrong book**: `Atlatl` (Treasure Vault, 2 sp
+  exact), `Earth Breaker` ("Earthbreaker", Treasure Vault, 4 gp exact), `Bola`
+  (Player Core 1 / Treasure Vault, 5 sp exact), `Armored Coat` (Lost Omens:
+  Knights of Lastwall).
+
+All of it is open content under the OGL — the exposure is the false citation, not
+the licence. Six further PF2e equipment rows have **no** open-content counterpart
+anywhere: `Field Plate` (an AD&D 2e armour name, absent from items-crb, the
+410-row baseitems, every Pf2eTools file, the 3,715-item PF1e PSRD corpus and the
+5e SRD), `Horn`, `Sledgehammer`, `Chisel`, `File`, `Tongs`.
+
+Five PF2e **spells** are similarly PF1e/3.5 imports tagged CRB (`Feather Step`,
+`Geyser`, `Delayed Blast Fireball`, `Firestorm`, `Forcecage` — the last three
+carrying d20 tells such as "N 10-foot cubes"), and five have no counterpart in
+any of the 2,059 Pf2eTools spells across 59 book files or the 1,543-spell PF1e
+PSRD corpus: `Entreat`, `Floating Shroud`, `Harmless Healing`, `Jumping Jack`,
+`Misdirection, Mass`. Four of those five sit in the same files as, and paraphrase,
+a genuine CRB spell the loader already ships correctly (`Command`, `Heal`,
+`Jump`).
+
+#### 18.5.2 `genuine-non-open-content` — 95 records, 86 distinct entries [OWNER DECISION]
+
+**5e magic items (10 entries, each shipped TWICE — once tagged `SRD 5.1` in the
+2014 catalog and once tagged `SRD 5.2` in the 2024 catalog, so 20 records).** Each
+is absent from BOTH open-content 5e sources checked: the 362-entry
+5e-bits/5e-database SRD 5.1 magic-item list AND the 264-entry SRD 5.2.1
+`magic-items.md` (downfallx/dnd-5e-srd-markdown).
+
+| Entry | What it actually is |
+| --- | --- |
+| Alchemy Jug | Dungeon Master's Guide wondrous item |
+| Cloak of Etherealness | Dungeon Master's Guide wondrous item |
+| Sword of Vengeance (Cursed) | Dungeon Master's Guide cursed item |
+| Scroll of Protection | Dungeon Master's Guide item — and NOT a Spell Scroll instance |
+| Cloak of Billowing | Xanathar's Guide to Everything common item |
+| Potion of Dragon's Breath | Xanathar's Guide to Everything potion |
+| Cloak of the Archmagi | No known WotC counterpart — apparently invented (the SRD item is the Robe of the Archmagi, which also ships) |
+| Cap of Water Breathing | No known WotC counterpart — apparently invented |
+| Pegasus Boots | No known WotC counterpart — apparently invented (the SRD analogue Winged Boots also ships) |
+| Ring of Clumsiness (Cursed) | No known WotC counterpart — apparently invented |
+
+**5e-2024 monsters (3).** `Captain`, `Necromancer`, `Pixie` — absent from SRD 5.1
+and SRD 5.2.1 alike. Both SRDs carry only `Sprite`, never `Pixie`; the 5e
+`Necromancer` NPC is Volo's Guide content; no bare `Captain` exists in either
+SRD, and the shipped CR 2 / AC 16 does not match `Bandit Captain` (CR 2 / AC 15).
+§15.4 independently reached the same conclusion for these three.
+
+**3.5e spells (2).** `Mass Misdirection` (level 7) and `Reversal of Fortune`
+(level 7), both tagged `SRD 3.5`, neither a heading in any of the nine
+`olimot/srd-v3.5-md` spell chapters. The qualifier word-order normalization
+already folds `Mass X` / `X, Mass`, so `Mass Misdirection` is not a naming
+artifact — the SRD has only the level-2 `Misdirection`, which also ships.
+
+**PF1e (1 entry, 2 records).** `Cloak of Flying`, tagged `Core Rulebook`: absent
+from the 590-entry PSRD PF1e Core manifest, from the D&D 3.5 SRD (whose only
+flight items are Broom / Carpet / Wings of Flying) and from SRD 5.2. Shipped at
+55,000 gp granting fly-at-will; nearest analogue is 3.5's *Wings of Flying* at
+54,000 gp. Apparently invented.
+
+**PF2e (11).** The five spells and six equipment rows itemised in 18.5.1.
+
+#### 18.5.3 `wrong-edition-attribution` — 78 records, 73 distinct entries
+
+Open content, **false citation**. No licence exposure, but the product asserts a
+provenance it does not have — the same defect class as §15(c).
+
+- **PF2e equipment (47) and spells (5)** — 18.5.1.
+- **5e-2024 monsters (7)** — `Goblin`, `Acolyte`, `Kobold`, `Hobgoblin`,
+  `Bugbear`, `Thug`, `Veteran` ship tagged `SRD 5.2`. All seven are verbatim SRD
+  5.1 names, all seven also ship from the 2014 loader, and none has a stat block
+  in the SRD 5.2.1 bestiary — which names only qualified forms (`Goblin Warrior`,
+  `Priest Acolyte`, `Kobold Warrior`, `Warrior Veteran`, …). §15.4 independently
+  confirms the content is 5.1 content.
+- **5e-2024 equipment (7)** — `Rope, Hempen (50 feet)` (1 gp / **10** lb; SRD
+  5.2.1 names it `Rope` at 1 gp / **5** lb, which the loader also ships),
+  `Tent, Two-Person`, `Mirror, Steel`, `Hammer`, `Piton`, `Soap`, `Mess Kit`.
+  Every one is a verbatim SRD 5.1 adventuring-gear or tool name absent from SRD
+  5.2.1 `equipment.md`; the 2024 revision dropped or renamed them.
+- **3.5e (1)** — `Bleed`, tagged `SRD 3.5`. No such spell exists in the SRD 3.5
+  chapters (the 0-level necromancy spells are Disrupt Undead and Touch of
+  Fatigue). The shipped text — *"a living creature that has 0 hit points but is
+  still alive … resumes dying"* — is the **Pathfinder 1e** cantrip verbatim.
+- **PF1e (3 entries, 6 records)** — `Amulet of Health` and `Cloak of Charisma`
+  are **D&D 3.5 SRD** wondrous items that PF1e replaced with `Belt of Mighty
+  Constitution` and `Headband of Alluring Charisma` (both of which the loader
+  already ships at the source price of 4,000 gp; the 3.5-named entries are priced
+  30,000 gp, matching no source). `Cloak of Invisibility` is in neither PF1e Core
+  nor the 3.5 SRD but **is** in D&D SRD 5.1/5.2; shipped at an unsourced
+  62,000 gp. All three tagged `Core Rulebook`.
+
+#### 18.5.4 The class a name diff structurally CANNOT see
+
+**A name match does not prove provenance, so 173 is a lower bound.** §15(c) is
+the proof: 5e-2024's Criminal, Sage and Soldier backgrounds carry *Player's
+Handbook* text under legitimate SRD 5.2 names, and the reverse diff scores them
+100% covered with zero over-inclusion, because the NAMES are real. Nothing in
+this lane changes that. The `wrong-edition-attribution` findings above are only
+the cases where the other edition's name *also* differs; every entry whose names
+coincide across editions is invisible to a name diff and reachable only by the
+field-level comparison of §15 — which today covers 5e monsters and backgrounds
+and nothing else.
+
+### 18.6 What this lane did NOT cover
+
+- ~~**M&M 3e equipment (103 suspects) deferred to a concurrent lane.**~~
+  **HAND-OFF COMPLETED 2026-07-26.** The prediction above was exact: when the M&M
+  equipment lane landed (§17), all 103 records failed — 79 as `SOURCE-TAG DRIFT`
+  (that lane moved the tag from `Hero's Handbook` to `Original Content (not SRD)`)
+  and 24 as `STALE CLASSIFICATION` (entries it removed). Both were the ratchet
+  working as designed. The 24 stale records were removed after confirming the
+  entries are absent from the shipped catalog; the 79 were re-recorded against the
+  113-name pinned denominator, which is byte-equal in name-set to the SRD-encoded
+  tier that lane produced. Result: 64 `genuine-non-open-content`, 7
+  `duplicate-alias`, 6 `generic-entry-instantiation`, 2 `undetermined`.
+  **Because the SRD tier and the denominator are the same 113 names, every
+  correctly-named source entry ships** — so a semantic match can only ever be
+  `duplicate-alias` or `generic-entry-instantiation` here, never `naming-variant`.
+- **Prose, mechanics and stat fidelity of every classified entry.** This lane
+  compared NAMES and, where a classification turned on it, a handful of scalar
+  fields (price, weight, rarity, damage, level, range). An entry classified
+  `duplicate-alias` or `naming-variant` is *provenance*-clean; it is not thereby
+  *content*-clean. Divergences surfaced incidentally and NOT systematically
+  audited: the six mismatched 5e duplicate pairs; PF1e `Belt of Strength`
+  (30,000 gp vs 4,000), `Wand of Fireball` (7,200 gp where the Core generic rule
+  gives 11,250) and the three elemental longswords (8,815 gp vs 8,315); PF2e
+  `Keen Rune` (1,400 gp vs CRB 3,000), `Greater Fortification Rune` (14,000 vs
+  24,000), `Slick Rune` (450 vs 45), `Hide` armour (AC 3 vs CRB +2), and
+  `Ten-Foot Pole` / `Ladder` / `Chain` carrying the wrong edition's price under
+  the correct name.
+- **Populations with no wired denominator have no over-inclusion measure at all,
+  and their absence is not evidence of cleanliness.** `srd:coverage` measures 41
+  (system × category) pairs. Everything else is unmeasured: **3.5e equipment**
+  and **PF1e classes/feats** (closed-by-no-source), **PF2e archetypes** (no CRB
+  entries), **M&M conditions** (no shipped catalog), and every category no system
+  wires at all. 3.5e and PF1e are thinnest — four and five wired categories
+  against 5e's seven and Daggerheart's nine — so a non-open 3.5e magic item or
+  PF1e feat is structurally invisible today. The fix is
+  `p1.wire-remaining-denominators`, not this lane.
+- **The measurement defects in 18.3 are diagnosed, not repaired.** Nothing in
+  `docs/generated/srd-coverage.md` changed: the report regenerates
+  byte-identical after this lane's refactor, which is the evidence that the
+  refactor is behaviour-preserving — and equally the evidence that the published
+  PF1e and PF2e over-inclusion numbers are still not meaningful.
+- **Two PF2e classifications rest on weaker evidence than the rest** and say so
+  in their ledger records: `Pouch` (name and description match 3.5/PF1e "Belt
+  Pouch" and 5e "Pouch", but the shipped 5 cp matches neither price) and
+  `Net (fishing)` (d20-SRD name and function; 1 gp matches neither PF1e's 4 gp
+  nor CRB `Fishing Tackle`'s 8 sp). `Horn` is the one `genuine-non-open-content`
+  record whose actual source could not be identified at all.
+
+### 18.7 Adversarial re-verification (2026-07-26) — what it corrected, and what it says about method
+
+This section's classifications were re-checked by an independent adversarial pass
+instructed to **refute** rather than confirm: 6 verifiers over the 79 re-recorded
+M&M entries, 4 refutation agents over a stratified sample of the surviving 966,
+and one agent tasked with breaking the gate.
+
+**The gate is a proven ratchet.** All five failure modes — `UNCLASSIFIED`,
+`BAD CLASS`, `NO EVIDENCE`, `SOURCE-TAG DRIFT`, `STALE CLASSIFICATION` — were
+made to fire, each identified by the specific diagnostic naming the tampered key
+against a control run, not by bare exit code (which is worthless here, since the
+gate was already exiting 1 on the known backlog). Every tamper was reverted and
+the file verified byte-identical afterwards.
+
+**A systematic classification defect was found and corrected.**
+`genuine-non-open-content` requires absence from **any** cited open-content
+source, but several records were established by checking only the entry's *own*
+system's sources. Seven records were corrected to `wrong-edition-attribution`
+after the counterpart was found **in this audit's own pinned manifest**:
+
+| Record | Prior evidence | Counterpart, in our own pinned denominator |
+| --- | --- | --- |
+| `Ring of Clumsiness` (2014 + 2024) | "apparently invented" | `pf1e/magic-items`; also a 3.5 SRD cursed item |
+| `Cloak of Etherealness` (2014 + 2024) | "DMG wondrous item" | `pf1e/magic-items`; also 3.5 SRD |
+| `Horn` (PF2e) | "the 5e SRD has no horn either" | both `dnd-5e-2014/equipment` and `dnd-5e-2024/equipment` |
+| `Sledgehammer` (PF2e) | "no sledgehammer in the 5e SRD" | `Hammer, sledge` — the normalizer folds it to `hammersledge`, not `sledgehammer` |
+| `Pixie` (5e-2024) | "Monster Manual content" | `pf1e/monsters` and `pf2e/monsters`; the shipped array is the SRD **Sprite**, not the MM Pixie |
+
+This **reduces** claimed exposure: those seven are open content under a false
+citation, not unlicensed content. It is also the more useful correction, because
+`wrong-edition-attribution` is remediable by re-tagging while
+`genuine-non-open-content` may not be remediable at all.
+
+**The verifiers themselves were wrong 25% of the time, and that is recorded on
+purpose.** Of 20 claimed Hero SRD counterparts for the M&M entries, **5 were
+fabricated** — `Semi`, `Space Shuttle`, `Orbiting Satellite`, `Submarine` and
+`Tank` appear in neither the 113-name pinned denominator nor the SRD-encoded tier
+(the two are identical name-sets, which is what makes the check decisive). Every
+surviving refutation in the table above was therefore re-verified locally against
+the pinned manifest before being applied, and refutations resting on external or
+live-fetched sources were **not** applied. The lesson generalises: an adversarial
+panel is a lead generator, not an oracle, and its output needs the same evidence
+standard as the thing it audits.
+
+**Not applied, recorded for follow-up.** `Cap of Water Breathing` (claimed to have
+a PF1e counterpart — not present in the pinned `pf1e/magic-items` denominator, so
+unconfirmed) and `Captain` (5e-2024; the existing disproof rests on a one-point AC
+difference, which cannot establish absence under any name, but no counterpart was
+established either). Both keep their current class pending evidence.
 
 ## Where the largest open work is
 

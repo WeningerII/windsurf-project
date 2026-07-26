@@ -57,13 +57,18 @@ Two further tests (`mam3eValidation.test.ts:33`, `capabilityScenarios.test.tsx:3
 
 ---
 
-## 1. Rescue before it is lost — **READY, CHEAP**
+## 1. Rescue before it is lost — ~~READY, CHEAP~~ **DONE 2026-07-26**
 
-### 1.1 Recover the over-inclusion audit's 1,069 classifications
+### 1.1 ~~Recover the over-inclusion audit's 1,069 classifications~~ — **RECOVERED AND LANDED**
 
-A lane classified all 1,069 over-inclusion suspects across the seven systems and **died on a session limit before committing**. The work sits uncommitted in an agent worktree that dies with the container.
+A lane classified all 1,069 over-inclusion suspects across the seven systems and **died on a session limit before committing**. The work survived only as uncommitted changes in a container-local worktree on a branch never pushed to origin.
 
-**Do first.** Everything in §2.1 depends on it, and it is minutes of work against days of re-derivation.
+Recovered in `544967c`, completed and enforced in `d34e776`. The gate now runs inside `npm run verify` and passes on all **1,045** current suspects (the population shrank because the M&M lane removed 24 entries). Full account in `GAPS.md` §18.
+
+Two things worth carrying forward:
+
+- **The audit predicted its own failure and was right.** It deferred `mam3e/equipment` and wrote that those records *"will fail this gate as `STALE CLASSIFICATION` … that is the ratchet working, and a deliberate hand-off, not an oversight."* All 103 failed exactly that way. Completing the hand-off was the landing work.
+- **Adversarial verification corrected the audit and was itself wrong 25% of the time.** Seven records moved from `genuine-non-open-content` to `wrong-edition-attribution` — their counterparts were sitting in the audit's *own* pinned manifest, because entries had been checked only against their own system's sources. But 5 of 20 claimed counterparts were fabricated, so every applied correction was re-verified locally first. Treat a verifier panel as a lead generator, not an oracle (§18.7).
 
 ---
 
@@ -71,11 +76,16 @@ A lane classified all 1,069 over-inclusion suspects across the seven systems and
 
 The content denominator is mid-migration. Read §2.2 before starting anything else here, because it changes what "coverage" means.
 
-### 2.1 `p1.provenance-over-inclusion-audit` — classify and remediate — **BLOCKED on 1.1**
+### 2.1 `p1.provenance-over-inclusion-audit` — ~~BLOCKED on 1.1~~ **classification DONE, remedies are owner decisions**
 
-Each over-included entry is one of: naming-variant false positive (extend normalization), genuine non-open content (relabel and segregate — **never delete**, that is an owner decision), or upstream defect (record, never normalize silently). The M&M equipment lane is the worked example of the whole shape.
+All 1,045 suspects are classified with evidence and held by a gate that is a proven ratchet (all five failure modes made to fire against a control run). What remains is **not** classification work:
 
-**Known remainder even after the rescue:** 21 non-SRD M&M powers and 1 advantage still ship under `Hero's Handbook` — same defect class as the equipment finding, untreated.
+- **31 records carry a false citation today — the live exposure number.** Not 95: of the 95 `genuine-non-open-content` records, 64 are M&M originals that §17 already relabelled honestly to `Original Content (not SRD)`. They stay in the licensing class because absence of an open-content counterpart is the *finding*, and because whether `Power Ring` / `Web Shooters` / `Mystic Amulet` ship at all is a trade-dress judgment — see §0.1, this is the same owner decision.
+- **Nothing was deleted or relabelled, deliberately.** `filterOpenContentBySource` drops any entry whose source leaves the allowlist, so re-tagging silently removes shipped content from the product. That is the owner's call, not a cleanup.
+- **Three measurement defects are diagnosed, not repaired** — repairing one moves published coverage percentages, so it is a deliberate, separately-scoped change.
+- **Two records are `undetermined` and say why** (§18.7): `Cap of Water Breathing` and `Captain`.
+
+**Known remainder:** 21 non-SRD M&M powers and 1 advantage still ship under `Hero's Handbook` — same defect class as the equipment finding, untreated. These now sit in the gate as `denominator-scope-defect` and are the obvious next tranche.
 
 ### 2.2 Execute the `srd-manifest` demotion — **READY**
 

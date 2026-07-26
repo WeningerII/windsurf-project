@@ -236,21 +236,39 @@ async function fetchSrd52MonsterNames(monstersUrl: string, animalsUrl: string): 
   return names;
 }
 
-async function loaderNames(load: (s: GameSystemId) => Promise<unknown[]>, system: GameSystemId) {
-  const items = (await load(system)) as Array<{ name?: unknown }>;
+/** A shipped catalog record. Only `name` is required by the coverage diff; the
+ * full record is carried through so the offline over-inclusion gate can read the
+ * entry's `source` attribution without re-deriving the loader map. */
+export type LoaderRecord = { name?: unknown; source?: unknown };
+
+const records =
+  (load: (s: GameSystemId) => Promise<unknown[]>, system: GameSystemId) =>
+  async (): Promise<LoaderRecord[]> =>
+    (await load(system)) as LoaderRecord[];
+
+/** The name column of a loader record set, as the coverage diff consumes it. */
+export function recordNames(items: LoaderRecord[]): string[] {
   return items.filter((i) => typeof i.name === 'string').map((i) => i.name as string);
 }
 
-type CoverageTarget = {
+export type CoverageTarget = {
   systemId: GameSystemId;
   systemLabel: string;
   category: string;
   srdSource: string;
   srd: () => Promise<string[]>;
-  loader: () => Promise<string[]>;
+  loaderRecords: () => Promise<LoaderRecord[]>;
 };
 
-const TARGETS: CoverageTarget[] = [];
+/**
+ * Every wired (system × category) denominator, EXPORTED so the offline
+ * over-inclusion gate (`scripts/check-provenance-over-inclusion.mjs --write`)
+ * pins its SRD name lists from exactly these cited sources instead of
+ * re-declaring a second, drift-prone copy of the URLs. Importing this module
+ * must therefore NOT run the report — see the `main()` invocation guard at the
+ * bottom of the file.
+ */
+export const TARGETS: CoverageTarget[] = [];
 
 /**
  * Categories deliberately NOT rendered as a measured coverage row because a
@@ -271,41 +289,41 @@ const ABSENT: AbsentCategory[] = [
 
 // --- D&D 5e 2014 (SRD 5.1) ---
 const en2014 = `${RAW5E}/2014/en`;
-const cats5e2014: Array<[string, () => Promise<string[]>, () => Promise<string[]>]> = [
+const cats5e2014: Array<[string, () => Promise<string[]>, () => Promise<LoaderRecord[]>]> = [
   [
     'spells',
     () => fetchNames(`${en2014}/5e-SRD-Spells.json`),
-    () => loaderNames(loadSpellsForSystem, 'dnd-5e-2014'),
+    records(loadSpellsForSystem, 'dnd-5e-2014'),
   ],
   [
     'classes',
     () => fetchNames(`${en2014}/5e-SRD-Classes.json`),
-    () => loaderNames(loadClassesForSystem, 'dnd-5e-2014'),
+    records(loadClassesForSystem, 'dnd-5e-2014'),
   ],
   [
     'species',
     () => fetchNames(`${en2014}/5e-SRD-Races.json`),
-    () => loaderNames(loadSpeciesForSystem, 'dnd-5e-2014'),
+    records(loadSpeciesForSystem, 'dnd-5e-2014'),
   ],
   [
     'backgrounds',
     () => fetchNames(`${en2014}/5e-SRD-Backgrounds.json`),
-    () => loaderNames(loadBackgroundsForSystem, 'dnd-5e-2014'),
+    records(loadBackgroundsForSystem, 'dnd-5e-2014'),
   ],
   [
     'feats',
     () => fetchNames(`${en2014}/5e-SRD-Feats.json`),
-    () => loaderNames(loadFeatsForSystem, 'dnd-5e-2014'),
+    records(loadFeatsForSystem, 'dnd-5e-2014'),
   ],
   [
     'monsters',
     () => fetchNames(`${en2014}/5e-SRD-Monsters.json`),
-    () => loaderNames(loadMonstersForSystem, 'dnd-5e-2014'),
+    records(loadMonstersForSystem, 'dnd-5e-2014'),
   ],
   [
     'equipment',
     () => fetchNames(`${en2014}/5e-SRD-Equipment.json`, `${en2014}/5e-SRD-Magic-Items.json`),
-    () => loaderNames(loadEquipmentForSystem, 'dnd-5e-2014'),
+    records(loadEquipmentForSystem, 'dnd-5e-2014'),
   ],
 ];
 for (const [category, srd, loader] of cats5e2014) {
@@ -315,7 +333,7 @@ for (const [category, srd, loader] of cats5e2014) {
     category,
     srdSource: 'SRD 5.1 (5e-bits/5e-database)',
     srd,
-    loader,
+    loaderRecords: loader,
   });
 }
 
@@ -325,42 +343,42 @@ for (const [category, srd, loader] of cats5e2014) {
 const en2024 = `${RAW5E}/2024/en`;
 const SRD52_MD = 'https://raw.githubusercontent.com/downfallx/dnd-5e-srd-markdown/master';
 const SRD52_SPELLS_MD = `${SRD52_MD}/spells.md`;
-const cats5e2024: Array<[string, () => Promise<string[]>, () => Promise<string[]>]> = [
+const cats5e2024: Array<[string, () => Promise<string[]>, () => Promise<LoaderRecord[]>]> = [
   [
     'spells',
     () => fetchSrd52SpellNames(SRD52_SPELLS_MD),
-    () => loaderNames(loadSpellsForSystem, 'dnd-5e-2024'),
+    records(loadSpellsForSystem, 'dnd-5e-2024'),
   ],
   [
     'classes',
     () => fetchNames(`${en2024}/5e-SRD-Classes.json`),
-    () => loaderNames(loadClassesForSystem, 'dnd-5e-2024'),
+    records(loadClassesForSystem, 'dnd-5e-2024'),
   ],
   [
     'species',
     () => fetchNames(`${en2024}/5e-SRD-Species.json`),
-    () => loaderNames(loadSpeciesForSystem, 'dnd-5e-2024'),
+    records(loadSpeciesForSystem, 'dnd-5e-2024'),
   ],
   [
     'backgrounds',
     () => fetchNames(`${en2024}/5e-SRD-Backgrounds.json`),
-    () => loaderNames(loadBackgroundsForSystem, 'dnd-5e-2024'),
+    records(loadBackgroundsForSystem, 'dnd-5e-2024'),
   ],
   [
     'feats',
     () => fetchNames(`${en2024}/5e-SRD-Feats.json`),
-    () => loaderNames(loadFeatsForSystem, 'dnd-5e-2024'),
+    records(loadFeatsForSystem, 'dnd-5e-2024'),
   ],
   [
     'monsters',
     // NOT the 5e-database 2024 JSON: that file holds only 3 monsters.
     () => fetchSrd52MonsterNames(`${SRD52_MD}/monsters-A-Z.md`, `${SRD52_MD}/animals.md`),
-    () => loaderNames(loadMonstersForSystem, 'dnd-5e-2024'),
+    records(loadMonstersForSystem, 'dnd-5e-2024'),
   ],
   [
     'equipment',
     () => fetchNames(`${en2024}/5e-SRD-Equipment.json`, `${en2024}/5e-SRD-Magic-Items.json`),
-    () => loaderNames(loadEquipmentForSystem, 'dnd-5e-2024'),
+    records(loadEquipmentForSystem, 'dnd-5e-2024'),
   ],
 ];
 for (const [category, srd, loader] of cats5e2024) {
@@ -370,7 +388,7 @@ for (const [category, srd, loader] of cats5e2024) {
     category,
     srdSource: 'SRD 5.2 (5e-bits/5e-database; spells + monsters per downfallx SRD 5.2.1 markdown)',
     srd,
-    loader,
+    loaderRecords: loader,
   });
 }
 
@@ -383,7 +401,7 @@ TARGETS.push({
   category: 'spells',
   srdSource: 'Core Rulebook (Pf2eToolsOrg/Pf2eTools spells-crb.json)',
   srd: () => fetchJsonPropNames(PF2E_SPELLS_CRB, 'spell'),
-  loader: () => loaderNames(loadSpellsForSystem, 'pf2e'),
+  loaderRecords: records(loadSpellsForSystem, 'pf2e'),
 });
 
 // --- Pathfinder 1e (Core Rulebook — filter spells.csv source column to "PFRPG Core") ---
@@ -395,7 +413,7 @@ TARGETS.push({
   category: 'spells',
   srdSource: 'Core Rulebook (wolfgangcodes/pathfinder-spellbook spells.csv, source="PFRPG Core")',
   srd: () => fetchCsvNames(PF1E_SPELLS_CSV, 'PFRPG Core'),
-  loader: () => loaderNames(loadSpellsForSystem, 'pf1e'),
+  loaderRecords: records(loadSpellsForSystem, 'pf1e'),
 });
 
 // PF1e Bestiary 1: the denominator is the pinned upstream manifest written by
@@ -421,7 +439,7 @@ TARGETS.push({
     // (e.g. Skeletal Champion) are preserved. See src/scripts/srdCoverageShape.ts.
     return collapsePf1eContainerRecords(manifest.entries.map((entry) => entry.name));
   },
-  loader: () => loaderNames(loadMonstersForSystem, 'pf1e'),
+  loaderRecords: records(loadMonstersForSystem, 'pf1e'),
 });
 
 // PF1e Core Rulebook equipment + magic items: the denominators are the pinned
@@ -446,7 +464,7 @@ TARGETS.push({
   category: 'equipment',
   srdSource: 'Core Rulebook (devonjones/PSRD-Data, pinned manifest — Equipment scope)',
   srd: () => pf1eEquipmentManifestNames('equipment'),
-  loader: () => loaderNames(loadEquipmentForSystem, 'pf1e'),
+  loaderRecords: records(loadEquipmentForSystem, 'pf1e'),
 });
 TARGETS.push({
   systemId: 'pf1e',
@@ -454,7 +472,7 @@ TARGETS.push({
   category: 'magic-items',
   srdSource: 'Core Rulebook (devonjones/PSRD-Data, pinned manifest — Magic Items scope)',
   srd: () => pf1eEquipmentManifestNames('magic'),
-  loader: () => loaderNames(loadEquipmentForSystem, 'pf1e'),
+  loaderRecords: records(loadEquipmentForSystem, 'pf1e'),
 });
 
 // PF1e classes & feats are CLOSED-BY-NO-SOURCE (close-by-recorded-decision): no
@@ -480,7 +498,7 @@ TARGETS.push({
       'https://raw.githubusercontent.com/Pf2eToolsOrg/Pf2eTools/master/data/bestiary/creatures-b1.json',
       'creature'
     ),
-  loader: () => loaderNames(loadMonstersForSystem, 'pf2e'),
+  loaderRecords: records(loadMonstersForSystem, 'pf2e'),
 });
 
 // --- Pathfinder 2e non-spell/non-monster categories (Core Rulebook scope) ---
@@ -520,7 +538,7 @@ TARGETS.push({
   category: 'classes',
   srdSource: 'Core Rulebook (Pf2eToolsOrg/Pf2eTools class/*, source="CRB")',
   srd: () => fetchPf2eCrbNamesFromDir('class', 'class'),
-  loader: () => loaderNames(loadClassesForSystem, 'pf2e'),
+  loaderRecords: records(loadClassesForSystem, 'pf2e'),
 });
 TARGETS.push({
   systemId: 'pf2e',
@@ -528,7 +546,7 @@ TARGETS.push({
   category: 'ancestries',
   srdSource: 'Core Rulebook (Pf2eToolsOrg/Pf2eTools ancestries/*, source="CRB")',
   srd: () => fetchPf2eCrbNamesFromDir('ancestries', 'ancestry'),
-  loader: () => loaderNames(loadSpeciesForSystem, 'pf2e'),
+  loaderRecords: records(loadSpeciesForSystem, 'pf2e'),
 });
 TARGETS.push({
   systemId: 'pf2e',
@@ -536,7 +554,7 @@ TARGETS.push({
   category: 'backgrounds',
   srdSource: 'Core Rulebook (Pf2eToolsOrg/Pf2eTools backgrounds-crb.json)',
   srd: () => fetchJsonPropNames(`${PF2E_DATA}/backgrounds/backgrounds-crb.json`, 'background'),
-  loader: () => loaderNames(loadPf2eBackgroundsForSystem, 'pf2e'),
+  loaderRecords: records(loadPf2eBackgroundsForSystem, 'pf2e'),
 });
 TARGETS.push({
   systemId: 'pf2e',
@@ -544,7 +562,7 @@ TARGETS.push({
   category: 'feats',
   srdSource: 'Core Rulebook (Pf2eToolsOrg/Pf2eTools feats-crb.json)',
   srd: () => fetchJsonPropNames(`${PF2E_DATA}/feats/feats-crb.json`, 'feat'),
-  loader: () => loaderNames(loadFeatsForSystem, 'pf2e'),
+  loaderRecords: records(loadFeatsForSystem, 'pf2e'),
 });
 TARGETS.push({
   systemId: 'pf2e',
@@ -552,7 +570,7 @@ TARGETS.push({
   category: 'equipment',
   srdSource: 'Core Rulebook (Pf2eToolsOrg/Pf2eTools items-crb.json)',
   srd: () => fetchJsonPropNames(`${PF2E_DATA}/items/items-crb.json`, 'item'),
-  loader: () => loaderNames(loadEquipmentForSystem, 'pf2e'),
+  loaderRecords: records(loadEquipmentForSystem, 'pf2e'),
 });
 // PF2e archetypes are CLOSED-BY-NO-SOURCE (close-by-recorded-decision): archetypes
 // are an Advanced Player's Guide-era system with NO Core Rulebook entries (the
@@ -598,7 +616,7 @@ TARGETS.push({
   category: 'spells',
   srdSource: 'SRD 3.5 (olimot/srd-v3.5-md spell chapters)',
   srd: () => fetchSrd35SpellNames(),
-  loader: () => loaderNames(loadSpellsForSystem, 'dnd-3.5e'),
+  loaderRecords: records(loadSpellsForSystem, 'dnd-3.5e'),
 });
 
 const SRD35_MONSTER_FILES = [
@@ -638,7 +656,7 @@ TARGETS.push({
   category: 'monsters',
   srdSource: 'SRD 3.5 (olimot/srd-v3.5-md monster chapters)',
   srd: () => fetchSrd35MonsterNames(),
-  loader: () => loaderNames(loadMonstersForSystem, 'dnd-3.5e'),
+  loaderRecords: records(loadMonstersForSystem, 'dnd-3.5e'),
 });
 
 // --- D&D 3.5e classes & feats (olimot core-only chapters) ---
@@ -674,7 +692,7 @@ TARGETS.push({
   category: 'classes',
   srdSource: 'SRD 3.5 (olimot/srd-v3.5-md base + prestige class chapters)',
   srd: () => fetchSrd35ClassNames(),
-  loader: () => loaderNames(loadClassesForSystem, 'dnd-3.5e'),
+  loaderRecords: records(loadClassesForSystem, 'dnd-3.5e'),
 });
 
 // Feats are `### Name <small>[Type]</small>` headings under "## Feat
@@ -698,7 +716,7 @@ TARGETS.push({
   category: 'feats',
   srdSource: 'SRD 3.5 (olimot/srd-v3.5-md feats chapter)',
   srd: () => fetchSrd35FeatNames(),
-  loader: () => loaderNames(loadFeatsForSystem, 'dnd-3.5e'),
+  loaderRecords: records(loadFeatsForSystem, 'dnd-3.5e'),
 });
 
 // 3.5e equipment is CLOSED-BY-NO-SOURCE (close-by-recorded-decision): the only
@@ -719,7 +737,7 @@ TARGETS.push({
   category: 'powers',
   srdSource: "Hero's Handbook (frnprt/mm3e-character-creator POWER_EFFECTS)",
   srd: () => fetchJsArrayNames(MM_DATA_JS, 'POWER_EFFECTS'),
-  loader: () => loaderNames(loadSpellsForSystem, 'mam3e'),
+  loaderRecords: records(loadSpellsForSystem, 'mam3e'),
 });
 TARGETS.push({
   systemId: 'mam3e',
@@ -727,7 +745,7 @@ TARGETS.push({
   category: 'advantages',
   srdSource: "Hero's Handbook (frnprt/mm3e-character-creator ADVANTAGES)",
   srd: () => fetchJsArrayNames(MM_DATA_JS, 'ADVANTAGES'),
-  loader: () => loaderNames(loadAdvantagesForSystem, 'mam3e'),
+  loaderRecords: records(loadAdvantagesForSystem, 'mam3e'),
 });
 // M&M equipment: the DHH equipment data already ships and the runtime is wired
 // (loadMam3eEquipment / loadEquipmentForSystem case 'mam3e'); this target is the
@@ -740,7 +758,7 @@ TARGETS.push({
   category: 'equipment',
   srdSource: "Hero's Handbook (frnprt/mm3e-character-creator EQUIPMENT)",
   srd: () => fetchJsArrayNames(MM_DATA_JS, 'EQUIPMENT'),
-  loader: () => loaderNames(loadEquipmentForSystem, 'mam3e'),
+  loaderRecords: records(loadEquipmentForSystem, 'mam3e'),
 });
 // M&M skills: the frnprt SKILLS list vs the shipped skills data set
 // (`src/data/mutants-and-masterminds/3e/skills` exports `skills`). There is no
@@ -753,11 +771,9 @@ TARGETS.push({
   category: 'skills',
   srdSource: "Hero's Handbook (frnprt/mm3e-character-creator SKILLS)",
   srd: () => fetchJsArrayNames(MM_DATA_JS, 'SKILLS'),
-  loader: async () => {
+  loaderRecords: async () => {
     const mod = await import('../data/mutants-and-masterminds/3e/skills');
-    return (mod.skills as Array<{ name?: unknown }>)
-      .filter((s) => typeof s.name === 'string')
-      .map((s) => s.name as string);
+    return mod.skills as LoaderRecord[];
   },
 });
 // M&M conditions are recorded as an ABSENT gap marker (see ABSENT below): the
@@ -773,7 +789,7 @@ TARGETS.push({
   category: 'domain cards',
   srdSource: 'SRD 1.0 (Batres3/daggerheart-srd Domain Card Reference)',
   srd: () => fetchMarkdownLinkNames(DH_DOMAIN_REF, '/abilities/'),
-  loader: () => loaderNames(loadDaggerheartDomainCardsForSystem, 'daggerheart'),
+  loaderRecords: records(loadDaggerheartDomainCardsForSystem, 'daggerheart'),
 });
 TARGETS.push({
   systemId: 'daggerheart',
@@ -781,7 +797,7 @@ TARGETS.push({
   category: 'domains',
   srdSource: 'SRD 1.0 (Batres3/daggerheart-srd Domain Card Reference headings)',
   srd: () => fetchMarkdownHeadings(DH_DOMAIN_REF, 'DOMAIN'),
-  loader: () => loaderNames(loadDaggerheartDomainsForSystem, 'daggerheart'),
+  loaderRecords: records(loadDaggerheartDomainsForSystem, 'daggerheart'),
 });
 
 // Daggerheart non-domain SRD categories. Each reference page lists its entries as
@@ -799,7 +815,7 @@ TARGETS.push({
   category: 'classes',
   srdSource: 'SRD 1.0 (Batres3/daggerheart-srd Classes)',
   srd: () => fetchMarkdownLinkNames(`${DH_CONTENTS}/Classes.md`, '/classes/'),
-  loader: () => loaderNames(loadDaggerheartClassesForSystem, 'daggerheart'),
+  loaderRecords: records(loadDaggerheartClassesForSystem, 'daggerheart'),
 });
 TARGETS.push({
   systemId: 'daggerheart',
@@ -807,7 +823,7 @@ TARGETS.push({
   category: 'ancestries',
   srdSource: 'SRD 1.0 (Batres3/daggerheart-srd Ancestries)',
   srd: () => fetchMarkdownLinkNames(`${DH_CONTENTS}/Ancestries.md`, '/ancestries/'),
-  loader: () => loaderNames(loadDaggerheartAncestriesForSystem, 'daggerheart'),
+  loaderRecords: records(loadDaggerheartAncestriesForSystem, 'daggerheart'),
 });
 TARGETS.push({
   systemId: 'daggerheart',
@@ -815,7 +831,7 @@ TARGETS.push({
   category: 'communities',
   srdSource: 'SRD 1.0 (Batres3/daggerheart-srd Communities)',
   srd: () => fetchMarkdownLinkNames(`${DH_CONTENTS}/Communities.md`, '/communities/'),
-  loader: () => loaderNames(loadDaggerheartCommunitiesForSystem, 'daggerheart'),
+  loaderRecords: records(loadDaggerheartCommunitiesForSystem, 'daggerheart'),
 });
 TARGETS.push({
   systemId: 'daggerheart',
@@ -826,7 +842,7 @@ TARGETS.push({
     ...(await fetchMarkdownLinkNames(`${DH_CONTENTS}/Primary%20Weapon%20Tables.md`, '/weapons/')),
     ...(await fetchMarkdownLinkNames(`${DH_CONTENTS}/Secondary%20Weapon%20Tables.md`, '/weapons/')),
   ],
-  loader: () => loaderNames(loadDaggerheartWeaponsForSystem, 'daggerheart'),
+  loaderRecords: records(loadDaggerheartWeaponsForSystem, 'daggerheart'),
 });
 TARGETS.push({
   systemId: 'daggerheart',
@@ -834,7 +850,7 @@ TARGETS.push({
   category: 'armor',
   srdSource: 'SRD 1.0 (Batres3/daggerheart-srd Armor Tables)',
   srd: () => fetchMarkdownLinkNames(`${DH_CONTENTS}/Armor%20Tables.md`, '/armor/'),
-  loader: () => loaderNames(loadDaggerheartArmorForSystem, 'daggerheart'),
+  loaderRecords: records(loadDaggerheartArmorForSystem, 'daggerheart'),
 });
 // Daggerheart adversaries: the SRD ships one markdown statblock per adversary
 // under adversaries/Tier {1-4}/ with NO single link-listing page (the Fantasy
@@ -859,9 +875,9 @@ TARGETS.push({
     };
     return manifest.entries.map((entry) => entry.name);
   },
-  loader: async () => {
+  loaderRecords: async () => {
     const mod = await import('../data/daggerheart/1.0/adversaries');
-    return mod.daggerheartAdversaries.map((a) => a.name);
+    return mod.daggerheartAdversaries as LoaderRecord[];
   },
 });
 
@@ -882,7 +898,8 @@ async function main(): Promise<void> {
   const failedTargets: string[] = [];
   for (const t of TARGETS) {
     try {
-      const [srdNames, loaderRaw] = await Promise.all([t.srd(), t.loader()]);
+      const [srdNames, loaderItems] = await Promise.all([t.srd(), t.loaderRecords()]);
+      const loaderRaw = recordNames(loaderItems);
       const loaderSet = new Set(loaderRaw.flatMap(loaderNormVariants));
       // Symmetric qualifier word-order variants on the SRD side clear confirmed
       // naming-convention false-positives (loader "Greater Invisibility" vs SRD
@@ -1002,7 +1019,16 @@ async function main(): Promise<void> {
   console.log(`\nWrote ${path.relative(path.resolve(scriptDir, '../..'), out)}`);
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+// Only generate the report when this file is the process entrypoint. Importing
+// it (the over-inclusion manifest writer does, for TARGETS) must not fire the
+// networked run or overwrite docs/generated/srd-coverage.md as a side effect.
+const invokedDirectly =
+  process.argv[1] !== undefined &&
+  path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url));
+
+if (invokedDirectly) {
+  main().catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
+}
