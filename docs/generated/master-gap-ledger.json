@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-25T16:32:53.746Z",
+  "generatedAt": "2026-07-26T14:06:23.916Z",
   "summary": {
     "total": 23,
     "byStatus": {
@@ -150,7 +150,7 @@
         "engineering"
       ],
       "system": "mam3e",
-      "evidence": "scripts/encode-mam-equipment.mjs; scripts/check-mam-equipment-provenance.mjs (in npm run verify); scripts/data/mam3e-equipment-manifest.json; docs/mam3e-equipment-provenance.md (item-by-item classification); docs/GAPS.md §15; docs/generated/srd-coverage.md (M&M equipment 113/113)"
+      "evidence": "scripts/encode-mam-equipment.mjs; scripts/check-mam-equipment-provenance.mjs (in npm run verify); scripts/data/mam3e-equipment-manifest.json; docs/mam3e-equipment-provenance.md (item-by-item classification); docs/GAPS.md §17; docs/generated/srd-coverage.md (M&M equipment 113/113)"
     },
     {
       "id": "p1.mam-provenance-LEGAL-2",
