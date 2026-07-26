@@ -195,6 +195,9 @@ Use when the project itself is gone or you are migrating.
    export PGURI_NEW='postgresql://postgres:[PW]@db.<PROJECT_REF>.supabase.co:5432/postgres'
    for f in supabase/migrations/00*.sql; do psql "$PGURI_NEW" -v ON_ERROR_STOP=1 -f "$f"; done
    ```
+   This loop is correct **only against an empty target**: `001_initial.sql` is a
+   fresh-project bootstrap with no idempotency guards, so it aborts if the tables
+   already exist. If the target is not empty, see §5.4.
 3. **Restore auth users** (only if preserving existing accounts):
    ```bash
    psql "$PGURI_NEW" -v ON_ERROR_STOP=1 -f rpg-auth-YYYY-MM-DD.sql
@@ -214,7 +217,7 @@ Use when the project itself is gone or you are migrating.
    - **CSP**: `netlify.toml` `connect-src` lists `https://*.supabase.co` /
      `wss://*.supabase.co` wildcards, so a same-region `*.supabase.co` host needs no
      CSP change. If the project host is on a **different** domain, update
-     `connect-src` (and per RFC 001 §Netlify, keep RFC 001 updated).
+     `connect-src` (and per RFC 001 § "Netlify / runtime implications", keep RFC 001 updated).
    - Redeploy Netlify so Vite re-inlines the new values.
 6. Go to **§6 Verify**.
 
@@ -227,9 +230,28 @@ If data is fine but schema drifted (e.g. a policy or index missing, or the
    ```bash
    pg_dump "$PGURI" --schema-only --schema=public | diff - rpg-supabase-schema-KNOWNGOOD.sql
    ```
-2. Re-apply the relevant migration(s). All migrations are written to **run
-   idempotently** (`ADD COLUMN IF NOT EXISTS`, `DROP TRIGGER IF EXISTS`, etc.), so
-   re-running `001`–`004` in order is safe and converges to the intended schema.
+2. Re-apply **only** the relevant migration(s).
+
+   > **Do not re-run `001_initial.sql` against a database that already has these
+   > tables.** Unlike `002`–`004`, it carries **no** idempotency guards: its
+   > `CREATE TABLE` / `CREATE POLICY` / `CREATE INDEX` and its
+   > `ALTER PUBLICATION supabase_realtime ADD TABLE documents` all fail on a second
+   > run, and under `-v ON_ERROR_STOP=1` the script aborts at the first one. It is
+   > a fresh-project bootstrap only (its own header says "Run against a fresh
+   > Supabase project"). `002`, `003` and `004` each state "Runs idempotently" in
+   > their header comment and are safe to re-apply.
+
+   So:
+   - Missing `deleted_at`, or the `update_updated_at` trigger crept back →
+     re-apply `003_soft_delete.sql`.
+   - Missing `quests` / `session_log` → re-apply `004_campaign_story.sql`.
+   - `campaigns` missing from the realtime publication → re-apply
+     `002_campaigns_realtime.sql`.
+   - Missing table, policy, or index from `001` → **do not** re-run the file.
+     Apply just the statement you need, copied out of `001_initial.sql` (e.g.
+     `CREATE POLICY "users_own_documents" ON documents FOR ALL USING (auth.uid() =
+     user_id) WITH CHECK (auth.uid() = user_id);`). If the *tables* themselves are
+     gone, this is not schema drift — go to §5.3 and rebuild into a fresh project.
 3. Go to **§6 Verify**.
 
 ---
@@ -286,13 +308,13 @@ select id, name, system_id, jsonb_typeof(system_data) from documents limit 3;
 1. Set Netlify env to the restored project (if changed) and deploy, or point a local
    `.env` at it.
 2. Sign in as a known test account. Confirm the account's documents/campaigns
-   **pull down and appear** (sync merge on sign-in, RFC 001 §Migration).
+   **pull down and appear** (sync merge on sign-in, RFC 001 § "Migration from browser-local").
 3. Edit a document, confirm it pushes (network tab shows a successful upsert to the
    Supabase REST endpoint), reload, confirm persistence.
 4. Sign in as a *different* account and confirm you **cannot** see the first
    account's rows (RLS boundary intact).
 5. Confirm realtime: with two tabs on the same account, an edit in one appears in the
-   other (best-effort per RFC 001 §Realtime — a manual reload also reconciles).
+   other (best-effort per RFC 001 § "Realtime" — a manual reload also reconciles).
 
 Restore is "verified" only after 6.1–6.6 all pass.
 
@@ -326,7 +348,7 @@ Restore is "verified" only after 6.1–6.6 all pass.
   **rotate** them (dashboard → Project Settings → Database / API). The client only
   uses the anon key; rotating anon requires updating `VITE_SUPABASE_ANON_KEY` in
   Netlify + redeploy.
-- Update RFC 001 if the schema, project domain, or CSP changed (RFC 001 §Maintenance
+- Update RFC 001 if the schema, project domain, or CSP changed (RFC 001 § "Maintenance"
   requires it).
 - Record the incident: what was restored, target timestamp, verification results.
 

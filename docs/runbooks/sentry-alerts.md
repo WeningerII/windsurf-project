@@ -7,10 +7,16 @@ to review or merge — the rules go live the moment a DSN and Sentry project exi
 
 - Stack: Vite + React (browser SDK `@sentry/browser@^10`), Netlify hosting,
   Supabase backend, optional AI gateway as a Netlify Function.
-- Status of signal wiring is called out per rule under **Signal source**. Some
-  rules are **dormant** until a one-line reporting call or the AI surface is
-  enabled — those prerequisites are flagged explicitly. Do not assume a rule is
-  firing just because it is defined here.
+- **These rules shipped before the code that feeds them.** Rules (b) and (c) were
+  defined against paths that swallowed the very failures they describe; the
+  reporting seams were wired on **2026-07-25** (`src/ai/gatewayClient.ts` and
+  `src/hooks/useEntitySync.ts`, pinned by
+  `src/__tests__/observability/failureReporting.test.tsx`). Every rule below now
+  has a real signal source, with two standing conditions, both flagged in place:
+  rule (b) only carries traffic when `VITE_AI_ENABLED = "true"` (default OFF),
+  and rule (a′) needs release-health/session tracking enabled in the SDK.
+- Status of signal wiring is called out per rule under **Signal source**. Do not
+  assume a rule is firing just because it is defined here — check that line.
 
 ---
 
@@ -81,7 +87,7 @@ Consequences that shape every rule below:
 - The DSN is the *only* Sentry env var. There is no server-side Sentry key today.
 - CSP already permits Sentry ingest: `netlify.toml` `connect-src` includes
   `https://*.sentry.io https://*.ingest.sentry.io` (Content-Security-Policy header,
-  `netlify.toml:~99`). If the DSN's ingest host differs, update `connect-src`.
+  `netlify.toml` line 100). If the DSN's ingest host differs, update `connect-src`.
 
 ### Secret-exposure guard (already enforced — no action needed)
 
@@ -90,7 +96,10 @@ build** if any server secret is smuggled into the client via a `VITE_`-prefixed
 name (rule `client-inlined-vite-secret` matches
 `VITE_*(SECRET|PRIVATE|SERVICE_ROLE|PASSWORD|TOKEN|API_KEY)*`), or if a real
 credential is committed. The public names `VITE_SENTRY_DSN`, `VITE_SUPABASE_URL`,
-`VITE_SUPABASE_ANON_KEY` are explicitly allow-listed (`check-secret-exposure.mjs:83-85`).
+`VITE_SUPABASE_ANON_KEY` cannot match it: the pattern is deliberately scoped
+around them, and that scoping is documented in the rule comment
+(`scripts/check-secret-exposure.mjs:80-87`). There is no separate allow-list to
+edit — the safety comes from the pattern's shape.
 **Therefore: never rename the DSN or add a Sentry auth token under a `VITE_` name** —
 CI will block it, and correctly so (Vite inlines every `import.meta.env.VITE_*` into
 the shipped JS).
@@ -100,7 +109,7 @@ the shipped JS).
 The AI gateway is **off unless `VITE_AI_ENABLED === "true"`**
 (`src/config/featureFlags.ts:33`, `isFeatureEnabled('ai')`). It ships default-off.
 The provider key (`GOOGLE_GENERATIVE_AI_API_KEY`) is **server-side only** in the
-Netlify Function and is never a `VITE_` var (`.env.example:11-13`). Rule (b) below is
+Netlify Function and is never a `VITE_` var (`.env.example:16-19`). Rule (b) below is
 therefore **dormant on a default deployment**.
 
 ---
@@ -187,7 +196,7 @@ signal_source: >
   outcome: a transport throw ('transport-error'), an unreadable body
   ('unreadable-response'), a response that is not an AiResponse
   ('malformed-response'), and any server-returned failure code not on the
-  by-design list. Wired + pinned by src/__tests__/observability/failureReporting.test.ts.
+  by-design list. Wired + pinned by src/__tests__/observability/failureReporting.test.tsx.
   Sentry receives these as tags.category:network / tags.severity:high with the
   detail in `extra` (surface/task/code/traceId) — filter on `extra.surface:ai` if
   your Sentry plan indexes extras, else on the message above.
@@ -230,7 +239,7 @@ signal_source: >
   remote delete during reconciliation), or 'sync' (the full fetch/merge/push
   cycle). Reporting is ADDITIVE: each site still sets syncState:'error' and still
   queues the snapshot, so local-first behaviour is unchanged. Pinned by
-  src/__tests__/observability/failureReporting.test.ts. The payload is
+  src/__tests__/observability/failureReporting.test.tsx. The payload is
   content-free by construction — no entities, names, or notes — so this rule
   cannot leak user content into Sentry.
 prerequisites:
@@ -275,12 +284,15 @@ Steps that need console/credential access are marked **[NEEDS ACCESS]**.
 2. **[NEEDS ACCESS]** Set `VITE_SENTRY_DSN` in Netlify production env vars; redeploy
    so Vite inlines it. Confirm `npm run verify` still passes (the secret-exposure
    guard tolerates the public DSN name).
-3. **[NEEDS ACCESS]** In Sentry, create alert rules (a), (a′), (c), (d) as
+3. **[NEEDS ACCESS]** In Sentry, create alert rules (a), (c) and (d) as
    specified — these are **live immediately** on the existing signal.
-4. Create rule (b) too. Its seam is wired, but it only carries traffic once
-   `VITE_AI_ENABLED = "true"`; on a default (AI-off) deployment it will simply
-   never fire. Leave it enabled rather than muted — there is nothing left to
-   wire.
+4. Create rules (a′) and (b) too; both are wired but conditional.
+   - (a′) reads the `sessions` dataset, which stays empty until release-health /
+     session tracking is enabled (step 6). Until then it cannot fire — treat (a)
+     as the client-health signal, and do not read (a′)'s silence as health.
+   - (b) only carries traffic once `VITE_AI_ENABLED = "true"`; on a default
+     (AI-off) deployment it will simply never fire. Leave it enabled rather than
+     muted — there is nothing left to wire.
 5. **[NEEDS ACCESS]** Replace `<CHAN_OPS>` / `<CHAN_ONCALL>` / `<EMAIL_OPS>` with the
    real Sentry alert integrations (Slack app, PagerDuty service, email list).
 6. Optional but recommended: enable release health / session tracking (populates
@@ -320,5 +332,7 @@ Steps that need console/credential access are marked **[NEEDS ACCESS]**.
   cannot distinguish them without extra wiring.
 
 The last two are one-line `src/main.tsx` changes, deliberately **not** taken
-here: `main.tsx` is in the eager first-paint chunk, which is at 84.8 / 85.0 KiB
-gzip. See `docs/GAPS.md` §14.
+here: `main.tsx` rides the eager first-paint chunk, which sits close enough to its
+gzip ceiling that even a small addition can redden the gate. Run
+`npm run check:bundle-size` for the current measurement and headroom; the ceilings
+themselves are in `scripts/check-bundle-size.mjs`. See `docs/GAPS.md` §14.

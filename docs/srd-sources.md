@@ -1,8 +1,17 @@
-# Open-Content SRD Sources (verified 2026-05-31)
+# Open-Content SRD Sources
 
 Authoritative, open-content sources for each registered system's SRD, with
 machine-readable forms usable to build **independent** content denominators
-(see `docs/GAPS.md` §1 and the `npm run srd:coverage` tool). Verified via the
+(see `docs/GAPS.md` §1 and the `npm run srd:coverage` tool).
+
+**Upstream URLs and their entry counts were verified 2026-05-31.** The repo-side
+notes interleaved below (which encoder consumes a source, which manifest pins it,
+which coverage target it feeds) track the code and are updated as that code
+changes — so they can be newer than the upstream verification date. Where a count
+below describes what *ships*, `docs/generated/roadmap-metrics.md` is the
+authority, not this file.
+
+Upstream verification used the
 deep-research workflow: GitHub `raw.githubusercontent.com` files were fetched and
 confirmed (this environment's Node runtime fetches them fully, without the
 truncation the `WebFetch` tool imposes); official publisher sites (WotC, Paizo,
