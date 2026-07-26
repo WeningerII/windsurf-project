@@ -298,6 +298,10 @@ export const HISTORICAL_BANNER_RULES = [
     path: 'docs/history/pf1e-equipment-sourcing.md',
     description: 'executed PF1e sourcing proposal banner',
   },
+  {
+    path: 'docs/history/REMEDIATION_PLAN.md',
+    description: 'completed remediation plan banner',
+  },
 ] as const;
 
 export const RUNTIME_COPY_RULES: RuntimeCopyRule[] = [

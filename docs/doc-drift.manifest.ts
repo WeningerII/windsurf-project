@@ -86,10 +86,15 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: ['path_ref_rule'],
   },
   {
-    path: 'docs/REMEDIATION_PLAN.md',
-    kind: 'plan',
-    owner: 'active-remediation-plan',
-    rules: [],
+    // Retired 2026-07-26. All seven phases complete, and it survived only by
+    // being hand-mirrored into MASTER_PLAN.md — a mirror that demonstrably
+    // dropped four shipped items. Kept for its forensic record (§0-§1 root
+    // cause, Appendix A dead-code inventory); the live toolchain remainder now
+    // lives in the plan's "Technical Remediation Closeout".
+    path: 'docs/history/REMEDIATION_PLAN.md',
+    kind: 'historical',
+    owner: 'historical-remediation-plan',
+    rules: ['historical_banner_rule'],
   },
   {
     path: 'docs/GAPS.md',

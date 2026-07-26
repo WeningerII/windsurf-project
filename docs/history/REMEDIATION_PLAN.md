@@ -2,11 +2,18 @@
 
 **Status:** All seven phases complete · **Owner:** engineering · **Created:** 2026-05-30
 
-> ## ⚠️ Recommendation: retire this document to `docs/history/`
+> **Historical remediation record — retired to `docs/history/` on 2026-07-26.**
+> All seven phases are complete. This document is kept for its forensic value —
+> §0–§1 record what was actually wrong on 2026-05-30 and how it was proven, and
+> Appendix A holds the dead-code inventory — and is never updated to track current
+> state. `docs/MASTER_PLAN.md` is the planning authority; its "Technical
+> Remediation Closeout" section carries the live toolchain remainder.
 >
-> **This is a recommendation, not a decision.** Retiring it requires a
-> `docs/doc-drift.manifest.ts` entry change and a historical banner, both owned by
-> the maintainer. Nothing here has been deleted.
+> Current repo truth note (July 26, 2026): the reasoning for retiring it is below
+> and is preserved as written, because it is the evidence for the decision. The
+> four drift examples it cites were verified against code on that date.
+
+> ## Why this was retired
 >
 > **Why.** `docs/README.md` names `docs/MASTER_PLAN.md` the sole planning
 > authority, and this document is a second plan. It survives only by being
