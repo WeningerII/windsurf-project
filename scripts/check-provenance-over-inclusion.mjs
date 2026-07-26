@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * OVER-INCLUSION provenance gate (docs/GAPS.md §16).
+ * OVER-INCLUSION provenance gate (docs/GAPS.md §18).
  *
  * `npm run srd:coverage` already computes the reverse diff — shipped entries
  * that do NOT appear in the open-content source they cite — but it is
@@ -195,7 +195,7 @@ async function run({ record = false } = {}) {
         failures.push(
           `UNCLASSIFIED ${key}: "${item.name}" (tagged ${JSON.stringify(tagged)}) is shipped but ` +
             `absent from the pinned open-content source, and has no classification. Classify it in ` +
-            `scripts/data/srd-overinclusion-classification.json (see docs/GAPS.md §16 for the vocabulary).`
+            `scripts/data/srd-overinclusion-classification.json (see docs/GAPS.md §18 for the vocabulary).`
         );
         continue;
       }
@@ -267,7 +267,7 @@ async function run({ record = false } = {}) {
   for (const [c, n] of Object.entries(tally).sort(([, a], [, b]) => b - a)) {
     console.log(`  ${String(n).padStart(4)}  ${c}`);
   }
-  console.log(`  licensing-class total: ${licensing || 'none'} (see docs/GAPS.md §16)`);
+  console.log(`  licensing-class total: ${licensing || 'none'} (see docs/GAPS.md §18)`);
 
   if (failures.length > 0) {
     console.error('\nProvenance over-inclusion check FAILED:\n');
@@ -275,7 +275,7 @@ async function run({ record = false } = {}) {
     console.error(
       '\nEvery shipped entry absent from the source it cites must be classified with evidence. ' +
         'Do NOT resolve a finding by editing the source tag, and do NOT delete shipped content — ' +
-        'both are the repository owner’s decision (docs/GAPS.md §11, §16).'
+        'both are the repository owner’s decision (docs/GAPS.md §11, §18).'
     );
     process.exit(1);
   }

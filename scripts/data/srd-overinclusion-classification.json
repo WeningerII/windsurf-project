@@ -268,8 +268,8 @@
     "dnd-5e-2014/equipment|cloakofetherealness": {
       "name": "Cloak of Etherealness",
       "taggedSource": "SRD 5.1",
-      "class": "genuine-non-open-content",
-      "evidence": "Absent from BOTH open-content 5e sources checked: the 362-entry 5e-bits/5e-database SRD 5.1 magic-item list AND the 264-entry SRD 5.2.1 magic-items.md (downfallx/dnd-5e-srd-markdown). It is a Dungeon Master’s Guide wondrous item. Shipped tagged \"SRD 5.1\"."
+      "class": "wrong-edition-attribution",
+      "evidence": "CORRECTED 2026-07-26. Prior record asserted DMG-only origin after checking only the two 5e sources. \"Cloak of Etherealness\" is present in the pinned pf1e/magic-items denominator and is a D&D 3.5 SRD wondrous item. Absence from SRD 5.1/5.2 is real, so the TAG is false, but an open-content counterpart exists."
     },
     "dnd-5e-2014/equipment|cloakofthearchmagi": {
       "name": "Cloak of the Archmagi",
@@ -388,8 +388,8 @@
     "dnd-5e-2014/equipment|ringofclumsinesscursed": {
       "name": "Ring of Clumsiness (Cursed)",
       "taggedSource": "SRD 5.1",
-      "class": "genuine-non-open-content",
-      "evidence": "Absent from BOTH open-content 5e sources checked: the 362-entry 5e-bits/5e-database SRD 5.1 magic-item list AND the 264-entry SRD 5.2.1 magic-items.md (downfallx/dnd-5e-srd-markdown). It is no known WotC counterpart — apparently invented. Shipped tagged \"SRD 5.1\"."
+      "class": "wrong-edition-attribution",
+      "evidence": "CORRECTED 2026-07-26 by adversarial re-verification. The prior record said \"no known WotC counterpart - apparently invented\"; that is false. \"Ring of Clumsiness\" is present in THIS AUDIT'S OWN pinned denominator scripts/data/srd-overinclusion-manifest.json .denominators[\"pf1e/magic-items\"].names, and is a D&D 3.5 SRD cursed item. Absence from SRD 5.1/5.2 is real, but the class requires absence from ANY cited open-content source, so this is a false citation of open content, not unlicensed content."
     },
     "dnd-5e-2014/equipment|robesofthearchmagi": {
       "name": "Robes of the Archmagi",
@@ -550,8 +550,8 @@
     "dnd-5e-2024/equipment|cloakofetherealness": {
       "name": "Cloak of Etherealness",
       "taggedSource": "SRD 5.2",
-      "class": "genuine-non-open-content",
-      "evidence": "Absent from BOTH the 264-entry SRD 5.2.1 magic-items.md and the 362-entry SRD 5.1 magic-item list. It is a Dungeon Master’s Guide wondrous item. Shipped tagged \"SRD 5.2\"; the identical entry also ships in the 2014 catalog tagged \"SRD 5.1\"."
+      "class": "wrong-edition-attribution",
+      "evidence": "CORRECTED 2026-07-26. Same as the 2014 twin; present in the pinned pf1e/magic-items denominator, so the licensing class does not hold."
     },
     "dnd-5e-2024/equipment|cloakofthearchmagi": {
       "name": "Cloak of the Archmagi",
@@ -664,8 +664,8 @@
     "dnd-5e-2024/equipment|ringofclumsinesscursed": {
       "name": "Ring of Clumsiness (Cursed)",
       "taggedSource": "SRD 5.2",
-      "class": "genuine-non-open-content",
-      "evidence": "Absent from BOTH the 264-entry SRD 5.2.1 magic-items.md and the 362-entry SRD 5.1 magic-item list. It is no known WotC counterpart — apparently invented. Shipped tagged \"SRD 5.2\"; the identical entry also ships in the 2014 catalog tagged \"SRD 5.1\"."
+      "class": "wrong-edition-attribution",
+      "evidence": "CORRECTED 2026-07-26. Same finding as the 2014 twin: \"Ring of Clumsiness\" appears verbatim in the pinned pf1e/magic-items denominator, so \"apparently invented\" was wrong. Open content of the d20/3.5 lineage, cited to SRD 5.2 which does not contain it."
     },
     "dnd-5e-2024/equipment|robesofthearchmagi": {
       "name": "Robes of the Archmagi",
@@ -796,8 +796,8 @@
     "dnd-5e-2024/monsters|pixie": {
       "name": "Pixie",
       "taggedSource": "SRD 5.2",
-      "class": "genuine-non-open-content",
-      "evidence": "absent from SRD 5.1 and SRD 5.2.1 — both carry only \"Sprite\". Pixie is Monster Manual content. Shipped tagged \"SRD 5.2\". GAPS §15.4 records the same three as having no 5.2.1 stat block under any name."
+      "class": "wrong-edition-attribution",
+      "evidence": "CORRECTED 2026-07-26. \"Pixie\" is present in the pinned pf1e/monsters AND pf2e/monsters denominators and is a D&D 3.5 SRD stat block, so \"no counterpart in any cited open-content source\" is false. Separately, the shipped block (STR 3/DEX 18/INT 14/CHA 11, AC 15, CR 1/4) matches the SRD Sprite array rather than the 5e Monster Manual Pixie, so the prior \"Monster Manual content\" claim is also unsupported."
     },
     "dnd-5e-2024/monsters|thug": {
       "name": "Thug",
@@ -819,621 +819,477 @@
     },
     "mam3e/equipment|armoredspeedboat": {
       "name": "Armored Speedboat",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|armoredtruck": {
       "name": "Armored Truck",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|attackhelicopter": {
       "name": "Attack Helicopter",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|axe": {
       "name": "Axe",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|backpack": {
       "name": "Backpack",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|bicycle": {
       "name": "Bicycle",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|bombsuit": {
       "name": "Bomb Suit",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|bugdetector": {
       "name": "Bug Detector",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|bus": {
       "name": "Bus",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|castle": {
       "name": "Castle",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|climbinggear": {
       "name": "Climbing Gear",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|combathelmet": {
       "name": "Combat Helmet",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|combatstaff": {
       "name": "Combat Staff",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|commercialjet": {
       "name": "Commercial Jet",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|compactcar": {
       "name": "Compact Car",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "generic-entry-instantiation",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. SRD ships the generic civilian car at cost 10; \"Compact Car\" is a smaller instance at cost 9. The generic row \"Car (Sedan)\" ships alongside it, so this is an instantiation, not absent content."
     },
     "mam3e/equipment|compoundbow": {
       "name": "Compound Bow",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "generic-entry-instantiation",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. SRD \"Bow\" is the generic ranged weapon; \"Compound Bow\" is a modern instance. The generic row \"Bow\" ships alongside it, so this is an instantiation, not absent content."
     },
     "mam3e/equipment|dimensionalanchor": {
       "name": "Dimensional Anchor",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
-    },
-    "mam3e/equipment|divinggear": {
-      "name": "Diving Gear",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|ducttape": {
       "name": "Duct Tape",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|electronictoolkit": {
       "name": "Electronic Toolkit",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "duplicate-alias",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. The correctly-named SRD row \"Toolkit (Basic)\" ALSO ships (src/data/mutants-and-masterminds/3e/equipment/srd-*.ts, which is byte-equal in name-set to the 113-name pinned denominator): cost 1 both; both grant the Technology-check bonus. A duplicated catalog row, not missing open content."
     },
     "mam3e/equipment|emergencybeacon": {
       "name": "Emergency Beacon",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|energyshieldbracelet": {
       "name": "Energy Shield Bracelet",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|evidencecollectionkit": {
       "name": "Evidence Collection Kit",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
-    },
-    "mam3e/equipment|fighterjet": {
-      "name": "Fighter Jet",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "duplicate-alias",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. The correctly-named SRD row \"Toolkit (Forensic)\" ALSO ships (src/data/mutants-and-masterminds/3e/equipment/srd-*.ts, which is byte-equal in name-set to the 113-name pinned denominator): both +2 Investigation for forensics; cost 1 vs 2. A duplicated catalog row, not missing open content."
     },
     "mam3e/equipment|firestarter": {
       "name": "Fire Starter",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
-    },
-    "mam3e/equipment|flashbanggrenade": {
-      "name": "Flash-Bang Grenade",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|foodwater": {
       "name": "Food & Water",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|forcefieldbelt": {
       "name": "Force Field Belt",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
-    },
-    "mam3e/equipment|forensickit": {
-      "name": "Forensic Kit",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
-    },
-    "mam3e/equipment|forensicskit": {
-      "name": "Forensics Kit",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
-    },
-    "mam3e/equipment|grapplinggun": {
-      "name": "Grappling Gun",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|gravityboots": {
       "name": "Gravity Boots",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|greatsword": {
       "name": "Great Sword",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
-    },
-    "mam3e/equipment|grenade": {
-      "name": "Grenade",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "generic-entry-instantiation",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. SRD \"Sword\" is the generic blade (Damage 3, cost 4); \"Great Sword\" is a named instance at the same cost. The generic row \"Sword\" ships alongside it, so this is an instantiation, not absent content."
     },
     "mam3e/equipment|heavybodyarmor": {
       "name": "Heavy Body Armor",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|heavypowerarmor": {
       "name": "Heavy Power Armor",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|helmet": {
       "name": "Helmet",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|holographicprojector": {
       "name": "Holographic Projector",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
-    },
-    "mam3e/equipment|house": {
-      "name": "House",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|hovercraft": {
       "name": "Hovercraft",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|islandfortress": {
       "name": "Island Fortress",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|jetpack": {
       "name": "Jet Pack",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|largeapartment": {
       "name": "Large Apartment",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
-    },
-    "mam3e/equipment|laserpistol": {
-      "name": "Laser Pistol",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
-    },
-    "mam3e/equipment|laserrifle": {
-      "name": "Laser Rifle",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|leatherjacket": {
       "name": "Leather Jacket",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "duplicate-alias",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. The correctly-named SRD row \"Leather Armor\" ALSO ships (src/data/mutants-and-masterminds/3e/equipment/srd-*.ts, which is byte-equal in name-set to the 113-name pinned denominator): cost 1 both; \"minimal protection\" vs \"Protection 1\". A duplicated catalog row, not missing open content."
     },
     "mam3e/equipment|lightaircraft": {
       "name": "Light Aircraft",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|lightbodyarmor": {
       "name": "Light Body Armor",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|lightpowerarmor": {
       "name": "Light Power Armor",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|machinegun": {
       "name": "Machine Gun",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|magicwand": {
       "name": "Magic Wand",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
-    },
-    "mam3e/equipment|mansion": {
-      "name": "Mansion",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
-    },
-    "mam3e/equipment|medkit": {
-      "name": "Medkit",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|mobilebase": {
       "name": "Mobile Base",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|motorcyclehelmet": {
       "name": "Motorcycle Helmet",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|mysticamulet": {
       "name": "Mystic Amulet",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|net": {
       "name": "Net",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|officebuilding": {
       "name": "Office Building",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "generic-entry-instantiation",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. HQ rows are generic size tiers; \"Office Building\" is a themed instance of the Huge tier. The generic row \"HQ: Size – Huge (skyscraper)\" ships alongside it, so this is an instantiation, not absent content."
     },
     "mam3e/equipment|pickuptruck": {
       "name": "Pickup Truck",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
-    },
-    "mam3e/equipment|platearmor": {
-      "name": "Plate Armor",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "generic-entry-instantiation",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. SRD ships the generic light truck at cost 12; \"Pickup Truck\" is an instance at cost 10. The generic row \"SUV/Truck\" ships alongside it, so this is an instantiation, not absent content."
     },
     "mam3e/equipment|pocketdimension": {
       "name": "Pocket Dimension",
-      "taggedSource": "Hero's Handbook",
+      "taggedSource": "Original Content (not SRD)",
       "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. Nearest SRD row is a generic HQ size tier at cost 3; the shipped extradimensional HQ costs 20. The 6.7x cost gap and the extradimensional concept make the match too weak to assert either way. Kept visible rather than asserted either way."
     },
     "mam3e/equipment|portablecomputer": {
       "name": "Portable Computer",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "duplicate-alias",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. The correctly-named SRD row \"Computer\" ALSO ships (src/data/mutants-and-masterminds/3e/equipment/srd-*.ts, which is byte-equal in name-set to the 113-name pinned denominator): cost 1 both; \"laptop or tablet\" vs \"standard computer with peripherals\". A duplicated catalog row, not missing open content."
     },
     "mam3e/equipment|portablemedkit": {
       "name": "Portable Medkit",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "duplicate-alias",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. The correctly-named SRD row \"First Aid Kit\" ALSO ships (src/data/mutants-and-masterminds/3e/equipment/srd-*.ts, which is byte-equal in name-set to the 113-name pinned denominator): both +2 Treatment; cost 2 vs 1. A duplicated catalog row, not missing open content."
     },
     "mam3e/equipment|poweredarmor": {
       "name": "Powered Armor",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|powerring": {
       "name": "Power Ring",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|radio": {
       "name": "Radio",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "duplicate-alias",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. The correctly-named SRD row \"Commlink\" ALSO ships (src/data/mutants-and-masterminds/3e/equipment/srd-*.ts, which is byte-equal in name-set to the 113-name pinned denominator): cost 1 both; \"handheld radio transceiver\" vs \"Radio Communication 1\". A duplicated catalog row, not missing open content."
     },
     "mam3e/equipment|riotarmor": {
       "name": "Riot Armor",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|riotshield": {
       "name": "Riot Shield",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|rope": {
       "name": "Rope",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|secretlair": {
       "name": "Secret Lair",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
-    },
-    "mam3e/equipment|sedan": {
-      "name": "Sedan",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|semitruck": {
       "name": "Semi Truck",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
-    },
-    "mam3e/equipment|shield": {
-      "name": "Shield",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
-    },
-    "mam3e/equipment|skyscraper": {
-      "name": "Skyscraper",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|smallapartment": {
       "name": "Small Apartment",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
-    },
-    "mam3e/equipment|smokegrenade": {
-      "name": "Smoke Grenade",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|spaceshuttle": {
       "name": "Space Shuttle",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|spacestation": {
       "name": "Space Station",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|spyglasses": {
       "name": "Spy Glasses",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|staff": {
       "name": "Staff",
-      "taggedSource": "Hero's Handbook",
+      "taggedSource": "Original Content (not SRD)",
       "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. SRD has no Staff. Club (bludgeoning, Damage 2, cost 2) is the nearest row but a quarterstaff is a distinct weapon and the cost differs (1 vs 2); neither \"same entry\" nor \"no counterpart\" is established. Kept visible rather than asserted either way."
     },
     "mam3e/equipment|stealthjet": {
       "name": "Stealth Jet",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|stunbaton": {
       "name": "Stun Baton",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|submarine": {
       "name": "Submarine",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|survivalkit": {
       "name": "Survival Kit",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
-    },
-    "mam3e/equipment|suv": {
-      "name": "SUV",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|tacticalbodyarmor": {
       "name": "Tactical Body Armor",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|tacticalvest": {
       "name": "Tactical Vest",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|tank": {
       "name": "Tank",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
-    },
-    "mam3e/equipment|teargas": {
-      "name": "Tear Gas",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
-    },
-    "mam3e/equipment|teargasgrenade": {
-      "name": "Tear Gas Grenade",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|telepathicheadband": {
       "name": "Telepathic Headband",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|throwingknife": {
       "name": "Throwing Knife",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
-    },
-    "mam3e/equipment|throwingstars": {
-      "name": "Throwing Stars",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "generic-entry-instantiation",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. SRD \"Knife\" is the generic blade; \"Throwing Knife\" is a balanced-for-throwing instance. The generic row \"Knife\" ships alongside it, so this is an instantiation, not absent content."
     },
     "mam3e/equipment|trackingdevice": {
       "name": "Tracking Device",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "duplicate-alias",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. The correctly-named SRD row \"Mini-Tracer\" ALSO ships (src/data/mutants-and-masterminds/3e/equipment/srd-*.ts, which is byte-equal in name-set to the 113-name pinned denominator): both a small radio/GPS tracker; cost 2 vs 1. A duplicated catalog row, not missing open content."
     },
     "mam3e/equipment|unarmed": {
       "name": "Unarmed",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
-    },
-    "mam3e/equipment|undercovervest": {
-      "name": "Undercover Vest",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|undergroundbunker": {
       "name": "Underground Bunker",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|underwaterbase": {
       "name": "Underwater Base",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|utilitybelt": {
       "name": "Utility Belt",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
-    },
-    "mam3e/equipment|warehouse": {
-      "name": "Warehouse",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|webshooters": {
       "name": "Web Shooters",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/equipment|yacht": {
       "name": "Yacht",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
-    },
-    "mam3e/equipment|zipties": {
-      "name": "Zip Ties",
-      "taggedSource": "Hero's Handbook",
-      "class": "undetermined",
-      "evidence": "DEFERRED, NOT AUDITED: the M&M 3e equipment population is owned by a separate concurrent lane that is remediating src/data/mutants-and-masterminds/3e/equipment/** in this same phase. Classifying it here would collide with that work and would be superseded within days. Recorded so the gate still refuses to let the population grow silently; the owning lane must replace these records (or delete them, which this gate will demand as STALE once the entries change)."
+      "taggedSource": "Original Content (not SRD)",
+      "class": "genuine-non-open-content",
+      "evidence": "Reclassified 2026-07-26 completing the deliberate hand-off recorded in the audit itself (the M&M equipment lane has since landed: scripts/encode-mam-equipment.mjs, check:mam-equipment, docs/mam3e-equipment-provenance.md). Source tag moved \"Hero's Handbook\" -> \"Original Content (not SRD)\" by that lane, which is why the record drifted. No counterpart in the 113-name pinned Hero SRD denominator under any name or variant, and the entry is segregated in equipment/original-not-srd.ts, which the M&M lane created precisely for content it could not source. Honestly labelled now, but retained in the licensing class because absence of an open-content counterpart is the finding; the trade-dress question on names like Power Ring / Web Shooters / Mystic Amulet remains an owner decision (GAPS §17.2)."
     },
     "mam3e/powers|alternateform": {
       "name": "Alternate Form",
@@ -5824,8 +5680,8 @@
     "pf2e/equipment|horn": {
       "name": "Horn",
       "taggedSource": "Core Rulebook",
-      "class": "genuine-non-open-content",
-      "evidence": "No plain 'Horn' in items-crb.json (only Horn of Blasting / Horn of Fog, magic items), none in items/baseitems.json, and none in the PF1e PSRD corpus - the closest is PF1e APG 'Signal Horn' (1 gp, 2 lb), which does not match the shipped 3 sp; the D&D 5e SRD has no horn either. Most likely the non-SRD D&D 5e PHB musical instrument 'Horn' (3 gp) with the catalog's 10x price downshift, but I could not confirm it against any open source."
+      "class": "wrong-edition-attribution",
+      "evidence": "CORRECTED 2026-07-26. Prior evidence claimed \"the D&D 5e SRD has no horn either\" - contradicted by this audit's own manifest, where \"Horn\" appears in BOTH .denominators[\"dnd-5e-2014/equipment\"] and [\"dnd-5e-2024/equipment\"]. Open content under an identical name in a cited source; the exposure is the \"Core Rulebook\" tag, not the licence."
     },
     "pf2e/equipment|horsechopper": {
       "name": "Horsechopper",
@@ -6166,8 +6022,8 @@
     "pf2e/equipment|sledgehammer": {
       "name": "Sledgehammer",
       "taggedSource": "Core Rulebook",
-      "class": "genuine-non-open-content",
-      "evidence": "No sledgehammer in items-crb.json, items/baseitems.json, any Pf2eTools items file, or the D&D 5e SRD. The nearest open-content entry is the 3.5/PF1e SRD 'Sledge' (PSRD, 1 gp, 10 lb), which matches neither the name nor the shipped 2 gp / weight 4 - apparently invented."
+      "class": "wrong-edition-attribution",
+      "evidence": "CORRECTED 2026-07-26. Prior evidence said no sledgehammer exists in the 5e SRD and dismissed the 3.5/PF1e \"Sledge\" on a price mismatch. The pinned dnd-5e-2014/equipment denominator contains \"Hammer, sledge\"; the audit's normalizer missed it because norm(\"Hammer, sledge\")=\"hammersledge\" != \"sledgehammer\". The class tests for absence UNDER ANY NAME, so a cost difference cannot rebut a name counterpart."
     },
     "pf2e/equipment|slickrune": {
       "name": "Slick Rune",
