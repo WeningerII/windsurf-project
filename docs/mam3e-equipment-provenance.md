@@ -5,6 +5,13 @@ modules with an encoder (`scripts/encode-mam-equipment.mjs`) plus a segregated
 non-SRD module. This file exists so every reclassification is reviewable
 individually rather than as a bulk assertion.
 
+The tables below are a **record of the repair**, fixed at the time it landed. The
+live invariant — that the generated tier still matches the pinned Hero SRD
+manifest on name, cost and type — is enforced by `npm run check:mam-equipment`
+inside `npm run verify`, and the shipped totals are reported by
+`docs/generated/roadmap-metrics.md`. If this file and the gate disagree, the gate
+is right.
+
 ## The finding
 
 `src/data/mutants-and-masterminds/3e/equipment/*.ts` shipped **150 hand-written
@@ -13,13 +20,24 @@ the Hero SRD `EQUIPMENT_LIST` (frnprt/mm3e-character-creator `js/data.js` — th
 same upstream `src/scripts/srd-coverage.ts` already cites for the mam3e
 powers/advantages/equipment/skills denominators):
 
+Counted two ways, because entries and names are not the same population — `Plate
+Armor` and `Chain Mail` each shipped twice, so 150 entries carry only 148 distinct
+names. Both bases are given explicitly; an earlier revision of this table mixed
+them and did not add up.
+
 | | |
 |---|---|
 | Hero SRD equipment entries | 113 |
 | Shipped entries | 150 |
-| Shipped names present in the Hero SRD | 45 |
-| Shipped names absent from the Hero SRD | 104 |
+| Distinct shipped names | 148 |
+| Distinct shipped names present in the Hero SRD | 45 |
+| Distinct shipped names absent from the Hero SRD | 103 |
+| Shipped **entries** with no Hero SRD name match | 104 |
 | Hero SRD entries absent from the product | 68 |
+
+Matching is by normalized name (case and punctuation folded), which is why
+`Chain Mail` counts as present against the SRD's `Chain-mail` while `Plate Armor`
+does not against `Plate-mail`.
 
 The 45 that matched by name were not faithful either — the SRD prints Club 2
 (shipped 1), Knife 2 (1), Sword 4 (3), Spear 4 (2), Whip 5 (2), Shuriken 3 (1),
