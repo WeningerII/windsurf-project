@@ -363,8 +363,10 @@ RFC 004 was executed without formal acceptance; its status line records that.
   and no doc claims RAW-coverage-complete.
 - The full `npm run verify` gate runs in CI on every main merge — including
   `build`, `check:bundle-size`, coverage thresholds, and Playwright `test:e2e`
-  on both chromium and firefox; the latest such merge is `245876a` (PR #37,
-  2026-07-16). Not every historical main-merge run was green (e.g. the PR #30
+  on both chromium and firefox. No "latest green" commit is named here — a SHA
+  pinned in prose rots at every merge, and the one that stood here until
+  2026-07-26 had 64 merges pass it; the workflow's run history on `main` is the
+  record. Not every historical main-merge run was green (e.g. the PR #30
   merge run was cancelled and needed follow-up e2e fixes). The earlier caveat
   that this container cannot run e2e is stale as a gate concern; CI is the
   authority for the full gate.
