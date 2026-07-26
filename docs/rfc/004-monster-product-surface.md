@@ -1,18 +1,29 @@
 # RFC 004: Monster Product Surface (Bestiaries Beyond 5e)
 
-**Status:** Accepted (formalized 2026-07-21). History preserved: this RFC was
-Draft (Proposed) when the monster data and scene encounter surface it planned
-shipped on 2026-06-12 — i.e. it was executed without formal acceptance — and
-the user's 2026-07-21 acceptance formalizes that already-executed decision
-after the fact. See `docs/MASTER_PLAN.md` and `docs/GAPS.md` §3.
+**Status:** Accepted
+**Date:** July 21, 2026 (accepted); May 31, 2026 (drafted); June 12, 2026 (executed)
 **Author:** engineering planning
-**Created:** May 31, 2026
-**Executed:** June 12, 2026 (without formal acceptance)
-**Accepted:** July 21, 2026 (formalized retroactively)
+**Supersedes:** the `no monster product surface` boundary previously stated in
+`docs/MASTER_PLAN.md`
+**Implementation status lives in:** `docs/MASTER_PLAN.md`
+
+> An RFC records a decision — its context, the options weighed, the choice, and
+> the constraints that choice imposes. It does not own rollout status. Where this
+> document states what has shipped, the statement is dated and was checked against
+> code on that date; `docs/MASTER_PLAN.md` is the authority on sequencing and
+> phase status, and wins on any disagreement.
+
+**Provenance worth preserving.** This RFC was still a draft when the work it
+describes shipped on 2026-06-12; acceptance on 2026-07-21 formalized an
+already-executed decision after the fact. That ordering is a finding, not a
+detail — see `docs/GAPS.md`. The sequencing rule this document itself sets out
+(never docs ahead of data) was written to prevent exactly the inverse failure,
+and the process failure that occurred here was the opposite one: data ahead of
+the decision record.
 
 ## Summary
 
-This RFC proposes overriding one currently-accepted product boundary: the rule
+This RFC overrides one previously-accepted product boundary: the rule
 in `docs/MASTER_PLAN.md` that D&D 3.5e and Pathfinder 1e have **no monster
 product surface**, and that such systems "must not regain monster UI, monster
 categories, or reporting claims without a separate loader-backed product-scope
@@ -24,8 +35,8 @@ monster corpus (D&D 3.5e, Pathfinder 1e, Pathfinder 2e) and reference
 adversaries for the others (M&M 3e, Daggerheart), measured against the content
 denominators in `docs/srd-manifest/` exactly like every other category.
 
-This RFC proposes a **scope decision and a sequencing**, not an implementation.
-It respects the anti-overengineering constraint: no monster UI, category, or
+This RFC is a **scope decision and a sequencing**, not an implementation. It
+respects the anti-overengineering constraint: no monster UI, category, or
 reporting claim ships until loader-backed, source-tagged, policy-compliant data
 exists and the completion metric can measure it.
 
@@ -109,8 +120,18 @@ the per-system engine-math and the smaller content catalogs. Within this RFC:
   policy filters non-compliant entries at load time, so a mis-sourced statblock
   is excluded rather than shipped.
 
-## Status of this document
+## Condition of the override
 
-Proposed. Accepting this RFC authorizes the boundary override **conditioned on**
-the sequencing above. Until the first loader-backed monster slice lands, the
-current boundary remains in force and is still enforced by the doc-drift checks.
+Acceptance authorizes the boundary override **conditioned on** the sequencing
+above: the boundary only moves in the same change-set that lands the data and the
+measured metric.
+
+**Verified against code 2026-07-26.** That condition is met. Loader-backed monster
+data exists for D&D 3.5e, Pathfinder 1e, and Pathfinder 2e under `src/data/`
+alongside the 5e (2014/2024) sets, reached through the same
+`loadMonstersForSystem` contract, and the scene encounter surface consumes it.
+Daggerheart ships reference adversaries through its own typed loader, counted in
+the same `monsters` category. **M&M 3e has no adversary set** — the "reference
+adversaries for the others" goal above is therefore half delivered. Per-system
+counts belong in `docs/generated/`, and the schedule for the remainder belongs to
+`docs/MASTER_PLAN.md`; neither belongs in this RFC.
