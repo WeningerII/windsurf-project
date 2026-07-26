@@ -8,6 +8,25 @@ environment's network policy (all VTT domains 403 at the gateway) — the UI ana
 below is reconstructed from official documentation and release notes, and should be
 upgraded with a firsthand pass when a session has open egress.
 
+## Status (verified against code 2026-07-26)
+
+**What this document is:** the external research input to the shell redesign and the
+single home for the eight translated principles in "The principles, translated to
+this repo" below. Every other design doc in this folder cites those principles rather
+than restating them.
+
+**What it is not:** a status record. It specified nothing and shipped nothing.
+`docs/MASTER_PLAN.md` ("UI Shell Redesign" track) is the authoritative per-phase
+record of what has and has not been built; this document is deliberately silent on
+build state and should stay that way.
+
+**Where the principles stand as built.** Principles 1 and 2 are realized (three
+keepalive surfaces, one five-tab dock). Principle 8's engineering budget is realized
+for keepalive and bundle cost and *not* for interaction latency, which is still
+soft-logged. Principles 3, 4 and 6 exist only behind default-off flags or not at all,
+so no user experiences them today. Take the specifics from `MASTER_PLAN.md`, not from
+this paragraph — it will go stale and this document is not gated on staying current.
+
 ## Verdict
 
 **Owlbear Rodeo (v2.2–2.4) is the consensus UI/UX winner** among 2025–2026 VTTs.
@@ -119,12 +138,15 @@ approachability" case study.
 
 ## Follow-ups
 
-1. **Hands-on pass (blocked here):** with open network egress, drive
+1. **Hands-on pass — still open (blocked here):** with open network egress, drive
    owlbear.rodeo with Playwright — screenshot every surface, verify the anatomy
    above, capture the interaction feel this doc can't. Note: the site bot-blocks
-   automated fetchers; a real browser session is required.
-2. Decide the three-surface shell (Library/Sheet/Scene) and dock inventory
-   against the current component tree (`src/App.tsx`, `src/components/`,
-   `src/systems/*/components/`).
-3. Prototype the dock + drop-classifier on ONE flow (monster → scene token)
-   before any broad restyle.
+   automated fetchers; a real browser session is required. Nothing below depends on
+   this; the anatomy above remains docs-derived until it happens.
+2. ~~Decide the three-surface shell and dock inventory against the current component
+   tree.~~ Done — resolved by the adversarial tournament in
+   `ui-shell-redesign-final-plan.md` (three surfaces, one five-tab dock) and built.
+3. ~~Prototype the dock + drop-classifier on ONE flow (monster → scene token) before
+   any broad restyle.~~ Done — the two-part prototype gate was built and evaluated;
+   see `ui-redesign-phase-build-specs.md` Phase 4. It ships behind a default-off
+   flag, so the prototype exists but no user has exercised it.
