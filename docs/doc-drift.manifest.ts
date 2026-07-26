@@ -88,6 +88,16 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: [],
   },
   {
+    // Item-by-item record of the M&M 3e equipment provenance repair (which
+    // hand-written entry was reconciled to which Hero SRD row, which were kept
+    // as original content). Names shipped encoder / gate / data paths, so
+    // path_ref_rule applies and keeps the record honest about what exists.
+    path: 'docs/mam3e-equipment-provenance.md',
+    kind: 'live',
+    owner: 'mam3e-equipment-provenance',
+    rules: ['path_ref_rule'],
+  },
+  {
     path: 'docs/design/vtt-ui-ux-research.md',
     kind: 'plan',
     owner: 'ui-shell-redesign',

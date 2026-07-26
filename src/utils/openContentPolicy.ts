@@ -21,6 +21,22 @@ export type OpenContentCategory =
 type SystemOpenContentPolicy = {
   allowedSources: readonly string[];
   allowMissingSourceFor: readonly OpenContentCategory[];
+  /**
+   * Sources that are NOT open-content provenance: content authored for this
+   * application rather than transcribed from a published open document.
+   *
+   * This channel exists because the alternative is worse. Content this project
+   * wrote itself is shippable — but tagging it with an SRD/book label to get it
+   * past `allowedSources` is a false attribution, which is exactly the defect
+   * the M&M equipment audit found (150 hand-written entries, all citing
+   * "Hero's Handbook", only 45 of which the Hero SRD contains). Keeping the two
+   * lists separate means "we transcribed this from an open document" and "we
+   * wrote this" stay distinguishable by machine, not just by intent.
+   *
+   * Entries admitted here are still subject to every other gate; they simply do
+   * not claim an open-content pedigree they do not have.
+   */
+  originalContentSources?: readonly string[];
 };
 
 export const strictOpenContentPolicy: Record<GameSystemId, SystemOpenContentPolicy> = {
@@ -71,6 +87,11 @@ export const strictOpenContentPolicy: Record<GameSystemId, SystemOpenContentPoli
       'd20herosrd',
     ],
     allowMissingSourceFor: [],
+    // The mam3e equipment set ships 79 entries with no Hero SRD counterpart
+    // (Power Ring, Web Shooters, Space Station, …) in
+    // src/data/mutants-and-masterminds/3e/equipment/original-not-srd.ts. They
+    // used to claim "Hero's Handbook"; they now say what they are.
+    originalContentSources: ['Original Content (not SRD)'],
   },
   daggerheart: {
     allowedSources: [
@@ -147,6 +168,28 @@ function isSourceAllowed(systemId: GameSystemId, source: string): boolean {
 }
 
 /**
+ * True when the citation names this project's own original content rather than
+ * an open document. Such entries are shippable but are NOT open-content
+ * provenance — see `SystemOpenContentPolicy.originalContentSources`.
+ *
+ * EXPORTED because `isOpenContentCompliant` is the SHIPPING gate (open content
+ * OR declared original content), which is the wrong predicate for anything
+ * *measuring* open-content compliance. `generate-roadmap-metrics.ts` uses this
+ * to keep the two populations separate in the published Content Integrity
+ * table instead of reporting self-authored entries as compliant open content.
+ *
+ * Scanned rather than pre-indexed: only mam3e declares any, and the eager shell
+ * is ~130 bytes from its gzip budget, so a seventh module-level Set map is not
+ * worth the first-paint cost.
+ */
+export function isOriginalContentSource(systemId: GameSystemId, source: string): boolean {
+  const declared = strictOpenContentPolicy[systemId].originalContentSources;
+  if (!declared) return false;
+  const normalized = normalizeSource(source);
+  return declared.some((candidate) => normalizeSource(candidate) === normalized);
+}
+
+/**
  * Species can nest subraces that come from a different (possibly closed) book
  * than the parent species. When a nested subrace declares its own source, that
  * attribution must pass the same whitelist as the parent; otherwise the whole
@@ -169,6 +212,13 @@ function nestedSubracesCompliant(systemId: GameSystemId, item: unknown): boolean
   });
 }
 
+/**
+ * The shipping gate for a data entry's citation. An entry passes when its source
+ * is either open-content provenance for that system (`allowedSources`) or a
+ * declared original-content label (`originalContentSources`). Anything else —
+ * including a closed-book citation or an unrecognised label — is filtered out of
+ * the loaded corpus.
+ */
 export function isOpenContentCompliant(
   systemId: GameSystemId,
   category: OpenContentCategory,
@@ -179,7 +229,7 @@ export function isOpenContentCompliant(
     if (!allowMissingSourceBySystemAndCategory[systemId].has(category)) {
       return false;
     }
-  } else if (!isSourceAllowed(systemId, source)) {
+  } else if (!isSourceAllowed(systemId, source) && !isOriginalContentSource(systemId, source)) {
     return false;
   }
 

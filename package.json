@@ -29,6 +29,7 @@
     "check:srd-fidelity": "npm run node:check && tsx scripts/check-srd-fidelity.mjs",
     "srd:fidelity:write": "npm run node:check && tsx scripts/check-srd-fidelity.mjs --write",
     "srd:fidelity:record": "npm run node:check && tsx scripts/check-srd-fidelity.mjs --record-baseline",
+    "check:mam-equipment": "npm run node:check && tsx scripts/check-mam-equipment-provenance.mjs",
     "legal:generate": "npm run node:check && tsx src/scripts/generate-legal-notice.ts",
     "check:compute-register": "npm run node:check && tsx scripts/check-compute-register.mjs",
     "check:compute-register:mutate": "npm run node:check && tsx scripts/check-compute-register.mjs --mutate",
@@ -55,7 +56,7 @@
     "enhance": "tsx src/scripts/enhance-classes.ts",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx}\"",
-    "verify": "npm run node:check && npm run lint && npm run typecheck:test && npm run typecheck:netlify && npm run format:check && npm run test:coverage -- --run --maxWorkers=1 && npm run check:keepalive-budget && npm run validate && npm run build && npm run check:bundle-size && npm run test:e2e && npm run check:repo-hygiene && npm run check:generated-docs && npm run check:doc-drift && npm run check:dead-code && npm run check:legal-notices && npm run check:compute-register && npm run check:rules-provenance && npm run check:srd-fidelity && npm run check:secret-exposure"
+    "verify": "npm run node:check && npm run lint && npm run typecheck:test && npm run typecheck:netlify && npm run format:check && npm run test:coverage -- --run --maxWorkers=1 && npm run check:keepalive-budget && npm run validate && npm run build && npm run check:bundle-size && npm run test:e2e && npm run check:repo-hygiene && npm run check:generated-docs && npm run check:doc-drift && npm run check:dead-code && npm run check:legal-notices && npm run check:compute-register && npm run check:rules-provenance && npm run check:srd-fidelity && npm run check:mam-equipment && npm run check:secret-exposure"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "3.0.86",

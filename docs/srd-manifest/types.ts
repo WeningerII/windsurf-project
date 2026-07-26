@@ -80,8 +80,18 @@ export type ManifestCategory =
  *                  denominator and surfaced for human review. NEVER invent.
  *   - `excluded` : intentionally out of scope (see docs/srd-manifest/_exclusions.ts);
  *                  excluded from the denominator. Must cite a reason.
+ *   - `original` : SHIPS, and its citation is honest, but the entry was AUTHORED
+ *                  by this project rather than transcribed from an open document
+ *                  (a source declared in `originalContentSources`,
+ *                  src/utils/openContentPolicy.ts). Enumerated here so the
+ *                  catalog stays a complete inventory of what ships, but
+ *                  excluded from the OPEN-CONTENT denominator — this manifest's
+ *                  denominator answers "how much open content should we have",
+ *                  and self-authored entries are not an answer to that. Folding
+ *                  them in would restate a non-open-content population as
+ *                  open-content parity. See docs/mam3e-equipment-provenance.md.
  */
-export type ManifestEntryStatus = 'encoded' | 'missing' | 'flagged' | 'excluded';
+export type ManifestEntryStatus = 'encoded' | 'missing' | 'flagged' | 'excluded' | 'original';
 
 export interface SrdManifestEntry {
   /** Stable id; matches the loader data id once `encoded`. */
@@ -102,7 +112,10 @@ export interface SystemManifest {
   entries: SrdManifestEntry[];
 }
 
-/** An entry counts toward the denominator unless flagged or excluded. */
+/**
+ * An entry counts toward the OPEN-CONTENT denominator unless flagged, excluded,
+ * or `original` (self-authored — cited and shipping, but not open content).
+ */
 export function isInScope(entry: SrdManifestEntry): boolean {
   return entry.status === 'encoded' || entry.status === 'missing';
 }

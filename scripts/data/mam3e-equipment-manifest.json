@@ -1,0 +1,912 @@
+{
+  "source": "frnprt/mm3e-character-creator js/data.js EQUIPMENT_LIST (M&M 3e Hero SRD, OGL 1.0a)",
+  "url": "https://raw.githubusercontent.com/frnprt/mm3e-character-creator/master/js/data.js",
+  "generatedBy": "scripts/encode-mam-equipment.mjs",
+  "srdSourceLabel": "M&M 3e Hero SRD",
+  "entries": [
+    {
+      "id": "brass-knuckles",
+      "name": "Brass Knuckles",
+      "section": "Melee Weapons — Simple",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 1
+    },
+    {
+      "id": "club",
+      "name": "Club",
+      "section": "Melee Weapons — Simple",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 2
+    },
+    {
+      "id": "knife",
+      "name": "Knife",
+      "section": "Melee Weapons — Simple",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 2
+    },
+    {
+      "id": "pepper-spray",
+      "name": "Pepper Spray",
+      "section": "Melee Weapons — Simple",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 2
+    },
+    {
+      "id": "stun-gun",
+      "name": "Stun Gun",
+      "section": "Melee Weapons — Simple",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 5
+    },
+    {
+      "id": "battleaxe",
+      "name": "Battleaxe",
+      "section": "Melee Weapons — Archaic",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 3
+    },
+    {
+      "id": "sword",
+      "name": "Sword",
+      "section": "Melee Weapons — Archaic",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 4
+    },
+    {
+      "id": "spear",
+      "name": "Spear",
+      "section": "Melee Weapons — Archaic",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 4
+    },
+    {
+      "id": "warhammer",
+      "name": "Warhammer",
+      "section": "Melee Weapons — Archaic",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 3
+    },
+    {
+      "id": "chain",
+      "name": "Chain",
+      "section": "Melee Weapons — Exotic",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 6
+    },
+    {
+      "id": "chainsaw",
+      "name": "Chainsaw",
+      "section": "Melee Weapons — Exotic",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 6
+    },
+    {
+      "id": "nunchaku",
+      "name": "Nunchaku",
+      "section": "Melee Weapons — Exotic",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 3
+    },
+    {
+      "id": "whip",
+      "name": "Whip",
+      "section": "Melee Weapons — Exotic",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 5
+    },
+    {
+      "id": "holdout-pistol",
+      "name": "Holdout Pistol",
+      "section": "Ranged Weapons — Projectile",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 4
+    },
+    {
+      "id": "light-pistol",
+      "name": "Light Pistol",
+      "section": "Ranged Weapons — Projectile",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 6
+    },
+    {
+      "id": "heavy-pistol",
+      "name": "Heavy Pistol",
+      "section": "Ranged Weapons — Projectile",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 8
+    },
+    {
+      "id": "machine-pistol",
+      "name": "Machine Pistol",
+      "section": "Ranged Weapons — Projectile",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 9
+    },
+    {
+      "id": "submachine-gun",
+      "name": "Submachine Gun",
+      "section": "Ranged Weapons — Projectile",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 12
+    },
+    {
+      "id": "shotgun",
+      "name": "Shotgun",
+      "section": "Ranged Weapons — Projectile",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 10
+    },
+    {
+      "id": "assault-rifle",
+      "name": "Assault Rifle",
+      "section": "Ranged Weapons — Projectile",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 15
+    },
+    {
+      "id": "sniper-rifle",
+      "name": "Sniper Rifle",
+      "section": "Ranged Weapons — Projectile",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 11
+    },
+    {
+      "id": "bow",
+      "name": "Bow",
+      "section": "Ranged Weapons — Projectile",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 6
+    },
+    {
+      "id": "crossbow",
+      "name": "Crossbow",
+      "section": "Ranged Weapons — Projectile",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 7
+    },
+    {
+      "id": "blaster-pistol",
+      "name": "Blaster Pistol",
+      "section": "Ranged Weapons — Energy",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 10
+    },
+    {
+      "id": "blaster-rifle",
+      "name": "Blaster Rifle",
+      "section": "Ranged Weapons — Energy",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 16
+    },
+    {
+      "id": "taser",
+      "name": "Taser",
+      "section": "Ranged Weapons — Energy",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 10
+    },
+    {
+      "id": "flamethrower",
+      "name": "Flamethrower",
+      "section": "Ranged Weapons — Heavy",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 13
+    },
+    {
+      "id": "grenade-launcher",
+      "name": "Grenade Launcher",
+      "section": "Ranged Weapons — Heavy",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 15
+    },
+    {
+      "id": "rocket-launcher",
+      "name": "Rocket Launcher",
+      "section": "Ranged Weapons — Heavy",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 27
+    },
+    {
+      "id": "bolos",
+      "name": "Bolos",
+      "section": "Ranged Weapons — Thrown",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 6
+    },
+    {
+      "id": "boomerang",
+      "name": "Boomerang",
+      "section": "Ranged Weapons — Thrown",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 2
+    },
+    {
+      "id": "javelin",
+      "name": "Javelin",
+      "section": "Ranged Weapons — Thrown",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 4
+    },
+    {
+      "id": "shuriken",
+      "name": "Shuriken",
+      "section": "Ranged Weapons — Thrown",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 3
+    },
+    {
+      "id": "laser-sight",
+      "name": "Laser Sight",
+      "section": "Weapon Accessories (1 EP each)",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 1
+    },
+    {
+      "id": "stun-ammo",
+      "name": "Stun Ammo",
+      "section": "Weapon Accessories (1 EP each)",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 1
+    },
+    {
+      "id": "suppressor",
+      "name": "Suppressor",
+      "section": "Weapon Accessories (1 EP each)",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 1
+    },
+    {
+      "id": "targeting-scope",
+      "name": "Targeting Scope",
+      "section": "Weapon Accessories (1 EP each)",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 1
+    },
+    {
+      "id": "grenade-fragmentation",
+      "name": "Grenade (Fragmentation)",
+      "section": "Grenades & Explosives",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 15
+    },
+    {
+      "id": "grenade-smoke",
+      "name": "Grenade (Smoke)",
+      "section": "Grenades & Explosives",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 12
+    },
+    {
+      "id": "grenade-flash-bang",
+      "name": "Grenade (Flash-bang)",
+      "section": "Grenades & Explosives",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 16
+    },
+    {
+      "id": "grenade-sleep-gas",
+      "name": "Grenade (Sleep Gas)",
+      "section": "Grenades & Explosives",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 12
+    },
+    {
+      "id": "grenade-tear-gas",
+      "name": "Grenade (Tear Gas)",
+      "section": "Grenades & Explosives",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 16
+    },
+    {
+      "id": "dynamite",
+      "name": "Dynamite",
+      "section": "Grenades & Explosives",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 15
+    },
+    {
+      "id": "plastic-explosive",
+      "name": "Plastic Explosive",
+      "section": "Grenades & Explosives",
+      "srdType": "Weapon",
+      "type": "weapon",
+      "cost": 30
+    },
+    {
+      "id": "leather-armor",
+      "name": "Leather Armor",
+      "section": "Armor — Archaic",
+      "srdType": "Armor",
+      "type": "armor",
+      "cost": 1
+    },
+    {
+      "id": "chain-mail",
+      "name": "Chain-mail",
+      "section": "Armor — Archaic",
+      "srdType": "Armor",
+      "type": "armor",
+      "cost": 3
+    },
+    {
+      "id": "plate-mail",
+      "name": "Plate-mail",
+      "section": "Armor — Archaic",
+      "srdType": "Armor",
+      "type": "armor",
+      "cost": 5
+    },
+    {
+      "id": "full-plate",
+      "name": "Full-plate",
+      "section": "Armor — Archaic",
+      "srdType": "Armor",
+      "type": "armor",
+      "cost": 6
+    },
+    {
+      "id": "undercover-shirt",
+      "name": "Undercover Shirt",
+      "section": "Armor — Modern",
+      "srdType": "Armor",
+      "type": "armor",
+      "cost": 2
+    },
+    {
+      "id": "bulletproof-vest",
+      "name": "Bulletproof Vest",
+      "section": "Armor — Modern",
+      "srdType": "Armor",
+      "type": "armor",
+      "cost": 3
+    },
+    {
+      "id": "small-shield",
+      "name": "Small Shield",
+      "section": "Shields",
+      "srdType": "Armor",
+      "type": "armor",
+      "cost": 2
+    },
+    {
+      "id": "medium-shield",
+      "name": "Medium Shield",
+      "section": "Shields",
+      "srdType": "Armor",
+      "type": "armor",
+      "cost": 4
+    },
+    {
+      "id": "large-shield",
+      "name": "Large Shield",
+      "section": "Shields",
+      "srdType": "Armor",
+      "type": "armor",
+      "cost": 6
+    },
+    {
+      "id": "car-sedan",
+      "name": "Car (Sedan)",
+      "section": "Vehicles",
+      "srdType": "Vehicle",
+      "type": "vehicle",
+      "cost": 10
+    },
+    {
+      "id": "sports-car",
+      "name": "Sports Car",
+      "section": "Vehicles",
+      "srdType": "Vehicle",
+      "type": "vehicle",
+      "cost": 12
+    },
+    {
+      "id": "motorcycle",
+      "name": "Motorcycle",
+      "section": "Vehicles",
+      "srdType": "Vehicle",
+      "type": "vehicle",
+      "cost": 8
+    },
+    {
+      "id": "suv-truck",
+      "name": "SUV/Truck",
+      "section": "Vehicles",
+      "srdType": "Vehicle",
+      "type": "vehicle",
+      "cost": 12
+    },
+    {
+      "id": "van",
+      "name": "Van",
+      "section": "Vehicles",
+      "srdType": "Vehicle",
+      "type": "vehicle",
+      "cost": 10
+    },
+    {
+      "id": "helicopter",
+      "name": "Helicopter",
+      "section": "Vehicles",
+      "srdType": "Vehicle",
+      "type": "vehicle",
+      "cost": 24
+    },
+    {
+      "id": "jet-fighter",
+      "name": "Jet Fighter",
+      "section": "Vehicles",
+      "srdType": "Vehicle",
+      "type": "vehicle",
+      "cost": 38
+    },
+    {
+      "id": "speedboat",
+      "name": "Speedboat",
+      "section": "Vehicles",
+      "srdType": "Vehicle",
+      "type": "vehicle",
+      "cost": 14
+    },
+    {
+      "id": "audio-recorder",
+      "name": "Audio Recorder",
+      "section": "General Equipment — Electronics",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "camera",
+      "name": "Camera",
+      "section": "General Equipment — Electronics",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "cell-phone",
+      "name": "Cell Phone",
+      "section": "General Equipment — Electronics",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "commlink",
+      "name": "Commlink",
+      "section": "General Equipment — Electronics",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "computer",
+      "name": "Computer",
+      "section": "General Equipment — Electronics",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "video-camera",
+      "name": "Video Camera",
+      "section": "General Equipment — Electronics",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 2
+    },
+    {
+      "id": "handcuffs",
+      "name": "Handcuffs",
+      "section": "General Equipment — Criminal Gear",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "lock-release-gun",
+      "name": "Lock Release Gun",
+      "section": "General Equipment — Criminal Gear",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "restraints-plastic",
+      "name": "Restraints (Plastic)",
+      "section": "General Equipment — Criminal Gear",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "binoculars",
+      "name": "Binoculars",
+      "section": "General Equipment — Surveillance",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "concealable-microphone",
+      "name": "Concealable Microphone",
+      "section": "General Equipment — Surveillance",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "mini-tracer",
+      "name": "Mini-Tracer",
+      "section": "General Equipment — Surveillance",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "night-vision-goggles",
+      "name": "Night Vision Goggles",
+      "section": "General Equipment — Surveillance",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 2
+    },
+    {
+      "id": "parabolic-microphone",
+      "name": "Parabolic Microphone",
+      "section": "General Equipment — Surveillance",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "camo-clothing",
+      "name": "Camo Clothing",
+      "section": "General Equipment — Survival",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "fire-extinguisher",
+      "name": "Fire Extinguisher",
+      "section": "General Equipment — Survival",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "flash-goggles",
+      "name": "Flash Goggles",
+      "section": "General Equipment — Survival",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "flashlight",
+      "name": "Flashlight",
+      "section": "General Equipment — Survival",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "gas-mask",
+      "name": "Gas Mask",
+      "section": "General Equipment — Survival",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "gps-receiver",
+      "name": "GPS Receiver",
+      "section": "General Equipment — Survival",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "multi-tool",
+      "name": "Multi-tool",
+      "section": "General Equipment — Survival",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "rebreather",
+      "name": "Rebreather",
+      "section": "General Equipment — Survival",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "scuba-gear",
+      "name": "SCUBA Gear",
+      "section": "General Equipment — Survival",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 2
+    },
+    {
+      "id": "caltrops",
+      "name": "Caltrops",
+      "section": "General Equipment — Other Useful Items",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "disguise-kit",
+      "name": "Disguise Kit",
+      "section": "General Equipment — Other Useful Items",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "first-aid-kit",
+      "name": "First Aid Kit",
+      "section": "General Equipment — Other Useful Items",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "grapple-gun",
+      "name": "Grapple Gun",
+      "section": "General Equipment — Other Useful Items",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "lock-picks",
+      "name": "Lock Picks",
+      "section": "General Equipment — Other Useful Items",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "parachute",
+      "name": "Parachute",
+      "section": "General Equipment — Other Useful Items",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "toolkit-basic",
+      "name": "Toolkit (Basic)",
+      "section": "General Equipment — Other Useful Items",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 1
+    },
+    {
+      "id": "toolkit-forensic",
+      "name": "Toolkit (Forensic)",
+      "section": "General Equipment — Other Useful Items",
+      "srdType": "General",
+      "type": "gear",
+      "cost": 2
+    },
+    {
+      "id": "hq-size-small-house",
+      "name": "HQ: Size – Small (house)",
+      "section": "Headquarters (as Equipment)",
+      "srdType": "Headquarters",
+      "type": "headquarters",
+      "cost": 1
+    },
+    {
+      "id": "hq-size-medium-warehouse",
+      "name": "HQ: Size – Medium (warehouse)",
+      "section": "Headquarters (as Equipment)",
+      "srdType": "Headquarters",
+      "type": "headquarters",
+      "cost": 2
+    },
+    {
+      "id": "hq-size-large-mansion",
+      "name": "HQ: Size – Large (mansion)",
+      "section": "Headquarters (as Equipment)",
+      "srdType": "Headquarters",
+      "type": "headquarters",
+      "cost": 3
+    },
+    {
+      "id": "hq-size-huge-skyscraper",
+      "name": "HQ: Size – Huge (skyscraper)",
+      "section": "Headquarters (as Equipment)",
+      "srdType": "Headquarters",
+      "type": "headquarters",
+      "cost": 4
+    },
+    {
+      "id": "hq-feature-combat-simulator",
+      "name": "HQ Feature: Combat Simulator",
+      "section": "Headquarters (as Equipment)",
+      "srdType": "Headquarters",
+      "type": "headquarters",
+      "cost": 1
+    },
+    {
+      "id": "hq-feature-communications",
+      "name": "HQ Feature: Communications",
+      "section": "Headquarters (as Equipment)",
+      "srdType": "Headquarters",
+      "type": "headquarters",
+      "cost": 1
+    },
+    {
+      "id": "hq-feature-computer",
+      "name": "HQ Feature: Computer",
+      "section": "Headquarters (as Equipment)",
+      "srdType": "Headquarters",
+      "type": "headquarters",
+      "cost": 1
+    },
+    {
+      "id": "hq-feature-concealed",
+      "name": "HQ Feature: Concealed",
+      "section": "Headquarters (as Equipment)",
+      "srdType": "Headquarters",
+      "type": "headquarters",
+      "cost": 1
+    },
+    {
+      "id": "hq-feature-defense-system",
+      "name": "HQ Feature: Defense System",
+      "section": "Headquarters (as Equipment)",
+      "srdType": "Headquarters",
+      "type": "headquarters",
+      "cost": 2
+    },
+    {
+      "id": "hq-feature-fire-prevention",
+      "name": "HQ Feature: Fire Prevention",
+      "section": "Headquarters (as Equipment)",
+      "srdType": "Headquarters",
+      "type": "headquarters",
+      "cost": 1
+    },
+    {
+      "id": "hq-feature-garage",
+      "name": "HQ Feature: Garage",
+      "section": "Headquarters (as Equipment)",
+      "srdType": "Headquarters",
+      "type": "headquarters",
+      "cost": 1
+    },
+    {
+      "id": "hq-feature-gym",
+      "name": "HQ Feature: Gym",
+      "section": "Headquarters (as Equipment)",
+      "srdType": "Headquarters",
+      "type": "headquarters",
+      "cost": 1
+    },
+    {
+      "id": "hq-feature-hangar",
+      "name": "HQ Feature: Hangar",
+      "section": "Headquarters (as Equipment)",
+      "srdType": "Headquarters",
+      "type": "headquarters",
+      "cost": 1
+    },
+    {
+      "id": "hq-feature-holding-cells",
+      "name": "HQ Feature: Holding Cells",
+      "section": "Headquarters (as Equipment)",
+      "srdType": "Headquarters",
+      "type": "headquarters",
+      "cost": 1
+    },
+    {
+      "id": "hq-feature-infirmary",
+      "name": "HQ Feature: Infirmary",
+      "section": "Headquarters (as Equipment)",
+      "srdType": "Headquarters",
+      "type": "headquarters",
+      "cost": 1
+    },
+    {
+      "id": "hq-feature-laboratory",
+      "name": "HQ Feature: Laboratory",
+      "section": "Headquarters (as Equipment)",
+      "srdType": "Headquarters",
+      "type": "headquarters",
+      "cost": 1
+    },
+    {
+      "id": "hq-feature-library",
+      "name": "HQ Feature: Library",
+      "section": "Headquarters (as Equipment)",
+      "srdType": "Headquarters",
+      "type": "headquarters",
+      "cost": 1
+    },
+    {
+      "id": "hq-feature-living-space",
+      "name": "HQ Feature: Living Space",
+      "section": "Headquarters (as Equipment)",
+      "srdType": "Headquarters",
+      "type": "headquarters",
+      "cost": 1
+    },
+    {
+      "id": "hq-feature-power-system",
+      "name": "HQ Feature: Power System",
+      "section": "Headquarters (as Equipment)",
+      "srdType": "Headquarters",
+      "type": "headquarters",
+      "cost": 1
+    },
+    {
+      "id": "hq-feature-security-system",
+      "name": "HQ Feature: Security System",
+      "section": "Headquarters (as Equipment)",
+      "srdType": "Headquarters",
+      "type": "headquarters",
+      "cost": 2
+    },
+    {
+      "id": "hq-feature-workshop",
+      "name": "HQ Feature: Workshop",
+      "section": "Headquarters (as Equipment)",
+      "srdType": "Headquarters",
+      "type": "headquarters",
+      "cost": 1
+    }
+  ]
+}

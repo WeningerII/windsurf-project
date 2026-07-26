@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-07-25T15:03:40.235Z",
+  "generatedAt": "2026-07-26T14:06:23.916Z",
   "summary": {
     "total": 23,
     "byStatus": {
-      "done": 12,
-      "in-progress": 4,
+      "done": 13,
+      "in-progress": 3,
       "pending": 6,
       "missing": 1
     },
@@ -144,13 +144,13 @@
       "phase": 1,
       "track": "A-content",
       "title": "Mutants & Masterminds equipment — data, runtime, and coverage target",
-      "detail": "The DHH equipment data ships (src/data/mutants-and-masterminds/3e/equipment/*), the runtime loader is wired (loadMam3eEquipment / loadEquipmentForSystem case mam3e), and the mam3e/equipment CoverageTarget (frnprt EQUIPMENT list) is published: the networked npm run srd:coverage measures 45/113 (39.8%) in docs/generated/srd-coverage.md. Wiring + measurement are done; the published number reveals 68 Hero SRD equipment items (weapons, armor, vehicles, HQ features/sizes) the loader lacks — a content-completion follow-on.",
-      "status": "in-progress",
+      "detail": "Coverage closed AND the provenance defect behind it fixed. The 45/113 measurement was not a content gap, it was a citation defect: all 150 shipped entries were HAND-WRITTEN and every one claimed source \"Hero's Handbook\", but only 45 of those names exist in the Hero SRD — and even those printed costs the SRD does not (Club 2 vs 1, Bow 6 vs 3, Rocket Launcher 27 vs 19). Plate Armor and Chain Mail each shipped twice under different ids. scripts/encode-mam-equipment.mjs now generates all 113/113 SRD entries (byte-reproducible, cited \"M&M 3e Hero SRD\") and the six hand-written modules are deleted. Nothing was removed from the product: 25 entries were the SRD's own item renamed (reconciled, SRD stats win) and the 79 genuinely original ones are kept in equipment/original-not-srd.ts under a new, honest source label admitted through a new originalContentSources policy channel rather than the open-content whitelist. Offline gate check:mam-equipment is wired into verify. Networked srd:coverage re-run: 113/113 (100%). The published compliance metrics were also fixed so they do not launder the 79: isOpenContentCompliant is the SHIPPING gate (open content OR declared original content) and was the wrong predicate for MEASURING open-content compliance, so roadmap-metrics Content Integrity gained an explicit Original (non-SRD) column with the 79 excluded from both sides of the ratio (M&M reads 469 | 79 | 390 | 390 | 100%), and docs/srd-manifest/ gained a ManifestEntryStatus of \"original\" that keeps them enumerated but out of the open-content denominator (M&M equipment catalog parity 113/113, not 192/192). RESIDUAL: the gate compares name/cost/type only — prose fidelity is unaudited; the generated tier carries no structured stat fields (protection/damage/toughness live in the SRD details prose, and deriving them would not be transcription); original-not-srd.ts stays hand-written and unauditable; and the other hand-written M&M data sets (21 non-SRD powers, 1 non-SRD advantage per srd:coverage) have the same defect, untreated.",
+      "status": "done",
       "tags": [
         "engineering"
       ],
       "system": "mam3e",
-      "evidence": "docs/generated/srd-coverage.md (M&M equipment 45/113); src/scripts/srd-coverage.ts (mam3e/equipment target); src/utils/dataLoader.ts (loadMam3eEquipment)"
+      "evidence": "scripts/encode-mam-equipment.mjs; scripts/check-mam-equipment-provenance.mjs (in npm run verify); scripts/data/mam3e-equipment-manifest.json; docs/mam3e-equipment-provenance.md (item-by-item classification); docs/GAPS.md §17; docs/generated/srd-coverage.md (M&M equipment 113/113)"
     },
     {
       "id": "p1.mam-provenance-LEGAL-2",
