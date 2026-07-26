@@ -286,6 +286,18 @@ export const HISTORICAL_BANNER_RULES = [
     path: 'docs/history/DAGGERHEART_DATA_ORGANIZATION_PLAN.md',
     description: 'historical Daggerheart banner',
   },
+  {
+    path: 'docs/history/2026-06-09-full-repo-code-review.md',
+    description: 'historical code-review snapshot banner',
+  },
+  {
+    path: 'docs/history/ui-shell-redesign-plan.md',
+    description: 'superseded UI shell first-pass banner',
+  },
+  {
+    path: 'docs/history/pf1e-equipment-sourcing.md',
+    description: 'executed PF1e sourcing proposal banner',
+  },
 ] as const;
 
 export const RUNTIME_COPY_RULES: RuntimeCopyRule[] = [

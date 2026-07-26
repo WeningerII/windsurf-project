@@ -1,7 +1,7 @@
 # UI shell redesign — FINAL plan (adversarial tournament of record)
 
-**Date:** 2026-07-08 · **Supersedes:** `ui-shell-redesign-plan.md` (kept as the
-first-pass synthesis) · **Basis:** all compiled research —
+**Date:** 2026-07-08 · **Supersedes:** `docs/history/ui-shell-redesign-plan.md`
+(kept as the first-pass synthesis) · **Basis:** all compiled research —
 `vtt-ui-ux-research.md` (Owlbear Rodeo principles), the first plan, and the
 commissioned pragmatic handoff (`scratchpad/.../design_handoff_ui_restructure/`).
 

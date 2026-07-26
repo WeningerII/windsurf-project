@@ -45,6 +45,16 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: ['verification_rule', 'command_rule', 'path_ref_rule'],
   },
   {
+    // The docs index: authority order, reading order, and the gate-defined order
+    // of operations for changing a doc. Deliberately owns no counts and names no
+    // commit, so count_rule / verification_rule do not apply; it does cite real
+    // directories and scripts, so path_ref_rule and command_rule do.
+    path: 'docs/README.md',
+    kind: 'live',
+    owner: 'docs-index',
+    rules: ['command_rule', 'path_ref_rule'],
+  },
+  {
     path: 'docs/MASTER_PLAN.md',
     kind: 'live',
     owner: 'roadmap',
@@ -102,15 +112,6 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     kind: 'plan',
     owner: 'ui-shell-redesign',
     rules: ['path_ref_rule'],
-  },
-  {
-    // Forward-looking plan: deliberately references proposed src/dock/** and
-    // src/shell/** files that do not exist yet, so path_ref_rule must NOT apply
-    // (mirrors REMEDIATION_PLAN.md / GAPS.md, which also carry no rules).
-    path: 'docs/design/ui-shell-redesign-plan.md',
-    kind: 'plan',
-    owner: 'ui-shell-redesign',
-    rules: [],
   },
   {
     // The adversarial-tournament plan of record; references many proposed
@@ -225,15 +226,6 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: [],
   },
   {
-    // Sourcing recommendation for the last source-blocked content gap; names a
-    // PROPOSED encoder + manifest (scripts/encode-pf1e-equipment.mjs, …) that
-    // are follow-on work, so no path_ref_rule (mirrors srd-sources.md).
-    path: 'docs/proposals/pf1e-equipment-sourcing.md',
-    kind: 'plan',
-    owner: 'pf1e-equipment-sourcing',
-    rules: [],
-  },
-  {
     // Ops runbook (turnkey-when-provisioned); prose spec, not code-paired, so
     // 'plan' (rules-free prose) like srd-sources.md — 'live' requires rule coverage.
     path: 'docs/runbooks/sentry-alerts.md',
@@ -283,10 +275,31 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: ['historical_banner_rule', 'path_ref_rule'],
   },
   {
-    path: 'docs/reviews/2026-06-09-full-repo-code-review.md',
+    path: 'docs/history/2026-06-09-full-repo-code-review.md',
     kind: 'historical',
     owner: 'historical-code-review',
     rules: ['historical_banner_rule', 'path_ref_rule'],
+  },
+  {
+    // Superseded by ui-shell-redesign-final-plan.md two days after it was
+    // written (that document names this one in its own Supersedes line). Kept
+    // for the file-grounded mapping and the product-decision reasoning the
+    // final plan states as settled. References proposed files by design, so no
+    // path_ref_rule.
+    path: 'docs/history/ui-shell-redesign-plan.md',
+    kind: 'historical',
+    owner: 'ui-shell-redesign',
+    rules: ['historical_banner_rule'],
+  },
+  {
+    // Sourcing recommendation whose follow-on shipped: the encoder + manifest it
+    // named as PROPOSED now exist, so it is a decision record, not open work.
+    // Still no path_ref_rule — it also names rejected corpora that were never
+    // vendored.
+    path: 'docs/history/pf1e-equipment-sourcing.md',
+    kind: 'historical',
+    owner: 'pf1e-equipment-sourcing',
+    rules: ['historical_banner_rule'],
   },
   {
     path: 'docs/history/DAGGERHEART_DATA_ORGANIZATION_PLAN.md',
