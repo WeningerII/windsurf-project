@@ -45,6 +45,26 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: ['verification_rule', 'command_rule', 'path_ref_rule'],
   },
   {
+    // The docs index: authority order, reading order, and the gate-defined order
+    // of operations for changing a doc. Deliberately owns no counts and names no
+    // commit, so count_rule / verification_rule do not apply; it does cite real
+    // directories and scripts, so path_ref_rule and command_rule do.
+    path: 'docs/README.md',
+    kind: 'live',
+    owner: 'docs-index',
+    rules: ['command_rule', 'path_ref_rule'],
+  },
+  {
+    // The forward-looking work queue: what to do next and what it unblocks.
+    // MASTER_PLAN owns status and decisions, GAPS owns evidence, this owns
+    // ordering. Cites real paths so path_ref_rule applies; owns no counts and
+    // names no commit, so the count and verification rules do not.
+    path: 'docs/WORK_PLAN.md',
+    kind: 'plan',
+    owner: 'work-queue',
+    rules: ['path_ref_rule'],
+  },
+  {
     path: 'docs/MASTER_PLAN.md',
     kind: 'live',
     owner: 'roadmap',
@@ -76,10 +96,15 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: ['path_ref_rule'],
   },
   {
-    path: 'docs/REMEDIATION_PLAN.md',
-    kind: 'plan',
-    owner: 'active-remediation-plan',
-    rules: [],
+    // Retired 2026-07-26. All seven phases complete, and it survived only by
+    // being hand-mirrored into MASTER_PLAN.md — a mirror that demonstrably
+    // dropped four shipped items. Kept for its forensic record (§0-§1 root
+    // cause, Appendix A dead-code inventory); the live toolchain remainder now
+    // lives in the plan's "Technical Remediation Closeout".
+    path: 'docs/history/REMEDIATION_PLAN.md',
+    kind: 'historical',
+    owner: 'historical-remediation-plan',
+    rules: ['historical_banner_rule'],
   },
   {
     path: 'docs/GAPS.md',
@@ -102,15 +127,6 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     kind: 'plan',
     owner: 'ui-shell-redesign',
     rules: ['path_ref_rule'],
-  },
-  {
-    // Forward-looking plan: deliberately references proposed src/dock/** and
-    // src/shell/** files that do not exist yet, so path_ref_rule must NOT apply
-    // (mirrors REMEDIATION_PLAN.md / GAPS.md, which also carry no rules).
-    path: 'docs/design/ui-shell-redesign-plan.md',
-    kind: 'plan',
-    owner: 'ui-shell-redesign',
-    rules: [],
   },
   {
     // The adversarial-tournament plan of record; references many proposed
@@ -180,6 +196,16 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: [],
   },
   {
+    // RFC index: one line per decision, plus the statement that an RFC owns the
+    // DECISION and the plan owns rollout status. Names real RFC paths, so
+    // path_ref_rule applies; owns no counts and no commit, so the count and
+    // verification rules do not.
+    path: 'docs/rfc/README.md',
+    kind: 'rfc',
+    owner: 'rfc-index',
+    rules: ['path_ref_rule'],
+  },
+  {
     path: 'docs/rfc/001-backend-sync.md',
     kind: 'rfc',
     owner: 'backend-sync-rfc',
@@ -222,15 +248,6 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     path: 'docs/rfc/007-ai-dm-runtime.md',
     kind: 'rfc',
     owner: 'ai-dm-runtime-rfc',
-    rules: [],
-  },
-  {
-    // Sourcing recommendation for the last source-blocked content gap; names a
-    // PROPOSED encoder + manifest (scripts/encode-pf1e-equipment.mjs, …) that
-    // are follow-on work, so no path_ref_rule (mirrors srd-sources.md).
-    path: 'docs/proposals/pf1e-equipment-sourcing.md',
-    kind: 'plan',
-    owner: 'pf1e-equipment-sourcing',
     rules: [],
   },
   {
@@ -283,10 +300,31 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: ['historical_banner_rule', 'path_ref_rule'],
   },
   {
-    path: 'docs/reviews/2026-06-09-full-repo-code-review.md',
+    path: 'docs/history/2026-06-09-full-repo-code-review.md',
     kind: 'historical',
     owner: 'historical-code-review',
     rules: ['historical_banner_rule', 'path_ref_rule'],
+  },
+  {
+    // Superseded by ui-shell-redesign-final-plan.md two days after it was
+    // written (that document names this one in its own Supersedes line). Kept
+    // for the file-grounded mapping and the product-decision reasoning the
+    // final plan states as settled. References proposed files by design, so no
+    // path_ref_rule.
+    path: 'docs/history/ui-shell-redesign-plan.md',
+    kind: 'historical',
+    owner: 'ui-shell-redesign',
+    rules: ['historical_banner_rule'],
+  },
+  {
+    // Sourcing recommendation whose follow-on shipped: the encoder + manifest it
+    // named as PROPOSED now exist, so it is a decision record, not open work.
+    // Still no path_ref_rule — it also names rejected corpora that were never
+    // vendored.
+    path: 'docs/history/pf1e-equipment-sourcing.md',
+    kind: 'historical',
+    owner: 'pf1e-equipment-sourcing',
+    rules: ['historical_banner_rule'],
   },
   {
     path: 'docs/history/DAGGERHEART_DATA_ORGANIZATION_PLAN.md',

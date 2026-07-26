@@ -17,9 +17,15 @@ maintainer helping a user, or by a user reading it directly.
 | Store | What | Notes |
 |---|---|---|
 | **IndexedDB** | the primary document collection | written async; the authoritative store when both exist |
-| **localStorage** (`rpg-character-documents`) | mirror of the same collection | written synchronously, including at unload |
-| **localStorage** (corrupt-payload backup key) | last payload that failed to parse | kept so a corrupt save is recoverable, cleared by "clear all" |
+| **localStorage** key `rpg-documents-v2` | mirror of the same collection | written synchronously, including at unload |
+| **localStorage** key `rpg-documents-v2.corrupt` | last payload that failed to parse | kept so a corrupt save is recoverable, cleared by "clear all" |
 | **localStorage** (sync tombstones, opt-in flags) | deletion markers + preferences | not character data |
+
+> **Get the key right before you tell anyone their data is gone.** The two keys
+> above are defined at `src/utils/documentStorage.ts:15-18` and exported as
+> `DOCUMENTS_STORAGE_KEY`. If they ever change, that file is the authority —
+> check it rather than trusting this table. An operator looking under the wrong
+> key sees an empty result that is indistinguishable from real data loss.
 
 `src/utils/documentStorage.ts` reads **both** stores on load and MERGES them
 per-document by `(version, updatedAt)` rather than preferring either wholesale —

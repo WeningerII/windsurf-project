@@ -1,6 +1,6 @@
 # Vision
 
-**Last updated:** July 17, 2026
+**Last updated:** July 26, 2026
 
 This document records the *why* of the project — the long-horizon thesis that
 the product is built to test. It is deliberately separate from the roadmap.
@@ -161,12 +161,12 @@ the authoritative current state:
   with the bespoke Daggerheart and M&M derivations an accepted architectural
   boundary; functional terrain (cover, high ground, difficult-terrain movement
   cost) resolving in scene combat across all seven systems; rule validation and
-  provenance primitives; and the default-off AI control plane (RFC 002) — a
-  server-side gateway with four task surfaces, where deterministic validators
-  decide what applies.
-- **Not yet built:** guided creation, the LLM strategist and narration critic,
-  observability/cost controls, and IR condition/ledger unification beyond the
-  5e engines.
+  provenance primitives; guided creation's front door
+  (`src/components/GuidedCreatorDialog.tsx`); and the default-off AI control
+  plane (RFC 002) — a server-side gateway whose task allowlist is
+  `src/ai/contracts.ts`, where deterministic validators decide what applies.
+- **Not yet built:** the LLM strategist and narration critic, observability/cost
+  controls, and IR condition/ledger unification beyond the 5e engines.
 
 The foundation — the part that is hard to fake and expensive to earn — exists.
 Finishing the grammar's adoption and deepening the AI layer are the road ahead.

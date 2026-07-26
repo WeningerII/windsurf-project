@@ -1,5 +1,16 @@
 # UI shell redesign — phased, file-grounded plan
 
+> **Historical first-pass synthesis.** Superseded two days after it was written by
+> `docs/design/ui-shell-redesign-final-plan.md`, which is the plan of record and says
+> so in its own header. Kept because the final plan builds on this one's file-grounded
+> mapping rather than replacing it, and because the four product decisions surfaced
+> in §2 here are the reasoning behind choices the final plan states as settled.
+> Not updated as the shell ships.
+>
+> Current repo truth note (July 26, 2026): the shell is at end-of-Phase-5 plus one
+> Phase-6 slice and one Phase-7 deliverable. Neither this document nor the final plan
+> tracks that — `docs/MASTER_PLAN.md` is the accurate per-phase record.
+
 **Date:** 2026-07-06 · **Basis:** `docs/design/vtt-ui-ux-research.md` (Owlbear Rodeo
 UX principles) · **Method:** multi-agent design workflow (5 code-mappers → 4 surface
 designs → synthesis → adversarial critique), grounded in the current source with

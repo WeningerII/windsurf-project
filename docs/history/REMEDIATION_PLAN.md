@@ -1,29 +1,77 @@
 # Technical Remediation Plan
 
-**Status:** Active · **Owner:** engineering · **Created:** 2026-05-30
+**Status:** All seven phases complete · **Owner:** engineering · **Created:** 2026-05-30
 
-### Progress log (2026-05-30)
+> **Historical remediation record — retired to `docs/history/` on 2026-07-26.**
+> All seven phases are complete. This document is kept for its forensic value —
+> §0–§1 record what was actually wrong on 2026-05-30 and how it was proven, and
+> Appendix A holds the dead-code inventory — and is never updated to track current
+> state. `docs/MASTER_PLAN.md` is the planning authority; its "Technical
+> Remediation Closeout" section carries the live toolchain remainder.
+>
+> Current repo truth note (July 26, 2026): the reasoning for retiring it is below
+> and is preserved as written, because it is the evidence for the decision. The
+> four drift examples it cites were verified against code on that date.
 
-| Phase | State | Commit |
+> ## Why this was retired
+>
+> **Why.** `docs/README.md` names `docs/MASTER_PLAN.md` the sole planning
+> authority, and this document is a second plan. It survives only by being
+> *mirrored* into the master plan — and that mirror has now demonstrably failed.
+> As of 2026-07-26, four items this document still presents as pending or open
+> had already shipped, none of which the mirror carried across:
+>
+> | This document said | Ground truth |
+> |---|---|
+> | Phase 7 pending, "ESLint 8 EOL is the priority" | `eslint@9.39.5` in `package.json` — the 8→9 flat-config migration landed |
+> | Phase 3.1 "union retype deferred" | `AnyCharacterDocument` ships at `src/types/core/document.ts:110` with its `systemId` narrowing guard |
+> | "`zod` vs. hand guards — the one genuine architecture fork", open | `zod@^4.4.3` is a dependency; the fork was taken |
+> | Phase 5 M2 listed as to-do | Supabase JWT (`netlify/functions/supabaseJwt.mts`) and rate limiting (`AI_RATE_LIMIT`, `netlify/functions/rateLimitStore.mts`) are wired into `netlify/functions/ai-gateway.mts` |
+>
+> A document that must be kept in sync with an authority, by hand, will drift from
+> it — that is what happened here, twice over. The status column below has been
+> corrected, but correcting it does not fix the mechanism.
+>
+> **What is worth keeping.** The durable value of this file is *forensic*, not
+> forward-looking: §0–§1 record what was actually wrong on 2026-05-30 and how it
+> was proven, and Appendix A records the dead-code inventory. That is exactly the
+> content `docs/history/` exists to hold, and history entries are banner-enforced
+> and never updated — which removes the drift surface entirely rather than
+> re-papering it. The forward-looking phases are all complete and are already
+> represented in `docs/MASTER_PLAN.md`.
+>
+> **If it is kept instead**, it needs an explicit owner and a place in the
+> order-of-operations in `docs/README.md`, because today nothing makes anyone
+> update it.
+
+### Progress log
+
+| Phase | State | Evidence |
 |---|---|---|
 | 0 · Truthful green build | ✅ Done | `creationDraftStorage` + 5e validators restored |
 | 1 · Real safety net | ✅ Done | CI gates all PRs; baseline de-fictionalized |
 | 2 · Delete trash | ✅ Done | 11 orphans removed; `knip` gate added |
-| 3 · Boundary parsing | ✅ Done | import + Supabase + offline-queue validated (union retype 3.1 deferred) |
+| 3 · Boundary parsing | ✅ Done | import + Supabase + offline-queue validated; the 3.1 union retype has since landed (`src/types/core/document.ts`) |
 | 4 · Defer per-system load | ✅ Done | `modulePreload` filter: initial prefetch ~2.4 MB → ~0.57 MB; data loads on demand |
-| 5 · Security/privacy | ✅ Done | Sentry PII fix; `npm audit` 0 vulns |
-| 6 · Slim docs/process | ✅ Done (2026-07-21) | Superseded planning docs archived to `docs/history/`; `CONTRIBUTING.md` already slimmed (~111 lines) |
-| 7 · Toolchain | ⏳ Pending | ESLint 8 EOL is the priority |
+| 5 · Security/privacy | ✅ Done | Sentry PII fix; M2 gateway hardening (JWT + rate limit) shipped |
+| 6 · Slim docs/process | ✅ Done (2026-07-21) | Superseded planning docs archived to `docs/history/`; `CONTRIBUTING.md` slimmed |
+| 7 · Toolchain | ✅ Partly done | ESLint 8→9 landed; the risk-ordered remainder is tracked in `docs/MASTER_PLAN.md`, not here |
 
-Verified locally each step: `tsc`, vitest (929 green), lint, format, `knip`,
-doc-drift, build, bundle-size. Playwright E2E runs in CI only (browser binaries
-cannot be fetched in the dev sandbox).
+Each step was verified locally with `tsc`, Vitest, lint, format, `knip`,
+doc-drift, build, and bundle-size. Exact test totals are command output, not a
+figure to copy into prose — `docs/generated/verification-baseline.json` holds the
+recorded baseline. Playwright E2E runs in CI only (browser binaries cannot be
+fetched in the dev sandbox).
 
-This is an evidence-based, sequenced plan to take the repository from "red and
+This was an evidence-based, sequenced plan to take the repository from "red and
 inaccurately documented" to "green, gated, lean, and type-safe," and then to
-resume feature work on a trustworthy foundation. It supersedes ad-hoc cleanup.
-It is intentionally decision-complete: each phase states what to do, the
+resume feature work on a trustworthy foundation. It superseded ad-hoc cleanup.
+It was intentionally decision-complete: each phase states what to do, the
 decisions already made, and the acceptance gate.
+
+Sections 0 and 1 below are a **point-in-time record of 2026-05-30** and are not
+updated as the repo moves; they exist to show what was wrong and how it was
+proven. Everything from §3 onward has shipped.
 
 ---
 
@@ -140,9 +188,8 @@ the types → harden → slim the ceremony → modernize → resume features.**
 - **3.2** Parse-don't-cast at the 4 untrusted boundaries:
   `documentStorage.importDocuments`, `syncEngine.fromRemote`, the offline-queue
   parsers, and AI-gateway responses (`gatewayClient.ts` already validates — use
-  it as the template). **Open decision:** `zod` vs. hand-written guards
-  (MASTER_PLAN flags `zod` as needing an RFC). Recommendation: small vendored
-  guard layer first; adopt `zod` only if guard sprawl proves it.
+  it as the template). ~~**Open decision:** `zod` vs. hand-written guards.~~
+  **Resolved:** `zod` was adopted (see `package.json`); the fork is closed.
 - **3.3** Delete the ~16 `as Record<string, unknown>` casts and `App.tsx`
   `asNumber/asString` shims the union makes unnecessary.
 - **Acceptance:** zero `Record<string, unknown>` casts on `system`; corrupt
@@ -158,8 +205,10 @@ the types → harden → slim the ceremony → modernize → resume features.**
 ### Phase 5 — Security & privacy hardening · ~½–1 day · risk: low
 - **M1 (privacy):** Sentry `beforeSend` scrubber + `sendDefaultPii:false`; stop
   `errorLogger` forwarding raw `args`/`context` (allowlist safe fields).
-- **M2:** require a Supabase JWT + rate-limit on
-  `netlify/functions/ai-gateway.mjs` before any real provider is wired.
+- **M2:** require a Supabase JWT + rate-limit on the AI gateway before any real
+  provider is wired. **Shipped** — the function is `netlify/functions/ai-gateway.mts`;
+  JWT verification lives in `netlify/functions/supabaseJwt.mts` and the
+  `AI_RATE_LIMIT` counter in `netlify/functions/rateLimitStore.mts`.
 - **Housekeeping:** `npm audit fix` (3 moderate); tighten CSP wildcards
   (`netlify.toml:78`); add an origin check to the SW `CACHE_URLS` handler.
 
@@ -176,10 +225,15 @@ the types → harden → slim the ceremony → modernize → resume features.**
   maintained as the single roadmap authority at ~430 lines.)
 
 ### Phase 7 — Toolchain modernization (deliberate, last) · ~1–2 days · risk: med
-- Most pressing: ESLint 8 is EOL → 8→9/10 flat-config migration.
-- Risk-ordered: React 18→19, Tailwind 3→4, Vite 7→8, `lucide-react`
-  0.294→1.17, `@types/node` 20→22. Reconcile `.nvmrc` (20.19.0) with the
-  cloud env (Node 22); `engines` already allows 22.
+- ~~Most pressing: ESLint 8 is EOL → 8→9/10 flat-config migration.~~ **Done** —
+  `package.json` pins ESLint 9 and the repo uses `eslint.config.js` flat config.
+- Remaining, risk-ordered: React 18→19, Tailwind 3→4, Vite 7→8, `lucide-react`,
+  `@types/node`. Read the current pins from `package.json` rather than from this
+  list — it has already gone stale once. Reconcile `.nvmrc` with the cloud env;
+  `engines` already allows 22 and 24.
+- **Tracking note:** this remainder belongs in `docs/MASTER_PLAN.md`. The two
+  upgrades that landed (ESLint, `zod`) were never mirrored there, which is the
+  concrete evidence behind the retirement recommendation at the top of this file.
 
 ---
 
@@ -208,12 +262,16 @@ the types → harden → slim the ceremony → modernize → resume features.**
 ---
 
 ## 5. Risks & open decisions
-- **Coverage gate (Phase 0.3):** may surface a shortfall now that the build is
-  green; small add-on if so.
-- **Type-binding blast radius (Phase 3):** do it system-by-system behind green
-  `verify`, not big-bang.
-- **`zod` vs. hand guards (Phase 3.2):** the one genuine architecture fork;
-  recommendation recorded above.
+
+All three are now closed; kept for the record.
+
+- ~~**Coverage gate (Phase 0.3):** may surface a shortfall now that the build is
+  green.~~ Coverage thresholds are enforced by `npm run test:coverage` inside
+  `npm run verify`.
+- ~~**Type-binding blast radius (Phase 3):** do it system-by-system behind green
+  `verify`, not big-bang.~~ Done that way; the union landed.
+- ~~**`zod` vs. hand guards (Phase 3.2):** the one genuine architecture fork.~~
+  Resolved in favour of `zod`.
 
 ## 6. Effort summary
 

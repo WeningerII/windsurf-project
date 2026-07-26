@@ -1,9 +1,16 @@
 # RFC 005: System-Agnostic Resource Pools And Stateful Action Verbs
 
-**Status:** Accepted — primitive + first consumers implemented; broader adoption
-incremental.
+**Status:** Accepted
+**Date:** June 17, 2026
 **Author:** engineering planning
-**Created:** June 17, 2026
+**Supersedes:** nothing
+**Implementation status lives in:** `docs/MASTER_PLAN.md`
+
+> An RFC records a decision — its context, the options weighed, the choice, and
+> the constraints that choice imposes. It does not own rollout status. Where this
+> document states what has shipped, the statement is dated and was checked against
+> code on that date; `docs/MASTER_PLAN.md` is the authority on sequencing and
+> phase status, and wins on any disagreement.
 
 ## Summary
 
@@ -51,10 +58,18 @@ interface ResourcePool { max: number; spent: number }
 clampCount(value, max, min = 0)            // the shared bounded-clamp primitive
 createPool(max, spent?)                    // clamps spent into 0..max
 spend(pool, n = 1)  restore(pool, n = 1)  reset(pool)   // verbs, all clamped
+consume(pool, n = 1) -> { pool, depleted } // spend + an exhaustion SIGNAL
 setMax(pool, max)                          // change cap, keep spent (re-clamped)
 remainingOf · isExhausted · isFull
 poolFromRemaining(current, max) · remainingShape(pool)  // {current,max} adapter
 ```
+
+`consume` is deliberately distinct from `spend`. Both clamp identically; only
+`consume` reports `depleted`, which is the signal an inventory handler needs to
+destroy a spent consumable (the last arrow, potion, or wand charge). Making that
+a separate verb rather than a flag on `spend` keeps the common case — a spell
+slot, which is refilled rather than destroyed — from carrying a signal it must
+ignore.
 
 It deliberately maps **both** data-model shapes found in the survey:
 
@@ -106,8 +121,15 @@ eventual home for these verbs; this primitive is the first step toward it.
 
 ## Future work
 
-- A typed `consume` verb for item charges/ammunition (missing everywhere today),
-  expressed against `ResourcePool`.
+Dated notes below record what has since been built against this design.
+`docs/MASTER_PLAN.md` owns what is scheduled next.
+
+- A typed `consume` verb for item charges/ammunition, expressed against
+  `ResourcePool`. **Done — verified against code 2026-07-26:** `consume` ships in
+  `src/utils/resourcePool.ts` and is wired into the mutation handlers of the six
+  systems that have an item/charge model (5e 2014/2024, the d20-legacy pair,
+  PF2e, Daggerheart). M&M 3e is excluded for the reason given under *Boundaries*:
+  it has no equipment model and its power points are a computed budget.
 - Rest as a first-class `reset` across the systems that lack rest automation.
   **Done (2026-07-17):** Daggerheart gained its long-rest downtime moves
   (`src/systems/daggerheart/daggerheartRest.ts`) — Tend to All Wounds / Clear

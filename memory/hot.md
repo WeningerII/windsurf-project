@@ -47,8 +47,9 @@ each independently fully gated earlier.
   adapter README + 11 tests. Built on item-8 DI; default-off byte-identical.
 - **RFC 007 AI-DM runtime (Draft)** `62e3da5`; **Sentry+Supabase DR runbooks**
   `30258f7` (docs/runbooks/, honest DORMANT-alert notes); **PF1e equipment sourcing
-  recommendation** `30258f7` (docs/proposals/ — verdict: source via PSRD-Data
-  core_rulebook/item, 590 Core items, encode is a follow-on).
+  recommendation** `30258f7` (verdict: source via PSRD-Data core_rulebook/item,
+  590 Core items — the encode follow-on has since shipped, and the proposal moved
+  to docs/history/pf1e-equipment-sourcing.md on 2026-07-26).
 - doc-drift manifest register `4eea6a1`+`bcacdf3` (new docs; runbooks='plan' not
   'live' — live requires rule coverage). Regen/graph this batch: graphify only.
 - **BATCH BARRIER ALL GREEN:** full suite 245 files / 2463 tests (cov ~86%),

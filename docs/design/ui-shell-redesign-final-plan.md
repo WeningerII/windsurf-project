@@ -1,7 +1,7 @@
 # UI shell redesign — FINAL plan (adversarial tournament of record)
 
-**Date:** 2026-07-08 · **Supersedes:** `ui-shell-redesign-plan.md` (kept as the
-first-pass synthesis) · **Basis:** all compiled research —
+**Date:** 2026-07-08 · **Supersedes:** `docs/history/ui-shell-redesign-plan.md`
+(kept as the first-pass synthesis) · **Basis:** all compiled research —
 `vtt-ui-ux-research.md` (Owlbear Rodeo principles), the first plan, and the
 commissioned pragmatic handoff (`scratchpad/.../design_handoff_ui_restructure/`).
 
@@ -12,6 +12,51 @@ loop-until-dry hardening**. Every concrete claim is grounded in real file:line
 anchors via the knowledge graph. Load-bearing invariant throughout: the deterministic
 event-sourced core `src/scene/runtime.ts` and its 12 `SceneActionIntent` variants are
 **never touched** — every new gesture emits an existing controller handler or intent.
+
+---
+
+## STATUS — most of this plan has been built (verified against code 2026-07-26)
+
+**This document is the direction and the reasoning, not the status record.**
+`docs/MASTER_PLAN.md` ("UI Shell Redesign" track) is the authoritative per-phase
+record; `ui-redesign-phase-build-specs.md` is the re-grounded task-level spec. Where
+this document and either of those disagree, they win; where any document disagrees
+with the code, the code wins.
+
+Read the phase sections below as *what was specified and why*. Each carries an
+**As built** line stating what actually happened.
+
+| Phase | As built |
+| --- | --- |
+| 1 — declutter | Shipped, complete |
+| 2 — structural substrate | Shipped, all three parts (reducer, keepalive stage, sync pause/resume-with-reconcile) |
+| 3 — five-tab dock + bestiary off the sheet | Shipped |
+| 4 — pointer-drag keystone | **Shipped behind a default-off flag, not end-to-end gated.** No user sees it |
+| 5 — sheet eviction | **Half shipped.** The dispatch half is complete at 7 of 7 systems; the eviction half — deleting the in-sheet browser wrappers and collapsing the tab grids — did not happen. The dual-home the plan capped at "one chapter" is still live |
+| 6 — scene canvas | **Roughly 1 of 5 slices.** The transform render landed as an opt-in alternative behind a default-off flag; 5a, 5b, 5d and 5e are open |
+| 7 — hardening/budgets | **1 of 5 deliverables** (budgets). Chrome-dominance is blocked on Phase 6's unshipped right-rail tray, not merely undone |
+
+**The two flag-gated phases are not "complete."** Phases 4 and 6 ship behind
+`VITE_SCENE_DRAG_ENABLED` and `VITE_SCENE_CANVAS_ENABLED`, both defaulting OFF, and
+no CI job builds with either enabled. Their acceptance specs therefore do not run:
+`e2e/scene-drag.spec.ts` calls `test.skip` on every current run, and the spec'd
+scene-canvas e2e gate was never written at all. The engines are unit-tested; the
+user-facing behaviour is not gated end to end, and no user experiences it. Anyone
+summarizing this work should say "shipped behind a default-off flag, not end-to-end
+gated" and mean it.
+
+**Sequencing consequences that follow from the above, and are easy to miss:**
+
+- Phase 4's drag drop target is wired to the DOM grid only. Enabling the Phase-6
+  canvas flag disables drag (`sceneDragEnabled && !sceneCanvasEnabled` in
+  `src/components/SceneManager.tsx`), so the two flags are mutually exclusive in
+  practice and cannot be turned on together to preview the destination.
+- The canvas render also does not carry the map-image layer the DOM grid renders,
+  which is a second reason its flag is off.
+- Phase 5's eviction half is a *precondition the plan set for itself* — the "transient
+  dual-home capped to one chapter" risk below is no longer transient.
+- Phase 7's chrome-dominance gate is blocked on Phase 6 slice 5b, exactly as Finding
+  20 predicted. That prediction held; the work did not follow.
 
 ---
 
@@ -132,144 +177,149 @@ Each phase ships user-visible value on its own; ordering is tokens/frame → sub
 dock → drag keystone → sheet eviction → scene canvas → hardening. Phase detail below is
 the hardened output (findings folded in).
 
-## Phase 1 — Handoff frame + total nav seam + compound openSheet AND compound scene-selection actions + lazy-mount-on-first-visit SceneManager + Export/Delete re-home + LEFT-rail-only Scene declutter + full test blast radius (the declutter, in days)
+**Each phase records Goal, Ships-on-its-own, As built, and Risk — the intent and the
+reasoning.** The ordered build tasks, file lists, test blast radius, acceptance gates
+and CI-gate pairings live once, in `ui-redesign-phase-build-specs.md`, which re-verified
+every anchor against source and corrected the drift this document carries (notably
+`src/context/` → `src/contexts/`, and the doc-drift guard being fifteen paths rather
+than thirteen). Do not restate them here; that duplication is what made these two
+documents disagree.
+
+## Phase 1 — Declutter: handoff frame, total nav seam, compound openSheet + scene-selection, lazy-mount-on-first-visit SceneManager, Export/Delete re-home, left-rail-only Scene declutter
+
+**As built: shipped, complete** (three PRs, 2026-07-09 → 2026-07-14). Nothing deferred.
 
 **Goal:** Replace the resting scroll cascade (App.tsx L511-648) with header-tab views backed by a single TOTAL discriminated-union nav model; model sheet-open as ONE compound openSheet(docId) action wired into all SIX writers AND scene-selection as ONE compound five-writer seam (Finding 16); move creation AND import AND the current character's export/delete into the rail/dialog/overflows (Finding 18), keeping the doc-drift-guarded GameSystemSelector alive; ship a real select-only LibraryScenesView; lift scene selection to a controlled prop; relocate ONLY the LEFT scene-list rail so the grid widens with no lost function (Finding 20); keep the stateful SceneManager on its existing React.lazy() split, lazy-mounting-then-keepaliving it on FIRST Scene visit (Finding 17, NOT mounted from boot); preserve its App-owned onLogToCampaign prop; and rewrite EVERY affected test suite — all in ONE atomic PR.
 
 **Ships on its own:** The home page becomes ONE thing (Characters, default), with Campaigns / Scenes / Library as sibling views behind header tabs; a 'New Character' button -> one-click dialog and an 'Import' control replace the always-present grid + action bar; from an open sheet you can still Clone, Export, and Delete the current character; a real select-only scene picker lets you pick, create, or import a scene and land on the live canvas; the Scene surface loses its cramped LEFT list rail (its content now lives in Library) so the grid widens, while every operating panel stays exactly where it is; opening a character from anywhere (list, clone, import, campaign card, header switcher) reliably shows the sheet; switching to Scene and back preserves in-progress combat/placement/initiative with no layout stutter and NO first-paint/bundle regression (SceneManager stays lazy). The single biggest decluttering win landing in days, with no feel regression on either named slop surface.
 
-**Steps:**
-- Write the TOTAL union type FIRST in src/hooks/useAppNav.ts: {surface:'library'|'sheet'|'scene', librarySegment:'characters'|'campaigns'|'scenes'|'content', sheetDocId, sceneId, overlay}, with a compile-time assertNever over BOTH discriminants. Render it in Phase 1 with conditional switching for the stateless Library segment views (a flat useState makes Phase 2 an app-wide rewrite; a PARTIAL union makes Phase 2 add a surface).
-- MODEL SHEET-OPEN AS ONE COMPOUND ACTION (Finding 11): expose openSheet(docId) => dispatch {surface:'sheet', sheetDocId} and rewire ALL SIX writers — handleCreateCharacter (App L276), handleCloneDocument (L328), handleImportDocument (L346), AppHeader.onSelectCharacter (L435), CharacterListView.onOpenCharacter (L585), and the CROSS-SEGMENT CampaignManager.onOpenCharacter (L618). Do NOT mechanically port any to a bare sheetDocId set. Map the three setCurrentDocId(null) sites (L190/286/580) to a closeSheet/back action.
-- MODEL SCENE-SELECTION AS ONE COMPOUND FIVE-WRITER SEAM (Finding 16): add a selectedSceneId prop + onSelectScene callback and enumerate ALL FIVE writers as first-class call sites — L109 init and L143 auto-reset become onSelectScene(scenes[0]?.id ?? null) the shell owns; L926 rail-click becomes onSelectScene(scene.id); and L807 (select-first-imported) + L872 (select-just-created, inside SceneCreateForm.onCreate) RELOCATE WITH the create/import UI into LibraryScenesView, where they call onSelectScene(newScene.id) AND dispatch {surface:'scene', sceneId} so create/import-then-open lands on the canvas (import selects imported[0]). Land this behavior-preservingly BEFORE LibraryScenesView consumes it. PRESERVE onLogToCampaign (L79/L105) and onAppendSceneEvent unchanged.
-- Keep SceneManager on its EXISTING React.lazy() split (App L30-31) and do NOT mount it from boot (Finding 17): lazy-mount-then-keepalive on FIRST Scene visit — before any scene visit it is unmounted (Characters is the boot landing, as today), so the code-split, index-chunk size, and TTI are preserved and foldSceneEvents (L155) never runs at boot for users who never open a scene; on first Scene visit it lazy-loads and thereafter stays in the layout tree via visibility:hidden + off-screen position whenever surface !== 'scene' (Findings 7+14: NOT display:none, which re-layouts ~900 gridcells per switch; DROP content-visibility:auto, which relocates the reflow to reveal time). This preserves SceneManager's ~30 transient useState across tab-away/back — which only matters after the first visit, exactly when there is state to preserve. This is a minimal mount-on-first-visit + keepalive, NOT the full Phase-2 ShellContext frame.
-- Add a Phase-1 performance.measure that compares THREE mount-hide mechanisms on a real ~30x30 grid — display:none vs visibility-hidden-ONLY vs visibility+content-visibility:auto (Finding 14) — and chooses by measured reveal-frame time; default is visibility-hidden-only.
-- SCENE LEFT-RAIL RELOCATION ONLY (Findings 13+20) — a STANDALONE local-boolean step decoupled from the SceneCanvas rewrite: relocate SceneManager's 18rem LEFT scene-list rail (L885 xl:grid-cols-[18rem_minmax(0,1fr)]) OFF the Scene surface — its list content genuinely moves to LibraryScenesView, so the grid widens by 18rem with NO lost function. DO NOT collapse the 20rem RIGHT operating rail (L1007 lg:grid-cols-[minmax(0,1fr)_20rem], holding Token/Dice/Check/Oracle/Initiative/Combat/Marker) — those are how you operate the scene and have no summon affordance until Phase 6 5b, so hiding them behind a bare boolean is a feel regression. Re-label this change 'left scene-list rail relocation,' NOT 'canvas dominates'; the right rail stays docked through Phase 5.
-- Create LibraryScenesView.tsx (Finding 1): a select-only scene picker extracting SceneManager's L884-915 rail (filter + scenes.map driving onSelectScene) PLUS the existing SceneCreateForm.tsx for create/import — the relocated L807/L872 selection-and-surface writers (Finding 16) live here. A component DISTINCT from the Scene canvas so the picker->canvas IA is real.
-- Add the header center nav + primary 'New Character' + 'Import' controls to AppHeader.tsx; UNGATE onImport from the {currentDoc && ...} block; add Import to CharacterListView's '...' overflow. RE-HOME EXPORT + DELETE (Finding 18): place the current character's onExport (App L437) + onDelete (App L439) in the Sheet-surface header '...' overflow, and add per-card Export/Delete to CharacterListView's '...' overflow (delete routes through the L286 setCurrentDocId(null) => closeSheet path). Repoint Alt+N to the dialog and add Alt+1/2/3 surface switches in useKeyboardNavigation.ts.
-- Create NewCharacterDialog.tsx (portaled, systemRegistry.getAll() rows, systemAccents reuse, one-click create); move selectedSystem into it; KEEP GameSystemSelector.tsx ALIVE still rendering its doc-drift-guarded tokens (Finding 12) — the 'inline + delete' branch is forbidden unless docs/doc-drift.rules.ts L325-327 + manifest.ts are edited in-commit. Ship unit tests for NewCharacterDialog + useAppNav (openSheet + the compound scene-selection seam + assertNever) + LibraryScenesView in the same PR.
-- Delete the hero block + centered action bar from App.tsx; render exactly one Library segment view per librarySegment; re-host SystemStatusDashboard.tsx as librarySegment:'content' (also doc-drift-guarded, rules.ts L330-332 — keep its tokens); give CampaignManager.tsx a two-column view header; add search to CharacterListView.tsx.
-- TEST BLAST RADIUS (Findings 5+6+11+16+18) — rewrite in the SAME PR: (a) character-creation-flow.test.tsx + character-management-flow.test.tsx — createCharacter helper opens NewCharacterDialog first, home-copy assertions moved; ADD assertions that after clone and after character-import the new/imported sheet is shown, that a campaign-card character click lands on the sheet, and that Export + Delete of the current character are reachable from an open sheet; (b) SceneManager.test.tsx + capabilityScenarios.test.tsx scene-selection cases — wire the controlled five-writer seam, re-assert shell-owned auto-reset AND create/import-then-open selection+surface; (c) App.test.tsx, GameSystemSelector.test.tsx, app-sheet-error-boundary.test.tsx mocks. Treat EVERY render(<App/>) suite and direct SceneManager-mount suite as Phase-1 blast radius.
-- Add performance.mark/measure around the surface switch for a baseline interaction-latency number for the Phase-7 budget, AND a bundle-size/index-chunk assertion that SceneManager's chunk stays OUT of the eager index chunk (Finding 17).
-- Preserve the setShowLegal(true) path and legal strings verbatim so check:legal-notices / doc-drift stay green; verify GameSystemSelector + SystemStatusDashboard tokens are untouched (Finding 12).
-- ACCEPTANCE GATES (Playwright, in this PR): (a) enter placement mode / type an initiative value on Scene, tab to Characters, tab back, assert transient state survives AND the switch does not exceed the measured frame budget; (b) with no sheet open, assert both 'New Character' and 'Import' are reachable; (c) NON-TAUTOLOGICAL scene-selection gate: in LibraryScenesView select scene X, flip to Scene, assert the live canvas renders scene X's grid, then round-trip and assert selectedSceneId persists; (d) SHEET-OPEN gates (Finding 11): from Campaigns click a character in a campaign card and assert the Sheet renders; after clone and after character-import, assert the new/imported sheet is shown; (e) SCENE-CREATE/IMPORT gates (Finding 16): create a scene in LibraryScenesView and assert it becomes selected AND the Scene surface renders; import scenes and assert imported[0] is selected and shown; (f) EXPORT/DELETE gates (Finding 18): from an open sheet assert Export and Delete of the current character are reachable+functional (delete lands on the closeSheet/back state); (g) BUNDLE/TTI gate (Finding 17): assert the SceneManager chunk is not force-loaded at first paint on the Characters landing; (h) assert the Scene LEFT list rail is gone and the grid width increased on first render of surface:'scene' (NOT a full 'canvas dominates' assertion — that is Phase 6).
-
-**Files:** `src/App.tsx`, `src/components/AppHeader.tsx (center nav + New Character + Import; Sheet-context Export/Delete overflow — Finding 18)`, `src/components/NewCharacterDialog.tsx (new)`, `src/components/LibraryScenesView.tsx (new; select-only extraction of SceneManager L884-915 + SceneCreateForm; hosts the relocated L807/L872 select-and-surface writers — Finding 16)`, `src/components/scene/SceneCreateForm.tsx (reused, create/import only; onCreate now selects AND flips surface via the shell seam)`, `src/hooks/useAppNav.ts (new; TOTAL union + openSheet compound action + compound five-writer scene-selection seam)`, `src/hooks/useKeyboardNavigation.ts`, `src/components/CharacterListView.tsx (search; per-card Export/Delete + Import in '...' overflow — Finding 18)`, `src/components/GameSystemSelector.tsx (KEPT ALIVE; doc-drift-guarded tokens preserved)`, `src/components/CampaignManager.tsx (two-column header; cross-segment onOpenCharacter -> openSheet)`, `src/components/SystemStatusDashboard.tsx (re-hosted as 'content'; doc-drift-guarded tokens preserved)`, `src/components/SceneManager.tsx (React.lazy() split PRESERVED, lazy-mount-on-first-visit + keepalive via visibility NOT display:none NOT content-visibility — Findings 7+14+17; controlled five-writer selection seam — Finding 16; LEFT list rail relocated L885, RIGHT operating rail L1007 UNCHANGED — Finding 20; onLogToCampaign preserved)`, `docs/doc-drift.rules.ts (only if any guarded file is deleted/gutted — default keeps GameSystemSelector/SystemStatusDashboard alive and does NOT edit rules.ts)`, `docs/doc-drift.manifest.ts (paired edit only if a guarded file changes)`, `src/__tests__/character-creation-flow.test.tsx (rewrite createCharacter helper + home copy + clone/import/campaign open-sheet + Export/Delete-reachable assertions)`, `src/__tests__/character-management-flow.test.tsx (same)`, `src/__tests__/components/SceneManager.test.tsx (controlled five-writer seam + shell-owned auto-reset + create/import-then-open)`, `src/__tests__/scenarios/capabilityScenarios.test.tsx (scene-selection cases)`, `src/__tests__ (App.test.tsx, GameSystemSelector.test.tsx, app-sheet-error-boundary.test.tsx; new NewCharacterDialog + useAppNav + LibraryScenesView specs; Playwright transient-state + import-reachable + non-tautological scene-selection + compound-sheet-open + scene-create/import-open + Export/Delete-reachable + bundle/TTI + left-rail-relocated guards)`
-
 **Risk:** The TOTAL useAppNav union is the load-bearing hinge — nav must be NOT flat AND NOT partial (assertNever must compile). Atomicity is mandatory: deleting the GameSystemSelector usage without the dialog severs create; GUTTING GameSystemSelector/SystemStatusDashboard drops doc-drift-guarded tokens unless rules.ts+manifest.ts are edited in-commit (default keeps them alive); deleting the action bar without re-homing Import strands the default view, and without re-homing Export/Delete orphans single-character export/delete (Finding 18); MOUNTING SceneManager from boot de-lazies the heaviest component / force-loads its chunk at first paint with no offsetting deletion (Finding 17) — so it MUST stay React.lazy() and mount only on first Scene visit; using display:none OR content-visibility:auto on the mounted SceneManager stutters every tab-to-Scene (Findings 7+14); dropping onLogToCampaign orphans the recap write; porting ANY sheet-open OR scene-selection writer to a bare id-set strands the user (clone/import/campaign-card for sheets — Finding 11; scene create/import for scenes — Finding 16); COLLAPSING the RIGHT operating rail in Phase 1 hides operating tools with no reopen UX (Finding 20) — only the LEFT list rail relocates; and omitting ANY render(<App/>) or direct-SceneManager-mount suite reddens verify's coverage gate. The controlled five-writer scene-selection edit MUST precede LibraryScenesView in the same PR. The left-rail relocation is a small intentional VISIBLE change decoupled from the behavior-preserving relocation.
 
 ## Phase 2 — Structural substrate + pause/resume-with-reconcile on the SHARED sync engine
+
+**As built: shipped, all three parts.** The reducer landed as the two-file split the
+build specs corrected to (`src/contexts/shell-context.ts` + `ShellContext.tsx`, plural
+directory — this document's `src/context/` singular was wrong). `SurfaceStage.tsx`
+keepalives the three surfaces and is now hard-gated by `npm run check:keepalive-budget`.
+The `active` pause/resume knob with its mandatory reconcile landed on the shared
+`useEntitySync`, with `reloadScenes()` on Scene reactivate rather than listener-gating,
+exactly as Finding 2 required. One deviation worth knowing: `SurfaceStage` takes
+`ReactNode` slots instead of the three spec'd `surfaces/` wrapper components, so
+`src/components/surfaces/` was never created and Phase 6's "flesh out the Phase-2
+SceneSurface stub" has no stub to flesh out.
 
 **Goal:** Swap useAppNav's internals for a ShellContext reducer + keepalive SurfaceStage (generalizing the Phase-1 first-visit lazy-mount to all three surfaces); promote the Sheet to a mounted keepalive peer; and add a genuine `active` pause/resume knob to the SHARED useEntitySync hook with a mandatory reconcile on reactivate — NOT a leaf-file DOM `hidden` flag.
 
 **Ships on its own:** Instant, state-preserving surface switching with real quiescence AND correctness: flipping Library -> Scene -> Sheet no longer rebuilds or flashes, each surface keeps its scroll/filter/selection position, hidden surfaces stop their realtime sync, and a reactivated surface immediately catches up on anything that changed while it was quiesced — no stale data.
 
-**Steps:**
-- Create src/context/ShellContext.tsx (mirrors the AuthContext split) holding the nav reducer including the openSheet compound action and the compound scene-selection seam; point useAppNav.ts at it — the view components do not change because Phase 1 already made them switched islands and the union is already total.
-- Create src/components/SurfaceStage.tsx (h-dvh) that lazy-mounts then keepalives Library/Sheet/Scene surface wrappers — generalizing the Phase-1 first-visit lazy-mount (Finding 17) so each heavy surface is lazy-mounted-then-kept-alive on first visit rather than from boot; SheetSurface hosts the existing ErrorBoundary+Suspense+SystemSheetRenderer block verbatim; SceneSurface keeps the Scene subtree layout-tree-resident via visibility (per Findings 7+14, no content-visibility:auto) and carries the Phase-1 LEFT-rail relocation forward (the RIGHT operating rail is still docked — Finding 20).
-- RE-HOMED QUIESCENCE (Finding 2): add the `active`/quiesce knob to the SHARED useEntitySync hook — owner of subscribeToRemote (L322-330) and the debounced push — NOT to useScenes/syncEngine leaf files. useSync.ts (documents) and useCampaignSync.ts (campaigns) both hand an adapter to useEntitySync, so thread `active` down. On active:false->true, MANDATE a catch-up call to useEntitySync's existing sync() (L133/L162) so a reactivated surface can never show data stale by missed events.
-- useScenes.ts has NO realtime timer — only a load-on-mount effect (L20) and a cross-tab `storage` listener (L96) that observes only LIVE events. Do NOT gate that listener (it would silently DROP cross-tab scene edits received while hidden). Instead, on the Scene surface's active:false->true transition, force a loadScenes() re-read.
-- Collapse the Phase-1 Characters/Campaigns/Scenes header tabs into Library's internal segment control — a librarySegment flip, no view rewrite, no new surface.
-- Ship unit tests for SurfaceStage + the useEntitySync `active`/reconcile branches in the same PR, or add Playwright-only wrappers to the coverage exclude list in the same PR.
-- Re-label this phase honestly in the paired doc: 'add pause/resume-with-reconcile to the shared sync engine + generalize first-visit lazy-mount,' NOT 'invisible one-module refactor.'
-
-**Files:** `src/context/ShellContext.tsx (new)`, `src/components/SurfaceStage.tsx (new; generalizes first-visit lazy-mount — Finding 17)`, `src/components/surfaces/{LibrarySurface,SheetSurface,SceneSurface}.tsx (new)`, `src/hooks/useAppNav.ts`, `src/hooks/useEntitySync.ts (the `active`/quiesce knob + sync() reconcile on reactivate)`, `src/hooks/useSync.ts (thread `active` through the document adapter)`, `src/hooks/useCampaignSync.ts (thread `active` through the campaign adapter)`, `src/hooks/useScenes.ts (loadScenes() re-read on Scene-surface reactivate; NOT listener-gating)`, `src/App.tsx`, `vitest.config.ts (coverage exclude additions if any wrapper is Playwright-only)`
-
 **Risk:** Quiescence is a net-new pause/resume-with-reconcile capability on the shared engine, NOT a free refactor — pausing a supabase realtime channel without the sync() catch-up on reactivate is a correctness bug, so the reconcile is mandatory and tested. Aiming the knob at useScenes/syncEngine leaf files would silently drop cross-tab edits. Keepalive raises baseline DOM/memory; needs real PWA device testing for mobile dvh + keyboard insets. Bundle-size pressure peaks (shell added, nothing deleted yet) — lazy-mount surfaces off the eager index chunk (the SurfaceStage first-visit mechanism, generalizing Phase 1's SceneManager treatment, is what keeps this in budget).
 
 ## Phase 3 — Shared Dock (five tabs, click-select) + party tab from App documents + SheetDispatchContext + delete the bestiary
+
+**As built: shipped.** `src/dock/` carries the five typed tabs (party, monster, spell,
+feat, equipment) and `src/contexts/SheetDispatchContext.tsx` inverts control as spec'd.
+The read-only monsters tab is gone from the 5e sheet strip. One nuance the plan did not
+anticipate: the bestiary is now single-homed *off the sheet* but double-homed *within
+the shell* — it is reachable both from the dock's monster tab and from a Library
+`bestiary` segment (`src/components/LibraryBestiaryView.tsx`, added later by RFC 004).
+That is not the "two-bestiary state" the kill-list warned about, which was specifically
+a browser buried inside a character; but it is two shared-layer homes for the same
+catalog, and nothing in this plan decided that.
 
 **Goal:** Stand up the one summonable content dock with FIVE tabs (adding a party tab sourced from the App documents prop — Finding 15), invert control so the shell dock dispatches into a per-sheet handler registry, and evict the read-only Monsters tab from the 5e sheet. (The scene emit seam and the party tab's drag wiring are NOT exposed here — they move to Phase 4 with their consumers.)
 
 **Ships on its own:** A single summonable Dock of typed content tabs reachable identically from every surface via click-select; the dock's spell/feat/equipment tabs click-add into the current sheet; a browsable PARTY tab shows your character roster (its drag-to-scene verb arrives Phase 4), replacing the PlacementMode roster's browse function; the bestiary leaves the character sheet entirely. The IA fix the owner named.
 
-**Steps:**
-- Create src/dock/{DockProvider,Dock,useDockResources,dockRegistry}.tsx built on the existing Tabs.tsx; re-host the SHARED src/components/{MonsterBrowser,SpellBrowser,FeatBrowser,EquipmentBrowser}.tsx verbatim as tab bodies. Ship dock unit tests in the same PR.
-- ADD THE FIFTH 'PARTY' TAB (Finding 15): a dock tab sourced from the App documents prop (CharacterDocument[]) threaded through the shell — NOT a SRD catalog loader, so it does NOT go through useDockResources. In Phase 3 it is BROWSE-ONLY (renders the roster list, mirroring what SceneManager's L529/roster shows); it has NO click-to-add-to-sheet verb (you do not add a character to a character). Its ONLY verb — drag-to-scene — is wired in Phase 4 alongside its DragLayer consumer (3b-i), so nothing here is orphaned. The party tab is the character-document drag SOURCE the Phase-4 1-choice gate requires; without it, 3b-i has no draggable character document anywhere in Phases 1-4.
-- Build useDockResources as a NEW loader keyed by an explicit active-system selector (NOT the sheet's systemId-scoped useDnd5eSheetResources loader) — for the four SRD catalog tabs only; the party tab bypasses it.
-- Create src/context/SheetDispatchContext.tsx so the active SheetSurface PUBLISHES its controller handlers up (control inverted: the dock emits a generic onSelect into the registry; the per-system sheet registers its handler — respecting the eslint boundary). The Phase-3 CONSUMER is the dock's spell/feat/equipment click-add. Hard-gate every cross-surface onSelect on a RESOLVED active-document id (disable, never silently target the last-mounted controller).
-- DELETE Dnd5eMonsterBrowserTab.tsx and drop the 'monsters' TabsTrigger from Dnd5eTabsNavigation.tsx (verified read-only, no add-to-PC mutation). BEFORE deleting, CHECK docs/doc-drift.rules.ts for a runtime-copy pin on the monster browser tab (Findings 12+19); the verified pins are on the FEAT browser (browserSupport L355) and the inline spell/feat/feature files, but the guard is keyed to file path, so any guarded delete edits rules.ts + manifest.ts in the SAME commit. Dnd5eTabsNavigation.tsx is a SIBLING, not a host, so this does not affect Dnd5eSheetBase.tsx's LOC.
-
-**Files:** `src/dock/{DockProvider,Dock,useDockResources,dockRegistry}.tsx (new; FIVE tabs)`, `src/dock/PartyDockTab.tsx (new; sourced from the App documents prop, browse-only in Phase 3, drag-source in Phase 4 — Finding 15)`, `src/components/ui/Tabs.tsx`, `src/components/{MonsterBrowser,SpellBrowser,FeatBrowser,EquipmentBrowser}.tsx`, `src/context/SheetDispatchContext.tsx (new)`, `src/systems/dnd5e/shared/Dnd5eSheetBase.tsx (1-2 line registration; measure host LOC — currently ~301/400)`, `src/systems/dnd5e/shared/components/Dnd5eMonsterBrowserTab.tsx (delete)`, `src/systems/dnd5e/shared/components/Dnd5eTabsNavigation.tsx`, `src/utils/dataLoader.ts`, `docs/doc-drift.rules.ts + docs/doc-drift.manifest.ts (only if the deleted tab is guarded)`, `dock + party-tab + SheetDispatchContext unit tests`
-
 **Risk:** The SheetDispatchContext seam is real engineering; a shell-scoped dock reaching a systems/** controller must invert control to respect the eslint boundary. The party tab must NOT go through useDockResources (it is App-state-sourced, not SRD) and must NOT expose a click-to-add-to-sheet verb; it is browse-only until its Phase-4 drag consumer lands, so it is user-visible content (roster), not dead code. hostSizeBudget: Dnd5eSheetBase.tsx gains only a 1-2 line registration — measure it. Transient dual-home for spell/feat/equipment starts here — route both through useDockResources and cap to Phase 5. Before deleting ANY sheet tab, check the doc-drift.rules.ts file-path guard (Findings 12+19). Coverage: new dock/loader/party-tab branches ship tests in-PR.
 
 ## Phase 4 — Drag keystone + bound emit seam + party-tab drag source + TWO-part prototype GATE + dynamic-viewport probe + PlacementMode mutual-exclusion
+
+**As built: shipped behind a default-off flag, not end-to-end gated.** The greenfield
+engine exists (`src/components/drag/`), the bound emit seam exists, the party tab is a
+real drag source, the PlacementMode mutual-exclusion keys off the same single predicate
+as the plan demanded, and the two-part gate was genuinely evaluated rather than
+asserted. But `sceneDrag` defaults OFF in the flag registry, no CI job builds with
+`VITE_SCENE_DRAG_ENABLED=true`, and `e2e/scene-drag.spec.ts` opens with a `test.skip`
+that fires on every current run. The engine is unit-gated; the user-facing gesture is
+not gated end to end and no user has one. **Do not call this phase complete.** The
+reconcile-budget check also has a known flake history under full-suite load — the
+wall-clock problem the Phase-7 budgets doc analyses at length.
 
 **Goal:** Build the generic pointer-events drag engine, expose the zero-arg emit(intent) scene-dispatch seam WITH its DragLayer consumer, wire the party dock tab as the character-document drag source, prove the interaction thesis on TWO honestly-scoped flows (a genuine 1-choice auto-apply AND the monster 2+ inline-chip classifier), PROBE the live-viewport unknowns, and gate the legacy PlacementMode entry OFF for every drag-covered kind — all on the risk-carrying transformed surface, before any broad eviction.
 
 **Ships on its own:** Drag a PARTY character-document token onto the scene and it drops where you release with NO menu (true auto-apply); drag a bestiary monster and a minimal friendly/hostile chip resolves its allegiance before it lands; for those two kinds the old click-'Place token'-then-click-cell machine is gone (one affordance per kind). The first genuinely Owlbear-grade gestures, on the stable Phase-1/2 frame — with the fund/kill decision made against a realistic post-drop reconcile budget AND a dynamic-viewport probe that de-risks the Phase-6 pan/zoom subsystem.
 
-**Steps:**
-- Create src/components/drag/{DragProvider,DragLayer,useDropTarget,pointerEngine}.ts(x): pointer-events with setPointerCapture, scroll-vs-drag disambiguation (activation delay/tolerance for touch), a portaled DragLayer ghost tracked by direct ref transform (pointer-events:none), no per-frame React state. Ship pointerEngine + useDropTarget UNIT tests in the same PR; add the DOM-only DragLayer to the coverage exclude list in the same PR if only Playwright-exercisable.
-- Expose the scene-dispatch seam HERE: add a SceneDispatchContext through which the mounted SceneSurface publishes a ZERO-ARG emit(intent: SceneActionIntent) => boolean, bound internally to the shell-resolved selectedScene. Buildable now without an orphan export because Phase 1 already lifted scene SELECTION and the DragLayer is its first consumer.
-- WIRE THE PARTY TAB AS THE CHARACTER-DOCUMENT DRAG SOURCE (Finding 15): make the Phase-3 party dock tab's roster entries draggable; the drag payload carries a documentId that SceneSurface resolves against the shell-threaded documents prop (mirroring SceneManager L529 documents.find(...)) so buildPlacedToken receives its linkedDoc. This is the ONLY character-document drag source in Phases 1-4 — the four SRD tabs contain none.
-- 3a SPIKE — retire the STATIC case AND PROBE the DYNAMIC case (Findings 3+10): prove clientX/clientY -> integer SceneCoordinate inversion AND document.elementFromPoint hit-testing under active setPointerCapture against a TRANSFORMED surface at a REALISTIC ~900 memoized cells. EXTEND to a DYNAMIC viewport probe — variable scale+translate coordinate inversion (floor((clientX-rect.left-tx)/(cellPx*scale)) with wheel-zoom-to-cursor anchoring + clamping), a CONTINUOUS pan/zoom repaint frame budget at ~900 transform-positioned cells, and touch pinch-zoom + one-finger-pan gesture arbitration — so the pan/zoom unknowns are PROBED here, not first discovered in Phase 6. This spike PROBES but does NOT fully retire the viewport subsystem, which gets its OWN gate in Phase 6 (5d).
-- 3b-i GATE (genuine 1-choice, Findings 9+15): drag a PARTY character-DOCUMENT token from the party dock tab onto the transformed surface. buildPlacedToken (tokenPlacement.ts:36-68) resolves a linkedDoc with non-npc kind to kind='character', playerControlled:true, requiring NO allegiance — so this fires auto-apply with NO menu, emitting the EXISTING place-token intent via the zero-arg emit seam. This is the true '1 legal choice = auto-apply' path; illegal drops surface runtime.ts's existing `issues` as a toast + snap-back.
-- 3b-ii GATE (the 2+ classifier, Finding 9): make a BESTIARY MONSTER dock item draggable. Because a statblock-backed NPC REQUIRES a tokenAllegiance, pull a MINIMAL inline-chip friendly/hostile classifier FORWARD here — a thin ConfirmDialog-based chooser — resolving to the EXISTING place-token / set-token-allegiance intents. Phase 6 RELOCATES/HARDENS this chip.
-- GATE OFF PLACEMENTMODE PER DRAG-COVERED KIND (Finding 21): under the SAME feature flag that enables a kind's drag path, disable that kind's PlacementMode entry point on the Scene so the two affordances never coexist — 3b-i (character) gates off the 'token' PlacementMode toggle (L1030/L1032); 3b-ii (monster/npc) gates off the 'adversary' toggle (L1064). When the flag is OFF (drag not yet shipped or gate failed), PlacementMode stays as the sole affordance. Markers (not covered by Phase-4 drag) keep their PlacementMode until Phase 6. The full machine DELETION still lands in Phase 6 5b.
-- Register today's SceneGridView.tsx as the SHIPPED interim drop target (trivial cell = floor((clientX-rect.left)/cellPx) on the untransformed grid — real and user-visible now), sourced from the party tab (character) and monster tab (monster) so the interim drop has a real source too (Finding 15); fold the monster/character->token path through useSceneEncounter.ts so the Encounter panel and the Monster dock tab share ONE path.
-- THE GATE (Finding 3): butteriness is judged on the 3a transformed ~900-cell surface against an EXPLICIT post-drop reconcile frame-time budget for BOTH sub-gates — NOT on the trivial grid, and NOT by hardcoding a default allegiance to fake a 1-choice monster drop. If either sub-gate misses the budget/feel bar, or the dynamic-viewport probe shows the continuous-repaint budget is unreachable, the interaction thesis (or the pan/zoom subsystem) is falsified before the expensive phases.
-
-**Files:** `src/components/drag/{DragProvider,DragLayer,useDropTarget,pointerEngine}.ts(x) (new)`, `src/context/SceneDispatchContext.tsx (new; zero-arg bound emit)`, `src/dock/PartyDockTab.tsx (drag-source wiring — Finding 15)`, `src/components/surfaces/SceneSurface.tsx (resolve drag payload documentId against documents, mirror L529)`, `src/dock/Dock.tsx`, `src/components/SceneGridView.tsx (shipped interim drop target)`, `src/components/SceneManager.tsx (publish bound emit; gate off PlacementMode entry per drag-covered kind under the flag — L1030/L1064, Finding 21)`, `src/components/scene/useSceneEncounter.ts`, `src/components/ui/ConfirmDialog.tsx (minimal friendly/hostile chip pulled forward for 3b-ii)`, `src/scene/tokenPlacement.ts (READ-ONLY reference for the 1-choice vs 2+ resolution; NOT edited)`, `drag-engine unit tests; a transformed ~900-cell spike harness with a post-drop reconcile assertion AND a dynamic-viewport (scale+translate, continuous-repaint, touch-pinch) probe harness; party-tab drag-source tests; vitest.config.ts coverage-exclude for DOM-only DragLayer if applicable`
-
 **Risk:** The pointer engine is unavoidably novel (zero DnD code, no lib, PWA touch). This IS the pass/fail gate — de-risked ONLY if it measures FEEL on the transformed ~900-cell surface for BOTH the 1-choice PARTY character-document drop AND the 2+ monster chip (Findings 9+15); a green gate on the trivial untransformed grid, a faked '1-choice' monster drop, or a 1-choice gate with no real character-document source licenses nothing. The party tab (Finding 15) is the load-bearing new source — if it slips, the fallback 1-choice example is a manual/marker token. The PlacementMode mutual-exclusion (Finding 21) must key off the SAME flag as the drag path so exactly one affordance exists per kind in every flag state. The dynamic-viewport probe (Finding 10) PROBES pan/zoom, it does not retire it; the viewport subsystem still carries its own Phase-6 gate. runtime.ts is not touched. Coverage: the branch-heavy pointerEngine + the pulled-forward chip + party drag-source MUST ship tests.
 
 ## Phase 5 — Sheet eviction (click-to-add ONLY) + tab-grid collapse + felt micro-feedback + full runtime-copy guard discipline
+
+**As built: the dispatch half shipped at 7 of 7; the eviction half did not ship.**
+Every system now publishes whatever add-handlers it actually has into the Dock's
+dispatch registry, and the resolved capability matrix is asserted system by system —
+honestly asymmetric, because two systems carry no shared Spell/Feat/Item concept and
+correctly publish nothing. That part is done and gated.
+
+The phase's *name* is not done. The in-sheet browser wrappers this phase exists to
+delete are all still present and still rendered: `Dnd5eFeatBrowserTab`,
+`Pf2eFeatBrowserTab`, `Pf2eEquipmentBrowserTab`, `Pf2eSpellBrowserPanel`,
+`D20FeatBrowserTab`, `D20EquipmentBrowserTab`, `D20SpellBrowserPanel`,
+`MamPowerBrowserTab`, `MamAdvantageBrowserTab`, `MamEquipmentBrowserTab`. The tab grids
+were not collapsed. Consequently the "transient dual-home for spell/feat/equipment,
+capped to one chapter" in the Risk note below is **not transient** — every affected
+system browses the same catalog from two places today, which is the exact condition
+this phase was scheduled to end. Treat that as the live gap, not as an accepted
+boundary; nothing on record says it was consciously deferred.
 
 **Goal:** Make the character sheet only the character: evict the src/systems/** catalog browser wrappers, collapse the tab bars, and add content via click-to-add + kept inline controls — the sheet has NO drop targets (Finding 8) — one system per atomic PR, with host additions kept near-zero via sibling extraction AND every DELETE OR EDIT of a RUNTIME_COPY_RULES-guarded file paired with its doc-drift.rules.ts + manifest.ts edit (Finding 19).
 
 **Ships on its own:** Per system, the sheet drops from a 10-across tab strip to ~6 real character sections; adding a spell/feat/item is one tap (existing inline control) or a dock click, with an immediate felt beat (toast + count-badge animation) on that FAST path; a sticky vitals spine surfaces Header/Classes/Overview. The most-touched surface stops being slop. Sheets stay always-editable.
 
-**Steps:**
-- Per system, ONE atomic PR: wire the dock tab to that system's EXISTING controller add-handler via SheetDispatchContext (click-to-add), KEEP the existing inline controls (Dnd5eSpellsTab.tsx onTogglePreparedSpell), DELETE the src/systems/** browser wrapper tabs, collapse the tab-nav grid, and update paired knip/hostSizeBudget/doc-drift/test entries in the same commit. Click-to-add is UNIFORM across all 7 systems; the per-system add-DESTINATION is resolved by EXISTING per-system controller handlers, NOT any new drag-classifier.
-- RUNTIME-COPY GUARD DISCIPLINE — FULL SCOPE (Finding 19): the doc-drift RUNTIME_COPY_RULES table pins THIRTEEN paths (verified L295-381), and SIX of them are per-system inline tab/section files this phase EDITS (not deletes) when it collapses the tab grid and reworks spell-prep UI: Dnd5eSpellsTab.tsx (L340, DND5E_SPELLS_COPY.knownSpellCasting + .alwaysPreparedSupport), Pf2eSpellsTab.tsx (L366, PF2E_SPELLS_COPY.alwaysPreparedSupport + .preparedSlotsSupport), D20SpellsTab.tsx (L335, D20_LEGACY_MANUAL_NOTES), Dnd5eSelectedFeatsSection.tsx (L348, DND5E_FEAT_COPY.selectedSupport), Dnd5eFeatureOptionsSection.tsx (L358, DND5E_FEATURE_OPTION_COPY.provenanceSupport + .emptyState), MamArchetypesTab.tsx (L374, MAM3E_ARCHETYPE_COPY.referenceOnly). The per-PR checklist trigger is REWRITTEN from 'before deleting any *BrowserTab' to 'before EDITING OR deleting any file whose path appears in RUNTIME_COPY_RULES, assert its requiredTokens still render.' When the dnd5e/pf2e/d20-legacy/mam3e tab collapse touches any of these six, the SAME commit must preserve (or relocate + update rules.ts+manifest.ts for) their tokens. Deleting Dnd5eFeatBrowserTab.tsx (L355) additionally drops DND5E_FEAT_COPY.browserSupport — same in-commit rules.ts+manifest.ts pairing.
-- NO sheet drop targets, NO sheet drag, NO chip menu on the sheet (Finding 8): delete the previously-planned 'register owned tabs as drop targets' and 'buttery drop on dnd5e first' steps entirely. Pointer-drag and the inline-chip classifier are reserved for the spatial Scene canvas (Phase 4/6).
-- hostSizeBudget DISCIPLINE: hostSizeBudget.test.ts is a PER-FILE <=400-LOC ceiling on 5 named hosts. Land click-to-add wiring as NEW SIBLING modules each host consumes in 1-2 lines. Deleting sibling *BrowserTab wrappers does NOT reduce a host's own LOC — measure host LOC in every eviction PR's checklist.
-- Add the micro-feedback beat (budget freed from deleting sheet drag): a click-to-add toast + count-badge animation so the slice's felt moment is on the FAST path.
-- DO NOT thread any onUpdate={canEdit?onUpdate:undefined} read-only gating (Decision B): sheets stay always-editable; read-only/view mode is out of scope.
-- Coverage: each eviction PR deletes tested wrapper components — so the same PR must ship tests for the new sibling click-to-add registration + the micro-feedback; branch threshold 60 is tightest.
-- ACCEPTANCE (per system, Finding 19): run check:doc-drift (not just knip/hostSizeBudget/coverage) in each per-system eviction PR, because the tab-grid collapse touches guarded inline files in dnd5e/pf2e/d20-legacy/mam3e.
-
-**Files:** `src/systems/dnd5e/shared/Dnd5eSheetBase.tsx (host — 1-2 line sibling consumption; measure LOC)`, `src/systems/dnd5e/shared/{useDnd5eSheetActionHandlers.ts, components/Dnd5eSpellsTab.tsx (EDITED, RUNTIME-COPY-GUARDED L340 — keep tokens + inline toggle; Finding 19), components/Dnd5eSelectedFeatsSection.tsx (EDITED, GUARDED L348), components/Dnd5eFeatureOptionsSection.tsx (EDITED, GUARDED L358), components/Dnd5eTabsNavigation.tsx, components/Dnd5eFeatBrowserTab.tsx (DELETE wrapper — PAIR with rules.ts L355 + manifest edit), useSheetClickToAdd.ts (new sibling)}`, `src/systems/pf2e/{sheet.tsx (host — measure LOC), components/Pf2eSpellsTab.tsx (EDITED, GUARDED L366 — keep tokens; Finding 19), components/Pf2eSpellBrowserPanel.tsx, Pf2eFeatBrowserTab.tsx, Pf2eEquipmentBrowserTab.tsx (delete wrappers)}`, `src/systems/d20-legacy/components/{D20LegacyTabs.tsx, D20SpellsTab.tsx (EDITED, GUARDED L335 — keep D20_LEGACY_MANUAL_NOTES; Finding 19), D20SpellBrowserPanel.tsx, D20FeatBrowserTab.tsx, D20EquipmentBrowserTab.tsx (delete wrappers)}`, `src/systems/mam3e/{sheet.tsx (host — measure LOC), components/MamArchetypesTab.tsx (EDITED, GUARDED L374 — keep MAM3E_ARCHETYPE_COPY.referenceOnly; Finding 19), components/{MamPowerBrowserTab.tsx, MamEquipmentBrowserTab.tsx, MamAdvantageBrowserTab.tsx} (delete wrappers)}`, `knip.json, src/__tests__/hostSizeBudget.test.ts (the 5 named hosts), docs/doc-drift.rules.ts (RUNTIME_COPY_RULES entries for deleted AND edited guarded files — Finding 19), docs/doc-drift.manifest.ts, new sibling click-to-add + micro-feedback unit tests`
-
 **Risk:** FOUR CI gates fight the deletions: knip, hostSizeBudget (per-file host LOC — NOT offset by sibling deletion), doc-drift, AND the coverage thresholds. CRITICALLY (Finding 19), doc-drift fires not only on DELETING a *BrowserTab but on EDITING any of the six guarded inline files the tab-grid collapse reworks (Dnd5eSpellsTab, Pf2eSpellsTab, D20SpellsTab, Dnd5eSelectedFeatsSection, Dnd5eFeatureOptionsSection, MamArchetypesTab): dropping/renaming a guarded support-note token during the collapse reddens check:doc-drift inside verify and blocks the atomic PR. Each PR must delete/edit the guarded file AND update its paired rules.ts+manifest.ts+test AND keep host LOC near-zero via sibling extraction AND ship the sibling's tests AND run check:doc-drift — all in one commit. Because the sheet no longer drags, the per-system drag-classifier matrix is DISSOLVED — the only remaining classifier is the scene-generic allegiance chip (Phase 4/6).
 
 ## Phase 6 — Scene canvas (canvas-first; honest split) + right-rail summon tray + the recap seam + relocate the scene classifier + final PlacementMode deletion
+
+**As built: roughly one slice of five, and that one is opt-in.** Only 5c-i landed:
+`src/components/SceneCanvas.tsx` renders the scene as a pure view over `SceneState` and
+dispatches no intents, so the frozen-core invariant holds. But it is an **alternative**
+to `SceneGridView`, not the replacement 5c-i specifies — `SceneGridView.tsx` is still
+present and still the rendered default, `VITE_SCENE_CANVAS_ENABLED` defaults OFF, no CI
+job enables it, and the spec'd scene-canvas e2e gate was never written. Two further
+reasons the flag stays off, neither recorded in the spec: the canvas branch does not
+receive the map-image layer the DOM grid renders, and drag is wired to the DOM grid
+only, so enabling the canvas disables drag.
+
+Open: **5a** (`SceneManager.tsx` is ~1220 lines, undecomposed), **5b** (the 20rem right
+operating rail is still docked — which is what blocks Phase 7's chrome-dominance gate),
+**5d** (no viewport, no pan/zoom), **5e** (no ruler, no marker drag path). The
+PlacementMode machine is fully live, from the type declaration through every toggle and
+cell handler. Whether these were consciously deferred or simply not reached is recorded
+nowhere, so they are open, not accepted boundaries.
 
 **Goal:** Make the grid canvas the page: decompose the monolith into a thin SceneSurface that owns BOTH the emit(intent) seam AND the App-owned onLogToCampaign recap callback (Finding 4); demote the RIGHT operating rail (still docked since Phase 1 — Finding 20) into its designed summon tray + GM overlay; then, in THREE separately-gated slices (Finding 10), replace the grid with a fixed-1:1 transform-positioned RENDER, add the pan/zoom VIEWPORT subsystem with its OWN gate, and add the distance ruler; RELOCATE/HARDEN the Phase-4 allegiance chip; and DELETE the remaining PlacementMode machine (Finding 21).
 
 **Ships on its own:** The Scene becomes a full-bleed canvas where the grid dominates and tools are summoned — the right operating rail finally demotes into a two-level summon tray + GM overlay (its FIRST demotion, with designed reopen UX, per Finding 20), a transform-positioned render, then user-controlled pan/zoom, then a live distance ruler — AND logging a session recap back to a linked campaign still works after the decomposition. The surface a VTT actually lives on finally feels buttery, and 'canvas dominates' + the chrome-dominance budget become true here for the first time.
 
-**Steps:**
-- 5a: decompose the 1207-line SceneManager.tsx into a thin SceneSurface that owns BOTH the emit(intent) dispatch seam AND the App-owned onLogToCampaign(campaignId, title, body) recap callback (Finding 4 — NOT one of the 12 intents; it stays an App callback threaded from SurfaceStage), consuming the shell-controlled selectedSceneId (lifted in Phase 1). Push each tool's transient input state down so the canvas stops re-rendering on every keystroke — behavior-preserving.
-- 5b (the RIGHT-rail demotion — its FIRST, Finding 20): the LEFT scene-list rail is already relocated (Phase 1); NOW demote the 20rem RIGHT operating rail into a designed summoned two-level tool rail (with real reopen affordances — never a bare boolean). Fold Dice/Check/Oracle/Reaction into a summonable tray built with a new src/components/ui/CollapsibleSection.tsx that is MOUNTED + CSS-hidden (never unmount — preserves DicePanel.history / in-flight drafts; ship the Playwright persistence guard). Fold Initiative+Combat into a GM overlay; fold the monster/token SOURCE into the dock. This is where 'canvas dominates' becomes true.
-- DELETE THE REMAINING PLACEMENTMODE MACHINE (Finding 21): Phase 4 already gated off the entry points for drag-covered kinds (character/monster); now remove the PlacementMode machine entirely (type L65, state L114, badge L963, toggles L1030/L1064/L1146, cell handlers L528/L558/L574) — including the last uncovered kind (markers, once its drag path lands) — replacing it wholesale with the drop-time classifier ON THE SCENE.
-- RELOCATE/HARDEN the inline-chip classifier (Findings 8+9): the friendly/hostile allegiance chip was BUILT in Phase 4 (3b-ii); Phase 6 relocates it into the canvas's drop-time-classify flow and extends it to kind (character/adversary/marker) where legal. It resolves to EXISTING SceneActionIntents; scene-generic, not per-system.
-- 5c-i — TRANSFORM RENDER slice (Finding 10): create src/components/scene/SceneCanvas.tsx as a from-scratch transform/SVG-positioned canvas at FIXED 1:1 scale that REPLACES SceneGridView.tsx (a true render swap — SceneGridView has ZERO viewport transform), with a re-implemented roving-tabindex keyboard-grid a11y path and the grid drop target from the Phase-4 spike. Budget the POST-drop reconcile of ~900 cells (pre-measured by the Phase-4 gate). This slice does NOT add pan or zoom.
-- 5d — PAN/ZOOM VIEWPORT subsystem, its OWN gated slice (Finding 10): a viewport state machine (scale + translate), wheel-zoom-to-cursor with clamping, drag-pan, and PWA touch pinch-zoom + one-finger-pan arbitration. 100% GREENFIELD, carrying its OWN acceptance gate: coordinate inversion under variable scale+translate AND a continuous-repaint frame budget at ~900 transform-positioned cells — the unknowns PROBED (not retired) by the Phase-4 dynamic-viewport spike. Do NOT describe the coordinate math as 'already retired in Phase 4.'
-- 5e — DISTANCE RULER slice (Finding 10): a discrete measurement feature — a new drag gesture + overlay + grid-distance math — landed separately from the render and viewport slices.
-- Every drop still emits an existing SceneActionIntent via the zero-arg emit seam; runtime.ts untouched. Ship SceneCanvas + viewport + ruler unit tests, or add DOM-only pieces to the coverage exclude in the same PR.
-- ACCEPTANCE CHECKS: (Finding 4) from an active scene with a linked campaign, log a recap and assert the campaign's session log gains the entry; (Finding 10) the 5d viewport gate — zoom-to-cursor lands the correct cell under variable scale, and continuous pan/zoom repaint meets its frame budget on ~900 cells; (Finding 20) after 5b, assert the right operating rail is summonable (tools reopen via a designed affordance) AND the chrome-dominance budget is met; (Finding 21) assert no PlacementMode click-machine remains — placement is drag-only.
-
-**Files:** `src/components/SceneManager.tsx (decompose; delete PlacementMode machine — Finding 21)`, `src/components/surfaces/SceneSurface.tsx (owns emit(intent) + App-owned onLogToCampaign)`, `src/components/scene/SceneCanvas.tsx (new, replaces SceneGridView; 5c-i render + 5d viewport)`, `src/components/scene/SceneViewport.ts(x) (new; pan/zoom state machine — 5d, own gate)`, `src/components/scene/SceneDistanceRuler.tsx (new; 5e discrete feature)`, `src/components/SceneGridView.tsx (retire)`, `src/components/ui/CollapsibleSection.tsx (new; right-rail summon tray — Finding 20)`, `src/components/ui/ConfirmDialog.tsx (allegiance/kind chip — RELOCATED from Phase 4)`, `src/components/scene/{DicePanel,CheckPanel,OraclePanel,ReactionPanel,InitiativeTracker,CombatPanel,TokenPanel,MarkerPanel,RecapPanel}.tsx`, `src/__tests__ (SceneManager.test.tsx decomposition + PlacementMode-removal edits, sceneCombatBridgeUi.test.ts, capabilityScenarios.test.tsx; SceneCanvas + SceneViewport + ruler specs or coverage-exclude; recap-log + viewport-gate + right-rail-summon + no-placement-machine acceptance tests)`
-
 **Risk:** 5c-i + 5d + 5e together are the single most expensive item — but SPLITTING them (Finding 10) is the whole point: 5c-i retires the static coordinate case pre-measured in Phase 4, 5d is a 100% greenfield viewport whose costs are only PROBED (not retired) by the Phase-4 dynamic spike and so carries its OWN gate, and 5e is a discrete feature. This is ALSO where the right operating rail demotes for the first time (Finding 20) — its summon tray must ship WITH designed reopen UX, never a bare collapse boolean. Mitigated by landing LAST on a stabilized frame. onLogToCampaign must be explicitly threaded through SceneSurface or the recap write is silently dropped (acceptance test guards it). The allegiance chip is RELOCATED, not rebuilt. The PlacementMode deletion must confirm every kind's drag path is live first (Finding 21). Coverage: the branch-heavy canvas + viewport must ship tests or be excluded.
 
 ## Phase 7 — Hardening, chrome + coverage + host-LOC budgets, seam doc, decision gate
 
+**As built: one deliverable of five.** The perf/bundle budgets landed and the keepalive
+frame budget was promoted from soft log to hard CI gate; the derivations, the
+hard-gated/soft-logged ledger, and the reasoning for choosing a counted rather than a
+wall-clock gate live in `ui-shell-phase7-budgets.md`, which is the record of that half.
+Open: hash-sync restore-on-reload, the chrome-dominance gate, the seam catalogue and
+constraint set of record, and the owner usability sign-off. Chrome-dominance is
+**blocked**, not merely undone — Finding 20 predicted it could only be satisfied after
+Phase 6's 5b demotes the right rail, 5b has not shipped, and the rail is still docked.
+
+One correction this phase must carry: the "13-path doc-drift-rules guard" cited in the
+Goal and Risk below is **wrong**. The guard is fifteen file-path-keyed entries; the
+build-specs doc caught this and the constraint set of record must state fifteen (or
+derive the count) rather than reproduce the stale number.
+
 **Goal:** Restore-on-reload, make canvas dominance a CI gate (anchored to Phase 6, not Phase 1 — Finding 20), formalize the constraint set (coverage, host-LOC, the 13-path doc-drift-rules guard — Finding 19), document the role/read-only model and ALL app-facing seams (three scene seams incl. the FIVE-writer selection seam + the compound six-writer sheet-open seam), and gate future investment on a real felt signal.
 
 **Ships on its own:** Reload restores your exact surface/sheet/scene position (no router); the app enforces its own 'canvas dominates' promise in CI once the right rail demotes; the owner confirms each shipped chapter actually feels buttery.
-
-**Steps:**
-- Hash-sync ShellNavState in useAppNav.ts (deferred router) so reload restores surface + librarySegment + sheetDocId + sceneId + overlay.
-- Promote the Phase-1 interaction-latency instrument into scripts/check-interaction-budget.mjs and add scripts/check-chrome-dominance.mjs (non-content chrome <= ~10% of Scene viewport pixels) to npm run verify — but ANCHOR it to POST-Phase-6 state (Finding 20): the budget is only achievable once 5b demotes the 20rem right rail to a summoned strip, so it is asserted from Phase 6 onward, NOT Phase 1 (whose Scene change is only left-rail relocation).
-- Formalize the constraint set all four red-team passes surfaced: document that verify's gates include the coverage thresholds (lines 70/functions 65/branches 60/statements 70), hostSizeBudget's per-file 400-LOC host ceiling, AND the doc-drift RUNTIME_COPY_RULES guard — a FILE-PATH-keyed token guard over THIRTEEN paths (Finding 19), six of which are EDITED not deleted by Phase 5; add a per-phase checklist item that measures coverage-delta, host LOC, and 'is this deleted/EDITED file pinned in rules.ts?' in every eviction PR.
-- Document (a) the role toggle as disclosure-only AND read-only/view mode as explicitly out of scope; (b) ALL app-facing seams — the THREE scene seams (the compound FIVE-writer selectedSceneId+onSelectScene seam per Finding 16, the zero-arg emit(intent), and the App-owned onLogToCampaign) AND the FOURTH, sheet-side compound openSheet(docId) seam with its six writers plus the re-homed Export/Delete controls (Finding 18); run check:doc-drift.
-- Usability check with the owner as the explicit gate for whether the next interaction chapter (and specifically the 5d pan/zoom subsystem) is warranted; run graphify update . and /save to keep memory warm.
-
-**Files:** `src/hooks/useAppNav.ts`, `scripts/check-interaction-budget.mjs (new)`, `scripts/check-chrome-dominance.mjs (new; anchored to post-Phase-6 right-rail demotion — Finding 20)`, `package.json (verify chain)`, `vitest.config.ts (coverage config of record)`, `src/__tests__/hostSizeBudget.test.ts (host ceiling of record)`, `docs/doc-drift.rules.ts + docs/doc-drift.manifest.ts (13-path RUNTIME_COPY_RULES of record, edit-or-delete guard — Finding 19)`, `docs/ (role-toggle + read-only-out-of-scope + seam doc: three scene seams incl. five-writer selection + compound openSheet + Export/Delete)`, `memory/hot.md`
 
 **Risk:** The chrome-dominance budget must be measured (viewport pixel ratio), not asserted, and CANNOT be enforced until Phase 6 demotes the right operating rail (Finding 20) — anchoring it to Phase 1 would either fail (the 20rem rail is ~320px of chrome) or force the very premature right-rail collapse Finding 20 forbids. The coverage, host-LOC, and 13-path doc-drift-rules gates are already live in CI — Phase 7 only documents them; the real enforcement happened per-PR in Phases 1-6.
 
@@ -328,28 +378,120 @@ The tournament's value is as much in what it refused as what it kept. Selected r
 
 # Open risks (carried, eyes-open)
 
-- ⚠️ The greenfield pointer engine is unavoidably novel (zero DnD code, no library, PWA touch). The Phase-4 prototype gate is the explicit pass/fail — real only if it measures FEEL on the transformed ~900-cell surface for BOTH the genuine 1-choice PARTY character-document drop AND the 2+ monster inline-chip classifier (Findings 9+15), against a post-drop reconcile frame-time budget (Finding 3). A green gate on the trivial untransformed grid, a faked '1-choice' monster drop, or a 1-choice gate with no real character-document source licenses nothing. This is a bet, de-risked, not eliminated.
-- ⚠️ The Phase-4 1-choice sub-gate depends on the NEW party dock tab (Finding 15): the four SRD dock tabs contain no character-document source, and character documents reach the Scene today only via SceneManager's documents prop + the L529 roster. The party tab (App-documents-sourced, browse-only Phase 3, draggable Phase 4) is the load-bearing new source; if it slips, the fallback genuine 1-choice example is a manual/marker token that needs no allegiance and no roster.
-- ⚠️ The bestiary-monster drop is INTRINSICALLY the 2+ case (Finding 9): buildPlacedToken requires a tokenAllegiance for statblock NPCs, so the friendly/hostile inline-chip classifier MUST be built in Phase 4 (3b-ii), not Phase 6. The true '1 choice = auto-apply' example is a character DOCUMENT, gated in 3b-i.
-- ⚠️ Scene selection is a COMPOUND FIVE-writer seam (Finding 16) — L109 init, L143 auto-reset, L807 select-first-imported, L872 select-just-created, L926 rail-click — and L807/L872 relocate into LibraryScenesView with the create/import UI; each must dispatch onSelectScene(newScene.id) AND {surface:'scene',sceneId}, not a bare id-set, or creating/importing a scene in Library adds it but never opens it. Phase-1 create/import-then-open acceptance gates cover this.
-- ⚠️ SceneManager must stay React.lazy() and lazy-mount on FIRST Scene visit, NOT from boot (Finding 17) — mounting from boot de-lazies the 1207-line heaviest component / force-loads its chunk at first paint with no offsetting deletion until Phases 3/5, a TTI/bundle regression in the Phase-1 PR. A Phase-1 bundle/TTI acceptance check guards the index chunk. State preservation applies only after the first visit, exactly when there is transient state to preserve.
-- ⚠️ Per-character Export and Delete are orphaned by the AppHeader {currentDoc && ...} dissolution (Finding 18) — CharacterListView has only bulk onExportAll. They must re-home to the Sheet-surface header overflow AND per-card in CharacterListView in the same Phase-1 PR as Import; delete must still route through the L286 setCurrentDocId(null) => closeSheet path.
-- ⚠️ doc-drift is TWO files and THIRTEEN pinned paths (Findings 12+19): docs/doc-drift.rules.ts (the RUNTIME_COPY_RULES token guard, FILE-PATH-keyed, L295-381) AND docs/doc-drift.manifest.ts. SIX of the pins are inline tab/section files Phase 5 EDITS not deletes (Dnd5eSpellsTab L340, Pf2eSpellsTab L366, D20SpellsTab L335, Dnd5eSelectedFeatsSection L348, Dnd5eFeatureOptionsSection L358, MamArchetypesTab L374); the tab-grid collapse that reworks them must preserve their tokens or edit rules.ts+manifest.ts in-commit, and each per-system eviction PR must run check:doc-drift. The default keeps GameSystemSelector/SystemStatusDashboard alive; relocating tokens into another file does NOT satisfy the path-keyed guard.
-- ⚠️ The Phase-1 Scene declutter is LEFT-rail relocation ONLY (Findings 13+20): the 18rem left scene-list rail relocates to Library (grid widens, no function lost), but the 20rem RIGHT operating rail STAYS DOCKED until Phase 6 5b builds its designed summon tray — collapsing it in Phase 1 would hide Token/Dice/Check/Oracle/Initiative/Combat/Marker behind an undesigned boolean while the canvas is still non-interactive, a feel regression. 'Canvas dominates' and the chrome-dominance CI budget are Phase-6 outcomes, not Phase-1 claims.
-- ⚠️ Drag-to-place and PlacementMode must be MUTUALLY EXCLUSIVE per kind (Finding 21): under the same flag that enables a kind's drag path, that kind's PlacementMode entry point (character L1030, adversary L1064) is gated off, so the Scene never shows two placement affordances for one action during Phase 4-5. The full PlacementMode machine deletion lands Phase 6 5b for the remaining uncovered kind + final removal.
-- ⚠️ The Scene-surface mount-hide must keep the ~900-cell subtree in the layout tree via visibility:hidden + off-screen position, WITHOUT content-visibility:auto (Findings 7+14). The CSS mechanism must be chosen by a Phase-1 THREE-way performance.measure on a real ~30x30 grid. Keepalive (Phase 2) also raises baseline DOM/memory unless `active` genuinely quiesces effects; PWA mobile dvh + virtual-keyboard insets need real device testing.
-- ⚠️ Phase-2 quiescence is a net-new pause/resume-WITH-RECONCILE capability on the SHARED useEntitySync hook (Finding 2): it must gate the realtime subscription useEntitySync owns (L322-330) via useSync.ts/useCampaignSync.ts, and MUST call sync() on active:false->true or a reactivated surface shows stale data; useScenes needs a loadScenes() re-read, NOT listener-gating.
-- ⚠️ Pan/zoom is a 100% GREENFIELD viewport subsystem (Finding 10) — SceneGridView has ZERO transform. Its coordinate-inversion-under-variable-scale and continuous-repaint costs are only PROBED (not retired) by the extended Phase-4 dynamic-viewport spike; the subsystem is a SEPARATE Phase-6 slice (5d) with its OWN gate, distinct from the 5c-i fixed-1:1 render swap and the 5e distance ruler.
-- ⚠️ FIVE app-facing seams must be threaded and not drift: the compound FIVE-writer selectedSceneId+onSelectScene scene-selection seam (Phase 1, Finding 16), the zero-arg bound emit(intent) (Phase 4, consumer DragLayer), the App-owned onLogToCampaign (pre-existing, preserved Phase 1, owned by SceneSurface Phase 6), the compound SIX-writer openSheet(docId) sheet seam plus re-homed Export/Delete (Phase 1, Findings 11+18), and the party dock-tab drag source resolved against documents (Phase 4, Finding 15). SheetDispatchContext (Phase 3) and SceneDispatchContext (Phase 4) must both INVERT control or the eslint boundary rejects a shell layer reaching into src/systems/**.
-- ⚠️ Sheet content-add is UNIFORM click-to-add across all 7 systems, resolved by the EXISTING per-system controller add-handlers (Finding 8) — the per-system drop-classifier matrix is DISSOLVED on the sheet. The only remaining classifier is the scene-generic allegiance/kind chip on the Scene canvas (built Phase 4, relocated Phase 6).
-- ⚠️ FOUR CI gates fight the Phase-5/6 deletions AND edits: knip, hostSizeBudget (per-file 400-LOC host ceiling — sibling deletion does NOT reduce host LOC), doc-drift (the 13-path FILE-PATH RUNTIME_COPY_RULES guard, edit-OR-delete — Finding 19), AND the vitest coverage thresholds. Every eviction PR must delete/edit the guarded file, update its paired rules.ts+manifest.ts+doc/test, keep host additions near-zero via sibling extraction, run check:doc-drift, AND ship the sibling's own tests — all in one commit.
-- ⚠️ Read-only/view mode is OUT OF SCOPE (Decision B): the app must NOT introduce onUpdate=canEdit gating on the sheet, because that would build the enforcement path Decision B relies on not existing.
-- ⚠️ Transient dual-home (dock + sheet copies of spell/feat/equipment browsers) between Phase 3 and Phase 5 must route through the single useDockResources seam and be capped to one chapter; monsters are exempt (sheet tab deleted Phase 3); the party tab is exempt (App-documents-sourced, never a sheet tab).
-- ⚠️ Decision 4 (radial vs chip; pointer-events confirmed) is finally decidable only after the 3a/3b spikes — do not pre-commit the menu UI; the chip serves only the Scene canvas 2+ case and is exercised in Phase 4 (3b-ii).
-- ⚠️ The plan reaches the buttery destination only if the interaction chapters (4-6) get funded; the Phase-7 usability gate is the mechanism. If the org stops after Phase 1-3, the owner has a decluttered app (home four-view IA + a Scene whose LEFT list rail relocated to Library so the grid widened, with every operating tool still docked and reachable — no feel regression), a shared five-tab dock, and two proven gestures — a defensible fallback that regresses neither in-flight Scene state, cross-tab sync freshness, the campaign-recap write, any sheet-open flow, per-character export/delete, nor the scene create/import-then-open flow.
+**Re-scoped 2026-07-26 against what shipped.** The constraints this list originally
+carried for Phases 1-3 were met and are recorded in those phases' As-built notes; they
+are not repeated here. What remains below is what is still live, plus the two places
+where reality diverged from what the list assumed.
+
+- ⚠️ **The pointer-engine bet is de-risked but still unexercised.** The Phase-4
+  gate ran against the transformed ~900-cell surface for both sub-gates, as required,
+  and the party dock tab existed to make the 1-choice sub-gate genuine rather than a
+  faked default allegiance. But the gesture ships behind a default-off flag with a
+  skipped acceptance spec, so no user and no CI run has ever exercised it end to end.
+  A unit-gated engine is not a proven interaction. This is still a bet.
+- ⚠️ **The dual-home is no longer transient — this is the list's biggest miss.**
+  The original risk was "dock + sheet copies of spell/feat/equipment between Phase 3 and
+  Phase 5, capped to one chapter." Phase 5's eviction half did not ship, so the cap did
+  not hold: every affected system still browses the same catalog from both the dock and
+  its own in-sheet wrapper. Monsters remain exempt (the sheet tab was deleted in Phase
+  3) and the party tab remains exempt (App-documents-sourced, never a sheet tab).
+- ⚠️ **Placement still has two affordances for the uncovered kinds, and the machine
+  is intact.** Finding 21's per-kind mutual exclusion shipped and keys off the same
+  single predicate as the drag path, so the invariant holds in every flag state. But
+  with the flag off — which is every shipped build — PlacementMode is the sole
+  affordance for every kind, and the full machine (type, state, badge, three toggles,
+  cell handlers) is still live. Its deletion needs Phase 6 5e's marker drag path first.
+- ⚠️ **Pan/zoom is still 100% greenfield.** The Phase-4 dynamic-viewport spike
+  PROBED coordinate inversion under variable scale+translate, continuous repaint at
+  ~900 cells, and touch pinch arbitration — it did not retire them. 5d carries its own
+  gate, distinct from the 5c-i render swap that landed and the 5e ruler that did not. Do
+  not describe the math as "already retired in Phase 4."
+- ⚠️ **Five app-facing seams must be threaded and must not drift**: the compound
+  five-writer scene-selection seam, the zero-arg bound `emit(intent)`, the App-owned
+  `onLogToCampaign` recap callback (still an App callback, never a 13th intent), the
+  compound six-writer `openSheet(docId)` seam plus the re-homed Export/Delete, and the
+  party dock-tab drag source resolved against `documents`. All five exist today.
+  `SheetDispatchContext` and `SceneDispatchContext` both INVERT control, which is what
+  keeps the eslint layer boundary green; that inversion is load-bearing, not stylistic.
+  Phase 7's seam catalogue — the document that would make this list checkable — is not
+  written.
+- ⚠️ **The CI gates that fight Phase 5/6 deletions are unchanged and still ahead of
+  the work**: knip, `hostSizeBudget` (a per-file 400-LOC ceiling on five named sheet
+  hosts — deleting a sibling does NOT reduce a host's own LOC), the doc-drift
+  RUNTIME_COPY_RULES guard, and the vitest coverage thresholds. The guard is
+  FILE-PATH-keyed and fires on EDIT as well as delete; relocating a token into another
+  file does not satisfy it. **Correction: it pins fifteen paths, not the thirteen this
+  document says elsewhere** — six of them per-system inline files a tab-grid collapse
+  would edit rather than delete. Anything that formalizes the constraint set must state
+  fifteen or derive the count.
+- ⚠️ **Sheet content-add is click-to-add resolved by existing per-system controller
+  handlers — with an honest asymmetry the plan did not foresee.** The plan said
+  "UNIFORM across all 7 systems." What shipped is uniform in *mechanism* and asymmetric
+  in *capability*: two systems whose models carry no shared Spell/Feat/Item concept
+  publish nothing and the Dock's verb correctly disables. That asymmetry is the
+  contract, not a gap. The per-system drop-classifier matrix stays dissolved; the only
+  classifier is the scene-generic allegiance/kind chip.
+- ⚠️ **Read-only/view mode is OUT OF SCOPE (Decision B):** no
+  `onUpdate={canEdit ? … : undefined}` gating on the sheet, because that builds the
+  enforcement path Decision B relies on not existing. Still true; nothing has
+  introduced one.
+- ⚠️ **The right operating rail is still docked, and "canvas dominates" is still
+  unclaimed.** Phase 1 relocated only the left scene-list rail, correctly. The 20rem
+  right rail was to demote in Phase 6 5b with designed reopen UX; it has not. So the
+  chrome-dominance CI budget remains a Phase-6 outcome, not a Phase-1 or Phase-7 claim
+  — Finding 20's prediction held exactly.
+- ⚠️ **The buttery destination still depends on the interaction chapters being
+  funded, and this is now the sharpest risk on the list.** The Phase-7 usability gate
+  was the funding mechanism; it has not been run. The fallback the plan described has
+  in fact been reached and is defensible: a decluttered four-view home, a widened Scene
+  grid with every operating tool still docked and reachable, a shared five-tab dock,
+  and a dispatch matrix that works across all seven systems — regressing neither
+  in-flight Scene state, cross-tab sync freshness, the campaign-recap write, any
+  sheet-open flow, per-character export/delete, nor scene create/import-then-open. What
+  the fallback does not include is a single Owlbear-grade gesture any user can perform,
+  because both are behind default-off flags.
 
 ---
 
-# The prototype GATE (build this first)
+# The prototype GATE — what it required, and what it produced
 
-The dock-content -> scene-token vertical slice, run as the prototype GATE before any broad eviction, on the already-shipped Phase-1/2 frame — split into TWO honestly-scoped sub-gates because the app's own placement rules make a single 'monster = 1-choice auto-apply' claim false (Finding 9), AND because the character-document drag source the 1-choice sub-gate needs did not exist until it was added (Finding 15). buildPlacedToken (src/scene/tokenPlacement.ts:36-68) resolves a linkedDoc with non-npc kind to kind='character', playerControlled:true, with NO allegiance — a GENUINE 1-choice case — while a statblock-backed NPC resolves to kind='npc' and REQUIRES a tokenAllegiance — intrinsically the 2+ case. But the dock built in Phase 3 has only four SRD-catalog tabs (monster/spell/feat/equipment), and character documents live only in App state (documents: CharacterDocument[], reaching the Scene via SceneManager's documents prop + the L529 roster, never the dock) — so a FIFTH 'party' dock tab, sourced from the App documents prop rather than a SRD loader, is added in Phase 3 (browse-only) and made draggable in Phase 4 to BE that source. Sub-gate 3b-i drags a PARTY character-DOCUMENT token and fires auto-apply with NO menu (the true buttery '1 legal choice' path; SceneSurface resolves the drag payload's documentId against documents, mirroring L529, so buildPlacedToken gets its linkedDoc), and sub-gate 3b-ii drags a BESTIARY MONSTER through a MINIMAL inline-chip friendly/hostile classifier pulled forward from ConfirmDialog — never by hardcoding a default allegiance to fake a 1-choice monster drop. Both thread the smallest end-to-end path: a Dock tab (Phase 3) -> the generic pointer-events drag engine (3a) -> a scene grid drop target -> resolution that emits the EXISTING place-token / set-token-allegiance intents through the zero-arg emit(intent) seam (bound internally to the shell-resolved selectedScene, buildable without an orphan export because Phase 1 already lifted scene SELECTION and the DragLayer is its first consumer). In the same slice, the legacy PlacementMode entry points for the two covered kinds are gated OFF under the same flag (Finding 21) so the Scene never shows two placement affordances for one action. CRITICALLY (Findings 3+10), butteriness is judged NOT on today's trivial untransformed SceneGridView (floor((clientX-rect.left)/cellPx)), which cannot exhibit the plan's own named jank, but on a TRANSFORMED surface at a realistic ~900 memoized cells — matching Phase-6's real grid — with the POST-drop reconcile frame time measured against an explicit budget for BOTH sub-gates; and the SAME spike is EXTENDED to a DYNAMIC-viewport probe (variable scale+translate coordinate inversion, wheel-zoom-to-cursor, a continuous-repaint budget at ~900 cells, touch pinch) so the Phase-6 pan/zoom subsystem (5d) is de-risked here rather than first discovered as a disguised 'render rewrite.' The untransformed grid still ships as the user-visible interim (sourced from the same party + monster tabs), but the fund/kill decision rides the transformed spike. If BOTH sub-gates meet the reconcile budget and feel buttery AND the dynamic-viewport probe shows the continuous-repaint budget is reachable, the interaction thesis is proven cheap and the expensive sheet/scene chapters are funded; if not, the thesis (or the viewport subsystem specifically) is falsified before a single browser is evicted. runtime.ts is never touched — place-token and set-token-allegiance already exist.
+The gate was the plan's fund/kill checkpoint: prove or kill the interaction thesis on
+the smallest end-to-end slice before any broad eviction. Its design is the part worth
+keeping, because it is the part most easily faked.
+
+**Why it had to be two sub-gates, not one.** `buildPlacedToken` resolves a `linkedDoc`
+with a non-npc kind to `kind='character'`, `playerControlled:true`, with **no**
+allegiance — a genuine 1-choice case that can auto-apply with no menu. A
+statblock-backed NPC resolves to `kind='npc'` and **requires** a `tokenAllegiance` — so
+the monster drop is intrinsically the 2+ case (Finding 9). A single "monster =
+1-choice auto-apply" gate would have been false, and the only way to make it look true
+was to hardcode a default allegiance, which would have proven nothing. Hence 3b-i (a
+party character document, genuine auto-apply) and 3b-ii (a monster through a minimal
+friendly/hostile chip).
+
+**Why the character-document source had to be built first.** The dock's four SRD tabs
+contain no character documents; those live only in App state and reached the Scene via
+the roster (Finding 15). Without a fifth party tab there was no draggable character
+document anywhere, so 3b-i could not run and the decision would have collapsed to the
+2+ case the plan insists is not the buttery path being proven. The party tab was
+therefore scheduled browse-only in Phase 3 and made draggable in Phase 4 to *be* that
+source.
+
+**Why it had to be measured on a transformed surface.** Today's untransformed grid
+cannot exhibit the jank the plan names, so a green gate there licenses nothing
+(Finding 3). Both sub-gates were routed through a ~900-memoized-cell transformed spike
+with an explicit post-drop reconcile budget, and the same spike was extended to a
+dynamic-viewport probe — variable scale+translate inversion, wheel-zoom-to-cursor,
+continuous-repaint budget, touch pinch — so Phase 6's pan/zoom unknowns were probed
+here rather than first discovered as a disguised "render rewrite" (Finding 10). The
+probe **probes**; 5d still carries its own gate.
+
+**As built.** The gate was genuinely run to this shape, not asserted: both sub-gates
+against the transformed spike with a real reconcile budget, plus the dynamic-viewport
+probe. `runtime.ts` was never touched — every drop emits the pre-existing place-token /
+set-token-allegiance intents. Two caveats that matter more than the gate's own result:
+the reconcile-budget check is wall-clock and has flaked under full-suite load, and the
+gate's outcome never converted into a shipped gesture, because the flag it lives behind
+defaults off and its acceptance spec skips. **A passed gate is not a funded chapter.**
+The Phase-7 usability sign-off, which was the mechanism for converting one into the
+other, has not been run.

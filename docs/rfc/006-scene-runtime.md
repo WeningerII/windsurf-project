@@ -1,10 +1,17 @@
 # RFC 006: Scene Runtime — Documents, Event Sourcing, And Seeded Replay
 
-**Status:** Accepted — runtime shipped; this RFC documents the architecture and
-contracts (the Scene Runtime track's Phase 0, written retroactively) and names
-the next increments.
+**Status:** Accepted (retrospective — the runtime shipped before this RFC was
+written, as the Scene Runtime track's missing Phase 0)
+**Date:** June 17, 2026
 **Author:** engineering planning
-**Created:** June 17, 2026
+**Supersedes:** nothing
+**Implementation status lives in:** `docs/MASTER_PLAN.md`
+
+> An RFC records a decision — its context, the options weighed, the choice, and
+> the constraints that choice imposes. It does not own rollout status. Where this
+> document states what has shipped, the statement is dated and was checked against
+> code on that date; `docs/MASTER_PLAN.md` is the authority on sequencing and
+> phase status, and wins on any disagreement.
 
 ## Summary
 
@@ -183,14 +190,36 @@ adjustment, unlike PF1e). Any other system is honestly reported
 `unsupported-system`. The scene UI consumes the validator live (the encounter
 panel shows on/over-budget for the chosen difficulty).
 
-## Next increments (named, not yet built)
+## What has been built on these contracts (verified against code 2026-07-26)
 
-- **AI encounter-spec drafting** (Phase 8) — prompt → structured spec →
-  `validateEncounterSpec` → repair loop → the same builder path manual selection
-  uses. The gate above is its entry contract.
-- **Backend sync** (RFC 001) — the event log is sync-friendly (compare last
-  sequence); conflict policy is out of scope here.
+This section is a dated observation, not a tracker. `docs/MASTER_PLAN.md` owns
+phase status and sequencing.
 
-Map-aware spawn zones (`buildEncounterSceneEvents`' `zone` parameter) and manual
-rebalance ergonomics (the encounter panel's per-monster +/- controls) already
-ship.
+- **AI encounter-spec drafting** (Phase 8) — **built.** Prompt → structured spec
+  → `validateEncounterSpec` → bounded repair → the same builder path manual
+  selection uses. The gate described above is its entry contract, exactly as
+  named here. It is a user-reachable surface in the scene encounter panel. The
+  drafting flow itself lives under `docs/rfc/002-ai-control-plane.md`, which owns
+  the gateway contract; this RFC owns the validator it must pass.
+- **Map-asset pipeline** (Phase 9) — **built, 2026-07-21.** Content-addressed map
+  images with a manual grid registration: pixel offsets plus a cell size, from
+  which the square `SceneGrid` is derived. Placement of the image inside the grid
+  container is a pure percentage computation
+  (`src/components/scene/mapImageLayer.ts`), so it is independent of the
+  responsive rendered cell size and unit-testable without a DOM.
+- **Grid-geometry proposal gate** (Phase 10, provider-free half) — **built.**
+  `src/scene/gridGeometryProposal.ts` is the deterministic validator and
+  acceptance transform for a *proposed* grid registration plus spawn/terrain/
+  cover/hazard boxes, mirroring `validateEncounterSpec`: typed spec in, coded
+  issues out, pure and total, with a three-way verdict (`accept`, `reject`,
+  `manual-correction`). An accepted proposal emits only artifacts the manual path
+  already uses — `add-marker` intents, builder spawn zones, a plain `SceneGrid` —
+  so a future vision adapter cannot invent state the manual path could not. The
+  vision adapter that would produce such a proposal is **not** built.
+- **Map-aware spawn zones** (`buildEncounterSceneEvents`' `zone` parameter) and
+  manual rebalance ergonomics (the encounter panel's per-monster +/- controls) —
+  built.
+- **Backend sync for scenes** (RFC 001) — **not built.** Scenes remain
+  browser-local under `rpg-scenes-v1`; only documents and campaigns sync. The
+  event log is sync-friendly by construction (compare last sequence); conflict
+  policy is out of scope here and belongs to `docs/rfc/001-backend-sync.md`.

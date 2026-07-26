@@ -1,8 +1,16 @@
 # RFC 001: Local-First Backend Sync
 
-**Status:** Accepted (retrospective — implementation shipped before the RFC was written)
+**Status:** Accepted (retrospective — the implementation shipped before the RFC was written)
+**Date:** April 21, 2026
 **Author:** consolidated from the March–April 2026 production-readiness audit
-**Consolidated:** April 21, 2026
+**Supersedes:** nothing
+**Implementation status lives in:** `docs/MASTER_PLAN.md`
+
+> An RFC records a decision — its context, the options weighed, the choice, and
+> the constraints that choice imposes. It does not own rollout status. Where this
+> document states what has shipped, the statement is dated and was checked against
+> code on that date; `docs/MASTER_PLAN.md` is the authority on sequencing and
+> phase status, and wins on any disagreement.
 
 ## Summary
 
@@ -50,19 +58,19 @@ Supabase Auth. See `src/contexts/AuthContext.tsx`.
 
 ### Storage schema
 
-See `supabase/migrations/001_initial.sql` and `supabase/migrations/002_campaigns_realtime.sql`.
+The migrations under `supabase/migrations/` are the authority on the live shape; this section states the contract they implement.
 
 Two user-owned tables:
 
-- `documents`: `id`, `user_id`, `name`, `system_id`, `system_data JSONB`, `created_at`, `updated_at`, `version INTEGER`.
-- `campaigns`: `id`, `user_id`, `name`, `system_id`, `notes`, `character_ids UUID[]`, `created_at`, `updated_at`. **No `version` column** — campaigns are low-churn metadata.
+- `documents`: `id`, `user_id`, `name`, `system_id`, `system_data JSONB`, `created_at`, `updated_at`, `version INTEGER`, `deleted_at TIMESTAMPTZ NULL`.
+- `campaigns`: `id`, `user_id`, `name`, `system_id`, `notes`, `character_ids UUID[]`, `created_at`, `updated_at`, `deleted_at TIMESTAMPTZ NULL`, plus the client-owned `quests JSONB` / `session_log JSONB` blobs. **No `version` column** — campaigns are low-churn metadata, so their merge is timestamp-only.
 
 Shared infrastructure:
 
 - RLS is enabled on both with a single `auth.uid() = user_id` USING+CHECK policy.
-- `update_updated_at()` trigger bumps `updated_at` on every row UPDATE.
+- **`updated_at` is client-owned.** The original `update_updated_at()` trigger was dropped: it rewrote `updated_at` to the time of the last *push*, which let a later push from a second device outrank a genuinely newer edit and silently revert it. Because `updated_at` is the last-writer-wins conflict timestamp, it must be stamped at edit time by the writer, not at storage time by the server. This is a constraint on any future schema change — do not reintroduce a server-side `updated_at` writer.
 - Indexes on `user_id` on both tables; `documents` also has `(updated_at DESC)`.
-- Both tables are added to the `supabase_realtime` publication (the publication for `campaigns` was split into `002_campaigns_realtime.sql` so existing `001` deploys can catch up idempotently).
+- Both tables are added to the `supabase_realtime` publication (the publication for `campaigns` was split into a follow-up migration so existing initial deploys can catch up idempotently).
 
 ### Sync semantics
 
@@ -151,24 +159,27 @@ Runtime:
 - **Auth provider choices are the user's responsibility.** If email verification is disabled in the Supabase project, the client will not re-check it.
 - **Realtime is best-effort.** If the WebSocket drops, the next explicit `sync()` call (on reconnect, on navigation, on visibility change in a future hook iteration) will reconcile. Nothing depends on realtime for correctness — it is a UX improvement, not a correctness primitive.
 
-## Future work
+## Cross-device delete tombstones
 
-Each item below is a deliberate non-shipped extension. They are grouped together so a future implementer can read this section as a contract sketch instead of a wish list. None of them is on the active implementation track at the time of this RFC update.
-
-### Cross-device delete tombstones
+**Decision:** deletions are soft-deletes carrying an explicit tombstone, not row removal.
 
 **Problem.** The local delete queues (`rpg-sync-delete-queue-v1`, `rpg-campaign-sync-delete-queue-v1`) protect this device's offline or failed deletes. But if device A deletes a row while device B is offline, when device B reconnects it pulls the remote table (which no longer contains the row) and merges with its still-present local copy. `mergeDocuments` and `mergeCampaigns` keep the local row because there is nothing remote to compare against — the deletion is silently undone on push.
 
-**Sketch.**
+**Design.**
 
-- Add `deleted_at TIMESTAMPTZ NULL` to both `documents` and `campaigns`. When the column is non-null the row is a tombstone.
-- DELETE flows become soft-deletes: `UPDATE … SET deleted_at = now()` instead of `DELETE FROM …`.
+- `deleted_at TIMESTAMPTZ NULL` on both `documents` and `campaigns`. When the column is non-null the row is a tombstone.
+- DELETE flows become soft-deletes: `UPDATE … SET deleted_at = <now>` instead of `DELETE FROM …`.
 - RLS continues to scope `auth.uid() = user_id`. No policy changes are required because the column is owned by the same user.
-- `fetchRemoteDocuments` / `fetchRemoteCampaigns` start including tombstones. The merge functions gain a third rule: if either side has `deleted_at` set, the row is removed locally and the local id is added to a tombstone-acknowledged set so it cannot resurface on the next merge.
-- A scheduled Postgres job (or Supabase scheduled Edge Function) hard-deletes rows where `deleted_at < now() - interval '30 days'`. The window is intentionally generous so a device that has been offline for weeks can still observe the tombstone.
+- The remote fetch returns live entities *and* tombstones as separate results. The merge functions gain a third rule: if either side has `deleted_at` set, the row is removed locally and the local id is added to a tombstone-acknowledged set so it cannot resurface on the next merge.
+- `deleted_at` is deliberately **not** part of the upsert payload, so a stale full-collection push from an old tab cannot revive a tombstoned row. Only an explicit restore path clears the column.
 - Existing local delete queues continue to apply but now post tombstone updates rather than DELETEs. The local deletion UX is unchanged.
-- Migration: a new SQL migration (`003_soft_deletes.sql`) adds the column with a partial index `(user_id) WHERE deleted_at IS NULL` so the hot-path read filter stays cheap.
-- Rollout: the column ships first with no client behavior change. Once deployed, the client switches DELETE → soft-delete. Old clients still hard-delete; the cleanup job tolerates either shape.
+- A scheduled hard-delete of rows where `deleted_at < now() - interval '30 days'` is the intended reaping policy. The window is deliberately generous so a device that has been offline for weeks still observes the tombstone.
+
+**Status (verified against code 2026-07-26).** The column, the soft-delete write path, the tombstone-bearing fetch, and the merge rule are implemented (`supabase/migrations/`, `src/utils/syncEngine.ts`). The scheduled reaping job and the `(user_id) WHERE deleted_at IS NULL` partial index are not; tombstones currently accumulate. `docs/MASTER_PLAN.md` is the authority on whether that remainder is scheduled.
+
+## Future work
+
+Each item below is a deliberate non-shipped extension. They are grouped together so a future implementer can read this section as a contract sketch instead of a wish list. Whether any of them is on the active implementation track is a question for `docs/MASTER_PLAN.md`, not for this RFC.
 
 ### Per-document conflict UI
 
@@ -247,4 +258,4 @@ This RFC must be updated — not duplicated elsewhere — when any of the follow
 - Auth context (`src/contexts/AuthContext.tsx`)
 - Netlify or CSP constraints that affect the Supabase connection
 
-`docs/MASTER_PLAN.md` references this RFC under Historical Provenance. Its Active-implementation-track entries on sync are expected to link back here rather than re-describe the design.
+`docs/MASTER_PLAN.md` references this RFC. Its active-track entries on sync are expected to link back here for the *design*, while this RFC defers to the plan for *rollout status*. Neither should restate the other.

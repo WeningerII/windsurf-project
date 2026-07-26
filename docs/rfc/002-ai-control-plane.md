@@ -1,25 +1,37 @@
 # RFC 002: AI Control Plane For Frictionless Creation And Play
 
-**Status:** Active — foundation and five task surfaces shipped (character drafting landed 2026-07-24). Sections below describe the target design; see "Implementation status" for exactly what has landed versus what remains.
+**Status:** Accepted
+**Date:** May 1, 2026
 **Author:** product/engineering planning
-**Consolidated:** May 1, 2026
+**Supersedes:** nothing
+**Implementation status lives in:** `docs/MASTER_PLAN.md`
 
-## Implementation status (2026-06-19)
+> An RFC records a decision — its context, the options weighed, the choice, and
+> the constraints that choice imposes. It does not own rollout status. Where this
+> document states what has shipped, the statement is dated and was checked against
+> code on that date; `docs/MASTER_PLAN.md` is the authority on sequencing and
+> phase status, and wins on any disagreement.
 
-The provider-agnostic control plane and its first five task surfaces are live. What shipped, mapped to this design:
+## Implementation status (verified against code 2026-07-26)
+
+**Four task surfaces are reachable by a user; a fifth exists as a validated flow with no UI.** The task allowlist (`AI_GATEWAY_TASKS` in `src/ai/contracts.ts`) carries five entries — `encounter-draft`, `scene-narration`, `identify-creature`, `illustrate-scene`, `character-draft` — but only the first four are wired to a component (`src/components/scene/useSceneEncounter.ts` for encounter drafting and creature identification; `src/components/SceneManager.tsx` for narration and illustration). `character-draft` (`src/ai/characterDraftFlow.ts`) and the "make me a game" composition flow (`src/ai/makeMeAGameFlow.ts`) are complete, validator-gated, test-covered modules whose only importers are each other and their tests. Counting them as shipped product surfaces overstates the rollout; counting the *contracts* as landed does not.
+
+What is built, mapped to this design:
 
 - **Gateway foundation** (`src/ai/`): typed, dependency-free task contracts (`contracts.ts`) with hand-written parse-don't-cast validators; a pure, injectable gateway core (`gatewayCore.ts`) with fixture replay, a request timeout, and normalized typed failures; a browser client (`gatewayClient.ts`) gated behind `VITE_AI_ENABLED` that degrades every transport error to a manual fallback; pure prompt builders (`prompts.ts`) and HTTP glue (`gatewayHttp.ts`).
 - **Server gateway** (`netlify/functions/`): a Netlify Function holding the provider key in the server environment only (never the browser bundle), delegating to the pure core; provider-bound code is confined to one thin adapter file per provider (Vercel AI SDK) behind the `AiProviderAdapter` seam. Task allowlist, request validation, and key-less degradation are enforced; per-task structured output schemas (or image routing) live in the shared adapter body (`netlify/functions/aiSdkAdapter.mts`), not in any one provider's file.
 - **Candidate pools + deterministic handshake**: encounter drafting, creature identification, and character drafting build loader-backed candidate pools and the model must return ids from them; an invented id is rejected deterministically. Encounter drafting reuses the shipped `validateEncounterSpec` budget gate with one bounded repair; character drafting (`src/ai/characterDraftFlow.ts` + `src/ai/characterDraftPools.ts`) routes the built document through the per-system `registry.validateDocument` gate (7/7 validator systems) with a bounded two-repair loop.
 - **Review-and-apply UI + local-first**: every surface is human-in-the-loop (selections reviewed before the deterministic builder applies them; narration edited before logging; identified statblock selected, not placed; imagery viewed/downloaded, never written to scene state). Default OFF; CI exercises the full path via fixtures without a key.
 
-Five task surfaces:
+The five allowlisted tasks — the first four user-reachable, the fifth flow-only:
 
-1. **encounter-draft** — prompt → structured selections, gated by the encounter-spec validator (structured output).
-2. **scene-narration** — deterministic recap → prose, grounded in those facts only (free text).
-3. **identify-creature** — image → a catalog id, validated against the candidate pool (vision / image input).
-4. **illustrate-scene** — prompt → an image via Imagen, a human-judged creative aid kept out of deterministic state (image output).
-5. **character-draft** — prompt + loader-derived candidate pools (legal class/ancestry/background/feat/spell ids) → a structured draft the client applies through the EXISTING template/creation path into a normal `CharacterDocument`, validated deterministically through the per-system `registry.validateDocument` gate for every validator-bearing system (all 7), with a bounded two-repair loop feeding machine-readable `ValidationIssue[]` back. The model never decides RAW legality — the validators do; key-less/unconfigured degrades to manual creation.
+1. **encounter-draft** — prompt → structured selections, gated by the encounter-spec validator (structured output). *User-reachable.*
+2. **scene-narration** — deterministic recap → prose, grounded in those facts only (free text). *User-reachable.*
+3. **identify-creature** — image → a catalog id, validated against the candidate pool (vision / image input). *User-reachable.*
+4. **illustrate-scene** — prompt → an image via Imagen, a human-judged creative aid kept out of deterministic state (image output). *User-reachable.*
+5. **character-draft** — prompt + loader-derived candidate pools (legal class/ancestry/background/feat/spell ids) → a structured draft the client applies through the EXISTING template/creation path into a normal `CharacterDocument`, validated deterministically through the per-system `registry.validateDocument` gate for every validator-bearing system (all 7), with a bounded two-repair loop feeding machine-readable `ValidationIssue[]` back. The model never decides RAW legality — the validators do; key-less/unconfigured degrades to manual creation. *No UI wired as of 2026-07-26 — the flow and its fixtures exist, the affordance does not.*
+
+The `make me a game` composition flow (`src/ai/makeMeAGameFlow.ts`) joins character drafting, encounter drafting, and deterministic scene building into one seeded path under a single shared budget. It is likewise a complete module with no UI entry point. Both it and `character-draft` are seams the product can adopt, not features a user can currently press.
 
 Provider selection, mock provider, request rate limiting, request authentication, structured observability, and the Phase 14 cost-control layer (session cost caps, per-task-class latency budgets, prompt/template versioning) have since landed (all pure, injectable, and SDK-free):
 
@@ -34,6 +46,8 @@ Provider selection, mock provider, request rate limiting, request authentication
 - **Per-task-class latency budgets** (Phase 14, `DEFAULT_LATENCY_BUDGET_MS` in `src/ai/gatewayCore.ts`): text/vision/image classes each have a budget (10/15/25 s, env-overridable) that is both the hard timeout on the provider call and the trace log's exceedance threshold.
 
 Still target design, not yet built: rule/provenance explanation, tactical intent hints, and token-metered cost *enforcement*. Provider-reported token counts are now **observed** — the seam has an optional usage reporter, and reported counts land in `usage.tokens` and the trace record — but nothing is capped by them: the budgets still charge deterministic per-task units, on purpose, so caps trip identically whichever provider serves. Delivering the rest against a hosted provider still requires real keys and remains out of scope for the local/CI slice above. The task allowlist grows one entry at a time as each remaining surface lands with its tests.
+
+The AI-DM play loop that consumes this control plane is specified separately in `docs/rfc/007-ai-dm-runtime.md`. For what is scheduled next and in what order, read `docs/MASTER_PLAN.md` — not this section, which is a dated observation and will age.
 
 ## Summary
 

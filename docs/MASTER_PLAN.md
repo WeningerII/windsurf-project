@@ -1,8 +1,32 @@
 # Master Plan
 
-**Last consolidated:** July 14, 2026
+**Last consolidated:** July 14, 2026 · **Last verified against code:** July 26, 2026
 
-`docs/MASTER_PLAN.md` is the sole planning authority for this repo. If another document appears to define roadmap, sequencing, or long-horizon scope, treat that content as historical or descriptive unless it is explicitly mirrored here.
+`docs/MASTER_PLAN.md` is the sole planning authority for this repo. If another document appears to define roadmap, sequencing, or long-horizon scope, treat that content as historical or descriptive unless it is explicitly mirrored here. `docs/README.md` gives the full authority order across the docs tree.
+
+> **Looking for what to work on next? Read `docs/WORK_PLAN.md`, not this file.**
+> This document answers *where are we* — status, decisions, constraints, and the
+> reasoning behind them. It is deliberately not ordered by what to do next, and
+> reading it that way is how work has been mis-scheduled here before. The work queue
+> derives from this document; where the two disagree, this one wins and the queue is
+> stale.
+
+## How to read this document
+
+Status lines here are **verified against code, not carried forward from prose**. On 2026-07-26 four independent passes checked roughly seventy status-bearing claims in this file: 39 were accurate, 21 understated shipped work, 7 overstated, and 3 were flatly wrong. Every correction from that pass is marked inline as `corrected 2026-07-26` so the next reader can tell a verified line from an inherited one.
+
+Two habits caused the drift, and both are now rules rather than advice. **Narrative docs do not own counts** — a number restated in prose is wrong within a week, so counts live in `docs/generated/` and are cited. **Do not claim a guard you have not proven can fail** — several "enforced" and "cannot be gamed" claims here described mechanisms structurally incapable of going red.
+
+| Section | What it answers |
+| --- | --- |
+| [Product North Star](#product-north-star) | What the product is for, and the all-seven-equal bar |
+| [Current Repo Truth](#current-repo-truth) | What exists today, with the caveats that apply |
+| [Non-Negotiable Constraints](#non-negotiable-constraints) | What no plan may propose |
+| [Completed Foundation](#completed-foundation) · [Accepted Product Boundaries](#accepted-product-boundaries) | What is done, and what is deliberately manual |
+| [Active Implementation Tracks](#active-implementation-tracks) | The three live programs and their per-phase status |
+| [Maintenance Tracks](#maintenance-tracks) | Per-area contracts that must not regress |
+| [Historical Provenance](#historical-provenance) | Where this plan's content came from |
+| [Maintenance Rule](#maintenance-rule) | The order of operations for changing it |
 
 ## Product North Star
 
@@ -14,33 +38,11 @@ The long-term user experience is: describe a character, encounter, scene, or des
 
 The durable *why* behind this direction — the thesis the product exists to test — lives in `docs/VISION.md`. This plan is the *what* and *how* and changes often; `docs/VISION.md` is the *why* and changes rarely. If the two disagree about scope, this plan wins.
 
-## Purpose And Source Documents
+## Item Classification
 
-This file merges the still-valid planning content from these repo planning documents:
+Every item below is tagged as one of `Completed foundation`, `Accepted product boundary`, `Active implementation track`, `Maintenance track`, `Discovery track`, or `Historical context`. The tag is load-bearing: an `Accepted product boundary` is a deliberate decision that must not be re-litigated as backlog, and a `Maintenance track` is a contract that must not regress — neither is open work.
 
-- `docs/STATUS.md`
-- `docs/history/PRODUCTION_PLAN.md` (archived to `docs/history/` by Remediation Phase 6, 2026-07-21)
-- `docs/history/EVIDENCE_LINKED_PARITY_REMEDIATION_PLAN.md` (archived)
-- `docs/history/EVIDENCE_LINKED_PARITY_AUDIT.md` (archived)
-- `docs/history/DAGGERHEART_DATA_ORGANIZATION_PLAN.md` (archived)
-
-These non-planning documents were also consulted where they contained planning-adjacent policy or product-scope statements, but they are not roadmap authorities:
-
-- `README.md`
-- `CONTRIBUTING.md`
-- `docs/rfc/002-ai-control-plane.md`
-- `docs/generated/roadmap-metrics.md`
-- `src/data/mutants-and-masterminds/3e/conditions/README.md`
-- `src/data/mutants-and-masterminds/3e/powers/README.md`
-
-Every inherited item below is classified as one of:
-
-- `Completed foundation`
-- `Accepted product boundary`
-- `Active implementation track`
-- `Maintenance track`
-- `Discovery track`
-- `Historical context`
+This file merges the still-valid planning content of several earlier planning documents, all now archived under `docs/history/`. That inheritance — which document contributed what, and what unique value each retains — is recorded once in [Historical Provenance](#historical-provenance) rather than restated here.
 
 ## Current Repo Truth
 
@@ -259,12 +261,11 @@ The following older backlog claims are no longer true and must not re-enter the 
 >   (`src/systems/dnd5e/shared/validation.ts`, both editions) plus per-system
 >   validators for D&D 3.5e, PF1e, PF2e, M&M 3e, and Daggerheart, each deriving
 >   checks from its own RAW/loaders and consuming its `src/rules/legality/`
->   build validator as warnings where one exists. **Correction (2026-07-26): the
->   claim that all seven are lazy-loaded was overstated.** Lazy loading via
->   `SystemDefinition.loadValidator` covers 5 of 7; two still register eagerly on
->   the `validator:` field, so their validation logic rides the eager bootstrap
->   chunk and the stated benefit is not delivered for them (owed by: D&D 5e
->   2014, D&D 5e 2024 — a fix is in flight). The legal-actions **enumeration**
+>   build validator as warnings where one exists. All seven are lazy-loaded via
+>   `SystemDefinition.loadValidator`, so no validator rides the eager bootstrap
+>   chunk. (This line claimed that before it was true: as of 2026-07-26 two
+>   systems still registered eagerly, and the bundle reclaim moved them —
+>   discovered by chasing bytes, not by reading this plan.) The legal-actions **enumeration**
 >   seam is registered by 7 of 7 (`SystemDefinition.loadLegalActions`, cached by
 >   the registry) with per-system tests, but nothing outside tests consumes it;
 >   it is not a resolver seam. Still owed on this phase: routing the eager two
@@ -279,7 +280,7 @@ The following older backlog claims are no longer true and must not re-enter the 
 > | --- | --- | --- | --- |
 > | Ledger re-backed on resolver | 7 | 0 | **COMPLETE** — every system's ledger projects resolver output through `toContributionLedger`. Two value shapes stay explicit rather than faked through the IR, annotated at their sites: list-valued proficiency rows (`string[]`) and an object-valued unarmored-defense override, neither of which the published `EffectValue` can carry |
 > | Condition effects through the resolver fold | 7 | 0 | **COMPLETE** — the compile layer takes a system-agnostic `conditions: EffectInstance[]` input; each engine feeds it from its own catalog collector, so conditions share the resolver's stacking and reach ledgers |
-> | AI-seam validators | 7 | 0 registered / 2 not yet code-split | Registration COMPLETE for all seven; lazy loading covers 5 of 7, owed by D&D 5e 2014 and D&D 5e 2024 (still on the eager `validator:` field) |
+> | AI-seam validators | 7 | 0 | **COMPLETE** — all seven registered and all seven lazy-loaded through `SystemDefinition.loadValidator` (re-verified 2026-07-26; the last two were code-split by the bundle reclaim) |
 > | Legal-actions enumeration seam | 7 | 0 registered / 0 consumers | **Registration COMPLETE** — every system provides a lazy, cached `loadLegalActions`, tested per system. The seam is deliberately enumeration-only (descriptors name and cost an action but never resolve it), so it is **not** a resolver seam and must not be scheduled as one. Open: nothing outside tests calls it yet |
 > | Additive equip routing | 5 | 2 — accepted boundary | Daggerheart, M&M 3e (non-additive derivation; revisit only if the IR gains override/derived operations for other reasons) |
 >
@@ -301,7 +302,7 @@ carried forward from prose.
 | Workstream | Status (2026-07-21) | Remaining deliverable | Acceptance |
 | --- | --- | --- | --- |
 | W1. Validation registry (core contract) | **Shipped** | — (`SystemRegistry.validateDocument` takes document plus context, returns structured issues) | Covered by `src/__tests__/registryValidation.test.ts`; systems opt in without changing persistence or sync schema |
-| W2. Per-system validators, all 7 | **Registration COMPLETE — 7 of 7**; lazy-loaded 5 of 7 (re-verified 2026-07-26) | Move the remaining 2 of 7 off the eager `validator:` field onto `SystemDefinition.loadValidator`, so no system's validation logic rides the eager bootstrap chunk (owed by: D&D 5e 2014, D&D 5e 2024 — in flight) | Met: valid+invalid fixtures per system; warn/annotate not block; import/export preserved; the two non-d20 validators shaped by their own models, not d20. Open: the bundle chunk graph shows no validator module in the eager set for any of the seven |
+| W2. Per-system validators, all 7 | **COMPLETE — 7 of 7 registered and 7 of 7 lazy-loaded** (re-verified 2026-07-26 after the reclaim landed) | — (done) | Met: valid+invalid fixtures per system; warn/annotate not block; import/export preserved; the two non-d20 validators shaped by their own models, not d20; and every system resolves through `SystemDefinition.loadValidator`, so no validation logic rides the eager bootstrap chunk. The last two were moved off the eager `validator:` field by the bundle reclaim, which found them by chasing bytes rather than by reading this table — the table had asserted the work was already done |
 | W3. Contribution-ledger contract | **Shipped** | — (non-persisted entry shape in `src/types/core/contributionLedger.ts`; resolver projection via `toContributionLedger`) | Existing ledger tests; ledgers never alter stored document shape |
 | W4. Ledger completion, all 7 | **7 of 7** (5e ×2 via `dnd5e/shared/contributionLedger.ts`, 3.5e + PF1e via the d20-legacy builder, and PF2e, M&M 3e and Daggerheart each with their own) — corrected 2026-07-25; the previous "4 of 7" predated the Wave-2 fan-out | — | Computed totals equal existing engine outputs; each row names its source and whether manual interpretation remains; existing ledger tests pass unchanged |
 | W5. Conditions through the resolver fold, all 7 | **7 of 7** — corrected 2026-07-26; the previous "0 of 7" predated the 2026-07-24 fold | — (done) | Met: the shared compile layer takes a system-agnostic `conditions: EffectInstance[]` input (`src/rules/compile/characterEffects.ts`), and every engine's check/defense path feeds it from its own catalog collector, so condition contributions enter the same resolver as equipment and feat/feature effects, obey the same per-target stacking, and surface as ledger rows naming the condition. Fold output is pinned byte-identical to the closed-form per-system selectors, which are retained only as the specs the folds are checked against |
@@ -363,7 +364,8 @@ Research anchors for this track: Vercel AI SDK provider abstraction and telemetr
 - `Shipped (Phase 2 — PR #63)`: the structural substrate is in place, and all three parts landed. The shell-nav reducer moved out of `useAppNav` into `src/contexts/shell-context.ts` behind a `ShellProvider`, leaving `useAppNav` a thin `useContext` seam with an unchanged public API, so no view component changed in the swap. `SurfaceStage` (`src/components/SurfaceStage.tsx`) generalizes Phase 1's single-surface keepalive to all three shell surfaces: each mounts on first visit and then stays mounted, hidden by `visibility:hidden` + an off-screen transform + `aria-hidden` — never `display:none`. The shared sync engine gained a pause/resume-with-reconcile `active` knob (`src/hooks/useEntitySync.ts`): a hidden surface stops holding a realtime channel open, pushes are never gated, and the false→true edge fires a reconcile. All three are system-agnostic — identical for all seven systems.
 - `Shipped (Phase 3 — PR #75)`: the shared summonable Dock (`src/dock/Dock.tsx`) renders once at the shell root, outside `SurfaceStage`, so it is reachable identically from every surface, with five typed tabs (Party, Bestiary, Spells, Feats, Equipment). Party and Bestiary are browse-only; the three SRD tabs click-add into the open sheet through `SheetDispatchContext`, an inverted-control registry that keeps the Dock shared-layer — it value-imports nothing from `src/systems/**`. The read-only bestiary was evicted from the one sheet that still hosted it and single-homed in the Library route, closing the dual-homing warned about above; `e2e/a11y.spec.ts` asserts no sheet exposes a Monsters tab.
 - `Shipped (Phase 4 — PR #76, behind a default-OFF flag)`: the pointer-drag keystone landed as a greenfield engine (`src/components/drag/`), with the paired `PlacementMode` mutual exclusion so exactly one affordance exists per covered kind, and the two-part prototype gate was actually evaluated — a post-drop reconcile budget and a dynamic-viewport inversion probe that de-risks Phase 6's pan/zoom slice. **Stated plainly: `sceneDrag` defaults OFF, no CI job builds with it enabled, and `e2e/scene-drag.spec.ts` therefore skips on every current run. The engine is unit-gated, not end-to-end-gated, and no user sees it in the shipped build.** The reconcile-budget gate also has a known flake history under full-suite load.
-- `Shipped (Phase 5 — PR #79)`: per-system sheet eviction is complete at 7 of 7. Every sheet publishes whatever add-handlers it actually has up into the shared Dock's dispatch registry instead of hosting its own browser, and `src/__tests__/dock/SheetDispatchParity.test.tsx` asserts the resolved capability matrix system by system, then proves each wired system mutates its document when the Dock dispatches into it. The matrix is honestly asymmetric and that asymmetry is the contract, not a gap: 5 of 7 publish a spell verb, 5 of 7 an equipment verb, 2 of 7 a feat verb, and the two systems whose models carry no shared Spell/Feat/Item concept publish nothing, so the Dock's verb correctly disables. Click-to-add only; no sheet is a drop target.
+- `Active implementation track`: **Phase 5 is HALF shipped — corrected 2026-07-26, after an earlier entry here claimed "complete at 7 of 7" and was wrong.** The *dispatch* half is complete at 7 of 7 (PR #79): every sheet publishes whatever add-handlers it has up into the shared Dock's registry, and `src/__tests__/dock/SheetDispatchParity.test.tsx` asserts the resolved capability matrix system by system, then proves each wired system mutates its document when the Dock dispatches into it. That matrix is honestly asymmetric and the asymmetry is the contract, not a gap: 5 of 7 publish a spell verb, 5 of 7 an equipment verb, 2 of 7 a feat verb, and the two systems whose models carry no shared Spell/Feat/Item concept publish nothing, so the Dock's verb correctly disables. **The *eviction* half did not happen.** All ten in-sheet browser wrappers are still imported and still rendered across the PF2e, 5e, d20-legacy and M&M sheets, so the shell plan's "transient dual-home capped to one chapter" is not transient: every affected system browses the same catalog from two places today. Remaining deliverable: delete the in-sheet browser wrappers and collapse the tab grids, all seven.
+- `Active implementation track`: **the two flag-gated phases are mutually exclusive in practice.** Phase 4's drag drop-target is wired to the DOM grid only, so enabling the Phase-6 canvas flag *disables* drag (`sceneDragEnabled && !sceneCanvasEnabled`, `src/components/SceneManager.tsx`). The two flags cannot be turned on together to preview the destination. The canvas render also drops the map-image layer the DOM grid carries, which is a second reason its flag stays off. Both were undocumented until 2026-07-26.
 - `Active implementation track`: **Phase 6 is a slice, not a phase — roughly 1 of 5 (PR #81).** Only the transform-render slice landed: `SceneCanvas.tsx` plus the framework-free `src/scene/canvasGeometry.ts` render the scene to a `<canvas>` as a pure VIEW over `SceneState`, hit-testing back into the same activation contracts the DOM grid uses, so the load-bearing invariant holds — it dispatches no intents and never touches `runtime.ts`. But it is an **opt-in alternative** to `SceneGridView`, not the replacement the spec requires: `SceneGridView.tsx` is still present and still rendered, `VITE_SCENE_CANVAS_ENABLED` defaults OFF, no CI job builds with it on, and the spec'd `e2e/scene-canvas.spec.ts` was never written. Still open: decomposing `SceneManager` (now ~1220 LOC) into a thin scene surface, the right-rail summon tray, the pan/zoom viewport and its gate, and the distance ruler plus deletion of the `PlacementMode` machine, whose setter sites all remain live. Whether these were consciously deferred or simply not reached is not recorded anywhere, so they are listed as open, not as accepted boundaries.
 - `Shipped (Phase 7 — budgets half, 2026-07-24)`: the shell's perf/bundle budgets are now HARD CI gates, and the Phase-1 keepalive frame budget is no longer soft-logged. `npm run check:keepalive-budget` (new, in the `verify` chain) asserts the real `SurfaceStage` keepalive cost across all seven systems and all six surface transitions — 4 attribute writes, zero structural DOM mutations, zero remounts, and switch cost constant from a 1-node to a 200-node hidden subtree. The gate is DETERMINISTIC (counted DOM writes), not wall-clock, because the Phase-1 `performance.measure` instrument spans dwell time rather than switch latency and the observed timing spread (12.6-48.5ms for four attribute writes) is an order of magnitude above the signal; wall-clock stays soft-logged with the re-scoping it would need recorded. `check:bundle-size` gained three structural gates driven by Rollup's chunk graph (emitted by a new `shell-chunk-graph` vite plugin outside `dist/`): a 192 KiB first-paint budget on the shell's own eager code (measured 189.4 KiB), a may-only-shrink ratchet on the eleven per-system SRD data chunks that are already eager, and an all-seven assertion that no system's sheet and neither shell surface (`SceneManager`, `SceneCanvas`) rides first paint. Finding from the work: `dist/index.html` under-reports the eager set — real first-paint JS is 944.4 KiB gzip (189.4 shell + 755.0 per-system data), unequally distributed across the seven systems; the structural reclaim that fixes it is recorded, not attempted. Full derivations and the hard-gated/soft-logged ledger: `docs/design/ui-shell-phase7-budgets.md`. Phase 7's other four deliverables (hash-sync restore-on-reload, chrome-dominance gate, seam catalogue, owner usability sign-off) remain OPEN — re-verified 2026-07-26, none exists. Note that the chrome-dominance gate is **blocked, not merely undone**: its spec anchors on the summoned tray from Phase 6's unshipped right-rail slice.
 
@@ -379,7 +381,7 @@ Research anchors for this track: Vercel AI SDK provider abstraction and telemetr
 
 ### Technical Remediation Closeout
 
-- `Maintenance track`: mirrored here (2026-07-14) from `docs/REMEDIATION_PLAN.md` (Status: Active) so its remaining sequencing is roadmap-authoritative under the sole-authority rule. Phases 0–5 (truthful green build, real CI gating, dead-code cleanup, boundary parsing, deferred per-system data load, security/privacy hardening) are done. **Phase 6 (slim docs/process) is DONE (2026-07-21)**: the superseded planning docs (PRODUCTION_PLAN, both EVIDENCE_LINKED_PARITY docs, DAGGERHEART_DATA_ORGANIZATION_PLAN) are archived under `docs/history/` (see `docs/history/README.md`), and the slim-docs half was already satisfied — `CONTRIBUTING.md` is ~111 lines and this plan is maintained as the single roadmap authority. The Historical Provenance table below and the source-document list above now cite the archived `docs/history/` paths. The two audit-flagged residues behind "Phases 0–5 done" have since closed (2026-07-21): the Supabase-JWT gateway check shipped (PR #47) and the discriminated-union retype landed (PR #51). **Phase 7 (toolchain modernization)** is underway: the ESLint 8→9 flat-config migration is DONE (2026-07-21, PR #49, behavior byte-equivalent); remaining, risk-ordered and verified against `package.json` on 2026-07-26: React 18.2→19, Tailwind 3.3→4, Vite 7.3→8, `lucide-react` 0.294→1.17, `@types/node` 20→22, and runtime-pin reconciliation (`.nvmrc` still pins 20.19.0 while `engines` already admits 22 and 24). The last two were dropped when this section was mirrored from `docs/REMEDIATION_PLAN.md` and were consequently tracked nowhere; they are restored here. Note: the verify chain has grown well beyond the historically documented gates — twenty steps, now including `typecheck:netlify`, `validate`, `check:keepalive-budget`, `check:bundle-size`, `check:legal-notices`, `check:compute-register`, `check:rules-provenance`, `check:srd-fidelity`, and `check:secret-exposure` — and it is system-agnostic: every gate with a per-system dimension asserts it across all 7.
+- `Maintenance track`: this section is now the **only** live record of the remediation programme. Its source document was retired to `docs/history/REMEDIATION_PLAN.md` on 2026-07-26 — all seven phases complete, and the hand-mirroring that kept it in sync had demonstrably failed, dropping four already-shipped items. Nothing is mirrored any more; edit this section directly. Phases 0–5 (truthful green build, real CI gating, dead-code cleanup, boundary parsing, deferred per-system data load, security/privacy hardening) are done. **Phase 6 (slim docs/process) is DONE (2026-07-21)**: the superseded planning docs (PRODUCTION_PLAN, both EVIDENCE_LINKED_PARITY docs, DAGGERHEART_DATA_ORGANIZATION_PLAN) are archived under `docs/history/` (see `docs/history/README.md`), and the slim-docs half was already satisfied — `CONTRIBUTING.md` is ~111 lines and this plan is maintained as the single roadmap authority. The Historical Provenance table below and the source-document list above now cite the archived `docs/history/` paths. The two audit-flagged residues behind "Phases 0–5 done" have since closed (2026-07-21): the Supabase-JWT gateway check shipped (PR #47) and the discriminated-union retype landed (PR #51). **Phase 7 (toolchain modernization)** is underway: the ESLint 8→9 flat-config migration is DONE (2026-07-21, PR #49, behavior byte-equivalent); remaining, risk-ordered and verified against `package.json` on 2026-07-26: React 18.2→19, Tailwind 3.3→4, Vite 7.3→8, `lucide-react` 0.294→1.17, `@types/node` 20→22, and runtime-pin reconciliation (`.nvmrc` still pins 20.19.0 while `engines` already admits 22 and 24). The last two were dropped when this section was mirrored from `docs/history/REMEDIATION_PLAN.md` and were consequently tracked nowhere; they are restored here. Note: the verify chain has grown well beyond the historically documented gates — twenty steps, now including `typecheck:netlify`, `validate`, `check:keepalive-budget`, `check:bundle-size`, `check:legal-notices`, `check:compute-register`, `check:rules-provenance`, `check:srd-fidelity`, and `check:secret-exposure` — and it is system-agnostic: every gate with a per-system dimension asserts it across all 7.
 
 ### D&D 5e (2014 + 2024)
 
@@ -430,7 +432,7 @@ Research anchors for this track: Vercel AI SDK provider abstraction and telemetr
 | `docs/history/EVIDENCE_LINKED_PARITY_AUDIT.md` | Historical context (archived 2026-07-21) | Evidence snapshot showing what the repo looked like before the March 2026 parity/productization push landed |
 | `docs/history/DAGGERHEART_DATA_ORGANIZATION_PLAN.md` | Historical context (archived 2026-07-21) | Original Daggerheart data-shape rationale, plus superseded early structure proposals that informed the shipped data tree |
 | `docs/rfc/001-backend-sync.md` | Accepted RFC | Canonical description of the shipped local-first sync architecture: auth, schema, merge semantics, offline queue, realtime, retry, migration-from-local, Netlify/runtime implications, accepted boundaries |
-| `docs/rfc/002-ai-control-plane.md` | Active RFC — foundation and four task surfaces shipped (2026-06-19) | AI integration contract for frictionless creation and play: server-side task gateway, loader-derived candidate pools, deterministic validation/repair, user approval, typed action/event boundaries, fixture replay, and cost/timeout fallbacks |
+| `docs/rfc/002-ai-control-plane.md` | Active RFC — foundation plus four user-reachable task surfaces shipped (2026-06-19); a fifth task class and the composition flow are landed contracts with no UI (verified 2026-07-26) | AI integration contract for frictionless creation and play: server-side task gateway, loader-derived candidate pools, deterministic validation/repair, user approval, typed action/event boundaries, fixture replay, and cost/timeout fallbacks |
 | `docs/rfc/003-rules-ir-and-effects.md` | Accepted RFC | System-independent, system-agnostic rules intermediate representation and deterministic effect resolver that unify the contribution ledger with scene resolution across all seven systems equally, enabling RAW auto-resolution of equipment/feat/spell/condition effects, mechanical condition application, and functional terrain; first proof point is cross-system equip resolution; the three-consumer extraction rule is satisfied by seven per-system effect compilers, and the content-pack-rewrite prohibition still holds (the IR is computed from loaded data) |
 | `docs/rfc/004-monster-product-surface.md` | Accepted RFC (formalized 2026-07-21; executed 2026-06-12 ahead of acceptance) | Monster product surface plan for bestiaries beyond 5e; the plan it demanded was executed on 2026-06-12 (loader-backed D&D 3.5e, PF1e, and PF2e monster catalogs became product-reachable, with PF1e/PF2e participating in encounter budgets) without formal acceptance at the time — the user's 2026-07-21 acceptance formalized the already-executed decision, and the RFC records the original scope, constraints, and reporting boundaries |
 | `docs/rfc/005-resource-pools.md` | Accepted RFC | System-agnostic resource-pool primitive and stateful action verbs; the primitive plus first consumers are implemented, with broader adoption landing incrementally |
@@ -439,14 +441,12 @@ Research anchors for this track: Vercel AI SDK provider abstraction and telemetr
 
 ## Maintenance Rule
 
-When roadmap content changes:
+`docs/README.md` carries the tree-wide order of operations and the gate sequence. The rules below are the ones specific to *this* document.
 
-1. Update `docs/MASTER_PLAN.md` first.
-2. Check new or edited roadmap text against the `All-seven-equal phrasing` constraint: no system name as the subject of a deliverable line, tallies use denominator 7, asymmetric progress recorded as per-system debt (done/owed/owed-by).
-3. Keep `docs/STATUS.md` as a concise current-state summary only.
-4. Update `README.md` only if the public product overview changes.
-5. If support notes or reachable categories changed, update the support-note copy and the selector/dashboard summary expectations together with the roadmap text.
-6. Run `npm run roadmap:metrics` if count-bearing docs or reporting assumptions changed.
-7. Run `npm run check:generated-docs`.
-8. Run `npm run check:repo-hygiene`.
-9. Run `npm run check:doc-drift`.
+1. **Change the code first.** A plan describing unshipped behaviour is the failure mode this file spent 2026-07-26 recovering from.
+2. **Update this file before the others.** It is the planning authority; `docs/STATUS.md` summarizes it and must stay a concise current-state summary, never a competing roadmap.
+3. **Check every edited line against the `All-seven-equal phrasing` constraint**: no system name as the subject of a deliverable line, tallies use denominator 7, asymmetric progress recorded as explicit per-system debt (done / owed / owed-by).
+4. **State status only where you checked the code.** If a claim is inherited rather than verified, say so. An honest "unverified" costs a reader nothing; a confidently wrong status costs them a lane of rebuilt work — that has happened here.
+5. **Never restate a count or pin a commit SHA.** Counts belong in `docs/generated/`, cited. A SHA in prose rots at every merge.
+6. Update `README.md` only if the public product overview changed, and update support-note copy together with the selector/dashboard summary expectations if reachable categories moved.
+7. Regenerate and verify: `npm run check:generated-docs`, then `npm run check:repo-hygiene` and `npm run check:doc-drift`.

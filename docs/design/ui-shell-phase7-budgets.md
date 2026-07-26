@@ -1,11 +1,33 @@
 # UI-shell Phase 7 — budgets of record: what is hard-gated, what stays soft-logged
 
-**Status:** live. Landed 2026-07-24 with the Phase-7 hardening PR.
-**Scope:** the perf/bundle half of Phase 7 — the budgets themselves and the
-promotion of the keepalive frame budget from a soft log to a hard CI gate. The
-rest of the phase's brief (hash-sync restore-on-reload, the chrome-dominance
-gate, the seam catalogue, the owner usability sign-off) is NOT in this PR and is
-still open; see "Deliberately not done" at the bottom.
+## Status (re-verified against code 2026-07-26)
+
+**This document is live, and it is one fifth of Phase 7.** What it describes —
+the perf/bundle budgets and the promotion of the keepalive frame budget from a
+soft log to a hard CI gate — landed 2026-07-24 and is running in `npm run verify`
+today. Everything in it below this section is an as-built record, not a plan.
+
+Phase 7's other four deliverables are **open**, re-verified against the tree on
+2026-07-26:
+
+| Deliverable | State |
+| --- | --- |
+| Perf/bundle budgets + hard keepalive gate | **Shipped** — this document |
+| Hash-sync restore-on-reload | Open — no hash codec, no restore-on-reload spec |
+| Chrome-dominance CI gate | **Blocked**, not merely undone — see below |
+| Seam catalogue / constraint set of record | Open — not written |
+| Owner usability sign-off | Open — not recorded |
+
+The chrome-dominance gate is blocked rather than pending: its budget is only
+achievable against the summoned right-rail tray from Phase 6 slice 5b, and 5b has
+not shipped. The scene's 20rem right operating rail is still docked
+(`src/components/SceneManager.tsx`), which is roughly 320px of permanent chrome —
+the gate would fail by construction if wired today. It cannot be closed
+independently of Phase 6.
+
+`docs/MASTER_PLAN.md` ("UI Shell Redesign" track) is the authoritative per-phase
+record. Where this document and the plan disagree about status, the plan wins;
+where either disagrees with the code, the code wins.
 
 All numbers below were MEASURED on the build of 2026-07-24 and each carries its
 derivation in the source comment next to it. None was chosen to make a check
@@ -182,12 +204,13 @@ control exits 0.
   sheet rendering is exercised by `e2e/system-smoke.spec.ts` and the
   `e2e/outcome` baseline, not by this gate.
 
-## 4. Deliberately not done in this PR
+## 4. Why this half landed alone
 
-Phase 7's full brief also includes hash-sync restore-on-reload (a `shellNavHash`
-codec plus a restore-on-reload e2e spec), the chrome-dominance CI gate (a
-proposed `check:chrome-dominance` script), the constraint-set-of-record and
-five-seam catalogue docs, and the owner usability sign-off. None of those are in
-this PR; they remain open Phase-7 work. This PR is the perf/bundle-budget half
-plus the keepalive gate, which had to land together: the frame budget could only
-become hard once the hard budgets it lives beside existed.
+The four open deliverables are listed in the Status section at the top; they are
+not restated here. What is worth recording is the sequencing reason: the frame
+budget could only become *hard* once the hard budgets it lives beside existed. A
+lone deterministic gate with no peer budgets has no reference for what a
+"plausible addition" costs, which is exactly the margin reasoning every row of §1
+depends on. So the perf/bundle half and the keepalive gate had to land together,
+and the remaining four — which are a nav codec, a blocked pixel-ratio gate, two
+documents and a human sign-off — share no such coupling with them.

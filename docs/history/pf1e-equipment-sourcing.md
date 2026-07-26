@@ -1,5 +1,16 @@
 # Proposal: Sourcing PF1e Core Rulebook EQUIPMENT
 
+> **Historical proposal — accepted and executed.** The follow-on this document
+> explicitly placed out of scope has since landed: `scripts/encode-pf1e-equipment.mjs`
+> generates `src/data/pathfinder/1e/equipment/srd-*.ts` from the pinned
+> `scripts/data/pf1e-equipment-manifest.json`, and `npm run srd:coverage` reports PF1e
+> equipment and magic items complete. Kept as the sourcing decision record — which
+> corpus was chosen, which were rejected, and why — not as open work.
+>
+> Current repo truth note (July 26, 2026): the "Status" line below is the status as
+> written on 2026-07-20 and is preserved rather than rewritten; the encoder shipped
+> 2026-07-21. Live coverage figures are in `docs/generated/srd-coverage.md`.
+
 **Status:** recommendation, awaiting encode follow-on
 **Author:** research pass, 2026-07-20
 **Scope of this doc:** decide whether a clean, machine-readable, OGC/OGL Pathfinder 1e
