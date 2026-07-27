@@ -33,6 +33,7 @@ import {
 import type { Dnd5eLikeDataModel } from './dnd5eSheetShared';
 import { useSheetDispatchRegister } from '../../../contexts/sheet-dispatch-context';
 import { useDnd5eSheetController } from './useDnd5eSheetController';
+import { useDnd5eContributionLedger } from './useDnd5eContributionLedger';
 import { availableDnd5eToggles, dnd5eEditionOf } from '../../../rules/conditions/dnd5eRiders';
 import { presentDerivedQuantities } from '../../../rules/derivation';
 import { DND5E_DERIVED_QUANTITIES } from './derivedQuantities';
@@ -54,6 +55,9 @@ export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
     enableWeaponMasteries,
   });
   const d = controller.d;
+  // First consumer of the contribution ledger: the Armor Class card explains
+  // itself from the same entries the ledger builders already computed.
+  const contributionLedger = useDnd5eContributionLedger(document);
 
   // Publish the sheet's add-handlers UP into the shared Dock's dispatch
   // registry (Phase 3, inverted control). Gated on a resolved active-doc id:
@@ -121,6 +125,7 @@ export function Dnd5eSheetBase<T extends Dnd5eLikeDataModel>({
         initiative={d.initiative}
         speed={d.speed}
         derivedCards={derivedCards}
+        contributionLedger={contributionLedger}
         spellcasting={d.spellcasting}
         exhaustionLevel={d.exhaustionLevel}
         deathSaves={d.deathSaves}
