@@ -39,25 +39,20 @@ Two findings, same defect class, both remedy-is-owner's-call. The tooling has pr
 **Unblocks:** the Phase-1 content close-out, and `p7.release` — neither should ship with an unresolved licensing question.
 **Options:** keep as-is (already honestly labelled) · replace the three backgrounds with genuine SRD 5.2 origins · remove the invented M&M items · some combination.
 
-### 0.2 Which of the three unmerged shelf branches are live?
+### 0.2 ~~Which of the three unmerged shelf branches are live?~~ — **DECIDED 2026-07-26: delete deliberately**
 
-An earlier revision of this section named **one** branch. There are three, and the inventory of 2026-07-26 established that most of what looked shelved is actually dead or superseded.
+**Owner decision: the shelved work is retired rather than salvaged.** Phase 12 is cut from the roadmap (§5.3, and the `MASTER_PLAN` phase table). The Phase-12 strategist prototype was *not* salvaged — that was a deliberate choice to stop carrying it, not an oversight.
 
-| Branch | Ahead / behind | What it holds |
-| --- | ---: | --- |
-| `claude/sharp-davinci-pu40fc` | 73 / 577 | Phases 10/12/13/14 plus Phase-0/1 content encoding |
-| `claude/hopeful-thompson-cul3X` | 156 / 597 | SRD content catalogs, narration gateway, strategist seam |
-| `claude/next-priorities-98pzof` | 2 / 544 | **Doc-only.** Removes guided creation + the LLM strategist from the plan |
+Every retired branch's SHA is recorded in `docs/history/2026-07-26-retired-branches.md`. A branch is only a name pointing at a commit, so nothing is unrecoverable: `git branch <name> <sha>` restores any of them.
 
-No commit on any of the three is an ancestor of `origin/main`. What the inventory changed:
+What the inventory established, kept here because it explains *why* deleting was cheap:
 
-- **Phase 14 is not open.** It landed independently (`src/ai/gatewayLog.ts`, `flowBudget.ts`, `recordedGateway.ts`); only the §5.2 trace join remains, so the branch's Phase-14 commits are superseded rather than shelved.
-- **Phase 10 is half-shipped.** `src/scene/gridGeometryProposal.ts` is in-tree and is *strictly better* than the branch's validator (15 issue codes vs 5, three-way verdict vs boolean, versioned envelope, preset-vocabulary validation). Only the vision adapter is genuinely open.
-- **`hopeful-thompson` is fully superseded** — its bestiary imports are behind shipped data, its 3.5e feat data is stale and re-derivable from the pinned source, and its one code commit is beaten by main's system-agnostic `LibraryBestiaryView`.
-- **Only Phase 12 is genuinely salvageable** — roughly two hours of cherry-picking — and `next-priorities-98pzof` proposes deleting exactly that.
+- **`hopeful-thompson-cul3X` (156 commits) was fully superseded** — bestiary imports behind shipped data, 3.5e feat data stale and re-derivable from the pinned source, and its one code commit beaten by main's system-agnostic `LibraryBestiaryView`.
+- **Phase 14 was never open** — it landed independently; only the §5.2 trace join remains.
+- **Phase 10 is half-shipped** — the in-tree validator is *strictly better* than the branch's (15 issue codes vs 5, three-way verdict vs boolean, versioned envelope, preset-vocabulary validation). Only the vision adapter is open (§0.6).
+- **62 of 65 branches were retirable**; 58 were already fully merged.
 
-**The real question:** does the `next-priorities` cut stand? If yes, delete all three branches. If no, salvage Phase 12 first.
-**Unblocks:** §5, and retiring 62 of 65 branches.
+**Remaining action:** the branch deletions themselves still need to be run against `origin` — they were blocked here as a destructive remote operation.
 
 ### 0.3 May documents publish one microtask late on cold start?
 
@@ -205,15 +200,11 @@ Ordered by dependency. Do not schedule any of these before the shelf-branch verd
 
 Everything else in the observability layer shipped. What remains is a single join: **a trace id does not yet reach a scene event**.
 
-### 5.3 Phase 12 — LLM strategist blackboard — **STATUS DISPUTED, do not schedule**
+### 5.3 Phase 12 — LLM strategist blackboard — **CUT 2026-07-26**
 
-Async strategist writing intent/weight hints; the local executor stays authoritative. No turn may block on a model call.
+**Removed from the roadmap by owner decision.** The prototype on `claude/sharp-davinci-pu40fc` was deliberately not salvaged, and that branch is retired — its SHA is in `docs/history/2026-07-26-retired-branches.md` if the call is ever revisited.
 
-**An unmerged commit deletes this item.** `202d9f7` on `claude/next-priorities-98pzof` removes the LLM strategist blackboard *and* guided creation from `MASTER_PLAN.md`, citing maintainer direction. Resolve under §0.2 before scheduling anything here — the same commit also touches §5.1's scope.
-
-Note the tension worth naming: a working prototype exists **on the branch only** — a tactical strategy blackboard under `src/rules/`, a strategist flow under `src/ai/`, and a target-scoring bias hunk, roughly two hours to port — and RFC 007, **accepted 2026-07-21, the same week**, asks Phase 2 to prototype exactly this. Dropping it as a planned item while a tested prototype sits on a branch is the worst of both outcomes. Either salvage it or delete it deliberately.
-
-If salvaging: make the new `strategistBias` field **optional**. As written it is a breaking shape change for every `ScoredTarget` literal, and main has since added `offHandAttack` to the same types.
+This partially supersedes RFC 007, which specified the strategist plus a narration/adjudication loop. The RFC stays Accepted (it records a decision at a point in time); the phase table now wins. RFC 007's narration half is unaffected.
 
 ### 5.4 Phase 13 — narration critic · 5.5 Phase 10 — the vision adapter
 
