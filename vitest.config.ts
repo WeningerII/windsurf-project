@@ -12,7 +12,11 @@ export default defineConfig({
     globals: true,
     environment: 'happy-dom',
     setupFiles: './src/__tests__/setup.ts',
-    exclude: [...configDefaults.exclude, 'e2e/**', '.tmp/**'],
+    // `.claude/worktrees/**` holds agent worktrees — full checkouts of this repo
+    // nested inside it. Without this exclude, vitest collects every worktree's
+    // copy of the suite, so a run tests stale code alongside the real tree and
+    // multiplies its own runtime by the worktree count.
+    exclude: [...configDefaults.exclude, 'e2e/**', '.tmp/**', '.claude/worktrees/**'],
     testTimeout: isCoverageRun ? 15000 : 10000,
     fileParallelism: !isCoverageRun,
     maxWorkers: isCoverageRun ? 1 : undefined,

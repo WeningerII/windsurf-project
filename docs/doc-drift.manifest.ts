@@ -55,6 +55,15 @@ export const DOC_DRIFT_MANIFEST: DocDriftSurface[] = [
     rules: ['command_rule', 'path_ref_rule'],
   },
   {
+    // Recovery record for the branches retired on 2026-07-26. Historical: it
+    // pins SHAs deliberately so a retired branch can be restored, so it must
+    // never be "kept current" — that is the point of the record.
+    path: 'docs/history/2026-07-26-retired-branches.md',
+    kind: 'historical',
+    owner: 'branch-retirement',
+    rules: [],
+  },
+  {
     // The forward-looking work queue: what to do next and what it unblocks.
     // MASTER_PLAN owns status and decisions, GAPS owns evidence, this owns
     // ordering. Cites real paths so path_ref_rule applies; owns no counts and
