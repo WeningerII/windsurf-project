@@ -77,36 +77,104 @@ export function createSceneDocument(params: CreateSceneDocumentParams): SceneDoc
   };
 }
 
+/**
+ * Total order over scene events that depends ONLY on event data — never on how
+ * the `events` array happened to be assembled.
+ *
+ * `sequence` alone is not a total order. It is minted locally
+ * (`scene.events.length + 1`), so two devices appending while offline both mint
+ * the same number; `Array#sort` is stable, so a bare `a.sequence - b.sequence`
+ * then resolves the tie to array insertion order — a property of the merge, not
+ * of the log. RFC 006 guarantees "the same initial scene + the same event log
+ * yields byte-identical folded state", which that made unenforceable under any
+ * merge. Tiebreaking on `createdAt` and then `id` (UUIDs in production) restores
+ * a device-independent total order without renumbering history.
+ *
+ * Defensive by design: the fold sorts BEFORE its per-event try/catch safety net,
+ * so this comparator must never throw on a corrupt persisted event (a `createdAt`
+ * revived as a string, a NaN `sequence`). Unusable fields simply fall through to
+ * the next tiebreak.
+ */
+export function compareSceneEvents(a: SceneEvent, b: SceneEvent): number {
+  const bySequence = sequenceOrZero(a) - sequenceOrZero(b);
+  if (bySequence !== 0) return bySequence;
+
+  const byCreatedAt = createdAtOrZero(a) - createdAtOrZero(b);
+  if (byCreatedAt !== 0) return byCreatedAt;
+
+  // Codepoint compare (not `localeCompare`): the order must not vary by locale.
+  const aId = eventIdOrEmpty(a);
+  const bId = eventIdOrEmpty(b);
+  if (aId < bId) return -1;
+  if (aId > bId) return 1;
+  return 0;
+}
+
+function sequenceOrZero(event: SceneEvent): number {
+  const sequence = event?.sequence;
+  return typeof sequence === 'number' && Number.isFinite(sequence) ? sequence : 0;
+}
+
+function createdAtOrZero(event: SceneEvent): number {
+  const createdAt = event?.createdAt;
+  if (!(createdAt instanceof Date)) return 0;
+  const time = createdAt.getTime();
+  return Number.isFinite(time) ? time : 0;
+}
+
+function eventIdOrEmpty(event: SceneEvent): string {
+  return typeof event?.id === 'string' ? event.id : '';
+}
+
 export function foldSceneEvents(scene: SceneDocument): SceneFoldResult {
   const state = cloneSceneState(scene.initialState);
   const issues: SceneIssue[] = [];
 
-  scene.events
-    .slice()
-    .sort((a, b) => a.sequence - b.sequence)
-    .forEach((event) => {
-      // Replay safety net: a corrupt persisted/imported event (missing or
-      // wrong-shaped payload) must degrade to a recorded issue and a skipped
-      // event, never crash hydration — the same parse-don't-cast guarantee the
-      // storage boundary makes. The happy path (app-built events) never throws
-      // here, so this masks no real logic; it only contains malformed data.
-      try {
-        const eventIssues = validateSceneEvent(state, event);
-        issues.push(...eventIssues);
-        if (eventIssues.some((issue) => issue.severity === 'error')) {
-          return;
-        }
-        applySceneEvent(state, event);
-      } catch {
+  const ordered = scene.events.slice().sort(compareSceneEvents);
+  const sequenceCounts = new Map<number, number>();
+  for (const event of ordered) {
+    const sequence = sequenceOrZero(event);
+    sequenceCounts.set(sequence, (sequenceCounts.get(sequence) ?? 0) + 1);
+  }
+
+  ordered.forEach((event) => {
+    // Replay safety net: a corrupt persisted/imported event (missing or
+    // wrong-shaped payload) must degrade to a recorded issue and a skipped
+    // event, never crash hydration — the same parse-don't-cast guarantee the
+    // storage boundary makes. The happy path (app-built events) never throws
+    // here, so this masks no real logic; it only contains malformed data.
+    try {
+      // Colliding sequences are a WARNING, never an error: an error makes the
+      // fold skip the event below, which would delete history in order to
+      // report a merge problem. `compareSceneEvents` has already resolved the
+      // order deterministically; this only surfaces that a merge happened.
+      if ((sequenceCounts.get(sequenceOrZero(event)) ?? 0) > 1) {
         issues.push({
-          code: 'scene-event-malformed',
-          message: `Scene event '${event?.id ?? '?'}' could not be processed and was skipped.`,
-          severity: 'error',
-          eventId: event?.id,
+          code: 'scene-event-sequence-duplicate',
+          message: `Scene events share sequence ${sequenceOrZero(event)}; replay order falls back to createdAt, then event id.`,
+          path: 'sequence',
+          severity: 'warning',
+          eventId: eventIdOrEmpty(event) || undefined,
           sequence: event?.sequence,
         });
       }
-    });
+
+      const eventIssues = validateSceneEvent(state, event);
+      issues.push(...eventIssues);
+      if (eventIssues.some((issue) => issue.severity === 'error')) {
+        return;
+      }
+      applySceneEvent(state, event);
+    } catch {
+      issues.push({
+        code: 'scene-event-malformed',
+        message: `Scene event '${event?.id ?? '?'}' could not be processed and was skipped.`,
+        severity: 'error',
+        eventId: event?.id,
+        sequence: event?.sequence,
+      });
+    }
+  });
 
   return { state, issues };
 }

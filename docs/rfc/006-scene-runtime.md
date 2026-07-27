@@ -59,7 +59,7 @@ referenced sheet can change without rewriting history.
 ## Event sourcing and the fold
 
 `foldSceneEvents(scene)` (`src/scene/runtime.ts`) is a **pure** function: it
-clones `initialState`, sorts events by `sequence`, validates each
+clones `initialState`, orders events with `compareSceneEvents`, validates each
 (`validateSceneEvent`), and applies the valid ones (`applySceneEvent`). It never
 mutates its input and returns `{ state, issues }`. Two validation layers are kept
 distinct on purpose:
@@ -82,6 +82,33 @@ so a corrupt event (missing/wrong-shaped payload) becomes a recorded
 `scene-event-malformed` issue and is skipped — a single bad event can never
 crash the fold or the sidebar that folds every scene. App-built events never hit
 that net, so it contains malformed data without masking real logic.
+
+### Replay order is intrinsic to the data
+
+`compareSceneEvents(a, b)` (`src/scene/runtime.ts`) is the fold's total order:
+`sequence`, then `createdAt`, then event `id` (codepoint compare — production ids
+are UUIDs). `sequence` alone is **not** a total order. It is minted from a local
+counter (`scene.events.length + 1`), so two devices appending offline both mint
+the same number, and `Array#sort` is stable — a bare `a.sequence - b.sequence`
+would resolve the tie to array insertion order, which is a property of how the
+merge assembled the array rather than of the log. The extra tiebreaks make the
+byte-identical-fold guarantee below hold under merge as well as locally.
+
+Two deliberate non-decisions:
+
+- **Merge never renumbers `sequence`.** Rewriting history to repair ordering
+  would break the append-only contract; the comparator resolves the collision
+  instead.
+- **A duplicate `sequence` is a `warning`, not an `error`.** The fold *skips*
+  events whose validation produced an error, so reporting a merge collision as
+  an error would delete history in order to describe it. The
+  `scene-event-sequence-duplicate` issue surfaces the collision while every
+  event still folds.
+
+Event ids therefore carry weight beyond identity: check and oracle RNG is seeded
+from them, so callers must supply globally unique ids.
+`buildEncounterSceneEvents` (`src/scene/encounterBuilder.ts`) requires an
+`eventIdFactory` for exactly this reason — there is no count-derived fallback.
 
 ## Seeded replay
 
@@ -221,5 +248,6 @@ phase status and sequencing.
   built.
 - **Backend sync for scenes** (RFC 001) — **not built.** Scenes remain
   browser-local under `rpg-scenes-v1`; only documents and campaigns sync. The
-  event log is sync-friendly by construction (compare last sequence); conflict
+  event log is sync-friendly by construction (compare last sequence) and merges
+  into a device-independent order via `compareSceneEvents`; the rest of conflict
   policy is out of scope here and belongs to `docs/rfc/001-backend-sync.md`.
