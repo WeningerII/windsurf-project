@@ -135,9 +135,9 @@ Every new verified entry must land with its Tier-B mutation anchor.
 
 Cannot be honestly closed while one system has no creature catalog.
 
-### 4.2 PF2e carries zero exclusion entries — **READY, CHEAP**
+### 4.2 ~~PF2e carries zero exclusion entries~~ — **DONE 2026-07-27 (enumerated, label kept)**
 
-`_exclusions.ts` holds 10 entries and **none for PF2e**, yet PF2e reads `Full` and names a manual focus-spell surface in its own support row. By the plan's own rule — a system reads `Full` when its only residual gaps live in that registry — PF2e does not currently qualify. Either enumerate its boundaries or correct the label.
+`_exclusions.ts` held **no entry for PF2e**, yet PF2e read `Full` and named a manual focus-spell surface in its own support row. By the plan's own rule — a system reads `Full` when its only residual gaps live in that registry — PF2e did not qualify. **Resolved by enumerating, not by relabelling:** the gaps were real, findable, and genuinely of boundary shape (play choices and ungenerated class-feature grants, not skipped math), so three entries now stand in `docs/srd-manifest/_exclusions.ts` — focus-spell list and effects, prepared-slot assignment and cantrip selection, and rank-10 slots from 10th-rank class features — each citing the code that already treats the surface as manual. PF2e's agile MAP and weapon specialization were deliberately **kept out**: those are pending wiring, and the registry is not a place to park unfinished automation. `src/__tests__/manualExclusionRegistry.test.ts` fails if any manifest-carrying system falls back to zero entries. See `docs/GAPS.md` §4.
 
 ### 4.3 Sheet eviction — the dual-home is not transient — **READY**
 

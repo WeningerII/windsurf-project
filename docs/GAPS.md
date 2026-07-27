@@ -482,15 +482,33 @@ the *claim they were taken to license* is not, and that is the open part.
   `docs/srd-manifest/_exclusions.ts` — d20 Vancian prepared-slot assignment +
   spontaneous conversion, Daggerheart triggered/narrative card resolution, M&M
   freeform descriptors — and therefore "never unfinished automation". Those
-  boundaries are real, but the registry holds only 10 entries and does not
-  enumerate every residual gap: measured content shortfalls exist that are
-  neither automated nor recorded there, and PF2e carries **no** exclusion entry
-  at all. So the rule ("a system reads `Full` when its only residual gaps live in
+  boundaries are real, but the registry does not enumerate every residual gap:
+  measured content shortfalls exist that are neither automated nor recorded
+  there. So the rule ("a system reads `Full` when its only residual gaps live in
   that registry") is right while the conclusion has outrun it. Restoring the
   invariant means closing those gaps or enumerating them, with reasons, in
   `_exclusions.ts`. Live shortfalls: `docs/generated/srd-coverage.md`; tracked as
   per-system debt in §1, and — for content that is *named* correctly but
   *transcribed* from the wrong source — in §15.
+- **PARTLY CLOSED 2026-07-27 — the PF2e half of the paragraph above.** PF2e used
+  to carry **no** exclusion entry at all while declaring `Full` and naming a
+  manual focus-spell surface in its own support row, so the rule did not hold for
+  it on automation depth either. Its boundaries are now enumerated in
+  `docs/srd-manifest/_exclusions.ts` with code citations: focus-spell list and
+  effects (`src/systems/pf2e/validation.ts` deliberately does not check
+  `spellcasting.focusSpells` against the catalog and raises
+  `pf2e-focus-spells-manual`; the sheet badges the section Manual), prepared-slot
+  assignment and cantrip selection (slot *counts* are register-verified as
+  `pf2e.L5.spell-slots`; the daily choice is not), and rank-10 slots granted by
+  10th-rank class features rather than the class progression table (hence
+  `CLASS_PROGRESSION_RANKS` stopping at 9). Every system that ships a content
+  denominator now has at least one entry, gated by
+  `src/__tests__/manualExclusionRegistry.test.ts`. **Deliberately left out of the
+  registry**, because they are unfinished automation rather than boundaries: the
+  PF2e agile multiple-attack penalty (−4/−8, blocked on weapon-trait data) and
+  PF2e weapon specialization (+2/+3/+4, formula-only pending wiring), both noted
+  on `docs/compute-register/pf2e.ts`. Still open for PF2e: the content-fidelity
+  debt in §15/§18.5.1, which no exclusion entry may absorb.
 - MASTER_PLAN.md now mirrors the two-denominator completion goal and adopts
   this file as the completion-tracking doc (2026-07-14). README.md cites both
   denominators under Quality Metrics ("Completion methodology", 2026-07-17),
