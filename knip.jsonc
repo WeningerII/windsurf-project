@@ -1,0 +1,45 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  // Test files are deliberately NOT entry points. When they were, a module kept
+  // alive only by its own test counted as "used", which is how three dead
+  // modules (utils/systemCatalog.ts, utils/validation.ts,
+  // components/MonsterStatBlock.tsx) passed check:dead-code.
+  "entry": [
+    "src/scripts/**/*.ts",
+    "scripts/**/*.mjs",
+    "e2e/**/*.spec.ts",
+    "*.config.{ts,js,mjs}",
+    "docs/doc-drift.manifest.ts",
+    "docs/doc-drift.rules.ts",
+    "netlify/functions/*.mts"
+  ],
+  "project": ["src/**/*.{ts,tsx}", "scripts/**/*.mjs", "netlify/functions/**/*.mts"],
+  "ignore": [
+    "src/__tests__/vitest.d.ts",
+    // Deliberate seams: reachable by design decision, not by the import graph.
+    // Each entry cites the doc that ratifies it. Do not add to this list without one.
+
+    // RFC 002 (AI control plane) + docs/GAPS.md §9: the make-me-a-game flow is
+    // composed but deliberately not wired to a UI entry point yet.
+    "src/ai/makeMeAGameFlow.ts",
+
+    // RFC 006 (scene/encounter runtime): grid geometry proposal awaits the
+    // Phase 10 vision adapter that will consume it.
+    "src/scene/gridGeometryProposal.ts",
+
+    // docs/GAPS.md §8 (W6 executable-activity contract): CLOSE-BY-RULE at a
+    // single consumer; kept as the contract surface.
+    "src/systems/dnd5e/shared/activities.ts"
+  ],
+  "ignoreDependencies": ["playwright-core"],
+  "ignoreBinaries": ["graphify"],
+  "rules": {
+    "types": "off",
+    "exports": "off",
+    "enumMembers": "off",
+    "classMembers": "off",
+    "nsTypes": "off",
+    "nsExports": "off",
+    "duplicates": "off"
+  }
+}
